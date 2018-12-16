@@ -69,9 +69,6 @@ __shopify_cli__() {
     fi
   done
 
-  # Read as MACOS_SW_VERSION ||= `sw_vers -productVersion`
-  export MACOS_SW_VERSION="${MACOS_SW_VERSION-$(sw_vers -productVersion)}"
-
   # https://discourse.shopify.io/t/running-dev-up-changes-the-display-language-of-apple-terminal/1556
   export LANG="${LANG-en_US.UTF-8}"
   export LANGUAGE="${LANGUAGE-en_US.UTF-8}"
