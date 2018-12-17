@@ -4,7 +4,7 @@ module ShopifyCli
   module Commands
     class Server < ShopifyCli::Command
       def call(args, _name)
-        CLI::Kit::System.system('npm run dev')
+        exec('npm run dev')
       end
 
       def self.help

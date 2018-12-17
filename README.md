@@ -2,6 +2,11 @@
 
 ## install
 
+Until this is public the instructions below won't work. Instead:
+```sh
+dev clone shopify-cli && eval "$(cat install.sh)"
+```
+
 ### Mac OS and Ubuntu
 ```sh
 eval "$(curl -sS https://raw.githubusercontent.com/Shopify/shopify-cli/master/install.sh)"
