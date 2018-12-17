@@ -26,7 +26,7 @@ module ShopifyCli
         File.write(File.join(@name, '.env'),
           "SHOPIFY_API_KEY=#{api_key}\nSHOPIFY_API_SECRET_KEY=#{api_secret}")
 
-        CLI::UI::Frame.open('Running yarn...') do
+        CLI::UI::Frame.open('Installing dependencies...') do
           yarn
         end
         puts CLI::UI.fmt(post_clone)
@@ -56,7 +56,7 @@ module ShopifyCli
 
       def yarn
         CLI::UI::Progress.progress do |bar|
-          success = CLI::Kit::System.system('yarn', chdir: @name) do |_out, err|
+          success = CLI::Kit::System.system('npm install', chdir: @name) do |_out, err|
             match = err.match(/(\d+)\/(\d+)/)
             next unless match
             percent = (match[1] / match[2] * 100).round(2)
