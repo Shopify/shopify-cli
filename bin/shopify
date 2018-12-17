@@ -33,6 +33,6 @@ require_relative 'support/load_shopify'
 # but don't have binary compatibility with this ruby version.
 # Dev::Helpers::ChrubyReset.call(ENV)
 
-# exit(Dev::ErrorHandler.call do
-#   Dev::EntryPoint.call(ARGV.dup)
-# end)
+exit(ShopifyCli::ErrorHandler.call do
+  ShopifyCli::EntryPoint.call(ARGV.dup)
+end)

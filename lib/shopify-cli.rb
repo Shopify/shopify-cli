@@ -78,125 +78,30 @@ module ShopifyCli
   BugSilent    = CLI::Kit::BugSilent
   AbortSilent  = CLI::Kit::AbortSilent
 
-  # These are the currently standard versions of various languages.
-  # New projects will be initialized using these
-  FEATURE_VERSIONS = {
-    'go' => '1.9',
-    'ruby' => '2.5.3',
-    'node' => 'v8.9.4',
-    'rust' => 'stable',
-  }
-
   # The rest of this file outlines classes and modules required by the dev application and CLI kit framework.
   # To understand how this works, read https://github.com/Shopify/cli-kit/blob/master/lib/cli/kit.rb
+  autocall(:Config)  { CLI::Kit::Config.new(tool_name: TOOL_NAME) }
+  autocall(:Command) { CLI::Kit::BaseCommand }
 
   autocall(:Executor) { CLI::Kit::Executor.new(log_file: LOG_FILE) }
   autocall(:Logger)   { CLI::Kit::Logger.new(debug_log_file: DEBUG_LOG_FILE) }
-
-  autoload :APICommand,         'dev/api_command'
-  autoload :Command,            'dev/command'
-  autoload :Config,             'dev/config'
-  autoload :ConfigString,       'dev/config_string'
-  autoload :Context,            'dev/context'
-  autoload :Dep,                'dev/dep'
-  autoload :Docs,               'dev/docs'
-  autoload :EntryPoint,         'dev/entry_point'
-  autoload :ErrorHandler,       'dev/error_handler'
-  autoload :ExceptionReporter,  'dev/exception_reporter'
-  autoload :Finalize,           'dev/finalize'
-  autoload :Galaxy,             'dev/galaxy'
-  autoload :GlobalStateManager, 'dev/global_state_manager'
-  autoload :HasGlobalState,     'dev/has_global_state'
-  autoload :Metadata,           'dev/metadata'
-  autoload :Project,            'dev/project'
-  autoload :Resolver,           'dev/resolver'
-  autoload :Stats,              'dev/stats'
-  autoload :Task,               'dev/task'
-  autoload :TaskEngine,         'dev/task_engine'
-  autoload :Update,             'dev/update'
-
-  # Has submodules, but autoloads them itself.
-  autoload :ShellHook, 'dev/shell_hook'
-
-  # Common helpers, with a shorter fully-qualified path, that don't feel like
-  # they belong in a more verbosely-named helper below.
-  autoload :Util, 'dev/util'
-
-  module Helpers
-    autoload :AddProject,               'dev/helpers/add_project'
-    autoload :AndroidInstallDependency, 'dev/helpers/android_install_dependency'
-    autoload :API,                      'dev/helpers/api'
-    autoload :MigrationsMetricParser,   'dev/helpers/migrations_metric_parser'
-    autoload :Bundler,                  'dev/helpers/bundler'
-    autoload :ChrubyReset,              'dev/helpers/chruby_reset'
-    autoload :CommandTracking,          'dev/helpers/command_tracking'
-    autoload :Database,                 'dev/helpers/database'
-    autoload :DeltaChooser,             'dev/helpers/delta_chooser'
-    autoload :DidYouKnow,               'dev/helpers/did_you_know'
-    autoload :DylibLinkage,             'dev/helpers/dylib_linkage'
-    autoload :EaccesHandler,            'dev/helpers/eacces_handler'
-    autoload :EtcHosts,                 'dev/helpers/etc_hosts'
-    autoload :GCloud,                   'dev/helpers/gcloud'
-    autoload :GemHelper,                'dev/helpers/gem_helper'
-    autoload :Git,                      'dev/helpers/git'
-    autoload :GitHookManager,           'dev/helpers/git_hook_manager'
-    autoload :GithubSSH,                'dev/helpers/github_ssh'
-    autoload :Growl,                    'dev/helpers/growl'
-    autoload :Help,                     'dev/helpers/help'
-    autoload :Homebrew,                 'dev/helpers/homebrew'
-    autoload :Ini,                      'dev/helpers/ini'
-    autoload :Integrations,             'dev/helpers/integrations'
-    autoload :IOS,                      'dev/helpers/ios'
-    autoload :Keychain,                 'dev/helpers/keychain'
-    autoload :MacOS,                    'dev/helpers/mac_os'
-    autoload :MaterializeRepo,          'dev/helpers/materialize_repo'
-    autoload :Minikube,                 'dev/helpers/minikube'
-    autoload :MultiplexMetrics,         'dev/helpers/multiplex_metrics'
-    autoload :OpenGithub,               'dev/helpers/open_github'
-    autoload :PackageCloud,             'dev/helpers/package_cloud'
-    autoload :PidFile,                  'dev/helpers/pid_file'
-    autoload :Plist,                    'dev/helpers/plist'
-    autoload :PlistBuddy,               'dev/helpers/plist_buddy'
-    autoload :ProcessSupervision,       'dev/helpers/process_supervision'
-    autoload :RailgunSupervision,       'dev/helpers/railgun_supervision'
-    autoload :PythonDep,                'dev/helpers/python_dep'
-    autoload :PythonInstall,            'dev/helpers/python_install'
-    autoload :Railgun,                  'dev/helpers/railgun'
-    autoload :RailsDatabaseChecker,     'dev/helpers/rails_database_checker'
-    autoload :RailsTemplates,           'dev/helpers/rails_templates'
-    autoload :RubyDep,                  'dev/helpers/ruby_dep'
-    autoload :Rubygems,                 'dev/helpers/rubygems'
-    autoload :RubyInstall,              'dev/helpers/ruby_install'
-    autoload :RubyLinker,               'dev/helpers/ruby_linker'
-    autoload :SDHCP,                    'dev/helpers/sdhcp'
-    autoload :ServerCommandInference,   'dev/helpers/server_command_inference'
-    autoload :ServicesDB,               'dev/helpers/services_db'
-    autoload :Shellify,                 'dev/helpers/shellify'
-    autoload :Simctl,                   'dev/helpers/simctl'
-    autoload :Splunk,                   'dev/helpers/splunk'
-    autoload :SrcPath,                  'dev/helpers/src_path'
-    autoload :Stats,                    'dev/helpers/stats'
-    autoload :Submodules,               'dev/helpers/submodules'
-    autoload :TableFormatter,           'dev/helpers/table_formatter'
-    autoload :Template,                 'dev/helpers/template'
-    autoload :Tophat,                   'dev/helpers/tophat'
-    autoload :Validator,                'dev/helpers/validator'
-    autoload :Version,                  'dev/helpers/version'
-    autoload :Virtualenv,               'dev/helpers/virtualenv'
-    autoload :Xcode,                    'dev/helpers/xcode'
+  autocall(:Resolver) do
+    CLI::Kit::Resolver.new(
+      tool_name: TOOL_NAME,
+      command_registry: ShopifyCli::Commands::Registry
+    )
   end
+  autocall(:ErrorHandler) do
+    CLI::Kit::ErrorHandler.new(
+      log_file: ShopifyCli::LOG_FILE,
+      exception_reporter: nil,
+    )
+  end
+
+  autoload :EntryPoint,         'shopify-cli/entry_point'
+  autoload :Finalize,           'shopify-cli/finalize'
 
   module Tasks
-    register :Application,                 'application',            'dev/tasks/application'
-  end
-
-  module Commands
-    # Task registration is handled differently for project-local commands
-    autoload :ProjectLocal, 'dev/commands/project_local'
-
-    # See lib/dev/commands.rb
-    register :CD
-
-    Registry.add_alias('s',    'server')
+    register :Application, 'application', 'shopify-cli/tasks/application'
   end
 end
