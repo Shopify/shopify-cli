@@ -1,4 +1,4 @@
-# shopify-cli
+# shopify-cli [![Build status](https://badge.buildkite.com/a27554588a0e537d0ca23984dec9e68a16dc3f5ff41415cb08.svg)](https://buildkite.com/shopify/shopify-cli)
 
 ## install
 
