@@ -18,13 +18,12 @@ module ShopifyCli
       end
 
       def embedded_app
-        CLI::UI::Frame.open('Cloning embeddedapp...') do
+        CLI::UI::Frame.open('Cloning embedded app...') do
           git_progress('clone', '--single-branch', 'git@github.com:shopify/webgen-embeddedapp.git', @name)
         end
         api_key = CLI::UI.ask('What is your Shopify API Key')
         api_secret = CLI::UI.ask('What is your Shopify API Secret')
-        File.write(File.join(@name, '.env'),
-          "SHOPIFY_API_KEY=#{api_key}\nSHOPIFY_API_SECRET_KEY=#{api_secret}")
+        write_env_file(api_key, api_secret)
 
         CLI::UI::Frame.open('Installing dependencies...') do
           yarn
@@ -39,6 +38,11 @@ module ShopifyCli
 
       def self.help
         "Bootstrap an app.\nUsage: {{command:#{ShopifyCli::TOOL_NAME} create <apptype> <appname>}}"
+      end
+
+      def write_env_file(api_key, api_secret)
+        File.write(File.join(@name, '.env'),
+          "SHOPIFY_API_KEY=#{api_key}\nSHOPIFY_API_SECRET_KEY=#{api_secret}")
       end
 
       def git_progress(*git_command)
