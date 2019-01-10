@@ -98,10 +98,11 @@ module ShopifyCli
     )
   end
 
-  autoload :EntryPoint,         'shopify-cli/entry_point'
-  autoload :Finalize,           'shopify-cli/finalize'
+  autoload :EntryPoint, 'shopify-cli/entry_point'
+  autoload :Finalize,   'shopify-cli/finalize'
+  autoload :Task,   'shopify-cli/task'
 
   module Tasks
-    register :Application, 'application', 'shopify-cli/tasks/application'
+    register :Clone, 'clone', 'shopify-cli/tasks/clone'
   end
 end
