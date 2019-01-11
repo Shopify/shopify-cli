@@ -1,7 +1,7 @@
 require 'test_helper'
 
 module ShopifyCli
-  module Tasks
+  module Commands
     class HelpTest < MiniTest::Test
       def setup
         @command = ShopifyCli::Commands::Help.new

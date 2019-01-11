@@ -1,7 +1,7 @@
 require 'test_helper'
 
 module ShopifyCli
-  module Tasks
+  module Commands
     class CreateTest < MiniTest::Test
       def setup
         @command = ShopifyCli::Commands::Create.new
@@ -26,8 +26,9 @@ module ShopifyCli
 
       def test_embedded_app_creation
         CLI::UI::Prompt.expects(:ask).returns('embedded_app')
-        @command.expects(:git_progress).with(
-          'clone', '--single-branch', 'git@github.com:shopify/webgen-embeddedapp.git', 'test-app'
+        ShopifyCli::Tasks::Clone.stubs(:call).with(
+          'git@github.com:shopify/webgen-embeddedapp.git',
+          'test-app'
         )
         CLI::UI.expects(:ask).twice.returns('apikey', 'apisecret')
         @command.expects(:write_env_file)
@@ -37,7 +38,6 @@ module ShopifyCli
         end
         output = io.join
 
-        assert_match('Cloning embedded app...', output)
         assert_match('Installing dependencies...', output)
       end
     end
