@@ -101,6 +101,8 @@ module ShopifyCli
   autoload :EntryPoint, 'shopify-cli/entry_point'
   autoload :Finalize,   'shopify-cli/finalize'
   autoload :Task,   'shopify-cli/task'
+  autoload :AppTypes, 'shopify-cli/app_types'
+  autoload :AppTypeRegistry, 'shopify-cli/app_type_registry'
 
   module Tasks
     register :Clone, 'clone', 'shopify-cli/tasks/clone'
