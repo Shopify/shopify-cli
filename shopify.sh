@@ -86,7 +86,8 @@ __shopify_cli__() {
 
   local return_from_shopify_cli
   local with_gems
-  if [[ "${__shopify_cli_source_dir}" == "/opt/shopify-cli" ]] || [ ! -t 0 ]; then
+  local install_dir="${XDG_RUNTIME_DIR:-$HOME}/.shopify-cli"
+  if [[ "${__shopify_cli_source_dir}" == "${install_dir}" ]] || [ ! -t 0 ]; then
     with_gems="FALSE"
   else
     with_gems="TRUE"

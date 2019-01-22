@@ -47,6 +47,7 @@ module ShopifyCli
 
   TOOL_NAME        = 'shopify'
   ROOT             = File.expand_path('../..', __FILE__)
+  INSTALL_DIR      = File.expand_path(File.join(ENV.fetch('XDG_RUNTIME_DIR', ENV.fetch('HOME')), '.shopify-cli'))
   CONFIG_HOME      = File.expand_path(ENV.fetch('XDG_CONFIG_HOME', '~/.config'))
   TOOL_CONFIG_PATH = File.join(CONFIG_HOME, TOOL_NAME)
   LOG_FILE         = File.join(TOOL_CONFIG_PATH, 'logs', 'log.log')

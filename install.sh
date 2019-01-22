@@ -46,6 +46,8 @@ is_linux() {
   test -n "${linux}"
 }
 
+install_dir="${XDG_RUNTIME_DIR:-$HOME}/.shopify-cli"
+
 postmsg() {
   echo -e "\x1b[32mshopify-cli\x1b[0m is installed!"
   echo -e "Run \x1b[32mshopify help\x1b[0m to see what you can do, or read \x1b[32mhttps://github.com/Shopify/shopify-cli\x1b[0m."
@@ -161,18 +163,17 @@ install_linux_prerequisites() {
 }
 
 clone_shopify_cli() {
-  if [[ -d "/opt/shopify-cli/.git" ]]; then
+  if [[ -d "${install_dir}/.git" ]]; then
     bs_success_message "already have shopify-cli"
   else
     local git_url
     git_url="${SHOPIFY_CLI_BOOTSTRAP_GIT_URL:-git@github.com:shopify/shopify-cli.git}"
 
     # Very intentionally do the git clone as the logged in user so ssh keys aren't an issue.
-    sudo mkdir -p /opt/shopify-cli
-    sudo chown "${LOGNAME}" /opt/shopify-cli
-    echo "Cloning Shopify/shopify-cli into /opt/shopify-cli"
+    mkdir -p "${install_dir}"
+    echo "Cloning Shopify/shopify-cli into ${install_dir}"
     false
-    (cd /opt/shopify-cli && git clone "${git_url}" .)
+    (cd "${install_dir}" && git clone "${git_url}" .)
     if [[ $? -ne 0 ]]; then
       bs_error_message "git clone failed. Have you set up SSH keys yet?"
       bs_error_message "https://help.github.com/articles/generating-an-ssh-key"
@@ -234,15 +235,15 @@ install_bash_shell_shim() {
   fi
 
   if ! grep -q "shopify.sh" "${bp}" 2>/dev/null; then
-    echo "if [[ -f /opt/shopify-cli/shopify.sh ]]; then source /opt/shopify-cli/shopify.sh; fi" >> "${bp}"
+    echo "if [[ -f "${install_dir}/shopify.sh" ]]; then source "${install_dir}/shopify.sh"; fi" >> "${bp}"
   fi
 
   if ! grep -q "shopify.sh" "${HOME}/.bashrc" 2>/dev/null; then
     {
       echo ''
       echo '# load shopify-cli, but only if present and the shell is interactive'
-      echo 'if [[ -f /opt/shopify-cli/shopify.sh ]] && [[ $- == *i* ]]; then'
-      echo '  source /opt/shopify-cli/shopify.sh'
+      echo 'if [[ -f "${install_dir}/shopify.sh"  ]] && [[ $- == *i* ]]; then'
+      echo '  source "${install_dir}/shopify.sh"'
       echo 'fi'
     } >> "${HOME}/.bashrc"
   fi
@@ -255,12 +256,12 @@ install_zsh_shell_shim() {
   local rcfile
   rcfile="${HOME}/.zshrc"
   touch "${rcfile}"
-  if grep -q /opt/shopify-cli/shopify.sh "${rcfile}"; then
+  if grep -q "${install_dir}/shopify.sh" "${rcfile}"; then
     bs_success_message "shell already set up for shopify-cli"
     return
   fi
 
-  echo -e "\n[ -f /opt/shopify-cli/shopify.sh ] && source /opt/shopify-cli/shopify.sh" >> "${rcfile}"
+  echo -e "\n[ -f \"${install_dir}/shopify.sh\" ] && source \"${install_dir}/shopify.sh\"" >> "${rcfile}"
   bs_success_message "shell set up for shopify-cli"
   bs_success_message "\x1b[1;44;31mNOTE:\x1b[39m added a line to the end of ${rcfile}\x1b[0m"
 }
@@ -270,12 +271,12 @@ install_fish_shell_shim() {
   rcfile="${HOME}/.config/fish/config.fish"
   mkdir -p "$(dirname "${rcfile}")"
   touch "${rcfile}"
-  if grep -q /opt/shopify-cli/shopify.fish "${rcfile}"; then
+  if grep -q "${install_dir}/shopify.fish" "${rcfile}"; then
     bs_success_message "shell already set up for shopify-cli"
     return
   fi
 
-  echo -e "\nif test -f /opt/shopify-cli/shopify.fish\n  source /opt/shopify-cli/shopify.fish\nend" >> "${rcfile}"
+  echo -e "\nif test -f \"${install_dir}/shopify.fish\"\n  source \"${install_dir}/shopify.fish\"\nend" >> "${rcfile}"
   bs_success_message "shell set up for shopify-cli"
   bs_success_message "\x1b[1;44;31mNOTE:\x1b[39m added a line to the end of ${rcfile}\x1b[0m"
 }
@@ -402,8 +403,6 @@ __bs_padding() {
 }
 
 main() {
-  sudo true # ask for password early
-
   __bs_print_title 1 2 "Installing Prerequisites"
   if __bs_run_func_with_margin install_prerequisites; then
     __bs_print_bare_footer

@@ -25,9 +25,9 @@ module ShopifyCli
         @setenv[key] = value
       end
 
-      # Reload dev.sh or dev.fish, and reset chruby state
+      # Reload shopify.sh or shopify.fish
       #
-      def reload_dev_from(path)
+      def reload_shopify_from(path)
         @reload = path
       end
 
