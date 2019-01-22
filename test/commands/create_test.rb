@@ -24,21 +24,10 @@ module ShopifyCli
         assert_match('not yet implemented', io.join)
       end
 
-      def test_embedded_app_creation
-        CLI::UI::Prompt.expects(:ask).returns('embedded_app')
-        ShopifyCli::Tasks::Clone.stubs(:call).with(
-          'git@github.com:shopify/webgen-embeddedapp.git',
-          'test-app'
-        )
-        CLI::UI.expects(:ask).twice.returns('apikey', 'apisecret')
-        @command.expects(:write_env_file)
-        @command.expects(:yarn)
-        io = capture_io do
-          @command.call(['test-app'], nil)
-        end
-        output = io.join
-
-        assert_match('Installing dependencies...', output)
+      def test_implemented_option
+        CLI::UI::Prompt.expects(:ask).returns(:node)
+        ShopifyCli::AppTypes::Node.any_instance.stubs(:call).with('test-app')
+        @command.call(['test-app'], nil)
       end
     end
   end
