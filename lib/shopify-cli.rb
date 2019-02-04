@@ -106,6 +106,7 @@ module ShopifyCli
   autoload :AppTypeRegistry, 'shopify-cli/app_type_registry'
 
   module Tasks
-    register :Clone, 'clone', 'shopify-cli/tasks/clone'
+    register :Clone, :clone, 'shopify-cli/tasks/clone'
+    register :JsDeps, :js_deps, 'shopify-cli/tasks/js_deps'
   end
 end

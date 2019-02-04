@@ -12,15 +12,20 @@ module ShopifyCli
           'git@github.com:shopify/webgen-embeddedapp.git',
           'test-app'
         )
+        ShopifyCli::Tasks::JsDeps.stubs(:call).with(
+          File.join(Dir.pwd, 'test-app')
+        )
         CLI::UI.expects(:ask).twice.returns('apikey', 'apisecret')
         @app.expects(:write_env_file)
-        @app.expects(:yarn)
         io = capture_io do
           @app.call('test-app')
         end
         output = io.join
 
-        assert_match('Installing dependencies...', output)
+        assert_match(
+          CLI::UI.fmt('Run {{command:shopify server}} to start the app server'),
+          output
+        )
       end
     end
   end
