@@ -5,6 +5,7 @@ module ShopifyCli
     class Node < ShopifyCli::Task
       def call(*args)
         @name = args.shift
+        @dir = File.join(Dir.pwd, @name)
         embedded_app
       end
 
@@ -16,15 +17,12 @@ module ShopifyCli
 
       def embedded_app
         ShopifyCli::Tasks::Clone.call('git@github.com:shopify/webgen-embeddedapp.git', @name)
+        ShopifyCli::Finalize.request_cd(@name)
         api_key = CLI::UI.ask('What is your Shopify API Key')
         api_secret = CLI::UI.ask('What is your Shopify API Secret')
         write_env_file(api_key, api_secret)
-
-        CLI::UI::Frame.open('Installing dependencies...') do
-          yarn
-        end
+        ShopifyCli::Tasks::JsDeps.call(@dir)
         puts CLI::UI.fmt(post_clone)
-        ShopifyCli::Finalize.request_cd(@name)
       end
 
       def write_env_file(api_key, api_secret)
@@ -34,20 +32,6 @@ module ShopifyCli
 
       def post_clone
         "Run {{command:shopify server}} to start the app server"
-      end
-
-      def yarn
-        CLI::UI::Progress.progress do |bar|
-          success = CLI::Kit::System.system('npm install', chdir: @name) do |_out, err|
-            match = err.match(/(\d+)\/(\d+)/)
-            next unless match
-            percent = (match[1] / match[2] * 100).round(2)
-            bar.tick(set_percent: percent)
-          end.success?
-          return false unless success
-          bar.tick(set_percent: 1.0)
-          true
-        end
       end
     end
   end

@@ -1,6 +1,8 @@
 require 'shopify-cli'
 
-Dir.glob('./lib/shopify-cli/app_types/*.rb') { |f| require f }
+Dir.glob(
+  File.join(ShopifyCli::ROOT, './lib/shopify-cli/app_types/*.rb')
+) { |f| require f }
 
 module ShopifyCli
   module AppTypes
