@@ -3,6 +3,12 @@ containers:
     docker: circleci/ruby:2.5.1-node-browsers
 
 steps:
+- label: Lint
+  timeout: 5m
+  run:
+    - bundle: ~
+    - bundle exec rubocop
+
 - label: Tests
   timeout: 5m
   run:

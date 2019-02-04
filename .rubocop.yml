@@ -1,0 +1,20 @@
+inherit_from:
+  - https://shopify.github.io/ruby-style-guide/rubocop-cli.yml
+
+AllCops:
+  Exclude:
+    - 'vendor/**/*'
+  TargetRubyVersion: 2.3
+
+Layout/EmptyLines:
+  Exclude:
+    # Need extra line so comment at top isnt registered to the Dev namespace
+    - 'lib/dev/helpers/chruby_reset.rb'
+
+# allow String.new to create mutable strings
+Style/EmptyLiteral:
+  Enabled: false
+
+# allow using %r{} for regexes
+Style/RegexpLiteral:
+  Enabled: false
