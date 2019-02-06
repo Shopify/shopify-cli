@@ -11,7 +11,6 @@ module ShopifyCli
           AppTypeRegistry.each do |identifier, type|
             handler.option(type.description) { identifier }
           end
-          handler.option('ruby embedded app') { return false }
         end
 
         return puts "not yet implemented" unless app_type
