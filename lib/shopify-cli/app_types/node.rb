@@ -31,7 +31,7 @@ module ShopifyCli
       end
 
       def post_clone
-        "Run {{command:shopify server}} to start the app server"
+        "Run {{command:npm run dev}} to start the app server"
       end
     end
   end
