@@ -1,0 +1,17 @@
+name: dev
+type:
+  - ruby
+
+up:
+  - ruby: 2.5.1
+  - bundler
+
+test:
+  desc: 'Run tests.'
+  run: |
+    if [ "$#" -eq 1 ] && [[ -f $1 ]];
+    then
+      rake test TEST=$1
+    else
+      rake test $@
+    fi
