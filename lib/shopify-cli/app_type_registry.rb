@@ -24,4 +24,5 @@ module ShopifyCli
   end
 
   AppTypeRegistry.register(:node, AppTypes::Node)
+  AppTypeRegistry.register(:rails, AppTypes::Rails)
 end

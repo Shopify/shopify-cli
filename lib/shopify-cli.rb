@@ -99,6 +99,7 @@ module ShopifyCli
     )
   end
 
+  autoload :Context, 'shopify-cli/context'
   autoload :EntryPoint, 'shopify-cli/entry_point'
   autoload :Finalize,   'shopify-cli/finalize'
   autoload :Task,   'shopify-cli/task'
@@ -108,5 +109,9 @@ module ShopifyCli
   module Tasks
     register :Clone, :clone, 'shopify-cli/tasks/clone'
     register :JsDeps, :js_deps, 'shopify-cli/tasks/js_deps'
+  end
+
+  module Helpers
+    autoload :GemHelper, 'shopify-cli/helpers/gem_helper'
   end
 end
