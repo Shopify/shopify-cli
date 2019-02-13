@@ -113,5 +113,6 @@ module ShopifyCli
 
   module Helpers
     autoload :GemHelper, 'shopify-cli/helpers/gem_helper'
+    autoload :NgrokHelper, 'shopify-cli/helpers/ngrok_helper'
   end
 end

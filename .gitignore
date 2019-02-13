@@ -1,1 +1,4 @@
 .rubocop-*
+ngrok
+ngrok.zip
+.tmp
