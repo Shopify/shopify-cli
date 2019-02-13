@@ -1,4 +1,5 @@
 .rubocop-*
+.auth
 ngrok
 ngrok.zip
 .tmp

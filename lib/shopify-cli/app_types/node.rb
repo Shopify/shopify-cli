@@ -3,14 +3,20 @@ require 'shopify_cli'
 module ShopifyCli
   module AppTypes
     class Node < ShopifyCli::Task
+      class << self
+        def description
+          'node embedded app'
+        end
+
+        def callback_url(host)
+          "#{host}/auth/callback"
+        end
+      end
+
       def call(*args)
         @name = args.shift
         @dir = File.join(Dir.pwd, @name)
         embedded_app
-      end
-
-      def self.description
-        'node embedded app'
       end
 
       protected

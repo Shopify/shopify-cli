@@ -4,14 +4,20 @@ require 'shopify_cli'
 module ShopifyCli
   module AppTypes
     class Rails < ShopifyCli::Task
+      class << self
+        def description
+          'rails embedded app'
+        end
+
+        def callback_url(host)
+          "#{host}/auth/shopify/callback"
+        end
+      end
+
       def call(*args)
         @name = args.shift
         @dir = File.join(Dir.pwd, @name)
         generate
-      end
-
-      def self.description
-        'rails embedded app'
       end
 
       def rails_installed?
