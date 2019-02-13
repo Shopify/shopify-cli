@@ -10,10 +10,6 @@ module ShopifyCli
         generate
       end
 
-      def ctx
-        @ctx ||= ShopifyCli::Context.new
-      end
-
       def self.description
         'rails embedded app'
       end
