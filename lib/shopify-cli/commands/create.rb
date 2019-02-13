@@ -14,7 +14,7 @@ module ShopifyCli
         puts CLI::UI.fmt("{{yellow:*}} ngrok connected at #{@ngrok}")
 
         apps = @partners.get_apps
-        @app = if apps.size > 1
+        @ctx.app_metadata = if apps.size > 1
           CLI::UI::Prompt.ask('Which app would you like to use?') do |handler|
             apps.each do |app|
               handler.option(app['title']) { app }
@@ -23,6 +23,8 @@ module ShopifyCli
         else
           apps.first
         end
+        @ctx.app_metadata[:host] = @ngrok
+        @ctx.log(@ctx.app_metadata)
 
         app_type_id, app_type = CLI::UI::Prompt.ask('What type of app would you like to create?') do |handler|
           AppTypeRegistry.each do |identifier, type|
@@ -30,20 +32,21 @@ module ShopifyCli
           end
         end
 
-
         puts CLI::UI.fmt("{{yellow:*}} updating app url")
-        @ctx.log @app
-        @partners.update_app_url(@app['apiKey'], @ngrok, app_type.callback_url(@ngrok))
+        @partners.update_app_url(@ctx.app_metadata['apiKey'], @ngrok, app_type.callback_url(@ngrok))
 
         puts CLI::UI.fmt("{{yellow:*}} updated")
 
         return puts "not yet implemented" unless app_type
 
-        AppTypeRegistry.build(app_type, @name)
+        AppTypeRegistry.build(app_type_id, @name, @ctx)
       end
 
       def self.help
-        "Bootstrap an app.\nUsage: {{command:#{ShopifyCli::TOOL_NAME} create <apptype> <appname>}}"
+        <<~HELP
+          Bootstrap an app.
+          Usage: {{command:#{ShopifyCli::TOOL_NAME} create <appname>}}
+        HELP
       end
     end
   end

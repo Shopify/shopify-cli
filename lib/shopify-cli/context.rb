@@ -3,6 +3,8 @@ require 'shopify_cli'
 
 module ShopifyCli
   class Context
+    attr_writer :app_metadata
+
     def initialize
       @env = ($original_env || ENV).clone
     end
@@ -30,6 +32,10 @@ module ShopifyCli
       else
         super
       end
+    end
+
+    def app_metadata
+      @app_metadata ||= {}
     end
   end
 end

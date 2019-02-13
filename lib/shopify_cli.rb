@@ -115,6 +115,7 @@ module ShopifyCli
     autoload :API, 'shopify-cli/helpers/api'
     autoload :AuthHelper, 'shopify-cli/helpers/auth_helper'
     autoload :GemHelper, 'shopify-cli/helpers/gem_helper'
+    autoload :KeysHelper, 'shopify-cli/helpers/keys_helper'
     autoload :NgrokHelper, 'shopify-cli/helpers/ngrok_helper'
   end
 end
