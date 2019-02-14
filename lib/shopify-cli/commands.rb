@@ -13,10 +13,11 @@ module ShopifyCli
     end
 
     register :Create, 'create', 'shopify-cli/commands/create'
+    register :Generate, 'generate', 'shopify-cli/commands/generate'
     register :Help, 'help', 'shopify-cli/commands/help'
     register :LoadDev, 'load-dev', 'shopify-cli/commands/load_dev'
     register :LoadSystem, 'load-system', 'shopify-cli/commands/load_system'
-    register :Server, 'server', 'shopify-cli/commands/server'
+    register :Serve, 'serve', 'shopify-cli/commands/serve'
     register :Update, 'update', 'shopify-cli/commands/update'
   end
 end
