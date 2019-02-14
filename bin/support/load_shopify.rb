@@ -13,7 +13,7 @@ ENV['PATH'] = ENV['PATH'].split(':').select { |p| p.start_with?('/', '~') }.join
 
 $original_env = ENV.to_hash
 
-require 'shopify-cli'
+require 'shopify_cli'
 
 if ENV['PRINT_LOADED_FEATURES']
   puts $LOADED_FEATURES

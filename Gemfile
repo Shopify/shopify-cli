@@ -6,9 +6,11 @@ ruby '2.5.1'
 # None of these can actually be used in a development copy of dev
 # They are all for CI and tests
 # `dev` uses no gems
-
-gem 'rake'
-gem 'byebug'
+group :development, :test do
+  gem 'rake'
+  gem 'byebug'
+  gem 'rubocop', '~> 0.61.0'
+end
 
 group :test do
   gem 'session'

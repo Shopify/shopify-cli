@@ -1,5 +1,5 @@
 # frozen_string_literal: true
-require 'shopify-cli'
+require 'shopify_cli'
 
 module ShopifyCli
   module AppTypes

@@ -9,7 +9,7 @@ end
 
 require 'rubygems'
 require 'bundler/setup'
-require 'shopify-cli'
+require 'shopify_cli'
 require 'byebug'
 
 require 'minitest/autorun'

@@ -7,7 +7,7 @@ module ShellSupportCLI
     def call(*argv)
       case argv.shift
       when 'env'
-        usage_and_die unless shellname = argv.shift
+        usage_and_die unless (shellname = argv.shift)
         env(shellname)
       else
         usage_and_die
@@ -37,7 +37,7 @@ module ShellSupportCLI
     #   This is useful for rarely-used commands which must be provided, but
     #   take some time to load, and so should not be bothered with on shell
     #   startup. (e.g. nvm, and to a lesser degree, chruby)
-    def env(shellname)
+    def env(_shellname)
       # EnvHelpers.source("sh/autocomplete/completion.#{shellname}")
       EnvHelpers.setenv('USING_SHOPIFY_CLI', '1')
 

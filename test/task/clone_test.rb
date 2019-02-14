@@ -11,7 +11,7 @@ module ShopifyCli
           'git@github.com:shopify/test.git',
           'test-app',
           '--progress'
-        ).returns(mock(:success? => true))
+        ).returns(mock(success?: true))
         io = capture_io do
           ShopifyCli::Tasks::Clone.call('git@github.com:shopify/test.git', 'test-app')
         end

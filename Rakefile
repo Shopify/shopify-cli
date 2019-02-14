@@ -7,4 +7,3 @@ Rake::TestTask.new do |t|
   t.verbose = false
   t.warning = false
 end
-

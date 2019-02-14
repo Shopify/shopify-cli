@@ -1,4 +1,4 @@
-require 'shopify-cli'
+require 'shopify_cli'
 
 module ShopifyCli
   module Commands
@@ -53,4 +53,3 @@ module ShopifyCli
     end
   end
 end
-
