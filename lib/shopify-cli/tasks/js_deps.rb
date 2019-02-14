@@ -22,11 +22,13 @@ module ShopifyCli
 
       def yarn?
         return false unless File.exist?(File.join(@dir, 'yarn.lock'))
-        CLI::Kit::System.system('which', 'yarn').success?
+        _out, stat = CLI::Kit::System.capture2('which', 'yarn')
+        stat.success?
       end
 
       def install_progress
-        success = CLI::Kit::System.system(*INSTALL_COMMANDS[installer], chdir: @dir) do |_out, err|
+        success = CLI::Kit::System.system(*INSTALL_COMMANDS[installer], chdir: @dir) do |out, err|
+          puts out if /^\[[\d\/]+\//.match(out)
           err.lines.each do |e|
             puts e
           end

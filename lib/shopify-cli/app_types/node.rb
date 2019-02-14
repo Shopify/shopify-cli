@@ -33,13 +33,20 @@ module ShopifyCli
 
       def embedded_app
         ShopifyCli::Tasks::Clone.call('git@github.com:shopify/webgen-embeddedapp.git', @name)
-        FileUtils.rm_r(File.join(@name, '.git'))
         ShopifyCli::Finalize.request_cd(@name)
         ShopifyCli::Tasks::JsDeps.call(@dir)
         puts CLI::UI.fmt("{{yellow:*}} writing .env file")
         @keys = Helpers::KeysHelper.new(self, @ctx)
         @keys.write(File.join(@name, '.env'))
+        remove_git_dir
         puts CLI::UI.fmt(post_clone)
+      end
+
+      def remove_git_dir
+        git_dir = File.join(Dir.pwd, @name, '.git')
+        if File.exist?(git_dir)
+          FileUtils.rm_r(git_dir)
+        end
       end
 
       def post_clone
