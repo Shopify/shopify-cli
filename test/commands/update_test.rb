@@ -45,7 +45,7 @@ module ShopifyCli
           .returns([nil, Stat.new])
           .times(5)
 
-        io = capture_io do
+        capture_io do
           @command.call([], nil)
         end
       end

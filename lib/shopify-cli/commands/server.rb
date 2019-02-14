@@ -1,9 +1,11 @@
-require 'shopify-cli'
+# frozen_string_literal: true
+
+require 'shopify_cli'
 
 module ShopifyCli
   module Commands
     class Server < ShopifyCli::Command
-      def call(args, _name)
+      def call(*)
         exec('npm run dev')
       end
 

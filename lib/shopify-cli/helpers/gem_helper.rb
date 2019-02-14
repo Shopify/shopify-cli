@@ -1,12 +1,12 @@
 # frozen_string_literal: true
-require 'shopify-cli'
+require 'shopify_cli'
 
 module ShopifyCli
   module Helpers
     module GemHelper
       class << self
         def installed?(ctx, gem_name)
-          # TODO fallback when GEM_PATH is not populated
+          # TODO: fallback when GEM_PATH is not populated
           gem_path = ctx.getenv('GEM_PATH').tr(':', ',')
           !!Dir.glob("{#{gem_path}}/gems/#{gem_name}-*").detect do |f|
             f =~ %r{/#{Regexp.quote(gem_name)}-\d}

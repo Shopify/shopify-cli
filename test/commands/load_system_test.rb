@@ -9,7 +9,7 @@ module ShopifyCli
 
       def test_loads_system
         ShopifyCli::Finalize.expects(:reload_shopify_from).with(ShopifyCli::INSTALL_DIR)
-        io = capture_io do
+        capture_io do
           @command.call([], nil)
         end
       end

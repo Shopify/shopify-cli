@@ -24,7 +24,7 @@ module ShopifyCli
 
         assert_match(
           CLI::UI.fmt('Run {{command:npm run dev}} to start the app server'),
-          outpu
+          output
         )
       end
     end
