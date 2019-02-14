@@ -1,4 +1,4 @@
-require 'shopify-cli'
+require 'shopify_cli'
 
 module ShopifyCli
   class Command < CLI::Kit::BaseCommand
