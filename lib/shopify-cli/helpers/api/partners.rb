@@ -33,7 +33,7 @@ module ShopifyCli
           @authorize_url = resp['authorize_url']
           @verify_url = resp['verify_url']
           CLI::Kit::System.system('open', @authorize_url)
-          while !@authorized
+          until !@authorized
             pause
             begin
               _, resp = get(@verify_url)
