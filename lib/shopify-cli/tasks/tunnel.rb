@@ -1,3 +1,4 @@
+require 'json'
 require 'shopify_cli'
 
 module ShopifyCli
@@ -8,21 +9,32 @@ module ShopifyCli
         mac: 'https://bin.equinox.io/c/4VmDzA7iaHb/ngrok-stable-darwin-amd64.zip',
       }
 
-      def self.start
-        ensure_binary
+      class << self
+        def start
+          task = new
+          task.start
+        end
 
-        if running?
-          @state[:url]
-        else
-          run
+        def stop
+          task = new
+          task.stop
         end
       end
 
-      def self.stop
+      def stop
         if running?
-          Process.kill(9, @state[:pid])
+          Process.kill(9, state[:pid])
           File.rm(pid_file)
-          @state = nil
+        end
+      end
+
+      def start
+        ensure_binary
+
+        if running?
+          state[:url]
+        else
+          run
         end
       end
 
@@ -31,16 +43,16 @@ module ShopifyCli
       end
 
       def run
-        pid = spawn("exec ngrok http " + ngrok_exec_params)
+        pid = Kernel.spawn("exec ngrok http " + ngrok_params)
         Process.detach(pid)
-        url = fetch_url
+        fetch_url
       end
 
       private
 
       def running?
         if File.exist?(pid_file)
-          @state = read_state
+          state = read_state
           begin
             Process.kill(0, state['pid'])
             true
@@ -109,8 +121,16 @@ module ShopifyCli
         raise FetchUrlError, "Unable to fetch external url"
       end
 
+      def ngrok_params
+        "-log=stdout -log-level=debug #{PORT} > #{log.to_path}"
+      end
+
       def log
         @log ||= Tempfile.new('ngrok')
+      end
+
+      def state
+        @state ||= read_state
       end
     end
   end

@@ -11,10 +11,6 @@ module ShopifyCli
       class << self
         attr_reader :pid, :ngrok_url, :ngrok_url_https, :status
 
-        DOWNLOAD_URLS = {
-          mac: 'https://bin.equinox.io/c/4VmDzA7iaHb/ngrok-stable-darwin-amd64.zip',
-        }
-
         def init(params = {})
           # map old key 'port' to 'addr' to maintain backwards compatibility with versions 2.0.21 and earlier
           params[:addr] = params.delete(:port) if params.key?(:port)
@@ -29,20 +25,9 @@ module ShopifyCli
 
           begin
              state = JSON.parse(File.open(persistence_file, "rb").read)
-             running = begin
-                         Process.kill(0, state['pid'])
-                         true
-                       rescue Errno::ESRCH
-                         false
-                       rescue Errno::EPERM
-                         false
-                       end
+             running = 
 
              if running
-               @status = :running
-               @pid = state['pid']
-               @ngrok_url = state['ngrok_url']
-               @ngrok_url_https = state['ngrok_url_https']
              end
           rescue StandardError
            # Catch all errors that could have happened while reading the file and just treat them as not finding an existing process.
@@ -50,16 +35,10 @@ module ShopifyCli
 
           if stopped?
             @params[:log] = @params[:log] ? File.open(@params[:log], 'w+') : Tempfile.new('ngrok')
-            @pid = spawn("exec ngrok http " + ngrok_exec_params)
-            Process.detach(@pid)
-            fetch_urls
           end
 
           @status = :running
 
-          File.open(persistence_file, 'w') do |f|
-            f.write({ pid: @pid, ngrok_url: @ngrok_url, ngrok_url_https: @ngrok_url_https }.to_json)
-          end
           @ngrok_url_https
         end
 
@@ -115,7 +94,7 @@ module ShopifyCli
           exec_params << "-subdomain=#{@params[:subdomain]} " if @params[:subdomain]
           exec_params << "-hostname=#{@params[:hostname]} " if @params[:hostname]
           exec_params << "-inspect=#{@params[:inspect]} " if @params.key?(:inspect)
-          exec_params << "-config=#{@params[:config]} #{@params[:addr]} > #{@params[:log].path}"
+          exec_params << "-config=#{@params[:config]} "
         end
 
         def fetch_urls
@@ -140,20 +119,6 @@ module ShopifyCli
           end
           raise FetchUrlError, "Unable to fetch external url"
           @ngrok_url
-        end
-
-        def ensure_binary
-          unless File.exist?(File.join(ShopifyCli::ROOT, 'ngrok'))
-            install
-          end
-        end
-
-        def install
-          puts "Installing ngrok"
-          zip_dest = File.join(ShopifyCli::ROOT, 'ngrok.zip')
-          CLI::Kit::System.system('curl', '-o', zip_dest, DOWNLOAD_URLS[:mac])
-          CLI::Kit::System.system('unzip', zip_dest)
-          FileUtils.rm(zip_dest)
         end
       end
 
