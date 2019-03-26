@@ -10,7 +10,7 @@ module ShopifyCli
         return puts CLI::UI.fmt(self.class.help) unless @name
 
         puts CLI::UI.fmt("{{yellow:*}} starting ngrok")
-        @ngrok = Helpers::NgrokHelper.start
+        @ngrok = Helpers::NgrokHelper.start(@ctx)
         puts CLI::UI.fmt("{{yellow:*}} ngrok connected at #{@ngrok}")
 
         apps = @partners.get_apps

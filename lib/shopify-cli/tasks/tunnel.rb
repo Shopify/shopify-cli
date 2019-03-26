@@ -10,15 +10,19 @@ module ShopifyCli
       }
 
       class << self
-        def start
-          task = new
+        def start(ctx)
+          task = new(ctx)
           task.start
         end
 
         def stop
-          task = new
+          task = new(ctx)
           task.stop
         end
+      end
+
+      def initialize(ctx)
+        @ctx = ctx
       end
 
       def stop
@@ -43,7 +47,7 @@ module ShopifyCli
       end
 
       def run
-        pid = Kernel.spawn("exec ngrok http " + ngrok_params)
+        pid = @ctx.spawn(ngrok_command)
         Process.detach(pid)
         fetch_url
       end
@@ -105,12 +109,8 @@ module ShopifyCli
 
       def fetch_url
         log_content = log.read
-        result = log_content.scan(/URL:(.+)\sProto:(http|https)\s/)
-        unless result.empty?
-          result = Hash[*result.flatten].invert
-          url = result['https']
-          return url if url
-        end
+        result = log_content.match(/msg="started tunnel".*url=(https:\/\/.+)/)
+        return result[1] if result[1]
 
         error = log_content.scan(/msg="command failed" err="([^"]+)"/).flatten
         unless error.empty?
@@ -121,8 +121,8 @@ module ShopifyCli
         raise FetchUrlError, "Unable to fetch external url"
       end
 
-      def ngrok_params
-        "-log=stdout -log-level=debug #{PORT} > #{log.to_path}"
+      def ngrok_command
+        "exec ngrok http -log=stdout -log-level=debug #{PORT} > #{log.to_path}"
       end
 
       def log
