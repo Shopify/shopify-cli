@@ -112,5 +112,6 @@ module ShopifyCli
 
   module Helpers
     autoload :GemHelper, 'shopify-cli/helpers/gem_helper'
+    autoload :EnvFileHelper, 'shopify-cli/helpers/env_file_helper'
   end
 end

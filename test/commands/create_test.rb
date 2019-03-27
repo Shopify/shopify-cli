@@ -3,8 +3,11 @@ require 'test_helper'
 module ShopifyCli
   module Commands
     class CreateTest < MiniTest::Test
+      include TestHelpers::Context
+
       def setup
-        @command = ShopifyCli::Commands::Create.new
+        super
+        @command = ShopifyCli::Commands::Create.new(@context)
       end
 
       def test_prints_help_with_no_name_argument
@@ -26,7 +29,7 @@ module ShopifyCli
 
       def test_implemented_option
         CLI::UI::Prompt.expects(:ask).returns(:node)
-        ShopifyCli::AppTypes::Node.any_instance.stubs(:call).with('test-app')
+        ShopifyCli::AppTypes::Node.any_instance.stubs(:call).with('test-app', @context)
         @command.call(['test-app'], nil)
       end
     end

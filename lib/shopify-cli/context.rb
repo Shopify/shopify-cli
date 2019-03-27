@@ -3,6 +3,9 @@ require 'shopify_cli'
 
 module ShopifyCli
   class Context
+    attr_writer :app_metadata
+    attr_accessor :root
+
     def initialize
       @env = ($original_env || ENV).clone
     end
@@ -10,6 +13,18 @@ module ShopifyCli
     def getenv(name)
       v = @env[name]
       v == '' ? nil : v
+    end
+
+    def print_task(text)
+      puts CLI::UI.fmt("{{yellow:*}} #{text}")
+    end
+
+    def write(fname, content)
+      File.write(File.join(@root, fname), content)
+    end
+
+    def puts(*args)
+      Kernel.puts(*args)
     end
 
     def method_missing(method, *args)
@@ -26,6 +41,10 @@ module ShopifyCli
       else
         super
       end
+    end
+
+    def app_metadata
+      @app_metadata ||= {}
     end
   end
 end

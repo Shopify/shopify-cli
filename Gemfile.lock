@@ -5,6 +5,7 @@ GEM
     ast (2.4.0)
     builder (3.2.3)
     byebug (8.2.2)
+    fakefs (0.20.0)
     jaro_winkler (1.5.2)
     metaclass (0.0.4)
     minitest (5.11.3)
@@ -38,6 +39,7 @@ PLATFORMS
 
 DEPENDENCIES
   byebug
+  fakefs
   minitest (>= 5.0.0)
   minitest-reporters
   mocha
