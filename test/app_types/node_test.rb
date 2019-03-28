@@ -3,7 +3,10 @@ require 'test_helper'
 module ShopifyCli
   module AppTypes
     class NodeTest < MiniTest::Test
+      include TestHelpers::Context
+
       def setup
+        super
         @app = ShopifyCli::AppTypes::Node.new
       end
 
@@ -16,9 +19,16 @@ module ShopifyCli
           File.join(Dir.pwd, 'test-app')
         )
         CLI::UI.expects(:ask).twice.returns('apikey', 'apisecret')
-        @app.expects(:write_env_file)
+        @context.expects(:write).with('.env',
+          <<~KEYS
+            SHOPIFY_API_KEY=apikey
+            SHOPIFY_API_SECRET_KEY=apisecret
+            SHOPIFY_DOMAIN=myshopify.io
+            HOST=host
+          KEYS
+        )
         io = capture_io do
-          @app.call('test-app')
+          @app.call('test-app', @context)
         end
         output = io.join
 

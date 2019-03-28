@@ -16,5 +16,6 @@ require 'minitest/autorun'
 require 'minitest/reporters'
 require_relative 'minitest_ext'
 require_relative 'test_helpers'
+require 'fakefs/safe'
 
 require 'mocha/minitest'
