@@ -2,7 +2,10 @@ require 'shopify_cli'
 
 module ShopifyCli
   module Commands
-    Registry = CLI::Kit::CommandRegistry.new(
+    class CommandRegistry < CLI::Kit::CommandRegistry
+    end
+
+    Registry = CommandRegistry.new(
       default: 'help',
       contextual_resolver: nil
     )

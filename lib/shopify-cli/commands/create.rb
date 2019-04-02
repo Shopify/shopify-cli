@@ -3,6 +3,8 @@ require 'shopify_cli'
 module ShopifyCli
   module Commands
     class Create < ShopifyCli::Command
+      prerequisite_task :tunnel
+
       def call(args, _name)
         @name = args.shift
         return puts CLI::UI.fmt(self.class.help) unless @name
