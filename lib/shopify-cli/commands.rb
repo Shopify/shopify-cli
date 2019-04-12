@@ -2,12 +2,10 @@ require 'shopify_cli'
 
 module ShopifyCli
   module Commands
-    class CommandRegistry < CLI::Kit::CommandRegistry
-    end
-
-    Registry = CommandRegistry.new(
+    Registry = ShopifyCli::CommandRegistry.new(
       default: 'help',
-      contextual_resolver: nil
+      contextual_resolver: nil,
+      task_registry: ShopifyCli::Tasks::Registry
     )
 
     def self.register(const, cmd, path)
@@ -20,6 +18,7 @@ module ShopifyCli
     register :LoadDev, 'load-dev', 'shopify-cli/commands/load_dev'
     register :LoadSystem, 'load-system', 'shopify-cli/commands/load_system'
     register :Server, 'server', 'shopify-cli/commands/server'
+    register :Tunnel, 'tunnel', 'shopify-cli/commands/tunnel'
     register :Update, 'update', 'shopify-cli/commands/update'
   end
 end
