@@ -30,6 +30,9 @@ require 'cli/kit'
 
 # Defines register commands for init scripts
 require 'shopify-cli/register'
+require 'shopify-cli/tasks'
+require 'shopify-cli/context'
+require 'shopify-cli/command_registry'
 require 'shopify-cli/commands'
 
 # Enable stdout routing. At this point all calls to STDOUT (and STDERR) will go through this class.

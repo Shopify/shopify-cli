@@ -17,9 +17,6 @@ module ShopifyCli
 
     def initialize(ctx = nil)
       @ctx = ctx || ShopifyCli::Context.new
-      self.class.prerequisite_tasks.each do |_, task|
-        task.call(ctx)
-      end
     end
   end
 end
