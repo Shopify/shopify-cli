@@ -7,8 +7,17 @@ module ShopifyCli
     class Tunnel < ShopifyCli::Command
       # subcommands :start, :stop
 
-      def call(_args, _name)
-        puts CLI::UI.fmt(self.class.help)
+      def call(args, _name)
+        subcommand = args.shift
+        task = ShopifyCli::Tasks::Tunnel.new
+        case subcommand
+        when 'start'
+          task.call(@ctx)
+        when 'stop'
+          task.stop(@ctx)
+        else
+          puts CLI::UI.fmt(self.class.help)
+        end
       end
 
       def self.help

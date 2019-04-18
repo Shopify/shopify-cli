@@ -5,7 +5,6 @@ module ShopifyCli
 
     class FakeCommand < ShopifyCli::Command
       prerequisite_task :fake_task
-      attr_accessor :ctx
 
       def call(_args, _name)
         @ctx.puts('command!')

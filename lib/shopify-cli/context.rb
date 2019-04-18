@@ -24,7 +24,11 @@ module ShopifyCli
     end
 
     def puts(*args)
-      Kernel.puts(*args)
+      Kernel.puts(CLI::UI.fmt(*args))
+    end
+
+    def spawn(*args)
+      Kernel.spawn(*args)
     end
 
     def method_missing(method, *args)
