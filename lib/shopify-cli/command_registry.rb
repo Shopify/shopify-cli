@@ -16,7 +16,7 @@ module ShopifyCli
     end
 
     def resolve_prerequisite(name)
-      @task_registry[name].call(@ctx)
+      @task_registry[name]&.call(@ctx)
     end
   end
 end
