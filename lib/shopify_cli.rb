@@ -105,6 +105,7 @@ module ShopifyCli
   autoload :Context, 'shopify-cli/context'
   autoload :EntryPoint, 'shopify-cli/entry_point'
   autoload :Finalize, 'shopify-cli/finalize'
+  autoload :Project, 'shopify-cli/project'
   autoload :Task, 'shopify-cli/task'
   autoload :Tasks, 'shopify-cli/tasks'
   autoload :AppTypes, 'shopify-cli/app_types'
