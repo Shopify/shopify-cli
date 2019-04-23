@@ -3,28 +3,19 @@ require 'shopify_cli'
 
 module ShopifyCli
   module AppTypes
-    class Rails < ShopifyCli::Task
-      def call(*args)
-        @name = args.shift
-        @dir = File.join(Dir.pwd, @name)
-        generate
-      end
-
-      def ctx
-        @ctx ||= ShopifyCli::Context.new
-      end
-
+    class Rails < AppType
       def self.description
         'rails embedded app'
       end
+
+
+      protected
 
       def rails_installed?
         ShopifyCli::Helpers::GemHelper.installed?(ctx, 'rails')
       end
 
-      protected
-
-      def generate
+      def build
         unless rails_installed?
           ShopifyCli::Helpers::GemHelper.install!(ctx, 'rails')
         end
