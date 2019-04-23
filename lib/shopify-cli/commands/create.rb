@@ -21,6 +21,8 @@ module ShopifyCli
         @ctx.root = File.join(Dir.pwd, @name)
 
         AppTypeRegistry.build(app_type, @name, @ctx)
+
+        ShopifyCli::Project.write(@ctx, app_type)
       end
 
       def self.help

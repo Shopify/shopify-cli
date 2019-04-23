@@ -7,8 +7,8 @@ module ShopifyCli
         app_types[identifier] = klass
       end
 
-      def build(identifer, *args)
-        app_types[identifer].call(*args)
+      def build(identifier, handle, ctx)
+        app_types[identifier].call(handle, ctx)
       end
 
       def each(&enumerator)
