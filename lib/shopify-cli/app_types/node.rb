@@ -2,7 +2,7 @@ require 'shopify_cli'
 
 module ShopifyCli
   module AppTypes
-    class Node < ShopifyCli::Task
+    class Node < AppType
       class << self
         def env_file(key, secret, host)
           <<~KEYS
@@ -14,20 +14,13 @@ module ShopifyCli
         end
       end
 
-      def call(*args)
-        @name = args.shift
-        @ctx = args.shift
-        @dir = File.join(Dir.pwd, @name)
-        embedded_app
-      end
-
       def self.description
         'node embedded app'
       end
 
       protected
 
-      def embedded_app
+      def build
         ShopifyCli::Tasks::Clone.call('git@github.com:shopify/webgen-embeddedapp.git', @name)
         ShopifyCli::Finalize.request_cd(@name)
         ShopifyCli::Tasks::JsDeps.call(@dir)
