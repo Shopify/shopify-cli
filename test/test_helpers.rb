@@ -5,4 +5,5 @@ module TestHelpers
   autoload :FakeTask, 'test_helpers/fake_task'
   autoload :FakeContext, 'test_helpers/fake_context'
   autoload :FakeFS, 'test_helpers/fake_fs'
+  autoload :AppType, 'test_helpers/app_type'
 end
