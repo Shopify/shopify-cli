@@ -19,5 +19,11 @@ module ShopifyCli
         end
       end
     end
+
+    def test_write_writes_yaml
+      FileUtils.touch(".shopify-cli.yml")
+      ShopifyCli::Project.write(@context, :node)
+      assert_equal :node, ShopifyCli::Project.at(@context.root).config['app_type']
+    end
   end
 end

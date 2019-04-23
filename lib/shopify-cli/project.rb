@@ -28,6 +28,14 @@ module ShopifyCli
         @dir[dir]
       end
 
+      def write(ctx, identifier)
+        require 'yaml' # takes 20ms, so deferred as late as possible.
+        content = {
+          'app_type' => identifier,
+        }
+        ctx.write('.shopify-cli.yml', YAML.dump(content))
+      end
+
       private
 
       def __directory(curr)

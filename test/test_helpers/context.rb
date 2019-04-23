@@ -6,6 +6,7 @@ module TestHelpers
     def setup
       @context = TestHelpers::FakeContext.new
       @context.root = Dir.mktmpdir
+      ::FakeFS::FileSystem.clone(@context.root)
       super
     end
 
