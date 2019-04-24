@@ -8,7 +8,7 @@ module ShopifyCli
       def setup
         ShopifyCli::Tasks::Tunnel.any_instance.stubs(:pid_file).returns(pid_path)
         super
-        FakeFS::FileSystem.clone(pid_path)
+        # FakeFS::FileSystem.clone(pid_path)
       end
 
       def test_start_running_returns_url
@@ -52,7 +52,7 @@ module ShopifyCli
 
       def with_log(fixture = 'ngrok')
         log_path = File.join(File.absolute_path(File.dirname(__FILE__)), "../fixtures/#{fixture}.log")
-        FakeFS::FileSystem.clone(log_path)
+        # FakeFS::FileSystem.clone(log_path)
         ShopifyCli::Tasks::Tunnel.any_instance.stubs(:log).returns(log_path)
         yield(log_path)
       end
@@ -60,7 +60,7 @@ module ShopifyCli
       def stub_binary
         ShopifyCli::Tasks::Tunnel.any_instance.stubs(:install)
         binary = File.join(ShopifyCli::ROOT, 'ngrok')
-        FakeFS::FileSystem.clone(binary)
+        # FakeFS::FileSystem.clone(binary)
         binary
       end
 

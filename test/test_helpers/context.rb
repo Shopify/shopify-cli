@@ -7,6 +7,7 @@ module TestHelpers
       @context = TestHelpers::FakeContext.new
       @context.root = Dir.mktmpdir
       ::FakeFS::FileSystem.clone(@context.root)
+      ::FakeFS::FileSystem.clone(ShopifyCli::ROOT)
       super
     end
 

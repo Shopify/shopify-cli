@@ -3,6 +3,8 @@ require 'test_helper'
 
 module ShopifyCli
   class ProjectTest < MiniTest::Test
+    include TestHelpers::Context
+
     def test_directory_recurses
       Dir.mktmpdir do |dir|
         FileUtils.mkdir_p("#{dir}/a/b/c/d")
