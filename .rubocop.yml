@@ -18,3 +18,13 @@ Style/EmptyLiteral:
 # allow using %r{} for regexes
 Style/RegexpLiteral:
   Enabled: false
+
+Style/MethodCallWithArgsParentheses:
+  IgnoredMethods:
+    - require
+    - require_relative
+    - require_dependency
+    - yield
+    - raise
+    - puts
+    - assert_equal
