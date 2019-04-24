@@ -7,6 +7,10 @@ module ShopifyCli
         def description
           raise NotImplementedError
         end
+
+        def serve_command
+          raise NotImplementedError
+        end
       end
 
       def call(*args)

@@ -8,6 +8,10 @@ module ShopifyCli
         'rails embedded app'
       end
 
+      def self.serve_command
+        'bin/rails server'
+      end
+
       protected
 
       def rails_installed?

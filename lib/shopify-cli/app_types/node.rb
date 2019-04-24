@@ -18,6 +18,10 @@ module ShopifyCli
         'node embedded app'
       end
 
+      def self.serve_command
+        'npm run dev'
+      end
+
       protected
 
       def build

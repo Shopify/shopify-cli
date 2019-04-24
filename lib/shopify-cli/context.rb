@@ -31,6 +31,10 @@ module ShopifyCli
       Kernel.spawn(*args)
     end
 
+    def exec(*args)
+      Kernel.exec(*args)
+    end
+
     def method_missing(method, *args)
       if CLI::Kit::System.respond_to?(method)
         CLI::Kit::System.send(method, *args)

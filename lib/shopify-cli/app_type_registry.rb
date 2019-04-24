@@ -15,6 +15,14 @@ module ShopifyCli
         app_types.each(&enumerator)
       end
 
+      def [](identifier)
+        app_types[identifier]
+      end
+
+      def deregister(identifier)
+        app_types.delete(identifier)
+      end
+
       protected
 
       def app_types
