@@ -22,6 +22,12 @@ module ShopifyCli
         'npm run dev'
       end
 
+      def self.generate
+        {
+          page: 'npm run-script generate-page',
+        }
+      end
+
       protected
 
       def build
