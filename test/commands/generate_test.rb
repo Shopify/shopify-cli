@@ -2,7 +2,7 @@ require 'test_helper'
 
 module ShopifyCli
   module Commands
-    class GenerateTest  < MiniTest::Test
+    class GenerateTest < MiniTest::Test
       include TestHelpers::AppType
 
       def setup

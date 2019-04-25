@@ -4,7 +4,6 @@ module ShopifyCli
   module Commands
     class Generate
       class Page < ShopifyCli::Task
-
         def call(ctx, args)
           ctx.puts(self.class.help) if args.empty?
           name = args.first
@@ -15,8 +14,8 @@ module ShopifyCli
 
         def self.help
           <<~HELP
-          Bootstrap an app.
-          Usage: {{command:#{ShopifyCli::TOOL_NAME} create <appname>}}
+            Bootstrap an app.
+            Usage: {{command:#{ShopifyCli::TOOL_NAME} create <appname>}}
           HELP
         end
       end

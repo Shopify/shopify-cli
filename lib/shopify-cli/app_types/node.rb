@@ -24,7 +24,7 @@ module ShopifyCli
 
       def self.generate
         {
-          page: 'npm run-script generate-page'
+          page: 'npm run-script generate-page',
         }
       end
 

@@ -10,7 +10,7 @@ module TestHelpers
       end
 
       def self.generate_command
-        {page: 'page-generate'}
+        { page: 'page-generate' }
       end
     end
 
