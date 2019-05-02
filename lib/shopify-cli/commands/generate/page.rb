@@ -9,7 +9,7 @@ module ShopifyCli
           name = args.first
           project = ShopifyCli::Project.current
           app_type = ShopifyCli::AppTypeRegistry[project.config["app_type"].to_sym]
-          ctx.exec(app_type.generate_command[:page], name)
+          ctx.exec("#{app_type.generate[:page]} #{name}")
         end
 
         def self.help

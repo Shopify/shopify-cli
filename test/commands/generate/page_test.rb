@@ -4,7 +4,7 @@ module ShopifyCli
   module Commands
     class Generate
       class PageTest < MiniTest::Test
-        include TestHelpers::AppType
+        include TestHelpers::Context
 
         def setup
           super
@@ -12,7 +12,8 @@ module ShopifyCli
         end
 
         def test_run
-          @context.expects(:exec).with('page-generate', 'name')
+          ShopifyCli::Project.write(@context, :node)
+          @context.expects(:exec).with('npm run-script generate-page name')
           @command.call(['page', 'name'], nil)
         end
       end
