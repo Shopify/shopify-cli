@@ -3,7 +3,6 @@ require 'shopify_cli'
 
 module ShopifyCli
   class Context
-    attr_writer :app_metadata
     attr_accessor :root
 
     def initialize
@@ -53,6 +52,10 @@ module ShopifyCli
 
     def app_metadata
       @app_metadata ||= {}
+    end
+
+    def app_metadata=(hash)
+      @app_metadata = app_metadata.merge(hash)
     end
   end
 end

@@ -19,3 +19,5 @@ require_relative 'test_helpers'
 require 'fakefs/safe'
 
 require 'mocha/minitest'
+
+Minitest::Reporters.use!([Minitest::Reporters::SpecReporter.new])

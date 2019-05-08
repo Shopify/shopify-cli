@@ -12,7 +12,7 @@ module ShopifyCli
       DOWNLOAD_URLS = {
         mac: 'https://bin.equinox.io/c/4VmDzA7iaHb/ngrok-stable-darwin-amd64.zip',
       }
-      TIMEOUT = 5
+      TIMEOUT = 10
 
       def call(ctx)
         @ctx = ctx
@@ -22,7 +22,7 @@ module ShopifyCli
       def stop(ctx)
         @ctx = ctx
         if running?
-          Process.kill(9, state[:pid])
+          ShopifyCli::Helpers::ProcessSupervision.stop(state[:pid])
           FileUtils.rm(pid_file)
           @ctx.puts("{{green:x}} ngrok tunnel stopped")
         else
@@ -33,55 +33,34 @@ module ShopifyCli
       def start
         install
 
-        url = if running?
-          state[:url]
-        else
-          run
+        unless running?
+          ShopifyCli::Helpers::ProcessSupervision.start(ngrok_command)
         end
+        url = fetch_url
         @ctx.puts("{{green:✔︎}} ngrok tunnel running at #{url}")
+        @ctx.app_metadata = { host: url }
         url
       end
 
-      def run
-        pid = @ctx.spawn(ngrok_command, chdir: ShopifyCli::ROOT)
-        Process.detach(pid)
-        url = fetch_url
-        write_state(pid, url, Time.now)
-        url
+      def running?
+        return false unless File.exist?(pid_file)
+        ShopifyCli::Helpers::ProcessSupervision.running?(state[:pid])
       end
 
       private
-
-      def running?
-        if File.exist?(pid_file)
-          state = read_state
-          begin
-            Process.kill(0, state[:pid])
-            true
-          rescue Errno::ESRCH
-            false
-          rescue Errno::EPERM
-            false
-          end
-        else
-          false
-        end
-      end
 
       def read_state
         content = JSON.parse(File.open(pid_file).read)
         {
           pid: content['pid'],
-          url: content['url'],
           time: content['time'],
         }
       end
 
-      def write_state(pid, url, time)
+      def write_state(pid, time)
         File.open(pid_file, 'w') do |f|
           f.write({
             pid: pid,
-            url: url,
             time: time,
           }.to_json)
         end
@@ -104,18 +83,18 @@ module ShopifyCli
       def fetch_url
         counter = 0
         while counter < TIMEOUT
-          log_content = File.read(log)
+          log_content = log.read
           result = log_content.match(/msg="started tunnel".*url=(https:\/\/.+)/)
           return result[1] if result
 
           counter += 1
           sleep(1)
-        end
 
-        error = log_content.scan(/msg="command failed" err="([^"]+)"/).flatten
-        unless error.empty?
-          stop(@ctx)
-          raise NgrokError, error.first
+          error = log_content.scan(/msg="command failed" err="([^"]+)"/).flatten
+          unless error.empty?
+            stop(@ctx)
+            raise NgrokError, error.first
+          end
         end
 
         raise FetchUrlError, "Unable to fetch external url"
@@ -126,11 +105,7 @@ module ShopifyCli
       end
 
       def log
-        @log ||= begin
-          fname = File.join(ShopifyCli::ROOT, '.tmp', 'ngrok.log')
-          FileUtils.touch(fname)
-          File.join(fname)
-        end
+        @log ||= Logger.new
       end
 
       def pid_file
@@ -139,6 +114,21 @@ module ShopifyCli
 
       def state
         @state ||= read_state
+      end
+
+      class Logger
+        def initialize(location = File.join(ShopifyCli::ROOT, '.tmp', 'ngrok.log'))
+          FileUtils.mkdir_p(File.dirname(location))
+          @location = location
+        end
+
+        def read
+          File.read(@location)
+        end
+
+        def to_s
+          @location
+        end
       end
     end
   end
