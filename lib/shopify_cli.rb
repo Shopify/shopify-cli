@@ -30,10 +30,6 @@ require 'cli/kit'
 
 # Defines register commands for init scripts
 require 'shopify-cli/register'
-require 'shopify-cli/tasks'
-require 'shopify-cli/context'
-require 'shopify-cli/command_registry'
-require 'shopify-cli/commands'
 
 # Enable stdout routing. At this point all calls to STDOUT (and STDERR) will go through this class.
 # See https://github.com/Shopify/cli-ui/blob/master/lib/cli/ui/stdout_router.rb for more info
@@ -85,7 +81,6 @@ module ShopifyCli
   # The rest of this file outlines classes and modules required by the dev application and CLI kit framework.
   # To understand how this works, read https://github.com/Shopify/cli-kit/blob/master/lib/cli/kit.rb
   autocall(:Config)   { CLI::Kit::Config.new(tool_name: TOOL_NAME) }
-  autocall(:Executor) { CLI::Kit::Executor.new(log_file: LOG_FILE) }
   autocall(:Logger)   { CLI::Kit::Logger.new(debug_log_file: DEBUG_LOG_FILE) }
   autocall(:Resolver) do
     CLI::Kit::Resolver.new(
@@ -101,8 +96,9 @@ module ShopifyCli
   end
 
   autoload :Command, 'shopify-cli/command'
-  autoload :CommandRegistry, 'shopify-cli/command_registry'
+  autoload :Commands, 'shopify-cli/commands'
   autoload :Context, 'shopify-cli/context'
+  autoload :Executor, 'shopify-cli/executor'
   autoload :EntryPoint, 'shopify-cli/entry_point'
   autoload :Finalize, 'shopify-cli/finalize'
   autoload :Project, 'shopify-cli/project'

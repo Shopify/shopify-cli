@@ -21,3 +21,11 @@ require 'fakefs/safe'
 require 'mocha/minitest'
 
 Minitest::Reporters.use!([Minitest::Reporters::SpecReporter.new])
+
+module Minitest
+  module Assertions
+    def assert_nothing_raised(*)
+      yield
+    end
+  end
+end
