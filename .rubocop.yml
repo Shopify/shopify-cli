@@ -28,3 +28,5 @@ Style/MethodCallWithArgsParentheses:
     - raise
     - puts
     - assert_equal
+    - assert
+    - refute
