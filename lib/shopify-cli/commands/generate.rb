@@ -4,12 +4,16 @@ module ShopifyCli
   module Commands
     class Generate < ShopifyCli::Command
       autoload :Page, 'shopify-cli/commands/generate/page'
+      autoload :Billing, 'shopify-cli/commands/generate/billing'
+
 
       def call(args, _name)
         subcommand = args.shift
         case subcommand
         when 'page'
           Page.call(@ctx, args)
+        when 'billing'
+          Billing.call(@ctx, args)
         else
           @ctx.puts(self.class.help)
         end
