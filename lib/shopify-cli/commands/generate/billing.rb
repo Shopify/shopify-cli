@@ -6,7 +6,6 @@ module ShopifyCli
       class Billing < ShopifyCli::Task
         def call(ctx, args)
           ctx.puts(self.class.help) if args.empty?
-          name = args.first
           project = ShopifyCli::Project.current
           app_type = ShopifyCli::AppTypeRegistry[project.config["app_type"].to_sym]
           type = CLI::UI::Prompt.ask('Which kind of billing?') do |handler|

@@ -6,7 +6,6 @@ module ShopifyCli
       autoload :Page, 'shopify-cli/commands/generate/page'
       autoload :Billing, 'shopify-cli/commands/generate/billing'
 
-
       def call(args, _name)
         subcommand = args.shift
         case subcommand
