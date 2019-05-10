@@ -10,7 +10,10 @@ module TestHelpers
       end
 
       def self.generate
-        { page: 'page-generate' }
+        {
+          page: 'page-generate',
+          billing: 'billing-generate',
+        }
       end
     end
 
