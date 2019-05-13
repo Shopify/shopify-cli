@@ -2,10 +2,9 @@ require 'shopify_cli'
 
 module ShopifyCli
   module Commands
-    Registry = ShopifyCli::CommandRegistry.new(
+    Registry = CLI::Kit::CommandRegistry.new(
       default: 'help',
       contextual_resolver: nil,
-      task_registry: ShopifyCli::Tasks::Registry
     )
 
     def self.register(const, cmd, path)
