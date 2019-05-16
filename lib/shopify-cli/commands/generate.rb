@@ -20,8 +20,8 @@ module ShopifyCli
 
       def self.help
         <<~HELP
-          Bootstrap an app.
-          Usage: {{command:#{ShopifyCli::TOOL_NAME} create <appname>}}
+          Generate code.
+          Usage: {{command:#{ShopifyCli::TOOL_NAME} generate <page> or billing}}
         HELP
       end
     end
