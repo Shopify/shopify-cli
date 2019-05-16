@@ -20,5 +20,6 @@ module ShopifyCli
     register :Serve, 'serve', 'shopify-cli/commands/serve'
     register :Tunnel, 'tunnel', 'shopify-cli/commands/tunnel'
     register :Update, 'update', 'shopify-cli/commands/update'
+    register :Populate, 'populate', 'shopify-cli/commands/populate'
   end
 end
