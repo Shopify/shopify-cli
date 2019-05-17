@@ -1,5 +1,5 @@
 require 'json'
-require 'tempfile'
+require 'fileutils'
 require 'shopify_cli'
 
 module ShopifyCli
@@ -34,7 +34,8 @@ module ShopifyCli
         install
 
         unless running?
-          ShopifyCli::Helpers::ProcessSupervision.start(ngrok_command)
+          pid = ShopifyCli::Helpers::ProcessSupervision.start(ngrok_command)
+          write_state(pid, Time.now)
         end
         url = fetch_url
         @ctx.puts("{{green:✔︎}} ngrok tunnel running at #{url}")
