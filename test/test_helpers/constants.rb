@@ -2,6 +2,11 @@ module TestHelpers
   module Constants
     protected
 
+    def teardown
+      super
+      reset_constants
+    end
+
     def redefine_constant(mod, constant, new_value)
       @redefined_constants ||= []
       @redefined_constants << [mod, constant, mod.const_get(constant)]

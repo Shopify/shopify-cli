@@ -6,17 +6,26 @@ module ShopifyCli
       DebriefableError = Class.new(StandardError)
 
       class << self
-        def start(args)
-          pid = fork do
+        def start(identifier, args)
+          fork do
+            pid_file = PidFile.new(identifier, pid: Process.pid)
+            PidFile.write(pid_file)
+
+            STDOUT.reopen(pid_file.log_path, "w")
+            STDERR.reopen(pid_file.log_path, "w")
             STDIN.reopen("/dev/null", "r")
             Process.setsid
 
             exec(*args)
           end
-          pid
+          sleep(0.1)
         end
 
-        def stop(pid)
+        def stop(identifier)
+          pid_file = pid_file_for_id(identifier)
+          return unless pid_file
+          pid = pid_file.pid
+
           process_group = -pid
           stop_pid(process_group)
         rescue Errno::ESRCH
@@ -28,8 +37,10 @@ module ShopifyCli
           end
         end
 
-        def running?(pid)
-          pid_alive?(pid)
+        def running?(identifier)
+          pid_file = PidFile.for(identifier)
+          return false unless pid_file
+          pid_alive?(pid_file.pid)
         end
 
         private
@@ -50,6 +61,17 @@ module ShopifyCli
           false
         rescue Errno::EPERM
           true
+        end
+
+        def pid_file_for_id(identifier)
+          pid_file = PidFile.for(identifier)
+          return nil unless pid_file
+          return pid_file if pid_alive?(pid_file.pid)
+
+          pid_file.unlink # clean up if pidfile specifies dead pid
+          nil
+        rescue Errno::ENOENT
+          nil
         end
       end
     end

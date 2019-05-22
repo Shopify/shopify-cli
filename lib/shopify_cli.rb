@@ -47,6 +47,7 @@ module ShopifyCli
   TOOL_NAME        = 'shopify'
   ROOT             = File.expand_path('../..', __FILE__)
   INSTALL_DIR      = File.expand_path(File.join(ENV.fetch('XDG_RUNTIME_DIR', ENV.fetch('HOME')), '.shopify-cli'))
+  TEMP_DIR         = File.join(ROOT, '.tmp')
   CONFIG_HOME      = File.expand_path(ENV.fetch('XDG_CONFIG_HOME', '~/.config'))
   TOOL_CONFIG_PATH = File.join(CONFIG_HOME, TOOL_NAME)
   LOG_FILE         = File.join(TOOL_CONFIG_PATH, 'logs', 'log.log')
@@ -114,6 +115,7 @@ module ShopifyCli
   end
 
   module Helpers
+    autoload :PidFile, 'shopify-cli/helpers/pid_file'
     autoload :GemHelper, 'shopify-cli/helpers/gem_helper'
     autoload :EnvFileHelper, 'shopify-cli/helpers/env_file_helper'
     autoload :ProcessSupervision, 'shopify-cli/helpers/process_supervision'

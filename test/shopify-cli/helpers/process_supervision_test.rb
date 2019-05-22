@@ -4,30 +4,39 @@ module ShopifyCli
   module Helpers
     class ProcessSuperVisionTest < MiniTest::Test
       def teardown
-        Process.kill("TERM", @pid)
-      rescue Errno::EPERM
-        # Happens with start_fg due to exec-ing the forked process
-      rescue Errno::ESRCH
-        # It's okay if it's not running anymore
+        return unless @pid_file
+
+        begin
+          Process.kill("TERM", @pid_file.pid)
+        rescue Errno::EPERM
+          # Happens with start_fg due to exec-ing the forked process
+        rescue Errno::ESRCH
+          # It's okay if it's not running anymore
+        end
+
+        @pid_file.unlink
+        @pid_file.unlink_log
       end
 
       def test_start
-        @pid = ProcessSupervision.start("sleep 1")
+        ProcessSupervision.start('example', 'sleep 1')
+        @pid_file = PidFile.for('example')
 
-        assert_process_running(@pid)
+        assert_process_running(@pid_file.pid)
 
-        assert ProcessSupervision.running?(@pid)
+        assert ProcessSupervision.running?('example')
       end
 
       def test_stop
-        @pid = spawn_fake_process("should_stop_me")
-        assert_process_running(@pid)
+        spawn_fake_process('example')
+        @pid_file = PidFile.for('example')
+        assert_process_running(@pid_file.pid)
 
-        ProcessSupervision.stop(@pid)
+        ProcessSupervision.stop('example')
 
-        refute_process_running(@pid)
+        refute_process_running(@pid_file.pid)
 
-        refute ProcessSupervision.running?(@pid)
+        refute ProcessSupervision.running?('example')
       end
 
       private
@@ -55,7 +64,7 @@ module ShopifyCli
         false
       end
 
-      def spawn_fake_process(name)
+      def spawn_fake_process(identifier)
         reader, writer = IO.pipe
 
         pid = fork do
@@ -78,7 +87,9 @@ module ShopifyCli
         writer.close
         reader.read
 
-        pid
+        PidFile.new(identifier, pid: pid).tap do |pid_file|
+          PidFile.write(pid_file)
+        end
       end
     end
   end

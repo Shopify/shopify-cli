@@ -22,8 +22,9 @@ module ShopifyCli
       def stop(ctx)
         @ctx = ctx
         if running?
-          ShopifyCli::Helpers::ProcessSupervision.stop(state[:pid])
-          FileUtils.rm(pid_file)
+          ShopifyCli::Helpers::ProcessSupervision.stop(:ngrok)
+          pid_file = ShopifyCli::Helpers::PidFile.for(:ngrok)
+          pid_file&.unlink_log
           @ctx.puts("{{green:x}} ngrok tunnel stopped")
         else
           @ctx.puts("{{green:x}} ngrok tunnel not running")
@@ -34,38 +35,20 @@ module ShopifyCli
         install
 
         unless running?
-          pid = ShopifyCli::Helpers::ProcessSupervision.start(ngrok_command)
-          write_state(pid, Time.now)
+          ShopifyCli::Helpers::ProcessSupervision.start(:ngrok, ngrok_command)
         end
-        url = fetch_url
+        pid_file = ShopifyCli::Helpers::PidFile.for(:ngrok)
+        url = fetch_url(pid_file.log_path)
         @ctx.puts("{{green:✔︎}} ngrok tunnel running at #{url}")
         @ctx.app_metadata = { host: url }
         url
       end
 
       def running?
-        return false unless File.exist?(pid_file)
-        ShopifyCli::Helpers::ProcessSupervision.running?(state[:pid])
+        ShopifyCli::Helpers::ProcessSupervision.running?(:ngrok)
       end
 
       private
-
-      def read_state
-        content = JSON.parse(File.open(pid_file).read)
-        {
-          pid: content['pid'],
-          time: content['time'],
-        }
-      end
-
-      def write_state(pid, time)
-        File.open(pid_file, 'w') do |f|
-          f.write({
-            pid: pid,
-            time: time,
-          }.to_json)
-        end
-      end
 
       def install
         return if File.exist?(File.join(ShopifyCli::ROOT, 'ngrok'))
@@ -81,10 +64,10 @@ module ShopifyCli
         spinner.wait
       end
 
-      def fetch_url
+      def fetch_url(log_path)
         counter = 0
         while counter < TIMEOUT
-          log_content = log.read
+          log_content = File.read(log_path)
           result = log_content.match(/msg="started tunnel".*url=(https:\/\/.+)/)
           return result[1] if result
 
@@ -102,34 +85,7 @@ module ShopifyCli
       end
 
       def ngrok_command
-        "exec #{File.join(ShopifyCli::ROOT, 'ngrok')} http -log=stdout -log-level=debug #{PORT} > #{log}"
-      end
-
-      def log
-        @log ||= Logger.new
-      end
-
-      def pid_file
-        File.join(ShopifyCli::ROOT, '.tmp/ngrok.pid')
-      end
-
-      def state
-        @state ||= read_state
-      end
-
-      class Logger
-        def initialize(location = File.join(ShopifyCli::ROOT, '.tmp', 'ngrok.log'))
-          FileUtils.mkdir_p(File.dirname(location))
-          @location = location
-        end
-
-        def read
-          File.read(@location)
-        end
-
-        def to_s
-          @location
-        end
+        "exec #{File.join(ShopifyCli::ROOT, 'ngrok')} http -log=stdout -log-level=debug #{PORT}"
       end
     end
   end
