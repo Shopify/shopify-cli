@@ -19,12 +19,13 @@ module ShopifyCli
           File.join(Dir.pwd, 'test-app')
         )
         CLI::UI.expects(:ask).twice.returns('apikey', 'apisecret')
+        @context.app_metadata[:host] = 'host'
         @context.expects(:write).with('.env',
           <<~KEYS
             SHOPIFY_API_KEY=apikey
             SHOPIFY_API_SECRET_KEY=apisecret
-            SHOPIFY_DOMAIN=myshopify.io
             HOST=host
+            SCOPES=read_products
           KEYS
         )
         io = capture_io do

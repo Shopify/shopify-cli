@@ -4,12 +4,13 @@ module ShopifyCli
   module AppTypes
     class Node < AppType
       class << self
-        def env_file(key, secret, host)
+        def env_file
           <<~KEYS
-            SHOPIFY_API_KEY=#{key}
-            SHOPIFY_API_SECRET_KEY=#{secret}
-            SHOPIFY_DOMAIN=myshopify.io
-            HOST=#{host}
+            SHOPIFY_API_KEY={api_key}
+            SHOPIFY_API_SECRET_KEY={secret}
+            HOST={host}
+            SHOP={shop}
+            SCOPES={scopes}
           KEYS
         end
       end
@@ -40,15 +41,14 @@ module ShopifyCli
         api_key = CLI::UI.ask('What is your Shopify API Key')
         api_secret = CLI::UI.ask('What is your Shopify API Secret')
 
-        # temporary metadata construction, will be replaced by data from Partners
-        @ctx.app_metadata = {
-          apiKey: api_key,
-          sharedSecret: api_secret,
-          host: 'host', # to be added with ngrok task
-        }
-
-        @keys = Helpers::EnvFileHelper.new(self, @ctx)
-        @keys.write('.env')
+        env_file = Helpers::EnvFile.new(
+          app_type: self,
+          api_key: api_key,
+          secret: api_secret,
+          host: @ctx.app_metadata[:host],
+          scopes: 'read_products',
+        )
+        env_file.write(@ctx, '.env')
         puts CLI::UI.fmt(post_clone)
       end
 
