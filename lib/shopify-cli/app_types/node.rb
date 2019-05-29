@@ -31,12 +31,10 @@ module ShopifyCli
         }
       end
 
-      protected
-
       def build
-        ShopifyCli::Tasks::Clone.call('git@github.com:shopify/webgen-embeddedapp.git', @name)
-        ShopifyCli::Finalize.request_cd(@name)
-        ShopifyCli::Tasks::JsDeps.call(@dir)
+        ShopifyCli::Tasks::Clone.call('git@github.com:shopify/webgen-embeddedapp.git', name)
+        ShopifyCli::Finalize.request_cd(name)
+        ShopifyCli::Tasks::JsDeps.call(dir)
 
         api_key = CLI::UI.ask('What is your Shopify API Key')
         api_secret = CLI::UI.ask('What is your Shopify API Secret')
@@ -45,10 +43,10 @@ module ShopifyCli
           app_type: self,
           api_key: api_key,
           secret: api_secret,
-          host: @ctx.app_metadata[:host],
+          host: ctx.app_metadata[:host],
           scopes: 'read_products',
         )
-        env_file.write(@ctx, '.env')
+        env_file.write(ctx, '.env')
         puts CLI::UI.fmt(post_clone)
       end
 

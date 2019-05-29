@@ -3,9 +3,11 @@ require 'shopify_cli'
 
 module ShopifyCli
   class Context
-    attr_accessor :root
+    include SmartProperties
+    property :root, default: lambda { Dir.pwd }, converts: :to_s
 
-    def initialize
+    def initialize(*)
+      super
       @env = ($original_env || ENV).clone
     end
 

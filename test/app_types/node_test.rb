@@ -7,16 +7,12 @@ module ShopifyCli
 
       def setup
         super
-        @app = ShopifyCli::AppTypes::Node.new
+        @app = ShopifyCli::AppTypes::Node.new(name: 'test-app', ctx: @context)
       end
 
       def test_embedded_app_creation
-        ShopifyCli::Tasks::Clone.stubs(:call).with(
-          'git@github.com:shopify/webgen-embeddedapp.git',
-          'test-app'
-        )
         ShopifyCli::Tasks::JsDeps.stubs(:call).with(
-          File.join(Dir.pwd, 'test-app')
+          File.join(@context.root, 'test-app')
         )
         CLI::UI.expects(:ask).twice.returns('apikey', 'apisecret')
         @context.app_metadata[:host] = 'host'
@@ -29,7 +25,7 @@ module ShopifyCli
           KEYS
         )
         io = capture_io do
-          @app.call('test-app', @context)
+          @app.build
         end
         output = io.join
 
