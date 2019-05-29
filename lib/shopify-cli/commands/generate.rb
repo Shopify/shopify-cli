@@ -5,6 +5,7 @@ module ShopifyCli
     class Generate < ShopifyCli::Command
       autoload :Page, 'shopify-cli/commands/generate/page'
       autoload :Billing, 'shopify-cli/commands/generate/billing'
+      autoload :Webhook, 'shopify-cli/commands/generate/webhook'
 
       def call(args, _name)
         subcommand = args.shift
@@ -13,6 +14,8 @@ module ShopifyCli
           Page.call(@ctx, args)
         when 'billing'
           Billing.call(@ctx, args)
+        when 'webhook'
+          Webhook.call(@ctx, args)
         else
           @ctx.puts(self.class.help)
         end
@@ -21,7 +24,7 @@ module ShopifyCli
       def self.help
         <<~HELP
           Generate code.
-          Usage: {{command:#{ShopifyCli::TOOL_NAME} generate <page> or billing}}
+          Usage: {{command:#{ShopifyCli::TOOL_NAME} generate <page>, billing, or webhook}}
         HELP
       end
     end

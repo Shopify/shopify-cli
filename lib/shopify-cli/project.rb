@@ -52,6 +52,10 @@ module ShopifyCli
 
     property :directory
 
+    def app_type
+      ShopifyCli::AppTypeRegistry[config['app_type']].new
+    end
+
     def config
       @config ||= begin
         config = load_yaml_file('.shopify-cli.yml')
