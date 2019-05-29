@@ -34,6 +34,23 @@ module ShopifyCli
           output
         )
       end
+
+      def test_server_command
+        ShopifyCli::Project.expects(:current).returns(
+          TestHelpers::FakeProject.new(
+            directory: @context.root,
+            config: {
+              'app_type' => 'node',
+            }
+          )
+        )
+        @context.app_metadata[:host] = 'https://example.com'
+        cmd = ShopifyCli::Commands::Serve.new(@context)
+        @context.expects(:exec).with(
+          "HOST=https://example.com PORT=8081 npm run dev"
+        )
+        cmd.call([], nil)
+      end
     end
   end
 end

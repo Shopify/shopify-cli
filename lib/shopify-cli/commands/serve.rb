@@ -8,7 +8,7 @@ module ShopifyCli
       def call(*)
         project = ShopifyCli::Project.current
         app_type = ShopifyCli::AppTypeRegistry[project.config["app_type"].to_sym]
-        @ctx.exec(app_type.serve_command)
+        @ctx.exec(app_type.serve_command(@ctx))
       end
 
       def self.help

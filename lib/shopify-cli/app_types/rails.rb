@@ -8,7 +8,7 @@ module ShopifyCli
         'rails embedded app'
       end
 
-      def self.serve_command
+      def self.serve_command(_ctx)
         'bin/rails server'
       end
 
