@@ -4,11 +4,11 @@ require 'shopify_cli'
 module ShopifyCli
   class Context
     autoload :FileSystem, 'shopify-cli/context/file_system'
-    autoload :Execution, 'shopify-cli/context/execution'
+    autoload :System, 'shopify-cli/context/system'
 
     include SmartProperties
     include FileSystem
-    include Execution
+    include System
 
     property :root, default: lambda { Dir.pwd }, converts: :to_s
     property :env, default: lambda { ($original_env || ENV).clone }
@@ -28,6 +28,12 @@ module ShopifyCli
 
     def puts(*args)
       Kernel.puts(CLI::UI.fmt(*args))
+    end
+
+    def debug(msg)
+      if @env['DEBUG']
+        puts("{{yellow:DEBUG}} #{msg}")
+      end
     end
 
     def app_metadata
