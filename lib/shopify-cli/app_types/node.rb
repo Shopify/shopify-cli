@@ -47,6 +47,10 @@ module ShopifyCli
           scopes: 'read_products',
         )
         env_file.write(ctx, '.env')
+
+        ctx.rm_r(File.join(ctx.root, '.git'))
+        ctx.rm_r(File.join(ctx.root, '.github'))
+
         puts CLI::UI.fmt(post_clone)
       end
 
