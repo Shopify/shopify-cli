@@ -30,7 +30,7 @@ module ShopifyCli
       def test_implemented_option
         FileUtils.mkdir_p('test-app')
         CLI::UI::Prompt.expects(:ask).returns(:node)
-        ShopifyCli::AppTypes::Node.any_instance.stubs(:call).with('test-app', @context)
+        ShopifyCli::AppTypes::Node.any_instance.stubs(:build)
         @command.call(['test-app'], nil)
       end
     end

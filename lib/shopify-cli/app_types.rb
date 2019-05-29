@@ -3,6 +3,11 @@ require 'shopify_cli'
 module ShopifyCli
   module AppTypes
     class AppType < ShopifyCli::Task
+      include SmartProperties
+
+      property :name
+      property :ctx, accepts: ShopifyCli::Context
+
       class << self
         def description
           raise NotImplementedError
@@ -17,11 +22,13 @@ module ShopifyCli
         end
       end
 
-      def call(*args)
-        @name = args.shift
-        @ctx = args.shift
-        @dir = File.join(Dir.pwd, @name)
-        build
+      def initialize(*)
+        super
+        ctx.root = dir
+      end
+
+      def dir
+        File.join(ctx.root, name)
       end
 
       def build

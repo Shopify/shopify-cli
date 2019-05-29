@@ -17,9 +17,6 @@ module ShopifyCli
 
         return puts "not yet implemented" unless app_type
 
-        # we need the concept of "project" probably to hold path state
-        @ctx.root = File.join(Dir.pwd, @name)
-
         AppTypeRegistry.build(app_type, @name, @ctx)
 
         ShopifyCli::Project.write(@ctx, app_type)
