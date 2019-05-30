@@ -14,14 +14,8 @@ module ShopifyCli
 
       protected
 
-      def rails_installed?
-        ShopifyCli::Helpers::GemHelper.installed?(ctx, 'rails')
-      end
-
       def build
-        unless rails_installed?
-          ShopifyCli::Helpers::GemHelper.install!(ctx, 'rails')
-        end
+        ShopifyCli::Helpers::Gem.install(ctx, 'rails')
         ctx.system('rails', 'new', name)
         ctx.system('echo', '"gem \'shopify_app\'"', '>>', 'Gemfile')
         ctx.system('bundle', 'install', chdir: dir)

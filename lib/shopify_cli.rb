@@ -117,7 +117,7 @@ module ShopifyCli
 
   module Helpers
     autoload :PidFile, 'shopify-cli/helpers/pid_file'
-    autoload :GemHelper, 'shopify-cli/helpers/gem_helper'
+    autoload :Gem, 'shopify-cli/helpers/gem'
     autoload :EnvFile, 'shopify-cli/helpers/env_file'
     autoload :ProcessSupervision, 'shopify-cli/helpers/process_supervision'
   end

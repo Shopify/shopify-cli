@@ -4,20 +4,22 @@ require 'shopify_cli'
 module ShopifyCli
   class Context
     autoload :FileSystem, 'shopify-cli/context/file_system'
+    autoload :Execution, 'shopify-cli/context/execution'
 
     include SmartProperties
     include FileSystem
+    include Execution
 
     property :root, default: lambda { Dir.pwd }, converts: :to_s
-
-    def initialize(*)
-      super
-      @env = ($original_env || ENV).clone
-    end
+    property :env, default: lambda { ($original_env || ENV).clone }
 
     def getenv(name)
       v = @env[name]
       v == '' ? nil : v
+    end
+
+    def setenv(key, value)
+      @env[key] = value
     end
 
     def print_task(text)
@@ -26,30 +28,6 @@ module ShopifyCli
 
     def puts(*args)
       Kernel.puts(CLI::UI.fmt(*args))
-    end
-
-    def spawn(*args)
-      Kernel.spawn(*args)
-    end
-
-    def exec(*args)
-      Kernel.exec(*args)
-    end
-
-    def method_missing(method, *args)
-      if CLI::Kit::System.respond_to?(method)
-        CLI::Kit::System.send(method, *args)
-      else
-        super
-      end
-    end
-
-    def respond_to_missing?(method, include_private = false)
-      if CLI::Kit::System.respond_to?(method)
-        true
-      else
-        super
-      end
     end
 
     def app_metadata

@@ -23,6 +23,10 @@ require 'mocha/minitest'
 Minitest::Reporters.use!([Minitest::Reporters::SpecReporter.new])
 
 module Minitest
+  class Test
+    RUBY_VERSION = File.read('.ruby-version').tr("\n", '')
+  end
+
   module Assertions
     def assert_nothing_raised(*)
       yield
