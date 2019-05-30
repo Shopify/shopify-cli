@@ -3,6 +3,8 @@ require 'shopify_cli'
 
 module ShopifyCli
   class Project
+    include SmartProperties
+
     class << self
       def current
         at(Dir.pwd)
@@ -13,7 +15,7 @@ module ShopifyCli
         unless proj_dir
           raise(ShopifyCli::Abort, "You are not in a shopify project")
         end
-        @at ||= Hash.new { |h, k| h[k] = new(k) }
+        @at ||= Hash.new { |h, k| h[k] = new(directory: k) }
         @at[proj_dir]
       end
 
@@ -48,11 +50,7 @@ module ShopifyCli
       end
     end
 
-    attr_reader :directory
-
-    def initialize(directory)
-      @directory = directory
-    end
+    property :directory
 
     def config
       @config ||= begin

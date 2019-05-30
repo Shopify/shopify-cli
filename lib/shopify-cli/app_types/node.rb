@@ -19,8 +19,12 @@ module ShopifyCli
         'node embedded app'
       end
 
-      def self.serve_command
-        'npm run dev'
+      def self.serve_command(ctx)
+        %W(
+          HOST=#{ctx.app_metadata[:host]}
+          PORT=#{ShopifyCli::Tasks::Tunnel::PORT}
+          npm run dev
+        ).join(' ')
       end
 
       def self.generate

@@ -5,7 +5,7 @@ module TestHelpers
     class FakeAppType < ShopifyCli::AppTypes::AppType
       def self.description; end
 
-      def self.serve_command
+      def self.serve_command(_ctx)
         "a command"
       end
 
