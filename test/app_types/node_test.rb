@@ -11,9 +11,7 @@ module ShopifyCli
       end
 
       def test_embedded_app_creation
-        ShopifyCli::Tasks::JsDeps.stubs(:call).with(
-          File.join(@context.root, 'test-app')
-        )
+        ShopifyCli::Tasks::JsDeps.stubs(:call).with(@context.root)
         CLI::UI.expects(:ask).twice.returns('apikey', 'apisecret')
         @context.app_metadata[:host] = 'host'
         @context.expects(:write).with('.env',
