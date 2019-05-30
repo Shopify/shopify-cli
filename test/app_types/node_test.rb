@@ -24,6 +24,8 @@ module ShopifyCli
             SCOPES=read_products
           KEYS
         )
+        @context.expects(:rm_r).with(File.join(@context.root, '.git'))
+        @context.expects(:rm_r).with(File.join(@context.root, '.github'))
         io = capture_io do
           @app.build
         end

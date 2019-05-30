@@ -3,7 +3,11 @@ require 'shopify_cli'
 
 module ShopifyCli
   class Context
+    autoload :FileSystem, 'shopify-cli/context/file_system'
+
     include SmartProperties
+    include FileSystem
+
     property :root, default: lambda { Dir.pwd }, converts: :to_s
 
     def initialize(*)
@@ -18,10 +22,6 @@ module ShopifyCli
 
     def print_task(text)
       puts CLI::UI.fmt("{{yellow:*}} #{text}")
-    end
-
-    def write(fname, content)
-      File.write(File.join(@root, fname), content)
     end
 
     def puts(*args)
