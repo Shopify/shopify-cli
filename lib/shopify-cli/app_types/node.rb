@@ -38,7 +38,7 @@ module ShopifyCli
       def build
         ShopifyCli::Tasks::Clone.call('git@github.com:shopify/webgen-embeddedapp.git', name)
         ShopifyCli::Finalize.request_cd(name)
-        ShopifyCli::Tasks::JsDeps.call(dir)
+        ShopifyCli::Tasks::JsDeps.call(ctx.root)
 
         api_key = CLI::UI.ask('What is your Shopify API Key')
         api_secret = CLI::UI.ask('What is your Shopify API Secret')
