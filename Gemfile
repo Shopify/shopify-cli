@@ -18,4 +18,5 @@ group :test do
   gem 'minitest', '>= 5.0.0', require: false
   gem 'minitest-reporters', require: false
   gem 'fakefs', require: false
+  gem 'webmock', require: false
 end

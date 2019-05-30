@@ -17,6 +17,7 @@ require 'minitest/reporters'
 require_relative 'minitest_ext'
 require_relative 'test_helpers'
 require 'fakefs/safe'
+require 'webmock/minitest'
 
 require 'mocha/minitest'
 
