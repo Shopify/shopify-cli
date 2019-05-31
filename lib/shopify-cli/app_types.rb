@@ -24,11 +24,7 @@ module ShopifyCli
 
       def initialize(*)
         super
-        ctx.root = dir
-      end
-
-      def dir
-        File.join(ctx.root, name)
+        ctx.root = File.join(ctx.root, name)
       end
 
       def build
