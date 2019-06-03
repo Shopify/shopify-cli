@@ -30,10 +30,8 @@ module ShopifyCli
       Kernel.puts(CLI::UI.fmt(*args))
     end
 
-    def debug(msg)
-      if @env['DEBUG']
-        puts("{{yellow:DEBUG}} #{msg}")
-      end
+    def debug(string)
+      puts("{{red:DEBUG}} #{string}") if getenv('DEBUG')
     end
 
     def app_metadata

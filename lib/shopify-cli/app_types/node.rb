@@ -52,8 +52,12 @@ module ShopifyCli
         )
         env_file.write(ctx, '.env')
 
-        ctx.rm_r(File.join(ctx.root, '.git'))
-        ctx.rm_r(File.join(ctx.root, '.github'))
+        begin
+          ctx.rm_r(File.join(ctx.root, '.git'))
+          ctx.rm_r(File.join(ctx.root, '.github'))
+        rescue Errno::ENOENT => e
+          ctx.debug(e)
+        end
 
         puts CLI::UI.fmt(post_clone)
       end
