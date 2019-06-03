@@ -10,6 +10,10 @@ module ShopifyCli
       def rm_r(*args)
         FileUtils.rm_r(*args)
       end
+
+      def mkdir_p(*args)
+        FileUtils.mkdir_p(*args)
+      end
     end
   end
 end

@@ -57,10 +57,6 @@ module ShopifyCli
 
         puts CLI::UI.fmt(post_clone)
       end
-
-      def post_clone
-        "Run {{command:npm run dev}} to start the app server"
-      end
     end
   end
 end
