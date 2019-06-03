@@ -3,8 +3,24 @@ require 'shopify_cli'
 module ShopifyCli
   module Commands
     class Help < ShopifyCli::Command
-      def call(*)
-        puts CLI::UI.fmt("{{bold:Available commands}}")
+      def call(args, _name)
+        command = args.shift
+        if command
+          if Registry.exist?(command)
+            cmd, _name = Registry.lookup_command(command)
+            @ctx.puts(CLI::UI.fmt(cmd.help))
+            if cmd.respond_to?(:extended_help)
+              @ctx.puts('')
+              @ctx.puts(CLI::UI.fmt(cmd.extended_help))
+            end
+            return
+          else
+            @ctx.puts("Command #{command} not found.")
+          end
+        end
+
+        @ctx.puts('{{bold:Available commands}}')
+        @ctx.puts('Use {{command:shopify help [command]}} to display detailed information about a specific command.')
         puts ""
 
         ShopifyCli::Commands::Registry.resolved_commands.each do |name, klass|

@@ -7,8 +7,8 @@ module ShopifyCli
       contextual_resolver: nil,
     )
 
-    def self.register(const, cmd, path)
-      autoload(const, path)
+    def self.register(const, cmd, path = nil)
+      autoload(const, path) if path
       Registry.add(->() { const_get(const) }, cmd)
     end
 

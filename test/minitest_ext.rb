@@ -2,7 +2,9 @@ module Minitest
   class Test
     def capture_io(&block)
       cap = CLI::UI::StdoutRouter::Capture.new(with_frame_inset: true, &block)
+      @context.output_captured = true if @context
       cap.run
+      @context.output_captured = false if @context
       [cap.stdout, cap.stderr]
     end
 

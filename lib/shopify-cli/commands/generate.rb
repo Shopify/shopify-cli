@@ -24,6 +24,26 @@ module ShopifyCli
           Usage: {{command:#{ShopifyCli::TOOL_NAME} generate <page> or billing}}
         HELP
       end
+
+      def self.extended_help
+        <<~HELP
+          Subcommands:
+
+          * page: Generates code for a page or section of pages in your app. Usage:
+
+              {{command:#{ShopifyCli::TOOL_NAME} generate page [name]}}
+
+          * billing: Generates code for calling the Shopify Billing API and
+            accepting usage charges for your app. Usage:
+
+              {{command:#{ShopifyCli::TOOL_NAME} generate billing}}
+
+          * webhook: Generates code for registering and responding to a webhook
+            from Shopify. Usage:
+
+              {{command:#{ShopifyCli::TOOL_NAME} generate webhook [type]}}
+        HELP
+      end
     end
   end
 end
