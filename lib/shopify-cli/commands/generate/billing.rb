@@ -12,7 +12,7 @@ module ShopifyCli
             handler.option('recurring billing') { :billing_recurring }
             handler.option('one time billing') { :billing_one_time }
           end
-          ctx.exec(app_type.generate[type])
+          ctx.system(app_type.generate[type])
         end
 
         def self.help

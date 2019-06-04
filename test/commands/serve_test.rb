@@ -11,7 +11,7 @@ module ShopifyCli
       end
 
       def test_run
-        @context.expects(:exec).with('a command')
+        @context.expects(:system).with('a command')
         @command.call([], nil)
       end
     end

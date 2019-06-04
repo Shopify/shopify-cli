@@ -7,10 +7,6 @@ module ShopifyCli
         Kernel.spawn(*args, env: @env, **kwargs)
       end
 
-      def exec(*args, **kwargs)
-        Kernel.exec(*args, env: @env, **kwargs)
-      end
-
       def system(*args, **kwargs)
         CLI::Kit::System.system(*args, env: @env, **kwargs)
       end
