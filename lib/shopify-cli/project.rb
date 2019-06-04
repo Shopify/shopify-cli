@@ -53,7 +53,7 @@ module ShopifyCli
     property :directory
 
     def app_type
-      ShopifyCli::AppTypeRegistry[config['app_type']].new
+      ShopifyCli::AppTypeRegistry[config['app_type'].to_sym]
     end
 
     def config

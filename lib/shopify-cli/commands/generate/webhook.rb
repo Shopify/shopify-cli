@@ -22,7 +22,7 @@ module ShopifyCli
           end
 
           project = ShopifyCli::Project.current
-          app_type = ShopifyCli::AppTypeRegistry[project.config["app_type"].to_sym]
+          app_type = project.app_type
           ctx.exec("#{app_type.generate[:webhook]} #{selected_type}")
         end
 
