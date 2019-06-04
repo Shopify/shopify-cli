@@ -10,7 +10,11 @@ module ShopifyCli
         @app = ShopifyCli::AppTypes::Node.new(name: 'test-app', ctx: @context)
       end
 
-      def test_embedded_app_creation
+      def test_build_creates_app
+        ShopifyCli::Tasks::Clone.stubs(:call).with(
+          'git@github.com:shopify/webgen-embeddedapp.git',
+          'test-app',
+        )
         ShopifyCli::Tasks::JsDeps.stubs(:call).with(@context.root)
         CLI::UI.expects(:ask).twice.returns('apikey', 'apisecret')
         @context.app_metadata[:host] = 'host'
@@ -33,6 +37,18 @@ module ShopifyCli
           CLI::UI.fmt('Run {{command:shopify serve}} to start the app server'),
           output
         )
+      end
+
+      def test_build_does_not_error_on_missing_git_dir
+        ShopifyCli::Tasks::Clone.stubs(:call).with(
+          'git@github.com:shopify/webgen-embeddedapp.git',
+          'test-app',
+        )
+        ShopifyCli::Tasks::JsDeps.stubs(:call).with(@context.root)
+        CLI::UI.expects(:ask).twice.returns('apikey', 'apisecret')
+        @context.app_metadata[:host] = 'host'
+        @context.expects(:write)
+        @app.build
       end
 
       def test_server_command

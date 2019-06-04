@@ -19,13 +19,13 @@ module ShopifyCli
       end
 
       def test_install_installs_with_gem_home_populated
-        @context.expects(:getenv).with('GEM_HOME').returns('~/.gem/ruby/2.5.5')
+        @context.setenv('GEM_HOME', '~/.gem/ruby/2.5.5')
         @context.expects(:system).with('gem install mygem')
         Gem.install(@context, 'mygem')
       end
 
       def test_install_does_not_install_if_installed
-        @context.expects(:getenv).with('GEM_HOME').returns("~/.gem/ruby/#{RUBY_VERSION}")
+        @context.setenv('GEM_HOME', "~/.gem/ruby/#{RUBY_VERSION}")
         Dir.expects(:glob).with("~/.gem/ruby/#{RUBY_VERSION}/gems/mygem-*").returns([
           "~/.gem/ruby/#{RUBY_VERSION}/gems/mygem-1.0.0",
         ]).at_least_once
