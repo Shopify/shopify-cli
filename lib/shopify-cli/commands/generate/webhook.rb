@@ -23,7 +23,7 @@ module ShopifyCli
 
           project = ShopifyCli::Project.current
           app_type = project.app_type
-          ctx.exec("#{app_type.generate[:webhook]} #{selected_type}")
+          ctx.system("#{app_type.generate[:webhook]} #{selected_type}")
         end
 
         def self.help

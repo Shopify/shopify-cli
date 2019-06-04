@@ -23,13 +23,13 @@ module ShopifyCli
         end
 
         def test_with_param
-          @context.expects(:exec).with('npm run-script generate-webhook PRODUCT_CREATE')
+          @context.expects(:system).with('npm run-script generate-webhook PRODUCT_CREATE')
           @command.call(['webhook', 'PRODUCT_CREATE'], nil)
         end
 
         def test_with_selection
           CLI::UI::Prompt.expects(:ask).returns('PRODUCT_CREATE')
-          @context.expects(:exec).with('npm run-script generate-webhook PRODUCT_CREATE')
+          @context.expects(:system).with('npm run-script generate-webhook PRODUCT_CREATE')
           @command.call(['webhook'], nil)
         end
       end
