@@ -32,6 +32,7 @@ module ShopifyCli
           page: 'npm run-script generate-page',
           billing_recurring: 'npm run-script generate-recurring-billing',
           billing_one_time: 'npm run-script generate-one-time-billing',
+          webhook: 'npm run-script generate-webhook',
         }
       end
 
