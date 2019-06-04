@@ -5,10 +5,12 @@ module ShopifyCli
     class Generate
       class Webhook < ShopifyCli::Task
         include ShopifyCli::Helpers::SchemaParser
-
         def call(ctx, args)
+          unless File.file?("#{ShopifyCli::TEMP_DIR}/.access_token")
+            ShopifyCli::Tasks::AuthenticateShopify.call(ctx)
+          end
           selected_type = args.first
-          schema = ShopifyCli::Tasks::GetSchema.call(ctx)
+          schema = ShopifyCli::Tasks::Schema.call(ctx)
           enum = get_types_by_name(schema, 'WebhookSubscriptionTopic')
           webhooks = get_names_from_enum(enum)
 

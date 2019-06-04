@@ -7,7 +7,8 @@ module ShopifyCli
       include TestHelpers::AppType
 
       def test_read_reads_env_content_from_file
-        env_file = EnvFile.read(TestHelpers::AppType::FakeAppType, fixture)
+        cmd = FakeCommand
+        env_file = EnvFile.read(cmd, fixture)
         assert_equal(env_file.api_key, 'foo')
         assert_equal(env_file.secret, 'bar')
         assert_equal(env_file.host, 'baz')

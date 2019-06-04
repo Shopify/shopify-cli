@@ -21,7 +21,7 @@ module ShopifyCli
           TestHelpers::FakeProject.new(
             directory: @context.root,
             config: {
-              app_type: 'node',
+              'app_type' => 'node',
             }
           )
         ).at_least_once
