@@ -50,7 +50,7 @@ module ShopifyCli
         )
         @context.app_metadata[:host] = 'https://example.com'
         cmd = ShopifyCli::Commands::Serve.new(@context)
-        @context.expects(:exec).with(
+        @context.expects(:system).with(
           "PORT=8081 bin/rails server"
         )
         cmd.call([], nil)
