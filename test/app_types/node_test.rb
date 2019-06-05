@@ -8,6 +8,9 @@ module ShopifyCli
       def setup
         super
         @app = ShopifyCli::AppTypes::Node.new(name: 'test-app', ctx: @context)
+        @context.app_metadata[:host] = 'host'
+        @context.app_metadata[:api_key] = 'api_key'
+        @context.app_metadata[:secret] = 'secret'
       end
 
       def test_build_creates_app
@@ -16,12 +19,10 @@ module ShopifyCli
           'test-app',
         )
         ShopifyCli::Tasks::JsDeps.stubs(:call).with(@context.root)
-        CLI::UI.expects(:ask).twice.returns('apikey', 'apisecret')
-        @context.app_metadata[:host] = 'host'
         @context.expects(:write).with('.env',
           <<~KEYS
-            SHOPIFY_API_KEY=apikey
-            SHOPIFY_API_SECRET_KEY=apisecret
+            SHOPIFY_API_KEY=api_key
+            SHOPIFY_API_SECRET_KEY=secret
             HOST=host
             SCOPES=read_products
           KEYS
@@ -45,8 +46,6 @@ module ShopifyCli
           'test-app',
         )
         ShopifyCli::Tasks::JsDeps.stubs(:call).with(@context.root)
-        CLI::UI.expects(:ask).twice.returns('apikey', 'apisecret')
-        @context.app_metadata[:host] = 'host'
         @context.expects(:write)
         @app.build
       end
