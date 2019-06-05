@@ -113,7 +113,7 @@ module ShopifyCli
     register :Clone, :clone, 'shopify-cli/tasks/clone'
     register :JsDeps, :js_deps, 'shopify-cli/tasks/js_deps'
     register :Tunnel, :tunnel, 'shopify-cli/tasks/tunnel'
-    register :GetSchema, :get_schema, 'shopify-cli/tasks/get_schema'
+    register :Schema, :schema, 'shopify-cli/tasks/schema'
   end
 
   module Helpers
@@ -124,12 +124,5 @@ module ShopifyCli
     autoload :SchemaParser, 'shopify-cli/helpers/schema_parser'
     autoload :ShopifySchema, 'shopify-cli/helpers/shopify_schema'
     autoload :GraphQL, 'shopify-cli/helpers/graphql'
-  end
-
-  module Tasks
-    register :Clone, :clone, 'shopify-cli/tasks/clone'
-    register :JsDeps, :js_deps, 'shopify-cli/tasks/js_deps'
-    register :Tunnel, :tunnel, 'shopify-cli/tasks/tunnel'
-    register :Schema, :schema, 'shopify-cli/tasks/schema'
   end
 end
