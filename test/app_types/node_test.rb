@@ -8,9 +8,11 @@ module ShopifyCli
       def setup
         super
         @app = ShopifyCli::AppTypes::Node.new(name: 'test-app', ctx: @context)
-        @context.app_metadata[:host] = 'host'
-        @context.app_metadata[:api_key] = 'api_key'
-        @context.app_metadata[:secret] = 'secret'
+        @context.app_metadata = {
+          host: 'host',
+          api_key: 'api_key',
+          secret: 'secret',
+        }
       end
 
       def test_build_creates_app
