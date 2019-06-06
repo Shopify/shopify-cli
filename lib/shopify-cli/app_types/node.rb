@@ -37,7 +37,7 @@ module ShopifyCli
       end
 
       def build
-        ShopifyCli::Tasks::Clone.call('git@github.com:shopify/webgen-embeddedapp.git', name)
+        ShopifyCli::Tasks::Clone.call('git@github.com:shopify/shopify-app-node.git', name)
         ShopifyCli::Finalize.request_cd(name)
         ShopifyCli::Tasks::JsDeps.call(ctx.root)
 
