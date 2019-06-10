@@ -11,7 +11,7 @@ page PAGENAME
 billing
 >>aliases: c
 
-webhook WEBHOOKNAME
+webhook WEBHOOK_NAME
 >>aliases: o
 
 
@@ -22,5 +22,5 @@ Generate a new page with routing named "onboarding"
 shopify generate billing
 Generate a new call to the billing api
 
-shopify generate webhook products-create
+shopify generate webhook PRODUCTS_CREATE
 Generate and register a new webhook to listen for new products being created
