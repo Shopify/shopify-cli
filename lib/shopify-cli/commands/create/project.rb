@@ -5,9 +5,12 @@ module ShopifyCli
     class Create
       class Project < ShopifyCli::Command
         def call(ctx, args)
-          ctx.puts(self.class.help) if args.empty?
-          ShopifyCli::Tasks::Tunnel.call(ctx)
+          if args.empty?
+            ctx.puts(self.class.help)
+            return
+          end
           name = args.first
+          ShopifyCli::Tasks::Tunnel.call(ctx)
           api_key = CLI::UI.ask('What is your Shopify API Key')
           api_secret = CLI::UI.ask('What is your Shopify API Secret')
           ctx.app_metadata = {
