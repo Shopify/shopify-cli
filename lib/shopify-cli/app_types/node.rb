@@ -41,13 +41,10 @@ module ShopifyCli
         ShopifyCli::Finalize.request_cd(name)
         ShopifyCli::Tasks::JsDeps.call(ctx.root)
 
-        api_key = CLI::UI.ask('What is your Shopify API Key')
-        api_secret = CLI::UI.ask('What is your Shopify API Secret')
-
         env_file = Helpers::EnvFile.new(
           app_type: self,
-          api_key: api_key,
-          secret: api_secret,
+          api_key: ctx.app_metadata[:api_key],
+          secret: ctx.app_metadata[:secret],
           host: ctx.app_metadata[:host],
           scopes: 'read_products',
         )

@@ -19,6 +19,7 @@ module ShopifyCli
       end
 
       def test_exists_with_not_implemented_choice
+        CLI::UI.expects(:ask).twice.returns('apikey', 'apisecret')
         CLI::UI::Prompt.expects(:ask).returns(false)
         io = capture_io do
           @command.call(['test-app'], nil)
@@ -29,9 +30,12 @@ module ShopifyCli
 
       def test_implemented_option
         FileUtils.mkdir_p('test-app')
+        CLI::UI.expects(:ask).twice.returns('apikey', 'apisecret')
         CLI::UI::Prompt.expects(:ask).returns(:node)
         ShopifyCli::AppTypes::Node.any_instance.stubs(:build)
         @command.call(['test-app'], nil)
+        assert_equal 'apikey', @context.app_metadata[:api_key]
+        assert_equal 'apisecret', @context.app_metadata[:secret]
       end
     end
   end

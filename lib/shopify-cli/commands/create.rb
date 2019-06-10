@@ -8,7 +8,12 @@ module ShopifyCli
       def call(args, _name)
         @name = args.shift
         return puts CLI::UI.fmt(self.class.help) unless @name
-
+        api_key = CLI::UI.ask('What is your Shopify API Key')
+        api_secret = CLI::UI.ask('What is your Shopify API Secret')
+        @ctx.app_metadata = {
+          api_key: api_key,
+          secret: api_secret,
+        }
         app_type = CLI::UI::Prompt.ask('What type of app would you like to create?') do |handler|
           AppTypeRegistry.each do |identifier, type|
             handler.option(type.description) { identifier }
