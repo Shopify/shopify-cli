@@ -10,7 +10,7 @@ module ShopifyCli
           name = args.first
           api_key = CLI::UI.ask('What is your Shopify API Key')
           api_secret = CLI::UI.ask('What is your Shopify API Secret')
-          @ctx.app_metadata = {
+          ctx.app_metadata = {
             api_key: api_key,
             secret: api_secret,
           }
