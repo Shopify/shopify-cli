@@ -20,7 +20,8 @@ module ShopifyCli
         code = wait_for_redirect(server)
         case res = send_token_request(code)
         when Net::HTTPSuccess
-          @env = Helpers::AccessToken.write(res)
+          body = JSON.parse(res.body)
+          @env = Helpers::AccessToken.write(body)
           @ctx.puts "{{success:Token stored!}}"
         else
           @ctx.puts("{{error:Response was #{res.body}}}")
@@ -77,7 +78,7 @@ module ShopifyCli
       end
 
       def env
-        @env = Helpers::EnvFile.read(project.app_type, File.join(ShopifyCli::Project.current.directory, '.env'))
+        @env = Helpers::EnvFile.read(project.app_type, File.join(project.directory, '.env'))
       end
 
       def extract_query_param(key, request)

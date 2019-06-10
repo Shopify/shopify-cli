@@ -8,7 +8,6 @@ module ShopifyCli
 
       def setup
         super
-        @dir = Dir.mktmpdir
         @command = ShopifyCli::Commands::Update.new
       end
 
@@ -29,6 +28,9 @@ module ShopifyCli
             shop: 'myshop',
           )
         ).at_least_once
+        ShopifyCli::Helpers::AccessToken.expects(:read).returns(
+          File.read(File.join(ShopifyCli::ROOT, "test/fixtures/.apikey"))
+        )
         @context.expects(:system)
         File.stub(:write, true) do
           AuthenticateShopify.any_instance.expects(:wait_for_redirect).returns('mycode')
@@ -41,7 +43,7 @@ module ShopifyCli
               })
             .to_return(status: 200, body: '{ "access_token": "accesstoken123" }', headers: {})
           AuthenticateShopify.call(@context)
-          assert_equal('accesstoken123', File.read(File.join(ShopifyCli::ROOT, "test/fixtures/.access_token")))
+          assert_equal('accesstoken123', ShopifyCli::Helpers::AccessToken.read(@context))
         end
       end
     end

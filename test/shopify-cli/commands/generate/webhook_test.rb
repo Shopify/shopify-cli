@@ -9,7 +9,6 @@ module ShopifyCli
         def setup
           super
           @command = ShopifyCli::Commands::Generate.new(@context)
-          @responsed = '200'
         end
 
         def test_with_param
