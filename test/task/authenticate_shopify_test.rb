@@ -34,8 +34,11 @@ module ShopifyCli
           AuthenticateShopify.any_instance.expects(:wait_for_redirect).returns('mycode')
           stub_request(:post, "https://myshop/admin/oauth/access_token")
             .with(body: "client_id=apikey&client_secret=secret&code=mycode",
-              headers: { 'Accept' => '*/*', 'Accept-Encoding' => 'gzip;q=1.0,deflate;q=0.6,identity;q=0.3',
-              'User-Agent' => 'Ruby' })
+              headers: {
+                'Accept' => '*/*',
+                'Accept-Encoding' => 'gzip;q=1.0,deflate;q=0.6,identity;q=0.3',
+                'User-Agent' => 'Ruby',
+              })
             .to_return(status: 200, body: '{ "access_token": "accesstoken123" }', headers: {})
           AuthenticateShopify.call(@context)
           assert_equal('accesstoken123', File.read(File.join(ShopifyCli::ROOT, "test/fixtures/.access_token")))

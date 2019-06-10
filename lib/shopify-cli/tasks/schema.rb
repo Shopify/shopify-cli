@@ -5,15 +5,15 @@ module ShopifyCli
     class Schema < ShopifyCli::Task
       include ShopifyCli::Helpers::GraphQL
       include ShopifyCli::Helpers::GraphQL::Queries
-      include ShopifyCli::Helpers::AccessToken
 
       def call(ctx)
+        @ctx = ctx
         get
         if @response.code == '401'
           ShopifyCli::Tasks::AuthenticateShopify.call(ctx)
           get
         end
-        ctx.app_metadata = { schema: schema_file }
+        @ctx.app_metadata = { schema: schema_file }
         schema_file
       end
 
@@ -22,7 +22,7 @@ module ShopifyCli
         http = Net::HTTP.new(uri.host, uri.port)
         http.use_ssl = true
         request = Net::HTTP::Post.new(uri.request_uri)
-        request["X-Shopify-Access-Token"] = access_token
+        request["X-Shopify-Access-Token"] = Helpers::AccessToken.read(@ctx)
         request["Content-Type"] = "application/json"
         request.body = query_body(introspection)
         @response = http.request(request)

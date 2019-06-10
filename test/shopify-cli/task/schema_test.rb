@@ -16,7 +16,6 @@ module ShopifyCli
       end
 
       def test_gets_schema
-        Schema.any_instance.expects(:access_token).returns('myaccesstoken')
         ShopifyCli::Project.expects(:current).returns(
           TestHelpers::FakeProject.new(
             directory: @context.root,
@@ -25,6 +24,9 @@ module ShopifyCli
             }
           )
         ).at_least_once
+        ShopifyCli::Helpers::AccessToken.expects(:read).returns(
+          File.read(File.join(ShopifyCli::ROOT, "test/fixtures/.access_token"))
+        )
         ShopifyCli::Helpers::EnvFile.expects(:read).returns(
           ShopifyCli::Helpers::EnvFile.new(
             app_type: 'node',
@@ -32,10 +34,10 @@ module ShopifyCli
             secret: 'secret',
             shop: 'myshop',
           )
-        )
+        ).at_least_once
         stub_request(:post, "https://myshop/admin/api/2019-04/graphql.json")
           .with(body: JSON.dump(query: introspection, variables: {}),
-            headers: { 'X-Shopify-Access-Token' => 'myaccesstoken' })
+            headers: { 'X-Shopify-Access-Token' => 'accesstoken123' })
           .to_return(status: 200, body: "{}", headers: {})
         ShopifyCli::Tasks::Schema.call(@context)
       end

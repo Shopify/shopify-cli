@@ -20,17 +20,12 @@ module ShopifyCli
         code = wait_for_redirect(server)
         case res = send_token_request(code)
         when Net::HTTPSuccess
-          store_token(res)
+          @env = Helpers::AccessToken.write(res)
           @ctx.puts "{{success:Token stored!}}"
         else
           @ctx.puts("{{error:Response was #{res.body}}}")
           @ctx.puts("{{error:Failed to retrieve ID & Refresh tokens}}")
         end
-      end
-
-      def store_token(res)
-        body = JSON.parse(res.body)
-        File.write(File.join(ShopifyCli::TEMP_DIR, '.access_token'), body['access_token'])
       end
 
       def wait_for_redirect(server)
