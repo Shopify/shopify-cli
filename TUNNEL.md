@@ -1,11 +1,12 @@
+**COMMAND**
 **tunnel**
-Opens and ngrok tunne to proxy the localhost
+Opens a tunnel to proxy localhost using ngrok (https://ngrok.com). This will make your local development app visible to anyone who knows the ngrok URL.
 
 **USAGE**
 shopify tunnel [subcommand] 
 
-**COMMANDS**
-start
+**SUBCOMMANDS**
+start [default]
 
 stop
 
@@ -14,4 +15,4 @@ shopify tunnel
 Start a new ngrok tunnel
 
 shopify tunnel stop
-Stop the current tunnel process
+Stop the current ngrok tunnel process

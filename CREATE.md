@@ -1,19 +1,20 @@
+**COMMAND**
 **create**
-create is a command used to create new code and new apiclientID or dev stores on the partner dashboard
+Create code for a new app project, such as an app scaffold, Shopify app and API keys, or development store.
+>>aliases: new
 
 **USAGE**
 shopify create [subcommand] 
 
-**COMMANDS**
-project PROJECTNAME
->> aliases: p
+**SUBCOMMANDS**
+project <project name>
 
-dev-store
->> aliases: d store shop devstore
+development-store
+>>aliases: dev-store devshop dev-shop 
 
 **EXAMPLES**
-shopify create project mytestapp (green)
+shopify create project mytestapp
 Create a new app project with the name “mytestapp”
 
-shopify create dev-store (green)
-Create a new development store with the name “TestShop1”
+shopify create development-store
+Create a new development store. It will use a unique, automatically generated name.

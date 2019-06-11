@@ -1,26 +1,23 @@
+**COMMAND**
 **populate**
-Populate allows you to add fake products, customers, or orders to your development store.
+Populate your development store with example products, customers, or orders. The data is randomly generated but resembles real-world examples.
 
 **USAGE**
 shopify populate [subcommand] 
 
-**COMMANDS**
-products [count=10]
->>aliases: p
+**SUBCOMMANDS**
+products [default: --count 10]
 
-customers [count=10]
->>aliases: c
+customers [default: --count 10]
 
-orders [count=10]
->>aliases: o
-
+orders [default: --count 10]
 
 **EXAMPLES**
-shopify populate products count=30
-Populate your dev store with 30 products
+shopify populate products --count 30
+Populate your development store with 30 additional products.
 
 shopify populate customers
-Create a new development store with the name “TestShop1”
+Populate your development store with 10 additional customers.
 
 shopify populate orders
-Create a new development store with the name “TestShop1”
+Populate your development store with 10 additional orders.
