@@ -5,7 +5,10 @@ module ShopifyCli
     class Generate
       class Page < ShopifyCli::Task
         def call(ctx, args)
-          ctx.puts(self.class.help) if args.empty?
+          if args.empty?
+            ctx.puts(self.class.help)
+            return
+          end
           name = args.first
           project = ShopifyCli::Project.current
           app_type = ShopifyCli::AppTypeRegistry[project.config["app_type"].to_sym]

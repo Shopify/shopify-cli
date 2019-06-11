@@ -7,7 +7,6 @@ module ShopifyCli
         include ShopifyCli::Helpers::SchemaParser
 
         def call(ctx, args)
-          # TODO: Add check for file after authenticate shopify is complete
           selected_type = args.first
           schema = ShopifyCli::Tasks::GetSchema.call(ctx)
           enum = get_types_by_name(schema, 'WebhookSubscriptionTopic')
