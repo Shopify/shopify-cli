@@ -46,6 +46,7 @@ module ShopifyCli
           api_key: ctx.app_metadata[:api_key],
           secret: ctx.app_metadata[:secret],
           host: ctx.app_metadata[:host],
+          shop: ctx.app_metadata[:shop],
           scopes: 'read_products',
         )
         env_file.write(ctx, '.env')

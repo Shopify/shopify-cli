@@ -9,7 +9,7 @@ module ShopifyCli
         subcommand = args.shift
         case subcommand
         when 'project'
-          Project.call(@ctx, args)
+          Project.new(@ctx).call(args)
         else
           @ctx.puts(self.class.help)
         end
