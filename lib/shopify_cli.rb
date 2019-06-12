@@ -97,39 +97,16 @@ module ShopifyCli
     )
   end
 
+  autoload :AppTypes, 'shopify-cli/app_types'
+  autoload :AppTypeRegistry, 'shopify-cli/app_type_registry'
   autoload :Command, 'shopify-cli/command'
   autoload :Commands, 'shopify-cli/commands'
   autoload :Context, 'shopify-cli/context'
-  autoload :Executor, 'shopify-cli/executor'
   autoload :EntryPoint, 'shopify-cli/entry_point'
+  autoload :Executor, 'shopify-cli/executor'
   autoload :Finalize, 'shopify-cli/finalize'
+  autoload :Helpers, 'shopify-cli/helpers'
   autoload :Project, 'shopify-cli/project'
   autoload :Task, 'shopify-cli/task'
   autoload :Tasks, 'shopify-cli/tasks'
-  autoload :AppTypes, 'shopify-cli/app_types'
-  autoload :AppTypeRegistry, 'shopify-cli/app_type_registry'
-
-  module Tasks
-    register :Clone, :clone, 'shopify-cli/tasks/clone'
-    register :JsDeps, :js_deps, 'shopify-cli/tasks/js_deps'
-    register :Tunnel, :tunnel, 'shopify-cli/tasks/tunnel'
-    register :GetSchema, :get_schema, 'shopify-cli/tasks/get_schema'
-  end
-
-  module Helpers
-    autoload :PidFile, 'shopify-cli/helpers/pid_file'
-    autoload :Gem, 'shopify-cli/helpers/gem'
-    autoload :EnvFile, 'shopify-cli/helpers/env_file'
-    autoload :ProcessSupervision, 'shopify-cli/helpers/process_supervision'
-    autoload :SchemaParser, 'shopify-cli/helpers/schema_parser'
-    autoload :ShopifySchema, 'shopify-cli/helpers/shopify_schema'
-    autoload :GraphQL, 'shopify-cli/helpers/graphql'
-  end
-
-  module Tasks
-    register :Clone, :clone, 'shopify-cli/tasks/clone'
-    register :JsDeps, :js_deps, 'shopify-cli/tasks/js_deps'
-    register :Tunnel, :tunnel, 'shopify-cli/tasks/tunnel'
-    register :Schema, :schema, 'shopify-cli/tasks/schema'
-  end
 end
