@@ -3,17 +3,27 @@ module TestHelpers
     include TestHelpers::Context
 
     class FakeAppType < ShopifyCli::AppTypes::AppType
-      def self.description; end
+      class << self
+        def env_file
+          <<~ENV
+            SHOPIFY_API_KEY={api_key}
+            SHOPIFY_SECRET={secret}
+            SHOPIFY_HOST={host}
+          ENV
+        end
 
-      def self.serve_command(_ctx)
-        "a command"
-      end
+        def description; end
 
-      def self.generate
-        {
-          page: 'page-generate',
-          billing: 'billing-generate',
-        }
+        def serve_command(_ctx)
+          "a command"
+        end
+
+        def generate
+          {
+            page: 'page-generate',
+            billing: 'billing-generate',
+          }
+        end
       end
     end
 

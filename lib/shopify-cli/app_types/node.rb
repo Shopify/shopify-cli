@@ -13,27 +13,27 @@ module ShopifyCli
             SCOPES={scopes}
           KEYS
         end
-      end
 
-      def self.description
-        'node embedded app'
-      end
+        def description
+          'node embedded app'
+        end
 
-      def self.serve_command(ctx)
-        %W(
-          HOST=#{ctx.app_metadata[:host]}
-          PORT=#{ShopifyCli::Tasks::Tunnel::PORT}
-          npm run dev
-        ).join(' ')
-      end
+        def serve_command(ctx)
+          %W(
+            HOST=#{ctx.app_metadata[:host]}
+            PORT=#{ShopifyCli::Tasks::Tunnel::PORT}
+            npm run dev
+          ).join(' ')
+        end
 
-      def self.generate
-        {
-          page: 'npm run-script generate-page',
-          billing_recurring: 'npm run-script generate-recurring-billing',
-          billing_one_time: 'npm run-script generate-one-time-billing',
-          webhook: 'npm run-script generate-webhook',
-        }
+        def generate
+          {
+            page: 'npm run-script generate-page',
+            billing_recurring: 'npm run-script generate-recurring-billing',
+            billing_one_time: 'npm run-script generate-one-time-billing',
+            webhook: 'npm run-script generate-webhook',
+          }
+        end
       end
 
       def build

@@ -11,8 +11,7 @@ module ShopifyCli
           end
           name = args.first
           project = ShopifyCli::Project.current
-          app_type = ShopifyCli::AppTypeRegistry[project.config["app_type"].to_sym]
-          ctx.system("#{app_type.generate[:page]} #{name}")
+          ctx.system("#{project.app_type.generate[:page]} #{name}")
         end
 
         def self.help

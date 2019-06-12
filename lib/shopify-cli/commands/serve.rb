@@ -5,10 +5,11 @@ require 'shopify_cli'
 module ShopifyCli
   module Commands
     class Serve < ShopifyCli::Command
+      prerequisite_task :tunnel
+
       def call(*)
         project = ShopifyCli::Project.current
-        app_type = ShopifyCli::AppTypeRegistry[project.config["app_type"].to_sym]
-        @ctx.system(app_type.serve_command(@ctx))
+        @ctx.system(project.app_type.serve_command(@ctx))
       end
 
       def self.help
