@@ -6,6 +6,16 @@ module ShopifyCli
     class Rails < AppType
       include ShopifyCli::Helpers
 
+      def self.env_file
+        <<~KEYS
+          SHOPIFY_API_KEY={api_key}
+          SHOPIFY_API_SECRET_KEY={secret}
+          HOST={host}
+          SHOP={shop}
+          SCOPES={scopes}
+        KEYS
+      end
+
       def self.description
         'rails embedded app'
       end
