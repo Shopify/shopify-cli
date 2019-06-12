@@ -6,22 +6,24 @@ module ShopifyCli
     class Rails < AppType
       include ShopifyCli::Helpers
 
-      def self.env_file
-        <<~KEYS
-          SHOPIFY_API_KEY={api_key}
-          SHOPIFY_API_SECRET_KEY={secret}
-          HOST={host}
-          SHOP={shop}
-          SCOPES={scopes}
-        KEYS
-      end
+      class << self
+        def env_file
+          <<~KEYS
+            SHOPIFY_API_KEY={api_key}
+            SHOPIFY_API_SECRET_KEY={secret}
+            HOST={host}
+            SHOP={shop}
+            SCOPES={scopes}
+          KEYS
+        end
 
-      def self.description
-        'rails embedded app'
-      end
+        def description
+          'rails embedded app'
+        end
 
-      def self.serve_command(_ctx)
-        "PORT=#{ShopifyCli::Tasks::Tunnel::PORT} bin/rails server"
+        def serve_command(_ctx)
+          "PORT=#{ShopifyCli::Tasks::Tunnel::PORT} bin/rails server"
+        end
       end
 
       def build
