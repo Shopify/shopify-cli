@@ -2,8 +2,10 @@
 module TestHelpers
   module Context
     def setup
-      @context = TestHelpers::FakeContext.new(root: Dir.mktmpdir, env: {
+      root = Dir.mktmpdir
+      @context = TestHelpers::FakeContext.new(root: root, env: {
         'HOME' => '~',
+        'XDG_CONFIG_HOME' => root,
       })
       FileUtils.touch(File.join(@context.root, '.shopify-cli.yml'))
       super
