@@ -26,12 +26,12 @@ Tip: include an error message (in a `<details></details>` tag) if your issue is 
 
 ## Reduced test case
 
-The best way to get your bug fixed is to provide a reduced test case.
+The best way to get your bug fixed is to provide a [reduced test case](https://developer.mozilla.org/en-US/docs/Mozilla/QA/Reducing_testcases).
 
 
 
 ## Specifications
 
-- Browser:
+- Environment:
 - Device:
 - Operating System:

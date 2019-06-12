@@ -1,6 +1,6 @@
 # How to contribute
 
-Shopify App CLI is an open source project. We want to make it as easy and transparent as possible to contribute. If we are missing anything or can make the process easier in any way, please let us know.
+Shopify App CLI is an open source project. We want to make it as easy and transparent as possible to contribute. If we are missing anything or can make the process easier in any way, please let us know by [opening an issue](https://github.com/Shopify/shopify-cli/issues/new).
 
 ## Code of conduct
 
