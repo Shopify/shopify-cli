@@ -5,11 +5,11 @@ module ShopifyCli
     class Create < ShopifyCli::Command
       autoload :Project, 'shopify-cli/commands/create/project'
 
-      def call(args, _name)
+      def call(args, name)
         subcommand = args.shift
         case subcommand
         when 'project'
-          Project.new(@ctx).call(args)
+          Project.new(@ctx).call(args, name)
         else
           @ctx.puts(self.class.help)
         end
