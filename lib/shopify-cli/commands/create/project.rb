@@ -4,7 +4,7 @@ module ShopifyCli
   module Commands
     class Create
       class Project < ShopifyCli::Command
-        def call(args, _name)
+        def call(args, name)
           if args.empty?
             @ctx.puts(self.class.help)
             return
@@ -18,11 +18,12 @@ module ShopifyCli
             end
           end
 
+          AppTypeRegistry.check_dependencies(app_type, @ctx)
           ask_for_credentials
 
           AppTypeRegistry.build(app_type, name, @ctx)
-
           ShopifyCli::Project.write(@ctx, app_type)
+
         end
 
         def ask_for_credentials

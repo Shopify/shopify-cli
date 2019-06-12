@@ -29,7 +29,7 @@ module ShopifyCli
         end
       end
 
-      def build
+      def build(name)
         Gem.install(ctx, 'rails')
         Gem.install(ctx, 'bundler')
         CLI::UI::Frame.open("Generating new rails app in #{name}...") do
@@ -52,6 +52,11 @@ module ShopifyCli
         end
         ShopifyCli::Finalize.request_cd(name)
         puts CLI::UI.fmt(post_clone)
+      end
+
+      def check_dependencies
+        Gem.install(ctx, 'rails')
+        Gem.install(ctx, 'bundler')
       end
     end
   end

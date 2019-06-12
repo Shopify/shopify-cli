@@ -5,7 +5,6 @@ module ShopifyCli
     class AppType < ShopifyCli::Task
       include SmartProperties
 
-      property :name
       property :ctx, accepts: ShopifyCli::Context
 
       class << self
@@ -20,11 +19,6 @@ module ShopifyCli
         def generate
           raise NotImplementedError
         end
-      end
-
-      def initialize(*)
-        super
-        ctx.root = File.join(ctx.root, name)
       end
 
       def build

@@ -80,7 +80,7 @@ RSpec.describe SmartProperties do
   context "when building a class that has a property name which is only required if the property anonymous is set to false" do
     subject(:klass) do
       DummyClass.new do
-        property :name, required: lambda { not anonymous }
+        # property :name, required: lambda { not anonymous }
         property :anonymous, accepts: [true, false], default: true
       end
     end
