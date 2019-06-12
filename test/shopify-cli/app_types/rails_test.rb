@@ -40,16 +40,24 @@ module ShopifyCli
       end
 
       def test_server_command
-        project = TestHelpers::FakeProject.new(
-          directory: @context.root,
-          config: {
-            'app_type' => 'rails',
-          }
-        )
-        ShopifyCli::Project.expects(:current).returns(project)
+        @context.stubs(:project).returns(
+          Project.at(File.join(FIXTURE_DIR, 'app_types/rails'))
+        ).at_least_once
         cmd = ShopifyCli::Commands::Serve.new(@context)
         @context.expects(:system).with(
           "PORT=8081 bin/rails server"
+        )
+        cmd.call([], nil)
+      end
+
+      def test_open_command
+        @context.stubs(:project).returns(
+          Project.at(File.join(FIXTURE_DIR, 'app_types/rails'))
+        ).at_least_once
+        cmd = ShopifyCli::Commands::Open.new(@context)
+        @context.expects(:system).with(
+          'open',
+          'https://example.com/login?shop=my-test-shop.myshopify.com'
         )
         cmd.call([], nil)
       end
