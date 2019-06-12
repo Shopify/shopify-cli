@@ -46,11 +46,11 @@ is_linux() {
   test -n "${linux}"
 }
 
-install_dir="${XDG_RUNTIME_DIR:-$HOME}/.shopify-cli"
+install_dir="${XDG_RUNTIME_DIR:-$HOME}/.shopify-app-cli"
 
 postmsg() {
-  echo -e "\x1b[32mshopify-cli\x1b[0m is installed!"
-  echo -e "Run \x1b[32mshopify help\x1b[0m to see what you can do, or read \x1b[32mhttps://github.com/Shopify/shopify-cli\x1b[0m."
+  echo -e "\x1b[32mshopify-app-cli\x1b[0m is installed!"
+  echo -e "Run \x1b[32mshopify help\x1b[0m to see what you can do, or read \x1b[32mhttps://github.com/Shopify/shopify-app-cli\x1b[0m."
   echo -e "To start developing on shopify, for example:"
   echo -e "  * run \x1b[32mshopify app create embeddedapp\x1b[0m"
 }
@@ -71,7 +71,7 @@ install_xcode_clt() {
   osx_vers=$(sw_vers -productVersion | awk -F "." '{print $2}')
 
   if [[ "${osx_vers}" -lt 11 ]]; then
-    >&2 echo "shopify-cli is only supported on El Capitan and higher."
+    >&2 echo "shopify-app-cli is only supported on El Capitan and higher."
     exit 1
   fi
 
@@ -150,7 +150,7 @@ install_linux_prerequisites() {
         bs_error_message "update-alternatives failed"
         exit 1
       fi
-      bs_success_message "Successfully installed shopify-cli prerequisites"
+      bs_success_message "Successfully installed shopify-app-cli prerequisites"
       ;;
     *)
       bs_error_message "On ubuntu, we would install build-essential, git-core, and ruby."
@@ -164,14 +164,14 @@ install_linux_prerequisites() {
 
 clone_shopify_cli() {
   if [[ -d "${install_dir}/.git" ]]; then
-    bs_success_message "already have shopify-cli"
+    bs_success_message "already have shopify-app-cli"
   else
     local git_url
-    git_url="${SHOPIFY_CLI_BOOTSTRAP_GIT_URL:-git@github.com:shopify/shopify-cli.git}"
+    git_url="${SHOPIFY_CLI_BOOTSTRAP_GIT_URL:-git@github.com:shopify/shopify-app-cli.git}"
 
     # Very intentionally do the git clone as the logged in user so ssh keys aren't an issue.
     mkdir -p "${install_dir}"
-    echo "Cloning Shopify/shopify-cli into ${install_dir}"
+    echo "Cloning Shopify/shopify-app-cli into ${install_dir}"
     false
     (cd "${install_dir}" && git clone "${git_url}" .)
     if [[ $? -ne 0 ]]; then
@@ -179,12 +179,12 @@ clone_shopify_cli() {
       bs_error_message "https://help.github.com/articles/generating-an-ssh-key"
       bs_error_message ""
       bs_error_message "If you know that you've set up auth for HTTPS but not SSH, run:"
-      bs_error_message "  export SHOPIFY_CLI_BOOTSTRAP_GIT_URL=https://github.com/shopify/shopify-cli.git"
+      bs_error_message "  export SHOPIFY_CLI_BOOTSTRAP_GIT_URL=https://github.com/shopify/shopify-app-cli.git"
       bs_error_message "And then run this script again."
       exit 1
     fi
 
-    bs_success_message "cloned shopify/shopify-cli"
+    bs_success_message "cloned shopify/shopify-app-cli"
   fi
 
   case "${shell}" in
@@ -200,7 +200,7 @@ clone_shopify_cli() {
       install_fish_shell_shim
       ;;
     *)
-      >&2 echo "shopify-cli is not supported on your shell (${shell} -- bash, zsh, and fish are supported)."
+      >&2 echo "shopify-app-cli is not supported on your shell (${shell} -- bash, zsh, and fish are supported)."
       ;;
   esac
 }
@@ -219,7 +219,7 @@ install_bash_shell_shim() {
   # 2. Source .profile if is exists and .bash_login did not
   # 4. Source shopify.sh
   #
-  # And additionally, we will append to .bashrc which will load shopify-cli if it exists
+  # And additionally, we will append to .bashrc which will load shopify-app-cli if it exists
   # and the shell is also interactive.
   #
   # See:
@@ -237,7 +237,7 @@ install_bash_shell_shim() {
   if ! grep -q "shopify.sh" "${bp}" 2>/dev/null; then
     {
       echo ''
-      echo '# load shopify-cli, but only if present and the shell is interactive'
+      echo '# load shopify-app-cli, but only if present and the shell is interactive'
       echo "if [[ -f "${install_dir}/shopify.sh" ]]; then source "${install_dir}/shopify.sh"; fi"
     } >> "${bp}"
   fi
@@ -245,14 +245,14 @@ install_bash_shell_shim() {
   if ! grep -q "shopify.sh" "${HOME}/.bashrc" 2>/dev/null; then
     {
       echo ''
-      echo '# load shopify-cli, but only if present and the shell is interactive'
+      echo '# load shopify-app-cli, but only if present and the shell is interactive'
       echo 'if [[ -f "${install_dir}/shopify.sh"  ]] && [[ $- == *i* ]]; then'
       echo '  source "${install_dir}/shopify.sh"'
       echo 'fi'
     } >> "${HOME}/.bashrc"
   fi
 
-  bs_success_message "shell set up for shopify-cli"
+  bs_success_message "shell set up for shopify-app-cli"
   bs_success_message "\x1b[1;44;31mNOTE:\x1b[39m added lines to the end of ~/.bash_profile and ~/.bashrc\x1b[0m"
 }
 
@@ -261,12 +261,12 @@ install_zsh_shell_shim() {
   rcfile="${HOME}/.zshrc"
   touch "${rcfile}"
   if grep -q "${install_dir}/shopify.sh" "${rcfile}"; then
-    bs_success_message "shell already set up for shopify-cli"
+    bs_success_message "shell already set up for shopify-app-cli"
     return
   fi
 
   echo -e "\n[ -f \"${install_dir}/shopify.sh\" ] && source \"${install_dir}/shopify.sh\"" >> "${rcfile}"
-  bs_success_message "shell set up for shopify-cli"
+  bs_success_message "shell set up for shopify-app-cli"
   bs_success_message "\x1b[1;44;31mNOTE:\x1b[39m added a line to the end of ${rcfile}\x1b[0m"
 }
 
@@ -276,12 +276,12 @@ install_fish_shell_shim() {
   mkdir -p "$(dirname "${rcfile}")"
   touch "${rcfile}"
   if grep -q "${install_dir}/shopify.fish" "${rcfile}"; then
-    bs_success_message "shell already set up for shopify-cli"
+    bs_success_message "shell already set up for shopify-app-cli"
     return
   fi
 
   echo -e "\nif test -f \"${install_dir}/shopify.fish\"\n  source \"${install_dir}/shopify.fish\"\nend" >> "${rcfile}"
-  bs_success_message "shell set up for shopify-cli"
+  bs_success_message "shell set up for shopify-app-cli"
   bs_success_message "\x1b[1;44;31mNOTE:\x1b[39m added a line to the end of ${rcfile}\x1b[0m"
 }
 
@@ -415,7 +415,7 @@ main() {
     exit 1
   fi
 
-  __bs_print_title 2 2 "Installing shopify-cli"
+  __bs_print_title 2 2 "Installing shopify-app-cli"
   if __bs_run_func_with_margin clone_shopify_cli; then
     __bs_print_bare_footer
   else
@@ -438,7 +438,7 @@ else
   \bash "${tempfile}"
   if \test $? -eq 0; then
     \rm -f "${tempfile}"
-    # re-exec the user's shell to pick up the new shopify-cli function.
+    # re-exec the user's shell to pick up the new shopify-app-cli function.
     case "$(\uname -s)" in
       Darwin)
         \exec "$(\dscl . -read "/Users/${LOGNAME}" UserShell | /usr/bin/awk '{print $NF}')" --login
