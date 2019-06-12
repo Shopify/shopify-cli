@@ -235,7 +235,11 @@ install_bash_shell_shim() {
   fi
 
   if ! grep -q "shopify.sh" "${bp}" 2>/dev/null; then
-    echo "if [[ -f "${install_dir}/shopify.sh" ]]; then source "${install_dir}/shopify.sh"; fi" >> "${bp}"
+    {
+      echo ''
+      echo '# load shopify-cli, but only if present and the shell is interactive'
+      echo "if [[ -f "${install_dir}/shopify.sh" ]]; then source "${install_dir}/shopify.sh"; fi"
+    } >> "${bp}"
   fi
 
   if ! grep -q "shopify.sh" "${HOME}/.bashrc" 2>/dev/null; then
