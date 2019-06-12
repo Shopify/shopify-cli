@@ -1,5 +1,6 @@
 module ShopifyCli
   module Helpers
+    autoload :AccessToken, 'shopify-cli/helpers/access_token'
     autoload :EnvFile, 'shopify-cli/helpers/env_file'
     autoload :Gem, 'shopify-cli/helpers/gem'
     autoload :GraphQL, 'shopify-cli/helpers/graphql'
