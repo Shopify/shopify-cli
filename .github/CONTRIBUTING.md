@@ -40,7 +40,3 @@ We’ll review your pull request and either merge it, request changes to it, or 
 ### Contributor License Agreement (CLA)
 
 Each contributor is required to [sign a CLA](https://cla.shopify.com/). This process is automated as part of your first pull request and is only required once. If any contributor has not signed or does not have an associated GitHub account, the CLA check will fail and the pull request is unable to be merged.
-
-## Breaking changes
-
-If your pull request contains breaking changes, please target the branch for the next major release and open a pull request against `master` that introduces the deprecation warnings and upgrade path. If you are unsure if the changes are considered breaking or not, open your pull request against the `master` branch and let us know. We understand it can be uncomfortable asking for help and this is why we have a [code of conduct](https://github.com/Shopify/shopify-app-cli/blob/master/.github/CODE_OF_CONDUCT.md) to ensure the community is positive, encouraging, and helpful.
