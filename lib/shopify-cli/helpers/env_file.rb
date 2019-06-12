@@ -7,7 +7,7 @@ module ShopifyCli
 
       class << self
         def read(app_type, filename)
-          template = parse_template(app_type.class.env_file)
+          template = parse_template(app_type.env_file)
           input = {}
           parse(filename).each do |key, value|
             input[template[key]] = value if template[key]

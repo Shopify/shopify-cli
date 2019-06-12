@@ -40,15 +40,13 @@ module ShopifyCli
       end
 
       def test_server_command
-        ShopifyCli::Project.expects(:current).returns(
-          TestHelpers::FakeProject.new(
-            directory: @context.root,
-            config: {
-              'app_type' => 'rails',
-            }
-          )
+        project = TestHelpers::FakeProject.new(
+          directory: @context.root,
+          config: {
+            'app_type' => 'rails',
+          }
         )
-        @context.app_metadata[:host] = 'https://example.com'
+        ShopifyCli::Project.expects(:current).returns(project)
         cmd = ShopifyCli::Commands::Serve.new(@context)
         @context.expects(:system).with(
           "PORT=8081 bin/rails server"
