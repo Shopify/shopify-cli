@@ -26,8 +26,8 @@ module ShopifyCli
 
         def self.help
           <<~HELP
-            Generate webhook scaffolding
-            Usage: {{command:#{ShopifyCli::TOOL_NAME} generate webhook <type>}}
+            Generate and register a new webhook that listens for the specified Shopify store event.
+              Usage: {{command:#{ShopifyCli::TOOL_NAME} generate webhook <type>}}
           HELP
         end
       end

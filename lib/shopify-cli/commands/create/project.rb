@@ -41,9 +41,9 @@ module ShopifyCli
 
         def self.help
           <<~HELP
-            Bootstrap an app.
+          Create a new app project.
             Usage: {{command:#{ShopifyCli::TOOL_NAME} create project <appname>}}
-          HELP
+        HELP
         end
       end
     end

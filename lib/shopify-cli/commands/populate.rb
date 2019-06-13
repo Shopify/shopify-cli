@@ -15,8 +15,8 @@ module ShopifyCli
 
       def self.help
         <<~HELP
-          Populate dev store with products, customers and order records.
-          Usage: {{command:#{ShopifyCli::TOOL_NAME} populate <storename>}}
+        Populate your Shopify development store with example products, customers, or orders.
+            Usage: {{command:#{ShopifyCli::TOOL_NAME} populate <storename> [ products | customers | orders ]}}
         HELP
       end
     end
