@@ -30,21 +30,17 @@ module ShopifyCli
 
       def self.extended_help
         <<~HELP
+          ------------
           Subcommands:
 
-          * page: Generates code for a page or section of pages in your app. Usage:
+          {{cyan:page}}: Generate a new page in your app with the specified name. New files are generated inside the project’s “/pages” directory.
+            Usage: {{command:#{ShopifyCli::TOOL_NAME} generate page <pagename>}}
 
-              {{command:#{ShopifyCli::TOOL_NAME} generate page [name]}}
+          {{cyan:billing}}: Generate a new call to Shopify’s billing API by adding the necessary code to the project’s server.js file.
+            Usage: {{command:#{ShopifyCli::TOOL_NAME} generate billing}}
 
-          * billing: Generates code for calling the Shopify Billing API and
-            accepting usage charges for your app. Usage:
-
-              {{command:#{ShopifyCli::TOOL_NAME} generate billing}}
-
-          * webhook: Generates code for registering and responding to a webhook
-            from Shopify. Usage:
-
-              {{command:#{ShopifyCli::TOOL_NAME} generate webhook [type]}}
+          {{cyan:webhook}}: Generate and register a new webhook that listens for the specified Shopify store event.
+            Usage: {{command:#{ShopifyCli::TOOL_NAME} generate webhook [type]}}
         HELP
       end
     end

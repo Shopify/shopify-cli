@@ -24,11 +24,12 @@ module ShopifyCli
 
       def self.extended_help
         <<~HELP
+          ------------
           Subcommands:
 
-          * project: Creates an app based on type selected. Usage:
+            {{cyan:project}}: Creates an app based on type selected.
+              Usage: {{command:#{ShopifyCli::TOOL_NAME} create project <appname>}}
 
-              {{command:#{ShopifyCli::TOOL_NAME} create project <appname>}}
         HELP
       end
     end
