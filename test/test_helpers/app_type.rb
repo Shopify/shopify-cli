@@ -24,6 +24,10 @@ module TestHelpers
             billing: 'billing-generate',
           }
         end
+
+        def open(ctx)
+          ctx.system('open https://example.com')
+        end
       end
     end
 

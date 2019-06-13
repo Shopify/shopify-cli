@@ -17,6 +17,7 @@ module ShopifyCli
     register :Help, 'help', 'shopify-cli/commands/help'
     register :LoadDev, 'load-dev', 'shopify-cli/commands/load_dev'
     register :LoadSystem, 'load-system', 'shopify-cli/commands/load_system'
+    register :Open, 'open', 'shopify-cli/commands/open'
     register :Serve, 'serve', 'shopify-cli/commands/serve'
     register :Tunnel, 'tunnel', 'shopify-cli/commands/tunnel'
     register :Update, 'update', 'shopify-cli/commands/update'

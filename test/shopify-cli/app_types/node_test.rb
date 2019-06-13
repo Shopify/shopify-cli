@@ -4,6 +4,7 @@ module ShopifyCli
   module AppTypes
     class NodeTest < MiniTest::Test
       include TestHelpers::Context
+      include TestHelpers::Constants
 
       def setup
         super
@@ -53,18 +54,25 @@ module ShopifyCli
       end
 
       def test_server_command
-        ShopifyCli::Project.expects(:current).returns(
-          TestHelpers::FakeProject.new(
-            directory: @context.root,
-            config: {
-              'app_type' => 'node',
-            }
-          )
-        )
+        @context.stubs(:project).returns(
+          Project.at(File.join(FIXTURE_DIR, 'app_types/node'))
+        ).at_least_once
         @context.app_metadata[:host] = 'https://example.com'
         cmd = ShopifyCli::Commands::Serve.new(@context)
         @context.expects(:system).with(
           "HOST=https://example.com PORT=8081 npm run dev"
+        )
+        cmd.call([], nil)
+      end
+
+      def test_open_command
+        @context.stubs(:project).returns(
+          Project.at(File.join(FIXTURE_DIR, 'app_types/node'))
+        ).at_least_once
+        cmd = ShopifyCli::Commands::Open.new(@context)
+        @context.expects(:system).with(
+          'open',
+          'https://example.com/auth?shop=my-test-shop.myshopify.com'
         )
         cmd.call([], nil)
       end

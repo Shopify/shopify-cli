@@ -56,6 +56,10 @@ module ShopifyCli
       ShopifyCli::AppTypeRegistry[config['app_type'].to_sym]
     end
 
+    def env
+      @env ||= ShopifyCli::Helpers::EnvFile.read(app_type, File.join(directory, '.env'))
+    end
+
     def config
       @config ||= begin
         config = load_yaml_file('.shopify-cli.yml')

@@ -26,6 +26,7 @@ Minitest::Reporters.use!([Minitest::Reporters::SpecReporter.new])
 module Minitest
   class Test
     RUBY_VERSION = File.read('.ruby-version').tr("\n", '')
+    FIXTURE_DIR = File.expand_path('fixtures', File.dirname(__FILE__))
   end
 
   module Assertions

@@ -13,7 +13,6 @@ module ShopifyCli
             SHOPIFY_API_SECRET_KEY={secret}
             HOST={host}
             SHOP={shop}
-            SCOPES={scopes}
           KEYS
         end
 
@@ -23,6 +22,10 @@ module ShopifyCli
 
         def serve_command(_ctx)
           "PORT=#{ShopifyCli::Tasks::Tunnel::PORT} bin/rails server"
+        end
+
+        def open(ctx)
+          ctx.system('open', "#{ctx.project.env.host}/login?shop=#{ctx.project.env.shop}")
         end
       end
 

@@ -5,12 +5,15 @@ require 'shopify_cli'
 module ShopifyCli
   module Tasks
     class Tunnel < ShopifyCli::Task
+      include ShopifyCli::Helpers::OS
+
       class FetchUrlError < RuntimeError; end
       class NgrokError < RuntimeError; end
 
       PORT = 8081
       DOWNLOAD_URLS = {
         mac: 'https://bin.equinox.io/c/4VmDzA7iaHb/ngrok-stable-darwin-amd64.zip',
+        linux: 'https://bin.equinox.io/c/4VmDzA7iaHb/ngrok-stable-linux-amd64.zip',
       }
       TIMEOUT = 10
 
@@ -56,7 +59,7 @@ module ShopifyCli
         spinner.add('Installing ngrok...') do
           zip_dest = File.join(ShopifyCli::ROOT, 'ngrok.zip')
           unless File.exist?(zip_dest)
-            @ctx.system('curl', '-o', zip_dest, DOWNLOAD_URLS[:mac], chdir: ShopifyCli::ROOT)
+            @ctx.system('curl', '-o', zip_dest, DOWNLOAD_URLS[os], chdir: ShopifyCli::ROOT)
           end
           @ctx.system('unzip', '-u', zip_dest, chdir: ShopifyCli::ROOT)
           FileUtils.rm(zip_dest)

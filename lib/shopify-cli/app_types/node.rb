@@ -20,7 +20,7 @@ module ShopifyCli
 
         def serve_command(ctx)
           %W(
-            HOST=#{ctx.app_metadata[:host]}
+            HOST=#{ctx.project.env.host}
             PORT=#{ShopifyCli::Tasks::Tunnel::PORT}
             npm run dev
           ).join(' ')
@@ -33,6 +33,10 @@ module ShopifyCli
             billing_one_time: 'npm run-script generate-one-time-billing',
             webhook: 'npm run-script generate-webhook',
           }
+        end
+
+        def open(ctx)
+          ctx.system('open', "#{ctx.project.env.host}/auth?shop=#{ctx.project.env.shop}")
         end
       end
 
