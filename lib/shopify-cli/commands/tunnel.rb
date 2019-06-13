@@ -22,8 +22,8 @@ module ShopifyCli
 
       def self.help
         <<~HELP
-          Start and manage an http tunnel.
-          Usage: {{command:#{ShopifyCli::TOOL_NAME} tunnel start|stop}}
+          Start or stop an http tunnel to your local development app using ngrok.
+            Usage: {{command:#{ShopifyCli::TOOL_NAME} tunnel [ start | stop ]}}
         HELP
       end
     end

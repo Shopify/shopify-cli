@@ -23,8 +23,8 @@ module ShopifyCli
 
       def self.help
         <<~HELP
-          Generate code.
-          Usage: {{command:#{ShopifyCli::TOOL_NAME} generate [page|billing|webhook]}}
+          Generate code in your app project. Supports generating new pages, new billing API calls, or new webhooks.
+            Usage: {{command:#{ShopifyCli::TOOL_NAME} generate [ page | billing | webhook ]}}
         HELP
       end
 

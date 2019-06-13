@@ -19,6 +19,7 @@ module ShopifyCli
           end
         end
 
+        puts ""
         @ctx.puts('{{bold:Available commands}}')
         @ctx.puts('Use {{command:shopify help [command]}} to display detailed information about a specific command.')
         puts ""

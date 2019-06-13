@@ -16,7 +16,7 @@ module ShopifyCli
 
         def self.help
           <<~HELP
-            Generate billing scaffold
+          Generate a new call to Shopify’s billing API by adding the necessary code to the project’s server.js file.
             Usage: {{command:#{ShopifyCli::TOOL_NAME} generate billing}}
           HELP
         end

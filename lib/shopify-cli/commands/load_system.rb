@@ -8,7 +8,10 @@ module ShopifyCli
       end
 
       def self.help
-        "reloads installed instance of shopify-cli"
+        <<~HELP
+        Reload the installed instance of shopify-cli
+          Usage: {{command:#{ShopifyCli::TOOL_NAME} load-system}}
+        HELP
       end
     end
   end
