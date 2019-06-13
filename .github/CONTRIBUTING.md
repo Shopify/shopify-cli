@@ -1,6 +1,6 @@
 # How to contribute
 
-Shopify App CLI is an open source project. We want to make it as easy and transparent as possible to contribute. If we are missing anything or can make the process easier in any way, please let us know by [opening an issue](https://github.com/Shopify/shopify-cli/issues/new).
+Shopify App CLI is an open source project. We want to make it as easy and transparent as possible to contribute. If we are missing anything or can make the process easier in any way, please let us know by [opening an issue](https://github.com/Shopify/shopify-app-cli/issues/new).
 
 ## Code of conduct
 
@@ -14,7 +14,7 @@ All work on Shopify App CLI happens directly on GitHub. Both team members and ex
 
 ### Where to find known issues
 
-We track all of our issues in GitHub and [bugs](https://github.com/Shopify/shopify-app-cli/labels/Bug) are labeled accordingly. If you are planning to work on an issue, avoid ones which already have an assignee, where someone has commented within the last two weeks they are working on it, or the issue is labeled with [fix in progress](https://github.com/Shopify/shopify-ap-cli/labels/fix%20in%20progress). We will do our best to communicate when an issue is being worked on internally.
+We track all of our issues in GitHub and [bugs](https://github.com/Shopify/shopify-app-cli/labels/Bug) are labeled accordingly. If you are planning to work on an issue, avoid ones which already have an assignee, where someone has commented within the last two weeks they are working on it, or the issue is labeled with [fix in progress](https://github.com/Shopify/shopify-app-cli/labels/fix%20in%20progress). We will do our best to communicate when an issue is being worked on internally.
 
 ### Reporting new issues
 
