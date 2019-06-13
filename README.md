@@ -7,7 +7,7 @@ dev clone shopify-app-cli && eval "$(cat install.sh)"
 
 # Shopify App CLI
 
-<span style="background-color:#fffacd">This tool is a Beta release in active development. Please check the [contributing guide](https://github.com/Shopify/shopify-app-cli/blob/master/.github/CONTRIBUTING.md) for notes on how to file issues and pull requests.</span>
+> NOTE: This tool is a Beta release in active development. Please check the [contributing guide](https://github.com/Shopify/shopify-app-cli/blob/master/.github/CONTRIBUTING.md) for notes on how to file issues and pull requests.
 
 Shopify App CLI helps you build Shopify apps faster. It automates many common tasks in the development process and lets you quickly add popular features, such as billing and webhooks.
 
@@ -37,7 +37,7 @@ Developers should have some prior knowledge of the Shopify app ecosystem. Curren
 - If you don’t have one, [create a Development store](https://help.shopify.com/en/partners/dashboard/development-stores#create-a-development-store) where you can install and test your app.
 - In the Partner dashboard, [create a new app](https://help.shopify.com/en/api/tools/partner-dashboard/your-apps#create-a-new-app). You’ll need this app’s API credentials during the setup process.
 
-NOTE: A future release will allow you to provision API credentials and development stores without leaving the CLI. During the beta, it must be done through the Partner Dashboard.
+> NOTE: A future release will allow you to provision API credentials and development stores without leaving the CLI. During the beta, it must be done through the Partner Dashboard.
 
 ## Commands
 
