@@ -1,0 +1,7 @@
+language: ruby
+rvm:
+ - 2.5.1
+install:
+- bundle install
+script:
+  - bundle exec rake test
