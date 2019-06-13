@@ -7,6 +7,8 @@ dev clone shopify-app-cli && eval "$(cat install.sh)"
 
 # Shopify App CLI
 
+<span style="background-color:#fffacd">This tool is a Beta release in active development. Please check the [contributing guide](https://github.com/Shopify/shopify-app-cli/blob/master/.github/CONTRIBUTING.md) for notes on how to file issues and pull requests.</span>
+
 Shopify App CLI helps you build Shopify apps faster. It automates many common tasks in the development process and lets you quickly add popular features, such as billing and webhooks.
 
 ## Install
@@ -15,14 +17,14 @@ Shopify App CLI installs using a shell script. Download and run it in your termi
 
 ### Mac OS and Ubuntu
 ```sh
-eval "$(curl -sS https://raw.githubusercontent.com/Shopify/shopify-cli/master/install.sh)"
+eval "$(curl -sS https://raw.githubusercontent.com/Shopify/shopify-app-cli/master/install.sh)"
 ```
 
 ### Windows
 Install [Linux Subsystem for Windows](https://docs.microsoft.com/en-us/windows/wsl/install-win10) and the [Ubuntu VM](https://www.microsoft.com/en-ca/p/ubuntu/9nblggh4msv6), then:
 
 ```sh
-eval "$(curl -sS https://raw.githubusercontent.com/Shopify/shopify-cli/master/install.sh)"
+eval "$(curl -sS https://raw.githubusercontent.com/Shopify/shopify-app-cli/master/install.sh)"
 ```
 
 ## Getting started
@@ -35,26 +37,28 @@ Developers should have some prior knowledge of the Shopify app ecosystem. Curren
 - If you don’t have one, [create a Development store](https://help.shopify.com/en/partners/dashboard/development-stores#create-a-development-store) where you can install and test your app.
 - In the Partner dashboard, [create a new app](https://help.shopify.com/en/api/tools/partner-dashboard/your-apps#create-a-new-app). You’ll need this app’s API credentials during the setup process.
 
+NOTE: A future release will allow you to provision API credentials and development stores without leaving the CLI. During the beta, it must be done through the Partner Dashboard.
+
 ## Commands
 
 ### Create a new app project
 
-The `create` command will scaffold a new Shopify app in your current active directory and generate all the necessary files.
+The `create` command will scaffold a new Shopify app in your current active directory and generate all the necessary starter files.
 
 ```sh
 ~/ $ shopify create project APP_NAME
 ```
 
-The CLI will ask what type of app you want to create. Two languages and frameworks are currently supported:
+The CLI will ask what type of app you want to create. Two languages are currently supported:
 
 - Node.js and React
-- Ruby and Sinatra
+- Ruby
 
-The CLI will also ask for your app’s API key and API secret, which you can find in the Partner Dashboard.
+The CLI will also ask for your app’s API key and API secret, which you can find in the Partner Dashboard (see “Requirements” above).
 
 ### Start a development server
 
-Running the `serve` command in your app directory will start a local development server.
+Running the `serve` command in your app directory will start your local development server as well as a public tunnel to your local app (see the `tunnel` command below). This will make your app visible to anyone with the ngrok URL.
 
 ```sh
 $ shopify serve
@@ -62,9 +66,9 @@ $ shopify serve
 
 Your terminal will display the localhost and port where your app is now visible.
 
-### Start a tunnel to your localhost
+### Start or stop a tunnel to your localhost
 
-Use `tunnel` to set up a public tunnel to your local app. Shopify App CLI uses [ngrok](https://ngrok.com/) under the hood to manage this connection:
+Use `tunnel` to set up a public tunnel to your local app. Shopify App CLI uses [ngrok](https://ngrok.com/) to manage this connection. Starting a tunnel will make your app visible to anyone with the ngrok URL.
 
 ```sh
 $ shopify tunnel start
@@ -113,6 +117,8 @@ A [list of supported webhook events](https://help.shopify.com/en/api/reference/e
 Developers can use [development stores](https://help.shopify.com/en/partners/dashboard/development-stores) to test their apps. Development stores have no products, customers or orders when they’re created. Shopify App CLI can quickly add dummy data to your development store so you can test your app more thoroughly.
 
 The `populate` command can add fake products, customers, and orders. The default number of items added is 10. You can specify a different number of items with the `--count` option.
+
+The STORE_ID placeholder in these examples can be found in your development store’s URL, preceding `.myshopify.com` (so, for instance, if you had a development store with a URL of `example.myshopify.com`, the store’s ID would be `example`).
 
 ```sh
 # Adds 10 fake products
