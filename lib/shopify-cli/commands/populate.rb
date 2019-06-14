@@ -34,6 +34,7 @@ module ShopifyCli
               Usage: {{command:#{ShopifyCli::TOOL_NAME} generate webhook [type]}}
           
           {{bold:Options:}}
+            
             {{cyan:--count [integer]}}: The number of dummy items to populate. Defaults to 10.
           
           {{bold:Examples:}}
