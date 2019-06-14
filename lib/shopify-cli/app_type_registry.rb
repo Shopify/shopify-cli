@@ -8,7 +8,12 @@ module ShopifyCli
       end
 
       def build(identifier, name, ctx)
-        app_types[identifier].new(name: name, ctx: ctx).build
+        ctx.root = File.join(ctx.root, name)
+        app_types[identifier].new(ctx: ctx).build(name)
+      end
+
+      def check_dependencies(identifier, ctx)
+        app_types[identifier].new(ctx: ctx).check_dependencies
       end
 
       def each(&enumerator)

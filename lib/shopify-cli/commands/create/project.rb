@@ -18,10 +18,10 @@ module ShopifyCli
             end
           end
 
+          AppTypeRegistry.check_dependencies(app_type, @ctx)
           ask_for_credentials
 
           AppTypeRegistry.build(app_type, name, @ctx)
-
           ShopifyCli::Project.write(@ctx, app_type)
         end
 

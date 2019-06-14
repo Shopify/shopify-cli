@@ -29,7 +29,7 @@ module ShopifyCli
         end
       end
 
-      def build
+      def build(name)
         Gem.install(ctx, 'rails')
         Gem.install(ctx, 'bundler')
         CLI::UI::Frame.open("Generating new rails app in #{name}...") do
@@ -41,17 +41,20 @@ module ShopifyCli
         CLI::UI::Frame.open("Running bundle install...") do
           ctx.system(Gem.binary_path_for(ctx, 'bundle'), 'install', chdir: ctx.root)
         end
-        api_key = CLI::UI.ask('What is your Shopify API Key')
-        api_secret = CLI::UI.ask('What is your Shopify API Secret')
         CLI::UI::Frame.open("Running shopfiy_app generator...") do
           ctx.system(
             Gem.binary_path_for(ctx, 'rails'),
             'generate',
-            'shopify_app', "--api_key #{api_key}", "--secret #{api_secret}"
+            'shopify_app', "--api_key #{ctx.app_metadata[:api_key]}", "--secret #{ctx.app_metadata[:secret]}"
           )
         end
         ShopifyCli::Finalize.request_cd(name)
         puts CLI::UI.fmt(post_clone)
+      end
+
+      def check_dependencies
+        Gem.install(ctx, 'rails')
+        Gem.install(ctx, 'bundler')
       end
     end
   end

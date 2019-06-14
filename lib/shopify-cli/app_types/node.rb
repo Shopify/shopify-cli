@@ -40,7 +40,7 @@ module ShopifyCli
         end
       end
 
-      def build
+      def build(name)
         ShopifyCli::Tasks::Clone.call('git@github.com:shopify/shopify-app-node.git', name)
         ShopifyCli::Finalize.request_cd(name)
         ShopifyCli::Tasks::JsDeps.call(ctx.root)
@@ -63,6 +63,14 @@ module ShopifyCli
         end
 
         puts CLI::UI.fmt(post_clone)
+      end
+
+      def check_dependencies
+        version, stat = ctx.capture2e('node -v')
+        ctx.puts("{{green:✔︎}} Node #{version}")
+        unless stat.success?
+          raise(ShopifyCli::Abort, 'Node required to create app. Download node at https://nodejs.org/en/download')
+        end
       end
     end
   end
