@@ -7,13 +7,16 @@ module ShopifyCli
 
       def setup
         super
-        @app = ShopifyCli::AppTypes::Rails.new(name: 'test-app', ctx: @context)
+        @app = ShopifyCli::AppTypes::Rails.new(ctx: @context)
+        @context.app_metadata = {
+          api_key: 'api_key',
+          secret: 'secret',
+        }
       end
 
       def test_build_creates_rails_app
         ShopifyCli::Helpers::Gem.expects(:install).with(@context, 'rails')
         ShopifyCli::Helpers::Gem.expects(:install).with(@context, 'bundler')
-        CLI::UI.expects(:ask).twice.returns('apikey', 'apisecret')
         @context.expects(:system).with(
           "~/.gem/ruby/#{RUBY_VERSION}/bin/rails", 'new', 'test-app'
         )
@@ -25,11 +28,11 @@ module ShopifyCli
           "~/.gem/ruby/#{RUBY_VERSION}/bin/rails",
           'generate',
           'shopify_app',
-          '--api_key apikey',
-          '--secret apisecret',
+          '--api_key api_key',
+          '--secret secret',
         )
         io = capture_io do
-          @app.build
+          @app.build('test-app')
         end
         output = io.join
 

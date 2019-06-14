@@ -8,7 +8,7 @@ module ShopifyCli
 
       def setup
         super
-        @app = ShopifyCli::AppTypes::Node.new(name: 'test-app', ctx: @context)
+        @app = ShopifyCli::AppTypes::Node.new(ctx: @context)
         @context.app_metadata = {
           host: 'host',
           api_key: 'api_key',
@@ -33,7 +33,7 @@ module ShopifyCli
         @context.expects(:rm_r).with(File.join(@context.root, '.git'))
         @context.expects(:rm_r).with(File.join(@context.root, '.github'))
         io = capture_io do
-          @app.build
+          @app.build('test-app')
         end
         output = io.join
 
@@ -43,6 +43,20 @@ module ShopifyCli
         )
       end
 
+      def test_check_dependencies_command
+        @context.expects(:capture2e).with(
+          'node -v'
+        ).returns(["8.0.0", mock(success?: true)])
+
+        io = capture_io do
+          @app.check_dependencies
+        end
+        puts io
+        output = io.join
+        puts output
+        assert_match(CLI::UI.fmt('✔︎ Node 8.0.0'), output)
+      end
+
       def test_build_does_not_error_on_missing_git_dir
         ShopifyCli::Tasks::Clone.stubs(:call).with(
           'git@github.com:shopify/shopify-app-node.git',
@@ -50,7 +64,7 @@ module ShopifyCli
         )
         ShopifyCli::Tasks::JsDeps.stubs(:call).with(@context.root)
         @context.expects(:write)
-        @app.build
+        @app.build('test-app')
       end
 
       def test_server_command

@@ -15,7 +15,7 @@ module ShopifyCli
 
       def test_write_writes_env_content_to_file
         env_file = EnvFile.new(
-          app_type: TestHelpers::AppType::FakeAppType.new(ctx: @context, name: 'fake'),
+          app_type: TestHelpers::AppType::FakeAppType.new(ctx: @context),
           api_key: 'foo',
           secret: 'bar',
           host: 'baz'
