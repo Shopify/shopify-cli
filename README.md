@@ -138,18 +138,29 @@ This is an [open-source](https://github.com/Shopify/shopify-app-cli/blob/master/
 That often requires having multiple instances of Shopify App CLI installed for testing purposes. There are two commands that give developers greater control over their Shopify App CLI environment:
 
 
-### Load a development instance
+### Load a development instance 
 
 ```sh
+# Clone the repo for development purposes
+$ git clone git@github.com:Shopify/shopify-app-cli.git
+# Configure the CLI to use your development instance
 $ shopify load-dev `/path/to/instance`
 ```
 
 The `load-dev` command loads the version of Shopify App CLI specified between the backticks.
 
-### Reload a development instance after making a change
+### Reload the production instance
 
 ```sh
 $ shopify load-system
 ```
 
-The `load-system` ensures you’re using the most recent version of Shopify App CLI after making a local change.
+The `load-system` command resets the CLI to use the production instance.
+
+### Update to the latest version
+
+```sh
+$ shopify update
+```
+
+The `update` command will upgrade your production instance of the CLI to use the most recent version.
