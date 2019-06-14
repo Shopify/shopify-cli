@@ -30,8 +30,7 @@ module ShopifyCli
 
       def self.extended_help
         <<~HELP
-          ------------
-          Subcommands:
+          {{bold:Subcommands:}}
 
             {{cyan:page}}: Generate a new page in your app with the specified name. New files are generated inside the project’s “/pages” directory.
               Usage: {{command:#{ShopifyCli::TOOL_NAME} generate page <pagename>}}
@@ -41,6 +40,17 @@ module ShopifyCli
 
             {{cyan:webhook}}: Generate and register a new webhook that listens for the specified Shopify store event.
               Usage: {{command:#{ShopifyCli::TOOL_NAME} generate webhook [type]}}
+          
+          {{bold:Examples:}}
+
+            {{cyan:shopify generate page onboarding}}
+              Generate a new page in your app with a URL route of /onboarding.
+
+            {{cyan:shopify generate webhook}}
+              Show a list of all available webhooks in your terminal.
+
+            {{cyan:shopify generate webhook PRODUCTS_CREATE}}
+              Generate and register a new webhook that will be called every time a new product is created on your store.
         HELP
       end
     end
