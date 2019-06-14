@@ -68,7 +68,6 @@ module ShopifyCli
       def check_dependencies
         version, stat = ctx.capture2e('node -v')
         ctx.puts("{{green:✔︎}} Node #{version}")
-        puts stat
         unless stat.success?
           raise(ShopifyCli::Abort, 'Node required to create app. Download node at https://nodejs.org/en/download')
         end

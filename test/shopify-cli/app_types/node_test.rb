@@ -46,15 +46,24 @@ module ShopifyCli
       def test_check_dependencies_command
         @context.expects(:capture2e).with(
           'node -v'
-        ).returns(["8.0.0", mock(success?: true)])
+        ).returns(['8.0.0', mock(success?: true)])
 
         io = capture_io do
           @app.check_dependencies
         end
-        puts io
         output = io.join
-        puts output
-        assert_match(CLI::UI.fmt('✔︎ Node 8.0.0'), output)
+        assert_match('8.0.0', output)
+      end
+
+      def test_check_dependencies_command_error
+        assert_raises ShopifyCli::Abort do
+          @context.expects(:capture2e).with(
+            'node -v'
+          ).returns([nil, mock(success?: false)])
+          capture_io do
+            @app.check_dependencies
+          end
+        end
       end
 
       def test_build_does_not_error_on_missing_git_dir
