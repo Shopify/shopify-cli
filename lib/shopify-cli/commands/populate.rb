@@ -1,16 +1,29 @@
 require 'shopify_cli'
+require 'optparse'
 
 module ShopifyCli
   module Commands
     class Populate < ShopifyCli::Command
-      def call
-        puts CLI::UI.fmt(self.class.mock)
-      end
+      autoload :Resource, 'shopify-cli/commands/populate/resource'
+      autoload :Product, 'shopify-cli/commands/populate/product'
 
-      def self.mock
-        <<~MOCK
-          Store populated with 50 products, customers and order records.
-        MOCK
+      DEFAULT_COUNT = 5
+
+      def call(args, _name)
+        count = DEFAULT_COUNT
+        OptionParser.new do |parser|
+          # TODO: find a better way to do flags
+          parser.on('-c COUNT', '--count=COUNT', 'Number of resources to generate') do |c|
+            count = c.to_i
+          end
+        end.parse(args)
+        subcommand = args.shift
+        case subcommand
+        when 'products'
+          Product.new(ctx: @ctx).populate(count)
+        else
+          @ctx.puts(self.class.help)
+        end
       end
 
       def self.help

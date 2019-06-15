@@ -9,6 +9,7 @@ module ShopifyCli
       def setup
         super
         @command = ShopifyCli::Commands::Update.new
+        TCPServer.stubs(:new)
       end
 
       def test_store_token
