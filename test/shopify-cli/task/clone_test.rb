@@ -18,6 +18,22 @@ module ShopifyCli
         output = io.join
         assert_match('Cloning into test-app...', output)
       end
+
+      def test_clone_failure
+        assert_raises do
+          CLI::Kit::System.expects(:system).with(
+            'git',
+            'clone',
+            '--single-branch',
+            'git@github.com:shopify/test.git',
+            'test-app',
+            '--progress'
+          ).returns(mock(success?: false))
+          capture_io do
+            ShopifyCli::Tasks::Clone.call('git@github.com:shopify/test.git', 'test-app')
+          end
+        end
+      end
     end
   end
 end
