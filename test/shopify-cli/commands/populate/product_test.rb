@@ -18,6 +18,7 @@ module ShopifyCli
 
         def test_populate_calls_api_with_mutation
           Helpers::Haikunator.stubs(:haikunate).returns('fake product')
+          @resource.stubs(:price).returns('1.00')
           body = @resource.api.mutation_body(@mutation)
           stub_request(:post, "https://my-test-shop.myshopify.com/admin/api/2019-04/graphql.json")
             .with(body: body,

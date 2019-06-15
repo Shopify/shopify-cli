@@ -9,7 +9,7 @@ module ShopifyCli
             productCreate(input: {
               title: "#{Helpers::Haikunator.haikunate(0, ' ')}",
               variants: [{
-                price: "1.00"
+                price: "#{price}"
               }]
             }) {
               product {

@@ -38,6 +38,10 @@ module ShopifyCli
         def admin_url(type, id)
           "https://#{ctx.project.env.shop}/admin/#{type}s/#{id}"
         end
+
+        def price
+          format('%.2f', rand(1..10))
+        end
       end
     end
   end
