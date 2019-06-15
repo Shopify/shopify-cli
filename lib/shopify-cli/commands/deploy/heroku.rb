@@ -42,7 +42,9 @@ module ShopifyCli
             spin_group.add("Authenticated with Heroku as `#{account}`") { true }
             spin_group.wait
           else
-            heroku_authenticate
+            CLI::UI::Frame.open("Authenticating with Heroku…", success_text: '✓ Authenticated with Heroku') do
+              heroku_authenticate
+            end
           end
 
           if app_name = heroku_app
@@ -55,9 +57,14 @@ module ShopifyCli
             end
 
             if app_type == :existing
-              heroku_select_existing_app
+              app_name = CLI::UI::Prompt.ask('What is your Heroku app’s name?')
+              CLI::UI::Frame.open("Selecting Heroku app `#{app_name}`…", success_text: "✓ Heroku app `#{app_name}` selected") do
+                  heroku_select_existing_app(app_name)
+              end
             elsif app_type == :new
-              heroku_create_new_app
+              CLI::UI::Frame.open('Creating new Heroku app…', success_text: '✓ New Heroku app created') do
+                heroku_create_new_app
+              end
             end
           end
 
@@ -80,7 +87,9 @@ module ShopifyCli
             end
           end
 
-          heroku_deploy(branch_to_deploy)
+          CLI::UI::Frame.open('Deploying to Heroku…', success_text: '✓ Deployed to Heroku') do
+            heroku_deploy(branch_to_deploy)
+          end
         rescue ShopifyCli::Abort => e
           @ctx.puts("{{red:x}} #{e.message}")
         end
@@ -122,10 +131,8 @@ module ShopifyCli
         end
 
         def heroku_authenticate
-          CLI::UI::Frame.open("Authenticating with Heroku…", success_text: '✓ Authenticated with Heroku') do
-            result = @ctx.system(heroku_command, 'login')
-            raise(ShopifyCli::Abort, "Could not authenticate with Heroku") unless result.success?
-          end
+          result = @ctx.system(heroku_command, 'login')
+          raise(ShopifyCli::Abort, "Could not authenticate with Heroku") unless result.success?
         end
 
         def heroku_command
@@ -138,21 +145,17 @@ module ShopifyCli
         end
 
         def heroku_create_new_app
-          CLI::UI::Frame.open('Creating new Heroku app…', success_text: '✓ New Heroku app created') do
-            output, status = @ctx.capture2e(heroku_command, 'create')
-            raise(ShopifyCli::Abort, 'Heroku app could not be created') unless status.success?
-            @ctx.puts(output)
+          output, status = @ctx.capture2e(heroku_command, 'create')
+          raise(ShopifyCli::Abort, 'Heroku app could not be created') unless status.success?
+          @ctx.puts(output)
 
-            new_remote = output.split("\n").last.split("|").last.strip
-            @ctx.system('git', 'remote', 'add', 'heroku', new_remote)
-          end
+          new_remote = output.split("\n").last.split("|").last.strip
+          @ctx.system('git', 'remote', 'add', 'heroku', new_remote)
         end
 
         def heroku_deploy(branch_to_deploy)
-          CLI::UI::Frame.open('Deploying to Heroku…', success_text: '✓ Deployed to Heroku') do
-            result = @ctx.system('git', 'push', '-u', 'heroku', "#{branch_to_deploy}:master")
-            raise(ShopifyCli::Abort, "Could not deploy to Heroku") unless result.success?
-          end
+          result = @ctx.system('git', 'push', '-u', 'heroku', "#{branch_to_deploy}:master")
+          raise(ShopifyCli::Abort, "Could not deploy to Heroku") unless result.success?
         end
 
         def heroku_download
@@ -195,12 +198,9 @@ module ShopifyCli
           end
         end
 
-        def heroku_select_existing_app
-          app_name = CLI::UI::Prompt.ask('What is your Heroku app’s name?')
-          CLI::UI::Frame.open("Selecting Heroku app `#{app_name}`…", success_text: "✓ Heroku app `#{app_name}` selected") do
-            result = @ctx.system(heroku_command, 'git:remote', '-a', app_name)
-            raise(ShopifyCli::Abort, "Heroku app `#{app_name}` could not be selected") unless result.success?
-          end
+        def heroku_select_existing_app(app_name)
+          result = @ctx.system(heroku_command, 'git:remote', '-a', app_name)
+          raise(ShopifyCli::Abort, "Heroku app `#{app_name}` could not be selected") unless result.success?
         end
 
         def heroku_whoami
