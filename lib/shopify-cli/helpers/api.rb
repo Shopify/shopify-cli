@@ -22,7 +22,8 @@ module ShopifyCli
         "https://#{ctx.project.env.shop}/admin/api/#{API_VERSION}/graphql.json"
       end
 
-      def graphql_post(query)
+      def mutation(mutation)
+        query = mutation_body(mutation)
         _, resp = post(
           graphql_url, query
         )
@@ -77,7 +78,7 @@ module ShopifyCli
           }
         MUTATION
         JSON.dump(
-          query: query,
+          query: query.tr("\n", ""),
           variables: variables,
         )
       end

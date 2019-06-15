@@ -31,8 +31,7 @@ module ShopifyCli
         end
 
         def run_mutation
-          body = @api.mutation_body(mutation)
-          resp = @api.graphql_post(body)
+          resp = @api.mutation(mutation)
           ctx.done(message(resp['data']))
         end
 
