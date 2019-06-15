@@ -19,7 +19,7 @@ module ShopifyCli
           HELP
         end
 
-        def call(ctx, args)
+        def call(ctx, _args)
           @ctx = ctx
 
           spin_group = CLI::UI::SpinGroup.new
@@ -38,7 +38,7 @@ module ShopifyCli
           end
           spin_group.wait
 
-          if account = heroku_whoami
+          if (account = heroku_whoami)
             spin_group.add("Authenticated with Heroku as `#{account}`") { true }
             spin_group.wait
           else
@@ -47,7 +47,7 @@ module ShopifyCli
             end
           end
 
-          if app_name = heroku_app
+          if (app_name = heroku_app)
             spin_group.add("Heroku app `#{app_name}` selected") { true }
             spin_group.wait
           else
@@ -58,8 +58,11 @@ module ShopifyCli
 
             if app_type == :existing
               app_name = CLI::UI::Prompt.ask('What is your Heroku app’s name?')
-              CLI::UI::Frame.open("Selecting Heroku app `#{app_name}`…", success_text: "✓ Heroku app `#{app_name}` selected") do
-                  heroku_select_existing_app(app_name)
+              CLI::UI::Frame.open(
+                "Selecting Heroku app `#{app_name}`…",
+                success_text: "✓ Heroku app `#{app_name}` selected"
+              ) do
+                heroku_select_existing_app(app_name)
               end
             elsif app_type == :new
               CLI::UI::Frame.open('Creating new Heroku app…', success_text: '✓ New Heroku app created') do
@@ -97,12 +100,12 @@ module ShopifyCli
         private
 
         def git_branches
-          output, status = @ctx.capture2e('git', 'branch', '--list', '--format=%(refname:short)')
+          output, _status = @ctx.capture2e('git', 'branch', '--list', '--format=%(refname:short)')
 
-          if output == ''
-            branches = ['master']
+          branches = if output == ''
+            ['master']
           else
-            branches = output.split("\n")
+            output.split("\n")
           end
 
           branches
@@ -110,12 +113,18 @@ module ShopifyCli
 
         def git_init
           output, status = @ctx.capture2e('git', 'status')
-          raise(ShopifyCli::Abort, "Git repo is not initiated. Please run `git init` and make at least one commit.") unless status.success?
-          raise(ShopifyCli::Abort, "No git commits have been made. Please make at least one commit.") if output.match?('No commits yet')
+
+          unless status.success?
+            raise(ShopifyCli::Abort, "Git repo is not initiated. Please run `git init` and make at least one commit.")
+          end
+
+          if output.match?('No commits yet')
+            raise(ShopifyCli::Abort, "No git commits have been made. Please make at least one commit.")
+          end
         end
 
         def git_set_origin
-          output, status = @ctx.capture2e('git', 'remote', 'get-url', 'origin')
+          _output, status = @ctx.capture2e('git', 'remote', 'get-url', 'origin')
           if !status.success? && heroku_git_remote
             result = @ctx.system('git', 'remote', 'add', 'origin', heroku_git_remote)
             raise(ShopifyCli::Abort, "Could not set git origin") unless result.success?
@@ -136,7 +145,7 @@ module ShopifyCli
         end
 
         def heroku_command
-          local_path = "#{File.join(ShopifyCli::ROOT, 'heroku', 'bin', 'heroku')}"
+          local_path = File.join(ShopifyCli::ROOT, 'heroku', 'bin', 'heroku').to_s
           if File.exist?(local_path)
             local_path
           else
@@ -190,12 +199,10 @@ module ShopifyCli
         end
 
         def heroku_installed?
-          begin
-            output_and_errors, status = @ctx.capture2e(heroku_command, '--version')
-            status.success?
-          rescue
-            false
-          end
+          _output, status = @ctx.capture2e(heroku_command, '--version')
+          status.success?
+        rescue
+          false
         end
 
         def heroku_select_existing_app(app_name)
