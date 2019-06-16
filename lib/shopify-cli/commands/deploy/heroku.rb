@@ -19,7 +19,7 @@ module ShopifyCli
           HELP
         end
 
-        def call(ctx, _args)
+        def call(ctx, _name = nil)
           @ctx = ctx
 
           spin_group = CLI::UI::SpinGroup.new
@@ -28,6 +28,8 @@ module ShopifyCli
             heroku_download
             spinner.update_title('Downloaded Heroku CLI')
           end
+          spin_group.wait
+
           spin_group.add('Installing Heroku CLI…') do |spinner|
             heroku_install
             spinner.update_title('Installed Heroku CLI')
@@ -93,14 +95,13 @@ module ShopifyCli
           CLI::UI::Frame.open('Deploying to Heroku…', success_text: '✓ Deployed to Heroku') do
             heroku_deploy(branch_to_deploy)
           end
-        rescue ShopifyCli::Abort => e
-          @ctx.puts("{{red:x}} #{e.message}")
         end
 
         private
 
         def git_branches
-          output, _status = @ctx.capture2e('git', 'branch', '--list', '--format=%(refname:short)')
+          output, status = @ctx.capture2e('git', 'branch', '--list', '--format=%(refname:short)')
+          raise(ShopifyCli::Abort, "Could not find any git branches") unless status.success?
 
           branches = if output == ''
             ['master']
@@ -159,7 +160,8 @@ module ShopifyCli
           @ctx.puts(output)
 
           new_remote = output.split("\n").last.split("|").last.strip
-          @ctx.system('git', 'remote', 'add', 'heroku', new_remote)
+          result = @ctx.system('git', 'remote', 'add', 'heroku', new_remote)
+          raise(ShopifyCli::Abort, 'Heroku app created, but couldn’t be set as a git remote') unless result.success?
         end
 
         def heroku_deploy(branch_to_deploy)
@@ -169,7 +171,6 @@ module ShopifyCli
 
         def heroku_download
           return if heroku_installed?
-          return if File.exist?(heroku_download_filename)
 
           result = @ctx.system('curl', '-o', heroku_download_path, DOWNLOAD_URLS[os], chdir: ShopifyCli::ROOT)
           raise(ShopifyCli::Abort, "Heroku CLI could not be downloaded") unless result.success?
