@@ -1,0 +1,15 @@
+productCreate(input: {
+  title: "fake product",
+  variants: [{
+    price: "1.00"
+  }]
+}) {
+  product {
+    id,
+    title,
+    onlineStoreUrl,
+  }
+  userErrors {
+    message
+  }
+}

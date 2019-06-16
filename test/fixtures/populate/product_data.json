@@ -1,0 +1,10 @@
+{"data": {
+  "productCreate": {
+    "product": {
+      "id": "gid://shopify/Product/12345678",
+      "title": "fake product",
+      "onlineStoreUrl": null
+    },
+    "userErrors": []
+  }
+}}
