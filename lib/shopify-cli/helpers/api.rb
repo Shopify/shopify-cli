@@ -5,8 +5,6 @@ module ShopifyCli
     class API
       include SmartProperties
 
-      API_VERSION = '2019-04'
-
       property :ctx, required: true, accepts: ShopifyCli::Context
       property :token, required: true
 
@@ -19,7 +17,29 @@ module ShopifyCli
       class APIRequestThrottledError < APIRequestRetriableError; end
 
       def graphql_url
-        "https://#{ctx.project.env.shop}/admin/api/#{API_VERSION}/graphql.json"
+        "https://#{ctx.project.env.shop}/admin/api/#{latest_api_version}/graphql.json"
+      end
+
+      def latest_api_version
+        @latest_api_version ||= fetch_latest_api_version
+      end
+
+      def fetch_latest_api_version
+        url = 'https://graphql.myshopify.com/admin/api/unstable/graphql.json'
+
+        query = <<~QUERY
+          {
+            publicApiVersions() {
+              handle
+              displayName
+            }
+          }
+        QUERY
+
+        response = post(url, query_body(query))
+        versions = response['data']['publicApiVersions']
+        latest = versions.select { |version| version['displayName'].match?('Latest') }.first
+        latest['handle']
       end
 
       def mutation(mutation)
@@ -89,6 +109,13 @@ module ShopifyCli
 
       def pause
         sleep(1)
+      end
+
+      def query_body(query, variables: {})
+        JSON.dump(
+          query: query,
+          variables: variables,
+        )
       end
 
       private

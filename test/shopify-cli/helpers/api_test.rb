@@ -8,6 +8,7 @@ module ShopifyCli
       def setup
         super
         @api = API.new(ctx: @context, token: 'faketoken')
+        @api.stubs(:latest_api_version).returns('2019-04')
         @context.stubs(:project).returns(
           Project.at(File.join(FIXTURE_DIR, 'app_types/node'))
         )
