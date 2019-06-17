@@ -4,6 +4,7 @@ module ShopifyCli
   module Commands
     class Generate
       class Page < ShopifyCli::Task
+        include ShopifyCli::Helpers::ErrorCodeMessages
         def call(ctx, args)
           if args.empty?
             ctx.puts(self.class.help)
@@ -11,7 +12,11 @@ module ShopifyCli
           end
           name = args.first
           project = ShopifyCli::Project.current
-          ctx.system("#{project.app_type.generate[:page]} #{name}")
+          stat = ctx.system("#{project.app_type.generate[:page]} #{name}")
+          ctx.puts("{{green:✔︎}} Generated page: #{name}")
+          unless stat.success?
+            raise(ShopifyCli::Abort, response(stat.exitstatus, name))
+          end
         end
 
         def self.help

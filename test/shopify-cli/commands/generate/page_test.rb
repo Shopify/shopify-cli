@@ -13,7 +13,8 @@ module ShopifyCli
 
         def test_run
           ShopifyCli::Project.write(@context, :node)
-          @context.expects(:system).with('npm run-script generate-page name')
+          @context.expects(:system).with('npm run-script generate-page --silent name')
+            .returns(mock(success?: true))
           @command.call(['page', 'name'], nil)
         end
       end

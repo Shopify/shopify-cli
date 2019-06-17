@@ -28,10 +28,10 @@ module ShopifyCli
 
         def generate
           {
-            page: 'npm run-script generate-page',
-            billing_recurring: 'npm run-script generate-recurring-billing',
-            billing_one_time: 'npm run-script generate-one-time-billing',
-            webhook: 'npm run-script generate-webhook',
+            page: 'npm run-script generate-page --silent',
+            billing_recurring: 'npm run-script generate-recurring-billing --silent',
+            billing_one_time: 'npm run-script generate-one-time-billing --silent',
+            webhook: 'npm run-script generate-webhook --silent',
           }
         end
 
