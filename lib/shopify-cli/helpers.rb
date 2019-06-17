@@ -11,5 +11,6 @@ module ShopifyCli
     autoload :ProcessSupervision, 'shopify-cli/helpers/process_supervision'
     autoload :SchemaParser, 'shopify-cli/helpers/schema_parser'
     autoload :ShopifySchema, 'shopify-cli/helpers/shopify_schema'
+    autoload :String, 'shopify-cli/helpers/string'
   end
 end

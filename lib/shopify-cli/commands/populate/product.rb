@@ -4,24 +4,19 @@ module ShopifyCli
   module Commands
     class Populate
       class Product < Resource
-        def mutation
-          <<~MUTATION
-            productCreate(input: {
-              title: "#{Helpers::Haikunator.haikunate(0, ' ')}",
-              variants: [{
-                price: "#{price}"
-              }]
-            }) {
-              product {
-                id,
-                title,
-                onlineStoreUrl,
-              }
-              userErrors {
-                message
-              }
-            }
-          MUTATION
+        @type = :product
+        @field = :productCreate
+        @input_type = :ProductInput
+        @payload = :ProductCreatePayload
+        @payload_blacklist = %w(
+          availablePublicationCount
+          publishedOnCurrentChannel
+          publishedOnCurrentPublication
+        )
+
+        def defaults
+          @input.title = Helpers::Haikunator.title
+          @input.variants = "[{price: \"#{price}\"}]"
         end
 
         def message(data)
