@@ -41,8 +41,8 @@ module ShopifyCli
 
         def self.help
           <<~HELP
-          Create a new app project.
-            Usage: {{command:#{ShopifyCli::TOOL_NAME} create project <appname>}}
+            Create a new app project.
+              Usage: {{command:#{ShopifyCli::TOOL_NAME} create project <appname>}}
         HELP
         end
       end

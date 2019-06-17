@@ -9,8 +9,8 @@ module ShopifyCli
 
       def self.help
         <<~HELP
-        Reload the installed instance of Shopify App CLI. This command is intended for development work on the CLI itself.
-          Usage: {{command:#{ShopifyCli::TOOL_NAME} load-system}}
+          Reload the installed instance of Shopify App CLI. This command is intended for development work on the CLI itself.
+            Usage: {{command:#{ShopifyCli::TOOL_NAME} load-system}}
         HELP
       end
     end
