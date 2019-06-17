@@ -3,7 +3,6 @@ module ShopifyCli
     autoload :AccessToken, 'shopify-cli/helpers/access_token'
     autoload :API, 'shopify-cli/helpers/api'
     autoload :EnvFile, 'shopify-cli/helpers/env_file'
-    autoload :GenerateResources, 'shopify-cli/helpers/generate_resources'
     autoload :Gem, 'shopify-cli/helpers/gem'
     autoload :GraphQL, 'shopify-cli/helpers/graphql'
     autoload :Haikunator, 'shopify-cli/helpers/haikunator'

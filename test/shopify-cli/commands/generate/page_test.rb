@@ -9,7 +9,6 @@ module ShopifyCli
         def setup
           super
           @command = ShopifyCli::Commands::Generate.new(@context)
-          @ex
         end
 
         def test_run

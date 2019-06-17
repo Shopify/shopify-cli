@@ -3,6 +3,7 @@ require 'shopify_cli'
 module ShopifyCli
   module Commands
     class Generate < ShopifyCli::Command
+
       autoload :Page, 'shopify-cli/commands/generate/page'
       autoload :Billing, 'shopify-cli/commands/generate/billing'
       autoload :Webhook, 'shopify-cli/commands/generate/webhook'
@@ -46,6 +47,24 @@ module ShopifyCli
 
               {{command:#{ShopifyCli::TOOL_NAME} generate webhook [type]}}
         HELP
+      end
+
+      def self.run_generate(script, name, ctx)
+        stat = ctx.system(script)
+        unless stat.success?
+          raise(ShopifyCli::Abort, response(stat.exitstatus, name))
+        end
+      end
+
+      def self.response(code, name)
+        case code
+        when 1
+          "Error generating #{name}"
+        when 2
+          "#{name} already exists!"
+        else
+          'Error'
+        end
       end
     end
   end

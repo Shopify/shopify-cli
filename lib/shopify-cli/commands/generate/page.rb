@@ -4,7 +4,6 @@ module ShopifyCli
   module Commands
     class Generate
       class Page < ShopifyCli::Task
-        include ShopifyCli::Helpers::GenerateResources
         def call(ctx, args)
           if args.empty?
             ctx.puts(self.class.help)
@@ -12,7 +11,7 @@ module ShopifyCli
           end
           name = args.first
           project = ShopifyCli::Project.current
-          run_generate("#{project.app_type.generate[:page]} #{name}", name, ctx)
+          ShopifyCli::Commands::Generate.run_generate("#{project.app_type.generate[:page]} #{name}", name, ctx)
           ctx.puts("{{green:✔︎}} Generating page: #{name}")
         end
 
