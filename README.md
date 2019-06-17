@@ -39,6 +39,15 @@ Developers should have some prior knowledge of the Shopify app ecosystem. Curren
 
 > NOTE: A future release will allow you to provision API credentials and development stores without leaving the CLI. During the beta, it must be done through the Partner Dashboard.
 
+### Setup in Partners Dashboard
+- You'll need to add whitelisted URLS within the setup for your app where you fetched your API Credentials:
+  `https://yourtunnelurl.io/auth/callback`
+  `https://localhost:3456`
+
+> NOTE: A future release will write your callback URLS on your behalf. During the beta, it must be done through the Partner Dashboard.
+
+
+
 ## Commands
 
 ### Create a new app project
@@ -138,7 +147,7 @@ This is an [open-source](https://github.com/Shopify/shopify-app-cli/blob/master/
 That often requires having multiple instances of Shopify App CLI installed for testing purposes. There are two commands that give developers greater control over their Shopify App CLI environment:
 
 
-### Load a development instance 
+### Load a development instance
 
 ```sh
 # Clone the repo for development purposes
