@@ -13,29 +13,18 @@ module ShopifyCli
         @command = ShopifyCli::Commands::Update.new
         redefine_constant(ShopifyCli, :TEMP_DIR, Dir.mktmpdir)
         FileUtils.mkdir("#{ShopifyCli::TEMP_DIR}/.shopify_schema")
-        ShopifyCli::Project.expects(:current).returns(
-          TestHelpers::FakeProject.new(
-            directory: @context.root,
-            config: {
-              'app_type' => 'node',
-            }
-          )
-        ).at_least_once
+        @context.stubs(:project).returns(
+          Project.at(File.join(FIXTURE_DIR, 'app_types/node'))
+        )
+        ShopifyCli::Helpers::API.any_instance.stubs(:latest_api_version)
+          .returns('2019-04')
         ShopifyCli::Helpers::AccessToken.expects(:read).returns(
           File.read(File.join(ShopifyCli::ROOT, "test/fixtures/.apikey"))
-        ).at_least_once
-        ShopifyCli::Helpers::EnvFile.expects(:read).returns(
-          ShopifyCli::Helpers::EnvFile.new(
-            app_type: 'node',
-            api_key: 'apikey',
-            secret: 'secret',
-            shop: 'myshop',
-          )
         ).at_least_once
       end
 
       def test_gets_schema
-        stub_request(:post, "https://myshop/admin/api/2019-04/graphql.json")
+        stub_request(:post, "https://my-test-shop.myshopify.com/admin/api/2019-04/graphql.json")
           .with(body: JSON.dump(query: introspection, variables: {}),
             headers: { 'X-Shopify-Access-Token' => 'accesstoken123' })
           .to_return(status: 200, body: "{}", headers: {})
@@ -46,10 +35,13 @@ module ShopifyCli
         ShopifyCli::Tasks::AuthenticateShopify.expects(:call).returns(
           File.read(File.join(ShopifyCli::ROOT, "test/fixtures/.apikey"))
         )
-        stub_request(:post, "https://myshop/admin/api/2019-04/graphql.json")
+        stub_request(:post, "https://my-test-shop.myshopify.com/admin/api/2019-04/graphql.json")
           .with(body: JSON.dump(query: introspection, variables: {}),
           headers: { 'X-Shopify-Access-Token' => 'accesstoken123' })
-          .to_return(status: 401, body: "{}", headers: {})
+          .to_return(
+            { status: 401, body: "{}", headers: {} },
+            status: 200, body: '{}', headers: {}
+          )
         ShopifyCli::Tasks::Schema.call(@context)
       end
     end

@@ -7,4 +7,5 @@ module TestHelpers
   autoload :FakeFS, 'test_helpers/fake_fs'
   autoload :FakeProject, 'test_helpers/fake_project'
   autoload :AppType, 'test_helpers/app_type'
+  autoload :Schema, 'test_helpers/schema'
 end
