@@ -141,6 +141,31 @@ install_linux_prerequisites() {
 
   # shellcheck disable=1091,2153
   case "$(source /etc/lsb-release && echo "${DISTRIB_ID}")" in
+    CentOS)
+      if ! sudo yum -y install make automake gcc gcc-c++ kernel-devel git ruby25; then
+        bs_error_message "yum failed"
+        exit 1
+      fi
+      bs_success_message "Successfully installed shopify-app-cli prerequisites"
+      ;;
+    Debian)
+      if ! sudo apt-get install -y build-essential git-core ruby2.5; then
+        bs_error_message "apt failed"
+        exit 1
+      fi
+      if ! sudo update-alternatives --install /usr/bin/ruby ruby /usr/bin/ruby2.5 1; then
+        bs_error_message "update-alternatives failed"
+        exit 1
+      fi
+      bs_success_message "Successfully installed shopify-app-cli prerequisites"
+      ;;
+    Fedora)
+      if ! sudo yum -y install make automake gcc gcc-c++ kernel-devel git ruby25; then
+        bs_error_message "yum failed"
+        exit 1
+      fi
+      bs_success_message "Successfully installed shopify-app-cli prerequisites"
+      ;;
     Ubuntu)
       if ! sudo apt-get install -y build-essential git-core ruby2.5; then
         bs_error_message "apt failed"
@@ -152,11 +177,18 @@ install_linux_prerequisites() {
       fi
       bs_success_message "Successfully installed shopify-app-cli prerequisites"
       ;;
+    RHEL)
+      if ! sudo yum -y install make automake gcc gcc-c++ kernel-devel git ruby25; then
+        bs_error_message "yum failed"
+        exit 1
+      fi
+      bs_success_message "Successfully installed shopify-app-cli prerequisites"
+      ;;
     *)
-      bs_error_message "On ubuntu, we would install build-essential, git-core, and ruby."
-      bs_error_message "Only ubuntu is supported here. Figure out how to install some"
-      bs_error_message "equivalent to those things, then export SKIP_PREREQS=1 and run this again."
-      bs_error_message "At the end, /usr/bin/ruby must exist and be >= 2.0.0"
+      bs_error_message "Only apt (e.g. Ubuntu, Debian) and yum (e.g. CentOS, Fedora) are supported
+      bs_error_message "in this install script. To proceed, figure out how to install the equivalent
+      bs_error_message "of: build-essential, git-core, and ruby. Then, export SKIP_PREREQS=1 and run
+      bs_error_message "this script again. At the end, /usr/bin/ruby must exist and be >= 2.0.0"
       exit 1
       ;;
   esac
