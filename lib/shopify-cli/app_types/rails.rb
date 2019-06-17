@@ -32,7 +32,7 @@ module ShopifyCli
       def build(name)
         Gem.install(ctx, 'rails')
         Gem.install(ctx, 'bundler')
-        CLI::UI::Frame.open("Generating new rails app in #{name}...") do
+        CLI::UI::Frame.open("Generating new rails app project in #{name}...") do
           ctx.system(Gem.binary_path_for(ctx, 'rails'), 'new', name)
         end
         CLI::UI::Frame.open("Adding shopify_app gem...") do

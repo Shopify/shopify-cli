@@ -12,7 +12,7 @@ module ShopifyCli
           name = args.first
           ShopifyCli::Tasks::Tunnel.call(@ctx)
 
-          app_type = CLI::UI::Prompt.ask('What type of app would you like to create?') do |handler|
+          app_type = CLI::UI::Prompt.ask('What type of app project would you like to create?') do |handler|
             AppTypeRegistry.each do |identifier, type|
               handler.option(type.description) { identifier }
             end
@@ -26,8 +26,8 @@ module ShopifyCli
         end
 
         def ask_for_credentials
-          api_key = CLI::UI.ask('What is your Shopify API Key')
-          api_secret = CLI::UI.ask('What is your Shopify API Secret')
+          api_key = CLI::UI.ask('What is your Shopify API Key?')
+          api_secret = CLI::UI.ask('What is your Shopify API Secret?')
           shop = CLI::UI.ask('What is your development store address? (e.g. my-test-shop.myshopify.com)')
 
           shop.gsub!(/https?\:\/\//, '')
