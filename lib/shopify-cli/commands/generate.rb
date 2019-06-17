@@ -40,7 +40,7 @@ module ShopifyCli
 
             {{cyan:webhook}}: Generate and register a new webhook that listens for the specified Shopify store event.
               Usage: {{command:#{ShopifyCli::TOOL_NAME} generate webhook [type]}}
-          
+
           {{bold:Examples:}}
 
             {{cyan:shopify generate page onboarding}}

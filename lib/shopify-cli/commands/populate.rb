@@ -15,7 +15,7 @@ module ShopifyCli
 
       def self.help
         <<~HELP
-        Populate your Shopify development store with example products, customers, or orders.
+          Populate your Shopify development store with example products, customers, or orders.
             Usage: {{command:#{ShopifyCli::TOOL_NAME} populate <storename> [ products | customers | orders ]}}
         HELP
       end
@@ -24,7 +24,7 @@ module ShopifyCli
         <<~HELP
           {{bold:Subcommands:}}
 
-            {{cyan:products [options]}}: Add dummy products to the specified development store. 
+            {{cyan:products [options]}}: Add dummy products to the specified development store.
               Usage: {{command:#{ShopifyCli::TOOL_NAME} populate <storename> products}}
 
             {{cyan:orders [options]}}: Add dummy orders to the specified development store.
@@ -32,11 +32,11 @@ module ShopifyCli
 
             {{cyan:customers [options]}}: Add dummy customers to the specified development store.
               Usage: {{command:#{ShopifyCli::TOOL_NAME} generate webhook [type]}}
-          
+
           {{bold:Options:}}
-            
+
             {{cyan:--count [integer]}}: The number of dummy items to populate. Defaults to 10.
-          
+
           {{bold:Examples:}}
 
             {{cyan:shopify populate <storename> products}}
