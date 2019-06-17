@@ -3,12 +3,18 @@ require 'shopify_cli'
 
 module ShopifyCli
   module Helpers
-    module SchemaParser
-      def get_types_by_name(schema, name)
-        all_types = schema["data"]["__schema"]["types"]
+    class SchemaParser
+      include SmartProperties
 
-        all_types.find do |object|
-          object["name"] == name
+      property :schema
+
+      def types
+        @types = schema["data"]["__schema"]["types"]
+      end
+
+      def [](name)
+        types.find do |object|
+          object['name'] == name.to_s
         end
       end
 
