@@ -4,7 +4,7 @@ module ShopifyCli
   module Commands
     class Generate
       class Billing < ShopifyCli::Task
-        include ShopifyCli::Helpers::ErrorCodeMessages
+        include ShopifyCli::Helpers::GenerateResources
         def call(ctx, args)
           ctx.puts(self.class.help) if args.empty?
           project = ShopifyCli::Project.current
@@ -12,11 +12,8 @@ module ShopifyCli
             handler.option('recurring billing') { :billing_recurring }
             handler.option('one time billing') { :billing_one_time }
           end
-          stat = ctx.system(project.app_type.generate[type])
-          ctx.puts("{{green:✔︎}} Created billing code for: #{type}")
-          unless stat.success?
-            raise(ShopifyCli::Abort, response(stat.exitstatus, type))
-          end
+          run_generate(project.app_type.generate[type], type, ctx)
+          ctx.puts("{{green:✔︎}} Generating Billing code: #{type}")
         end
 
         def self.help

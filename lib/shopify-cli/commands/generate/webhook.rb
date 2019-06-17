@@ -4,7 +4,7 @@ module ShopifyCli
   module Commands
     class Generate
       class Webhook < ShopifyCli::Task
-        include ShopifyCli::Helpers::ErrorCodeMessages
+        include ShopifyCli::Helpers::GenerateResources
         include ShopifyCli::Helpers::SchemaParser
         def call(ctx, args)
           selected_type = args.first
@@ -22,11 +22,8 @@ module ShopifyCli
 
           project = ShopifyCli::Project.current
           app_type = project.app_type
-          stat = ctx.system("#{app_type.generate[:webhook]} #{selected_type}")
-          ctx.puts("{{green:✔︎}} Generated webhook: #{selected_type}")
-          unless stat.success?
-            raise(ShopifyCli::Abort, response(stat.exitstatus, selected_type))
-          end
+          run_generate("#{app_type.generate[:webhook]} #{selected_type}", selected_type, ctx)
+          ctx.puts("{{green:✔︎}} Generating webhook: #{selected_type}")
         end
 
         def self.help
