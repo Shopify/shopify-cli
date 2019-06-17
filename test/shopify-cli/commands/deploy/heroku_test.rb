@@ -26,14 +26,6 @@ module ShopifyCli
           stub_successful_flow(os: :mac)
         end
 
-        def teardown
-          @command.unstub(:os)
-          @context.unstub(:capture2e)
-          @context.unstub(:system)
-          File.unstub(:exist?)
-          FileUtils.unstub(:rm)
-        end
-
         def test_call_doesnt_download_heroku_cli_if_it_is_installed
           @context.expects(:system)
             .with('curl', '-o', @download_path,
