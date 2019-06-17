@@ -27,7 +27,7 @@ module ShopifyCli
             SHOPIFY_API_KEY=api_key
             SHOPIFY_API_SECRET_KEY=secret
             HOST=host
-            SCOPES=write_products,write_customers,write_orders
+            SCOPES=write_products,write_customers,write_draft_orders
           KEYS
         )
         @context.expects(:rm_r).with(File.join(@context.root, '.git'))

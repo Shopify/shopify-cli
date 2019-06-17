@@ -35,6 +35,12 @@ module ShopifyCli
           build(token_range, delimiter)
         end
 
+        def name
+          first = nouns[random_seed % nouns.length]
+          last = adjectives[random_seed % adjectives.length]
+          [first, last]
+        end
+
         private
 
         def build(token_range, delimiter)
