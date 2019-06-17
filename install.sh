@@ -49,10 +49,10 @@ is_linux() {
 install_dir="${XDG_RUNTIME_DIR:-$HOME}/.shopify-app-cli"
 
 postmsg() {
-  echo -e "\x1b[32mshopify-app-cli\x1b[0m is installed!"
-  echo -e "Run \x1b[32mshopify help\x1b[0m to see what you can do, or read \x1b[32mhttps://github.com/Shopify/shopify-app-cli\x1b[0m."
+  echo -e "\x1b[36mshopify-app-cli\x1b[0m is installed!"
+  echo -e "Run \x1b[36mshopify help\x1b[0m to see what you can do, or read \x1b[36mhttps://github.com/Shopify/shopify-app-cli\x1b[0m."
   echo -e "To start developing on shopify, for example:"
-  echo -e "  * run \x1b[32mshopify app create embeddedapp\x1b[0m"
+  echo -e "  * run \x1b[36mshopify create app <appname>\x1b[0m"
 }
 
 install_prerequisites() {
