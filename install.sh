@@ -185,9 +185,9 @@ install_linux_prerequisites() {
       bs_success_message "Successfully installed shopify-app-cli prerequisites"
       ;;
     *)
-      bs_error_message "Only apt (e.g. Ubuntu, Debian) and yum (e.g. CentOS, Fedora) are supported
-      bs_error_message "in this install script. To proceed, figure out how to install the equivalent
-      bs_error_message "of: build-essential, git-core, and ruby. Then, export SKIP_PREREQS=1 and run
+      bs_error_message "Only apt (e.g. Ubuntu, Debian) and yum (e.g. CentOS, Fedora) are supported"
+      bs_error_message "in this install script. To proceed, figure out how to install the equivalent"
+      bs_error_message "of: build-essential, git-core, and ruby. Then, export SKIP_PREREQS=1 and run"
       bs_error_message "this script again. At the end, /usr/bin/ruby must exist and be >= 2.0.0"
       exit 1
       ;;
