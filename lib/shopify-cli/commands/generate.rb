@@ -32,10 +32,10 @@ module ShopifyCli
         <<~HELP
           {{bold:Subcommands:}}
 
-            {{cyan:page}}: Generate a new page in your app with the specified name. New files are generated inside the project’s “/pages” directory.
+            {{cyan:page}}: Generate a new page in your app with the specified page name.
               Usage: {{command:#{ShopifyCli::TOOL_NAME} generate page <pagename>}}
 
-            {{cyan:billing}}: Generate a new call to Shopify’s billing API by adding the necessary code to the project’s server.js file.
+            {{cyan:billing}}: Generate code to enable charging for your app using Shopify’s billing API.
               Usage: {{command:#{ShopifyCli::TOOL_NAME} generate billing}}
 
             {{cyan:webhook}}: Generate and register a new webhook that listens for the specified Shopify store event.
