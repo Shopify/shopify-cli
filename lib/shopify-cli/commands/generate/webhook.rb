@@ -4,12 +4,13 @@ module ShopifyCli
   module Commands
     class Generate
       class Webhook < ShopifyCli::Task
-        include ShopifyCli::Helpers::SchemaParser
         def call(ctx, args)
           selected_type = args.first
-          schema = ShopifyCli::Tasks::Schema.call(ctx)
-          enum = get_types_by_name(schema, 'WebhookSubscriptionTopic')
-          webhooks = get_names_from_enum(enum)
+          schema = ShopifyCli::Helpers::SchemaParser.new(
+            schema: ShopifyCli::Tasks::Schema.call(ctx)
+          )
+          enum = schema['WebhookSubscriptionTopic']
+          webhooks = schema.get_names_from_enum(enum)
 
           unless selected_type
             selected_type = CLI::UI::Prompt.ask('What type of webhook would you like to create?') do |handler|
