@@ -1,15 +1,5 @@
-productCreate(input: {
-  title: "fake product",
-  variants: [{
-    price: "1.00"
-  }]
-}) {
+productCreate(input: {title: "fake product",variants: [{price: "1.00"}]}) {
   product {
-    id,
-    title,
-    onlineStoreUrl,
-  }
-  userErrors {
-    message
+    createdAt,defaultCursor,descriptionHtml,descriptionPlainSummary,handle,hasOnlyDefaultVariant,hasOutOfStockVariants,id,isGiftCard,legacyResourceId,productType,storefrontId,title,totalInventory,totalVariants,tracksInventory,updatedAt,vendor
   }
 }

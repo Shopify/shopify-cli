@@ -27,6 +27,10 @@ module ShopifyCli
   module Helpers
     module Haikunator
       class << self
+        def title
+          build(0, ' ')
+        end
+
         def haikunate(token_range = 9999, delimiter = "-")
           build(token_range, delimiter)
         end

@@ -5,6 +5,7 @@ module ShopifyCli
     class Populate
       class ProductTest < MiniTest::Test
         include TestHelpers::Context
+        include TestHelpers::Schema
 
         def setup
           super
@@ -12,14 +13,15 @@ module ShopifyCli
             Project.at(File.join(FIXTURE_DIR, 'app_types/node'))
           )
           Helpers::AccessToken.stubs(:read).returns('myaccesstoken')
-          @resource = Product.new(ctx: @context)
+          ShopifyCli::Helpers::API.any_instance.stubs(:latest_api_version)
+            .returns('2019-04')
           @mutation = File.read(File.join(FIXTURE_DIR, 'populate/product.graphql'))
         end
 
         def test_populate_calls_api_with_mutation
-          Helpers::Haikunator.stubs(:haikunate).returns('fake product')
-          @resource.api.stubs(:latest_api_version).returns('2019-04')
-          @resource.stubs(:price).returns('1.00')
+          Helpers::Haikunator.stubs(:title).returns('fake product')
+          Resource.any_instance.stubs(:price).returns('1.00')
+          @resource = Product.new(ctx: @context, args: ['-c 1'])
           body = @resource.api.mutation_body(@mutation)
           stub_request(:post, "https://my-test-shop.myshopify.com/admin/api/2019-04/graphql.json")
             .with(body: body,
@@ -36,7 +38,7 @@ module ShopifyCli
           @context.expects(:done).with(
             "product 'fake product' created: https://my-test-shop.myshopify.com/admin/products/12345678"
           )
-          @resource.populate(1)
+          @resource.populate
         end
       end
     end

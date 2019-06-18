@@ -1,26 +1,18 @@
 require 'shopify_cli'
-require 'optparse'
 
 module ShopifyCli
   module Commands
     class Populate < ShopifyCli::Command
+      prerequisite_task :schema
+
       autoload :Resource, 'shopify-cli/commands/populate/resource'
       autoload :Product, 'shopify-cli/commands/populate/product'
 
-      DEFAULT_COUNT = 5
-
       def call(args, _name)
-        count = DEFAULT_COUNT
-        OptionParser.new do |parser|
-          # TODO: find a better way to do flags
-          parser.on('-c COUNT', '--count=COUNT', 'Number of resources to generate') do |c|
-            count = c.to_i
-          end
-        end.parse(args)
         subcommand = args.shift
         case subcommand
         when 'products'
-          Product.new(ctx: @ctx).populate(count)
+          Product.new(ctx: @ctx, args: args).populate
         else
           @ctx.puts(self.class.help)
         end
@@ -29,7 +21,7 @@ module ShopifyCli
       def self.help
         <<~HELP
           Populate your Shopify development store with example products, customers, or orders.
-            Usage: {{command:#{ShopifyCli::TOOL_NAME} populate <storename> [ products | customers | orders ]}}
+            Usage: {{command:#{ShopifyCli::TOOL_NAME} populate [ products | customers | draftorders ]}}
         HELP
       end
 
@@ -38,13 +30,13 @@ module ShopifyCli
           {{bold:Subcommands:}}
 
             {{cyan:products [options]}}: Add dummy products to the specified development store.
-              Usage: {{command:#{ShopifyCli::TOOL_NAME} populate <storename> products}}
-
-            {{cyan:orders [options]}}: Add dummy orders to the specified development store.
-              Usage: {{command:#{ShopifyCli::TOOL_NAME} generate billing}}
+              Usage: {{command:#{ShopifyCli::TOOL_NAME} populate products}}
 
             {{cyan:customers [options]}}: Add dummy customers to the specified development store.
               Usage: {{command:#{ShopifyCli::TOOL_NAME} generate webhook [type]}}
+
+            {{cyan:draftorders [options]}}: Add dummy orders to the specified development store.
+              Usage: {{command:#{ShopifyCli::TOOL_NAME} generate billing}}
 
           {{bold:Options:}}
 
@@ -52,13 +44,13 @@ module ShopifyCli
 
           {{bold:Examples:}}
 
-            {{cyan:shopify populate <storename> products}}
+            {{cyan:shopify populate products}}
               Populate your development store with 10 additional products.
 
-            {{cyan:shopify populate <storename> customers --count 30}}
+            {{cyan:shopify populate customers --count 30}}
               Populate your development store with 30 additional customers.
 
-            {{cyan:shopify populate orders}}
+            {{cyan:shopify populate draftorders}}
               Populate your development store with 10 additional orders.
         HELP
       end
