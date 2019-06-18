@@ -4,6 +4,14 @@
       {
         "handle": "2019-04",
         "displayName": "2019-04 (Latest)"
+      },
+      {
+        "handle": "2019-07",
+        "displayName": "2019-07 (Release candidate)"
+      },
+      {
+        "handle": "unstable",
+        "displayName": "unstable"
       }
     ]
   }

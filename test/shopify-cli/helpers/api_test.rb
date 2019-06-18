@@ -53,7 +53,7 @@ module ShopifyCli
             status: 200,
             body: File.read(File.join(FIXTURE_DIR, 'api/versions.json')),
           )
-        assert_equal(@api.latest_api_version, '2019-04')
+        assert_equal(@api.fetch_latest_api_version, '2019-04')
       end
     end
   end

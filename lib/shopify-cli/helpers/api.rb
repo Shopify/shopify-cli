@@ -39,7 +39,7 @@ module ShopifyCli
         _, response = post(url, query_body(query))
         ctx.debug(response)
         versions = response['data']['publicApiVersions']
-        latest = versions.select { |version| /Latest/.match?(version['displayName']) }.first
+        latest = versions.find { |version| version['displayName'].include?('Latest') }
         latest['handle']
       end
 
