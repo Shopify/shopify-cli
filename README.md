@@ -35,18 +35,23 @@ Developers should have some prior knowledge of the Shopify app ecosystem. Curren
 
 - If you don’t have one, [create a Shopify partner account](https://partners.shopify.com/signup).
 - If you don’t have one, [create a Development store](https://help.shopify.com/en/partners/dashboard/development-stores#create-a-development-store) where you can install and test your app.
-- In the Partner dashboard, [create a new app](https://help.shopify.com/en/api/tools/partner-dashboard/your-apps#create-a-new-app). You’ll need this app’s API credentials during the setup process.
+- In the Partner dashboard, [create a new app](https://help.shopify.com/en/api/tools/partner-dashboard/your-apps#create-a-new-app). You’ll need this app’s API credentials during the setup process. You can use any placeholder App URL when creating an app, then update it when your local development app is running.
 
 > NOTE: A future release will allow you to provision API credentials and development stores without leaving the CLI. During the beta, it must be done through the Partner Dashboard.
 
-### Setup in Partners Dashboard
-- You'll need to add whitelisted URLS within the setup for your app where you fetched your API Credentials:
-  `https://yourtunnelurl.io/auth/callback`
-  `https://localhost:3456`
+### Whitelisting App redirection URLs
+- When creating a new app with the Partner Dashboard, you’ll need to provide a few URLs for your app, which allow it to authenticate and embed in the Shopify admin. Once your local development app is running (using [`shopify serve`](https://github.com/Shopify/shopify-app-cli#start-a-development-server)), you’ll need to update these URLs with your live ngrok URLs.
 
-> NOTE: A future release will write your callback URLS on your behalf. During the beta, it must be done through the Partner Dashboard.
+Edit your app’s whitelisted redirection URLs in the Partner Dashboard by navigating to **Apps > [Your app name] > App setup**. On the App setup screen, set “App URL” to your live ngrok URL. Add the following two URLs to the “Whitelisted redirection URLs” field:
 
+```
+https://<LIVE_NGROK_URL>/auth/callback
+https://localhost:3456`
+```
 
+The first URL handles the authentication flow for adding your app to a Shopify development store. The second is currently necessary to allow your local development server to make Shopify API requests on behalf of your development app.
+
+> NOTE: A future release will handle this URL whitelisting process automatically. During the beta, it must be done through the Partner Dashboard.
 
 ## Commands
 
