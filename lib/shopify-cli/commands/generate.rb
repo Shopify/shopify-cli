@@ -53,6 +53,24 @@ module ShopifyCli
               Generate and register a new webhook that will be called every time a new product is created on your store.
         HELP
       end
+
+      def self.run_generate(script, name, ctx)
+        stat = ctx.system(script)
+        unless stat.success?
+          raise(ShopifyCli::Abort, response(stat.exitstatus, name))
+        end
+      end
+
+      def self.response(code, name)
+        case code
+        when 1
+          "Error generating #{name}"
+        when 2
+          "#{name} already exists!"
+        else
+          'Error'
+        end
+      end
     end
   end
 end

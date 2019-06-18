@@ -11,7 +11,8 @@ module ShopifyCli
           end
           name = args.first
           project = ShopifyCli::Project.current
-          ctx.system("#{project.app_type.generate[:page]} #{name}")
+          ShopifyCli::Commands::Generate.run_generate("#{project.app_type.generate[:page]} #{name}", name, ctx)
+          ctx.puts("{{green:✔︎}} Generating page: #{name}")
         end
 
         def self.help

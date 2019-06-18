@@ -11,7 +11,8 @@ module ShopifyCli
             handler.option('recurring billing') { :billing_recurring }
             handler.option('one-time billing') { :billing_one_time }
           end
-          ctx.system(project.app_type.generate[type])
+          ShopifyCli::Commands::Generate.run_generate(project.app_type.generate[type], type, ctx)
+          ctx.puts("{{green:✔︎}} Generating Billing code: #{type}")
         end
 
         def self.help
