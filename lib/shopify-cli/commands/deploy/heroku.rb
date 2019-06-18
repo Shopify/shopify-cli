@@ -119,7 +119,7 @@ module ShopifyCli
             raise(ShopifyCli::Abort, "Git repo is not initiated. Please run `git init` and make at least one commit.")
           end
 
-          if output.match?('No commits yet')
+          if output.include?('No commits yet')
             raise(ShopifyCli::Abort, "No git commits have been made. Please make at least one commit.")
           end
         end
