@@ -5,7 +5,7 @@ module ShopifyCli
     class JsDeps < ShopifyCli::Task
       INSTALL_COMMANDS = {
         yarn: %w(yarn),
-        npm: %w(npm install),
+        npm: %w(npm install --no-optional),
       }.freeze
 
       def call(*args)

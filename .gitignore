@@ -3,3 +3,5 @@
 ngrok*
 .bundle/*
 .DS_Store
+heroku
+*.gz

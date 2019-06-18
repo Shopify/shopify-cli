@@ -13,6 +13,7 @@ module ShopifyCli
     end
 
     register :Create, 'create', 'shopify-cli/commands/create'
+    register :Deploy, 'deploy', 'shopify-cli/commands/deploy'
     register :Generate, 'generate', 'shopify-cli/commands/generate'
     register :Help, 'help', 'shopify-cli/commands/help'
     register :LoadDev, 'load-dev', 'shopify-cli/commands/load_dev'
