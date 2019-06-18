@@ -47,6 +47,9 @@ module ShopifyCli
         @context.expects(:capture2e).with(
           'node -v'
         ).returns(['8.0.0', mock(success?: true)])
+        @context.expects(:capture2e).with(
+          'npm -v'
+        ).returns(['1', mock(success?: true)])
 
         io = capture_io do
           @app.check_dependencies
