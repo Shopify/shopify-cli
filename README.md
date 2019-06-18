@@ -40,7 +40,7 @@ Developers should have some prior knowledge of the Shopify app ecosystem. Curren
 > NOTE: A future release will allow you to provision API credentials and development stores without leaving the CLI. During the beta, it must be done through the Partner Dashboard.
 
 ### Whitelisting App redirection URLs
-- When creating a new app with the Partner Dashboard, you’ll need to provide a few URLs for your app, which allow it to authenticate and embed in the Shopify admin. Once your local development app is running (using [`shopify serve`](https://github.com/Shopify/shopify-app-cli#start-a-development-server)), you’ll need to update these URLs with your live ngrok URLs.
+When creating a new app with the Partner Dashboard, you’ll need to provide a few URLs for your app, which allow it to authenticate and embed in the Shopify admin. Once your local development app is running (using [`shopify serve`](https://github.com/Shopify/shopify-app-cli#start-a-development-server)), you’ll need to update these URLs with your live ngrok URLs.
 
 Edit your app’s whitelisted redirection URLs in the Partner Dashboard by navigating to **Apps > [Your app name] > App setup**. On the App setup screen, set “App URL” to your live ngrok URL. Add the following two URLs to the “Whitelisted redirection URLs” field:
 
