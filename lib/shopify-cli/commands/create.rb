@@ -17,18 +17,18 @@ module ShopifyCli
 
       def self.help
         <<~HELP
-          Create.
-          Usage: {{command:#{ShopifyCli::TOOL_NAME} create project|}}
+          Create a new app project.
+            Usage: {{command:#{ShopifyCli::TOOL_NAME} create project <appname>}}
         HELP
       end
 
       def self.extended_help
         <<~HELP
-          Subcommands:
+          {{bold:Subcommands:}
 
-          * project: Creates an app based on type selected. Usage:
+            {{cyan:project}}: Creates an app based on type selected.
+              Usage: {{command:#{ShopifyCli::TOOL_NAME} create project <appname>}}
 
-              {{command:#{ShopifyCli::TOOL_NAME} create project <appname>}}
         HELP
       end
     end

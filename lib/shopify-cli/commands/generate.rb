@@ -23,28 +23,34 @@ module ShopifyCli
 
       def self.help
         <<~HELP
-          Generate code.
-          Usage: {{command:#{ShopifyCli::TOOL_NAME} generate [page|billing|webhook]}}
+          Generate code in your app project. Supports generating new pages, new billing API calls, or new webhooks.
+            Usage: {{command:#{ShopifyCli::TOOL_NAME} generate [ page | billing | webhook ]}}
         HELP
       end
 
       def self.extended_help
         <<~HELP
-          Subcommands:
+          {{bold:Subcommands:}}
 
-          * page: Generates code for a page or section of pages in your app. Usage:
+            {{cyan:page}}: Generate a new page in your app with the specified page name.
+              Usage: {{command:#{ShopifyCli::TOOL_NAME} generate page <pagename>}}
 
-              {{command:#{ShopifyCli::TOOL_NAME} generate page [name]}}
+            {{cyan:billing}}: Generate code to enable charging for your app using Shopify’s billing API.
+              Usage: {{command:#{ShopifyCli::TOOL_NAME} generate billing}}
 
-          * billing: Generates code for calling the Shopify Billing API and
-            accepting usage charges for your app. Usage:
+            {{cyan:webhook}}: Generate and register a new webhook that listens for the specified Shopify store event.
+              Usage: {{command:#{ShopifyCli::TOOL_NAME} generate webhook [type]}}
 
-              {{command:#{ShopifyCli::TOOL_NAME} generate billing}}
+          {{bold:Examples:}}
 
-          * webhook: Generates code for registering and responding to a webhook
-            from Shopify. Usage:
+            {{cyan:shopify generate page onboarding}}
+              Generate a new page in your app with a URL route of /onboarding.
 
-              {{command:#{ShopifyCli::TOOL_NAME} generate webhook [type]}}
+            {{cyan:shopify generate webhook}}
+              Show a list of all available webhooks in your terminal.
+
+            {{cyan:shopify generate webhook PRODUCTS_CREATE}}
+              Generate and register a new webhook that will be called every time a new product is created on your store.
         HELP
       end
     end
