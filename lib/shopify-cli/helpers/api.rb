@@ -25,7 +25,7 @@ module ShopifyCli
       end
 
       def fetch_latest_api_version
-        url = 'https://graphql.myshopify.com/admin/api/unstable/graphql.json'
+        url = "https://#{ctx.project.env.shop}/admin/api/unstable/graphql.json"
 
         query = <<~QUERY
           {
@@ -36,9 +36,10 @@ module ShopifyCli
           }
         QUERY
 
-        response = post(url, query_body(query))
+        _, response = post(url, query_body(query))
+        ctx.debug(response)
         versions = response['data']['publicApiVersions']
-        latest = versions.select { |version| version['displayName'].match?('Latest') }.first
+        latest = versions.select { |version| /Latest/.match?(version['displayName']) }.first
         latest['handle']
       end
 

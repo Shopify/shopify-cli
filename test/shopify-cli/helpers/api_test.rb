@@ -8,13 +8,13 @@ module ShopifyCli
       def setup
         super
         @api = API.new(ctx: @context, token: 'faketoken')
-        @api.stubs(:latest_api_version).returns('2019-04')
         @context.stubs(:project).returns(
           Project.at(File.join(FIXTURE_DIR, 'app_types/node'))
         )
       end
 
       def test_mutation_makes_request_to_shopify
+        @api.stubs(:latest_api_version).returns('2019-04')
         mutation = <<~MUTATION
           fakeMutation(input: {
             title: "fake title"
@@ -31,6 +31,29 @@ module ShopifyCli
             })
           .to_return(status: 200, body: '{}')
         @api.mutation(mutation)
+      end
+
+      def test_latest_api_version
+        query = <<~QUERY
+          {
+            publicApiVersions() {
+              handle
+              displayName
+            }
+          }
+        QUERY
+        stub_request(:post, 'https://my-test-shop.myshopify.com/admin/api/unstable/graphql.json')
+          .with(body: @api.query_body(query),
+            headers: {
+              'Content-Type' => 'application/json',
+              'User-Agent' => 'Shopify App CLI',
+              'X-Shopify-Access-Token' => 'faketoken',
+            })
+          .to_return(
+            status: 200,
+            body: File.read(File.join(FIXTURE_DIR, 'api/versions.json')),
+          )
+        assert_equal(@api.latest_api_version, '2019-04')
       end
     end
   end
