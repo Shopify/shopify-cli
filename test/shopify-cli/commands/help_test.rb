@@ -35,7 +35,7 @@ module ShopifyCli
           @command.call(%w(fake), nil)
         end
         output = io.join
-        assert_match(/basic help.*extended help/, output)
+        assert_match(/basic help.*extended help/m, output)
       end
     end
   end

@@ -6,8 +6,6 @@ module ShopifyCli
     class Gem
       include SmartProperties
 
-      RUBY_VERSION = /ruby ([\d\.]+)/
-
       property :ctx, accepts: ShopifyCli::Context
       property :name, converts: :to_s
 
@@ -45,13 +43,8 @@ module ShopifyCli
 
       private
 
-      def ruby_version
-        out, _ = ctx.capture2('ruby -v')
-        RUBY_VERSION.match(out)[1]
-      end
-
       def set_gem_home
-        path = File.join(ctx.getenv('HOME'), '.gem', 'ruby', ruby_version)
+        path = File.join(ctx.getenv('HOME'), '.gem', 'ruby', RUBY_VERSION)
         ctx.mkdir_p(path)
         ctx.setenv('GEM_HOME', path)
       end
