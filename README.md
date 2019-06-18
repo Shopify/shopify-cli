@@ -40,7 +40,7 @@ Developers should have some prior knowledge of the Shopify app ecosystem. Curren
 > NOTE: A future release will allow you to provision API credentials and development stores without leaving the CLI. During the beta, it must be done through the Partner Dashboard.
 
 ### Setup in Partners Dashboard
-- You'll need to add whitelisted URLS within the setup for your app where you fetched your API Credentials:
+- You will need to whitelist the following URLs on the App Setup page in the Partner Dashboard:
   `https://yourtunnelurl.io/auth/callback`
   `https://localhost:3456`
 
@@ -109,7 +109,7 @@ The CLI will scaffold the new page in the `pages` directory.
 ```sh
 $ shopify generate billing
 ```
-The CLI will ask whether you want to create a one-time billing model or a recurring subscription model. 
+The CLI will ask whether you want to create a one-time billing model or a recurring subscription model.
 
 #### Create a new webhook
 
