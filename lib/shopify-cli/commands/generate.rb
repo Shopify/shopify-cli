@@ -55,6 +55,9 @@ module ShopifyCli
       end
 
       def self.run_generate(script, name, ctx)
+        if script.include?('not-yet')
+          raise(ShopifyCli::Abort, 'This feature is not yet available for Rails apps')
+        end
         stat = ctx.system(script)
         unless stat.success?
           raise(ShopifyCli::Abort, response(stat.exitstatus, name))
