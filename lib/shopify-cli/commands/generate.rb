@@ -3,7 +3,6 @@ require 'shopify_cli'
 module ShopifyCli
   module Commands
     class Generate < ShopifyCli::Command
-
       autoload :Page, 'shopify-cli/commands/generate/page'
       autoload :Billing, 'shopify-cli/commands/generate/billing'
       autoload :Webhook, 'shopify-cli/commands/generate/webhook'
