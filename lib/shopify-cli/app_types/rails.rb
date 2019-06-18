@@ -22,10 +22,10 @@ module ShopifyCli
 
         def generate
           {
-            page: 'not-yet',
-            billing_recurring: 'not-yet',
-            billing_one_time: 'not-yet',
-            webhook: 'not-yet',
+            page: NotImplementedError,
+            billing_recurring: NotImplementedError,
+            billing_one_time: NotImplementedError,
+            webhook: NotImplementedError,
           }
         end
 

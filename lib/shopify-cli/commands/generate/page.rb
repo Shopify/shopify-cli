@@ -18,7 +18,7 @@ module ShopifyCli
         def self.help
           <<~HELP
             Generate a new page in your app with the specified name. New files are generated inside the project’s “/pages” directory.
-              Usage: {{command:#{ShopifyCli::TOOL_NAME} generate <pagename>}}
+              Usage: {{command:#{ShopifyCli::TOOL_NAME} generate page <pagename>}}
           HELP
         end
       end
