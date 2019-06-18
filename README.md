@@ -114,7 +114,7 @@ The CLI will scaffold the new page in the `pages` directory.
 ```sh
 $ shopify generate billing
 ```
-The CLI will ask whether you want to create a one-time billing model or a recurring subscription model. 
+The CLI will ask whether you want to create a one-time billing model or a recurring subscription model.
 
 #### Create a new webhook
 
