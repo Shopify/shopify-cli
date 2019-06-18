@@ -69,7 +69,7 @@ module ShopifyCli
         version, stat = ctx.capture2e('node -v')
         ctx.puts("{{green:✔︎}} Node #{version}")
         unless stat.success?
-          raise(ShopifyCli::Abort, 'Node required to create app. Download node at https://nodejs.org/en/download')
+          raise(ShopifyCli::Abort, 'Node.js required to create an app project. Download node at https://nodejs.org/en/download.')
         end
       end
     end

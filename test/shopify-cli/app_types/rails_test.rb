@@ -37,7 +37,7 @@ module ShopifyCli
         output = io.join
 
         assert_match(
-          CLI::UI.fmt('Run {{command:shopify serve}} to start the app server'),
+          CLI::UI.fmt('Run {{command:shopify serve}} to start the local development server'),
           output
         )
       end

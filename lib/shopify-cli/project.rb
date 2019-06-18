@@ -13,7 +13,7 @@ module ShopifyCli
       def at(dir)
         proj_dir = directory(dir)
         unless proj_dir
-          raise(ShopifyCli::Abort, "You are not in a shopify project")
+          raise(ShopifyCli::Abort, "You are not in a Shopify app project")
         end
         @at ||= Hash.new { |h, k| h[k] = new(directory: k) }
         @at[proj_dir]
@@ -64,7 +64,7 @@ module ShopifyCli
       @config ||= begin
         config = load_yaml_file('.shopify-cli.yml')
         unless config.is_a?(Hash)
-          raise ShopifyCli::Abort, '.shopify-cli.yml was not a proper yaml file. Expecting a hash'
+          raise ShopifyCli::Abort, '.shopify-cli.yml was not a proper YAML file. Expecting a hash.'
         end
         config
       end
