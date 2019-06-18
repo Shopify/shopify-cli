@@ -28,7 +28,7 @@ module ShopifyCli
         def ask_for_credentials
           api_key = CLI::UI.ask('What is your Shopify API key?')
           api_secret = CLI::UI.ask('What is your Shopify API secret key?')
-          shop = CLI::UI.ask('What is your development store address? (e.g. my-test-shop.myshopify.com)')
+          shop = CLI::UI.ask('What is your development store URL? (e.g. my-test-shop.myshopify.com)')
 
           shop.gsub!(/https?\:\/\//, '')
 
