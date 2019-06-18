@@ -24,8 +24,13 @@ module ShopifyCli
           token = Helpers::AccessToken.read(ctx)
           @api = Helpers::API.new(ctx: ctx, token: token)
           @input = OpenStruct.new
-          defaults
+          @count = DEFAULT_COUNT
           input_options
+          options.parse(args)
+        end
+
+        def set_input
+          defaults
           options.parse(args)
         end
 
@@ -45,7 +50,7 @@ module ShopifyCli
               "--count=#{DEFAULT_COUNT}",
               'Number of resources to generate'
             ) do |value|
-              @count = value.to_i || DEFAULT_COUNT
+              @count = value.to_i
             end
 
             opts.on(
@@ -60,6 +65,7 @@ module ShopifyCli
 
         def populate
           @count.times do
+            set_input
             ctx.debug(mutation)
             run_mutation
           end
