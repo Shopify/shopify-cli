@@ -1,8 +1,9 @@
 language: ruby
 rvm:
+ - 2.3.7
  - 2.5.1
 install:
 - bundle install
 script:
+  - bundle exec rubocop .
   - bundle exec rake test
-  
