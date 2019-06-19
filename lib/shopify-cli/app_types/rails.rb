@@ -20,6 +20,15 @@ module ShopifyCli
           'rails embedded app'
         end
 
+        def generate
+          {
+            page: NotImplementedError,
+            billing_recurring: NotImplementedError,
+            billing_one_time: NotImplementedError,
+            webhook: NotImplementedError,
+          }
+        end
+
         def serve_command(_ctx)
           "PORT=#{ShopifyCli::Tasks::Tunnel::PORT} bin/rails server"
         end
