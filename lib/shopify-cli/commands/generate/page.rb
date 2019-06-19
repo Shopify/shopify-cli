@@ -9,6 +9,10 @@ module ShopifyCli
             ctx.puts(self.class.help)
             return
           end
+          # temporary check until we build for rails
+          if ctx.project.app_type == ShopifyCli::AppTypes::Rails
+            raise(ShopifyCli::Abort, 'This feature is not yet available for Rails apps')
+          end
           name = args.first
           project = ShopifyCli::Project.current
           ShopifyCli::Commands::Generate.run_generate("#{project.app_type.generate[:page]} #{name}", name, ctx)
