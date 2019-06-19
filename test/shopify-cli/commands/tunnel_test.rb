@@ -16,6 +16,18 @@ module ShopifyCli
         ShopifyCli::Tasks::Tunnel.any_instance.stubs(:stop)
         @command.call(['stop'], nil)
       end
+
+      def test_stop_rescues
+        ShopifyCli::Helpers::ProcessSupervision.stubs(:running?).with(:ngrok).returns(true)
+        ShopifyCli::Helpers::ProcessSupervision.stubs(:stop).with(:ngrok).raises
+
+        io = capture_io do
+          @command.call(['stop'], nil)
+        end
+        output = io.join
+
+        assert_match(/could not be stopped/, output)
+      end
     end
   end
 end
