@@ -66,10 +66,15 @@ module ShopifyCli
       end
 
       def check_dependencies
-        version, stat = ctx.capture2e('node -v')
-        ctx.puts("{{green:✔︎}} Node #{version}")
-        unless stat.success?
-          raise(ShopifyCli::Abort, 'Node.js required to create an app project. Download node at https://nodejs.org/en/download.')
+        deps = ['node -v', 'npm -v']
+        deps.each do |dep|
+          dep_name = dep.split.first
+          dep_link = dep_name == 'node' ? 'https://nodejs.org/en/download.' : 'https://www.npmjs.com/get-npm'
+          version, stat = ctx.capture2e(dep)
+          ctx.puts("{{green:✔︎}} #{dep_name} #{version}")
+          next if stat.success?
+          raise(ShopifyCli::Abort,
+            "#{dep_name} is required to create an app project. Download at #{dep_link}")
         end
       end
     end
