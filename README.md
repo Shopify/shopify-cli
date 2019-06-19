@@ -1,8 +1,6 @@
 # shopify-app-cli [![Build status](https://badge.buildkite.com/a27554588a0e537d0ca23984dec9e68a16dc3f5ff41415cb08.svg?branch=master)](https://buildkite.com/shopify/shopify-app-cli)[![License: MIT](https://img.shields.io/badge/License-MIT-green.svg)](LICENSE.md)
 
-# Shopify App CLI
-
-> NOTE: This tool is a Beta release in active development. Please check the [contributing guide](https://github.com/Shopify/shopify-app-cli/blob/master/.github/CONTRIBUTING.md) for notes on how to file issues and pull requests.
+> NOTE: This tool is a beta release in active development. Please check the [contributing guide](https://github.com/Shopify/shopify-app-cli/blob/master/.github/CONTRIBUTING.md) for notes on how to file issues and pull requests.
 
 Shopify App CLI helps you build Shopify apps faster. It automates many common tasks in the development process and lets you quickly add popular features, such as billing and webhooks.
 
@@ -55,7 +53,7 @@ The first URL handles the authentication flow for adding your app to a Shopify d
 The `create` command will scaffold a new Shopify app in your current active directory and generate all the necessary starter files.
 
 ```sh
-~/ $ shopify create project APP_NAME
+$ shopify create project APP_NAME
 ```
 
 The CLI will ask what type of app you want to create. Two languages are currently supported:
@@ -63,11 +61,11 @@ The CLI will ask what type of app you want to create. Two languages are currentl
 - Node.js and React
 - Ruby
 
-The CLI will also ask for your app’s API key and API secret, which you can find in the Partner Dashboard (see “Requirements” above).
+The CLI will also ask for your app’s API key and API secret, which you can find in your Partner Dashboard (see “Requirements” above).
 
 ### Start a development server
 
-Running the `serve` command in your app directory will start your local development server as well as a public tunnel to your local app (see the `tunnel` command below). This will make your app visible to anyone with the ngrok URL.
+Running the `serve` command in your app directory will start your local development server as well as a public tunnel to your local development app (see the `tunnel` command below). This will make your app visible to anyone with the ngrok URL.
 
 ```sh
 $ shopify serve
@@ -91,7 +89,7 @@ $ shopify tunnel stop
 
 ### Generate new app features
 
-Shopify App CLI automates several common developer tasks. Currently `generate` supports the following options:
+Shopify App CLI automates several common developer tasks. Currently `generate` supports the following actions:
 
 - Generating new pages in your app
 - Generating new billing models and endpoints
