@@ -59,7 +59,7 @@ install_prerequisites() {
   if is_mac; then
     install_xcode_clt
   elif is_linux; then
-    install_linux_prerequisites
+    check_linux_prerequisites
   fi
 }
 
@@ -134,52 +134,23 @@ install_xcode_clt() {
   return "${ret}"
 }
 
-install_linux_prerequisites() {
+check_linux_prerequisites() {
   if [ -n "${SKIP_PREREQS}" ]; then
     return 0;
   fi
 
   # shellcheck disable=1091,2153
-  case "$(source /etc/lsb-release && echo "${DISTRIB_ID}")" in
-    CentOS)
-      if ! sudo yum -y install make automake gcc gcc-c++ kernel-devel git ruby25; then
-        bs_error_message "yum failed"
+  case "$(source /etc/os-release && echo "${ID_LIKE}")" in
+    debian)
+      if [[ -n $(check_executables "git ruby") ]]; then
+        bs_error_message "please install dependencies with 'sudo apt-get install git-core ruby'"
         exit 1
       fi
       bs_success_message "Successfully installed shopify-app-cli prerequisites"
       ;;
-    Debian)
-      if ! sudo apt-get install -y build-essential git-core ruby2.5; then
-        bs_error_message "apt failed"
-        exit 1
-      fi
-      if ! sudo update-alternatives --install /usr/bin/ruby ruby /usr/bin/ruby2.5 1; then
-        bs_error_message "update-alternatives failed"
-        exit 1
-      fi
-      bs_success_message "Successfully installed shopify-app-cli prerequisites"
-      ;;
-    Fedora)
-      if ! sudo yum -y install make automake gcc gcc-c++ kernel-devel git ruby25; then
-        bs_error_message "yum failed"
-        exit 1
-      fi
-      bs_success_message "Successfully installed shopify-app-cli prerequisites"
-      ;;
-    Ubuntu)
-      if ! sudo apt-get install -y build-essential git-core ruby2.5; then
-        bs_error_message "apt failed"
-        exit 1
-      fi
-      if ! sudo update-alternatives --install /usr/bin/ruby ruby /usr/bin/ruby2.5 1; then
-        bs_error_message "update-alternatives failed"
-        exit 1
-      fi
-      bs_success_message "Successfully installed shopify-app-cli prerequisites"
-      ;;
-    RHEL)
-      if ! sudo yum -y install make automake gcc gcc-c++ kernel-devel git ruby25; then
-        bs_error_message "yum failed"
+    *fedora*)
+      if [[ -n $(check_executables "git ruby25") ]]; then
+        bs_error_message "please install dependencies with 'sudo yum install git ruby25'"
         exit 1
       fi
       bs_success_message "Successfully installed shopify-app-cli prerequisites"
@@ -192,6 +163,15 @@ install_linux_prerequisites() {
       exit 1
       ;;
   esac
+}
+
+check_executables() {
+  for package in $1; do
+    if ! which $package ; then
+      bs_error_message "$package not installed"
+      echo "1"
+    fi
+  done
 }
 
 clone_shopify_cli() {

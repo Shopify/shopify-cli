@@ -5,3 +5,5 @@ ngrok*
 .DS_Store
 heroku
 *.gz
+.vagrant/
+*.log
