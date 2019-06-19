@@ -20,7 +20,7 @@ module ShopifyCli
         @context.expects(:system).with(
           "~/.gem/ruby/#{RUBY_VERSION}/bin/rails", 'new', 'test-app'
         )
-        @context.expects(:system).with('echo', '"gem \'shopify_app\'"', '>>', 'Gemfile')
+        File.expects(:open).with(File.join(@context.root, 'Gemfile'), 'a')
         @context.expects(:system).with(
           "~/.gem/ruby/#{RUBY_VERSION}/bin/bundle", 'install', chdir: @context.root
         )
@@ -30,6 +30,34 @@ module ShopifyCli
           'shopify_app',
           '--api_key api_key',
           '--secret secret',
+          chdir: @context.root
+        )
+        @context.expects(:system).with(
+          "~/.gem/ruby/#{RUBY_VERSION}/bin/rails",
+          'db:migrate',
+          'RAILS_ENV=development',
+          chdir: @context.root
+        )
+        @context.expects(:system).with(
+          'gem',
+          'install',
+          'bundler',
+          '-v',
+          '~>1.0',
+          chdir: @context.root
+        )
+        @context.expects(:system).with(
+          'gem',
+          'install',
+          'bundler',
+          '-v',
+          '~>2.0',
+          chdir: @context.root
+        )
+        @context.expects(:system).with(
+          ShopifyCli::Helpers::Gem.binary_path_for(@context, 'spring'),
+          'stop',
+          chdir: @context.root
         )
         io = capture_io do
           @app.build('test-app')
