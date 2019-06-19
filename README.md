@@ -19,6 +19,7 @@ Install [Linux Subsystem for Windows](https://docs.microsoft.com/en-us/windows/w
 ```sh
 eval "$(curl -sS https://raw.githubusercontent.com/Shopify/shopify-app-cli/master/install.sh)"
 ```
+> NOTE: Installing the Shopify App CLI requires [curl](https://curl.haxx.se/).
 
 ## Getting started
 
