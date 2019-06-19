@@ -27,7 +27,6 @@ module ShopifyCli
             .with(body: body,
                headers: {
                  'Content-Type' => 'application/json',
-                 'User-Agent' => 'Shopify App CLI',
                  'X-Shopify-Access-Token' => 'myaccesstoken',
                })
             .to_return(

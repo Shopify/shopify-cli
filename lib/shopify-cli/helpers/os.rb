@@ -14,8 +14,8 @@ module ShopifyCli
         /Linux/.match(uname)
       end
 
-      def uname
-        @uname ||= CLI::Kit::System.capture2('uname -a')[0]
+      def uname(flag: 'a')
+        @uname ||= CLI::Kit::System.capture2("uname -#{flag}")[0].strip
       end
     end
   end

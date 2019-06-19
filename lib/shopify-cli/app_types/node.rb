@@ -58,6 +58,11 @@ module ShopifyCli
         begin
           ctx.rm_r(File.join(ctx.root, '.git'))
           ctx.rm_r(File.join(ctx.root, '.github'))
+          ctx.rm(File.join(ctx.root, 'server', 'handlers', 'client.js'))
+          ctx.rename(
+            File.join(ctx.root, 'server', 'handlers', 'client.cli.js'),
+            File.join(ctx.root, 'server', 'handlers', 'client.js')
+          )
         rescue Errno::ENOENT => e
           ctx.debug(e)
         end

@@ -32,6 +32,7 @@ module ShopifyCli
         )
         @context.expects(:rm_r).with(File.join(@context.root, '.git'))
         @context.expects(:rm_r).with(File.join(@context.root, '.github'))
+        @context.expects(:rm).with(File.join(@context.root, 'server', 'handlers', 'client.js'))
         io = capture_io do
           @app.build('test-app')
         end

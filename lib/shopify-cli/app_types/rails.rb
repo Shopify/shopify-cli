@@ -85,12 +85,29 @@ module ShopifyCli
         )
         env_file.write(ctx, '.env')
 
+        set_custom_ua
+
         puts CLI::UI.fmt(post_clone)
       end
 
       def check_dependencies
         Gem.install(ctx, 'rails')
         Gem.install(ctx, 'bundler')
+      end
+
+      private
+
+      # TODO: update once custom UA gets into shopify_app release
+      def set_custom_ua
+        ua_path = File.join(ctx.root, 'config', 'initializers', 'user_agent.rb')
+        ua_code = <<~USERAGENT
+          module ShopifyAPI
+            class Base < ActiveResource::Base
+              self.headers['User-Agent'] << " | ShopifyApp/\#{ShopifyApp::VERSION} | Shopify App CLI"
+            end
+          end
+        USERAGENT
+        File.open(ua_path, 'w') { |file| file.puts ua_code }
       end
     end
   end
