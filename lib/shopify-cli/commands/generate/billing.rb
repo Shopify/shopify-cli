@@ -6,6 +6,11 @@ module ShopifyCli
       class Billing < ShopifyCli::Task
         def call(ctx, args)
           ctx.puts(self.class.help) if args.empty?
+          # temporary check until we build for rails
+          if ctx.project.app_type == ShopifyCli::AppTypes::Rails
+            raise(ShopifyCli::Abort, 'This feature is not yet available for Rails apps')
+          end
+
           project = ShopifyCli::Project.current
           type = CLI::UI::Prompt.ask('Which kind of billing?') do |handler|
             handler.option('recurring billing') { :billing_recurring }
