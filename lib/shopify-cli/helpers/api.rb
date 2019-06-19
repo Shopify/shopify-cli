@@ -3,6 +3,7 @@ require 'shopify_cli'
 module ShopifyCli
   module Helpers
     class API
+      include OS
       include SmartProperties
 
       property :ctx, required: true, accepts: ShopifyCli::Context
@@ -121,10 +122,15 @@ module ShopifyCli
 
       private
 
+      def current_sha
+        output, status = @ctx.capture2e('git', 'rev-parse', 'HEAD', chdir: ShopifyCli::ROOT)
+        status.success? ? output.strip : 'SHA unavailable'
+      end
+
       def headers
         headers = {
           'Content-Type' => 'application/json',
-          'User-Agent' => 'Shopify App CLI',
+          'User-Agent' => "Shopify App CLI #{ShopifyCli::VERSION} #{current_sha} | #{uname(flag: 'v')}",
         }
         headers
       end

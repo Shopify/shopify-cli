@@ -46,6 +46,7 @@ module ShopifyCli
   extend CLI::Kit::Autocall
 
   TOOL_NAME        = 'shopify'
+  VERSION          = 'beta'
   ROOT             = File.expand_path('../..', __FILE__)
   INSTALL_DIR      = File.expand_path('.shopify-app-cli', ENV.fetch('XDG_RUNTIME_DIR', ENV.fetch('HOME')))
   TEMP_DIR         = File.join(ROOT, '.tmp')
