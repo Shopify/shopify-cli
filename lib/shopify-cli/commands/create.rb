@@ -10,6 +10,8 @@ module ShopifyCli
         case subcommand
         when 'project'
           Project.new(@ctx).call(args, name)
+        when 'store'
+          raise(ShopifyCli::Abort, 'This feature is not yet available')
         else
           @ctx.puts(self.class.help)
         end
