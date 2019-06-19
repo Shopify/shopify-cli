@@ -1,0 +1,11 @@
+draftOrderCreate(input: {lineItems: [{
+  originalUnitPrice: "1.00",
+  quantity: 1,
+  weight: {value: 10, unit: GRAMS},
+  title: "fake order"
+}]
+}) {
+  draftOrder {
+    createdAt,hasTimelineComment,id,legacyResourceId,name,subtotalPrice,taxExempt,taxesIncluded,totalPrice,totalShippingPrice,totalTax,totalWeight,updatedAt
+  }
+}

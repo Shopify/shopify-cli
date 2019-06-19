@@ -125,17 +125,15 @@ Developers can use [development stores](https://help.shopify.com/en/partners/das
 
 The `populate` command can add fake products, customers, and orders. The default number of items added is 10. You can specify a different number of items with the `--count` option.
 
-The STORE_ID placeholder in these examples can be found in your development store’s URL, preceding `.myshopify.com` (so, for instance, if you had a development store with a URL of `example.myshopify.com`, the store’s ID would be `example`).
-
 ```sh
 # Adds 10 fake products
-$ shopify populate STORE_ID products
+$ shopify populate products
 
 # Adds 10 fake customers
-$ shopify populate STORE_ID customers
+$ shopify populate customers
 
 # Adds 25 fake orders
-$ shopify populate STORE_ID orders --count 25
+$ shopify populate orders --count 25
 ```
 
 ## Developing Shopify App CLI

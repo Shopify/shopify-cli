@@ -1,0 +1,8 @@
+{"data": {
+  "draftOrderCreate": {
+    "draftOrder": {
+      "id": "gid://shopify/DraftOrder/12345678"
+    },
+    "userErrors": []
+  }
+}}
