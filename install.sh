@@ -166,12 +166,15 @@ check_linux_prerequisites() {
 }
 
 check_executables() {
-  for package in $1; do
-    if ! which $package ; then
+  packages=("$1")
+  missing=""
+  for package in $packages; do
+    if [[ -z $(which $package) ]]; then
       bs_error_message "$package not installed"
-      echo "1"
+      missing="$missing $package"
     fi
   done
+  echo $missing
 }
 
 clone_shopify_cli() {
