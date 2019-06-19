@@ -37,9 +37,16 @@ When creating a new app with the Partner Dashboard, you’ll need to provide a f
 
 Edit your app’s whitelisted redirection URLs in the Partner Dashboard by navigating to **Apps > [Your app name] > App setup**. On the App setup screen, set “App URL” to your live ngrok URL. Add the following two URLs to the “Whitelisted redirection URLs” field:
 
+For Node.js Apps:
 ```
 https://<LIVE_NGROK_URL>/auth/callback
-https://localhost:3456`
+https://localhost:3456
+```
+
+For Rails Apps:
+```
+https://<LIVE_NGROK_URL>/auth/shopify/callback
+https://localhost:3456
 ```
 
 The first URL handles the authentication flow for adding your app to a Shopify development store. The second is currently necessary to allow your local development server to make Shopify API requests on behalf of your development app.
