@@ -10,7 +10,7 @@ module ShopifyCli
         case subcommand
         when 'project'
           Project.new(@ctx).call(args, name)
-        when 'store'
+        when 'dev-store'
           raise(ShopifyCli::Abort, 'This feature is not yet available')
         else
           @ctx.puts(self.class.help)
@@ -26,11 +26,12 @@ module ShopifyCli
 
       def self.extended_help
         <<~HELP
-          {{bold:Subcommands:}
+          {{bold:Subcommands:}}
 
             {{cyan:project}}: Creates an app based on type selected.
               Usage: {{command:#{ShopifyCli::TOOL_NAME} create project <appname>}}
 
+            {{cyan:dev-store}}: {{yellow: Create dev-store is not currently available.}}
         HELP
       end
     end
