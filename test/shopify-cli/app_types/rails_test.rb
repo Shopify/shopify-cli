@@ -15,6 +15,12 @@ module ShopifyCli
       end
 
       def test_build_creates_rails_app
+        File.stubs(:open).with(File.join(
+          @context.root,
+          'config',
+          'initializers',
+          'user_agent.rb'
+        ), 'w').returns(nil)
         ShopifyCli::Helpers::Gem.expects(:install).with(@context, 'rails')
         ShopifyCli::Helpers::Gem.expects(:install).with(@context, 'bundler')
         @context.expects(:system).with(
