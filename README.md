@@ -138,6 +138,14 @@ $ shopify populate customers
 $ shopify populate orders --count 25
 ```
 
+### Update to the latest version
+
+```sh
+$ shopify update
+```
+
+The `update` command will upgrade your production instance of the CLI to use the most recent version.
+
 ## Developing Shopify App CLI
 
 This is an [open-source](https://github.com/Shopify/shopify-app-cli/blob/master/.github/LICENSE.md) tool and developers are [invited to contribute](https://github.com/Shopify/shopify-app-cli/blob/master/.github/CONTRIBUTING.md) to it.
@@ -164,10 +172,12 @@ $ shopify load-system
 
 The `load-system` command resets the CLI to use the production instance.
 
-### Update to the latest version
+### VM testing
 
-```sh
-$ shopify update
+A Vagrantfile is provided with some images for testing cross-platform. For more information see the [Vagrant docs](https://www.vagrantup.com/docs/). Here's how to test the install script on Ubuntu.
+
 ```
-
-The `update` command will upgrade your production instance of the CLI to use the most recent version.
+$ vagrant up ubuntu
+$ vagrant ssh ubuntu
+vagrant$ cd /vagrant
+vagrant$ eval "$(cat install.sh)"
