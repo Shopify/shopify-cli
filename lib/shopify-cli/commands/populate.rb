@@ -7,12 +7,18 @@ module ShopifyCli
 
       autoload :Resource, 'shopify-cli/commands/populate/resource'
       autoload :Product, 'shopify-cli/commands/populate/product'
+      autoload :Customer, 'shopify-cli/commands/populate/customer'
+      autoload :DraftOrder, 'shopify-cli/commands/populate/draft_order'
 
       def call(args, _name)
         subcommand = args.shift
         case subcommand
         when 'products'
           Product.new(ctx: @ctx, args: args).populate
+        when 'customers'
+          Customer.new(ctx: @ctx, args: args).populate
+        when 'draftorders'
+          DraftOrder.new(ctx: @ctx, args: args).populate
         else
           @ctx.puts(self.class.help)
         end

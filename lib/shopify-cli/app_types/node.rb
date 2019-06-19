@@ -51,7 +51,7 @@ module ShopifyCli
           secret: ctx.app_metadata[:secret],
           host: ctx.app_metadata[:host],
           shop: ctx.app_metadata[:shop],
-          scopes: 'write_products,write_customers,write_orders',
+          scopes: 'write_products,write_customers,write_draft_orders',
         )
         env_file.write(ctx, '.env')
 
