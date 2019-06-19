@@ -18,6 +18,7 @@ module ShopifyCli
         def self.help
           <<~HELP
             Enable charging for your app. This command generates the necessary code to call Shopify’s billing API.
+              Usage: {{command:#{ShopifyCli::TOOL_NAME} generate billing}}
           HELP
         end
       end
