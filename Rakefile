@@ -7,3 +7,7 @@ Rake::TestTask.new do |t|
   t.verbose = false
   t.warning = false
 end
+
+task :console do
+  exec('irb', '-r', './bin/support/load_shopify.rb', '-r', 'byebug')
+end
