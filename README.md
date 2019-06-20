@@ -187,3 +187,14 @@ $ vagrant up ubuntu
 $ vagrant ssh ubuntu
 vagrant$ cd /vagrant
 vagrant$ eval "$(cat install.sh)"
+```
+
+### Ruby console
+
+You can run `rake console` inside this repo to interact with the CLI's ruby API inside of an `irb` console.
+
+```
+rake console
+irb(main):001:0> ShopifyCli::ROOT
+=> "/Users/me/src/github.com/Shopify/shopify-cli"
+```
