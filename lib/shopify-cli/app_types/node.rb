@@ -41,7 +41,7 @@ module ShopifyCli
       end
 
       def build(name)
-        ShopifyCli::Tasks::Clone.call('git@github.com:shopify/shopify-app-node.git', name)
+        ShopifyCli::Tasks::Clone.call('https://github.com/Shopify/shopify-app-node.git', name)
         ShopifyCli::Finalize.request_cd(name)
         ShopifyCli::Tasks::JsDeps.call(ctx.root)
 
