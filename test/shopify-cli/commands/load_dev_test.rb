@@ -15,11 +15,19 @@ module ShopifyCli
       end
 
       def test_with_argument
-        ShopifyCli::Finalize.expects(:reload_shopify_from).with(
-          File.expand_path('~/shopify-cli')
-        )
+        dir = File.expand_path(Dir.pwd)
+        ShopifyCli::Finalize.expects(:reload_shopify_from).with(dir)
         capture_io do
-          @command.call(['~/shopify-cli'], nil)
+          @command.call([dir], nil)
+        end
+      end
+
+      def test_with_missing_dir
+        dir = File.join(Dir.mktmpdir, 'doesnotexist')
+        assert_raises ShopifyCli::AbortSilent do
+          capture_io do
+            @command.call([dir], nil)
+          end
         end
       end
     end
