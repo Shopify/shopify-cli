@@ -19,6 +19,24 @@ module CLI
           assert_all_commands_run
         end
 
+        module FakeConfig
+          require 'tmpdir'
+          require 'fileutils'
+
+          def setup
+            super
+            @tmpdir = Dir.mktmpdir
+            @prev_xdg = ENV['XDG_CONFIG_HOME']
+            ENV['XDG_CONFIG_HOME'] = @tmpdir
+          end
+
+          def teardown
+            FileUtils.rm_rf(@tmpdir)
+            ENV['XDG_CONFIG_HOME'] = @prev_xdg
+            super
+          end
+        end
+
         class FakeSuccess
           def initialize(success)
             @success = success

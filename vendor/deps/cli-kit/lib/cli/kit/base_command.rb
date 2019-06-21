@@ -24,7 +24,7 @@ module CLI
             cmd.call(args, command_name)
           end
           statsd_increment("cli.command.success", tags: stats_tags)
-        rescue => e
+        rescue Exception => e # rubocop:disable Lint/RescueException
           statsd_increment("cli.command.exception", tags: stats_tags + ["exception:#{e.class}"])
           raise e
         end
