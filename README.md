@@ -1,8 +1,8 @@
 # shopify-app-cli [![License: MIT](https://img.shields.io/badge/License-MIT-green.svg)](LICENSE.md)[![Build Status](https://travis-ci.com/Shopify/shopify-app-cli.svg?token=qtPazgjyosjEEgxgq7VZ&branch=master)](https://travis-ci.com/Shopify/shopify-app-cli)
 
-> NOTE: This tool is a beta release in active development. Please check the [contributing guide](https://github.com/Shopify/shopify-app-cli/blob/master/.github/CONTRIBUTING.md) for notes on how to file issues and pull requests.
-
 Shopify App CLI helps you build Shopify apps faster. It automates many common tasks in the development process and lets you quickly add popular features, such as billing and webhooks.
+
+> NOTE: This tool is currently a beta release in active development. Some features may be absent or incomplete, and functionality may change without warning. We welcome your feedback! Please check the [contributing guide](https://github.com/Shopify/shopify-app-cli/blob/master/.github/CONTRIBUTING.md) for notes on how to file bug reports and pull requests.
 
 ## Install
 
