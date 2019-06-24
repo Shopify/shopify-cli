@@ -30,7 +30,8 @@ module ShopifyCli
           }
         end
 
-        def serve_command(_ctx)
+        def serve_command(ctx)
+          Helpers::Gem.gem_home(ctx)
           "PORT=#{ShopifyCli::Tasks::Tunnel::PORT} bin/rails server"
         end
 
