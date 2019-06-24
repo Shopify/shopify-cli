@@ -18,7 +18,7 @@ module ShopifyCli
 
       def test_build_creates_app
         ShopifyCli::Tasks::Clone.stubs(:call).with(
-          'git@github.com:shopify/shopify-app-node.git',
+          'https://github.com/Shopify/shopify-app-node.git',
           'test-app',
         )
         ShopifyCli::Tasks::JsDeps.stubs(:call).with(@context.root)
@@ -72,7 +72,7 @@ module ShopifyCli
 
       def test_build_does_not_error_on_missing_git_dir
         ShopifyCli::Tasks::Clone.stubs(:call).with(
-          'git@github.com:shopify/shopify-app-node.git',
+          'https://github.com/Shopify/shopify-app-node.git',
           'test-app',
         )
         ShopifyCli::Tasks::JsDeps.stubs(:call).with(@context.root)
