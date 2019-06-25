@@ -14,7 +14,7 @@ module ShopifyCli
 
       def get
         _, resp = @api.post(@api.graphql_url, @api.query_body(introspection))
-        File.write(File.join(ShopifyCli::TEMP_DIR, 'shopify_schema.json'), resp)
+        File.write(File.join(ShopifyCli::TEMP_DIR, 'shopify_schema.json'), JSON.dump(resp))
       rescue Helpers::API::APIRequestUnauthorizedError
         ShopifyCli::Tasks::AuthenticateShopify.call(@ctx)
         get
