@@ -25,6 +25,7 @@ module ShopifyCli
           CLI::UI.expects(:ask).times(3)
             .returns('apikey', 'apisecret', 'test-shop.myshopify.com')
           CLI::UI::Prompt.expects(:ask).returns(:node)
+          ShopifyCli::AppTypes::Node.any_instance.stubs(:check_dependencies)
           ShopifyCli::AppTypes::Node.any_instance.stubs(:build)
           @command.call(['test-app'], nil)
           assert_equal 'apikey', @context.app_metadata[:api_key]
