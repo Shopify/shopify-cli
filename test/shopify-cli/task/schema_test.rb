@@ -27,8 +27,14 @@ module ShopifyCli
         stub_request(:post, "https://my-test-shop.myshopify.com/admin/api/2019-04/graphql.json")
           .with(body: JSON.dump(query: introspection, variables: {}),
             headers: { 'X-Shopify-Access-Token' => 'accesstoken123' })
-          .to_return(status: 200, body: "{}", headers: {})
-        ShopifyCli::Tasks::Schema.call(@context)
+          .to_return(status: 200, body: '{"foo":"baz"}', headers: {})
+        assert_equal({ "foo" => "baz" }, ShopifyCli::Tasks::Schema.call(@context))
+        assert_equal('{"foo":"baz"}', File.read(File.join(ShopifyCli::TEMP_DIR, 'shopify_schema.json')))
+      end
+
+      def test_gets_schema_if_already_downloaded
+        File.write(File.join(ShopifyCli::TEMP_DIR, 'shopify_schema.json'), '{"foo":"baz"}')
+        assert_equal({ "foo" => "baz" }, ShopifyCli::Tasks::Schema.call(@context))
       end
 
       def test_error_gets_access_token
