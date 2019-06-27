@@ -15,7 +15,6 @@ require 'byebug'
 require 'minitest/autorun'
 require 'minitest/reporters'
 require_relative 'minitest_ext'
-require_relative 'test_helpers'
 require 'fakefs/safe'
 require 'webmock/minitest'
 
@@ -34,3 +33,5 @@ module Minitest
     end
   end
 end
+
+require_relative 'test_helpers'
