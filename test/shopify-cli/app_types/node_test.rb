@@ -3,11 +3,11 @@ require 'test_helper'
 module ShopifyCli
   module AppTypes
     class NodeTest < MiniTest::Test
-      include TestHelpers::Context
+      include TestHelpers::Project
       include TestHelpers::Constants
 
       def setup
-        super
+        project_context('app_types', 'node')
         @app = ShopifyCli::AppTypes::Node.new(ctx: @context)
         @context.app_metadata = {
           host: 'host',
@@ -81,9 +81,6 @@ module ShopifyCli
       end
 
       def test_server_command
-        @context.stubs(:project).returns(
-          Project.at(File.join(FIXTURE_DIR, 'app_types/node'))
-        ).at_least_once
         @context.app_metadata[:host] = 'https://example.com'
         cmd = ShopifyCli::Commands::Serve.new(@context)
         @context.expects(:system).with(
@@ -93,9 +90,6 @@ module ShopifyCli
       end
 
       def test_open_command
-        @context.stubs(:project).returns(
-          Project.at(File.join(FIXTURE_DIR, 'app_types/node'))
-        ).at_least_once
         cmd = ShopifyCli::Commands::Open.new(@context)
         @context.expects(:system).with(
           'open',
