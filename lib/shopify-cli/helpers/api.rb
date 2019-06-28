@@ -18,7 +18,7 @@ module ShopifyCli
       class APIRequestThrottledError < APIRequestRetriableError; end
 
       def graphql_url
-        "https://#{ctx.project.env.shop}/admin/api/#{latest_api_version}/graphql.json"
+        "https://#{Project.current.env.shop}/admin/api/#{latest_api_version}/graphql.json"
       end
 
       def latest_api_version
@@ -26,7 +26,7 @@ module ShopifyCli
       end
 
       def fetch_latest_api_version
-        url = "https://#{ctx.project.env.shop}/admin/api/unstable/graphql.json"
+        url = "https://#{Project.current.env.shop}/admin/api/unstable/graphql.json"
 
         query = <<~QUERY
           {

@@ -128,7 +128,7 @@ module ShopifyCli
         end
 
         def admin_url(type, id)
-          "https://#{ctx.project.env.shop}/admin/#{type}s/#{id}"
+          "https://#{Project.current.env.shop}/admin/#{type}s/#{id}"
         end
 
         def price
