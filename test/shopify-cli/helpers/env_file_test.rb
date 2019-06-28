@@ -7,7 +7,7 @@ module ShopifyCli
       include TestHelpers::Project
 
       def test_read_reads_env_content_from_file
-        env_file = EnvFile.read(TestHelpers::AppType::FakeAppType, '.env')
+        env_file = EnvFile.read
         assert_equal(env_file.api_key, 'apikey')
         assert_equal(env_file.secret, 'secret')
         assert_equal(env_file.host, 'https://example.com')
@@ -16,7 +16,6 @@ module ShopifyCli
 
       def test_write_writes_env_content_to_file
         env_file = EnvFile.new(
-          app_type: TestHelpers::AppType::FakeAppType.new(ctx: @context),
           api_key: 'foo',
           secret: 'bar',
           host: 'baz'
@@ -28,7 +27,7 @@ module ShopifyCli
         CONTENT
         @context.expects(:write).with('.env', content)
         @context.expects(:print_task).with('writing .env file')
-        env_file.write(@context, '.env')
+        env_file.write(@context)
       end
     end
   end

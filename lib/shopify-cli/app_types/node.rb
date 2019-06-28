@@ -46,14 +46,13 @@ module ShopifyCli
         ShopifyCli::Tasks::JsDeps.call(ctx.root)
 
         env_file = Helpers::EnvFile.new(
-          app_type: self,
           api_key: ctx.app_metadata[:api_key],
           secret: ctx.app_metadata[:secret],
           host: ctx.app_metadata[:host],
           shop: ctx.app_metadata[:shop],
           scopes: 'write_products,write_customers,write_draft_orders',
         )
-        env_file.write(ctx, '.env')
+        env_file.write(ctx)
 
         begin
           ctx.rm_r(File.join(ctx.root, '.git'))
