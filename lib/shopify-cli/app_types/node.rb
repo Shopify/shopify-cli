@@ -18,9 +18,9 @@ module ShopifyCli
           'node embedded app'
         end
 
-        def serve_command(ctx)
+        def serve_command(_ctx)
           %W(
-            HOST=#{ctx.project.env.host}
+            HOST=#{Project.current.env.host}
             PORT=#{ShopifyCli::Tasks::Tunnel::PORT}
             npm run dev
           ).join(' ')
@@ -36,7 +36,7 @@ module ShopifyCli
         end
 
         def open(ctx)
-          ctx.system('open', "#{ctx.project.env.host}/auth?shop=#{ctx.project.env.shop}")
+          ctx.system('open', "#{Project.current.env.host}/auth?shop=#{Project.current.env.shop}")
         end
       end
 

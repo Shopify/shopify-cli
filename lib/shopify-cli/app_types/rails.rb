@@ -36,7 +36,7 @@ module ShopifyCli
         end
 
         def open(ctx)
-          ctx.system('open', "#{ctx.project.env.host}/login?shop=#{ctx.project.env.shop}")
+          ctx.system('open', "#{Project.current.env.host}/login?shop=#{Project.current.env.shop}")
         end
       end
 
