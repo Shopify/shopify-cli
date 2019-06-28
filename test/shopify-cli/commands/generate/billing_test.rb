@@ -4,7 +4,7 @@ module ShopifyCli
   module Commands
     class Generate
       class BillingTest < MiniTest::Test
-        include TestHelpers::Context
+        include TestHelpers::Project
 
         def setup
           super
@@ -12,17 +12,15 @@ module ShopifyCli
         end
 
         def test_recurring_billing
-          ShopifyCli::Project.write(@context, :node)
           CLI::UI::Prompt.expects(:ask).returns(:billing_recurring)
-          @context.expects(:system).with('npm run-script generate-recurring-billing --silent')
+          @context.expects(:system).with('generate-recurring-billing')
             .returns(mock(success?: true))
           @command.call(['billing'], nil)
         end
 
         def test_one_time_billing
-          ShopifyCli::Project.write(@context, :node)
           CLI::UI::Prompt.expects(:ask).returns(:billing_one_time)
-          @context.expects(:system).with('npm run-script generate-one-time-billing --silent')
+          @context.expects(:system).with('generate-one-time-billing')
             .returns(mock(success?: true))
           @command.call(['billing'], nil)
         end

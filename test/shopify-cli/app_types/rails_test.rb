@@ -3,15 +3,16 @@ require 'test_helper'
 module ShopifyCli
   module AppTypes
     class RailsTest < MiniTest::Test
-      include TestHelpers::Context
+      include TestHelpers::Project
 
       def setup
-        super
+        project_context('app_types', 'rails')
         @app = ShopifyCli::AppTypes::Rails.new(ctx: @context)
         @context.app_metadata = {
           api_key: 'api_key',
           secret: 'secret',
         }
+        Helpers::EnvFile.any_instance.stubs(:write)
       end
 
       def test_build_creates_rails_app
@@ -77,9 +78,6 @@ module ShopifyCli
       end
 
       def test_server_command
-        @context.stubs(:project).returns(
-          Project.at(File.join(FIXTURE_DIR, 'app_types/rails'))
-        ).at_least_once
         cmd = ShopifyCli::Commands::Serve.new(@context)
         @context.expects(:system).with(
           "PORT=8081 bin/rails server"
@@ -88,9 +86,6 @@ module ShopifyCli
       end
 
       def test_open_command
-        @context.stubs(:project).returns(
-          Project.at(File.join(FIXTURE_DIR, 'app_types/rails'))
-        ).at_least_once
         cmd = ShopifyCli::Commands::Open.new(@context)
         @context.expects(:system).with(
           'open',

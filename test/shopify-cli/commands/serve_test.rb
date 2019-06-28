@@ -3,7 +3,7 @@ require 'test_helper'
 module ShopifyCli
   module Commands
     class ServeTest < MiniTest::Test
-      include TestHelpers::AppType
+      include TestHelpers::Project
 
       def setup
         super

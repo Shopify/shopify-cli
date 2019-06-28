@@ -1,14 +1,13 @@
 module TestHelpers
   module AppType
-    include TestHelpers::Context
-
     class FakeAppType < ShopifyCli::AppTypes::AppType
       class << self
         def env_file
           <<~ENV
-            SHOPIFY_API_KEY={api_key}
-            SHOPIFY_SECRET={secret}
-            SHOPIFY_HOST={host}
+            API_KEY={api_key}
+            SECRET={secret}
+            HOST={host}
+            SHOP={shop}
           ENV
         end
 
@@ -21,7 +20,9 @@ module TestHelpers
         def generate
           {
             page: 'page-generate',
-            billing: 'billing-generate',
+            billing_recurring: 'generate-recurring-billing',
+            billing_one_time: 'generate-one-time-billing',
+            webhook: 'generate-webhook',
           }
         end
 
@@ -34,11 +35,6 @@ module TestHelpers
     def setup
       super
       ShopifyCli::AppTypeRegistry.register(:fake, FakeAppType)
-      content = <<~CONTENT
-        ---
-        app_type: :fake
-      CONTENT
-      File.write(File.join(@context.root, '.shopify-cli.yml'), content)
     end
 
     def teardown

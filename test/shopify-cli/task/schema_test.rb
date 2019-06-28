@@ -3,7 +3,7 @@ require 'test_helper'
 module ShopifyCli
   module Tasks
     class SchemaTest < MiniTest::Test
-      include TestHelpers::Context
+      include TestHelpers::Project
       include ShopifyCli::Helpers::GraphQL::Queries
       include TestHelpers::Constants
 
@@ -13,9 +13,6 @@ module ShopifyCli
         @command = ShopifyCli::Commands::Update.new
         redefine_constant(ShopifyCli, :TEMP_DIR, Dir.mktmpdir)
         FileUtils.mkdir("#{ShopifyCli::TEMP_DIR}/.shopify_schema")
-        @context.stubs(:project).returns(
-          Project.at(File.join(FIXTURE_DIR, 'app_types/node'))
-        )
         ShopifyCli::Helpers::API.any_instance.stubs(:latest_api_version)
           .returns('2019-04')
         ShopifyCli::Helpers::AccessToken.expects(:read).returns(
