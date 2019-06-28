@@ -76,14 +76,14 @@ module ShopifyCli
       f = File.join(directory, relative_path)
       require 'yaml' # takes 20ms, so deferred as late as possible.
       begin
-        YAML.load_file(f) || {}
+        YAML.load_file(f)
       rescue Psych::SyntaxError => e
         raise(ShopifyCli::Abort, "#{relative_path} contains invalid YAML: #{e.message}")
       # rescue Errno::EACCES => e
       # TODO
       #   Dev::Helpers::EaccesHandler.diagnose_and_raise(f, e, mode: :read)
       rescue Errno::ENOENT
-        raise
+        raise ShopifyCli::Abort, "#{f} not found"
       end
     end
   end

@@ -19,26 +19,11 @@ module ShopifyCli
           end
 
           AppTypeRegistry.check_dependencies(app_type, @ctx)
-          ask_for_credentials
 
           AppTypeRegistry.build(app_type, name, @ctx)
           ShopifyCli::Project.write(@ctx, app_type)
           @ctx.puts("{{green:! tip}} Whitelist your development URLs in the Partner Dashboard:
           https://github.com/Shopify/shopify-app-cli#whitelisting-app-redirection-urls")
-        end
-
-        def ask_for_credentials
-          api_key = CLI::UI.ask('What is your Shopify API key?')
-          api_secret = CLI::UI.ask('What is your Shopify API secret key?')
-          shop = CLI::UI.ask('What is your development store URL? (e.g. my-test-shop.myshopify.com)')
-
-          shop.gsub!(/https?\:\/\//, '')
-
-          @ctx.app_metadata = {
-            api_key: api_key,
-            secret: api_secret,
-            shop: shop,
-          }
         end
 
         def self.help

@@ -25,7 +25,7 @@ module ShopifyCli
 
     register :AuthenticateShopify, :authenticate_shopify, 'shopify-cli/tasks/authenticate_shopify'
     register :Clone, :clone, 'shopify-cli/tasks/clone'
-    register :Schema, :schema, 'shopify-cli/tasks/schema'
+    register :EnsureEnv, :ensure_env, 'shopify-cli/tasks/ensure_env'
     register :JsDeps, :js_deps, 'shopify-cli/tasks/js_deps'
     register :Schema, :schema, 'shopify-cli/tasks/schema'
     register :Tunnel, :tunnel, 'shopify-cli/tasks/tunnel'

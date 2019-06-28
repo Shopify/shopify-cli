@@ -14,6 +14,7 @@ module ShopifyCli
 
       def call(ctx)
         @ctx = ctx
+        Tasks::EnsureEnv.call(@ctx)
         server = TCPServer.new('localhost', PORT)
         @ctx.puts("opening #{authorize_url}")
         @ctx.system("open '#{authorize_url}'")
