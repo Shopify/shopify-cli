@@ -16,9 +16,7 @@ module ShopifyCli
         end
 
         def file_name
-          project = ShopifyCli::Project.current
-          env = Helpers::EnvFile.read(project.app_type,
-            File.join(project.directory, '.env'))
+          env = Helpers::EnvFile.read
           @file_name = env.api_key
         end
       end

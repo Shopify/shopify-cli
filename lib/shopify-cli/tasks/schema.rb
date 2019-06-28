@@ -21,9 +21,7 @@ module ShopifyCli
       end
 
       def shop_name
-        project = ShopifyCli::Project.current
-        env = Helpers::EnvFile.read(project.app_type,
-          File.join(ShopifyCli::Project.current.directory, '.env'))
+        env = Helpers::EnvFile.read
         @shop_name = env.shop
       end
 

@@ -5,14 +5,16 @@ module ShopifyCli
     class EnvFile
       include SmartProperties
 
+      FILENAME = '.env'
+
       class << self
-        def read(app_type, filename)
+        def read(directory = Dir.pwd)
+          app_type = Project.at(directory).app_type
           template = parse_template(app_type.env_file)
           input = {}
-          parse(filename).each do |key, value|
+          parse(directory).each do |key, value|
             input[template[key]] = value if template[key]
           end
-          input[:app_type] = app_type
           new(input)
         end
 
@@ -26,8 +28,9 @@ module ShopifyCli
           end
         end
 
-        def parse(filename)
-          File.read(filename).gsub("\r\n", "\n").split("\n").each_with_object({}) do |line, output|
+        def parse(directory)
+          File.read(File.join(directory, FILENAME))
+            .gsub("\r\n", "\n").split("\n").each_with_object({}) do |line, output|
             match = /\A([A-Za-z_0-9]+)=(.*)\z/.match(line)
             if match
               key = match[1]
@@ -44,21 +47,20 @@ module ShopifyCli
         end
       end
 
-      property :app_type, required: true
       property :api_key, required: true
       property :secret, required: true
       property :shop
       property :scopes
       property :host
 
-      def write(ctx, filename)
-        template = self.class.parse_template(app_type.class.env_file)
+      def write(ctx)
+        template = self.class.parse_template(Project.current.app_type.env_file)
         output = []
         template.each do |key, value|
           output << "#{key}=#{send(value)}" if send(value)
         end
-        ctx.print_task('writing .env file')
-        ctx.write(filename, output.join("\n") + "\n")
+        ctx.print_task("writing #{FILENAME} file")
+        ctx.write(FILENAME, output.join("\n") + "\n")
       end
     end
   end
