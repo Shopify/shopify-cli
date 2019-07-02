@@ -2,17 +2,21 @@ require 'test_helper'
 
 module ShopifyCli
   module AppTypes
-    class RailsTest < MiniTest::Test
-      include TestHelpers::Project
-
+    class RailsBuildTest < MiniTest::Test
       def setup
-        project_context('app_types', 'rails')
+        root = Dir.mktmpdir
+        @context = TestHelpers::FakeContext.new(
+          root: root,
+          env: {
+            'HOME' => '~',
+            'XDG_CONFIG_HOME' => root,
+          }
+        )
         @app = ShopifyCli::AppTypes::Rails.new(ctx: @context)
         @context.app_metadata = {
           api_key: 'api_key',
           secret: 'secret',
         }
-        Helpers::EnvFile.any_instance.stubs(:write)
       end
 
       def test_build_creates_rails_app
@@ -75,6 +79,16 @@ module ShopifyCli
           CLI::UI.fmt('Run {{command:shopify serve}} to start the local development server'),
           output
         )
+      end
+    end
+
+    class RailsTest < MiniTest::Test
+      include TestHelpers::Project
+
+      def setup
+        project_context('app_types', 'rails')
+        @app = ShopifyCli::AppTypes::Rails.new(ctx: @context)
+        Helpers::EnvFile.any_instance.stubs(:write)
       end
 
       def test_server_command

@@ -27,7 +27,12 @@ module ShopifyCli
         CONTENT
         @context.expects(:write).with('.env', content)
         @context.expects(:print_task).with('writing .env file')
-        env_file.write(@context)
+        template = <<~TEMPLATE
+          API_KEY={api_key}
+          SECRET={secret}
+          HOST={host}
+        TEMPLATE
+        env_file.write(@context, template)
       end
     end
   end
