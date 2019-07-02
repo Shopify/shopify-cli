@@ -28,7 +28,7 @@ module ShopifyCli
 
         def apply_gem_home(ctx)
           path = File.join(ctx.getenv('HOME'), '.gem', 'ruby', RUBY_VERSION)
-          ctx.mkdir_p(path)
+          ctx.mkdir_p(path) unless Dir.exist?(path)
           ctx.setenv('GEM_HOME', path)
         end
       end
