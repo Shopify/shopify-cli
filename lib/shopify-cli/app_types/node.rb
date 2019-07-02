@@ -52,7 +52,7 @@ module ShopifyCli
           shop: ctx.app_metadata[:shop],
           scopes: 'write_products,write_customers,write_draft_orders',
         )
-        env_file.write(ctx)
+        env_file.write(ctx, self.class.env_file)
 
         begin
           ctx.rm_r(File.join(ctx.root, '.git'))

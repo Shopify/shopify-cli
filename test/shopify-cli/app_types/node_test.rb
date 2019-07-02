@@ -2,12 +2,9 @@ require 'test_helper'
 
 module ShopifyCli
   module AppTypes
-    class NodeTest < MiniTest::Test
-      include TestHelpers::Project
-      include TestHelpers::Constants
-
+    class NodeBuildTest < MiniTest::Test
       def setup
-        project_context('app_types', 'node')
+        @context = TestHelpers::FakeContext.new(root: Dir.mktmpdir)
         @app = ShopifyCli::AppTypes::Node.new(ctx: @context)
         @context.app_metadata = {
           host: 'host',
@@ -78,6 +75,16 @@ module ShopifyCli
         ShopifyCli::Tasks::JsDeps.stubs(:call).with(@context.root)
         @context.expects(:write)
         @app.build('test-app')
+      end
+    end
+
+    class NodeTest < MiniTest::Test
+      include TestHelpers::Project
+      include TestHelpers::Constants
+
+      def setup
+        project_context('app_types', 'node')
+        @app = ShopifyCli::AppTypes::Node.new(ctx: @context)
       end
 
       def test_server_command

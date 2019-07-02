@@ -83,7 +83,7 @@ module ShopifyCli
           shop: ctx.app_metadata[:shop],
           scopes: 'write_products,write_customers,write_orders',
         )
-        env_file.write(ctx)
+        env_file.write(ctx, self.class.env_file)
 
         set_custom_ua
 
