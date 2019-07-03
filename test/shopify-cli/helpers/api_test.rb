@@ -3,7 +3,7 @@ require 'test_helper'
 module ShopifyCli
   module Helpers
     class APITest < MiniTest::Test
-      include TestHelpers::Context
+      include TestHelpers::Project
 
       def setup
         super
@@ -11,9 +11,6 @@ module ShopifyCli
         @api.stubs(:latest_api_version).returns('2019-04')
         @api.stubs(:current_sha).returns('abcde')
         @api.stubs(:uname).with(flag: 'v').returns('Mac')
-        @context.stubs(:project).returns(
-          Project.at(File.join(FIXTURE_DIR, 'app_types/node'))
-        )
       end
 
       def test_mutation_makes_request_to_shopify

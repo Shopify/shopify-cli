@@ -4,14 +4,11 @@ module ShopifyCli
   module Commands
     class Populate
       class CustomerTest < MiniTest::Test
-        include TestHelpers::Context
+        include TestHelpers::Project
         include TestHelpers::Schema
 
         def setup
           super
-          @context.stubs(:project).returns(
-            Project.at(File.join(FIXTURE_DIR, 'app_types/node'))
-          )
           Helpers::AccessToken.stubs(:read).returns('myaccesstoken')
           ShopifyCli::Helpers::API.any_instance.stubs(:latest_api_version)
             .returns('2019-04')

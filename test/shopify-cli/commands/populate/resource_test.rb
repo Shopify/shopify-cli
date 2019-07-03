@@ -4,15 +4,12 @@ module ShopifyCli
   module Commands
     class Populate
       class ResourceTest < MiniTest::Test
-        include TestHelpers::Context
+        include TestHelpers::Project
         include TestHelpers::Schema
 
         def setup
           super
           Helpers::AccessToken.stubs(:read).returns('myaccesstoken')
-          @context.stubs(:project).returns(
-            Project.at(File.join(FIXTURE_DIR, 'app_types/node'))
-          )
         end
 
         def test_with_schema_args_overrides_input

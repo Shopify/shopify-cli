@@ -3,14 +3,11 @@ require 'test_helper'
 module ShopifyCli
   module Commands
     class PopulateTest < MiniTest::Test
-      include TestHelpers::Context
+      include TestHelpers::Project
 
       def setup
         super
         @command = ShopifyCli::Commands::Populate.new(@context)
-        @context.stubs(:project).returns(
-          Project.at(File.join(FIXTURE_DIR, 'app_types/node'))
-        )
         Helpers::AccessToken.stubs(:read).returns('myaccesstoken')
       end
 

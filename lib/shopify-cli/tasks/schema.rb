@@ -14,16 +14,14 @@ module ShopifyCli
 
       def get
         _, resp = @api.post(@api.graphql_url, @api.query_body(introspection))
-        File.write(File.join(ShopifyCli::TEMP_DIR, 'shopify_schema.json'), resp)
+        File.write(File.join(ShopifyCli::TEMP_DIR, 'shopify_schema.json'), JSON.dump(resp))
       rescue Helpers::API::APIRequestUnauthorizedError
         ShopifyCli::Tasks::AuthenticateShopify.call(@ctx)
         get
       end
 
       def shop_name
-        project = ShopifyCli::Project.current
-        env = Helpers::EnvFile.read(project.app_type,
-          File.join(ShopifyCli::Project.current.directory, '.env'))
+        env = Helpers::EnvFile.read
         @shop_name = env.shop
       end
 

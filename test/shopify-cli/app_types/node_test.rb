@@ -2,12 +2,9 @@ require 'test_helper'
 
 module ShopifyCli
   module AppTypes
-    class NodeTest < MiniTest::Test
-      include TestHelpers::Context
-      include TestHelpers::Constants
-
+    class NodeBuildTest < MiniTest::Test
       def setup
-        super
+        @context = TestHelpers::FakeContext.new(root: Dir.mktmpdir)
         @app = ShopifyCli::AppTypes::Node.new(ctx: @context)
         @context.app_metadata = {
           host: 'host',
@@ -18,7 +15,7 @@ module ShopifyCli
 
       def test_build_creates_app
         ShopifyCli::Tasks::Clone.stubs(:call).with(
-          'git@github.com:shopify/shopify-app-node.git',
+          'https://github.com/Shopify/shopify-app-node.git',
           'test-app',
         )
         ShopifyCli::Tasks::JsDeps.stubs(:call).with(@context.root)
@@ -72,18 +69,25 @@ module ShopifyCli
 
       def test_build_does_not_error_on_missing_git_dir
         ShopifyCli::Tasks::Clone.stubs(:call).with(
-          'git@github.com:shopify/shopify-app-node.git',
+          'https://github.com/Shopify/shopify-app-node.git',
           'test-app',
         )
         ShopifyCli::Tasks::JsDeps.stubs(:call).with(@context.root)
         @context.expects(:write)
         @app.build('test-app')
       end
+    end
+
+    class NodeTest < MiniTest::Test
+      include TestHelpers::Project
+      include TestHelpers::Constants
+
+      def setup
+        project_context('app_types', 'node')
+        @app = ShopifyCli::AppTypes::Node.new(ctx: @context)
+      end
 
       def test_server_command
-        @context.stubs(:project).returns(
-          Project.at(File.join(FIXTURE_DIR, 'app_types/node'))
-        ).at_least_once
         @context.app_metadata[:host] = 'https://example.com'
         cmd = ShopifyCli::Commands::Serve.new(@context)
         @context.expects(:system).with(
@@ -93,9 +97,6 @@ module ShopifyCli
       end
 
       def test_open_command
-        @context.stubs(:project).returns(
-          Project.at(File.join(FIXTURE_DIR, 'app_types/node'))
-        ).at_least_once
         cmd = ShopifyCli::Commands::Open.new(@context)
         @context.expects(:system).with(
           'open',

@@ -5,8 +5,9 @@ module ShopifyCli
     class Generate
       class Webhook < ShopifyCli::Task
         def call(ctx, args)
+          project = ShopifyCli::Project.current
           # temporary check until we build for rails
-          if ctx.project.app_type == ShopifyCli::AppTypes::Rails
+          if project.app_type == ShopifyCli::AppTypes::Rails
             raise(ShopifyCli::Abort, 'This feature is not yet available for Rails apps')
           end
           selected_type = args.first
@@ -23,7 +24,6 @@ module ShopifyCli
             end
           end
 
-          project = ShopifyCli::Project.current
           app_type = project.app_type
           ShopifyCli::Commands::Generate
             .run_generate("#{app_type.generate[:webhook]} #{selected_type}", selected_type, ctx)

@@ -15,10 +15,6 @@ module ShopifyCli
     property :root, default: lambda { Dir.pwd }, converts: :to_s
     property :env, default: lambda { ($original_env || ENV).clone }
 
-    def project
-      @project ||= ShopifyCli::Project.at(root)
-    end
-
     def getenv(name)
       v = @env[name]
       v == '' ? nil : v

@@ -74,12 +74,8 @@ module ShopifyCli
         uri
       end
 
-      def project
-        @project = ShopifyCli::Project.current
-      end
-
       def env
-        @env = Helpers::EnvFile.read(project.app_type, File.join(project.directory, '.env'))
+        @env = Helpers::EnvFile.read
       end
 
       def extract_query_param(key, request)

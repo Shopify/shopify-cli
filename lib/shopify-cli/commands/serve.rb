@@ -10,13 +10,14 @@ module ShopifyCli
       prerequisite_task :tunnel
 
       def call(*)
+        project = Project.current
         if mac?
           @ctx.puts("{{green:! tip}} Press Control-T to open this project in your browser")
           on_siginfo do
-            @ctx.project.app_type.open(@ctx)
+            project.app_type.open(@ctx)
           end
         end
-        @ctx.system(@ctx.project.app_type.serve_command(@ctx))
+        @ctx.system(project.app_type.serve_command(@ctx))
       end
 
       def self.help

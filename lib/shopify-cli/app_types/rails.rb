@@ -36,7 +36,7 @@ module ShopifyCli
         end
 
         def open(ctx)
-          ctx.system('open', "#{ctx.project.env.host}/login?shop=#{ctx.project.env.shop}")
+          ctx.system('open', "#{Project.current.env.host}/login?shop=#{Project.current.env.shop}")
         end
       end
 
@@ -77,14 +77,13 @@ module ShopifyCli
         ShopifyCli::Finalize.request_cd(name)
 
         env_file = Helpers::EnvFile.new(
-          app_type: self,
           api_key: ctx.app_metadata[:api_key],
           secret: ctx.app_metadata[:secret],
           host: ctx.app_metadata[:host],
           shop: ctx.app_metadata[:shop],
           scopes: 'write_products,write_customers,write_orders',
         )
-        env_file.write(ctx, '.env')
+        env_file.write(ctx, self.class.env_file)
 
         set_custom_ua
 

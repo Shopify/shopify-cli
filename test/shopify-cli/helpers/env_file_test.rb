@@ -3,30 +3,36 @@ require 'test_helper'
 
 module ShopifyCli
   module Helpers
-    class EnvFileHelperTest < MiniTest::Test
-      include TestHelpers::AppType
+    class EnvFileTest < MiniTest::Test
+      include TestHelpers::Project
 
       def test_read_reads_env_content_from_file
-        env_file = EnvFile.read(TestHelpers::AppType::FakeAppType, fixture)
-        assert_equal(env_file.api_key, 'foo')
-        assert_equal(env_file.secret, 'bar')
-        assert_equal(env_file.host, 'baz')
+        env_file = EnvFile.read
+        assert_equal(env_file.api_key, 'apikey')
+        assert_equal(env_file.secret, 'secret')
+        assert_equal(env_file.host, 'https://example.com')
+        assert_equal(env_file.shop, 'my-test-shop.myshopify.com')
       end
 
       def test_write_writes_env_content_to_file
         env_file = EnvFile.new(
-          app_type: TestHelpers::AppType::FakeAppType.new(ctx: @context),
           api_key: 'foo',
           secret: 'bar',
           host: 'baz'
         )
-        @context.expects(:write).with('.env', File.read(fixture))
+        content = <<~CONTENT
+          API_KEY=foo
+          SECRET=bar
+          HOST=baz
+        CONTENT
+        @context.expects(:write).with('.env', content)
         @context.expects(:print_task).with('writing .env file')
-        env_file.write(@context, '.env')
-      end
-
-      def fixture
-        File.join(ShopifyCli::ROOT, 'test/fixtures/env_file_read.env')
+        template = <<~TEMPLATE
+          API_KEY={api_key}
+          SECRET={secret}
+          HOST={host}
+        TEMPLATE
+        env_file.write(@context, template)
       end
     end
   end

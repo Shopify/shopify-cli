@@ -18,9 +18,9 @@ module ShopifyCli
           'node embedded app'
         end
 
-        def serve_command(ctx)
+        def serve_command(_ctx)
           %W(
-            HOST=#{ctx.project.env.host}
+            HOST=#{Project.current.env.host}
             PORT=#{ShopifyCli::Tasks::Tunnel::PORT}
             npm run dev
           ).join(' ')
@@ -36,24 +36,23 @@ module ShopifyCli
         end
 
         def open(ctx)
-          ctx.system('open', "#{ctx.project.env.host}/auth?shop=#{ctx.project.env.shop}")
+          ctx.system('open', "#{Project.current.env.host}/auth?shop=#{Project.current.env.shop}")
         end
       end
 
       def build(name)
-        ShopifyCli::Tasks::Clone.call('git@github.com:shopify/shopify-app-node.git', name)
+        ShopifyCli::Tasks::Clone.call('https://github.com/Shopify/shopify-app-node.git', name)
         ShopifyCli::Finalize.request_cd(name)
         ShopifyCli::Tasks::JsDeps.call(ctx.root)
 
         env_file = Helpers::EnvFile.new(
-          app_type: self,
           api_key: ctx.app_metadata[:api_key],
           secret: ctx.app_metadata[:secret],
           host: ctx.app_metadata[:host],
           shop: ctx.app_metadata[:shop],
           scopes: 'write_products,write_customers,write_draft_orders',
         )
-        env_file.write(ctx, '.env')
+        env_file.write(ctx, self.class.env_file)
 
         begin
           ctx.rm_r(File.join(ctx.root, '.git'))

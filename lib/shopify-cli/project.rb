@@ -57,7 +57,7 @@ module ShopifyCli
     end
 
     def env
-      @env ||= ShopifyCli::Helpers::EnvFile.read(app_type, File.join(directory, '.env'))
+      @env ||= Helpers::EnvFile.read(directory)
     end
 
     def config
