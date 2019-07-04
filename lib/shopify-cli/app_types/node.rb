@@ -70,6 +70,11 @@ module ShopifyCli
       end
 
       def check_dependencies
+        check_npm_node
+        check_npm_registry
+      end
+
+      def check_npm_node
         deps = ['node -v', 'npm -v']
         deps.each do |dep|
           dep_name = dep.split.first
@@ -79,6 +84,18 @@ module ShopifyCli
           next if stat.success?
           raise(ShopifyCli::Abort,
             "#{dep_name} is required to create an app project. Download at #{dep_link}")
+        end
+      end
+
+      def check_npm_registry
+        if ctx.getenv('DISABLE_NPM_REGISTRY_CHECK').nil?
+          registry, _ = ctx.capture2('npm', 'config', 'get', '@shopify:registry')
+          msg = <<~MSG
+            You are not using the public npm registry for Shopify packages. This can cause issues with installing @shopify packages.
+            Please run `npm config set @shopify:registry https://registry.yarnpkg.com and try this command again,
+            or preface the command with `DISABLE_NPM_REGISTRY_CHECK=1`.
+          MSG
+          raise(ShopifyCli::Abort, msg) unless registry.include?('https://registry.yarnpkg.com')
         end
       end
     end

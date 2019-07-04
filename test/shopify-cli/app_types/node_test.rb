@@ -4,7 +4,7 @@ module ShopifyCli
   module AppTypes
     class NodeBuildTest < MiniTest::Test
       def setup
-        @context = TestHelpers::FakeContext.new(root: Dir.mktmpdir)
+        @context = TestHelpers::FakeContext.new(root: Dir.mktmpdir, env: {})
         @app = ShopifyCli::AppTypes::Node.new(ctx: @context)
         @context.app_metadata = {
           host: 'host',
@@ -42,6 +42,9 @@ module ShopifyCli
       end
 
       def test_check_dependencies_command
+        @context.expects(:capture2).with('npm', 'config', 'get', '@shopify:registry').returns(
+          ['https://registry.yarnpkg.com', nil]
+        )
         @context.expects(:capture2e).with(
           'node -v'
         ).returns(['8.0.0', mock(success?: true)])
@@ -56,11 +59,34 @@ module ShopifyCli
         assert_match('8.0.0', output)
       end
 
-      def test_check_dependencies_command_error
+      def test_check_npm_node_command_error
+        @app.stubs(:check_npm_registry)
+        @context.expects(:capture2e).with(
+          'node -v'
+        ).returns([nil, mock(success?: false)])
         assert_raises ShopifyCli::Abort do
-          @context.expects(:capture2e).with(
-            'node -v'
-          ).returns([nil, mock(success?: false)])
+          capture_io do
+            @app.check_dependencies
+          end
+        end
+      end
+
+      def test_check_dependencies_raises_on_non_public_npm_repo
+        @context.expects(:capture2).with('npm', 'config', 'get', '@shopify:registry').returns(
+          ['https://packages.private.io', nil]
+        )
+        @app.stubs(:check_npm_node)
+        assert_raises ShopifyCli::Abort do
+          capture_io do
+            @app.check_dependencies
+          end
+        end
+      end
+
+      def test_check_dependencies_does_not_raise_on_non_public_npm_repo_with_override
+        @context.setenv('DISABLE_NPM_REGISTRY_CHECK', '1')
+        @app.stubs(:check_npm_node)
+        assert_nothing_raised do
           capture_io do
             @app.check_dependencies
           end
