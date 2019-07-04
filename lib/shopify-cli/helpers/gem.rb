@@ -6,12 +6,15 @@ module ShopifyCli
     class Gem
       include SmartProperties
 
-      property :ctx, accepts: ShopifyCli::Context
-      property :name, converts: :to_s
+      property :ctx, accepts: ShopifyCli::Context, required: true
+      property :name, converts: :to_s, required: true
+      property :version, converts: :to_s
 
       class << self
-        def install(ctx, name)
-          gem = new(ctx: ctx, name: name)
+        def install(ctx, *args)
+          name = args.shift
+          version = args.shift
+          gem = new(ctx: ctx, name: name, version: version)
           ctx.debug("#{name} installed: #{gem.installed?}")
           gem.install! unless gem.installed?
         end
@@ -42,7 +45,10 @@ module ShopifyCli
       def install!
         spin = CLI::UI::SpinGroup.new
         spin.add("Installing #{name} gem...") do |spinner|
-          ctx.system("gem install #{name}")
+          args = %w(gem install)
+          args.push(name)
+          args.push('-v', version) unless version.nil?
+          ctx.system(*args)
           spinner.update_title("Installed #{name} gem")
         end
         spin.wait
