@@ -94,6 +94,9 @@ Use the `stop` command to close the tunnel:
 ```sh
 $ shopify tunnel stop
 ```
+### Loading your app within the admin
+
+As the Shopify App CLI creates an embedded app, you'll need to install it on a development store. To do so, you'll need to head to `HTTPS://your-ngrok-url.io/auth?shop=your-development-store.myshopify.com`. This will prompt you to install on your development store. App Bridge and some Polaris components are only available within the admin.
 
 ### Generate new app features
 
