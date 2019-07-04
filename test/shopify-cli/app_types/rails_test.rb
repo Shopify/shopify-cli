@@ -21,7 +21,8 @@ module ShopifyCli
           'user_agent.rb'
         ), 'w').returns(nil)
         ShopifyCli::Helpers::Gem.expects(:install).with(@context, 'rails')
-        ShopifyCli::Helpers::Gem.expects(:install).with(@context, 'bundler')
+        ShopifyCli::Helpers::Gem.expects(:install).with(@context, 'bundler', '~>1.0')
+        ShopifyCli::Helpers::Gem.expects(:install).with(@context, 'bundler', '~>2.0')
         @context.expects(:system).with(
           ShopifyCli::Helpers::Gem.binary_path_for(@context, 'rails'), 'new', 'test-app'
         )
@@ -43,22 +44,6 @@ module ShopifyCli
           ShopifyCli::Helpers::Gem.binary_path_for(@context, 'rails'),
           'db:migrate',
           'RAILS_ENV=development',
-          chdir: @context.root
-        )
-        @context.expects(:system).with(
-          'gem',
-          'install',
-          'bundler',
-          '-v',
-          '~>1.0',
-          chdir: @context.root
-        )
-        @context.expects(:system).with(
-          'gem',
-          'install',
-          'bundler',
-          '-v',
-          '~>2.0',
           chdir: @context.root
         )
         @context.expects(:system).with(

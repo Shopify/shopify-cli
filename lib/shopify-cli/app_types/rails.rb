@@ -42,7 +42,10 @@ module ShopifyCli
 
       def build(name)
         Gem.install(ctx, 'rails')
-        Gem.install(ctx, 'bundler')
+        CLI::UI::Frame.open("Installing bundler…") do
+          Gem.install(ctx, 'bundler', '~>1.0')
+          Gem.install(ctx, 'bundler', '~>2.0')
+        end
         CLI::UI::Frame.open("Generating new rails app project in #{name}...") do
           ctx.system(Gem.binary_path_for(ctx, 'rails'), 'new', name)
         end
@@ -51,10 +54,6 @@ module ShopifyCli
           f.puts "\ngem 'shopify_app'"
         end
         ctx.puts("{{green:✔︎}} Adding shopify_app gem…")
-        CLI::UI::Frame.open("Installing bundler…") do
-          ctx.system('gem', 'install', 'bundler', '-v', '~>1.0', chdir: ctx.root)
-          ctx.system('gem', 'install', 'bundler', '-v', '~>2.0', chdir: ctx.root)
-        end
         CLI::UI::Frame.open("Running bundle install...") do
           ctx.system(Gem.binary_path_for(ctx, 'bundle'), 'install', chdir: ctx.root)
         end
