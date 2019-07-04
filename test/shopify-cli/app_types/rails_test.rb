@@ -2,17 +2,15 @@ require 'test_helper'
 
 module ShopifyCli
   module AppTypes
-    class RailsTest < MiniTest::Test
-      include TestHelpers::Project
-
+    class RailsBuildTest < MiniTest::Test
       def setup
-        project_context('app_types', 'rails')
+        root = Dir.mktmpdir
+        @context = TestHelpers::FakeContext.new(root: root)
         @app = ShopifyCli::AppTypes::Rails.new(ctx: @context)
         @context.app_metadata = {
           api_key: 'api_key',
           secret: 'secret',
         }
-        Helpers::EnvFile.any_instance.stubs(:write)
       end
 
       def test_build_creates_rails_app
@@ -25,14 +23,16 @@ module ShopifyCli
         ShopifyCli::Helpers::Gem.expects(:install).with(@context, 'rails')
         ShopifyCli::Helpers::Gem.expects(:install).with(@context, 'bundler')
         @context.expects(:system).with(
-          "~/.gem/ruby/#{RUBY_VERSION}/bin/rails", 'new', 'test-app'
+          ShopifyCli::Helpers::Gem.binary_path_for(@context, 'rails'), 'new', 'test-app'
         )
         File.expects(:open).with(File.join(@context.root, 'Gemfile'), 'a')
         @context.expects(:system).with(
-          "~/.gem/ruby/#{RUBY_VERSION}/bin/bundle", 'install', chdir: @context.root
+          ShopifyCli::Helpers::Gem.binary_path_for(@context, 'bundle'),
+          'install',
+          chdir: @context.root
         )
         @context.expects(:system).with(
-          "~/.gem/ruby/#{RUBY_VERSION}/bin/rails",
+          ShopifyCli::Helpers::Gem.binary_path_for(@context, 'rails'),
           'generate',
           'shopify_app',
           '--api_key api_key',
@@ -40,7 +40,7 @@ module ShopifyCli
           chdir: @context.root
         )
         @context.expects(:system).with(
-          "~/.gem/ruby/#{RUBY_VERSION}/bin/rails",
+          ShopifyCli::Helpers::Gem.binary_path_for(@context, 'rails'),
           'db:migrate',
           'RAILS_ENV=development',
           chdir: @context.root
@@ -75,6 +75,16 @@ module ShopifyCli
           CLI::UI.fmt('Run {{command:shopify serve}} to start the local development server'),
           output
         )
+      end
+    end
+
+    class RailsTest < MiniTest::Test
+      include TestHelpers::Project
+
+      def setup
+        project_context('app_types', 'rails')
+        @app = ShopifyCli::AppTypes::Rails.new(ctx: @context)
+        Helpers::EnvFile.any_instance.stubs(:write)
       end
 
       def test_server_command
