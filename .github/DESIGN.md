@@ -74,16 +74,16 @@ Message at the end of the task executing to summarize what happened.
 ### CLI commands
 When contributing to the CLI consider the following  commands and what their intents are before either adding new subcommands to them or creating new top level commands.
 
-#### Create
+#### `Create`
 Creating new parent resources that other commands depend on. 
 
 Subcommand:  
 `project projectName`
 
 Examples:  
-`shopify create project myApp`
+`shopify create project myApp`  
 
-#### Generate
+#### `Generate`
 Generate is for creating new files and examples in the current app project.
 
 Subcommand  
@@ -94,7 +94,7 @@ Subcommand
 Examples
 `shopify generate page`
 
-#### Populate
+#### `Populate`
 Allows a user to add data to a development store.
 
 Subcommands:  
@@ -108,7 +108,7 @@ Options:
 Example:  
 `shopify populate products --count 100`
 
-#### Serve
+#### `Serve`
 Start an ngrok tunnel.
 
 Example:  
