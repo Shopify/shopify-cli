@@ -23,8 +23,8 @@ module ShopifyCli
 
           AppTypeRegistry.build(app_type, name, @ctx)
           ShopifyCli::Project.write(@ctx, app_type)
-          @ctx.puts("{{green:! tip}} Whitelist your development URLs in the Partner Dashboard:
-          https://github.com/Shopify/shopify-app-cli#whitelisting-app-redirection-urls")
+          @ctx.puts("{{*}} Whitelist your development URLs in the Partner Dashboard:
+          {{underline: https://github.com/Shopify/shopify-app-cli#whitelisting-app-redirection-urls}}")
         end
 
         def ask_for_credentials
