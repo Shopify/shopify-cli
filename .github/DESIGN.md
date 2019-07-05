@@ -19,32 +19,40 @@ The user understands the basic mechanics of a cli:
 High level guiding principles to help make decisions faster when creating a CLI UI.
 
 **Communicate every state (success, waiting, error) even if it’s redundant.**
+
 ✅ Communicate task success even if the external process has also communicated success. Always wrap up what just happened with a success/error message.
 ❌ Assume that success is understood because the process finished. 
 
 **Suppress output when the process is successful, show output when the process has an error.**
+
 ✅ Hide all STDOUT information if the process has run successfully, show all output if the process failed.
 ❌ Show every line or state if the process success/error state has not been determined yet.
 
 **Error out if a task needs to make a system change and tell the user how to complete the installation.**
+
 ✅ Prompt the user if you need to run something external that will modify their system to complete the installation.
 ❌ Automatically install an NPM package that modifies the system. Prompt them that it’s needed and ask them if they would like the cli to install it.
 
 **If a process that fails early will affect the rest of the task, terminate it as soon as possible and tell the user why.**
+
 ✅ Error out of a process if you know the rest of the task will fail.
 ❌ Continue to try successfully completing the task if one crucial task failed.
 
 **Output one idea per line.**
+
 ✅ Error: you are not in an app project folder
 ✅ Tip: use shopify create project to create a new app project
 ❌ Error: you are not in an app project folder, use shopify create project to create a new app project.
 
 **The command should ask for all the information needed to execute the task automatically.**
+
 ✅ Have opinion on smart defaults that the user can override with arguments and options.
 ❌ Defer multiple options or inputs to after the command is executing.
 
 **Let the user opt in to verbosity.**
+
 ✅ Show the user whatever is necessary given the task at hand. A summary may be best suited for tasks with many sub processes, where some output might make sense for small tasks.
+
 ❌ Show the user every bit of information that comes in from external or internal tasks.
 
 ### CLI UI states
@@ -56,12 +64,14 @@ The command a user types in to execute a task
 
 **Execute**
 While a task is running, the output from the task to communicate what is happening to the user.
+
 `Installing NPM..`
 `Updating files`
 `Checking dependencies`
 
 **Complete**
 Message at the end of the task executing to summarize what happened
+
 `Successfully installed NPM in [diectory]`
 
 ### CLI commands
@@ -71,15 +81,18 @@ When contributing to the CLI consider the following  commands and what their int
 Creating new parent resources that other commands depend on. 
 
 Subcommand
+
 `project projectName`
 
 Examples
+
 `shopify create project myApp`
 
 #### Generate
 Generate is for creating new files and examples in the current app project.
 
 Subcommand
+
 `page`
 `webhook`
 `billing`
@@ -91,9 +104,13 @@ Examples
 Allows a user to add data to a development store.
 
 Subcommand
+
 `products`
+
 `customers`
+
 `Draftorders`
+
 
 Options
 `--count [integer]`
