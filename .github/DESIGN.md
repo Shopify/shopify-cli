@@ -69,7 +69,6 @@ While a task is running, the output from the task to communicate what is happeni
 
 **Complete**
 Message at the end of the task executing to summarize what happened.  
-
 `Successfully installed NPM in [diectory]`
 
 ### CLI commands
@@ -78,10 +77,10 @@ When contributing to the CLI consider the following  commands and what their int
 #### Create
 Creating new parent resources that other commands depend on. 
 
-Subcommand  
+Subcommand:  
 `project projectName`
 
-Examples  
+Examples:  
 `shopify create project myApp`
 
 #### Generate
@@ -98,19 +97,19 @@ Examples
 #### Populate
 Allows a user to add data to a development store.
 
-Subcommand  
+Subcommands:  
 `products`  
 `customers`  
 `Draftorders`  
 
-Options
+Options:  
 `--count [integer]`  
 
-Examples  
+Example:  
 `shopify populate products --count 100`
 
 #### Serve
 Start an ngrok tunnel.
 
-Examples  
+Example:  
 `shopify serve`
