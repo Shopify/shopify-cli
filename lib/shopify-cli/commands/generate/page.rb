@@ -16,8 +16,12 @@ module ShopifyCli
             raise(ShopifyCli::Abort, 'This feature is not yet available for Rails apps')
           end
           name = args.first
-          ShopifyCli::Commands::Generate.run_generate("#{project.app_type.generate[:page]} #{name}", name, ctx)
-          ctx.puts("{{green:✔︎}} Generating page: #{name}")
+          spin_group = CLI::UI::SpinGroup.new
+          spin_group.add("Generating #{name}") do |spinner|
+            ShopifyCli::Commands::Generate.run_generate("#{project.app_type.generate[:page]} #{name}", name, ctx)
+            spinner.update_title("{{green: #{name}}} generated in /pages/#{name}")
+          end
+          spin_group.wait
         end
 
         def self.help
