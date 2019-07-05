@@ -1,4 +1,4 @@
-#Shopify App CLI design guidelines
+# Shopify App CLI design guidelines
 
 The purpose of this doc is to outline all the heuristics, patterns, and templates we are using in the Shopify App CLI tool. All the content is based on the CLI Design and Style Guidelines doc, as well as the guidance on the Shopify cli-ui Github repo.
 
@@ -8,14 +8,14 @@ To help visualize all the components and states avialable in the Shopify App CLI
 
 *Figma is a free web based design tool.*
 
-###Assumptions
+### Assumptions
 The user understands the basic mechanics of a cli:
 - can type in commands to execute tasks 
 - there is a persistent “help” command that will educate them on specifics of each command/subcommand
 - CNTRL + C quits any running task
 - how to navigate and manipulate the filesystem via the command line: cd and mkdir
 
-###Design principles
+### Design principles
 High level guiding principles to help make decisions faster when creating a CLI UI.
 
 **Communicate every state (success, waiting, error) even if it’s redundant.**
@@ -47,7 +47,7 @@ High level guiding principles to help make decisions faster when creating a CLI 
 ✅ Show the user whatever is necessary given the task at hand. A summary may be best suited for tasks with many sub processes, where some output might make sense for small tasks.
 ❌ Show the user every bit of information that comes in from external or internal tasks.
 
-###CLI UI states
+### CLI UI states
 CLI’s tend to have less states that GUI, however error states are more prevalent because a CLI can error out at any moment.
 
 **Input**
@@ -64,10 +64,10 @@ While a task is running, the output from the task to communicate what is happeni
 Message at the end of the task executing to summarize what happened
 `Successfully installed NPM in [diectory]`
 
-###CLI commands
+### CLI commands
 When contributing to the CLI consider the following  commands and what their intents are before either adding new subcommands to them or creating new top level commands.
 
-####Create
+#### Create
 Creating new parent resources that other commands depend on. 
 
 Subcommand
@@ -76,7 +76,7 @@ Subcommand
 Examples
 `shopify create project myApp`
 
-####Generate
+#### Generate
 Generate is for creating new files and examples in the current app project.
 
 Subcommand
@@ -87,7 +87,7 @@ Subcommand
 Examples
 `shopify generate page`
 
-####Populate
+#### Populate
 Allows a user to add data to a development store.
 
 Subcommand
@@ -101,7 +101,7 @@ Options
 Examples
 `shopify populate products --count 100`
 
-####Serve
+#### Serve
 Start an ngrok tunnel.
 
 Examples
