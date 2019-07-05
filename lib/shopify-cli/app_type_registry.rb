@@ -38,4 +38,5 @@ module ShopifyCli
 
   AppTypeRegistry.register(:node, AppTypes::Node)
   AppTypeRegistry.register(:rails, AppTypes::Rails)
+  AppTypeRegistry.register(:play_scala, AppTypes::PlayScala)
 end
