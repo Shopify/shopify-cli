@@ -12,7 +12,7 @@ module ShopifyCli
       def call(*)
         project = Project.current
         if mac?
-          @ctx.puts("{{*}} Press {{yellow: Control-T}}  to open this project in your browser")
+          @ctx.puts("{{*}} Press {{yellow: Control-T}} to open this project in your browser")
           on_siginfo do
             project.app_type.open(@ctx)
           end

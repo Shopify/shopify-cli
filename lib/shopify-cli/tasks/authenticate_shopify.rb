@@ -23,7 +23,7 @@ module ShopifyCli
           body = JSON.parse(res.body)
           @env = Helpers::AccessToken.write(body)
           @ctx.puts "{{success:Token stored!}}"
-          @ctx.puts "{{green:! tip}}: Add https://localhost:3456 to the whitelisted redirection URLs in your app setup"
+          @ctx.puts "{{*}} Add {{underline:https://localhost:3456}} to the whitelisted redirection URLs in your app setup"
         else
           @ctx.puts("{{error:Response was #{res.body}}}")
           @ctx.puts("{{error:Failed to retrieve ID & Refresh tokens}}")
