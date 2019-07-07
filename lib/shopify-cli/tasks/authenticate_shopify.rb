@@ -24,10 +24,10 @@ module ShopifyCli
           url = "https://localhost:3456"
           @env = Helpers::AccessToken.write(body)
           @ctx.puts "{{success:Token stored!}}"
-          @ctx.puts "{{*}} Add {{underline: #{url} to the whitelisted redirection URLs in your app setup"
+          @ctx.puts "{{*}} Add {{underline: #{url}}} to the whitelisted redirection URLs in your app setup"
         else
           @ctx.puts("{{error:Response was #{res.body}}}")
-          @ctx.puts("{{error:Failed to retrieve ID & Refresh tokens}}")
+          @ctx.puts("{{error:Failed to retrieve ID & Refresh token}}")
         end
       end
 
@@ -58,7 +58,7 @@ module ShopifyCli
           client_secret: env.secret,
           code: code
         )
-        @ctx.puts "Fetching tokens..."
+        @ctx.puts "Fetching token..."
         https.request(request)
       end
 
