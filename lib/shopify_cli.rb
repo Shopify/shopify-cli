@@ -24,24 +24,16 @@ require 'cli/ui'
 require 'cli/kit'
 require 'smart_properties'
 
-# Checks for conflicts with tools like RVM and Rbenv, etc.
-# Will exit if needed
-# require_relative 'dev/tool_conflicts'
-# Dev::ToolConflicts.check
-
-# Defines register commands for init scripts
-require 'shopify-cli/register'
-
 # Enable stdout routing. At this point all calls to STDOUT (and STDERR) will go through this class.
 # See https://github.com/Shopify/cli-ui/blob/master/lib/cli/ui/stdout_router.rb for more info
 CLI::UI::StdoutRouter.enable
 
-# The main file to load for `dev`
+# The main file to load for `shopify-app-cli`
 # Contains all high level constants, exit management, exception management,
 # autoloads for commands, tasks, helpers, etc
 #
 # It is recommended to read through CLI Kit (https://github.com/shopify/cli-kit) and a CLI Kit example
-# (https://github.com/Shopify/cli-kit-example) to fully understand how dev functions
+# (https://github.com/Shopify/cli-kit-example) to fully understand how shopify-app-cli functions
 module ShopifyCli
   extend CLI::Kit::Autocall
 
@@ -61,7 +53,7 @@ module ShopifyCli
   # shrug or boom emoji
   FAILMOJI = ROOT == '/opt/shopify-cli' ? "\u{1f937}" : "\u{1f4a5}"
 
-  # Exit management in `dev` follows the management set out by CLI Kit.
+  # Exit management in `shopify-app-cli` follows the management set out by CLI Kit.
   # https://github.com/Shopify/cli-kit/blob/master/lib/cli/kit.rb
   # That is to say, we differentiate between exit success (0), exit failure (1), and exit bug (not 1)
   #
@@ -70,7 +62,7 @@ module ShopifyCli
   EXIT_BUG                 = CLI::Kit::EXIT_BUG
   EXIT_SUCCESS             = CLI::Kit::EXIT_SUCCESS
 
-  # `dev` uses CLI Kit's exception management
+  # `shopify-app-cli` uses CLI Kit's exception management
   # These are documented here: https://github.com/Shopify/cli-kit/blob/master/lib/cli/kit.rb
   #
   # You should never subclass these exceptions, but instead rescue another exception and re-raise.
@@ -82,7 +74,7 @@ module ShopifyCli
   BugSilent    = CLI::Kit::BugSilent
   AbortSilent  = CLI::Kit::AbortSilent
 
-  # The rest of this file outlines classes and modules required by the dev application and CLI kit framework.
+  # The rest of this file outlines classes and modules required by the shopify-app-cli application and CLI kit framework.
   # To understand how this works, read https://github.com/Shopify/cli-kit/blob/master/lib/cli/kit.rb
   autocall(:Config)   { CLI::Kit::Config.new(tool_name: TOOL_NAME) }
   autocall(:Logger)   { CLI::Kit::Logger.new(debug_log_file: DEBUG_LOG_FILE) }
