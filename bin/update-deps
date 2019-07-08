@@ -19,7 +19,7 @@ end
 
 def bail(msg)
   STDERR.puts(fmt("ERROR", msg))
-  exit 1
+  exit(1)
 end
 
 def warn(msg)
@@ -30,7 +30,7 @@ def source_path
   File.expand_path(ENV.fetch('SOURCE_ROOT', File.expand_path('../../..', __FILE__)))
 end
 
-deps = %w(cli-ui cli-kit)
+deps = %w(cli-ui cli-kit smart_properties)
 
 deps.each do |dep|
   path = File.expand_path(dep, source_path)
@@ -38,7 +38,8 @@ deps.each do |dep|
   unless Dir.exist?(path)
     bail(
       "dependency is not checked out: {{yellow:#{dep}}}.\n" \
-      "  This repo {{bold_blue:(github.com/shopify/#{dep})}} must be cloned at {{bold_blue:#{path}}} for this script to succeed.\n" \
+      "  This repo {{bold_blue:(github.com/shopify/#{dep})}} must be cloned at" \
+      " {{bold_blue:#{path}}} for this script to succeed.\n" \
       "  Currently, SOURCE_ROOT is set to {{bold_blue:#{source_path}}}.\n" \
       "  Alternatively, you can set {{bold_blue:SOURCE_ROOT}} to a directory containing {{yellow:#{dep}}}.\n" \
       "  {{bold_blue:SOURCE_ROOT}} defaults to {{bold_blue:../}}."
@@ -69,7 +70,8 @@ deps.each do |dep|
         "  However, the repo at {{yellow:#{path}}} isn't up to date.\n" \
         "  The checked-out revision is {{yellow:#{head_sha[0..8]}}}, and "\
         "{{yellow:origin/master}} is {{yellow:#{fetch_head_sha[0..8]}}}.\n" \
-        "  Unless you know what you're doing, you should {{green:cd}} to that repo and {{green:git pull}}, then run this again."
+        "  Unless you know what you're doing, you should {{green:cd}} to that "\
+        "repo and {{green:git pull}}, then run this again."
       )
     end
 
