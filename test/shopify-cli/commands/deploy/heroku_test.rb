@@ -272,40 +272,6 @@ module ShopifyCli
           end
         end
 
-        def test_call_uses_existing_remote_origin_if_available
-          @context.expects(:capture2e)
-            .with('git', 'remote', 'get-url', 'origin')
-            .returns([@heroku_remote, @status_mock[:true]])
-
-          io = capture_io do
-            @command.call(@context)
-          end
-
-          assert_match('Git origin set', io.join)
-        end
-
-        def test_call_tries_to_set_remote_origin_if_its_not_set
-          stub_git_remote(status: false, remote: 'origin')
-
-          @context.stubs(:system)
-            .with('git', 'remote', 'add', 'origin', @heroku_remote)
-            .returns(@status_mock[:true])
-
-          @command.call(@context)
-        end
-
-        def test_call_raises_if_setting_remote_origin_fails
-          stub_git_remote(status: false, remote: 'origin')
-
-          @context.stubs(:system)
-            .with('git', 'remote', 'add', 'origin', @heroku_remote)
-            .returns(@status_mock[:false])
-
-          assert_raises ShopifyCli::Abort do
-            @command.call(@context)
-          end
-        end
-
         def test_call_doesnt_prompt_if_only_one_branch_exists
           @context.expects(:capture2e)
             .with('git', 'branch', '--list', '--format=%(refname:short)')
