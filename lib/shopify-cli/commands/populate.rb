@@ -39,10 +39,10 @@ module ShopifyCli
               Usage: {{command:#{ShopifyCli::TOOL_NAME} populate products}}
 
             {{cyan:customers [options]}}: Add dummy customers to the specified development store.
-              Usage: {{command:#{ShopifyCli::TOOL_NAME} generate webhook [type]}}
+              Usage: {{command:#{ShopifyCli::TOOL_NAME} populate customers}}
 
             {{cyan:draftorders [options]}}: Add dummy orders to the specified development store.
-              Usage: {{command:#{ShopifyCli::TOOL_NAME} generate billing}}
+              Usage: {{command:#{ShopifyCli::TOOL_NAME} populate draftorders}}
 
           {{bold:Options:}}
 

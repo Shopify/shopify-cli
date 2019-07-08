@@ -4,9 +4,10 @@ require 'English'
 module CLI
   module Kit
     class ErrorHandler
-      def initialize(log_file:, exception_reporter:)
+      def initialize(log_file:, exception_reporter:, tool_name: nil)
         @log_file = log_file
         @exception_reporter_or_proc = exception_reporter || NullExceptionReporter
+        @tool_name = tool_name
       end
 
       module NullExceptionReporter
@@ -83,6 +84,14 @@ module CLI
         CLI::Kit::EXIT_FAILURE_BUT_NOT_BUG
       rescue Interrupt
         $stderr.puts(format_error_message("Interrupt"))
+        CLI::Kit::EXIT_FAILURE_BUT_NOT_BUG
+      rescue Errno::ENOSPC
+        message = if @tool_name
+          "Your disk is full - {{command:#{@tool_name}}} requires free space to operate"
+        else
+          "Your disk is full - free space is required to operate"
+        end
+        $stderr.puts(format_error_message(message))
         CLI::Kit::EXIT_FAILURE_BUT_NOT_BUG
       end
 
