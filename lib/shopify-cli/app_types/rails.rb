@@ -23,11 +23,15 @@ module ShopifyCli
 
         def generate
           {
-            page: NotImplementedError,
+            page: 'rails generate controller',
             billing_recurring: NotImplementedError,
             billing_one_time: NotImplementedError,
             webhook: NotImplementedError,
           }
+        end
+
+        def page_information(name)
+          "{{green: #{name}}} generated in app/views/#{name} and app/controllers/#{name}"
         end
 
         def serve_command(ctx)

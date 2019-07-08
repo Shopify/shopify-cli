@@ -35,6 +35,10 @@ module ShopifyCli
           }
         end
 
+        def page_information(name)
+          "{{green: #{name}}} generated in /pages/#{name}"
+        end
+
         def open(ctx)
           ctx.system('open', "#{Project.current.env.host}/auth?shop=#{Project.current.env.shop}")
         end
