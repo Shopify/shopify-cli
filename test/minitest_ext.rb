@@ -8,18 +8,6 @@ module Minitest
   class Test
     FIXTURE_DIR = File.expand_path('fixtures', File.dirname(__FILE__))
 
-    class FakeSpinner
-      def update_title(*); end
-
-      def wait; end
-    end
-
-    def setup
-      super
-      CLI::UI::Frame.stubs(:open).yields
-      CLI::UI::SpinGroup.any_instance.stubs(:add).yields(FakeSpinner.new)
-    end
-
     def capture_io(&block)
       cap = CLI::UI::StdoutRouter::Capture.new(with_frame_inset: true, &block)
       @context.output_captured = true if @context
