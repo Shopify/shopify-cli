@@ -5,6 +5,7 @@ module ShopifyCli
   module Helpers
     class GemTest < MiniTest::Test
       include TestHelpers::Context
+      include TestHelpers::FakeUI
 
       def setup
         super
