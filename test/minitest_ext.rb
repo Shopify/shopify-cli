@@ -1,5 +1,13 @@
 module Minitest
+  module Assertions
+    def assert_nothing_raised(*)
+      yield
+    end
+  end
+
   class Test
+    FIXTURE_DIR = File.expand_path('fixtures', File.dirname(__FILE__))
+
     def capture_io(&block)
       cap = CLI::UI::StdoutRouter::Capture.new(with_frame_inset: true, &block)
       @context.output_captured = true if @context

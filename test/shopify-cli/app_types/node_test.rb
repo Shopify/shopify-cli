@@ -86,15 +86,19 @@ module ShopifyCli
           'test-app',
         )
         ShopifyCli::Tasks::JsDeps.stubs(:call).with(@context.root)
-        @app.build('test-app')
+        capture_io do
+          @app.build('test-app')
+        end
       end
     end
 
     class NodeTest < MiniTest::Test
       include TestHelpers::Project
       include TestHelpers::Constants
+      include TestHelpers::FakeUI
 
       def setup
+        super
         project_context('app_types', 'node')
         @app = ShopifyCli::AppTypes::Node.new(ctx: @context)
       end

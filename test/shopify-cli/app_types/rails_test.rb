@@ -59,8 +59,10 @@ module ShopifyCli
 
     class RailsTest < MiniTest::Test
       include TestHelpers::Project
+      include TestHelpers::FakeUI
 
       def setup
+        super
         project_context('app_types', 'rails')
         @app = ShopifyCli::AppTypes::Rails.new(ctx: @context)
         Helpers::EnvFile.any_instance.stubs(:write)

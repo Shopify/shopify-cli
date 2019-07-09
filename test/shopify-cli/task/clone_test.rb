@@ -12,11 +12,9 @@ module ShopifyCli
           'test-app',
           '--progress'
         ).returns(mock(success?: true))
-        io = capture_io do
+        capture_io do
           ShopifyCli::Tasks::Clone.call('git@github.com:shopify/test.git', 'test-app')
         end
-        output = io.join
-        assert_match('Cloning into test-app...', output)
       end
 
       def test_clone_failure

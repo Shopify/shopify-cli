@@ -22,16 +22,4 @@ require 'mocha/minitest'
 
 Minitest::Reporters.use!([Minitest::Reporters::SpecReporter.new])
 
-module Minitest
-  class Test
-    FIXTURE_DIR = File.expand_path('fixtures', File.dirname(__FILE__))
-  end
-
-  module Assertions
-    def assert_nothing_raised(*)
-      yield
-    end
-  end
-end
-
 require_relative 'test_helpers'

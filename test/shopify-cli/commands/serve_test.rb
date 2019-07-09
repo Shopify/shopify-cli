@@ -4,6 +4,7 @@ module ShopifyCli
   module Commands
     class ServeTest < MiniTest::Test
       include TestHelpers::Project
+      include TestHelpers::FakeUI
 
       def setup
         super
