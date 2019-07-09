@@ -5,6 +5,7 @@ module ShopifyCli
     class Generate
       class BillingTest < MiniTest::Test
         include TestHelpers::Project
+        include TestHelpers::FakeUI
 
         def setup
           super
