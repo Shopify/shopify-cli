@@ -53,8 +53,8 @@ module ShopifyCli
       property :scopes
       property :host
 
-      def write(ctx, template)
-        template = self.class.parse_template(template)
+      def write(ctx)
+        template = self.class.parse_template(Project.current.app_type.env_file)
         output = []
         template.each do |key, value|
           output << "#{key}=#{send(value)}" if send(value)

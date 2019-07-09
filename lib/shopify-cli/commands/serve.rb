@@ -7,7 +7,7 @@ module ShopifyCli
     class Serve < ShopifyCli::Command
       include ShopifyCli::Helpers::OS
 
-      prerequisite_task :tunnel
+      prerequisite_task :tunnel, :ensure_env
 
       def call(*)
         project = Project.current

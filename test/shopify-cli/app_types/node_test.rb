@@ -6,11 +6,6 @@ module ShopifyCli
       def setup
         @context = TestHelpers::FakeContext.new(root: Dir.mktmpdir, env: {})
         @app = ShopifyCli::AppTypes::Node.new(ctx: @context)
-        @context.app_metadata = {
-          host: 'host',
-          api_key: 'api_key',
-          secret: 'secret',
-        }
       end
 
       def test_build_creates_app
@@ -19,14 +14,6 @@ module ShopifyCli
           'test-app',
         )
         ShopifyCli::Tasks::JsDeps.stubs(:call).with(@context.root)
-        @context.expects(:write).with('.env',
-          <<~KEYS
-            SHOPIFY_API_KEY=api_key
-            SHOPIFY_API_SECRET_KEY=secret
-            HOST=host
-            SCOPES=write_products,write_customers,write_draft_orders
-          KEYS
-        )
         @context.expects(:rm_r).with(File.join(@context.root, '.git'))
         @context.expects(:rm_r).with(File.join(@context.root, '.github'))
         @context.expects(:rm).with(File.join(@context.root, 'server', 'handlers', 'client.js'))
@@ -99,7 +86,6 @@ module ShopifyCli
           'test-app',
         )
         ShopifyCli::Tasks::JsDeps.stubs(:call).with(@context.root)
-        @context.expects(:write)
         @app.build('test-app')
       end
     end

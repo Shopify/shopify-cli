@@ -7,10 +7,6 @@ module ShopifyCli
         root = Dir.mktmpdir
         @context = TestHelpers::FakeContext.new(root: root)
         @app = ShopifyCli::AppTypes::Rails.new(ctx: @context)
-        @context.app_metadata = {
-          api_key: 'api_key',
-          secret: 'secret',
-        }
       end
 
       def test_build_creates_rails_app
@@ -36,8 +32,6 @@ module ShopifyCli
           ShopifyCli::Helpers::Gem.binary_path_for(@context, 'rails'),
           'generate',
           'shopify_app',
-          '--api_key api_key',
-          '--secret secret',
           chdir: @context.root
         )
         @context.expects(:system).with(
