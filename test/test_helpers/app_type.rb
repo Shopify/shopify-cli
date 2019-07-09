@@ -17,6 +17,10 @@ module TestHelpers
           "a command"
         end
 
+        def generate_command(_ctx)
+          "a command"
+        end
+
         def generate
           {
             page: 'page-generate',
