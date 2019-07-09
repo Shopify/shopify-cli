@@ -74,7 +74,8 @@ module ShopifyCli
   BugSilent    = CLI::Kit::BugSilent
   AbortSilent  = CLI::Kit::AbortSilent
 
-  # The rest of this file outlines classes and modules required by the shopify-app-cli application and CLI kit framework.
+  # The rest of this file outlines classes and modules required by the shopify-app-cli
+  # application and CLI kit framework.
   # To understand how this works, read https://github.com/Shopify/cli-kit/blob/master/lib/cli/kit.rb
   autocall(:Config)   { CLI::Kit::Config.new(tool_name: TOOL_NAME) }
   autocall(:Logger)   { CLI::Kit::Logger.new(debug_log_file: DEBUG_LOG_FILE) }

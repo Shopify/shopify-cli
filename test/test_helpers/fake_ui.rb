@@ -2,6 +2,7 @@ module TestHelpers
   module FakeUI
     class FakeSpinner
       def update_title(*); end
+
       def wait; end
     end
 
