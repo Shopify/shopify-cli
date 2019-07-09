@@ -5,26 +5,39 @@ module ShopifyCli
     class Generate
       class Billing < ShopifyCli::Task
         def call(ctx, args)
-          ctx.puts(self.class.help) if args.empty?
           project = ShopifyCli::Project.current
-
+          billing_types = {
+            'recurring-billing' => :billing_recurring,
+            'one-time-billing' => :billing_one_time,
+          }
+          selected_type = billing_types[args.first]
           # temporary check until we build for rails
           if project.app_type == ShopifyCli::AppTypes::Rails
             raise(ShopifyCli::Abort, 'This feature is not yet available for Rails apps')
           end
-
-          type = CLI::UI::Prompt.ask('Which kind of billing?') do |handler|
-            handler.option('recurring billing') { :billing_recurring }
-            handler.option('one-time billing') { :billing_one_time }
+          unless selected_type
+            selected_type = CLI::UI::Prompt.ask('How would you like to charge for your app?') do |handler|
+              billing_types.each do |key, value|
+                handler.option(key) { value }
+              end
+            end
           end
-          ShopifyCli::Commands::Generate.run_generate(project.app_type.generate[type], type, ctx)
-          ctx.puts("{{green:✔︎}} Generating Billing code: #{type}")
+          spin_group = CLI::UI::SpinGroup.new
+          spin_group.add("Generating #{billing_types.key(selected_type)} code ...") do |spinner|
+            ShopifyCli::Commands::Generate.run_generate(
+              project.app_type.generate[selected_type], selected_type, ctx
+            )
+            spinner.update_title(
+              "#{billing_types.key(selected_type)} generated in server/server.js"
+            )
+          end
+          spin_group.wait
         end
 
         def self.help
           <<~HELP
             Enable charging for your app. This command generates the necessary code to call Shopify’s billing API.
-              Usage: {{command:#{ShopifyCli::TOOL_NAME} generate billing}}
+              Usage: {{command:#{ShopifyCli::TOOL_NAME} generate billing recurring-billing | one-time-billing}}
           HELP
         end
       end
