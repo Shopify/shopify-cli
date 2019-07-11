@@ -81,11 +81,22 @@ module ShopifyCli
       end
 
       def check_dependencies
+        unless Helpers::Ruby.version(ctx).satisfies?('~>2.4')
+          raise ShopifyCli::Abort, invalid_ruby_message
+        end
         Gem.install(ctx, 'rails')
         Gem.install(ctx, 'bundler')
       end
 
       private
+
+      def invalid_ruby_message
+        <<~MSG
+          This project requires a ruby version ~> 2.4.
+          See https://github.com/Shopify/shopify-app-cli/blob/master/docs/installing-ruby.md
+          for our recommended method of installing ruby.
+        MSG
+      end
 
       # TODO: update once custom UA gets into shopify_app release
       def set_custom_ua

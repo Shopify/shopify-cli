@@ -9,6 +9,7 @@ module ShopifyCli
     autoload :OS, 'shopify-cli/helpers/os'
     autoload :PidFile, 'shopify-cli/helpers/pid_file'
     autoload :ProcessSupervision, 'shopify-cli/helpers/process_supervision'
+    autoload :Ruby, 'shopify-cli/helpers/ruby'
     autoload :SchemaParser, 'shopify-cli/helpers/schema_parser'
     autoload :ShopifySchema, 'shopify-cli/helpers/shopify_schema'
     autoload :String, 'shopify-cli/helpers/string'

@@ -1,4 +1,5 @@
 require 'test_helper'
+require 'semantic/semantic'
 
 module ShopifyCli
   module AppTypes
@@ -54,6 +55,13 @@ module ShopifyCli
           CLI::UI.fmt('Run {{command:shopify serve}} to start the local development server'),
           output
         )
+      end
+
+      def test_check_dependencies_exits_if_incorrect_ruby_version
+        Helpers::Ruby.expects(:version).returns(Semantic::Version.new('2.3.7'))
+        assert_raises ShopifyCli::Abort do
+          @app.check_dependencies
+        end
       end
     end
 
