@@ -83,7 +83,7 @@ module ShopifyCli
           registry, _ = ctx.capture2('npm', 'config', 'get', '@shopify:registry')
           msg = <<~MSG
             You are not using the public npm registry for Shopify packages. This can cause issues with installing @shopify packages.
-            Please run `npm config set @shopify:registry https://registry.yarnpkg.com and try this command again,
+            Please run `npm config set @shopify:registry https://registry.yarnpkg.com` and try this command again,
             or preface the command with `DISABLE_NPM_REGISTRY_CHECK=1`.
           MSG
           raise(ShopifyCli::Abort, msg) unless registry.include?('https://registry.yarnpkg.com')
