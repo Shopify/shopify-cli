@@ -13,6 +13,7 @@ module ShopifyCli
       def at(dir)
         proj_dir = directory(dir)
         unless proj_dir
+          ctx.puts("hi")
           raise(ShopifyCli::Abort, "You are not in a Shopify app project")
         end
         @at ||= Hash.new { |h, k| h[k] = new(directory: k) }

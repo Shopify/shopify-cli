@@ -10,13 +10,13 @@ module ShopifyCli
             return
           end
           name = args.first
-          ShopifyCli::Tasks::Tunnel.call(@ctx)
-
           app_type = CLI::UI::Prompt.ask('What type of app project would you like to create?') do |handler|
             AppTypeRegistry.each do |identifier, type|
               handler.option(type.description) { identifier }
             end
           end
+
+          ShopifyCli::Tasks::Tunnel.call(@ctx)
 
           AppTypeRegistry.check_dependencies(app_type, @ctx)
 
@@ -24,6 +24,7 @@ module ShopifyCli
           ShopifyCli::Project.write(@ctx, app_type)
           @ctx.puts("{{*}} Whitelist your development URLs in the Partner Dashboard:
           {{underline: https://github.com/Shopify/shopify-app-cli#whitelisting-app-redirection-urls}}")
+          @ctx.puts("{{*}} Run {{cyan: shopify serve}} to start local development server")
         end
 
         def self.help
