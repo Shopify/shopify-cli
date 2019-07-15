@@ -54,7 +54,7 @@ module ShopifyCli
     end
 
     def redirect_uri
-      "#{REDIRECT_HOST}:#{port}/"
+      "#{REDIRECT_HOST}:#{port}"
     end
 
     def state_token
@@ -113,7 +113,7 @@ module ShopifyCli
 
     def receive_access_code
       @access_code ||= begin
-        query = @server_thread.join(5).value
+        query = @server_thread.join(120).value
         raise Error, query['error_description'] unless query['error'].nil?
         query['code']
       end
