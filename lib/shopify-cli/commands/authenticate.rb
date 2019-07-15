@@ -7,7 +7,7 @@ module ShopifyCli
         spin_group = CLI::UI::SpinGroup.new
         spin_group.add("Requesting access token...") do |spinner|
           case args.shift
-          when 'ident'
+          when 'identity'
             ShopifyCli::Tasks::AuthenticateIdentity.call(@ctx)
           when 'shop'
             ShopifyCli::Tasks::AuthenticateShopify.call(@ctx)
