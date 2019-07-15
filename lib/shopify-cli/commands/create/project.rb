@@ -10,13 +10,13 @@ module ShopifyCli
             return
           end
           name = args.first
-          ShopifyCli::Tasks::Tunnel.call(@ctx)
-
           app_type = CLI::UI::Prompt.ask('What type of app project would you like to create?') do |handler|
             AppTypeRegistry.each do |identifier, type|
               handler.option(type.description) { identifier }
             end
           end
+
+          ShopifyCli::Tasks::Tunnel.call(@ctx)
 
           AppTypeRegistry.check_dependencies(app_type, @ctx)
 
