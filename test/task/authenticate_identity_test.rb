@@ -2,7 +2,7 @@ require 'test_helper'
 
 module ShopifyCli
   module Tasks
-    class AuthenticateShopifyTest < MiniTest::Test
+    class AuthenticateIdentityTest < MiniTest::Test
       include TestHelpers::Project
       include TestHelpers::Constants
 
@@ -11,18 +11,14 @@ module ShopifyCli
         ShopifyCli::OAuth
           .expects(:new)
           .with(
-            client_id: 'apikey',
-            secret: 'secret',
-            scopes: nil,
-            token_path: "/access_token",
-            options: { 'grant_options[]' => 'per user' },
+            client_id: 'e5380e02-312a-7408-5718-e07017e9cf52',
+            scopes: ['openid', 'profile', 'email'],
           ).returns(@oauth_client)
         @oauth_client
           .expects(:authenticate)
-          .with("https://my-test-shop.myshopify.com/admin/oauth")
+          .with("https://identity.myshopify.io/oauth")
           .returns("this_is_token")
-        Helpers::AccessToken.expects(:write).with("this_is_token")
-        AuthenticateShopify.new.call(@context)
+        AuthenticateIdentity.new.call(@context)
       end
 
       def test_handles_oauth_errors
@@ -30,11 +26,10 @@ module ShopifyCli
         ShopifyCli::OAuth.stubs(:new).returns(@oauth_client)
         @oauth_client
           .expects(:authenticate)
-          .with("https://my-test-shop.myshopify.com/admin/oauth")
+          .with("https://identity.myshopify.io/oauth")
           .raises(OAuth::Error, 'invalid request')
-        @oauth_client.expects(:redirect_uri).returns("http://localhost:3456")
         assert_nothing_raised do
-          AuthenticateShopify.new.call(@context)
+          AuthenticateIdentity.new.call(@context)
         end
       end
     end
