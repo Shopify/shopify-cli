@@ -4,7 +4,7 @@ module ShopifyCli
   module Tasks
     class AuthenticateIdentity < ShopifyCli::Task
       def call(ctx)
-        token = oauth_client.authenticate("https://identity.myshopify.io/oauth")
+        token = oauth_client.authenticate("https://accounts.shopify.com/oauth")
         Helpers::PkceToken.write(token)
         ctx.puts "{{success:Authentication Token saved}}"
       rescue OAuth::Error => e
@@ -15,8 +15,8 @@ module ShopifyCli
 
       def oauth_client
         OAuth.new(
-          client_id: 'e5380e02-312a-7408-5718-e07017e9cf52',
-          scopes: ['openid', 'profile', 'email'],
+          client_id: 'fbdb2649-e327-4907-8f67-908d24cfd7e3',
+          scopes: ['openid'],
         )
       end
     end
