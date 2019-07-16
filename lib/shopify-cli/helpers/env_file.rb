@@ -54,13 +54,18 @@ module ShopifyCli
       property :host
 
       def write(ctx)
-        template = self.class.parse_template(Project.current.app_type.env_file)
-        output = []
-        template.each do |key, value|
-          output << "#{key}=#{send(value)}" if send(value)
+        spin_group = CLI::UI::SpinGroup.new
+        spin_group.add("writing #{FILENAME} file...") do |spinner|
+          template = self.class.parse_template(Project.current.app_type.env_file)
+          output = []
+          template.each do |key, value|
+            output << "#{key}=#{send(value)}" if send(value)
+          end
+          ctx.print_task("writing #{FILENAME} file")
+          ctx.write(FILENAME, output.join("\n") + "\n")
+          spinner.update_title("#{FILENAME} saved")
         end
-        ctx.print_task("writing #{FILENAME} file")
-        ctx.write(FILENAME, output.join("\n") + "\n")
+        spin_group.wait
       end
     end
   end
