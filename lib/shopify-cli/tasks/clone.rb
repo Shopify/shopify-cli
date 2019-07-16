@@ -9,6 +9,7 @@ module ShopifyCli
         CLI::UI::Frame.open("Cloning into #{dest}...") do
           git_progress('clone', '--single-branch', repository, dest)
         end
+        puts CLI::UI.fmt("{{v}} Cloned app in #{dest}")
       end
 
       def git_progress(*git_command)
