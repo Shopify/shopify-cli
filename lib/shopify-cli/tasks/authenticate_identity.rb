@@ -5,7 +5,8 @@ module ShopifyCli
     class AuthenticateIdentity < ShopifyCli::Task
       def call(ctx)
         token = oauth_client.authenticate("https://identity.myshopify.io/oauth")
-        ctx.puts "{{success:Authentication Token #{token}}}"
+        Helpers::PkceToken.write(token)
+        ctx.puts "{{success:Authentication Token saved}}"
       rescue OAuth::Error => e
         ctx.puts("{{error: #{e}}}")
       end

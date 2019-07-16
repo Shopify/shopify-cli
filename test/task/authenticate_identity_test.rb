@@ -18,6 +18,7 @@ module ShopifyCli
           .expects(:authenticate)
           .with("https://identity.myshopify.io/oauth")
           .returns("this_is_token")
+        Helpers::PkceToken.expects(:write).with("this_is_token")
         AuthenticateIdentity.new.call(@context)
       end
 
