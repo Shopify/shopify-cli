@@ -7,8 +7,11 @@ module ShopifyCli
 
       def setup
         super
-        @api = API.new(ctx: @context, token: 'faketoken')
-        @api.stubs(:latest_api_version).returns('2019-04')
+        @api = API.new(
+          ctx: @context,
+          token: 'faketoken',
+          url: "https://my-test-shop.myshopify.com/admin/api/2019-04/graphql.json",
+        )
         @api.stubs(:current_sha).returns('abcde')
         @api.stubs(:uname).with(flag: 'v').returns('Mac')
       end
@@ -28,32 +31,33 @@ module ShopifyCli
               'Content-Type' => 'application/json',
               'User-Agent' => "Shopify App CLI #{ShopifyCli::VERSION} abcde | Mac",
               'X-Shopify-Access-Token' => 'faketoken',
+              'Authorization' => 'faketoken',
             })
           .to_return(status: 200, body: '{}')
         @api.mutation(mutation)
       end
 
       def test_latest_api_version
-        query = <<~QUERY
-          {
-            publicApiVersions() {
-              handle
-              displayName
-            }
-          }
-        QUERY
+        query = '{ publicApiVersions() { handle displayName } }'
         stub_request(:post, 'https://my-test-shop.myshopify.com/admin/api/unstable/graphql.json')
-          .with(body: @api.query_body(query),
+          .with(body: JSON.dump(
+              query: query,
+              variables: {},
+            ),
             headers: {
               'Content-Type' => 'application/json',
               'User-Agent' => "Shopify App CLI #{ShopifyCli::VERSION} abcde | Mac",
               'X-Shopify-Access-Token' => 'faketoken',
+              'Authorization' => 'faketoken',
             })
           .to_return(
             status: 200,
             body: File.read(File.join(FIXTURE_DIR, 'api/versions.json')),
           )
-        assert_equal(@api.fetch_latest_api_version, '2019-04')
+        API.any_instance.stubs(:current_sha).returns('abcde')
+        API.any_instance.stubs(:uname).with(flag: 'v').returns('Mac')
+        api = API.new(ctx: @context, token: 'faketoken')
+        assert_equal(api.url, 'https://my-test-shop.myshopify.com/admin/api/2019-04/graphql.json')
       end
     end
   end
