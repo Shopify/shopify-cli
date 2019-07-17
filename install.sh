@@ -253,7 +253,7 @@ install_bash_shell_shim() {
     {
       echo ''
       echo '# load shopify-app-cli, but only if present and the shell is interactive'
-      echo "if [[ -f "${install_dir}/shopify.sh" ]]; then source "${install_dir}/shopify.sh"; fi"
+      echo "if [[ -f \"${install_dir}/shopify.sh\" ]]; then source \"${install_dir}/shopify.sh\"; fi"
     } >> "${bp}"
   fi
 
@@ -261,8 +261,8 @@ install_bash_shell_shim() {
     {
       echo ''
       echo '# load shopify-app-cli, but only if present and the shell is interactive'
-      echo 'if [[ -f "${install_dir}/shopify.sh"  ]] && [[ $- == *i* ]]; then'
-      echo '  source "${install_dir}/shopify.sh"'
+      echo "if [[ -f \"${install_dir}/shopify.sh\"  ]] && [[ $- == *i* ]]; then"
+      echo "  source \"${install_dir}/shopify.sh\""
       echo 'fi'
     } >> "${HOME}/.bashrc"
   fi
