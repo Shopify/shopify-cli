@@ -46,7 +46,7 @@ is_linux() {
   test -n "${linux}"
 }
 
-install_dir="${XDG_RUNTIME_DIR:-$HOME}/.shopify-app-cli"
+install_dir="$HOME/.shopify-app-cli"
 
 postmsg() {
   echo -e "\x1b[36mshopify-app-cli\x1b[0m is installed!"
