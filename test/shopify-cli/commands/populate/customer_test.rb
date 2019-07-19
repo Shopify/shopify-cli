@@ -10,31 +10,30 @@ module ShopifyCli
         def setup
           super
           Helpers::AccessToken.stubs(:read).returns('myaccesstoken')
-          ShopifyCli::Helpers::API.any_instance.stubs(:latest_api_version)
-            .returns('2019-04')
           @mutation = File.read(File.join(FIXTURE_DIR, 'populate/customer.graphql'))
         end
 
         def test_populate_calls_api_with_mutation
+          api = api_stub
+          api.expects(:mutation)
+            .with(@mutation)
+            .returns(JSON.parse(File.read(File.join(FIXTURE_DIR, 'populate/customer_data.json'))))
+          api.expects(:gid_to_id).returns(12345678)
           Helpers::Haikunator.stubs(:name).returns(['first', 'last'])
           Resource.any_instance.stubs(:price).returns('1.00')
           @resource = Customer.new(ctx: @context, args: ['-c 1'])
-          body = @resource.api.mutation_body(@mutation)
-          stub_request(:post, "https://my-test-shop.myshopify.com/admin/api/2019-04/graphql.json")
-            .with(body: body,
-               headers: {
-                 'Content-Type' => 'application/json',
-                 'X-Shopify-Access-Token' => 'myaccesstoken',
-               })
-            .to_return(
-              status: 200,
-              body: File.read(File.join(FIXTURE_DIR, 'populate/customer_data.json')),
-              headers: {}
-            )
           @context.expects(:done).with(
             "customer 'first last' created: https://my-test-shop.myshopify.com/admin/customers/12345678"
           )
           @resource.populate
+        end
+
+        private
+
+        def api_stub
+          api_stub = Object.new
+          ShopifyCli::Helpers::API.stubs(:new).returns(api_stub)
+          api_stub
         end
       end
     end
