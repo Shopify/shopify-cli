@@ -31,7 +31,6 @@ module ShopifyCli
               'Content-Type' => 'application/json',
               'User-Agent' => "Shopify App CLI #{ShopifyCli::VERSION} abcde | Mac",
               'X-Shopify-Access-Token' => 'faketoken',
-              'Authorization' => 'faketoken',
             })
           .to_return(status: 200, body: '{}')
         @api.mutation(mutation)
@@ -48,7 +47,6 @@ module ShopifyCli
               'Content-Type' => 'application/json',
               'User-Agent' => "Shopify App CLI #{ShopifyCli::VERSION} abcde | Mac",
               'X-Shopify-Access-Token' => 'faketoken',
-              'Authorization' => 'faketoken',
             })
           .to_return(
             status: 200,
