@@ -14,6 +14,7 @@ module ShopifyCli
         CLI::UI::Frame.open("Installing dependencies with #{installer}...") do
           install_progress
         end
+        puts CLI::UI.fmt("{{v}} Dependencies installed")
       end
 
       def installer
@@ -26,7 +27,8 @@ module ShopifyCli
       end
 
       def install_progress
-        success = CLI::Kit::System.system(*INSTALL_COMMANDS[installer], chdir: @dir) do |_out, err|
+        success = CLI::Kit::System.system(*INSTALL_COMMANDS[installer], chdir: @dir) do |out, err|
+          puts out
           err.lines.each do |e|
             puts e
           end
