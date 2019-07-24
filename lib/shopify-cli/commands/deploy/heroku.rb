@@ -44,7 +44,7 @@ module ShopifyCli
             spin_group.add("Authenticated with Heroku as `#{account}`") { true }
             spin_group.wait
           else
-            CLI::UI::Frame.open("Authenticating with Heroku…", success_text: '✓ Authenticated with Heroku') do
+            CLI::UI::Frame.open("Authenticating with Heroku…", success_text: '✔︎ Authenticated with Heroku') do
               heroku_authenticate
             end
           end
@@ -62,12 +62,12 @@ module ShopifyCli
               app_name = CLI::UI::Prompt.ask('What is your Heroku app’s name?')
               CLI::UI::Frame.open(
                 "Selecting Heroku app `#{app_name}`…",
-                success_text: "✓ Heroku app `#{app_name}` selected"
+                success_text: "✔︎ Heroku app `#{app_name}` selected"
               ) do
                 heroku_select_existing_app(app_name)
               end
             elsif app_type == :new
-              CLI::UI::Frame.open('Creating new Heroku app…', success_text: '✓ New Heroku app created') do
+              CLI::UI::Frame.open('Creating new Heroku app…', success_text: '✔︎ New Heroku app created') do
                 heroku_create_new_app
               end
             end
@@ -86,7 +86,7 @@ module ShopifyCli
             end
           end
 
-          CLI::UI::Frame.open('Deploying to Heroku…', success_text: '✓ Deployed to Heroku') do
+          CLI::UI::Frame.open('Deploying to Heroku…', success_text: '✔︎ Deployed to Heroku') do
             heroku_deploy(branch_to_deploy)
           end
         end

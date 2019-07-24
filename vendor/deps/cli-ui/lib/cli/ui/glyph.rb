@@ -44,7 +44,7 @@ module CLI
       INFO     = new('i', 0x1d4be, Color::BLUE)
       # BLUE QUESTION MARK (?)
       QUESTION = new('?', 0x003f,  Color::BLUE)
-      # GREEN CHECK MARK (✓)
+      # GREEN CHECK MARK (✔︎)
       CHECK    = new('v', 0x2713,  Color::GREEN)
       # RED BALLOT X (✗)
       X        = new('x', 0x2717,  Color::RED)
