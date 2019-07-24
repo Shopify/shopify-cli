@@ -201,3 +201,25 @@ rake console
 irb(main):001:0> ShopifyCli::ROOT
 => "/Users/me/src/github.com/Shopify/shopify-cli"
 ```
+
+## Uninstalling Shopify App CLI
+
+There are two steps to completely uninstall Shopify App CLI:
+
+1. Delete the CLI files.
+1. Remove the `shopify` command from your shell profile.
+
+### Delete the CLI files
+
+With [the standard installation process](https://github.com/Shopify/shopify-app-cli#install), Shopify App CLI is installed in your home directory. All the files are contained in a hidden directory called `.shopify-app-cli`, which you can delete to uninstall.
+
+### Remove the `shopify` command from your shell
+
+During the install process, Shopify App CLI adds a line to your shell configuration. This line is typically located in the `.bash_profile` file in your home directory (depending on your system, it may also be found in `.bash_login` or `.profile`). It will look similar to this:
+
+```sh
+# The line won’t look exactly like this. `HOME_DIR` will instead be the absolute path to your home directory
+if [[ -f /HOME_DIR/.shopify-cli/shopify.sh ]]; then source /HOME_DIR/.shopify-cli/shopify.sh; fi
+```
+
+Deleting or commenting out this line will remove `shopify` as a command. You may need to reload your shell.
