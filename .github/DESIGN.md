@@ -70,7 +70,7 @@ While a task is running, the output from the task to communicate what is happeni
 **Success/Error**  
 Message at the end of the task executing to summarize what happened. This can be either a success or error message - because a CLI executes linearly, an error c annot happen inline or during a process, the completeion of a task will either end in success or error.  
 `[success] Installed NPM in [diectory]`  
-`[error] Dependecny could not be installed because [output]`
+`[error] NPM could not be installed because [output]`
 
 ## CLI commands
 When contributing to the CLI consider the following  commands and what their intents are before either adding new subcommands to them or creating new top level commands.
