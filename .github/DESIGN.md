@@ -57,17 +57,17 @@ High level guiding principles to help make decisions faster when creating a CLI 
 ## CLI UI states
 Because of the serial nature of terminal input and output, CLIs have fewer states than graphical user interfaces. We provide design guidelines for three states:
 
-**Input**
+**Input**  
 The command a user types in to execute a task.  
 `shopify create project projectName`
 
-**Execute**
+**Execute**  
 While a task is running, the output from the task to communicate what is happening to the user.  
 `Installing NPM..`  
 `Updating files`  
 `Checking dependencies`  
 
-**Success/Error**
+**Success/Error**  
 Message at the end of the task executing to summarize what happened. This can be either a success or error message - because a CLI executes linearly, an error c annot happen inline or during a process, the completeion of a task will either end in success or error.
 `[success] Installed NPM in [diectory]`
 `[error] Dependecny could not be installed because [output]`
@@ -92,7 +92,7 @@ Subcommand
 `webhook`  
 `billing`  
 
-Examples
+Examples  
 `shopify generate page`
 
 ### `Populate`
