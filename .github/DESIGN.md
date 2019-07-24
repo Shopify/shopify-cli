@@ -68,8 +68,8 @@ While a task is running, the output from the task to communicate what is happeni
 `Checking dependencies`  
 
 **Success/Error**  
-Message at the end of the task executing to summarize what happened. This can be either a success or error message - because a CLI executes linearly, an error c annot happen inline or during a process, the completeion of a task will either end in success or error.
-`[success] Installed NPM in [diectory]`
+Message at the end of the task executing to summarize what happened. This can be either a success or error message - because a CLI executes linearly, an error c annot happen inline or during a process, the completeion of a task will either end in success or error.  
+`[success] Installed NPM in [diectory]`  
 `[error] Dependecny could not be installed because [output]`
 
 ## CLI commands
