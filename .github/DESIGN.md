@@ -4,7 +4,7 @@ The purpose of this doc is to outline all the heuristics, patterns, and template
 
 The most important principle to follow is **speed**. CLI tools are built to be extremely fast and perform tasks quickly. If there is ever a collision between heuristics, default to whatever results in the fastest perceived or actual performance. 
 
-To help visualize all the components and states avialable in the Shopify App CLI, we have crteated a [UI Kit](https://www.figma.com/file/ZXIgM4wQpfRNjGaIArjWOgTD/CLI-UI-Kit?node-id=67%3A0) in [Figma](http://figma.com) that you can use to build command flows.
+To help visualize all the components and states avialable in the Shopify App CLI, we have created a [UI Kit](https://www.figma.com/file/ZXIgM4wQpfRNjGaIArjWOgTD/CLI-UI-Kit?node-id=67%3A0) in [Figma](http://figma.com) that you can use to build command flows.
 
 *Figma is a free web based design tool.*
 
@@ -12,7 +12,7 @@ To help visualize all the components and states avialable in the Shopify App CLI
 The user understands the basic mechanics of a cli:
 - can type in commands to execute tasks 
 - there is a persistent “help” command that will educate them on specifics of each command/subcommand
-- CNTRL + C quits any running task
+- CTRL + C quits any running task
 - how to navigate and manipulate the filesystem via the command line: cd and mkdir
 
 ## Design principles
@@ -55,7 +55,7 @@ High level guiding principles to help make decisions faster when creating a CLI 
 ❌ Show the user every bit of information that comes in from external or internal tasks.
 
 ## CLI UI states
-CLI’s tend to have less states that GUI, however error states are more prevalent because a CLI can error out at any moment.
+Because of the serial nature of terminal input and output, CLIs have fewer states than graphical user interfaces. We provide design guidelines for three states:
 
 **Input**
 The command a user types in to execute a task.  
@@ -67,9 +67,10 @@ While a task is running, the output from the task to communicate what is happeni
 `Updating files`  
 `Checking dependencies`  
 
-**Complete**
-Message at the end of the task executing to summarize what happened.  
-`Successfully installed NPM in [diectory]`
+**Success/Error**
+Message at the end of the task executing to summarize what happened. This can be either a success or error message - because a CLI executes linearly, an error c annot happen inline or during a process, the completeion of a task will either end in success or error.
+`[success] Installed NPM in [diectory]`
+`[error] Dependecny could not be installed because [output]`
 
 ## CLI commands
 When contributing to the CLI consider the following  commands and what their intents are before either adding new subcommands to them or creating new top level commands.
@@ -100,7 +101,7 @@ Allows a user to add data to a development store.
 Subcommands:  
 `products`  
 `customers`  
-`Draftorders`  
+`draftorders`  
 
 Options:  
 `--count [integer]`  
