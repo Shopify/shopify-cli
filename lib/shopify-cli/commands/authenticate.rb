@@ -21,8 +21,8 @@ module ShopifyCli
 
       def self.help
         <<~HELP
-          Request a new access token from the Shopify admin API.
-            Usage: {{command:#{ShopifyCli::TOOL_NAME} auth}}
+          Request a new access token from the Shopify Admin API.
+            Usage: {{command:#{ShopifyCli::TOOL_NAME} authenticate}}
         HELP
       end
     end
