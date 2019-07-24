@@ -23,13 +23,13 @@ module CLI
       # #### Example Usage
       # `config.get('name.of.config')`
       #
-      def get(section, name)
-        all_configs.dig("[#{section}]", name) || false
+      def get(section, name, default: false)
+        all_configs.dig("[#{section}]", name) || default
       end
 
       # Coalesce and enforce the value of a config to a boolean
-      def get_bool(section, name)
-        case get(section, name).to_s
+      def get_bool(section, name, default: false)
+        case get(section, name, default: default).to_s
         when "true"
           true
         when "false"

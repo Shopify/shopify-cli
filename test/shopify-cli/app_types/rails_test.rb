@@ -1,4 +1,5 @@
 require 'test_helper'
+require 'semantic/semantic'
 
 module ShopifyCli
   module AppTypes
@@ -7,10 +8,6 @@ module ShopifyCli
         root = Dir.mktmpdir
         @context = TestHelpers::FakeContext.new(root: root)
         @app = ShopifyCli::AppTypes::Rails.new(ctx: @context)
-        @context.app_metadata = {
-          api_key: 'api_key',
-          secret: 'secret',
-        }
       end
 
       def test_build_creates_rails_app
@@ -36,8 +33,6 @@ module ShopifyCli
           ShopifyCli::Helpers::Gem.binary_path_for(@context, 'rails'),
           'generate',
           'shopify_app',
-          '--api_key api_key',
-          '--secret secret',
           chdir: @context.root
         )
         @context.expects(:system).with(
@@ -56,17 +51,26 @@ module ShopifyCli
         end
         output = io.join
 
-        assert_match(
-          CLI::UI.fmt('Run {{command:shopify serve}} to start the local development server'),
+        assert(
+          CLI::UI.fmt("{{*}} Run {{command:shopify serve}} to start the local development server"),
           output
         )
+      end
+
+      def test_check_dependencies_exits_if_incorrect_ruby_version
+        Helpers::Ruby.expects(:version).returns(Semantic::Version.new('2.3.7'))
+        assert_raises ShopifyCli::Abort do
+          @app.check_dependencies
+        end
       end
     end
 
     class RailsTest < MiniTest::Test
       include TestHelpers::Project
+      include TestHelpers::FakeUI
 
       def setup
+        super
         project_context('app_types', 'rails')
         @app = ShopifyCli::AppTypes::Rails.new(ctx: @context)
         Helpers::EnvFile.any_instance.stubs(:write)

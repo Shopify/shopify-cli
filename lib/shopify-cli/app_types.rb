@@ -26,7 +26,7 @@ module ShopifyCli
       end
 
       def post_clone
-        "Run {{command:shopify serve}} to start the local development server"
+        "{{*}} Run {{command:shopify serve}} to start the local development server"
       end
     end
   end

@@ -6,29 +6,35 @@ module ShopifyCli
       include TestHelpers::Project
       include TestHelpers::Constants
 
-      def setup
-        super
-        @command = ShopifyCli::Commands::Update.new
-        TCPServer.stubs(:new)
+      def test_negotiate_oauth_and_store_token
+        @oauth_client = Object.new
+        ShopifyCli::OAuth
+          .expects(:new)
+          .with(
+            client_id: 'apikey',
+            secret: 'secret',
+            scopes: nil,
+            token_path: "/access_token",
+            options: { 'grant_options[]' => 'per user' },
+          ).returns(@oauth_client)
+        @oauth_client
+          .expects(:authenticate)
+          .with("https://my-test-shop.myshopify.com/admin/oauth")
+          .returns("this_is_token")
+        Helpers::AccessToken.expects(:write).with("this_is_token")
+        AuthenticateShopify.new.call(@context)
       end
 
-      def test_store_token
-        ShopifyCli::Helpers::AccessToken.expects(:read).returns(
-          File.read(File.join(ShopifyCli::ROOT, "test/fixtures/.apikey"))
-        )
-        @context.expects(:system)
-        File.stub(:write, true) do
-          AuthenticateShopify.any_instance.expects(:wait_for_redirect).returns('mycode')
-          stub_request(:post, "https://my-test-shop.myshopify.com/admin/oauth/access_token")
-            .with(body: "client_id=apikey&client_secret=secret&code=mycode",
-              headers: {
-                'Accept' => '*/*',
-                'Accept-Encoding' => 'gzip;q=1.0,deflate;q=0.6,identity;q=0.3',
-                'User-Agent' => 'Ruby',
-              })
-            .to_return(status: 200, body: '{ "access_token": "accesstoken123" }', headers: {})
-          AuthenticateShopify.call(@context)
-          assert_equal('accesstoken123', ShopifyCli::Helpers::AccessToken.read(@context))
+      def test_handles_oauth_errors
+        @oauth_client = Object.new
+        ShopifyCli::OAuth.stubs(:new).returns(@oauth_client)
+        @oauth_client
+          .expects(:authenticate)
+          .with("https://my-test-shop.myshopify.com/admin/oauth")
+          .raises(OAuth::Error, 'invalid request')
+        @oauth_client.expects(:redirect_uri).returns("http://localhost:3456")
+        assert_nothing_raised do
+          AuthenticateShopify.new.call(@context)
         end
       end
     end

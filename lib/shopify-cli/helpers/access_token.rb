@@ -11,8 +11,8 @@ module ShopifyCli
           )
         end
 
-        def write(res)
-          File.write(File.join(ShopifyCli::TEMP_DIR, ".#{file_name}"), res['access_token'])
+        def write(token)
+          File.write(File.join(ShopifyCli::TEMP_DIR, ".#{file_name}"), token)
         end
 
         def file_name

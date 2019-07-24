@@ -1,91 +1,34 @@
 require 'shopify_cli'
-require 'base64'
-require 'securerandom'
-require 'socket'
-require 'net/http'
-require 'uri'
-require 'json'
 
 module ShopifyCli
   module Tasks
     class AuthenticateShopify < ShopifyCli::Task
-      PORT = 3456
-      REDIRECT_URI = "http://localhost:#{PORT}/"
-
       def call(ctx)
-        @ctx = ctx
-        server = TCPServer.new('localhost', PORT)
-        @ctx.puts("opening #{authorize_url}")
-        @ctx.system("open '#{authorize_url}'")
-        code = wait_for_redirect(server)
-        case res = send_token_request(code)
-        when Net::HTTPSuccess
-          body = JSON.parse(res.body)
-          @env = Helpers::AccessToken.write(body)
-          @ctx.puts "{{success:Token stored!}}"
-          @ctx.puts "{{green:! tip}}: Add https://localhost:3456 to the whitelisted redirection URLs in your app setup"
-        else
-          @ctx.puts("{{error:Response was #{res.body}}}")
-          @ctx.puts("{{error:Failed to retrieve ID & Refresh tokens}}")
-        end
+        Tasks::EnsureEnv.call(ctx)
+        token = oauth_client.authenticate("https://#{env.shop}/admin/oauth")
+        @env = Helpers::AccessToken.write(token)
+        ctx.puts "{{success:Authentication Token written to env file}}"
+      rescue OAuth::Error => e
+        ctx.puts("{{error: #{e}}}")
+        ctx.puts("{{error:Failed to retrieve ID & Refresh tokens}}")
+        ctx.puts "{{*}} Remeber to add {{underline: #{oauth_client.redirect_uri} "\
+          "to the whitelisted redirection URLs in your app setup"
       end
 
-      def wait_for_redirect(server)
-        socket = server.accept # Wait for redirect
-        @ctx.puts "Authenticated"
-        request = socket.gets
-
-        unless extract_query_param('state', request) == state_token
-          socket.close
-          raise(StandardError, "Anti-forgery state token does not match the initial request.")
-        end
-
-        socket.print("HTTP/1.1 200\r\n")
-        socket.print("Content-Type: text/plain\r\n\r\n")
-        socket.print("SUCCESS - please return to the CLI for the rest of this process.")
-        socket.close
-        extract_query_param("code", request)
-      end
-
-      def send_token_request(code)
-        uri = URI("https://#{env.shop}/admin/oauth/access_token")
-        https = Net::HTTP.new(uri.host, uri.port)
-        https.use_ssl = true
-        request = Net::HTTP::Post.new(uri.path)
-        request.body = URI.encode_www_form(
-          client_id: env.api_key,
-          client_secret: env.secret,
-          code: code
-        )
-        @ctx.puts "Fetching tokens..."
-        https.request(request)
-      end
-
-      def authorize_url
-        params = {
-          client_id: env.api_key,
-          scope: env.scopes,
-          redirect_uri: REDIRECT_URI,
-          state: state_token,
-          'grant_options[]' => 'per user',
-        }
-        uri = URI.parse("https://#{env.shop}/admin/oauth/authorize")
-        uri.query = URI.encode_www_form(params)
-        uri
-      end
+      private
 
       def env
         @env = Helpers::EnvFile.read
       end
 
-      def extract_query_param(key, request)
-        paramstring = request.split('?')[1]
-        paramstring = paramstring.split(' ')[0]
-        URI.decode_www_form(paramstring).assoc(key).last
-      end
-
-      def state_token
-        @state_token ||= SecureRandom.hex(30)
+      def oauth_client
+        OAuth.new(
+          client_id: env.api_key,
+          secret: env.secret,
+          scopes: env.scopes,
+          token_path: "/access_token",
+          options: { 'grant_options[]' => 'per user' },
+        )
       end
     end
   end

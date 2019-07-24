@@ -5,6 +5,7 @@ module ShopifyCli
     class Deploy
       class HerokuTest < MiniTest::Test
         include TestHelpers::Context
+        include TestHelpers::FakeUI
 
         def setup
           super
@@ -128,11 +129,13 @@ module ShopifyCli
             .with(@heroku_command, 'whoami')
             .returns(['username', @status_mock[:true]])
 
-          io = capture_io do
+          CLI::UI::SpinGroup.any_instance.expects(:add).with(
+            'Authenticated with Heroku as `username`'
+          )
+
+          capture_io do
             @command.call(@context)
           end
-
-          assert_match('Authenticated with Heroku as `username`', io.join)
         end
 
         def test_call_attempts_to_authenticate_with_heroku_if_not_already_authed
@@ -159,11 +162,13 @@ module ShopifyCli
             .with('git', 'remote', 'get-url', 'heroku')
             .returns([@heroku_remote, @status_mock[:true]])
 
-          io = capture_io do
+          CLI::UI::SpinGroup.any_instance.expects(:add).with(
+            'Heroku app `app-name` selected'
+          )
+
+          capture_io do
             @command.call(@context)
           end
-
-          assert_match('Heroku app `app-name` selected', io.join)
         end
 
         def test_call_lets_you_choose_existing_heroku_app
@@ -272,50 +277,18 @@ module ShopifyCli
           end
         end
 
-        def test_call_uses_existing_remote_origin_if_available
-          @context.expects(:capture2e)
-            .with('git', 'remote', 'get-url', 'origin')
-            .returns([@heroku_remote, @status_mock[:true]])
-
-          io = capture_io do
-            @command.call(@context)
-          end
-
-          assert_match('Git origin set', io.join)
-        end
-
-        def test_call_tries_to_set_remote_origin_if_its_not_set
-          stub_git_remote(status: false, remote: 'origin')
-
-          @context.stubs(:system)
-            .with('git', 'remote', 'add', 'origin', @heroku_remote)
-            .returns(@status_mock[:true])
-
-          @command.call(@context)
-        end
-
-        def test_call_raises_if_setting_remote_origin_fails
-          stub_git_remote(status: false, remote: 'origin')
-
-          @context.stubs(:system)
-            .with('git', 'remote', 'add', 'origin', @heroku_remote)
-            .returns(@status_mock[:false])
-
-          assert_raises ShopifyCli::Abort do
-            @command.call(@context)
-          end
-        end
-
         def test_call_doesnt_prompt_if_only_one_branch_exists
           @context.expects(:capture2e)
             .with('git', 'branch', '--list', '--format=%(refname:short)')
             .returns(["master\n", @status_mock[:true]])
 
-          io = capture_io do
+          CLI::UI::SpinGroup.any_instance.expects(:add).with(
+            'Git branch `master` selected for deploy'
+          )
+
+          capture_io do
             @command.call(@context)
           end
-
-          assert_match('Git branch `master` selected for deploy', io.join)
         end
 
         def test_call_lets_you_specify_a_branch_if_multiple_exist

@@ -73,12 +73,6 @@ module ShopifyCli
             end
           end
 
-          spin_group.add('Setting git origin…') do |spinner|
-            git_set_origin
-            spinner.update_title("Git origin set")
-          end
-          spin_group.wait
-
           branches = git_branches
           if branches.length == 1
             branch_to_deploy = branches[0]
@@ -121,14 +115,6 @@ module ShopifyCli
 
           if output.include?('No commits yet')
             raise(ShopifyCli::Abort, "No git commits have been made. Please make at least one commit.")
-          end
-        end
-
-        def git_set_origin
-          _output, status = @ctx.capture2e('git', 'remote', 'get-url', 'origin')
-          if !status.success? && heroku_git_remote
-            result = @ctx.system('git', 'remote', 'add', 'origin', heroku_git_remote)
-            raise(ShopifyCli::Abort, "Could not set git origin") unless result.success?
           end
         end
 

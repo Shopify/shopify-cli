@@ -13,7 +13,7 @@ module ShopifyCli
       def at(dir)
         proj_dir = directory(dir)
         unless proj_dir
-          raise(ShopifyCli::Abort, "You are not in a Shopify app project")
+          raise(ShopifyCli::Abort, message)
         end
         @at ||= Hash.new { |h, k| h[k] = new(directory: k) }
         @at[proj_dir]
@@ -28,6 +28,13 @@ module ShopifyCli
       def directory(dir)
         @dir ||= Hash.new { |h, k| h[k] = __directory(k) }
         @dir[dir]
+      end
+
+      def message
+        <<~MESSAGE
+          {{x}} You are not in a Shopify app project
+          {{yellow:{{*}}}}{{reset: Run}}{{cyan: shopify create project}}{{reset: to create your app}}
+        MESSAGE
       end
 
       def write(ctx, identifier)
@@ -76,14 +83,14 @@ module ShopifyCli
       f = File.join(directory, relative_path)
       require 'yaml' # takes 20ms, so deferred as late as possible.
       begin
-        YAML.load_file(f) || {}
+        YAML.load_file(f)
       rescue Psych::SyntaxError => e
         raise(ShopifyCli::Abort, "#{relative_path} contains invalid YAML: #{e.message}")
       # rescue Errno::EACCES => e
       # TODO
       #   Dev::Helpers::EaccesHandler.diagnose_and_raise(f, e, mode: :read)
       rescue Errno::ENOENT
-        raise
+        raise ShopifyCli::Abort, "#{f} not found"
       end
     end
   end

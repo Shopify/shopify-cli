@@ -1,3 +1,4 @@
+# coding: utf-8
 require 'cli/ui'
 require 'readline'
 
@@ -30,11 +31,15 @@ module CLI
         # * +:default+ - The default answer to the question (e.g. they just press enter and don't input anything)
         # * +:is_file+ - Tells the input to use file auto-completion (tab completion)
         # * +:allow_empty+ - Allows the answer to be empty
+        # * +:multiple+ - Allow multiple options to be selected
+        # * +:filter_ui+ - Enable option filtering (default: true)
+        # * +:select_ui+ - Enable long-form option selection (default: true)
         #
         # Note:
         # * +:options+ or providing a +Block+ conflicts with +:default+ and +:is_file+, you cannot set options with either of these keywords
         # * +:default+ conflicts with +:allow_empty:, you cannot set these together
         # * +:options+ conflicts with providing a +Block+ , you may only set one
+        # * +:multiple+ can only be used with +:options+ or a +Block+; it is ignored, otherwise.
         #
         # ==== Block (optional)
         #
@@ -71,15 +76,42 @@ module CLI
         #     handler.option('python') { |selection| selection }
         #   end
         #
-        def ask(question, options: nil, default: nil, is_file: nil, allow_empty: true, multiple: false, &options_proc)
+        def ask(question, options: nil, default: nil, is_file: nil, allow_empty: true, multiple: false, filter_ui: true, select_ui: true, &options_proc)
           if ((options || block_given?) && (default || is_file))
             raise(ArgumentError, 'conflicting arguments: options provided with default or is_file')
           end
 
           if options || block_given?
-            ask_interactive(question, options, multiple: multiple, &options_proc)
+            ask_interactive(question, options, multiple: multiple, filter_ui: filter_ui, select_ui: select_ui, &options_proc)
           else
             ask_free_form(question, default, is_file, allow_empty)
+          end
+        end
+
+        # Asks the user for a single-line answer, without displaying the characters while typing.
+        # Typically used for password prompts
+        #
+        # ==== Return Value
+        #
+        # The password, without a trailing newline.
+        # If the user simply presses "Enter" without typing any password, this will return an empty string.
+        def ask_password(question)
+          require 'io/console'
+
+          CLI::UI.with_frame_color(:blue) do
+            STDOUT.print(CLI::UI.fmt('{{?}} ' + question)) # Do not use puts_question to avoid the new line.
+
+            # noecho interacts poorly with Readline under system Ruby, so do a manual `gets` here.
+            # No fancy Readline integration (like echoing back) is required for a password prompt anyway.
+            password = STDIN.noecho do
+              # Chomp will remove the one new line character added by `gets`, without touching potential extra spaces:
+              # " 123 \n".chomp => " 123 "
+              STDIN.gets.chomp
+            end
+
+            STDOUT.puts # Complete the line
+
+            password
           end
         end
 
@@ -94,7 +126,7 @@ module CLI
         #   CLI::UI::Prompt.confirm('Do a dangerous thing?', default: false)
         #
         def confirm(question, default: true)
-          ask_interactive(question, default ? %w(yes no) : %w(no yes)) == 'yes'
+          ask_interactive(question, default ? %w(yes no) : %w(no yes), filter_ui: false) == 'yes'
         end
 
         private
@@ -123,7 +155,7 @@ module CLI
           end
         end
 
-        def ask_interactive(question, options = nil, multiple: false)
+        def ask_interactive(question, options = nil, multiple: false, filter_ui: true, select_ui: true)
           raise(ArgumentError, 'conflicting arguments: options and block given') if options && block_given?
 
           options ||= if block_given?
@@ -132,8 +164,10 @@ module CLI
             handler.options
           end
 
-          raise(ArgumentError, 'insufficient options') if options.nil? || options.size < 2
+          raise(ArgumentError, 'insufficient options') if options.nil? || options.empty?
           instructions = (multiple ? "Toggle options. " : "") + "Choose with ↑ ↓ ⏎"
+          instructions += ", filter with 'f'" if filter_ui
+          instructions += ", enter option with 'e'" if select_ui and options.size > 9
           puts_question("#{question} {{yellow:(#{instructions})}}")
           resp = interactive_prompt(options, multiple: multiple)
 

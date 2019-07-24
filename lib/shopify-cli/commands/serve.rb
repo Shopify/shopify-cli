@@ -7,17 +7,19 @@ module ShopifyCli
     class Serve < ShopifyCli::Command
       include ShopifyCli::Helpers::OS
 
-      prerequisite_task :tunnel
+      prerequisite_task :ensure_env, :tunnel
 
       def call(*)
         project = Project.current
         if mac?
-          @ctx.puts("{{green:! tip}} Press Control-T to open this project in your browser")
+          @ctx.puts("{{*}} Press {{yellow: Control-T}} to open this project in your browser")
           on_siginfo do
             project.app_type.open(@ctx)
           end
         end
-        @ctx.system(project.app_type.serve_command(@ctx))
+        CLI::UI::Frame.open('Running server...') do
+          @ctx.system(project.app_type.serve_command(@ctx))
+        end
       end
 
       def self.help

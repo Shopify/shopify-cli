@@ -15,8 +15,12 @@ module CLI
     class Ini
       attr_accessor :ini
 
-      def initialize(path = nil, default_section: nil, convert_types: true)
-        @config = File.readlines(path) if path && File.exist?(path)
+      def initialize(path = nil, config: nil, default_section: nil, convert_types: true)
+        @config = if path && File.exist?(path)
+          File.readlines(path)
+        elsif config
+          config.lines
+        end
         @ini = {}
         @current_key = nil
         @default_section = default_section

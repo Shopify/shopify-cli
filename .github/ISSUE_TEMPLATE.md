@@ -32,6 +32,7 @@ The best way to get your bug fixed is to provide a [reduced test case](https://d
 
 ## Specifications
 
+- App type:
 - Operating System:
 - Shell:
 - Ruby version (ruby -v):
