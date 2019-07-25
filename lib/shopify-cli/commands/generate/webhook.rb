@@ -6,10 +6,6 @@ module ShopifyCli
       class Webhook < ShopifyCli::Task
         def call(ctx, args)
           project = ShopifyCli::Project.current
-          # temporary check until we build for rails
-          if project.app_type == ShopifyCli::AppTypes::Rails
-            raise(ShopifyCli::Abort, 'This feature is not yet available for Rails apps')
-          end
           selected_type = args.first
           schema = ShopifyCli::Helpers::SchemaParser.new(
             schema: ShopifyCli::Tasks::Schema.call(ctx)
@@ -25,8 +21,7 @@ module ShopifyCli
           end
 
           app_type = project.app_type
-          ShopifyCli::Commands::Generate
-            .run_generate("#{app_type.generate[:webhook]} #{selected_type}", selected_type, ctx)
+          ShopifyCli::Commands::Generate.run_generate(app_type.generate_command(selected_type), selected_type, ctx)
           ctx.puts("{{green:✔︎}} Generating webhook: #{selected_type}")
         end
 

@@ -15,7 +15,7 @@ module ShopifyCli
           ShopifyCli::Tasks::Schema.expects(:call).returns(
             JSON.parse(File.read(File.join(ShopifyCli::ROOT, "test/fixtures/shopify_schema.json")))
           )
-          @context.expects(:system).with('generate-webhook PRODUCT_CREATE')
+          @context.expects(:system).with('a command')
             .returns(mock(success?: true))
           @command.call(['webhook', 'PRODUCT_CREATE'], nil)
         end
@@ -25,7 +25,7 @@ module ShopifyCli
             JSON.parse(File.read(File.join(ShopifyCli::ROOT, "test/fixtures/shopify_schema.json"))),
           )
           CLI::UI::Prompt.expects(:ask).returns('PRODUCT_CREATE')
-          @context.expects(:system).with('generate-webhook PRODUCT_CREATE')
+          @context.expects(:system).with('a command')
             .returns(mock(success?: true))
           @command.call(['webhook'], nil)
         end
