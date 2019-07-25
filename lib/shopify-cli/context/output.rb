@@ -10,7 +10,7 @@ module ShopifyCli
       end
 
       def done(string)
-        puts("{{green:✔︎}} #{string}")
+        puts("{{v}} #{string}")
       end
 
       def debug(string)
