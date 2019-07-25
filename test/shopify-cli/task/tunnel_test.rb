@@ -27,7 +27,7 @@ module ShopifyCli
             "exec #{File.join(ShopifyCli::ROOT, 'ngrok')} http -log=stdout -log-level=debug 8081"
           )
           @context.expects(:puts).with(
-            "{{green:✔︎}} ngrok tunnel running at {{underline: https://example.ngrok.io}}"
+            "{{v}} ngrok tunnel running at {{underline: https://example.ngrok.io}}"
           )
           assert_equal 'https://example.ngrok.io', ShopifyCli::Tasks::Tunnel.new.call(@context)
           assert_equal 'https://example.ngrok.io', @context.app_metadata[:host]

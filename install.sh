@@ -301,7 +301,7 @@ install_fish_shell_shim() {
 }
 
 bs_success_message() {
-  >&9 echo -e "\x1b[32m✓\x1b[0m $1"
+  >&9 echo -e "\x1b[32m✔︎\x1b[0m $1"
 }
 
 bs_error_message() {

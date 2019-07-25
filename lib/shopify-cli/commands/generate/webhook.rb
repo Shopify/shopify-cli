@@ -22,7 +22,7 @@ module ShopifyCli
 
           app_type = project.app_type
           ShopifyCli::Commands::Generate.run_generate(app_type.generate_command(selected_type), selected_type, ctx)
-          ctx.puts("{{green:✔︎}} Generating webhook: #{selected_type}")
+          ctx.puts("{{v}} Generating webhook: #{selected_type}")
         end
 
         def self.help
