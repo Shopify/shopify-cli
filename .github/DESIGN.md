@@ -2,36 +2,36 @@
 
 The purpose of this doc is to outline all the heuristics, patterns, and templates we are using in the Shopify App CLI tool. All the content is based on the CLI Design and Style Guidelines doc, as well as the guidance on the Shopify cli-ui Github repo.
 
-The most important principle to follow is **speed**. CLI tools are built to be extremely fast and perform tasks quickly. If there is ever a collision between heuristics, default to whatever results in the fastest perceived or actual performance. 
+The most important principle to follow is **speed**. CLI tools are built to be extremely fast to use and to perform tasks quickly. If there is ever a collision between heuristics, default to whatever results in the fastest perceived or actual performance.
 
-To help visualize all the components and states avialable in the Shopify App CLI, we have created a [UI Kit](https://www.figma.com/file/ZXIgM4wQpfRNjGaIArjWOgTD/CLI-UI-Kit?node-id=67%3A0) in [Figma](http://figma.com) that you can use to build command flows.
+To help visualize all the components and states available in the Shopify App CLI, we have created a [UI Kit](https://www.figma.com/file/ZXIgM4wQpfRNjGaIArjWOgTD/CLI-UI-Kit?node-id=67%3A0) in [Figma](http://figma.com) that you can use to build command flows.
 
-*Figma is a free web based design tool.*
+*Figma is a free web-based design tool.*
 
 ## Assumptions
-The user understands the basic mechanics of a cli:
-- can type in commands to execute tasks 
+The user understands the basic mechanics of a CLI:
+- can type in commands to execute tasks
 - there is a persistent “help” command that will educate them on specifics of each command/subcommand
 - CTRL + C quits any running task
 - how to navigate and manipulate the filesystem via the command line: cd and mkdir
 
 ## Design principles
-High level guiding principles to help make decisions faster when creating a CLI UI.
+High-level guiding principles to help make decisions faster when creating a CLI UI.
 
 **Communicate every state (success, waiting, error) even if it’s redundant.**  
 
 ✅ Communicate task success even if the external process has also communicated success. Always wrap up what just happened with a success/error message.  
-❌ Assume that success is understood because the process finished. 
+❌ Assume that success is understood because the process finished.
 
-**Suppress output when the process is successful, show output when the process has an error.**  
+**Suppress output when the process is successful, and show output when the process has an error.**  
 
-✅ Hide all STDOUT information if the process has run successfully, show all output if the process failed.  
+✅ Hide all STDOUT information if the process has run successfully, and show all output if the process failed.  
 ❌ Show every line or state if the process success/error state has not been determined yet.
 
 **Error out if a task needs to make a system change and tell the user how to complete the installation.**  
 
 ✅ Prompt the user if you need to run something external that will modify their system to complete the installation.  
-❌ Automatically install an NPM package that modifies the system. Prompt them that it’s needed and ask them if they would like the cli to install it.
+❌ Automatically install an NPM package that modifies the system. Prompt them that it’s needed and ask them if they would like the CLI to install it.
 
 **If a process that fails early will affect the rest of the task, terminate it as soon as possible and tell the user why.**  
 
@@ -51,7 +51,7 @@ High level guiding principles to help make decisions faster when creating a CLI 
 
 **Let the user opt in to verbosity.**  
 
-✅ Show the user whatever is necessary given the task at hand. A summary may be best suited for tasks with many sub processes, where some output might make sense for small tasks.  
+✅ Show the user whatever is necessary given the task at hand. A summary may be best suited for tasks with many subprocesses, where some output might make sense for small tasks.  
 ❌ Show the user every bit of information that comes in from external or internal tasks.
 
 ## CLI UI states
@@ -63,20 +63,20 @@ The command a user types in to execute a task.
 
 **Execute**  
 While a task is running, the output from the task to communicate what is happening to the user.  
-`Installing NPM..`  
+`Installing NPM...`  
 `Updating files`  
 `Checking dependencies`  
 
 **Success/Error**  
-Message at the end of the task executing to summarize what happened. This can be either a success or error message - because a CLI executes linearly, an error c annot happen inline or during a process, the completeion of a task will either end in success or error.  
-`[success] Installed NPM in [diectory]`  
+Message at the end of the task executing to summarize what happened. This can be either a success or error message - because a CLI executes linearly, an error cannot happen inline or during a process, and the completion of a task will either end in success or error.  
+`[success] Installed NPM in [directory]`  
 `[error] NPM could not be installed because [output]`
 
 ## CLI commands
-When contributing to the CLI consider the following  commands and what their intents are before either adding new subcommands to them or creating new top level commands.
+When contributing to the CLI consider the following commands and what their intents are before either adding new subcommands to them or creating new top-level commands.
 
 ### `Create`
-Creating new parent resources that other commands depend on. 
+Creating new parent resources that other commands depend on.
 
 Subcommand:  
 `project projectName`
@@ -87,12 +87,12 @@ Examples:
 ### `Generate`
 Generate is for creating new files and examples in the current app project.
 
-Subcommand  
+Subcommand:  
 `page`  
 `webhook`  
 `billing`  
 
-Examples  
+Examples:  
 `shopify generate page`
 
 ### `Populate`
@@ -106,7 +106,7 @@ Subcommands:
 Options:  
 `--count [integer]`  
 
-Example:  
+Examples:  
 `shopify populate products --count 100`
 
 ### `Serve`
