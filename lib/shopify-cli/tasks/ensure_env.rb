@@ -21,6 +21,7 @@ module ShopifyCli
           api_key: api_key,
           secret: api_secret,
           shop: shop,
+          host: @ctx.app_metadata[:host],
           scopes: 'write_products,write_customers,write_draft_orders',
         ).write(@ctx)
         env
