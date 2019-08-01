@@ -11,7 +11,7 @@ module ShopifyCli
       end
 
       def test_run
-        @context.expects(:system).with('open https://example.com')
+        @context.expects(:system).with('open', '"https://example.com"')
         @command.call([], nil)
       end
     end

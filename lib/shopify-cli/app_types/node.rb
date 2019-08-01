@@ -39,8 +39,8 @@ module ShopifyCli
           "#{generate[:webhook]} #{selected_type}"
         end
 
-        def open(ctx)
-          ctx.system('open', "#{Project.current.env.host}/auth?shop=#{Project.current.env.shop}")
+        def open_url
+          "#{Project.current.env.host}/auth?shop=#{Project.current.env.shop}"
         end
       end
 

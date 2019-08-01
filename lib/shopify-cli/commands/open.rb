@@ -6,7 +6,7 @@ module ShopifyCli
       prerequisite_task :tunnel
 
       def call(*)
-        Project.current.app_type.open(@ctx)
+        @ctx.system('open', "\"#{Project.current.app_type.open_url}\"")
       end
 
       def self.help

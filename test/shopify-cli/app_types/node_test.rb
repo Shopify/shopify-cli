@@ -116,7 +116,7 @@ module ShopifyCli
         cmd = ShopifyCli::Commands::Open.new(@context)
         @context.expects(:system).with(
           'open',
-          'https://example.com/auth?shop=my-test-shop.myshopify.com'
+          '"https://example.com/auth?shop=my-test-shop.myshopify.com"'
         )
         cmd.call([], nil)
       end
