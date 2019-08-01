@@ -10,6 +10,7 @@ module ShopifyCli
         def setup
           super
           Helpers::AccessToken.stubs(:read).returns('myaccesstoken')
+          ShopifyCli::Helpers::API.stubs(:new).returns(Object.new)
         end
 
         def test_with_schema_args_overrides_input

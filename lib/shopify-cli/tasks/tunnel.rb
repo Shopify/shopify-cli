@@ -46,7 +46,7 @@ module ShopifyCli
         end
         pid_file = ShopifyCli::Helpers::PidFile.for(:ngrok)
         url = fetch_url(pid_file.log_path)
-        @ctx.puts("{{green:✔︎}} ngrok tunnel running at {{underline: #{url}}}")
+        @ctx.puts("{{v}} ngrok tunnel running at {{underline: #{url}}}")
         @ctx.app_metadata = { host: url }
         url
       end

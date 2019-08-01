@@ -17,6 +17,10 @@ module TestHelpers
           "a command"
         end
 
+        def generate_command(_ctx)
+          "a command"
+        end
+
         def generate
           {
             page: 'page-generate',
@@ -26,8 +30,8 @@ module TestHelpers
           }
         end
 
-        def open(ctx)
-          ctx.system('open https://example.com')
+        def open_url
+          'https://example.com'
         end
       end
     end

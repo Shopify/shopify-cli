@@ -1,4 +1,5 @@
 require 'shopify_cli'
+require 'net/http'
 
 module ShopifyCli
   module Helpers
@@ -6,8 +7,9 @@ module ShopifyCli
       include OS
       include SmartProperties
 
-      property :ctx, required: true, accepts: ShopifyCli::Context
-      property :token, required: true
+      property! :ctx, accepts: ShopifyCli::Context
+      property! :token
+      property :url, default: -> { graphql_url }
 
       class APIRequestError < StandardError; end
       class APIRequestClientError < APIRequestError; end
@@ -17,62 +19,34 @@ module ShopifyCli
       class APIRequestServerError < APIRequestRetriableError; end
       class APIRequestThrottledError < APIRequestRetriableError; end
 
-      def graphql_url
-        "https://#{Project.current.env.shop}/admin/api/#{latest_api_version}/graphql.json"
-      end
-
-      def latest_api_version
-        @latest_api_version ||= fetch_latest_api_version
-      end
-
-      def fetch_latest_api_version
-        url = "https://#{Project.current.env.shop}/admin/api/unstable/graphql.json"
-
-        query = <<~QUERY
-          {
-            publicApiVersions() {
-              handle
-              displayName
-            }
-          }
-        QUERY
-
-        _, response = post(url, query_body(query))
-        ctx.debug(response)
-        versions = response['data']['publicApiVersions']
-        latest = versions.find { |version| version['displayName'].include?('Latest') }
-        latest['handle']
-      end
-
-      def mutation(mutation)
-        query = mutation_body(mutation)
-        _, resp = post(
-          graphql_url, query
-        )
+      def mutation(mutation, variables: {})
+        _, resp = request("mutation { #{mutation} }", variables: variables)
         @ctx.debug(resp)
         resp
       end
 
-      def post(url, body = "{}")
-        request(url: url) do |uri|
-          req = Net::HTTP::Post.new(uri.request_uri)
-          req.body = body
-          req
-        end
+      def query(body, variables: {})
+        _, resp = request(body, variables: variables)
+        @ctx.debug(resp)
+        resp
       end
 
-      def request(url: raise)
-        CLI::Kit::Util.begin do
-          raise 'Invalid Usage: Block must return a request' unless block_given?
+      def gid_to_id(gid)
+        gid.split('/').last
+      end
 
-          uri = URI.parse(url)
-          http = Net::HTTP.new(uri.host, uri.port)
+      private
+
+      def request(body, variables: {}, graphql_url: url)
+        CLI::Kit::Util.begin do
+          uri = URI.parse(graphql_url)
+          http = ::Net::HTTP.new(uri.host, uri.port)
           http.use_ssl = true
 
-          request = yield(uri)
-          headers.each { |header, value| request[header] = value }
-          request["X-Shopify-Access-Token"] = token
-          response = http.request(request)
+          req = ::Net::HTTP::Post.new(uri.request_uri)
+          req.body = JSON.dump(query: body.tr("\n", ""), variables: variables)
+          headers.each { |header, value| req[header] = value }
+          response = http.request(req)
 
           case response.code.to_i
           when 200..399
@@ -93,34 +67,27 @@ module ShopifyCli
         end
       end
 
-      def mutation_body(mutation, variables: {})
-        query = <<~MUTATION
-          mutation {
-            #{mutation}
-          }
-        MUTATION
-        JSON.dump(
-          query: query.tr("\n", ""),
-          variables: variables,
-        )
+      def graphql_url
+        "https://#{Project.current.env.shop}/admin/api/#{latest_api_version}/graphql.json"
       end
 
-      def gid_to_id(gid)
-        gid.split('/').last
+      def latest_api_version
+        @latest_api_version ||= fetch_latest_api_version
+      end
+
+      def fetch_latest_api_version
+        version_url = "https://#{Project.current.env.shop}/admin/api/unstable/graphql.json"
+        query = '{ publicApiVersions() { handle displayName } }'
+        _, response = request(query, graphql_url: version_url)
+        ctx.debug(response)
+        versions = response['data']['publicApiVersions']
+        latest = versions.find { |version| version['displayName'].include?('Latest') }
+        latest['handle']
       end
 
       def pause
         sleep(1)
       end
-
-      def query_body(query, variables: {})
-        JSON.dump(
-          query: query,
-          variables: variables,
-        )
-      end
-
-      private
 
       def current_sha
         output, status = @ctx.capture2e('git', 'rev-parse', 'HEAD', chdir: ShopifyCli::ROOT)
@@ -128,11 +95,12 @@ module ShopifyCli
       end
 
       def headers
-        headers = {
+        {
           'Content-Type' => 'application/json',
           'User-Agent' => "Shopify App CLI #{ShopifyCli::VERSION} #{current_sha} | #{uname(flag: 'v')}",
+          'X-Shopify-Access-Token' => token,
+          'Authorization' => token,
         }
-        headers
       end
     end
   end

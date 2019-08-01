@@ -10,6 +10,9 @@ We expect all participants to read our [code of conduct](https://github.com/Shop
 
 All work on Shopify App CLI happens directly on GitHub. Both team members and external contributors send pull requests which go through the same review process.
 
+## Design guidelines
+When contributing to the Shopify App CLI, there are a set of [design guidelines](https://github.com/Shopify/shopify-app-cli/blob/master/.github/DESIGN.md) that should be followed. The design guidelines are meant to help create a consistent and predictable experience for all users of the tool, and help make descisions quicker when creating new commands or adding to existing ones.
+
 ## Bugs
 
 ### Where to find known issues

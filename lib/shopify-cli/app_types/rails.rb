@@ -26,7 +26,7 @@ module ShopifyCli
             page: NotImplementedError,
             billing_recurring: NotImplementedError,
             billing_one_time: NotImplementedError,
-            webhook: NotImplementedError,
+            webhook: 'rails g shopify_app:add_webhook',
           }
         end
 
@@ -35,8 +35,14 @@ module ShopifyCli
           "PORT=#{ShopifyCli::Tasks::Tunnel::PORT} bin/rails server"
         end
 
-        def open(ctx)
-          ctx.system('open', "#{Project.current.env.host}/login?shop=#{Project.current.env.shop}")
+        def generate_command(selected_type)
+          parts = selected_type.downcase.split("_")
+          selected_type = parts[0..-2].join("_") + "/" + parts[-1]
+          "#{generate[:webhook]} -t #{selected_type} -a #{Project.current.env.host}/webhooks/#{selected_type.downcase}"
+        end
+
+        def open_url
+          "#{Project.current.env.host}/login?shop=#{Project.current.env.shop}"
         end
       end
 

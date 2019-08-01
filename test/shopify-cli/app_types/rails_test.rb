@@ -4,10 +4,25 @@ require 'semantic/semantic'
 module ShopifyCli
   module AppTypes
     class RailsBuildTest < MiniTest::Test
+      include TestHelpers::Project
+
       def setup
         root = Dir.mktmpdir
+        project_context('app_types', 'rails')
         @context = TestHelpers::FakeContext.new(root: root)
         @app = ShopifyCli::AppTypes::Rails.new(ctx: @context)
+      end
+
+      def test_generate_command
+        {
+          "SHOP_UPDATE" => "shop/update",
+          "DRAFT_ORDER_UPDATE" => "draft_order/update",
+          "APP_PURCHASE_ONE_TIME_CREATE" => "app_purchase_one_time/create",
+        }.each do |topic, expected|
+          actual = Rails.generate_command(topic)
+          expected_cmd = "rails g shopify_app:add_webhook -t #{expected} -a https://example.com/webhooks/#{expected}"
+          assert_equal expected_cmd, actual
+        end
       end
 
       def test_build_creates_rails_app
@@ -51,8 +66,8 @@ module ShopifyCli
         end
         output = io.join
 
-        assert_match(
-          CLI::UI.fmt('Run {{command:shopify serve}} to start the local development server'),
+        assert(
+          CLI::UI.fmt("{{*}} Run {{command:shopify serve}} to start the local development server"),
           output
         )
       end
@@ -86,9 +101,10 @@ module ShopifyCli
 
       def test_open_command
         cmd = ShopifyCli::Commands::Open.new(@context)
+        cmd.stubs(:mac?).returns(true)
         @context.expects(:system).with(
           'open',
-          'https://example.com/login?shop=my-test-shop.myshopify.com'
+          '"https://example.com/login?shop=my-test-shop.myshopify.com"'
         )
         cmd.call([], nil)
       end

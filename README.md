@@ -1,8 +1,16 @@
-# shopify-app-cli [![License: MIT](https://img.shields.io/badge/License-MIT-green.svg)](LICENSE.md)[![Build Status](https://travis-ci.com/Shopify/shopify-app-cli.svg?token=qtPazgjyosjEEgxgq7VZ&branch=master)](https://travis-ci.com/Shopify/shopify-app-cli)
+# Shopify App CLI [![License: MIT](https://img.shields.io/badge/License-MIT-green.svg)](LICENSE.md)[![Build Status](https://travis-ci.com/Shopify/shopify-app-cli.svg?token=qtPazgjyosjEEgxgq7VZ&branch=master)](https://travis-ci.com/Shopify/shopify-app-cli)
 
 Shopify App CLI helps you build Shopify apps faster. It automates many common tasks in the development process and lets you quickly add popular features, such as billing and webhooks.
 
-> NOTE: This tool is currently a beta release in active development. Some features may be absent or incomplete, and functionality may change without warning. We welcome your feedback! Please check the [contributing guide](https://github.com/Shopify/shopify-app-cli/blob/master/.github/CONTRIBUTING.md) for notes on how to file bug reports and pull requests.
+> ⚠️ NOTE: This tool is currently a beta release in active development. Some features may be absent or incomplete, and functionality may change without warning. We welcome your feedback! Please check the [contributing guide](https://github.com/Shopify/shopify-app-cli/blob/master/.github/CONTRIBUTING.md) for notes on how to file bug reports and pull requests.
+
+#### Table of Contents
+
+- [Install](#install)
+- [Getting started](#getting-started)
+- [Commands](#commands)
+- [Contributing to development](#developing-shopify-app-cli)
+- [Uninstall](#uninstalling-shopify-app-cli)
 
 ## Install
 
@@ -157,9 +165,9 @@ The `update` command will upgrade your production instance of the CLI to use the
 
 ## Developing Shopify App CLI
 
-This is an [open-source](https://github.com/Shopify/shopify-app-cli/blob/master/.github/LICENSE.md) tool and developers are [invited to contribute](https://github.com/Shopify/shopify-app-cli/blob/master/.github/CONTRIBUTING.md) to it.
+This is an [open-source](https://github.com/Shopify/shopify-app-cli/blob/master/.github/LICENSE.md) tool and developers are [invited to contribute](https://github.com/Shopify/shopify-app-cli/blob/master/.github/CONTRIBUTING.md) to it. Please check the [code of conduct](https://github.com/Shopify/shopify-app-cli/blob/master/.github/CODE_OF_CONDUCT.md) and the [design guidelines](https://github.com/Shopify/shopify-app-cli/blob/master/.github/DESIGN.md) before you begin.
 
-That often requires having multiple instances of Shopify App CLI installed for testing purposes. There are two commands that give developers greater control over their Shopify App CLI environment:
+Developing Shopify App CLI often requires having multiple instances of the tool installed for testing purposes. There are two commands that give developers greater control over their Shopify App CLI environment:
 
 
 ### Load a development instance
@@ -201,3 +209,25 @@ rake console
 irb(main):001:0> ShopifyCli::ROOT
 => "/Users/me/src/github.com/Shopify/shopify-cli"
 ```
+
+## Uninstalling Shopify App CLI
+
+There are two steps to completely uninstall Shopify App CLI:
+
+1. Delete the CLI files.
+1. Remove the `shopify` command from your shell profile.
+
+### Delete the CLI files
+
+With [the standard installation process](https://github.com/Shopify/shopify-app-cli#install), Shopify App CLI is installed in your home directory. All the files are contained in a hidden directory called `.shopify-app-cli`, which you can delete to uninstall.
+
+### Remove the `shopify` command from your shell
+
+During the install process, Shopify App CLI adds a line to your shell configuration. This line is typically located in the `.bash_profile` file in your home directory (depending on your system, it may also be found in `.bash_login` or `.profile`). It will look similar to this:
+
+```sh
+# The line won’t look exactly like this. `HOME_DIR` will instead be the absolute path to your home directory
+if [[ -f /HOME_DIR/.shopify-cli/shopify.sh ]]; then source /HOME_DIR/.shopify-cli/shopify.sh; fi
+```
+
+Deleting or commenting out this line will remove `shopify` as a command. You may need to reload your shell.

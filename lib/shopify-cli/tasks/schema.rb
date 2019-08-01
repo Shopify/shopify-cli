@@ -5,6 +5,8 @@ module ShopifyCli
     class Schema < ShopifyCli::Task
       include ShopifyCli::Helpers::GraphQL::Queries
 
+      FILEPATH = File.join(ShopifyCli::TEMP_DIR, "shopify_schema.json")
+
       def call(ctx)
         @ctx = ctx
         @api = Helpers::API.new(ctx: ctx, token: Helpers::AccessToken.read(ctx))
@@ -13,23 +15,20 @@ module ShopifyCli
       end
 
       def get
-        _, resp = @api.post(@api.graphql_url, @api.query_body(introspection))
-        File.write(File.join(ShopifyCli::TEMP_DIR, 'shopify_schema.json'), JSON.dump(resp))
+        File.write(FILEPATH, JSON.dump(@api.query(introspection)))
       rescue Helpers::API::APIRequestUnauthorizedError
         ShopifyCli::Tasks::AuthenticateShopify.call(@ctx)
-        get
+        retry
       end
 
       def shop_name
-        env = Helpers::EnvFile.read
-        @shop_name = env.shop
+        @shop_name = Helpers::EnvFile.read.shop
       end
 
       def schema_file
         @schema_file ||= begin
-          path = File.join(ShopifyCli::TEMP_DIR, "shopify_schema.json")
-          get unless File.exist?(path)
-          JSON.parse(File.read(path))
+          get unless File.exist?(FILEPATH)
+          JSON.parse(File.read(FILEPATH))
         end
       end
     end
