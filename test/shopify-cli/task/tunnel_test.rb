@@ -10,6 +10,11 @@ module ShopifyCli
         super
       end
 
+      def test_auth_calls_ngrok_authtoken
+        @context.expects(:system).with("#{ShopifyCli::ROOT}/ngrok", 'authtoken', 'token')
+        Tunnel.new.auth(@context, 'token')
+      end
+
       def test_start_running_returns_url
         ShopifyCli::Helpers::ProcessSupervision.stubs(:running?)
           .with(:ngrok).returns(:true)

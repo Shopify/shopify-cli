@@ -51,6 +51,12 @@ module ShopifyCli
         url
       end
 
+      def auth(ctx, token)
+        install
+
+        ctx.system(File.join(ShopifyCli::ROOT, 'ngrok'), 'authtoken', token)
+      end
+
       def running?
         ShopifyCli::Helpers::ProcessSupervision.running?(:ngrok)
       end

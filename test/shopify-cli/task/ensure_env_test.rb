@@ -11,6 +11,7 @@ module ShopifyCli
         @context = TestHelpers::FakeContext.new(root: root)
         Project.write(@context, :fake)
         FileUtils.cd(@context.root)
+        Tasks::Tunnel.stubs(:call)
       end
 
       def test_ask_strips_out_https_from_shop
