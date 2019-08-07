@@ -46,7 +46,7 @@ is_linux() {
   test -n "${linux}"
 }
 
-install_dir="${XDG_RUNTIME_DIR:-$HOME}/.shopify-app-cli"
+install_dir="$HOME/.shopify-app-cli"
 
 postmsg() {
   echo -e "\x1b[36mshopify-app-cli\x1b[0m is installed!"
@@ -253,7 +253,7 @@ install_bash_shell_shim() {
     {
       echo ''
       echo '# load shopify-app-cli, but only if present and the shell is interactive'
-      echo "if [[ -f "${install_dir}/shopify.sh" ]]; then source "${install_dir}/shopify.sh"; fi"
+      echo "if [[ -f \"${install_dir}/shopify.sh\" ]]; then source \"${install_dir}/shopify.sh\"; fi"
     } >> "${bp}"
   fi
 
@@ -261,8 +261,8 @@ install_bash_shell_shim() {
     {
       echo ''
       echo '# load shopify-app-cli, but only if present and the shell is interactive'
-      echo 'if [[ -f "${install_dir}/shopify.sh"  ]] && [[ $- == *i* ]]; then'
-      echo '  source "${install_dir}/shopify.sh"'
+      echo "if [[ -f \"${install_dir}/shopify.sh\"  ]] && [[ $- == *i* ]]; then"
+      echo "  source \"${install_dir}/shopify.sh\""
       echo 'fi'
     } >> "${HOME}/.bashrc"
   fi
