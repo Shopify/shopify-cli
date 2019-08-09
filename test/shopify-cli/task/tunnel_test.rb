@@ -39,6 +39,20 @@ module ShopifyCli
         end
       end
 
+      def test_start_displays_url_with_account
+        with_log('ngrok_account') do
+          ShopifyCli::Helpers::ProcessSupervision.stubs(:running?).returns(false)
+          ShopifyCli::Helpers::ProcessSupervision.expects(:start).with(
+            :ngrok,
+            "exec #{File.join(ShopifyCli::ROOT, 'ngrok')} http -log=stdout -log-level=debug 8081"
+          )
+          @context.expects(:puts).with(
+            "{{v}} ngrok tunnel running at {{underline: https://example.ngrok.io}}, with account Tom Cruise"
+          )
+          assert_equal 'https://example.ngrok.io', ShopifyCli::Tasks::Tunnel.new.call(@context)
+        end
+      end
+
       def test_start_raises_error_on_ngrok_failure
         Tunnel.any_instance.stubs(:running?).returns(false)
         with_log('ngrok_error') do
