@@ -35,7 +35,7 @@ When trying to create parity with an existing GUI based feature, consider the la
 For example when creating a `dev-store` the data model requires up to 8 fields to be filled in. When creating a CLI command to create a `dev-store`, don't ask the user for all 8 fields - auto-fill all 8 fields with smart generated data. If a field requires an address dont generate an animal name, try to get as close as possible to the format the data expects.
 
 ### Allow arguments for key options
-Argumemnts allow the user to override a commands default execution. For example if we run `shopify populate products` the default will be to create 5 products. However if the user wanted more then 5 products to be generated they could use an argument to override the deault which would look it would look like this `shopify populate products --count=20`.
+Argumemnts allow the user to override a commands default execution. For example if we run `shopify populate products` the default will be to create 5 products. However if the user wanted more then 5 products to be generated they could use an argument to override the defaults which would look it would look like this `shopify populate products --count=20`.
 
 When creating a command or subcommand consider which of the defaults a user may want to override. Taking our example above for `dev-stores`, an argument may be passed in to override generating a `store name` or `password`, if the user had specific values in mind for those fields.
 
