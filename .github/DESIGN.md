@@ -1,5 +1,16 @@
 # Shopify App CLI design guidelines
 
+#### Table of Contents
+
+- [Introduction](#introduction)
+- [Assumptions](#assumptions)
+- [Components of a well designed command](#Components-of-a-well-designed-command)
+- [Design Principles](#design-principles)
+- [CLI UI states](#CLI-UI-states)
+- [Commands](#commands)
+
+## Introduction
+
 The purpose of this doc is to outline all the heuristics, patterns, and templates we are using in the Shopify App CLI tool. All the content is based on the CLI Design and Style Guidelines doc, as well as the guidance on the Shopify cli-ui Github repo.
 
 The most important principle to follow is **speed**. CLI tools are built to be extremely fast to use and to perform tasks quickly. If there is ever a collision between heuristics, default to whatever results in the fastest perceived or actual performance.
@@ -14,6 +25,30 @@ The user understands the basic mechanics of a CLI:
 - there is a persistent “help” command that will educate them on specifics of each command/subcommand
 - CTRL + C quits any running task
 - how to navigate and manipulate the filesystem via the command line: cd and mkdir
+
+## Components of a well designed command
+When creating a new command or adding to an existing command there are a few things to keep in mind.
+
+### Reduce user input
+When trying to create parity with an existing GUI based feature, consider the larger task at had and build your command to accomplish that goal. 
+
+For example when creating a dev-store the data model requires up to 8 fields to be filled in. When creating a CLI command, the ideal experience woulnt be to ask the user for all 8 of those fields - the ideal experience would be to auto-fill those fields with smart generated data. If a field requires an address dont fill it with an animal name, try to get as close as possible to the expected data.
+
+### Allow arguments for key options
+Argumemnts allow the user to override a commands default execution. For example if we run `shopify populate products` the default will be to create 5 products. However if the user knew they wanted more they can use an argument to override the deault, and it would look like this `shopify populate products --count=20`.
+
+When creating a command or subcommand consider which of the defaults a user may want to override. Taking our eample above for `dev-stores` an argumwent may be passed in to override generating a `store name` or `password`, if the user wants to specify those.
+
+### Add to the Help command
+Help is the primary way a user will find more information about how to use your command. This is a pattern built in to the CLI mental model and should not be overlooked.
+
+When adding a new command or subcommand always make sure it is documented in the Help pages properly. There is a standard pattern we use which can be found by running `shopify help [command]`.
+
+### Other surface areas to consider
+The nature of CLIs usually means they are writing files or lines of code in files, as well as making network calls. 
+
+When your command or subcommand creates new files or adds lines of code to existing files, consider adding comments or content in those files that describe hjow to use that particular feature. It could be a link to the docs to explain more, it could contain multiple commented out examples of how to use the feature, etc. Think about how to help the user work with the feature or file most effectively.
+
 
 ## Design principles
 High-level guiding principles to help make decisions faster when creating a CLI UI.
@@ -48,6 +83,11 @@ High-level guiding principles to help make decisions faster when creating a CLI 
 
 ✅ Have opinion on smart defaults that the user can override with arguments and options.  
 ❌ Defer multiple options or inputs to after the command is executing.
+
+**Build your command with smart defaults**  
+
+✅ Design your command to be completed with the least amount of user intervention. This may mean smatrt defaults and generating content to speed up the completing of the task.
+❌ Ask the user for ever possible option as a part of executing the task.
 
 **Let the user opt in to verbosity.**  
 
