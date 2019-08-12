@@ -10,6 +10,11 @@ module ShopifyCli
         super
       end
 
+      def test_auth_calls_ngrok_authtoken
+        @context.expects(:system).with("#{ShopifyCli::ROOT}/ngrok", 'authtoken', 'token')
+        Tunnel.new.auth(@context, 'token')
+      end
+
       def test_start_running_returns_url
         ShopifyCli::Helpers::ProcessSupervision.stubs(:running?)
           .with(:ngrok).returns(:true)
@@ -31,6 +36,20 @@ module ShopifyCli
           )
           assert_equal 'https://example.ngrok.io', ShopifyCli::Tasks::Tunnel.new.call(@context)
           assert_equal 'https://example.ngrok.io', @context.app_metadata[:host]
+        end
+      end
+
+      def test_start_displays_url_with_account
+        with_log('ngrok_account') do
+          ShopifyCli::Helpers::ProcessSupervision.stubs(:running?).returns(false)
+          ShopifyCli::Helpers::ProcessSupervision.expects(:start).with(
+            :ngrok,
+            "exec #{File.join(ShopifyCli::ROOT, 'ngrok')} http -log=stdout -log-level=debug 8081"
+          )
+          @context.expects(:puts).with(
+            "{{v}} ngrok tunnel running at {{underline: https://example.ngrok.io}}, with account Tom Cruise"
+          )
+          assert_equal 'https://example.ngrok.io', ShopifyCli::Tasks::Tunnel.new.call(@context)
         end
       end
 

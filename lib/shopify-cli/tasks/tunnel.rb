@@ -45,10 +45,20 @@ module ShopifyCli
           ShopifyCli::Helpers::ProcessSupervision.start(:ngrok, ngrok_command)
         end
         pid_file = ShopifyCli::Helpers::PidFile.for(:ngrok)
-        url = fetch_url(pid_file.log_path)
-        @ctx.puts("{{v}} ngrok tunnel running at {{underline: #{url}}}")
-        @ctx.app_metadata = { host: url }
-        url
+        log = fetch_url(pid_file.log_path)
+        if log.account
+          @ctx.puts("{{v}} ngrok tunnel running at {{underline: #{log.url}}}, with account #{log.account}")
+        else
+          @ctx.puts("{{v}} ngrok tunnel running at {{underline: #{log.url}}}")
+        end
+        @ctx.app_metadata = { host: log.url }
+        log.url
+      end
+
+      def auth(ctx, token)
+        install
+
+        ctx.system(File.join(ShopifyCli::ROOT, 'ngrok'), 'authtoken', token)
       end
 
       def running?
@@ -72,27 +82,52 @@ module ShopifyCli
       end
 
       def fetch_url(log_path)
-        counter = 0
-        while counter < TIMEOUT
-          log_content = File.read(log_path)
-          result = log_content.match(/msg="started tunnel".*url=(https:\/\/.+)/)
-          return result[1] if result
-
-          counter += 1
-          sleep(1)
-
-          error = log_content.scan(/msg="command failed" err="([^"]+)"/).flatten
-          unless error.empty?
-            stop(@ctx)
-            raise NgrokError, error.first
-          end
-        end
-
-        raise FetchUrlError, "Unable to fetch external url"
+        LogParser.new(log_path)
+      rescue RuntimeError => e
+        stop(@ctx)
+        raise e.class, e.message
       end
 
       def ngrok_command
         "exec #{File.join(ShopifyCli::ROOT, 'ngrok')} http -log=stdout -log-level=debug #{PORT}"
+      end
+
+      class LogParser
+        attr_reader :url, :account
+
+        def initialize(log_path)
+          @log_path = log_path
+          counter = 0
+          while counter < TIMEOUT
+            parse
+            return if url
+            counter += 1
+            sleep(1)
+          end
+
+          raise FetchUrlError, "Unable to fetch external url" unless url
+        end
+
+        def parse
+          @log = File.read(@log_path)
+          unless error.empty?
+            raise NgrokError, error.first
+          end
+          parse_account
+          parse_url
+        end
+
+        def parse_url
+          @url, _ = @log.match(/msg="started tunnel".*url=(https:\/\/.+)/)&.captures
+        end
+
+        def parse_account
+          @account, _ = @log.match(/AccountName:([\w\s]+) SessionDuration/)&.captures
+        end
+
+        def error
+          @log.scan(/msg="command failed" err="([^"]+)"/).flatten
+        end
       end
     end
   end
