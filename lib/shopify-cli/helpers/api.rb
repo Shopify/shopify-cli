@@ -12,6 +12,7 @@ module ShopifyCli
       property :url, default: -> { graphql_url }
 
       class APIRequestError < StandardError; end
+      class APIRequestNotFoundError < APIRequestError; end
       class APIRequestClientError < APIRequestError; end
       class APIRequestUnauthorizedError < APIRequestClientError; end
       class APIRequestUnexpectedError < APIRequestError; end
@@ -53,6 +54,8 @@ module ShopifyCli
             [response.code.to_i, JSON.parse(response.body)]
           when 401
             raise APIRequestUnauthorizedError, "#{response.code}\n#{response.body}"
+          when 404
+            raise APIRequestNotFoundError, "#{response.code}\n#{response.body}"
           when 429
             raise APIRequestThrottledError, "#{response.code}\n#{response.body}"
           when 400..499
@@ -99,7 +102,7 @@ module ShopifyCli
           'Content-Type' => 'application/json',
           'User-Agent' => "Shopify App CLI #{ShopifyCli::VERSION} #{current_sha} | #{uname(flag: 'v')}",
           'X-Shopify-Access-Token' => token,
-          'Authorization' => token,
+          'Authorization' => "Bearer #{token}",
         }
       end
     end

@@ -12,14 +12,23 @@ module ShopifyCli
           .expects(:new)
           .with(
             client_id: 'fbdb2649-e327-4907-8f67-908d24cfd7e3',
-            scopes: ['openid'],
+            scopes: AuthenticateIdentity::SCOPES,
           ).returns(@oauth_client)
         @oauth_client
           .expects(:authenticate)
           .with("https://accounts.shopify.com/oauth")
           .returns("this_is_token")
-        Helpers::PkceToken.expects(:write).with("this_is_token")
-        AuthenticateIdentity.new.call(@context)
+        @oauth_client
+          .expects(:exchange_token)
+          .with(
+            "https://accounts.shopify.com/oauth",
+            token: "this_is_token",
+            audience: '271e16d403dfa18082ffb3d197bd2b5f4479c3fc32736d69296829cbb28d41a6',
+            scopes: AuthenticateIdentity::SCOPES,
+          )
+          .returns("this_is_exchange_token")
+        Helpers::PkceToken.expects(:write).with("this_is_exchange_token")
+        AuthenticateIdentity.call(@context)
       end
 
       def test_handles_oauth_errors
@@ -30,7 +39,7 @@ module ShopifyCli
           .with("https://accounts.shopify.com/oauth")
           .raises(OAuth::Error, 'invalid request')
         assert_nothing_raised do
-          AuthenticateIdentity.new.call(@context)
+          AuthenticateIdentity.call(@context)
         end
       end
     end

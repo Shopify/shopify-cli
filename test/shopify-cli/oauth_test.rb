@@ -81,6 +81,32 @@ module ShopifyCli
       assert_equal 'accesstoken123', client.authenticate(endpoint)
     end
 
+    def test_exchange_token
+      endpoint = "https://example.com/auth"
+      client = OAuth.new(client_id: 'key', scopes: 'test,one', secret: 'secret')
+
+      token_query = {
+        grant_type: "urn:ietf:params:oauth:grant-type:token-exchange",
+        requested_token_type: "urn:ietf:params:oauth:token-type:access_token",
+        subject_token_type: "urn:ietf:params:oauth:token-type:access_token",
+        client_id: 'key',
+        audience: 'audience',
+        scope: 'scopes',
+        subject_token: 'test_token',
+      }
+
+      stub_request(:post, "#{endpoint}/token")
+        .with(body: URI.encode_www_form(token_query))
+        .to_return(status: 200, body: '{ "access_token": "accesstoken123" }', headers: {})
+
+      assert_equal 'accesstoken123', client.exchange_token(
+        endpoint,
+        token: "test_token",
+        audience: "audience",
+        scopes: "scopes",
+      )
+    end
+
     def test_authenticate_with_invalid_request
       endpoint = "https://example.com/auth"
       client = OAuth.new(client_id: 'key', scopes: 'test,one')
