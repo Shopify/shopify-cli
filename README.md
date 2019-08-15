@@ -49,13 +49,13 @@ Edit your app’s whitelisted redirection URLs in the Partner Dashboard by navig
 For Node.js Apps:
 ```
 https://<LIVE_NGROK_URL>/auth/callback
-http://localhost:3456
+http://app-cli-loopback.shopifyapps.com:3456
 ```
 
 For Rails Apps:
 ```
 https://<LIVE_NGROK_URL>/auth/shopify/callback
-http://localhost:3456
+http://app-cli-loopback.shopifyapps.com:3456
 ```
 
 The first URL handles the authentication flow for adding your app to a Shopify development store. The second is currently necessary to allow your local development server to make Shopify API requests on behalf of your development app.
