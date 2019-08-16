@@ -69,6 +69,7 @@ module ShopifyCli
             ctx.debug(mutation)
             run_mutation
           end
+          completion_message
         end
 
         def input_options
