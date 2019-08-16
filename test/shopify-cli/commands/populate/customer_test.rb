@@ -23,7 +23,7 @@ module ShopifyCli
           Resource.any_instance.stubs(:price).returns('1.00')
           @resource = Customer.new(ctx: @context, args: ['-c 1'])
           @context.expects(:done).with(
-            "customer 'first last' created: https://my-test-shop.myshopify.com/admin/customers/12345678"
+            "first last added to {{green:my-test-shop.myshopify.com}} at https://my-test-shop.myshopify.com/admin/customers/12345678"
           )
           @resource.populate
         end

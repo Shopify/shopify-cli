@@ -21,20 +21,8 @@ module ShopifyCli
 
         def message(data)
           ret = data['productCreate']['product']
-          @store = ret['vendor']
           id = @api.gid_to_id(ret['id'])
-          "#{ret['title']} added to {{green:#{@store}}} at #{admin_url('product', id)}"
-        end
-
-        def success
-          <<~SUCCESS
-            {{v}} Successfully added products to {{green:#{@store}}}
-            {{*}} View all products at some https://#{Project.current.env.shop}/admin/products
-          SUCCESS
-        end
-
-        def completion_message
-          ctx.puts(success)
+          "#{ret['title']} added to {{green:#{Project.current.env.shop}}} at #{admin_url}products/#{id}"
         end
       end
     end

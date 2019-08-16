@@ -23,7 +23,7 @@ module ShopifyCli
           Resource.any_instance.stubs(:price).returns('1.00')
           @resource = DraftOrder.new(ctx: @context, args: ['-c 1'])
           @context.expects(:done).with(
-            "draft order created: https://my-test-shop.myshopify.com/admin/draft_orders/12345678"
+            "DraftOrders added to {{green:my-test-shop.myshopify.com}} at https://my-test-shop.myshopify.com/admin/draft_order/12345678"
           )
           @resource.populate
         end
