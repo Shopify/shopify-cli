@@ -131,7 +131,7 @@ module ShopifyCli
         def success
           <<~SUCCESS
             {{v}} Successfully added #{self.class.type}s to {{green:#{Project.current.env.shop}}}
-            {{*}} View all #{self.class.type}s at #{admin_url}#{self.class.type}s
+            {{*}} View all #{self.class.type}s at {{underline:#{admin_url}#{self.class.type}s}}
           SUCCESS
         end
 
