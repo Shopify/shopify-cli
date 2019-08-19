@@ -69,6 +69,7 @@ module ShopifyCli
             ctx.debug(mutation)
             run_mutation
           end
+          completion_message
         end
 
         def input_options
@@ -127,8 +128,19 @@ module ShopifyCli
           ctx.done(message(resp['data']))
         end
 
-        def admin_url(type, id)
-          "https://#{Project.current.env.shop}/admin/#{type}s/#{id}"
+        def success
+          <<~SUCCESS
+            {{v}} Successfully added #{self.class.type}s to {{green:#{Project.current.env.shop}}}
+            {{*}} View all #{self.class.type}s at #{admin_url}#{self.class.type}s
+          SUCCESS
+        end
+
+        def completion_message
+          ctx.puts(success)
+        end
+
+        def admin_url
+          "https://#{Project.current.env.shop}/admin/"
         end
 
         def price
