@@ -33,6 +33,10 @@ module TestHelpers
         def open_url
           'https://example.com'
         end
+
+        def webhook_location
+          "im fake"
+        end
       end
     end
 

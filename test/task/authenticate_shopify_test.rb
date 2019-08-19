@@ -11,6 +11,7 @@ module ShopifyCli
         ShopifyCli::OAuth
           .expects(:new)
           .with(
+            service: 'admin',
             client_id: 'apikey',
             secret: 'secret',
             scopes: nil,
@@ -20,22 +21,7 @@ module ShopifyCli
         @oauth_client
           .expects(:authenticate)
           .with("https://my-test-shop.myshopify.com/admin/oauth")
-          .returns("this_is_token")
-        Helpers::AccessToken.expects(:write).with("this_is_token")
         AuthenticateShopify.new.call(@context)
-      end
-
-      def test_handles_oauth_errors
-        @oauth_client = Object.new
-        ShopifyCli::OAuth.stubs(:new).returns(@oauth_client)
-        @oauth_client
-          .expects(:authenticate)
-          .with("https://my-test-shop.myshopify.com/admin/oauth")
-          .raises(OAuth::Error, 'invalid request')
-        @oauth_client.expects(:redirect_uri).returns("http://localhost:3456")
-        assert_nothing_raised do
-          AuthenticateShopify.new.call(@context)
-        end
       end
     end
   end

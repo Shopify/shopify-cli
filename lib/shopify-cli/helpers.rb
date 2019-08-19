@@ -14,6 +14,7 @@ module ShopifyCli
     autoload :Ruby, 'shopify-cli/helpers/ruby'
     autoload :SchemaParser, 'shopify-cli/helpers/schema_parser'
     autoload :ShopifySchema, 'shopify-cli/helpers/shopify_schema'
+    autoload :Store, 'shopify-cli/helpers/store'
     autoload :String, 'shopify-cli/helpers/string'
   end
 end
