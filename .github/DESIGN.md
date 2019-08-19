@@ -30,12 +30,12 @@ The user understands the following mechanics of a CLI:
 When creating a new command or subcommand there are a few things to keep in mind.
 
 ### What is the quickest way to execute a command?
-Commands are best execuexecuted autonomously. Most of the time the command should be self contained and should not requre additional input from the user. For example when running `shopify populate products` the command will execute without additional inputs required from the user even though the command could ask for things like `product name`, `price`, etc.
+Commands are best executed autonomously. Most of the time the command should be self contained and should not requre additional input from the user. For example when running `shopify populate products` the command will execute without additional inputs required from the user even though the command could ask for things like `product name`, `price`, etc.
 
 When creating a new command or subcommand consider how much information is absolutely necessary for the command to execute autonomously. If a command always requires arguments or additional information then  adding smart defaults could help make inputting the command faster. 
 
 ### Add arguments for key overrides
-Argumemnts allow the user to override a commands default execution. For example if we run `shopify populate products` the default will be to create 5 products. However if the user wanted more then 5 products to be generated they could use an argument to override the defaults which would look it would look like this `shopify populate products --count=20`.
+Arguments allow the user to override a commands default execution. For example if we run `shopify populate products` the default will be to create 5 products. However if the user wanted more then 5 products to be generated they could use an argument to override the defaults which would look it would look like this `shopify populate products --count=20`.
 
 When creating a new command or subcommand consider what are the smart defaults included in the command, and what are the arguments you should expose to allow a user to override it.
 
