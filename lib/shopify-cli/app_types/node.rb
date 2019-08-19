@@ -29,9 +29,18 @@ module ShopifyCli
         def generate
           {
             page: 'npm run-script generate-page --silent',
+            empty_state: 'npm run-script generate-empty-state --silent',
+            list: 'npm run-script generate-list-page --silent',
             billing_recurring: 'npm run-script generate-recurring-billing --silent',
             billing_one_time: 'npm run-script generate-one-time-billing --silent',
             webhook: 'npm run-script generate-webhook --silent',
+          }
+        end
+
+        def page_types
+          {
+            'empty-state' => :empty_state,
+            'list' => :list
           }
         end
 
