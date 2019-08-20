@@ -23,7 +23,8 @@ module ShopifyCli
           Resource.any_instance.stubs(:price).returns('1.00')
           @resource = Product.new(ctx: @context, args: ['-c 1'])
           @context.expects(:done).with(
-            "product 'fake product' created: https://my-test-shop.myshopify.com/admin/products/12345678"
+            "fake product added to {{green:my-test-shop.myshopify.com}} at" \
+            " {{underline:https://my-test-shop.myshopify.com/admin/products/12345678}}"
           )
           @resource.populate
         end

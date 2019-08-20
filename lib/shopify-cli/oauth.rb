@@ -14,7 +14,7 @@ module ShopifyCli
 
     class Error < StandardError; end
 
-    REDIRECT_HOST = "http://localhost"
+    REDIRECT_HOST = "http://app-cli-loopback.shopifyapps.com"
     TEMPLATE = %{HTTP/1.1 200
       Content-Type: text/html
 
@@ -48,9 +48,7 @@ module ShopifyCli
     def authenticate(url)
       listen_local
       initiate_authentication(url)
-      res = request_token(url, code: receive_access_code)
-      raise Error, JSON.parse(res.body)['error_description'] unless res.is_a?(Net::HTTPSuccess)
-      JSON.parse(res.body)["access_token"]
+      request_token(url, code: receive_access_code)
     end
 
     def redirect_uri
@@ -72,6 +70,19 @@ module ShopifyCli
       )
     end
 
+    def exchange_token(url, token:, audience:, scopes:)
+      post_token_request(
+        "#{url}#{token_path}",
+        grant_type: "urn:ietf:params:oauth:grant-type:token-exchange",
+        requested_token_type: "urn:ietf:params:oauth:token-type:access_token",
+        subject_token_type: "urn:ietf:params:oauth:token-type:access_token",
+        client_id: client_id,
+        audience: audience,
+        scope: scopes,
+        subject_token: token,
+      )
+    end
+
     private
 
     def initiate_authentication(url)
@@ -89,7 +100,7 @@ module ShopifyCli
     end
 
     def listen_local
-      server = TCPServer.new('localhost', port)
+      server = TCPServer.new('127.0.0.1', port)
       @server_thread ||= Thread.new do
         Thread.current.abort_on_exception = true
         begin
@@ -120,19 +131,27 @@ module ShopifyCli
     end
 
     def request_token(url, code:)
-      uri = URI.parse("#{url}#{token_path}")
+      post_token_request(
+        "#{url}#{token_path}",
+        {
+          grant_type: :authorization_code,
+          code: code,
+          redirect_uri: redirect_uri,
+          client_id: client_id,
+        }.merge(confirmation_param)
+      )
+    end
+
+    def post_token_request(url, params)
+      uri = URI.parse(url)
       https = Net::HTTP.new(uri.host, uri.port)
       https.use_ssl = true
       request = Net::HTTP::Post.new(uri.path)
       request['User-Agent'] = "Shopify App CLI #{::ShopifyCli::VERSION}"
-      params = {
-        grant_type: :authorization_code,
-        code: code,
-        redirect_uri: redirect_uri,
-        client_id: client_id,
-      }.merge(confirmation_param)
       request.body = URI.encode_www_form(params)
-      https.request(request)
+      res = https.request(request)
+      raise Error, JSON.parse(res.body)['error_description'] unless res.is_a?(Net::HTTPSuccess)
+      JSON.parse(res.body)["access_token"]
     end
 
     def respond_with(resp, status, message)
