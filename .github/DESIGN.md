@@ -1,5 +1,16 @@
 # Shopify App CLI design guidelines
 
+#### Table of Contents
+
+- [Introduction](#introduction)
+- [Assumptions](#assumptions)
+- [Components of a well designed command](#Components-of-a-well-designed-command)
+- [Design Principles](#design-principles)
+- [CLI UI states](#CLI-UI-states)
+- [Commands](#commands)
+
+## Introduction
+
 The purpose of this doc is to outline all the heuristics, patterns, and templates we are using in the Shopify App CLI tool. All the content is based on the CLI Design and Style Guidelines doc, as well as the guidance on the Shopify cli-ui Github repo.
 
 The most important principle to follow is **speed**. CLI tools are built to be extremely fast to use and to perform tasks quickly. If there is ever a collision between heuristics, default to whatever results in the fastest perceived or actual performance.
@@ -9,11 +20,37 @@ To help visualize all the components and states available in the Shopify App CLI
 *Figma is a free web-based design tool.*
 
 ## Assumptions
-The user understands the basic mechanics of a CLI:
-- can type in commands to execute tasks
-- there is a persistent “help” command that will educate them on specifics of each command/subcommand
-- CTRL + C quits any running task
-- how to navigate and manipulate the filesystem via the command line: cd and mkdir
+The user understands the following mechanics of a CLI:
+- type in commands to execute tasks
+- there is a persistent `help` command that will educate them on specifics of each command/subcommand
+- `CTRL + C` quits any running task
+- how to navigate and manipulate the filesystem via the command line: `cd` and `mkdir`
+
+## Components of a well designed command
+When creating a new command or subcommand there are a few things to keep in mind.
+
+### What is the quickest way to execute a command?
+Commands are best executed autonomously. Most of the time the command should be self contained and should not requre additional input from the user. For example when running `shopify populate products` the command will execute without additional inputs required from the user even though the command could ask for things like `product name`, `price`, etc.
+
+When creating a new command or subcommand consider how much information is absolutely necessary for the command to execute autonomously. If a command always requires arguments or additional information then  adding smart defaults could help make inputting the command faster. 
+
+### Add arguments for key overrides
+Arguments allow the user to override a commands default execution. For example if we run `shopify populate products` the default will be to create 5 products. However if the user wanted more then 5 products to be generated they could use an argument to override the defaults which would look it would look like this `shopify populate products --count=20`.
+
+When creating a new command or subcommand consider what are the smart defaults included in the command, and what are the arguments you should expose to allow a user to override it.
+
+### Always add to `Help`
+Help is the primary way a user will find more information about how to use a command. This is a pattern built in to the CLI mental model and should not be overlooked.
+
+When adding a new command or subcommand always make sure it is documented in the `Help` pages properly. There is a standard pattern we use which can be found by running `shopify help [command]`.
+
+### Other surface areas to consider
+The nature of CLIs usually means they are writing files or lines of code in files, as well as making API calls. 
+
+When your command or subcommand creates new files or adds lines of code to existing files, consider adding comments or content in those files that describe how to use the feature. It could be a link to the docs to explain more, it could contain multiple commented out examples of how to use the feature, etc. 
+
+Think about how to help the user work with the feature or file most effectively.
+
 
 ## Design principles
 High-level guiding principles to help make decisions faster when creating a CLI UI.
@@ -44,9 +81,9 @@ High-level guiding principles to help make decisions faster when creating a CLI 
 ✅ Tip: use shopify create project to create a new app project  
 ❌ Error: you are not in an app project folder, use shopify create project to create a new app project.
 
-**The command should ask for all the information needed to execute the task automatically.**  
+**Ask for all the information needed to execute the task automatically.**  
 
-✅ Have opinion on smart defaults that the user can override with arguments and options.  
+✅ Use smart defaults to execute the task as fast as possible, and include arguments to let the user override the defaults.  
 ❌ Defer multiple options or inputs to after the command is executing.
 
 **Let the user opt in to verbosity.**  
