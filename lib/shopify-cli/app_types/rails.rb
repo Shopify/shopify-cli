@@ -44,6 +44,10 @@ module ShopifyCli
         def open_url
           "#{Project.current.env.host}/login?shop=#{Project.current.env.shop}"
         end
+
+        def webhook_location
+          "config/webhooks"
+        end
       end
 
       def build(name)

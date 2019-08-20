@@ -7,6 +7,7 @@ module ShopifyCli
         def call(ctx, args)
           project = ShopifyCli::Project.current
           selected_type = args.first
+          app_type = project.app_type
           schema = ShopifyCli::Helpers::SchemaParser.new(
             schema: ShopifyCli::Tasks::Schema.call(ctx)
           )
@@ -20,9 +21,12 @@ module ShopifyCli
             end
           end
 
-          app_type = project.app_type
-          ShopifyCli::Commands::Generate.run_generate(app_type.generate_command(selected_type), selected_type, ctx)
-          ctx.puts("{{v}} Generating webhook: #{selected_type}")
+          spin_group = CLI::UI::SpinGroup.new
+          spin_group.add("Generating webhook: #{selected_type}") do |spinner|
+            ShopifyCli::Commands::Generate.run_generate(app_type.generate_command(selected_type), selected_type, ctx)
+            spinner.update_title("#{selected_type} generated in #{app_type.webhook_location}")
+          end
+          spin_group.wait
         end
 
         def self.help
