@@ -142,7 +142,7 @@ A [list of supported webhook events](https://help.shopify.com/en/api/reference/e
 
 Developers can use [development stores](https://help.shopify.com/en/partners/dashboard/development-stores) to test their apps. Development stores have no products, customers or orders when they’re created. Shopify App CLI can quickly add dummy data to your development store so you can test your app more thoroughly.
 
-The `populate` command can add fake products, customers, and orders. The default number of items added is 10. You can specify a different number of items with the `--count` option.
+The `populate` command can add fake products, customers, and draftorders. The default number of items added is 10. You can specify a different number of items with the `--count` option.
 
 ```sh
 # Adds 10 fake products
@@ -152,7 +152,7 @@ $ shopify populate products
 $ shopify populate customers
 
 # Adds 25 fake orders
-$ shopify populate orders --count 25
+$ shopify populate draftorders --count 25
 ```
 
 ### Update to the latest version
