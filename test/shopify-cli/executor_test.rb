@@ -8,6 +8,14 @@ module ShopifyCli
     class FakeCommand < ShopifyCli::Command
       prerequisite_task :fake
 
+      class FakeSubCommand < ShopifyCli::Command
+        def call(*)
+          @ctx.puts('subcommand!')
+        end
+      end
+
+      subcommand :FakeSubCommand, 'fakesub'
+
       options do |parser, flags|
         parser.on('-v', '--verbose', 'print verbosely') do |v|
           flags[:verbose] = v
@@ -43,7 +51,16 @@ module ShopifyCli
       reg.add(FakeCommand, :fake)
       @context.expects(:puts).with('success!')
       @context.expects(:puts).with('verbose!')
-      executor.call(FakeCommand, 'fake', ['foo', '-v'])
+      executor.call(FakeCommand, 'fake', ['-v'])
+    end
+
+    def test_subcommand
+      executor = ShopifyCli::Executor.new(@context, @registry, log_file: @log)
+      reg = CLI::Kit::CommandRegistry.new(default: nil, contextual_resolver: nil)
+      reg.add(FakeCommand, :fake)
+      @context.expects(:puts).with('success!')
+      @context.expects(:puts).with('subcommand!')
+      executor.call(FakeCommand, 'fake', ['fakesub'])
     end
   end
 end

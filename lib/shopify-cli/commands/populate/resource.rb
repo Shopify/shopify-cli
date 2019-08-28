@@ -4,11 +4,8 @@ require 'optparse'
 module ShopifyCli
   module Commands
     class Populate
-      class Resource
+      class Resource < ShopifyCli::Command
         include SmartProperties
-
-        property :ctx, required: true, accepts: ShopifyCli::Context
-        property :args, required: true, accepts: Array
 
         DEFAULT_COUNT = 5
         PAYLOAD_TYPE_WHITELIST = %w(SCALAR NON_NULL)
@@ -17,6 +14,11 @@ module ShopifyCli
 
         class << self
           attr_accessor :type, :field, :input_type, :payload, :payload_blacklist
+        end
+
+        def call(args, _name)
+          @args = args
+          populate
         end
 
         def initialize(*)
