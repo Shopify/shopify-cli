@@ -104,6 +104,7 @@ module ShopifyCli
   autoload :OAuth, 'shopify-cli/oauth'
   autoload :Options, 'shopify-cli/options'
   autoload :Project, 'shopify-cli/project'
+  autoload :SubCommand, 'shopify-cli/sub_command'
   autoload :Task, 'shopify-cli/task'
   autoload :Tasks, 'shopify-cli/tasks'
   autoload :Update, 'shopify-cli/update'

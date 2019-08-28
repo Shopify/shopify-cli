@@ -10,7 +10,6 @@ module ShopifyCli
       end
       opts = Options.new
       opts.parse(block, ['subc', '-v'])
-      assert_equal 'subc', opts.subcommand
       assert_equal true, opts.flags[:verbose]
     end
   end

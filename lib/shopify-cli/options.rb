@@ -14,15 +14,7 @@ module ShopifyCli
 
     def parse(options_block, args)
       @args = args
-      parse_subcommand
-      parse_flags(options_block) if options_block
-    end
-
-    def parse_subcommand
-      @subcommand = @args.find do |arg|
-        arg.match(/\w/)
-      end
-      @args.delete(@subcommand)
+      parse_flags(options_block) if options_block.respond_to?(:call)
     end
 
     def parse_flags(block)
