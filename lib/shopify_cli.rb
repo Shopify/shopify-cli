@@ -102,6 +102,7 @@ module ShopifyCli
   autoload :Finalize, 'shopify-cli/finalize'
   autoload :Helpers, 'shopify-cli/helpers'
   autoload :OAuth, 'shopify-cli/oauth'
+  autoload :Options, 'shopify-cli/options'
   autoload :Project, 'shopify-cli/project'
   autoload :Task, 'shopify-cli/task'
   autoload :Tasks, 'shopify-cli/tasks'

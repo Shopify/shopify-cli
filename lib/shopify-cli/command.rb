@@ -4,6 +4,7 @@ require 'shopify_cli'
 module ShopifyCli
   class Command < CLI::Kit::BaseCommand
     attr_writer :ctx
+    attr_accessor :options
 
     class << self
       attr_writer :ctx
@@ -11,7 +12,13 @@ module ShopifyCli
       def call(args, command_name)
         cmd = new
         cmd.ctx = @ctx
+        cmd.options = Options.new
+        cmd.options.parse(@_options, args)
         cmd.call(args, command_name)
+      end
+
+      def options(&block)
+        @_options = block
       end
 
       def prerequisite_task(*tasks)
