@@ -29,7 +29,8 @@ module ShopifyCli
         def generate
           {
             page: 'npm run-script generate-page --silent',
-            empty_state: 'npm run-script generate-empty-state --silent',
+            empty_state: 'npm run-script generate-empty-state-page --silent',
+            two_column: 'npm run-script generate-two-column-page --silent',
             list: 'npm run-script generate-list-page --silent',
             billing_recurring: 'npm run-script generate-recurring-billing --silent',
             billing_one_time: 'npm run-script generate-one-time-billing --silent',
@@ -40,7 +41,8 @@ module ShopifyCli
         def page_types
           {
             'empty-state' => :empty_state,
-            'list' => :list
+            'list' => :list,
+            'two-column' => :two_column,
           }
         end
 
