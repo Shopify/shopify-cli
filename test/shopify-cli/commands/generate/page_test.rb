@@ -13,7 +13,8 @@ module ShopifyCli
         end
 
         def test_run
-          @context.expects(:system).with('page-generate name')
+          CLI::UI::Prompt.expects(:ask).returns(:empty_state)
+          @context.expects(:system).with('generate-app empty-state-page name')
             .returns(mock(success?: true))
           @command.call(['page', 'name'], nil)
         end

@@ -28,13 +28,13 @@ module ShopifyCli
 
         def generate
           {
-            page: 'npm run-script generate-page --silent',
-            empty_state: 'npm run-script generate-empty-state-page --silent',
-            two_column: 'npm run-script generate-two-column-page --silent',
-            list: 'npm run-script generate-list-page --silent',
-            billing_recurring: 'npm run-script generate-recurring-billing --silent',
-            billing_one_time: 'npm run-script generate-one-time-billing --silent',
-            webhook: 'npm run-script generate-webhook --silent',
+            empty_state: 'generate-node-app empty-state-page',
+            two_column: 'generate-node-app two-column-page',
+            annotated: 'generate-node-app settings-page',
+            list: 'generate-node-app list-page',
+            billing_recurring: 'generate-node-app recurring-billing',
+            billing_one_time: 'generate-node-app one-time-billing',
+            webhook: 'generate-node-app webhook',
           }
         end
 
@@ -43,6 +43,7 @@ module ShopifyCli
             'empty-state' => :empty_state,
             'list' => :list,
             'two-column' => :two_column,
+            'annotated' => :annotated,
           }
         end
 

@@ -35,6 +35,18 @@ module ShopifyCli
             {{cyan:page}}: Generate a new page in your app with the specified page name.
               Usage: {{command:#{ShopifyCli::TOOL_NAME} generate page <pagename>}}
 
+              {{cyan:empty-state}}: generate a new page with an empty state
+              {{underline:https://polaris.shopify.com/components/structure/empty-state}}
+
+              {{cyan:list}}: generate a new page with a Resource List, generally used as an index page
+              {{underline:https://polaris.shopify.com/components/lists-and-tables/resource-list}}
+
+              {{cyan:two-column}}: generate a new page with a two column card layout, generally used for details
+              {{underline:https://polaris.shopify.com/components/structure/layout}}
+
+              {{cyan:annotated}}: generate a new page with a description and card layout, generally used for settings
+              {{underline:https://polaris.shopify.com/components/structure/layout}}
+
             {{cyan:billing}}: Generate code to enable charging for your app using Shopify’s billing API.
               Usage: {{command:#{ShopifyCli::TOOL_NAME} generate billing}}
 
