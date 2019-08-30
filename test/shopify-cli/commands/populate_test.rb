@@ -17,27 +17,23 @@ module ShopifyCli
       end
 
       def test_with_products_calls_product_resource_with_default_count
-        Populate::Product.expects(:new).with(ctx: @context, args: [])
-          .returns(mock(:populate))
-        @command.call(['products'], nil)
+        Populate::Product.expects(:call).with(['products'], 'products')
+        @command.class.call(['products'], nil)
       end
 
       def test_with_count_flag_calls_product_resource_with_default_count
-        Populate::Product.expects(:new).with(ctx: @context, args: ['--count=10'])
-          .returns(mock(:populate))
-        @command.call(['products', '--count=10'], nil)
+        Populate::Product.expects(:call).with(['products', '--count=10'], 'products')
+        @command.class.call(['products', '--count=10'], nil)
       end
 
       def test_with_customers_arg_calls_customer_resource
-        Populate::Customer.expects(:new).with(ctx: @context, args: ['--count=10'])
-          .returns(mock(:populate))
-        @command.call(['customers', '--count=10'], nil)
+        Populate::Customer.expects(:call).with(['customers', '--count=10'], 'customers')
+        @command.class.call(['customers', '--count=10'], nil)
       end
 
       def test_with_draftorders_arg_calls_draftorder_resource
-        Populate::DraftOrder.expects(:new).with(ctx: @context, args: ['--count=10'])
-          .returns(mock(:populate))
-        @command.call(['draftorders', '--count=10'], nil)
+        Populate::DraftOrder.expects(:call).with(['draftorders', '--count=10'], 'draftorders')
+        @command.class.call(['draftorders', '--count=10'], nil)
       end
     end
   end

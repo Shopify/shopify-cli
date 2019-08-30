@@ -3,7 +3,7 @@ require 'shopify_cli'
 module ShopifyCli
   module Commands
     class Create
-      class Project < ShopifyCli::Command
+      class Project < ShopifyCli::SubCommand
         def call(args, _name)
           if args.empty?
             @ctx.puts(self.class.help)
