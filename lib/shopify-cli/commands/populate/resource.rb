@@ -4,8 +4,11 @@ require 'optparse'
 module ShopifyCli
   module Commands
     class Populate
-      class Resource < ShopifyCli::Command
+      class Resource
         include SmartProperties
+
+        property :ctx, required: true, accepts: ShopifyCli::Context
+        property :args, required: true, accepts: Array
 
         DEFAULT_COUNT = 5
         PAYLOAD_TYPE_WHITELIST = %w(SCALAR NON_NULL)
@@ -16,20 +19,19 @@ module ShopifyCli
           attr_accessor :type, :field, :input_type, :payload, :payload_blacklist
         end
 
-        def call(args, _name)
-          @args = args
-          token = Helpers::AccessToken.read(@ctx)
-          @api = Helpers::API.new(ctx: @ctx, token: token)
+        def initialize(*)
+          super
+          token = Helpers::AccessToken.read(ctx)
+          @api = Helpers::API.new(ctx: ctx, token: token)
           @input = OpenStruct.new
           @count = DEFAULT_COUNT
           input_options
           options.parse(args)
-          populate
         end
 
         def set_input
           defaults
-          options.parse(@args)
+          options.parse(args)
         end
 
         def message
@@ -64,7 +66,7 @@ module ShopifyCli
         def populate
           @count.times do
             set_input
-            @ctx.debug(mutation)
+            ctx.debug(mutation)
             run_mutation
           end
           completion_message
@@ -117,13 +119,13 @@ module ShopifyCli
         end
 
         def schema
-          @schema ||= ShopifyCli::Helpers::SchemaParser.new(schema: @ctx.app_metadata[:schema])
+          @schema ||= ShopifyCli::Helpers::SchemaParser.new(schema: ctx.app_metadata[:schema])
         end
 
         def run_mutation
           resp = @api.mutation(mutation)
           raise(ShopifyCli::Abort, resp['errors']) if resp['errors']
-          @ctx.done(message(resp['data']))
+          ctx.done(message(resp['data']))
         end
 
         def success
@@ -134,7 +136,7 @@ module ShopifyCli
         end
 
         def completion_message
-          @ctx.puts(success)
+          ctx.puts(success)
         end
 
         def admin_url

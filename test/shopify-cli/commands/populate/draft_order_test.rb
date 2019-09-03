@@ -21,12 +21,12 @@ module ShopifyCli
           api.expects(:gid_to_id).returns(12345678)
           Helpers::Haikunator.stubs(:title).returns('fake order')
           Resource.any_instance.stubs(:price).returns('1.00')
-          @resource = DraftOrder.new(@context)
+          @resource = DraftOrder.new(ctx: @context, args: ['-c 1'])
           @context.expects(:done).with(
             "DraftOrders added to {{green:my-test-shop.myshopify.com}} at " \
             "{{underline:https://my-test-shop.myshopify.com/admin/draft_order/12345678}}"
           )
-          @resource.call(['-c 1'], nil)
+          @resource.populate
         end
 
         private
