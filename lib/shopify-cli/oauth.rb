@@ -37,30 +37,29 @@ module ShopifyCli
     SUCCESS_RESP = 'Authenticated Successfully, this page will close shortly.'
     INVALID_STATE_RESP = 'Anti-forgery state token does not match the initial request.'
 
+    property! :service, accepts: String
     property! :client_id, accepts: String
     property! :scopes
+    property :store, default: Helpers::Store.new
     property :secret, accepts: String
+    property :request_exchange, accepts: String
     property :port, default: 3456, accepts: Integer
     property :options, default: {}, accepts: Hash
     property :auth_path, default: "/authorize", accepts: ->(path) { path.is_a?(String) && path.start_with?("/") }
     property :token_path, default: "/token", accepts: ->(path) { path.is_a?(String) && path.start_with?("/") }
+    property :state_token, accepts: String, default: SecureRandom.hex(30)
+    property :code_verifier, accepts: String, default: SecureRandom.hex(30)
 
     def authenticate(url)
-      listen_local
+      return if refresh_exchange_token(url)
+      return if refresh_access_token(url)
       initiate_authentication(url)
-      request_token(url, code: receive_access_code)
+      request_access_token(url, code: receive_access_code)
+      request_exchange_token(url) if should_exchange
     end
 
     def redirect_uri
       "#{REDIRECT_HOST}:#{port}"
-    end
-
-    def state_token
-      @state_token ||= SecureRandom.hex(30)
-    end
-
-    def code_verifier
-      @code_verifier ||= SecureRandom.hex(30)
     end
 
     def code_challenge
@@ -70,22 +69,10 @@ module ShopifyCli
       )
     end
 
-    def exchange_token(url, token:, audience:, scopes:)
-      post_token_request(
-        "#{url}#{token_path}",
-        grant_type: "urn:ietf:params:oauth:grant-type:token-exchange",
-        requested_token_type: "urn:ietf:params:oauth:token-type:access_token",
-        subject_token_type: "urn:ietf:params:oauth:token-type:access_token",
-        client_id: client_id,
-        audience: audience,
-        scope: scopes,
-        subject_token: token,
-      )
-    end
-
     private
 
     def initiate_authentication(url)
+      listen_local
       params = {
         client_id: client_id,
         scope: scopes,
@@ -124,14 +111,16 @@ module ShopifyCli
 
     def receive_access_code
       @access_code ||= begin
-        query = @server_thread.join(120).value
+        server = @server_thread.join(60)
+        raise Error, 'Timed out while waiting for response from shopify' if server.nil?
+        query = server.value
         raise Error, query['error_description'] unless query['error'].nil?
         query['code']
       end
     end
 
-    def request_token(url, code:)
-      post_token_request(
+    def request_access_token(url, code:)
+      resp = post_token_request(
         "#{url}#{token_path}",
         {
           grant_type: :authorization_code,
@@ -140,6 +129,58 @@ module ShopifyCli
           client_id: client_id,
         }.merge(confirmation_param)
       )
+      store.set(
+        "#{service}_access_token".to_sym => resp['access_token'],
+        "#{service}_refresh_token".to_sym => resp['refresh_token'],
+      )
+    end
+
+    def refresh_access_token(url)
+      return false if !store.exists?("#{service}_access_token".to_sym) ||
+        !store.exists?("#{service}_refresh_token".to_sym)
+      refresh_token(url)
+      request_exchange_token(url) if should_exchange
+      true
+    rescue
+      store.del("#{service}_access_token".to_sym, "#{service}_refresh_token".to_sym)
+      false
+    end
+
+    def refresh_token(url)
+      resp = post_token_request(
+        "#{url}#{token_path}",
+        grant_type: :refresh_token,
+        access_token: store.get("#{service}_access_token".to_sym),
+        refresh_token: store.get("#{service}_refresh_token".to_sym),
+        client_id: client_id,
+      )
+      store.set(
+        "#{service}_access_token".to_sym => resp['access_token'],
+        "#{service}_refresh_token".to_sym => resp['refresh_token'],
+      )
+    end
+
+    def refresh_exchange_token(url)
+      return false if !should_exchange || !store.exists?("#{service}_exchange_token".to_sym)
+      request_exchange_token(url)
+      true
+    rescue
+      store.del("#{service}_exchange_token".to_sym)
+      false
+    end
+
+    def request_exchange_token(url)
+      resp = post_token_request(
+        "#{url}#{token_path}",
+        grant_type: "urn:ietf:params:oauth:grant-type:token-exchange",
+        requested_token_type: "urn:ietf:params:oauth:token-type:access_token",
+        subject_token_type: "urn:ietf:params:oauth:token-type:access_token",
+        client_id: client_id,
+        audience: request_exchange,
+        scope: scopes,
+        subject_token: store.get("#{service}_access_token".to_sym),
+      )
+      store.set("#{service}_exchange_token".to_sym => resp['access_token'])
     end
 
     def post_token_request(url, params)
@@ -151,7 +192,7 @@ module ShopifyCli
       request.body = URI.encode_www_form(params)
       res = https.request(request)
       raise Error, JSON.parse(res.body)['error_description'] unless res.is_a?(Net::HTTPSuccess)
-      JSON.parse(res.body)["access_token"]
+      JSON.parse(res.body)
     end
 
     def respond_with(resp, status, message)
@@ -179,6 +220,10 @@ module ShopifyCli
       else
         { client_secret: secret }
       end
+    end
+
+    def should_exchange
+      !request_exchange.nil? && !request_exchange.empty?
     end
   end
 end

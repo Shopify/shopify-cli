@@ -3,16 +3,10 @@ module ShopifyCli
     class PkceToken
       class << self
         def read(ctx)
-          ShopifyCli::Tasks::AuthenticateIdentity.call(ctx) unless File.file?(file_name)
-          File.read(file_name)
-        end
-
-        def write(token)
-          File.write(file_name, token)
-        end
-
-        def file_name
-          File.join(ShopifyCli::TEMP_DIR, ".pkce")
+          Store.get(:identity_exchange_token) do
+            ShopifyCli::Tasks::AuthenticateIdentity.call(ctx)
+            Store.get(:identity_exchange_token)
+          end
         end
       end
     end
