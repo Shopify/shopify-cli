@@ -10,14 +10,15 @@ module ShopifyCli
       def test_installs_with_npm
         ShopifyCli::Tasks::JsDeps.any_instance.stubs(:installer).returns(:npm)
         CLI::Kit::System.expects(:system).with(
-          'npm', 'install', '--no-optional',
+          'npm', 'install', '--no-audit', '--no-optional', '--silent',
           chdir: @context.root,
-        ).returns(mock(success?: true))
+        )
         io = capture_io do
-          ShopifyCli::Tasks::JsDeps.call(@context.root)
+          ShopifyCli::Tasks::JsDeps.call(@context)
         end
         output = io.join
         assert_match('Installing dependencies with npm...', output)
+        assert_match('Installing 37 dependencies', output)
       end
 
       def test_installs_with_yarn
@@ -27,7 +28,7 @@ module ShopifyCli
           chdir: @context.root
         ).returns(mock(success?: true))
         io = capture_io do
-          ShopifyCli::Tasks::JsDeps.call(@context.root)
+          ShopifyCli::Tasks::JsDeps.call(@context)
         end
         output = io.join
         assert_match('Installing dependencies with yarn...', output)
