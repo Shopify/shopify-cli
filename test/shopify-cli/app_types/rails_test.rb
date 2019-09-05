@@ -104,7 +104,7 @@ module ShopifyCli
         cmd.stubs(:mac?).returns(true)
         @context.expects(:system).with(
           'open',
-          '"https://example.com/login?shop=my-test-shop.myshopify.com"'
+          'https://example.com/login?shop=my-test-shop.myshopify.com'
         )
         cmd.call([], nil)
       end

@@ -4,7 +4,7 @@ module ShopifyCli
   class Context
     module System
       def spawn(*args, **kwargs)
-        Kernel.spawn(*args, env: @env, **kwargs)
+        Kernel.spawn(@env, *args, **kwargs)
       end
 
       def system(*args, **kwargs)

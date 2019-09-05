@@ -15,6 +15,18 @@ module ShopifyCli
         @context.expects(:system).with('a command')
         @command.call([], nil)
       end
+
+      def test_open_while_run
+        @command.stubs(:on_siginfo).yields
+        @command.stubs(:mac?).returns(true)
+        Open.any_instance.stubs(:mac?).returns(true)
+        @context.expects(:system).with('a command')
+        @context.expects(:system).with(
+          'open',
+          'https://example.com',
+        )
+        @command.call([], nil)
+      end
     end
   end
 end
