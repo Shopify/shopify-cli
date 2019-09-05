@@ -14,7 +14,8 @@ module ShopifyCli
         if mac?
           @ctx.puts("{{*}} Press {{yellow: Control-T}} to open this project in your browser")
           on_siginfo do
-            project.app_type.open(@ctx)
+            open = Open.new(@ctx)
+            open.call
           end
         end
         CLI::UI::Frame.open('Running server...') do

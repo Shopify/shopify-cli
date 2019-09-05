@@ -8,7 +8,7 @@ module ShopifyCli
       prerequisite_task :tunnel
 
       def call(*)
-        @ctx.system(*open_cmd, "\"#{Project.current.app_type.open_url}\"")
+        @ctx.system(*open_cmd, Project.current.app_type.open_url)
       end
 
       def self.help
