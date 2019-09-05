@@ -30,13 +30,7 @@ module ShopifyCli
           ENV[ENV_VAR].nil? ? PROD_URI : DEV_URI
         end
 
-        def mutation(ctx, body, variables: {})
-          authenticated_req(ctx) do
-            api_client(ctx).mutation(body, variables: variables)
-          end
-        end
-
-        def query(ctx, body, variables: {})
+        def query(ctx, body, **variables)
           authenticated_req(ctx) do
             api_client(ctx).query(body, variables: variables)
           end

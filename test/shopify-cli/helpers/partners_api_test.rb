@@ -45,8 +45,8 @@ module ShopifyCli
           token: 'token123',
           url: "#{PartnersAPI.endpoint}/api/cli/graphql",
         ).returns(api_stub)
-        api_stub.expects(:mutation).with('query', variables: {}).returns('response')
-        assert_equal 'response', PartnersAPI.mutation(@context, 'query')
+        api_stub.expects(:query).with('query', variables: {}).returns('response')
+        assert_equal 'response', PartnersAPI.query(@context, 'query')
       end
 
       def test_mutation_can_reauth
@@ -56,10 +56,10 @@ module ShopifyCli
           token: 'token123',
           url: "#{PartnersAPI.endpoint}/api/cli/graphql",
         ).returns(api_stub).twice
-        api_stub.expects(:mutation).with('query', variables: {}).returns('response')
-        api_stub.expects(:mutation).raises(Helpers::API::APIRequestUnauthorizedError)
+        api_stub.expects(:query).with('query', variables: {}).returns('response')
+        api_stub.expects(:query).raises(Helpers::API::APIRequestUnauthorizedError)
         Tasks::AuthenticateIdentity.expects(:call)
-        PartnersAPI.mutation(@context, 'query')
+        PartnersAPI.query(@context, 'query')
       end
 
       def test_mutation_fails_gracefully_without_partners_account
@@ -69,11 +69,11 @@ module ShopifyCli
           token: 'token123',
           url: "#{PartnersAPI.endpoint}/api/cli/graphql",
         ).returns(api_stub)
-        api_stub.expects(:mutation).raises(Helpers::API::APIRequestNotFoundError)
+        api_stub.expects(:query).raises(Helpers::API::APIRequestNotFoundError)
         @context.expects(:puts).with(
           "{{error: Your account was not found. Please sign up at https://partners.shopify.com/signup}}",
         )
-        PartnersAPI.mutation(@context, 'query')
+        PartnersAPI.query(@context, 'query')
       end
 
       def test_query

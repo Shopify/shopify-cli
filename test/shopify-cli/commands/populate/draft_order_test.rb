@@ -15,7 +15,7 @@ module ShopifyCli
 
         def test_populate_calls_api_with_mutation
           api = api_stub
-          api.expects(:mutation)
+          api.expects(:query)
             .with(@mutation)
             .returns(JSON.parse(File.read(File.join(FIXTURE_DIR, 'populate/draft_order_data.json'))))
           api.expects(:gid_to_id).returns(12345678)
