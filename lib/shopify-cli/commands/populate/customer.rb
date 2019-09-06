@@ -18,7 +18,7 @@ module ShopifyCli
 
         def message(data)
           ret = data['customerCreate']['customer']
-          id = @api.gid_to_id(ret['id'])
+          id = API.gid_to_id(ret['id'])
           "#{ret['displayName']} added to {{green:#{Project.current.env.shop}}} at "\
           "{{underline:#{admin_url}customers/#{id}}}"
         end

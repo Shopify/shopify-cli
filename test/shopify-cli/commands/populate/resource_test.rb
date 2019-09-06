@@ -11,7 +11,7 @@ module ShopifyCli
           super
           @resource = Product.new(@context)
           Helpers::AccessToken.stubs(:read).returns('myaccesstoken')
-          ShopifyCli::Helpers::API.stubs(:new).returns(Object.new)
+          ShopifyCli::Helpers::AdminAPI.stubs(:new).returns(Object.new)
         end
 
         def test_with_schema_args_overrides_input
