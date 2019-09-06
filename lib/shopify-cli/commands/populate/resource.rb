@@ -4,11 +4,8 @@ require 'optparse'
 module ShopifyCli
   module Commands
     class Populate
-      class Resource
+      class Resource < ShopifyCli::SubCommand
         include SmartProperties
-
-        property :ctx, required: true, accepts: ShopifyCli::Context
-        property :args, required: true, accepts: Array
 
         DEFAULT_COUNT = 5
         PAYLOAD_TYPE_WHITELIST = %w(SCALAR NON_NULL)
@@ -19,19 +16,16 @@ module ShopifyCli
           attr_accessor :type, :field, :input_type, :payload, :payload_blacklist
         end
 
-        def initialize(*)
-          super
-          token = Helpers::AccessToken.read(ctx)
-          @api = Helpers::API.new(ctx: ctx, token: token)
+        def call(args, _)
+          @args = args
+          token = Helpers::AccessToken.read(@ctx)
+          @api = Helpers::API.new(ctx: @ctx, token: token)
           @input = OpenStruct.new
           @count = DEFAULT_COUNT
           input_options
-          options.parse(args)
-        end
-
-        def set_input
           defaults
-          options.parse(args)
+          resource_options.parse(@args)
+          populate
         end
 
         def message
@@ -42,8 +36,8 @@ module ShopifyCli
           raise NotImplementedError
         end
 
-        def options
-          @options ||= OptionParser.new do |opts|
+        def resource_options
+          @resource_options ||= OptionParser.new do |opts|
             opts.banner = "\0"
             opts.on(
               "-c #{DEFAULT_COUNT}",
@@ -65,8 +59,7 @@ module ShopifyCli
 
         def populate
           @count.times do
-            set_input
-            ctx.debug(mutation)
+            @ctx.debug(mutation)
             run_mutation
           end
           completion_message
@@ -74,7 +67,7 @@ module ShopifyCli
 
         def input_options
           schema[self.class.input_type]['inputFields'].each do |field|
-            options.on(
+            resource_options.on(
               "--#{field['name']}=#{field['defaultValue']}",
               field['description']
             ) do |value|
@@ -121,13 +114,13 @@ module ShopifyCli
         end
 
         def schema
-          @schema ||= ShopifyCli::Helpers::SchemaParser.new(schema: ctx.app_metadata[:schema])
+          @schema ||= ShopifyCli::Helpers::SchemaParser.new(schema: @ctx.app_metadata[:schema])
         end
 
         def run_mutation
           resp = @api.query(mutation)
           raise(ShopifyCli::Abort, resp['errors']) if resp['errors']
-          ctx.done(message(resp['data']))
+          @ctx.done(message(resp['data']))
         end
 
         def success
@@ -138,7 +131,7 @@ module ShopifyCli
         end
 
         def completion_message
-          ctx.puts(success)
+          @ctx.puts(success)
         end
 
         def admin_url

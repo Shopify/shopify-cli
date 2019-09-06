@@ -21,12 +21,12 @@ module ShopifyCli
           api.expects(:gid_to_id).returns(12345678)
           Helpers::Haikunator.stubs(:name).returns(['first', 'last'])
           Resource.any_instance.stubs(:price).returns('1.00')
-          @resource = Customer.new(ctx: @context, args: ['-c 1'])
+          @resource = Customer.new(@context)
           @context.expects(:done).with(
             "first last added to {{green:my-test-shop.myshopify.com}} at " \
             "{{underline:https://my-test-shop.myshopify.com/admin/customers/12345678}}"
           )
-          @resource.populate
+          @resource.call(['-c 1'], nil)
         end
 
         private
