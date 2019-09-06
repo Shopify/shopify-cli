@@ -3,13 +3,13 @@ require 'shopify_cli'
 module ShopifyCli
   module Commands
     class Create
-      class Project < ShopifyCli::Command
+      class Project < ShopifyCli::SubCommand
         def call(args, _name)
           if args.empty?
             @ctx.puts(self.class.help)
             return
           end
-          name = args.first
+          name = args[1]
           app_type = CLI::UI::Prompt.ask('What type of app project would you like to create?') do |handler|
             AppTypeRegistry.each do |identifier, type|
               handler.option(type.description) { identifier }

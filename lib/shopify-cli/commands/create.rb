@@ -3,18 +3,10 @@ require 'shopify_cli'
 module ShopifyCli
   module Commands
     class Create < ShopifyCli::Command
-      autoload :Project, 'shopify-cli/commands/create/project'
+      subcommand :Project, 'project', 'shopify-cli/commands/create/project'
 
-      def call(args, name)
-        subcommand = args.shift
-        case subcommand
-        when 'project'
-          Project.new(@ctx).call(args, name)
-        when 'dev-store'
-          raise(ShopifyCli::Abort, 'This feature is not yet available')
-        else
-          @ctx.puts(self.class.help)
-        end
+      def call(*)
+        @ctx.puts(self.class.help)
       end
 
       def self.help
