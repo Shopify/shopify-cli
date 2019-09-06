@@ -19,10 +19,12 @@ module ShopifyCli
       def test_mutation_makes_request_to_shopify
         @api.stubs(:latest_api_version).returns('2019-04')
         mutation = <<~MUTATION
-          fakeMutation(input: {
-            title: "fake title"
-          }) {
-            id
+          mutation {
+            fakeMutation(input: {
+              title: "fake title"
+            }) {
+              id
+            }
           }
         MUTATION
         stub_request(:post, 'https://my-test-shop.myshopify.com/admin/api/2019-04/graphql.json')
@@ -33,7 +35,7 @@ module ShopifyCli
               'X-Shopify-Access-Token' => 'faketoken',
             })
           .to_return(status: 200, body: '{}')
-        @api.mutation(mutation)
+        @api.query(mutation)
       end
 
       def test_latest_api_version

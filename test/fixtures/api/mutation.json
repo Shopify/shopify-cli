@@ -1,1 +1,1 @@
-{"query":"mutation { fakeMutation(input: {  title: \"fake title\"}) {  id} }","variables":{}}
+{"query":"mutation {  fakeMutation(input: {    title: \"fake title\"  }) {    id  }}","variables":{}}

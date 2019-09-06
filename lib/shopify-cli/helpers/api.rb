@@ -20,12 +20,6 @@ module ShopifyCli
       class APIRequestServerError < APIRequestRetriableError; end
       class APIRequestThrottledError < APIRequestRetriableError; end
 
-      def mutation(mutation, variables: {})
-        _, resp = request("mutation { #{mutation} }", variables: variables)
-        @ctx.debug(resp)
-        resp
-      end
-
       def query(body, variables: {})
         _, resp = request(body, variables: variables)
         @ctx.debug(resp)

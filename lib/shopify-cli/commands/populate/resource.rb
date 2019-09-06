@@ -99,9 +99,11 @@ module ShopifyCli
 
         def mutation
           <<~MUTATION
-            #{self.class.field}(input: {#{to_input(@input)}}) {
-              #{self.class.type} {
-                #{payload}
+            mutation {
+              #{self.class.field}(input: {#{to_input(@input)}}) {
+                #{self.class.type} {
+                  #{payload}
+                }
               }
             }
           MUTATION
@@ -123,7 +125,7 @@ module ShopifyCli
         end
 
         def run_mutation
-          resp = @api.mutation(mutation)
+          resp = @api.query(mutation)
           raise(ShopifyCli::Abort, resp['errors']) if resp['errors']
           ctx.done(message(resp['data']))
         end
