@@ -102,7 +102,6 @@ module ShopifyCli
           'Content-Type' => 'application/json',
           'User-Agent' => "Shopify App CLI #{ShopifyCli::VERSION} #{current_sha} | #{uname(flag: 'v')}",
           'X-Shopify-Access-Token' => token,
-          'Authorization' => "Bearer #{token}",
         }
       end
     end
