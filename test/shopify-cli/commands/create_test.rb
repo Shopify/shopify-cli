@@ -7,7 +7,8 @@ module ShopifyCli
 
       def setup
         super
-        @command = ShopifyCli::Commands::Create.new(@context)
+        @command = ShopifyCli::Commands::Create
+        @command.ctx = @context
       end
 
       def test_without_arguments_calls_help
@@ -17,8 +18,8 @@ module ShopifyCli
 
       def test_with_project_calls_project
         ShopifyCli::Commands::Create::Project.any_instance.expects(:call)
-          .with(['new-app'], 'create')
-        @command.call(['project', 'new-app'], 'create')
+          .with(['project', 'new-app'], 'project')
+        @command.call(['project', 'new-app'], nil)
       end
     end
   end
