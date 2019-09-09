@@ -116,7 +116,7 @@ module ShopifyCli
         end
 
         def run_mutation
-          resp = Helpers::AdminAPI.query(ctx, mutation)
+          resp = Helpers::AdminAPI.query(@ctx, mutation)
           raise(ShopifyCli::Abort, resp['errors']) if resp['errors']
           @ctx.done(message(resp['data']))
         end
