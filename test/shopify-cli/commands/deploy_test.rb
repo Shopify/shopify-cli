@@ -15,6 +15,11 @@ module ShopifyCli
         @command.call(['heroku'], nil)
       end
 
+      def test_now_subcommand_calls_now
+        Deploy::Now.expects(:call)
+        @command.call(['now'], nil)
+      end
+
       def test_without_arguments_calls_help
         @context.expects(:puts).with(ShopifyCli::Commands::Deploy.help)
         @command.call([], nil)
