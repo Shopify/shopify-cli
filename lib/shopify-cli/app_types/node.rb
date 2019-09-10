@@ -28,13 +28,13 @@ module ShopifyCli
 
         def generate
           {
-            empty_state: 'generate-node-app empty-state-page',
-            two_column: 'generate-node-app two-column-page',
-            annotated: 'generate-node-app settings-page',
-            list: 'generate-node-app list-page',
-            billing_recurring: 'generate-node-app recurring-billing',
-            billing_one_time: 'generate-node-app one-time-billing',
-            webhook: 'generate-node-app webhook',
+            empty_state: './node_modules/.bin/generate-node-app empty-state-page',
+            two_column: './node_modules/.bin/generate-node-app two-column-page',
+            annotated: './node_modules/.bin/generate-node-app settings-page',
+            list: './node_modules/.bin/generate-node-app list-page',
+            billing_recurring: './node_modules/.bin/generate-node-app recurring-billing',
+            billing_one_time: './node_modules/.bin/generate-node-app one-time-billing',
+            webhook: './node_modules/.bin/generate-node-app webhook',
           }
         end
 
