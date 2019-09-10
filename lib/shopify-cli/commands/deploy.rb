@@ -6,12 +6,15 @@ module ShopifyCli
   module Commands
     class Deploy < ShopifyCli::Command
       autoload :Heroku, 'shopify-cli/commands/deploy/heroku'
+      autoload :Now, 'shopify-cli/commands/deploy/now'
 
       def call(args, _name)
         subcommand = args.shift
         case subcommand
         when 'heroku'
           Heroku.call(@ctx, args)
+        when 'now'
+          Now.call(@ctx, args)
         else
           @ctx.puts(self.class.help)
         end
