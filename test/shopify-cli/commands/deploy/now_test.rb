@@ -7,6 +7,11 @@ module ShopifyCli
         include TestHelpers::Context
         include TestHelpers::FakeUI
 
+        def test_for_truth
+          @context.expects(:system)
+          assert true          
+        end
+
         # def setup
         #   super
 
@@ -31,7 +36,7 @@ module ShopifyCli
         #   @context.expects(:system)
         #     .with('now --version')
 
-
+  
         #   @command.call(@context)
         # end
 
