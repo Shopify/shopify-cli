@@ -8,7 +8,7 @@ module ShopifyCli
       SCHEMA_KEY = "shopify_admin_schema"
 
       def call(ctx)
-        unless Helpers::Store.exist?(SCHEMA_KEY)
+        unless Helpers::Store.exists?(SCHEMA_KEY)
           Helpers::Store.set(SCHEMA_KEY, JSON.dump(Helpers::AdminAPI.query(ctx, introspection)))
         end
         schema = JSON.parse(Helpers::Store.get(SCHEMA_KEY))
