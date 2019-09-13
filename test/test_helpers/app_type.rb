@@ -23,10 +23,22 @@ module TestHelpers
 
         def generate
           {
-            page: 'page-generate',
+            empty_state: 'generate-app empty-state-page',
+            two_column: 'generate-app two-column-page',
+            annotated: 'generate-app settings-page',
+            list: 'generate-app list-page',
             billing_recurring: 'generate-recurring-billing',
             billing_one_time: 'generate-one-time-billing',
             webhook: 'generate-webhook',
+          }
+        end
+
+        def page_types
+          {
+            'empty-state' => :empty_state,
+            'list' => :list,
+            'two-column' => :two_column,
+            'annotated' => :annotated,
           }
         end
 
