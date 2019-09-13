@@ -10,7 +10,7 @@ module ShopifyCli
         DEFAULT_COUNT = 5
         PAYLOAD_TYPE_WHITELIST = %w(SCALAR NON_NULL)
 
-        attr_reader :api, :input
+        attr_reader :input
 
         class << self
           attr_accessor :type, :field, :input_type, :payload, :payload_blacklist
@@ -18,8 +18,6 @@ module ShopifyCli
 
         def call(args, _)
           @args = args
-          token = Helpers::AccessToken.read(@ctx)
-          @api = Helpers::API.new(ctx: @ctx, token: token)
           @input = OpenStruct.new
           @count = DEFAULT_COUNT
           input_options
@@ -118,7 +116,7 @@ module ShopifyCli
         end
 
         def run_mutation
-          resp = @api.query(mutation)
+          resp = Helpers::AdminAPI.query(@ctx, mutation)
           raise(ShopifyCli::Abort, resp['errors']) if resp['errors']
           @ctx.done(message(resp['data']))
         end

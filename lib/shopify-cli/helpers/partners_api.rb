@@ -40,10 +40,10 @@ module ShopifyCli
 
         def authenticated_req(ctx)
           yield
-        rescue Helpers::API::APIRequestUnauthorizedError
+        rescue API::APIRequestUnauthorizedError
           Tasks::AuthenticateIdentity.call(ctx)
           retry
-        rescue Helpers::API::APIRequestNotFoundError
+        rescue API::APIRequestNotFoundError
           ctx.puts("{{error: Your account was not found. Please sign up at https://partners.shopify.com/signup}}")
         end
 
@@ -54,6 +54,10 @@ module ShopifyCli
             url: "#{endpoint}/api/cli/graphql",
           )
         end
+      end
+
+      def auth_headers(token)
+        { Authorization: "Bearer #{token}" }
       end
     end
   end

@@ -5,31 +5,15 @@ module ShopifyCli
     class Schema < ShopifyCli::Task
       include ShopifyCli::Helpers::GraphQL::Queries
 
-      FILEPATH = File.join(ShopifyCli::TEMP_DIR, "shopify_schema.json")
+      SCHEMA_KEY = "shopify_admin_schema"
 
       def call(ctx)
-        @ctx = ctx
-        @api = Helpers::API.new(ctx: ctx, token: Helpers::AccessToken.read(ctx))
-        @ctx.app_metadata = { schema: schema_file }
-        schema_file
-      end
-
-      def get
-        File.write(FILEPATH, JSON.dump(@api.query(introspection)))
-      rescue Helpers::API::APIRequestUnauthorizedError
-        ShopifyCli::Tasks::AuthenticateShopify.call(@ctx)
-        retry
-      end
-
-      def shop_name
-        @shop_name = Helpers::EnvFile.read.shop
-      end
-
-      def schema_file
-        @schema_file ||= begin
-          get unless File.exist?(FILEPATH)
-          JSON.parse(File.read(FILEPATH))
+        unless Helpers::Store.exist?(SCHEMA_KEY)
+          Helpers::Store.set(SCHEMA_KEY, JSON.dump(Helpers::AdminAPI.query(ctx, introspection)))
         end
+        schema = JSON.parse(Helpers::Store.get(SCHEMA_KEY))
+        ctx.app_metadata = { schema: schema }
+        schema
       end
     end
   end
