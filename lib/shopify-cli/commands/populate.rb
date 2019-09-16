@@ -37,6 +37,7 @@ module ShopifyCli
           {{bold:Options:}}
 
             {{cyan:--count [integer]}}: The number of dummy items to populate. Defaults to 10.
+            {{cyan:--silent}}: Silence the populate output.
 
           {{bold:Examples:}}
 
