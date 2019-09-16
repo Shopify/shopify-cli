@@ -23,7 +23,16 @@ module ShopifyCli
           input_options
           defaults
           resource_options.parse(@args)
-          populate
+          if @silent
+            spin_group = CLI::UI::SpinGroup.new
+            spin_group.add("Populating #{@count} #{self.class.type}s...") do |spinner|
+              populate
+              spinner.update_title(completion_message)
+            end
+            spin_group.wait
+          else
+            populate
+          end
         end
 
         def message
@@ -52,6 +61,13 @@ module ShopifyCli
               puts opts
               exit
             end
+
+            opts.on(
+              "--silent",
+              "-s"
+            ) do |s|
+              @silent = s
+            end
           end
         end
 
@@ -60,7 +76,7 @@ module ShopifyCli
             @ctx.debug(mutation)
             run_mutation
           end
-          completion_message
+          @ctx.puts(completion_message)
         end
 
         def input_options
@@ -118,18 +134,14 @@ module ShopifyCli
         def run_mutation
           resp = Helpers::AdminAPI.query(@ctx, mutation)
           raise(ShopifyCli::Abort, resp['errors']) if resp['errors']
-          @ctx.done(message(resp['data']))
-        end
-
-        def success
-          <<~SUCCESS
-            {{v}} Successfully added #{self.class.type}s to {{green:#{Project.current.env.shop}}}
-            {{*}} View all #{self.class.type}s at {{underline:#{admin_url}#{self.class.type}s}}
-          SUCCESS
+          @ctx.done(message(resp['data'])) unless @silent
         end
 
         def completion_message
-          @ctx.puts(success)
+          <<~COMPLETION_MESSAGE
+            Successfully added #{@count} #{self.class.type}s to {{green:#{Project.current.env.shop}}}
+            {{*}} View all #{self.class.type}s at {{underline:#{admin_url}#{self.class.type}s}}
+          COMPLETION_MESSAGE
         end
 
         def admin_url
