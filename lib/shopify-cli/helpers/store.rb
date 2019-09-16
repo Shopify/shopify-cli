@@ -1,35 +1,12 @@
 require 'pstore'
+require 'forwardable'
 
 module ShopifyCli
   module Helpers
     class Store
+      extend SingleForwardable
+      def_delegators :new, :keys, :exists?, :set, :get, :del, :clear
       attr_reader :db
-
-      class << self
-        def keys
-          new.keys
-        end
-
-        def exists?(key)
-          new.exists?(key)
-        end
-
-        def set(**args)
-          new.set(**args)
-        end
-
-        def get(key, &block)
-          new.get(key, &block)
-        end
-
-        def del(*args)
-          new.del(*args)
-        end
-
-        def clear
-          new.clear
-        end
-      end
 
       def initialize(path: File.join(ShopifyCli::TEMP_DIR, ".db.pstore"))
         @db = PStore.new(path)
