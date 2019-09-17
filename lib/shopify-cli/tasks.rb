@@ -28,8 +28,11 @@ module ShopifyCli
     register :AuthenticateShopify, :authenticate_shopify, 'shopify-cli/tasks/authenticate_shopify'
     register :Clone, :clone, 'shopify-cli/tasks/clone'
     register :EnsureEnv, :ensure_env, 'shopify-cli/tasks/ensure_env'
+    register :GetApp, :get_app, 'shopify-cli/tasks/partners_queries/get_app'
+    register :GetOrgs, :get_orgs, 'shopify-cli/tasks/partners_queries/get_orgs'
     register :JsDeps, :js_deps, 'shopify-cli/tasks/js_deps'
     register :Schema, :schema, 'shopify-cli/tasks/schema'
     register :Tunnel, :tunnel, 'shopify-cli/tasks/tunnel'
+    register :UpdateWhitelistURL, :update_whitelist_url, 'shopify-cli/tasks/update_whitelist_url'
   end
 end
