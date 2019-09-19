@@ -8,7 +8,7 @@ module ShopifyCli
 
         def setup
           super
-          @command = ShopifyCli::Commands::Generate.new(@context)
+          @command = ShopifyCli::Commands::Generate::Webhook.new(@context)
         end
 
         def test_with_param

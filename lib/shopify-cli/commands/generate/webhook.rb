@@ -3,13 +3,13 @@ require 'json'
 module ShopifyCli
   module Commands
     class Generate
-      class Webhook < ShopifyCli::Task
-        def call(ctx, args)
+      class Webhook < ShopifyCli::SubCommand
+        def call(args, _name)
           project = ShopifyCli::Project.current
-          selected_type = args.first
+          selected_type = args[1]
           app_type = project.app_type
           schema = ShopifyCli::Helpers::SchemaParser.new(
-            schema: ShopifyCli::Tasks::Schema.call(ctx)
+            schema: ShopifyCli::Tasks::Schema.call(@ctx)
           )
           enum = schema['WebhookSubscriptionTopic']
           webhooks = schema.get_names_from_enum(enum)
@@ -23,7 +23,7 @@ module ShopifyCli
 
           spin_group = CLI::UI::SpinGroup.new
           spin_group.add("Generating webhook: #{selected_type}") do |spinner|
-            ShopifyCli::Commands::Generate.run_generate(app_type.generate_command(selected_type), selected_type, ctx)
+            ShopifyCli::Commands::Generate.run_generate(app_type.generate_command(selected_type), selected_type, @ctx)
             spinner.update_title("#{selected_type} generated in #{app_type.webhook_location}")
           end
           spin_group.wait
