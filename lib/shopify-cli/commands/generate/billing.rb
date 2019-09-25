@@ -25,7 +25,7 @@ module ShopifyCli
           spin_group = CLI::UI::SpinGroup.new
           spin_group.add("Generating #{billing_types.key(selected_type)} code ...") do |spinner|
             ShopifyCli::Commands::Generate.run_generate(
-              project.app_type.generate[selected_type], selected_type
+              project.app_type.generate[selected_type], selected_type, @ctx
             )
             spinner.update_title(
               "#{billing_types.key(selected_type)} generated in server/server.js"
