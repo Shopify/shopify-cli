@@ -11,11 +11,11 @@ We recommend using [`ruby-install`][ruby-install] and [`chruby`][chruby] from Ho
 
 1. Install ruby 2.5.1:
 
-        ruby-install ruby 2.5.1
+        ruby-install ruby-2.5.1
 
 1. Open a new terminal window and activate ruby 2.5.1:
 
-        chruby 2.5.1
+        chruby ruby-2.5.1
 
 1. Run your Shopify App CLI command.
 
