@@ -4,15 +4,28 @@ module ShopifyCli
   module Commands
     class Create
       class Project < ShopifyCli::SubCommand
+        options do |parser, flags|
+          parser.on('--type=TYPE') do |t|
+            flags[:type] = t
+          end
+        end
+
         def call(args, _name)
-          if args.empty?
+          name = args[1]
+          flag = options.flags[:type]
+          puts AppTypeRegistry.each
+          if !name || name.include?('--')
             @ctx.puts(self.class.help)
             return
           end
-          name = args[1]
-          app_type = CLI::UI::Prompt.ask('What type of app project would you like to create?') do |handler|
-            AppTypeRegistry.each do |identifier, type|
-              handler.option(type.description) { identifier }
+
+          app_type = if options.flags[:type]
+            flag.downcase.to_sym
+          else
+            CLI::UI::Prompt.ask('What type of app project would you like to create?') do |handler|
+              AppTypeRegistry.each do |identifier, type|
+                handler.option(type.description) { identifier }
+              end
             end
           end
 
