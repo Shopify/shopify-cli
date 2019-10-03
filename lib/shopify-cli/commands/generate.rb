@@ -3,22 +3,12 @@ require 'shopify_cli'
 module ShopifyCli
   module Commands
     class Generate < ShopifyCli::Command
-      autoload :Page, 'shopify-cli/commands/generate/page'
-      autoload :Billing, 'shopify-cli/commands/generate/billing'
-      autoload :Webhook, 'shopify-cli/commands/generate/webhook'
+      subcommand :Page, 'page', 'shopify-cli/commands/generate/page'
+      subcommand :Billing, 'billing', 'shopify-cli/commands/generate/billing'
+      subcommand :Webhook, 'webhook', 'shopify-cli/commands/generate/webhook'
 
-      def call(args, _name)
-        subcommand = args.shift
-        case subcommand
-        when 'page'
-          Page.call(@ctx, args)
-        when 'billing'
-          Billing.call(@ctx, args)
-        when 'webhook'
-          Webhook.call(@ctx, args)
-        else
-          @ctx.puts(self.class.help)
-        end
+      def call(*)
+        @ctx.puts(self.class.help)
       end
 
       def self.help

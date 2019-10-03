@@ -3,14 +3,14 @@ require 'shopify_cli'
 module ShopifyCli
   module Commands
     class Generate
-      class Billing < ShopifyCli::Task
-        def call(ctx, args)
+      class Billing < ShopifyCli::SubCommand
+        def call(args, _name)
           project = ShopifyCli::Project.current
           billing_types = {
             'recurring-billing' => :billing_recurring,
             'one-time-billing' => :billing_one_time,
           }
-          selected_type = billing_types[args.first]
+          selected_type = billing_types[args[1]]
           # temporary check until we build for rails
           if project.app_type == ShopifyCli::AppTypes::Rails
             raise(ShopifyCli::Abort, 'This feature is not yet available for Rails apps')
@@ -25,7 +25,7 @@ module ShopifyCli
           spin_group = CLI::UI::SpinGroup.new
           spin_group.add("Generating #{billing_types.key(selected_type)} code ...") do |spinner|
             ShopifyCli::Commands::Generate.run_generate(
-              project.app_type.generate[selected_type], selected_type, ctx
+              project.app_type.generate[selected_type], selected_type, @ctx
             )
             spinner.update_title(
               "#{billing_types.key(selected_type)} generated in server/server.js"
