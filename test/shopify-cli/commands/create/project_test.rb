@@ -8,7 +8,8 @@ module ShopifyCli
 
         def setup
           super
-          @command = ShopifyCli::Commands::Create::Project.new(@context)
+          @command = ShopifyCli::Commands::Create::Project
+          @command.ctx = @context
           ShopifyCli::Tasks::Tunnel.any_instance.stubs(:call)
         end
 
@@ -24,8 +25,25 @@ module ShopifyCli
           FileUtils.mkdir_p('test-app')
           CLI::UI::Prompt.expects(:ask).returns(:node)
           ShopifyCli::AppTypes::Node.any_instance.stubs(:check_dependencies)
-          ShopifyCli::AppTypes::Node.any_instance.stubs(:build)
+          ShopifyCli::AppTypes::Node.any_instance.stubs(:build).with('test-app')
           @command.call(['project', 'test-app'], nil)
+        end
+
+        def test_with_type_argument
+          FileUtils.mkdir_p('test-app')
+          CLI::UI::Prompt.expects(:ask).never
+          ShopifyCli::AppTypes::Node.any_instance.stubs(:check_dependencies)
+          ShopifyCli::AppTypes::Node.any_instance.stubs(:build).with('test-app')
+          @command.call(['project', '--type=node', 'test-app'], nil)
+        end
+
+        def test_raises_with_invalid_type
+          FileUtils.mkdir_p('test-app')
+          CLI::UI::Prompt.expects(:ask).never
+          ShopifyCli::AppTypes::Node.any_instance.expects(:build).never
+          assert_raises ShopifyCli::Abort do
+            @command.call(['project', '--type=noder', 'test-app'], nil)
+          end
         end
       end
     end

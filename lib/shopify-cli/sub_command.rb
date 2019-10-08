@@ -7,7 +7,7 @@ module ShopifyCli
       def call(args, command_name)
         cmd = new(@ctx)
         cmd.options = Options.new
-        cmd.options.parse(@_options, args[1..-1])
+        args = cmd.options.parse(@_options, args[1..-1] || [])
         cmd.call(args, command_name)
       end
     end

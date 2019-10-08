@@ -18,7 +18,7 @@ module ShopifyCli
 
       def test_with_project_calls_project
         ShopifyCli::Commands::Create::Project.any_instance.expects(:call)
-          .with(['project', 'new-app'], 'project')
+          .with(['new-app'], 'project')
         @command.call(['project', 'new-app'], nil)
       end
     end

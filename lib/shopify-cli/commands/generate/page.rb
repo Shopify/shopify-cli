@@ -6,16 +6,16 @@ module ShopifyCli
       class Page < ShopifyCli::SubCommand
         options do |parser, flags|
           parser.on('--type=TYPE') do |t|
-            flags[:type] = t
+            flags[:type] = t.downcase
           end
         end
 
         def call(args, _name)
           project = ShopifyCli::Project.current
           types = project.app_type.page_types
-          name = args[1]
+          name = args.first
           flag = options.flags[:type]
-          if !name || name.include?('--')
+          unless name
             @ctx.puts(self.class.help)
             return
           end
@@ -24,8 +24,8 @@ module ShopifyCli
             raise(ShopifyCli::Abort, 'This feature is not yet available for Rails apps')
           end
 
-          selected_type = if options.flags[:type]
-            types[flag.downcase]
+          selected_type = if flag
+            types[flag]
           else
             CLI::UI::Prompt.ask('Which template would you like to use?') do |handler|
               types.each do |key, value|
