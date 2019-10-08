@@ -14,12 +14,13 @@ module ShopifyCli
 
     def parse(options_block, args)
       @args = args
-      parse_flags(options_block) if options_block.respond_to?(:call)
+      parse_flags(options_block) if options_block.respond_to?(:call) && args
+      @args
     end
 
     def parse_flags(block)
       block.call(parser, @flags)
-      parser.parse!(@args)
+      parser.permute!(@args)
     end
 
     def parser

@@ -13,11 +13,26 @@ module ShopifyCli
           @command.ctx = @context
         end
 
-        def test_run
+        def test_with_selection
           CLI::UI::Prompt.expects(:ask).returns(:empty_state)
           @context.expects(:system).with('generate-app empty-state-page name')
             .returns(mock(success?: true))
           @command.call(['page', 'name'], nil)
+        end
+
+        def test_with_type_argument
+          CLI::UI::Prompt.expects(:ask).never
+          @context.expects(:system).with('generate-app list-page name')
+            .returns(mock(success?: true))
+          @command.call(['page', 'name', '--type=list'], nil)
+        end
+
+        def test_no_name_calls_help
+          io = capture_io do
+            @command.call([], nil)
+          end
+
+          assert_match(CLI::UI.fmt(ShopifyCli::Commands::Generate::Page.help), io.join)
         end
       end
     end

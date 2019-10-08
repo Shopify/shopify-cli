@@ -6,21 +6,23 @@ module ShopifyCli
       class Project < ShopifyCli::SubCommand
         options do |parser, flags|
           parser.on('--type=TYPE') do |t|
-            flags[:type] = t
+            flags[:type] = t.downcase.to_sym
           end
         end
 
         def call(args, _name)
-          name = args[1]
+          name = args.first
           flag = options.flags[:type]
-          puts AppTypeRegistry.each
-          if !name || name.include?('--')
+          unless name
             @ctx.puts(self.class.help)
             return
           end
 
-          app_type = if options.flags[:type]
-            flag.downcase.to_sym
+          app_type = if flag
+            unless AppTypeRegistry[flag]
+              raise ShopifyCli::Abort, 'Invalid App Type.'
+            end
+            flag
           else
             CLI::UI::Prompt.ask('What type of app project would you like to create?') do |handler|
               AppTypeRegistry.each do |identifier, type|

@@ -9,8 +9,18 @@ module ShopifyCli
         end
       end
       opts = Options.new
-      opts.parse(block, ['subc', '-v'])
+      assert_equal ['subc', 'foo', 'bar'], opts.parse(block, ['subc', '-v', 'foo', 'bar'])
       assert_equal true, opts.flags[:verbose]
+    end
+
+    def test_parse_returns_empty_array_when_no_args_provided
+      block = proc do |parser, flags|
+        parser.on('-v', '--verbose', 'run verbosely') do |v|
+          flags[:verbose] = v
+        end
+      end
+      opts = Options.new
+      assert_equal [], opts.parse(block, [])
     end
   end
 end
