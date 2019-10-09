@@ -21,7 +21,8 @@ module ShopifyCli
           {{bold:Subcommands:}}
 
             {{cyan:project}}: Creates an app based on type selected.
-              Usage: {{command:#{ShopifyCli::TOOL_NAME} create project <appname>}}
+              Usage: {{command:#{ShopifyCli::TOOL_NAME} create project <appname>}} or
+                     {{command:#{ShopifyCli::TOOL_NAME} create project <appname> --type=TYPE}]
 
             {{cyan:dev-store}}: {{yellow: Create dev-store is not currently available.}}
         HELP
