@@ -23,8 +23,9 @@ module ShopifyCli
           {{bold:Subcommands:}}
 
             {{cyan:page}}: Generate a new page in your app with the specified page name.
-              Usage: {{command:#{ShopifyCli::TOOL_NAME} generate page <pagename>}}
-
+              Usage: {{command:#{ShopifyCli::TOOL_NAME} generate page <pagename>}} or
+                     {{command:#{ShopifyCli::TOOL_NAME} generate page <pagename> --type=TYPE}}
+              Types:
               {{cyan:empty-state}}: generate a new page with an empty state
               {{underline:https://polaris.shopify.com/components/structure/empty-state}}
 
