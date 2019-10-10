@@ -25,6 +25,9 @@ module ShopifyCli
           end
 
           selected_type = if flag
+            unless types.key?(flag)
+              raise ShopifyCli::Abort, 'Invalid page type.'
+            end
             types[flag]
           else
             CLI::UI::Prompt.ask('Which template would you like to use?') do |handler|

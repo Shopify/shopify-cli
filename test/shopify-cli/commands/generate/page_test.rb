@@ -27,6 +27,12 @@ module ShopifyCli
           @command.call(['page', 'name', '--type=list'], nil)
         end
 
+        def test_raises_with_invalid_type
+          assert_raises ShopifyCli::Abort do
+            @command.call(['project', '--type=list_TYPE', 'test-app'], nil)
+          end
+        end
+
         def test_no_name_calls_help
           io = capture_io do
             @command.call([], nil)
