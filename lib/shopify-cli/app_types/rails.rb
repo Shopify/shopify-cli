@@ -10,7 +10,7 @@ module ShopifyCli
         def env_file
           <<~KEYS
             SHOPIFY_API_KEY={api_key}
-            SHOPIFY_API_SECRET_KEY={secret}
+            SHOPIFY_API_SECRET={secret}
             HOST={host}
             SHOP={shop}
             SCOPES={scopes}
