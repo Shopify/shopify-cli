@@ -54,7 +54,7 @@ http://app-cli-loopback.shopifyapps.com:3456
 
 For Rails Apps:
 ```
-https://<LIVE_NGROK_URL>/auth/shopify/callback
+https://<LIVE_NGROK_URL>/login/shopify/callback
 http://app-cli-loopback.shopifyapps.com:3456
 ```
 
