@@ -5,45 +5,72 @@ module ShopifyCli
     class Create
       class ProjectTest < MiniTest::Test
         include TestHelpers::Context
+        include TestHelpers::Partners
 
         def setup
           super
           @command = ShopifyCli::Commands::Create::Project
           @command.ctx = @context
-          ShopifyCli::Tasks::Tunnel.any_instance.stubs(:call)
         end
 
         def test_prints_help_with_no_name_argument
-          io = capture_io do
-            @command.call([], nil)
-          end
-
+          io = capture_io { @command.call([], nil) }
           assert_match(CLI::UI.fmt(ShopifyCli::Commands::Create::Project.help), io.join)
         end
 
-        def test_implemented_option
+        def test_can_create_new_app
           FileUtils.mkdir_p('test-app')
-          CLI::UI::Prompt.expects(:ask).returns(:node)
-          ShopifyCli::AppTypes::Node.any_instance.stubs(:check_dependencies)
-          ShopifyCli::AppTypes::Node.any_instance.stubs(:build).with('test-app')
-          @command.call(['project', 'test-app'], nil)
+          ShopifyCli::AppTypes::Node.any_instance.expects(:check_dependencies)
+          ShopifyCli::AppTypes::Node.any_instance.expects(:build).with('test-app')
+
+          stub_partner_req(
+            'create_app',
+            variables: {
+              org: 42,
+              title: 'Test app',
+              app_url: 'http://app.com',
+              redir: ["http://app-cli-loopback.shopifyapps.com:3456"],
+            },
+            resp: {
+              'data': {
+                'appCreate': {
+                  'app': {
+                    'apiKey': 'newapikey',
+                    'apiSecretKeys': [{ 'secret': 'secret' }],
+                  },
+                },
+              },
+            }
+          )
+
+          perform_command
+
+          app_type = <<~APPTYPE
+            ---
+            app_type: :node
+          APPTYPE
+          assert_equal app_type, File.read("test-app/.shopify-cli.yml")
+
+          env_file = <<~CONTENT
+            SHOPIFY_API_KEY=newapikey
+            SHOPIFY_API_SECRET=secret
+            SHOP=testshop.myshopify.com
+            SCOPES=write_products,write_customers,write_draft_orders
+          CONTENT
+          assert_equal env_file, File.read("test-app/.env")
         end
 
-        def test_with_type_argument
-          FileUtils.mkdir_p('test-app')
-          CLI::UI::Prompt.expects(:ask).never
-          ShopifyCli::AppTypes::Node.any_instance.stubs(:check_dependencies)
-          ShopifyCli::AppTypes::Node.any_instance.stubs(:build).with('test-app')
-          @command.call(['project', '--type=node', 'test-app'], nil)
-        end
+        private
 
-        def test_raises_with_invalid_type
-          FileUtils.mkdir_p('test-app')
-          CLI::UI::Prompt.expects(:ask).never
-          ShopifyCli::AppTypes::Node.any_instance.expects(:build).never
-          assert_raises ShopifyCli::Abort do
-            @command.call(['project', '--type=noder', 'test-app'], nil)
-          end
+        def perform_command
+          @command.call([
+            'project',
+            'test-app',
+            '--type=node',
+            '--app_url=http://app.com',
+            '--organization_id=42',
+            '--shop_domain=testshop.myshopify.com',
+          ], nil)
         end
       end
     end

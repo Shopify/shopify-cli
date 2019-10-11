@@ -14,7 +14,8 @@ module ShopifyCli
 
     class Error < StandardError; end
 
-    REDIRECT_HOST = "http://app-cli-loopback.shopifyapps.com"
+    DEFAULT_PORT = 3456
+    REDIRECT_HOST = "http://app-cli-loopback.shopifyapps.com:#{DEFAULT_PORT}"
     TEMPLATE = %{HTTP/1.1 200
       Content-Type: text/html
 
@@ -43,7 +44,6 @@ module ShopifyCli
     property :store, default: Helpers::Store.new
     property :secret, accepts: String
     property :request_exchange, accepts: String
-    property :port, default: 3456, accepts: Integer
     property :options, default: {}, accepts: Hash
     property :auth_path, default: "/authorize", accepts: ->(path) { path.is_a?(String) && path.start_with?("/") }
     property :token_path, default: "/token", accepts: ->(path) { path.is_a?(String) && path.start_with?("/") }
@@ -56,10 +56,6 @@ module ShopifyCli
       initiate_authentication(url)
       request_access_token(url, code: receive_access_code)
       request_exchange_token(url) if should_exchange
-    end
-
-    def redirect_uri
-      "#{REDIRECT_HOST}:#{port}"
     end
 
     def code_challenge
@@ -76,7 +72,7 @@ module ShopifyCli
       params = {
         client_id: client_id,
         scope: scopes,
-        redirect_uri: redirect_uri,
+        redirect_uri: REDIRECT_HOST,
         state: state_token,
         response_type: :code,
       }
@@ -87,7 +83,7 @@ module ShopifyCli
     end
 
     def listen_local
-      server = TCPServer.new('127.0.0.1', port)
+      server = TCPServer.new('127.0.0.1', DEFAULT_PORT)
       @server_thread ||= Thread.new do
         Thread.current.abort_on_exception = true
         begin
@@ -125,7 +121,7 @@ module ShopifyCli
         {
           grant_type: :authorization_code,
           code: code,
-          redirect_uri: redirect_uri,
+          redirect_uri: REDIRECT_HOST,
           client_id: client_id,
         }.merge(confirmation_param)
       )

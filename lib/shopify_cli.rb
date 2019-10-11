@@ -101,6 +101,7 @@ module ShopifyCli
   autoload :EntryPoint, 'shopify-cli/entry_point'
   autoload :Executor, 'shopify-cli/executor'
   autoload :Finalize, 'shopify-cli/finalize'
+  autoload :Forms, 'shopify-cli/forms'
   autoload :Helpers, 'shopify-cli/helpers'
   autoload :OAuth, 'shopify-cli/oauth'
   autoload :Options, 'shopify-cli/options'
