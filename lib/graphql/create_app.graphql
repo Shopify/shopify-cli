@@ -1,0 +1,19 @@
+mutation AppCreate($org: Int!, $title: String!, $app_url: Url!, $redir: [Url]!) {
+  appCreate(input: {organizationID: $org, title: $title, applicationUrl: $app_url, redirectUrlWhitelist: $redir}) {
+    app {
+      id
+      apiKey
+      title
+      applicationUrl
+      redirectUrlWhitelist
+      apiSecretKeys {
+        secret
+        createdAt
+      }
+    }
+    userErrors {
+      field
+      message
+    }
+  }
+}

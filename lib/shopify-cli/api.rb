@@ -24,9 +24,9 @@ module ShopifyCli
       gid.split('/').last
     end
 
-    def query(body, variables: {})
+    def query(query_name, variables: {})
       _, resp = request(
-        body,
+        load_query(query_name),
         variables: variables,
         headers: default_headers,
         graphql_url: url,
@@ -36,6 +36,10 @@ module ShopifyCli
     end
 
     private
+
+    def load_query(name)
+      File.read(File.join(ShopifyCli::ROOT, "lib/graphql/#{name}.graphql"))
+    end
 
     def request(body, graphql_url:, variables: {}, headers: {})
       CLI::Kit::Util.begin do

@@ -36,7 +36,11 @@ module ShopifyCli
             'Auth' => 'faketoken',
           })
         .to_return(status: 200, body: '{}')
-      @api.query(mutation)
+
+      File.stubs(:read)
+        .with(File.join(ShopifyCli::ROOT, "lib/graphql/api/mutation.graphql"))
+        .returns(mutation)
+      @api.query('api/mutation')
     end
   end
 end
