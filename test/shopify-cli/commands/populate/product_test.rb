@@ -10,16 +10,18 @@ module ShopifyCli
         def setup
           super
           Helpers::AccessToken.stubs(:read).returns('myaccesstoken')
-          @mutation = File.read(File.join(FIXTURE_DIR, 'populate/product.graphql'))
         end
 
         def test_populate_calls_api_with_mutation
-          ShopifyCli::Helpers::AdminAPI.expects(:query)
-            .with(@context, @mutation)
-            .returns(JSON.parse(File.read(File.join(FIXTURE_DIR, 'populate/product_data.json'))))
-          ShopifyCli::API.expects(:gid_to_id).returns(12345678)
           Helpers::Haikunator.stubs(:title).returns('fake product')
           Resource.any_instance.stubs(:price).returns('1.00')
+          ShopifyCli::Helpers::AdminAPI.expects(:query)
+            .with(@context, 'create_product', input: {
+              title: 'fake product',
+              variants: [{ price: '1.00' }],
+            })
+            .returns(JSON.parse(File.read(File.join(FIXTURE_DIR, 'populate/product_data.json'))))
+          ShopifyCli::API.expects(:gid_to_id).returns(12345678)
           @resource = Product.new(@context)
           @context.expects(:done).with(
             "fake product added to {{green:my-test-shop.myshopify.com}} at" \

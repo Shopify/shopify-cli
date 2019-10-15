@@ -14,7 +14,7 @@ module ShopifyCli
           url: "https://my-test-shop.myshopify.com/admin/api/unstable/graphql.json",
         ).returns(unstable_stub)
         unstable_stub.expects(:query)
-          .with('{ publicApiVersions() { handle displayName } }')
+          .with('api_versions')
           .returns(JSON.parse(File.read(File.join(FIXTURE_DIR, 'api/versions.json'))))
 
         Helpers::AccessToken.expects(:read).returns('token123').twice

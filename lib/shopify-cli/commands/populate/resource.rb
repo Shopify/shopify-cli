@@ -13,7 +13,7 @@ module ShopifyCli
         attr_reader :input
 
         class << self
-          attr_accessor :type, :field, :input_type, :payload, :payload_blacklist
+          attr_accessor :input_type
         end
 
         def call(args, _)
@@ -25,7 +25,7 @@ module ShopifyCli
           resource_options.parse(@args)
           if @silent
             spin_group = CLI::UI::SpinGroup.new
-            spin_group.add("Populating #{@count} #{self.class.type}s...") do |spinner|
+            spin_group.add("Populating #{@count} #{resource_type}s...") do |spinner|
               populate
               spinner.update_title(completion_message)
             end
@@ -72,10 +72,7 @@ module ShopifyCli
         end
 
         def populate
-          @count.times do
-            @ctx.debug(mutation)
-            run_mutation
-          end
+          @count.times { run_mutation }
           @ctx.puts(completion_message)
         end
 
@@ -90,41 +87,8 @@ module ShopifyCli
           end
         end
 
-        def input_fields
-          @input_fields = schema[self.class.input_type]['inputFields'].each_with_object({}) do |field, obj|
-            obj[field['name']] = field
-            obj
-          end
-        end
-
-        def to_input(struct)
-          struct.to_h.map do |key, value|
-            value = "\"#{value}\"" if input_fields[key.to_s]['type']['name'] == 'String'
-            "#{key}: #{value}"
-          end.join(',')
-        end
-
-        def mutation
-          <<~MUTATION
-            mutation {
-              #{self.class.field}(input: {#{to_input(@input)}}) {
-                #{self.class.type} {
-                  #{payload}
-                }
-              }
-            }
-          MUTATION
-        end
-
-        def payload
-          schema[Helpers::String.cap_first(self.class.type)]['fields']
-            .each_with_object([]) do |field, obj|
-            next unless field['args'].empty?
-            next if self.class.payload_blacklist.include?(field['name'])
-            next unless PAYLOAD_TYPE_WHITELIST.include?(field.dig('type', 'kind'))
-            next unless PAYLOAD_TYPE_WHITELIST.include?(field.dig('type', 'ofType', 'kind'))
-            obj << field['name']
-          end.join(',')
+        def resource_type
+          @resource_type ||= self.class.to_s.split('::').last.downcase
         end
 
         def schema
@@ -132,15 +96,15 @@ module ShopifyCli
         end
 
         def run_mutation
-          resp = Helpers::AdminAPI.query(@ctx, mutation)
+          resp = Helpers::AdminAPI.query(@ctx, "create_#{resource_type}", input: @input.to_h)
           raise(ShopifyCli::Abort, resp['errors']) if resp['errors']
           @ctx.done(message(resp['data'])) unless @silent
         end
 
         def completion_message
           <<~COMPLETION_MESSAGE
-            Successfully added #{@count} #{self.class.type}s to {{green:#{Project.current.env.shop}}}
-            {{*}} View all #{self.class.type}s at {{underline:#{admin_url}#{self.class.type}s}}
+            Successfully added #{@count} #{resource_type}s to {{green:#{Project.current.env.shop}}}
+            {{*}} View all #{resource_type}s at {{underline:#{admin_url}#{resource_type}s}}
           COMPLETION_MESSAGE
         end
 

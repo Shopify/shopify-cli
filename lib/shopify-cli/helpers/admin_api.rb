@@ -36,7 +36,7 @@ module ShopifyCli
             token: Helpers::AccessToken.read(ctx),
             url: "#{endpoint}/unstable/graphql.json",
           )
-          versions = client.query('{ publicApiVersions() { handle displayName } }')['data']['publicApiVersions']
+          versions = client.query('api_versions')['data']['publicApiVersions']
           latest = versions.find { |version| version['displayName'].include?('Latest') }
           latest['handle']
         end

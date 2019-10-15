@@ -1,0 +1,20 @@
+mutation createDrafOrder($input: DraftOrderInput!){
+  draftOrderCreate(input: $input) {
+    draftOrder {
+      createdAt
+      hasTimelineComment
+      id
+      legacyResourceId
+      name
+      subtotalPrice
+      taxExempt
+      taxesIncluded
+      totalPrice
+      totalShippingPrice
+      totalTax
+      totalWeight
+      updatedAt
+    }
+  }
+}
+

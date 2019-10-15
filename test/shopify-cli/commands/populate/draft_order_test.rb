@@ -10,20 +10,26 @@ module ShopifyCli
         def setup
           super
           Helpers::AccessToken.stubs(:read).returns('myaccesstoken')
-          @mutation = File.read(File.join(FIXTURE_DIR, 'populate/draft_order.graphql'))
         end
 
         def test_populate_calls_api_with_mutation
+          Helpers::Haikunator.stubs(:title).returns('fake order')
           ShopifyCli::Helpers::AdminAPI.expects(:query)
-            .with(@context, @mutation)
+            .with(@context, 'create_draftorder', input: {
+              lineItems: [{
+                originalUnitPrice: "1.00",
+                quantity: 1,
+                weight: { value: 10, unit: 'GRAMS' },
+                title: 'fake order',
+              }],
+            })
             .returns(JSON.parse(File.read(File.join(FIXTURE_DIR, 'populate/draft_order_data.json'))))
           ShopifyCli::API.expects(:gid_to_id).returns(12345678)
-          Helpers::Haikunator.stubs(:title).returns('fake order')
           Resource.any_instance.stubs(:price).returns('1.00')
           @resource = DraftOrder.new(@context)
           @context.expects(:done).with(
             "DraftOrders added to {{green:my-test-shop.myshopify.com}} at " \
-            "{{underline:https://my-test-shop.myshopify.com/admin/draft_order/12345678}}"
+            "{{underline:https://my-test-shop.myshopify.com/admin/draft_orders/12345678}}"
           )
           @resource.call(['-c 1'], nil)
         end
