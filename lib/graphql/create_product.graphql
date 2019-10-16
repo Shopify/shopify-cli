@@ -1,24 +1,8 @@
 mutation createProduct($input: ProductInput!){
   productCreate(input: $input) {
     product {
-      createdAt
-      defaultCursor
-      descriptionHtml
-      descriptionPlainSummary
-      handle
-      hasOnlyDefaultVariant
-      hasOutOfStockVariants
       id
-      isGiftCard
-      legacyResourceId
-      productType
-      storefrontId
       title
-      totalInventory
-      totalVariants
-      tracksInventory
-      updatedAt
-      vendor
     }
   }
 }

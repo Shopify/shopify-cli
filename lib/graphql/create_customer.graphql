@@ -1,22 +1,8 @@
 mutation createCustomer($input: CustomerInput!){
   customerCreate(input: $input) {
     customer {
-      acceptsMarketing
-      acceptsMarketingUpdatedAt
-      canDelete
-      createdAt
-      displayName
-      hasNote
-      hasTimelineComment
       id
-      legacyResourceId
-      lifetimeDuration
-      ordersCount
-      taxExempt
-      totalSpent
-      updatedAt
-      validEmailAddress
-      verifiedEmail
+      displayName
     }
   }
 }
