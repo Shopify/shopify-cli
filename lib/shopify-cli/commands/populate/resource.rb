@@ -5,10 +5,7 @@ module ShopifyCli
   module Commands
     class Populate
       class Resource < ShopifyCli::SubCommand
-        include SmartProperties
-
         DEFAULT_COUNT = 5
-        PAYLOAD_TYPE_WHITELIST = %w(SCALAR NON_NULL)
 
         attr_reader :input
 
@@ -32,6 +29,7 @@ module ShopifyCli
             spin_group.wait
           else
             populate
+            @ctx.puts(completion_message)
           end
         end
 
@@ -46,34 +44,21 @@ module ShopifyCli
         def resource_options
           @resource_options ||= OptionParser.new do |opts|
             opts.banner = "\0"
-            opts.on(
-              "-c #{DEFAULT_COUNT}",
-              "--count=#{DEFAULT_COUNT}",
-              'Number of resources to generate'
-            ) do |value|
+            opts.on("-c #{DEFAULT_COUNT}", "--count=#{DEFAULT_COUNT}", 'Number of resources to generate') do |value|
               @count = value.to_i
             end
 
-            opts.on(
-              "-h",
-              'print help'
-            ) do |_value|
+            opts.on("-h", 'print help') do |_value|
               puts opts
               exit
             end
 
-            opts.on(
-              "--silent",
-              "-s"
-            ) do |s|
-              @silent = s
-            end
+            opts.on("--silent", "-s") { |s| @silent = s }
           end
         end
 
         def populate
           @count.times { run_mutation }
-          @ctx.puts(completion_message)
         end
 
         def input_options
