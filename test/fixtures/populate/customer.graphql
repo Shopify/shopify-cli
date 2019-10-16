@@ -1,7 +1,0 @@
-mutation {
-  customerCreate(input: {firstName: "first",lastName: "last"}) {
-    customer {
-      acceptsMarketing,acceptsMarketingUpdatedAt,canDelete,createdAt,displayName,hasNote,hasTimelineComment,id,legacyResourceId,lifetimeDuration,ordersCount,taxExempt,totalSpent,updatedAt,validEmailAddress,verifiedEmail
-    }
-  }
-}

@@ -4,7 +4,6 @@ module ShopifyCli
   module Tasks
     class SchemaTest < MiniTest::Test
       include TestHelpers::Project
-      include ShopifyCli::Helpers::GraphQL::Queries
       include TestHelpers::Constants
 
       def test_gets_schema
@@ -12,7 +11,7 @@ module ShopifyCli
         Helpers::Store.expects(:set).with(shopify_admin_schema: "{\"foo\":\"baz\"}")
         Helpers::Store.expects(:get).with(:shopify_admin_schema).returns("{\"foo\":\"baz\"}")
         ShopifyCli::Helpers::AdminAPI.expects(:query)
-          .with(@context, introspection)
+          .with(@context, 'admin_introspection')
           .returns(foo: "baz")
         assert_equal({ "foo" => "baz" }, ShopifyCli::Tasks::Schema.call(@context))
       end

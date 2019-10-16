@@ -1,0 +1,6 @@
+query {
+  publicApiVersions() {
+    handle
+    displayName
+  }
+}

@@ -1,7 +1,0 @@
-mutation {
-  productCreate(input: {title: "fake product",variants: [{price: "1.00"}]}) {
-    product {
-      createdAt,defaultCursor,descriptionHtml,descriptionPlainSummary,handle,hasOnlyDefaultVariant,hasOutOfStockVariants,id,isGiftCard,legacyResourceId,productType,storefrontId,title,totalInventory,totalVariants,tracksInventory,updatedAt,vendor
-    }
-  }
-}
