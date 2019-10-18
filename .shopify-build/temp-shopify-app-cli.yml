@@ -1,0 +1,17 @@
+containers:
+  default:
+    docker: circleci/ruby:2.6.5-node-browsers
+
+steps:
+- label: Tests
+  timeout: 5m
+  run:
+    - bundle: ~
+    - bundle exec rake test
+
+- label: Lint
+  timeout: 3m
+  run:
+  - bundle: ~
+  - bundle exec rubocop
+  
