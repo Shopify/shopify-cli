@@ -13,7 +13,6 @@ module ShopifyCli
         end
 
         def call(args, _name)
-<<<<<<< HEAD
           form = Forms::CreateApp.ask(@ctx, args, options.flags)
           return @ctx.puts(self.class.help) if form.nil?
 
@@ -34,30 +33,6 @@ module ShopifyCli
             shop: form.shop_domain,
             scopes: 'write_products,write_customers,write_draft_orders',
           ).write(@ctx, app_type: ShopifyCli::AppTypeRegistry[form.type])
-=======
-          name = args.first
-          flag = options.flags[:type]
-          unless name
-            @ctx.puts(self.class.help)
-            return
-          end
-          name = args[1]
-
-          app_type = CLI::UI::Prompt.ask('What type of app project would you like to create?') do |handler|
-            AppTypeRegistry.each do |identifier, type|
-              handler.option(type.description) { identifier }
-            end
-          end
-
-          ShopifyCli::Tasks::Tunnel.call(@ctx)
-
-          AppTypeRegistry.check_dependencies(app_type, @ctx)
-
-          AppTypeRegistry.build(app_type, name, @ctx)
-          ShopifyCli::Project.write(@ctx, app_type)
-          @ctx.puts("{{*}} Whitelist your development URLs in the Partner Dashboard:
-          {{underline:https://github.com/Shopify/shopify-app-cli#whitelisting-app-redirection-urls}}")
->>>>>>> 182c6f8... add graphql files
         end
 
         def self.help
