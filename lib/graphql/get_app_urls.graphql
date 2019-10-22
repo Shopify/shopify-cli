@@ -1,0 +1,13 @@
+query getApp($apiKey: String!) {
+  app(apiKey: $apiKey) {
+    id
+    apiKey
+    title
+    applicationUrl
+    redirectUrlWhitelist
+    apiSecretKeys {
+      secret
+      createdAt
+    }
+  }
+}
