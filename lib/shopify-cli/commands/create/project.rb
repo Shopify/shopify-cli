@@ -5,40 +5,34 @@ module ShopifyCli
     class Create
       class Project < ShopifyCli::SubCommand
         options do |parser, flags|
-          parser.on('--type=TYPE') do |t|
-            flags[:type] = t.downcase.to_sym
-          end
+          parser.on('--title=TITLE') { |t| title[:title] = t }
+          parser.on('--type=TYPE') { |t| flags[:type] = t.downcase.to_sym }
+          parser.on('--app_url=APPURL') { |url| flags[:app_url] = url }
+          parser.on('--organization_id=ID') { |url| flags[:organization_id] = url }
+          parser.on('--shop_domain=MYSHOPIFYDOMAIN') { |url| flags[:shop_domain] = url }
         end
 
         def call(args, _name)
-          name = args.first
-          flag = options.flags[:type]
-          unless name
-            @ctx.puts(self.class.help)
-            return
-          end
+          form = Forms::CreateApp.ask(@ctx, args, options.flags)
+          return @ctx.puts(self.class.help) if form.nil?
 
-          app_type = if flag
-            unless AppTypeRegistry[flag]
-              raise ShopifyCli::Abort, 'Invalid App Type.'
-            end
-            flag
-          else
-            CLI::UI::Prompt.ask('What type of app project would you like to create?') do |handler|
-              AppTypeRegistry.each do |identifier, type|
-                handler.option(type.description) { identifier }
-              end
-            end
-          end
+          AppTypeRegistry.check_dependencies(form.type, @ctx)
+          AppTypeRegistry.build(form.type, form.name, @ctx)
+          ShopifyCli::Project.write(@ctx, form.type)
 
-          ShopifyCli::Tasks::Tunnel.call(@ctx)
+          api_client = Tasks::CreateApiClient.call(
+            @ctx,
+            org_id: form.organization_id,
+            title: form.title,
+            app_url: form.app_url,
+          )
 
-          AppTypeRegistry.check_dependencies(app_type, @ctx)
-
-          AppTypeRegistry.build(app_type, name, @ctx)
-          ShopifyCli::Project.write(@ctx, app_type)
-          @ctx.puts("{{*}} Whitelist your development URLs in the Partner Dashboard:
-          {{underline:https://github.com/Shopify/shopify-app-cli#whitelisting-app-redirection-urls}}")
+          Helpers::EnvFile.new(
+            api_key: api_client["apiKey"],
+            secret: api_client["apiSecretKeys"].first["secret"],
+            shop: form.shop_domain,
+            scopes: 'write_products,write_customers,write_draft_orders',
+          ).write(@ctx, app_type: ShopifyCli::AppTypeRegistry[form.type])
         end
 
         def self.help

@@ -6,6 +6,7 @@ module ShopifyCli
     autoload :Gem, 'shopify-cli/helpers/gem'
     autoload :GraphQL, 'shopify-cli/helpers/graphql'
     autoload :Haikunator, 'shopify-cli/helpers/haikunator'
+    autoload :Organizations, 'shopify-cli/helpers/organizations'
     autoload :OS, 'shopify-cli/helpers/os'
     autoload :PartnersAPI, 'shopify-cli/helpers/partners_api'
     autoload :PidFile, 'shopify-cli/helpers/pid_file'

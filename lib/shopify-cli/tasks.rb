@@ -23,6 +23,7 @@ module ShopifyCli
       Registry.add(const_get(task), name)
     end
 
+    register :CreateApiClient, :create_api_client, 'shopify-cli/tasks/create_api_client'
     register :AuthenticateIdentity, :authenticate_identity, 'shopify-cli/tasks/authenticate_identity'
     register :AuthenticateShopify, :authenticate_shopify, 'shopify-cli/tasks/authenticate_shopify'
     register :Clone, :clone, 'shopify-cli/tasks/clone'

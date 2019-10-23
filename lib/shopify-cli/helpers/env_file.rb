@@ -53,10 +53,10 @@ module ShopifyCli
       property :scopes
       property :host
 
-      def write(ctx)
+      def write(ctx, app_type: Project.current.app_type)
         spin_group = CLI::UI::SpinGroup.new
         spin_group.add("writing #{FILENAME} file...") do |spinner|
-          template = self.class.parse_template(Project.current.app_type.env_file)
+          template = self.class.parse_template(app_type.env_file)
           output = []
           template.each do |key, value|
             output << "#{key}=#{send(value)}" if send(value)

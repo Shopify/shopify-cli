@@ -11,13 +11,11 @@ module ShopifyCli
       assert_equal 'key', client.client_id
       assert_equal 'test,one', client.scopes
       assert_nil(client.secret)
-      assert_equal 3456, client.port
       assert_equal({}, client.options)
 
-      client = oauth(port: 9876, secret: 'secret', options: { foo: :bar })
+      client = oauth(secret: 'secret', options: { foo: :bar })
       assert_equal 'key', client.client_id
       assert_equal 'test,one', client.scopes
-      assert_equal 9876, client.port
       assert_equal 'secret', client.secret
       assert_equal({ foo: :bar }, client.options)
     end
@@ -32,7 +30,7 @@ module ShopifyCli
       authorize_query = {
         client_id: client.client_id,
         scope: client.scopes,
-        redirect_uri: client.redirect_uri,
+        redirect_uri: OAuth::REDIRECT_HOST,
         state: client.state_token,
         response_type: :code,
       }
@@ -41,7 +39,7 @@ module ShopifyCli
       token_query = {
         grant_type: :authorization_code,
         code: "mycode",
-        redirect_uri: client.redirect_uri,
+        redirect_uri: OAuth::REDIRECT_HOST,
         client_id: client.client_id,
         client_secret: 'secret',
       }
@@ -64,7 +62,7 @@ module ShopifyCli
       authorize_query = {
         client_id: client.client_id,
         scope: client.scopes,
-        redirect_uri: client.redirect_uri,
+        redirect_uri: OAuth::REDIRECT_HOST,
         state: client.state_token,
         response_type: :code,
       }
@@ -73,7 +71,7 @@ module ShopifyCli
       token_query = {
         grant_type: :authorization_code,
         code: "mycode",
-        redirect_uri: client.redirect_uri,
+        redirect_uri: OAuth::REDIRECT_HOST,
         client_id: client.client_id,
         code_verifier: client.code_verifier,
       }
@@ -96,7 +94,7 @@ module ShopifyCli
       authorize_query = {
         client_id: client.client_id,
         scope: client.scopes,
-        redirect_uri: client.redirect_uri,
+        redirect_uri: OAuth::REDIRECT_HOST,
         state: client.state_token,
         response_type: :code,
       }
@@ -105,7 +103,7 @@ module ShopifyCli
       token_query = {
         grant_type: :authorization_code,
         code: "mycode",
-        redirect_uri: client.redirect_uri,
+        redirect_uri: OAuth::REDIRECT_HOST,
         client_id: client.client_id,
         code_verifier: client.code_verifier,
       }
@@ -260,7 +258,7 @@ module ShopifyCli
       authorize_query = {
         client_id: client.client_id,
         scope: client.scopes,
-        redirect_uri: client.redirect_uri,
+        redirect_uri: OAuth::REDIRECT_HOST,
         state: client.state_token,
         response_type: :code,
       }
@@ -269,7 +267,7 @@ module ShopifyCli
       token_query = {
         grant_type: :authorization_code,
         code: "mycode",
-        redirect_uri: client.redirect_uri,
+        redirect_uri: OAuth::REDIRECT_HOST,
         client_id: client.client_id,
         client_secret: 'secret',
       }
@@ -303,7 +301,7 @@ module ShopifyCli
       query = {
         client_id: client.client_id,
         scope: client.scopes,
-        redirect_uri: client.redirect_uri,
+        redirect_uri: OAuth::REDIRECT_HOST,
         state: client.state_token,
         response_type: :code,
       }
