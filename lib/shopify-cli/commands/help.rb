@@ -5,7 +5,7 @@ module ShopifyCli
     class Help < ShopifyCli::Command
       def call(args, _name)
         command = args.shift
-        if command
+        if command && command != 'help'
           if Registry.exist?(command)
             cmd, _name = Registry.lookup_command(command)
             @ctx.puts(CLI::UI.fmt(cmd.help))

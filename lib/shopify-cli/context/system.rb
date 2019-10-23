@@ -18,6 +18,10 @@ module ShopifyCli
       def capture2e(*args, **kwargs)
         CLI::Kit::System.capture2e(*args, env: @env, **kwargs)
       end
+
+      def capture3(*args, **kwargs)
+        CLI::Kit::System.capture3(*args, env: @env, **kwargs)
+      end
     end
   end
 end
