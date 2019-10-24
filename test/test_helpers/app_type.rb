@@ -49,6 +49,10 @@ module TestHelpers
         def webhook_location
           "im fake"
         end
+
+        def callback_url
+          "/callback/fake"
+        end
       end
     end
 

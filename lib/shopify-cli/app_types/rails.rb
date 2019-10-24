@@ -48,6 +48,10 @@ module ShopifyCli
         def webhook_location
           "config/webhooks"
         end
+
+        def callback_url
+          "/auth/shopify/callback"
+        end
       end
 
       def build(name)

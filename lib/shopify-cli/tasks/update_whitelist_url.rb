@@ -3,11 +3,15 @@ module ShopifyCli
     class UpdateWhitelistURL < ShopifyCli::Task
       def call(ctx, url: ngrokurl)
         @ctx = ctx
+        project = ShopifyCli::Project.current
+        app_type = project.app_type
         api_key = Project.current.env.api_key
         result = Helpers::PartnersAPI.query(ctx, 'get_app_urls', apiKey: api_key)
+        @callback = app_type.callback_url
         app = result['data']['app']
         whitelist_urls = check_urls(app['redirectUrlWhitelist'], url)
-        return if whitelist_urls == app['redirectUrlWhitelist']
+        with_callback = check_callback_url(whitelist_urls, url)
+        return if with_callback == app['redirectUrlWhitelist']
         ShopifyCli::Helpers::PartnersAPI.query(@ctx, 'update_whitelisturls', input: {
           redirectUrlWhitelist: whitelist_urls, apiKey: api_key
         })
@@ -20,6 +24,14 @@ module ShopifyCli
           else
             url
           end
+        end
+      end
+
+      def check_callback_url(urls, new_url)
+        if urls.grep(/callback/).empty?
+          urls.push("#{new_url}#{@callback}")
+        else
+          urls
         end
       end
     end
