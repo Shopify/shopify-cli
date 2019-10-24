@@ -41,6 +41,7 @@ module ShopifyCli
               app: {
                 redirectUrlWhitelist: [
                   'https://123abc.ngrok.io',
+                  'https://newone123.ngrok.io/callback/fake',
                 ],
               },
             },
