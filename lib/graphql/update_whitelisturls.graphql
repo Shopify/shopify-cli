@@ -1,0 +1,8 @@
+mutation appUpdate($input: AppUpdateInput!) {
+  appUpdate(input: $input) {
+    userErrors {
+      message
+      field
+    }
+  }
+}

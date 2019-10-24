@@ -47,9 +47,9 @@ module ShopifyCli
         pid_file = ShopifyCli::Helpers::PidFile.for(:ngrok)
         log = fetch_url(pid_file.log_path)
         if log.account
-          @ctx.puts("{{v}} ngrok tunnel running at {{underline: #{log.url}}}, with account #{log.account}")
+          @ctx.puts("{{v}} ngrok tunnel running at {{underline:#{log.url}}}, with account #{log.account}")
         else
-          @ctx.puts("{{v}} ngrok tunnel running at {{underline: #{log.url}}}")
+          @ctx.puts("{{v}} ngrok tunnel running at {{underline:#{log.url}}}")
         end
         @ctx.app_metadata = { host: log.url }
         log.url

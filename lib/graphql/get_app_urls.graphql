@@ -1,0 +1,5 @@
+query getApp($apiKey: String!) {
+  app(apiKey: $apiKey) {
+    redirectUrlWhitelist
+  }
+}
