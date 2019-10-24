@@ -24,8 +24,7 @@ module ShopifyCli
             },
           },
         )
-        call_api = ShopifyCli::Tasks::UpdateWhitelistURL.call(@context, url: 'https://123abc.ngrok.io')
-        assert_equal(nil, call_api)
+        ShopifyCli::Tasks::UpdateWhitelistURL.call(@context, url: 'https://123abc.ngrok.io')
       end
 
       def test_url_is_transformed_if_different

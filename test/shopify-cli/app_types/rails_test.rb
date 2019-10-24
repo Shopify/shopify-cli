@@ -93,6 +93,8 @@ module ShopifyCli
 
       def test_server_command
         cmd = ShopifyCli::Commands::Serve.new(@context)
+        ShopifyCli::Tasks::Tunnel.stubs(:call)
+        ShopifyCli::Tasks::UpdateWhitelistURL.stubs(:call)
         @context.expects(:system).with(
           "PORT=8081 bin/rails server"
         )
