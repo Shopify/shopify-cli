@@ -5,6 +5,7 @@ module ShopifyCli
     class Authenticate < ShopifyCli::Command
       def call(args, _name)
         command = args.shift
+        ShopifyCli::Tasks::EnsureLoopbackURL.call(@ctx)
         CLI::UI::Spinner.spin("Requesting access token...") do |spinner|
           begin
             case command
@@ -16,10 +17,6 @@ module ShopifyCli
             spinner.update_title("Authetication token stored")
           rescue OAuth::Error
             @ctx.puts("{{error:Failed to Authenticate}}")
-            if command == 'shop' || command.nil?
-              @ctx.puts "{{*}} Remeber to add {{underline: #{OAuth::REDIRECT_HOST}:3456"\
-                "to the whitelisted redirection URLs in your app setup"
-            end
             raise(::ShopifyCli::Abort, "Failed to Authenticate")
           end
         end
