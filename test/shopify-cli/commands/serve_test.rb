@@ -23,8 +23,10 @@ module ShopifyCli
         ShopifyCli::Tasks::Tunnel.stubs(:call)
         ShopifyCli::Tasks::UpdateWhitelistURL.expects(:call)
         @command.stubs(:mac?).returns(true)
-        Open.any_instance.expects(:open_url!).with(
-          @context,
+        Open.any_instance.stubs(:mac?).returns(true)
+        @context.expects(:system).with('a command')
+        @context.expects(:system).with(
+          'open',
           'https://example.com',
         )
         @command.call([], nil)
