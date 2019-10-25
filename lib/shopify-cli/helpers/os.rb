@@ -26,12 +26,9 @@ module ShopifyCli
       end
 
       def open_url!(ctx, uri)
-        OPEN_COMMANDS.each do |bin, cmd|
-          return ctx.system(cmd, "'#{uri}'") if File.executable?(bin)
-        end
+        return ctx.system("open '#{uri}'") if mac?
         help = <<~OPEN
-          No open command available, (open, xdg-open, python)
-          Please open {{bold_green:#{uri}}} in your browser
+          Please open {{green:#{uri}}} in your browser
         OPEN
         ctx.puts(help)
       end
