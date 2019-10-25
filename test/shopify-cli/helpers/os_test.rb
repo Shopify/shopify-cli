@@ -4,6 +4,7 @@ module ShopifyCli
   module Helpers
     class OSTest < MiniTest::Test
       include OS
+      include TestHelpers::Context
 
       def test_mac_matches
         CLI::Kit::System.expects(:capture2).with('uname -a').returns(
@@ -21,6 +22,26 @@ module ShopifyCli
         assert(linux?)
         assert_equal(:linux, os)
         refute(mac?)
+      end
+
+      def test_open_url_formats_command_correctly
+        url = 'http://cutekitties.com'
+        expect_open('python', url)
+        expect_open('rundll32', url)
+        expect_open('xdg-open', url)
+        expect_open('open', url)
+      end
+
+      def expect_open(wanted_bin, url)
+        OPEN_COMMANDS.each do |bin, cmd|
+          if bin == wanted_bin
+            File.expects(:executable?).with(bin).returns(true)
+            @context.expects(:system).with(cmd, "'#{url}'")
+          else
+            File.stubs(:executable?).with(bin).returns(false)
+          end
+        end
+        open_url!(@context, url)
       end
     end
   end
