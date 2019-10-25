@@ -7,7 +7,6 @@ module ShopifyCli
         Tasks::EnsureEnv.call(ctx)
         env = Helpers::EnvFile.read
         OAuth.new(
-          ctx: ctx,
           service: 'admin',
           client_id: env.api_key,
           secret: env.secret,

@@ -3,7 +3,6 @@ require 'test_helper'
 module ShopifyCli
   module Tasks
     class AuthenticateIdentityTest < MiniTest::Test
-      include TestHelpers::Context
       include TestHelpers::Project
       include TestHelpers::Constants
 
@@ -12,7 +11,6 @@ module ShopifyCli
         ShopifyCli::OAuth
           .expects(:new)
           .with(
-            ctx: @context,
             service: 'identity',
             client_id: Helpers::PartnersAPI.cli_id,
             scopes: AuthenticateIdentity::SCOPES,

@@ -11,7 +11,6 @@ require 'uri'
 module ShopifyCli
   class OAuth
     include SmartProperties
-    include Helpers::OS
 
     class Error < StandardError; end
 
@@ -39,7 +38,6 @@ module ShopifyCli
     SUCCESS_RESP = 'Authenticated Successfully, this page will close shortly.'
     INVALID_STATE_RESP = 'Anti-forgery state token does not match the initial request.'
 
-    property! :ctx
     property! :service, accepts: String
     property! :client_id, accepts: String
     property! :scopes
@@ -81,7 +79,7 @@ module ShopifyCli
       params.merge!(challange_params) if secret.nil?
       uri = URI.parse("#{url}#{auth_path}")
       uri.query = URI.encode_www_form(params.merge(options))
-      open_url!(ctx, uri)
+      CLI::Kit::System.system("open '#{uri}'")
     end
 
     def listen_local

@@ -5,9 +5,8 @@ module ShopifyCli
     class AuthenticateIdentity < ShopifyCli::Task
       SCOPES = 'openid https://api.shopify.com/auth/partners.app.cli.access'
 
-      def call(ctx)
+      def call(_ctx)
         OAuth.new(
-          ctx: ctx,
           service: 'identity',
           client_id: Helpers::PartnersAPI.cli_id,
           scopes: SCOPES,
