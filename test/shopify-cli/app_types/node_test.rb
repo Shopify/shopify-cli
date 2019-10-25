@@ -116,9 +116,8 @@ module ShopifyCli
 
       def test_open_command
         cmd = ShopifyCli::Commands::Open.new(@context)
-        cmd.stubs(:mac?).returns(true)
-        @context.expects(:system).with(
-          'open',
+        cmd.expects(:open_url!).with(
+          @context,
           'https://example.com/auth?shop=my-test-shop.myshopify.com'
         )
         cmd.call([], nil)
