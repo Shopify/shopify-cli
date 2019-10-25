@@ -2,6 +2,7 @@ require 'test_helper'
 
 module ShopifyCli
   class OAuthTest < MiniTest::Test
+    include TestHelpers::Context
     include TestHelpers::Project
     include TestHelpers::Constants
 
@@ -23,7 +24,7 @@ module ShopifyCli
     def test_authenticate_with_secret
       endpoint = "https://example.com/auth"
       client = oauth(secret: 'secret')
-      CLI::Kit::System.expects(:system).with do |param|
+      client.expects(:open_url!).with do |_ctx, param|
         auth_repsonse(client, endpoint, param)
       end
 
@@ -55,7 +56,7 @@ module ShopifyCli
     def test_authenticate_without_secret
       endpoint = "https://example.com/auth"
       client = oauth
-      CLI::Kit::System.expects(:system).with do |param|
+      client.expects(:open_url!).with do |_ctx, param|
         auth_repsonse(client, endpoint, param)
       end
 
@@ -87,7 +88,7 @@ module ShopifyCli
     def test_request_exchange_token
       endpoint = "https://example.com/auth"
       client = oauth(request_exchange: '123')
-      CLI::Kit::System.expects(:system).with do |param|
+      client.expects(:open_url!).with do |_ctx, param|
         auth_repsonse(client, endpoint, param)
       end
 
@@ -217,7 +218,7 @@ module ShopifyCli
     def test_authenticate_with_invalid_request
       endpoint = "https://example.com/auth"
       client = oauth
-      CLI::Kit::System.stubs(:system).with do |_param|
+      client.expects(:open_url!).with do |_ctx, _param|
         WebMock.disable!
         https = Net::HTTP.new('localhost', 3456)
         request = Net::HTTP::Get.new("/?error=err&error_description=error")
@@ -234,7 +235,7 @@ module ShopifyCli
     def test_authenticate_with_invalid_state
       endpoint = "https://example.com/auth"
       client = oauth
-      CLI::Kit::System.stubs(:system).with do |_param|
+      client.expects(:open_url!).with do |_ctx, _param|
         WebMock.disable!
         https = Net::HTTP.new('localhost', 3456)
         request = Net::HTTP::Get.new("/?code=mycode&state=notyourstate")
@@ -251,7 +252,7 @@ module ShopifyCli
     def test_authenticate_with_invalid_code
       endpoint = "https://example.com/auth"
       client = oauth(secret: 'secret')
-      CLI::Kit::System.expects(:system).with do |param|
+      client.expects(:open_url!).with do |_ctx, param|
         auth_repsonse(client, endpoint, param)
       end
 
@@ -290,6 +291,7 @@ module ShopifyCli
       store = Helpers::Store.new(path: File.join(ShopifyCli::TEMP_DIR, ".test_db.pstore"))
       store.clear
       OAuth.new({
+        ctx: @context,
         service: 'test',
         client_id: 'key',
         scopes: 'test,one',
@@ -311,15 +313,15 @@ module ShopifyCli
           code_challenge_method: 'S256',
         )
       end
-      command = "open '#{endpoint}/authorize?#{URI.encode_www_form(query)}'"
-      if command == param
+      command = "#{endpoint}/authorize?#{URI.encode_www_form(query)}"
+      if command == param.to_s
         WebMock.disable!
         https = Net::HTTP.new('localhost', 3456)
         request = Net::HTTP::Get.new("/?code=mycode&state=#{client.state_token}")
         https.request(request)
         WebMock.enable!
       end
-      command == param
+      command == param.to_s
     end
 
     def token_resp

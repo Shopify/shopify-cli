@@ -11,6 +11,7 @@ module ShopifyCli
         ShopifyCli::OAuth
           .expects(:new)
           .with(
+            ctx: @context,
             service: 'admin',
             client_id: 'apikey',
             secret: 'secret',

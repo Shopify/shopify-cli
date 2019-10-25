@@ -4,6 +4,7 @@ module ShopifyCli
   module Helpers
     class OSTest < MiniTest::Test
       include OS
+      include TestHelpers::Context
 
       def test_mac_matches
         CLI::Kit::System.expects(:capture2).with('uname -a').returns(
@@ -21,6 +22,13 @@ module ShopifyCli
         assert(linux?)
         assert_equal(:linux, os)
         refute(mac?)
+      end
+
+      def test_open_url_formats_command_correctly
+        url = 'http://cutekitties.com'
+        stubs(:mac?).returns(true)
+        @context.expects(:system).with("open '#{url}'")
+        open_url!(@context, url)
       end
     end
   end
