@@ -22,6 +22,13 @@ module ShopifyCli
         assert_equal(:linux, os)
         refute(mac?)
       end
+
+      def test_open_url_formats_command_correctly
+        url = 'http://cutekitties.com'
+        stubs(:mac?).returns(true)
+        @context.expects(:system).with("open '#{url}'")
+        open_url!(@context, url)
+      end
     end
   end
 end

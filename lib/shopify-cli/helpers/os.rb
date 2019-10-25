@@ -17,6 +17,14 @@ module ShopifyCli
       def uname(flag: 'a')
         @uname ||= CLI::Kit::System.capture2("uname -#{flag}")[0].strip
       end
+
+      def open_url!(ctx, uri)
+        return ctx.system("open '#{uri}'") if mac?
+        help = <<~OPEN
+          Please open {{green:#{uri}}} in your browser
+        OPEN
+        ctx.puts(help)
+      end
     end
   end
 end
