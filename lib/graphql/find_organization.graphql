@@ -4,6 +4,16 @@ query FindOrg($id: ID!) {
       id
       businessName
       website
+      apps {
+        nodes {
+          id
+          title
+          apiKey
+          apiSecretKeys{
+            secret
+          }
+        }
+      }
       stores {
         nodes {
           link
