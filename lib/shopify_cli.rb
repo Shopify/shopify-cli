@@ -14,7 +14,7 @@ ENV['PATH'] = ENV['PATH'].split(':').select { |p| p.start_with?('/', '~') }.join
 vendor_path = File.expand_path("../../vendor/lib", __FILE__)
 $LOAD_PATH.unshift(vendor_path) unless $LOAD_PATH.include?(vendor_path)
 
-deps = %w(cli-ui cli-kit smart_properties)
+deps = %w(cli-ui cli-kit smart_properties graphql)
 deps.each do |dep|
   vendor_path = File.expand_path("../../vendor/deps/#{dep}/lib", __FILE__)
   $LOAD_PATH.unshift(vendor_path) unless $LOAD_PATH.include?(vendor_path)
@@ -113,6 +113,7 @@ module ShopifyCli
   autoload :Project, 'shopify-cli/project'
   autoload :HelpResolver, 'shopify-cli/help_resolver'
   autoload :SubCommand, 'shopify-cli/sub_command'
+  autoload :ScriptModule, 'shopify-cli/script_module'
   autoload :Task, 'shopify-cli/task'
   autoload :Tasks, 'shopify-cli/tasks'
   autoload :Update, 'shopify-cli/update'

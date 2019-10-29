@@ -15,3 +15,8 @@ test:
     else
       rake test $@
     fi
+
+commands:
+  style:
+    run: bundle exec rubocop
+    desc: 'Runs Rubocop'

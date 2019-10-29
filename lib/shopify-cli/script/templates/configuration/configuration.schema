@@ -1,0 +1,9 @@
+input Configuration {
+  _: Boolean
+}
+
+type Query {
+  configuration: Configuration
+}
+
+schema {query: Query}

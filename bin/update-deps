@@ -30,7 +30,7 @@ def source_path
   File.expand_path(ENV.fetch('SOURCE_ROOT', File.expand_path('../../..', __FILE__)))
 end
 
-deps = %w(cli-ui cli-kit smart_properties)
+deps = %w(cli-ui cli-kit smart_properties graphql)
 
 deps.each do |dep|
   path = File.expand_path(dep, source_path)

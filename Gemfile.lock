@@ -9,7 +9,7 @@ GEM
     byebug (8.2.2)
     crack (0.4.3)
       safe_yaml (~> 1.0.0)
-    fakefs (0.20.0)
+    fakefs (0.20.1)
     hashdiff (0.3.2)
     jaro_winkler (1.5.4)
     metaclass (0.0.4)
@@ -48,7 +48,7 @@ PLATFORMS
 
 DEPENDENCIES
   byebug
-  fakefs
+  fakefs (~> 0.20.1)
   minitest (>= 5.0.0)
   minitest-reporters
   mocha
