@@ -4,7 +4,7 @@ module ShopifyCli
       class << self
         GIT_SHA_PATTERN = %r{^[a-f0-9]{40}$}
 
-        def exec(*args, dir: nil, default: nil, ctx: Context.new)
+        def exec(*args, dir: Dir.pwd, default: nil, ctx: Context.new)
           args = %w(git) + args
           out, _, stat = ctx.capture3(*args, chdir: dir)
           return default unless stat.success?
