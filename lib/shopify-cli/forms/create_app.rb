@@ -45,7 +45,10 @@ module ShopifyCli
         @organiztion ||= begin
           if organization_id.nil?
             orgs = Helpers::Organizations.fetch_all(ctx)
-            if orgs.count == 1
+            if orgs.count == 0
+              ctx.puts('Please visit https://partners.shopify.com/ to create a partners account')
+              raise(ShopifyCli::Abort, 'No organizations available.')
+            elsif orgs.count == 1
               orgs.first
             else
               org_id = CLI::UI::Prompt.ask('Which organization do you want this app to belong to?') do |handler|
