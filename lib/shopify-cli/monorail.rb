@@ -10,7 +10,7 @@ module ShopifyCli
 
     ENDPOINT_URI = URI.parse('https://monorail-edge.shopifycloud.com/v1/produce')
 
-    MonorailError = Class.new(StandardError)
+    class MonorailError < StandardError; end
 
     class NilWriter
       def write(*args); end
