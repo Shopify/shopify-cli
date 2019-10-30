@@ -18,7 +18,7 @@ module ShopifyCli
       end
 
       def invocation(name, args, &block)
-        args.unshift(name)
+        args = args.dup.unshift(name)
         payload = {
           cli_sha: ShopifyCli::Helpers::Git.sha(dir: ShopifyCli::ROOT),
           uname: uname,
