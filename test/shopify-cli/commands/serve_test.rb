@@ -5,6 +5,12 @@ module ShopifyCli
     class ServeTest < MiniTest::Test
       include TestHelpers::FakeUI
 
+      def setup
+        super
+        @command = ShopifyCli::Commands::Serve
+        @command.ctx = @context
+      end
+
       def test_run
         Tasks::Tunnel.stubs(:call)
         Tasks::UpdateWhitelistURL.stubs(:call)
