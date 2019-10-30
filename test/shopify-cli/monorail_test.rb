@@ -14,6 +14,7 @@ module ShopifyCli
       redefine_constant(ShopifyCli, :EVENTS_MTIME, @mtime)
       ShopifyCli::Monorail.monorail = nil
       ShopifyCli::Monorail.events = nil
+      ShopifyCli::Config.stubs(:get_section).with('analytics').returns('enabled' => true)
     end
 
     def test_log_does_not_write_when_disabled_by_config
