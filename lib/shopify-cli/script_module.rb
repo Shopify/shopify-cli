@@ -2,6 +2,8 @@ require "shopify_cli"
 
 module ShopifyCli
   module ScriptModule
+    LANGUAGES = %w(ts js json)
+
     module Application
       autoload :Bootstrap, "shopify-cli/script/application/bootstrap.rb"
       autoload :Build, "shopify-cli/script/application/build.rb"
@@ -24,7 +26,7 @@ module ShopifyCli
       autoload :ServiceFailureError, "shopify-cli/script/domain/errors/service_failure_error.rb"
       autoload :InvalidConfigurationSchemaError, "shopify-cli/script/domain/errors/invalid_configuration_schema_error.rb"
       autoload :TestSuiteNotFoundError, "shopify-cli/script/domain/errors/test_suite_not_found_error.rb"
-      autoload :WasmNotFoundError, "shopify-cli/script/domain/errors/wasm_not_found_error.rb"
+      autoload :DeployPackageNotFoundError, "shopify-cli/script/domain/errors/deploy_package_not_found_error.rb"
     end
 
     module Infrastructure
@@ -37,12 +39,15 @@ module ShopifyCli
 
       autoload :ScriptService, "shopify-cli/script/infrastructure/script_service.rb"
 
+      autoload :ScriptBuilder, "shopify-cli/script/infrastructure/script_builder.rb"
       autoload :TypeScriptWasmBuilder, "shopify-cli/script/infrastructure/typescript_wasm_builder.rb"
       autoload :GraphQLTypeScriptBuilder, "shopify-cli/script/infrastructure/graphql_typescript_builder.rb"
+      autoload :GraphQLBuilder, "shopify-cli/script/infrastructure/graphql_builder.rb"
       autoload :TypeScriptWasmTestRunner, "shopify-cli/script/infrastructure/typescript_wasm_test_runner.rb"
 
       # errors
       autoload :ScriptServiceConnectionError, "shopify-cli/script/infrastructure/errors/script_service_connection_error.rb"
+      autoload :BuilderNotFoundError, "shopify-cli/script/infrastructure/errors/builder_not_found_error.rb"
     end
   end
 end

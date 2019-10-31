@@ -41,7 +41,7 @@ describe ShopifyCli::ScriptModule::Infrastructure::ConfigurationRepository do
   describe ".create_configuration" do
     subject { configuration_repository.create_configuration(extension_point, script.name) }
 
-    it "should a configuration" do
+    it "should create a configuration" do
       FakeFS.with_fresh do
         FakeFS::FileSystem.clone(configuration_schema_template)
         assert_equal configuration_root, subject.id

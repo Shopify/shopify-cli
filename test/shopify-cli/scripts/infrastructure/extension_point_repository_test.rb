@@ -103,6 +103,13 @@ describe ShopifyCli::ScriptModule::Infrastructure::ExtensionPointRepository do
         }
       HEREDOC
     end
+    let(:script_examples) do
+      {
+        "ts" => script_example,
+        "js" => nil,
+        "json" => nil,
+      }
+    end
 
     let(:remote_extension) { "discount" }
     let(:invalid_extension) { "bad" }
@@ -117,7 +124,7 @@ describe ShopifyCli::ScriptModule::Infrastructure::ExtensionPointRepository do
         extension_point = subject.get_extension_point(extension)
         assert_equal discount_schema, extension_point.schema
         assert_equal extension, extension_point.type
-        assert_equal script_example, extension_point.example_script
+        assert_equal script_examples, extension_point.example_scripts
         assert_equal remote_types, extension_point.sdk_types
       end
     end

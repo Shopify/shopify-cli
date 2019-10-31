@@ -15,11 +15,11 @@ module ShopifyCli
         DESCRIPTION_TEMPLATE = "Script '%s' created by CLI tool"
         DEPLOY_FAILED_MSG = "Deploy failed with status %{status} and message %{msg}"
         SCHEMA_FETCH_FAILED = "Failed to fetch schemas with status %{status} and message %{msg}"
-        WASM_FILE = "build.wasm"
+        BUILD_FILE = "build.out"
         EXTENSION_POINT_SCHEMA_FILE = "extension_point.schema"
         CONFIG_SCHEMA_FILE = "config.schema"
         private_constant :SCRIPT_SERVICE_URL, :MOCK_ORG_ID, :DESCRIPTION_TEMPLATE, :DEPLOY_FAILED_MSG,
-          :SCHEMA_FETCH_FAILED, :WASM_FILE, :EXTENSION_POINT_SCHEMA_FILE, :CONFIG_SCHEMA_FILE
+          :SCHEMA_FETCH_FAILED, :BUILD_FILE, :EXTENSION_POINT_SCHEMA_FILE, :CONFIG_SCHEMA_FILE
 
         def fetch_extension_points
           response = try_request { Net::HTTP.get_response(fetch_uri) }
@@ -31,7 +31,8 @@ module ShopifyCli
           extension_point_type:,
           extension_point_schema:,
           script_name:,
-          bytecode:,
+          script_content:,
+          content_type:,
           config_schema:,
           shop_id: nil,
           config_value: nil
@@ -42,11 +43,12 @@ module ShopifyCli
           Dir.mktmpdir do |temp_dir|
             Dir.chdir(temp_dir) do
               request.set_form(build_form_data(
-                shop_id: shop_id,
+                scope: { "shop_id" => shop_id }.to_json,
                 extension_point_type: extension_point_type,
                 extension_point_schema: extension_point_schema,
                 script_name: script_name,
-                bytecode: bytecode,
+                script_content: script_content,
+                content_type: content_type,
                 config_schema: config_schema,
                 config_value: config_value,
               ), "multipart/form-data")
@@ -82,26 +84,28 @@ module ShopifyCli
         end
 
         def build_form_data(
-          shop_id:,
+          scope:,
           extension_point_type:,
           extension_point_schema:,
           script_name:,
-          bytecode:,
+          script_content:,
           config_schema:,
-          config_value:
+          config_value:,
+          content_type:
         )
           form = [
             ["org_id", org_id],
             ["extension_point_name", extension_point_type],
-            ["source_code", bytecode, filename: WASM_FILE],
+            ["script_content", script_content, filename: BUILD_FILE],
             ["input_schema", extension_point_schema, filename: EXTENSION_POINT_SCHEMA_FILE],
             ["title", script_name],
+            ["content_type", content_type],
             ["description", get_description(script_name)],
             ["config_schema", config_schema, filename: CONFIG_SCHEMA_FILE],
           ]
 
           form.push(["configuration", config_value]) if config_value
-          form.push(["shop_id", shop_id]) if shop_id
+          form.push(["scope", scope]) if scope
           form
         end
 

@@ -1,5 +1,6 @@
 require "test_helper"
 require_relative "fake_script_repository"
+require_relative "fake_configuration_repository"
 
 describe ShopifyCli::ScriptModule::Infrastructure::TestSuiteRepository do
   let(:extension_point_type) { "discount" }
@@ -20,7 +21,7 @@ describe ShopifyCli::ScriptModule::Infrastructure::TestSuiteRepository do
   let(:script) { ShopifyCli::ScriptModule::Domain::Script.new(script_name, extension_point, configuration, language, "schema") }
   let(:language) { "ts" }
   let(:template_base) { "#{ShopifyCli::ScriptModule::Infrastructure::Repository::INSTALLATION_BASE_PATH}/templates/" }
-  let(:template_file) { "#{template_base}/typescript/#{ShopifyCli::ScriptModule::Infrastructure::TestSuiteRepository::TEST_TEMPLATE_NAME}.spec.#{language}" }
+  let(:template_file) { "#{template_base}/ts/#{ShopifyCli::ScriptModule::Infrastructure::TestSuiteRepository::TEST_TEMPLATE_NAME}.spec.#{language}" }
   let(:spec_test_base) { "#{Dir.pwd}/test/#{extension_point_type}/#{script_name}" }
   let(:spec_test_file) { "#{spec_test_base}/#{script_name}.spec.#{language}" }
   let(:script_repository) { ShopifyCli::ScriptModule::Infrastructure::FakeScriptRepository.new }

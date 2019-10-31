@@ -6,6 +6,8 @@ module ShopifyCli
       class ConfigurationRepository < Repository
         BASE_DIR_NAME = "configuration"
         SCHEMA_FILE_NAME = "configuration.schema"
+        # this sucks since it's hardcoded to ts, but since ts is the only language with glue code and
+        # soon probably won't even have glue code I'm just going to leave it be
         GLUE_CODE_FILE_NAME = "configuration.ts"
         private_constant :BASE_DIR_NAME, :SCHEMA_FILE_NAME, :GLUE_CODE_FILE_NAME
 
@@ -18,6 +20,7 @@ module ShopifyCli
         end
 
         def update_configuration(configuration)
+          return unless configuration.glue_code
           Pathname.new("#{config_dir_path(configuration)}/#{GLUE_CODE_FILE_NAME}").write(configuration.glue_code)
         end
 

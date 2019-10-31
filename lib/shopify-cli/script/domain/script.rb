@@ -15,7 +15,11 @@ module ShopifyCli
         end
 
         def id
-          "#{extension_point.type}/#{name}.#{language}"
+          "#{extension_point.type}/#{filename}"
+        end
+
+        def filename
+          "#{name}.#{language}"
         end
       end
     end

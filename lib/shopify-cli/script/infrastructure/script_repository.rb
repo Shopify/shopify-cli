@@ -9,13 +9,12 @@ module ShopifyCli
         def create_script(language, extension_point, configuration, script_name)
           source_file_path = src_code_file(extension_point.type, language, script_name)
 
-          FileUtils.cp_r(runtime_types, src_base(extension_point.type, script_name))
-          File.write(source_file_path, extension_point.example_script)
-
-          write_schema_and_sdk_types(
+          FileUtils.mkdir_p(types_path(extension_point.type, script_name))
+          File.write(source_file_path, extension_point.example_scripts[language])
+          File.write(schema_file(extension_point.type, script_name), extension_point.schema)
+          write_sdk(
             extension_point.type,
             script_name,
-            extension_point.schema,
             language,
             extension_point.sdk_types
           )
@@ -54,9 +53,10 @@ module ShopifyCli
 
         private
 
-        def write_schema_and_sdk_types(extension_point_type, script_name, schema, language, sdk_types)
-          FileUtils.mkdir_p(types_path(extension_point_type, script_name))
-          File.write(schema_file(extension_point_type, script_name), schema)
+        def write_sdk(extension_point_type, script_name, language, sdk_types)
+          return unless language == "ts"
+
+          FileUtils.cp_r(runtime_types, src_base(extension_point_type, script_name))
           File.write(sdk_types_file(extension_point_type, script_name, language), sdk_types)
         end
 
@@ -74,6 +74,10 @@ module ShopifyCli
 
         def types_path(extension_point_type, script_name)
           "#{src_base(extension_point_type, script_name)}/types"
+        end
+
+        def code_template(extension_point_type, language)
+          "#{INSTALLATION_BASE_PATH}/templates/#{language}/#{extension_point_type}.#{language}"
         end
 
         def runtime_types

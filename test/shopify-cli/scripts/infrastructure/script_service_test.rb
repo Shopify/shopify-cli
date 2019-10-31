@@ -27,7 +27,7 @@ describe ShopifyCli::ScriptModule::Infrastructure::ScriptService do
     let(:extension_point_type) { "discount" }
     let(:extension_point_schema) { "schema" }
     let(:script_name) { "foo_bar" }
-    let(:bytecode) { "(module)" }
+    let(:script_content) { "(module)" }
     let(:config_schema) { "config" }
     let(:config_value) { nil }
     let(:shop_id) { nil }
@@ -38,7 +38,8 @@ describe ShopifyCli::ScriptModule::Infrastructure::ScriptService do
         extension_point_type: extension_point_type,
         extension_point_schema: extension_point_schema,
         script_name: script_name,
-        bytecode: bytecode,
+        script_content: script_content,
+        content_type: "wasm",
         config_schema: config_schema,
       )
     end
@@ -47,7 +48,7 @@ describe ShopifyCli::ScriptModule::Infrastructure::ScriptService do
       form = [
         ["org_id", "100"],
         ["extension_point_name", extension_point_type],
-        ["source_code", bytecode, filename: "build.wasm"],
+        ["source_code", script_content, filename: "build.wasm"],
         ["input_schema", extension_point_schema, filename: "extension_point.schema"],
         ["title", script_name],
         ["description", "Script 'foo_bar' created by CLI tool"],
@@ -57,9 +58,9 @@ describe ShopifyCli::ScriptModule::Infrastructure::ScriptService do
       form.push(["configuration", config_value]) if config_value
       form.push(["shop_id", "1"]) if shop_id
 
-      stub_request(:post, deploy_uri).with { |req|
+      stub_request(:post, deploy_uri).with do |req|
         req.body = form
-      }.to_return(http_result)
+      end.to_return(http_result)
     end
 
     describe "when deploy to script service succeeds" do

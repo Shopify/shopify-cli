@@ -13,7 +13,7 @@ module ShopifyCli
 
           configuration_repository = Infrastructure::ConfigurationRepository.new
           configuration = configuration_repository.create_configuration(extension_point, script_name)
-          configuration.generate_glue_code!(Infrastructure::GraphQLTypeScriptBuilder.new)
+          configuration.generate_glue_code!(Infrastructure::GraphQLBuilder.from(language))
           configuration_repository.update_configuration(configuration)
 
           script = Infrastructure::ScriptRepository

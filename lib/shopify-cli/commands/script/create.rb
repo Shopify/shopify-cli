@@ -16,7 +16,16 @@ module ShopifyCli
           name = args.shift
           return @ctx.puts(CLI::UI.fmt(self.class.help)) unless name
 
-          bootstrap(extension_point, name)
+          language = if args.include?("--language")
+            index = args.index("--language")
+            args[index + 1]
+          else
+            "ts"
+          end
+
+          return puts CLI::UI.fmt(self.class.help) unless ScriptModule::LANGUAGES.include?(language)
+
+          bootstrap(language, extension_point, name)
         end
 
         def self.help
@@ -28,8 +37,8 @@ module ShopifyCli
 
         private
 
-        def bootstrap(extension_point, name)
-          script = ScriptModule::Application::Bootstrap.call("ts", extension_point, name)
+        def bootstrap(language, extension_point, name)
+          script = ScriptModule::Application::Bootstrap.call(language, extension_point, name)
           puts CLI::UI.fmt(format(CREATED_NEW_SCRIPT_MSG, script_id: script.id))
         rescue ScriptModule::Domain::InvalidExtensionPointError
           puts CLI::UI.fmt(format(INVALID_EXTENSION_POINT, extension_point: extension_point))

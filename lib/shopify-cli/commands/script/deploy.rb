@@ -15,6 +15,8 @@ module ShopifyCli
         INVALID_EXTENSION_POINT = "Invalid extension point %{extension_point}"
         SCRIPT_NOT_FOUND = "Could not find script %{script_name} for extension point %{extension_point}"
 
+        LANGUAGES = %w(ts js json)
+
         def call(args, _name)
           extension_point = args.shift
           return puts CLI::UI.fmt(self.class.help) unless extension_point
@@ -34,11 +36,19 @@ module ShopifyCli
               args[index + 1]
             end
 
+          language = if args.include?("--language")
+            index = args.index("--language")
+            args[index + 1]
+          else
+            "ts"
+          end
+          return puts CLI::UI.fmt(self.class.help) unless ScriptModule::LANGUAGES.include?(language)
+
           puts CLI::UI.fmt(BUILDING_MSG)
-          ScriptModule::Application::Build.call("ts", extension_point, name)
+          ScriptModule::Application::Build.call(language, extension_point, name)
 
           puts CLI::UI.fmt(DEPLOYING_MSG)
-          ScriptModule::Application::Deploy.call("ts", extension_point, name, shop_id, config_value)
+          ScriptModule::Application::Deploy.call(language, extension_point, name, shop_id, config_value)
 
           puts CLI::UI.fmt(DEPLOY_SUCCEEDED_MSG)
         rescue ScriptModule::Domain::ScriptNotFoundError

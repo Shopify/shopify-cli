@@ -4,32 +4,44 @@ module ShopifyCli
   module ScriptModule
     module Infrastructure
       class DeployPackageRepository < Repository
-        def create_deploy_package(script, bytecode)
-          base = "#{src_base(script.extension_point.type, script.name)}/build"
-          FileUtils.mkdir_p(base)
-          File.write("#{base}/#{script.name}.wasm", bytecode)
-
-          id = wasm_blob_file_path(script.extension_point.type, script.name)
-          Domain::DeployPackage.new(id, script, bytecode)
+        def create_deploy_package(script, script_content)
+          compiled_type = Infrastructure::ScriptBuilder.for(script).compiled_type
+          build_file_path = file_path(script.extension_point.type, script.name, compiled_type)
+          write_to_path(
+            build_file_path,
+            script_content
+          )
+          Domain::DeployPackage.new(
+            build_file_path,
+            script,
+            script_content,
+            compiled_type
+          )
         end
 
         def get_deploy_package(language, extension_point_type, script_name)
           script = ScriptRepository.new.get_script(language, extension_point_type, script_name)
+          compiled_type = Infrastructure::ScriptBuilder.for(script).compiled_type
 
-          id = wasm_blob_file_path(extension_point_type, script_name)
-          raise Domain::WasmNotFoundError.new(extension_point_type, script_name) unless File.exist?(id)
+          id = file_path(extension_point_type, script_name, compiled_type)
+          raise Domain::DeployPackageNotFoundError.new(extension_point_type, script_name) unless File.exist?(id)
 
-          Domain::DeployPackage.new(id, script, File.read(id))
+          Domain::DeployPackage.new(id, script, File.read(id), compiled_type)
         end
 
         private
 
-        def src_base(extension_point_type, script_name)
-          "#{SOURCE_PATH}/#{extension_point_type}/#{script_name}"
+        def write_to_path(path, content)
+          FileUtils.mkdir_p(File.dirname(path))
+          File.write(path, content)
         end
 
-        def wasm_blob_file_path(extension_point_type, script_name)
-          "#{src_base(extension_point_type, script_name)}/build/#{script_name}.wasm"
+        def file_path(extension_point_type, script_name, content_type)
+          "#{src_base(extension_point_type, script_name)}/build/#{script_name}.#{content_type}"
+        end
+
+        def src_base(extension_point_type, script_name)
+          "#{SOURCE_PATH}/#{extension_point_type}/#{script_name}"
         end
       end
     end

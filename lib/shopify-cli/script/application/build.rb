@@ -10,12 +10,12 @@ module ShopifyCli
           script_repo = Infrastructure::ScriptRepository.new
           script = script_repo.get_script(language, extension_point_type, script_name)
 
-          byte_code = script_repo.with_script_context(script) do
-            Infrastructure::TypeScriptWasmBuilder.new(script).build
+          script_content = script_repo.with_script_context(script) do
+            Infrastructure::ScriptBuilder.for(script).build
           end
 
           Infrastructure::DeployPackageRepository.new
-            .create_deploy_package(script, byte_code)
+            .create_deploy_package(script, script_content)
         end
       end
     end

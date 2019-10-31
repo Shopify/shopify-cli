@@ -33,6 +33,10 @@ module ShopifyCli
           bytecode
         end
 
+        def compiled_type
+          "wasm"
+        end
+
         private
 
         def prepare

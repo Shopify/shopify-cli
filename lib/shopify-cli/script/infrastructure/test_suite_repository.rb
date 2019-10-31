@@ -7,6 +7,9 @@ module ShopifyCli
         TEST_TEMPLATE_NAME = "template"
 
         def create_test_suite(script)
+          # Remove this once we have a test suite for js
+          return unless script.language == "ts"
+
           root = test_base(script.extension_point.type, script.name)
 
           FileUtils.mkdir_p(root)
@@ -37,7 +40,7 @@ module ShopifyCli
         private
 
         def test_template(language)
-          "#{INSTALLATION_BASE_PATH}/templates/typescript/#{TEST_TEMPLATE_NAME}.spec.#{language}"
+          "#{INSTALLATION_BASE_PATH}/templates/#{language}/#{TEST_TEMPLATE_NAME}.spec.#{language}"
         end
 
         def test_base(extension_point_type, script_name)
