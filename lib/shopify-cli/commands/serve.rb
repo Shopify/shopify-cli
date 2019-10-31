@@ -16,12 +16,12 @@ module ShopifyCli
       def call(*)
         project = Project.current
         custom_host = options.flags[:host]
-        update_env(custom_host) if custom_host
         url = if custom_host
             custom_host
         else
           ShopifyCli::Tasks::Tunnel.call(@ctx)
         end
+        update_env(url)
         ShopifyCli::Tasks::UpdateWhitelistURL.call(@ctx, url: url)
         if mac? && project.env.shop
           @ctx.puts("{{*}} Press {{yellow: Control-T}} to open this project in your browser")

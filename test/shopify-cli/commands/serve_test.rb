@@ -19,10 +19,11 @@ module ShopifyCli
       end
 
       def test_open_while_run
-        Serve.any_instance.stubs(:on_siginfo).yields
-        Tasks::Tunnel.stubs(:call)
-        Tasks::UpdateWhitelistURL.expects(:call)
-        Serve.any_instance.stubs(:mac?).returns(true)
+        @command.stubs(:on_siginfo).yields
+        puts ShopifyCli::Tasks::Tunnel.stubs(:call).returns('https://example.com')
+        @command.stubs(:update_env).with('https://example.com')
+        ShopifyCli::Tasks::UpdateWhitelistURL.expects(:call)
+        @command.stubs(:mac?).returns(true)
         Open.any_instance.expects(:open_url!).with(
           @context,
           'https://example.com',
