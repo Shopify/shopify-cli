@@ -71,19 +71,21 @@ module ShopifyCli
       end
 
       def do_post(headers, body, num_retries)
-        CLI::Kit::Util.begin do
-          Net::HTTP.start(ENDPOINT_URI.host, ENDPOINT_URI.port, use_ssl: ENDPOINT_URI.scheme == 'https') do |http|
-            post = Net::HTTP::Post.new(ENDPOINT_URI.request_uri, headers)
-            post.body = body
-            http.request(post) do |response|
-              code = response.code.to_i
-              unless code == 200
-                raise(MonorailError, "Unexpected status #{code} from Monorail Edge: #{response.body}")
+        Helpers::Async.in_thread do
+          CLI::Kit::Util.begin do
+            Net::HTTP.start(ENDPOINT_URI.host, ENDPOINT_URI.port, use_ssl: ENDPOINT_URI.scheme == 'https') do |http|
+              post = Net::HTTP::Post.new(ENDPOINT_URI.request_uri, headers)
+              post.body = body
+              http.request(post) do |response|
+                code = response.code.to_i
+                unless code == 200
+                  raise(MonorailError, "Unexpected status #{code} from Monorail Edge: #{response.body}")
+                end
               end
             end
+          end.retry_after(MonorailError, retries: num_retries) do |error|
+            ShopifyCli::Logger.warn(name) { "#{error.message}; retrying..." }
           end
-        end.retry_after(MonorailError, retries: num_retries) do |error|
-          ShopifyCli::Logger.warn(name) { "#{error.message}; retrying..." }
         end
       end
 

@@ -12,21 +12,22 @@ module ShopifyCli
         @event = { payload: { timestamp: Time.now.utc.to_s } }
         @logger_io = StringIO.new
         redefine_constant(ShopifyCli, :Logger, ::Logger.new(@logger_io))
+        Helpers::Async.stubs(:in_thread).yields
       end
 
       def test_no_retries_success
-        stub_request(:post, ShopifyCli::Monorail::ENDPOINT_URI)
+        stub_request(:post, Monorail::ENDPOINT_URI)
           .to_return(status: 200)
-        ShopifyCli::Monorail.produce(@event, num_retries: 0)
+        Monorail.produce(@event, num_retries: 0)
 
         log_lines = @logger_io.string.lines
         assert_equal(0, log_lines.size)
       end
 
       def test_no_retries_failure
-        stub_request(:post, ShopifyCli::Monorail::ENDPOINT_URI)
+        stub_request(:post, Monorail::ENDPOINT_URI)
           .to_return(status: 500)
-        ShopifyCli::Monorail.produce(@event, num_retries: 0)
+        Monorail.produce(@event, num_retries: 0)
 
         log_lines = @logger_io.string.lines
         assert_equal(1, log_lines.size)
@@ -34,10 +35,10 @@ module ShopifyCli
       end
 
       def test_one_retry_then_success
-        stub_request(:post, ShopifyCli::Monorail::ENDPOINT_URI)
+        stub_request(:post, Monorail::ENDPOINT_URI)
           .to_return(status: 500).then
           .to_return(status: 200)
-        ShopifyCli::Monorail.produce(@event, num_retries: 1)
+        Monorail.produce(@event, num_retries: 1)
 
         log_lines = @logger_io.string.lines
         assert_equal(1, log_lines.size)
@@ -45,10 +46,10 @@ module ShopifyCli
       end
 
       def test_one_retry_then_failure
-        stub_request(:post, ShopifyCli::Monorail::ENDPOINT_URI)
+        stub_request(:post, Monorail::ENDPOINT_URI)
           .to_return(status: 500).then
           .to_return(status: 500)
-        ShopifyCli::Monorail.produce(@event, num_retries: 1)
+        Monorail.produce(@event, num_retries: 1)
 
         log_lines = @logger_io.string.lines
         assert_equal(2, log_lines.size)
@@ -57,12 +58,12 @@ module ShopifyCli
       end
 
       def test_three_retries_then_failure
-        stub_request(:post, ShopifyCli::Monorail::ENDPOINT_URI)
+        stub_request(:post, Monorail::ENDPOINT_URI)
           .to_return(status: 500).then
           .to_return(status: 500).then
           .to_return(status: 500).then
           .to_return(status: 500)
-        ShopifyCli::Monorail.produce(@event) # default is three
+        Monorail.produce(@event) # default is three
 
         log_lines = @logger_io.string.lines
         assert_equal(4, log_lines.size)
