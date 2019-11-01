@@ -57,7 +57,7 @@ module ShopifyCli
         assert_match('Invalid URL', io.join)
       end
 
-      def test_user_will_be_promted_if_more_than_one_organization
+      def test_user_will_be_prompted_if_more_than_one_organization
         stub_partner_req(
           'all_organizations',
           resp: {
@@ -125,6 +125,20 @@ module ShopifyCli
         form = ask(org_id: 123, shop: nil)
         assert_equal(form.organization_id, 123)
         assert_equal(form.shop_domain, 'shopdomain.myshopify.com')
+      end
+
+      def test_it_will_fail_if_no_orgs_are_available
+        stub_partner_req(
+          'all_organizations',
+          resp: { data: { organizations: { nodes: [] } } },
+        )
+
+        io = capture_io do
+          form = ask(org_id: nil, shop: nil)
+          assert_nil(form)
+        end
+        assert_match('Please visit https://partners.shopify.com/ to create a partners account', io.join)
+        assert_match('No organizations available.', io.join)
       end
 
       def test_returns_no_shop_if_none_are_available
