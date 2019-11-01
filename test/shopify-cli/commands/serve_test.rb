@@ -27,6 +27,7 @@ module ShopifyCli
           @context,
           'https://example.com',
         )
+        @context.expects(:system).with('a command')
         @command.call([], nil)
       end
     end
