@@ -67,7 +67,7 @@ module ShopifyCli
         File.open(File.join(ctx.root, 'Gemfile'), 'a') do |f|
           f.puts "\ngem 'shopify_app', '~>11.0.1'"
         end
-        ctx.puts("{{green:✔︎}} Adding shopify_app gem…")
+        ctx.puts("{{v}} Adding shopify_app gem…")
         CLI::UI::Frame.open("Running bundle install...") do
           ctx.system(Gem.binary_path_for(ctx, 'bundle'), 'install', chdir: ctx.root)
         end

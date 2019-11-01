@@ -21,12 +21,14 @@ module ShopifyCli
           {{bold:Subcommands:}}
 
             {{cyan:project}}: Creates an app based on type selected.
-              Usage: {{command:#{ShopifyCli::TOOL_NAME} create project <appname>}} or any combination of
-                     {{command:#{ShopifyCli::TOOL_NAME} create project <appname> --type=TYPE}}
-                     {{command:#{ShopifyCli::TOOL_NAME} create project <appname> --title=TITLE}}
-                     {{command:#{ShopifyCli::TOOL_NAME} create project <appname> --app_url=APPURL}}
-                     {{command:#{ShopifyCli::TOOL_NAME} create project <appname> --organization_id=ID}}
-                     {{command:#{ShopifyCli::TOOL_NAME} create project <appname> --shop_domain=MYSHOPIFYDOMAIN}}
+              Usage: {{command:#{ShopifyCli::TOOL_NAME} create project <appname>}}
+
+              Options:
+                {{command:--type=TYPE}}  App project type. Valid types are "node" and "rails"
+                {{command:--title=TITLE}} App project title. Any string.
+                {{command:--app_url=APPURL}} App project URL. Must be valid URL.
+                {{command:--organization_id=ID}} App project Org ID. Must be existing org ID.
+                {{command:--shop_domain=MYSHOPIFYDOMAIN }} Test store URL. Must be existing test store.
 
             {{cyan:dev-store}}: {{yellow: Create dev-store is not currently available.}}
         HELP
