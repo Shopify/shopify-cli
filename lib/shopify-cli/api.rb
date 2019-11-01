@@ -75,8 +75,7 @@ module ShopifyCli
     end
 
     def current_sha
-      output, status = ctx.capture2e('git', 'rev-parse', 'HEAD', chdir: ShopifyCli::ROOT)
-      status.success? ? output.strip : 'SHA unavailable'
+      @current_sha ||= Helpers::Git.sha(dir: ShopifyCli::ROOT)
     end
 
     def default_headers
