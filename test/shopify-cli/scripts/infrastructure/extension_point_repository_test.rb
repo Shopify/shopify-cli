@@ -8,19 +8,23 @@ describe ShopifyCli::ScriptModule::Infrastructure::ExtensionPointRepository do
 
   describe ".get_extension_point" do
     let(:extension_points) do
-      [
-        {
-          "name" => remote_extension,
-          "schema" => discount_schema,
-          "types" => remote_types,
-          "script_example" => script_example,
+      {
+        "data" => {
+          "extensionPoints" => [
+          {
+            "name" => remote_extension,
+            "schema" => discount_schema,
+            "types" => remote_types,
+            "scriptExample" => script_example,
+          },
+          {
+            "name" => invalid_extension,
+            "schema" => discount_schema,
+            "scriptExample" => script_example,
+          },
+          ],
         },
-        {
-          "name" => invalid_extension,
-          "schema" => discount_schema,
-          "script_example" => script_example,
-        },
-      ]
+      }
     end
     let(:discount_schema) do
       <<~HEREDOC
@@ -111,9 +115,9 @@ describe ShopifyCli::ScriptModule::Infrastructure::ExtensionPointRepository do
       }
     end
 
-    let(:remote_extension) { "discount" }
+    let(:remote_extension) { "DISCOUNT" }
     let(:invalid_extension) { "bad" }
-    let(:extension) { remote_extension }
+    let(:bogus_extension) { "bogus" }
 
     before do
       script_service.expect(:fetch_extension_points, extension_points)
@@ -121,31 +125,29 @@ describe ShopifyCli::ScriptModule::Infrastructure::ExtensionPointRepository do
 
     describe "if the right extension point exists" do
       it "should return valid ExtensionPoint" do
-        extension_point = subject.get_extension_point(extension)
+        extension_point = subject.get_extension_point(remote_extension)
         assert_equal discount_schema, extension_point.schema
-        assert_equal extension, extension_point.type
+        assert_equal remote_extension, extension_point.type
         assert_equal script_examples, extension_point.example_scripts
         assert_equal remote_types, extension_point.sdk_types
       end
     end
 
     describe "if the right extension point does not exist" do
-      let(:extension) { "bogus" }
-      it "should raise an ArgumentError" do
+      it "should raise an InvalidExtensionPointError" do
         err = assert_raises ShopifyCli::ScriptModule::Domain::InvalidExtensionPointError do
-          subject.get_extension_point(extension)
+          subject.get_extension_point(bogus_extension)
         end
-        assert_equal "Extension point #{extension} cannot be found", err.message
+        assert_equal "Extension point #{bogus_extension} cannot be found", err.message
       end
     end
 
     describe "if the right extension point exist, but it's misconfigured" do
-      let(:extension) { invalid_extension }
-      it "should raise an ArgumentError" do
+      it "should raise an InvalidExtensionPointError" do
         err = assert_raises ShopifyCli::ScriptModule::Domain::InvalidExtensionPointError do
-          subject.get_extension_point(extension)
+          subject.get_extension_point(invalid_extension)
         end
-        assert_equal "Extension point #{extension} cannot be found", err.message
+        assert_equal "Extension point #{invalid_extension} cannot be found", err.message
       end
     end
   end

@@ -5,12 +5,15 @@ module ShopifyCli
     class Script
       class Deploy < ShopifyCli::SubCommand
         CMD_DESCRIPTION = "Deploy a script to the extension platform"
-        CMD_USAGE = "script deploy <Extension Point> <Script Name> --shop [id] --config [json]"
+        CMD_USAGE = "script deploy <Extension Point> <Script Name> <API Key>"
 
         FAILED_TO_BUILD_MESSAGE = "Failed to build"
-        DEPLOY_SUCCEEDED_MSG = "Deploy was successful"
-        BUILDING_MSG = "Building..."
-        DEPLOYING_MSG = "Deploying..."
+        DEPLOY_SUCCEEDED_MSG = "{{v}} %{extension_point} script %{script_name}" \
+        "is deployed to app (API_KEY: {{green:%{app_key}}})"
+        BUILDING_MSG = "Building"
+        DEPLOYING_MSG = "Deploying"
+        BUILT_MSG = "Built"
+        DEPLOYED_MSG = "Deployed"
 
         INVALID_EXTENSION_POINT = "Invalid extension point %{extension_point}"
         SCRIPT_NOT_FOUND = "Could not find script %{script_name} for extension point %{extension_point}"
@@ -25,11 +28,9 @@ module ShopifyCli
           return @ctx.puts(self.class.help) unless form
           name = form.name
           extension_point = form.extension_point
-          # Uncomment this once we start passing app_key through the deploy process
-          # app_key = form.app_key
+
+          app_key = form.app_key
           language = form.language
-          shop_id = nil # unused, remove eventually
-          config_value = nil # also unused
 
           return @ctx.puts(self.class.help) unless ScriptModule::LANGUAGES.include?(language)
 
@@ -46,13 +47,18 @@ module ShopifyCli
             end
           end
 
-          @ctx.puts(BUILDING_MSG)
-          deploy_package = ScriptModule::Application::Build.call(language, extension_point, name)
+          deploy_package = nil
+          CLI::UI::Spinner.spin(BUILDING_MSG) do |spinner|
+            deploy_package = ScriptModule::Application::Build.call(@ctx, language, extension_point, name)
+            spinner.update_title(BUILT_MSG)
+          end
 
-          @ctx.puts(DEPLOYING_MSG)
-          deploy_package.deploy(ScriptModule::Infrastructure::ScriptService.new, shop_id, config_value)
+          CLI::UI::Spinner.spin(DEPLOYING_MSG) do |spinner|
+            deploy_package.deploy(ScriptModule::Infrastructure::ScriptService.new(ctx: @ctx), app_key)
+            spinner.update_title(DEPLOYED_MSG)
+          end
 
-          @ctx.puts(DEPLOY_SUCCEEDED_MSG)
+          @ctx.puts(format(DEPLOY_SUCCEEDED_MSG, script_name: name, extension_point: extension_point, app_key: app_key))
         rescue ScriptModule::Domain::ScriptNotFoundError
           @ctx.puts(format(SCRIPT_NOT_FOUND, script_name: name, extension_point: extension_point))
         rescue ScriptModule::Domain::InvalidExtensionPointError

@@ -25,7 +25,7 @@ module ShopifyCli
 
           return @ctx.puts(self.class.help) unless ScriptModule::LANGUAGES.include?(language)
 
-          script = bootstrap(language, extension_point, name)
+          script = bootstrap(@ctx, language, extension_point, name)
 
           dep_manager = ScriptModule::Infrastructure::DependencyManager.for(name, language)
 
@@ -52,16 +52,16 @@ module ShopifyCli
 
         private
 
-        def bootstrap(language, extension_point, name)
+        def bootstrap(ctx, language, extension_point, name)
           CLI::UI::Frame.open("Cloning into #{name}...") do
             CLI::UI::Progress.progress do |bar|
-              script = ScriptModule::Application::Bootstrap.call(language, extension_point, name)
+              script = ScriptModule::Application::Bootstrap.call(ctx, language, extension_point, name)
               bar.tick(set_percent: 1.0)
               script
             end
           end
         rescue ScriptModule::Domain::InvalidExtensionPointError
-          puts @ctx.puts(format(INVALID_EXTENSION_POINT, extension_point: extension_point))
+          @ctx.puts(format(INVALID_EXTENSION_POINT, extension_point: extension_point))
         end
       end
     end

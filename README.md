@@ -23,13 +23,11 @@ shopify script
 ```
 
 ## Running Scripts in a development environment
-By default, `temp-shopify-app-cli` uses the production version of [Script Service](https://github.com/Shopify/script-service). If you want to run scripts in your local dev environment instead, then do the following:
+By default, `temp-shopify-app-cli` talks with Script Service proxed through Partners with the production version of [Script Service](https://github.com/Shopify/script-service) and [Partners](https://github.com/Shopify/partners). If you want to run scripts in your local dev environment instead, then do the following:
 
-1. Set the environment variable `SCRIPT_SERVICE_URL`.  You can add this variable to your bash profile (or you can set it temporarily when you're doing development work):
+1. Set env variable `SHOPIFY_APP_CLI_LOCAL_PARTNERS=1`
 
-    ```bash
-    export SCRIPT_SERVICE_URL=https://script-service.myshopify.io
-    ```
+1. Set up `partners` and all it's dependencies locally
 
 2. Run `script-service` locally.  Refer to the `script-service` [README](https://github.com/Shopify/script-service) for instructions.
 

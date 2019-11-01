@@ -4,6 +4,7 @@ require "test_helper"
 require_relative "fake_extension_point_repository"
 
 describe ShopifyCli::ScriptModule::Infrastructure::ScriptRepository do
+  let(:context) { TestHelpers::FakeContext.new }
   let(:extension_point_type) { "discount" }
   let(:extension_point_schema) { "schema" }
   let(:extension_point) do
@@ -54,7 +55,7 @@ describe ShopifyCli::ScriptModule::Infrastructure::ScriptRepository do
   end
 
   describe ".get_script" do
-    subject { script_repository.get_script(language, extension_point.type, script_name) }
+    subject { script_repository.get_script(context, language, extension_point.type, script_name) }
 
     describe "when extension point is valid" do
       before do

@@ -27,14 +27,14 @@ module ShopifyCli
           )
         end
 
-        def get_script(language, extension_point_type, script_name)
+        def get_script(ctx, language, extension_point_type, script_name)
           source_file_path = src_code_file(language, script_name)
           schema_file_path = schema_file(extension_point_type, script_name)
           unless File.exist?(source_file_path)
             raise Domain::ScriptNotFoundError.new(extension_point_type, source_file_path)
           end
 
-          extension_point = extension_point_repo.get_extension_point(extension_point_type)
+          extension_point = extension_point_repo(ctx).get_extension_point(extension_point_type)
           schema = File.exist?(schema_file_path) ? File.read(schema_file_path) : ""
 
           Domain::Script.new(script_name, extension_point, language, schema)
@@ -71,8 +71,8 @@ module ShopifyCli
           File.write(sdk_types_file(extension_point_type, script_name, language), sdk_types)
         end
 
-        def extension_point_repo
-          ExtensionPointRepository.new(ScriptService.new)
+        def extension_point_repo(ctx)
+          ExtensionPointRepository.new(ScriptService.new(ctx: ctx))
         end
 
         def src_base(script_name)

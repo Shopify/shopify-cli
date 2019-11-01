@@ -15,8 +15,7 @@ describe ShopifyCli::ScriptModule::Domain::DeployPackage do
     ShopifyCli::ScriptModule::Domain::Script.new(script_name, extension_point, "ts", extension_point_schema)
   end
 
-  let(:shop_id) { 1 }
-  let(:config_value) { "{}" }
+  let(:app_key) { "fake_key" }
   let(:script_content) { "(module)" }
   let(:content_type) { "wasm" }
   let(:deploy_package) do
@@ -37,7 +36,7 @@ describe ShopifyCli::ScriptModule::Domain::DeployPackage do
   end
 
   describe ".deploy" do
-    subject { deploy_package.deploy(script_service, shop_id, config_value) }
+    subject { deploy_package.deploy(script_service, app_key) }
 
     it "should open write to build file and deploy" do
       FakeFS.with_fresh do
@@ -47,8 +46,7 @@ describe ShopifyCli::ScriptModule::Domain::DeployPackage do
           kwargs[:script_content] == script_content &&
           kwargs[:content_type] == content_type &&
           kwargs[:schema] == extension_point_schema &&
-          kwargs[:shop_id] == shop_id &&
-          kwargs[:config_value] == "{}"
+          kwargs[:app_key] == app_key
         end
         subject
       end

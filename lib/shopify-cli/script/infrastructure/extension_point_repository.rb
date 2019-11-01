@@ -16,10 +16,9 @@ module ShopifyCli
         private
 
         def fetch_extension_point(type)
-          extension_point_attributes = @script_service
-            .fetch_extension_points
-            .select { |ep| ep["name"] == type }
-            .map { |ep| [ep["schema"], ep["types"], ep["script_example"]] }
+          extension_point_attributes = @script_service.fetch_extension_points["data"]["extensionPoints"]
+            .select { |ep| ep["name"] == type.upcase }
+            .map { |ep| [ep["schema"], ep["types"], ep["scriptExample"]] }
             .first
 
           raise Domain::InvalidExtensionPointError.new(type: type) unless extension_point_attributes&.all?

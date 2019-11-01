@@ -1,27 +1,63 @@
 require "test_helper"
 
 describe ShopifyCli::ScriptModule::Infrastructure::ScriptService do
-  let(:script_service) { ShopifyCli::ScriptModule::Infrastructure::ScriptService.new }
-  let(:fetch_uri) do
-    URI.parse((ENV["SCRIPT_SERVICE_URL"] || "https://script-service.shopifycloud.com") + "/extension_points")
-  end
+  include TestHelpers::Partners
+
+  let(:ctx) { TestHelpers::FakeContext.new }
+  let(:script_service) { ShopifyCli::ScriptModule::Infrastructure::ScriptService.new(ctx: ctx) }
+  let(:app_key) { "fake_key" }
 
   describe ".fetch_extension_points" do
-    subject { script_service.fetch_extension_points }
-    it "should return an array of available extension points" do
-      stub_request(:get, fetch_uri)
-        .to_return(status: 200, body: "{\"result\": [1, 2, 3]}")
-
-      assert_equal [1, 2, 3], subject
+    let(:valid_ep_response) do
+      {
+        "data" => {
+          "extensionPoints" => [
+            {
+              "name" => "ALLOW_CHECKOUT_COMPLETION",
+              "schema" => "schema",
+              "types" => "types",
+              "scriptExample" => "var i = 0",
+            },
+            {
+              "name" => "DISCOUNT",
+              "schema" => "schema",
+              "types" => "type",
+              "scriptExample" => "var i = 0",
+            },
+          ],
+        },
+      }
     end
 
-    it "should return an array of available extension points" do
-      stub_request(:get, fetch_uri)
-        .to_return(status: 502, body: "Bad Gateway")
+    let(:extension_point_query) do
+      <<~HERE
+        {
+          extensionPoints {
+            name
+            schema
+            scriptExample
+            types
+          }
+        }
+      HERE
+    end
 
-      assert_raises ShopifyCli::ScriptModule::Infrastructure::ScriptServiceConnectionError do
-        subject.fetch_extension_points
-      end
+    subject { script_service.fetch_extension_points }
+    it "should return an array of available extension points" do
+      stub_partner_req(
+        'script_service_proxy',
+        variables: {
+          query: extension_point_query,
+          app_key: nil,
+        },
+        resp: {
+          data: {
+            scriptServiceProxy: JSON.dump(valid_ep_response),
+          },
+        }
+      )
+
+      assert_equal(valid_ep_response, subject)
     end
   end
 
@@ -30,9 +66,50 @@ describe ShopifyCli::ScriptModule::Infrastructure::ScriptService do
     let(:extension_point_schema) { "schema" }
     let(:script_name) { "foo_bar" }
     let(:script_content) { "(module)" }
-    let(:config_value) { nil }
-    let(:shop_id) { nil }
-    let(:deploy_uri) { URI.parse((ENV["SCRIPT_SERVICE_URL"] || "https://script-service.shopifycloud.com") + "/deploy") }
+    let(:content_type) { "ts" }
+    let(:app_key) { "fake_key" }
+    let(:schema) { "schema" }
+
+    let(:app_script_create_or_update) do
+      <<~HERE
+        mutation {
+          appScriptUpdateOrCreate(
+            extensionPointName: #{extension_point_type.upcase}
+            title: #{script_name.inspect}
+            sourceCode: #{Base64.encode64(script_content).inspect}
+            language: #{content_type.inspect}
+            schema: #{schema.inspect}
+        ) {
+            userErrors {
+              field
+              message
+            }
+            appScript {
+              appKey
+              configSchema
+              extensionPointName
+              title
+            }
+          }
+        }
+      HERE
+    end
+
+    let(:valid_app_script_create_upadate_response) do
+      {
+        "data" => {
+          "appScriptUpdateOrCreate" => {
+            "appScript" => {
+              "appKey" => "fake_key",
+              "configSchema" => nil,
+              "extensionPointName" => "DISCOUNT",
+              "title" => "foo2",
+            },
+            "userErrors" => [],
+          },
+        },
+      }
+    end
 
     subject do
       script_service.deploy(
@@ -40,57 +117,27 @@ describe ShopifyCli::ScriptModule::Infrastructure::ScriptService do
         schema: extension_point_schema,
         script_name: script_name,
         script_content: script_content,
-        content_type: "wasm",
-        shop_id: shop_id
+        content_type: "ts",
+        app_key: app_key,
       )
     end
 
     describe "when deploy to script service succeeds" do
-      let(:form) do
-        [
-          ["extension_point_name", extension_point_type],
-          ["script_content", script_content, filename: "build.out"],
-          ["schema", extension_point_schema, filename: "extension_point.schema"],
-          ["title", script_name],
-          ["content_type", "wasm"],
-          ["description", "Script 'foo_bar' created by CLI tool"],
-        ]
-      end
-
-      describe "when shop_id is nil" do
-        let(:shop_id) { nil }
-
-        it "should post the form without scope" do
-          script_service.expects(:post).with(form)
-          FakeFS.with_fresh do
-            subject
-          end
-        end
-      end
-      describe "when shop_id exists" do
-        let(:shop_id) { 1 }
-        let(:scope) { { shop_id: shop_id }.to_json }
-
-        it "should post the form without scope" do
-          script_service.expects(:post).with(form + [["scope", scope]])
-          FakeFS.with_fresh do
-            subject
-          end
-        end
-      end
-    end
-
-    describe "when deploy to script service fails" do
-      before do
-        stub_request(:post, deploy_uri).to_return(status: 500)
-      end
-
-      it "should fail to deploy to script service" do
-        assert_raises ShopifyCli::ScriptModule::Domain::ServiceFailureError do
-          FakeFS.with_fresh do
-            subject
-          end
-        end
+      let(:valid_app_script_create_update) { "test" }
+      it "should post the form without scope" do
+        stub_partner_req(
+          'script_service_proxy',
+          variables: {
+            query: app_script_create_or_update,
+            app_key: app_key,
+          },
+          resp: {
+            data: {
+              scriptServiceProxy: JSON.dump(valid_app_script_create_upadate_response),
+            },
+          }
+        )
+        assert_equal(valid_app_script_create_upadate_response, subject)
       end
     end
   end
