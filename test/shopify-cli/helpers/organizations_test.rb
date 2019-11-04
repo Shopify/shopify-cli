@@ -4,7 +4,6 @@ require 'test_helper'
 module ShopifyCli
   module Helpers
     class OrganizationsTest < MiniTest::Test
-      include TestHelpers::Context
       include TestHelpers::Partners
 
       def test_fetch_all_queries_partners

@@ -2,7 +2,6 @@ require 'test_helper'
 
 module ShopifyCli
   class ExecutorTest < MiniTest::Test
-    include TestHelpers::Context
     include TestHelpers::FakeTask
 
     class FakeCommand < ShopifyCli::Command

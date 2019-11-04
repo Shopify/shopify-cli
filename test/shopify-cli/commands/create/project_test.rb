@@ -4,17 +4,10 @@ module ShopifyCli
   module Commands
     class Create
       class ProjectTest < MiniTest::Test
-        include TestHelpers::Context
         include TestHelpers::Partners
 
-        def setup
-          super
-          @command = ShopifyCli::Commands::Create::Project
-          @command.ctx = @context
-        end
-
         def test_prints_help_with_no_name_argument
-          io = capture_io { @command.call([], nil) }
+          io = capture_io { run_cmd('create project') }
           assert_match(CLI::UI.fmt(ShopifyCli::Commands::Create::Project.help), io.join)
         end
 

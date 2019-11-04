@@ -3,12 +3,11 @@ require 'test_helper'
 module ShopifyCli
   module Commands
     class CommandTest < MiniTest::Test
-      include TestHelpers::Context
-
       def test_non_existant
-        command = ShopifyCli::Commands::Help.new(@context)
         io = capture_io do
-          command.call(%w(foobar), nil)
+          assert_raises(ShopifyCli::AbortSilent) do
+            run_cmd('foobar')
+          end
         end
 
         assert_match(/Available commands/, io.join)

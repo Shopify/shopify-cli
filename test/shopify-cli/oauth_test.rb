@@ -2,10 +2,6 @@ require 'test_helper'
 
 module ShopifyCli
   class OAuthTest < MiniTest::Test
-    include TestHelpers::Context
-    include TestHelpers::Project
-    include TestHelpers::Constants
-
     def test_new
       client = oauth
       assert_equal 'test', client.service

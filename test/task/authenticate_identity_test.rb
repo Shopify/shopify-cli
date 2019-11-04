@@ -3,8 +3,6 @@ require 'test_helper'
 module ShopifyCli
   module Tasks
     class AuthenticateIdentityTest < MiniTest::Test
-      include TestHelpers::Context
-      include TestHelpers::Project
       include TestHelpers::Constants
 
       def test_negotiate_oauth_and_store_token

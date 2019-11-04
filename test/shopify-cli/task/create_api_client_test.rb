@@ -3,7 +3,6 @@ require 'test_helper'
 module ShopifyCli
   module Tasks
     class CreateApiClientTest < MiniTest::Test
-      include TestHelpers::Context
       include TestHelpers::Partners
 
       def test_call_will_query_partners_dashboard
