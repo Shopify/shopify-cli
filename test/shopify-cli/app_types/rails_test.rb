@@ -5,7 +5,6 @@ module ShopifyCli
   module AppTypes
     class RailsBuildTest < MiniTest::Test
       def setup
-        root = Dir.mktmpdir
         project_context('app_types', 'rails')
         @app = ShopifyCli::AppTypes::Rails.new(ctx: @context)
       end

@@ -10,7 +10,7 @@ module ShopifyCli
           end
         end
 
-        assert_match(/Available commands/, io.join)
+        assert_match(/foobar.*was not found/, io.join)
       end
     end
   end
