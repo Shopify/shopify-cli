@@ -7,7 +7,6 @@ module ShopifyCli
         options do |parser, flags|
           parser.on('--title=TITLE') { |t| title[:title] = t }
           parser.on('--type=TYPE') { |t| flags[:type] = t.downcase.to_sym }
-          parser.on('--app_url=APPURL') { |url| flags[:app_url] = url }
           parser.on('--organization_id=ID') { |url| flags[:organization_id] = url }
           parser.on('--shop_domain=MYSHOPIFYDOMAIN') { |url| flags[:shop_domain] = url }
         end
@@ -24,7 +23,7 @@ module ShopifyCli
             @ctx,
             org_id: form.organization_id,
             title: form.title,
-            app_url: form.app_url,
+            app_url: 'https://shopify.github.io/shopify-app-cli/getting-started',
           )
 
           Helpers::EnvFile.new(
