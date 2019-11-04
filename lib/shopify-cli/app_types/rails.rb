@@ -17,6 +17,7 @@ module ShopifyCli
             billing_recurring: NotImplementedError,
             billing_one_time: NotImplementedError,
             webhook: 'rails g shopify_app:add_webhook',
+            marketing_activities_extension: 'rails g shopify_app:add_marketing_activity_extension'
           }
         end
 
@@ -37,6 +38,13 @@ module ShopifyCli
 
         def webhook_location
           "config/webhooks"
+        end
+
+        def extension_location(type)
+          if type.nil?
+            return
+          end
+          "controllers/#{type.to_s.split('_')[0..1].join('_')}_controller.rb"
         end
 
         def callback_url

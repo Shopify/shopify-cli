@@ -5,6 +5,7 @@ module ShopifyCli
     class Generate < ShopifyCli::Command
       subcommand :Page, 'page', 'shopify-cli/commands/generate/page'
       subcommand :Billing, 'billing', 'shopify-cli/commands/generate/billing'
+      subcommand :Extension, 'extension', 'shopify-cli/commands/generate/extension'
       subcommand :Webhook, 'webhook', 'shopify-cli/commands/generate/webhook'
 
       def call(*)
@@ -13,8 +14,8 @@ module ShopifyCli
 
       def self.help
         <<~HELP
-          Generate code in your app project. Supports generating new pages, new billing API calls, or new webhooks.
-            Usage: {{command:#{ShopifyCli::TOOL_NAME} generate [ page | billing | webhook ]}}
+          Generate code in your app project. Supports generating new pages, new billing API calls, app extensions, or new webhooks.
+            Usage: {{command:#{ShopifyCli::TOOL_NAME} generate [ page | billing | webhook | extension ]}}
         HELP
       end
 
@@ -43,6 +44,14 @@ module ShopifyCli
 
             {{cyan:webhook}}: Generate and register a new webhook that listens for the specified Shopify store event.
               Usage: {{command:#{ShopifyCli::TOOL_NAME} generate webhook [type]}}
+
+            {{cyan:extension}}: Generate endpoints for a Shopify app extension feature.
+              Usage: {{command:#{ShopifyCli::TOOL_NAME} generate extension [type]}}
+
+              Types:
+              {{cyan:marketing-activities}}: generate marketing activities extension
+              {{underline:https://help.shopify.com/en/api/embedded-apps/app-extensions/shopify-admin/marketing-activities/manage-marketing-activity-extension}}
+
 
           {{bold:Examples:}}
 

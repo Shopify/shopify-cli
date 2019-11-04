@@ -25,6 +25,7 @@ module ShopifyCli
             billing_recurring: './node_modules/.bin/generate-node-app recurring-billing',
             billing_one_time: './node_modules/.bin/generate-node-app one-time-billing',
             webhook: './node_modules/.bin/generate-node-app webhook',
+            marketing_activities_extension: './node_modules/.bin/generate-node-app marketing-activity-extension'
           }
         end
 
@@ -47,6 +48,10 @@ module ShopifyCli
 
         def webhook_location
           "server/server.js"
+        end
+
+        def extension_location(type)
+          "server/api/#{type.to_s.split('_')[0..1].join('-')}.js"
         end
 
         def callback_url
