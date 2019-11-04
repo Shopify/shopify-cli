@@ -4,7 +4,6 @@ module ShopifyCli
   module Commands
     class Populate
       class CustomerTest < MiniTest::Test
-        include TestHelpers::Project
         include TestHelpers::Schema
 
         def setup

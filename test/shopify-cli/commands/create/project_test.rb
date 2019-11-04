@@ -58,19 +58,19 @@ module ShopifyCli
             SCOPES=write_products,write_customers,write_draft_orders
           CONTENT
           assert_equal env_file, File.read("test-app/.env")
+
+          FileUtils.rm_r('test-app')
         end
 
         private
 
         def perform_command
-          @command.call([
-            'project',
-            'test-app',
-            '--type=node',
-            '--app_url=http://app.com',
-            '--organization_id=42',
-            '--shop_domain=testshop.myshopify.com',
-          ], nil)
+          run_cmd("create project \
+            test-app \
+            --type=node \
+            --app_url=http://app.com \
+            --organization_id=42 \
+            --shop_domain=testshop.myshopify.com")
         end
       end
     end
