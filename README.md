@@ -1,3 +1,29 @@
+# Script CLI
+
+> This part is temporary, considering we are in the middle of migrating script-cli to shopify-app-cli.
+> We should add a "Script" section to the README before the merging.
+
+1. Clone the repo:
+```
+dev clone temp-shopify-app-cli
+```
+2. Run `dev up` and add `{PATH_TO_THE_PROJECT}/bin/` to your `PATH` in Bash env.
+
+3. Create a folder for your scripts at another place
+
+```bash
+mkdir my-scripts
+cd my-scripts
+```
+
+4. From the `my-scripts` directory, use the `shopify script` command to view the available commands.
+
+```bash
+shopify script
+```
+
+- - -
+
 # Shopify App CLI [![License: MIT](https://img.shields.io/badge/License-MIT-green.svg)](LICENSE.md)[![Build Status](https://travis-ci.com/Shopify/shopify-app-cli.svg?token=qtPazgjyosjEEgxgq7VZ&branch=master)](https://travis-ci.com/Shopify/shopify-app-cli)
 
 Shopify App CLI helps you build Shopify apps faster. It automates many common tasks in the development process and lets you quickly add popular features, such as billing and webhooks.
