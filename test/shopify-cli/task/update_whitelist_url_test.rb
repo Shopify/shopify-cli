@@ -52,6 +52,7 @@ module ShopifyCli
           'update_whitelisturls',
           variables: {
             input: {
+              applicationUrl: 'https://newone123.ngrok.io',
               redirectUrlWhitelist: ['https://newone123.ngrok.io', 'https://newone123.ngrok.io/callback/fake'],
               apiKey: api_key,
             },
@@ -85,6 +86,7 @@ module ShopifyCli
           'update_whitelisturls',
           variables: {
             input: {
+              applicationUrl: 'https://newone123.ngrok.io',
               redirectUrlWhitelist: [
                 'https://newone123.ngrok.io',
                 'https://fake.fakeurl.com',
