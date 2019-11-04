@@ -24,7 +24,7 @@ module ShopifyCli
           spin_group = CLI::UI::SpinGroup.new
           spin_group.add("Generating webhook: #{selected_type}") do |spinner|
             ShopifyCli::Commands::Generate.run_generate(app_type.generate_command(selected_type), selected_type, @ctx)
-            spinner.update_title("#{selected_type} generated in #{app_type.webhook_location}")
+            spinner.update_title("{{green:#{selected_type}}} generated in #{app_type.webhook_location}")
           end
           spin_group.wait
         end

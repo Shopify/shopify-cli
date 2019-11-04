@@ -95,7 +95,7 @@ module ShopifyCli
           dep_name = dep.split.first
           dep_link = dep_name == 'node' ? 'https://nodejs.org/en/download.' : 'https://www.npmjs.com/get-npm'
           version, stat = ctx.capture2e(dep)
-          ctx.puts("{{green:✔︎}} #{dep_name} #{version}")
+          ctx.puts("{{v}} #{dep_name} #{version}")
           next if stat.success?
           raise(ShopifyCli::Abort,
             "#{dep_name} is required to create an app project. Download at #{dep_link}")

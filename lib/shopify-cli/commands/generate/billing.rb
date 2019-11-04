@@ -28,7 +28,7 @@ module ShopifyCli
               project.app_type.generate[selected_type], selected_type, @ctx
             )
             spinner.update_title(
-              "#{billing_types.key(selected_type)} generated in server/server.js"
+              "{{green:#{billing_types.key(selected_type)}}} generated in server/server.js"
             )
           end
           spin_group.wait
