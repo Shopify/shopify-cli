@@ -10,8 +10,13 @@ module ShopifyCli
           return nil if attrs.any? { |_k, v| v.nil? }
           @flag_arguments.each { |arg| attrs[arg] = flags[arg] }
           form = new(ctx, args, attrs)
-          form.ask
-          form
+          begin
+            form.ask
+            form
+          rescue ShopifyCli::Abort => err
+            ctx.puts(err.message)
+            nil
+          end
         end
 
         def positional_arguments(*args)

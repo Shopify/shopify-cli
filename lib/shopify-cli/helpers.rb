@@ -2,8 +2,11 @@ module ShopifyCli
   module Helpers
     autoload :AccessToken, 'shopify-cli/helpers/access_token'
     autoload :AdminAPI, 'shopify-cli/helpers/admin_api'
+    autoload :Async, 'shopify-cli/helpers/async'
     autoload :EnvFile, 'shopify-cli/helpers/env_file'
+    autoload :FS, 'shopify-cli/helpers/fs'
     autoload :Gem, 'shopify-cli/helpers/gem'
+    autoload :Git, 'shopify-cli/helpers/git'
     autoload :GraphQL, 'shopify-cli/helpers/graphql'
     autoload :Haikunator, 'shopify-cli/helpers/haikunator'
     autoload :Organizations, 'shopify-cli/helpers/organizations'
