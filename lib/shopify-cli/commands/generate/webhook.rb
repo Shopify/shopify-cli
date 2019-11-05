@@ -6,7 +6,7 @@ module ShopifyCli
       class Webhook < ShopifyCli::SubCommand
         def call(args, _name)
           project = ShopifyCli::Project.current
-          selected_type = args[1]
+          selected_type = args.first
           app_type = project.app_type
           schema = ShopifyCli::Helpers::SchemaParser.new(
             schema: ShopifyCli::Tasks::Schema.call(@ctx)

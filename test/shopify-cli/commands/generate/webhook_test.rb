@@ -4,12 +4,7 @@ module ShopifyCli
   module Commands
     class Generate
       class WebhookTest < MiniTest::Test
-        include TestHelpers::Project
-
-        def setup
-          super
-          @command = ShopifyCli::Commands::Generate::Webhook.new(@context)
-        end
+        include TestHelpers::FakeUI
 
         def test_with_param
           ShopifyCli::Tasks::Schema.expects(:call).returns(
@@ -17,7 +12,7 @@ module ShopifyCli
           )
           @context.expects(:system).with('a command')
             .returns(mock(success?: true))
-          @command.call(['webhook', 'PRODUCT_CREATE'], nil)
+          run_cmd('generate webhook PRODUCT_CREATE')
         end
 
         def test_with_selection
@@ -27,7 +22,7 @@ module ShopifyCli
           CLI::UI::Prompt.expects(:ask).returns('PRODUCT_CREATE')
           @context.expects(:system).with('a command')
             .returns(mock(success?: true))
-          @command.call(['webhook'], nil)
+          run_cmd('generate webhook')
         end
       end
     end
