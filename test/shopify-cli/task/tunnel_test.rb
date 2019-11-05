@@ -3,8 +3,6 @@ require 'test_helper'
 module ShopifyCli
   module Tasks
     class TunnelTest < MiniTest::Test
-      include TestHelpers::Context
-
       def setup
         Tunnel.any_instance.stubs(:install)
         super

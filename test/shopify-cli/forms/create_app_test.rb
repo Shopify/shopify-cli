@@ -4,7 +4,6 @@ require 'test_helper'
 module ShopifyCli
   module Forms
     class CreateAppTest < MiniTest::Test
-      include TestHelpers::Context
       include TestHelpers::Partners
 
       def test_returns_all_defined_attributes_if_valid

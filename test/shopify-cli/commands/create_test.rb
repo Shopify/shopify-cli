@@ -3,8 +3,6 @@ require 'test_helper'
 module ShopifyCli
   module Commands
     class CreateTest < MiniTest::Test
-      include TestHelpers::Context
-
       def setup
         super
         @command = ShopifyCli::Commands::Create

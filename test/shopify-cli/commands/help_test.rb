@@ -16,13 +16,12 @@ module ShopifyCli
 
     class HelpTest < MiniTest::Test
       def setup
-        @command = ShopifyCli::Commands::Help.new
         ShopifyCli::Commands.register(:FakeCommand, 'fake')
       end
 
       def test_default_behavior_lists_tasks
         io = capture_io do
-          @command.call([], nil)
+          run_cmd('help')
         end
         output = io.join
 
@@ -32,7 +31,7 @@ module ShopifyCli
 
       def test_extended_help_for_individual_command
         io = capture_io do
-          @command.call(%w(fake), nil)
+          run_cmd('help fake')
         end
         output = io.join
         assert_match(/basic help.*extended help/m, output)

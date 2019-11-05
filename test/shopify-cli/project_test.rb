@@ -3,7 +3,10 @@ require 'test_helper'
 
 module ShopifyCli
   class ProjectTest < MiniTest::Test
-    include TestHelpers::Context
+    def setup
+      @context = TestHelpers::FakeContext.new(root: Dir.mktmpdir)
+      FileUtils.cd(@context.root)
+    end
 
     def test_directory_recurses
       Dir.mktmpdir do |dir|

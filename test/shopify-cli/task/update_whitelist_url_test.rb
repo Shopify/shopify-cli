@@ -3,7 +3,6 @@ require 'test_helper'
 module ShopifyCli
   module Tasks
     class UpdateWhitelistURLTest < MiniTest::Test
-      include TestHelpers::Project
       include TestHelpers::Partners
 
       def test_url_is_not_transformed_if_same

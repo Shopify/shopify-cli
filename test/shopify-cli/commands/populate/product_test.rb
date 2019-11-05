@@ -4,7 +4,6 @@ module ShopifyCli
   module Commands
     class Populate
       class ProductTest < MiniTest::Test
-        include TestHelpers::Project
         include TestHelpers::Schema
 
         def setup
@@ -22,12 +21,11 @@ module ShopifyCli
             })
             .returns(JSON.parse(File.read(File.join(FIXTURE_DIR, 'populate/product_data.json'))))
           ShopifyCli::API.expects(:gid_to_id).returns(12345678)
-          @resource = Product.new(@context)
           @context.expects(:done).with(
             "fake product added to {{green:my-test-shop.myshopify.com}} at" \
             " {{underline:https://my-test-shop.myshopify.com/admin/products/12345678}}"
           )
-          @resource.call(['-c 1'], nil)
+          run_cmd('populate products -c 1')
         end
       end
     end

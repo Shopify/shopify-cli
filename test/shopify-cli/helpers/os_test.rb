@@ -4,7 +4,6 @@ module ShopifyCli
   module Helpers
     class OSTest < MiniTest::Test
       include OS
-      include TestHelpers::Context
 
       def test_mac_matches
         CLI::Kit::System.expects(:capture2).with('uname -a').returns(

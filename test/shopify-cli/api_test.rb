@@ -2,8 +2,6 @@ require 'test_helper'
 
 module ShopifyCli
   class APITest < MiniTest::Test
-    include TestHelpers::Project
-
     def setup
       super
       @api = API.new(

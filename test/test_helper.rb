@@ -14,6 +14,7 @@ require 'byebug'
 
 require 'minitest/autorun'
 require 'minitest/reporters'
+require_relative 'test_helpers'
 require_relative 'minitest_ext'
 require 'fakefs/safe'
 require 'webmock/minitest'
@@ -21,5 +22,3 @@ require 'webmock/minitest'
 require 'mocha/minitest'
 
 Minitest::Reporters.use!([Minitest::Reporters::SpecReporter.new])
-
-require_relative 'test_helpers'
