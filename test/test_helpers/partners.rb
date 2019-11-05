@@ -13,8 +13,8 @@ module TestHelpers
 
     def stub_partner_req(query, variables: {}, status: 200, resp: {})
       stub_request(:post, "https://partners.shopify.com/api/cli/graphql").with(body: {
-          query: File.read(File.join(ShopifyCli::ROOT, "lib/graphql/#{query}.graphql")).tr("\n", ''),
-          variables: variables,
+        query: File.read(File.join(ShopifyCli::ROOT, "lib/graphql/#{query}.graphql")).tr("\n", ''),
+        variables: variables,
       }.to_json).to_return(status: status, body: resp.to_json)
     end
   end
