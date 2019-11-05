@@ -13,7 +13,7 @@ module ShopifyCli
         project = Project.current
         url = ShopifyCli::Tasks::Tunnel.call(@ctx)
         ShopifyCli::Tasks::UpdateWhitelistURL.call(@ctx, url: url)
-        if mac?
+        if mac? && project.env.shop
           @ctx.puts("{{*}} Press {{yellow: Control-T}} to open this project in your browser")
           on_siginfo do
             open = Open.new(@ctx)
