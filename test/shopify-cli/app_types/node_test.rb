@@ -102,9 +102,12 @@ module ShopifyCli
       end
 
       def test_server_command
-        Tasks::Tunnel.expects(:call).at_least_once
-        Tasks::UpdateWhitelistURL.expects(:call)
+        ShopifyCli::Tasks::Tunnel.stubs(:call)
+        ShopifyCli::Tasks::UpdateWhitelistURL.expects(:call)
+        Helpers::EnvFile.any_instance.expects(:update)
         @context.app_metadata[:host] = 'https://example.com'
+        cmd = ShopifyCli::Commands::Serve
+        cmd.ctx = @context
         @context.expects(:system).with(
           "HOST=https://example.com PORT=8081 npm run dev"
         )

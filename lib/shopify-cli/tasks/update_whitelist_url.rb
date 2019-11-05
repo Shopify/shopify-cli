@@ -16,6 +16,7 @@ module ShopifyCli
           applicationUrl: url,
           redirectUrlWhitelist: whitelist_urls, apiKey: api_key
         })
+        @ctx.puts("{{v}} Whitelist URLS updated in Partners Dashboard}}")
       end
 
       def check_urls(urls, new_url)

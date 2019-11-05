@@ -6,12 +6,17 @@ module ShopifyCli
   module Commands
     class Serve < ShopifyCli::Command
       include ShopifyCli::Helpers::OS
-
-      prerequisite_task :ensure_env, :tunnel
+      prerequisite_task :ensure_env
+      options do |parser, flags|
+        parser.on('--host=HOST') do |h|
+          flags[:host] = h.gsub('"', '')
+        end
+      end
 
       def call(*)
         project = Project.current
-        url = ShopifyCli::Tasks::Tunnel.call(@ctx)
+        url = options.flags[:host] || Tasks::Tunnel.call(@ctx)
+        update_env(url)
         ShopifyCli::Tasks::UpdateWhitelistURL.call(@ctx, url: url)
         if mac? && project.env.shop
           @ctx.puts("{{*}} Press {{yellow: Control-T}} to open this project in your browser")
@@ -30,6 +35,17 @@ module ShopifyCli
           Start a local development server for your project, as well as a public ngrok tunnel to your localhost.
             Usage: {{command:#{ShopifyCli::TOOL_NAME} serve}}
         HELP
+      end
+
+      def self.extended_help
+        <<~HELP
+          {{bold:Options:}}
+            {{cyan:--host=HOST}}: Must be HTTPS url. Bypass running tunnel and use custom host.
+        HELP
+      end
+
+      def update_env(url)
+        Project.current.env.update(@ctx, :host, url)
       end
 
       def on_siginfo

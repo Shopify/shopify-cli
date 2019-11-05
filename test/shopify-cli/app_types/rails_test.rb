@@ -84,11 +84,14 @@ module ShopifyCli
         project_context('app_types', 'rails')
         @app = ShopifyCli::AppTypes::Rails.new(ctx: @context)
         Helpers::EnvFile.any_instance.stubs(:write)
+        Helpers::EnvFile.any_instance.stubs(:update)
       end
 
       def test_server_command
-        Tasks::Tunnel.expects(:call).at_least_once
-        Tasks::UpdateWhitelistURL.expects(:call)
+        cmd = ShopifyCli::Commands::Serve
+        cmd.ctx = @context
+        ShopifyCli::Tasks::Tunnel.stubs(:call)
+        ShopifyCli::Tasks::UpdateWhitelistURL.expects(:call)
         @context.expects(:system).with(
           "PORT=8081 bin/rails server"
         )
