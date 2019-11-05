@@ -84,6 +84,7 @@ module ShopifyCli
         project_context('app_types', 'rails')
         @app = ShopifyCli::AppTypes::Rails.new(ctx: @context)
         Helpers::EnvFile.any_instance.stubs(:write)
+        Helpers::EnvFile.any_instance.stubs(:update)
       end
 
       def test_server_command

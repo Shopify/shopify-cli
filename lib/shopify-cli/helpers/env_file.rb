@@ -67,6 +67,11 @@ module ShopifyCli
         end
         spin_group.wait
       end
+
+      def update(ctx, field, value)
+        self[field] = value
+        write(ctx)
+      end
     end
   end
 end

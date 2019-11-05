@@ -9,18 +9,13 @@ module ShopifyCli
       prerequisite_task :ensure_env
       options do |parser, flags|
         parser.on('--host=HOST') do |h|
-          flags[:host] = h
+          flags[:host] = h.gsub('"', '')
         end
       end
 
       def call(*)
         project = Project.current
-        custom_host = options.flags[:host]
-        url = if custom_host
-            custom_host
-        else
-          ShopifyCli::Tasks::Tunnel.call(@ctx)
-        end
+        url = options.flags[:host] || Tasks::Tunnel.call(@ctx)
         update_env(url)
         ShopifyCli::Tasks::UpdateWhitelistURL.call(@ctx, url: url)
         if mac? && project.env.shop
@@ -42,15 +37,15 @@ module ShopifyCli
         HELP
       end
 
-      def update_env(host)
-        env = Helpers::EnvFile.read(@ctx.root)
-        Helpers::EnvFile.new(
-          api_key: env.api_key,
-          secret: env.secret,
-          shop: env.shop,
-          scopes: env.scopes,
-          host: host
-        ).write(@ctx)
+      def self.extended_help
+        <<~HELP
+          {{bold:Options:}}
+            {{cyan:--host=HOST}}: Must be HTTPS url. Bypass running tunnel and use custom host.
+        HELP
+      end
+
+      def update_env(url)
+        Project.current.env.update(@ctx, :host, url)
       end
 
       def on_siginfo
