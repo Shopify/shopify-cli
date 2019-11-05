@@ -6,7 +6,7 @@ module ShopifyCli
       include SmartProperties
 
       INSTALL_COMMANDS = {
-        yarn: %w(yarn),
+        yarn: %w(yarn install --silent),
         npm: %w(npm install --no-audit --no-optional --silent),
       }.freeze
 

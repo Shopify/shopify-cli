@@ -17,15 +17,9 @@ module ShopifyCli
         @context.expects(:rm_r).with(File.join(@context.root, '.git'))
         @context.expects(:rm_r).with(File.join(@context.root, '.github'))
         @context.expects(:rm).with(File.join(@context.root, 'server', 'handlers', 'client.js'))
-        io = capture_io do
+        capture_io do
           @app.build('test-app')
         end
-        output = io.join
-
-        assert_match(
-          CLI::UI.fmt('{{*}} Run {{command:shopify serve}} to start the local development server'),
-          output
-        )
       end
 
       def test_check_dependencies_command

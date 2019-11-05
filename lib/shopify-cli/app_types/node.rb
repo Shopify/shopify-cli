@@ -70,8 +70,6 @@ module ShopifyCli
         rescue Errno::ENOENT => e
           ctx.debug(e)
         end
-
-        puts CLI::UI.fmt(post_clone)
       end
 
       def check_dependencies

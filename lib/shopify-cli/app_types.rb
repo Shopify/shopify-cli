@@ -24,10 +24,6 @@ module ShopifyCli
       def build
         raise NotImplementedError
       end
-
-      def post_clone
-        "{{*}} Run {{command:shopify serve}} to start the local development server"
-      end
     end
   end
 end
