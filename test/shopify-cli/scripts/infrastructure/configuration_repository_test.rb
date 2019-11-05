@@ -6,7 +6,7 @@ describe ShopifyCli::ScriptModule::Infrastructure::ConfigurationRepository do
   let(:extension_point) { ShopifyCli::ScriptModule::Domain::ExtensionPoint.new("discount", "schema", "types", "example") }
   let(:script) do
     config = MiniTest::Mock.new
-    ShopifyCli::ScriptModule::Domain::Script.new("discount_script", extension_point, config, "ts", "schema")
+    ShopifyCli::ScriptModule::Domain::Script.new("discount_script", extension_point, "ts", "schema")
   end
   let(:configuration_root) do
     source_path = ShopifyCli::ScriptModule::Infrastructure::Repository::SOURCE_PATH

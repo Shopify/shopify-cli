@@ -9,21 +9,7 @@ describe ShopifyCli::ScriptModule::Infrastructure::DeployPackageRepository do
   let(:extension_point_type) { "vanity_pricing" }
   let(:extension_point) { ShopifyCli::ScriptModule::Domain::ExtensionPoint.new(extension_point_type, "schema", "types", "example") }
   let(:script_name) { "foo" }
-  let(:configuration_schema) do
-    <<~GRAPHQL
-      input Configuration {
-        _: Boolean
-      }
-
-      type Query {
-        configuration: Configuration
-      }
-    GRAPHQL
-  end
-  let(:configuration) do
-    ShopifyCli::ScriptModule::Domain::Configuration.new("config_id", "configuration.schema", configuration_schema, "config code")
-  end
-  let(:script) { ShopifyCli::ScriptModule::Domain::Script.new(script_name, extension_point, configuration, language, "schema") }
+  let(:script) { ShopifyCli::ScriptModule::Domain::Script.new(script_name, extension_point, language, "schema") }
   let(:script_content) { "BYTECODE" }
   let(:build_base) do
     "#{ShopifyCli::ScriptModule::Infrastructure::Repository::SOURCE_PATH}/#{extension_point_type}/#{script_name}/build"
@@ -58,11 +44,7 @@ describe ShopifyCli::ScriptModule::Infrastructure::DeployPackageRepository do
 
     describe "when script exists" do
       before do
-        configuration =
-          ShopifyCli::ScriptModule::Infrastructure::FakeConfigurationRepository.new.create_configuration(
-            extension_point, script_name
-          )
-        script_repository.create_script(language, extension_point, configuration, script_name)
+        script_repository.create_script(language, extension_point, script_name)
       end
       it "should return the deploy package when valid script and wasm exist" do
         FakeFS.with_fresh do

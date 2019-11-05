@@ -6,19 +6,7 @@ describe ShopifyCli::ScriptModule::Infrastructure::TestSuiteRepository do
   let(:extension_point_type) { "discount" }
   let(:extension_point) { ShopifyCli::ScriptModule::Domain::ExtensionPoint.new(extension_point_type, "schema", "types", "example") }
   let(:script_name) { "myscript" }
-  let(:configuration_schema) do
-    <<~GRAPHQL
-      input Configuration {
-        _: Boolean
-      }
-
-      type Query {
-        configuration: Configuration
-      }
-    GRAPHQL
-  end
-  let(:configuration) { ShopifyCli::ScriptModule::Domain::Configuration.new("id", "configuration.schema", configuration_schema, "code") }
-  let(:script) { ShopifyCli::ScriptModule::Domain::Script.new(script_name, extension_point, configuration, language, "schema") }
+  let(:script) { ShopifyCli::ScriptModule::Domain::Script.new(script_name, extension_point, language, "schema") }
   let(:language) { "ts" }
   let(:template_base) { "#{ShopifyCli::ScriptModule::Infrastructure::Repository::INSTALLATION_BASE_PATH}/templates/" }
   let(:template_file) { "#{template_base}/ts/#{ShopifyCli::ScriptModule::Infrastructure::TestSuiteRepository::TEST_TEMPLATE_NAME}.spec.#{language}" }
@@ -52,11 +40,7 @@ describe ShopifyCli::ScriptModule::Infrastructure::TestSuiteRepository do
 
     describe "when script is valid" do
       before do
-        configuration =
-          ShopifyCli::ScriptModule::Infrastructure::FakeConfigurationRepository.new.create_configuration(
-            extension_point, script_name
-          )
-        script_repository.create_script(language, extension_point, configuration, script_name)
+        script_repository.create_script(language, extension_point, script_name)
       end
 
       it "should return the requested test suite if test spec file exists" do

@@ -5,7 +5,6 @@ require "test_helper"
 describe ShopifyCli::ScriptModule::Domain::Script do
   let(:script_id) { "discount/myscript.ts" }
   let(:language) { "ts" }
-  let(:configuration) { MiniTest::Mock.new }
   let(:extension_point) { Object.new }
   let(:extension_point_type) { "discount" }
   let(:script_name) { "myscript" }
@@ -17,7 +16,7 @@ describe ShopifyCli::ScriptModule::Domain::Script do
     before do
       extension_point.expects(:type).returns(extension_point_type)
     end
-    subject { ShopifyCli::ScriptModule::Domain::Script.new(script_name, extension_point, configuration, language, "schema") }
+    subject { ShopifyCli::ScriptModule::Domain::Script.new(script_name, extension_point, language, "schema") }
     it "should construct new Script" do
       assert_equal script_id, subject.id
       assert_equal script_name, subject.name

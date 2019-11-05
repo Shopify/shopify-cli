@@ -6,12 +6,12 @@ module ShopifyCli
   module ScriptModule
     module Infrastructure
       class ScriptRepository < Repository
-        def create_script(language, extension_point, configuration, script_name)
+        def create_script(language, extension_point, script_name)
           source_file_path = src_code_file(extension_point.type, language, script_name)
 
           FileUtils.mkdir_p(types_path(extension_point.type, script_name))
           File.write(source_file_path, extension_point.example_scripts[language])
-          File.write(schema_file(extension_point.type, script_name), extension_point.schema)
+
           write_sdk(
             extension_point.type,
             script_name,
@@ -22,7 +22,6 @@ module ShopifyCli
           Domain::Script.new(
             script_name,
             extension_point,
-            configuration,
             language,
             extension_point.schema
           )
@@ -36,10 +35,9 @@ module ShopifyCli
           end
 
           extension_point = extension_point_repo.get_extension_point(extension_point_type)
-          configuration = configuration_repo.get_configuration(extension_point_type, script_name)
           schema = File.read(schema_file_path)
 
-          Domain::Script.new(script_name, extension_point, configuration, language, schema)
+          Domain::Script.new(script_name, extension_point, language, schema)
         end
 
         def with_script_context(script)
@@ -62,10 +60,6 @@ module ShopifyCli
 
         def extension_point_repo
           ExtensionPointRepository.new(ScriptService.new)
-        end
-
-        def configuration_repo
-          ConfigurationRepository.new
         end
 
         def src_base(extension_point_type, script_name)
