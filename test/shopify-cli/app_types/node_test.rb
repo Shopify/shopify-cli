@@ -13,7 +13,7 @@ module ShopifyCli
           'https://github.com/Shopify/shopify-app-node.git',
           'test-app',
         )
-        ShopifyCli::Tasks::JsDeps.stubs(:call).with(@context.root)
+        ShopifyCli::Tasks::JsDeps.stubs(:call).with(@context)
         @context.expects(:rm_r).with(File.join(@context.root, '.git'))
         @context.expects(:rm_r).with(File.join(@context.root, '.github'))
         @context.expects(:rm).with(File.join(@context.root, 'server', 'handlers', 'client.js'))
@@ -85,7 +85,7 @@ module ShopifyCli
           'https://github.com/Shopify/shopify-app-node.git',
           'test-app',
         )
-        ShopifyCli::Tasks::JsDeps.stubs(:call).with(@context.root)
+        ShopifyCli::Tasks::JsDeps.stubs(:call).with(@context)
         capture_io do
           @app.build('test-app')
         end

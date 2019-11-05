@@ -1,0 +1,43 @@
+{
+  "dependencies": {
+    "@babel/core": "7.6.4",
+    "@babel/polyfill": "^7.6.0",
+    "@babel/preset-env": "^7.6.2",
+    "@babel/register": "^7.6.2",
+    "@shopify/app-bridge-react": "^1.6.8",
+    "@shopify/app-cli-node-generator-helper": "^1.1.2",
+    "@shopify/koa-shopify-auth": "^3.1.41",
+    "@shopify/koa-shopify-graphql-proxy": "^3.1.2",
+    "@shopify/koa-shopify-webhooks": "^2.0.0",
+    "@shopify/polaris": "^4.7.1",
+    "@zeit/next-css": "^1.0.1",
+    "apollo-boost": "^0.4.4",
+    "dotenv": "^8.2.0",
+    "graphql": "^14.5.8",
+    "isomorphic-fetch": "^2.1.1",
+    "js-cookie": "^2.2.1",
+    "koa": "^2.8.2",
+    "koa-router": "^7.4.0",
+    "koa-session": "^5.12.3",
+    "next": "^8.1.0",
+    "next-env": "^1.1.0",
+    "react": "^16.10.1",
+    "react-apollo": "^2.5.8",
+    "react-dom": "^16.10.1"
+  },
+  "devDependencies": {
+    "@babel/plugin-transform-runtime": "^7.6.2",
+    "@babel/preset-stage-3": "^7.0.0",
+    "babel-jest": "24.9.0",
+    "babel-register": "^6.26.0",
+    "enzyme": "3.10.0",
+    "enzyme-adapter-react-16": "1.15.1",
+    "husky": "^3.0.9",
+    "jest": "24.9.0",
+    "lint-staged": "^9.4.2",
+    "nodemon": "^1.19.3",
+    "prettier": "1.18.2",
+    "react-addons-test-utils": "15.6.2",
+    "react-test-renderer": "16.11.0"
+  }
+}
