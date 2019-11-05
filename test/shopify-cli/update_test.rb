@@ -4,7 +4,6 @@ require 'shellwords'
 module ShopifyCli
   class UpdateTest < MiniTest::Test
     include TestHelpers::Constants
-    include TestHelpers::Context
 
     class Stat
       def initialize(success: true)
@@ -17,13 +16,13 @@ module ShopifyCli
     end
 
     def setup
-      super
-
       $original_env = ENV.clone
 
-      redefine_constant(ShopifyCli, :ROOT, @context.root)
+      root = Dir.mktmpdir
+      @context = TestHelpers::FakeContext.new(root: root)
+      redefine_constant(ShopifyCli, :ROOT, root)
       FileUtils.mkdir("#{ShopifyCli::ROOT}/.git")
-      redefine_constant(ShopifyCli::Update, :FETCH_HEAD, File.expand_path('.git/FETCH_HEAD', @context.root))
+      redefine_constant(ShopifyCli::Update, :FETCH_HEAD, File.expand_path('.git/FETCH_HEAD', root))
       ShopifyCli::Config.set('autoupdate', 'enabled', true)
     end
 

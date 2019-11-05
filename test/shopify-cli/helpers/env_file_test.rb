@@ -4,8 +4,6 @@ require 'test_helper'
 module ShopifyCli
   module Helpers
     class EnvFileTest < MiniTest::Test
-      include TestHelpers::Project
-
       def test_read_reads_env_content_from_file
         env_file = EnvFile.read
         assert_equal(env_file.api_key, 'apikey')

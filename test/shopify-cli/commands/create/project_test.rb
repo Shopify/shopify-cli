@@ -4,17 +4,10 @@ module ShopifyCli
   module Commands
     class Create
       class ProjectTest < MiniTest::Test
-        include TestHelpers::Context
         include TestHelpers::Partners
 
-        def setup
-          super
-          @command = ShopifyCli::Commands::Create::Project
-          @command.ctx = @context
-        end
-
         def test_prints_help_with_no_name_argument
-          io = capture_io { @command.call([], nil) }
+          io = capture_io { run_cmd('create project') }
           assert_match(CLI::UI.fmt(ShopifyCli::Commands::Create::Project.help), io.join)
         end
 
@@ -58,19 +51,19 @@ module ShopifyCli
             SCOPES=write_products,write_customers,write_draft_orders
           CONTENT
           assert_equal env_file, File.read("test-app/.env")
+
+          FileUtils.rm_r('test-app')
         end
 
         private
 
         def perform_command
-          @command.call([
-            'project',
-            'test-app',
-            '--type=node',
-            '--app_url=http://app.com',
-            '--organization_id=42',
-            '--shop_domain=testshop.myshopify.com',
-          ], nil)
+          run_cmd("create project \
+            test-app \
+            --type=node \
+            --app_url=http://app.com \
+            --organization_id=42 \
+            --shop_domain=testshop.myshopify.com")
         end
       end
     end

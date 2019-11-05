@@ -4,12 +4,8 @@ require 'semantic/semantic'
 module ShopifyCli
   module AppTypes
     class RailsBuildTest < MiniTest::Test
-      include TestHelpers::Project
-
       def setup
-        root = Dir.mktmpdir
         project_context('app_types', 'rails')
-        @context = TestHelpers::FakeContext.new(root: root)
         @app = ShopifyCli::AppTypes::Rails.new(ctx: @context)
       end
 
@@ -81,7 +77,6 @@ module ShopifyCli
     end
 
     class RailsTest < MiniTest::Test
-      include TestHelpers::Project
       include TestHelpers::FakeUI
 
       def setup
@@ -92,22 +87,21 @@ module ShopifyCli
       end
 
       def test_server_command
-        cmd = ShopifyCli::Commands::Serve.new(@context)
         ShopifyCli::Tasks::Tunnel.stubs(:call)
         ShopifyCli::Tasks::UpdateWhitelistURL.expects(:call)
         @context.expects(:system).with(
           "PORT=8081 bin/rails server"
         )
-        cmd.call([], nil)
+        run_cmd('serve')
       end
 
       def test_open_command
-        cmd = ShopifyCli::Commands::Open.new(@context)
-        cmd.expects(:open_url!).with(
+        Tasks::Tunnel.stubs(:call)
+        Commands::Open.any_instance.expects(:open_url!).with(
           @context,
           'https://example.com/login?shop=my-test-shop.myshopify.com'
         )
-        cmd.call([], nil)
+        run_cmd('open')
       end
     end
   end

@@ -3,8 +3,6 @@ require 'test_helper'
 module ShopifyCli
   module Commands
     class DeployTest < MiniTest::Test
-      include TestHelpers::Project
-
       def setup
         super
         @command = ShopifyCli::Commands::Deploy.new(@context)
@@ -12,12 +10,12 @@ module ShopifyCli
 
       def test_heroku_subcommand_calls_heroku
         Deploy::Heroku.expects(:call)
-        @command.call(['heroku'], nil)
+        run_cmd('deploy heroku')
       end
 
       def test_without_arguments_calls_help
         @context.expects(:puts).with(ShopifyCli::Commands::Deploy.help)
-        @command.call([], nil)
+        run_cmd('deploy')
       end
     end
   end

@@ -5,8 +5,7 @@ module ShopifyCli
     class << self
       SKIP_UPDATE = %w(update help for-completion load-dev load-system open)
 
-      def call(args)
-        ctx = ShopifyCli::Context.new
+      def call(args, ctx = Context.new)
         task_registry = ShopifyCli::Tasks::Registry
 
         before_resolve(args)

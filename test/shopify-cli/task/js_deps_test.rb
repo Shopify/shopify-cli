@@ -3,8 +3,6 @@ require 'test_helper'
 module ShopifyCli
   module Tasks
     class JsDepsTest < MiniTest::Test
-      include TestHelpers::Project
-
       def setup
         project_context('app_types', 'node')
       end

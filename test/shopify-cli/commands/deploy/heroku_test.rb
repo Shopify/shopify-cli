@@ -4,7 +4,6 @@ module ShopifyCli
   module Commands
     class Deploy
       class HerokuTest < MiniTest::Test
-        include TestHelpers::Context
         include TestHelpers::FakeUI
 
         def setup

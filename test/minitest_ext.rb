@@ -8,6 +8,17 @@ module Minitest
   class Test
     FIXTURE_DIR = File.expand_path('fixtures', File.dirname(__FILE__))
 
+    include TestHelpers::Project
+
+    def setup
+      project_context('project')
+      super
+    end
+
+    def run_cmd(cmd)
+      ShopifyCli::EntryPoint.call(cmd.split(' '), @context)
+    end
+
     def capture_io(&block)
       cap = CLI::UI::StdoutRouter::Capture.new(with_frame_inset: true, &block)
       @context.output_captured = true if @context
