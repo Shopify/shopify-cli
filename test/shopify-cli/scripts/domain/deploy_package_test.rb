@@ -51,7 +51,7 @@ describe ShopifyCli::ScriptModule::Domain::DeployPackage do
           kwargs[:script_name] == script_name &&
           kwargs[:script_content] == script_content &&
           kwargs[:content_type] == content_type &&
-          kwargs[:config_schema] == configuration_schema &&
+          kwargs[:schema] == extension_point_schema &&
           kwargs[:shop_id] == shop_id &&
           kwargs[:config_value] == "{}"
         end

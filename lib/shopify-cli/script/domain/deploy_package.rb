@@ -4,13 +4,14 @@ module ShopifyCli
   module ScriptModule
     module Domain
       class DeployPackage
-        attr_reader :id, :script, :script_content, :content_type
+        attr_reader :id, :script, :script_content, :content_type, :schema
 
-        def initialize(id, script, script_content, content_type)
+        def initialize(id, script, script_content, content_type, schema=nil)
           @id = id
           @script = script
           @script_content = script_content
           @content_type = content_type
+          @schema = schema
         end
 
         def deploy(script_service, shop_id, config_value)
@@ -20,7 +21,7 @@ module ShopifyCli
             script_name: @script.name,
             script_content: @script_content,
             content_type: @content_type,
-            config_schema: @script.configuration.schema,
+            schema: schema || script.schema,
             shop_id: shop_id,
             config_value: config_value
           )

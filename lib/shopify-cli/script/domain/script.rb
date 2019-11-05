@@ -14,6 +14,10 @@ module ShopifyCli
           @schema = schema
         end
 
+        def main_source_file
+          "#{name}.#{language}"
+        end
+
         def id
           "#{extension_point.type}/#{filename}"
         end

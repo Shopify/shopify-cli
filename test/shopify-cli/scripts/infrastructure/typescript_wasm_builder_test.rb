@@ -26,8 +26,11 @@ export { run };"
 
   describe "build" do
     it "should write the entry and tsconfig files, install assembly script and trigger the compilation process" do
-      File.expects(:write).with("assembly.ts", assembly_index)
+      subject.expects(:open).with("#{script_name}.ts", "a")
+      FileUtils.expects(:cp)
       File.expects(:write).with("tsconfig.json", tsconfig)
+      File.expects(:write).with("package.json", "{}")
+      File.expects(:read).with("schema")
       File.expects(:read).with("build/#{script_name}.wasm")
 
       ShopifyCli::ScriptModule::Infrastructure::TypeScriptWasmBuilder
