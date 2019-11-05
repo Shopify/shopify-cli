@@ -93,8 +93,6 @@ module ShopifyCli
     end
 
     class NodeTest < MiniTest::Test
-      include TestHelpers::Project
-      include TestHelpers::Constants
       include TestHelpers::FakeUI
 
       def setup
@@ -104,23 +102,22 @@ module ShopifyCli
       end
 
       def test_server_command
-        ShopifyCli::Tasks::Tunnel.stubs(:call)
-        ShopifyCli::Tasks::UpdateWhitelistURL.expects(:call)
+        Tasks::Tunnel.expects(:call).at_least_once
+        Tasks::UpdateWhitelistURL.expects(:call)
         @context.app_metadata[:host] = 'https://example.com'
-        cmd = ShopifyCli::Commands::Serve.new(@context)
         @context.expects(:system).with(
           "HOST=https://example.com PORT=8081 npm run dev"
         )
-        cmd.call([], nil)
+        run_cmd('serve')
       end
 
       def test_open_command
-        cmd = ShopifyCli::Commands::Open.new(@context)
-        cmd.expects(:open_url!).with(
+        Tasks::Tunnel.expects(:call)
+        Commands::Open.any_instance.expects(:open_url!).with(
           @context,
           'https://example.com/auth?shop=my-test-shop.myshopify.com'
         )
-        cmd.call([], nil)
+        run_cmd('open')
       end
     end
   end

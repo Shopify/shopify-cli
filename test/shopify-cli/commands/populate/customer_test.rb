@@ -21,12 +21,11 @@ module ShopifyCli
             .returns(JSON.parse(File.read(File.join(FIXTURE_DIR, 'populate/customer_data.json'))))
           ShopifyCli::API.expects(:gid_to_id).returns(12345678)
           Resource.any_instance.stubs(:price).returns('1.00')
-          @resource = Customer.new(@context)
           @context.expects(:done).with(
             "first last added to {{green:my-test-shop.myshopify.com}} at " \
             "{{underline:https://my-test-shop.myshopify.com/admin/customers/12345678}}"
           )
-          @resource.call(['-c 1'], nil)
+          run_cmd('populate customers -c 1')
         end
       end
     end

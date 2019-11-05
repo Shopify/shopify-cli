@@ -87,8 +87,8 @@ module ShopifyCli
       end
 
       def test_server_command
-        ShopifyCli::Tasks::Tunnel.stubs(:call)
-        ShopifyCli::Tasks::UpdateWhitelistURL.expects(:call)
+        Tasks::Tunnel.expects(:call).at_least_once
+        Tasks::UpdateWhitelistURL.expects(:call)
         @context.expects(:system).with(
           "PORT=8081 bin/rails server"
         )
@@ -96,7 +96,7 @@ module ShopifyCli
       end
 
       def test_open_command
-        Tasks::Tunnel.stubs(:call)
+        Tasks::Tunnel.expects(:call).at_least_once
         Commands::Open.any_instance.expects(:open_url!).with(
           @context,
           'https://example.com/login?shop=my-test-shop.myshopify.com'
