@@ -4,16 +4,6 @@ module ShopifyCli
   module AppTypes
     class Node < AppType
       class << self
-        def env_file
-          <<~KEYS
-            SHOPIFY_API_KEY={api_key}
-            SHOPIFY_API_SECRET={secret}
-            HOST={host}
-            SHOP={shop}
-            SCOPES={scopes}
-          KEYS
-        end
-
         def description
           'node embedded app'
         end
