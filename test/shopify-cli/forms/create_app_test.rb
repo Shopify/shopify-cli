@@ -91,9 +91,9 @@ module ShopifyCli
             data: {
               organizations: {
                 nodes: [{
-                    'id': 421,
-                    'businessName': "one",
-                    'stores': { 'nodes': [{ 'shopDomain': 'next.myshopify.com' }] },
+                  'id': 421,
+                  'businessName': "one",
+                  'stores': { 'nodes': [{ 'shopDomain': 'next.myshopify.com' }] },
                 }],
               },
             },

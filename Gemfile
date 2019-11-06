@@ -7,7 +7,7 @@ source "https://rubygems.org"
 group :development, :test do
   gem 'rake'
   gem 'byebug'
-  gem 'rubocop', '~> 0.61.0'
+  gem 'rubocop'
 end
 
 group :test do
