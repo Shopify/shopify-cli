@@ -80,8 +80,6 @@ module ShopifyCli
         ShopifyCli::Finalize.request_cd(name)
 
         set_custom_ua
-
-        puts CLI::UI.fmt(post_clone)
       end
 
       def check_dependencies

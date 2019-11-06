@@ -21,7 +21,7 @@ module ShopifyCli
             variables: {
               org: 42,
               title: 'Test app',
-              app_url: 'http://app.com',
+              app_url: 'https://shopify.github.io/shopify-app-cli/getting-started',
               redir: ["http://app-cli-loopback.shopifyapps.com:3456"],
             },
             resp: {
@@ -61,7 +61,6 @@ module ShopifyCli
           run_cmd("create project \
             test-app \
             --type=node \
-            --app_url=http://app.com \
             --organization_id=42 \
             --shop_domain=testshop.myshopify.com")
         end

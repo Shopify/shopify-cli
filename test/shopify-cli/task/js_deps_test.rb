@@ -24,7 +24,7 @@ module ShopifyCli
       def test_installs_with_yarn
         ShopifyCli::Tasks::JsDeps.any_instance.stubs(:installer).returns(:yarn)
         CLI::Kit::System.expects(:system).with(
-          'yarn',
+          'yarn', 'install', '--silent',
           chdir: @context.root
         ).returns(mock(success?: true))
         io = capture_io do
