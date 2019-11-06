@@ -12,18 +12,21 @@ module ShopifyCli
         assert_equal(env_file.secret, 'secret')
         assert_equal(env_file.host, 'https://example.com')
         assert_equal(env_file.shop, 'my-test-shop.myshopify.com')
+        assert_equal(env_file.extra['AWSKEY'], 'awskey')
       end
 
       def test_write_writes_env_content_to_file
         env_file = EnvFile.new(
           api_key: 'foo',
           secret: 'bar',
-          host: 'baz'
+          host: 'baz',
+          extra: { 'AWSKEY' => 'awskey' },
         )
         content = <<~CONTENT
           API_KEY=foo
           SECRET=bar
           HOST=baz
+          AWSKEY=awskey
         CONTENT
         @context.expects(:write).with('.env', content)
         @context.expects(:print_task).with('writing .env file')

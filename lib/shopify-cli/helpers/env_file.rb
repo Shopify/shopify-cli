@@ -12,9 +12,15 @@ module ShopifyCli
           app_type = Project.at(directory).app_type
           template = parse_template(app_type.env_file)
           input = {}
+          extra = {}
           parse(directory).each do |key, value|
-            input[template[key]] = value if template[key]
+            if template[key]
+              input[template[key]] = value
+            else
+              extra[key] = value
+            end
           end
+          input[:extra] = extra
           new(input)
         end
 
@@ -52,6 +58,7 @@ module ShopifyCli
       property :shop
       property :scopes
       property :host
+      property :extra, default: {}
 
       def write(ctx, app_type: Project.current.app_type)
         spin_group = CLI::UI::SpinGroup.new
@@ -60,6 +67,9 @@ module ShopifyCli
           output = []
           template.each do |key, value|
             output << "#{key}=#{send(value)}" if send(value)
+          end
+          extra.each do |key, value|
+            output << "#{key}=#{value}"
           end
           ctx.print_task("writing #{FILENAME} file")
           ctx.write(FILENAME, output.join("\n") + "\n")
