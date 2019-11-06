@@ -32,7 +32,7 @@ module ShopifyCli
             secret: api_client["apiSecretKeys"].first["secret"],
             shop: form.shop_domain,
             scopes: 'write_products,write_customers,write_draft_orders',
-          ).write(@ctx, app_type: ShopifyCli::AppTypeRegistry[form.type])
+          ).write(@ctx)
         end
 
         def self.help

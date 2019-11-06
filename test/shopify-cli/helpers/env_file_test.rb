@@ -23,8 +23,8 @@ module ShopifyCli
           extra: { 'AWSKEY' => 'awskey' },
         )
         content = <<~CONTENT
-          API_KEY=foo
-          SECRET=bar
+          SHOPIFY_API_KEY=foo
+          SHOPIFY_API_SECRET=bar
           HOST=baz
           AWSKEY=awskey
         CONTENT
@@ -40,8 +40,8 @@ module ShopifyCli
           host: 'baz'
         )
         content = <<~CONTENT
-          API_KEY=foo
-          SECRET=bar
+          SHOPIFY_API_KEY=foo
+          SHOPIFY_API_SECRET=bar
           HOST=boo
         CONTENT
         @context.expects(:write).with('.env', content)

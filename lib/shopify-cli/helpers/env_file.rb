@@ -4,34 +4,28 @@ module ShopifyCli
   module Helpers
     class EnvFile
       include SmartProperties
-
       FILENAME = '.env'
+      KEY_MAP = {
+        'SHOPIFY_API_KEY' => :api_key,
+        'SHOPIFY_API_SECRET' => :secret,
+        'SHOP' => :shop,
+        'SCOPES' => :scopes,
+        'HOST' => :host,
+      }
 
       class << self
         def read(directory = Dir.pwd)
-          app_type = Project.at(directory).app_type
-          template = parse_template(app_type.env_file)
           input = {}
           extra = {}
           parse(directory).each do |key, value|
-            if template[key]
-              input[template[key]] = value
+            if KEY_MAP[key]
+              input[KEY_MAP[key]] = value
             else
               extra[key] = value
             end
           end
           input[:extra] = extra
           new(input)
-        end
-
-        def parse_template(template)
-          template.split("\n").each_with_object({}) do |line, output|
-            match = /\A([A-Za-z_0-9]+)=\{(.*)\}\z/.match(line)
-            if match
-              output[match[1]] = match[2]
-            end
-            output
-          end
         end
 
         def parse(directory)
@@ -60,12 +54,11 @@ module ShopifyCli
       property :host
       property :extra, default: {}
 
-      def write(ctx, app_type: Project.current.app_type)
+      def write(ctx)
         spin_group = CLI::UI::SpinGroup.new
         spin_group.add("writing #{FILENAME} file...") do |spinner|
-          template = self.class.parse_template(app_type.env_file)
           output = []
-          template.each do |key, value|
+          KEY_MAP.each do |key, value|
             output << "#{key}=#{send(value)}" if send(value)
           end
           extra.each do |key, value|
