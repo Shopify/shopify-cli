@@ -12,7 +12,7 @@ describe ShopifyCli::ScriptModule::Domain::DeployPackage do
   let(:config_value) { "{}" }
   let(:script_content) { "(module)" }
   let(:content_type) { "wasm" }
-  let(:deploy_package) { ShopifyCli::ScriptModule::Domain::DeployPackage.new(id, script, script_content, content_type) }
+  let(:deploy_package) { ShopifyCli::ScriptModule::Domain::DeployPackage.new(id, script, script_content, content_type, extension_point_schema) }
   let(:script_service) { Minitest::Mock.new }
   let(:id) { "deploy_package_id" }
 

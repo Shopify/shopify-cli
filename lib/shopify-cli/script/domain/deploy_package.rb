@@ -6,7 +6,7 @@ module ShopifyCli
       class DeployPackage
         attr_reader :id, :script, :script_content, :content_type, :schema
 
-        def initialize(id, script, script_content, content_type, schema=nil)
+        def initialize(id, script, script_content, content_type, schema)
           @id = id
           @script = script
           @script_content = script_content
@@ -21,7 +21,7 @@ module ShopifyCli
             script_name: @script.name,
             script_content: @script_content,
             content_type: @content_type,
-            schema: schema || script.schema,
+            schema: schema,
             shop_id: shop_id,
             config_value: config_value
           )
