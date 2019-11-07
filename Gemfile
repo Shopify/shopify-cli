@@ -18,3 +18,7 @@ group :test do
   gem 'fakefs', require: false
   gem 'webmock', require: false
 end
+
+group :jekyll_plugins do
+  gem 'github-pages'
+end
