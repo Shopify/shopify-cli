@@ -1,5 +1,5 @@
-query FindOrg($id: ID!) {
-  organizations(id: $id) {
+query AllOrgs{
+  organizations {
     nodes {
       id
       businessName
@@ -11,7 +11,15 @@ query FindOrg($id: ID!) {
           shopName
         }
       }
+      apps {
+        nodes {
+          title
+          apiKey
+          apiSecretKeys{
+            secret
+          }
+        }
+      }
     }
   }
 }
-

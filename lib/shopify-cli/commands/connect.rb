@@ -7,9 +7,10 @@ module ShopifyCli
       def call(*)
         if Project.at(Dir.pwd)
           @ctx.puts "{{yellow:! Don't use}} {{cyan:connect}} {{yellow:for production apps}}"
-          org_id = get_organization
-          app = get_app(org_id)
-          shop = get_shop
+          org = get_organization
+          id = org['id']
+          app = get_app(org['apps'])
+          shop = get_shop(org['stores'], id)
           write_env(app, shop)
           @ctx.puts "{{v}} Project now connected to {{green:app_name}}"
           @ctx.puts "{{*}} Run {{cyan:shopify serve}} to start a local development server"
@@ -17,36 +18,33 @@ module ShopifyCli
       end
 
       def get_organization
-        orgs = Helpers::Organizations.fetch_all(@ctx)
-        if orgs.count == 1
+        orgs = Helpers::Organizations.fetch_with_app(@ctx)
+        org = if orgs.count == 1
           orgs.first
         else
-          org_id = CLI::UI::Prompt.ask('Which organization does this app belong to?') do |handler|
-            orgs.each { |org| handler.option(org["businessName"]) { org["id"] } }
+         CLI::UI::Prompt.ask('Which organization does this app belong to?') do |handler|
+            orgs.each { |org| handler.option(org["businessName"]) { org } }
           end
-          orgs.find { |org| org["id"] == org_id }
         end
-        org_id
+        org
       end
 
-      def get_app(org_id)
-       @org = Helpers::Organizations.fetch(@ctx, id: org_id)
-        apps = @org['apps']['nodes']
+      def get_app(apps)
         app = CLI::UI::Prompt.ask('Which app does this project belong to?') do |handler|
           apps.each { |app| handler.option(app["title"]) {app} }
         end
         app
       end
 
-      def get_shop
-        if @org['stores'].count == 1
-         @org.first
-        elsif @org['stores'].count === 0
+      def get_shop(shops, id)
+        if shops.count == 1
+         shops.first
+        elsif shops.count === 0
           @ctx.puts('No developement shops available.')
-          @ctx.puts("Visit https://partners.shopify.com/#{@org_id}/stores to create one") 
+          @ctx.puts("Visit https://partners.shopify.com/#{id}/stores to create one")
         else
           shop = CLI::UI::Prompt.ask('Which development store would you like to use?') do |handler|
-            @org['stores'].each{ |store| handler.option(store["shopName"]) {store["shopDomain"]}}
+            shops.each{ |shop| handler.option(shop["shopName"]) {shop["shopDomain"]}}
           end
         end
         shop
