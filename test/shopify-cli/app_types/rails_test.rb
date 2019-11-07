@@ -85,7 +85,7 @@ module ShopifyCli
         cmd = ShopifyCli::Commands::Serve
         cmd.ctx = @context
         ShopifyCli::Tasks::Tunnel.stubs(:call)
-        ShopifyCli::Tasks::UpdateWhitelistURL.expects(:call)
+        ShopifyCli::Tasks::UpdateDashboardURLS.expects(:call)
         @context.expects(:system).with(
           "PORT=8081 bin/rails server"
         )
