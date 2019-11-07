@@ -17,7 +17,6 @@ module ShopifyCli
         def deploy(script_service, shop_id, config_value)
           script_service.deploy(
             extension_point_type: @script.extension_point.type,
-            extension_point_schema: @script.schema,
             script_name: @script.name,
             script_content: @script_content,
             content_type: @content_type,

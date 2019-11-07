@@ -29,11 +29,10 @@ module ShopifyCli
 
         def deploy(
           extension_point_type:,
-          extension_point_schema:,
+          schema:,
           script_name:,
           script_content:,
           content_type:,
-          config_schema:,
           shop_id: nil,
           config_value: nil
         )
@@ -45,11 +44,10 @@ module ShopifyCli
               request.set_form(build_form_data(
                 scope: { "shop_id" => shop_id }.to_json,
                 extension_point_type: extension_point_type,
-                extension_point_schema: extension_point_schema,
+                schema: schema,
                 script_name: script_name,
                 script_content: script_content,
                 content_type: content_type,
-                config_schema: config_schema,
                 config_value: config_value,
               ), "multipart/form-data")
               net_args = { use_ssl: uri.scheme == "https" }
@@ -86,10 +84,9 @@ module ShopifyCli
         def build_form_data(
           scope:,
           extension_point_type:,
-          extension_point_schema:,
           script_name:,
           script_content:,
-          config_schema:,
+          schema:,
           config_value:,
           content_type:
         )
@@ -97,11 +94,10 @@ module ShopifyCli
             ["org_id", org_id],
             ["extension_point_name", extension_point_type],
             ["script_content", script_content, filename: BUILD_FILE],
-            ["input_schema", extension_point_schema, filename: EXTENSION_POINT_SCHEMA_FILE],
+            ["schema", schema, filename: EXTENSION_POINT_SCHEMA_FILE],
             ["title", script_name],
             ["content_type", content_type],
-            ["description", get_description(script_name)],
-            ["config_schema", config_schema, filename: CONFIG_SCHEMA_FILE],
+            ["description", get_description(script_name)]
           ]
 
           form.push(["configuration", config_value]) if config_value

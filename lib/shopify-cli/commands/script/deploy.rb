@@ -48,7 +48,7 @@ module ShopifyCli
           deploy_package = ScriptModule::Application::Build.call(language, extension_point, name)
 
           puts CLI::UI.fmt(DEPLOYING_MSG)
-          deploy_package.deploy(Infrastructure::ScriptService.new, shop_id, config_value)
+          deploy_package.deploy(ScriptModule::Infrastructure::ScriptService.new, shop_id, config_value)
 
           puts CLI::UI.fmt(DEPLOY_SUCCEEDED_MSG)
         rescue ScriptModule::Domain::ScriptNotFoundError
