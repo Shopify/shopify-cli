@@ -97,7 +97,7 @@ module ShopifyCli
             ["schema", schema, filename: EXTENSION_POINT_SCHEMA_FILE],
             ["title", script_name],
             ["content_type", content_type],
-            ["description", get_description(script_name)]
+            ["description", get_description(script_name)],
           ]
 
           form.push(["configuration", config_value]) if config_value

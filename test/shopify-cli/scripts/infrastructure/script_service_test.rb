@@ -36,11 +36,10 @@ describe ShopifyCli::ScriptModule::Infrastructure::ScriptService do
     subject do
       script_service.deploy(
         extension_point_type: extension_point_type,
-        extension_point_schema: extension_point_schema,
+        schema: extension_point_schema,
         script_name: script_name,
         script_content: script_content,
         content_type: "wasm",
-        config_schema: config_schema,
       )
     end
 
@@ -49,10 +48,9 @@ describe ShopifyCli::ScriptModule::Infrastructure::ScriptService do
         ["org_id", "100"],
         ["extension_point_name", extension_point_type],
         ["source_code", script_content, filename: "build.wasm"],
-        ["input_schema", extension_point_schema, filename: "extension_point.schema"],
+        ["schema", extension_point_schema, filename: "extension_point.schema"],
         ["title", script_name],
-        ["description", "Script 'foo_bar' created by CLI tool"],
-        ["config_schema", config_schema, filename: "config.schema"],
+        ["description", "Script 'foo_bar' created by CLI tool"]
       ]
 
       form.push(["configuration", config_value]) if config_value

@@ -77,15 +77,6 @@ describe ShopifyCli::ScriptModule::Infrastructure::ScriptRepository do
           assert_equal script_source_file, e.script_name
         end
       end
-
-      it "should raise ScriptNotFoundError when schema file does not exist" do
-        FakeFS.with_fresh do
-          FileUtils.mkdir_p(script_source_base)
-          File.write(script_source_file, "//script code")
-          e = assert_raises(ShopifyCli::ScriptModule::Domain::ScriptNotFoundError) { subject }
-          assert_equal script_source_file, e.script_name
-        end
-      end
     end
 
     describe "when extension point does not exist" do
