@@ -65,7 +65,7 @@ module ShopifyCli
             app_url: 'http://app.com',
           )
         end
-        assert_equal(err.message, "app_url is not a valid url")
+        assert_equal(err.message, "{{x}} app_url is not a valid url")
       end
     end
   end
