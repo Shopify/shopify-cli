@@ -13,7 +13,7 @@ module ShopifyCli
       def at(dir)
         proj_dir = directory(dir)
         unless proj_dir
-          raise(ShopifyCli::Abort, message)
+          raise(ShopifyCli::Abort, "{{x}} #{message}")
         end
         @at ||= Hash.new { |h, k| h[k] = new(directory: k) }
         @at[proj_dir]
@@ -71,7 +71,7 @@ module ShopifyCli
       @config ||= begin
         config = load_yaml_file('.shopify-cli.yml')
         unless config.is_a?(Hash)
-          raise ShopifyCli::Abort, '.shopify-cli.yml was not a proper YAML file. Expecting a hash.'
+          raise ShopifyCli::Abort, '{{x}} .shopify-cli.yml was not a proper YAML file. Expecting a hash.'
         end
         config
       end
@@ -85,12 +85,12 @@ module ShopifyCli
       begin
         YAML.load_file(f)
       rescue Psych::SyntaxError => e
-        raise(ShopifyCli::Abort, "#{relative_path} contains invalid YAML: #{e.message}")
+        raise(ShopifyCli::Abort, "{{x}} #{relative_path} contains invalid YAML: #{e.message}")
       # rescue Errno::EACCES => e
       # TODO
       #   Dev::Helpers::EaccesHandler.diagnose_and_raise(f, e, mode: :read)
       rescue Errno::ENOENT
-        raise ShopifyCli::Abort, "#{f} not found"
+        raise ShopifyCli::Abort, "{{x}} #{f} not found"
       end
     end
   end

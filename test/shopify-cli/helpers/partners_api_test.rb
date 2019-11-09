@@ -71,7 +71,7 @@ module ShopifyCli
         ).returns(api_stub)
         api_stub.expects(:query).raises(API::APIRequestNotFoundError)
         @context.expects(:puts).with(
-          "{{error: Your account was not found. Please sign up at https://partners.shopify.com/signup}}",
+          "{{{{x}} error: Your account was not found. Please sign up at https://partners.shopify.com/signup}}",
         )
         PartnersAPI.query(@context, 'query')
       end

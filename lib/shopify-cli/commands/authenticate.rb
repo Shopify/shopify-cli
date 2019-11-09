@@ -16,8 +16,8 @@ module ShopifyCli
             end
             spinner.update_title("Authetication token stored")
           rescue OAuth::Error
-            @ctx.puts("{{error:Failed to Authenticate}}")
-            raise(::ShopifyCli::Abort, "Failed to Authenticate")
+            @ctx.puts("{{{{x}} error:Failed to Authenticate}}")
+            raise(::ShopifyCli::Abort, "{{x}} Failed to Authenticate")
           end
         end
       end

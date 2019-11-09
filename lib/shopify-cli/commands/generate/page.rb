@@ -14,7 +14,7 @@ module ShopifyCli
           project = ShopifyCli::Project.current
           # temporary check until we build for rails
           if project.app_type == ShopifyCli::AppTypes::Rails
-            raise(ShopifyCli::Abort, 'This feature is not yet available for Rails apps')
+            raise(ShopifyCli::Abort, "{{x}} This feature is not yet available for Rails apps")
           end
           types = project.app_type.page_types
           name = args.first
@@ -26,11 +26,11 @@ module ShopifyCli
 
           selected_type = if flag
             unless types.key?(flag)
-              raise ShopifyCli::Abort, 'Invalid page type.'
+              raise ShopifyCli::Abort, "{{x}} Invalid page type."
             end
             types[flag]
           else
-            CLI::UI::Prompt.ask('Which template would you like to use?') do |handler|
+            CLI::UI::Prompt.ask("Which template would you like to use?") do |handler|
               types.each do |key, value|
                 handler.option(key) { value }
               end
