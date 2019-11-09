@@ -7,7 +7,7 @@ module ShopifyCli
         repository = args.shift
         dest = args.shift
         if Dir.exist?(dest)
-          abort(CLI::UI.fmt("{{red:Project directory already exists. Please create a project with a new name.}}"))
+          abort(CLI::UI.fmt("{{red:{{x}} Project directory already exists. Please create a project with a new name.}}"))
         else
           CLI::UI::Frame.open("Cloning into #{dest}...") do
             git_progress('clone', '--single-branch', repository, dest)
@@ -28,7 +28,7 @@ module ShopifyCli
             msg << err
           end.success?
           unless success
-            abort(CLI::UI.fmt("{{red:#{msg.join("\n")}}}"))
+            raise(ShopifyCli::Abort, msg.join("\n"))
           end
           bar.tick(set_percent: 1.0)
           true
