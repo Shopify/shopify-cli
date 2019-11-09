@@ -6,10 +6,14 @@ module ShopifyCli
       def call(*args)
         repository = args.shift
         dest = args.shift
-        CLI::UI::Frame.open("Cloning into #{dest}...") do
-          git_progress('clone', '--single-branch', repository, dest)
+        if Dir.exist?(dest)
+          abort(CLI::UI.fmt("{{red:{{x}} Project directory already exists. Please create a project with a new name.}}"))
+        else
+          CLI::UI::Frame.open("Cloning into #{dest}...") do
+            git_progress('clone', '--single-branch', repository, dest)
+          end
+          puts CLI::UI.fmt("{{v}} Cloned app in #{dest}")
         end
-        puts CLI::UI.fmt("{{v}} Cloned app in #{dest}")
       end
 
       def git_progress(*git_command)
@@ -24,7 +28,7 @@ module ShopifyCli
             msg << err
           end.success?
           unless success
-            raise CLI::UI.fmt("{{red:#{msg.join("\n")}}}")
+            raise(ShopifyCli::Abort, msg.join("\n"))
           end
           bar.tick(set_percent: 1.0)
           true
