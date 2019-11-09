@@ -110,7 +110,8 @@ module ShopifyCli
           output, status = @ctx.capture2e('git', 'status')
 
           unless status.success?
-            raise(ShopifyCli::Abort, "{{x}} Git repo is not initiated. Please run `git init` and make at least one commit.")
+            msg = "{{x}} Git repo is not initiated. Please run `git init` and make at least one commit."
+            raise(ShopifyCli::Abort, msg)
           end
 
           if output.include?('No commits yet')
@@ -147,7 +148,8 @@ module ShopifyCli
 
           new_remote = output.split("\n").last.split("|").last.strip
           result = @ctx.system('git', 'remote', 'add', 'heroku', new_remote)
-          raise(ShopifyCli::Abort, "{{x}} Heroku app created, but couldn’t be set as a git remote") unless result.success?
+          msg = "{{x}} Heroku app created, but couldn’t be set as a git remote"
+          raise(ShopifyCli::Abort, msg) unless result.success?
         end
 
         def heroku_deploy(branch_to_deploy)
@@ -194,7 +196,8 @@ module ShopifyCli
 
         def heroku_select_existing_app(app_name)
           result = @ctx.system(heroku_command, 'git:remote', '-a', app_name)
-          raise(ShopifyCli::Abort, "{{x}} Heroku app `#{app_name}` could not be selected") unless result.success?
+          msg = "{{x}} Heroku app `#{app_name}` could not be selected"
+          raise(ShopifyCli::Abort, msg) unless result.success?
         end
 
         def heroku_whoami
