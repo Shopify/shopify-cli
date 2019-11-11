@@ -7,8 +7,10 @@ module ShopifyCli
         @input_type = :ProductInput
 
         def defaults
-          @input.title = Helpers::Haikunator.title
-          @input.variants = [{ price: price }]
+          {
+            title: Helpers::Haikunator.title,
+            variants: [{ price: price }],
+          }
         end
 
         def message(data)

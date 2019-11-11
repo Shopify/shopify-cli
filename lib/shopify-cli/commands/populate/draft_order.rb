@@ -7,12 +7,14 @@ module ShopifyCli
         @input_type = :DraftOrderInput
 
         def defaults
-          @input.lineItems = [{
-            originalUnitPrice: price,
-            quantity: 1,
-            weight: { value: 10, unit: 'GRAMS' },
-            title: Helpers::Haikunator.title,
-          }]
+          {
+            lineItems: [{
+              originalUnitPrice: price,
+              quantity: 1,
+              weight: { value: 10, unit: 'GRAMS' },
+              title: Helpers::Haikunator.title,
+            }],
+          }
         end
 
         def message(data)

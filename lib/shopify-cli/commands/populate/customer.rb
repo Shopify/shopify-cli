@@ -8,8 +8,10 @@ module ShopifyCli
 
         def defaults
           first_name, last_name = Helpers::Haikunator.name
-          @input.firstName = first_name
-          @input.lastName = last_name
+          {
+            firstName: first_name,
+            lastName: last_name,
+          }
         end
 
         def message(data)
