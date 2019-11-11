@@ -17,7 +17,7 @@ module ShopifyCli
         CLI::UI::Frame.open("Installing dependencies with #{installer}...") do
           CLI::UI::Spinner.spin("Installing dependencies...") do |spinner|
             send(installer)
-              spinner.update_title("#{installer} dependencies installed")
+            spinner.update_title("#{@dep_number} #{installer} dependencies installed")
           end
         end
         puts CLI::UI.fmt("{{v}} Dependencies installed")
@@ -54,6 +54,7 @@ module ShopifyCli
         deps = %w(dependencies devDependencies).map do |key|
           pkg.fetch(key, []).keys
         end.flatten
+        @dep_number = deps.size
         @ctx.puts("Installing #{deps.size} dependencies")
         CLI::Kit::System.system(*INSTALL_COMMANDS[installer], chdir: @dir)
       rescue JSON::ParserError
