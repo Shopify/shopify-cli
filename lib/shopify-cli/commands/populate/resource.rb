@@ -47,12 +47,14 @@ module ShopifyCli
               @count = value.to_i
             end
 
-            opts.on("-h", 'print help') do |_value|
+            opts.on("-h", 'print help') do |_v|
               puts opts
               exit
             end
 
-            opts.on("--silent", "-s") { |s| @silent = s }
+            opts.on("--silent") { |v| @silent = v }
+
+            opts.on('--shop=', '-s') { |value| @shop = value }
           end
         end
 
@@ -82,7 +84,11 @@ module ShopifyCli
         end
 
         def run_mutation(data)
-          resp = Helpers::AdminAPI.query(@ctx, "create_#{resource_type}", input: data)
+          kwargs = { input: data }
+          kwargs[:shop] = @shop if @shop
+          resp = Helpers::AdminAPI.query(
+            @ctx, "create_#{resource_type}", kwargs
+          )
           raise(ShopifyCli::Abort, resp['errors']) if resp['errors']
           @ctx.done(message(resp['data'])) unless @silent
         end
