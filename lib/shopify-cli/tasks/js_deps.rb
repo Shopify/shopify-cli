@@ -15,7 +15,10 @@ module ShopifyCli
         @dir = ctx.root
 
         CLI::UI::Frame.open("Installing dependencies with #{installer}...") do
-          send(installer)
+          CLI::UI::Spinner.spin("Installing dependencies...") do |spinner|
+            send(installer)
+              spinner.update_title("#{installer} dependencies installed")
+          end
         end
         puts CLI::UI.fmt("{{v}} Dependencies installed")
       end

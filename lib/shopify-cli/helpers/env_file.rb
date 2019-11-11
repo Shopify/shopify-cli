@@ -66,7 +66,7 @@ module ShopifyCli
           end
           ctx.print_task("writing #{FILENAME} file")
           ctx.write(FILENAME, output.join("\n") + "\n")
-          spinner.update_title("#{FILENAME} saved")
+          spinner.update_title("#{FILENAME} saved to project root")
         end
         spin_group.wait
       end
