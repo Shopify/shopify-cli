@@ -42,7 +42,7 @@ module ShopifyCli
           raise(ShopifyCli::Abort, "{{x}} Cannot find an organization with that ID") if org.nil?
           org
         elsif organizations.count == 0
-          ctx.puts('Please visit https://partners.shopify.com/ to create a partners account')
+          ctx.puts('Please visit {{underline:https://partners.shopify.com/ to create a partners account}}')
           raise(ShopifyCli::Abort, '{{x}} No organizations available.')
         elsif organizations.count == 1
           ctx.puts("Organization {{green:#{organizations.first['businessName']}}}")
@@ -58,7 +58,7 @@ module ShopifyCli
       def ask_shop_domain
         if organization['stores'].count == 0
           ctx.puts('No developement shops available.')
-          ctx.puts("Visit {{green:https://partners.shopify.com/#{organization['id']}/stores}} to create one")
+          ctx.puts("Visit {{underline:https://partners.shopify.com/#{organization['id']}/stores}} to create one")
         elsif organization['stores'].count == 1
           domain = organization['stores'].first['shopDomain']
           ctx.puts("Using development shop {{green:#{domain}}}")
