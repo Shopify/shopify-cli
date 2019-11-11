@@ -39,16 +39,16 @@ module ShopifyCli
       def organization
         @organiztion ||= if !organization_id.nil?
           org = Helpers::Organizations.fetch(ctx, id: organization_id)
-          raise(ShopifyCli::Abort, 'Cannot find an organization with that ID') if org.nil?
+          raise(ShopifyCli::Abort, "{{x}} Cannot find an organization with that ID") if org.nil?
           org
         elsif organizations.count == 0
           ctx.puts('Please visit https://partners.shopify.com/ to create a partners account')
-          raise(ShopifyCli::Abort, 'No organizations available.')
+          raise(ShopifyCli::Abort, '{{x}} No organizations available.')
         elsif organizations.count == 1
           ctx.puts("Organization {{green:#{organizations.first['businessName']}}}")
           organizations.first
         else
-          org_id = CLI::UI::Prompt.ask('Which organization do you want this app to belong to?') do |handler|
+          org_id = CLI::UI::Prompt.ask('Select organization') do |handler|
             organizations.each { |o| handler.option(o['businessName']) { o['id'] } }
           end
           organizations.find { |o| o['id'] == org_id }
@@ -65,7 +65,7 @@ module ShopifyCli
           domain
         else
           CLI::UI::Prompt.ask(
-            'Which development store would you like to work with?',
+            'Select a development store',
             options: organization["stores"].map { |s| s["shopDomain"] }
           )
         end

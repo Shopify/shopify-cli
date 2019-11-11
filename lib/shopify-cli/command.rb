@@ -19,6 +19,7 @@ module ShopifyCli
           cmd.ctx = @ctx
           cmd.options = Options.new
           cmd.options.parse(@_options, args)
+          return @ctx.puts(cmd.class.help) if cmd.options.help
           cmd.call(args, command_name)
         end
       end

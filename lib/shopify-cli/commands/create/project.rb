@@ -33,7 +33,7 @@ module ShopifyCli
             scopes: 'write_products,write_customers,write_draft_orders',
           ).write(@ctx)
 
-          @ctx.puts("{{v}} {{green:#{form.title}}} was created in your Partners" \
+          @ctx.puts("{{v}} {{green:#{form.title}}} was created in your Partner" \
                     " Dashboard https://partners.shopify.com/#{form.organization_id}/apps/#{api_client['id']}")
           @ctx.puts("{{v}} {{green:#{form.title}}} is ready to install on " \
                     "{{green:#{form.shop_domain}}}") unless form.shop_domain.nil?

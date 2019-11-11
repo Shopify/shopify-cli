@@ -18,7 +18,7 @@ module ShopifyCli
       end
 
       def test_clone_failure
-        assert_raises do
+        assert_raises(ShopifyCli::Abort) do
           CLI::Kit::System.expects(:system).with(
             'git',
             'clone',

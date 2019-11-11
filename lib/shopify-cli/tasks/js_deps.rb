@@ -45,7 +45,7 @@ module ShopifyCli
         pkg = begin
                 JSON.parse(File.read(package_json))
               rescue Errno::ENOENT, Errno::ENOTDIR
-                raise(ShopifyCli::Abort, "expected to have a file at: #{package_json}")
+                raise(ShopifyCli::Abort, "{{x}} expected to have a file at: #{package_json}")
               end
 
         deps = %w(dependencies devDependencies).map do |key|

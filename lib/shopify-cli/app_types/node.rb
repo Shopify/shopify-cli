@@ -86,7 +86,7 @@ module ShopifyCli
           ctx.puts("{{v}} #{dep_name} #{version}")
           next if stat.success?
           raise(ShopifyCli::Abort,
-            "#{dep_name} is required to create an app project. Download at #{dep_link}")
+            "{{x}} #{dep_name} is required to create an app project. Download at #{dep_link}")
         end
       end
 
@@ -98,7 +98,7 @@ module ShopifyCli
             Please run `npm config set @shopify:registry https://registry.yarnpkg.com` and try this command again,
             or preface the command with `DISABLE_NPM_REGISTRY_CHECK=1`.
           MSG
-          raise(ShopifyCli::Abort, msg) unless registry.include?('https://registry.yarnpkg.com')
+          raise(ShopifyCli::Abort, "{{x}} #{msg}") unless registry.include?('https://registry.yarnpkg.com')
         end
       end
     end
