@@ -11,14 +11,13 @@ module ShopifyCli
     module Infrastructure
       class ScriptService
         SCRIPT_SERVICE_URL = "https://script-service.shopifycloud.com"
-        MOCK_ORG_ID = "100"
         DESCRIPTION_TEMPLATE = "Script '%s' created by CLI tool"
         DEPLOY_FAILED_MSG = "Deploy failed with status %{status} and message %{msg}"
         SCHEMA_FETCH_FAILED = "Failed to fetch schemas with status %{status} and message %{msg}"
         BUILD_FILE = "build.out"
         EXTENSION_POINT_SCHEMA_FILE = "extension_point.schema"
         CONFIG_SCHEMA_FILE = "config.schema"
-        private_constant :SCRIPT_SERVICE_URL, :MOCK_ORG_ID, :DESCRIPTION_TEMPLATE, :DEPLOY_FAILED_MSG,
+        private_constant :SCRIPT_SERVICE_URL, :DESCRIPTION_TEMPLATE, :DEPLOY_FAILED_MSG,
           :SCHEMA_FETCH_FAILED, :BUILD_FILE, :EXTENSION_POINT_SCHEMA_FILE, :CONFIG_SCHEMA_FILE
 
         def fetch_extension_points
@@ -37,7 +36,6 @@ module ShopifyCli
           config_value: nil
         )
           form = [
-            ["org_id", org_id],
             ["extension_point_name", extension_point_type],
             ["script_content", script_content, filename: BUILD_FILE],
             ["schema", schema, filename: EXTENSION_POINT_SCHEMA_FILE],
@@ -47,7 +45,7 @@ module ShopifyCli
           ]
 
           form.push(["configuration", config_value]) if config_value
-          form.push(["scope", { "shop_id" => shop_id }.to_json]) if scope
+          form.push(["scope", { "shop_id" => shop_id }.to_json]) if shop_id
 
           post(form)
         end
@@ -90,36 +88,8 @@ module ShopifyCli
           end
         end
 
-        def build_form_data(
-          scope:,
-          extension_point_type:,
-          script_name:,
-          script_content:,
-          schema:,
-          config_value:,
-          content_type:
-        )
-          form = [
-            ["org_id", org_id],
-            ["extension_point_name", extension_point_type],
-            ["script_content", script_content, filename: BUILD_FILE],
-            ["schema", schema, filename: EXTENSION_POINT_SCHEMA_FILE],
-            ["title", script_name],
-            ["content_type", content_type],
-            ["description", get_description(script_name)],
-          ]
-
-          form.push(["configuration", config_value]) if config_value
-          form.push(["scope", scope]) if scope
-          form
-        end
-
         def get_description(name)
           DESCRIPTION_TEMPLATE % name
-        end
-
-        def org_id
-          MOCK_ORG_ID
         end
 
         def fetch_uri

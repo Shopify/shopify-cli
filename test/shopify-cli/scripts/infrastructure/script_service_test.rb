@@ -38,14 +38,14 @@ describe ShopifyCli::ScriptModule::Infrastructure::ScriptService do
         schema: extension_point_schema,
         script_name: script_name,
         script_content: script_content,
-        content_type: "wasm"
+        content_type: "wasm",
+        shop_id: shop_id
       )
     end
 
     describe "when deploy to script service succeeds" do
       let(:form) do
         [
-          ["org_id", "100"],
           ["extension_point_name", extension_point_type],
           ["script_content", script_content, filename: "build.out"],
           ["schema", extension_point_schema, filename: "extension_point.schema"],
@@ -55,10 +55,25 @@ describe ShopifyCli::ScriptModule::Infrastructure::ScriptService do
         ]
       end
 
-      it "should post the form without scope" do
-        script_service.expects(:post).with(form)
-        FakeFS.with_fresh do
-          subject
+      describe "when shop_id is nil" do
+        let(:shop_id) { nil }
+
+        it "should post the form without scope" do
+          script_service.expects(:post).with(form)
+          FakeFS.with_fresh do
+            subject
+          end
+        end
+      end
+      describe "when shop_id exists" do
+        let(:shop_id) { 1 }
+        let(:scope) { { shop_id: shop_id }.to_json }
+
+        it "should post the form without scope" do
+          script_service.expects(:post).with(form + [["scope", scope]])
+          FakeFS.with_fresh do
+            subject
+          end
         end
       end
     end
