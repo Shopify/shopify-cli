@@ -36,20 +36,29 @@ module ShopifyCli
           shop_id: nil,
           config_value: nil
         )
+          form = [
+            ["org_id", org_id],
+            ["extension_point_name", extension_point_type],
+            ["script_content", script_content, filename: BUILD_FILE],
+            ["schema", schema, filename: EXTENSION_POINT_SCHEMA_FILE],
+            ["title", script_name],
+            ["content_type", content_type],
+            ["description", get_description(script_name)],
+          ]
+
+          form.push(["configuration", config_value]) if config_value
+          form.push(["scope", { "shop_id" => shop_id }.to_json]) if scope
+
+          post(form)
+        end
+
+        def post(form)
           uri = deploy_uri
           request = Net::HTTP::Post.new(uri)
 
           Dir.mktmpdir do |temp_dir|
             Dir.chdir(temp_dir) do
-              request.set_form(build_form_data(
-                scope: { "shop_id" => shop_id }.to_json,
-                extension_point_type: extension_point_type,
-                schema: schema,
-                script_name: script_name,
-                script_content: script_content,
-                content_type: content_type,
-                config_value: config_value,
-              ), "multipart/form-data")
+              request.set_form(form, "multipart/form-data")
               net_args = { use_ssl: uri.scheme == "https" }
               response = try_request do
                 Net::HTTP.start(uri.hostname, uri.port, net_args) do |http|
