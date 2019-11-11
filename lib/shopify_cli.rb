@@ -82,7 +82,7 @@ module ShopifyCli
   autocall(:Config)   { CLI::Kit::Config.new(tool_name: TOOL_NAME) }
   autocall(:Logger)   { CLI::Kit::Logger.new(debug_log_file: DEBUG_LOG_FILE) }
   autocall(:Resolver) do
-    CLI::Kit::Resolver.new(
+    ShopifyCli::HelpResolver.new(
       tool_name: TOOL_NAME,
       command_registry: ShopifyCli::Commands::Registry
     )
@@ -110,6 +110,7 @@ module ShopifyCli
   autoload :OAuth, 'shopify-cli/oauth'
   autoload :Options, 'shopify-cli/options'
   autoload :Project, 'shopify-cli/project'
+  autoload :HelpResolver, 'shopify-cli/help_resolver'
   autoload :SubCommand, 'shopify-cli/sub_command'
   autoload :Task, 'shopify-cli/task'
   autoload :Tasks, 'shopify-cli/tasks'
