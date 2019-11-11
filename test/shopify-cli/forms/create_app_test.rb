@@ -200,7 +200,7 @@ module ShopifyCli
 
         CLI::UI::Prompt.expects(:ask)
           .with(
-            'Which development store would you like to work with?',
+            'Select a development store',
             options: %w(shopdomain.myshopify.com shop.myshopify.com)
           )
           .returns('selected')

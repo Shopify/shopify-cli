@@ -48,7 +48,7 @@ module ShopifyCli
           ctx.puts("Organization {{green:#{organizations.first['businessName']}}}")
           organizations.first
         else
-          org_id = CLI::UI::Prompt.ask('Which organization do you want this app to belong to?') do |handler|
+          org_id = CLI::UI::Prompt.ask('Select organization') do |handler|
             organizations.each { |o| handler.option(o['businessName']) { o['id'] } }
           end
           organizations.find { |o| o['id'] == org_id }
@@ -65,7 +65,7 @@ module ShopifyCli
           domain
         else
           CLI::UI::Prompt.ask(
-            'Which development store would you like to work with?',
+            'Select a development store',
             options: organization["stores"].map { |s| s["shopDomain"] }
           )
         end
