@@ -19,8 +19,8 @@ module ShopifyCli
           @resource.call([
             '-c 1', '--title="bad jeggings"', '--variants=[{price: "4.99"}]'
           ], nil)
-          assert_equal('"bad jeggings"', @resource.input.title)
-          assert_equal('[{price: "4.99"}]', @resource.input.variants)
+          assert_equal('"bad jeggings"', @resource.input['title'])
+          assert_equal('[{price: "4.99"}]', @resource.input['variants'])
         end
 
         def test_populate_runs_mutation_default_number_of_times
