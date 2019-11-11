@@ -12,6 +12,22 @@ module ShopifyCli
 
         assert_match(/foobar.*was not found/, io.join)
       end
+
+      def test_calls_help_with_h_flag
+        io = capture_io do
+          run_cmd('create -h')
+        end
+
+        assert_match(CLI::UI.fmt(Create.help), io.join)
+      end
+
+      def test_calls_help_with_subcommand_h_flag
+        io = capture_io do
+          run_cmd('create project -h')
+        end
+
+        assert_match(CLI::UI.fmt(Create::Project.help), io.join)
+      end
     end
   end
 end
