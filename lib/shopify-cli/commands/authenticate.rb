@@ -10,18 +10,16 @@ module ShopifyCli
           case command
           when 'identity'
             run_task(ShopifyCli::Tasks::AuthenticateIdentity.call(@ctx))
-          else
-            opt = ask_for_auth
+          when 'shop'
+            opt = CLI::UI::Prompt.confirm('Open default browser to authenticate with the Partner Dashboard?')
             opt ? run_task(ShopifyCli::Tasks::AuthenticateShopify.call(@ctx)) : abort
+          else
+            @ctx.puts(self.class.help)
           end
         rescue OAuth::Error
           @ctx.puts("{{error:Failed to Authenticate}}")
           raise(::ShopifyCli::Abort, "Failed to Authenticate")
         end
-      end
-
-      def ask_for_auth
-        CLI::UI::Prompt.confirm('Open default browser to authenticate with the Partner Dashboard?')
       end
 
       def run_task(task_to_run)
@@ -33,8 +31,8 @@ module ShopifyCli
 
       def self.help
         <<~HELP
-          Request a new access token from the Shopify Admin API.
-            Usage: {{command:#{ShopifyCli::TOOL_NAME} authenticate}}
+          Request a new access token for Shop or App creation.
+            Usage: {{command:#{ShopifyCli::TOOL_NAME} authenticate shop || identity}}
         HELP
       end
     end
