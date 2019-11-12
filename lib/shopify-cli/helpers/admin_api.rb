@@ -4,7 +4,8 @@ module ShopifyCli
   module Helpers
     class AdminAPI < API
       class << self
-        def query(ctx, body, api_version: nil, **variables)
+        def query(ctx, body, api_version: nil, shop: nil, **variables)
+          @shop = shop
           authenticated_req(ctx) do
             api_client(ctx, api_version).query(body, variables: variables)
           end
@@ -15,7 +16,7 @@ module ShopifyCli
         def authenticated_req(ctx)
           yield
         rescue API::APIRequestUnauthorizedError
-          Tasks::AuthenticateShopify.call(ctx)
+          Tasks::AuthenticateShopify.call(ctx, shop: @shop)
           retry
         end
 
@@ -42,7 +43,7 @@ module ShopifyCli
         end
 
         def endpoint
-          "https://#{Project.current.env.shop}/admin/api"
+          "https://#{@shop || Project.current.env.shop}/admin/api"
         end
       end
     end

@@ -44,6 +44,9 @@ module ShopifyCli
     def request(body, graphql_url:, variables: {}, headers: {})
       CLI::Kit::Util.begin do
         uri = URI.parse(graphql_url)
+        unless uri.is_a?(URI::HTTP)
+          raise(ShopifyCli::Abort, "Invalid URL: #{graphql_url}")
+        end
         http = ::Net::HTTP.new(uri.host, uri.port)
         http.use_ssl = true
 

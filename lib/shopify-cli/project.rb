@@ -20,7 +20,7 @@ module ShopifyCli
       end
 
       # Returns the directory of the project you are current in
-      # Traverses up directory hierarchy until it finds a `.shopify-cli.json`, then returns the directory is it in
+      # Traverses up directory hierarchy until it finds a `.shopify-cli.yml`, then returns the directory is it in
       #
       # #### Example Usage
       # `directory`, e.g. `~/src/Shopify/dev`

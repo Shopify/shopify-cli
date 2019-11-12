@@ -32,6 +32,15 @@ module ShopifyCli
           @resource.expects(:run_mutation).times(2)
           @resource.call(['-c 2'], nil)
         end
+
+        def test_populate_runs_mutation_against_other_shop
+          Helpers::AdminAPI.expects(:query).with(
+            @context, 'create_product', has_entry(shop: 'my-other-test-shop.myshopify.com')
+          ).returns(Hash.new)
+          capture_io do
+            @resource.call(['--silent', '-c 1', '--shop=my-other-test-shop.myshopify.com'], nil)
+          end
+        end
       end
     end
   end

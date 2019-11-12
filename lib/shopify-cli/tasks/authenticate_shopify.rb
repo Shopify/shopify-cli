@@ -3,9 +3,10 @@ require 'shopify_cli'
 module ShopifyCli
   module Tasks
     class AuthenticateShopify < ShopifyCli::Task
-      def call(ctx)
+      def call(ctx, shop: nil)
         Tasks::EnsureEnv.call(ctx)
         env = Helpers::EnvFile.read
+        shop ||= env.shop
         OAuth.new(
           ctx: ctx,
           service: 'admin',
@@ -14,7 +15,7 @@ module ShopifyCli
           scopes: env.scopes,
           token_path: "/access_token",
           options: { 'grant_options[]' => 'per user' },
-        ).authenticate("https://#{env.shop}/admin/oauth")
+        ).authenticate("https://#{shop}/admin/oauth")
       end
     end
   end
