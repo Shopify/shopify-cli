@@ -17,18 +17,6 @@ module ShopifyCli
         ShopifyCli::Tasks::Tunnel.any_instance.expects(:stop)
         run_cmd('tunnel stop')
       end
-
-      def test_stop_rescues
-        ShopifyCli::Helpers::ProcessSupervision.stubs(:running?).with(:ngrok).returns(true)
-        ShopifyCli::Helpers::ProcessSupervision.stubs(:stop).with(:ngrok).raises
-
-        io = capture_io do
-          run_cmd('tunnel stop')
-        end
-        output = io.join
-
-        assert_match(/could not be stopped/, output)
-      end
     end
   end
 end
