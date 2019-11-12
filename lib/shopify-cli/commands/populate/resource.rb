@@ -15,10 +15,9 @@ module ShopifyCli
 
         def call(args, _)
           @args = args
-          @input = OpenStruct.new
+          @input = Hash.new
           @count = DEFAULT_COUNT
           input_options
-          defaults
           resource_options.parse(@args)
           if @silent
             spin_group = CLI::UI::SpinGroup.new
@@ -58,7 +57,9 @@ module ShopifyCli
         end
 
         def populate
-          @count.times { run_mutation }
+          @count.times do
+            run_mutation(defaults.merge(@input))
+          end
         end
 
         def input_options
@@ -80,8 +81,8 @@ module ShopifyCli
           @schema ||= ShopifyCli::Helpers::SchemaParser.new(schema: @ctx.app_metadata[:schema])
         end
 
-        def run_mutation
-          resp = Helpers::AdminAPI.query(@ctx, "create_#{resource_type}", input: @input.to_h)
+        def run_mutation(data)
+          resp = Helpers::AdminAPI.query(@ctx, "create_#{resource_type}", input: data)
           raise(ShopifyCli::Abort, resp['errors']) if resp['errors']
           @ctx.done(message(resp['data'])) unless @silent
         end

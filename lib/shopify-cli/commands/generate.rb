@@ -67,11 +67,11 @@ module ShopifyCli
       def self.response(code, name)
         case code
         when 1
-          "Error generating #{name}"
+          "{{x}} Error generating #{name}"
         when 2
-          "#{name} already exists!"
+          "{{x}} #{name} already exists!"
         else
-          'Error'
+          '{{x}} Error'
         end
       end
     end
