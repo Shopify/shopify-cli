@@ -46,7 +46,7 @@ module ShopifyCli
         end
 
         def webhook_location
-          "pages/server.js"
+          "server/server.js"
         end
 
         def callback_url
