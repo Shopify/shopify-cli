@@ -5,6 +5,7 @@ module ShopifyCli
     class Create
       class ProjectTest < MiniTest::Test
         include TestHelpers::Partners
+        include TestHelpers::FakeUI
 
         def test_prints_help_with_no_name_argument
           io = capture_io { run_cmd('create project') }

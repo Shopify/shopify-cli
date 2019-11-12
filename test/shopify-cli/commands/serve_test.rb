@@ -7,7 +7,7 @@ module ShopifyCli
 
       def test_run
         Tasks::Tunnel.stubs(:call)
-        Tasks::UpdateWhitelistURL.stubs(:call)
+        Tasks::UpdateDashboardURLS.stubs(:call)
         Helpers::EnvFile.any_instance.expects(:update)
         @context.expects(:system).with('a command')
         run_cmd('serve')
@@ -16,7 +16,7 @@ module ShopifyCli
       def test_open_while_run
         Serve.any_instance.stubs(:on_siginfo).yields
         ShopifyCli::Tasks::Tunnel.stubs(:call).returns('https://example.com')
-        ShopifyCli::Tasks::UpdateWhitelistURL.expects(:call)
+        ShopifyCli::Tasks::UpdateDashboardURLS.expects(:call)
         Helpers::EnvFile.any_instance.expects(:update).with(
           @context, :host, 'https://example.com'
         )
@@ -30,7 +30,7 @@ module ShopifyCli
 
       def test_update_env_with_host
         ShopifyCli::Tasks::Tunnel.expects(:call).never
-        ShopifyCli::Tasks::UpdateWhitelistURL.expects(:call)
+        ShopifyCli::Tasks::UpdateDashboardURLS.expects(:call)
         Helpers::EnvFile.any_instance.expects(:update).with(
           @context, :host, 'https://example-foo.com'
         )

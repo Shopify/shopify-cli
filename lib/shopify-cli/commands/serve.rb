@@ -17,9 +17,9 @@ module ShopifyCli
         project = Project.current
         url = options.flags[:host] || Tasks::Tunnel.call(@ctx)
         update_env(url)
-        ShopifyCli::Tasks::UpdateWhitelistURL.call(@ctx, url: url)
+        ShopifyCli::Tasks::UpdateDashboardURLS.call(@ctx, url: url)
         if mac? && project.env.shop
-          @ctx.puts("{{*}} Press {{yellow: Control-T}} to open this project in your browser")
+          @ctx.puts("{{*}} Press {{yellow: Control-T}} to open this project in {{green:#{project.env.shop}}} ")
           on_siginfo do
             open = Open.new(@ctx)
             open.call

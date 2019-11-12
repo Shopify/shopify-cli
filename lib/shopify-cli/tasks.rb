@@ -32,6 +32,6 @@ module ShopifyCli
     register :JsDeps, :js_deps, 'shopify-cli/tasks/js_deps'
     register :Schema, :schema, 'shopify-cli/tasks/schema'
     register :Tunnel, :tunnel, 'shopify-cli/tasks/tunnel'
-    register :UpdateWhitelistURL, :update_whitelist_url, 'shopify-cli/tasks/update_whitelist_url'
+    register :UpdateDashboardURLS, :update_dashboard_urls, 'shopify-cli/tasks/update_dashboard_urls'
   end
 end

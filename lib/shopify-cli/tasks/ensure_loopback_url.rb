@@ -10,7 +10,7 @@ module ShopifyCli
         urls = app['redirectUrlWhitelist']
         if urls.grep(/#{loopback}/).empty?
           with_loopback = urls.push(loopback)
-          ShopifyCli::Helpers::PartnersAPI.query(@ctx, 'update_whitelisturls', input: {
+          ShopifyCli::Helpers::PartnersAPI.query(@ctx, 'update_dashboard_urls', input: {
             redirectUrlWhitelist: with_loopback, apiKey: api_key
           })
         end

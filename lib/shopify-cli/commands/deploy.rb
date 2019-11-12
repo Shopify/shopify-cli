@@ -19,7 +19,7 @@ module ShopifyCli
 
       def self.help
         <<~HELP
-          Deploy the current app project to a hosting service. Heroku (https://www.heroku.com) is currently the only option, but more will be added in the future.
+          Deploy the current app project to a hosting service. Heroku ({{underline:https://www.heroku.com}}) is currently the only option, but more will be added in the future.
             Usage: {{command:#{ShopifyCli::TOOL_NAME} deploy [heroku]}}
         HELP
       end

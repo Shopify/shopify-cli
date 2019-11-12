@@ -6,26 +6,33 @@ module ShopifyCli
       def call(args, _name)
         command = args.shift
         ShopifyCli::Tasks::EnsureLoopbackURL.call(@ctx)
-        CLI::UI::Spinner.spin("Requesting access token...") do |spinner|
-          begin
-            case command
-            when 'identity'
-              ShopifyCli::Tasks::AuthenticateIdentity.call(@ctx)
-            else
-              ShopifyCli::Tasks::AuthenticateShopify.call(@ctx)
-            end
-            spinner.update_title("Authetication token stored")
-          rescue OAuth::Error
-            @ctx.puts("{{{{x}} error:Failed to Authenticate}}")
-            raise(::ShopifyCli::Abort, "{{x}} Failed to Authenticate")
+        begin
+          case command
+          when 'identity'
+            run_task(ShopifyCli::Tasks::AuthenticateIdentity.call(@ctx))
+          when 'shop'
+            opt = CLI::UI::Prompt.confirm('Open default browser to authenticate with the Partner Dashboard?')
+            opt ? run_task(ShopifyCli::Tasks::AuthenticateShopify.call(@ctx)) : abort
+          else
+            @ctx.puts(self.class.help)
           end
+        rescue OAuth::Error
+          @ctx.puts("{{error:Failed to Authenticate}}")
+          raise(::ShopifyCli::Abort, "{{x}} Failed to Authenticate")
+        end
+      end
+
+      def run_task(task_to_run)
+        CLI::UI::Spinner.spin("Waiting to authenticate") do |spinner|
+          spinner.update_title("Authetication token stored")
+          task_to_run
         end
       end
 
       def self.help
         <<~HELP
-          Request a new access token from the Shopify Admin API.
-            Usage: {{command:#{ShopifyCli::TOOL_NAME} authenticate}}
+          Request a new access token for Shop or App creation.
+            Usage: {{command:#{ShopifyCli::TOOL_NAME} authenticate shop || identity}}
         HELP
       end
     end
