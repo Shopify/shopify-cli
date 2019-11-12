@@ -15,7 +15,11 @@ module ShopifyCli
 
     def parse(options_block, args)
       @args = args
-      parse_flags(options_block) if options_block.respond_to?(:call) && args
+      if options_block.respond_to?(:call) && args
+        parse_flags(options_block)
+      else
+        parser.permute!(@args)
+      end
       @args
     end
 
@@ -27,8 +31,8 @@ module ShopifyCli
     def parser
       @parser ||= begin
         opt = OptionParser.new
-        opt.on('--help', '-h', 'Print help for command') do
-          @help = true
+        opt.on('--help', '-h', 'Print help for command') do |v|
+          @help = v
         end
       end
     end

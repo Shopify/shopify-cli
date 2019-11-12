@@ -41,6 +41,16 @@ module ShopifyCli
             @resource.call(['--silent', '-c 1', '--shop=my-other-test-shop.myshopify.com'], nil)
           end
         end
+
+        def test_populate_with_help_flag_shows_options
+          CLI::UI::Terminal.stubs(:height).returns(10000)
+          @resource.expects(:run_mutation).never
+          io = capture_io do
+            @resource.call(['-h'], nil)
+          end.join
+          assert_match(/Product.*options/, io)
+          assert_match(@resource.resource_options.help, io)
+        end
       end
     end
   end
