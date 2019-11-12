@@ -16,6 +16,16 @@ module ShopifyCli
       def debug(string)
         puts("{{red:DEBUG}} #{string}") if getenv('DEBUG')
       end
+
+      def page(output)
+        if output.split("\n").size > CLI::UI::Terminal.height
+          IO.popen(getenv('PAGER') || 'less', "w") do |pipe|
+            pipe.puts CLI::UI.fmt(output)
+          end
+        else
+          puts(CLI::UI.fmt(output))
+        end
+      end
     end
   end
 end

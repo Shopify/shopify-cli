@@ -8,11 +8,13 @@ module ShopifyCli
         if command && command != 'help'
           if Registry.exist?(command)
             cmd, _name = Registry.lookup_command(command)
-            @ctx.puts(CLI::UI.fmt(cmd.help))
+            output = cmd.help
             if cmd.respond_to?(:extended_help)
-              @ctx.puts('')
-              @ctx.puts(CLI::UI.fmt(cmd.extended_help))
+              output += "\n"
+              output += cmd.extended_help
             end
+
+            @ctx.page(output)
             return
           else
             @ctx.puts("Command #{command} not found.")
