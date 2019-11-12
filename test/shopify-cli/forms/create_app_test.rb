@@ -150,7 +150,7 @@ module ShopifyCli
         end
         log = io.join
         assert_match('No developement shops available.', log)
-        assert_match(CLI::UI.fmt("Visit {{green:https://partners.shopify.com/123/stores}} to create one"), log)
+        assert_match(CLI::UI.fmt("Visit {{underline:https://partners.shopify.com/123/stores}} to create one"), log)
       end
 
       def test_autopicks_only_shop

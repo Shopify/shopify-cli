@@ -51,8 +51,10 @@ module ShopifyCli
         deps = %w(dependencies devDependencies).map do |key|
           pkg.fetch(key, []).keys
         end.flatten
-        @ctx.puts("Installing #{deps.size} dependencies")
-        CLI::Kit::System.system(*INSTALL_COMMANDS[installer], chdir: @dir)
+        CLI::UI::Spinner.spin("Installing #{deps.size} dependencies...") do |spinner|
+          CLI::Kit::System.system(*INSTALL_COMMANDS[installer], chdir: @dir)
+          spinner.update_title("#{deps.size} #{installer} dependencies installed")
+        end
       rescue JSON::ParserError
         ctx.puts(
           "{{info:#{File.read(File.join(path, 'package.json'))}}} was not valid JSON. Fix this then try again",
