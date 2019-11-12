@@ -7,4 +7,4 @@ heroku
 *.gz
 .vagrant/
 *.log
-_site/
+docs/_site/
