@@ -71,6 +71,14 @@ module ShopifyCli
         Tunnel.new.stop(@context)
       end
 
+      def test_start_raises_error_when_ngrok_cannot_be_stopped
+        ShopifyCli::Helpers::ProcessSupervision.stubs(:running?).with(:ngrok).returns(true)
+        ShopifyCli::Helpers::ProcessSupervision.stubs(:stop).with(:ngrok).raises
+        assert_raises(ShopifyCli::Abort) do
+          Tunnel.new.stop(@context)
+        end
+      end
+
       def with_log(fixture = 'ngrok')
         log_path = File.join(ShopifyCli::ROOT, "test/fixtures/#{fixture}.log")
         pid_file = ShopifyCli::Helpers::PidFile.new(:ngrok, pid: 40000)
