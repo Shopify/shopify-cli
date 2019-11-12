@@ -42,7 +42,7 @@ module ShopifyCli
             ShopifyCli::Commands::Generate.run_generate(
               "#{project.app_type.generate[selected_type]} #{name}", name, @ctx
             )
-            spinner.update_title("{{green: #{name}}} generated in /pages/#{name}")
+            spinner.update_title("{{green: #{name}}} generated in pages/#{name}")
           end
           spin_group.wait
         end

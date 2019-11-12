@@ -58,7 +58,7 @@ module ShopifyCli
       def ask_shop_domain
         if organization['stores'].count == 0
           ctx.puts('No developement shops available.')
-          ctx.puts("Visit {{green:https://partners.shopify.com/#{organization['id']}/stores}} to create one")
+          ctx.puts("Visit {{underline:https://partners.shopify.com/#{organization['id']}/stores}} to create one")
         elsif organization['stores'].count == 1
           domain = organization['stores'].first['shopDomain']
           ctx.puts("Using development shop {{green:#{domain}}}")
