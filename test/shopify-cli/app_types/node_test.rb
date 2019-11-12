@@ -97,7 +97,7 @@ module ShopifyCli
 
       def test_server_command
         ShopifyCli::Tasks::Tunnel.stubs(:call)
-        ShopifyCli::Tasks::UpdateWhitelistURL.expects(:call)
+        ShopifyCli::Tasks::UpdateDashboardURLS.expects(:call)
         Helpers::EnvFile.any_instance.expects(:update)
         @context.app_metadata[:host] = 'https://example.com'
         cmd = ShopifyCli::Commands::Serve

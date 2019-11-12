@@ -47,7 +47,7 @@ module ShopifyCli
         )
 
         stub_partner_req(
-          'update_whitelisturls',
+          'update_dashboard_urls',
           variables: {
             input: {
               redirectUrlWhitelist: [

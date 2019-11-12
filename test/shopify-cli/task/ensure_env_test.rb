@@ -4,6 +4,7 @@ module ShopifyCli
   module Tasks
     class EnsureEnvTest < MiniTest::Test
       include TestHelpers::AppType
+      include TestHelpers::FakeUI
 
       def setup
         super
