@@ -56,6 +56,21 @@ module ShopifyCli
         Tasks::AuthenticateShopify.expects(:call)
         AdminAPI.query(@context, 'query', api_version: '2019-04')
       end
+
+      def test_query_calls_admin_api_with_different_shop
+        Helpers::AccessToken.expects(:read).returns('token123')
+        api_stub = Object.new
+        AdminAPI.expects(:new).with(
+          ctx: @context,
+          auth_header: 'X-Shopify-Access-Token',
+          token: 'token123',
+          url: "https://other-test-shop.myshopify.com/admin/api/2019-04/graphql.json",
+        ).returns(api_stub)
+        api_stub.expects(:query).with('query', variables: {}).returns('response')
+        assert_equal 'response', AdminAPI.query(
+          @context, 'query', shop: 'other-test-shop.myshopify.com', api_version: '2019-04'
+        )
+      end
     end
   end
 end
