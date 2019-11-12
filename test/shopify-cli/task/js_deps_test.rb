@@ -18,7 +18,6 @@ module ShopifyCli
         end
         output = io.join
         assert_match('Installing dependencies with npm...', output)
-        assert_match('npm dependencies installed', output)
       end
 
       def test_installs_with_yarn
