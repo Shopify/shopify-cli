@@ -11,14 +11,29 @@ module ShopifyCli
 
         class << self
           attr_accessor :input_type
+
+          # we override the call classmethod here because we parse options at runtime
+          def call(args, command_name)
+            cmd = new(@ctx)
+            cmd.call(args, command_name)
+          end
         end
 
         def call(args, _)
           @args = args
           @input = Hash.new
           @count = DEFAULT_COUNT
+          @help = false
           input_options
           resource_options.parse(@args)
+
+          if @help
+            output = Populate.extended_help
+            output += "\n{{bold:{{cyan:#{resource_type.capitalize}}} options:}}\n"
+            output += resource_options.help
+            return @ctx.page(output)
+          end
+
           if @silent
             spin_group = CLI::UI::SpinGroup.new
             spin_group.add("Populating #{@count} #{resource_type}s...") do |spinner|
@@ -42,14 +57,13 @@ module ShopifyCli
 
         def resource_options
           @resource_options ||= OptionParser.new do |opts|
-            opts.banner = "\0"
+            opts.banner = ""
             opts.on("-c #{DEFAULT_COUNT}", "--count=#{DEFAULT_COUNT}", 'Number of resources to generate') do |value|
               @count = value.to_i
             end
 
-            opts.on("-h", 'print help') do |_v|
-              puts opts
-              exit
+            opts.on('-h', '--help', 'print help') do |value|
+              @help = value
             end
 
             opts.on("--silent") { |v| @silent = v }
