@@ -8,5 +8,10 @@ module ShopifyCli
         run_cmd('-h')
       end
     end
+
+    def test_outputs_help_without_argument
+      ShopifyCli::Commands::Help.expects(:call)
+      run_cmd('')
+    end
   end
 end
