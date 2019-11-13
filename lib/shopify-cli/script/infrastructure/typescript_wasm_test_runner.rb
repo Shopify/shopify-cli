@@ -13,8 +13,7 @@ module ShopifyCli
 
         private
 
-        ASM_SCRIPT_SOURCE = "git://github.com/AssemblyScript/assemblyscript#3b227d47b1c546ddd0ae19fbd49bdae9ad5c1c99"
-        INSTALL_AS_PECT = "npm install @as-pect/cli @as-pect/core @as-pect/assembly #{ASM_SCRIPT_SOURCE} > /dev/null 2>&1"
+        INSTALL_AS_PECT = "npm install @as-pect/cli@2.6.0 @as-pect/core@2.6.0 @as-pect/assembly@2.6.0 assemblyscript@0.8.0 > /dev/null 2>&1"
 
         CONFIG_FILE = "%{temp_dir}/as-pect.config.js"
         CONFIG_FILE_CONTENT = "module.exports = {
@@ -42,7 +41,7 @@ module ShopifyCli
 
         RUN_AS_PECT_COMMAND = "npx asp --config #{CONFIG_FILE}"
 
-        private_constant :ASM_SCRIPT_SOURCE, :INSTALL_AS_PECT, :CONFIG_FILE, :CONFIG_FILE_CONTENT, :RUN_AS_PECT_COMMAND
+        private_constant :INSTALL_AS_PECT, :CONFIG_FILE, :CONFIG_FILE_CONTENT, :RUN_AS_PECT_COMMAND
 
         def prepare_config_file(temp_dir)
           File.write(format(CONFIG_FILE, temp_dir: temp_dir), CONFIG_FILE_CONTENT)

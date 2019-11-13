@@ -2,8 +2,7 @@ require "test_helper"
 
 describe ShopifyCli::ScriptModule::Infrastructure::TypeScriptWasmTestRunner do
   let(:typescript_wasm_test_runner) { ShopifyCli::ScriptModule::Infrastructure::TypeScriptWasmTestRunner.new }
-  let(:asm_script_source) { "git://github.com/AssemblyScript/assemblyscript#3b227d47b1c546ddd0ae19fbd49bdae9ad5c1c99" }
-  let(:install_cmd) { "npm install @as-pect/cli @as-pect/core @as-pect/assembly #{asm_script_source} > /dev/null 2>&1" }
+  let(:install_cmd) { "npm install @as-pect/cli@2.6.0 @as-pect/core@2.6.0 @as-pect/assembly@2.6.0 assemblyscript@0.8.0 > /dev/null 2>&1" }
   let(:execute_cmd) { "npx asp --config " }
 
   describe ".run_tests" do
