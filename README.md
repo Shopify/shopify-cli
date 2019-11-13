@@ -93,7 +93,7 @@ Shopify App CLI automates several common developer tasks. Currently `generate` s
 ```sh
 $ shopify generate page PAGE_NAME
 ```
-The CLI will scaffold the new page in the `pages` directory.
+The CLI will scaffold the new page in the `pages` directory. In node apps, you can view this page by appeneding the name you pass to the url.
 
 #### Create a billing model
 
