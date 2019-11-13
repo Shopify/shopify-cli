@@ -149,7 +149,7 @@ module ShopifyCli
           assert_nil form.shop_domain
         end
         log = io.join
-        assert_match('No developement shops available.', log)
+        assert_match('No Development Stores available.', log)
         assert_match(CLI::UI.fmt("Visit {{underline:https://partners.shopify.com/123/stores}} to create one"), log)
       end
 
@@ -174,7 +174,7 @@ module ShopifyCli
           form = ask(org_id: 123, shop: nil)
           assert_equal(form.shop_domain, 'shopdomain.myshopify.com')
         end
-        assert_match(CLI::UI.fmt("Using development shop {{green:shopdomain.myshopify.com}}"), io.join)
+        assert_match(CLI::UI.fmt("Using Development Store {{green:shopdomain.myshopify.com}}"), io.join)
       end
 
       def test_prompts_user_to_pick_from_shops
@@ -200,7 +200,7 @@ module ShopifyCli
 
         CLI::UI::Prompt.expects(:ask)
           .with(
-            'Select a development store',
+            'Select a Development Store',
             options: %w(shopdomain.myshopify.com shop.myshopify.com)
           )
           .returns('selected')
