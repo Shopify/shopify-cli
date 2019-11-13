@@ -15,6 +15,15 @@ module ShopifyCli
         assert_equal(form.shop_domain, 'shop.myshopify.com')
       end
 
+      def test_transforms_uppercase_titles_properly
+        form = ask_uppercase
+        assert_equal(form.name, 'TEST-APP')
+        assert_equal(form.title, 'Test app')
+        assert_equal(form.type, 'node')
+        assert_equal(form.organization_id, 42)
+        assert_equal(form.shop_domain, 'shop.myshopify.com')
+      end
+
       def test_title_can_be_provided_by_flag
         form = ask
         assert_equal(form.name, 'test-app')
@@ -211,6 +220,17 @@ module ShopifyCli
       private
 
       def ask(name: 'test-app', title: nil, type: 'node', org_id: 42, shop: 'shop.myshopify.com')
+        CreateApp.ask(
+          @context,
+          [name],
+          title: title,
+          type: type,
+          organization_id: org_id,
+          shop_domain: shop,
+        )
+      end
+
+      def ask_uppercase(name: 'TEST-APP', title: nil, type: 'node', org_id: 42, shop: 'shop.myshopify.com')
         CreateApp.ask(
           @context,
           [name],
