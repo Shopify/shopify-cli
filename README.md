@@ -78,7 +78,7 @@ $ shopify tunnel stop
 ```
 ### Loading your app within the admin
 
-As the Shopify App CLI creates an embedded app, you'll need to install it on a development store. To do so, open the installation URL in your web browser:  `https://<LIVE_NGROK_URL>/auth?shop=your-development-store.myshopify.com`. This will prompt you to install on your development store. It’s necessary to view and test your app in a live development store because some App Bridge and Polaris features are only available for use by your app when it’s embedded in the Shopify admin.
+As the Shopify App CLI creates an embedded app, you'll need to install it on a development store. To do so, open the installation URL in your web browser with `shopify open`. This will prompt you to install on your development store. It’s necessary to view and test your app in a live development store because some App Bridge and Polaris features are only available for use by your app when it’s embedded in the Shopify admin.
 
 ### Generate new app features
 
