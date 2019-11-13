@@ -78,7 +78,7 @@ $ shopify tunnel stop
 ```
 ### Loading your app within the admin
 
-As the Shopify App CLI creates an embedded app, you'll need to install it on a development store. To do so, open the installation URL in your web browser:  `https://<LIVE_NGROK_URL>/auth?shop=your-development-store.myshopify.com`. This will prompt you to install on your development store. It’s necessary to view and test your app in a live development store because some App Bridge and Polaris features are only available for use by your app when it’s embedded in the Shopify admin.
+As the Shopify App CLI creates an embedded app, you'll need to install it on a development store. To do so, open the installation URL in your web browser with `shopify open`. This will prompt you to install on your development store. It’s necessary to view and test your app in a live development store because some App Bridge and Polaris features are only available for use by your app when it’s embedded in the Shopify admin.
 
 ### Generate new app features
 
@@ -93,7 +93,7 @@ Shopify App CLI automates several common developer tasks. Currently `generate` s
 ```sh
 $ shopify generate page PAGE_NAME
 ```
-The CLI will scaffold the new page in the `pages` directory.
+The CLI will scaffold the new page in the `pages` directory. In node apps, you can view this page by appeneding the name you pass to the url.
 
 #### Create a billing model
 
