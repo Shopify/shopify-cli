@@ -21,6 +21,17 @@ export class Slice<T> {
 		return index < this._length ? load<T>(changetype<usize>(this._data) + (<usize>index << alignof<T>())) : <T>unreachable();
 	}
 
+  @operator("==")
+  private __eq(other_slice: Slice<T>): bool {
+    if(other_slice.length != this.length) { return false; }
+    for(let i = 0; i < this.length; i++) {
+      if(!(this[i] == other_slice[i])) {
+        return false
+      }
+    }
+    return true;
+  }
+
 	// NOTE: fromArray, fromArrayBuffer, and fromString do not retain the argument,
 	// with runtime stub/none this is fine as nothing is ever freed, but with
 	// runtime full/half this could be DANGEROUS and should be reconsidered
