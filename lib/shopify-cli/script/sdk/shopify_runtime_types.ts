@@ -110,7 +110,7 @@ export class Slice<T> {
 
 	some(callbackFn: (thing: T, index: i32, array: Slice<T>) => bool): bool {
 		for(let i = 0; i < this.length; i++) {
-			if (callbackFn(this[i], i, this, array)) {
+			if (callbackFn(this[i], i, this)) {
 				return true;
 			}
 		}
@@ -118,11 +118,11 @@ export class Slice<T> {
 	}
 
 	@inline
-	includes(searchElement: T, fromIndex: usize = 0): bool {
+	includes(searchElement: T, fromIndex: i32 = 0): bool {
 		return this.indexOf(searchElement, fromIndex) >= 0;
 	}
 
-	indexOf(searchElement: T, fromIndex: usize = 0): i32 {
+	indexOf(searchElement: T, fromIndex: i32 = 0): i32 {
 		if (this.length == 0 || fromIndex >= this.length) return -1;
 		if (fromIndex < 0) fromIndex = max(this.length + fromIndex, 0);
 		while (fromIndex < this.length) {
