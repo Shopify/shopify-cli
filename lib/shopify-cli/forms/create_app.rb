@@ -17,7 +17,8 @@ module ShopifyCli
       private
 
       def fallback_title
-        name.gsub(/(.)([A-Z])/, '\1\2') # change camelcase to title
+        name.gsub(/([A-Z]+)([A-Z][a-z])/, '\1 \2')
+          .gsub(/([a-z\d])([A-Z])/, '\1 \2') # change camelcase to title
           .gsub(/(-|_)/, ' ') # change snakecase to title
           .capitalize
       end
