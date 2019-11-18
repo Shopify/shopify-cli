@@ -23,6 +23,7 @@ module ShopifyCli
           'test_app4' => 'Test app4',
           'testAPI5' => 'Test api5',
           'TESTApp6' => 'Test app6',
+          'INCAPS' => 'Incaps',
         }
 
         title_tests.each do |input, expected|
