@@ -1,7 +1,6 @@
 # frozen_string_literal: true
 
 require "test_helper"
-require_relative "fake_configuration_repository"
 require_relative "fake_extension_point_repository"
 
 describe ShopifyCli::ScriptModule::Infrastructure::ScriptRepository do

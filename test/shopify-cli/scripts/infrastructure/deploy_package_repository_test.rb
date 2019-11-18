@@ -2,7 +2,6 @@
 
 require "test_helper"
 require_relative "fake_script_repository"
-require_relative "fake_configuration_repository"
 
 describe ShopifyCli::ScriptModule::Infrastructure::DeployPackageRepository do
   let(:language) { "ts" }

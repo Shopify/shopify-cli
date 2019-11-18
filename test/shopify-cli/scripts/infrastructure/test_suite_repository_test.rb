@@ -1,6 +1,5 @@
 require "test_helper"
 require_relative "fake_script_repository"
-require_relative "fake_configuration_repository"
 
 describe ShopifyCli::ScriptModule::Infrastructure::TestSuiteRepository do
   let(:extension_point_type) { "discount" }
