@@ -6,10 +6,16 @@ require_relative "fake_extension_point_repository"
 describe ShopifyCli::ScriptModule::Infrastructure::ScriptRepository do
   let(:extension_point_type) { "discount" }
   let(:extension_point_schema) { "schema" }
-  let(:extension_point) { ShopifyCli::ScriptModule::Domain::ExtensionPoint.new(extension_point_type, extension_point_schema, "types", "example") }
+  let(:extension_point) do
+    ShopifyCli::ScriptModule::Domain::ExtensionPoint.new(
+      extension_point_type, extension_point_schema, "types", "example"
+    )
+  end
   let(:script_name) { "myscript" }
   let(:language) { "ts" }
-  let(:script_source_base) { "#{ShopifyCli::ScriptModule::Infrastructure::Repository::SOURCE_PATH}/#{extension_point_type}/#{script_name}" }
+  let(:script_source_base) do
+    "#{ShopifyCli::ScriptModule::Infrastructure::Repository::SOURCE_PATH}/#{extension_point_type}/#{script_name}"
+  end
   let(:script_source_file) { "#{script_source_base}/#{script_name}.#{language}" }
   let(:script_types_directory) { "#{script_source_base}/types" }
   let(:script_schema_file) { "#{script_types_directory}/#{extension_point_type}.schema" }

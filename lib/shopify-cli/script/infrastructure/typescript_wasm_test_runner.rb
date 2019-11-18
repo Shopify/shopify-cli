@@ -13,7 +13,8 @@ module ShopifyCli
 
         private
 
-        INSTALL_AS_PECT = "npm install @as-pect/cli@2.6.0 @as-pect/core@2.6.0 @as-pect/assembly@2.6.0 assemblyscript@0.8.0 > /dev/null 2>&1"
+        INSTALL_AS_PECT = "npm install @as-pect/cli@2.6.0 @as-pect/core@2.6.0 @as-pect/assembly@2.6.0 "\
+          "assemblyscript@0.8.0 > /dev/null 2>&1"
 
         CONFIG_FILE = "%{temp_dir}/as-pect.config.js"
         CONFIG_FILE_CONTENT = "module.exports = {

@@ -21,7 +21,7 @@ module ShopifyCli
         COMPILERS = {
           "ts" => Infrastructure::TypeScriptWasmBuilder,
           "js" => Infrastructure::NoopBuilder,
-          "json" => Infrastructure::NoopBuilder
+          "json" => Infrastructure::NoopBuilder,
         }
 
         def self.for(script)

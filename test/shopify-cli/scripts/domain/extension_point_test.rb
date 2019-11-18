@@ -9,9 +9,9 @@ describe ShopifyCli::ScriptModule::Domain::ExtensionPoint do
   let(:example) { "example" }
   let(:example_scripts) do
     {
-        "ts" => example,
-        "js" => nil,
-        "json" => nil,
+      "ts" => example,
+      "js" => nil,
+      "json" => nil,
     }
   end
 

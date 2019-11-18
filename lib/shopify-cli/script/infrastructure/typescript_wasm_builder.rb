@@ -9,8 +9,8 @@ TSCONFIG = "{
   \"extends\": \"./node_modules/assemblyscript/std/assembly.json\",
 }"
 ALLOCATE_FUNC = "\n\nexport function shopify_runtime_allocate(size: u32): ArrayBuffer { return new ArrayBuffer(size); }"
-GQL_BUILDER="GraphQLBuilder.ts"
-GQL_TRANSFORM="#{File.dirname(__FILE__)}/#{GQL_BUILDER}"
+GQL_BUILDER = "GraphQLBuilder.ts"
+GQL_TRANSFORM = "#{File.dirname(__FILE__)}/#{GQL_BUILDER}"
 ASM_SCRIPT_OPTIMIZED = "npx asc %{script}.ts -b build/%{script}.wasm --sourceMap --validate \
 --optimize --use abort= --runtime none --transform=#{GQL_BUILDER}"
 
@@ -38,7 +38,7 @@ module ShopifyCli
         private
 
         def prepare
-          open(script.main_source_file, "a") { |fh| fh.puts(ALLOCATE_FUNC) }
+          File.open(script.main_source_file, "a") { |fh| fh.puts(ALLOCATE_FUNC) }
           File.write(TSCONFIG_FILE, TSCONFIG)
         end
 

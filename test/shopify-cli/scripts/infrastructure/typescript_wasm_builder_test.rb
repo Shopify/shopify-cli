@@ -7,7 +7,10 @@ describe ShopifyCli::ScriptModule::Infrastructure::TypeScriptWasmBuilder do
   let(:script_name) { "foo" }
   let(:schema) { "schema" }
   let(:extension_point) { ShopifyCli::ScriptModule::Domain::ExtensionPoint.new("discount", schema, "types", "example") }
-  let(:script_root) { "#{ShopifyCli::ScriptModule::Infrastructure::Repository::INSTALLATION_BASE_PATH}/#{extension_point.type}/#{script_name}" }
+  let(:script_root) do
+    "#{ShopifyCli::ScriptModule::Infrastructure::Repository::INSTALLATION_BASE_PATH}"\
+    "/#{extension_point.type}/#{script_name}"
+  end
   let(:language) { "ts" }
   let(:script) { ShopifyCli::ScriptModule::Domain::Script.new(script_name, extension_point, language, schema) }
   let(:assembly_index) do
@@ -25,7 +28,7 @@ export { run };"
 
   describe "build" do
     it "should write the entry and tsconfig files, install assembly script and trigger the compilation process" do
-      subject.expects(:open).with("#{script_name}.ts", "a")
+      File.expects(:open).with("#{script_name}.ts", "a")
       FileUtils.expects(:cp)
       File.expects(:write).with("tsconfig.json", tsconfig)
       File.expects(:write).with("package.json", "{}")

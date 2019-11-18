@@ -39,7 +39,8 @@ module ShopifyCli
       autoload :TypeScriptWasmTestRunner, "shopify-cli/script/infrastructure/typescript_wasm_test_runner.rb"
 
       # errors
-      autoload :ScriptServiceConnectionError, "shopify-cli/script/infrastructure/errors/script_service_connection_error.rb"
+      autoload :ScriptServiceConnectionError,
+        "shopify-cli/script/infrastructure/errors/script_service_connection_error.rb"
       autoload :BuilderNotFoundError, "shopify-cli/script/infrastructure/errors/builder_not_found_error.rb"
     end
   end

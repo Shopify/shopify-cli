@@ -2,7 +2,9 @@ require "test_helper"
 
 describe ShopifyCli::ScriptModule::Infrastructure::ScriptService do
   let(:script_service) { ShopifyCli::ScriptModule::Infrastructure::ScriptService.new }
-  let(:fetch_uri) { URI.parse((ENV["SCRIPT_SERVICE_URL"] || "https://script-service.shopifycloud.com") + "/extension_points") }
+  let(:fetch_uri) do
+    URI.parse((ENV["SCRIPT_SERVICE_URL"] || "https://script-service.shopifycloud.com") + "/extension_points")
+  end
 
   describe ".fetch_extension_points" do
     subject { script_service.fetch_extension_points }

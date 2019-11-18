@@ -5,14 +5,25 @@ require "test_helper"
 describe ShopifyCli::ScriptModule::Domain::DeployPackage do
   let(:extension_point_type) { "discount" }
   let(:extension_point_schema) { "discount" }
-  let(:extension_point) { ShopifyCli::ScriptModule::Domain::ExtensionPoint.new(extension_point_type, extension_point_schema, "types", "example") }
+  let(:extension_point) do
+    ShopifyCli::ScriptModule::Domain::ExtensionPoint.new(
+      extension_point_type, extension_point_schema, "types", "example"
+    )
+  end
   let(:script_name) { "foo_script" }
-  let(:script) { ShopifyCli::ScriptModule::Domain::Script.new(script_name, extension_point, "ts", extension_point_schema) }
+  let(:script) do
+    ShopifyCli::ScriptModule::Domain::Script.new(script_name, extension_point, "ts", extension_point_schema)
+  end
+
   let(:shop_id) { 1 }
   let(:config_value) { "{}" }
   let(:script_content) { "(module)" }
   let(:content_type) { "wasm" }
-  let(:deploy_package) { ShopifyCli::ScriptModule::Domain::DeployPackage.new(id, script, script_content, content_type, extension_point_schema) }
+  let(:deploy_package) do
+    ShopifyCli::ScriptModule::Domain::DeployPackage.new(
+      id, script, script_content, content_type, extension_point_schema
+    )
+  end
   let(:script_service) { Minitest::Mock.new }
   let(:id) { "deploy_package_id" }
 

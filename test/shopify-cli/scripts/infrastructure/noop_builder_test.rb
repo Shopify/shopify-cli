@@ -7,7 +7,10 @@ describe ShopifyCli::ScriptModule::Infrastructure::TypeScriptWasmBuilder do
   let(:script_name) { "foo" }
   let(:schema) { "schema" }
   let(:extension_point) { ShopifyCli::ScriptModule::Domain::ExtensionPoint.new("discount", schema, "types", "example") }
-  let(:script_root) { "#{ShopifyCli::ScriptModule::Infrastructure::Repository::INSTALLATION_BASE_PATH}/#{extension_point.type}/#{script_name}" }
+  let(:script_root) do
+    "#{ShopifyCli::ScriptModule::Infrastructure::Repository::INSTALLATION_BASE_PATH}"\
+    "/#{extension_point.type}/#{script_name}"
+  end
   let(:language) { "ts" }
   let(:configuration) { MiniTest::Mock.new }
   let(:script) { ShopifyCli::ScriptModule::Domain::Script.new(script_name, extension_point, language, schema) }

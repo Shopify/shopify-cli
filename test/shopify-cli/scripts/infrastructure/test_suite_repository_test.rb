@@ -3,12 +3,17 @@ require_relative "fake_script_repository"
 
 describe ShopifyCli::ScriptModule::Infrastructure::TestSuiteRepository do
   let(:extension_point_type) { "discount" }
-  let(:extension_point) { ShopifyCli::ScriptModule::Domain::ExtensionPoint.new(extension_point_type, "schema", "types", "example") }
+  let(:extension_point) do
+    ShopifyCli::ScriptModule::Domain::ExtensionPoint.new(extension_point_type, "schema", "types", "example")
+  end
   let(:script_name) { "myscript" }
   let(:script) { ShopifyCli::ScriptModule::Domain::Script.new(script_name, extension_point, language, "schema") }
   let(:language) { "ts" }
   let(:template_base) { "#{ShopifyCli::ScriptModule::Infrastructure::Repository::INSTALLATION_BASE_PATH}/templates/" }
-  let(:template_file) { "#{template_base}/ts/#{ShopifyCli::ScriptModule::Infrastructure::TestSuiteRepository::TEST_TEMPLATE_NAME}.spec.#{language}" }
+  let(:template_file) do
+    "#{template_base}/ts/#{ShopifyCli::ScriptModule::Infrastructure::TestSuiteRepository::TEST_TEMPLATE_NAME}"\
+    ".spec.#{language}"
+  end
   let(:spec_test_base) { "#{Dir.pwd}/test/#{extension_point_type}/#{script_name}" }
   let(:spec_test_file) { "#{spec_test_base}/#{script_name}.spec.#{language}" }
   let(:script_repository) { ShopifyCli::ScriptModule::Infrastructure::FakeScriptRepository.new }
