@@ -151,12 +151,12 @@ export class Str extends Slice<u8> {
 	get length(): usize { return this.toString().length; }
 
 	@operator("==")
-	private __eq(other: String): bool {
-		return this.toString() == other;
+	private __eq(other: Str): bool {
+		return this.toString() == other.toString();
 	}
 
 	@operator("!=")
-	private __ne(other: String): bool {
+	private __ne(other: Str): bool {
 		return !this.__eq(other);
 	}
 
