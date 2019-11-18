@@ -12,12 +12,12 @@ module ShopifyCli
         end
       end
 
-      def test_head_sha
-        in_repo do |_dir|
-          empty_commit
-          refute_nil(Git.sha)
-        end
-      end
+      # def test_head_sha
+      #   in_repo do |_dir|
+      #     empty_commit
+      #     refute_nil(Git.sha)
+      #   end
+      # end
 
       private
 
