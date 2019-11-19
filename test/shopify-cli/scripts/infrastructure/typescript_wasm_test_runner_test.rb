@@ -38,19 +38,5 @@ describe ShopifyCli::ScriptModule::Infrastructure::TypeScriptWasmTestRunner do
         assert_raises(ShopifyCli::ScriptModule::Domain::ServiceFailureError) { subject }
       end
     end
-
-    it "should raise ServiceFailureError if execute fails" do
-      typescript_wasm_test_runner.expects(:system).with do |arg|
-        arg.include?(execute_cmd)
-      end.returns(false)
-
-      typescript_wasm_test_runner.expects(:system).with do |arg|
-        arg.eql?(install_cmd)
-      end.returns(true)
-
-      FakeFS.with_fresh do
-        assert_raises(ShopifyCli::ScriptModule::Domain::ServiceFailureError) { subject }
-      end
-    end
   end
 end

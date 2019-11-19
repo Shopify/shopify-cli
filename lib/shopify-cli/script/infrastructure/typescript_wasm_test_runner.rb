@@ -54,8 +54,7 @@ module ShopifyCli
         end
 
         def execute_tests(temp_dir)
-          execute_success = system(format(RUN_AS_PECT_COMMAND, temp_dir: temp_dir))
-          raise Domain::ServiceFailureError unless execute_success
+          system(format(RUN_AS_PECT_COMMAND, temp_dir: temp_dir))
         end
       end
     end
