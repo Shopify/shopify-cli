@@ -1,0 +1,8 @@
+query getApps {
+  apps() {
+    nodes {
+      title
+      apiKey
+    }
+  }
+}

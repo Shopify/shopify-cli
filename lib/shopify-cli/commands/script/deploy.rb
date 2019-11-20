@@ -17,31 +17,22 @@ module ShopifyCli
 
         LANGUAGES = %w(ts js json)
 
+        options do |parser, flags|
+          parser.on('--app_key=APPKEY') { |t| flags[:app_key] = t }
+          parser.on('--language=LANGUAGE') { |t| flags[:language] = t }
+        end
+
         def call(args, _name)
-          extension_point = args.shift
-          return @ctx.puts(self.class.help) unless extension_point
+          form = Forms::DeployScript.ask(@ctx, args, options.flags)
+          return @ctx.puts(self.class.help) unless form
+          name = form.name
+          extension_point = form.extension_point
+          # Uncomment this once we start passing app_key through the deploy process
+          # app_key = form.app_key
+          language = form.language
+          shop_id = nil # unused, remove eventually
+          config_value = nil # also unused
 
-          name = args.shift
-          return @ctx.puts(self.class.help) unless name
-
-          shop_id =
-            if args.include?("--shop")
-              index = args.index("--shop")
-              args[index + 1]
-            end
-
-          config_value =
-            if args.include?("--config")
-              index = args.index("--config")
-              args[index + 1]
-            end
-
-          language = if args.include?("--language")
-            index = args.index("--language")
-            args[index + 1]
-          else
-            "ts"
-          end
           return @ctx.puts(self.class.help) unless ScriptModule::LANGUAGES.include?(language)
 
           @ctx.puts(BUILDING_MSG)

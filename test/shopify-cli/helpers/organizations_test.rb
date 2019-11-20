@@ -83,6 +83,38 @@ module ShopifyCli
         assert_nil(org)
       end
 
+      def test_fetch_apps
+        stub_partner_req(
+          'get_apps',
+          resp: {
+            data: {
+              apps: {
+                nodes: [
+                  {
+                    title: 'app',
+                    apiKey: 1234,
+                    apiSecretKeys: [{
+                      secret: 1233,
+                    }],
+                  },
+                  {
+                    title: 'my_other_app',
+                    apiKey: 1234,
+                    apiSecretKeys: [{
+                      secret: 1233,
+                    }],
+                  },
+                ],
+              },
+            },
+          },
+        )
+
+        apps = Helpers::Organizations.fetch_apps(@context)
+        assert_equal(apps.count, 2)
+        assert_equal(apps.first['title'], 'app')
+      end
+
       def test_fetch_org_with_app_info
         stub_partner_req(
           'all_orgs_with_apps',

@@ -26,6 +26,11 @@ module ShopifyCli
             org
           end
         end
+
+        def fetch_apps(ctx)
+          resp = Helpers::PartnersAPI.query(ctx, 'get_apps')
+          resp['data']['apps']['nodes']
+        end
       end
     end
   end

@@ -40,5 +40,6 @@ module ShopifyCli
     end
 
     autoload :CreateApp, 'shopify-cli/forms/create_app'
+    autoload :DeployScript, 'shopify-cli/forms/deploy_script'
   end
 end
