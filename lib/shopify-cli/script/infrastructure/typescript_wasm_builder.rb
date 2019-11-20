@@ -3,7 +3,7 @@
 require "tmpdir"
 require "fileutils"
 
-INSTALL_ASSEMBLY_SCRIPT = "npm i -D ts-node typescript assemblyscript@0.8.0 > /dev/null 2>&1"
+INSTALL_ASSEMBLY_SCRIPT = "npm i -D ts-node typescript assemblyscript@0.8.1 > /dev/null 2>&1"
 TSCONFIG_FILE = "tsconfig.json"
 TSCONFIG = "{
   \"extends\": \"./node_modules/assemblyscript/std/assembly.json\",
