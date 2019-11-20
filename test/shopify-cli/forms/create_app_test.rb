@@ -15,6 +15,23 @@ module ShopifyCli
         assert_equal(form.shop_domain, 'shop.myshopify.com')
       end
 
+      def test_transforms_fallback_titles_properly
+        title_tests = {
+          'TEST-APP1' => 'Test app1',
+          'testApp2' => 'Test app2',
+          'TestApp3' => 'Test app3',
+          'test_app4' => 'Test app4',
+          'testAPI5' => 'Test api5',
+          'TESTApp6' => 'Test app6',
+          'INCAPS' => 'Incaps',
+        }
+
+        title_tests.each do |input, expected|
+          form = ask(name: input)
+          assert_equal(form.title, expected)
+        end
+      end
+
       def test_title_can_be_provided_by_flag
         form = ask
         assert_equal(form.name, 'test-app')
@@ -149,7 +166,7 @@ module ShopifyCli
           assert_nil form.shop_domain
         end
         log = io.join
-        assert_match('No developement shops available.', log)
+        assert_match('No Development Stores available.', log)
         assert_match(CLI::UI.fmt("Visit {{underline:https://partners.shopify.com/123/stores}} to create one"), log)
       end
 
@@ -174,7 +191,7 @@ module ShopifyCli
           form = ask(org_id: 123, shop: nil)
           assert_equal(form.shop_domain, 'shopdomain.myshopify.com')
         end
-        assert_match(CLI::UI.fmt("Using development shop {{green:shopdomain.myshopify.com}}"), io.join)
+        assert_match(CLI::UI.fmt("Using Development Store {{green:shopdomain.myshopify.com}}"), io.join)
       end
 
       def test_prompts_user_to_pick_from_shops
@@ -200,7 +217,7 @@ module ShopifyCli
 
         CLI::UI::Prompt.expects(:ask)
           .with(
-            'Select a development store',
+            'Select a Development Store',
             options: %w(shopdomain.myshopify.com shop.myshopify.com)
           )
           .returns('selected')

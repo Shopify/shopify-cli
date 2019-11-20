@@ -17,7 +17,8 @@ module ShopifyCli
       private
 
       def fallback_title
-        name.gsub(/(.)([A-Z])/, '\1 \2') # change camelcase to title
+        name.gsub(/([A-Z]+)([A-Z][a-z])/, '\1 \2')
+          .gsub(/([a-z\d])([A-Z])/, '\1 \2') # change camelcase to title
           .gsub(/(-|_)/, ' ') # change snakecase to title
           .capitalize
       end
@@ -57,15 +58,15 @@ module ShopifyCli
 
       def ask_shop_domain
         if organization['stores'].count == 0
-          ctx.puts('No developement shops available.')
+          ctx.puts('{{x}} No Development Stores available.')
           ctx.puts("Visit {{underline:https://partners.shopify.com/#{organization['id']}/stores}} to create one")
         elsif organization['stores'].count == 1
           domain = organization['stores'].first['shopDomain']
-          ctx.puts("Using development shop {{green:#{domain}}}")
+          ctx.puts("Using Development Store {{green:#{domain}}}")
           domain
         else
           CLI::UI::Prompt.ask(
-            'Select a development store',
+            'Select a Development Store',
             options: organization["stores"].map { |s| s["shopDomain"] }
           )
         end
