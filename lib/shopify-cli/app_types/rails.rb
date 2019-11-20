@@ -20,11 +20,6 @@ module ShopifyCli
           }
         end
 
-        def serve_command(ctx)
-          Helpers::Gem.gem_home(ctx)
-          "PORT=#{ShopifyCli::Tasks::Tunnel::PORT} bin/rails server"
-        end
-
         def generate_command(selected_type)
           parts = selected_type.downcase.split("_")
           selected_type = parts[0..-2].join("_") + "/" + parts[-1]

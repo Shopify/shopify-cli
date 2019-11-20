@@ -76,23 +76,8 @@ module ShopifyCli
       def setup
         super
         project_context('app_types', 'rails')
-        @app = ShopifyCli::AppTypes::Rails.new(ctx: @context)
         Helpers::EnvFile.any_instance.stubs(:write)
         Helpers::EnvFile.any_instance.stubs(:update)
-      end
-
-      def test_server_command
-        cmd = ShopifyCli::Commands::Serve
-        cmd.ctx = @context
-        ShopifyCli::Tasks::Tunnel.stubs(:call)
-        ShopifyCli::Tasks::UpdateDashboardURLS.expects(:call)
-        env = Project.current.env.to_h
-        env.delete('HOST')
-        @context.expects(:system).with(
-          "PORT=8081 bin/rails server",
-          env: env
-        )
-        run_cmd('serve')
       end
 
       def test_open_command
