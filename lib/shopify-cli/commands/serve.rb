@@ -5,8 +5,8 @@ require 'shopify_cli'
 module ShopifyCli
   module Commands
     class Serve < ShopifyCli::AppTypeCommand
-      type :node, :ServeNode, 'serve/node'
-      type :rails, :ServeRails, 'serve/rails'
+      app_type :node, :ServeNode, 'serve/node'
+      app_type :rails, :ServeRails, 'serve/rails'
 
       include ShopifyCli::Helpers::OS
       prerequisite_task :ensure_env
