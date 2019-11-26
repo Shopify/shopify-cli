@@ -14,11 +14,11 @@ describe ShopifyCli::ScriptModule::Infrastructure::ScriptRepository do
   let(:script_name) { "myscript" }
   let(:language) { "ts" }
   let(:script_source_base) do
-    "#{ShopifyCli::ScriptModule::Infrastructure::Repository::SOURCE_PATH}/#{extension_point_type}/#{script_name}"
+    "#{format(ShopifyCli::ScriptModule::Infrastructure::Repository::FOLDER_PATH_TEMPLATE, script_name: script_name)}"\
+    "/src"
   end
   let(:script_source_file) { "#{script_source_base}/#{script_name}.#{language}" }
-  let(:script_types_directory) { "#{script_source_base}/types" }
-  let(:script_schema_file) { "#{script_types_directory}/#{extension_point_type}.schema" }
+  let(:script_schema_file) { "#{script_source_base}/#{extension_point_type}.schema" }
   let(:expected_script_id) { "#{extension_point_type}/#{script_name}.#{language}" }
   let(:template_base) { "#{ShopifyCli::ScriptModule::Infrastructure::Repository::INSTALLATION_BASE_PATH}/templates/" }
   let(:template_file) { "#{template_base}/typescript/#{extension_point_type}.#{language}" }
@@ -64,7 +64,6 @@ describe ShopifyCli::ScriptModule::Infrastructure::ScriptRepository do
       it "should return the requested script" do
         FakeFS.with_fresh do
           FileUtils.mkdir_p(script_source_base)
-          FileUtils.mkdir_p(script_types_directory)
           File.write(script_source_file, "//script code")
           File.write(script_schema_file, extension_point_schema)
           script = subject
@@ -88,7 +87,6 @@ describe ShopifyCli::ScriptModule::Infrastructure::ScriptRepository do
       it "should raise InvalidExtensionPointError" do
         FakeFS.with_fresh do
           FileUtils.mkdir_p(script_source_base)
-          FileUtils.mkdir_p(script_types_directory)
           File.write(script_source_file, "//script code")
           File.write(script_schema_file, "//schema code")
           assert_raises(ShopifyCli::ScriptModule::Domain::InvalidExtensionPointError) { subject }

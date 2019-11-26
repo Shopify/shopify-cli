@@ -14,7 +14,8 @@ describe ShopifyCli::ScriptModule::Infrastructure::DeployPackageRepository do
   let(:script) { ShopifyCli::ScriptModule::Domain::Script.new(script_name, extension_point, language, "schema") }
   let(:script_content) { "BYTECODE" }
   let(:build_base) do
-    "#{ShopifyCli::ScriptModule::Infrastructure::Repository::SOURCE_PATH}/#{extension_point_type}/#{script_name}/build"
+    "#{format(ShopifyCli::ScriptModule::Infrastructure::Repository::FOLDER_PATH_TEMPLATE, script_name: script_name)}"\
+    "/src/build"
   end
   let(:build_file) { "#{build_base}/#{script_name}.wasm" }
   let(:script_repository) { ShopifyCli::ScriptModule::Infrastructure::FakeScriptRepository.new }

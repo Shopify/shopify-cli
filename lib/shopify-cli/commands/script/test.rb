@@ -10,12 +10,12 @@ module ShopifyCli
 
         def call(args, _name)
           extension_point_type = args.shift
-          return puts CLI::UI.fmt(self.class.help) unless extension_point_type
+          return @ctx.puts(self.class.help) unless extension_point_type
 
           script_name = args.shift
-          return puts CLI::UI.fmt(self.class.help) unless script_name
+          return @ctx.puts(self.class.help) unless script_name
 
-          puts CLI::UI.fmt(RUNNING_MSG)
+          @ctx.puts(RUNNING_MSG)
           ScriptModule::Application::Test.call("ts", extension_point_type, script_name)
         end
 

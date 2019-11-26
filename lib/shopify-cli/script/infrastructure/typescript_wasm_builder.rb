@@ -39,7 +39,7 @@ module ShopifyCli
         private
 
         def prepare
-          File.open(script.main_source_file, "a") { |fh| fh.puts(ALLOCATE_FUNC) }
+          File.open(script.filename, "a") { |fh| fh.puts(ALLOCATE_FUNC) }
           File.write(TSCONFIG_FILE, TSCONFIG)
         end
 

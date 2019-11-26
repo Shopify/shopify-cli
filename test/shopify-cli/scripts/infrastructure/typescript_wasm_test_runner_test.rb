@@ -5,8 +5,7 @@ describe ShopifyCli::ScriptModule::Infrastructure::TypeScriptWasmTestRunner do
   let(:install_cmd) do
     "npm install @as-pect/cli@2.6.0 @as-pect/core@2.6.0 @as-pect/assembly@2.6.0 assemblyscript@0.8.0 > /dev/null 2>&1"
   end
-
-  let(:execute_cmd) { "npx asp --config " }
+  let(:execute_cmd) { "npx asp" }
 
   describe ".run_tests" do
     subject { typescript_wasm_test_runner.run_tests }

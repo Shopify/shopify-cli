@@ -7,14 +7,19 @@ describe ShopifyCli::ScriptModule::Infrastructure::TestSuiteRepository do
     ShopifyCli::ScriptModule::Domain::ExtensionPoint.new(extension_point_type, "schema", "types", "example")
   end
   let(:script_name) { "myscript" }
-  let(:script) { ShopifyCli::ScriptModule::Domain::Script.new(script_name, extension_point, language, "schema") }
+
   let(:language) { "ts" }
-  let(:template_base) { "#{ShopifyCli::ScriptModule::Infrastructure::Repository::INSTALLATION_BASE_PATH}/templates/" }
+  let(:script) { ShopifyCli::ScriptModule::Domain::Script.new(script_name, extension_point, language, "schema") }
+  let(:template_base) { "#{ShopifyCli::ScriptModule::Infrastructure::Repository::INSTALLATION_BASE_PATH}/templates" }
   let(:template_file) do
     "#{template_base}/ts/#{ShopifyCli::ScriptModule::Infrastructure::TestSuiteRepository::TEST_TEMPLATE_NAME}"\
     ".spec.#{language}"
   end
-  let(:spec_test_base) { "#{Dir.pwd}/test/#{extension_point_type}/#{script_name}" }
+  let(:config_file) { "#{template_base}/ts/as-pect.config.js" }
+  let(:spec_test_base) do
+    "#{format(ShopifyCli::ScriptModule::Infrastructure::Repository::FOLDER_PATH_TEMPLATE, script_name: script_name)}"\
+    "/test"
+  end
   let(:spec_test_file) { "#{spec_test_base}/#{script_name}.spec.#{language}" }
   let(:script_repository) { ShopifyCli::ScriptModule::Infrastructure::FakeScriptRepository.new }
   let(:repository) { ShopifyCli::ScriptModule::Infrastructure::TestSuiteRepository.new }
@@ -31,6 +36,7 @@ describe ShopifyCli::ScriptModule::Infrastructure::TestSuiteRepository do
     it "should create a test suite" do
       FakeFS.with_fresh do
         FakeFS::FileSystem.clone(template_file)
+        FakeFS::FileSystem.clone(config_file)
         test_suite = subject
         assert File.exist?(spec_test_file)
         assert_equal spec_test_file, test_suite.id

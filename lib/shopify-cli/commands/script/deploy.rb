@@ -19,10 +19,10 @@ module ShopifyCli
 
         def call(args, _name)
           extension_point = args.shift
-          return puts CLI::UI.fmt(self.class.help) unless extension_point
+          return @ctx.puts(self.class.help) unless extension_point
 
           name = args.shift
-          return puts CLI::UI.fmt(self.class.help) unless name
+          return @ctx.puts(self.class.help) unless name
 
           shop_id =
             if args.include?("--shop")
@@ -42,19 +42,19 @@ module ShopifyCli
           else
             "ts"
           end
-          return puts CLI::UI.fmt(self.class.help) unless ScriptModule::LANGUAGES.include?(language)
+          return @ctx.puts(self.class.help) unless ScriptModule::LANGUAGES.include?(language)
 
-          puts CLI::UI.fmt(BUILDING_MSG)
+          @ctx.puts(BUILDING_MSG)
           deploy_package = ScriptModule::Application::Build.call(language, extension_point, name)
 
-          puts CLI::UI.fmt(DEPLOYING_MSG)
+          @ctx.puts(DEPLOYING_MSG)
           deploy_package.deploy(ScriptModule::Infrastructure::ScriptService.new, shop_id, config_value)
 
-          puts CLI::UI.fmt(DEPLOY_SUCCEEDED_MSG)
+          @ctx.puts(DEPLOY_SUCCEEDED_MSG)
         rescue ScriptModule::Domain::ScriptNotFoundError
-          puts CLI::UI.fmt(format(SCRIPT_NOT_FOUND, script_name: name, extension_point: extension_point))
+          @ctx.puts(format(SCRIPT_NOT_FOUND, script_name: name, extension_point: extension_point))
         rescue ScriptModule::Domain::InvalidExtensionPointError
-          puts CLI::UI.fmt(format(INVALID_EXTENSION_POINT, extension_point: extension_point))
+          @ctx.puts(format(INVALID_EXTENSION_POINT, extension_point: extension_point))
         rescue ScriptModule::Domain::ServiceFailureError => e
           warn("Command failed: #{e.inspect}")
         end
