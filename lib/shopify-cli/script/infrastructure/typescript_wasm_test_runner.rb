@@ -22,7 +22,7 @@ module ShopifyCli
         end
 
         def execute_tests
-          system(RUN_AS_PECT_COMMAND)
+          CLI::Kit::System.system(RUN_AS_PECT_COMMAND, env: ENV.to_h.merge('FORCE_COLOR' => '1'))
         end
       end
     end

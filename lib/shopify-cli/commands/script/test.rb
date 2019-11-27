@@ -15,8 +15,9 @@ module ShopifyCli
           script_name = args.shift
           return @ctx.puts(self.class.help) unless script_name
 
-          @ctx.puts(RUNNING_MSG)
-          ScriptModule::Application::Test.call("ts", extension_point_type, script_name)
+          CLI::UI::Frame.open(RUNNING_MSG) do
+            ScriptModule::Application::Test.call("ts", extension_point_type, script_name)
+          end
         end
 
         def self.help

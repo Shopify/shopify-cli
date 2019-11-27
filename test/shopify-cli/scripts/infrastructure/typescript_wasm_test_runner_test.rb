@@ -11,8 +11,8 @@ describe ShopifyCli::ScriptModule::Infrastructure::TypeScriptWasmTestRunner do
     subject { typescript_wasm_test_runner.run_tests }
 
     it "should execute tests with as-pect" do
-      typescript_wasm_test_runner.expects(:system).with do |arg|
-        arg.include?(execute_cmd)
+      CLI::Kit::System.expects(:system).with do |arg|
+        arg.eql?(execute_cmd)
       end.returns(true)
 
       typescript_wasm_test_runner.expects(:system).with do |arg|

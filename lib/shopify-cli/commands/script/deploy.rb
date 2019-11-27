@@ -5,7 +5,7 @@ module ShopifyCli
     class Script
       class Deploy < ShopifyCli::SubCommand
         CMD_DESCRIPTION = "Deploy a script to the extension platform"
-        CMD_USAGE = "deploy <Extension Point> <Script Name> --shop [id] --config [json]"
+        CMD_USAGE = "script deploy <Extension Point> <Script Name> --shop [id] --config [json]"
 
         FAILED_TO_BUILD_MESSAGE = "Failed to build"
         DEPLOY_SUCCEEDED_MSG = "Deploy was successful"
