@@ -13,7 +13,7 @@ module ShopifyCli
       return [] if n < 1
 
       if size < TAIL_BUF_LENGTH
-        return readlines.reverse[0..n - 1]
+        return [readlines.reverse[0..n - 1], 0]
       end
 
       seek(-TAIL_BUF_LENGTH, SEEK_END)
@@ -21,10 +21,21 @@ module ShopifyCli
       buf = ""
       while buf.count("\n") <= n
         buf = read(TAIL_BUF_LENGTH) + buf
-        seek(2 * -TAIL_BUF_LENGTH, SEEK_CUR)
+        sk = 2 * -TAIL_BUF_LENGTH
+        if sk < -size
+          seek(0)
+          buf = read(size - buf.size) + buf
+          break
+        else
+          seek(sk, SEEK_CUR)
+        end
       end
+      ret = buf.split("\n")[-n..-1]
+      [ret, ret.join("\n").bytesize + 1]
+    end
 
-      buf.split("\n")[-n..-1]
+    def clear(pos)
+      truncate(size - pos)
     end
   end
 end
