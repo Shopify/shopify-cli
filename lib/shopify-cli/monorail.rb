@@ -33,7 +33,8 @@ module ShopifyCli
       def send_events
         return unless enabled?
         return unless consented?
-        new_events = events.tail(200).select do |line|
+        new_events, pos = events.tail(200)
+        new_events.select! do |line|
           event = JSON.parse(line, symbolize_names: true)
           Time.parse(event[:payload][:timestamp]) > mtime
         end
@@ -43,6 +44,7 @@ module ShopifyCli
           produce(event)
           File.write(ShopifyCli::EVENTS_MTIME, event[:payload][:timestamp])
         end
+        events.clear(pos)
       end
 
       def produce(event, num_retries: 3)
