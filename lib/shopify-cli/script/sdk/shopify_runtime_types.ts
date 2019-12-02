@@ -4,6 +4,8 @@ export type Float = f64;
 
 @unmanaged
 export class Slice<T> {
+  [key: number]: T
+
   _data: u32;
   _length: u32;
 
