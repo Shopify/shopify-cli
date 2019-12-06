@@ -10,7 +10,7 @@ module ShopifyCli
     end
 
     def tail(n)
-      return [] if n < 1
+      return [[], 0] if n < 1
 
       if size < TAIL_BUF_LENGTH
         return [readlines.reverse[0..n - 1], 0]

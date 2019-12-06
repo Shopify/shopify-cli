@@ -34,6 +34,7 @@ module ShopifyCli
         return unless enabled?
         return unless consented?
         new_events, pos = events.tail(200)
+        return unless new_events
         new_events.select! do |line|
           event = JSON.parse(line, symbolize_names: true)
           Time.parse(event[:payload][:timestamp]) > mtime
