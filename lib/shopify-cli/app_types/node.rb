@@ -25,7 +25,7 @@ module ShopifyCli
             billing_recurring: './node_modules/.bin/generate-node-app recurring-billing',
             billing_one_time: './node_modules/.bin/generate-node-app one-time-billing',
             webhook: './node_modules/.bin/generate-node-app webhook',
-            marketing_activities_extension: './node_modules/.bin/generate-node-app marketing-activity-extension'
+            marketing_activities_extension: './node_modules/.bin/generate-node-app marketing-activity-extension',
           }
         end
 

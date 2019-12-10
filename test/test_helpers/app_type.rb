@@ -30,6 +30,7 @@ module TestHelpers
             billing_recurring: 'generate-recurring-billing',
             billing_one_time: 'generate-one-time-billing',
             webhook: 'generate-webhook',
+            marketing_activities_extension: 'generate-marketing-activities-extension',
           }
         end
 
@@ -48,6 +49,10 @@ module TestHelpers
 
         def webhook_location
           "im fake"
+        end
+
+        def extension_location(type)
+          "fake/extension/location/#{type}"
         end
 
         def callback_url

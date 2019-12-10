@@ -7,7 +7,7 @@ module ShopifyCli
         def call(args, _name)
           project = ShopifyCli::Project.current
           extension_types = {
-            'marketing-activities-extension' => :marketing_activities_extension
+            'marketing-activities-extension' => :marketing_activities_extension,
           }
           selected_type = extension_types[args[1]]
           app_type = project.app_type
