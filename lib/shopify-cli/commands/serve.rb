@@ -26,7 +26,7 @@ module ShopifyCli
           end
         end
         CLI::UI::Frame.open('Running server...') do
-          @ctx.system(project.app_type.serve_command(@ctx))
+          @ctx.system(project.app_type.serve_command(@ctx), env: project.env.to_h)
         end
       end
 

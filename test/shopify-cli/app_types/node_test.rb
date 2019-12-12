@@ -103,7 +103,8 @@ module ShopifyCli
         cmd = ShopifyCli::Commands::Serve
         cmd.ctx = @context
         @context.expects(:system).with(
-          "HOST=https://example.com PORT=8081 npm run dev"
+          "HOST=https://example.com PORT=8081 npm run dev",
+          env: Project.current.env.to_h
         )
         run_cmd('serve')
       end

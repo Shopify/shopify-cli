@@ -87,7 +87,8 @@ module ShopifyCli
         ShopifyCli::Tasks::Tunnel.stubs(:call)
         ShopifyCli::Tasks::UpdateDashboardURLS.expects(:call)
         @context.expects(:system).with(
-          "PORT=8081 bin/rails server"
+          "PORT=8081 bin/rails server",
+          env: Project.current.env.to_h
         )
         run_cmd('serve')
       end

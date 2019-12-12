@@ -54,6 +54,17 @@ module ShopifyCli
       property :host
       property :extra, default: {}
 
+      def to_h
+        out = {}
+        KEY_MAP.each do |key, value|
+          out[key] = send(value).to_s if send(value)
+        end
+        extra.each do |key, value|
+          out[key] = value.to_s
+        end
+        out
+      end
+
       def write(ctx)
         spin_group = CLI::UI::SpinGroup.new
         spin_group.add("writing #{FILENAME} file...") do |spinner|
