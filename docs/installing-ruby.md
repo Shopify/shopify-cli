@@ -13,7 +13,7 @@ We recommend using [`ruby-install`][ruby-install] and [`chruby`][chruby] from Ho
 
         ruby-install ruby-2.5.1
 
-1. Open a new terminal window and activate ruby 2.5.1:
+1. **Open a new terminal window** and activate ruby 2.5.1:
 
         chruby ruby-2.5.1
 
