@@ -22,20 +22,20 @@ module ShopifyCli
       end
 
       def check_application_url(application_url, new_url)
-        return false if application_url.match(NGROK_REGEX) && new_url.match(NGROK_REGEX)
+        return false if application_url.match(new_url)
         CLI::UI::Prompt.confirm('Do you want to update your application url?')
       end
 
       def construct_redirect_urls(urls, new_url, callback)
-        if urls.grep(/#{new_url}#{callback}/).empty?
-          urls.push("#{new_url}#{callback}")
-        end
         urls.map do |url|
           if (match = url.match(NGROK_REGEX))
             "#{new_url}#{match[2]}"
           else
             url
           end
+        end
+        if urls.grep(/#{new_url}#{callback}/).empty?
+          urls.push("#{new_url}#{callback}")
         end
       end
     end
