@@ -3,27 +3,17 @@ module ShopifyCli
   module ScriptModule
     module Infrastructure
       class TypeScriptWasmTestRunner
+        include SmartProperties
+
+        property! :ctx, accepts: ShopifyCli::Context
+
         def run_tests
-          install_test_runner
-          execute_tests
+          ctx.system(RUN_TEST_COMMAND)
         end
 
-        private
+        RUN_TEST_COMMAND = "npm test"
 
-        INSTALL_AS_PECT = "npm install @as-pect/cli@2.6.0 @as-pect/core@2.6.0 @as-pect/assembly@2.6.0 "\
-          "assemblyscript@0.8.0 > /dev/null 2>&1"
-        RUN_AS_PECT_COMMAND = "npx asp"
-
-        private_constant :INSTALL_AS_PECT, :RUN_AS_PECT_COMMAND
-
-        def install_test_runner
-          install_success = system(INSTALL_AS_PECT)
-          raise Domain::ServiceFailureError unless install_success
-        end
-
-        def execute_tests
-          CLI::Kit::System.system(RUN_AS_PECT_COMMAND, env: ENV.to_h.merge('FORCE_COLOR' => '1'))
-        end
+        private_constant :RUN_TEST_COMMAND
       end
     end
   end

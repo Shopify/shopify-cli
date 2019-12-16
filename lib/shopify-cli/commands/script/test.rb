@@ -15,8 +15,24 @@ module ShopifyCli
           script_name = args.shift
           return @ctx.puts(self.class.help) unless script_name
 
-          CLI::UI::Frame.open(RUNNING_MSG) do
-            ScriptModule::Application::Test.call("ts", extension_point_type, script_name)
+          language = "ts"
+
+          dep_manager = ScriptModule::Infrastructure::DependencyManager.for(script_name, language)
+
+          ScriptModule::Infrastructure::ScriptRepository.new.with_script_context(script_name) do
+            unless dep_manager.installed?
+              CLI::UI::Frame.open('Installing Dependencies in {{green:package.json}}...') do
+                CLI::UI::Spinner.spin('Installing') do |spinner|
+                  dep_manager.install
+                  spinner.update_title("Installed")
+                end
+              end
+            end
+          end
+
+          @ctx.setenv("FORCE_COLOR", "1") # without this, aspect output is not in color :(
+          CLI::UI::Frame.open("Running tests") do
+            ScriptModule::Application::Test.call(@ctx, language, extension_point_type, script_name)
           end
         end
 

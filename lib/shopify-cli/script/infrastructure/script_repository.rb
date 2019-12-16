@@ -40,13 +40,26 @@ module ShopifyCli
           Domain::Script.new(script_name, extension_point, language, schema)
         end
 
-        def with_script_context(script)
-          Dir.mktmpdir do |tmp|
-            Dir.chdir(tmp) do
-              FileUtils.cp_r("#{File.dirname(file_path(script))}/.", ".")
-              yield
-            end
-          end
+        def with_script_build_context(script)
+          prev_dir = format(FOLDER_PATH_TEMPLATE, script_name: script.name)
+          temp_dir = "#{prev_dir}/temp"
+          FileUtils.mkdir_p(temp_dir)
+          Dir.chdir(temp_dir)
+          FileUtils.cp_r("#{File.dirname(file_path(script))}/.", ".")
+          yield
+
+        ensure
+          Dir.chdir(prev_dir)
+        end
+
+        def with_script_context(script_name)
+          prev_dir = Dir.pwd
+          script_dir = format(FOLDER_PATH_TEMPLATE, script_name: script_name)
+          Dir.chdir(script_dir)
+          yield
+
+        ensure
+          Dir.chdir(prev_dir)
         end
 
         private

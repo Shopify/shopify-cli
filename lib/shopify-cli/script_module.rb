@@ -38,6 +38,9 @@ module ShopifyCli
       autoload :TypeScriptWasmBuilder, "shopify-cli/script/infrastructure/typescript_wasm_builder.rb"
       autoload :TypeScriptWasmTestRunner, "shopify-cli/script/infrastructure/typescript_wasm_test_runner.rb"
 
+      autoload :DependencyManager, "shopify-cli/script/infrastructure/dependency_manager.rb"
+      autoload :TypeScriptDependencyManager, "shopify-cli/script/infrastructure/typescript_dependency_manager.rb"
+
       # errors
       autoload :ScriptServiceConnectionError,
         "shopify-cli/script/infrastructure/errors/script_service_connection_error.rb"

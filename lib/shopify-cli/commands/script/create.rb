@@ -25,7 +25,22 @@ module ShopifyCli
 
           return @ctx.puts(self.class.help) unless ScriptModule::LANGUAGES.include?(language)
 
-          bootstrap(language, extension_point, name)
+          script = bootstrap(language, extension_point, name)
+
+          dep_manager = ScriptModule::Infrastructure::DependencyManager.for(name, language)
+
+          ScriptModule::Infrastructure::ScriptRepository.new.with_script_context(name) do
+            unless dep_manager.installed?
+              CLI::UI::Frame.open('Installing Dependencies in {{green:package.json}}...') do
+                CLI::UI::Spinner.spin('Installing') do |spinner|
+                  dep_manager.install
+                  spinner.update_title('Installed')
+                end
+              end
+            end
+          end
+
+          @ctx.puts(format(CREATED_NEW_SCRIPT_MSG, script_filename: script.filename, folder: script.name))
         end
 
         def self.help
@@ -38,8 +53,13 @@ module ShopifyCli
         private
 
         def bootstrap(language, extension_point, name)
-          script = ScriptModule::Application::Bootstrap.call(language, extension_point, name)
-          puts @ctx.puts(format(CREATED_NEW_SCRIPT_MSG, script_filename: script.filename, folder: script.name))
+          CLI::UI::Frame.open("Cloning into #{name}...") do
+            CLI::UI::Progress.progress do |bar|
+              script = ScriptModule::Application::Bootstrap.call(language, extension_point, name)
+              bar.tick(set_percent: 1.0)
+              script
+            end
+          end
         rescue ScriptModule::Domain::InvalidExtensionPointError
           puts @ctx.puts(format(INVALID_EXTENSION_POINT, extension_point: extension_point))
         end

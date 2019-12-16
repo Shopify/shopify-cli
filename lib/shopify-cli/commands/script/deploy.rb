@@ -15,8 +15,6 @@ module ShopifyCli
         INVALID_EXTENSION_POINT = "Invalid extension point %{extension_point}"
         SCRIPT_NOT_FOUND = "Could not find script %{script_name} for extension point %{extension_point}"
 
-        LANGUAGES = %w(ts js json)
-
         options do |parser, flags|
           parser.on('--app_key=APPKEY') { |t| flags[:app_key] = t }
           parser.on('--language=LANGUAGE') { |t| flags[:language] = t }
@@ -34,6 +32,19 @@ module ShopifyCli
           config_value = nil # also unused
 
           return @ctx.puts(self.class.help) unless ScriptModule::LANGUAGES.include?(language)
+
+          dep_manager = ScriptModule::Infrastructure::DependencyManager.for(name, language)
+
+          ScriptModule::Infrastructure::ScriptRepository.new.with_script_context(name) do
+            unless dep_manager.installed?
+              CLI::UI::Frame.open('Installing Dependencies in {{green:package.json}}...') do
+                CLI::UI::Spinner.spin('Installing') do |spinner|
+                  dep_manager.install
+                  spinner.update_title('Installed')
+                end
+              end
+            end
+          end
 
           @ctx.puts(BUILDING_MSG)
           deploy_package = ScriptModule::Application::Build.call(language, extension_point, name)

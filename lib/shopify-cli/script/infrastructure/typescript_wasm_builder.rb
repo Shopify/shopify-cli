@@ -3,8 +3,6 @@
 require "tmpdir"
 require "fileutils"
 
-# AssemblyScript 0.8.1 appears to raise a TypeError when using the GraphQL transform
-INSTALL_ASSEMBLY_SCRIPT = "npm i -D ts-node typescript assemblyscript@0.8.0 > /dev/null 2>&1"
 TSCONFIG_FILE = "tsconfig.json"
 TSCONFIG = "{
   \"extends\": \"./node_modules/assemblyscript/std/assembly.json\",
@@ -27,7 +25,6 @@ module ShopifyCli
 
         def build
           prepare
-          install_builder_framework
           compile
           [bytecode, schema]
         end
@@ -41,12 +38,7 @@ module ShopifyCli
         def prepare
           File.open(script.filename, "a") { |fh| fh.puts(ALLOCATE_FUNC) }
           File.write(TSCONFIG_FILE, TSCONFIG)
-        end
-
-        def install_builder_framework
           FileUtils.cp(GQL_TRANSFORM, GQL_BUILDER)
-          File.write("package.json", "{}")
-          system(INSTALL_ASSEMBLY_SCRIPT)
         end
 
         def compile

@@ -13,10 +13,10 @@ describe ShopifyCli::ScriptModule::Infrastructure::ScriptRepository do
   end
   let(:script_name) { "myscript" }
   let(:language) { "ts" }
-  let(:script_source_base) do
-    "#{format(ShopifyCli::ScriptModule::Infrastructure::Repository::FOLDER_PATH_TEMPLATE, script_name: script_name)}"\
-    "/src"
+  let(:script_folder_base) do
+    format(ShopifyCli::ScriptModule::Infrastructure::Repository::FOLDER_PATH_TEMPLATE, script_name: script_name)
   end
+  let(:script_source_base) { "#{script_folder_base}/src" }
   let(:script_source_file) { "#{script_source_base}/#{script_name}.#{language}" }
   let(:script_schema_file) { "#{script_source_base}/#{extension_point_type}.schema" }
   let(:expected_script_id) { "#{extension_point_type}/#{script_name}.#{language}" }
@@ -95,7 +95,7 @@ describe ShopifyCli::ScriptModule::Infrastructure::ScriptRepository do
     end
   end
 
-  describe ".with_script_context" do
+  describe ".with_script_build_context" do
     let(:script) do
       ShopifyCli::ScriptModule::Domain::Script.new(script_name, extension_point, language, extension_point_schema)
     end
@@ -112,11 +112,30 @@ describe ShopifyCli::ScriptModule::Infrastructure::ScriptRepository do
 
         FileUtils.mkdir_p("other_dir")
 
-        script_repository.with_script_context(script) do
+        script_repository.with_script_build_context(script) do
           assert script_source_base != Dir.pwd
           assert File.exist?(script_file)
           assert File.exist?(helper_file)
         end
+      end
+    end
+  end
+
+  describe ".with_script_context" do
+    let(:script) do
+      ShopifyCli::ScriptModule::Domain::Script.new(script_name, extension_point, language, extension_point_schema)
+    end
+    let(:package_json) { "package.json" }
+
+    it "should go to the root dir of the scripts" do
+      FakeFS.with_fresh do
+        FileUtils.mkdir_p(script_folder_base)
+
+        original_dir = Dir.pwd
+        script_repository.with_script_context(script_name) do
+          assert_equal(script_folder_base, Dir.pwd)
+        end
+        assert_equal(original_dir, Dir.pwd)
       end
     end
   end
