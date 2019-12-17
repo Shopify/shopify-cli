@@ -61,7 +61,7 @@ Running the `serve` command in your app directory will start your local developm
 $ shopify serve
 ```
 
-Your terminal will display the localhost and port where your app is now visible.
+Your terminal will display the localhost and port where your app is now visible. Your app can then be installed on a development store from your Partner Dashboard.
 
 ### Start or stop a tunnel to your localhost
 

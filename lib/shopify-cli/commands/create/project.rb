@@ -33,12 +33,14 @@ module ShopifyCli
             scopes: 'write_products,write_customers,write_draft_orders',
           ).write(@ctx)
 
+          partners_url = "https://partners.shopify.com/#{form.organization_id}/apps/#{api_client['id']}"
+
           @ctx.puts("{{v}} {{green:#{form.title}}} was created in your Partner" \
                     " Dashboard " \
-                    "{{underline:https://partners.shopify.com/#{form.organization_id}/apps/#{api_client['id']}}}")
-          @ctx.puts("{{v}} {{green:#{form.title}}} is ready to install on " \
-                    "{{green:#{form.shop_domain}}}") unless form.shop_domain.nil?
-          @ctx.puts("{{*}} Run {{cyan:shopify serve}} to start a local server and install {{green:#{form.title}}}")
+                    "{{underline:#{partners_url}}}")
+          @ctx.puts("{{*}} Run {{cyan:shopify serve}} to start a local server")
+          @ctx.puts("{{*}} Then, visit {{underline:#{partners_url}/test}} to install" \
+                    " {{green:#{form.title}}} on your Dev Store")
         end
 
         def self.help
