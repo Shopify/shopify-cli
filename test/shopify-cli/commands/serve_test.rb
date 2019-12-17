@@ -14,7 +14,6 @@ module ShopifyCli
           env: {
             'SHOPIFY_API_KEY' => 'apikey',
             'SHOPIFY_API_SECRET' => 'secret',
-            'HOST' => 'https://example.com',
             'SHOP' => 'my-test-shop.myshopify.com',
             'AWSKEY' => 'awskey',
           }

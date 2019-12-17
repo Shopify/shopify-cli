@@ -26,7 +26,10 @@ module ShopifyCli
           end
         end
         CLI::UI::Frame.open('Running server...') do
-          @ctx.system(project.app_type.serve_command(@ctx), env: project.env.to_h)
+          # fix for rails, where HOST is used for binding address
+          env = project.env.to_h
+          env.delete('HOST')
+          @ctx.system(project.app_type.serve_command(@ctx), env: env)
         end
       end
 
