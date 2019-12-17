@@ -10,7 +10,6 @@ module ShopifyCli
 
         def serve_command(_ctx)
           %W(
-            HOST=#{Project.current.env.host}
             PORT=#{ShopifyCli::Tasks::Tunnel::PORT}
             npm run dev
           ).join(' ')

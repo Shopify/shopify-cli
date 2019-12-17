@@ -102,9 +102,11 @@ module ShopifyCli
         @context.app_metadata[:host] = 'https://example.com'
         cmd = ShopifyCli::Commands::Serve
         cmd.ctx = @context
+        env = Project.current.env.to_h
+        env.delete('HOST')
         @context.expects(:system).with(
-          "HOST=https://example.com PORT=8081 npm run dev",
-          env: Project.current.env.to_h
+          "PORT=8081 npm run dev",
+          env: env
         )
         run_cmd('serve')
       end
