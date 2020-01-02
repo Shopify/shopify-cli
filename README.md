@@ -93,7 +93,7 @@ Shopify App CLI automates several common developer tasks. Currently `generate` s
 ```sh
 $ shopify generate page PAGE_NAME
 ```
-The CLI will scaffold the new page in the `pages` directory. In node apps, you can view this page by appeneding the name you pass to the url.
+The CLI will scaffold the new page in the `pages` directory. In node apps, you can view this page by appending the name you pass to the url.
 
 #### Create a billing model
 
@@ -104,7 +104,7 @@ The CLI will ask whether you want to create a one-time billing model or a recurr
 
 #### Create a new webhook
 
-Webhooks allow your app to listen for events that happen on any stores that have it installed. The CLI can quickly register a new webhook for any valid store event.
+Webhooks allow your app to listen for events that happen on any stores that have them installed. The CLI can quickly register a new webhook for any valid store event.
 
 ```sh
 $ shopify generate webhook WEBHOOK_NAME
