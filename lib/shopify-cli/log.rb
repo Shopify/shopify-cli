@@ -30,7 +30,7 @@ module ShopifyCli
           seek(sk, SEEK_CUR)
         end
       end
-      ret = buf.split("\n")[-n..-1]
+      ret = buf.split("\n").last(n)
       [ret, ret.join("\n").bytesize + 1]
     end
 
