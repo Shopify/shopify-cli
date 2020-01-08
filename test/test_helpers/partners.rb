@@ -15,6 +15,12 @@ module TestHelpers
       stub_request(:post, "https://partners.shopify.com/api/cli/graphql").with(body: {
         query: File.read(File.join(ShopifyCli::ROOT, "lib/graphql/#{query}.graphql")).tr("\n", ''),
         variables: variables,
+        headers: {
+          'Accept'=>'*/*',
+          'Accept-Encoding'=>'gzip;q=1.0,deflate;q=0.6,identity;q=0.3',
+          'Authorization'=>'Bearer faketoken',
+          'Content-Type'=>'application/json',
+          'User-Agent'=>"Shopify App CLI #{ShopifyCli::VERSION} abcde | Mac"},
       }.to_json).to_return(status: status, body: resp.to_json)
     end
   end

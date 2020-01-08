@@ -1,9 +1,9 @@
 query ProxyRequest(
-  $app_key: String,
+  $api_key: String,
   $query: String!
 ) {
   scriptServiceProxy(
-    appKey: $app_key
+    apiKey: $api_key
     query: $query
   )
 }

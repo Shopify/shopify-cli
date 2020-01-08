@@ -34,7 +34,7 @@ module ShopifyCli
 
           return @ctx.puts(self.class.help) unless ScriptModule::LANGUAGES.include?(language)
 
-          dep_manager = ScriptModule::Infrastructure::DependencyManager.for(name, language)
+          dep_manager = ScriptModule::Infrastructure::DependencyManager.for(@ctx, name, language)
 
           ScriptModule::Infrastructure::ScriptRepository.new.with_script_context(name) do
             unless dep_manager.installed?

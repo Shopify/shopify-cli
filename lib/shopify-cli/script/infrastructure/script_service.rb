@@ -31,7 +31,7 @@ module ShopifyCli
             }
           HERE
 
-          proxy_request(query: query, app_key: nil)
+          proxy_request(query: query, api_key: nil)
         end
 
         def deploy(
@@ -56,7 +56,7 @@ module ShopifyCli
                   message
                 }
                 appScript {
-                  appKey
+                  apiKey
                   configSchema
                   extensionPointName
                   title
@@ -64,7 +64,7 @@ module ShopifyCli
               }
             }
           HERE
-          resp_hash = proxy_request(query: query, app_key: app_key)
+          resp_hash = proxy_request(query: query, api_key: app_key)
 
           unless resp_hash["data"]["appScriptUpdateOrCreate"]["userErrors"].empty?
             raise(ShopifyCli::Abort, resp_hash["data"]["appScriptUpdateOrCreate"]["userErrors"].to_s)
@@ -76,7 +76,6 @@ module ShopifyCli
 
         def proxy_request(variables)
           resp = Helpers::PartnersAPI.query(ctx, "script_service_proxy", **variables)
-
           resp_hash = JSON.parse(resp["data"]["scriptServiceProxy"])
 
           if resp_hash.key?("errors")

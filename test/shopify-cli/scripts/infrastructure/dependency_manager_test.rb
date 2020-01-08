@@ -5,7 +5,8 @@ require "test_helper"
 describe ShopifyCli::ScriptModule::Infrastructure::DependencyManager do
   describe ".for" do
     let(:script_name) { "foo_discount" }
-    subject { ShopifyCli::ScriptModule::Infrastructure::DependencyManager.for(script_name, language) }
+    let(:ctx) { TestHelpers::FakeContext.new }
+    subject { ShopifyCli::ScriptModule::Infrastructure::DependencyManager.for(ctx, script_name, language) }
 
     describe "when the script language does match an entry in the registry" do
       let(:language) { "ts" }

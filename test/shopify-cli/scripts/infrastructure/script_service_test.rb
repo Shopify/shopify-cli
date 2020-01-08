@@ -48,7 +48,7 @@ describe ShopifyCli::ScriptModule::Infrastructure::ScriptService do
         'script_service_proxy',
         variables: {
           query: extension_point_query,
-          app_key: nil,
+          api_key: nil,
         },
         resp: {
           data: {
@@ -85,7 +85,7 @@ describe ShopifyCli::ScriptModule::Infrastructure::ScriptService do
               message
             }
             appScript {
-              appKey
+              apiKey
               configSchema
               extensionPointName
               title
@@ -100,7 +100,7 @@ describe ShopifyCli::ScriptModule::Infrastructure::ScriptService do
         'script_service_proxy',
         variables: {
           query: app_script_create_or_update,
-          app_key: app_key,
+          api_key: app_key,
         },
         resp: {
           data: {
@@ -127,7 +127,7 @@ describe ShopifyCli::ScriptModule::Infrastructure::ScriptService do
           "data" => {
             "appScriptUpdateOrCreate" => {
               "appScript" => {
-                "appKey" => "fake_key",
+                "apiKey" => "fake_key",
                 "configSchema" => nil,
                 "extensionPointName" => "DISCOUNT",
                 "title" => "foo2",
@@ -160,7 +160,7 @@ describe ShopifyCli::ScriptModule::Infrastructure::ScriptService do
         {
           "data" => {
             "appScriptUpdateOrCreate" => {
-              "userErrors" => [{ "message" => "invalid", "field" => "appKey" }],
+              "userErrors" => [{ "message" => "invalid", "field" => "apiKey" }],
             },
           },
         }
