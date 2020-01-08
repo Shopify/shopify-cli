@@ -4,14 +4,14 @@ query AllOrgs{
       id
       businessName
       website
-      stores {
+      stores(first: 500) {
         nodes {
           link
           shopDomain
           shopName
         }
       }
-      apps {
+      apps(first: 500) {
         nodes {
           id
           title
