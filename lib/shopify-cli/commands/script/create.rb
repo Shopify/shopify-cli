@@ -22,21 +22,15 @@ module ShopifyCli
           else
             "ts"
           end
-
           return @ctx.puts(self.class.help) unless ScriptModule::LANGUAGES.include?(language)
 
           script = bootstrap(@ctx, language, extension_point, name)
 
-          dep_manager = ScriptModule::Infrastructure::DependencyManager.for(name, language)
+          dep_manager = ScriptModule::Infrastructure::DependencyManager.for(@ctx, name, language)
 
           ScriptModule::Infrastructure::ScriptRepository.new.with_script_context(name) do
             unless dep_manager.installed?
-              CLI::UI::Frame.open('Installing Dependencies in {{green:package.json}}...') do
-                CLI::UI::Spinner.spin('Installing') do |spinner|
-                  dep_manager.install
-                  spinner.update_title('Installed')
-                end
-              end
+              dep_manager.install
             end
           end
 
@@ -56,6 +50,7 @@ module ShopifyCli
           CLI::UI::Frame.open("Cloning into #{name}...") do
             CLI::UI::Progress.progress do |bar|
               script = ScriptModule::Application::Bootstrap.call(ctx, language, extension_point, name)
+              ctx.root = File.join(ctx.root, script.name)
               bar.tick(set_percent: 1.0)
               script
             end

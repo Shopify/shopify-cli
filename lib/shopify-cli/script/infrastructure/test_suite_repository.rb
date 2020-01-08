@@ -21,8 +21,8 @@ module ShopifyCli
           Domain::TestSuite.new(source, script)
         end
 
-        def get_test_suite(language, extension_point_type, script_name)
-          script = ScriptRepository.new.get_script(language, extension_point_type, script_name)
+        def get_test_suite(ctx, language, extension_point_type, script_name)
+          script = ScriptRepository.new.get_script(ctx, language, extension_point_type, script_name)
 
           root = test_base(script_name)
           source = "#{root}/#{script_name}.spec.#{language}"

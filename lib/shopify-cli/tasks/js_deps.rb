@@ -49,7 +49,7 @@ module ShopifyCli
               end
 
         deps = %w(dependencies devDependencies).map do |key|
-          pkg.fetch(key, []).keys
+          pkg.fetch(key, {}).keys
         end.flatten
         CLI::UI::Spinner.spin("Installing #{deps.size} dependencies...") do |spinner|
           CLI::Kit::System.system(*INSTALL_COMMANDS[installer], chdir: @dir)

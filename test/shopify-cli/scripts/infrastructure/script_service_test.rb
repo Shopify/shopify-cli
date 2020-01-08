@@ -95,20 +95,19 @@ describe ShopifyCli::ScriptModule::Infrastructure::ScriptService do
       HERE
     end
 
-    let(:valid_app_script_create_upadate_response) do
-      {
-        "data" => {
-          "appScriptUpdateOrCreate" => {
-            "appScript" => {
-              "appKey" => "fake_key",
-              "configSchema" => nil,
-              "extensionPointName" => "DISCOUNT",
-              "title" => "foo2",
-            },
-            "userErrors" => [],
-          },
+    before do
+      stub_partner_req(
+        'script_service_proxy',
+        variables: {
+          query: app_script_create_or_update,
+          app_key: app_key,
         },
-      }
+        resp: {
+          data: {
+            scriptServiceProxy: JSON.dump(response),
+          },
+        }
+      )
     end
 
     subject do
@@ -123,21 +122,52 @@ describe ShopifyCli::ScriptModule::Infrastructure::ScriptService do
     end
 
     describe "when deploy to script service succeeds" do
-      let(:valid_app_script_create_update) { "test" }
-      it "should post the form without scope" do
-        stub_partner_req(
-          'script_service_proxy',
-          variables: {
-            query: app_script_create_or_update,
-            app_key: app_key,
-          },
-          resp: {
-            data: {
-              scriptServiceProxy: JSON.dump(valid_app_script_create_upadate_response),
+      let(:response) do
+        {
+          "data" => {
+            "appScriptUpdateOrCreate" => {
+              "appScript" => {
+                "appKey" => "fake_key",
+                "configSchema" => nil,
+                "extensionPointName" => "DISCOUNT",
+                "title" => "foo2",
+              },
+              "userErrors" => [],
             },
-          }
-        )
-        assert_equal(valid_app_script_create_upadate_response, subject)
+          },
+        }
+      end
+
+      it "should post the form without scope" do
+        assert_equal(response, subject)
+      end
+    end
+
+    describe "when deploy to script service responds with errors" do
+      let(:response) do
+        {
+          "errors" => "errors",
+        }
+      end
+
+      it "should raise error" do
+        assert_raises(ShopifyCli::Abort) { subject }
+      end
+    end
+
+    describe "when deploy to script service responds with userErrors" do
+      let(:response) do
+        {
+          "data" => {
+            "appScriptUpdateOrCreate" => {
+              "userErrors" => [{ "message" => "invalid", "field" => "appKey" }],
+            },
+          },
+        }
+      end
+
+      it "should raise error" do
+        assert_raises(ShopifyCli::Abort) { subject }
       end
     end
   end

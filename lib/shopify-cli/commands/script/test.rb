@@ -17,7 +17,7 @@ module ShopifyCli
 
           language = "ts"
 
-          dep_manager = ScriptModule::Infrastructure::DependencyManager.for(script_name, language)
+          dep_manager = ScriptModule::Infrastructure::DependencyManager.for(@ctx, script_name, language)
 
           ScriptModule::Infrastructure::ScriptRepository.new.with_script_context(script_name) do
             unless dep_manager.installed?

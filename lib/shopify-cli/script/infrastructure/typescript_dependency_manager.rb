@@ -2,7 +2,8 @@ module ShopifyCli
   module ScriptModule
     module Infrastructure
       class TypeScriptDependencyManager
-        def initialize(script_name, language)
+        def initialize(ctx, script_name, language)
+          @ctx = ctx
           @language = language
           @script_name = script_name
         end
@@ -13,16 +14,8 @@ module ShopifyCli
         end
 
         def install
-          unless system('npm --version > /dev/null')
-            # There is no way to automatically install NPM as far as I know
-            raise(ShopifyCli::Abort, "{{x}} Please install NPM")
-          end
-
           write_package_json
-
-          unless system('npm install --no-audit --no-optional')
-            raise(ShopifyCli::Abort, "{{x}} Installing dependencies failed")
-          end
+          ShopifyCli::Tasks::JsDeps.call(@ctx)
         end
 
         private
