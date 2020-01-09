@@ -18,7 +18,7 @@ module ShopifyCli
           ).returns(@oauth_client)
         @oauth_client
           .expects(:authenticate)
-          .with("https://accounts.shopify.com/oauth")
+          .with("#{ShopifyCli::Helpers::PartnersAPI.auth_endpoint}/oauth")
         AuthenticateIdentity.call(@context)
       end
     end

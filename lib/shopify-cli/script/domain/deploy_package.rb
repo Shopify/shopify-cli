@@ -14,14 +14,14 @@ module ShopifyCli
           @schema = schema
         end
 
-        def deploy(script_service, app_key)
+        def deploy(script_service, api_key)
           script_service.deploy(
             extension_point_type: @script.extension_point.type,
             script_name: @script.name,
             script_content: @script_content,
             content_type: @content_type,
             schema: schema,
-            app_key: app_key
+            api_key: api_key
           )
         end
       end

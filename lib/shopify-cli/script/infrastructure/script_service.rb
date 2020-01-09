@@ -40,7 +40,7 @@ module ShopifyCli
           script_name:,
           script_content:,
           content_type:,
-          app_key: nil
+          api_key: nil
         )
           query = <<~HERE
             mutation {
@@ -56,7 +56,7 @@ module ShopifyCli
                   message
                 }
                 appScript {
-                  apiKey
+                  appKey
                   configSchema
                   extensionPointName
                   title
@@ -64,7 +64,7 @@ module ShopifyCli
               }
             }
           HERE
-          resp_hash = proxy_request(query: query, api_key: app_key)
+          resp_hash = proxy_request(query: query, api_key: api_key)
 
           unless resp_hash["data"]["appScriptUpdateOrCreate"]["userErrors"].empty?
             raise(ShopifyCli::Abort, resp_hash["data"]["appScriptUpdateOrCreate"]["userErrors"].to_s)

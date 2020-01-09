@@ -9,7 +9,7 @@ module ShopifyCli
 
         FAILED_TO_BUILD_MESSAGE = "Failed to build"
         DEPLOY_SUCCEEDED_MSG = "{{v}} %{extension_point} script %{script_name}" \
-        "is deployed to app (API_KEY: {{green:%{app_key}}})"
+        "is deployed to app (API_KEY: {{green:%{api_key}}})"
         BUILDING_MSG = "Building"
         DEPLOYING_MSG = "Deploying"
         BUILT_MSG = "Built"
@@ -19,7 +19,7 @@ module ShopifyCli
         SCRIPT_NOT_FOUND = "Could not find script %{script_name} for extension point %{extension_point}"
 
         options do |parser, flags|
-          parser.on('--app_key=APPKEY') { |t| flags[:app_key] = t }
+          parser.on('--api_key=APIKEY') { |t| flags[:api_key] = t }
           parser.on('--language=LANGUAGE') { |t| flags[:language] = t }
         end
 
@@ -29,7 +29,7 @@ module ShopifyCli
           name = form.name
           extension_point = form.extension_point
 
-          app_key = form.app_key
+          api_key = form.api_key
           language = form.language
 
           return @ctx.puts(self.class.help) unless ScriptModule::LANGUAGES.include?(language)
@@ -54,11 +54,11 @@ module ShopifyCli
           end
 
           CLI::UI::Spinner.spin(DEPLOYING_MSG) do |spinner|
-            deploy_package.deploy(ScriptModule::Infrastructure::ScriptService.new(ctx: @ctx), app_key)
+            deploy_package.deploy(ScriptModule::Infrastructure::ScriptService.new(ctx: @ctx), api_key)
             spinner.update_title(DEPLOYED_MSG)
           end
 
-          @ctx.puts(format(DEPLOY_SUCCEEDED_MSG, script_name: name, extension_point: extension_point, app_key: app_key))
+          @ctx.puts(format(DEPLOY_SUCCEEDED_MSG, script_name: name, extension_point: extension_point, api_key: api_key))
         rescue ScriptModule::Domain::ScriptNotFoundError
           @ctx.puts(format(SCRIPT_NOT_FOUND, script_name: name, extension_point: extension_point))
         rescue ScriptModule::Domain::InvalidExtensionPointError

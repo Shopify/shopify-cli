@@ -5,18 +5,18 @@ module ShopifyCli
   module Forms
     class DeployScript < Form
       positional_arguments :extension_point, :name
-      flag_arguments :app_key, :language
+      flag_arguments :api_key, :language
 
       def ask
-        self.app_key ||= ask_app_key
+        self.api_key ||= ask_api_key
         self.language ||= "ts"
       end
 
       private
 
-      def ask_app_key
+      def ask_api_key
         apps = Helpers::Organizations.fetch_apps(ctx)
-        @app_key = if apps.count == 1
+        @api_key = if apps.count == 1
           apps.first["apiKey"]
         elsif apps.count == 0
           raise ShopifyCli::Abort, '{{x}} You need to create an app first'

@@ -5,7 +5,7 @@ describe ShopifyCli::ScriptModule::Infrastructure::ScriptService do
 
   let(:ctx) { TestHelpers::FakeContext.new }
   let(:script_service) { ShopifyCli::ScriptModule::Infrastructure::ScriptService.new(ctx: ctx) }
-  let(:app_key) { "fake_key" }
+  let(:api_key) { "fake_key" }
 
   describe ".fetch_extension_points" do
     let(:valid_ep_response) do
@@ -67,7 +67,7 @@ describe ShopifyCli::ScriptModule::Infrastructure::ScriptService do
     let(:script_name) { "foo_bar" }
     let(:script_content) { "(module)" }
     let(:content_type) { "ts" }
-    let(:app_key) { "fake_key" }
+    let(:api_key) { "fake_key" }
     let(:schema) { "schema" }
 
     let(:app_script_create_or_update) do
@@ -85,7 +85,7 @@ describe ShopifyCli::ScriptModule::Infrastructure::ScriptService do
               message
             }
             appScript {
-              apiKey
+              appKey
               configSchema
               extensionPointName
               title
@@ -100,7 +100,7 @@ describe ShopifyCli::ScriptModule::Infrastructure::ScriptService do
         'script_service_proxy',
         variables: {
           query: app_script_create_or_update,
-          api_key: app_key,
+          api_key: api_key,
         },
         resp: {
           data: {
@@ -117,7 +117,7 @@ describe ShopifyCli::ScriptModule::Infrastructure::ScriptService do
         script_name: script_name,
         script_content: script_content,
         content_type: "ts",
-        app_key: app_key,
+        api_key: api_key,
       )
     end
 
@@ -160,7 +160,7 @@ describe ShopifyCli::ScriptModule::Infrastructure::ScriptService do
         {
           "data" => {
             "appScriptUpdateOrCreate" => {
-              "userErrors" => [{ "message" => "invalid", "field" => "apiKey" }],
+              "userErrors" => [{ "message" => "invalid", "field" => "appKey" }],
             },
           },
         }
