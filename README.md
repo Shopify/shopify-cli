@@ -27,9 +27,9 @@ By default, `temp-shopify-app-cli` talks with Script Service proxed through Part
 
 1. Set env variable `SHOPIFY_APP_CLI_LOCAL_PARTNERS=1`
 
-1. Set up `partners` and all it's dependencies locally
+2. Set up `partners` and all it's dependencies locally
 
-2. Run `script-service` locally.  Refer to the `script-service` [README](https://github.com/Shopify/script-service) for instructions.
+3. Run `script-service` locally.  Refer to the `script-service` [README](https://github.com/Shopify/script-service) for instructions.
 
 - - -
 

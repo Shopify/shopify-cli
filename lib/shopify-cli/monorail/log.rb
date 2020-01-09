@@ -48,7 +48,7 @@ module ShopifyCli
             duration: ((end_time - start_time) * 1_000_000).to_i,
             result: capture_result ? ret.to_s : SUCCESS_SENTINEL,
           ))
-          return ret
+          ret
         rescue Exception => e # rubocop:disable Lint/RescueException
           end_time = Time.now.utc
           send_event(schema, payload.merge(

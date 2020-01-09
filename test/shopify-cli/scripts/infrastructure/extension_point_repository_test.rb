@@ -11,17 +11,17 @@ describe ShopifyCli::ScriptModule::Infrastructure::ExtensionPointRepository do
       {
         "data" => {
           "extensionPoints" => [
-          {
-            "name" => remote_extension,
-            "schema" => discount_schema,
-            "types" => remote_types,
-            "scriptExample" => script_example,
-          },
-          {
-            "name" => invalid_extension,
-            "schema" => discount_schema,
-            "scriptExample" => script_example,
-          },
+            {
+              "name" => remote_extension,
+              "schema" => discount_schema,
+              "types" => remote_types,
+              "scriptExample" => script_example,
+            },
+            {
+              "name" => invalid_extension,
+              "schema" => discount_schema,
+              "scriptExample" => script_example,
+            },
           ],
         },
       }

@@ -12,6 +12,8 @@ module TestHelpers
     end
 
     def stub_partner_req(query, variables: {}, status: 200, resp: {})
+      current_sha = ShopifyCli::Helpers::Git.sha(dir: ShopifyCli::ROOT)
+      os_uname = CLI::Kit::System.capture2("uname -v")[0].strip
       stub_request(:post, "#{ShopifyCli::Helpers::PartnersAPI.endpoint}/api/cli/graphql").with(
         body: {
           query: File.read(File.join(ShopifyCli::ROOT, "lib/graphql/#{query}.graphql")).tr("\n", ''),
@@ -21,8 +23,7 @@ module TestHelpers
           'Accept' => '*/*',
           'Accept-Encoding' => 'gzip;q=1.0,deflate;q=0.6,identity;q=0.3',
           'Content-Type' => 'application/json',
-          'User-Agent' => 'Shopify App CLI beta 1e447bb8498c61a2b160a4b8c22d11f1ef98879b '\
-            '| Darwin Kernel Version 19.2.0: Sat Nov  9 03:47:04 PST 2019; root:xnu-6153.61.1~20/RELEASE_X86_64',
+          'User-Agent' => "Shopify App CLI #{ShopifyCli::VERSION} #{current_sha} | #{os_uname}",
           'Authorization' => 'Bearer faketoken',
         }
       ).to_return(status: status, body: resp.to_json)
