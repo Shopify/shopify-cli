@@ -2,8 +2,9 @@
 module TestHelpers
   module FakeFS
     def setup
-      ::FakeFS.activate!
       super
+      ::FakeFS.clear!
+      ::FakeFS.activate!
     end
 
     def teardown
