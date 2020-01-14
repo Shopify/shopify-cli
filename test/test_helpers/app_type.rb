@@ -13,10 +13,6 @@ module TestHelpers
 
         def description; end
 
-        def serve_command(_ctx)
-          "a command"
-        end
-
         def generate_command(_ctx)
           "a command"
         end

@@ -8,13 +8,6 @@ module ShopifyCli
           'node embedded app'
         end
 
-        def serve_command(_ctx)
-          %W(
-            PORT=#{ShopifyCli::Tasks::Tunnel::PORT}
-            npm run dev
-          ).join(' ')
-        end
-
         def generate
           {
             empty_state: './node_modules/.bin/generate-node-app empty-state-page',

@@ -95,6 +95,7 @@ module ShopifyCli
   end
 
   autoload :API, 'shopify-cli/api'
+  autoload :AppTypeCommand, 'shopify-cli/app_type_command'
   autoload :AppTypeRegistry, 'shopify-cli/app_type_registry'
   autoload :AppTypes, 'shopify-cli/app_types'
   autoload :Command, 'shopify-cli/command'

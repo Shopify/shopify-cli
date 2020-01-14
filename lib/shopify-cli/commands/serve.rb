@@ -4,7 +4,10 @@ require 'shopify_cli'
 
 module ShopifyCli
   module Commands
-    class Serve < ShopifyCli::Command
+    class Serve < ShopifyCli::AppTypeCommand
+      app_type :node, :ServeNode, 'serve/node'
+      app_type :rails, :ServeRails, 'serve/rails'
+
       include ShopifyCli::Helpers::OS
       prerequisite_task :ensure_env
       options do |parser, flags|
@@ -13,7 +16,7 @@ module ShopifyCli
         end
       end
 
-      def call(*)
+      def setup
         project = Project.current
         url = options.flags[:host] || Tasks::Tunnel.call(@ctx)
         update_env(url)
@@ -24,12 +27,6 @@ module ShopifyCli
             open = Open.new(@ctx)
             open.call
           end
-        end
-        CLI::UI::Frame.open('Running server...') do
-          # fix for rails, where HOST is used for binding address
-          env = project.env.to_h
-          env.delete('HOST')
-          @ctx.system(project.app_type.serve_command(@ctx), env: env)
         end
       end
 

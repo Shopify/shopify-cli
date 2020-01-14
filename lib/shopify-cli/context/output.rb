@@ -13,6 +13,10 @@ module ShopifyCli
         puts("{{v}} #{string}")
       end
 
+      def error(string)
+        raise ShopifyCli::Abort, "{{x}} #{string}"
+      end
+
       def debug(string)
         puts("{{red:DEBUG}} #{string}") if getenv('DEBUG')
       end

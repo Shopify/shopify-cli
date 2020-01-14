@@ -5,19 +5,16 @@ module ShopifyCli
     class ServeTest < MiniTest::Test
       include TestHelpers::FakeUI
 
+      def setup
+        super
+        project_context('app_types', 'rails')
+        @context.stubs(:system)
+      end
+
       def test_run
         Tasks::Tunnel.stubs(:call)
         Tasks::UpdateDashboardURLS.stubs(:call)
         Helpers::EnvFile.any_instance.expects(:update)
-        @context.expects(:system).with(
-          'a command',
-          env: {
-            'SHOPIFY_API_KEY' => 'apikey',
-            'SHOPIFY_API_SECRET' => 'secret',
-            'SHOP' => 'my-test-shop.myshopify.com',
-            'AWSKEY' => 'awskey',
-          }
-        )
         run_cmd('serve')
       end
 
@@ -31,7 +28,7 @@ module ShopifyCli
         Serve.any_instance.stubs(:mac?).returns(true)
         Open.any_instance.expects(:open_url!).with(
           @context,
-          'https://example.com',
+          'https://example.com/login?shop=my-test-shop.myshopify.com',
         )
         run_cmd('serve')
       end

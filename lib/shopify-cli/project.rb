@@ -60,7 +60,11 @@ module ShopifyCli
     property :directory
 
     def app_type
-      ShopifyCli::AppTypeRegistry[config['app_type'].to_sym]
+      ShopifyCli::AppTypeRegistry[app_type_id]
+    end
+
+    def app_type_id
+      config['app_type'].to_sym
     end
 
     def env
