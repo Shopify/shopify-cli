@@ -11,7 +11,7 @@ module ShopifyCli
             @ctx.system(
               'bin/rails server',
               env: {
-                PORT: ShopifyCli::Tasks::Tunnel::PORT,
+                'PORT' => ShopifyCli::Tasks::Tunnel::PORT.to_s,
               }
             )
           end

@@ -19,7 +19,7 @@ module ShopifyCli
           @context.expects(:system).with(
             'bin/rails server',
             env: {
-              PORT: 8081,
+              'PORT' => '8081',
             }
           )
           run_cmd('serve')

@@ -19,8 +19,8 @@ module ShopifyCli
           @context.expects(:system).with(
             'npm run dev',
             env: {
-              HOST: 'https://example.com',
-              PORT: 8081,
+              'HOST' => 'https://example.com',
+              'PORT' => '8081',
             }
           )
           run_cmd('serve')

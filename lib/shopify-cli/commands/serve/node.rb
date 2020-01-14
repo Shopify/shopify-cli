@@ -10,8 +10,8 @@ module ShopifyCli
             @ctx.system(
               'npm run dev',
               env: {
-                HOST: Project.current.env.host,
-                PORT: ShopifyCli::Tasks::Tunnel::PORT,
+                'HOST' => Project.current.env.host,
+                'PORT' => ShopifyCli::Tasks::Tunnel::PORT.to_s,
               }
             )
           end
