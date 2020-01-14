@@ -14,6 +14,7 @@ module ShopifyCli
       end
 
       def test_calls_help_with_h_flag
+        no_project_context
         io = capture_io do
           run_cmd('create -h')
         end
@@ -22,6 +23,7 @@ module ShopifyCli
       end
 
       def test_calls_help_with_subcommand_h_flag
+        no_project_context
         io = capture_io do
           run_cmd('create project -h')
         end

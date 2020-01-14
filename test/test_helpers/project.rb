@@ -20,6 +20,18 @@ module TestHelpers
       FileUtils.cd(@context.root)
     end
 
+    def no_project_context
+      root = Dir.mktmpdir
+      @context = TestHelpers::FakeContext.new(
+        root: root,
+        env: {
+          'HOME' => '~',
+          'XDG_CONFIG_HOME' => root,
+        }
+      )
+      FileUtils.cd(@context.root)
+    end
+
     def teardown
       @context = nil
       FileUtils.cd('/')

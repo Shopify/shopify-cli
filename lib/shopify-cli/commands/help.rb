@@ -3,8 +3,6 @@ require 'shopify_cli'
 module ShopifyCli
   module Commands
     class Help < ShopifyCli::Command
-      available_in :global
-
       def call(args, _name)
         command = args.shift
         if command && command != 'help'

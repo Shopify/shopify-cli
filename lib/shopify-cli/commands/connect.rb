@@ -2,7 +2,9 @@ require 'shopify_cli'
 
 module ShopifyCli
   module Commands
-    class Connect < ShopifyCli::Command
+    class Connect < ShopifyCli::ContextualCommand
+      available_in :app
+
       def call(*)
         if Project.at(Dir.pwd)
           @ctx.puts "{{yellow:! Don't use}} {{cyan:connect}} {{yellow:for production apps}}"

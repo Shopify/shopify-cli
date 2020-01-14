@@ -5,8 +5,6 @@ require 'shopify_cli'
 module ShopifyCli
   module Commands
     class Tunnel < ShopifyCli::Command
-      # subcommands :start, :stop
-
       def call(args, _name)
         subcommand = args.shift
         task = ShopifyCli::Tasks::Tunnel.new

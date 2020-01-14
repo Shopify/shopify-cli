@@ -4,7 +4,9 @@ require 'shopify_cli'
 
 module ShopifyCli
   module Commands
-    class Deploy < ShopifyCli::Command
+    class Deploy < ShopifyCli::ContextualCommand
+      available_in :app
+
       autoload :Heroku, 'shopify-cli/commands/deploy/heroku'
 
       def call(args, _name)

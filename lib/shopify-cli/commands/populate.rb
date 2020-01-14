@@ -3,6 +3,8 @@ require 'shopify_cli'
 module ShopifyCli
   module Commands
     class Populate < ShopifyCli::Command
+      available_in :app
+
       prerequisite_task :schema
 
       autoload :Resource, 'shopify-cli/commands/populate/resource'

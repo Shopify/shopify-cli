@@ -2,8 +2,10 @@ require 'shopify_cli'
 
 module ShopifyCli
   module Commands
-    class Open < ShopifyCli::Command
+    class Open < ShopifyCli::ContextualCommand
       include Helpers::OS
+
+      available_in :app
 
       prerequisite_task :tunnel
 
