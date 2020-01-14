@@ -37,9 +37,10 @@ module ShopifyCli
         MESSAGE
       end
 
-      def write(ctx, identifier)
+      def write(ctx, project_type, identifier)
         require 'yaml' # takes 20ms, so deferred as late as possible.
         content = {
+          'project_type' => project_type,
           'app_type' => identifier,
         }
         ctx.write('.shopify-cli.yml', YAML.dump(content))
@@ -73,11 +74,14 @@ module ShopifyCli
 
     def config
       @config ||= begin
+        defaults = {
+          'project_type' => :app
+        }
         config = load_yaml_file('.shopify-cli.yml')
         unless config.is_a?(Hash)
           raise ShopifyCli::Abort, '{{x}} .shopify-cli.yml was not a proper YAML file. Expecting a hash.'
         end
-        config
+        defaults.merge(config)
       end
     end
 

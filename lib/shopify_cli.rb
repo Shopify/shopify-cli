@@ -82,7 +82,7 @@ module ShopifyCli
   autocall(:Config)   { CLI::Kit::Config.new(tool_name: TOOL_NAME) }
   autocall(:Logger)   { CLI::Kit::Logger.new(debug_log_file: DEBUG_LOG_FILE) }
   autocall(:Resolver) do
-    ShopifyCli::HelpResolver.new(
+    ShopifyCli::ContextualResolver.new(
       tool_name: TOOL_NAME,
       command_registry: ShopifyCli::Commands::Registry
     )
@@ -101,6 +101,8 @@ module ShopifyCli
   autoload :Command, 'shopify-cli/command'
   autoload :Commands, 'shopify-cli/commands'
   autoload :Context, 'shopify-cli/context'
+  autoload :ContextualCommand, 'shopify-cli/contextual_command'
+  autoload :ContextualResolver, 'shopify-cli/contextual_resolver'
   autoload :EntryPoint, 'shopify-cli/entry_point'
   autoload :Executor, 'shopify-cli/executor'
   autoload :Finalize, 'shopify-cli/finalize'
@@ -111,7 +113,6 @@ module ShopifyCli
   autoload :OAuth, 'shopify-cli/oauth'
   autoload :Options, 'shopify-cli/options'
   autoload :Project, 'shopify-cli/project'
-  autoload :HelpResolver, 'shopify-cli/help_resolver'
   autoload :SubCommand, 'shopify-cli/sub_command'
   autoload :Task, 'shopify-cli/task'
   autoload :Tasks, 'shopify-cli/tasks'

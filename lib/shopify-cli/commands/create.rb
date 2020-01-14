@@ -3,6 +3,7 @@ require 'shopify_cli'
 module ShopifyCli
   module Commands
     class Create < ShopifyCli::Command
+      available_in :top_level
       subcommand :Project, 'project', 'shopify-cli/commands/create/project'
 
       def call(*)

@@ -3,6 +3,8 @@ require 'shopify_cli'
 module ShopifyCli
   module Commands
     class Help < ShopifyCli::Command
+      available_in :global
+
       def call(args, _name)
         command = args.shift
         if command && command != 'help'
@@ -29,6 +31,7 @@ module ShopifyCli
 
         ShopifyCli::Commands::Registry.resolved_commands.sort.each do |name, klass|
           next if name == 'help'
+          next unless klass.available?
           puts CLI::UI.fmt("{{command:#{ShopifyCli::TOOL_NAME} #{name}}}")
           if (help = klass.help)
             puts CLI::UI.fmt(help)
