@@ -13,5 +13,7 @@ module ShopifyCli
       ShopifyCli::Commands::Help.expects(:call)
       run_cmd('')
     end
+
+    # def test_runs
   end
 end

@@ -9,6 +9,14 @@ module ShopifyCli
     class << self
       attr_writer :ctx
 
+      def available?
+        true
+      end
+
+      def available_in(identifier)
+        available << identifier
+      end
+
       def call(args, command_name)
         subcommand, resolved_name = subcommand_registry.lookup_command(args.first)
         if subcommand
