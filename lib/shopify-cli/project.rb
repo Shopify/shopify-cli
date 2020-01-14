@@ -75,7 +75,7 @@ module ShopifyCli
     def config
       @config ||= begin
         defaults = {
-          'project_type' => :app
+          'project_type' => :app,
         }
         config = load_yaml_file('.shopify-cli.yml')
         unless config.is_a?(Hash)
