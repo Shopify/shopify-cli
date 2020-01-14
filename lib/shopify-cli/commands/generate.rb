@@ -2,7 +2,9 @@ require 'shopify_cli'
 
 module ShopifyCli
   module Commands
-    class Generate < ShopifyCli::Command
+    class Generate < ShopifyCli::ContextualCommand
+      available_in :app
+
       subcommand :Page, 'page', 'shopify-cli/commands/generate/page'
       subcommand :Billing, 'billing', 'shopify-cli/commands/generate/billing'
       subcommand :Webhook, 'webhook', 'shopify-cli/commands/generate/webhook'

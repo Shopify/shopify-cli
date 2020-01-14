@@ -2,7 +2,9 @@ require 'shopify_cli'
 
 module ShopifyCli
   module Commands
-    class Populate < ShopifyCli::Command
+    class Populate < ShopifyCli::ContextualCommand
+      available_in :app
+
       prerequisite_task :schema, :ensure_env
 
       autoload :Resource, 'shopify-cli/commands/populate/resource'

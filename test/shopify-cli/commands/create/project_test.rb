@@ -7,6 +7,11 @@ module ShopifyCli
         include TestHelpers::Partners
         include TestHelpers::FakeUI
 
+        def setup
+          super
+          no_project_context
+        end
+
         def test_prints_help_with_no_name_argument
           io = capture_io { run_cmd('create project') }
           assert_match(CLI::UI.fmt(ShopifyCli::Commands::Create::Project.help), io.join)
@@ -41,6 +46,7 @@ module ShopifyCli
 
           app_type = <<~APPTYPE
             ---
+            project_type: :app
             app_type: :node
           APPTYPE
           assert_equal app_type, File.read("test-app/.shopify-cli.yml")

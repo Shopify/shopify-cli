@@ -10,7 +10,7 @@ module ShopifyCli
         super
         root = Dir.mktmpdir
         @context = TestHelpers::FakeContext.new(root: root)
-        Project.write(@context, :fake)
+        Project.write(@context, :app, :fake)
         FileUtils.cd(@context.root)
         Tasks::Tunnel.stubs(:call)
       end

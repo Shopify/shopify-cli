@@ -3,6 +3,11 @@ require 'test_helper'
 module ShopifyCli
   module Tasks
     class CloneTest < MiniTest::Test
+      def setup
+        super
+        no_project_context
+      end
+
       def test_clones_git_repo
         CLI::Kit::System.expects(:system).with(
           'git',

@@ -17,7 +17,7 @@ module ShopifyCli
 
           AppTypeRegistry.check_dependencies(form.type, @ctx)
           AppTypeRegistry.build(form.type, form.name, @ctx)
-          ShopifyCli::Project.write(@ctx, form.type)
+          ShopifyCli::Project.write(@ctx, :app, form.type)
 
           api_client = Tasks::CreateApiClient.call(
             @ctx,
