@@ -54,7 +54,7 @@ module ShopifyCli
           end
 
           CLI::UI::Spinner.spin(DEPLOYING_MSG) do |spinner|
-            deploy_package.deploy(ScriptModule::Infrastructure::ScriptService.new(ctx: @ctx), api_key)
+            ScriptModule::Application::Deploy.call(@ctx, deploy_package, api_key)
             spinner.update_title(DEPLOYED_MSG)
           end
 
