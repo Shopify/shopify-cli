@@ -51,7 +51,7 @@ class GraphQLSchemaBuilder extends ExportsWalker {
       return "input " + name + " {\n" + body + "\n}\n";
     });
     const outputTypes = Array.from(builder.outputTypes, ([name, body]: [string, string]) => {
-      return "type " + name + " {\n" + body + "\n}\n";
+      return "input " + name + " {\n" + body + "\n}\n";
     });
     return outputTypes.join("\n") + "\n\n" + inputTypes.join("\n") + "\n\ntype Query {\n" + builder.entrypoints.join("\n") + "\n}\n";
   }
