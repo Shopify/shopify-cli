@@ -13,6 +13,10 @@ module ShopifyCli
         true
       end
 
+      def app_type?
+        false
+      end
+
       def call(args, command_name)
         subcommand, resolved_name = subcommand_registry.lookup_command(args.first)
         if subcommand

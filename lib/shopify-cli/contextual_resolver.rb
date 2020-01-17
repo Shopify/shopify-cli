@@ -27,6 +27,16 @@ module ShopifyCli
           raise CLI::Kit::AbortSilent
         end
 
+        if command.app_type?
+          project = Project.current
+          cmd = command.app_type_lookup[command][project.app_type_id]
+          unless cmd
+            $stderr.puts(CLI::UI.fmt("{{command:#{command_name}}} not supported in #{project.app_type_id} apps}}"))
+            raise CLI::Kit::AbortSilent
+          end
+          return [cmd, resolved_name, args]
+        end
+
         [command, resolved_name, args]
       end
     end

@@ -4,6 +4,12 @@ module ShopifyCli
   module Commands
     class Serve
       class ServeRails < ShopifyCli::Commands::Serve
+        options do |parser, flags|
+          parser.on('--host=HOST') do |h|
+            flags[:host] = h.gsub('"', '')
+          end
+        end
+
         def call(*)
           setup
           Helpers::Gem.gem_home(@ctx)

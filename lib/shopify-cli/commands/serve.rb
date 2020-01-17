@@ -4,21 +4,15 @@ require 'shopify_cli'
 
 module ShopifyCli
   module Commands
-    class Serve < ShopifyCli::AppTypeCommand
+    class Serve < ShopifyCli::ContextualCommand
       available_in :app
 
-      type :node, :ServeNode, 'serve/node'
-      type :rails, :ServeRails, 'serve/rails'
+      app_type :node, :ServeNode, 'serve/node'
+      app_type :rails, :ServeRails, 'serve/rails'
 
       include ShopifyCli::Helpers::OS
 
       prerequisite_task :ensure_env
-
-      options do |parser, flags|
-        parser.on('--host=HOST') do |h|
-          flags[:host] = h.gsub('"', '')
-        end
-      end
 
       def setup
         project = Project.current

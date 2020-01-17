@@ -13,6 +13,20 @@ module ShopifyCli
         available << identifier
       end
 
+      def app_type?
+        Project.directory(Dir.pwd) && app_type_lookup[self]
+      end
+
+      def app_type(identifier, const, path)
+        autoload(const, "shopify-cli/commands/#{path}") if path
+        app_type_lookup[self] ||= {}
+        app_type_lookup[self][identifier] = const_get(const)
+      end
+
+      def app_type_lookup
+        @app_type_lookup ||= {}
+      end
+
       private
 
       def available
