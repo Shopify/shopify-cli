@@ -92,23 +92,6 @@ module ShopifyCli
       def setup
         super
         project_context('app_types', 'node')
-        @app = ShopifyCli::AppTypes::Node.new(ctx: @context)
-      end
-
-      def test_server_command
-        ShopifyCli::Tasks::Tunnel.stubs(:call)
-        ShopifyCli::Tasks::UpdateDashboardURLS.expects(:call)
-        Helpers::EnvFile.any_instance.expects(:update)
-        @context.app_metadata[:host] = 'https://example.com'
-        cmd = ShopifyCli::Commands::Serve
-        cmd.ctx = @context
-        env = Project.current.env.to_h
-        env.delete('HOST')
-        @context.expects(:system).with(
-          "PORT=8081 npm run dev",
-          env: env
-        )
-        run_cmd('serve')
       end
 
       def test_open_command
