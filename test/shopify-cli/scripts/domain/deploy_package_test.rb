@@ -39,17 +39,15 @@ describe ShopifyCli::ScriptModule::Domain::DeployPackage do
     subject { deploy_package.deploy(script_service, api_key) }
 
     it "should open write to build file and deploy" do
-      FakeFS.with_fresh do
-        script_service.expect(:deploy, nil) do |**kwargs|
-          kwargs[:extension_point_type] == extension_point_type &&
-          kwargs[:script_name] == script_name &&
-          kwargs[:script_content] == script_content &&
-          kwargs[:content_type] == content_type &&
-          kwargs[:schema] == extension_point_schema &&
-          kwargs[:api_key] == api_key
-        end
-        subject
+      script_service.expect(:deploy, nil) do |**kwargs|
+        kwargs[:extension_point_type] == extension_point_type &&
+        kwargs[:script_name] == script_name &&
+        kwargs[:script_content] == script_content &&
+        kwargs[:content_type] == content_type &&
+        kwargs[:schema] == extension_point_schema &&
+        kwargs[:api_key] == api_key
       end
+      subject
     end
   end
 end

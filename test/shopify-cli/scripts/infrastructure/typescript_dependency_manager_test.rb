@@ -3,6 +3,8 @@
 require "test_helper"
 
 describe ShopifyCli::ScriptModule::Infrastructure::TypeScriptDependencyManager do
+  include TestHelpers::FakeFS
+
   let(:script_name) { "foo_discount_script" }
   let(:language) { "ts" }
   let(:ctx) { TestHelpers::FakeContext.new }
@@ -14,16 +16,12 @@ describe ShopifyCli::ScriptModule::Infrastructure::TypeScriptDependencyManager d
     subject { ts_dep_manager.installed? }
 
     it "should return true if node_modules folder exists" do
-      FakeFS.with_fresh do
-        FileUtils.mkdir_p("node_modules")
-        assert_equal true, subject
-      end
+      FileUtils.mkdir_p("node_modules")
+      assert_equal true, subject
     end
 
     it "should return false if node_modules folder does not exists" do
-      FakeFS.with_fresh do
-        assert_equal false, subject
-      end
+      assert_equal false, subject
     end
   end
 
@@ -32,10 +30,8 @@ describe ShopifyCli::ScriptModule::Infrastructure::TypeScriptDependencyManager d
 
     it "should install using npm with the generated package.json" do
       ShopifyCli::Tasks::JsDeps.expects(:call).with(ctx)
-      FakeFS.with_fresh do
-        subject
-        assert File.exist?("package.json")
-      end
+      subject
+      assert File.exist?("package.json")
     end
   end
 end

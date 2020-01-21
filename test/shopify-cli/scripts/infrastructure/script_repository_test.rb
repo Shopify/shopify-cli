@@ -4,6 +4,8 @@ require "test_helper"
 require_relative "fake_extension_point_repository"
 
 describe ShopifyCli::ScriptModule::Infrastructure::ScriptRepository do
+  include TestHelpers::FakeFS
+
   let(:context) { TestHelpers::FakeContext.new }
   let(:extension_point_type) { "discount" }
   let(:extension_point_schema) { "schema" }
@@ -38,19 +40,17 @@ describe ShopifyCli::ScriptModule::Infrastructure::ScriptRepository do
   describe ".create_script" do
     subject { script_repository.create_script(language, extension_point, script_name) }
     it "should create the script correctly from the template" do
-      FakeFS.with_fresh do
-        FakeFS::FileSystem.clone(template_file)
-        FakeFS::FileSystem.clone(runtime_types_path)
-        FileUtils.mkdir_p(script_source_base)
+      FakeFS::FileSystem.clone(template_file)
+      FakeFS::FileSystem.clone(runtime_types_path)
+      FileUtils.mkdir_p(script_source_base)
 
-        script = subject
-        assert File.exist?(script_source_file)
+      script = subject
+      assert File.exist?(script_source_file)
 
-        assert_equal expected_script_id, script.id
-        assert_equal script_name, script.name
-        assert_equal extension_point, script.extension_point
-        assert_equal extension_point_schema, script.schema
-      end
+      assert_equal expected_script_id, script.id
+      assert_equal script_name, script.name
+      assert_equal extension_point, script.extension_point
+      assert_equal extension_point_schema, script.schema
     end
   end
 
@@ -63,35 +63,29 @@ describe ShopifyCli::ScriptModule::Infrastructure::ScriptRepository do
       end
 
       it "should return the requested script" do
-        FakeFS.with_fresh do
-          FileUtils.mkdir_p(script_source_base)
-          File.write(script_source_file, "//script code")
-          File.write(script_schema_file, extension_point_schema)
-          script = subject
-          assert_equal expected_script_id, script.id
-          assert_equal script_name, script.name
-          assert_equal extension_point_repository.get_extension_point(extension_point_type), script.extension_point
-          assert_equal extension_point_schema, script.schema
-        end
+        FileUtils.mkdir_p(script_source_base)
+        File.write(script_source_file, "//script code")
+        File.write(script_schema_file, extension_point_schema)
+        script = subject
+        assert_equal expected_script_id, script.id
+        assert_equal script_name, script.name
+        assert_equal extension_point_repository.get_extension_point(extension_point_type), script.extension_point
+        assert_equal extension_point_schema, script.schema
       end
 
       it "should raise ScriptNotFoundError when script source file does not exist" do
-        FakeFS.with_fresh do
-          FileUtils.mkdir_p(script_source_base)
-          e = assert_raises(ShopifyCli::ScriptModule::Domain::ScriptNotFoundError) { subject }
-          assert_equal script_source_file, e.script_name
-        end
+        FileUtils.mkdir_p(script_source_base)
+        e = assert_raises(ShopifyCli::ScriptModule::Domain::ScriptNotFoundError) { subject }
+        assert_equal script_source_file, e.script_name
       end
     end
 
     describe "when extension point does not exist" do
       it "should raise InvalidExtensionPointError" do
-        FakeFS.with_fresh do
-          FileUtils.mkdir_p(script_source_base)
-          File.write(script_source_file, "//script code")
-          File.write(script_schema_file, "//schema code")
-          assert_raises(ShopifyCli::ScriptModule::Domain::InvalidExtensionPointError) { subject }
-        end
+        FileUtils.mkdir_p(script_source_base)
+        File.write(script_source_file, "//script code")
+        File.write(script_schema_file, "//schema code")
+        assert_raises(ShopifyCli::ScriptModule::Domain::InvalidExtensionPointError) { subject }
       end
     end
   end
@@ -104,20 +98,18 @@ describe ShopifyCli::ScriptModule::Infrastructure::ScriptRepository do
     let(:helper_file) { "helper.#{language}" }
 
     it "should go to a tempdir with all its files" do
-      FakeFS.with_fresh do
-        FileUtils.mkdir_p(script_source_base)
-        Dir.chdir(script_source_base)
+      FileUtils.mkdir_p(script_source_base)
+      Dir.chdir(script_source_base)
 
-        File.write(script_file, "//run code")
-        File.write(helper_file, "//helper code")
+      File.write(script_file, "//run code")
+      File.write(helper_file, "//helper code")
 
-        FileUtils.mkdir_p("other_dir")
+      FileUtils.mkdir_p("other_dir")
 
-        script_repository.with_script_build_context(script) do
-          assert script_source_base != Dir.pwd
-          assert File.exist?(script_file)
-          assert File.exist?(helper_file)
-        end
+      script_repository.with_script_build_context(script) do
+        assert script_source_base != Dir.pwd
+        assert File.exist?(script_file)
+        assert File.exist?(helper_file)
       end
     end
   end
@@ -129,15 +121,13 @@ describe ShopifyCli::ScriptModule::Infrastructure::ScriptRepository do
     let(:package_json) { "package.json" }
 
     it "should go to the root dir of the scripts" do
-      FakeFS.with_fresh do
-        FileUtils.mkdir_p(script_folder_base)
+      FileUtils.mkdir_p(script_folder_base)
 
-        original_dir = Dir.pwd
-        script_repository.with_script_context(script_name) do
-          assert_equal(script_folder_base, Dir.pwd)
-        end
-        assert_equal(original_dir, Dir.pwd)
+      original_dir = Dir.pwd
+      script_repository.with_script_context(script_name) do
+        assert_equal(script_folder_base, Dir.pwd)
       end
+      assert_equal(original_dir, Dir.pwd)
     end
   end
 end

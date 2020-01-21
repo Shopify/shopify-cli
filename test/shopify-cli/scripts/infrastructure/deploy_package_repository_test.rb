@@ -4,6 +4,8 @@ require "test_helper"
 require_relative "fake_script_repository"
 
 describe ShopifyCli::ScriptModule::Infrastructure::DeployPackageRepository do
+  include TestHelpers::FakeFS
+
   let(:language) { "ts" }
   let(:extension_point_type) { "vanity_pricing" }
   let(:extension_point) do
@@ -34,11 +36,9 @@ describe ShopifyCli::ScriptModule::Infrastructure::DeployPackageRepository do
     subject { deploy_package_repository.create_deploy_package(script, script_content, "schema") }
 
     it "should create a deploy package" do
-      FakeFS.with_fresh do
-        deploy_package = subject
-        assert_equal script_content, File.read(build_file)
-        assert_equal script_content, deploy_package.script_content
-      end
+      deploy_package = subject
+      assert_equal script_content, File.read(build_file)
+      assert_equal script_content, deploy_package.script_content
     end
   end
 end
