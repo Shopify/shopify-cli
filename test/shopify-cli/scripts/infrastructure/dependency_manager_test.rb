@@ -20,7 +20,8 @@ describe ShopifyCli::ScriptModule::Infrastructure::DependencyManager do
       let(:language) { "ArnoldC" }
 
       it "should raise dependency not supported error" do
-        assert_raises(ShopifyCli::Abort, "{{x}} No dependency support for #{language}") { subject }
+        assert_raises(ShopifyCli::ScriptModule::Infrastructure::DependencyError,
+                      "{{x}} No dependency support for #{language}") { subject }
       end
     end
   end

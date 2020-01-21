@@ -25,7 +25,7 @@ module ShopifyCli
         }
 
         def self.for(ctx, script_name, language)
-          raise(ShopifyCli::Abort, "{{x}} No dependency support for #{language}") unless DEP_MANAGER[language]
+          raise(Infrastructure::DependencyError, language) unless DEP_MANAGER[language]
           DEP_MANAGER[language].new(ctx, script_name, language)
         end
       end

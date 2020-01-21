@@ -116,6 +116,7 @@ module ShopifyCli
   autoload :ScriptModule, 'shopify-cli/script_module'
   autoload :Task, 'shopify-cli/task'
   autoload :Tasks, 'shopify-cli/tasks'
+  autoload :UI, 'shopify-cli/ui'
   autoload :Update, 'shopify-cli/update'
   autoload :Util, 'shopify-cli/util'
 end

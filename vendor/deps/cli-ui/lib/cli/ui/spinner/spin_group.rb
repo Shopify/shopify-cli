@@ -235,6 +235,14 @@ module CLI
             @tasks.all?(&:success)
           end
         end
+
+        # Returns an array of exception instances raised by the executed tasks
+        #
+        def exceptions
+          @m.synchronize do
+            @tasks.map(&:exception).compact
+          end
+        end
       end
     end
   end

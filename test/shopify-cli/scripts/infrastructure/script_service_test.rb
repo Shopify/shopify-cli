@@ -178,7 +178,7 @@ describe ShopifyCli::ScriptModule::Infrastructure::ScriptService do
       end
 
       it "should raise error" do
-        assert_raises(ShopifyCli::Abort) { subject }
+        assert_raises(ShopifyCli::ScriptModule::Infrastructure::GraphqlError) { subject }
       end
     end
 
@@ -194,7 +194,7 @@ describe ShopifyCli::ScriptModule::Infrastructure::ScriptService do
       end
 
       it "should raise error" do
-        assert_raises(ShopifyCli::Abort) { subject }
+        assert_raises(ShopifyCli::ScriptModule::Infrastructure::GraphqlError) { subject }
       end
     end
   end

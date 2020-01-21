@@ -41,9 +41,8 @@ module ShopifyCli
             schema: schema,
           }
           resp_hash = proxy_request(query: query, api_key: api_key, variables: variables.to_json)
-
           unless resp_hash["data"]["appScriptUpdateOrCreate"]["userErrors"].empty?
-            raise(ShopifyCli::Abort, resp_hash["data"]["appScriptUpdateOrCreate"]["userErrors"].to_s)
+            raise(Infrastructure::GraphqlError, resp_hash["data"]["appScriptUpdateOrCreate"]["userErrors"].to_s)
           end
           resp_hash
         end
@@ -55,7 +54,7 @@ module ShopifyCli
           resp_hash = JSON.parse(resp["data"]["scriptServiceProxy"])
 
           if resp_hash.key?("errors")
-            raise(ShopifyCli::Abort, resp_hash["errors"].to_s)
+            raise(Infrastructure::GraphqlError, resp_hash["errors"].to_s)
           end
           resp_hash
         end
