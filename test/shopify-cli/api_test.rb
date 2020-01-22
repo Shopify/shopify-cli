@@ -56,5 +56,26 @@ module ShopifyCli
         api.query('api/mutation')
       end
     end
+
+    def test_load_query_reads_file_content_properly
+      name = 'get_extension_points'
+      get_extension_points = <<~HERE
+        query GetExtensionPointsTest {
+          extensionPoints {
+            name
+            schema
+            scriptExample
+            types
+          }
+        }
+      HERE
+
+      FakeFS.with_fresh do
+        path = File.join(ShopifyCli::ROOT, "lib/graphql/#{name}.graphql")
+        FileUtils.mkdir_p(File.dirname(path))
+        File.write(path, get_extension_points)
+        assert_equal get_extension_points, @api.load_query(name)
+      end
+    end
   end
 end

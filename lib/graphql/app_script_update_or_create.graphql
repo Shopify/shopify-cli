@@ -1,0 +1,26 @@
+mutation AppScriptUpdateOrCreate(
+  $extensionPointName: ExtensionPointName!,
+  $title: String,
+  $sourceCode: String,
+  $language: String,
+  $schema: String
+) {
+  appScriptUpdateOrCreate(
+    extensionPointName: $extensionPointName
+    title: $title
+    sourceCode: $sourceCode
+    language: $language
+    schema: $schema
+) {
+    userErrors {
+      field
+      message
+    }
+    appScript {
+      appKey
+      configSchema
+      extensionPointName
+      title
+    }
+  }
+}

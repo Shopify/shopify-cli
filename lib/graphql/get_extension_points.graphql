@@ -1,0 +1,8 @@
+query GetExtensionPoints {
+  extensionPoints {
+    name
+    schema
+    scriptExample
+    types
+  }
+}

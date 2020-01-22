@@ -36,6 +36,10 @@ module ShopifyCli
           end
         end
 
+        def load_query(ctx, query_name)
+          api_client(ctx).load_query(query_name)
+        end
+
         private
 
         def authenticated_req(ctx)

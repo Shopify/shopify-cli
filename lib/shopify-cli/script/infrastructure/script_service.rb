@@ -20,17 +20,7 @@ module ShopifyCli
         property! :ctx, accepts: ShopifyCli::Context
 
         def fetch_extension_points
-          query = <<~HERE
-            {
-              extensionPoints {
-                name
-                schema
-                scriptExample
-                types
-              }
-            }
-          HERE
-
+          query = Helpers::PartnersAPI.load_query(ctx, "get_extension_points")
           proxy_request(query: query, api_key: nil)
         end
 
@@ -42,29 +32,15 @@ module ShopifyCli
           content_type:,
           api_key: nil
         )
-          query = <<~HERE
-            mutation {
-              appScriptUpdateOrCreate(
-                extensionPointName: #{extension_point_type.upcase}
-                title: #{script_name.inspect}
-                sourceCode: #{Base64.encode64(script_content).inspect}
-                language: #{content_type.inspect}
-                schema: #{schema.inspect}
-            ) {
-                userErrors {
-                  field
-                  message
-                }
-                appScript {
-                  appKey
-                  configSchema
-                  extensionPointName
-                  title
-                }
-              }
-            }
-          HERE
-          resp_hash = proxy_request(query: query, api_key: api_key)
+          query = Helpers::PartnersAPI.load_query(ctx, "app_script_update_or_create")
+          variables = {
+            extensionPointName: extension_point_type.upcase,
+            title: script_name,
+            sourceCode: Base64.encode64(script_content),
+            language: content_type,
+            schema: schema,
+          }
+          resp_hash = proxy_request(query: query, api_key: api_key, variables: variables.to_json)
 
           unless resp_hash["data"]["appScriptUpdateOrCreate"]["userErrors"].empty?
             raise(ShopifyCli::Abort, resp_hash["data"]["appScriptUpdateOrCreate"]["userErrors"].to_s)

@@ -6,6 +6,17 @@ describe ShopifyCli::ScriptModule::Infrastructure::ScriptService do
   let(:ctx) { TestHelpers::FakeContext.new }
   let(:script_service) { ShopifyCli::ScriptModule::Infrastructure::ScriptService.new(ctx: ctx) }
   let(:api_key) { "fake_key" }
+  let(:script_service_proxy) do
+    <<~HERE
+      query ProxyRequest($api_key: String, $query: String!, $variables: String) {
+        scriptServiceProxy(
+          apiKey: $api_key
+          query: $query
+          variables: $variables
+        )
+      }
+    HERE
+  end
 
   describe ".fetch_extension_points" do
     let(:valid_ep_response) do
@@ -31,7 +42,7 @@ describe ShopifyCli::ScriptModule::Infrastructure::ScriptService do
 
     let(:extension_point_query) do
       <<~HERE
-        {
+        query GetExtensionPoints {
           extensionPoints {
             name
             schema
@@ -44,6 +55,8 @@ describe ShopifyCli::ScriptModule::Infrastructure::ScriptService do
 
     subject { script_service.fetch_extension_points }
     it "should return an array of available extension points" do
+      stub_load_query('script_service_proxy', script_service_proxy)
+      stub_load_query('get_extension_points', extension_point_query)
       stub_partner_req(
         'script_service_proxy',
         variables: {
@@ -62,23 +75,28 @@ describe ShopifyCli::ScriptModule::Infrastructure::ScriptService do
   end
 
   describe ".deploy" do
-    let(:extension_point_type) { "discount" }
+    let(:extension_point_type) { "DISCOUNT" }
     let(:extension_point_schema) { "schema" }
     let(:script_name) { "foo_bar" }
     let(:script_content) { "(module)" }
     let(:content_type) { "ts" }
     let(:api_key) { "fake_key" }
     let(:schema) { "schema" }
-
-    let(:app_script_create_or_update) do
+    let(:app_script_update_or_create) do
       <<~HERE
-        mutation {
+        mutation AppScriptUpdateOrCreate(
+          $extensionPointName: ExtensionPointName!,
+          $title: String,
+          $sourceCode: String,
+          $language: String,
+          $schema: String
+        ) {
           appScriptUpdateOrCreate(
-            extensionPointName: #{extension_point_type.upcase}
-            title: #{script_name.inspect}
-            sourceCode: #{Base64.encode64(script_content).inspect}
-            language: #{content_type.inspect}
-            schema: #{schema.inspect}
+            extensionPointName: $extensionPointName
+            title: $title
+            sourceCode: $sourceCode
+            language: $language
+            schema: $schema
         ) {
             userErrors {
               field
@@ -96,11 +114,20 @@ describe ShopifyCli::ScriptModule::Infrastructure::ScriptService do
     end
 
     before do
+      stub_load_query('script_service_proxy', script_service_proxy)
+      stub_load_query('app_script_update_or_create', app_script_update_or_create)
       stub_partner_req(
         'script_service_proxy',
         variables: {
-          query: app_script_create_or_update,
+          query: app_script_update_or_create,
           api_key: api_key,
+          variables: {
+            extensionPointName: extension_point_type,
+            title: script_name,
+            sourceCode: Base64.encode64(script_content),
+            language: "ts",
+            schema: extension_point_schema,
+          }.to_json,
         },
         resp: {
           data: {

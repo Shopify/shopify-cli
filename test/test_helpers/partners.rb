@@ -11,6 +11,10 @@ module TestHelpers
       super
     end
 
+    def stub_load_query(name, body)
+      ShopifyCli::API.any_instance.stubs(:load_query).with(name).returns(body)
+    end
+
     def stub_partner_req(query, variables: {}, status: 200, resp: {})
       current_sha = ShopifyCli::Helpers::Git.sha(dir: ShopifyCli::ROOT)
       os_uname = CLI::Kit::System.capture2("uname -v")[0].strip
