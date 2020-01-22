@@ -8,12 +8,10 @@ module ShopifyCli
           setup
           Helpers::Gem.gem_home(@ctx)
           CLI::UI::Frame.open('Running server...') do
-            @ctx.system(
-              'bin/rails server',
-              env: {
-                'PORT' => ShopifyCli::Tasks::Tunnel::PORT.to_s,
-              }
-            )
+            env = Project.current.env.to_h
+            env.delete('HOST')
+            env['PORT'] = ShopifyCli::Tasks::Tunnel::PORT.to_s
+            @ctx.system('bin/rails server', env: env)
           end
         end
       end
