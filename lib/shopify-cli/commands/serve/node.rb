@@ -7,13 +7,9 @@ module ShopifyCli
         def call(*)
           setup
           CLI::UI::Frame.open('Running server...') do
-            @ctx.system(
-              'npm run dev',
-              env: {
-                'HOST' => Project.current.env.host,
-                'PORT' => ShopifyCli::Tasks::Tunnel::PORT.to_s,
-              }
-            )
+            env = Project.current.env.to_h
+            env['PORT'] = ShopifyCli::Tasks::Tunnel::PORT.to_s
+            @ctx.system('npm run dev', env: env)
           end
         end
       end
