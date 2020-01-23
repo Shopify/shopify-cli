@@ -13,7 +13,7 @@ module ShopifyCli
           )
           enum = schema['WebhookSubscriptionTopic']
           webhooks = schema.get_names_from_enum(enum)
-          unless selected_type
+          unless selected_type && webhooks.include?(selected_type)
             selected_type = CLI::UI::Prompt.ask('What type of webhook would you like to create?') do |handler|
               webhooks.each do |type|
                 handler.option(type) { type }

@@ -6,13 +6,23 @@ module ShopifyCli
       class WebhookTest < MiniTest::Test
         include TestHelpers::FakeUI
 
-        def test_with_param
+        def test_with_existing_param
           ShopifyCli::Tasks::Schema.expects(:call).returns(
             JSON.parse(File.read(File.join(ShopifyCli::ROOT, "test/fixtures/shopify_schema.json")))
           )
           @context.expects(:system).with('a command')
             .returns(mock(success?: true))
-          run_cmd('generate webhook PRODUCT_CREATE')
+          run_cmd('generate webhook APP_UNINSTALLED')
+        end
+
+        def test_with_incorrect_param_expects_ask
+          ShopifyCli::Tasks::Schema.expects(:call).returns(
+            JSON.parse(File.read(File.join(ShopifyCli::ROOT, "test/fixtures/shopify_schema.json")))
+          )
+          CLI::UI::Prompt.expects(:ask).returns('APP_UNINSTALLED')
+          @context.expects(:system).with('a command')
+            .returns(mock(success?: true))
+          run_cmd('generate webhook create_webhook_fake')
         end
 
         def test_with_selection

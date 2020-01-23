@@ -31,7 +31,7 @@ module ShopifyCli
         end
 
         def webhook_location
-          "config/webhooks"
+          " config/initializers/shopify_app.rb"
         end
 
         def callback_url
