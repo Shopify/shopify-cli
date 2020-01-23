@@ -47,14 +47,13 @@ module ShopifyCli
             end
           end
 
-          deploy_package = nil
           CLI::UI::Spinner.spin(BUILDING_MSG) do |spinner|
-            deploy_package = ScriptModule::Application::Build.call(@ctx, language, extension_point, name)
+            ScriptModule::Application::Build.call(@ctx, language, extension_point, name)
             spinner.update_title(BUILT_MSG)
           end
 
           CLI::UI::Spinner.spin(DEPLOYING_MSG) do |spinner|
-            ScriptModule::Application::Deploy.call(@ctx, deploy_package, api_key)
+            ScriptModule::Application::Deploy.call(@ctx, language, extension_point, name, api_key)
             spinner.update_title(DEPLOYED_MSG)
           end
 
