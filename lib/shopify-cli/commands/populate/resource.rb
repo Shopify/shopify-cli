@@ -20,33 +20,32 @@ module ShopifyCli
         end
 
         def call(args, _)
-          if Project.at(Dir.pwd)
-            Tasks::EnsureEnv.call(@ctx)
-            @args = args
-            @input = Hash.new
-            @count = DEFAULT_COUNT
-            @help = false
-            input_options
-            resource_options.parse(@args)
+          return unless Project.at(Dir.pwd)
+          Tasks::EnsureEnv.call(@ctx)
+          @args = args
+          @input = Hash.new
+          @count = DEFAULT_COUNT
+          @help = false
+          input_options
+          resource_options.parse(@args)
 
-            if @help
-              output = Populate.extended_help
-              output += "\n{{bold:{{cyan:#{resource_type.capitalize}}} options:}}\n"
-              output += resource_options.help
-              return @ctx.page(output)
-            end
+          if @help
+            output = Populate.extended_help
+            output += "\n{{bold:{{cyan:#{resource_type.capitalize}}} options:}}\n"
+            output += resource_options.help
+            return @ctx.page(output)
+          end
 
-            if @silent
-              spin_group = CLI::UI::SpinGroup.new
-              spin_group.add("Populating #{@count} #{resource_type}s...") do |spinner|
-                populate
-                spinner.update_title(completion_message)
-              end
-              spin_group.wait
-            else
+          if @silent
+            spin_group = CLI::UI::SpinGroup.new
+            spin_group.add("Populating #{@count} #{resource_type}s...") do |spinner|
               populate
-              @ctx.puts(completion_message)
+              spinner.update_title(completion_message)
             end
+            spin_group.wait
+          else
+            populate
+            @ctx.puts(completion_message)
           end
         end
 
