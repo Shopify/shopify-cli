@@ -20,6 +20,8 @@ module ShopifyCli
         end
 
         def call(args, _)
+          return unless Project.at(Dir.pwd)
+          Tasks::EnsureEnv.call(@ctx)
           @args = args
           @input = Hash.new
           @count = DEFAULT_COUNT
