@@ -20,12 +20,8 @@ module ShopifyCli
           )
         end
 
-        def get_deploy_package(ctx, language, extension_point_type, script_name)
-          script = ScriptRepository.new.get_script(ctx, language, extension_point_type, script_name)
-          compiled_type = Infrastructure::ScriptBuilder.for(script).compiled_type
-
-          build_file_path = file_path(script_name, compiled_type)
-          schema_path = schema_path(script_name)
+        def get_deploy_package(script, extension_point_type, script_name, content_type)
+          build_file_path = file_path(script_name, content_type)
 
           raise Domain::DeployPackageNotFoundError.new(
             extension_point_type,
@@ -33,13 +29,14 @@ module ShopifyCli
           ) unless File.exist?(build_file_path)
 
           script_content = File.read(build_file_path)
+          schema_path = schema_path(script_name)
           schema = File.exist?(schema_path) ? File.read(schema_path) : ''
 
           Domain::DeployPackage.new(
             build_file_path,
             script,
             script_content,
-            compiled_type,
+            content_type,
             schema
           )
         end

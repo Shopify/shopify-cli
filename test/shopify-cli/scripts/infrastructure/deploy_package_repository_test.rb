@@ -37,7 +37,9 @@ describe ShopifyCli::ScriptModule::Infrastructure::DeployPackageRepository do
   end
 
   describe ".create_deploy_package" do
-    subject { deploy_package_repository.create_deploy_package(script, script_content, schema) }
+    subject do
+      deploy_package_repository.create_deploy_package(script, script_content, schema)
+    end
 
     it "should create a deploy package" do
       deploy_package = subject
@@ -47,13 +49,9 @@ describe ShopifyCli::ScriptModule::Infrastructure::DeployPackageRepository do
   end
 
   describe ".get_deploy_package" do
-    subject { deploy_package_repository.get_deploy_package(context, language, extension_point_type, script_name) }
+    subject { deploy_package_repository.get_deploy_package(script, extension_point_type, script_name, 'wasm') }
 
     describe "when script exists" do
-      before do
-        script_repository.create_script(language, extension_point, script_name)
-      end
-
       it "should return the deploy package when valid script and wasm exist" do
         FileUtils.mkdir_p(build_base)
         File.write(build_file, script_content)
@@ -72,14 +70,6 @@ describe ShopifyCli::ScriptModule::Infrastructure::DeployPackageRepository do
       it "should raise DeployPackageNotFoundError when wasm does not exist" do
         FileUtils.mkdir_p(build_base)
         assert_raises(ShopifyCli::ScriptModule::Domain::DeployPackageNotFoundError) { subject }
-      end
-    end
-
-    describe "when script does not exist" do
-      it "should raise ScriptNotFoundError" do
-        FileUtils.mkdir_p(build_base)
-        File.write(build_file, script_content)
-        assert_raises(ShopifyCli::ScriptModule::Domain::ScriptNotFoundError) { subject }
       end
     end
   end
