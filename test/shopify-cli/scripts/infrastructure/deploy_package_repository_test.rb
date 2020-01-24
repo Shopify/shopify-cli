@@ -1,7 +1,6 @@
 # frozen_string_literal: true
 
 require "test_helper"
-require_relative "fake_script_repository"
 
 describe ShopifyCli::ScriptModule::Infrastructure::DeployPackageRepository do
   include TestHelpers::FakeFS
@@ -16,6 +15,7 @@ describe ShopifyCli::ScriptModule::Infrastructure::DeployPackageRepository do
   let(:script_name) { "foo" }
   let(:script) { ShopifyCli::ScriptModule::Domain::Script.new(script_name, extension_point, language, schema) }
   let(:script_content) { "BYTECODE" }
+  let(:content_type) { "wasm" }
   let(:script_path) do
     format(ShopifyCli::ScriptModule::Infrastructure::Repository::FOLDER_PATH_TEMPLATE, script_name: script_name)
   end
@@ -23,22 +23,12 @@ describe ShopifyCli::ScriptModule::Infrastructure::DeployPackageRepository do
   let(:temp_base) { "#{script_path}/temp" }
   let(:build_file) { "#{build_base}/#{script_name}.wasm" }
   let(:schema_path) { "#{temp_base}/schema" }
-  let(:script_repository) { ShopifyCli::ScriptModule::Infrastructure::FakeScriptRepository.new }
   let(:deploy_package_repository) { ShopifyCli::ScriptModule::Infrastructure::DeployPackageRepository.new }
   let(:context) { TestHelpers::FakeContext.new }
 
-  before do
-    ShopifyCli::ScriptModule::Infrastructure::ScriptRepository
-      .stubs(:new)
-      .returns(script_repository)
-    ShopifyCli::ScriptModule::Infrastructure::ScriptRepository
-      .stubs(:for)
-      .returns(ShopifyCli::ScriptModule::Infrastructure::TypeScriptWasmBuilder.new(script))
-  end
-
   describe ".create_deploy_package" do
     subject do
-      deploy_package_repository.create_deploy_package(script, script_content, schema)
+      deploy_package_repository.create_deploy_package(script, script_content, schema, content_type)
     end
 
     it "should create a deploy package" do
@@ -49,7 +39,7 @@ describe ShopifyCli::ScriptModule::Infrastructure::DeployPackageRepository do
   end
 
   describe ".get_deploy_package" do
-    subject { deploy_package_repository.get_deploy_package(script, extension_point_type, script_name, 'wasm') }
+    subject { deploy_package_repository.get_deploy_package(script, extension_point_type, script_name, content_type) }
 
     describe "when script exists" do
       it "should return the deploy package when valid script and wasm exist" do

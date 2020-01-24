@@ -7,7 +7,7 @@ module ShopifyCli
     module Application
       class Deploy
         def self.call(ctx, language, extension_point_type, script_name, api_key)
-          script = ScriptRepository.new.get_script(ctx, language, extension_point_type, script_name)
+          script = Infrastructure::ScriptRepository.new.get_script(ctx, language, extension_point_type, script_name)
           content_type = Infrastructure::ScriptBuilder.for(script).compiled_type
 
           Infrastructure::DeployPackageRepository.new

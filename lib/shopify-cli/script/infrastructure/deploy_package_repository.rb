@@ -4,9 +4,8 @@ module ShopifyCli
   module ScriptModule
     module Infrastructure
       class DeployPackageRepository < Repository
-        def create_deploy_package(script, script_content, schema)
-          compiled_type = Infrastructure::ScriptBuilder.for(script).compiled_type
-          build_file_path = file_path(script.name, compiled_type)
+        def create_deploy_package(script, script_content, schema, content_type)
+          build_file_path = file_path(script.name, content_type)
           write_to_path(
             build_file_path,
             script_content
@@ -15,7 +14,7 @@ module ShopifyCli
             build_file_path,
             script,
             script_content,
-            compiled_type,
+            content_type,
             schema
           )
         end
