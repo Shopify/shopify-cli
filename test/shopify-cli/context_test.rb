@@ -6,15 +6,14 @@ module ShopifyCli
     include TestHelpers::FakeFS
 
     def setup
+      super
       @ctx = Context.new
     end
 
     def test_write_writes_to_file_in_project
-      FakeFS do
-        @ctx.root = Dir.mktmpdir
-        @ctx.write('.env', 'foobar')
-        assert File.exist?(File.join(@ctx.root, '.env'))
-      end
+      @ctx.root = Dir.mktmpdir
+      @ctx.write('.env', 'foobar')
+      assert File.exist?(File.join(@ctx.root, '.env'))
     end
   end
 end

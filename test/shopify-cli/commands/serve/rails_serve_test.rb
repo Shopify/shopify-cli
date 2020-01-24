@@ -19,6 +19,10 @@ module ShopifyCli
           @context.expects(:system).with(
             'bin/rails server',
             env: {
+              "SHOPIFY_API_KEY" => "api_key",
+              "SHOPIFY_API_SECRET" => "secret",
+              "SHOP" => "my-test-shop.myshopify.com",
+              "SCOPES" => "write_products,write_customers,write_orders",
               'PORT' => '8081',
             }
           )
