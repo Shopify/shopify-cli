@@ -46,7 +46,7 @@ module ShopifyCli
           Gem.install(ctx, 'bundler', '~>2.0')
         end
         CLI::UI::Frame.open("Generating new rails app project in #{name}...") do
-          ctx.system(Gem.binary_path_for(ctx, 'rails'), 'new', name)
+          ctx.system(Gem.binary_path_for(ctx, 'rails'), 'new --skip-spring', name)
         end
 
         File.open(File.join(ctx.root, 'Gemfile'), 'a') do |f|
