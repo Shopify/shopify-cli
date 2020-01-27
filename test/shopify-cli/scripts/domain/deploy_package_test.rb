@@ -17,10 +17,10 @@ describe ShopifyCli::ScriptModule::Domain::DeployPackage do
 
   let(:api_key) { "fake_key" }
   let(:script_content) { "(module)" }
-  let(:content_type) { "wasm" }
+  let(:compiled_type) { "wasm" }
   let(:deploy_package) do
     ShopifyCli::ScriptModule::Domain::DeployPackage.new(
-      id, script, script_content, content_type, extension_point_schema
+      id, script, script_content, compiled_type, extension_point_schema
     )
   end
   let(:script_service) { Minitest::Mock.new }
@@ -43,7 +43,7 @@ describe ShopifyCli::ScriptModule::Domain::DeployPackage do
         kwargs[:extension_point_type] == extension_point_type &&
         kwargs[:script_name] == script_name &&
         kwargs[:script_content] == script_content &&
-        kwargs[:content_type] == content_type &&
+        kwargs[:compiled_type] == compiled_type &&
         kwargs[:schema] == extension_point_schema &&
         kwargs[:api_key] == api_key
       end

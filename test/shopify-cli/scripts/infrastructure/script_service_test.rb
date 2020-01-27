@@ -143,7 +143,7 @@ describe ShopifyCli::ScriptModule::Infrastructure::ScriptService do
         schema: extension_point_schema,
         script_name: script_name,
         script_content: script_content,
-        content_type: "ts",
+        compiled_type: "ts",
         api_key: api_key,
       )
     end

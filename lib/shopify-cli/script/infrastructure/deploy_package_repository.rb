@@ -4,8 +4,8 @@ module ShopifyCli
   module ScriptModule
     module Infrastructure
       class DeployPackageRepository < Repository
-        def create_deploy_package(script, script_content, schema, content_type)
-          build_file_path = file_path(script.name, content_type)
+        def create_deploy_package(script, script_content, schema, compiled_type)
+          build_file_path = file_path(script.name, compiled_type)
           write_to_path(
             build_file_path,
             script_content
@@ -14,28 +14,28 @@ module ShopifyCli
             build_file_path,
             script,
             script_content,
-            content_type,
+            compiled_type,
             schema
           )
         end
 
-        def get_deploy_package(script, extension_point_type, script_name, content_type)
-          build_file_path = file_path(script_name, content_type)
+        def get_deploy_package(script, compiled_type)
+          build_file_path = file_path(script.name, compiled_type)
 
           raise Domain::DeployPackageNotFoundError.new(
-            extension_point_type,
-            script_name
+            script.extension_point.type,
+            script.name
           ) unless File.exist?(build_file_path)
 
           script_content = File.read(build_file_path)
-          schema_path = schema_path(script_name)
+          schema_path = schema_path(script.name)
           schema = File.exist?(schema_path) ? File.read(schema_path) : ''
 
           Domain::DeployPackage.new(
             build_file_path,
             script,
             script_content,
-            content_type,
+            compiled_type,
             schema
           )
         end
@@ -47,8 +47,8 @@ module ShopifyCli
           File.write(path, content)
         end
 
-        def file_path(script_name, content_type)
-          "#{script_base_path(script_name)}/src/build/#{script_name}.#{content_type}"
+        def file_path(script_name, compiled_type)
+          "#{script_base_path(script_name)}/src/build/#{script_name}.#{compiled_type}"
         end
 
         def schema_path(script_name)

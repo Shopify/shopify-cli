@@ -29,7 +29,7 @@ module ShopifyCli
           schema:,
           script_name:,
           script_content:,
-          content_type:,
+          compiled_type:,
           api_key: nil
         )
           query = Helpers::PartnersAPI.load_query(ctx, "app_script_update_or_create")
@@ -37,7 +37,7 @@ module ShopifyCli
             extensionPointName: extension_point_type.upcase,
             title: script_name,
             sourceCode: Base64.encode64(script_content),
-            language: content_type,
+            language: compiled_type,
             schema: schema,
           }
           resp_hash = proxy_request(query: query, api_key: api_key, variables: variables.to_json)
