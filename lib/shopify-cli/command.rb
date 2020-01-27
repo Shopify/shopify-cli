@@ -54,6 +54,10 @@ module ShopifyCli
         help = Commands::Help.new(@ctx)
         help.call([name], nil)
       end
+
+      def has_more_context?
+        false
+      end
     end
 
     def initialize(ctx = nil)

@@ -45,6 +45,10 @@ module ShopifyCli
         ctx.write('.shopify-cli.yml', YAML.dump(content))
       end
 
+      def is_at_top_level?
+        !directory(Dir.pwd)
+      end
+
       private
 
       def __directory(curr)

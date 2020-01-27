@@ -2,8 +2,8 @@ require 'shopify_cli'
 
 module ShopifyCli
   module Commands
-    class Script
-      class Deploy < ShopifyCli::SubCommand
+    class Deploy
+      class Script < ShopifyCli::Command
         CMD_DESCRIPTION = "Deploy a script to the extension platform"
         CMD_USAGE = "script deploy <Extension Point> <Script Name> <API Key>"
 

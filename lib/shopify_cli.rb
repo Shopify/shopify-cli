@@ -99,6 +99,7 @@ module ShopifyCli
   autoload :AppTypeRegistry, 'shopify-cli/app_type_registry'
   autoload :AppTypes, 'shopify-cli/app_types'
   autoload :Command, 'shopify-cli/command'
+  autoload :ContextualCommand, 'shopify-cli/contextual_command'
   autoload :Commands, 'shopify-cli/commands'
   autoload :Context, 'shopify-cli/context'
   autoload :EntryPoint, 'shopify-cli/entry_point'

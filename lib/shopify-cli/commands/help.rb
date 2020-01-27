@@ -8,6 +8,12 @@ module ShopifyCli
         if command && command != 'help'
           if Registry.exist?(command)
             cmd, _name = Registry.lookup_command(command)
+
+            while cmd.has_more_context?
+              cmd.register_contextual_command
+              cmd, _name = Registry.lookup_command(command)
+            end
+
             output = cmd.help
             if cmd.respond_to?(:extended_help)
               output += "\n"
@@ -28,7 +34,7 @@ module ShopifyCli
         puts ""
 
         ShopifyCli::Commands::Registry.resolved_commands.sort.each do |name, klass|
-          next if name == 'help'
+          next if name == 'help' || klass.nil?
           puts CLI::UI.fmt("{{command:#{ShopifyCli::TOOL_NAME} #{name}}}")
           if (help = klass.help)
             puts CLI::UI.fmt(help)
