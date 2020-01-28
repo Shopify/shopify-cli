@@ -41,11 +41,11 @@ module ShopifyCli
         MESSAGE
       end
 
-      def write(ctx, identifier)
+      def write(ctx, project_type, identifiers)
         require 'yaml' # takes 20ms, so deferred as late as possible.
         content = {
-          'app_type' => identifier,
-        }
+          'project_type' => project_type,
+        }.merge(identifiers)
         ctx.write('.shopify-cli.yml', YAML.dump(content))
       end
 

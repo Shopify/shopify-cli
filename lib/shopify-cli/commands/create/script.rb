@@ -52,7 +52,6 @@ module ShopifyCli
           CLI::UI::Frame.open("Cloning into #{name}...") do
             CLI::UI::Progress.progress do |bar|
               script = ScriptModule::Application::Bootstrap.call(ctx, language, extension_point, name)
-              ctx.root = File.join(ctx.root, script.name)
               bar.tick(set_percent: 1.0)
               script
             end

@@ -19,6 +19,10 @@ module ShopifyCli
             .new
             .create_test_suite(script)
 
+          ShopifyCli::Finalize.request_cd(script_name)
+          ctx.root = File.join(ctx.root, script.name)
+          ShopifyCli::Project.write(ctx, :Script,
+            { 'extension_point_type' => extension_point_type, 'script_name' => script_name })
           script
         end
       end
