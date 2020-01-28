@@ -32,7 +32,7 @@ module ShopifyCli
         ShopifyCli::Helpers::Gem.expects(:install).with(@context, 'bundler', '~>1.0')
         ShopifyCli::Helpers::Gem.expects(:install).with(@context, 'bundler', '~>2.0')
         @context.expects(:system).with(
-          ShopifyCli::Helpers::Gem.binary_path_for(@context, 'rails'), 'new', 'test-app'
+          ShopifyCli::Helpers::Gem.binary_path_for(@context, 'rails'), 'new', '--skip-spring', 'test-app'
         )
         File.expects(:open).with(File.join(@context.root, 'Gemfile'), 'a')
         @context.expects(:system).with(
