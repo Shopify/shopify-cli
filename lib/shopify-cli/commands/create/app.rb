@@ -3,7 +3,7 @@ require 'shopify_cli'
 module ShopifyCli
   module Commands
     class Create
-      class Project < ShopifyCli::SubCommand
+      class App < ShopifyCli::SubCommand
         options do |parser, flags|
           parser.on('--title=TITLE') { |t| title[:title] = t }
           parser.on('--type=TYPE') { |t| flags[:type] = t.downcase.to_sym }
@@ -46,7 +46,7 @@ module ShopifyCli
         def self.help
           <<~HELP
             Create a new app project.
-              Usage: {{command:#{ShopifyCli::TOOL_NAME} create project <appname>}}
+              Usage: {{command:#{ShopifyCli::TOOL_NAME} create app <appname>}}
           HELP
         end
       end

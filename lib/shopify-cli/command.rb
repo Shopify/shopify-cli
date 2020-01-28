@@ -40,6 +40,10 @@ module ShopifyCli
         )
       end
 
+      def execute_subcommands
+        subcommand_registry.resolved_commands.each_value.map { |subcommand| yield subcommand }
+      end
+
       def prerequisite_task(*tasks)
         tasks.each do |task|
           prerequisite_tasks[task] = ShopifyCli::Tasks::Registry[task]
@@ -57,6 +61,20 @@ module ShopifyCli
 
       def needs_contextual_resolution?
         false
+      end
+
+      def help
+        helps = execute_subcommands(&:help)
+        helps&.join("\n")
+      end
+
+      def extended_help
+        extended_helps = execute_subcommands do |subcommand|
+          if subcommand.respond_to?(:extended_help)
+            subcommand.extended_help
+          end
+        end
+        extended_helps&.join("\n")
       end
     end
 
