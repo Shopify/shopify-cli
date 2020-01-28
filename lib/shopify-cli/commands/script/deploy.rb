@@ -8,7 +8,7 @@ module ShopifyCli
         CMD_USAGE = "script deploy <Extension Point> <Script Name> <API Key>"
 
         FAILED_TO_BUILD_MESSAGE = "Failed to build"
-        DEPLOY_SUCCEEDED_MSG = "{{v}} %{extension_point} script %{script_name}" \
+        DEPLOY_SUCCEEDED_MSG = "{{v}} %{extension_point} script %{script_name} " \
         "is deployed to app (API_KEY: {{green:%{api_key}}})"
         BUILDING_MSG = "Building"
         DEPLOYING_MSG = "Deploying"
