@@ -1,4 +1,6 @@
 require 'shopify_cli'
+require 'bundler/setup'
+require "pry"
 
 module ShopifyCli
   module EntryPoint
