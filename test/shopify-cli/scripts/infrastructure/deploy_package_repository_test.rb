@@ -13,7 +13,7 @@ describe ShopifyCli::ScriptModule::Infrastructure::DeployPackageRepository do
 
   let(:schema) { "schema" }
   let(:script_name) { "foo" }
-  let(:script) { ShopifyCli::ScriptModule::Domain::Script.new(script_name, extension_point, language, schema) }
+  let(:script) { ShopifyCli::ScriptModule::Domain::Script.new(script_name, extension_point, language) }
   let(:script_content) { "BYTECODE" }
   let(:compiled_type) { "wasm" }
   let(:script_path) do

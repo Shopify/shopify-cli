@@ -12,7 +12,7 @@ describe ShopifyCli::ScriptModule::Domain::DeployPackage do
   end
   let(:script_name) { "foo_script" }
   let(:script) do
-    ShopifyCli::ScriptModule::Domain::Script.new(script_name, extension_point, "ts", extension_point_schema)
+    ShopifyCli::ScriptModule::Domain::Script.new(script_name, extension_point, "ts")
   end
 
   let(:api_key) { "fake_key" }

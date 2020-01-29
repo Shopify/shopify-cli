@@ -10,7 +10,7 @@ describe ShopifyCli::ScriptModule::Domain::TestSuite do
   let(:language) { "ts" }
   let(:extension_point_type) { "discount" }
   let(:script_name) { "myscript" }
-  let(:script) { ShopifyCli::ScriptModule::Domain::Script.new(script_name, extension_point_type, language, "schema") }
+  let(:script) { ShopifyCli::ScriptModule::Domain::Script.new(script_name, extension_point_type, language) }
 
   describe ".new" do
     subject { ShopifyCli::ScriptModule::Domain::TestSuite.new(id, script) }

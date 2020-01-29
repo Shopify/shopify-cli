@@ -13,7 +13,7 @@ describe ShopifyCli::ScriptModule::Infrastructure::TypeScriptWasmBuilder do
   end
   let(:language) { "ts" }
   let(:configuration) { MiniTest::Mock.new }
-  let(:script) { ShopifyCli::ScriptModule::Domain::Script.new(script_name, extension_point, language, schema) }
+  let(:script) { ShopifyCli::ScriptModule::Domain::Script.new(script_name, extension_point, language) }
 
   subject { ShopifyCli::ScriptModule::Infrastructure::NoopBuilder.new(script) }
 

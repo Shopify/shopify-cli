@@ -50,7 +50,6 @@ describe ShopifyCli::ScriptModule::Infrastructure::ScriptRepository do
       assert_equal expected_script_id, script.id
       assert_equal script_name, script.name
       assert_equal extension_point, script.extension_point
-      assert_equal extension_point_schema, script.schema
     end
   end
 
@@ -65,12 +64,10 @@ describe ShopifyCli::ScriptModule::Infrastructure::ScriptRepository do
       it "should return the requested script" do
         FileUtils.mkdir_p(script_source_base)
         File.write(script_source_file, "//script code")
-        File.write(script_schema_file, extension_point_schema)
         script = subject
         assert_equal expected_script_id, script.id
         assert_equal script_name, script.name
         assert_equal extension_point_repository.get_extension_point(extension_point_type), script.extension_point
-        assert_equal extension_point_schema, script.schema
       end
 
       it "should raise ScriptNotFoundError when script source file does not exist" do
@@ -92,7 +89,7 @@ describe ShopifyCli::ScriptModule::Infrastructure::ScriptRepository do
 
   describe ".with_script_build_context" do
     let(:script) do
-      ShopifyCli::ScriptModule::Domain::Script.new(script_name, extension_point, language, extension_point_schema)
+      ShopifyCli::ScriptModule::Domain::Script.new(script_name, extension_point, language)
     end
     let(:script_file) { "#{extension_point.type}.#{language}" }
     let(:helper_file) { "helper.#{language}" }
@@ -116,7 +113,7 @@ describe ShopifyCli::ScriptModule::Infrastructure::ScriptRepository do
 
   describe ".with_script_context" do
     let(:script) do
-      ShopifyCli::ScriptModule::Domain::Script.new(script_name, extension_point, language, extension_point_schema)
+      ShopifyCli::ScriptModule::Domain::Script.new(script_name, extension_point, language)
     end
     let(:package_json) { "package.json" }
 

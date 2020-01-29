@@ -8,7 +8,7 @@ describe ShopifyCli::ScriptModule::Infrastructure::TypeScriptWasmBuilder do
   let(:schema) { "schema" }
   let(:extension_point) { ShopifyCli::ScriptModule::Domain::ExtensionPoint.new("discount", schema, "types", "example") }
   let(:language) { "ts" }
-  let(:script) { ShopifyCli::ScriptModule::Domain::Script.new(script_name, extension_point, language, schema) }
+  let(:script) { ShopifyCli::ScriptModule::Domain::Script.new(script_name, extension_point, language) }
   let(:allocate_func) do
     "export function shopify_runtime_allocate(size: u32): ArrayBuffer { return new ArrayBuffer(size); }"
   end
