@@ -7,13 +7,9 @@ describe ShopifyCli::ScriptModule::Infrastructure::DeployPackageRepository do
 
   let(:language) { "ts" }
   let(:extension_point_type) { "vanity_pricing" }
-  let(:extension_point) do
-    ShopifyCli::ScriptModule::Domain::ExtensionPoint.new(extension_point_type, "schema", "types", "example")
-  end
-
   let(:schema) { "schema" }
   let(:script_name) { "foo" }
-  let(:script) { ShopifyCli::ScriptModule::Domain::Script.new(script_name, extension_point, language) }
+  let(:script) { ShopifyCli::ScriptModule::Domain::Script.new(script_name, extension_point_type, language) }
   let(:script_content) { "BYTECODE" }
   let(:compiled_type) { "wasm" }
   let(:script_path) do

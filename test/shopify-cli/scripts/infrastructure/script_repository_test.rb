@@ -49,12 +49,12 @@ describe ShopifyCli::ScriptModule::Infrastructure::ScriptRepository do
 
       assert_equal expected_script_id, script.id
       assert_equal script_name, script.name
-      assert_equal extension_point, script.extension_point
+      assert_equal extension_point_type, script.extension_point_type
     end
   end
 
   describe ".get_script" do
-    subject { script_repository.get_script(context, language, extension_point.type, script_name) }
+    subject { script_repository.get_script(language, extension_point.type, script_name) }
 
     describe "when extension point is valid" do
       before do
@@ -67,22 +67,13 @@ describe ShopifyCli::ScriptModule::Infrastructure::ScriptRepository do
         script = subject
         assert_equal expected_script_id, script.id
         assert_equal script_name, script.name
-        assert_equal extension_point_repository.get_extension_point(extension_point_type), script.extension_point
+        assert_equal extension_point_type, script.extension_point_type
       end
 
       it "should raise ScriptNotFoundError when script source file does not exist" do
         FileUtils.mkdir_p(script_source_base)
         e = assert_raises(ShopifyCli::ScriptModule::Domain::ScriptNotFoundError) { subject }
         assert_equal script_source_file, e.script_name
-      end
-    end
-
-    describe "when extension point does not exist" do
-      it "should raise InvalidExtensionPointError" do
-        FileUtils.mkdir_p(script_source_base)
-        File.write(script_source_file, "//script code")
-        File.write(script_schema_file, "//schema code")
-        assert_raises(ShopifyCli::ScriptModule::Domain::InvalidExtensionPointError) { subject }
       end
     end
   end

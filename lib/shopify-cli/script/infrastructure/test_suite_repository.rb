@@ -17,12 +17,12 @@ module ShopifyCli
           FileUtils.copy(aspect_config_template(script.language), "#{root}/as-pect.config.js")
           source = "#{root}/#{script.name}.spec.#{script.language}"
           File.write(source,
-            format(sample_test, extension_point_type: script.extension_point.type, script_name: script.name))
+            format(sample_test, extension_point_type: script.extension_point_type, script_name: script.name))
           Domain::TestSuite.new(source, script)
         end
 
-        def get_test_suite(ctx, language, extension_point_type, script_name)
-          script = ScriptRepository.new.get_script(ctx, language, extension_point_type, script_name)
+        def get_test_suite(language, extension_point_type, script_name)
+          script = ScriptRepository.new.get_script(language, extension_point_type, script_name)
 
           root = test_base(script_name)
           source = "#{root}/#{script_name}.spec.#{language}"

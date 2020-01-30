@@ -5,14 +5,9 @@ require "test_helper"
 describe ShopifyCli::ScriptModule::Domain::DeployPackage do
   let(:extension_point_type) { "discount" }
   let(:extension_point_schema) { "discount" }
-  let(:extension_point) do
-    ShopifyCli::ScriptModule::Domain::ExtensionPoint.new(
-      extension_point_type, extension_point_schema, "types", "example"
-    )
-  end
   let(:script_name) { "foo_script" }
   let(:script) do
-    ShopifyCli::ScriptModule::Domain::Script.new(script_name, extension_point, "ts")
+    ShopifyCli::ScriptModule::Domain::Script.new(script_name, extension_point_type, "ts")
   end
 
   let(:api_key) { "fake_key" }

@@ -48,7 +48,7 @@ module ShopifyCli
           end
 
           CLI::UI::Spinner.spin(BUILDING_MSG) do |spinner|
-            ScriptModule::Application::Build.call(@ctx, language, extension_point, name)
+            ScriptModule::Application::Build.call(language, extension_point, name)
             spinner.update_title(BUILT_MSG)
           end
 

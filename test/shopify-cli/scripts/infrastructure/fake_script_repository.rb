@@ -11,7 +11,7 @@ module ShopifyCli
           @cache[id] = ShopifyCli::ScriptModule::Domain::Script.new(script_name, extension_point, language)
         end
 
-        def get_script(_ctx, language, extension_point_type, script_name)
+        def get_script(language, extension_point_type, script_name)
           id = "#{language}/#{extension_point_type}/#{script_name}"
 
           if @cache.key?(id)

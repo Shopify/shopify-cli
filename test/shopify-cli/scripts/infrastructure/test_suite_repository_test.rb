@@ -46,7 +46,7 @@ describe ShopifyCli::ScriptModule::Infrastructure::TestSuiteRepository do
   end
 
   describe ".get_test_suite" do
-    subject { repository.get_test_suite(context, language, extension_point_type, script_name) }
+    subject { repository.get_test_suite(language, extension_point_type, script_name) }
 
     describe "when script is valid" do
       before do

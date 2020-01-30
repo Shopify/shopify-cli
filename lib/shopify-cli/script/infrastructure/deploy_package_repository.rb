@@ -23,7 +23,7 @@ module ShopifyCli
           build_file_path = file_path(script.name, compiled_type)
 
           raise Domain::DeployPackageNotFoundError.new(
-            script.extension_point.type,
+            script.extension_point_type,
             script.name
           ) unless File.exist?(build_file_path)
 
