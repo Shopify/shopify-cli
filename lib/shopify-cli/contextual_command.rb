@@ -3,15 +3,18 @@ require 'shopify_cli'
 module ShopifyCli
   class ContextualCommand < ShopifyCli::Command
     class << self
-      def has_more_context?
+      def needs_contextual_resolution?
         true
       end
 
-      def register_for_context(command, context_type, path)
+      def override_for_context(command, context_type, path)
           autoload context_type.capitalize, path + "/" + context_type.to_s
           ShopifyCli::Commands::Registry.add(->() { const_get(context_type.capitalize) }, command)
       end
+
+      def unregister_for_context(command)
+        ShopifyCli::Commands::Registry.add(->() { }, command)
+      end
     end
-    private_class_method :register_for_context
   end
 end

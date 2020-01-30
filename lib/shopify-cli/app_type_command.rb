@@ -1,7 +1,7 @@
 require 'shopify_cli'
 
 module ShopifyCli
-  class AppTypeCommand < ShopifyCli::Command
+  class AppTypeCommand < ShopifyCli::ContextualCommand
     class << self
       def app_type(identifier, const, path)
         autoload(const, "shopify-cli/commands/#{path}") if path

@@ -8,23 +8,16 @@ module ShopifyCli
         if command && command != 'help'
           if Registry.exist?(command)
             cmd, _name = Registry.lookup_command(command)
-
-            while cmd.has_more_context?
-              cmd.register_contextual_command
-              cmd, _name = Registry.lookup_command(command)
-            end
-
             output = cmd.help
             if cmd.respond_to?(:extended_help)
               output += "\n"
               output += cmd.extended_help
             end
 
-            @ctx.page(output)
-            return
-          else
-            @ctx.puts("Command #{command} not found.")
-          end
+          @ctx.page(output)
+          return
+        else
+          @ctx.puts("Command #{command} not found.")
         end
 
         # a line break before output aids scanning/readability
@@ -32,6 +25,9 @@ module ShopifyCli
         @ctx.puts('{{bold:Available commands}}')
         @ctx.puts('Use {{command:shopify help [command]}} to display detailed information about a specific command.')
         puts ""
+
+        # need to do this once to allow contextual commands to update the command registry
+        ShopifyCli::Commands::Registry.resolved_commands
 
         ShopifyCli::Commands::Registry.resolved_commands.sort.each do |name, klass|
           next if name == 'help' || klass.nil?

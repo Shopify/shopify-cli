@@ -12,8 +12,7 @@ module ShopifyCli
         before_resolve(args)
         command, command_name, args = ShopifyCli::Resolver.call(args)
 
-        while command.has_more_context?
-          command.register_contextual_command
+        if command.needs_contextual_resolution?
           command, command_name, args = ShopifyCli::Resolver.call(orig_args)
         end
 

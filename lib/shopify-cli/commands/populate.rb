@@ -2,13 +2,15 @@ require 'shopify_cli'
 
 module ShopifyCli
   module Commands
-    class Populate < ShopifyCli::Command
+    class Populate < ShopifyCli::ContextualCommand
       prerequisite_task :schema
 
       autoload :Resource, 'shopify-cli/commands/populate/resource'
       subcommand :Product, 'products', 'shopify-cli/commands/populate/product'
       subcommand :Customer, 'customers', 'shopify-cli/commands/populate/customer'
       subcommand :DraftOrder, 'draftorders', 'shopify-cli/commands/populate/draft_order'
+
+      unregister_for_context 'populate' unless Project.current_context == :app
 
       def call(_args, _name)
         @ctx.puts(self.class.help)

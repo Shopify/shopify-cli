@@ -10,6 +10,10 @@ module ShopifyCli
         at(Dir.pwd)
       end
 
+      def current_context
+        Project.is_at_top_level? ? :top_level : Project.current.config['project_type']
+      end
+
       def at(dir)
         proj_dir = directory(dir)
         unless proj_dir

@@ -2,7 +2,9 @@ require 'shopify_cli'
 
 module ShopifyCli
   module Commands
-    class Connect < ShopifyCli::Command
+    class Connect < ShopifyCli::ContextualCommand
+      unregister_for_context 'connect' unless Project.current_context == :app
+
       def call(*)
         if Project.at(Dir.pwd)
           @ctx.puts "{{yellow:! Don't use}} {{cyan:connect}} {{yellow:for production apps}}"

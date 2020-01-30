@@ -55,7 +55,7 @@ module ShopifyCli
         help.call([name], nil)
       end
 
-      def has_more_context?
+      def needs_contextual_resolution?
         false
       end
     end

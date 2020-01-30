@@ -2,10 +2,12 @@ require 'shopify_cli'
 
 module ShopifyCli
   module Commands
-    class Generate < ShopifyCli::Command
+    class Generate < ShopifyCli::ContextualCommand
       subcommand :Page, 'page', 'shopify-cli/commands/generate/page'
       subcommand :Billing, 'billing', 'shopify-cli/commands/generate/billing'
       subcommand :Webhook, 'webhook', 'shopify-cli/commands/generate/webhook'
+
+      unregister_for_context 'generate' unless Project.current_context == :app
 
       def call(*)
         @ctx.puts(self.class.help)
