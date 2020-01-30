@@ -13,17 +13,14 @@ module ShopifyCli
               output += "\n"
               output += cmd.extended_help
             end
+
+            @ctx.page(output)
+            return
+          else
+            @ctx.puts("Command #{command} not found.")
           end
-
-          @ctx.page(output)
-          true
-        else
-          @ctx.puts("Command #{command} not found.")
-          false
         end
-      end
 
-      def call_help_on_all_commands_in_registry
         # a line break before output aids scanning/readability
         puts ""
         @ctx.puts('{{bold:Available commands}}')
@@ -36,15 +33,10 @@ module ShopifyCli
         ShopifyCli::Commands::Registry.resolved_commands.sort.each do |name, klass|
           next if name == 'help' || klass.nil?
           puts CLI::UI.fmt("{{command:#{ShopifyCli::TOOL_NAME} #{name}}}")
-          while (klass.has_more_context?)
-            klass.register_contextual_command
-            klass, name = Registry.lookup_command(name)
-          end
 
           if (help = klass.help)
             puts CLI::UI.fmt(help)
           end
-
           puts ""
         end
       end
