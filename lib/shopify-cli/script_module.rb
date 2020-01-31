@@ -42,10 +42,9 @@ module ShopifyCli
       autoload :TypeScriptDependencyManager, "shopify-cli/script/infrastructure/typescript_dependency_manager.rb"
 
       # errors
-      autoload :ScriptServiceConnectionError,
-        "shopify-cli/script/infrastructure/errors/script_service_connection_error.rb"
       autoload :BuilderNotFoundError, "shopify-cli/script/infrastructure/errors/builder_not_found_error.rb"
       autoload :GraphqlError, "shopify-cli/script/infrastructure/errors/graphql_error.rb"
+      autoload :ScriptServiceProxyError, "shopify-cli/script/infrastructure/errors/script_service_proxy_error.rb"
       autoload :DependencyError, "shopify-cli/script/infrastructure/errors/dependency_error.rb"
     end
   end
