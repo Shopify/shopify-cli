@@ -2,6 +2,6 @@ require 'shopify_cli'
 
 module ShopifyCli
   module UI
-    autoload :RequirementSpinner, 'shopify-cli/ui/requirement_spinner'
+    autoload :StrictSpinner, 'shopify-cli/ui/strict_spinner'
   end
 end

@@ -39,7 +39,7 @@ module ShopifyCli
           ScriptModule::Infrastructure::ScriptRepository.new.with_script_context(name) do
             unless dep_manager.installed?
               CLI::UI::Frame.open('Installing Dependencies in {{green:package.json}}...') do
-                ShopifyCli::UI::RequirementSpinner.spin('Installing') do |spinner|
+                ShopifyCli::UI::StrictSpinner.spin('Installing') do |spinner|
                   dep_manager.install
                   spinner.update_title('Installed')
                 end
@@ -47,12 +47,12 @@ module ShopifyCli
             end
           end
 
-          ShopifyCli::UI::RequirementSpinner.spin(BUILDING_MSG) do |spinner|
+          ShopifyCli::UI::StrictSpinner.spin(BUILDING_MSG) do |spinner|
             ScriptModule::Application::Build.call(language, extension_point, name)
             spinner.update_title(BUILT_MSG)
           end
 
-          ShopifyCli::UI::RequirementSpinner.spin(DEPLOYING_MSG) do |spinner|
+          ShopifyCli::UI::StrictSpinner.spin(DEPLOYING_MSG) do |spinner|
             ScriptModule::Application::Deploy.call(@ctx, language, extension_point, name, api_key)
             spinner.update_title(DEPLOYED_MSG)
           end
@@ -65,7 +65,7 @@ module ShopifyCli
         rescue ScriptModule::Domain::ServiceFailureError => e
           warn("Command failed: #{e.inspect}")
         rescue StandardError => e
-          raise(ShopifyCli::Abort, e.message)
+          raise(ShopifyCli::Abort, e)
         end
 
         def self.help

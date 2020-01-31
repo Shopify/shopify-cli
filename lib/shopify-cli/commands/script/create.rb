@@ -36,7 +36,7 @@ module ShopifyCli
 
           @ctx.puts(format(CREATED_NEW_SCRIPT_MSG, script_filename: script.filename, folder: script.name))
         rescue StandardError => e
-          raise(ShopifyCli::Abort, e.message)
+          raise(ShopifyCli::Abort, e)
         end
 
         def self.help
