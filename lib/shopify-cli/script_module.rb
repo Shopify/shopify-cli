@@ -44,7 +44,7 @@ module ShopifyCli
       # errors
       autoload :BuilderNotFoundError, "shopify-cli/script/infrastructure/errors/builder_not_found_error.rb"
       autoload :GraphqlError, "shopify-cli/script/infrastructure/errors/graphql_error.rb"
-      autoload :ScriptServiceProxyError, "shopify-cli/script/infrastructure/errors/script_service_proxy_error.rb"
+      autoload :ScriptServiceUserError, "shopify-cli/script/infrastructure/errors/script_service_user_error.rb"
       autoload :DependencyError, "shopify-cli/script/infrastructure/errors/dependency_error.rb"
     end
   end

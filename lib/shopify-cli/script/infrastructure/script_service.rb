@@ -43,9 +43,11 @@ module ShopifyCli
           }
           resp_hash = proxy_request(query: query, api_key: api_key, variables: variables.to_json)
           user_errors = resp_hash["data"]["appScriptUpdateOrCreate"]["userErrors"]
+
           unless user_errors.empty?
-            raise Infrastructure::ScriptServiceProxyError.new(query_name, user_errors.to_s, variables)
+            raise Infrastructure::ScriptServiceUserError.new(query_name, user_errors.to_s, variables)
           end
+
           resp_hash
         end
 
@@ -53,13 +55,18 @@ module ShopifyCli
 
         def proxy_request(variables)
           query_name = "script_service_proxy"
-          resp = Helpers::PartnersAPI.query(ctx, query_name, **variables)
-          resp_hash = JSON.parse(resp["data"]["scriptServiceProxy"])
+          partners_resp = Helpers::PartnersAPI.query(ctx, query_name, **variables)
+          raise_if_graphql_failed('Shopify Partners', query_name, partners_resp, variables)
 
-          if resp_hash.key?("errors")
-            raise Infrastructure::GraphqlError.new(query_name, resp_hash["errors"].to_s, variables)
-          end
-          resp_hash
+          script_service_resp = JSON.parse(partners_resp['data']['scriptServiceProxy'])
+          raise_if_graphql_failed('Script Service', query_name, script_service_resp, variables)
+
+          script_service_resp
+        end
+
+        def raise_if_graphql_failed(from, query_name, response, variables)
+          return unless response.key?('errors')
+          raise Infrastructure::GraphqlError.new(from, query_name, response['errors'].to_s, variables)
         end
       end
     end

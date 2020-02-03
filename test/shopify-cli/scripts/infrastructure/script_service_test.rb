@@ -129,11 +129,7 @@ describe ShopifyCli::ScriptModule::Infrastructure::ScriptService do
             schema: extension_point_schema,
           }.to_json,
         },
-        resp: {
-          data: {
-            scriptServiceProxy: JSON.dump(response),
-          },
-        }
+        resp: response
       )
     end
 
@@ -149,7 +145,7 @@ describe ShopifyCli::ScriptModule::Infrastructure::ScriptService do
     end
 
     describe "when deploy to script service succeeds" do
-      let(:response) do
+      let(:script_service_response) do
         {
           "data" => {
             "appScriptUpdateOrCreate" => {
@@ -165,15 +161,37 @@ describe ShopifyCli::ScriptModule::Infrastructure::ScriptService do
         }
       end
 
+      let(:response) do
+        {
+          data: {
+            scriptServiceProxy: JSON.dump(script_service_response),
+          },
+        }
+      end
+
       it "should post the form without scope" do
-        assert_equal(response, subject)
+        assert_equal(script_service_response, subject)
       end
     end
 
     describe "when deploy to script service responds with errors" do
       let(:response) do
         {
-          "errors" => "errors",
+          data: {
+            scriptServiceProxy: JSON.dump("errors" => "errors"),
+          },
+        }
+      end
+
+      it "should raise error" do
+        assert_raises(ShopifyCli::ScriptModule::Infrastructure::GraphqlError) { subject }
+      end
+    end
+
+    describe "when partners responds with errors" do
+      let(:response) do
+        {
+          errors: 'some error message',
         }
       end
 
@@ -185,16 +203,20 @@ describe ShopifyCli::ScriptModule::Infrastructure::ScriptService do
     describe "when deploy to script service responds with userErrors" do
       let(:response) do
         {
-          "data" => {
-            "appScriptUpdateOrCreate" => {
-              "userErrors" => [{ "message" => "invalid", "field" => "appKey" }],
-            },
+          data: {
+            scriptServiceProxy: JSON.dump(
+              "data" => {
+                "appScriptUpdateOrCreate" => {
+                  "userErrors" => [{ "message" => "invalid", "field" => "appKey" }],
+                },
+              }
+            ),
           },
         }
       end
 
       it "should raise error" do
-        assert_raises(ShopifyCli::ScriptModule::Infrastructure::ScriptServiceProxyError) { subject }
+        assert_raises(ShopifyCli::ScriptModule::Infrastructure::ScriptServiceUserError) { subject }
       end
     end
   end
