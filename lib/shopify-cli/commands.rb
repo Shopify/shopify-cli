@@ -25,6 +25,7 @@ module ShopifyCli
 
       # commands availalbe only in project context
       register :Deploy, 'deploy', 'shopify-cli/commands/deploy'
+      register :Connect, 'connect', 'shopify-cli/commands/connect'
 
       # commands available in app project context
       register :Serve, 'serve', 'shopify-cli/commands/serve'

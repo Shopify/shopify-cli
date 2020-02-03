@@ -16,7 +16,7 @@ module ShopifyCli
     end
 
     def commands_and_aliases
-      command_names = @command_registry.command_names.filter{ |name| @command_registry.exist?(name) }
+      command_names = @command_registry.command_names.select{ |name| @command_registry.exist?(name) }
       command_names + @command_registry.aliases.keys
     end
   end

@@ -85,23 +85,5 @@ module ShopifyCli
         end
       end
     end
-
-    class NodeTest < MiniTest::Test
-      include TestHelpers::FakeUI
-
-      def setup
-        super
-        project_context('app_types', 'node')
-      end
-
-      def test_open_command
-        Tasks::Tunnel.expects(:call)
-        Commands::Open.any_instance.expects(:open_url!).with(
-          @context,
-          'https://example.com/auth?shop=my-test-shop.myshopify.com'
-        )
-        run_cmd('open')
-      end
-    end
   end
 end

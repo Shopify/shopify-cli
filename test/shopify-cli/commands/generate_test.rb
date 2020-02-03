@@ -3,9 +3,17 @@ require 'test_helper'
 module ShopifyCli
   module Commands
     class GenerateTest < MiniTest::Test
+
+      def setup
+        super
+        Helpers::AccessToken.stubs(:read).returns('myaccesstoken')
+        @cmd = ShopifyCli::Commands::Generate
+        @cmd.ctx = @context
+      end
+
       def test_without_arguments_calls_help
         @context.expects(:puts).with(ShopifyCli::Commands::Generate.help)
-        run_cmd('generate')
+        @cmd.call([], 'generate')
       end
 
       def test_for_failure

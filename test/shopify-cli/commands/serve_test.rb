@@ -9,13 +9,16 @@ module ShopifyCli
         super
         project_context('app_types', 'rails')
         @context.stubs(:system)
+        @cmd = ShopifyCli::Commands::Serve
+        @cmd.ctx = @context
+        @cmd_name = 'serve'
       end
 
       def test_run
         Tasks::Tunnel.stubs(:call)
         Tasks::UpdateDashboardURLS.stubs(:call)
         Helpers::EnvFile.any_instance.expects(:update)
-        run_cmd('serve')
+        @cmd.call([], @cmd_name)
       end
 
       def test_open_while_run
@@ -30,7 +33,7 @@ module ShopifyCli
           @context,
           'https://example.com/login?shop=my-test-shop.myshopify.com',
         )
-        run_cmd('serve')
+        @cmd.call([], @cmd_name)
       end
 
       def test_update_env_with_host
@@ -39,7 +42,7 @@ module ShopifyCli
         Helpers::EnvFile.any_instance.expects(:update).with(
           @context, :host, 'https://example-foo.com'
         )
-        run_cmd('serve --host="https://example-foo.com"')
+        @cmd.call(['--host="https://example-foo.com"'], @cmd_name)
       end
     end
   end

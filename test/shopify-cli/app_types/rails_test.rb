@@ -69,25 +69,5 @@ module ShopifyCli
         end
       end
     end
-
-    class RailsTest < MiniTest::Test
-      include TestHelpers::FakeUI
-
-      def setup
-        super
-        project_context('app_types', 'rails')
-        Helpers::EnvFile.any_instance.stubs(:write)
-        Helpers::EnvFile.any_instance.stubs(:update)
-      end
-
-      def test_open_command
-        Tasks::Tunnel.expects(:call).at_least_once
-        Commands::Open.any_instance.expects(:open_url!).with(
-          @context,
-          'https://example.com/login?shop=my-test-shop.myshopify.com'
-        )
-        run_cmd('open')
-      end
-    end
   end
 end

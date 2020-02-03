@@ -41,7 +41,7 @@ module ShopifyCli
         MESSAGE
       end
 
-      def write(ctx, project_type, identifiers)
+      def write(ctx, project_type, identifiers={})
         require 'yaml' # takes 20ms, so deferred as late as possible.
         content = {
           'project_type' => project_type,

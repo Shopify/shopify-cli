@@ -10,6 +10,8 @@ module ShopifyCli
         def setup
           super
           Helpers::AccessToken.stubs(:read).returns('myaccesstoken')
+          @cmd = ShopifyCli::Commands::Populate
+          @cmd.ctx = @context
         end
 
         def test_populate_calls_api_with_mutation
@@ -30,7 +32,7 @@ module ShopifyCli
             "DraftOrders added to {{green:my-test-shop.myshopify.com}} at " \
             "{{underline:https://my-test-shop.myshopify.com/admin/draft_orders/12345678}}"
           )
-          run_cmd('populate draftorders -c 1')
+          @cmd.call(['draftorders', '-c', '1'], 'populate')
         end
       end
     end

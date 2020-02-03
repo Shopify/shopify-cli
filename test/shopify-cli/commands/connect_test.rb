@@ -5,6 +5,13 @@ module ShopifyCli
     class ConnectTest < MiniTest::Test
       include TestHelpers::Partners
 
+      def setup
+        super
+        @cmd = ShopifyCli::Commands::Connect
+        @cmd.ctx = @context
+        @cmd_name = 'connect'
+      end
+
       def test_run
         response = [{
           "id" => 421,
@@ -40,7 +47,7 @@ module ShopifyCli
           'Which development store would you like to use?'
         ).returns('store.myshopify.com')
         Helpers::EnvFile.any_instance.stubs(:write)
-        run_cmd('connect')
+        @cmd.call([], @cmd_name)
       end
 
       def test_no_prompt_if_one_app_and_org
@@ -60,7 +67,7 @@ module ShopifyCli
         }]
         ShopifyCli::Helpers::Organizations.stubs(:fetch_with_app).returns(response)
         Helpers::EnvFile.any_instance.stubs(:write)
-        run_cmd('connect')
+        @cmd.call([], @cmd_name)
       end
     end
   end

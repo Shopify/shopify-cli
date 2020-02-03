@@ -9,6 +9,8 @@ module ShopifyCli
         def setup
           super
           Helpers::AccessToken.stubs(:read).returns('myaccesstoken')
+          @cmd = ShopifyCli::Commands::Populate
+          @cmd.ctx = @context
         end
 
         def test_populate_calls_api_with_mutation
@@ -25,7 +27,7 @@ module ShopifyCli
             "first last added to {{green:my-test-shop.myshopify.com}} at " \
             "{{underline:https://my-test-shop.myshopify.com/admin/customers/12345678}}"
           )
-          run_cmd('populate customers -c 1')
+          @cmd.call(['customers', '-c', '1'], 'populate')
         end
       end
     end

@@ -11,6 +11,8 @@ module ShopifyCli
           project_context('app_types', 'node')
           Helpers::EnvFile.any_instance.stubs(:write)
           Helpers::EnvFile.any_instance.stubs(:update)
+          @cmd = ShopifyCli::Commands::Serve
+          @cmd.ctx = @context
         end
 
         def test_server_command
@@ -27,7 +29,7 @@ module ShopifyCli
               "PORT" => "8081",
             }
           )
-          run_cmd('serve')
+          @cmd.call([], 'serve')
         end
       end
     end

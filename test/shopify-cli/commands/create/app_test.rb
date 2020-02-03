@@ -3,19 +3,35 @@ require 'test_helper'
 module ShopifyCli
   module Commands
     class Create
-      class ProjectTest < MiniTest::Test
+      class AppTest < MiniTest::Test
         include TestHelpers::Partners
         include TestHelpers::FakeUI
 
+        def setup
+          super
+          Project.stubs(:current_context).returns(:app)
+          @cmd = ShopifyCli::Commands::Create
+          @cmd.ctx = @context
+        end
+
         def test_prints_help_with_no_name_argument
-          io = capture_io { run_cmd('create project') }
-          assert_match(CLI::UI.fmt(ShopifyCli::Commands::Create::Project.help), io.join)
+          io = capture_io { @cmd.call(['app'], 'create') }
+          assert_match(CLI::UI.fmt(ShopifyCli::Commands::Create::App.help), io.join)
         end
 
         def test_can_create_new_app
           FileUtils.mkdir_p('test-app')
           ShopifyCli::AppTypes::Node.any_instance.expects(:check_dependencies)
           ShopifyCli::AppTypes::Node.any_instance.expects(:build).with('test-app')
+          ShopifyCli::Project.expects(:write).with(@context, :app, { 'app_type' => :node })
+          env_file = MiniTest::Mock.new
+          Helpers::EnvFile.expects(:new).with(
+            api_key: 'newapikey',
+            secret: 'secret'  ,
+            shop: 'testshop.myshopify.com',
+            scopes: 'write_products,write_customers,write_draft_orders'
+          ).returns(env_file)
+          env_file.expect(:write, nil, [@context])
 
           stub_partner_req(
             'create_app',
@@ -37,33 +53,8 @@ module ShopifyCli
             }
           )
 
-          perform_command
-
-          app_type = <<~APPTYPE
-            ---
-            app_type: :node
-          APPTYPE
-          assert_equal app_type, File.read("test-app/.shopify-cli.yml")
-
-          env_file = <<~CONTENT
-            SHOPIFY_API_KEY=newapikey
-            SHOPIFY_API_SECRET=secret
-            SHOP=testshop.myshopify.com
-            SCOPES=write_products,write_customers,write_draft_orders
-          CONTENT
-          assert_equal env_file, File.read("test-app/.env")
-
-          FileUtils.rm_r('test-app')
-        end
-
-        private
-
-        def perform_command
-          run_cmd("create project \
-            test-app \
-            --type=node \
-            --organization_id=42 \
-            --shop_domain=testshop.myshopify.com")
+          @cmd.call(['app', 'test-app', '--type=node', '--organization_id=42',
+            '--shop_domain=testshop.myshopify.com'], 'create')
         end
       end
     end
