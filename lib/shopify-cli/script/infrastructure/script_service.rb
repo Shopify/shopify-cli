@@ -32,7 +32,8 @@ module ShopifyCli
           compiled_type:,
           api_key: nil
         )
-          query = Helpers::PartnersAPI.load_query(ctx, "app_script_update_or_create")
+          query_name = "app_script_update_or_create"
+          query = Helpers::PartnersAPI.load_query(ctx, query_name)
           variables = {
             extensionPointName: extension_point_type.upcase,
             title: script_name,
@@ -43,7 +44,7 @@ module ShopifyCli
           resp_hash = proxy_request(query: query, api_key: api_key, variables: variables.to_json)
           user_errors = resp_hash["data"]["appScriptUpdateOrCreate"]["userErrors"]
           unless user_errors.empty?
-            raise Infrastructure::ScriptServiceProxyError.new(user_errors.to_s, variables)
+            raise Infrastructure::ScriptServiceProxyError.new(query_name, user_errors.to_s, variables)
           end
           resp_hash
         end
