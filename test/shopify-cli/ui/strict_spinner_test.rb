@@ -7,22 +7,26 @@ describe ShopifyCli::UI::StrictSpinner do
     let(:title) { 'title' }
 
     describe "when an error is thrown in the block" do
-      it "should abort" do
-        assert_raises(StandardError, "some err") do
-          ShopifyCli::UI::StrictSpinner.spin(title, auto_debrief: false) do
-            raise(StandardError, "some err")
-          end
+      subject do
+        ShopifyCli::UI::StrictSpinner.spin(title, auto_debrief: false) do
+          raise(StandardError, "some err")
         end
+      end
+
+      it "should abort" do
+        assert_raises(StandardError, "some err") { subject }
       end
     end
 
     describe "when the block runs successfully" do
-      it "should do nothing" do
-        assert_nothing_raised do
-          ShopifyCli::UI::StrictSpinner.spin(title, auto_debrief: false) do
-            true
-          end
+      subject do
+        ShopifyCli::UI::StrictSpinner.spin(title, auto_debrief: false) do
+          true
         end
+      end
+
+      it "should do nothing" do
+        assert_nothing_raised { subject }
       end
     end
   end
