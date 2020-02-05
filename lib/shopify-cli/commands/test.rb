@@ -3,7 +3,7 @@ require "shopify_cli"
 module ShopifyCli
   module Commands
     class Test < ShopifyCli::ContextualCommand
-      unregister_for_context 'test' unless Project.current_context == :script
+      available_in_contexts 'test', [:script]
 
       CMD_DESCRIPTION = "Runs unit tests"
       RUNNING_MSG = "Running tests..."

@@ -7,9 +7,22 @@ module ShopifyCli
         true
       end
 
-      def override_for_context(command, context_type, path)
-          autoload context_type.capitalize, path + "/" + context_type.to_s
-          ShopifyCli::Commands::Registry.add(->() { const_get(context_type.capitalize) }, command)
+      def available_in_contexts(command, context_types)
+        project_context = Project.current_context
+        unregister_for_context(command) unless context_types.include?(project_context)
+      end
+
+      def unavailable_in_contexts(command, context_types)
+        project_context = Project.current_context
+        unregister_for_context(command) if context_types.include?(project_context)
+      end
+
+      def override_in_contexts(command, context_types, path)
+        project_context = Project.current_context
+        if context_types.include?(project_context)
+          autoload project_context.capitalize, path + "/" + project_context.to_s
+          ShopifyCli::Commands::Registry.add(->() { const_get(project_context.capitalize) }, command)
+        end
       end
 
       def unregister_for_context(command)

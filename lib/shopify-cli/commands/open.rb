@@ -6,7 +6,7 @@ module ShopifyCli
       include Helpers::OS
 
       prerequisite_task :tunnel
-      unregister_for_context 'open' unless Project.current_context == :app
+      available_in_contexts 'open', [:app]
 
       def call(*)
         open_url!(@ctx, Project.current.app_type.open_url)

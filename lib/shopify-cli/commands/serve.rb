@@ -7,7 +7,7 @@ module ShopifyCli
     class Serve < ShopifyCli::AppTypeCommand
       app_type :node, :ServeNode, 'serve/node'
       app_type :rails, :ServeRails, 'serve/rails'
-      unregister_for_context 'serve' unless Project.current_context == :app
+      available_in_contexts 'serve', [:app]
 
       include ShopifyCli::Helpers::OS
       prerequisite_task :ensure_env

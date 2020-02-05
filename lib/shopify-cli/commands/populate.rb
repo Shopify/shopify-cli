@@ -10,7 +10,7 @@ module ShopifyCli
       subcommand :Customer, 'customers', 'shopify-cli/commands/populate/customer'
       subcommand :DraftOrder, 'draftorders', 'shopify-cli/commands/populate/draft_order'
 
-      unregister_for_context 'populate' unless Project.current_context == :app
+      available_in_contexts 'populate', [:app]
 
       def call(_args, _name)
         @ctx.puts(self.class.help)

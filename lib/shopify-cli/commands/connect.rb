@@ -3,7 +3,7 @@ require 'shopify_cli'
 module ShopifyCli
   module Commands
     class Connect < ShopifyCli::ContextualCommand
-      unregister_for_context 'connect' unless Project.current_context == :app
+      available_in_contexts 'connect', [:app]
 
       def call(*)
         if Project.at(Dir.pwd)

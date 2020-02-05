@@ -7,7 +7,7 @@ module ShopifyCli
       subcommand :Billing, 'billing', 'shopify-cli/commands/generate/billing'
       subcommand :Webhook, 'webhook', 'shopify-cli/commands/generate/webhook'
 
-      unregister_for_context 'generate' unless Project.current_context == :app
+      available_in_contexts 'generate', [:app]
 
       def call(*)
         @ctx.puts(self.class.help)
