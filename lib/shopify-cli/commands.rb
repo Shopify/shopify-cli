@@ -7,35 +7,48 @@ module ShopifyCli
       contextual_resolver: nil,
     )
 
-    def self.register(const, cmd, path = nil)
-      autoload(const, path) if path
-      Registry.add(->() { const_get(const) }, cmd)
-    end
+    class << self
+      def register(const, cmd, path = nil)
+        autoload(const, path) if path
+        Registry.add(->() { const_get(const) }, cmd)
+      end
 
-    def self.load_all_commands
-      # commands available in all contexts
-      register :Authenticate, 'authenticate', 'shopify-cli/commands/authenticate'
-      register :Help, 'help', 'shopify-cli/commands/help'
-      register :LoadDev, 'load-dev', 'shopify-cli/commands/load_dev'
-      register :LoadSystem, 'load-system', 'shopify-cli/commands/load_system'
-      register :Update, 'update', 'shopify-cli/commands/update'
+      def load_commands_for_all_contexts
+        register :Authenticate, 'authenticate', 'shopify-cli/commands/authenticate'
+        register :Help, 'help', 'shopify-cli/commands/help'
+        register :LoadDev, 'load-dev', 'shopify-cli/commands/load_dev'
+        register :LoadSystem, 'load-system', 'shopify-cli/commands/load_system'
+        register :Update, 'update', 'shopify-cli/commands/update'
+      end
 
-      # commands available only at top-level folder context
-      register :Create, 'create', 'shopify-cli/commands/create'
+      def load_commands_for_top_level
+        register :Create, 'create', 'shopify-cli/commands/create'
+      end
 
-      # commands availalbe only in project context
-      register :Deploy, 'deploy', 'shopify-cli/commands/deploy'
-      register :Connect, 'connect', 'shopify-cli/commands/connect'
+      def load_commands_for_all_projects
+        register :Deploy, 'deploy', 'shopify-cli/commands/deploy'
+        register :Connect, 'connect', 'shopify-cli/commands/connect'
+      end
 
-      # commands available in app project context
-      register :Serve, 'serve', 'shopify-cli/commands/serve'
-      register :Generate, 'generate', 'shopify-cli/commands/generate'
-      register :Open, 'open', 'shopify-cli/commands/open'
-      register :Tunnel, 'tunnel', 'shopify-cli/commands/tunnel'
-      register :Populate, 'populate', 'shopify-cli/commands/populate'
+      def load_commands_for_app_project
+        register :Serve, 'serve', 'shopify-cli/commands/serve'
+        register :Generate, 'generate', 'shopify-cli/commands/generate'
+        register :Open, 'open', 'shopify-cli/commands/open'
+        register :Tunnel, 'tunnel', 'shopify-cli/commands/tunnel'
+        register :Populate, 'populate', 'shopify-cli/commands/populate'
+      end
 
-      # commands available in script project context
-      register :Test, 'test', 'shopify-cli/commands/test'
+      def load_commands_for_script_project
+        register :Test, 'test', 'shopify-cli/commands/test'
+      end
+
+      def load_all_commands
+        load_commands_for_all_contexts
+        load_commands_for_top_level
+        load_commands_for_all_projects
+        load_commands_for_app_project
+        load_commands_for_script_project
+      end
     end
 
     load_all_commands
