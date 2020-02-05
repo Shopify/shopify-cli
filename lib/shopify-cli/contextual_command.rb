@@ -20,13 +20,13 @@ module ShopifyCli
       def override_in_contexts(command, context_types, path)
         project_context = Project.current_context
         if context_types.include?(project_context)
-          autoload project_context.capitalize, path + "/" + project_context.to_s
+          autoload(project_context.capitalize, path + "/" + project_context.to_s)
           ShopifyCli::Commands::Registry.add(->() { const_get(project_context.capitalize) }, command)
         end
       end
 
       def unregister_for_context(command)
-        ShopifyCli::Commands::Registry.add(->() { }, command)
+        ShopifyCli::Commands::Registry.add(->() {}, command)
       end
     end
   end

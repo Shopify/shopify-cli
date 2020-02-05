@@ -3,7 +3,6 @@ require 'test_helper'
 module ShopifyCli
   module Commands
     class TunnelTest < MiniTest::Test
-
       def setup
         super
         Helpers::AccessToken.stubs(:read).returns('myaccesstoken')

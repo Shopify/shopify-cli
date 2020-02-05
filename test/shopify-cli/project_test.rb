@@ -27,7 +27,7 @@ module ShopifyCli
 
     def test_write_writes_yaml
       FileUtils.touch(".shopify-cli.yml")
-      ShopifyCli::Project.write(@context, :fake, { 'app_type' => :node })
+      ShopifyCli::Project.write(@context, :fake, 'app_type' => :node)
       assert_equal :fake, ShopifyCli::Project.current_context
       assert_equal :node, ShopifyCli::Project.at(@context.root).config['app_type']
     end

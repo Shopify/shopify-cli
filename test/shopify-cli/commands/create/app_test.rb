@@ -23,11 +23,11 @@ module ShopifyCli
           FileUtils.mkdir_p('test-app')
           ShopifyCli::AppTypes::Node.any_instance.expects(:check_dependencies)
           ShopifyCli::AppTypes::Node.any_instance.expects(:build).with('test-app')
-          ShopifyCli::Project.expects(:write).with(@context, :app, { 'app_type' => :node })
+          ShopifyCli::Project.expects(:write).with(@context, :app, 'app_type' => :node)
           env_file = MiniTest::Mock.new
           Helpers::EnvFile.expects(:new).with(
             api_key: 'newapikey',
-            secret: 'secret'  ,
+            secret: 'secret',
             shop: 'testshop.myshopify.com',
             scopes: 'write_products,write_customers,write_draft_orders'
           ).returns(env_file)
@@ -54,7 +54,7 @@ module ShopifyCli
           )
 
           @cmd.call(['app', 'test-app', '--type=node', '--organization_id=42',
-            '--shop_domain=testshop.myshopify.com'], 'create')
+                     '--shop_domain=testshop.myshopify.com'], 'create')
         end
       end
     end

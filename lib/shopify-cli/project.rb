@@ -11,7 +11,7 @@ module ShopifyCli
       end
 
       def current_context
-        Project.is_at_top_level? ? :top_level : Project.current.config['project_type']
+        Project.at_top_level? ? :top_level : Project.current.config['project_type']
       end
 
       def at(dir)
@@ -41,7 +41,7 @@ module ShopifyCli
         MESSAGE
       end
 
-      def write(ctx, project_type, identifiers={})
+      def write(ctx, project_type, identifiers = {})
         require 'yaml' # takes 20ms, so deferred as late as possible.
         content = {
           'project_type' => project_type,
@@ -49,7 +49,7 @@ module ShopifyCli
         ctx.write('.shopify-cli.yml', YAML.dump(content))
       end
 
-      def is_at_top_level?
+      def at_top_level?
         !directory(Dir.pwd)
       end
 

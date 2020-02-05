@@ -3,7 +3,6 @@ require 'test_helper'
 module ShopifyCli
   module Commands
     class CommandTest < MiniTest::Test
-
       def setup
         super
         @cmd = ShopifyCli::Commands::Create
@@ -45,8 +44,6 @@ module ShopifyCli
 
         assert_match(help_io.join, cmd_io.join)
       end
-
-
     end
   end
 end

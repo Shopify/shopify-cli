@@ -16,7 +16,7 @@ module ShopifyCli
           CLI::UI::Prompt.expects(:ask).returns(:billing_recurring)
           @context.expects(:system).with('generate-recurring-billing')
             .returns(mock(success?: true))
-            @cmd.call(['billing'], 'generate')
+          @cmd.call(['billing'], 'generate')
         end
 
         def test_one_time_billing

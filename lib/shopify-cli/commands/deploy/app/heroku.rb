@@ -162,8 +162,9 @@ module ShopifyCli
             return if heroku_installed?
 
             result = @ctx.system('curl', '-o', heroku_download_path, DOWNLOAD_URLS[os], chdir: ShopifyCli::ROOT)
-            raise(ShopifyCli::Abort, "{{x}} Heroku CLI could not be downloaded") unless result.success?
-            raise(ShopifyCli::Abort, "{{x}} Heroku CLI could not be downloaded") unless File.exist?(heroku_download_path)
+            unless result.success? && File.exist?(heroku_download_path)
+              raise(ShopifyCli::Abort, "{{x}} Heroku CLI could not be downloaded")
+            end
           end
 
           def heroku_download_filename
