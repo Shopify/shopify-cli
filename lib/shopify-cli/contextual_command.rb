@@ -12,11 +12,6 @@ module ShopifyCli
         unregister_for_context(command) unless context_types.include?(project_context)
       end
 
-      def unavailable_in_contexts(command, context_types)
-        project_context = Project.current_context
-        unregister_for_context(command) if context_types.include?(project_context)
-      end
-
       def override_in_contexts(command, context_types, path)
         project_context = Project.current_context
         if context_types.include?(project_context)

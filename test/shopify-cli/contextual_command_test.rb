@@ -22,23 +22,6 @@ module ShopifyCli
       ShopifyCli::ContextualCommand.available_in_contexts(@command_name, [:top_level])
     end
 
-    def test_unavailable_in_contexts_when_context_is_in_unavailable_list
-      ShopifyCli::Commands::Registry.expects(:add).with do |param1, param2|
-        assert_nil(param1.call)
-        assert_equal(@command_name, param2)
-      end
-
-      Project.stubs(:current_context).returns(:top_level)
-      ShopifyCli::ContextualCommand.unavailable_in_contexts(@command_name, [:top_level, :script])
-    end
-
-    def test_unavailable_in_contexts_when_context_is_not_in_unavailable_list
-      ShopifyCli::Commands::Registry.expects(:add).never
-
-      Project.stubs(:current_context).returns(:top_level)
-      ShopifyCli::ContextualCommand.unavailable_in_contexts(@command_name, [:script])
-    end
-
     def test_override_in_contexts_when_context_is_in_override_list
       Project.stubs(:current_context).returns(:app)
       # below is needed to test the correct path was autoloaded
