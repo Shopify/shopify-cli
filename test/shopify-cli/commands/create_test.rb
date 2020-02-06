@@ -15,10 +15,16 @@ module ShopifyCli
         @cmd.call([], @cmd_name)
       end
 
-      def test_with_create_pp
+      def test_with_create_app
         Create::App.any_instance.expects(:call)
           .with(['new-app'], 'app')
         @cmd.call(['app', 'new-app'], @cmd_name)
+      end
+
+      def test_with_create_script
+        Create::Script.any_instance.expects(:call)
+          .with(['discount', 'new-script'], 'script')
+        @cmd.call(['script', 'discount', 'new-script'], @cmd_name)
       end
     end
   end
