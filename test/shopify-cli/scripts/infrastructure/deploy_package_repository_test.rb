@@ -12,15 +12,19 @@ describe ShopifyCli::ScriptModule::Infrastructure::DeployPackageRepository do
   let(:script) { ShopifyCli::ScriptModule::Domain::Script.new(script_name, extension_point_type, language) }
   let(:script_content) { "BYTECODE" }
   let(:compiled_type) { "wasm" }
-  let(:script_path) do
-    format(ShopifyCli::ScriptModule::Infrastructure::Repository::FOLDER_PATH_TEMPLATE, script_name: script_name)
-  end
-  let(:build_base) { "#{script_path}/src/build" }
-  let(:temp_base) { "#{script_path}/temp" }
+  let(:script_path) { script_name }
+  let(:build_base) { "#{script_name}/src/build" }
+  let(:temp_base) { "#{script_name}/temp" }
   let(:build_file) { "#{build_base}/#{script_name}.wasm" }
   let(:schema_path) { "#{temp_base}/schema" }
   let(:deploy_package_repository) { ShopifyCli::ScriptModule::Infrastructure::DeployPackageRepository.new }
   let(:context) { TestHelpers::FakeContext.new }
+  let(:project) { TestHelpers::FakeProject.new }
+
+  before do
+    ShopifyCli::ScriptModule::ScriptProject.stubs(:current).returns(project)
+    project.directory = script_name
+  end
 
   describe ".create_deploy_package" do
     subject do

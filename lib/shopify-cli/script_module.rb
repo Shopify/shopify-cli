@@ -47,5 +47,8 @@ module ShopifyCli
       autoload :ScriptServiceUserError, "shopify-cli/script/infrastructure/errors/script_service_user_error.rb"
       autoload :DependencyError, "shopify-cli/script/infrastructure/errors/dependency_error.rb"
     end
+
+    autoload :ScriptProject, "shopify-cli/script/script_project.rb"
+    autoload :InvalidScriptProjectContextError, "shopify-cli/script/errors/invalid_script_project_context_error.rb"
   end
 end

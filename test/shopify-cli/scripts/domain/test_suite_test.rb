@@ -3,10 +3,7 @@
 require "test_helper"
 
 describe ShopifyCli::ScriptModule::Domain::TestSuite do
-  let(:id) do
-    "#{format(ShopifyCli::ScriptModule::Infrastructure::Repository::FOLDER_PATH_TEMPLATE, script_name: script_name)}"\
-    "/discount/myscript/myscript.spec.ts"
-  end
+  let(:id) { "#{Dir.pwd}/#{script_name}/discount/myscript/myscript.spec.ts" }
   let(:language) { "ts" }
   let(:extension_point_type) { "discount" }
   let(:script_name) { "myscript" }

@@ -28,7 +28,6 @@ module ShopifyCli
           ) unless File.exist?(build_file_path)
 
           script_content = File.read(build_file_path)
-          schema_path = schema_path(script.name)
           schema = File.exist?(schema_path) ? File.read(schema_path) : ''
 
           Domain::DeployPackage.new(
@@ -48,15 +47,11 @@ module ShopifyCli
         end
 
         def file_path(script_name, compiled_type)
-          "#{script_base_path(script_name)}/src/build/#{script_name}.#{compiled_type}"
+          "#{ShopifyCli::ScriptModule::ScriptProject.current.directory}/src/build/#{script_name}.#{compiled_type}"
         end
 
-        def schema_path(script_name)
-          "#{script_base_path(script_name)}/temp/schema"
-        end
-
-        def script_base_path(script_name)
-          format(FOLDER_PATH_TEMPLATE, script_name: script_name)
+        def schema_path
+          "#{ShopifyCli::ScriptModule::ScriptProject.current.directory}/temp/schema"
         end
       end
     end

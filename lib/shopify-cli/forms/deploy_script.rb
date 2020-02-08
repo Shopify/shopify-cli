@@ -4,12 +4,10 @@ require 'uri'
 module ShopifyCli
   module Forms
     class DeployScript < Form
-      positional_arguments :extension_point, :name
-      flag_arguments :api_key, :language
+      flag_arguments :api_key
 
       def ask
         self.api_key ||= ask_api_key
-        self.language ||= "ts"
       end
 
       private

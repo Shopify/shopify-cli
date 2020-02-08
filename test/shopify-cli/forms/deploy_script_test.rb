@@ -6,69 +6,20 @@ module ShopifyCli
     class DeployScriptTest < MiniTest::Test
       include TestHelpers::Partners
 
-      def test_use_provided_language
-        form = ask(api_key: 'fakekey', language: 'js')
-        assert_equal(form.language, 'js')
-      end
-
-      def test_use_default_language
-        form = ask(api_key: 'fakekey')
-        assert_equal(form.language, 'ts')
-      end
-
       def test_use_provided_app
         form = ask(api_key: 'fakekey')
         assert_equal(form.api_key, 'fakekey')
       end
 
       def test_pick_singular_app
-        stub_partner_req(
-          'get_apps',
-          resp: {
-            data: {
-              apps: {
-                nodes: [
-                  {
-                    title: 'app',
-                    apiKey: 1234,
-                    apiSecretKeys: [{
-                      secret: 1233,
-                    }],
-                  },
-                ],
-              },
-            },
-          },
-        )
+        Helpers::Organizations.stubs(:fetch_apps).with(@context).returns([{ "apiKey" => 1234 }])
         form = ask
-        assert_equal(form.api_key, 1234)
+        assert_equal 1234, form.api_key
       end
 
       def test_display_selection_for_apps
-        stub_partner_req(
-          'get_apps',
-          resp: {
-            data: {
-              apps: {
-                nodes: [
-                  {
-                    title: 'app',
-                    apiKey: 1234,
-                    apiSecretKeys: [{
-                      secret: 1233,
-                    }],
-                  },
-                  {
-                    title: 'other_app',
-                    apiKey: 1267,
-                    apiSecretKeys: [{
-                      secret: 1233,
-                    }],
-                  },
-                ],
-              },
-            },
-          },
+        Helpers::Organizations.stubs(:fetch_apps).with(@context).returns(
+          [{ "apiKey" => 1234 }, { "apiKey" => 1267 }]
         )
         CLI::UI::Prompt.expects(:ask)
           .with(
@@ -80,16 +31,7 @@ module ShopifyCli
       end
 
       def test_show_error_when_no_apps_exist
-        stub_partner_req(
-          'get_apps',
-          resp: {
-            data: {
-              apps: {
-                nodes: [],
-              },
-            },
-          },
-        )
+        Helpers::Organizations.stubs(:fetch_apps).with(@context).returns([])
         io = capture_io do
           assert_nil(ask)
         end
@@ -98,12 +40,11 @@ module ShopifyCli
 
       private
 
-      def ask(api_key: nil, language: "ts", extension_point: "discount", name: "myscript")
+      def ask(api_key: nil)
         DeployScript.ask(
           @context,
-          [extension_point, name],
-          api_key: api_key,
-          language: language
+          [],
+          api_key: api_key
         )
       end
     end

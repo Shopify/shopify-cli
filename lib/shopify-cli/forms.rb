@@ -6,8 +6,11 @@ module ShopifyCli
       class << self
         def ask(ctx, args, flags)
           attrs = {}
-          @positional_arguments.each { |name| attrs[name] = args.shift }
-          return nil if attrs.any? { |_k, v| v.nil? }
+          unless @positional_arguments.nil?
+            @positional_arguments.each { |name| attrs[name] = args.shift }
+            return nil if attrs.any? { |_k, v| v.nil? }
+          end
+
           @flag_arguments.each { |arg| attrs[arg] = flags[arg] }
           form = new(ctx, args, attrs)
           begin
