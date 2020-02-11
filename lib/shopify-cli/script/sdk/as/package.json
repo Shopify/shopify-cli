@@ -1,0 +1,15 @@
+{
+  "name": "@shopify/scripts-sdk",
+  "version": "0.0.1",
+  "devDependencies": {
+    "@as-pect/assembly": "^2.6.0",
+    "@as-pect/cli": "^2.6.0",
+    "@as-pect/core": "^2.6.0",
+    "assemblyscript": "0.8.0",
+    "ts-node": "^8.5.4",
+    "typescript": "^3.7.3"
+  },
+  "scripts": {
+    "test": "asp --config as-pect.config.js"
+  }
+}

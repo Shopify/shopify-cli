@@ -23,8 +23,8 @@ describe ShopifyCli::ScriptModule::Infrastructure::ScriptRepository do
   let(:expected_script_id) { "#{extension_point_type}/#{script_name}.#{language}" }
   let(:template_base) { "#{ShopifyCli::ScriptModule::Infrastructure::Repository::INSTALLATION_BASE_PATH}/templates/" }
   let(:template_file) { "#{template_base}/typescript/#{extension_point_type}.#{language}" }
-  let(:runtime_types_path) do
-    "#{ShopifyCli::ScriptModule::Infrastructure::Repository::INSTALLATION_BASE_PATH}/sdk/shopify_runtime_types.ts"
+  let(:as_sdk_path) do
+    "#{ShopifyCli::ScriptModule::Infrastructure::Repository::INSTALLATION_BASE_PATH}/sdk/as"
   end
   let(:extension_point_repository) { ShopifyCli::ScriptModule::Infrastructure::FakeExtensionPointRepository.new }
   let(:script_repository) { ShopifyCli::ScriptModule::Infrastructure::ScriptRepository.new }
@@ -42,7 +42,7 @@ describe ShopifyCli::ScriptModule::Infrastructure::ScriptRepository do
     subject { script_repository.create_script(language, extension_point, script_name) }
     it "should create the script correctly from the template" do
       FakeFS::FileSystem.clone(template_file)
-      FakeFS::FileSystem.clone(runtime_types_path)
+      FakeFS::FileSystem.clone(as_sdk_path)
       FileUtils.mkdir_p(script_source_base)
 
       script = subject

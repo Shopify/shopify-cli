@@ -25,6 +25,9 @@ module ShopifyCli
             {
               "name": "#{@script_name}",
               "version": "1.0.0",
+              "dependencies": {
+                "@shopify/scripts-sdk": "file:./src/sdk/as"
+              },
               "devDependencies": {
                 "@as-pect/assembly": "^2.6.0",
                 "@as-pect/cli": "^2.6.0",

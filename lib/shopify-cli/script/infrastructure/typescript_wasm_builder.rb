@@ -11,7 +11,7 @@ ALLOCATE_FUNC = "\n\nexport function shopify_runtime_allocate(size: u32): ArrayB
 GQL_BUILDER = "GraphQLBuilder.ts"
 GQL_TRANSFORM = "#{File.dirname(__FILE__)}/#{GQL_BUILDER}"
 ASM_SCRIPT_OPTIMIZED = "npx asc %{script}.ts -b build/%{script}.wasm --sourceMap --validate \
---optimize --use abort= --runtime none --transform=#{GQL_BUILDER}"
+--optimize --use abort= --runtime none --transform=#{GQL_BUILDER} --lib=../node_modules"
 
 module ShopifyCli
   module ScriptModule

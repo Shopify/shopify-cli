@@ -51,7 +51,9 @@ module ShopifyCli
         def write_sdk(extension_point_type, language, sdk_types)
           return unless language == "ts"
 
-          FileUtils.cp_r(runtime_types, src_base)
+          sdk_dest_path = "#{src_base}/sdk/as"
+          FileUtils.mkdir_p(sdk_dest_path)
+          FileUtils.cp_r(sdk_paths, sdk_dest_path)
           File.write(sdk_types_file(extension_point_type, language), sdk_types)
         end
 
@@ -59,8 +61,8 @@ module ShopifyCli
           "#{ShopifyCli::ScriptModule::ScriptProject.current.directory}/src"
         end
 
-        def runtime_types
-          "#{INSTALLATION_BASE_PATH}/sdk/shopify_runtime_types.ts"
+        def sdk_paths
+          Dir.glob("#{INSTALLATION_BASE_PATH}/sdk/as/*")
         end
 
         def src_code_file(language, script_name)
