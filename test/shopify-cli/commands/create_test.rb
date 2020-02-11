@@ -26,6 +26,13 @@ module ShopifyCli
           .with(['discount', 'new-script'], 'script')
         @cmd.call(['script', 'discount', 'new-script'], @cmd_name)
       end
+
+      def test_with_create_project_returns_warning
+        io = capture_io do
+          @cmd.call(['project', 'new-app'], @cmd_name)
+        end
+        assert_match('shopify create app', io.join)
+      end
     end
   end
 end

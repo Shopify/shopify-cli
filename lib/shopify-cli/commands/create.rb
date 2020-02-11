@@ -7,8 +7,17 @@ module ShopifyCli
       subcommand :Script, 'script', 'shopify-cli/commands/create/script'
       available_in_contexts 'create', [:top_level]
 
-      def call(*)
+      def call(args, *)
+        return project_command_moved_warning if args.first == 'project'
         @ctx.puts(self.class.help)
+      end
+
+      private
+
+      def project_command_moved_warning
+        @ctx.puts(
+          '{{yellow:The project command has been renamed app. Run the following command:}} {{cyan:shopify create app}}'
+        )
       end
     end
   end
