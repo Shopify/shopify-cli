@@ -42,10 +42,10 @@ module ShopifyCli
       def self.extended_help
         <<~HELP
           #{
-            all_visible_type.map do |type|
-              type.create_command.help
-            end.join("\n")
-          }
+        all_visible_type.map do |type|
+          type.create_command.help
+        end.join("\n")
+        }
         HELP
       end
     end
