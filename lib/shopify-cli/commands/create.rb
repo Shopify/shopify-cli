@@ -4,7 +4,7 @@ module ShopifyCli
   module Commands
     class Create < ShopifyCli::ContextualCommand
       subcommand :App, 'app', 'shopify-cli/commands/create/app'
-      subcommand :Script, 'script', 'shopify-cli/commands/create/script'
+      subcommand(:Script, 'script', 'shopify-cli/commands/create/script') if ENV['SCRIPTS_PLATFORM']
       available_in_contexts 'create', [:top_level]
 
       def call(args, *)
