@@ -1,3 +1,5 @@
+# frozen_string_literal: true
+
 module ShopifyCli
   module ScriptModule
     class InvalidScriptProjectContextError < StandardError
