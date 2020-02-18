@@ -93,7 +93,7 @@ class GraphQLSchemaBuilder extends ExportsWalker {
   private visitClassReference(klass: Class, prefix: string, types: Map<string, string>, inferDefaultValues: boolean): string {
     return Array.from(klass.members || [], ([name, fieldel]: [String, DeclaredElement]) => {
       const field = <Field>fieldel;
-      if(field.memoryOffset < 0 || !field.type) {
+      if(field.memoryOffset < 0 || !field.type || field.getterInstance) {
         return null;
       } else {
         const initializer = (<VariableLikeDeclarationStatement>field.declaration).initializer;
@@ -104,7 +104,7 @@ class GraphQLSchemaBuilder extends ExportsWalker {
 
   private visitType(type: Type, prefix: string, types: Map<string, string>, inferDefaultValues: boolean): string {
     if(type.isManaged) {
-      throw "cannot use managed type " + type + " in interface";
+      throw new Error("cannot use managed type " + type + " in interface");
     }
 
     let ref = this.visitAsIfNullable(type, prefix, types, inferDefaultValues);
@@ -136,7 +136,7 @@ class GraphQLSchemaBuilder extends ExportsWalker {
         case TypeKind.BOOL: return "Boolean";
         case TypeKind.F64: return "Float";
         default:
-          throw "cannot use primitive type " + type + " in interface";
+          throw new Error("cannot use primitive type " + type + " in interface");
     }
 
     }
@@ -165,7 +165,7 @@ class GraphQLSchemaBuilder extends ExportsWalker {
       if(expr.kind == NodeKind.LITERAL && (<LiteralExpression>expr).literalKind == LiteralKind.ARRAY) {
         return "[" + (<ArrayLiteralExpression>expr).elementExpressions.map((el) => {
           const value = this.defaultValue(null, el);
-          if(!value) throw "Unusable default array value: " + el;
+          if(!value) throw new Error("Unusable default array value: " + el);
           return value;
         }).join(", ") + "]";
       }
@@ -174,7 +174,7 @@ class GraphQLSchemaBuilder extends ExportsWalker {
         const obj = <ObjectLiteralExpression>expr;
         return "{" + obj.names.map((name, idx) => {
           const value = this.defaultValue(null, obj.values[idx]);
-          if(!value) throw "Unusable default object value: " + obj.values[idx];
+          if(!value) throw new Error("Unusable default object value: " + obj.values[idx]);
           return name.text + ": " + value;
         }).join(", ") + "}";
       }
@@ -217,7 +217,7 @@ class GraphQLSchemaBuilder extends ExportsWalker {
       case TypeKind.BOOL: return "false";
       case TypeKind.F64: return "0.0";
       default:
-        throw "cannot use primitive type " + type + " in interface";
+        throw new Error("cannot use primitive type " + type + " in interface");
     }
 
     return null;
