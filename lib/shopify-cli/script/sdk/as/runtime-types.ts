@@ -16,7 +16,9 @@ export class Slice<T> {
     }
 
     @inline
-    get length(): i32 { return <i32>this._length; }
+    get length(): i32 {
+        return <i32>this._length;
+    }
 
     @operator("[]")
     private __get(index: u32): T {
@@ -25,9 +27,11 @@ export class Slice<T> {
 
     @operator("==")
     private __eq(other_slice: Slice<T>): bool {
-        if(other_slice.length != this.length) { return false; }
-        for(let i = 0; i < this.length; i++) {
-            if(!(this[i] == other_slice[i])) {
+        if (other_slice.length != this.length) {
+            return false;
+        }
+        for (let i = 0; i < this.length; i++) {
+            if (!(this[i] == other_slice[i])) {
                 return false
             }
         }
@@ -53,13 +57,8 @@ export class Slice<T> {
         return new Slice(changetype<usize>(buf), buf.byteLength);
     }
 
-    @inline
-    static fromString(str: String): Str {
-        return <Str>Slice.fromArrayBuffer(String.UTF8.encode(str));
-    }
-
     extend_array(array: Array<T>): Array<T> {
-        for(let i = 0; i < this.length; i++) {
+        for (let i = 0; i < this.length; i++) {
             array.push(this[i]);
         }
         return array;
@@ -81,9 +80,9 @@ export class Slice<T> {
         return out;
     }
 
-    reduce<U>(fn: (previousValue: U, currentValue: T) => U, initialValue: U) : U {
+    reduce<U>(fn: (previousValue: U, currentValue: T) => U, initialValue: U): U {
         let accum = initialValue;
-        for(let i = 0; i < this.length; i++) {
+        for (let i = 0; i < this.length; i++) {
             accum = fn(accum, this[i]);
         }
         return accum;
@@ -92,8 +91,8 @@ export class Slice<T> {
     filter<E>(callbackFn: (thing: T) => bool): Array<T> {
         let array = new Array<T>();
 
-        for(let i = 0; i < this.length; i++) {
-            if(callbackFn.call(this[i])) {
+        for (let i = 0; i < this.length; i++) {
+            if (callbackFn.call(this[i])) {
                 array.push(this[i]);
             }
         }
@@ -102,7 +101,7 @@ export class Slice<T> {
     }
 
     every(callbackFn: (thing: T, index: i32, array: Slice<T>) => bool): bool {
-        for(let i = 0; i < this.length; i++) {
+        for (let i = 0; i < this.length; i++) {
             if (!callbackFn(this[i], i, this)) {
                 return false;
             }
@@ -111,7 +110,7 @@ export class Slice<T> {
     }
 
     some(callbackFn: (thing: T, index: i32, array: Slice<T>) => bool): bool {
-        for(let i = 0; i < this.length; i++) {
+        for (let i = 0; i < this.length; i++) {
             if (callbackFn(this[i], i, this)) {
                 return true;
             }
@@ -147,10 +146,8 @@ export class Slice<T> {
 export class Str extends Slice<u8> {
     @inline
     static from(string: String): Str {
-        return Str.fromString(string);
+        return <Str>Slice.fromArrayBuffer(String.UTF8.encode(string));
     }
-
-    get length(): usize { return this.toString().length; }
 
     @operator("==")
     private __eq(other: Str): bool {
@@ -169,9 +166,5 @@ export class Str extends Slice<u8> {
 
     toString(): String {
         return String.UTF8.decodeUnsafe(<usize>this._data, <usize>this._length);
-    }
-
-    indexOf(other: String): i32 {
-        return this.toString().indexOf(other);
     }
 }
