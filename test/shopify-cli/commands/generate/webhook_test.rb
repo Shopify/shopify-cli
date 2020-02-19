@@ -36,7 +36,7 @@ module ShopifyCli
         def test_with_selection
           ShopifyCli::Tasks::Schema.expects(:call).returns(
             JSON.parse(File.read(File.join(ShopifyCli::ROOT, "test/fixtures/shopify_schema.json"))),
-            )
+          )
           CLI::UI::Prompt.expects(:ask).returns('PRODUCT_CREATE')
           @context.expects(:system).with('a command')
             .returns(mock(success?: true))
