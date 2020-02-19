@@ -97,7 +97,8 @@ class GraphQLSchemaBuilder extends ExportsWalker {
         return null;
       } else {
         const initializer = (<VariableLikeDeclarationStatement>field.declaration).initializer;
-        return "\t" + name + ": " + this.visitType(field.type, prefix, types, inferDefaultValues) + this.defaultValueAssignment(inferDefaultValues ? field.type : null, initializer);
+        let translated_name = this.translateFieldName(name);
+        return "\t" + translated_name + ": " + this.visitType(field.type, prefix, types, inferDefaultValues) + this.defaultValueAssignment(inferDefaultValues ? field.type : null, initializer);
       }
     }).filter((fld: string|null) => !!fld).join("\n");
   }
@@ -233,6 +234,10 @@ class GraphQLSchemaBuilder extends ExportsWalker {
     }
 
     return null;
+  }
+
+  private translateFieldName(name: string): string {
+    return name.replace("_","").replace(/[A-Z]/g, (group) => { return '_' + group.toLowerCase() })
   }
 
   private internalNameToGraphQL(internalName: string): string {
