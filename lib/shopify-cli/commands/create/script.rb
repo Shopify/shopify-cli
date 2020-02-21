@@ -27,12 +27,11 @@ module ShopifyCli
           script = bootstrap(@ctx, language, extension_point, name)
 
           dep_manager = ScriptModule::Infrastructure::DependencyManager.for(@ctx, name, language)
-
-          unless dep_manager.installed?
-            dep_manager.install
-          end
+          dep_manager.install unless dep_manager.installed?
 
           @ctx.puts(format(CREATED_NEW_SCRIPT_MSG, script_filename: script.filename, folder: script.name))
+        rescue ScriptModule::Domain::InvalidExtensionPointError
+          @ctx.puts(format(INVALID_EXTENSION_POINT, extension_point: extension_point))
         rescue StandardError => e
           raise(ShopifyCli::Abort, e)
         end
@@ -54,8 +53,6 @@ module ShopifyCli
               script
             end
           end
-        rescue ScriptModule::Domain::InvalidExtensionPointError
-          @ctx.puts(format(INVALID_EXTENSION_POINT, extension_point: extension_point))
         end
       end
     end

@@ -37,15 +37,7 @@ module ShopifyCli
           return @ctx.puts(self.class.help) unless ScriptModule::LANGUAGES.include?(language)
 
           dep_manager = ScriptModule::Infrastructure::DependencyManager.for(@ctx, script_name, language)
-
-          unless dep_manager.installed?
-            CLI::UI::Frame.open('Installing Dependencies in {{green:package.json}}...') do
-              ShopifyCli::UI::StrictSpinner.spin('Installing') do |spinner|
-                dep_manager.install
-                spinner.update_title('Installed')
-              end
-            end
-          end
+          dep_manager.install unless dep_manager.installed?
 
           ShopifyCli::UI::StrictSpinner.spin(BUILDING_MSG) do |spinner|
             ScriptModule::Application::Build.call(language, extension_point_type, script_name)
