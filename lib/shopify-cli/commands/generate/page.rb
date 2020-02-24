@@ -10,12 +10,12 @@ module ShopifyCli
           end
         end
 
+        def self.available?
+          Project.current.app_type == AppTypes::Node
+        end
+
         def call(args, _name)
           project = ShopifyCli::Project.current
-          # temporary check until we build for rails
-          if project.app_type == ShopifyCli::AppTypes::Rails
-            raise(ShopifyCli::Abort, "{{x}} This feature is not yet available for Rails apps")
-          end
           types = project.app_type.page_types
           name = args.first
           flag = options.flags[:type]
