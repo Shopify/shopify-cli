@@ -26,7 +26,7 @@ GEM
       ast (~> 2.4.0)
     public_suffix (3.0.3)
     rainbow (3.0.0)
-    rake (12.1.0)
+    rake (13.0.1)
     rubocop (0.76.0)
       jaro_winkler (~> 1.5.1)
       parallel (~> 1.10)
