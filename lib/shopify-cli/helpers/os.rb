@@ -32,6 +32,26 @@ module ShopifyCli
         OPEN
         ctx.puts(help)
       end
+
+      def on_siginfo
+        fork do
+          begin
+            r, w = IO.pipe
+            @signal = false
+            trap('SIGINFO') do
+              @signal = true
+              w.write(0)
+            end
+            while r.read(1)
+              next unless @signal
+              @signal = false
+              yield
+            end
+          rescue Interrupt
+            exit(0)
+          end
+        end
+      end
     end
   end
 end
