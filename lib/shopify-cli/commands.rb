@@ -22,7 +22,6 @@ module ShopifyCli
     register :LoadSystem, 'load-system', 'shopify-cli/commands/load_system'
     register :Open, 'open', 'shopify-cli/commands/open'
     register :Populate, 'populate', 'shopify-cli/commands/populate'
-    register :Serve, 'serve', 'shopify-cli/commands/serve'
     register :Tunnel, 'tunnel', 'shopify-cli/commands/tunnel'
     register :Update, 'update', 'shopify-cli/commands/update'
   end

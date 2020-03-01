@@ -21,6 +21,8 @@ module ShopifyCli
           @status_mock[:false].stubs(:success?).returns(false)
           @status_mock[:true].stubs(:success?).returns(true)
 
+          File.stubs(:exist?)
+
           stub_successful_flow(os: :mac)
         end
 
