@@ -7,7 +7,7 @@ module ShopifyCli
     class FakeCommand < ShopifyCli::Command
       prerequisite_task :fake
 
-      class FakeSubCommand < ShopifyCli::Command
+      class FakeSubCommand < ShopifyCli::SubCommand
         def call(*)
           @ctx.puts('subcommand!')
         end

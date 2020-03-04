@@ -1,45 +1,27 @@
-require 'shopify_cli'
 require 'uri'
 
-module ShopifyCli
+module Rails
   module Forms
-    class CreateApp < Form
-      positional_arguments :name
-      flag_arguments :title, :type, :organization_id, :shop_domain
+    class Create < ShopifyCli::Form
+      attr_accessor :name
+      flag_arguments :title, :organization_id, :shop_domain
 
       def ask
-        self.title ||= fallback_title
-        self.type = ask_type
+        self.title ||= CLI::UI::Prompt.ask('App Name')
+        self.name = self.title.downcase.split(" ").join("_")
         self.organization_id ||= organization["id"].to_i
         self.shop_domain ||= ask_shop_domain
       end
 
       private
 
-      def fallback_title
-        name.gsub(/([A-Z]+)([A-Z][a-z])/, '\1 \2')
-          .gsub(/([a-z\d])([A-Z])/, '\1 \2') # change camelcase to title
-          .gsub(/(-|_)/, ' ') # change snakecase to title
-          .capitalize
-      end
-
-      def ask_type
-        return type unless AppTypeRegistry[type.to_s.to_sym].nil?
-        ctx.puts('Invalid App Type.') unless type.nil?
-        CLI::UI::Prompt.ask('What type of app project would you like to create?') do |handler|
-          AppTypeRegistry.each do |identifier, type|
-            handler.option(type.description) { identifier }
-          end
-        end
-      end
-
       def organizations
-        @organizations ||= Helpers::Organizations.fetch_all(ctx)
+        @organizations ||= ShopifyCli::Helpers::Organizations.fetch_all(ctx)
       end
 
       def organization
         @organiztion ||= if !organization_id.nil?
-          org = Helpers::Organizations.fetch(ctx, id: organization_id)
+          org = ShopifyCli::Helpers::Organizations.fetch(ctx, id: organization_id)
           raise(ShopifyCli::Abort, "{{x}} Cannot find an organization with that ID") if org.nil?
           org
         elsif organizations.count == 0
@@ -74,3 +56,4 @@ module ShopifyCli
     end
   end
 end
+

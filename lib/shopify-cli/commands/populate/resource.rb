@@ -13,7 +13,7 @@ module ShopifyCli
           attr_accessor :input_type
 
           # we override the call classmethod here because we parse options at runtime
-          def call(args, command_name)
+          def call(args, command_name, _parent_command)
             cmd = new(@ctx)
             cmd.call(args, command_name)
           end

@@ -1,7 +1,9 @@
 module ShopifyCli
   class ProjectType
     class << self
-      attr_accessor :project_type
+      attr_accessor :project_type,
+        :project_name,
+        :project_creator_command_class
 
       def repository
         @repository ||= []
@@ -34,6 +36,16 @@ module ShopifyCli
 
       def project_filepath(path)
         File.join(ShopifyCli::PROJECT_TYPES_DIR, project_type.to_s, path)
+      end
+
+      def creator(name, command_const)
+        @project_name = name
+        @project_creator_command_class = command_const
+        ShopifyCli::Commands::Create.subcommand(command_const, @project_type)
+      end
+
+      def create_command
+        const_get(@project_creator_command_class)
       end
 
       def register_command(const, cmd)
