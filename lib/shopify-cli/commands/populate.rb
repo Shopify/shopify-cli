@@ -42,13 +42,13 @@ module ShopifyCli
           {{bold:Examples:}}
 
             {{cyan:shopify populate products}}
-              Populate your development store with 10 additional products.
+              Populate your development store with 5 additional products.
 
             {{cyan:shopify populate customers --count 30}}
               Populate your development store with 30 additional customers.
 
             {{cyan:shopify populate draftorders}}
-              Populate your development store with 10 additional orders.
+              Populate your development store with 5 additional orders.
         HELP
       end
     end
