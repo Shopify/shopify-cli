@@ -19,6 +19,36 @@ module ShopifyCli
         end
       end
 
+      def test_clones_git_repo
+        CLI::Kit::System.expects(:system).with(
+          'git',
+          'clone',
+          '--single-branch',
+          'git@github.com:shopify/test.git',
+          'test-app',
+          '--progress'
+        ).returns(mock(success?: true))
+        capture_io do
+          Git.clone('git@github.com:shopify/test.git', 'test-app')
+        end
+      end
+
+      def test_clone_failure
+        assert_raises(ShopifyCli::Abort) do
+          CLI::Kit::System.expects(:system).with(
+            'git',
+            'clone',
+            '--single-branch',
+            'git@github.com:shopify/test.git',
+            'test-app',
+            '--progress'
+          ).returns(mock(success?: false))
+          capture_io do
+            Git.clone('git@github.com:shopify/test.git', 'test-app')
+          end
+        end
+      end
+
       private
 
       def in_repo

@@ -13,7 +13,7 @@ module ShopifyCli
         subcommand, resolved_name = subcommand_registry.lookup_command(args.first)
         if subcommand
           subcommand.ctx = @ctx
-          subcommand.call(args, resolved_name)
+          subcommand.call(args, resolved_name, command_name)
         else
           cmd = new
           cmd.ctx = @ctx
@@ -30,7 +30,7 @@ module ShopifyCli
 
       def subcommand(const, cmd, path = nil)
         autoload(const, path) if path
-        subcommand_registry.add(->() { const_get(const) }, cmd)
+        subcommand_registry.add(->() { const_get(const) }, cmd.to_s)
       end
 
       def subcommand_registry
@@ -50,9 +50,9 @@ module ShopifyCli
         @prerequisite_tasks ||= {}
       end
 
-      def call_help(name)
+      def call_help(*cmds)
         help = Commands::Help.new(@ctx)
-        help.call([name], nil)
+        help.call(cmds, nil)
       end
     end
 

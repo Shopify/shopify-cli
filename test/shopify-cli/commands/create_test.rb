@@ -3,15 +3,28 @@ require 'test_helper'
 module ShopifyCli
   module Commands
     class CreateTest < MiniTest::Test
-      def test_without_arguments_calls_help
-        @context.expects(:puts).with(ShopifyCli::Commands::Create.help)
-        run_cmd('create')
+      def test_help_loads_app_types
+        io = capture_io do
+          run_cmd('create --help')
+        end
+        output = io.join
+        assert_match('node', output)
+        assert_match('rails', output)
       end
 
-      def test_with_project_calls_project
-        Create::Project.any_instance.expects(:call)
-          .with(['new-app'], 'project')
-        run_cmd('create project new-app')
+      def test_type_is_validated_and_will_call_help_on_bad_type
+        io = capture_io do
+          run_cmd('create nope')
+        end
+        assert_match('invalid app type', io.join)
+      end
+
+      def test_type_will_be_asked_for_if_not_provided
+        ProjectType.load_type(:rails)
+        Rails::Commands::Create.expects(:call)
+        Rails::Commands::Create.expects(:ctx=)
+        CLI::UI::Prompt.expects(:ask).with('What type of project would you like to create?').returns(:rails)
+        run_cmd('create')
       end
     end
   end
