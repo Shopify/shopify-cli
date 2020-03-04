@@ -1,3 +1,4 @@
+# frozen_string_literal: true
 module Node
   module Commands
     class Serve < ShopifyCli::Command
@@ -14,16 +15,16 @@ module Node
       def call(*)
         project = ShopifyCli::Project.current
         url = options.flags[:host] || ShopifyCli::Tasks::Tunnel.call(@ctx)
-        ShopifyCli::Project.current.env.update(@ctx, :host, url)
+        project.env.update(@ctx, :host, url)
         ShopifyCli::Tasks::UpdateDashboardURLS.call(@ctx, url: url)
         if mac? && project.env.shop
           @ctx.puts("{{*}} Press {{yellow: Control-T}} to open this project in {{green:#{project.env.shop}}} ")
           on_siginfo do
-            open_url!(@ctx, project.app_type.open_url)
+            open_url!(@ctx, "#{project.env.host}/auth?shop=#{project.env.shop}")
           end
         end
         CLI::UI::Frame.open('Running server...') do
-          env = ShopifyCli::Project.current.env.to_h
+          env = project.env.to_h
           env['PORT'] = ShopifyCli::Tasks::Tunnel::PORT.to_s
           @ctx.system('npm run dev', env: env)
         end

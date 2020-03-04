@@ -1,8 +1,8 @@
 require 'test_helper'
 
 module ShopifyCli
-  class FormsTest < MiniTest::Test
-    class TestForm < Forms::Form
+  class FormTest < MiniTest::Test
+    class TestForm < ShopifyCli::Form
       positional_arguments :one, :two
       flag_arguments :three, :four
 

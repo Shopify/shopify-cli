@@ -3,34 +3,43 @@ require 'shopify_cli'
 module ShopifyCli
   module Commands
     class Create < ShopifyCli::Command
-      subcommand :Project, 'project', 'shopify-cli/commands/create/project'
+      def self.call(args, command_name)
+        ProjectType.load_type(args[0]) unless args.empty?
+        super
+      end
 
-      def call(*)
-        @ctx.puts(self.class.help)
+      def call(args, command_name)
+        unless args.empty?
+          @ctx.puts("{{red:Error}}: invalid app type {{bold:#{args[0]}}}")
+          return @ctx.puts(self.class.help)
+        end
+
+        type_name = CLI::UI::Prompt.ask('What type of project would you like to create?') do |handler|
+          ProjectType.load_all.each do |type|
+            handler.option(type.project_name) { type.project_type }
+          end
+        end
+
+        klass = ProjectType.load_type(type_name).create_command
+        klass.ctx = @ctx
+        klass.call(args, command_name, 'create')
       end
 
       def self.help
+        project_types = ProjectType.load_all.map(&:project_type).join("|")
         <<~HELP
-          Create a new app project.
-            Usage: {{command:#{ShopifyCli::TOOL_NAME} create project <appname>}}
+          Create a new project.
+            Usage: {{command:#{ShopifyCli::TOOL_NAME} create [#{project_types}]}}
         HELP
       end
 
       def self.extended_help
         <<~HELP
-          {{bold:Subcommands:}}
-
-            {{cyan:project}}: Creates an app based on type selected.
-              Usage: {{command:#{ShopifyCli::TOOL_NAME} create project <appname>}}
-
-              Options:
-                {{command:--type=TYPE}}  App project type. Valid types are "node" and "rails"
-                {{command:--title=TITLE}} App project title. Any string.
-                {{command:--app_url=APPURL}} App project URL. Must be valid URL.
-                {{command:--organization_id=ID}} App project Org ID. Must be existing org ID.
-                {{command:--shop_domain=MYSHOPIFYDOMAIN }} Test store URL. Must be existing test store.
-
-            {{cyan:dev-store}}: {{yellow: Create dev-store is not currently available.}}
+          #{
+            ProjectType.load_all.map do |type|
+              type.create_command.help
+            end.join("\n")
+          }
         HELP
       end
     end

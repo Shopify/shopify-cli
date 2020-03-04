@@ -1,64 +1,28 @@
 # frozen_string_literal: true
 require 'test_helper'
 
-module ShopifyCli
+module Node
   module Forms
-    class CreateAppTest < MiniTest::Test
+    class CreateTest < MiniTest::Test
       include TestHelpers::Partners
+
+      def setup
+        super
+        ShopifyCli::ProjectType.load_type(:node)
+      end
 
       def test_returns_all_defined_attributes_if_valid
         form = ask
-        assert_equal(form.name, 'test-app')
-        assert_equal(form.title, 'Test app')
-        assert_equal(form.type, 'node')
+        assert_equal(form.name, 'test_app')
+        assert_equal(form.title, 'Test App')
         assert_equal(form.organization_id, 42)
         assert_equal(form.shop_domain, 'shop.myshopify.com')
       end
 
-      def test_transforms_fallback_titles_properly
-        title_tests = {
-          'TEST-APP1' => 'Test app1',
-          'testApp2' => 'Test app2',
-          'TestApp3' => 'Test app3',
-          'test_app4' => 'Test app4',
-          'testAPI5' => 'Test api5',
-          'TESTApp6' => 'Test app6',
-          'INCAPS' => 'Incaps',
-        }
-
-        title_tests.each do |input, expected|
-          form = ask(name: input)
-          assert_equal(form.title, expected)
-        end
-      end
-
       def test_title_can_be_provided_by_flag
-        form = ask
-        assert_equal(form.name, 'test-app')
-        assert_equal(form.title, 'Test app')
-
         form = ask(title: 'My New App')
-        assert_equal(form.name, 'test-app')
+        assert_equal(form.name, 'my_new_app')
         assert_equal(form.title, 'My New App')
-      end
-
-      def test_type_can_be_provided_by_flag
-        form = ask
-        assert_equal(form.type, 'node')
-
-        form = ask(type: 'rails')
-        assert_equal(form.type, 'rails')
-
-        io = capture_io do
-          CLI::UI::Prompt.expects(:ask).with('What type of app project would you like to create?')
-          ask(type: 'notatype')
-        end
-        assert_match('Invalid App Type.', io.join)
-      end
-
-      def test_type_will_be_asked_for_if_not_provided
-        CLI::UI::Prompt.expects(:ask).with('What type of app project would you like to create?')
-        ask(type: nil)
       end
 
       def test_user_will_be_prompted_if_more_than_one_organization
@@ -227,12 +191,11 @@ module ShopifyCli
 
       private
 
-      def ask(name: 'test-app', title: nil, type: 'node', org_id: 42, shop: 'shop.myshopify.com')
-        CreateApp.ask(
+      def ask(title: 'Test App', org_id: 42, shop: 'shop.myshopify.com')
+        Create.ask(
           @context,
-          [name],
+          [],
           title: title,
-          type: type,
           organization_id: org_id,
           shop_domain: shop,
         )
@@ -240,3 +203,5 @@ module ShopifyCli
     end
   end
 end
+
+
