@@ -35,6 +35,7 @@ Developers should have some prior knowledge of the Shopify app ecosystem. Curren
 
 - If you don’t have one, [create a Shopify partner account](https://partners.shopify.com/signup).
 - If you don’t have one, [create a Development store](https://help.shopify.com/en/partners/dashboard/development-stores#create-a-development-store) where you can install and test your app.
+- You should have Node.js version 10.0.0 or higher installed. If you're looking for a way to manage your node versions we recommend [nvm](https://github.com/nvm-sh/nvm/blob/master/README.md)
 
 ## Commands
 

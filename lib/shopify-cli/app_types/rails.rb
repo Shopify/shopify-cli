@@ -81,6 +81,9 @@ module ShopifyCli
         unless Helpers::Ruby.version(ctx).satisfies?('~>2.4')
           raise ShopifyCli::Abort, invalid_ruby_message
         end
+        unless Helpers::Node.version(ctx).satisfies?('>=10.0.0')
+          raise ShopifyCli::Abort, invalid_node_message
+        end
         Gem.install(ctx, 'rails')
         Gem.install(ctx, 'bundler')
       end
@@ -92,6 +95,14 @@ module ShopifyCli
           This project requires a ruby version ~> 2.4.
           See {{underline:https://github.com/Shopify/shopify-app-cli/blob/master/docs/installing-ruby.md}}
           for our recommended method of installing ruby.
+        MSG
+      end
+
+      def invalid_node_message
+        <<~MSG
+          This project requires a Node.js version >= 10.0
+          See {{underline:https://github.com/Shopify/shopify-app-cli/blob/master/README.md}}
+          for our recommended method of switching Node.js versions.
         MSG
       end
 
