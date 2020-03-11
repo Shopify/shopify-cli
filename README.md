@@ -207,6 +207,6 @@ if [[ -f /HOME_DIR/.shopify-cli/shopify.sh ]]; then source /HOME_DIR/.shopify-cl
 
 Deleting or commenting out this line will remove `shopify` as a command. You may need to reload your shell.
 
-## Contributing
+## Contributing to Shopify App CLI
 
-See our [Development Guide](https://shopify.github.io/shopify-app-cli/development).
+See our [Development Guide](docs/development.md).
