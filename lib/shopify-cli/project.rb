@@ -10,6 +10,12 @@ module ShopifyCli
         at(Dir.pwd)
       end
 
+      def current_project_type
+        proj_dir = directory(Dir.pwd)
+        return if proj_dir.nil?
+        current.config['app_type'].to_sym
+      end
+
       def at(dir)
         proj_dir = directory(dir)
         unless proj_dir
