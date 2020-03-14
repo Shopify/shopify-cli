@@ -3,6 +3,7 @@ module Rails
   class Project < ShopifyCli::ProjectType
     creator 'Ruby on Rails App', 'Rails::Commands::Create'
 
+    register_command('Rails::Commands::Open', "open")
     register_command('Rails::Commands::Serve', "serve")
     # register_task('Rails::Tasks::RailsTask', 'rails_task')
   end
@@ -10,6 +11,7 @@ module Rails
   # define/autoload project specific Commads
   module Commands
     autoload :Create, Project.project_filepath('commands/create')
+    autoload :Open, Project.project_filepath('commands/open')
     autoload :Serve, Project.project_filepath('commands/serve')
   end
 
