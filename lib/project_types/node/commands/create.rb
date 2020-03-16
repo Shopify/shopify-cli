@@ -65,13 +65,13 @@ module Node
       private
 
       def check_node
-        version, stat = @ctx.capture2e('node -v')
+        version, stat = @ctx.capture2e('node', '-v')
         @ctx.puts("{{v}} node #{version}")
         raise(ShopifyCli::Abort, NODE_REQUIRED_NOTICE) unless stat.success?
       end
 
       def check_npm
-        version, stat = @ctx.capture2e('npm -v')
+        version, stat = @ctx.capture2e('npm', '-v')
         @ctx.puts("{{v}} npm #{version}")
         raise(ShopifyCli::Abort, NPM_REQUIRED_NOTICE) unless stat.success?
         return unless @ctx.getenv('DISABLE_NPM_REGISTRY_CHECK').nil?
