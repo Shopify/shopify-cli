@@ -5,8 +5,6 @@ module Node
     class Open < ShopifyCli::Command
       include ShopifyCli::Helpers::OS
 
-      prerequisite_task :tunnel
-
       def call(*)
         project = ShopifyCli::Project.current
         open_url!(@ctx, "#{project.env.host}/auth?shop=#{project.env.shop}")
