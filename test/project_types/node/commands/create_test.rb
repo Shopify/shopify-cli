@@ -30,7 +30,7 @@ module Node
       end
 
       def test_check_node_installed
-        @context.expects(:capture2e).with(%w(node -v)).returns([nil, mock(success?: false)])
+        @context.expects(:capture2e).with('node -v').returns([nil, mock(success?: false)])
         assert_raises ShopifyCli::Abort, Create::NODE_REQUIRED_NOTICE do
           perform_command
         end
@@ -38,16 +38,16 @@ module Node
 
       def test_check_npm_installed
         Create.any_instance.stubs(:check_node)
-        @context.expects(:capture2e).with(%w(npm -v)).returns([nil, mock(success?: false)])
+        @context.expects(:capture2e).with('npm -v').returns([nil, mock(success?: false)])
         assert_raises ShopifyCli::Abort, Create::NPM_REQUIRED_NOTICE do
           perform_command
         end
       end
 
       def test_check_npm_registry
-        @context.expects(:capture2e).with(%w(npm -v)).returns(['1', mock(success?: true)])
-        @context.expects(:capture2e).with(%w(node -v)).returns(['8.0.0', mock(success?: true)])
-        @context.expects(:capture2).with(%w(npm config get @shopify:registry)).returns(
+        @context.expects(:capture2e).with('npm -v').returns(['1', mock(success?: true)])
+        @context.expects(:capture2e).with('node -v').returns(['8.0.0', mock(success?: true)])
+        @context.expects(:capture2).with('npm config get @shopify:registry').returns(
           ['https://badregistry.com', nil]
         )
         assert_raises ShopifyCli::Abort, Create::NPM_REGISTRY_NOTICE do
@@ -63,9 +63,9 @@ module Node
         FileUtils.touch('test-app/server/handlers/client.js')
         FileUtils.touch('test-app/server/handlers/client.cli.js')
 
-        @context.expects(:capture2e).with(%w(npm -v)).returns(['1', mock(success?: true)])
-        @context.expects(:capture2e).with(%w(node -v)).returns(['8.0.0', mock(success?: true)])
-        @context.expects(:capture2).with(%w(npm config get @shopify:registry)).returns(
+        @context.expects(:capture2e).with('npm -v').returns(['1', mock(success?: true)])
+        @context.expects(:capture2e).with('node -v').returns(['8.0.0', mock(success?: true)])
+        @context.expects(:capture2).with('npm config get @shopify:registry').returns(
           ['https://registry.yarnpkg.com', nil]
         )
         ShopifyCli::Helpers::Git.expects(:clone).with('https://github.com/Shopify/shopify-app-node.git', 'test-app')
