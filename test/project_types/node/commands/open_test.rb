@@ -11,7 +11,6 @@ module Node
       end
 
       def test_run
-        ShopifyCli::Tasks::Tunnel.stubs(:call).returns('https://example.com')
         Node::Commands::Open.any_instance.expects(:open_url!).with(@context, 'https://example.com/auth?shop=my-test-shop.myshopify.com')
         run_cmd('open')
       end
