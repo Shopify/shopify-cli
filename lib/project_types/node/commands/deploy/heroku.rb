@@ -1,19 +1,18 @@
+# frozen_string_literal: true
 require 'shopify_cli'
 
-module ShopifyCli
+module Node
   module Commands
     class Deploy
-      class Heroku < ShopifyCli::Task
+      class Heroku < ShopifyCli::SubCommand
         def self.help
           <<~HELP
-            Deploy the current app project to Heroku
+            Deploy the current Node project to Heroku
             Usage: {{command:#{ShopifyCli::TOOL_NAME} deploy heroku}}
           HELP
         end
 
-        def call(ctx, _name = nil)
-          @ctx = ctx
-
+        def call(_args, _name)
           spin_group = CLI::UI::SpinGroup.new
           git_service = ShopifyCli::Git.new(@ctx)
           heroku_service = ShopifyCli::Heroku.new(@ctx)
