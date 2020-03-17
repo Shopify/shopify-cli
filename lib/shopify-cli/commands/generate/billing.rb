@@ -13,7 +13,7 @@ module ShopifyCli
           selected_type = billing_types[args[1]]
           # temporary check until we build for rails
           if project.app_type == ShopifyCli::AppTypes::Rails
-            raise(ShopifyCli::Abort, '{{x}} This feature is not yet available for Rails apps')
+            @ctx.error('This feature is not yet available for Rails apps')
           end
           unless selected_type
             selected_type = CLI::UI::Prompt.ask('How would you like to charge for your app?') do |handler|

@@ -19,7 +19,7 @@ module ShopifyCli
           token = args.shift
           task.auth(@ctx, token)
         else
-          puts CLI::UI.fmt(self.class.help)
+          @ctx.puts(self.class.help)
         end
       end
 
