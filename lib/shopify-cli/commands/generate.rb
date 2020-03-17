@@ -60,18 +60,18 @@ module ShopifyCli
       def self.run_generate(script, name, ctx)
         stat = ctx.system(script)
         unless stat.success?
-          raise(ShopifyCli::Abort, CLI::UI.fmt(response(stat.exitstatus, name)))
+          ctx.error(response(stat.exitstatus, name))
         end
       end
 
       def self.response(code, name)
         case code
         when 1
-          "{{x}} Error generating #{name}"
+          "Error generating #{name}"
         when 2
-          "{{x}} #{name} already exists!"
+          "#{name} already exists!"
         else
-          '{{x}} Error'
+          'Error'
         end
       end
     end

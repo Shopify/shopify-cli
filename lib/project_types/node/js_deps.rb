@@ -18,7 +18,7 @@ module Node
       CLI::UI::Frame.open("Installing dependencies with #{yarn? ? 'yarn' : 'npm'}...") do
         yarn? ? yarn : npm
       end
-      puts CLI::UI.fmt("{{v}} Dependencies installed")
+      ctx.done("Dependencies installed")
     end
 
     def yarn
@@ -37,14 +37,14 @@ module Node
       pkg = begin
               JSON.parse(File.read(package_json))
             rescue Errno::ENOENT, Errno::ENOTDIR
-              raise(ShopifyCli::Abort, "{{x}} expected to have a file at: #{package_json}")
+              ctx.error("expected to have a file at: #{package_json}")
             end
 
       deps = %w(dependencies devDependencies).map do |key|
         pkg.fetch(key, []).keys
       end.flatten
       CLI::UI::Spinner.spin("Installing #{deps.size} dependencies...") do |spinner|
-        CLI::Kit::System.system('npm', 'install', '--no-audit', '--no-optional', '--silent', chdir: ctx.root)
+        ctx.system('npm', 'install', '--no-audit', '--no-optional', '--silent', chdir: ctx.root)
         spinner.update_title("#{deps.size} npm dependencies installed")
       end
     rescue JSON::ParserError

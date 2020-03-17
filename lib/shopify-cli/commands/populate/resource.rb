@@ -105,7 +105,7 @@ module ShopifyCli
           resp = Helpers::AdminAPI.query(
             @ctx, "create_#{resource_type}", kwargs
           )
-          raise(ShopifyCli::Abort, resp['errors']) if resp['errors']
+          @ctx.error(resp['errors']) if resp['errors']
           @ctx.done(message(resp['data'])) unless @silent
         end
 

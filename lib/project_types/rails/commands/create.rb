@@ -26,7 +26,7 @@ module Rails
         form = Forms::Create.ask(@ctx, args, options.flags)
         return @ctx.puts(self.class.help) if form.nil?
 
-        raise ShopifyCli::Abort, INVALID_RUBY_VERSION unless Ruby.version(@ctx).satisfies?('~>2.4')
+        @ctx.error(INVALID_RUBY_VERSION) unless Ruby.version(@ctx).satisfies?('~>2.4')
 
         build(form.name)
         set_custom_ua
@@ -107,8 +107,8 @@ module Rails
       end
 
       def set_custom_ua
-        ua_path = File.join(@ctx.root, 'config', 'initializers', 'user_agent.rb')
-        File.write(ua_path, USER_AGENT_CODE)
+        ua_path = File.join('config', 'initializers', 'user_agent.rb')
+        @ctx.write(ua_path, USER_AGENT_CODE)
       end
 
       def syscall(args)
