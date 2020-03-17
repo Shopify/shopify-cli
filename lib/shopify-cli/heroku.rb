@@ -11,8 +11,7 @@ module ShopifyCli
     end
 
     def app
-      return nil if git_remote.nil?
-      app = git_remote
+      return nil unless (app = git_remote)
       app = app.split('/').last
       app = app.split('.').first
       app

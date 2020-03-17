@@ -3,6 +3,7 @@ module Node
   class Project < ShopifyCli::ProjectType
     creator 'Node.js App', 'Node::Commands::Create'
 
+    register_command('Node::Commands::Deploy', "deploy")
     register_command('Node::Commands::Generate', "generate")
     register_command('Node::Commands::Open', "open")
     register_command('Node::Commands::Serve', "serve")
@@ -13,6 +14,7 @@ module Node
   # define/autoload project specific Commads
   module Commands
     autoload :Create, Project.project_filepath('commands/create')
+    autoload :Deploy, Project.project_filepath('commands/deploy')
     autoload :Generate, Project.project_filepath('commands/generate')
     autoload :Open, Project.project_filepath('commands/open')
     autoload :Serve, Project.project_filepath('commands/serve')
