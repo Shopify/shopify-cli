@@ -20,7 +20,8 @@ module Node
           end
           spin_group = CLI::UI::SpinGroup.new
           spin_group.add("Generating webhook: #{selected_type}") do |spinner|
-            Node::Commands::Generate.run_generate("./node_modules/.bin/generate-node-app webhook #{selected_type}", selected_type, @ctx)
+            Node::Commands::Generate.run_generate("./node_modules/.bin/generate-node-app webhook #{selected_type}",
+              selected_type, @ctx)
             spinner.update_title("{{green:#{selected_type}}} generated in server/server.js")
           end
           spin_group.wait

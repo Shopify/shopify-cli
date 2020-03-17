@@ -18,7 +18,6 @@ module Node
         end
 
         def call(args, _name)
-          project = ShopifyCli::Project.current
           name = args.first
           flag = options.flags[:type]
           unless name

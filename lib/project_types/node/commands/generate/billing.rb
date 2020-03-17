@@ -9,7 +9,6 @@ module Node
           'one-time-billing' => './node_modules/.bin/generate-node-app one-time-billing',
         }
         def call(args, _name)
-          project = ShopifyCli::Project.current
           selected_type = BILLING_TYPES[args[1]]
           unless selected_type
             selected_type = CLI::UI::Prompt.ask('How would you like to charge for your app?') do |handler|

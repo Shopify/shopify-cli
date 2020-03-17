@@ -35,8 +35,9 @@ module Rails
 
         def generate_command(selected_type)
           parts = selected_type.downcase.split("_")
+          env = ShopifyCli::Project.current.env.host
           selected_type = parts[0..-2].join("_") + "/" + parts[-1]
-          "rails g shopify_app:add_webhook -t #{selected_type} -a #{ShopifyCli::Project.current.env.host}/webhooks/#{selected_type.downcase}"
+          "rails g shopify_app:add_webhook -t #{selected_type} -a #{env}/webhooks/#{selected_type.downcase}"
         end
       end
     end

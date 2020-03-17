@@ -34,17 +34,6 @@ module Rails
           raise(ShopifyCli::Abort, CLI::UI.fmt(response(stat.exitstatus, name)))
         end
       end
-
-      def self.response(code, name)
-        case code
-        when 1
-          "{{x}} Error generating #{name}"
-        when 2
-          "{{x}} #{name} already exists!"
-        else
-          '{{x}} Error'
-        end
-      end
     end
   end
 end
