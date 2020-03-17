@@ -18,13 +18,14 @@ module Node
               end
             end
           end
+          billing_type_name = BILLING_TYPES.key(selected_type)
           spin_group = CLI::UI::SpinGroup.new
-          spin_group.add("Generating #{BILLING_TYPES.key(selected_type)} code ...") do |spinner|
+          spin_group.add("Generating #{billing_type_name} code ...") do |spinner|
             Node::Commands::Generate.run_generate(
-              selected_type, BILLING_TYPES.key(selected_type), @ctx
+              selected_type, billing_type_name, @ctx
             )
             spinner.update_title(
-              "{{green:#{BILLING_TYPES.key(selected_type)} generated in server/server.js"
+              "{{green:#{billing_type_name} generated in server/server.js"
             )
           end
           spin_group.wait
