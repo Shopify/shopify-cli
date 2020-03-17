@@ -50,7 +50,7 @@ module ShopifyCli
 
         _, stat = ctx.capture2e('git', '-C', ShopifyCli::ROOT, 'fetch', 'origin', 'master')
         unless stat.success?
-          raise(ShopifyCli::Abort, '{{x}} failed!')
+          ctx.error('failed!')
         end
 
         commands = [
@@ -62,7 +62,7 @@ module ShopifyCli
         Kernel.print('Updating shopify-cli...')
         commands.each do |args|
           _, stat = ctx.capture2e('git', '-C', ShopifyCli::ROOT, *args)
-          raise(ShopifyCli::Abort, "{{x}} command failed: #{args.join(' ')}") unless stat.success?
+          ctx.error("command failed: #{args.join(' ')}") unless stat.success?
         end
 
         ctx.puts("done!")

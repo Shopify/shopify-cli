@@ -31,9 +31,8 @@ module ShopifyCli
             pid_file&.unlink_log
             @ctx.puts("{{green:x}} ngrok tunnel stopped")
           rescue
-            raise(
-              ShopifyCli::Abort,
-              '{{red:x}} ngrok tunnel could not be stopped. Try running {{command:killall -9 ngrok}}'
+            @ctx.error(
+              'ngrok tunnel could not be stopped. Try running {{command:killall -9 ngrok}}'
             )
           end
         else
@@ -79,7 +78,7 @@ module ShopifyCli
             @ctx.system('curl', '-o', zip_dest, DOWNLOAD_URLS[os], chdir: ShopifyCli::ROOT)
           end
           @ctx.system('unzip', '-u', zip_dest, chdir: ShopifyCli::ROOT)
-          FileUtils.rm(zip_dest)
+          @ctx.rm(zip_dest)
         end
         spinner.wait
       end
