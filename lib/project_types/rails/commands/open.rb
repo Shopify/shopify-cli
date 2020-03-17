@@ -1,14 +1,13 @@
 require 'shopify_cli'
 
-module ShopifyCli
+module Rails
   module Commands
     class Open < ShopifyCli::Command
-      include Helpers::OS
-
-      prerequisite_task :tunnel
+      include ShopifyCli::Helpers::OS
 
       def call(*)
-        open_url!(@ctx, Project.current.app_type.open_url)
+        project = ShopifyCli::Project.current
+        open_url!(@ctx, "#{project.env.host}/login?shop=#{project.env.shop}")
       end
 
       def self.help
