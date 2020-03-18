@@ -30,16 +30,15 @@ module Rails
       end
 
       def test_open_while_run
-        Rails::Commands::Serve.any_instance.stubs(:on_siginfo).yields
+        ShopifyCli::Context.any_instance.stubs(:on_siginfo).yields
         ShopifyCli::Tasks::Tunnel.stubs(:call).returns('https://example.com')
         ShopifyCli::Tasks::UpdateDashboardURLS.expects(:call)
         ShopifyCli::Helpers::EnvFile.any_instance.expects(:update).with(
           @context, :host, 'https://example.com'
         )
-        Rails::Commands::Serve.any_instance.stubs(:mac?).returns(true)
-        Rails::Commands::Serve.any_instance.expects(:open_url!).with(
-          @context,
-          'https://example.com/login?shop=my-test-shop.myshopify.com',
+        ShopifyCli::Context.any_instance.stubs(:mac?).returns(true)
+        ShopifyCli::Context.any_instance.expects(:open_url!).with(
+          'https://example.com/login?shop=my-test-shop.myshopify.com'
         )
         run_cmd('serve')
       end
