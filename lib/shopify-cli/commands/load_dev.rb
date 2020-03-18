@@ -3,6 +3,8 @@ require 'shopify_cli'
 module ShopifyCli
   module Commands
     class LoadDev < ShopifyCli::Command
+      hidden_command
+
       def call(args, _name)
         project_dir = File.expand_path(args.shift || Dir.pwd)
         unless File.exist?(project_dir)
