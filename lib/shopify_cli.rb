@@ -105,6 +105,7 @@ module ShopifyCli
   autoload :Executor, 'shopify-cli/executor'
   autoload :Finalize, 'shopify-cli/finalize'
   autoload :Form, 'shopify-cli/form'
+  autoload :Git, 'shopify-cli/git'
   autoload :Helpers, 'shopify-cli/helpers'
   autoload :Log, 'shopify-cli/log'
   autoload :Monorail, 'shopify-cli/monorail'
