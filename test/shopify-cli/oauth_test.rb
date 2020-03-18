@@ -20,7 +20,7 @@ module ShopifyCli
     def test_authenticate_with_secret
       endpoint = "https://example.com/auth"
       client = oauth(secret: 'secret')
-      ShopifyCli::Context.expects(:open_url!).with do |param|
+      @context.expects(:open_url!).with do |param|
         auth_response(client, endpoint, param)
       end
 
@@ -52,7 +52,7 @@ module ShopifyCli
     def test_authenticate_without_secret
       endpoint = "https://example.com/auth"
       client = oauth
-      ShopifyCli::Context.expects(:open_url!).with do |param|
+      @context.expects(:open_url!).with do |param|
         auth_response(client, endpoint, param)
       end
 
@@ -84,7 +84,7 @@ module ShopifyCli
     def test_request_exchange_token
       endpoint = "https://example.com/auth"
       client = oauth(request_exchange: '123')
-      ShopifyCli::Context.expects(:open_url!).with do |param|
+      @context.expects(:open_url!).with do |param|
         auth_response(client, endpoint, param)
       end
 
@@ -214,7 +214,7 @@ module ShopifyCli
     def test_authenticate_with_invalid_request
       endpoint = "https://example.com/auth"
       client = oauth
-      ShopifyCli::Context.expects(:open_url!).with do |_param|
+      @context.expects(:open_url!).with do |_param|
         WebMock.disable!
         https = Net::HTTP.new('localhost', 3456)
         request = Net::HTTP::Get.new("/?error=err&error_description=error")
@@ -231,7 +231,7 @@ module ShopifyCli
     def test_authenticate_with_invalid_state
       endpoint = "https://example.com/auth"
       client = oauth
-      ShopifyCli::Context.expects(:open_url!).with do |_param|
+      @context.expects(:open_url!).with do |_param|
         WebMock.disable!
         https = Net::HTTP.new('localhost', 3456)
         request = Net::HTTP::Get.new("/?code=mycode&state=notyourstate")
@@ -248,7 +248,7 @@ module ShopifyCli
     def test_authenticate_with_invalid_code
       endpoint = "https://example.com/auth"
       client = oauth(secret: 'secret')
-      ShopifyCli::Context.expects(:open_url!).with do |param|
+      @context.expects(:open_url!).with do |param|
         auth_response(client, endpoint, param)
       end
 
