@@ -4,7 +4,6 @@ module ShopifyCli
   module Commands
     class Deploy
       class Heroku < ShopifyCli::Task
-        include Helpers::OS
 
         DOWNLOAD_URLS = {
           linux: 'https://cli-assets.heroku.com/heroku-linux-x64.tar.gz',
@@ -135,13 +134,13 @@ module ShopifyCli
         def heroku_download
           return if heroku_installed?
 
-          result = @ctx.system('curl', '-o', heroku_download_path, DOWNLOAD_URLS[os], chdir: ShopifyCli::ROOT)
+          result = @ctx.system('curl', '-o', heroku_download_path, DOWNLOAD_URLS[@ctx.os], chdir: ShopifyCli::ROOT)
           @ctx.error("Heroku CLI could not be downloaded") unless result.success?
           @ctx.error("Heroku CLI could not be downloaded") unless File.exist?(heroku_download_path)
         end
 
         def heroku_download_filename
-          URI.parse(DOWNLOAD_URLS[os]).path.split('/').last
+          URI.parse(DOWNLOAD_URLS[@ctx.os]).path.split('/').last
         end
 
         def heroku_download_path

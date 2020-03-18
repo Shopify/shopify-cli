@@ -20,8 +20,8 @@ module ShopifyCli
     def test_authenticate_with_secret
       endpoint = "https://example.com/auth"
       client = oauth(secret: 'secret')
-      client.expects(:open_url!).with do |_ctx, param|
-        auth_repsonse(client, endpoint, param)
+      ShopifyCli::Context.expects(:open_url!).with do |param|
+        auth_response(client, endpoint, param)
       end
 
       authorize_query = {
@@ -52,8 +52,8 @@ module ShopifyCli
     def test_authenticate_without_secret
       endpoint = "https://example.com/auth"
       client = oauth
-      client.expects(:open_url!).with do |_ctx, param|
-        auth_repsonse(client, endpoint, param)
+      ShopifyCli::Context.expects(:open_url!).with do |param|
+        auth_response(client, endpoint, param)
       end
 
       authorize_query = {
@@ -84,8 +84,8 @@ module ShopifyCli
     def test_request_exchange_token
       endpoint = "https://example.com/auth"
       client = oauth(request_exchange: '123')
-      client.expects(:open_url!).with do |_ctx, param|
-        auth_repsonse(client, endpoint, param)
+      ShopifyCli::Context.expects(:open_url!).with do |param|
+        auth_response(client, endpoint, param)
       end
 
       authorize_query = {
@@ -214,7 +214,7 @@ module ShopifyCli
     def test_authenticate_with_invalid_request
       endpoint = "https://example.com/auth"
       client = oauth
-      client.expects(:open_url!).with do |_ctx, _param|
+      ShopifyCli::Context.expects(:open_url!).with do |_param|
         WebMock.disable!
         https = Net::HTTP.new('localhost', 3456)
         request = Net::HTTP::Get.new("/?error=err&error_description=error")
@@ -231,7 +231,7 @@ module ShopifyCli
     def test_authenticate_with_invalid_state
       endpoint = "https://example.com/auth"
       client = oauth
-      client.expects(:open_url!).with do |_ctx, _param|
+      ShopifyCli::Context.expects(:open_url!).with do |_param|
         WebMock.disable!
         https = Net::HTTP.new('localhost', 3456)
         request = Net::HTTP::Get.new("/?code=mycode&state=notyourstate")
@@ -248,8 +248,8 @@ module ShopifyCli
     def test_authenticate_with_invalid_code
       endpoint = "https://example.com/auth"
       client = oauth(secret: 'secret')
-      client.expects(:open_url!).with do |_ctx, param|
-        auth_repsonse(client, endpoint, param)
+      ShopifyCli::Context.expects(:open_url!).with do |param|
+        auth_response(client, endpoint, param)
       end
 
       authorize_query = {
@@ -295,7 +295,7 @@ module ShopifyCli
       }.merge(args))
     end
 
-    def auth_repsonse(client, endpoint, param)
+    def auth_response(client, endpoint, param)
       query = {
         client_id: client.client_id,
         scope: client.scopes,

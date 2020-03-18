@@ -469,7 +469,7 @@ module ShopifyCli
         end
 
         def stub_os(os:)
-          Heroku.any_instance.stubs(:os).returns(os)
+          ShopifyCli::Context.any_instance.stubs(:os).returns(os)
         end
       end
     end

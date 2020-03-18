@@ -3,7 +3,6 @@ require 'net/http'
 
 module ShopifyCli
   class API
-    include Helpers::OS
     include SmartProperties
 
     property! :ctx, accepts: ShopifyCli::Context
@@ -83,7 +82,7 @@ module ShopifyCli
 
     def default_headers
       {
-        'User-Agent' => "Shopify App CLI #{ShopifyCli::VERSION} #{current_sha} | #{uname(flag: 'v')}",
+        'User-Agent' => "Shopify App CLI #{ShopifyCli::VERSION} #{current_sha} | #{ctx.uname(flag: 'v')}",
       }.merge(auth_headers(token))
     end
 
