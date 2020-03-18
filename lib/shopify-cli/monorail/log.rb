@@ -20,7 +20,7 @@ module ShopifyCli
       def invocation(name, args, &block)
         args = args.dup.unshift(name)
         payload = {
-          cli_sha: ShopifyCli::Helpers::Git.sha(dir: ShopifyCli::ROOT),
+          cli_sha: ShopifyCli::Git.sha(dir: ShopifyCli::ROOT),
           uname: uname,
           args: args.join(' '),
         }
