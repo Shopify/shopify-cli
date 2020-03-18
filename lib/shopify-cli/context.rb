@@ -38,6 +38,6 @@ module ShopifyCli
         Please open {{green:#{uri}}} in your browser
       OPEN
       puts(help)
-    end    
+    end
   end
 end
