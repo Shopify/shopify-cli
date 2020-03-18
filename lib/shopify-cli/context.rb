@@ -31,5 +31,13 @@ module ShopifyCli
     def app_metadata=(hash)
       @app_metadata = app_metadata.merge(hash)
     end
+
+    def open_url!(uri)
+      return system("open '#{uri}'") if mac?
+      help = <<~OPEN
+        Please open {{green:#{uri}}} in your browser
+      OPEN
+      puts(help)
+    end    
   end
 end

@@ -2,8 +2,6 @@
 module Node
   module Commands
     class Serve < ShopifyCli::Command
-      include ShopifyCli::Helpers::OS
-
       prerequisite_task :ensure_env
 
       options do |parser, flags|
@@ -17,10 +15,10 @@ module Node
         url = options.flags[:host] || ShopifyCli::Tasks::Tunnel.call(@ctx)
         project.env.update(@ctx, :host, url)
         ShopifyCli::Tasks::UpdateDashboardURLS.call(@ctx, url: url)
-        if mac? && project.env.shop
+        if @ctx.mac? && project.env.shop
           @ctx.puts("{{*}} Press {{yellow: Control-T}} to open this project in {{green:#{project.env.shop}}} ")
-          on_siginfo do
-            open_url!(@ctx, "#{project.env.host}/auth?shop=#{project.env.shop}")
+          @ctx.on_siginfo do
+            @ctx.open_url!("#{project.env.host}/auth?shop=#{project.env.shop}")
           end
         end
         CLI::UI::Frame.open('Running server...') do
