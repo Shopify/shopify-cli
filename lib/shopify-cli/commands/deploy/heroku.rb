@@ -4,7 +4,6 @@ module ShopifyCli
   module Commands
     class Deploy
       class Heroku < ShopifyCli::Task
-
         DOWNLOAD_URLS = {
           linux: 'https://cli-assets.heroku.com/heroku-linux-x64.tar.gz',
           mac: 'https://cli-assets.heroku.com/heroku-darwin-x64.tar.gz',

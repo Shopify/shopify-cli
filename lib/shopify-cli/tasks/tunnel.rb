@@ -5,7 +5,6 @@ require 'shopify_cli'
 module ShopifyCli
   module Tasks
     class Tunnel < ShopifyCli::Task
-
       class FetchUrlError < RuntimeError; end
       class NgrokError < RuntimeError; end
 
