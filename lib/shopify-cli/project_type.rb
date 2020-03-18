@@ -4,6 +4,7 @@ module ShopifyCli
       attr_accessor :project_type,
         :project_name,
         :project_creator_command_class
+      attr_reader :hidden
 
       def repository
         @repository ||= []
@@ -46,6 +47,10 @@ module ShopifyCli
 
       def create_command
         const_get(@project_creator_command_class)
+      end
+
+      def hidden_project_type
+        @hidden = true
       end
 
       def register_command(const, cmd)
