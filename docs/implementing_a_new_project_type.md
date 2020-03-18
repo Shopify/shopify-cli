@@ -4,7 +4,7 @@ Implementing a new project type
 Implementing a new project type is easy.
 
 - First create a new folder `lib/project_types/<type name>`. This type name
-  will setup how your project is loaded. For instance the if you name your folder
+  will setup how your project is loaded. For instance if you name your folder
   `foo`, it can be loaded by calling `ProjectType.load_type(:foo)`
 - Inside your new project type create a cli.rb file with the following contents.
 
@@ -24,7 +24,7 @@ module Foo
     register_command('Foo::Commands::Build', "build")
   end
 
-  # define/autoload project specific Commads
+  # define/autoload project specific Commands
   # We leverage autoload so that we do not require all of our source code at startup.
   # if we required all of our files at startup, the cli would be slow
   module Commands
