@@ -11,7 +11,7 @@ module Node
       end
 
       def test_run
-        Node::Commands::Open.any_instance.expects(:open_url!).with(@context, 'https://example.com/auth?shop=my-test-shop.myshopify.com')
+        @context.expects(:open_url!).with('https://example.com/auth?shop=my-test-shop.myshopify.com')
         run_cmd('open')
       end
     end

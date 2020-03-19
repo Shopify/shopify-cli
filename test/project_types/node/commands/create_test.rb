@@ -64,9 +64,9 @@ module Node
         FileUtils.touch('test-app/server/handlers/client.cli.js')
 
         @context.stubs(:uname).with(flag: 'v').returns('Mac')
-        @context.expects(:capture2e).with(%w(npm -v)).returns(['1', mock(success?: true)])
-        @context.expects(:capture2e).with(%w(node -v)).returns(['8.0.0', mock(success?: true)])
-        @context.expects(:capture2).with(%w(npm config get @shopify:registry)).returns(
+        @context.expects(:capture2e).with('npm', '-v').returns(['1', mock(success?: true)])
+        @context.expects(:capture2e).with('node', '-v').returns(['8.0.0', mock(success?: true)])
+        @context.expects(:capture2).with('npm config get @shopify:registry').returns(
           ['https://registry.yarnpkg.com', nil]
         )
         ShopifyCli::Git.expects(:clone).with('https://github.com/Shopify/shopify-app-node.git', 'test-app')
