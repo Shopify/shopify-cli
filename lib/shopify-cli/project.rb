@@ -13,7 +13,7 @@ module ShopifyCli
       def current_project_type
         proj_dir = directory(Dir.pwd)
         return if proj_dir.nil?
-        current.config['app_type'].to_sym
+        current.app_type_id
       end
 
       def at(dir)
@@ -64,10 +64,6 @@ module ShopifyCli
     end
 
     property :directory
-
-    def app_type
-      ShopifyCli::AppTypeRegistry[app_type_id]
-    end
 
     def app_type_id
       config['app_type'].to_sym

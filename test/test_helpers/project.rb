@@ -1,8 +1,6 @@
 # frozen_string_literal: true
 module TestHelpers
   module Project
-    include TestHelpers::AppType
-
     def setup
       project_context('project')
       super
