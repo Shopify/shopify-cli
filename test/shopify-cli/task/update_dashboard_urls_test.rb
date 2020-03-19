@@ -25,7 +25,11 @@ module ShopifyCli
             },
           },
         )
-        ShopifyCli::Tasks::UpdateDashboardURLS.call(@context, url: 'https://123abc.ngrok.io')
+        ShopifyCli::Tasks::UpdateDashboardURLS.call(
+          @context,
+          url: 'https://123abc.ngrok.io',
+          callback_url: '/callback/fake',
+        )
       end
 
       def test_url_is_transformed_if_different_and_callback_is_appended
@@ -59,7 +63,11 @@ module ShopifyCli
             },
           },
         )
-        ShopifyCli::Tasks::UpdateDashboardURLS.call(@context, url: 'https://newone123.ngrok.io')
+        ShopifyCli::Tasks::UpdateDashboardURLS.call(
+          @context,
+          url: 'https://newone123.ngrok.io',
+          callback_url: '/callback/fake',
+        )
       end
 
       def test_only_ngrok_urls_are_updated
@@ -99,7 +107,11 @@ module ShopifyCli
             },
           }
         )
-        ShopifyCli::Tasks::UpdateDashboardURLS.call(@context, url: 'https://newone123.ngrok.io')
+        ShopifyCli::Tasks::UpdateDashboardURLS.call(
+          @context,
+          url: 'https://newone123.ngrok.io',
+          callback_url: '/callback/fake',
+        )
       end
 
       def test_application_url_is_not_updated_if_user_says_no
@@ -140,7 +152,11 @@ module ShopifyCli
           }
         )
         CLI::UI::Prompt.expects(:confirm).returns(false)
-        ShopifyCli::Tasks::UpdateDashboardURLS.call(@context, url: 'https://myowndomain.io')
+        ShopifyCli::Tasks::UpdateDashboardURLS.call(
+          @context,
+          url: 'https://myowndomain.io',
+          callback_url: '/callback/fake',
+        )
       end
     end
 
@@ -182,7 +198,11 @@ module ShopifyCli
         }
       )
       CLI::UI::Prompt.expects(:confirm).returns(true)
-      ShopifyCli::Tasks::UpdateDashboardURLS.call(@context, url: 'https://myowndomain.io')
+      ShopifyCli::Tasks::UpdateDashboardURLS.call(
+        @context,
+        url: 'https://myowndomain.io',
+        callback_url: '/callback/fake',
+      )
     end
 
     def test_whitelist_urls_are_updated_even_if_app_url_is_set
@@ -216,7 +236,11 @@ module ShopifyCli
           },
         }
       )
-      ShopifyCli::Tasks::UpdateDashboardURLS.call(@context, url: 'https://newone123.ngrok.io')
+      ShopifyCli::Tasks::UpdateDashboardURLS.call(
+        @context,
+        url: 'https://newone123.ngrok.io',
+        callback_url: '/callback/fake',
+      )
     end
 
     def test_user_is_prompted_to_update_application_url
@@ -240,7 +264,11 @@ module ShopifyCli
         },
       )
       CLI::UI::Prompt.expects(:confirm).returns(true)
-      ShopifyCli::Tasks::UpdateDashboardURLS.call(@context, url: 'https://123adifferenturl.ngrok.io')
+      ShopifyCli::Tasks::UpdateDashboardURLS.call(
+        @context,
+        url: 'https://123adifferenturl.ngrok.io',
+        callback_url: '/callback/fake',
+      )
     end
   end
 end
