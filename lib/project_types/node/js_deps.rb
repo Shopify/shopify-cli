@@ -37,7 +37,7 @@ module Node
       pkg = begin
               JSON.parse(File.read(package_json))
             rescue Errno::ENOENT, Errno::ENOTDIR
-              ctx.error("expected to have a file at: #{package_json}")
+              ctx.abort("expected to have a file at: #{package_json}")
             end
 
       deps = %w(dependencies devDependencies).map do |key|
