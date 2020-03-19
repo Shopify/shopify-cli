@@ -68,7 +68,7 @@ module Node
         @context.expects(:capture2).with('npm config get @shopify:registry').returns(
           ['https://registry.yarnpkg.com', nil]
         )
-        ShopifyCli::Helpers::Git.expects(:clone).with('https://github.com/Shopify/shopify-app-node.git', 'test-app')
+        ShopifyCli::Git.expects(:clone).with('https://github.com/Shopify/shopify-app-node.git', 'test-app')
         JsDeps.expects(:install)
 
         stub_partner_req(

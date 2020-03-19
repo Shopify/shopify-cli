@@ -23,6 +23,7 @@ module ShopifyCli
           @ctx = ctx
 
           spin_group = CLI::UI::SpinGroup.new
+          git_service = ShopifyCli::Git.new(@ctx)
 
           spin_group.add('Downloading Heroku CLI…') do |spinner|
             heroku_download
@@ -35,7 +36,7 @@ module ShopifyCli
             spinner.update_title('Installed Heroku CLI')
           end
           spin_group.add('Checking git repo…') do |spinner|
-            git_init
+            git_service.init
             spinner.update_title('Git repo initialized')
           end
           spin_group.wait
@@ -73,7 +74,7 @@ module ShopifyCli
             end
           end
 
-          branches = git_branches
+          branches = git_service.branches
           if branches.length == 1
             branch_to_deploy = branches[0]
             spin_group.add("Git branch `#{branch_to_deploy}` selected for deploy") { true }
@@ -92,32 +93,6 @@ module ShopifyCli
         end
 
         private
-
-        def git_branches
-          output, status = @ctx.capture2e('git', 'branch', '--list', '--format=%(refname:short)')
-          raise(ShopifyCli::Abort, "{{x}} Could not find any git branches") unless status.success?
-
-          branches = if output == ''
-            ['master']
-          else
-            output.split("\n")
-          end
-
-          branches
-        end
-
-        def git_init
-          output, status = @ctx.capture2e('git', 'status')
-
-          unless status.success?
-            msg = "{{x}} Git repo is not initiated. Please run `git init` and make at least one commit."
-            raise(ShopifyCli::Abort, msg)
-          end
-
-          if output.include?('No commits yet')
-            raise(ShopifyCli::Abort, "{{x}} No git commits have been made. Please make at least one commit.")
-          end
-        end
 
         def heroku_app
           return nil if heroku_git_remote.nil?

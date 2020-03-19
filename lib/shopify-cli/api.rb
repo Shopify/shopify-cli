@@ -78,7 +78,7 @@ module ShopifyCli
     end
 
     def current_sha
-      @current_sha ||= Helpers::Git.sha(dir: ShopifyCli::ROOT)
+      @current_sha ||= Git.sha(dir: ShopifyCli::ROOT)
     end
 
     def default_headers
