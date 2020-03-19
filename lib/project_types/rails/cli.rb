@@ -1,11 +1,11 @@
 # frozen_string_literal: true
 module Rails
   class Project < ShopifyCli::ProjectType
+    # hidden_project_type
     creator 'Ruby on Rails App', 'Rails::Commands::Create'
 
     register_command('Rails::Commands::Open', "open")
     register_command('Rails::Commands::Serve', "serve")
-    # register_task('Rails::Tasks::RailsTask', 'rails_task')
   end
 
   # define/autoload project specific Commads

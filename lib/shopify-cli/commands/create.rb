@@ -15,7 +15,7 @@ module ShopifyCli
         end
 
         type_name = CLI::UI::Prompt.ask('What type of project would you like to create?') do |handler|
-          ProjectType.load_all.each do |type|
+          self.class.all_visible_type.each do |type|
             handler.option(type.project_name) { type.project_type }
           end
         end
@@ -25,8 +25,14 @@ module ShopifyCli
         klass.call(args, command_name, 'create')
       end
 
+      def self.all_visible_type
+        ProjectType
+          .load_all
+          .select { |type| !type.hidden }
+      end
+
       def self.help
-        project_types = ProjectType.load_all.map(&:project_type).join("|")
+        project_types = all_visible_type.map(&:project_type).join("|")
         <<~HELP
           Create a new project.
             Usage: {{command:#{ShopifyCli::TOOL_NAME} create [#{project_types}]}}
@@ -36,7 +42,7 @@ module ShopifyCli
       def self.extended_help
         <<~HELP
           #{
-            ProjectType.load_all.map do |type|
+            all_visible_type.map do |type|
               type.create_command.help
             end.join("\n")
           }
