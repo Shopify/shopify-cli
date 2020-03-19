@@ -36,7 +36,7 @@ module ShopifyCli
 
     def test_open_url_formats_command_correctly
       url = 'http://cutekitties.com'
-      stubs(:mac?).returns(true)
+      @ctx.stubs(:mac?).returns(true)
       @ctx.expects(:system).with("open '#{url}'")
       @ctx.open_url!(url)
     end
