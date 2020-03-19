@@ -60,7 +60,7 @@ module ShopifyCli
       def self.run_generate(script, name, ctx)
         stat = ctx.system(script)
         unless stat.success?
-          ctx.error(response(stat.exitstatus, name))
+          ctx.abort(response(stat.exitstatus, name))
         end
       end
 

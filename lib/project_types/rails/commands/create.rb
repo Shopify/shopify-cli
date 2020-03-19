@@ -26,7 +26,7 @@ module Rails
         form = Forms::Create.ask(@ctx, args, options.flags)
         return @ctx.puts(self.class.help) if form.nil?
 
-        @ctx.error(INVALID_RUBY_VERSION) unless Ruby.version(@ctx).satisfies?('~>2.4')
+        @ctx.abort(INVALID_RUBY_VERSION) unless Ruby.version(@ctx).satisfies?('~>2.4')
 
         build(form.name)
         set_custom_ua

@@ -22,11 +22,11 @@ module Node
       def organization
         @organization ||= if !organization_id.nil?
           org = ShopifyCli::Helpers::Organizations.fetch(ctx, id: organization_id)
-          ctx.error("Cannot find an organization with that ID") if org.nil?
+          ctx.abort("Cannot find an organization with that ID") if org.nil?
           org
         elsif organizations.count == 0
           ctx.puts('Please visit https://partners.shopify.com/ to create a partners account')
-          ctx.error('No organizations available.')
+          ctx.abort('No organizations available.')
         elsif organizations.count == 1
           ctx.puts("Organization {{green:#{organizations.first['businessName']}}}")
           organizations.first

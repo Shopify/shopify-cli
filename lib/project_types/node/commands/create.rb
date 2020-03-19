@@ -67,17 +67,17 @@ module Node
       def check_node
         version, stat = @ctx.capture2e(%w(node -v))
         @ctx.done("node #{version}")
-        @ctx.error(NODE_REQUIRED_NOTICE) unless stat.success?
+        @ctx.abort(NODE_REQUIRED_NOTICE) unless stat.success?
       end
 
       def check_npm
         version, stat = @ctx.capture2e(%w(npm -v))
         @ctx.done("npm #{version}")
-        @ctx.error(NPM_REQUIRED_NOTICE) unless stat.success?
+        @ctx.abort(NPM_REQUIRED_NOTICE) unless stat.success?
         return unless @ctx.getenv('DISABLE_NPM_REGISTRY_CHECK').nil?
         registry, _ = @ctx.capture2('npm config get @shopify:registry')
         return if registry.include?('https://registry.yarnpkg.com')
-        @ctx.error(NPM_REGISTRY_NOTICE)
+        @ctx.abort(NPM_REGISTRY_NOTICE)
       end
 
       def build(name)
