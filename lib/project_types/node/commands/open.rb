@@ -4,7 +4,8 @@ module Node
   module Commands
     class Open < ShopifyCli::Command
       def call(*)
-        @ctx.open_url!(Project.current.app_type.open_url)
+        project = ShopifyCli::Project.current
+        @ctx.open_url!("#{project.env.host}/auth?shop=#{project.env.shop}")
       end
 
       def self.help

@@ -65,13 +65,13 @@ module Node
       private
 
       def check_node
-        version, stat = @ctx.capture2e(%w(node -v))
+        version, stat = @ctx.capture2e('node', '-v')
         @ctx.done("node #{version}")
         @ctx.abort(NODE_REQUIRED_NOTICE) unless stat.success?
       end
 
       def check_npm
-        version, stat = @ctx.capture2e(%w(npm -v))
+        version, stat = @ctx.capture2e('npm', '-v')
         @ctx.done("npm #{version}")
         @ctx.abort(NPM_REQUIRED_NOTICE) unless stat.success?
         return unless @ctx.getenv('DISABLE_NPM_REGISTRY_CHECK').nil?
