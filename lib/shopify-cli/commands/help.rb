@@ -28,7 +28,7 @@ module ShopifyCli
 
         visible_commands = ShopifyCli::Commands::Registry
           .resolved_commands
-          .select {|name, cmd| !cmd.hidden }
+          .select { |_name, c| !c.hidden }
           .sort
 
         visible_commands.each do |name, klass|
