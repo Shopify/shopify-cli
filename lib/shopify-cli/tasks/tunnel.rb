@@ -29,7 +29,7 @@ module ShopifyCli
             pid_file&.unlink_log
             @ctx.puts("{{green:x}} ngrok tunnel stopped")
           rescue
-            @ctx.error(
+            @ctx.abort(
               'ngrok tunnel could not be stopped. Try running {{command:killall -9 ngrok}}'
             )
           end

@@ -15,7 +15,7 @@ module ShopifyCli
 
         user_errors = resp["data"]["appCreate"]["userErrors"]
         if !user_errors.nil? && user_errors.any?
-          ctx.error(user_errors.map { |err| "#{err['field']} #{err['message']}" }.join(", "))
+          ctx.abort(user_errors.map { |err| "#{err['field']} #{err['message']}" }.join(", "))
         end
 
         resp["data"]["appCreate"]["app"]

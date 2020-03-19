@@ -14,7 +14,7 @@ module ShopifyCli
           project = ShopifyCli::Project.current
           # temporary check until we build for rails
           if project.app_type == ShopifyCli::AppTypes::Rails
-            @ctx.error("This feature is not yet available for Rails apps")
+            @ctx.abort("This feature is not yet available for Rails apps")
           end
           types = project.app_type.page_types
           name = args.first
@@ -26,7 +26,7 @@ module ShopifyCli
 
           selected_type = if flag
             unless types.key?(flag)
-              @ctx.error("Invalid page type.")
+              @ctx.abort("Invalid page type.")
             end
             types[flag]
           else
