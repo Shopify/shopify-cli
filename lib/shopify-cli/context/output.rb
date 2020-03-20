@@ -13,7 +13,7 @@ module ShopifyCli
         puts("{{v}} #{string}")
       end
 
-      def error(string)
+      def abort(string)
         raise ShopifyCli::Abort, "{{x}} #{string}"
       end
 

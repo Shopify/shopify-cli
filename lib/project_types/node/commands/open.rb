@@ -3,11 +3,9 @@ require 'shopify_cli'
 module Node
   module Commands
     class Open < ShopifyCli::Command
-      include ShopifyCli::Helpers::OS
-
       def call(*)
         project = ShopifyCli::Project.current
-        open_url!(@ctx, "#{project.env.host}/auth?shop=#{project.env.shop}")
+        @ctx.open_url!("#{project.env.host}/auth?shop=#{project.env.shop}")
       end
 
       def self.help

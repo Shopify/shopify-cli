@@ -23,7 +23,7 @@ module ShopifyCli
       assert_equal(ProjectType.for_app_type(:node), Node::Project)
       assert_equal(ProjectType.for_app_type('rails'), Rails::Project)
       assert_equal(ProjectType.for_app_type('node'), Node::Project)
-      assert_equal(ProjectType.for_app_type('nope'), nil)
+      assert_nil(ProjectType.for_app_type('nope'))
     end
 
     def test_project_filepath

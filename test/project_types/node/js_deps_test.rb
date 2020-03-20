@@ -11,6 +11,7 @@ module Node
       JsDeps.any_instance.stubs(:yarn?).returns(false)
       CLI::Kit::System.expects(:system).with(
         'npm', 'install', '--no-audit', '--no-optional', '--silent',
+        env: @context.env,
         chdir: @context.root,
       )
       io = capture_io do
