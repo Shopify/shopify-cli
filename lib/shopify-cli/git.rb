@@ -10,7 +10,7 @@ module ShopifyCli
 
     def branches
       output, status = @ctx.capture2e('git', 'branch', '--list', '--format=%(refname:short)')
-      raise(ShopifyCli::Abort, "{{x}} Could not find any git branches") unless status.success?
+      @ctx.abort("Could not find any git branches") unless status.success?
 
       branches = if output == ''
         ['master']
@@ -25,12 +25,12 @@ module ShopifyCli
       output, status = @ctx.capture2e('git', 'status')
 
       unless status.success?
-        msg = "{{x}} Git repo is not initiated. Please run `git init` and make at least one commit."
-        raise(ShopifyCli::Abort, msg)
+        msg = "Git repo is not initiated. Please run `git init` and make at least one commit."
+        @ctx.abort(msg)
       end
 
       if output.include?('No commits yet')
-        raise(ShopifyCli::Abort, "{{x}} No git commits have been made. Please make at least one commit.")
+        @ctx.abort("No git commits have been made. Please make at least one commit.")
       end
     end
 
