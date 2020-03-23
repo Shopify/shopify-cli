@@ -4,9 +4,9 @@ require 'shopify_cli'
 module Node
   module Commands
     class Generate < ShopifyCli::Command
-      subcommand :Page, 'page', 'project_types/node/commands/generate/page'
-      subcommand :Billing, 'billing', 'project_types/node/commands/generate/billing'
-      subcommand :Webhook, 'webhook', 'project_types/node/commands/generate/webhook'
+      subcommand :Page, 'page', Project.project_filepath('commands/generate/page')
+      subcommand :Billing, 'billing', Project.project_filepath('commands/generate/billing')
+      subcommand :Webhook, 'webhook', Project.project_filepath('commands/generate/webhook')
 
       def call(*)
         @ctx.puts(self.class.help)
