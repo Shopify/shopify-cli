@@ -72,8 +72,8 @@ function __shopify__
       case setenv:\*
         set -l assignment (echo "$fin" | sed 's/^setenv://' | tr = \\n)
         set -x "$assignment[1]" "$assignment[2]"
-      case reload_shopify_from:\*
-        set -l root (echo "$fin" | sed 's/^reload_shopify_from://')
+      case reload_shopify_cli_from:\*
+        set -l root (echo "$fin" | sed 's/^reload_shopify_cli_from://')
         source "$root/shopify.fish"
     end
   end < "$finalizers"
