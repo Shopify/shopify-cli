@@ -2,7 +2,7 @@ require 'test_helper'
 
 module Node
   module Commands
-    class Generate
+    module GenerateTests
       class PageTest < MiniTest::Test
         include TestHelpers::Project
         include TestHelpers::FakeUI
@@ -14,7 +14,7 @@ module Node
 
         def test_with_selection
           CLI::UI::Prompt.expects(:ask).returns('empty-state')
-          @context.expects(:system).with('./node_modules/.bin/generate-node-app empty-state-page name')
+          @context.expects(:system).with('empty-state name')
             .returns(mock(success?: true))
           run_cmd('generate page name')
         end
@@ -33,11 +33,11 @@ module Node
         end
 
         def test_no_name_calls_help
-          # io = capture_io do
-          #   run_cmd('generate page')
-          # end
+          io = capture_io do
+            run_cmd('generate page')
+          end
 
-          assert_match(CLI::UI.fmt(Node::Commands::Generate.help), '')
+          assert_match(CLI::UI.fmt(Node::Commands::Generate::Page.help), io.join)
         end
       end
     end

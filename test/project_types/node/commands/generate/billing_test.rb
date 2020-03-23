@@ -2,7 +2,7 @@ require 'test_helper'
 
 module Node
   module Commands
-    class Generate
+    module GenerateTests
       class BillingTest < MiniTest::Test
         include TestHelpers::FakeUI
 
@@ -13,14 +13,14 @@ module Node
 
         def test_recurring_billing
           CLI::UI::Prompt.expects(:ask).returns('recurring-billing')
-          @context.expects(:system).with('./node_modules/.bin/generate-node-app recurring-billing')
+          @context.expects(:system).with('recurring-billing')
             .returns(mock(success?: true))
           run_cmd('generate billing')
         end
 
         def test_one_time_billing
           CLI::UI::Prompt.expects(:ask).returns('one-time-billing')
-          @context.expects(:system).with('./node_modules/.bin/generate-node-app one-time-billing')
+          @context.expects(:system).with('one-time-billing')
             .returns(mock(success?: true))
           run_cmd('generate billing')
         end
