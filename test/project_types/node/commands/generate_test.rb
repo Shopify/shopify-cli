@@ -1,10 +1,15 @@
 require 'test_helper'
 
-module ShopifyCli
+module Node
   module Commands
     class GenerateTest < MiniTest::Test
+      def setup
+        super
+        ShopifyCli::ProjectType.load_type(:node)
+      end
+
       def test_without_arguments_calls_help
-        @context.expects(:puts).with(ShopifyCli::Commands::Generate.help)
+        @context.expects(:puts).with(Node::Commands::Generate.help)
         run_cmd('generate')
       end
 
@@ -22,7 +27,7 @@ module ShopifyCli
           ]
         ).returns(m)
         assert_raises(ShopifyCli::Abort) do
-          ShopifyCli::Commands::Generate.run_generate(
+          Node::Commands::Generate.run_generate(
             [
               'npm',
               'run-dev',

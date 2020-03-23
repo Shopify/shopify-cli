@@ -11,10 +11,6 @@ module ShopifyCli
         def description
           raise NotImplementedError
         end
-
-        def generate
-          raise NotImplementedError
-        end
       end
 
       def build
