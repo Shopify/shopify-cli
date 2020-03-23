@@ -1,16 +1,21 @@
-require 'test_helper'
+require('test_helper')
 
-module ShopifyCli
+module Rails
   module Commands
-    class Generate
+    module GenerateTests
       class WebhookTest < MiniTest::Test
         include TestHelpers::FakeUI
+
+        def setup
+          super
+          ShopifyCli::ProjectType.load_type(:rails)
+        end
 
         def test_with_existing_param
           ShopifyCli::Tasks::Schema.expects(:call).returns(
             JSON.parse(File.read(File.join(ShopifyCli::ROOT, "test/fixtures/shopify_schema.json")))
           )
-          @context.expects(:system).with('a command')
+          @context.expects(:system).with('rails g shopify_app:add_webhook -t app/uninstalled -a https://example.com/webhooks/app/uninstalled')
             .returns(mock(success?: true))
           run_cmd('generate webhook APP_UNINSTALLED')
         end
@@ -20,7 +25,7 @@ module ShopifyCli
             JSON.parse(File.read(File.join(ShopifyCli::ROOT, "test/fixtures/shopify_schema.json")))
           )
           CLI::UI::Prompt.expects(:ask).returns('APP_UNINSTALLED')
-          @context.expects(:system).with('a command')
+          @context.expects(:system).with('rails g shopify_app:add_webhook -t app/uninstalled -a https://example.com/webhooks/app/uninstalled')
             .returns(mock(success?: true))
           run_cmd('generate webhook create_webhook_fake')
         end
@@ -30,7 +35,7 @@ module ShopifyCli
             JSON.parse(File.read(File.join(ShopifyCli::ROOT, "test/fixtures/shopify_schema.json"))),
           )
           CLI::UI::Prompt.expects(:ask).returns('PRODUCT_CREATE')
-          @context.expects(:system).with('a command')
+          @context.expects(:system).with('rails g shopify_app:add_webhook -t product/create -a https://example.com/webhooks/product/create')
             .returns(mock(success?: true))
           run_cmd('generate webhook')
         end

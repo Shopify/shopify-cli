@@ -1,13 +1,11 @@
 require 'shopify_cli'
 require 'json'
-module ShopifyCli
+module Rails
   module Commands
     class Generate
       class Webhook < ShopifyCli::SubCommand
         def call(args, _name)
-          project = ShopifyCli::Project.current
           selected_type = args.first
-          app_type = project.app_type
           schema = ShopifyCli::Helpers::SchemaParser.new(
             schema: ShopifyCli::Tasks::Schema.call(@ctx)
           )
@@ -20,11 +18,10 @@ module ShopifyCli
               end
             end
           end
-
           spin_group = CLI::UI::SpinGroup.new
           spin_group.add("Generating webhook: #{selected_type}") do |spinner|
-            ShopifyCli::Commands::Generate.run_generate(app_type.generate_command(selected_type), selected_type, @ctx)
-            spinner.update_title("{{green:#{selected_type}}} generated in #{app_type.webhook_location}")
+            Rails::Commands::Generate.run_generate(generate_command(selected_type), selected_type, @ctx)
+            spinner.update_title("{{green:#{selected_type}}} config/initializers/shopify_app.rb")
           end
           spin_group.wait
         end
@@ -34,6 +31,13 @@ module ShopifyCli
             Generate and register a new webhook that listens for the specified Shopify store event.
               Usage: {{command:#{ShopifyCli::TOOL_NAME} generate webhook <type>}}
           HELP
+        end
+
+        def generate_command(selected_type)
+          parts = selected_type.downcase.split("_")
+          env = ShopifyCli::Project.current.env.host
+          selected_type = parts[0..-2].join("_") + "/" + parts[-1]
+          "rails g shopify_app:add_webhook -t #{selected_type} -a #{env}/webhooks/#{selected_type.downcase}"
         end
       end
     end
