@@ -77,6 +77,7 @@ module Node
           variables: {
             org: 42,
             title: 'test-app',
+            type: 'public',
             app_url: 'https://shopify.github.io/shopify-app-cli/getting-started',
             redir: ["http://app-cli-loopback.shopifyapps.com:3456"],
           },
@@ -113,6 +114,7 @@ module Node
       def perform_command
         run_cmd("create node \
           --title=test-app \
+          --type=public \
           --organization_id=42 \
           --shop_domain=testshop.myshopify.com")
       end

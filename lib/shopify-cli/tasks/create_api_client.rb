@@ -3,12 +3,15 @@ require 'shopify_cli'
 module ShopifyCli
   module Tasks
     class CreateApiClient < ShopifyCli::Task
-      def call(ctx, org_id:, title:, app_url:)
+      VALID_APP_TYPES = %w(public custom)
+
+      def call(ctx, org_id:, title:, app_url:, type:)
         resp = Helpers::PartnersAPI.query(
           ctx,
           'create_app',
           org: org_id.to_i,
           title: title,
+          type: type,
           app_url: app_url,
           redir: [OAuth::REDIRECT_HOST]
         )

@@ -14,6 +14,7 @@ module Node
         parser.on('--title=TITLE') { |t| flags[:title] = t }
         parser.on('--organization_id=ID') { |url| flags[:organization_id] = url }
         parser.on('--shop_domain=MYSHOPIFYDOMAIN') { |url| flags[:shop_domain] = url }
+        parser.on('--type=APPTYPE') { |url| flags[:type] = url }
       end
 
       def call(args, _name)
@@ -30,6 +31,7 @@ module Node
           @ctx,
           org_id: form.organization_id,
           title: form.title,
+          type: form.type,
           app_url: 'https://shopify.github.io/shopify-app-cli/getting-started',
         )
 

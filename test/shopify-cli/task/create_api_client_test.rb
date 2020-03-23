@@ -11,6 +11,7 @@ module ShopifyCli
           variables: {
             org: 42,
             title: 'Test app',
+            type: 'public',
             app_url: 'http://app.com',
             redir: ["http://app-cli-loopback.shopifyapps.com:3456"],
           },
@@ -30,6 +31,7 @@ module ShopifyCli
           @context,
           org_id: 42,
           title: 'Test app',
+          type: 'public',
           app_url: 'http://app.com',
         )
 
@@ -43,6 +45,7 @@ module ShopifyCli
           variables: {
             org: 42,
             title: 'Test app',
+            type: 'public',
             app_url: 'http://app.com',
             redir: ["http://app-cli-loopback.shopifyapps.com:3456"],
           },
@@ -62,6 +65,7 @@ module ShopifyCli
             @context,
             org_id: 42,
             title: 'Test app',
+            type: 'public',
             app_url: 'http://app.com',
           )
         end
