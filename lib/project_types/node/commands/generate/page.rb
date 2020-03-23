@@ -1,9 +1,16 @@
 require 'shopify_cli'
 
-module ShopifyCli
+module Node
   module Commands
     class Generate
       class Page < ShopifyCli::SubCommand
+        PAGE_TYPES = {
+          'empty-state' => './node_modules/.bin/generate-node-app empty-state-page',
+          'two-column' => './node_modules/.bin/generate-node-app two-column-page',
+          'annotated' => './node_modules/.bin/generate-node-app settings-page',
+          'list' => './node_modules/.bin/generate-node-app list-page',
+        }
+
         options do |parser, flags|
           parser.on('--type=TYPE') do |t|
             flags[:type] = t.downcase
@@ -11,12 +18,6 @@ module ShopifyCli
         end
 
         def call(args, _name)
-          project = ShopifyCli::Project.current
-          # temporary check until we build for rails
-          if project.app_type == ShopifyCli::AppTypes::Rails
-            @ctx.abort("This feature is not yet available for Rails apps")
-          end
-          types = project.app_type.page_types
           name = args.first
           flag = options.flags[:type]
           unless name
@@ -25,22 +26,22 @@ module ShopifyCli
           end
 
           selected_type = if flag
-            unless types.key?(flag)
+            unless PAGE_TYPES.key?(flag)
               @ctx.abort("Invalid page type.")
             end
-            types[flag]
+            PAGE_TYPES[flag]
           else
             CLI::UI::Prompt.ask("Which template would you like to use?") do |handler|
-              types.each do |key, value|
+              PAGE_TYPES.each do |key, value|
                 handler.option(key) { value }
               end
             end
           end
 
           spin_group = CLI::UI::SpinGroup.new
-          spin_group.add("Generating #{types.key(selected_type)} page...") do |spinner|
-            ShopifyCli::Commands::Generate.run_generate(
-              "#{project.app_type.generate[selected_type]} #{name}", name, @ctx
+          spin_group.add("Generating #{selected_type} page...") do |spinner|
+            Node::Commands::Generate.run_generate(
+              "#{selected_type} #{name}", name, @ctx
             )
             spinner.update_title("{{green: #{name}}} generated in pages/#{name}")
           end
