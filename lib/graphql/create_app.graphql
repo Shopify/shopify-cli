@@ -1,5 +1,5 @@
-mutation AppCreate($org: Int!, $title: String!, $app_url: Url!, $redir: [Url]!) {
-  appCreate(input: {organizationID: $org, title: $title, applicationUrl: $app_url, redirectUrlWhitelist: $redir}) {
+mutation AppCreate($org: Int!, $title: String!, $app_url: Url!, $redir: [Url]!, $type: AppType) {
+  appCreate(input: {organizationID: $org, title: $title, applicationUrl: $app_url, redirectUrlWhitelist: $redir, appType: $type}) {
     app {
       id
       apiKey
@@ -10,6 +10,7 @@ mutation AppCreate($org: Int!, $title: String!, $app_url: Url!, $redir: [Url]!) 
         secret
         createdAt
       }
+      appType
     }
     userErrors {
       field

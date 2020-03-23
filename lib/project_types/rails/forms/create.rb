@@ -4,16 +4,32 @@ module Rails
   module Forms
     class Create < ShopifyCli::Form
       attr_accessor :name
-      flag_arguments :title, :organization_id, :shop_domain
+      flag_arguments :title, :organization_id, :shop_domain, :type
 
       def ask
         self.title ||= CLI::UI::Prompt.ask('App Name')
+        self.type = ask_type
         self.name = self.title.downcase.split(" ").join("_")
         self.organization_id ||= organization["id"].to_i
         self.shop_domain ||= ask_shop_domain
       end
 
       private
+
+      def ask_type
+        if type.nil?
+          return CLI::UI::Prompt.ask('What type of app are you building?') do |handler|
+            handler.option('Public: An app built for a wide merchant audience.') { 'public' }
+            handler.option('Custom: An app custom built for a single client.') { 'custom' }
+          end
+        end
+
+        unless ShopifyCli::Tasks::CreateApiClient::VALID_APP_TYPES.include?(type)
+          ctx.abort("Invalid App Type #{type}")
+        end
+        ctx.puts("App Type {{green:#{type}}}")
+        type
+      end
 
       def organizations
         @organizations ||= ShopifyCli::Helpers::Organizations.fetch_all(ctx)
@@ -39,17 +55,21 @@ module Rails
       end
 
       def ask_shop_domain
-        if organization['stores'].count == 0
+        valid_stores = organization['stores'].select do |store|
+          store['transferDisabled'] == true || store['convertableToPartnerTest'] == true
+        end
+
+        if valid_stores.count == 0
           ctx.puts('{{x}} No Development Stores available.')
           ctx.puts("Visit {{underline:https://partners.shopify.com/#{organization['id']}/stores}} to create one")
-        elsif organization['stores'].count == 1
-          domain = organization['stores'].first['shopDomain']
+        elsif valid_stores.count == 1
+          domain = valid_stores.first['shopDomain']
           ctx.puts("Using Development Store {{green:#{domain}}}")
           domain
         else
           CLI::UI::Prompt.ask(
             'Select a Development Store',
-            options: organization["stores"].map { |s| s["shopDomain"] }
+            options: valid_stores.map { |s| s['shopDomain'] }
           )
         end
       end
