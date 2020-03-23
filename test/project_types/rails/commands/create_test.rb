@@ -62,6 +62,7 @@ module Rails
           variables: {
             org: 42,
             title: 'test-app',
+            type: 'public',
             app_url: 'https://shopify.github.io/shopify-app-cli/getting-started',
             redir: ["http://app-cli-loopback.shopifyapps.com:3456"],
           },
@@ -94,6 +95,7 @@ module Rails
 
       def perform_command
         run_cmd("create rails \
+          --type=public \
           --title=test-app \
           --organization_id=42 \
           --shop_domain=testshop.myshopify.com")
