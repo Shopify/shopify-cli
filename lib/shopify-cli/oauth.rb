@@ -14,6 +14,7 @@ module ShopifyCli
     include Helpers::OS
 
     class Error < StandardError; end
+    LocalRequest = Struct.new(:method, :path, :query, :protocol)
 
     DEFAULT_PORT = 3456
     REDIRECT_HOST = "http://app-cli-loopback.shopifyapps.com:#{DEFAULT_PORT}"
@@ -90,20 +91,38 @@ module ShopifyCli
         Thread.current.abort_on_exception = true
         begin
           socket = server.accept
-          query = Hash[URI.decode_www_form(socket.gets.split[1][2..-1])]
-          if !query['error'].nil?
-            respond_with(socket, 400, "Invalid Request: #{query['error_description']}")
-          elsif query['state'] != state_token
-            query.merge!('error' => 'invalid_state', 'error_description' => INVALID_STATE_RESP)
+          req = decode_request(socket.gets)
+          if !req.query['error'].nil?
+            respond_with(socket, 400, "Invalid Request: #{req.query['error_description']}")
+          elsif req.query['state'] != state_token
+            req.query.merge!('error' => 'invalid_state', 'error_description' => INVALID_STATE_RESP)
             respond_with(socket, 403, INVALID_STATE_RESP)
           else
             respond_with(socket, 200, SUCCESS_RESP)
           end
-          query
+          req.query
         ensure
           socket.close_write
           server.close
         end
+      end
+    end
+
+    def decode_request(req)
+      data = LocalRequest.new
+      data.method, path, data.protocol = req.split(' ')
+      data.path, _sep, query = path.partition("?")
+      data.query = decode_request_params(query)
+      data
+    end
+
+    def decode_request_params(str)
+      str.b.split('&').each_with_object({}) do |string, params|
+        key, _sep, val = string.partition('=')
+        key = URI.decode_www_form_component(key)
+        val = URI.decode_www_form_component(val)
+        params[key] = val
+        params
       end
     end
 
