@@ -14,7 +14,11 @@ module Rails
         project = ShopifyCli::Project.current
         url = options.flags[:host] || ShopifyCli::Tasks::Tunnel.call(@ctx)
         project.env.update(@ctx, :host, url)
-        ShopifyCli::Tasks::UpdateDashboardURLS.call(@ctx, url: url)
+        ShopifyCli::Tasks::UpdateDashboardURLS.call(
+          @ctx,
+          url: url,
+          callback_url: "/auth/shopify/callback",
+        )
         if @ctx.mac? && project.env.shop
           @ctx.puts("{{*}} Press {{yellow: Control-T}} to open this project in {{green:#{project.env.shop}}} ")
           @ctx.on_siginfo do
