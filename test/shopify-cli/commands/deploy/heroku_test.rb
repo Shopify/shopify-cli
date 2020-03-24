@@ -29,7 +29,7 @@ module ShopifyCli
         def test_call_doesnt_download_heroku_cli_if_it_is_installed
           @context.expects(:system)
             .with('curl', '-o', @download_path,
-              Deploy::Heroku::DOWNLOAD_URLS[:mac],
+              ShopifyCli::Heroku::DOWNLOAD_URLS[:mac],
               chdir: ShopifyCli::ROOT)
             .never
 
@@ -41,7 +41,7 @@ module ShopifyCli
 
           @context.expects(:system)
             .with('curl', '-o', @download_path,
-              Deploy::Heroku::DOWNLOAD_URLS[:mac],
+              ShopifyCli::Heroku::DOWNLOAD_URLS[:mac],
               chdir: ShopifyCli::ROOT)
             .returns(@status_mock[:true])
 
@@ -54,7 +54,7 @@ module ShopifyCli
           assert_raises ShopifyCli::Abort do
             @context.expects(:system)
               .with('curl', '-o', @download_path,
-                Deploy::Heroku::DOWNLOAD_URLS[:mac],
+                ShopifyCli::Heroku::DOWNLOAD_URLS[:mac],
                 chdir: ShopifyCli::ROOT)
               .returns(@status_mock[:false])
 
@@ -69,7 +69,7 @@ module ShopifyCli
           assert_raises ShopifyCli::Abort do
             @context.expects(:system)
               .with('curl', '-o', @download_path,
-                Deploy::Heroku::DOWNLOAD_URLS[:mac],
+                ShopifyCli::Heroku::DOWNLOAD_URLS[:mac],
                 chdir: ShopifyCli::ROOT)
               .returns(@status_mock[:true])
 
@@ -407,7 +407,7 @@ module ShopifyCli
         def stub_heroku_downloaded(status:)
           @context.stubs(:system)
             .with('curl', '-o', @download_path,
-              Deploy::Heroku::DOWNLOAD_URLS[:mac],
+              ShopifyCli::Heroku::DOWNLOAD_URLS[:mac],
               chdir: ShopifyCli::ROOT)
             .returns(@status_mock[:"#{status}"])
         end
@@ -442,7 +442,7 @@ module ShopifyCli
             .returns(['', @status_mock[:"#{status}"]])
 
           @context.stubs(:capture2e)
-            .with(@heroku_command, 'git:remote', '-a', 'app-name')
+            .with('heroku', 'git:remote', '-a', 'app-name')
             .returns(['', @status_mock[:"#{status}"]])
         end
 
