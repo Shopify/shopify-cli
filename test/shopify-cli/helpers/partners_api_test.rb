@@ -62,7 +62,7 @@ module ShopifyCli
         PartnersAPI.query(@context, 'query')
       end
 
-      def test_query_fails_gracefully_without_partners_account
+      def test_query_aborts_without_partners_account
         api_stub = Object.new
         PartnersAPI.expects(:new).with(
           ctx: @context,
@@ -70,10 +70,13 @@ module ShopifyCli
           url: "#{PartnersAPI.endpoint}/api/cli/graphql",
         ).returns(api_stub)
         api_stub.expects(:query).raises(API::APIRequestNotFoundError)
-        @context.expects(:puts).with(
-          "{{x}} error: Your account was not found. Please sign up at https://partners.shopify.com/signup",
+        e = assert_raises ShopifyCli::Abort do
+          PartnersAPI.query(@context, 'query')
+        end
+        assert_match(
+          'error: Your account was not found. Please sign up at https://partners.shopify.com/signup',
+          e.message
         )
-        PartnersAPI.query(@context, 'query')
       end
 
       def test_query
