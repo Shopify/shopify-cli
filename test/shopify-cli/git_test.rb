@@ -86,7 +86,7 @@ module ShopifyCli
     end
 
     def test_clones_git_repo
-      CLI::Kit::System.expects(:system).with(
+      ShopifyCli::Context.any_instance.expects(:system).with(
         'git',
         'clone',
         '--single-branch',
@@ -101,7 +101,7 @@ module ShopifyCli
 
     def test_clone_failure
       assert_raises(ShopifyCli::Abort) do
-        CLI::Kit::System.expects(:system).with(
+        ShopifyCli::Context.any_instance.expects(:system).with(
           'git',
           'clone',
           '--single-branch',
