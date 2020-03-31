@@ -2,22 +2,22 @@
 
 require 'shopify_cli'
 
-module ShopifyCli
+module Node
   module Commands
     class Tunnel < ShopifyCli::Command
-      # subcommands :start, :stop
+      # subcommands :auth, :start, :stop
 
       def call(args, _name)
         subcommand = args.shift
         task = ShopifyCli::Tasks::Tunnel.new
         case subcommand
+        when 'auth'
+          token = args.shift
+          task.auth(@ctx, token)
         when 'start'
           task.call(@ctx)
         when 'stop'
           task.stop(@ctx)
-        when 'auth'
-          token = args.shift
-          task.auth(@ctx, token)
         else
           @ctx.puts(self.class.help)
         end
@@ -35,7 +35,7 @@ module ShopifyCli
           {{bold:Subcommands:}}
 
             {{cyan:auth}}: Writes an ngrok auth token to ~/.ngrok2/ngrok.yml to allow connecting with an ngrok account. Visit https://dashboard.ngrok.com/signup to sign up.
-              Usage: {{command:#{ShopifyCli::TOOL_NAME} auth <token>}}
+              Usage: {{command:#{ShopifyCli::TOOL_NAME} tunnel auth <token>}}
 
             {{cyan:start}}: Starts an ngrok tunnel, will print the URL for an existing tunnel if already running.
               Usage: {{command:#{ShopifyCli::TOOL_NAME} tunnel start}}
