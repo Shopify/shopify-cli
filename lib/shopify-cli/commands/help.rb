@@ -49,7 +49,7 @@ module ShopifyCli
           output += "\n"
           output += klass.extended_help
         end
-        @ctx.page(output)
+        @ctx.puts(output)
       end
     end
   end
