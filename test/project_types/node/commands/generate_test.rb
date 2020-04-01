@@ -13,7 +13,12 @@ module Node
         run_cmd('generate')
       end
 
-      def test_for_failure
+      def test_help_argument_calls_extended_help
+        @context.expects(:puts).with(Node::Commands::Generate.help + "\n" + Node::Commands::Generate.extended_help)
+        run_cmd('help generate')
+      end
+
+      def test_run_generate_raises_abort_when_not_successful
         m = mock
         m.stubs(:success?).returns(false)
         m.stubs(:exitstatus).returns(1)
@@ -26,6 +31,7 @@ module Node
             '--silent',
           ]
         ).returns(m)
+
         assert_raises(ShopifyCli::Abort) do
           Node::Commands::Generate.run_generate(
             [

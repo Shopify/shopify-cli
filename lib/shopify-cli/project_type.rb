@@ -17,7 +17,7 @@ module ShopifyCli
       end
 
       def load_type(current_type)
-        filepath = File.join(ROOT, 'lib', 'project_types', current_type.to_s, 'cli.rb')
+        filepath = File.join(ShopifyCli::ROOT, 'lib', 'project_types', current_type.to_s, 'cli.rb')
         return unless File.exist?(filepath)
         @current_type = current_type
         load(filepath)
@@ -26,7 +26,7 @@ module ShopifyCli
       end
 
       def load_all
-        Dir.glob(File.join(ROOT, 'lib', 'project_types', '*', 'cli.rb')).map do |filepath|
+        Dir.glob(File.join(ShopifyCli::ROOT, 'lib', 'project_types', '*', 'cli.rb')).map do |filepath|
           load_type(filepath.split(File::Separator)[-2])
         end
       end
