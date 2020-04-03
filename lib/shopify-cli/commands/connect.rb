@@ -4,7 +4,7 @@ module ShopifyCli
   module Commands
     class Connect < ShopifyCli::Command
       def call(*)
-        if Project.at(Dir.pwd)
+        if Project.current
           @ctx.puts "{{yellow:! Don't use}} {{cyan:connect}} {{yellow:for production apps}}"
           org = fetch_org
           id = org['id']
