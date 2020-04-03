@@ -16,15 +16,6 @@ module ShopifyCli
         current.app_type_id
       end
 
-      def at(dir)
-        proj_dir = directory(dir)
-        unless proj_dir
-          raise(ShopifyCli::Abort, "{{x}} #{message}")
-        end
-        @at ||= Hash.new { |h, k| h[k] = new(directory: k) }
-        @at[proj_dir]
-      end
-
       # Returns the directory of the project you are current in
       # Traverses up directory hierarchy until it finds a `.shopify-cli.yml`, then returns the directory is it in
       #
@@ -52,6 +43,15 @@ module ShopifyCli
       end
 
       private
+
+      def at(dir)
+        proj_dir = directory(dir)
+        unless proj_dir
+          raise(ShopifyCli::Abort, "{{x}} #{message}")
+        end
+        @at ||= Hash.new { |h, k| h[k] = new(directory: k) }
+        @at[proj_dir]
+      end
 
       def __directory(curr)
         loop do
