@@ -102,7 +102,7 @@ module ShopifyCli
         def run_mutation(data)
           kwargs = { input: data }
           kwargs[:shop] = @shop if @shop
-          resp = Helpers::AdminAPI.query(
+          resp = AdminAPI.query(
             @ctx, "create_#{resource_type}", kwargs
           )
           @ctx.abort(resp['errors']) if resp['errors']

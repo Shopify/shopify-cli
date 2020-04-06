@@ -13,7 +13,7 @@ module ShopifyCli
 
         def test_populate_calls_api_with_mutation
           Helpers::Haikunator.stubs(:name).returns(['first', 'last'])
-          ShopifyCli::Helpers::AdminAPI.expects(:query)
+          ShopifyCli::AdminAPI.expects(:query)
             .with(@context, 'create_customer', input: {
               firstName: 'first',
               lastName: 'last',
