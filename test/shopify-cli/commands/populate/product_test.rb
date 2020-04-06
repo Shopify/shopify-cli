@@ -16,13 +16,13 @@ module ShopifyCli
           Helpers::Haikunator.expects(:title).returns('fake producttwo')
           Resource.any_instance.stubs(:price).returns('1.00')
           return_data = JSON.parse(File.read(File.join(FIXTURE_DIR, 'populate/product_data.json')))
-          ShopifyCli::Helpers::AdminAPI.expects(:query)
+          ShopifyCli::AdminAPI.expects(:query)
             .with(@context, 'create_product', input: {
               'title': 'fake product',
               variants: [{ price: '1.00' }],
             })
             .returns(return_data)
-          ShopifyCli::Helpers::AdminAPI.expects(:query)
+          ShopifyCli::AdminAPI.expects(:query)
             .with(@context, 'create_product', input: {
               'title': 'fake producttwo',
               variants: [{ price: '1.00' }],
