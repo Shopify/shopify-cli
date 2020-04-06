@@ -83,7 +83,7 @@ module ShopifyCli
   autocall(:Config)   { CLI::Kit::Config.new(tool_name: TOOL_NAME) }
   autocall(:Logger)   { CLI::Kit::Logger.new(debug_log_file: DEBUG_LOG_FILE) }
   autocall(:Resolver) do
-    ShopifyCli::HelpResolver.new(
+    ShopifyCli::Core::HelpResolver.new(
       tool_name: TOOL_NAME,
       command_registry: ShopifyCli::Commands::Registry
     )
@@ -100,22 +100,17 @@ module ShopifyCli
   autoload :Command, 'shopify-cli/command'
   autoload :Commands, 'shopify-cli/commands'
   autoload :Context, 'shopify-cli/context'
-  autoload :EntryPoint, 'shopify-cli/entry_point'
-  autoload :Executor, 'shopify-cli/executor'
-  autoload :Finalize, 'shopify-cli/finalize'
+  autoload :Core, 'shopify-cli/core'
   autoload :Form, 'shopify-cli/form'
   autoload :Git, 'shopify-cli/git'
   autoload :Helpers, 'shopify-cli/helpers'
   autoload :Heroku, 'shopify-cli/heroku'
   autoload :Log, 'shopify-cli/log'
-  autoload :Monorail, 'shopify-cli/monorail'
   autoload :OAuth, 'shopify-cli/oauth'
   autoload :Options, 'shopify-cli/options'
   autoload :Project, 'shopify-cli/project'
   autoload :ProjectType, 'shopify-cli/project_type'
-  autoload :HelpResolver, 'shopify-cli/help_resolver'
   autoload :SubCommand, 'shopify-cli/sub_command'
   autoload :Task, 'shopify-cli/task'
   autoload :Tasks, 'shopify-cli/tasks'
-  autoload :Update, 'shopify-cli/update'
 end

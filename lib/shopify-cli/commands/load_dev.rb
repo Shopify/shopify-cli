@@ -11,7 +11,7 @@ module ShopifyCli
           raise(ShopifyCli::AbortSilent, "{{x}} #{project_dir} does not exist")
         end
         @ctx.done("Reloading #{TOOL_FULL_NAME} from #{project_dir}")
-        ShopifyCli::Finalize.reload_shopify_from(project_dir)
+        ShopifyCli::Core::Finalize.reload_shopify_from(project_dir)
       end
 
       def self.help

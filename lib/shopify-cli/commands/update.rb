@@ -11,7 +11,7 @@ module ShopifyCli
       end
 
       def call(_args, _name)
-        ShopifyCli::Update.check_now(restart_command_after_update: false, ctx: @ctx)
+        ShopifyCli::Core::Update.check_now(restart_command_after_update: false, ctx: @ctx)
       end
     end
   end
