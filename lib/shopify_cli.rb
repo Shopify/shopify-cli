@@ -95,6 +95,7 @@ module ShopifyCli
     )
   end
 
+  autoload :AdminAPI, 'shopify-cli/admin_api'
   autoload :API, 'shopify-cli/api'
   autoload :Command, 'shopify-cli/command'
   autoload :Commands, 'shopify-cli/commands'

@@ -11,7 +11,7 @@ module ShopifyCli
           super
           @resource = Product.new(@context)
           Helpers::AccessToken.stubs(:read).returns('myaccesstoken')
-          ShopifyCli::Helpers::AdminAPI.stubs(:new).returns(Object.new)
+          ShopifyCli::AdminAPI.stubs(:new).returns(Object.new)
         end
 
         def test_with_schema_args_overrides_input
@@ -34,7 +34,7 @@ module ShopifyCli
         end
 
         def test_populate_runs_mutation_against_other_shop
-          Helpers::AdminAPI.expects(:query).with(
+          ShopifyCli::AdminAPI.expects(:query).with(
             @context, 'create_product', has_entry(shop: 'my-other-test-shop.myshopify.com')
           ).returns(Hash.new)
           capture_io do

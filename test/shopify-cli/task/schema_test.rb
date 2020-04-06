@@ -10,7 +10,7 @@ module ShopifyCli
         Helpers::Store.expects(:exists?).returns(false)
         Helpers::Store.expects(:set).with(shopify_admin_schema: "{\"foo\":\"baz\"}")
         Helpers::Store.expects(:get).with(:shopify_admin_schema).returns("{\"foo\":\"baz\"}")
-        ShopifyCli::Helpers::AdminAPI.expects(:query)
+        ShopifyCli::AdminAPI.expects(:query)
           .with(@context, 'admin_introspection')
           .returns(foo: "baz")
         assert_equal({ "foo" => "baz" }, ShopifyCli::Tasks::Schema.call(@context))
