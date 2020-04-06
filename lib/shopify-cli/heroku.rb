@@ -11,20 +11,19 @@ module ShopifyCli
     end
 
     def app
-      return nil if git_remote.nil?
-      app = git_remote
+      return nil unless (app = git_remote)
       app = app.split('/').last
       app = app.split('.').first
       app
     end
 
     def authenticate
-      result = @ctx.system(heroku_path, 'login')
+      result = @ctx.system(heroku_command, 'login')
       @ctx.abort("Could not authenticate with Heroku") unless result.success?
     end
 
     def create_new_app
-      output, status = @ctx.capture2e(heroku_path, 'create')
+      output, status = @ctx.capture2e(heroku_command, 'create')
       @ctx.abort('Heroku app could not be created') unless status.success?
       @ctx.puts(output)
 
@@ -58,14 +57,14 @@ module ShopifyCli
     end
 
     def select_existing_app(app_name)
-      result = @ctx.system(heroku_path, 'git:remote', '-a', app_name)
+      result = @ctx.system(heroku_command, 'git:remote', '-a', app_name)
 
       msg = "Heroku app `#{app_name}` could not be selected"
       @ctx.abort(msg) unless result.success?
     end
 
     def whoami
-      output, status = @ctx.capture2e(heroku_path, 'whoami')
+      output, status = @ctx.capture2e(heroku_command, 'whoami')
       return output.strip if status.success?
       nil
     end
@@ -85,7 +84,7 @@ module ShopifyCli
       status.success? ? output : nil
     end
 
-    def heroku_path
+    def heroku_command
       local_path = File.join(ShopifyCli::ROOT, 'heroku', 'bin', 'heroku').to_s
       if File.exist?(local_path)
         local_path
@@ -95,7 +94,7 @@ module ShopifyCli
     end
 
     def installed?
-      _output, status = @ctx.capture2e(heroku_path, '--version')
+      _output, status = @ctx.capture2e(heroku_command, '--version')
       status.success?
     rescue
       false

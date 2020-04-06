@@ -4,6 +4,7 @@ module Rails
     # hidden_project_type
     creator 'Ruby on Rails App', 'Rails::Commands::Create'
 
+    register_command('Rails::Commands::Deploy', "deploy")
     register_command('Rails::Commands::Generate', "generate")
     register_command('Rails::Commands::Open', "open")
     register_command('Rails::Commands::Serve', "serve")
@@ -14,6 +15,7 @@ module Rails
   # define/autoload project specific Commads
   module Commands
     autoload :Create, Project.project_filepath('commands/create')
+    autoload :Deploy, Project.project_filepath('commands/deploy')
     autoload :Generate, Project.project_filepath('commands/generate')
     autoload :Open, Project.project_filepath('commands/open')
     autoload :Serve, Project.project_filepath('commands/serve')
