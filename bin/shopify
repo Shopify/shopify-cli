@@ -34,5 +34,5 @@ require_relative 'support/load_shopify'
 # Dev::Helpers::ChrubyReset.call(ENV)
 
 exit(ShopifyCli::ErrorHandler.call do
-  ShopifyCli::EntryPoint.call(ARGV.dup)
+  ShopifyCli::Core::EntryPoint.call(ARGV.dup)
 end)

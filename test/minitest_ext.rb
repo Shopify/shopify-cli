@@ -16,7 +16,8 @@ module Minitest
     end
 
     def run_cmd(cmd)
-      ShopifyCli::EntryPoint.call(cmd.split(' '), @context)
+      stub_monorail_log_invocation
+      ShopifyCli::Core::EntryPoint.call(cmd.split(' '), @context)
     end
 
     def capture_io(&block)
@@ -38,6 +39,12 @@ module Minitest
           failure.message.force_encoding(Encoding::UTF_8),
         ]
       end.join("\n")
+    end
+
+    private
+
+    def stub_monorail_log_invocation
+      ShopifyCli::Git.stubs(:sha).returns("bb6f42193239a248f054e5019e469bc75f3adf1b")
     end
   end
 end
