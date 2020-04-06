@@ -4,7 +4,7 @@ module ShopifyCli
   module Commands
     class LoadDevTest < MiniTest::Test
       def test_without_argument_uses_current_dir
-        ShopifyCli::Finalize.expects(:reload_shopify_from).with(Dir.pwd)
+        ShopifyCli::Core::Finalize.expects(:reload_shopify_from).with(Dir.pwd)
         capture_io do
           run_cmd('load-dev')
         end
@@ -12,7 +12,7 @@ module ShopifyCli
 
       def test_with_argument
         dir = File.expand_path(Dir.pwd)
-        ShopifyCli::Finalize.expects(:reload_shopify_from).with(dir)
+        ShopifyCli::Core::Finalize.expects(:reload_shopify_from).with(dir)
         capture_io do
           run_cmd("load-dev #{dir}")
         end
