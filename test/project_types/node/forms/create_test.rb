@@ -25,6 +25,24 @@ module Node
         assert_equal(form.title, 'My New App')
       end
 
+      def test_type_can_be_provided_by_flag
+        form = ask(type: 'public')
+        assert_equal(form.type, 'public')
+      end
+
+      def test_type_is_validated
+        io = capture_io do
+          form = ask(type: "not_a_type")
+          assert_nil(form)
+        end
+        assert_match('Invalid App Type not_a_type', io.join)
+      end
+
+      def test_type_is_prompted
+        CLI::UI::Prompt.expects(:ask).with('What type of app are you building?').returns('public')
+        ask(type: nil)
+      end
+
       def test_user_will_be_prompted_if_more_than_one_organization
         stub_partner_req(
           'all_organizations',
@@ -40,7 +58,12 @@ module Node
                   {
                     'id': 431,
                     'businessName': "two",
-                    'stores': { 'nodes': [{ 'shopDomain': 'other.myshopify.com' }] },
+                    'stores': {
+                      'nodes': [
+                        { 'shopDomain': 'other.myshopify.com', 'transferDisabled': true },
+                        { 'shopDomain': 'yet-another.myshopify.com' },
+                      ],
+                    },
                   },
                 ],
               },
@@ -62,7 +85,7 @@ module Node
                 nodes: [{
                   'id': 421,
                   'businessName': "hoopy froods",
-                  'stores': { 'nodes': [{ 'shopDomain': 'next.myshopify.com' }] },
+                  'stores': { 'nodes': [{ 'shopDomain': 'next.myshopify.com', 'transferDisabled': true }] },
                 }],
               },
             },
@@ -86,7 +109,7 @@ module Node
                 nodes: [
                   {
                     id: 123,
-                    stores: { nodes: [{ shopDomain: 'shopdomain.myshopify.com' }] },
+                    stores: { nodes: [{ shopDomain: 'shopdomain.myshopify.com', 'transferDisabled': true }] },
                   },
                 ],
               },
@@ -144,7 +167,7 @@ module Node
                 nodes: [
                   {
                     id: 123,
-                    stores: { nodes: [{ shopDomain: 'shopdomain.myshopify.com' }] },
+                    stores: { nodes: [{ shopDomain: 'shopdomain.myshopify.com', 'transferDisabled': true }] },
                   },
                 ],
               },
@@ -169,8 +192,9 @@ module Node
                   {
                     id: 123,
                     stores: { nodes: [
-                      { shopDomain: 'shopdomain.myshopify.com' },
-                      { shopDomain: 'shop.myshopify.com' },
+                      { shopDomain: 'shopdomain.myshopify.com', 'transferDisabled': true },
+                      { shopDomain: 'shop.myshopify.com', 'convertableToPartnerTest': true },
+                      { shopDomain: 'other.myshopify.com' },
                     ] },
                   },
                 ],
@@ -191,11 +215,12 @@ module Node
 
       private
 
-      def ask(title: 'Test App', org_id: 42, shop: 'shop.myshopify.com')
+      def ask(title: 'Test App', org_id: 42, shop: 'shop.myshopify.com', type: 'custom')
         Create.ask(
           @context,
           [],
           title: title,
+          type: type,
           organization_id: org_id,
           shop_domain: shop,
         )
