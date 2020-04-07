@@ -6,7 +6,7 @@ module ShopifyCli
 
     class << self
       def auto_update
-        return if ShopifyCli::Util.testing?
+        return if Context.new.testing?
         prompt_for_updates
         return unless ShopifyCli::Config.get_bool('autoupdate', 'enabled')
 
@@ -23,7 +23,7 @@ module ShopifyCli
       end
 
       def check_now(restart_command_after_update: raise, ctx: ShopifyCli::Context.new)
-        if ShopifyCli::Util.development?
+        if Context.new.development?
           if restart_command_after_update
             return # just skip
           else
