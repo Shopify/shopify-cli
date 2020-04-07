@@ -23,6 +23,22 @@ module ShopifyCli
         /Linux/.match(uname)
       end
 
+      def system?
+        ShopifyCli::INSTALL_DIR == ShopifyCli::ROOT
+      end
+
+      def development?
+        !system? && !testing?
+      end
+
+      def testing?
+        ci? || ENV['TEST']
+      end
+
+      def ci?
+        ENV['CI']
+      end
+
       def uname(flag: 'a')
         @uname ||= capture2("uname -#{flag}")[0].strip
       end

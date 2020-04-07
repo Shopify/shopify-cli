@@ -94,7 +94,7 @@ module ShopifyCli
 
       def enabled?
         # we only want to send Monorail events in production or when explicitly developing
-        ShopifyCli::Util.system? || ENV['MONORAIL_REAL_EVENTS'] == '1'
+        Context.new.system? || ENV['MONORAIL_REAL_EVENTS'] == '1'
       end
 
       def consented?

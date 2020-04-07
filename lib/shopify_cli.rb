@@ -118,5 +118,4 @@ module ShopifyCli
   autoload :Task, 'shopify-cli/task'
   autoload :Tasks, 'shopify-cli/tasks'
   autoload :Update, 'shopify-cli/update'
-  autoload :Util, 'shopify-cli/util'
 end
