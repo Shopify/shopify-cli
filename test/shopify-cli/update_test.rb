@@ -32,7 +32,7 @@ module ShopifyCli
     end
 
     def test_check_now_aborts_when_head_lock_exists
-      ShopifyCli::Util.expects(:development?).returns(false)
+      ShopifyCli::Context.any_instance.expects(:development?).returns(false)
       FileUtils.touch(File.expand_path('.git/HEAD.lock', ShopifyCli::ROOT))
       ShopifyCli::Update.expects(:exec).never
 
@@ -45,7 +45,7 @@ module ShopifyCli
     end
 
     def test_check_now_aborts_when_branch_head_lock_exists
-      ShopifyCli::Util.expects(:development?).returns(false)
+      ShopifyCli::Context.any_instance.expects(:development?).returns(false)
       lockfile = File.expand_path(".git/refs/heads/master.lock", ShopifyCli::ROOT)
       FileUtils.mkdir_p(File.dirname(lockfile))
       FileUtils.touch(lockfile)
@@ -82,7 +82,7 @@ module ShopifyCli
     end
 
     def test_auto_update_doesnt_check_if_fetch_head_not_stale
-      ShopifyCli::Util.expects(:testing?).returns(false)
+      ShopifyCli::Context.any_instance.expects(:testing?).returns(false)
       FileUtils.touch(ShopifyCli::Update::FETCH_HEAD, mtime: Time.now - 10)
       ShopifyCli::Update.expects(:check_now).never
 
@@ -90,7 +90,7 @@ module ShopifyCli
     end
 
     def test_auto_update_checks_if_fetch_head_stale
-      ShopifyCli::Util.expects(:testing?).returns(false)
+      ShopifyCli::Context.any_instance.expects(:testing?).returns(false)
       FileUtils.touch(ShopifyCli::Update::FETCH_HEAD, mtime: Time.now - 3601)
       ShopifyCli::Update.expects(:check_now).once
 
@@ -98,7 +98,7 @@ module ShopifyCli
     end
 
     def test_auto_update_does_not_check_if_config_disabled
-      ShopifyCli::Util.expects(:testing?).returns(false)
+      ShopifyCli::Context.any_instance.expects(:testing?).returns(false)
       ShopifyCli::Config.expects(:get_bool).with('autoupdate', 'enabled').returns(false)
       FileUtils.touch(ShopifyCli::Update::FETCH_HEAD, mtime: Time.now - 3601)
       ShopifyCli::Update.expects(:check_now).never
@@ -155,7 +155,7 @@ module ShopifyCli
     private
 
     def fake_context_for_success
-      ShopifyCli::Util.expects(:development?).returns(false)
+      ShopifyCli::Context.any_instance.expects(:development?).returns(false)
       fake_git(["fetch", "origin", 'master'])
       fake_git(["reset", "."])
       fake_git(["checkout", "."])
@@ -164,12 +164,12 @@ module ShopifyCli
     end
 
     def fake_context_for_failed_fetch
-      ShopifyCli::Util.expects(:development?).returns(false)
+      ShopifyCli::Context.any_instance.expects(:development?).returns(false)
       fake_git(["fetch", "origin", 'master'], success: false)
     end
 
     def fake_context_for_failed_reset
-      ShopifyCli::Util.expects(:development?).returns(false)
+      ShopifyCli::Context.any_instance.expects(:development?).returns(false)
       fake_git(["fetch", "origin", 'master'])
       fake_git(["reset", "."])
       fake_git(["checkout", "."])
