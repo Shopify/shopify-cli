@@ -3,7 +3,7 @@ require 'test_helper'
 module ShopifyCli
   class ProcessSuperVisionTest < MiniTest::Test
     def teardown
-      return unless @process && @process.alive?
+      return unless @process&.alive?
       @process.stop
     end
 

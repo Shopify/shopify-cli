@@ -19,7 +19,7 @@ module ShopifyCli
         return for_ident(identifier) if running?(identifier)
         fork do
           pid_file = new(identifier, pid: Process.pid)
-          pid_file.write()
+          pid_file.write
           STDOUT.reopen(pid_file.log_path, "w")
           STDERR.reopen(pid_file.log_path, "w")
           STDIN.reopen("/dev/null", "r")
@@ -30,14 +30,14 @@ module ShopifyCli
         for_ident(identifier)
       end
 
-      def stop(identifier, retry_count: 2)
-        process = self.for_ident(identifier)
+      def stop(identifier)
+        process = for_ident(identifier)
         return false unless process
         process.stop
       end
 
       def running?(identifier)
-        process = self.for_ident(identifier)
+        process = for_ident(identifier)
         return false unless process
         process.alive?
       end
@@ -98,7 +98,7 @@ module ShopifyCli
     end
 
     def stat(id)
-      Process.getpgid(pid)
+      Process.getpgid(id)
       true
     rescue Errno::EPERM
       true
