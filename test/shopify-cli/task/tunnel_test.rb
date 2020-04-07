@@ -64,10 +64,9 @@ module ShopifyCli
         end
       end
 
-      def test_stop_removes_pid_and_logfile
-        Tunnel.any_instance.stubs(:running?).returns(true)
-        @context.expects(:puts).with("{{green:x}} ngrok tunnel stopped")
-        ShopifyCli::ProcessSupervision.expects(:stop).with(:ngrok).returns(true)
+      def test_stop_doesnt_stop_what_isnt_started
+        ShopifyCli::ProcessSupervision.expects(:running?).with(:ngrok).returns(false)
+        @context.expects(:puts).with("{{green:x}} ngrok tunnel not running")
         Tunnel.new.stop(@context)
       end
 
