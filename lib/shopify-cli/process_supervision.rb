@@ -98,7 +98,7 @@ module ShopifyCli
     end
 
     def stat(id)
-      Process.getpgid(id)
+      Process.kill(0, id) # signal 0 checks if pid is alive
       true
     rescue Errno::EPERM
       true
