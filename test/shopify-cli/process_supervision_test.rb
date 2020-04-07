@@ -15,26 +15,33 @@ module ShopifyCli
     end
 
     def test_start
-      process = ProcessSupervision.start('example', 'sleep 1')
+      process = start
       assert process.alive?
       assert ProcessSupervision.running?('example')
       process.stop
     end
 
     def test_alive
-      process = ProcessSupervision.start('example', 'sleep 1')
+      process = start
       assert process.alive?
       assert process.stop
       refute process.alive?
     end
 
     def test_stop
-      ProcessSupervision.start('example', 'sleep 1')
-      process = ProcessSupervision.for_ident('example')
+      process = start
       assert process.alive?
       ProcessSupervision.stop('example')
       refute process.alive?
       refute ProcessSupervision.running?('example')
+    end
+
+    private
+
+    def start
+      process = ProcessSupervision.start('example', 'sleep 1')
+      Process.detach(process.pid)
+      process
     end
   end
 end
