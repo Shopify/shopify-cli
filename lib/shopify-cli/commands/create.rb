@@ -32,10 +32,10 @@ module ShopifyCli
       end
 
       def self.help
-        project_types = all_visible_type.map(&:project_type).join("|")
+        project_types = all_visible_type.map(&:project_type).join(" | ")
         <<~HELP
           Create a new project.
-            Usage: {{command:#{ShopifyCli::TOOL_NAME} create [#{project_types}]}}
+            Usage: {{command:#{ShopifyCli::TOOL_NAME} create [ #{project_types} ]}}
         HELP
       end
 
