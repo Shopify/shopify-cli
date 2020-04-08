@@ -13,10 +13,6 @@ module ShopifyCli
 
         # we override the call classmethod here because we parse options at runtime
         def call(args, command_name, _parent_command)
-          @ctx.debug("{{red:args = #{args}}}")
-          @ctx.debug("{{red:command_name = #{command_name}}}")
-          @ctx.debug("{{red:_parent_command = #{_parent_command}}}")
-
           cmd = new(@ctx)
           cmd.call(args, command_name)
         end
@@ -24,7 +20,7 @@ module ShopifyCli
         def help
           cmd = new(@ctx)
           output = cmd.display_parent_help + "\n"
-          output += cmd.display_parent_extended_help
+          output + cmd.display_parent_extended_help
         end
       end
 
@@ -37,8 +33,6 @@ module ShopifyCli
         @help = false
         input_options
         resource_options.parse(@args)
-
-        @ctx.debug("{{red:args = #{args}}}")
 
         if @help
           output = display_parent_extended_help
@@ -69,13 +63,11 @@ module ShopifyCli
       end
 
       def display_parent_help
-        @ctx.debug("{{red:display_parent_help(): parent_command_klass = #{parent_command_klass}}}")
-        output = parent_command_klass.respond_to?(:help) ? parent_command_klass.help : ""
+        parent_command_klass.respond_to?(:help) ? parent_command_klass.help : ""
       end
 
       def display_parent_extended_help
-        @ctx.debug("{{red:display_parent_extended_help(): parent_command_klass = #{parent_command_klass}}}")
-        output = parent_command_klass.respond_to?(:extended_help) ? parent_command_klass.extended_help : ""
+        parent_command_klass.respond_to?(:extended_help) ? parent_command_klass.extended_help : ""
       end
 
       def resource_options
@@ -149,11 +141,11 @@ module ShopifyCli
       end
 
       def snake_case_resource_type
-        @snake_case_resource_type ||= camel_case_resource_type.to_s.
-          gsub(/([A-Z]+)([A-Z][a-z])/,'\1_\2').
-          gsub(/([a-z\d])([A-Z])/,'\1_\2').
-          tr("-", "_").
-          downcase
+        @snake_case_resource_type ||= camel_case_resource_type.to_s
+          .gsub(/([A-Z]+)([A-Z][a-z])/, '\1_\2')
+          .gsub(/([a-z\d])([A-Z])/, '\1_\2')
+          .tr("-", "_")
+          .downcase
       end
 
       def parent_command_klass
