@@ -47,14 +47,14 @@ module Node
         @ctx.puts("{{v}} {{green:#{form.title}}} was created in your Partner" \
                   " Dashboard " \
                   "{{underline:#{partners_url}}}")
-        @ctx.puts("{{*}} Run {{cyan:shopify serve}} to start a local server")
+        @ctx.puts("{{*}} Run {{command:#{ShopifyCli::TOOL_NAME} serve}} to start a local server")
         @ctx.puts("{{*}} Then, visit {{underline:#{partners_url}/test}} to install" \
                   " {{green:#{form.title}}} on your Dev Store")
       end
 
       def self.help
         <<~HELP
-        {{cyan:shopify create node}}: Creates an embedded nodejs app.
+        {{command:#{ShopifyCli::TOOL_NAME} create node}}: Creates an embedded nodejs app.
           Usage: {{command:#{ShopifyCli::TOOL_NAME} create node}}
           Options:
             {{command:--title=TITLE}} App project title. Any string.
