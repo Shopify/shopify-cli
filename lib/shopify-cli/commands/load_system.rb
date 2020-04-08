@@ -7,7 +7,7 @@ module ShopifyCli
 
       def call(_args, _name)
         @ctx.done("Reloading #{TOOL_FULL_NAME} from #{ShopifyCli::INSTALL_DIR}")
-        ShopifyCli::Finalize.reload_shopify_from(ShopifyCli::INSTALL_DIR)
+        ShopifyCli::Core::Finalize.reload_shopify_from(ShopifyCli::INSTALL_DIR)
       end
 
       def self.help
