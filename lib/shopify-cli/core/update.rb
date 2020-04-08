@@ -28,7 +28,8 @@ module ShopifyCli
             if restart_command_after_update
               return # just skip
             else
-              err("Development version of {{cyan:shopify}} in use. Run {{cyan:shopify load-system}} first.")
+              err("Development version of {{command:#{ShopifyCli::TOOL_NAME}}} in use. "\
+                "Run {{command:#{ShopifyCli::TOOL_NAME} load-system}} first.")
               raise(ShopifyCli::AbortSilent)
             end
           end
@@ -36,7 +37,7 @@ module ShopifyCli
           if File.exist?(File.expand_path('.git/HEAD.lock', ShopifyCli::ROOT))
             err("failed!")
             err("It looks like another git operation is in progress on {{blue:#{ShopifyCli::ROOT}}}.")
-            err("Try running {{cyan:shopify update}}.")
+            err("Try running {{command:#{ShopifyCli::TOOL_NAME} update}}.")
             err("If that fails, you must run {{green: rm #{ShopifyCli::ROOT}/.git/HEAD.lock}} to continue.")
             raise(ShopifyCli::AbortSilent)
           end
@@ -44,7 +45,7 @@ module ShopifyCli
           if File.exist?(File.expand_path(".git/refs/heads/master.lock", ShopifyCli::ROOT))
             err("failed!")
             err("It looks like another git operation is in progress on {{blue:#{ShopifyCli::ROOT}}}.")
-            err("Try running {{cyan:shopify update}}.")
+            err("Try running {{command:#{ShopifyCli::TOOL_NAME} update}}.")
             err(
               "If that fails, you must run {{green: rm #{ShopifyCli::ROOT}/.git/refs/heads/master.lock}} to continue."
             )
