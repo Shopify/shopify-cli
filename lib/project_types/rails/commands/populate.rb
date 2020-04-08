@@ -1,14 +1,13 @@
 require 'shopify_cli'
 
-module ShopifyCli
+module Rails
   module Commands
     class Populate < ShopifyCli::Command
       prerequisite_task :schema
 
-      autoload :Resource, 'shopify-cli/commands/populate/resource'
-      subcommand :Product, 'products', 'shopify-cli/commands/populate/product'
-      subcommand :Customer, 'customers', 'shopify-cli/commands/populate/customer'
-      subcommand :DraftOrder, 'draftorders', 'shopify-cli/commands/populate/draft_order'
+      subcommand :Product, 'products', Project.project_filepath('commands/populate/product')
+      subcommand :Customer, 'customers', Project.project_filepath('commands/populate/customer')
+      subcommand :DraftOrder, 'draftorders', Project.project_filepath('commands/populate/draft_order')
 
       def call(_args, _name)
         @ctx.puts(self.class.help)
@@ -36,19 +35,24 @@ module ShopifyCli
 
           {{bold:Options:}}
 
-            {{cyan:--count [integer]}}: The number of dummy items to populate. Defaults to 10.
+            {{cyan:--count [integer]}}: The number of dummy items to populate. Defaults to 5.
             {{cyan:--silent}}: Silence the populate output.
+            {{cyan:--help}}: Display more options specific to each subcommand.
 
           {{bold:Examples:}}
 
-            {{cyan:shopify populate products}}
+            {{command:#{ShopifyCli::TOOL_NAME} populate products}}
               Populate your development store with 5 additional products.
 
-            {{cyan:shopify populate customers --count 30}}
+            {{command:#{ShopifyCli::TOOL_NAME} populate customers --count 30}}
               Populate your development store with 30 additional customers.
 
-            {{cyan:shopify populate draftorders}}
+            {{command:#{ShopifyCli::TOOL_NAME} populate draftorders}}
               Populate your development store with 5 additional orders.
+
+            {{command:#{ShopifyCli::TOOL_NAME} populate products --help}}
+              Display the list of options available to customize the
+              {{command:#{ShopifyCli::TOOL_NAME} populate products}} command.
         HELP
       end
     end

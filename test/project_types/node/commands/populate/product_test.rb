@@ -1,20 +1,21 @@
 require 'test_helper'
 
-module ShopifyCli
+module Node
   module Commands
-    class Populate
+    module PopulateTests
       class ProductTest < MiniTest::Test
         include TestHelpers::Schema
 
         def setup
           super
-          Helpers::AccessToken.stubs(:read).returns('myaccesstoken')
+          ShopifyCli::ProjectType.load_type(:node)
+          ShopifyCli::Helpers::AccessToken.stubs(:read).returns('myaccesstoken')
         end
 
         def test_populate_calls_api_with_mutation
-          Helpers::Haikunator.expects(:title).returns('fake product')
-          Helpers::Haikunator.expects(:title).returns('fake producttwo')
-          Resource.any_instance.stubs(:price).returns('1.00')
+          ShopifyCli::Helpers::Haikunator.expects(:title).returns('fake product')
+          ShopifyCli::Helpers::Haikunator.expects(:title).returns('fake producttwo')
+          ShopifyCli::AdminAPI::PopulateResourceCommand.any_instance.stubs(:price).returns('1.00')
           return_data = JSON.parse(File.read(File.join(FIXTURE_DIR, 'populate/product_data.json')))
           ShopifyCli::AdminAPI.expects(:query)
             .with(@context, 'create_product', input: {
