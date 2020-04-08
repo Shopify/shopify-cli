@@ -18,7 +18,6 @@ module ShopifyCli
     register :Help, 'help', 'shopify-cli/commands/help'
     register :LoadDev, 'load-dev', 'shopify-cli/commands/load_dev'
     register :LoadSystem, 'load-system', 'shopify-cli/commands/load_system'
-    register :Populate, 'populate', 'shopify-cli/commands/populate'
     register :Update, 'update', 'shopify-cli/commands/update'
   end
 end
