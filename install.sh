@@ -52,7 +52,7 @@ postmsg() {
   echo -e "\x1b[36mshopify-app-cli\x1b[0m is installed!"
   echo -e "Run \x1b[36mshopify help\x1b[0m to see what you can do, or read \x1b[36mhttps://github.com/Shopify/shopify-app-cli\x1b[0m."
   echo -e "To start developing on shopify, for example:"
-  echo -e "  * run \x1b[36mshopify create project <appname>\x1b[0m"
+  echo -e "  * run \x1b[36mshopify create\x1b[0m"
 }
 
 install_prerequisites() {
