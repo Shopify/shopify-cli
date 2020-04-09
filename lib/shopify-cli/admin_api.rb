@@ -3,6 +3,7 @@ require 'shopify_cli'
 module ShopifyCli
   class AdminAPI < API
     autoload :PopulateResourceCommand, 'shopify-cli/admin_api/populate_resource_command'
+    autoload :Schema, 'shopify-cli/admin_api/schema'
 
     class << self
       def query(ctx, body, api_version: nil, shop: nil, **variables)
