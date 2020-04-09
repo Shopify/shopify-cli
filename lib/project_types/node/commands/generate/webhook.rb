@@ -6,11 +6,8 @@ module Node
       class Webhook < ShopifyCli::SubCommand
         def call(args, _name)
           selected_type = args.first
-          schema = ShopifyCli::Helpers::SchemaParser.new(
-            schema: ShopifyCli::Tasks::Schema.call(@ctx)
-          )
-          enum = schema['WebhookSubscriptionTopic']
-          webhooks = schema.get_names_from_enum(enum)
+          schema = ShopifyCli::AdminAPI::Schema.get(@ctx)
+          webhooks = schema.get_names_from_type('WebhookSubscriptionTopic')
           unless selected_type && webhooks.include?(selected_type)
             selected_type = CLI::UI::Prompt.ask('What type of webhook would you like to create?') do |handler|
               webhooks.each do |type|

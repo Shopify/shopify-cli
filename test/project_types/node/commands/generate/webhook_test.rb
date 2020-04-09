@@ -5,11 +5,11 @@ module Node
     module GenerateTests
       class WebhookTest < MiniTest::Test
         include TestHelpers::FakeUI
+        include TestHelpers::Schema
 
         def setup
           super
           ShopifyCli::ProjectType.load_type(:node)
-          ShopifyCli::Tasks::Schema.expects(:call).returns(schema_json)
         end
 
         def test_with_existing_param
@@ -30,12 +30,6 @@ module Node
           @context.expects(:system).with('./node_modules/.bin/generate-node-app webhook PRODUCT_CREATE')
             .returns(mock(success?: true))
           run_cmd('generate webhook')
-        end
-
-        private
-
-        def schema_json
-          @schema_json ||= JSON.parse(File.read(File.join(ShopifyCli::ROOT, "test/fixtures/shopify_schema.json")))
         end
       end
     end
