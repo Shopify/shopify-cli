@@ -26,12 +26,6 @@ module ShopifyCli
         CLI::UI::Prompt.expects(:ask).with('What type of project would you like to create?').returns(:rails)
         run_cmd('create')
       end
-
-      def test_with_extension_calls_extension
-        Create::Extension.any_instance.expects(:call)
-          .with(['new-extension'], 'extension')
-        run_cmd('create extension new-extension')
-      end
     end
   end
 end

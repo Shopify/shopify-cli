@@ -1,11 +1,9 @@
-require 'shopify_cli'
-require 'uri'
+# frozen_string_literal: true
 
-module ShopifyCli
+module Extension
   module Forms
-    class CreateExtension < Form
-      positional_arguments :name
-      flag_arguments :type, :api_key
+    class Create < ShopifyCli::Form
+      flag_arguments :title, :type, :api_key
 
       attr_reader :app
 
@@ -26,15 +24,21 @@ module ShopifyCli
       ]
 
       def ask
+        self.title = ask_title
         self.type = ask_type
         self.app = ask_app
       end
 
-      protected 
-      
+      protected
+
       attr_writer :app
 
       private
+
+      def ask_title
+        return title unless title.nil?
+        CLI::UI::Prompt.ask('Extension Name')
+      end
 
       def ask_type
         return type if EXTENSION_TYPES.include?(type)
@@ -47,24 +51,24 @@ module ShopifyCli
       end
 
       def ask_app
-        orgs = Helpers::Organizations.fetch_with_app(@ctx)
+        orgs = ShopifyCli::Helpers::Organizations.fetch_with_app(@ctx)
         orgs_with_apps = orgs.select {|org| org['apps'].any?}
-        raise(ShopifyCli::Abort, 'There is no registered app. Create an app and try again') if !orgs_with_apps.any?
-        
+        ctx.abort('There is no registered app. Create an app and try again') unless orgs_with_apps.any?
+
         if !api_key.nil?
-          app = orgs_with_apps.reduce(nil) do |app, org| 
+          app = orgs_with_apps.reduce(nil) do |app, org|
             break app if app
             org.fetch('apps', []).find { |app| app['apiKey'] == api_key }
           end
-          raise(ShopifyCli::Abort, 'The api key does not match any of the existing apps') if app.nil?   
-          return app    
+          ctx.abort('The api key does not match any of the existing apps') if app.nil?
+          return app
         else
           CLI::UI::Prompt.ask('Which app will you like to associate with the extension?') do |handler|
             orgs.each do |org|
               org['apps'].each do |app|
                 handler.option(app['title'] + " by #{org['businessName'].to_s}") { app }
               end
-            end 
+            end
           end
         end
       end
