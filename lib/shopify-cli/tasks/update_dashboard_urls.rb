@@ -7,12 +7,12 @@ module ShopifyCli
         @ctx = ctx
         project = ShopifyCli::Project.current
         api_key = project.env.api_key
-        result = Helpers::PartnersAPI.query(ctx, 'get_app_urls', apiKey: api_key)
+        result = ShopifyCli::PartnersAPI.query(ctx, 'get_app_urls', apiKey: api_key)
         app = result['data']['app']
         consent = check_application_url(app['applicationUrl'], url)
         constructed_urls = construct_redirect_urls(app['redirectUrlWhitelist'], url, callback_url)
         return if url == app['applicationUrl']
-        ShopifyCli::Helpers::PartnersAPI.query(@ctx, 'update_dashboard_urls', input: {
+        ShopifyCli::PartnersAPI.query(@ctx, 'update_dashboard_urls', input: {
           applicationUrl: consent ? url : app['applicationUrl'],
           redirectUrlWhitelist: constructed_urls, apiKey: api_key
         })

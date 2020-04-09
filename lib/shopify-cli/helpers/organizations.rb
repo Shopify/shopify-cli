@@ -3,7 +3,7 @@ module ShopifyCli
     class Organizations
       class << self
         def fetch_all(ctx)
-          resp = Helpers::PartnersAPI.query(ctx, 'all_organizations')
+          resp = ShopifyCli::PartnersAPI.query(ctx, 'all_organizations')
           resp['data']['organizations']['nodes'].map do |org|
             org['stores'] = org['stores']['nodes']
             org
@@ -11,7 +11,7 @@ module ShopifyCli
         end
 
         def fetch(ctx, id:)
-          resp = Helpers::PartnersAPI.query(ctx, 'find_organization', id: id)
+          resp = ShopifyCli::PartnersAPI.query(ctx, 'find_organization', id: id)
           org = resp['data']['organizations']['nodes'].first
           return nil if org.nil?
           org['stores'] = org['stores']['nodes']
@@ -19,7 +19,7 @@ module ShopifyCli
         end
 
         def fetch_with_app(ctx)
-          resp = Helpers::PartnersAPI.query(ctx, 'all_orgs_with_apps')
+          resp = ShopifyCli::PartnersAPI.query(ctx, 'all_orgs_with_apps')
           resp['data']['organizations']['nodes'].map do |org|
             org['stores'] = org['stores']['nodes']
             org['apps'] = org['apps']['nodes']

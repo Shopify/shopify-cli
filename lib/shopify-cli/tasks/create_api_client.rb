@@ -6,7 +6,7 @@ module ShopifyCli
       VALID_APP_TYPES = %w(public custom)
 
       def call(ctx, org_id:, title:, app_url:, type:)
-        resp = Helpers::PartnersAPI.query(
+        resp = ShopifyCli::PartnersAPI.query(
           ctx,
           'create_app',
           org: org_id.to_i,

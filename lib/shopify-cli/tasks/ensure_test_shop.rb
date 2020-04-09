@@ -9,7 +9,7 @@ module ShopifyCli
         return if shop['transferDisabled'] == true
         return unless CLI::UI::Prompt.confirm("Do you want to convert #{project.env.shop} to a test shop."\
                                 " This will enable you to install your app on this store.")
-        ShopifyCli::Helpers::PartnersAPI.query(ctx, 'convert_dev_to_test_store', input: {
+        ShopifyCli::PartnersAPI.query(ctx, 'convert_dev_to_test_store', input: {
           organizationID: shop['orgID'].to_i,
           shopId: shop['shopId'],
         })

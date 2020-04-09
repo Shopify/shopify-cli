@@ -8,7 +8,6 @@ module ShopifyCli
     autoload :Haikunator, 'shopify-cli/helpers/haikunator'
     autoload :Node, 'shopify-cli/helpers/node'
     autoload :Organizations, 'shopify-cli/helpers/organizations'
-    autoload :PartnersAPI, 'shopify-cli/helpers/partners_api'
     autoload :PkceToken, 'shopify-cli/helpers/pkce_token'
     autoload :Store, 'shopify-cli/helpers/store'
     autoload :String, 'shopify-cli/helpers/string'

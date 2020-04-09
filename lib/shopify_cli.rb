@@ -109,6 +109,7 @@ module ShopifyCli
   autoload :OAuth, 'shopify-cli/oauth'
   autoload :Options, 'shopify-cli/options'
   autoload :ProcessSupervision, 'shopify-cli/process_supervision'
+  autoload :PartnersAPI, 'shopify-cli/partners_api'
   autoload :Project, 'shopify-cli/project'
   autoload :ProjectType, 'shopify-cli/project_type'
   autoload :SubCommand, 'shopify-cli/sub_command'
