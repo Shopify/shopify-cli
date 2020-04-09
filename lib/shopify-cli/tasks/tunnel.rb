@@ -16,75 +16,59 @@ module ShopifyCli
       TIMEOUT = 10
 
       def call(ctx)
-        @ctx = ctx
-        start
+        start(ctx)
       end
 
       def stop(ctx)
-        @ctx = ctx
-        if running?
-          begin
-            ShopifyCli::Helpers::ProcessSupervision.stop(:ngrok)
-            pid_file = ShopifyCli::Helpers::PidFile.for(:ngrok)
-            pid_file&.unlink_log
-            @ctx.puts("{{green:x}} ngrok tunnel stopped")
-          rescue
-            @ctx.abort(
-              'ngrok tunnel could not be stopped. Try running {{command:killall -9 ngrok}}'
-            )
+        if ShopifyCli::ProcessSupervision.running?(:ngrok)
+          if ShopifyCli::ProcessSupervision.stop(:ngrok)
+            ctx.puts('{{green:x}} ngrok tunnel stopped')
+          else
+            ctx.abort('ngrok tunnel could not be stopped. Try running {{command:killall -9 ngrok}}')
           end
         else
-          @ctx.puts("{{green:x}} ngrok tunnel not running")
+          ctx.puts("{{green:x}} ngrok tunnel not running")
         end
       end
 
-      def start
-        install
-
-        unless running?
-          ShopifyCli::Helpers::ProcessSupervision.start(:ngrok, ngrok_command)
-        end
-        pid_file = ShopifyCli::Helpers::PidFile.for(:ngrok)
-        log = fetch_url(pid_file.log_path)
+      def start(ctx)
+        install(ctx)
+        process = ShopifyCli::ProcessSupervision.start(:ngrok, ngrok_command)
+        log = fetch_url(ctx, process.log_path)
         if log.account
-          @ctx.puts("{{v}} ngrok tunnel running at {{underline:#{log.url}}}, with account #{log.account}")
+          ctx.puts("{{v}} ngrok tunnel running at {{underline:#{log.url}}}, with account #{log.account}")
         else
-          @ctx.puts("{{v}} ngrok tunnel running at {{underline:#{log.url}}}")
+          ctx.puts("{{v}} ngrok tunnel running at {{underline:#{log.url}}}")
         end
-        @ctx.app_metadata = { host: log.url }
+        ctx.app_metadata = { host: log.url }
         log.url
       end
 
       def auth(ctx, token)
-        install
-
+        install(ctx)
         ctx.system(File.join(ShopifyCli::ROOT, 'ngrok'), 'authtoken', token)
-      end
-
-      def running?
-        ShopifyCli::Helpers::ProcessSupervision.running?(:ngrok)
       end
 
       private
 
-      def install
+      def install(ctx)
         return if File.exist?(File.join(ShopifyCli::ROOT, 'ngrok'))
         spinner = CLI::UI::SpinGroup.new
         spinner.add('Installing ngrok...') do
           zip_dest = File.join(ShopifyCli::ROOT, 'ngrok.zip')
           unless File.exist?(zip_dest)
-            @ctx.system('curl', '-o', zip_dest, DOWNLOAD_URLS[@ctx.os], chdir: ShopifyCli::ROOT)
+            ctx.system('curl', '-o', zip_dest, DOWNLOAD_URLS[ctx.os], chdir: ShopifyCli::ROOT)
           end
-          @ctx.system('unzip', '-u', zip_dest, chdir: ShopifyCli::ROOT)
-          @ctx.rm(zip_dest)
+          ctx.system('unzip', '-u', zip_dest, chdir: ShopifyCli::ROOT)
+          ctx.rm(zip_dest)
         end
         spinner.wait
       end
 
-      def fetch_url(log_path)
+      def fetch_url(ctx, log_path)
         LogParser.new(log_path)
       rescue RuntimeError => e
-        stop(@ctx)
+        stop(ctx)
         raise e.class, e.message
       end
 

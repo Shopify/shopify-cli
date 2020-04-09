@@ -14,7 +14,7 @@ module ShopifyCli
       end
 
       def test_start_running_returns_url
-        ShopifyCli::Helpers::ProcessSupervision.stubs(:running?)
+        ShopifyCli::ProcessSupervision.stubs(:running?)
           .with(:ngrok).returns(:true)
         with_log do
           Tunnel.new.call(@context)
@@ -24,11 +24,11 @@ module ShopifyCli
 
       def test_start_not_running_starts_ngrok
         with_log do
-          ShopifyCli::Helpers::ProcessSupervision.stubs(:running?).returns(false)
-          ShopifyCli::Helpers::ProcessSupervision.expects(:start).with(
+          ShopifyCli::ProcessSupervision.stubs(:running?).returns(false)
+          ShopifyCli::ProcessSupervision.expects(:start).with(
             :ngrok,
             "exec #{File.join(ShopifyCli::ROOT, 'ngrok')} http -log=stdout -log-level=debug 8081"
-          )
+          ).returns(ShopifyCli::ProcessSupervision.new(:ngrok, pid: 40000))
           @context.expects(:puts).with(
             "{{v}} ngrok tunnel running at {{underline:https://example.ngrok.io}}"
           )
@@ -39,11 +39,11 @@ module ShopifyCli
 
       def test_start_displays_url_with_account
         with_log('ngrok_account') do
-          ShopifyCli::Helpers::ProcessSupervision.stubs(:running?).returns(false)
-          ShopifyCli::Helpers::ProcessSupervision.expects(:start).with(
+          ShopifyCli::ProcessSupervision.stubs(:running?).returns(false)
+          ShopifyCli::ProcessSupervision.expects(:start).with(
             :ngrok,
             "exec #{File.join(ShopifyCli::ROOT, 'ngrok')} http -log=stdout -log-level=debug 8081"
-          )
+          ).returns(ShopifyCli::ProcessSupervision.new(:ngrok, pid: 40000))
           @context.expects(:puts).with(
             "{{v}} ngrok tunnel running at {{underline:https://example.ngrok.io}}, with account Tom Cruise"
           )
@@ -54,26 +54,25 @@ module ShopifyCli
       def test_start_raises_error_on_ngrok_failure
         Tunnel.any_instance.stubs(:running?).returns(false)
         with_log('ngrok_error') do
-          ShopifyCli::Helpers::ProcessSupervision.expects(:start).with(
+          ShopifyCli::ProcessSupervision.expects(:start).with(
             :ngrok,
             "exec #{File.join(ShopifyCli::ROOT, 'ngrok')} http -log=stdout -log-level=debug 8081"
-          )
+          ).returns(ShopifyCli::ProcessSupervision.new(:ngrok, pid: 40000))
           assert_raises ShopifyCli::Tasks::Tunnel::NgrokError do
             Tunnel.new.call(@context)
           end
         end
       end
 
-      def test_stop_removes_pid_and_logfile
-        Tunnel.any_instance.stubs(:running?).returns(true)
-        @context.expects(:puts).with("{{green:x}} ngrok tunnel stopped")
-        ShopifyCli::Helpers::ProcessSupervision.expects(:stop).with(:ngrok)
+      def test_stop_doesnt_stop_what_isnt_started
+        ShopifyCli::ProcessSupervision.expects(:running?).with(:ngrok).returns(false)
+        @context.expects(:puts).with("{{green:x}} ngrok tunnel not running")
         Tunnel.new.stop(@context)
       end
 
       def test_start_raises_error_when_ngrok_cannot_be_stopped
-        ShopifyCli::Helpers::ProcessSupervision.stubs(:running?).with(:ngrok).returns(true)
-        ShopifyCli::Helpers::ProcessSupervision.stubs(:stop).with(:ngrok).raises
+        ShopifyCli::ProcessSupervision.stubs(:running?).with(:ngrok).returns(true)
+        ShopifyCli::ProcessSupervision.stubs(:stop).with(:ngrok).returns(false)
         assert_raises(ShopifyCli::Abort) do
           Tunnel.new.stop(@context)
         end
@@ -81,12 +80,11 @@ module ShopifyCli
 
       def with_log(fixture = 'ngrok')
         log_path = File.join(ShopifyCli::ROOT, "test/fixtures/#{fixture}.log")
-        pid_file = ShopifyCli::Helpers::PidFile.new(:ngrok, pid: 40000)
-        ShopifyCli::Helpers::PidFile.write(pid_file)
-        File.write(pid_file.log_path, File.read(log_path))
+        process = ShopifyCli::ProcessSupervision.new(:ngrok, pid: 40000)
+        process.write
+        File.write(process.log_path, File.read(log_path))
         yield
-        pid_file.unlink
-        pid_file.unlink_log
+        process.unlink
       end
     end
   end
