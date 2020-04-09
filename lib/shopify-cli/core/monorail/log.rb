@@ -7,7 +7,7 @@ module ShopifyCli
   module Core
     module Monorail
       class Log
-        INVOCATIONS_SCHEMA = 'app_cli_command/1.0'
+        INVOCATIONS_SCHEMA = 'app_cli_command/1.1'
 
         SUCCESS_SENTINEL = '_success'
 
@@ -24,6 +24,7 @@ module ShopifyCli
             cli_sha: ShopifyCli::Git.sha(dir: ShopifyCli::ROOT),
             uname: uname,
             args: args.join(' '),
+            project_type: Project.current_project_type,
           }
 
           event(schema: INVOCATIONS_SCHEMA, payload: payload, &block)

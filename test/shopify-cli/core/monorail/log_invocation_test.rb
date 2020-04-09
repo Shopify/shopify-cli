@@ -33,9 +33,29 @@ module ShopfyCli
           refute_nil(invocation_result[:payload][:duration])
         end
 
+        def test_invocation_payload_has_project_type
+          project_context('app_types', 'node')
+          _, events = with_monorail_log do |monorail_log|
+            monorail_log.invocation('test', %w(arg argtwo)) { 'This is the result' }
+          end
+          invocation, _ = events
+
+          assert_equal "node", invocation[:payload][:project_type]
+        end
+
+        def test_invocation_payload_project_type_can_be_nil
+          ShopifyCli::Project.expects(:current_project_type).returns(nil)
+          _, events = with_monorail_log do |monorail_log|
+            monorail_log.invocation('test', %w(arg argtwo)) { 'This is the result' }
+          end
+          invocation, _ = events
+
+          assert_nil(invocation[:payload][:project_type])
+        end
+
         def test_expected_values
           @events.each do |event|
-            assert_equal('app_cli_command/1.0', event[:schema_id])
+            assert_equal('app_cli_command/1.1', event[:schema_id])
             assert_equal('test arg argtwo', event[:payload][:args])
           end
         end
