@@ -94,7 +94,7 @@ module ShopifyCli
       end
 
       def input_options
-        schema[self.class.input_type]['inputFields'].each do |field|
+        schema.type(self.class.input_type)['inputFields'].each do |field|
           resource_options.on(
             "--#{field['name']}=#{field['defaultValue']}",
             field['description']
@@ -105,7 +105,7 @@ module ShopifyCli
       end
 
       def schema
-        @schema ||= ShopifyCli::Helpers::SchemaParser.new(schema: @ctx.app_metadata[:schema])
+        @schema ||= AdminAPI::Schema.get(@ctx)
       end
 
       def run_mutation(data)

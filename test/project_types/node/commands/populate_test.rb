@@ -6,7 +6,6 @@ module Node
       def setup
         super
         ShopifyCli::Helpers::AccessToken.stubs(:read).returns('myaccesstoken')
-        ShopifyCli::Tasks::Schema.stubs(:call)
         ShopifyCli::Tasks::EnsureEnv.stubs(:call)
         project_context('app_types', 'node')
         ShopifyCli::ProjectType.load_type(:node)

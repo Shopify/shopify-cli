@@ -3,8 +3,6 @@ require 'shopify_cli'
 module Node
   module Commands
     class Populate < ShopifyCli::Command
-      prerequisite_task :schema
-
       subcommand :Product, 'products', Project.project_filepath('commands/populate/product')
       subcommand :Customer, 'customers', Project.project_filepath('commands/populate/customer')
       subcommand :DraftOrder, 'draftorders', Project.project_filepath('commands/populate/draft_order')

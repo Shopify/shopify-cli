@@ -10,8 +10,6 @@ module ShopifyCli
     autoload :Organizations, 'shopify-cli/helpers/organizations'
     autoload :PartnersAPI, 'shopify-cli/helpers/partners_api'
     autoload :PkceToken, 'shopify-cli/helpers/pkce_token'
-    autoload :SchemaParser, 'shopify-cli/helpers/schema_parser'
-    autoload :ShopifySchema, 'shopify-cli/helpers/shopify_schema'
     autoload :Store, 'shopify-cli/helpers/store'
     autoload :String, 'shopify-cli/helpers/string'
   end
