@@ -21,7 +21,7 @@ module ShopifyCli
         org_id = if orgs.count == 1
           orgs.first["id"]
         else
-          CLI::UI::Prompt.ask('Which organization does this project belong to?') do |handler|
+          CLI::UI::Prompt.ask('To which organization does this project belong?') do |handler|
             orgs.each { |org| handler.option(org["businessName"]) { org["id"] } }
           end
         end
@@ -33,7 +33,7 @@ module ShopifyCli
         app_id = if apps.count == 1
           apps.first["id"]
         else
-          CLI::UI::Prompt.ask('Which app does this project belong to?') do |handler|
+          CLI::UI::Prompt.ask('To which app does this project belong?') do |handler|
             apps.each { |app| handler.option(app["title"]) { app["id"] } }
           end
         end
@@ -44,7 +44,7 @@ module ShopifyCli
         if shops.count == 1
           shops.first
         elsif shops.count == 0
-          @ctx.puts('No developement shops available.')
+          @ctx.puts('No development stores available.')
           @ctx.puts("Visit {{underline:https://partners.shopify.com/#{id}/stores}} to create one")
         else
           shop = CLI::UI::Prompt.ask('Which development store would you like to use?') do |handler|
