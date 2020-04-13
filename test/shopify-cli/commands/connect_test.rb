@@ -35,7 +35,7 @@ module ShopifyCli
           }],
         }]
         ShopifyCli::Helpers::Organizations.stubs(:fetch_with_app).returns(response)
-        CLI::UI::Prompt.expects(:ask).with('Which organization does this project belong to?').returns(422)
+        CLI::UI::Prompt.expects(:ask).with('To which organization does this project belong?').returns(422)
         CLI::UI::Prompt.expects(:ask).with(
           'Which development store would you like to use?'
         ).returns('store.myshopify.com')
