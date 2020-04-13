@@ -44,7 +44,7 @@ module ShopifyCli
           Tasks::AuthenticateIdentity.call(ctx)
           retry
         rescue API::APIRequestNotFoundError
-          ctx.error("error: Your account was not found. Please sign up at https://partners.shopify.com/signup")
+          ctx.abort("error: Your account was not found. Please sign up at https://partners.shopify.com/signup")
         end
 
         def api_client(ctx)
