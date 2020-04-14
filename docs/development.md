@@ -53,13 +53,13 @@ Commands should deal with the user interface, options and arguments, serializing
 - Reading from the user’s ENV
 - Executing things: `system`, `capture2`, `exec`, etc.
 - Displaying output
+- File operations: `rm`, `rm_r`, `rename`, `mkdir_p`
 
 ## ShopifyCli::Project
 
 ## What to use it for
 - Accessing information about the current project (app/codebase):
     - You can read from the `.env` file with the `Project.env` method
-    - Accessing the `AppType` via `Project.app_type`
 
 [cli-kit]:https://github.com/Shopify/cli-kit
 [cli-ui]:https://github.com/Shopify/cli-ui
