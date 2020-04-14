@@ -62,7 +62,7 @@ module Extension
       end
 
       def test_prompts_the_user_to_choose_an_app_to_associate_with_extension_if_no_app_is_provided
-        CLI::UI::Prompt.expects(:ask).with('Which app will you like to associate with the extension?')
+        CLI::UI::Prompt.expects(:ask).with('Which app would you like to associate with the extension?')
 
         capture_io do
           ask(api_key: nil)
