@@ -41,7 +41,7 @@ Developers should have some prior knowledge of the Shopify app ecosystem. Curren
 The `create` command will scaffold a new Shopify app in your current active directory and generate all the necessary starter files.
 
 ```sh
-$ shopify create project APP_NAME
+$ shopify create
 ```
 
 The CLI will ask what type of app you want to create. Two languages are currently supported:
