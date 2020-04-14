@@ -13,7 +13,7 @@ module Extension
         form = Forms::Create.ask(@ctx, args, options.flags)
         return @ctx.puts(self.class.help) if form.nil?
         build(form.title, @ctx)
-        write_envfile(form)
+        write_cli_files(form)
       end
 
       def self.help
@@ -40,7 +40,9 @@ module Extension
         JsDeps.install(ctx)
       end
 
-      def write_envfile(form)
+      def write_cli_files(form)
+        ShopifyCli::Project.write(@ctx, 'extension')
+
         ShopifyCli::Helpers::EnvFile.new(
           api_key: form.app["apiKey"],
           secret: form.app["apiSecretKeys"].first["secret"]
