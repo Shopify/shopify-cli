@@ -3,7 +3,6 @@ require 'net/http'
 
 module ShopifyCli
   class API
-    include Helpers::OS
     include SmartProperties
 
     property! :ctx, accepts: ShopifyCli::Context
@@ -45,7 +44,7 @@ module ShopifyCli
       CLI::Kit::Util.begin do
         uri = URI.parse(graphql_url)
         unless uri.is_a?(URI::HTTP)
-          raise(ShopifyCli::Abort, "Invalid URL: #{graphql_url}")
+          ctx.abort("Invalid URL: #{graphql_url}")
         end
         http = ::Net::HTTP.new(uri.host, uri.port)
         http.use_ssl = true
@@ -78,12 +77,12 @@ module ShopifyCli
     end
 
     def current_sha
-      @current_sha ||= Helpers::Git.sha(dir: ShopifyCli::ROOT)
+      @current_sha ||= Git.sha(dir: ShopifyCli::ROOT)
     end
 
     def default_headers
       {
-        'User-Agent' => "Shopify App CLI #{ShopifyCli::VERSION} #{current_sha} | #{uname(flag: 'v')}",
+        'User-Agent' => "Shopify App CLI #{ShopifyCli::VERSION} #{current_sha} | #{ctx.uname(flag: 'v')}",
       }.merge(auth_headers(token))
     end
 

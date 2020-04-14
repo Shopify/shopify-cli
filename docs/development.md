@@ -13,4 +13,3 @@
 ## What to use it for
 - Accessing information about the current project (app/codebase):
     - You can read from the `.env` file with the `Project.env` method
-    - Accessing the `AppType` via `Project.app_type`

@@ -9,10 +9,10 @@ module ShopifyCli
         OAuth.new(
           ctx: ctx,
           service: 'identity',
-          client_id: Helpers::PartnersAPI.cli_id,
+          client_id: ShopifyCli::PartnersAPI.cli_id,
           scopes: SCOPES,
-          request_exchange: Helpers::PartnersAPI.id,
-        ).authenticate("#{Helpers::PartnersAPI.auth_endpoint}/oauth")
+          request_exchange: ShopifyCli::PartnersAPI.id,
+        ).authenticate("#{ShopifyCli::PartnersAPI.auth_endpoint}/oauth")
       end
     end
   end

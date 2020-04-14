@@ -11,6 +11,7 @@ require 'rubygems'
 require 'bundler/setup'
 require 'shopify_cli'
 require 'byebug'
+require 'pry'
 
 require 'minitest/autorun'
 require 'minitest/reporters'

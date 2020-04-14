@@ -12,9 +12,9 @@ module ShopifyCli
           .with(
             ctx: @context,
             service: 'identity',
-            client_id: Helpers::PartnersAPI.cli_id,
+            client_id: PartnersAPI.cli_id,
             scopes: AuthenticateIdentity::SCOPES,
-            request_exchange: Helpers::PartnersAPI.id,
+            request_exchange: PartnersAPI.id,
           ).returns(@oauth_client)
         @oauth_client
           .expects(:authenticate)

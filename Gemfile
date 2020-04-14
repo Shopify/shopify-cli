@@ -6,6 +6,7 @@ source "https://rubygems.org"
 # `dev` uses no gems
 group :development, :test do
   gem 'rake'
+  gem 'pry-byebug'
   gem 'byebug'
   gem 'rubocop'
 end

@@ -8,12 +8,13 @@ module ShopifyCli
 
     class << self
       attr_writer :ctx
+      attr_reader :hidden
 
       def call(args, command_name)
         subcommand, resolved_name = subcommand_registry.lookup_command(args.first)
         if subcommand
           subcommand.ctx = @ctx
-          subcommand.call(args, resolved_name)
+          subcommand.call(args, resolved_name, command_name)
         else
           cmd = new
           cmd.ctx = @ctx
@@ -24,13 +25,17 @@ module ShopifyCli
         end
       end
 
+      def hidden_command
+        @hidden = true
+      end
+
       def options(&block)
         @_options = block
       end
 
       def subcommand(const, cmd, path = nil)
         autoload(const, path) if path
-        subcommand_registry.add(->() { const_get(const) }, cmd)
+        subcommand_registry.add(->() { const_get(const) }, cmd.to_s)
       end
 
       def subcommand_registry
@@ -50,9 +55,9 @@ module ShopifyCli
         @prerequisite_tasks ||= {}
       end
 
-      def call_help(name)
+      def call_help(*cmds)
         help = Commands::Help.new(@ctx)
-        help.call([name], nil)
+        help.call(cmds, nil)
       end
     end
 

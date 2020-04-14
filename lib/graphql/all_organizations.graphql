@@ -6,9 +6,12 @@ query AllOrgs{
       website
       stores(first: 500) {
         nodes {
+          shopId
           link
           shopDomain
           shopName
+          transferDisabled
+          convertableToPartnerTest
         }
       }
     }

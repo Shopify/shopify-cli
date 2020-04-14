@@ -6,9 +6,12 @@ query AllOrgs{
       website
       stores(first: 500) {
         nodes {
+          shopId
           link
           shopDomain
           shopName
+          transferDisabled
+          convertableToPartnerTest
         }
       }
       apps(first: 500) {
@@ -19,6 +22,7 @@ query AllOrgs{
           apiSecretKeys{
             secret
           }
+          appType
         }
       }
     }

@@ -1,0 +1,10 @@
+mutation convertDevToTestStore($input: ConvertDevToTestStoreInput!) {
+  convertDevToTestStore(input: $input) {
+    convertedToTestStore
+    userErrors {
+      message
+      field
+    }
+  }
+}
+

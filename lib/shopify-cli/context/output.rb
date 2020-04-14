@@ -2,7 +2,7 @@ module ShopifyCli
   class Context
     module Output
       def print_task(text)
-        puts CLI::UI.fmt("{{yellow:*}} #{text}")
+        puts "{{yellow:*}} #{text}"
       end
 
       def puts(*args)
@@ -13,7 +13,7 @@ module ShopifyCli
         puts("{{v}} #{string}")
       end
 
-      def error(string)
+      def abort(string)
         raise ShopifyCli::Abort, "{{x}} #{string}"
       end
 
@@ -27,7 +27,7 @@ module ShopifyCli
             pipe.puts CLI::UI.fmt(output)
           end
         else
-          puts(CLI::UI.fmt(output))
+          puts(output)
         end
       end
     end

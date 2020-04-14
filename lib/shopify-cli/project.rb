@@ -10,13 +10,10 @@ module ShopifyCli
         at(Dir.pwd)
       end
 
-      def at(dir)
-        proj_dir = directory(dir)
-        unless proj_dir
-          raise(ShopifyCli::Abort, "{{x}} #{message}")
-        end
-        @at ||= Hash.new { |h, k| h[k] = new(directory: k) }
-        @at[proj_dir]
+      def current_project_type
+        proj_dir = directory(Dir.pwd)
+        return if proj_dir.nil?
+        current.app_type_id
       end
 
       # Returns the directory of the project you are current in
@@ -47,6 +44,15 @@ module ShopifyCli
 
       private
 
+      def at(dir)
+        proj_dir = directory(dir)
+        unless proj_dir
+          raise(ShopifyCli::Abort, "{{x}} #{message}")
+        end
+        @at ||= Hash.new { |h, k| h[k] = new(directory: k) }
+        @at[proj_dir]
+      end
+
       def __directory(curr)
         loop do
           return nil if curr == '/'
@@ -58,10 +64,6 @@ module ShopifyCli
     end
 
     property :directory
-
-    def app_type
-      ShopifyCli::AppTypeRegistry[app_type_id]
-    end
 
     def app_type_id
       config['app_type'].to_sym

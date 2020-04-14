@@ -19,7 +19,7 @@ module ShopifyCli
           end
         rescue OAuth::Error
           @ctx.puts("{{error:Failed to Authenticate}}")
-          raise(::ShopifyCli::Abort, "{{x}} Failed to Authenticate")
+          @ctx.abort("Failed to Authenticate")
         end
       end
 
