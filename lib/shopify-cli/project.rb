@@ -30,7 +30,7 @@ module ShopifyCli
       def message
         <<~MESSAGE
           {{x}} You are not in a Shopify app project
-          {{yellow:{{*}}}}{{reset: Run}}{{cyan: shopify create project}}{{reset: to create your app}}
+          {{yellow:{{*}}}}{{reset: Run}}{{cyan: shopify create}}{{reset: to create your app}}
         MESSAGE
       end
 
