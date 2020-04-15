@@ -115,4 +115,5 @@ module ShopifyCli
   autoload :SubCommand, 'shopify-cli/sub_command'
   autoload :Task, 'shopify-cli/task'
   autoload :Tasks, 'shopify-cli/tasks'
+  autoload :Tunnel, 'shopify-cli/tunnel'
 end
