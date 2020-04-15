@@ -4,12 +4,8 @@ module ShopifyCli
     autoload :Async, 'shopify-cli/helpers/async'
     autoload :EnvFile, 'shopify-cli/helpers/env_file'
     autoload :FS, 'shopify-cli/helpers/fs'
-    autoload :GraphQL, 'shopify-cli/helpers/graphql'
     autoload :Haikunator, 'shopify-cli/helpers/haikunator'
-    autoload :Node, 'shopify-cli/helpers/node'
     autoload :Organizations, 'shopify-cli/helpers/organizations'
     autoload :PkceToken, 'shopify-cli/helpers/pkce_token'
-    autoload :Store, 'shopify-cli/helpers/store'
-    autoload :String, 'shopify-cli/helpers/string'
   end
 end

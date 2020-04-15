@@ -284,14 +284,14 @@ module ShopifyCli
     private
 
     def oauth(**args)
-      store = Helpers::Store.new(path: File.join(ShopifyCli::TEMP_DIR, ".test_db.pstore"))
-      store.clear
+      db = ShopifyCli::DB.new(path: File.join(ShopifyCli::TEMP_DIR, ".test_db.pstore"))
+      db.clear
       OAuth.new({
         ctx: @context,
         service: 'test',
         client_id: 'key',
         scopes: 'test,one',
-        store: store,
+        store: db,
       }.merge(args))
     end
 
