@@ -48,8 +48,6 @@ module ShopifyCli
   TOOL_CONFIG_PATH = File.join(CONFIG_HOME, TOOL_NAME)
   LOG_FILE         = File.join(TOOL_CONFIG_PATH, 'logs', 'log.log')
   DEBUG_LOG_FILE   = File.join(TOOL_CONFIG_PATH, 'logs', 'debug.log')
-  EVENTS_FILE      = File.join(TOOL_CONFIG_PATH, 'logs', 'events.log')
-  EVENTS_MTIME     = File.join(TOOL_CONFIG_PATH, 'logs', 'events.mtime')
 
   # programmer emoji if default install location, else wrench emoji
   EMOJI    = ROOT == '/opt/shopify-cli' ? "\u{1f469}\u{200d}\u{1f4bb}" : "\u{1f527}"

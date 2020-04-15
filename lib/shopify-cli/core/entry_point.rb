@@ -15,7 +15,7 @@ module ShopifyCli
 
           command, command_name, args = ShopifyCli::Resolver.call(args)
           executor = ShopifyCli::Core::Executor.new(ctx, task_registry, log_file: ShopifyCli::LOG_FILE)
-          ShopifyCli::Core::Monorail.log.invocation(command_name, args) do
+          ShopifyCli::Core::Monorail.log(command_name, args) do
             executor.call(command, command_name, args)
           end
         ensure
@@ -23,7 +23,6 @@ module ShopifyCli
         end
 
         def before_resolve(args)
-          ShopifyCli::Core::Monorail.send_events
           ShopifyCli::Core::Update.record_last_update_time
 
           unless SKIP_UPDATE.include?(args.first)

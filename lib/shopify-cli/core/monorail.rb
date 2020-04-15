@@ -1,66 +1,62 @@
 require 'json'
-require 'securerandom'
-require 'time'
-require 'timeout'
 require 'net/http'
+require 'time'
 
 module ShopifyCli
   module Core
     module Monorail
-      autoload :Log, 'shopify-cli/core/monorail/log'
-
       ENDPOINT_URI = URI.parse('https://monorail-edge.shopifycloud.com/v1/produce')
-
-      class MonorailError < StandardError; end
-
-      class NilWriter
-        def write(*args); end
-      end
+      INVOCATIONS_SCHEMA = 'app_cli_command/1.0'
+      SUCCESS_SENTINEL = '_success'
+      MICROSECOND_PRECISION = 6
 
       class << self
-        attr_writer :monorail, :events
-
-        def log
-          return @monorail if @monorail
+        def log(name, args, &block) # rubocop:disable Lint/UnusedMethodArgument
           prompt_for_consent
-          writable = if enabled? && consented?
-            events
-          else
-            NilWriter.new
-          end
-          @monorail = ShopifyCli::Core::Monorail::Log.new(writable: writable)
-        end
 
-        def send_events
-          return unless enabled?
-          return unless consented?
-          new_events, pos = events.tail(200)
-          return unless new_events
-          new_events.select! do |line|
-            event = JSON.parse(line, symbolize_names: true)
-            Time.parse(event[:payload][:timestamp]) > mtime
-          end
+          args = args.dup.unshift(name)
+          command_with_args = args.join(' ')
 
-          new_events.reverse.each do |line|
-            event = JSON.parse(line, symbolize_names: true)
-            produce(event)
-            File.write(ShopifyCli::EVENTS_MTIME, event[:payload][:timestamp])
-          end
-          events.clear(pos)
-        end
+          # option to add future logic to capture block result in monorail event
+          capture_result = false
 
-        def produce(event, num_retries: 3)
-          headers = {
-            'Content-Type': 'application/json; charset=utf-8',
-            'X-Monorail-Edge-Event-Created-At-Ms': Time.parse(event[:payload][:timestamp]).to_i.to_s,
-            'X-Monorail-Edge-Event-Sent-At-Ms': Time.now.utc.to_i.to_s,
-          }
-          do_post(headers, JSON.dump(event), num_retries)
-        rescue Exception => e # rubocop:disable Lint/RescueException
-          ShopifyCli::Logger.error(name) { "Unexpected error when posting #{event.inspect}: #{e.inspect}" }
+          start_time = Time.now.utc
+          begin
+            block_result = yield
+            end_time = Time.now.utc
+            send_event(
+              schema_id: INVOCATIONS_SCHEMA,
+              payload: monorail_payload(
+                args: command_with_args,
+                duration: (end_time - start_time),
+                result: (capture_result ? block_result.to_s : SUCCESS_SENTINEL)
+              )
+            )
+            return block_result
+          rescue Exception => e # rubocop:disable Lint/RescueException
+            end_time = Time.now.utc
+            send_event(
+              schema_id: INVOCATIONS_SCHEMA,
+              payload: monorail_payload(
+                args: command_with_args,
+                duration: (end_time - start_time),
+                result: e.class.name
+              )
+            )
+            raise
+          end
         end
 
         private
+
+        def enabled?
+          # we only want to send Monorail events in production or when explicitly developing
+          Context.new.system? || ENV['MONORAIL_REAL_EVENTS'] == '1'
+        end
+
+        def consented?
+          ShopifyCli::Config.get_bool('analytics', 'enabled')
+        end
 
         def prompt_for_consent
           return unless enabled?
@@ -74,42 +70,50 @@ module ShopifyCli
           ShopifyCli::Config.set('analytics', 'enabled', opt)
         end
 
-        def do_post(headers, body, num_retries)
-          Helpers::Async.in_thread do
-            CLI::Kit::Util.begin do
-              Net::HTTP.start(ENDPOINT_URI.host, ENDPOINT_URI.port, use_ssl: ENDPOINT_URI.scheme == 'https') do |http|
-                post = Net::HTTP::Post.new(ENDPOINT_URI.request_uri, headers)
-                post.body = body
-                http.request(post) do |response|
-                  code = response.code.to_i
-                  unless code == 200
-                    raise(MonorailError, "Unexpected status #{code} from Monorail Edge: #{response.body}")
-                  end
-                end
-              end
-            end.retry_after(MonorailError, retries: num_retries) do |error|
-              ShopifyCli::Logger.warn(name) { "#{error.message}; retrying..." }
+        def monorail_payload(args:, duration:, result:)
+          {
+            cli_sha: ShopifyCli::Git.sha(dir: ShopifyCli::ROOT),
+            uname: uname,
+            args: args,
+            timestamp: Time.now.utc.iso8601(MICROSECOND_PRECISION),
+            duration: duration,
+            result: result,
+          }
+        end
+
+        def uname
+          @uname ||= %x{uname -a}
+        end
+
+        def ruby_version
+          @ruby_version ||= RUBY_VERSION
+        end
+
+        def send_event(event)
+          return unless enabled?
+          return unless consented?
+
+          headers = {
+            'Content-Type': 'application/json; charset=utf-8',
+            'X-Monorail-Edge-Event-Created-At-Ms': Time.parse(event[:payload][:timestamp]).to_i.to_s,
+            'X-Monorail-Edge-Event-Sent-At-Ms': Time.now.utc.to_i.to_s,
+          }
+
+          begin
+            Net::HTTP.start(
+              ENDPOINT_URI.host,
+              ENDPOINT_URI.port,
+              # timeouts for opening a connection, reading, writing (in seconds)
+              open_timeout: 0.2, read_timeout: 0.2, write_timeout: 0.2,
+              use_ssl: ENDPOINT_URI.scheme == 'https'
+            ) do |http|
+              post = Net::HTTP::Post.new(ENDPOINT_URI.request_uri, headers)
+              post.body = JSON.dump(event)
+              http.request(post)
             end
+          rescue
+            # silently fail on errors, fire-and-forget approach
           end
-        end
-
-        def enabled?
-          # we only want to send Monorail events in production or when explicitly developing
-          Context.new.system? || ENV['MONORAIL_REAL_EVENTS'] == '1'
-        end
-
-        def consented?
-          ShopifyCli::Config.get_bool('analytics', 'enabled')
-        end
-
-        def events
-          @events ||= ShopifyCli::Log.new(ShopifyCli::EVENTS_FILE, mode: 'a+')
-        end
-
-        def mtime
-          @mtime ||= Time.parse(File.read(Helpers::FS.ensure_file(ShopifyCli::EVENTS_MTIME)))
-        rescue ArgumentError
-          Time.new(2019)
         end
       end
     end
