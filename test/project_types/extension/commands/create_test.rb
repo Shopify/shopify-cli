@@ -1,13 +1,13 @@
 # frozen_string_literal: true
 require 'test_helper'
-require 'project_types/extension/stubs/get_organizations'
+require 'project_types/extension/extension_test_helpers'
 
 module Extension
   module Commands
     class CreateTest < MiniTest::Test
       include TestHelpers::Partners
       include TestHelpers::FakeUI
-      include Extension::Stubs::GetOrganizations
+      include ExtensionTestHelpers::Stubs::GetOrganizations
 
       def setup
         super
@@ -42,7 +42,6 @@ end
 
 class CreateFakeExtensionProject
   def perform
-    puts "CREATING"
     FileUtils.mkdir_p('myext/.git')
     File.open('myext/package.json', 'w') { |f| f.puts('{}') }
     FileUtils.touch('myext/yarn.lock')

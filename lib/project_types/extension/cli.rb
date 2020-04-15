@@ -4,11 +4,13 @@ module Extension
     creator 'App Extension', 'Extension::Commands::Create'
 
     register_command('Extension::Commands::Pack', "pack")
+    register_command('Extension::Commands::Deploy', "deploy")
   end
 
   module Commands
     autoload :Create, Project.project_filepath('commands/create')
     autoload :Pack, Project.project_filepath('commands/pack')
+    autoload :Deploy, Project.project_filepath('commands/deploy')
   end
 
   module Tasks
@@ -26,4 +28,5 @@ module Extension
   end
 
   autoload :JsDeps, Project.project_filepath('js_deps')
+  autoload :ExtensionProject, Project.project_filepath('extension_project')
 end

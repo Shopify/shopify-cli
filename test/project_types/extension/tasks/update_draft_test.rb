@@ -1,12 +1,12 @@
 # frozen_string_literal: true
 require 'test_helper'
-require 'project_types/extension/stubs/update_draft'
+require 'project_types/extension/extension_test_helpers'
 
 module Extension
   module Tasks
     class UpdateDraftTest < MiniTest::Test
       include TestHelpers::Partners
-      include Extension::Stubs::UpdateDraft
+      include ExtensionTestHelpers::Stubs::UpdateDraft
 
       def setup
         super

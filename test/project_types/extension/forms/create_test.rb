@@ -1,12 +1,12 @@
 # frozen_string_literal: true
 require 'test_helper'
-require 'project_types/extension/stubs/get_organizations'
+require 'project_types/extension/extension_test_helpers'
 
 module Extension
   module Forms
     class CreateTest < MiniTest::Test
       include TestHelpers::Partners
-      include Extension::Stubs::GetOrganizations
+      include ExtensionTestHelpers::Stubs::GetOrganizations
 
       def setup
         super
