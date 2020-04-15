@@ -12,7 +12,7 @@ module Script
       end
 
       def call(args, _name)
-        form = Forms::CreateScript.ask(@ctx, args, options.flags)
+        form = Forms::Create.ask(@ctx, args, options.flags)
         return @ctx.puts(self.class.help) if form.nil?
 
         script_name = form.name
