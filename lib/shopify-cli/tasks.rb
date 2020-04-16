@@ -29,7 +29,6 @@ module ShopifyCli
     register :EnsureEnv, :ensure_env, 'shopify-cli/tasks/ensure_env'
     register :EnsureLoopbackURL, :ensure_loopback_url, 'shopify-cli/tasks/ensure_loopback_url'
     register :EnsureTestShop, :ensure_test_shop, 'shopify-cli/tasks/ensure_test_shop'
-    register :Tunnel, :tunnel, 'shopify-cli/tasks/tunnel'
     register :UpdateDashboardURLS, :update_dashboard_urls, 'shopify-cli/tasks/update_dashboard_urls'
   end
 end

@@ -9,15 +9,14 @@ module Node
 
       def call(args, _name)
         subcommand = args.shift
-        task = ShopifyCli::Tasks::Tunnel.new
         case subcommand
         when 'auth'
           token = args.shift
-          task.auth(@ctx, token)
+          ShopifyCli::Tunnel.auth(@ctx, token)
         when 'start'
-          task.call(@ctx)
+          ShopifyCli::Tunnel.start(@ctx)
         when 'stop'
-          task.stop(@ctx)
+          ShopifyCli::Tunnel.stop(@ctx)
         else
           @ctx.puts(self.class.help)
         end

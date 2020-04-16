@@ -9,17 +9,17 @@ module Node
       end
 
       def test_auth
-        ShopifyCli::Tasks::Tunnel.any_instance.expects(:auth)
+        ShopifyCli::Tunnel.any_instance.expects(:auth)
         run_cmd('tunnel auth')
       end
 
       def test_start
-        ShopifyCli::Tasks::Tunnel.any_instance.expects(:call)
+        ShopifyCli::Tunnel.any_instance.expects(:start)
         run_cmd('tunnel start')
       end
 
       def test_stop
-        ShopifyCli::Tasks::Tunnel.any_instance.expects(:stop)
+        ShopifyCli::Tunnel.any_instance.expects(:stop)
         run_cmd('tunnel stop')
       end
     end
