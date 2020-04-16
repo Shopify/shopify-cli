@@ -1,13 +1,11 @@
 # frozen_string_literal: true
 require 'test_helper'
-require 'project_types/extension/stubs'
 
 module Extension
   module Commands
     class PackTest < MiniTest::Test
       include TestHelpers::Partners
       include TestHelpers::FakeUI
-      include Extension::Stubs
 
       class FakeProcessStatus
         def initialize(success)

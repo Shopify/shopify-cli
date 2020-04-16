@@ -1,16 +1,16 @@
 # frozen_string_literal: true
 require 'test_helper'
-require 'project_types/extension/stubs'
+require 'project_types/extension/stubs/get_organizations'
 
 module Extension
   module Forms
     class CreateTest < MiniTest::Test
       include TestHelpers::Partners
-      include Extension::Stubs
+      include Extension::Stubs::GetOrganizations
 
       def setup
         super
-        stub_query_for_fetch_organizations_with_apps
+        stub_get_organizations
         ShopifyCli::ProjectType.load_type(:extension)
       end
 

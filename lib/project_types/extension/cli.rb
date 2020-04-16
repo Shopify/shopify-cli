@@ -12,10 +12,17 @@ module Extension
   end
 
   module Tasks
+    autoload :CreateExtension, Project.project_filepath('tasks/create_extension')
+    autoload :UpdateDraft, Project.project_filepath('tasks/update_draft')
   end
 
   module Forms
     autoload :Create, Project.project_filepath('forms/create')
+  end
+
+  module Models
+    autoload :Registration, Project.project_filepath('models/registration')
+    autoload :Version, Project.project_filepath('models/version')
   end
 
   autoload :JsDeps, Project.project_filepath('js_deps')

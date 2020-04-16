@@ -1,13 +1,13 @@
 # frozen_string_literal: true
 require 'test_helper'
-require 'project_types/extension/stubs'
+require 'project_types/extension/stubs/get_organizations'
 
 module Extension
   module Commands
     class CreateTest < MiniTest::Test
       include TestHelpers::Partners
       include TestHelpers::FakeUI
-      include Extension::Stubs
+      include Extension::Stubs::GetOrganizations
 
       def setup
         super
@@ -27,7 +27,7 @@ module Extension
 
         JsDeps.expects(:install).add_side_effect(CreateDummyLockfile.new)
         ShopifyCli::Core::Finalize.expects(:request_cd).with('myext')
-        stub_query_for_fetch_organizations_with_apps
+        stub_get_organizations
 
         capture_io { run_cmd('create extension --title=myext --type=product-details --api-key=1234') }
         refute File.exists?('myext/.git'), 'Expected .git directory to be removed'
