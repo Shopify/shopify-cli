@@ -2,12 +2,12 @@
 module TestHelpers
   module Partners
     def setup
-      ShopifyCli::Helpers::Store.set(identity_exchange_token: 'faketoken')
+      ShopifyCli::DB.set(identity_exchange_token: 'faketoken')
       super
     end
 
     def teardown
-      ShopifyCli::Helpers::Store.del(:identity_exchange_token)
+      ShopifyCli::DB.del(:identity_exchange_token)
       super
     end
 

@@ -101,6 +101,7 @@ module ShopifyCli
   autoload :Commands, 'shopify-cli/commands'
   autoload :Context, 'shopify-cli/context'
   autoload :Core, 'shopify-cli/core'
+  autoload :DB, 'shopify-cli/db'
   autoload :Form, 'shopify-cli/form'
   autoload :Git, 'shopify-cli/git'
   autoload :Helpers, 'shopify-cli/helpers'

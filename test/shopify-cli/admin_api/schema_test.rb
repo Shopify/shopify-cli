@@ -17,9 +17,9 @@ module ShopifyCli
       end
 
       def test_gets_schema
-        Helpers::Store.expects(:exists?).returns(false)
-        Helpers::Store.expects(:set).with(shopify_admin_schema: "{\"foo\":\"baz\"}")
-        Helpers::Store.expects(:get).with(:shopify_admin_schema).returns("{\"foo\":\"baz\"}")
+        ShopifyCli::DB.expects(:exists?).returns(false)
+        ShopifyCli::DB.expects(:set).with(shopify_admin_schema: "{\"foo\":\"baz\"}")
+        ShopifyCli::DB.expects(:get).with(:shopify_admin_schema).returns("{\"foo\":\"baz\"}")
         ShopifyCli::AdminAPI.expects(:query)
           .with(@context, 'admin_introspection')
           .returns(foo: "baz")
@@ -27,8 +27,8 @@ module ShopifyCli
       end
 
       def test_gets_schema_if_already_downloaded
-        Helpers::Store.expects(:exists?).returns(true)
-        Helpers::Store.expects(:get).with(:shopify_admin_schema).returns("{\"foo\":\"baz\"}")
+        ShopifyCli::DB.expects(:exists?).returns(true)
+        ShopifyCli::DB.expects(:get).with(:shopify_admin_schema).returns("{\"foo\":\"baz\"}")
         assert_equal({ "foo" => "baz" }, AdminAPI::Schema.get(@context))
       end
 
