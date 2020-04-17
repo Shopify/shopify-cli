@@ -5,7 +5,7 @@ module ShopifyCli
     class EnsureEnv < ShopifyCli::Task
       def call(ctx)
         @ctx = ctx
-        Helpers::EnvFile.read(ctx.root)
+        Resources::EnvFile.read(ctx.root)
       rescue Errno::ENOENT
         ask
       end
@@ -17,7 +17,7 @@ module ShopifyCli
 
         shop.gsub!(/https?\:\/\//, '')
 
-        env = Helpers::EnvFile.new(
+        env = Resources::EnvFile.new(
           api_key: api_key,
           secret: api_secret,
           shop: shop,

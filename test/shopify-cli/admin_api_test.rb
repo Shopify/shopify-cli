@@ -16,7 +16,7 @@ module ShopifyCli
         .with('api_versions')
         .returns(JSON.parse(File.read(File.join(FIXTURE_DIR, 'api/versions.json'))))
 
-      Helpers::AccessToken.expects(:read).returns('token123').twice
+      Resources::AccessToken.expects(:read).returns('token123').twice
       api_stub = Object.new
       AdminAPI.expects(:new).with(
         ctx: @context,
@@ -29,7 +29,7 @@ module ShopifyCli
     end
 
     def test_query_calls_admin_api
-      Helpers::AccessToken.expects(:read).returns('token123')
+      Resources::AccessToken.expects(:read).returns('token123')
       api_stub = Object.new
       AdminAPI.expects(:new).with(
         ctx: @context,
@@ -42,7 +42,7 @@ module ShopifyCli
     end
 
     def test_query_can_reauth
-      Helpers::AccessToken.expects(:read).returns('token123').twice
+      Resources::AccessToken.expects(:read).returns('token123').twice
       api_stub = Object.new
       AdminAPI.expects(:new).with(
         ctx: @context,
@@ -57,7 +57,7 @@ module ShopifyCli
     end
 
     def test_query_calls_admin_api_with_different_shop
-      Helpers::AccessToken.expects(:read).returns('token123')
+      Resources::AccessToken.expects(:read).returns('token123')
       api_stub = Object.new
       AdminAPI.expects(:new).with(
         ctx: @context,

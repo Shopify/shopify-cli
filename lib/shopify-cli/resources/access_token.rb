@@ -1,5 +1,5 @@
 module ShopifyCli
-  module Helpers
+  module Resources
     class AccessToken
       class << self
         def read(ctx)

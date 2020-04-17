@@ -52,7 +52,7 @@ module ShopifyCli
 
       def stub_env(domain: 'shopdomain.myshopify.com')
         Project.current.stubs(:env).returns(
-          Helpers::EnvFile.new(
+          Resources::EnvFile.new(
             api_key: '123',
             secret: 'kjhasas',
             shop: domain,

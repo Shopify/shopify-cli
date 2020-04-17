@@ -1,5 +1,5 @@
 module ShopifyCli
-  module Helpers
+  module Resources
     class PkceToken
       class << self
         def read(ctx)

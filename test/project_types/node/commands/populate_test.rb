@@ -5,7 +5,7 @@ module Node
     class PopulateTest < MiniTest::Test
       def setup
         super
-        ShopifyCli::Helpers::AccessToken.stubs(:read).returns('myaccesstoken')
+        ShopifyCli::Resources::AccessToken.stubs(:read).returns('myaccesstoken')
         ShopifyCli::Tasks::EnsureEnv.stubs(:call)
         project_context('app_types', 'node')
         ShopifyCli::ProjectType.load_type(:node)

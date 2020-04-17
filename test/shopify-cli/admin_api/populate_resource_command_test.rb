@@ -9,7 +9,7 @@ module ShopifyCli
       def setup
         super
         @resource = Rails::Commands::Populate::Product.new(@context)
-        ShopifyCli::Helpers::AccessToken.stubs(:read).returns('myaccesstoken')
+        ShopifyCli::Resources::AccessToken.stubs(:read).returns('myaccesstoken')
         ShopifyCli::AdminAPI.stubs(:new).returns(Object.new)
       end
 

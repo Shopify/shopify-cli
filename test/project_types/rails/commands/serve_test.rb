@@ -16,7 +16,7 @@ module Rails
       def test_server_command
         ShopifyCli::Tunnel.stubs(:start)
         ShopifyCli::Tasks::UpdateDashboardURLS.expects(:call)
-        ShopifyCli::Helpers::EnvFile.any_instance.expects(:update)
+        ShopifyCli::Resources::EnvFile.any_instance.expects(:update)
         @context.expects(:system).with(
           'bin/rails server',
           env: {
@@ -34,7 +34,7 @@ module Rails
         ShopifyCli::Context.any_instance.stubs(:on_siginfo).yields
         ShopifyCli::Tunnel.stubs(:start).returns('https://example.com')
         ShopifyCli::Tasks::UpdateDashboardURLS.expects(:call)
-        ShopifyCli::Helpers::EnvFile.any_instance.expects(:update).with(
+        ShopifyCli::Resources::EnvFile.any_instance.expects(:update).with(
           @context, :host, 'https://example.com'
         )
         ShopifyCli::Context.any_instance.stubs(:mac?).returns(true)
@@ -47,7 +47,7 @@ module Rails
       def test_update_env_with_host
         ShopifyCli::Tunnel.expects(:start).never
         ShopifyCli::Tasks::UpdateDashboardURLS.expects(:call)
-        ShopifyCli::Helpers::EnvFile.any_instance.expects(:update).with(
+        ShopifyCli::Resources::EnvFile.any_instance.expects(:update).with(
           @context, :host, 'https://example-foo.com'
         )
         run_cmd('serve --host="https://example-foo.com"')

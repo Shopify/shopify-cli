@@ -49,7 +49,7 @@ module ShopifyCli
       def api_client(ctx)
         new(
           ctx: ctx,
-          token: Helpers::PkceToken.read(ctx),
+          token: Resources::PkceToken.read(ctx),
           url: "#{endpoint}/api/cli/graphql",
         )
       end

@@ -17,7 +17,7 @@ module ShopifyCli
       end
 
       def fetch_org
-        orgs = Helpers::Organizations.fetch_with_app(@ctx)
+        orgs = Resources::Organizations.fetch_with_app(@ctx)
         org_id = if orgs.count == 1
           orgs.first["id"]
         else
@@ -55,7 +55,7 @@ module ShopifyCli
       end
 
       def write_env(app, shop)
-        Helpers::EnvFile.new(
+        Resources::EnvFile.new(
           api_key: app.first["apiKey"],
           secret: app.first["apiSecretKeys"].first["secret"],
           shop: shop,

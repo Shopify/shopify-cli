@@ -1,5 +1,5 @@
 module ShopifyCli
-  module Helpers
+  module Resources
     class Organizations
       class << self
         def fetch_all(ctx)
