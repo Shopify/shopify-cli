@@ -1,8 +1,6 @@
 # frozen_string_literal: true
 
-require "test_helper"
-
-ShopifyCli::ProjectType.load_type(:script)
+require "project_types/script/test_helper"
 
 describe Script::Layers::Domain::ExtensionPoint do
   let(:type) { "discount" }
@@ -23,7 +21,6 @@ describe Script::Layers::Domain::ExtensionPoint do
       assert_equal type, extension_point.type
 
       sdk = extension_point.sdks[:ts]
-      puts sdk.inspect
       refute_nil sdk.package
       refute_nil sdk.version
       refute_nil sdk.sdk_version

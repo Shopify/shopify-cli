@@ -3,8 +3,7 @@
 module Script
   module Layers
     module Infrastructure
-      class Repository
-        INSTALLATION_BASE_PATH = File.expand_path("../../", __dir__)
+      class DependencyInstallError < StandardError
       end
     end
   end

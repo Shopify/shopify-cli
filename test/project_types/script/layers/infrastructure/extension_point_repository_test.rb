@@ -1,8 +1,6 @@
 # frozen_string_literal: true
 
-require "test_helper"
-
-ShopifyCli::ProjectType.load_type(:script)
+require "project_types/script/test_helper"
 
 describe Script::Layers::Infrastructure::ExtensionPointRepository do
   subject { Script::Layers::Infrastructure::ExtensionPointRepository.new }
@@ -35,10 +33,7 @@ describe Script::Layers::Infrastructure::ExtensionPointRepository do
 
   describe ".extension_point_types" do
     it 'should return the ep keys' do
-      subject.stubs(:extension_points).returns({
-                                                 "discount" => {},
-                                                 "other" => {},
-                                               })
+      subject.stubs(:extension_points).returns({ "discount" => {}, "other" => {} })
       assert_equal ['discount', 'other'], subject.send(:extension_point_types)
     end
   end

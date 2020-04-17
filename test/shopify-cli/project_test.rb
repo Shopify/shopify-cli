@@ -33,5 +33,12 @@ module ShopifyCli
       ShopifyCli::Project.write(@context, :node)
       assert_equal :node, Project.current.config['app_type']
     end
+
+    def test_write_includes_identifiers
+      Dir.stubs(:pwd).returns(@context.root)
+      FileUtils.touch(".shopify-cli.yml")
+      ShopifyCli::Project.write(@context, :node, { 'other_option' => true })
+      assert Project.current.config['other_option']
+    end
   end
 end

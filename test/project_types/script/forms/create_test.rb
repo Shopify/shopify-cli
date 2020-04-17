@@ -1,5 +1,6 @@
 # frozen_string_literal: true
-require 'test_helper'
+
+require "project_types/script/test_helper"
 
 module Script
   module Forms
@@ -26,7 +27,7 @@ module Script
 
       def test_asks_extension_point_if_no_flag
         eps = ['discount', 'another']
-        Script::Layers::Application::ExtensionPoints.stubs(:types).returns(eps)
+        Layers::Application::ExtensionPoints.stubs(:types).returns(eps)
         CLI::UI::Prompt.expects(:ask).with('Which extension point do you want to use?', options: eps)
         ask(name: 'name')
       end
