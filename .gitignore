@@ -9,3 +9,4 @@ heroku
 *.log
 docs/_site/
 tmp/
+.git/*
