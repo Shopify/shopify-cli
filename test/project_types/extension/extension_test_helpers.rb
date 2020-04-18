@@ -2,6 +2,8 @@
 
 module Extension
   module ExtensionTestHelpers
+    autoload :TestExtension, 'project_types/extension/extension_test_helpers/test_extension'
+    autoload :TestExtensionSetup, 'project_types/extension/extension_test_helpers/test_extension_setup'
     autoload :TempProjectSetup, 'project_types/extension/extension_test_helpers/temp_project_setup'
 
     module Stubs

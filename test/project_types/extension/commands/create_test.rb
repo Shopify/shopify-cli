@@ -7,12 +7,8 @@ module Extension
     class CreateTest < MiniTest::Test
       include TestHelpers::Partners
       include TestHelpers::FakeUI
+      include ExtensionTestHelpers::TestExtensionSetup
       include ExtensionTestHelpers::Stubs::GetOrganizations
-
-      def setup
-        super
-        ShopifyCli::ProjectType.load_type(:extension)
-      end
 
       def test_prints_help
         io = capture_io { run_cmd('create extension --help') }
@@ -29,7 +25,10 @@ module Extension
         ShopifyCli::Core::Finalize.expects(:request_cd).with('myext')
         stub_get_organizations
 
-        capture_io { run_cmd('create extension --title=myext --type=product-details --api-key=1234') }
+        capture_io do
+          run_cmd("create extension --title=myext --type=#{@test_extension_type.identifier} --api-key=1234")
+        end
+
         refute File.exists?('myext/.git'), 'Expected .git directory to be removed'
         lockfile_content = File.read('myext/yarn.lock')
         assert_equal lockfile_content, '# Dummy lockfile'

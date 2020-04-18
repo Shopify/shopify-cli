@@ -45,7 +45,7 @@ module Extension
     end
 
     def extension_type
-      env[:extra][EXTENSION_TYPE_KEY]
+      Models::Type.load_type(env[:extra][EXTENSION_TYPE_KEY])
     end
   end
 end

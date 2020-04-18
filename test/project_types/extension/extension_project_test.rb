@@ -19,7 +19,7 @@ module Extension
         context: @new_context,
         api_key: 'test_key',
         api_secret: 'test_secret',
-        type: 'test_type'
+        type: @type.identifier
       )
 
       assert File.exists?('.env')
@@ -29,7 +29,7 @@ module Extension
       project = ExtensionProject.current
       assert_equal 'test_key', project.env['api_key']
       assert_equal 'test_secret', project.env['secret']
-      assert_equal 'test_type', project.extension_type
+      assert_equal @type.identifier, project.extension_type.identifier
     end
 
     def test_can_write_and_read_registration_id_values
@@ -37,6 +37,10 @@ module Extension
       @project.set_registration_id(@context, 42)
 
       assert_equal 42, @project.registration_id
+    end
+
+    def test_extension_type_returns_a_type_instance
+      assert_kind_of Models::Type, @project.extension_type
     end
 
     def test_detects_if_registration_id_is_missing_or_invalid

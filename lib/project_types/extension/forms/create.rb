@@ -7,22 +7,6 @@ module Extension
 
       attr_reader :app
 
-      ExtensionType = Struct.new(:identifier, :description, keyword_init: true) do
-        def ==(extensionType)
-          case extensionType
-          when String
-            self.identifier == extensionType
-          else
-            super(extensionType)
-          end
-        end
-      end
-
-      EXTENSION_TYPES = [
-        ExtensionType.new(identifier: 'product-details', description: 'Product extension'),
-        ExtensionType.new(identifier: 'customer-details', description: 'Customer extension')
-      ]
-
       def ask
         self.title = ask_title
         self.type = ask_type
@@ -41,11 +25,12 @@ module Extension
       end
 
       def ask_type
-        return type if EXTENSION_TYPES.include?(type)
+        return type if Models::Type.valid?(type)
         raise(ShopifyCli::Abort, 'Invalid extension type.') unless type.nil?
+
         CLI::UI::Prompt.ask('What type of extension would you like to create?') do |handler|
-          EXTENSION_TYPES.each do |type|
-            handler.option(type.description) { type.identifier }
+          Models::Type.repository.values.each do |type|
+            handler.option(type.name) { type.identifier }
           end
         end
       end

@@ -6,12 +6,12 @@ module Extension
   module Forms
     class CreateTest < MiniTest::Test
       include TestHelpers::Partners
+      include ExtensionTestHelpers::TestExtensionSetup
       include ExtensionTestHelpers::Stubs::GetOrganizations
 
       def setup
         super
         stub_get_organizations
-        ShopifyCli::ProjectType.load_type(:extension)
       end
 
       def returns_defined_attributes_if_valid
@@ -21,14 +21,9 @@ module Extension
 
       end
 
-      def test_accepts_product_details_as_type
-        form = ask
-        assert_equal form.type, 'product-details'
-      end
-
-      def test_accepts_customer_details_as_type
-        form = ask(type: 'customer-details')
-        assert_equal form.type, 'customer-details'
+      def test_accepts_any_valid_extension_type
+        form = ask(type: @test_extension_type.identifier)
+        assert_equal form.type, @test_extension_type.identifier
       end
 
       def test_prompts_the_user_to_choose_a_title_if_no_title_was_provided
@@ -79,7 +74,7 @@ module Extension
 
       private
 
-      def ask(title: ['test-extension'], type: 'product-details', api_key: '1234')
+      def ask(title: ['test-extension'], type: @test_extension_type.identifier, api_key: '1234')
         Create.ask(
           @context,
           [],

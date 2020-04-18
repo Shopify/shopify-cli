@@ -5,7 +5,7 @@ module Extension
     class Create < ShopifyCli::SubCommand
       options do |parser, flags|
         parser.on('--title=TITLE') { |title| flags[:title] = title }
-        parser.on('--type=TYPE') { |type| flags[:type] = type.downcase  }
+        parser.on('--type=TYPE') { |type| flags[:type] = type.upcase  }
         parser.on('--api-key=KEY') { |key| flags[:api_key] = key.downcase }
       end
 

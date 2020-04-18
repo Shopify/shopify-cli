@@ -24,9 +24,7 @@ module Extension
           context: @ctx,
           api_key: @project.env['api_key'],
           registration_id: @project.registration_id,
-          config: {
-            serialized_script: encode_script
-          }
+          config: @project.extension_type.config(@ctx)
         )
       end
 
@@ -34,11 +32,9 @@ module Extension
         registration = Tasks::CreateExtension.call(
           context: @ctx,
           api_key: @project.env['api_key'],
-          type: @project.extension_type,
+          type: @project.extension_type.identifier,
           title: 'Testing the CLI',
-          config: {
-            serialized_script: encode_script
-          }
+          config: @project.extension_type.config(@ctx)
         )
 
         @project.set_registration_id(@ctx, registration.id)

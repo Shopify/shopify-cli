@@ -25,6 +25,11 @@ module Extension
   module Models
     autoload :Registration, Project.project_filepath('models/registration')
     autoload :Version, Project.project_filepath('models/version')
+    autoload :Type, Project.project_filepath('models/type')
+
+    class << self
+      Models::Type.load_all
+    end
   end
 
   autoload :JsDeps, Project.project_filepath('js_deps')

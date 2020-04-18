@@ -18,16 +18,15 @@ module Extension
             }
         SCRIPT
 
-        def with_stubbed_script(script: TEMPLATE_SCRIPT)
-          base_folder = "extension_test_" + SecureRandom.uuid.to_str
+        def with_stubbed_script(context, path, script = TEMPLATE_SCRIPT)
+          filepath = File.join(context.root, path)
+          directory = File.dirname(filepath)
 
-          FileUtils.mkdir_p("#{base_folder}/build")
-          FileUtils.cd(base_folder)
-          File.open('build/main.js', 'w+') { |file| file.puts(script) }
+          FileUtils.mkdir_p(directory)
+          File.open(filepath, 'w+') { |file| file.puts(script) }
           yield
         ensure
-          FileUtils.cd('..')
-          FileUtils.rm_r(base_folder)
+          FileUtils.rm_r(directory)
         end
       end
     end
