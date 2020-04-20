@@ -32,12 +32,12 @@ module Node
       end
 
       def organizations
-        @organizations ||= ShopifyCli::Resources::Organizations.fetch_all(ctx)
+        @organizations ||= ShopifyCli::PartnersAPI::Organizations.fetch_all(ctx)
       end
 
       def organization
         @organization ||= if !organization_id.nil?
-          org = ShopifyCli::Resources::Organizations.fetch(ctx, id: organization_id)
+          org = ShopifyCli::PartnersAPI::Organizations.fetch(ctx, id: organization_id)
           ctx.abort("Cannot find an organization with that ID") if org.nil?
           org
         elsif organizations.count == 0

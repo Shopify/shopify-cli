@@ -2,6 +2,8 @@ require 'shopify_cli'
 
 module ShopifyCli
   class PartnersAPI < API
+    autoload :Organizations, 'shopify-cli/partners_api/organizations'
+
     ENV_VAR = 'SHOPIFY_APP_CLI_LOCAL_PARTNERS'
     AUTH_PROD_URI = 'https://accounts.shopify.com'
     AUTH_DEV_URI = 'https://identity.myshopify.io'

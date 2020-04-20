@@ -17,7 +17,7 @@ module ShopifyCli
       end
 
       def fetch_org
-        orgs = Resources::Organizations.fetch_with_app(@ctx)
+        orgs = PartnersAPI::Organizations.fetch_with_app(@ctx)
         org_id = if orgs.count == 1
           orgs.first["id"]
         else

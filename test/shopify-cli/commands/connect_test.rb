@@ -34,7 +34,7 @@ module ShopifyCli
             }],
           }],
         }]
-        ShopifyCli::Resources::Organizations.stubs(:fetch_with_app).returns(response)
+        ShopifyCli::PartnersAPI::Organizations.stubs(:fetch_with_app).returns(response)
         CLI::UI::Prompt.expects(:ask).with('To which organization does this project belong?').returns(422)
         CLI::UI::Prompt.expects(:ask).with(
           'Which development store would you like to use?'
@@ -58,7 +58,7 @@ module ShopifyCli
             }],
           }],
         }]
-        ShopifyCli::Resources::Organizations.stubs(:fetch_with_app).returns(response)
+        ShopifyCli::PartnersAPI::Organizations.stubs(:fetch_with_app).returns(response)
         Resources::EnvFile.any_instance.stubs(:write)
         run_cmd('connect')
       end
