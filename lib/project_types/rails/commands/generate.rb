@@ -12,7 +12,8 @@ module Rails
 
       def self.help
         <<~HELP
-          Generate code in your app project. Currently supports generating new webhooks.
+          Generate code in your app project. Currently only supports generating new webhooks.
+          Generating new pages and/or new billing API calls is not currently supported in Rails projects.
             Usage: {{command:#{ShopifyCli::TOOL_NAME} generate webhook}}
         HELP
       end
