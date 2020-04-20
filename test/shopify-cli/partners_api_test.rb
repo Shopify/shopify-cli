@@ -6,7 +6,7 @@ module ShopifyCli
 
     def setup
       super
-      Resources::PkceToken.stubs(:read).returns('token123')
+      Resources::Tokens.stubs(:identity).returns('token123')
     end
 
     def test_id

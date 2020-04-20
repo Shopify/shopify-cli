@@ -9,7 +9,7 @@ module Node
         def setup
           super
           ShopifyCli::ProjectType.load_type(:node)
-          ShopifyCli::Resources::AccessToken.stubs(:read).returns('myaccesstoken')
+          ShopifyCli::Resources::Tokens.stubs(:admin).returns('myaccesstoken')
         end
 
         def test_populate_calls_api_with_mutation
