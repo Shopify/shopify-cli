@@ -6,7 +6,7 @@ module ShopifyCli
       include TestHelpers::Partners
 
       def test_url_is_not_transformed_if_same
-        Project.current.stubs(:env).returns(Helpers::EnvFile.new(api_key: '123', secret: 'foo'))
+        Project.current.stubs(:env).returns(Resources::EnvFile.new(api_key: '123', secret: 'foo'))
         api_key = '123'
         stub_partner_req(
           'get_app_urls',
@@ -33,7 +33,7 @@ module ShopifyCli
       end
 
       def test_url_is_transformed_if_different_and_callback_is_appended
-        Project.current.stubs(:env).returns(Helpers::EnvFile.new(api_key: '1234', secret: 'foo'))
+        Project.current.stubs(:env).returns(Resources::EnvFile.new(api_key: '1234', secret: 'foo'))
         api_key = '1234'
         stub_partner_req(
           'get_app_urls',
@@ -71,7 +71,7 @@ module ShopifyCli
       end
 
       def test_only_ngrok_urls_are_updated
-        Project.current.stubs(:env).returns(Helpers::EnvFile.new(api_key: '1234', secret: 'foo'))
+        Project.current.stubs(:env).returns(Resources::EnvFile.new(api_key: '1234', secret: 'foo'))
         api_key = '1234'
         stub_partner_req(
           'get_app_urls',
@@ -115,7 +115,7 @@ module ShopifyCli
       end
 
       def test_application_url_is_not_updated_if_user_says_no
-        Project.current.stubs(:env).returns(Helpers::EnvFile.new(api_key: '1234', secret: 'foo'))
+        Project.current.stubs(:env).returns(Resources::EnvFile.new(api_key: '1234', secret: 'foo'))
         api_key = '1234'
         stub_partner_req(
           'get_app_urls',
@@ -161,7 +161,7 @@ module ShopifyCli
     end
 
     def test_application_url_is_updated_if_user_says_yes
-      Project.current.stubs(:env).returns(Helpers::EnvFile.new(api_key: '1234', secret: 'foo'))
+      Project.current.stubs(:env).returns(Resources::EnvFile.new(api_key: '1234', secret: 'foo'))
       api_key = '1234'
       stub_partner_req(
         'get_app_urls',
@@ -206,7 +206,7 @@ module ShopifyCli
     end
 
     def test_whitelist_urls_are_updated_even_if_app_url_is_set
-      Project.current.stubs(:env).returns(Helpers::EnvFile.new(api_key: '123', secret: 'foo'))
+      Project.current.stubs(:env).returns(Resources::EnvFile.new(api_key: '123', secret: 'foo'))
       api_key = '123'
       stub_partner_req(
         'get_app_urls',
@@ -244,7 +244,7 @@ module ShopifyCli
     end
 
     def test_user_is_prompted_to_update_application_url
-      Project.current.stubs(:env).returns(Helpers::EnvFile.new(api_key: '123', secret: 'foo'))
+      Project.current.stubs(:env).returns(Resources::EnvFile.new(api_key: '123', secret: 'foo'))
       api_key = '123'
       stub_partner_req(
         'get_app_urls',

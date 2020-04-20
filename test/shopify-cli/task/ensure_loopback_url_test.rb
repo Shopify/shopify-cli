@@ -6,7 +6,7 @@ module ShopifyCli
       include TestHelpers::Partners
 
       def test_url_is_not_added_if_it_exists
-        Project.current.stubs(:env).returns(Helpers::EnvFile.new(api_key: '123', secret: 'foo'))
+        Project.current.stubs(:env).returns(Resources::EnvFile.new(api_key: '123', secret: 'foo'))
         api_key = '123'
         stub_partner_req(
           'get_app_urls',
@@ -28,7 +28,7 @@ module ShopifyCli
       end
 
       def test_url_is_added_if_it_is_not_there
-        Project.current.stubs(:env).returns(Helpers::EnvFile.new(api_key: '123', secret: 'foo'))
+        Project.current.stubs(:env).returns(Resources::EnvFile.new(api_key: '123', secret: 'foo'))
         api_key = '123'
         stub_partner_req(
           'get_app_urls',

@@ -35,7 +35,7 @@ module Node
           app_url: 'https://shopify.github.io/shopify-app-cli/getting-started',
         )
 
-        ShopifyCli::Helpers::EnvFile.new(
+        ShopifyCli::Resources::EnvFile.new(
           api_key: api_client["apiKey"],
           secret: api_client["apiSecretKeys"].first["secret"],
           shop: form.shop_domain,

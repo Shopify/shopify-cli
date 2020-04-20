@@ -2,7 +2,7 @@
 require 'test_helper'
 
 module ShopifyCli
-  module Helpers
+  module Resources
     class EnvFileTest < MiniTest::Test
       include TestHelpers::FakeUI
 

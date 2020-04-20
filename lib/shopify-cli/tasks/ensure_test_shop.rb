@@ -25,7 +25,7 @@ module ShopifyCli
       def shop
         @shop ||= begin
           current_domain = project.env.shop
-          Helpers::Organizations.fetch_all(@ctx).map do |org|
+          ShopifyCli::PartnersAPI::Organizations.fetch_all(@ctx).map do |org|
             org['stores'].find do |store|
               store['orgID'] = org['id']
               store['shopDomain'] == current_domain

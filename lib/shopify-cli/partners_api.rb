@@ -2,6 +2,8 @@ require 'shopify_cli'
 
 module ShopifyCli
   class PartnersAPI < API
+    autoload :Organizations, 'shopify-cli/partners_api/organizations'
+
     ENV_VAR = 'SHOPIFY_APP_CLI_LOCAL_PARTNERS'
     AUTH_PROD_URI = 'https://accounts.shopify.com'
     AUTH_DEV_URI = 'https://identity.myshopify.io'
@@ -49,7 +51,7 @@ module ShopifyCli
       def api_client(ctx)
         new(
           ctx: ctx,
-          token: Helpers::PkceToken.read(ctx),
+          token: Resources::Tokens.identity(ctx),
           url: "#{endpoint}/api/cli/graphql",
         )
       end

@@ -70,7 +70,7 @@ module ShopifyCli
     end
 
     def env
-      @env ||= Helpers::EnvFile.read(directory)
+      @env ||= Resources::EnvFile.read(directory)
     end
 
     def config

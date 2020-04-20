@@ -5,7 +5,7 @@ module ShopifyCli
     class AuthenticateShopify < ShopifyCli::Task
       def call(ctx, shop: nil)
         Tasks::EnsureEnv.call(ctx)
-        env = Helpers::EnvFile.read
+        env = Resources::EnvFile.read
         shop ||= env.shop
         OAuth.new(
           ctx: ctx,

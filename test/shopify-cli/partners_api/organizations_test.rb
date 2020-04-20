@@ -2,7 +2,7 @@
 require 'test_helper'
 
 module ShopifyCli
-  module Helpers
+  class PartnersAPI
     class OrganizationsTest < MiniTest::Test
       include TestHelpers::Partners
 
@@ -29,7 +29,7 @@ module ShopifyCli
           }
         )
 
-        orgs = Helpers::Organizations.fetch_all(@context)
+        orgs = PartnersAPI::Organizations.fetch_all(@context)
         assert_equal(orgs.count, 1)
         assert_equal(orgs.first['id'], 42)
         assert_equal(orgs.first['stores'].count, 1)
@@ -60,7 +60,7 @@ module ShopifyCli
           }
         )
 
-        org = Helpers::Organizations.fetch(@context, id: 42)
+        org = PartnersAPI::Organizations.fetch(@context, id: 42)
         assert_equal(org['id'], 42)
         assert_equal(org['stores'].count, 1)
         assert_equal(org['stores'].first['shopDomain'], 'shopdomain.myshopify.com')
@@ -79,7 +79,7 @@ module ShopifyCli
           }
         )
 
-        org = Helpers::Organizations.fetch(@context, id: 42)
+        org = PartnersAPI::Organizations.fetch(@context, id: 42)
         assert_nil(org)
       end
 
@@ -131,7 +131,7 @@ module ShopifyCli
             },
           },
         )
-        orgs = Helpers::Organizations.fetch_with_app(@context)
+        orgs = PartnersAPI::Organizations.fetch_with_app(@context)
         assert_equal(orgs.count, 2)
         assert_equal(orgs.first['id'], 421)
         assert_equal(orgs.first['stores'].first['shopDomain'], 'store.myshopify.com')

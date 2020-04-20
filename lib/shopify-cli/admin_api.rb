@@ -26,7 +26,7 @@ module ShopifyCli
         new(
           ctx: ctx,
           auth_header: 'X-Shopify-Access-Token',
-          token: Helpers::AccessToken.read(ctx),
+          token: Resources::Tokens.admin(ctx),
           url: "#{endpoint}/#{fetch_api_version(ctx, api_version)}/graphql.json",
         )
       end
@@ -36,7 +36,7 @@ module ShopifyCli
         client = new(
           ctx: ctx,
           auth_header: 'X-Shopify-Access-Token',
-          token: Helpers::AccessToken.read(ctx),
+          token: Resources::Tokens.admin(ctx),
           url: "#{endpoint}/unstable/graphql.json",
         )
         versions = client.query('api_versions')['data']['publicApiVersions']

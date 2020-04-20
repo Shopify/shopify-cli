@@ -118,6 +118,7 @@ module ShopifyCli
   autoload :ProcessSupervision, 'shopify-cli/process_supervision'
   autoload :Project, 'shopify-cli/project'
   autoload :ProjectType, 'shopify-cli/project_type'
+  autoload :Resources, 'shopify-cli/resources'
   autoload :SubCommand, 'shopify-cli/sub_command'
   autoload :Task, 'shopify-cli/task'
   autoload :Tasks, 'shopify-cli/tasks'
