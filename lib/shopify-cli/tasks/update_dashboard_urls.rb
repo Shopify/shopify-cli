@@ -17,6 +17,10 @@ module ShopifyCli
           redirectUrlWhitelist: constructed_urls, apiKey: api_key
         })
         @ctx.puts("{{v}} Whitelist URLS updated in Partners Dashboard}}")
+      rescue
+        @ctx.puts("{{x}} error: For authentication issues, run {{command:#{ShopifyCli::TOOL_NAME} logout}} "\
+          "to clear invalid credentials")
+        raise
       end
 
       def check_application_url(application_url, new_url)

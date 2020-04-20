@@ -38,10 +38,18 @@ module Rails
       def organization
         @organization ||= if !organization_id.nil?
           org = ShopifyCli::PartnersAPI::Organizations.fetch(ctx, id: organization_id)
-          ctx.abort('Cannot find an organization with that ID') if org.nil?
+          if org.nil?
+            ctx.puts(
+              "For authentication issues, run {{command:#{ShopifyCli::TOOL_NAME} logout}} to clear invalid credentials"
+            )
+            ctx.abort("Cannot find an organization with that ID")
+          end
           org
         elsif organizations.count == 0
           ctx.puts('Please visit https://partners.shopify.com/ to create a partners account')
+          ctx.puts(
+            "For authentication issues, run {{command:#{ShopifyCli::TOOL_NAME} logout}} to clear invalid credentials"
+          )
           ctx.abort('No organizations available.')
         elsif organizations.count == 1
           ctx.puts("Organization {{green:#{organizations.first['businessName']}}}")
@@ -62,6 +70,9 @@ module Rails
         if valid_stores.count == 0
           ctx.puts('{{x}} No Development Stores available.')
           ctx.puts("Visit {{underline:https://partners.shopify.com/#{organization['id']}/stores}} to create one")
+          ctx.puts(
+            "For authentication issues, run {{command:#{ShopifyCli::TOOL_NAME} logout}} to clear invalid credentials"
+          )
         elsif valid_stores.count == 1
           domain = valid_stores.first['shopDomain']
           ctx.puts("Using Development Store {{green:#{domain}}}")

@@ -72,6 +72,8 @@ module ShopifyCli
       @context.expects(:puts).with(
         "{{x}} error: Your account was not found. Please sign up at https://partners.shopify.com/signup",
       )
+      @context.expects(:puts).with("For authentication issues, run "\
+        "{{command:#{ShopifyCli::TOOL_NAME} logout}} to clear invalid credentials")
       PartnersAPI.query(@context, 'query')
     end
 
