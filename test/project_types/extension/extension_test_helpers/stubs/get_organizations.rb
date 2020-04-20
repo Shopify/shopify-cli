@@ -6,7 +6,7 @@ module Extension
       module GetOrganizations
         include TestHelpers::Partners
 
-        def stub_get_organizations
+        def stub_get_organizations(organization_name: 'one', app_title: 'App', api_key: '1234', api_secret: '5678')
           stub_partner_req(
             'all_orgs_with_apps',
             resp: {
@@ -14,8 +14,8 @@ module Extension
                 organizations: {
                   nodes: [
                     {
-                      'id': 421,
-                      'businessName': "one",
+                      'id': rand(9999),
+                      'businessName': organization_name,
                       'stores': {
                         'nodes': [
                           { 'shopDomain': 'store.myshopify.com' },
@@ -23,11 +23,11 @@ module Extension
                       },
                       'apps': {
                         nodes: [{
-                                  id: 123,
-                                  title: 'app',
-                                  'apiKey': '1234',
+                                  id: rand(9999),
+                                  title: app_title,
+                                  'apiKey': api_key,
                                   'apiSecretKeys': [{
-                                                      'secret': "1233",
+                                                      'secret': api_secret,
                                                     }],
                                 }],
                       },
@@ -37,6 +37,43 @@ module Extension
               },
             },
           )
+        end
+
+        def stub_no_organizations
+          stub_partner_req(
+            'all_orgs_with_apps',
+            resp: {
+              data: {
+                organizations: {
+                  nodes: []
+                },
+              },
+            },
+          )
+        end
+
+        def stub_no_apps(organization_name)
+          stub_partner_req(
+            'all_orgs_with_apps',
+            resp: {
+              data: {
+                organizations: {
+                  nodes: [
+                    {
+                      'id': rand(9999),
+                      'businessName': organization_name,
+                      'stores': {
+                        'nodes': [
+                          { 'shopDomain': 'store.myshopify.com' },
+                        ],
+                      },
+                      'apps': { nodes: [] },
+                    },
+                  ],
+                },
+              },
+            },
+            )
         end
       end
     end

@@ -14,6 +14,7 @@ module Extension
   end
 
   module Tasks
+    autoload :GetApps, Project.project_filepath('tasks/get_apps')
     autoload :CreateExtension, Project.project_filepath('tasks/create_extension')
     autoload :UpdateDraft, Project.project_filepath('tasks/update_draft')
   end
@@ -23,6 +24,7 @@ module Extension
   end
 
   module Models
+    autoload :App, Project.project_filepath('models/app')
     autoload :Registration, Project.project_filepath('models/registration')
     autoload :Version, Project.project_filepath('models/version')
     autoload :Type, Project.project_filepath('models/type')

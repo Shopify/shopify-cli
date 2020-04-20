@@ -11,12 +11,12 @@ module Extension
 
       def call(args, _)
         with_create_form(args) do |form|
-          build(form.title)
+          build(form.name)
 
           ExtensionProject.write_project_files(
             context: @ctx,
-            api_key: form.app["apiKey"],
-            api_secret: form.app["apiSecretKeys"].first["secret"],
+            api_key: form.app.api_key,
+            api_secret: form.app.secret,
             type: form.type
           )
         end
