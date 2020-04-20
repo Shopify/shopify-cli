@@ -134,7 +134,7 @@ module Node
             title: 'test-app',
             type: 'public',
             app_url: 'https://shopify.github.io/shopify-app-cli/getting-started',
-            redir: ["http://app-cli-loopback.shopifyapps.com:3456"],
+            redir: ["http://127.0.0.1:3456"],
           },
           resp: {
             'data': {
@@ -195,7 +195,7 @@ module Node
             title: 'test-app',
             type: 'public',
             app_url: 'https://shopify.github.io/shopify-app-cli/getting-started',
-            redir: ["http://app-cli-loopback.shopifyapps.com:3456"],
+            redir: ["http://127.0.0.1:3456"],
           },
           resp: {
             'data': {

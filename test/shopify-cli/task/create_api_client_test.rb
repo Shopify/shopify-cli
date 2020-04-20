@@ -13,7 +13,7 @@ module ShopifyCli
             title: 'Test app',
             type: 'public',
             app_url: 'http://app.com',
-            redir: ["http://app-cli-loopback.shopifyapps.com:3456"],
+            redir: ["http://127.0.0.1:3456"],
           },
           resp: {
             'data': {
@@ -47,7 +47,7 @@ module ShopifyCli
             title: 'Test app',
             type: 'public',
             app_url: 'http://app.com',
-            redir: ["http://app-cli-loopback.shopifyapps.com:3456"],
+            redir: ["http://127.0.0.1:3456"],
           },
           resp: {
             'data': {
