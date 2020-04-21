@@ -10,3 +10,4 @@ heroku
 docs/_site/
 tmp/
 .git/*
+markdown_intermediate

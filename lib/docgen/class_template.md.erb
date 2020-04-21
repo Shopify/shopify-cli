@@ -1,0 +1,81 @@
+<%= comment %>
+<% if constants.any? -%>
+- [Constants](#constants)
+<%- end -%>
+<%- if attributes.any? -%>
+- [Attributes](#attributes)
+<%- end -%>
+<%- if class_methods.any? -%>
+- [Class Methods](#class-methods)
+<%- class_methods.each do |method| -%>
+  - [<%= method.title %>](#<%= method.title.gsub("?", "") %>)
+<%- end -%>
+<%- end -%>
+<%- if instance_methods.any? -%>
+- [Instance Methods](#instance-methods)
+<%- instance_methods.each do |method| -%>
+  - [<%= method.title %>](#<%= method.title.gsub("?", "") %>)
+<%- end -%>
+<%- end -%>
+<%- if included.any? -%>
+- [Includes](#includes)
+<%- end -%>
+<%- if extended.any? -%>
+- [Extends](#extends)
+<%- end -%>
+<%- if constants.any? %>
+## Constants
+<%- constants.each do |const| -%>
+- `<%= const.title %>` <%= const.comment %>
+<%- end -%>
+<%- end -%>
+<%- if attributes.any? %>
+## Attributes
+<%- attributes.each do |attr| -%>
+- `<%= attr.title %>` <%= attr.comment %>
+<%- end -%>
+<%- end -%>
+<%- if class_methods.any? %>
+## Class Methods
+<% class_methods.each do |method| %>
+### <%= method.title %>
+`<%= method.signature %>`
+<%= method.comment %>
+<details><summary>see source</summary><p>
+
+```ruby
+<%= method.source_code %>
+```
+</p></details>
+
+---
+<%- end -%>
+<%- end -%>
+<%- if instance_methods.any? %>
+## Instance Methods
+<% instance_methods.each do |method| %>
+### <%= method.title %>
+`<%= method.signature %>`
+<%= method.comment %>
+<details><summary>see source</summary><p>
+
+```ruby
+<%= method.source_code %>
+```
+</p></details>
+
+---
+<%- end -%>
+<%- end -%>
+<%- if included.any? %>
+## Includes
+<% included.each do |incld| %>
+- <%= incld.title %>
+<%- end -%>
+<%- end -%>
+<%- if extended.any? %>
+## Extends
+<% extended.each do |incld| %>
+- <%= incld.title %>
+<%- end -%>
+<%- end -%>
