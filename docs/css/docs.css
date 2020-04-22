@@ -34,6 +34,11 @@ code {
   height: 36px;
 }
 
+.footer-nav {
+  margin-bottom: 0;
+  border-bottom: 0;
+}
+
 /* Code highlights */
 
 div.highlight {
