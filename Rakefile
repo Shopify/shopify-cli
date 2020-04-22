@@ -14,9 +14,6 @@ task :console do
 end
 
 namespace :rdoc do
-  require 'rdoc/rdoc'
-  require 'docgen/markdown'
-
   temp_path = '/tmp/shopify-app-cli-wiki'
   repo = 'https://github.com/Shopify/shopify-app-cli.wiki.git'
   intermediate = 'markdown_intermediate'
@@ -34,6 +31,8 @@ namespace :rdoc do
 
   desc("Generate markdown files from rdoc comments")
   task :markdown do
+    require 'rdoc/rdoc'
+    require 'docgen/markdown'
     options = RDoc::Options.new
     options.setup_generator('markdown')
     options.op_dir = intermediate
