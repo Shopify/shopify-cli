@@ -113,5 +113,7 @@ module ShopifyCli
         @log.scan(/msg="command failed" err="([^"]+)"/).flatten
       end
     end
+
+    private_constant :LogParser
   end
 end
