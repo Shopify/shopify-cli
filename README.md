@@ -128,4 +128,4 @@ Deleting or commenting out this line will remove `shopify` as a command. You may
 
 ## Contributing to Shopify App CLI
 
-See our [Development Guide](docs/development.md).
+See our [Development Guide](https://github.com/Shopify/shopify-app-cli/wiki).
