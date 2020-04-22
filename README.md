@@ -37,9 +37,7 @@ Developers should have some prior knowledge of the Shopify app ecosystem. Curren
 - If you don’t have one, [create a Development store](https://help.shopify.com/en/partners/dashboard/development-stores#create-a-development-store) where you can install and test your app.
 - You should have Node.js version 10.0.0 or higher installed. If you're looking for a way to manage your node versions we recommend [nvm](https://github.com/nvm-sh/nvm/blob/master/README.md)
 
-## Commands
-
-### Create a new app project
+### Create a new project
 
 The `create` command will scaffold a new Shopify app in your current active directory and generate all the necessary starter files.
 
@@ -47,96 +45,17 @@ The `create` command will scaffold a new Shopify app in your current active dire
 $ shopify create
 ```
 
-The CLI will ask what type of app you want to create. Two languages are currently supported:
+### Project Commands
 
-- Node.js and React
-- Ruby
+Once inside a project you can find more commands available to you by running `shopify help`
 
-The CLI will also ask for your app’s API key and API secret, which you can find in your Partner Dashboard (see “Requirements” above).
+There will be several commands available in a rails and node shopify app like
 
-### Start a development server
-
-Running the `serve` command in your app directory will start your local development server as well as a public tunnel to your local development app (see the `tunnel` command below). This will make your app visible to anyone with the ngrok URL.
-
-```sh
-$ shopify serve
-```
-
-Your terminal will display the localhost and port where your app is now visible. Your app can then be installed on a development store from your Partner Dashboard.
-
-### Start or stop a tunnel to your localhost
-
-Use `tunnel` to set up a public tunnel to your local app. Shopify App CLI uses [ngrok](https://ngrok.com/) to manage this connection. Starting a tunnel will make your app visible to anyone with the ngrok URL.
-
-```sh
-$ shopify tunnel start
-```
-
-Use the `stop` command to close the tunnel:
-
-```sh
-$ shopify tunnel stop
-```
-### Loading your app within the admin
-
-As the Shopify App CLI creates an embedded app, you'll need to install it on a development store. To do so, open the installation URL in your web browser with `shopify open`. This will prompt you to install on your development store. It’s necessary to view and test your app in a live development store because some App Bridge and Polaris features are only available for use by your app when it’s embedded in the Shopify admin.
-
-### Generate new app features
-
-Shopify App CLI automates several common developer tasks. Currently `generate` supports the following actions:
-
-- Generating new pages in your app
-- Generating new billing models and endpoints
-- Generating new webhooks to listen for store events
-
-#### Create a new page
-
-```sh
-$ shopify generate page PAGE_NAME
-```
-The CLI will scaffold the new page in the `pages` directory. In node apps, you can view this page by appending the name you pass to the url.
-
-#### Create a billing model
-
-```sh
-$ shopify generate billing
-```
-The CLI will ask whether you want to create a one-time billing model or a recurring subscription model.
-
-#### Create a new webhook
-
-Webhooks allow your app to listen for events that happen on any stores that have them installed. The CLI can quickly register a new webhook for any valid store event.
-
-```sh
-$ shopify generate webhook WEBHOOK_NAME
-```
-
-A [list of supported webhook events](https://help.shopify.com/en/api/reference/events/webhook) is available in [Shopify’s API docs](https://help.shopify.com/en/api/getting-started).
-
-### Add test data to a development store
-
-Developers can use [development stores](https://help.shopify.com/en/partners/dashboard/development-stores) to test their apps. Development stores have no products, customers or orders when they’re created. Shopify App CLI can quickly add dummy data to your development store so you can test your app more thoroughly.
-
-The `populate` command can add fake products, customers, and draftorders. The default number of items added is 5. You can specify a different number of items with the `--count` option.
-
-```sh
-# Adds 5 fake products
-$ shopify populate products
-
-# Adds 5 fake customers
-$ shopify populate customers
-
-# Adds 25 fake orders
-$ shopify populate draftorders --count 25
-```
-
-### Update to the latest version
-
-```sh
-$ shopify update
-```
-
-The `update` command will upgrade your production instance of the CLI to use the most recent version.
+- `shopify serve` to start your local development server and a tunnel to make your app available inside shopify admin.
+- `shopify open` to open the installation url and install the app on your development store
+- `shopify generate webhook WEBHOOK_NAME` to generate configuration for recieving a webhook topic
+- `shopify populate products` to populate product data on your development store
+- Many more!
 
 ## Developing Shopify App CLI
 
