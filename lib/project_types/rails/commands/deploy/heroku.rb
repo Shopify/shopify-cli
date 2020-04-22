@@ -33,8 +33,7 @@ module Rails
           spin_group.wait
 
           if (account = heroku_service.whoami)
-            spin_group.add("Authenticated with Heroku as `#{account}`") { true }
-            spin_group.wait
+            @ctx.puts("{{v}} Authenticated with Heroku as `#{account}`")
           else
             CLI::UI::Frame.open("Authenticating with Heroku…", success_text: '{{v}} Authenticated with Heroku') do
               heroku_service.authenticate
@@ -42,8 +41,7 @@ module Rails
           end
 
           if (app_name = heroku_service.app)
-            spin_group.add("Heroku app `#{app_name}` selected") { true }
-            spin_group.wait
+            @ctx.puts("{{v}} Heroku app `#{app_name}` selected")
           else
             app_type = CLI::UI::Prompt.ask('No existing Heroku app found. What would you like to do?') do |handler|
               handler.option('Create a new Heroku app') { :new }
@@ -68,8 +66,7 @@ module Rails
           branches = ShopifyCli::Git.branches(@ctx)
           if branches.length == 1
             branch_to_deploy = branches[0]
-            spin_group.add("Git branch `#{branch_to_deploy}` selected for deploy") { true }
-            spin_group.wait
+            @ctx.puts("{{v}} Git branch `#{branch_to_deploy}` selected for deploy")
           else
             branch_to_deploy = CLI::UI::Prompt.ask('What branch would you like to deploy?') do |handler|
               branches.each do |branch|

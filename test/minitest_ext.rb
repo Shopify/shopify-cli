@@ -16,7 +16,8 @@ module Minitest
     end
 
     def run_cmd(cmd)
-      stub_monorail_log_invocation
+      stub_prompt_for_cli_updates
+      stub_monorail_log_git_sha
       ShopifyCli::Core::EntryPoint.call(cmd.split(' '), @context)
     end
 
@@ -43,8 +44,12 @@ module Minitest
 
     private
 
-    def stub_monorail_log_invocation
+    def stub_monorail_log_git_sha
       ShopifyCli::Git.stubs(:sha).returns("bb6f42193239a248f054e5019e469bc75f3adf1b")
+    end
+
+    def stub_prompt_for_cli_updates
+      ShopifyCli::Config.stubs(:get_section).with("autoupdate").returns(stub("key?" => true))
     end
   end
 end

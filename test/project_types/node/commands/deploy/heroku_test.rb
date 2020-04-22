@@ -101,8 +101,8 @@ module Node
         def test_call_uses_existing_heroku_auth_if_available
           expects_heroku_whoami(status: true)
 
-          CLI::UI::SpinGroup.any_instance.expects(:add).with(
-            'Authenticated with Heroku as `username`'
+          @context.expects(:puts).with(
+            '{{v}} Authenticated with Heroku as `username`'
           )
 
           run_cmd('deploy heroku')
@@ -127,8 +127,8 @@ module Node
         def test_call_uses_existing_heroku_app_if_available
           expects_git_remote_get_url_heroku(status: true, remote: 'heroku')
 
-          CLI::UI::SpinGroup.any_instance.expects(:add).with(
-            'Heroku app `app-name` selected'
+          @context.expects(:puts).with(
+            '{{v}} Heroku app `app-name` selected'
           )
 
           run_cmd('deploy heroku')
@@ -169,7 +169,6 @@ module Node
         def test_call_lets_you_create_new_heroku_app
           expects_git_remote_get_url_heroku(status: false, remote: 'heroku')
           expects_heroku_create(status: true)
-          expects_git_remote_add_heroku(status: true)
 
           CLI::UI::Prompt.expects(:ask)
             .with('No existing Heroku app found. What would you like to do?')
@@ -181,21 +180,6 @@ module Node
         def test_call_raises_if_creating_new_heroku_app_fails
           expects_git_remote_get_url_heroku(status: false, remote: 'heroku')
           expects_heroku_create(status: false)
-          expects_git_remote_add_heroku(status: nil)
-
-          CLI::UI::Prompt.expects(:ask)
-            .with('No existing Heroku app found. What would you like to do?')
-            .returns(:new)
-
-          assert_raises ShopifyCli::Abort do
-            run_cmd('deploy heroku')
-          end
-        end
-
-        def test_call_raises_if_setting_remote_heroku_fails
-          expects_git_remote_get_url_heroku(status: false, remote: 'heroku')
-          expects_heroku_create(status: true)
-          expects_git_remote_add_heroku(status: false)
 
           CLI::UI::Prompt.expects(:ask)
             .with('No existing Heroku app found. What would you like to do?')
@@ -209,8 +193,8 @@ module Node
         def test_call_doesnt_prompt_if_only_one_branch_exists
           expects_git_branch(status: true, multiple: false)
 
-          CLI::UI::SpinGroup.any_instance.expects(:add).with(
-            'Git branch `master` selected for deploy'
+          @context.expects(:puts).with(
+            '{{v}} Git branch `master` selected for deploy'
           )
 
           run_cmd('deploy heroku')
