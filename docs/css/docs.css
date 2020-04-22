@@ -1,0 +1,60 @@
+body {
+  color: #212326;
+}
+
+article {
+  padding: 30px 0;
+}
+
+article h1,
+article h2,
+article h3,
+article h4,
+article h5,
+article h6 {
+  margin-top: 1em;
+}
+
+article ul {
+  list-style: disc;
+  margin-left: 20px;
+}
+
+code {
+  font-family: Menlo, Monaco, Consolas, "Lucida Console", monospace;
+  padding: 0.5px 5px 2px;
+  border-radius: 5px;
+  background: #f4f6f8;
+  border: 1px solid #c4cdd5;
+  overflow-wrap: break-word;
+}
+
+.marketing-nav__logo__shopify {
+  width: 240px;
+  height: 36px;
+}
+
+/* Code highlights */
+
+div.highlight {
+  color: #ffffff;
+  background-color: #000639;
+  border-radius: 5px;
+  margin-bottom: 15px;
+}
+
+pre.highlight {
+  font-size: 1em;
+  white-space: pre-wrap;
+  margin: 0;
+  overflow-x: auto;
+  text-align: left;
+}
+
+.highlight code {
+  display: block;
+  padding: 15px 0 15px 20px;
+  background: none;
+  border: none;
+  white-space: pre;
+}
