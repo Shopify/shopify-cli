@@ -1,15 +1,46 @@
 require 'shopify_cli'
 
 module ShopifyCli
+  ##
+  # ShopifyCli::AdminAPI wraps our graphql functionality with authentication so that
+  # these concerns are taken care of.
+  #
   class AdminAPI < API
     autoload :PopulateResourceCommand, 'shopify-cli/admin_api/populate_resource_command'
     autoload :Schema, 'shopify-cli/admin_api/schema'
 
     class << self
-      def query(ctx, body, api_version: nil, shop: nil, **variables)
+      ##
+      # issues a graphql query or mutation to the Shopify Admin API. It loads a graphql
+      # query from a file so that you do not need to use large unwieldy query strings.
+      #
+      # #### Parameters
+      # - `ctx`: running context from your command
+      # - `query_name`: name of the query you want to use, loaded from the `lib/graphql` directory.
+      # - `api_version`: an api version string to specify version. If no version is supplied then unstable will be used
+      # - `shop`: shop domain string for which shop that you are calling the admin
+      #   API on. If not supplied, then it will be fetched from the `.env` file
+      # - `**variable`: a hash of variables to be supplied to the query ro mutation
+      #
+      # #### Raises
+      #
+      # * http 404 will raise a ShopifyCli::API::APIRequestNotFoundError
+      # * http 400..499 will raise a ShopifyCli::API::APIRequestClientError
+      # * http 500..599 will raise a ShopifyCli::API::APIRequestServerError
+      # * All other codes will raise ShopifyCli::API::APIRequestUnexpectedError
+      #
+      # #### Returns
+      #
+      # * `resp` - graphql response data hash. This can be a different shape for every query.
+      #
+      # #### Example
+      #
+      #   ShopifyCli::AdminAPI.query(@ctx, 'all_organizations')
+      #
+      def query(ctx, query_name, api_version: nil, shop: nil, **variables)
         shop = shop || Project.current.env.shop
         authenticated_req(ctx, shop) do
-          api_client(ctx, api_version, shop).query(body, variables: variables)
+          api_client(ctx, api_version, shop).query(query_name, variables: variables)
         end
       end
 

@@ -1,15 +1,52 @@
 require 'shopify_cli'
 
 module ShopifyCli
+  ##
+  # ShopifyCli::PartnersAPI provides easy access to the partners dashboard CLI
+  # schema.
+  #
   class PartnersAPI < API
     autoload :Organizations, 'shopify-cli/partners_api/organizations'
 
+    # Defines the environment variable that this API looks for to operate on local
+    # services. If you set this environment variable in your shell then the partners
+    # api will operation on your local instance
+    #
+    # #### Example
+    #
+    #  SHOPIFY_APP_CLI_LOCAL_PARTNERS=1 shopify create
+    #
     LOCAL_DEBUG = 'SHOPIFY_APP_CLI_LOCAL_PARTNERS'
 
     class << self
-      def query(ctx, body, **variables)
+      ##
+      # issues a graphql query or mutation to the Shopify Partners Dashboard CLI Schema.
+      # It loads a graphql query from a file so that you do not need to use large
+      # unwieldy query strings. It also handles authentication for you as well.
+      #
+      # #### Parameters
+      # - `ctx`: running context from your command
+      # - `query_name`: name of the query you want to use, loaded from the `lib/graphql` directory.
+      # - `**variable`: a hash of variables to be supplied to the query ro mutation
+      #
+      # #### Raises
+      #
+      # * http 404 will raise a ShopifyCli::API::APIRequestNotFoundError
+      # * http 400..499 will raise a ShopifyCli::API::APIRequestClientError
+      # * http 500..599 will raise a ShopifyCli::API::APIRequestServerError
+      # * All other codes will raise ShopifyCli::API::APIRequestUnexpectedError
+      #
+      # #### Returns
+      #
+      # * `resp` - graphql response data hash. This can be a different shape for every query.
+      #
+      # #### Example
+      #
+      #   ShopifyCli::PartnersAPI.query(@ctx, 'all_organizations')
+      #
+      def query(ctx, query_name, **variables)
         authenticated_req(ctx) do
-          api_client(ctx).query(body, variables: variables)
+          api_client(ctx).query(query_name, variables: variables)
         end
       end
 
