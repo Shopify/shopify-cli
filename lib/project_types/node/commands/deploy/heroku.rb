@@ -14,7 +14,6 @@ module Node
 
         def call(_args, _name)
           spin_group = CLI::UI::SpinGroup.new
-          git_service = ShopifyCli::Git.new(@ctx)
           heroku_service = ShopifyCli::Heroku.new(@ctx)
 
           spin_group.add('Downloading Heroku CLI…') do |spinner|
@@ -28,7 +27,7 @@ module Node
             spinner.update_title('Installed Heroku CLI')
           end
           spin_group.add('Checking git repo…') do |spinner|
-            git_service.init
+            ShopifyCli::Git.init(@ctx)
             spinner.update_title('Git repo initialized')
           end
           spin_group.wait
@@ -66,7 +65,7 @@ module Node
             end
           end
 
-          branches = git_service.branches
+          branches = ShopifyCli::Git.branches(@ctx)
           if branches.length == 1
             branch_to_deploy = branches[0]
             spin_group.add("Git branch `#{branch_to_deploy}` selected for deploy") { true }
