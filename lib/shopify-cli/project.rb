@@ -9,7 +9,7 @@ module ShopifyCli
   #
   class Project
     include SmartProperties
-    NOT_IN_PROJECT =<<~MESSAGE
+    NOT_IN_PROJECT = <<~MESSAGE
       {{x}} You are not in a Shopify app project
       {{yellow:{{*}}}}{{reset: Run}}{{cyan: shopify create}}{{reset: to create your app}}
     MESSAGE
