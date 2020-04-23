@@ -20,11 +20,6 @@ module Script
         assert_equal(form.extension_point, extension_point)
       end
 
-      def test_returns_nil_if_no_name
-        form = ask(extension_point: 'discount')
-        assert_nil(form)
-      end
-
       def test_asks_extension_point_if_no_flag
         eps = ['discount', 'another']
         Layers::Application::ExtensionPoints.stubs(:types).returns(eps)
@@ -32,10 +27,29 @@ module Script
         ask(name: 'name')
       end
 
+      def test_asks_name_if_no_flag
+        name = 'name'
+        CLI::UI::Prompt.expects(:ask).with('Script Name').returns(name)
+        form = ask(extension_point: 'discount')
+        assert_equal name, form.name
+      end
+
+      def test_name_is_cleaned_after_prompt
+        name = 'name with space'
+        CLI::UI::Prompt.expects(:ask).with('Script Name').returns(name)
+        form = ask(extension_point: 'discount')
+        assert_equal 'name_with_space', form.name
+      end
+
+      def test_name_is_cleaned_when_using_flag
+        form = ask(name: 'name with space', extension_point: 'discount')
+        assert_equal 'name_with_space', form.name
+      end
+
       private
 
       def ask(name: nil, extension_point: nil)
-        Create.ask(@context, [name].compact, extension_point: extension_point)
+        Create.ask(@context, [], name: name, extension_point: extension_point)
       end
     end
   end

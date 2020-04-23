@@ -3,10 +3,10 @@
 module Script
   module Forms
     class Create < ShopifyCli::Form
-      positional_arguments :name
-      flag_arguments :extension_point
+      flag_arguments :extension_point, :name
 
       def ask
+        self.name = (name || ask_name).downcase.gsub(' ', '_')
         self.extension_point ||= ask_extension_point
       end
 
@@ -17,6 +17,10 @@ module Script
           'Which extension point do you want to use?',
           options: Script::Layers::Application::ExtensionPoints.types
         )
+      end
+
+      def ask_name
+        CLI::UI::Prompt.ask('Script Name')
       end
     end
   end

@@ -8,6 +8,7 @@ module Script
       OPERATION_SUCCESS_MESSAGE = "{{v}} Script created: {{green:%{script_id}}}"
 
       options do |parser, flags|
+        parser.on('--name=NAME') { |name| flags[:name] = name }
         parser.on('--extension_point=EP_NAME') { |ep_name| flags[:extension_point] = ep_name }
       end
 
@@ -16,7 +17,7 @@ module Script
         form = Forms::Create.ask(@ctx, args, options.flags)
         return @ctx.puts(self.class.help) if form.nil?
 
-        unless form.name && form.extension_point && ScriptProject::SUPPORTED_LANGUAGES.include?(language)
+        unless !form.name.empty? && form.extension_point && ScriptProject::SUPPORTED_LANGUAGES.include?(language)
           return @ctx.puts(self.class.help)
         end
 
@@ -36,9 +37,10 @@ module Script
         allowed_values = "{{cyan:discount}} and {{cyan:unit_limit_per_order}}"
         <<~HELP
         {{command:#{ShopifyCli::TOOL_NAME} create script}}: Creates a script project.
-          Usage: {{command:#{ShopifyCli::TOOL_NAME} create script <name>}}
+          Usage: {{command:#{ShopifyCli::TOOL_NAME} create script}}
           Options:
-            {{command:--extension_point=<name>}} Extension point name. Allowed values: #{allowed_values}.
+            {{command:--name=NAME}} Script project name. Any string.
+            {{command:--extension_point=TYPE}} Extension point name. Allowed values: #{allowed_values}.
         HELP
       end
     end

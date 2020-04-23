@@ -41,7 +41,7 @@ module Script
       private
 
       def perform_command
-        run_cmd("create script #{@script_name} --extension_point=#{@ep_type}")
+        run_cmd("create script --name=#{@script_name} --extension_point=#{@ep_type}")
       end
 
       def fake_script
