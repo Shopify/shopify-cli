@@ -49,7 +49,7 @@ module ShopifyCli
           CLI::UI::Frame.open("Cloning into #{dest}...") do
             clone_progress('clone', '--single-branch', repository, dest, ctx: ctx)
           end
-          ctx.done("Cloned app in #{dest}")
+          ctx.done("Cloned into #{dest}")
         end
       end
 
