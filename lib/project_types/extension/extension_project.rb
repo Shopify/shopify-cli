@@ -21,7 +21,7 @@ module Extension
       def write_project_files(context:, api_key:, api_secret:, type:)
         ShopifyCli::Project.write(context, :extension)
 
-        ShopifyCli::Helpers::EnvFile.new(
+        ShopifyCli::Resources::EnvFile.new(
           api_key: api_key,
           secret: api_secret,
           extra: {

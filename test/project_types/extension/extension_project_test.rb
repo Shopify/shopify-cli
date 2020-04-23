@@ -59,7 +59,7 @@ module Extension
     end
 
     def test_only_writes_env_file_if_registration_id_is_different
-      ShopifyCli::Helpers::EnvFile.any_instance.expects(:write).once
+      ShopifyCli::Resources::EnvFile.any_instance.expects(:write).once
 
       @project.set_registration_id(@context, 42)
       @project.set_registration_id(@context, 42)

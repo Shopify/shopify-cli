@@ -5,7 +5,7 @@ module Extension
   module Tasks
     class GetApps < ShopifyCli::Task
       def call(context:)
-        organizations = ShopifyCli::Helpers::Organizations.fetch_with_app(context)
+        organizations = ShopifyCli::PartnersAPI::Organizations.fetch_with_app(context)
         apps_from_organizations(organizations)
       end
 

@@ -5,7 +5,7 @@ module Extension
   module Tasks
     class CreateExtension < ShopifyCli::Task
       def call(context:, api_key:, type:, title:)
-        response = ShopifyCli::Helpers::PartnersAPI.query(
+        response = ShopifyCli::PartnersAPI.query(
           context,
           'extension_create',
           api_key: api_key,

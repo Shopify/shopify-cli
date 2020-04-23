@@ -5,7 +5,7 @@ module Extension
   module Tasks
     class UpdateDraft < ShopifyCli::Task
       def call(context:, api_key:, registration_id:, config:, extension_context:)
-        response = ShopifyCli::Helpers::PartnersAPI.query(
+        response = ShopifyCli::PartnersAPI.query(
           context,
           'extension_update_draft',
           api_key: api_key,
