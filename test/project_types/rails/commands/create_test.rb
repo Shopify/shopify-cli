@@ -96,7 +96,7 @@ module Rails
       def perform_command
         run_cmd("create rails \
           --type=public \
-          --title=test-app \
+          --name=test-app \
           --organization_id=42 \
           --shop_domain=testshop.myshopify.com")
       end
