@@ -1,13 +1,38 @@
 require 'fileutils'
 
 module ShopifyCli
+  ##
+  # ProcessSupervision wraps a running process spawned by `exec` and keeps track
+  # if its `pid` and keeps a log file for it as well
   class ProcessSupervision
-    DebriefableError = Class.new(StandardError)
+    # is the directory where the pid and logfile are kept
     RUN_DIR = File.join(ShopifyCli::TEMP_DIR, 'sv')
 
-    attr_reader :identifier, :pid, :time, :pid_path, :log_path
+    # a string or a symbol to identify this process by
+    attr_reader :identifier
+    # process ID for the running process
+    attr_reader :pid
+    # starttime of the process
+    attr_reader :time
+    # filepath to the pidfile for this process
+    attr_reader :pid_path
+    # filepath to the logfile for this process
+    attr_reader :log_path
 
     class << self
+      ##
+      # Will find and create a new instance of ProcessSupervision for a running process
+      # if it is currently running. It will return nil if the process is not running.
+      #
+      # #### Parameters
+      #
+      # * `identifier` - a string or a symbol that a process was started with
+      #
+      # #### Returns
+      #
+      # * `process` - ProcessSupervision instance if the process is running this
+      #   will be nil if the process is not running.
+      #
       def for_ident(identifier)
         pid, time = File.read(File.join(RUN_DIR, "#{identifier}.pid")).split(':')
         new(identifier, pid: Integer(pid), time: time)
@@ -15,6 +40,20 @@ module ShopifyCli
         nil
       end
 
+      ##
+      # will fork and spawn a new process that is separate from the current process.
+      # This process will keep running beyond the command running so be careful!
+      #
+      # #### Parameters
+      #
+      # * `identifier` - a string or symbol to identify the new process by.
+      # * `args` - a command to run, either a string or array of strings
+      #
+      # #### Returns
+      #
+      # * `process` - ProcessSupervision instance if the process is running, this
+      #   will be nil if the process did not start.
+      #
       def start(identifier, args)
         return for_ident(identifier) if running?(identifier)
         fork do
@@ -30,12 +69,34 @@ module ShopifyCli
         for_ident(identifier)
       end
 
+      ##
+      # will attempt to shutdown a running process
+      #
+      # #### Parameters
+      #
+      # * `identifier` - a string or symbol to identify the new process by.
+      #
+      # #### Returns
+      #
+      # * `stopped` - [true, false]
+      #
       def stop(identifier)
         process = for_ident(identifier)
         return false unless process
         process.stop
       end
 
+      ##
+      # will help identify if your process is still running in the background.
+      #
+      # #### Parameters
+      #
+      # * `identifier` - a string or symbol to identify the new process by.
+      #
+      # #### Returns
+      #
+      # * `running` - [true, false]
+      #
       def running?(identifier)
         process = for_ident(identifier)
         return false unless process
@@ -43,7 +104,7 @@ module ShopifyCli
       end
     end
 
-    def initialize(identifier, pid:, time: Time.now.strftime('%s'))
+    def initialize(identifier, pid:, time: Time.now.strftime('%s')) # :nodoc:
       @identifier = identifier
       @pid = pid
       @time = time
@@ -51,6 +112,13 @@ module ShopifyCli
       @log_path = File.join(RUN_DIR, "#{identifier}.log")
     end
 
+    ##
+    # will attempt to shutdown a running process
+    #
+    # #### Returns
+    #
+    # * `stopped` - [true, false]
+    #
     def stop
       unlink
       kill_proc
@@ -59,9 +127,26 @@ module ShopifyCli
       false
     end
 
+    ##
+    # will help identify if your process is still running in the background.
+    #
+    # #### Returns
+    #
+    # * `alive` - [true, false]
+    #
     def alive?
       stat(pid)
     end
+
+    ##
+    # persists the pidfile
+    #
+    def write
+      FileUtils.mkdir_p(File.dirname(pid_path))
+      File.write(pid_path, "#{pid}:#{time}")
+    end
+
+    private
 
     def unlink
       File.unlink(pid_path)
@@ -70,13 +155,6 @@ module ShopifyCli
     rescue Errno::ENOENT
       nil
     end
-
-    def write
-      FileUtils.mkdir_p(File.dirname(pid_path))
-      File.write(pid_path, "#{pid}:#{time}")
-    end
-
-    private
 
     def kill_proc
       kill(-pid) # process group

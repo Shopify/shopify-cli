@@ -83,7 +83,7 @@ module ShopifyCli
       process.write
       File.write(process.log_path, File.read(log_path))
       yield
-      process.unlink
+      process.stop
     end
   end
 end
