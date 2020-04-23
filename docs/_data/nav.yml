@@ -1,0 +1,26 @@
+sidebar:
+  - title: Introduction
+    section: intro
+    url: /
+  - title: Getting started
+    section: getting_started
+    url: /getting_started/
+  - title: Core commands
+    section: core
+    url: /core/
+  - title: Node app projects
+    section: node
+    url: /node_app/
+    subnav:
+      - title: Getting started
+        url: /node_app/getting_started.html
+      - title: Command reference
+        url: /node_app/commands.html
+  - title: Rails app projects
+    section: rails
+    url: /rails_app/
+    subnav:
+      - title: Getting started
+        url: /rails_app/getting_started.html
+      - title: Command reference
+        url: /node_app/commands.html

@@ -16,25 +16,58 @@
     </symbol><symbol id="modules-social-pinterest"><svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 30 30"><path d="M15 30c-1.5 0-2.9-.2-4.3-.6.6-.9 1.2-2 1.5-3.2.2-.7 1-4.1 1-4.1.5 1 2 1.9 3.7 1.9 4.8 0 8.1-4.4 8.1-10.3 0-4.4-3.8-8.6-9.5-8.6-7.1-.1-10.6 5-10.6 9.3 0 2.6 1 4.9 3.1 5.7.3.1.7 0 .8-.4.1-.2.2-.9.3-1.2.1-.4 0-.5-.2-.8-.6-.7-1-1.6-1-3 0-3.8 2.8-7.2 7.4-7.2 4 0 6.2 2.5 6.2 5.8 0 4.3-1.9 8-4.8 8-1.6 0-2.7-1.3-2.4-2.9.5-1.9 1.3-4 1.3-5.3 0-1.2-.7-2.3-2-2.3-1.6 0-2.9 1.7-2.9 3.9 0 1.4.5 2.4.5 2.4S9.5 24 9.3 25.3c-.3 1.1-.4 2.4-.3 3.5-5.3-2.4-9-7.7-9-13.8C0 6.7 6.7 0 15 0s15 6.7 15 15-6.7 15-15 15z"></path></svg>
     </symbol><symbol id="modules-close"><svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 44 44"><path d="M39.196 43.3L1.154 5.256l3.89-3.89 38.04 38.043z"></path><path d="M.54 39.413L38.58 1.37l3.89 3.89L4.428 43.302z"></path></svg></symbol></svg></div>
     <header class="site-nav-container">
-      <nav class="marketing-nav--skin-light marketing-nav marketing-nav--primary" id="ShopifyMainNav" itemscope="itemscope" itemtype="https://schema.org/SiteNavigationElement" aria-label="Main Navigation">
 
-        <div class="marketing-nav__logo ">
-          <a href={{ site.url }}" class="marketing-nav__logo__shopify">
-            <svg class="icon" aria-labelledby="icon-shopify-developers-logo-5-title" role="img"><title id="icon-shopify-developers-logo-5-title">Home</title> <use xlink:href="#shopify-developers-logo"></use> </svg>
-          </a>
-        </div>
+      <div class="marketing-nav-wrapper">
+        <nav class="marketing-nav--skin-light marketing-nav marketing-nav--primary" id="ShopifyMainNav" itemscope="itemscope" itemtype="https://schema.org/SiteNavigationElement" aria-label="Main Navigation">
 
-        <h1 class="heading--2 gutter-bottom--reset">Shopify App CLI</h1>
-
-      </nav>
+          <div class="marketing-nav__logo ">
+            <a href="{{ site.url }}" class="marketing-nav__logo__shopify">
+              <svg class="icon" aria-labelledby="icon-shopify-developers-logo-5-title" role="img"><title id="icon-shopify-developers-logo-5-title">Home</title> <use xlink:href="#shopify-developers-logo"></use> </svg>
+            </a>
+          </div>
+          <span class="marketing-nav__items display--expanded-nav"></span>
+          <ul class="marketing-nav__items marketing-nav__user display--expanded-nav">
+            <li>
+              <a href="//partners.shopify.com/organizations" class="marketing-nav__item marketing-nav__item--user" itemprop="name">Log in </a></li><li><a href="https://partners.shopify.com/signup" class="marketing-nav__button marketing-button marketing-button--small" itemprop="name" data-ga-event="Partners" data-ga-action="Signup" data-ga-label="Main Nav Top Button" data-fb-event="PartnerJoinNow">Sign up</a>
+            </li>
+          </ul>
+        </nav>
+      </div>
     </header>
 
     <div id="PageContainer">
-      <div class="grid page-container grid--layout-mode-desktop-up">
-        <div class="grid grid--equal-height">
-          <div class="grid__item grid__item--desktop-up-quarter grid__item--sidebar">
+
+      <section class="section section--tight section-padding section--padding-top-only ui-hero">
+        <div class="grid">
+          <div class="grid__item">
+            <p class="section-heading__kicker heading--5">Shopify Open Source</p>
+            <h1 class="section-heading__heading heading--2 ui-hero__header">Shopify App CLI</h1>
+            <p class="text-major hide--mobile ui-hero__header">
+              Build Shopify apps faster
+            </p>
           </div>
-          <div class="grid__item grid__item--desktop-up-three-quarters grid__item-main">
+        </div>
+      </section>
+      <section id="Content">
+        <div class="grid">
+          <div class="grid__item grid__item--tablet-up-quarter" id="SidebarNav">
+            <ul class="in-page-menu in-page-menu--vertical">
+            {% for item in site.data.nav.sidebar %}
+              <li>
+                <a class="{% if item.url == page.url %}is-active{% endif %}" href="{{ item.url }}">{{ item.title }}</a>
+
+                {% if item.section == page.section %}
+                  <ul>
+                  {% for subitem in item.subnav %}
+                    <li><a class="{% if subitem.url == page.url %}is-active{% endif %}" href="{{ subitem.url }}">{{ subitem.title }}</a></li>
+                  {% endfor %}
+                  </ul>
+                {% endif %}
+              </li>
+            {% endfor %}
+            </ul>
+          </div>
+          <div class="grid__item grid__item--tablet-up-three-quarters sticky-menu-content">
             <main role="main" id="Main">
 
               <article>
@@ -43,11 +76,12 @@
 
             </main>
           </div>
-      </div>
+        </div>
+      </section>
     </div>
   </div>
 
-    {% include footer.html %}
+  {% include footer.html %}
 
   </body>
 </html>
