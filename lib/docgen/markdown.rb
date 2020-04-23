@@ -41,7 +41,7 @@ module RDoc
           is_class = @store.all_modules.find { |m| m.full_name == klass.full_name }.nil?
           kind = is_class ? :class : :module
           DocClass.new(
-            filename: "#{kind}-#{klass.full_name}.md",
+            filename: "#{kind}-#{klass.full_name}",
             title: klass.full_name,
             kind: kind,
             comment: @converter.convert(klass.comment.parse),
