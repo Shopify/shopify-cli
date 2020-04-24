@@ -19,6 +19,7 @@ namespace :rdoc do
   intermediate = 'markdown_intermediate'
   file_to_doc = [
     'lib/shopify-cli/admin_api.rb',
+    'lib/shopify-cli/context.rb',
     'lib/shopify-cli/db.rb',
     'lib/shopify-cli/git.rb',
     'lib/shopify-cli/heroku.rb',

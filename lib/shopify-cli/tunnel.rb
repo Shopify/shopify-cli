@@ -64,7 +64,6 @@ module ShopifyCli
       else
         ctx.puts("{{v}} ngrok tunnel running at {{underline:#{log.url}}}")
       end
-      ctx.app_metadata = { host: log.url }
       log.url
     end
 
