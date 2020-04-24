@@ -12,7 +12,12 @@ module Node
         case subcommand
         when 'auth'
           token = args.shift
-          ShopifyCli::Tunnel.auth(@ctx, token)
+          if token.nil?
+            @ctx.puts("{{x}} {{red:auth requires a token argument}}\n\n")
+            @ctx.puts("#{self.class.help}\n#{self.class.extended_help}")
+          else
+            ShopifyCli::Tunnel.auth(@ctx, token)
+          end
         when 'start'
           ShopifyCli::Tunnel.start(@ctx)
         when 'stop'
@@ -33,7 +38,7 @@ module Node
         <<~HELP
           {{bold:Subcommands:}}
 
-            {{cyan:auth}}: Writes an ngrok auth token to ~/.ngrok2/ngrok.yml to allow connecting with an ngrok account. Visit https://dashboard.ngrok.com/signup to sign up.
+            {{cyan:auth}}: Writes an ngrok auth token to ~/.ngrok2/ngrok.yml to connect with an ngrok account. Visit https://dashboard.ngrok.com/signup to sign up.
               Usage: {{command:#{ShopifyCli::TOOL_NAME} tunnel auth <token>}}
 
             {{cyan:start}}: Starts an ngrok tunnel, will print the URL for an existing tunnel if already running.

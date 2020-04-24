@@ -3,9 +3,9 @@ require 'shopify_cli'
 module Node
   module Commands
     class Populate < ShopifyCli::Command
-      subcommand :Product, 'products', Project.project_filepath('commands/populate/product')
       subcommand :Customer, 'customers', Project.project_filepath('commands/populate/customer')
       subcommand :DraftOrder, 'draftorders', Project.project_filepath('commands/populate/draft_order')
+      subcommand :Product, 'products', Project.project_filepath('commands/populate/product')
 
       def call(_args, _name)
         @ctx.puts(self.class.help)
@@ -13,8 +13,8 @@ module Node
 
       def self.help
         <<~HELP
-          Populate your Shopify development store with example products, customers, or orders.
-            Usage: {{command:#{ShopifyCli::TOOL_NAME} populate [ products | customers | draftorders ]}}
+          Populate your Shopify development store with example customers, orders, or products.
+            Usage: {{command:#{ShopifyCli::TOOL_NAME} populate [ customers | draftorders | products ]}}
         HELP
       end
 
@@ -22,14 +22,14 @@ module Node
         <<~HELP
           {{bold:Subcommands:}}
 
-            {{cyan:products [options]}}: Add dummy products to the specified development store.
-              Usage: {{command:#{ShopifyCli::TOOL_NAME} populate products}}
-
             {{cyan:customers [options]}}: Add dummy customers to the specified development store.
               Usage: {{command:#{ShopifyCli::TOOL_NAME} populate customers}}
 
             {{cyan:draftorders [options]}}: Add dummy orders to the specified development store.
               Usage: {{command:#{ShopifyCli::TOOL_NAME} populate draftorders}}
+
+            {{cyan:products [options]}}: Add dummy products to the specified development store.
+              Usage: {{command:#{ShopifyCli::TOOL_NAME} populate products}}
 
           {{bold:Options:}}
 

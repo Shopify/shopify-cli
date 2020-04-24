@@ -13,14 +13,14 @@ module Node
       def self.help
         <<~HELP
           Deploy the current Node project to a hosting service. Heroku ({{underline:https://www.heroku.com}}) is currently the only option, but more will be added in the future.
-            Usage: {{command:#{ShopifyCli::TOOL_NAME} deploy [heroku]}}
+            Usage: {{command:#{ShopifyCli::TOOL_NAME} deploy [ heroku ]}}
         HELP
       end
 
       def self.extended_help
         <<~HELP
-          Subcommands:
-          * heroku: Deploys the current Rails project to Heroku.
+        {{bold:Subcommands:}}
+          {{cyan:heroku}}: Deploys the current Node project to Heroku.
             Usage: {{command:#{ShopifyCli::TOOL_NAME} deploy heroku}}
         HELP
       end

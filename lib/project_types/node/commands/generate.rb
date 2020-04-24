@@ -14,20 +14,26 @@ module Node
 
       def self.help
         <<~HELP
-          Generate code in your app project. Supports generating new pages, new billing API calls, or new webhooks.
-            Usage: {{command:#{ShopifyCli::TOOL_NAME} generate [ page | billing | webhook ]}}
+          Generate code in your Node project. Supports generating new billing API calls, new pages, or new webhooks.
+            Usage: {{command:#{ShopifyCli::TOOL_NAME} generate [ billing | page | webhook ]}}
         HELP
       end
 
       def self.extended_help
-        <<~HELP
-          {{bold:Subcommands:}}
-            {{cyan:webhook}}: Generate and register a new webhook that listens for the specified Shopify store event.
-              Usage: {{command:#{ShopifyCli::TOOL_NAME} generate webhook [type]}}
+        extended_help = "{{bold:Subcommands:}}\n"
+        subcommand_registry.resolved_commands.sort.each do |name, klass|
+          extended_help += "  {{cyan:#{name}}}: "
+
+          if (subcmd_help = klass.help)
+            extended_help += subcmd_help.gsub("\n  ", "\n    ")
+          end
+          extended_help += "\n"
+        end
+        extended_help += <<~EXAMPLES
           {{bold:Examples:}}
             {{cyan:#{ShopifyCli::TOOL_NAME} generate webhook PRODUCTS_CREATE}}
               Generate and register a new webhook that will be called every time a new product is created on your store.
-        HELP
+        EXAMPLES
       end
 
       def self.run_generate(script, name, ctx)

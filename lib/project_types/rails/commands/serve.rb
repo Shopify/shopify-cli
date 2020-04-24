@@ -13,6 +13,7 @@ module Rails
       def call(*)
         project = ShopifyCli::Project.current
         url = options.flags[:host] || ShopifyCli::Tunnel.start(@ctx)
+        @ctx.abort("{{red:HOST must be a HTTPS url.}}") if url.match(/^https/i).nil?
         project.env.update(@ctx, :host, url)
         ShopifyCli::Tasks::UpdateDashboardURLS.call(
           @ctx,
@@ -44,7 +45,7 @@ module Rails
       def self.extended_help
         <<~HELP
           {{bold:Options:}}
-            {{cyan:--host=HOST}}: Must be HTTPS url. Bypass running tunnel and use custom host.
+            {{cyan:--host=HOST}}: Bypass running tunnel and use custom host. HOST must be HTTPS url.
         HELP
       end
     end
