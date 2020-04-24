@@ -11,7 +11,9 @@ module Node
       NPM_REQUIRED_NOTICE = "node is required to create an app project. Download at https://www.npmjs.com/get-npm."
 
       options do |parser, flags|
+        # backwards compatibility allow 'title' for now
         parser.on('--title=TITLE') { |t| flags[:title] = t }
+        parser.on('--name=NAME') { |t| flags[:title] = t }
         parser.on('--organization_id=ID') { |url| flags[:organization_id] = url }
         parser.on('--shop_domain=MYSHOPIFYDOMAIN') { |url| flags[:shop_domain] = url }
         parser.on('--type=APPTYPE') { |url| flags[:type] = url }
@@ -57,9 +59,9 @@ module Node
         {{command:#{ShopifyCli::TOOL_NAME} create node}}: Creates an embedded nodejs app.
           Usage: {{command:#{ShopifyCli::TOOL_NAME} create node}}
           Options:
-            {{command:--title=TITLE}} App project title. Any string.
-            {{command:--app_url=APPURL}} App project URL. Must be valid URL.
-            {{command:--organization_id=ID}} App project Org ID. Must be existing org ID.
+            {{command:--name=NAME}} App name. Any string.
+            {{command:--app_url=APPURL}} App URL. Must be valid URL.
+            {{command:--organization_id=ID}} App Org ID. Must be existing org ID.
             {{command:--shop_domain=MYSHOPIFYDOMAIN }} Test store URL. Must be existing test store.
         HELP
       end
@@ -91,12 +93,12 @@ module Node
         JsDeps.install(@ctx)
 
         begin
-          @ctx.rm_r(File.join(@ctx.root, '.git'))
-          @ctx.rm_r(File.join(@ctx.root, '.github'))
-          @ctx.rm(File.join(@ctx.root, 'server', 'handlers', 'client.js'))
+          @ctx.rm_r('.git')
+          @ctx.rm_r('.github')
+          @ctx.rm(File.join('server', 'handlers', 'client.js'))
           @ctx.rename(
-            File.join(@ctx.root, 'server', 'handlers', 'client.cli.js'),
-            File.join(@ctx.root, 'server', 'handlers', 'client.js')
+            File.join('server', 'handlers', 'client.cli.js'),
+            File.join('server', 'handlers', 'client.js')
           )
         rescue Errno::ENOENT => e
           @ctx.debug(e)

@@ -4,6 +4,10 @@ require 'shopify_cli'
 require 'forwardable'
 
 module ShopifyCli
+  ##
+  # Wraps around ngrok functionality to allow you to spawn a ngrok proccess in the
+  # background and stop the process when you need to. It also allows control over
+  # the ngrok process between application runs.
   class Tunnel
     extend SingleForwardable
 
@@ -12,13 +16,21 @@ module ShopifyCli
     class FetchUrlError < RuntimeError; end
     class NgrokError < RuntimeError; end
 
-    PORT = 8081
+    PORT = 8081 # port that ngrok will bind to
+    # mapping for supported operating systems for where to download ngrok from.
     DOWNLOAD_URLS = {
       mac: 'https://bin.equinox.io/c/4VmDzA7iaHb/ngrok-stable-darwin-amd64.zip',
       linux: 'https://bin.equinox.io/c/4VmDzA7iaHb/ngrok-stable-linux-amd64.zip',
     }
-    TIMEOUT = 10
 
+    ##
+    # will find and stop a running tunnel process. It will also output if the
+    # operation was successful or not
+    #
+    # #### Paramters
+    #
+    # * `ctx` - running context from your command
+    #
     def stop(ctx)
       if ShopifyCli::ProcessSupervision.running?(:ngrok)
         if ShopifyCli::ProcessSupervision.stop(:ngrok)
@@ -31,6 +43,18 @@ module ShopifyCli
       end
     end
 
+    ##
+    # start will start a running ngrok process running in the background. It will
+    # also output the success of this operation
+    #
+    # #### Paramters
+    #
+    # * `ctx` - running context from your command
+    #
+    # #### Returns
+    #
+    # * `url` - the url that the tunnel is now bound to and available to the public
+    #
     def start(ctx)
       install(ctx)
       process = ShopifyCli::ProcessSupervision.start(:ngrok, ngrok_command)
@@ -40,10 +64,18 @@ module ShopifyCli
       else
         ctx.puts("{{v}} ngrok tunnel running at {{underline:#{log.url}}}")
       end
-      ctx.app_metadata = { host: log.url }
       log.url
     end
 
+    ##
+    # will add the users authentication token to our version of ngrok to unlock the
+    # extended ngrok features
+    #
+    # #### Paramters
+    #
+    # * `ctx` - running context from your command
+    # * `token` - authentication token provided by ngrok for extended features
+    #
     def auth(ctx, token)
       install(ctx)
       ctx.system(File.join(ShopifyCli::ROOT, 'ngrok'), 'authtoken', token)
@@ -76,7 +108,9 @@ module ShopifyCli
       "exec #{File.join(ShopifyCli::ROOT, 'ngrok')} http -log=stdout -log-level=debug #{PORT}"
     end
 
-    class LogParser
+    class LogParser # :nodoc:
+      TIMEOUT = 10
+
       attr_reader :url, :account
 
       def initialize(log_path)

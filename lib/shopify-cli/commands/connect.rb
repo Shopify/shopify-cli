@@ -42,7 +42,7 @@ module ShopifyCli
 
       def get_shop(shops, id)
         if shops.count == 1
-          shops.first
+          shop = shops.first["shopDomain"]
         elsif shops.count == 0
           @ctx.puts('No development stores available.')
           @ctx.puts("Visit {{underline:https://partners.shopify.com/#{id}/stores}} to create one")
@@ -65,15 +65,8 @@ module ShopifyCli
 
       def self.help
         <<~HELP
-          Connect a Shopify-App-Cli project. Restores the ENV file
+          Connect a Shopify App CLI project. Restores the ENV file.
             Usage: {{command:#{ShopifyCli::TOOL_NAME} connect}}
-        HELP
-      end
-
-      def self.extended_help
-        <<~HELP
-          Connect a Shopify-App-Cli project. Restores the Env file
-          Usage: {{command:#{ShopifyCli::TOOL_NAME} connect}}
         HELP
       end
     end

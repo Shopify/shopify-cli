@@ -17,7 +17,7 @@ module ShopifyCli
         .with(:ngrok).returns(:true)
       with_log do
         ShopifyCli::Tunnel.start(@context)
-        assert_equal 'https://example.ngrok.io', @context.app_metadata[:host]
+        assert_equal 'https://example.ngrok.io', ShopifyCli::Tunnel.start(@context)
       end
     end
 
@@ -32,7 +32,6 @@ module ShopifyCli
           "{{v}} ngrok tunnel running at {{underline:https://example.ngrok.io}}"
         )
         assert_equal 'https://example.ngrok.io', ShopifyCli::Tunnel.start(@context)
-        assert_equal 'https://example.ngrok.io', @context.app_metadata[:host]
       end
     end
 
@@ -83,7 +82,7 @@ module ShopifyCli
       process.write
       File.write(process.log_path, File.read(log_path))
       yield
-      process.unlink
+      process.stop
     end
   end
 end

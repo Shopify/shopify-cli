@@ -8,7 +8,7 @@ module RDoc
 
       DocClass = Struct.new(
         :title, :kind, :comment, :class_methods, :instance_methods, :attributes,
-        :constants, :extended, :included,
+        :constants, :extended, :included, :filename,
         keyword_init: true,
       )
       ClassMember = Struct.new(:title, :comment, :signature, :source_code, keyword_init: true)
@@ -17,8 +17,6 @@ module RDoc
         @options = options
         @store = store
         @converter = ::RDoc::Markup::ToMarkdown.new
-        template_path = File.join(File.dirname(__FILE__), 'class_template.md.erb')
-        @renderer = ERB.new(File.read(template_path), nil, '-')
       end
 
       def generate
@@ -28,20 +26,24 @@ module RDoc
       private
 
       def render(data)
+        class_template_path = File.join(File.dirname(__FILE__), 'class_template.md.erb')
+        class_renderer = ERB.new(File.read(class_template_path), nil, '-')
         data.each do |cls|
-          File.write(
-            "#{cls.kind}-#{cls.title}.md",
-            @renderer.result(cls.instance_eval { binding }),
-          )
+          File.write("#{cls.filename}.md", class_renderer.result(cls.instance_eval { binding }))
         end
+        index_template_path = File.join(File.dirname(__FILE__), 'index_template.md.erb')
+        index_renderer = ERB.new(File.read(index_template_path), nil, '-')
+        File.write("Core-APIs.md", index_renderer.result(OpenStruct.new(classes: data).instance_eval { binding }))
       end
 
       def build_classes
         classes = @store.all_classes_and_modules.map do |klass|
           is_class = @store.all_modules.find { |m| m.full_name == klass.full_name }.nil?
+          kind = is_class ? :class : :module
           DocClass.new(
+            filename: "#{kind}-#{klass.full_name}",
             title: klass.full_name,
-            kind: is_class ? :class : :module,
+            kind: kind,
             comment: @converter.convert(klass.comment.parse),
             constants: build_members(klass.constants),
             class_methods: build_members(klass.method_list.select { |m| m.type == 'class' }),

@@ -18,9 +18,7 @@ module ShopifyCli
         .with('git', 'branch', '--list', '--format=%(refname:short)')
         .returns(['', @status_mock[:true]])
 
-      git_service = ShopifyCli::Git.new(@context)
-
-      assert_equal(['master'], git_service.branches)
+      assert_equal(['master'], ShopifyCli::Git.branches(@context))
     end
 
     def test_branches_returns_list_of_branches_if_multiple_exist
@@ -28,44 +26,35 @@ module ShopifyCli
         .with('git', 'branch', '--list', '--format=%(refname:short)')
         .returns(["master\nsecond_branch\n", @status_mock[:true]])
 
-      git_service = ShopifyCli::Git.new(@context)
-
-      assert_equal(['master', 'second_branch'], git_service.branches)
+      assert_equal(['master', 'second_branch'], ShopifyCli::Git.branches(@context))
     end
 
     def test_branches_raises_if_finding_branches_fails
       @context.stubs(:capture2e)
         .with('git', 'branch', '--list', '--format=%(refname:short)')
         .returns(['', @status_mock[:false]])
-      git_service = ShopifyCli::Git.new(@context)
 
       assert_raises ShopifyCli::Abort do
-        git_service.branches
+        ShopifyCli::Git.branches(@context)
       end
     end
 
     def test_init_initializes_successfully
       stub_git_init(status: true, commits: true)
-      git_service = ShopifyCli::Git.new(@context)
-
-      assert_nil(git_service.init)
+      assert_nil(ShopifyCli::Git.init(@context))
     end
 
     def test_init_raises_if_git_isnt_inited
       stub_git_init(status: false, commits: false)
-      git_service = ShopifyCli::Git.new(@context)
-
       assert_raises ShopifyCli::Abort do
-        git_service.init
+        ShopifyCli::Git.init(@context)
       end
     end
 
     def test_init_raises_if_git_is_inited_but_there_are_no_commits
       stub_git_init(status: true, commits: false)
-      git_service = ShopifyCli::Git.new(@context)
-
       assert_raises ShopifyCli::Abort do
-        git_service.init
+        ShopifyCli::Git.init(@context)
       end
     end
 
@@ -86,7 +75,7 @@ module ShopifyCli
     end
 
     def test_clones_git_repo
-      ShopifyCli::Context.any_instance.expects(:system).with(
+      @context.expects(:system).with(
         'git',
         'clone',
         '--single-branch',
@@ -95,13 +84,13 @@ module ShopifyCli
         '--progress'
       ).returns(mock(success?: true))
       capture_io do
-        ShopifyCli::Git.clone('git@github.com:shopify/test.git', 'test-app')
+        ShopifyCli::Git.clone('git@github.com:shopify/test.git', 'test-app', ctx: @context)
       end
     end
 
     def test_clone_failure
       assert_raises(ShopifyCli::Abort) do
-        ShopifyCli::Context.any_instance.expects(:system).with(
+        @context.expects(:system).with(
           'git',
           'clone',
           '--single-branch',
@@ -110,7 +99,7 @@ module ShopifyCli
           '--progress'
         ).returns(mock(success?: false))
         capture_io do
-          ShopifyCli::Git.clone('git@github.com:shopify/test.git', 'test-app')
+          ShopifyCli::Git.clone('git@github.com:shopify/test.git', 'test-app', ctx: @context)
         end
       end
     end
@@ -127,7 +116,7 @@ module ShopifyCli
     end
 
     def empty_commit
-      ShopifyCli::Git.exec('commit', '-m', 'commit', '--allow-empty')
+      Context.new.capture3('git', 'commit', '-m', 'commit', '--allow-empty')
     end
 
     def stub_git_init(status:, commits:)

@@ -14,7 +14,7 @@ module Node
       end
 
       def test_server_command
-        ShopifyCli::Tunnel.stubs(:start)
+        ShopifyCli::Tunnel.stubs(:start).returns('https://example.com')
         ShopifyCli::Tasks::UpdateDashboardURLS.expects(:call)
         ShopifyCli::Resources::EnvFile.any_instance.expects(:update)
         @context.expects(:system).with(
@@ -29,6 +29,27 @@ module Node
           }
         )
         run_cmd('serve')
+      end
+
+      def test_server_command_with_invalid_host_url
+        ShopifyCli::Tunnel.stubs(:start).returns('garbage://example.com')
+        ShopifyCli::Tasks::UpdateDashboardURLS.expects(:call).never
+        ShopifyCli::Resources::EnvFile.any_instance.expects(:update).never
+        @context.expects(:system).with(
+          'npm run dev',
+          env: {
+            "SHOPIFY_API_KEY" => "mykey",
+            "SHOPIFY_API_SECRET" => "mysecretkey",
+            "SHOP" => "my-test-shop.myshopify.com",
+            "SCOPES" => "read_products",
+            "HOST" => "garbage://example.com",
+            "PORT" => "8081",
+          }
+        ).never
+
+        assert_raises ShopifyCli::Abort do
+          run_cmd('serve')
+        end
       end
 
       def test_open_while_run

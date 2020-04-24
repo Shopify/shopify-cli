@@ -26,12 +26,6 @@ module ShopifyCli
       output, status = @ctx.capture2e(heroku_command, 'create')
       @ctx.abort('Heroku app could not be created') unless status.success?
       @ctx.puts(output)
-
-      new_remote = output.split("\n").last.split("|").last.strip
-      result = @ctx.system('git', 'remote', 'add', 'heroku', new_remote)
-
-      msg = "Heroku app created, but couldn’t be set as a git remote"
-      @ctx.abort(msg) unless result.success?
     end
 
     def deploy(branch_to_deploy)

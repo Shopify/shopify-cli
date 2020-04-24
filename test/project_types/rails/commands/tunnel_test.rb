@@ -10,6 +10,11 @@ module Rails
 
       def test_auth
         ShopifyCli::Tunnel.any_instance.expects(:auth)
+        run_cmd('tunnel auth adfhauf98q7rtqhfkajf')
+      end
+
+      def test_auth_no_token
+        ShopifyCli::Tunnel.any_instance.expects(:auth).never
         run_cmd('tunnel auth')
       end
 

@@ -16,7 +16,7 @@ module ShopifyCli
         .with('api_versions')
         .returns(JSON.parse(File.read(File.join(FIXTURE_DIR, 'api/versions.json'))))
 
-      Resources::Tokens.expects(:admin).returns('token123').twice
+      ShopifyCli::DB.expects(:get).with(:admin_access_token).returns('token123').twice
       api_stub = Object.new
       AdminAPI.expects(:new).with(
         ctx: @context,
@@ -29,7 +29,7 @@ module ShopifyCli
     end
 
     def test_query_calls_admin_api
-      Resources::Tokens.expects(:admin).returns('token123')
+      ShopifyCli::DB.expects(:get).with(:admin_access_token).returns('token123')
       api_stub = Object.new
       AdminAPI.expects(:new).with(
         ctx: @context,
@@ -42,7 +42,7 @@ module ShopifyCli
     end
 
     def test_query_can_reauth
-      Resources::Tokens.expects(:admin).returns('token123').twice
+      ShopifyCli::DB.expects(:get).with(:admin_access_token).returns('token123').twice
       api_stub = Object.new
       AdminAPI.expects(:new).with(
         ctx: @context,
@@ -52,12 +52,28 @@ module ShopifyCli
       ).returns(api_stub).twice
       api_stub.expects(:query).with('query', variables: {}).returns('response')
       api_stub.expects(:query).raises(API::APIRequestUnauthorizedError)
-      Tasks::AuthenticateShopify.expects(:call)
+
+      @oauth_client = Object.new
+      ShopifyCli::OAuth
+        .expects(:new)
+        .with(
+          ctx: @context,
+          service: 'admin',
+          client_id: 'apikey',
+          secret: 'secret',
+          scopes: nil,
+          token_path: "/access_token",
+          options: { 'grant_options[]' => 'per user' },
+        ).returns(@oauth_client)
+      @oauth_client
+        .expects(:authenticate)
+        .with("https://my-test-shop.myshopify.com/admin/oauth")
+
       AdminAPI.query(@context, 'query', api_version: '2019-04')
     end
 
     def test_query_calls_admin_api_with_different_shop
-      Resources::Tokens.expects(:admin).returns('token123')
+      ShopifyCli::DB.expects(:get).with(:admin_access_token).returns('token123')
       api_stub = Object.new
       AdminAPI.expects(:new).with(
         ctx: @context,
