@@ -20,11 +20,14 @@ module ShopifyCli
           end
         end
 
-        # a line break before output aids scanning/readability
-        @ctx.puts("")
-        @ctx.puts('{{bold:Available commands}}')
-        @ctx.puts('Use {{command:shopify help [command]}} to display detailed information about a specific command.')
-        @ctx.puts("")
+        preamble = <<~MESSAGE
+          CLI to help build Shopify apps faster.
+
+          Use {{command:#{ShopifyCli::TOOL_NAME} help <command>}} to display detailed information about a specific command.
+
+          {{bold:Available commands}}
+        MESSAGE
+        @ctx.puts(preamble)
 
         visible_commands = ShopifyCli::Commands::Registry
           .resolved_commands
@@ -33,11 +36,7 @@ module ShopifyCli
 
         visible_commands.each do |name, klass|
           next if name == 'help'
-          @ctx.puts("{{command:#{ShopifyCli::TOOL_NAME} #{name}}}")
-          if (help = klass.help)
-            @ctx.puts(help)
-          end
-          @ctx.puts("")
+          @ctx.puts("{{command:#{name}}}: #{klass.help}\n")
         end
       end
 
