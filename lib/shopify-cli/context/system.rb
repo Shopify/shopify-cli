@@ -11,16 +11,17 @@ module ShopifyCli
       }
 
       def os
-        return :mac if mac?
-        return :linux if linux?
+        host = uname
+        return :mac if /darwin/.match(host)
+        return :linux if /linux/.match(host)
       end
 
       def mac?
-        /Darwin/.match(uname)
+        os == :mac
       end
 
       def linux?
-        /Linux/.match(uname)
+        os == :linux
       end
 
       def system?
@@ -39,8 +40,8 @@ module ShopifyCli
         ENV['CI']
       end
 
-      def uname(flag: 'a')
-        @uname ||= capture2("uname -#{flag}")[0].strip
+      def uname
+        @uname ||= RbConfig::CONFIG["host"]
       end
 
       def spawn(*args, **kwargs)
