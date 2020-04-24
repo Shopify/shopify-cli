@@ -16,15 +16,17 @@ module Extension
         @registration_id = 42
         @config = { }
         @extension_context = 'fake#context'
-      end
 
-      def test_parses_a_version_from_the_graphql_response
-        stub_update_draft(
+        @input = {
           api_key: @api_key,
           registration_id: @registration_id,
           config: @config,
-          context: @extension_context
-        )
+          extension_context: @extension_context
+        }
+      end
+
+      def test_parses_a_version_from_the_graphql_response
+        stub_update_draft_success(**@input)
 
         updated_draft = Tasks::UpdateDraft.call(
           context: @context,
@@ -39,16 +41,11 @@ module Extension
         assert_equal @extension_context, updated_draft.context
       end
 
-      def test_returns_nil_if_the_updated_draft_is_not_returned
-        stub_update_draft_with_errors(
-          api_key: @api_key,
-          registration_id: @registration_id,
-          config: @config,
-          context: @extension_context
-        )
+      def test_aborts_with_parse_error_if_no_updated_version_or_errors_are_returned
+        stub_update_draft_failure(errors: [], **@input)
 
-        assert_nothing_raised do
-          assert_nil Tasks::UpdateDraft.call(
+        error = assert_raises(ShopifyCli::Abort) do
+          Tasks::UpdateDraft.call(
             context: @context,
             api_key: @api_key,
             registration_id: @registration_id,
@@ -56,6 +53,25 @@ module Extension
             extension_context: @extension_context
           )
         end
+
+        assert_match Tasks::UpdateDraft::PARSE_ERROR, error.message
+      end
+
+      def test_aborts_with_errors_if_user_errors_are_returned
+        user_errors = [ {field: ['field'], UserErrors::MESSAGE_FIELD => 'An error occurred on field'} ]
+        stub_update_draft_failure(errors: user_errors, **@input)
+
+        error = assert_raises(ShopifyCli::Abort) do
+          Tasks::UpdateDraft.call(
+            context: @context,
+            api_key: @api_key,
+            registration_id: @registration_id,
+            config: @config,
+            extension_context: @extension_context
+          )
+        end
+
+        assert_match 'An error occurred on field', error.message
       end
     end
   end

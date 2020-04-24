@@ -24,7 +24,8 @@ module Extension
           context: @ctx,
           api_key: @project.env['api_key'],
           registration_id: @project.registration_id,
-          config: @project.extension_type.config(@ctx)
+          config: @project.extension_type.config(@ctx),
+          extension_context: @project.extension_type.extension_context(@ctx)
         )
       end
 
@@ -34,7 +35,8 @@ module Extension
           api_key: @project.env['api_key'],
           type: @project.extension_type.identifier,
           title: 'Testing the CLI',
-          config: @project.extension_type.config(@ctx)
+          config: @project.extension_type.config(@ctx),
+          extension_context: @project.extension_type.extension_context(@ctx)
         )
 
         @project.set_registration_id(@ctx, registration.id)

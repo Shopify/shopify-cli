@@ -6,42 +6,42 @@ module Extension
       module UpdateDraft
         include TestHelpers::Partners
 
-        def stub_update_draft(api_key:, registration_id:, config:, context:)
-          stub_partner_req(
-            'extension_update_draft',
+        def stub_update_draft(registration_id:, config:, extension_context: nil, api_key: 'FAKE_API_KEY')
+          stub_partner_req(Tasks::UpdateDraft::GRAPHQL_FILE,
             variables: {
               api_key: api_key,
               registration_id: registration_id,
-              config: config,
-              context: context
+              config: JSON.generate(config),
+              extension_context: extension_context
             },
             resp: {
-              data: {
-                extensionUpdateDraft: {
-                  extensionVersion: {
-                    registrationId: registration_id,
-                    context: context
-                  },
-                  userErrors: []
-                },
-              },
+              data: yield(registration_id, config, extension_context)
             }
           )
         end
 
-        def stub_update_draft_with_errors(api_key:, registration_id:, config:, context:, errors: [])
-          stub_partner_req(
-            'extension_update_draft',
-            variables: {
-              api_key: api_key,
-              registration_id: registration_id,
-              config: config,
-              context: context
-            },
-            resp: {
-              errors: errors
+        def stub_update_draft_success(**args)
+          stub_update_draft(args) do |registration_id, config, extension_context|
+            {
+              extensionUpdateDraft: {
+                extensionVersion: {
+                  registrationId: registration_id,
+                  context: extension_context
+                },
+                Tasks::UserErrors::USER_ERRORS_FIELD => []
+              }
             }
-          )
+          end
+        end
+
+        def stub_update_draft_failure(errors:, **args)
+          stub_update_draft(args) do
+            {
+              extensionUpdateDraft: {
+                Tasks::UserErrors::USER_ERRORS_FIELD => errors
+              }
+            }
+          end
         end
       end
     end

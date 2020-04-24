@@ -1,5 +1,6 @@
 # frozen_string_literal: true
 require 'shopify_cli'
+require 'forwardable'
 
 module Extension
   class ExtensionProject

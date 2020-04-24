@@ -16,6 +16,7 @@ module Extension
   end
 
   module Tasks
+    autoload :UserErrors, Project.project_filepath('tasks/user_errors')
     autoload :GetApps, Project.project_filepath('tasks/get_apps')
     autoload :CreateExtension, Project.project_filepath('tasks/create_extension')
     autoload :UpdateDraft, Project.project_filepath('tasks/update_draft')

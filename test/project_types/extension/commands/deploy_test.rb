@@ -33,7 +33,8 @@ module Extension
             api_key: @api_key,
             type: @type.identifier,
             title: 'Testing the CLI',
-            config: @type.config(@context)
+            config: @type.config(@context),
+            extension_context: @type.extension_context(@context)
           )
           .returns(@registration).once
 
@@ -49,7 +50,8 @@ module Extension
           context: @context,
           api_key: @api_key,
           registration_id: @registration.id,
-          config: @type.config(@context)
+          config: @type.config(@context),
+          extension_context: @type.extension_context(@context)
         ).once
 
         run_cmd('deploy')
