@@ -54,7 +54,6 @@ module ShopifyCli
 
     def test_create_new_app_using_full_path_heroku_to_create_new_heroku_app
       expects_heroku_create(status: true, full_path: true)
-      expects_git_remote_add_heroku(status: true)
 
       heroku_service = ShopifyCli::Heroku.new(@context)
 
@@ -63,7 +62,6 @@ module ShopifyCli
 
     def test_create_new_app_using_non_full_path_heroku_to_create_new_heroku_app
       expects_heroku_create(status: true, full_path: false)
-      expects_git_remote_add_heroku(status: true)
 
       heroku_service = ShopifyCli::Heroku.new(@context)
 
@@ -72,18 +70,6 @@ module ShopifyCli
 
     def test_create_new_app_raises_if_creating_new_heroku_app_fails
       expects_heroku_create(status: false)
-      expects_git_remote_add_heroku(status: nil)
-
-      heroku_service = ShopifyCli::Heroku.new(@context)
-
-      assert_raises ShopifyCli::Abort do
-        heroku_service.create_new_app
-      end
-    end
-
-    def test_create_new_app_raises_if_setting_remote_heroku_fails
-      expects_heroku_create(status: true)
-      expects_git_remote_add_heroku(status: false)
 
       heroku_service = ShopifyCli::Heroku.new(@context)
 

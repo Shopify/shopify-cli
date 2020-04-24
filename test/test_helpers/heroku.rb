@@ -43,6 +43,9 @@ module TestHelpers
       @context.stubs(:system)
         .with('git', 'push', '-u', 'heroku', 'master:master')
         .returns(status_mock[:true])
+
+      # user outputs
+      @context.stubs(:puts)
     end
 
     def expects_tar_heroku(status:)
@@ -103,18 +106,6 @@ module TestHelpers
       @context.expects(:capture2e)
         .with('git', 'remote', 'get-url', remote)
         .returns([output, status_mock[:"#{status}"]])
-    end
-
-    def expects_git_remote_add_heroku(status:)
-      if status.nil?
-        @context.expects(:system)
-          .with('git', 'remote', 'add', 'heroku', heroku_remote)
-          .never
-      else
-        @context.expects(:system)
-          .with('git', 'remote', 'add', 'heroku', heroku_remote)
-          .returns(status_mock[:"#{status}"])
-      end
     end
 
     def expects_git_push_heroku(status:, branch:)
