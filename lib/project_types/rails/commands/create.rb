@@ -17,7 +17,9 @@ module Rails
       MSG
 
       options do |parser, flags|
+        # backwards compatibility allow 'title' for now
         parser.on('--title=TITLE') { |t| flags[:title] = t }
+        parser.on('--name=NAME') { |t| flags[:title] = t }
         parser.on('--organization_id=ID') { |url| flags[:organization_id] = url }
         parser.on('--shop_domain=MYSHOPIFYDOMAIN') { |url| flags[:shop_domain] = url }
         parser.on('--type=APPTYPE') { |url| flags[:type] = url }
@@ -65,9 +67,9 @@ module Rails
         {{command:#{ShopifyCli::TOOL_NAME} create rails}}: Creates a ruby on rails app.
           Usage: {{command:#{ShopifyCli::TOOL_NAME} create rails}}
           Options:
-            {{command:--title=TITLE}} App project title. Any string.
-            {{command:--app_url=APPURL}} App project URL. Must be valid URL.
-            {{command:--organization_id=ID}} App project Org ID. Must be existing org ID.
+            {{command:--name=NAME}} App name. Any string.
+            {{command:--app_url=APPURL}} App URL. Must be valid URL.
+            {{command:--organization_id=ID}} App Org ID. Must be existing org ID.
             {{command:--shop_domain=MYSHOPIFYDOMAIN }} Test store URL. Must be existing test store.
         HELP
       end

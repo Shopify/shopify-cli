@@ -113,7 +113,7 @@ module Node
 
       def perform_command
         run_cmd("create node \
-          --title=test-app \
+          --name=test-app \
           --type=public \
           --organization_id=42 \
           --shop_domain=testshop.myshopify.com")
