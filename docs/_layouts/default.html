@@ -26,11 +26,6 @@
             </a>
           </div>
           <span class="marketing-nav__items display--expanded-nav"></span>
-          <ul class="marketing-nav__items marketing-nav__user display--expanded-nav">
-            <li>
-              <a href="//partners.shopify.com/organizations" class="marketing-nav__item marketing-nav__item--user" itemprop="name">Log in </a></li><li><a href="https://partners.shopify.com/signup" class="marketing-nav__button marketing-button marketing-button--small" itemprop="name" data-ga-event="Partners" data-ga-action="Signup" data-ga-label="Main Nav Top Button" data-fb-event="PartnerJoinNow">Sign up</a>
-            </li>
-          </ul>
         </nav>
       </div>
     </header>
@@ -40,7 +35,7 @@
       <section class="section section--tight section-padding section--padding-top-only ui-hero">
         <div class="grid">
           <div class="grid__item">
-            <p class="section-heading__kicker heading--5">Shopify Open Source</p>
+            <p class="section-heading__kicker heading--5 hide--mobile">Shopify Open Source</p>
             <h1 class="section-heading__heading heading--2 ui-hero__header">Shopify App CLI</h1>
             <p class="text-major hide--mobile ui-hero__header">
               Build Shopify apps faster
@@ -51,21 +46,7 @@
       <section id="Content">
         <div class="grid">
           <div class="grid__item grid__item--tablet-up-quarter" id="SidebarNav">
-            <ul class="in-page-menu in-page-menu--vertical">
-            {% for item in site.data.nav.sidebar %}
-              <li>
-                <a class="{% if item.url == page.url %}is-active{% endif %}" href="{{ item.url }}">{{ item.title }}</a>
-
-                {% if item.section == page.section %}
-                  <ul>
-                  {% for subitem in item.subnav %}
-                    <li><a class="{% if subitem.url == page.url %}is-active{% endif %}" href="{{ subitem.url }}">{{ subitem.title }}</a></li>
-                  {% endfor %}
-                  </ul>
-                {% endif %}
-              </li>
-            {% endfor %}
-            </ul>
+            {% include sidebar_nav.html %}
           </div>
           <div class="grid__item grid__item--tablet-up-three-quarters sticky-menu-content">
             <main role="main" id="Main">

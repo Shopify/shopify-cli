@@ -1,0 +1,19 @@
+<ul class="in-page-menu in-page-menu--vertical">
+    {% for item in site.data.nav.sidebar %}
+    <li>
+        <a class="{% if item.url == page.url %}is-active{% endif %}" href="{{ item.url }}">{{ item.title }}</a>
+
+        {% if item.section == page.section %}
+        <ul>
+            {% for subitem in item.subnav %}
+            <li><a class="{% if subitem.url == page.url %}is-active{% endif %}" href="{{ subitem.url }}">{{ subitem.title }}</a></li>
+            {% endfor %}
+        </ul>
+        {% endif %}
+    </li>
+    {% endfor %}
+</ul>
+
+<div>
+    <a href="{{ site.github.repository_url }}">GitHub repository</a>
+</div>

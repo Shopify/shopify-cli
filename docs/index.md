@@ -7,9 +7,9 @@ Shopify App CLI helps you build Shopify apps faster. It automates many common ta
 
 ## Project types
 
-The CLI can create and help manage different kinds of Shopify projects. There are two types of projects you can create:
+The CLI can help you create and manage different kinds of Shopify app projects. There are two types you can create:
 
-1. Node.js app -- 
+1. Node.js app
 2. Ruby on Rails app
 
 The `create` command will scaffold a new Shopify project in your current active directory and generate all the necessary starter files.
@@ -23,4 +23,4 @@ $ shopify create
 
 Each project type has its own set of commands to speed up your development process.
 
-To get started, look at the [prequisites and installation instructions](/setup/).
+To get started, look at the [requirements and installation instructions]({% link getting_started/index.md %}).

@@ -1,6 +1,7 @@
 article {
   padding: 30px 0;
   color: #212326;
+  min-height: 80vh;
 }
 
 article h1,
@@ -10,6 +11,15 @@ article h4,
 article h5,
 article h6 {
   margin-top: 1em;
+}
+
+article h1:first-child,
+article h2:first-child,
+article h3:first-child,
+article h4:first-child,
+article h5:first-child,
+article h6:first-child {
+  margin-top: 0;
 }
 
 article ul {
