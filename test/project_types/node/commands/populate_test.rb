@@ -6,8 +6,7 @@ module Node
       def setup
         super
         ShopifyCli::Tasks::EnsureEnv.stubs(:call)
-        project_context('app_types', 'node')
-        ShopifyCli::ProjectType.load_type(:node)
+        ShopifyCli::Project.stubs(:current_project_type).returns(:node)
       end
 
       def test_without_arguments_calls_help

@@ -16,6 +16,7 @@ module ShopifyCli
 
     class HelpTest < MiniTest::Test
       def setup
+        super
         ShopifyCli::Commands.register(:FakeCommand, 'fake')
       end
 

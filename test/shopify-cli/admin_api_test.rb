@@ -2,8 +2,10 @@ require 'test_helper'
 
 module ShopifyCli
   class AdminAPITest < MiniTest::Test
-    include TestHelpers::Project
-
+    def setup
+      super
+    end
+      
     def test_latest_api_version
       unstable_stub = Object.new
       AdminAPI.expects(:new).with(

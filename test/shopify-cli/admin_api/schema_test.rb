@@ -3,10 +3,10 @@ require 'test_helper'
 module ShopifyCli
   class AdminAPI
     class SchemaTest < MiniTest::Test
-      include TestHelpers::Project
       include TestHelpers::Constants
 
       def setup
+        super
         json_data = File.read(File.join(ShopifyCli::ROOT, "test/fixtures/shopify_schema.json"))
         @test_obj = AdminAPI::Schema[JSON.parse(json_data)]
         @enum = {

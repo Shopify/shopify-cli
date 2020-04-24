@@ -2,7 +2,9 @@ require 'test_helper'
 
 module ShopifyCli
   class PartnersAPITest < MiniTest::Test
-    include TestHelpers::Project
+    def setup
+      super
+    end
 
     def test_query_calls_partners_api
       ShopifyCli::DB.expects(:get).with(:identity_exchange_token).returns('token123')

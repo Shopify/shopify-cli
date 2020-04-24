@@ -8,7 +8,7 @@ module Node
 
         def setup
           super
-          ShopifyCli::ProjectType.load_type(:node)
+          ShopifyCli::Project.stubs(:current_project_type).returns(:node)
         end
 
         def test_recurring_billing

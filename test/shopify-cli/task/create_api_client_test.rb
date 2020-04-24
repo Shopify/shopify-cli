@@ -4,6 +4,10 @@ module ShopifyCli
   module Tasks
     class CreateApiClientTest < MiniTest::Test
       include TestHelpers::Partners
+      
+      def setup
+        super
+      end
 
       def test_call_will_query_partners_dashboard
         stub_partner_req(

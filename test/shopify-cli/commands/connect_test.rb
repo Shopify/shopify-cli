@@ -5,6 +5,10 @@ module ShopifyCli
     class ConnectTest < MiniTest::Test
       include TestHelpers::Partners
 
+      def setup
+        super
+      end
+
       def test_run
         response = [{
           "id" => 421,

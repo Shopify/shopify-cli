@@ -4,6 +4,10 @@ module ShopifyCli
   module Tasks
     class EnsureLoopbackURLTest < MiniTest::Test
       include TestHelpers::Partners
+      
+      def setup
+        super
+      end
 
       def test_url_is_not_added_if_it_exists
         Project.current.stubs(:env).returns(Resources::EnvFile.new(api_key: '123', secret: 'foo'))

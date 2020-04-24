@@ -4,6 +4,10 @@ module ShopifyCli
   module Tasks
     class UpdateDashboardURLSTest < MiniTest::Test
       include TestHelpers::Partners
+      
+      def setup
+        super
+      end
 
       def test_url_is_not_transformed_if_same
         Project.current.stubs(:env).returns(Resources::EnvFile.new(api_key: '123', secret: 'foo'))

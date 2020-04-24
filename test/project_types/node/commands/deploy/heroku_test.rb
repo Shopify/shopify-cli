@@ -11,7 +11,7 @@ module Node
           super
           File.stubs(:exist?)
           File.stubs(:exist?).with(File.join(ShopifyCli::ROOT, 'lib', 'project_types', 'node', 'cli.rb')).returns(true)
-          ShopifyCli::ProjectType.load_type(:node)
+          ShopifyCli::Project.stubs(:current_project_type).returns(:node)
           ShopifyCli::Context.any_instance.stubs(:os).returns(:mac)
           stub_successful_heroku_flow
         end

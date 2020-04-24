@@ -7,7 +7,7 @@ module ShopifyCli
 
       def setup
         super
-        @context = TestHelpers::FakeContext.new
+        # @context = TestHelpers::FakeContext.new
       end
 
       def test_outputs_if_shop_cant_be_queried

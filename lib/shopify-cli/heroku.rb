@@ -41,7 +41,7 @@ module ShopifyCli
 
     def download
       return if installed?
-
+      @ctx.puts("**** Not installed: #{installed?}, heroku_command: #{heroku_command}")
       result = @ctx.system('curl', '-o', download_path, DOWNLOAD_URLS[@ctx.os], chdir: ShopifyCli::ROOT)
       @ctx.abort("Heroku CLI could not be downloaded") unless result.success?
       @ctx.abort("Heroku CLI could not be downloaded") unless File.exist?(download_path)

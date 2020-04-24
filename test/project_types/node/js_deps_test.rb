@@ -3,8 +3,8 @@ require 'test_helper'
 module Node
   class JsDepsTest < MiniTest::Test
     def setup
-      project_context('app_types', 'node')
-      ShopifyCli::ProjectType.load_type(:node)
+      super
+      ShopifyCli::Project.stubs(:current_project_type).returns(:node)
     end
 
     def test_installs_with_npm

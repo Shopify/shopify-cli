@@ -4,9 +4,15 @@ require 'test_helper'
 module ShopifyCli
   class ProjectTest < MiniTest::Test
     def setup
-      @context = TestHelpers::FakeContext.new(root: Dir.mktmpdir)
-      FileUtils.cd(@context.root)
+      super
+      # @old_pwd = Dir.pwd
+      # @context = TestHelpers::FakeContext.new(root: Dir.mktmpdir)
+      # FileUtils.cd(@context.root)
     end
+
+    # def teardown
+    #   FileUtils.cd(@old_pwd)
+    # end
 
     def test_directory_recurses
       Dir.mktmpdir do |dir|

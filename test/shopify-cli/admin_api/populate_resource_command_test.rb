@@ -3,7 +3,6 @@ require 'test_helper'
 module ShopifyCli
   class AdminAPI
     class PopulateResourceCommandTest < MiniTest::Test
-      include TestHelpers::Project
       include TestHelpers::Schema
 
       def setup

@@ -5,9 +5,7 @@ module Rails
     class OpenTest < MiniTest::Test
       def setup
         super
-        project_context('app_types', 'rails')
-        ShopifyCli::ProjectType.load_type(:rails)
-        @context.stubs(:system)
+        ShopifyCli::Project.stubs(:current_project_type).returns(:rails)
       end
 
       def test_run

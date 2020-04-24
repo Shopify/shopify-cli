@@ -3,14 +3,18 @@ require 'test_helper'
 module Rails
   module Commands
     class DeployTest < MiniTest::Test
+      include TestHelpers::Heroku
+
       def setup
         super
-        ShopifyCli::ProjectType.load_type(:rails)
-        @command = Rails::Commands::Deploy.new(@context)
+        ShopifyCli::Project.stubs(:current_project_type).returns(:rails)
+        ShopifyCli::Context.any_instance.stubs(:os).returns(:mac)
+        stub_successful_heroku_flow
+        # @command = Rails::Commands::Deploy.new(@context)
       end
 
       def test_heroku_subcommand_calls_heroku
-        Rails::Commands::Deploy::Heroku.expects(:call)
+        Rails::Commands::Deploy::Heroku.expects(:call).returns(true)
         run_cmd('deploy heroku')
       end
 

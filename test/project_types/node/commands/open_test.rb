@@ -5,9 +5,7 @@ module Node
     class OpenTest < MiniTest::Test
       def setup
         super
-        project_context('app_types', 'node')
-        ShopifyCli::ProjectType.load_type(:node)
-        @context.stubs(:system)
+        ShopifyCli::Project.stubs(:current_project_type).returns(:node)
       end
 
       def test_run

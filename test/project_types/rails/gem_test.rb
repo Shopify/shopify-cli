@@ -7,14 +7,14 @@ module Rails
 
     def setup
       super
-      ShopifyCli::ProjectType.load_type(:rails)
-      @home = Dir.mktmpdir
-      @context.setenv('HOME', @home)
+      ShopifyCli::Project.stubs(:current_project_type).returns(:rails)
+      # @home = Dir.mktmpdir
+      # @context.setenv('HOME', @home)
     end
 
-    def teardown
-      @context.setenv('GEM_HOME', nil)
-    end
+    # def teardown
+    #   @context.setenv('GEM_HOME', nil)
+    # end
 
     def test_install_installs_with_gem_home_unpopulated
       @context.expects(:system).with('gem', 'install', 'mygem')

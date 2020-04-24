@@ -2,8 +2,9 @@
 module TestHelpers
   module Project
     def setup
-      project_context('project')
       super
+      @old_pwd = Dir.pwd
+      project_context('project')
     end
 
     def project_context(*dir)
@@ -20,7 +21,7 @@ module TestHelpers
 
     def teardown
       @context = nil
-      FileUtils.cd('/')
+      FileUtils.cd(@old_pwd)
       super
     end
   end

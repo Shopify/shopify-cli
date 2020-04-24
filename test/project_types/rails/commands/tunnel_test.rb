@@ -5,7 +5,7 @@ module Rails
     class TunnelTest < MiniTest::Test
       def setup
         super
-        ShopifyCli::ProjectType.load_type(:rails)
+        ShopifyCli::Project.stubs(:current_project_type).returns(:rails)
       end
 
       def test_auth

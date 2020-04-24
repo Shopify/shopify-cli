@@ -6,12 +6,11 @@ module Minitest
   end
 
   class Test
+    include TestHelpers::Project
+    
     FIXTURE_DIR = File.expand_path('fixtures', File.dirname(__FILE__))
 
-    include TestHelpers::Project
-
     def setup
-      project_context('project')
       super
     end
 

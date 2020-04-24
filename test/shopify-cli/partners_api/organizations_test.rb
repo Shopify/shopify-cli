@@ -5,6 +5,10 @@ module ShopifyCli
   class PartnersAPI
     class OrganizationsTest < MiniTest::Test
       include TestHelpers::Partners
+      
+      def setup
+        super
+      end
 
       def test_fetch_all_queries_partners
         stub_partner_req(

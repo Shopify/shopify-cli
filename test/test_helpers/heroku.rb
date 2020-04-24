@@ -3,6 +3,14 @@ module TestHelpers
     protected
 
     def stub_successful_heroku_flow(full_path: false)
+      # install
+      @context.stubs(:system)
+        .with(includes('curl', '-o'))
+        .returns(stub('success?' => true))
+      File.stubs(:exist?)
+        .with(download_path)
+        .returns(true)
+
       # installed
       File.stubs(:exist?)
         .with(heroku_command(full_path: full_path))

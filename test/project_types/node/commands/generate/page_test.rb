@@ -4,12 +4,11 @@ module Node
   module Commands
     module GenerateTests
       class PageTest < MiniTest::Test
-        include TestHelpers::Project
         include TestHelpers::FakeUI
 
         def setup
           super
-          ShopifyCli::ProjectType.load_type(:node)
+          ShopifyCli::Project.stubs(:current_project_type).returns(:node)
         end
 
         def test_with_selection

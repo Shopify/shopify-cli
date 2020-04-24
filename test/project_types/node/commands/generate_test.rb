@@ -5,7 +5,7 @@ module Node
     class GenerateTest < MiniTest::Test
       def setup
         super
-        ShopifyCli::ProjectType.load_type(:node)
+        ShopifyCli::Project.stubs(:current_project_type).returns(:node)
       end
 
       def test_without_arguments_calls_help

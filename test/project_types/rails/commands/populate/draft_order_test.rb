@@ -4,12 +4,11 @@ module Rails
   module Commands
     module PopulateTests
       class DraftOrderTest < MiniTest::Test
-        include TestHelpers::Project
         include TestHelpers::Schema
 
         def setup
           super
-          ShopifyCli::ProjectType.load_type(:rails)
+          ShopifyCli::Project.stubs(:current_project_type).returns(:rails)
         end
 
         def test_populate_calls_api_with_mutation
