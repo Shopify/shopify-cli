@@ -17,18 +17,14 @@ module ShopifyCli
     end
 
     def test_mac_matches
-      @ctx.expects(:capture2).with('uname -a').returns(
-        ['Darwin hostname.local 18.6.0 Darwin Kernel Version 18.6.0', nil]
-      )
+      @ctx.expects(:uname).returns('x86_64-apple-darwin19.3.0').times(3)
       assert(@ctx.mac?)
       assert_equal(:mac, @ctx.os)
       refute(@ctx.linux?)
     end
 
     def test_linux_matches
-      @ctx.expects(:capture2).with('uname -a').returns(
-        ['Linux hostname 4.15.0-50-generic #54-Ubuntu SMP', nil]
-      )
+      @ctx.expects(:uname).returns('x86_64-pc-linux-gnu').times(3)
       assert(@ctx.linux?)
       assert_equal(:linux, @ctx.os)
       refute(@ctx.mac?)

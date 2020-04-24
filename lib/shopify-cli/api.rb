@@ -82,7 +82,7 @@ module ShopifyCli
 
     def default_headers
       {
-        'User-Agent' => "Shopify App CLI #{ShopifyCli::VERSION} #{current_sha} | #{ctx.uname(flag: 'v')}",
+        'User-Agent' => "Shopify App CLI #{ShopifyCli::VERSION} #{current_sha} | #{ctx.uname}",
       }.merge(auth_headers(token))
     end
 

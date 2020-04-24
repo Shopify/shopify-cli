@@ -73,16 +73,12 @@ module ShopifyCli
         def monorail_payload(args:, duration:, result:)
           {
             cli_sha: ShopifyCli::Git.sha(dir: ShopifyCli::ROOT),
-            uname: uname,
+            uname: RbConfig::CONFIG["host"],
             args: args,
             timestamp: Time.now.utc.iso8601(MICROSECOND_PRECISION),
             duration: duration,
             result: result,
           }
-        end
-
-        def uname
-          @uname ||= %x{uname -a}
         end
 
         def ruby_version
