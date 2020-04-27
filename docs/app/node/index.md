@@ -7,7 +7,7 @@ section: node
 
 1. To create a new Node project, type `shopify create node`. This will scaffold a new Node.js app in a subdirectory.
 
-    ```sh
+    ```console
     $ shopify create node
     ? App Name
     >
@@ -17,7 +17,7 @@ section: node
 server, which uses [ngrok](https://ngrok.com) to create a tunnel. ngrok will choose a unique URL for you. The server 
 will stay open until you type Ctrl-C.
 
-    ```sh
+    ```console
     $ shopify serve
     ✓ ngrok tunnel running at https://example.ngrok.io
     ✓ writing .env file...
@@ -26,7 +26,7 @@ will stay open until you type Ctrl-C.
 3. With the server running, open a new terminal window and type `shopify open` to open your app in your browser and 
 install it on a development store.
 
-    ```sh
+    ```console
     $ shopify open
     ```
 

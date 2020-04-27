@@ -14,7 +14,7 @@ The CLI can help you create and manage different kinds of Shopify app projects. 
 
 The `create` command will scaffold a new Shopify project in your current active directory and generate all the necessary starter files.
 
-```sh
+```console
 $ shopify create
 ? What type of project would you like to create? (Choose with ↑ ↓ ⏎, filter with 'f')
 > 1. Node.js App

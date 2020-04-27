@@ -73,12 +73,17 @@ code {
 
 #SidebarNav {
   padding-top: 30px;
-  position: -webkit-sticky;
-  position: -moz-sticky;
-  position: -ms-sticky;
-  position: -o-sticky;
-  position: sticky;
-  top: 0;
+}
+
+@media screen and (min-width: 46.875em) {
+  #SidebarNav {
+    position: -webkit-sticky;
+    position: -moz-sticky;
+    position: -ms-sticky;
+    position: -o-sticky;
+    position: sticky;
+    top: 0;
+  }
 }
 
 #SidebarNav .is-active {
