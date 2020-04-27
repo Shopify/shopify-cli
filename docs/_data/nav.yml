@@ -3,8 +3,8 @@ sidebar:
     section: intro
     url: /
   - title: Getting started
-    section: getting_started
-    url: /getting_started/
+    section: getting-started
+    url: /getting-started/
   - title: Core commands
     section: core
     url: /core/

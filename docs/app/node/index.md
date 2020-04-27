@@ -13,9 +13,7 @@ section: node
     >
     ```
 
-2. Once your app is created, you can work with it immediately by typing `shopify serve` to start a local development
-server, which uses [ngrok](https://ngrok.com) to create a tunnel. ngrok will choose a unique URL for you. The server 
-will stay open until you type Ctrl-C.
+2. Once your app is created, you can work with it immediately by typing `shopify serve` to start a local development server, which uses [ngrok](https://ngrok.com) to create a tunnel. ngrok will choose a unique URL for you. The server will stay open until you type **Ctrl + C**.
 
     ```console
     $ shopify serve
@@ -30,4 +28,4 @@ install it on a development store.
     $ shopify open
     ```
 
-For more information, look at the [command reference]({% link app/node/commands/index.md %}).
+For more information, consult the [command reference]({% link app/node/commands/index.md %}).
