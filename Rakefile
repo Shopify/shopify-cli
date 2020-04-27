@@ -14,7 +14,6 @@ task :console do
 end
 
 namespace :rdoc do
-  temp_path = '/tmp/shopify-app-cli-wiki'
   repo = 'https://github.com/Shopify/shopify-app-cli.wiki.git'
   intermediate = 'markdown_intermediate'
   file_to_doc = [
@@ -44,19 +43,21 @@ namespace :rdoc do
 
   desc("Copy markdown documentation to the wiki and commit them")
   task :wiki do
-    system("git clone --depth=1 #{repo} #{temp_path}")
-    FileUtils.cp(Dir[File.join(intermediate, '*.md')], "/tmp/shopify-app-cli-wiki")
-    Dir.chdir(temp_path) do
-      system('git add --all')
-      system('git commit -am "auto doc update"')
-      system('git push')
+    require 'tmpdir'
+    Dir.mktmpdir do |temp_dir|
+      system("git clone --depth=1 #{repo} #{temp_dir}")
+      FileUtils.cp(Dir[File.join(intermediate, '*.md')], temp_dir)
+      Dir.chdir(temp_dir) do
+        system('git add --all')
+        system('git commit -am "auto doc update"')
+        system('git push')
+      end
     end
   end
 
   desc("Clean up any documentation related files")
   task :cleanup do
     FileUtils.rm_r(intermediate)
-    FileUtils.rm_rf(temp_path)
   end
 end
 
