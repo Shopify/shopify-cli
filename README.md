@@ -15,14 +15,14 @@ Shopify App CLI helps you build Shopify apps faster. It automates many common ta
 Shopify App CLI installs using a shell script. Download and run it in your terminal with one command:
 
 ### Mac OS and Ubuntu
-```console
+```sh
 eval "$(curl -sS https://raw.githubusercontent.com/Shopify/shopify-app-cli/master/install.sh)"
 ```
 
 ### Windows
 Install [Linux Subsystem for Windows](https://docs.microsoft.com/en-us/windows/wsl/install-win10) and the [Ubuntu VM](https://www.microsoft.com/en-ca/p/ubuntu/9nblggh4msv6), then:
 
-```console
+```sh
 eval "$(curl -sS https://raw.githubusercontent.com/Shopify/shopify-app-cli/master/install.sh)"
 ```
 > NOTE: Installing the Shopify App CLI requires [curl](https://curl.haxx.se/). You can to see if it's on your system by running: `curl --version`
@@ -41,7 +41,7 @@ Developers should have some prior knowledge of the Shopify app ecosystem. Curren
 
 The `create` command will scaffold a new Shopify app in your current active directory and generate all the necessary starter files.
 
-```console
+```sh
 $ shopify create
 ```
 
@@ -66,7 +66,7 @@ Developing Shopify App CLI often requires having multiple instances of the tool 
 
 ### Load a development instance
 
-```console
+```sh
 # Clone the repo for development purposes
 $ git clone git@github.com:Shopify/shopify-app-cli.git
 # Configure the CLI to use your development instance
@@ -77,7 +77,7 @@ The `load-dev` command loads the version of Shopify App CLI specified between th
 
 ### Reload the production instance
 
-```console
+```sh
 $ shopify load-system
 ```
 
@@ -119,7 +119,7 @@ With [the standard installation process](https://github.com/Shopify/shopify-app-
 
 During the install process, Shopify App CLI adds a line to your shell configuration. This line is typically located in the `.bash_profile` file in your home directory (depending on your system, it may also be found in `.bash_login` or `.profile`). It will look similar to this:
 
-```console
+```sh
 # The line won’t look exactly like this. `HOME_DIR` will instead be the absolute path to your home directory
 if [[ -f /HOME_DIR/.shopify-cli/shopify.sh ]]; then source /HOME_DIR/.shopify-cli/shopify.sh; fi
 ```
