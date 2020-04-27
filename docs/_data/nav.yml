@@ -11,16 +11,16 @@ sidebar:
   - title: Node app projects
     section: node
     url: /app/node/
-#    subnav:
-#      - title: Getting started
-#        url: /app/node/getting_started.html
-#      - title: Command reference
-#        url: /app/node/commands.html
+    subnav:
+      - title: Getting started
+        url: /app/node/
+      - title: Command reference
+        url: /app/node/commands/
   - title: Rails app projects
     section: rails
     url: /app/rails/
-#    subnav:
-#      - title: Getting started
-#        url: /app/rails/getting_started.html
-#      - title: Command reference
-#        url: /app/rails/commands.html
+    subnav:
+      - title: Getting started
+        url: /app/rails/
+      - title: Command reference
+        url: /app/rails/commands/

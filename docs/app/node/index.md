@@ -1,51 +1,33 @@
 ---
-title: Node.js app projects
+title: Node app projects
 section: node
 ---
 
-## Node.js app projects
+## Getting started
 
-To create a Node project, type `shopify create node`.
+1. To create a new Node project, type `shopify create node`. This will scaffold a new Node.js app in a subdirectory.
 
-Once you have created your project, the following commands are available while working in the project directory.
+    ```sh
+    $ shopify create node
+    ? App Name
+    >
+    ```
 
-### deploy
+2. Once your app is created, you can work with it immediately by typing `shopify serve` to start a local development
+server, which uses [ngrok](https://ngrok.com) to create a tunnel. ngrok will choose a unique URL for you. The server 
+will stay open until you type Ctrl-C.
 
-Deploy the current Node project to a hosting service. [Heroku](https://www.heroku.com) is currently the only option, 
-but more will be added in the future.
+    ```sh
+    $ shopify serve
+    ✓ ngrok tunnel running at https://example.ngrok.io
+    ✓ writing .env file...
+    ```
 
-- `shopify deploy heroku`: Deploy the current Node project to Heroku 
+3. With the server running, open a new terminal window and type `shopify open` to open your app in your browser and 
+install it on a development store.
 
-### generate
+    ```sh
+    $ shopify open
+    ```
 
-Generate code in your app project. Supports generating new pages, new billing API calls, or new webhooks.
-
-- `shopify generate page` generates a new page in your project.
-- `shopify generate billing` generates a new billing API call.
-- `shopify generate webhook` generates a new webhook.
-
-### open
-
-Open your local development app in the default browser.
-
-- `shopify open`
-
-### populate
-Populate your Shopify development store with example products, customers, or orders.
-
-- `shopify populate products`
-- `shopify populate customers`
-- `shopify populate draftorders`
-
-### serve
-Start a local development node server for your project, as well as a public [ngrok](https://ngrok.com/) tunnel to your 
-localhost.
-
-- `shopify serve`
-
-### tunnel
-Start or stop an http tunnel to your local development app using ngrok.
-
-- `shopify tunnel auth` 
-- `shopify tunnel start` starts the ngrok tunnel for your app
-- `shopify tunnel stop` stops the ngrok tunnel for your app
+For more information, look at the [command reference]({% link app/node/commands/index.md %}).
