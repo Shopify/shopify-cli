@@ -1,6 +1,6 @@
 ---
 title: Getting started
-section: getting_started
+section: getting-started
 ---
 
 Developers should have some prior knowledge of the [Shopify app ecosystem](https://shopify.dev/concepts/apps). Currently, Shopify App CLI creates apps using either [Node.js](https://nodejs.org/) or [Ruby on Rails](https://rubyonrails.org/).

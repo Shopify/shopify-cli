@@ -23,4 +23,4 @@ $ shopify create
 
 Each project type has its own set of commands to speed up your development process.
 
-To get started, look at the [requirements and installation instructions]({% link getting_started/index.md %}).
+To get started, look at the [requirements and installation instructions]({% link getting-started/index.md %}).
