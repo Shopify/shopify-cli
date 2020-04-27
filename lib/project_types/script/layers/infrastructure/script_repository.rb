@@ -1,11 +1,11 @@
 # frozen_string_literal: true
 
-BOOTSTRAP_SRC = "npx --no-install shopify-scripts-bootstrap src %{src_base}"
-
 module Script
   module Layers
     module Infrastructure
-      class ScriptRepository < Repository
+      class ScriptRepository
+        BOOTSTRAP_SRC = "npx --no-install shopify-scripts-bootstrap src %{src_base}"
+
         def create_script(language, extension_point, script_name)
           FileUtils.mkdir_p(src_base)
           out, status = CLI::Kit::System.capture2e(format(BOOTSTRAP_SRC, src_base: src_base))

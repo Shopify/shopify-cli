@@ -2,13 +2,12 @@
 
 require "pathname"
 
-TSCONFIG_FILE = "tsconfig.json"
-TSCONFIG_EXTENDS_PATH = "/node_modules/assemblys"
-
 module Script
   module Layers
     module Infrastructure
       class AssemblyScriptTsConfig
+        TSCONFIG_FILE = "tsconfig.json"
+
         attr_reader :config
 
         def initialize(dir_to_write_in:)

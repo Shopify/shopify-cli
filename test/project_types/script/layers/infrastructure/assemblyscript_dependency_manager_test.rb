@@ -26,11 +26,14 @@ describe Script::Layers::Infrastructure::AssemblyScriptDependencyManager do
     subject { as_dep_manager.bootstrap }
 
     it "should write to npmrc" do
+      @context
+        .expects(:system)
+        .with('npm', '--userconfig', './.npmrc', 'config', 'set', '@shopify:registry', 'https://registry.npmjs.com')
       subject
-      assert File.exist?(".npmrc")
     end
 
     it "should write to package.json" do
+      @context.expects(:system).once
       subject
       assert File.exist?("package.json")
     end

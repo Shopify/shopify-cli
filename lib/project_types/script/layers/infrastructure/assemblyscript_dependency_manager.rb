@@ -29,11 +29,9 @@ module Script
         private
 
         def write_npmrc
-          npmrc = <<~HERE
-            @shopify:registry=https://registry.npmjs.org/
-          HERE
-
-          File.write(".npmrc", npmrc)
+          @ctx.system(
+            'npm', '--userconfig', './.npmrc', 'config', 'set', '@shopify:registry', 'https://registry.npmjs.com'
+          )
         end
 
         def write_package_json

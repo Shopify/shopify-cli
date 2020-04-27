@@ -1,4 +1,5 @@
 # frozen_string_literal: true
+
 module Script
   class Project < ShopifyCli::ProjectType
     hidden_project_type
@@ -40,7 +41,6 @@ module Script
                Project.project_filepath('layers/infrastructure/assemblyscript_dependency_manager')
       autoload :DependencyManager, Project.project_filepath('layers/infrastructure/dependency_manager')
       autoload :ExtensionPointRepository, Project.project_filepath('layers/infrastructure/extension_point_repository')
-      autoload :Repository, Project.project_filepath('layers/infrastructure/repository')
       autoload :ScriptRepository, Project.project_filepath('layers/infrastructure/script_repository')
       autoload :TestSuiteRepository, Project.project_filepath('layers/infrastructure/test_suite_repository')
 

@@ -21,7 +21,7 @@ describe Script::Layers::Infrastructure::TestSuiteRepository do
   let(:language) { "ts" }
   let(:script_id) { 'id' }
   let(:script) { Script::Layers::Domain::Script.new(script_id, script_name, extension_point, language) }
-  let(:template_base) { "#{Script::Layers::Infrastructure::Repository::INSTALLATION_BASE_PATH}/templates" }
+  let(:template_base) { Script::Project.project_filepath('templates') }
   let(:config_file) { "#{template_base}/ts/as-pect.config.js" }
   let(:spec_test_base) { "#{script_name}/test" }
   let(:relative_path_to_node_modules) { "." }

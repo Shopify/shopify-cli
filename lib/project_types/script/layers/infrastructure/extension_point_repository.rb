@@ -3,7 +3,7 @@
 module Script
   module Layers
     module Infrastructure
-      class ExtensionPointRepository < Repository
+      class ExtensionPointRepository
         def get_extension_point(type)
           Domain::ExtensionPoint.new(type, fetch_extension_point(type))
         end
@@ -22,7 +22,7 @@ module Script
         def extension_points
           @extension_points ||= begin
             require 'yaml'
-            YAML.load_file(File.join(ShopifyCli::ROOT, 'config/extension_points.yml'))
+            YAML.load_file(Project.project_filepath('config/extension_points.yml'))
           end
         end
       end

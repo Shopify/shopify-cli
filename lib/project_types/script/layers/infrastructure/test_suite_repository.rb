@@ -2,14 +2,13 @@
 
 require 'pathname'
 
-BOOTSTRAP_TEST = "npx --no-install shopify-scripts-bootstrap test %{test_base}"
-
 module Script
   module Layers
     module Infrastructure
-      class TestSuiteRepository < Repository
+      class TestSuiteRepository
         ASPECT_DTS_FILENAME = "as-pect.d.ts"
         ASPECT_DTS_FILE_CONTENTS = "/// <reference types=\"@as-pect/assembly/types/as-pect\" />"
+        BOOTSTRAP_TEST = "npx --no-install shopify-scripts-bootstrap test %{test_base}"
 
         def create_test_suite(script)
           # Remove this once we have a test suite for js
@@ -47,7 +46,7 @@ module Script
         end
 
         def aspect_config_template(language)
-          "#{INSTALLATION_BASE_PATH}/templates/#{language}/as-pect.config.js"
+          Project.project_filepath("templates/#{language}/as-pect.config.js")
         end
 
         def write_tsconfig_file
