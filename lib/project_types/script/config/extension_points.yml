@@ -1,0 +1,10 @@
+discount:
+  assemblyscript:
+    package: "@shopify/extension-point-as-discount"
+    version: "~0.0.19"
+    sdk-version: "^2.0.0"
+unit_limit_per_order:
+  assemblyscript:
+    package: "@shopify/extension-point-as-unit-limit-per-order"
+    version: "~0.0.19"
+    sdk-version: "^2.0.0"
