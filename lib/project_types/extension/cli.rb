@@ -5,11 +5,13 @@ module Extension
 
     register_command('Extension::Commands::Pack', "pack")
     register_command('Extension::Commands::Deploy', "deploy")
+    register_command('Extension::Commands::Serve', "serve")
   end
 
   module Commands
     autoload :Create, Project.project_filepath('commands/create')
     autoload :Pack, Project.project_filepath('commands/pack')
+    autoload :Serve, Project.project_filepath('commands/serve')
     autoload :Deploy, Project.project_filepath('commands/deploy')
   end
 
