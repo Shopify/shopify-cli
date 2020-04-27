@@ -16,42 +16,42 @@ module Extension
 
       def returns_defined_attributes_if_valid
         form = ask
-        assert_equal form.title, 'test-extension'
-        assert_equal form.type, @test_extension_type.identifier
+        assert_equal form.name, 'test-extension'
+        assert_equal form.type, @test_extension_type
       end
 
-      def test_prompts_the_user_to_choose_a_title_if_no_title_was_provided
-        CLI::UI::Prompt.expects(:ask).with(Forms::Create::ASK_TITLE).times(3)
+      def test_prompts_the_user_to_choose_a_name_if_no_name_was_provided
+        CLI::UI::Prompt.expects(:ask).with(Content::Create::ASK_NAME).times(3)
 
-        capture_io { ask(title: nil) }
-        capture_io { ask(title: "") }
-        capture_io { ask(title: " ") }
+        capture_io { ask(name: nil) }
+        capture_io { ask(name: "") }
+        capture_io { ask(name: " ") }
       end
 
-      def test_name_is_a_lowercase_underscored_version_of_title
-        assert_equal 'demo', ask(title: 'Demo').name
-        assert_equal 'spaces', ask(title: ' Spaces ').name
-        assert_equal 'demo_extension', ask(title: 'Demo Extension').name
-        assert_equal 'testlongstring', ask(title: 'TestLongString').name
+      def test_directory_name_is_a_lowercase_underscored_version_of_name
+        assert_equal 'demo', ask(name: 'Demo').directory_name
+        assert_equal 'spaces', ask(name: ' Spaces ').directory_name
+        assert_equal 'demo_extension', ask(name: 'Demo Extension').directory_name
+        assert_equal 'testlongstring', ask(name: 'TestLongString').directory_name
+        assert_equal 'double__spaces', ask(name: 'double  spaces').directory_name
       end
 
       def test_accepts_any_valid_extension_type
         form = ask(type: @test_extension_type.identifier)
-        assert_equal form.type, @test_extension_type.identifier
+        assert_equal form.type, @test_extension_type
       end
 
-      def test_prompts_the_user_to_choose_a_type_if_an_unknown_type_was_provided_as_flag
-        CLI::UI::Prompt::expects(:ask).with(Forms::Create::ASK_TYPE)
+      def test_outputs_an_error_and_prompts_the_user_to_choose_a_type_if_an_unknown_type_was_provided_as_flag
+        CLI::UI::Prompt.expects(:interactive_prompt).returns(@test_extension_type.name).once
 
-        io = capture_io do
-          ask(type: 'unknown-type')
-        end
+        io = capture_io { ask(type: 'unknown-type') }
 
-        assert_match(Forms::Create::INVALID_TYPE, io.join)
+        assert_match(Content::Create::INVALID_TYPE, io.join)
+        assert_match(Content::Create::ASK_TYPE, io.join)
       end
 
       def test_prompts_the_user_to_choose_a_type_if_no_type_was_provided
-        CLI::UI::Prompt.expects(:ask).with(Forms::Create::ASK_TYPE)
+        CLI::UI::Prompt.expects(:ask).with(Content::Create::ASK_TYPE)
 
         capture_io do
           ask(type: nil)
@@ -64,7 +64,7 @@ module Extension
 
         output = capture_io { ask }
 
-        assert_match Forms::Create::NO_APPS, output.join
+        assert_match Content::Create::NO_APPS, output.join
       end
 
       def test_accepts_the_api_key_to_associate_with_extension
@@ -73,7 +73,7 @@ module Extension
       end
 
       def test_prompts_the_user_to_choose_an_app_to_associate_with_extension_if_no_app_is_provided
-        CLI::UI::Prompt.expects(:ask).with(Forms::Create::ASK_APP)
+        CLI::UI::Prompt.expects(:ask).with(Content::Create::ASK_APP)
 
         capture_io do
           ask(api_key: nil)
@@ -81,20 +81,20 @@ module Extension
       end
 
       def test_fails_with_invalid_api_key_to_associate_with_extension
-        io = capture_io do
-          ask(api_key: '00001')
-        end
+        api_key = '00001'
 
-        assert_match(Forms::Create::INVALID_API_KEY, io.join)
+        io = capture_io { ask(api_key: api_key) }
+
+        assert_match(Content::Create::INVALID_API_KEY % api_key, io.join)
       end
 
       private
 
-      def ask(title: 'test-extension', type: @test_extension_type.identifier, api_key: @app.api_key)
+      def ask(name: 'test-extension', type: @test_extension_type.identifier, api_key: @app.api_key)
         Create.ask(
           @context,
           [],
-          title: title,
+          name: name,
           type: type,
           api_key: api_key,
         )

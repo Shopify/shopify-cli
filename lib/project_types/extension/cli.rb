@@ -38,4 +38,5 @@ module Extension
 
   autoload :JsDeps, Project.project_filepath('js_deps')
   autoload :ExtensionProject, Project.project_filepath('extension_project')
+  autoload :Content, Project.project_filepath('content')
 end

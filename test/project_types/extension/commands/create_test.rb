@@ -16,22 +16,27 @@ module Extension
       end
 
       def test_clones_project_template
+        name = "MyExt"
+
         ShopifyCli::Git
           .expects(:clone)
-          .with('https://github.com/Shopify/shopify-app-extension-template.git', 'myext')
+          .with('https://github.com/Shopify/shopify-app-extension-template.git', 'myext', ctx: @context)
           .add_side_effect(CreateFakeExtensionProject.new)
 
         JsDeps.expects(:install).add_side_effect(CreateDummyLockfile.new)
         ShopifyCli::Core::Finalize.expects(:request_cd).with('myext')
         stub_get_organizations
 
-        capture_io do
-          run_cmd("create extension --title=myext --type=#{@test_extension_type.identifier} --api-key=1234")
+        io = capture_io do
+          run_cmd("create extension --name=#{name} --type=#{@test_extension_type.identifier} --api-key=1234")
         end
 
         refute File.exists?('myext/.git'), 'Expected .git directory to be removed'
         lockfile_content = File.read('myext/yarn.lock')
         assert_equal lockfile_content, '# Dummy lockfile'
+
+        assert_match Content::Create::READY_TO_START % name, io.join
+        assert_match Content::Create::LEARN_MORE % @test_extension_type.name, io.join
       ensure
         FileUtils.rm_r('myext')
       end

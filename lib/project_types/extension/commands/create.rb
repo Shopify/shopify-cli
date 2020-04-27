@@ -4,21 +4,24 @@ module Extension
   module Commands
     class Create < ShopifyCli::SubCommand
       options do |parser, flags|
-        parser.on('--title=TITLE') { |title| flags[:title] = title }
+        parser.on('--name=NAME') { |name| flags[:name] = name }
         parser.on('--type=TYPE') { |type| flags[:type] = type.upcase  }
         parser.on('--api-key=KEY') { |key| flags[:api_key] = key.downcase }
       end
 
       def call(args, _)
         with_create_form(args) do |form|
-          build(form.name)
+          build(form.directory_name)
 
           ExtensionProject.write_project_files(
             context: @ctx,
             api_key: form.app.api_key,
             api_secret: form.app.secret,
-            type: form.type
+            type: form.type.identifier
           )
+
+          @ctx.puts('{{*}} ' + Content::Create::READY_TO_START % form.name)
+          @ctx.puts('{{*}} ' + Content::Create::LEARN_MORE % form.type.name)
         end
       end
 
@@ -26,6 +29,10 @@ module Extension
         <<~HELP
           Create a new app extension.
             Usage: {{command:#{ShopifyCli::TOOL_NAME} create extension <name>}}
+            Options:
+              {{command:--api_key=API_KEY}} The API key used to associate an app to the extension. This can be found on the app page on Partners Dashboard.
+              {{command:--type=TYPE}} The type of extension you would like to create.
+              {{command:--name=NAME}} The name of your extension (40 characters).”
         HELP
       end
 
@@ -39,7 +46,7 @@ module Extension
       end
 
       def build(name)
-        ShopifyCli::Git.clone('https://github.com/Shopify/shopify-app-extension-template.git', name)
+        ShopifyCli::Git.clone('https://github.com/Shopify/shopify-app-extension-template.git', name, ctx: @ctx)
         ShopifyCli::Core::Finalize.request_cd(name)
         @ctx.root = File.join(@ctx.root, name)
 
