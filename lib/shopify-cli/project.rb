@@ -65,17 +65,18 @@ module ShopifyCli
       # #### Parameters
       #
       # * `ctx` - the current running context of your command
-      # * `identifier` - a string or symbol of your app type name
+      # * `app_type` - a string or symbol of your app type name
+      # * `identifiers` - an optional hash of other app identifiers
       #
       # #### Example
       #
       #   type = ShopifyCli::Project.current_app_type
       #
-      def write(ctx, identifier)
+      def write(ctx, app_type, identifiers = {})
         require 'yaml' # takes 20ms, so deferred as late as possible.
         content = {
-          'app_type' => identifier,
-        }
+          'app_type' => app_type,
+        }.merge(identifiers)
         ctx.write('.shopify-cli.yml', YAML.dump(content))
       end
 
