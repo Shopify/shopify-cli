@@ -16,7 +16,7 @@ module Script
     private
 
     def lookup_config(key)
-      raise InvalidScriptProjectContextError, key unless config.key?(key)
+      raise InvalidContextError, key unless config.key?(key)
       config[key]
     end
 

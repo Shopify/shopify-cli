@@ -21,7 +21,7 @@ module Script
           if @cache.key?(id)
             @cache[id]
           else
-            raise Domain::ScriptNotFoundError.new(extension_point_type, script_name)
+            raise ScriptNotFoundError.new(extension_point_type, script_name)
           end
         end
 

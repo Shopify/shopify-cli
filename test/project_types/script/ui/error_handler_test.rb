@@ -97,8 +97,8 @@ describe Script::UI::ErrorHandler do
         end
       end
 
-      describe "when InvalidScriptProjectContextError" do
-        let(:err) { Script::InvalidScriptProjectContextError.new('') }
+      describe "when InvalidContextError" do
+        let(:err) { Script::InvalidContextError.new('') }
         it "should call display_and_raise" do
           should_call_display_and_raise
         end
@@ -111,21 +111,22 @@ describe Script::UI::ErrorHandler do
         end
       end
 
-      describe "when DependencyInstallError" do
-        let(:err) { Script::Layers::Domain::InvalidExtensionPointError.new(type: '') }
+      describe "when InvalidExtensionPointError" do
+        let(:err) { Script::InvalidExtensionPointError.new('') }
         it "should call display_and_raise" do
           should_call_display_and_raise
         end
       end
-      describe "when DependencyInstallError" do
-        let(:err) { Script::Layers::Domain::ScriptNotFoundError.new('ep type', 'name') }
+
+      describe "when ScriptNotFoundError" do
+        let(:err) { Script::ScriptNotFoundError.new('ep type', 'name') }
         it "should call display_and_raise" do
           should_call_display_and_raise
         end
       end
 
       describe "when DependencyInstallError" do
-        let(:err) { Script::Layers::Infrastructure::DependencyInstallError.new }
+        let(:err) { Script::DependencyInstallError.new }
         it "should call display_and_raise" do
           should_call_display_and_raise
         end

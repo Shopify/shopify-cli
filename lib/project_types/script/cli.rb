@@ -26,13 +26,6 @@ module Script
     module Domain
       autoload :ExtensionPoint, Project.project_filepath('layers/domain/extension_point')
       autoload :Script, Project.project_filepath('layers/domain/script')
-
-      # errors
-      autoload :InvalidExtensionPointError,
-               Project.project_filepath('layers/domain/errors/invalid_extension_point_error')
-      autoload :ScriptNotFoundError, Project.project_filepath('layers/domain/errors/script_not_found_error')
-      autoload :ServiceFailureError, Project.project_filepath('layers/domain/errors/service_failure_error')
-      autoload :TestSuiteNotFoundError, Project.project_filepath('layers/domain/errors/test_suite_not_found_error')
     end
 
     module Infrastructure
@@ -43,11 +36,6 @@ module Script
       autoload :ExtensionPointRepository, Project.project_filepath('layers/infrastructure/extension_point_repository')
       autoload :ScriptRepository, Project.project_filepath('layers/infrastructure/script_repository')
       autoload :TestSuiteRepository, Project.project_filepath('layers/infrastructure/test_suite_repository')
-
-      # errors
-      autoload :DependencyError, Project.project_filepath('layers/infrastructure/errors/dependency_error')
-      autoload :DependencyInstallError,
-               Project.project_filepath('layers/infrastructure/errors/dependency_install_error')
     end
   end
 
@@ -57,7 +45,25 @@ module Script
   end
 
   autoload :ScriptProject, Project.project_filepath('script_project')
-  autoload :InvalidScriptProjectContextError,
-           Project.project_filepath('errors/invalid_script_project_context_error')
-  autoload :ScriptProjectAlreadyExistsError, Project.project_filepath('errors/script_project_already_exists_error')
+
+  class ScriptProjectError < StandardError; end
+  class InvalidContextError < ScriptProjectError; end
+  class ScriptProjectAlreadyExistsError < ScriptProjectError; end
+  class ServiceFailureError < ScriptProjectError; end
+  class TestSuiteNotFoundError < ScriptProjectError; end
+  class DependencyError < ScriptProjectError; end
+  class DependencyInstallError < ScriptProjectError; end
+  class InvalidExtensionPointError < ScriptProjectError
+    attr_reader :type
+    def initialize(type)
+      @type = type
+    end
+  end
+  class ScriptNotFoundError < ScriptProjectError
+    attr_reader :script_name, :extension_point_type
+    def initialize(extension_point_type, script_name)
+      @script_name = script_name
+      @extension_point_type = extension_point_type
+    end
+  end
 end

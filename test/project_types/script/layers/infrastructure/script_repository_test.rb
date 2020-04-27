@@ -68,7 +68,7 @@ describe Script::Layers::Infrastructure::ScriptRepository do
 
       it "should raise ScriptNotFoundError when script source file does not exist" do
         FileUtils.mkdir_p(script_source_base)
-        e = assert_raises(Script::Layers::Domain::ScriptNotFoundError) { subject }
+        e = assert_raises(Script::ScriptNotFoundError) { subject }
         assert_equal script_source_file, e.script_name
       end
     end

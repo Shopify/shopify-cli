@@ -65,7 +65,7 @@ describe Script::Layers::Infrastructure::AssemblyScriptDependencyManager do
     it "should raise error on failure" do
       msg = 'error message'
       @context.expects(:capture2e).returns([msg, mock(success?: false)])
-      assert_raises Script::Layers::Infrastructure::DependencyInstallError, msg do
+      assert_raises Script::DependencyInstallError, msg do
         subject
       end
     end
