@@ -29,7 +29,7 @@ Shopify App CLI installs using a shell script. Download and run it in your termi
 eval "$(curl -sS https://raw.githubusercontent.com/Shopify/shopify-app-cli/master/install.sh)"
 ```
 
-([View shell script source](https://raw.githubusercontent.com/Shopify/shopify-app-cli/master/install.sh))
+[View shell script source](https://raw.githubusercontent.com/Shopify/shopify-app-cli/master/install.sh)
 
 
 ## Uninstall
