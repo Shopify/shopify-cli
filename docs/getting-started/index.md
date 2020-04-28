@@ -9,7 +9,7 @@ Developers should have some prior knowledge of the [Shopify app ecosystem](https
 
 - [Ruby](https://www.ruby-lang.org) 2.5.1+ 
 - [Node.js](https://nodejs.org) 10.0.0+
-- [curl](https://curl.haxx.se) 7.0.0+
+- [curl](https://curl.haxx.se)
 - A [Shopify partner account](https://partners.shopify.com/signup)
 - A [Shopify development store](https://help.shopify.com/en/partners/dashboard/development-stores#create-a-development-store) to install and test apps
 - An [ngrok](https://ngrok.com/) account (free or paid) for local development
