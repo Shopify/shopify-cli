@@ -3,52 +3,55 @@ title: Getting started
 section: getting-started
 ---
 
-Developers should have some prior knowledge of the [Shopify app ecosystem](https://shopify.dev/concepts/apps). Currently, Shopify App CLI creates apps using either [Node.js](https://nodejs.org/) or [Ruby on Rails](https://rubyonrails.org/).
+Developers should have some prior knowledge of the [Shopify app ecosystem](https://shopify.dev/concepts/apps). Shopify App CLI creates apps using either [Node.js](https://nodejs.org/) or [Ruby on Rails](https://rubyonrails.org/).
+
+## Requirements
+
+- [Ruby](https://www.ruby-lang.org) 2.5.1+ 
+- [Node.js](https://nodejs.org) 10.0.0+
+- [curl](https://curl.haxx.se) 7.0.0+
+- You’ll need a [Shopify partner account](https://partners.shopify.com/signup)
+- You’ll need to [create a development store](https://help.shopify.com/en/partners/dashboard/development-stores#create-a-development-store) to install and test apps
+
+### Windows requirements
+
+You’ll need to install the following tools to use Shopify App CLI on Windows:
+
+- [Linux Subsystem for Windows](https://docs.microsoft.com/en-us/windows/wsl/install-win10)
+- [Ubuntu VM](https://www.microsoft.com/en-ca/p/ubuntu/9nblggh4msv6)
 
 ## Install
 
-Shopify App CLI installs using a shell script. Download and run it in your terminal with one command:
-
-### Mac OS and Ubuntu
-```console
-eval "$(curl -sS https://raw.githubusercontent.com/Shopify/shopify-app-cli/master/install.sh)"
-```
-
-### Windows
-Install [Linux Subsystem for Windows](https://docs.microsoft.com/en-us/windows/wsl/install-win10) and the [Ubuntu VM](https://www.microsoft.com/en-ca/p/ubuntu/9nblggh4msv6), then:
+Shopify App CLI installs using a [shell script](https://raw.githubusercontent.com/Shopify/shopify-app-cli/master/install.sh). Download and run it in your terminal with one command:
 
 ```console
 eval "$(curl -sS https://raw.githubusercontent.com/Shopify/shopify-app-cli/master/install.sh)"
 ```
-
-> NOTE: Installing the Shopify App CLI requires [curl](https://curl.haxx.se/). You can to see if it's on your system by running: `curl --version`
-
-## Requirements to create a project
-
-- If you don’t have one, [create a Shopify partner account](https://partners.shopify.com/signup).
-- If you don’t have one, [create a development store](https://help.shopify.com/en/partners/dashboard/development-stores#create-a-development-store) where you can install and test your app.
-- You should have Node.js version 10.0.0 or higher installed. If you're looking for a way to manage your node versions we recommend [nvm](https://github.com/nvm-sh/nvm/blob/master/README.md)
 
 ## Uninstall
 
 There are two steps to completely uninstall Shopify App CLI:
 
 1. Delete the CLI files.
-2. Remove the shopify command from your shell profile.
+1. Remove the `shopify` command from your shell profile.
 
-### Delete the CLI files
+### 1. Delete the CLI files
 
-With the standard installation process, Shopify App CLI is installed in your home directory. All the files are contained
- in a hidden directory called `.shopify-app-cli`, which you can delete to uninstall.
+By default, Shopify App CLI is installed in your home directory. All the files are contained in a hidden directory called `.shopify-app-cli`. Delete that directory to uninstall.
 
-### Remove the `shopify` command from your shell
+### 2. Remove the `shopify` command from your shell
 
-During the install process, Shopify App CLI adds a line to your shell configuration. This line is typically located in the `.bash_profile` file in your home directory (depending on your system, it may also be found in `.bash_login` or 
-  `.profile`). It will look similar to this:
+During the install process, Shopify App CLI adds a line to your shell configuration. This line is typically located in the `.bash_profile` file in your home directory (depending on your system, it may also be found in `.bash_login` or `.profile`). It will look similar to this:
 
 ```sh
-# The line won’t look exactly like this. `HOME_DIR` will instead be the absolute path to your home directory
+# The line won’t look exactly like this. `HOME_DIR` will instead be the absolute path to your home directory.
 if [[ -f /HOME_DIR/.shopify-cli/shopify.sh ]]; then source /HOME_DIR/.shopify-cli/shopify.sh; fi
 ```
 
-Deleting or commenting out this line will remove `shopify` as a command. You may need to reload your shell.
+You can use `grep` to search for the correct file in your home directory. This command will return the name of the relevant file, and the line number where it appears:
+
+```console
+$ grep -Ens "^if.+\.shopify-app-cli/shopify\.sh.+fi$" ~/\.*
+```
+
+Deleting or commenting out the relevant line in your shell profile will remove `shopify` as a command. You may need to reload your shell.
