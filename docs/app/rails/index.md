@@ -5,7 +5,7 @@ section: rails
 
 ## Create a new Rails app project
 
-To create a new Node project, type `shopify create rails`. This will scaffold a new Node.js app in a subdirectory.
+To create a new Rails project, type `shopify create rails`. This will scaffold a new Rails app in a subdirectory.
 
 ```console
 $ shopify create rails

@@ -1,5 +1,5 @@
 ---
-title: Node app project command reference
+title: Node.js app project command reference
 section: node
 ---
 
@@ -51,7 +51,7 @@ $ shopify populate products --count 10
 
 ## `serve`
 
-Start a local development node server for your project, as well as a public [ngrok](https://ngrok.com/) tunnel to your localhost.
+Start a local development server for your project, as well as a public [ngrok](https://ngrok.com/) tunnel to your localhost.
 
 ```console
 $ shopify serve

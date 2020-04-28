@@ -1,11 +1,11 @@
 ---
-title: Getting started with Node app projects
+title: Getting started with Node.js app projects
 section: node
 ---
 
 ## Create a new Node.js app project
 
-To create a new Node project, type `shopify create node`. This will scaffold a new Node.js app in a subdirectory.
+To create a new Node.js project, type `shopify create node`. This will scaffold a new Node.js app in a subdirectory.
 
 ```console
 $ shopify create node
