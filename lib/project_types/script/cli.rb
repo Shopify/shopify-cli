@@ -47,18 +47,17 @@ module Script
   autoload :ScriptProject, Project.project_filepath('script_project')
 
   class ScriptProjectError < StandardError; end
-  class InvalidContextError < ScriptProjectError; end
-  class ScriptProjectAlreadyExistsError < ScriptProjectError; end
-  class ServiceFailureError < ScriptProjectError; end
-  class TestSuiteNotFoundError < ScriptProjectError; end
   class DependencyError < ScriptProjectError; end
   class DependencyInstallError < ScriptProjectError; end
+  class InvalidContextError < ScriptProjectError; end
   class InvalidExtensionPointError < ScriptProjectError
     attr_reader :type
     def initialize(type)
       @type = type
     end
   end
+  class ServiceFailureError < ScriptProjectError; end
+  class ScriptProjectAlreadyExistsError < ScriptProjectError; end
   class ScriptNotFoundError < ScriptProjectError
     attr_reader :script_name, :extension_point_type
     def initialize(extension_point_type, script_name)
@@ -66,4 +65,5 @@ module Script
       @extension_point_type = extension_point_type
     end
   end
+  class TestSuiteNotFoundError < ScriptProjectError; end
 end
