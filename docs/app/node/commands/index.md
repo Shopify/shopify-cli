@@ -5,7 +5,7 @@ section: node
 
 ## `deploy`
 
-Deploy the current Node project to a hosting service. Currently, the only available option is [Heroku](https://www.heroku.com).
+Deploy the current Node.js app to a hosting service. Currently, the only option is [Heroku](https://www.heroku.com).
 
 ```console
 $ shopify deploy heroku
@@ -13,7 +13,7 @@ $ shopify deploy heroku
 
 ## `generate`
 
-Generate code in your app. 
+Generate boilerplate code inside your app project. Node.js apps support generating new **pages**, **billing API calls**, and **webhooks**.
 
 ```console
 $ shopify generate page
