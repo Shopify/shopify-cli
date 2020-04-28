@@ -1,6 +1,7 @@
 ---
 title: Node app projects
 section: node
+toc: false
 ---
 
 ## Getting started

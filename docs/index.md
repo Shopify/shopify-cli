@@ -1,6 +1,7 @@
 ---
 title: Introduction
 section: intro
+toc: false
 ---
 
 Shopify App CLI helps you build Shopify apps faster. It automates many common tasks in the development process and lets you quickly add popular features, such as billing and webhooks.

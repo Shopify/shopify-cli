@@ -1,6 +1,7 @@
 ---
 title: Rails app projects
 section: rails
+toc: false
 ---
 
 ## Getting started
