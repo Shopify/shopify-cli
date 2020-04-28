@@ -58,7 +58,9 @@
                 {% if page.toc %}
                   <h2 class="heading--4">On this page</h2>
 
-                  {% include toc.html html=content h_max=2 %}
+                  <div class="on-this-page">
+                    {% include toc.html html=content h_max=2 %}
+                  </div>
                 {% endif %}
 
                 {{ content }}
