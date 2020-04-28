@@ -13,7 +13,7 @@ $ shopify -h
 $ shopify --help
 ```
 
-You can also use the `help` command or flags to get more detailed information about a specific command:
+You can also use the `help` command or options to get more detailed information about a specific command:
 
 ```console
 $ shopify help [command]

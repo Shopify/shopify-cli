@@ -41,7 +41,7 @@ $ shopify populate customers
 $ shopify populate draftorders
 ```
 
-By default, the `populate` command adds 5 records. Use the `--count` flag to specify a different number:
+By default, the `populate` command adds 5 records. Use the `--count` option to specify a different number:
 
 ```console
 $ shopify populate products --count 10

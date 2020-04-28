@@ -13,7 +13,7 @@ $ shopify deploy heroku
 
 ## `generate`
 
-Generate boilerplate code inside your app project. Node.js apps support generating new **pages**, **billing API calls**, and **webhooks**.
+Generate boilerplate code inside your app project. Node.js apps support generating new **pages**, **Billing API calls**, and **webhooks**.
 
 ```console
 $ shopify generate page
@@ -43,7 +43,7 @@ $ shopify populate customers
 $ shopify populate draftorders
 ```
 
-By default, the `populate` command adds 5 records. Use the `--count` flag to specify a different number:
+By default, the `populate` command adds 5 records. Use the `--count` option to specify a different number:
 
 ```console
 $ shopify populate products --count 10

@@ -23,11 +23,14 @@ You’ll need to install the following tools to use Shopify App CLI on Windows:
 
 ## Install
 
-Shopify App CLI installs using a [shell script](https://raw.githubusercontent.com/Shopify/shopify-app-cli/master/install.sh). Download and run it in your terminal with one command:
+Shopify App CLI installs using a shell script. Download and run it in your terminal with one command:
 
 ```console
 eval "$(curl -sS https://raw.githubusercontent.com/Shopify/shopify-app-cli/master/install.sh)"
 ```
+
+([View shell script source](https://raw.githubusercontent.com/Shopify/shopify-app-cli/master/install.sh))
+
 
 ## Uninstall
 
