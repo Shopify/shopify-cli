@@ -1,50 +1,82 @@
 ---
-title: Node app project command reference
+title: Node.js app project command reference
 section: node
 ---
 
-## create
+## `deploy`
 
-- `shopify create node` creates a new Node project in a subdirectory of the current directory.
+Deploy the current Node.js app to a hosting service. Currently, the only option is [Heroku](https://www.heroku.com).
 
-## deploy
+```console
+$ shopify deploy heroku
+```
 
-Deploy the current Node project to a hosting service. [Heroku](https://www.heroku.com) is currently the only option, 
-but more will be added in the future.
+## `generate`
 
-- `shopify deploy heroku` deploys the current Node project to Heroku 
+Generate boilerplate code inside your app project. Node.js apps support generating new **pages**, **Billing API calls**, and **webhooks**.
 
-## generate
+```console
+$ shopify generate page
+$ shopify generate billing
+$ shopify generate webhook
+```
 
-Generate code in your app project. Supports generating new pages, new billing API calls, or new webhooks.
+## `open`
 
-- `shopify generate page` generates a new page in your project.
-- `shopify generate billing` generates a new billing API call.
-- `shopify generate webhook` generates a new webhook.
+Open your local development app in your default browser.
 
-## open
+```console
+$ shopify open
+```
 
-Open your local development app in the default browser.
+## `populate`
 
-- `shopify open`
+Add example data to your development store. This is useful for testing your app’s behavior. You can create the following types of example store records:
 
-## populate
-Populate your Shopify development store with example products, customers, or orders.
+- Products
+- Customers
+- Orders
 
-- `shopify populate products`
-- `shopify populate customers`
-- `shopify populate draftorders`
+```console
+$ shopify populate products
+$ shopify populate customers
+$ shopify populate draftorders
+```
 
-## serve
-Start a local development node server for your project, as well as a public [ngrok](https://ngrok.com/) tunnel to your 
-localhost.
+By default, the `populate` command adds 5 records. Use the `--count` option to specify a different number:
 
-- `shopify serve`
+```console
+$ shopify populate products --count 10
+```
 
-## tunnel
-Start or stop an http tunnel to your local development app using ngrok.
+## `serve`
 
-- `shopify tunnel auth` writes an ngrok auth token to `~/.ngrok2/ngrok.yml` to allow connecting with an ngrok account.
-  [Visit the ngrok site to sign up](https://dashboard.ngrok.com/signup) 
-- `shopify tunnel start` starts the ngrok tunnel for your app
-- `shopify tunnel stop` stops the ngrok tunnel for your app
+Start a local development server for your project, as well as a public [ngrok](https://ngrok.com/) tunnel to your localhost.
+
+```console
+$ shopify serve
+```
+
+## `tunnel`
+
+Control an HTTP tunnel to your local development app using [ngrok](https://ngrok.com). With the `tunnel` command you can authenticate with ngrok and start or stop the tunnel. (Note that the `serve` command will automatically run `tunnel start` for you.)
+
+To authenticate with ngrok, you need an authentication token. You can find it in [your ngrok dashboard](https://dashboard.ngrok.com/auth/your-authtoken). Copy your token and use it with the `tunnel auth` command:
+
+```console
+$ shopify tunnel auth <token>
+```
+
+This will write your ngrok auth token to `~/.ngrok2/ngrok.yml`. To learn more about ngrok configuration, [consult ngrok’s documentation](https://ngrok.com/docs#config).
+
+To start an ngrok tunnel to your app in your localhost development environment:
+
+```console
+$ shopify tunnel start
+```
+
+To stop the running ngrok tunnel:
+
+```console
+$ shopify tunnel stop
+```

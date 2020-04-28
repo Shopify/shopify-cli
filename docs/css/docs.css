@@ -4,6 +4,14 @@ article {
   min-height: 80vh;
 }
 
+article a:link {
+  text-decoration: underline;
+}
+
+article a:hover {
+  text-decoration: none;
+}
+
 article h1,
 article h2,
 article h3,
@@ -62,6 +70,12 @@ code {
   background: #f4f6f8;
   border: 1px solid #c4cdd5;
   overflow-wrap: break-word;
+}
+
+h1 code, h2 code, h3 code, .on-this-page code {
+  background-color: transparent;
+  border: none;
+  padding: 0;
 }
 
 #PageContainer {
