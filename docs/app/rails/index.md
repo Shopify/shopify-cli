@@ -30,5 +30,5 @@ install it on a development store.
     $ shopify open
     ```
 
-For more information, look at the [command reference]({% link app/node/commands/index.md %}).
+For more information, look at the [command reference]({{ site.baseurl }}{% link app/node/commands/index.md %}).
 
