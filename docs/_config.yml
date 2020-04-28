@@ -1,4 +1,4 @@
-name: Shopify App CLI
+title: Shopify App CLI
 markdown: kramdown
 exclude: [
   'heroku/',
