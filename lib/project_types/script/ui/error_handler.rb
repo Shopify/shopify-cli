@@ -63,6 +63,10 @@ module Script
             cause_of_error: "Directory with the same name as the script already exists.",
             help_suggestion: "Use different script name and try again.",
           }
+        when TestError
+          {
+            help_suggestion: "Correct the errors and try again.",
+          }
         end
       end
     end
