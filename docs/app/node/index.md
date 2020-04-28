@@ -13,9 +13,7 @@ section: node
     >
     ```
 
-2. Once your app is created, you can work with it immediately by typing `shopify serve` to start a local development
-server, which uses [ngrok](https://ngrok.com) to create a tunnel. ngrok will choose a unique URL for you. The server 
-will stay open until you type Ctrl-C.
+2. Once your app is created, you can work with it immediately by typing `shopify serve` to start a local development server. Shopify App CLI uses [ngrok](https://ngrok.com) to create a tunnel. ngrok will choose a unique URL for you. The server will stay open until you type **Ctrl-C**.
 
     ```console
     $ shopify serve
@@ -23,8 +21,7 @@ will stay open until you type Ctrl-C.
     ✓ writing .env file...
     ```
 
-3. With the server running, open a new terminal window and type `shopify open` to open your app in your browser and 
-install it on a development store.
+3. With the server running, open a new terminal window and type `shopify open` to open your app in your browser and install it on a development store.
 
     ```console
     $ shopify open

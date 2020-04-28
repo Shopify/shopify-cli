@@ -10,8 +10,8 @@ Developers should have some prior knowledge of the [Shopify app ecosystem](https
 - [Ruby](https://www.ruby-lang.org) 2.5.1+ 
 - [Node.js](https://nodejs.org) 10.0.0+
 - [curl](https://curl.haxx.se) 7.0.0+
-- You’ll need a [Shopify partner account](https://partners.shopify.com/signup)
-- You’ll need to [create a development store](https://help.shopify.com/en/partners/dashboard/development-stores#create-a-development-store) to install and test apps
+- A [Shopify partner account](https://partners.shopify.com/signup)
+- A [Shopify development store](https://help.shopify.com/en/partners/dashboard/development-stores#create-a-development-store) to install and test apps
 
 ### Windows requirements
 
@@ -32,8 +32,8 @@ eval "$(curl -sS https://raw.githubusercontent.com/Shopify/shopify-app-cli/maste
 
 There are two steps to completely uninstall Shopify App CLI:
 
-1. Delete the CLI files.
-1. Remove the `shopify` command from your shell profile.
+1. Delete the CLI files
+1. Remove the `shopify` command from your shell profile
 
 ### 1. Delete the CLI files
 
