@@ -1,6 +1,7 @@
 ---
 title: Getting started with Rails app projects
 section: rails
+toc: false
 ---
 
 ## Create a new Rails app project

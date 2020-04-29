@@ -1,6 +1,7 @@
 ---
 title: Getting started with Node.js app projects
 section: node
+toc: false
 ---
 
 ## Create a new Node.js app project

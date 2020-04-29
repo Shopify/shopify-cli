@@ -1,6 +1,7 @@
 ---
 title: Introduction
 section: intro
+toc: false
 ---
 
 Shopify App CLI helps you build Shopify apps faster. It quickly scaffolds Node.js and Ruby on Rails apps, and automates many common development tasks.
