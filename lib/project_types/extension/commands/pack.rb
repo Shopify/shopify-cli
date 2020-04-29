@@ -4,6 +4,8 @@ require 'shopify_cli'
 module Extension
   module Commands
     class Pack < ShopifyCli::Command
+      hidden_command
+
       YARN_BUILD_COMMAND = %w(yarn build)
       NPM_BUILD_COMMAND = %w(npm run-script build)
 

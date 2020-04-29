@@ -58,13 +58,12 @@ module Extension
         end
       end
 
-      def test_informs_user_if_there_are_no_apps
+      def test_aborts_and_informs_user_if_there_are_no_apps
         Tasks::GetApps.any_instance.unstub(:call)
         Tasks::GetApps.any_instance.expects(:call).with(context: @context).returns([]).once
+        @context.expects(:abort).with(Content::Create::NO_APPS).raises(ShopifyCli::Abort).once
 
-        output = capture_io { ask }
-
-        assert_match Content::Create::NO_APPS, output.join
+        capture_io { ask }
       end
 
       def test_accepts_the_api_key_to_associate_with_extension

@@ -22,6 +22,10 @@ module Extension
         ShopifyCli::ProjectType.load_type(:extension)
       end
 
+      def test_is_a_hidden_command
+        assert Commands::Pack.hidden
+      end
+
       def test_prints_help
         @context.expects(:puts).with(Extension::Commands::Pack.help)
         run_cmd('help pack')
