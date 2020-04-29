@@ -11,7 +11,6 @@ module Minitest
     include TestHelpers::Project
 
     def setup
-      project_context('project')
       super
     end
 

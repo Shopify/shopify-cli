@@ -16,16 +16,15 @@ module Node
           stub_successful_heroku_flow
         end
 
-        def test_help_argument_calls_help
-          @context.expects(:puts).with(Node::Commands::Deploy::Heroku.help)
-          run_cmd('help deploy heroku')
+        def test_help
+          assert Node::Commands::Deploy::Heroku.help.include?("#{ShopifyCli::TOOL_NAME} deploy heroku")
         end
 
         def test_call_doesnt_download_heroku_cli_if_it_is_installed
           expects_heroku_installed(status: true, twice: true)
           expects_heroku_download(status: nil)
 
-          run_cmd('deploy heroku')
+          Node::Commands::Deploy::Heroku.call([], "heroku", "deploy")
         end
 
         def test_call_downloads_heroku_cli_if_it_is_not_installed

@@ -2,8 +2,6 @@ module TestHelpers
   module FakeUI
     class FakeSpinner
       def update_title(*); end
-
-      def wait; end
     end
 
     class FakeFrame
@@ -21,6 +19,7 @@ module TestHelpers
       super
       CLI::UI::Frame.stubs(:open).yields
       CLI::UI::SpinGroup.any_instance.stubs(:add).yields(FakeSpinner.new)
+      CLI::UI::SpinGroup.any_instance.stubs(:wait)
       CLI::UI::Progress.stubs(:progress).yields(FakeProgress.new)
     end
   end

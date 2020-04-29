@@ -18,6 +18,7 @@ module ShopifyCli
     end
 
     def authenticate
+      binding.pry
       result = @ctx.system(heroku_command, 'login')
       @ctx.abort("Could not authenticate with Heroku") unless result.success?
     end
