@@ -19,17 +19,33 @@ module Extension
         context: @new_context,
         api_key: 'test_key',
         api_secret: 'test_secret',
+        title: 'Registration Title',
         type: @type.identifier
       )
 
       assert File.exists?('.env')
       assert File.exists?('.shopify-cli.yml')
       assert_equal :extension, ShopifyCli::Project.current_project_type
+    end
 
-      project = ExtensionProject.current
-      assert_equal 'test_key', project.env['api_key']
-      assert_equal 'test_secret', project.env['secret']
-      assert_equal @type.identifier, project.extension_type.identifier
+    def test_can_access_app_specific_values_as_an_app
+      assert_kind_of Models::App, @project.app
+      assert_equal @api_key, @project.app.api_key
+      assert_equal @api_secret, @project.app.secret
+    end
+
+    def test_title_returns_the_title
+      assert_equal @title, @project.title
+    end
+
+    def test_title_returns_nil_if_title_is_missing
+      setup_temp_project(title: nil)
+      assert_nil ExtensionProject.current.title
+    end
+
+    def test_extension_type_returns_the_set_type_as_a_type_instance
+      assert_kind_of Models::Type, @project.extension_type
+      assert_equal @type.identifier, @project.extension_type.identifier
     end
 
     def test_can_write_and_read_registration_id_values
@@ -37,10 +53,6 @@ module Extension
       @project.set_registration_id(@context, 42)
 
       assert_equal 42, @project.registration_id
-    end
-
-    def test_extension_type_returns_a_type_instance
-      assert_kind_of Models::Type, @project.extension_type
     end
 
     def test_detects_if_registration_id_is_missing_or_invalid

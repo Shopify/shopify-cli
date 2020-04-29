@@ -5,10 +5,11 @@ module Extension
     module TempProjectSetup
       include ExtensionTestHelpers::TestExtensionSetup
 
-      def setup_temp_project(api_key: 'TEST_KEY', api_secret: 'TEST_SECRET', type: @test_extension_type)
+      def setup_temp_project(api_key: 'TEST_KEY', api_secret: 'TEST_SECRET', title: 'Test', type: @test_extension_type)
         @context = TestHelpers::FakeContext.new(root: Dir.mktmpdir)
         @api_key = api_key
         @api_secret = api_secret
+        @title = title
         @type = type
 
         FileUtils.cd(@context.root)
@@ -16,6 +17,7 @@ module Extension
           context: @context,
           api_key: @api_key,
           api_secret: @api_secret,
+          title: @title,
           type: @type.identifier
         )
 

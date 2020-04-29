@@ -17,6 +17,7 @@ module Extension
             context: @ctx,
             api_key: form.app.api_key,
             api_secret: form.app.secret,
+            title: form.name,
             type: form.type.identifier
           )
 
