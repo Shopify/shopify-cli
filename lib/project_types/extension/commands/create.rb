@@ -51,8 +51,7 @@ module Extension
         @ctx.root = File.join(@ctx.root, name)
 
         begin
-          @ctx.rm_r(File.join(@ctx.root, '.git'))
-          @ctx.rm(File.join(@ctx.root, 'yarn.lock'))
+          @ctx.rm_r('.git')
         rescue Errno::ENOENT => e
           @ctx.debug(e)
         end

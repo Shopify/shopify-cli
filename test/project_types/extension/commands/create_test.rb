@@ -32,8 +32,7 @@ module Extension
         end
 
         refute File.exists?('myext/.git'), 'Expected .git directory to be removed'
-        lockfile_content = File.read('myext/yarn.lock')
-        assert_equal lockfile_content, '# Dummy lockfile'
+        assert File.exists?('myext/yarn.lock'), 'Expected yarn.lock directory to be removed'
 
         assert_match Content::Create::READY_TO_START % name, io.join
         assert_match Content::Create::LEARN_MORE % @test_extension_type.name, io.join
