@@ -14,7 +14,7 @@ module Extension
         def setup
           super
           setup_temp_project
-          @subscription_management = Models::Type.load_type('SUBSCRIPTION_MANAGEMENT')
+          @subscription_management = Models::Type.load_type(SubscriptionManagement::IDENTIFIER)
         end
 
         def test_aborts_with_error_if_script_file_doesnt_exist
@@ -22,7 +22,7 @@ module Extension
             @subscription_management.config(@context)
           end
 
-          assert error.message.include?(SubscriptionManagement::MISSING_FILE_ERROR)
+          assert error.message.include?(@subscription_management.get_content(:missing_file_error))
         end
 
         def test_aborts_with_error_if_script_serialization_fails
@@ -30,7 +30,7 @@ module Extension
           Base64.stubs(:strict_encode64).raises(IOError)
 
           error = assert_raises(ShopifyCli::Abort) { @subscription_management.config(@context) }
-          assert error.message.include?(SubscriptionManagement::SCRIPT_PREPARE_ERROR)
+          assert error.message.include?(@subscription_management.get_content(:script_prepare_error))
         end
 
         def test_aborts_with_error_if_file_read_fails
@@ -38,7 +38,7 @@ module Extension
           File.any_instance.stubs(:read).raises(IOError)
 
           error = assert_raises(ShopifyCli::Abort) { @subscription_management.config(@context) }
-          assert error.message.include?(SubscriptionManagement::SCRIPT_PREPARE_ERROR)
+          assert error.message.include?(@subscription_management.get_content(:script_prepare_error))
         end
 
         def test_encodes_script_into_context_if_it_exists

@@ -63,7 +63,10 @@ module Extension
       end
 
       def test_outputs_an_error_and_prompts_the_user_to_choose_a_type_if_an_unknown_type_was_provided_as_flag
-        CLI::UI::Prompt.expects(:interactive_prompt).returns(@test_extension_type.name).once
+        CLI::UI::Prompt
+          .expects(:interactive_prompt)
+          .returns("#{@test_extension_type.name} #{@test_extension_type.tagline}")
+          .once
 
         io = capture_io { ask(type: 'unknown-type') }
 

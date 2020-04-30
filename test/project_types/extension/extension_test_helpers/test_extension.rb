@@ -3,12 +3,14 @@
 module Extension
   module ExtensionTestHelpers
     class TestExtension < Models::Type
-      def identifier
-        'TEST_EXTENSION'
-      end
+      IDENTIFIER = 'TEST_EXTENSION'
 
       def name
         'Test Extension'
+      end
+
+      def tagline
+        'An extension for testing'
       end
 
       def config(_context)

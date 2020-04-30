@@ -1,3 +1,5 @@
+# frozen_string_literal: true
+
 module Extension
   module Content
     module Create
@@ -37,6 +39,17 @@ module Extension
       FRAME_TITLE = 'Serving extension...'
 
       SERVE_FAILURE_MESSAGE = 'Failed to run extension code for testing.'
+    end
+
+    module Models
+      TYPES = {
+        Extension::Models::Types::SubscriptionManagement::IDENTIFIER => {
+          name: 'Subscription Management',
+          tagline: '(limit 1 per app)',
+          missing_file_error: 'Could not find built extension file.',
+          script_prepare_error: 'An error occurred while attempting to prepare your script.'
+        }
+      }
     end
   end
 end

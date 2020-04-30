@@ -13,7 +13,7 @@ module Extension
 
       def teardown
         super
-        Models::Type.repository.delete(ExtensionTestHelpers::TestExtension.new.identifier)
+        Models::Type.repository.delete(ExtensionTestHelpers::TestExtension::IDENTIFIER)
       end
     end
   end

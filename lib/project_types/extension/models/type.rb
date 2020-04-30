@@ -34,11 +34,15 @@ module Extension
       end
 
       def identifier
-        raise NotImplementedError, "'#{__method__}' must be implemented for #{self.class}"
+        self.class::IDENTIFIER
       end
 
       def name
-        raise NotImplementedError, "'#{__method__}' must be implemented for #{self.class}"
+        get_content(:name)
+      end
+
+      def tagline
+        get_content(:tagline) || ""
       end
 
       def config(_context)
@@ -51,6 +55,10 @@ module Extension
 
       def valid_extension_contexts
         []
+      end
+
+      def get_content(key)
+        Content::Models::TYPES.dig(identifier, key)
       end
     end
   end

@@ -38,7 +38,7 @@ module Extension
 
         CLI::UI::Prompt.ask(Content::Create::ASK_TYPE) do |handler|
           Models::Type.repository.values.each do |type|
-            handler.option(type.name) { type }
+            handler.option("#{type.name} #{type.tagline}") { type }
           end
         end
       end
