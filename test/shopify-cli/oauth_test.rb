@@ -213,8 +213,8 @@ module ShopifyCli
       client = oauth
       @context.expects(:open_url!)
       stub_server(client, {
-        error: 'err',
-        error_description: 'error',
+        'error' => 'err',
+        'error_description' => 'error',
       })
       stub_request(:post, "#{endpoint}/authorize")
       assert_raises OAuth::Error do
@@ -273,8 +273,8 @@ module ShopifyCli
 
     def stub_auth_response(client)
       stub_server(client, {
-        code: 'mycode',
-        state: client.state_token,
+        'code' => 'mycode',
+        'state' => client.state_token,
       })
     end
 
@@ -282,7 +282,7 @@ module ShopifyCli
       server = Object.new
       client.stubs(:server).returns(server)
       server.expects(:start)
-      client.response_query = resp.transform_keys(&:to_s)
+      client.response_query = resp
     end
 
     def token_resp
