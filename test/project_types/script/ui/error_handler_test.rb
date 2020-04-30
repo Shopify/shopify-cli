@@ -98,42 +98,42 @@ describe Script::UI::ErrorHandler do
       end
 
       describe "when InvalidContextError" do
-        let(:err) { Script::InvalidContextError.new('') }
+        let(:err) { Script::Errors::InvalidContextError.new('') }
         it "should call display_and_raise" do
           should_call_display_and_raise
         end
       end
 
       describe "when ScriptProjectAlreadyExistsError" do
-        let(:err) { Script::ScriptProjectAlreadyExistsError.new('/') }
+        let(:err) { Script::Errors::ScriptProjectAlreadyExistsError.new('/') }
         it "should call display_and_raise" do
           should_call_display_and_raise
         end
       end
 
       describe "when InvalidExtensionPointError" do
-        let(:err) { Script::InvalidExtensionPointError.new('') }
+        let(:err) { Script::Layers::Domain::Errors::InvalidExtensionPointError.new('') }
         it "should call display_and_raise" do
           should_call_display_and_raise
         end
       end
 
       describe "when ScriptNotFoundError" do
-        let(:err) { Script::ScriptNotFoundError.new('ep type', 'name') }
+        let(:err) { Script::Layers::Domain::Errors::ScriptNotFoundError.new('ep type', 'name') }
         it "should call display_and_raise" do
           should_call_display_and_raise
         end
       end
 
       describe "when DependencyInstallError" do
-        let(:err) { Script::DependencyInstallError.new }
+        let(:err) { Script::Layers::Infrastructure::Errors::DependencyInstallError.new }
         it "should call display_and_raise" do
           should_call_display_and_raise
         end
       end
 
       describe "when TestError" do
-        let(:err) { Script::TestError.new }
+        let(:err) { Script::Layers::Infrastructure::Errors::TestError.new }
         it "should call display_and_raise" do
           should_call_display_and_raise
         end

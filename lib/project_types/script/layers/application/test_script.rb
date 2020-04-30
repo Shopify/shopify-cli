@@ -22,9 +22,10 @@ module Script
           def run_tests(ctx, language, extension_point_type, script_name)
             ensure_valid_test_suite(language, extension_point_type, script_name)
 
-            raise TestError unless Infrastructure::TestSuiteRepository.new.with_test_suite_context do
+            success = Infrastructure::TestSuiteRepository.new.with_test_suite_context do
               Infrastructure::AssemblyScriptTestRunner.new(ctx: ctx).run_tests
             end
+            raise Infrastructure::Errors::TestError unless success
           end
 
           def ensure_valid_test_suite(language, extension_point_type, script_name)

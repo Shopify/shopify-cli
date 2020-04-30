@@ -28,11 +28,13 @@ module Script
     end
 
     module Domain
+      autoload :Errors, Project.project_filepath('layers/domain/errors')
       autoload :ExtensionPoint, Project.project_filepath('layers/domain/extension_point')
       autoload :Script, Project.project_filepath('layers/domain/script')
     end
 
     module Infrastructure
+      autoload :Errors, Project.project_filepath('layers/infrastructure/errors')
       autoload :AssemblyScriptTsConfig, Project.project_filepath('layers/infrastructure/assemblyscript_tsconfig')
       autoload :AssemblyScriptDependencyManager,
                Project.project_filepath('layers/infrastructure/assemblyscript_dependency_manager')
@@ -51,26 +53,7 @@ module Script
   end
 
   autoload :ScriptProject, Project.project_filepath('script_project')
+  autoload :Errors, Project.project_filepath('errors')
 
   class ScriptProjectError < StandardError; end
-  class DependencyError < ScriptProjectError; end
-  class DependencyInstallError < ScriptProjectError; end
-  class InvalidContextError < ScriptProjectError; end
-  class InvalidExtensionPointError < ScriptProjectError
-    attr_reader :type
-    def initialize(type)
-      @type = type
-    end
-  end
-  class ServiceFailureError < ScriptProjectError; end
-  class ScriptProjectAlreadyExistsError < ScriptProjectError; end
-  class ScriptNotFoundError < ScriptProjectError
-    attr_reader :script_name, :extension_point_type
-    def initialize(extension_point_type, script_name)
-      @script_name = script_name
-      @extension_point_type = extension_point_type
-    end
-  end
-  class TestError < ScriptProjectError; end
-  class TestSuiteNotFoundError < ScriptProjectError; end
 end

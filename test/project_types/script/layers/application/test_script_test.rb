@@ -56,7 +56,7 @@ describe Script::Layers::Application::TestScript do
         Script::Layers::Infrastructure::AssemblyScriptTestRunner
           .any_instance.expects(:run_tests)
           .returns(false)
-        assert_raises(Script::TestError) do
+        assert_raises(Script::Layers::Infrastructure::Errors::TestError) do
           capture_io { subject }
         end
       end
