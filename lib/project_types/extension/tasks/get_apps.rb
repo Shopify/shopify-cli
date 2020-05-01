@@ -13,12 +13,13 @@ module Extension
 
       def apps_from_organizations(organizations)
         organizations.flat_map do |organization|
-          return [] unless organization.key?('apps') && organization['apps'].any?
           apps_owned_by_organization(organization)
         end
       end
 
       def apps_owned_by_organization(organization)
+        return [] unless organization.key?('apps') && organization['apps'].any?
+
         organization['apps'].map do |app|
           Models::App.new(
             api_key: app['apiKey'],

@@ -25,7 +25,9 @@ module Extension
 
         JsDeps.expects(:install).add_side_effect(CreateDummyLockfile.new)
         ShopifyCli::Core::Finalize.expects(:request_cd).with('myext')
-        stub_get_organizations
+        stub_get_organizations([
+          organization(name: "Organization One", apps: [Models::App.new(api_key: '1234', secret: '4567')])
+        ])
 
         io = capture_io do
           run_cmd("create extension --name=#{name} --type=#{@test_extension_type.identifier} --api-key=1234")

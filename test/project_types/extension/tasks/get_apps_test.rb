@@ -11,15 +11,13 @@ module Extension
       def setup
         super
         ShopifyCli::ProjectType.load_type(:extension)
+        @app = Models::App.new(title: 'App One', api_key: '1234', secret: '5678')
       end
 
       def test_loads_all_apps_into_a_list_from_organizations
-        stub_get_organizations(
-          organization_name: 'Organization One',
-          app_title: 'App One',
-          api_key: '1234',
-          api_secret: '5678'
-        )
+        stub_get_organizations([
+          organization(name: 'Organization One', apps: [@app])
+        ])
 
         app_list = Tasks::GetApps.call(context: @context)
         app = app_list.first
@@ -32,15 +30,26 @@ module Extension
       end
 
       def test_returns_empty_array_if_there_are_no_organizations
-        stub_no_organizations
+        stub_get_organizations([])
 
         assert_empty Tasks::GetApps.call(context: @context)
       end
 
       def test_returns_empty_array_if_there_are_no_apps
-        stub_no_apps(organization_name: 'Organization One')
+        stub_get_organizations([
+          organization(name: 'Organization One', apps: [])
+        ])
 
         assert_empty Tasks::GetApps.call(context: @context)
+      end
+
+      def test_can_handle_multiple_organizations_where_one_has_no_apps
+        stub_get_organizations([
+          organization(name: 'Organization One', apps: [@app]),
+          organization(name: 'Organization Two', apps: []),
+        ])
+
+        assert_equal 1, Tasks::GetApps.call(context: @context).size
       end
     end
   end
