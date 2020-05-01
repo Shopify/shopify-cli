@@ -58,6 +58,11 @@ module Extension
           }
         },
       },
+      tasks: {
+        errors: {
+          parse_error: 'Unable to parse response from Partners Dashboard.'
+        }
+      },
       errors: {
         unknown_type: 'Unknown extension type %s'
       }

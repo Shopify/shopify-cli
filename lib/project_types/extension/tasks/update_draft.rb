@@ -8,15 +8,8 @@ module Extension
 
       GRAPHQL_FILE = 'extension_update_draft'
 
-      REGISTRATION_ID_FIELD = 'registrationId'
-      CONTEXT_FIELD = 'context'
-      LAST_USER_INTERACTION_AT_FIELD = 'lastUserInteractionAt'
-      LOCATION_FIELD = 'location'
-
       RESPONSE_FIELD = %w(data extensionUpdateDraft)
       VERSION_FIELD = 'extensionVersion'
-
-      PARSE_ERROR = 'Unable to parse response from Partners Dashboard.'
 
       def call(context:, api_key:, registration_id:, config:, extension_context:)
         input = {
@@ -26,24 +19,10 @@ module Extension
           extension_context: extension_context,
         }
         response = ShopifyCli::PartnersAPI.query(context, GRAPHQL_FILE, input).dig(*RESPONSE_FIELD)
-        context.abort(PARSE_ERROR) if response.nil?
+        context.abort(context.message('tasks.errors.parse_error')) if response.nil?
 
         abort_if_user_errors(context, response)
-        response_to_version(context, response)
-      end
-
-      private
-
-      def response_to_version(context, response)
-        version_hash = response.dig(VERSION_FIELD)
-        context.abort(PARSE_ERROR) if version_hash.nil?
-
-        Models::Version.new(
-          registration_id: version_hash[REGISTRATION_ID_FIELD].to_i,
-          context: version_hash[CONTEXT_FIELD],
-          last_user_interaction_at: Time.parse(version_hash[LAST_USER_INTERACTION_AT_FIELD]),
-          location: version_hash[LOCATION_FIELD]
-        )
+        Converters::VersionConverter.from_hash(context, response.dig(VERSION_FIELD))
       end
     end
   end

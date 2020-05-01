@@ -5,6 +5,10 @@ mutation ExtensionUpdateDraft($api_key: String!, $registration_id: ID!, $config:
       context
       lastUserInteractionAt
       location
+      validationErrors {
+        field
+        message
+      }
     }
     userErrors {
       field

@@ -5,7 +5,9 @@ require 'project_types/extension/extension_test_helpers'
 module Extension
   module Tasks
     class CreateExtensionTest < MiniTest::Test
+      include TestHelpers::FakeUI
       include TestHelpers::Partners
+      include ExtensionTestHelpers::Messages
       include ExtensionTestHelpers::Stubs::CreateExtension
 
       def setup
@@ -42,15 +44,12 @@ module Extension
         )
 
         assert_kind_of Models::Registration, created_registration
-        assert_equal @fake_type, created_registration.type
-        assert_equal @fake_title, created_registration.title
-        assert_kind_of Time, created_registration.draft_version.last_user_interaction_at
       end
 
       def test_aborts_with_parse_error_if_no_created_registration_or_errors_are_returned
         stub_create_extension_failure(userErrors: [], **@input)
 
-        error = assert_raises(ShopifyCli::Abort) do
+        io = capture_io_and_assert_raises(ShopifyCli::Abort) do
           Tasks::CreateExtension.call(
             context: @context,
             api_key: @api_key,
@@ -61,14 +60,14 @@ module Extension
           )
         end
 
-        assert_match Tasks::UpdateDraft::PARSE_ERROR, error.message
+        assert_message_output(io: io, expected_content: @context.message('tasks.errors.parse_error'))
       end
 
       def test_aborts_with_errors_if_user_errors_are_returned
         user_errors = [ {field: ['field'], UserErrors::MESSAGE_FIELD => 'An error occurred on field'} ]
         stub_create_extension_failure(userErrors: user_errors, **@input)
 
-        error = assert_raises(ShopifyCli::Abort) do
+        io = capture_io_and_assert_raises(ShopifyCli::Abort) do
           Tasks::CreateExtension.call(
             context: @context,
             api_key: @api_key,
@@ -79,7 +78,7 @@ module Extension
           )
         end
 
-        assert_match 'An error occurred on field', error.message
+        assert_message_output(io: io, expected_content: 'An error occurred on field')
       end
     end
   end

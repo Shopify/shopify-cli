@@ -32,6 +32,12 @@ module Extension
     autoload :GetApps, Project.project_filepath('tasks/get_apps')
     autoload :CreateExtension, Project.project_filepath('tasks/create_extension')
     autoload :UpdateDraft, Project.project_filepath('tasks/update_draft')
+
+    module Converters
+      autoload :RegistrationConverter, Project.project_filepath('tasks/converters/registration_converter')
+      autoload :VersionConverter, Project.project_filepath('tasks/converters/version_converter')
+      autoload :ValidationErrorConverter, Project.project_filepath('tasks/converters/validation_error_converter')
+    end
   end
 
   module Forms
@@ -49,6 +55,7 @@ module Extension
     autoload :Registration, Project.project_filepath('models/registration')
     autoload :Version, Project.project_filepath('models/version')
     autoload :Type, Project.project_filepath('models/type')
+    autoload :ValidationError, Project.project_filepath('models/validation_error')
 
     class << self
       Models::Type.load_all
