@@ -14,6 +14,12 @@ module Extension
       LEARN_MORE = 'Learn more about building %s extensions at <shopify.dev>'
     end
 
+    module Pack
+      FRAME_TITLE = "Packing extension with: %s..."
+
+      BUILD_FAILURE_MESSAGE = 'Failed to pack extension code for deployment.'
+    end
+
     module Push
       FRAME_TITLE = 'Pushing your extension to Shopify'
       WAITING_TEXT = 'Pushing to Shopify...'
@@ -24,6 +30,12 @@ module Extension
 
       SUCCESS_CONFIRMATION = '{{v}} Extension has been pushed to a draft.'
       SUCCESS_INFO = '{{*}} Visit the Partner\'s Dashboard to create and publish versions.'
+    end
+
+    module Serve
+      FRAME_TITLE = 'Running your extension'
+
+      SERVE_FAILURE_MESSAGE = 'Failed to run extension code for testing.'
     end
   end
 end

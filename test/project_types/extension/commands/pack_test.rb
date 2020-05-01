@@ -48,7 +48,7 @@ module Extension
       def test_aborts_and_informs_the_user_when_build_fails
         Pack.any_instance.stubs(:yarn_available?).returns(true)
         @context.expects(:system).with(*Pack::YARN_BUILD_COMMAND).returns(FakeProcessStatus.new(false))
-        @context.expects(:abort).with(Pack::BUILD_FAILURE_MESSAGE)
+        @context.expects(:abort).with(Content::Pack::BUILD_FAILURE_MESSAGE)
 
         run_cmd('pack')
       end

@@ -8,11 +8,11 @@ module Extension
       YARN_SERVE_COMMAND = %w(yarn server)
       NPM_SERVE_COMMAND = %w(npm run-script server)
 
-      SERVE_FAILURE_MESSAGE = 'Failed to run extension code for testing.'
+
 
       def call(args, command_name)
-        CLI::UI::Frame.open('Running your extension') do
-          @ctx.abort(SERVE_FAILURE_MESSAGE) unless serve.success?
+        CLI::UI::Frame.open(Content::Pack::FRAME_TITLE) do
+          @ctx.abort(Content::Serve::SERVE_FAILURE_MESSAGE) unless serve.success?
         end
       end
 
