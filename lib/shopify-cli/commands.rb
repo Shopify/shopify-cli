@@ -18,6 +18,7 @@ module ShopifyCli
     register :LoadDev, 'load-dev', 'shopify-cli/commands/load_dev'
     register :LoadSystem, 'load-system', 'shopify-cli/commands/load_system'
     register :Logout, 'logout', 'shopify-cli/commands/logout'
+    register :System, 'system', 'shopify-cli/commands/system'
     register :Update, 'update', 'shopify-cli/commands/update'
   end
 end
