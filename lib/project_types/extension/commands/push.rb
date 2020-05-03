@@ -12,7 +12,7 @@ module Extension
         CLI::UI::Frame.open(Content::Push::FRAME_TITLE) do
           @project.registration_id? ? update_draft : confirm_before_creating_extension
 
-          @ctx.puts(Content::Push::SUCCESS_CONFIRMATION)
+          @ctx.puts(Content::Push::SUCCESS_CONFIRMATION % @project.title)
           @ctx.puts(Content::Push::SUCCESS_INFO)
         end
       end
@@ -37,7 +37,7 @@ module Extension
 
         Tasks::UpdateDraft.call(
           context: @ctx,
-          api_key: @project.env['api_key'],
+          api_key: @project.app.api_key,
           registration_id: @project.registration_id,
           config: @project.extension_type.config(@ctx),
           extension_context: @project.extension_type.extension_context(@ctx)
@@ -55,9 +55,9 @@ module Extension
 
         registration = Tasks::CreateExtension.call(
           context: @ctx,
-          api_key: @project.env['api_key'],
+          api_key: @project.app.api_key,
           type: @project.extension_type.identifier,
-          title: 'Testing the CLI',
+          title: @project.title,
           config: @project.extension_type.config(@ctx),
           extension_context: @project.extension_type.extension_context(@ctx)
         )

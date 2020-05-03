@@ -77,6 +77,12 @@ module Extension
       @project.set_registration_id(@context, 42)
     end
 
+    def test_set_registration_id_does_not_write_the_env_file_if_registration_id_empty
+      ShopifyCli::Resources::EnvFile.any_instance.expects(:write).never
+
+      @project.set_registration_id(@context, nil)
+    end
+
     def test_delegate_standard_project_methods_to_internal_project_instance
       @project.project.expects(:env).once
       @project.env

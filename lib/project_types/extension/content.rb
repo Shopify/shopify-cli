@@ -31,7 +31,7 @@ module Extension
       CREATE_CONFIRM_QUESTION = 'This is not reversible (y/n)'
       CREATE_ABORT = 'Pushing extension aborted by user.'
 
-      SUCCESS_CONFIRMATION = '{{v}} Extension has been pushed to a draft.'
+      SUCCESS_CONFIRMATION = '{{v}} %s has been pushed to a draft.'
       SUCCESS_INFO = '{{*}} Visit the Partner\'s Dashboard to create and publish versions.'
     end
 

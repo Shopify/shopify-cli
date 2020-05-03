@@ -51,6 +51,7 @@ module Extension
     end
 
     def set_registration_id(context, new_registration_id)
+      return if new_registration_id.nil?
       return if registration_id == new_registration_id
 
       updated_extra = env[:extra].merge(REGISTRATION_ID_KEY => new_registration_id)
@@ -60,8 +61,8 @@ module Extension
     private
 
     def get_extra_field(key)
-      extra = env[:extra]
-      extra[key] unless extra.nil?
+      extra = env[:extra] || {}
+      extra[key]
     end
   end
 end

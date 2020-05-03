@@ -17,7 +17,7 @@ module Extension
         @registration = Models::Registration.new(
           id: 42,
           type: @type.identifier,
-          title: 'Fake Registration'
+          title: @title
         )
       end
 
@@ -57,7 +57,7 @@ module Extension
             context: @context,
             api_key: @api_key,
             type: @type.identifier,
-            title: 'Testing the CLI',
+            title: @title,
             config: @type.config(@context),
             extension_context: @type.extension_context(@context)
           )
@@ -68,7 +68,7 @@ module Extension
         assert_equal @registration.id, @project.registration_id
         confirm_content_output(io: io, expected_content: [
           Content::Push::WAITING_TEXT,
-          Content::Push::SUCCESS_CONFIRMATION,
+          Content::Push::SUCCESS_CONFIRMATION % @title,
           Content::Push::SUCCESS_INFO
         ])
       end
@@ -90,7 +90,7 @@ module Extension
 
         confirm_content_output(io: io, expected_content: [
           Content::Push::WAITING_TEXT,
-          Content::Push::SUCCESS_CONFIRMATION,
+          Content::Push::SUCCESS_CONFIRMATION % @title,
           Content::Push::SUCCESS_INFO
         ])
       end

@@ -17,6 +17,7 @@ module Extension
 
       def test_clones_project_template
         name = "MyExt"
+        app = Models::App.new(api_key: '1234', secret: '4567')
 
         ShopifyCli::Git
           .expects(:clone)
@@ -24,13 +25,20 @@ module Extension
           .add_side_effect(CreateFakeExtensionProject.new)
 
         JsDeps.expects(:install).add_side_effect(CreateDummyLockfile.new)
+
+        ExtensionProject.expects(:write_project_files).with(
+          context: @context,
+          api_key: app.api_key,
+          api_secret: app.secret,
+          title: name,
+          type: @test_extension_type.identifier
+        ).once
+
         ShopifyCli::Core::Finalize.expects(:request_cd).with('myext')
-        stub_get_organizations([
-          organization(name: "Organization One", apps: [Models::App.new(api_key: '1234', secret: '4567')])
-        ])
+        stub_get_organizations([organization(name: "Organization One", apps: [app])])
 
         io = capture_io do
-          run_cmd("create extension --name=#{name} --type=#{@test_extension_type.identifier} --api-key=1234")
+          run_cmd("create extension --name=#{name} --type=#{@test_extension_type.identifier} --api-key=#{app.api_key}")
         end
 
         refute File.exists?('myext/.git'), 'Expected .git directory to be removed'
