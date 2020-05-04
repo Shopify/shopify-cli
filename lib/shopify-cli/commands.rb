@@ -6,10 +6,16 @@ module ShopifyCli
       default: 'help',
       contextual_resolver: nil,
     )
+    @core_commands = []
 
     def self.register(const, cmd, path = nil)
       autoload(const, path) if path
       Registry.add(->() { const_get(const) }, cmd)
+      @core_commands.push(cmd)
+    end
+
+    def self.core_command?(cmd)
+      @core_commands.include?(cmd)
     end
 
     register :Connect, 'connect', 'shopify-cli/commands/connect'
