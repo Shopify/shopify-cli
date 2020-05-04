@@ -122,7 +122,10 @@ module Script
             cause_of_error: "Another app in this store has already enabled a script on this extension point.",
             help_suggestion: "Disable that script or uninstall that app and try again.",
           }
-
+        when Layers::Infrastructure::Errors::ShopScriptUndefinedError
+          {
+            cause_of_error: "Script is already turned off in development store.",
+          }
         when Layers::Infrastructure::Errors::TestError
           {
             help_suggestion: ShopifyCli::Context.message('script.error.test_help'),

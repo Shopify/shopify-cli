@@ -31,6 +31,7 @@ module Script
         end
         class ShopAuthenticationError < ScriptProjectError; end
         class ShopScriptConflictError < ScriptProjectError; end
+        class ShopScriptUndefinedError < ScriptProjectError; end
         class TestError < ScriptProjectError; end
       end
     end

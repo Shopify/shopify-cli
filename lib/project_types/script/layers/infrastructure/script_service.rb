@@ -67,6 +67,28 @@ module Script
           end
         end
 
+        def disable(api_key:, shop_domain:, extension_point_type:)
+          query_name = "shop_script_delete"
+          variables = {
+            extensionPointName: extension_point_type.upcase,
+          }
+
+          resp_hash = script_service_request(
+            query_name: query_name,
+            api_key: api_key,
+            shop_domain: shop_domain,
+            variables: variables,
+          )
+          user_errors = resp_hash["data"]["shopScriptDelete"]["userErrors"]
+          return resp_hash if user_errors.empty?
+
+          if user_errors.any? { |e| e['tag'] == 'shop_script_not_found' }
+            raise Errors::ShopScriptUndefinedError, api_key
+          else
+            raise Errors::ScriptServiceUserError.new(query_name, user_errors.to_s)
+          end
+        end
+
         private
 
         class ScriptServiceAPI < ShopifyCli::API

@@ -331,6 +331,122 @@ describe Script::Layers::Infrastructure::ScriptService do
     end
   end
 
+  describe ".disable" do
+    let(:extension_point_type) { "DISCOUNT" }
+    let(:shop_domain) { 'shop.myshopify.com' }
+    let(:api_key) { "fake_key" }
+    let(:shop_script_delete) do
+      <<~HERE
+        mutation ShopScriptDelete($extensionPointName: ExtensionPointName!) {
+          shopScriptDelete(extensionPointName: $extensionPointName) {
+            userErrors {
+              field
+              message
+              tag
+            }
+            shopScript {
+              extensionPointName
+              shopId
+              title
+              configuration
+            }
+          }
+        }
+      HERE
+    end
+
+    let(:response) do
+      {
+        data: {
+          scriptServiceProxy: JSON.dump(script_service_response),
+        },
+      }
+    end
+
+    before do
+      stub_load_query('script_service_proxy', script_service_proxy)
+      stub_load_query('shop_script_delete', shop_script_delete)
+      stub_partner_req(
+        'script_service_proxy',
+        variables: {
+          api_key: api_key,
+          shop_domain: shop_domain,
+          variables: {
+            extensionPointName: extension_point_type,
+          }.to_json,
+          query: shop_script_delete,
+        },
+        resp: response
+      )
+    end
+
+    subject do
+      script_service.disable(
+        extension_point_type: extension_point_type,
+        api_key: api_key,
+        shop_domain: shop_domain,
+      )
+    end
+
+    describe 'when successful' do
+      let(:script_service_response) do
+        {
+          "data" => {
+            "shopScriptDelete" => {
+              "shopScript" => {
+                "shopId" => "1",
+                "configuration" => nil,
+                "extensionPointName" => extension_point_type,
+                "title" => "foo2",
+              },
+              "userErrors" => [],
+            },
+          },
+        }
+      end
+
+      it 'should have no errors' do
+        assert_equal(script_service_response, subject)
+      end
+    end
+
+    describe 'when failure' do
+      describe 'when shop_script_not_found error' do
+        let(:script_service_response) do
+          {
+            "data" => {
+              "shopScriptDelete" => {
+                "shopScript" => {},
+                "userErrors" => [{ "message" => 'error', "tag" => "shop_script_not_found" }],
+              },
+            },
+          }
+        end
+
+        it 'should raise ShopScriptUndefinedError' do
+          assert_raises(Script::Layers::Infrastructure::Errors::ShopScriptUndefinedError) { subject }
+        end
+      end
+
+      describe 'when other error' do
+        let(:script_service_response) do
+          {
+            "data" => {
+              "shopScriptDelete" => {
+                "shopScript" => {},
+                "userErrors" => [{ "message" => 'error', "tag" => "other_error" }],
+              },
+            },
+          }
+        end
+
+        it 'should raise ShopScriptUndefinedError' do
+          assert_raises(Script::Layers::Infrastructure::Errors::ScriptServiceUserError) { subject }
+        end
+      end
+    end
+  end
+
   private
 
   def stub_load_query(name, body)
