@@ -21,26 +21,44 @@ module ShopifyCli
         end
 
         preamble = <<~MESSAGE
-          CLI to help build Shopify apps faster.
-
           Use {{command:#{ShopifyCli::TOOL_NAME} help <command>}} to display detailed information about a specific command.
 
-          {{bold:Available commands}}
+          {{bold:Available core commands:}}
+
         MESSAGE
         @ctx.puts(preamble)
 
-        visible_commands = ShopifyCli::Commands::Registry
-          .resolved_commands
-          .select { |_name, c| !c.hidden }
-          .sort
+        core_commands.each do |name, klass|
+          next if name == 'help'
+          @ctx.puts("{{command:#{name}}}: #{klass.help}\n")
+        end
 
-        visible_commands.each do |name, klass|
+        return unless Project.current_project_type && ProjectType.load_type(Project.current_project_type)
+
+        @ctx.puts("{{bold:Available commands for #{project_name} projects:}}\n\n")
+
+        local_commands.each do |name, klass|
           next if name == 'help'
           @ctx.puts("{{command:#{name}}}: #{klass.help}\n")
         end
       end
 
       private
+
+      def project_name
+        ProjectType.load_type(Project.current_project_type).project_name
+      end
+
+      def core_commands
+        resolved_commands
+          .select { |_name, c| !c.hidden }
+          .select { |_name, c| c.to_s.include?('ShopifyCli::Commands') }
+      end
+
+      def local_commands
+        resolved_commands
+          .reject { |_name, c| c.to_s.include?('ShopifyCli::Commands') }
+      end
 
       def display_help(klass)
         output = klass.help
@@ -49,6 +67,12 @@ module ShopifyCli
           output += klass.extended_help
         end
         @ctx.puts(output)
+      end
+
+      def resolved_commands
+        ShopifyCli::Commands::Registry
+          .resolved_commands
+          .sort
       end
     end
   end
