@@ -40,6 +40,33 @@ module Script
           end
         end
 
+        def enable(api_key:, shop_domain:, configuration:, extension_point_type:, title:)
+          query_name = "shop_script_update_or_create"
+          variables = {
+            extensionPointName: extension_point_type.upcase,
+            configuration: configuration,
+            title: title,
+          }
+
+          resp_hash = script_service_request(
+            query_name: query_name,
+            api_key: api_key,
+            shop_domain: shop_domain,
+            variables: variables,
+          )
+          user_errors = resp_hash["data"]["shopScriptUpdateOrCreate"]["userErrors"]
+
+          return resp_hash if user_errors.empty?
+
+          if user_errors.any? { |e| e['tag'] == 'app_script_not_found' }
+            raise Errors::AppScriptUndefinedError, api_key
+          elsif user_errors.any? { |e| e['tag'] == 'shop_script_conflict' }
+            raise Errors::ShopScriptConflictError
+          else
+            raise Errors::ScriptServiceUserError.new(query_name, user_errors.to_s)
+          end
+        end
+
         private
 
         class ScriptServiceAPI < ShopifyCli::API

@@ -84,6 +84,10 @@ module Script
           {
             cause_of_error: ShopifyCli::Context.message('script.error.app_not_installed_cause'),
           }
+        when Layers::Infrastructure::Errors::AppScriptUndefinedError
+          {
+            help_suggestion: "Deploy script to app.",
+          }
         when Layers::Infrastructure::Errors::BuildError
           {
             cause_of_error: ShopifyCli::Context.message('script.error.build_error_cause'),
@@ -113,6 +117,12 @@ module Script
             cause_of_error: ShopifyCli::Context.message('script.error.shop_auth_cause'),
             help_suggestion: ShopifyCli::Context.message('script.error.shop_auth_help'),
           }
+        when Layers::Infrastructure::Errors::ShopScriptConflictError
+          {
+            cause_of_error: "Another app in this store has already enabled a script on this extension point.",
+            help_suggestion: "Disable that script or uninstall that app and try again.",
+          }
+
         when Layers::Infrastructure::Errors::TestError
           {
             help_suggestion: ShopifyCli::Context.message('script.error.test_help'),
