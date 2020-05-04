@@ -64,21 +64,19 @@ module Node
       private
 
       def check_node
-        version, stat = @ctx.capture2e('node', '-v')
-        @ctx.done("node #{version}")
+        output, stat = @ctx.capture2e('which', 'node')
         @ctx.abort(NODE_REQUIRED_NOTICE) unless stat.success?
-      rescue Errno::ENOENT
-        # We can run into this error if we attempt to touch a non-existing file
-        @ctx.abort(NODE_REQUIRED_NOTICE)
+
+        version, = @ctx.capture2e('node', '-v')
+        @ctx.done("node #{version}")
       end
 
       def check_npm
-        version, stat = @ctx.capture2e('npm', '-v')
-        @ctx.done("npm #{version}")
+        output, stat = @ctx.capture2e('which', 'npm')
         @ctx.abort(NPM_REQUIRED_NOTICE) unless stat.success?
-      rescue Errno::ENOENT
-        # We can run into this error if we attempt to touch a non-existing file
-        @ctx.abort(NPM_REQUIRED_NOTICE)
+
+        version, = @ctx.capture2e('npm', '-v')
+        @ctx.done("npm #{version}")
       end
 
       def set_npm_config
