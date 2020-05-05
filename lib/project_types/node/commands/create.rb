@@ -3,7 +3,11 @@ module Node
   module Commands
     class Create < ShopifyCli::SubCommand
       NODE_REQUIRED_NOTICE = "node is required to create an app project. Download at https://nodejs.org/en/download."
+      NODE_VERSION_FAILURE_NOTICE = "Failed to get the current node version. Please make sure it is installed as per " \
+        "the instructions at https://nodejs.org/en."
       NPM_REQUIRED_NOTICE = "npm is required to create an app project. Download at https://www.npmjs.com/get-npm."
+      NPM_VERSION_FAILURE_NOTICE = "Failed to get the current npm version. Please make sure it is installed as per " \
+        "the instructions at https://www.npmjs.com/get-npm."
 
       options do |parser, flags|
         # backwards compatibility allow 'title' for now
@@ -64,15 +68,23 @@ module Node
       private
 
       def check_node
-        version, stat = @ctx.capture2e('node', '-v')
-        @ctx.done("node #{version}")
+        _, stat = @ctx.capture2e('which', 'node')
         @ctx.abort(NODE_REQUIRED_NOTICE) unless stat.success?
+
+        version, stat = @ctx.capture2e('node', '-v')
+        @ctx.abort(NODE_VERSION_FAILURE_NOTICE) unless stat.success?
+
+        @ctx.done("node #{version}")
       end
 
       def check_npm
-        version, stat = @ctx.capture2e('npm', '-v')
-        @ctx.done("npm #{version}")
+        _, stat = @ctx.capture2e('which', 'npm')
         @ctx.abort(NPM_REQUIRED_NOTICE) unless stat.success?
+
+        version, stat = @ctx.capture2e('npm', '-v')
+        @ctx.abort(NPM_VERSION_FAILURE_NOTICE) unless stat.success?
+
+        @ctx.done("npm #{version}")
       end
 
       def set_npm_config
