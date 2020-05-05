@@ -34,7 +34,7 @@ module Extension
     end
 
     module Serve
-      FRAME_TITLE = 'Running your extension'
+      FRAME_TITLE = 'Serving extension...'
 
       SERVE_FAILURE_MESSAGE = 'Failed to run extension code for testing.'
     end
