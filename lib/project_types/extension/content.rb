@@ -1,7 +1,8 @@
 module Extension
   module Content
     module Create
-      ASK_NAME = 'Extension name (40 characters):'
+      ASK_NAME = 'Extension name'
+      INVALID_NAME = "Extension name must be under %s characters"
 
       ASK_TYPE = 'What type of extension would you like to create?'
       INVALID_TYPE = 'Invalid extension type.'

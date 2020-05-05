@@ -14,18 +14,39 @@ module Extension
         Tasks::GetApps.any_instance.expects(:call).with(context: @context).returns([@app]).at_least_once
       end
 
-      def returns_defined_attributes_if_valid
+      def test_returns_defined_attributes_if_valid
         form = ask
         assert_equal form.name, 'test-extension'
         assert_equal form.type, @test_extension_type
       end
 
       def test_prompts_the_user_to_choose_a_name_if_no_name_was_provided
-        CLI::UI::Prompt.expects(:ask).with(Content::Create::ASK_NAME).times(3)
-
+        CLI::UI::Prompt.expects(:ask).with(Content::Create::ASK_NAME).times(3).returns('A name')
         capture_io { ask(name: nil) }
         capture_io { ask(name: "") }
         capture_io { ask(name: " ") }
+      end
+
+      def test_reprompts_the_user_to_choose_a_name_until_valid_response_is_given
+        CLI::UI::Prompt.stubs(:ask).with(Content::Create::ASK_NAME)
+          .returns(nil, nil)
+          .then.returns('A name')
+        ShopifyCli::Context.any_instance.expects(:puts).with(
+          Content::Create::INVALID_NAME % Models::Registration::MAX_TITLE_LENGTH
+        ).times(2)
+
+        capture_io do
+          form = ask(name: nil)
+          assert_equal form.name, 'A name'
+        end
+      end
+
+      def test_strips_whitespace_from_beginning_and_end_of_name
+        CLI::UI::Prompt.expects(:ask).with(Content::Create::ASK_NAME).returns('  A name  ')
+        capture_io do
+          form = ask(name: nil)
+          assert_equal form.name, 'A name'
+        end
       end
 
       def test_directory_name_is_a_lowercase_underscored_version_of_name
