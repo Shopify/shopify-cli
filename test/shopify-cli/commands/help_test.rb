@@ -81,6 +81,19 @@ module ShopifyCli
         refute_match(/fake_rails/, output)
       end
 
+      def test_shows_current_project_path_and_type
+        Dir.stubs(:pwd).returns("/Users/john/my_app")
+        Project.stubs(:current_project_type).returns('rails')
+        ShopifyCli::Commands.register("Rails::Commands::Fake", 'fake_rails')
+
+        io = capture_io do
+          run_cmd('help')
+        end
+        output = io.join
+
+        assert_match("Project: my_app (Ruby on Rails App)", output)
+      end
+
       def test_extended_help_for_individual_command
         io = capture_io do
           run_cmd('help fake')
