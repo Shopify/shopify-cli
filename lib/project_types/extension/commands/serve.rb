@@ -15,7 +15,7 @@ module Extension
 
       def self.help
         <<~HELP
-          Serve your extension locally for testing.
+          Serve your extension in a local simulator for development.
             Usage: {{command:#{ShopifyCli::TOOL_NAME} serve}}
         HELP
       end
