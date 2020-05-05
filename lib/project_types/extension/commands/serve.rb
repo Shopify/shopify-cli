@@ -3,12 +3,9 @@
 module Extension
   module Commands
     class Serve < ShopifyCli::Command
-      hidden_command
 
       YARN_SERVE_COMMAND = %w(yarn server)
       NPM_SERVE_COMMAND = %w(npm run-script server)
-
-
 
       def call(args, command_name)
         CLI::UI::Frame.open(Content::Pack::FRAME_TITLE) do
