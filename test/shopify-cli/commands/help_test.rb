@@ -57,7 +57,7 @@ module ShopifyCli
 
       def test_local_commands_available_within_a_project
         Project.stubs(:current_project_type).returns('rails')
-        ShopifyCli::Commands.register("Rails::Commands::Fake", 'fake_rails')
+        Registry.add(->() { Rails::Commands::Fake }, 'fake_rails')
 
         io = capture_io do
           run_cmd('help')
@@ -70,7 +70,7 @@ module ShopifyCli
 
       def test_local_commands_not_available_outside_a_project
         Project.stubs(:current_project_type).returns(nil)
-        ShopifyCli::Commands.register("Rails::Commands::Fake", 'fake_rails')
+        Registry.add(->() { Rails::Commands::Fake }, 'fake_rails')
 
         io = capture_io do
           run_cmd('help')
