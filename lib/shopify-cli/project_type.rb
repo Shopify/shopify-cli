@@ -54,6 +54,7 @@ module ShopifyCli
       end
 
       def register_command(const, cmd)
+        Context.new.abort("Can't register duplicate core command '#{cmd}' from #{const}") if Commands.core_command?(cmd)
         Commands::Registry.add(->() { const_get(const) }, cmd)
       end
 
