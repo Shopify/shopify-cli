@@ -45,7 +45,8 @@ module Node
       end
 
       def test_check_npm_installed
-        Create.any_instance.stubs(:check_node)
+        @context.expects(:capture2e).with('which', 'node').returns(['/usr/bin/node', mock(success?: true)])
+        @context.expects(:capture2e).with('node', '-v').returns(['8.0.0', mock(success?: true)])
         @context.expects(:capture2e).with('which', 'npm').returns([nil, mock(success?: false)])
         assert_raises ShopifyCli::Abort, Create::NPM_REQUIRED_NOTICE do
           perform_command
@@ -53,7 +54,8 @@ module Node
       end
 
       def test_check_get_npm_version
-        Create.any_instance.stubs(:check_node)
+        @context.expects(:capture2e).with('which', 'node').returns(['/usr/bin/node', mock(success?: true)])
+        @context.expects(:capture2e).with('node', '-v').returns(['8.0.0', mock(success?: true)])
         @context.expects(:capture2e).with('which', 'npm').returns(['/usr/bin/npm', mock(success?: true)])
         @context.expects(:capture2e).with('npm', '-v').returns([nil, mock(success?: false)])
         assert_raises ShopifyCli::Abort, Create::NPM_VERSION_FAILURE_NOTICE do
@@ -69,10 +71,7 @@ module Node
         FileUtils.touch('test-app/server/handlers/client.js')
         FileUtils.touch('test-app/server/handlers/client.cli.js')
 
-        @context.expects(:capture2e).with('which', 'npm').returns(['/usr/bin/npm', mock(success?: true)])
-        @context.expects(:capture2e).with('npm', '-v').returns(['1', mock(success?: true)])
-        @context.expects(:capture2e).with('which', 'node').returns(['/usr/bin/node', mock(success?: true)])
-        @context.expects(:capture2e).with('node', '-v').returns(['8.0.0', mock(success?: true)])
+        expect_node_npm_check_commands
         @context.expects(:capture2).with('npm config get @shopify:registry').returns(
           ['https://registry.yarnpkg.com', nil]
         )
@@ -99,10 +98,7 @@ module Node
         FileUtils.touch('test-app/server/handlers/client.js')
         FileUtils.touch('test-app/server/handlers/client.cli.js')
 
-        @context.expects(:capture2e).with('which', 'npm').returns(['/usr/bin/npm', mock(success?: true)])
-        @context.expects(:capture2e).with('npm', '-v').returns(['1', mock(success?: true)])
-        @context.expects(:capture2e).with('which', 'node').returns(['/usr/bin/node', mock(success?: true)])
-        @context.expects(:capture2e).with('node', '-v').returns(['8.0.0', mock(success?: true)])
+        expect_node_npm_check_commands
         @context.expects(:capture2).with('npm config get @shopify:registry').returns(
           ['https://badregistry.com', nil]
         )
@@ -140,10 +136,7 @@ module Node
         FileUtils.touch('test-app/server/handlers/client.cli.js')
 
         @context.stubs(:uname).returns('Mac')
-        @context.expects(:capture2e).with('which', 'npm').returns(['/usr/bin/npm', mock(success?: true)])
-        @context.expects(:capture2e).with('npm', '-v').returns(['1', mock(success?: true)])
-        @context.expects(:capture2e).with('which', 'node').returns(['/usr/bin/node', mock(success?: true)])
-        @context.expects(:capture2e).with('node', '-v').returns(['8.0.0', mock(success?: true)])
+        expect_node_npm_check_commands
         @context.expects(:capture2).with('npm config get @shopify:registry').returns(
           ['https://registry.yarnpkg.com', nil]
         )
@@ -193,10 +186,7 @@ module Node
         FileUtils.touch('test-app/server/handlers/client.cli.js')
 
         @context.stubs(:uname).returns('Mac')
-        @context.expects(:capture2e).with('which', 'npm').returns(['/usr/bin/npm', mock(success?: true)])
-        @context.expects(:capture2e).with('npm', '-v').returns(['1', mock(success?: true)])
-        @context.expects(:capture2e).with('which', 'node').returns(['/usr/bin/node', mock(success?: true)])
-        @context.expects(:capture2e).with('node', '-v').returns(['8.0.0', mock(success?: true)])
+        expect_node_npm_check_commands
         @context.expects(:capture2).with('npm config get @shopify:registry').returns(
           ['https://badregistry.com', nil]
         )
@@ -258,6 +248,13 @@ module Node
           --type=public \
           --organization_id=42 \
           --shop_domain=testshop.myshopify.com")
+      end
+
+      def expect_node_npm_check_commands
+        @context.expects(:capture2e).with('which', 'node').returns(['/usr/bin/node', mock(success?: true)])
+        @context.expects(:capture2e).with('node', '-v').returns(['8.0.0', mock(success?: true)])
+        @context.expects(:capture2e).with('which', 'npm').returns(['/usr/bin/npm', mock(success?: true)])
+        @context.expects(:capture2e).with('npm', '-v').returns(['1', mock(success?: true)])
       end
     end
   end
