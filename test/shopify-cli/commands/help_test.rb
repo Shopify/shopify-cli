@@ -54,8 +54,7 @@ module ShopifyCli
         end
         output = io.join
 
-        assert_match(/Available commands.*Rails/, output)
-        assert_match(/fake_rails/, output)
+        assert_match(/Available commands for Ruby on Rails App projects.*fake_rails/m, output)
       end
 
       def test_local_commands_not_available_outside_a_project
@@ -67,8 +66,7 @@ module ShopifyCli
         end
         output = io.join
 
-        refute_match(/Available commands.*Rails/, output)
-        refute_match(/fake_rails/, output)
+        refute_match(/Available commands for Ruby on Rails App projects.*fake_rails/m, output)
       end
 
       def test_shows_current_project_path_and_type
