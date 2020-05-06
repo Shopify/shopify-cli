@@ -45,16 +45,6 @@ module ShopifyCli
         assert_match(/Usage: .*shopify/, output)
       end
 
-      def test_core_commands
-        io = capture_io do
-          run_cmd('help')
-        end
-        output = io.join
-
-        assert_match('Available core commands:', output)
-        assert_match(/Usage: .*shopify/, output)
-      end
-
       def test_local_commands_available_within_a_project
         Project.stubs(:current_project_type).returns('rails')
         Registry.add(->() { Rails::Commands::Fake }, 'fake_rails')
