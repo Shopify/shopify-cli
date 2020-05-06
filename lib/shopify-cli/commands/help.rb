@@ -53,12 +53,12 @@ module ShopifyCli
       def core_commands
         resolved_commands
           .select { |_name, c| !c.hidden }
-          .select { |name, _c| Commands.core_command?(name)}
+          .select { |name, _c| Commands.core_command?(name) }
       end
 
       def local_commands
         resolved_commands
-          .reject { |name, _c| Commands.core_command?(name)}
+          .reject { |name, _c| Commands.core_command?(name) }
       end
 
       def display_help(klass)
