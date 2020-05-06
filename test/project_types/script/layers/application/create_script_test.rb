@@ -42,7 +42,13 @@ describe Script::Layers::Application::CreateScript do
         Script::ScriptProject.expects(:create).with(script_name).once
         Script::ScriptProject
           .expects(:write)
-          .with(@context, :script, 'extension_point_type' => ep.type, 'script_name' => script_name)
+          .with(
+            @context,
+            app_type: :script,
+            partner_id: nil,
+            extension_point_type: ep.type,
+            script_name: script_name,
+          )
         Script::Layers::Application::ProjectDependencies
           .expects(:bootstrap)
           .with(ctx: @context, language: language, extension_point: ep, script_name: script_name)

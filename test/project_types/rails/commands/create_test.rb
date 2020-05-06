@@ -17,6 +17,7 @@ module Rails
       SHOPIFYCLI_FILE = <<~APPTYPE
         ---
         app_type: rails
+        partner_id: 42
       APPTYPE
 
       def setup

@@ -45,6 +45,7 @@ GEM
     ruby-progressbar (1.10.1)
     safe_yaml (1.0.4)
     session (3.2.0)
+    timecop (0.9.1)
     unicode-display_width (1.6.0)
     webmock (2.3.2)
       addressable (>= 2.3.6)
@@ -64,6 +65,7 @@ DEPENDENCIES
   rake
   rubocop
   session
+  timecop
   webmock
 
 BUNDLED WITH

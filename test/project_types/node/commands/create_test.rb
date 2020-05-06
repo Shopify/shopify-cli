@@ -17,6 +17,7 @@ module Node
       SHOPIFYCLI_FILE = <<~APPTYPE
         ---
         app_type: node
+        partner_id: 42
       APPTYPE
 
       def setup

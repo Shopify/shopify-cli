@@ -22,9 +22,10 @@ module Script
             ctx.root = File.join(ctx.root, script_name)
             ScriptProject.write(
               ctx,
-              :script,
-              'extension_point_type' => extension_point.type,
-              'script_name' => script_name
+              app_type: :script,
+              partner_id: nil, # TODO: can you provide this at creation
+              extension_point_type: extension_point.type,
+              script_name: script_name
             )
             ProjectDependencies
               .bootstrap(ctx: ctx, language: language, extension_point: extension_point, script_name: script_name)

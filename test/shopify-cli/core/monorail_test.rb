@@ -1,4 +1,5 @@
 require 'test_helper'
+require 'timecop'
 
 module ShopifyCli
   module Core
@@ -39,23 +40,41 @@ module ShopifyCli
 
       def test_log_event_contains_schema_and_payload_values
         enabled_and_consented(true, true)
-        stub_request(:post, Monorail::ENDPOINT_URI).to_return(status: 200)
-
-        JSON.expects(:dump).with(
-          has_entries(
-            schema_id: ShopifyCli::Core::Monorail::INVOCATIONS_SCHEMA,
-            payload: has_entries(
-              cli_sha: "bb6f42193239a248f054e5019e469bc75f3adf1b",
-              uname: instance_of(String),
-              args: "testcommand arg argtwo",
-              timestamp: instance_of(String),
-              duration: instance_of(Float),
-              result: ShopifyCli::Core::Monorail::SUCCESS_SENTINEL
+        Timecop.freeze do |time|
+          this_time = (time.utc.to_f * 1000).to_i
+          stub_request(:post, Monorail::ENDPOINT_URI)
+            .with(
+              headers: {
+                'Content-Type': 'application/json; charset=utf-8',
+                'X-Monorail-Edge-Event-Created-At-Ms': this_time.to_s,
+                'X-Monorail-Edge-Event-Sent-At-Ms': this_time.to_s,
+              },
+              body: JSON.dump({
+                schema_id: ShopifyCli::Core::Monorail::INVOCATIONS_SCHEMA,
+                payload: {
+                  project_type: 'fake',
+                  args: "testcommand arg argtwo",
+                  time_start: this_time,
+                  time_end: this_time,
+                  total_time: 0,
+                  success: true,
+                  error_message: nil,
+                  uname: RbConfig::CONFIG["host"],
+                  cli_sha: "bb6f42193239a248f054e5019e469bc75f3adf1b",
+                  ruby_version: RUBY_VERSION,
+                  metadata: "{\"foo\":\"identifier\"}",
+                  api_client_id: "apikey",
+                  partner_id: 42,
+                },
+              })
             )
-          )
-        )
+            .to_return(status: 200)
 
-        ShopifyCli::Core::Monorail.log('testcommand', %w(arg argtwo)) { 'This is the block and result' }
+          ShopifyCli::Core::Monorail.log('testcommand', %w(arg argtwo)) do
+            ShopifyCli::Core::Monorail.metadata[:foo] = "identifier"
+            'This is the block and result'
+          end
+        end
       end
 
       def test_log_returns_the_result_after_sending_monorail_events
