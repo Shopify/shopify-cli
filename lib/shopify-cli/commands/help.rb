@@ -33,7 +33,7 @@ module ShopifyCli
           @ctx.puts("{{command:#{name}}}: #{klass.help}\n")
         end
 
-        return unless Project.current_project_type && ProjectType.load_type(Project.current_project_type)
+        return unless inside_supported_project?
 
         @ctx.puts("{{bold:Project: #{File.basename(Dir.pwd)} (#{project_name})}}")
         @ctx.puts("{{bold:Available commands for #{project_name} projects:}}\n\n")
@@ -74,6 +74,10 @@ module ShopifyCli
         ShopifyCli::Commands::Registry
           .resolved_commands
           .sort
+      end
+
+      def inside_supported_project?
+        Project.current_project_type && ProjectType.load_type(Project.current_project_type)
       end
     end
   end
