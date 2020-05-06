@@ -8,6 +8,7 @@ module ShopifyCli
 
       def setup
         super
+        ShopifyCli::ProjectType.load_type(:rails)
         @resource = Rails::Commands::Populate::Product.new(@context)
         ShopifyCli::AdminAPI.stubs(:new).returns(Object.new)
       end
