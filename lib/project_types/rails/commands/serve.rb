@@ -22,6 +22,9 @@ module Rails
         )
         if @ctx.mac? && project.env.shop
           @ctx.puts("{{*}} Press {{yellow: Control-T}} to open this project in {{green:#{project.env.shop}}} ")
+
+          # Reset any previous SIGINFO handling we had so the only action we take is opening the URL
+          trap('INFO', 'DEFAULT')
           @ctx.on_siginfo do
             @ctx.open_url!("#{project.env.host}/login?shop=#{project.env.shop}")
           end
