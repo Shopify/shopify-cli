@@ -35,8 +35,8 @@ module ShopifyCli
 
         return unless inside_supported_project?
 
-        @ctx.puts("{{bold:Project: #{File.basename(Dir.pwd)} (#{project_name})}}")
-        @ctx.puts("{{bold:Available commands for #{project_name} projects:}}\n\n")
+        @ctx.puts("{{bold:Project: #{File.basename(Dir.pwd)} (#{project_type_name})}}")
+        @ctx.puts("{{bold:Available commands for #{project_type_name} projects:}}\n\n")
 
         local_commands.each do |name, klass|
           next if name == 'help'
@@ -46,7 +46,7 @@ module ShopifyCli
 
       private
 
-      def project_name
+      def project_type_name
         ProjectType.load_type(Project.current_project_type).project_name
       end
 
