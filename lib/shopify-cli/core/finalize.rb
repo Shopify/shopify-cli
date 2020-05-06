@@ -45,7 +45,6 @@ module ShopifyCli
           begin
             finalizer_pipe.puts(message.join("\n"))
           rescue Errno::EBADF, IOError
-            $stderr.puts "Not running with shell integration. Finalizers: #{message.join("\n")}"
           ensure
             clear
           end
