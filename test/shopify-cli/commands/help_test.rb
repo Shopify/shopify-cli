@@ -32,7 +32,7 @@ module ShopifyCli
 
     class HelpTest < MiniTest::Test
       def setup
-        ShopifyCli::Commands.register(:FakeCommand, 'fake')
+        ShopifyCli::Commands.register(:FakeCommand, 'fake', 'fake_path', true)
       end
 
       def test_default_behavior_lists_tasks
@@ -47,7 +47,7 @@ module ShopifyCli
 
       def test_local_commands_available_within_a_project
         Project.stubs(:current_project_type).returns('rails')
-        Registry.add(->() { Rails::Commands::Fake }, 'fake_rails')
+        ShopifyCli::Commands.register('Rails::Commands::Fake', 'fake_rails')
 
         io = capture_io do
           run_cmd('help')
@@ -59,7 +59,7 @@ module ShopifyCli
 
       def test_local_commands_not_available_outside_a_project
         Project.stubs(:current_project_type).returns(nil)
-        Registry.add(->() { Rails::Commands::Fake }, 'fake_rails')
+        ShopifyCli::Commands.register('Rails::Commands::Fake', 'fake_rails')
 
         io = capture_io do
           run_cmd('help')
@@ -72,7 +72,7 @@ module ShopifyCli
       def test_shows_current_project_path_and_type
         Dir.stubs(:pwd).returns("/Users/john/my_app")
         Project.stubs(:current_project_type).returns('rails')
-        Registry.add(->() { Rails::Commands::Fake }, 'fake_rails')
+        ShopifyCli::Commands.register('Rails::Commands::Fake', 'fake_rails')
 
         io = capture_io do
           run_cmd('help')
