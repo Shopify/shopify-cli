@@ -8,3 +8,9 @@ exclude: [
   'Gemfile',
   'Gemfile.lock'
 ]
+
+defaults:
+  - scope:
+      path: ""
+    values:
+      toc: true

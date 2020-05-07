@@ -32,5 +32,11 @@ module ShopifyCli
         File.join(ShopifyCli::PROJECT_TYPES_DIR, 'rails', 'myfile')
       )
     end
+
+    def test_duplicate_command
+      assert_raises ShopifyCli::Abort, "Can't register duplicate core command" do
+        ProjectType.register_command('Nonsense::Module::Help', 'help')
+      end
+    end
   end
 end

@@ -1,33 +1,35 @@
 ---
-title: Node app projects
+title: Getting started with Node.js app projects
 section: node
+toc: false
 ---
 
-## Getting started
+## Create a new Node.js app project
 
-1. To create a new Node project, type `shopify create node`. This will scaffold a new Node.js app in a subdirectory.
+To create a new Node.js project, type `shopify create node`. This will scaffold a new Node.js app in a subdirectory.
 
-    ```console
-    $ shopify create node
-    ? App Name
-    >
-    ```
+```console
+$ shopify create node
+? App Name
+>
+```
 
-2. Once your app is created, you can work with it immediately by typing `shopify serve` to start a local development
-server, which uses [ngrok](https://ngrok.com) to create a tunnel. ngrok will choose a unique URL for you. The server 
-will stay open until you type Ctrl-C.
+## Start a local development server
 
-    ```console
-    $ shopify serve
-    ✓ ngrok tunnel running at https://example.ngrok.io
-    ✓ writing .env file...
-    ```
+Once your app is created, you can work with it immediately by running `shopify serve` to start a local development server. Shopify App CLI uses [ngrok](https://ngrok.com) to create a tunnel. ngrok will choose a unique URL for you. The server will stay open until you type **Ctrl-C**.
 
-3. With the server running, open a new terminal window and type `shopify open` to open your app in your browser and 
-install it on a development store.
+```console
+$ shopify serve
+✓ ngrok tunnel running at https://example.ngrok.io
+✓ writing .env file...
+```
 
-    ```console
-    $ shopify open
-    ```
+## Install your app on your development store
 
-For more information, look at the [command reference]({{ site.baseurl }}{% link app/node/commands/index.md %}).
+With the server running, open a new terminal window and run `shopify open` to open your app in your browser and install it on a development store.
+
+```console
+$ shopify open
+```
+
+For more information, consult the [Node.js project command reference]({{ site.baseurl }}{% link app/node/commands/index.md %}).

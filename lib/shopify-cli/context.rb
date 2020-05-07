@@ -87,9 +87,10 @@ module ShopifyCli
     end
 
     # will write/overwrite a file with the provided contents, relative to the context root
+    # unless the file path is absolute.
     #
     # #### Parameters
-    # * `fname` - filename of the file that you are writing, relative to root.
+    # * `fname` - filename of the file that you are writing, relative to root unless it is absolute.
     # * `content` - the body contents of the file that you are writing
     #
     # #### Example
@@ -97,42 +98,44 @@ module ShopifyCli
     #   @ctx.write('new.txt', 'hello world')
     #
     def write(fname, content)
-      File.write(File.join(root, fname), content)
+      File.write(ctx_path(fname), content)
     end
 
-    # will rename a file from one place to another, all relative to the command root
+    # will rename a file from one place to another, relative to the command root
+    # unless the path is absolute.
     #
     # #### Parameters
     # * `from` - the path of the original file
     # * `to` - the destination path
     #
     def rename(from, to)
-      File.rename(File.join(root, from), File.join(root, to))
+      File.rename(ctx_path(from), ctx_path(to))
     end
 
     # will remove a plain file from the FS, the filepath is relative to the command
-    # root.
+    # root unless absolute.
     #
     # #### Parameters
     # * `fname` - the file path relative to the context root to remove from the FS
     #
     def rm(fname)
-      FileUtils.rm(File.join(root, fname))
+      FileUtils.rm(ctx_path(fname))
     end
 
     # will remove a directory from the FS, the filepath is relative to the command
-    # root.
+    # root unless absolute
     #
     # #### Parameters
     # * `fname` - the file path to a directory, relative to the context root to remove from the FS
     #
     def rm_r(fname)
-      FileUtils.rm_r(File.join(root, fname))
+      FileUtils.rm_r(ctx_path(fname))
     end
 
     # will create a directory, recursively if it does not exist. So if you create
     # a directory `foo/bar/dun`, this will also create the directories `foo` and
-    # `foo/bar` if they do not exist.
+    # `foo/bar` if they do not exist. The path will be made relative to the command
+    # root unless absolute
     #
     # #### Parameters
     # * `path` - file path of the directory that you want to create
@@ -314,6 +317,17 @@ module ShopifyCli
         rescue Interrupt
           exit(0)
         end
+      end
+    end
+
+    private
+
+    def ctx_path(fname)
+      require 'pathname'
+      if Pathname.new(fname).absolute?
+        fname
+      else
+        File.join(root, fname)
       end
     end
   end

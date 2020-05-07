@@ -21,5 +21,3 @@ require 'fakefs/safe'
 require 'webmock/minitest'
 
 require 'mocha/minitest'
-
-Minitest::Reporters.use!([Minitest::Reporters::SpecReporter.new])
