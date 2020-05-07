@@ -7,7 +7,7 @@ module Extension
         all_output = io.join
 
         Array(expected_content).each do |expected|
-          assert_match CLI::UI.fmt(expected), all_output
+          assert_includes all_output, CLI::UI.fmt(expected)
         end
       end
     end

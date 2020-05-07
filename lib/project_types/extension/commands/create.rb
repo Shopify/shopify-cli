@@ -11,7 +11,7 @@ module Extension
 
       def call(args, _)
         with_create_form(args) do |form|
-          build(form.directory_name)
+          form.type.create(form.directory_name, @ctx)
 
           ExtensionProject.write_project_files(
             context: @ctx,
@@ -21,8 +21,10 @@ module Extension
             type: form.type.identifier
           )
 
-          @ctx.puts('{{*}} ' + Content::Create::READY_TO_START % form.name)
-          @ctx.puts('{{*}} ' + Content::Create::LEARN_MORE % form.type.name)
+          ShopifyCli::Core::Finalize.request_cd(form.directory_name)
+
+          @ctx.puts(Content::Create::READY_TO_START % form.name)
+          @ctx.puts(Content::Create::LEARN_MORE % form.type.name)
         end
       end
 
@@ -44,20 +46,6 @@ module Extension
         return @ctx.puts(self.class.help) if form.nil?
 
         yield form
-      end
-
-      def build(name)
-        ShopifyCli::Git.clone('https://github.com/Shopify/shopify-app-extension-template.git', name, ctx: @ctx)
-        ShopifyCli::Core::Finalize.request_cd(name)
-        @ctx.root = File.join(@ctx.root, name)
-
-        begin
-          @ctx.rm_r('.git')
-        rescue Errno::ENOENT => e
-          @ctx.debug(e)
-        end
-
-        JsDeps.install(@ctx)
       end
     end
   end

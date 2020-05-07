@@ -5,27 +5,23 @@ require 'project_types/extension/extension_test_helpers'
 module Extension
   module Commands
     class CreateTest < MiniTest::Test
-      include TestHelpers::Partners
       include TestHelpers::FakeUI
       include ExtensionTestHelpers::TestExtensionSetup
+      include ExtensionTestHelpers::Content
       include ExtensionTestHelpers::Stubs::GetOrganizations
 
       def test_prints_help
         io = capture_io { run_cmd('create extension --help') }
-        assert_match(CLI::UI.fmt(Extension::Commands::Create.help), io.join)
+        confirm_content_output(io: io, expected_content: [Extension::Commands::Create.help])
       end
 
-      def test_clones_project_template
-        name = "MyExt"
+      def test_runs_type_create_and_writes_project_files
+        name = "My Ext"
+        directory_name = 'my_ext'
         app = Models::App.new(api_key: '1234', secret: '4567')
+        stub_get_organizations([organization(name: "Organization One", apps: [app])])
 
-        ShopifyCli::Git
-          .expects(:clone)
-          .with('https://github.com/Shopify/shopify-app-extension-template.git', 'myext', ctx: @context)
-          .add_side_effect(CreateFakeExtensionProject.new)
-
-        JsDeps.expects(:install).add_side_effect(CreateDummyLockfile.new)
-
+        @test_extension_type.expects(:create).with(directory_name, @context).once
         ExtensionProject.expects(:write_project_files).with(
           context: @context,
           api_key: app.api_key,
@@ -33,37 +29,19 @@ module Extension
           title: name,
           type: @test_extension_type.identifier
         ).once
-
-        ShopifyCli::Core::Finalize.expects(:request_cd).with('myext')
-        stub_get_organizations([organization(name: "Organization One", apps: [app])])
+        ShopifyCli::Core::Finalize.expects(:request_cd).with(directory_name).once
 
         io = capture_io do
-          run_cmd("create extension --name=#{name} --type=#{@test_extension_type.identifier} --api-key=#{app.api_key}")
+          Commands::Create.ctx = @context
+          arguments = %W(extension --name=#{name} --type=#{@test_extension_type.identifier} --api-key=#{app.api_key})
+          Commands::Create.call(arguments, 'create', 'create')
         end
 
-        refute File.exists?('myext/.git'), 'Expected .git directory to be removed'
-        assert File.exists?('myext/yarn.lock'), 'Expected yarn.lock directory to be removed'
-
-        assert_match Content::Create::READY_TO_START % name, io.join
-        assert_match Content::Create::LEARN_MORE % @test_extension_type.name, io.join
-      ensure
-        FileUtils.rm_r('myext')
+        confirm_content_output(io: io, expected_content: [
+          Content::Create::READY_TO_START % name,
+          Content::Create::LEARN_MORE % @test_extension_type.name
+        ])
       end
     end
   end
 end
-
-class CreateFakeExtensionProject
-  def perform
-    FileUtils.mkdir_p('myext/.git')
-    File.open('myext/package.json', 'w') { |f| f.puts('{}') }
-    FileUtils.touch('myext/yarn.lock')
-  end
-end
-
-class CreateDummyLockfile
-  def perform
-    File.open('myext/yarn.lock', "w") { |f| f.write("# Dummy lockfile") }
-  end
-end
-

@@ -49,6 +49,10 @@ module Extension
         raise NotImplementedError, "'#{__method__}' must be implemented for #{self.class}"
       end
 
+      def create(_directory_name, _context)
+        raise NotImplementedError, "'#{__method__}' must be implemented for #{self.class}"
+      end
+
       def extension_context(_context)
         nil
       end

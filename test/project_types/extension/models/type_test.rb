@@ -25,6 +25,7 @@ module Extension
 
       def test_raises_not_implemented_error_for_required_methods
         assert_raises(NotImplementedError) { Models::Type.new.config(@context) }
+        assert_raises(NotImplementedError) { Models::Type.new.create('name', @context) }
       end
 
       def test_valid_extension_contexts_returns_empty_array

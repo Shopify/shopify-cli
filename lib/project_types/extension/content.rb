@@ -13,8 +13,10 @@ module Extension
       NO_APPS = 'You don’t have any apps. Learn more about building apps at <https://shopify.dev/concepts/apps> or try creating one using a new app using {{command:shopify create app}}.'
       INVALID_API_KEY = 'The API key %s does not match any of your apps.'
 
-      READY_TO_START = 'You\'re ready to start building %s! Try running `shopify serve` to start a local server.'
-      LEARN_MORE = 'Learn more about building %s extensions at <shopify.dev>'
+      SETUP_PROJECT_FRAME_TITLE = 'Initializing Project'
+
+      READY_TO_START = '{{*}} You\'re ready to start building %s! Try running `shopify serve` to start a local server.'
+      LEARN_MORE = '{{*}} Learn more about building %s extensions at <shopify.dev>'
     end
 
     module Pack
@@ -43,11 +45,13 @@ module Extension
 
     module Models
       TYPES = {
+        ARGO: {
+          missing_file_error: 'Could not find built extension file.',
+          script_prepare_error: 'An error occurred while attempting to prepare your script.'
+        },
         Extension::Models::Types::SubscriptionManagement::IDENTIFIER => {
           name: 'Subscription Management',
           tagline: '(limit 1 per app)',
-          missing_file_error: 'Could not find built extension file.',
-          script_prepare_error: 'An error occurred while attempting to prepare your script.'
         }
       }
     end

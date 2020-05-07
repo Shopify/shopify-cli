@@ -6,19 +6,13 @@ module Extension
     module Types
       class SubscriptionManagement < Models::Type
         IDENTIFIER = 'SUBSCRIPTION_MANAGEMENT'
-        SCRIPT_PATH = %w(build main.js)
+
+        def create(directory_name, context)
+          Models::Types::Argo.create(directory_name, IDENTIFIER, context)
+        end
 
         def config(context)
-          filepath = File.join(context.root, SCRIPT_PATH)
-          context.abort(get_content(:missing_file_error)) unless File.exists?(filepath)
-
-          begin
-            {
-              serialized_script: Base64.strict_encode64(File.open(filepath).read.chomp)
-            }
-          rescue Exception
-            context.abort(get_content(:script_prepare_error))
-          end
+          Models::Types::Argo.config(context)
         end
       end
     end
