@@ -39,29 +39,33 @@ module Script
             cause_of_error: "Something went wrong while authenticating your account with the Partner Dashboard.",
             help_suggestion: "Try again.",
           }
-        when DependencyInstallError
-          {
-            cause_of_error: "Something went wrong while installing the dependencies that are needed.",
-            help_suggestion: "See https://help.shopify.com/en/",
-          }
-        when InvalidContextError
+        when Errors::InvalidContextError
           {
             cause_of_error: "Your .shopify-cli.yml file is not correct.",
             help_suggestion: "See https://help.shopify.com/en/",
           }
-        when InvalidExtensionPointError
+        when Errors::ScriptProjectAlreadyExistsError
+          {
+            cause_of_error: "Directory with the same name as the script already exists.",
+            help_suggestion: "Use different script name and try again.",
+          }
+        when Layers::Domain::Errors::InvalidExtensionPointError
           {
             cause_of_error: "Invalid extension point #{e.type}",
             help_suggestion: "Allowed values: discount and unit_limit_per_order.",
           }
-        when ScriptNotFoundError
+        when Layers::Domain::Errors::ScriptNotFoundError
           {
             cause_of_error: "Couldn't find script #{e.script_name} for extension point #{e.extension_point_type}",
           }
-        when ScriptProjectAlreadyExistsError
+        when Layers::Infrastructure::Errors::DependencyInstallError
           {
-            cause_of_error: "Directory with the same name as the script already exists.",
-            help_suggestion: "Use different script name and try again.",
+            cause_of_error: "Something went wrong while installing the dependencies that are needed.",
+            help_suggestion: "See https://help.shopify.com/en/",
+          }
+        when Layers::Infrastructure::Errors::TestError
+          {
+            help_suggestion: "Correct the errors and try again.",
           }
         end
       end

@@ -15,7 +15,7 @@ module Script
         private
 
         def fetch_extension_point(type)
-          raise InvalidExtensionPointError, type unless extension_points[type]
+          raise Domain::Errors::InvalidExtensionPointError, type unless extension_points[type]
           extension_points[type]
         end
 

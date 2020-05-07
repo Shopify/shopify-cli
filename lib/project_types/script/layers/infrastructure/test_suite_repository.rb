@@ -17,7 +17,7 @@ module Script
           FileUtils.mkdir_p(test_base)
           FileUtils.copy(aspect_config_template(script.language), "#{test_base}/as-pect.config.js")
           out, status = CLI::Kit::System.capture2e(format(BOOTSTRAP_TEST, test_base: test_base))
-          raise ServiceFailureError, out unless status.success?
+          raise Domain::Errors::ServiceFailureError, out unless status.success?
 
           write_tsconfig_file
           write_aspect_type_definitions_file
@@ -26,7 +26,7 @@ module Script
         def get_test_suite(language, extension_point_type, script_name)
           ScriptRepository.new.get_script(language, extension_point_type, script_name)
           source = "#{test_base}/script.spec.#{language}"
-          raise TestSuiteNotFoundError unless File.exist?(source)
+          raise Domain::Errors::TestSuiteNotFoundError unless File.exist?(source)
         end
 
         def with_test_suite_context

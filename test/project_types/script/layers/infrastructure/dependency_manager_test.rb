@@ -37,7 +37,7 @@ describe Script::Layers::Infrastructure::DependencyManager do
 
       it "should raise dependency not supported error" do
         assert_raises(
-          Script::DependencyError,
+          Script::Layers::Infrastructure::Errors::DependencyError,
           "{{x}} No dependency support for #{language}"
         ) { subject }
       end

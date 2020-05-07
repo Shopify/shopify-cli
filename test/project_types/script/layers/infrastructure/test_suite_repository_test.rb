@@ -87,7 +87,7 @@ describe Script::Layers::Infrastructure::TestSuiteRepository do
       end
 
       it "should raise TestSuiteNotFoundError if test spec file does not exist" do
-        assert_raises(Script::TestSuiteNotFoundError) { subject }
+        assert_raises(Script::Layers::Domain::Errors::TestSuiteNotFoundError) { subject }
       end
     end
   end
