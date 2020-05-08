@@ -10,6 +10,44 @@ module ShopifyCli
   # resoures.
   #
   class Context
+    class << self
+      attr_reader :messages
+
+      # adds a new set of messages to be used by the CLI from the given YAML file. This will flatten the keys using '.'s
+      # and will fail if any of the new keys conflict with existing ones.
+      #
+      # #### Parameters
+      # * `yaml_file_path` - The path of a YAML file containing the messages
+      def load_messages_file(yaml_file_path)
+        require 'yaml'
+
+        yaml_contents = YAML.load_file(yaml_file_path)
+        return unless yaml_contents
+
+        @messages = {} if @messages.nil?
+        @messages = @messages.merge(flatten_yaml_file(yaml_contents)) do |key|
+          abort("Message key '#{key}' already exists and cannot be registered") if @messages.key?(key)
+        end
+      end
+
+      private
+
+      def flatten_yaml_file(yaml_data)
+        messages = {}
+        yaml_data.each do |key, value|
+          if value.is_a?(Hash)
+            flatten_yaml_file(value).each do |inner_key, inner_value|
+              messages["#{key}.#{inner_key}"] = inner_value
+            end
+          else
+            messages[key] = value
+          end
+        end
+
+        messages
+      end
+    end
+
     # is the directory root that the current command is running in. If you want to
     # simulate a `cd` for the file operations, you can change this variable.
     attr_accessor :root
@@ -205,6 +243,15 @@ module ShopifyCli
     #
     def debug(text)
       puts("{{red:DEBUG}} #{text}") if getenv('DEBUG')
+    end
+
+    # returns the user-facing messages for the given key. Returns the key if no message is available.
+    #
+    # #### Parameters
+    # * `key` - a symbol representing the message
+    # * `params` - the parameters to format the string with
+    def message(key, *params)
+      Context.messages.key?(key) ? Context.messages[key] % params : key
     end
 
     # will grab the host info of the computer running the cli. This indicates the
