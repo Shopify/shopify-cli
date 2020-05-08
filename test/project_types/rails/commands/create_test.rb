@@ -88,18 +88,163 @@ module Rails
         FileUtils.rm_r('test-app')
       end
 
+      def test_can_create_new_app_with_db_flag
+        FileUtils.mkdir_p('test-app')
+        FileUtils.mkdir_p('test-app/config/initializers')
+
+        gem_path = "/gem/path/"
+        Gem.stubs(:gem_home).returns(gem_path)
+
+        Ruby.expects(:version).returns(Semantic::Version.new('2.4.0'))
+        Gem.expects(:install).with(@context, 'rails', nil)
+        Gem.expects(:install).with(@context, 'bundler', '~>1.0')
+        Gem.expects(:install).with(@context, 'bundler', '~>2.0')
+        expect_command(%w(/gem/path/bin/rails new --skip-spring --database="postgresql" test-app))
+        expect_command(%w(/gem/path/bin/bundle install),
+                       chdir: File.join(@context.root, 'test-app'))
+        expect_command(%w(/gem/path/bin/spring stop),
+                       chdir: File.join(@context.root, 'test-app'))
+        expect_command(%w(/gem/path/bin/rails generate shopify_app),
+                       chdir: File.join(@context.root, 'test-app'))
+        expect_command(%w(/gem/path/bin/rails db:migrate RAILS_ENV=development),
+                       chdir: File.join(@context.root, 'test-app'))
+
+        stub_partner_req(
+          'create_app',
+          variables: {
+            org: 42,
+            title: 'test-app',
+            type: 'public',
+            app_url: 'https://shopify.github.io/shopify-app-cli/getting-started',
+            redir: ["http://127.0.0.1:3456"],
+          },
+          resp: {
+            'data': {
+              'appCreate': {
+                'app': {
+                  'apiKey': 'newapikey',
+                  'apiSecretKeys': [{ 'secret': 'secret' }],
+                },
+              },
+            },
+          }
+        )
+
+        perform_command('--db="postgresql"')
+
+        FileUtils.rm_r('test-app')
+      end
+
+      def test_can_create_new_app_with_api_flag
+        FileUtils.mkdir_p('test-app')
+        FileUtils.mkdir_p('test-app/config/initializers')
+
+        gem_path = "/gem/path/"
+        Gem.stubs(:gem_home).returns(gem_path)
+
+        Ruby.expects(:version).returns(Semantic::Version.new('2.4.0'))
+        Gem.expects(:install).with(@context, 'rails', nil)
+        Gem.expects(:install).with(@context, 'bundler', '~>1.0')
+        Gem.expects(:install).with(@context, 'bundler', '~>2.0')
+        expect_command(%w(/gem/path/bin/rails new --skip-spring --api test-app))
+        expect_command(%w(/gem/path/bin/bundle install),
+                       chdir: File.join(@context.root, 'test-app'))
+        expect_command(%w(/gem/path/bin/spring stop),
+                       chdir: File.join(@context.root, 'test-app'))
+        expect_command(%w(/gem/path/bin/rails generate shopify_app),
+                       chdir: File.join(@context.root, 'test-app'))
+        expect_command(%w(/gem/path/bin/rails db:migrate RAILS_ENV=development),
+                       chdir: File.join(@context.root, 'test-app'))
+
+        stub_partner_req(
+          'create_app',
+          variables: {
+            org: 42,
+            title: 'test-app',
+            type: 'public',
+            app_url: 'https://shopify.github.io/shopify-app-cli/getting-started',
+            redir: ["http://127.0.0.1:3456"],
+          },
+          resp: {
+            'data': {
+              'appCreate': {
+                'app': {
+                  'apiKey': 'newapikey',
+                  'apiSecretKeys': [{ 'secret': 'secret' }],
+                },
+              },
+            },
+          }
+        )
+
+        perform_command('--api')
+
+        FileUtils.rm_r('test-app')
+      end
+
+      def test_can_create_new_app_with_rails_opts_flag
+        FileUtils.mkdir_p('test-app')
+        FileUtils.mkdir_p('test-app/config/initializers')
+
+        gem_path = "/gem/path/"
+        Gem.stubs(:gem_home).returns(gem_path)
+
+        Ruby.expects(:version).returns(Semantic::Version.new('2.4.0'))
+        Gem.expects(:install).with(@context, 'rails', nil)
+        Gem.expects(:install).with(@context, 'bundler', '~>1.0')
+        Gem.expects(:install).with(@context, 'bundler', '~>2.0')
+        expect_command(%w(/gem/path/bin/rails new --skip-spring --edge -J test-app))
+        expect_command(%w(/gem/path/bin/bundle install),
+                       chdir: File.join(@context.root, 'test-app'))
+        expect_command(%w(/gem/path/bin/spring stop),
+                       chdir: File.join(@context.root, 'test-app'))
+        expect_command(%w(/gem/path/bin/rails generate shopify_app),
+                       chdir: File.join(@context.root, 'test-app'))
+        expect_command(%w(/gem/path/bin/rails db:migrate RAILS_ENV=development),
+                       chdir: File.join(@context.root, 'test-app'))
+
+        stub_partner_req(
+          'create_app',
+          variables: {
+            org: 42,
+            title: 'test-app',
+            type: 'public',
+            app_url: 'https://shopify.github.io/shopify-app-cli/getting-started',
+            redir: ["http://127.0.0.1:3456"],
+          },
+          resp: {
+            'data': {
+              'appCreate': {
+                'app': {
+                  'apiKey': 'newapikey',
+                  'apiSecretKeys': [{ 'secret': 'secret' }],
+                },
+              },
+            },
+          }
+        )
+
+        perform_command('--rails-opts=--edge -J')
+
+        FileUtils.rm_r('test-app')
+      end
+
       private
+
+      def default_new_cmd
+        "create rails \
+        --type=public \
+        --name=test-app \
+        --organization_id=42 \
+        --shop_domain=testshop.myshopify.com".split
+      end
 
       def expect_command(command, chdir: @context.root)
         @context.expects(:system).with(*command, chdir: chdir)
       end
 
-      def perform_command
-        run_cmd("create rails \
-          --type=public \
-          --name=test-app \
-          --organization_id=42 \
-          --shop_domain=testshop.myshopify.com")
+      def perform_command(add_cmd = nil)
+        run_cmd(default_new_cmd << add_cmd, false)
       end
     end
   end

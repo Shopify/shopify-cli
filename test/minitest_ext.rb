@@ -15,10 +15,12 @@ module Minitest
       super
     end
 
-    def run_cmd(cmd)
+    def run_cmd(cmd, split_cmd = true)
       stub_prompt_for_cli_updates
       stub_monorail_log_git_sha
-      ShopifyCli::Core::EntryPoint.call(cmd.split(' '), @context)
+
+      new_cmd = split_cmd ? cmd.split : cmd
+      ShopifyCli::Core::EntryPoint.call(new_cmd, @context)
     end
 
     def capture_io(&block)
