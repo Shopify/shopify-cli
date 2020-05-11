@@ -11,7 +11,8 @@ module Node
     register_command('Node::Commands::Tunnel', "tunnel")
     # register_task('Node::Tasks::NodeTask', 'node_task')
 
-    register_messages_file(Project.project_filepath('messages/messages.yml'))
+    require Project.project_filepath('messages/messages')
+    register_messages(Node::Messages::MESSAGES)
   end
 
   # define/autoload project specific Commands

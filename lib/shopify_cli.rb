@@ -122,5 +122,6 @@ module ShopifyCli
   autoload :Tasks, 'shopify-cli/tasks'
   autoload :Tunnel, 'shopify-cli/tunnel'
 
-  Context.load_messages_file(File.join(ROOT, 'lib', 'shopify-cli', 'messages/messages.yml'))
+  require 'shopify-cli/messages/messages'
+  Context.load_messages(ShopifyCli::Messages::MESSAGES)
 end

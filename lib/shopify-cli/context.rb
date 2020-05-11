@@ -13,38 +13,17 @@ module ShopifyCli
     class << self
       attr_reader :messages
 
-      # adds a new set of messages to be used by the CLI from the given YAML file. This will flatten the keys using '.'s
-      # and will fail if any of the new keys conflict with existing ones.
+      # adds a new set of messages to be used by the CLI. The messages are expected to be a hash of symbols, and
+      # multiple levels are allowed. When fetching messages a dot notation is used to separate different levels. See
+      # Context::message for more information.
       #
       # #### Parameters
-      # * `yaml_file_path` - The path of a YAML file containing the messages
-      def load_messages_file(yaml_file_path)
-        require 'yaml'
-
-        yaml_contents = YAML.load_file(yaml_file_path)
-        return unless yaml_contents
-
+      # * `messages` - Hash containing the new keys to register
+      def load_messages(messages)
         @messages = {} if @messages.nil?
-        @messages = @messages.merge(flatten_yaml_file(yaml_contents)) do |key|
+        @messages = @messages.merge(messages) do |key|
           abort("Message key '#{key}' already exists and cannot be registered") if @messages.key?(key)
         end
-      end
-
-      private
-
-      def flatten_yaml_file(yaml_data)
-        messages = {}
-        yaml_data.each do |key, value|
-          if value.is_a?(Hash)
-            flatten_yaml_file(value).each do |inner_key, inner_value|
-              messages["#{key}.#{inner_key}"] = inner_value
-            end
-          else
-            messages[key] = value
-          end
-        end
-
-        messages
       end
     end
 
@@ -251,7 +230,9 @@ module ShopifyCli
     # * `key` - a symbol representing the message
     # * `params` - the parameters to format the string with
     def message(key, *params)
-      Context.messages.key?(key) ? Context.messages[key] % params : key
+      key_parts = key.split('.').map(&:to_sym)
+      str = Context.messages.dig(*key_parts)
+      str ? str % params : key
     end
 
     # will grab the host info of the computer running the cli. This indicates the

@@ -62,13 +62,13 @@ module ShopifyCli
         Task::Registry.add(const_get(task), name)
       end
 
-      def register_messages_file(messages_file_path)
+      def register_messages(messages)
         # Make sure we don't attempt to register a file more than once as that will fail
         @registered_message_files = {} if @registered_message_files.nil?
-        return if @registered_message_files.key?(messages_file_path)
-        @registered_message_files[messages_file_path] = true
+        return if @registered_message_files.key?(@project_type)
+        @registered_message_files[@project_type] = true
 
-        Context.load_messages_file(messages_file_path)
+        Context.load_messages(messages)
       end
     end
   end
