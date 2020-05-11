@@ -76,13 +76,21 @@ module ShopifyCli
       params.merge!(challange_params) if secret.nil?
       uri = URI.parse("#{url}#{auth_path}")
       uri.query = URI.encode_www_form(params.merge(options))
+      output_authentication_info(uri)
+    end
+
+    def output_authentication_info(uri)
+      login_location = service == 'admin' ? 'development store' : 'Shopify Partners account'
+      ctx.puts(
+        "{{i}} Authentication required. Login to the URL below with your #{login_location} credentials to continue."
+      )
       ctx.open_url!(uri)
     end
 
     def receive_access_code
       @access_code ||= begin
         @server_thread.join(240)
-        raise Error, 'Timed out while waiting for response from shopify' if response_query.nil?
+        raise Error, 'Timed out while waiting for response from Shopify' if response_query.nil?
         raise Error, response_query['error_description'] unless response_query['error'].nil?
         response_query['code']
       end

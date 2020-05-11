@@ -27,7 +27,7 @@ module Script
         }
 
         def self.for(ctx, language, extension_point, script_name)
-          raise DependencyError, language unless DEP_MANAGER[language]
+          raise Errors::DependencyError, language unless DEP_MANAGER[language]
           DEP_MANAGER[language].new(ctx, language, extension_point, script_name)
         end
       end

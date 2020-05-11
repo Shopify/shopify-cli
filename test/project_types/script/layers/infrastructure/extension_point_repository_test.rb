@@ -24,7 +24,7 @@ describe Script::Layers::Infrastructure::ExtensionPointRepository do
       let(:bogus_extension) { "bogus" }
 
       it "should raise InvalidExtensionPointError" do
-        assert_raises(Script::InvalidExtensionPointError) do
+        assert_raises(Script::Layers::Domain::Errors::InvalidExtensionPointError) do
           subject.get_extension_point(bogus_extension)
         end
       end
