@@ -18,14 +18,14 @@ module Script
                 spinner.update_title('Dependencies installed')
               end
               true
-            rescue DependencyInstallError => e
+            rescue Infrastructure::Errors::DependencyInstallError => e
               CLI::UI::Frame.with_frame_color_override(:red) do
                 ctx.puts("\n#{e.message}")
               end
               false
             end
           end
-            raise DependencyInstallError
+            raise Infrastructure::Errors::DependencyInstallError
           end
         end
       end

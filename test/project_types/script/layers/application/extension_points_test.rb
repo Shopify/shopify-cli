@@ -32,7 +32,7 @@ describe Script::Layers::Application::ExtensionPoints do
 
     describe 'when extension point exists' do
       it 'should return a valid extension point' do
-        assert_raises(Script::InvalidExtensionPointError) do
+        assert_raises(Script::Layers::Domain::Errors::InvalidExtensionPointError) do
           Script::Layers::Application::ExtensionPoints.get(type: 'invalid')
         end
       end
