@@ -23,7 +23,7 @@ module Script
 
         def install
           output, status = @ctx.capture2e("npm", "install", "--no-audit", "--no-optional", "--loglevel error")
-          raise DependencyInstallError, output unless status.success?
+          raise Errors::DependencyInstallError, output unless status.success?
         end
 
         private

@@ -172,17 +172,16 @@ module ShopifyCli
       FileUtils.mkdir_p(path)
     end
 
-    # will open a url in a browser if that functionality is available, otherwise
-    # it will simply output to the console a link for the user to either copy/paste
+    # will output to the console a link for the user to either copy/paste
     # or click on.
     #
     # #### Parameters
     # * `uri` - a http URI to open in a browser
     #
     def open_url!(uri)
-      return system("open '#{uri}'") if mac?
       help = <<~OPEN
-        Please open {{green:#{uri}}} in your browser
+        Please open this URL in your browser:
+        {{green:#{uri}}}
       OPEN
       puts(help)
     end
