@@ -38,44 +38,33 @@ module Node
 
         partners_url = "https://partners.shopify.com/#{form.organization_id}/apps/#{api_client['id']}"
 
-        @ctx.puts("{{v}} {{green:#{form.title}}} was created in your Partner" \
-                  " Dashboard " \
-                  "{{underline:#{partners_url}}}")
-        @ctx.puts("{{*}} Run {{command:#{ShopifyCli::TOOL_NAME} serve}} to start a local server")
-        @ctx.puts("{{*}} Then, visit {{underline:#{partners_url}/test}} to install" \
-                  " {{green:#{form.title}}} on your Dev Store")
+        @ctx.puts(@ctx.message('node.create.info.created', form.title, partners_url))
+        @ctx.puts(@ctx.message('node.create.info.serve', ShopifyCli::TOOL_NAME))
+        @ctx.puts(@ctx.message('node.create.info.install', partners_url, form.title))
       end
 
       def self.help
-        <<~HELP
-        {{command:#{ShopifyCli::TOOL_NAME} create node}}: Creates an embedded nodejs app.
-          Usage: {{command:#{ShopifyCli::TOOL_NAME} create node}}
-          Options:
-            {{command:--name=NAME}} App name. Any string.
-            {{command:--app_url=APPURL}} App URL. Must be valid URL.
-            {{command:--organization_id=ID}} App Org ID. Must be existing org ID.
-            {{command:--shop_domain=MYSHOPIFYDOMAIN }} Test store URL. Must be existing test store.
-        HELP
+        ShopifyCli::Context.message('node.create.help', ShopifyCli::TOOL_NAME, ShopifyCli::TOOL_NAME)
       end
 
       private
 
       def check_node
         _, stat = @ctx.capture2e('which', 'node')
-        @ctx.abort(@ctx.message('node.node_required_notice')) unless stat.success?
+        @ctx.abort(@ctx.message('node.create.error.node_required')) unless stat.success?
 
         version, stat = @ctx.capture2e('node', '-v')
-        @ctx.abort(@ctx.message('node.node_version_failure_notice')) unless stat.success?
+        @ctx.abort(@ctx.message('node.create.error.node_version_failure')) unless stat.success?
 
         @ctx.done("node #{version}")
       end
 
       def check_npm
         _, stat = @ctx.capture2e('which', 'npm')
-        @ctx.abort(@ctx.message('node.npm_required_notice')) unless stat.success?
+        @ctx.abort(@ctx.message('node.create.error.npm_required')) unless stat.success?
 
         version, stat = @ctx.capture2e('npm', '-v')
-        @ctx.abort(@ctx.message('node.npm_version_failure_notice')) unless stat.success?
+        @ctx.abort(@ctx.message('node.create.error.npm_version_failure')) unless stat.success?
 
         @ctx.done("npm #{version}")
       end

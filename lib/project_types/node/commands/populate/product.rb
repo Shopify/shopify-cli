@@ -16,8 +16,7 @@ module Node
         def message(data)
           ret = data['productCreate']['product']
           id = ShopifyCli::API.gid_to_id(ret['id'])
-          "#{ret['title']} added to {{green:#{ShopifyCli::Project.current.env.shop}}} "\
-          "at {{underline:#{admin_url}products/#{id}}}"
+          @ctx.message('node.populate.product.added', ret['title'], ShopifyCli::Project.current.env.shop, admin_url, id)
         end
       end
     end

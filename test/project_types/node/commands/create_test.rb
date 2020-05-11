@@ -31,7 +31,7 @@ module Node
 
       def test_check_node_installed
         @context.expects(:capture2e).with('which', 'node').returns([nil, mock(success?: false)])
-        assert_raises ShopifyCli::Abort, 'node.node_required_notice' do
+        assert_raises ShopifyCli::Abort, 'node.create.error.node_required' do
           perform_command
         end
       end
@@ -39,7 +39,7 @@ module Node
       def test_check_get_node_version
         @context.expects(:capture2e).with('which', 'node').returns(['/usr/bin/node', mock(success?: true)])
         @context.expects(:capture2e).with('node', '-v').returns([nil, mock(success?: false)])
-        assert_raises ShopifyCli::Abort, 'node.node_version_failure_notice' do
+        assert_raises ShopifyCli::Abort, 'node.create.error.node_version_failure' do
           perform_command
         end
       end
@@ -48,7 +48,7 @@ module Node
         @context.expects(:capture2e).with('which', 'node').returns(['/usr/bin/node', mock(success?: true)])
         @context.expects(:capture2e).with('node', '-v').returns(['8.0.0', mock(success?: true)])
         @context.expects(:capture2e).with('which', 'npm').returns([nil, mock(success?: false)])
-        assert_raises ShopifyCli::Abort, 'node.npm_required_notice' do
+        assert_raises ShopifyCli::Abort, 'node.create.error.npm_required' do
           perform_command
         end
       end
@@ -58,7 +58,7 @@ module Node
         @context.expects(:capture2e).with('node', '-v').returns(['8.0.0', mock(success?: true)])
         @context.expects(:capture2e).with('which', 'npm').returns(['/usr/bin/npm', mock(success?: true)])
         @context.expects(:capture2e).with('npm', '-v').returns([nil, mock(success?: false)])
-        assert_raises ShopifyCli::Abort, 'node.npm_version_failure_notice' do
+        assert_raises ShopifyCli::Abort, 'node.create.error.npm_version_failure' do
           perform_command
         end
       end

@@ -25,6 +25,17 @@ module ShopifyCli
           abort("Message key '#{key}' already exists and cannot be registered") if @messages.key?(key)
         end
       end
+
+      # returns the user-facing messages for the given key. Returns the key if no message is available.
+      #
+      # #### Parameters
+      # * `key` - a symbol representing the message
+      # * `params` - the parameters to format the string with
+      def message(key, *params)
+        key_parts = key.split('.').map(&:to_sym)
+        str = Context.messages.dig(*key_parts)
+        str ? str % params : key
+      end
     end
 
     # is the directory root that the current command is running in. If you want to
@@ -224,15 +235,13 @@ module ShopifyCli
       puts("{{red:DEBUG}} #{text}") if getenv('DEBUG')
     end
 
-    # returns the user-facing messages for the given key. Returns the key if no message is available.
+    # proxy call to Context.message.
     #
     # #### Parameters
     # * `key` - a symbol representing the message
     # * `params` - the parameters to format the string with
     def message(key, *params)
-      key_parts = key.split('.').map(&:to_sym)
-      str = Context.messages.dig(*key_parts)
-      str ? str % params : key
+      Context.message(key, *params)
     end
 
     # will grab the host info of the computer running the cli. This indicates the
