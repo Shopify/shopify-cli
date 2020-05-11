@@ -300,6 +300,9 @@ module ShopifyCli
     #   end
     #
     def on_siginfo
+      # Reset any previous SIGINFO handling we had so the only action we take is the given block
+      trap('INFO', 'DEFAULT')
+
       fork do
         begin
           r, w = IO.pipe
