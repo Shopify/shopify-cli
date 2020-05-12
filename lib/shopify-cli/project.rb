@@ -80,6 +80,10 @@ module ShopifyCli
         ctx.write('.shopify-cli.yml', YAML.dump(content))
       end
 
+      def project_name
+        File.basename(Dir.pwd)
+      end
+
       private
 
       def directory(dir)

@@ -70,7 +70,7 @@ module ShopifyCli
       end
 
       def test_shows_current_project_path_and_type
-        Dir.stubs(:pwd).returns("/Users/john/my_app")
+        Project.stubs(:project_name).returns("my_app")
         Project.stubs(:current_project_type).returns('rails')
         ShopifyCli::Commands.register('Rails::Commands::Fake', 'fake_rails')
 

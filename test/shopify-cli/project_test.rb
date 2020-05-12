@@ -40,5 +40,11 @@ module ShopifyCli
       ShopifyCli::Project.write(@context, :node, { 'other_option' => true })
       assert Project.current.config['other_option']
     end
+
+    def test_project_name_returns_last_entry_in_working_directory
+      Dir.stubs(:pwd).returns("/Users/john/my_app")
+      project_name = Project.project_name
+      assert_equal "my_app", project_name
+    end
   end
 end
