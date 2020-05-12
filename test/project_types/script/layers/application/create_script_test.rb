@@ -56,7 +56,7 @@ describe Script::Layers::Application::CreateScript do
 
     describe 'create_definition' do
       subject do
-        Script::Layers::Application::CreateScript.send(:create_definition, language, ep, script_name)
+        Script::Layers::Application::CreateScript.send(:create_definition, @context, language, ep, script_name)
       end
 
       it 'should return new script' do

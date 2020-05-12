@@ -14,13 +14,13 @@ module Script
 
       def ask_extension_point
         CLI::UI::Prompt.ask(
-          'Which extension point do you want to use?',
+          @ctx.message('script.create.select_extension_point'),
           options: Script::Layers::Application::ExtensionPoints.types
         )
       end
 
       def ask_name
-        CLI::UI::Prompt.ask('Script Name')
+        CLI::UI::Prompt.ask(@ctx.message('script.create.name'))
       end
     end
   end

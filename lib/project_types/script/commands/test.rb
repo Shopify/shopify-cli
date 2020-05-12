@@ -3,9 +3,6 @@
 module Script
   module Commands
     class Test < ShopifyCli::Command
-      OPERATION_FAILED_MESSAGE = "Tests didn't run or they ran with failures."
-      OPERATION_SUCCESS_MESSAGE = "{{v}} Tests finished."
-
       def call(_args, _name)
         project = Script::ScriptProject.current
         Layers::Application::TestScript.call(
@@ -14,16 +11,13 @@ module Script
           extension_point_type: project.extension_point_type,
           script_name: project.script_name
         )
-        @ctx.puts(OPERATION_SUCCESS_MESSAGE)
+        @ctx.puts(@ctx.message('script.test.success'))
       rescue StandardError => e
-        UI::ErrorHandler.pretty_print_and_raise(e, failed_op: OPERATION_FAILED_MESSAGE)
+        UI::ErrorHandler.pretty_print_and_raise(e, failed_op: @ctx.message('script.test.error.operation_failed'))
       end
 
       def self.help
-        <<~HELP
-        Runs unit tests on your script.
-          Usage: {{command:#{ShopifyCli::TOOL_NAME} test}}
-        HELP
+        ShopifyCli::Context.message('script.test.help', ShopifyCli::TOOL_NAME)
       end
     end
   end

@@ -10,7 +10,7 @@ module Script
           def call(ctx:, language:, script_name:, extension_point_type:)
             extension_point = ExtensionPoints.get(type: extension_point_type)
             create_project(ctx, language, script_name, extension_point)
-            script = create_definition(language, extension_point, script_name)
+            script = create_definition(ctx, language, extension_point, script_name)
             ShopifyCli::Core::Finalize.request_cd(script_name)
             script
           end
@@ -32,12 +32,12 @@ module Script
               .install(ctx: ctx, language: language, extension_point: extension_point, script_name: script_name)
           end
 
-          def create_definition(language, extension_point, script_name)
+          def create_definition(ctx, language, extension_point, script_name)
             script = nil
-            UI::StrictSpinner.spin('Creating script') do |spinner|
+            UI::StrictSpinner.spin(ctx.message('script.create.spinner_creating')) do |spinner|
               script = Infrastructure::ScriptRepository.new.create_script(language, extension_point, script_name)
               Infrastructure::TestSuiteRepository.new.create_test_suite(script)
-              spinner.update_title('Created script')
+              spinner.update_title(ctx.message('script.create.spinner_created'))
             end
             script
           end
