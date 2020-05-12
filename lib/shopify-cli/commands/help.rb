@@ -21,26 +21,45 @@ module ShopifyCli
         end
 
         preamble = <<~MESSAGE
-          CLI to help build Shopify apps faster.
-
           Use {{command:#{ShopifyCli::TOOL_NAME} help <command>}} to display detailed information about a specific command.
 
-          {{bold:Available commands}}
+          {{bold:Available core commands:}}
+
         MESSAGE
         @ctx.puts(preamble)
 
-        visible_commands = ShopifyCli::Commands::Registry
-          .resolved_commands
-          .select { |_name, c| !c.hidden }
-          .sort
+        core_commands.each do |name, klass|
+          next if name == 'help'
+          @ctx.puts("{{command:#{name}}}: #{klass.help}\n")
+        end
 
-        visible_commands.each do |name, klass|
+        return unless inside_supported_project?
+
+        @ctx.puts("{{bold:Project: #{File.basename(Dir.pwd)} (#{project_type_name})}}")
+        @ctx.puts("{{bold:Available commands for #{project_type_name} projects:}}\n\n")
+
+        local_commands.each do |name, klass|
           next if name == 'help'
           @ctx.puts("{{command:#{name}}}: #{klass.help}\n")
         end
       end
 
       private
+
+      def project_type_name
+        ProjectType.load_type(Project.current_project_type).project_name
+      end
+
+      def core_commands
+        resolved_commands
+          .select { |_name, c| !c.hidden }
+          .select { |name, _c| Commands.core_command?(name) }
+      end
+
+      def local_commands
+        resolved_commands
+          .reject { |name, _c| Commands.core_command?(name) }
+      end
 
       def display_help(klass)
         output = klass.help
@@ -49,6 +68,16 @@ module ShopifyCli
           output += klass.extended_help
         end
         @ctx.puts(output)
+      end
+
+      def resolved_commands
+        ShopifyCli::Commands::Registry
+          .resolved_commands
+          .sort
+      end
+
+      def inside_supported_project?
+        Project.current_project_type && ProjectType.load_type(Project.current_project_type)
       end
     end
   end
