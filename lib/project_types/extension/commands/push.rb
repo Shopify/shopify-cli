@@ -9,7 +9,7 @@ module Extension
         @project = ExtensionProject.current
 
         Commands::Register.new(@ctx).call(args, name) unless @project.registered?
-        Commands::Pack.new(@ctx).call(args, name)
+        Commands::Build.new(@ctx).call(args, name)
 
         CLI::UI::Frame.open(Content::Push::FRAME_TITLE) do
           update_draft

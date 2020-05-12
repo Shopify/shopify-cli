@@ -24,7 +24,7 @@ module Extension
       def test_runs_register_command_if_extension_not_yet_registered
         @project.expects(:registered?).returns(false).once
         Commands::Register.any_instance.expects(:call).once
-        Commands::Pack.any_instance.expects(:call).once
+        Commands::Build.any_instance.expects(:call).once
         Tasks::UpdateDraft.any_instance.expects(:call).once
 
         run_push
@@ -34,7 +34,7 @@ module Extension
         assert @project.registered?
 
         Commands::Register.any_instance.expects(:call).never
-        Commands::Pack.any_instance.expects(:call).once
+        Commands::Build.any_instance.expects(:call).once
         Tasks::UpdateDraft.any_instance.expects(:call).once
 
         run_push
@@ -43,7 +43,7 @@ module Extension
       def test_packs_and_updates_draft_if_extension_registered
         assert @project.registered?
 
-        Commands::Pack.any_instance.expects(:call).once
+        Commands::Build.any_instance.expects(:call).once
         Tasks::UpdateDraft.any_instance.expects(:call).with(
           context: @context,
           api_key: @api_key,
