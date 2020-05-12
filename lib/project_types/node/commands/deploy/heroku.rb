@@ -30,7 +30,7 @@ module Node
           spin_group.wait
 
           if (account = heroku_service.whoami)
-            @ctx.puts(@ctx.message('node.deploy.heroku.git.authenticated', account))
+            @ctx.puts(@ctx.message('node.deploy.heroku.authenticated_with_account', account))
           else
             CLI::UI::Frame.open(
               @ctx.message('node.deploy.heroku.authenticating'),

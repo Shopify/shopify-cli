@@ -13,7 +13,7 @@ module Node
       def call(*)
         project = ShopifyCli::Project.current
         url = options.flags[:host] || ShopifyCli::Tunnel.start(@ctx)
-        @ctx.abort(@ctx.message('node.serve.error.must_be_https')) if url.match(/^https/i).nil?
+        @ctx.abort(@ctx.message('node.serve.error.host_must_be_https')) if url.match(/^https/i).nil?
         project.env.update(@ctx, :host, url)
         ShopifyCli::Tasks::UpdateDashboardURLS.call(
           @ctx,

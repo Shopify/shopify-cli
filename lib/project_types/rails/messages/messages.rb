@@ -1,72 +1,74 @@
 # frozen_string_literal: true
 
-module Node
+module Rails
   module Messages
     MESSAGES = {
-      node: {
+      rails: {
         error: {
           generic: "Error",
         },
 
-        js_deps: {
-          error: {
-            missing_package: "expected to have a file at: %s",
-            invalid_package: "{{info:%s}} was not valid JSON. Fix this then try again",
-          },
-
-          installing: "Installing dependencies with %s...",
-          installed: "Dependencies installed",
-          npm_installing_deps: "Installing %d dependencies...",
-          npm_installed_deps: "%d npm dependencies installed",
+        gem: {
+          installed_debug: "%s installed: %s",
+          installing: "Installing %s gem...",
+          installed: "Installed %s gem",
         },
 
         create: {
           help: <<~HELP,
-          {{command:%s create node}}: Creates an embedded nodejs app.
-            Usage: {{command:%s create node}}
+          {{command:%s create rails}}: Creates a ruby on rails app.
+            Usage: {{command:%s create rails}}
             Options:
               {{command:--name=NAME}} App name. Any string.
               {{command:--app_url=APPURL}} App URL. Must be valid URL.
               {{command:--organization_id=ID}} App Org ID. Must be existing org ID.
               {{command:--shop_domain=MYSHOPIFYDOMAIN }} Test store URL. Must be existing test store.
           HELP
+
           error: {
-            node_required: "node is required to create an app project. Download at https://nodejs.org/en/download.",
-            node_version_failure: "Failed to get the current node version. Please make sure it is installed as " \
-              "per the instructions at https://nodejs.org/en.",
-            npm_required: "npm is required to create an app project. Download at https://www.npmjs.com/get-npm.",
-            npm_version_failure: "Failed to get the current npm version. Please make sure it is installed as per " \
-              "the instructions at https://www.npmjs.com/get-npm.",
+            invalid_ruby_version: <<~MSG,
+            This project requires a ruby version ~> 2.4.
+            See {{underline:https://github.com/Shopify/shopify-app-cli/blob/master/docs/installing-ruby.md}}
+            for our recommended method of installing ruby.
+            MSG
           },
+
           info: {
             created: "{{v}} {{green:%s}} was created in your Partner Dashboard {{underline:%s}}",
             serve: "{{*}} Run {{command:%s serve}} to start a local server",
             install: "{{*}} Then, visit {{underline:%s/test}} to install {{green:%s}} on your Dev Store",
           },
+          installing_bundler: "Installing bundler…",
+          generating_app: "Generating new rails app project in %s...",
+          adding_shopify_gem: "{{v}} Adding shopify_app gem…",
+          running_bundle_install: "Running bundle install...",
+          running_generator: "Running shopfiy_app generator...",
+          running_migrations: "Running migrations…",
         },
 
         deploy: {
           help: <<~HELP,
-          Deploy the current Node project to a hosting service. Heroku ({{underline:https://www.heroku.com}}) is currently the only option, but more will be added in the future.
+          Deploy the current Rails project to a hosting service. Heroku ({{underline:https://www.heroku.com}}) is currently the only option, but more will be added in the future.
             Usage: {{command:%s deploy [ heroku ]}}
           HELP
           extended_help: <<~HELP,
           {{bold:Subcommands:}}
-            {{cyan:heroku}}: Deploys the current Node project to Heroku.
+            {{cyan:heroku}}: Deploys the current Rails project to Heroku.
               Usage: {{command:%s deploy heroku}}
           HELP
+
           heroku: {
             help: <<~HELP,
-            Deploy the current Node project to Heroku
-              Usage: {{command:%s deploy heroku}}
+            Deploy the current Rails project to Heroku
+            Usage: {{command:%s deploy heroku}}
             HELP
             downloading: "Downloading Heroku CLI…",
             downloaded: "Downloaded Heroku CLI",
             installing: "Installing Heroku CLI…",
             installed: "Installed Heroku CLI",
+            authenticated_with_account: "{{v}} Authenticated with Heroku as `%s`",
             authenticating: "Authenticating with Heroku…",
             authenticated: "{{v}} Authenticated with Heroku",
-            authenticated_with_account: "{{v}} Authenticated with Heroku as `%s`",
             deploying: "Deploying to Heroku…",
             deployed: "{{v}} Deployed to Heroku",
             git: {
@@ -90,8 +92,8 @@ module Node
 
         generate: {
           help: <<~HELP,
-          Generate code in your Node project. Supports generating new billing API calls, new pages, or new webhooks.
-            Usage: {{command:%s generate [ billing | page | webhook ]}}
+          Generate code in your Rails project. Currently supports generating new webhooks.
+            Usage: {{command:%s generate [ webhook ]}}
           HELP
           extended_help: <<~EXAMPLES,
           {{bold:Examples:}}
@@ -104,37 +106,14 @@ module Node
             generic: "Error generating %s",
           },
 
-          billing: {
-            help: <<~HELP,
-            Enable charging for your app. This command generates the necessary code to call Shopify’s billing API.
-              Usage: {{command:%s generate billing [ one-time-billing | recurring-billing ]}}
-            HELP
-            type_select: "How would you like to charge for your app?",
-            generating: "Generating %s code ...",
-            generated: "{{green:%s generated in server/server.js",
-          },
-
-          page: {
-            help: <<~HELP,
-            Generate a new page in your app with the specified name. New files are generated inside the project’s “/pages” directory.
-              Usage: {{command:%s generate page <pagename>}}
-            HELP
-            error: {
-              invalid_page_type: "Invalid page type.",
-            },
-            type_select: "Which template would you like to use?",
-            generating: "Generating %s page...",
-            generated: "{{green: %s}} generated in pages/%s",
-          },
-
           webhook: {
             help: <<~HELP,
             Generate and register a new webhook that listens for the specified Shopify store event.
               Usage: {{command:%s generate webhook <type>}}
             HELP
-            type_select: "What type of webhook would you like to create?",
-            generating: "Generating webhook: %s",
-            generated: "{{green:%s}} generated in server/server.js",
+
+            select: "What type of webhook would you like to create?",
+            selected: "Generating webhook: %s",
           },
         },
 
@@ -199,7 +178,7 @@ module Node
 
         serve: {
           help: <<~HELP,
-          Start a local development node server for your project, as well as a public ngrok tunnel to your localhost.
+          Start a local development rails server for your project, as well as a public ngrok tunnel to your localhost.
             Usage: {{command:%s serve}}
           HELP
           extended_help: <<~HELP,
@@ -208,7 +187,7 @@ module Node
           HELP
 
           error: {
-            host_must_be_https: "HOST must be a HTTPS url.",
+            host_must_be_https: "{{red:HOST must be a HTTPS url.}}",
           },
 
           open_info: "{{*}} Press {{yellow: Control-T}} to open this project in {{green:%s}} ",
