@@ -180,8 +180,7 @@ module Node
               Populate your development store with 5 additional orders.
 
             {{command:%1$s populate products --help}}
-              Display the list of options available to customize the
-              {{command:%1$s populate products}} command.
+              Display the list of options available to customize the {{command:%1$s populate products}} command.
           HELP
 
           customer: {
