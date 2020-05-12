@@ -9,10 +9,6 @@ module Extension
       ASK_TYPE = 'What type of extension would you like to create?'
       INVALID_TYPE = 'Invalid extension type.'
 
-      ASK_APP = 'Which app would you like to associate with the extension?'
-      NO_APPS = 'You don’t have any apps. Learn more about building apps at <https://shopify.dev/concepts/apps> or try creating one using a new app using {{command:shopify create app}}.'
-      INVALID_API_KEY = 'The API key %s does not match any of your apps.'
-
       SETUP_PROJECT_FRAME_TITLE = 'Initializing Project'
 
       READY_TO_START = '{{*}} You\'re ready to start building %s! Try running `shopify serve` to start a local server.'
@@ -25,13 +21,29 @@ module Extension
       BUILD_FAILURE_MESSAGE = 'Failed to pack extension code for deployment.'
     end
 
+    module Register
+      FRAME_TITLE = 'Registering Extension'
+      WAITING_TEXT = 'Registering with Shopify...'
+
+      ALREADY_REGISTERED = 'Extension is already registered.'
+
+      LOADING_APPS = 'Loading your apps...'
+      ASK_APP = 'Which app would you like to associate with the extension?'
+      NO_APPS = '{{x}} You don’t have any apps.'
+      LEARN_ABOUT_APPS = '{{*}} Learn more about building apps at <https://shopify.dev/concepts/apps>, or try creating a new app using {{command: shopify create app.}}'
+      INVALID_API_KEY = 'The API key %s does not match any of your apps.'
+
+      CONFIRM_INFO = 'You can only create one %s extension per app, which can’t be undone.'
+      CONFIRM_QUESTION = 'Would you like to connect this extension? (y/n)'
+      CONFIRM_ABORT = 'Extension was not created.'
+
+      SUCCESS = '{{v}} Connected %s.'
+      SUCCESS_INFO = '{{*}} Run {{command: shopify push}} to push your extension to Shopify.'
+    end
+
     module Push
       FRAME_TITLE = 'Pushing your extension to Shopify'
       WAITING_TEXT = 'Pushing to Shopify...'
-
-      CREATE_CONFIRM_INFO = 'This will create an extension on the Partners Dashboard. You can only create one subscription management extension per app.'
-      CREATE_CONFIRM_QUESTION = 'This is not reversible (y/n)'
-      CREATE_ABORT = 'Pushing extension aborted by user.'
 
       SUCCESS_CONFIRMATION = '{{v}} %s has been pushed to a draft.'
       SUCCESS_INFO = '{{*}} Visit the Partner\'s Dashboard to create and publish versions.'

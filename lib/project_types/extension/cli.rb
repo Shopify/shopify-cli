@@ -4,12 +4,14 @@ module Extension
     creator 'App Extension', 'Extension::Commands::Create'
 
     register_command('Extension::Commands::Pack', "pack")
+    register_command('Extension::Commands::Register', "register")
     register_command('Extension::Commands::Push', "push")
     register_command('Extension::Commands::Serve', "serve")
   end
 
   module Commands
     autoload :Create, Project.project_filepath('commands/create')
+    autoload :Register, Project.project_filepath('commands/register')
     autoload :Pack, Project.project_filepath('commands/pack')
     autoload :Serve, Project.project_filepath('commands/serve')
     autoload :Push, Project.project_filepath('commands/push')
@@ -24,6 +26,7 @@ module Extension
 
   module Forms
     autoload :Create, Project.project_filepath('forms/create')
+    autoload :Register, Project.project_filepath('forms/register')
   end
 
   module Models

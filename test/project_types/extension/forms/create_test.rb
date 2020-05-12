@@ -11,7 +11,6 @@ module Extension
       def setup
         super
         @app = Models::App.new(title: 'Fake', api_key: '1234', secret: '4567', business_name: 'Fake Business')
-        Tasks::GetApps.any_instance.expects(:call).with(context: @context).returns([@app]).at_least_once
       end
 
       def test_returns_defined_attributes_if_valid
@@ -82,44 +81,14 @@ module Extension
         end
       end
 
-      def test_aborts_and_informs_user_if_there_are_no_apps
-        Tasks::GetApps.any_instance.unstub(:call)
-        Tasks::GetApps.any_instance.expects(:call).with(context: @context).returns([]).once
-        @context.expects(:abort).with(Content::Create::NO_APPS).raises(ShopifyCli::Abort).once
-
-        capture_io { ask }
-      end
-
-      def test_accepts_the_api_key_to_associate_with_extension
-        form = ask(api_key: '1234')
-        assert_equal form.app, @app
-      end
-
-      def test_prompts_the_user_to_choose_an_app_to_associate_with_extension_if_no_app_is_provided
-        CLI::UI::Prompt.expects(:ask).with(Content::Create::ASK_APP)
-
-        capture_io do
-          ask(api_key: nil)
-        end
-      end
-
-      def test_fails_with_invalid_api_key_to_associate_with_extension
-        api_key = '00001'
-
-        io = capture_io { ask(api_key: api_key) }
-
-        assert_match(Content::Create::INVALID_API_KEY % api_key, io.join)
-      end
-
       private
 
-      def ask(name: 'test-extension', type: @test_extension_type.identifier, api_key: @app.api_key)
+      def ask(name: 'test-extension', type: @test_extension_type.identifier)
         Create.ask(
           @context,
           [],
           name: name,
           type: type,
-          api_key: api_key,
         )
       end
     end
