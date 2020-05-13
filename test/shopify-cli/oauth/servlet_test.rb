@@ -16,7 +16,7 @@ module ShopifyCli
         servlet.do_GET(Request.new({ 'state' => 'state_token' }), resp)
         assert_equal(oauth.response_query, { 'state' => 'state_token' })
         assert_equal(resp.status, 200)
-        assert_match('Authenticate Successfully', resp.body)
+        assert_match(Context.message('core.oauth.servlet.authenticated'), resp.body)
       end
 
       def test_oauth_error
@@ -31,7 +31,7 @@ module ShopifyCli
         servlet.do_GET(Request.new(data), resp)
         assert_equal(oauth.response_query, data)
         assert_equal(resp.status, 400)
-        assert_match('Failed to Authenticate', resp.body)
+        assert_match(Context.message('core.oauth.servlet.not_authenticated'), resp.body)
       end
 
       def test_invalid_state
@@ -43,10 +43,10 @@ module ShopifyCli
         assert_equal(oauth.response_query, {
           "state" => "nope",
           "error" => "invalid_state",
-          "error_description" => OAuth::Servlet::INVALID_STATE_RESP,
+          "error_description" => Context.message('core.oauth.servlet.invalid_state_response'),
         })
         assert_equal(resp.status, 403)
-        assert_match('Failed to Authenticate', resp.body)
+        assert_match(Context.message('core.oauth.servlet.not_authenticated'), resp.body)
       end
 
       private

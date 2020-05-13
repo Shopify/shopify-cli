@@ -80,17 +80,15 @@ module ShopifyCli
     end
 
     def output_authentication_info(uri)
-      login_location = service == 'admin' ? 'development store' : 'Shopify Partners account'
-      ctx.puts(
-        "{{i}} Authentication required. Login to the URL below with your #{login_location} credentials to continue."
-      )
+      login_location = ctx.message(service == 'admin' ? 'core.oauth.location.admin' : 'core.oauth.location.partner')
+      ctx.puts(ctx.message('core.oauth.authentication_required', login_location))
       ctx.open_url!(uri)
     end
 
     def receive_access_code
       @access_code ||= begin
         @server_thread.join(240)
-        raise Error, 'Timed out while waiting for response from Shopify' if response_query.nil?
+        raise Error, ctx.message('core.oauth.error.timeout') if response_query.nil?
         raise Error, response_query['error_description'] unless response_query['error'].nil?
         response_query['code']
       end

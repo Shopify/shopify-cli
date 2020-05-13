@@ -67,7 +67,7 @@ module ShopifyCli
 
       def write(ctx)
         spin_group = CLI::UI::SpinGroup.new
-        spin_group.add("writing #{FILENAME} file...") do |spinner|
+        spin_group.add(ctx.message('core.env_file.saving_header', FILENAME)) do |spinner|
           output = []
           KEY_MAP.each do |key, value|
             output << "#{key}=#{send(value)}" if send(value)
@@ -75,9 +75,9 @@ module ShopifyCli
           extra.each do |key, value|
             output << "#{key}=#{value}"
           end
-          ctx.print_task("writing #{FILENAME} file")
+          ctx.print_task(ctx.message('core.env_file.saving', FILENAME))
           ctx.write(FILENAME, output.join("\n") + "\n")
-          spinner.update_title("#{FILENAME} saved to project root")
+          spinner.update_title(ctx.message('core.env_file.saved', FILENAME))
         end
         spin_group.wait
       end

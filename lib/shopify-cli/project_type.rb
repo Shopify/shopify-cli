@@ -54,7 +54,9 @@ module ShopifyCli
       end
 
       def register_command(const, cmd)
-        Context.new.abort("Can't register duplicate core command '#{cmd}' from #{const}") if Commands.core_command?(cmd)
+        Context.new.abort(
+          Context.message('core.project_type.error.cannot_override_core', cmd, const)
+        ) if Commands.core_command?(cmd)
         Commands.register(const, cmd)
       end
 

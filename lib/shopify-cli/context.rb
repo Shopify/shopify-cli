@@ -179,10 +179,7 @@ module ShopifyCli
     # * `uri` - a http URI to open in a browser
     #
     def open_url!(uri)
-      help = <<~OPEN
-        Please open this URL in your browser:
-        {{green:#{uri}}}
-      OPEN
+      help = message('core.context.open_url', uri)
       puts(help)
     end
 

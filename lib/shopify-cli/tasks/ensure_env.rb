@@ -11,9 +11,9 @@ module ShopifyCli
       end
 
       def ask
-        api_key = CLI::UI.ask('What is your Shopify API key?')
-        api_secret = CLI::UI.ask('What is your Shopify API secret key?')
-        shop = CLI::UI.ask('What is your development store URL? (e.g. my-test-shop.myshopify.com)')
+        api_key = CLI::UI.ask(@ctx.message('core.tasks.ensure_env.api_key_question'))
+        api_secret = CLI::UI.ask(@ctx.message('core.tasks.ensure_env.api_secret_key_question'))
+        shop = CLI::UI.ask(@ctx.message('core.tasks.ensure_env.development_store_question'))
 
         shop.gsub!(/https?\:\/\//, '')
 

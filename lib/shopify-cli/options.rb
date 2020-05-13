@@ -31,7 +31,7 @@ module ShopifyCli
     def parser
       @parser ||= begin
         opt = OptionParser.new
-        opt.on('--help', '-h', 'Print help for command') do |v|
+        opt.on('--help', '-h', Context.message('core.options.help_text')) do |v|
           @help = v
         end
       end
