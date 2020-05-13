@@ -16,7 +16,7 @@ module Script
           oauth_help: "Try again.",
 
           invalid_context_cause: "Your .shopify-cli.yml file is not correct.",
-          invalid_context_help: "See https://help.shopify.com/en/",
+          invalid_context_help: "See https://help.shopify.com",
 
           project_exists_cause: "Directory with the same name as the script already exists.",
           project_exists_help: "Use different script name and try again.",
@@ -27,7 +27,7 @@ module Script
           script_not_found_cause: "Couldn't find script %s for extension point %s",
 
           dependency_install_cause: "Something went wrong while installing the dependencies that are needed.",
-          dependency_install_help: "See https://help.shopify.com/en/",
+          dependency_install_help: "See https://help.shopify.com",
 
           test_help: "Correct the errors and try again.",
         },
