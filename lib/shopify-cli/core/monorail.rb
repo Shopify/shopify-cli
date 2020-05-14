@@ -1,6 +1,7 @@
 require 'json'
 require 'net/http'
 require 'time'
+require 'rbconfig'
 
 module ShopifyCli
   module Core

@@ -1,6 +1,7 @@
 # frozen_string_literal: true
 require 'shopify_cli'
 require 'fileutils'
+require 'rbconfig'
 
 module ShopifyCli
   ##
