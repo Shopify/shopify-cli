@@ -11,10 +11,7 @@ module Rails
       end
 
       def self.help
-        <<~HELP
-          Generate code in your Rails project. Currently supports generating new webhooks.
-            Usage: {{command:#{ShopifyCli::TOOL_NAME} generate [ webhook ]}}
-        HELP
+        ShopifyCli::Context.message('rails.generate.help', ShopifyCli::TOOL_NAME)
       end
 
       def self.extended_help
@@ -27,28 +24,24 @@ module Rails
           end
           extended_help += "\n"
         end
-        extended_help += <<~EXAMPLES
-          {{bold:Examples:}}
-            {{cyan:#{ShopifyCli::TOOL_NAME} generate webhook PRODUCTS_CREATE}}
-              Generate and register a new webhook that will be called every time a new product is created on your store.
-        EXAMPLES
+        extended_help += ShopifyCli::Context.message('rails.generate.extended_help', ShopifyCli::TOOL_NAME)
       end
 
       def self.run_generate(script, name, ctx)
         stat = ctx.system(script)
         unless stat.success?
-          ctx.abort(response(stat.exitstatus, name))
+          ctx.abort(response(stat.exitstatus, name, ctx))
         end
       end
 
-      def self.response(code, name)
+      def self.response(code, name, ctx)
         case code
         when 1
-          "Error generating #{name}"
+          ctx.message('rails.generate.error.generic', name)
         when 2
-          "#{name} already exists!"
+          ctx.message('rails.generate.error.name_exists', name)
         else
-          'Error'
+          ctx.message('rails.error.generic')
         end
       end
     end

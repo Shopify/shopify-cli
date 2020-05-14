@@ -12,14 +12,11 @@ module ShopifyCli
         LOGIN_TOKENS.each do |token|
           ShopifyCli::DB.del(token) if ShopifyCli::DB.exists?(token)
         end
-        @ctx.puts "Logged out of Organization and Shop"
+        @ctx.puts(@ctx.message('core.logout.success'))
       end
 
       def self.help
-        <<~HELP
-          Log out of a currently authenticated Organization and Shop, or clear invalid credentials
-            Usage: {{command:#{ShopifyCli::TOOL_NAME} logout}}
-        HELP
+        ShopifyCli::Context.message('core.logout.help', ShopifyCli::TOOL_NAME)
       end
     end
   end

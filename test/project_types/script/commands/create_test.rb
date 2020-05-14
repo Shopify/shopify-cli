@@ -31,10 +31,10 @@ module Script
 
         @context
           .expects(:puts)
-          .with(format(Script::Commands::Create::DIRECTORY_CHANGED_MSG, folder: fake_script.name))
+          .with(@context.message('script.create.changed_dir', folder: fake_script.name))
         @context
           .expects(:puts)
-          .with(format(Script::Commands::Create::OPERATION_SUCCESS_MESSAGE, script_id: fake_script.id))
+          .with(@context.message('script.create.script_created', script_id: fake_script.id))
         perform_command
       end
 

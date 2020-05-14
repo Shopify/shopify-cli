@@ -6,15 +6,12 @@ module ShopifyCli
       hidden_command
 
       def call(_args, _name)
-        @ctx.done("Reloading #{TOOL_FULL_NAME} from #{ShopifyCli::INSTALL_DIR}")
+        @ctx.done(@ctx.message('core.load_system.reloading', TOOL_FULL_NAME, ShopifyCli::INSTALL_DIR))
         ShopifyCli::Core::Finalize.reload_shopify_from(ShopifyCli::INSTALL_DIR)
       end
 
       def self.help
-        <<~HELP
-          Reload the installed instance of Shopify App CLI. This command is intended for development work on the CLI itself.
-            Usage: {{command:#{ShopifyCli::TOOL_NAME} load-system}}
-        HELP
+        ShopifyCli::Context.message('core.load_system.help', ShopifyCli::TOOL_NAME)
       end
     end
   end

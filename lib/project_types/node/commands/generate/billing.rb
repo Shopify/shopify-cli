@@ -11,7 +11,7 @@ module Node
         def call(args, _name)
           selected_type = BILLING_TYPES[args[1]]
           unless selected_type
-            selected_type = CLI::UI::Prompt.ask('How would you like to charge for your app?') do |handler|
+            selected_type = CLI::UI::Prompt.ask(@ctx.message('node.generate.billing.type_select')) do |handler|
               BILLING_TYPES.each do |key, value|
                 handler.option(key) { value }
               end
@@ -19,22 +19,17 @@ module Node
           end
           billing_type_name = BILLING_TYPES.key(selected_type)
           spin_group = CLI::UI::SpinGroup.new
-          spin_group.add("Generating #{billing_type_name} code ...") do |spinner|
+          spin_group.add(@ctx.message('node.generate.billing.generating', billing_type_name)) do |spinner|
             Node::Commands::Generate.run_generate(
               selected_type, billing_type_name, @ctx
             )
-            spinner.update_title(
-              "{{green:#{billing_type_name} generated in server/server.js"
-            )
+            spinner.update_title(@ctx.message('node.generate.billing.generated', billing_type_name))
           end
           spin_group.wait
         end
 
         def self.help
-          <<~HELP
-            Enable charging for your app. This command generates the necessary code to call Shopify’s billing API.
-              Usage: {{command:#{ShopifyCli::TOOL_NAME} generate billing [ one-time-billing | recurring-billing ]}}
-          HELP
+          ShopifyCli::Context.message('node.generate.billing.help', ShopifyCli::TOOL_NAME)
         end
       end
     end

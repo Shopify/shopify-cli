@@ -4,7 +4,7 @@ module Script
   module UI
     module ErrorHandler
       def self.display(failed_op:, cause_of_error:, help_suggestion:)
-        $stderr.puts(CLI::UI.fmt("{{red:{{x}} Error}}"))
+        $stderr.puts(CLI::UI.fmt(ShopifyCli::Context.message('script.error.generic')))
         full_msg = failed_op ? failed_op.dup : ""
         full_msg << " #{cause_of_error}" if cause_of_error
         full_msg << " #{help_suggestion}" if help_suggestion
@@ -26,46 +26,48 @@ module Script
         case e
         when Errno::EACCES
           {
-            cause_of_error: "You don't have permission to write to this directory.",
-            help_suggestion: "Change your directory permissions and try again.",
+            cause_of_error: ShopifyCli::Context.message('script.error.eacces_cause'),
+            help_suggestion: ShopifyCli::Context.message('script.error.eacces_help'),
           }
         when Errno::ENOSPC
           {
-            cause_of_error: "You don't have enough disk space to perform this action.",
-            help_suggestion: "Free up some space and try again.",
+            cause_of_error: ShopifyCli::Context.message('script.error.enospc_cause'),
+            help_suggestion: ShopifyCli::Context.message('script.error.enospc_help'),
           }
         when ShopifyCli::OAuth::Error
           {
-            cause_of_error: "Something went wrong while authenticating your account with the Partner Dashboard.",
-            help_suggestion: "Try again.",
+            cause_of_error: ShopifyCli::Context.message('script.error.oauth_cause'),
+            help_suggestion: ShopifyCli::Context.message('script.error.oauth_help'),
           }
         when Errors::InvalidContextError
           {
-            cause_of_error: "Your .shopify-cli.yml file is not correct.",
-            help_suggestion: "See https://help.shopify.com/en/",
+            cause_of_error: ShopifyCli::Context.message('script.error.invalid_context_cause'),
+            help_suggestion: ShopifyCli::Context.message('script.error.invalid_context_help'),
           }
         when Errors::ScriptProjectAlreadyExistsError
           {
-            cause_of_error: "Directory with the same name as the script already exists.",
-            help_suggestion: "Use different script name and try again.",
+            cause_of_error: ShopifyCli::Context.message('script.error.project_exists_cause'),
+            help_suggestion: ShopifyCli::Context.message('script.error.project_exists_help'),
           }
         when Layers::Domain::Errors::InvalidExtensionPointError
           {
-            cause_of_error: "Invalid extension point #{e.type}",
-            help_suggestion: "Allowed values: discount and unit_limit_per_order.",
+            cause_of_error: ShopifyCli::Context.message('script.error.invalid_extension_cause', e.type),
+            help_suggestion: ShopifyCli::Context.message('script.error.invalid_extension_help'),
           }
         when Layers::Domain::Errors::ScriptNotFoundError
           {
-            cause_of_error: "Couldn't find script #{e.script_name} for extension point #{e.extension_point_type}",
+            cause_of_error: ShopifyCli::Context.message(
+              'script.error.script_not_found_cause', e.script_name, e.extension_point_type
+            ),
           }
         when Layers::Infrastructure::Errors::DependencyInstallError
           {
-            cause_of_error: "Something went wrong while installing the dependencies that are needed.",
-            help_suggestion: "See https://help.shopify.com/en/",
+            cause_of_error: ShopifyCli::Context.message('script.error.dependency_install_cause'),
+            help_suggestion: ShopifyCli::Context.message('script.error.dependency_install_help'),
           }
         when Layers::Infrastructure::Errors::TestError
           {
-            help_suggestion: "Correct the errors and try again.",
+            help_suggestion: ShopifyCli::Context.message('script.error.test_help'),
           }
         end
       end

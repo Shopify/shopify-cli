@@ -10,9 +10,12 @@ module Node
     register_command('Node::Commands::Serve', "serve")
     register_command('Node::Commands::Tunnel', "tunnel")
     # register_task('Node::Tasks::NodeTask', 'node_task')
+
+    require Project.project_filepath('messages/messages')
+    register_messages(Node::Messages::MESSAGES)
   end
 
-  # define/autoload project specific Commads
+  # define/autoload project specific Commands
   module Commands
     autoload :Create, Project.project_filepath('commands/create')
     autoload :Deploy, Project.project_filepath('commands/deploy')

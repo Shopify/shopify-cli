@@ -10,6 +10,34 @@ module ShopifyCli
   # resoures.
   #
   class Context
+    class << self
+      attr_reader :messages
+
+      # adds a new set of messages to be used by the CLI. The messages are expected to be a hash of symbols, and
+      # multiple levels are allowed. When fetching messages a dot notation is used to separate different levels. See
+      # Context::message for more information.
+      #
+      # #### Parameters
+      # * `messages` - Hash containing the new keys to register
+      def load_messages(messages)
+        @messages ||= {}
+        @messages = @messages.merge(messages) do |key|
+          Context.new.abort("Message key '#{key}' already exists and cannot be registered") if @messages.key?(key)
+        end
+      end
+
+      # returns the user-facing messages for the given key. Returns the key if no message is available.
+      #
+      # #### Parameters
+      # * `key` - a symbol representing the message
+      # * `params` - the parameters to format the string with
+      def message(key, *params)
+        key_parts = key.split('.').map(&:to_sym)
+        str = Context.messages.dig(*key_parts)
+        str ? str % params : key
+      end
+    end
+
     # is the directory root that the current command is running in. If you want to
     # simulate a `cd` for the file operations, you can change this variable.
     attr_accessor :root
@@ -151,10 +179,7 @@ module ShopifyCli
     # * `uri` - a http URI to open in a browser
     #
     def open_url!(uri)
-      help = <<~OPEN
-        Please open this URL in your browser:
-        {{green:#{uri}}}
-      OPEN
+      help = message('core.context.open_url', uri)
       puts(help)
     end
 
@@ -204,6 +229,15 @@ module ShopifyCli
     #
     def debug(text)
       puts("{{red:DEBUG}} #{text}") if getenv('DEBUG')
+    end
+
+    # proxy call to Context.message.
+    #
+    # #### Parameters
+    # * `key` - a symbol representing the message
+    # * `params` - the parameters to format the string with
+    def message(key, *params)
+      Context.message(key, *params)
     end
 
     # will grab the host info of the computer running the cli. This indicates the
@@ -300,6 +334,9 @@ module ShopifyCli
     #   end
     #
     def on_siginfo
+      # Reset any previous SIGINFO handling we had so the only action we take is the given block
+      trap('INFO', 'DEFAULT')
+
       fork do
         begin
           r, w = IO.pipe

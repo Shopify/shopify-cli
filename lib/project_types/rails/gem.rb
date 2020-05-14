@@ -14,7 +14,7 @@ module Rails
         name = args.shift
         version = args.shift
         gem = new(ctx: ctx, name: name, version: version)
-        ctx.debug("#{name} installed: #{gem.installed?}")
+        ctx.debug(ctx.message('rails.gem.installed_debug', name, gem.installed?))
         gem.install! unless gem.installed?
       end
 
@@ -43,12 +43,12 @@ module Rails
 
     def install!
       spin = CLI::UI::SpinGroup.new
-      spin.add("Installing #{name} gem...") do |spinner|
+      spin.add(ctx.message('rails.gem.installing', name)) do |spinner|
         args = %w(gem install)
         args.push(name)
         args.push('-v', version) unless version.nil?
         ctx.system(*args)
-        spinner.update_title("Installed #{name} gem")
+        spinner.update_title(ctx.message('rails.gem.installed', name))
       end
       spin.wait
     end

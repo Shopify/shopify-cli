@@ -28,27 +28,18 @@ module ShopifyCli
             if restart_command_after_update
               return # just skip
             else
-              err("Development version of {{command:#{ShopifyCli::TOOL_NAME}}} in use. "\
-                "Run {{command:#{ShopifyCli::TOOL_NAME} load-system}} first.")
+              err(Context.message('core.update.error.development_version', ShopifyCli::TOOL_NAME))
               raise(ShopifyCli::AbortSilent)
             end
           end
 
           if File.exist?(File.expand_path('.git/HEAD.lock', ShopifyCli::ROOT))
-            err("failed!")
-            err("It looks like another git operation is in progress on {{blue:#{ShopifyCli::ROOT}}}.")
-            err("Try running {{command:#{ShopifyCli::TOOL_NAME} update}}.")
-            err("If that fails, you must run {{green: rm #{ShopifyCli::ROOT}/.git/HEAD.lock}} to continue.")
+            err(Context.message('core.update.error.git_head_locked', ShopifyCli::ROOT, ShopifyCli::TOOL_NAME))
             raise(ShopifyCli::AbortSilent)
           end
 
           if File.exist?(File.expand_path(".git/refs/heads/master.lock", ShopifyCli::ROOT))
-            err("failed!")
-            err("It looks like another git operation is in progress on {{blue:#{ShopifyCli::ROOT}}}.")
-            err("Try running {{command:#{ShopifyCli::TOOL_NAME} update}}.")
-            err(
-              "If that fails, you must run {{green: rm #{ShopifyCli::ROOT}/.git/refs/heads/master.lock}} to continue."
-            )
+            err(Context.message('core.update.error.git_master_locked', ShopifyCli::ROOT, ShopifyCli::TOOL_NAME))
             raise(ShopifyCli::AbortSilent)
           end
 
@@ -63,13 +54,13 @@ module ShopifyCli
             ['checkout', '-f', '-B', 'master'],
             ['reset', '--hard', 'FETCH_HEAD'],
           ]
-          Kernel.print('Updating shopify-cli...')
+          Kernel.print(Context.message('core.update.updating'))
           commands.each do |args|
             _, stat = ctx.capture2e('git', '-C', ShopifyCli::ROOT, *args)
-            ctx.abort("command failed: #{args.join(' ')}") unless stat.success?
+            ctx.abort(Context.message('core.update.error.git_command_failure', args.join(' '))) unless stat.success?
           end
 
-          ctx.puts("done!")
+          ctx.puts(Context.message('core.update.updated'))
 
           if restart_command_after_update
             ENV.replace($original_env)
@@ -85,7 +76,7 @@ module ShopifyCli
 
         def prompt_for_updates
           return if ShopifyCli::Config.get_section('autoupdate').key?('enabled')
-          opt = CLI::UI::Prompt.confirm('Would you like to enable auto updates for Shopify App CLI?')
+          opt = CLI::UI::Prompt.confirm(Context.message('core.update.auto_update_prompt'))
           ShopifyCli::Config.set('autoupdate', 'enabled', opt)
           auto_update
         end

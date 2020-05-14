@@ -27,11 +27,11 @@ module Node
 
           selected_type = if flag
             unless PAGE_TYPES.key?(flag)
-              @ctx.abort("Invalid page type.")
+              @ctx.abort(@ctx.message('node.generate.page.error.invalid_page_type'))
             end
             PAGE_TYPES[flag]
           else
-            CLI::UI::Prompt.ask("Which template would you like to use?") do |handler|
+            CLI::UI::Prompt.ask(@ctx.message('node.generate.page.type_select')) do |handler|
               PAGE_TYPES.each do |key, value|
                 handler.option(key) { value }
               end
@@ -39,20 +39,15 @@ module Node
           end
 
           spin_group = CLI::UI::SpinGroup.new
-          spin_group.add("Generating #{selected_type} page...") do |spinner|
-            Node::Commands::Generate.run_generate(
-              "#{selected_type} #{name}", name, @ctx
-            )
-            spinner.update_title("{{green: #{name}}} generated in pages/#{name}")
+          spin_group.add(@ctx.message('node.generate.page.generating', selected_type)) do |spinner|
+            Node::Commands::Generate.run_generate("#{selected_type} #{name}", name, @ctx)
+            spinner.update_title(@ctx.message('node.generate.page.generated', name, name))
           end
           spin_group.wait
         end
 
         def self.help
-          <<~HELP
-            Generate a new page in your app with the specified name. New files are generated inside the project’s “/pages” directory.
-              Usage: {{command:#{ShopifyCli::TOOL_NAME} generate page <pagename>}}
-          HELP
+          ShopifyCli::Context.message('node.generate.page.help', ShopifyCli::TOOL_NAME)
         end
       end
     end
