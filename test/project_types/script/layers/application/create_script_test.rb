@@ -45,7 +45,7 @@ describe Script::Layers::Application::CreateScript do
           .with(
             @context,
             app_type: :script,
-            partner_id: nil,
+            organization_id: nil,
             extension_point_type: ep.type,
             script_name: script_name,
           )

@@ -34,7 +34,7 @@ module ShopifyCli
       end
 
       ##
-      # will return if the command line is currently within a project
+      # will return true if the command line is currently within a project
       #
       # #### Returns
       #
@@ -50,7 +50,7 @@ module ShopifyCli
       #
       # #### Returns
       #
-      # * `type` - a symbol of the name of the app identifier. i.e. [rails, node]
+      # * `type` - a symbol of the name of the project type identifier. i.e. [rails, node]
       #   This will be nil if the user is not in a current project.
       #
       # #### Example
@@ -71,16 +71,16 @@ module ShopifyCli
       #
       # * `ctx` - the current running context of your command
       # * `app_type` - a string or symbol of your app type name
-      # * `partner_id` - the id of the organization that the app owned by. Used for metrics
+      # * `organization_id` - the id of the organization that the app owned by. Used for metrics
       # * `identifiers` - an optional hash of other app identifiers
       #
       # #### Example
       #
       #   type = ShopifyCli::Project.current_app_type
       #
-      def write(ctx, app_type:, partner_id:, **identifiers)
+      def write(ctx, app_type:, organization_id:, **identifiers)
         require 'yaml' # takes 20ms, so deferred as late as possible.
-        content = Hash[{ app_type: app_type, partner_id: partner_id }
+        content = Hash[{ app_type: app_type, organization_id: organization_id.to_i }
           .merge(identifiers)
           .collect { |k, v| [k.to_s, v] }]
 

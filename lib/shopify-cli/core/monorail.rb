@@ -16,15 +16,19 @@ module ShopifyCli
 
         def log(name, args, &block) # rubocop:disable Lint/UnusedMethodArgument
           prompt_for_consent
+          return yield unless enabled? && consented?
+
           args = args.dup.unshift(name)
           start_time = now_in_milliseconds
+          err = nil
           begin
             result = yield
-            send_event(start_time, args)
             return result
           rescue Exception => e # rubocop:disable Lint/RescueException
-            send_event(start_time, args, e.message)
+            err = e
             raise
+          ensure
+            send_event(start_time, args, err&.message)
           end
         end
 
@@ -52,15 +56,12 @@ module ShopifyCli
         end
 
         def send_event(start_time, args, err = nil)
-          return unless enabled? && consented?
-
           end_time = now_in_milliseconds
           headers = {
             'Content-Type': 'application/json; charset=utf-8',
             'X-Monorail-Edge-Event-Created-At-Ms': start_time.to_s,
             'X-Monorail-Edge-Event-Sent-At-Ms': end_time.to_s,
           }
-
           begin
             Net::HTTP.start(
               ENDPOINT_URI.host,
@@ -87,7 +88,7 @@ module ShopifyCli
               time_start: start_time,
               time_end: end_time,
               total_time:  end_time - start_time,
-              success: !err,
+              success: err.nil?,
               error_message: err,
               uname: RbConfig::CONFIG["host"],
               cli_sha: ShopifyCli::Git.sha(dir: ShopifyCli::ROOT),
@@ -98,7 +99,7 @@ module ShopifyCli
               if Project.has_current?
                 project = Project.current
                 payload[:api_client_id] = project.env.api_key
-                payload[:partner_id] = project.config['partner_id']
+                payload[:partner_id] = project.config['organization_id']
               end
             end,
           }

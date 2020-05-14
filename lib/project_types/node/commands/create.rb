@@ -22,7 +22,7 @@ module Node
         ShopifyCli::Project.write(
           @ctx,
           app_type: 'node',
-          partner_id: form.organization_id.to_i,
+          organization_id: form.organization_id,
         )
 
         api_client = ShopifyCli::Tasks::CreateApiClient.call(

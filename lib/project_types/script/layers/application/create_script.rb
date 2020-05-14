@@ -23,7 +23,7 @@ module Script
             ScriptProject.write(
               ctx,
               app_type: :script,
-              partner_id: nil, # TODO: can you provide this at creation
+              organization_id: nil, # TODO: can you provide this at creation
               extension_point_type: extension_point.type,
               script_name: script_name
             )
