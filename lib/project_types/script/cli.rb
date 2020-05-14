@@ -6,6 +6,9 @@ module Script
     creator 'Script', 'Script::Commands::Create'
 
     register_command('Script::Commands::Test', 'test')
+
+    require Project.project_filepath('messages/messages')
+    register_messages(Script::Messages::MESSAGES)
   end
 
   # define/autoload project specific Commads

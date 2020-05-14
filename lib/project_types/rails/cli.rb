@@ -11,6 +11,9 @@ module Rails
     register_command('Rails::Commands::Serve', "serve")
     register_command('Rails::Commands::Tunnel', "tunnel")
     # register_task('Rails::Tasks::RailsTask', 'rails_task')
+
+    require Project.project_filepath('messages/messages')
+    register_messages(Rails::Messages::MESSAGES)
   end
 
   # define/autoload project specific Commads

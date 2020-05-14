@@ -10,12 +10,6 @@ module Rails
         end
       USERAGENT
 
-      INVALID_RUBY_VERSION = <<~MSG
-        This project requires a ruby version ~> 2.4.
-        See {{underline:https://github.com/Shopify/shopify-app-cli/blob/master/docs/installing-ruby.md}}
-        for our recommended method of installing ruby.
-      MSG
-
       options do |parser, flags|
         # backwards compatibility allow 'title' for now
         parser.on('--title=TITLE') { |t| flags[:title] = t }
@@ -29,7 +23,8 @@ module Rails
         form = Forms::Create.ask(@ctx, args, options.flags)
         return @ctx.puts(self.class.help) if form.nil?
 
-        @ctx.abort(INVALID_RUBY_VERSION) unless Ruby.version(@ctx).satisfies?('~>2.4')
+        @ctx.abort(@ctx.message('rails.create.error.invalid_ruby_version')) unless
+          Ruby.version(@ctx).satisfies?('~>2.4')
 
         build(form.name)
         set_custom_ua
@@ -54,50 +49,39 @@ module Rails
 
         partners_url = "https://partners.shopify.com/#{form.organization_id}/apps/#{api_client['id']}"
 
-        @ctx.puts("{{v}} {{green:#{form.title}}} was created in your Partner" \
-                  " Dashboard " \
-                  "{{underline:#{partners_url}}}")
-        @ctx.puts("{{*}} Run {{command:#{ShopifyCli::TOOL_NAME} serve}} to start a local server")
-        @ctx.puts("{{*}} Then, visit {{underline:#{partners_url}/test}} to install" \
-                  " {{green:#{form.title}}} on your Dev Store")
+        @ctx.puts(@ctx.message('rails.create.info.created', form.title, partners_url))
+        @ctx.puts(@ctx.message('rails.create.info.serve', ShopifyCli::TOOL_NAME))
+        @ctx.puts(@ctx.message('rails.create.info.install', partners_url, form.title))
       end
 
       def self.help
-        <<~HELP
-        {{command:#{ShopifyCli::TOOL_NAME} create rails}}: Creates a ruby on rails app.
-          Usage: {{command:#{ShopifyCli::TOOL_NAME} create rails}}
-          Options:
-            {{command:--name=NAME}} App name. Any string.
-            {{command:--app_url=APPURL}} App URL. Must be valid URL.
-            {{command:--organization_id=ID}} App Org ID. Must be existing org ID.
-            {{command:--shop_domain=MYSHOPIFYDOMAIN }} Test store URL. Must be existing test store.
-        HELP
+        ShopifyCli::Context.message('rails.create.help', ShopifyCli::TOOL_NAME, ShopifyCli::TOOL_NAME)
       end
 
       private
 
       def build(name)
         install_gem('rails')
-        CLI::UI::Frame.open("Installing bundler…") do
+        CLI::UI::Frame.open(@ctx.message('rails.create.installing_bundler')) do
           install_gem('bundler', '~>1.0')
           install_gem('bundler', '~>2.0')
         end
 
-        CLI::UI::Frame.open("Generating new rails app project in #{name}...") do
+        CLI::UI::Frame.open(@ctx.message('rails.create.generating_app', name)) do
           syscall(%W(rails new --skip-spring #{name}))
         end
 
         @ctx.root = File.join(@ctx.root, name)
 
-        @ctx.puts("{{v}} Adding shopify_app gem…")
+        @ctx.puts(@ctx.message('rails.create.adding_shopify_gem'))
         File.open(File.join(@ctx.root, 'Gemfile'), 'a') do |f|
           f.puts "\ngem 'shopify_app', '>=11.3.0'"
         end
-        CLI::UI::Frame.open("Running bundle install...") do
+        CLI::UI::Frame.open(@ctx.message('rails.create.running_bundle_install')) do
           syscall(%w(bundle install))
         end
 
-        CLI::UI::Frame.open("Running shopfiy_app generator...") do
+        CLI::UI::Frame.open(@ctx.message('rails.create.running_generator')) do
           begin
             syscall(%w(spring stop))
           rescue
@@ -105,7 +89,7 @@ module Rails
           syscall(%w(rails generate shopify_app))
         end
 
-        CLI::UI::Frame.open('Running migrations…') do
+        CLI::UI::Frame.open(@ctx.message('rails.create.running_migrations')) do
           syscall(%w(rails db:migrate RAILS_ENV=development))
         end
       end

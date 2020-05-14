@@ -17,8 +17,13 @@ module Rails
         def message(data)
           ret = data['customerCreate']['customer']
           id = ShopifyCli::API.gid_to_id(ret['id'])
-          "#{ret['displayName']} added to {{green:#{ShopifyCli::Project.current.env.shop}}} "\
-          "at {{underline:#{admin_url}customers/#{id}}}"
+          @ctx.message(
+            'rails.populate.customer.added',
+            ret['displayName'],
+            ShopifyCli::Project.current.env.shop,
+            admin_url,
+            id
+          )
         end
       end
     end

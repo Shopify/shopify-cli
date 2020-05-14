@@ -36,14 +36,14 @@ module ShopifyCli
 
         if @help
           output = display_parent_extended_help
-          output += "\n{{bold:{{cyan:#{camel_case_resource_type}}} options:}}\n"
+          output += "\n#{@ctx.message('core.populate.options.header', camel_case_resource_type)}\n"
           output += resource_options.help
           return @ctx.puts(output)
         end
 
         if @silent
           spin_group = CLI::UI::SpinGroup.new
-          spin_group.add("Populating #{@count} #{camel_case_resource_type}s...") do |spinner|
+          spin_group.add(@ctx.message('core.populate.populating', @count, camel_case_resource_type)) do |spinner|
             populate
             spinner.update_title(completion_message)
           end
@@ -73,7 +73,11 @@ module ShopifyCli
       def resource_options
         @resource_options ||= OptionParser.new do |opts|
           opts.banner = ""
-          opts.on("-c #{DEFAULT_COUNT}", "--count=#{DEFAULT_COUNT}", 'Number of resources to generate') do |value|
+          opts.on(
+            "-c #{DEFAULT_COUNT}",
+            "--count=#{DEFAULT_COUNT}",
+            @ctx.message('core.populate.options.count_help')
+          ) do |value|
             @count = value.to_i
           end
 
@@ -120,10 +124,15 @@ module ShopifyCli
 
       def completion_message
         plural = @count > 1 ? "s" : ""
-        <<~COMPLETION_MESSAGE
-          Successfully added #{@count} #{camel_case_resource_type}#{plural} to {{green:#{Project.current.env.shop}}}
-          {{*}} View all #{camel_case_resource_type}s at {{underline:#{admin_url}#{snake_case_resource_type}s}}
-        COMPLETION_MESSAGE
+        @ctx.message(
+          'core.populate.completion_message',
+          @count,
+          "#{camel_case_resource_type}#{plural}",
+          Project.current.env.shop,
+          camel_case_resource_type,
+          admin_url,
+          snake_case_resource_type
+        )
       end
 
       def admin_url
