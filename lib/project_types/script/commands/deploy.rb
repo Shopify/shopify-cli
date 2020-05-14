@@ -3,9 +3,6 @@
 module Script
   module Commands
     class Deploy < ShopifyCli::Command
-      OPERATION_FAILED_MESSAGE = "Script not deployed."
-      OPERATION_SUCCESS_MESSAGE = "{{v}} Script deployed to app (API key: %{api_key})."
-
       options do |parser, flags|
         parser.on('--api_key=APIKEY') { |t| flags[:api_key] = t }
         parser.on('--force') { |t| flags[:force] = t }
@@ -25,16 +22,13 @@ module Script
           api_key: form.api_key,
           force: form.force
         )
-        @ctx.puts(format(OPERATION_SUCCESS_MESSAGE, api_key: form.api_key))
+        @ctx.puts(@ctx.message('script.deploy.script_deployed', api_key: form.api_key))
       rescue StandardError => e
-        UI::ErrorHandler.pretty_print_and_raise(e, failed_op: OPERATION_FAILED_MESSAGE)
+        UI::ErrorHandler.pretty_print_and_raise(e, failed_op: @ctx.message('script.deploy.error.operation_failed'))
       end
 
       def self.help
-        <<~HELP
-        Build the script and deploy it to app.
-          Usage: {{command:#{ShopifyCli::TOOL_NAME} deploy --API_key=<API_key> [--force]}}
-        HELP
+        ShopifyCli::Context.message('script.deploy.help', ShopifyCli::TOOL_NAME)
       end
     end
   end

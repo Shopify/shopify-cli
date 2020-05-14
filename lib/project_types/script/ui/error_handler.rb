@@ -46,19 +46,21 @@ module Script
           }
         when Errors::NoExistingAppsError
           {
-            cause_of_error: "You don't have any apps.",
-            help_suggestion: "Please create an app with {{command:shopify create}} or "\
-                             "visit https://partners.shopify.com/.",
+            cause_of_error: ShopifyCli::Context.message('script.error.no_existing_apps_cause'),
+            help_suggestion: ShopifyCli::Context.message('script.error.no_existing_apps_help'),
           }
         when Errors::NoExistingOrganizationsError
           {
-            cause_of_error: "You don't have any organizations.",
-            help_suggestion: "Please visit https://partners.shopify.com/ to create a partners account.",
+            cause_of_error: ShopifyCli::Context.message('script.error.no_existing_orgs_cause'),
+            help_suggestion: ShopifyCli::Context.message('script.error.no_existing_orgs_help'),
           }
         when Errors::NoExistingStoresError
           {
-            cause_of_error: "You don't have any development stores.",
-            help_suggestion: "Visit https://partners.shopify.com/#{e.organization_id}/stores/ to create one.",
+            cause_of_error: ShopifyCli::Context.message('script.error.no_existing_stores_cause'),
+            help_suggestion: ShopifyCli::Context.message(
+              'script.error.no_existing_stores_help',
+              organization_id: e.organization_id
+            ),
           }
         when Errors::ScriptProjectAlreadyExistsError
           {
@@ -73,17 +75,19 @@ module Script
         when Layers::Domain::Errors::ScriptNotFoundError
           {
             cause_of_error: ShopifyCli::Context.message(
-              'script.error.script_not_found_cause', e.script_name, e.extension_point_type
+              'script.error.script_not_found_cause',
+              e.script_name,
+              e.extension_point_type
             ),
           }
         when Layers::Infrastructure::Errors::AppNotInstalledError
           {
-            cause_of_error: "App not installed on development store.",
+            cause_of_error: ShopifyCli::Context.message('script.error.app_not_installed_cause'),
           }
         when Layers::Infrastructure::Errors::BuildError
           {
-            cause_of_error: "Something went wrong while building the script.",
-            help_suggestion: "Correct the errors and try again.",
+            cause_of_error: ShopifyCli::Context.message('script.error.build_error_cause'),
+            help_suggestion: ShopifyCli::Context.message('script.error.build_error_help'),
           }
         when Layers::Infrastructure::Errors::DependencyInstallError
           {
@@ -92,22 +96,22 @@ module Script
           }
         when Layers::Infrastructure::Errors::ForbiddenError
           {
-            cause_of_error: "You do not have permission to do this action.",
+            cause_of_error: ShopifyCli::Context.message('script.error.forbidden_error_cause'),
           }
         when Layers::Infrastructure::Errors::GraphqlError
           {
-            cause_of_error: "An error was returned: #{e.errors.join(', ')}.",
-            help_suggestion: "\nReview the error and try again.",
+            cause_of_error: ShopifyCli::Context.message('script.error.graphql_error_cause', e.errors.join(', ')),
+            help_suggestion: ShopifyCli::Context.message('script.error.graphql_error_help'),
           }
         when Layers::Infrastructure::Errors::ScriptRedeployError
           {
-            cause_of_error: "Script with the same extension point already exists on app (API key: #{e.api_key}).",
-            help_suggestion: "Use {{cyan:--force}} to replace the existing script.",
+            cause_of_error: ShopifyCli::Context.message('script.error.script_redeploy_cause', e.api_key),
+            help_suggestion: ShopifyCli::Context.message('script.error.script_redeploy_help'),
           }
         when Layers::Infrastructure::Errors::ShopAuthenticationError
           {
-            cause_of_error: "Unable to authenticate with the store.",
-            help_suggestion: "Try again.",
+            cause_of_error: ShopifyCli::Context.message('script.error.shop_auth_cause'),
+            help_suggestion: ShopifyCli::Context.message('script.error.shop_auth_help'),
           }
         when Layers::Infrastructure::Errors::TestError
           {

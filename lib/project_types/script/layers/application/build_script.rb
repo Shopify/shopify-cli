@@ -4,16 +4,13 @@ module Script
   module Layers
     module Application
       class BuildScript
-        BUILDING_MSG = "Building script"
-        BUILT_MSG = "Built"
-
         class << self
           def call(ctx:, script:)
-            raise Infrastructure::Errors::BuildError unless CLI::UI::Frame.open('Building') do
+            return if CLI::UI::Frame.open(ctx.message('script.application.build_script.building')) do
               begin
-                UI::StrictSpinner.spin(BUILDING_MSG) do |spinner|
+                UI::StrictSpinner.spin(ctx.message('script.application.build_script.building_script')) do |spinner|
                   build(script)
-                  spinner.update_title(BUILT_MSG)
+                  spinner.update_title(ctx.message('script.application.build_script.built'))
                 end
                 true
               rescue StandardError => e
@@ -23,6 +20,7 @@ module Script
                 false
               end
             end
+            raise Infrastructure::Errors::BuildError
           end
 
           private

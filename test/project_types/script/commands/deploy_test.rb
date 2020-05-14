@@ -33,7 +33,7 @@ module Script
 
         @context
           .expects(:puts)
-          .with(format(Deploy::OPERATION_SUCCESS_MESSAGE, api_key: @api_key))
+          .with(@context.message('script.deploy.script_deployed', api_key: @api_key))
         perform_command
       end
 

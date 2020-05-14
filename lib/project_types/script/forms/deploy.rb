@@ -12,7 +12,7 @@ module Script
       private
 
       def ask_api_key
-        ask_app_api_key(ctx, organization['apps'])
+        ask_app_api_key(organization['apps'])
       end
     end
   end

@@ -4,9 +4,6 @@ module Script
   module Layers
     module Application
       class DeployScript
-        DEPLOYING_MSG = "Deploying"
-        DEPLOYED_MSG = "Deployed"
-
         class << self
           def call(ctx:, language:, extension_point_type:, script_name:, api_key:, force:)
             extension_point = ExtensionPoints.get(type: extension_point_type)
@@ -20,12 +17,12 @@ module Script
           private
 
           def deploy_script(ctx, script, api_key, force)
-            UI::StrictSpinner.spin(DEPLOYING_MSG) do |spinner|
+            UI::StrictSpinner.spin(ctx.message('script.application.deploy_script.deploying')) do |spinner|
               compiled_type = Infrastructure::ScriptBuilder.for(script).compiled_type
               Infrastructure::DeployPackageRepository.new
                 .get_deploy_package(script, compiled_type)
                 .deploy(Infrastructure::ScriptService.new(ctx: ctx), api_key, force)
-              spinner.update_title(DEPLOYED_MSG)
+              spinner.update_title(ctx.message('script.application.deploy_script.deployed'))
             end
           end
         end
