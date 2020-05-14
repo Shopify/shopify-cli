@@ -46,11 +46,9 @@ module Script
           },
 
           changed_dir: "{{v}} Changed to project directory: {{green:%{folder}}}",
-          created: "{{v}} Script created: {{green:%{script_id}}}",
-          select_extension_point: "Which extension point do you want to use?",
-          name: "Script Name",
-          spinner_creating: "Creating script",
-          spinner_created: "Created script",
+          script_created: "{{v}} Script created: {{green:%{script_id}}}",
+          creating: "Creating script",
+          created: "Created script",
         },
 
         project_deps: {
@@ -72,6 +70,13 @@ module Script
 
           running: "Running tests",
           success: "{{v}} Tests finished.",
+        },
+
+        forms: {
+          create: {
+            select_extension_point: "Which extension point do you want to use?",
+            script_name: "Script Name",
+          },
         },
       },
     }.freeze

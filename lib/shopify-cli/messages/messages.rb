@@ -39,7 +39,7 @@ module ShopifyCli
             invalid_app_type: "{{red:Error}}: invalid app type {{bold:%s}}",
           },
 
-          app_type_select: "What type of project would you like to create?",
+          project_type_select: "What type of project would you like to create?",
         },
 
         env_file: {
@@ -212,13 +212,13 @@ module ShopifyCli
           rb_config: "%-25s - RbConfig[\"%s\"]",
           command_header: "{{bold:Commands}}",
           command_with_path: "{{v}} %s, %s",
-          command: "{{x}} %s",
+          command_not_found: "{{x}} %s",
           ngrok_available: "{{v}} ngrok, %s",
           ngrok_not_available: "{{x}} ngrok NOT available",
           project: {
             header: "{{bold:In a {{cyan:%s}} project directory}}",
             command_with_path: "{{v}} %s, %s, version %s",
-            command: "{{x}} %s",
+            command_not_found: "{{x}} %s",
             env_header: "{{bold:Project environment}}",
             env_not_set: "not set",
             env: "%-18s = %s",

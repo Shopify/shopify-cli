@@ -14,13 +14,13 @@ module Script
 
       def ask_extension_point
         CLI::UI::Prompt.ask(
-          @ctx.message('script.create.select_extension_point'),
+          @ctx.message('script.forms.create.select_extension_point'),
           options: Script::Layers::Application::ExtensionPoints.types
         )
       end
 
       def ask_name
-        CLI::UI::Prompt.ask(@ctx.message('script.create.name'))
+        CLI::UI::Prompt.ask(@ctx.message('script.forms.create.script_name'))
       end
     end
   end

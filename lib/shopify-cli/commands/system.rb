@@ -68,7 +68,7 @@ module ShopifyCli
           if status.success?
             @ctx.puts("  " + @ctx.message('core.system.command_with_path', s, output))
           else
-            @ctx.puts("  " + @ctx.message('core.system.command', s))
+            @ctx.puts("  " + @ctx.message('core.system.command_not_found', s))
           end
         end
       end
@@ -100,7 +100,7 @@ module ShopifyCli
             version = version_output.match(/(\d+\.[^\s]+)/)[0]
             @ctx.puts("  " + @ctx.message('core.system.project.command_with_path', s, output.strip, version.strip))
           else
-            @ctx.puts("  " + @ctx.message('core.system.project.command', s))
+            @ctx.puts("  " + @ctx.message('core.system.project.command_not_found', s))
           end
         end
         display_ngrok

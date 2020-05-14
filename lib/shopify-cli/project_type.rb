@@ -66,7 +66,7 @@ module ShopifyCli
 
       def register_messages(messages)
         # Make sure we don't attempt to register a file more than once as that will fail
-        @registered_message_files = {} if @registered_message_files.nil?
+        @registered_message_files ||= {}
         return if @registered_message_files.key?(@project_type)
         @registered_message_files[@project_type] = true
 

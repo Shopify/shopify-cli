@@ -28,7 +28,9 @@ module ShopifyCli
       def do_GET(req, res) # rubocop:disable Naming/MethodName
         if !req.query['error'].nil?
           respond_with(
-            res, 400, Context.message('core.oauth.servlet.invalid_request_response', req.query['error_description'])
+            res,
+            400,
+            Context.message('core.oauth.servlet.invalid_request_response', req.query['error_description'])
           )
         elsif req.query['state'] != @state_token
           response_message = Context.message('core.oauth.servlet.invalid_state_response')

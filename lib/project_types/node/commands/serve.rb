@@ -26,7 +26,7 @@ module Node
             @ctx.open_url!("#{project.env.host}/auth?shop=#{project.env.shop}")
           end
         end
-        CLI::UI::Frame.open(@ctx.message('node.serve.running')) do
+        CLI::UI::Frame.open(@ctx.message('node.serve.running_server')) do
           env = project.env.to_h
           env['PORT'] = ShopifyCli::Tunnel::PORT.to_s
           @ctx.system('npm run dev', env: env)

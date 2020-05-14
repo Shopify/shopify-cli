@@ -27,7 +27,7 @@ module Rails
           end
         end
         Gem.gem_home(@ctx)
-        CLI::UI::Frame.open(@ctx.message('rails.serve.running')) do
+        CLI::UI::Frame.open(@ctx.message('rails.serve.running_server')) do
           env = ShopifyCli::Project.current.env.to_h
           env.delete('HOST')
           env['PORT'] = ShopifyCli::Tunnel::PORT.to_s

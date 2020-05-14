@@ -43,6 +43,8 @@ module Node
             serve: "{{*}} Run {{command:%s serve}} to start a local server",
             install: "{{*}} Then, visit {{underline:%s/test}} to install {{green:%s}} on your Dev Store",
           },
+          node_version: "node %s",
+          npm_version: "npm %s",
         },
 
         deploy: {
@@ -211,7 +213,7 @@ module Node
           },
 
           open_info: "{{*}} Press {{yellow: Control-T}} to open this project in {{green:%s}} ",
-          running: "Running server...",
+          running_server: "Running server...",
         },
 
         tunnel: {

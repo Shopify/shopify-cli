@@ -14,7 +14,7 @@ module ShopifyCli
           return @ctx.puts(self.class.help)
         end
 
-        type_name = CLI::UI::Prompt.ask(@ctx.message('core.create.app_type_select')) do |handler|
+        type_name = CLI::UI::Prompt.ask(@ctx.message('core.create.project_type_select')) do |handler|
           self.class.all_visible_type.each do |type|
             handler.option(type.project_name) { type.project_type }
           end

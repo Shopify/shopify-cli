@@ -34,7 +34,7 @@ module Script
           .with(@context.message('script.create.changed_dir', folder: fake_script.name))
         @context
           .expects(:puts)
-          .with(@context.message('script.create.created', script_id: fake_script.id))
+          .with(@context.message('script.create.script_created', script_id: fake_script.id))
         perform_command
       end
 

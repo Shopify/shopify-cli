@@ -34,10 +34,10 @@ module Script
 
           def create_definition(ctx, language, extension_point, script_name)
             script = nil
-            UI::StrictSpinner.spin(ctx.message('script.create.spinner_creating')) do |spinner|
+            UI::StrictSpinner.spin(ctx.message('script.create.creating')) do |spinner|
               script = Infrastructure::ScriptRepository.new.create_script(language, extension_point, script_name)
               Infrastructure::TestSuiteRepository.new.create_test_suite(script)
-              spinner.update_title(ctx.message('script.create.spinner_created'))
+              spinner.update_title(ctx.message('script.create.created'))
             end
             script
           end

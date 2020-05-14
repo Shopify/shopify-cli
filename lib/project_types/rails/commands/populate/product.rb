@@ -17,7 +17,11 @@ module Rails
           ret = data['productCreate']['product']
           id = ShopifyCli::API.gid_to_id(ret['id'])
           @ctx.message(
-            'rails.populate.product.added', ret['title'], ShopifyCli::Project.current.env.shop, admin_url, id
+            'rails.populate.product.added',
+            ret['title'],
+            ShopifyCli::Project.current.env.shop,
+            admin_url,
+            id
           )
         end
       end

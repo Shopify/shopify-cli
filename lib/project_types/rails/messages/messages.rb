@@ -190,7 +190,7 @@ module Rails
           },
 
           open_info: "{{*}} Press {{yellow: Control-T}} to open this project in {{green:%s}} ",
-          running: "Running server...",
+          running_server: "Running server...",
         },
 
         tunnel: {

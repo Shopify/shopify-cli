@@ -20,9 +20,9 @@ module ShopifyCli
       # #### Parameters
       # * `messages` - Hash containing the new keys to register
       def load_messages(messages)
-        @messages = {} if @messages.nil?
+        @messages ||= {}
         @messages = @messages.merge(messages) do |key|
-          abort("Message key '#{key}' already exists and cannot be registered") if @messages.key?(key)
+          Context.new.abort("Message key '#{key}' already exists and cannot be registered") if @messages.key?(key)
         end
       end
 

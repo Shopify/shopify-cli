@@ -56,7 +56,7 @@ module Node
         version, stat = @ctx.capture2e('node', '-v')
         @ctx.abort(@ctx.message('node.create.error.node_version_failure')) unless stat.success?
 
-        @ctx.done("node #{version}")
+        @ctx.done(@ctx.message('node.create.node_version', version))
       end
 
       def check_npm
@@ -66,7 +66,7 @@ module Node
         version, stat = @ctx.capture2e('npm', '-v')
         @ctx.abort(@ctx.message('node.create.error.npm_version_failure')) unless stat.success?
 
-        @ctx.done("npm #{version}")
+        @ctx.done(@ctx.message('node.create.npm_version', version))
       end
 
       def set_npm_config

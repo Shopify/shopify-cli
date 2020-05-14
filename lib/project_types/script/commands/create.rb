@@ -24,7 +24,7 @@ module Script
           extension_point_type: form.extension_point
         )
         @ctx.puts(@ctx.message('script.create.changed_dir', folder: script.name))
-        @ctx.puts(@ctx.message('script.create.created', script_id: script.id))
+        @ctx.puts(@ctx.message('script.create.script_created', script_id: script.id))
       rescue StandardError => e
         UI::ErrorHandler.pretty_print_and_raise(e, failed_op: @ctx.message('script.create.error.operation_failed'))
       end
