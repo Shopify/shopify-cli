@@ -66,11 +66,10 @@ module ShopifyCli
           },
 
           preamble: <<~MESSAGE,
-          CLI to help build Shopify apps faster.
-
           Use {{command:%s help <command>}} to display detailed information about a specific command.
 
-          {{bold:Available commands}}
+          {{bold:Available core commands:}}
+
           MESSAGE
         },
 
