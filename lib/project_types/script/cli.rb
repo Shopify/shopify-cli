@@ -5,6 +5,7 @@ module Script
     hidden_project_type
     creator 'Script', 'Script::Commands::Create'
 
+    register_command('Script::Commands::Deploy', 'deploy')
     register_command('Script::Commands::Test', 'test')
 
     require Project.project_filepath('messages/messages')
@@ -14,17 +15,22 @@ module Script
   # define/autoload project specific Commads
   module Commands
     autoload :Create, Project.project_filepath('commands/create')
+    autoload :Deploy, Project.project_filepath('commands/deploy')
     autoload :Test, Project.project_filepath('commands/test')
   end
 
   # define/autoload project specific Forms
   module Forms
     autoload :Create, Project.project_filepath('forms/create')
+    autoload :Deploy, Project.project_filepath('forms/deploy')
+    autoload :ScriptForm, Project.project_filepath('forms/script_form')
   end
 
   module Layers
     module Application
+      autoload :BuildScript, Project.project_filepath('layers/application/build_script')
       autoload :CreateScript, Project.project_filepath('layers/application/create_script')
+      autoload :DeployScript, Project.project_filepath('layers/application/deploy_script')
       autoload :ExtensionPoints, Project.project_filepath('layers/application/extension_points')
       autoload :ProjectDependencies, Project.project_filepath('layers/application/project_dependencies')
       autoload :TestScript, Project.project_filepath('layers/application/test_script')
@@ -32,20 +38,26 @@ module Script
 
     module Domain
       autoload :Errors, Project.project_filepath('layers/domain/errors')
+      autoload :DeployPackage, Project.project_filepath('layers/domain/deploy_package')
       autoload :ExtensionPoint, Project.project_filepath('layers/domain/extension_point')
       autoload :Script, Project.project_filepath('layers/domain/script')
     end
 
     module Infrastructure
       autoload :Errors, Project.project_filepath('layers/infrastructure/errors')
-      autoload :AssemblyScriptTsConfig, Project.project_filepath('layers/infrastructure/assemblyscript_tsconfig')
       autoload :AssemblyScriptDependencyManager,
                Project.project_filepath('layers/infrastructure/assemblyscript_dependency_manager')
       autoload :AssemblyScriptTestRunner,
                Project.project_filepath('layers/infrastructure/assemblyscript_test_runner')
+      autoload :AssemblyScriptTsConfig, Project.project_filepath('layers/infrastructure/assemblyscript_tsconfig')
+      autoload :AssemblyScriptWasmBuilder,
+               Project.project_filepath('layers/infrastructure/assemblyscript_wasm_builder')
       autoload :DependencyManager, Project.project_filepath('layers/infrastructure/dependency_manager')
+      autoload :DeployPackageRepository, Project.project_filepath('layers/infrastructure/deploy_package_repository')
       autoload :ExtensionPointRepository, Project.project_filepath('layers/infrastructure/extension_point_repository')
+      autoload :ScriptBuilder, Project.project_filepath('layers/infrastructure/script_builder')
       autoload :ScriptRepository, Project.project_filepath('layers/infrastructure/script_repository')
+      autoload :ScriptService, Project.project_filepath('layers/infrastructure/script_service')
       autoload :TestSuiteRepository, Project.project_filepath('layers/infrastructure/test_suite_repository')
     end
   end
