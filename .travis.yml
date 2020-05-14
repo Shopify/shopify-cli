@@ -9,5 +9,4 @@ cache:
 install:
 - bundle install
 script:
-  - bundle exec rubocop .
-  - bundle exec rake test
+  - bundle exec rake
