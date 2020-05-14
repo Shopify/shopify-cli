@@ -10,6 +10,10 @@ module ShopifyCli
         CLI::UI::Prompt.stubs(:confirm).returns(true)
       end
 
+      def teardown
+        ShopifyCli::Core::Monorail.metadata = {}
+      end
+
       def test_log_prompts_for_consent_and_saves_answer
         enabled_and_consented(true, nil)
         ShopifyCli::Config.expects(:get_section).with('analytics').returns(stub("key?" => false))

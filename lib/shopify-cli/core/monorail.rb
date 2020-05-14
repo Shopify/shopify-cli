@@ -12,7 +12,7 @@ module ShopifyCli
       @metadata = {}
 
       class << self
-        attr_reader :metadata
+        attr_accessor :metadata
 
         def log(name, args, &block) # rubocop:disable Lint/UnusedMethodArgument
           prompt_for_consent
