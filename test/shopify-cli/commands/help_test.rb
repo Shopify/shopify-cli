@@ -47,6 +47,7 @@ module ShopifyCli
 
       def test_local_commands_available_within_a_project
         Project.stubs(:current_project_type).returns('rails')
+        Project.stubs(:project_name).returns('myapp')
         ShopifyCli::Commands.register('Rails::Commands::Fake', 'fake_rails')
 
         io = capture_io do
@@ -70,8 +71,8 @@ module ShopifyCli
       end
 
       def test_shows_current_project_path_and_type
-        Project.stubs(:project_name).returns("my_app")
         Project.stubs(:current_project_type).returns('rails')
+        Project.stubs(:project_name).returns("my_app")
         ShopifyCli::Commands.register('Rails::Commands::Fake', 'fake_rails')
 
         io = capture_io do

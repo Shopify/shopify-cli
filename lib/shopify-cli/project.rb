@@ -81,7 +81,7 @@ module ShopifyCli
       end
 
       def project_name
-        File.basename(Dir.pwd)
+        File.basename(current.directory)
       end
 
       private
