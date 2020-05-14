@@ -1,4 +1,5 @@
 require 'shopify_cli'
+require 'rbconfig'
 
 module ShopifyCli
   module Commands

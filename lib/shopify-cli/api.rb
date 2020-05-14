@@ -34,11 +34,13 @@ module ShopifyCli
       resp
     end
 
-    private
+    protected
 
     def load_query(name)
       File.read(File.join(ShopifyCli::ROOT, "lib/graphql/#{name}.graphql"))
     end
+
+    private
 
     def request(body, graphql_url:, variables: {}, headers: {})
       CLI::Kit::Util.begin do

@@ -4,6 +4,7 @@ module Script
   module Layers
     module Domain
       module Errors
+        class DeployPackageNotFoundError < ScriptProjectError; end
         class InvalidExtensionPointError < ScriptProjectError
           attr_reader :type
           def initialize(type)
