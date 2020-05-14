@@ -13,10 +13,7 @@ module Node
       end
 
       def self.help
-        <<~HELP
-          Generate code in your Node project. Supports generating new billing API calls, new pages, or new webhooks.
-            Usage: {{command:#{ShopifyCli::TOOL_NAME} generate [ billing | page | webhook ]}}
-        HELP
+        ShopifyCli::Context.message('node.generate.help', ShopifyCli::TOOL_NAME)
       end
 
       def self.extended_help
@@ -29,28 +26,24 @@ module Node
           end
           extended_help += "\n"
         end
-        extended_help += <<~EXAMPLES
-          {{bold:Examples:}}
-            {{cyan:#{ShopifyCli::TOOL_NAME} generate webhook PRODUCTS_CREATE}}
-              Generate and register a new webhook that will be called every time a new product is created on your store.
-        EXAMPLES
+        extended_help += ShopifyCli::Context.message('node.generate.extended_help', ShopifyCli::TOOL_NAME)
       end
 
       def self.run_generate(script, name, ctx)
         stat = ctx.system(script)
         unless stat.success?
-          ctx.abort(response(stat.exitstatus, name))
+          ctx.abort(response(stat.exitstatus, name, ctx))
         end
       end
 
-      def self.response(code, name)
+      def self.response(code, name, ctx)
         case code
         when 1
-          "Error generating #{name}"
+          ctx.message('node.generate.error.generic', name)
         when 2
-          "#{name} already exists!"
+          ctx.message('node.generate.error.name_exists', name)
         else
-          'Error'
+          ctx.message('node.error.generic')
         end
       end
     end

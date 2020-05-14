@@ -4,10 +4,7 @@ module ShopifyCli
   module Commands
     class Update < ShopifyCli::Command
       def self.help
-        <<~HELP
-          Update Shopify App CLI.
-            Usage: {{command:#{ShopifyCli::TOOL_NAME} update}}
-        HELP
+        ShopifyCli::Context.message('core.update.help', ShopifyCli::TOOL_NAME)
       end
 
       def call(_args, _name)

@@ -34,12 +34,12 @@ module ShopifyCli
     def stop(ctx)
       if ShopifyCli::ProcessSupervision.running?(:ngrok)
         if ShopifyCli::ProcessSupervision.stop(:ngrok)
-          ctx.puts('{{green:x}} ngrok tunnel stopped')
+          ctx.puts(ctx.message('core.tunnel.stopped'))
         else
-          ctx.abort('ngrok tunnel could not be stopped. Try running {{command:killall -9 ngrok}}')
+          ctx.abort(ctx.message('core.tunnel.error.stop'))
         end
       else
-        ctx.puts("{{green:x}} ngrok tunnel not running")
+        ctx.puts(ctx.message('core.tunnel.not_running'))
       end
     end
 
@@ -60,9 +60,9 @@ module ShopifyCli
       process = ShopifyCli::ProcessSupervision.start(:ngrok, ngrok_command)
       log = fetch_url(ctx, process.log_path)
       if log.account
-        ctx.puts("{{v}} ngrok tunnel running at {{underline:#{log.url}}}, with account #{log.account}")
+        ctx.puts(ctx.message('core.tunnel.start_with_account', log.url, log.account))
       else
-        ctx.puts("{{v}} ngrok tunnel running at {{underline:#{log.url}}}")
+        ctx.puts(ctx.message('core.tunnel.start', log.url))
       end
       log.url
     end
@@ -123,7 +123,7 @@ module ShopifyCli
           sleep(1)
         end
 
-        raise FetchUrlError, "Unable to fetch external url" unless url
+        raise FetchUrlError, Context.message('core.tunnel.error.url_fetch_failure') unless url
       end
 
       def parse

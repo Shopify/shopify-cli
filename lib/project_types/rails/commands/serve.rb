@@ -13,7 +13,7 @@ module Rails
       def call(*)
         project = ShopifyCli::Project.current
         url = options.flags[:host] || ShopifyCli::Tunnel.start(@ctx)
-        @ctx.abort("{{red:HOST must be a HTTPS url.}}") if url.match(/^https/i).nil?
+        @ctx.abort(@ctx.message('rails.serve.error.host_must_be_https')) if url.match(/^https/i).nil?
         project.env.update(@ctx, :host, url)
         ShopifyCli::Tasks::UpdateDashboardURLS.call(
           @ctx,
@@ -21,13 +21,13 @@ module Rails
           callback_url: "/auth/shopify/callback",
         )
         if @ctx.mac? && project.env.shop
-          @ctx.puts("{{*}} Press {{yellow: Control-T}} to open this project in {{green:#{project.env.shop}}} ")
+          @ctx.puts(@ctx.message('rails.serve.open_info', project.env.shop))
           @ctx.on_siginfo do
             @ctx.open_url!("#{project.env.host}/login?shop=#{project.env.shop}")
           end
         end
         Gem.gem_home(@ctx)
-        CLI::UI::Frame.open('Running server...') do
+        CLI::UI::Frame.open(@ctx.message('rails.serve.running_server')) do
           env = ShopifyCli::Project.current.env.to_h
           env.delete('HOST')
           env['PORT'] = ShopifyCli::Tunnel::PORT.to_s
@@ -36,17 +36,11 @@ module Rails
       end
 
       def self.help
-        <<~HELP
-          Start a local development rails server for your project, as well as a public ngrok tunnel to your localhost.
-            Usage: {{command:#{ShopifyCli::TOOL_NAME} serve}}
-        HELP
+        ShopifyCli::Context.message('rails.serve.help', ShopifyCli::TOOL_NAME)
       end
 
       def self.extended_help
-        <<~HELP
-          {{bold:Options:}}
-            {{cyan:--host=HOST}}: Bypass running tunnel and use custom host. HOST must be HTTPS url.
-        HELP
+        ShopifyCli::Context.message('rails.serve.extended_help', ShopifyCli::TOOL_NAME)
       end
     end
   end

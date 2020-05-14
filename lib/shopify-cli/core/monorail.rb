@@ -62,11 +62,7 @@ module ShopifyCli
         def prompt_for_consent
           return unless enabled?
           return if ShopifyCli::Config.get_section('analytics').key?('enabled')
-          msg = <<~MSG
-            Would you like to enable anonymous usage reporting?
-            If you select “Yes”, we’ll collect data about which commands you use and which errors you encounter.
-            Sharing this anonymous data helps Shopify improve this tool.
-          MSG
+          msg = Context.message('core.monorail.consent_prompt')
           opt = CLI::UI::Prompt.confirm(msg)
           ShopifyCli::Config.set('analytics', 'enabled', opt)
         end

@@ -15,10 +15,10 @@ module Node
     end
 
     def install
-      CLI::UI::Frame.open("Installing dependencies with #{yarn? ? 'yarn' : 'npm'}...") do
+      CLI::UI::Frame.open(ctx.message('node.js_deps.installing', yarn? ? 'yarn' : 'npm')) do
         yarn? ? yarn : npm
       end
-      ctx.done("Dependencies installed")
+      ctx.done(ctx.message('node.js_deps.installed'))
     end
 
     def yarn
@@ -37,19 +37,19 @@ module Node
       pkg = begin
               JSON.parse(File.read(package_json))
             rescue Errno::ENOENT, Errno::ENOTDIR
-              ctx.abort("expected to have a file at: #{package_json}")
+              ctx.abort(ctx.message('node.js_deps.error.missing_package', package_json))
             end
 
       deps = %w(dependencies devDependencies).map do |key|
         pkg.fetch(key, []).keys
       end.flatten
-      CLI::UI::Spinner.spin("Installing #{deps.size} dependencies...") do |spinner|
+      CLI::UI::Spinner.spin(ctx.message('node.js_deps.npm_installing_deps', deps.size)) do |spinner|
         ctx.system('npm', 'install', '--no-audit', '--no-optional', '--silent', chdir: ctx.root)
-        spinner.update_title("#{deps.size} npm dependencies installed")
+        spinner.update_title(ctx.message('node.js_deps.npm_installed_deps', deps.size))
       end
     rescue JSON::ParserError
       ctx.puts(
-        "{{info:#{File.read(File.join(path, 'package.json'))}}} was not valid JSON. Fix this then try again",
+        ctx.message('node.js_deps.error.invalid_package', File.read(File.join(path, 'package.json'))),
         error: true
       )
       raise ShopifyCli::AbortSilent

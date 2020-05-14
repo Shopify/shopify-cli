@@ -25,7 +25,7 @@ module Script
 
         @context
           .expects(:puts)
-          .with(Script::Commands::Test::OPERATION_SUCCESS_MESSAGE)
+          .with(@context.message('script.test.success'))
         perform_command
       end
 

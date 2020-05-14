@@ -44,12 +44,12 @@ module ShopifyCli
       #
       def clone(repository, dest, ctx: Context.new)
         if Dir.exist?(dest)
-          ctx.abort("Project directory already exists. Please create a project with a new name.")
+          ctx.abort(ctx.message('core.git.error.directory_exists'))
         else
-          CLI::UI::Frame.open("Cloning into #{dest}...") do
+          CLI::UI::Frame.open(ctx.message('core.git.cloning', dest)) do
             clone_progress('clone', '--single-branch', repository, dest, ctx: ctx)
           end
-          ctx.done("Cloned into #{dest}")
+          ctx.done(ctx.message('core.git.cloned', dest))
         end
       end
 
@@ -70,7 +70,7 @@ module ShopifyCli
       #
       def branches(ctx)
         output, status = ctx.capture2e('git', 'branch', '--list', '--format=%(refname:short)')
-        ctx.abort("Could not find any git branches") unless status.success?
+        ctx.abort(ctx.message('core.git.error.no_branches_found')) unless status.success?
 
         branches = if output == ''
           ['master']
@@ -97,12 +97,11 @@ module ShopifyCli
         output, status = ctx.capture2e('git', 'status')
 
         unless status.success?
-          msg = "Git repo is not initiated. Please run `git init` and make at least one commit."
-          ctx.abort(msg)
+          ctx.abort(ctx.message('core.git.error.repo_not_initiated'))
         end
 
         if output.include?('No commits yet')
-          ctx.abort("No git commits have been made. Please make at least one commit.")
+          ctx.abort(ctx.message('core.git.error.no_commits_made'))
         end
       end
 

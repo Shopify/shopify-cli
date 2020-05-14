@@ -4,15 +4,13 @@ module Script
   module Layers
     module Application
       class TestScript
-        RUNNING_MSG = "Running tests"
-
         class << self
           def call(ctx:, language:, extension_point_type:, script_name:)
             extension_point = ExtensionPoints.get(type: extension_point_type)
             ProjectDependencies
               .install(ctx: ctx, language: language, extension_point: extension_point, script_name: script_name)
 
-            CLI::UI::Frame.open(RUNNING_MSG) do
+            CLI::UI::Frame.open(ctx.message('script.test.running')) do
               run_tests(ctx, language, extension_point_type, script_name)
             end
           end

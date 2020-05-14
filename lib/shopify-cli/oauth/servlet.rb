@@ -17,8 +17,6 @@ module ShopifyCli
           setTimeout(function() { window.close(); }, 3000)
         </script>
       }
-      SUCCESS_RESP = 'Authenticated Successfully, this page will close shortly.'
-      INVALID_STATE_RESP = 'Anti-forgery state token does not match the initial request.'
 
       def initialize(server, oauth, token)
         super
@@ -29,12 +27,17 @@ module ShopifyCli
 
       def do_GET(req, res) # rubocop:disable Naming/MethodName
         if !req.query['error'].nil?
-          respond_with(res, 400, "Invalid Request: #{req.query['error_description']}")
+          respond_with(
+            res,
+            400,
+            Context.message('core.oauth.servlet.invalid_request_response', req.query['error_description'])
+          )
         elsif req.query['state'] != @state_token
-          req.query.merge!('error' => 'invalid_state', 'error_description' => INVALID_STATE_RESP)
-          respond_with(res, 403, INVALID_STATE_RESP)
+          response_message = Context.message('core.oauth.servlet.invalid_state_response')
+          req.query.merge!('error' => 'invalid_state', 'error_description' => response_message)
+          respond_with(res, 403, response_message)
         else
-          respond_with(res, 200, SUCCESS_RESP)
+          respond_with(res, 200, Context.message('core.oauth.servlet.success_response'))
         end
         @oauth.response_query = req.query
         @server.shutdown
@@ -46,7 +49,8 @@ module ShopifyCli
           status: status,
           message: message,
           color: successful ? 'black' : 'red',
-          title: successful ? 'Authenticate Successfully' : 'Failed to Authenticate',
+          title:
+            Context.message(successful ? 'core.oauth.servlet.authenticated' : 'core.oauth.servlet.not_authenticated'),
           autoclose: successful ? AUTOCLOSE_TEMPLATE : '',
         }
         response.status = status

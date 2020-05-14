@@ -16,16 +16,11 @@ module ShopifyCli
             end
             return
           else
-            @ctx.puts("Command #{command} not found.")
+            @ctx.puts(@ctx.message('core.help.error.command_not_found', command))
           end
         end
 
-        preamble = <<~MESSAGE
-          Use {{command:#{ShopifyCli::TOOL_NAME} help <command>}} to display detailed information about a specific command.
-
-          {{bold:Available core commands:}}
-
-        MESSAGE
+        preamble = @ctx.message('core.help.preamble', ShopifyCli::TOOL_NAME)
         @ctx.puts(preamble)
 
         core_commands.each do |name, klass|
