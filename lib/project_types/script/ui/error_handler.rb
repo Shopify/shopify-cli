@@ -86,7 +86,7 @@ module Script
           }
         when Layers::Infrastructure::Errors::AppScriptUndefinedError
           {
-            help_suggestion: "Deploy script to app.",
+            help_suggestion: ShopifyCli::Context.message('script.error.app_script_undefined_help'),
           }
         when Layers::Infrastructure::Errors::BuildError
           {
@@ -119,12 +119,12 @@ module Script
           }
         when Layers::Infrastructure::Errors::ShopScriptConflictError
           {
-            cause_of_error: "Another app in this store has already enabled a script on this extension point.",
-            help_suggestion: "Disable that script or uninstall that app and try again.",
+            cause_of_error: ShopifyCli::Context.message('script.error.shop_script_conflict_cause'),
+            help_suggestion: ShopifyCli::Context.message('script.error.shop_script_conflict_help'),
           }
         when Layers::Infrastructure::Errors::ShopScriptUndefinedError
           {
-            cause_of_error: "Script is already turned off in development store.",
+            cause_of_error: ShopifyCli::Context.message('script.error.shop_script_undefined_cause'),
           }
         when Layers::Infrastructure::Errors::TestError
           {

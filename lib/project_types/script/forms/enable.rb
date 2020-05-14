@@ -13,11 +13,11 @@ module Script
       private
 
       def ask_api_key
-        ask_app_api_key(ctx, organization['apps'], message: 'Which app is the script deployed to?')
+        ask_app_api_key(organization['apps'], message: ctx.message('script.forms.enable.ask_app_api_key'))
       end
 
       def ask_shop_domain
-        super(ctx, organization, message: 'Which development store is the app installed on?')
+        super(organization, message: ctx.message('script.forms.enable.ask_shop_domain'))
       end
     end
   end

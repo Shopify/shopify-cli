@@ -49,12 +49,12 @@ module Script
         end
       end
 
-      def ask_shop_domain(ctx, organization, message: 'Select a development store')
+      def ask_shop_domain(organization, message: ctx.message('script.forms.script_form.ask_shop_domain_default'))
         if organization['stores'].count == 0
           raise Errors::NoExistingStoresError, organization['id']
         elsif organization['stores'].count == 1
           domain = organization['stores'].first['shopDomain']
-          ctx.puts("Using development store {{green:#{domain}}}")
+          ctx.message('script.forms.script_form.using_development_store', domain: domain)
           domain
         else
           CLI::UI::Prompt.ask(message, options: organization["stores"].map { |s| s["shopDomain"] })

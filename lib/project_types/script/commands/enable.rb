@@ -3,10 +3,6 @@
 module Script
   module Commands
     class Enable < ShopifyCli::Command
-      OPERATION_FAILED_MESSAGE = "Can't enable script."
-      OPERATION_SUCCESS_MESSAGE = "{{v}} Script enabled. %{type} script %{title} in app (API key: %{api_key}) "\
-                                  "is turned on in development store {{green:%{shop_domain}}}"
-
       options do |parser, flags|
         parser.on('--api_key=APIKEY') { |t| flags[:api_key] = t }
         parser.on('--shop_domain=MYSHOPIFYDOMAIN') { |t| flags[:shop_domain] = t }
@@ -26,22 +22,19 @@ module Script
           extension_point_type: project.extension_point_type,
           title: project.script_name
         )
-        @ctx.puts(format(
-                    OPERATION_SUCCESS_MESSAGE,
-                    api_key: form.api_key,
-                    shop_domain: form.shop_domain,
-                    type: project.extension_point_type.capitalize,
-                    title: project.script_name
-                  ))
+        @ctx.puts(@ctx.message(
+          'script.enable.script_enabled',
+          api_key: form.api_key,
+          shop_domain: form.shop_domain,
+          type: project.extension_point_type.capitalize,
+          title: project.script_name
+        ))
       rescue StandardError => e
-        UI::ErrorHandler.pretty_print_and_raise(e, failed_op: OPERATION_FAILED_MESSAGE)
+        UI::ErrorHandler.pretty_print_and_raise(e, failed_op: @ctx.message('script.enable.error.operation_failed'))
       end
 
       def self.help
-        <<~HELP
-        Turn on script in development store.
-          Usage: {{command:#{ShopifyCli::TOOL_NAME} enable --API_key=<API_key> --shop_domain=<my_store.myshopify.com>}}
-        HELP
+        ShopifyCli::Context.message('script.enable.help', ShopifyCli::TOOL_NAME)
       end
     end
   end

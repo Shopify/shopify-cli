@@ -38,6 +38,8 @@ module Script
 
           app_not_installed_cause: "App not installed on development store.",
 
+          app_script_undefined_help: "Deploy script to app.",
+
           build_error_cause: "Something went wrong while building the script.",
           build_error_help: "Correct the errors and try again.",
 
@@ -54,6 +56,12 @@ module Script
 
           shop_auth_cause: "Unable to authenticate with the store.",
           shop_auth_help: "Try again.",
+
+          shop_script_conflict_cause: "Another app in this store has already enabled a script "\
+                                      "on this extension point.",
+          shop_script_conflict_help: "Disable that script or uninstall that app and try again.",
+
+          shop_script_undefined_cause: "Script is already turned off in development store.",
 
           test_help: "Correct the errors and try again.",
         },
@@ -90,6 +98,33 @@ module Script
           script_deployed: "{{v}} Script deployed to app (API key: %{api_key}).",
         },
 
+        disable: {
+          help: <<~HELP,
+          Turn off script in development store.
+            Usage: {{command:%s disable --API_key=<API_key> --shop_domain=<my_store.myshopify.com>}}
+          HELP
+
+          error: {
+            operation_failed: "Can't disable script.",
+          },
+
+          script_disabled: "{{v}} Script disabled. Script is turned off in development store.",
+        },
+
+        enable: {
+          help: <<~HELP,
+          Turn on script in development store.
+            Usage: {{command:%s enable --API_key=<API_key> --shop_domain=<my_store.myshopify.com>}}
+          HELP
+
+          error: {
+            operation_failed: "Can't enable script.",
+          },
+
+          script_enabled: "{{v}} Script enabled. %{type} script %{title} in app (API key: %{api_key}) "\
+                          "is turned on in development store {{green:%{shop_domain}}}",
+        },
+
         project_deps: {
           deps_are_installed: "{{v}} Dependencies installed",
           installing_with_npm: "Installing dependencies with npm",
@@ -118,11 +153,17 @@ module Script
           },
           script_form: {
             ask_app_api_key_default: "Which app do you want this script to belong to?",
+            ask_shop_domain_default: "Select a development store",
             fetching_organizations: "Fetching organizations",
             fetched_organizations: "Fetched organizations",
             select_organization: "Select organization.",
             using_app: "Using app {{green:%{title} (%{api_key})}}.",
+            using_development_store: "Using development store {{green:%{domain}}}",
             using_organization: "Organization {{green:%s}}.",
+          },
+          enable: {
+            ask_app_api_key: "Which app is the script deployed to?",
+            ask_shop_domain: "Which development store is the app installed on?",
           },
         },
 
@@ -135,6 +176,14 @@ module Script
           deploy_script: {
             deploying: "Deploying",
             deployed: "Deployed",
+          },
+          disable_script: {
+            disabling: "Disabling",
+            disabled: "Disabled",
+          },
+          enable_script: {
+            enabling: "Enabling",
+            enabled: "Enabled",
           },
         },
       },
