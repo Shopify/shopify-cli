@@ -12,8 +12,6 @@ module Rails
 
       DEFAULT_RAILS_FLAGS = %w(--skip-spring)
 
-      DEFAULT_RAILS_FLAGS = %w(--skip-spring)
-
       options do |parser, flags|
         # backwards compatibility allow 'title' for now
         parser.on('--title=TITLE') { |t| flags[:title] = t }
@@ -22,7 +20,6 @@ module Rails
         parser.on('--shop_domain=MYSHOPIFYDOMAIN') { |url| flags[:shop_domain] = url }
         parser.on('--type=APPTYPE') { |url| flags[:type] = url }
         parser.on('--db=DB') { |db| flags[:db] = db }
-        parser.on('--api') { flags[:api] = true }
         parser.on('--rails_opts=RAILSOPTS') { |opts| flags[:rails_opts] = opts }
       end
 
@@ -82,7 +79,6 @@ module Rails
           new_command = %w(rails new)
           new_command += DEFAULT_RAILS_FLAGS
           new_command << "--database=#{options.flags[:db]}" unless options.flags[:db].nil?
-          new_command << "--api" unless options.flags[:api].nil?
           new_command += options.flags[:rails_opts].split unless options.flags[:rails_opts].nil?
           new_command << name
 
