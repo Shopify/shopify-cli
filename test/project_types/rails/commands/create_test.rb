@@ -179,10 +179,6 @@ module Rails
       end
 
       private
-
-      def default_new_cmd
-      end
-
       def expect_command(command, chdir: @context.root)
         @context.expects(:system).with(*command, chdir: chdir)
       end

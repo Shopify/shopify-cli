@@ -2,6 +2,8 @@
 Encoding.default_external = Encoding::UTF_8
 Encoding.default_internal = Encoding::UTF_8
 
+Thread.report_on_exception = false
+
 # Contains backports from newer rubies to make our lives easier
 # require_relative 'support/ruby_backports'
 

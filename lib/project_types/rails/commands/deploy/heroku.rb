@@ -5,11 +5,22 @@ module Rails
   module Commands
     class Deploy
       class Heroku < ShopifyCli::SubCommand
+        DB_CHECK_CMD = 'bundle exec rails runner "puts ActiveRecord::Base.connection.adapter_name.downcase"'
+
         def self.help
           ShopifyCli::Context.message('rails.deploy.heroku.help', ShopifyCli::TOOL_NAME)
         end
 
-        def call(*)
+        def call(_args, _name)
+          CLI::UI::Frame.open(@ctx.message('rails.deploy.heroku.db_check.validating')) do
+            CLI::UI::Spinner.spin(@ctx.message('rails.deploy.heroku.db_check.checking')) do |spinner|
+              db_type, err = check_db(@ctx)
+              @ctx.abort(@ctx.message(err)) unless err.nil?
+              spinner.update_title(@ctx.message('rails.deploy.heroku.db_check.validated', db_type))
+            end
+            true
+          end
+
           spin_group = CLI::UI::SpinGroup.new
           heroku_service = ShopifyCli::Heroku.new(@ctx)
 
@@ -83,6 +94,17 @@ module Rails
             success_text: @ctx.message('rails.deploy.heroku.deployed')
           ) do
             heroku_service.deploy(branch_to_deploy)
+          end
+        end
+
+        def check_db(ctx)
+          out, stat = ctx.capture2e(DB_CHECK_CMD)
+          if stat.success? && out.strip == 'sqlite'
+            return ['select_sqlite', 'rails.deploy.heroku.db_check.sqlite']
+          elsif !stat.success?
+            return [nil, 'rails.deploy.heroku.db_check.problem']
+          else
+            return ['select_' + out.strip, nil]
           end
         end
       end
