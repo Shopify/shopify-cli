@@ -36,7 +36,7 @@ module ShopifyCli
     def download
       return if installed?
 
-      result = @ctx.system('curl', '-o', download_path, DOWNLOAD_URLS[@ctx.os], chdir: ShopifyCli::ROOT)
+      result = @ctx.system('curl', '-o', download_path, DOWNLOAD_URLS[@ctx.os], chdir: ShopifyCli::CACHE_DIR)
       @ctx.abort(@ctx.message('core.heroku.error.download')) unless result.success?
       @ctx.abort(@ctx.message('core.heroku.error.download')) unless File.exist?(download_path)
     end
@@ -44,7 +44,7 @@ module ShopifyCli
     def install
       return if installed?
 
-      result = @ctx.system('tar', '-xf', download_path, chdir: ShopifyCli::ROOT)
+      result = @ctx.system('tar', '-xf', download_path, chdir: ShopifyCli::CACHE_DIR)
       @ctx.abort(@ctx.message('core.heroku.error.install')) unless result.success?
 
       @ctx.rm(download_path)
@@ -70,7 +70,7 @@ module ShopifyCli
     end
 
     def download_path
-      File.join(ShopifyCli::ROOT, download_filename)
+      File.join(ShopifyCli::CACHE_DIR, download_filename)
     end
 
     def git_remote
@@ -79,7 +79,7 @@ module ShopifyCli
     end
 
     def heroku_command
-      local_path = File.join(ShopifyCli::ROOT, 'heroku', 'bin', 'heroku').to_s
+      local_path = File.join(ShopifyCli::CACHE_DIR, 'heroku', 'bin', 'heroku').to_s
       if File.exist?(local_path)
         local_path
       else
