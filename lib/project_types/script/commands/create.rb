@@ -26,7 +26,7 @@ module Script
           extension_point_type: form.extension_point
         )
         project = ScriptProject.current
-        @ctx.puts(@ctx.message('script.create.changed_dir', folder: project.script_name))
+        @ctx.puts(@ctx.message('script.create.script_path', folder: project.script_name))
         @ctx.puts(@ctx.message('script.create.script_created', script_id: project.source_file))
       rescue StandardError => e
         ScriptProject.cleanup(ctx: @ctx, script_name: form.name, root_dir: cur_dir) if form

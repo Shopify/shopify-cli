@@ -35,7 +35,7 @@ module Script
 
         @context
           .expects(:puts)
-          .with(@context.message('script.create.changed_dir', folder: @script_project.script_name))
+          .with(@context.message('script.create.script_path', folder: @script_project.script_name))
         @context
           .expects(:puts)
           .with(@context.message('script.create.script_created', script_id: @script_project.source_file))
