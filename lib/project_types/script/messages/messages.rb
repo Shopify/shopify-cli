@@ -168,23 +168,15 @@ module Script
         },
 
         application: {
-          build_script: {
-            building: "Building",
-            building_script: "Building script",
-            built: "Built",
-          },
-          deploy_script: {
-            deploying: "Deploying",
-            deployed: "Deployed",
-          },
-          disable_script: {
-            disabling: "Disabling",
-            disabled: "Disabled",
-          },
-          enable_script: {
-            enabling: "Enabling",
-            enabled: "Enabled",
-          },
+          building: "Building",
+          building_script: "Building script",
+          built: "Built",
+          deploying: "Deploying",
+          deployed: "Deployed",
+          disabling: "Disabling",
+          disabled: "Disabled",
+          enabling: "Enabling",
+          enabled: "Enabled",
         },
       },
     }.freeze
