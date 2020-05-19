@@ -98,35 +98,105 @@ describe Script::UI::ErrorHandler do
       end
 
       describe "when InvalidContextError" do
-        let(:err) { Script::InvalidContextError.new('') }
+        let(:err) { Script::Errors::InvalidContextError.new('') }
+        it "should call display_and_raise" do
+          should_call_display_and_raise
+        end
+      end
+
+      describe "when NoExistingAppsError" do
+        let(:err) { Script::Errors::NoExistingAppsError.new }
+        it "should call display_and_raise" do
+          should_call_display_and_raise
+        end
+      end
+
+      describe "when NoExistingOrganizationsError" do
+        let(:err) { Script::Errors::NoExistingOrganizationsError.new }
+        it "should call display_and_raise" do
+          should_call_display_and_raise
+        end
+      end
+
+      describe "when NoExistingStoresError" do
+        let(:err) { Script::Errors::NoExistingStoresError.new(1) }
         it "should call display_and_raise" do
           should_call_display_and_raise
         end
       end
 
       describe "when ScriptProjectAlreadyExistsError" do
-        let(:err) { Script::ScriptProjectAlreadyExistsError.new('/') }
+        let(:err) { Script::Errors::ScriptProjectAlreadyExistsError.new('/') }
         it "should call display_and_raise" do
           should_call_display_and_raise
         end
       end
 
       describe "when InvalidExtensionPointError" do
-        let(:err) { Script::InvalidExtensionPointError.new('') }
+        let(:err) { Script::Layers::Domain::Errors::InvalidExtensionPointError.new('') }
         it "should call display_and_raise" do
           should_call_display_and_raise
         end
       end
 
       describe "when ScriptNotFoundError" do
-        let(:err) { Script::ScriptNotFoundError.new('ep type', 'name') }
+        let(:err) { Script::Layers::Domain::Errors::ScriptNotFoundError.new('ep type', 'name') }
+        it "should call display_and_raise" do
+          should_call_display_and_raise
+        end
+      end
+
+      describe "when AppNotInstalledError" do
+        let(:err) { Script::Layers::Infrastructure::Errors::AppNotInstalledError.new }
+        it "should call display_and_raise" do
+          should_call_display_and_raise
+        end
+      end
+
+      describe "when BuildError" do
+        let(:err) { Script::Layers::Infrastructure::Errors::BuildError.new }
         it "should call display_and_raise" do
           should_call_display_and_raise
         end
       end
 
       describe "when DependencyInstallError" do
-        let(:err) { Script::DependencyInstallError.new }
+        let(:err) { Script::Layers::Infrastructure::Errors::DependencyInstallError.new }
+        it "should call display_and_raise" do
+          should_call_display_and_raise
+        end
+      end
+
+      describe "when ForbiddenError" do
+        let(:err) { Script::Layers::Infrastructure::Errors::ForbiddenError.new }
+        it "should call display_and_raise" do
+          should_call_display_and_raise
+        end
+      end
+
+      describe "when GraphqlError" do
+        let(:err) { Script::Layers::Infrastructure::Errors::GraphqlError.new([]) }
+        it "should call display_and_raise" do
+          should_call_display_and_raise
+        end
+      end
+
+      describe "when ScriptRedeployError" do
+        let(:err) { Script::Layers::Infrastructure::Errors::ScriptRedeployError.new('api_key') }
+        it "should call display_and_raise" do
+          should_call_display_and_raise
+        end
+      end
+
+      describe "when ShopAuthenticationError" do
+        let(:err) { Script::Layers::Infrastructure::Errors::ShopAuthenticationError.new }
+        it "should call display_and_raise" do
+          should_call_display_and_raise
+        end
+      end
+
+      describe "when TestError" do
+        let(:err) { Script::Layers::Infrastructure::Errors::TestError.new }
         it "should call display_and_raise" do
           should_call_display_and_raise
         end

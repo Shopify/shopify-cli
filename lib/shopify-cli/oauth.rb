@@ -5,39 +5,20 @@ require 'net/http'
 require 'securerandom'
 require 'openssl'
 require 'shopify_cli'
-require 'socket'
 require 'uri'
+require 'webrick'
 
 module ShopifyCli
   class OAuth
     include SmartProperties
 
+    autoload :Servlet, 'shopify-cli/oauth/servlet'
+
     class Error < StandardError; end
     LocalRequest = Struct.new(:method, :path, :query, :protocol)
 
     DEFAULT_PORT = 3456
-    REDIRECT_HOST = "http://app-cli-loopback.shopifyapps.com:#{DEFAULT_PORT}"
-    TEMPLATE = %{HTTP/1.1 200
-      Content-Type: text/html
-
-      <!DOCTYPE html>
-      <html>
-      <head>
-        <title>%{title}</title>
-      </head>
-      <body>
-        <h1 style="color: #%{color};">%{message}</h1>
-        %{autoclose}
-      </body>
-      </html>
-    }
-    AUTOCLOSE_TEMPLATE = %{
-      <script>
-        setTimeout(function() { window.close(); }, 3000)
-      </script>
-    }
-    SUCCESS_RESP = 'Authenticated Successfully, this page will close shortly.'
-    INVALID_STATE_RESP = 'Anti-forgery state token does not match the initial request.'
+    REDIRECT_HOST = "http://127.0.0.1:#{DEFAULT_PORT}"
 
     property! :ctx
     property! :service, accepts: String
@@ -51,6 +32,8 @@ module ShopifyCli
     property :token_path, default: "/token", accepts: ->(path) { path.is_a?(String) && path.start_with?("/") }
     property :state_token, accepts: String, default: SecureRandom.hex(30)
     property :code_verifier, accepts: String, default: SecureRandom.hex(30)
+
+    attr_accessor :response_query
 
     def authenticate(url)
       return if refresh_exchange_token(url)
@@ -67,10 +50,22 @@ module ShopifyCli
       )
     end
 
+    def server
+      @server ||= begin
+        server = WEBrick::HTTPServer.new(
+          Port: DEFAULT_PORT,
+          Logger: WEBrick::Log.new(File.open(File::NULL, 'w')),
+          AccessLog: [],
+        )
+        server.mount('/', Servlet, self, state_token)
+        server
+      end
+    end
+
     private
 
     def initiate_authentication(url)
-      listen_local
+      @server_thread = Thread.new { server.start }
       params = {
         client_id: client_id,
         scope: scopes,
@@ -81,57 +76,21 @@ module ShopifyCli
       params.merge!(challange_params) if secret.nil?
       uri = URI.parse("#{url}#{auth_path}")
       uri.query = URI.encode_www_form(params.merge(options))
+      output_authentication_info(uri)
+    end
+
+    def output_authentication_info(uri)
+      login_location = ctx.message(service == 'admin' ? 'core.oauth.location.admin' : 'core.oauth.location.partner')
+      ctx.puts(ctx.message('core.oauth.authentication_required', login_location))
       ctx.open_url!(uri)
-    end
-
-    def listen_local
-      server = TCPServer.new('127.0.0.1', DEFAULT_PORT)
-      @server_thread ||= Thread.new do
-        Thread.current.abort_on_exception = true
-        begin
-          socket = server.accept
-          req = decode_request(socket.gets)
-          if !req.query['error'].nil?
-            respond_with(socket, 400, "Invalid Request: #{req.query['error_description']}")
-          elsif req.query['state'] != state_token
-            req.query.merge!('error' => 'invalid_state', 'error_description' => INVALID_STATE_RESP)
-            respond_with(socket, 403, INVALID_STATE_RESP)
-          else
-            respond_with(socket, 200, SUCCESS_RESP)
-          end
-          req.query
-        ensure
-          socket.close_write
-          server.close
-        end
-      end
-    end
-
-    def decode_request(req)
-      data = LocalRequest.new
-      data.method, path, data.protocol = req.split(' ')
-      data.path, _sep, query = path.partition("?")
-      data.query = decode_request_params(query)
-      data
-    end
-
-    def decode_request_params(str)
-      str.b.split('&').each_with_object({}) do |string, params|
-        key, _sep, val = string.partition('=')
-        key = URI.decode_www_form_component(key)
-        val = URI.decode_www_form_component(val)
-        params[key] = val
-        params
-      end
     end
 
     def receive_access_code
       @access_code ||= begin
-        server = @server_thread.join(60)
-        raise Error, 'Timed out while waiting for response from shopify' if server.nil?
-        query = server.value
-        raise Error, query['error_description'] unless query['error'].nil?
-        query['code']
+        @server_thread.join(240)
+        raise Error, ctx.message('core.oauth.error.timeout') if response_query.nil?
+        raise Error, response_query['error_description'] unless response_query['error'].nil?
+        response_query['code']
       end
     end
 
@@ -209,18 +168,6 @@ module ShopifyCli
       res = https.request(request)
       raise Error, JSON.parse(res.body)['error_description'] unless res.is_a?(Net::HTTPSuccess)
       JSON.parse(res.body)
-    end
-
-    def respond_with(resp, status, message)
-      successful = status == 200
-      locals = {
-        status: status,
-        message: message,
-        color: successful ? 'black' : 'red',
-        title: successful ? 'Authenticate Successfully' : 'Failed to Authenticate',
-        autoclose: successful ? AUTOCLOSE_TEMPLATE : '',
-      }
-      resp.print(format(TEMPLATE, locals))
     end
 
     def challange_params

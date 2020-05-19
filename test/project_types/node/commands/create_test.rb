@@ -17,6 +17,7 @@ module Node
       SHOPIFYCLI_FILE = <<~APPTYPE
         ---
         app_type: node
+        organization_id: 42
       APPTYPE
 
       def setup
@@ -30,16 +31,35 @@ module Node
       end
 
       def test_check_node_installed
+        @context.expects(:capture2e).with('which', 'node').returns([nil, mock(success?: false)])
+        assert_raises ShopifyCli::Abort, 'node.create.error.node_required' do
+          perform_command
+        end
+      end
+
+      def test_check_get_node_version
+        @context.expects(:capture2e).with('which', 'node').returns(['/usr/bin/node', mock(success?: true)])
         @context.expects(:capture2e).with('node', '-v').returns([nil, mock(success?: false)])
-        assert_raises ShopifyCli::Abort, Create::NODE_REQUIRED_NOTICE do
+        assert_raises ShopifyCli::Abort, 'node.create.error.node_version_failure' do
           perform_command
         end
       end
 
       def test_check_npm_installed
-        Create.any_instance.stubs(:check_node)
+        @context.expects(:capture2e).with('which', 'node').returns(['/usr/bin/node', mock(success?: true)])
+        @context.expects(:capture2e).with('node', '-v').returns(['8.0.0', mock(success?: true)])
+        @context.expects(:capture2e).with('which', 'npm').returns([nil, mock(success?: false)])
+        assert_raises ShopifyCli::Abort, 'node.create.error.npm_required' do
+          perform_command
+        end
+      end
+
+      def test_check_get_npm_version
+        @context.expects(:capture2e).with('which', 'node').returns(['/usr/bin/node', mock(success?: true)])
+        @context.expects(:capture2e).with('node', '-v').returns(['8.0.0', mock(success?: true)])
+        @context.expects(:capture2e).with('which', 'npm').returns(['/usr/bin/npm', mock(success?: true)])
         @context.expects(:capture2e).with('npm', '-v').returns([nil, mock(success?: false)])
-        assert_raises ShopifyCli::Abort, Create::NPM_REQUIRED_NOTICE do
+        assert_raises ShopifyCli::Abort, 'node.create.error.npm_version_failure' do
           perform_command
         end
       end
@@ -52,8 +72,7 @@ module Node
         FileUtils.touch('test-app/server/handlers/client.js')
         FileUtils.touch('test-app/server/handlers/client.cli.js')
 
-        @context.expects(:capture2e).with('npm', '-v').returns(['1', mock(success?: true)])
-        @context.expects(:capture2e).with('node', '-v').returns(['8.0.0', mock(success?: true)])
+        expect_node_npm_check_commands
         @context.expects(:capture2).with('npm config get @shopify:registry').returns(
           ['https://registry.yarnpkg.com', nil]
         )
@@ -80,8 +99,7 @@ module Node
         FileUtils.touch('test-app/server/handlers/client.js')
         FileUtils.touch('test-app/server/handlers/client.cli.js')
 
-        @context.expects(:capture2e).with('npm', '-v').returns(['1', mock(success?: true)])
-        @context.expects(:capture2e).with('node', '-v').returns(['8.0.0', mock(success?: true)])
+        expect_node_npm_check_commands
         @context.expects(:capture2).with('npm config get @shopify:registry').returns(
           ['https://badregistry.com', nil]
         )
@@ -119,8 +137,7 @@ module Node
         FileUtils.touch('test-app/server/handlers/client.cli.js')
 
         @context.stubs(:uname).returns('Mac')
-        @context.expects(:capture2e).with('npm', '-v').returns(['1', mock(success?: true)])
-        @context.expects(:capture2e).with('node', '-v').returns(['8.0.0', mock(success?: true)])
+        expect_node_npm_check_commands
         @context.expects(:capture2).with('npm config get @shopify:registry').returns(
           ['https://registry.yarnpkg.com', nil]
         )
@@ -134,7 +151,7 @@ module Node
             title: 'test-app',
             type: 'public',
             app_url: 'https://shopify.github.io/shopify-app-cli/getting-started',
-            redir: ["http://app-cli-loopback.shopifyapps.com:3456"],
+            redir: ["http://127.0.0.1:3456"],
           },
           resp: {
             'data': {
@@ -170,8 +187,7 @@ module Node
         FileUtils.touch('test-app/server/handlers/client.cli.js')
 
         @context.stubs(:uname).returns('Mac')
-        @context.expects(:capture2e).with('npm', '-v').returns(['1', mock(success?: true)])
-        @context.expects(:capture2e).with('node', '-v').returns(['8.0.0', mock(success?: true)])
+        expect_node_npm_check_commands
         @context.expects(:capture2).with('npm config get @shopify:registry').returns(
           ['https://badregistry.com', nil]
         )
@@ -195,7 +211,7 @@ module Node
             title: 'test-app',
             type: 'public',
             app_url: 'https://shopify.github.io/shopify-app-cli/getting-started',
-            redir: ["http://app-cli-loopback.shopifyapps.com:3456"],
+            redir: ["http://127.0.0.1:3456"],
           },
           resp: {
             'data': {
@@ -233,6 +249,13 @@ module Node
           --type=public \
           --organization_id=42 \
           --shop_domain=testshop.myshopify.com")
+      end
+
+      def expect_node_npm_check_commands
+        @context.expects(:capture2e).with('which', 'node').returns(['/usr/bin/node', mock(success?: true)])
+        @context.expects(:capture2e).with('node', '-v').returns(['8.0.0', mock(success?: true)])
+        @context.expects(:capture2e).with('which', 'npm').returns(['/usr/bin/npm', mock(success?: true)])
+        @context.expects(:capture2e).with('npm', '-v').returns(['1', mock(success?: true)])
       end
     end
   end

@@ -5,14 +5,14 @@ module ShopifyCli
     class Connect < ShopifyCli::Command
       def call(*)
         if Project.current
-          @ctx.puts "{{yellow:! Don't use}} {{cyan:connect}} {{yellow:for production apps}}"
+          @ctx.puts @ctx.message('core.connect.production_warning')
           org = fetch_org
           id = org['id']
           app = get_app(org['apps'])
           shop = get_shop(org['stores'], id)
           write_env(app, shop)
-          @ctx.puts "{{v}} Project now connected to {{green:#{app.first['title']}}}"
-          @ctx.puts "{{*}} Run {{command:#{ShopifyCli::TOOL_NAME} serve}} to start a local development server"
+          @ctx.puts(@ctx.message('core.connect.connected', app.first['title']))
+          @ctx.puts(@ctx.message('core.connect.serve', ShopifyCli::TOOL_NAME))
         end
       end
 
@@ -21,7 +21,7 @@ module ShopifyCli
         org_id = if orgs.count == 1
           orgs.first["id"]
         else
-          CLI::UI::Prompt.ask('To which organization does this project belong?') do |handler|
+          CLI::UI::Prompt.ask(@ctx.message('core.connect.organization_select')) do |handler|
             orgs.each { |org| handler.option(org["businessName"]) { org["id"] } }
           end
         end
@@ -33,7 +33,7 @@ module ShopifyCli
         app_id = if apps.count == 1
           apps.first["id"]
         else
-          CLI::UI::Prompt.ask('To which app does this project belong?') do |handler|
+          CLI::UI::Prompt.ask(@ctx.message('core.connect.app_select')) do |handler|
             apps.each { |app| handler.option(app["title"]) { app["id"] } }
           end
         end
@@ -44,10 +44,9 @@ module ShopifyCli
         if shops.count == 1
           shop = shops.first["shopDomain"]
         elsif shops.count == 0
-          @ctx.puts('No development stores available.')
-          @ctx.puts("Visit {{underline:https://partners.shopify.com/#{id}/stores}} to create one")
+          @ctx.puts(@ctx.message('core.connect.no_development_stores', id))
         else
-          shop = CLI::UI::Prompt.ask('Which development store would you like to use?') do |handler|
+          shop = CLI::UI::Prompt.ask(@ctx.message('core.connect.development_store_select')) do |handler|
             shops.each { |s| handler.option(s["shopName"]) { s["shopDomain"] } }
           end
         end
@@ -64,10 +63,7 @@ module ShopifyCli
       end
 
       def self.help
-        <<~HELP
-          Connect a Shopify App CLI project. Restores the ENV file.
-            Usage: {{command:#{ShopifyCli::TOOL_NAME} connect}}
-        HELP
+        ShopifyCli::Context.message('core.connect.help', ShopifyCli::TOOL_NAME)
       end
     end
   end

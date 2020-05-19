@@ -1,6 +1,7 @@
 # frozen_string_literal: true
 require 'shopify_cli'
 require 'fileutils'
+require 'rbconfig'
 
 module ShopifyCli
   ##
@@ -10,6 +11,34 @@ module ShopifyCli
   # resoures.
   #
   class Context
+    class << self
+      attr_reader :messages
+
+      # adds a new set of messages to be used by the CLI. The messages are expected to be a hash of symbols, and
+      # multiple levels are allowed. When fetching messages a dot notation is used to separate different levels. See
+      # Context::message for more information.
+      #
+      # #### Parameters
+      # * `messages` - Hash containing the new keys to register
+      def load_messages(messages)
+        @messages ||= {}
+        @messages = @messages.merge(messages) do |key|
+          Context.new.abort("Message key '#{key}' already exists and cannot be registered") if @messages.key?(key)
+        end
+      end
+
+      # returns the user-facing messages for the given key. Returns the key if no message is available.
+      #
+      # #### Parameters
+      # * `key` - a symbol representing the message
+      # * `params` - the parameters to format the string with
+      def message(key, *params)
+        key_parts = key.split('.').map(&:to_sym)
+        str = Context.messages.dig(*key_parts)
+        str ? str % params : key
+      end
+    end
+
     # is the directory root that the current command is running in. If you want to
     # simulate a `cd` for the file operations, you can change this variable.
     attr_accessor :root
@@ -87,9 +116,10 @@ module ShopifyCli
     end
 
     # will write/overwrite a file with the provided contents, relative to the context root
+    # unless the file path is absolute.
     #
     # #### Parameters
-    # * `fname` - filename of the file that you are writing, relative to root.
+    # * `fname` - filename of the file that you are writing, relative to root unless it is absolute.
     # * `content` - the body contents of the file that you are writing
     #
     # #### Example
@@ -97,42 +127,44 @@ module ShopifyCli
     #   @ctx.write('new.txt', 'hello world')
     #
     def write(fname, content)
-      File.write(File.join(root, fname), content)
+      File.write(ctx_path(fname), content)
     end
 
-    # will rename a file from one place to another, all relative to the command root
+    # will rename a file from one place to another, relative to the command root
+    # unless the path is absolute.
     #
     # #### Parameters
     # * `from` - the path of the original file
     # * `to` - the destination path
     #
     def rename(from, to)
-      File.rename(File.join(root, from), File.join(root, to))
+      File.rename(ctx_path(from), ctx_path(to))
     end
 
     # will remove a plain file from the FS, the filepath is relative to the command
-    # root.
+    # root unless absolute.
     #
     # #### Parameters
     # * `fname` - the file path relative to the context root to remove from the FS
     #
     def rm(fname)
-      FileUtils.rm(File.join(root, fname))
+      FileUtils.rm(ctx_path(fname))
     end
 
     # will remove a directory from the FS, the filepath is relative to the command
-    # root.
+    # root unless absolute
     #
     # #### Parameters
     # * `fname` - the file path to a directory, relative to the context root to remove from the FS
     #
     def rm_r(fname)
-      FileUtils.rm_r(File.join(root, fname))
+      FileUtils.rm_r(ctx_path(fname))
     end
 
     # will create a directory, recursively if it does not exist. So if you create
     # a directory `foo/bar/dun`, this will also create the directories `foo` and
-    # `foo/bar` if they do not exist.
+    # `foo/bar` if they do not exist. The path will be made relative to the command
+    # root unless absolute
     #
     # #### Parameters
     # * `path` - file path of the directory that you want to create
@@ -141,18 +173,14 @@ module ShopifyCli
       FileUtils.mkdir_p(path)
     end
 
-    # will open a url in a browser if that functionality is available, otherwise
-    # it will simply output to the console a link for the user to either copy/paste
+    # will output to the console a link for the user to either copy/paste
     # or click on.
     #
     # #### Parameters
     # * `uri` - a http URI to open in a browser
     #
     def open_url!(uri)
-      return system("open '#{uri}'") if mac?
-      help = <<~OPEN
-        Please open {{green:#{uri}}} in your browser
-      OPEN
+      help = message('core.context.open_url', uri)
       puts(help)
     end
 
@@ -202,6 +230,15 @@ module ShopifyCli
     #
     def debug(text)
       puts("{{red:DEBUG}} #{text}") if getenv('DEBUG')
+    end
+
+    # proxy call to Context.message.
+    #
+    # #### Parameters
+    # * `key` - a symbol representing the message
+    # * `params` - the parameters to format the string with
+    def message(key, *params)
+      Context.message(key, *params)
     end
 
     # will grab the host info of the computer running the cli. This indicates the
@@ -298,6 +335,9 @@ module ShopifyCli
     #   end
     #
     def on_siginfo
+      # Reset any previous SIGINFO handling we had so the only action we take is the given block
+      trap('INFO', 'DEFAULT')
+
       fork do
         begin
           r, w = IO.pipe
@@ -314,6 +354,17 @@ module ShopifyCli
         rescue Interrupt
           exit(0)
         end
+      end
+    end
+
+    private
+
+    def ctx_path(fname)
+      require 'pathname'
+      if Pathname.new(fname).absolute?
+        fname
+      else
+        File.join(root, fname)
       end
     end
   end

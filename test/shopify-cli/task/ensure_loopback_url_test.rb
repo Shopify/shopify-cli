@@ -18,7 +18,7 @@ module ShopifyCli
               app: {
                 redirectUrlWhitelist: [
                   'https://123abc.ngrok.io',
-                  'http://app-cli-loopback.shopifyapps.com:3456',
+                  'http://127.0.0.1:3456',
                 ],
               },
             },
@@ -52,7 +52,7 @@ module ShopifyCli
             input: {
               redirectUrlWhitelist: [
                 'https://123abc.ngrok.io',
-                'http://app-cli-loopback.shopifyapps.com:3456',
+                'http://127.0.0.1:3456',
               ],
               apiKey: api_key,
             },

@@ -9,7 +9,7 @@ module Script
         def create_script(language, extension_point, script_name)
           FileUtils.mkdir_p(src_base)
           out, status = CLI::Kit::System.capture2e(format(BOOTSTRAP_SRC, src_base: src_base))
-          raise ServiceFailureError, out unless status.success?
+          raise Domain::Errors::ServiceFailureError, out unless status.success?
 
           write_tsconfig if language == "ts"
 
@@ -24,7 +24,7 @@ module Script
         def get_script(language, extension_point_type, script_name)
           source_file_path = src_code_file(language)
           unless File.exist?(source_file_path)
-            raise ScriptNotFoundError.new(extension_point_type, source_file_path)
+            raise Domain::Errors::ScriptNotFoundError.new(extension_point_type, source_file_path)
           end
 
           Domain::Script.new(script_id(language), script_name, extension_point_type, language)

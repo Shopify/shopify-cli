@@ -6,58 +6,61 @@ module Rails
     class Deploy
       class Heroku < ShopifyCli::SubCommand
         def self.help
-          <<~HELP
-            Deploy the current Rails project to Heroku
-            Usage: {{command:#{ShopifyCli::TOOL_NAME} deploy heroku}}
-          HELP
+          ShopifyCli::Context.message('rails.deploy.heroku.help', ShopifyCli::TOOL_NAME)
         end
 
         def call(_args, _name)
           spin_group = CLI::UI::SpinGroup.new
           heroku_service = ShopifyCli::Heroku.new(@ctx)
 
-          spin_group.add('Downloading Heroku CLI…') do |spinner|
+          spin_group.add(@ctx.message('rails.deploy.heroku.downloading')) do |spinner|
             heroku_service.download
-            spinner.update_title('Downloaded Heroku CLI')
+            spinner.update_title(@ctx.message('rails.deploy.heroku.downloaded'))
           end
           spin_group.wait
 
-          spin_group.add('Installing Heroku CLI…') do |spinner|
+          spin_group.add(@ctx.message('rails.deploy.heroku.installing')) do |spinner|
             heroku_service.install
-            spinner.update_title('Installed Heroku CLI')
+            spinner.update_title(@ctx.message('rails.deploy.heroku.installed'))
           end
-          spin_group.add('Checking git repo…') do |spinner|
+          spin_group.add(@ctx.message('rails.deploy.heroku.git.checking')) do |spinner|
             ShopifyCli::Git.init(@ctx)
-            spinner.update_title('Git repo initialized')
+            spinner.update_title(@ctx.message('rails.deploy.heroku.git.initialized'))
           end
           spin_group.wait
 
           if (account = heroku_service.whoami)
-            @ctx.puts("{{v}} Authenticated with Heroku as `#{account}`")
+            @ctx.puts(@ctx.message('rails.deploy.heroku.authenticated_with_account', account))
           else
-            CLI::UI::Frame.open("Authenticating with Heroku…", success_text: '{{v}} Authenticated with Heroku') do
+            CLI::UI::Frame.open(
+              @ctx.message('rails.deploy.heroku.authenticating'),
+              success_text: @ctx.message('rails.deploy.heroku.authenticated')
+            ) do
               heroku_service.authenticate
             end
           end
 
           if (app_name = heroku_service.app)
-            @ctx.puts("{{v}} Heroku app `#{app_name}` selected")
+            @ctx.puts(@ctx.message('rails.deploy.heroku.app.selected', app_name))
           else
-            app_type = CLI::UI::Prompt.ask('No existing Heroku app found. What would you like to do?') do |handler|
-              handler.option('Create a new Heroku app') { :new }
-              handler.option('Specify an existing Heroku app') { :existing }
+            app_type = CLI::UI::Prompt.ask(@ctx.message('rails.deploy.heroku.app.no_apps_found')) do |handler|
+              handler.option(@ctx.message('rails.deploy.heroku.app.create')) { :new }
+              handler.option(@ctx.message('rails.deploy.heroku.app.select')) { :existing }
             end
 
             if app_type == :existing
-              app_name = CLI::UI::Prompt.ask('What is your Heroku app’s name?')
+              app_name = CLI::UI::Prompt.ask(@ctx.message('rails.deploy.heroku.app.name'))
               CLI::UI::Frame.open(
-                "Selecting Heroku app `#{app_name}`…",
-                success_text: "{{v}} Heroku app `#{app_name}` selected"
+                @ctx.message('rails.deploy.heroku.app.selecting', app_name),
+                success_text: @ctx.message('rails.deploy.heroku.app.selected', app_name)
               ) do
                 heroku_service.select_existing_app(app_name)
               end
             elsif app_type == :new
-              CLI::UI::Frame.open('Creating new Heroku app…', success_text: '{{v}} New Heroku app created') do
+              CLI::UI::Frame.open(
+                @ctx.message('rails.deploy.heroku.app.creating'),
+                success_text: @ctx.message('rails.deploy.heroku.app.created')
+              ) do
                 heroku_service.create_new_app
               end
             end
@@ -66,16 +69,19 @@ module Rails
           branches = ShopifyCli::Git.branches(@ctx)
           if branches.length == 1
             branch_to_deploy = branches[0]
-            @ctx.puts("{{v}} Git branch `#{branch_to_deploy}` selected for deploy")
+            @ctx.puts(@ctx.message('rails.deploy.heroku.git.branch_selected', branch_to_deploy))
           else
-            branch_to_deploy = CLI::UI::Prompt.ask('What branch would you like to deploy?') do |handler|
+            branch_to_deploy = CLI::UI::Prompt.ask(@ctx.message('rails.deploy.heroku.git.what_branch')) do |handler|
               branches.each do |branch|
                 handler.option(branch) { branch }
               end
             end
           end
 
-          CLI::UI::Frame.open('Deploying to Heroku…', success_text: '{{v}} Deployed to Heroku') do
+          CLI::UI::Frame.open(
+            @ctx.message('rails.deploy.heroku.deploying'),
+            success_text: @ctx.message('rails.deploy.heroku.deployed')
+          ) do
             heroku_service.deploy(branch_to_deploy)
           end
         end

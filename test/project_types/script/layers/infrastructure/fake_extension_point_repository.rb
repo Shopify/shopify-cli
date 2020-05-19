@@ -18,7 +18,7 @@ module Script
           if @cache.key?(type)
             @cache[type]
           else
-            raise InvalidExtensionPointError, type
+            raise Domain::Errors::InvalidExtensionPointError, type
           end
         end
 

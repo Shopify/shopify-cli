@@ -19,33 +19,33 @@ module ShopifyCli
 
     def authenticate
       result = @ctx.system(heroku_command, 'login')
-      @ctx.abort("Could not authenticate with Heroku") unless result.success?
+      @ctx.abort(@ctx.message('core.heroku.error.authentication')) unless result.success?
     end
 
     def create_new_app
       output, status = @ctx.capture2e(heroku_command, 'create')
-      @ctx.abort('Heroku app could not be created') unless status.success?
+      @ctx.abort(@ctx.message('core.heroku.error.creation')) unless status.success?
       @ctx.puts(output)
     end
 
     def deploy(branch_to_deploy)
       result = @ctx.system('git', 'push', '-u', 'heroku', "#{branch_to_deploy}:master")
-      @ctx.abort("Could not deploy to Heroku") unless result.success?
+      @ctx.abort(@ctx.message('core.heroku.error.deploy')) unless result.success?
     end
 
     def download
       return if installed?
 
       result = @ctx.system('curl', '-o', download_path, DOWNLOAD_URLS[@ctx.os], chdir: ShopifyCli::ROOT)
-      @ctx.abort("Heroku CLI could not be downloaded") unless result.success?
-      @ctx.abort("Heroku CLI could not be downloaded") unless File.exist?(download_path)
+      @ctx.abort(@ctx.message('core.heroku.error.download')) unless result.success?
+      @ctx.abort(@ctx.message('core.heroku.error.download')) unless File.exist?(download_path)
     end
 
     def install
       return if installed?
 
       result = @ctx.system('tar', '-xf', download_path, chdir: ShopifyCli::ROOT)
-      @ctx.abort("Could not install Heroku CLI") unless result.success?
+      @ctx.abort(@ctx.message('core.heroku.error.install')) unless result.success?
 
       @ctx.rm(download_path)
     end
@@ -53,7 +53,7 @@ module ShopifyCli
     def select_existing_app(app_name)
       result = @ctx.system(heroku_command, 'git:remote', '-a', app_name)
 
-      msg = "Heroku app `#{app_name}` could not be selected"
+      msg = @ctx.message('core.heroku.error.could_not_select_app', app_name)
       @ctx.abort(msg) unless result.success?
     end
 

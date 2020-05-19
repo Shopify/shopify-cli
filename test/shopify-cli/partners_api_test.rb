@@ -54,11 +54,7 @@ module ShopifyCli
         url: "https://partners.shopify.com/api/cli/graphql",
       ).returns(api_stub)
       api_stub.expects(:query).raises(API::APIRequestNotFoundError)
-      @context.expects(:puts).with(
-        "{{x}} error: Your account was not found. Please sign up at https://partners.shopify.com/signup",
-      )
-      @context.expects(:puts).with("For authentication issues, run "\
-        "{{command:#{ShopifyCli::TOOL_NAME} logout}} to clear invalid credentials")
+      @context.expects(:puts).with(@context.message('core.partners_api.error.account_not_found', ShopifyCli::TOOL_NAME))
       PartnersAPI.query(@context, 'query')
     end
 

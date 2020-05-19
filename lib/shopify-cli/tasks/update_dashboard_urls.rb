@@ -16,16 +16,15 @@ module ShopifyCli
           applicationUrl: consent ? url : app['applicationUrl'],
           redirectUrlWhitelist: constructed_urls, apiKey: api_key
         })
-        @ctx.puts("{{v}} Whitelist URLS updated in Partners Dashboard}}")
+        @ctx.puts(@ctx.message('core.tasks.update_dashboard_urls.updated'))
       rescue
-        @ctx.puts("{{x}} error: For authentication issues, run {{command:#{ShopifyCli::TOOL_NAME} logout}} "\
-          "to clear invalid credentials")
+        @ctx.puts(@ctx.message('core.tasks.update_dashboard_urls.update_error', ShopifyCli::TOOL_NAME))
         raise
       end
 
       def check_application_url(application_url, new_url)
         return false if application_url.match(new_url)
-        CLI::UI::Prompt.confirm('Do you want to update your application url?')
+        CLI::UI::Prompt.confirm(@ctx.message('core.tasks.update_dashboard_urls.update_prompt'))
       end
 
       def construct_redirect_urls(urls, new_url, callback_url)

@@ -7,7 +7,7 @@ module Node
       flag_arguments :title, :organization_id, :shop_domain, :type
 
       def ask
-        self.title ||= CLI::UI::Prompt.ask('App Name')
+        self.title ||= CLI::UI::Prompt.ask(ctx.message('node.forms.create.app_name'))
         self.type = ask_type
         self.name = self.title.downcase.split(" ").join("_")
         self.organization_id ||= organization["id"].to_i
@@ -18,16 +18,16 @@ module Node
 
       def ask_type
         if type.nil?
-          return CLI::UI::Prompt.ask('What type of app are you building?') do |handler|
-            handler.option('Public: An app built for a wide merchant audience.') { 'public' }
-            handler.option('Custom: An app custom built for a single client.') { 'custom' }
+          return CLI::UI::Prompt.ask(ctx.message('node.forms.create.app_type.select')) do |handler|
+            handler.option(ctx.message('node.forms.create.app_type.select_public')) { 'public' }
+            handler.option(ctx.message('node.forms.create.app_type.select_custom')) { 'custom' }
           end
         end
 
         unless ShopifyCli::Tasks::CreateApiClient::VALID_APP_TYPES.include?(type)
-          ctx.abort("Invalid App Type #{type}")
+          ctx.abort(ctx.message('node.forms.create.error.invalid_app_type', type))
         end
-        ctx.puts("App Type {{green:#{type}}}")
+        ctx.puts(ctx.message('node.forms.create.app_type.selected', type))
         type
       end
 
@@ -39,23 +39,19 @@ module Node
         @organization ||= if !organization_id.nil?
           org = ShopifyCli::PartnersAPI::Organizations.fetch(ctx, id: organization_id)
           if org.nil?
-            ctx.puts(
-              "For authentication issues, run {{command:#{ShopifyCli::TOOL_NAME} logout}} to clear invalid credentials"
-            )
-            ctx.abort("Cannot find an organization with that ID")
+            ctx.puts(ctx.message('node.forms.create.authentication_issue', ShopifyCli::TOOL_NAME))
+            ctx.abort(ctx.message('node.forms.create.error.organization_not_found'))
           end
           org
         elsif organizations.count == 0
-          ctx.puts('Please visit https://partners.shopify.com/ to create a partners account')
-          ctx.puts(
-            "For authentication issues, run {{command:#{ShopifyCli::TOOL_NAME} logout}} to clear invalid credentials"
-          )
-          ctx.abort('No organizations available.')
+          ctx.puts(ctx.message('node.forms.create.partners_notice'))
+          ctx.puts(ctx.message('node.forms.create.authentication_issue', ShopifyCli::TOOL_NAME))
+          ctx.abort(ctx.message('node.forms.create.error.no_organizations'))
         elsif organizations.count == 1
-          ctx.puts("Organization {{green:#{organizations.first['businessName']}}}")
+          ctx.puts(ctx.message('node.forms.create.organization', organizations.first['businessName']))
           organizations.first
         else
-          org_id = CLI::UI::Prompt.ask('Select organization') do |handler|
+          org_id = CLI::UI::Prompt.ask(ctx.message('node.forms.create.organization_select')) do |handler|
             organizations.each { |o| handler.option(o['businessName']) { o['id'] } }
           end
           organizations.find { |o| o['id'] == org_id }
@@ -68,18 +64,16 @@ module Node
         end
 
         if valid_stores.count == 0
-          ctx.puts('{{x}} No Development Stores available.')
-          ctx.puts("Visit {{underline:https://partners.shopify.com/#{organization['id']}/stores}} to create one")
-          ctx.puts(
-            "For authentication issues, run {{command:#{ShopifyCli::TOOL_NAME} logout}} to clear invalid credentials"
-          )
+          ctx.puts(ctx.message('node.forms.create.no_development_stores'))
+          ctx.puts(ctx.message('node.forms.create.create_store', organization['id']))
+          ctx.puts(ctx.message('node.forms.create.authentication_issue', ShopifyCli::TOOL_NAME))
         elsif valid_stores.count == 1
           domain = valid_stores.first['shopDomain']
-          ctx.puts("Using Development Store {{green:#{domain}}}")
+          ctx.puts(ctx.message('node.forms.create.development_store', domain))
           domain
         else
           CLI::UI::Prompt.ask(
-            'Select a Development Store',
+            ctx.message('node.forms.create.development_store_select'),
             options: valid_stores.map { |s| s['shopDomain'] }
           )
         end

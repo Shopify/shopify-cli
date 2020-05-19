@@ -11,18 +11,11 @@ module Node
       end
 
       def self.help
-        <<~HELP
-          Deploy the current Node project to a hosting service. Heroku ({{underline:https://www.heroku.com}}) is currently the only option, but more will be added in the future.
-            Usage: {{command:#{ShopifyCli::TOOL_NAME} deploy [ heroku ]}}
-        HELP
+        ShopifyCli::Context.message('node.deploy.help', ShopifyCli::TOOL_NAME)
       end
 
       def self.extended_help
-        <<~HELP
-        {{bold:Subcommands:}}
-          {{cyan:heroku}}: Deploys the current Node project to Heroku.
-            Usage: {{command:#{ShopifyCli::TOOL_NAME} deploy heroku}}
-        HELP
+        ShopifyCli::Context.message('node.deploy.extended_help', ShopifyCli::TOOL_NAME)
       end
     end
   end

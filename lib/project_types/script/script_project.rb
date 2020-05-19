@@ -16,13 +16,13 @@ module Script
     private
 
     def lookup_config(key)
-      raise InvalidContextError, key unless config.key?(key)
+      raise Errors::InvalidContextError, key unless config.key?(key)
       config[key]
     end
 
     class << self
       def create(dir)
-        raise ScriptProjectAlreadyExistsError, dir if Dir.exist?(dir)
+        raise Errors::ScriptProjectAlreadyExistsError, dir if Dir.exist?(dir)
 
         FileUtils.mkdir_p(dir)
         Dir.chdir(dir)

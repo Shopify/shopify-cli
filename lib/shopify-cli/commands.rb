@@ -6,18 +6,25 @@ module ShopifyCli
       default: 'help',
       contextual_resolver: nil,
     )
+    @core_commands = []
 
-    def self.register(const, cmd, path = nil)
+    def self.register(const, cmd, path = nil, is_core = false)
       autoload(const, path) if path
       Registry.add(->() { const_get(const) }, cmd)
+      @core_commands.push(cmd) if is_core
     end
 
-    register :Connect, 'connect', 'shopify-cli/commands/connect'
-    register :Create, 'create', 'shopify-cli/commands/create'
-    register :Help, 'help', 'shopify-cli/commands/help'
-    register :LoadDev, 'load-dev', 'shopify-cli/commands/load_dev'
-    register :LoadSystem, 'load-system', 'shopify-cli/commands/load_system'
-    register :Logout, 'logout', 'shopify-cli/commands/logout'
-    register :Update, 'update', 'shopify-cli/commands/update'
+    def self.core_command?(cmd)
+      @core_commands.include?(cmd)
+    end
+
+    register :Connect, 'connect', 'shopify-cli/commands/connect', true
+    register :Create, 'create', 'shopify-cli/commands/create', true
+    register :Help, 'help', 'shopify-cli/commands/help', true
+    register :LoadDev, 'load-dev', 'shopify-cli/commands/load_dev', true
+    register :LoadSystem, 'load-system', 'shopify-cli/commands/load_system', true
+    register :Logout, 'logout', 'shopify-cli/commands/logout', true
+    register :System, 'system', 'shopify-cli/commands/system', true
+    register :Update, 'update', 'shopify-cli/commands/update', true
   end
 end

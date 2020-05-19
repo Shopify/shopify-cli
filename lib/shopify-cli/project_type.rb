@@ -54,11 +54,23 @@ module ShopifyCli
       end
 
       def register_command(const, cmd)
-        Commands::Registry.add(->() { const_get(const) }, cmd)
+        Context.new.abort(
+          Context.message('core.project_type.error.cannot_override_core', cmd, const)
+        ) if Commands.core_command?(cmd)
+        Commands.register(const, cmd)
       end
 
       def register_task(task, name)
         Task::Registry.add(const_get(task), name)
+      end
+
+      def register_messages(messages)
+        # Make sure we don't attempt to register a file more than once as that will fail
+        @registered_message_files ||= {}
+        return if @registered_message_files.key?(@project_type)
+        @registered_message_files[@project_type] = true
+
+        Context.load_messages(messages)
       end
     end
   end

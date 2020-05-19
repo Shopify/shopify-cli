@@ -9,10 +9,7 @@ module Node
       end
 
       def self.help
-        <<~HELP
-          Open your local development app in the default browser.
-            Usage: {{command:#{ShopifyCli::TOOL_NAME} open}}
-        HELP
+        ShopifyCli::Context.message('node.open.help', ShopifyCli::TOOL_NAME)
       end
     end
   end

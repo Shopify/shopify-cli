@@ -20,8 +20,7 @@ module Rails
         def message(data)
           ret = data['draftOrderCreate']['draftOrder']
           id = ShopifyCli::API.gid_to_id(ret['id'])
-          "DraftOrder added to {{green:#{ShopifyCli::Project.current.env.shop}}} "\
-          "at {{underline:#{admin_url}draft_orders/#{id}}}"
+          @ctx.message('rails.populate.draft_order.added', ShopifyCli::Project.current.env.shop, admin_url, id)
         end
       end
     end
