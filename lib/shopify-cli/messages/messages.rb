@@ -98,8 +98,8 @@ module ShopifyCli
 
           installing: "Installing dependencies with %s...",
           installed: "Dependencies installed",
-          installing_deps: "Installing %d dependencies...",
-          installed_deps: "%d dependencies installed",
+          npm_installing_deps: "Installing %d dependencies...",
+          npm_installed_deps: "%d npm dependencies installed",
         },
 
         logout: {
