@@ -16,7 +16,7 @@ module Script
       def test_ask_calls_form_ask_app_api_key_when_no_flag
         apps = [{ "apiKey" => 1234 }]
         Deploy.any_instance.expects(:ask_app_api_key).with(apps)
-        ShopifyCli::PartnersAPI::Organizations.stubs(:fetch_with_app).with(@context).returns([{ "apps" => apps }])
+        ShopifyCli::PartnersAPI::Organizations.expects(:fetch_with_app).with(@context).returns([{ "apps" => apps }])
         ask
       end
 

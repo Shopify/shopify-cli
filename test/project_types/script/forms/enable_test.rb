@@ -21,16 +21,8 @@ module Script
         end
       end
 
-      def test_organizations_fetch_once
-        UI::StrictSpinner.expects(:spin).with('Fetching organizations').yields(FakeSpinner.new).returns(true).once
-        ShopifyCli::PartnersAPI::Organizations.expects(:fetch_with_app).returns(true).once
-        form = Enable.new(@context, [], [])
-        2.times { form.send(:organizations) }
-      end
-
       def test_pick_singular_app
         stub_organization(apps: [{ "apiKey" => 1234 }])
-        ShopifyCli::PartnersAPI::Organizations.stubs(:fetch_apps).returns([{ "apiKey" => 1234 }])
         form = ask(api_key: nil)
         assert_equal 1234, form.api_key
       end
