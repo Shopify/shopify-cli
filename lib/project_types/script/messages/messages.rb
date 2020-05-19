@@ -79,7 +79,7 @@ module Script
             operation_failed: "Script not created.",
           },
 
-          changed_dir: "{{v}} Changed to project directory: {{green:%{folder}}}",
+          script_path: "{{v}} Project directory: {{green:%{folder}}}",
           script_created: "{{v}} Script created: {{green:%{script_id}}}",
           creating: "Creating script",
           created: "Created script",

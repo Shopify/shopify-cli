@@ -68,11 +68,3 @@ Log out of the currently authenticated partner organization and store. The `logo
 $ shopify logout
 ```
 
-## `update`
-
-Update the Shopify App CLI to the latest version.
-
-```console
-$ shopify update
-```
-
