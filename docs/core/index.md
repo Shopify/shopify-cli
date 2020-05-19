@@ -68,11 +68,3 @@ Log out of the currently authentiated organization and store. The `logout` comma
 $ shopify logout
 ```
 
-## `update`
-
-Update the Shopify App CLI to the latest version.
-
-```console
-$ shopify update
-```
-

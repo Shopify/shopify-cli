@@ -38,8 +38,6 @@ module Rails
           organization_id: form.organization_id,
         )
 
-        ShopifyCli::Core::Finalize.request_cd(form.name)
-
         api_client = ShopifyCli::Tasks::CreateApiClient.call(
           @ctx,
           org_id: form.organization_id,
@@ -58,7 +56,7 @@ module Rails
         partners_url = "https://partners.shopify.com/#{form.organization_id}/apps/#{api_client['id']}"
 
         @ctx.puts(@ctx.message('rails.create.info.created', form.title, partners_url))
-        @ctx.puts(@ctx.message('rails.create.info.serve', ShopifyCli::TOOL_NAME))
+        @ctx.puts(@ctx.message('rails.create.info.serve', form.name, ShopifyCli::TOOL_NAME))
         @ctx.puts(@ctx.message('rails.create.info.install', partners_url, form.title))
       end
 
