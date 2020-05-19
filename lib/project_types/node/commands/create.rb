@@ -19,7 +19,11 @@ module Node
         check_npm
         build(form.name)
 
-        ShopifyCli::Project.write(@ctx, 'node')
+        ShopifyCli::Project.write(
+          @ctx,
+          app_type: 'node',
+          organization_id: form.organization_id,
+        )
 
         api_client = ShopifyCli::Tasks::CreateApiClient.call(
           @ctx,

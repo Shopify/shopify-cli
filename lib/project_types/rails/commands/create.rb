@@ -28,7 +28,11 @@ module Rails
 
         build(form.name)
         set_custom_ua
-        ShopifyCli::Project.write(@ctx, 'rails')
+        ShopifyCli::Project.write(
+          @ctx,
+          app_type: 'rails',
+          organization_id: form.organization_id,
+        )
 
         ShopifyCli::Core::Finalize.request_cd(form.name)
 
