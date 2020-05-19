@@ -6,7 +6,7 @@ module ShopifyCli
   # if its `pid` and keeps a log file for it as well
   class ProcessSupervision
     # is the directory where the pid and logfile are kept
-    RUN_DIR = File.join(ShopifyCli::TEMP_DIR, 'sv')
+    RUN_DIR = File.join(ShopifyCli::CACHE_DIR, 'sv')
 
     # a string or a symbol to identify this process by
     attr_reader :identifier

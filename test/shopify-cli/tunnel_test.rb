@@ -8,7 +8,7 @@ module ShopifyCli
     end
 
     def test_auth_calls_ngrok_authtoken
-      @context.expects(:system).with("#{ShopifyCli::ROOT}/ngrok", 'authtoken', 'token')
+      @context.expects(:system).with("#{ShopifyCli::CACHE_DIR}/ngrok", 'authtoken', 'token')
       ShopifyCli::Tunnel.auth(@context, 'token')
     end
 
@@ -26,7 +26,7 @@ module ShopifyCli
         ShopifyCli::ProcessSupervision.stubs(:running?).returns(false)
         ShopifyCli::ProcessSupervision.expects(:start).with(
           :ngrok,
-          "exec #{File.join(ShopifyCli::ROOT, 'ngrok')} http -log=stdout -log-level=debug 8081"
+          "exec #{File.join(ShopifyCli::CACHE_DIR, 'ngrok')} http -log=stdout -log-level=debug 8081"
         ).returns(ShopifyCli::ProcessSupervision.new(:ngrok, pid: 40000))
         @context.expects(:puts).with(@context.message('core.tunnel.start', 'https://example.ngrok.io'))
         assert_equal 'https://example.ngrok.io', ShopifyCli::Tunnel.start(@context)
@@ -39,7 +39,7 @@ module ShopifyCli
         ShopifyCli::ProcessSupervision.stubs(:running?).returns(false)
         ShopifyCli::ProcessSupervision.expects(:start).with(
           :ngrok,
-          "exec #{File.join(ShopifyCli::ROOT, 'ngrok')} http -log=stdout -log-level=debug #{configured_port}"
+          "exec #{File.join(ShopifyCli::CACHE_DIR, 'ngrok')} http -log=stdout -log-level=debug #{configured_port}"
         ).returns(ShopifyCli::ProcessSupervision.new(:ngrok, pid: 40000))
         @context.expects(:puts).with(@context.message('core.tunnel.start', 'https://example.ngrok.io'))
         assert_equal 'https://example.ngrok.io', ShopifyCli::Tunnel.start(@context, port: configured_port)
@@ -51,7 +51,7 @@ module ShopifyCli
         ShopifyCli::ProcessSupervision.stubs(:running?).returns(false)
         ShopifyCli::ProcessSupervision.expects(:start).with(
           :ngrok,
-          "exec #{File.join(ShopifyCli::ROOT, 'ngrok')} http -log=stdout -log-level=debug 8081"
+          "exec #{File.join(ShopifyCli::CACHE_DIR, 'ngrok')} http -log=stdout -log-level=debug 8081"
         ).returns(ShopifyCli::ProcessSupervision.new(:ngrok, pid: 40000))
         @context.expects(:puts).with(
           @context.message('core.tunnel.start_with_account', 'https://example.ngrok.io', 'Tom Cruise')
@@ -65,7 +65,7 @@ module ShopifyCli
       with_log('ngrok_error') do
         ShopifyCli::ProcessSupervision.expects(:start).with(
           :ngrok,
-          "exec #{File.join(ShopifyCli::ROOT, 'ngrok')} http -log=stdout -log-level=debug 8081"
+          "exec #{File.join(ShopifyCli::CACHE_DIR, 'ngrok')} http -log=stdout -log-level=debug 8081"
         ).returns(ShopifyCli::ProcessSupervision.new(:ngrok, pid: 40000))
         assert_raises ShopifyCli::Tunnel::NgrokError do
           ShopifyCli::Tunnel.start(@context)

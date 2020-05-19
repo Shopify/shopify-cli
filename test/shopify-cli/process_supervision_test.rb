@@ -7,10 +7,10 @@ module ShopifyCli
       assert_equal(1234, process.pid)
       assert_equal('web', process.identifier)
       assert_equal(
-        File.join(ShopifyCli::TEMP_DIR, 'sv/web.pid'), process.pid_path
+        File.join(ShopifyCli::CACHE_DIR, 'sv/web.pid'), process.pid_path
       )
       assert_equal(
-        File.join(ShopifyCli::TEMP_DIR, 'sv/web.log'), process.log_path
+        File.join(ShopifyCli::CACHE_DIR, 'sv/web.log'), process.log_path
       )
     end
 
