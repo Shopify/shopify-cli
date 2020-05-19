@@ -23,6 +23,7 @@ end
 require 'cli/ui'
 require 'cli/kit'
 require 'smart_properties'
+require_relative 'shopify-cli/version'
 
 # Enable stdout routing. At this point all calls to STDOUT (and STDERR) will go through this class.
 # See https://github.com/Shopify/cli-ui/blob/master/lib/cli/ui/stdout_router.rb for more info
@@ -39,7 +40,6 @@ module ShopifyCli
 
   TOOL_NAME        = 'shopify'
   TOOL_FULL_NAME   = 'Shopify App CLI'
-  VERSION          = 'beta'
   ROOT             = File.expand_path('../..', __FILE__)
   INSTALL_DIR      = File.expand_path('.shopify-app-cli', ENV.fetch('XDG_RUNTIME_DIR', ENV.fetch('HOME')))
   PROJECT_TYPES_DIR = File.join(ROOT, 'lib', 'project_types')
