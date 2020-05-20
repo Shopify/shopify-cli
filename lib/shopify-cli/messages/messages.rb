@@ -287,6 +287,13 @@ module ShopifyCli
           updated: "done!",
           auto_update_prompt: "Would you like to enable auto updates for Shopify App CLI?",
         },
+
+        version: {
+          help: <<~HELP,
+          Prints version number.
+            Usage: {{command:%s version}}
+          HELP
+        },
       },
     }.freeze
   end
