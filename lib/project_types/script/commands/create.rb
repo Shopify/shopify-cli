@@ -30,8 +30,8 @@ module Script
       end
 
       def self.help
-        allowed_values = "{{cyan:discount}} and {{cyan:unit_limit_per_order}}"
-        ShopifyCli::Context.message('script.create.help', ShopifyCli::TOOL_NAME, allowed_values)
+        allowed_values = Script::Layers::Application::ExtensionPoints.types.map {|type| "{{cyan:#{type}}}"}
+        ShopifyCli::Context.message('script.create.help', ShopifyCli::TOOL_NAME, allowed_values.join(', '))
       end
     end
   end
