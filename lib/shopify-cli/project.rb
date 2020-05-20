@@ -87,6 +87,10 @@ module ShopifyCli
         ctx.write('.shopify-cli.yml', YAML.dump(content))
       end
 
+      def project_name
+        File.basename(current.directory)
+      end
+
       private
 
       def directory(dir)
