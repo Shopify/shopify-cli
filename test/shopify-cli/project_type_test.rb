@@ -18,11 +18,6 @@ module ShopifyCli
       assert(all_types.include?(Node::Project))
     end
 
-    def test_load_all_loads_shallow
-      assert(Rails::Project.project_load_shallow)
-      assert(Node::Project.project_load_shallow)
-    end
-
     def test_for_app_type_can_find_the_app_by_name
       assert_equal(ProjectType.for_app_type(:rails), Rails::Project)
       assert_equal(ProjectType.for_app_type(:node), Node::Project)
@@ -46,12 +41,8 @@ module ShopifyCli
 
     def test_register_command_does_not_call_if_shallow
       ShopifyCli::Commands.expects(:register).never
+      Rails::Project.project_load_shallow = true
       Rails::Project.register_command('Nonsense::Module::Help', 'help')
-    end
-
-    def test_register_task_does_not_call_if_shallow
-      ShopifyCli::Commands.expects(:register).never
-      Rails::Project.register_task('Nonsense::Task::Foo', 'too')
     end
   end
 end
