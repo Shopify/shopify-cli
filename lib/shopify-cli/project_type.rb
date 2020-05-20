@@ -18,7 +18,7 @@ module ShopifyCli
         klass.project_load_shallow = @shallow_load
       end
 
-      def load_type(current_type, shallow=false)
+      def load_type(current_type, shallow = false)
         filepath = File.join(ShopifyCli::ROOT, 'lib', 'project_types', current_type.to_s, 'cli.rb')
         return unless File.exist?(filepath)
         @shallow_load = shallow
