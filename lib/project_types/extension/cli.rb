@@ -3,7 +3,7 @@ module Extension
   class Project < ShopifyCli::ProjectType
     creator 'App Extension', 'Extension::Commands::Create'
 
-    register_command('Extension::Commands::Pack', "pack")
+    register_command('Extension::Commands::Build', "build")
     register_command('Extension::Commands::Register', "register")
     register_command('Extension::Commands::Push', "push")
     register_command('Extension::Commands::Serve', "serve")
@@ -12,7 +12,7 @@ module Extension
   module Commands
     autoload :Create, Project.project_filepath('commands/create')
     autoload :Register, Project.project_filepath('commands/register')
-    autoload :Pack, Project.project_filepath('commands/pack')
+    autoload :Build, Project.project_filepath('commands/build')
     autoload :Serve, Project.project_filepath('commands/serve')
     autoload :Push, Project.project_filepath('commands/push')
   end
