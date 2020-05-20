@@ -5,6 +5,7 @@ module Script
     module Infrastructure
       module Errors
         class AppNotInstalledError < ScriptProjectError; end
+        class AppScriptUndefinedError < ScriptProjectError; end
         class BuilderNotFoundError < ScriptProjectError; end
         class BuildError < ScriptProjectError; end
         class DependencyError < ScriptProjectError; end
@@ -29,6 +30,8 @@ module Script
           end
         end
         class ShopAuthenticationError < ScriptProjectError; end
+        class ShopScriptConflictError < ScriptProjectError; end
+        class ShopScriptUndefinedError < ScriptProjectError; end
         class TestError < ScriptProjectError; end
       end
     end

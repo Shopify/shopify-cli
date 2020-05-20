@@ -48,6 +48,18 @@ module Script
           organizations.find { |o| o['id'] == org_id }
         end
       end
+
+      def ask_shop_domain(organization, message: ctx.message('script.forms.script_form.ask_shop_domain_default'))
+        if organization['stores'].count == 0
+          raise Errors::NoExistingStoresError, organization['id']
+        elsif organization['stores'].count == 1
+          domain = organization['stores'].first['shopDomain']
+          ctx.message('script.forms.script_form.using_development_store', domain: domain)
+          domain
+        else
+          CLI::UI::Prompt.ask(message, options: organization["stores"].map { |s| s["shopDomain"] })
+        end
+      end
     end
   end
 end
