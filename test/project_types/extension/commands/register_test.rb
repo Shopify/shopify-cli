@@ -7,7 +7,7 @@ module Extension
     class RegisterTest < MiniTest::Test
       include TestHelpers::FakeUI
       include ExtensionTestHelpers::TempProjectSetup
-      include ExtensionTestHelpers::Content
+      include ExtensionTestHelpers::Messages
       include ExtensionTestHelpers::Stubs::GetOrganizations
 
       def setup
@@ -30,7 +30,7 @@ module Extension
 
         io = capture_io_and_assert_raises(ShopifyCli::Abort) { run_register_command }
 
-        confirm_content_output(io: io, expected_content: Content::Register::ALREADY_REGISTERED)
+        assert_message_output(io: io, expected_content: @context.message('register.already_registered'))
       end
 
       def test_does_not_run_create_if_user_does_not_confirm
@@ -38,13 +38,17 @@ module Extension
         Tasks::CreateExtension.any_instance.expects(:call).never
         ExtensionProject.expects(:write_env_file).never
 
-        CLI::UI::Prompt.expects(:confirm).with(Content::Register::CONFIRM_QUESTION % @app.title).returns(false).once
+        CLI::UI::Prompt
+          .expects(:confirm)
+          .with(@context.message('register.confirm_question', @app.title))
+          .returns(false)
+          .once
 
         io = capture_io_and_assert_raises(ShopifyCli::Abort) { run_register_command }
 
-        confirm_content_output(io: io, expected_content: [
-          Content::Register::CONFIRM_ABORT,
-          Content::Register::CONFIRM_INFO % @test_extension_type.name,
+        assert_message_output(io: io, expected_content: [
+          @context.message('register.confirm_abort'),
+          @context.message('register.confirm_info', @test_extension_type.name)
         ])
       end
 
@@ -61,7 +65,12 @@ module Extension
         )
         refute @project.registered?
 
-        CLI::UI::Prompt.expects(:confirm).with(Content::Register::CONFIRM_QUESTION % @app.title).returns(true).once
+        CLI::UI::Prompt
+          .expects(:confirm)
+          .with(@context.message('register.confirm_question', @app.title))
+          .returns(true)
+          .once
+
         Tasks::CreateExtension.any_instance.expects(:call).with(
           context: @context,
           api_key: @app.api_key,
@@ -81,11 +90,11 @@ module Extension
 
         io = capture_io { run_register_command }
 
-        confirm_content_output(io: io, expected_content: [
-          Content::Register::CONFIRM_INFO % @test_extension_type.name,
-          Content::Register::WAITING_TEXT,
-          Content::Register::SUCCESS % [@project.title, @app.title],
-          Content::Register::SUCCESS_INFO,
+        assert_message_output(io: io, expected_content: [
+          @context.message('register.confirm_info', @test_extension_type.name),
+          @context.message('register.waiting_text'),
+          @context.message('register.success', @project.title, @app.title),
+          @context.message('register.success_info'),
         ])
       end
 

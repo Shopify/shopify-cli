@@ -69,7 +69,7 @@ module Extension
             @argo.config(@context)
           end
 
-          assert error.message.include?(Content::Models::TYPES[:ARGO][:missing_file_error])
+          assert error.message.include?(@context.message('features.argo.missing_file_error'))
         end
 
         def test_config_aborts_with_error_if_script_serialization_fails
@@ -77,7 +77,7 @@ module Extension
           Base64.stubs(:strict_encode64).raises(IOError)
 
           error = assert_raises(ShopifyCli::Abort) { @argo.config(@context) }
-          assert error.message.include?(Content::Models::TYPES[:ARGO][:script_prepare_error])
+          assert error.message.include?(@context.message('features.argo.script_prepare_error'))
         end
 
         def test_config_aborts_with_error_if_file_read_fails
@@ -85,7 +85,7 @@ module Extension
           File.any_instance.stubs(:read).raises(IOError)
 
           error = assert_raises(ShopifyCli::Abort) { @argo.config(@context) }
-          assert error.message.include?(Content::Models::TYPES[:ARGO][:script_prepare_error])
+          assert error.message.include?(@context.message('features.argo.script_prepare_error'))
         end
 
         def test_config_encodes_script_into_context_if_it_exists

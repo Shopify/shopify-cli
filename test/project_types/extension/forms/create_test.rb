@@ -20,18 +20,18 @@ module Extension
       end
 
       def test_prompts_the_user_to_choose_a_name_if_no_name_was_provided
-        CLI::UI::Prompt.expects(:ask).with(Content::Create::ASK_NAME).times(3).returns('A name')
+        CLI::UI::Prompt.expects(:ask).with(@context.message('create.ask_name')).times(3).returns('A name')
         capture_io { ask(name: nil) }
         capture_io { ask(name: "") }
         capture_io { ask(name: " ") }
       end
 
       def test_reprompts_the_user_to_choose_a_name_until_valid_response_is_given
-        CLI::UI::Prompt.stubs(:ask).with(Content::Create::ASK_NAME)
+        CLI::UI::Prompt.stubs(:ask).with(@context.message('create.ask_name'))
           .returns(nil, nil)
           .then.returns('A name')
         ShopifyCli::Context.any_instance.expects(:puts).with(
-          Content::Create::INVALID_NAME % Models::Registration::MAX_TITLE_LENGTH
+          @context.message('create.invalid_name', Models::Registration::MAX_TITLE_LENGTH)
         ).times(2)
 
         capture_io do
@@ -41,7 +41,7 @@ module Extension
       end
 
       def test_strips_whitespace_from_beginning_and_end_of_name
-        CLI::UI::Prompt.expects(:ask).with(Content::Create::ASK_NAME).returns('  A name  ')
+        CLI::UI::Prompt.expects(:ask).with(@context.message('create.ask_name')).returns('  A name  ')
         capture_io do
           form = ask(name: nil)
           assert_equal form.name, 'A name'
@@ -69,12 +69,12 @@ module Extension
 
         io = capture_io { ask(type: 'unknown-type') }
 
-        assert_match(Content::Create::INVALID_TYPE, io.join)
-        assert_match(Content::Create::ASK_TYPE, io.join)
+        assert_match(@context.message('create.invalid_type'), io.join)
+        assert_match(@context.message('create.ask_type'), io.join)
       end
 
       def test_prompts_the_user_to_choose_a_type_if_no_type_was_provided
-        CLI::UI::Prompt.expects(:ask).with(Content::Create::ASK_TYPE)
+        CLI::UI::Prompt.expects(:ask).with(@context.message('create.ask_type'))
 
         capture_io do
           ask(type: nil)

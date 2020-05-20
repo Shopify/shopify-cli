@@ -44,7 +44,7 @@ module Extension
       def test_aborts_and_informs_the_user_when_serve_fails
         Serve.any_instance.stubs(:yarn_available?).returns(true)
         @context.expects(:system).with(*Serve::YARN_SERVE_COMMAND).returns(FakeProcessStatus.new(false))
-        @context.expects(:abort).with(Content::Serve::SERVE_FAILURE_MESSAGE)
+        @context.expects(:abort).with(@context.message('serve.serve_failure_message'))
 
         run_cmd('serve')
       end

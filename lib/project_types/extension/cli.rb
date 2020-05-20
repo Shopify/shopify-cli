@@ -1,4 +1,5 @@
 # frozen_string_literal: true
+
 module Extension
   class Project < ShopifyCli::ProjectType
     hidden_project_type
@@ -9,6 +10,11 @@ module Extension
     register_command('Extension::Commands::Push', "push")
     register_command('Extension::Commands::Serve', "serve")
     register_command('Extension::Commands::Tunnel', "tunnel")
+
+    require Project.project_filepath('messages/messages')
+    require Project.project_filepath('messages/message_loading')
+    require Project.project_filepath('extension_project_keys')
+    register_messages(Extension::Messages::MessageLoading.load)
   end
 
   module Commands
@@ -43,7 +49,7 @@ module Extension
     end
   end
 
-  autoload :JsDeps, Project.project_filepath('js_deps')
+  autoload :ExtensionProjectKeys, Project.project_filepath('extension_project_keys')
   autoload :ExtensionProject, Project.project_filepath('extension_project')
-  autoload :Content, Project.project_filepath('content')
+  autoload :JsDeps, Project.project_filepath('js_deps')
 end

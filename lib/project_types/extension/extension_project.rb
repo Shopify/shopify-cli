@@ -3,17 +3,13 @@ require 'shopify_cli'
 
 module Extension
   class ExtensionProject < ShopifyCli::Project
-    REGISTRATION_ID_KEY = 'EXTENSION_ID'
-    EXTENSION_TYPE_KEY = 'EXTENSION_TYPE'
-    TITLE_KEY = 'EXTENSION_TITLE'
-
     class << self
       def write_cli_file(context:, type:)
         ShopifyCli::Project.write(
           context,
           project_type: :extension,
           organization_id: nil,
-          "#{EXTENSION_TYPE_KEY}": type
+          "#{ExtensionProjectKeys::EXTENSION_TYPE_KEY}": type
         )
       end
 
@@ -22,8 +18,8 @@ module Extension
           api_key: api_key,
           secret: api_secret,
           extra: {
-            TITLE_KEY => title,
-            REGISTRATION_ID_KEY => registration_id,
+            ExtensionProjectKeys::TITLE_KEY => title,
+            ExtensionProjectKeys::REGISTRATION_ID_KEY => registration_id,
           }.compact
         ).write(context)
 
@@ -46,21 +42,21 @@ module Extension
     end
 
     def title
-      get_extra_field(TITLE_KEY)
+      get_extra_field(ExtensionProjectKeys::TITLE_KEY)
     end
 
     def extension_type
-      Models::Type.load_type(config[EXTENSION_TYPE_KEY])
+      @extension_type ||= Models::Type.load_type(config[ExtensionProjectKeys::EXTENSION_TYPE_KEY])
     end
 
     def registration_id?
-      extra_property_present?(REGISTRATION_ID_KEY) &&
-        is_integer?(get_extra_field(REGISTRATION_ID_KEY)) &&
+      extra_property_present?(ExtensionProjectKeys::REGISTRATION_ID_KEY) &&
+        is_integer?(get_extra_field(ExtensionProjectKeys::REGISTRATION_ID_KEY)) &&
         registration_id > 0
     end
 
     def registration_id
-      get_extra_field(REGISTRATION_ID_KEY).to_i
+      get_extra_field(ExtensionProjectKeys::REGISTRATION_ID_KEY).to_i
     end
 
     def reload

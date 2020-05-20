@@ -12,7 +12,7 @@ module Extension
         Commands::Register.new(@ctx).call(args, name) unless @project.registered?
         Commands::Build.new(@ctx).call(args, name)
 
-        CLI::UI::Frame.open(Content::Push::FRAME_TITLE) do
+        CLI::UI::Frame.open(@ctx.message('push.frame_title')) do
           updated_draft_version = update_draft
           show_confirmation_message(updated_draft_version.last_user_interaction_at)
         end
@@ -28,8 +28,8 @@ module Extension
       private
 
       def show_confirmation_message(confirmed_at)
-        @ctx.puts(Content::Push::SUCCESS_CONFIRMATION % [@project.title, format_time(confirmed_at)])
-        @ctx.puts(Content::Push::SUCCESS_INFO)
+        @ctx.puts(@ctx.message('push.success_confirmation', @project.title, format_time(confirmed_at)))
+        @ctx.puts(@ctx.message('push.success_info'))
       end
 
       def format_time(time)
@@ -37,7 +37,7 @@ module Extension
       end
 
       def with_waiting_text
-        @ctx.puts(Content::Push::WAITING_TEXT)
+        @ctx.puts(@ctx.message('push.waiting_text'))
         yield
       end
 

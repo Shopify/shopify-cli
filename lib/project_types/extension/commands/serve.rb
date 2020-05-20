@@ -8,8 +8,8 @@ module Extension
       NPM_SERVE_COMMAND = %w(npm run-script server)
 
       def call(args, command_name)
-        CLI::UI::Frame.open(Content::Serve::FRAME_TITLE) do
-          @ctx.abort(Content::Serve::SERVE_FAILURE_MESSAGE) unless serve.success?
+        CLI::UI::Frame.open(@ctx.message('serve.frame_title')) do
+          @ctx.abort(@ctx.message('serve.serve_failure_message')) unless serve.success?
         end
       end
 

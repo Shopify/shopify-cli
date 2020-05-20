@@ -7,7 +7,7 @@ module Extension
     class PushTest < MiniTest::Test
       include TestHelpers::FakeUI
       include ExtensionTestHelpers::TempProjectSetup
-      include ExtensionTestHelpers::Content
+      include ExtensionTestHelpers::Messages
 
       def setup
         super
@@ -76,13 +76,10 @@ module Extension
 
         io = capture_io { run_push }
 
-        confirm_content_output(io: io, expected_content: [
-          Content::Push::WAITING_TEXT,
-          Content::Push::SUCCESS_CONFIRMATION % [
-            @title,
-            'May 07, 2020 19:01:56 UTC'
-          ],
-          Content::Push::SUCCESS_INFO
+        assert_message_output(io: io, expected_content: [
+          @context.message('push.waiting_text'),
+          @context.message('push.success_confirmation', @title, 'May 07, 2020 19:01:56 UTC'),
+          @context.message('push.success_info')
         ])
       end
 
@@ -96,8 +93,8 @@ module Extension
 
         io = capture_io { run_push }
 
-        confirm_content_output(io: io, expected_content: [
-          Content::Push::SUCCESS_CONFIRMATION % [@title, expected_formatted_time_in_utc]
+        assert_message_output(io: io, expected_content: [
+          @context.message('push.success_confirmation', @title, expected_formatted_time_in_utc)
         ])
       end
 

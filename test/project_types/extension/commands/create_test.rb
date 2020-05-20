@@ -7,12 +7,12 @@ module Extension
     class CreateTest < MiniTest::Test
       include TestHelpers::FakeUI
       include ExtensionTestHelpers::TestExtensionSetup
-      include ExtensionTestHelpers::Content
+      include ExtensionTestHelpers::Messages
       include ExtensionTestHelpers::Stubs::GetOrganizations
 
       def test_prints_help
         io = capture_io { run_cmd('create extension --help') }
-        confirm_content_output(io: io, expected_content: [Extension::Commands::Create.help])
+        assert_message_output(io: io, expected_content: [Extension::Commands::Create.help])
       end
 
       def test_runs_type_create_and_writes_project_files
@@ -29,9 +29,9 @@ module Extension
           Commands::Create.call(arguments, 'create', 'create')
         end
 
-        confirm_content_output(io: io, expected_content: [
-          Content::Create::READY_TO_START % [name, directory_name],
-          Content::Create::LEARN_MORE % @test_extension_type.name
+        assert_message_output(io: io, expected_content: [
+          @context.message('create.ready_to_start', name, directory_name),
+          @context.message('create.learn_more', @test_extension_type.name)
         ])
       end
 

@@ -20,10 +20,10 @@ module Extension
 
         if !api_key.nil?
           found_app = apps.find { |app| app.api_key == api_key }
-          ctx.abort(Content::Register::INVALID_API_KEY % api_key) if found_app.nil?
+          ctx.abort(ctx.message('register.invalid_api_key',api_key)) if found_app.nil?
           found_app
         else
-          CLI::UI::Prompt.ask(Content::Register::ASK_APP) do |handler|
+          CLI::UI::Prompt.ask(ctx.message('register.ask_app')) do |handler|
             apps.each do |app|
               handler.option("#{app.title} by #{app.business_name}") { app }
             end
@@ -32,15 +32,15 @@ module Extension
       end
 
       def load_apps
-        ctx.puts(Content::Register::LOADING_APPS)
+        ctx.puts(@ctx.message('register.loading_apps'))
         apps = Tasks::GetApps.call(context: ctx)
 
         apps.empty? ? abort_no_apps : apps
       end
 
       def abort_no_apps
-        ctx.puts(Content::Register::NO_APPS)
-        ctx.puts(Content::Register::LEARN_ABOUT_APPS)
+        ctx.puts(@ctx.message('register.no_apps'))
+        ctx.puts(@ctx.message('register.learn_about_apps'))
         raise ShopifyCli::AbortSilent
       end
     end

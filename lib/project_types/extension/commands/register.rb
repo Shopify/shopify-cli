@@ -10,17 +10,17 @@ module Extension
       def call(args, command_name)
         @project = ExtensionProject.current
 
-        CLI::UI::Frame.open(Content::Register::FRAME_TITLE) do
-          @ctx.abort(Content::Register::ALREADY_REGISTERED) if @project.registered?
+        CLI::UI::Frame.open(@ctx.message('register.frame_title')) do
+          @ctx.abort(@ctx.message('register.already_registered')) if @project.registered?
 
           with_register_form(args) do |form|
             should_continue = confirm_registration(form.app)
-            registration = should_continue ? register_extension(form.app) : @ctx.abort(Content::Register::CONFIRM_ABORT)
+            registration = should_continue ? register_extension(form.app) : @ctx.abort(@ctx.message('register.confirm_abort'))
 
             update_project_files(form.app, registration)
 
-            @ctx.puts(Content::Register::SUCCESS % [@project.title, form.app.title])
-            @ctx.puts(Content::Register::SUCCESS_INFO)
+            @ctx.puts(@ctx.message('register.success', @project.title, form.app.title))
+            @ctx.puts(@ctx.message('register.success_info'))
           end
         end
       end
@@ -44,12 +44,12 @@ module Extension
       end
 
       def confirm_registration(app)
-        @ctx.puts(Content::Register::CONFIRM_INFO % @project.extension_type.name)
-        CLI::UI::Prompt.confirm(Content::Register::CONFIRM_QUESTION % app.title)
+        @ctx.puts(@ctx.message('register.confirm_info', @project.extension_type.name))
+        CLI::UI::Prompt.confirm(@ctx.message('register.confirm_question', app.title))
       end
 
       def register_extension(app)
-        @ctx.puts(Content::Register::WAITING_TEXT)
+        @ctx.puts(@ctx.message('register.waiting_text'))
 
         Tasks::CreateExtension.call(
           context: @ctx,

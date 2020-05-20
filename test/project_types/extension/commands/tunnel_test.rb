@@ -6,7 +6,7 @@ module Extension
   module Commands
     class TunnelTest < MiniTest::Test
       include TestHelpers::FakeUI
-      include ExtensionTestHelpers::Content
+      include ExtensionTestHelpers::Messages
 
       def setup
         super
@@ -21,8 +21,8 @@ module Extension
       def test_auth_errors_if_no_token_is_provided
         io = capture_io { run_tunnel(Tunnel::AUTH_SUBCOMMAND) }
 
-        confirm_content_output(io: io, expected_content: [
-          Content::Tunnel::MISSING_TOKEN,
+        assert_message_output(io: io, expected_content: [
+          @context.message('tunnel.missing_token'),
           Tunnel::help,
           Tunnel::extended_help
         ])
@@ -56,8 +56,8 @@ module Extension
           run_tunnel(Tunnel::START_SUBCOMMAND, "--port=#{invalid_port}")
         end
 
-        confirm_content_output(io: io, expected_content: [
-          Content::Tunnel::INVALID_PORT % invalid_port
+        assert_message_output(io: io, expected_content: [
+          @context.message('tunnel.invalid_port', invalid_port)
         ])
       end
 

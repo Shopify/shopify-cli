@@ -2,8 +2,8 @@
 
 module Extension
   module ExtensionTestHelpers
-    module Content
-      def confirm_content_output(io:, expected_content:)
+    module Messages
+      def assert_message_output(io:, expected_content:)
         all_output = io.join
 
         Array(expected_content).each do |expected|

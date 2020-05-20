@@ -20,16 +20,16 @@ module Extension
         ask_with_reprompt(
           initial_value: self.name,
           break_condition: -> (current_name) { Models::Registration.valid_title?(current_name) },
-          prompt_message: Content::Create::ASK_NAME,
-          reprompt_message: Content::Create::INVALID_NAME % Models::Registration::MAX_TITLE_LENGTH
+          prompt_message: ctx.message('create.ask_name'),
+          reprompt_message: ctx.message('create.invalid_name', Models::Registration::MAX_TITLE_LENGTH)
         )
       end
 
       def ask_type
         return Models::Type.load_type(type) if Models::Type.valid?(type)
-        ctx.puts(Content::Create::INVALID_TYPE) unless type.nil?
+        ctx.puts(ctx.message('create.invalid_type')) unless type.nil?
 
-        CLI::UI::Prompt.ask(Content::Create::ASK_TYPE) do |handler|
+        CLI::UI::Prompt.ask(ctx.message('create.ask_type')) do |handler|
           Models::Type.repository.values.each do |type|
             handler.option("#{type.name} #{type.tagline}") { type }
           end

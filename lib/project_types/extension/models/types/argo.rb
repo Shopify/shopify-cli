@@ -38,14 +38,14 @@ module Extension
 
         def config(context)
           filepath = File.join(context.root, SCRIPT_PATH)
-          context.abort(Content::Models::TYPES[:ARGO][:missing_file_error]) unless File.exists?(filepath)
+          context.abort(context.message('features.argo.missing_file_error')) unless File.exists?(filepath)
 
           begin
             {
               serialized_script: Base64.strict_encode64(File.open(filepath).read.chomp)
             }
           rescue Exception
-            context.abort(Content::Models::TYPES[:ARGO][:script_prepare_error])
+            context.abort(context.message('features.argo.script_prepare_error'))
           end
         end
 
@@ -60,7 +60,7 @@ module Extension
           initialize_command = JsDeps.new(ctx: context).yarn? ? YARN_INITIALIZE_COMMAND : NPM_INITIALIZE_COMMAND
           initialize_command = initialize_command + [INITIALIZE_TYPE_PARAMETER % identifier]
 
-          CLI::UI::Frame.open(Content::Create::SETUP_PROJECT_FRAME_TITLE) do
+          CLI::UI::Frame.open(context.message('create.setup_project_frame_title')) do
             context.system(*initialize_command, chdir: context.root)
           end
         end
@@ -77,4 +77,3 @@ module Extension
     end
   end
 end
-

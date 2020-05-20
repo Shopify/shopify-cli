@@ -15,8 +15,8 @@ module Extension
           ExtensionProject.write_cli_file(context: @ctx, type: form.type.identifier)
           ExtensionProject.write_env_file(context: @ctx, title: form.name)
 
-          @ctx.puts(Content::Create::READY_TO_START % [form.name, form.directory_name])
-          @ctx.puts(Content::Create::LEARN_MORE % form.type.name)
+          @ctx.puts(@ctx.message('create.ready_to_start', form.name, form.directory_name))
+          @ctx.puts(@ctx.message('create.learn_more', form.type.name))
         end
       end
 

@@ -52,7 +52,7 @@ module Extension
         return DEFAULT_PORT unless options.flags.key?(:port)
 
         port = options.flags[:port].to_i
-        @ctx.abort(Content::Tunnel::INVALID_PORT % options.flags[:port]) unless port > 0
+        @ctx.abort(@ctx.message('tunnel.invalid_port', options.flags[:port])) unless port > 0
         port
       end
 
@@ -60,7 +60,7 @@ module Extension
         token = args.shift
 
         if token.nil?
-          @ctx.puts(Content::Tunnel::MISSING_TOKEN)
+          @ctx.puts(@ctx.message('tunnel.missing_token'))
           @ctx.puts("#{self.class.help}\n#{self.class.extended_help}")
         else
           ShopifyCli::Tunnel.auth(@ctx, token)

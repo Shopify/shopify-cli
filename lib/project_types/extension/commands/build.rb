@@ -11,7 +11,7 @@ module Extension
 
       def call(args, command_name)
         CLI::UI::Frame.open(frame_title) do
-          @ctx.abort(Content::Build::BUILD_FAILURE_MESSAGE) unless build.success?
+          @ctx.abort(@ctx.message('build.build_failure_message')) unless build.success?
         end
       end
 
@@ -25,7 +25,7 @@ module Extension
       private
 
       def frame_title
-        Content::Build::FRAME_TITLE % (yarn_available? ? 'yarn' : 'npm')
+        @ctx.message('build.frame_title', (yarn_available? ? 'yarn' : 'npm'))
       end
 
       def yarn_available?

@@ -7,7 +7,7 @@ module Extension
     class RegisterTest < MiniTest::Test
       include TestHelpers::FakeUI
       include ExtensionTestHelpers::TestExtensionSetup
-      include ExtensionTestHelpers::Content
+      include ExtensionTestHelpers::Messages
 
       def setup
         super
@@ -23,9 +23,9 @@ module Extension
           assert_raises(ShopifyCli::AbortSilent) { ask }
         end
 
-        confirm_content_output(io: io, expected_content: [
-          Content::Register::NO_APPS,
-          Content::Register::LEARN_ABOUT_APPS
+        assert_message_output(io: io, expected_content: [
+          @context.message('register.no_apps'),
+          @context.message('register.learn_about_apps')
         ])
       end
 
@@ -35,7 +35,7 @@ module Extension
       end
 
       def test_prompts_the_user_to_choose_an_app_to_associate_with_extension_if_no_app_is_provided
-        CLI::UI::Prompt.expects(:ask).with(Content::Register::ASK_APP)
+        CLI::UI::Prompt.expects(:ask).with(@context.message('register.ask_app'))
 
         capture_io do
           ask(api_key: nil)
@@ -47,7 +47,7 @@ module Extension
 
         io = capture_io { ask(api_key: api_key) }
 
-        assert_match(Content::Register::INVALID_API_KEY % api_key, io.join)
+        assert_match(@context.message('register.invalid_api_key', api_key), io.join)
       end
 
       private

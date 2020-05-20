@@ -38,11 +38,11 @@ module Extension
       end
 
       def name
-        get_content(:name)
+        message('name')
       end
 
       def tagline
-        get_content(:tagline) || ""
+        message('tagline') || ""
       end
 
       def config(_context)
@@ -61,8 +61,15 @@ module Extension
         []
       end
 
-      def get_content(key)
-        Content::Models::TYPES.dig(identifier, key)
+      private
+
+      def message(key, *params)
+        return unless messages.has_key?(key.to_sym)
+        messages[key.to_sym] % params
+      end
+
+      def messages
+        @messages ||= Messages::TYPES[identifier.downcase.to_sym] || {}
       end
     end
   end
