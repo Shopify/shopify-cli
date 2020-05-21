@@ -11,14 +11,14 @@ module Node
           CLI::UI::Prompt.expects(:ask).returns('recurring-billing')
           @context.expects(:system).with('recurring-billing')
             .returns(mock(success?: true))
-          run_cmd('generate billing')
+          Node::Commands::Generate::Billing.new(@context).call([], '')
         end
 
         def test_one_time_billing
           CLI::UI::Prompt.expects(:ask).returns('one-time-billing')
           @context.expects(:system).with('one-time-billing')
             .returns(mock(success?: true))
-          run_cmd('generate billing')
+          Node::Commands::Generate::Billing.new(@context).call([], '')
         end
       end
     end

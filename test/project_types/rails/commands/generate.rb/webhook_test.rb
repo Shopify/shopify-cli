@@ -11,21 +11,21 @@ module Rails
         def test_with_existing_param
           @context.expects(:system).with('rails g shopify_app:add_webhook -t app/uninstalled -a https://example.com/webhooks/app/uninstalled')
             .returns(mock(success?: true))
-          run_cmd('generate webhook APP_UNINSTALLED')
+          Rails::Commands::Generate::Webhook.new(@context).call(['APP_UNINSTALLED'], '')
         end
 
         def test_with_incorrect_param_expects_ask
           CLI::UI::Prompt.expects(:ask).returns('APP_UNINSTALLED')
           @context.expects(:system).with('rails g shopify_app:add_webhook -t app/uninstalled -a https://example.com/webhooks/app/uninstalled')
             .returns(mock(success?: true))
-          run_cmd('generate webhook create_webhook_fake')
+          Rails::Commands::Generate::Webhook.new(@context).call(['create_webhook_fake'], '')
         end
 
         def test_with_selection
           CLI::UI::Prompt.expects(:ask).returns('PRODUCT_CREATE')
           @context.expects(:system).with('rails g shopify_app:add_webhook -t product/create -a https://example.com/webhooks/product/create')
             .returns(mock(success?: true))
-          run_cmd('generate webhook')
+          Rails::Commands::Generate::Webhook.new(@context).call([], '')
         end
       end
     end

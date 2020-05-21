@@ -6,12 +6,7 @@ module Rails
     class GenerateTest < MiniTest::Test
       def test_without_arguments_calls_help
         @context.expects(:puts).with(Rails::Commands::Generate.help)
-        run_cmd('generate')
-      end
-
-      def test_help_argument_calls_extended_help
-        @context.expects(:puts).with(Rails::Commands::Generate.help + "\n" + Rails::Commands::Generate.extended_help)
-        run_cmd('help generate')
+        Rails::Commands::Generate.new(@context).call
       end
 
       def test_run_generate_raises_abort_when_not_successful
