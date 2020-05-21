@@ -44,9 +44,9 @@ module ShopifyCli
       cmd << '--silent' unless verbose
 
       success = CLI::Kit::System.system(*cmd, chdir: ctx.root) do |out, err|
-        puts out
+        ctx.puts out
         err.lines.each do |e|
-          puts e
+          ctx.puts e
         end
       end.success?
       return false unless success
