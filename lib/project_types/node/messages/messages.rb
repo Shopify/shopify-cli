@@ -8,18 +8,6 @@ module Node
           generic: "Error",
         },
 
-        js_deps: {
-          error: {
-            missing_package: "expected to have a file at: %s",
-            invalid_package: "{{info:%s}} was not valid JSON. Fix this then try again",
-          },
-
-          installing: "Installing dependencies with %s...",
-          installed: "Dependencies installed",
-          npm_installing_deps: "Installing %d dependencies...",
-          npm_installed_deps: "%d npm dependencies installed",
-        },
-
         create: {
           help: <<~HELP,
           {{command:%s create node}}: Creates an embedded nodejs app.
