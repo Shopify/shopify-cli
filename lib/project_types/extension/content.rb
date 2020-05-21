@@ -41,26 +41,6 @@ module Extension
       SUCCESS_INFO = '{{*}} Run {{command: shopify push}} to push your extension to Shopify.'
     end
 
-    module Register
-      FRAME_TITLE = 'Registering Extension'
-      WAITING_TEXT = 'Registering with Shopify...'
-
-      ALREADY_REGISTERED = 'Extension is already registered.'
-
-      LOADING_APPS = 'Loading your apps...'
-      ASK_APP = 'Which app would you like to associate with the extension?'
-      NO_APPS = '{{x}} You don’t have any apps.'
-      LEARN_ABOUT_APPS = '{{*}} Learn more about building apps at <https://shopify.dev/concepts/apps>, or try creating a new app using {{command: shopify create app.}}'
-      INVALID_API_KEY = 'The API key %s does not match any of your apps.'
-
-      CONFIRM_INFO = 'You can only create one %s extension per app, which can’t be undone.'
-      CONFIRM_QUESTION = 'Would you like to connect this extension? (y/n)'
-      CONFIRM_ABORT = 'Extension was not created.'
-
-      SUCCESS = '{{v}} Connected %s.'
-      SUCCESS_INFO = '{{*}} Run {{command: shopify push}} to push your extension to Shopify.'
-    end
-
     module Push
       FRAME_TITLE = 'Pushing your extension to Shopify'
       WAITING_TEXT = 'Pushing to Shopify...'
