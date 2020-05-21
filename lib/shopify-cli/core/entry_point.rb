@@ -4,7 +4,7 @@ module ShopifyCli
   module Core
     module EntryPoint
       class << self
-        SKIP_UPDATE = %w(update help for-completion load-dev load-system open)
+        SKIP_UPDATE = %w(update help for-completion open)
 
         def call(args, ctx = Context.new)
           ProjectType.load_type(Project.current_project_type)
@@ -18,8 +18,6 @@ module ShopifyCli
           ShopifyCli::Core::Monorail.log(command_name, args) do
             executor.call(command, command_name, args)
           end
-        ensure
-          ShopifyCli::Core::Finalize.deliver!
         end
 
         def before_resolve(args)

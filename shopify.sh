@@ -77,13 +77,6 @@ __shopify_cli__() {
   local bin_path
   bin_path="${__shopify_cli_source_dir}/bin/shopify"
 
-  local tmpfile
-  tmpfile="$(\mktemp -u)" # Create a new tempfile
-
-  exec 9>"${tmpfile}" # Open the tempfile for writing on FD 9.
-  exec 8<"${tmpfile}" # Open the tempfile for reading on FD 8.
-  \rm -f "${tmpfile}" # Unlink the tempfile. (we've already opened it).
-
   local return_from_shopify_cli
   local with_gems
   local install_dir="$HOME/.shopify-cli"
@@ -106,37 +99,6 @@ __shopify_cli__() {
     "${bin_path}" "$@"
   fi
   return_from_shopify_cli=$?
-
-  local finalizers
-  finalizers=()
-
-  local fin
-  while \read -r fin; do
-    finalizers+=("${fin}")
-  done <&8
-
-  exec 8<&- # close FD 8.
-  exec 9<&- # close FD 9.
-
-  for fin in "${finalizers[@]}"; do
-    case "${fin}" in
-      cd:*)
-        # shellcheck disable=SC2164
-        cd "${fin//cd:/}"
-        ;;
-      setenv:*)
-        # shellcheck disable=SC2163
-        export "${fin//setenv:/}"
-        ;;
-      reload_shopify_cli_from:*)
-        # Force chruby to re-scan next time it runs.
-        unset -f chruby 2>/dev/null
-        source "${fin//reload_shopify_cli_from:/}/shopify.sh"
-        ;;
-      *)
-        ;;
-    esac
-  done
 
   \return ${return_from_shopify_cli}
 }

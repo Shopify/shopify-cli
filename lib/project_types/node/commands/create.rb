@@ -43,7 +43,7 @@ module Node
         partners_url = "https://partners.shopify.com/#{form.organization_id}/apps/#{api_client['id']}"
 
         @ctx.puts(@ctx.message('node.create.info.created', form.title, partners_url))
-        @ctx.puts(@ctx.message('node.create.info.serve', ShopifyCli::TOOL_NAME))
+        @ctx.puts(@ctx.message('node.create.info.serve', form.name, ShopifyCli::TOOL_NAME))
         @ctx.puts(@ctx.message('node.create.info.install', partners_url, form.title))
       end
 
@@ -94,7 +94,6 @@ module Node
 
       def build(name)
         ShopifyCli::Git.clone('https://github.com/Shopify/shopify-app-node.git', name)
-        ShopifyCli::Core::Finalize.request_cd(name)
 
         @ctx.root = File.join(@ctx.root, name)
 
