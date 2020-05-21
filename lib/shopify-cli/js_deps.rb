@@ -2,7 +2,7 @@ require 'shopify_cli'
 
 module ShopifyCli
   ##
-  # ShopifyCli::JsDeps ensures that all Javascript dependencies are installed for projects.
+  # ShopifyCli::JsDeps ensures that all JavaScript dependencies are installed for projects.
   #
   class JsDeps
     include SmartProperties
@@ -17,14 +17,14 @@ module ShopifyCli
     end
 
     ##
-    # Installs all of a project's Javascript dependencies using Yarn or NPM, based on the project's settings.
+    # Installs all of a project's JavaScript dependencies using Yarn or NPM, based on the project's settings.
     #
     # #### Parameters
     # - `verbose`: whether to run the installation tools in silent mode.
     #
     # #### Example
     #
-    #   ShopifyCli::JsDeps.new(ShopifyCli::Context context).install()
+    #   ShopifyCli::JsDeps.new(ShopifyCli::Context context).install
     #
     def install(verbose = false)
       CLI::UI::Frame.open(ctx.message('node.js_deps.installing', yarn? ? 'yarn' : 'npm')) do
