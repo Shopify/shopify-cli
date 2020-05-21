@@ -84,28 +84,6 @@ module ShopifyCli
           },
         },
 
-        load_dev: {
-          help: <<~HELP,
-          Load a development instance of Shopify App CLI from the given path. This command is intended for development work on the CLI itself.
-            Usage: {{command:%s load-dev `/absolute/path/to/cli/instance`}}
-          HELP
-
-          error: {
-            project_dir_not_found: "{{x}} %s does not exist",
-          },
-
-          reloading: "Reloading %s from %s",
-        },
-
-        load_system: {
-          help: <<~HELP,
-          Reload the installed instance of Shopify App CLI. This command is intended for development work on the CLI itself.
-            Usage: {{command:%s load-system}}
-          HELP
-
-          reloading: "Reloading %s from %s",
-        },
-
         logout: {
           help: <<~HELP,
           Log out of a currently authenticated Organization and Shop, or clear invalid credentials
@@ -266,8 +244,7 @@ module ShopifyCli
           HELP
 
           error: {
-            development_version:
-              "Development version of {{command:%1$s}} in use. Run {{command:%1$s load-system}} first.",
+            development_version: "Development version of {{command:%1$s}} in use.",
             git_head_locked: <<~MESSAGE,
             failed!
             It looks like another git operation is in progress on {{blue:%1$s}}.
