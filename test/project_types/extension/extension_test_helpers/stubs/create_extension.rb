@@ -23,13 +23,18 @@ module Extension
         end
 
         def stub_create_extension_success(**args)
+          registration_id = rand(9999)
           stub_create_extension(args) do |title, type|
             {
               extensionCreate: {
                 extensionRegistration: {
-                  id: rand(9999),
+                  id: registration_id,
                   type: type,
-                  title: title
+                  title: title,
+                  draftVersion: {
+                    registrationId: registration_id,
+                    lastUserInteractionAt: Time.now.utc.to_s
+                  }
                 },
                 userErrors: []
               },

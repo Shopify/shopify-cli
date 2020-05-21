@@ -4,6 +4,10 @@ mutation ExtensionCreate($api_key: String!, $type: ExtensionType!, $title: Strin
       id
       type
       title
+      draftVersion {
+        registrationId
+        lastUserInteractionAt
+      }
     }
     userErrors {
       field

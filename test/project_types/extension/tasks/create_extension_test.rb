@@ -42,8 +42,9 @@ module Extension
         )
 
         assert_kind_of Models::Registration, created_registration
-        assert_equal created_registration.type, @fake_type
-        assert_equal created_registration.title, @fake_title
+        assert_equal @fake_type, created_registration.type
+        assert_equal @fake_title, created_registration.title
+        assert_kind_of Time, created_registration.draft_version.last_user_interaction_at
       end
 
       def test_aborts_with_parse_error_if_no_created_registration_or_errors_are_returned

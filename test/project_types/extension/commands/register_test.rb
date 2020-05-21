@@ -49,7 +49,16 @@ module Extension
       end
 
       def test_creates_the_extension_if_user_confirms
-        registration = Models::Registration.new(id: 55, type: @test_extension_type.identifier, title: @project.title)
+        registration = Models::Registration.new(
+          id: 55,
+          type: @test_extension_type.identifier,
+          title: @project.title,
+          draft_version: Models::Version.new(
+            registration_id: 55,
+            last_user_interaction_at: Time.now.utc,
+          )
+
+        )
         refute @project.registered?
 
         CLI::UI::Prompt.expects(:confirm).with(Content::Register::CONFIRM_QUESTION).returns(true).once

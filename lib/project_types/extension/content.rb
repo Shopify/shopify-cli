@@ -45,7 +45,7 @@ module Extension
       FRAME_TITLE = 'Pushing your extension to Shopify'
       WAITING_TEXT = 'Pushing to Shopify...'
 
-      SUCCESS_CONFIRMATION = '{{v}} %s has been pushed to a draft.'
+      SUCCESS_CONFIRMATION = '{{v}} Pushed %s to a draft at %s.'
       SUCCESS_INFO = '{{*}} Visit the Partner\'s Dashboard to create and publish versions.'
     end
 

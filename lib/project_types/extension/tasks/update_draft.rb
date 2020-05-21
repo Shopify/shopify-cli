@@ -7,10 +7,14 @@ module Extension
       include UserErrors
 
       GRAPHQL_FILE = 'extension_update_draft'
+
       REGISTRATION_ID_FIELD = 'registrationId'
       CONTEXT_FIELD = 'context'
+      LAST_USER_INTERACTION_AT_FIELD = 'lastUserInteractionAt'
+
       RESPONSE_FIELD = %w(data extensionUpdateDraft)
       VERSION_FIELD = 'extensionVersion'
+
       PARSE_ERROR = 'Unable to parse response from Partners Dashboard.'
 
       def call(context:, api_key:, registration_id:, config:, extension_context:)
@@ -36,7 +40,8 @@ module Extension
 
         Models::Version.new(
           registration_id: version_hash[REGISTRATION_ID_FIELD].to_i,
-          context: version_hash[CONTEXT_FIELD]
+          context: version_hash[CONTEXT_FIELD],
+          last_user_interaction_at: Time.parse(version_hash[LAST_USER_INTERACTION_AT_FIELD])
         )
       end
     end

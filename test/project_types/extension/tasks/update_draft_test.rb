@@ -39,6 +39,7 @@ module Extension
         assert_kind_of Models::Version, updated_draft
         assert_equal @registration_id, updated_draft.registration_id
         assert_equal @extension_context, updated_draft.context
+        assert_kind_of Time, updated_draft.last_user_interaction_at
       end
 
       def test_aborts_with_parse_error_if_no_updated_version_or_errors_are_returned

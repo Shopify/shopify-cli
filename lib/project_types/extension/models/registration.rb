@@ -9,6 +9,7 @@ module Extension
       property! :id, accepts: Integer
       property! :type, accepts: String
       property! :title, accepts: String
+      property! :draft_version, accepts: Extension::Models::Version
 
       def self.valid_title?(title)
         !title.nil? && !title.strip.empty? && title.length <= MAX_TITLE_LENGTH

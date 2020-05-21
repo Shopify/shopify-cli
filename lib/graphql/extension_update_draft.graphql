@@ -3,6 +3,7 @@ mutation ExtensionUpdateDraft($api_key: String!, $registration_id: ID!, $config:
     extensionVersion {
       registrationId
       context
+      lastUserInteractionAt
     }
     userErrors {
       field

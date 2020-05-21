@@ -26,7 +26,8 @@ module Extension
               extensionUpdateDraft: {
                 extensionVersion: {
                   registrationId: registration_id,
-                  context: extension_context
+                  context: extension_context,
+                  lastUserInteractionAt: Time.now.utc.to_s
                 },
                 Tasks::UserErrors::USER_ERRORS_FIELD => []
               }
