@@ -84,6 +84,18 @@ module ShopifyCli
           },
         },
 
+        js_deps: {
+          error: {
+            missing_package: "expected to have a file at: %s",
+            invalid_package: "{{info:%s}} was not valid JSON. Fix this then try again",
+          },
+
+          installing: "Installing dependencies with %s...",
+          installed: "Dependencies installed",
+          npm_installing_deps: "Installing %d dependencies...",
+          npm_installed_deps: "%d npm dependencies installed",
+        },
+
         load_dev: {
           help: <<~HELP,
           Load a development instance of Shopify App CLI from the given path. This command is intended for development work on the CLI itself.

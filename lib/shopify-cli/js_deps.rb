@@ -27,10 +27,10 @@ module ShopifyCli
     #   ShopifyCli::JsDeps.new(ShopifyCli::Context context).install
     #
     def install(verbose = false)
-      CLI::UI::Frame.open(ctx.message('node.js_deps.installing', yarn? ? 'yarn' : 'npm')) do
+      CLI::UI::Frame.open(ctx.message('core.js_deps.installing', yarn? ? 'yarn' : 'npm')) do
         yarn? ? yarn(verbose) : npm(verbose)
       end
-      ctx.done(ctx.message('node.js_deps.installed'))
+      ctx.done(ctx.message('core.js_deps.installed'))
     end
 
     private
@@ -61,19 +61,19 @@ module ShopifyCli
       pkg = begin
               JSON.parse(File.read(package_json))
             rescue Errno::ENOENT, Errno::ENOTDIR
-              ctx.abort(ctx.message('node.js_deps.error.missing_package', package_json))
+              ctx.abort(ctx.message('core.js_deps.error.missing_package', package_json))
             end
 
       deps = %w(dependencies devDependencies).map do |key|
         pkg.fetch(key, []).keys
       end.flatten
-      CLI::UI::Spinner.spin(ctx.message('node.js_deps.npm_installing_deps', deps.size)) do |spinner|
+      CLI::UI::Spinner.spin(ctx.message('core.js_deps.npm_installing_deps', deps.size)) do |spinner|
         ctx.system(*cmd, chdir: ctx.root)
-        spinner.update_title(ctx.message('node.js_deps.npm_installed_deps', deps.size))
+        spinner.update_title(ctx.message('core.js_deps.npm_installed_deps', deps.size))
       end
     rescue JSON::ParserError
       ctx.puts(
-        ctx.message('node.js_deps.error.invalid_package', File.read(File.join(path, 'package.json'))),
+        ctx.message('core.js_deps.error.invalid_package', File.read(File.join(path, 'package.json'))),
         error: true
       )
       raise ShopifyCli::AbortSilent
