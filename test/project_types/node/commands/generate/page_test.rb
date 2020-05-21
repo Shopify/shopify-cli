@@ -1,4 +1,5 @@
-require 'test_helper'
+# frozen_string_literal: true
+require 'project_types/node/test_helper'
 
 module Node
   module Commands
@@ -6,11 +7,6 @@ module Node
       class PageTest < MiniTest::Test
         include TestHelpers::Project
         include TestHelpers::FakeUI
-
-        def setup
-          super
-          ShopifyCli::ProjectType.load_type(:node)
-        end
 
         def test_with_selection
           CLI::UI::Prompt.expects(:ask).returns('empty-state')

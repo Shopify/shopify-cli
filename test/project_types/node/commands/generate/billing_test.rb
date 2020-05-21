@@ -1,15 +1,11 @@
-require 'test_helper'
+# frozen_string_literal: true
+require 'project_types/node/test_helper'
 
 module Node
   module Commands
     module GenerateTests
       class BillingTest < MiniTest::Test
         include TestHelpers::FakeUI
-
-        def setup
-          super
-          ShopifyCli::ProjectType.load_type(:node)
-        end
 
         def test_recurring_billing
           CLI::UI::Prompt.expects(:ask).returns('recurring-billing')

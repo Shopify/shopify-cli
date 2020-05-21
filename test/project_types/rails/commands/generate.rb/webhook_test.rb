@@ -1,4 +1,5 @@
-require('test_helper')
+# frozen_string_literal: true
+require 'project_types/rails/test_helper'
 
 module Rails
   module Commands
@@ -6,11 +7,6 @@ module Rails
       class WebhookTest < MiniTest::Test
         include TestHelpers::FakeUI
         include TestHelpers::Schema
-
-        def setup
-          super
-          ShopifyCli::ProjectType.load_type(:rails)
-        end
 
         def test_with_existing_param
           @context.expects(:system).with('rails g shopify_app:add_webhook -t app/uninstalled -a https://example.com/webhooks/app/uninstalled')

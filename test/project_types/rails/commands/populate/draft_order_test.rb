@@ -1,4 +1,5 @@
-require 'test_helper'
+# frozen_string_literal: true
+require 'project_types/rails/test_helper'
 
 module Rails
   module Commands
@@ -6,11 +7,6 @@ module Rails
       class DraftOrderTest < MiniTest::Test
         include TestHelpers::Project
         include TestHelpers::Schema
-
-        def setup
-          super
-          ShopifyCli::ProjectType.load_type(:rails)
-        end
 
         def test_populate_calls_api_with_mutation
           ShopifyCli::Helpers::Haikunator.stubs(:title).returns('fake order')

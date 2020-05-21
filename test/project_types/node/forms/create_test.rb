@@ -1,5 +1,5 @@
 # frozen_string_literal: true
-require 'test_helper'
+require 'project_types/rails/test_helper'
 
 module Node
   module Forms

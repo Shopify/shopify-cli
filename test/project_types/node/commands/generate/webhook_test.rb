@@ -1,4 +1,5 @@
-require 'test_helper'
+# frozen_string_literal: true
+require 'project_types/node/test_helper'
 
 module Node
   module Commands
@@ -6,11 +7,6 @@ module Node
       class WebhookTest < MiniTest::Test
         include TestHelpers::FakeUI
         include TestHelpers::Schema
-
-        def setup
-          super
-          ShopifyCli::ProjectType.load_type(:node)
-        end
 
         def test_with_existing_param
           @context.expects(:system).with('./node_modules/.bin/generate-node-app webhook APP_UNINSTALLED')
