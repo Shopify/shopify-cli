@@ -37,14 +37,14 @@ module ShopifyCli
         assert_nil(Finalize.deliver!)
       end
 
-      def test_deliver_puts_error_if_io_error
+      def test_discard_error_if_io_error
         IO.expects(:new).raises(IOError.new)
 
         Finalize.request_cd('path/to/cd')
         output = capture_io do
           Finalize.deliver!
         end
-        assert output[1].include?("Not running with shell integration. Finalizers: cd:path/to/cd")
+        assert_equal "", output[1]
       end
 
       def test_deliver_raises_argument_error_if_io_not_found

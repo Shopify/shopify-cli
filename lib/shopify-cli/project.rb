@@ -9,11 +9,6 @@ module ShopifyCli
   #
   class Project
     include SmartProperties
-    NOT_IN_PROJECT = <<~MESSAGE
-      {{x}} You are not in a Shopify app project
-      {{yellow:{{*}}}}{{reset: Run}}{{cyan: shopify create}}{{reset: to create your app}}
-    MESSAGE
-    private_constant :NOT_IN_PROJECT
 
     class << self
       ##
@@ -39,12 +34,23 @@ module ShopifyCli
       end
 
       ##
+      # will return true if the command line is currently within a project
+      #
+      # #### Returns
+      #
+      # * `has_project` - boolean, true if there is a current project
+      #
+      def has_current?
+        !directory(Dir.pwd).nil?
+      end
+
+      ##
       # will fetch the project type of the current project. This is mostly used
       # for internal project type loading, you should not normally need this.
       #
       # #### Returns
       #
-      # * `type` - a string of the name of the app identifier. i.e. [rails, node]
+      # * `type` - a symbol of the name of the project type identifier. i.e. [rails, node]
       #   This will be nil if the user is not in a current project.
       #
       # #### Example
@@ -52,8 +58,7 @@ module ShopifyCli
       #   type = ShopifyCli::Project.current_app_type
       #
       def current_project_type
-        proj_dir = directory(Dir.pwd)
-        return if proj_dir.nil?
+        return unless has_current?
         current.config['app_type'].to_sym
       end
 
@@ -66,17 +71,19 @@ module ShopifyCli
       #
       # * `ctx` - the current running context of your command
       # * `app_type` - a string or symbol of your app type name
+      # * `organization_id` - the id of the organization that the app owned by. Used for metrics
       # * `identifiers` - an optional hash of other app identifiers
       #
       # #### Example
       #
       #   type = ShopifyCli::Project.current_app_type
       #
-      def write(ctx, app_type, identifiers = {})
+      def write(ctx, app_type:, organization_id:, **identifiers)
         require 'yaml' # takes 20ms, so deferred as late as possible.
-        content = {
-          'app_type' => app_type,
-        }.merge(identifiers)
+        content = Hash[{ app_type: app_type, organization_id: organization_id.to_i }
+          .merge(identifiers)
+          .collect { |k, v| [k.to_s, v] }]
+
         ctx.write('.shopify-cli.yml', YAML.dump(content))
       end
 
@@ -90,7 +97,7 @@ module ShopifyCli
       def at(dir)
         proj_dir = directory(dir)
         unless proj_dir
-          raise(ShopifyCli::Abort, NOT_IN_PROJECT)
+          raise(ShopifyCli::Abort, Context.message('core.project.error.not_in_project'))
         end
         @at ||= Hash.new { |h, k| h[k] = new(directory: k) }
         @at[proj_dir]
@@ -143,7 +150,7 @@ module ShopifyCli
       @config ||= begin
         config = load_yaml_file('.shopify-cli.yml')
         unless config.is_a?(Hash)
-          raise ShopifyCli::Abort, '{{x}} .shopify-cli.yml was not a proper YAML file. Expecting a hash.'
+          raise ShopifyCli::Abort, Context.message('core.project.error.cli_yaml.not_hash')
         end
         config
       end
@@ -157,12 +164,12 @@ module ShopifyCli
       begin
         YAML.load_file(f)
       rescue Psych::SyntaxError => e
-        raise(ShopifyCli::Abort, "{{x}} #{relative_path} contains invalid YAML: #{e.message}")
+        raise(ShopifyCli::Abort, Context.message('core.project.error.cli_yaml.invalid', relative_path, e.message))
       # rescue Errno::EACCES => e
       # TODO
       #   Dev::Helpers::EaccesHandler.diagnose_and_raise(f, e, mode: :read)
       rescue Errno::ENOENT
-        raise ShopifyCli::Abort, "{{x}} #{f} not found"
+        raise ShopifyCli::Abort, Context.message('core.project.error.cli_yaml.not_found', f)
       end
     end
   end

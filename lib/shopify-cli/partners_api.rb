@@ -58,10 +58,7 @@ module ShopifyCli
         authenticate(ctx)
         retry
       rescue API::APIRequestNotFoundError
-        ctx.puts("{{x}} error: Your account was not found. Please sign up at https://partners.shopify.com/signup")
-        ctx.puts(
-          "For authentication issues, run {{command:#{ShopifyCli::TOOL_NAME} logout}} to clear invalid credentials"
-        )
+        ctx.puts(ctx.message('core.partners_api.error.account_not_found', ShopifyCli::TOOL_NAME))
       end
 
       def api_client(ctx)

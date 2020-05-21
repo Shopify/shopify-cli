@@ -42,7 +42,13 @@ describe Script::Layers::Application::CreateScript do
         Script::ScriptProject.expects(:create).with(script_name).once
         Script::ScriptProject
           .expects(:write)
-          .with(@context, :script, 'extension_point_type' => ep.type, 'script_name' => script_name)
+          .with(
+            @context,
+            app_type: :script,
+            organization_id: nil,
+            extension_point_type: ep.type,
+            script_name: script_name,
+          )
         Script::Layers::Application::ProjectDependencies
           .expects(:bootstrap)
           .with(ctx: @context, language: language, extension_point: ep, script_name: script_name)
@@ -56,7 +62,7 @@ describe Script::Layers::Application::CreateScript do
 
     describe 'create_definition' do
       subject do
-        Script::Layers::Application::CreateScript.send(:create_definition, language, ep, script_name)
+        Script::Layers::Application::CreateScript.send(:create_definition, @context, language, ep, script_name)
       end
 
       it 'should return new script' do

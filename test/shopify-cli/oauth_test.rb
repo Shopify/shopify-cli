@@ -20,9 +20,8 @@ module ShopifyCli
     def test_authenticate_with_secret
       endpoint = "https://example.com/auth"
       client = oauth(secret: 'secret')
-      @context.expects(:open_url!).with do |param|
-        auth_response(client, endpoint, param)
-      end
+      @context.expects(:open_url!)
+      stub_auth_response(client)
 
       authorize_query = {
         client_id: client.client_id,
@@ -52,9 +51,8 @@ module ShopifyCli
     def test_authenticate_without_secret
       endpoint = "https://example.com/auth"
       client = oauth
-      @context.expects(:open_url!).with do |param|
-        auth_response(client, endpoint, param)
-      end
+      @context.expects(:open_url!)
+      stub_auth_response(client)
 
       authorize_query = {
         client_id: client.client_id,
@@ -84,9 +82,8 @@ module ShopifyCli
     def test_request_exchange_token
       endpoint = "https://example.com/auth"
       client = oauth(request_exchange: '123')
-      @context.expects(:open_url!).with do |param|
-        auth_response(client, endpoint, param)
-      end
+      @context.expects(:open_url!)
+      stub_auth_response(client)
 
       authorize_query = {
         client_id: client.client_id,
@@ -214,31 +211,11 @@ module ShopifyCli
     def test_authenticate_with_invalid_request
       endpoint = "https://example.com/auth"
       client = oauth
-      @context.expects(:open_url!).with do |_param|
-        WebMock.disable!
-        https = Net::HTTP.new('localhost', 3456)
-        request = Net::HTTP::Get.new("/?error=err&error_description=error")
-        https.request(request)
-        WebMock.enable!
-        true
-      end
-      stub_request(:post, "#{endpoint}/authorize")
-      assert_raises OAuth::Error do
-        client.authenticate(endpoint)
-      end
-    end
-
-    def test_authenticate_with_invalid_state
-      endpoint = "https://example.com/auth"
-      client = oauth
-      @context.expects(:open_url!).with do |_param|
-        WebMock.disable!
-        https = Net::HTTP.new('localhost', 3456)
-        request = Net::HTTP::Get.new("/?code=mycode&state=notyourstate")
-        https.request(request)
-        WebMock.enable!
-        true
-      end
+      @context.expects(:open_url!)
+      stub_server(client, {
+        'error' => 'err',
+        'error_description' => 'error',
+      })
       stub_request(:post, "#{endpoint}/authorize")
       assert_raises OAuth::Error do
         client.authenticate(endpoint)
@@ -248,9 +225,8 @@ module ShopifyCli
     def test_authenticate_with_invalid_code
       endpoint = "https://example.com/auth"
       client = oauth(secret: 'secret')
-      @context.expects(:open_url!).with do |param|
-        auth_response(client, endpoint, param)
-      end
+      @context.expects(:open_url!)
+      stub_auth_response(client)
 
       authorize_query = {
         client_id: client.client_id,
@@ -295,29 +271,18 @@ module ShopifyCli
       }.merge(args))
     end
 
-    def auth_response(client, endpoint, param)
-      query = {
-        client_id: client.client_id,
-        scope: client.scopes,
-        redirect_uri: OAuth::REDIRECT_HOST,
-        state: client.state_token,
-        response_type: :code,
-      }
-      if client.secret.nil?
-        query.merge!(
-          code_challenge: client.code_challenge,
-          code_challenge_method: 'S256',
-        )
-      end
-      command = "#{endpoint}/authorize?#{URI.encode_www_form(query)}"
-      if command == param.to_s
-        WebMock.disable!
-        https = Net::HTTP.new('localhost', 3456)
-        request = Net::HTTP::Get.new("/?code=mycode&state=#{client.state_token}")
-        https.request(request)
-        WebMock.enable!
-      end
-      command == param.to_s
+    def stub_auth_response(client)
+      stub_server(client, {
+        'code' => 'mycode',
+        'state' => client.state_token,
+      })
+    end
+
+    def stub_server(client, resp)
+      server = Object.new
+      client.stubs(:server).returns(server)
+      server.expects(:start)
+      client.response_query = resp
     end
 
     def token_resp

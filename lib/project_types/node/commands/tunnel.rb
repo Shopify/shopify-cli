@@ -13,7 +13,7 @@ module Node
         when 'auth'
           token = args.shift
           if token.nil?
-            @ctx.puts("{{x}} {{red:auth requires a token argument}}\n\n")
+            @ctx.puts(@ctx.message('node.tunnel.error.token_argument_missing'))
             @ctx.puts("#{self.class.help}\n#{self.class.extended_help}")
           else
             ShopifyCli::Tunnel.auth(@ctx, token)
@@ -28,26 +28,11 @@ module Node
       end
 
       def self.help
-        <<~HELP
-          Start or stop an http tunnel to your local development app using ngrok.
-            Usage: {{command:#{ShopifyCli::TOOL_NAME} tunnel [ auth | start | stop ]}}
-        HELP
+        ShopifyCli::Context.message('node.tunnel.help', ShopifyCli::TOOL_NAME)
       end
 
       def self.extended_help
-        <<~HELP
-          {{bold:Subcommands:}}
-
-            {{cyan:auth}}: Writes an ngrok auth token to ~/.ngrok2/ngrok.yml to connect with an ngrok account. Visit https://dashboard.ngrok.com/signup to sign up.
-              Usage: {{command:#{ShopifyCli::TOOL_NAME} tunnel auth <token>}}
-
-            {{cyan:start}}: Starts an ngrok tunnel, will print the URL for an existing tunnel if already running.
-              Usage: {{command:#{ShopifyCli::TOOL_NAME} tunnel start}}
-
-            {{cyan:stop}}: Stops the ngrok tunnel.
-              Usage: {{command:#{ShopifyCli::TOOL_NAME} tunnel stop}}
-
-        HELP
+        ShopifyCli::Context.message('node.tunnel.extended_help', ShopifyCli::TOOL_NAME)
       end
     end
   end
