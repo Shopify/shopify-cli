@@ -8,6 +8,7 @@ module Extension
     register_command('Extension::Commands::Register', "register")
     register_command('Extension::Commands::Push', "push")
     register_command('Extension::Commands::Serve', "serve")
+    register_command('Extension::Commands::Tunnel', "tunnel")
   end
 
   module Commands
@@ -16,6 +17,7 @@ module Extension
     autoload :Build, Project.project_filepath('commands/build')
     autoload :Serve, Project.project_filepath('commands/serve')
     autoload :Push, Project.project_filepath('commands/push')
+    autoload :Tunnel, Project.project_filepath('commands/tunnel')
   end
 
   module Tasks

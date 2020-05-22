@@ -1,0 +1,78 @@
+# frozen_string_literal: true
+require 'test_helper'
+require 'project_types/extension/extension_test_helpers'
+
+module Extension
+  module Commands
+    class TunnelTest < MiniTest::Test
+      include TestHelpers::FakeUI
+      include ExtensionTestHelpers::Content
+
+      def setup
+        super
+        ShopifyCli::ProjectType.load_type(:extension)
+      end
+
+      def test_prints_help
+        @context.expects(:puts).with(Tunnel.help)
+        run_tunnel('help')
+      end
+
+      def test_auth_errors_if_no_token_is_provided
+        io = capture_io { run_tunnel(Tunnel::AUTH_SUBCOMMAND) }
+
+        confirm_content_output(io: io, expected_content: [
+          Content::Tunnel::MISSING_TOKEN,
+          Tunnel::help,
+          Tunnel::extended_help
+        ])
+      end
+
+      def test_auth_runs_the_core_cli_tunnel_auth_if_token_is_present
+        fake_token = 'FAKE_TOKEN'
+        ShopifyCli::Tunnel.expects(:auth).with(@context, fake_token).once
+
+        capture_io { run_tunnel(Tunnel::AUTH_SUBCOMMAND, fake_token) }
+      end
+
+      def test_start_runs_with_the_default_port_if_no_port_provided
+        ShopifyCli::Tunnel.expects(:start).with(@context, port: Tunnel::DEFAULT_PORT).once
+
+        capture_io { run_tunnel(Tunnel::START_SUBCOMMAND) }
+      end
+
+      def test_start_runs_with_the_requested_port_if_provided
+        ShopifyCli::Tunnel.expects(:start).with(@context, port: Tunnel::DEFAULT_PORT).once
+
+        capture_io { run_tunnel(Tunnel::START_SUBCOMMAND) }
+      end
+
+      def test_start_aborts_if_an_invalid_port_is_provided
+        invalid_port = 'NOT_PORT'
+
+        ShopifyCli::Tunnel.expects(:start).never
+
+        io = capture_io_and_assert_raises(ShopifyCli::Abort) do
+          run_tunnel(Tunnel::START_SUBCOMMAND, "--port=#{invalid_port}")
+        end
+
+        confirm_content_output(io: io, expected_content: [
+          Content::Tunnel::INVALID_PORT % invalid_port
+        ])
+      end
+
+      def test_stop_runs_the_core_cli_tunnel_stop
+        ShopifyCli::Tunnel.expects(:stop).with(@context).once
+
+        capture_io { run_tunnel(Tunnel::STOP_SUBCOMMAND) }
+      end
+
+      private
+
+      def run_tunnel(*args)
+        Tunnel.ctx = @context
+        Tunnel.call(args, 'tunnel')
+      end
+    end
+  end
+end

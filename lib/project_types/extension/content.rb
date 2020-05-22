@@ -55,6 +55,11 @@ module Extension
       SERVE_FAILURE_MESSAGE = 'Failed to run extension code for testing.'
     end
 
+    module Tunnel
+      MISSING_TOKEN = '{{x}} {{red:auth requires a token argument}}. Find it on your ngrok dashboard: {{underline:https://dashboard.ngrok.com/auth/your-authtoken}}.'
+      INVALID_PORT = '%s is not a valid port.'
+    end
+
     module Models
       TYPES = {
         ARGO: {
