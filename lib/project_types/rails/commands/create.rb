@@ -87,6 +87,8 @@ module Rails
 
         @ctx.root = File.join(@ctx.root, name)
 
+        File.open(File.join(@ctx.root, '.gitignore'), 'a') { |f| f.write('.env') }
+
         @ctx.puts(@ctx.message('rails.create.adding_shopify_gem'))
         File.open(File.join(@ctx.root, 'Gemfile'), 'a') do |f|
           f.puts "\ngem 'shopify_app', '>=11.3.0'"
