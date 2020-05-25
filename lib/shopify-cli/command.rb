@@ -16,9 +16,7 @@ module ShopifyCli
           subcommand.ctx = @ctx
           subcommand.call(args, resolved_name, command_name)
         else
-          cmd = new
-          cmd.ctx = @ctx
-          cmd.options = Options.new
+          cmd = new(@ctx)
           cmd.options.parse(@_options, args)
           return call_help(command_name) if cmd.options.help
           cmd.call(args, command_name)
@@ -63,6 +61,7 @@ module ShopifyCli
 
     def initialize(ctx = nil)
       @ctx = ctx || ShopifyCli::Context.new
+      self.options = Options.new
     end
   end
 end

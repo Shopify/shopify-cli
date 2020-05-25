@@ -1,13 +1,9 @@
-require 'test_helper'
+# frozen_string_literal: true
+require 'project_types/node/test_helper'
 
 module Node
   module Commands
     class TunnelTest < MiniTest::Test
-      def setup
-        super
-        ShopifyCli::ProjectType.load_type(:node)
-      end
-
       def test_auth
         ShopifyCli::Tunnel.any_instance.expects(:auth)
         run_cmd('tunnel auth adfhauf98q7rtqhfkajf')
