@@ -16,7 +16,7 @@ module Node
 
       SHOPIFYCLI_FILE = <<~APPTYPE
         ---
-        app_type: node
+        project_type: node
         organization_id: 42
       APPTYPE
 

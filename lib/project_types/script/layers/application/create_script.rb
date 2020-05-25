@@ -22,7 +22,7 @@ module Script
             ctx.root = File.join(ctx.root, script_name)
             ScriptProject.write(
               ctx,
-              app_type: :script,
+              project_type: :script,
               organization_id: nil, # TODO: can you provide this at creation
               extension_point_type: extension_point.type,
               script_name: script_name

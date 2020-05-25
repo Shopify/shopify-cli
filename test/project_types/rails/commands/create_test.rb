@@ -16,7 +16,7 @@ module Rails
 
       SHOPIFYCLI_FILE = <<~APPTYPE
         ---
-        app_type: rails
+        project_type: rails
         organization_id: 42
       APPTYPE
 
