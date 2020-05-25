@@ -59,8 +59,7 @@ module ShopifyCli
       #
       def current_project_type
         return unless has_current?
-        return current.config['project_type'].to_sym if current.config.key?('project_type')
-        current.config['app_type'].to_sym
+        current.config['project_type'].to_sym
       end
 
       ##
@@ -157,6 +156,13 @@ module ShopifyCli
         unless config.is_a?(Hash)
           raise ShopifyCli::Abort, Context.message('core.project.error.cli_yaml.not_hash')
         end
+
+        # The app_type key was deprecated in favour of project_type, so replace it
+        if config.key?('app_type')
+          config['project_type'] = config['app_type']
+          config.delete('app_type')
+        end
+
         config
       end
     end
