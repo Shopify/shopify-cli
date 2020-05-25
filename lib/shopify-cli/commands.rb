@@ -23,7 +23,6 @@ module ShopifyCli
     register :Help, 'help', 'shopify-cli/commands/help', true
     register :Logout, 'logout', 'shopify-cli/commands/logout', true
     register :System, 'system', 'shopify-cli/commands/system', true
-    register :Update, 'update', 'shopify-cli/commands/update', true
     register :Version, 'version', 'shopify-cli/commands/version', true
   end
 end

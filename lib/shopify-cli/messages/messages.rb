@@ -237,34 +237,6 @@ module ShopifyCli
           start: "{{v}} ngrok tunnel running at {{underline:%s}}",
         },
 
-        update: {
-          help: <<~HELP,
-          Update Shopify App CLI.
-            Usage: {{command:%s update}}
-          HELP
-
-          error: {
-            development_version: "Development version of {{command:%1$s}} in use.",
-            git_head_locked: <<~MESSAGE,
-            failed!
-            It looks like another git operation is in progress on {{blue:%1$s}}.
-            Try running {{command:%2$s update}}.
-            If that fails, you must run {{green: rm %1$s/.git/HEAD.lock}} to continue.
-            MESSAGE
-            git_master_locked: <<~MESSAGE,
-            failed!
-            It looks like another git operation is in progress on {{blue:%1$s}}.
-            Try running {{command:%2$s update}}.
-            If that fails, you must run {{green: rm %1$s/.git/refs/heads/master.lock}} to continue.
-            MESSAGE
-            git_command_error: "command failed: %s",
-          },
-
-          updating: "Updating shopify-cli... ",
-          updated: "done!",
-          auto_update_prompt: "Would you like to enable auto updates for Shopify App CLI?",
-        },
-
         version: {
           help: <<~HELP,
           Prints version number.
