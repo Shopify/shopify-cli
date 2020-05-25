@@ -32,7 +32,7 @@ module Script
           project_exists_help: "Use different script name and try again.",
 
           invalid_extension_cause: "Invalid extension point %s",
-          invalid_extension_help: "Allowed values: discount and unit_limit_per_order.",
+          invalid_extension_help: "Allowed values: %s.",
 
           script_not_found_cause: "Couldn't find script %s for extension point %s",
 

@@ -70,7 +70,10 @@ module Script
         when Layers::Domain::Errors::InvalidExtensionPointError
           {
             cause_of_error: ShopifyCli::Context.message('script.error.invalid_extension_cause', e.type),
-            help_suggestion: ShopifyCli::Context.message('script.error.invalid_extension_help'),
+            help_suggestion: ShopifyCli::Context.message(
+              'script.error.invalid_extension_help',
+             Script::Layers::Application::ExtensionPoints.types.join(', ')
+            ),
           }
         when Layers::Domain::Errors::ScriptNotFoundError
           {
