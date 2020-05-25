@@ -21,7 +21,7 @@ module Node
 
         ShopifyCli::Project.write(
           @ctx,
-          app_type: 'node',
+          project_type: 'node',
           organization_id: form.organization_id,
         )
 
