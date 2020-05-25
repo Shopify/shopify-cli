@@ -54,7 +54,7 @@ module Script
           raise Errors::NoExistingStoresError, organization['id']
         elsif organization['stores'].count == 1
           domain = organization['stores'].first['shopDomain']
-          ctx.message('script.forms.script_form.using_development_store', domain: domain)
+          ctx.puts(ctx.message('script.forms.script_form.using_development_store', domain: domain))
           domain
         else
           CLI::UI::Prompt.ask(message, options: organization["stores"].map { |s| s["shopDomain"] })
