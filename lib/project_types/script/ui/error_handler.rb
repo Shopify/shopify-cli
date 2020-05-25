@@ -73,7 +73,7 @@ module Script
             help_suggestion: ShopifyCli::Context.message(
               'script.error.invalid_extension_help',
              Script::Layers::Application::ExtensionPoints.types.join(', ')
-            )
+            ),
           }
         when Layers::Domain::Errors::ScriptNotFoundError
           {
