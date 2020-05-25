@@ -1,4 +1,5 @@
-require 'test_helper'
+# frozen_string_literal: true
+require 'project_types/node/test_helper'
 require 'semantic/semantic'
 
 module Node
@@ -19,11 +20,6 @@ module Node
         app_type: node
         organization_id: 42
       APPTYPE
-
-      def setup
-        super
-        ShopifyCli::ProjectType.load_type(:node)
-      end
 
       def test_prints_help_with_no_name_argument
         io = capture_io { run_cmd('create node --help') }

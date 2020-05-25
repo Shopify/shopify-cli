@@ -1,4 +1,5 @@
-require 'test_helper'
+# frozen_string_literal: true
+require 'project_types/rails/test_helper'
 
 module Rails
   module Commands
@@ -9,7 +10,6 @@ module Rails
         super
         project_context('app_types', 'rails')
         ShopifyCli::Tasks::EnsureTestShop.stubs(:call)
-        ShopifyCli::ProjectType.load_type(:rails)
         @context.stubs(:system)
       end
 
@@ -27,7 +27,7 @@ module Rails
             'PORT' => '8081',
           }
         )
-        run_cmd('serve')
+        Rails::Commands::Serve.new(@context).call
       end
 
       def test_server_command_with_invalid_host_url
@@ -46,7 +46,7 @@ module Rails
         ).never
 
         assert_raises ShopifyCli::Abort do
-          run_cmd('serve')
+          Rails::Commands::Serve.new(@context).call
         end
       end
 
@@ -61,7 +61,7 @@ module Rails
         ShopifyCli::Context.any_instance.expects(:open_url!).with(
           'https://example.com/login?shop=my-test-shop.myshopify.com'
         )
-        run_cmd('serve')
+        Rails::Commands::Serve.new(@context).call
       end
 
       def test_update_env_with_host
@@ -70,7 +70,9 @@ module Rails
         ShopifyCli::Resources::EnvFile.any_instance.expects(:update).with(
           @context, :host, 'https://example-foo.com'
         )
-        run_cmd('serve --host="https://example-foo.com"')
+        command = Rails::Commands::Serve.new(@context)
+        command.options.flags[:host] = 'https://example-foo.com'
+        command.call
       end
     end
   end
