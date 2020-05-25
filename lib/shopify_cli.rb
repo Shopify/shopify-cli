@@ -6,7 +6,6 @@ Encoding.default_internal = Encoding::UTF_8
 # require_relative 'support/ruby_backports'
 
 # See bin/support/load_shopify.rb
-# Do it here as well because in some cases, load_dev is not called
 ENV['PATH'] = ENV['PATH'].split(':').select { |p| p.start_with?('/', '~') }.join(':') unless defined?($original_env)
 
 # Load vendor and CLI UI/Kit.

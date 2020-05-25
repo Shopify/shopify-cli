@@ -34,11 +34,6 @@ function __shopify__
   # Read as MACOS_SW_VERSION ||= `sw_vers -productVersion`
   set -qg MACOS_SW_VERSION; or set -gx MACOS_SW_VERSION (sw_vers -productVersion)
 
-  set -l finalizers (mktemp /tmp/shopify-finalize-XXXXXX)
-  function cleanup-finalizer-tmpfile --on-process %self
-    rm -f "$finalizers"
-  end
-
   set -l bin_path "$__shopify_source_dir/bin/shopify"
 
   set -l with_gems ''
@@ -58,25 +53,11 @@ function __shopify__
   end
 
   if test "$with_gems" = "TRUE"
-    eval /usr/bin/env ruby $bin_path $argv 9>$finalizers
+    eval /usr/bin/env ruby $bin_path $argv
   else
-    eval $bin_path $argv 9>$finalizers
+    eval $bin_path $argv
   end
   set -l return_from_shopify $status
-
-  while read fin
-    switch "$fin"
-      case cd:\*
-        set -l newdir (echo "$fin" | sed 's/^cd://')
-        cd "$newdir"
-      case setenv:\*
-        set -l assignment (echo "$fin" | sed 's/^setenv://' | tr = \\n)
-        set -x "$assignment[1]" "$assignment[2]"
-      case reload_shopify_cli_from:\*
-        set -l root (echo "$fin" | sed 's/^reload_shopify_cli_from://')
-        source "$root/shopify.fish"
-    end
-  end < "$finalizers"
 
   return $return_from_shopify
 end
