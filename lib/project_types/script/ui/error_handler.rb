@@ -70,7 +70,10 @@ module Script
         when Layers::Domain::Errors::InvalidExtensionPointError
           {
             cause_of_error: ShopifyCli::Context.message('script.error.invalid_extension_cause', e.type),
-            help_suggestion: ShopifyCli::Context.message('script.error.invalid_extension_help'),
+            help_suggestion: ShopifyCli::Context.message(
+              'script.error.invalid_extension_help',
+             Script::Layers::Application::ExtensionPoints.types.join(', ')
+            ),
           }
         when Layers::Domain::Errors::ScriptNotFoundError
           {
@@ -83,6 +86,10 @@ module Script
         when Layers::Infrastructure::Errors::AppNotInstalledError
           {
             cause_of_error: ShopifyCli::Context.message('script.error.app_not_installed_cause'),
+          }
+        when Layers::Infrastructure::Errors::AppScriptUndefinedError
+          {
+            help_suggestion: ShopifyCli::Context.message('script.error.app_script_undefined_help'),
           }
         when Layers::Infrastructure::Errors::BuildError
           {
@@ -112,6 +119,15 @@ module Script
           {
             cause_of_error: ShopifyCli::Context.message('script.error.shop_auth_cause'),
             help_suggestion: ShopifyCli::Context.message('script.error.shop_auth_help'),
+          }
+        when Layers::Infrastructure::Errors::ShopScriptConflictError
+          {
+            cause_of_error: ShopifyCli::Context.message('script.error.shop_script_conflict_cause'),
+            help_suggestion: ShopifyCli::Context.message('script.error.shop_script_conflict_help'),
+          }
+        when Layers::Infrastructure::Errors::ShopScriptUndefinedError
+          {
+            cause_of_error: ShopifyCli::Context.message('script.error.shop_script_undefined_cause'),
           }
         when Layers::Infrastructure::Errors::TestError
           {

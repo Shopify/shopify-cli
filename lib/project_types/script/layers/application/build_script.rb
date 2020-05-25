@@ -6,11 +6,11 @@ module Script
       class BuildScript
         class << self
           def call(ctx:, script:)
-            return if CLI::UI::Frame.open(ctx.message('script.application.build_script.building')) do
+            return if CLI::UI::Frame.open(ctx.message('script.application.building')) do
               begin
-                UI::StrictSpinner.spin(ctx.message('script.application.build_script.building_script')) do |spinner|
+                UI::StrictSpinner.spin(ctx.message('script.application.building_script')) do |spinner|
                   build(script)
-                  spinner.update_title(ctx.message('script.application.build_script.built'))
+                  spinner.update_title(ctx.message('script.application.built'))
                 end
                 true
               rescue StandardError => e

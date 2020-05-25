@@ -1,5 +1,5 @@
 # frozen_string_literal: true
-require 'test_helper'
+require 'project_types/rails/test_helper'
 
 module Rails
   class GemTest < MiniTest::Test
@@ -7,7 +7,6 @@ module Rails
 
     def setup
       super
-      ShopifyCli::ProjectType.load_type(:rails)
       @home = Dir.mktmpdir
       @context.setenv('HOME', @home)
     end

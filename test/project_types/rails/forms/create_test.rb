@@ -1,15 +1,10 @@
 # frozen_string_literal: true
-require 'test_helper'
+require 'project_types/rails/test_helper'
 
 module Rails
   module Forms
     class CreateTest < MiniTest::Test
       include TestHelpers::Partners
-
-      def setup
-        super
-        ShopifyCli::ProjectType.load_type(:rails)
-      end
 
       def test_returns_all_defined_attributes_if_valid
         form = ask
@@ -228,4 +223,3 @@ module Rails
     end
   end
 end
-

@@ -1,4 +1,5 @@
-require 'test_helper'
+# frozen_string_literal: true
+require 'project_types/node/test_helper'
 
 module Node
   module Commands
@@ -6,13 +7,12 @@ module Node
       def setup
         super
         project_context('app_types', 'node')
-        ShopifyCli::ProjectType.load_type(:node)
         @context.stubs(:system)
       end
 
       def test_run
         @context.expects(:open_url!).with('https://example.com/auth?shop=my-test-shop.myshopify.com')
-        run_cmd('open')
+        Node::Commands::Open.new(@context).call
       end
     end
   end

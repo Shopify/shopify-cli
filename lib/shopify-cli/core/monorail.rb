@@ -88,7 +88,7 @@ module ShopifyCli
               args: args.join(' '),
               time_start: start_time,
               time_end: end_time,
-              total_time:  end_time - start_time,
+              total_time: end_time - start_time,
               success: err.nil?,
               error_message: err,
               uname: RbConfig::CONFIG["host"],

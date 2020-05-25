@@ -46,5 +46,25 @@ module ShopifyCli
       )
       assert Project.current.config['other_option']
     end
+
+    def test_project_name_returns_name
+      Dir.mktmpdir do |dir|
+        FileUtils.mkdir_p("#{dir}/myapp")
+        FileUtils.touch("#{dir}/myapp/.shopify-cli.yml")
+        FileUtils.cd("#{dir}/myapp")
+        project_name = Project.project_name
+        assert_equal "myapp", project_name
+      end
+    end
+
+    def test_project_name_returns_name_even_if_called_from_subdirectory
+      Dir.mktmpdir do |dir|
+        FileUtils.mkdir_p("#{dir}/myapp/lib")
+        FileUtils.touch("#{dir}/myapp/.shopify-cli.yml")
+        FileUtils.cd("#{dir}/myapp/lib")
+        project_name = Project.project_name
+        assert_equal "myapp", project_name
+      end
+    end
   end
 end

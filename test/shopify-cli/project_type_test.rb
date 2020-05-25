@@ -38,5 +38,11 @@ module ShopifyCli
         ProjectType.register_command('Nonsense::Module::Help', 'help')
       end
     end
+
+    def test_register_command_does_not_call_if_shallow
+      ShopifyCli::Commands.expects(:register).never
+      Rails::Project.project_load_shallow = true
+      Rails::Project.register_command('Nonsense::Module::Help', 'help')
+    end
   end
 end

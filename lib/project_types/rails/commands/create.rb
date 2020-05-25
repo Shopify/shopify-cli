@@ -10,6 +10,8 @@ module Rails
         end
       USERAGENT
 
+      DEFAULT_RAILS_FLAGS = %w(--skip-spring)
+
       options do |parser, flags|
         # backwards compatibility allow 'title' for now
         parser.on('--title=TITLE') { |t| flags[:title] = t }
@@ -17,6 +19,8 @@ module Rails
         parser.on('--organization_id=ID') { |url| flags[:organization_id] = url }
         parser.on('--shop_domain=MYSHOPIFYDOMAIN') { |url| flags[:shop_domain] = url }
         parser.on('--type=APPTYPE') { |url| flags[:type] = url }
+        parser.on('--db=DB') { |db| flags[:db] = db }
+        parser.on('--rails_opts=RAILSOPTS') { |opts| flags[:rails_opts] = opts }
       end
 
       def call(args, _name)
@@ -72,10 +76,18 @@ module Rails
         end
 
         CLI::UI::Frame.open(@ctx.message('rails.create.generating_app', name)) do
-          syscall(%W(rails new --skip-spring #{name}))
+          new_command = %w(rails new)
+          new_command += DEFAULT_RAILS_FLAGS
+          new_command << "--database=#{options.flags[:db]}" unless options.flags[:db].nil?
+          new_command += options.flags[:rails_opts].split unless options.flags[:rails_opts].nil?
+          new_command << name
+
+          syscall(new_command)
         end
 
         @ctx.root = File.join(@ctx.root, name)
+
+        File.open(File.join(@ctx.root, '.gitignore'), 'a') { |f| f.write('.env') }
 
         @ctx.puts(@ctx.message('rails.create.adding_shopify_gem'))
         File.open(File.join(@ctx.root, 'Gemfile'), 'a') do |f|

@@ -1,11 +1,12 @@
 inherit_from:
+  - .rubocop_todo.yml
   - https://shopify.github.io/ruby-style-guide/rubocop-cli.yml
 
 AllCops:
   Exclude:
     - 'vendor/**/*'
     - 'docs/**/*'
-  TargetRubyVersion: 2.3
+  TargetRubyVersion: 2.4
 
 Layout/EmptyLines:
   Exclude:

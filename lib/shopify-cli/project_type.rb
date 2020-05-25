@@ -3,7 +3,8 @@ module ShopifyCli
     class << self
       attr_accessor :project_type,
         :project_name,
-        :project_creator_command_class
+        :project_creator_command_class,
+        :project_load_shallow
       attr_reader :hidden
 
       def repository
@@ -14,20 +15,23 @@ module ShopifyCli
       def inherited(klass)
         repository << klass
         klass.project_type = @current_type
+        klass.project_load_shallow = @shallow_load
       end
 
-      def load_type(current_type)
+      def load_type(current_type, shallow = false)
         filepath = File.join(ShopifyCli::ROOT, 'lib', 'project_types', current_type.to_s, 'cli.rb')
         return unless File.exist?(filepath)
+        @shallow_load = shallow
         @current_type = current_type
         load(filepath)
         @current_type = nil
+        @shallow_load = false
         for_app_type(current_type)
       end
 
       def load_all
         Dir.glob(File.join(ShopifyCli::ROOT, 'lib', 'project_types', '*', 'cli.rb')).map do |filepath|
-          load_type(filepath.split(File::Separator)[-2])
+          load_type(filepath.split(File::Separator)[-2], true)
         end
       end
 
@@ -54,6 +58,7 @@ module ShopifyCli
       end
 
       def register_command(const, cmd)
+        return if project_load_shallow
         Context.new.abort(
           Context.message('core.project_type.error.cannot_override_core', cmd, const)
         ) if Commands.core_command?(cmd)
@@ -61,6 +66,7 @@ module ShopifyCli
       end
 
       def register_task(task, name)
+        return if project_load_shallow
         Task::Registry.add(const_get(task), name)
       end
 
