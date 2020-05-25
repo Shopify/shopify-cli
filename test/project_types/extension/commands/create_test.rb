@@ -35,6 +35,14 @@ module Extension
           Content::Create::LEARN_MORE % @test_extension_type.name
         ])
       end
+      
+      def test_help_does_not_load_extension_project_type
+        io = capture_io do
+          run_cmd('create --help')
+        end
+        output = io.join
+        refute_match('extension', output)
+      end
     end
   end
 end

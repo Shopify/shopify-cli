@@ -1,6 +1,7 @@
 # frozen_string_literal: true
 module Extension
   class Project < ShopifyCli::ProjectType
+    hidden_project_type
     creator 'App Extension', 'Extension::Commands::Create'
 
     register_command('Extension::Commands::Build', "build")
