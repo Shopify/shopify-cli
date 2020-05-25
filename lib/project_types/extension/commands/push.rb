@@ -20,7 +20,7 @@ module Extension
 
       def self.help
         <<~HELP
-          Push the current extension to the Partners Dashboard where you can create a version that can be published to merchants.
+          Push the current extension to Shopify.
             Usage: {{command:#{ShopifyCli::TOOL_NAME} push}}
         HELP
       end

@@ -15,7 +15,7 @@ module Extension
           ExtensionProject.write_cli_file(context: @ctx, type: form.type.identifier)
           ExtensionProject.write_env_file(context: @ctx, title: form.name)
 
-          @ctx.puts(Content::Create::READY_TO_START % form.name)
+          @ctx.puts(Content::Create::READY_TO_START % [form.name, form.directory_name])
           @ctx.puts(Content::Create::LEARN_MORE % form.type.name)
         end
       end
@@ -25,9 +25,8 @@ module Extension
           Create a new app extension.
             Usage: {{command:#{ShopifyCli::TOOL_NAME} create extension <name>}}
             Options:
-              {{command:--api_key=API_KEY}} The API key used to associate an app to the extension. This can be found on the app page on Partners Dashboard.
               {{command:--type=TYPE}} The type of extension you would like to create.
-              {{command:--name=NAME}} The name of your extension (40 characters).”
+              {{command:--name=NAME}} The name of your extension (50 characters).”
         HELP
       end
 

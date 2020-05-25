@@ -38,7 +38,7 @@ module Extension
         Tasks::CreateExtension.any_instance.expects(:call).never
         ExtensionProject.expects(:write_env_file).never
 
-        CLI::UI::Prompt.expects(:confirm).with(Content::Register::CONFIRM_QUESTION).returns(false).once
+        CLI::UI::Prompt.expects(:confirm).with(Content::Register::CONFIRM_QUESTION % @app.title).returns(false).once
 
         io = capture_io_and_assert_raises(ShopifyCli::Abort) { run_register_command }
 
@@ -61,7 +61,7 @@ module Extension
         )
         refute @project.registered?
 
-        CLI::UI::Prompt.expects(:confirm).with(Content::Register::CONFIRM_QUESTION).returns(true).once
+        CLI::UI::Prompt.expects(:confirm).with(Content::Register::CONFIRM_QUESTION % @app.title).returns(true).once
         Tasks::CreateExtension.any_instance.expects(:call).with(
           context: @context,
           api_key: @app.api_key,
@@ -84,7 +84,7 @@ module Extension
         confirm_content_output(io: io, expected_content: [
           Content::Register::CONFIRM_INFO % @test_extension_type.name,
           Content::Register::WAITING_TEXT,
-          Content::Register::SUCCESS % @project.title,
+          Content::Register::SUCCESS % [@project.title, @app.title],
           Content::Register::SUCCESS_INFO,
         ])
       end

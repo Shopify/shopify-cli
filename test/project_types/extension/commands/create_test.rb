@@ -30,7 +30,7 @@ module Extension
         end
 
         confirm_content_output(io: io, expected_content: [
-          Content::Create::READY_TO_START % name,
+          Content::Create::READY_TO_START % [name, directory_name],
           Content::Create::LEARN_MORE % @test_extension_type.name
         ])
       end
