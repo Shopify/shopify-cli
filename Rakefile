@@ -1,4 +1,4 @@
-require_relative 'bin/support/load_shopify'
+require_relative 'bin/load_shopify'
 require 'rake/testtask'
 
 Rake::TestTask.new do |t|
@@ -10,7 +10,7 @@ end
 
 desc("Start up irb with cli loaded")
 task :console do
-  exec('irb', '-r', './bin/support/load_shopify.rb', '-r', 'byebug')
+  exec('irb', '-r', './bin/load_shopify.rb', '-r', 'byebug')
 end
 
 namespace :rdoc do

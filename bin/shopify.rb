@@ -25,7 +25,7 @@ module Kernel
   end
 end
 
-require_relative 'support/load_shopify'
+require_relative './load_shopify'
 
 exit(ShopifyCli::ErrorHandler.call do
   ShopifyCli::Core::EntryPoint.call(ARGV.dup)
