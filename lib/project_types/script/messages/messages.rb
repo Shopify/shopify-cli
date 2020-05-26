@@ -87,7 +87,7 @@ module Script
 
         deploy: {
           help: <<~HELP,
-          Build the script and deploy it to app.
+          Build the script and deploy it to the app. If there's a script with the same extension point already deployed for an app, use --force to replace it.
             Usage: {{command:%s deploy --API_key=<API_key> [--force]}}
           HELP
 
@@ -116,6 +116,10 @@ module Script
           Turn on script in development store.
             Usage: {{command:%s enable --API_key=<API_key> --shop_domain=<my_store.myshopify.com>}}
           HELP
+
+          info: "{{*}} A script always remains enabled until you disable it ⁠— even after deploying "\
+                "script changes with the same extension point to an app. To disable a script, use "\
+                "the 'disable' command.",
 
           error: {
             operation_failed: "Can't enable script.",
