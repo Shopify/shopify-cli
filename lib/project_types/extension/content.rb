@@ -64,6 +64,10 @@ module Extension
         Extension::Models::Types::SubscriptionManagement::IDENTIFIER => {
           name: 'Subscription Management',
           tagline: '(limit 1 per app)',
+        },
+        Extension::Models::Types::CheckoutPostPurchase::IDENTIFIER => {
+          name: 'Checkout Post Purchase',
+          tagline: '',
         }
       }
     end
