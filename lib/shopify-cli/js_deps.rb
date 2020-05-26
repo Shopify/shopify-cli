@@ -10,7 +10,15 @@ module ShopifyCli
     property :ctx, accepts: ShopifyCli::Context, required: true
 
     ##
-    # Proxy to ShopifyCli::JsDeps.new.install.
+    # Proxy to instance method ShopifyCli::JsDeps.new.install.
+    #
+    # #### Parameters
+    # - `ctx`: running context from your command
+    # - `verbose`: whether to run the installation tools in silent mode
+    #
+    # #### Example
+    #
+    #   ShopifyCli::JsDeps.install(ctx)
     #
     def self.install(ctx, verbose = false)
       new(ctx: ctx).install(verbose)
@@ -20,11 +28,12 @@ module ShopifyCli
     # Installs all of a project's JavaScript dependencies using Yarn or NPM, based on the project's settings.
     #
     # #### Parameters
-    # - `verbose`: whether to run the installation tools in silent mode.
+    # - `verbose`: whether to run the installation tools in silent mode
     #
     # #### Example
     #
-    #   ShopifyCli::JsDeps.new(ShopifyCli::Context context).install
+    #   # context is the running context for the command
+    #   ShopifyCli::JsDeps.new(context).install(true)
     #
     def install(verbose = false)
       CLI::UI::Frame.open(ctx.message('core.js_deps.installing', yarn? ? 'yarn' : 'npm')) do
@@ -43,14 +52,12 @@ module ShopifyCli
       cmd = %w(yarn install)
       cmd << '--silent' unless verbose
 
-      success = CLI::Kit::System.system(*cmd, chdir: ctx.root) do |out, err|
+      CLI::Kit::System.system(*cmd, chdir: ctx.root) do |out, err|
         ctx.puts out
         err.lines.each do |e|
           ctx.puts e
         end
       end.success?
-      return false unless success
-      true
     end
 
     def npm(verbose = false)
