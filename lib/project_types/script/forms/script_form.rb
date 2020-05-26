@@ -6,7 +6,7 @@ module Script
       protected
 
       def organization
-        @organization ||= ask_organization(ctx)
+        @organization ||= ask_organization
       end
 
       def organizations
@@ -35,7 +35,7 @@ module Script
         end
       end
 
-      def ask_organization(ctx)
+      def ask_organization
         if organizations.count == 0
           raise Errors::NoExistingOrganizationsError
         elsif organizations.count == 1
