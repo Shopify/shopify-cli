@@ -100,7 +100,7 @@ module Node
         @ctx.root = File.join(@ctx.root, name)
 
         set_npm_config
-        ShopifyCli::JsDeps.install(@ctx, options.flags[:verbose] ? true : false)
+        ShopifyCli::JsDeps.install(@ctx, !options.flags[:verbose].nil?)
 
         begin
           @ctx.rm_r('.git')
