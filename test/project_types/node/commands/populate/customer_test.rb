@@ -1,15 +1,11 @@
-require 'test_helper'
+# frozen_string_literal: true
+require 'project_types/node/test_helper'
 
 module Node
   module Commands
     module PopulateTests
       class CustomerTest < MiniTest::Test
         include TestHelpers::Schema
-
-        def setup
-          super
-          ShopifyCli::ProjectType.load_type(:node)
-        end
 
         def test_populate_calls_api_with_mutation
           ShopifyCli::Helpers::Haikunator.stubs(:name).returns(['first', 'last'])

@@ -17,12 +17,12 @@ module Script
           private
 
           def deploy_script(ctx, script, api_key, force)
-            UI::StrictSpinner.spin(ctx.message('script.application.deploy_script.deploying')) do |spinner|
+            UI::StrictSpinner.spin(ctx.message('script.application.deploying')) do |spinner|
               compiled_type = Infrastructure::ScriptBuilder.for(script).compiled_type
               Infrastructure::DeployPackageRepository.new
                 .get_deploy_package(script, compiled_type)
                 .deploy(Infrastructure::ScriptService.new(ctx: ctx), api_key, force)
-              spinner.update_title(ctx.message('script.application.deploy_script.deployed'))
+              spinner.update_title(ctx.message('script.application.deployed'))
             end
           end
         end

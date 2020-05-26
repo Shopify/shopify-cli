@@ -1,4 +1,5 @@
-require 'test_helper'
+# frozen_string_literal: true
+require 'project_types/node/test_helper'
 
 module Node
   module Commands
@@ -8,7 +9,6 @@ module Node
       def setup
         super
         project_context('app_types', 'node')
-        ShopifyCli::ProjectType.load_type(:node)
         ShopifyCli::Tasks::EnsureTestShop.stubs(:call)
         @context.stubs(:system)
       end

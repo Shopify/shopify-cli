@@ -86,4 +86,3 @@ module ShopifyCli
     end
   end
 end
-

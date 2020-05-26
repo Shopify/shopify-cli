@@ -1,5 +1,6 @@
 require_relative 'bin/support/load_shopify'
 require 'rake/testtask'
+require 'rubocop/rake_task'
 
 Rake::TestTask.new do |t|
   t.libs += %w(test)
@@ -7,6 +8,10 @@ Rake::TestTask.new do |t|
   t.verbose = false
   t.warning = false
 end
+
+RuboCop::RakeTask.new
+
+task(default: [:test, :rubocop])
 
 desc("Start up irb with cli loaded")
 task :console do
