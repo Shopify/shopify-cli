@@ -34,6 +34,4 @@ module Node
   module Forms
     autoload :Create, Project.project_filepath('forms/create')
   end
-
-  autoload :JsDeps, Project.project_filepath('js_deps')
 end

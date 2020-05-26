@@ -1,7 +1,7 @@
 # frozen_string_literal: true
 require 'project_types/node/test_helper'
 
-module Node
+module ShopifyCli
   class JsDepsTest < MiniTest::Test
     def setup
       project_context('app_types', 'node')

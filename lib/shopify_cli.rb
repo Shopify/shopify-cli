@@ -109,6 +109,7 @@ module ShopifyCli
   autoload :Git, 'shopify-cli/git'
   autoload :Helpers, 'shopify-cli/helpers'
   autoload :Heroku, 'shopify-cli/heroku'
+  autoload :JsDeps, 'shopify-cli/js_deps'
   autoload :Log, 'shopify-cli/log'
   autoload :OAuth, 'shopify-cli/oauth'
   autoload :Options, 'shopify-cli/options'
