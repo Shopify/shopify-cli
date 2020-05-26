@@ -55,11 +55,11 @@ module ShopifyCli
       #
       # #### Example
       #
-      #   type = ShopifyCli::Project.current_app_type
+      #   type = ShopifyCli::Project.current_project_type
       #
       def current_project_type
         return unless has_current?
-        current.config['app_type'].to_sym
+        current.config['project_type'].to_sym
       end
 
       ##
@@ -70,17 +70,17 @@ module ShopifyCli
       # #### Parameters
       #
       # * `ctx` - the current running context of your command
-      # * `app_type` - a string or symbol of your app type name
+      # * `project_type` - a string or symbol of your project type name
       # * `organization_id` - the id of the organization that the app owned by. Used for metrics
       # * `identifiers` - an optional hash of other app identifiers
       #
       # #### Example
       #
-      #   type = ShopifyCli::Project.current_app_type
+      #   type = ShopifyCli::Project.current_project_type
       #
-      def write(ctx, app_type:, organization_id:, **identifiers)
+      def write(ctx, project_type:, organization_id:, **identifiers)
         require 'yaml' # takes 20ms, so deferred as late as possible.
-        content = Hash[{ app_type: app_type, organization_id: organization_id.to_i }
+        content = Hash[{ project_type: project_type, organization_id: organization_id.to_i }
           .merge(identifiers)
           .collect { |k, v| [k.to_s, v] }]
 
@@ -156,6 +156,13 @@ module ShopifyCli
         unless config.is_a?(Hash)
           raise ShopifyCli::Abort, Context.message('core.project.error.cli_yaml.not_hash')
         end
+
+        # The app_type key was deprecated in favour of project_type, so replace it
+        if config.key?('app_type')
+          config['project_type'] = config['app_type']
+          config.delete('app_type')
+        end
+
         config
       end
     end
