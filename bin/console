@@ -1,8 +1,0 @@
-#!/usr/bin/env ruby
-
-require "irb"
-require_relative './load_shopify'
-
-# require your libraries + basic initialization
-
-IRB.start

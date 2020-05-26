@@ -12,3 +12,4 @@ tmp/
 .git/*
 markdown_intermediate
 .idea
+*.gem
