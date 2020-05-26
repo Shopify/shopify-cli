@@ -9,7 +9,7 @@ module Node
           ShopifyCli::Context.message('node.deploy.heroku.help', ShopifyCli::TOOL_NAME)
         end
 
-        def call(_args, _name)
+        def call(*)
           spin_group = CLI::UI::SpinGroup.new
           heroku_service = ShopifyCli::Heroku.new(@ctx)
 

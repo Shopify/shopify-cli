@@ -1,4 +1,5 @@
-require 'test_helper'
+# frozen_string_literal: true
+require 'project_types/rails/test_helper'
 require 'semantic/semantic'
 
 module Rails
@@ -19,11 +20,6 @@ module Rails
         project_type: rails
         organization_id: 42
       APPTYPE
-
-      def setup
-        super
-        ShopifyCli::ProjectType.load_type(:rails)
-      end
 
       def test_prints_help_with_no_name_argument
         io = capture_io { run_cmd('create rails --help') }
