@@ -67,7 +67,7 @@ module ShopifyCli
                   cli_sha: "bb6f42193239a248f054e5019e469bc75f3adf1b",
                   ruby_version: RUBY_VERSION,
                   metadata: "{\"foo\":\"identifier\"}",
-                  api_client_id: "apikey",
+                  # api_client_id: "apikey",
                   partner_id: 42,
                 },
               })
@@ -105,7 +105,7 @@ module ShopifyCli
                   uname: RbConfig::CONFIG["host"],
                   cli_sha: "bb6f42193239a248f054e5019e469bc75f3adf1b",
                   ruby_version: RUBY_VERSION,
-                  api_client_id: "apikey",
+                  # api_client_id: "apikey",
                   partner_id: 42,
                 },
               })
