@@ -150,6 +150,11 @@ module Script
           create: {
             select_extension_point: "Which extension point do you want to use?",
             script_name: "Script Name",
+
+            error: {
+              invalid_name: "Invalid script name: replace or remove unsupported characters. Valid "\
+                            "characters are numbers, letters, spaces, hyphens, or underscores.",
+            },
           },
           script_form: {
             ask_app_api_key_default: "Which app do you want this script to belong to?",
