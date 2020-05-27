@@ -3,7 +3,7 @@ require 'test_helper'
 module ShopifyCli
   class APITest < MiniTest::Test
     class TestAPI < API
-      def test_it(query_name)
+      def call_load_query(query_name)
         load_query(query_name)
       end
     end
@@ -71,7 +71,7 @@ module ShopifyCli
       File.expects(:exist?).with(expected_path).returns(true)
       File.expects(:read).with(expected_path).returns('content')
 
-      assert_equal(new_api.test_it('my_query'), 'content')
+      assert_equal(new_api.call_load_query('my_query'), 'content')
     end
 
     def test_load_query_will_fall_back_to_core_queries
@@ -84,7 +84,7 @@ module ShopifyCli
       expected_path = File.join(ShopifyCli::ROOT, 'lib', 'graphql', 'my_query.graphql')
       File.expects(:read).with(expected_path).returns('content')
 
-      assert_equal(new_api.test_it('my_query'), 'content')
+      assert_equal(new_api.call_load_query('my_query'), 'content')
     end
 
     def test_load_query_will_not_read_project_type_queries_if_not_in_project
@@ -92,7 +92,7 @@ module ShopifyCli
       ShopifyCli::Project.expects(:current_project_type).returns(nil)
       expected_path = File.join(ShopifyCli::ROOT, 'lib', 'graphql', 'my_query.graphql')
       File.expects(:read).with(expected_path).returns('content')
-      assert_equal(new_api.test_it('my_query'), 'content')
+      assert_equal(new_api.call_load_query('my_query'), 'content')
     end
   end
 end
