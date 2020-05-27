@@ -34,7 +34,7 @@ module Rails
         set_custom_ua
         ShopifyCli::Project.write(
           @ctx,
-          app_type: 'rails',
+          project_type: 'rails',
           organization_id: form.organization_id,
         )
 

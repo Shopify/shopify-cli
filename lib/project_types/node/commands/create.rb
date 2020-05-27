@@ -9,6 +9,7 @@ module Node
         parser.on('--organization_id=ID') { |url| flags[:organization_id] = url }
         parser.on('--shop_domain=MYSHOPIFYDOMAIN') { |url| flags[:shop_domain] = url }
         parser.on('--type=APPTYPE') { |url| flags[:type] = url }
+        parser.on('--verbose') { flags[:verbose] = true }
       end
 
       def call(args, _name)
@@ -21,7 +22,7 @@ module Node
 
         ShopifyCli::Project.write(
           @ctx,
-          app_type: 'node',
+          project_type: 'node',
           organization_id: form.organization_id,
         )
 
@@ -99,7 +100,7 @@ module Node
         @ctx.root = File.join(@ctx.root, name)
 
         set_npm_config
-        JsDeps.install(@ctx)
+        ShopifyCli::JsDeps.install(@ctx, !options.flags[:verbose].nil?)
 
         begin
           @ctx.rm_r('.git')

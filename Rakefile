@@ -27,6 +27,7 @@ namespace :rdoc do
     'lib/shopify-cli/db.rb',
     'lib/shopify-cli/git.rb',
     'lib/shopify-cli/heroku.rb',
+    'lib/shopify-cli/js_deps.rb',
     'lib/shopify-cli/partners_api.rb',
     'lib/shopify-cli/process_supervision.rb',
     'lib/shopify-cli/project.rb',

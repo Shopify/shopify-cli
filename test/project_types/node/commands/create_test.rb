@@ -17,7 +17,7 @@ module Node
 
       SHOPIFYCLI_FILE = <<~APPTYPE
         ---
-        app_type: node
+        project_type: node
         organization_id: 42
       APPTYPE
 
@@ -73,7 +73,7 @@ module Node
           ['https://registry.yarnpkg.com', nil]
         )
         ShopifyCli::Git.expects(:clone).with('https://github.com/Shopify/shopify-app-node.git', 'test-app')
-        JsDeps.expects(:install)
+        ShopifyCli::JsDeps.expects(:install)
         ShopifyCli::Tasks::CreateApiClient.stubs(:call).returns({
           "apiKey" => "ljdlkajfaljf",
           "apiSecretKeys" => [{ "secret": "kldjakljjkj" }],
@@ -111,7 +111,7 @@ module Node
         )
 
         ShopifyCli::Git.expects(:clone).with('https://github.com/Shopify/shopify-app-node.git', 'test-app')
-        JsDeps.expects(:install)
+        ShopifyCli::JsDeps.expects(:install)
         ShopifyCli::Tasks::CreateApiClient.stubs(:call).returns({
           "apiKey" => "ljdlkajfaljf",
           "apiSecretKeys" => [{ "secret": "kldjakljjkj" }],
@@ -138,7 +138,7 @@ module Node
           ['https://registry.yarnpkg.com', nil]
         )
         ShopifyCli::Git.expects(:clone).with('https://github.com/Shopify/shopify-app-node.git', 'test-app')
-        JsDeps.expects(:install)
+        ShopifyCli::JsDeps.expects(:install)
 
         stub_partner_req(
           'create_app',
@@ -198,7 +198,7 @@ module Node
           'https://registry.yarnpkg.com',
           chdir: @context.root + '/test-app'
         )
-        JsDeps.expects(:install)
+        ShopifyCli::JsDeps.expects(:install)
 
         stub_partner_req(
           'create_app',

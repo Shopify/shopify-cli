@@ -44,7 +44,7 @@ describe Script::Layers::Application::CreateScript do
           .expects(:write)
           .with(
             @context,
-            app_type: :script,
+            project_type: :script,
             organization_id: nil,
             extension_point_type: ep.type,
             script_name: script_name,
