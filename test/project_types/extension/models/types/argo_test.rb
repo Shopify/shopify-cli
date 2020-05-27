@@ -15,22 +15,24 @@ module Extension
           super
           ShopifyCli::ProjectType.load_type(:extension)
 
+          @git_template = 'https://www.github.com/fake_template.git'
+          @argo = Argo.new(git_template: @git_template)
           @identifier = 'FAKE_ARGO_TYPE'
           @directory = 'fake_directory'
         end
 
         def test_create_clones_repo_then_initializes_project_then_cleans_up
-          Argo.expects(:clone_template).with(@directory, @context).once
-          Argo.expects(:initialize_project).with(@identifier, @context).once
-          Argo.expects(:cleanup).with(@context).once
+          @argo.expects(:clone_template).with(@directory, @context).once
+          @argo.expects(:initialize_project).with(@identifier, @context).once
+          @argo.expects(:cleanup).with(@context).once
 
-          Argo.create(@directory, @identifier, @context)
+          @argo.create(@directory, @identifier, @context)
         end
 
         def test_clone_template_clones_argo_template_git_repo_into_directory_and_updates_context_root
-          ShopifyCli::Git.expects(:clone).with(Argo::GIT_TEMPLATE, @directory, ctx: @context).once
+          ShopifyCli::Git.expects(:clone).with(@git_template, @directory, ctx: @context).once
 
-          Argo.clone_template(@directory, @context)
+          @argo.clone_template(@directory, @context)
 
           assert_equal @directory, Pathname(@context.root).each_filename.to_a.last
         end
@@ -42,7 +44,7 @@ module Extension
           JsDeps.any_instance.expects(:yarn?).returns(false).once
           @context.expects(:system).with(*expected_npm_command, chdir: @context.root).once
 
-          Argo.initialize_project(@identifier, @context)
+          @argo.initialize_project(@identifier, @context)
         end
 
         def test_initialize_project_installs_js_dependencies_and_runs_generate_script_with_yarn
@@ -52,19 +54,19 @@ module Extension
           JsDeps.any_instance.expects(:yarn?).returns(true).once
           @context.expects(:system).with(*expected_yarn_command, chdir: @context.root).once
 
-          Argo.initialize_project(@identifier, @context)
+          @argo.initialize_project(@identifier, @context)
         end
 
         def test_cleanup_removes_git_and_script_directories
           @context.expects(:rm_r).with(Argo::GIT_DIRECTORY).once
           @context.expects(:rm_r).with(Argo::SCRIPTS_DIRECTORY).once
 
-          Argo.cleanup(@context)
+          @argo.cleanup(@context)
         end
 
         def test_config_aborts_with_error_if_script_file_doesnt_exist
           error = assert_raises ShopifyCli::Abort do
-            Argo.config(@context)
+            @argo.config(@context)
           end
 
           assert error.message.include?(Content::Models::TYPES[:ARGO][:missing_file_error])
@@ -74,7 +76,7 @@ module Extension
           File.stubs(:exists?).returns(true)
           Base64.stubs(:strict_encode64).raises(IOError)
 
-          error = assert_raises(ShopifyCli::Abort) { Argo.config(@context) }
+          error = assert_raises(ShopifyCli::Abort) { @argo.config(@context) }
           assert error.message.include?(Content::Models::TYPES[:ARGO][:script_prepare_error])
         end
 
@@ -82,17 +84,29 @@ module Extension
           File.stubs(:exists?).returns(true)
           File.any_instance.stubs(:read).raises(IOError)
 
-          error = assert_raises(ShopifyCli::Abort) { Argo.config(@context) }
+          error = assert_raises(ShopifyCli::Abort) { @argo.config(@context) }
           assert error.message.include?(Content::Models::TYPES[:ARGO][:script_prepare_error])
         end
 
         def test_config_encodes_script_into_context_if_it_exists
           with_stubbed_script(@context, Argo::SCRIPT_PATH) do
-            config = Argo.config(@context)
+            config = @argo.config(@context)
 
             assert_equal [:serialized_script], config.keys
             assert_equal Base64.strict_encode64(TEMPLATE_SCRIPT.chomp), config[:serialized_script]
           end
+        end
+
+        def test_admin_method_returns_an_argo_extension_with_the_subscription_management_template
+          git_admin_template = 'https://github.com/Shopify/shopify-app-extension-template.git'.freeze
+          argo = Models::Types::Argo.admin
+          assert_equal(argo.git_template, git_admin_template)
+        end
+
+        def test_checkout_method_returns_an_argo_extension_with_the_checkout_post_purchase_template
+          git_checkout_template = 'https://github.com/Shopify/argo-checkout-template.git'.freeze
+          argo = Models::Types::Argo.checkout
+          assert_equal(argo.git_template, git_checkout_template)
         end
       end
     end

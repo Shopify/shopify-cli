@@ -8,11 +8,11 @@ module Extension
         IDENTIFIER = 'CHECKOUT_POST_PURCHASE'
 
         def create(directory_name, context)
-          Models::Types::Argo.create(directory_name, IDENTIFIER, context)
+          Models::Types::Argo.checkout.create(directory_name, IDENTIFIER, context)
         end
 
         def config(context)
-          Models::Types::Argo.config(context)
+          Models::Types::Argo.checkout.config(context)
         end
       end
     end
