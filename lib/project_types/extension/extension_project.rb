@@ -11,7 +11,7 @@ module Extension
       def write_cli_file(context:, type:)
         ShopifyCli::Project.write(
           context,
-          app_type: :extension,
+          project_type: :extension,
           organization_id: nil,
           "#{EXTENSION_TYPE_KEY}": type
         )
