@@ -4,7 +4,7 @@ require 'shopify_cli'
 module Extension
   module Commands
     class Build < ExtensionCommand
-      hidden_command
+      hidden_feature
 
       YARN_BUILD_COMMAND = %w(build)
       NPM_BUILD_COMMAND = %w(run-script build)

@@ -1,7 +1,6 @@
 # frozen_string_literal: true
 module Rails
   class Project < ShopifyCli::ProjectType
-    # hidden_project_type
     creator 'Ruby on Rails App', 'Rails::Commands::Create'
 
     register_command('Rails::Commands::Deploy', "deploy")

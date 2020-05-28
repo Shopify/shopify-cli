@@ -2,7 +2,7 @@
 
 module Script
   class Project < ShopifyCli::ProjectType
-    hidden_project_type
+    hidden_feature
     creator 'Script', 'Script::Commands::Create'
 
     register_command('Script::Commands::Push', 'push')

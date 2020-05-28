@@ -3,12 +3,13 @@ require 'shopify_cli'
 
 module ShopifyCli
   class Command < CLI::Kit::BaseCommand
+    extend Feature::Set
+
     attr_writer :ctx
     attr_accessor :options
 
     class << self
       attr_writer :ctx
-      attr_reader :hidden
 
       def call(args, command_name)
         subcommand, resolved_name = subcommand_registry.lookup_command(args.first)
@@ -21,10 +22,6 @@ module ShopifyCli
           return call_help(command_name) if cmd.options.help
           cmd.call(args, command_name)
         end
-      end
-
-      def hidden_command
-        @hidden = true
       end
 
       def options(&block)
