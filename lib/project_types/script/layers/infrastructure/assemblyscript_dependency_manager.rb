@@ -42,9 +42,7 @@ module Script
               "devDependencies": {
                 "@shopify/scripts-sdk-as": "#{@extension_point.sdks[:ts].sdk_version}",
                 "#{@extension_point.sdks[:ts].package}": "#{@extension_point.sdks[:ts].version}",
-                "@as-pect/assembly": "3.1.2",
                 "@as-pect/cli": "3.1.4",
-                "@as-pect/core": "3.1.4",
                 "yargs": "10.0.0",
                 "as-wasi": "^0.0.1",
                 "assemblyscript": "^0.9.4",
