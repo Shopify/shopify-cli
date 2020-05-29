@@ -3,18 +3,7 @@ require 'shopify_cli'
 module ShopifyCli
   module Tasks
     class CreateApiClient < ShopifyCli::Task
-      VALID_APP_TYPES = %w(public custom) # style guide?
-      VALID_DB_TYPES = ['mysql',
-                        'postgresql',
-                        'sqlite3',
-                        'oracle',
-                        'frontbase',
-                        'ibm_db',
-                        'sqlserver',
-                        'jdbcmysql',
-                        'jdbcsqlite3',
-                        'jdbcpostgresql',
-                        'jdbc']
+      VALID_APP_TYPES = %w(public custom)
 
       def call(ctx, org_id:, title:, app_url:, type:)
         resp = ShopifyCli::PartnersAPI.query(

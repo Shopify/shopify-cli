@@ -5,6 +5,18 @@ module Rails
     class Create < ShopifyCli::Form
       attr_accessor :name
       flag_arguments :title, :organization_id, :shop_domain, :type, :db
+      VALID_DB_TYPES = ['sqlite3',
+                        'mysql',
+                        'postgresql',
+                        'sqlite3',
+                        'oracle',
+                        'frontbase',
+                        'ibm_db',
+                        'sqlserver',
+                        'jdbcmysql',
+                        'jdbcsqlite3',
+                        'jdbcpostgresql',
+                        'jdbc']
 
       def ask
         self.title ||= CLI::UI::Prompt.ask(ctx.message('rails.forms.create.app_name'))
@@ -82,37 +94,21 @@ module Rails
 
       def ask_db
         if db.nil?
-          want_select = CLI::UI::Prompt.ask(ctx.message('rails.forms.create.db.want_select.select')) do |handler|
-            handler.option(ctx.message('rails.forms.create.db.want_select.select_no')) { false }
-            handler.option(ctx.message('rails.forms.create.db.want_select.select_yes')) { true }
-          end
-
-          if want_select
-            return CLI::UI::Prompt.ask(ctx.message('rails.forms.create.db.type.select')) do |handler|
-              handler.option(ctx.message('rails.forms.create.db.type.select_sqlite')) { 'sqlite' }
-              handler.option(ctx.message('rails.forms.create.db.type.select_mysql')) { 'mysql' }
-              handler.option(ctx.message('rails.forms.create.db.type.select_pg')) { 'postgresql' }
-              handler.option(ctx.message('rails.forms.create.db.type.select_oracle')) { 'oracle' }
-              handler.option(ctx.message('rails.forms.create.db.type.select_fb')) { 'frontbase' }
-              handler.option(ctx.message('rails.forms.create.db.type.select_ibm')) { 'ibm_db' }
-              handler.option(ctx.message('rails.forms.create.db.type.select_sql')) { 'sqlserver' }
-              handler.option(ctx.message('rails.forms.create.db.type.select_jdbc_mysql')) { 'jdbcmysql' }
-              handler.option(ctx.message('rails.forms.create.db.type.select_jdbc_sqlite')) { 'jdbcsqlite3' }
-              handler.option(ctx.message('rails.forms.create.db.type.select_jdbc_pg')) { 'jdbcpostgresql' }
-              handler.option(ctx.message('rails.forms.create.db.type.select_jdbc')) { 'jdbc' }
+          return 'sqlite3' unless CLI::UI::Prompt.confirm(ctx.message('rails.forms.create.db.want_select'),
+                                                          default: false)
+          @db = CLI::UI::Prompt.ask(ctx.message('rails.forms.create.db.select')) do |handler|
+            VALID_DB_TYPES.each do |db_type|
+              handler.option(ctx.message("rails.forms.create.db.select_#{db_type}")) { db_type }
             end
-          else
-            return 'sqlite3'
           end
         end
 
-        unless ShopifyCli::Tasks::CreateApiClient::VALID_DB_TYPES.include?(db)
+        unless VALID_DB_TYPES.include?(db)
           ctx.abort(ctx.message('rails.forms.create.error.invalid_db_type', db))
         end
-        ctx.puts(ctx.message('rails.forms.create.db.type.selected', db))
+        ctx.puts(ctx.message('rails.forms.create.db.selected', db))
         db
       end
     end
   end
 end
-

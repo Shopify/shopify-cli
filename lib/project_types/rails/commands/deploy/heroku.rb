@@ -11,7 +11,7 @@ module Rails
           ShopifyCli::Context.message('rails.deploy.heroku.help', ShopifyCli::TOOL_NAME)
         end
 
-        def call(_args, _name)
+        def call(*)
           CLI::UI::Frame.open(@ctx.message('rails.deploy.heroku.db_check.validating')) do
             CLI::UI::Spinner.spin(@ctx.message('rails.deploy.heroku.db_check.checking')) do |spinner|
               db_type, err = check_db(@ctx)
@@ -100,11 +100,11 @@ module Rails
         def check_db(ctx)
           out, stat = ctx.capture2e(DB_CHECK_CMD)
           if stat.success? && out.strip == 'sqlite'
-            return ['select_sqlite', 'rails.deploy.heroku.db_check.sqlite']
+            ['sqlite', 'rails.deploy.heroku.db_check.sqlite']
           elsif !stat.success?
-            return [nil, 'rails.deploy.heroku.db_check.problem']
+            [nil, 'rails.deploy.heroku.db_check.problem']
           else
-            return ['select_' + out.strip, nil]
+            [out.strip, nil]
           end
         end
       end

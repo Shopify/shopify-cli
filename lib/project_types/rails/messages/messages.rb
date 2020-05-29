@@ -78,7 +78,11 @@ module Rails
               checking: "Checking database type...",
               validated: "Database type \"%s\" validated for platform \"Heroku\"",
               problem: "A problem was encountered while checking your database type.",
-              sqlite: "Heroku does not support deployment using SQLite database. Please change database using {{command:db:system:change --to=[new_db_type]}} ({{underline:https://gorails.com/episodes/rails-6-db-system-change-command}})",
+              sqlite: <<~SQLITE,
+              Heroku does not support deployment using the SQLite database system.
+              Change the database type using {{command:rails db:system:change --to=[new_db_type]}}. For more info:
+              {{underline:https://gorails.com/episodes/rails-6-db-system-change-command}}
+              SQLITE
             },
             git: {
               checking: "Checking git repo…",
@@ -230,7 +234,7 @@ module Rails
           create: {
             error: {
               invalid_app_type: "Invalid App Type %s",
-              invalid_db_type: "Invalid DB Type %s",
+              invalid_db_type: "Invalid Database Type %s",
               organization_not_found: "Cannot find an organization with that ID",
               no_organizations: "No organizations available.",
             },
@@ -247,26 +251,24 @@ module Rails
               selected: "App Type {{green:%s}}",
             },
             db: {
-              want_select: {
-                select: "Would you like to select your database now? If you want to change this in the future, run {{command:db:system:change --to=[new_db_type]}} ({{underline:https://gorails.com/episodes/rails-6-db-system-change-command}})",
-                select_no: "No",
-                select_yes: "Yes",
-              },
-              type: {
-                select: "What database type would you like to use? Please ensure the database is installed.",
-                select_sqlite: "SQLite (default)",
-                select_mysql: "MySQL",
-                select_pg: "PostgreSQL",
-                select_oracle: "Oracle",
-                select_fb: "FrontBase",
-                select_ibm: "IBM_DB",
-                select_sql: "SQL Server",
-                select_jdbc_mysql: "JDBC MySQL",
-                select_jdbc_sqlite: "JDBC SQlite3",
-                select_jdbc_pg: "JDBC PostgreSQL",
-                select_jdbc: "JDBC",
-                selected: "Database Type {{green:%s}}",
-              },
+              want_select: <<~WANT_SELECT,
+              Would you like to select what database type to use now? (SQLite is the default)
+              If you want to change this in the future, run {{command:rails db:system:change --to=[new_db_type]}}. For more info:
+              {{underline:https://gorails.com/episodes/rails-6-db-system-change-command}}
+              WANT_SELECT
+              select: "What database type would you like to use? Please ensure the database is installed.",
+              select_sqlite3: "SQLite (default)",
+              select_mysql: "MySQL",
+              select_postgresql: "PostgreSQL",
+              select_oracle: "Oracle",
+              select_frontbase: "FrontBase",
+              select_ibm_db: "IBM_DB",
+              select_sqlserver: "SQL Server",
+              select_jdbcmysql: "JDBC MySQL",
+              select_jdbcsqlite3: "JDBC SQlite",
+              select_jdbcpostgresql: "JDBC PostgreSQL",
+              select_jdbc: "JDBC",
+              selected: "Database Type {{green:%s}}",
             },
             organization_select: "Select organization",
             organization: "Organization {{green:%s}}",

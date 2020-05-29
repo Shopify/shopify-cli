@@ -44,12 +44,14 @@ module Rails
         Gem.expects(:install).with(@context, 'rails', nil)
         Gem.expects(:install).with(@context, 'bundler', '~>1.0')
         Gem.expects(:install).with(@context, 'bundler', '~>2.0')
-        expect_command(%w(/gem/path/bin/rails new --skip-spring test-app))
+        expect_command(%w(/gem/path/bin/rails new --skip-spring --database=sqlite3 test-app))
         expect_command(%w(/gem/path/bin/bundle install),
                        chdir: File.join(@context.root, 'test-app'))
         expect_command(%w(/gem/path/bin/spring stop),
                        chdir: File.join(@context.root, 'test-app'))
         expect_command(%w(/gem/path/bin/rails generate shopify_app),
+                       chdir: File.join(@context.root, 'test-app'))
+        expect_command(%w(/gem/path/bin/rails db:create),
                        chdir: File.join(@context.root, 'test-app'))
         expect_command(%w(/gem/path/bin/rails db:migrate RAILS_ENV=development),
                        chdir: File.join(@context.root, 'test-app'))
@@ -95,12 +97,14 @@ module Rails
         Gem.expects(:install).with(@context, 'rails', nil)
         Gem.expects(:install).with(@context, 'bundler', '~>1.0')
         Gem.expects(:install).with(@context, 'bundler', '~>2.0')
-        expect_command(%w(/gem/path/bin/rails new --skip-spring --database="postgresql" test-app))
+        expect_command(%w(/gem/path/bin/rails new --skip-spring --database=postgresql test-app))
         expect_command(%w(/gem/path/bin/bundle install),
                        chdir: File.join(@context.root, 'test-app'))
         expect_command(%w(/gem/path/bin/spring stop),
                        chdir: File.join(@context.root, 'test-app'))
         expect_command(%w(/gem/path/bin/rails generate shopify_app),
+                       chdir: File.join(@context.root, 'test-app'))
+        expect_command(%w(/gem/path/bin/rails db:create),
                        chdir: File.join(@context.root, 'test-app'))
         expect_command(%w(/gem/path/bin/rails db:migrate RAILS_ENV=development),
                        chdir: File.join(@context.root, 'test-app'))
@@ -126,7 +130,7 @@ module Rails
           }
         )
 
-        perform_command('--db="postgresql"')
+        perform_command('--db=postgresql')
 
         FileUtils.rm_r('test-app')
       end
@@ -142,12 +146,14 @@ module Rails
         Gem.expects(:install).with(@context, 'rails', nil)
         Gem.expects(:install).with(@context, 'bundler', '~>1.0')
         Gem.expects(:install).with(@context, 'bundler', '~>2.0')
-        expect_command(%w(/gem/path/bin/rails new --skip-spring --edge -J test-app))
+        expect_command(%w(/gem/path/bin/rails new --skip-spring --database=sqlite3 --edge -J test-app))
         expect_command(%w(/gem/path/bin/bundle install),
                        chdir: File.join(@context.root, 'test-app'))
         expect_command(%w(/gem/path/bin/spring stop),
                        chdir: File.join(@context.root, 'test-app'))
         expect_command(%w(/gem/path/bin/rails generate shopify_app),
+                       chdir: File.join(@context.root, 'test-app'))
+        expect_command(%w(/gem/path/bin/rails db:create),
                        chdir: File.join(@context.root, 'test-app'))
         expect_command(%w(/gem/path/bin/rails db:migrate RAILS_ENV=development),
                        chdir: File.join(@context.root, 'test-app'))
@@ -179,6 +185,7 @@ module Rails
       end
 
       private
+
       def expect_command(command, chdir: @context.root)
         @context.expects(:system).with(*command, chdir: chdir)
       end
@@ -188,6 +195,7 @@ module Rails
                              --type=public \
                              --name=test-app \
                              --organization_id=42 \
+                             --db=sqlite3 \
                              --shop_domain=testshop.myshopify.com)
         run_cmd(default_new_cmd << add_cmd, false)
       end
