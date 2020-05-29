@@ -32,12 +32,11 @@ module ShopifyCli
       private
 
       def display_cli_constants(show_all_details)
-        cli_constants = %w(INSTALL_DIR)
+        cli_constants = %w(ROOT)
         cli_constants_extra = %w(
-          ROOT
           PROJECT_TYPES_DIR
           TEMP_DIR
-          CONFIG_HOME
+          CACHE_DIR
           TOOL_CONFIG_PATH
           LOG_FILE
           DEBUG_LOG_FILE
