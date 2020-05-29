@@ -20,7 +20,7 @@ module Node
           url: url,
           callback_url: "/auth/callback",
         )
-        if project.env.shop
+        if @ctx.mac? && project.env.shop
           @ctx.puts(@ctx.message('node.serve.open_info', project.env.shop))
           @ctx.on_siginfo do
             @ctx.open_url!("#{project.env.host}/auth?shop=#{project.env.shop}")
