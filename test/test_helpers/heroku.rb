@@ -51,11 +51,11 @@ module TestHelpers
     def expects_tar_heroku(status:)
       if status.nil?
         @context.expects(:system)
-          .with('tar', '-xf', download_path, chdir: ShopifyCli::ROOT)
+          .with('tar', '-xf', download_path, chdir: ShopifyCli::CACHE_DIR)
           .never
       else
         @context.expects(:system)
-          .with('tar', '-xf', download_path, chdir: ShopifyCli::ROOT)
+          .with('tar', '-xf', download_path, chdir: ShopifyCli::CACHE_DIR)
           .returns(status_mock[:"#{status}"])
       end
 
@@ -148,13 +148,13 @@ module TestHelpers
         @context.expects(:system)
           .with('curl', '-o', download_path,
           ShopifyCli::Heroku::DOWNLOAD_URLS[:mac],
-          chdir: ShopifyCli::ROOT)
+          chdir: ShopifyCli::CACHE_DIR)
           .never
       else
         @context.expects(:system)
           .with('curl', '-o', download_path,
             ShopifyCli::Heroku::DOWNLOAD_URLS[:mac],
-            chdir: ShopifyCli::ROOT)
+            chdir: ShopifyCli::CACHE_DIR)
           .returns(status_mock[:"#{status}"])
       end
     end
@@ -196,13 +196,13 @@ module TestHelpers
     end
 
     def download_path
-      File.join(ShopifyCli::ROOT, download_filename)
+      File.join(ShopifyCli::CACHE_DIR, download_filename)
     end
 
     def heroku_command(full_path: false)
       if full_path
         File.stubs(:exist?).returns(true)
-        File.join(ShopifyCli::ROOT, 'heroku', 'bin', 'heroku').to_s
+        File.join(ShopifyCli::CACHE_DIR, 'heroku', 'bin', 'heroku').to_s
       else
         'heroku'
       end
