@@ -55,6 +55,8 @@ module Extension
 
       def test_load_current_type_messages_calls_messages_for_type_with_type_if_there_is_a_current_project
         setup_temp_project
+        ShopifyCli::Project.expects(:has_current?).returns(true).once
+        ShopifyCli::Project.stubs(:current).returns(@project).once
         Messages::MessageLoading.expects(:messages_for_type).with(@type.identifier).once
 
         Messages::MessageLoading.load_current_type_messages

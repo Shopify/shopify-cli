@@ -79,7 +79,7 @@ module Extension
     end
 
     def is_integer?(value)
-      value.to_i.to_s == value
+      value.to_i.to_s == value.to_s
     end
   end
 end
