@@ -4,11 +4,17 @@ Gem::Specification.new do |spec|
   spec.name = "shopify-cli"
   spec.version = ShopifyCli::VERSION
   spec.authors = ["Shopify"]
+  # need to change the email that ends with `shopify.com`
   spec.email = ["developers@jadedpixel.com"]
   spec.license = 'Nonstandard'
 
-  spec.summary = "Shopify App CLI helps you build Shopify apps faster."
-  # spec.description   = %q{TODO: Write a longer description or delete this line.}
+  spec.summary = "Shopify CLI helps you build Shopify apps faster."
+  spec.description = <<~HERE
+    Shopify CLI helps you build Shopify apps faster. It quickly scaffolds Node.js
+    and Ruby-on-Rails embedded apps. It also automates many common tasks in the
+    development process and lets you quickly add popular features, such as billing
+    and webhooks.
+  HERE
   spec.homepage = "https://shopify.github.io/shopify-app-cli/"
   spec.required_ruby_version = Gem::Requirement.new(">= 2.3.0")
 
