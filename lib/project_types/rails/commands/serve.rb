@@ -20,7 +20,7 @@ module Rails
           url: url,
           callback_url: "/auth/shopify/callback",
         )
-        if @ctx.mac? && project.env.shop
+        if project.env.shop
           @ctx.puts(@ctx.message('rails.serve.open_info', project.env.shop))
           @ctx.on_siginfo do
             @ctx.open_url!("#{project.env.host}/login?shop=#{project.env.shop}")

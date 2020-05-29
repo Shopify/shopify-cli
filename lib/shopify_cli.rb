@@ -37,16 +37,16 @@ CLI::UI::StdoutRouter.enable
 module ShopifyCli
   extend CLI::Kit::Autocall
 
-  TOOL_NAME        = 'shopify'
-  TOOL_FULL_NAME   = 'Shopify App CLI'
-  ROOT             = File.expand_path('../..', __FILE__)
-  INSTALL_DIR      = File.expand_path('.shopify-app-cli', ENV.fetch('XDG_RUNTIME_DIR', ENV.fetch('HOME')))
+  TOOL_NAME         = 'shopify-cli'
+  TOOL_FULL_NAME    = 'Shopify App CLI'
+  ROOT              = File.expand_path('../..', __FILE__)
+  INSTALL_DIR       = File.expand_path('.shopify-app-cli', ENV.fetch('XDG_RUNTIME_DIR', ENV.fetch('HOME')))
   PROJECT_TYPES_DIR = File.join(ROOT, 'lib', 'project_types')
-  TEMP_DIR         = File.join(ROOT, '.tmp')
-  CONFIG_HOME      = File.expand_path(ENV.fetch('XDG_CONFIG_HOME', '~/.config'))
-  TOOL_CONFIG_PATH = File.join(CONFIG_HOME, TOOL_NAME)
-  LOG_FILE         = File.join(TOOL_CONFIG_PATH, 'logs', 'log.log')
-  DEBUG_LOG_FILE   = File.join(TOOL_CONFIG_PATH, 'logs', 'debug.log')
+  TEMP_DIR          = File.join(ROOT, '.tmp')
+  CACHE_DIR         = File.join(File.expand_path(ENV.fetch('XDG_CACHE_HOME', '~/.cache')), TOOL_NAME)
+  TOOL_CONFIG_PATH  = File.join(File.expand_path(ENV.fetch('XDG_CONFIG_HOME', '~/.config')), TOOL_NAME)
+  LOG_FILE          = File.join(TOOL_CONFIG_PATH, 'logs', 'log.log')
+  DEBUG_LOG_FILE    = File.join(TOOL_CONFIG_PATH, 'logs', 'debug.log')
 
   # programmer emoji if default install location, else wrench emoji
   EMOJI    = ROOT == '/opt/shopify-cli' ? "\u{1f469}\u{200d}\u{1f4bb}" : "\u{1f527}"

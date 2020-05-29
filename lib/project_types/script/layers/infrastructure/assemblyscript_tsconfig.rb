@@ -16,7 +16,7 @@ module Script
         end
 
         def with_extends_assemblyscript_config(relative_path_to_node_modules:)
-          relative_path = Pathname.new(relative_path_to_node_modules).relative_path_from(@dir_to_write_in)
+          relative_path = Pathname.new(relative_path_to_node_modules).relative_path_from(Pathname.new(@dir_to_write_in))
           @config[:extends] = "#{relative_path}/node_modules/assemblyscript/std/assembly.json"
           self
         end

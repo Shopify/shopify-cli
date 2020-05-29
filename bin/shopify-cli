@@ -27,6 +27,9 @@ end
 
 require_relative './load_shopify'
 
+# Make sure the cache dir always exists
+FileUtils.mkdir_p(ShopifyCli::CACHE_DIR)
+
 exit(ShopifyCli::ErrorHandler.call do
   ShopifyCli::Core::EntryPoint.call(ARGV.dup)
 end)

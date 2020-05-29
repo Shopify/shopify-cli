@@ -1,9 +1,7 @@
 .rubocop-*
 .tmp/*
-ngrok*
 .bundle/*
 .DS_Store
-heroku
 *.gz
 .vagrant/
 *.log

@@ -59,7 +59,7 @@ module Script
 
         def relative_path_to_source_dir
           src_path_from_root = ScriptRepository.new.relative_path_to_src
-          Pathname.new(src_path_from_root).relative_path_from(test_dir)
+          Pathname.new(src_path_from_root).relative_path_from(Pathname.new(test_dir))
         end
 
         def write_aspect_type_definitions_file
