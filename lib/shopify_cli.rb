@@ -124,3 +124,6 @@ module ShopifyCli
   require 'shopify-cli/messages/messages'
   Context.load_messages(ShopifyCli::Messages::MESSAGES)
 end
+
+# Make sure the cache dir always exists
+FileUtils.mkdir_p(ShopifyCli::CACHE_DIR)
