@@ -22,7 +22,6 @@ module Extension
         @test_extension_type.expects(:create).with(directory_name, @context).once
         ExtensionProject.expects(:write_cli_file).with(context: @context, type: @test_extension_type.identifier).once
         ExtensionProject.expects(:write_env_file).with(context: @context, title: name).once
-        ShopifyCli::Core::Finalize.expects(:request_cd).with(directory_name).once
 
         io = capture_io do
           Commands::Create.ctx = @context
@@ -35,7 +34,7 @@ module Extension
           Content::Create::LEARN_MORE % @test_extension_type.name
         ])
       end
-      
+
       def test_help_does_not_load_extension_project_type
         io = capture_io do
           run_cmd('create --help')

@@ -15,8 +15,6 @@ module Extension
           ExtensionProject.write_cli_file(context: @ctx, type: form.type.identifier)
           ExtensionProject.write_env_file(context: @ctx, title: form.name)
 
-          ShopifyCli::Core::Finalize.request_cd(form.directory_name)
-
           @ctx.puts(Content::Create::READY_TO_START % form.name)
           @ctx.puts(Content::Create::LEARN_MORE % form.type.name)
         end
