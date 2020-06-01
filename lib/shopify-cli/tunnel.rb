@@ -50,14 +50,15 @@ module ShopifyCli
     # #### Paramters
     #
     # * `ctx` - running context from your command
+    # * `port` - port to use to open the ngrok tunnel
     #
     # #### Returns
     #
     # * `url` - the url that the tunnel is now bound to and available to the public
     #
-    def start(ctx)
+    def start(ctx, port: PORT)
       install(ctx)
-      process = ShopifyCli::ProcessSupervision.start(:ngrok, ngrok_command)
+      process = ShopifyCli::ProcessSupervision.start(:ngrok, ngrok_command(port))
       log = fetch_url(ctx, process.log_path)
       if log.account
         ctx.puts(ctx.message('core.tunnel.start_with_account', log.url, log.account))
@@ -104,8 +105,8 @@ module ShopifyCli
       raise e.class, e.message
     end
 
-    def ngrok_command
-      "exec #{File.join(ShopifyCli::ROOT, 'ngrok')} http -log=stdout -log-level=debug #{PORT}"
+    def ngrok_command(port)
+      "exec #{File.join(ShopifyCli::ROOT, 'ngrok')} http -log=stdout -log-level=debug #{port}"
     end
 
     class LogParser # :nodoc:

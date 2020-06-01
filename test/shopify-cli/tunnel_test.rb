@@ -35,6 +35,21 @@ module ShopifyCli
       end
     end
 
+    def test_start_accepts_configurable_port
+      configured_port = 3000
+      with_log do
+        ShopifyCli::ProcessSupervision.stubs(:running?).returns(false)
+        ShopifyCli::ProcessSupervision.expects(:start).with(
+          :ngrok,
+          "exec #{File.join(ShopifyCli::ROOT, 'ngrok')} http -log=stdout -log-level=debug #{configured_port}"
+        ).returns(ShopifyCli::ProcessSupervision.new(:ngrok, pid: 40000))
+        @context.expects(:puts).with(
+          "{{v}} ngrok tunnel running at {{underline:https://example.ngrok.io}}"
+        )
+        assert_equal 'https://example.ngrok.io', ShopifyCli::Tunnel.start(@context, port: configured_port)
+      end
+    end
+
     def test_start_displays_url_with_account
       with_log('ngrok_account') do
         ShopifyCli::ProcessSupervision.stubs(:running?).returns(false)

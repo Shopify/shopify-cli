@@ -14,48 +14,11 @@ module Script
         assert_equal(form.shop_domain, 'shop.myshopify.com')
       end
 
-      def test_raises_when_no_apps_available
-        stub_organization
-        assert_raises Errors::NoExistingAppsError do
-          ask(api_key: nil)
-        end
-      end
-
-      def test_pick_singular_app
-        stub_organization(apps: [{ "apiKey" => 1234 }])
-        form = ask(api_key: nil)
-        assert_equal 1234, form.api_key
-      end
-
-      def test_display_selection_for_apps
-        stub_organization(apps: [{ "apiKey" => 1234 }, { "apiKey" => 1267 }])
-        CLI::UI::Prompt.expects(:ask)
-          .with('Which app is the script deployed to?')
-          .returns(1267)
-        form = ask(api_key: nil)
-        assert_equal(form.api_key, 1267)
-      end
-
-      def test_raises_when_no_shops_available
-        stub_organization
-        assert_raises Errors::NoExistingStoresError do
-          ask(shop_domain: nil)
-        end
-      end
-
-      def test_pick_singular_shop
-        stub_organization(stores: [{ 'shopId' => 1234, 'shopDomain' => 'domain' }])
-        form = ask(shop_domain: nil)
-        assert_equal 'domain', form.shop_domain
-      end
-
-      def test_display_selection_for_shops
-        stub_organization(stores: [{ 'shopId' => 1, 'shopDomain' => 'a' }, { 'shopId' => 2, 'shopDomain' => 'b' }])
-        CLI::UI::Prompt.expects(:ask)
-          .with('Which development store is the app installed on?', options: %w(a b))
-          .returns('a')
-        form = ask(shop_domain: nil)
-        assert_equal(form.shop_domain, 'a')
+      def test_calls_superclass_methods_when_no_flags
+        ScriptForm.any_instance.stubs(:organization).returns({})
+        ScriptForm.any_instance.expects(:ask_app_api_key).once
+        ScriptForm.any_instance.expects(:ask_shop_domain).once
+        ask(api_key: nil, shop_domain: nil)
       end
 
       private
