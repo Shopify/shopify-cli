@@ -43,9 +43,9 @@ module Script
                 "@shopify/scripts-sdk-as": "#{@extension_point.sdks[:ts].sdk_version}",
                 "@shopify/scripts-toolchain-as": "#{@extension_point.sdks[:ts].toolchain_version}",
                 "#{@extension_point.sdks[:ts].package}": "#{@extension_point.sdks[:ts].version}",
-                "@as-pect/cli": "3.1.4",
+                "@as-pect/cli": "3.2.0",
                 "as-wasi": "^0.0.1",
-                "assemblyscript": "^0.9.4"
+                "assemblyscript": "^0.10.0"
               },
               "scripts": {
                 "test": "asp --config test/as-pect.config.js --summary --verbose"
