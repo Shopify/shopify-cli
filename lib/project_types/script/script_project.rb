@@ -27,6 +27,11 @@ module Script
         FileUtils.mkdir_p(dir)
         Dir.chdir(dir)
       end
+
+      def cleanup(ctx:, script_name:, cli_dir:)
+        Dir.chdir(cli_dir)
+        ctx.rm_r("#{cli_dir}/#{script_name}") if Dir.exist?("#{cli_dir}/#{script_name}")
+      end
     end
   end
 end
