@@ -9,9 +9,9 @@ module Script
 
         def self.install(ctx:, language:, extension_point:, script_name:)
           dep_manager = Infrastructure::DependencyManager.for(ctx, language, extension_point, script_name)
-          return ctx.puts(ctx.message('script.project_deps.deps_are_installed')) if dep_manager.installed?
 
-          unless CLI::UI::Frame.open(ctx.message('script.project_deps.installing_with_npm')) do
+          unless CLI::UI::Frame.open(ctx.message('script.project_deps.checking_with_npm')) do
+            return ctx.puts(ctx.message('script.project_deps.none_required')) if dep_manager.installed?
             begin
               UI::StrictSpinner.spin(ctx.message('script.project_deps.installing')) do |spinner|
                 dep_manager.install
