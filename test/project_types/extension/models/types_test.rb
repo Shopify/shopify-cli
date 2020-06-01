@@ -11,7 +11,7 @@ module Extension
       end
 
       def test_loads_all_extension_types_within_types_folder
-        extension_type_count = 1
+        extension_type_count = 2
         assert_equal extension_type_count, Models::Type.repository.size
       end
 
