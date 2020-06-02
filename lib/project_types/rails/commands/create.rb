@@ -45,7 +45,6 @@ module Rails
           org_id: form.organization_id,
           title: form.title,
           type: form.type,
-          app_url: ShopifyCli::DEFAULT_APP_URL,
         )
 
         ShopifyCli::Resources::EnvFile.new(
