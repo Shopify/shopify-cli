@@ -14,7 +14,7 @@ module Extension
 
       def config
         {
-          ExtensionProjectKeys::EXTENSION_TYPE_KEY => type.identifier
+          ExtensionProjectKeys::EXTENSION_TYPE_KEY => type
         }
       end
 

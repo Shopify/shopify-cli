@@ -3,7 +3,7 @@ require 'shopify_cli'
 
 module Extension
   module Commands
-    class Tunnel < ShopifyCli::Command
+    class Tunnel < ExtensionCommand
       options do |parser, flags|
         parser.on('--port=PORT') { |port| flags[:port] = port }
       end

@@ -3,7 +3,7 @@ require 'shopify_cli'
 
 module Extension
   module Commands
-    class Build < ShopifyCli::Command
+    class Build < ExtensionCommand
       hidden_command
 
       YARN_BUILD_COMMAND = %w(yarn build)

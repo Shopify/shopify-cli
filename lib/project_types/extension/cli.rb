@@ -18,6 +18,7 @@ module Extension
   end
 
   module Commands
+    autoload :ExtensionCommand, Project.project_filepath('commands/extension_command')
     autoload :Create, Project.project_filepath('commands/create')
     autoload :Register, Project.project_filepath('commands/register')
     autoload :Build, Project.project_filepath('commands/build')

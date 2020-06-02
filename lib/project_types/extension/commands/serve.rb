@@ -2,7 +2,7 @@
 
 module Extension
   module Commands
-    class Serve < ShopifyCli::Command
+    class Serve < ExtensionCommand
 
       YARN_SERVE_COMMAND = %w(yarn server)
       NPM_SERVE_COMMAND = %w(npm run-script server)

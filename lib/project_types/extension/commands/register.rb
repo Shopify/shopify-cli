@@ -2,16 +2,14 @@
 
 module Extension
   module Commands
-    class Register < ShopifyCli::Command
+    class Register < ExtensionCommand
       options do |parser, flags|
         parser.on('--api_key=KEY') { |key| flags[:api_key] = key.downcase }
       end
 
       def call(args, command_name)
-        @project = ExtensionProject.current
-
         CLI::UI::Frame.open(@ctx.message('register.frame_title')) do
-          @ctx.abort(@ctx.message('register.already_registered')) if @project.registered?
+          @ctx.abort(@ctx.message('register.already_registered')) if project.registered?
 
           with_register_form(args) do |form|
             should_continue = confirm_registration(form.app)
@@ -19,7 +17,7 @@ module Extension
 
             update_project_files(form.app, registration)
 
-            @ctx.puts(@ctx.message('register.success', @project.title, form.app.title))
+            @ctx.puts(@ctx.message('register.success', project.title, form.app.title))
             @ctx.puts(@ctx.message('register.success_info'))
           end
         end
@@ -44,7 +42,7 @@ module Extension
       end
 
       def confirm_registration(app)
-        @ctx.puts(@ctx.message('register.confirm_info', @project.extension_type.name))
+        @ctx.puts(@ctx.message('register.confirm_info', extension_type.name))
         CLI::UI::Prompt.confirm(@ctx.message('register.confirm_question', app.title))
       end
 
@@ -54,10 +52,10 @@ module Extension
         Tasks::CreateExtension.call(
           context: @ctx,
           api_key: app.api_key,
-          type: @project.extension_type.identifier,
-          title: @project.title,
+          type: extension_type.identifier,
+          title: project.title,
           config: {},
-          extension_context: @project.extension_type.extension_context(@ctx)
+          extension_context: extension_type.extension_context(@ctx)
         )
       end
 
@@ -67,7 +65,7 @@ module Extension
           api_key: app.api_key,
           api_secret: app.secret,
           registration_id: registration.id,
-          title: @project.title
+          title: project.title
         )
       end
     end

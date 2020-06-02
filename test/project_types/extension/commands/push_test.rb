@@ -60,8 +60,8 @@ module Extension
             context: @context,
             api_key: @api_key,
             registration_id: @registration_id,
-            config: @type.config(@context),
-            extension_context: @type.extension_context(@context)
+            config: @test_extension_type.config(@context),
+            extension_context: @test_extension_type.extension_context(@context)
           )
           .returns(@version)
           .once

@@ -57,7 +57,7 @@ module Extension
         setup_temp_project
         ShopifyCli::Project.expects(:has_current?).returns(true).once
         ShopifyCli::Project.stubs(:current).returns(@project).once
-        Messages::MessageLoading.expects(:messages_for_type).with(@type.identifier).once
+        Messages::MessageLoading.expects(:messages_for_type).with(@type).once
 
         Messages::MessageLoading.load_current_type_messages
       end
@@ -68,17 +68,17 @@ module Extension
 
       def test_messages_for_type_returns_nil_if_the_type_key_does_not_exist
         setup_temp_project
-        Messages::TYPES.expects(:has_key?).with(@type.identifier.downcase.to_sym).returns(false).once
+        Messages::TYPES.expects(:has_key?).with(@type.downcase.to_sym).returns(false).once
 
-        assert_nil Messages::MessageLoading.messages_for_type(@type.identifier)
+        assert_nil Messages::MessageLoading.messages_for_type(@type)
       end
 
       def test_messages_for_type_returns_type_messages_if_they_exist
         setup_temp_project
-        Messages::TYPES.expects(:has_key?).with(@type.identifier.downcase.to_sym).returns(true).once
-        Messages::TYPES.expects(:[]).with(@type.identifier.downcase.to_sym).returns(@fake_overrides).once
+        Messages::TYPES.expects(:has_key?).with(@type.downcase.to_sym).returns(true).once
+        Messages::TYPES.expects(:[]).with(@type.downcase.to_sym).returns(@fake_overrides).once
 
-        assert_equal @fake_overrides, Messages::MessageLoading.messages_for_type(@type.identifier)
+        assert_equal @fake_overrides, Messages::MessageLoading.messages_for_type(@type)
       end
     end
   end

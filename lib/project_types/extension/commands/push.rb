@@ -3,13 +3,11 @@ require 'shopify_cli'
 
 module Extension
   module Commands
-    class Push < ShopifyCli::Command
+    class Push < ExtensionCommand
       TIME_DISPLAY_FORMAT = "%B %d, %Y %H:%M:%S %Z"
 
       def call(args, name)
-        @project = ExtensionProject.current
-
-        Commands::Register.new(@ctx).call(args, name) unless @project.registered?
+        Commands::Register.new(@ctx).call(args, name) unless project.registered?
         Commands::Build.new(@ctx).call(args, name)
 
         CLI::UI::Frame.open(@ctx.message('push.frame_title')) do
@@ -28,7 +26,7 @@ module Extension
       private
 
       def show_confirmation_message(confirmed_at)
-        @ctx.puts(@ctx.message('push.success_confirmation', @project.title, format_time(confirmed_at)))
+        @ctx.puts(@ctx.message('push.success_confirmation', project.title, format_time(confirmed_at)))
         @ctx.puts(@ctx.message('push.success_info'))
       end
 
@@ -45,10 +43,10 @@ module Extension
         with_waiting_text do
           Tasks::UpdateDraft.call(
             context: @ctx,
-            api_key: @project.app.api_key,
-            registration_id: @project.registration_id,
-            config: @project.extension_type.config(@ctx),
-            extension_context: @project.extension_type.extension_context(@ctx)
+            api_key: project.app.api_key,
+            registration_id: project.registration_id,
+            config: extension_type.config(@ctx),
+            extension_context: extension_type.extension_context(@ctx)
           )
         end
       end

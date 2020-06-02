@@ -10,14 +10,14 @@ module Extension
         api_key: 'TEST_KEY',
         api_secret: 'TEST_SECRET',
         title: 'Test',
-        type: @test_extension_type,
+        type_identifier: @test_extension_type.identifier,
         registration_id: 55)
 
         @context = TestHelpers::FakeContext.new(root: '/fake/root')
         @api_key = api_key
         @api_secret = api_secret
         @title = title
-        @type = type
+        @type = type_identifier
         @registration_id = registration_id
 
         @project = FakeExtensionProject.new(

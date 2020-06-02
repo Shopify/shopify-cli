@@ -45,8 +45,8 @@ module Extension
       get_extra_field(ExtensionProjectKeys::TITLE_KEY)
     end
 
-    def extension_type
-      @extension_type ||= Models::Type.load_type(config[ExtensionProjectKeys::EXTENSION_TYPE_KEY])
+    def extension_type_identifier
+      config[ExtensionProjectKeys::EXTENSION_TYPE_KEY]
     end
 
     def registration_id?

@@ -52,6 +52,9 @@ module Extension
           script_prepare_error: 'An error occurred while attempting to prepare your script.',
         },
       },
+      errors: {
+        unknown_type: 'Unknown extension type %s'
+      }
     }
 
     TYPES = {
