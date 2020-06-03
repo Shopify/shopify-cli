@@ -14,12 +14,12 @@ module Extension
           @ctx.abort(Content::Register::ALREADY_REGISTERED) if @project.registered?
 
           with_register_form(args) do |form|
-            should_continue = confirm_registration
+            should_continue = confirm_registration(form.app)
             registration = should_continue ? register_extension(form.app) : @ctx.abort(Content::Register::CONFIRM_ABORT)
 
             update_project_files(form.app, registration)
 
-            @ctx.puts(Content::Register::SUCCESS % @project.title)
+            @ctx.puts(Content::Register::SUCCESS % [@project.title, form.app.title])
             @ctx.puts(Content::Register::SUCCESS_INFO)
           end
         end
@@ -27,10 +27,10 @@ module Extension
 
       def self.help
         <<~HELP
-          Connect your local extension to a Shopify app.
+        Register your local extension to a Shopify app
             Usage: {{command:#{ShopifyCli::TOOL_NAME} register}}
             Options:
-              {{command:--api_key=API_KEY}} The API key used to connect an app to the extension. This can be found on the app page on Partners Dashboard.
+              {{command:--api_key=API_KEY}} The API key used to register an app with the extension. This can be found on the app page on Partners Dashboard.
         HELP
       end
 
@@ -43,9 +43,9 @@ module Extension
         yield form
       end
 
-      def confirm_registration
+      def confirm_registration(app)
         @ctx.puts(Content::Register::CONFIRM_INFO % @project.extension_type.name)
-        CLI::UI::Prompt.confirm(Content::Register::CONFIRM_QUESTION)
+        CLI::UI::Prompt.confirm(Content::Register::CONFIRM_QUESTION % app.title)
       end
 
       def register_extension(app)
