@@ -29,11 +29,14 @@ describe Script::Layers::Infrastructure::AssemblyScriptDependencyManager do
       @context
         .expects(:system)
         .with('npm', '--userconfig', './.npmrc', 'config', 'set', '@shopify:registry', 'https://registry.npmjs.com')
+      @context
+        .expects(:system)
+        .with('npm', '--userconfig', './.npmrc', 'config', 'set', 'engine-strict', 'true')
       subject
     end
 
     it "should write to package.json" do
-      @context.expects(:system).once
+      @context.expects(:system).twice
       subject
       assert File.exist?("package.json")
     end
