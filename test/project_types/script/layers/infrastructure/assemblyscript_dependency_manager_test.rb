@@ -13,6 +13,7 @@ describe Script::Layers::Infrastructure::AssemblyScriptDependencyManager do
         "package": "@shopify/extension-point-as-fake",
         "version": "*",
         "sdk-version": "*",
+        "toolchain-version": "*",
       },
     }
   end
