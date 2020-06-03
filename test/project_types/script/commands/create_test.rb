@@ -58,7 +58,7 @@ module Script
         ScriptProject.expects(:cleanup).with(
           ctx: @context,
           script_name: @script_name,
-          cli_dir: Dir.pwd
+          root_dir: @context.root
         )
 
         assert_raises StandardError do

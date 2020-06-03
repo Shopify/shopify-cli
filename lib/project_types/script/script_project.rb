@@ -28,9 +28,9 @@ module Script
         Dir.chdir(dir)
       end
 
-      def cleanup(ctx:, script_name:, cli_dir:)
-        Dir.chdir(cli_dir)
-        ctx.rm_r("#{cli_dir}/#{script_name}") if Dir.exist?("#{cli_dir}/#{script_name}")
+      def cleanup(ctx:, script_name:, root_dir:)
+        Dir.chdir(root_dir)
+        ctx.rm_r("#{root_dir}/#{script_name}") if Dir.exist?("#{root_dir}/#{script_name}")
       end
     end
   end
