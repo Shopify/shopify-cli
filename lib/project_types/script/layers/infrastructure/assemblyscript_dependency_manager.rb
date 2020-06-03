@@ -51,6 +51,9 @@ module Script
               },
               "scripts": {
                 "test": "asp --config test/as-pect.config.js --summary --verbose"
+              },
+              "engines": {
+                "node": ">=12.16"
               }
             }
           HERE
