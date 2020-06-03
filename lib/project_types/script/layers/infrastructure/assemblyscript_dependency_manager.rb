@@ -32,6 +32,9 @@ module Script
           @ctx.system(
             'npm', '--userconfig', './.npmrc', 'config', 'set', '@shopify:registry', 'https://registry.npmjs.com'
           )
+          @ctx.system(
+            'npm', '--userconfig', './.npmrc', 'config', 'set', 'engine-strict', 'true'
+          )
         end
 
         def write_package_json
