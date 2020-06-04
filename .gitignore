@@ -12,3 +12,4 @@ markdown_intermediate
 .idea
 vendor/bundle
 *.gem
+packaging/debian/shopify-cli.deb
