@@ -20,21 +20,10 @@ module Script
         ask
       end
 
-      def test_organizations_fetch_once
-        UI::StrictSpinner.expects(:spin).with('Fetching organizations').yields(FakeSpinner.new).returns(true).once
-        ShopifyCli::PartnersAPI::Organizations.expects(:fetch_with_app).once
-        form = Deploy.new(@context, [], [])
-        2.times { form.send(:organizations) }
-      end
-
-      def test_no_apps_raises_error
-        Deploy.any_instance.stubs(:organization).returns({ "apps" => [] })
-        assert_raises(Errors::NoExistingAppsError) { ask }
-      end
-
-      def test_no_organization_raises_error
-        Deploy.any_instance.stubs(:organizations).returns([])
-        assert_raises(Errors::NoExistingOrganizationsError) { ask }
+      def test_calls_superclass_methods_when_no_flags
+        ScriptForm.any_instance.stubs(:organization).returns({})
+        ScriptForm.any_instance.expects(:ask_app_api_key).once
+        ask(api_key: nil)
       end
 
       private
