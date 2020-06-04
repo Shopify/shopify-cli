@@ -16,12 +16,13 @@ module Extension
         @registration_id = 42
         @config = { }
         @extension_context = 'fake#context'
+        @location = 'https://www.fakeurl.com'
 
         @input = {
           api_key: @api_key,
           registration_id: @registration_id,
           config: @config,
-          extension_context: @extension_context
+          extension_context: @extension_context,
         }
       end
 
@@ -33,12 +34,12 @@ module Extension
           api_key: @api_key,
           registration_id: @registration_id,
           config: @config,
-          extension_context: @extension_context
+          extension_context: @extension_context,
         )
-
         assert_kind_of Models::Version, updated_draft
         assert_equal @registration_id, updated_draft.registration_id
         assert_equal @extension_context, updated_draft.context
+        assert_equal @location, updated_draft.location
         assert_kind_of Time, updated_draft.last_user_interaction_at
       end
 
@@ -51,7 +52,7 @@ module Extension
             api_key: @api_key,
             registration_id: @registration_id,
             config: @config,
-            extension_context: @extension_context
+            extension_context: @extension_context,
           )
         end
 
@@ -68,7 +69,7 @@ module Extension
             api_key: @api_key,
             registration_id: @registration_id,
             config: @config,
-            extension_context: @extension_context
+            extension_context: @extension_context,
           )
         end
 

@@ -12,7 +12,7 @@ module Extension
 
         CLI::UI::Frame.open(@ctx.message('push.frame_title')) do
           updated_draft_version = update_draft
-          show_confirmation_message(updated_draft_version.last_user_interaction_at)
+          show_confirmation_message(updated_draft_version.last_user_interaction_at, updated_draft_version.location)
         end
       end
 
@@ -25,9 +25,9 @@ module Extension
 
       private
 
-      def show_confirmation_message(confirmed_at)
+      def show_confirmation_message(confirmed_at, location)
         @ctx.puts(@ctx.message('push.success_confirmation', project.title, format_time(confirmed_at)))
-        @ctx.puts(@ctx.message('push.success_info'))
+        @ctx.puts(@ctx.message('push.success_info', location))
       end
 
       def format_time(time)

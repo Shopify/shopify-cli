@@ -8,6 +8,7 @@ module Extension
       property! :registration_id, accepts: Integer
       property! :last_user_interaction_at, accepts: Time
       property  :context, accepts: String
+      property  :location, accepts: String
     end
   end
 end
