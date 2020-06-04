@@ -32,6 +32,9 @@ module Script
           @ctx.system(
             'npm', '--userconfig', './.npmrc', 'config', 'set', '@shopify:registry', 'https://registry.npmjs.com'
           )
+          @ctx.system(
+            'npm', '--userconfig', './.npmrc', 'config', 'set', 'engine-strict', 'true'
+          )
         end
 
         def write_package_json
@@ -49,6 +52,9 @@ module Script
               },
               "scripts": {
                 "test": "asp --config test/as-pect.config.js --summary --verbose"
+              },
+              "engines": {
+                "node": ">=12.16"
               }
             }
           HERE
