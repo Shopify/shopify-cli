@@ -20,7 +20,9 @@ module Script
       end
 
       def ask_name
-        CLI::UI::Prompt.ask(@ctx.message('script.forms.create.script_name'))
+        name = CLI::UI::Prompt.ask(@ctx.message('script.forms.create.script_name'))
+        return name if name.match?(/^[0-9A-Za-z _-]*$/)
+        @ctx.abort(@ctx.message('script.forms.create.error.invalid_name'))
       end
     end
   end
