@@ -7,7 +7,8 @@ module ShopifyCli
   class JsDeps
     include SmartProperties
 
-    property :ctx, accepts: ShopifyCli::Context, required: true
+    property! :ctx, accepts: ShopifyCli::Context
+    property! :system, accepts: JsSystem, default: -> { JsSystem.new(ctx: ctx) }
 
     ##
     # Proxy to instance method ShopifyCli::JsDeps.new.install.
@@ -36,17 +37,16 @@ module ShopifyCli
     #   ShopifyCli::JsDeps.new(context).install(true)
     #
     def install(verbose = false)
-      CLI::UI::Frame.open(ctx.message('core.js_deps.installing', yarn? ? 'yarn' : 'npm')) do
-        yarn? ? yarn(verbose) : npm(verbose)
+      CLI::UI::Frame.open(ctx.message('core.js_deps.installing', @system.package_manager)) do
+        @system.call(
+          yarn: -> { yarn(verbose) },
+          npm: -> { npm(verbose) }
+        )
       end
       ctx.done(ctx.message('core.js_deps.installed'))
     end
 
     private
-
-    def yarn?
-      File.exist?(File.join(ctx.root, 'yarn.lock')) && CLI::Kit::System.system('which', 'yarn').success?
-    end
 
     def yarn(verbose = false)
       cmd = %w(yarn install)
