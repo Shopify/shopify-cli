@@ -15,12 +15,13 @@ module Script
       end
 
       class ExtensionPointAssemblyScriptSDK
-        attr_reader :package, :version, :sdk_version
+        attr_reader :package, :version, :sdk_version, :toolchain_version
 
         def initialize(config)
           @package = config["package"]
           @version = config["version"]
           @sdk_version = config["sdk-version"]
+          @toolchain_version = config["toolchain-version"]
         end
       end
     end

@@ -10,6 +10,7 @@ describe Script::Layers::Domain::ExtensionPoint do
         "package" => "@shopify/extension-point-as-fake",
         "version" => "*",
         "sdk-version" => "*",
+        "toolchain-version" => "*",
       },
     }
   end
@@ -24,6 +25,7 @@ describe Script::Layers::Domain::ExtensionPoint do
       refute_nil sdk.package
       refute_nil sdk.version
       refute_nil sdk.sdk_version
+      refute_nil sdk.toolchain_version
     end
   end
 end
