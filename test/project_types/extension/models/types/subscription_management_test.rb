@@ -14,7 +14,7 @@ module Extension
         def test_create_uses_standard_argo_create_implementation
           directory_name = 'subscription_management'
 
-          Models::Types::Argo.admin
+          Features::Argo.admin
             .expects(:create)
             .with(directory_name, SubscriptionManagement::IDENTIFIER, @context)
             .once
@@ -23,7 +23,7 @@ module Extension
         end
 
         def test_config_uses_standard_argo_config_implementation
-          Models::Types::Argo.admin.expects(:config).with(@context).once
+          Features::Argo.admin.expects(:config).with(@context).once
 
           @subscription_management.config(@context)
         end

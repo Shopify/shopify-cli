@@ -50,6 +50,12 @@ module Extension
         argo: {
           missing_file_error: 'Could not find built extension file.',
           script_prepare_error: 'An error occurred while attempting to prepare your script.',
+          dependencies: {
+            node: {
+              node_not_installed: 'Node must be installed to create this extension.',
+              version_too_low: 'Your node version %s does not meet the minimum required version %s',
+            }
+          }
         },
       },
       errors: {

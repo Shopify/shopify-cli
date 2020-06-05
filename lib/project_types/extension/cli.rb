@@ -39,6 +39,11 @@ module Extension
     autoload :Register, Project.project_filepath('forms/register')
   end
 
+  module Features
+    autoload :Argo, Project.project_filepath('features/argo')
+    autoload :ArgoDependencies, Project.project_filepath('features/argo_dependencies')
+  end
+
   module Models
     autoload :App, Project.project_filepath('models/app')
     autoload :Registration, Project.project_filepath('models/registration')

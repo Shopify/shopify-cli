@@ -14,7 +14,7 @@ module Extension
         def test_create_uses_standard_argo_create_implementation
           directory_name = 'checkout_post_purchase'
 
-          Models::Types::Argo.checkout
+          Features::Argo.checkout
             .expects(:create)
             .with(directory_name, CheckoutPostPurchase::IDENTIFIER, @context)
             .once
@@ -23,7 +23,7 @@ module Extension
         end
 
         def test_config_uses_standard_argo_config_implementation
-          Models::Types::Argo.checkout.expects(:config).with(@context).once
+          Features::Argo.checkout.expects(:config).with(@context).once
 
           @checkout_post_purchase.config(@context)
         end
