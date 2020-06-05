@@ -14,8 +14,8 @@ module Extension
         GIT_DIRECTORY = '.git'.freeze
         SCRIPTS_DIRECTORY = 'scripts'.freeze
 
-        YARN_INITIALIZE_COMMAND = %w(yarn generate).freeze
-        NPM_INITIALIZE_COMMAND = %w(npm run generate --).freeze
+        YARN_INITIALIZE_COMMAND = %w(generate).freeze
+        NPM_INITIALIZE_COMMAND = %w(run generate --).freeze
         INITIALIZE_TYPE_PARAMETER = '--type=%s'.freeze
 
         class << self
@@ -55,13 +55,14 @@ module Extension
         end
 
         def initialize_project(identifier, context)
-          JsDeps.install(context)
-
-          initialize_command = JsDeps.new(ctx: context).yarn? ? YARN_INITIALIZE_COMMAND : NPM_INITIALIZE_COMMAND
-          initialize_command = initialize_command + [INITIALIZE_TYPE_PARAMETER % identifier]
+          system = ShopifyCli::JsSystem.new(ctx: context)
+          ShopifyCli::JsDeps.new(ctx: context, system: system).install
 
           CLI::UI::Frame.open(context.message('create.setup_project_frame_title')) do
-            context.system(*initialize_command, chdir: context.root)
+            system.call(
+              yarn: YARN_INITIALIZE_COMMAND + [INITIALIZE_TYPE_PARAMETER % identifier],
+              npm: NPM_INITIALIZE_COMMAND + [INITIALIZE_TYPE_PARAMETER % identifier]
+            )
           end
         end
 
