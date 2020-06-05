@@ -6,6 +6,7 @@ AllCops:
   Exclude:
     - 'vendor/**/*'
     - 'docs/**/*'
+    - 'packaging/**/*'
   TargetRubyVersion: 2.4
 
 Layout/EmptyLines:
