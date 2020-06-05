@@ -44,7 +44,7 @@ module Script
           build_error_help: "Correct the errors and try again.",
 
           dependency_install_cause: "Something went wrong while installing the dependencies that are needed.",
-          dependency_install_help: "See https://help.shopify.com",
+          dependency_install_help: "Correct the errors and try again.",
 
           forbidden_error_cause: "You do not have permission to do this action.",
 
@@ -150,6 +150,11 @@ module Script
           create: {
             select_extension_point: "Which extension point do you want to use?",
             script_name: "Script Name",
+
+            error: {
+              invalid_name: "Invalid script name: replace or remove unsupported characters. Valid "\
+                            "characters are numbers, letters, spaces, hyphens, or underscores.",
+            },
           },
           script_form: {
             ask_app_api_key_default: "Which app do you want this script to belong to?",

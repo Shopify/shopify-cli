@@ -8,7 +8,7 @@ module ShopifyCli
     end
 
     def test_installs_with_npm
-      JsDeps.any_instance.stubs(:yarn?).returns(false)
+      JsSystem.any_instance.stubs(:yarn?).returns(false)
       CLI::Kit::System.expects(:system).with(
         'npm', 'install', '--no-audit', '--no-optional', '--silent',
         env: @context.env,
@@ -22,7 +22,7 @@ module ShopifyCli
     end
 
     def test_installs_with_yarn
-      JsDeps.any_instance.stubs(:yarn?).returns(true)
+      JsSystem.any_instance.stubs(:yarn?).returns(true)
       CLI::Kit::System.expects(:system).with(
         'yarn', 'install', '--silent',
         chdir: @context.root
