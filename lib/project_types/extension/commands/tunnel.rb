@@ -42,6 +42,8 @@ module Extension
 
             {{cyan:start}}: Starts an ngrok tunnel, will print the URL for an existing tunnel if already running.
               Usage: {{command:%1$s tunnel start}}
+              Options:
+              {{command:--port=PORT}} Forward the ngrok subdomain to local port PORT. Defaults to #{DEFAULT_PORT}.
 
             {{cyan:stop}}: Stops the ngrok tunnel.
               Usage: {{command:%1$s tunnel stop}}
