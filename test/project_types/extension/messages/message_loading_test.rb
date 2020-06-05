@@ -47,6 +47,13 @@ module Extension
         assert_equal @fake_overrides[:build][:frame_title], loaded_messages[:build][:frame_title]
       end
 
+      def test_load_does_a_deep_merge_and_retains_nested_non_overridden_messages
+        Messages::MessageLoading.expects(:load_current_type_messages).returns(@fake_override_messages).once
+
+        loaded_messages = Messages::MessageLoading.load
+        assert_equal Messages::MESSAGES[:build][:build_failure_message], loaded_messages[:build][:build_failure_message]
+      end
+
       def test_load_current_type_messages_returns_nil_if_there_is_no_current_project
         ShopifyCli::Project.expects(:has_current?).returns(false).once
 

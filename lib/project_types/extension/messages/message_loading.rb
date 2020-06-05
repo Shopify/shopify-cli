@@ -8,7 +8,7 @@ module Extension
         return Messages::MESSAGES if type_specific_messages.nil?
 
         if type_specific_messages.key?(:overrides)
-          Messages::MESSAGES.merge(type_specific_messages[:overrides])
+          deep_merge(Messages::MESSAGES, type_specific_messages[:overrides])
         else
           Messages::MESSAGES
         end
@@ -26,6 +26,13 @@ module Extension
         return unless Messages::TYPES.has_key?(type_identifier_symbol)
 
         TYPES[type_identifier_symbol]
+      end
+
+      private
+
+      def self.deep_merge(first, second)
+        merger = proc { |key, v1, v2| Hash === v1 && Hash === v2 ? v1.merge(v2, &merger) : v2 }
+        first.merge(second, &merger)
       end
     end
   end

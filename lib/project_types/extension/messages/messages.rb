@@ -26,7 +26,7 @@ module Extension
         no_apps: '{{x}} You don’t have any apps.',
         learn_about_apps: '{{*}} Learn more about building apps at <https://shopify.dev/concepts/apps>, or try creating a new app using {{shopify create app.}}',
         invalid_api_key: 'The API key %s does not match any of your apps.',
-        confirm_info: 'You can only create one %s extension per app, which can’t be undone.',
+        confirm_info: 'This will create a new extension registration for %s, which can’t be undone.',
         confirm_question: 'Would you like to register this extension with {{green:%s}}? (y/n)',
         confirm_abort: 'Extension was not created.',
         success: '{{v}} Registered {{green:%s}} with {{green:%s}}.',
@@ -67,6 +67,11 @@ module Extension
       subscription_management: {
         name: 'Subscription Management',
         tagline: '(limit 1 per app)',
+        overrides: {
+          register: {
+            confirm_info: 'You can only create one %s extension per app, which can’t be undone.',
+          }
+        }
       },
       checkout_post_purchase: {
         name: 'Checkout Post Purchase',
