@@ -13,3 +13,4 @@ markdown_intermediate
 vendor/bundle
 *.gem
 packaging/debian/shopify-cli.deb
+packaging/rpm/build/*
