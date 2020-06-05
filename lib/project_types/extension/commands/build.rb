@@ -29,7 +29,7 @@ module Extension
       end
 
       def yarn_available?
-        @yarn_availability ||= JsDeps.new(ctx: @ctx).yarn?
+        @yarn_availability ||= ShopifyCli::JsSystem.yarn?(@ctx)
       end
 
       def build

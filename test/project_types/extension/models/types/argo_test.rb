@@ -37,22 +37,15 @@ module Extension
           assert_equal @directory, Pathname(@context.root).each_filename.to_a.last
         end
 
-        def test_initialize_project_installs_js_dependencies_and_runs_generate_script_with_npm
+        def test_initialize_project_installs_js_dependencies_and_requests_js_system_to_generate
           expected_npm_command = Argo::NPM_INITIALIZE_COMMAND + [Argo::INITIALIZE_TYPE_PARAMETER % @identifier]
-
-          JsDeps.expects(:install).once
-          JsDeps.any_instance.expects(:yarn?).returns(false).once
-          @context.expects(:system).with(*expected_npm_command, chdir: @context.root).once
-
-          @argo.initialize_project(@identifier, @context)
-        end
-
-        def test_initialize_project_installs_js_dependencies_and_runs_generate_script_with_yarn
           expected_yarn_command = Argo::YARN_INITIALIZE_COMMAND + [Argo::INITIALIZE_TYPE_PARAMETER % @identifier]
 
-          JsDeps.expects(:install).once
-          JsDeps.any_instance.expects(:yarn?).returns(true).once
-          @context.expects(:system).with(*expected_yarn_command, chdir: @context.root).once
+          ShopifyCli::JsDeps.any_instance.expects(:install).once
+          ShopifyCli::JsSystem.any_instance
+            .expects(:call)
+            .with(yarn: expected_yarn_command, npm: expected_npm_command)
+            .once
 
           @argo.initialize_project(@identifier, @context)
         end

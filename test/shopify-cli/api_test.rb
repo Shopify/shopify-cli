@@ -2,6 +2,12 @@ require 'test_helper'
 
 module ShopifyCli
   class APITest < MiniTest::Test
+    class TestAPI < API
+      def call_load_query(query_name)
+        load_query(query_name)
+      end
+    end
+
     def setup
       super
       @mutation = <<~MUTATION
@@ -55,6 +61,38 @@ module ShopifyCli
       assert_raises(ShopifyCli::Abort) do
         api.query('api/mutation')
       end
+    end
+
+    def test_load_query_can_load_project_type_queries
+      new_api = TestAPI.new(ctx: Context.new, token: 'blah', url: 'alsoblah')
+      ShopifyCli::Project.expects(:current_project_type).returns(:fake)
+
+      expected_path = File.join(ShopifyCli::ROOT, 'lib', 'project_types', 'fake', 'graphql', 'my_query.graphql')
+      File.expects(:exist?).with(expected_path).returns(true)
+      File.expects(:read).with(expected_path).returns('content')
+
+      assert_equal(new_api.call_load_query('my_query'), 'content')
+    end
+
+    def test_load_query_will_fall_back_to_core_queries
+      new_api = TestAPI.new(ctx: Context.new, token: 'blah', url: 'alsoblah')
+      ShopifyCli::Project.expects(:current_project_type).returns(:fake)
+
+      project_type_path = File.join(ShopifyCli::ROOT, 'lib', 'project_types', 'fake', 'graphql', 'my_query.graphql')
+      File.expects(:exist?).with(project_type_path).returns(false)
+
+      expected_path = File.join(ShopifyCli::ROOT, 'lib', 'graphql', 'my_query.graphql')
+      File.expects(:read).with(expected_path).returns('content')
+
+      assert_equal(new_api.call_load_query('my_query'), 'content')
+    end
+
+    def test_load_query_will_not_read_project_type_queries_if_not_in_project
+      new_api = TestAPI.new(ctx: Context.new, token: 'blah', url: 'alsoblah')
+      ShopifyCli::Project.expects(:current_project_type).returns(nil)
+      expected_path = File.join(ShopifyCli::ROOT, 'lib', 'graphql', 'my_query.graphql')
+      File.expects(:read).with(expected_path).returns('content')
+      assert_equal(new_api.call_load_query('my_query'), 'content')
     end
   end
 end

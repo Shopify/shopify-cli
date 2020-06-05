@@ -7,7 +7,7 @@ module ShopifyCli
   module Core
     module Monorail
       ENDPOINT_URI = URI.parse('https://monorail-edge.shopifycloud.com/v1/produce')
-      INVOCATIONS_SCHEMA = 'app_cli_command/2.0'
+      INVOCATIONS_SCHEMA = 'app_cli_command/3.0'
 
       # Extra hash of data that will be sent in the payload
       @metadata = {}
@@ -92,14 +92,14 @@ module ShopifyCli
               success: err.nil?,
               error_message: err,
               uname: RbConfig::CONFIG["host"],
-              cli_sha: ShopifyCli::Git.sha(dir: ShopifyCli::ROOT),
+              cli_version: ShopifyCli::Git.sha(dir: ShopifyCli::ROOT),
               ruby_version: RUBY_VERSION,
             }.tap do |payload|
               payload[:metadata] = JSON.dump(metadata) unless metadata.empty?
 
               if Project.has_current?
                 project = Project.current
-                # payload[:api_client_id] = project.env.api_key
+                payload[:api_key] = project.env.api_key
                 payload[:partner_id] = project.config['organization_id']
               end
             end,

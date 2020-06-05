@@ -52,5 +52,4 @@ module Extension
 
   autoload :ExtensionProjectKeys, Project.project_filepath('extension_project_keys')
   autoload :ExtensionProject, Project.project_filepath('extension_project')
-  autoload :JsDeps, Project.project_filepath('js_deps')
 end
