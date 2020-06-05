@@ -35,7 +35,7 @@ module Extension
       push: {
         frame_title: 'Pushing your extension to Shopify',
         waiting_text: 'Pushing code to Shopify...',
-        success_confirmation: '{{v}} Pushed %s to a draft at %s.',
+        success_confirmation: '{{v}} Pushed %s to a draft on %s.',
         success_info: '{{*}} Visit <extension URL> to version and publish your extension.',
       },
       serve: {
