@@ -44,7 +44,7 @@ module Script
           build_error_help: "Correct the errors and try again.",
 
           dependency_install_cause: "Something went wrong while installing the dependencies that are needed.",
-          dependency_install_help: "See https://help.shopify.com",
+          dependency_install_help: "Correct the errors and try again.",
 
           forbidden_error_cause: "You do not have permission to do this action.",
 
