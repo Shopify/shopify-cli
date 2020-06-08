@@ -148,7 +148,7 @@ module ShopifyCli
             "{{i}} Authentication required. Login to the URL below with your %s credentials to continue.",
 
           servlet: {
-            success_response: "Authenticated Successfully, this page will close shortly.",
+            success_response: "Authenticated Successfully, you may now close this page.",
             invalid_request_response: "Invalid Request: %s",
             invalid_state_response: "Anti-forgery state token does not match the initial request.",
             authenticated: "Authenticate Successfully",

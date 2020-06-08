@@ -10,6 +10,7 @@ module Script
       def setup
         super
         ShopifyCli::ProjectType.load_type(:script)
+        @context = TestHelpers::FakeContext.new
       end
 
       def test_returns_all_defined_attributes_if_valid
@@ -44,6 +45,17 @@ module Script
       def test_name_is_cleaned_when_using_flag
         form = ask(name: 'name with space', extension_point: 'discount')
         assert_equal 'name_with_space', form.name
+      end
+
+      def test_invalid_name
+        name = 'na/me'
+        CLI::UI::Prompt.expects(:ask).returns(name)
+
+        @context
+          .expects(:abort)
+          .with(@context.message('script.forms.create.error.invalid_name'))
+
+        Create.new(@context, [], []).send(:ask_name)
       end
 
       private
