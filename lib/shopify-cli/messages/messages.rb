@@ -248,7 +248,7 @@ module ShopifyCli
           ensure_test_shop: {
             could_not_verify_shop: "Couldn't verify your shop %s",
             convert_dev_to_test_store:
-              "Do you want to convert %s to a test shop? This will enable you to install your app on this store.",
+              "Do you want to convert %s to a development store? This will enable you to install your app on this store.",
             transfer_disabled: "{{v}} Transfer has been disabled on %s.",
           },
           update_dashboard_urls: {
