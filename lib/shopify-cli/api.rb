@@ -37,7 +37,15 @@ module ShopifyCli
     protected
 
     def load_query(name)
-      File.read(File.join(ShopifyCli::ROOT, "lib/graphql/#{name}.graphql"))
+      project_type = ShopifyCli::Project.current_project_type
+      project_file_path = File.join(
+        ShopifyCli::ROOT, 'lib', 'project_types', project_type.to_s, 'graphql', "#{name}.graphql"
+      )
+      if !project_type.nil? && File.exist?(project_file_path)
+        File.read(project_file_path)
+      else
+        File.read(File.join(ShopifyCli::ROOT, 'lib', 'graphql', "#{name}.graphql"))
+      end
     end
 
     private

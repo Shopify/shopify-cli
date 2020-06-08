@@ -44,7 +44,7 @@ module Script
           build_error_help: "Correct the errors and try again.",
 
           dependency_install_cause: "Something went wrong while installing the dependencies that are needed.",
-          dependency_install_help: "See https://help.shopify.com",
+          dependency_install_help: "Correct the errors and try again.",
 
           forbidden_error_cause: "You do not have permission to do this action.",
 
@@ -130,10 +130,10 @@ module Script
         },
 
         project_deps: {
-          deps_are_installed: "{{v}} Dependencies installed",
-          installing_with_npm: "Installing dependencies with npm",
+          none_required: "{{v}} None required",
+          checking_with_npm: "Checking dependencies with npm",
           installing: "Dependencies installing",
-          installed: "Dependencies installed",
+          installed: "Missing dependencies installed",
         },
 
         test: {
@@ -154,12 +154,16 @@ module Script
           create: {
             select_extension_point: "Which extension point do you want to use?",
             script_name: "Script Name",
+
+            error: {
+              invalid_name: "Invalid script name: replace or remove unsupported characters. Valid "\
+                            "characters are numbers, letters, spaces, hyphens, or underscores.",
+            },
           },
           script_form: {
             ask_app_api_key_default: "Which app do you want this script to belong to?",
             ask_shop_domain_default: "Select a development store",
-            fetching_organizations: "Fetching organizations",
-            fetched_organizations: "Fetched organizations",
+            fetching_organizations: "{{i}} Fetching organizations",
             select_organization: "Select organization.",
             using_app: "Using app {{green:%{title} (%{api_key})}}.",
             using_development_store: "Using development store {{green:%{domain}}}",
@@ -175,12 +179,9 @@ module Script
           building: "Building",
           building_script: "Building script",
           built: "Built",
-          deploying: "Deploying",
-          deployed: "Deployed",
-          disabling: "Disabling",
-          disabled: "Disabled",
-          enabling: "Enabling",
-          enabled: "Enabled",
+          deployed: "{{v}} Deployed",
+          disabled: "{{v}} Disabled",
+          enabled: "{{v}} Enabled",
         },
       },
     }.freeze
