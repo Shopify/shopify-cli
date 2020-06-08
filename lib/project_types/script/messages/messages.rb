@@ -70,9 +70,11 @@ module Script
           help: <<~HELP,
           {{command:%1$s create script}}: Creates a script project.
             Usage: {{command:%1$s create script}}
-            Options:
-              {{command:--name=NAME}} Script project name. Any string.
-              {{command:--extension_point=TYPE}} Extension point name. Allowed values: %2$s.
+          HELP
+          extended_help: <<~HELP,
+            \s\sOptions:
+              \s\s{{command:--name=NAME}} Script project name. Any string.
+              \s\s{{command:--extension_point=TYPE}} Extension point name. Allowed values: %2$s.
           HELP
 
           error: {
@@ -88,7 +90,12 @@ module Script
         deploy: {
           help: <<~HELP,
           Build the script and deploy it to app.
-            Usage: {{command:%s deploy --API_key=<API_key> [--force]}}
+            Usage: {{command:%s deploy}}
+          HELP
+          extended_help: <<~HELP,
+            \s\sOptions:
+              \s\s{{command:--API_key=<API_key>}} API key. Must be a valid API key, otherwise store access fails.
+              \s\s{{command:--force}} Forces the script to be overwritten if an instance of it already exists.
           HELP
 
           error: {
@@ -101,7 +108,12 @@ module Script
         disable: {
           help: <<~HELP,
           Turn off script in development store.
-            Usage: {{command:%s disable --API_key=<API_key> --shop_domain=<my_store.myshopify.com>}}
+            Usage: {{command:%s disable}}
+          HELP
+          extended_help: <<~HELP,
+            \s\sOptions:
+              \s\s{{command:--API_key=<API_key>}} API key. Must be a valid API key, otherwise store access fails.
+              \s\s{{command:--shop_domain=<my_store.myshopify.com>}} Test store URL. Must be existing test store.
           HELP
 
           error: {
@@ -114,7 +126,12 @@ module Script
         enable: {
           help: <<~HELP,
           Turn on script in development store.
-            Usage: {{command:%s enable --API_key=<API_key> --shop_domain=<my_store.myshopify.com>}}
+            Usage: {{command:%s enable}}
+          HELP
+          extended_help: <<~HELP,
+            \s\sOptions:
+              \s\s{{command:--API_key=<API_key>}} API key. Must be a valid API key, otherwise store access fails.
+              \s\s{{command:--shop_domain=<my_store.myshopify.com>}} Test store URL. Must be existing test store.
           HELP
 
           error: {

@@ -9,6 +9,8 @@ module Script
       end
 
       def call(args, _name)
+        return @ctx.puts(self.class.help) if args.include?('help')
+
         language = 'ts'
         cur_dir = @ctx.root
 
@@ -33,8 +35,12 @@ module Script
       end
 
       def self.help
+        ShopifyCli::Context.message('script.create.help', ShopifyCli::TOOL_NAME)
+      end
+
+      def self.extended_help
         allowed_values = Script::Layers::Application::ExtensionPoints.types.map { |type| "{{cyan:#{type}}}" }
-        ShopifyCli::Context.message('script.create.help', ShopifyCli::TOOL_NAME, allowed_values.join(', '))
+        ShopifyCli::Context.message('script.create.extended_help', ShopifyCli::TOOL_NAME, allowed_values.join(', '))
       end
     end
   end

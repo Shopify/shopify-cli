@@ -3,7 +3,8 @@
 module Script
   module Commands
     class Test < ShopifyCli::Command
-      def call(_args, _name)
+      def call(args, _name)
+        return @ctx.puts(self.class.help) if args.include?('help')
         project = Script::ScriptProject.current
         Layers::Application::TestScript.call(
           ctx: @ctx,

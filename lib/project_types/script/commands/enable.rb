@@ -9,6 +9,8 @@ module Script
       end
 
       def call(args, _name)
+        return @ctx.puts(self.class.help) if args.include?('help')
+
         form = Forms::Enable.ask(@ctx, args, options.flags)
         return @ctx.puts(self.class.help) unless form
 
@@ -35,6 +37,10 @@ module Script
 
       def self.help
         ShopifyCli::Context.message('script.enable.help', ShopifyCli::TOOL_NAME)
+      end
+
+      def self.extended_help
+        ShopifyCli::Context.message('script.enable.extended_help', ShopifyCli::TOOL_NAME)
       end
     end
   end

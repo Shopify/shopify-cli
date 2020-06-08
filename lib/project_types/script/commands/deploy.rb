@@ -9,6 +9,8 @@ module Script
       end
 
       def call(args, _name)
+        return @ctx.puts(self.class.help) if args.include?('help')
+
         form = Forms::Deploy.ask(@ctx, args, options.flags)
         project = ScriptProject.current
 
@@ -29,6 +31,10 @@ module Script
 
       def self.help
         ShopifyCli::Context.message('script.deploy.help', ShopifyCli::TOOL_NAME)
+      end
+
+      def self.extended_help
+        ShopifyCli::Context.message('script.deploy.extended_help', ShopifyCli::TOOL_NAME)
       end
     end
   end
