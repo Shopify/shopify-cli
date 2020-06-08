@@ -16,6 +16,27 @@ module Rails
           stub_successful_heroku_flow
         end
 
+        def test_call_raises_if_using_sqlite
+          expects_heroku_db_validated(status: false, db: 'sqlite')
+
+          assert_raises ShopifyCli::Abort do
+            Rails::Commands::Deploy::Heroku.new(@context).call
+          end
+        end
+
+        def test_call_raises_if_cannot_validate_db
+          expects_heroku_db_validated(status: false, db: nil)
+
+          assert_raises ShopifyCli::Abort do
+            Rails::Commands::Deploy::Heroku.new(@context).call
+          end
+        end
+
+        def test_call_validates_db_if_not_sqlite
+          expects_heroku_db_validated(status: true, db: 'mysql')
+          Rails::Commands::Deploy::Heroku.new(@context).call
+        end
+
         def test_call_doesnt_download_heroku_cli_if_it_is_installed
           expects_heroku_installed(status: true, twice: true)
           expects_heroku_download(status: nil)
