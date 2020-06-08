@@ -18,7 +18,7 @@ module Script
           ctx: @ctx,
           api_key: form.api_key,
           shop_domain: form.shop_domain,
-          configuration: '{}',
+          configuration: '{ "entries": [] }',
           extension_point_type: project.extension_point_type,
           title: project.script_name
         )
