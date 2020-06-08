@@ -9,8 +9,6 @@ module Script
       end
 
       def call(args, _name)
-        return @ctx.puts(self.class.help) if args.include?('help')
-
         form = Forms::Deploy.ask(@ctx, args, options.flags)
         project = ScriptProject.current
 

@@ -9,8 +9,6 @@ module Script
       end
 
       def call(args, _name)
-        return @ctx.puts(self.class.help) if args.include?('help')
-
         form = Forms::Enable.ask(@ctx, args, options.flags)
         return @ctx.puts(self.class.help) unless form
 
@@ -31,6 +29,7 @@ module Script
           type: project.extension_point_type.capitalize,
           title: project.script_name
         ))
+        @ctx.puts(@ctx.message('script.enable.info'))
       rescue StandardError => e
         UI::ErrorHandler.pretty_print_and_raise(e, failed_op: @ctx.message('script.enable.error.operation_failed'))
       end

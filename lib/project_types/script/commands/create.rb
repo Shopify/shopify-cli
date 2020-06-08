@@ -9,8 +9,6 @@ module Script
       end
 
       def call(args, _name)
-        return @ctx.puts(self.class.help) if args.include?('help')
-
         language = 'ts'
         cur_dir = @ctx.root
 

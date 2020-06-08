@@ -73,7 +73,7 @@ module Script
           HELP
           extended_help: <<~HELP,
             \s\sOptions:
-              \s\s{{command:--name=NAME}} Script project name. Any string.
+              \s\s{{command:--name=NAME}} Script project name. Use any string.
               \s\s{{command:--extension_point=TYPE}} Extension point name. Allowed values: %2$s.
           HELP
 
@@ -89,13 +89,13 @@ module Script
 
         deploy: {
           help: <<~HELP,
-          Build the script and deploy it to app.
+          Build the script and deploy it to the app. If there's a script with the same extension point already deployed, use --force to replace it.
             Usage: {{command:%s deploy}}
           HELP
           extended_help: <<~HELP,
             \s\sOptions:
               \s\s{{command:--API_key=<API_key>}} API key. Must be a valid API key, otherwise store access fails.
-              \s\s{{command:--force}} Forces the script to be overwritten if an instance of it already exists.
+              \s\s{{command:[--force]}} Forces the script to be overwritten if an instance of it already exists.
           HELP
 
           error: {
@@ -113,7 +113,7 @@ module Script
           extended_help: <<~HELP,
             \s\sOptions:
               \s\s{{command:--API_key=<API_key>}} API key. Must be a valid API key, otherwise store access fails.
-              \s\s{{command:--shop_domain=<my_store.myshopify.com>}} Test store URL. Must be existing test store.
+              \s\s{{command:--shop_domain=<my_store.myshopify.com>}} Test store URL. Must be an existing test store.
           HELP
 
           error: {
@@ -131,8 +131,12 @@ module Script
           extended_help: <<~HELP,
             \s\sOptions:
               \s\s{{command:--API_key=<API_key>}} API key. Must be a valid API key, otherwise store access fails.
-              \s\s{{command:--shop_domain=<my_store.myshopify.com>}} Test store URL. Must be existing test store.
+              \s\s{{command:--shop_domain=<my_store.myshopify.com>}} Test store URL. Must be an existing test store.
           HELP
+
+          info: "{{*}} A script always remains enabled until you disable it ⁠— even after deploying "\
+                "script changes with the same extension point to an app. To disable a script, use "\
+                "the 'disable' command.",
 
           error: {
             operation_failed: "Can't enable script.",
