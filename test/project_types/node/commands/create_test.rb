@@ -146,7 +146,7 @@ module Node
             org: 42,
             title: 'test-app',
             type: 'public',
-            app_url: 'https://shopify.github.io/shopify-app-cli/getting-started',
+            app_url: ShopifyCli::Tasks::CreateApiClient::DEFAULT_APP_URL,
             redir: ["http://127.0.0.1:3456"],
           },
           resp: {
@@ -206,7 +206,7 @@ module Node
             org: 42,
             title: 'test-app',
             type: 'public',
-            app_url: 'https://shopify.github.io/shopify-app-cli/getting-started',
+            app_url: ShopifyCli::Tasks::CreateApiClient::DEFAULT_APP_URL,
             redir: ["http://127.0.0.1:3456"],
           },
           resp: {
