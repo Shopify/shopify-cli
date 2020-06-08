@@ -14,17 +14,8 @@ module ShopifyCli
       }
 
       class << self
-        def read(directory = Dir.pwd)
-          input = {}
-          extra = {}
-          parse(directory).each do |key, value|
-            if KEY_MAP[key]
-              input[KEY_MAP[key]] = value
-            else
-              extra[key] = value
-            end
-          end
-          input[:extra] = extra
+        def read(_directory = Dir.pwd)
+          input = parse_external_env
           new(input)
         end
 
@@ -44,6 +35,20 @@ module ShopifyCli
             end
             output
           end
+        end
+
+        def parse_external_env(directory = Dir.pwd)
+          env_details = {}
+          extra = {}
+          parse(directory).each do |key, value|
+            if KEY_MAP[key]
+              env_details[KEY_MAP[key]] = value
+            else
+              extra[key] = value
+            end
+          end
+          env_details[:extra] = extra
+          env_details
         end
       end
 

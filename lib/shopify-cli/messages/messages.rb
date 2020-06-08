@@ -6,13 +6,16 @@ module ShopifyCli
       core: {
         connect: {
           help: <<~HELP,
-          Connect a Shopify App CLI project. Restores the ENV file.
+          Connect (or re-connect) an existing project to a Shopify partner organization and/or a store. Creates or updates the {{green:.env}} file, and creates the {{green:.shopify-cli.yml}} file.
             Usage: {{command:%s connect}}
           HELP
 
-          production_warning: "{{yellow:! Don't use}} {{cyan:connect}} {{yellow:for production apps}}",
+          production_warning: <<~MESSAGE,
+          {{yellow:! Warning: if you have connected to an {{bold:app in production}}, running {{command:serve}} may update the app URL and cause an outage.
+          MESSAGE
+          already_connected_warning: "{{yellow:! This app appears to be already connected}}",
           connected: "{{v}} Project now connected to {{green:%s}}",
-          serve: "{{*}} Run {{command:%s serve}} to start a local development server",
+          project_type_select: "What type of project would you like to connect?",
           organization_select: "To which organization does this project belong?",
           app_select: "To which app does this project belong?",
           no_development_stores: <<~MESSAGE,
@@ -20,6 +23,7 @@ module ShopifyCli
           Visit {{underline:https://partners.shopify.com/%d/stores}} to create one
           MESSAGE
           development_store_select: "Which development store would you like to use?",
+          cli_yml_saved: ".shopify-cli.yml saved to project root",
         },
 
         context: {
