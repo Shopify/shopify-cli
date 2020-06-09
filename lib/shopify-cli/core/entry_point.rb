@@ -5,6 +5,8 @@ module ShopifyCli
     module EntryPoint
       class << self
         def call(args, ctx = Context.new)
+          ctx.puts(ctx.message('core.development_version_warning')) if ctx.development?
+
           ProjectType.load_type(Project.current_project_type)
 
           task_registry = ShopifyCli::Tasks::Registry
