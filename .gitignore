@@ -11,3 +11,4 @@ tmp/
 markdown_intermediate
 .idea
 *.gem
+packaging/debian/shopify-cli.deb
