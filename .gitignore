@@ -11,5 +11,8 @@ tmp/
 markdown_intermediate
 .idea
 *.gem
+packaging/builds
+packaging/debian/shopify-cli
 packaging/debian/shopify-cli.deb
-packaging/rpm/build/*
+packaging/rpm/build
+packaging/rpm/rubygem-shopify.spec
