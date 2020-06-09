@@ -99,7 +99,7 @@ module ShopifyCli
 
               if Project.has_current?
                 project = Project.current
-                payload[:api_key] = project.env.api_key
+                payload[:api_key] = File.exist?("#{Dir.pwd}/.env") ? project.env.api_key : ''
                 payload[:partner_id] = project.config['organization_id']
               end
             end,

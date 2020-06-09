@@ -7,6 +7,29 @@ module Script
     def setup
       @context = TestHelpers::FakeContext.new
       @script_name = 'name'
+      @extension_point_type = 'ep_type'
+    end
+
+    def test_initialize
+      ScriptProject
+        .any_instance
+        .expects(:lookup_config)
+        .with('extension_point_type')
+        .returns(@extension_point_type)
+
+      ScriptProject
+        .any_instance
+        .expects(:lookup_config)
+        .with('script_name')
+        .returns(@script_name)
+
+      ScriptProject.new(directory: 'testdir')
+
+      assert_equal({
+        "script_name" => @script_name,
+        "extension_point_type" => @extension_point_type,
+        "language" => 'ts',
+      }, ShopifyCli::Core::Monorail.metadata)
     end
 
     def test_cleanup_when_directory_exists
