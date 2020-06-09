@@ -247,8 +247,11 @@ module ShopifyCli
           },
           ensure_test_shop: {
             could_not_verify_shop: "Couldn't verify your store %s",
-            convert_dev_to_test_store:
-              "Do you want to convert %s to a development store? This will enable you to install your app on this store.",
+            convert_dev_to_test_store: <<~MESSAGE,
+              Do you want to convert %s to a development store?
+              Doing this will allow you to install your app, but the store will become {{bold:transfer-disabled}}.
+              Learn more: https://shopify.dev/tutorials/transfer-a-development-store-to-a-merchant#transfer-disabled-stores
+              MESSAGE
             transfer_disabled: "{{v}} Transfer has been disabled on %s.",
           },
           update_dashboard_urls: {
