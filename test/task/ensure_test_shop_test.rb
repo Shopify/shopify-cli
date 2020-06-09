@@ -13,7 +13,7 @@ module ShopifyCli
       def test_outputs_if_shop_cant_be_queried
         stub_org_request
         stub_env(domain: 'notther.myshopify.com')
-        @context.expects(:puts).with("Couldn't verify your shop notther.myshopify.com")
+        @context.expects(:puts).with("Couldn't verify your store notther.myshopify.com")
         EnsureTestShop.call(@context)
       end
 
