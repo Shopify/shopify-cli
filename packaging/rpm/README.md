@@ -8,10 +8,16 @@ want to do that, follow the instructions below. These instructions are kept most
 
 ## Requirements
 
-To build RPM packages, you'll need the `rpm` package from brew:
+To build RPM packages, you'll need the `rpmbuild` program. It can be installed on Mac OS via `brew`:
 
 ```
 brew install rpm
+```
+
+Or via `yum` on Linux:
+
+```
+yum install rpm-build
 ```
 
 ## Package creation
