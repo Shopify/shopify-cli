@@ -1,6 +1,6 @@
 # Generated from shopify-cli-1.0.1.gem by gem2rpm -*- rpm-spec -*-
 %define rbname shopify-cli
-%define version 1.0.1
+%define version SHOPIFY_CLI_VERSION
 %define release 1
 %define _rpmdir ./build
 %define _target_os linux
@@ -33,10 +33,10 @@ and webhooks.
 %build
 
 %post
-gem install shopify-cli
+gem install shopify-cli -v SHOPIFY_CLI_VERSION
 
 %preun
-gem uninstall shopify-cli
+gem uninstall shopify-cli -v SHOPIFY_CLI_VERSION
 
 %clean
 
