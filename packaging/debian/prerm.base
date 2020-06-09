@@ -1,0 +1,1 @@
+gem uninstall shopify-cli -v SHOPIFY_CLI_VERSION

@@ -3,16 +3,12 @@
 The RPM package of the CLI is simply a metapackage that installs the CLI gem directly through Ruby. Therefore, 
 the package itself only serves to facilitate the installation and inclusion of non-ruby dependencies.
 
+To create new RPM builds, it is easier to run `rake package:rpm` rather than to run the build by hand, but if you
+want to do that, follow the instructions below. These instructions are kept mostly for future reference.
+
 ## Requirements
 
-The `gem2rpm` gem can be used to manage the package templates, even though it's not necessarily used to build the 
-package itself. To install it, simply run:
-
-```
-gem install gem2rpm 
-```
-
-To build the actual packages, you'll also need the `rpm` package from brew:
+To build RPM packages, you'll need the `rpm` package from brew:
 
 ```
 brew install rpm
@@ -20,21 +16,20 @@ brew install rpm
 
 ## Package creation
 
-If there is a need to bump the version of the metapackage, one needs to re-generate the RPM spec file based on the 
-template. This can be done automatically by `gem2rpm`, by running:
+Before a package can be created, the metadata `.spec.base` file can be copied into the `.spec` file to be used for the
+build. This file references the current CLI version as `SHOPIFY_CLI_VERSION`. This is filled automatically in the Rake
+task, but it needs to be set manually for manual builds.
 
-```
-gem2rpm -t rubygem-shopify.spec.template <path>/shopify-X.Y.Z.gem > rubygem-shopify.spec
-```
-
-Then, build the RPM package itself based on the spec:
+Once you have a working spec, build the RPM package itself by running:
 
 ```
 cd packaging/rpm
 rpmbuild -bb rubygem-shopify.spec
 ```
 
-## Version changes
+The package file will be saved in `build/noarch`.
 
-If the required Ruby version changes, make sure to update the `.spec.template` file to reflect that. There seems to be a
-bug in `gem2rpm` that causes the ruby version from the gemspec to be placed inside `[]`, which fails the build.
+## Metadata updates
+
+The CLI version number is obtained automatically by the Rake task (or manually set on manual builds), however if other
+changes need to be made to the metadata, the `.spec.base` file can be updated accordingly to keep things consistent.

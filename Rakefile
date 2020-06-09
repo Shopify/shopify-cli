@@ -69,3 +69,22 @@ end
 
 desc("Generate markdown documentation and update the wiki")
 task(rdoc: 'rdoc:all')
+
+namespace :package do
+  require 'shopify-cli/packager'
+
+  task all: [:debian, :rpm]
+
+  desc("Builds a Debian package of the CLI")
+  task :debian do
+    ShopifyCli::Packager.new.build_debian
+  end
+
+  desc("Builds an RPM package of the CLI")
+  task :rpm do
+    ShopifyCli::Packager.new.build_rpm
+  end
+end
+
+desc("Builds all distribution packages of the CLI")
+task(package: 'package:all')

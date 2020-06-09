@@ -1,5 +1,5 @@
 Package: shopify-cli
-Version: 0.9.2
+Version: SHOPIFY_CLI_VERSION
 Section: custom
 Priority: optional
 Architecture: all
