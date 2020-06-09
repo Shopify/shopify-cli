@@ -13,7 +13,7 @@ module ShopifyCli
       debian_dir = File.join(root_dir, 'shopify-cli', 'DEBIAN')
       FileUtils.mkdir_p(debian_dir)
 
-      puts "Building Debian package"
+      puts "\nBuilding Debian package"
 
       puts "Generating metadata files..."
       Dir.glob("#{debian_dir}/*").each { |file| File.delete(file) }
@@ -46,7 +46,7 @@ module ShopifyCli
       FileUtils.mkdir_p(rpm_build_dir)
 
       spec_path = File.join(root_dir, 'rubygem-shopify.spec')
-      puts "Building RPM package"
+      puts "\nBuilding RPM package"
 
       puts "Generating spec file..."
       File.delete(spec_path) if File.exist?(spec_path)

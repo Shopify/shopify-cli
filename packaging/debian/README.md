@@ -8,7 +8,8 @@ want to do that, follow the instructions below. These instructions are kept most
 
 ## Requirements
 
-The `dpkg-deb` program is required to build the actual package. It can be installed for Mac OS X via `brew`:
+The `dpkg-deb` program is required to build the actual package. It should be installed by default on Debian-based
+systems, and it can be installed for Mac OS X via `brew`:
 
 ```
 brew install dpkg
