@@ -5,5 +5,9 @@ module TestHelpers
     def puts(*args)
       super(*args) if output_captured
     end
+
+    def testing?
+      true
+    end
   end
 end
