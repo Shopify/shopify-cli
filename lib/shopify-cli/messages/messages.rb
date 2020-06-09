@@ -120,11 +120,11 @@ module ShopifyCli
 
         logout: {
           help: <<~HELP,
-          Log out of a currently authenticated Organization and Shop, or clear invalid credentials
+          Log out of a currently authenticated Organization and Store, or clear invalid credentials
             Usage: {{command:%s logout}}
           HELP
 
-          success: "Logged out of Organization and Shop",
+          success: "Logged out of Organization and Store",
         },
 
         monorail: {
@@ -243,10 +243,10 @@ module ShopifyCli
           ensure_env: {
             api_key_question: "What is your Shopify API key?",
             api_secret_key_question: "What is your Shopify API secret key?",
-            development_store_question: "What is your development store URL? (e.g. my-test-shop.myshopify.com)",
+            development_store_question: "What is your development store URL? (Example: my-dev-store.myshopify.com)",
           },
           ensure_test_shop: {
-            could_not_verify_shop: "Couldn't verify your shop %s",
+            could_not_verify_shop: "Couldn't verify your store %s",
             convert_dev_to_test_store:
               "Do you want to convert %s to a development store? This will enable you to install your app on this store.",
             transfer_disabled: "{{v}} Transfer has been disabled on %s.",
