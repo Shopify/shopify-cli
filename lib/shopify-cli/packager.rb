@@ -1,15 +1,16 @@
 module ShopifyCli
   class Packager
+    PACKAGING_DIR = File.join(ShopifyCli::ROOT, 'packaging')
+    BUILDS_DIR = File.join(PACKAGING_DIR, 'builds', ShopifyCli::VERSION)
+
     def initialize
-      @packaging_dir = File.join(ShopifyCli::ROOT, 'packaging')
-      @builds_dir = File.join(@packaging_dir, 'builds', ShopifyCli::VERSION)
-      FileUtils.mkdir_p(@builds_dir)
+      FileUtils.mkdir_p(BUILDS_DIR)
     end
 
     def build_debian
-      ensure_brew_installed('dpkg')
+      ensure_program_installed('dpkg-deb')
 
-      root_dir = File.join(@packaging_dir, 'debian')
+      root_dir = File.join(PACKAGING_DIR, 'debian')
       debian_dir = File.join(root_dir, 'shopify-cli', 'DEBIAN')
       FileUtils.mkdir_p(debian_dir)
 
@@ -32,16 +33,16 @@ module ShopifyCli
       raise "Failed to build package" unless system('dpkg-deb', '-b', 'shopify-cli')
 
       output_path = File.join(root_dir, 'shopify-cli.deb')
-      final_path = File.join(@builds_dir, "shopify-cli-#{ShopifyCli::VERSION}.deb")
+      final_path = File.join(BUILDS_DIR, "shopify-cli-#{ShopifyCli::VERSION}.deb")
 
       puts "Moving generated package: \n  From: #{output_path}\n  To: #{final_path}\n\n"
       FileUtils.mv(output_path, final_path)
     end
 
     def build_rpm
-      ensure_brew_installed('rpm')
+      ensure_program_installed('rpmbuild')
 
-      root_dir = File.join(@packaging_dir, 'rpm')
+      root_dir = File.join(PACKAGING_DIR, 'rpm')
       rpm_build_dir = File.join(root_dir, 'build')
       FileUtils.mkdir_p(rpm_build_dir)
 
@@ -61,21 +62,15 @@ module ShopifyCli
 
       output_dir = File.join(root_dir, 'build', 'noarch')
 
-      puts "Moving generated packages: \n  From: #{output_dir}\n  To: #{@builds_dir}\n\n"
-      FileUtils.mv(Dir.glob("#{output_dir}/*.rpm"), @builds_dir)
+      puts "Moving generated packages: \n  From: #{output_dir}\n  To: #{BUILDS_DIR}\n\n"
+      FileUtils.mv(Dir.glob("#{output_dir}/*.rpm"), BUILDS_DIR)
     end
 
     private
 
-    def ensure_brew_installed(brew)
-      unless ShopifyCli::Context.new.mac?
-        raise "Package creation only works on Mac OS. Aborting operation"
-      end
-
-      brew_installed = system('brew', 'info', brew, out: File::NULL, err: File::NULL)
-      unless brew_installed
-        raise "Missing brew #{brew}, please install it. Aborting operation"
-      end
+    def ensure_program_installed(program)
+      raise "Could not find program #{program} which is required to build the package" unless
+        system(program, '--version', out: File::NULL, err: File::NULL)
     end
   end
 end
