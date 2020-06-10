@@ -5,7 +5,9 @@ module ShopifyCli
     module EntryPoint
       class << self
         def call(args, ctx = Context.new)
-          ctx.puts(ctx.message('core.development_version_warning')) if ctx.development?
+          if ctx&.development?
+            ctx.puts(ctx.message('core.development_version_warning', File.join(ShopifyCli::ROOT, 'bin', 'shopify-cli')))
+          end
 
           ProjectType.load_type(Project.current_project_type)
 

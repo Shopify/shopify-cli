@@ -46,7 +46,11 @@ module ShopifyCli
           project_type_select: "What type of project would you like to create?",
         },
 
-        development_version_warning: "{{yellow:You are running the development version of the CLI}}",
+        development_version_warning: <<~DEVELOPMENT,
+        {{*}} {{yellow:You are running a development version of the CLI at:}}
+            {{yellow:%s}}
+
+        DEVELOPMENT
 
         env_file: {
           saving_header: "writing %s file...",
