@@ -37,6 +37,10 @@ module Script
       def self.help
         ShopifyCli::Context.message('script.enable.help', ShopifyCli::TOOL_NAME)
       end
+
+      def self.extended_help
+        ShopifyCli::Context.message('script.enable.extended_help', ShopifyCli::TOOL_NAME)
+      end
     end
   end
 end

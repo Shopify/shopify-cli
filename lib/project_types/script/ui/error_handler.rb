@@ -110,10 +110,10 @@ module Script
             cause_of_error: ShopifyCli::Context.message('script.error.graphql_error_cause', e.errors.join(', ')),
             help_suggestion: ShopifyCli::Context.message('script.error.graphql_error_help'),
           }
-        when Layers::Infrastructure::Errors::ScriptRedeployError
+        when Layers::Infrastructure::Errors::ScriptRepushError
           {
-            cause_of_error: ShopifyCli::Context.message('script.error.script_redeploy_cause', e.api_key),
-            help_suggestion: ShopifyCli::Context.message('script.error.script_redeploy_help'),
+            cause_of_error: ShopifyCli::Context.message('script.error.script_repush_cause', e.api_key),
+            help_suggestion: ShopifyCli::Context.message('script.error.script_repush_help'),
           }
         when Layers::Infrastructure::Errors::ShopAuthenticationError
           {

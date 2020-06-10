@@ -33,6 +33,20 @@ module Script
         end
       end
 
+      def test_help
+        ShopifyCli::Context
+          .expects(:message)
+          .with('script.disable.help', ShopifyCli::TOOL_NAME)
+        Script::Commands::Disable.help
+      end
+
+      def test_extended_help
+        ShopifyCli::Context
+          .expects(:message)
+          .with('script.disable.extended_help', ShopifyCli::TOOL_NAME)
+        Script::Commands::Disable.extended_help
+      end
+
       private
 
       def perform_command

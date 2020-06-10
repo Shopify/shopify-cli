@@ -22,7 +22,7 @@ module Script
       end
 
       def test_calls_push_script
-        Layers::Application::PushTest.expects(:call).with(
+        Layers::Application::PushScript.expects(:call).with(
           ctx: @context,
           api_key: @api_key,
           language: @language,
@@ -41,6 +41,20 @@ module Script
         @script_project.stubs(:language).returns('invalid')
         @context.expects(:puts).with(Push.help)
         perform_command
+      end
+
+      def test_help
+        ShopifyCli::Context
+          .expects(:message)
+          .with('script.push.help', ShopifyCli::TOOL_NAME)
+        Script::Commands::Push.help
+      end
+
+      def test_extended_help
+        ShopifyCli::Context
+          .expects(:message)
+          .with('script.push.extended_help', ShopifyCli::TOOL_NAME)
+        Script::Commands::Push.extended_help
       end
 
       private
