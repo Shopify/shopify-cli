@@ -51,7 +51,7 @@ module Script
           graphql_error_cause: "An error was returned: %s.",
           graphql_error_help: "\nReview the error and try again.",
 
-          script_redeploy_cause: "Script with the same extension point already exists on app (API key: %s).",
+          script_redeploy_cause: "A script with the same extension point already exists on app (API key: %s).",
           script_redeploy_help: "Use {{cyan:--force}} to replace the existing script.",
 
           shop_auth_cause: "Unable to authenticate with the store.",
@@ -85,17 +85,17 @@ module Script
           created: "Created script",
         },
 
-        deploy: {
+        push: {
           help: <<~HELP,
-          Build the script and deploy it to the app. If there's a script with the same extension point already deployed for an app, use --force to replace it.
-            Usage: {{command:%s deploy --API_key=<API_key> [--force]}}
+          Build the script and put it into production. If you've already pushed a script with the same extension point, use --force to replace the current script with the newest one.
+            Usage: {{command:%s push --API_key=<API_key> [--force]}}
           HELP
 
           error: {
-            operation_failed: "Script not deployed.",
+            operation_failed: "Script not pushed.",
           },
 
-          script_deployed: "{{v}} Script deployed to app (API key: %{api_key}).",
+          script_pushed: "{{v}} Script pushed to app (API key: %{api_key}).",
         },
 
         disable: {
@@ -179,7 +179,7 @@ module Script
           building: "Building",
           building_script: "Building script",
           built: "Built",
-          deployed: "{{v}} Deployed",
+          pushed: "{{v}} Pushed",
           disabled: "{{v}} Disabled",
           enabled: "{{v}} Enabled",
         },
