@@ -25,7 +25,7 @@ module ShopifyCli
         url: "https://my-test-shop.myshopify.com/admin/api/2019-04/graphql.json",
       ).returns(api_stub)
       api_stub.expects(:query).with('query', variables: {}).returns('response')
-      assert_equal 'response', AdminAPI.query(@context, 'query')
+      assert_equal 'response', AdminAPI.query(@context, 'query', shop: 'my-test-shop.myshopify.com')
     end
 
     def test_query_calls_admin_api
@@ -38,7 +38,10 @@ module ShopifyCli
         url: "https://my-test-shop.myshopify.com/admin/api/2019-04/graphql.json",
       ).returns(api_stub)
       api_stub.expects(:query).with('query', variables: {}).returns('response')
-      assert_equal 'response', AdminAPI.query(@context, 'query', api_version: '2019-04')
+      assert_equal(
+        'response',
+        AdminAPI.query(@context, 'query', shop: 'my-test-shop.myshopify.com', api_version: '2019-04'),
+      )
     end
 
     def test_query_can_reauth
@@ -69,7 +72,7 @@ module ShopifyCli
         .expects(:authenticate)
         .with("https://my-test-shop.myshopify.com/admin/oauth")
 
-      AdminAPI.query(@context, 'query', api_version: '2019-04')
+      AdminAPI.query(@context, 'query', shop: 'my-test-shop.myshopify.com', api_version: '2019-04')
     end
 
     def test_query_calls_admin_api_with_different_shop

@@ -11,7 +11,7 @@ module Node
         def test_populate_calls_api_with_mutation
           ShopifyCli::Helpers::Haikunator.stubs(:title).returns('fake order')
           ShopifyCli::AdminAPI.expects(:query)
-            .with(@context, 'create_draft_order', input: {
+            .with(@context, 'create_draft_order', shop: 'my-test-shop.myshopify.com', input: {
               lineItems: [{
                 originalUnitPrice: "1.00",
                 quantity: 1,

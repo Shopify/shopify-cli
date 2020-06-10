@@ -233,17 +233,10 @@ module Rails
         forms: {
           create: {
             error: {
-              invalid_app_type: "Invalid app type %s",
-              invalid_db_type: "Invalid database type %s",
-              organization_not_found: "Cannot find a partner organization with that ID",
-              no_organizations: "No partner organizations available.",
+              invalid_app_type: "Invalid App Type %s",
+              invalid_db_type: "Invalid Database Type %s",
             },
-
-            authentication_issue: "For authentication issues, run {{command:%s logout}} to clear invalid credentials",
-            partners_notice: "Please visit https://partners.shopify.com/ to create a partners account",
-            no_development_stores: "{{x}} No development stores available.",
-            create_store: "Visit {{underline:https://partners.shopify.com/%s/stores}} to create one",
-            app_name: "App name",
+            app_name: "App Name",
             app_type: {
               select: "What type of app are you building?",
               select_public: "Public: An app built for a wide merchant audience.",
@@ -270,10 +263,6 @@ module Rails
               select_jdbc: "JDBC",
               selected: "Database Type {{green:%s}}",
             },
-            organization_select: "Select partner organization",
-            organization: "Partner organization {{green:%s}}",
-            development_store_select: "Select a development store",
-            development_store: "Using development store {{green:%s}}",
           },
         },
       },

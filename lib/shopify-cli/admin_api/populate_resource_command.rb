@@ -41,6 +41,8 @@ module ShopifyCli
           return @ctx.puts(output)
         end
 
+        @shop ||= Project.current.env.shop || get_shop(@ctx)
+
         if @silent
           spin_group = CLI::UI::SpinGroup.new
           spin_group.add(@ctx.message('core.populate.populating', @count, camel_case_resource_type)) do |spinner|
@@ -114,7 +116,7 @@ module ShopifyCli
 
       def run_mutation(data)
         kwargs = { input: data }
-        kwargs[:shop] = @shop if @shop
+        kwargs[:shop] = @shop
         resp = AdminAPI.query(
           @ctx, "create_#{snake_case_resource_type}", kwargs
         )
@@ -144,6 +146,13 @@ module ShopifyCli
       end
 
       private
+
+      def get_shop(ctx)
+        res = ShopifyCli::Tasks::SelectOrgAndShop.call(ctx)
+        domain = res[:shop_domain]
+        Project.current.env.update(ctx, :shop, domain)
+        domain
+      end
 
       def camel_case_resource_type
         @camel_case_resource_type ||= self.class.to_s.split('::').last

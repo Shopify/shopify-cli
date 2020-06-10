@@ -129,7 +129,10 @@ module Rails
           assert_equal(form.organization_id, 421)
           assert_equal(form.shop_domain, 'next.myshopify.com')
         end
-        assert_match(CLI::UI.fmt('Partner organization {{green:hoopy froods (421)}}'), io.join)
+        assert_match(
+          CLI::UI.fmt(@context.message('core.tasks.select_org_and_shop.organization', 'hoopy froods', 421)),
+          io.join,
+        )
       end
 
       def test_organization_will_be_fetched_if_id_is_provided_but_not_shop
@@ -164,8 +167,8 @@ module Rails
           form = ask(org_id: nil, shop: nil)
           assert_nil(form)
         end
-        assert_match(@context.message('rails.forms.create.partners_notice'), io.join)
-        assert_match(@context.message('rails.forms.create.error.no_organizations'), io.join)
+        assert_match(@context.message('core.tasks.select_org_and_shop.error.partners_notice'), io.join)
+        assert_match(@context.message('core.tasks.select_org_and_shop.error.no_organizations'), io.join)
       end
 
       def test_returns_no_shop_if_none_are_available
@@ -186,8 +189,8 @@ module Rails
           assert_nil form.shop_domain
         end
         log = io.join
-        assert_match(CLI::UI.fmt(@context.message('rails.forms.create.no_development_stores')), log)
-        assert_match(CLI::UI.fmt(@context.message('rails.forms.create.create_store', 123)), log)
+        assert_match(CLI::UI.fmt(@context.message('core.tasks.select_org_and_shop.error.no_development_stores')), log)
+        assert_match(CLI::UI.fmt(@context.message('core.tasks.select_org_and_shop.create_store', 123)), log)
       end
 
       def test_autopicks_only_shop
@@ -212,7 +215,7 @@ module Rails
           assert_equal(form.shop_domain, 'shopdomain.myshopify.com')
         end
         assert_match(CLI::UI.fmt(
-          @context.message('rails.forms.create.development_store', 'shopdomain.myshopify.com')
+          @context.message('core.tasks.select_org_and_shop.development_store', 'shopdomain.myshopify.com')
         ), io.join)
       end
 
@@ -240,7 +243,7 @@ module Rails
 
         CLI::UI::Prompt.expects(:ask)
           .with(
-            @context.message('rails.forms.create.development_store_select'),
+            @context.message('core.tasks.select_org_and_shop.development_store_select'),
             options: %w(shopdomain.myshopify.com shop.myshopify.com)
           )
           .returns('selected')

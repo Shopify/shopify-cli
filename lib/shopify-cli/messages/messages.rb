@@ -273,6 +273,20 @@ module ShopifyCli
               "{{x}} error: For authentication issues, run {{command:%s logout}} to clear invalid credentials",
             update_prompt: "Do you want to update your application url?",
           },
+          select_org_and_shop: {
+            authentication_issue: "For authentication issues, run {{command:%s logout}} to clear invalid credentials",
+            create_store: "Visit {{underline:https://partners.shopify.com/%s/stores}} to create one",
+            development_store: "Using development store {{green:%s}}",
+            development_store_select: "Select a development store",
+            error: {
+              no_development_stores: "{{x}} No Development Stores available.",
+              no_organizations: "No partner organizations available.",
+              organization_not_found: "Cannot find a partner organization with that ID",
+              partners_notice: "Please visit https://partners.shopify.com/ to create a partners account",
+            },
+            organization: "Partner organization {{green:%s (%s)}}",
+            organization_select: "Select partner organization",
+          },
         },
 
         tunnel: {
