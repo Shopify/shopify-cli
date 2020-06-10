@@ -2,7 +2,7 @@ require 'test_helper'
 
 module ShopifyCli
   module Tasks
-    class EnsureTestShopTest < MiniTest::Test
+    class EnsureDevStoreTest < MiniTest::Test
       include TestHelpers::Partners
 
       def setup
@@ -14,21 +14,21 @@ module ShopifyCli
         stub_org_request
         stub_env(domain: 'notther.myshopify.com')
         @context.expects(:puts).with("Couldn't verify your store notther.myshopify.com")
-        EnsureTestShop.call(@context)
+        EnsureDevStore.call(@context)
       end
 
       def test_noop_if_already_transfer_disabled
         stub_org_request(transfer_disabled: true)
         stub_env
         CLI::UI::Prompt.expects(:confirm).never
-        EnsureTestShop.call(@context)
+        EnsureDevStore.call(@context)
       end
 
       def test_will_prompt_to_convert
         stub_org_request
         stub_env
         CLI::UI::Prompt.expects(:confirm).returns(false)
-        EnsureTestShop.call(@context)
+        EnsureDevStore.call(@context)
       end
 
       def test_can_convert
@@ -45,7 +45,7 @@ module ShopifyCli
           }
         )
         @context.expects(:puts).with("{{v}} Transfer has been disabled on shopdomain.myshopify.com.")
-        EnsureTestShop.call(@context)
+        EnsureDevStore.call(@context)
       end
 
       private
