@@ -29,6 +29,13 @@ module Script
         perform_command
       end
 
+      def test_help
+        ShopifyCli::Context
+          .expects(:message)
+          .with('script.test.help', ShopifyCli::TOOL_NAME)
+        Script::Commands::Test.help
+      end
+
       private
 
       def perform_command

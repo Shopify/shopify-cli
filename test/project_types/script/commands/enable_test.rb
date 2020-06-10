@@ -51,6 +51,20 @@ module Script
         end
       end
 
+      def test_help
+        ShopifyCli::Context
+          .expects(:message)
+          .with('script.enable.help', ShopifyCli::TOOL_NAME)
+        Script::Commands::Enable.help
+      end
+
+      def test_extended_help
+        ShopifyCli::Context
+          .expects(:message)
+          .with('script.enable.extended_help', ShopifyCli::TOOL_NAME)
+        Script::Commands::Enable.extended_help
+      end
+
       def test_calls_application_enable_error
         Script::Layers::Application::EnableScript.expects(:call).with(
           ctx: @context,
