@@ -3,7 +3,10 @@ require 'test_helper'
 module ShopifyCli
   module Core
     class EntryPointTest < MiniTest::Test
+      include TestHelpers::Project
+
       def setup
+        super
         ShopifyCli::Core::EntryPoint.stubs(:before_resolve)
       end
 
@@ -15,7 +18,7 @@ module ShopifyCli
           'help',
           args.dup[1..-1]
         )
-        EntryPoint.call(args)
+        EntryPoint.call(args, @context)
       end
     end
   end
