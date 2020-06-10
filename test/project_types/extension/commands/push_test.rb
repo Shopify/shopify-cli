@@ -46,7 +46,7 @@ module Extension
         run_push
       end
 
-      def test_runs_pack_command
+      def test_runs_build_command
         Commands::Build.any_instance.expects(:call).once
         Tasks::UpdateDraft.any_instance.stubs(:call).returns(@version)
 
@@ -71,6 +71,7 @@ module Extension
 
       def test_shows_confirmation_message_with_time_updated_on_successful_update
         @version.last_user_interaction_at = Time.parse("2020-05-07 19:01:56 UTC")
+        @version.location = "https://www.fakeurl.com"
         Commands::Build.any_instance.stubs(:call)
         Tasks::UpdateDraft.any_instance.stubs(:call).returns(@version)
 
@@ -79,7 +80,7 @@ module Extension
         assert_message_output(io: io, expected_content: [
           @context.message('push.waiting_text'),
           @context.message('push.success_confirmation', @title, 'May 07, 2020 19:01:56 UTC'),
-          @context.message('push.success_info')
+          @context.message('push.success_info', 'https://www.fakeurl.com')
         ])
       end
 

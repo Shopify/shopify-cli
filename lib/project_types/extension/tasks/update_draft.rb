@@ -11,6 +11,7 @@ module Extension
       REGISTRATION_ID_FIELD = 'registrationId'
       CONTEXT_FIELD = 'context'
       LAST_USER_INTERACTION_AT_FIELD = 'lastUserInteractionAt'
+      LOCATION_FIELD = 'location'
 
       RESPONSE_FIELD = %w(data extensionUpdateDraft)
       VERSION_FIELD = 'extensionVersion'
@@ -22,9 +23,8 @@ module Extension
           api_key: api_key,
           registration_id: registration_id,
           config: JSON.generate(config),
-          extension_context: extension_context
+          extension_context: extension_context,
         }
-
         response = ShopifyCli::PartnersAPI.query(context, GRAPHQL_FILE, input).dig(*RESPONSE_FIELD)
         context.abort(PARSE_ERROR) if response.nil?
 
@@ -41,7 +41,8 @@ module Extension
         Models::Version.new(
           registration_id: version_hash[REGISTRATION_ID_FIELD].to_i,
           context: version_hash[CONTEXT_FIELD],
-          last_user_interaction_at: Time.parse(version_hash[LAST_USER_INTERACTION_AT_FIELD])
+          last_user_interaction_at: Time.parse(version_hash[LAST_USER_INTERACTION_AT_FIELD]),
+          location: version_hash[LOCATION_FIELD]
         )
       end
     end
