@@ -22,7 +22,7 @@ module Rails
               {{command:--name=NAME}} App name. Any string.
               {{command:--app_url=APPURL}} App URL. Must be valid URL.
               {{command:--organization_id=ID}} App Org ID. Must be existing org ID.
-              {{command:--shop_domain=MYSHOPIFYDOMAIN }} Test store URL. Must be existing test store.
+              {{command:--shop_domain=MYSHOPIFYDOMAIN }} Development store URL. Must be an existing development store.
               {{command:--db=DB}} Database type. Must be one of: mysql, postgresql, sqlite3, oracle, frontbase, ibm_db, sqlserver, jdbcmysql, jdbcsqlite3, jdbcpostgresql, jdbc.
               {{command:--rails_opts=RAILSOPTS}} Additional options. Must be string containing one or more valid Rails options, separated by spaces.
           HELP

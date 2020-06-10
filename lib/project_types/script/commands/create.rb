@@ -43,4 +43,3 @@ module Script
     end
   end
 end
-

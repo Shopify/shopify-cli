@@ -45,7 +45,6 @@ module Rails
           org_id: form.organization_id,
           title: form.title,
           type: form.type,
-          app_url: 'https://shopify.github.io/shopify-app-cli/getting-started',
         )
 
         ShopifyCli::Resources::EnvFile.new(
@@ -127,4 +126,3 @@ module Rails
     end
   end
 end
-
