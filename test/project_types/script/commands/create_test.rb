@@ -39,11 +39,18 @@ module Script
       end
 
       def test_help
+        ShopifyCli::Context
+          .expects(:message)
+          .with('script.create.help', ShopifyCli::TOOL_NAME)
+        Script::Commands::Create.help
+      end
+
+      def test_extended_help
         Script::Layers::Application::ExtensionPoints.expects(:types).returns(%w(ep1 ep2))
         ShopifyCli::Context
           .expects(:message)
-          .with('script.create.help', ShopifyCli::TOOL_NAME, '{{cyan:ep1}}, {{cyan:ep2}}')
-        Script::Commands::Create.help
+          .with('script.create.extended_help', ShopifyCli::TOOL_NAME, '{{cyan:ep1}}, {{cyan:ep2}}')
+        Script::Commands::Create.extended_help
       end
 
       def test_cleanup_after_error
