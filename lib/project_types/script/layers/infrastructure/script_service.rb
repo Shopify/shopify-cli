@@ -34,7 +34,7 @@ module Script
           return resp_hash if user_errors.empty?
 
           if user_errors.any? { |e| e['tag'] == 'already_exists_error' }
-            raise Errors::ScriptRedeployError, api_key
+            raise Errors::ScriptRepushError, api_key
           else
             raise Errors::ScriptServiceUserError.new(query_name, user_errors.to_s)
           end

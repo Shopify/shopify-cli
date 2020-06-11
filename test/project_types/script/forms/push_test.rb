@@ -4,7 +4,7 @@ require "project_types/script/test_helper"
 
 module Script
   module Forms
-    class DeployTest < MiniTest::Test
+    class PushTest < MiniTest::Test
       include TestHelpers::Partners
       include TestHelpers::FakeUI
 
@@ -15,7 +15,7 @@ module Script
 
       def test_ask_calls_form_ask_app_api_key_when_no_flag
         apps = [{ "apiKey" => 1234 }]
-        Deploy.any_instance.expects(:ask_app_api_key).with(apps)
+        Push.any_instance.expects(:ask_app_api_key).with(apps)
         ShopifyCli::PartnersAPI::Organizations.expects(:fetch_with_app).with(@context).returns([{ "apps" => apps }])
         ask
       end
@@ -29,7 +29,7 @@ module Script
       private
 
       def ask(api_key: nil)
-        Deploy.ask(
+        Push.ask(
           @context,
           [],
           api_key: api_key

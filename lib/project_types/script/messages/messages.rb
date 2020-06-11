@@ -38,7 +38,7 @@ module Script
 
           app_not_installed_cause: "App not installed on development store.",
 
-          app_script_undefined_help: "Deploy script to app.",
+          app_script_undefined_help: "Push script to app.",
 
           build_error_cause: "Something went wrong while building the script.",
           build_error_help: "Correct the errors and try again.",
@@ -51,8 +51,8 @@ module Script
           graphql_error_cause: "An error was returned: %s.",
           graphql_error_help: "\nReview the error and try again.",
 
-          script_redeploy_cause: "Script with the same extension point already exists on app (API key: %s).",
-          script_redeploy_help: "Use {{cyan:--force}} to replace the existing script.",
+          script_repush_cause: "A script with the same extension point already exists on app (API key: %s).",
+          script_repush_help: "Use {{cyan:--force}} to replace the existing script.",
 
           shop_auth_cause: "Unable to authenticate with the store.",
           shop_auth_help: "Try again.",
@@ -87,10 +87,10 @@ module Script
           created: "Created script",
         },
 
-        deploy: {
+        push: {
           help: <<~HELP,
-          Build the script and deploy it to the app. If there's a script with the same extension point already deployed, use --force to replace it.
-            Usage: {{command:%s deploy}}
+          Build the script and put it into production. If you've already pushed a script with the same extension point, use --force to replace the current script with the newest one.
+            Usage: {{command:%s push}}
           HELP
           extended_help: <<~HELP,
             \s\sOptions:
@@ -99,10 +99,10 @@ module Script
           HELP
 
           error: {
-            operation_failed: "Script not deployed.",
+            operation_failed: "Script not pushed.",
           },
 
-          script_deployed: "{{v}} Script deployed to app (API key: %{api_key}).",
+          script_pushed: "{{v}} Script pushed to app (API key: %{api_key}).",
         },
 
         disable: {
@@ -134,7 +134,7 @@ module Script
               \s\s{{command:--shop_domain=<my_store.myshopify.com>}} Test store URL. Must be an existing test store.
           HELP
 
-          info: "{{*}} A script always remains enabled until you disable it ⁠— even after deploying "\
+          info: "{{*}} A script always remains enabled until you disable it - even after pushing "\
                 "script changes with the same extension point to an app. To disable a script, use "\
                 "the 'disable' command.",
 
@@ -187,7 +187,7 @@ module Script
             using_organization: "Organization {{green:%s}}.",
           },
           enable: {
-            ask_app_api_key: "Which app is the script deployed to?",
+            ask_app_api_key: "Which app is the script pushed to?",
             ask_shop_domain: "Which development store is the app installed on?",
           },
         },
@@ -196,7 +196,7 @@ module Script
           building: "Building",
           building_script: "Building script",
           built: "Built",
-          deployed: "{{v}} Deployed",
+          pushed: "{{v}} Pushed",
           disabled: "{{v}} Disabled",
           enabled: "{{v}} Enabled",
         },

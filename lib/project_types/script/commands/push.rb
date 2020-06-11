@@ -2,19 +2,19 @@
 
 module Script
   module Commands
-    class Deploy < ShopifyCli::Command
+    class Push < ShopifyCli::Command
       options do |parser, flags|
         parser.on('--api_key=APIKEY') { |t| flags[:api_key] = t }
         parser.on('--force') { |t| flags[:force] = t }
       end
 
       def call(args, _name)
-        form = Forms::Deploy.ask(@ctx, args, options.flags)
+        form = Forms::Push.ask(@ctx, args, options.flags)
         project = ScriptProject.current
 
         return @ctx.puts(self.class.help) unless form && ScriptProject::SUPPORTED_LANGUAGES.include?(project.language)
 
-        Layers::Application::DeployScript.call(
+        Layers::Application::PushScript.call(
           ctx: @ctx,
           language: project.language,
           extension_point_type: project.extension_point_type,
@@ -22,17 +22,17 @@ module Script
           api_key: form.api_key,
           force: form.force
         )
-        @ctx.puts(@ctx.message('script.deploy.script_deployed', api_key: form.api_key))
+        @ctx.puts(@ctx.message('script.push.script_pushed', api_key: form.api_key))
       rescue StandardError => e
-        UI::ErrorHandler.pretty_print_and_raise(e, failed_op: @ctx.message('script.deploy.error.operation_failed'))
+        UI::ErrorHandler.pretty_print_and_raise(e, failed_op: @ctx.message('script.push.error.operation_failed'))
       end
 
       def self.help
-        ShopifyCli::Context.message('script.deploy.help', ShopifyCli::TOOL_NAME)
+        ShopifyCli::Context.message('script.push.help', ShopifyCli::TOOL_NAME)
       end
 
       def self.extended_help
-        ShopifyCli::Context.message('script.deploy.extended_help', ShopifyCli::TOOL_NAME)
+        ShopifyCli::Context.message('script.push.extended_help', ShopifyCli::TOOL_NAME)
       end
     end
   end

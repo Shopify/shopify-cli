@@ -2,7 +2,7 @@
 
 module Script
   module Forms
-    class Deploy < ScriptForm
+    class Push < ScriptForm
       flag_arguments :api_key, :force
 
       def ask
