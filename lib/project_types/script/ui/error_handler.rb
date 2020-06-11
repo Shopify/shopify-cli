@@ -129,10 +129,6 @@ module Script
           {
             cause_of_error: ShopifyCli::Context.message('script.error.shop_script_undefined_cause'),
           }
-        when Layers::Infrastructure::Errors::TestError
-          {
-            help_suggestion: ShopifyCli::Context.message('script.error.test_help'),
-          }
         end
       end
     end

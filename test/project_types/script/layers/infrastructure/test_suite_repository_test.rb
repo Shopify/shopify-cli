@@ -66,38 +66,4 @@ describe Script::Layers::Infrastructure::TestSuiteRepository do
       subject
     end
   end
-
-  describe ".get_test_suite" do
-    subject { repository.get_test_suite(language, extension_point_type, script_name) }
-
-    describe "when script is valid" do
-      before do
-        script_repository.create_script(language, extension_point, script_name)
-      end
-
-      it "should check that the script exists" do
-        File.expects(:exist?).with("myscript/test/script.spec.ts").returns(true)
-        script_repository.expects(:get_script).with("ts", "discount", "myscript")
-        subject
-      end
-
-      it "should do nothing if test spec file exists" do
-        File.expects(:exist?).with("myscript/test/script.spec.ts").returns(true)
-        subject
-      end
-
-      it "should raise TestSuiteNotFoundError if test spec file does not exist" do
-        assert_raises(Script::Layers::Domain::Errors::TestSuiteNotFoundError) { subject }
-      end
-    end
-  end
-
-  describe ".with_test_suite_context" do
-    it "should allow execution at the correct place within the filesystem" do
-      FileUtils.mkdir_p(spec_test_base)
-      repository.with_test_suite_context do
-        assert_equal "/#{spec_test_base}", Dir.pwd
-      end
-    end
-  end
 end
