@@ -5,9 +5,15 @@ module ShopifyCli
     module EntryPoint
       class << self
         def call(args, ctx = Context.new)
+          if ctx.capture2e('type __shopify_cli__')
+            # Looks like we are in a shell shim. Do not proceed with the command
+            ctx.puts(ctx.message('core.warning.shell_shim'))
+            exit 1
+          end
+
           if ctx.development?
             ctx.puts(
-              ctx.message('core.development_version_warning', File.join(ShopifyCli::ROOT, 'bin', ShopifyCli::TOOL_NAME))
+              ctx.message('core.warning.development_version', File.join(ShopifyCli::ROOT, 'bin', ShopifyCli::TOOL_NAME))
             )
           end
 
