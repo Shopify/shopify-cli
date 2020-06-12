@@ -47,7 +47,6 @@ module Script
                 "@shopify/scripts-toolchain-as": "#{@extension_point.sdks[:ts].toolchain_version}",
                 "#{@extension_point.sdks[:ts].package}": "#{@extension_point.sdks[:ts].version}",
                 "@as-pect/cli": "3.2.7",
-                "yargs": "10.0.0",
                 "as-wasi": "^0.0.1",
                 "assemblyscript": "^0.10.0"
               },
