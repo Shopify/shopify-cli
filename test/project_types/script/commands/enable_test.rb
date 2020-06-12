@@ -9,7 +9,7 @@ module Script
         super
         @cmd = Enable
         @cmd.ctx = @context
-        @configuration = '{ "entries": [] }'
+        @configuration = { entries: [] }
         @ep_type = 'discount'
         @script_name = 'script'
         @api_key = 'key'

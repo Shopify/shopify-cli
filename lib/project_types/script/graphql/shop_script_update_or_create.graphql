@@ -1,6 +1,6 @@
 mutation ShopScriptUpdateOrCreate(
   $extensionPointName: ExtensionPointName!,
-  $configuration: String,
+  $configuration: ConfigurationInput,
   $title: String
 ) {
   shopScriptUpdateOrCreate(
@@ -17,7 +17,12 @@ mutation ShopScriptUpdateOrCreate(
       extensionPointName
       shopId
       title
-      configuration
+      configuration {
+          entries {
+              key,
+              value
+          }
+      }
     }
   }
 }
