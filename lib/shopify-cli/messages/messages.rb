@@ -42,12 +42,6 @@ module ShopifyCli
           project_type_select: "What type of project would you like to create?",
         },
 
-        development_version_warning: <<~DEVELOPMENT,
-        {{*}} {{yellow:You are running a development version of the CLI at:}}
-            {{yellow:%s}}
-
-        DEVELOPMENT
-
         env_file: {
           saving_header: "writing %s file...",
           saving: "writing %s file",
@@ -263,6 +257,19 @@ module ShopifyCli
           Prints version number.
             Usage: {{command:%s version}}
           HELP
+        },
+
+        warning: {
+          development_version: <<~DEVELOPMENT,
+          {{*}} {{yellow:You are running a development version of the CLI at:}}
+              {{yellow:%s}}
+
+          DEVELOPMENT
+
+          shell_shim: <<~MESSAGE,
+          {{x}} {{red:The Shopify CLI is no longer available as a Git repository. It is now delivered as a package.
+            Please visit https://shopify.github.io/shopify-app-cli for installation instructions.}}
+          MESSAGE
         },
       },
     }.freeze
