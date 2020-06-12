@@ -99,6 +99,26 @@ module Extension
         ])
       end
 
+      def test_shows_error_messages_and_validation_errors_if_any_occurred_on_push
+        @version.last_user_interaction_at = Time.parse("2020-05-07 19:01:56 UTC")
+        @version.validation_errors = [
+          Models::ValidationError.new(field: %w(test_field), message: 'Error message'),
+          Models::ValidationError.new(field: %w(test_field1 test_field2), message: 'Error message2')
+        ]
+
+        Commands::Build.any_instance.stubs(:call)
+        Tasks::UpdateDraft.any_instance.stubs(:call).returns(@version)
+
+        io = capture_io { run_push }
+
+        assert_message_output(io: io, expected_content: [
+          @context.message('push.pushed_with_errors', 'May 07, 2020 19:01:56 UTC'),
+          '{{x}} test_field: Error message',
+          '{{x}} test_field2: Error message2',
+          @context.message('push.push_with_errors_info')
+        ])
+      end
+
       private
 
       def run_push

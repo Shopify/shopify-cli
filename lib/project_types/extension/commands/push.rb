@@ -12,7 +12,7 @@ module Extension
 
         CLI::UI::Frame.open(@ctx.message('push.frame_title')) do
           updated_draft_version = update_draft
-          show_confirmation_message(updated_draft_version.last_user_interaction_at, updated_draft_version.location)
+          show_message(updated_draft_version)
         end
       end
 
@@ -25,9 +25,23 @@ module Extension
 
       private
 
-      def show_confirmation_message(confirmed_at, location)
-        @ctx.puts(@ctx.message('push.success_confirmation', project.title, format_time(confirmed_at)))
-        @ctx.puts(@ctx.message('push.success_info', location))
+      def show_message(draft)
+        draft.validation_errors.empty? ? output_success_messages(draft) : output_validation_errors(draft)
+      end
+
+      def output_success_messages(draft)
+        @ctx.puts(@ctx.message('push.success_confirmation', project.title, format_time(draft.last_user_interaction_at)))
+        @ctx.puts(@ctx.message('push.success_info', draft.location))
+      end
+
+      def output_validation_errors(draft)
+        @ctx.puts(@ctx.message('push.pushed_with_errors', format_time(draft.last_user_interaction_at)))
+
+        draft.validation_errors.each do |error|
+          @ctx.puts('{{x}} %s: %s' % [error.field.last, error.message])
+        end
+
+        @ctx.puts(@ctx.message('push.push_with_errors_info'))
       end
 
       def format_time(time)
