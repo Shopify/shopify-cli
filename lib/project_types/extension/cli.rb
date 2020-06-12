@@ -48,6 +48,7 @@ module Extension
   module Features
     autoload :Argo, Project.project_filepath('features/argo')
     autoload :ArgoDependencies, Project.project_filepath('features/argo_dependencies')
+    autoload :TunnelUrl, Project.project_filepath('features/tunnel_url')
   end
 
   module Models

@@ -11,6 +11,7 @@ module Extension
       AUTH_SUBCOMMAND = 'auth'
       START_SUBCOMMAND = 'start'
       STOP_SUBCOMMAND = 'stop'
+      STATUS_SUBCOMMAND = 'status'
       DEFAULT_PORT = 39351
 
       def call(args, _name)
@@ -20,6 +21,7 @@ module Extension
         when AUTH_SUBCOMMAND then authorize(args)
         when START_SUBCOMMAND then ShopifyCli::Tunnel.start(@ctx, port: port)
         when STOP_SUBCOMMAND then ShopifyCli::Tunnel.stop(@ctx)
+        when STATUS_SUBCOMMAND then status
         else @ctx.puts(self.class.help)
         end
       end
@@ -27,27 +29,21 @@ module Extension
       private
 
       def self.help
-        <<~HELP
-          Start or stop an http tunnel to your local development extension using ngrok.
-            Usage: {{command:%s tunnel [ auth | start | stop ]}}
-        HELP
+        ShopifyCli::Context.message('tunnel.help', ShopifyCli::TOOL_NAME)
       end
 
       def self.extended_help
-        <<~HELP
-          {{bold:Subcommands:}}
+        ShopifyCli::Context.message('tunnel.extended_help', ShopifyCli::TOOL_NAME, DEFAULT_PORT)
+      end
 
-            {{cyan:auth}}: Writes an ngrok auth token to ~/.ngrok2/ngrok.yml to connect with an ngrok account. Visit https://dashboard.ngrok.com/signup to sign up.
-              Usage: {{command:%1$s tunnel auth <token>}}
+      def status
+        tunnel_url = Features::TunnelUrl.fetch
 
-            {{cyan:start}}: Starts an ngrok tunnel, will print the URL for an existing tunnel if already running.
-              Usage: {{command:%1$s tunnel start}}
-              Options:
-              {{command:--port=PORT}} Forward the ngrok subdomain to local port PORT. Defaults to #{DEFAULT_PORT}.
-
-            {{cyan:stop}}: Stops the ngrok tunnel.
-              Usage: {{command:%1$s tunnel stop}}
-        HELP
+        if tunnel_url.nil?
+          @ctx.puts(@ctx.message('tunnel.no_tunnel_running'))
+        else
+          @ctx.puts(@ctx.message('tunnel.tunnel_running_at', tunnel_url))
+        end
       end
 
       def port

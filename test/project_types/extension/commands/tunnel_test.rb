@@ -67,6 +67,23 @@ module Extension
         capture_io { run_tunnel(Tunnel::STOP_SUBCOMMAND) }
       end
 
+      def test_status_outputs_no_tunnel_running_if_tunnel_url_returns_nil
+        Features::TunnelUrl.expects(:fetch).returns(nil).once
+
+        io = capture_io { run_tunnel(Tunnel::STATUS_SUBCOMMAND) }
+
+        assert_message_output(io: io, expected_content: @context.message('tunnel.no_tunnel_running'))
+      end
+
+      def test_status_outputs_the_running_tunnel_url_if_returned_by_tunnel_url
+        fake_url = 'http://12345.ngrok.io'
+        Features::TunnelUrl.expects(:fetch).returns(fake_url).once
+
+        io = capture_io { run_tunnel(Tunnel::STATUS_SUBCOMMAND) }
+
+        assert_message_output(io: io, expected_content: @context.message('tunnel.tunnel_running_at', fake_url))
+      end
+
       private
 
       def run_tunnel(*args)

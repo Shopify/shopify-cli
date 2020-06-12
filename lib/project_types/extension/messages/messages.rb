@@ -44,7 +44,30 @@ module Extension
       },
       tunnel: {
         missing_token: '{{x}} {{red:auth requires a token argument}}. Find it on your ngrok dashboard: {{underline:https://dashboard.ngrok.com/auth/your-authtoken}}.',
-        invalid_port: '%s is not a valid port.'
+        invalid_port: '%s is not a valid port.',
+        no_tunnel_running: 'No tunnel running.',
+        tunnel_running_at: 'Tunnel running at: {{underline:%s}}',
+        help: <<~HELP,
+          Start or stop an http tunnel to your local development extension using ngrok.
+            Usage: {{command:%s tunnel [ auth | start | stop | status ]}}
+        HELP
+        extended_help: <<~HELP,
+          {{bold:Subcommands:}}
+
+            {{cyan:auth}}: Writes an ngrok auth token to ~/.ngrok2/ngrok.yml to connect with an ngrok account. Visit https://dashboard.ngrok.com/signup to sign up.
+              Usage: {{command:%1$s tunnel auth <token>}}
+
+            {{cyan:start}}: Starts an ngrok tunnel, will print the URL for an existing tunnel if already running.
+              Usage: {{command:%1$s tunnel start}}
+              Options:
+              {{command:--port=PORT}} Forward the ngrok subdomain to local port PORT. Defaults to %2$s.
+
+            {{cyan:stop}}: Stops the ngrok tunnel.
+              Usage: {{command:%1$s tunnel stop}}
+
+            {{cyan:status}}: Output the current status of the ngrok tunnel.
+              Usage: {{command:%1$s tunnel status}}
+        HELP
       },
       features: {
         argo: {
