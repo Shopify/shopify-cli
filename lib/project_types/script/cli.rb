@@ -8,7 +8,6 @@ module Script
     register_command('Script::Commands::Push', 'push')
     register_command('Script::Commands::Disable', 'disable')
     register_command('Script::Commands::Enable', 'enable')
-    register_command('Script::Commands::Test', 'test')
 
     require Project.project_filepath('messages/messages')
     register_messages(Script::Messages::MESSAGES)
@@ -20,7 +19,6 @@ module Script
     autoload :Push, Project.project_filepath('commands/push')
     autoload :Disable, Project.project_filepath('commands/disable')
     autoload :Enable, Project.project_filepath('commands/enable')
-    autoload :Test, Project.project_filepath('commands/test')
   end
 
   # define/autoload project specific Forms
@@ -40,7 +38,6 @@ module Script
       autoload :EnableScript, Project.project_filepath('layers/application/enable_script')
       autoload :ExtensionPoints, Project.project_filepath('layers/application/extension_points')
       autoload :ProjectDependencies, Project.project_filepath('layers/application/project_dependencies')
-      autoload :TestScript, Project.project_filepath('layers/application/test_script')
     end
 
     module Domain
@@ -54,8 +51,6 @@ module Script
       autoload :Errors, Project.project_filepath('layers/infrastructure/errors')
       autoload :AssemblyScriptDependencyManager,
                Project.project_filepath('layers/infrastructure/assemblyscript_dependency_manager')
-      autoload :AssemblyScriptTestRunner,
-               Project.project_filepath('layers/infrastructure/assemblyscript_test_runner')
       autoload :AssemblyScriptTsConfig, Project.project_filepath('layers/infrastructure/assemblyscript_tsconfig')
       autoload :AssemblyScriptWasmBuilder,
                Project.project_filepath('layers/infrastructure/assemblyscript_wasm_builder')
