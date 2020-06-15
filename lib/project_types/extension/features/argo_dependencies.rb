@@ -4,7 +4,7 @@ module Extension
   module Features
     class ArgoDependencies
       def self.node_installed(min_major:, min_minor: nil)
-        Proc.new do |context|
+        -> (context) do
           out, status = CLI::Kit::System.capture2(*%w(node -v))
           context.abort(context.message('features.argo.dependencies.node.node_not_installed')) unless status.success?
 
@@ -15,6 +15,8 @@ module Extension
           unless min_major.nil? || parsed_version[:major].to_i >= min_major
             context.abort(context.message('features.argo.dependencies.node.version_too_low', version, min_version))
           end
+
+          return if parsed_version[:major].to_i > min_major
 
           unless min_minor.nil? || parsed_version[:minor].to_i >= min_minor
             context.abort(context.message('features.argo.dependencies.node.version_too_low', version, min_version))

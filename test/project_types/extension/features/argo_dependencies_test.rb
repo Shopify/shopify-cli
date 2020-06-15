@@ -54,7 +54,7 @@ module Extension
         ])
       end
 
-      def test_if_node_exists_but_minor_version_is_under_the_minimum_abort_with_message
+      def test_if_major_version_is_the_minimum_version_abort_with_message_if_minor_version_is_under_the_minimum_version
         mock_node_version('v10.11.12')
 
         io = capture_io_and_assert_raises(ShopifyCli::Abort) do
@@ -64,6 +64,14 @@ module Extension
         assert_message_output(io: io, expected_content: [
           @context.message('features.argo.dependencies.node.version_too_low', 'v10.11.12', 'v10.12.x')
         ])
+      end
+
+      def test_if_major_version_is_the_above_the_minimum_version_do_not_check_minor_version
+        mock_node_version('v13.7.0')
+
+        assert_nothing_raised do
+          ArgoDependencies.node_installed(min_major: 10, min_minor: 13).call(@context)
+        end
       end
 
       private
