@@ -19,7 +19,6 @@ module Script
           end
         end
         class ServiceFailureError < ScriptProjectError; end
-        class TestSuiteNotFoundError < ScriptProjectError; end
       end
     end
   end

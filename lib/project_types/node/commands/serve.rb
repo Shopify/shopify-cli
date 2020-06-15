@@ -2,7 +2,7 @@
 module Node
   module Commands
     class Serve < ShopifyCli::Command
-      prerequisite_task :ensure_env, :ensure_test_shop
+      prerequisite_task :ensure_env, :ensure_dev_store
 
       options do |parser, flags|
         parser.on('--host=HOST') do |h|

@@ -245,9 +245,9 @@ module ShopifyCli
             api_secret_key_question: "What is your Shopify API secret key?",
             development_store_question: "What is your development store URL? (Example: my-dev-store.myshopify.com)",
           },
-          ensure_test_shop: {
-            could_not_verify_shop: "Couldn't verify your store %s",
-            convert_dev_to_test_store: <<~MESSAGE,
+          ensure_dev_store: {
+            could_not_verify_store: "Couldn't verify your store %s",
+            convert_to_dev_store: <<~MESSAGE,
               Do you want to convert %s to a development store?
               Doing this will allow you to install your app, but the store will become {{bold:transfer-disabled}}.
               Learn more: https://shopify.dev/tutorials/transfer-a-development-store-to-a-merchant#transfer-disabled-stores
