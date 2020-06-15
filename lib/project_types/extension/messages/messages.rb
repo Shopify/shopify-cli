@@ -12,6 +12,7 @@ module Extension
         setup_project_frame_title: 'Initializing project',
         ready_to_start: "{{*}} You’re ready to start building {{green:%s}}!\nA new folder was generated at {{green:./%s}}. Navigate there, then run {{command:shopify serve}} to start a local server.",
         learn_more: '{{*}} Register this extension with one of your apps by running {{command:shopify register}}.',
+        try_again: '{{*}} Fix the errors and run {{command:shopify create extension}} again.',
       },
       build: {
         frame_title: 'Building extension with: %s...',
@@ -75,6 +76,7 @@ module Extension
         argo: {
           missing_file_error: 'Could not find built extension file.',
           script_prepare_error: 'An error occurred while attempting to prepare your script.',
+          initialization_error: '{{x}} There was an error while initializing the project.',
           dependencies: {
             node: {
               node_not_installed: 'Node must be installed to create this extension.',

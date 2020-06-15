@@ -10,13 +10,15 @@ module Extension
 
       def call(args, _)
         with_create_form(args) do |form|
-          form.type.create(form.directory_name, @ctx)
+          if form.type.create(form.directory_name, @ctx)
+            ExtensionProject.write_cli_file(context: @ctx, type: form.type.identifier)
+            ExtensionProject.write_env_file(context: @ctx, title: form.name)
 
-          ExtensionProject.write_cli_file(context: @ctx, type: form.type.identifier)
-          ExtensionProject.write_env_file(context: @ctx, title: form.name)
-
-          @ctx.puts(@ctx.message('create.ready_to_start', form.name, form.directory_name))
-          @ctx.puts(@ctx.message('create.learn_more', form.type.name))
+            @ctx.puts(@ctx.message('create.ready_to_start', form.name, form.directory_name))
+            @ctx.puts(@ctx.message('create.learn_more', form.type.name))
+          else
+            @ctx.puts(@ctx.message('create.try_again'))
+          end
         end
       end
 
