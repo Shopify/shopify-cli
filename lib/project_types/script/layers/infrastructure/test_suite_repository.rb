@@ -23,18 +23,6 @@ module Script
           write_aspect_type_definitions_file
         end
 
-        def get_test_suite(language, extension_point_type, script_name)
-          ScriptRepository.new.get_script(language, extension_point_type, script_name)
-          source = "#{test_base}/script.spec.#{language}"
-          raise Domain::Errors::TestSuiteNotFoundError unless File.exist?(source)
-        end
-
-        def with_test_suite_context
-          Dir.chdir(test_base) do
-            yield
-          end
-        end
-
         private
 
         def test_dir

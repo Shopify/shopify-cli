@@ -5,10 +5,9 @@ module Script
     hidden_project_type
     creator 'Script', 'Script::Commands::Create'
 
-    register_command('Script::Commands::Deploy', 'deploy')
+    register_command('Script::Commands::Push', 'push')
     register_command('Script::Commands::Disable', 'disable')
     register_command('Script::Commands::Enable', 'enable')
-    register_command('Script::Commands::Test', 'test')
 
     require Project.project_filepath('messages/messages')
     register_messages(Script::Messages::MESSAGES)
@@ -17,16 +16,15 @@ module Script
   # define/autoload project specific Commands
   module Commands
     autoload :Create, Project.project_filepath('commands/create')
-    autoload :Deploy, Project.project_filepath('commands/deploy')
+    autoload :Push, Project.project_filepath('commands/push')
     autoload :Disable, Project.project_filepath('commands/disable')
     autoload :Enable, Project.project_filepath('commands/enable')
-    autoload :Test, Project.project_filepath('commands/test')
   end
 
   # define/autoload project specific Forms
   module Forms
     autoload :Create, Project.project_filepath('forms/create')
-    autoload :Deploy, Project.project_filepath('forms/deploy')
+    autoload :Push, Project.project_filepath('forms/push')
     autoload :Enable, Project.project_filepath('forms/enable')
     autoload :ScriptForm, Project.project_filepath('forms/script_form')
   end
@@ -35,12 +33,11 @@ module Script
     module Application
       autoload :BuildScript, Project.project_filepath('layers/application/build_script')
       autoload :CreateScript, Project.project_filepath('layers/application/create_script')
-      autoload :DeployScript, Project.project_filepath('layers/application/deploy_script')
+      autoload :PushScript, Project.project_filepath('layers/application/push_script')
       autoload :DisableScript, Project.project_filepath('layers/application/disable_script')
       autoload :EnableScript, Project.project_filepath('layers/application/enable_script')
       autoload :ExtensionPoints, Project.project_filepath('layers/application/extension_points')
       autoload :ProjectDependencies, Project.project_filepath('layers/application/project_dependencies')
-      autoload :TestScript, Project.project_filepath('layers/application/test_script')
     end
 
     module Domain
@@ -54,8 +51,6 @@ module Script
       autoload :Errors, Project.project_filepath('layers/infrastructure/errors')
       autoload :AssemblyScriptDependencyManager,
                Project.project_filepath('layers/infrastructure/assemblyscript_dependency_manager')
-      autoload :AssemblyScriptTestRunner,
-               Project.project_filepath('layers/infrastructure/assemblyscript_test_runner')
       autoload :AssemblyScriptTsConfig, Project.project_filepath('layers/infrastructure/assemblyscript_tsconfig')
       autoload :AssemblyScriptWasmBuilder,
                Project.project_filepath('layers/infrastructure/assemblyscript_wasm_builder')

@@ -184,8 +184,8 @@ describe Script::Layers::Infrastructure::ScriptService do
           }
         end
 
-        it "should raise ScriptRedeployError error" do
-          assert_raises(Script::Layers::Infrastructure::Errors::ScriptRedeployError) { subject }
+        it "should raise ScriptRepushError error" do
+          assert_raises(Script::Layers::Infrastructure::Errors::ScriptRepushError) { subject }
         end
       end
     end

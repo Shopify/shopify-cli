@@ -5,7 +5,7 @@ require "project_types/script/layers/infrastructure/fake_script_repository"
 require "project_types/script/layers/infrastructure/fake_extension_point_repository"
 require "project_types/script/layers/infrastructure/fake_deploy_package_repository"
 
-describe Script::Layers::Application::DeployScript do
+describe Script::Layers::Application::PushScript do
   include TestHelpers::FakeFS
 
   let(:compiled_type) { 'wasm' }
@@ -35,7 +35,7 @@ describe Script::Layers::Application::DeployScript do
 
   describe '.call' do
     subject do
-      Script::Layers::Application::DeployScript.call(
+      Script::Layers::Application::PushScript.call(
         ctx: @context,
         language: language,
         extension_point_type: extension_point_type,
@@ -45,7 +45,7 @@ describe Script::Layers::Application::DeployScript do
       )
     end
 
-    it 'should prepare and deploy script' do
+    it 'should prepare and push script' do
       script_service_instance = Script::Layers::Infrastructure::ScriptService.new(ctx: @context)
       Script::Layers::Application::ProjectDependencies
         .expects(:install).with(ctx: @context, language: language, extension_point: ep, script_name: script_name)
