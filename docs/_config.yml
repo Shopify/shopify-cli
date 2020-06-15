@@ -14,3 +14,6 @@ defaults:
       path: ""
     values:
       toc: true
+
+plugins:
+  - jekyll-redirect-from
