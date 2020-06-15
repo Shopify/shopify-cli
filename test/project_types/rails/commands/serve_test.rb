@@ -9,7 +9,7 @@ module Rails
       def setup
         super
         project_context('app_types', 'rails')
-        ShopifyCli::Tasks::EnsureTestShop.stubs(:call)
+        ShopifyCli::Tasks::EnsureDevStore.stubs(:call)
         @context.stubs(:system)
       end
 
