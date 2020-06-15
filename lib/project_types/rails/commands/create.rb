@@ -28,7 +28,7 @@ module Rails
         return @ctx.puts(self.class.help) if form.nil?
 
         @ctx.abort(@ctx.message('rails.create.error.invalid_ruby_version')) unless
-          Ruby.version(@ctx).satisfies?('~>2.4')
+          Ruby.version(@ctx).satisfies?('~>2.5')
 
         build(form.name, form.db)
         set_custom_ua
