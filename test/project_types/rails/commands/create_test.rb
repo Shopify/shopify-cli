@@ -40,7 +40,7 @@ module Rails
         gem_path = "/gem/path/"
         Gem.stubs(:gem_home).returns(gem_path)
 
-        Ruby.expects(:version).returns(Semantic::Version.new('2.4.0'))
+        Ruby.expects(:version).returns(Semantic::Version.new('2.5.0'))
         Gem.expects(:install).with(@context, 'rails', nil)
         Gem.expects(:install).with(@context, 'bundler', '~>1.0')
         Gem.expects(:install).with(@context, 'bundler', '~>2.0')
@@ -93,7 +93,7 @@ module Rails
         gem_path = "/gem/path/"
         Gem.stubs(:gem_home).returns(gem_path)
 
-        Ruby.expects(:version).returns(Semantic::Version.new('2.4.0'))
+        Ruby.expects(:version).returns(Semantic::Version.new('2.5.0'))
         Gem.expects(:install).with(@context, 'rails', nil)
         Gem.expects(:install).with(@context, 'bundler', '~>1.0')
         Gem.expects(:install).with(@context, 'bundler', '~>2.0')
@@ -142,7 +142,7 @@ module Rails
         gem_path = "/gem/path/"
         Gem.stubs(:gem_home).returns(gem_path)
 
-        Ruby.expects(:version).returns(Semantic::Version.new('2.4.0'))
+        Ruby.expects(:version).returns(Semantic::Version.new('2.5.0'))
         Gem.expects(:install).with(@context, 'rails', nil)
         Gem.expects(:install).with(@context, 'bundler', '~>1.0')
         Gem.expects(:install).with(@context, 'bundler', '~>2.0')

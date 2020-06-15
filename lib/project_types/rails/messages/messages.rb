@@ -29,7 +29,7 @@ module Rails
 
           error: {
             invalid_ruby_version: <<~MSG,
-            This project requires a ruby version ~> 2.4.
+            This project requires a ruby version ~> 2.5.
             See {{underline:https://github.com/Shopify/shopify-app-cli/blob/master/docs/installing-ruby.md}}
             for our recommended method of installing ruby.
             MSG
