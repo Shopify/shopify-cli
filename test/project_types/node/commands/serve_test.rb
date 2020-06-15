@@ -9,7 +9,7 @@ module Node
       def setup
         super
         project_context('app_types', 'node')
-        ShopifyCli::Tasks::EnsureTestShop.stubs(:call)
+        ShopifyCli::Tasks::EnsureDevStore.stubs(:call)
         @context.stubs(:system)
       end
 

@@ -63,7 +63,10 @@ module ShopifyCli
     #   ShopifyCli::JsSystem.new(ctx: ctx).yarn?
     #
     def yarn?
-      @has_yarn ||= File.exist?(File.join(ctx.root, 'yarn.lock')) && CLI::Kit::System.system('which', 'yarn').success?
+      @has_yarn ||= begin
+        _, status = CLI::Kit::System.capture2('which', 'yarn')
+        File.exist?(File.join(ctx.root, 'yarn.lock')) && status.success?
+      end
     end
 
     ##
