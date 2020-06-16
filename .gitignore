@@ -10,6 +10,7 @@ tmp/
 .git/*
 markdown_intermediate
 .idea
+vendor/bundle
 *.gem
 packaging/builds
 packaging/debian/shopify-cli

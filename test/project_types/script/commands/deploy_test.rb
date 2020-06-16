@@ -43,6 +43,20 @@ module Script
         perform_command
       end
 
+      def test_help
+        ShopifyCli::Context
+          .expects(:message)
+          .with('script.deploy.help', ShopifyCli::TOOL_NAME)
+        Script::Commands::Deploy.help
+      end
+
+      def test_extended_help
+        ShopifyCli::Context
+          .expects(:message)
+          .with('script.deploy.extended_help', ShopifyCli::TOOL_NAME)
+        Script::Commands::Deploy.extended_help
+      end
+
       private
 
       def perform_command

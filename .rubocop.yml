@@ -1,5 +1,4 @@
 inherit_from:
-  - .rubocop_todo.yml
   - https://shopify.github.io/ruby-style-guide/rubocop-cli.yml
 
 AllCops:
@@ -13,6 +12,14 @@ Layout/EmptyLines:
   Exclude:
     # Need extra line so comment at top isnt registered to the Dev namespace
     - 'lib/dev/helpers/chruby_reset.rb'
+
+# Changing this could effect the way the content is rendered.
+Layout/HeredocIndentation:
+  Exclude:
+    - 'lib/project_types/node/messages/messages.rb'
+    - 'lib/project_types/rails/messages/messages.rb'
+    - 'lib/project_types/script/messages/messages.rb'
+    - 'lib/shopify-cli/messages/messages.rb'
 
 # allow String.new to create mutable strings
 Style/EmptyLiteral:

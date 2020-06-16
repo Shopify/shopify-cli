@@ -24,6 +24,11 @@ module TestHelpers
         .with('git', 'status')
         .returns([init_output, status_mock[:true]])
 
+      # db validation
+      @context.stubs(:capture2e)
+        .with('bundle exec rails runner "puts ActiveRecord::Base.connection.adapter_name.downcase"')
+        .returns(['mysql', status_mock[:true]])
+
       # whoami
       @context.stubs(:capture2e)
         .with(heroku_command(full_path: full_path), 'whoami')
@@ -135,6 +140,12 @@ module TestHelpers
       @context.expects(:system)
         .with('git', 'push', '-u', 'heroku', "master:master")
         .returns(status_mock[:"#{status}"])
+    end
+
+    def expects_heroku_db_validated(status:, db:)
+      @context.expects(:capture2e)
+        .with('bundle exec rails runner "puts ActiveRecord::Base.connection.adapter_name.downcase"')
+        .returns([db, status_mock[:"#{status}"]])
     end
 
     def expects_heroku_download_exists(status:)

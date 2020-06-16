@@ -18,7 +18,7 @@ module Script
           ctx: @ctx,
           api_key: form.api_key,
           shop_domain: form.shop_domain,
-          configuration: '{}',
+          configuration: '{ "entries": [] }',
           extension_point_type: project.extension_point_type,
           title: project.script_name
         )
@@ -29,12 +29,17 @@ module Script
           type: project.extension_point_type.capitalize,
           title: project.script_name
         ))
+        @ctx.puts(@ctx.message('script.enable.info'))
       rescue StandardError => e
         UI::ErrorHandler.pretty_print_and_raise(e, failed_op: @ctx.message('script.enable.error.operation_failed'))
       end
 
       def self.help
         ShopifyCli::Context.message('script.enable.help', ShopifyCli::TOOL_NAME)
+      end
+
+      def self.extended_help
+        ShopifyCli::Context.message('script.enable.extended_help', ShopifyCli::TOOL_NAME)
       end
     end
   end

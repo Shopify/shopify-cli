@@ -44,7 +44,7 @@ module Script
           build_error_help: "Correct the errors and try again.",
 
           dependency_install_cause: "Something went wrong while installing the dependencies that are needed.",
-          dependency_install_help: "See https://help.shopify.com",
+          dependency_install_help: "Correct the errors and try again.",
 
           forbidden_error_cause: "You do not have permission to do this action.",
 
@@ -70,9 +70,11 @@ module Script
           help: <<~HELP,
           {{command:%1$s create script}}: Creates a script project.
             Usage: {{command:%1$s create script}}
-            Options:
-              {{command:--name=NAME}} Script project name. Any string.
-              {{command:--extension_point=TYPE}} Extension point name. Allowed values: %2$s.
+          HELP
+          extended_help: <<~HELP,
+            \s\sOptions:
+              \s\s{{command:--name=NAME}} Script project name. Use any string.
+              \s\s{{command:--extension_point=TYPE}} Extension point name. Allowed values: %2$s.
           HELP
 
           error: {
@@ -87,8 +89,13 @@ module Script
 
         deploy: {
           help: <<~HELP,
-          Build the script and deploy it to app.
-            Usage: {{command:%s deploy --API_key=<API_key> [--force]}}
+          Build the script and deploy it to the app. If there's a script with the same extension point already deployed, use --force to replace it.
+            Usage: {{command:%s deploy}}
+          HELP
+          extended_help: <<~HELP,
+            \s\sOptions:
+              \s\s{{command:--API_key=<API_key>}} API key. Must be a valid API key, otherwise store access fails.
+              \s\s{{command:[--force]}} Forces the script to be overwritten if an instance of it already exists.
           HELP
 
           error: {
@@ -101,7 +108,12 @@ module Script
         disable: {
           help: <<~HELP,
           Turn off script in development store.
-            Usage: {{command:%s disable --API_key=<API_key> --shop_domain=<my_store.myshopify.com>}}
+            Usage: {{command:%s disable}}
+          HELP
+          extended_help: <<~HELP,
+            \s\sOptions:
+              \s\s{{command:--API_key=<API_key>}} API key. Must be a valid API key, otherwise store access fails.
+              \s\s{{command:--shop_domain=<my_store.myshopify.com>}} Test store URL. Must be an existing test store.
           HELP
 
           error: {
@@ -114,8 +126,17 @@ module Script
         enable: {
           help: <<~HELP,
           Turn on script in development store.
-            Usage: {{command:%s enable --API_key=<API_key> --shop_domain=<my_store.myshopify.com>}}
+            Usage: {{command:%s enable}}
           HELP
+          extended_help: <<~HELP,
+            \s\sOptions:
+              \s\s{{command:--API_key=<API_key>}} API key. Must be a valid API key, otherwise store access fails.
+              \s\s{{command:--shop_domain=<my_store.myshopify.com>}} Test store URL. Must be an existing test store.
+          HELP
+
+          info: "{{*}} A script always remains enabled until you disable it ⁠— even after deploying "\
+                "script changes with the same extension point to an app. To disable a script, use "\
+                "the 'disable' command.",
 
           error: {
             operation_failed: "Can't enable script.",
@@ -150,12 +171,16 @@ module Script
           create: {
             select_extension_point: "Which extension point do you want to use?",
             script_name: "Script Name",
+
+            error: {
+              invalid_name: "Invalid script name: replace or remove unsupported characters. Valid "\
+                            "characters are numbers, letters, spaces, hyphens, or underscores.",
+            },
           },
           script_form: {
             ask_app_api_key_default: "Which app do you want this script to belong to?",
             ask_shop_domain_default: "Select a development store",
-            fetching_organizations: "Fetching organizations",
-            fetched_organizations: "Fetched organizations",
+            fetching_organizations: "{{i}} Fetching organizations",
             select_organization: "Select organization.",
             using_app: "Using app {{green:%{title} (%{api_key})}}.",
             using_development_store: "Using development store {{green:%{domain}}}",
@@ -171,12 +196,9 @@ module Script
           building: "Building",
           building_script: "Building script",
           built: "Built",
-          deploying: "Deploying",
-          deployed: "Deployed",
-          disabling: "Disabling",
-          disabled: "Disabled",
-          enabling: "Enabling",
-          enabled: "Enabled",
+          deployed: "{{v}} Deployed",
+          disabled: "{{v}} Disabled",
+          enabled: "{{v}} Enabled",
         },
       },
     }.freeze

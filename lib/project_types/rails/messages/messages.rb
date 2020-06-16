@@ -22,7 +22,7 @@ module Rails
               {{command:--name=NAME}} App name. Any string.
               {{command:--app_url=APPURL}} App URL. Must be valid URL.
               {{command:--organization_id=ID}} App Org ID. Must be existing org ID.
-              {{command:--shop_domain=MYSHOPIFYDOMAIN }} Test store URL. Must be existing test store.
+              {{command:--shop_domain=MYSHOPIFYDOMAIN }} Development store URL. Must be an existing development store.
               {{command:--db=DB}} Database type. Must be one of: mysql, postgresql, sqlite3, oracle, frontbase, ibm_db, sqlserver, jdbcmysql, jdbcsqlite3, jdbcpostgresql, jdbc.
               {{command:--rails_opts=RAILSOPTS}} Additional options. Must be string containing one or more valid Rails options, separated by spaces.
           HELP
@@ -45,7 +45,7 @@ module Rails
           generating_app: "Generating new rails app project in %s...",
           adding_shopify_gem: "{{v}} Adding shopify_app gem…",
           running_bundle_install: "Running bundle install...",
-          running_generator: "Running shopfiy_app generator...",
+          running_generator: "Running shopify_app generator...",
           running_migrations: "Running migrations…",
         },
 
@@ -74,6 +74,17 @@ module Rails
             authenticated: "{{v}} Authenticated with Heroku",
             deploying: "Deploying to Heroku…",
             deployed: "{{v}} Deployed to Heroku",
+            db_check: {
+              validating: "Validating application...",
+              checking: "Checking database type...",
+              validated: "Database type \"%s\" validated for platform \"Heroku\"",
+              problem: "A problem was encountered while checking your database type.",
+              sqlite: <<~SQLITE,
+              Heroku does not support deployment using the SQLite database system.
+              Change the database type using {{command:rails db:system:change --to=[new_db_type]}}. For more info:
+              {{underline:https://gorails.com/episodes/rails-6-db-system-change-command}}
+              SQLITE
+            },
             git: {
               checking: "Checking git repo…",
               initialized: "Git repo initialized",
@@ -224,6 +235,7 @@ module Rails
           create: {
             error: {
               invalid_app_type: "Invalid App Type %s",
+              invalid_db_type: "Invalid Database Type %s",
               organization_not_found: "Cannot find an organization with that ID",
               no_organizations: "No organizations available.",
             },
@@ -238,6 +250,26 @@ module Rails
               select_public: "Public: An app built for a wide merchant audience.",
               select_custom: "Custom: An app custom built for a single client.",
               selected: "App Type {{green:%s}}",
+            },
+            db: {
+              want_select: <<~WANT_SELECT,
+              Would you like to select what database type to use now? (SQLite is the default)
+              If you want to change this in the future, run {{command:rails db:system:change --to=[new_db_type]}}. For more info:
+              {{underline:https://gorails.com/episodes/rails-6-db-system-change-command}}
+              WANT_SELECT
+              select: "What database type would you like to use? Please ensure the database is installed.",
+              select_sqlite3: "SQLite (default)",
+              select_mysql: "MySQL",
+              select_postgresql: "PostgreSQL",
+              select_oracle: "Oracle",
+              select_frontbase: "FrontBase",
+              select_ibm_db: "IBM_DB",
+              select_sqlserver: "SQL Server",
+              select_jdbcmysql: "JDBC MySQL",
+              select_jdbcsqlite3: "JDBC SQlite",
+              select_jdbcpostgresql: "JDBC PostgreSQL",
+              select_jdbc: "JDBC",
+              selected: "Database Type {{green:%s}}",
             },
             organization_select: "Select organization",
             organization: "Organization {{green:%s}}",

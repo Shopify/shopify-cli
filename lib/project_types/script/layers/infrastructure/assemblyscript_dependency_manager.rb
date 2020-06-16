@@ -32,6 +32,9 @@ module Script
           @ctx.system(
             'npm', '--userconfig', './.npmrc', 'config', 'set', '@shopify:registry', 'https://registry.npmjs.com'
           )
+          @ctx.system(
+            'npm', '--userconfig', './.npmrc', 'config', 'set', 'engine-strict', 'true'
+          )
         end
 
         def write_package_json
@@ -41,16 +44,17 @@ module Script
               "version": "1.0.0",
               "devDependencies": {
                 "@shopify/scripts-sdk-as": "#{@extension_point.sdks[:ts].sdk_version}",
+                "@shopify/scripts-toolchain-as": "#{@extension_point.sdks[:ts].toolchain_version}",
                 "#{@extension_point.sdks[:ts].package}": "#{@extension_point.sdks[:ts].version}",
-                "@as-pect/cli": "3.1.4",
-                "yargs": "10.0.0",
+                "@as-pect/cli": "3.2.0",
                 "as-wasi": "^0.0.1",
-                "assemblyscript": "^0.9.4",
-                "ts-node": "^8.5.4",
-                "typescript": "^3.7.3"
+                "assemblyscript": "^0.10.0"
               },
               "scripts": {
                 "test": "asp --config test/as-pect.config.js --summary --verbose"
+              },
+              "engines": {
+                "node": ">=12.16"
               }
             }
           HERE
