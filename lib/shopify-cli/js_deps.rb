@@ -55,18 +55,40 @@ module ShopifyCli
       cmd = %w(yarn install)
       cmd << '--silent' unless verbose
 
-      CLI::Kit::System.system(*cmd, chdir: ctx.root) do |out, err|
-        ctx.puts out
-        err.lines.each do |e|
-          ctx.puts e
-        end
-      end.success?
+      run_install_command(cmd)
     end
 
     def npm(verbose = false)
       cmd = %w(npm install --no-audit --no-optional)
-      cmd << '--silent' unless verbose
+      cmd << '--quiet' unless verbose
 
+      run_install_command(cmd)
+    end
+
+    def run_install_command(cmd)
+      deps = parse_dependencies
+      errors = nil
+
+      spinner_title = ctx.message('core.js_deps.installing_deps', deps.size)
+      success = CLI::UI::Spinner.spin(spinner_title, auto_debrief: false) do |spinner|
+        _, errors, status = CLI::Kit::System.capture3(*cmd, env: @ctx.env, chdir: ctx.root)
+        update_spinner_title_and_status(spinner, status, deps)
+      end
+
+      errors.lines.each { |e| ctx.puts e } unless success || errors.nil?
+      success
+    end
+
+    def update_spinner_title_and_status(spinner, status, deps)
+      if status.success?
+        spinner.update_title(ctx.message('core.js_deps.installed_deps', deps.size))
+      else
+        spinner.update_title(ctx.message('core.js_deps.error.install_spinner_error', deps.size))
+        CLI::UI::Spinner::TASK_FAILED
+      end
+    end
+
+    def parse_dependencies
       package_json = File.join(ctx.root, 'package.json')
       pkg = begin
               JSON.parse(File.read(package_json))
@@ -74,24 +96,9 @@ module ShopifyCli
               ctx.abort(ctx.message('core.js_deps.error.missing_package', package_json))
             end
 
-      deps = %w(dependencies devDependencies).map do |key|
+      %w(dependencies devDependencies).map do |key|
         pkg.fetch(key, []).keys
       end.flatten
-
-      success = true
-      spinner_title = ctx.message('core.js_deps.npm_installing_deps', deps.size)
-      CLI::UI::Spinner.spin(spinner_title, auto_debrief: false) do |spinner|
-        success = ctx.system(*cmd, chdir: ctx.root).success?
-
-        if success
-          spinner.update_title(ctx.message('core.js_deps.npm_installed_deps', deps.size))
-        else
-          spinner.update_title(ctx.message('core.js_deps.error.install_error'))
-          CLI::UI::Spinner::TASK_FAILED
-        end
-      end
-
-      success
     rescue JSON::ParserError
       ctx.puts(
         ctx.message('core.js_deps.error.invalid_package', File.read(File.join(path, 'package.json'))),
