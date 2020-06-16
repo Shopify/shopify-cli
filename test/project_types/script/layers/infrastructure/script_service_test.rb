@@ -348,7 +348,6 @@ describe Script::Layers::Infrastructure::ScriptService do
               extensionPointName
               shopId
               title
-              configuration
             }
           }
         }
@@ -395,7 +394,6 @@ describe Script::Layers::Infrastructure::ScriptService do
             "shopScriptDelete" => {
               "shopScript" => {
                 "shopId" => "1",
-                "configuration" => nil,
                 "extensionPointName" => extension_point_type,
                 "title" => "foo2",
               },
