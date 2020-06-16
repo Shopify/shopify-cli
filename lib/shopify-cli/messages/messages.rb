@@ -88,13 +88,14 @@ module ShopifyCli
           error: {
             missing_package: "expected to have a file at: %s",
             invalid_package: "{{info:%s}} was not valid JSON. Fix this then try again",
+            install_spinner_error: "Unable to install all %d dependencies",
             install_error: 'An error occurred while installing dependencies',
           },
 
           installing: "Installing dependencies with %s...",
           installed: "Dependencies installed",
-          npm_installing_deps: "Installing %d dependencies...",
-          npm_installed_deps: "%d npm dependencies installed",
+          installing_deps: "Installing %d dependencies...",
+          installed_deps: "%d dependencies installed",
         },
 
         load_dev: {
