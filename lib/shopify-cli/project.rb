@@ -131,7 +131,11 @@ module ShopifyCli
     #   ShopifyCli::Project.current.env
     #
     def env
-      @env ||= Resources::EnvFile.read(directory)
+      @env ||= begin
+                 Resources::EnvFile.read(directory)
+               rescue
+                 nil
+               end
     end
 
     ##

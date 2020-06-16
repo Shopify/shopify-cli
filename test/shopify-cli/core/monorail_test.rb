@@ -96,7 +96,8 @@ module ShopifyCli
                 schema_id: ShopifyCli::Core::Monorail::INVOCATIONS_SCHEMA,
                 payload: {
                   project_type: 'fake',
-                  args: "testcommand arg argtwo",
+                  command: 'testcommand',
+                  args: "arg argtwo",
                   time_start: this_time,
                   time_end: this_time,
                   total_time: 0,
