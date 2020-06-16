@@ -44,7 +44,7 @@ module Extension
           .returns(false)
           .once
 
-        io = capture_io_and_assert_raises(ShopifyCli::Abort) { run_register_command }
+        io = capture_io_and_assert_raises(ShopifyCli::AbortSilent) { run_register_command }
 
         assert_message_output(io: io, expected_content: [
           @context.message('register.confirm_abort'),

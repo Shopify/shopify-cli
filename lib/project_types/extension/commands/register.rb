@@ -13,7 +13,7 @@ module Extension
 
           with_register_form(args) do |form|
             should_continue = confirm_registration(form.app)
-            registration = should_continue ? register_extension(form.app) : @ctx.abort(@ctx.message('register.confirm_abort'))
+            registration = should_continue ? register_extension(form.app) : abort_not_registered
 
             update_project_files(form.app, registration)
 
@@ -67,6 +67,11 @@ module Extension
           registration_id: registration.id,
           title: project.title
         )
+      end
+
+      def abort_not_registered
+        @ctx.puts(@ctx.message('register.confirm_abort'))
+        raise ShopifyCli::AbortSilent
       end
     end
   end
