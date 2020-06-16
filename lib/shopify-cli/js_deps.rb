@@ -37,13 +37,16 @@ module ShopifyCli
     #   ShopifyCli::JsDeps.new(context).install(true)
     #
     def install(verbose = false)
-      CLI::UI::Frame.open(ctx.message('core.js_deps.installing', @system.package_manager)) do
+      title = ctx.message('core.js_deps.installing', @system.package_manager)
+      success = ctx.message('core.js_deps.installed')
+      failure = ctx.message('core.js_deps.error.install_error', @system.package_manager)
+
+      CLI::UI::Frame.open(title, success_text: success, failure_text: failure) do
         @system.call(
           yarn: -> { yarn(verbose) },
           npm: -> { npm(verbose) }
         )
       end
-      ctx.done(ctx.message('core.js_deps.installed'))
     end
 
     private
@@ -74,10 +77,21 @@ module ShopifyCli
       deps = %w(dependencies devDependencies).map do |key|
         pkg.fetch(key, []).keys
       end.flatten
-      CLI::UI::Spinner.spin(ctx.message('core.js_deps.npm_installing_deps', deps.size)) do |spinner|
-        ctx.system(*cmd, chdir: ctx.root)
-        spinner.update_title(ctx.message('core.js_deps.npm_installed_deps', deps.size))
+
+      success = true
+      spinner_title = ctx.message('core.js_deps.npm_installing_deps', deps.size)
+      CLI::UI::Spinner.spin(spinner_title, auto_debrief: false) do |spinner|
+        success = ctx.system(*cmd, chdir: ctx.root).success?
+
+        if success
+          spinner.update_title(ctx.message('core.js_deps.npm_installed_deps', deps.size))
+        else
+          spinner.update_title(ctx.message('core.js_deps.error.install_error'))
+          CLI::UI::Spinner::TASK_FAILED
+        end
       end
+
+      success
     rescue JSON::ParserError
       ctx.puts(
         ctx.message('core.js_deps.error.invalid_package', File.read(File.join(path, 'package.json'))),

@@ -101,7 +101,7 @@ module Node
             HELP
             type_select: "How would you like to charge for your app?",
             generating: "Generating %s code ...",
-            generated: "{{green:%s generated in server/server.js",
+            generated: "{{green:%s}} generated in server/server.js",
           },
 
           page: {
