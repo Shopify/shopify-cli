@@ -1,0 +1,9 @@
+Package: shopify-cli
+Version: SHOPIFY_CLI_VERSION
+Section: custom
+Priority: optional
+Architecture: all
+Essential: no
+Maintainer: github.com/Shopify/shopify-app-cli
+Depends: ruby (>= 2.3)
+Description: Shopify CLI metapackage, which installs the shopify-cli Ruby gem
