@@ -17,7 +17,7 @@ module Script
           private
 
           def push_script(ctx, script, api_key, force)
-            compiled_type = Infrastructure::ScriptBuilder.for(script).compiled_type
+            compiled_type = Infrastructure::TaskRunner.for(ctx, script).compiled_type
             Infrastructure::PushPackageRepository.new
               .get_push_package(script, compiled_type)
               .push(Infrastructure::ScriptService.new(ctx: ctx), api_key, force)

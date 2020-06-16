@@ -30,7 +30,7 @@ describe Script::Layers::Application::BuildScript do
     describe 'when build succeeds' do
       it 'should return normally' do
         CLI::UI::Frame.expects(:with_frame_color_override).never
-        Script::Layers::Infrastructure::AssemblyScriptWasmBuilder
+        Script::Layers::Infrastructure::AssemblyScriptTaskRunner
           .any_instance
           .expects(:build)
           .returns(content)
@@ -46,7 +46,7 @@ describe Script::Layers::Application::BuildScript do
       it 'should output message and raise BuildError' do
         err_msg = 'some error message'
         CLI::UI::Frame.expects(:with_frame_color_override).yields.once
-        Script::Layers::Infrastructure::AssemblyScriptWasmBuilder
+        Script::Layers::Infrastructure::AssemblyScriptTaskRunner
           .any_instance
           .expects(:build)
           .returns(content)

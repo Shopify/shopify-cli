@@ -6,7 +6,6 @@ module Script
       module Errors
         class AppNotInstalledError < ScriptProjectError; end
         class AppScriptUndefinedError < ScriptProjectError; end
-        class BuilderNotFoundError < ScriptProjectError; end
         class BuildError < ScriptProjectError; end
         class DependencyError < ScriptProjectError; end
         class DependencyInstallError < ScriptProjectError; end
@@ -32,6 +31,7 @@ module Script
         class ShopAuthenticationError < ScriptProjectError; end
         class ShopScriptConflictError < ScriptProjectError; end
         class ShopScriptUndefinedError < ScriptProjectError; end
+        class TaskRunnerNotFoundError < ScriptProjectError; end
       end
     end
   end

@@ -39,39 +39,4 @@ describe Script::Layers::Infrastructure::AssemblyScriptDependencyManager do
       assert File.exist?("package.json")
     end
   end
-
-  describe ".installed?" do
-    subject { as_dep_manager.installed? }
-
-    it "should return true if node_modules folder exists" do
-      FileUtils.mkdir_p("node_modules")
-      assert_equal true, subject
-    end
-
-    it "should return false if node_modules folder does not exists" do
-      assert_equal false, subject
-    end
-  end
-
-  describe ".install" do
-    subject { as_dep_manager.install }
-
-    it "should install using npm" do
-      @context.expects(:capture2e)
-        .with("node", "--version")
-        .returns(["v12.16.1", mock(success?: true)])
-      @context.expects(:capture2e)
-        .with("npm", "install", "--no-audit", "--no-optional", "--loglevel error")
-        .returns([nil, mock(success?: true)])
-      subject
-    end
-
-    it "should raise error on failure" do
-      msg = 'error message'
-      @context.expects(:capture2e).returns([msg, mock(success?: false)])
-      assert_raises Script::Layers::Infrastructure::Errors::DependencyInstallError, msg do
-        subject
-      end
-    end
-  end
 end
