@@ -5,8 +5,15 @@ module ShopifyCli
     module EntryPoint
       class << self
         def call(args, ctx = Context.new)
-          if !ctx.testing? && ctx.capture2e('type __shopify_cli__')
-            # Looks like we are in a shell shim. Do not proceed with the command
+          # Check if the shim is set up by checking whether the old Finalizer FD exists
+          begin
+            is_shell_shim = false
+            IO.open(9) { is_shell_shim = true }
+          rescue Errno::EBADF
+            # This is expected if the descriptor doesn't exist
+          end
+
+          if !ctx.testing? && is_shell_shim
             ctx.puts(ctx.message('core.warning.shell_shim'))
             return
           end

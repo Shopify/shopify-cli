@@ -274,8 +274,8 @@ module ShopifyCli
           DEVELOPMENT
 
           shell_shim: <<~MESSAGE,
-          {{x}} {{red:The Shopify CLI is no longer available as a Git repository. It is now delivered as a package.
-            Please visit https://shopify.github.io/shopify-app-cli for installation instructions.}}
+          {{x}} {{red:This version of Shopify App CLI is no longer supported. You'll need to upgrade to continue using it, this process typically takes a few minutes.
+            Please visit https://shopify.github.io/shopify-app-cli/upgrade/ for complete instructions.}}
           MESSAGE
         },
       },
