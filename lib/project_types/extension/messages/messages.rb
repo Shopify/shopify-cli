@@ -9,7 +9,7 @@ module Extension
         invalid_name: 'Extension name must be under %s characters',
         ask_type: 'What type of extension are you creating?',
         invalid_type: 'Extension type is invalid.',
-        setup_project_frame_title: 'Initializing Project',
+        setup_project_frame_title: 'Initializing project',
         ready_to_start: "{{*}} You’re ready to start building {{green:%s}}!\nA new folder was generated at {{green:./%s}}. Navigate there, then run {{command:shopify serve}} to start a local server.",
         learn_more: '{{*}} Register this extension with one of your apps by running {{command:shopify register}}.',
       },
