@@ -10,9 +10,15 @@ module Extension
         ask_type: 'What type of extension are you creating?',
         invalid_type: 'Extension type is invalid.',
         setup_project_frame_title: 'Initializing project',
-        ready_to_start: "{{*}} You’re ready to start building {{green:%s}}!\nA new folder was generated at {{green:./%s}}. Navigate there, then run {{command:shopify serve}} to start a local server.",
-        learn_more: '{{*}} Register this extension with one of your apps by running {{command:shopify register}}.',
-        try_again: '{{*}} Fix the errors and run {{command:shopify create extension}} again.',
+        ready_to_start: <<~MESSAGE,
+        {{v}} A new folder was generated at {{green:./%s}}.
+        {{*}} You’re ready to start building {{green:%s}}!
+        Navigate to the new folder, then run {{command:shopify serve}} to start a local server.
+        MESSAGE
+        learn_more: <<~MESSAGE,
+        {{*}} Once you're ready to version and publish your extension,
+        run {{command:shopify register}} to register this extension with one of your apps.
+        MESSAGE
       },
       build: {
         frame_title: 'Building extension with: %s...',
