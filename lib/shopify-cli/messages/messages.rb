@@ -88,6 +88,7 @@ module ShopifyCli
           error: {
             missing_package: "expected to have a file at: %s",
             invalid_package: "{{info:%s}} was not valid JSON. Fix this then try again",
+            install_error: 'An error occurred while installing dependencies',
           },
 
           installing: "Installing dependencies with %s...",
