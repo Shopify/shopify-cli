@@ -4,6 +4,11 @@ require 'test_helper'
 module Extension
   module Models
     class RegistrationTest < MiniTest::Test
+      def setup
+        super
+        ShopifyCli::ProjectType.load_type(:extension)
+      end
+
       def test_valid_title_returns_true_for_valid_title
         assert Models::Registration.valid_title?('A title')
       end
