@@ -4,7 +4,7 @@ module Script
   module Layers
     module Domain
       module Errors
-        class DeployPackageNotFoundError < ScriptProjectError; end
+        class PushPackageNotFoundError < ScriptProjectError; end
         class InvalidExtensionPointError < ScriptProjectError
           attr_reader :type
           def initialize(type)
@@ -19,7 +19,6 @@ module Script
           end
         end
         class ServiceFailureError < ScriptProjectError; end
-        class TestSuiteNotFoundError < ScriptProjectError; end
       end
     end
   end

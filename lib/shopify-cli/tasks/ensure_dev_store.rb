@@ -2,19 +2,21 @@ require 'shopify_cli'
 
 module ShopifyCli
   module Tasks
-    class EnsureTestShop < ShopifyCli::Task
+    class EnsureDevStore < ShopifyCli::Task
       def call(ctx)
         @ctx = ctx
-        return ctx.puts(ctx.message('core.tasks.ensure_test_shop.could_not_verify_shop', project.env.shop)) if shop.nil?
+        return ctx.puts(ctx.message(
+          'core.tasks.ensure_dev_store.could_not_verify_store', project.env.shop
+        )) if shop.nil?
         return if shop['transferDisabled'] == true
         return unless CLI::UI::Prompt.confirm(
-          ctx.message('core.tasks.ensure_test_shop.convert_dev_to_test_store', project.env.shop)
+          ctx.message('core.tasks.ensure_dev_store.convert_to_dev_store', project.env.shop)
         )
         ShopifyCli::PartnersAPI.query(ctx, 'convert_dev_to_test_store', input: {
           organizationID: shop['orgID'].to_i,
           shopId: shop['shopId'],
         })
-        ctx.puts(ctx.message('core.tasks.ensure_test_shop.transfer_disabled', project.env.shop))
+        ctx.puts(ctx.message('core.tasks.ensure_dev_store.transfer_disabled', project.env.shop))
       end
 
       private

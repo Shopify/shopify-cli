@@ -16,7 +16,7 @@ module Rails
     register_messages(Rails::Messages::MESSAGES)
   end
 
-  # define/autoload project specific Commads
+  # define/autoload project specific Commands
   module Commands
     autoload :Create, Project.project_filepath('commands/create')
     autoload :Deploy, Project.project_filepath('commands/deploy')

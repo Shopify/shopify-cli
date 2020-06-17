@@ -188,8 +188,8 @@ describe Script::UI::ErrorHandler do
         end
       end
 
-      describe "when ScriptRedeployError" do
-        let(:err) { Script::Layers::Infrastructure::Errors::ScriptRedeployError.new('api_key') }
+      describe "when ScriptRepushError" do
+        let(:err) { Script::Layers::Infrastructure::Errors::ScriptRepushError.new('api_key') }
         it "should call display_and_raise" do
           should_call_display_and_raise
         end
@@ -211,13 +211,6 @@ describe Script::UI::ErrorHandler do
 
       describe "when ShopScriptUndefinedError" do
         let(:err) { Script::Layers::Infrastructure::Errors::ShopScriptUndefinedError.new }
-        it "should call display_and_raise" do
-          should_call_display_and_raise
-        end
-      end
-
-      describe "when TestError" do
-        let(:err) { Script::Layers::Infrastructure::Errors::TestError.new }
         it "should call display_and_raise" do
           should_call_display_and_raise
         end

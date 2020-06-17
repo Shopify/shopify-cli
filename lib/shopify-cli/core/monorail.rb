@@ -23,8 +23,7 @@ module ShopifyCli
           start_time = now_in_milliseconds
           err = nil
           begin
-            result = yield
-            return result
+            yield
           rescue Exception => e # rubocop:disable Lint/RescueException
             err = e
             raise

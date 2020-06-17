@@ -12,7 +12,7 @@ module ShopifyCli
             org: 42,
             title: 'Test app',
             type: 'public',
-            app_url: 'http://app.com',
+            app_url: ShopifyCli::Tasks::CreateApiClient::DEFAULT_APP_URL,
             redir: ["http://127.0.0.1:3456"],
           },
           resp: {
@@ -32,7 +32,6 @@ module ShopifyCli
           org_id: 42,
           title: 'Test app',
           type: 'public',
-          app_url: 'http://app.com',
         )
 
         refute_nil(api_client)
@@ -46,14 +45,14 @@ module ShopifyCli
             org: 42,
             title: 'Test app',
             type: 'public',
-            app_url: 'http://app.com',
+            app_url: ShopifyCli::Tasks::CreateApiClient::DEFAULT_APP_URL,
             redir: ["http://127.0.0.1:3456"],
           },
           resp: {
             'data': {
               'appCreate': {
                 'userErrors': [
-                  { 'field': 'app_url', 'message': 'is not a valid url' },
+                  { 'field': 'title', 'message': 'is not a valid title' },
                 ],
               },
             },
@@ -66,10 +65,9 @@ module ShopifyCli
             org_id: 42,
             title: 'Test app',
             type: 'public',
-            app_url: 'http://app.com',
           )
         end
-        assert_equal(err.message, "{{x}} app_url is not a valid url")
+        assert_equal(err.message, "{{x}} title is not a valid title")
       end
     end
   end
