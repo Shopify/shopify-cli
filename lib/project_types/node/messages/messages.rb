@@ -16,7 +16,7 @@ module Node
               {{command:--name=NAME}} App name. Any string.
               {{command:--app_url=APPURL}} App URL. Must be valid URL.
               {{command:--organization_id=ID}} App Org ID. Must be existing org ID.
-              {{command:--shop_domain=MYSHOPIFYDOMAIN }} Test store URL. Must be existing test store.
+              {{command:--shop_domain=MYSHOPIFYDOMAIN }} Development store URL. Must be an existing development store.
           HELP
           error: {
             node_required: "node is required to create an app project. Download at https://nodejs.org/en/download.",
@@ -101,7 +101,7 @@ module Node
             HELP
             type_select: "How would you like to charge for your app?",
             generating: "Generating %s code ...",
-            generated: "{{green:%s generated in server/server.js",
+            generated: "{{green:%s}} generated in server/server.js",
           },
 
           page: {

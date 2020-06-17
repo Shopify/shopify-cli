@@ -22,7 +22,7 @@ describe Script::Layers::Infrastructure::ScriptService do
     HERE
   end
 
-  describe ".deploy" do
+  describe ".push" do
     let(:extension_point_schema) { "schema" }
     let(:script_name) { "foo_bar" }
     let(:script_content) { "(module)" }
@@ -82,7 +82,7 @@ describe Script::Layers::Infrastructure::ScriptService do
     end
 
     subject do
-      script_service.deploy(
+      script_service.push(
         extension_point_type: extension_point_type,
         schema: extension_point_schema,
         script_name: script_name,
@@ -92,7 +92,7 @@ describe Script::Layers::Infrastructure::ScriptService do
       )
     end
 
-    describe "when deploy to script service succeeds" do
+    describe "when push to script service succeeds" do
       let(:script_service_response) do
         {
           "data" => {
@@ -122,7 +122,7 @@ describe Script::Layers::Infrastructure::ScriptService do
       end
     end
 
-    describe "when deploy to script service responds with errors" do
+    describe "when push to script service responds with errors" do
       let(:response) do
         {
           data: {
@@ -148,7 +148,7 @@ describe Script::Layers::Infrastructure::ScriptService do
       end
     end
 
-    describe "when deploy to script service responds with userErrors" do
+    describe "when push to script service responds with userErrors" do
       describe "when invalid app key" do
         let(:response) do
           {
@@ -169,7 +169,7 @@ describe Script::Layers::Infrastructure::ScriptService do
         end
       end
 
-      describe "when redeploy without a force" do
+      describe "when repush without a force" do
         let(:response) do
           {
             data: {
@@ -184,8 +184,8 @@ describe Script::Layers::Infrastructure::ScriptService do
           }
         end
 
-        it "should raise ScriptRedeployError error" do
-          assert_raises(Script::Layers::Infrastructure::Errors::ScriptRedeployError) { subject }
+        it "should raise ScriptRepushError error" do
+          assert_raises(Script::Layers::Infrastructure::Errors::ScriptRepushError) { subject }
         end
       end
     end
@@ -348,7 +348,6 @@ describe Script::Layers::Infrastructure::ScriptService do
               extensionPointName
               shopId
               title
-              configuration
             }
           }
         }
@@ -395,7 +394,6 @@ describe Script::Layers::Infrastructure::ScriptService do
             "shopScriptDelete" => {
               "shopScript" => {
                 "shopId" => "1",
-                "configuration" => nil,
                 "extensionPointName" => extension_point_type,
                 "title" => "foo2",
               },

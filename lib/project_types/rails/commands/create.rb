@@ -28,9 +28,9 @@ module Rails
         return @ctx.puts(self.class.help) if form.nil?
 
         @ctx.abort(@ctx.message('rails.create.error.invalid_ruby_version')) unless
-          Ruby.version(@ctx).satisfies?('~>2.4')
+          Ruby.version(@ctx).satisfies?('~>2.5')
 
-        build(form.name)
+        build(form.name, form.db)
         set_custom_ua
         ShopifyCli::Project.write(
           @ctx,
@@ -45,7 +45,6 @@ module Rails
           org_id: form.organization_id,
           title: form.title,
           type: form.type,
-          app_url: 'https://shopify.github.io/shopify-app-cli/getting-started',
         )
 
         ShopifyCli::Resources::EnvFile.new(
@@ -68,7 +67,7 @@ module Rails
 
       private
 
-      def build(name)
+      def build(name, db)
         install_gem('rails')
         CLI::UI::Frame.open(@ctx.message('rails.create.installing_bundler')) do
           install_gem('bundler', '~>1.0')
@@ -78,7 +77,7 @@ module Rails
         CLI::UI::Frame.open(@ctx.message('rails.create.generating_app', name)) do
           new_command = %w(rails new)
           new_command += DEFAULT_RAILS_FLAGS
-          new_command << "--database=#{options.flags[:db]}" unless options.flags[:db].nil?
+          new_command << "--database=#{db}"
           new_command += options.flags[:rails_opts].split unless options.flags[:rails_opts].nil?
           new_command << name
 
@@ -106,6 +105,7 @@ module Rails
         end
 
         CLI::UI::Frame.open(@ctx.message('rails.create.running_migrations')) do
+          syscall(%w(rails db:create))
           syscall(%w(rails db:migrate RAILS_ENV=development))
         end
       end
@@ -126,4 +126,3 @@ module Rails
     end
   end
 end
-

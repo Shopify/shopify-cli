@@ -3,13 +3,13 @@
 module Script
   module Layers
     module Infrastructure
-      class DeployPackageRepository
-        def create_deploy_package(script, script_content, schema, compiled_type)
+      class PushPackageRepository
+        def create_push_package(script, script_content, schema, compiled_type)
           build_file_path = file_path(script.name, compiled_type)
           write_to_path(build_file_path, script_content)
           write_to_path(schema_path, schema)
 
-          Domain::DeployPackage.new(
+          Domain::PushPackage.new(
             build_file_path,
             script,
             script_content,
@@ -18,15 +18,15 @@ module Script
           )
         end
 
-        def get_deploy_package(script, compiled_type)
+        def get_push_package(script, compiled_type)
           build_file_path = file_path(script.name, compiled_type)
 
-          raise Domain::DeployPackageNotFoundError unless File.exist?(build_file_path)
+          raise Domain::PushPackageNotFoundError unless File.exist?(build_file_path)
 
           script_content = File.read(build_file_path)
           schema = File.exist?(schema_path) ? File.read(schema_path) : ''
 
-          Domain::DeployPackage.new(
+          Domain::PushPackage.new(
             build_file_path,
             script,
             script_content,

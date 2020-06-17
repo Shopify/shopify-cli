@@ -76,7 +76,44 @@ module ShopifyCli
       JsSystem.yarn?(@context)
     end
 
+    def test_yarn_check_returns_false_if_yarn_lock_missing_and_which_yarn_call_fails
+      mock_yarn_check(lock_exists: false, status: stubs(success?: false))
+
+      refute JsSystem.yarn?(@context)
+    end
+
+    def test_yarn_check_returns_false_if_yarn_lock_not_present
+      mock_yarn_check(lock_exists: false, status: stubs(success?: true))
+
+      refute JsSystem.yarn?(@context)
+    end
+
+    def test_yarn_check_returns_false_if_yarn_lock_present_but_which_yarn_call_fails
+      mock_yarn_check(lock_exists: true, status: mock(success?: false))
+
+      refute JsSystem.yarn?(@context)
+    end
+
+    def test_yarn_check_returns_true_if_yarn_lock_present_and_which_yarn_call_succeeds
+      mock_yarn_check(lock_exists: true, status: mock(success?: true))
+
+      assert JsSystem.yarn?(@context)
+    end
+
     private
+
+    def mock_yarn_check(status:, lock_exists:)
+      CLI::Kit::System
+        .expects(:capture2)
+        .with('which', 'yarn')
+        .returns(['v1.0.0', status])
+        .once
+      File
+        .expects(:exist?)
+        .with(File.join(@context.root, 'yarn.lock'))
+        .returns(lock_exists)
+        .once
+    end
 
     def mock_kit_system(*input)
       CLI::Kit::System

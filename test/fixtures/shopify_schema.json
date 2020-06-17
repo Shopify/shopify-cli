@@ -38946,7 +38946,7 @@
             },
             {
               "name": "partnerDevelopment",
-              "description": "Whether the shop is a partner development shop for testing purposes.",
+              "description": "Whether the store is a partner development store for testing purposes.",
               "args": [],
               "type": {
                 "kind": "NON_NULL",

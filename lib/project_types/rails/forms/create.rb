@@ -4,7 +4,19 @@ module Rails
   module Forms
     class Create < ShopifyCli::Form
       attr_accessor :name
-      flag_arguments :title, :organization_id, :shop_domain, :type
+      flag_arguments :title, :organization_id, :shop_domain, :type, :db
+      VALID_DB_TYPES = ['sqlite3',
+                        'mysql',
+                        'postgresql',
+                        'sqlite3',
+                        'oracle',
+                        'frontbase',
+                        'ibm_db',
+                        'sqlserver',
+                        'jdbcmysql',
+                        'jdbcsqlite3',
+                        'jdbcpostgresql',
+                        'jdbc']
 
       def ask
         self.title ||= CLI::UI::Prompt.ask(ctx.message('rails.forms.create.app_name'))
@@ -12,6 +24,7 @@ module Rails
         self.name = self.title.downcase.split(" ").join("_")
         self.organization_id ||= organization["id"].to_i
         self.shop_domain ||= ask_shop_domain
+        self.db = ask_db
       end
 
       private
@@ -78,7 +91,24 @@ module Rails
           )
         end
       end
+
+      def ask_db
+        if db.nil?
+          return 'sqlite3' unless CLI::UI::Prompt.confirm(ctx.message('rails.forms.create.db.want_select'),
+                                                          default: false)
+          @db = CLI::UI::Prompt.ask(ctx.message('rails.forms.create.db.select')) do |handler|
+            VALID_DB_TYPES.each do |db_type|
+              handler.option(ctx.message("rails.forms.create.db.select_#{db_type}")) { db_type }
+            end
+          end
+        end
+
+        unless VALID_DB_TYPES.include?(db)
+          ctx.abort(ctx.message('rails.forms.create.error.invalid_db_type', db))
+        end
+        ctx.puts(ctx.message('rails.forms.create.db.selected', db))
+        db
+      end
     end
   end
 end
-

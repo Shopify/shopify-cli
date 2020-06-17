@@ -33,8 +33,8 @@ module Script
               script_builder.build
             end
 
-            Infrastructure::DeployPackageRepository.new
-              .create_deploy_package(script, script_content, schema, compiled_type)
+            Infrastructure::PushPackageRepository.new
+              .create_push_package(script, script_content, schema, compiled_type)
           end
         end
       end
