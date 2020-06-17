@@ -22,7 +22,11 @@ module ShopifyCli
           orgs.first["id"]
         else
           CLI::UI::Prompt.ask(@ctx.message('core.connect.organization_select')) do |handler|
-            orgs.each { |org| handler.option(org["businessName"]) { org["id"] } }
+            orgs.each do |org|
+              handler.option(
+                ctx.message('core.partners_api.org_name_and_id', org['businessName'], org['id'])
+              ) { org["id"] }
+            end
           end
         end
         org = orgs.find { |o| o["id"] == org_id }

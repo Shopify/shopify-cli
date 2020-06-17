@@ -62,7 +62,7 @@ $ shopify create node
 
 ## `logout`
 
-Log out of the currently authentiated organization and store. The `logout` command clears any invalid credentials. You’ll need to re-authenticate the next time you connect your project to Shopify.
+Log out of the currently authenticated partner organization and store. The `logout` command clears any invalid credentials. You’ll need to re-authenticate the next time you connect your project to Shopify.
 
 ```console
 $ shopify logout

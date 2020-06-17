@@ -48,11 +48,15 @@ module Node
           ctx.puts(ctx.message('node.forms.create.authentication_issue', ShopifyCli::TOOL_NAME))
           ctx.abort(ctx.message('node.forms.create.error.no_organizations'))
         elsif organizations.count == 1
-          ctx.puts(ctx.message('node.forms.create.organization', organizations.first['businessName']))
-          organizations.first
+          org = organizations.first
+          ctx.puts(ctx.message('node.forms.create.organization',
+            ctx.message('core.partners_api.org_name_and_id', org['businessName'], org['id'])))
+          org
         else
           org_id = CLI::UI::Prompt.ask(ctx.message('node.forms.create.organization_select')) do |handler|
-            organizations.each { |o| handler.option(o['businessName']) { o['id'] } }
+            organizations.each do |o|
+              handler.option(ctx.message('core.partners_api.org_name_and_id', o['businessName'], o['id'])) { o['id'] }
+            end
           end
           organizations.find { |o| o['id'] == org_id }
         end

@@ -35,9 +35,9 @@ module ShopifyCli
           }],
         }]
         ShopifyCli::PartnersAPI::Organizations.stubs(:fetch_with_app).returns(response)
-        CLI::UI::Prompt.expects(:ask).with('To which organization does this project belong?').returns(422)
+        CLI::UI::Prompt.expects(:ask).with(Context.message('core.connect.organization_select')).returns(422)
         CLI::UI::Prompt.expects(:ask).with(
-          'Which development store would you like to use?'
+          Context.message('core.connect.development_store_select')
         ).returns('store.myshopify.com')
         Resources::EnvFile.any_instance.stubs(:write)
         run_cmd('connect')
