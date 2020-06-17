@@ -42,7 +42,7 @@ module Script
 
     module Domain
       autoload :Errors, Project.project_filepath('layers/domain/errors')
-      autoload :DeployPackage, Project.project_filepath('layers/domain/deploy_package')
+      autoload :PushPackage, Project.project_filepath('layers/domain/push_package')
       autoload :ExtensionPoint, Project.project_filepath('layers/domain/extension_point')
       autoload :Script, Project.project_filepath('layers/domain/script')
     end
@@ -55,7 +55,7 @@ module Script
       autoload :AssemblyScriptWasmBuilder,
                Project.project_filepath('layers/infrastructure/assemblyscript_wasm_builder')
       autoload :DependencyManager, Project.project_filepath('layers/infrastructure/dependency_manager')
-      autoload :DeployPackageRepository, Project.project_filepath('layers/infrastructure/deploy_package_repository')
+      autoload :PushPackageRepository, Project.project_filepath('layers/infrastructure/push_package_repository')
       autoload :ExtensionPointRepository, Project.project_filepath('layers/infrastructure/extension_point_repository')
       autoload :ScriptBuilder, Project.project_filepath('layers/infrastructure/script_builder')
       autoload :ScriptRepository, Project.project_filepath('layers/infrastructure/script_repository')

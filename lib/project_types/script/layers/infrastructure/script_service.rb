@@ -10,7 +10,7 @@ module Script
         include SmartProperties
         property! :ctx, accepts: ShopifyCli::Context
 
-        def deploy(
+        def push(
           extension_point_type:,
           schema:,
           script_name:,
