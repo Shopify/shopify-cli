@@ -54,7 +54,7 @@ describe Script::Layers::Application::CreateScript do
           .with(ctx: @context, language: language, extension_point: ep, script_name: script_name)
         Script::Layers::Application::ProjectDependencies
           .expects(:install)
-          .with(ctx: @context, language: language, extension_point: ep, script_name: script_name)
+          .with(ctx: @context, language: language)
         capture_io { subject }
         assert_equal File.join(initial_ctx_root, script_name), @context.root
       end

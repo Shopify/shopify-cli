@@ -7,9 +7,8 @@ module Script
           dep_manager.bootstrap
         end
 
-        def self.install(ctx:, language:, extension_point:, script_name:)
-          script = Infrastructure::ScriptRepository.new.get_script(language, extension_point.type, script_name)
-          task_runner = Infrastructure::TaskRunner.for(ctx, script)
+        def self.install(ctx:, language:)
+          task_runner = Infrastructure::TaskRunner.for(ctx, language)
 
           CLI::UI::Frame.open(ctx.message('script.project_deps.checking_with_npm')) do
             begin

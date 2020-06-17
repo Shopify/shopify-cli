@@ -1,7 +1,6 @@
 # frozen_string_literal: true
 
 require "project_types/script/test_helper"
-require "project_types/script/layers/infrastructure/fake_script_repository"
 require "project_types/script/layers/infrastructure/fake_extension_point_repository"
 
 describe Script::Layers::Application::ProjectDependencies do
@@ -10,25 +9,20 @@ describe Script::Layers::Application::ProjectDependencies do
   let(:language) { 'ts' }
   let(:script_name) { 'name' }
   let(:extension_point_type) { 'discount' }
-  let(:script_repository) { Script::Layers::Infrastructure::FakeScriptRepository.new }
   let(:extension_point_repository) { Script::Layers::Infrastructure::FakeExtensionPointRepository.new }
   let(:extension_point) { extension_point_repository.get_extension_point(extension_point_type) }
   let(:dependency_manager) do
     Script::Layers::Infrastructure::AssemblyScriptDependencyManager
       .new(@context, language, extension_point, script_name)
   end
-  let(:script) { script_repository.create_script(language, extension_point, script_name) }
   let(:task_runner) do
-    Script::Layers::Infrastructure::AssemblyScriptTaskRunner
-      .new(@context, script)
+    Script::Layers::Infrastructure::AssemblyScriptTaskRunner.new(@context)
   end
 
   before do
     extension_point_repository.create_extension_point(extension_point_type)
-    script_repository.create_script(language, extension_point, script_name)
     Script::Layers::Infrastructure::DependencyManager.stubs(:for).returns(dependency_manager)
     Script::Layers::Infrastructure::TaskRunner.stubs(:for).returns(task_runner)
-    Script::Layers::Infrastructure::ScriptRepository.stubs(:new).returns(script_repository)
   end
 
   describe '.bootstrap' do
@@ -43,7 +37,7 @@ describe Script::Layers::Application::ProjectDependencies do
     subject do
       capture_io do
         Script::Layers::Application::ProjectDependencies
-          .install(ctx: @context, language: language, extension_point: extension_point, script_name: script_name)
+          .install(ctx: @context, language: language)
       end
     end
 

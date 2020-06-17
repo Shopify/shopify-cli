@@ -27,7 +27,7 @@ module Script
 
           def build(ctx, script)
             script_repo = Infrastructure::ScriptRepository.new
-            task_runner = Infrastructure::TaskRunner.for(ctx, script)
+            task_runner = Infrastructure::TaskRunner.for(ctx, script.language)
             script_content = script_repo.with_temp_build_context do
               task_runner.build
             end

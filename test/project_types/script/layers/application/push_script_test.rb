@@ -48,7 +48,7 @@ describe Script::Layers::Application::PushScript do
     it 'should prepare and push script' do
       script_service_instance = Script::Layers::Infrastructure::ScriptService.new(ctx: @context)
       Script::Layers::Application::ProjectDependencies
-        .expects(:install).with(ctx: @context, language: language, extension_point: ep, script_name: script_name)
+        .expects(:install).with(ctx: @context, language: language)
       Script::Layers::Application::BuildScript
         .expects(:call).with(ctx: @context, script: script)
       Script::Layers::Infrastructure::ScriptService

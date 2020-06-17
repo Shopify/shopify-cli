@@ -8,9 +8,9 @@ module Script
           "ts" => Infrastructure::AssemblyScriptTaskRunner,
         }
 
-        def self.for(ctx, script)
-          raise Errors::TaskRunnerNotFoundError unless TASK_RUNNERS[script.language]
-          TASK_RUNNERS[script.language].new(ctx, script)
+        def self.for(ctx, language)
+          raise Errors::TaskRunnerNotFoundError unless TASK_RUNNERS[language]
+          TASK_RUNNERS[language].new(ctx)
         end
       end
     end

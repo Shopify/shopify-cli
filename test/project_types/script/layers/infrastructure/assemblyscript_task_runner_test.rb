@@ -15,11 +15,17 @@ describe Script::Layers::Infrastructure::AssemblyScriptTaskRunner do
       },
     }
   end
-  let(:extension_point) { Script::Layers::Domain::ExtensionPoint.new("discount", extension_point_config) }
+  let(:extension_point_type) { "discount" }
   let(:language) { "ts" }
-  let(:script) { Script::Layers::Domain::Script.new(script_id, script_name, extension_point, language) }
+  let(:as_task_runner) { Script::Layers::Infrastructure::AssemblyScriptTaskRunner.new(ctx) }
+  let(:script_project) do
+    TestHelpers::FakeScriptProject
+      .new(language: language, extension_point_type: extension_point_type, script_name: script_name)
+  end
 
-  let(:as_task_runner) { Script::Layers::Infrastructure::AssemblyScriptTaskRunner.new(ctx, script) }
+  before do
+    Script::ScriptProject.stubs(:current).returns(script_project)
+  end
 
   describe ".build" do
     subject { as_task_runner.build }

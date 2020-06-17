@@ -8,11 +8,10 @@ module Script
         SCRIPT_SDK_BUILD = "npx --no-install shopify-scripts-build --src=../%{source} --binary=#{BYTECODE_FILE} "\
                            "-- --lib=../node_modules --validate --optimize"
 
-        attr_reader :ctx, :script
+        attr_reader :ctx
 
-        def initialize(ctx, script)
+        def initialize(ctx)
           @ctx = ctx
-          @script = script
         end
 
         def build
@@ -38,6 +37,10 @@ module Script
 
         private
 
+        def project
+          @project ||= ScriptProject.current
+        end
+
         def check_node_version!
           output, status = @ctx.capture2e("node", "--version")
           raise Errors::DependencyInstallError, output unless status.success?
@@ -49,12 +52,12 @@ module Script
         end
 
         def compile
-          out, status = ctx.capture2e(format(SCRIPT_SDK_BUILD, source: script.id, name: script.name))
+          out, status = ctx.capture2e(format(SCRIPT_SDK_BUILD, source: project.source_file, name: project.script_name))
           raise Domain::Errors::ServiceFailureError, out unless status.success?
         end
 
         def bytecode
-          File.read(format(BYTECODE_FILE, name: script.name))
+          File.read(format(BYTECODE_FILE, name: project.script_name))
         end
       end
     end
