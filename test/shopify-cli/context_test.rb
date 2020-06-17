@@ -33,7 +33,7 @@ module ShopifyCli
     def test_open_url_outputs_url_to_open
       url = 'http://cutekitties.com'
       @ctx.stubs(:mac?).returns(true)
-      @ctx.expects(:puts).with("Please open this URL in your browser:\n{{green:#{url}}}\n")
+      @ctx.expects(:puts).with(@context.message('core.context.open_url', url))
       @ctx.open_url!(url)
     end
   end

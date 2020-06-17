@@ -35,11 +35,11 @@ module Node
           form = ask(type: "not_a_type")
           assert_nil(form)
         end
-        assert_match('Invalid App Type not_a_type', io.join)
+        assert_match(@context.message('node.forms.create.error.invalid_app_type', 'not_a_type'), io.join)
       end
 
       def test_type_is_prompted
-        CLI::UI::Prompt.expects(:ask).with('What type of app are you building?').returns('public')
+        CLI::UI::Prompt.expects(:ask).with(@context.message('node.forms.create.app_type.select')).returns('public')
         ask(type: nil)
       end
 
@@ -96,7 +96,7 @@ module Node
           assert_equal(form.organization_id, 421)
           assert_equal(form.shop_domain, 'next.myshopify.com')
         end
-        assert_match(CLI::UI.fmt('Organization {{green:hoopy froods}}'), io.join)
+        assert_match(CLI::UI.fmt(@context.message('node.forms.create.organization', 'hoopy froods')), io.join)
       end
 
       def test_organization_will_be_fetched_if_id_is_provided_but_not_shop
@@ -131,8 +131,8 @@ module Node
           form = ask(org_id: nil, shop: nil)
           assert_nil(form)
         end
-        assert_match('Please visit https://partners.shopify.com/ to create a partners account', io.join)
-        assert_match('No organizations available.', io.join)
+        assert_match(@context.message('node.forms.create.partners_notice'), io.join)
+        assert_match(@context.message('node.forms.create.error.no_organizations'), io.join)
       end
 
       def test_returns_no_shop_if_none_are_available
@@ -153,8 +153,8 @@ module Node
           assert_nil form.shop_domain
         end
         log = io.join
-        assert_match('No Development Stores available.', log)
-        assert_match(CLI::UI.fmt("Visit {{underline:https://partners.shopify.com/123/stores}} to create one"), log)
+        assert_match(CLI::UI.fmt(@context.message('node.forms.create.no_development_stores')), log)
+        assert_match(CLI::UI.fmt(@context.message('node.forms.create.create_store', 123)), log)
       end
 
       def test_autopicks_only_shop
@@ -178,7 +178,9 @@ module Node
           form = ask(org_id: 123, shop: nil)
           assert_equal(form.shop_domain, 'shopdomain.myshopify.com')
         end
-        assert_match(CLI::UI.fmt("Using Development Store {{green:shopdomain.myshopify.com}}"), io.join)
+        assert_match(CLI::UI.fmt(
+          @context.message('node.forms.create.development_store', 'shopdomain.myshopify.com')
+        ), io.join)
       end
 
       def test_prompts_user_to_pick_from_shops
@@ -205,7 +207,7 @@ module Node
 
         CLI::UI::Prompt.expects(:ask)
           .with(
-            'Select a Development Store',
+            @context.message('node.forms.create.development_store_select'),
             options: %w(shopdomain.myshopify.com shop.myshopify.com)
           )
           .returns('selected')
