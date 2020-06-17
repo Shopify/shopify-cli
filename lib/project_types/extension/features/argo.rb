@@ -6,7 +6,7 @@ module Extension
     class Argo
       include SmartProperties
 
-      GIT_ADMIN_TEMPLATE = 'https://github.com/Shopify/shopify-app-extension-template.git'.freeze
+      GIT_ADMIN_TEMPLATE = 'https://github.com/Shopify/argo-admin-template.git'.freeze
       GIT_CHECKOUT_TEMPLATE = 'https://github.com/Shopify/argo-checkout-template.git'.freeze
       SCRIPT_PATH = %w(build main.js).freeze
 

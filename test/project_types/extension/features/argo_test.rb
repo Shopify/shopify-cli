@@ -54,7 +54,7 @@ module Extension
       end
 
       def test_admin_method_returns_an_argo_extension_with_the_subscription_management_template
-        git_admin_template = 'https://github.com/Shopify/shopify-app-extension-template.git'.freeze
+        git_admin_template = 'https://github.com/Shopify/argo-admin-template.git'.freeze
         argo = Argo.admin
         assert_equal(argo.setup.git_template, git_admin_template)
       end
