@@ -5,7 +5,6 @@ require 'project_types/script/test_helper'
 describe Script::Layers::Infrastructure::AssemblyScriptWasmBuilder do
   let(:script_id) { 'id' }
   let(:script_name) { "foo" }
-  let(:schema) { "schema" }
   let(:extension_point_config) do
     {
       "assemblyscript" => {
@@ -23,7 +22,6 @@ describe Script::Layers::Infrastructure::AssemblyScriptWasmBuilder do
 
   describe ".build" do
     it "should trigger the compilation process" do
-      File.expects(:read).with("schema")
       File.expects(:read).with("#{script_name}.wasm")
 
       CLI::Kit::System

@@ -23,12 +23,10 @@ describe Script::Layers::Infrastructure::ScriptService do
   end
 
   describe ".push" do
-    let(:extension_point_schema) { "schema" }
     let(:script_name) { "foo_bar" }
     let(:script_content) { "(module)" }
     let(:content_type) { "ts" }
     let(:api_key) { "fake_key" }
-    let(:schema) { "schema" }
     let(:app_script_update_or_create) do
       <<~HERE
         mutation AppScriptUpdateOrCreate(
@@ -36,14 +34,12 @@ describe Script::Layers::Infrastructure::ScriptService do
           $title: String,
           $sourceCode: String,
           $language: String,
-          $schema: String
         ) {
           appScriptUpdateOrCreate(
             extensionPointName: $extensionPointName
             title: $title
             sourceCode: $sourceCode
             language: $language
-            schema: $schema
         ) {
             userErrors {
               field
@@ -72,7 +68,6 @@ describe Script::Layers::Infrastructure::ScriptService do
             title: script_name,
             sourceCode: Base64.encode64(script_content),
             language: "ts",
-            schema: extension_point_schema,
             force: false,
           }.to_json,
           query: app_script_update_or_create,
@@ -84,7 +79,6 @@ describe Script::Layers::Infrastructure::ScriptService do
     subject do
       script_service.push(
         extension_point_type: extension_point_type,
-        schema: extension_point_schema,
         script_name: script_name,
         script_content: script_content,
         compiled_type: "ts",

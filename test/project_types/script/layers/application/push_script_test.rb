@@ -30,7 +30,7 @@ describe Script::Layers::Application::PushScript do
     Script::Layers::Infrastructure::ExtensionPointRepository.stubs(:new).returns(extension_point_repository)
     Script::ScriptProject.stubs(:current).returns(project)
     extension_point_repository.create_extension_point(extension_point_type)
-    push_package_repository.create_push_package(script, 'content', 'schema', compiled_type)
+    push_package_repository.create_push_package(script, 'content', compiled_type)
   end
 
   describe '.call' do

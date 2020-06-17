@@ -8,9 +8,9 @@ module Script
           @cache = {}
         end
 
-        def create_push_package(script, script_content, schema, compiled_type)
+        def create_push_package(script, script_content, compiled_type)
           id = id(script.name, compiled_type)
-          @cache[id] = Domain::PushPackage.new(script.id, script, script_content, compiled_type, schema)
+          @cache[id] = Domain::PushPackage.new(script.id, script, script_content, compiled_type)
         end
 
         def get_push_package(script, compiled_type)
