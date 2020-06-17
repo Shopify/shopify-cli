@@ -31,11 +31,11 @@ module Rails
           form = ask(type: "not_a_type")
           assert_nil(form)
         end
-        assert_match('Invalid App Type not_a_type', io.join)
+        assert_match(@context.message('rails.forms.create.error.invalid_app_type', 'not_a_type'), io.join)
       end
 
       def test_type_is_prompted
-        CLI::UI::Prompt.expects(:ask).with('What type of app are you building?').returns('public')
+        CLI::UI::Prompt.expects(:ask).with(@context.message('rails.forms.create.app_type.select')).returns('public')
         ask(type: nil)
       end
 
@@ -49,7 +49,7 @@ module Rails
           form = ask(db: "not_a_db")
           assert_nil(form)
         end
-        assert_match('Invalid Database Type not_a_db', io.join)
+        assert_match(@context.message('rails.forms.create.error.invalid_db_type', 'not_a_db'), io.join)
       end
 
       def test_user_can_change_db_in_app
@@ -164,8 +164,8 @@ module Rails
           form = ask(org_id: nil, shop: nil)
           assert_nil(form)
         end
-        assert_match('Please visit https://partners.shopify.com/ to create a partners account', io.join)
-        assert_match('No organizations available.', io.join)
+        assert_match(@context.message('rails.forms.create.partners_notice'), io.join)
+        assert_match(@context.message('rails.forms.create.error.no_organizations'), io.join)
       end
 
       def test_returns_no_shop_if_none_are_available
@@ -186,8 +186,8 @@ module Rails
           assert_nil form.shop_domain
         end
         log = io.join
-        assert_match('No Development Stores available.', log)
-        assert_match(CLI::UI.fmt("Visit {{underline:https://partners.shopify.com/123/stores}} to create one"), log)
+        assert_match(CLI::UI.fmt(@context.message('rails.forms.create.no_development_stores')), log)
+        assert_match(CLI::UI.fmt(@context.message('rails.forms.create.create_store', 123)), log)
       end
 
       def test_autopicks_only_shop
@@ -211,7 +211,9 @@ module Rails
           form = ask(org_id: 123, shop: nil)
           assert_equal(form.shop_domain, 'shopdomain.myshopify.com')
         end
-        assert_match(CLI::UI.fmt("Using Development Store {{green:shopdomain.myshopify.com}}"), io.join)
+        assert_match(CLI::UI.fmt(
+          @context.message('rails.forms.create.development_store', 'shopdomain.myshopify.com')
+        ), io.join)
       end
 
       def test_prompts_user_to_pick_from_shops
@@ -238,7 +240,7 @@ module Rails
 
         CLI::UI::Prompt.expects(:ask)
           .with(
-            'Select a Development Store',
+            @context.message('rails.forms.create.development_store_select'),
             options: %w(shopdomain.myshopify.com shop.myshopify.com)
           )
           .returns('selected')
