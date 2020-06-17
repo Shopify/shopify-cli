@@ -17,16 +17,21 @@ describe Script::Layers::Application::CreateScript do
   let(:script_repo) { Script::Layers::Infrastructure::FakeScriptRepository.new(ctx: @context) }
   let(:script) { script_repo.create_script(language, ep, script_name) }
   let(:task_runner) { stub(compiled_type: compiled_type) }
+  let(:project_creator) { stub }
   let(:script_project) { TestHelpers::FakeScriptProject.new(language: language) }
 
   before do
     Script::ScriptProject.stubs(:current).returns(script_project)
     Script::Layers::Infrastructure::ExtensionPointRepository.stubs(:new).returns(extension_point_repository)
+    extension_point_repository.create_extension_point(extension_point_type)
     Script::Layers::Infrastructure::TaskRunner
       .stubs(:for)
       .with(@context, language, script_name, script_source)
       .returns(task_runner)
-    extension_point_repository.create_extension_point(extension_point_type)
+    Script::Layers::Infrastructure::ProjectCreator
+      .stubs(:for)
+      .with(@context, language, ep, script_name)
+      .returns(project_creator)
   end
 
   describe '.call' do
@@ -36,16 +41,26 @@ describe Script::Layers::Application::CreateScript do
     end
 
     it 'should create a new script' do
-      Script::Layers::Application::ExtensionPoints.expects(:get).with(type: extension_point_type).returns(ep)
-      Script::Layers::Application::CreateScript.expects(:create_project)
-      Script::Layers::Application::CreateScript.expects(:install_dependencies)
-      Script::Layers::Application::CreateScript.expects(:create_definition).returns(script)
+      Script::Layers::Application::ExtensionPoints
+        .expects(:get)
+        .with(type: extension_point_type)
+        .returns(ep)
+      Script::Layers::Application::CreateScript
+        .expects(:setup_project)
+        .with(@context, script_name, ep)
+        .returns(script_project)
+      Script::Layers::Application::CreateScript
+        .expects(:install_dependencies)
+        .with(@context, language, script_name, script_project, project_creator)
+      Script::Layers::Application::CreateScript
+        .expects(:bootstrap)
+        .with(@context, project_creator)
       subject
     end
 
-    describe 'create_project' do
+    describe '.setup_project' do
       subject do
-        Script::Layers::Application::CreateScript.send(:create_project, @context, script_name, ep)
+        Script::Layers::Application::CreateScript.send(:setup_project, @context, script_name, ep)
       end
 
       it 'should succeed and update ctx root' do
@@ -68,35 +83,25 @@ describe Script::Layers::Application::CreateScript do
     describe 'install_dependencies' do
       subject do
         Script::Layers::Application::CreateScript
-          .send(:install_dependencies, @context, language, script_name, ep, script_project)
+          .send(:install_dependencies, @context, language, script_name, script_project, project_creator)
       end
 
       it 'should return new script' do
         Script::Layers::Application::ProjectDependencies
-          .expects(:bootstrap)
-          .with(ctx: @context, language: language, extension_point: ep, script_name: script_name)
-        Script::Layers::Application::ProjectDependencies
           .expects(:install)
           .with(ctx: @context, task_runner: task_runner)
+        project_creator.expects(:setup_dependencies)
         capture_io { subject }
       end
     end
 
-    describe 'create_definition' do
+    describe 'bootstrap' do
       subject do
-        Script::Layers::Application::CreateScript.send(:create_definition, @context, language, ep, script_name)
+        Script::Layers::Application::CreateScript.send(:bootstrap, @context, project_creator)
       end
 
       it 'should return new script' do
-        Script::Layers::Infrastructure::ScriptRepository
-          .any_instance
-          .expects(:create_script)
-          .with(language, ep, script_name)
-          .returns(script)
-        Script::Layers::Infrastructure::TestSuiteRepository
-          .any_instance
-          .expects(:create_test_suite)
-          .with(script)
+        project_creator.expects(:bootstrap)
         capture_io { subject }
       end
     end

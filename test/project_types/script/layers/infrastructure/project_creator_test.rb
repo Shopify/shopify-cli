@@ -2,7 +2,7 @@
 
 require "project_types/script/test_helper"
 
-describe Script::Layers::Infrastructure::DependencyManager do
+describe Script::Layers::Infrastructure::ProjectCreator do
   describe ".for" do
     let(:script_name) { "foo_discount" }
     let(:extension_point_config) do
@@ -16,7 +16,7 @@ describe Script::Layers::Infrastructure::DependencyManager do
     end
     let(:extension_point) { Script::Layers::Domain::ExtensionPoint.new("discount", extension_point_config) }
     subject do
-      Script::Layers::Infrastructure::DependencyManager.for(
+      Script::Layers::Infrastructure::ProjectCreator.for(
         @context,
         language,
         extension_point,
@@ -28,7 +28,7 @@ describe Script::Layers::Infrastructure::DependencyManager do
       let(:language) { "ts" }
 
       it "should return the entry from the registry" do
-        assert_instance_of(Script::Layers::Infrastructure::AssemblyScriptDependencyManager, subject)
+        assert_instance_of(Script::Layers::Infrastructure::AssemblyScriptProjectCreator, subject)
       end
     end
 
@@ -36,10 +36,7 @@ describe Script::Layers::Infrastructure::DependencyManager do
       let(:language) { "ArnoldC" }
 
       it "should raise dependency not supported error" do
-        assert_raises(
-          Script::Layers::Infrastructure::Errors::DependencyError,
-          "{{x}} No dependency support for #{language}"
-        ) { subject }
+        assert_raises(Script::Layers::Infrastructure::Errors::ProjectCreatorNotFoundError) { subject }
       end
     end
   end

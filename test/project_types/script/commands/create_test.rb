@@ -1,20 +1,24 @@
 # frozen_string_literal: true
 
 require 'project_types/script/test_helper'
-require "project_types/script/layers/infrastructure/fake_script_repository"
-require "project_types/script/layers/infrastructure/fake_extension_point_repository"
 
 module Script
   module Commands
     class CreateTest < MiniTest::Test
       include TestHelpers::Partners
       include TestHelpers::FakeUI
+      include TestHelpers::FakeFS
 
       def setup
         @context = TestHelpers::FakeContext.new
         @language = 'ts'
         @script_name = 'name'
         @ep_type = 'discount'
+        @script_project = TestHelpers::FakeScriptProject.new(
+          language: @language,
+          extension_point_type: @ep_type,
+          script_name: @script_name
+        )
       end
 
       def test_prints_help_with_no_name_argument
@@ -24,17 +28,17 @@ module Script
       end
 
       def test_can_create_new_script
+        ScriptProject.stubs(:current).returns(@script_project)
         Script::Layers::Application::CreateScript
           .expects(:call)
           .with(ctx: @context, language: @language, script_name: @script_name, extension_point_type: @ep_type)
-          .returns(fake_script)
 
         @context
           .expects(:puts)
-          .with(@context.message('script.create.changed_dir', folder: fake_script.name))
+          .with(@context.message('script.create.changed_dir', folder: @script_project.script_name))
         @context
           .expects(:puts)
-          .with(@context.message('script.create.script_created', script_id: fake_script.id))
+          .with(@context.message('script.create.script_created', script_id: @script_project.source_file))
         perform_command
       end
 
@@ -81,17 +85,6 @@ module Script
 
       def perform_command
         run_cmd("create script --name=#{@script_name} --extension_point=#{@ep_type}")
-      end
-
-      def fake_script
-        @fake_script ||= begin
-           ep = Script::Layers::Infrastructure::FakeExtensionPointRepository.new.create_extension_point(@ep_type)
-           Script::Layers::Infrastructure::FakeScriptRepository.new(ctx: @context).create_script(
-             @language,
-             ep,
-             @script_name
-           )
-         end
       end
     end
   end

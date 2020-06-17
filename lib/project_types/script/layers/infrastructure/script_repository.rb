@@ -7,23 +7,6 @@ module Script
         include SmartProperties
         property! :ctx, accepts: ShopifyCli::Context
 
-        BOOTSTRAP_SRC = "npx --no-install shopify-scripts-bootstrap src %{src_base}"
-
-        def create_script(language, extension_point, script_name)
-          ctx.mkdir_p(src_base)
-          out, status = CLI::Kit::System.capture2e(format(BOOTSTRAP_SRC, src_base: src_base))
-          raise Domain::Errors::ServiceFailureError, out unless status.success?
-
-          write_tsconfig if language == "ts"
-
-          Domain::Script.new(
-            script_id(language),
-            script_name,
-            extension_point.type,
-            language
-          )
-        end
-
         def get_script(language, extension_point_type, script_name)
           source_file_path = src_code_file(language)
           unless File.exist?(source_file_path)
@@ -51,18 +34,6 @@ module Script
 
         private
 
-        def write_sdk(extension_point_type, language, sdk_types)
-          return unless language == "ts"
-          File.write(sdk_types_file(extension_point_type, language), sdk_types)
-        end
-
-        def write_tsconfig
-          AssemblyScriptTsConfig
-            .new(dir_to_write_in: relative_path_to_src)
-            .with_extends_assemblyscript_config(relative_path_to_node_modules: ".")
-            .write
-        end
-
         def project_base
           ScriptProject.current.directory
         end
@@ -81,10 +52,6 @@ module Script
 
         def file_name(language)
           "script.#{language}"
-        end
-
-        def sdk_types_file(extension_point_type, language)
-          "#{src_base}/#{extension_point_type}.#{language}"
         end
       end
     end

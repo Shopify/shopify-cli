@@ -32,28 +32,6 @@ describe Script::Layers::Infrastructure::ScriptRepository do
     project.directory = script_folder_base
   end
 
-  describe ".create_script" do
-    subject { script_repository.create_script(language, extension_point, script_name) }
-    it "should call the bootstrap method and return the script" do
-      CLI::Kit::System.expects(:capture2e)
-        .with("npx --no-install shopify-scripts-bootstrap src /some/directory/myscript/src")
-        .returns(["", OpenStruct.new(success?: true)])
-
-      tsconfig_stub = stub
-      tsconfig_stub
-        .expects(:with_extends_assemblyscript_config)
-        .with(relative_path_to_node_modules: ".")
-        .returns(tsconfig_stub)
-      tsconfig_stub.expects(:write)
-      Script::Layers::Infrastructure::AssemblyScriptTsConfig.stubs(:new).returns(tsconfig_stub)
-
-      script = subject
-      assert_equal expected_script_id, script.id
-      assert_equal script_name, script.name
-      assert_equal extension_point_type, script.extension_point_type
-    end
-  end
-
   describe ".get_script" do
     subject { script_repository.get_script(language, extension_point.type, script_name) }
 

@@ -12,23 +12,10 @@ describe Script::Layers::Application::ProjectDependencies do
   let(:extension_point_repository) { Script::Layers::Infrastructure::FakeExtensionPointRepository.new }
   let(:extension_point) { extension_point_repository.get_extension_point(extension_point_type) }
   let(:task_runner) { stub }
-  let(:dependency_manager) do
-    Script::Layers::Infrastructure::AssemblyScriptDependencyManager
-      .new(@context, language, extension_point, script_name)
-  end
 
   before do
     extension_point_repository.create_extension_point(extension_point_type)
-    Script::Layers::Infrastructure::DependencyManager.stubs(:for).returns(dependency_manager)
     Script::Layers::Infrastructure::TaskRunner.stubs(:for).returns(task_runner)
-  end
-
-  describe '.bootstrap' do
-    it 'should call the DependencyManager.bootstrap method' do
-      dependency_manager.expects(:bootstrap).once
-      Script::Layers::Application::ProjectDependencies
-        .bootstrap(ctx: @context, language: language, extension_point: extension_point, script_name: script_name)
-    end
   end
 
   describe '.install' do

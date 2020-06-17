@@ -2,11 +2,6 @@ module Script
   module Layers
     module Application
       class ProjectDependencies
-        def self.bootstrap(ctx:, language:, extension_point:, script_name:)
-          dep_manager = Infrastructure::DependencyManager.for(ctx, language, extension_point, script_name)
-          dep_manager.bootstrap
-        end
-
         def self.install(ctx:, task_runner:)
           CLI::UI::Frame.open(ctx.message('script.project_deps.checking_with_npm')) do
             begin

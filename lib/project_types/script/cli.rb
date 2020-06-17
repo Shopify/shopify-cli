@@ -51,15 +51,16 @@ module Script
       autoload :Errors, Project.project_filepath('layers/infrastructure/errors')
       autoload :AssemblyScriptDependencyManager,
                Project.project_filepath('layers/infrastructure/assemblyscript_dependency_manager')
+      autoload :AssemblyScriptProjectCreator,
+               Project.project_filepath('layers/infrastructure/assemblyscript_project_creator')
       autoload :AssemblyScriptTaskRunner, Project.project_filepath('layers/infrastructure/assemblyscript_task_runner')
       autoload :AssemblyScriptTsConfig, Project.project_filepath('layers/infrastructure/assemblyscript_tsconfig')
-      autoload :DependencyManager, Project.project_filepath('layers/infrastructure/dependency_manager')
       autoload :PushPackageRepository, Project.project_filepath('layers/infrastructure/push_package_repository')
       autoload :ExtensionPointRepository, Project.project_filepath('layers/infrastructure/extension_point_repository')
+      autoload :ProjectCreator, Project.project_filepath('layers/infrastructure/project_creator')
       autoload :ScriptRepository, Project.project_filepath('layers/infrastructure/script_repository')
       autoload :ScriptService, Project.project_filepath('layers/infrastructure/script_service')
       autoload :TaskRunner, Project.project_filepath('layers/infrastructure/task_runner')
-      autoload :TestSuiteRepository, Project.project_filepath('layers/infrastructure/test_suite_repository')
     end
   end
 
