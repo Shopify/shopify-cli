@@ -22,18 +22,27 @@ module Script
         end
 
         def install
+          check_node_version!
+
           output, status = @ctx.capture2e("npm", "install", "--no-audit", "--no-optional", "--loglevel error")
           raise Errors::DependencyInstallError, output unless status.success?
         end
 
         private
 
+        def check_node_version!
+          output, status = @ctx.capture2e("node", "--version")
+          raise Errors::DependencyInstallError, output unless status.success?
+
+          major, minor, * = output.split(".")
+          unless Integer(major[1..-1]) >= 12 && Integer(minor) >= 16
+            raise Errors::DependencyInstallError, "Node version must be >= v12.16. Current version: #{output}."
+          end
+        end
+
         def write_npmrc
           @ctx.system(
             'npm', '--userconfig', './.npmrc', 'config', 'set', '@shopify:registry', 'https://registry.npmjs.com'
-          )
-          @ctx.system(
-            'npm', '--userconfig', './.npmrc', 'config', 'set', 'engine-strict', 'true'
           )
         end
 
@@ -52,9 +61,6 @@ module Script
               },
               "scripts": {
                 "test": "asp --config test/as-pect.config.js --summary --verbose"
-              },
-              "engines": {
-                "node": ">=12.16"
               }
             }
           HERE
