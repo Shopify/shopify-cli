@@ -5,9 +5,22 @@ module ShopifyCli
     module EntryPoint
       class << self
         def call(args, ctx = Context.new)
+          # Check if the shim is set up by checking whether the old Finalizer FD exists
+          begin
+            is_shell_shim = false
+            IO.open(9) { is_shell_shim = true }
+          rescue Errno::EBADF
+            # This is expected if the descriptor doesn't exist
+          end
+
+          if !ctx.testing? && is_shell_shim
+            ctx.puts(ctx.message('core.warning.shell_shim'))
+            return
+          end
+
           if ctx.development?
             ctx.puts(
-              ctx.message('core.development_version_warning', File.join(ShopifyCli::ROOT, 'bin', ShopifyCli::TOOL_NAME))
+              ctx.message('core.warning.development_version', File.join(ShopifyCli::ROOT, 'bin', ShopifyCli::TOOL_NAME))
             )
           end
 

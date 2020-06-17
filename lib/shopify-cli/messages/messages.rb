@@ -42,12 +42,6 @@ module ShopifyCli
           project_type_select: "What type of project would you like to create?",
         },
 
-        development_version_warning: <<~DEVELOPMENT,
-        {{*}} {{yellow:You are running a development version of the CLI at:}}
-            {{yellow:%s}}
-
-        DEVELOPMENT
-
         env_file: {
           saving_header: "writing %s file...",
           saving: "writing %s file",
@@ -263,6 +257,22 @@ module ShopifyCli
           Prints version number.
             Usage: {{command:%s version}}
           HELP
+        },
+
+        warning: {
+          development_version: <<~DEVELOPMENT,
+          {{*}} {{yellow:You are running a development version of the CLI at:}}
+              {{yellow:%s}}
+
+          DEVELOPMENT
+
+          shell_shim: <<~MESSAGE,
+          {{x}} This version of Shopify App CLI is no longer supported. You’ll need to upgrade to continue using it. This process typically takes a few minutes.
+
+            Please visit this page for complete instructions:
+            {{underline:https://shopify.github.io/shopify-app-cli/upgrade/}}
+
+          MESSAGE
         },
       },
     }.freeze
