@@ -19,6 +19,7 @@ module Extension
         {{*}} Once you're ready to version and publish your extension,
         run {{command:shopify register}} to register this extension with one of your apps.
         MESSAGE
+        try_again: '{{*}} Fix the errors and run {{command:shopify create extension}} again.',
       },
       build: {
         frame_title: 'Building extension with: %s...',

@@ -1,5 +1,4 @@
 # frozen_string_literal: true
-require 'base64'
 
 module Extension
   module Features
@@ -9,54 +8,33 @@ module Extension
       GIT_DIRECTORY = '.git'.freeze
       SCRIPTS_DIRECTORY = 'scripts'.freeze
 
-      YARN_INITIALIZE_COMMAND = %w(generate).freeze
-      NPM_INITIALIZE_COMMAND = %w(run generate --).freeze
-      INITIALIZE_TYPE_PARAMETER = '--type=%s'.freeze
-
       property! :git_template, accepts: String
       property! :dependency_checks, default: []
 
-      attr_accessor :success
-
       def call(directory_name, identifier, context)
-        @success = true
+        steps = [
+          ArgoSetupSteps.check_dependencies(dependency_checks),
+          ArgoSetupSteps.clone_template(git_template),
+          ArgoSetupSteps.install_dependencies,
+          ArgoSetupSteps.initialize_project
+        ]
 
-        check_dependencies(context)
-        clone_template(directory_name, context)
-        initialize_project(identifier, context)
-        cleanup(context, directory_name)
+        install_result = run_install_steps(context, steps, identifier, directory_name)
 
-        @success
+        cleanup(context, install_result, directory_name)
+        install_result
       end
 
-      def check_dependencies(context)
-        dependency_checks.each do |dependency_check|
-          dependency_check.call(context)
-        end
-      end
-
-      def clone_template(directory_name, context)
-        ShopifyCli::Git.clone(git_template, directory_name, ctx: context)
-        context.root = File.join(context.root, directory_name)
-      end
-
-      def initialize_project(identifier, context)
+      def run_install_steps(context, steps, identifier, directory_name)
         system = ShopifyCli::JsSystem.new(ctx: context)
-        ShopifyCli::JsDeps.new(ctx: context, system: system).install
 
-        frame_title = context.message('create.setup_project_frame_title')
-        failure_message = context.message('features.argo.initialization_error')
-
-        CLI::UI::Frame.open(frame_title, failure_text: failure_message) do
-          @success = system.call(
-            yarn: YARN_INITIALIZE_COMMAND + [INITIALIZE_TYPE_PARAMETER % identifier],
-            npm: NPM_INITIALIZE_COMMAND + [INITIALIZE_TYPE_PARAMETER % identifier]
-          )
-        end
+        steps.inject(true) { |success, setup_step|
+          success && setup_step.call(context, identifier, directory_name, system)
+        }
       end
 
-      def cleanup(context, directory_name)
-        @success ? cleanup_template(context) : cleanup_on_failure(context, directory_name)
+      def cleanup(context, install_result, directory_name)
+        install_result ? cleanup_template(context) : cleanup_on_failure(context, directory_name)
       end
 
       def cleanup_template(context)

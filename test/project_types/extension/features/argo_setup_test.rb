@@ -16,84 +16,44 @@ module Extension
         @initializer = ArgoSetup.new(git_template: @git_template)
         @identifier = 'FAKE_ARGO_TYPE'
         @directory = 'fake_directory'
+
+        @passing_step = ArgoSetupStep.default { true }
+        @failing_step = ArgoSetupStep.default { false }
+        @never_run_step = mock.expects(:call).never
       end
 
-      def test_call_clones_repo_then_initializes_project_then_cleans_up
-        @initializer.expects(:check_dependencies).with(@context).once
-        @initializer.expects(:clone_template).with(@directory, @context).once
-        @initializer.expects(:initialize_project).with(@identifier, @context).once
-        @initializer.expects(:cleanup).with(@context, @directory).once
+      def test_call_sets_up_the_default_setup_steps_runs_them_and_cleans_up
+        ArgoSetupSteps.expects(:check_dependencies).with([]).returns(@passing_step).once
+        ArgoSetupSteps.expects(:clone_template).with(@git_template).returns(@passing_step).once
+        ArgoSetupSteps.expects(:install_dependencies).returns(@passing_step).once
+        ArgoSetupSteps.expects(:initialize_project).returns(@passing_step).once
 
+        @initializer.expects(:cleanup).with(@context, true, @directory).once
         @initializer.call(@directory, @identifier, @context)
       end
 
-      def test_check_dependencies_loops_through_the_provided_dependencies
-        execution_mock = Minitest::Mock.new
-        execution_mock.expect(:executed, nil)
+      def test_if_any_step_fails_subsequent_steps_are_not_run_and_cleanup_is_called
+        ArgoSetupSteps.expects(:check_dependencies).with([]).returns(@passing_step).once
+        ArgoSetupSteps.expects(:clone_template).with(@git_template).returns(@passing_step).once
+        ArgoSetupSteps.expects(:install_dependencies).returns(@failing_step).once
+        ArgoSetupSteps.expects(:initialize_project).returns(@never_run_step).once
 
-        test_proc = Proc.new do |context|
-          execution_mock.executed
-          assert_equal @context, context
-        end
-
-        ArgoSetup.new(git_template: @git_template, dependency_checks: [test_proc]).check_dependencies(@context)
-        execution_mock.verify
-      end
-
-      def test_clone_template_clones_argo_template_git_repo_into_directory_and_updates_context_root
-        ShopifyCli::Git.expects(:clone).with(@git_template, @directory, ctx: @context).once
-
-        @initializer.clone_template(@directory, @context)
-
-        assert_equal @directory, Pathname(@context.root).each_filename.to_a.last
-      end
-
-      def test_initialize_project_installs_js_deps_and_initializes_the_project_setting_success_true_if_successful
-        type_parameter = [ArgoSetup::INITIALIZE_TYPE_PARAMETER % @identifier]
-        expected_npm_command = ArgoSetup::NPM_INITIALIZE_COMMAND + type_parameter
-        expected_yarn_command = ArgoSetup::YARN_INITIALIZE_COMMAND + type_parameter
-
-        ShopifyCli::JsDeps.any_instance.expects(:install).once
-        ShopifyCli::JsSystem.any_instance
-          .expects(:call)
-          .with(yarn: expected_yarn_command, npm: expected_npm_command)
-          .returns(true)
-          .once
-
-        @initializer.initialize_project(@identifier, @context)
-        assert @initializer.success
-      end
-
-      def test_initialize_project_sets_success_to_false_if_initialize_command_fails
-        type_parameter = [ArgoSetup::INITIALIZE_TYPE_PARAMETER % @identifier]
-        expected_npm_command = ArgoSetup::NPM_INITIALIZE_COMMAND + type_parameter
-        expected_yarn_command = ArgoSetup::YARN_INITIALIZE_COMMAND + type_parameter
-
-        ShopifyCli::JsDeps.any_instance.expects(:install).once
-        ShopifyCli::JsSystem.any_instance
-          .expects(:call)
-          .with(yarn: expected_yarn_command, npm: expected_npm_command)
-          .returns(false)
-          .once
-
-        @initializer.initialize_project(@identifier, @context)
-        refute @initializer.success
+        @initializer.expects(:cleanup).with(@context, false, @directory).once
+        @initializer.call(@directory, @identifier, @context)
       end
 
       def test_cleanup_runs_cleanup_template_if_success_is_true
-        @initializer.success = true
         @initializer.expects(:cleanup_template).with(@context).once
         @initializer.expects(:cleanup_on_failure).never
 
-        @initializer.cleanup(@context, @directory)
+        @initializer.cleanup(@context, true, @directory)
       end
 
       def test_cleanup_runs_cleanup_on_failure_if_success_is_false
-        @initializer.success = false
         @initializer.expects(:cleanup_template).never
         @initializer.expects(:cleanup_on_failure).with(@context, @directory).once
 
-        @initializer.cleanup(@context, @directory)
+        @initializer.cleanup(@context, false, @directory)
       end
 
       def test_cleanup_template_removes_git_and_script_directories
