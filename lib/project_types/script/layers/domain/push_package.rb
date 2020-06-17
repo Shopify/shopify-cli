@@ -3,7 +3,7 @@
 module Script
   module Layers
     module Domain
-      class DeployPackage
+      class PushPackage
         attr_reader :id, :script, :script_content, :compiled_type, :schema
 
         def initialize(id, script, script_content, compiled_type, schema)
@@ -14,8 +14,8 @@ module Script
           @schema = schema
         end
 
-        def deploy(script_service, api_key, force)
-          script_service.deploy(
+        def push(script_service, api_key, force)
+          script_service.push(
             extension_point_type: @script.extension_point_type,
             script_name: @script.name,
             script_content: @script_content,

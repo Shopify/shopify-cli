@@ -35,9 +35,9 @@ describe Script::Layers::Application::BuildScript do
           .any_instance
           .expects(:build)
           .returns([content, schema])
-        Script::Layers::Infrastructure::DeployPackageRepository
+        Script::Layers::Infrastructure::PushPackageRepository
           .any_instance
-          .expects(:create_deploy_package)
+          .expects(:create_push_package)
           .with(script, content, schema, 'wasm')
         capture_io { subject }
       end
@@ -51,9 +51,9 @@ describe Script::Layers::Application::BuildScript do
           .any_instance
           .expects(:build)
           .returns([content, schema])
-        Script::Layers::Infrastructure::DeployPackageRepository
+        Script::Layers::Infrastructure::PushPackageRepository
           .any_instance
-          .expects(:create_deploy_package)
+          .expects(:create_push_package)
           .raises(err_msg)
 
         io = capture_io do

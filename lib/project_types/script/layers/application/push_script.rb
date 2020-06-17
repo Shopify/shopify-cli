@@ -18,9 +18,9 @@ module Script
 
           def push_script(ctx, script, api_key, force)
             compiled_type = Infrastructure::ScriptBuilder.for(script).compiled_type
-            Infrastructure::DeployPackageRepository.new
-              .get_deploy_package(script, compiled_type)
-              .deploy(Infrastructure::ScriptService.new(ctx: ctx), api_key, force)
+            Infrastructure::PushPackageRepository.new
+              .get_push_package(script, compiled_type)
+              .push(Infrastructure::ScriptService.new(ctx: ctx), api_key, force)
             ctx.puts(ctx.message('script.application.pushed'))
           end
         end
