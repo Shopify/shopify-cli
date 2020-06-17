@@ -19,7 +19,7 @@ module Extension
           @checkout ||= Argo.new(
             setup: ArgoSetup.new(
               git_template: GIT_CHECKOUT_TEMPLATE,
-              dependency_checks: [ArgoDependencies.node_installed(min_major: 10, min_minor: 13)]
+              dependency_checks: [ArgoDependencies.node_installed(min_major: 10, min_minor: 16)]
             )
           )
         end
