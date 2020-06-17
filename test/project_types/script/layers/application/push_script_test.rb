@@ -20,6 +20,7 @@ describe Script::Layers::Application::PushScript do
   end
   let(:push_package_repository) { Script::Layers::Infrastructure::FakePushPackageRepository.new }
   let(:extension_point_repository) { Script::Layers::Infrastructure::FakeExtensionPointRepository.new }
+  let(:as_task_runner) { Script::Layers::Infrastructure::AssemblyScriptTaskRunner.new(@context) }
   let(:ep) { extension_point_repository.get_extension_point(extension_point_type) }
   let(:script_repository) { Script::Layers::Infrastructure::FakeScriptRepository.new }
   let(:script) { script_repository.create_script(language, ep, script_name) }
@@ -28,6 +29,7 @@ describe Script::Layers::Application::PushScript do
     Script::Layers::Infrastructure::PushPackageRepository.stubs(:new).returns(push_package_repository)
     Script::Layers::Infrastructure::ScriptRepository.stubs(:new).returns(script_repository)
     Script::Layers::Infrastructure::ExtensionPointRepository.stubs(:new).returns(extension_point_repository)
+    Script::Layers::Infrastructure::TaskRunner.stubs(:for).returns(as_task_runner)
     Script::ScriptProject.stubs(:current).returns(project)
     extension_point_repository.create_extension_point(extension_point_type)
     push_package_repository.create_push_package(script, 'content', compiled_type)
@@ -48,7 +50,7 @@ describe Script::Layers::Application::PushScript do
     it 'should prepare and push script' do
       script_service_instance = Script::Layers::Infrastructure::ScriptService.new(ctx: @context)
       Script::Layers::Application::ProjectDependencies
-        .expects(:install).with(ctx: @context, language: language)
+        .expects(:install).with(ctx: @context, task_runner: as_task_runner)
       Script::Layers::Application::BuildScript
         .expects(:call).with(ctx: @context, script: script)
       Script::Layers::Infrastructure::ScriptService

@@ -7,9 +7,7 @@ module Script
           dep_manager.bootstrap
         end
 
-        def self.install(ctx:, language:)
-          task_runner = Infrastructure::TaskRunner.for(ctx, language)
-
+        def self.install(ctx:, task_runner:)
           CLI::UI::Frame.open(ctx.message('script.project_deps.checking_with_npm')) do
             begin
               if task_runner.dependencies_installed?

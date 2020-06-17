@@ -7,17 +7,17 @@ module Script
         class << self
           def call(ctx:, language:, extension_point_type:, script_name:, api_key:, force:)
             script = Infrastructure::ScriptRepository.new.get_script(language, extension_point_type, script_name)
-            ProjectDependencies.install(ctx: ctx, language: language)
+            task_runner = Infrastructure::TaskRunner.for(ctx, language)
+            ProjectDependencies.install(ctx: ctx, task_runner: task_runner)
             BuildScript.call(ctx: ctx, script: script)
-            push_script(ctx, script, api_key, force)
+            push_script(ctx, task_runner, script, api_key, force)
           end
 
           private
 
-          def push_script(ctx, script, api_key, force)
-            compiled_type = Infrastructure::TaskRunner.for(ctx, script.language).compiled_type
+          def push_script(ctx, task_runner, script, api_key, force)
             Infrastructure::PushPackageRepository.new
-              .get_push_package(script, compiled_type)
+              .get_push_package(script, task_runner.compiled_type)
               .push(Infrastructure::ScriptService.new(ctx: ctx), api_key, force)
             ctx.puts(ctx.message('script.application.pushed'))
           end

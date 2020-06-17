@@ -13,9 +13,11 @@ describe Script::Layers::Application::CreateScript do
   let(:extension_point_repository) { Script::Layers::Infrastructure::FakeExtensionPointRepository.new }
   let(:ep) { extension_point_repository.get_extension_point(extension_point_type) }
   let(:script) { Script::Layers::Infrastructure::FakeScriptRepository.new.create_script(language, ep, script_name) }
+  let(:as_task_runner) { Script::Layers::Infrastructure::AssemblyScriptTaskRunner.new(@context) }
 
   before do
     Script::Layers::Infrastructure::ExtensionPointRepository.stubs(:new).returns(extension_point_repository)
+    Script::Layers::Infrastructure::TaskRunner.stubs(:for).returns(as_task_runner)
     extension_point_repository.create_extension_point(extension_point_type)
   end
 
@@ -54,7 +56,7 @@ describe Script::Layers::Application::CreateScript do
           .with(ctx: @context, language: language, extension_point: ep, script_name: script_name)
         Script::Layers::Application::ProjectDependencies
           .expects(:install)
-          .with(ctx: @context, language: language)
+          .with(ctx: @context, task_runner: as_task_runner)
         capture_io { subject }
         assert_equal File.join(initial_ctx_root, script_name), @context.root
       end

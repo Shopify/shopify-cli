@@ -37,7 +37,7 @@ describe Script::Layers::Application::ProjectDependencies do
     subject do
       capture_io do
         Script::Layers::Application::ProjectDependencies
-          .install(ctx: @context, language: language)
+          .install(ctx: @context, task_runner: task_runner)
       end
     end
 

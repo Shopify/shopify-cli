@@ -30,7 +30,7 @@ module Script
             ProjectDependencies
               .bootstrap(ctx: ctx, language: language, extension_point: extension_point, script_name: script_name)
             ProjectDependencies
-              .install(ctx: ctx, language: language)
+              .install(ctx: ctx, task_runner: Infrastructure::TaskRunner.for(ctx, language))
           end
 
           def create_definition(ctx, language, extension_point, script_name)
