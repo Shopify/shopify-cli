@@ -5,9 +5,8 @@ module Script
     module Infrastructure
       class AssemblyScriptWasmBuilder
         BYTECODE_FILE = "%{name}.wasm"
-        SCHEMA_FILE = "schema"
         SCRIPT_SDK_BUILD = "npx --no-install shopify-scripts-build --src=../%{source} --binary=#{BYTECODE_FILE} "\
-                           "--schema=#{SCHEMA_FILE} -- --lib=../node_modules --validate --optimize"
+                           "-- --lib=../node_modules --validate --optimize"
 
         attr_reader :script
 
@@ -17,7 +16,7 @@ module Script
 
         def build
           compile
-          [bytecode, schema]
+          bytecode
         end
 
         def compiled_type
@@ -33,10 +32,6 @@ module Script
 
         def bytecode
           File.read(format(BYTECODE_FILE, name: script.name))
-        end
-
-        def schema
-          File.read(SCHEMA_FILE)
         end
       end
     end
