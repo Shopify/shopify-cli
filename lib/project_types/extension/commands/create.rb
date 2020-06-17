@@ -14,7 +14,7 @@ module Extension
             ExtensionProject.write_cli_file(context: @ctx, type: form.type.identifier)
             ExtensionProject.write_env_file(context: @ctx, title: form.name)
 
-            @ctx.puts(@ctx.message('create.ready_to_start', form.name, form.directory_name))
+            @ctx.puts(@ctx.message('create.ready_to_start', form.directory_name, form.name))
             @ctx.puts(@ctx.message('create.learn_more', form.type.name))
           else
             @ctx.puts(@ctx.message('create.try_again'))
