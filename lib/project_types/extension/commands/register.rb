@@ -7,7 +7,7 @@ module Extension
         parser.on('--api_key=KEY') { |key| flags[:api_key] = key.downcase }
       end
 
-      def call(args, command_name)
+      def call(args, _command_name)
         CLI::UI::Frame.open(@ctx.message('register.frame_title')) do
           @ctx.abort(@ctx.message('register.already_registered')) if project.registered?
 
@@ -25,10 +25,10 @@ module Extension
 
       def self.help
         <<~HELP
-        Register your local extension to a Shopify app
-            Usage: {{command:#{ShopifyCli::TOOL_NAME} register}}
-            Options:
-              {{command:--api_key=API_KEY}} The API key used to register an app with the extension. This can be found on the app page on Partners Dashboard.
+          Register your local extension to a Shopify app
+              Usage: {{command:#{ShopifyCli::TOOL_NAME} register}}
+              Options:
+                {{command:--api_key=API_KEY}} The API key used to register an app with the extension. This can be found on the app page on Partners Dashboard.
         HELP
       end
 

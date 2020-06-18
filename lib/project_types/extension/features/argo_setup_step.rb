@@ -14,7 +14,7 @@ module Extension
       rescue ShopifyCli::Abort => e
         context.puts(e.message)
         false
-      rescue Exception => e
+      rescue StandardError => e
         context.puts("{{x}} #{e.message}")
         false
       end

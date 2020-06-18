@@ -64,7 +64,7 @@ module Extension
       private
 
       def message(key, *params)
-        return unless messages.has_key?(key.to_sym)
+        return unless messages.key?(key.to_sym)
         messages[key.to_sym] % params
       end
 

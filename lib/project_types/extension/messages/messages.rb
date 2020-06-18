@@ -11,13 +11,13 @@ module Extension
         invalid_type: 'Extension type is invalid.',
         setup_project_frame_title: 'Initializing project',
         ready_to_start: <<~MESSAGE,
-        {{v}} A new folder was generated at {{green:./%s}}.
-        {{*}} You’re ready to start building {{green:%s}}!
-        Navigate to the new folder, then run {{command:shopify serve}} to start a local server.
+          {{v}} A new folder was generated at {{green:./%s}}.
+          {{*}} You’re ready to start building {{green:%s}}!
+          Navigate to the new folder, then run {{command:shopify serve}} to start a local server.
         MESSAGE
         learn_more: <<~MESSAGE,
-        {{*}} Once you're ready to version and publish your extension,
-        run {{command:shopify register}} to register this extension with one of your apps.
+          {{*}} Once you're ready to version and publish your extension,
+          run {{command:shopify register}} to register this extension with one of your apps.
         MESSAGE
         try_again: '{{*}} Fix the errors and run {{command:shopify create extension}} again.',
       },
@@ -32,7 +32,8 @@ module Extension
         loading_apps: 'Loading your apps...',
         ask_app: 'Which app would you like to register this extension with?',
         no_apps: '{{x}} You don’t have any apps.',
-        learn_about_apps: '{{*}} Learn more about building apps at <https://shopify.dev/concepts/apps>, or try creating a new app using {{command:shopify create}}.',
+        learn_about_apps: '{{*}} Learn more about building apps at <https://shopify.dev/concepts/apps>, ' \
+          'or try creating a new app using {{command:shopify create}}.',
         invalid_api_key: 'The API key %s does not match any of your apps.',
         confirm_info: 'This will create a new extension registration for %s, which can’t be undone.',
         confirm_question: 'Would you like to register this extension with {{green:%s}}? (y/n)',
@@ -53,7 +54,8 @@ module Extension
         serve_failure_message: 'Failed to run extension code.',
       },
       tunnel: {
-        missing_token: '{{x}} {{red:auth requires a token argument}}. Find it on your ngrok dashboard: {{underline:https://dashboard.ngrok.com/auth/your-authtoken}}.',
+        missing_token: '{{x}} {{red:auth requires a token argument}}. '\
+          'Find it on your ngrok dashboard: {{underline:https://dashboard.ngrok.com/auth/your-authtoken}}.',
         invalid_port: '%s is not a valid port.',
         no_tunnel_running: 'No tunnel running.',
         tunnel_running_at: 'Tunnel running at: {{underline:%s}}',
@@ -64,7 +66,8 @@ module Extension
         extended_help: <<~HELP,
           {{bold:Subcommands:}}
 
-            {{cyan:auth}}: Writes an ngrok auth token to ~/.ngrok2/ngrok.yml to connect with an ngrok account. Visit https://dashboard.ngrok.com/signup to sign up.
+            {{cyan:auth}}: Writes an ngrok auth token to ~/.ngrok2/ngrok.yml to connect with an ngrok account. 
+            Visit https://dashboard.ngrok.com/signup to sign up.
               Usage: {{command:%1$s tunnel auth <token>}}
 
             {{cyan:start}}: Starts an ngrok tunnel, will print the URL for an existing tunnel if already running.
@@ -88,18 +91,18 @@ module Extension
             node: {
               node_not_installed: 'Node must be installed to create this extension.',
               version_too_low: 'Your node version %s does not meet the minimum required version %s',
-            }
-          }
+            },
+          },
         },
       },
       tasks: {
         errors: {
-          parse_error: 'Unable to parse response from Partners Dashboard.'
-        }
+          parse_error: 'Unable to parse response from Partners Dashboard.',
+        },
       },
       errors: {
-        unknown_type: 'Unknown extension type %s'
-      }
+        unknown_type: 'Unknown extension type %s',
+      },
     }
 
     TYPES = {
@@ -109,12 +112,12 @@ module Extension
         overrides: {
           register: {
             confirm_info: 'You can only create one %s extension per app, which can’t be undone.',
-          }
-        }
+          },
+        },
       },
       checkout_post_purchase: {
         name: 'Checkout Post Purchase',
-      }
+      },
     }
   end
 end

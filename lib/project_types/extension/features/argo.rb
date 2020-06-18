@@ -6,8 +6,8 @@ module Extension
     class Argo
       include SmartProperties
 
-      GIT_ADMIN_TEMPLATE = 'https://github.com/Shopify/argo-admin-template.git'.freeze
-      GIT_CHECKOUT_TEMPLATE = 'https://github.com/Shopify/argo-checkout-template.git'.freeze
+      GIT_ADMIN_TEMPLATE = 'https://github.com/Shopify/argo-admin-template.git'
+      GIT_CHECKOUT_TEMPLATE = 'https://github.com/Shopify/argo-checkout-template.git'
       SCRIPT_PATH = %w(build main.js).freeze
 
       class << self
@@ -33,13 +33,13 @@ module Extension
 
       def config(context)
         filepath = File.join(context.root, SCRIPT_PATH)
-        context.abort(context.message('features.argo.missing_file_error')) unless File.exists?(filepath)
+        context.abort(context.message('features.argo.missing_file_error')) unless File.exist?(filepath)
 
         begin
           {
-            serialized_script: Base64.strict_encode64(File.open(filepath).read.chomp)
+            serialized_script: Base64.strict_encode64(File.open(filepath).read.chomp),
           }
-        rescue Exception
+        rescue StandardError
           context.abort(context.message('features.argo.script_prepare_error'))
         end
       end

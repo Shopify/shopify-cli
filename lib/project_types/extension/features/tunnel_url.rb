@@ -9,13 +9,11 @@ module Extension
       PUBLIC_URL_FIELD = 'public_url'
 
       def self.fetch
-        begin
-          response = Net::HTTP.get_response(NGROK_TUNNELS_URI)
-          json = JSON.parse(response.body)
-          return json.dig(TUNNELS_FIELD, 0, PUBLIC_URL_FIELD)
-        rescue
-          return nil
-        end
+        response = Net::HTTP.get_response(NGROK_TUNNELS_URI)
+        json = JSON.parse(response.body)
+        json.dig(TUNNELS_FIELD, 0, PUBLIC_URL_FIELD)
+      rescue
+        nil
       end
     end
   end

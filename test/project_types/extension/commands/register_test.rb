@@ -48,7 +48,7 @@ module Extension
 
         assert_message_output(io: io, expected_content: [
           @context.message('register.confirm_abort'),
-          @context.message('register.confirm_info', @test_extension_type.name)
+          @context.message('register.confirm_info', @test_extension_type.name),
         ])
       end
 

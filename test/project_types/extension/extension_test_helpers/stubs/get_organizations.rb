@@ -9,7 +9,7 @@ module Extension
         def organization(name:, apps:)
           {
             name: name,
-            apps: apps
+            apps: apps,
           }
         end
 
@@ -19,11 +19,11 @@ module Extension
             resp: {
               data: {
                 organizations: {
-                  nodes: create_organizations_json(organizations)
+                  nodes: create_organizations_json(organizations),
                 },
               },
             },
-            )
+          )
         end
 
         def create_organizations_json(organizations)
@@ -43,7 +43,7 @@ module Extension
             },
             'apps': {
               nodes: create_apps_json(apps),
-            }
+            },
           }
         end
 
@@ -53,7 +53,7 @@ module Extension
               id: rand(9999),
               title: app.title,
               'apiKey': app.api_key,
-              'apiSecretKeys': [{'secret': app.secret, }],
+              'apiSecretKeys': [{ 'secret': app.secret }],
             }
           end
         end

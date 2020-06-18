@@ -14,10 +14,10 @@ module Extension
               type: type,
               title: title,
               config: JSON.generate(config),
-              extension_context: extension_context
+              extension_context: extension_context,
             },
             resp: {
-              data: yield(title, type, config, extension_context)
+              data: yield(title, type, config, extension_context),
             }
           )
         end
@@ -33,20 +33,20 @@ module Extension
                   title: title,
                   draftVersion: {
                     registrationId: registration_id,
-                    lastUserInteractionAt: Time.now.utc.to_s
-                  }
+                    lastUserInteractionAt: Time.now.utc.to_s,
+                  },
                 },
-                userErrors: []
+                userErrors: [],
               },
             }
           end
         end
 
-        def stub_create_extension_failure(userErrors:, **args)
+        def stub_create_extension_failure(userErrors:, **args) # rubocop:disable Naming/VariableName
           stub_create_extension(args) do
             {
               extensionCreate: {
-                userErrors: userErrors
+                userErrors: userErrors, # rubocop:disable Naming/VariableName
               },
             }
           end

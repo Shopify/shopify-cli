@@ -23,8 +23,8 @@ module Extension
 
         assert_message_output(io: io, expected_content: [
           @context.message('tunnel.missing_token'),
-          Tunnel::help,
-          Tunnel::extended_help
+          Tunnel.help,
+          Tunnel.extended_help,
         ])
       end
 
@@ -57,7 +57,7 @@ module Extension
         end
 
         assert_message_output(io: io, expected_content: [
-          @context.message('tunnel.invalid_port', invalid_port)
+          @context.message('tunnel.invalid_port', invalid_port),
         ])
       end
 

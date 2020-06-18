@@ -16,7 +16,7 @@ module Extension
 
         @api_key = 'FAKE_API_KEY'
         @registration_id = 42
-        @config = { }
+        @config = {}
         @extension_context = 'fake#context'
         @location = 'https://www.fakeurl.com'
 
@@ -39,7 +39,7 @@ module Extension
           extension_context: @extension_context,
         )
 
-        assert_kind_of Models::Version, updated_draft
+        assert_kind_of(Models::Version, updated_draft)
         assert_equal @registration_id, updated_draft.registration_id
       end
 
@@ -60,7 +60,7 @@ module Extension
       end
 
       def test_aborts_with_errors_if_user_errors_are_returned
-        user_errors = [ {field: ['field'], UserErrors::MESSAGE_FIELD => 'An error occurred on field'} ]
+        user_errors = [{ field: ['field'], UserErrors::MESSAGE_FIELD => 'An error occurred on field' }]
         stub_update_draft_failure(errors: user_errors, **@input)
 
         io = capture_io_and_assert_raises(ShopifyCli::Abort) do

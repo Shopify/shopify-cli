@@ -18,7 +18,7 @@ module Extension
         @fake_type = 'TEST_EXTENSION'
         @fake_title = 'Fake Title'
         @fake_config = {
-          field: 'with stuff'
+          field: 'with stuff',
         }
         @fake_extension_context = 'fake_context'
 
@@ -27,7 +27,7 @@ module Extension
           type: @fake_type,
           title: @fake_title,
           config: @fake_config,
-          extension_context: @fake_extension_context
+          extension_context: @fake_extension_context,
         }
       end
 
@@ -43,7 +43,7 @@ module Extension
           extension_context: @fake_extension_context
         )
 
-        assert_kind_of Models::Registration, created_registration
+        assert_kind_of(Models::Registration, created_registration)
       end
 
       def test_aborts_with_parse_error_if_no_created_registration_or_errors_are_returned
@@ -64,7 +64,7 @@ module Extension
       end
 
       def test_aborts_with_errors_if_user_errors_are_returned
-        user_errors = [ {field: ['field'], UserErrors::MESSAGE_FIELD => 'An error occurred on field'} ]
+        user_errors = [{ field: ['field'], UserErrors::MESSAGE_FIELD => 'An error occurred on field' }]
         stub_create_extension_failure(userErrors: user_errors, **@input)
 
         io = capture_io_and_assert_raises(ShopifyCli::Abort) do

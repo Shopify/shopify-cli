@@ -11,14 +11,14 @@ module Extension
       end
 
       def directory_name
-        @directory_name ||= self.name.strip.gsub(/( )/, '_').downcase
+        @directory_name ||= name.strip.gsub(/( )/, '_').downcase
       end
 
       private
 
       def ask_name
         ask_with_reprompt(
-          initial_value: self.name,
+          initial_value: name,
           break_condition: -> (current_name) { Models::Registration.valid_title?(current_name) },
           prompt_message: ctx.message('create.ask_name'),
           reprompt_message: ctx.message('create.invalid_name', Models::Registration::MAX_TITLE_LENGTH)
@@ -40,7 +40,7 @@ module Extension
         value = initial_value
         reprompt = false
 
-        while !break_condition.call(value) do
+        until break_condition.call(value)
           ctx.puts(reprompt_message) if reprompt
           value = CLI::UI::Prompt.ask(prompt_message)&.strip
           reprompt = true

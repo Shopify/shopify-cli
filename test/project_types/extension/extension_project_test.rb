@@ -13,7 +13,7 @@ module Extension
 
       ExtensionProject.write_cli_file(context: new_context, type: @test_extension_type.identifier)
 
-      assert File.exists?('.shopify-cli.yml')
+      assert File.exist?('.shopify-cli.yml')
       assert_equal :extension, ShopifyCli::Project.current_project_type
       assert_equal @test_extension_type.identifier, ExtensionProject.current.extension_type_identifier
     end
@@ -36,7 +36,7 @@ module Extension
         registration_id: registration_id
       )
 
-      assert File.exists?('.env')
+      assert File.exist?('.env')
       project = ExtensionProject.current
       assert_equal api_key, project.app.api_key
       assert_equal api_secret, project.app.secret
@@ -64,7 +64,7 @@ module Extension
     def test_can_access_app_specific_values_as_an_app
       setup_temp_project
 
-      assert_kind_of Models::App, @project.app
+      assert_kind_of(Models::App, @project.app)
       assert_equal @api_key, @project.app.api_key
       assert_equal @api_secret, @project.app.secret
     end
@@ -77,7 +77,7 @@ module Extension
 
     def test_title_returns_nil_if_title_is_missing
       setup_temp_project(title: nil)
-      assert_nil ExtensionProject.current.title
+      assert_nil(ExtensionProject.current.title)
     end
 
     def test_extension_type_returns_the_set_type_identifier

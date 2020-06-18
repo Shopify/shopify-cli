@@ -23,7 +23,7 @@ module Extension
           }.compact
         ).write(context)
 
-        self.current.reload unless project_empty?
+        current.reload unless project_empty?
       end
 
       private
@@ -51,7 +51,7 @@ module Extension
 
     def registration_id?
       extra_property_present?(ExtensionProjectKeys::REGISTRATION_ID_KEY) &&
-        is_integer?(get_extra_field(ExtensionProjectKeys::REGISTRATION_ID_KEY)) &&
+        integer?(get_extra_field(ExtensionProjectKeys::REGISTRATION_ID_KEY)) &&
         registration_id > 0
     end
 
@@ -78,7 +78,7 @@ module Extension
       !env[key].nil? && !env[key].strip.empty?
     end
 
-    def is_integer?(value)
+    def integer?(value)
       value.to_i.to_s == value.to_s
     end
   end

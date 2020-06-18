@@ -15,23 +15,22 @@ module Extension
               extension_context: extension_context,
             },
             resp: {
-              data: yield(registration_id, config, extension_context)
-            }
-          )
+              data: yield(registration_id, config, extension_context),
+            })
         end
 
         def stub_update_draft_success(**args)
-          stub_update_draft(args) do |registration_id, config, extension_context|
+          stub_update_draft(args) do |registration_id, _config, extension_context|
             {
               extensionUpdateDraft: {
                 extensionVersion: {
                   registrationId: registration_id,
                   context: extension_context,
                   lastUserInteractionAt: Time.now.utc.to_s,
-                  location: 'https://www.fakeurl.com'
+                  location: 'https://www.fakeurl.com',
                 },
-                Tasks::UserErrors::USER_ERRORS_FIELD => []
-              }
+                Tasks::UserErrors::USER_ERRORS_FIELD => [],
+              },
             }
           end
         end
@@ -40,8 +39,8 @@ module Extension
           stub_update_draft(args) do
             {
               extensionUpdateDraft: {
-                Tasks::UserErrors::USER_ERRORS_FIELD => errors
-              }
+                Tasks::UserErrors::USER_ERRORS_FIELD => errors,
+              },
             }
           end
         end

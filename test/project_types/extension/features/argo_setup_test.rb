@@ -64,14 +64,14 @@ module Extension
       end
 
       def test_cleanup_on_failure_removes_extension_directory_if_it_has_been_created
-        Dir.expects(:exists?).with(@directory).returns(true).once
+        Dir.expects(:exist?).with(@directory).returns(true).once
         FileUtils.expects(:rm_r).with(@directory).once
 
         @initializer.cleanup_on_failure(@context, @directory)
       end
 
       def test_cleanup_on_failure_does_nothing_if_failure_occurred_before_extension_directory_was_created
-        Dir.expects(:exists?).with(@directory).returns(false).once
+        Dir.expects(:exist?).with(@directory).returns(false).once
         FileUtils.expects(:rm_r).with(@directory).never
 
         @initializer.cleanup_on_failure(@context, @directory)

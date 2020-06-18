@@ -11,7 +11,8 @@ module Extension
         api_secret: 'TEST_SECRET',
         title: 'Test',
         type_identifier: @test_extension_type.identifier,
-        registration_id: 55)
+        registration_id: 55
+      )
 
         @context = TestHelpers::FakeContext.new(root: '/fake/root')
         @api_key = api_key

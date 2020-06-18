@@ -21,25 +21,33 @@ module Extension
               "uri": "/api/tunnels/command_line%20%28http%29",
               "public_url": fake_tunnel_uri,
               "proto": "http",
-              "config": {"addr": "http://localhost:39351", "inspect": true},
+              "config": { "addr": "http://localhost:39351", "inspect": true },
               "metrics": {
-                "conns": {"count": 0, "gauge": 0, "rate1": 0, "rate5": 0, "rate15": 0, "p50": 0, "p90": 0, "p95": 0, "p99": 0},
-                "http": {"count": 0, "rate1": 0, "rate5": 0, "rate15": 0, "p50": 0, "p90": 0, "p95": 0, "p99": 0}
-              }
+                "conns": {
+                  "count": 0, "gauge": 0, "rate1": 0, "rate5": 0, "rate15": 0, "p50": 0, "p90": 0, "p95": 0, "p99": 0
+                },
+                "http": {
+                  "count": 0, "rate1": 0, "rate5": 0, "rate15": 0, "p50": 0, "p90": 0, "p95": 0, "p99": 0
+                },
+              },
             },
             {
               "name": "command_line",
               "uri": "/api/tunnels/command_line",
               "public_url": fake_tunnel_uri,
               "proto": "https",
-              "config": {"addr": "http://localhost:39351", "inspect": true},
+              "config": { "addr": "http://localhost:39351", "inspect": true },
               "metrics": {
-                "conns": {"count": 0, "gauge": 0, "rate1": 0, "rate5": 0, "rate15": 0, "p50": 0, "p90": 0, "p95": 0, "p99": 0},
-                "http": {"count": 0, "rate1": 0, "rate5": 0, "rate15": 0, "p50": 0, "p90": 0, "p95": 0, "p99": 0}
-              }
-            }
+                "conns": {
+                  "count": 0, "gauge": 0, "rate1": 0, "rate5": 0, "rate15": 0, "p50": 0, "p90": 0, "p95": 0, "p99": 0
+                },
+                "http": {
+                  "count": 0, "rate1": 0, "rate5": 0, "rate15": 0, "p50": 0, "p90": 0, "p95": 0, "p99": 0
+                },
+              },
+            },
           ],
-          "uri": "/api/tunnels"
+          "uri": "/api/tunnels",
         }
 
         mock_ngrok_tunnels_http_call(response_body: JSON.dump(fake_tunnel_response))
@@ -60,8 +68,8 @@ module Extension
 
       def test_fetch_returns_nil_and_does_not_raise_if_the_response_has_no_tunnels
         fake_tunnel_response = {
-          "tunnels": [ ],
-          "uri": "/api/tunnels"
+          "tunnels": [],
+          "uri": "/api/tunnels",
         }
 
         mock_ngrok_tunnels_http_call(response_body: JSON.dump(fake_tunnel_response))

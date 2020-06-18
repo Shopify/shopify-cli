@@ -23,15 +23,13 @@ module Extension
         return if type_identifier.nil?
 
         type_identifier_symbol = type_identifier.downcase.to_sym
-        return unless Messages::TYPES.has_key?(type_identifier_symbol)
+        return unless Messages::TYPES.key?(type_identifier_symbol)
 
         TYPES[type_identifier_symbol]
       end
 
-      private
-
       def self.deep_merge(first, second)
-        merger = proc { |key, v1, v2| Hash === v1 && Hash === v2 ? v1.merge(v2, &merger) : v2 }
+        merger = proc { |_key, v1, v2| Hash === v1 && Hash === v2 ? v1.merge(v2, &merger) : v2 }
         first.merge(second, &merger)
       end
     end

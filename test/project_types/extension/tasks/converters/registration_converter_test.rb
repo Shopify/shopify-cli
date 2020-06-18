@@ -35,18 +35,18 @@ module Extension
             Converters::RegistrationConverter::TITLE_FIELD => @fake_title,
             Converters::RegistrationConverter::DRAFT_VERSION_FIELD => {
               Converters::VersionConverter::REGISTRATION_ID_FIELD => @registration_id,
-              Converters::VersionConverter::LAST_USER_INTERACTION_AT_FIELD => @last_user_interaction_at
-            }
+              Converters::VersionConverter::LAST_USER_INTERACTION_AT_FIELD => @last_user_interaction_at,
+            },
           }
 
           parsed_registration = Converters::RegistrationConverter.from_hash(@context, hash)
 
-          assert_kind_of Models::Registration, parsed_registration
+          assert_kind_of(Models::Registration, parsed_registration)
           assert_equal @registration_id, parsed_registration.id
           assert_equal @fake_type, parsed_registration.type
           assert_equal @fake_title, parsed_registration.title
           assert_equal @registration_id, parsed_registration.draft_version.registration_id
-          assert_kind_of Time, parsed_registration.draft_version.last_user_interaction_at
+          assert_kind_of(Time, parsed_registration.draft_version.last_user_interaction_at)
         end
       end
     end

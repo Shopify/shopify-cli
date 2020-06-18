@@ -15,7 +15,7 @@ module Extension
 
           @api_key = 'FAKE_API_KEY'
           @registration_id = 42
-          @config = { }
+          @config = {}
           @extension_context = 'fake#context'
           @location = 'https://www.fakeurl.com'
           @last_user_interaction_at = Time.now.to_s
@@ -35,14 +35,14 @@ module Extension
             Converters::VersionConverter::LAST_USER_INTERACTION_AT_FIELD => @last_user_interaction_at,
             Converters::VersionConverter::CONTEXT_FIELD => @extension_context,
             Converters::VersionConverter::LOCATION_FIELD => @location,
-            Converters::VersionConverter::VALIDATION_ERRORS_FIELD => []
+            Converters::VersionConverter::VALIDATION_ERRORS_FIELD => [],
           }
 
           parsed_version = Tasks::Converters::VersionConverter.from_hash(@context, hash)
 
-          assert_kind_of Models::Version, parsed_version
+          assert_kind_of(Models::Version, parsed_version)
           assert_equal @registration_id, parsed_version.registration_id
-          assert_kind_of Time, parsed_version.last_user_interaction_at
+          assert_kind_of(Time, parsed_version.last_user_interaction_at)
           assert_equal @extension_context, parsed_version.context
           assert_equal @location, parsed_version.location
           assert_equal [], parsed_version.validation_errors

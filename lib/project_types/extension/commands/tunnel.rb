@@ -26,8 +26,6 @@ module Extension
         end
       end
 
-      private
-
       def self.help
         ShopifyCli::Context.message('tunnel.help', ShopifyCli::TOOL_NAME)
       end
@@ -35,6 +33,8 @@ module Extension
       def self.extended_help
         ShopifyCli::Context.message('tunnel.extended_help', ShopifyCli::TOOL_NAME, DEFAULT_PORT)
       end
+
+      private
 
       def status
         tunnel_url = Features::TunnelUrl.fetch

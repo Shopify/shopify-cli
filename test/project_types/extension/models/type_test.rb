@@ -29,11 +29,11 @@ module Extension
       end
 
       def test_valid_extension_contexts_returns_empty_array
-        assert_empty Models::Type.new.valid_extension_contexts
+        assert_empty(Models::Type.new.valid_extension_contexts)
       end
 
       def test_extension_context_returns_nil
-        assert_nil Models::Type.new.extension_context(@context)
+        assert_nil(Models::Type.new.extension_context(@context))
       end
     end
   end

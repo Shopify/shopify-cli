@@ -17,7 +17,7 @@ module Extension
           type: type,
           title: title,
           config: JSON.generate(config),
-          extension_context: extension_context
+          extension_context: extension_context,
         }
 
         response = ShopifyCli::PartnersAPI.query(context, GRAPHQL_FILE, input).dig(*RESPONSE_FIELD)

@@ -20,7 +20,7 @@ module Extension
 
         if !api_key.nil?
           found_app = apps.find { |app| app.api_key == api_key }
-          ctx.abort(ctx.message('register.invalid_api_key',api_key)) if found_app.nil?
+          ctx.abort(ctx.message('register.invalid_api_key', api_key)) if found_app.nil?
           found_app
         else
           CLI::UI::Prompt.ask(ctx.message('register.ask_app')) do |handler|

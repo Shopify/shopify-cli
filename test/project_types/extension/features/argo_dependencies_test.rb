@@ -38,7 +38,7 @@ module Extension
         end
 
         assert_message_output(io: io, expected_content: [
-          @context.message('features.argo.dependencies.node.node_not_installed')
+          @context.message('features.argo.dependencies.node.node_not_installed'),
         ])
       end
 
@@ -50,7 +50,7 @@ module Extension
         end
 
         assert_message_output(io: io, expected_content: [
-          @context.message('features.argo.dependencies.node.version_too_low', 'v10.11.12', 'v11.x.x')
+          @context.message('features.argo.dependencies.node.version_too_low', 'v10.11.12', 'v11.x.x'),
         ])
       end
 
@@ -62,7 +62,7 @@ module Extension
         end
 
         assert_message_output(io: io, expected_content: [
-          @context.message('features.argo.dependencies.node.version_too_low', 'v10.11.12', 'v10.12.x')
+          @context.message('features.argo.dependencies.node.version_too_low', 'v10.11.12', 'v10.12.x'),
         ])
       end
 

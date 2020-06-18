@@ -24,7 +24,7 @@ module Extension
           end
 
           assert_message_output(io: io, expected_content: [
-            @context.message('tasks.errors.parse_error')
+            @context.message('tasks.errors.parse_error'),
           ])
         end
 
@@ -46,7 +46,7 @@ module Extension
 
           errors = [
             { 'field' => %w(field1), 'message' => message },
-            { 'field' => %w(config name), 'message' => message2 }
+            { 'field' => %w(config name), 'message' => message2 },
           ]
           parsed_validation_messages = ValidationErrorConverter.from_array(@context, errors).map(&:message)
 

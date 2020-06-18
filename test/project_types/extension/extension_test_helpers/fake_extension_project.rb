@@ -14,7 +14,7 @@ module Extension
 
       def config
         {
-          ExtensionProjectKeys::EXTENSION_TYPE_KEY => type
+          ExtensionProjectKeys::EXTENSION_TYPE_KEY => type,
         }
       end
 
@@ -24,7 +24,7 @@ module Extension
           secret: api_secret,
           extra: {
             ExtensionProjectKeys::TITLE_KEY => title,
-            ExtensionProjectKeys::REGISTRATION_ID_KEY => registration_id
+            ExtensionProjectKeys::REGISTRATION_ID_KEY => registration_id,
           }
         )
       end

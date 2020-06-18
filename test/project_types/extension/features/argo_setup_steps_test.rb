@@ -17,12 +17,11 @@ module Extension
         @system = ShopifyCli::JsSystem.new(ctx: @context)
       end
 
-
       def test_check_dependencies_loops_through_the_provided_dependencies
         execution_mock = Minitest::Mock.new
         execution_mock.expect(:executed, nil)
 
-        test_proc = Proc.new do |context|
+        test_proc = proc do |context|
           execution_mock.executed
           assert_equal @context, context
         end

@@ -5,8 +5,8 @@ module Extension
     class ArgoSetup
       include SmartProperties
 
-      GIT_DIRECTORY = '.git'.freeze
-      SCRIPTS_DIRECTORY = 'scripts'.freeze
+      GIT_DIRECTORY = '.git'
+      SCRIPTS_DIRECTORY = 'scripts'
 
       property! :git_template, accepts: String
       property! :dependency_checks, default: []
@@ -16,7 +16,7 @@ module Extension
           ArgoSetupSteps.check_dependencies(dependency_checks),
           ArgoSetupSteps.clone_template(git_template),
           ArgoSetupSteps.install_dependencies,
-          ArgoSetupSteps.initialize_project
+          ArgoSetupSteps.initialize_project,
         ]
 
         install_result = run_install_steps(context, steps, identifier, directory_name)
@@ -28,9 +28,9 @@ module Extension
       def run_install_steps(context, steps, identifier, directory_name)
         system = ShopifyCli::JsSystem.new(ctx: context)
 
-        steps.inject(true) { |success, setup_step|
+        steps.inject(true) do |success, setup_step|
           success && setup_step.call(context, identifier, directory_name, system)
-        }
+        end
       end
 
       def cleanup(context, install_result, directory_name)
@@ -38,20 +38,16 @@ module Extension
       end
 
       def cleanup_template(context)
-        begin
-          context.rm_r(GIT_DIRECTORY)
-          context.rm_r(SCRIPTS_DIRECTORY)
-        rescue Errno::ENOENT => e
-          context.debug(e)
-        end
+        context.rm_r(GIT_DIRECTORY)
+        context.rm_r(SCRIPTS_DIRECTORY)
+      rescue Errno::ENOENT => e
+        context.debug(e)
       end
 
       def cleanup_on_failure(context, directory_name)
-        begin
-          FileUtils.rm_r(directory_name) if Dir.exists?(directory_name)
-        rescue Errno::ENOENT => e
-          context.debug(e)
-        end
+        FileUtils.rm_r(directory_name) if Dir.exist?(directory_name)
+      rescue Errno::ENOENT => e
+        context.debug(e)
       end
     end
   end

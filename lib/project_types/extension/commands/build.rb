@@ -9,7 +9,7 @@ module Extension
       YARN_BUILD_COMMAND = %w(yarn build)
       NPM_BUILD_COMMAND = %w(npm run-script build)
 
-      def call(args, command_name)
+      def call(_args, _command_name)
         CLI::UI::Frame.open(frame_title) do
           @ctx.abort(@ctx.message('build.build_failure_message')) unless build.success?
         end

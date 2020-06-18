@@ -14,13 +14,13 @@ module Extension
 
         @fake_messages = {
           name: 'Fake Type',
-          tagline: 'Fake tagline'
+          tagline: 'Fake tagline',
         }
 
         @fake_overrides = {
           build: {
-            frame_title: 'Overridden Title'
-          }
+            frame_title: 'Overridden Title',
+          },
         }
 
         @fake_override_messages = @fake_messages.merge(overrides: @fake_overrides)
@@ -57,7 +57,7 @@ module Extension
       def test_load_current_type_messages_returns_nil_if_there_is_no_current_project
         ShopifyCli::Project.expects(:has_current?).returns(false).once
 
-        assert_nil Messages::MessageLoading.load_current_type_messages
+        assert_nil(Messages::MessageLoading.load_current_type_messages)
       end
 
       def test_load_current_type_messages_calls_messages_for_type_with_type_if_there_is_a_current_project
@@ -70,19 +70,19 @@ module Extension
       end
 
       def test_messages_for_type_returns_nil_if_the_type_identifier_is_nil
-        assert_nil Messages::MessageLoading.messages_for_type(nil)
+        assert_nil(Messages::MessageLoading.messages_for_type(nil))
       end
 
       def test_messages_for_type_returns_nil_if_the_type_key_does_not_exist
         setup_temp_project
-        Messages::TYPES.expects(:has_key?).with(@type.downcase.to_sym).returns(false).once
+        Messages::TYPES.expects(:key?).with(@type.downcase.to_sym).returns(false).once
 
-        assert_nil Messages::MessageLoading.messages_for_type(@type)
+        assert_nil(Messages::MessageLoading.messages_for_type(@type))
       end
 
       def test_messages_for_type_returns_type_messages_if_they_exist
         setup_temp_project
-        Messages::TYPES.expects(:has_key?).with(@type.downcase.to_sym).returns(true).once
+        Messages::TYPES.expects(:key?).with(@type.downcase.to_sym).returns(true).once
         Messages::TYPES.expects(:[]).with(@type.downcase.to_sym).returns(@fake_overrides).once
 
         assert_equal @fake_overrides, Messages::MessageLoading.messages_for_type(@type)

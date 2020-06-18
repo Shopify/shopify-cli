@@ -29,7 +29,7 @@ module Extension
       end
 
       def test_config_aborts_with_error_if_script_serialization_fails
-        File.stubs(:exists?).returns(true)
+        File.stubs(:exist?).returns(true)
         Base64.stubs(:strict_encode64).raises(IOError)
 
         error = assert_raises(ShopifyCli::Abort) { @argo.config(@context) }
@@ -37,7 +37,7 @@ module Extension
       end
 
       def test_config_aborts_with_error_if_file_read_fails
-        File.stubs(:exists?).returns(true)
+        File.stubs(:exist?).returns(true)
         File.any_instance.stubs(:read).raises(IOError)
 
         error = assert_raises(ShopifyCli::Abort) { @argo.config(@context) }
@@ -54,13 +54,13 @@ module Extension
       end
 
       def test_admin_method_returns_an_argo_extension_with_the_subscription_management_template
-        git_admin_template = 'https://github.com/Shopify/argo-admin-template.git'.freeze
+        git_admin_template = 'https://github.com/Shopify/argo-admin-template.git'
         argo = Argo.admin
         assert_equal(argo.setup.git_template, git_admin_template)
       end
 
       def test_checkout_method_returns_an_argo_extension_with_the_checkout_post_purchase_template
-        git_checkout_template = 'https://github.com/Shopify/argo-checkout-template.git'.freeze
+        git_checkout_template = 'https://github.com/Shopify/argo-checkout-template.git'
         argo = Argo.checkout
         assert_equal(argo.setup.git_template, git_checkout_template)
       end

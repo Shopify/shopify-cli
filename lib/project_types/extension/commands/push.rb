@@ -38,7 +38,7 @@ module Extension
         @ctx.puts(@ctx.message('push.pushed_with_errors', format_time(draft.last_user_interaction_at)))
 
         draft.validation_errors.each do |error|
-          @ctx.puts('{{x}} %s: %s' % [error.field.last, error.message])
+          @ctx.puts(format('{{x}} %s: %s', error.field.last, error.message))
         end
 
         @ctx.puts(@ctx.message('push.push_with_errors_info'))
