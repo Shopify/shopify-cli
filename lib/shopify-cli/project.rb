@@ -133,7 +133,7 @@ module ShopifyCli
     def env
       @env ||= begin
                  Resources::EnvFile.read(directory)
-               rescue
+               rescue Errno::ENOENT
                  nil
                end
     end
