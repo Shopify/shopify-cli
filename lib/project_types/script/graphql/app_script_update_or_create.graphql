@@ -3,7 +3,6 @@ mutation AppScriptUpdateOrCreate(
   $title: String,
   $sourceCode: String,
   $language: String,
-  $schema: String,
   $force: Boolean
 ) {
   appScriptUpdateOrCreate(
@@ -11,7 +10,6 @@ mutation AppScriptUpdateOrCreate(
     title: $title
     sourceCode: $sourceCode
     language: $language
-    schema: $schema,
     force: $force
 ) {
     userErrors {
