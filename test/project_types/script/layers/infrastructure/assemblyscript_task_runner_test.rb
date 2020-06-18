@@ -3,6 +3,8 @@
 require 'project_types/script/test_helper'
 
 describe Script::Layers::Infrastructure::AssemblyScriptTaskRunner do
+  include TestHelpers::FakeFS
+
   let(:ctx) { TestHelpers::FakeContext.new }
   let(:script_id) { 'id' }
   let(:script_name) { "foo" }
@@ -31,18 +33,20 @@ describe Script::Layers::Infrastructure::AssemblyScriptTaskRunner do
     subject { as_task_runner.build }
 
     it "should trigger the compilation process" do
-      File.expects(:read).with("#{script_name}.wasm")
+      wasm = "some compiled code"
+      File.write("#{script_name}.wasm", wasm)
 
       ctx
         .expects(:capture2e)
         .at_most(1)
         .returns(['output', mock(success?: true)])
 
-      subject
+      assert_equal wasm, subject
     end
 
     it "should raise error without command output on failure" do
       output = 'error_output'
+      File.expects(:read).never
       ctx
         .stubs(:capture2e)
         .returns([output, mock(success?: false)])
