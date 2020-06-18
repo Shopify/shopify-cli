@@ -130,6 +130,38 @@ module ShopifyCli
       File.write(ctx_path(fname), content)
     end
 
+    # will change directories and update the root, the filepath is relative to the command root unless absolute
+    #
+    # #### Parameters
+    # * `path` - the file path to a directory, relative to the context root to remove from the FS
+    #
+    def chdir(path)
+      Dir.chdir(ctx_path(path))
+      self.root = ctx_path(path)
+    end
+
+    # will recursively copy a directory from the FS, the filepath is relative to the command
+    # root unless absolute
+    #
+    # #### Parameters
+    # * `from` - the path of the original file
+    # * `to` - the destination path
+    #
+    def cp_r(from, to)
+      FileUtils.cp_r(ctx_path(from), ctx_path(to))
+    end
+
+    # will copy a directory from the FS, the filepath is relative to the command
+    # root unless absolute
+    #
+    # #### Parameters
+    # * `from` - the path of the original file
+    # * `to` - the destination path
+    #
+    def cp(from, to)
+      FileUtils.cp(ctx_path(from), ctx_path(to))
+    end
+
     # will rename a file from one place to another, relative to the command root
     # unless the path is absolute.
     #
@@ -159,6 +191,16 @@ module ShopifyCli
     #
     def rm_r(fname)
       FileUtils.rm_r(ctx_path(fname))
+    end
+
+    # will force remove a directory from the FS, the filepath is relative to the command
+    # root unless absolute
+    #
+    # #### Parameters
+    # * `fname` - the file path to a directory, relative to the context root to remove from the FS
+    #
+    def rm_rf(fname)
+      FileUtils.rm_rf(ctx_path(fname))
     end
 
     # will create a directory, recursively if it does not exist. So if you create

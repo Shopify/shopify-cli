@@ -47,7 +47,7 @@ describe Script::Layers::Infrastructure::AssemblyScriptDependencyManager do
     subject { as_dep_manager.installed? }
 
     it "should return true if node_modules folder exists" do
-      FileUtils.mkdir_p("node_modules")
+      @context.mkdir_p("node_modules")
       assert_equal true, subject
     end
 

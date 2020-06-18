@@ -6,6 +6,9 @@ module Script
   module Layers
     module Infrastructure
       class TestSuiteRepository
+        include SmartProperties
+        property! :ctx, accepts: ShopifyCli::Context
+
         ASPECT_DTS_FILENAME = "as-pect.d.ts"
         ASPECT_DTS_FILE_CONTENTS = "/// <reference types=\"@as-pect/assembly/types/as-pect\" />"
         BOOTSTRAP_TEST = "npx --no-install shopify-scripts-bootstrap test %{test_base}"
@@ -14,8 +17,8 @@ module Script
           # Remove this once we have a test suite for js
           return unless script.language == "ts"
 
-          FileUtils.mkdir_p(test_base)
-          FileUtils.copy(aspect_config_template(script.language), "#{test_base}/as-pect.config.js")
+          ctx.mkdir_p(test_base)
+          ctx.cp(aspect_config_template(script.language), "#{test_base}/as-pect.config.js")
           out, status = CLI::Kit::System.capture2e(format(BOOTSTRAP_TEST, test_base: test_base))
           raise Domain::Errors::ServiceFailureError, out unless status.success?
 
@@ -46,7 +49,7 @@ module Script
         end
 
         def relative_path_to_source_dir
-          src_path_from_root = ScriptRepository.new.relative_path_to_src
+          src_path_from_root = ScriptRepository.new(ctx: ctx).relative_path_to_src
           Pathname.new(src_path_from_root).relative_path_from(test_dir)
         end
 

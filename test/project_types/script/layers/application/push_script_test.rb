@@ -21,12 +21,12 @@ describe Script::Layers::Application::PushScript do
   let(:push_package_repository) { Script::Layers::Infrastructure::FakePushPackageRepository.new }
   let(:extension_point_repository) { Script::Layers::Infrastructure::FakeExtensionPointRepository.new }
   let(:ep) { extension_point_repository.get_extension_point(extension_point_type) }
-  let(:script_repository) { Script::Layers::Infrastructure::FakeScriptRepository.new }
+  let(:script_repository) { Script::Layers::Infrastructure::FakeScriptRepository.new(@context) }
   let(:script) { script_repository.create_script(language, ep, script_name) }
 
   before do
     Script::Layers::Infrastructure::PushPackageRepository.stubs(:new).returns(push_package_repository)
-    Script::Layers::Infrastructure::ScriptRepository.stubs(:new).returns(script_repository)
+    Script::Layers::Infrastructure::ScriptRepository.stubs(:new).with(ctx: @context).returns(script_repository)
     Script::Layers::Infrastructure::ExtensionPointRepository.stubs(:new).returns(extension_point_repository)
     Script::ScriptProject.stubs(:current).returns(project)
     extension_point_repository.create_extension_point(extension_point_type)

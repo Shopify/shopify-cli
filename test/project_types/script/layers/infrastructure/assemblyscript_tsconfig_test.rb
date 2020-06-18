@@ -45,7 +45,7 @@ describe Script::Layers::Infrastructure::AssemblyScriptTsConfig do
 
   describe ".write" do
     before do
-      FileUtils.mkdir_p(dir_to_write_in)
+      @context.mkdir_p(dir_to_write_in)
     end
 
     it "should write the config" do

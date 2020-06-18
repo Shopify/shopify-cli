@@ -28,12 +28,13 @@ describe Script::Layers::Infrastructure::TestSuiteRepository do
   let(:relative_path_to_src) { "../src" }
   let(:aspect_dts_file) { "#{spec_test_base}/as-pect.d.ts" }
   let(:aspect_dts_file_contents) { "/// <reference types=\"@as-pect/assembly/types/as-pect\" />" }
-  let(:script_repository) { Script::Layers::Infrastructure::FakeScriptRepository.new }
-  let(:repository) { Script::Layers::Infrastructure::TestSuiteRepository.new }
   let(:project) { TestHelpers::FakeProject.new }
+  let(:context) { TestHelpers::FakeContext.new }
+  let(:repository) { Script::Layers::Infrastructure::TestSuiteRepository.new(ctx: context) }
+  let(:script_repository) { Script::Layers::Infrastructure::FakeScriptRepository.new(ctx: context) }
 
   before do
-    Script::Layers::Infrastructure::ScriptRepository.stubs(:new).returns(script_repository)
+    Script::Layers::Infrastructure::ScriptRepository.stubs(:new).with(ctx: context).returns(script_repository)
     Script::ScriptProject.stubs(:current).returns(project)
     project.directory = script_name
   end

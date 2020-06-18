@@ -12,7 +12,13 @@ describe Script::Layers::Application::CreateScript do
   let(:script_name) { 'name' }
   let(:extension_point_repository) { Script::Layers::Infrastructure::FakeExtensionPointRepository.new }
   let(:ep) { extension_point_repository.get_extension_point(extension_point_type) }
-  let(:script) { Script::Layers::Infrastructure::FakeScriptRepository.new.create_script(language, ep, script_name) }
+  let(:script) do
+    Script::Layers::Infrastructure::FakeScriptRepository.new(ctx: @context).create_script(
+      language,
+      ep,
+      script_name
+    )
+  end
 
   before do
     Script::Layers::Infrastructure::ExtensionPointRepository.stubs(:new).returns(extension_point_repository)
@@ -39,7 +45,7 @@ describe Script::Layers::Application::CreateScript do
 
       it 'should succeed and update ctx root' do
         initial_ctx_root = @context.root
-        Script::ScriptProject.expects(:create).with(script_name).once
+        Script::ScriptProject.expects(:create).with(@context, script_name).once
         Script::ScriptProject
           .expects(:write)
           .with(

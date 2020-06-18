@@ -4,6 +4,9 @@ module Script
   module Layers
     module Infrastructure
       class PushPackageRepository
+        include SmartProperties
+        property! :ctx, accepts: ShopifyCli::Context
+
         def create_push_package(script, script_content, schema, compiled_type)
           build_file_path = file_path(script.name, compiled_type)
           write_to_path(build_file_path, script_content)
@@ -38,8 +41,8 @@ module Script
         private
 
         def write_to_path(path, content)
-          FileUtils.mkdir_p(File.dirname(path))
-          File.write(path, content)
+          ctx.mkdir_p(File.dirname(path))
+          ctx.write(path, content)
         end
 
         def file_path(script_name, compiled_type)

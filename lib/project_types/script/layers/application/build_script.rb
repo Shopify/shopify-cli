@@ -9,7 +9,7 @@ module Script
             return if CLI::UI::Frame.open(ctx.message('script.application.building')) do
               begin
                 UI::StrictSpinner.spin(ctx.message('script.application.building_script')) do |spinner|
-                  build(script)
+                  build(ctx, script)
                   spinner.update_title(ctx.message('script.application.built'))
                 end
                 true
@@ -25,15 +25,15 @@ module Script
 
           private
 
-          def build(script)
-            script_repo = Infrastructure::ScriptRepository.new
+          def build(ctx, script)
+            script_repo = Infrastructure::ScriptRepository.new(ctx: ctx)
             script_builder = Infrastructure::ScriptBuilder.for(script)
             compiled_type = script_builder.compiled_type
             script_content, schema = script_repo.with_temp_build_context do
               script_builder.build
             end
 
-            Infrastructure::PushPackageRepository.new
+            Infrastructure::PushPackageRepository.new(ctx: ctx)
               .create_push_package(script, script_content, schema, compiled_type)
           end
         end

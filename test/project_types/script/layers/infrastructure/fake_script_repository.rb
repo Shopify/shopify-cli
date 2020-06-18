@@ -6,7 +6,7 @@ module Script
   module Layers
     module Infrastructure
       class FakeScriptRepository
-        def initialize
+        def initialize(_ctx)
           @cache = {}
         end
 

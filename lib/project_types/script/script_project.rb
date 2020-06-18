@@ -21,10 +21,9 @@ module Script
     end
 
     class << self
-      def create(dir)
+      def create(ctx, dir)
         raise Errors::ScriptProjectAlreadyExistsError, dir if Dir.exist?(dir)
-
-        FileUtils.mkdir_p(dir)
+        ctx.mkdir_p(dir)
         Dir.chdir(dir)
       end
 

@@ -15,15 +15,15 @@ describe Script::Layers::Application::BuildScript do
     let(:schema) { 'schema' }
     let(:extension_point_repository) { Script::Layers::Infrastructure::FakeExtensionPointRepository.new }
     let(:ep) { extension_point_repository.get_extension_point(extension_point_type) }
-    let(:script_repository) { Script::Layers::Infrastructure::FakeScriptRepository.new }
+    let(:script_repository) { Script::Layers::Infrastructure::FakeScriptRepository.new(ctx: @context) }
     let(:script) do
-      Script::Layers::Infrastructure::FakeScriptRepository.new.create_script(language, ep, script_name)
+      Script::Layers::Infrastructure::FakeScriptRepository.new(ctx: @context).create_script(language, ep, script_name)
     end
 
     subject { Script::Layers::Application::BuildScript.call(ctx: @context, script: script) }
 
     before do
-      Script::Layers::Infrastructure::ScriptRepository.stubs(:new).returns(script_repository)
+      Script::Layers::Infrastructure::ScriptRepository.stubs(:new).with(ctx: @context).returns(script_repository)
       Script::Layers::Infrastructure::ExtensionPointRepository.stubs(:new).returns(extension_point_repository)
       extension_point_repository.create_extension_point(extension_point_type)
     end

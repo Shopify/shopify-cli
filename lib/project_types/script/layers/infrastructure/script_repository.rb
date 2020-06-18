@@ -4,10 +4,13 @@ module Script
   module Layers
     module Infrastructure
       class ScriptRepository
+        include SmartProperties
+        property! :ctx, accepts: ShopifyCli::Context
+
         BOOTSTRAP_SRC = "npx --no-install shopify-scripts-bootstrap src %{src_base}"
 
         def create_script(language, extension_point, script_name)
-          FileUtils.mkdir_p(src_base)
+          ctx.mkdir_p(src_base)
           out, status = CLI::Kit::System.capture2e(format(BOOTSTRAP_SRC, src_base: src_base))
           raise Domain::Errors::ServiceFailureError, out unless status.success?
 
@@ -33,13 +36,13 @@ module Script
         def with_temp_build_context
           prev_dir = Dir.pwd
           temp_dir = "#{project_base}/temp"
-          FileUtils.mkdir_p(temp_dir)
-          Dir.chdir(temp_dir)
-          FileUtils.cp_r("#{src_base}/.", ".")
+          ctx.mkdir_p(temp_dir)
+          ctx.chdir(temp_dir)
+          ctx.cp_r("#{src_base}/.", ".")
           yield
         ensure
-          Dir.chdir(prev_dir)
-          FileUtils.rm_rf(temp_dir)
+          ctx.chdir(prev_dir)
+          ctx.rm_rf(temp_dir)
         end
 
         def relative_path_to_src
