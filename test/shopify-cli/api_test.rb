@@ -63,6 +63,52 @@ module ShopifyCli
       end
     end
 
+    def test_query_fails_gracefully_with_internal_server_error
+      stub_request(:post, 'https://my-test-shop.myshopify.com/admin/api/2019-04/graphql.json')
+        .with(body: File.read(File.join(FIXTURE_DIR, 'api/mutation.json')).tr("\n", ''),
+          headers: {
+            'Accept' => '*/*',
+            'Accept-Encoding' => 'gzip;q=1.0,deflate;q=0.6,identity;q=0.3',
+            'Content-Type' => 'application/json',
+            'User-Agent' => "Shopify App CLI #{ShopifyCli::VERSION} abcde | Mac",
+            'Auth' => 'faketoken',
+          })
+        .to_return(status: 500, body: '{}')
+      File.stubs(:read)
+        .with(File.join(ShopifyCli::ROOT, "lib/graphql/api/mutation.graphql"))
+        .returns(@mutation)
+
+      @context.expects(:puts).with(@context.message('core.api.error.internal_server_error'))
+      @api.query('api/mutation')
+      @api.stubs(:query).raises(API::APIRequestServerError)
+      assert_raises(API::APIRequestServerError) do
+        @api.query('api/mutation')
+      end
+    end
+
+    def test_query_fails_gracefully_with_unexpected_error
+      stub_request(:post, 'https://my-test-shop.myshopify.com/admin/api/2019-04/graphql.json')
+        .with(body: File.read(File.join(FIXTURE_DIR, 'api/mutation.json')).tr("\n", ''),
+          headers: {
+            'Accept' => '*/*',
+            'Accept-Encoding' => 'gzip;q=1.0,deflate;q=0.6,identity;q=0.3',
+            'Content-Type' => 'application/json',
+            'User-Agent' => "Shopify App CLI #{ShopifyCli::VERSION} abcde | Mac",
+            'Auth' => 'faketoken',
+          })
+        .to_return(status: 600, body: '{}')
+      File.stubs(:read)
+        .with(File.join(ShopifyCli::ROOT, "lib/graphql/api/mutation.graphql"))
+        .returns(@mutation)
+
+      @context.expects(:puts).with(@context.message('core.api.error.internal_server_error'))
+      @api.query('api/mutation')
+      @api.stubs(:query).raises(API::APIRequestUnexpectedError)
+      assert_raises(API::APIRequestUnexpectedError) do
+        @api.query('api/mutation')
+      end
+    end
+
     def test_load_query_can_load_project_type_queries
       new_api = TestAPI.new(ctx: Context.new, token: 'blah', url: 'alsoblah')
       ShopifyCli::Project.expects(:current_project_type).returns(:fake)
