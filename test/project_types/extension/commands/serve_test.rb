@@ -24,7 +24,7 @@ module Extension
 
       def test_prints_help
         @context.expects(:puts).with(Extension::Commands::Serve.help)
-        run_cmd('help serve')
+        run_cmd('serve --help')
       end
 
       def test_uses_yarn_when_yarn_is_available

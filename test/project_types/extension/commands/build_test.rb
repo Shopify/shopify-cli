@@ -28,7 +28,7 @@ module Extension
 
       def test_prints_help
         @context.expects(:puts).with(Extension::Commands::Build.help)
-        run_cmd('help build')
+        run_cmd('build --help')
       end
 
       def test_uses_yarn_when_yarn_is_available
