@@ -2,9 +2,9 @@ require 'rbconfig'
 require 'fileutils'
 
 gem = File.expand_path('../../../', __FILE__)
-exe = File.join(gem, 'bin', 'shopify-cli')
+exe = File.join(gem, 'bin', 'shopify')
 script = exe + '.sh'
-symlink = '/usr/local/bin/shopify-cli'
+symlink = '/usr/local/bin/shopify'
 
 script_content = <<~SCRIPT
   #!/usr/bin/env bash
