@@ -17,7 +17,7 @@ module Script
         end
 
         private
-        
+
         def write_npmrc
           @ctx.system(
             'npm', '--userconfig', './.npmrc', 'config', 'set', '@shopify:registry', 'https://registry.npmjs.com'

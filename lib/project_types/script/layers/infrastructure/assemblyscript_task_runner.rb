@@ -45,6 +45,7 @@ module Script
           output, status = @ctx.capture2e("node", "--version")
           raise Errors::DependencyInstallError, output unless status.success?
 
+          require 'semantic/semantic'
           version = ::Semantic::Version.new(output[1..-1])
           unless version >= ::Semantic::Version.new("12.16.0")
             raise Errors::DependencyInstallError, "Node version must be >= v12.16.0. Current version: #{output.strip}."
