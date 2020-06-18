@@ -11,7 +11,7 @@ Gem::Specification.new do |spec|
   spec.summary = "Shopify CLI helps you build Shopify apps faster."
   spec.description = <<~HERE
     Shopify CLI helps you build Shopify apps faster. It quickly scaffolds Node.js
-    and Ruby-on-Rails embedded apps. It also automates many common tasks in the
+    and Ruby on Rails embedded apps. It also automates many common tasks in the
     development process and lets you quickly add popular features, such as billing
     and webhooks.
   HERE
