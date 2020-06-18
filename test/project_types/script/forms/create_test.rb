@@ -24,20 +24,23 @@ module Script
       def test_asks_extension_point_if_no_flag
         eps = ['discount', 'another']
         Layers::Application::ExtensionPoints.stubs(:types).returns(eps)
-        CLI::UI::Prompt.expects(:ask).with('Which extension point do you want to use?', options: eps)
+        CLI::UI::Prompt.expects(:ask).with(
+          @context.message('script.forms.create.select_extension_point'),
+          options: eps
+        )
         ask(name: 'name')
       end
 
       def test_asks_name_if_no_flag
         name = 'name'
-        CLI::UI::Prompt.expects(:ask).with('Script Name').returns(name)
+        CLI::UI::Prompt.expects(:ask).with(@context.message('script.forms.create.script_name')).returns(name)
         form = ask(extension_point: 'discount')
         assert_equal name, form.name
       end
 
       def test_name_is_cleaned_after_prompt
         name = 'name with space'
-        CLI::UI::Prompt.expects(:ask).with('Script Name').returns(name)
+        CLI::UI::Prompt.expects(:ask).with(@context.message('script.forms.create.script_name')).returns(name)
         form = ask(extension_point: 'discount')
         assert_equal 'name_with_space', form.name
       end
