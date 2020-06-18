@@ -5,7 +5,7 @@ class ShopifyCli < Formula
   sha256 'SHOPIFY_CLI_GEM_CHECKSUM'
   desc <<~DESC
     Shopify CLI helps you build Shopify apps faster. It quickly scaffolds Node.js
-    and Ruby-on-Rails embedded apps. It also automates many common tasks in the
+    and Ruby on Rails embedded apps. It also automates many common tasks in the
     development process and lets you quickly add popular features, such as billing
     and webhooks.
   DESC

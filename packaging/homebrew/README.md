@@ -1,7 +1,10 @@
-# Building a Homebrewbrew package of the CLI
+# Building a Homebrew package of the CLI
 
-The Homebrew package of the CLI is an empty metapackage that installs the CLI gem directly through Ruby. Therefore, the
-package itself only serves to facilitate the installation and inclusion of non-ruby dependencies.
+The Homebrew package of the CLI works as a proxy for the actual gem, by downloading it and installing the source code 
+inside under brew.
+
+Unlike Debian and RPM packages, this is not a metapackage, so the user will not be able to go between the brew and gem
+versions of the package, unless they reinstall it from scratch.
 
 To create new Homebrew builds, it is easier to run `rake package:homebrew` rather than to run the build by hand, but if 
 you want to do that, follow the instructions below. These instructions are kept mostly for future reference.
