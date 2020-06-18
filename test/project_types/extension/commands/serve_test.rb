@@ -22,16 +22,8 @@ module Extension
         ShopifyCli::ProjectType.load_type(:extension)
       end
 
-      def test_prints_help
-        @context.expects(:puts).with(Extension::Commands::Serve.help)
-        run_cmd('serve --help')
-      end
-
-      def test_uses_yarn_when_yarn_is_available
-        Serve.any_instance.stubs(:yarn_available?).returns(true)
-        @context.expects(:system).with(*Serve::YARN_SERVE_COMMAND).returns(FakeProcessStatus.new(true))
-
-        run_serve
+      def test_implements_help
+        refute_empty(Serve.help)
       end
 
       def test_uses_npm_when_yarn_is_unavailable
@@ -53,7 +45,7 @@ module Extension
 
       def run_serve(*args)
         Serve.ctx = @context
-        Serve.call(args, 'tunnel')
+        Serve.call(args, 'serve')
       end
     end
   end

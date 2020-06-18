@@ -26,9 +26,8 @@ module Extension
         assert Commands::Build.hidden
       end
 
-      def test_prints_help
-        @context.expects(:puts).with(Extension::Commands::Build.help)
-        run_cmd('build --help')
+      def test_implements_help
+        refute_empty(Build.help)
       end
 
       def test_uses_yarn_when_yarn_is_available
@@ -57,7 +56,7 @@ module Extension
 
       def run_build(*args)
         Build.ctx = @context
-        Build.call(args, 'tunnel')
+        Build.call(args, 'build')
       end
     end
   end
