@@ -4,17 +4,15 @@ module Script
   module Layers
     module Infrastructure
       class PushPackageRepository
-        def create_push_package(script, script_content, schema, compiled_type)
+        def create_push_package(script, script_content, compiled_type)
           build_file_path = file_path(script.name, compiled_type)
           write_to_path(build_file_path, script_content)
-          write_to_path(schema_path, schema)
 
           Domain::PushPackage.new(
             build_file_path,
             script,
             script_content,
             compiled_type,
-            schema
           )
         end
 
@@ -24,14 +22,12 @@ module Script
           raise Domain::PushPackageNotFoundError unless File.exist?(build_file_path)
 
           script_content = File.read(build_file_path)
-          schema = File.exist?(schema_path) ? File.read(schema_path) : ''
 
           Domain::PushPackage.new(
             build_file_path,
             script,
             script_content,
             compiled_type,
-            schema
           )
         end
 
@@ -44,10 +40,6 @@ module Script
 
         def file_path(script_name, compiled_type)
           "#{ScriptProject.current.directory}/build/#{script_name}.#{compiled_type}"
-        end
-
-        def schema_path
-          "#{ScriptProject.current.directory}/build/schema"
         end
       end
     end

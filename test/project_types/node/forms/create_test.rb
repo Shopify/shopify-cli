@@ -39,7 +39,7 @@ module Node
       end
 
       def test_type_is_prompted
-        CLI::UI::Prompt.expects(:ask).with('What type of app are you building?').returns('public')
+        CLI::UI::Prompt.expects(:ask).with(@context.message('node.forms.create.app_type.select')).returns('public')
         ask(type: nil)
       end
 
@@ -96,7 +96,7 @@ module Node
           assert_equal(form.organization_id, 421)
           assert_equal(form.shop_domain, 'next.myshopify.com')
         end
-        assert_match(CLI::UI.fmt('Partner organization {{green:hoopy froods (421)}}'), io.join)
+        assert_match(CLI::UI.fmt(@context.message('node.forms.create.organization', 'hoopy froods (421)')), io.join)
       end
 
       def test_organization_will_be_fetched_if_id_is_provided_but_not_shop
@@ -153,8 +153,8 @@ module Node
           assert_nil form.shop_domain
         end
         log = io.join
-        assert_match('No Development Stores available.', log)
-        assert_match(CLI::UI.fmt("Visit {{underline:https://partners.shopify.com/123/stores}} to create one"), log)
+        assert_match(CLI::UI.fmt(@context.message('node.forms.create.no_development_stores')), log)
+        assert_match(CLI::UI.fmt(@context.message('node.forms.create.create_store', 123)), log)
       end
 
       def test_autopicks_only_shop
@@ -178,7 +178,9 @@ module Node
           form = ask(org_id: 123, shop: nil)
           assert_equal(form.shop_domain, 'shopdomain.myshopify.com')
         end
-        assert_match(CLI::UI.fmt("Using development store {{green:shopdomain.myshopify.com}}"), io.join)
+        assert_match(CLI::UI.fmt(
+          @context.message('node.forms.create.development_store', 'shopdomain.myshopify.com')
+        ), io.join)
       end
 
       def test_prompts_user_to_pick_from_shops

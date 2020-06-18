@@ -4,7 +4,6 @@ require "project_types/script/test_helper"
 
 describe Script::Layers::Domain::PushPackage do
   let(:extension_point_type) { "discount" }
-  let(:extension_point_schema) { "discount" }
   let(:script_id) { 'id' }
   let(:script_name) { "foo_script" }
   let(:script) do
@@ -16,7 +15,7 @@ describe Script::Layers::Domain::PushPackage do
   let(:script_content) { "(module)" }
   let(:compiled_type) { "wasm" }
   let(:push_package) do
-    Script::Layers::Domain::PushPackage.new(id, script, script_content, compiled_type, extension_point_schema)
+    Script::Layers::Domain::PushPackage.new(id, script, script_content, compiled_type)
   end
   let(:script_service) { Minitest::Mock.new }
   let(:id) { "push_package_id" }
@@ -39,7 +38,6 @@ describe Script::Layers::Domain::PushPackage do
           kwargs[:script_name] == script_name &&
           kwargs[:script_content] == script_content &&
           kwargs[:compiled_type] == compiled_type &&
-          kwargs[:schema] == extension_point_schema &&
           kwargs[:api_key] == api_key
       end
       subject

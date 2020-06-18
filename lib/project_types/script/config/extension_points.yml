@@ -3,16 +3,16 @@ discount:
     package: "@shopify/extension-point-as-discount"
     version: "^0.2.2"
     sdk-version: "^6.0.0"
-    toolchain-version: "^1.0.1"
+    toolchain-version: "^1.1.0"
 unit_limit_per_order:
   assemblyscript:
     package: "@shopify/extension-point-as-unit-limit-per-order"
     version: "^0.1.2"
     sdk-version: "^6.0.0"
-    toolchain-version: "^1.0.1"
+    toolchain-version: "^1.1.0"
 payment_filter:
   assemblyscript:
     package: "@shopify/extension-point-as-payment-filter"
     version: "^0.1.2"
     sdk-version: "^6.0.0"
-    toolchain-version: "^1.0.1"
+    toolchain-version: "^1.1.0"
