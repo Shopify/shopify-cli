@@ -73,7 +73,12 @@ task(rdoc: 'rdoc:all')
 namespace :package do
   require 'shopify-cli/packager'
 
-  task all: [:debian, :rpm]
+  task all: [:debian, :rpm, :homebrew]
+
+  desc("Builds a gem of the CLI")
+  task :gem do
+    ShopifyCli::Packager.new.build_gem
+  end
 
   desc("Builds a Debian package of the CLI")
   task :debian do
@@ -83,6 +88,11 @@ namespace :package do
   desc("Builds an RPM package of the CLI")
   task :rpm do
     ShopifyCli::Packager.new.build_rpm
+  end
+
+  desc("Builds a Homebrew package of the CLI")
+  task :homebrew => :"package:gem" do
+    ShopifyCli::Packager.new.build_homebrew
   end
 end
 
