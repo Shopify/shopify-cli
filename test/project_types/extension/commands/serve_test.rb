@@ -31,14 +31,14 @@ module Extension
         Serve.any_instance.stubs(:yarn_available?).returns(true)
         @context.expects(:system).with(*Serve::YARN_SERVE_COMMAND).returns(FakeProcessStatus.new(true))
 
-        run_cmd('serve')
+        run_serve
       end
 
       def test_uses_npm_when_yarn_is_unavailable
         Serve.any_instance.stubs(:yarn_available?).returns(false)
         @context.expects(:system).with(*Serve::NPM_SERVE_COMMAND).returns(FakeProcessStatus.new(true))
 
-        run_cmd('serve')
+        run_serve
       end
 
       def test_aborts_and_informs_the_user_when_serve_fails
@@ -46,7 +46,14 @@ module Extension
         @context.expects(:system).with(*Serve::YARN_SERVE_COMMAND).returns(FakeProcessStatus.new(false))
         @context.expects(:abort).with(@context.message('serve.serve_failure_message'))
 
-        run_cmd('serve')
+        run_serve
+      end
+
+      private
+
+      def run_serve(*args)
+        Serve.ctx = @context
+        Serve.call(args, 'tunnel')
       end
     end
   end

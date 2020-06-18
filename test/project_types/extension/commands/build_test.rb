@@ -35,14 +35,14 @@ module Extension
         Build.any_instance.stubs(:yarn_available?).returns(true)
         @context.expects(:system).with(*Build::YARN_BUILD_COMMAND).returns(FakeProcessStatus.new(true))
 
-        run_cmd('build')
+        run_build
       end
 
       def test_uses_npm_when_yarn_is_unavailable
         Build.any_instance.stubs(:yarn_available?).returns(false)
         @context.expects(:system).with(*Build::NPM_BUILD_COMMAND).returns(FakeProcessStatus.new(true))
 
-        run_cmd('build')
+        run_build
       end
 
       def test_aborts_and_informs_the_user_when_build_fails
@@ -50,7 +50,14 @@ module Extension
         @context.expects(:system).with(*Build::YARN_BUILD_COMMAND).returns(FakeProcessStatus.new(false))
         @context.expects(:abort).with(@context.message('build.build_failure_message'))
 
-        run_cmd('build')
+        run_build
+      end
+
+      private
+
+      def run_build(*args)
+        Build.ctx = @context
+        Build.call(args, 'tunnel')
       end
     end
   end
