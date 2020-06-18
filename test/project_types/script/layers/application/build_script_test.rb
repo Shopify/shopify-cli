@@ -14,12 +14,13 @@ describe Script::Layers::Application::BuildScript do
     let(:content) { 'content' }
     let(:extension_point_repository) { Script::Layers::Infrastructure::FakeExtensionPointRepository.new }
     let(:ep) { extension_point_repository.get_extension_point(extension_point_type) }
+    let(:task_runner) { Script::Layers::Infrastructure::AssemblyScriptTaskRunner.new(@context) }
     let(:script_repository) { Script::Layers::Infrastructure::FakeScriptRepository.new }
     let(:script) do
       Script::Layers::Infrastructure::FakeScriptRepository.new.create_script(language, ep, script_name)
     end
 
-    subject { Script::Layers::Application::BuildScript.call(ctx: @context, script: script) }
+    subject { Script::Layers::Application::BuildScript.call(ctx: @context, task_runner: task_runner, script: script) }
 
     before do
       Script::Layers::Infrastructure::ScriptRepository.stubs(:new).returns(script_repository)
@@ -30,10 +31,7 @@ describe Script::Layers::Application::BuildScript do
     describe 'when build succeeds' do
       it 'should return normally' do
         CLI::UI::Frame.expects(:with_frame_color_override).never
-        Script::Layers::Infrastructure::AssemblyScriptTaskRunner
-          .any_instance
-          .expects(:build)
-          .returns(content)
+        task_runner.expects(:build).returns(content)
         Script::Layers::Infrastructure::PushPackageRepository
           .any_instance
           .expects(:create_push_package)
@@ -46,10 +44,7 @@ describe Script::Layers::Application::BuildScript do
       it 'should output message and raise BuildError' do
         err_msg = 'some error message'
         CLI::UI::Frame.expects(:with_frame_color_override).yields.once
-        Script::Layers::Infrastructure::AssemblyScriptTaskRunner
-          .any_instance
-          .expects(:build)
-          .returns(content)
+        task_runner.expects(:build).returns(content)
         Script::Layers::Infrastructure::PushPackageRepository
           .any_instance
           .expects(:create_push_package)

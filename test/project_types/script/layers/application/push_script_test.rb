@@ -52,7 +52,7 @@ describe Script::Layers::Application::PushScript do
       Script::Layers::Application::ProjectDependencies
         .expects(:install).with(ctx: @context, task_runner: as_task_runner)
       Script::Layers::Application::BuildScript
-        .expects(:call).with(ctx: @context, script: script)
+        .expects(:call).with(ctx: @context, task_runner: as_task_runner, script: script)
       Script::Layers::Infrastructure::ScriptService
         .expects(:new).returns(script_service_instance)
       Script::Layers::Domain::PushPackage

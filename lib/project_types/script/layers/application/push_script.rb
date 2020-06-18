@@ -9,7 +9,7 @@ module Script
             script = Infrastructure::ScriptRepository.new.get_script(language, extension_point_type, script_name)
             task_runner = Infrastructure::TaskRunner.for(ctx, language)
             ProjectDependencies.install(ctx: ctx, task_runner: task_runner)
-            BuildScript.call(ctx: ctx, script: script)
+            BuildScript.call(ctx: ctx, task_runner: task_runner, script: script)
             push_script(ctx, task_runner, script, api_key, force)
           end
 
