@@ -1,1 +1,4 @@
 *       @shopify/platform-dev-tools-education
+
+/lib/project_types/script/ @shopify/scripts
+/test/project_types/script/ @shopify/scripts
