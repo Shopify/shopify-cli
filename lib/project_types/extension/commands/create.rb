@@ -10,6 +10,10 @@ module Extension
 
       def call(args, _)
         with_create_form(args) do |form|
+          if Dir.exist?(form.directory_name)
+            @ctx.abort(@ctx.message('create.errors.directory_exists', form.directory_name))
+          end
+
           if form.type.create(form.directory_name, @ctx)
             ExtensionProject.write_cli_file(context: @ctx, type: form.type.identifier)
             ExtensionProject.write_env_file(context: @ctx, title: form.name)
