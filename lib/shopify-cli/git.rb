@@ -46,10 +46,10 @@ module ShopifyCli
         if Dir.exist?(dest)
           ctx.abort(ctx.message('core.git.error.directory_exists'))
         else
-          CLI::UI::Frame.open(ctx.message('core.git.cloning', dest)) do
+          success_message = ctx.message('core.git.cloned', dest)
+          CLI::UI::Frame.open(ctx.message('core.git.cloning', repository, dest), success_text: success_message) do
             clone_progress('clone', '--single-branch', repository, dest, ctx: ctx)
           end
-          ctx.done(ctx.message('core.git.cloned', dest))
         end
       end
 
@@ -121,19 +121,23 @@ module ShopifyCli
       def clone_progress(*git_command, ctx:)
         CLI::UI::Progress.progress do |bar|
           msg = []
-          success = ctx.system('git', *git_command, '--progress') do |_out, err|
-            if err.strip.start_with?('Receiving objects:')
-              percent = (err.match(/Receiving objects:\s+(\d+)/)[1].to_f / 100).round(2)
+          require 'open3'
+
+          success = Open3.popen3('git', *git_command, '--progress') do |_stdin, _stdout, stderr, thread|
+            while (line = stderr.gets)
+              next unless line.strip.start_with?('Receiving objects:')
+              percent = (line.match(/Receiving objects:\s+(\d+)/)[1].to_f / 100).round(2)
               bar.tick(set_percent: percent)
               next
             end
-            msg << err
+
+            msg << stderr
+            thread.value
           end.success?
-          unless success
-            ctx.abort(msg.join("\n"))
-          end
+
+          ctx.abort(msg.join("\n")) unless success
           bar.tick(set_percent: 1.0)
-          true
+          success
         end
       end
     end
