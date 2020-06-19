@@ -20,6 +20,9 @@ module Extension
           run {{command:shopify register}} to register this extension with one of your apps.
         MESSAGE
         try_again: '{{*}} Fix the errors and run {{command:shopify create extension}} again.',
+        errors: {
+          directory_exists: 'Directory ‘%s’ already exists. Please remove it or choose a new name for your project.',
+        },
       },
       build: {
         frame_title: 'Building extension with: %s...',

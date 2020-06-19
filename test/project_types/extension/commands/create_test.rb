@@ -21,7 +21,21 @@ module Extension
         assert_message_output(io: io, expected_content: [Extension::Commands::Create.help])
       end
 
+      def test_create_aborts_if_the_directory_already_exists
+        Dir.expects(:exist?).with(@directory_name).returns(true).once
+        @test_extension_type.expects(:create).never
+
+        io = capture_io_and_assert_raises(ShopifyCli::Abort) do
+          run_create(%W(extension --name=#{@name} --type=#{@test_extension_type.identifier}))
+        end
+
+        assert_message_output(io: io, expected_content: [
+          @context.message('create.errors.directory_exists', @directory_name),
+        ])
+      end
+
       def test_runs_type_create_and_writes_project_files
+        Dir.expects(:exist?).with(@directory_name).returns(false).once
         @test_extension_type.expects(:create).with(@directory_name, @context).returns(true).once
         ExtensionProject.expects(:write_cli_file).with(context: @context, type: @test_extension_type.identifier).once
         ExtensionProject.expects(:write_env_file).with(context: @context, title: @name).once
@@ -37,6 +51,7 @@ module Extension
       end
 
       def test_does_not_create_project_files_and_outputs_try_again_message_if_type_create_failed
+        Dir.expects(:exist?).with(@directory_name).returns(false).once
         @test_extension_type.expects(:create).with(@directory_name, @context).returns(false).once
         ExtensionProject.expects(:write_cli_file).never
         ExtensionProject.expects(:write_env_file).never
