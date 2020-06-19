@@ -26,16 +26,22 @@ module Extension
         refute_empty(Serve.help)
       end
 
-      def test_uses_npm_when_yarn_is_unavailable
-        Serve.any_instance.stubs(:yarn_available?).returns(false)
-        @context.expects(:system).with(*Serve::NPM_SERVE_COMMAND).returns(FakeProcessStatus.new(true))
+      def test_uses_js_system_to_run_npm_or_yarn_serve_commands
+        ShopifyCli::JsSystem.any_instance
+          .expects(:call)
+          .with(yarn: Serve::YARN_SERVE_COMMAND, npm: Serve::NPM_SERVE_COMMAND)
+          .returns(true)
+          .once
 
         run_serve
       end
 
       def test_aborts_and_informs_the_user_when_serve_fails
-        Serve.any_instance.stubs(:yarn_available?).returns(true)
-        @context.expects(:system).with(*Serve::YARN_SERVE_COMMAND).returns(FakeProcessStatus.new(false))
+        ShopifyCli::JsSystem.any_instance
+          .expects(:call)
+          .with(yarn: Serve::YARN_SERVE_COMMAND, npm: Serve::NPM_SERVE_COMMAND)
+          .returns(false)
+          .once
         @context.expects(:abort).with(@context.message('serve.serve_failure_message'))
 
         run_serve
