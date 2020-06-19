@@ -30,7 +30,8 @@ module Extension
         Serve.any_instance.stubs(:yarn_available?).returns(false)
         @context.expects(:system).with(*Serve::NPM_SERVE_COMMAND).returns(FakeProcessStatus.new(true))
 
-        run_serve
+        # run_serve
+        run_cmd('serve')
       end
 
       def test_aborts_and_informs_the_user_when_serve_fails

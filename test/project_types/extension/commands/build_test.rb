@@ -34,7 +34,8 @@ module Extension
         Build.any_instance.stubs(:yarn_available?).returns(true)
         @context.expects(:system).with(*Build::YARN_BUILD_COMMAND).returns(FakeProcessStatus.new(true))
 
-        run_build
+        # run_build
+        run_cmd('build')
       end
 
       def test_uses_npm_when_yarn_is_unavailable
