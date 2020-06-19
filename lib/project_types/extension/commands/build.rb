@@ -6,12 +6,15 @@ module Extension
     class Build < ExtensionCommand
       hidden_command
 
-      YARN_BUILD_COMMAND = %w(yarn build)
-      NPM_BUILD_COMMAND = %w(npm run-script build)
+      YARN_BUILD_COMMAND = %w(build)
+      NPM_BUILD_COMMAND = %w(run-script build)
 
       def call(_args, _command_name)
-        CLI::UI::Frame.open(frame_title) do
-          @ctx.abort(@ctx.message('build.build_failure_message')) unless build.success?
+        system = ShopifyCli::JsSystem.new(ctx: @ctx)
+
+        CLI::UI::Frame.open(@ctx.message('build.frame_title', system.package_manager)) do
+          success = system.call(yarn: YARN_BUILD_COMMAND, npm: NPM_BUILD_COMMAND)
+          @ctx.abort(@ctx.message('build.build_failure_message')) unless success
         end
       end
 
@@ -20,21 +23,6 @@ module Extension
           Build your extension to prepare for deployment.
             Usage: {{command:#{ShopifyCli::TOOL_NAME} build}}
         HELP
-      end
-
-      private
-
-      def frame_title
-        @ctx.message('build.frame_title', (yarn_available? ? 'yarn' : 'npm'))
-      end
-
-      def yarn_available?
-        @yarn_availability ||= ShopifyCli::JsSystem.yarn?(@ctx)
-      end
-
-      def build
-        build_command = yarn_available? ? YARN_BUILD_COMMAND : NPM_BUILD_COMMAND
-        @ctx.system(*build_command)
       end
     end
   end
