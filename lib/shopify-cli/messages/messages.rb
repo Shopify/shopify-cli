@@ -60,8 +60,8 @@ module ShopifyCli
             no_commits_made: "No git commits have been made. Please make at least one commit.",
           },
 
-          cloning: "Cloning into %s...",
-          cloned: "Cloned into %s",
+          cloning: "Cloning %s into %s...",
+          cloned: "{{v}} Cloned into %s",
         },
 
         help: {

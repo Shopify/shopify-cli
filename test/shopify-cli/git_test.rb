@@ -1,4 +1,5 @@
 require 'test_helper'
+require 'open3'
 
 module ShopifyCli
   class GitTest < MiniTest::Test
@@ -75,7 +76,7 @@ module ShopifyCli
     end
 
     def test_clones_git_repo
-      @context.expects(:system).with(
+      Open3.expects(:popen3).with(
         'git',
         'clone',
         '--single-branch',
@@ -90,7 +91,7 @@ module ShopifyCli
 
     def test_clone_failure
       assert_raises(ShopifyCli::Abort) do
-        @context.expects(:system).with(
+        Open3.expects(:popen3).with(
           'git',
           'clone',
           '--single-branch',
