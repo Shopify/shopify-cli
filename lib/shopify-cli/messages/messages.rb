@@ -274,7 +274,7 @@ module ShopifyCli
           DEVELOPMENT
 
           shell_shim: <<~MESSAGE,
-          {{x}} This version of Shopify App CLI is no longer supported. You’ll need to upgrade to continue using it. This process typically takes a few minutes.
+          {{x}} This version of Shopify App CLI is no longer supported. You’ll need to upgrade to continue using it.
 
             Please visit this page for complete instructions:
             {{underline:https://shopify.github.io/shopify-app-cli/upgrade/}}
