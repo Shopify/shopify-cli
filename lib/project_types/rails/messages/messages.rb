@@ -20,8 +20,8 @@ module Rails
             Usage: {{command:%s create rails}}
             Options:
               {{command:--name=NAME}} App name. Any string.
-              {{command:--app_url=APPURL}} App URL. Must be valid URL.
-              {{command:--organization_id=ID}} App Org ID. Must be existing org ID.
+              {{command:--app_url=APPURL}} App URL. Must be a valid URL.
+              {{command:--organization_id=ID}} Partner organization ID. Must be an existing organization.
               {{command:--shop_domain=MYSHOPIFYDOMAIN }} Development store URL. Must be an existing development store.
               {{command:--db=DB}} Database type. Must be one of: mysql, postgresql, sqlite3, oracle, frontbase, ibm_db, sqlserver, jdbcmysql, jdbcsqlite3, jdbcpostgresql, jdbc.
               {{command:--rails_opts=RAILSOPTS}} Additional options. Must be string containing one or more valid Rails options, separated by spaces.
@@ -38,7 +38,7 @@ module Rails
           info: {
             created: "{{v}} {{green:%s}} was created in your Partner Dashboard {{underline:%s}}",
             serve: "{{*}} Run {{command:%s serve}} to start a local server",
-            install: "{{*}} Then, visit {{underline:%s/test}} to install {{green:%s}} on your Dev Store",
+            install: "{{*}} Then, visit {{underline:%s/test}} to install {{green:%s}} on your dev store",
           },
           installing_bundler: "Installing bundler…",
           generating_app: "Generating new rails app project in %s...",
@@ -233,22 +233,22 @@ module Rails
         forms: {
           create: {
             error: {
-              invalid_app_type: "Invalid App Type %s",
-              invalid_db_type: "Invalid Database Type %s",
-              organization_not_found: "Cannot find an organization with that ID",
-              no_organizations: "No organizations available.",
+              invalid_app_type: "Invalid app type %s",
+              invalid_db_type: "Invalid database type %s",
+              organization_not_found: "Cannot find a partner organization with that ID",
+              no_organizations: "No partner organizations available.",
             },
 
             authentication_issue: "For authentication issues, run {{command:%s logout}} to clear invalid credentials",
             partners_notice: "Please visit https://partners.shopify.com/ to create a partners account",
-            no_development_stores: "{{x}} No Development Stores available.",
+            no_development_stores: "{{x}} No development stores available.",
             create_store: "Visit {{underline:https://partners.shopify.com/%s/stores}} to create one",
-            app_name: "App Name",
+            app_name: "App name",
             app_type: {
               select: "What type of app are you building?",
               select_public: "Public: An app built for a wide merchant audience.",
               select_custom: "Custom: An app custom built for a single client.",
-              selected: "App Type {{green:%s}}",
+              selected: "App type {{green:%s}}",
             },
             db: {
               want_select: <<~WANT_SELECT,
@@ -270,10 +270,10 @@ module Rails
               select_jdbc: "JDBC",
               selected: "Database Type {{green:%s}}",
             },
-            organization_select: "Select organization",
-            organization: "Organization {{green:%s}}",
-            development_store_select: "Select a Development Store",
-            development_store: "Using Development Store {{green:%s}}",
+            organization_select: "Select partner organization",
+            organization: "Partner organization {{green:%s}}",
+            development_store_select: "Select a development store",
+            development_store: "Using development store {{green:%s}}",
           },
         },
       },

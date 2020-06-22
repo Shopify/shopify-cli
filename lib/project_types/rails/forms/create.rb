@@ -61,8 +61,10 @@ module Rails
           ctx.puts(ctx.message('rails.forms.create.authentication_issue', ShopifyCli::TOOL_NAME))
           ctx.abort(ctx.message('rails.forms.create.error.no_organizations'))
         elsif organizations.count == 1
-          ctx.puts(ctx.message('rails.forms.create.organization', organizations.first['businessName']))
-          organizations.first
+          org = organizations.first
+          ctx.puts(ctx.message('rails.forms.create.organization',
+            ctx.message('core.partners_api.org_name_and_id', org['businessName'], org['id'])))
+          org
         else
           org_id = CLI::UI::Prompt.ask(ctx.message('rails.forms.create.organization_select')) do |handler|
             organizations.each { |o| handler.option(o['businessName']) { o['id'] } }

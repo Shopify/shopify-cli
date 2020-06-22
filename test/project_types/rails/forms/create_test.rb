@@ -129,7 +129,7 @@ module Rails
           assert_equal(form.organization_id, 421)
           assert_equal(form.shop_domain, 'next.myshopify.com')
         end
-        assert_match(CLI::UI.fmt('Organization {{green:hoopy froods}}'), io.join)
+        assert_match(CLI::UI.fmt('Partner organization {{green:hoopy froods (421)}}'), io.join)
       end
 
       def test_organization_will_be_fetched_if_id_is_provided_but_not_shop

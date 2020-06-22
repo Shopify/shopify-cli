@@ -22,7 +22,7 @@ module Script
           no_existing_apps_help: "Please create an app with {{command:shopify create}} or"\
                                  "visit https://partners.shopify.com/.",
 
-          no_existing_orgs_cause: "You don't have any organizations.",
+          no_existing_orgs_cause: "You don't have any partner organizations.",
           no_existing_orgs_help: "Please visit https://partners.shopify.com/ to create a partners account.",
 
           no_existing_stores_cause: "You don't have any development stores.",
@@ -178,11 +178,11 @@ module Script
           script_form: {
             ask_app_api_key_default: "Which app do you want this script to belong to?",
             ask_shop_domain_default: "Select a development store",
-            fetching_organizations: "{{i}} Fetching organizations",
-            select_organization: "Select organization.",
+            fetching_organizations: "{{i}} Fetching partner organizations",
+            select_organization: "Select partner organization.",
             using_app: "Using app {{green:%{title} (%{api_key})}}.",
             using_development_store: "Using development store {{green:%{domain}}}",
-            using_organization: "Organization {{green:%s}}.",
+            using_organization: "Partner organization {{green:%s}}.",
           },
           enable: {
             ask_app_api_key: "Which app is the script pushed to?",
