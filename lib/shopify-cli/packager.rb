@@ -7,22 +7,8 @@ module ShopifyCli
       FileUtils.mkdir_p(BUILDS_DIR)
     end
 
-    def build_gem
-      build_path = gem_path
-      puts "\nBuilding gem"
-
-      puts "Outputting gem to:\n  #{build_path}\n\n"
-      raise "Failed to build gem" unless system(
-        'gem',
-        'build',
-        '-o',
-        build_path,
-        File.join(ShopifyCli::ROOT, 'shopify-cli.gemspec')
-      )
-    end
-
     def build_debian
-      ensure_program_installed('dpkg-deb')
+      ensure_program_installed('dpkg-deb', 'brew install dpkg')
 
       root_dir = File.join(PACKAGING_DIR, 'debian')
       debian_dir = File.join(root_dir, 'shopify-cli', 'DEBIAN')
@@ -54,7 +40,7 @@ module ShopifyCli
     end
 
     def build_rpm
-      ensure_program_installed('rpmbuild')
+      ensure_program_installed('rpmbuild', 'brew install rpm')
 
       root_dir = File.join(PACKAGING_DIR, 'rpm')
       rpm_build_dir = File.join(root_dir, 'build')
@@ -92,10 +78,14 @@ module ShopifyCli
       spec_contents = File.read(File.join(root_dir, 'shopify-cli.base.rb'))
       spec_contents = spec_contents.gsub('SHOPIFY_CLI_VERSION', ShopifyCli::VERSION)
 
-      checksum = %x`shasum -a 256 #{gem_path}`
-      gem_checksum = checksum.split(' ')[0]
+      puts "Grabbing sha256 checksum from Rubygems.org"
+      require 'digest/sha2'
+      require 'open-uri'
+      gem_checksum = open("https://rubygems.org/downloads/shopify-cli-#{ShopifyCli::VERSION}.gem") do |io|
+        Digest::SHA256.new.hexdigest(io.read)
+      end
 
-      puts "Got sha256 sum for gem: #{gem_checksum}"
+      puts "Got sha256 checksum for gem: #{gem_checksum}"
       spec_contents = spec_contents.gsub('SHOPIFY_CLI_GEM_CHECKSUM', gem_checksum)
 
       puts "Writing generated formula\n  To: #{build_path}\n\n"
@@ -104,13 +94,15 @@ module ShopifyCli
 
     private
 
-    def ensure_program_installed(program)
-      raise "Could not find program #{program} which is required to build the package" unless
-        system(program, '--version', out: File::NULL, err: File::NULL)
-    end
+    def ensure_program_installed(program, installation_cmd)
+      unless system(program, '--version', out: File::NULL, err: File::NULL)
+        raise <<~MESSAGE
 
-    def gem_path
-      File.join(BUILDS_DIR, "shopify-cli.gem")
+          Could not find program #{program} which is required to build the package.
+          You can install it by running `#{installation_cmd}`.
+
+        MESSAGE
+      end
     end
   end
 end
