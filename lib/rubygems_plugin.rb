@@ -2,7 +2,7 @@ Gem.post_uninstall do |uninstaller|
   if uninstaller.spec.name == 'shopify-cli'
     require 'fileutils'
 
-    symlink = '/usr/local/bin/shopify-cli'
+    symlink = '/usr/local/bin/shopify'
 
     # delete the symbolic link IFF it exists AND it does not point to a file
     # (i.e., it's been left hanging as a result of the uninstall, as expected)

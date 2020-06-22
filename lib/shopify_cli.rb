@@ -39,7 +39,7 @@ CLI::UI::StdoutRouter.enable
 module ShopifyCli
   extend CLI::Kit::Autocall
 
-  TOOL_NAME         = 'shopify-cli'
+  TOOL_NAME         = 'shopify'
   TOOL_FULL_NAME    = 'Shopify CLI'
   ROOT              = File.expand_path('../..', __FILE__)
   PROJECT_TYPES_DIR = File.join(ROOT, 'lib', 'project_types')
@@ -50,9 +50,9 @@ module ShopifyCli
   DEBUG_LOG_FILE    = File.join(TOOL_CONFIG_PATH, 'logs', 'debug.log')
 
   # programmer emoji if default install location, else wrench emoji
-  EMOJI    = ROOT == '/opt/shopify-cli' ? "\u{1f469}\u{200d}\u{1f4bb}" : "\u{1f527}"
+  EMOJI    = ROOT == '/opt/shopify' ? "\u{1f469}\u{200d}\u{1f4bb}" : "\u{1f527}"
   # shrug or boom emoji
-  FAILMOJI = ROOT == '/opt/shopify-cli' ? "\u{1f937}" : "\u{1f4a5}"
+  FAILMOJI = ROOT == '/opt/shopify' ? "\u{1f937}" : "\u{1f4a5}"
 
   # Exit management in `shopify-app-cli` follows the management set out by CLI Kit.
   # https://github.com/Shopify/cli-kit/blob/master/lib/cli/kit.rb
