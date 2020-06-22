@@ -66,5 +66,28 @@ module ShopifyCli
         assert_equal "myapp", project_name
       end
     end
+
+    def test_project_env_returns_nil_if_doesnt_exist
+      Dir.mktmpdir do |dir|
+        Dir.stubs(:pwd).returns(dir)
+        FileUtils.touch("#{dir}/.shopify-cli.yml")
+        assert_nil(Project.current.env)
+      end
+    end
+
+    def test_project_env_returns_env_file_if_it_exists
+      Dir.mktmpdir do |dir|
+        Dir.stubs(:pwd).returns(dir)
+        FileUtils.touch("#{dir}/.shopify-cli.yml")
+        content = <<~CONTENT
+          SHOPIFY_API_KEY=foo
+          SHOPIFY_API_SECRET=bar
+          HOST=baz
+          AWSKEY=awskey
+        CONTENT
+        File.write(File.join(dir, '.env'), content)
+        refute_nil(Project.current.env)
+      end
+    end
   end
 end
