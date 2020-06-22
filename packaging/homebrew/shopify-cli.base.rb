@@ -12,6 +12,8 @@ class ShopifyCli < Formula
 
   bottle :unneeded
 
+  depends_on 'git' => '2.13'
+
   def install
     system 'tar', '-xzf', cached_download, '--directory', buildpath
 
