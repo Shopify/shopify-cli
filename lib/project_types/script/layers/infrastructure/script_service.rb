@@ -12,7 +12,6 @@ module Script
 
         def push(
           extension_point_type:,
-          schema:,
           script_name:,
           script_content:,
           compiled_type:,
@@ -25,7 +24,6 @@ module Script
             title: script_name,
             sourceCode: Base64.encode64(script_content),
             language: compiled_type,
-            schema: schema,
             force: force,
           }
           resp_hash = script_service_request(query_name: query_name, api_key: api_key, variables: variables)

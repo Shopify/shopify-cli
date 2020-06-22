@@ -38,7 +38,7 @@ module ShopifyCli
       #
       # #### Returns
       #
-      # * `has_project` - boolean, true if there is a current project
+      # * `has_current?` - boolean, true if there is a current project
       #
       def has_current?
         !directory(Dir.pwd).nil?

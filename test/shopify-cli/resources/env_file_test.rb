@@ -15,6 +15,15 @@ module ShopifyCli
         assert_equal(env_file.extra['AWSKEY'], 'awskey')
       end
 
+      def test_parse_external_env
+        env_file = EnvFile.parse_external_env
+        assert_equal(env_file[:api_key], 'apikey')
+        assert_equal(env_file[:secret], 'secret')
+        assert_equal(env_file[:host], 'https://example.com')
+        assert_equal(env_file[:shop], 'my-test-shop.myshopify.com')
+        assert_equal(env_file[:extra], { 'AWSKEY' => 'awskey' })
+      end
+
       def test_write_writes_env_content_to_file
         env_file = EnvFile.new(
           api_key: 'foo',

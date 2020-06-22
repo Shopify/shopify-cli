@@ -28,9 +28,7 @@ module ShopifyCli
           :ngrok,
           "exec #{File.join(ShopifyCli::ROOT, 'ngrok')} http -log=stdout -log-level=debug 8081"
         ).returns(ShopifyCli::ProcessSupervision.new(:ngrok, pid: 40000))
-        @context.expects(:puts).with(
-          "{{v}} ngrok tunnel running at {{underline:https://example.ngrok.io}}"
-        )
+        @context.expects(:puts).with(@context.message('core.tunnel.start', 'https://example.ngrok.io'))
         assert_equal 'https://example.ngrok.io', ShopifyCli::Tunnel.start(@context)
       end
     end
@@ -43,9 +41,7 @@ module ShopifyCli
           :ngrok,
           "exec #{File.join(ShopifyCli::ROOT, 'ngrok')} http -log=stdout -log-level=debug #{configured_port}"
         ).returns(ShopifyCli::ProcessSupervision.new(:ngrok, pid: 40000))
-        @context.expects(:puts).with(
-          "{{v}} ngrok tunnel running at {{underline:https://example.ngrok.io}}"
-        )
+        @context.expects(:puts).with(@context.message('core.tunnel.start', 'https://example.ngrok.io'))
         assert_equal 'https://example.ngrok.io', ShopifyCli::Tunnel.start(@context, port: configured_port)
       end
     end
@@ -58,7 +54,7 @@ module ShopifyCli
           "exec #{File.join(ShopifyCli::ROOT, 'ngrok')} http -log=stdout -log-level=debug 8081"
         ).returns(ShopifyCli::ProcessSupervision.new(:ngrok, pid: 40000))
         @context.expects(:puts).with(
-          "{{v}} ngrok tunnel running at {{underline:https://example.ngrok.io}}, with account Tom Cruise"
+          @context.message('core.tunnel.start_with_account', 'https://example.ngrok.io', 'Tom Cruise')
         )
         assert_equal 'https://example.ngrok.io', ShopifyCli::Tunnel.start(@context)
       end
@@ -79,7 +75,7 @@ module ShopifyCli
 
     def test_stop_doesnt_stop_what_isnt_started
       ShopifyCli::ProcessSupervision.expects(:running?).with(:ngrok).returns(false)
-      @context.expects(:puts).with("{{green:x}} ngrok tunnel not running")
+      @context.expects(:puts).with(@context.message('core.tunnel.not_running'))
       ShopifyCli::Tunnel.stop(@context)
     end
 

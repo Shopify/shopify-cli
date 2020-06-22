@@ -29,12 +29,11 @@ module Script
             script_repo = Infrastructure::ScriptRepository.new(ctx: ctx)
             script_builder = Infrastructure::ScriptBuilder.for(script)
             compiled_type = script_builder.compiled_type
-            script_content, schema = script_repo.with_temp_build_context do
+            script_content = script_repo.with_temp_build_context do
               script_builder.build
             end
-
             Infrastructure::PushPackageRepository.new(ctx: ctx)
-              .create_push_package(script, script_content, schema, compiled_type)
+              .create_push_package(script, script_content, compiled_type)
           end
         end
       end
