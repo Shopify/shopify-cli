@@ -23,8 +23,8 @@ class ShopifyCli < Formula
 
     prefix.install buildpath/'src'
 
-    exe = prefix/'src/bin/shopify-cli'
-    script = buildpath/'symlink/shopify-cli'
+    exe = prefix/'src/bin/shopify'
+    script = buildpath/'symlink/shopify'
 
     script_content = <<~SCRIPT
       #!/usr/bin/env bash
