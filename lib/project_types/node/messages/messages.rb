@@ -14,9 +14,9 @@ module Node
             Usage: {{command:%s create node}}
             Options:
               {{command:--name=NAME}} App name. Any string.
-              {{command:--app_url=APPURL}} App URL. Must be valid URL.
-              {{command:--organization_id=ID}} App Org ID. Must be existing org ID.
-              {{command:--shop_domain=MYSHOPIFYDOMAIN }} Test store URL. Must be existing test store.
+              {{command:--app_url=APPURL}} App URL. Must be a valid URL.
+              {{command:--organization_id=ID}} Partner organization ID. Must be an existing organization.
+              {{command:--shop_domain=MYSHOPIFYDOMAIN }} Development store URL. Must be an existing development store.
           HELP
           error: {
             node_required: "node is required to create an app project. Download at https://nodejs.org/en/download.",
@@ -29,7 +29,7 @@ module Node
           info: {
             created: "{{v}} {{green:%s}} was created in your Partner Dashboard {{underline:%s}}",
             serve: "{{*}} Run {{command:%s serve}} to start a local server",
-            install: "{{*}} Then, visit {{underline:%s/test}} to install {{green:%s}} on your Dev Store",
+            install: "{{*}} Then, visit {{underline:%s/test}} to install {{green:%s}} on your dev store",
           },
           node_version: "node %s",
           npm_version: "npm %s",
@@ -101,7 +101,7 @@ module Node
             HELP
             type_select: "How would you like to charge for your app?",
             generating: "Generating %s code ...",
-            generated: "{{green:%s generated in server/server.js",
+            generated: "{{green:%s}} generated in server/server.js",
           },
 
           page: {
@@ -231,9 +231,9 @@ module Node
         forms: {
           create: {
             error: {
-              invalid_app_type: "Invalid App Type %s",
-              organization_not_found: "Cannot find an organization with that ID",
-              no_organizations: "No organizations available.",
+              invalid_app_type: "Invalid app type %s",
+              organization_not_found: "Cannot find a partner organization with that ID",
+              no_organizations: "No partner organizations available.",
             },
 
             authentication_issue: "For authentication issues, run {{command:%s logout}} to clear invalid credentials",
@@ -245,12 +245,12 @@ module Node
               select: "What type of app are you building?",
               select_public: "Public: An app built for a wide merchant audience.",
               select_custom: "Custom: An app custom built for a single client.",
-              selected: "App Type {{green:%s}}",
+              selected: "App type {{green:%s}}",
             },
-            organization_select: "Select organization",
-            organization: "Organization {{green:%s}}",
-            development_store_select: "Select a Development Store",
-            development_store: "Using Development Store {{green:%s}}",
+            organization_select: "Select partner organization",
+            organization: "Partner organization {{green:%s}}",
+            development_store_select: "Select a development store",
+            development_store: "Using development store {{green:%s}}",
           },
         },
       },

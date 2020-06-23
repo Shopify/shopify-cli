@@ -30,14 +30,11 @@ describe Script::Layers::Infrastructure::AssemblyScriptDependencyManager do
       @context
         .expects(:system)
         .with('npm', '--userconfig', './.npmrc', 'config', 'set', '@shopify:registry', 'https://registry.npmjs.com')
-      @context
-        .expects(:system)
-        .with('npm', '--userconfig', './.npmrc', 'config', 'set', 'engine-strict', 'true')
       subject
     end
 
     it "should write to package.json" do
-      @context.expects(:system).twice
+      @context.expects(:system)
       subject
       assert File.exist?("package.json")
     end
@@ -60,6 +57,9 @@ describe Script::Layers::Infrastructure::AssemblyScriptDependencyManager do
     subject { as_dep_manager.install }
 
     it "should install using npm" do
+      @context.expects(:capture2e)
+        .with("node", "--version")
+        .returns(["v12.16.1", mock(success?: true)])
       @context.expects(:capture2e)
         .with("npm", "install", "--no-audit", "--no-optional", "--loglevel error")
         .returns([nil, mock(success?: true)])

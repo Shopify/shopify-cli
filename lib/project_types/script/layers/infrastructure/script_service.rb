@@ -10,9 +10,8 @@ module Script
         include SmartProperties
         property! :ctx, accepts: ShopifyCli::Context
 
-        def deploy(
+        def push(
           extension_point_type:,
-          schema:,
           script_name:,
           script_content:,
           compiled_type:,
@@ -25,7 +24,6 @@ module Script
             title: script_name,
             sourceCode: Base64.encode64(script_content),
             language: compiled_type,
-            schema: schema,
             force: force,
           }
           resp_hash = script_service_request(query_name: query_name, api_key: api_key, variables: variables)
@@ -34,7 +32,7 @@ module Script
           return resp_hash if user_errors.empty?
 
           if user_errors.any? { |e| e['tag'] == 'already_exists_error' }
-            raise Errors::ScriptRedeployError, api_key
+            raise Errors::ScriptRepushError, api_key
           else
             raise Errors::ScriptServiceUserError.new(query_name, user_errors.to_s)
           end

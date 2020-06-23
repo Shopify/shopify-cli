@@ -18,7 +18,7 @@ module Script
           ctx: @ctx,
           api_key: form.api_key,
           shop_domain: form.shop_domain,
-          configuration: '{}',
+          configuration: { entries: [] },
           extension_point_type: project.extension_point_type,
           title: project.script_name
         )
@@ -36,6 +36,10 @@ module Script
 
       def self.help
         ShopifyCli::Context.message('script.enable.help', ShopifyCli::TOOL_NAME)
+      end
+
+      def self.extended_help
+        ShopifyCli::Context.message('script.enable.extended_help', ShopifyCli::TOOL_NAME)
       end
     end
   end

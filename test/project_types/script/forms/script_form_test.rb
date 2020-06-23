@@ -19,10 +19,10 @@ module Script
       end
 
       def test_one_organization_auto_selects
-        org = { 'businessName' => 'test' }
+        org = { 'businessName' => 'test', 'id' => 123 }
         @context.expects(:puts).with(@context.message(
           'script.forms.script_form.using_organization',
-          'test'
+          'test (123)'
         ))
         form.expects(:organizations).returns([org]).at_least_once
         assert_equal org, form.send(:ask_organization)

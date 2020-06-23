@@ -12,7 +12,6 @@ describe Script::Layers::Application::BuildScript do
     let(:script_name) { 'name' }
     let(:op_failed_msg) { 'msg' }
     let(:content) { 'content' }
-    let(:schema) { 'schema' }
     let(:extension_point_repository) { Script::Layers::Infrastructure::FakeExtensionPointRepository.new }
     let(:ep) { extension_point_repository.get_extension_point(extension_point_type) }
     let(:script_repository) { Script::Layers::Infrastructure::FakeScriptRepository.new }
@@ -34,11 +33,11 @@ describe Script::Layers::Application::BuildScript do
         Script::Layers::Infrastructure::AssemblyScriptWasmBuilder
           .any_instance
           .expects(:build)
-          .returns([content, schema])
-        Script::Layers::Infrastructure::DeployPackageRepository
+          .returns(content)
+        Script::Layers::Infrastructure::PushPackageRepository
           .any_instance
-          .expects(:create_deploy_package)
-          .with(script, content, schema, 'wasm')
+          .expects(:create_push_package)
+          .with(script, content, 'wasm')
         capture_io { subject }
       end
     end
@@ -50,10 +49,10 @@ describe Script::Layers::Application::BuildScript do
         Script::Layers::Infrastructure::AssemblyScriptWasmBuilder
           .any_instance
           .expects(:build)
-          .returns([content, schema])
-        Script::Layers::Infrastructure::DeployPackageRepository
+          .returns(content)
+        Script::Layers::Infrastructure::PushPackageRepository
           .any_instance
-          .expects(:create_deploy_package)
+          .expects(:create_push_package)
           .raises(err_msg)
 
         io = capture_io do

@@ -11,17 +11,14 @@ module Script
     end
 
     def test_initialize
-      ScriptProject
+      ShopifyCli::Project
         .any_instance
-        .expects(:lookup_config)
-        .with('extension_point_type')
-        .returns(@extension_point_type)
-
-      ScriptProject
-        .any_instance
-        .expects(:lookup_config)
-        .with('script_name')
-        .returns(@script_name)
+        .expects(:load_yaml_file)
+        .with('.shopify-cli.yml')
+        .returns({
+          'extension_point_type' => @extension_point_type,
+          'script_name' => @script_name,
+        })
 
       ScriptProject.new(directory: 'testdir')
 

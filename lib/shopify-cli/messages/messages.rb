@@ -6,20 +6,24 @@ module ShopifyCli
       core: {
         connect: {
           help: <<~HELP,
-          Connect a Shopify App CLI project. Restores the ENV file.
+          Connect (or re-connect) an existing project to a Shopify partner organization and/or a store. Creates or updates the {{green:.env}} file, and creates the {{green:.shopify-cli.yml}} file.
             Usage: {{command:%s connect}}
           HELP
 
-          production_warning: "{{yellow:! Don't use}} {{cyan:connect}} {{yellow:for production apps}}",
+          production_warning: <<~MESSAGE,
+          {{yellow:! Warning: if you have connected to an {{bold:app in production}}, running {{command:serve}} may update the app URL and cause an outage.
+          MESSAGE
+          already_connected_warning: "{{yellow:! This app appears to be already connected}}",
           connected: "{{v}} Project now connected to {{green:%s}}",
-          serve: "{{*}} Run {{command:%s serve}} to start a local development server",
-          organization_select: "To which organization does this project belong?",
+          project_type_select: "What type of project would you like to connect?",
+          organization_select: "To which partner organization does this project belong?",
           app_select: "To which app does this project belong?",
           no_development_stores: <<~MESSAGE,
           No development stores available.
           Visit {{underline:https://partners.shopify.com/%d/stores}} to create one
           MESSAGE
           development_store_select: "Which development store would you like to use?",
+          cli_yml_saved: ".shopify-cli.yml saved to project root",
         },
 
         context: {
@@ -88,12 +92,14 @@ module ShopifyCli
           error: {
             missing_package: "expected to have a file at: %s",
             invalid_package: "{{info:%s}} was not valid JSON. Fix this then try again",
+            install_spinner_error: "Unable to install all %d dependencies",
+            install_error: 'An error occurred while installing dependencies',
           },
 
           installing: "Installing dependencies with %s...",
           installed: "Dependencies installed",
-          npm_installing_deps: "Installing %d dependencies...",
-          npm_installed_deps: "%d npm dependencies installed",
+          installing_deps: "Installing %d dependencies...",
+          installed_deps: "%d dependencies installed",
         },
 
         load_dev: {
@@ -120,11 +126,11 @@ module ShopifyCli
 
         logout: {
           help: <<~HELP,
-          Log out of a currently authenticated Organization and Shop, or clear invalid credentials
+          Log out of a currently authenticated partner organization and store, or clear invalid credentials
             Usage: {{command:%s logout}}
           HELP
 
-          success: "Logged out of Organization and Shop",
+          success: "Logged out of partner organization and store",
         },
 
         monorail: {
@@ -148,11 +154,11 @@ module ShopifyCli
             "{{i}} Authentication required. Login to the URL below with your %s credentials to continue.",
 
           servlet: {
-            success_response: "Authenticated Successfully, you may now close this page.",
-            invalid_request_response: "Invalid Request: %s",
+            success_response: "Authenticated successfully. You may now close this page.",
+            invalid_request_response: "Invalid request: %s",
             invalid_state_response: "Anti-forgery state token does not match the initial request.",
-            authenticated: "Authenticate Successfully",
-            not_authenticated: "Failed to Authenticate",
+            authenticated: "Authenticated successfully",
+            not_authenticated: "Failed to authenticate",
           },
         },
 
@@ -161,6 +167,7 @@ module ShopifyCli
         },
 
         partners_api: {
+          org_name_and_id: "%s (%s)",
           error: {
             account_not_found: <<~MESSAGE,
             {{x}} error: Your account was not found. Please sign up at https://partners.shopify.com/signup
@@ -243,12 +250,15 @@ module ShopifyCli
           ensure_env: {
             api_key_question: "What is your Shopify API key?",
             api_secret_key_question: "What is your Shopify API secret key?",
-            development_store_question: "What is your development store URL? (e.g. my-test-shop.myshopify.com)",
+            development_store_question: "What is your development store URL? (Example: my-dev-store.myshopify.com)",
           },
-          ensure_test_shop: {
-            could_not_verify_shop: "Couldn't verify your shop %s",
-            convert_dev_to_test_store:
-              "Do you want to convert %s to a test shop? This will enable you to install your app on this store.",
+          ensure_dev_store: {
+            could_not_verify_store: "Couldn't verify your store %s",
+            convert_to_dev_store: <<~MESSAGE,
+              Do you want to convert %s to a development store?
+              Doing this will allow you to install your app, but the store will become {{bold:transfer-disabled}}.
+              Learn more: https://shopify.dev/tutorials/transfer-a-development-store-to-a-merchant#transfer-disabled-stores
+              MESSAGE
             transfer_disabled: "{{v}} Transfer has been disabled on %s.",
           },
           update_dashboard_urls: {

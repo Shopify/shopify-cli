@@ -18,7 +18,7 @@ module Script
             super("GraphQL failed with errors: #{errors}")
           end
         end
-        class ScriptRedeployError < ScriptProjectError
+        class ScriptRepushError < ScriptProjectError
           attr_reader :api_key
           def initialize(api_key)
             @api_key = api_key
@@ -32,7 +32,6 @@ module Script
         class ShopAuthenticationError < ScriptProjectError; end
         class ShopScriptConflictError < ScriptProjectError; end
         class ShopScriptUndefinedError < ScriptProjectError; end
-        class TestError < ScriptProjectError; end
       end
     end
   end
