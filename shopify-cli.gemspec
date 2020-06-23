@@ -4,9 +4,8 @@ Gem::Specification.new do |spec|
   spec.name = "shopify-cli"
   spec.version = ShopifyCli::VERSION
   spec.authors = ["Shopify"]
-  # need to change the email that ends with `shopify.com`
-  spec.email = ["developers@jadedpixel.com"]
-  spec.license = 'Nonstandard'
+  spec.email = ["dev-tools-education@shopify.com"]
+  spec.license = 'MIT'
 
   spec.summary = "Shopify CLI helps you build Shopify apps faster."
   spec.description = <<~HERE
@@ -30,7 +29,6 @@ Gem::Specification.new do |spec|
     %x(git ls-files -z).split("\x0").reject { |f| f.match(%r{^(test|spec|features|packaging)/}) }
   end
   spec.bindir = "bin"
-  # spec.executables = spec.files.grep(%r{^bin/}) { |f| f.sub('bin/', '') }
   spec.require_paths = ["lib", "vendor"]
   spec.extensions = ["ext/shopify-cli/extconf.rb"]
 
