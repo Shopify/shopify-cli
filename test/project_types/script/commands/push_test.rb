@@ -16,6 +16,7 @@ module Script
           script_name: @script_name
         )
         @api_key = 'key'
+        @source_file = 'src/script.ts'
         @force = true
         ScriptProject.stubs(:current).returns(@script_project)
         ShopifyCli::ProjectType.load_type(:script)
@@ -27,6 +28,7 @@ module Script
           api_key: @api_key,
           language: @language,
           script_name: @script_name,
+          source_file: @source_file,
           extension_point_type: @ep_type,
           force: @force
         )

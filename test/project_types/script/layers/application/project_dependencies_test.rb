@@ -11,12 +11,10 @@ describe Script::Layers::Application::ProjectDependencies do
   let(:extension_point_type) { 'discount' }
   let(:extension_point_repository) { Script::Layers::Infrastructure::FakeExtensionPointRepository.new }
   let(:extension_point) { extension_point_repository.get_extension_point(extension_point_type) }
+  let(:task_runner) { stub }
   let(:dependency_manager) do
     Script::Layers::Infrastructure::AssemblyScriptDependencyManager
       .new(@context, language, extension_point, script_name)
-  end
-  let(:task_runner) do
-    Script::Layers::Infrastructure::AssemblyScriptTaskRunner.new(@context)
   end
 
   before do
