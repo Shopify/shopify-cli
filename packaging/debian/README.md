@@ -21,7 +21,7 @@ Before a package can be created, a few metadata files need to be put in the righ
 all have `.base` versions for reference. They should be placed in `packaging/debian/shopify-cli/DEBIAN`:
 
 * `control`
-* `postinst` 
+* `preinst` 
 * `prerm`
 
 All of those files reference the current CLI version as `SHOPIFY_CLI_VERSION`. This is filled automatically in the Rake
