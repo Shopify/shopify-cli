@@ -19,7 +19,6 @@ module Script
 
           def create_project(ctx, language, script_name, extension_point)
             ScriptProject.create(ctx, script_name)
-            ctx.root = File.join(ctx.root, script_name)
             ScriptProject.write(
               ctx,
               project_type: :script,

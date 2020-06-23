@@ -44,7 +44,6 @@ describe Script::Layers::Application::CreateScript do
       end
 
       it 'should succeed and update ctx root' do
-        initial_ctx_root = @context.root
         Script::ScriptProject.expects(:create).with(@context, script_name).once
         Script::ScriptProject
           .expects(:write)
@@ -62,7 +61,6 @@ describe Script::Layers::Application::CreateScript do
           .expects(:install)
           .with(ctx: @context, language: language, extension_point: ep, script_name: script_name)
         capture_io { subject }
-        assert_equal File.join(initial_ctx_root, script_name), @context.root
       end
     end
 
