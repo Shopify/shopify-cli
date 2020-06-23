@@ -76,11 +76,6 @@ namespace :package do
 
   task all: [:debian, :rpm, :homebrew]
 
-  desc("Builds a gem of the CLI")
-  task :gem do
-    ShopifyCli::Packager.new.build_gem
-  end
-
   desc("Builds a Debian package of the CLI")
   task :debian do
     ShopifyCli::Packager.new.build_debian
@@ -92,7 +87,7 @@ namespace :package do
   end
 
   desc("Builds a Homebrew package of the CLI")
-  task :homebrew => :"package:gem" do
+  task :homebrew do
     ShopifyCli::Packager.new.build_homebrew
   end
 end
