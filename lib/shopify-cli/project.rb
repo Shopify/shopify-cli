@@ -71,7 +71,7 @@ module ShopifyCli
       #
       # * `ctx` - the current running context of your command
       # * `project_type` - a string or symbol of your project type name
-      # * `organization_id` - the id of the organization that the app owned by. Used for metrics
+      # * `organization_id` - the id of the partner organization that the app is owned by. Used for metrics
       # * `identifiers` - an optional hash of other app identifiers
       #
       # #### Example
@@ -131,7 +131,11 @@ module ShopifyCli
     #   ShopifyCli::Project.current.env
     #
     def env
-      @env ||= Resources::EnvFile.read(directory)
+      @env ||= begin
+                 Resources::EnvFile.read(directory)
+               rescue Errno::ENOENT
+                 nil
+               end
     end
 
     ##

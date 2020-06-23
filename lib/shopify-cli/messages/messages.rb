@@ -16,7 +16,7 @@ module ShopifyCli
           already_connected_warning: "{{yellow:! This app appears to be already connected}}",
           connected: "{{v}} Project now connected to {{green:%s}}",
           project_type_select: "What type of project would you like to connect?",
-          organization_select: "To which organization does this project belong?",
+          organization_select: "To which partner organization does this project belong?",
           app_select: "To which app does this project belong?",
           no_development_stores: <<~MESSAGE,
           No development stores available.
@@ -126,11 +126,11 @@ module ShopifyCli
 
         logout: {
           help: <<~HELP,
-          Log out of a currently authenticated Organization and Store, or clear invalid credentials
+          Log out of a currently authenticated partner organization and store, or clear invalid credentials
             Usage: {{command:%s logout}}
           HELP
 
-          success: "Logged out of Organization and Store",
+          success: "Logged out of partner organization and store",
         },
 
         monorail: {
@@ -154,11 +154,11 @@ module ShopifyCli
             "{{i}} Authentication required. Login to the URL below with your %s credentials to continue.",
 
           servlet: {
-            success_response: "Authenticated Successfully, you may now close this page.",
-            invalid_request_response: "Invalid Request: %s",
+            success_response: "Authenticated successfully. You may now close this page.",
+            invalid_request_response: "Invalid request: %s",
             invalid_state_response: "Anti-forgery state token does not match the initial request.",
-            authenticated: "Authenticate Successfully",
-            not_authenticated: "Failed to Authenticate",
+            authenticated: "Authenticated successfully",
+            not_authenticated: "Failed to authenticate",
           },
         },
 
@@ -167,6 +167,7 @@ module ShopifyCli
         },
 
         partners_api: {
+          org_name_and_id: "%s (%s)",
           error: {
             account_not_found: <<~MESSAGE,
             {{x}} error: Your account was not found. Please sign up at https://partners.shopify.com/signup

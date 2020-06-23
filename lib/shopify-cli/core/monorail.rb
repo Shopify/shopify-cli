@@ -7,7 +7,7 @@ module ShopifyCli
   module Core
     module Monorail
       ENDPOINT_URI = URI.parse('https://monorail-edge.shopifycloud.com/v1/produce')
-      INVOCATIONS_SCHEMA = 'app_cli_command/3.0'
+      INVOCATIONS_SCHEMA = 'app_cli_command/4.0'
 
       # Extra hash of data that will be sent in the payload
       @metadata = {}
@@ -19,7 +19,13 @@ module ShopifyCli
           prompt_for_consent
           return yield unless enabled? && consented?
 
-          args = args.dup.unshift(name)
+          command, command_name = Commands::Registry.lookup_command(name)
+          final_command = [command_name]
+          if command
+            subcommand, subcommand_name = command.subcommand_registry.lookup_command(args.first)
+            final_command << subcommand_name if subcommand
+          end
+
           start_time = now_in_milliseconds
           err = nil
           begin
@@ -28,7 +34,7 @@ module ShopifyCli
             err = e
             raise
           ensure
-            send_event(start_time, args, err&.message)
+            send_event(start_time, final_command, args - final_command, err&.message)
           end
         end
 
@@ -55,7 +61,7 @@ module ShopifyCli
           ShopifyCli::Config.set('analytics', 'enabled', opt)
         end
 
-        def send_event(start_time, args, err = nil)
+        def send_event(start_time, commands, args, err = nil)
           end_time = now_in_milliseconds
           headers = {
             'Content-Type': 'application/json; charset=utf-8',
@@ -70,8 +76,9 @@ module ShopifyCli
               open_timeout: 0.2, read_timeout: 0.2, write_timeout: 0.2,
               use_ssl: ENDPOINT_URI.scheme == 'https'
             ) do |http|
+              payload = build_payload(start_time, end_time, commands, args, err)
               post = Net::HTTP::Post.new(ENDPOINT_URI.request_uri, headers)
-              post.body = JSON.dump(build_payload(start_time, end_time, args, err))
+              post.body = JSON.dump(payload)
               http.request(post)
             end
           rescue
@@ -79,11 +86,12 @@ module ShopifyCli
           end
         end
 
-        def build_payload(start_time, end_time, args, err = nil)
+        def build_payload(start_time, end_time, commands, args, err = nil)
           {
             schema_id: INVOCATIONS_SCHEMA,
             payload: {
               project_type: Project.current_project_type.to_s,
+              command: commands.join(' '),
               args: args.join(' '),
               time_start: start_time,
               time_end: end_time,
@@ -98,7 +106,7 @@ module ShopifyCli
 
               if Project.has_current?
                 project = Project.current
-                payload[:api_key] = project.env.api_key
+                payload[:api_key] = project.env&.api_key
                 payload[:partner_id] = project.config['organization_id']
               end
             end,

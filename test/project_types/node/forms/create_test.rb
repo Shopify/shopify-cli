@@ -96,7 +96,7 @@ module Node
           assert_equal(form.organization_id, 421)
           assert_equal(form.shop_domain, 'next.myshopify.com')
         end
-        assert_match(CLI::UI.fmt(@context.message('node.forms.create.organization', 'hoopy froods')), io.join)
+        assert_match(CLI::UI.fmt(@context.message('node.forms.create.organization', 'hoopy froods (421)')), io.join)
       end
 
       def test_organization_will_be_fetched_if_id_is_provided_but_not_shop

@@ -30,23 +30,18 @@ module Extension
         refute_empty(Build.help)
       end
 
-      def test_uses_yarn_when_yarn_is_available
-        Build.any_instance.stubs(:yarn_available?).returns(true)
-        @context.expects(:system).with(*Build::YARN_BUILD_COMMAND).returns(FakeProcessStatus.new(true))
-
-        run_build
-      end
-
-      def test_uses_npm_when_yarn_is_unavailable
-        Build.any_instance.stubs(:yarn_available?).returns(false)
-        @context.expects(:system).with(*Build::NPM_BUILD_COMMAND).returns(FakeProcessStatus.new(true))
+      def test_uses_js_system_to_call_yarn_or_npm_commands
+        ShopifyCli::JsSystem.any_instance
+          .expects(:call)
+          .with(yarn: Build::YARN_BUILD_COMMAND, npm: Build::NPM_BUILD_COMMAND)
+          .returns(true)
+          .once
 
         run_build
       end
 
       def test_aborts_and_informs_the_user_when_build_fails
-        Build.any_instance.stubs(:yarn_available?).returns(true)
-        @context.expects(:system).with(*Build::YARN_BUILD_COMMAND).returns(FakeProcessStatus.new(false))
+        ShopifyCli::JsSystem.any_instance.stubs(:call).returns(false)
         @context.expects(:abort).with(@context.message('build.build_failure_message'))
 
         run_build
