@@ -19,6 +19,7 @@ module Script
           language: project.language,
           extension_point_type: project.extension_point_type,
           script_name: project.script_name,
+          source_file: project.source_file,
           api_key: form.api_key,
           force: form.force
         )

@@ -16,30 +16,7 @@ module Script
           write_package_json
         end
 
-        def installed?
-          # Assuming if node_modules folder exist at root of script folder, all deps are installed
-          Dir.exist?("node_modules")
-        end
-
-        def install
-          check_node_version!
-
-          output, status = @ctx.capture2e("npm", "install", "--no-audit", "--no-optional", "--loglevel error")
-          raise Errors::DependencyInstallError, output unless status.success?
-        end
-
         private
-
-        def check_node_version!
-          output, status = @ctx.capture2e("node", "--version")
-          raise Errors::DependencyInstallError, output unless status.success?
-
-          require 'semantic/semantic'
-          version = ::Semantic::Version.new(output[1..-1])
-          unless version >= ::Semantic::Version.new("12.16.0")
-            raise Errors::DependencyInstallError, "Node version must be >= v12.16.0. Current version: #{output.strip}."
-          end
-        end
 
         def write_npmrc
           @ctx.system(
