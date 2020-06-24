@@ -32,7 +32,7 @@ module Script
           end
 
           def install_dependencies(ctx, language, script_name, extension_point, project)
-            task_runner = Infrastructure::TaskRunner.for(ctx, language, script_name, project)
+            task_runner = Infrastructure::TaskRunner.for(ctx, language, script_name, project.source_file)
             ProjectDependencies
               .bootstrap(ctx: ctx, language: language, extension_point: extension_point, script_name: script_name)
             ProjectDependencies

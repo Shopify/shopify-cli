@@ -11,16 +11,20 @@ describe Script::Layers::Application::CreateScript do
   let(:extension_point_type) { 'discount' }
   let(:script_name) { 'name' }
   let(:compiled_type) { 'wasm' }
+  let(:script_source) { 'src/script.ts' }
   let(:extension_point_repository) { Script::Layers::Infrastructure::FakeExtensionPointRepository.new }
   let(:ep) { extension_point_repository.get_extension_point(extension_point_type) }
   let(:script) { Script::Layers::Infrastructure::FakeScriptRepository.new.create_script(language, ep, script_name) }
   let(:task_runner) { stub(compiled_type: compiled_type) }
-  let(:script_project) { TestHelpers::FakeScriptProject.new }
+  let(:script_project) { TestHelpers::FakeScriptProject.new(language: language) }
 
   before do
     Script::ScriptProject.stubs(:current).returns(script_project)
     Script::Layers::Infrastructure::ExtensionPointRepository.stubs(:new).returns(extension_point_repository)
-    Script::Layers::Infrastructure::TaskRunner.stubs(:for).returns(task_runner)
+    Script::Layers::Infrastructure::TaskRunner
+      .stubs(:for)
+      .with(@context, language, script_name, script_source)
+      .returns(task_runner)
     extension_point_repository.create_extension_point(extension_point_type)
   end
 
