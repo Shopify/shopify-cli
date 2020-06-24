@@ -13,7 +13,7 @@
 
 5. Commit the changes with a commit message like "Packaging for release X.Y.Z"
    ```
-   $ git commit -am "Packaging for release X.Y.Z"
+   $ git commit -am "Packaging for release vX.Y.Z"
    ```
 
 6. Push out the changes
@@ -21,7 +21,7 @@
    $ git push -u origin release_X_Y_Z
    ```
 
-7. Open a PR for the branch, get necessary approvals from code owners and merge into main branch
+7. Open a PR for the branch, get necessary approvals from code owners and merge into main branch. Note that the PR title will be the release note in Shipit, so make sure it mentions the release
 
 8. Deploy using Shipit
 
@@ -34,8 +34,8 @@
 10. Clone the `Shopify/homebrew-shopify` repository (if not already cloned), and then
     * create a branch named `release_X_Y_Z_of_shopify-cli`
     * update the brew formula in `shopify-cli.rb` with the generated formula in `packaging/builds/X.Y.Z/` in the `Shopify/shopify-app-cli` repo (from step 9)
-    * commit the change and create a PR
-    * when PR is approved, merge into main branch of `Shopify/homebrew-shopify` repository
+    * commit the change and create a PR on the [Shopify Homebrew repository](https://github.com/Shopify/homebrew-shopify)
+    * when PR is approved, merge into main branch
 
 11. Go to [releases](https://github.com/Shopify/shopify-app-cli/releases) page of `Shopify/shopify-app-cli` repo and create a new release:
     * use the tag created in step 8 by Shipit (should be "vX.Y.Z")
