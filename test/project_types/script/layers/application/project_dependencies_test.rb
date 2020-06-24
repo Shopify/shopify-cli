@@ -11,6 +11,7 @@ describe Script::Layers::Application::ProjectDependencies do
   let(:extension_point_type) { 'discount' }
   let(:extension_point_repository) { Script::Layers::Infrastructure::FakeExtensionPointRepository.new }
   let(:extension_point) { extension_point_repository.get_extension_point(extension_point_type) }
+  let(:task_runner) { stub }
   let(:dependency_manager) do
     Script::Layers::Infrastructure::AssemblyScriptDependencyManager
       .new(@context, language, extension_point, script_name)
@@ -19,6 +20,7 @@ describe Script::Layers::Application::ProjectDependencies do
   before do
     extension_point_repository.create_extension_point(extension_point_type)
     Script::Layers::Infrastructure::DependencyManager.stubs(:for).returns(dependency_manager)
+    Script::Layers::Infrastructure::TaskRunner.stubs(:for).returns(task_runner)
   end
 
   describe '.bootstrap' do
@@ -33,29 +35,29 @@ describe Script::Layers::Application::ProjectDependencies do
     subject do
       capture_io do
         Script::Layers::Application::ProjectDependencies
-          .install(ctx: @context, language: language, extension_point: extension_point, script_name: script_name)
+          .install(ctx: @context, task_runner: task_runner)
       end
     end
 
     describe "when dependencies are already installed" do
       before do
-        dependency_manager.stubs(:installed?).returns(true)
+        task_runner.stubs(:dependencies_installed?).returns(true)
       end
 
       it "should skip installation" do
-        dependency_manager.expects(:install).never
+        task_runner.expects(:install_dependencies).never
         subject
       end
     end
 
     describe "when dependencies are not already installed" do
       before do
-        dependency_manager.stubs(:installed?).returns(false)
+        task_runner.stubs(:dependencies_installed?).returns(false)
       end
 
       describe "when dependency installer succeeds" do
         it "should install dependencies" do
-          dependency_manager.expects(:install)
+          task_runner.expects(:install_dependencies)
           Script::UI::ErrorHandler.expects(:display_and_raise).never
           subject
         end
@@ -64,7 +66,7 @@ describe Script::Layers::Application::ProjectDependencies do
       describe "when dependency installer fails" do
         let(:error_message) { 'some message' }
         before do
-          dependency_manager.stubs(:install)
+          task_runner.stubs(:install_dependencies)
             .raises(Script::Layers::Infrastructure::Errors::DependencyInstallError, error_message)
         end
 

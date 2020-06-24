@@ -3,6 +3,7 @@
 module Script
   class ScriptProject < ShopifyCli::Project
     SUPPORTED_LANGUAGES = %w(ts)
+    SOURCE_DIR = "src"
 
     attr_reader :extension_point_type, :script_name, :language
 
@@ -11,6 +12,14 @@ module Script
       @extension_point_type = lookup_config('extension_point_type')
       @script_name = lookup_config('script_name')
       @language = 'ts'
+    end
+
+    def source_file
+      "#{SOURCE_DIR}/#{file_name}"
+    end
+
+    def file_name
+      "script.#{language}"
     end
 
     private
