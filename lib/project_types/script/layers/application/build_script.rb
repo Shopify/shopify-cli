@@ -5,11 +5,11 @@ module Script
     module Application
       class BuildScript
         class << self
-          def call(ctx:, script:)
+          def call(ctx:, task_runner:, script:)
             return if CLI::UI::Frame.open(ctx.message('script.application.building')) do
               begin
                 UI::StrictSpinner.spin(ctx.message('script.application.building_script')) do |spinner|
-                  build(ctx, script)
+                  build(ctx, task_runner, script)
                   spinner.update_title(ctx.message('script.application.built'))
                 end
                 true
@@ -25,15 +25,13 @@ module Script
 
           private
 
-          def build(ctx, script)
+          def build(ctx, task_runner, script)
             script_repo = Infrastructure::ScriptRepository.new(ctx: ctx)
-            script_builder = Infrastructure::ScriptBuilder.for(script)
-            compiled_type = script_builder.compiled_type
             script_content = script_repo.with_temp_build_context do
-              script_builder.build
+              task_runner.build
             end
             Infrastructure::PushPackageRepository.new(ctx: ctx)
-              .create_push_package(script, script_content, compiled_type)
+              .create_push_package(script, script_content, task_runner.compiled_type)
           end
         end
       end

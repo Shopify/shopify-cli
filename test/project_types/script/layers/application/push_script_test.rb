@@ -14,12 +14,14 @@ describe Script::Layers::Application::PushScript do
   let(:force) { true }
   let(:extension_point_type) { 'discount' }
   let(:script_name) { 'name' }
+  let(:source_file) { 'src/script.ts' }
   let(:project) do
     TestHelpers::FakeScriptProject
       .new(language: @language, extension_point_type: @extension_point_type, script_name: @script_name)
   end
   let(:push_package_repository) { Script::Layers::Infrastructure::FakePushPackageRepository.new }
   let(:extension_point_repository) { Script::Layers::Infrastructure::FakeExtensionPointRepository.new }
+  let(:task_runner) { stub(compiled_type: 'wasm') }
   let(:ep) { extension_point_repository.get_extension_point(extension_point_type) }
   let(:script_repository) { Script::Layers::Infrastructure::FakeScriptRepository.new(@context) }
   let(:script) { script_repository.create_script(language, ep, script_name) }
@@ -28,6 +30,10 @@ describe Script::Layers::Application::PushScript do
     Script::Layers::Infrastructure::PushPackageRepository.stubs(:new).returns(push_package_repository)
     Script::Layers::Infrastructure::ScriptRepository.stubs(:new).with(ctx: @context).returns(script_repository)
     Script::Layers::Infrastructure::ExtensionPointRepository.stubs(:new).returns(extension_point_repository)
+    Script::Layers::Infrastructure::TaskRunner
+      .stubs(:for)
+      .with(@context, language, script_name, source_file)
+      .returns(task_runner)
     Script::ScriptProject.stubs(:current).returns(project)
     extension_point_repository.create_extension_point(extension_point_type)
     push_package_repository.create_push_package(script, 'content', compiled_type)
@@ -40,6 +46,7 @@ describe Script::Layers::Application::PushScript do
         language: language,
         extension_point_type: extension_point_type,
         script_name: script_name,
+        source_file: source_file,
         api_key: api_key,
         force: force
       )
@@ -48,9 +55,9 @@ describe Script::Layers::Application::PushScript do
     it 'should prepare and push script' do
       script_service_instance = Script::Layers::Infrastructure::ScriptService.new(ctx: @context)
       Script::Layers::Application::ProjectDependencies
-        .expects(:install).with(ctx: @context, language: language, extension_point: ep, script_name: script_name)
+        .expects(:install).with(ctx: @context, task_runner: task_runner)
       Script::Layers::Application::BuildScript
-        .expects(:call).with(ctx: @context, script: script)
+        .expects(:call).with(ctx: @context, task_runner: task_runner, script: script)
       Script::Layers::Infrastructure::ScriptService
         .expects(:new).returns(script_service_instance)
       Script::Layers::Domain::PushPackage

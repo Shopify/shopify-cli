@@ -74,7 +74,7 @@ module Script
           end
         end
 
-        refute Dir.exist?(@script_name)
+        refute @context.exist?(@script_name)
       end
 
       private

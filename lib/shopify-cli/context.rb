@@ -140,6 +140,15 @@ module ShopifyCli
       self.root = ctx_path(path)
     end
 
+    # checks if a directory exists, the filepath is relative to the command root unless absolute
+    #
+    # #### Parameters
+    # * `path` - the file path to a directory, relative to the context root to remove from the FS
+    #
+    def exist?(path)
+      Dir.exist?(ctx_path(path))
+    end
+
     # will recursively copy a directory from the FS, the filepath is relative to the command
     # root unless absolute
     #

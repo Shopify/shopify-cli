@@ -100,7 +100,7 @@ describe Script::Layers::Infrastructure::ScriptRepository do
     it "should create temp directory in the script root" do
       nested_dir = "#{script_folder_base}/some/nested/directory"
       context.mkdir_p(nested_dir)
-      Dir.chdir(nested_dir)
+      context.chdir(nested_dir)
 
       temp_dir = "#{script_folder_base}/temp"
       script_repository.with_temp_build_context do
@@ -111,9 +111,9 @@ describe Script::Layers::Infrastructure::ScriptRepository do
     it "should delete the script root temp directory afterwards" do
       temp_dir = "#{script_folder_base}/temp"
       script_repository.with_temp_build_context do
-        assert Dir.exist?(temp_dir)
+        assert context.exist?(temp_dir)
       end
-      refute Dir.exist?(temp_dir)
+      refute context.exist?(temp_dir)
     end
   end
 end

@@ -12,14 +12,16 @@ describe Script::Layers::Application::BuildScript do
     let(:script_name) { 'name' }
     let(:op_failed_msg) { 'msg' }
     let(:content) { 'content' }
+    let(:compiled_type) { 'wasm' }
     let(:extension_point_repository) { Script::Layers::Infrastructure::FakeExtensionPointRepository.new }
     let(:ep) { extension_point_repository.get_extension_point(extension_point_type) }
+    let(:task_runner) { stub(compiled_type: compiled_type) }
     let(:script_repository) { Script::Layers::Infrastructure::FakeScriptRepository.new(ctx: @context) }
     let(:script) do
       Script::Layers::Infrastructure::FakeScriptRepository.new(ctx: @context).create_script(language, ep, script_name)
     end
 
-    subject { Script::Layers::Application::BuildScript.call(ctx: @context, script: script) }
+    subject { Script::Layers::Application::BuildScript.call(ctx: @context, task_runner: task_runner, script: script) }
 
     before do
       Script::Layers::Infrastructure::ScriptRepository.stubs(:new).with(ctx: @context).returns(script_repository)
@@ -30,10 +32,7 @@ describe Script::Layers::Application::BuildScript do
     describe 'when build succeeds' do
       it 'should return normally' do
         CLI::UI::Frame.expects(:with_frame_color_override).never
-        Script::Layers::Infrastructure::AssemblyScriptWasmBuilder
-          .any_instance
-          .expects(:build)
-          .returns(content)
+        task_runner.expects(:build).returns(content)
         Script::Layers::Infrastructure::PushPackageRepository
           .any_instance
           .expects(:create_push_package)
@@ -46,10 +45,7 @@ describe Script::Layers::Application::BuildScript do
       it 'should output message and raise BuildError' do
         err_msg = 'some error message'
         CLI::UI::Frame.expects(:with_frame_color_override).yields.once
-        Script::Layers::Infrastructure::AssemblyScriptWasmBuilder
-          .any_instance
-          .expects(:build)
-          .returns(content)
+        task_runner.expects(:build).returns(content)
         Script::Layers::Infrastructure::PushPackageRepository
           .any_instance
           .expects(:create_push_package)
