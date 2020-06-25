@@ -10,12 +10,13 @@ module Script
         TEST_DIR = "test"
         LANGUAGE = "ts"
 
-        attr_reader :ctx
+        attr_reader :ctx, :extension_point, :script_name, :path_to_project
 
-        def initialize(ctx, extension_point, script_name)
+        def initialize(ctx, extension_point, script_name, path_to_project)
           @ctx = ctx
           @extension_point = extension_point
           @script_name = script_name
+          @path_to_project = path_to_project
         end
 
         def setup_dependencies
@@ -29,10 +30,6 @@ module Script
         end
 
         private
-
-        def project
-          @project ||= ScriptProject.current
-        end
 
         def create_src_folder
           ctx.mkdir_p(src_base)
@@ -53,11 +50,11 @@ module Script
         end
 
         def test_base
-          "#{project.directory}/#{TEST_DIR}"
+          "#{path_to_project}/#{TEST_DIR}"
         end
 
         def src_base
-          "#{project.directory}/#{SOURCE_DIR}"
+          "#{path_to_project}/#{SOURCE_DIR}"
         end
 
         def copy_template_file(destination, name)
@@ -85,12 +82,12 @@ module Script
         def write_package_json
           package_json = <<~HERE
             {
-              "name": "#{@script_name}",
+              "name": "#{script_name}",
               "version": "1.0.0",
               "devDependencies": {
-                "@shopify/scripts-sdk-as": "#{@extension_point.sdks[:ts].sdk_version}",
-                "@shopify/scripts-toolchain-as": "#{@extension_point.sdks[:ts].toolchain_version}",
-                "#{@extension_point.sdks[:ts].package}": "#{@extension_point.sdks[:ts].version}",
+                "@shopify/scripts-sdk-as": "#{extension_point.sdks[:ts].sdk_version}",
+                "@shopify/scripts-toolchain-as": "#{extension_point.sdks[:ts].toolchain_version}",
+                "#{extension_point.sdks[:ts].package}": "#{extension_point.sdks[:ts].version}",
                 "@as-pect/cli": "4.0.0",
                 "as-wasi": "^0.0.1",
                 "assemblyscript": "^0.12.0"

@@ -9,8 +9,9 @@ module Script
         class << self
           def call(ctx:, language:, script_name:, extension_point_type:)
             extension_point = ExtensionPoints.get(type: extension_point_type)
-            project_creator = Infrastructure::ProjectCreator.for(ctx, language, extension_point, script_name)
             project = setup_project(ctx, script_name, extension_point)
+            project_creator = Infrastructure::ProjectCreator
+              .for(ctx, language, extension_point, script_name, project.directory)
             install_dependencies(ctx, language, script_name, project, project_creator)
             bootstrap(ctx, project_creator)
             ShopifyCli::Core::Finalize.request_cd(script_name)

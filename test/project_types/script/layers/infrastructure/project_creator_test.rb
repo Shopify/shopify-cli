@@ -16,12 +16,7 @@ describe Script::Layers::Infrastructure::ProjectCreator do
     end
     let(:extension_point) { Script::Layers::Domain::ExtensionPoint.new("discount", extension_point_config) }
     subject do
-      Script::Layers::Infrastructure::ProjectCreator.for(
-        @context,
-        language,
-        extension_point,
-        script_name
-      )
+      Script::Layers::Infrastructure::ProjectCreator.for(@context, language, extension_point, script_name, '/path')
     end
 
     describe "when the script language does match an entry in the registry" do
