@@ -176,6 +176,12 @@ module ShopifyCli
           },
         },
 
+        api: {
+          error: {
+            internal_server_error: '{{red:{{x}} An unexpected error occurred on Shopify.}}',
+          },
+        },
+
         populate: {
           options: {
             header: "{{bold:{{cyan:%s}} options:}}",
