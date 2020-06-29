@@ -8,6 +8,7 @@ module ShopifyCli
         super
         ShopifyCli::Git.stubs(:sha).returns("bb6f42193239a248f054e5019e469bc75f3adf1b")
         CLI::UI::Prompt.stubs(:confirm).returns(true)
+        ShopifyCli::Core::Monorail.metadata = {}
       end
 
       def teardown
