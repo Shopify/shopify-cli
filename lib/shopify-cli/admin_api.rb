@@ -43,6 +43,46 @@ module ShopifyCli
         end
       end
 
+      ##
+      #
+      #
+      #
+      # #### Parameters
+      # - `ctx`: running context from your command
+      # - `shop`: shop domain string for shop whose admin you are calling
+      # - `path`: path string (excluding prefixes and API version) for specific JSON that you are requesting
+      #     ex. "data.json" instead of "/admin/api/unstable/data.json"
+      # - `body`: data string for corresponding REST request types
+      # - `method`: REST request string for the type of request; if nil, will perform GET request
+      # - `api_version`: API version string to specify version; if nil, latest will be used
+      # - `token`: shop password string for authentication to shop
+      #
+      # #### Raises
+      #
+      # * http 404 will raise a ShopifyCli::API::APIRequestNotFoundError
+      # * http 400..499 will raise a ShopifyCli::API::APIRequestClientError
+      # * http 500..599 will raise a ShopifyCli::API::APIRequestServerError
+      # * All other codes will raise ShopifyCli::API::APIRequestUnexpectedError
+      #
+      # #### Returns
+      #
+      # * `resp` - JSON response array
+      #
+      # #### Example
+      #
+      #   ShopifyCli::AdminAPI.rest_request(@ctx,
+      #                                     shop: 'shop.myshopify.com',
+      #                                     path: 'data.json',
+      #                                     token: 'password')
+      #
+      def rest_request(ctx, shop:, path:, body: nil, method: "GET", api_version: nil, token: nil)
+        ShopifyCli::DB.set(admin_access_token: token) unless token.nil?
+        url = URI::HTTPS.build(host: shop, path: "/admin/api/#{fetch_api_version(ctx, api_version, shop)}/#{path}")
+        resp = api_client(ctx, api_version, shop, path: path).request(url: url.to_s, body: body, method: method)
+        ShopifyCli::DB.set(admin_access_token: nil) unless token.nil?
+        resp
+      end
+
       private
 
       def authenticated_req(ctx, shop)
@@ -65,12 +105,12 @@ module ShopifyCli
         ).authenticate("https://#{shop}/admin/oauth")
       end
 
-      def api_client(ctx, api_version, shop)
+      def api_client(ctx, api_version, shop, path: 'graphql.json')
         new(
           ctx: ctx,
           auth_header: 'X-Shopify-Access-Token',
           token: admin_access_token(ctx, shop),
-          url: "https://#{shop}/admin/api/#{fetch_api_version(ctx, api_version, shop)}/graphql.json",
+          url: "https://#{shop}/admin/api/#{fetch_api_version(ctx, api_version, shop)}/#{path}",
         )
       end
 

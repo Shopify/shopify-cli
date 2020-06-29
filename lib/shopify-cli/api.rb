@@ -24,10 +24,8 @@ module ShopifyCli
 
     def query(query_name, variables: {})
       _, resp = request(
-        load_query(query_name),
-        variables: variables,
-        headers: default_headers,
-        graphql_url: url,
+        body: JSON.dump(query: load_query(query_name).tr("\n", ""), variables: variables),
+        url: url,
       )
       ctx.debug(resp)
       resp
@@ -36,32 +34,21 @@ module ShopifyCli
       ctx.debug(ctx.message('core.api.error.internal_server_error_debug', e.message))
     end
 
-    protected
-
-    def load_query(name)
-      project_type = ShopifyCli::Project.current_project_type
-      project_file_path = File.join(
-        ShopifyCli::ROOT, 'lib', 'project_types', project_type.to_s, 'graphql', "#{name}.graphql"
-      )
-      if !project_type.nil? && File.exist?(project_file_path)
-        File.read(project_file_path)
-      else
-        File.read(File.join(ShopifyCli::ROOT, 'lib', 'graphql', "#{name}.graphql"))
-      end
-    end
-
-    private
-
-    def request(body, graphql_url:, variables: {}, headers: {})
+    def request(url:, body: nil, headers: {}, method: "POST")
       CLI::Kit::Util.begin do
-        uri = URI.parse(graphql_url)
+        uri = URI.parse(url)
         unless uri.is_a?(URI::HTTP)
-          ctx.abort("Invalid URL: #{graphql_url}")
+          ctx.abort(ctx.message('core.api.error.invalid_url', url))
         end
 
         # we delay this require so as to avoid a performance hit on starting the CLI
         require 'shopify-cli/http_request'
-        response = HttpRequest.call(uri, body, variables, headers)
+        headers = default_headers.merge(headers)
+        response = if method == "POST"
+          HttpRequest.post(uri, body, headers)
+        elsif method == "GET"
+          HttpRequest.get(uri, body, headers)
+        end
 
         case response.code.to_i
         when 200..399
@@ -83,6 +70,22 @@ module ShopifyCli
         sleep(1) if e.is_a?(APIRequestThrottledError)
       end
     end
+
+    protected
+
+    def load_query(name)
+      project_type = ShopifyCli::Project.current_project_type
+      project_file_path = File.join(
+        ShopifyCli::ROOT, 'lib', 'project_types', project_type.to_s, 'graphql', "#{name}.graphql"
+      )
+      if !project_type.nil? && File.exist?(project_file_path)
+        File.read(project_file_path)
+      else
+        File.read(File.join(ShopifyCli::ROOT, 'lib', 'graphql', "#{name}.graphql"))
+      end
+    end
+
+    private
 
     def current_sha
       @current_sha ||= Git.sha(dir: ShopifyCli::ROOT)
