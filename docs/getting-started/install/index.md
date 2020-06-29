@@ -7,7 +7,7 @@ redirect_from: "/install/"
 
 Shopify App CLI can be installed using a variety of package managers.
 
-### Brew (MacOS)
+### Homebrew (macOS)
 
 You’ll need to run `brew tap` first to add Shopify’s third-party repositories to Homebrew.
 
@@ -24,7 +24,7 @@ You’ll need to install a downloaded .deb file with an explicit version number.
 $ sudo apt install shopify-cli-x.y.z.deb
 ```
 
-### RPM (CentOS, Fedora, Red Hat, SUSE)
+### yum (CentOS, Fedora, Red Hat, SUSE)
 
 You’ll need to install a downloaded .rpm file with an explicit version number. Make sure you check the [releases page](https://github.com/Shopify/shopify-app-cli/releases) to make sure you install the latest package.
 

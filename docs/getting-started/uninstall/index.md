@@ -7,7 +7,7 @@ redirect_from: "/uninstall/"
 
 Shopify App CLI can be removed from your system using the same package manager you used to install it.
 
-### Brew (MacOS)
+### Homebrew (macOS)
 
 ```console
 $ brew uninstall shopify-cli
@@ -19,7 +19,7 @@ $ brew uninstall shopify-cli
 $ sudo apt remove shopify-cli
 ```
 
-### RPM (CentOS, Fedora, Red Hat, SUSE)
+### yum (CentOS, Fedora, Red Hat, SUSE)
 
 ```console
 $ sudo yum remove shopify-cli
