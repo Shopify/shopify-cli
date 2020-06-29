@@ -11,7 +11,7 @@ module ShopifyCli
   class Tunnel
     extend SingleForwardable
 
-    def_delegators :new, :start, :stop, :auth
+    def_delegators :new, :start, :stop, :auth, :stats, :urls
 
     class FetchUrlError < RuntimeError; end
     class NgrokError < RuntimeError; end
@@ -22,6 +22,10 @@ module ShopifyCli
       mac: 'https://bin.equinox.io/c/4VmDzA7iaHb/ngrok-stable-darwin-amd64.zip',
       linux: 'https://bin.equinox.io/c/4VmDzA7iaHb/ngrok-stable-linux-amd64.zip',
     }
+
+    NGROK_TUNNELS_URI = URI.parse('http://localhost:4040/api/tunnels')
+    TUNNELS_FIELD = 'tunnels'
+    PUBLIC_URL_FIELD = 'public_url'
 
     ##
     # will find and stop a running tunnel process. It will also output if the
@@ -80,6 +84,34 @@ module ShopifyCli
     def auth(ctx, token)
       install(ctx)
       ctx.system(File.join(ShopifyCli::ROOT, 'ngrok'), 'authtoken', token)
+    end
+
+    ##
+    # will return the statistics of the current running tunnels
+    #
+    # #### Returns
+    #
+    # * `stats` - the hash of running statistics returning from the ngrok api
+    #
+    def stats
+      response = Net::HTTP.get_response(NGROK_TUNNELS_URI)
+      JSON.parse(response.body)
+    rescue
+      {}
+    end
+
+    ##
+    # will return the urls of the current running tunnels
+    #
+    # #### Returns
+    #
+    # * `stats` - the array of urls
+    #
+    def urls
+      tunnels = stats.dig(TUNNELS_FIELD)
+      tunnels.map { |tunnel| tunnel.dig(PUBLIC_URL_FIELD) }
+    rescue
+      []
     end
 
     private

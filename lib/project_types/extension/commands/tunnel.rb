@@ -37,7 +37,7 @@ module Extension
       private
 
       def status
-        tunnel_url = Features::TunnelUrl.fetch
+        tunnel_url = ShopifyCli::Tunnel.urls.first
 
         if tunnel_url.nil?
           @ctx.puts(@ctx.message('tunnel.no_tunnel_running'))
