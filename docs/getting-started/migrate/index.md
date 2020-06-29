@@ -56,5 +56,5 @@ Next, install the most recent version of Shopify App CLI. Follow the [install di
 
 ## 3. Re-authenticate the CLI
 
-The upgrade process moves some configuration files, so you’ll need to re-authenticate the CLI with your Shopify Partner Dashboard. The CLI will automatically prompt you to re-authenticate when needed.
+The migration process moves some configuration files, so you’ll need to re-authenticate the CLI with your Shopify Partner Dashboard. The CLI will automatically prompt you to re-authenticate when needed.
 

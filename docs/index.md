@@ -10,18 +10,17 @@ Shopify App CLI helps you build Shopify apps faster. It quickly scaffolds Node.j
 
 ## Quick start
 
-1. Install Shopify App CLI:
-    ```console
-    $ eval "$(curl -sS https://raw.githubusercontent.com/Shopify/shopify-app-cli/master/install.sh)"
-    ```
+1. [Install Shopify App CLI]({{ site.baseurl }}{% link getting-started/install/index.md %}).
 2. Create an app:
     ```console
     $ shopify create
     ```
-3. Start and install your app on a Shopify Development store:
+3. Start and install your app on a Shopify development store:
     ```console
     $ shopify serve
     ```
     ```console
     $ shopify open
     ```
+
+**[Learn more in our Getting Started guide]({{ site.baseurl }}{% link getting-started/index.md %})**
