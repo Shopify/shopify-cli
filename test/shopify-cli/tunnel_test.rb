@@ -87,6 +87,37 @@ module ShopifyCli
       end
     end
 
+    def test_stats_returns_the_json_stats_of_all_running_tunnels
+      mock_ngrok_tunnels_http_call(response_body: JSON.dump(fake_ngrok_api_response))
+
+      assert_equal fake_ngrok_api_response, Tunnel.stats
+    end
+
+    def test_stats_returns_empty_has_if_invalid_response_is_returned
+      mock_ngrok_tunnels_http_call(response_body: "{{}")
+
+      assert_nothing_raised do
+        assert_equal({}, Tunnel.stats)
+      end
+    end
+
+    def test_urls_returns_the_list_of_current_running_ngrok_urls
+      Tunnel.any_instance.expects(:stats).returns(fake_ngrok_api_response).once
+      expected_urls = %w(https://shopify.ngrok.io http://shopify.ngrok.io)
+
+      assert_equal expected_urls, Tunnel.urls
+    end
+
+    def test_urls_returns_an_empty_array_if_an_empty_hash_is_returns_from_stats
+      Tunnel.any_instance.expects(:stats).returns({}).once
+
+      assert_nothing_raised do
+        assert_equal [], Tunnel.urls
+      end
+    end
+
+    private
+
     def with_log(fixture = 'ngrok')
       log_path = File.join(ShopifyCli::ROOT, "test/fixtures/#{fixture}.log")
       process = ShopifyCli::ProcessSupervision.new(:ngrok, pid: 40000)
@@ -94,6 +125,20 @@ module ShopifyCli
       File.write(process.log_path, File.read(log_path))
       yield
       process.stop
+    end
+
+    def mock_ngrok_tunnels_http_call(response_body:)
+      Net::HTTP
+        .expects(:get_response)
+        .with(Tunnel::NGROK_TUNNELS_URI)
+        .returns(mock(body: response_body))
+        .once
+    end
+
+    def fake_ngrok_api_response
+      @ngrok_api_response ||= begin
+        JSON.parse(File.read(File.join(ShopifyCli::ROOT, 'test', 'fixtures', 'ngrok_api.json')))
+      end
     end
   end
 end

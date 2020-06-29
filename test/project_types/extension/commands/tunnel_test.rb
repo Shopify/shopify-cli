@@ -67,8 +67,8 @@ module Extension
         capture_io { run_tunnel(Tunnel::STOP_SUBCOMMAND) }
       end
 
-      def test_status_outputs_no_tunnel_running_if_tunnel_url_returns_nil
-        Features::TunnelUrl.expects(:fetch).returns(nil).once
+      def test_status_outputs_no_tunnel_running_if_tunnel_url_returns_empty
+        ShopifyCli::Tunnel.expects(:urls).returns([]).once
 
         io = capture_io { run_tunnel(Tunnel::STATUS_SUBCOMMAND) }
 
@@ -77,7 +77,7 @@ module Extension
 
       def test_status_outputs_the_running_tunnel_url_if_returned_by_tunnel_url
         fake_url = 'http://12345.ngrok.io'
-        Features::TunnelUrl.expects(:fetch).returns(fake_url).once
+        ShopifyCli::Tunnel.expects(:urls).returns([fake_url]).once
 
         io = capture_io { run_tunnel(Tunnel::STATUS_SUBCOMMAND) }
 
