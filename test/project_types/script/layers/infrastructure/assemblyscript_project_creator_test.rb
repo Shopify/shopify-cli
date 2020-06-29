@@ -22,7 +22,7 @@ describe Script::Layers::Infrastructure::AssemblyScriptProjectCreator do
   let(:extension_point) { Script::Layers::Domain::ExtensionPoint.new(extension_point_type, extension_point_config) }
   let(:project_creator) do
     Script::Layers::Infrastructure::AssemblyScriptProjectCreator
-      .new(context, extension_point, script_name, script_name)
+      .new(ctx: context, extension_point: extension_point, script_name: script_name, path_to_project: script_name)
   end
   let(:extension_point_config) do
     {

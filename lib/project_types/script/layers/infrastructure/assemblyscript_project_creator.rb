@@ -4,20 +4,17 @@ module Script
   module Layers
     module Infrastructure
       class AssemblyScriptProjectCreator
+        include SmartProperties
+        property! :ctx, accepts: ShopifyCli::Context
+        property! :extension_point, accepts: Domain::ExtensionPoint
+        property! :script_name, accepts: String
+        property! :path_to_project, accepts: String
+
         BOOTSTRAP_SRC = "npx --no-install shopify-scripts-bootstrap src %{src_base}"
         BOOTSTRAP_TEST = "npx --no-install shopify-scripts-bootstrap test %{test_base}"
         SOURCE_DIR = "src"
         TEST_DIR = "test"
         LANGUAGE = "ts"
-
-        attr_reader :ctx, :extension_point, :script_name, :path_to_project
-
-        def initialize(ctx, extension_point, script_name, path_to_project)
-          @ctx = ctx
-          @extension_point = extension_point
-          @script_name = script_name
-          @path_to_project = path_to_project
-        end
 
         def setup_dependencies
           write_npmrc
