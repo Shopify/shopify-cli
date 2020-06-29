@@ -10,48 +10,87 @@ module Theme
       end
 
       def test_does_nothing_if_themekit_installed
-        File.expects(:exist?).with(EnsureThemekitInstalled::FILENAME).returns(true)
+        stat = mock
+        @context.expects(:capture2e).with(Themekit::THEMEKIT).returns(['out', stat])
+        stat.stubs(:success?).returns(true)
+
         assert_nothing_raised do
           EnsureThemekitInstalled.call(@context)
         end
       end
 
       def test_installs_and_makes_executable_if_not_installed
-        File.expects(:exist?).with(EnsureThemekitInstalled::FILENAME).returns(false)
+        stub_check_executable
         stub_releases
         stub_themekit_file_write
-        Digest::MD5.expects(:file).with(EnsureThemekitInstalled::FILENAME).returns('boop')
-        FileUtils.expects(:chmod).with('+x', EnsureThemekitInstalled::FILENAME)
+
+        Digest::MD5.expects(:file).with(Themekit::THEMEKIT).returns('boop')
+        FileUtils.expects(:chmod).with('+x', Themekit::THEMEKIT)
 
         EnsureThemekitInstalled.call(@context)
       end
 
-      def test_deletes_if_bad_digest
-        File.expects(:exist?).with(EnsureThemekitInstalled::FILENAME).returns(false)
+      def test_fails_if_bad_digest
+        stub_check_executable
         stub_releases
         stub_themekit_file_write
-        Digest::MD5.expects(:file).with(EnsureThemekitInstalled::FILENAME).returns('mlem')
-        FileUtils.expects(:chmod).with('+x', EnsureThemekitInstalled::FILENAME).never
-        FileUtils.expects(:rm).with(EnsureThemekitInstalled::FILENAME)
 
-        EnsureThemekitInstalled.call(@context)
+        Digest::MD5.expects(:file).with(Themekit::THEMEKIT).returns('mlem')
+        FileUtils.expects(:chmod).with('+x', Themekit::THEMEKIT).never
+        File.expects(:exist?).with(Themekit::THEMEKIT).returns(true)
+        FileUtils.expects(:rm).with(Themekit::THEMEKIT)
+
+        assert_raises(ShopifyCli::Abort,
+                      @context.message('theme.tasks.ensure_themekit_installed.errors.digest_fail')) do
+          EnsureThemekitInstalled.call(@context)
+        end
       end
 
-      def test_fails_gracefully_if_errors
-        File.expects(:exist?).with(EnsureThemekitInstalled::FILENAME).returns(false)
+      def test_fails_gracefully_if_network_errors
+        stat = mock
+        @context.expects(:capture2e).with(Themekit::THEMEKIT).returns(['out', stat])
+        stat.stubs(:success?).returns(false)
         stub_request(:get, EnsureThemekitInstalled::URL).to_return(status: 504)
-        File.expects(:write)
-          .with(EnsureThemekitInstalled::FILENAME, 'this is data').never
-        Digest::MD5.expects(:file).with(EnsureThemekitInstalled::FILENAME).never
-        FileUtils.expects(:chmod).with('+x', EnsureThemekitInstalled::FILENAME).never
-        FileUtils.expects(:rm).with(EnsureThemekitInstalled::FILENAME).never
 
-        assert_nothing_raised do
+        @context.expects(:capture2e)
+          .with('curl', '-o', Themekit::THEMEKIT, 'http://www.website.ca')
+          .never
+        Digest::MD5.expects(:file).with(Themekit::THEMEKIT).never
+        FileUtils.expects(:chmod).with('+x', Themekit::THEMEKIT).never
+
+        assert_raises(ShopifyCli::Abort,
+                      @context.message('theme.tasks.ensure_themekit_installed.errors.releases_fail')) do
+          EnsureThemekitInstalled.call(@context)
+        end
+      end
+
+      def test_fails_if_bad_write
+        stub_check_executable
+        stub_releases
+
+        stat = mock
+        @context.expects(:capture2e)
+          .with('curl', '-o', Themekit::THEMEKIT, 'http://www.website.ca')
+          .returns(['out', stat])
+        stat.stubs(:success?).returns(false)
+
+        Digest::MD5.expects(:file).with(Themekit::THEMEKIT).never
+        FileUtils.expects(:chmod).with('+x', Themekit::THEMEKIT).never
+        File.expects(:exist?).with(Themekit::THEMEKIT).returns(true)
+        FileUtils.expects(:rm).with(Themekit::THEMEKIT)
+
+        assert_raises(ShopifyCli::Abort, @context.message('theme.tasks.ensure_themekit_installed.errors.write_fail')) do
           EnsureThemekitInstalled.call(@context)
         end
       end
 
       private
+
+      def stub_check_executable
+        stat = mock
+        @context.expects(:capture2e).with(Themekit::THEMEKIT).returns(['out', stat])
+        stat.stubs(:success?).returns(false)
+      end
 
       def stub_releases
         stub_request(:get, EnsureThemekitInstalled::URL)
@@ -78,11 +117,11 @@ module Theme
       end
 
       def stub_themekit_file_write
-        stub_request(:get, 'http://www.website.ca')
-          .to_return(body: 'this is data')
-
-        File.expects(:write)
-          .with(EnsureThemekitInstalled::FILENAME, 'this is data')
+        stat = mock
+        @context.expects(:capture2e)
+          .with('curl', '-o', Themekit::THEMEKIT, 'http://www.website.ca')
+          .returns(['out', stat])
+        stat.stubs(:success?).returns(true)
       end
     end
   end
