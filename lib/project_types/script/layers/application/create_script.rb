@@ -19,8 +19,7 @@ module Script
           private
 
           def create_project(ctx, script_name, extension_point)
-            ScriptProject.create(script_name)
-            ctx.root = File.join(ctx.root, script_name)
+            ScriptProject.create(ctx, script_name)
             ScriptProject.write(
               ctx,
               project_type: :script,
@@ -42,8 +41,12 @@ module Script
           def create_definition(ctx, language, extension_point, script_name)
             script = nil
             UI::StrictSpinner.spin(ctx.message('script.create.creating')) do |spinner|
-              script = Infrastructure::ScriptRepository.new.create_script(language, extension_point, script_name)
-              Infrastructure::TestSuiteRepository.new.create_test_suite(script)
+              script = Infrastructure::ScriptRepository.new(ctx: ctx).create_script(
+                language,
+                extension_point,
+                script_name
+              )
+              Infrastructure::TestSuiteRepository.new(ctx: ctx).create_test_suite(script)
               spinner.update_title(ctx.message('script.create.created'))
             end
             script

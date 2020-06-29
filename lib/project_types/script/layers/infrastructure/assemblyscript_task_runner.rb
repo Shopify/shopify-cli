@@ -34,7 +34,7 @@ module Script
 
         def dependencies_installed?
           # Assuming if node_modules folder exist at root of script folder, all deps are installed
-          Dir.exist?("node_modules")
+          ctx.exist?("node_modules")
         end
 
         private

@@ -29,8 +29,40 @@ module Script
       }, ShopifyCli::Core::Monorail.metadata)
     end
 
+    def test_create_when_directory_does_not_exist
+      @context
+        .expects(:exist?)
+        .with(@script_name)
+        .returns(false)
+
+      @context
+        .expects(:mkdir_p)
+        .with(@script_name)
+
+      @context
+        .expects(:chdir)
+        .with(@script_name)
+
+      Script::ScriptProject.create(@context, @script_name)
+    end
+
+    def test_create_when_directory_exists
+      @context
+        .expects(:exist?)
+        .with(@script_name)
+        .returns(true)
+
+      assert_raises Errors::ScriptProjectAlreadyExistsError do
+        Script::ScriptProject.create(@context, @script_name)
+      end
+    end
+
     def test_cleanup_when_directory_exists
-      Dir
+      @context
+        .expects(:chdir)
+        .with(@context.root)
+
+      @context
         .expects(:exist?)
         .with("#{@context.root}/#{@script_name}")
         .returns(true)
@@ -47,7 +79,11 @@ module Script
     end
 
     def test_cleanup_when_directory_does_not_exist
-      Dir
+      @context
+        .expects(:chdir)
+        .with(@context.root)
+
+      @context
         .expects(:exist?)
         .with("#{@context.root}/#{@script_name}")
         .returns(false)

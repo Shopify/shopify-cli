@@ -35,16 +35,15 @@ module Script
     end
 
     class << self
-      def create(dir)
-        raise Errors::ScriptProjectAlreadyExistsError, dir if Dir.exist?(dir)
-
-        FileUtils.mkdir_p(dir)
-        Dir.chdir(dir)
+      def create(ctx, dir)
+        raise Errors::ScriptProjectAlreadyExistsError, dir if ctx.exist?(dir)
+        ctx.mkdir_p(dir)
+        ctx.chdir(dir)
       end
 
       def cleanup(ctx:, script_name:, root_dir:)
-        Dir.chdir(root_dir)
-        ctx.rm_r("#{root_dir}/#{script_name}") if Dir.exist?("#{root_dir}/#{script_name}")
+        ctx.chdir(root_dir)
+        ctx.rm_r("#{root_dir}/#{script_name}") if ctx.exist?("#{root_dir}/#{script_name}")
       end
     end
   end

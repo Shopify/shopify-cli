@@ -14,7 +14,8 @@ describe Script::Layers::Application::CreateScript do
   let(:script_source) { 'src/script.ts' }
   let(:extension_point_repository) { Script::Layers::Infrastructure::FakeExtensionPointRepository.new }
   let(:ep) { extension_point_repository.get_extension_point(extension_point_type) }
-  let(:script) { Script::Layers::Infrastructure::FakeScriptRepository.new.create_script(language, ep, script_name) }
+  let(:script_repo) { Script::Layers::Infrastructure::FakeScriptRepository.new(ctx: @context) }
+  let(:script) { script_repo.create_script(language, ep, script_name) }
   let(:task_runner) { stub(compiled_type: compiled_type) }
   let(:script_project) { TestHelpers::FakeScriptProject.new(language: language) }
 
@@ -48,8 +49,7 @@ describe Script::Layers::Application::CreateScript do
       end
 
       it 'should succeed and update ctx root' do
-        initial_ctx_root = @context.root
-        Script::ScriptProject.expects(:create).with(script_name).once
+        Script::ScriptProject.expects(:create).with(@context, script_name).once
         Script::ScriptProject
           .expects(:write)
           .with(
@@ -62,7 +62,6 @@ describe Script::Layers::Application::CreateScript do
         capture_io do
           assert_equal script_project, subject
         end
-        assert_equal File.join(initial_ctx_root, script_name), @context.root
       end
     end
 

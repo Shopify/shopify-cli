@@ -22,11 +22,12 @@ describe Script::Layers::Infrastructure::ScriptRepository do
   let(:script_source_base) { "#{script_folder_base}/src" }
   let(:script_source_file) { "#{script_source_base}/script.#{language}" }
   let(:expected_script_id) { "src/script.#{language}" }
-  let(:script_repository) { Script::Layers::Infrastructure::ScriptRepository.new }
   let(:project) { TestHelpers::FakeProject.new }
+  let(:context) { TestHelpers::FakeContext.new }
+  let(:script_repository) { Script::Layers::Infrastructure::ScriptRepository.new(ctx: context) }
 
   before do
-    FileUtils.mkdir_p(script_folder_base)
+    context.mkdir_p(script_folder_base)
     Script::ScriptProject.stubs(:current).returns(project)
     project.directory = script_folder_base
   end
@@ -58,7 +59,7 @@ describe Script::Layers::Infrastructure::ScriptRepository do
 
     describe "when extension point is valid" do
       it "should return the requested script" do
-        FileUtils.mkdir_p(script_source_base)
+        context.mkdir_p(script_source_base)
         File.write(script_source_file, "//script code")
         script = subject
         assert_equal expected_script_id, script.id
@@ -67,7 +68,7 @@ describe Script::Layers::Infrastructure::ScriptRepository do
       end
 
       it "should raise ScriptNotFoundError when script source file does not exist" do
-        FileUtils.mkdir_p(script_source_base)
+        context.mkdir_p(script_source_base)
         e = assert_raises(Script::Layers::Domain::Errors::ScriptNotFoundError) { subject }
         assert_equal script_source_file, e.script_name
       end
@@ -75,18 +76,19 @@ describe Script::Layers::Infrastructure::ScriptRepository do
   end
 
   describe ".with_temp_build_context" do
-    let(:script_file) { "#{extension_point.type}.#{language}" }
+    let(:script_file) { "script.#{language}" }
     let(:helper_file) { "helper.#{language}" }
 
     before do
-      FileUtils.mkdir_p(script_source_base)
+      context.mkdir_p(script_source_base)
       Dir.chdir(script_source_base)
-      File.write(script_file, "//run code")
+      context.root = script_source_base
+      context.write(script_file, "//run code")
     end
 
     it "should go to a tempdir with all its files" do
-      File.write(helper_file, "//helper code")
-      FileUtils.mkdir_p("other_dir")
+      context.write(helper_file, "//helper code")
+      context.mkdir_p("other_dir")
 
       script_repository.with_temp_build_context do
         refute_equal script_source_base, Dir.pwd
@@ -97,8 +99,8 @@ describe Script::Layers::Infrastructure::ScriptRepository do
 
     it "should create temp directory in the script root" do
       nested_dir = "#{script_folder_base}/some/nested/directory"
-      FileUtils.mkdir_p(nested_dir)
-      Dir.chdir(nested_dir)
+      context.mkdir_p(nested_dir)
+      context.chdir(nested_dir)
 
       temp_dir = "#{script_folder_base}/temp"
       script_repository.with_temp_build_context do
@@ -109,9 +111,9 @@ describe Script::Layers::Infrastructure::ScriptRepository do
     it "should delete the script root temp directory afterwards" do
       temp_dir = "#{script_folder_base}/temp"
       script_repository.with_temp_build_context do
-        assert Dir.exist?(temp_dir)
+        assert context.exist?(temp_dir)
       end
-      refute Dir.exist?(temp_dir)
+      refute context.exist?(temp_dir)
     end
   end
 end

@@ -74,7 +74,7 @@ module Script
           end
         end
 
-        refute Dir.exist?(@script_name)
+        refute @context.exist?(@script_name)
       end
 
       private
@@ -86,7 +86,11 @@ module Script
       def fake_script
         @fake_script ||= begin
            ep = Script::Layers::Infrastructure::FakeExtensionPointRepository.new.create_extension_point(@ep_type)
-           Script::Layers::Infrastructure::FakeScriptRepository.new.create_script(@language, ep, @script_name)
+           Script::Layers::Infrastructure::FakeScriptRepository.new(ctx: @context).create_script(
+             @language,
+             ep,
+             @script_name
+           )
          end
       end
     end
