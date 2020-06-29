@@ -7,9 +7,9 @@ module ShopifyCli
 
       def call(ctx, organization_id: nil, shop_domain: nil)
         @ctx = ctx
-        return response(organization_id.to_i, shop_domain) if !organization_id.nil? && !shop_domain.nil?
+        return response(organization_id.to_i, shop_domain) unless organization_id.nil? || shop_domain.nil?
         org = get_organization(organization_id)
-        shop_domain = get_shop_domain(org, shop_domain)
+        shop_domain ||= get_shop_domain(org)
         response(org["id"].to_i, shop_domain)
       end
 
@@ -52,9 +52,7 @@ module ShopifyCli
         end
       end
 
-      def get_shop_domain(organization, shop_domain)
-        return shop_domain unless shop_domain.nil?
-
+      def get_shop_domain(organization)
         valid_stores = organization['stores'].select do |store|
           store['transferDisabled'] == true || store['convertableToPartnerTest'] == true
         end

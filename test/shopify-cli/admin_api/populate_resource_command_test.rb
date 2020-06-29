@@ -22,6 +22,17 @@ module ShopifyCli
         assert_equal('[{price: "4.99"}]', @resource.input['variants'])
       end
 
+      def test_prompts_and_writes_to_env_if_no_shop
+        Project.current.stubs(:env).returns(Resources::EnvFile.new(api_key: '123', secret: 'foo'))
+        assert_nil(Project.current.env.shop)
+        ShopifyCli::Tasks::SelectOrgAndShop.expects(:call)
+          .with(@context)
+          .returns({ shop_domain: 'shopdomain.myshopify.com' })
+        Resources::EnvFile.any_instance.expects(:update)
+        @resource.expects(:run_mutation).times(Rails::Commands::Populate::Product::DEFAULT_COUNT)
+        @resource.call([], nil)
+      end
+
       def test_populate_runs_mutation_default_number_of_times
         @resource.expects(:run_mutation).times(Rails::Commands::Populate::Product::DEFAULT_COUNT)
         @resource.call([], nil)
