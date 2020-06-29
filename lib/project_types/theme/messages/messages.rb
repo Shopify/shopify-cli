@@ -2,6 +2,9 @@
 module Theme
   module Messages
     MESSAGES = {
+      create: {
+        creating_theme: "Creating theme %s",
+      },
       ensure_themekit_installed: {
         downloading: "Downloading Themekit %s",
         failed: "Download failed",
