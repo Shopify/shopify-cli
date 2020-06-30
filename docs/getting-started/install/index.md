@@ -24,7 +24,7 @@ You’ll need to install a downloaded .deb file with an explicit version number.
 $ sudo apt install shopify-cli-x.y.z.deb
 ```
 
-### yum (CentOS, Fedora, Red Hat, SUSE)
+### yum (CentOS 8+, Fedora, Red Hat, SUSE)
 
 You’ll need to install a downloaded .rpm file with an explicit version number. Make sure you check the [releases page](https://github.com/Shopify/shopify-app-cli/releases) to make sure you install the latest package.
 

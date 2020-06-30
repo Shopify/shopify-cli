@@ -22,7 +22,7 @@ On Debian-based Linux distributions, download the latest `.deb` file for Shopify
 $ sudo apt install shopify-cli-x.y.z.deb
 ```
 
-### yum (CentOS, Fedora, Red Hat, SUSE)
+### yum (CentOS 8+, Fedora, Red Hat, SUSE)
 
 On Red Hat–based Linux distributions, download the latest `.rpm` file for Shopify App CLI from the [releases page](https://github.com/Shopify/shopify-app-cli/releases) and install it to update.
 

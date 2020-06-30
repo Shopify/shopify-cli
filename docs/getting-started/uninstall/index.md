@@ -19,7 +19,7 @@ $ brew uninstall shopify-cli
 $ sudo apt remove shopify-cli
 ```
 
-### yum (CentOS, Fedora, Red Hat, SUSE)
+### yum (CentOS 8+, Fedora, Red Hat, SUSE)
 
 ```console
 $ sudo yum remove shopify-cli
