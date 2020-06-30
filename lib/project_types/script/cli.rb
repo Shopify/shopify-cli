@@ -64,6 +64,7 @@ module Script
 
   module UI
     autoload :ErrorHandler, Project.project_filepath('ui/error_handler')
+    autoload :PrintingSpinner, Project.project_filepath('ui/printing_spinner')
     autoload :StrictSpinner, Project.project_filepath('ui/strict_spinner')
   end
 
