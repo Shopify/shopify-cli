@@ -19,14 +19,15 @@ module Script
           return @ctx.puts(self.class.help)
         end
 
-        script = Layers::Application::CreateScript.call(
+        Layers::Application::CreateScript.call(
           ctx: @ctx,
           language: language,
           script_name: form.name,
           extension_point_type: form.extension_point
         )
-        @ctx.puts(@ctx.message('script.create.changed_dir', folder: script.name))
-        @ctx.puts(@ctx.message('script.create.script_created', script_id: script.id))
+        project = ScriptProject.current
+        @ctx.puts(@ctx.message('script.create.changed_dir', folder: project.script_name))
+        @ctx.puts(@ctx.message('script.create.script_created', script_id: project.source_file))
       rescue StandardError => e
         ScriptProject.cleanup(ctx: @ctx, script_name: form.name, root_dir: cur_dir)
         UI::ErrorHandler.pretty_print_and_raise(e, failed_op: @ctx.message('script.create.error.operation_failed'))

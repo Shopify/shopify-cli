@@ -7,7 +7,6 @@ module Script
         class AppNotInstalledError < ScriptProjectError; end
         class AppScriptUndefinedError < ScriptProjectError; end
         class BuildError < ScriptProjectError; end
-        class DependencyError < ScriptProjectError; end
         class DependencyInstallError < ScriptProjectError; end
         class ForbiddenError < ScriptProjectError; end
         class GraphqlError < ScriptProjectError
@@ -17,6 +16,7 @@ module Script
             super("GraphQL failed with errors: #{errors}")
           end
         end
+        class ProjectCreatorNotFoundError < ScriptProjectError; end
         class ScriptRepushError < ScriptProjectError
           attr_reader :api_key
           def initialize(api_key)

@@ -9,16 +9,17 @@ module Script
         class << self
           def call(ctx:, language:, script_name:, extension_point_type:)
             extension_point = ExtensionPoints.get(type: extension_point_type)
-            project = create_project(ctx, script_name, extension_point)
-            install_dependencies(ctx, language, script_name, extension_point, project)
-            script = create_definition(ctx, language, extension_point, script_name)
+            project = setup_project(ctx, script_name, extension_point)
+            project_creator = Infrastructure::ProjectCreator
+              .for(ctx, language, extension_point, script_name, project.directory)
+            install_dependencies(ctx, language, script_name, project, project_creator)
+            bootstrap(ctx, project_creator)
             ShopifyCli::Core::Finalize.request_cd(script_name)
-            script
           end
 
           private
 
-          def create_project(ctx, script_name, extension_point)
+          def setup_project(ctx, script_name, extension_point)
             ScriptProject.create(ctx, script_name)
             ScriptProject.write(
               ctx,
@@ -30,26 +31,17 @@ module Script
             ScriptProject.current
           end
 
-          def install_dependencies(ctx, language, script_name, extension_point, project)
+          def install_dependencies(ctx, language, script_name, project, project_creator)
             task_runner = Infrastructure::TaskRunner.for(ctx, language, script_name, project.source_file)
-            ProjectDependencies
-              .bootstrap(ctx: ctx, language: language, extension_point: extension_point, script_name: script_name)
-            ProjectDependencies
-              .install(ctx: ctx, task_runner: task_runner)
+            project_creator.setup_dependencies
+            ProjectDependencies.install(ctx: ctx, task_runner: task_runner)
           end
 
-          def create_definition(ctx, language, extension_point, script_name)
-            script = nil
+          def bootstrap(ctx, project_creator)
             UI::StrictSpinner.spin(ctx.message('script.create.creating')) do |spinner|
-              script = Infrastructure::ScriptRepository.new(ctx: ctx).create_script(
-                language,
-                extension_point,
-                script_name
-              )
-              Infrastructure::TestSuiteRepository.new(ctx: ctx).create_test_suite(script)
+              project_creator.bootstrap
               spinner.update_title(ctx.message('script.create.created'))
             end
-            script
           end
         end
       end

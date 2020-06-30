@@ -11,15 +11,10 @@ describe Script::Layers::Application::ExtensionPoints do
   let(:extension_point_type) { 'discount' }
   let(:extension_point_repository) { Script::Layers::Infrastructure::FakeExtensionPointRepository.new }
   let(:extension_point) { extension_point_repository.get_extension_point(extension_point_type) }
-  let(:as_dependency_manager) do
-    Script::Layers::Infrastructure::AssemblyScriptDependencyManager
-      .new(@context, language, extension_point, script_name)
-  end
 
   before do
     extension_point_repository.create_extension_point(extension_point_type)
     Script::Layers::Infrastructure::ExtensionPointRepository.stubs(:new).returns(extension_point_repository)
-    Script::Layers::Infrastructure::DependencyManager.stubs(:for).returns(as_dependency_manager)
   end
 
   describe '.get' do
