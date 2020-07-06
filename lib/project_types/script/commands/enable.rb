@@ -4,6 +4,12 @@ module Script
   module Commands
     class Enable < ShopifyCli::Command
       prerequisite_task :ensure_env
+      options do |parser, flags|
+        parser.on('--config_props=KEYVALUEPAIRS', Array) do |t|
+          flags[:config_props] = Hash[t.map { |s| s.split(':') }]
+        end
+        parser.on('--config_file=CONFIGFILEPATH') { |t| flags[:config_file] = t }
+      end
 
       def call(_args, _name)
         project = ScriptProject.current
@@ -14,7 +20,7 @@ module Script
           ctx: @ctx,
           api_key: api_key,
           shop_domain: shop_domain,
-          configuration: { entries: [] },
+          configuration: acquire_configuration(**slice(options.flags, :config_file, :config_props)),
           extension_point_type: project.extension_point_type,
           title: project.script_name
         )
@@ -32,6 +38,32 @@ module Script
 
       def self.help
         ShopifyCli::Context.message('script.enable.help', ShopifyCli::TOOL_NAME)
+      end
+
+      def self.extended_help
+        ShopifyCli::Context.message('script.enable.extended_help', ShopifyCli::TOOL_NAME)
+      end
+
+      private
+
+      def acquire_configuration(config_file: nil, config_props: nil)
+        properties = {}
+        properties = YAML.load(File.read(config_file)) unless config_file.nil?
+        properties = properties.merge(config_props) unless config_props.nil?
+
+        configuration = { entries: [] }
+        properties.each do |key, value|
+          configuration[:entries].push({
+            key: key,
+            value: value,
+          })
+        end
+        configuration
+      end
+
+      # No slice pre Ruby 2.5 so roll our own
+      def slice(hash, *keys)
+        Hash[hash.to_a - hash.select { |key, _value| !keys.include?(key) }.to_a]
       end
     end
   end
