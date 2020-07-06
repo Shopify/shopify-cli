@@ -123,6 +123,11 @@ module Script
           Turn on script in development store.
             Usage: {{command:%s enable}}
           HELP
+          extended_help: <<~HELP,
+            \s\sOptions:
+              \s\s{{command:--config_props='name1:value1, name2:value2'}} Optional. Define the configuration of your script by passing individual name and value pairs. If used with --config_file, then matching values in --config_props will override those set in the file.
+              \s\s{{command:--config_file=<path/to/YAMLFilename>}} Optional. Define the configuration of your script using a YAML formatted file. --config_props values override properties in this file.
+          HELP
 
           info: "{{*}} A script always remains enabled until you disable it - even after pushing "\
                 "script changes with the same extension point to an app. To disable a script, use "\

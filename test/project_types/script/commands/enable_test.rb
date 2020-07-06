@@ -92,10 +92,150 @@ module Script
         end
       end
 
+      def test_calls_application_enable_with_configuration_properties
+        expected_configuration = {
+          entries: [
+            {
+              key: "key1",
+              value: "value1",
+            },
+            {
+              key: "key2",
+              value: "value2",
+            },
+          ],
+        }
+        Script::Layers::Application::EnableScript.expects(:call).with(
+          ctx: @context,
+          api_key: @api_key,
+          shop_domain: @shop_domain,
+          configuration: expected_configuration,
+          extension_point_type: @ep_type,
+          title: @script_name
+        )
+
+        @context
+          .expects(:puts)
+          .with(@context.message(
+            'script.enable.script_enabled',
+            api_key: @api_key,
+            shop_domain: @shop_domain,
+            type: @ep_type.capitalize,
+            title: @script_name
+          ))
+
+        @context
+          .expects(:puts)
+          .with(@context.message('script.enable.info'))
+
+        capture_io do
+          perform_command(config_props: "key1:value1,key2:value2")
+        end
+      end
+
+      def test_calls_application_enable_with_configuration_file
+        ::FakeFS.with_fresh do
+          File.open("enable_config_file.yml", "w+") { |file| file.write("key1: \"value1\"\nkey2: \"value2\"") }
+        end
+        expected_configuration = {
+          entries: [
+            {
+              key: "key1",
+              value: "value1",
+            },
+            {
+              key: "key2",
+              value: "value2",
+            },
+          ],
+        }
+        Script::Layers::Application::EnableScript.expects(:call).with(
+          ctx: @context,
+          api_key: @api_key,
+          shop_domain: @shop_domain,
+          configuration: expected_configuration,
+          extension_point_type: @ep_type,
+          title: @script_name
+        )
+
+        @context
+          .expects(:puts)
+          .with(@context.message(
+            'script.enable.script_enabled',
+            api_key: @api_key,
+            shop_domain: @shop_domain,
+            type: @ep_type.capitalize,
+            title: @script_name
+          ))
+
+        @context
+          .expects(:puts)
+          .with(@context.message('script.enable.info'))
+        capture_io do
+          perform_command(config_file_path: "enable_config_file.yml")
+        end
+      end
+
+      def test_calls_application_enable_with_configuration_file_and_properties_override
+        ::FakeFS.with_fresh do
+          File.open("enable_config_file.yml", "w+") { |file| file.write("key1: \"value1\"\nkey2: \"value2\"") }
+        end
+        expected_configuration = {
+          entries: [
+            {
+              key: "key1",
+              value: "overriddenValue",
+            },
+            {
+              key: "key2",
+              value: "value2",
+            },
+          ],
+        }
+        Script::Layers::Application::EnableScript.expects(:call).with(
+          ctx: @context,
+          api_key: @api_key,
+          shop_domain: @shop_domain,
+          configuration: expected_configuration,
+          extension_point_type: @ep_type,
+          title: @script_name
+        )
+
+        @context
+          .expects(:puts)
+          .with(@context.message(
+            'script.enable.script_enabled',
+            api_key: @api_key,
+            shop_domain: @shop_domain,
+            type: @ep_type.capitalize,
+            title: @script_name
+          ))
+
+        @context
+          .expects(:puts)
+          .with(@context.message('script.enable.info'))
+
+        capture_io do
+          perform_command(config_props: "key1:overriddenValue", config_file_path: "enable_config_file.yml")
+        end
+      end
+
       private
 
-      def perform_command
-        run_cmd("enable")
+      def perform_command(config_props: nil, config_file_path: nil)
+        env_contents = "SHOPIFY_API_KEY=apikey\n" \
+                       "SHOPIFY_API_SECRET=secret\n" \
+                       "HOST=https://example.com\n" \
+                       "SHOP=my-test-shop.myshopify.com\n" \
+                       "AWSKEY=awskey"
+        command = "enable"
+        command += " --config_props=#{config_props}" unless config_props.nil?
+        command += " --config_file=#{config_file_path}" unless config_file_path.nil?
+        ShopifyCli::Core::Monorail.stubs(:log).yields
+        ::FakeFS.with do
+          File.open(".env", "w+") { |file| file.write(env_contents) }
+          run_cmd(command)
+        end
       end
     end
   end
