@@ -3,14 +3,15 @@ module CLI
     autoload :ANSI,               'cli/ui/ansi'
     autoload :Glyph,              'cli/ui/glyph'
     autoload :Color,              'cli/ui/color'
-    autoload :Box,                'cli/ui/box'
     autoload :Frame,              'cli/ui/frame'
+    autoload :Printer,            'cli/ui/printer'
     autoload :Progress,           'cli/ui/progress'
     autoload :Prompt,             'cli/ui/prompt'
     autoload :Terminal,           'cli/ui/terminal'
     autoload :Truncater,          'cli/ui/truncater'
     autoload :Formatter,          'cli/ui/formatter'
     autoload :Spinner,            'cli/ui/spinner'
+    autoload :Widgets,            'cli/ui/widgets'
 
     # Convenience accessor to +CLI::UI::Spinner::SpinGroup+
     SpinGroup = Spinner::SpinGroup
@@ -42,7 +43,23 @@ module CLI
       end
     end
 
-    # Conviencence Method for +CLI::UI::Prompt.confirm+
+    # Frame style resolution using +CLI::UI::Frame::FrameStyle.lookup+.
+    # Will lookup using +FrameStyle.lookup+ if the input is a symbol.  Otherwise,
+    # we assume it's a valid FrameStyle
+    #
+    # ==== Attributes
+    #
+    # * +input+ - frame style to resolve
+    def self.resolve_style(input)
+      case input
+      when Symbol
+        CLI::UI::Frame::FrameStyle.lookup(input)
+      else
+        input
+      end
+    end
+
+    # Convenience Method for +CLI::UI::Prompt.confirm+
     #
     # ==== Attributes
     #
@@ -52,18 +69,18 @@ module CLI
       CLI::UI::Prompt.confirm(question, **kwargs)
     end
 
-    # Conviencence Method for +CLI::UI::Prompt.ask+
+    # Convenience Method for +CLI::UI::Prompt.ask+
     #
     # ==== Attributes
     #
     # * +question+ - question to ask
-    # * +kwargs+ - arugments for +Prompt.ask+
+    # * +kwargs+ - arguments for +Prompt.ask+
     #
     def self.ask(question, **kwargs)
       CLI::UI::Prompt.ask(question, **kwargs)
     end
 
-    # Conviencence Method to resolve text using +CLI::UI::Formatter.format+
+    # Convenience Method to resolve text using +CLI::UI::Formatter.format+
     # Check +CLI::UI::Formatter::SGR_MAP+ for available formatting options
     #
     # ==== Attributes
@@ -75,10 +92,10 @@ module CLI
       return input if input.nil?
       formatted = CLI::UI::Formatter.new(input).format
       return formatted unless truncate_to
-      return CLI::UI::Truncater.call(formatted, truncate_to)
+      CLI::UI::Truncater.call(formatted, truncate_to)
     end
 
-    # Conviencence Method to format text using +CLI::UI::Formatter.format+
+    # Convenience Method to format text using +CLI::UI::Formatter.format+
     # Check +CLI::UI::Formatter::SGR_MAP+ for available formatting options
     #
     # https://user-images.githubusercontent.com/3074765/33799827-6d0721a2-dd01-11e7-9ab5-c3d455264afe.png
@@ -96,7 +113,18 @@ module CLI
       CLI::UI::Formatter.new(input).format(enable_color: enable_color)
     end
 
-    # Conviencence Method for +CLI::UI::Frame.open+
+    # Convenience Method for +CLI::UI::Printer.puts+
+    #
+    # ==== Attributes
+    #
+    # * +msg+ - Message to print
+    # * +kwargs+ - keyword arguments for +Printer.puts+
+    #
+    def self.puts(msg, **kwargs)
+      CLI::UI::Printer.puts(msg, **kwargs)
+    end
+
+    # Convenience Method for +CLI::UI::Frame.open+
     #
     # ==== Attributes
     #
@@ -107,7 +135,7 @@ module CLI
       CLI::UI::Frame.open(*args, &block)
     end
 
-    # Conviencence Method for +CLI::UI::Spinner.spin+
+    # Convenience Method for +CLI::UI::Spinner.spin+
     #
     # ==== Attributes
     #
@@ -118,7 +146,7 @@ module CLI
       CLI::UI::Spinner.spin(*args, &block)
     end
 
-    # Conviencence Method to override frame color using +CLI::UI::Frame.with_frame_color+
+    # Convenience Method to override frame color using +CLI::UI::Frame.with_frame_color+
     #
     # ==== Attributes
     #
@@ -142,7 +170,7 @@ module CLI
       CLI::UI::StdoutRouter.duplicate_output_to = File.open(path, 'w')
       yield
     ensure
-      if file_descriptor = CLI::UI::StdoutRouter.duplicate_output_to
+      if (file_descriptor = CLI::UI::StdoutRouter.duplicate_output_to)
         file_descriptor.close
         CLI::UI::StdoutRouter.duplicate_output_to = nil
       end
@@ -181,6 +209,19 @@ module CLI
     end
 
     self.enable_color = $stdout.tty?
+
+    # Set the default frame style.
+    # Convenience method for setting the default frame style with +CLI::UI::Frame.frame_style=+
+    #
+    # Raises ArgumentError if +frame_style+ is not valid
+    #
+    # ==== Attributes
+    #
+    # * +symbol+ - the default frame style to use for frames
+    #
+    def self.frame_style=(frame_style)
+      Frame.frame_style = frame_style.to_sym
+    end
   end
 end
 

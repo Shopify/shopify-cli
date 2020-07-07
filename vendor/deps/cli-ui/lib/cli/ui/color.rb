@@ -31,15 +31,19 @@ module CLI
       BOLD    = new('1',  :bold)
       WHITE   = new('97', :white)
 
+      # 240 is very dark gray; 255 is very light gray. 244 is somewhat dark.
+      GRAY = new('38;5;244', :grey)
+
       MAP = {
-        red:     RED,
-        green:   GREEN,
-        yellow:  YELLOW,
-        blue:    BLUE,
+        red: RED,
+        green: GREEN,
+        yellow: YELLOW,
+        blue: BLUE,
         magenta: MAGENTA,
-        cyan:    CYAN,
-        reset:   RESET,
-        bold:    BOLD,
+        cyan: CYAN,
+        reset: RESET,
+        bold: BOLD,
+        gray: GRAY,
       }.freeze
 
       class InvalidColorName < ArgumentError
