@@ -8,7 +8,10 @@ module Script
       include TestHelpers::FakeUI
 
       def test_organizations_fetch_once
-        @context.expects(:puts).with(@context.message('script.forms.script_form.fetching_organizations')).once
+        UI::PrintingSpinner
+          .expects(:spin)
+          .with(@context, @context.message('script.forms.script_form.fetching_organizations'))
+          .yields(@context, FakeSpinner.new)
         ShopifyCli::PartnersAPI::Organizations.expects(:fetch_with_app).returns(true).once
         2.times { form.send(:organizations) }
       end

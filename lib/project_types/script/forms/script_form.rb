@@ -11,8 +11,11 @@ module Script
 
       def organizations
         return @organizations if defined?(@organizations)
-        ctx.puts(ctx.message('script.forms.script_form.fetching_organizations'))
-        @organizations = ShopifyCli::PartnersAPI::Organizations.fetch_with_app(ctx)
+        UI::PrintingSpinner.spin(ctx, ctx.message('script.forms.script_form.fetching_organizations')) do |ctx, spinner|
+          @organizations = ShopifyCli::PartnersAPI::Organizations.fetch_with_app(ctx)
+          spinner.update_title(ctx.message('script.forms.script_form.fetched_organizations'))
+        end
+        @organizations
       end
 
       def ask_app_api_key(apps, message: ctx.message('script.forms.script_form.ask_app_api_key_default'))

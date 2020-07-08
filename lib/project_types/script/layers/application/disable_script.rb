@@ -5,13 +5,15 @@ module Script
     module Application
       class DisableScript
         def self.call(ctx:, api_key:, shop_domain:, extension_point_type:)
-          script_service = Infrastructure::ScriptService.new(ctx: ctx)
-          script_service.disable(
-            api_key: api_key,
-            shop_domain: shop_domain,
-            extension_point_type: extension_point_type,
-          )
-          ctx.puts(ctx.message('script.application.disabled'))
+          UI::PrintingSpinner.spin(ctx, ctx.message('script.application.disabling')) do |p_ctx, spinner|
+            script_service = Infrastructure::ScriptService.new(ctx: p_ctx)
+            script_service.disable(
+              api_key: api_key,
+              shop_domain: shop_domain,
+              extension_point_type: extension_point_type,
+            )
+            spinner.update_title(p_ctx.message('script.application.disabled'))
+          end
         end
       end
     end
