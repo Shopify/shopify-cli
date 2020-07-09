@@ -104,6 +104,13 @@ describe Script::UI::ErrorHandler do
         end
       end
 
+      describe "when InvalidScriptNameError" do
+        let(:err) { Script::Errors::InvalidScriptNameError.new }
+        it "should call display_and_raise" do
+          should_call_display_and_raise
+        end
+      end
+
       describe "when NoExistingAppsError" do
         let(:err) { Script::Errors::NoExistingAppsError.new }
         it "should call display_and_raise" do

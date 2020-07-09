@@ -44,6 +44,11 @@ module Script
             cause_of_error: ShopifyCli::Context.message('script.error.invalid_context_cause'),
             help_suggestion: ShopifyCli::Context.message('script.error.invalid_context_help'),
           }
+        when Errors::InvalidScriptNameError
+          {
+            cause_of_error: ShopifyCli::Context.message('script.error.invalid_script_name_cause'),
+            help_suggestion: ShopifyCli::Context.message('script.error.invalid_script_name_help'),
+          }
         when Errors::NoExistingAppsError
           {
             cause_of_error: ShopifyCli::Context.message('script.error.no_existing_apps_cause'),
