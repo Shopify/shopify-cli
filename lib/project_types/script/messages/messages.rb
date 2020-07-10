@@ -176,7 +176,7 @@ module Script
             },
           },
           script_form: {
-            ask_app_api_key_default: "Which app do you want this script to belong to?",
+            ask_app_default: "Which app do you want this script to belong to?",
             ask_shop_domain_default: "Select a development store",
             fetching_organizations: "{{i}} Fetching partner organizations",
             select_organization: "Select partner organization.",
@@ -185,7 +185,7 @@ module Script
             using_organization: "Partner organization {{green:%s}}.",
           },
           enable: {
-            ask_app_api_key: "Which app is the script pushed to?",
+            ask_app: "Which app is the script pushed to?",
             ask_shop_domain: "Which development store is the app installed on?",
           },
         },

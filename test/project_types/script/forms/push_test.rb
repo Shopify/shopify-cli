@@ -13,16 +13,16 @@ module Script
         assert_equal(form.api_key, 'fakekey')
       end
 
-      def test_ask_calls_form_ask_app_api_key_when_no_flag
+      def test_ask_calls_form_ask_app_when_no_flag
         apps = [{ "apiKey" => 1234 }]
-        Push.any_instance.expects(:ask_app_api_key).with(apps)
+        Push.any_instance.expects(:ask_app).with(apps)
         ShopifyCli::PartnersAPI::Organizations.expects(:fetch_with_app).with(@context).returns([{ "apps" => apps }])
         ask
       end
 
       def test_calls_superclass_methods_when_no_flags
         ScriptForm.any_instance.stubs(:organization).returns({})
-        ScriptForm.any_instance.expects(:ask_app_api_key).once
+        ScriptForm.any_instance.expects(:ask_app).once
         ask(api_key: nil)
       end
 

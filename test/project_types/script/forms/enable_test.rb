@@ -16,7 +16,7 @@ module Script
 
       def test_calls_superclass_methods_when_no_flags
         ScriptForm.any_instance.stubs(:organization).returns({})
-        ScriptForm.any_instance.expects(:ask_app_api_key).once
+        ScriptForm.any_instance.expects(:ask_app).once
         ScriptForm.any_instance.expects(:ask_shop_domain).once
         ask(api_key: nil, shop_domain: nil)
       end

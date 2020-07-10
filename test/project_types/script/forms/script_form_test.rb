@@ -37,7 +37,7 @@ module Script
       end
 
       def test_no_apps_raises_error
-        assert_raises(Errors::NoExistingAppsError) { form.send(:ask_app_api_key, []) }
+        assert_raises(Errors::NoExistingAppsError) { form.send(:ask_app, []) }
       end
 
       def test_one_app_auto_selects
@@ -47,14 +47,14 @@ module Script
           title: 'title',
           api_key: 'key'
         ))
-        assert_equal 'key', form.send(:ask_app_api_key, [app])
+        assert_equal 'key', form.send(:ask_app, [app])['apiKey']
       end
 
       def test_multiple_apps_invoke_prompt
         app1 = { 'apiKey' => 'key1', 'title' => 'title1' }
         app2 = { 'apiKey' => 'key2', 'title' => 'title2' }
         CLI::UI::Prompt.expects(:ask).returns(app1['apiKey'])
-        assert_equal 'key1', form.send(:ask_app_api_key, [app1, app2])
+        assert_equal 'key1', form.send(:ask_app, [app1, app2])
       end
 
       def test_no_shops_raises_error

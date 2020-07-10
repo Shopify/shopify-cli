@@ -11,6 +11,7 @@ module ShopifyCli
         'SHOP' => :shop,
         'SCOPES' => :scopes,
         'HOST' => :host,
+        'ORG' => :org,
       }
 
       class << self
@@ -56,6 +57,7 @@ module ShopifyCli
       property :secret, required: true
       property :shop
       property :scopes
+      property :org
       property :host
       property :extra, default: {}
 

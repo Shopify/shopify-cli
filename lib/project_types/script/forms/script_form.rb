@@ -5,8 +5,8 @@ module Script
     class ScriptForm < ShopifyCli::Form
       protected
 
-      def organization
-        @organization ||= ask_organization
+      def organization(api_key = nil)
+        @organization ||= ask_organization(api_key)
       end
 
       def organizations
@@ -15,7 +15,12 @@ module Script
         @organizations = ShopifyCli::PartnersAPI::Organizations.fetch_with_app(ctx)
       end
 
-      def ask_app_api_key(apps, message: ctx.message('script.forms.script_form.ask_app_api_key_default'))
+      def ask_app(apps, api_key = nil, message: ctx.message('script.forms.script_form.ask_app_default'))
+        unless api_key.nil?
+          corresponding_app = apps.select { |app| app["apiKey"] == api_key }
+          return corresponding_app unless corresponding_app.empty?
+        end
+
         if apps.count == 0
           raise Errors::NoExistingAppsError
         elsif apps.count == 1
@@ -24,15 +29,20 @@ module Script
             title: apps.first['title'],
             api_key: apps.first['apiKey']
           ))
-          apps.first["apiKey"]
+          apps.first
         else
           CLI::UI::Prompt.ask(message) do |handler|
-            apps.each { |app| handler.option(app["title"]) { app["apiKey"] } }
+            apps.each { |app| handler.option(app["title"]) { app } }
           end
         end
       end
 
-      def ask_organization
+      def ask_organization(api_key = nil)
+        unless api_key.nil?
+          org = organizations.find { |ogz| ogz['apps'].select { |app| app["apiKey"] == api_key } }
+          return org unless org.empty?
+        end
+
         if organizations.count == 0
           raise Errors::NoExistingOrganizationsError
         elsif organizations.count == 1
@@ -60,6 +70,15 @@ module Script
         else
           CLI::UI::Prompt.ask(message, options: organization["stores"].map { |s| s["shopDomain"] })
         end
+      end
+
+      def write_env(org, api_key, secret_key, shop)
+        ShopifyCli::Resources::EnvFile.new(
+          api_key: api_key,
+          secret: secret_key,
+          shop: shop,
+          org: org
+        ).write(@ctx)
       end
     end
   end
