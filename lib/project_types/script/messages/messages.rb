@@ -20,7 +20,7 @@ module Script
 
           invalid_script_name_cause: "Invalid script name.",
           invalid_script_name_help: "Replace or remove unsupported characters. Valid characters "\
-                                    "are numbers, letters, spaces, hyphens, or underscores.",
+                                    "are numbers, letters, hyphens, or underscores.",
 
           no_existing_apps_cause: "You don't have any apps.",
           no_existing_apps_help: "Please create an app with {{command:shopify create}} or "\
