@@ -26,11 +26,11 @@ module CLI
       #
       # Increase the percent by X
       #   CLI::UI::Progress.progress do |bar|
-      #     bar.tick(percent: 5)
+      #     bar.tick(percent: 0.05)
       #   end
       def self.progress(width: Terminal.width)
         bar = Progress.new(width: width)
-        print CLI::UI::ANSI.hide_cursor
+        print(CLI::UI::ANSI.hide_cursor)
         yield(bar)
       ensure
         puts bar.to_s
@@ -59,14 +59,16 @@ module CLI
       # * +:percent+ - Increment progress by a specific percent amount
       # * +:set_percent+ - Set progress to a specific percent
       #
+      # *Note:* The +:percent+ and +:set_percent must be between 0.00 and 1.0
+      #
       def tick(percent: 0.01, set_percent: nil)
         raise ArgumentError, 'percent and set_percent cannot both be specified' if percent != 0.01 && set_percent
         @percent_done += percent
         @percent_done = set_percent if set_percent
         @percent_done = [@percent_done, 1.0].min # Make sure we can't go above 1.0
 
-        print to_s
-        print CLI::UI::ANSI.previous_line + "\n"
+        print(to_s)
+        print(CLI::UI::ANSI.previous_line + "\n")
       end
 
       # Format the progress bar to be printed to terminal
@@ -77,11 +79,11 @@ module CLI
         filled = [(@percent_done * workable_width.to_f).ceil, 0].max
         unfilled = [workable_width - filled, 0].max
 
-        CLI::UI.resolve_text [
+        CLI::UI.resolve_text([
           FILLED_BAR + ' ' * filled,
           UNFILLED_BAR + ' ' * unfilled,
-          CLI::UI::Color::RESET.code + suffix
-        ].join
+          CLI::UI::Color::RESET.code + suffix,
+        ].join)
       end
     end
   end

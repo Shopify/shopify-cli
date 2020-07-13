@@ -36,7 +36,8 @@ module CLI
         # * +:select_ui+ - Enable long-form option selection (default: true)
         #
         # Note:
-        # * +:options+ or providing a +Block+ conflicts with +:default+ and +:is_file+, you cannot set options with either of these keywords
+        # * +:options+ or providing a +Block+ conflicts with +:default+ and +:is_file+,
+        #              you cannot set options with either of these keywords
         # * +:default+ conflicts with +:allow_empty:, you cannot set these together
         # * +:options+ conflicts with providing a +Block+ , you may only set one
         # * +:multiple+ can only be used with +:options+ or a +Block+; it is ignored, otherwise.
@@ -49,7 +50,7 @@ module CLI
         # ==== Return Value
         #
         # * If a +Block+ was not provided, the selected option or response to the free form question will be returned
-        # * If a +Block+ was provided, the evaluted value of the +Block+ will be returned
+        # * If a +Block+ was provided, the evaluated value of the +Block+ will be returned
         #
         # ==== Example Usage:
         #
@@ -76,13 +77,35 @@ module CLI
         #     handler.option('python') { |selection| selection }
         #   end
         #
-        def ask(question, options: nil, default: nil, is_file: nil, allow_empty: true, multiple: false, filter_ui: true, select_ui: true, &options_proc)
-          if ((options || block_given?) && (default || is_file))
+        def ask(
+          question,
+          options: nil,
+          default: nil,
+          is_file: nil,
+          allow_empty: true,
+          multiple: false,
+          filter_ui: true,
+          select_ui: true,
+          &options_proc
+        )
+          if (options || block_given?) && ((default && !multiple) || is_file)
             raise(ArgumentError, 'conflicting arguments: options provided with default or is_file')
           end
 
+          if options && multiple && default && !(default - options).empty?
+            raise(ArgumentError, 'conflicting arguments: default should only include elements present in options')
+          end
+
           if options || block_given?
-            ask_interactive(question, options, multiple: multiple, filter_ui: filter_ui, select_ui: select_ui, &options_proc)
+            ask_interactive(
+              question,
+              options,
+              multiple: multiple,
+              default: default,
+              filter_ui: filter_ui,
+              select_ui: select_ui,
+              &options_proc
+            )
           else
             ask_free_form(question, default, is_file, allow_empty)
           end
@@ -132,7 +155,9 @@ module CLI
         private
 
         def ask_free_form(question, default, is_file, allow_empty)
-          raise(ArgumentError, 'conflicting arguments: default enabled but allow_empty is false') if (default && !allow_empty)
+          if default && !allow_empty
+            raise(ArgumentError, 'conflicting arguments: default enabled but allow_empty is false')
+          end
 
           if default
             puts_question("#{question} (empty = #{default})")
@@ -155,7 +180,7 @@ module CLI
           end
         end
 
-        def ask_interactive(question, options = nil, multiple: false, filter_ui: true, select_ui: true)
+        def ask_interactive(question, options = nil, multiple: false, default: nil, filter_ui: true, select_ui: true)
           raise(ArgumentError, 'conflicting arguments: options and block given') if options && block_given?
 
           options ||= if block_given?
@@ -167,14 +192,14 @@ module CLI
           raise(ArgumentError, 'insufficient options') if options.nil? || options.empty?
           instructions = (multiple ? "Toggle options. " : "") + "Choose with ↑ ↓ ⏎"
           instructions += ", filter with 'f'" if filter_ui
-          instructions += ", enter option with 'e'" if select_ui and options.size > 9
+          instructions += ", enter option with 'e'" if select_ui && (options.size > 9)
           puts_question("#{question} {{yellow:(#{instructions})}}")
-          resp = interactive_prompt(options, multiple: multiple)
+          resp = interactive_prompt(options, multiple: multiple, default: default)
 
           # Clear the line
-          print ANSI.previous_line + ANSI.clear_to_end_of_line
+          print(ANSI.previous_line + ANSI.clear_to_end_of_line)
           # Force StdoutRouter to prefix
-          print ANSI.previous_line + "\n"
+          print(ANSI.previous_line + "\n")
 
           # reset the question to include the answer
           resp_text = resp
@@ -195,8 +220,8 @@ module CLI
         end
 
         # Useful for stubbing in tests
-        def interactive_prompt(options, multiple: false)
-          InteractiveOptions.call(options, multiple: multiple)
+        def interactive_prompt(options, multiple: false, default: nil)
+          InteractiveOptions.call(options, multiple: multiple, default: default)
         end
 
         def write_default_over_empty_input(default)
@@ -235,7 +260,7 @@ module CLI
 
           begin
             line = Readline.readline(prompt, true)
-            print CLI::UI::Color::RESET.code
+            print(CLI::UI::Color::RESET.code)
             line.to_s.chomp
           rescue Interrupt
             CLI::UI.raw { STDERR.puts('^C' + CLI::UI::Color::RESET.code) }

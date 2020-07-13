@@ -1,7 +1,6 @@
 # frozen_string_literal: true
-
-require 'cli/ui'
-require 'strscan'
+require('cli/ui')
+require('strscan')
 
 module CLI
   module UI
@@ -13,39 +12,40 @@ module CLI
       #
       SGR_MAP = {
         # presentational
-        'red'       => '31',
-        'green'     => '32',
-        'yellow'    => '33',
-         # default blue is low-contrast against black in some default terminal color scheme
-        'blue'      => '94', # 9x = high-intensity fg color x
-        'magenta'   => '35',
-        'cyan'      => '36',
-        'bold'      => '1',
-        'italic'    => '3',
+        'red' => '31',
+        'green' => '32',
+        'yellow' => '33',
+        # default blue is low-contrast against black in some default terminal color scheme
+        'blue' => '94', # 9x = high-intensity fg color x
+        'magenta' => '35',
+        'cyan' => '36',
+        'bold' => '1',
+        'italic' => '3',
         'underline' => '4',
-        'reset'     => '0',
+        'reset' => '0',
 
         # semantic
-        'error'   => '31', # red
+        'error' => '31', # red
         'success' => '32', # success
         'warning' => '33', # yellow
-        'info'    => '94', # bright blue
+        'info' => '94', # bright blue
         'command' => '36', # cyan
       }.freeze
 
       BEGIN_EXPR = '{{'
       END_EXPR   = '}}'
 
+      SCAN_WIDGET   = %r[@widget/(?<handle>\w+):(?<args>.*?)}}]
       SCAN_FUNCNAME = /\w+:/
       SCAN_GLYPH    = /.}}/
-      SCAN_BODY     = /
+      SCAN_BODY     = %r{
         .*?
         (
           #{BEGIN_EXPR} |
           #{END_EXPR}   |
           \z
         )
-      /mx
+      }mx
 
       DISCARD_BRACES = 0..-3
 
@@ -123,7 +123,7 @@ module CLI
       end
 
       def parse_expr(sc, stack)
-        if match = sc.scan(SCAN_GLYPH)
+        if (match = sc.scan(SCAN_GLYPH))
           glyph_handle = match[0]
           begin
             glyph = Glyph.lookup(glyph_handle)
@@ -136,7 +136,20 @@ module CLI
               index
             )
           end
-        elsif match = sc.scan(SCAN_FUNCNAME)
+        elsif (match = sc.scan(SCAN_WIDGET))
+          match_data = SCAN_WIDGET.match(match) # Regexp.last_match doesn't work here
+          widget_handle = match_data['handle']
+          begin
+            widget = Widgets.lookup(widget_handle)
+            emit(widget.call(match_data['args']), stack)
+          rescue Widgets::InvalidWidgetHandle
+            index = sc.pos - 2 # rewind past '}}'
+            raise(FormatError.new(
+              "invalid widget handle at index #{index}: '#{widget_handle}'",
+              @text, index,
+            ))
+          end
+        elsif (match = sc.scan(SCAN_FUNCNAME))
           funcname = match.chop
           stack.push(funcname)
         else
@@ -153,10 +166,10 @@ module CLI
 
       def parse_body(sc, stack = [])
         match = sc.scan(SCAN_BODY)
-        if match && match.end_with?(BEGIN_EXPR)
+        if match&.end_with?(BEGIN_EXPR)
           emit(match[DISCARD_BRACES], stack)
           parse_expr(sc, stack)
-        elsif match && match.end_with?(END_EXPR)
+        elsif match&.end_with?(END_EXPR)
           emit(match[DISCARD_BRACES], stack)
           if stack.pop == LITERAL_BRACES
             emit('}}', stack)
