@@ -18,8 +18,12 @@ module Script
           invalid_context_cause: "Your .shopify-cli.yml file is not correct.",
           invalid_context_help: "See https://help.shopify.com",
 
+          invalid_script_name_cause: "Invalid script name.",
+          invalid_script_name_help: "Replace or remove unsupported characters. Valid characters "\
+                                    "are numbers, letters, hyphens, or underscores.",
+
           no_existing_apps_cause: "You don't have any apps.",
-          no_existing_apps_help: "Please create an app with {{command:shopify create}} or"\
+          no_existing_apps_help: "Please create an app with {{command:shopify create}} or "\
                                  "visit https://partners.shopify.com/.",
 
           no_existing_orgs_cause: "You don't have any partner organizations.",
@@ -169,11 +173,6 @@ module Script
           create: {
             select_extension_point: "Which extension point do you want to use?",
             script_name: "Script Name",
-
-            error: {
-              invalid_name: "Invalid script name: replace or remove unsupported characters. Valid "\
-                            "characters are numbers, letters, spaces, hyphens, or underscores.",
-            },
           },
           script_form: {
             ask_app_api_key_default: "Which app do you want this script to belong to?",

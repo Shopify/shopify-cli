@@ -54,11 +54,13 @@ module Script
         name = 'na/me'
         CLI::UI::Prompt.expects(:ask).returns(name)
 
-        @context
-          .expects(:abort)
-          .with(@context.message('script.forms.create.error.invalid_name'))
+        assert_raises(Script::Errors::InvalidScriptNameError) { ask }
+      end
 
-        Create.new(@context, [], []).send(:ask_name)
+      def test_invalid_name_as_option
+        assert_raises(Script::Errors::InvalidScriptNameError) do
+          ask(name: 'na/me')
+        end
       end
 
       private

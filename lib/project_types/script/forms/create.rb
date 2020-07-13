@@ -6,7 +6,7 @@ module Script
       flag_arguments :extension_point, :name
 
       def ask
-        self.name = (name || ask_name).downcase.gsub(' ', '_')
+        self.name = valid_name
         self.extension_point ||= ask_extension_point
       end
 
@@ -20,9 +20,13 @@ module Script
       end
 
       def ask_name
-        name = CLI::UI::Prompt.ask(@ctx.message('script.forms.create.script_name'))
-        return name if name.match?(/^[0-9A-Za-z _-]*$/)
-        @ctx.abort(@ctx.message('script.forms.create.error.invalid_name'))
+        CLI::UI::Prompt.ask(@ctx.message('script.forms.create.script_name'))
+      end
+
+      def valid_name
+        n = (name || ask_name).downcase.gsub(' ', '_')
+        return n if n.match?(/^[0-9A-Za-z_-]*$/)
+        raise Errors::InvalidScriptNameError
       end
     end
   end
