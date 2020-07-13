@@ -41,11 +41,14 @@ During the install process, Shopify App CLI added a line to your shell configura
 - `~/.profile`
 - `~/.config/fish/config.fish`
 
-It will look similar to this:
+It will look similar to one of the lines below. The exact syntax may vary depending on your system:
 
 ```sh
 # The line won’t look *exactly* like this. `HOME_DIR` will instead be the absolute path to your home directory.
 if [[ -f /HOME_DIR/.shopify-cli/shopify.sh ]]; then source /HOME_DIR/.shopify-cli/shopify.sh; fi
+
+# The line might not be wrapped in an `if` statement. Example:
+[ -f "/HOME_DIR/.shopify-app-cli/shopify.sh" ] && source "/HOME_DIR/.shopify-app-cli/shopify.sh"
 ```
 
 Deleting or commenting out the relevant line in your shell profile will remove `shopify` as a command. You may need to reload your shell.
