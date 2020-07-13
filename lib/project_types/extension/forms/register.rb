@@ -16,13 +16,12 @@ module Extension
       attr_writer :app
 
       def ask_app
-        apps = load_apps
-
         if !api_key.nil?
-          found_app = apps.find { |app| app.api_key == api_key }
+          found_app = Tasks::GetApp.call(context: ctx, api_key: api_key)
           ctx.abort(ctx.message('register.invalid_api_key', api_key)) if found_app.nil?
           found_app
         else
+          apps = load_apps
           CLI::UI::Prompt.ask(ctx.message('register.ask_app')) do |handler|
             apps.each do |app|
               handler.option("#{app.title} by #{app.business_name}") { app }

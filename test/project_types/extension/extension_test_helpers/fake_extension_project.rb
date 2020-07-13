@@ -14,6 +14,7 @@ module Extension
 
       def config
         {
+          'project_type' => 'extension',
           ExtensionProjectKeys::EXTENSION_TYPE_KEY => type,
         }
       end
