@@ -56,6 +56,7 @@ module ShopifyCli
       host = uname
       return :mac if /darwin/.match(host)
       return :linux if /linux/.match(host)
+      return :windows if /mingw32/.match(host)
     end
 
     # will return true if the cli is running on an apple computer.
@@ -66,6 +67,11 @@ module ShopifyCli
     # will return true if the cli is running on a linux distro
     def linux?
       os == :linux
+    end
+
+    # will return true if the cli is running on Windows
+    def windows?
+      os == :windows
     end
 
     # will return true if the cli is being run from an installation, and not a
@@ -407,6 +413,25 @@ module ShopifyCli
           exit(0)
         end
       end
+    end
+
+    # Checks if the given command exists in the system
+    #
+    # #### Parameters
+    # - `cmd`: The command to test
+    #
+    # #### Returns
+    # The path of the executable if it is found
+    def which(cmd)
+      exts = ENV['PATHEXT'] ? ENV['PATHEXT'].split(';') : ['']
+      ENV['PATH'].split(File::PATH_SEPARATOR).each do |path|
+        exts.each do |ext|
+          exe = File.join(File.expand_path(path), "#{cmd}#{ext}")
+          return exe if File.executable?(exe) && !File.directory?(exe)
+        end
+      end
+
+      nil
     end
 
     private
