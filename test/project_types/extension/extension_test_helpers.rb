@@ -10,6 +10,7 @@ module Extension
 
     module Stubs
       autoload :GetOrganizations, 'project_types/extension/extension_test_helpers/stubs/get_organizations'
+      autoload :GetApp, 'project_types/extension/extension_test_helpers/stubs/get_app'
       autoload :CreateExtension, 'project_types/extension/extension_test_helpers/stubs/create_extension'
       autoload :UpdateDraft, 'project_types/extension/extension_test_helpers/stubs/update_draft'
       autoload :ArgoScript, 'project_types/extension/extension_test_helpers/stubs/argo_script'

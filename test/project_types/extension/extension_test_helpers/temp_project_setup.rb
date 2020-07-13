@@ -29,6 +29,8 @@ module Extension
           registration_id: @registration_id
         )
 
+        ShopifyCli::Project.stubs(:current).returns(@project)
+        ShopifyCli::Project.stubs(:has_current?).returns(true)
         ExtensionProject.stubs(:current).returns(@project)
       end
     end

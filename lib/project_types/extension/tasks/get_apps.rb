@@ -21,12 +21,7 @@ module Extension
         return [] unless organization.key?('apps') && organization['apps'].any?
 
         organization['apps'].map do |app|
-          Models::App.new(
-            api_key: app['apiKey'],
-            secret: app["apiSecretKeys"].first["secret"],
-            title: app['title'],
-            business_name: organization['businessName']
-          )
+          Converters::AppConverter.from_hash(app, organization)
         end
       end
     end

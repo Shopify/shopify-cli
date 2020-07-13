@@ -30,6 +30,7 @@ module Extension
   module Tasks
     autoload :UserErrors, Project.project_filepath('tasks/user_errors')
     autoload :GetApps, Project.project_filepath('tasks/get_apps')
+    autoload :GetApp, Project.project_filepath('tasks/get_app')
     autoload :CreateExtension, Project.project_filepath('tasks/create_extension')
     autoload :UpdateDraft, Project.project_filepath('tasks/update_draft')
 
@@ -37,6 +38,7 @@ module Extension
       autoload :RegistrationConverter, Project.project_filepath('tasks/converters/registration_converter')
       autoload :VersionConverter, Project.project_filepath('tasks/converters/version_converter')
       autoload :ValidationErrorConverter, Project.project_filepath('tasks/converters/validation_error_converter')
+      autoload :AppConverter, Project.project_filepath('tasks/converters/app_converter')
     end
   end
 

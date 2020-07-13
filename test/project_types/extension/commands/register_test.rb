@@ -8,7 +8,7 @@ module Extension
       include TestHelpers::FakeUI
       include ExtensionTestHelpers::TempProjectSetup
       include ExtensionTestHelpers::Messages
-      include ExtensionTestHelpers::Stubs::GetOrganizations
+      include ExtensionTestHelpers::Stubs::GetApp
 
       def setup
         super
@@ -16,7 +16,7 @@ module Extension
         setup_temp_project(api_key: '', api_secret: '', registration_id: nil)
 
         @app = Models::App.new(api_key: @api_key, secret: @api_secret)
-        stub_get_organizations([organization(name: "Organization One", apps: [@app])])
+        stub_get_app(app: @app, api_key: @app.api_key)
       end
 
       def test_help_implemented
