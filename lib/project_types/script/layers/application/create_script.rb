@@ -14,7 +14,6 @@ module Script
               .for(ctx, language, extension_point, script_name, project.directory)
             install_dependencies(ctx, language, script_name, project, project_creator)
             bootstrap(ctx, project_creator)
-            ShopifyCli::Core::Finalize.request_cd(script_name)
           end
 
           private

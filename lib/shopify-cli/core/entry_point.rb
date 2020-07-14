@@ -4,29 +4,34 @@ module ShopifyCli
   module Core
     module EntryPoint
       class << self
-        SKIP_UPDATE = %w(update help for-completion load-dev load-system open)
-
         def call(args, ctx = Context.new)
+          # Check if the shim is set up by checking whether the old Finalizer FD exists
+          begin
+            is_shell_shim = false
+            IO.open(9) { is_shell_shim = true }
+          rescue Errno::EBADF
+            # This is expected if the descriptor doesn't exist
+          end
+
+          if !ctx.testing? && is_shell_shim
+            ctx.puts(ctx.message('core.warning.shell_shim'))
+            return
+          end
+
+          if ctx.development?
+            ctx.puts(
+              ctx.message('core.warning.development_version', File.join(ShopifyCli::ROOT, 'bin', ShopifyCli::TOOL_NAME))
+            )
+          end
+
           ProjectType.load_type(Project.current_project_type)
 
           task_registry = ShopifyCli::Tasks::Registry
-
-          before_resolve(args)
 
           command, command_name, args = ShopifyCli::Resolver.call(args)
           executor = ShopifyCli::Core::Executor.new(ctx, task_registry, log_file: ShopifyCli::LOG_FILE)
           ShopifyCli::Core::Monorail.log(command_name, args) do
             executor.call(command, command_name, args)
-          end
-        ensure
-          ShopifyCli::Core::Finalize.deliver!
-        end
-
-        def before_resolve(args)
-          ShopifyCli::Core::Update.record_last_update_time
-
-          unless SKIP_UPDATE.include?(args.first)
-            ShopifyCli::Core::Update.auto_update
           end
         end
       end

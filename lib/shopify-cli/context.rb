@@ -69,10 +69,11 @@ module ShopifyCli
     end
 
     # will return true if the cli is being run from an installation, and not a
-    # development instance. See `#development?` for checking for development environment.
+    # development instance. The gem installation will not have a 'test' directory.
+    # See `#development?` for checking for development environment.
     #
     def system?
-      ShopifyCli::INSTALL_DIR == ShopifyCli::ROOT
+      !Dir.exist?(File.join(ShopifyCli::ROOT, 'test'))
     end
 
     # will return true if the cli is running on your development instance.

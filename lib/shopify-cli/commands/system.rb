@@ -32,12 +32,11 @@ module ShopifyCli
       private
 
       def display_cli_constants(show_all_details)
-        cli_constants = %w(INSTALL_DIR)
+        cli_constants = %w(ROOT)
         cli_constants_extra = %w(
-          ROOT
           PROJECT_TYPES_DIR
           TEMP_DIR
-          CONFIG_HOME
+          CACHE_DIR
           TOOL_CONFIG_PATH
           LOG_FILE
           DEBUG_LOG_FILE
@@ -75,7 +74,7 @@ module ShopifyCli
       end
 
       def display_ngrok
-        ngrok_location = File.join(ShopifyCli::ROOT, 'ngrok')
+        ngrok_location = File.join(ShopifyCli::CACHE_DIR, 'ngrok')
         if File.exist?(ngrok_location)
           @ctx.puts("  " + @ctx.message('core.system.ngrok_available', ngrok_location))
         else

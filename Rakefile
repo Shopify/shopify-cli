@@ -1,6 +1,7 @@
-require_relative 'bin/support/load_shopify'
+require_relative 'bin/load_shopify'
 require 'rake/testtask'
 require 'rubocop/rake_task'
+require 'bundler/gem_tasks'
 
 Rake::TestTask.new do |t|
   t.libs += %w(test)
@@ -15,7 +16,7 @@ task(default: [:test, :rubocop])
 
 desc("Start up irb with cli loaded")
 task :console do
-  exec('irb', '-r', './bin/support/load_shopify.rb', '-r', 'byebug')
+  exec('irb', '-r', './bin/load_shopify.rb', '-r', 'byebug')
 end
 
 namespace :rdoc do
@@ -69,3 +70,27 @@ end
 
 desc("Generate markdown documentation and update the wiki")
 task(rdoc: 'rdoc:all')
+
+namespace :package do
+  require 'shopify-cli/packager'
+
+  task all: [:debian, :rpm, :homebrew]
+
+  desc("Builds a Debian package of the CLI")
+  task :debian do
+    ShopifyCli::Packager.new.build_debian
+  end
+
+  desc("Builds an RPM package of the CLI")
+  task :rpm do
+    ShopifyCli::Packager.new.build_rpm
+  end
+
+  desc("Builds a Homebrew package of the CLI")
+  task :homebrew do
+    ShopifyCli::Packager.new.build_homebrew
+  end
+end
+
+desc("Builds all distribution packages of the CLI")
+task(package: 'package:all')

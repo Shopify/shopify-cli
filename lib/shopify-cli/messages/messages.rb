@@ -98,30 +98,8 @@ module ShopifyCli
 
           installing: "Installing dependencies with %s...",
           installed: "Dependencies installed",
-          installing_deps: "Installing %d dependencies...",
-          installed_deps: "%d dependencies installed",
-        },
-
-        load_dev: {
-          help: <<~HELP,
-          Load a development instance of Shopify App CLI from the given path. This command is intended for development work on the CLI itself.
-            Usage: {{command:%s load-dev `/absolute/path/to/cli/instance`}}
-          HELP
-
-          error: {
-            project_dir_not_found: "{{x}} %s does not exist",
-          },
-
-          reloading: "Reloading %s from %s",
-        },
-
-        load_system: {
-          help: <<~HELP,
-          Reload the installed instance of Shopify App CLI. This command is intended for development work on the CLI itself.
-            Usage: {{command:%s load-system}}
-          HELP
-
-          reloading: "Reloading %s from %s",
+          npm_installing_deps: "Installing %d dependencies...",
+          npm_installed_deps: "%d npm dependencies installed",
         },
 
         logout: {
@@ -287,33 +265,27 @@ module ShopifyCli
           start: "{{v}} ngrok tunnel running at {{underline:%s}}",
         },
 
-        update: {
+        version: {
           help: <<~HELP,
-          Update Shopify App CLI.
-            Usage: {{command:%s update}}
+          Prints version number.
+            Usage: {{command:%s version}}
           HELP
+        },
 
-          error: {
-            development_version:
-              "Development version of {{command:%1$s}} in use. Run {{command:%1$s load-system}} first.",
-            git_head_locked: <<~MESSAGE,
-            failed!
-            It looks like another git operation is in progress on {{blue:%1$s}}.
-            Try running {{command:%2$s update}}.
-            If that fails, you must run {{green: rm %1$s/.git/HEAD.lock}} to continue.
-            MESSAGE
-            git_master_locked: <<~MESSAGE,
-            failed!
-            It looks like another git operation is in progress on {{blue:%1$s}}.
-            Try running {{command:%2$s update}}.
-            If that fails, you must run {{green: rm %1$s/.git/refs/heads/master.lock}} to continue.
-            MESSAGE
-            git_command_error: "command failed: %s",
-          },
+        warning: {
+          development_version: <<~DEVELOPMENT,
+          {{*}} {{yellow:You are running a development version of the CLI at:}}
+              {{yellow:%s}}
 
-          updating: "Updating shopify-cli... ",
-          updated: "done!",
-          auto_update_prompt: "Would you like to enable auto updates for Shopify App CLI?",
+          DEVELOPMENT
+
+          shell_shim: <<~MESSAGE,
+          {{x}} This version of Shopify App CLI is no longer supported. You’ll need to migrate to the new CLI version to continue.
+
+            Please visit this page for complete instructions:
+            {{underline:https://shopify.github.io/shopify-app-cli/migrate/}}
+
+          MESSAGE
         },
       },
     }.freeze

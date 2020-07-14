@@ -5,6 +5,7 @@ AllCops:
   Exclude:
     - 'vendor/**/*'
     - 'docs/**/*'
+    - 'packaging/**/*'
   TargetRubyVersion: 2.4
 
 Layout/EmptyLines:
@@ -23,6 +24,11 @@ Layout/HeredocIndentation:
 # allow String.new to create mutable strings
 Style/EmptyLiteral:
   Enabled: false
+
+# allow String.new to create mutable strings
+Style/HashSyntax:
+  Exclude:
+    - 'Rakefile'
 
 # allow using %r{} for regexes
 Style/RegexpLiteral:

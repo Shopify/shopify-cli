@@ -5,6 +5,15 @@ sidebar:
   - title: Getting started
     section: getting-started
     url: /getting-started/
+    subnav:
+      - title: Install
+        url: /getting-started/install/
+      - title: Upgrade
+        url: /getting-started/upgrade/
+      - title: Uninstall
+        url: /getting-started/uninstall/
+      - title: Migrate from a legacy version
+        url: /getting-started/migrate/
   - title: Core commands
     section: core
     url: /core/

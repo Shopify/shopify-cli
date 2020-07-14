@@ -7,8 +7,7 @@ Thread.report_on_exception = false
 # Contains backports from newer rubies to make our lives easier
 # require_relative 'support/ruby_backports'
 
-# See bin/support/load_shopify.rb
-# Do it here as well because in some cases, load_dev is not called
+# See bin/load_shopify.rb
 ENV['PATH'] = ENV['PATH'].split(':').select { |p| p.start_with?('/', '~') }.join(':') unless defined?($original_env)
 
 # Load vendor and CLI UI/Kit.
@@ -25,6 +24,7 @@ end
 require 'cli/ui'
 require 'cli/kit'
 require 'smart_properties'
+require_relative 'shopify-cli/version'
 
 # Enable stdout routing. At this point all calls to STDOUT (and STDERR) will go through this class.
 # See https://github.com/Shopify/cli-ui/blob/master/lib/cli/ui/stdout_router.rb for more info
@@ -39,22 +39,20 @@ CLI::UI::StdoutRouter.enable
 module ShopifyCli
   extend CLI::Kit::Autocall
 
-  TOOL_NAME        = 'shopify'
-  TOOL_FULL_NAME   = 'Shopify App CLI'
-  VERSION          = 'beta'
-  ROOT             = File.expand_path('../..', __FILE__)
-  INSTALL_DIR      = File.expand_path('.shopify-app-cli', ENV.fetch('XDG_RUNTIME_DIR', ENV.fetch('HOME')))
+  TOOL_NAME         = 'shopify'
+  TOOL_FULL_NAME    = 'Shopify CLI'
+  ROOT              = File.expand_path('../..', __FILE__)
   PROJECT_TYPES_DIR = File.join(ROOT, 'lib', 'project_types')
-  TEMP_DIR         = File.join(ROOT, '.tmp')
-  CONFIG_HOME      = File.expand_path(ENV.fetch('XDG_CONFIG_HOME', '~/.config'))
-  TOOL_CONFIG_PATH = File.join(CONFIG_HOME, TOOL_NAME)
-  LOG_FILE         = File.join(TOOL_CONFIG_PATH, 'logs', 'log.log')
-  DEBUG_LOG_FILE   = File.join(TOOL_CONFIG_PATH, 'logs', 'debug.log')
+  TEMP_DIR          = File.join(ROOT, '.tmp')
+  CACHE_DIR         = File.join(File.expand_path(ENV.fetch('XDG_CACHE_HOME', '~/.cache')), TOOL_NAME)
+  TOOL_CONFIG_PATH  = File.join(File.expand_path(ENV.fetch('XDG_CONFIG_HOME', '~/.config')), TOOL_NAME)
+  LOG_FILE          = File.join(TOOL_CONFIG_PATH, 'logs', 'log.log')
+  DEBUG_LOG_FILE    = File.join(TOOL_CONFIG_PATH, 'logs', 'debug.log')
 
   # programmer emoji if default install location, else wrench emoji
-  EMOJI    = ROOT == '/opt/shopify-cli' ? "\u{1f469}\u{200d}\u{1f4bb}" : "\u{1f527}"
+  EMOJI    = ROOT == '/opt/shopify' ? "\u{1f469}\u{200d}\u{1f4bb}" : "\u{1f527}"
   # shrug or boom emoji
-  FAILMOJI = ROOT == '/opt/shopify-cli' ? "\u{1f937}" : "\u{1f4a5}"
+  FAILMOJI = ROOT == '/opt/shopify' ? "\u{1f937}" : "\u{1f4a5}"
 
   # Exit management in `shopify-app-cli` follows the management set out by CLI Kit.
   # https://github.com/Shopify/cli-kit/blob/master/lib/cli/kit.rb
@@ -129,3 +127,6 @@ module ShopifyCli
   require 'shopify-cli/messages/messages'
   Context.load_messages(ShopifyCli::Messages::MESSAGES)
 end
+
+# Make sure the cache dir always exists
+FileUtils.mkdir_p(ShopifyCli::CACHE_DIR)

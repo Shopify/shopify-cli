@@ -1,9 +1,7 @@
 .rubocop-*
 .tmp/*
-ngrok*
 .bundle/*
 .DS_Store
-heroku
 *.gz
 .vagrant/
 *.log
@@ -13,3 +11,9 @@ tmp/
 markdown_intermediate
 .idea
 vendor/bundle
+*.gem
+packaging/builds
+packaging/debian/shopify-cli
+packaging/debian/shopify-cli.deb
+packaging/rpm/build
+packaging/rpm/shopify-cli.spec
