@@ -1,18 +1,22 @@
-Version 0.9.3
+Version 1.0.0
+------
+* Release the installer-based version of the CLI
+
+Version 0.9.3 - Internal Test Version
 ------
 * Rebased to master
 * Removed auto-generated files from builds directory
 
-Version 0.9.2
+Version 0.9.2 - Internal Test Version
 ------
 * Rebased to master, to pull in 7+ Pull Requests
 * Updates to dependencies to package files (updated Ruby version)
 
-Version 0.9.1
+Version 0.9.1 - Internal Test Version
 ------
 * Updated required Ruby version for the CLI
 * Minor fixes for the build / release process
 
-Version 0.9.0
+Version 0.9.0 - Internal Test Version
 ------
 * Initial test release of gem-based CLI
