@@ -6,7 +6,7 @@ module ShopifyCli
       def call(*)
         project_type = ask_project_type unless Project.has_current?
 
-        if Project.has_current? && Project.current
+        if Project.has_current? && Project.current && Project.current.env
           @ctx.puts @ctx.message('core.connect.already_connected_warning')
           prod_warning = @ctx.message('core.connect.production_warning')
           @ctx.puts prod_warning if [:rails, :node].include?(Project.current_project_type)

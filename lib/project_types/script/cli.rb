@@ -24,8 +24,6 @@ module Script
   # define/autoload project specific Forms
   module Forms
     autoload :Create, Project.project_filepath('forms/create')
-    autoload :Push, Project.project_filepath('forms/push')
-    autoload :Enable, Project.project_filepath('forms/enable')
     autoload :ScriptForm, Project.project_filepath('forms/script_form')
   end
 
