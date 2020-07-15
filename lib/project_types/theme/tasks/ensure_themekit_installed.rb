@@ -1,39 +1,39 @@
 module Theme
   module Tasks
     class EnsureThemekitInstalled < ShopifyCli::Task
+      FILENAME = File.join(ShopifyCli::CACHE_DIR, "themekit")
+      URL = 'https://shopify-themekit.s3.amazonaws.com/releases/latest.json'
+      OSMAP = {
+        mac: 'darwin-amd64',
+        linux: 'linux-amd64',
+        windows: 'windows-amd64',
+      }
+
       def call(ctx)
-        @ctx = ctx
-        unless system(File.join(ShopifyCli::CACHE_DIR, "theme"), [:out, :err] => File::NULL)
-          require 'json'
-          require 'net/http'
-          require 'fileutils'
-          require 'digest'
+        return if File.exist?(FILENAME)
 
-          url = 'https://shopify-themekit.s3.amazonaws.com/releases/latest.json'
-          osmap = {
-            mac: 'darwin-amd64',
-            linux: 'linux-amd64',
-          }
+        require 'json'
+        require 'net/http'
+        require 'fileutils'
+        require 'digest'
 
-          releases = JSON.parse(Net::HTTP.get(URI(url)))
-          release = releases["platforms"].find { |r| r["name"] == osmap[@ctx.os] }
-          puts "Downloading Themekit #{releases['version']}"
-          File.write(filename, Net::HTTP.get(URI.parse(release["url"])))
-          puts "Verifying Download"
-          if Digest::MD5.file(filename) == release["digest"]
-            FileUtils.chmod("+x", filename)
-            puts "Themekit installed successfully"
+        begin
+          releases = JSON.parse(Net::HTTP.get(URI(URL)))
+          release = releases["platforms"].find { |r| r["name"] == OSMAP[ctx.os] }
+          ctx.puts(ctx.message('ensure_themekit_installed.downloading', releases['version']))
+          File.write(FILENAME, Net::HTTP.get(URI.parse(release["url"])))
+          ctx.puts(ctx.message('ensure_themekit_installed.verifying'))
+
+          if Digest::MD5.file(FILENAME) == release["digest"]
+            FileUtils.chmod("+x", FILENAME)
+            ctx.puts(ctx.message('ensure_themekit_installed.successful'))
           else
-            puts "Unable to verify download digest"
-            FileUtils.rm(filename)
+            ctx.puts(ctx.message('ensure_themekit_installed.unsuccessful'))
+            FileUtils.rm(FILENAME)
           end
+        rescue
+          ctx.puts(ctx.message('ensure_themekit_installed.failed'))
         end
-      end
-
-      private
-
-      def filename
-        File.join(ShopifyCli::CACHE_DIR, "themekit")
       end
     end
   end
