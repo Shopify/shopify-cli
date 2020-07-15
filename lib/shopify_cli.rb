@@ -127,8 +127,10 @@ module ShopifyCli
   def self.cache_dir
     cache_dir = if ENV.key?('RUNNING_SHOPIFY_CLI_TESTS')
       TEMP_DIR
-    else
+    elsif ENV['LOCALAPPDATA'].nil?
       File.join(File.expand_path(ENV.fetch('XDG_CACHE_HOME', '~/.cache')), TOOL_NAME)
+    else
+      File.join(File.expand_path(ENV['LOCALAPPDATA']), TOOL_NAME)
     end
 
     # Make sure the cache dir always exists
@@ -140,8 +142,10 @@ module ShopifyCli
   def self.tool_config_path
     if ENV.key?('RUNNING_SHOPIFY_CLI_TESTS')
       TEMP_DIR
-    else
+    elsif ENV['APPDATA'].nil?
       File.join(File.expand_path(ENV.fetch('XDG_CONFIG_HOME', '~/.config')), TOOL_NAME)
+    else
+      File.join(File.expand_path(ENV['APPDATA']), TOOL_NAME)
     end
   end
 
