@@ -77,36 +77,36 @@ module ShopifyCli
     end
 
     def test_yarn_check_returns_false_if_yarn_lock_missing_and_which_yarn_call_fails
-      mock_yarn_check(lock_exists: false, status: stubs(success?: false))
+      mock_yarn_check(lock_exists: false, response: nil)
 
       refute JsSystem.yarn?(@context)
     end
 
     def test_yarn_check_returns_false_if_yarn_lock_not_present
-      mock_yarn_check(lock_exists: false, status: stubs(success?: true))
+      mock_yarn_check(lock_exists: false, response: '/usr/bin/yarn')
 
       refute JsSystem.yarn?(@context)
     end
 
     def test_yarn_check_returns_false_if_yarn_lock_present_but_which_yarn_call_fails
-      mock_yarn_check(lock_exists: true, status: mock(success?: false))
+      mock_yarn_check(lock_exists: true, response: nil)
 
       refute JsSystem.yarn?(@context)
     end
 
     def test_yarn_check_returns_true_if_yarn_lock_present_and_which_yarn_call_succeeds
-      mock_yarn_check(lock_exists: true, status: mock(success?: true))
+      mock_yarn_check(lock_exists: true, response: '/usr/bin/yarn')
 
       assert JsSystem.yarn?(@context)
     end
 
     private
 
-    def mock_yarn_check(status:, lock_exists:)
-      CLI::Kit::System
-        .expects(:capture2)
-        .with('which', 'yarn')
-        .returns(['v1.0.0', status])
+    def mock_yarn_check(response:, lock_exists:)
+      @context
+        .expects(:which)
+        .with('yarn')
+        .returns(response)
         .once
       File
         .expects(:exist?)
