@@ -44,8 +44,16 @@ module ShopifyCli
   ROOT              = File.expand_path('../..', __FILE__)
   PROJECT_TYPES_DIR = File.join(ROOT, 'lib', 'project_types')
   TEMP_DIR          = File.join(ROOT, '.tmp')
-  CACHE_DIR         = File.join(File.expand_path(ENV.fetch('XDG_CACHE_HOME', '~/.cache')), TOOL_NAME)
-  TOOL_CONFIG_PATH  = File.join(File.expand_path(ENV.fetch('XDG_CONFIG_HOME', '~/.config')), TOOL_NAME)
+  CACHE_DIR = if ENV['LOCALAPPDATA'].nil?
+    File.join(File.expand_path(ENV.fetch('XDG_CACHE_HOME', '~/.cache')), TOOL_NAME)
+  else
+    File.join(File.expand_path(ENV['LOCALAPPDATA']), TOOL_NAME)
+  end
+  TOOL_CONFIG_PATH = if ENV['APPDATA'].nil?
+    File.join(File.expand_path(ENV.fetch('XDG_CONFIG_HOME', '~/.config')), TOOL_NAME)
+  else
+    File.join(File.expand_path(ENV['APPDATA']), TOOL_NAME)
+  end
   LOG_FILE          = File.join(TOOL_CONFIG_PATH, 'logs', 'log.log')
   DEBUG_LOG_FILE    = File.join(TOOL_CONFIG_PATH, 'logs', 'debug.log')
 

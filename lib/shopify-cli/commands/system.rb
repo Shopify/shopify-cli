@@ -60,13 +60,14 @@ module ShopifyCli
       end
 
       def display_utility_commands(_show_all_details)
-        commands = %w(git curl tar unzip)
+        commands = %w(git curl tar)
 
         @ctx.puts("\n" + @ctx.message('core.system.command_header'))
         commands.each do |s|
-          output, status = @ctx.capture2e('which', s)
-          if status.success?
-            @ctx.puts("  " + @ctx.message('core.system.command_with_path', s, output))
+          cmd_path = @ctx.which(s)
+
+          if !cmd_path.nil?
+            @ctx.puts("  " + @ctx.message('core.system.command_with_path', s, cmd_path))
           else
             @ctx.puts("  " + @ctx.message('core.system.command_not_found', s))
           end
@@ -94,11 +95,11 @@ module ShopifyCli
       def display_project(project_type, commands)
         @ctx.puts("\n" + @ctx.message('core.system.project.header', project_type))
         commands.each do |s|
-          output, status = @ctx.capture2e('which', s)
-          if status.success?
+          cmd_path = @ctx.which(s)
+          if !cmd_path.nil?
             version_output, _ = @ctx.capture2e(s, '--version')
             version = version_output.match(/(\d+\.[^\s]+)/)[0]
-            @ctx.puts("  " + @ctx.message('core.system.project.command_with_path', s, output.strip, version.strip))
+            @ctx.puts("  " + @ctx.message('core.system.project.command_with_path', s, cmd_path.strip, version.strip))
           else
             @ctx.puts("  " + @ctx.message('core.system.project.command_not_found', s))
           end

@@ -124,7 +124,7 @@ module ShopifyCli
         unless File.exist?(zip_dest)
           ctx.system('curl', '-o', zip_dest, DOWNLOAD_URLS[ctx.os], chdir: ShopifyCli::CACHE_DIR)
         end
-        ctx.system('unzip', '-u', zip_dest, chdir: ShopifyCli::CACHE_DIR)
+        ctx.system('tar', '-xf', zip_dest, chdir: ShopifyCli::CACHE_DIR)
         ctx.rm(zip_dest)
       end
       spinner.wait
