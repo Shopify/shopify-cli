@@ -19,7 +19,9 @@ describe Script::Layers::Application::CreateScript do
   let(:task_runner) { stub(compiled_type: compiled_type) }
   let(:project_creator) { stub }
   let(:project_directory) { '/path' }
-  let(:script_project) { TestHelpers::FakeScriptProject.new(language: language, directory: project_directory) }
+  let(:script_project) do
+    TestHelpers::FakeScriptProject.new(language: language, directory: project_directory, script_name: script_name)
+  end
 
   before do
     Script::ScriptProject.stubs(:current).returns(script_project)
@@ -55,7 +57,7 @@ describe Script::Layers::Application::CreateScript do
         .with(@context, language, script_name, script_project, project_creator)
       Script::Layers::Application::CreateScript
         .expects(:bootstrap)
-        .with(@context, project_creator)
+        .with(@context, script_project, project_creator)
       subject
     end
 
@@ -98,10 +100,14 @@ describe Script::Layers::Application::CreateScript do
 
     describe 'bootstrap' do
       subject do
-        Script::Layers::Application::CreateScript.send(:bootstrap, @context, project_creator)
+        Script::Layers::Application::CreateScript.send(:bootstrap, @context, script_project, project_creator)
       end
 
       it 'should return new script' do
+        script_path = "#{script_name}/#{script_source}"
+        spinner = TestHelpers::FakeUI::FakeSpinner.new
+        spinner.expects(:update_title).with(@context.message('script.create.created', script_path))
+        Script::UI::StrictSpinner.expects(:spin).with(@context.message('script.create.creating')).yields(spinner)
         project_creator.expects(:bootstrap)
         capture_io { subject }
       end

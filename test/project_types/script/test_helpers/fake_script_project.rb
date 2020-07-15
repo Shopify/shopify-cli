@@ -4,12 +4,16 @@ module TestHelpers
     property :script_name
     property :language
 
+    def file_name
+      "script.#{language}"
+    end
+
     def source_file
       "src/#{file_name}"
     end
 
-    def file_name
-      "script.#{language}"
+    def source_path
+      "#{script_name}/#{source_file}"
     end
   end
 end
