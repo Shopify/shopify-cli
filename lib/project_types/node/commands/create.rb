@@ -54,8 +54,8 @@ module Node
       private
 
       def check_node
-        _, stat = @ctx.capture2e('which', 'node')
-        @ctx.abort(@ctx.message('node.create.error.node_required')) unless stat.success?
+        cmd_path = @ctx.which('node')
+        @ctx.abort(@ctx.message('node.create.error.node_required')) if cmd_path.nil?
 
         version, stat = @ctx.capture2e('node', '-v')
         @ctx.abort(@ctx.message('node.create.error.node_version_failure')) unless stat.success?
@@ -64,8 +64,8 @@ module Node
       end
 
       def check_npm
-        _, stat = @ctx.capture2e('which', 'npm')
-        @ctx.abort(@ctx.message('node.create.error.npm_required')) unless stat.success?
+        cmd_path = @ctx.which('npm')
+        @ctx.abort(@ctx.message('node.create.error.npm_required')) if cmd_path.nil?
 
         version, stat = @ctx.capture2e('npm', '-v')
         @ctx.abort(@ctx.message('node.create.error.npm_version_failure')) unless stat.success?
