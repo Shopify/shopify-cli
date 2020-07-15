@@ -11,6 +11,8 @@ module ShopifyCli
             IO.open(9) { is_shell_shim = true }
           rescue Errno::EBADF
             # This is expected if the descriptor doesn't exist
+          rescue ArgumentError
+            # This happens on RVM, for some reason
           end
 
           if !ctx.testing? && is_shell_shim
