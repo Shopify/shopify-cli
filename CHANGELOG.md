@@ -1,3 +1,7 @@
+Version 1.0.1
+------
+* Fixed an issue with RVM taking over the shell shim fd when it was not in use
+
 Version 1.0.0
 ------
 * Release the installer-based version of the CLI
