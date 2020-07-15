@@ -37,8 +37,7 @@ module ShopifyCli
       #
       #   ShopifyCli::AdminAPI.query(@ctx, 'all_organizations')
       #
-      def query(ctx, query_name, api_version: nil, shop: nil, **variables)
-        shop ||= Project.current.env.shop
+      def query(ctx, query_name, shop:, api_version: nil, **variables)
         authenticated_req(ctx, shop) do
           api_client(ctx, api_version, shop).query(query_name, variables: variables)
         end
