@@ -31,6 +31,8 @@ module ShopifyCli
         @input = Hash.new
         @count = DEFAULT_COUNT
         @help = false
+        @shop ||= Project.current.env.shop || get_shop(@ctx)
+
         input_options
         resource_options.parse(@args)
 
@@ -40,8 +42,6 @@ module ShopifyCli
           output += resource_options.help
           return @ctx.puts(output)
         end
-
-        @shop ||= Project.current.env.shop || get_shop(@ctx)
 
         if @silent
           spin_group = CLI::UI::SpinGroup.new
