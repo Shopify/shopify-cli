@@ -11,7 +11,7 @@ module ShopifyCli
     # a string or a symbol to identify this process by
     attr_reader :identifier
     # process ID for the running process
-    attr_reader :pid
+    attr_accessor :pid
     # starttime of the process
     attr_reader :time
     # filepath to the pidfile for this process
@@ -56,15 +56,21 @@ module ShopifyCli
       #
       def start(identifier, args)
         return for_ident(identifier) if running?(identifier)
-        fork do
-          pid_file = new(identifier, pid: Process.pid)
-          pid_file.write
-          STDOUT.reopen(pid_file.log_path, "w")
-          STDERR.reopen(pid_file.log_path, "w")
-          STDIN.reopen("/dev/null", "r")
-          Process.setsid
-          exec(*args)
-        end
+
+        ctx = Context.new
+        pid_file = new(identifier)
+
+        # Make sure the file exists and is empty, otherwise Windows fails
+        File.open(pid_file.log_path, 'w') {}
+        pid = spawn(
+          *args,
+          out: pid_file.log_path,
+          err: pid_file.log_path,
+          in: ctx.windows? ? "nul" : "/dev/null",
+        )
+        pid_file.pid = pid
+        pid_file.write
+
         sleep(0.1)
         for_ident(identifier)
       end
@@ -104,10 +110,12 @@ module ShopifyCli
       end
     end
 
-    def initialize(identifier, pid:, time: Time.now.strftime('%s')) # :nodoc:
+    def initialize(identifier, pid: nil, time: Time.now.strftime('%s')) # :nodoc:
       @identifier = identifier
       @pid = pid
       @time = time
+
+      FileUtils.mkdir_p(RUN_DIR)
       @pid_path = File.join(RUN_DIR, "#{identifier}.pid")
       @log_path = File.join(RUN_DIR, "#{identifier}.log")
     end
