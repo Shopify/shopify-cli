@@ -24,6 +24,15 @@ module ShopifyCli
           MESSAGE
           development_store_select: "Which development store would you like to use?",
           cli_yml_saved: ".shopify-cli.yml saved to project root",
+
+          no_apps: 'You have no apps to connect to, creating a new app.',
+          app_name: "App name",
+          app_type: {
+            select: "What type of app are you building?",
+            select_public: "Public: An app built for a wide merchant audience.",
+            select_custom: "Custom: An app custom built for a single client.",
+            selected: "App type {{green:%s}}",
+          },
         },
 
         context: {
