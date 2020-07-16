@@ -28,8 +28,8 @@ module Node
           },
           info: {
             created: "{{v}} {{green:%s}} was created in your Partner Dashboard {{underline:%s}}",
-            serve: "{{*}} Change into your new project folder {{green:%s}} and run {{command:%s serve}} to start a " \
-              "local server",
+            serve: "{{*}} Change directories to your new project folder {{green:%s}} and run {{command:%s serve}} " \
+              "to start a local server",
             install: "{{*}} Then, visit {{underline:%s/test}} to install {{green:%s}} on your Dev Store",
           },
           node_version: "node %s",
