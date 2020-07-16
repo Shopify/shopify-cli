@@ -31,7 +31,7 @@ module Script
 
     def test_create_when_directory_does_not_exist
       @context
-        .expects(:exist?)
+        .expects(:dir_exist?)
         .with(@script_name)
         .returns(false)
 
@@ -48,7 +48,7 @@ module Script
 
     def test_create_when_directory_exists
       @context
-        .expects(:exist?)
+        .expects(:dir_exist?)
         .with(@script_name)
         .returns(true)
 
@@ -63,7 +63,7 @@ module Script
         .with(@context.root)
 
       @context
-        .expects(:exist?)
+        .expects(:dir_exist?)
         .with("#{@context.root}/#{@script_name}")
         .returns(true)
 
@@ -84,7 +84,7 @@ module Script
         .with(@context.root)
 
       @context
-        .expects(:exist?)
+        .expects(:dir_exist?)
         .with("#{@context.root}/#{@script_name}")
         .returns(false)
 
