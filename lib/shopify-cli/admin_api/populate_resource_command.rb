@@ -111,7 +111,7 @@ module ShopifyCli
       end
 
       def schema
-        @schema ||= AdminAPI::Schema.get(@ctx)
+        @schema ||= AdminAPI::Schema.get(@ctx, @shop)
       end
 
       def run_mutation(data)
