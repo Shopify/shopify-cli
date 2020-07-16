@@ -22,7 +22,7 @@ module Script
         def get_push_package(script, compiled_type)
           build_file_path = file_path(script.name, compiled_type)
 
-          raise Domain::PushPackageNotFoundError unless File.exist?(build_file_path)
+          raise Domain::PushPackageNotFoundError unless ctx.file_exist?(build_file_path)
 
           script_content = File.read(build_file_path)
 

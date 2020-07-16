@@ -36,14 +36,14 @@ module Script
 
     class << self
       def create(ctx, dir)
-        raise Errors::ScriptProjectAlreadyExistsError, dir if ctx.exist?(dir)
+        raise Errors::ScriptProjectAlreadyExistsError, dir if ctx.dir_exist?(dir)
         ctx.mkdir_p(dir)
         ctx.chdir(dir)
       end
 
       def cleanup(ctx:, script_name:, root_dir:)
         ctx.chdir(root_dir)
-        ctx.rm_r("#{root_dir}/#{script_name}") if ctx.exist?("#{root_dir}/#{script_name}")
+        ctx.rm_r("#{root_dir}/#{script_name}") if ctx.dir_exist?("#{root_dir}/#{script_name}")
       end
     end
   end

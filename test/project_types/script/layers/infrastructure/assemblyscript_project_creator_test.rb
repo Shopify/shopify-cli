@@ -57,7 +57,7 @@ describe Script::Layers::Infrastructure::AssemblyScriptProjectCreator do
     it "should write to package.json" do
       context.expects(:system).twice
       subject
-      assert File.exist?("package.json")
+      assert context.file_exist?("package.json")
     end
   end
 

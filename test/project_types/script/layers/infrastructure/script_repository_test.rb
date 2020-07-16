@@ -70,8 +70,8 @@ describe Script::Layers::Infrastructure::ScriptRepository do
 
       script_repository.with_temp_build_context do
         refute_equal script_source_base, Dir.pwd
-        assert File.exist?(script_file)
-        assert File.exist?(helper_file)
+        assert context.file_exist?(script_file)
+        assert context.file_exist?(helper_file)
       end
     end
 
@@ -89,9 +89,9 @@ describe Script::Layers::Infrastructure::ScriptRepository do
     it "should delete the script root temp directory afterwards" do
       temp_dir = "#{script_folder_base}/temp"
       script_repository.with_temp_build_context do
-        assert context.exist?(temp_dir)
+        assert context.dir_exist?(temp_dir)
       end
-      refute context.exist?(temp_dir)
+      refute context.dir_exist?(temp_dir)
     end
   end
 end

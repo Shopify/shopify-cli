@@ -9,7 +9,7 @@ module Script
 
         def get_script(language, extension_point_type, script_name)
           source_file_path = src_code_file(language)
-          unless File.exist?(source_file_path)
+          unless ctx.file_exist?(source_file_path)
             raise Domain::Errors::ScriptNotFoundError.new(extension_point_type, source_file_path)
           end
 
