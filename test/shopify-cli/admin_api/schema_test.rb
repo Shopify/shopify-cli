@@ -7,6 +7,7 @@ module ShopifyCli
       include TestHelpers::Constants
 
       def setup
+        super
         json_data = File.read(File.join(ShopifyCli::ROOT, "test/fixtures/shopify_schema.json"))
         @test_obj = AdminAPI::Schema[JSON.parse(json_data)]
         @enum = {
@@ -21,7 +22,7 @@ module ShopifyCli
         ShopifyCli::DB.expects(:set).with(shopify_admin_schema: "{\"foo\":\"baz\"}")
         ShopifyCli::DB.expects(:get).with(:shopify_admin_schema).returns("{\"foo\":\"baz\"}")
         ShopifyCli::AdminAPI.expects(:query)
-          .with(@context, 'admin_introspection')
+          .with(@context, 'admin_introspection', shop: 'my-test-shop.myshopify.com')
           .returns(foo: "baz")
         assert_equal({ "foo" => "baz" }, AdminAPI::Schema.get(@context))
       end
