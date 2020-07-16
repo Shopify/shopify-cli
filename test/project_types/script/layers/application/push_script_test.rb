@@ -6,8 +6,6 @@ require "project_types/script/layers/infrastructure/fake_extension_point_reposit
 require "project_types/script/layers/infrastructure/fake_push_package_repository"
 
 describe Script::Layers::Application::PushScript do
-  include TestHelpers::FakeFS
-
   let(:compiled_type) { 'wasm' }
   let(:language) { 'ts' }
   let(:api_key) { 'api_key' }

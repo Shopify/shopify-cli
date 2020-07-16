@@ -7,7 +7,6 @@ module Script
     class CreateTest < MiniTest::Test
       include TestHelpers::Partners
       include TestHelpers::FakeUI
-      include TestHelpers::FakeFS
 
       def setup
         @context = TestHelpers::FakeContext.new

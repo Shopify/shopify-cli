@@ -5,7 +5,6 @@ require "project_types/script/layers/infrastructure/fake_script_repository"
 require "project_types/script/layers/infrastructure/fake_extension_point_repository"
 
 describe Script::Layers::Application::BuildScript do
-  include TestHelpers::FakeFS
   describe '.call' do
     let(:language) { 'ts' }
     let(:extension_point_type) { 'discount' }

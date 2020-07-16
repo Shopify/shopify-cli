@@ -3,8 +3,6 @@
 require "project_types/script/test_helper"
 
 describe Script::Layers::Infrastructure::AssemblyScriptProjectCreator do
-  include TestHelpers::FakeFS
-
   let(:script_name) { "myscript" }
   let(:language) { "ts" }
   let(:script_id) { 'id' }

@@ -3,8 +3,6 @@
 require 'project_types/script/test_helper'
 
 describe Script::Layers::Infrastructure::AssemblyScriptTaskRunner do
-  include TestHelpers::FakeFS
-
   let(:ctx) { TestHelpers::FakeContext.new }
   let(:script_id) { 'id' }
   let(:script_name) { "foo" }

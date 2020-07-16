@@ -3,8 +3,6 @@
 require "project_types/script/test_helper"
 
 describe Script::Layers::Infrastructure::AssemblyScriptTsConfig do
-  include TestHelpers::FakeFS
-
   let(:dir_to_write_in) { "foo" }
 
   subject { Script::Layers::Infrastructure::AssemblyScriptTsConfig.new(dir_to_write_in: dir_to_write_in) }
