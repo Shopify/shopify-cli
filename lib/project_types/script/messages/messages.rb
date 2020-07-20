@@ -83,7 +83,7 @@ module Script
             operation_failed: "Script not created.",
           },
 
-          change_directory_notice: "{{*}} Change into your new project folder {{green:%s}} to run script commands",
+          change_directory_notice: "{{*}} Change directories to {{green:%s}} to run script commands",
           creating: "Creating script",
           created: "Created script: {{green:%s}}",
         },
