@@ -116,6 +116,31 @@ module ShopifyCli
         run_cmd('connect')
       end
 
+      def test_create_new_app_if_none_available
+        ShopifyCli::PartnersAPI::Organizations.stubs(:fetch_with_app).returns([{
+          "id" => 421,
+          "businessName" => "one",
+          "stores" => [{
+            "shopDomain" => "store.myshopify.com",
+          }],
+          "apps" => [],
+        }])
+        CLI::UI::Prompt.expects(:ask).with(@context.message('rails.forms.create.app_name')).returns('new app')
+        CLI::UI::Prompt.expects(:ask).with(@context.message('rails.forms.create.app_type.select')).returns('public')
+        ShopifyCli::Tasks::CreateApiClient.expects(:call).with(
+          @context,
+          org_id: 421,
+          title: 'new app',
+          type: 'public',
+        ).returns({
+          "apiKey" => "ljdlkajfaljf",
+          "apiSecretKeys" => [{ "secret" => "kldjakljjkj" }],
+          "id" => "12345678",
+        })
+        Resources::EnvFile.any_instance.stubs(:write)
+        run_cmd('connect')
+      end
+
       private
 
       def partners_api_response

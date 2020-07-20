@@ -20,13 +20,13 @@ module ShopifyCli
 
         org = fetch_org
         id = org['id']
-        app = get_app(org['apps'])
+        app = get_app(id, org['apps'])
         shop = get_shop(org['stores'], id)
 
         write_env(app, shop, env_data[:scopes], env_data[:extra])
         write_cli_yml(project_type, id) unless Project.has_current?
 
-        @ctx.puts(@ctx.message('core.connect.connected', app.first['title']))
+        @ctx.puts(@ctx.message('core.connect.connected', app['title']))
       end
 
       def ask_project_type
@@ -54,15 +54,22 @@ module ShopifyCli
         org
       end
 
-      def get_app(apps)
-        app_id = if apps.count == 1
-          apps.first["id"]
+      def get_app(org_id, apps)
+        if apps.count == 1
+          apps.first
+        elsif apps.count == 0
+          @ctx.puts(@ctx.message('core.connect.no_apps'))
+          title = CLI::UI::Prompt.ask(@ctx.message('core.connect.app_name'))
+          type = CLI::UI::Prompt.ask(@ctx.message('core.connect.app_type.select')) do |handler|
+            handler.option(@ctx.message('core.connect.app_type.select_public')) { 'public' }
+            handler.option(@ctx.message('core.connect.app_type.select_custom')) { 'custom' }
+          end
+          ShopifyCli::Tasks::CreateApiClient.call(@ctx, org_id: org_id, title: title, type: type)
         else
           CLI::UI::Prompt.ask(@ctx.message('core.connect.app_select')) do |handler|
-            apps.each { |app| handler.option(app["title"]) { app["id"] } }
+            apps.each { |app| handler.option(app["title"]) { app } }
           end
         end
-        apps.select { |app| app["id"] == app_id }
       end
 
       def get_shop(shops, id)
@@ -83,8 +90,8 @@ module ShopifyCli
         extra = {} if extra.nil?
 
         Resources::EnvFile.new(
-          api_key: app.first["apiKey"],
-          secret: app.first["apiSecretKeys"].first["secret"],
+          api_key: app["apiKey"],
+          secret: app["apiSecretKeys"].first["secret"],
           shop: shop,
           scopes: scopes,
           extra: extra,
