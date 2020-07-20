@@ -47,7 +47,7 @@ module ShopifyCli
 
       def core_commands
         resolved_commands
-          .select { |_name, c| !c.hidden }
+          .select { |_name, c| !c.hidden? }
           .select { |name, _c| Commands.core_command?(name) }
       end
 

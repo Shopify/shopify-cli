@@ -4,7 +4,7 @@ require 'rbconfig'
 module ShopifyCli
   module Commands
     class System < ShopifyCli::Command
-      hidden_command
+      hidden_feature(feature_set: :debug)
 
       def call(args, _name)
         show_all_details = false

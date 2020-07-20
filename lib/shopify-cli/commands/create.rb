@@ -28,7 +28,7 @@ module ShopifyCli
       def self.all_visible_type
         ProjectType
           .load_all
-          .select { |type| !type.hidden }
+          .select { |type| !type.hidden? }
       end
 
       def self.help

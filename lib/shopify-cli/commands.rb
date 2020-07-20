@@ -18,6 +18,7 @@ module ShopifyCli
       @core_commands.include?(cmd)
     end
 
+    register :Config, 'config', 'shopify-cli/commands/config', true
     register :Connect, 'connect', 'shopify-cli/commands/connect', true
     register :Create, 'create', 'shopify-cli/commands/create', true
     register :Help, 'help', 'shopify-cli/commands/help', true

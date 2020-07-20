@@ -2,7 +2,7 @@
 
 module Extension
   class Project < ShopifyCli::ProjectType
-    hidden_project_type
+    hidden_feature
     creator 'App Extension', 'Extension::Commands::Create'
 
     register_command('Extension::Commands::Build', "build")
