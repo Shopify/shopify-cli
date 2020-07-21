@@ -54,10 +54,10 @@ describe Script::Layers::Application::CreateScript do
         .returns(script_project)
       Script::Layers::Application::CreateScript
         .expects(:install_dependencies)
-        .with(@context, language, script_name, script_project, project_creator)
+        .with(@context, language, script_name, script_project.source_file, project_creator)
       Script::Layers::Application::CreateScript
         .expects(:bootstrap)
-        .with(@context, script_project, project_creator)
+        .with(@context, script_project.source_path, project_creator)
       subject
     end
 
@@ -86,7 +86,7 @@ describe Script::Layers::Application::CreateScript do
     describe 'install_dependencies' do
       subject do
         Script::Layers::Application::CreateScript
-          .send(:install_dependencies, @context, language, script_name, script_project, project_creator)
+          .send(:install_dependencies, @context, language, script_name, script_project.source_file, project_creator)
       end
 
       it 'should return new script' do
@@ -100,7 +100,8 @@ describe Script::Layers::Application::CreateScript do
 
     describe 'bootstrap' do
       subject do
-        Script::Layers::Application::CreateScript.send(:bootstrap, @context, script_project, project_creator)
+        Script::Layers::Application::CreateScript
+          .send(:bootstrap, @context, script_project.source_path, project_creator)
       end
 
       it 'should return new script' do
