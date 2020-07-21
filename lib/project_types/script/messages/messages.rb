@@ -96,7 +96,6 @@ module Script
           HELP
           extended_help: <<~HELP,
             \s\sOptions:
-              \s\s{{command:--API_key=<API_key>}} API key. Must be a valid API key, otherwise store access fails.
               \s\s{{command:[--force]}} Forces the script to be overwritten if an instance of it already exists.
           HELP
 
@@ -112,11 +111,6 @@ module Script
           Turn off script in development store.
             Usage: {{command:%s disable}}
           HELP
-          extended_help: <<~HELP,
-            \s\sOptions:
-              \s\s{{command:--API_key=<API_key>}} API key. Must be a valid API key, otherwise store access fails.
-              \s\s{{command:--shop_domain=<my_store.myshopify.com>}} Test store URL. Must be an existing test store.
-          HELP
 
           error: {
             operation_failed: "Can't disable script.",
@@ -129,11 +123,6 @@ module Script
           help: <<~HELP,
           Turn on script in development store.
             Usage: {{command:%s enable}}
-          HELP
-          extended_help: <<~HELP,
-            \s\sOptions:
-              \s\s{{command:--API_key=<API_key>}} API key. Must be a valid API key, otherwise store access fails.
-              \s\s{{command:--shop_domain=<my_store.myshopify.com>}} Test store URL. Must be an existing test store.
           HELP
 
           info: "{{*}} A script always remains enabled until you disable it - even after pushing "\
@@ -182,10 +171,6 @@ module Script
             using_app: "Using app {{green:%{title} (%{api_key})}}.",
             using_development_store: "Using development store {{green:%{domain}}}",
             using_organization: "Partner organization {{green:%s}}.",
-          },
-          enable: {
-            ask_app_api_key: "Which app is the script pushed to?",
-            ask_shop_domain: "Which development store is the app installed on?",
           },
         },
 

@@ -3,29 +3,25 @@
 module Script
   module Commands
     class Enable < ShopifyCli::Command
-      options do |parser, flags|
-        parser.on('--api_key=APIKEY') { |t| flags[:api_key] = t }
-        parser.on('--shop_domain=MYSHOPIFYDOMAIN') { |t| flags[:shop_domain] = t }
-      end
+      prerequisite_task :ensure_env
 
-      def call(args, _name)
-        form = Forms::Enable.ask(@ctx, args, options.flags)
-        return @ctx.puts(self.class.help) unless form
-
+      def call(_args, _name)
         project = ScriptProject.current
+        api_key = project.env[:api_key]
+        shop_domain = project.env[:shop]
 
         Layers::Application::EnableScript.call(
           ctx: @ctx,
-          api_key: form.api_key,
-          shop_domain: form.shop_domain,
+          api_key: api_key,
+          shop_domain: shop_domain,
           configuration: { entries: [] },
           extension_point_type: project.extension_point_type,
           title: project.script_name
         )
         @ctx.puts(@ctx.message(
           'script.enable.script_enabled',
-          api_key: form.api_key,
-          shop_domain: form.shop_domain,
+          api_key: api_key,
+          shop_domain: shop_domain,
           type: project.extension_point_type.capitalize,
           title: project.script_name
         ))
@@ -36,10 +32,6 @@ module Script
 
       def self.help
         ShopifyCli::Context.message('script.enable.help', ShopifyCli::TOOL_NAME)
-      end
-
-      def self.extended_help
-        ShopifyCli::Context.message('script.enable.extended_help', ShopifyCli::TOOL_NAME)
       end
     end
   end

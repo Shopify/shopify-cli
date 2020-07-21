@@ -14,7 +14,6 @@ module ShopifyCli
         api_key = CLI::UI.ask(@ctx.message('core.tasks.ensure_env.api_key_question'))
         api_secret = CLI::UI.ask(@ctx.message('core.tasks.ensure_env.api_secret_key_question'))
         shop = CLI::UI.ask(@ctx.message('core.tasks.ensure_env.development_store_question'))
-
         shop.gsub!(/https?\:\/\//, '')
 
         env = Resources::EnvFile.new(

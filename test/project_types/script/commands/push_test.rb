@@ -15,14 +15,18 @@ module Script
           extension_point_type: @ep_type,
           script_name: @script_name
         )
-        @api_key = 'key'
+        @api_key = 'apikey'
         @source_file = 'src/script.ts'
         @force = true
         ScriptProject.stubs(:current).returns(@script_project)
+        @script_project.stubs(:env).returns({ api_key: @api_key })
         ShopifyCli::ProjectType.load_type(:script)
       end
 
       def test_calls_push_script
+        ShopifyCli::Tasks::EnsureEnv.any_instance.expects(:call).with(@context).returns({
+          api_key: @api_key,
+        })
         Layers::Application::PushScript.expects(:call).with(
           ctx: @context,
           api_key: @api_key,
@@ -40,6 +44,9 @@ module Script
       end
 
       def test_returns_help_if_language_is_not_supported
+        ShopifyCli::Tasks::EnsureEnv.any_instance.expects(:call).with(@context).returns({
+          api_key: @api_key,
+        })
         @script_project.stubs(:language).returns('invalid')
         @context.expects(:puts).with(Push.help)
         perform_command
@@ -62,7 +69,7 @@ module Script
       private
 
       def perform_command
-        run_cmd("push --api_key=#{@api_key} --force")
+        run_cmd("push --force")
       end
     end
   end
