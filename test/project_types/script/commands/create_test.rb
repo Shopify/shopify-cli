@@ -28,17 +28,14 @@ module Script
       end
 
       def test_can_create_new_script
-        ScriptProject.stubs(:current).returns(@script_project)
         Script::Layers::Application::CreateScript
           .expects(:call)
           .with(ctx: @context, language: @language, script_name: @script_name, extension_point_type: @ep_type)
+          .returns(@script_project)
 
         @context
           .expects(:puts)
-          .with(@context.message('script.create.script_path', folder: @script_project.script_name))
-        @context
-          .expects(:puts)
-          .with(@context.message('script.create.script_created', script_id: @script_project.source_file))
+          .with(@context.message('script.create.change_directory_notice', @script_project.script_name))
         perform_command
       end
 

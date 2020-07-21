@@ -19,7 +19,9 @@ describe Script::Layers::Application::CreateScript do
   let(:task_runner) { stub(compiled_type: compiled_type) }
   let(:project_creator) { stub }
   let(:project_directory) { '/path' }
-  let(:script_project) { TestHelpers::FakeScriptProject.new(language: language, directory: project_directory) }
+  let(:script_project) do
+    TestHelpers::FakeScriptProject.new(language: language, directory: project_directory, script_name: script_name)
+  end
 
   before do
     Script::ScriptProject.stubs(:current).returns(script_project)
@@ -52,10 +54,10 @@ describe Script::Layers::Application::CreateScript do
         .returns(script_project)
       Script::Layers::Application::CreateScript
         .expects(:install_dependencies)
-        .with(@context, language, script_name, script_project, project_creator)
+        .with(@context, language, script_name, script_project.source_file, project_creator)
       Script::Layers::Application::CreateScript
         .expects(:bootstrap)
-        .with(@context, project_creator)
+        .with(@context, script_project.source_path, project_creator)
       subject
     end
 
@@ -84,7 +86,7 @@ describe Script::Layers::Application::CreateScript do
     describe 'install_dependencies' do
       subject do
         Script::Layers::Application::CreateScript
-          .send(:install_dependencies, @context, language, script_name, script_project, project_creator)
+          .send(:install_dependencies, @context, language, script_name, script_project.source_file, project_creator)
       end
 
       it 'should return new script' do
@@ -98,10 +100,15 @@ describe Script::Layers::Application::CreateScript do
 
     describe 'bootstrap' do
       subject do
-        Script::Layers::Application::CreateScript.send(:bootstrap, @context, project_creator)
+        Script::Layers::Application::CreateScript
+          .send(:bootstrap, @context, script_project.source_path, project_creator)
       end
 
       it 'should return new script' do
+        script_path = "#{script_name}/#{script_source}"
+        spinner = TestHelpers::FakeUI::FakeSpinner.new
+        spinner.expects(:update_title).with(@context.message('script.create.created', script_path))
+        Script::UI::StrictSpinner.expects(:spin).with(@context.message('script.create.creating')).yields(spinner)
         project_creator.expects(:bootstrap)
         capture_io { subject }
       end
