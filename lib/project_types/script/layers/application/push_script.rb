@@ -20,10 +20,12 @@ module Script
           private
 
           def push_script(ctx, task_runner, script, api_key, force)
-            Infrastructure::PushPackageRepository.new(ctx: ctx)
-              .get_push_package(script, task_runner.compiled_type)
-              .push(Infrastructure::ScriptService.new(ctx: ctx), api_key, force)
-            ctx.puts(ctx.message('script.application.pushed'))
+            UI::PrintingSpinner.spin(ctx, ctx.message('script.application.pushing')) do |p_ctx, spinner|
+              Infrastructure::PushPackageRepository.new(ctx: p_ctx)
+                .get_push_package(script, task_runner.compiled_type)
+                .push(Infrastructure::ScriptService.new(ctx: p_ctx), api_key, force)
+              spinner.update_title(p_ctx.message('script.application.pushed'))
+            end
           end
         end
       end
