@@ -190,10 +190,22 @@ module CLI
           end
 
           raise(ArgumentError, 'insufficient options') if options.nil? || options.empty?
-          instructions = (multiple ? "Toggle options. " : "") + "Choose with ↑ ↓ ⏎"
-          instructions += ", filter with 'f'" if filter_ui
-          instructions += ", enter option with 'e'" if select_ui && (options.size > 9)
-          puts_question("#{question} {{yellow:(#{instructions})}}")
+          # Windows doesn't capture the up/down arrow keys with getc, so we simply don't mention that possibility
+          instructions = []
+          instructions << (multiple ? "Toggle options. " : "") + "Choose with ↑ ↓ ⏎" unless CLI::UI.os == :windows
+          instructions << "filter with 'f'" if filter_ui
+          instructions << "enter option with 'e'" if select_ui && (options.size > 9)
+
+          if instructions.empty?
+            instructions = ''
+          else
+            instructions = instructions.join(', ')
+            # Make sure the first entry is capitalized
+            instructions[0] = instructions[0].upcase
+            instructions = "(#{instructions})"
+          end
+
+          puts_question("#{question} {{yellow:#{instructions}}}")
           resp = interactive_prompt(options, multiple: multiple, default: default)
 
           # Clear the line
@@ -256,7 +268,10 @@ module CLI
           # thread to manage output, but the current strategy feels like a
           # better tradeoff.
           prefix = CLI::UI.with_frame_color(:blue) { CLI::UI::Frame.prefix }
-          prompt = prefix + CLI::UI.fmt('{{blue:> }}') + CLI::UI::Color::YELLOW.code
+          # If a prompt is interrupted on Windows it locks the colour of the terminal from that point on, so we should
+          # not change the colour here.
+          prompt = prefix + CLI::UI.fmt('{{blue:> }}')
+          prompt += CLI::UI::Color::YELLOW.code unless CLI::UI.os == :windows
 
           begin
             line = Readline.readline(prompt, true)

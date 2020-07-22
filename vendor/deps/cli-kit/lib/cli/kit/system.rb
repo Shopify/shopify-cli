@@ -163,6 +163,15 @@ module CLI
           [data.byteslice(0...partial_character_index), data.byteslice(partial_character_index..-1)]
         end
 
+        def os
+          require 'rbconfig'
+
+          host = RbConfig::CONFIG["host"]
+          return :mac if /darwin/.match(host)
+          return :linux if /linux/.match(host)
+          :windows if /mingw32/.match(host)
+        end
+
         private
 
         def apply_sudo(*a, sudo)
@@ -189,7 +198,11 @@ module CLI
         # See https://github.com/Shopify/dev/pull/625 for more details.
         def resolve_path(a, env)
           # If only one argument was provided, make sure it's interpreted by a shell.
-          return ["true ; " + a[0]] if a.size == 1
+          if os == :windows
+            return ["break && " + a[0]] if a.size == 1
+          else
+            return ["true ; " + a[0]] if a.size == 1
+          end
           return a if a.first.include?('/')
 
           paths = env.fetch('PATH', '').split(':')

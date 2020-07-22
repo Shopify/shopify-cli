@@ -13,9 +13,6 @@ module CLI
     autoload :Spinner,            'cli/ui/spinner'
     autoload :Widgets,            'cli/ui/widgets'
 
-    # Convenience accessor to +CLI::UI::Spinner::SpinGroup+
-    SpinGroup = Spinner::SpinGroup
-
     # Glyph resolution using +CLI::UI::Glyph.lookup+
     # Look at the method signature for +Glyph.lookup+ for more details
     #
@@ -210,6 +207,29 @@ module CLI
 
     self.enable_color = $stdout.tty?
 
+    # Check whether emojis are enabled in Formatter output. This depends on
+    # the OS running the CLI UI, since Windows does not fully support them yet
+    # See https://github.com/microsoft/terminal/issues/190 for more info.
+    #
+    def self.enable_emoji?
+      @enable_emoji
+    end
+
+    # Determine which OS is running [:mac, :linux, :windows]
+    #
+    # ==== Returns
+    # A symbol indicating the current OS
+    def self.os
+      require 'rbconfig'
+
+      host = RbConfig::CONFIG["host"]
+      return :mac if /darwin/.match(host)
+      return :linux if /linux/.match(host)
+      :windows if /mingw32/.match(host)
+    end
+
+    @enable_emoji = (self.os != :windows)
+
     # Set the default frame style.
     # Convenience method for setting the default frame style with +CLI::UI::Frame.frame_style=+
     #
@@ -222,6 +242,10 @@ module CLI
     def self.frame_style=(frame_style)
       Frame.frame_style = frame_style.to_sym
     end
+
+    # Convenience accessor to +CLI::UI::Spinner::SpinGroup+
+    # This needs to be defined after @enable_emoji, otherwise we will try to load the class before we're ready for it
+    SpinGroup = Spinner::SpinGroup
   end
 end
 
