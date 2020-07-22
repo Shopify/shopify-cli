@@ -4,6 +4,7 @@ module CLI
     autoload :Glyph,              'cli/ui/glyph'
     autoload :Color,              'cli/ui/color'
     autoload :Frame,              'cli/ui/frame'
+    autoload :OS,                 'cli/ui/os'
     autoload :Printer,            'cli/ui/printer'
     autoload :Progress,           'cli/ui/progress'
     autoload :Prompt,             'cli/ui/prompt'
@@ -131,8 +132,8 @@ module CLI
     # * +args+ - arguments for +Frame.open+
     # * +block+ - block for +Frame.open+
     #
-    def self.frame(*args, &block)
-      CLI::UI::Frame.open(*args, &block)
+    def self.frame(*args, **kwargs, &block)
+      CLI::UI::Frame.open(*args, **kwargs, &block)
     end
 
     # Convenience Method for +CLI::UI::Spinner.spin+
@@ -142,8 +143,8 @@ module CLI
     # * +args+ - arguments for +Spinner.open+
     # * +block+ - block for +Spinner.open+
     #
-    def self.spinner(*args, &block)
-      CLI::UI::Spinner.spin(*args, &block)
+    def self.spinner(*args, **kwargs, &block)
+      CLI::UI::Spinner.spin(*args, **kwargs, &block)
     end
 
     # Convenience Method to override frame color using +CLI::UI::Frame.with_frame_color+
