@@ -144,7 +144,7 @@ module ShopifyCli
     end
 
     def ngrok_command(port)
-      "#{File.join(ShopifyCli.cache_dir, 'ngrok')} http -log=stdout -log-level=debug #{port}"
+      "#{File.join(ShopifyCli.cache_dir, 'ngrok')} http -inspect=false -log=stdout -log-level=debug #{port}"
     end
 
     def seconds_to_hm(seconds)

@@ -124,10 +124,6 @@ module ShopifyCli
     ##
     # will attempt to shutdown a running process
     #
-    # #### Parameters
-    #
-    # * `ctx` - the context of this command
-    #
     # #### Returns
     #
     # * `stopped` - [true, false]

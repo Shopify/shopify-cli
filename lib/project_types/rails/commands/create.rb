@@ -30,6 +30,9 @@ module Rails
         @ctx.abort(@ctx.message('rails.create.error.invalid_ruby_version')) unless
           Ruby.version(@ctx).satisfies?('~>2.5')
 
+        check_node
+        check_yarn
+
         build(form.name, form.db)
         set_custom_ua
         ShopifyCli::Project.write(
@@ -65,11 +68,58 @@ module Rails
 
       private
 
+      def check_node
+        cmd_path = @ctx.which('node')
+        if cmd_path.nil?
+          @ctx.abort(@ctx.message('rails.create.error.node_required')) unless @ctx.windows?
+          @ctx.puts("{{x}} {{red:" + @ctx.message('rails.create.error.node_required') + "}}")
+          @ctx.puts(@ctx.message('rails.create.info.open_new_shell', 'node'))
+          raise ShopifyCli::AbortSilent
+        end
+
+        version, stat = @ctx.capture2e('node', '-v')
+        unless stat.success?
+          @ctx.abort(@ctx.message('rails.create.error.node_version_failure')) unless @ctx.windows?
+          # execution stops above if not Windows
+          @ctx.puts("{{x}} {{red:" + @ctx.message('rails.create.error.node_version_failure') + "}}")
+          @ctx.puts(@ctx.message('rails.create.info.open_new_shell', 'node'))
+          raise ShopifyCli::AbortSilent
+        end
+
+        @ctx.done(@ctx.message('rails.create.node_version', version))
+      end
+
+      def check_yarn
+        cmd_path = @ctx.which('yarn')
+        if cmd_path.nil?
+          @ctx.abort(@ctx.message('rails.create.error.yarn_required')) unless @ctx.windows?
+          @ctx.puts("{{x}} {{red:" + @ctx.message('rails.create.error.yarn_required') + "}}")
+          @ctx.puts(@ctx.message('rails.create.info.open_new_shell', 'yarn'))
+          raise ShopifyCli::AbortSilent
+        end
+
+        version, stat = @ctx.capture2e('yarn', '-v')
+        unless stat.success?
+          @ctx.abort(@ctx.message('rails.create.error.yarn_version_failure')) unless @ctx.windows?
+          @ctx.puts("{{x}} {{red:" + @ctx.message('rails.create.error.yarn_version_failure') + "}}")
+          @ctx.puts(@ctx.message('rails.create.info.open_new_shell', 'yarn'))
+          raise ShopifyCli::AbortSilent
+        end
+
+        @ctx.done(@ctx.message('rails.create.yarn_version', version))
+      end
+
       def build(name, db)
-        install_gem('rails')
+        @ctx.abort(@ctx.message('rails.create.error.install_failure', 'rails')) unless install_gem('rails')
+        bundler1_stat = bundler2_stat = false
         CLI::UI::Frame.open(@ctx.message('rails.create.installing_bundler')) do
-          install_gem('bundler', '~>1.0')
-          install_gem('bundler', '~>2.0')
+          bundler1_stat = install_gem('bundler', '~>1.0')
+          bundler2_stat = install_gem('bundler', '~>2.0')
+        end
+        @ctx.puts(@ctx.message('rails.create.error.install_failure', 'bundler ~>1.0')) unless bundler1_stat
+        @ctx.puts(@ctx.message('rails.create.error.install_failure', 'bundler ~>2.0')) unless bundler2_stat
+        unless bundler1_stat || bundler2_stat
+          @ctx.abort(@ctx.message('rails.create.error.install_failure', 'any bundler'))
         end
 
         CLI::UI::Frame.open(@ctx.message('rails.create.generating_app', name)) do
@@ -105,6 +155,12 @@ module Rails
         CLI::UI::Frame.open(@ctx.message('rails.create.running_migrations')) do
           syscall(%w(rails db:create))
           syscall(%w(rails db:migrate RAILS_ENV=development))
+        end
+
+        unless File.exist?(File.join(@ctx.root, 'config/webpacker.yml'))
+          CLI::UI::Frame.open(@ctx.message('rails.create.running_webpacker_install')) do
+            syscall(%w(rails webpacker:install))
+          end
         end
       end
 

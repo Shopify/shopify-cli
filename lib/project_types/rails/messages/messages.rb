@@ -33,6 +33,14 @@ module Rails
             See {{underline:https://github.com/Shopify/shopify-app-cli/blob/master/docs/installing-ruby.md}}
             for our recommended method of installing ruby.
             MSG
+            install_failure: "Error installing %s gem",
+            node_required: "node is required to create a rails project. Download at https://nodejs.org/en/download.",
+            node_version_failure: "Failed to get the current node version. Please make sure it is installed as " \
+              "per the instructions at https://nodejs.org/en.",
+            yarn_required: "yarn is required to create a rails project. Download at " \
+              "https://classic.yarnpkg.com/en/docs/install.",
+            yarn_version_failure: "Failed to get the current yarn version. Please make sure it is installed as per " \
+              "the instructions at https://classic.yarnpkg.com/en/docs/install.",
           },
 
           info: {
@@ -40,13 +48,18 @@ module Rails
             serve: "{{*}} Change directories to your new project folder {{green:%s}} and run {{command:%s serve}} " \
               "to start a local server",
             install: "{{*}} Then, visit {{underline:%s/test}} to install {{green:%s}} on your Dev Store",
+            open_new_shell: "{{*}} {{yellow:After installing %s, please open a new Command Prompt or PowerShell " \
+              "window to continue.}}",
           },
           installing_bundler: "Installing bundler…",
           generating_app: "Generating new rails app project in %s...",
           adding_shopify_gem: "{{v}} Adding shopify_app gem…",
+          node_version: "node %s",
+          yarn_version: "yarn %s",
           running_bundle_install: "Running bundle install...",
           running_generator: "Running shopify_app generator...",
           running_migrations: "Running migrations…",
+          running_webpacker_install: "Running webpacker:install...",
         },
 
         deploy: {
