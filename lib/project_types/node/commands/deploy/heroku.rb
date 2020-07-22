@@ -19,10 +19,15 @@ module Node
           end
           spin_group.wait
 
-          spin_group.add(@ctx.message('node.deploy.heroku.installing')) do |spinner|
+          install_message = @ctx.message(
+            @ctx.windows? ? 'node.deploy.heroku.installing_windows' : 'node.deploy.heroku.installing'
+          )
+          spin_group.add(install_message) do |spinner|
             heroku_service.install
             spinner.update_title(@ctx.message('node.deploy.heroku.installed'))
           end
+          spin_group.wait
+
           spin_group.add(@ctx.message('node.deploy.heroku.git.checking')) do |spinner|
             ShopifyCli::Git.init(@ctx)
             spinner.update_title(@ctx.message('node.deploy.heroku.git.initialized'))
