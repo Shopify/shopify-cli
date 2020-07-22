@@ -69,7 +69,7 @@ module ShopifyCli
       deps = parse_dependencies
       errors = nil
 
-      spinner_title = ctx.message('core.js_deps.installing_deps', deps.size)
+      spinner_title = ctx.message('core.js_deps.installing', @system.package_manager)
       success = CLI::UI::Spinner.spin(spinner_title, auto_debrief: false) do |spinner|
         _, errors, status = CLI::Kit::System.capture3(*cmd, env: @ctx.env, chdir: ctx.root)
         update_spinner_title_and_status(spinner, status, deps)
@@ -81,7 +81,7 @@ module ShopifyCli
 
     def update_spinner_title_and_status(spinner, status, deps)
       if status.success?
-        spinner.update_title(ctx.message('core.js_deps.installed_deps', deps.size))
+        spinner.update_title(ctx.message('core.js_deps.installed', deps.size))
       else
         spinner.update_title(ctx.message('core.js_deps.error.install_spinner_error', deps.size))
         CLI::UI::Spinner::TASK_FAILED

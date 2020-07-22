@@ -8,7 +8,7 @@ module ShopifyCli
     # a string or a symbol to identify this process by
     attr_reader :identifier
     # process ID for the running process
-    attr_reader :pid
+    attr_accessor :pid
     # starttime of the process
     attr_reader :time
     # filepath to the pidfile for this process
@@ -58,15 +58,21 @@ module ShopifyCli
       #
       def start(identifier, args)
         return for_ident(identifier) if running?(identifier)
-        fork do
-          pid_file = new(identifier, pid: Process.pid)
-          pid_file.write
-          STDOUT.reopen(pid_file.log_path, "w")
-          STDERR.reopen(pid_file.log_path, "w")
-          STDIN.reopen("/dev/null", "r")
-          Process.setsid
-          exec(*args)
-        end
+
+        pid_file = new(identifier)
+
+        # Make sure the file exists and is empty, otherwise Windows fails
+        File.open(pid_file.log_path, 'w') {}
+        pid = Process.spawn(
+          *args,
+          out: pid_file.log_path,
+          err: pid_file.log_path,
+          in: Context.new.windows? ? "nul" : "/dev/null",
+        )
+        pid_file.pid = pid
+        pid_file.write
+
+        Process.detach(pid)
         sleep(0.1)
         for_ident(identifier)
       end
@@ -85,7 +91,8 @@ module ShopifyCli
       def stop(identifier)
         process = for_ident(identifier)
         return false unless process
-        process.stop
+        ctx = Context.new
+        process.stop(ctx)
       end
 
       ##
@@ -106,10 +113,12 @@ module ShopifyCli
       end
     end
 
-    def initialize(identifier, pid:, time: Time.now.strftime('%s')) # :nodoc:
+    def initialize(identifier, pid: nil, time: Time.now.strftime('%s')) # :nodoc:
       @identifier = identifier
       @pid = pid
       @time = time
+
+      FileUtils.mkdir_p(ShopifyCli::ProcessSupervision.run_dir)
       @pid_path = File.join(ShopifyCli::ProcessSupervision.run_dir, "#{identifier}.pid")
       @log_path = File.join(ShopifyCli::ProcessSupervision.run_dir, "#{identifier}.log")
     end
@@ -117,13 +126,17 @@ module ShopifyCli
     ##
     # will attempt to shutdown a running process
     #
+    # #### Parameters
+    #
+    # * `ctx` - the context of this command
+    #
     # #### Returns
     #
     # * `stopped` - [true, false]
     #
     def stop
-      unlink
       kill_proc
+      unlink
       true
     rescue
       false
@@ -159,22 +172,32 @@ module ShopifyCli
     end
 
     def kill_proc
-      kill(-pid) # process group
+      if Context.new.windows?
+        kill(pid)
+      else
+        kill(-pid) # process group
+      end
     rescue Errno::ESRCH
       begin
-        kill(pid)
+        kill(ctx, pid)
       rescue Errno::ESRCH # The process group does not exist, try the pid itself
         # Race condition, process died in the middle
       end
     end
 
     def kill(id)
-      Process.kill('TERM', id)
-      50.times do
-        sleep 0.1
-        break unless stat(id)
+      ctx = Context.new
+
+      # Windows does not handle SIGTERM, go straight to SIGKILL
+      unless ctx.windows?
+        Process.kill('TERM', id)
+        50.times do
+          sleep 0.1
+          break unless stat(id)
+        end
       end
       Process.kill('KILL', id) if stat(id)
+      sleep(0.1) if ctx.windows? # Give Windows a second to actually close the process
     end
 
     def stat(id)

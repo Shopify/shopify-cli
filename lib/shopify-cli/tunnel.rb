@@ -21,6 +21,7 @@ module ShopifyCli
     DOWNLOAD_URLS = {
       mac: 'https://bin.equinox.io/c/4VmDzA7iaHb/ngrok-stable-darwin-amd64.zip',
       linux: 'https://bin.equinox.io/c/4VmDzA7iaHb/ngrok-stable-linux-amd64.zip',
+      windows: 'https://bin.equinox.io/c/4VmDzA7iaHb/ngrok-stable-windows-amd64.zip',
     }
 
     NGROK_TUNNELS_URI = URI.parse('http://localhost:4040/api/tunnels')
@@ -122,7 +123,7 @@ module ShopifyCli
     private
 
     def install(ctx)
-      return if File.exist?(File.join(ShopifyCli.cache_dir, 'ngrok'))
+      return if File.exist?(File.join(ShopifyCli.cache_dir, ctx.windows? ? 'ngrok.exe' : 'ngrok'))
       spinner = CLI::UI::SpinGroup.new
       spinner.add('Installing ngrok...') do
         zip_dest = File.join(ShopifyCli.cache_dir, 'ngrok.zip')
@@ -143,7 +144,7 @@ module ShopifyCli
     end
 
     def ngrok_command(port)
-      "exec #{File.join(ShopifyCli.cache_dir, 'ngrok')} http -inspect=false -log=stdout -log-level=debug #{port}"
+      "#{File.join(ShopifyCli.cache_dir, 'ngrok')} http -log=stdout -log-level=debug #{port}"
     end
 
     def seconds_to_hm(seconds)
