@@ -98,15 +98,13 @@ module CLI
           #
           def render(index, force = true, width: CLI::UI::Terminal.width)
             @m.synchronize do
-              begin
-                if force || @always_full_render || @force_full_render
-                  full_render(index, width)
-                else
-                  partial_render(index)
-                end
-              ensure
-                @force_full_render = false
+              if force || @always_full_render || @force_full_render
+                full_render(index, width)
+              else
+                partial_render(index)
               end
+            ensure
+              @force_full_render = false
             end
           end
 

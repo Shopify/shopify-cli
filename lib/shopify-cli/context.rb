@@ -431,6 +431,9 @@ module ShopifyCli
     #
     # #### Returns
     # The path of the executable if it is found
+    #
+    # @todo This is currently a duplicate of CLI::Kit::System.which() - we should make that method public when we make
+    #       Kit changes and make this a wrapper instead.
     def which(cmd)
       exts = ENV['PATHEXT'] ? ENV['PATHEXT'].split(';') : ['']
       ENV['PATH'].split(File::PATH_SEPARATOR).each do |path|

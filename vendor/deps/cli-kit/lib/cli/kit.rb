@@ -51,7 +51,7 @@ module CLI
     #       1. rescue Abort or Bug
     #       2. Print a contextualized error message
     #       3. Re-raise AbortSilent or BugSilent respectively.
-    GenericAbort = Class.new(Exception)
+    GenericAbort = Class.new(Exception) # rubocop:disable Lint/InheritException
     Abort        = Class.new(GenericAbort)
     Bug          = Class.new(GenericAbort)
     BugSilent    = Class.new(GenericAbort)

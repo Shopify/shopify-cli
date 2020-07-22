@@ -19,7 +19,7 @@ module CLI
         #
         def sudo_reason(msg)
           # See if sudo has a cached password
-          `env SUDO_ASKPASS=/usr/bin/false sudo -A true`
+          %x(env SUDO_ASKPASS=/usr/bin/false sudo -A true)
           return if $CHILD_STATUS.success?
           CLI::UI.with_frame_color(:blue) do
             puts(CLI::UI.fmt("{{i}} #{msg}"))
@@ -90,6 +90,18 @@ module CLI
           delegate_open3(*a, sudo: sudo, env: env, method: :capture3, **kwargs)
         end
 
+        def popen2(*a, sudo: false, env: ENV, **kwargs, &block)
+          delegate_open3(*a, sudo: sudo, env: env, method: :popen2, **kwargs, &block)
+        end
+
+        def popen2e(*a, sudo: false, env: ENV, **kwargs)
+          delegate_open3(*a, sudo: sudo, env: env, method: :popen2e, **kwargs, &block)
+        end
+
+        def popen3(*a, sudo: false, env: ENV, **kwargs)
+          delegate_open3(*a, sudo: sudo, env: env, method: :popen3, **kwargs, &block)
+        end
+
         # Execute a command in the user's environment
         # Outputs result of the command without capturing it
         #
@@ -130,13 +142,11 @@ module CLI
 
             readers, = IO.select(ios)
             readers.each do |io|
-              begin
-                data, trailing = split_partial_characters(io.readpartial(4096))
-                handlers[io].call(previous_trailing[io] + data)
-                previous_trailing[io] = trailing
-              rescue IOError
-                io.close
-              end
+              data, trailing = split_partial_characters(io.readpartial(4096))
+              handlers[io].call(previous_trailing[io] + data)
+              previous_trailing[io] = trailing
+            rescue IOError
+              io.close
             end
           end
 
@@ -163,6 +173,14 @@ module CLI
           [data.byteslice(0...partial_character_index), data.byteslice(partial_character_index..-1)]
         end
 
+        def os
+          return :mac if /darwin/.match(RUBY_PLATFORM)
+          return :linux if /linux/.match(RUBY_PLATFORM)
+          return :windows if /mingw32/.match(RUBY_PLATFORM)
+
+          raise "Could not determine OS from platform #{RUBY_PLATFORM}"
+        end
+
         private
 
         def apply_sudo(*a, sudo)
@@ -171,9 +189,9 @@ module CLI
           a
         end
 
-        def delegate_open3(*a, sudo: raise, env: raise, method: raise, **kwargs)
+        def delegate_open3(*a, sudo: raise, env: raise, method: raise, **kwargs, &block)
           a = apply_sudo(*a, sudo)
-          Open3.send(method, env, *resolve_path(a, env), **kwargs)
+          Open3.send(method, env, *resolve_path(a, env), **kwargs, &block)
         rescue Errno::EINTR
           raise(Errno::EINTR, "command interrupted: #{a.join(' ')}")
         end
@@ -189,17 +207,30 @@ module CLI
         # See https://github.com/Shopify/dev/pull/625 for more details.
         def resolve_path(a, env)
           # If only one argument was provided, make sure it's interpreted by a shell.
-          return ["true ; " + a[0]] if a.size == 1
+          if a.size == 1
+            if os == :windows
+              return ["break && " + a[0]]
+            else
+              return ["true ; " + a[0]]
+            end
+          end
           return a if a.first.include?('/')
 
-          paths = env.fetch('PATH', '').split(':')
-          item = paths.detect do |f|
-            command_path = "#{f}/#{a.first}"
-            File.executable?(command_path) && File.file?(command_path)
+          item = which(a.first, env)
+          a[0] = item if item
+          a
+        end
+
+        def which(cmd, env)
+          exts = os == :windows ? env.fetch('PATHEXT').split(';') : ['']
+          env.fetch('PATH', '').split(File::PATH_SEPARATOR).each do |path|
+            exts.each do |ext|
+              exe = File.join(path, "#{cmd}#{ext}")
+              return exe if File.executable?(exe) && !File.directory?(exe)
+            end
           end
 
-          a[0] = "#{item}/#{a.first}" if item
-          a
+          nil
         end
       end
     end
