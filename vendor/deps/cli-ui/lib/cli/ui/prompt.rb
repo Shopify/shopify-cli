@@ -192,7 +192,8 @@ module CLI
           raise(ArgumentError, 'insufficient options') if options.nil? || options.empty?
           # Windows doesn't capture the up/down arrow keys with getc, so we simply don't mention that possibility
           instructions = []
-          instructions << (multiple ? "Toggle options. " : "") + "Choose with ↑ ↓ ⏎" unless CLI::UI.os == :windows
+          instructions << (multiple ? "Toggle options. " : "") + "Choose with ↑ ↓ ⏎" if
+            CLI::UI::OS.current.supports_arrow_keys?
           instructions << "filter with 'f'" if filter_ui
           instructions << "enter option with 'e'" if select_ui && (options.size > 9)
 
@@ -271,7 +272,7 @@ module CLI
           # If a prompt is interrupted on Windows it locks the colour of the terminal from that point on, so we should
           # not change the colour here.
           prompt = prefix + CLI::UI.fmt('{{blue:> }}')
-          prompt += CLI::UI::Color::YELLOW.code unless CLI::UI.os == :windows
+          prompt += CLI::UI::Color::YELLOW.code if CLI::UI::OS.current.supports_color_prompt?
 
           begin
             line = Readline.readline(prompt, true)

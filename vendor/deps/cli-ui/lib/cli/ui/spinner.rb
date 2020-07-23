@@ -10,7 +10,7 @@ module CLI
       PERIOD = 0.1 # seconds
       TASK_FAILED = :task_failed
 
-      RUNES = CLI::UI.enable_emoji? ? %w(⠋ ⠙ ⠹ ⠸ ⠼ ⠴ ⠦ ⠧ ⠇ ⠏).freeze : %w(\\ | / _ \\ | / _).freeze
+      RUNES = CLI::UI::OS.current.supports_emoji? ? %w(⠋ ⠙ ⠹ ⠸ ⠼ ⠴ ⠦ ⠧ ⠇ ⠏).freeze : %w(\\ | / - \\ | / -).freeze
 
       begin
         colors = [CLI::UI::Color::CYAN.code] * (RUNES.size / 2).ceil +

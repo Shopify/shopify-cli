@@ -43,7 +43,7 @@ module CLI
       # ==== Returns
       # Returns the glyph string
       def char
-        CLI::UI.enable_emoji? ? @char : @plain
+        CLI::UI::OS.current.supports_emoji? ? @char : @plain
       end
 
       # Mapping of glyphs to terminal output

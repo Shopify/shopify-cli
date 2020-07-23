@@ -137,7 +137,7 @@ module CLI
       #
       def self.next_line
         cmd = cursor_down + control('1', 'G')
-        cmd += control('1', 'D') if CLI::UI.os == :windows
+        cmd += control('1', 'D') if CLI::UI::OS.current.shift_cursor_on_line_reset?
         cmd
       end
 
@@ -145,7 +145,7 @@ module CLI
       #
       def self.previous_line
         cmd = cursor_up + control('1', 'G')
-        cmd += control('1', 'D') if CLI::UI.os == :windows
+        cmd += control('1', 'D') if CLI::UI::OS.current.shift_cursor_on_line_reset?
         cmd
       end
 
