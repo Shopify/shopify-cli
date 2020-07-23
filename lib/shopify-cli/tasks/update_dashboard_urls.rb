@@ -28,16 +28,17 @@ module ShopifyCli
       end
 
       def construct_redirect_urls(urls, new_url, callback_url)
-        urls.map do |url|
+        new_urls = urls.map do |url|
           if (match = url.match(NGROK_REGEX))
             "#{new_url}#{match[2]}"
           else
             url
           end
         end
-        if urls.grep(/#{new_url}#{callback_url}/).empty?
-          urls.push("#{new_url}#{callback_url}")
+        if new_urls.grep(/#{new_url}#{callback_url}/).empty?
+          new_urls.push("#{new_url}#{callback_url}")
         end
+        new_urls.uniq
       end
     end
   end
