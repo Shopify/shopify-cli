@@ -295,10 +295,17 @@ module ShopifyCli
             url_fetch_failure: "Unable to fetch external url",
           },
 
-          stopped: "{{green:x}} ngrok tunnel stopped",
           not_running: "{{green:x}} ngrok tunnel not running",
-          start_with_account: "{{v}} ngrok tunnel running at {{underline:%s}}, with account %s",
+          signup_suggestion: <<~MESSAGE,
+          {{*}} To avoid tunnels that timeout, it is recommended to signup for a free ngrok
+          account at {{underline:https://ngrok.com/signup}}. After you signup, install your
+          personalized authorization token using {{command:%s tunnel auth <token>}}.
+          MESSAGE
           start: "{{v}} ngrok tunnel running at {{underline:%s}}",
+          start_with_account: "{{v}} ngrok tunnel running at {{underline:%s}}, with account %s",
+          stopped: "{{green:x}} ngrok tunnel stopped",
+          timed_out: "{{x}} ngrok tunnel has timed out, restarting ...",
+          will_timeout: "{{*}} This tunnel will timeout in {{red:%s}}",
         },
 
         version: {

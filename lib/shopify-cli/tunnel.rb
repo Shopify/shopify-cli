@@ -62,14 +62,19 @@ module ShopifyCli
     #
     def start(ctx, port: PORT)
       install(ctx)
-      process = ShopifyCli::ProcessSupervision.start(:ngrok, ngrok_command(port))
-      log = fetch_url(ctx, process.log_path)
-      if log.account
-        ctx.puts(ctx.message('core.tunnel.start_with_account', log.url, log.account))
+      url, account, seconds_remaining = start_ngrok(ctx, port)
+      if account
+        ctx.puts(ctx.message('core.tunnel.start_with_account', url, account))
       else
-        ctx.puts(ctx.message('core.tunnel.start', log.url))
+        if seconds_remaining <= 0
+          ctx.puts(ctx.message('core.tunnel.timed_out'))
+          url, _account, seconds_remaining = restart_ngrok(ctx, port)
+        end
+        ctx.puts(ctx.message('core.tunnel.start', url))
+        ctx.puts(ctx.message('core.tunnel.will_timeout', seconds_to_hm(seconds_remaining)))
+        ctx.puts(ctx.message('core.tunnel.signup_suggestion', ShopifyCli::TOOL_NAME))
       end
-      log.url
+      url
     end
 
     ##
@@ -138,13 +143,30 @@ module ShopifyCli
     end
 
     def ngrok_command(port)
-      "exec #{File.join(ShopifyCli::CACHE_DIR, 'ngrok')} http -log=stdout -log-level=debug #{port}"
+      "exec #{File.join(ShopifyCli::CACHE_DIR, 'ngrok')} http -inspect=false -log=stdout -log-level=debug #{port}"
     end
 
+    def seconds_to_hm(seconds)
+      format("%d hours %d minutes", seconds / 3600, seconds / 60 % 60)
+    end
+
+    def start_ngrok(ctx, port)
+      process = ShopifyCli::ProcessSupervision.start(:ngrok, ngrok_command(port))
+      log = fetch_url(ctx, process.log_path)
+      seconds_remaining = (process.time.to_i + log.timeout) - Time.now.to_i
+      [log.url, log.account, seconds_remaining]
+    end
+
+    def restart_ngrok(ctx, port)
+      unless ShopifyCli::ProcessSupervision.stop(:ngrok)
+        ctx.abort(ctx.message('core.tunnel.error.stop'))
+      end
+      start_ngrok(ctx, port)
+    end
     class LogParser # :nodoc:
       TIMEOUT = 10
 
-      attr_reader :url, :account
+      attr_reader :url, :account, :timeout
 
       def initialize(log_path)
         @log_path = log_path
@@ -173,7 +195,9 @@ module ShopifyCli
       end
 
       def parse_account
-        @account, _ = @log.match(/AccountName:([\w\s]+) SessionDuration/)&.captures
+        account, timeout, _ = @log.match(/AccountName:([\w\s]*) SessionDuration:([\d]+) PlanName/)&.captures
+        @account = account&.empty? ? nil : account
+        @timeout = timeout&.empty? ? 0 : timeout.to_i
       end
 
       def error
