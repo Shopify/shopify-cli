@@ -169,7 +169,9 @@ module CLI
           host = RbConfig::CONFIG["host"]
           return :mac if /darwin/.match(host)
           return :linux if /linux/.match(host)
-          :windows if /mingw32/.match(host)
+          return :windows if /mingw32/.match(host)
+
+          raise "Could not determine OS from host #{host}"
         end
 
         private
@@ -198,10 +200,12 @@ module CLI
         # See https://github.com/Shopify/dev/pull/625 for more details.
         def resolve_path(a, env)
           # If only one argument was provided, make sure it's interpreted by a shell.
-          if os == :windows
-            return ["break && " + a[0]] if a.size == 1
-          else
-            return ["true ; " + a[0]] if a.size == 1
+          if a.size == 1
+            if os == :windows
+              return ["break && " + a[0]]
+            else
+              return ["true ; " + a[0]]
+            end
           end
           return a if a.first.include?('/')
 
