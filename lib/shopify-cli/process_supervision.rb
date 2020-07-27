@@ -62,7 +62,7 @@ module ShopifyCli
 
         # Make sure the file exists and is empty, otherwise Windows fails
         File.open(pid_file.log_path, 'w') {}
-        pid = spawn(
+        pid = Process.spawn(
           *args,
           out: pid_file.log_path,
           err: pid_file.log_path,
