@@ -38,6 +38,9 @@ module Script
           invalid_extension_cause: "Invalid extension point %s",
           invalid_extension_help: "Allowed values: %s.",
 
+          invalid_config: "Can't change the configuration values because %1$s is missing or "\
+                          "it is not formatted properly.",
+
           script_not_found_cause: "Couldn't find script %s for extension point %s",
 
           app_not_installed_cause: "App not installed on development store.",
