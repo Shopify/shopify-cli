@@ -5,11 +5,17 @@ module Theme
       flag_arguments :title, :password, :store
 
       def ask
-        self.store ||= CLI::UI::Prompt.ask("Store domain: ")
-        ctx.puts("To create a new theme, we need to connect with a private app. Visit {{underline:#{self.store}/admin/apps/private}} to fetch the password. If you create a new private app, ensure that it has Read and Write Theme access.")
-        self.password ||= CLI::UI::Prompt.ask("Password: ")
-        self.title ||= CLI::UI::Prompt.ask("Title: ")
+        self.store ||= CLI::UI::Prompt.ask(ctx.message('theme.forms.create.ask_store'), allow_empty: false)
+        ctx.puts(ctx.message('theme.forms.create.private_app', self.store))
+        self.password ||= CLI::UI::Prompt.ask(ctx.message('theme.forms.create.ask_password'), allow_empty: false)
+        self.title ||= CLI::UI::Prompt.ask(ctx.message('theme.forms.create.ask_title'), allow_empty: false)
         self.name = self.title.downcase.split(" ").join("_")
+
+        errors = []
+        errors << "store" if store.strip.empty?
+        errors << "password" if password.strip.empty?
+        errors << "title" if title.strip.empty?
+        ctx.abort(ctx.message('theme.forms.create.errors', errors.join(", ").capitalize)) unless errors.empty?
       end
     end
   end

@@ -2,8 +2,6 @@
 module Theme
   module Commands
     class Create < ShopifyCli::SubCommand
-      # prerequisite_task :ensure_themekit_installed # doesn't work
-
       options do |parser, flags|
         parser.on('--name=NAME') { |t| flags[:title] = t }
         parser.on('--password=PASSWORD') { |p| flags[:password] = p }
@@ -18,31 +16,33 @@ module Theme
         ShopifyCli::Project.write(@ctx,
                                   project_type: 'theme',
                                   organization_id: nil) # private apps are different
+
+        @ctx.done(@ctx.message('theme.create.info.created', form.name, form.store, @ctx.root))
       end
 
       def self.help
+        ShopifyCli::Context.message('theme.create.help', ShopifyCli::TOOL_NAME, ShopifyCli::TOOL_NAME)
       end
 
       private
 
       def build(name, password, store)
-        unless name == "" || password == "" || store == ""
-          Dir.mkdir(name)
-          Dir.chdir(name)
+        @ctx.abort("Duplicate theme") if @ctx.dir_exist?(name)
+
+        CLI::UI::Frame.open(@ctx.message('theme.create.checking_themekit')) do
+          Themekit.ensure_themekit_installed(@ctx)
         end
 
-        CLI::UI::Frame.open(@ctx.message('create.creating_theme', name)) do
-          unless Themekit.create(@ctx, name: name, password: password, store: store) # this one has continuous output
-            @ctx.abort('error')
+        @ctx.mkdir_p(name)
+        @ctx.chdir(name)
+
+        CLI::UI::Frame.open(@ctx.message('theme.create.creating_theme', name)) do
+          unless Themekit.create(@ctx, name: name, password: password, store: store)
+            @ctx.chdir('..')
+            @ctx.rm_rf(name)
+            @ctx.abort(@ctx.message('theme.create.failed'))
           end
-          # out, err, stat = Themekit.create(@ctx, name: name, password: password, store: store)
-          # @ctx.puts out
-          # unless stat
-          #   CLI::UI::Frame.divider("error")
-          #   @ctx.puts(err)
-          # end
         end
-        @ctx.root = File.join(@ctx.root, name)
       end
     end
   end
