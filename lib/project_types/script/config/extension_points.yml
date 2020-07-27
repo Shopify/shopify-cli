@@ -16,3 +16,9 @@ payment_filter:
     version: "^0.2.1"
     sdk-version: "^6.0.0"
     toolchain-version: "^1.1.0"
+shipping_filter:
+  assemblyscript:
+    package: "@shopify/extension-point-as-shipping-filter"
+    version: "^0.2.2"
+    sdk-version: "^6.0.0"
+    toolchain-version: "^1.1.0"
