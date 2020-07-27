@@ -71,6 +71,8 @@ module ShopifyCli
         pid_file.pid = pid
         pid_file.write
 
+        Process.detach(pid)
+
         sleep(0.1)
         for_ident(identifier)
       end
@@ -89,7 +91,8 @@ module ShopifyCli
       def stop(identifier)
         process = for_ident(identifier)
         return false unless process
-        process.stop
+        ctx = Context.new
+        process.stop(ctx)
       end
 
       ##
@@ -123,13 +126,17 @@ module ShopifyCli
     ##
     # will attempt to shutdown a running process
     #
+    # #### Parameters
+    #
+    # * `ctx` - the context of this command
+    #
     # #### Returns
     #
     # * `stopped` - [true, false]
     #
-    def stop
+    def stop(ctx)
+      kill_proc(ctx)
       unlink
-      kill_proc
       true
     rescue
       false
@@ -164,23 +171,31 @@ module ShopifyCli
       nil
     end
 
-    def kill_proc
-      kill(-pid) # process group
+    def kill_proc(ctx)
+      if ctx.windows?
+        kill(ctx, pid)
+      else
+        kill(ctx, -pid) # process group
+      end
     rescue Errno::ESRCH
       begin
-        kill(pid)
+        kill(ctx, pid)
       rescue Errno::ESRCH # The process group does not exist, try the pid itself
         # Race condition, process died in the middle
       end
     end
 
-    def kill(id)
-      Process.kill('TERM', id)
-      50.times do
-        sleep 0.1
-        break unless stat(id)
+    def kill(ctx, id)
+      # Windows does not handle SIGTERM, go straight to SIGKILL
+      unless ctx.windows?
+        Process.kill('TERM', id)
+        50.times do
+          sleep 0.1
+          break unless stat(id)
+        end
       end
       Process.kill('KILL', id) if stat(id)
+      sleep(0.1) if ctx.windows? # Give Windows a second to actually close the process
     end
 
     def stat(id)

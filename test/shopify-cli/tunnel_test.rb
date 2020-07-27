@@ -124,7 +124,7 @@ module ShopifyCli
       process.write
       File.write(process.log_path, File.read(log_path))
       yield
-      process.stop
+      process.stop(@context)
     end
 
     def mock_ngrok_tunnels_http_call(response_body:)

@@ -18,13 +18,13 @@ module ShopifyCli
       process = start
       assert process.alive?
       assert ProcessSupervision.running?('example')
-      process.stop
+      process.stop(@context)
     end
 
     def test_alive
       process = start
       assert process.alive?
-      assert process.stop
+      assert process.stop(@context)
       refute process.alive?
     end
 
