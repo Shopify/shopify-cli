@@ -6,7 +6,7 @@ module Script
       class AssemblyScriptTaskRunner
         BYTECODE_FILE = "%{name}.wasm"
         SCRIPT_SDK_BUILD = "npx --no-install shopify-scripts-build --src=../%{source} --binary=#{BYTECODE_FILE} "\
-                           "-- --lib=../node_modules --validate --optimize"
+                           "-- --lib=../node_modules --optimize --use Date="
 
         attr_reader :ctx, :script_name, :script_source_file
 
