@@ -5,10 +5,10 @@ module Node
     class Generate
       class Page < ShopifyCli::SubCommand
         PAGE_TYPES = {
-          'empty-state' => './node_modules/.bin/generate-node-app empty-state-page',
-          'two-column' => './node_modules/.bin/generate-node-app two-column-page',
-          'annotated' => './node_modules/.bin/generate-node-app settings-page',
-          'list' => './node_modules/.bin/generate-node-app list-page',
+          'empty-state' => ['./node_modules/.bin/generate-node-app', 'empty-state-page'],
+          'two-column' => ['./node_modules/.bin/generate-node-app', 'two-column-page'],
+          'annotated' => ['./node_modules/.bin/generate-node-app', 'settings-page'],
+          'list' => ['./node_modules/.bin/generate-node-app', 'list-page'],
         }
 
         options do |parser, flags|
@@ -37,9 +37,12 @@ module Node
               end
             end
           end
+          page_type_name = PAGE_TYPES.key(selected_type)
+          selected_type[0] = File.join(ShopifyCli::Project.current.directory, selected_type[0])
+          selected_type = selected_type.join(' ')
 
           spin_group = CLI::UI::SpinGroup.new
-          spin_group.add(@ctx.message('node.generate.page.generating', selected_type)) do |spinner|
+          spin_group.add(@ctx.message('node.generate.page.generating', page_type_name)) do |spinner|
             Node::Commands::Generate.run_generate("#{selected_type} #{name}", name, @ctx)
             spinner.update_title(@ctx.message('node.generate.page.generated', name, name))
           end

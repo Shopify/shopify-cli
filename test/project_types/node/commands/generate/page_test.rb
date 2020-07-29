@@ -8,9 +8,13 @@ module Node
         include TestHelpers::Project
         include TestHelpers::FakeUI
 
+        BIN_REGEX = 'node_modules\/\.bin\/generate-node-app'
+
         def test_with_selection
-          CLI::UI::Prompt.expects(:ask).returns('empty-state')
-          @context.expects(:system).with('empty-state name')
+          CLI::UI::Prompt.expects(:ask).returns(Node::Commands::Generate::Page::PAGE_TYPES['empty-state'])
+          @context
+            .expects(:system)
+            .with(regexp_matches(Regexp.new("^.*#{BIN_REGEX} empty-state-page name$")))
             .returns(mock(success?: true))
           Node::Commands::Generate::Page.new(@context).call(['name'], '')
         end
@@ -19,7 +23,7 @@ module Node
           CLI::UI::Prompt.expects(:ask).never
           @context
             .expects(:system)
-            .with('./node_modules/.bin/generate-node-app list-page name')
+            .with(regexp_matches(Regexp.new("^.*#{BIN_REGEX} list-page name$")))
             .returns(mock(success?: true))
           command = Node::Commands::Generate::Page.new(@context)
           command.options.flags[:type] = 'list'
