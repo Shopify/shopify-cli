@@ -86,14 +86,14 @@ module Script
                 "@shopify/scripts-toolchain-as": "#{extension_point.sdks[:ts].toolchain_version}",
                 "#{extension_point.sdks[:ts].package}": "#{extension_point.sdks[:ts].version}",
                 "@as-pect/cli": "4.0.0",
-                "as-wasi": "^0.0.1",
+                "as-wasi": "^0.2.0",
                 "assemblyscript": "^0.12.0"
               },
               "scripts": {
                 "test": "asp --config test/as-pect.config.js --summary --verbose"
               },
               "engines": {
-                "node": ">=12.16"
+                "node": ">=14.5"
               }
             }
           HERE
