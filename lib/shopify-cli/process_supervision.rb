@@ -91,8 +91,7 @@ module ShopifyCli
       def stop(identifier)
         process = for_ident(identifier)
         return false unless process
-        ctx = Context.new
-        process.stop(ctx)
+        process.stop
       end
 
       ##
@@ -179,7 +178,7 @@ module ShopifyCli
       end
     rescue Errno::ESRCH
       begin
-        kill(ctx, pid)
+        kill(pid)
       rescue Errno::ESRCH # The process group does not exist, try the pid itself
         # Race condition, process died in the middle
       end
