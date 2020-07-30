@@ -16,23 +16,7 @@ module ShopifyCli
           already_connected_warning: "{{yellow:! This app appears to be already connected}}",
           connected: "{{v}} Project now connected to {{green:%s}}",
           project_type_select: "What type of project would you like to connect?",
-          organization_select: "To which partner organization does this project belong?",
-          app_select: "To which app does this project belong?",
-          no_development_stores: <<~MESSAGE,
-          No development stores available.
-          Visit {{underline:https://partners.shopify.com/%d/stores}} to create one
-          MESSAGE
-          development_store_select: "Which development store would you like to use?",
           cli_yml_saved: ".shopify-cli.yml saved to project root",
-
-          no_apps: 'You have no apps to connect to, creating a new app.',
-          app_name: "App name",
-          app_type: {
-            select: "What type of app are you building?",
-            select_public: "Public: An app built for a wide merchant audience.",
-            select_custom: "Custom: An app custom built for a single client.",
-            selected: "App type {{green:%s}}",
-          },
         },
 
         context: {
@@ -254,9 +238,21 @@ module ShopifyCli
 
         tasks: {
           ensure_env: {
-            api_key_question: "What is your Shopify API key?",
-            api_secret_key_question: "What is your Shopify API secret key?",
-            development_store_question: "What is your development store URL? (Example: my-dev-store.myshopify.com)",
+            organization_select: "To which partner organization does this project belong?",
+            no_development_stores: <<~MESSAGE,
+            No development stores available.
+            Visit {{underline:https://partners.shopify.com/%d/stores}} to create one
+            MESSAGE
+            development_store_select: "Which development store would you like to use?",
+            app_select: "To which app does this project belong?",
+            no_apps: 'You have no apps to connect to, creating a new app.',
+            app_name: "App name",
+            app_type: {
+              select: "What type of app are you building?",
+              select_public: "Public: An app built for a wide merchant audience.",
+              select_custom: "Custom: An app custom built for a single client.",
+              selected: "App type {{green:%s}}",
+            },
           },
           ensure_dev_store: {
             could_not_verify_store: "Couldn't verify your store %s",

@@ -10,9 +10,9 @@ module ShopifyCli
         Resources::EnvFile.expects(:parse_external_env).returns({})
         ShopifyCli::PartnersAPI::Organizations.stubs(:fetch_with_app).returns(partners_api_response)
         CLI::UI::Prompt.expects(:ask).with(@context.message('core.connect.project_type_select')).returns('node')
-        CLI::UI::Prompt.expects(:ask).with(@context.message('core.connect.organization_select')).returns(101)
+        CLI::UI::Prompt.expects(:ask).with(@context.message('core.tasks.ensure_env.organization_select')).returns(101)
         CLI::UI::Prompt.expects(:ask).with(
-          @context.message('core.connect.development_store_select')
+          @context.message('core.tasks.ensure_env.development_store_select')
         ).returns('store.myshopify.com')
 
         Resources::EnvFile.any_instance.expects(:write)
@@ -20,24 +20,16 @@ module ShopifyCli
         run_cmd('connect')
       end
 
-      def test_connect_uses_default_values_for_env_file
-        ShopifyCli::Project.stubs(:has_current?).returns(false)
-        Resources::EnvFile.expects(:parse_external_env).returns({})
+      def test_connect_doesnt_write_yml_when_current_project_exists
         ShopifyCli::PartnersAPI::Organizations.stubs(:fetch_with_app).returns(partners_api_response)
-        CLI::UI::Prompt.expects(:ask).with(@context.message('core.connect.project_type_select')).returns('node')
-        CLI::UI::Prompt.expects(:ask).with(@context.message('core.connect.organization_select')).returns(101)
+        CLI::UI::Prompt.expects(:ask).with(@context.message('core.tasks.ensure_env.organization_select')).returns(101)
         CLI::UI::Prompt.expects(:ask).with(
-          @context.message('core.connect.development_store_select')
+          @context.message('core.tasks.ensure_env.development_store_select')
         ).returns('store.myshopify.com')
 
-        Resources::EnvFile.expects(:new).with(
-          api_key: 1235,
-          secret: 1234,
-          shop: "store.myshopify.com",
-          scopes: "write_products,write_customers,write_draft_orders",
-          extra: {}
-        ).returns(stub(:write))
-        ShopifyCli::Project.expects(:write)
+        CLI::UI::Prompt.expects(:ask).with(@context.message('core.connect.project_type_select')).never
+        Resources::EnvFile.any_instance.expects(:write)
+        ShopifyCli::Project.expects(:write).never
         run_cmd('connect')
       end
 
@@ -49,13 +41,13 @@ module ShopifyCli
         })
         ShopifyCli::PartnersAPI::Organizations.stubs(:fetch_with_app).returns(partners_api_response)
         CLI::UI::Prompt.expects(:ask).with(@context.message('core.connect.project_type_select')).returns('node')
-        CLI::UI::Prompt.expects(:ask).with(@context.message('core.connect.organization_select')).returns(101)
+        CLI::UI::Prompt.expects(:ask).with(@context.message('core.tasks.ensure_env.organization_select')).returns(101)
         CLI::UI::Prompt.expects(:ask).with(
-          @context.message('core.connect.development_store_select')
+          @context.message('core.tasks.ensure_env.development_store_select')
         ).returns('store.myshopify.com')
 
         Resources::EnvFile.expects(:new).with(
-          api_key: 1235,
+          api_key: "apikey",
           secret: 1234,
           shop: "store.myshopify.com",
           scopes: "read_products",
@@ -65,25 +57,12 @@ module ShopifyCli
         run_cmd('connect')
       end
 
-      def test_connect_doesnt_write_yml_when_current_project_exists
-        ShopifyCli::PartnersAPI::Organizations.stubs(:fetch_with_app).returns(partners_api_response)
-        CLI::UI::Prompt.expects(:ask).with(@context.message('core.connect.organization_select')).returns(101)
-        CLI::UI::Prompt.expects(:ask).with(
-          @context.message('core.connect.development_store_select')
-        ).returns('store.myshopify.com')
-
-        CLI::UI::Prompt.expects(:ask).with(@context.message('core.connect.project_type_select')).never
-        Resources::EnvFile.any_instance.expects(:write)
-        ShopifyCli::Project.expects(:write).never
-        run_cmd('connect')
-      end
-
       def test_connect_outputs_warnings_if_already_connected
         ShopifyCli::PartnersAPI::Organizations.stubs(:fetch_with_app).returns(partners_api_response)
         CLI::UI::Prompt.expects(:ask).with(@context.message('core.connect.project_type_select')).never
-        CLI::UI::Prompt.expects(:ask).with(@context.message('core.connect.organization_select')).returns(101)
+        CLI::UI::Prompt.expects(:ask).with(@context.message('core.tasks.ensure_env.organization_select')).returns(101)
         CLI::UI::Prompt.expects(:ask).with(
-          @context.message('core.connect.development_store_select')
+          @context.message('core.tasks.ensure_env.development_store_select')
         ).returns('store.myshopify.com')
         Resources::EnvFile.any_instance.expects(:write)
         ShopifyCli::Project.expects(:write).never
@@ -93,51 +72,6 @@ module ShopifyCli
         @context.expects(:puts).with(@context.message('core.connect.production_warning'))
         @context.expects(:puts).with(@context.message('core.connect.connected', 'app'))
 
-        run_cmd('connect')
-      end
-
-      def test_no_prompt_if_one_app_and_org
-        response = [{
-          "id" => 421,
-          "businessName" => "one",
-          "stores" => [{
-            "shopDomain" => "store.myshopify.com",
-          }],
-          "apps" => [{
-            "title" => "app",
-            "apiKey" => 1234,
-            "apiSecretKeys" => [{
-              "secret" => 1233,
-            }],
-          }],
-        }]
-        ShopifyCli::PartnersAPI::Organizations.stubs(:fetch_with_app).returns(response)
-        Resources::EnvFile.any_instance.stubs(:write)
-        run_cmd('connect')
-      end
-
-      def test_create_new_app_if_none_available
-        ShopifyCli::PartnersAPI::Organizations.stubs(:fetch_with_app).returns([{
-          "id" => 421,
-          "businessName" => "one",
-          "stores" => [{
-            "shopDomain" => "store.myshopify.com",
-          }],
-          "apps" => [],
-        }])
-        CLI::UI::Prompt.expects(:ask).with(@context.message('rails.forms.create.app_name')).returns('new app')
-        CLI::UI::Prompt.expects(:ask).with(@context.message('rails.forms.create.app_type.select')).returns('public')
-        ShopifyCli::Tasks::CreateApiClient.expects(:call).with(
-          @context,
-          org_id: 421,
-          title: 'new app',
-          type: 'public',
-        ).returns({
-          "apiKey" => "ljdlkajfaljf",
-          "apiSecretKeys" => [{ "secret" => "kldjakljjkj" }],
-          "id" => "12345678",
-        })
-        Resources::EnvFile.any_instance.stubs(:write)
         run_cmd('connect')
       end
 
@@ -152,7 +86,7 @@ module ShopifyCli
           }],
           "apps" => [{
             "title" => "app",
-            "apiKey" => 1234,
+            "apiKey" => "apikey",
             "apiSecretKeys" => [{
               "secret" => 1233,
             }],
@@ -166,7 +100,7 @@ module ShopifyCli
           ],
           "apps" => [{
             "title" => "app",
-            "apiKey" => 1235,
+            "apiKey" => "apikey",
             "apiSecretKeys" => [{
               "secret" => 1234,
             }],
