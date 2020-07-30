@@ -72,11 +72,9 @@ module Script
           help: <<~HELP,
           {{command:%1$s create script}}: Creates a script project.
             Usage: {{command:%1$s create script}}
-          HELP
-          extended_help: <<~HELP,
-            \s\sOptions:
-              \s\s{{command:--name=NAME}} Script project name. Use any string.
-              \s\s{{command:--extension_point=TYPE}} Extension point name. Allowed values: %2$s.
+            Options:
+              {{command:--name=NAME}} Script project name. Use any string.
+              {{command:--extension_point=TYPE}} Extension point name. Allowed values: %2$s.
           HELP
 
           error: {
@@ -92,10 +90,8 @@ module Script
           help: <<~HELP,
           Build the script and put it into production. If you've already pushed a script with the same extension point, use --force to replace the current script with the newest one.
             Usage: {{command:%s push}}
-          HELP
-          extended_help: <<~HELP,
-            \s\sOptions:
-              \s\s{{command:[--force]}} Forces the script to be overwritten if an instance of it already exists.
+            Options:
+              {{command:[--force]}} Forces the script to be overwritten if an instance of it already exists.
           HELP
 
           error: {
@@ -122,11 +118,9 @@ module Script
           help: <<~HELP,
           Turn on script in development store.
             Usage: {{command:%s enable}}
-          HELP
-          extended_help: <<~HELP,
-            \s\sOptions:
-              \s\s{{command:--config_props='name1:value1, name2:value2'}} Optional. Define the configuration of your script by passing individual name and value pairs. If used with --config_file, then matching values in --config_props will override those set in the file.
-              \s\s{{command:--config_file=<path/to/YAMLFilename>}} Optional. Define the configuration of your script using a YAML formatted file. --config_props values override properties in this file.
+            Options:
+              {{command:--config_props='name1:value1, name2:value2'}} Optional. Define the configuration of your script by passing individual name and value pairs. If used with --config_file, then matching values in --config_props will override those set in the file.
+              {{command:--config_file=<path/to/YAMLFilename>}} Optional. Define the configuration of your script using a YAML formatted file. --config_props values override properties in this file.
           HELP
 
           info: "{{*}} A script always remains enabled until you disable it - even after pushing "\
