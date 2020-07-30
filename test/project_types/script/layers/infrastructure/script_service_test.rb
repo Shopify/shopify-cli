@@ -298,6 +298,14 @@ describe Script::Layers::Infrastructure::ScriptService do
         end
       end
 
+      describe 'when app script not pushed' do
+        let(:tag) { "app_script_not_pushed" }
+
+        it 'should raise AppScriptNotPushedError' do
+          assert_raises(Script::Layers::Infrastructure::Errors::AppScriptNotPushedError) { subject }
+        end
+      end
+
       describe 'when shop script conflict' do
         let(:tag) { "shop_script_conflict" }
 
