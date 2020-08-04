@@ -45,7 +45,7 @@ module ShopifyCli
           CLI::UI::Prompt.ask(@ctx.message('core.connect.organization_select')) do |handler|
             orgs.each do |org|
               handler.option(
-                ctx.message('core.partners_api.org_name_and_id', org['businessName'], org['id'])
+                @ctx.message('core.partners_api.org_name_and_id', org['businessName'], org['id'])
               ) { org["id"] }
             end
           end
