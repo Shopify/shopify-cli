@@ -3,9 +3,8 @@
 module Script
   module Commands
     class Disable < ShopifyCli::Command
-      prerequisite_task :ensure_env
-
       def call(_args, _name)
+        ShopifyCli::Tasks::EnsureEnv.call(@ctx, required: [:api_key, :secret, :shop])
         project = ScriptProject.current
         Layers::Application::DisableScript.call(
           ctx: @ctx,

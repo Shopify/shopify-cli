@@ -3,7 +3,6 @@
 module Script
   module Commands
     class Enable < ShopifyCli::Command
-      prerequisite_task :ensure_env
       options do |parser, flags|
         parser.on('--config_props=KEYVALUEPAIRS', Array) do |t|
           flags[:config_props] = Hash[t.map { |s| s.split(':') }]
@@ -12,6 +11,7 @@ module Script
       end
 
       def call(_args, _name)
+        ShopifyCli::Tasks::EnsureEnv.call(@ctx, required: [:api_key, :secret, :shop])
         project = ScriptProject.current
         api_key = project.env[:api_key]
         shop_domain = project.env[:shop]

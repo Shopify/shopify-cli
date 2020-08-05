@@ -3,13 +3,14 @@ require 'shopify_cli'
 module ShopifyCli
   module Tasks
     class EnsureEnv < ShopifyCli::Task
-      def call(ctx, regenerate: false, required: [:api_key, :secret, :shop])
+      def call(ctx, regenerate: false, required: [:api_key, :secret])
         @ctx = ctx
-        env_data = begin
-          Resources::EnvFile.parse_external_env
-                   rescue Errno::ENOENT
-                     {}
-        end
+        env_data =
+          begin
+            Resources::EnvFile.parse_external_env
+          rescue Errno::ENOENT
+            {}
+          end
 
         return {} if !regenerate && required.all? { |property| env_data[property] }
 
@@ -28,13 +29,12 @@ module ShopifyCli
           CLI::UI::Prompt.ask(@ctx.message('core.tasks.ensure_env.organization_select')) do |handler|
             orgs.each do |org|
               handler.option(
-                ctx.message('core.partners_api.org_name_and_id', org['businessName'], org['id'])
+                @ctx.message('core.partners_api.org_name_and_id', org['businessName'], org['id'])
               ) { org["id"] }
             end
           end
         end
-        org = orgs.find { |o| o["id"] == org_id }
-        org
+        orgs.find { |o| o["id"] == org_id }
       end
 
       def get_app(org_id, apps)

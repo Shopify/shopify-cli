@@ -5,6 +5,7 @@ module Script
     module Infrastructure
       module Errors
         class AppNotInstalledError < ScriptProjectError; end
+        class AppScriptNotPushedError < ScriptProjectError; end
         class AppScriptUndefinedError < ScriptProjectError; end
         class BuildError < ScriptProjectError; end
         class DependencyInstallError < ScriptProjectError; end

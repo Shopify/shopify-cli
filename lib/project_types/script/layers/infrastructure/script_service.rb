@@ -60,6 +60,8 @@ module Script
             raise Errors::AppScriptUndefinedError, api_key
           elsif user_errors.any? { |e| e['tag'] == 'shop_script_conflict' }
             raise Errors::ShopScriptConflictError
+          elsif user_errors.any? { |e| e['tag'] == 'app_script_not_pushed' }
+            raise Errors::AppScriptNotPushedError
           else
             raise Errors::ScriptServiceUserError.new(query_name, user_errors.to_s)
           end

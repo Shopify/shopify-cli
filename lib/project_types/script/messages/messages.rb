@@ -42,6 +42,8 @@ module Script
 
           app_not_installed_cause: "App not installed on development store.",
 
+          app_script_not_pushed_help: "Push the script and then try this command again.",
+
           app_script_undefined_help: "Push script to app.",
 
           build_error_cause: "Something went wrong while building the script.",
@@ -113,6 +115,7 @@ module Script
 
           error: {
             operation_failed: "Can't disable script.",
+            not_pushed_to_app: "Can't disable the script because it hasn't been pushed to the app.",
           },
 
           script_disabled: "{{v}} Script disabled. Script is turned off in development store.",
@@ -135,6 +138,7 @@ module Script
 
           error: {
             operation_failed: "Can't enable script.",
+            not_pushed_to_app: "Can't enable the script because it hasn't been pushed to the app.",
           },
 
           script_enabled: "{{v}} Script enabled. %{type} script %{title} in app (API key: %{api_key}) "\

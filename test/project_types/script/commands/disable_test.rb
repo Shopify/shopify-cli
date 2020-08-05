@@ -21,7 +21,10 @@ module Script
         ScriptProject.stubs(:current).returns(@script_project)
       end
 
-      def test_calls_application_enable
+      def test_calls_application_disable
+        ShopifyCli::Tasks::EnsureEnv
+          .any_instance.expects(:call)
+          .with(@context, required: [:api_key, :secret, :shop])
         Script::Layers::Application::DisableScript.expects(:call).with(
           ctx: @context,
           api_key: @api_key,

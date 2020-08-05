@@ -1,3 +1,11 @@
+Version 1.0.4
+------
+* Fix a bug when running the `connect` command with an account with multiple organizations 
+
+Version 1.0.3
+------
+* Fix a bug which causes an error in the `populate` and `generate` commands when prompting for the shop name
+
 Version 1.0.2
 ------
 * Fix missing shop parameter to AdminAPI.query() call (impacting populate and generate commands)

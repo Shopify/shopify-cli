@@ -6,20 +6,20 @@ module ShopifyCli
       def call(*)
         project_type = ask_project_type unless Project.has_current?
 
-        if Project.has_current? && Project.current_project_type && Project.current.env
+        if Project.has_current? && Project.current && Project.current.env
           @ctx.puts @ctx.message('core.connect.already_connected_warning')
           prod_warning = @ctx.message('core.connect.production_warning')
           @ctx.puts prod_warning if [:rails, :node].include?(Project.current_project_type)
         end
 
-        org = ShopifyCli::Tasks::EnsureEnv.new.call(@ctx, regenerate: true)
-        @api_key = Project.current.env['api_key']
+        org = ShopifyCli::Tasks::EnsureEnv.call(@ctx, regenerate: true)
+        api_key = Project.current.env['api_key']
         write_cli_yml(project_type, org['id']) unless Project.has_current?
-        @ctx.puts(@ctx.message('core.connect.connected', get_app(org['apps']).first["title"]))
+        @ctx.puts(@ctx.message('core.connect.connected', get_app(org['apps'], api_key).first["title"]))
       end
 
-      def get_app(apps)
-        apps.select { |app| app["apiKey"] == @api_key }
+      def get_app(apps, api_key)
+        apps.select { |app| app["apiKey"] == api_key }
       end
 
       def ask_project_type
