@@ -35,7 +35,7 @@ module ShopifyCli
           task_registry = ShopifyCli::Tasks::Registry
 
           command, command_name, args = ShopifyCli::Resolver.call(args)
-          executor = ShopifyCli::Core::Executor.new(ctx, task_registry, log_file: ShopifyCli::LOG_FILE)
+          executor = ShopifyCli::Core::Executor.new(ctx, task_registry, log_file: ShopifyCli.log_file)
           ShopifyCli::Core::Monorail.log(command_name, args) do
             executor.call(command, command_name, args)
           end

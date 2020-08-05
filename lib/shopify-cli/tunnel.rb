@@ -88,7 +88,7 @@ module ShopifyCli
     #
     def auth(ctx, token)
       install(ctx)
-      ctx.system(File.join(ShopifyCli::CACHE_DIR, 'ngrok'), 'authtoken', token)
+      ctx.system(File.join(ShopifyCli.cache_dir, 'ngrok'), 'authtoken', token)
     end
 
     ##
@@ -122,14 +122,14 @@ module ShopifyCli
     private
 
     def install(ctx)
-      return if File.exist?(File.join(ShopifyCli::CACHE_DIR, 'ngrok'))
+      return if File.exist?(File.join(ShopifyCli.cache_dir, 'ngrok'))
       spinner = CLI::UI::SpinGroup.new
       spinner.add('Installing ngrok...') do
-        zip_dest = File.join(ShopifyCli::CACHE_DIR, 'ngrok.zip')
+        zip_dest = File.join(ShopifyCli.cache_dir, 'ngrok.zip')
         unless File.exist?(zip_dest)
-          ctx.system('curl', '-o', zip_dest, DOWNLOAD_URLS[ctx.os], chdir: ShopifyCli::CACHE_DIR)
+          ctx.system('curl', '-o', zip_dest, DOWNLOAD_URLS[ctx.os], chdir: ShopifyCli.cache_dir)
         end
-        ctx.system('unzip', '-u', zip_dest, chdir: ShopifyCli::CACHE_DIR)
+        ctx.system('unzip', '-u', zip_dest, chdir: ShopifyCli.cache_dir)
         ctx.rm(zip_dest)
       end
       spinner.wait
@@ -143,7 +143,7 @@ module ShopifyCli
     end
 
     def ngrok_command(port)
-      "exec #{File.join(ShopifyCli::CACHE_DIR, 'ngrok')} http -inspect=false -log=stdout -log-level=debug #{port}"
+      "exec #{File.join(ShopifyCli.cache_dir, 'ngrok')} http -inspect=false -log=stdout -log-level=debug #{port}"
     end
 
     def seconds_to_hm(seconds)

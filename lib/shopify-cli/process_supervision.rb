@@ -5,9 +5,6 @@ module ShopifyCli
   # ProcessSupervision wraps a running process spawned by `exec` and keeps track
   # if its `pid` and keeps a log file for it as well
   class ProcessSupervision
-    # is the directory where the pid and logfile are kept
-    RUN_DIR = File.join(ShopifyCli::CACHE_DIR, 'sv')
-
     # a string or a symbol to identify this process by
     attr_reader :identifier
     # process ID for the running process
@@ -20,6 +17,11 @@ module ShopifyCli
     attr_reader :log_path
 
     class << self
+      def run_dir
+        # is the directory where the pid and logfile are kept
+        File.join(ShopifyCli.cache_dir, 'sv')
+      end
+
       ##
       # Will find and create a new instance of ProcessSupervision for a running process
       # if it is currently running. It will return nil if the process is not running.
@@ -34,7 +36,7 @@ module ShopifyCli
       #   will be nil if the process is not running.
       #
       def for_ident(identifier)
-        pid, time = File.read(File.join(RUN_DIR, "#{identifier}.pid")).split(':')
+        pid, time = File.read(File.join(ShopifyCli::ProcessSupervision.run_dir, "#{identifier}.pid")).split(':')
         new(identifier, pid: Integer(pid), time: time)
       rescue Errno::ENOENT
         nil
@@ -108,8 +110,8 @@ module ShopifyCli
       @identifier = identifier
       @pid = pid
       @time = time
-      @pid_path = File.join(RUN_DIR, "#{identifier}.pid")
-      @log_path = File.join(RUN_DIR, "#{identifier}.log")
+      @pid_path = File.join(ShopifyCli::ProcessSupervision.run_dir, "#{identifier}.pid")
+      @log_path = File.join(ShopifyCli::ProcessSupervision.run_dir, "#{identifier}.log")
     end
 
     ##
