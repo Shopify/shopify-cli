@@ -1,10 +1,11 @@
 # frozen_string_literal: true
-
 require 'project_types/script/test_helper'
 
 module Script
   module Commands
     class EnableTest < MiniTest::Test
+      include TestHelpers::FakeFS
+
       def setup
         super
         @cmd = Enable
@@ -134,9 +135,7 @@ module Script
       end
 
       def test_calls_application_enable_with_configuration_file
-        ::FakeFS.with_fresh do
-          File.open("enable_config_file.yml", "w+") { |file| file.write("key1: \"value1\"\nkey2: \"value2\"") }
-        end
+        File.open("enable_config_file.yml", "w+") { |file| file.write("key1: \"value1\"\nkey2: \"value2\"") }
         expected_configuration = {
           entries: [
             {
@@ -177,9 +176,7 @@ module Script
       end
 
       def test_calls_application_enable_with_configuration_file_and_properties_override
-        ::FakeFS.with_fresh do
-          File.open("enable_config_file.yml", "w+") { |file| file.write("key1: \"value1\"\nkey2: \"value2\"") }
-        end
+        File.open("enable_config_file.yml", "w+") { |file| file.write("key1: \"value1\"\nkey2: \"value2\"") }
         expected_configuration = {
           entries: [
             {
@@ -220,6 +217,28 @@ module Script
         end
       end
 
+      def test_calls_application_enable_with_invalid_configuration_file
+        File.open("enable_config_file.yml", "w+") { |file| file.write("key1 \"value1\"\nkey2: \"value2\"") }
+
+        Script::UI::ErrorHandler
+          .expects(:pretty_print_and_raise)
+          .with { |e| e.is_a?(Errors::InvalidConfigYAMLError) }
+
+        capture_io do
+          perform_command(config_file_path: "enable_config_file.yml")
+        end
+      end
+
+      def test_calls_application_enable_with_missing_configuration_file
+        Script::UI::ErrorHandler
+          .expects(:pretty_print_and_raise)
+          .with { |e| e.is_a?(Errors::InvalidConfigYAMLError) }
+
+        capture_io do
+          perform_command(config_file_path: "enable_config_file.yml")
+        end
+      end
+
       private
 
       def perform_command(config_props: nil, config_file_path: nil)
@@ -232,10 +251,8 @@ module Script
         command += " --config_props=#{config_props}" unless config_props.nil?
         command += " --config_file=#{config_file_path}" unless config_file_path.nil?
         ShopifyCli::Core::Monorail.stubs(:log).yields
-        ::FakeFS.with do
-          File.open(".env", "w+") { |file| file.write(env_contents) }
-          run_cmd(command)
-        end
+        File.open(".env", "w+") { |file| file.write(env_contents) }
+        run_cmd(command)
       end
     end
   end

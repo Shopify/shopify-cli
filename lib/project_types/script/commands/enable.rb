@@ -32,6 +32,8 @@ module Script
           title: project.script_name
         ))
         @ctx.puts(@ctx.message('script.enable.info'))
+      rescue Errors::InvalidConfigYAMLError => e
+        UI::ErrorHandler.pretty_print_and_raise(e)
       rescue StandardError => e
         UI::ErrorHandler.pretty_print_and_raise(e, failed_op: @ctx.message('script.enable.error.operation_failed'))
       end
@@ -59,6 +61,8 @@ module Script
           })
         end
         configuration
+      rescue Errno::ENOENT, Psych::SyntaxError
+        raise Errors::InvalidConfigYAMLError, options.flags[:config_file]
       end
 
       # No slice pre Ruby 2.5 so roll our own
