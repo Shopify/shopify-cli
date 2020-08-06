@@ -33,7 +33,7 @@ describe Script::Layers::Domain::PushPackage do
     subject { push_package.push(script_service, api_key, force) }
 
     it "should open write to build file and push" do
-      script_service.expect(:push, nil) do |**kwargs|
+      script_service.expect(:push, nil) do |kwargs|
         kwargs[:extension_point_type] == extension_point_type &&
           kwargs[:script_name] == script_name &&
           kwargs[:script_content] == script_content &&

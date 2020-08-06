@@ -6,11 +6,11 @@ GEM
     ansi (1.5.0)
     ast (2.4.0)
     builder (3.2.3)
-    byebug (8.2.2)
+    byebug (8.2.5)
     coderay (1.1.2)
     crack (0.4.3)
       safe_yaml (~> 1.0.0)
-    fakefs (0.20.0)
+    fakefs (1.2.2)
     hashdiff (0.3.2)
     metaclass (0.0.4)
     method_source (0.9.2)
@@ -62,7 +62,7 @@ PLATFORMS
 
 DEPENDENCIES
   byebug
-  fakefs
+  fakefs (>= 1.0)
   minitest (>= 5.0.0)
   minitest-reporters
   mocha
