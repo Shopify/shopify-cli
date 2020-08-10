@@ -3,9 +3,10 @@ module Theme
   module Messages
     MESSAGES = {
       theme: {
+        checking_themekit: "Verifying Theme Kit",
         create: {
           creating_theme: "Creating theme %s",
-          checking_themekit: "Verifying Theme Kit",
+          duplicate_theme: "Duplicate theme",
           failed: "Couldn't create the theme",
           help: <<~HELP,
             {{command:%s create theme}}: Creates a theme.
@@ -30,6 +31,14 @@ module Theme
               If you create a new private app, ensure that it has Read and Write Theme access.",
             APP
           },
+        },
+        serve: {
+          help: <<~HELP,
+            Sync your current changes, then view the active store in your default browser. Any theme edits will continue to update in real time. Also prints the active store's URL in your terminal.
+            Usage: {{command:%s serve}}
+          HELP
+          serve: "Viewing theme...",
+          open_fail: "Couldn't open the theme",
         },
         tasks: {
           ensure_themekit_installed: {
