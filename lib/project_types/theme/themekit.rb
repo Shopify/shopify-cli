@@ -1,6 +1,6 @@
 module Theme
   class Themekit
-    THEMEKIT = File.join(ShopifyCli::CACHE_DIR, "themekit")
+    THEMEKIT = File.join(ShopifyCli.cache_dir, "themekit")
 
     class << self
       def create(ctx, password:, store:, name:)
