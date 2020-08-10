@@ -30,9 +30,7 @@ module Theme
                                                       'shop.myshopify.com',
                                                       File.join('', 'my_theme')))
 
-          Theme::Commands::Create.ctx = context
-          Theme::Commands::Create.call([], 'create', nil)
-
+          Theme::Commands::Create.new(context).call([], 'create')
           assert_equal SHOPIFYCLI_FILE, File.read(".shopify-cli.yml")
         end
       end
