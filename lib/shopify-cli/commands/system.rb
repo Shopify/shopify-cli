@@ -36,17 +36,25 @@ module ShopifyCli
         cli_constants_extra = %w(
           PROJECT_TYPES_DIR
           TEMP_DIR
-          CACHE_DIR
-          TOOL_CONFIG_PATH
-          LOG_FILE
-          DEBUG_LOG_FILE
         )
+        cli_path_methods = [
+          :cache_dir,
+          :tool_config_path,
+          :log_file,
+          :debug_log_file,
+        ]
 
         cli_constants += cli_constants_extra if show_all_details
 
         @ctx.puts(@ctx.message('core.system.header'))
         cli_constants.each do |s|
           @ctx.puts("  " + @ctx.message('core.system.const', s, ShopifyCli.const_get(s.to_sym)) + "\n")
+        end
+
+        if show_all_details
+          cli_path_methods.each do |m|
+            @ctx.puts("  " + @ctx.message('core.system.const', m.upcase, ShopifyCli.send(m)) + "\n")
+          end
         end
       end
 
@@ -74,7 +82,7 @@ module ShopifyCli
       end
 
       def display_ngrok
-        ngrok_location = File.join(ShopifyCli::CACHE_DIR, 'ngrok')
+        ngrok_location = File.join(ShopifyCli.cache_dir, 'ngrok')
         if File.exist?(ngrok_location)
           @ctx.puts("  " + @ctx.message('core.system.ngrok_available', ngrok_location))
         else
