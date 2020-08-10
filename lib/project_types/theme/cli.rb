@@ -4,12 +4,15 @@ module Theme
     hidden_feature
     creator 'Theme App', 'Theme::Commands::Create'
 
+    register_command('Theme::Commands::Serve', "serve")
+
     require Project.project_filepath('messages/messages')
     register_messages(Theme::Messages::MESSAGES)
   end
 
   module Commands
     autoload :Create, Project.project_filepath('commands/create')
+    autoload :Serve, Project.project_filepath('commands/serve')
   end
 
   module Tasks
@@ -18,6 +21,7 @@ module Theme
 
   module Forms
     autoload :Create, Project.project_filepath('forms/create')
+    autoload :Serve, Project.project_filepath('serve')
   end
 
   autoload :Themekit, Project.project_filepath('themekit')
