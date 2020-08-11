@@ -11,8 +11,8 @@ module CLI
       def const_missing(const)
         block = begin
           @autocalls.fetch(const)
-        rescue KeyError
-          return super
+                rescue KeyError
+                  return super
         end
         const_set(const, block.call)
       end

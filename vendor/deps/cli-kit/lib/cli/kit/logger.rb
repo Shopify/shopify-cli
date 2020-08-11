@@ -10,9 +10,10 @@ module CLI
       # Constructor for CLI::Kit::Logger
       #
       # @param debug_log_file [String] path to the file where debug logs should be stored
-      def initialize(debug_log_file:)
+      def initialize(debug_log_file:, env_debug_name: 'DEBUG')
         FileUtils.mkpath(File.dirname(debug_log_file))
         @debug_logger = ::Logger.new(debug_log_file, MAX_NUM_LOGS, MAX_LOG_SIZE)
+        @env_debug_name = env_debug_name
       end
 
       # Functionally equivalent to Logger#info
@@ -60,7 +61,7 @@ module CLI
       #
       # @param msg [String] the message to log
       def debug(msg)
-        $stdout.puts CLI::UI.fmt(msg) if ENV['DEBUG']
+        $stdout.puts CLI::UI.fmt(msg) if is_debug?
         @debug_logger.debug(format_debug(msg))
       end
 
@@ -70,6 +71,11 @@ module CLI
         msg = CLI::UI.fmt(msg)
         return msg unless CLI::UI::StdoutRouter.current_id
         "[#{CLI::UI::StdoutRouter.current_id[:id]}] #{msg}"
+      end
+
+      def is_debug?
+        val = ENV[@env_debug_name]
+        val && val != '0' && val != ''
       end
     end
   end
