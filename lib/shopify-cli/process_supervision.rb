@@ -116,7 +116,6 @@ module ShopifyCli
       @identifier = identifier
       @pid = pid
       @time = time
-
       FileUtils.mkdir_p(ShopifyCli::ProcessSupervision.run_dir)
       @pid_path = File.join(ShopifyCli::ProcessSupervision.run_dir, "#{identifier}.pid")
       @log_path = File.join(ShopifyCli::ProcessSupervision.run_dir, "#{identifier}.log")
