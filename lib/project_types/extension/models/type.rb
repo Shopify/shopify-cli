@@ -12,6 +12,7 @@ module Extension
         end
 
         def inherited(klass)
+          super
           @all_extension_types ||= []
           @all_extension_types << klass
         end

@@ -11,8 +11,6 @@ module Minitest
     include TestHelpers::Project
 
     def setup
-      ENV['RUNNING_SHOPIFY_CLI_TESTS'] = 1.to_s
-
       project_context('project')
       super
     end

@@ -57,6 +57,7 @@ module ShopifyCli
     end
 
     def initialize(ctx = nil)
+      super()
       @ctx = ctx || ShopifyCli::Context.new
       self.options = Options.new
     end
