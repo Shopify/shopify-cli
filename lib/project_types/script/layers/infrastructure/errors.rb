@@ -21,6 +21,7 @@ module Script
         class ScriptRepushError < ScriptProjectError
           attr_reader :api_key
           def initialize(api_key)
+            super()
             @api_key = api_key
           end
         end

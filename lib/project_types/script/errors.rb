@@ -9,6 +9,7 @@ module Script
     class NoExistingStoresError < ScriptProjectError
       attr_reader :organization_id
       def initialize(organization_id)
+        super()
         @organization_id = organization_id
       end
     end
@@ -16,6 +17,7 @@ module Script
     class InvalidConfigYAMLError < ScriptProjectError
       attr_reader :config_file
       def initialize(config_file)
+        super()
         @config_file = config_file
       end
     end

@@ -7,6 +7,8 @@ begin
   addpath.call("vendor/lib")
 end
 
+ENV['RUNNING_SHOPIFY_CLI_TESTS'] = 1.to_s
+
 require 'rubygems'
 require 'bundler/setup'
 require 'shopify_cli'

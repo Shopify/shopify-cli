@@ -14,6 +14,7 @@ module ShopifyCli
       alias_method :all_loaded, :repository
 
       def inherited(klass)
+        super
         repository << klass
         klass.project_type = @current_type
         klass.project_load_shallow = @shallow_load
