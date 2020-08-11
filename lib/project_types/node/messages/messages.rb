@@ -54,6 +54,7 @@ module Node
             downloading: "Downloading Heroku CLI…",
             downloaded: "Downloaded Heroku CLI",
             installing: "Installing Heroku CLI…",
+            installing_windows: "Running Heroku CLI install wizard…",
             installed: "Installed Heroku CLI",
             authenticating: "Authenticating with Heroku…",
             authenticated: "{{v}} Authenticated with Heroku",
