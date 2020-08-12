@@ -1,0 +1,44 @@
+# -*- mode: ruby -*-
+# vi: set ft=ruby :
+
+Vagrant.configure('2') do |config|
+  config.vm.network("forwarded_port", guest: 3456, host: 3456, host_ip: "127.0.0.1")
+  config.vm.network("forwarded_port", guest: 8081, host: 8081, host_ip: "127.0.0.1")
+  config.vm.network("forwarded_port", guest: 39351, host: 39351, host_ip: "127.0.0.1")
+
+  config.vm.define('ubuntu_chruby', autostart: false) do |chruby|
+    chruby.vm.provision(
+      "chruby_complete", type: "shell", run: "never",
+      privileged: false, path: "provisioning/ubuntu-focal-chruby-complete.sh"
+    )
+    chruby.vm.box = 'ubuntu/focal64'
+    chruby.vm.provider("virtualbox") do |vb|
+      vb.gui = false
+      vb.memory = "4096"
+    end
+  end
+
+  config.vm.define('ubuntu_rbenv', autostart: false) do |rbenv|
+    rbenv.vm.provision(
+      "rbenv_complete", type: "shell", run: "never",
+      privileged: false, path: "provisioning/ubuntu-focal-rbenv-complete.sh"
+    )
+    rbenv.vm.box = 'ubuntu/focal64'
+    rbenv.vm.provider("virtualbox") do |vb|
+      vb.gui = false
+      vb.memory = "4096"
+    end
+  end
+
+  config.vm.define('ubuntu_rvm', autostart: false) do |rvm|
+    rvm.vm.provision(
+      "rvm_complete", type: "shell", run: "never",
+      privileged: false, path: "provisioning/ubuntu-focal-rvm-complete.sh"
+    )
+    rvm.vm.box = 'ubuntu/focal64'
+    rvm.vm.provider("virtualbox") do |vb|
+      vb.gui = false
+      vb.memory = "4096"
+    end
+  end
+end
