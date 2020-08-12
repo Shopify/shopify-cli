@@ -10,9 +10,7 @@ module ShopifyCli
       end
 
       def call(command, command_name, args)
-        command.prerequisite_tasks.each do |task, _|
-          @task_registry[task]&.call(@ctx)
-        end
+        command.task_registry = @task_registry
         command.ctx = @ctx
         super
       end

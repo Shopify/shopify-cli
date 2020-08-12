@@ -65,7 +65,7 @@ module ShopifyCli
 
       def register_task(task, name)
         return if project_load_shallow
-        Task::Registry.add(const_get(task), name)
+        ShopifyCli::Task.register(task, name)
       end
 
       def register_messages(messages)
