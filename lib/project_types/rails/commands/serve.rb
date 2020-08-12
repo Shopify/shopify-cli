@@ -31,7 +31,12 @@ module Rails
           env = ShopifyCli::Project.current.env.to_h
           env.delete('HOST')
           env['PORT'] = ShopifyCli::Tunnel::PORT.to_s
-          @ctx.system('bin/rails server', env: env)
+          env['GEM_PATH'] = Gem.gem_path(@ctx)
+          if @ctx.windows?
+            @ctx.system("ruby bin\\rails server", env: env)
+          else
+            @ctx.system('bin/rails server', env: env)
+          end
         end
       end
 

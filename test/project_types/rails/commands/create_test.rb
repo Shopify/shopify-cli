@@ -37,23 +37,24 @@ module Rails
         FileUtils.mkdir_p('test-app')
         FileUtils.mkdir_p('test-app/config/initializers')
 
-        gem_path = "/gem/path/"
+        gem_path = create_gem_path_and_binaries
         Gem.stubs(:gem_home).returns(gem_path)
 
         Ruby.expects(:version).returns(Semantic::Version.new('2.5.0'))
-        Gem.expects(:install).with(@context, 'rails', nil)
-        Gem.expects(:install).with(@context, 'bundler', '~>1.0')
-        Gem.expects(:install).with(@context, 'bundler', '~>2.0')
-        expect_command(%w(/gem/path/bin/rails new --skip-spring --database=sqlite3 test-app))
-        expect_command(%w(/gem/path/bin/bundle install),
+        Gem.expects(:install).with(@context, 'rails', nil).returns(true)
+        Gem.expects(:install).with(@context, 'bundler', '~>2.0').returns(true)
+        expect_command(%W(#{gem_path}/bin/rails new --skip-spring --database=sqlite3 test-app))
+        expect_command(%W(#{gem_path}/bin/bundle install),
                        chdir: File.join(@context.root, 'test-app'))
-        expect_command(%w(/gem/path/bin/spring stop),
+        expect_command(%W(#{gem_path}/bin/spring stop),
                        chdir: File.join(@context.root, 'test-app'))
-        expect_command(%w(/gem/path/bin/rails generate shopify_app),
+        expect_command(%W(#{gem_path}/bin/rails generate shopify_app),
                        chdir: File.join(@context.root, 'test-app'))
-        expect_command(%w(/gem/path/bin/rails db:create),
+        expect_command(%W(#{gem_path}/bin/rails db:create),
                        chdir: File.join(@context.root, 'test-app'))
-        expect_command(%w(/gem/path/bin/rails db:migrate RAILS_ENV=development),
+        expect_command(%W(#{gem_path}/bin/rails db:migrate RAILS_ENV=development),
+                       chdir: File.join(@context.root, 'test-app'))
+        expect_command(%W(#{gem_path}/bin/rails webpacker:install),
                        chdir: File.join(@context.root, 'test-app'))
 
         stub_partner_req(
@@ -83,6 +84,7 @@ module Rails
         assert_equal ENV_FILE, File.read("test-app/.env")
         assert_equal Create::USER_AGENT_CODE, File.read("test-app/config/initializers/user_agent.rb")
 
+        delete_gem_path_and_binaries
         FileUtils.rm_r('test-app')
       end
 
@@ -90,23 +92,24 @@ module Rails
         FileUtils.mkdir_p('test-app')
         FileUtils.mkdir_p('test-app/config/initializers')
 
-        gem_path = "/gem/path/"
+        gem_path = create_gem_path_and_binaries
         Gem.stubs(:gem_home).returns(gem_path)
 
         Ruby.expects(:version).returns(Semantic::Version.new('2.5.0'))
-        Gem.expects(:install).with(@context, 'rails', nil)
-        Gem.expects(:install).with(@context, 'bundler', '~>1.0')
-        Gem.expects(:install).with(@context, 'bundler', '~>2.0')
-        expect_command(%w(/gem/path/bin/rails new --skip-spring --database=postgresql test-app))
-        expect_command(%w(/gem/path/bin/bundle install),
+        Gem.expects(:install).with(@context, 'rails', nil).returns(true)
+        Gem.expects(:install).with(@context, 'bundler', '~>2.0').returns(true)
+        expect_command(%W(#{gem_path}/bin/rails new --skip-spring --database=postgresql test-app))
+        expect_command(%W(#{gem_path}/bin/bundle install),
                        chdir: File.join(@context.root, 'test-app'))
-        expect_command(%w(/gem/path/bin/spring stop),
+        expect_command(%W(#{gem_path}/bin/spring stop),
                        chdir: File.join(@context.root, 'test-app'))
-        expect_command(%w(/gem/path/bin/rails generate shopify_app),
+        expect_command(%W(#{gem_path}/bin/rails generate shopify_app),
                        chdir: File.join(@context.root, 'test-app'))
-        expect_command(%w(/gem/path/bin/rails db:create),
+        expect_command(%W(#{gem_path}/bin/rails db:create),
                        chdir: File.join(@context.root, 'test-app'))
-        expect_command(%w(/gem/path/bin/rails db:migrate RAILS_ENV=development),
+        expect_command(%W(#{gem_path}/bin/rails db:migrate RAILS_ENV=development),
+                       chdir: File.join(@context.root, 'test-app'))
+        expect_command(%W(#{gem_path}/bin/rails webpacker:install),
                        chdir: File.join(@context.root, 'test-app'))
 
         stub_partner_req(
@@ -132,6 +135,7 @@ module Rails
 
         perform_command('--db=postgresql')
 
+        delete_gem_path_and_binaries
         FileUtils.rm_r('test-app')
       end
 
@@ -139,23 +143,24 @@ module Rails
         FileUtils.mkdir_p('test-app')
         FileUtils.mkdir_p('test-app/config/initializers')
 
-        gem_path = "/gem/path/"
+        gem_path = create_gem_path_and_binaries
         Gem.stubs(:gem_home).returns(gem_path)
 
         Ruby.expects(:version).returns(Semantic::Version.new('2.5.0'))
-        Gem.expects(:install).with(@context, 'rails', nil)
-        Gem.expects(:install).with(@context, 'bundler', '~>1.0')
-        Gem.expects(:install).with(@context, 'bundler', '~>2.0')
-        expect_command(%w(/gem/path/bin/rails new --skip-spring --database=sqlite3 --edge -J test-app))
-        expect_command(%w(/gem/path/bin/bundle install),
+        Gem.expects(:install).with(@context, 'rails', nil).returns(true)
+        Gem.expects(:install).with(@context, 'bundler', '~>2.0').returns(true)
+        expect_command(%W(#{gem_path}/bin/rails new --skip-spring --database=sqlite3 --edge -J test-app))
+        expect_command(%W(#{gem_path}/bin/bundle install),
                        chdir: File.join(@context.root, 'test-app'))
-        expect_command(%w(/gem/path/bin/spring stop),
+        expect_command(%W(#{gem_path}/bin/spring stop),
                        chdir: File.join(@context.root, 'test-app'))
-        expect_command(%w(/gem/path/bin/rails generate shopify_app),
+        expect_command(%W(#{gem_path}/bin/rails generate shopify_app),
                        chdir: File.join(@context.root, 'test-app'))
-        expect_command(%w(/gem/path/bin/rails db:create),
+        expect_command(%W(#{gem_path}/bin/rails db:create),
                        chdir: File.join(@context.root, 'test-app'))
-        expect_command(%w(/gem/path/bin/rails db:migrate RAILS_ENV=development),
+        expect_command(%W(#{gem_path}/bin/rails db:migrate RAILS_ENV=development),
+                       chdir: File.join(@context.root, 'test-app'))
+        expect_command(%W(#{gem_path}/bin/rails webpacker:install),
                        chdir: File.join(@context.root, 'test-app'))
 
         stub_partner_req(
@@ -181,6 +186,7 @@ module Rails
 
         perform_command('--rails-opts=--edge -J')
 
+        delete_gem_path_and_binaries
         FileUtils.rm_r('test-app')
       end
 
@@ -198,6 +204,19 @@ module Rails
                              --db=sqlite3 \
                              --shop_domain=testshop.myshopify.com)
         run_cmd(default_new_cmd << add_cmd, false)
+      end
+
+      def create_gem_path_and_binaries
+        FileUtils.mkdir_p('gem/path/bin')
+        gem_path = File.expand_path('gem/path')
+        ['bundle', 'rails', 'spring'].each do |f|
+          FileUtils.touch("#{gem_path}/bin/#{f}")
+        end
+        gem_path
+      end
+
+      def delete_gem_path_and_binaries
+        FileUtils.rm_r('gem')
       end
     end
   end
