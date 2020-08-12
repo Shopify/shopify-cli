@@ -3,7 +3,6 @@ module Theme
   class Project < ShopifyCli::ProjectType
     hidden_feature
     creator 'Theme App', 'Theme::Commands::Create'
-
     register_command('Theme::Commands::Serve', "serve")
 
     require Project.project_filepath('messages/messages')
@@ -21,7 +20,6 @@ module Theme
 
   module Forms
     autoload :Create, Project.project_filepath('forms/create')
-    autoload :Serve, Project.project_filepath('serve')
   end
 
   autoload :Themekit, Project.project_filepath('themekit')

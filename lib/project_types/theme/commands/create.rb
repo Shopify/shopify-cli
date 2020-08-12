@@ -27,9 +27,9 @@ module Theme
       private
 
       def build(name, password, store)
-        @ctx.abort("Duplicate theme") if @ctx.dir_exist?(name)
+        @ctx.abort(@ctx.message('theme.create.duplicate_theme')) if @ctx.dir_exist?(name)
 
-        CLI::UI::Frame.open(@ctx.message('theme.create.checking_themekit')) do
+        CLI::UI::Frame.open(@ctx.message('theme.checking_themekit')) do
           Themekit.ensure_themekit_installed(@ctx)
         end
 

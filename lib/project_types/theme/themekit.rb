@@ -12,6 +12,14 @@ module Theme
         stat.success?
       end
 
+      def serve(ctx)
+        out, stat = ctx.capture2e(THEMEKIT, "open")
+        ctx.puts(out)
+        ctx.abort(ctx.message('theme.serve.open_fail')) unless stat.success?
+
+        ctx.system(THEMEKIT, "watch")
+      end
+
       def ensure_themekit_installed(ctx)
         Tasks::EnsureThemekitInstalled.call(ctx)
       end
