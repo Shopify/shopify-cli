@@ -12,7 +12,7 @@ module Extension
       def call(context:, api_key:)
         input = { api_key: api_key }
 
-        response = ShopifyCli::PartnersAPI.query(context, GRAPHQL_FILE, input).dig(*RESPONSE_FIELD)
+        response = ShopifyCli::PartnersAPI.query(context, GRAPHQL_FILE, **input).dig(*RESPONSE_FIELD)
         context.abort(context.message('tasks.errors.parse_error')) if response.nil?
 
         Converters::AppConverter.from_hash(response.dig(APP_FIELD))

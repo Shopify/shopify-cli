@@ -20,7 +20,7 @@ module Extension
         end
 
         def stub_update_draft_success(**args)
-          stub_update_draft(args) do |registration_id, _config, extension_context|
+          stub_update_draft(**args) do |registration_id, _config, extension_context|
             {
               extensionUpdateDraft: {
                 extensionVersion: {
@@ -36,7 +36,7 @@ module Extension
         end
 
         def stub_update_draft_failure(errors:, **args)
-          stub_update_draft(args) do
+          stub_update_draft(**args) do
             {
               extensionUpdateDraft: {
                 Tasks::UserErrors::USER_ERRORS_FIELD => errors,

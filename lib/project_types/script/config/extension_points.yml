@@ -7,13 +7,13 @@ discount:
 unit_limit_per_order:
   assemblyscript:
     package: "@shopify/extension-point-as-unit-limit-per-order"
-    version: "^0.1.6"
+    version: "^0.1.8"
     sdk-version: "^6.0.0"
     toolchain-version: "^1.1.0"
 payment_filter:
   assemblyscript:
     package: "@shopify/extension-point-as-payment-filter"
-    version: "^0.2.2"
+    version: "^0.2.3"
     sdk-version: "^6.0.0"
     toolchain-version: "^1.1.0"
 shipping_filter:

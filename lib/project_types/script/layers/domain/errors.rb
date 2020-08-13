@@ -8,12 +8,14 @@ module Script
         class InvalidExtensionPointError < ScriptProjectError
           attr_reader :type
           def initialize(type)
+            super()
             @type = type
           end
         end
         class ScriptNotFoundError < ScriptProjectError
           attr_reader :script_name, :extension_point_type
           def initialize(extension_point_type, script_name)
+            super()
             @script_name = script_name
             @extension_point_type = extension_point_type
           end

@@ -14,6 +14,7 @@ module ShopifyCli
       alias_method :all_loaded, :repository
 
       def inherited(klass)
+        super
         repository << klass
         klass.project_type = @current_type
         klass.project_load_shallow = @shallow_load
@@ -32,7 +33,7 @@ module ShopifyCli
 
       def load_all
         Dir.glob(File.join(ShopifyCli::ROOT, 'lib', 'project_types', '*', 'cli.rb')).map do |filepath|
-          load_type(filepath.split(File::Separator)[-2], true)
+          load_type(filepath.split(File::Separator)[-2].to_sym, true)
         end
       end
 
@@ -64,7 +65,7 @@ module ShopifyCli
 
       def register_task(task, name)
         return if project_load_shallow
-        Task::Registry.add(const_get(task), name)
+        ShopifyCli::Task.register(task, name)
       end
 
       def register_messages(messages)

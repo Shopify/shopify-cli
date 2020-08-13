@@ -32,7 +32,7 @@ module ShopifyCli
       end
 
       def self.help
-        project_types = all_visible_type.map(&:project_type).join(" | ")
+        project_types = all_visible_type.map(&:project_type).sort.join(" | ")
         ShopifyCli::Context.message('core.create.help', ShopifyCli::TOOL_NAME, project_types)
       end
 

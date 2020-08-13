@@ -59,13 +59,6 @@ module Script
         Script::Commands::Push.help
       end
 
-      def test_extended_help
-        ShopifyCli::Context
-          .expects(:message)
-          .with('script.push.extended_help', ShopifyCli::TOOL_NAME)
-        Script::Commands::Push.extended_help
-      end
-
       private
 
       def perform_command

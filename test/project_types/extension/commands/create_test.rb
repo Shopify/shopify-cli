@@ -69,7 +69,7 @@ module Extension
         end
 
         output = io.join
-        refute_match('extension', output)
+        refute_match(' extension ', output)
       end
 
       private

@@ -24,7 +24,7 @@ module Extension
 
         def stub_create_extension_success(**args)
           registration_id = rand(9999)
-          stub_create_extension(args) do |title, type|
+          stub_create_extension(**args) do |title, type|
             {
               extensionCreate: {
                 extensionRegistration: {
@@ -43,7 +43,7 @@ module Extension
         end
 
         def stub_create_extension_failure(userErrors:, **args) # rubocop:disable Naming/VariableName
-          stub_create_extension(args) do
+          stub_create_extension(**args) do
             {
               extensionCreate: {
                 userErrors: userErrors, # rubocop:disable Naming/VariableName

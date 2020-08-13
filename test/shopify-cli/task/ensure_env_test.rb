@@ -104,7 +104,7 @@ module ShopifyCli
         Resources::EnvFile
           .expects(:parse_external_env)
           .returns(existing_env_file_values.merge({ shop: "shop", host: "host" }))
-          ShopifyCli::PartnersAPI::Organizations.expects(:fetch_with_app).with(@context).returns(partners_api_response)
+        ShopifyCli::PartnersAPI::Organizations.expects(:fetch_with_app).with(@context).returns(partners_api_response)
         expect_user_prompts
         env_file = Minitest::Mock.new
         Resources::EnvFile.expects(:new).with(new_env_file_values.merge({ host: "host" })).returns(env_file)

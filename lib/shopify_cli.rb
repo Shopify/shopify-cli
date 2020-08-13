@@ -44,10 +44,6 @@ module ShopifyCli
   ROOT              = File.expand_path('../..', __FILE__)
   PROJECT_TYPES_DIR = File.join(ROOT, 'lib', 'project_types')
   TEMP_DIR          = File.join(ROOT, '.tmp')
-  CACHE_DIR         = File.join(File.expand_path(ENV.fetch('XDG_CACHE_HOME', '~/.cache')), TOOL_NAME)
-  TOOL_CONFIG_PATH  = File.join(File.expand_path(ENV.fetch('XDG_CONFIG_HOME', '~/.config')), TOOL_NAME)
-  LOG_FILE          = File.join(TOOL_CONFIG_PATH, 'logs', 'log.log')
-  DEBUG_LOG_FILE    = File.join(TOOL_CONFIG_PATH, 'logs', 'debug.log')
 
   # programmer emoji if default install location, else wrench emoji
   EMOJI    = ROOT == '/opt/shopify' ? "\u{1f469}\u{200d}\u{1f4bb}" : "\u{1f527}"
@@ -82,7 +78,7 @@ module ShopifyCli
   # ShopifyCli::Config
   autocall(:Config)   { CLI::Kit::Config.new(tool_name: TOOL_NAME) }
   # ShopifyCli::Logger
-  autocall(:Logger)   { CLI::Kit::Logger.new(debug_log_file: DEBUG_LOG_FILE) }
+  autocall(:Logger)   { CLI::Kit::Logger.new(debug_log_file: ShopifyCli.debug_log_file) }
   # ShopifyCli::Resolver
   autocall(:Resolver) do
     ShopifyCli::Core::HelpResolver.new(
@@ -93,7 +89,7 @@ module ShopifyCli
   # ShopifyCli::ErrorHandler
   autocall(:ErrorHandler) do
     CLI::Kit::ErrorHandler.new(
-      log_file: ShopifyCli::LOG_FILE,
+      log_file: ShopifyCli.log_file,
       exception_reporter: nil,
     )
   end
@@ -127,7 +123,33 @@ module ShopifyCli
 
   require 'shopify-cli/messages/messages'
   Context.load_messages(ShopifyCli::Messages::MESSAGES)
-end
 
-# Make sure the cache dir always exists
-FileUtils.mkdir_p(ShopifyCli::CACHE_DIR)
+  def self.cache_dir
+    cache_dir = if ENV.key?('RUNNING_SHOPIFY_CLI_TESTS')
+      TEMP_DIR
+    else
+      File.join(File.expand_path(ENV.fetch('XDG_CACHE_HOME', '~/.cache')), TOOL_NAME)
+    end
+
+    # Make sure the cache dir always exists
+    @cache_dir_exists ||= FileUtils.mkdir_p(cache_dir)
+
+    cache_dir
+  end
+
+  def self.tool_config_path
+    if ENV.key?('RUNNING_SHOPIFY_CLI_TESTS')
+      TEMP_DIR
+    else
+      File.join(File.expand_path(ENV.fetch('XDG_CONFIG_HOME', '~/.config')), TOOL_NAME)
+    end
+  end
+
+  def self.log_file
+    File.join(tool_config_path, 'logs', 'log.log')
+  end
+
+  def self.debug_log_file
+    File.join(tool_config_path, 'logs', 'debug.log')
+  end
+end

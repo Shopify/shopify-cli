@@ -12,15 +12,22 @@ module ShopifyCli
       end
 
       def [](name)
-        @tasks[name]
+        class_or_proc = @tasks[name]
+        if class_or_proc.is_a?(Class)
+          class_or_proc
+        elsif class_or_proc.respond_to?(:call)
+          class_or_proc.call
+        else
+          class_or_proc
+        end
       end
     end
 
     Registry = TaskRegistry.new
 
-    def self.register(task, name, path)
-      autoload(task, path)
-      Registry.add(const_get(task), name)
+    def self.register(task, name, path = nil)
+      autoload(task, path) if path
+      Registry.add(-> () { const_get(task) }, name)
     end
 
     register :CreateApiClient, :create_api_client, 'shopify-cli/tasks/create_api_client'
