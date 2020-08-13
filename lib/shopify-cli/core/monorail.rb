@@ -99,7 +99,7 @@ module ShopifyCli
               success: err.nil?,
               error_message: err,
               uname: RbConfig::CONFIG["host"],
-              cli_version: ShopifyCli::Git.sha(dir: ShopifyCli::ROOT),
+              cli_version: ShopifyCli::VERSION,
               ruby_version: RUBY_VERSION,
             }.tap do |payload|
               payload[:metadata] = JSON.dump(metadata) unless metadata.empty?
