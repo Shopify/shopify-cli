@@ -6,7 +6,6 @@ module ShopifyCli
     class MonorailTest < MiniTest::Test
       def setup
         super
-        ShopifyCli::Git.stubs(:sha).returns("bb6f42193239a248f054e5019e469bc75f3adf1b")
         CLI::UI::Prompt.stubs(:confirm).returns(true)
         ShopifyCli::Core::Monorail.metadata = {}
       end
@@ -66,7 +65,7 @@ module ShopifyCli
                   success: true,
                   error_message: nil,
                   uname: RbConfig::CONFIG["host"],
-                  cli_version: "bb6f42193239a248f054e5019e469bc75f3adf1b",
+                  cli_version: ShopifyCli::VERSION,
                   ruby_version: RUBY_VERSION,
                   metadata: "{\"foo\":\"identifier\"}",
                   api_key: "apikey",
@@ -106,7 +105,7 @@ module ShopifyCli
                   success: false,
                   error_message: 'test error',
                   uname: RbConfig::CONFIG["host"],
-                  cli_version: "bb6f42193239a248f054e5019e469bc75f3adf1b",
+                  cli_version: ShopifyCli::VERSION,
                   ruby_version: RUBY_VERSION,
                   api_key: "apikey",
                   partner_id: 42,
