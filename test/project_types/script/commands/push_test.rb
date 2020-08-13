@@ -24,9 +24,9 @@ module Script
       end
 
       def test_calls_push_script
-        ShopifyCli::Tasks::EnsureEnv.any_instance.expects(:call).returns({
-          api_key: @api_key,
-        })
+        ShopifyCli::Tasks::EnsureEnv
+          .any_instance.expects(:call)
+          .with(@context, required: [:api_key, :secret, :shop])
         Layers::Application::PushScript.expects(:call).with(
           ctx: @context,
           api_key: @api_key,
@@ -44,9 +44,9 @@ module Script
       end
 
       def test_returns_help_if_language_is_not_supported
-        ShopifyCli::Tasks::EnsureEnv.any_instance.expects(:call).returns({
-          api_key: @api_key,
-        })
+        ShopifyCli::Tasks::EnsureEnv
+          .any_instance.expects(:call)
+          .with(@context, required: [:api_key, :secret, :shop])
         @script_project.stubs(:language).returns('invalid')
         @context.expects(:puts).with(Push.help)
         perform_command

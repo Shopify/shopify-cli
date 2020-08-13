@@ -25,6 +25,9 @@ module Script
       end
 
       def test_calls_application_enable
+        ShopifyCli::Tasks::EnsureEnv
+          .any_instance.expects(:call)
+          .with(@context, required: [:api_key, :secret, :shop])
         Script::Layers::Application::EnableScript.expects(:call).with(
           ctx: @context,
           api_key: @api_key,
@@ -61,6 +64,9 @@ module Script
       end
 
       def test_calls_application_enable_error
+        ShopifyCli::Tasks::EnsureEnv
+          .any_instance.expects(:call)
+          .with(@context, required: [:api_key, :secret, :shop])
         Script::Layers::Application::EnableScript.expects(:call).with(
           ctx: @context,
           api_key: @api_key,
