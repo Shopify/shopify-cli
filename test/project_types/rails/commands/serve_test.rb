@@ -17,6 +17,8 @@ module Rails
         ShopifyCli::Tunnel.stubs(:start).returns('https://example.com')
         ShopifyCli::Tasks::UpdateDashboardURLS.expects(:call)
         ShopifyCli::Resources::EnvFile.any_instance.expects(:update)
+        @context.stubs(:getenv).with('GEM_HOME').returns('/gem/path')
+        @context.stubs(:getenv).with('GEM_PATH').returns('/gem/path')
         @context.expects(:system).with(
           'bin/rails server',
           env: {
@@ -25,6 +27,7 @@ module Rails
             "SHOP" => "my-test-shop.myshopify.com",
             "SCOPES" => "write_products,write_customers,write_orders",
             'PORT' => '8081',
+            'GEM_PATH' => '/gem/path',
           }
         )
         Rails::Commands::Serve.new(@context).call
