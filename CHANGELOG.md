@@ -1,6 +1,10 @@
+Version 1.0.5
+------
+* Fix a bug in out opt-in metrics
+
 Version 1.0.4
 ------
-* Fix a bug when running the `connect` command with an account with multiple organizations 
+* Fix a bug when running the `connect` command with an account with multiple organizations
 
 Version 1.0.3
 ------

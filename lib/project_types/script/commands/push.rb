@@ -3,13 +3,12 @@
 module Script
   module Commands
     class Push < ShopifyCli::Command
-      prerequisite_task :ensure_env
-
       options do |parser, flags|
         parser.on('--force') { |t| flags[:force] = t }
       end
 
       def call(_args, _name)
+        ShopifyCli::Tasks::EnsureEnv.call(@ctx, required: [:api_key, :secret, :shop])
         project = ScriptProject.current
         api_key = project.env[:api_key]
         return @ctx.puts(self.class.help) unless api_key &&
