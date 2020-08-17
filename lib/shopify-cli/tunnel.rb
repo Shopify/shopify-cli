@@ -130,7 +130,12 @@ module ShopifyCli
         unless File.exist?(zip_dest)
           ctx.system('curl', '-o', zip_dest, DOWNLOAD_URLS[ctx.os], chdir: ShopifyCli.cache_dir)
         end
-        ctx.system('tar', '-xf', zip_dest, chdir: ShopifyCli.cache_dir)
+        args = if ctx.linux?
+          %W(unzip -u #{zip_dest})
+        else
+          %W(tar -xf #{zip_dest})
+        end
+        ctx.system(*args, chdir: ShopifyCli.cache_dir)
         ctx.rm(zip_dest)
       end
       spinner.wait
@@ -144,7 +149,7 @@ module ShopifyCli
     end
 
     def ngrok_command(port)
-      "#{File.join(ShopifyCli.cache_dir, 'ngrok')} http -log=stdout -log-level=debug #{port}"
+      "#{File.join(ShopifyCli.cache_dir, 'ngrok')} http -inspect=false -log=stdout -log-level=debug #{port}"
     end
 
     def seconds_to_hm(seconds)
