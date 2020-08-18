@@ -188,6 +188,7 @@ describe Script::Layers::Infrastructure::ScriptService do
   describe '.enable' do
     let(:api_key) { 'api_key' }
     let(:shop_domain) { 'my.shop.com' }
+    let(:formatted_shop_domain) { 'my.shop.com' }
     let(:configuration) { '{}' }
     let(:extension_point_type) { 'discount' }
     let(:title) { 'title' }
@@ -233,7 +234,7 @@ describe Script::Layers::Infrastructure::ScriptService do
         'script_service_proxy',
         variables: {
           api_key: api_key,
-          shop_domain: shop_domain,
+          shop_domain: formatted_shop_domain,
           variables: {
             extensionPointName: extension_point_type.upcase,
             configuration: configuration,
@@ -253,6 +254,29 @@ describe Script::Layers::Infrastructure::ScriptService do
         extension_point_type: extension_point_type,
         title: title
       )
+    end
+
+    describe 'when shop domain ends with /' do
+      let(:shop_domain) { 'my.shop.com/' }
+      let(:script_service_response) do
+        {
+          "data" => {
+            "shopScriptUpdateOrCreate" => {
+              "shopScript" => {
+                "shopId" => "1",
+                "configuration" => nil,
+                "extensionPointName" => extension_point_type,
+                "title" => "foo2",
+              },
+              "userErrors" => [],
+            },
+          },
+        }
+      end
+
+      it 'should have no errors when shop domain is formatted' do
+        assert_equal(script_service_response, subject)
+      end
     end
 
     describe 'when successful' do
@@ -336,6 +360,7 @@ describe Script::Layers::Infrastructure::ScriptService do
   describe ".disable" do
     let(:extension_point_type) { "DISCOUNT" }
     let(:shop_domain) { 'shop.myshopify.com' }
+    let(:formatted_shop_domain) { 'shop.myshopify.com' }
     let(:api_key) { "fake_key" }
     let(:shop_script_delete) do
       <<~HERE
@@ -371,7 +396,7 @@ describe Script::Layers::Infrastructure::ScriptService do
         'script_service_proxy',
         variables: {
           api_key: api_key,
-          shop_domain: shop_domain,
+          shop_domain: formatted_shop_domain,
           variables: {
             extensionPointName: extension_point_type,
           }.to_json,
@@ -387,6 +412,28 @@ describe Script::Layers::Infrastructure::ScriptService do
         api_key: api_key,
         shop_domain: shop_domain,
       )
+    end
+
+    describe 'when shop domain ends with /' do
+      let(:shop_domain) { 'shop.myshopify.com' }
+      let(:script_service_response) do
+        {
+          "data" => {
+            "shopScriptDelete" => {
+              "shopScript" => {
+                "shopId" => "1",
+                "extensionPointName" => extension_point_type,
+                "title" => "foo2",
+              },
+              "userErrors" => [],
+            },
+          },
+        }
+      end
+
+      it 'should have no errors when shop domain is formatted' do
+        assert_equal(script_service_response, subject)
+      end
     end
 
     describe 'when successful' do
