@@ -118,7 +118,7 @@ module ShopifyCli
         kwargs = { input: data }
         kwargs[:shop] = @shop
         resp = AdminAPI.query(
-          @ctx, "create_#{snake_case_resource_type}", kwargs
+          @ctx, "create_#{snake_case_resource_type}", **kwargs
         )
         @ctx.abort(resp['errors']) if resp['errors']
         @ctx.done(message(resp['data'])) unless @silent
