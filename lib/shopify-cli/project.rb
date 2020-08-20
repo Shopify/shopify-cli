@@ -15,6 +15,10 @@ module ShopifyCli
       # will get an instance of the project that the user is currently operating
       # on. This is used for access to project resources.
       #
+      # #### Parameters
+      #
+      # * `force_reload` - whether to force a reload of the project files
+      #
       # #### Returns
       #
       # * `project` - a Project instance if the user is currently in the project.
@@ -29,8 +33,8 @@ module ShopifyCli
       #
       #   project = ShopifyCli::Project.current
       #
-      def current
-        at(Dir.pwd)
+      def current(force_reload: false)
+        at(Dir.pwd, force_reload: force_reload)
       end
 
       ##
@@ -93,13 +97,17 @@ module ShopifyCli
 
       private
 
-      def directory(dir)
+      def directory(dir, force_reload: false)
+        @dir = nil if force_reload
+
         @dir ||= Hash.new { |h, k| h[k] = __directory(k) }
         @dir[dir]
       end
 
-      def at(dir)
-        proj_dir = directory(dir)
+      def at(dir, force_reload: false)
+        @at = nil if force_reload
+
+        proj_dir = directory(dir, force_reload: force_reload)
         unless proj_dir
           raise(ShopifyCli::Abort, Context.message('core.project.error.not_in_project'))
         end
