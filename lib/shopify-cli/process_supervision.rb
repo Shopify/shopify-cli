@@ -59,20 +59,36 @@ module ShopifyCli
       def start(identifier, args)
         return for_ident(identifier) if running?(identifier)
 
-        pid_file = new(identifier)
+        # Windows doesn't support forking process without extra gems, so we resort to spawning a new child process -
+        # that means that it dies along with the original process if it is interrupted. On UNIX, we fork the process so
+        # that it doesn't have to be restarted on every run.
+        if Context.new.windows?
+          pid_file = new(identifier)
 
-        # Make sure the file exists and is empty, otherwise Windows fails
-        File.open(pid_file.log_path, 'w') {}
-        pid = Process.spawn(
-          *args,
-          out: pid_file.log_path,
-          err: pid_file.log_path,
-          in: Context.new.windows? ? "nul" : "/dev/null",
-        )
-        pid_file.pid = pid
-        pid_file.write
+          # Make sure the file exists and is empty, otherwise Windows fails
+          File.open(pid_file.log_path, 'w') {}
+          pid = Process.spawn(
+            *args,
+            out: pid_file.log_path,
+            err: pid_file.log_path,
+            in: Context.new.windows? ? "nul" : "/dev/null",
+          )
+          pid_file.pid = pid
+          pid_file.write
 
-        Process.detach(pid)
+          Process.detach(pid)
+        else
+          fork do
+            pid_file = new(identifier, pid: Process.pid)
+            pid_file.write
+            STDOUT.reopen(pid_file.log_path, "w")
+            STDERR.reopen(pid_file.log_path, "w")
+            STDIN.reopen("/dev/null", "r")
+            Process.setsid
+            exec(*args)
+          end
+        end
+
         sleep(0.1)
         for_ident(identifier)
       end
