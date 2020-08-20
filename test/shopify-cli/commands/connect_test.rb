@@ -9,6 +9,7 @@ module ShopifyCli
         ShopifyCli::Project.stubs(:has_current?).returns(false)
         CLI::UI::Prompt.expects(:ask).with(@context.message('core.connect.project_type_select')).returns('node')
         ShopifyCli::Tasks::EnsureEnv.expects(:call).with(@context, regenerate: true).returns(org_response)
+        ShopifyCli::Project.any_instance.expects(:clear_env)
         ShopifyCli::Project.expects(:write)
         run_cmd('connect')
       end
@@ -16,6 +17,7 @@ module ShopifyCli
       def test_connect_doesnt_write_yml_when_current_project_exists
         CLI::UI::Prompt.expects(:ask).with(@context.message('core.connect.project_type_select')).never
         ShopifyCli::Tasks::EnsureEnv.expects(:call).with(@context, regenerate: true).returns(org_response)
+        ShopifyCli::Project.any_instance.expects(:clear_env)
         ShopifyCli::Project.expects(:write).never
         run_cmd('connect')
       end
@@ -23,6 +25,7 @@ module ShopifyCli
       def test_connect_outputs_warnings_if_already_connected
         CLI::UI::Prompt.expects(:ask).with(@context.message('core.connect.project_type_select')).never
         ShopifyCli::Tasks::EnsureEnv.expects(:call).with(@context, regenerate: true).returns(org_response)
+        ShopifyCli::Project.any_instance.expects(:clear_env)
         ShopifyCli::Project.expects(:write).never
         ShopifyCli::Project.stubs(:current_project_type).returns(:rails)
 

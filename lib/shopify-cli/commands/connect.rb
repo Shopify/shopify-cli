@@ -13,6 +13,7 @@ module ShopifyCli
         end
 
         org = ShopifyCli::Tasks::EnsureEnv.call(@ctx, regenerate: true)
+        Project.current.clear_env
         api_key = Project.current.env['api_key']
         write_cli_yml(project_type, org['id']) unless Project.has_current?
         @ctx.puts(@ctx.message('core.connect.connected', get_app(org['apps'], api_key).first["title"]))

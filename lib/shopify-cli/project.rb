@@ -138,6 +138,10 @@ module ShopifyCli
                end
     end
 
+    def clear_env
+      @env = nil
+    end
+
     ##
     # will read, parse and return the .shopify-cli.yml for the project
     #
