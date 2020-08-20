@@ -13,6 +13,7 @@ module Rails
 
     def teardown
       @context.setenv('GEM_HOME', nil)
+      @context.setenv('GEM_PATH', nil)
     end
 
     def test_install_installs_with_gem_home_unpopulated
@@ -41,7 +42,19 @@ module Rails
     end
 
     def test_gem_home_returns_proper_path
+      @context.expects(:capture2e).with('gem', 'environment', 'home').returns(
+        ["#{@home}/.gem/ruby/#{RUBY_VERSION}\n", mock(success?: true)]
+      )
       assert_equal("#{@home}/.gem/ruby/#{RUBY_VERSION}", Gem.gem_home(@context))
+    end
+
+    def test_gem_path_returns_proper_path
+      tmpdir1 = Dir.mktmpdir
+      tmpdir2 = Dir.mktmpdir
+      @context.expects(:capture2e).with('gem', 'environment', 'path').returns(
+        ["#{@home}/.gem/ruby/#{RUBY_VERSION}:#{tmpdir1}:#{tmpdir2}\n", mock(success?: true)]
+      )
+      assert_equal("#{@home}/.gem/ruby/#{RUBY_VERSION}:#{tmpdir1}:#{tmpdir2}", Gem.gem_path(@context))
     end
   end
 end

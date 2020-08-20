@@ -34,7 +34,11 @@ module Rails
       private
 
       def apply_gem_home(ctx)
-        path = File.join(ctx.getenv('HOME'), '.gem', 'ruby', RUBY_VERSION)
+        path = ''
+        out, stat = ctx.capture2e('gem', 'environment', 'home')
+        path = out&.empty? ? '' : out.strip if stat.success?
+        path = File.join(ctx.getenv('HOME'), '.gem', 'ruby', RUBY_VERSION) if path.empty?
+        path = File.join(ctx.getenv('HOME'), '.gem', 'ruby', RUBY_VERSION) unless File.writable?(path)
         ctx.mkdir_p(path) unless Dir.exist?(path)
         ctx.debug(ctx.message('rails.gem.setting_gem_home', path))
         ctx.setenv('GEM_HOME', path)
@@ -42,10 +46,8 @@ module Rails
 
       def apply_gem_path(ctx)
         path = ''
-        out, stat = ctx.capture2('gem', 'environment', 'path')
-        if stat
-          path = out&.empty? ? '' : out.strip
-        end
+        out, stat = ctx.capture2e('gem', 'environment', 'path')
+        path = out&.empty? ? '' : out.strip if stat.success?
         ctx.debug(ctx.message('rails.gem.setting_gem_path', path))
         ctx.setenv('GEM_PATH', path)
       end
