@@ -8,6 +8,8 @@ module Kernel
   def require(name)
     original_require(name)
   rescue LoadError => e
+    # Special case for readline.so, which fails harmlessly on Windows
+    raise if (name == "readline.so") && ShopifyCli::Context.new.windows?
     # Special case for psych (yaml), which rescues this itself
     raise if name == "#{RUBY_VERSION[/\d+\.\d+/]}/psych.so"
     STDERR.puts "[Note] You cannot use gems with Shopify App CLI."
