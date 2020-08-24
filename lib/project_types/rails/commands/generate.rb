@@ -28,6 +28,7 @@ module Rails
       end
 
       def self.run_generate(script, name, ctx)
+        Gem.gem_path(ctx)
         stat = ctx.system(script)
         unless stat.success?
           ctx.abort(response(stat.exitstatus, name, ctx))

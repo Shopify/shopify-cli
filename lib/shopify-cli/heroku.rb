@@ -3,7 +3,7 @@ module ShopifyCli
     DOWNLOAD_URLS = {
       linux: 'https://cli-assets.heroku.com/heroku-linux-x64.tar.gz',
       mac: 'https://cli-assets.heroku.com/heroku-darwin-x64.tar.gz',
-      windows: 'https://cli-assets.heroku.com/heroku-win32-x64.tar.gz',
+      windows: 'https://cli-assets.heroku.com/heroku-x64.exe',
     }
 
     def initialize(ctx)
@@ -44,7 +44,11 @@ module ShopifyCli
     def install
       return if installed?
 
-      result = @ctx.system('tar', '-xf', download_path, chdir: ShopifyCli.cache_dir)
+      result = if @ctx.windows?
+        @ctx.system(download_path)
+      else
+        @ctx.system('tar', '-xf', download_path, chdir: ShopifyCli.cache_dir)
+      end
       @ctx.abort(@ctx.message('core.heroku.error.install')) unless result.success?
 
       @ctx.rm(download_path)
@@ -82,6 +86,18 @@ module ShopifyCli
       local_path = File.join(ShopifyCli.cache_dir, 'heroku', 'bin', 'heroku').to_s
       if File.exist?(local_path)
         local_path
+      elsif @ctx.windows?
+        # Check if Heroku exists in the Windows registry and run it from there
+        require 'win32/registry'
+        begin
+          windows_path = Win32::Registry::HKEY_CURRENT_USER.open('SOFTWARE\heroku') do |reg|
+            reg[''] # This reads the 'Default' registry key
+          end
+
+          File.join(windows_path, 'bin', 'heroku').to_s
+        rescue
+          'heroku'
+        end
       else
         'heroku'
       end

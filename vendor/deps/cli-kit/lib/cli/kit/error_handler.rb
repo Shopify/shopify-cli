@@ -22,11 +22,11 @@ module CLI
       end
 
       def handle_exception(error)
-        if notify_with = exception_for_submission(error)
+        if (notify_with = exception_for_submission(error))
           logs = begin
             File.read(@log_file)
-          rescue => e
-            "(#{e.class}: #{e.message})"
+                 rescue => e
+                   "(#{e.class}: #{e.message})"
           end
           exception_reporter.report(notify_with, logs)
         end
@@ -56,7 +56,7 @@ module CLI
             # if it was `exit 30`, translate the exit code to 1, and submit nothing.
             # 30 is used to signal normal failures that are not indicative of bugs.
             # However, users should see it presented as 1.
-            exit 1
+            exit(1)
           else
             # A weird termination status happened. `error.exception "message"` will maintain backtrace
             # but allow us to set a message
@@ -83,7 +83,7 @@ module CLI
 
         CLI::Kit::EXIT_FAILURE_BUT_NOT_BUG
       rescue Interrupt
-        $stderr.puts(format_error_message("Interrupt"))
+        stderr_puts_message('Interrupt')
         CLI::Kit::EXIT_FAILURE_BUT_NOT_BUG
       rescue Errno::ENOSPC
         message = if @tool_name
@@ -91,8 +91,14 @@ module CLI
         else
           "Your disk is full - free space is required to operate"
         end
-        $stderr.puts(format_error_message(message))
+        stderr_puts_message(message)
         CLI::Kit::EXIT_FAILURE_BUT_NOT_BUG
+      end
+
+      def stderr_puts_message(message)
+        $stderr.puts(format_error_message(message))
+      rescue Errno::EPIPE
+        nil
       end
 
       def exception_reporter

@@ -20,10 +20,6 @@ module CLI
               VERTICAL
             end
 
-            def prefix_width
-              CLI::UI::ANSI.printing_width(prefix)
-            end
-
             # Draws the "Open" line for this frame style
             #
             # ==== Attributes
@@ -103,7 +99,10 @@ module CLI
 
               preamble_width = CLI::UI::ANSI.printing_width(preamble)
               preamble_start = Frame.prefix_width
-              preamble_end   = preamble_start + preamble_width
+              # If prefix_width is non-zero, we need to subtract the width of
+              # the final space, since we're going to write over it.
+              preamble_start -= 1 unless preamble_start.zero?
+              preamble_end = preamble_start + preamble_width
 
               suffix_width = CLI::UI::ANSI.printing_width(suffix)
               suffix_end   = termwidth - 2
@@ -139,6 +138,15 @@ module CLI
               # reset to column 1 so that things like ^C don't ruin formatting
               o << "\r"
 
+              # This code will print out a full line with the given preamble and
+              # suffix, as exemplified below.
+              #
+              # preamble_start                         suffix_start
+              # |                 preamble_end         |            suffix_end
+              # |                 |                    |            | termwidth
+              # |                 |                    |            | |
+              # V                 V                    V            V V
+              # --- Preamble text --------------------- suffix text --
               o << color.code
               o << print_at_x(preamble_start, HORIZONTAL * (termwidth - preamble_start)) # draw a full line
               o << print_at_x(preamble_start, preamble)

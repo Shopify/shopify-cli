@@ -15,9 +15,12 @@ module Node
               end
             end
           end
+
+          generate_path = File.join(ShopifyCli::Project.current.directory, "node_modules/.bin/generate-node-app")
+
           spin_group = CLI::UI::SpinGroup.new
           spin_group.add(@ctx.message('node.generate.webhook.generating', selected_type)) do |spinner|
-            Node::Commands::Generate.run_generate("./node_modules/.bin/generate-node-app webhook #{selected_type}",
+            Node::Commands::Generate.run_generate("#{generate_path} webhook #{selected_type}",
               selected_type, @ctx)
             spinner.update_title(@ctx.message('node.generate.webhook.generated', selected_type))
           end

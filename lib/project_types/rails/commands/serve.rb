@@ -26,12 +26,16 @@ module Rails
             @ctx.open_url!("#{project.env.host}/login?shop=#{project.env.shop}")
           end
         end
-        Gem.gem_home(@ctx)
         CLI::UI::Frame.open(@ctx.message('rails.serve.running_server')) do
           env = ShopifyCli::Project.current.env.to_h
           env.delete('HOST')
           env['PORT'] = ShopifyCli::Tunnel::PORT.to_s
-          @ctx.system('bin/rails server', env: env)
+          env['GEM_PATH'] = Gem.gem_path(@ctx)
+          if @ctx.windows?
+            @ctx.system("ruby bin\\rails server", env: env)
+          else
+            @ctx.system('bin/rails server', env: env)
+          end
         end
       end
 

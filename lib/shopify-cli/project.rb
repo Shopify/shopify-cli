@@ -117,7 +117,7 @@ module ShopifyCli
 
       def __directory(curr)
         loop do
-          return nil if curr == '/'
+          return nil if curr == '/' || /^[A-Z]:\/$/.match?(curr)
           file = File.join(curr, '.shopify-cli.yml')
           return curr if File.exist?(file)
           curr = File.dirname(curr)
