@@ -25,7 +25,7 @@ $ sudo apt remove shopify-cli
 $ sudo yum remove shopify-cli
 ```
 
-### Ruby gem
+### RubyGems (macOS, Linux, Windows 10)
 
 ```console
 $ gem uninstall shopify-cli
