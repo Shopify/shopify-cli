@@ -26,7 +26,6 @@ module Rails
             @ctx.open_url!("#{project.env.host}/login?shop=#{project.env.shop}")
           end
         end
-        Gem.gem_home(@ctx)
         CLI::UI::Frame.open(@ctx.message('rails.serve.running_server')) do
           env = ShopifyCli::Project.current.env.to_h
           env.delete('HOST')
