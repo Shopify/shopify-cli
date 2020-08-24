@@ -1,3 +1,7 @@
+Version 1.1.0
+------
+* Add native Windows 10 support, including variety of stability fixes.
+
 Version 1.0.5
 ------
 * Fix a bug in out opt-in metrics
