@@ -24,7 +24,7 @@ $ brew install shopify-cli
 
 **RubyGems**
 
-See the [RubyGems]({{ site.baseurl }}/getting-started/install/#rubygem-all-platforms) section for further details.
+See the [RubyGems]({{ site.baseurl }}/getting-started/install/#rubygems-all-platforms) section for further details.
 
 ---
 
@@ -44,7 +44,7 @@ $ sudo apt install /path/to/downloaded/shopify-cli-x.y.z.deb
 
 **RubyGems**
 
-See the [RubyGems]({{ site.baseurl }}/getting-started/install/#rubygem-all-platforms) section for further details.
+See the [RubyGems]({{ site.baseurl }}/getting-started/install/#rubygems-all-platforms) section for further details.
 
 ---
 
@@ -64,7 +64,7 @@ $ sudo yum install /path/to/downloaded/shopify-cli-x.y.x.rpm
 
 **RubyGems**
 
-See the [RubyGems]({{ site.baseurl }}/getting-started/install/#rubygem-all-platforms) section for further details.
+See the [RubyGems]({{ site.baseurl }}/getting-started/install/#rubygems-all-platforms) section for further details.
 
 ---
 
