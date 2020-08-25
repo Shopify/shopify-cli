@@ -124,6 +124,8 @@ module ShopifyCli
 
     def install(ctx)
       return if File.exist?(File.join(ShopifyCli.cache_dir, ctx.windows? ? 'ngrok.exe' : 'ngrok'))
+      check_prereq_command(ctx, 'curl')
+      check_prereq_command(ctx, ctx.linux? ? 'unzip' : 'tar')
       spinner = CLI::UI::SpinGroup.new
       spinner.add('Installing ngrok...') do
         zip_dest = File.join(ShopifyCli.cache_dir, 'ngrok.zip')
@@ -169,6 +171,13 @@ module ShopifyCli
       end
       start_ngrok(ctx, port)
     end
+
+    def check_prereq_command(ctx, command)
+      cmd_path = ctx.which(command)
+      ctx.abort(ctx.message('core.tunnel.error.prereq_command_required', command)) if cmd_path.nil?
+      ctx.done(ctx.message('core.tunnel.prereq_command_location', command, cmd_path))
+    end
+
     class LogParser # :nodoc:
       TIMEOUT = 10
 
