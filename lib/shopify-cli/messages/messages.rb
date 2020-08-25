@@ -289,6 +289,8 @@ module ShopifyCli
           error: {
             stop: "ngrok tunnel could not be stopped. Try running {{command:killall -9 ngrok}}",
             url_fetch_failure: "Unable to fetch external url",
+            prereq_command_required: "%1$s is required for installing ngrok. Please install %1$s using the appropriate"\
+              " package manager for your system.",
           },
 
           not_running: "{{green:x}} ngrok tunnel not running",
@@ -302,6 +304,7 @@ module ShopifyCli
           stopped: "{{green:x}} ngrok tunnel stopped",
           timed_out: "{{x}} ngrok tunnel has timed out, restarting ...",
           will_timeout: "{{*}} This tunnel will timeout in {{red:%s}}",
+          prereq_command_location: "%s @ %s",
         },
 
         version: {
