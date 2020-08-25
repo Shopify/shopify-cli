@@ -15,7 +15,7 @@ class ShopifyCli < Formula
   depends_on 'git' => '2.13'
 
   def install
-    system 'tar', '-xzf', cached_download, '--directory', buildpath
+    system 'tar', '-xf', cached_download, '--directory', buildpath
 
     (buildpath/'src').mkpath
     (buildpath/'symlink').mkpath
