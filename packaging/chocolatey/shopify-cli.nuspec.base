@@ -1,0 +1,33 @@
+<?xml version="1.0" encoding="utf-8"?>
+<package xmlns="http://schemas.microsoft.com/packaging/2015/06/nuspec.xsd">
+  <metadata>
+    <id>shopify-cli</id>
+    <version>SHOPIFY_CLI_VERSION</version>
+    <packageSourceUrl>https://github.com/Shopify/shopify-app-cli/blob/master/packaging/chocolatey</packageSourceUrl>
+    <owners>Shopify</owners>
+    <title>Shopify CLI</title>
+    <authors>Shopify</authors>
+    <projectUrl>https://shopify.github.io/shopify-app-cli/</projectUrl>
+    <iconUrl>https://shopify.github.io/shopify-app-cli/blob/master/packaging/shopify-logo.png</iconUrl>
+    <copyright>Shopify 2020</copyright>
+    <licenseUrl>https://github.com/Shopify/shopify-app-cli/blob/master/LICENSE</licenseUrl>
+    <projectSourceUrl>https://github.com/Shopify/shopify-app-cli</projectSourceUrl>
+    <docsUrl>https://shopify.github.io/shopify-app-cli/</docsUrl>
+    <bugTrackerUrl>https://github.com/Shopify/shopify-app-cli/issues</bugTrackerUrl>
+    <tags>shopify-app-cli shopify-cli shopify</tags>
+    <summary>Shopify CLI helps you build Shopify apps faster.</summary>
+    <description>
+      Shopify CLI helps you build Shopify apps faster. It quickly scaffolds Node.js
+      and Ruby on Rails embedded apps. It also automates many common tasks in the
+      development process and lets you quickly add popular features, such as billing
+      and webhooks.
+    </description>
+    <dependencies>
+      <dependency id="msys2" />
+      <dependency id="ruby" version="2.5" />
+    </dependencies>
+  </metadata>
+  <files>
+    <file src="tools/**" target="tools" />
+  </files>
+</package>

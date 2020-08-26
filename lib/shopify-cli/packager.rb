@@ -92,6 +92,50 @@ module ShopifyCli
       File.write(build_path, spec_contents)
     end
 
+    def build_choco
+      ensure_program_installed('mono', 'brew install mono')
+
+      root_dir = File.join(PACKAGING_DIR, 'chocolatey')
+      choco_path = File.join('choco-static', 'choco.exe')
+
+      choco_build_dir = File.join(root_dir, 'build')
+      FileUtils.rm_r(choco_build_dir) if Dir.exist?(choco_build_dir)
+      FileUtils.mkdir(choco_build_dir)
+
+      choco_tools_dir = File.join(choco_build_dir, 'tools')
+      FileUtils.mkdir(choco_tools_dir)
+
+      puts "\nBuilding Chocolatey package"
+
+      puts "Generating metadata files..."
+
+      spec_file = 'shopify-cli.nuspec'
+
+      file_contents = File.read(File.join(root_dir, "#{spec_file}.base"))
+      file_contents = file_contents.gsub('SHOPIFY_CLI_VERSION', ShopifyCli::VERSION)
+      File.write(File.join(choco_build_dir, spec_file), file_contents)
+
+      tools_files = %w(chocolateyInstall.ps1 chocolateyUninstall.ps1)
+      tools_files.each do |file|
+        file_path = File.join(choco_build_dir, 'tools', file)
+
+        file_contents = File.read(File.join(root_dir, "#{file}.base"))
+        file_contents = file_contents.gsub('SHOPIFY_CLI_VERSION', ShopifyCli::VERSION)
+        File.write(file_path, file_contents)
+      end
+
+      puts "Building package..."
+      Dir.chdir(choco_build_dir)
+      raise "Failed to build package" unless system('mono', "../#{choco_path}", 'pack', '--allow-unofficial', spec_file)
+
+      output_file = "shopify-cli.#{ShopifyCli::VERSION}.nupkg"
+      output_path = File.join(choco_build_dir, output_file)
+      final_path = File.join(BUILDS_DIR, output_file)
+
+      puts "Moving generated package: \n  From: #{output_path}\n  To: #{final_path}\n\n"
+      FileUtils.mv(output_path, final_path)
+    end
+
     private
 
     def ensure_program_installed(program, installation_cmd)

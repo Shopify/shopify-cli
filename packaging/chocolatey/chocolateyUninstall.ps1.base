@@ -1,0 +1,5 @@
+gem uninstall shopify-cli -v SHOPIFY_CLI_VERSION
+if (! $?)
+{
+  Set-PowerShellExitCode 1
+}
