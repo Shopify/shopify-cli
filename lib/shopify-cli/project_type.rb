@@ -45,8 +45,12 @@ module ShopifyCli
         File.join(ShopifyCli::PROJECT_TYPES_DIR, project_type.to_s, path)
       end
 
-      def creator(name, command_const)
+      def declare(name)
         @project_name = name
+      end
+
+      def creator(name, command_const)
+        declare(name)
         @project_creator_command_class = command_const
         ShopifyCli::Commands::Create.subcommand(command_const, @project_type)
       end
