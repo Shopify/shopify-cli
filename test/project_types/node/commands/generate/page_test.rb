@@ -14,7 +14,7 @@ module Node
           CLI::UI::Prompt.expects(:ask).returns(Node::Commands::Generate::Page::PAGE_TYPES['empty-state'])
           @context
             .expects(:system)
-            .with(regexp_matches(Regexp.new("^.*#{BIN_REGEX} empty-state-page name$")))
+            .with(regexp_matches(Regexp.new("^.*#{BIN_REGEX}\\\" empty-state-page name$")))
             .returns(mock(success?: true))
           Node::Commands::Generate::Page.new(@context).call(['name'], '')
         end
@@ -23,7 +23,7 @@ module Node
           CLI::UI::Prompt.expects(:ask).never
           @context
             .expects(:system)
-            .with(regexp_matches(Regexp.new("^.*#{BIN_REGEX} list-page name$")))
+            .with(regexp_matches(Regexp.new("^.*#{BIN_REGEX}\\\" list-page name$")))
             .returns(mock(success?: true))
           command = Node::Commands::Generate::Page.new(@context)
           command.options.flags[:type] = 'list'

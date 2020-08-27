@@ -45,7 +45,7 @@ module ShopifyCli
       return if installed?
 
       result = if @ctx.windows?
-        @ctx.system(download_path)
+        @ctx.system("\"#{download_path}\"")
       else
         @ctx.system('tar', '-xf', download_path, chdir: ShopifyCli.cache_dir)
       end
