@@ -1,0 +1,26 @@
+# Reload the path to ensure it works even if we just installed Ruby
+$Env:Path = [System.Environment]::GetEnvironmentVariable("Path","Machine") +
+  [System.Environment]::GetEnvironmentVariable("Path","User")
+
+Write-Host "Checking environment..."
+
+$p = Start-Process -PassThru cmd.exe "/C ridk install"
+$p.WaitForExit()
+
+if (! $p.ExitCode -eq 0)
+{
+  Write-Host "Failed to set up the Ruby environment"
+  Set-PowerShellExitCode 1
+  exit 1
+}
+
+Write-Host "Installing the Shopify CLI Ruby gem..."
+gem install shopify-cli -v SHOPIFY_CLI_VERSION
+if (! $?)
+{
+  Write-Host "Failed to install the Shopify CLI gem"
+  Set-PowerShellExitCode 1
+  exit 1
+}
+
+Write-Host "Installation complete. Please start a new PowerShell window to start using the CLI"
