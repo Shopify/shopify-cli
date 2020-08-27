@@ -1,3 +1,7 @@
+Version 1.1.1
+------
+* Fix a bug where usernames with spaces caused issues on Windows
+
 Version 1.1.0
 ------
 * Add native Windows 10 support, including variety of stability fixes.
