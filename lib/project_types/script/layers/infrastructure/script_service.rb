@@ -49,7 +49,7 @@ module Script
           resp_hash = script_service_request(
             query_name: query_name,
             api_key: api_key,
-            shop_domain: shop_domain,
+            shop_domain: format_shop_domain(shop_domain),
             variables: variables,
           )
           user_errors = resp_hash["data"]["shopScriptUpdateOrCreate"]["userErrors"]
@@ -76,7 +76,7 @@ module Script
           resp_hash = script_service_request(
             query_name: query_name,
             api_key: api_key,
-            shop_domain: shop_domain,
+            shop_domain: format_shop_domain(shop_domain),
             variables: variables,
           )
           user_errors = resp_hash["data"]["shopScriptDelete"]["userErrors"]
@@ -90,6 +90,10 @@ module Script
         end
 
         private
+
+        def format_shop_domain(shop_domain)
+          shop_domain.delete_suffix("/")
+        end
 
         class ScriptServiceAPI < ShopifyCli::API
           property(:api_key, accepts: String)
