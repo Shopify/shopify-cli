@@ -19,6 +19,7 @@ module Node
           end
           billing_type_name = BILLING_TYPES.key(selected_type)
           selected_type[0] = File.join(ShopifyCli::Project.current.directory, selected_type[0])
+          selected_type[0] = "\"#{selected_type[0]}\""
           selected_type = selected_type.join(' ')
 
           spin_group = CLI::UI::SpinGroup.new

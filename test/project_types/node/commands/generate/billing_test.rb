@@ -11,14 +11,14 @@ module Node
 
         def test_recurring_billing
           CLI::UI::Prompt.expects(:ask).returns(Node::Commands::Generate::Billing::BILLING_TYPES['recurring-billing'])
-          @context.expects(:system).with(regexp_matches(Regexp.new("^.*#{BIN_REGEX} recurring-billing$")))
+          @context.expects(:system).with(regexp_matches(Regexp.new("^.*#{BIN_REGEX}\\\" recurring-billing$")))
             .returns(mock(success?: true))
           Node::Commands::Generate::Billing.new(@context).call([], '')
         end
 
         def test_one_time_billing
           CLI::UI::Prompt.expects(:ask).returns(Node::Commands::Generate::Billing::BILLING_TYPES['one-time-billing'])
-          @context.expects(:system).with(regexp_matches(Regexp.new("^.*#{BIN_REGEX} one-time-billing$")))
+          @context.expects(:system).with(regexp_matches(Regexp.new("^.*#{BIN_REGEX}\\\" one-time-billing$")))
             .returns(mock(success?: true))
           Node::Commands::Generate::Billing.new(@context).call([], '')
         end
