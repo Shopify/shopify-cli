@@ -29,7 +29,7 @@ module Script
           no_existing_orgs_cause: "You don't have any partner organizations.",
           no_existing_orgs_help: "Please visit https://partners.shopify.com/ to create a partners account.",
 
-          no_existing_stores_cause: "You don't have any development stores.",
+          no_existing_stores_cause: "You don't have any stores.",
           no_existing_stores_help: "Visit https://partners.shopify.com/%{organization_id}/stores/ to create one.",
 
           project_exists_cause: "Directory with the same name as the script already exists.",
@@ -43,7 +43,7 @@ module Script
 
           script_not_found_cause: "Couldn't find script %s for extension point %s",
 
-          app_not_installed_cause: "App not installed on development store.",
+          app_not_installed_cause: "App not installed on store.",
 
           app_script_not_pushed_help: "Push the script and then try this command again.",
 
@@ -70,7 +70,7 @@ module Script
                                       "on this extension point.",
           shop_script_conflict_help: "Disable that script or uninstall that app and try again.",
 
-          shop_script_undefined_cause: "Script is already turned off in development store.",
+          shop_script_undefined_cause: "Script is already turned off in store.",
         },
 
         create: {
@@ -100,7 +100,7 @@ module Script
           HELP
 
           error: {
-            operation_failed: "Script not pushed.",
+            operation_failed: "Couldn't push script to app.",
           },
 
           script_pushed: "{{v}} Script pushed to app (API key: %{api_key}).",
@@ -108,7 +108,7 @@ module Script
 
         disable: {
           help: <<~HELP,
-          Turn off script in development store.
+          Turn off script in store.
             Usage: {{command:%s disable}}
           HELP
 
@@ -117,12 +117,12 @@ module Script
             not_pushed_to_app: "Can't disable the script because it hasn't been pushed to the app.",
           },
 
-          script_disabled: "{{v}} Script disabled. Script is turned off in development store.",
+          script_disabled: "{{v}} Script disabled. Script is turned off in store.",
         },
 
         enable: {
           help: <<~HELP,
-          Turn on script in development store.
+          Turn on script in store.
             Usage: {{command:%s enable}}
             Options:
               {{command:--config_props='name1:value1, name2:value2'}} Optional. Define the configuration of your script by passing individual name and value pairs. If used with --config_file, then matching values in --config_props will override those set in the file.
@@ -139,7 +139,7 @@ module Script
           },
 
           script_enabled: "{{v}} Script enabled. %{type} script %{title} in app (API key: %{api_key}) "\
-                          "is turned on in development store {{green:%{shop_domain}}}",
+                          "is turned on in store {{green:%{shop_domain}}}",
         },
 
         project_deps: {
@@ -170,12 +170,12 @@ module Script
           },
           script_form: {
             ask_app_api_key_default: "Which app do you want this script to belong to?",
-            ask_shop_domain_default: "Select a development store",
+            ask_shop_domain_default: "Select a store",
             fetching_organizations: "Fetching partner organizations",
             fetched_organizations: "Fetched partner organizations",
             select_organization: "Select partner organization.",
             using_app: "Using app {{green:%{title} (%{api_key})}}.",
-            using_development_store: "Using development store {{green:%{domain}}}",
+            using_development_store: "Using store {{green:%{domain}}}",
             using_organization: "Partner organization {{green:%s}}.",
           },
         },
