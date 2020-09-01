@@ -114,7 +114,6 @@ module Script
 
           error: {
             operation_failed: "Can't disable script.",
-            not_pushed_to_app: "Can't disable the script because it hasn't been pushed to the app.",
           },
 
           script_disabled: "{{v}} Script disabled. Script is turned off in store.",
@@ -135,7 +134,6 @@ module Script
 
           error: {
             operation_failed: "Can't enable script.",
-            not_pushed_to_app: "Can't enable the script because it hasn't been pushed to the app.",
           },
 
           script_enabled: "{{v}} Script enabled. %{type} script %{title} in app (API key: %{api_key}) "\
@@ -149,34 +147,10 @@ module Script
           installed: "Missing dependencies installed",
         },
 
-        test: {
-          help: <<~HELP,
-          Runs unit tests on your script.
-            Usage: {{command:%s test}}
-          HELP
-
-          error: {
-            operation_failed: "Tests didn't run or they ran with failures.",
-          },
-
-          running: "Running tests",
-          success: "{{v}} Tests finished.",
-        },
-
         forms: {
           create: {
             select_extension_point: "Which extension point do you want to use?",
             script_name: "Script Name",
-          },
-          script_form: {
-            ask_app_api_key_default: "Which app do you want this script to belong to?",
-            ask_shop_domain_default: "Select a store",
-            fetching_organizations: "Fetching partner organizations",
-            fetched_organizations: "Fetched partner organizations",
-            select_organization: "Select partner organization.",
-            using_app: "Using app {{green:%{title} (%{api_key})}}.",
-            using_development_store: "Using store {{green:%{domain}}}",
-            using_organization: "Partner organization {{green:%s}}.",
           },
         },
 
