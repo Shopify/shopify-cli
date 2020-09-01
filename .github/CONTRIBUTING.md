@@ -4,7 +4,7 @@ Shopify App CLI is an open source project. We want to make it as easy and transp
 
 ## Code of conduct
 
-We expect all participants to read our [code of conduct](https://github.com/Shopify/shopify-app-cli/.github/CODE_OF_CONDUCT.md) to understand which actions are and aren’t tolerated.
+We expect all participants to read our [code of conduct](https://github.com/Shopify/shopify-app-cli/blob/master/.github/CODE_OF_CONDUCT.md) to understand which actions are and aren’t tolerated.
 
 ## Open development
 
