@@ -163,6 +163,7 @@ module ShopifyCli
         api: {
           error: {
             internal_server_error: '{{red:{{x}} An unexpected error occurred on Shopify.}}',
+            invalid_url: 'Invalid URL: %s',
           },
         },
 
