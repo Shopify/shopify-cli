@@ -12,7 +12,7 @@ module Theme
             {{command:%s create theme}}: Creates a theme.
               Usage: {{command:%s create theme}}
               Options:
-                {{command:--store=MYSHOPIFYDOMAIN}} Store URL. Must be an existing store.
+                {{command:--store=MYSHOPIFYDOMAIN}} Store URL. Must be an existing store with private apps enabled.
                 {{command:--password=PASSWORD}} Private app password. App must have Read and Write Theme access.
                 {{command:--name=NAME}} Theme name. Any string.
           HELP
@@ -47,21 +47,24 @@ module Theme
           },
           errors: "%s can't be blank",
           pull: {
-            ask_theme_id: "Theme ID:",
             private_app: <<~APP,
-              To fetch your existing themes, Shopify App CLI needs to connect with a private app installed on your store. Visit {{underline:%s/admin/apps/private}} to create a new API key and password, or retrieve an existing password.
+              To fetch your existing themes, Shopify App CLI needs to connect with your store. Visit {{underline:%s/admin/apps/private}} to create a new API key and password, or retrieve an existing password.
               If you create a new private app, ensure that it has Read and Write Theme access.",
             APP
           },
         },
         pull: {
           help: <<~HELP,
-            Connect an existing theme in your store to Shopify App CLI. All files in the theme will be pulled into your current directory.
-            Usage: {{command:%s pull}}
+            {{command:%s pull}}: Connects an existing theme in your store to Shopify App CLI. Downloads a copy of the theme files to your local development environment.
+              Usage: {{command:%s pull}}
+              Options:
+                {{command:--store=MYSHOPIFYDOMAIN}} Store URL. Must be an existing store with private apps enabled.
+                {{command:--password=PASSWORD}} Private app password. App must have Read and Write Theme access.
+                {{command:--themeid=THEMEID}} Theme ID. Must be an existing theme on your store.
           HELP
-          pull: "Pulling theme...",
-          failed: "Couldn't pull from store",
-          pulled: "Theme from {{underline:%s}} connected to Shopify App CLI.",
+          pull: "Pulling theme files...",
+          failed: "Couldn't pull theme files from store",
+          pulled: "{{green:%s}} files were pulled from {{underline:%s}} to {{green:%s}}",
         },
         push: {
           remove_abort: "Theme files weren't deleted",
