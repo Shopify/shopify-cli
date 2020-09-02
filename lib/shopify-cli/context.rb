@@ -2,6 +2,8 @@
 require 'shopify_cli'
 require 'fileutils'
 require 'rbconfig'
+require 'net/http'
+require 'json'
 
 module ShopifyCli
   ##
@@ -11,6 +13,11 @@ module ShopifyCli
   # resoures.
   #
   class Context
+    GEM_LATEST_URI = URI.parse('https://rubygems.org/api/v1/versions/shopify-cli/latest.json')
+    VERSION_CHECK_SECTION = 'versioncheck'
+    LAST_CHECKED_AT_FIELD = 'last_checked_at'
+    VERSION_CHECK_INTERVAL = 86400
+
     class << self
       attr_reader :messages
 
@@ -446,6 +453,23 @@ module ShopifyCli
       nil
     end
 
+    # Checks if there's a newer version of the CLI available and returns version string if
+    # this should be conveyed to the user (i.e., if it's been over 24 hours since last check)
+    #
+    # #### Parameters
+    #
+    # #### Returns
+    # - `version`: string of newer version available, IFF new version is available AND it's time to inform user,
+    #            : nil otherwise
+    #
+    def new_version
+      if (time_of_last_check + VERSION_CHECK_INTERVAL) < (now = Time.now.to_i)
+        update_time_of_last_check(now)
+        latest_version = retrieve_latest_gem_version
+        latest_version unless latest_version == ShopifyCli::VERSION
+      end
+    end
+
     private
 
     def ctx_path(fname)
@@ -455,6 +479,22 @@ module ShopifyCli
       else
         File.join(root, fname)
       end
+    end
+
+    def retrieve_latest_gem_version
+      response = Net::HTTP.get_response(GEM_LATEST_URI)
+      latest = JSON.parse(response.body)
+      latest["version"]
+    rescue
+      nil
+    end
+
+    def time_of_last_check
+      (val = ShopifyCli::Config.get(VERSION_CHECK_SECTION, LAST_CHECKED_AT_FIELD)) ? val.to_i : 0
+    end
+
+    def update_time_of_last_check(time)
+      ShopifyCli::Config.set(VERSION_CHECK_SECTION, LAST_CHECKED_AT_FIELD, time)
     end
   end
 end

@@ -317,7 +317,7 @@ module ShopifyCli
         warning: {
           development_version: <<~DEVELOPMENT,
           {{*}} {{yellow:You are running a development version of the CLI at:}}
-              {{yellow:%s}}
+            {{yellow:%s}}
 
           DEVELOPMENT
 
@@ -326,6 +326,14 @@ module ShopifyCli
 
             Please visit this page for complete instructions:
             {{underline:https://shopify.github.io/shopify-app-cli/migrate/}}
+
+          MESSAGE
+
+          new_version: <<~MESSAGE,
+          {{*}} {{yellow:A new version of the Shopify App CLI is available! You have version %s and the latest version is %s.
+
+            To upgrade, follow the instructions for the package manager you’re using:
+            {{underline:https://shopify.github.io/shopify-app-cli/getting-started/upgrade/}}}}
 
           MESSAGE
         },

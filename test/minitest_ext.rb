@@ -18,6 +18,7 @@ module Minitest
     def run_cmd(cmd, split_cmd = true)
       stub_prompt_for_cli_updates
       stub_monorail_log_git_sha
+      stub_new_version_check
 
       new_cmd = split_cmd ? cmd.split : cmd
       ShopifyCli::Core::EntryPoint.call(new_cmd, @context)
@@ -52,6 +53,17 @@ module Minitest
 
     def stub_prompt_for_cli_updates
       ShopifyCli::Config.stubs(:get_section).with("autoupdate").returns(stub("key?" => true))
+    end
+
+    def stub_new_version_check
+      stub_request(:get, ShopifyCli::Context::GEM_LATEST_URI)
+        .with(headers: {
+          'Accept' => '*/*',
+          'Accept-Encoding' => 'gzip;q=1.0,deflate;q=0.6,identity;q=0.3',
+          'Host' => 'rubygems.org',
+          'User-Agent' => 'Ruby',
+        })
+        .to_return(status: 200, body: "{\"version\":\"#{ShopifyCli::VERSION}\"}", headers: {})
     end
   end
 end
