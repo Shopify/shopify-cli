@@ -133,6 +133,34 @@ module Theme
       refute(Themekit.deploy(context))
     end
 
+    def test_pull_successful
+      context = ShopifyCli::Context.new
+      stat = mock
+      context.expects(:system)
+        .with(Themekit::THEMEKIT,
+              'get',
+              '--store=shop.com',
+              '--password=boop',
+              '--themeid=2468')
+        .returns(stat)
+      stat.stubs(:success?).returns(true)
+      assert(Themekit.pull(context, store: 'shop.com', password: 'boop', themeid: '2468'))
+    end
+
+    def test_pull_unsuccessful
+      context = ShopifyCli::Context.new
+      stat = mock
+      context.expects(:system)
+        .with(Themekit::THEMEKIT,
+              'get',
+              '--store=shop.com',
+              '--password=boop',
+              '--themeid=2468')
+        .returns(stat)
+      stat.stubs(:success?).returns(false)
+      refute(Themekit.pull(context, store: 'shop.com', password: 'boop', themeid: '2468'))
+    end
+
     def test_serve_successful
       context = ShopifyCli::Context.new
       stat = mock
