@@ -202,7 +202,10 @@ module Node
             host_must_be_https: "HOST must be a HTTPS url.",
           },
 
-          open_info: "{{*}} Press {{yellow: Control-T}} to open this project in {{green:%s}} ",
+          open_info: <<~MESSAGE,
+            {{*}} To install and start using your app, open this URL in your browser:
+            {{green:%s}}
+          MESSAGE
           running_server: "Running server...",
         },
 
