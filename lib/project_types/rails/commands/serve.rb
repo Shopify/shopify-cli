@@ -20,12 +20,12 @@ module Rails
           url: url,
           callback_url: "/auth/shopify/callback",
         )
-        if @ctx.mac? && project.env.shop
-          @ctx.puts(@ctx.message('rails.serve.open_info', project.env.shop))
-          @ctx.on_siginfo do
-            @ctx.open_url!("#{project.env.host}/login?shop=#{project.env.shop}")
-          end
+
+        if project.env.shop
+          project_url = "#{project.env.host}/login?shop=#{project.env.shop}"
+          @ctx.puts("\n" + @ctx.message('rails.serve.open_info', project_url) + "\n")
         end
+
         CLI::UI::Frame.open(@ctx.message('rails.serve.running_server')) do
           env = ShopifyCli::Project.current.env.to_h
           env.delete('HOST')

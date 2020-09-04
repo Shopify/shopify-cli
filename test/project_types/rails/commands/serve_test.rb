@@ -54,15 +54,15 @@ module Rails
       end
 
       def test_open_while_run
-        ShopifyCli::Context.any_instance.stubs(:on_siginfo).yields
         ShopifyCli::Tunnel.stubs(:start).returns('https://example.com')
         ShopifyCli::Tasks::UpdateDashboardURLS.expects(:call)
         ShopifyCli::Resources::EnvFile.any_instance.expects(:update).with(
           @context, :host, 'https://example.com'
         )
-        ShopifyCli::Context.any_instance.stubs(:mac?).returns(true)
-        ShopifyCli::Context.any_instance.expects(:open_url!).with(
-          'https://example.com/login?shop=my-test-shop.myshopify.com'
+        @context.expects(:puts).with(
+          "\n" +
+          @context.message('rails.serve.open_info', 'https://example.com/login?shop=my-test-shop.myshopify.com') +
+          "\n"
         )
         Rails::Commands::Serve.new(@context).call
       end

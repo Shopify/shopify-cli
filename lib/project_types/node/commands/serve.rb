@@ -20,12 +20,12 @@ module Node
           url: url,
           callback_url: "/auth/callback",
         )
-        if @ctx.mac? && project.env.shop
-          @ctx.puts(@ctx.message('node.serve.open_info', project.env.shop))
-          @ctx.on_siginfo do
-            @ctx.open_url!("#{project.env.host}/auth?shop=#{project.env.shop}")
-          end
+
+        if project.env.shop
+          project_url = "#{project.env.host}/auth?shop=#{project.env.shop}"
+          @ctx.puts("\n" + @ctx.message('node.serve.open_info', project_url) + "\n")
         end
+
         CLI::UI::Frame.open(@ctx.message('node.serve.running_server')) do
           env = project.env.to_h
           env['PORT'] = ShopifyCli::Tunnel::PORT.to_s
