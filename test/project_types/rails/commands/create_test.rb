@@ -34,8 +34,7 @@ module Rails
       end
 
       def test_can_create_new_app
-        FileUtils.mkdir_p('test-app')
-        FileUtils.mkdir_p('test-app/config/initializers')
+        create_mock_dirs
 
         gem_path = create_gem_path_and_binaries
         Gem.stubs(:gem_home).returns(gem_path)
@@ -89,8 +88,7 @@ module Rails
       end
 
       def test_can_create_new_app_with_db_flag
-        FileUtils.mkdir_p('test-app')
-        FileUtils.mkdir_p('test-app/config/initializers')
+        create_mock_dirs
 
         gem_path = create_gem_path_and_binaries
         Gem.stubs(:gem_home).returns(gem_path)
@@ -140,8 +138,7 @@ module Rails
       end
 
       def test_can_create_new_app_with_rails_opts_flag
-        FileUtils.mkdir_p('test-app')
-        FileUtils.mkdir_p('test-app/config/initializers')
+        create_mock_dirs
 
         gem_path = create_gem_path_and_binaries
         Gem.stubs(:gem_home).returns(gem_path)
@@ -190,6 +187,30 @@ module Rails
         FileUtils.rm_r('test-app')
       end
 
+      def test_create_fails_if_path_exists
+        FileUtils.mkdir_p('test-app')
+        FileUtils.mkdir_p('test-app/config/initializers')
+
+        gem_path = create_gem_path_and_binaries
+        Gem.stubs(:gem_home).returns(gem_path)
+
+        Ruby.expects(:version).returns(Semantic::Version.new('2.5.0'))
+        Gem.expects(:install).with(@context, 'rails', nil).returns(true)
+        Gem.expects(:install).with(@context, 'bundler', '~>2.0').returns(true)
+        Dir.stubs(:exist?).returns(true)
+
+        exception = assert_raises ShopifyCli::Abort do
+          perform_command
+        end
+        assert_equal(
+          "{{x}} " + @context.message('rails.create.error.dir_exists', 'test-app'),
+          exception.message
+        )
+
+        delete_gem_path_and_binaries
+        FileUtils.rm_r('test-app')
+      end
+
       private
 
       def expect_command(command, chdir: @context.root)
@@ -217,6 +238,15 @@ module Rails
 
       def delete_gem_path_and_binaries
         FileUtils.rm_r('gem')
+      end
+
+      def create_mock_dirs
+        FileUtils.mkdir_p('test-app')
+        FileUtils.mkdir_p('test-app/config/initializers')
+
+        # The dir needs to exist to simulate the command working, but we don't want to fail on the pre-create check
+        Dir.expects(:exist?).with(File.join(@context.root, 'test-app')).returns(false)
+        Dir.stubs(:exist?).with(File.join(ShopifyCli::ROOT, 'test')).returns(true)
       end
     end
   end
