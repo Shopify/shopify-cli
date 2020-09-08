@@ -1,3 +1,7 @@
+Version 1.1.2
+------
+* Fix various minor bugs (check dir before creating Rails project, catch stderr from failed git command)
+
 Version 1.1.1
 ------
 * Fix a bug where usernames with spaces caused issues on Windows
