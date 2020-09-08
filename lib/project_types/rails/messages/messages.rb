@@ -36,6 +36,7 @@ module Rails
             See {{underline:https://github.com/Shopify/shopify-app-cli/blob/master/docs/installing-ruby.md}}
             for our recommended method of installing ruby.
             MSG
+            dir_exists: "Project directory %s already exists. Please use a different name.",
             install_failure: "Error installing %s gem",
             node_required: "node is required to create a rails project. Download at https://nodejs.org/en/download.",
             node_version_failure: "Failed to get the current node version. Please make sure it is installed as " \

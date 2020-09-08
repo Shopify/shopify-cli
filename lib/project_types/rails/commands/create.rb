@@ -114,6 +114,9 @@ module Rails
         @ctx.abort(@ctx.message('rails.create.error.install_failure', 'bundler ~>2.0')) unless
           install_gem('bundler', '~>2.0')
 
+        full_path = File.join(@ctx.root, name)
+        @ctx.abort(@ctx.message('rails.create.error.dir_exists', name)) if Dir.exist?(full_path)
+
         CLI::UI::Frame.open(@ctx.message('rails.create.generating_app', name)) do
           new_command = %w(rails new)
           new_command += DEFAULT_RAILS_FLAGS
@@ -124,7 +127,7 @@ module Rails
           syscall(new_command)
         end
 
-        @ctx.root = File.join(@ctx.root, name)
+        @ctx.root = full_path
 
         File.open(File.join(@ctx.root, '.gitignore'), 'a') { |f| f.write('.env') }
 
