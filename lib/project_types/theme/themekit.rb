@@ -25,7 +25,7 @@ module Theme
         command << (remove ? 'remove' : 'deploy')
         (command << flags << files).flatten!
 
-        stat = ctx.system(command.join(" "))
+        stat = ctx.system(command.join(' '))
         stat.success?
       end
 
