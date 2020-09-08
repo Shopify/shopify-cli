@@ -33,7 +33,10 @@ module Theme
           },
         },
         push: {
-          error: "Theme could not be pushed to Shopify",
+          error: {
+            pushing_error: "Theme files couldn't be pushed to Shopify",
+            removing_error: "Theme files couldn't be removed from Shopify",
+          },
           help: <<~HELP,
             {{command:%s push}}: Replaces theme files on Shopify with those in your directory. If filenames are provided, only those files will be replaced; otherwise, the whole theme is replaced.
               Usage: {{command:%s push}}
@@ -42,8 +45,12 @@ module Theme
                 {{command:--allow-live}} Allows Shopify App CLI to replace a file on the currently live theme.
                 {{command:--nodelete}} Runs push without removing files from Shopify.
           HELP
-          pushed: "Pushed files from %s to Shopify",
-          pushing: "Pushing files to Shopify",
+          info: {
+            pushed: "Theme files were pushed from %s to Shopify",
+            removed: "Theme files were removed from %s and Shopify",
+          },
+          pushing: "Pushing theme files to Shopify",
+          removing: "Removing theme files from Shopify",
         },
         serve: {
           help: <<~HELP,
