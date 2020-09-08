@@ -3,6 +3,7 @@ module Theme
   class Project < ShopifyCli::ProjectType
     hidden_feature
     creator 'Theme App', 'Theme::Commands::Create'
+    register_command('Theme::Commands::Push', "push")
     register_command('Theme::Commands::Serve', "serve")
 
     require Project.project_filepath('messages/messages')
@@ -11,6 +12,7 @@ module Theme
 
   module Commands
     autoload :Create, Project.project_filepath('commands/create')
+    autoload :Push, Project.project_filepath('commands/push')
     autoload :Serve, Project.project_filepath('commands/serve')
   end
 
