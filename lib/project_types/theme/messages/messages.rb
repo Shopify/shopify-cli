@@ -32,6 +32,19 @@ module Theme
             APP
           },
         },
+        push: {
+          error: "Theme could not be pushed to Shopify",
+          help: <<~HELP,
+            {{command:%s push}}: Replaces theme files on Shopify with those in your directory. If filenames are provided, only those files will be replaced; otherwise, the whole theme is replaced.
+              Usage: {{command:%s push}}
+              Options:
+                {{command:--remove}} Removes, rather than replaces, both local and Shopify copies of theme files. At least one file must be specified.
+                {{command:--allow-live}} Allows Shopify App CLI to replace a file on the currently live theme.
+                {{command:--nodelete}} Runs push without removing files from Shopify.
+          HELP
+          pushed: "Pushed files from %s to Shopify",
+          pushing: "Pushing files to Shopify",
+        },
         serve: {
           help: <<~HELP,
             Sync your current changes, then view the active store in your default browser. Any theme edits will continue to update in real time. Also prints the active store's URL in your terminal.
