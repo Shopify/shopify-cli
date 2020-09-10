@@ -131,7 +131,7 @@ describe Script::Layers::Infrastructure::AssemblyScriptTaskRunner do
       package_name = "@shopify/extension-point-as-foo"
       stub_npm_outdated(create_package_version_info(package_name: package_name, current: "0.9.0", latest: "0.10.0"))
       msg = "The following packages must be updated before you can push: #{package_name}"
-      assert_raises Script::Layers::Domain::Errors::PackagesOutdatedError, msg do
+      assert_raises Script::Layers::Infrastructure::Errors::PackagesOutdatedError, msg do
         subject
       end
     end
@@ -140,7 +140,7 @@ describe Script::Layers::Infrastructure::AssemblyScriptTaskRunner do
       package_name = "@shopify/extension-point-as-foo"
       stub_npm_outdated(create_package_version_info(package_name: package_name, current: "0.9.0", latest: "1.0.0"))
       msg = "The following packages must be updated before you can push: #{package_name}"
-      assert_raises Script::Layers::Domain::Errors::PackagesOutdatedError, msg do
+      assert_raises Script::Layers::Infrastructure::Errors::PackagesOutdatedError, msg do
         subject
       end
     end

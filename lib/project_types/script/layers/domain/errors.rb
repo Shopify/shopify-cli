@@ -21,7 +21,6 @@ module Script
           end
         end
         class ServiceFailureError < ScriptProjectError; end
-        class PackagesOutdatedError < ScriptProjectError; end
       end
     end
   end

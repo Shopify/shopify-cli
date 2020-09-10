@@ -142,6 +142,11 @@ module Script
           {
             cause_of_error: ShopifyCli::Context.message('script.error.shop_script_undefined_cause'),
           }
+        when Layers::Infrastructure::Errors::PackagesOutdatedError
+          {
+            cause_of_error: ShopifyCli::Context.message('script.error.packages_outdated_cause', e.outdated_packages.join(', ')),
+            help_suggestion: ShopifyCli::Context.message('script.error.packages_outdated_help'),
+          }
         end
       end
     end
