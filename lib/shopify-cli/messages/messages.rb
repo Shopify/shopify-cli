@@ -184,11 +184,14 @@ module ShopifyCli
             {{x}} You are not in a Shopify app project
             {{yellow:{{*}}}}{{reset: Run}}{{cyan: shopify create}}{{reset: to create your app}}
             MESSAGE
-            cli_yaml: {
-              not_hash: "{{x}} .shopify-cli.yml was not a proper YAML file. Expecting a hash.",
-              invalid: "{{x}} %s contains invalid YAML: %s",
-              not_found: "{{x}} %s not found",
-            },
+          },
+        },
+
+        yaml: {
+          error: {
+            not_hash: "{{x}} %s was not a proper YAML file. Expecting a hash.",
+            invalid: "{{x}} %s contains invalid YAML: %s",
+            not_found: "{{x}} %s not found",
           },
         },
 
