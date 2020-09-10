@@ -53,7 +53,6 @@ module Extension
     autoload :ArgoSetupStep, Project.project_filepath('features/argo_setup_step')
     autoload :ArgoSetupSteps, Project.project_filepath('features/argo_setup_steps')
     autoload :ArgoDependencies, Project.project_filepath('features/argo_dependencies')
-    autoload :ArgoConfig, Project.project_filepath('features/argo_config')
   end
 
   module Models

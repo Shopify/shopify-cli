@@ -96,9 +96,6 @@ module Extension
               version_too_low: 'Your node version %s does not meet the minimum required version %s',
             },
           },
-          config: {
-            unpermitted_keys: '`%s` contains the following unpermitted keys: %s',
-          },
         },
       },
       tasks: {
