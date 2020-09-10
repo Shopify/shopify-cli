@@ -47,8 +47,7 @@ module Script
             .select { |package_name, _| package_name.start_with?('@shopify/extension-point-as-') }
             .select { |_, version_info| !package_is_up_to_date?(version_info) }
             .keys
-          raise Errors::PackagesOutdatedError.new(outdated_ep_packages),
-            "The following packages must be updated before you can push: #{outdated_ep_packages.join(', ')}" unless outdated_ep_packages.empty?
+          raise Errors::PackagesOutdatedError.new(outdated_ep_packages) unless outdated_ep_packages.empty?
         end
 
         private

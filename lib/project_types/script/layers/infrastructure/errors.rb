@@ -37,7 +37,7 @@ module Script
         class PackagesOutdatedError < ScriptProjectError
           attr_reader :outdated_packages
           def initialize(outdated_packages)
-            super
+            super("EP packages are outdated and need to be updated: #{outdated_packages.join(', ')}")
             @outdated_packages = outdated_packages
           end
         end

@@ -73,7 +73,7 @@ module Script
           shop_script_undefined_cause: "Script is already turned off in store.",
 
           packages_outdated_cause: "The following packages are out of date and must be updated: %s.",
-          packages_outdated_help: "Update the listed packages with `npm update`."
+          packages_outdated_help: "Update the listed packages with `npm update`.",
         },
 
         create: {

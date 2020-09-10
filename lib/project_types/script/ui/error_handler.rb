@@ -144,7 +144,10 @@ module Script
           }
         when Layers::Infrastructure::Errors::PackagesOutdatedError
           {
-            cause_of_error: ShopifyCli::Context.message('script.error.packages_outdated_cause', e.outdated_packages.join(', ')),
+            cause_of_error: ShopifyCli::Context.message(
+              'script.error.packages_outdated_cause',
+              e.outdated_packages.join(', ')
+            ),
             help_suggestion: ShopifyCli::Context.message('script.error.packages_outdated_help'),
           }
         end
