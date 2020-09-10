@@ -93,4 +93,68 @@ describe Script::Layers::Infrastructure::AssemblyScriptTaskRunner do
       end
     end
   end
+
+  describe ".check_if_safe_to_push!" do
+    subject { as_task_runner.check_if_safe_to_push! }
+
+    it "should not error if `npm outdated` returns nothing" do
+      stub_npm_outdated({})
+      subject
+    end
+
+    it "should not error if `npm outdated` does not return an EP package" do
+      stub_npm_outdated(create_package_version_info(package_name: "somepackage"))
+      subject
+    end
+
+    it "should not error if current version is linked" do
+      stub_npm_outdated(create_package_version_info(current: "linked"))
+      subject
+    end
+
+    it "should not error if latest version is an https URL" do
+      stub_npm_outdated(create_package_version_info(latest: "https://github.com/somethingsomething"))
+      subject
+    end
+
+    it "should not error if patch version is different" do
+      stub_npm_outdated(create_package_version_info(current: "0.9.0", latest: "0.9.1"))
+      subject
+    end
+
+    it "should not error if it's a non-zero major version and minor version is different" do
+      stub_npm_outdated(create_package_version_info(current: "1.0.0", latest: "1.1.0"))
+      subject
+    end
+
+    it "should error if it's a zero major version and minor version is different" do
+      package_name = "@shopify/extension-point-as-foo"
+      stub_npm_outdated(create_package_version_info(package_name: package_name, current: "0.9.0", latest: "0.10.0"))
+      msg = "The following packages must be updated before you can push: #{package_name}"
+      assert_raises Script::Layers::Domain::Errors::PackagesOutdatedError, msg do
+        subject
+      end
+    end
+
+    it "should error if major version is different" do
+      package_name = "@shopify/extension-point-as-foo"
+      stub_npm_outdated(create_package_version_info(package_name: package_name, current: "0.9.0", latest: "1.0.0"))
+      msg = "The following packages must be updated before you can push: #{package_name}"
+      assert_raises Script::Layers::Domain::Errors::PackagesOutdatedError, msg do
+        subject
+      end
+    end
+  end
+
+  private
+
+  def stub_npm_outdated(output)
+    ctx.stubs(:capture2e)
+      .with("npm", "outdated", "--json", "--depth", "0")
+      .returns([output.to_json, mock])
+  end
+
+  def create_package_version_info(package_name: "@shopify/extension-point-as-foo", current: "0.9.0", latest: "0.10.0")
+    { package_name => { "current" => current, "latest" => latest } }
+  end
 end

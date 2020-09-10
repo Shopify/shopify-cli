@@ -158,6 +158,8 @@ module Script
           building: "Building",
           building_script: "Building script",
           built: "Built",
+          checking: "Checking",
+          checked: "Checked",
           pushing: "Pushing",
           pushed: "Pushed",
           disabling: "Disabling",

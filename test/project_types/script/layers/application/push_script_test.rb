@@ -52,7 +52,7 @@ describe Script::Layers::Application::PushScript do
       )
     end
 
-    it 'should prepare and push script' do
+    it 'should prepare, check, and push script' do
       script_service_instance = Script::Layers::Infrastructure::ScriptService.new(ctx: @context)
       Script::Layers::Application::ProjectDependencies
         .expects(:install).with(ctx: @context, task_runner: task_runner)
@@ -62,6 +62,7 @@ describe Script::Layers::Application::PushScript do
         .expects(:new).returns(script_service_instance)
       Script::Layers::Domain::PushPackage
         .any_instance.expects(:push).with(script_service_instance, api_key, force)
+      task_runner.expects(:check_if_safe_to_push!)
       capture_io { subject }
     end
   end
