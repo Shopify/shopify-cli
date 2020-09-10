@@ -47,7 +47,8 @@ module Script
             .select { |package_name, _| package_name.start_with?('@shopify/extension-point-as-') }
             .select { |_, version_info| !package_is_up_to_date?(version_info) }
             .keys
-          raise Errors::PackagesOutdatedError.new(outdated_ep_packages) unless outdated_ep_packages.empty?
+          raise Errors::PackagesOutdatedError.new(outdated_ep_packages),
+            "NPM packages out of date: #{outdated_ep_packages.join(', ')}" unless outdated_ep_packages.empty?
         end
 
         private
@@ -77,7 +78,8 @@ module Script
           current_version = version_info['current']
           latest_version = version_info['latest']
 
-          # making an assumption that the script developer knows what they're doing if they're not referencing a semver version
+          # making an assumption that the script developer knows what they're doing if they're not referencing a
+          # semver version
           begin
             current_version = ::Semantic::Version.new(current_version)
             latest_version = ::Semantic::Version.new(latest_version)
