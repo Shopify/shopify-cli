@@ -109,19 +109,21 @@ describe Script::Layers::Infrastructure::AssemblyScriptTaskRunner do
     it "should error if it's a zero major version and minor version is different" do
       package_name = "@shopify/extension-point-as-foo"
       stub_npm_outdated(create_package_version_info(package_name: package_name, current: "0.9.0", latest: "0.10.0"))
-      msg = "The following packages must be updated before you can push: #{package_name}"
-      assert_raises Script::Layers::Infrastructure::Errors::PackagesOutdatedError, msg do
+      msg = "NPM packages out of date: #{package_name}"
+      error = assert_raises Script::Layers::Infrastructure::Errors::PackagesOutdatedError, msg do
         subject
       end
+      assert_equal msg, error.message
     end
 
     it "should error if major version is different" do
       package_name = "@shopify/extension-point-as-foo"
       stub_npm_outdated(create_package_version_info(package_name: package_name, current: "0.9.0", latest: "1.0.0"))
-      msg = "The following packages must be updated before you can push: #{package_name}"
-      assert_raises Script::Layers::Infrastructure::Errors::PackagesOutdatedError, msg do
+      msg = "NPM packages out of date: #{package_name}"
+      error = assert_raises Script::Layers::Infrastructure::Errors::PackagesOutdatedError do
         subject
       end
+      assert_equal msg, error.message
     end
   end
 
