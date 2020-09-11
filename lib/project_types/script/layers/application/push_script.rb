@@ -14,18 +14,10 @@ module Script
             task_runner = Infrastructure::TaskRunner.for(ctx, language, script_name, source_file)
             ProjectDependencies.install(ctx: ctx, task_runner: task_runner)
             BuildScript.call(ctx: ctx, task_runner: task_runner, script: script)
-            check_if_safe_to_push(ctx, task_runner)
             push_script(ctx, task_runner, script, api_key, force)
           end
 
           private
-
-          def check_if_safe_to_push(ctx, task_runner)
-            UI::PrintingSpinner.spin(ctx, ctx.message('script.application.checking')) do |p_ctx, spinner|
-              task_runner.check_if_safe_to_push!
-              spinner.update_title(p_ctx.message('script.application.checked'))
-            end
-          end
 
           def push_script(ctx, task_runner, script, api_key, force)
             UI::PrintingSpinner.spin(ctx, ctx.message('script.application.pushing')) do |p_ctx, spinner|

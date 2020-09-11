@@ -61,41 +61,20 @@ describe Script::Layers::Infrastructure::AssemblyScriptTaskRunner do
   describe ".dependencies_installed?" do
     subject { as_task_runner.dependencies_installed? }
 
-    it "should return true if node_modules folder exists" do
+    before do
       FileUtils.mkdir_p("node_modules")
+    end
+
+    it "should return true if node_modules folder exists" do
+      stub_npm_outdated({})
       assert_equal true, subject
     end
 
     it "should return false if node_modules folder does not exists" do
       Dir.stubs(:exist?).returns(false)
+      stub_npm_outdated({})
       assert_equal false, subject
     end
-  end
-
-  describe ".install_dependencies" do
-    subject { as_task_runner.install_dependencies }
-
-    it "should install using npm" do
-      ctx.expects(:capture2e)
-        .with("node", "--version")
-        .returns(["v12.16.1", mock(success?: true)])
-      ctx.expects(:capture2e)
-        .with("npm", "install", "--no-audit", "--no-optional", "--loglevel error")
-        .returns([nil, mock(success?: true)])
-      subject
-    end
-
-    it "should raise error on failure" do
-      msg = 'error message'
-      ctx.expects(:capture2e).returns([msg, mock(success?: false)])
-      assert_raises Script::Layers::Infrastructure::Errors::DependencyInstallError, msg do
-        subject
-      end
-    end
-  end
-
-  describe ".check_if_safe_to_push!" do
-    subject { as_task_runner.check_if_safe_to_push! }
 
     it "should not error if `npm outdated` returns nothing" do
       stub_npm_outdated({})
@@ -141,6 +120,28 @@ describe Script::Layers::Infrastructure::AssemblyScriptTaskRunner do
       stub_npm_outdated(create_package_version_info(package_name: package_name, current: "0.9.0", latest: "1.0.0"))
       msg = "The following packages must be updated before you can push: #{package_name}"
       assert_raises Script::Layers::Infrastructure::Errors::PackagesOutdatedError, msg do
+        subject
+      end
+    end
+  end
+
+  describe ".install_dependencies" do
+    subject { as_task_runner.install_dependencies }
+
+    it "should install using npm" do
+      ctx.expects(:capture2e)
+        .with("node", "--version")
+        .returns(["v12.16.1", mock(success?: true)])
+      ctx.expects(:capture2e)
+        .with("npm", "install", "--no-audit", "--no-optional", "--loglevel error")
+        .returns([nil, mock(success?: true)])
+      subject
+    end
+
+    it "should raise error on failure" do
+      msg = 'error message'
+      ctx.expects(:capture2e).returns([msg, mock(success?: false)])
+      assert_raises Script::Layers::Infrastructure::Errors::DependencyInstallError, msg do
         subject
       end
     end
