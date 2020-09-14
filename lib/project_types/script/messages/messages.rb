@@ -71,6 +71,9 @@ module Script
           shop_script_conflict_help: "Disable that script or uninstall that app and try again.",
 
           shop_script_undefined_cause: "Script is already turned off in store.",
+
+          packages_outdated_cause: "The following npm packages are out of date: %s.",
+          packages_outdated_help: "Run `npm update` to update them.",
         },
 
         create: {

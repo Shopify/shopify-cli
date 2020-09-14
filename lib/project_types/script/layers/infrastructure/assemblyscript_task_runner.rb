@@ -34,7 +34,9 @@ module Script
 
         def dependencies_installed?
           # Assuming if node_modules folder exist at root of script folder, all deps are installed
-          ctx.dir_exist?("node_modules")
+          return false unless ctx.dir_exist?("node_modules")
+          check_if_ep_dependencies_up_to_date!
+          true
         end
 
         private
@@ -57,6 +59,39 @@ module Script
 
         def bytecode
           File.read(format(BYTECODE_FILE, name: script_name))
+        end
+
+        def check_if_ep_dependencies_up_to_date!
+          return true if ENV['SHOPIFY_CLI_SCRIPTS_IGNORE_OUTDATED']
+
+          # ignore exit code since it will not be 0 unless every package is up to date which they probably won't be
+          out, _ = ctx.capture2e("npm", "outdated", "--json", "--depth", "0")
+          parsed_outdated_check = JSON.parse(out)
+          outdated_ep_packages = parsed_outdated_check
+            .select { |package_name, _| package_name.start_with?('@shopify/extension-point-as-') }
+            .select { |_, version_info| !package_is_up_to_date?(version_info) }
+            .keys
+          raise Errors::PackagesOutdatedError.new(outdated_ep_packages),
+            "NPM packages out of date: #{outdated_ep_packages.join(', ')}" unless outdated_ep_packages.empty?
+        end
+
+        def package_is_up_to_date?(version_info)
+          require 'semantic/semantic'
+          current_version = version_info['current']
+          latest_version = version_info['latest']
+
+          # making an assumption that the script developer knows what they're doing if they're not referencing a
+          # semver version
+          begin
+            current_version = ::Semantic::Version.new(current_version)
+            latest_version = ::Semantic::Version.new(latest_version)
+          rescue ArgumentError
+            return true
+          end
+
+          return false if current_version.major < latest_version.major
+          return false if latest_version.major == 0 && current_version.minor < latest_version.minor
+          true
         end
       end
     end
