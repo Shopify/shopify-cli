@@ -1,3 +1,7 @@
+Version 1.2.0
+------
+* Improvements and new functionality to various internal components
+
 Version 1.1.2
 ------
 * Fix various minor bugs (check dir before creating Rails project, catch stderr from failed git command)
