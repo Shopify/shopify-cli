@@ -166,7 +166,7 @@ module ShopifyCli
       @config ||= begin
         config = load_yaml_file('.shopify-cli.yml')
         unless config.is_a?(Hash)
-          raise ShopifyCli::Abort, Context.message('core.project.error.cli_yaml.not_hash')
+          raise ShopifyCli::Abort, Context.message('core.yaml.error.not_hash', '.shopify-cli.yml')
         end
 
         # The app_type key was deprecated in favour of project_type, so replace it
@@ -187,12 +187,12 @@ module ShopifyCli
       begin
         YAML.load_file(f)
       rescue Psych::SyntaxError => e
-        raise(ShopifyCli::Abort, Context.message('core.project.error.cli_yaml.invalid', relative_path, e.message))
+        raise(ShopifyCli::Abort, Context.message('core.yaml.error.invalid', relative_path, e.message))
       # rescue Errno::EACCES => e
       # TODO
       #   Dev::Helpers::EaccesHandler.diagnose_and_raise(f, e, mode: :read)
       rescue Errno::ENOENT
-        raise ShopifyCli::Abort, Context.message('core.project.error.cli_yaml.not_found', f)
+        raise ShopifyCli::Abort, Context.message('core.yaml.error.not_found', f)
       end
     end
   end
