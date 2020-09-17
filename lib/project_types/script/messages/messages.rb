@@ -47,8 +47,6 @@ module Script
 
           app_script_not_pushed_help: "Script isn't on the app. Run {{command:shopify push}}, and then try again.",
 
-          app_script_undefined_help: "Script isn't on the app. Run {{command:shopify push}}, and then try again.",
-
           build_error_cause: "Something went wrong while building the script.",
           build_error_help: "Correct the errors and try again.",
 
