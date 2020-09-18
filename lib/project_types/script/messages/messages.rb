@@ -45,9 +45,7 @@ module Script
 
           app_not_installed_cause: "App not installed on store.",
 
-          app_script_not_pushed_help: "Push the script and then try this command again.",
-
-          app_script_undefined_help: "Push script to app.",
+          app_script_not_pushed_help: "Script isn't on the app. Run {{command:shopify push}}, and then try again.",
 
           build_error_cause: "Something went wrong while building the script.",
           build_error_help: "Correct the errors and try again.",
