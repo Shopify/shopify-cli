@@ -118,8 +118,8 @@ module Extension
     }
 
     TYPES = {
-      subscription_management: {
-        name: 'Subscription Management',
+      product_subscription: {
+        name: 'Product Subscription',
         tagline: '(limit 1 per app)',
         overrides: {
           register: {

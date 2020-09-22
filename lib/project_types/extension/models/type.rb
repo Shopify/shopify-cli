@@ -38,6 +38,10 @@ module Extension
         self.class::IDENTIFIER
       end
 
+      def graphql_identifier
+        identifier
+      end
+
       def name
         message('name')
       end

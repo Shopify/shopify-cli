@@ -52,7 +52,7 @@ module Extension
         Tasks::CreateExtension.call(
           context: @ctx,
           api_key: app.api_key,
-          type: extension_type.identifier,
+          type: extension_type.graphql_identifier,
           title: project.title,
           config: {},
           extension_context: extension_type.extension_context(@ctx)
