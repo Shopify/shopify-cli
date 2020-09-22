@@ -18,7 +18,11 @@ module Extension
           config: JSON.generate(config),
           extension_context: extension_context,
         }
+        context.debug("input before send #{input}")
+
         response = ShopifyCli::PartnersAPI.query(context, GRAPHQL_FILE, **input).dig(*RESPONSE_FIELD)
+        context.debug("response #{response}")
+
         context.abort(context.message('tasks.errors.parse_error')) if response.nil?
 
         abort_if_user_errors(context, response)

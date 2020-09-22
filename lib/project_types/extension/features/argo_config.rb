@@ -7,13 +7,19 @@ module Extension
 
       class << self
         def parse_yaml(context, permitted_keys = [])
+          context.debug("CONFIG")
           file_name = File.join(context.root, CONFIG_FILE_NAME)
+
+          context.debug("config exists? #{file_name} #{File.size?(file_name)}")
 
           return {} unless File.size?(file_name)
 
           require 'yaml' # takes 20ms, so deferred as late as possible.
           begin
             config = YAML.load_file(file_name)
+
+            context.debug("loaded config #{config}")
+
 
             # `YAML.load_file` returns nil if the file is not empty
             # but does not contain any parsable yml data, e.g. only comments
@@ -24,7 +30,9 @@ module Extension
               raise ShopifyCli::Abort, ShopifyCli::Context.message('core.yaml.error.not_hash', CONFIG_FILE_NAME)
             end
 
+
             config.transform_keys!(&:to_sym)
+            context.debug("config after transform #{config}")
             assert_valid_config(config, permitted_keys) unless permitted_keys.empty?
 
             config

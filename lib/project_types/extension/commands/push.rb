@@ -54,6 +54,8 @@ module Extension
       end
 
       def update_draft
+        @ctx.debug("entireconfig before send #{extension_type.config(@ctx)}")
+
         with_waiting_text do
           Tasks::UpdateDraft.call(
             context: @ctx,
