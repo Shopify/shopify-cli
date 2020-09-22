@@ -66,6 +66,7 @@ module ShopifyCli
         req['Content-Type'] = 'application/json'
         headers.each { |header, value| req[header] = value }
         response = http.request(req)
+        puts response.inspect
 
         case response.code.to_i
         when 200..399

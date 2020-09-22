@@ -90,7 +90,7 @@ module ShopifyCli
         @server_thread.join(240)
         raise Error, ctx.message('core.oauth.error.timeout') if response_query.nil?
         raise Error, response_query['error_description'] unless response_query['error'].nil?
-        response_query['code']
+        response_query['code'] ####
       end
     end
 

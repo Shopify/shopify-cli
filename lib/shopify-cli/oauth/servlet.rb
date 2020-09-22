@@ -39,7 +39,7 @@ module ShopifyCli
         else
           respond_with(res, 200, Context.message('core.oauth.servlet.success_response'))
         end
-        @oauth.response_query = req.query
+        @oauth.response_query = req.query ####
         @server.shutdown
       end
 

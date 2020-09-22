@@ -16,6 +16,7 @@ module ShopifyCli
     #
     #  SHOPIFY_APP_CLI_LOCAL_PARTNERS=1 shopify create
     #
+    #
     LOCAL_DEBUG = 'SHOPIFY_APP_CLI_LOCAL_PARTNERS'
 
     class << self
@@ -62,6 +63,7 @@ module ShopifyCli
       end
 
       def api_client(ctx)
+        puts "**** ENDPOINT: #{endpoint}"
         new(
           ctx: ctx,
           token: access_token(ctx),
@@ -81,7 +83,7 @@ module ShopifyCli
           ctx: ctx,
           service: 'identity',
           client_id: cli_id,
-          scopes: 'openid https://api.shopify.com/auth/partners.app.cli.access',
+          scopes: 'openid employee https://api.shopify.com/auth/partners.app.cli.access',
           request_exchange: partners_id,
         ).authenticate("#{auth_endpoint}/oauth")
       end
@@ -102,6 +104,7 @@ module ShopifyCli
       end
 
       def endpoint
+        puts "**** ENDPOINT2: #{ENV[LOCAL_DEBUG]}"
         return 'https://partners.shopify.com' if ENV[LOCAL_DEBUG].nil?
         'https://partners.myshopify.io/'
       end
