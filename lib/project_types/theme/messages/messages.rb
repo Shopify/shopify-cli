@@ -20,6 +20,17 @@ module Theme
             created: "{{green:%s}} was created for {{underline:%s}} in {{green:%s}}",
           },
         },
+        deploy: {
+          abort: "Theme wasn't deployed",
+          confirmation: "This will change your live theme. Do you wish to proceed?",
+          deploying: "Deploying theme",
+          error: "Theme couldn't be deployed",
+          info: {
+            deployed: "Theme was updated and set as the live theme",
+            pushed: "All theme files were updated",
+          },
+          push_fail: "Theme files couldn't be updated",
+        },
         forms: {
           create: {
             ask_password: "Password:",
@@ -33,8 +44,8 @@ module Theme
           },
         },
         push: {
-          remove_abort: 'Your theme files were not deleted',
-          remove_confirm: 'Are you sure you want to delete the local and remote copies of the specified theme files?',
+          remove_abort: "Theme files weren't deleted",
+          remove_confirm: "This will delete the local and remote copies of the theme files. Do you wish to proceed?",
           error: {
             push_error: "Theme files couldn't be pushed to Shopify",
             remove_error: "Theme files couldn't be removed from Shopify",
