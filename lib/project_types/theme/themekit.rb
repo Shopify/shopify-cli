@@ -20,6 +20,15 @@ module Theme
         ctx.system(THEMEKIT, "watch")
       end
 
+      def push(ctx, files: nil, flags: nil, remove: false)
+        command = [THEMEKIT]
+        command << (remove ? 'remove' : 'deploy')
+        (command << flags << files).flatten!
+
+        stat = ctx.system(command.join(' '))
+        stat.success?
+      end
+
       def ensure_themekit_installed(ctx)
         Tasks::EnsureThemekitInstalled.call(ctx)
       end

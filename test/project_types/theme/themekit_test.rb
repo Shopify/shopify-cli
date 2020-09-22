@@ -11,6 +11,7 @@ module Theme
     def test_create_theme_successful
       context = ShopifyCli::Context.new
       stat = mock
+
       context.expects(:system)
         .with(Themekit::THEMEKIT,
               'new',
@@ -25,6 +26,7 @@ module Theme
     def test_create_theme_unsuccessful
       context = ShopifyCli::Context.new
       stat = mock
+
       context.expects(:system)
         .with(Themekit::THEMEKIT,
               'new',
@@ -34,6 +36,58 @@ module Theme
         .returns(stat)
       stat.stubs(:success?).returns(false)
       refute(Themekit.create(context, password: 'boop', store: 'shop.com', name: 'My Theme'))
+    end
+
+    def test_push_deploy_successful
+      context = ShopifyCli::Context.new
+      stat = mock
+
+      context.expects(:system)
+        .with([Themekit::THEMEKIT,
+               'deploy'].join(' '))
+        .returns(stat)
+      stat.stubs(:success?).returns(true)
+      assert(Themekit.push(context, files: [], flags: [], remove: nil))
+    end
+
+    def test_push_remove_successful
+      context = ShopifyCli::Context.new
+      stat = mock
+
+      context.expects(:system)
+        .with([Themekit::THEMEKIT,
+               'remove',
+               'file.liquid',
+               'another_file.liquid'].join(' '))
+        .returns(stat)
+      stat.stubs(:success?).returns(true)
+      assert(Themekit.push(context, files: ['file.liquid', 'another_file.liquid'], flags: [], remove: true))
+    end
+
+    def test_push_deploy_unsuccessful
+      context = ShopifyCli::Context.new
+      stat = mock
+
+      context.expects(:system)
+        .with([Themekit::THEMEKIT,
+               'deploy'].join(' '))
+        .returns(stat)
+      stat.stubs(:success?).returns(false)
+      refute(Themekit.push(context, files: [], flags: [], remove: nil))
+    end
+
+    def test_push_remove_unsuccessful
+      context = ShopifyCli::Context.new
+      stat = mock
+
+      context.expects(:system)
+        .with([Themekit::THEMEKIT,
+               'remove',
+               'file.liquid',
+               'another_file.liquid'].join(' '))
+        .returns(stat)
+      stat.stubs(:success?).returns(false)
+      refute(Themekit.push(context, files: ['file.liquid', 'another_file.liquid'], flags: [], remove: true))
     end
 
     def test_serve_successful

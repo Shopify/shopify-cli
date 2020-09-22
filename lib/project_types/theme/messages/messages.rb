@@ -32,6 +32,28 @@ module Theme
             APP
           },
         },
+        push: {
+          remove_abort: 'Your theme files were not deleted',
+          remove_confirm: 'Are you sure you want to delete the local and remote copies of the specified theme files?',
+          error: {
+            push_error: "Theme files couldn't be pushed to Shopify",
+            remove_error: "Theme files couldn't be removed from Shopify",
+          },
+          help: <<~HELP,
+            {{command:%s push}}: Uploads your local theme files to Shopify, overwriting the remote versions. If you specify filenames, separated by a space, only those files will be replaced. Otherwise, the whole theme will be replaced.
+              Usage: {{command:%s push}}
+              Options:
+                {{command:--remove}} Deletes both the local and the remote copies of the specified files. At least one filename must be specified.
+                {{command:--allow-live}} Allows Shopify App CLI to replace files on the store's live production theme.
+                {{command:--nodelete}} Runs the push command without deleting remote files from Shopify.
+          HELP
+          info: {
+            push: "Theme files were pushed from {{green:%s}} to Shopify",
+            remove: "Theme files were deleted from {{green:%s}} and Shopify",
+          },
+          push: "Pushing theme files to Shopify",
+          remove: "Deleting theme files",
+        },
         serve: {
           help: <<~HELP,
             Sync your current changes, then view the active store in your default browser. Any theme edits will continue to update in real time. Also prints the active store's URL in your terminal.
