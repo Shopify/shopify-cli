@@ -12,9 +12,6 @@ module Theme
         if options.flags['remove']
           remove = true
           options.flags.delete('remove')
-          action = 'remov'
-        else
-          action = 'push'
         end
 
         flags = options.flags.map do |key, _value|
@@ -25,13 +22,27 @@ module Theme
           Themekit.ensure_themekit_installed(@ctx)
         end
 
-        CLI::UI::Frame.open(@ctx.message("theme.push.#{action}ing")) do
-          unless Themekit.push(@ctx, files: args, flags: flags, remove: remove)
-            @ctx.abort(@ctx.message("theme.push.error.#{action}ing_error"))
-          end
-        end
+        if remove
+          CLI::UI::Frame.open(@ctx.message('theme.push.remove')) do
+            unless CLI::UI::Prompt.confirm(@ctx.message('theme.push.remove_confirm'))
+              @ctx.abort(@ctx.message('theme.push.remove_abort'))
+            end
 
-        @ctx.done(@ctx.message("theme.push.info.#{action}ed", @ctx.root))
+            unless Themekit.push(@ctx, files: args, flags: flags, remove: remove)
+              @ctx.abort(@ctx.message('theme.push.error.remove_error'))
+            end
+          end
+
+          @ctx.done(@ctx.message('theme.push.info.remove', @ctx.root))
+        else
+          CLI::UI::Frame.open(@ctx.message('theme.push.push')) do
+            unless Themekit.push(@ctx, files: args, flags: flags, remove: remove)
+              @ctx.abort(@ctx.message('theme.push.error.push_error'))
+            end
+          end
+
+          @ctx.done(@ctx.message('theme.push.info.push', @ctx.root))
+        end
       end
 
       def self.help
