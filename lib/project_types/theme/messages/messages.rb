@@ -33,24 +33,26 @@ module Theme
           },
         },
         push: {
+          remove_abort: 'Your theme files were not deleted',
+          remove_confirm: 'Are you sure you want to delete the local and remote copies of the specified theme files?',
           error: {
-            pushing_error: "Theme files couldn't be pushed to Shopify",
-            removing_error: "Theme files couldn't be removed from Shopify",
+            push_error: "Theme files couldn't be pushed to Shopify",
+            remove_error: "Theme files couldn't be removed from Shopify",
           },
           help: <<~HELP,
-            {{command:%s push}}: Replaces theme files on Shopify with those in your directory. If filenames are provided, only those files will be replaced; otherwise, the whole theme is replaced.
+            {{command:%s push}}: Uploads your local theme files to Shopify, overwriting the remote versions. If you specify filenames, separated by a space, only those files will be replaced. Otherwise, the whole theme will be replaced.
               Usage: {{command:%s push}}
               Options:
-                {{command:--remove}} Removes, rather than replaces, both local and Shopify copies of theme files. At least one file must be specified.
-                {{command:--allow-live}} Allows Shopify App CLI to replace a file on the currently live theme.
-                {{command:--nodelete}} Runs push without removing files from Shopify.
+                {{command:--remove}} Deletes both the local and the remote copies of the specified files. At least one filename must be specified.
+                {{command:--allow-live}} Allows Shopify App CLI to replace files on the store's live production theme.
+                {{command:--nodelete}} Runs the push command without deleting remote files from Shopify.
           HELP
           info: {
-            pushed: "Theme files were pushed from %s to Shopify",
-            removed: "Theme files were removed from %s and Shopify",
+            push: "Theme files were pushed from {{green:%s}} to Shopify",
+            remove: "Theme files were deleted from {{green:%s}} and Shopify",
           },
-          pushing: "Pushing theme files to Shopify",
-          removing: "Removing theme files from Shopify",
+          push: "Pushing theme files to Shopify",
+          remove: "Deleting theme files",
         },
         serve: {
           help: <<~HELP,
