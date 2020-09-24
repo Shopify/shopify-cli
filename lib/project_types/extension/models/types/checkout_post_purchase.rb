@@ -8,13 +8,13 @@ module Extension
         IDENTIFIER = 'CHECKOUT_POST_PURCHASE'
         PERMITTED_CONFIG_KEYS = [:metafields]
         def create(directory_name, context)
-          Features::Argo.checkout.create(directory_name, IDENTIFIER, context)
+          Features::Argo::Checkout.new.create(directory_name, IDENTIFIER, context)
         end
 
         def config(context)
           {
             **Features::ArgoConfig.parse_yaml(context, PERMITTED_CONFIG_KEYS),
-            **Features::Argo.checkout.config(context),
+            **Features::Argo::Checkout.new.config(context),
           }
         end
       end

@@ -31,6 +31,7 @@ module Extension
 
         Commands::Register.any_instance.expects(:call).once
         Commands::Build.any_instance.stubs(:call)
+        ShopifyCli::JsSystem.any_instance.stubs(:call).returns(true)
         Tasks::UpdateDraft.any_instance.stubs(:call).returns(@version)
 
         run_push
@@ -41,6 +42,7 @@ module Extension
 
         Commands::Register.any_instance.expects(:call).never
         Commands::Build.any_instance.stubs(:call)
+        ShopifyCli::JsSystem.any_instance.stubs(:call).returns(true)
         Tasks::UpdateDraft.any_instance.stubs(:call).returns(@version)
 
         run_push
@@ -48,6 +50,7 @@ module Extension
 
       def test_runs_build_command
         Commands::Build.any_instance.expects(:call).once
+        ShopifyCli::JsSystem.any_instance.stubs(:call).returns(true)
         Tasks::UpdateDraft.any_instance.stubs(:call).returns(@version)
 
         run_push
@@ -55,6 +58,7 @@ module Extension
 
       def test_updates_the_extensions_draft_version
         Commands::Build.any_instance.stubs(:call)
+        ShopifyCli::JsSystem.any_instance.stubs(:call).returns(true)
         Tasks::UpdateDraft.any_instance.expects(:call)
           .with(
             context: @context,
@@ -73,6 +77,7 @@ module Extension
         @version.last_user_interaction_at = Time.parse("2020-05-07 19:01:56 UTC")
         @version.location = "https://www.fakeurl.com"
         Commands::Build.any_instance.stubs(:call)
+        ShopifyCli::JsSystem.any_instance.stubs(:call).returns(true)
         Tasks::UpdateDraft.any_instance.stubs(:call).returns(@version)
 
         io = capture_io { run_push }
@@ -90,6 +95,7 @@ module Extension
 
         @version.last_user_interaction_at = Time.parse(response_time)
         Commands::Build.any_instance.stubs(:call)
+        ShopifyCli::JsSystem.any_instance.stubs(:call).returns(true)
         Tasks::UpdateDraft.any_instance.stubs(:call).returns(@version)
 
         io = capture_io { run_push }
@@ -107,6 +113,7 @@ module Extension
         ]
 
         Commands::Build.any_instance.stubs(:call)
+        ShopifyCli::JsSystem.any_instance.stubs(:call).returns(true)
         Tasks::UpdateDraft.any_instance.stubs(:call).returns(@version)
 
         io = capture_io { run_push }

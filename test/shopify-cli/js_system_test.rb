@@ -100,6 +100,17 @@ module ShopifyCli
       assert JsSystem.yarn?(@context)
     end
 
+    def test_call_hits_capture3_if_capture_reponse_set_to_true
+      yarn_command = 'list'
+      @system.stubs(:yarn?).returns(true)
+      CLI::Kit::System
+        .expects(:capture3)
+        .with(JsSystem::YARN_CORE_COMMAND, yarn_command, chdir: @context.root)
+        .returns(true)
+        .once
+      @system.call(yarn: yarn_command, npm: 'npm', capture_response: true)
+    end
+
     private
 
     def mock_yarn_check(response:, lock_exists:)

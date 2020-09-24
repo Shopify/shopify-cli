@@ -8,11 +8,11 @@ module Extension
         IDENTIFIER = 'SUBSCRIPTION_MANAGEMENT'
 
         def create(directory_name, context)
-          Features::Argo.admin.create(directory_name, IDENTIFIER, context)
+          Features::Argo::Admin.new.create(directory_name, IDENTIFIER, context)
         end
 
         def config(context)
-          Features::Argo.admin.config(context)
+          Features::Argo::Admin.new.config(context)
         end
       end
     end

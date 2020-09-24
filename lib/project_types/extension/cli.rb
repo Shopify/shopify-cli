@@ -48,12 +48,16 @@ module Extension
   end
 
   module Features
-    autoload :Argo, Project.project_filepath('features/argo')
     autoload :ArgoSetup, Project.project_filepath('features/argo_setup')
     autoload :ArgoSetupStep, Project.project_filepath('features/argo_setup_step')
     autoload :ArgoSetupSteps, Project.project_filepath('features/argo_setup_steps')
     autoload :ArgoDependencies, Project.project_filepath('features/argo_dependencies')
     autoload :ArgoConfig, Project.project_filepath('features/argo_config')
+    module Argo
+      autoload :Base, Project.project_filepath('features/argo/base')
+      autoload :Admin, Project.project_filepath('features/argo/admin')
+      autoload :Checkout, Project.project_filepath('features/argo/checkout')
+    end
   end
 
   module Models
