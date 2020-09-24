@@ -28,7 +28,7 @@ module Theme
           context.expects(:done).with(context.message('theme.create.info.created',
                                                       'my_theme',
                                                       'shop.myshopify.com',
-                                                      File.join('', 'my_theme')))
+                                                      File.join(context.root, 'my_theme')))
 
           Theme::Commands::Create.new(context).call([], 'create')
           assert_equal SHOPIFYCLI_FILE, File.read(".shopify-cli.yml")

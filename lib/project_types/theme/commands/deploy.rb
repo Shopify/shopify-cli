@@ -19,6 +19,10 @@ module Theme
 
         @ctx.done(@ctx.message('theme.deploy.info.deployed'))
       end
+
+      def self.help
+        ShopifyCli::Context.message('theme.deploy.help', ShopifyCli::TOOL_NAME, ShopifyCli::TOOL_NAME)
+      end
     end
   end
 end
