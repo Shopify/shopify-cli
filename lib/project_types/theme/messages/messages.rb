@@ -25,6 +25,10 @@ module Theme
           confirmation: "This will change your live theme. Do you wish to proceed?",
           deploying: "Deploying theme",
           error: "Theme couldn't be deployed",
+          help: <<~HELP,
+            {{command:%s deploy}}: Uploads your local theme files to Shopify, then sets your theme as the live theme.
+              Usage: {{command:%s deploy}}
+          HELP
           info: {
             deployed: "Theme was updated and set as the live theme",
             pushed: "All theme files were updated",

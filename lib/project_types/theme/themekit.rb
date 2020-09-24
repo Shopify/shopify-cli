@@ -13,7 +13,7 @@ module Theme
       end
 
       def deploy(ctx)
-        unless push(ctx, files: nil, flags: nil, remove: false)
+        unless push(ctx)
           ctx.abort(ctx.message('theme.deploy.push_fail'))
         end
         ctx.done(ctx.message('theme.deploy.info.pushed'))
