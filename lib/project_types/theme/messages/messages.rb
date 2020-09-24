@@ -42,18 +42,19 @@ module Theme
             ask_title: "Title:",
             private_app: <<~APP,
               To create a new theme, Shopify App CLI needs to connect with a private app installed on your store. Visit {{underline:%s/admin/apps/private}} to create a new API key and password, or retrieve an existing password.
-              If you create a new private app, ensure that it has Read and Write Theme access.",
+              If you create a new private app, ensure that it has Read and Write Theme access.,
             APP
           },
           errors: "%s can't be blank",
           pull: {
             private_app: <<~APP,
               To fetch your existing themes, Shopify App CLI needs to connect with your store. Visit {{underline:%s/admin/apps/private}} to create a new API key and password, or retrieve an existing password.
-              If you create a new private app, ensure that it has Read and Write Theme access.",
+              If you create a new private app, ensure that it has Read and Write Theme access.,
             APP
           },
         },
         pull: {
+          duplicate: "Duplicate directory, theme files weren't pulled",
           help: <<~HELP,
             {{command:%s pull}}: Connects an existing theme in your store to Shopify App CLI. Downloads a copy of the theme files to your local development environment.
               Usage: {{command:%s pull}}
@@ -62,6 +63,7 @@ module Theme
                 {{command:--password=PASSWORD}} Private app password. App must have Read and Write Theme access.
                 {{command:--themeid=THEMEID}} Theme ID. Must be an existing theme on your store.
           HELP
+          inside_project: "You are inside an existing theme, theme files weren't pulled",
           pull: "Pulling theme files...",
           failed: "Couldn't pull theme files from store",
           pulled: "{{green:%s}} files were pulled from {{underline:%s}} to {{green:%s}}",

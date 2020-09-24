@@ -9,6 +9,10 @@ module Theme
       end
 
       def call(args, _name)
+        if ShopifyCli::Project.has_current?
+          @ctx.abort(@ctx.message('theme.pull.inside_project'))
+        end
+
         form = Forms::Pull.ask(@ctx, args, options.flags)
         return @ctx.puts(self.class.help) if form.nil?
 
@@ -29,6 +33,10 @@ module Theme
       def build(store, password, themeid, name)
         CLI::UI::Frame.open(@ctx.message('theme.checking_themekit')) do
           Themekit.ensure_themekit_installed(@ctx)
+        end
+
+        if @ctx.dir_exist?(name)
+          @ctx.abort(@ctx.message('theme.pull.duplicate'))
         end
 
         @ctx.mkdir_p(name)

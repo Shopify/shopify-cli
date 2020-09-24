@@ -50,7 +50,8 @@ module ShopifyCli
       # #### Parameters
       # - `ctx`: running context from your command
       # - `shop`: shop domain string for shop whose admin you are calling
-      # - `path`: path string for specific JSON that you are requesting
+      # - `path`: path string (excluding prefixes and API version) for specific JSON that you are requesting
+      #     ex. "data.json" instead of "/admin/api/unstable/data.json"
       # - `body`: data string for corresponding REST request types
       # - `method`: REST request string for the type of request; if nil, will perform GET request
       # - `api_version`: API version string to specify version; if nil, latest will be used
