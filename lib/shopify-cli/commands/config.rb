@@ -17,6 +17,10 @@ module ShopifyCli
       end
 
       class Feature < ShopifyCli::SubCommand
+        def self.help
+          ShopifyCli::Context.message('core.config.feature.help', ShopifyCli::TOOL_NAME)
+        end
+
         options do |parser, flags|
           parser.on('--enable') { flags[:action] = 'enable' }
           parser.on('--disable') { flags[:action] = 'disable' }
@@ -42,6 +46,10 @@ module ShopifyCli
       end
 
       class Analytics < ShopifyCli::SubCommand
+        def self.help
+          ShopifyCli::Context.message('core.config.analytics.help', ShopifyCli::TOOL_NAME)
+        end
+
         options do |parser, flags|
           parser.on('--enable') { flags[:action] = 'enable' }
           parser.on('--disable') { flags[:action] = 'disable' }
