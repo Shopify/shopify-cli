@@ -56,6 +56,12 @@ module ShopifyCli
             is_enabled: "{{v}} feature {{green:%s}} is enabled",
             is_disabled: "{{v}} feature {{green:%s}} is disabled",
           },
+          analytics: {
+            enabled: "{{v}} analytics was enabled",
+            disabled: "{{v}} analytics was disabled",
+            is_enabled: "{{v}} analytics is enabled",
+            is_disabled: "{{v}} analytics is disabled",
+          }
         },
 
         git: {

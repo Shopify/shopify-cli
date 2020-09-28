@@ -6,6 +6,7 @@ module ShopifyCli
       hidden_feature(feature_set: :debug)
 
       subcommand :Feature, 'feature'
+      subcommand :Analytics, 'analytics'
 
       def call(*)
         @ctx.puts(self.class.help)
@@ -36,6 +37,29 @@ module ShopifyCli
             @ctx.puts(@ctx.message('core.config.feature.is_enabled', feature_name))
           else
             @ctx.puts(@ctx.message('core.config.feature.is_disabled', feature_name))
+          end
+        end
+      end
+
+      class Analytics < ShopifyCli::SubCommand
+        options do |parser, flags|
+          parser.on('--enable') { flags[:action] = 'enable' }
+          parser.on('--disable') { flags[:action] = 'disable' }
+          parser.on('--status') { flags[:action] = 'status' }
+        end
+
+        def call(_args, _name)
+          is_enabled = ShopifyCli::Config.get_bool('analytics', 'enabled')
+          if options.flags[:action] == 'disable' && is_enabled
+            ShopifyCli::Config.set('analytics', 'enabled', false)
+            @ctx.puts(@ctx.message('core.config.analytics.disabled'))
+          elsif options.flags[:action] == 'enable' && !is_enabled
+            ShopifyCli::Config.set('analytics', 'enabled', true)
+            @ctx.puts(@ctx.message('core.config.analytics.enabled'))
+          elsif is_enabled
+            @ctx.puts(@ctx.message('core.config.analytics.is_enabled'))
+          else
+            @ctx.puts(@ctx.message('core.config.analytics.is_disabled'))
           end
         end
       end
