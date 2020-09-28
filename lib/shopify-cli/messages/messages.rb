@@ -69,7 +69,7 @@ module ShopifyCli
             disabled: "{{v}} analytics was disabled",
             is_enabled: "{{v}} analytics is enabled",
             is_disabled: "{{v}} analytics is disabled",
-          }
+          },
         },
 
         git: {
