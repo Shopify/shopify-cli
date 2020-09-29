@@ -28,7 +28,7 @@ module ShopifyCli
           is_enabled = ShopifyCli::Feature.enabled?(feature_name)
           if options.flags[:action] == 'disable' && is_enabled
             ShopifyCli::Feature.disable(feature_name)
-            @ctx.puts(@ctx.message('core.config.feature.disabled', is_enabled))
+            @ctx.puts(@ctx.message('core.config.feature.disabled', feature_name))
           elsif options.flags[:action] == 'enable' && !is_enabled
             ShopifyCli::Feature.enable(feature_name)
             @ctx.puts(@ctx.message('core.config.feature.enabled', feature_name))
