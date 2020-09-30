@@ -7,22 +7,23 @@ module ShopifyCli
       hidden_feature(feature_set: :debug)
 
       def call(args, _name)
-        show_all_details = false
-        flag = args.shift
-        if flag && flag != 'all'
-          @ctx.puts(@ctx.message('core.system.error.unknown_option', flag))
-          @ctx.puts("\n" + self.class.help)
-          return
-        end
+        shopify_employee?
+        # show_all_details = false
+        # flag = args.shift
+        # if flag && flag != 'all'
+        #   @ctx.puts(@ctx.message('core.system.error.unknown_option', flag))
+        #   @ctx.puts("\n" + self.class.help)
+        #   return
+        # end
 
-        show_all_details = true if flag == 'all'
+        # show_all_details = true if flag == 'all'
 
-        display_environment if show_all_details
+        # display_environment if show_all_details
 
-        display_cli_constants(show_all_details)
-        display_cli_ruby(show_all_details)
-        display_utility_commands(show_all_details)
-        display_project_commands(show_all_details)
+        # display_cli_constants(show_all_details)
+        # display_cli_ruby(show_all_details)
+        # display_utility_commands(show_all_details)
+        # display_project_commands(show_all_details)
       end
 
       def self.help
@@ -139,6 +140,19 @@ module ShopifyCli
         end
         @ctx.puts("")
       end
+
+      def shopify_employee?
+        # wont work if they install in a different location
+        # is there a reason to change install location though?
+
+        @ctx.puts("are you a shopify developer?")
+        if File.exist?('/opt/dev/bin/dev') && File.exist?('/opt/dev/.shopify-build')
+          @ctx.puts("oh you ARE a shopify developer!")
+        else
+          @ctx.puts("you are NOT a shopify developer!")
+        end
+      end
+
     end
   end
 end
