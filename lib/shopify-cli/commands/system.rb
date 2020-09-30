@@ -7,7 +7,8 @@ module ShopifyCli
       hidden_feature(feature_set: :debug)
 
       def call(args, _name)
-        shopify_employee?
+        # shopify_employee_by_dev?
+        shopify_employee_by_feature?
         # show_all_details = false
         # flag = args.shift
         # if flag && flag != 'all'
@@ -141,11 +142,11 @@ module ShopifyCli
         @ctx.puts("")
       end
 
-      def shopify_employee?
+      def shopify_employee_by_dev?
         # wont work if they install in a different location
         # is there a reason to change install location though?
 
-        @ctx.puts("are you a shopify developer?")
+        @ctx.puts("are you a shopify developer by installing dev?")
         if File.exist?('/opt/dev/bin/dev') && File.exist?('/opt/dev/.shopify-build')
           @ctx.puts("oh you ARE a shopify developer!")
         else
@@ -153,6 +154,16 @@ module ShopifyCli
         end
       end
 
+      def shopify_employee_by_feature?
+        # must run shopify feature shopifolk --enable to be identified
+        is_shopifolk = ShopifyCli::Feature.enabled?('shopifolk')
+        @ctx.puts("are you a shopify developer by feature flag?")
+        if is_shopifolk
+          @ctx.puts("oh you ARE a shopify developer!")
+        else
+          @ctx.puts("you are NOT a shopify developer!")
+        end
+      end
     end
   end
 end
