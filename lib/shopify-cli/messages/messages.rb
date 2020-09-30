@@ -48,13 +48,27 @@ module ShopifyCli
         config: {
           help: <<~HELP,
           Change configuration of how the CLI operates
-            Usage: {{command:%s config [ feature ] [ feature_name ] }}
+            Usage: {{command:%s config [ feature | analytics ] }}
           HELP
           feature: {
-            enabled: "{{v}} feature {{green:%s}} was enabled",
-            disabled: "{{v}} feature {{green:%s}} was disabled",
-            is_enabled: "{{v}} feature {{green:%s}} is enabled",
-            is_disabled: "{{v}} feature {{green:%s}} is disabled",
+            help: <<~HELP,
+            Change configuration of various features
+              Usage: {{command:%s config [ feature ] [ feature_name ] }}
+            HELP
+            enabled: "{{v}} feature {{green:%s}} has been enabled",
+            disabled: "{{v}} feature {{green:%s}} has been disabled",
+            is_enabled: "{{v}} feature {{green:%s}} is currently enabled",
+            is_disabled: "{{v}} feature {{green:%s}} is currently disabled",
+          },
+          analytics: {
+            help: <<~HELP,
+            Opt in/out of anonymous usage reporting
+              Usage: {{command:%s config [ analytics ] }}
+            HELP
+            enabled: "{{v}} analytics have been enabled",
+            disabled: "{{v}} analytics have been disabled",
+            is_enabled: "{{v}} analytics are currently enabled",
+            is_disabled: "{{v}} analytics are currently disabled",
           },
         },
 
