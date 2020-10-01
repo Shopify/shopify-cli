@@ -76,5 +76,5 @@ Configure Shopify App CLI options. Currently there is one available option.
 
 Configure anonymous usage reporting by enabling or disabling analytics 
 ```console
-$ shopify config analytics [--status | --enable | --disable]
+$ shopify config analytics [ --status | --enable | --disable ]
 ```
