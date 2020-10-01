@@ -70,6 +70,10 @@ $ shopify logout
 
 ## `config analytics`
 
+Configure Shopify App CLI options. Currently there is one available option.
+
+### `analytics`
+
 Configure anonymous usage reporting by enabling or disabling analytics 
 ```console
 $ shopify config analytics [--status | --enable | --disable]
