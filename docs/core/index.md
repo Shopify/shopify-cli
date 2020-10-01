@@ -68,7 +68,7 @@ Log out of the currently authenticated partner organization and store. The `logo
 $ shopify logout
 ```
 
-## `config analytics`
+## `config`
 
 Configure Shopify App CLI options. Currently there is one available option.
 
