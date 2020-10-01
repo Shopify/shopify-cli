@@ -5,19 +5,29 @@ module Theme
     class << self
       def create(ctx, password:, store:, name:)
         stat = ctx.system(THEMEKIT,
-                          "new",
+                          'new',
                           "--password=#{password}",
                           "--store=#{store}",
                           "--name=#{name}")
         stat.success?
       end
 
+      def deploy(ctx)
+        unless push(ctx)
+          ctx.abort(ctx.message('theme.deploy.push_fail'))
+        end
+        ctx.done(ctx.message('theme.deploy.info.pushed'))
+
+        stat = ctx.system(THEMEKIT, 'publish')
+        stat.success?
+      end
+
       def serve(ctx)
-        out, stat = ctx.capture2e(THEMEKIT, "open")
+        out, stat = ctx.capture2e(THEMEKIT, 'open')
         ctx.puts(out)
         ctx.abort(ctx.message('theme.serve.open_fail')) unless stat.success?
 
-        ctx.system(THEMEKIT, "watch")
+        ctx.system(THEMEKIT, 'watch')
       end
 
       def push(ctx, files: nil, flags: nil, remove: false)

@@ -90,6 +90,49 @@ module Theme
       refute(Themekit.push(context, files: ['file.liquid', 'another_file.liquid'], flags: [], remove: true))
     end
 
+    def test_deploy_successful
+      context = ShopifyCli::Context.new
+      stat = mock
+
+      Themekit.expects(:push).with(context).returns(true)
+      context.expects(:done).with(context.message('theme.deploy.info.pushed'))
+
+      context.expects(:system)
+        .with(Themekit::THEMEKIT,
+              'publish')
+        .returns(stat)
+      stat.stubs(:success?).returns(true)
+
+      assert(Themekit.deploy(context))
+    end
+
+    def test_deploy_push_fail
+      context = ShopifyCli::Context.new
+
+      Themekit.expects(:push).with(context).returns(false)
+      context.expects(:system).with(Themekit::THEMEKIT, 'publish').never
+
+      assert_raises CLI::Kit::Abort do
+        Themekit.deploy(context)
+      end
+    end
+
+    def test_deploy_publish_fail
+      context = ShopifyCli::Context.new
+      stat = mock
+
+      Themekit.expects(:push).with(context).returns(true)
+      context.expects(:done).with(context.message('theme.deploy.info.pushed'))
+
+      context.expects(:system)
+        .with(Themekit::THEMEKIT,
+              'publish')
+        .returns(stat)
+      stat.stubs(:success?).returns(false)
+
+      refute(Themekit.deploy(context))
+    end
+
     def test_serve_successful
       context = ShopifyCli::Context.new
       stat = mock
