@@ -1,3 +1,7 @@
+Version 1.2.1
+------
+* Bug fixes and minor improvements to internal components
+
 Version 1.2.0
 ------
 * Improvements and new functionality to various internal components
