@@ -68,3 +68,9 @@ Log out of the currently authenticated partner organization and store. The `logo
 $ shopify logout
 ```
 
+## `config analytics`
+
+Configure anonymous usage reporting by enabling or disabling the analytics flag
+```console
+$ shopify config analytics [--status | --enable | --disable]
+```
