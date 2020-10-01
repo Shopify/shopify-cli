@@ -12,13 +12,11 @@ module Extension
         end
 
         def create(directory_name, context)
-          # I know using a different string for the identifier here is gross.
-          # I needed a quick way to rename this extension without breaking the partners mutation.
-          Features::Argo.admin.create(directory_name, graphql_identifier, context)
+          Features::Argo::Admin.new.create(directory_name, graphql_identifier, context)
         end
 
         def config(context)
-          Features::Argo.admin.config(context)
+          Features::Argo::Admin.new.config(context)
         end
       end
     end
