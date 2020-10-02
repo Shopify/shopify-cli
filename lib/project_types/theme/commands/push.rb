@@ -6,6 +6,7 @@ module Theme
         parser.on('--remove') { flags['remove'] = true }
         parser.on('--nodelete') { flags['nodelete'] = true }
         parser.on('--allow-live') { flags['allow-live'] = true }
+        parser.on('--env=ENV') { |env| flags['env'] = env }
       end
 
       def call(args, _name)
@@ -14,8 +15,12 @@ module Theme
           options.flags.delete('remove')
         end
 
-        flags = options.flags.map do |key, _value|
-          '--' + key
+        flags = options.flags.map do |key, value|
+          flag = '--' + key
+          if value.is_a?(String)
+            flag += '=' + value
+          end
+          flag
         end
 
         CLI::UI::Frame.open(@ctx.message('theme.checking_themekit')) do
