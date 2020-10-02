@@ -1,6 +1,5 @@
 require 'shopify_cli'
 require 'cli/kit'
-require 'json'
 require 'rbconfig'
 
 module ShopifyCli
