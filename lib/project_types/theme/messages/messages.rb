@@ -42,14 +42,14 @@ module Theme
             ask_title: "Title:",
             private_app: <<~APP,
               To create a new theme, Shopify App CLI needs to connect with a private app installed on your store. Visit {{underline:%s/admin/apps/private}} to create a new API key and password, or retrieve an existing password.
-              If you create a new private app, ensure that it has Read and Write Theme access.,
+              If you create a new private app, ensure that it has Read and Write Theme access.
             APP
           },
           errors: "%s can't be blank",
           pull: {
             private_app: <<~APP,
               To fetch your existing themes, Shopify App CLI needs to connect with your store. Visit {{underline:%s/admin/apps/private}} to create a new API key and password, or retrieve an existing password.
-              If you create a new private app, ensure that it has Read and Write Theme access.,
+              If you create a new private app, ensure that it has Read and Write Theme access.
             APP
           },
         },

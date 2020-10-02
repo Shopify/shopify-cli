@@ -46,17 +46,17 @@ module Theme
           ShopifyCli::Project.expects(:has_current?).returns(false)
 
           Theme::Forms::Pull.expects(:ask)
-            .with(context, [], { env: 'development' })
+            .with(context, [], { env: 'test' })
             .returns(Theme::Forms::Pull.new(context, [], { store: 'shop.myshopify.com',
                                                            password: 'boop',
                                                            themeid: '2468',
                                                            name: 'my_theme',
-                                                           env: 'development' }))
+                                                           env: 'test' }))
 
           Themekit.expects(:ensure_themekit_installed).with(context)
           context.expects(:dir_exist?).with('my_theme').returns(false)
           Themekit.expects(:pull)
-            .with(context, store: 'shop.myshopify.com', password: 'boop', themeid: '2468', env: 'development')
+            .with(context, store: 'shop.myshopify.com', password: 'boop', themeid: '2468', env: 'test')
             .returns(true)
           context.expects(:done).with(context.message('theme.pull.pulled',
                                                       'my_theme',
@@ -64,7 +64,7 @@ module Theme
                                                       File.join(context.root, 'my_theme')))
 
           command = Theme::Commands::Pull.new(context)
-          command.options.flags[:env] = 'development'
+          command.options.flags[:env] = 'test'
           command.call([], 'pull')
 
           assert_equal SHOPIFYCLI_FILE, File.read(".shopify-cli.yml")
