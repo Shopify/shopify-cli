@@ -1,5 +1,4 @@
 require 'shopify_cli'
-require 'cli/kit'
 require 'rbconfig'
 
 module ShopifyCli
@@ -8,9 +7,6 @@ module ShopifyCli
       hidden_feature(feature_set: :debug)
 
       def call(args, _name)
-        shopify_employee_by_dev?
-        set_shopifolk_flag_by_gcloud_config
-        shopify_employee_by_feature?
         show_all_details = false
         flag = args.shift
         if flag && flag != 'all'
@@ -27,6 +23,7 @@ module ShopifyCli
         display_cli_ruby(show_all_details)
         display_utility_commands(show_all_details)
         display_project_commands(show_all_details)
+        shopifolk?
       end
 
       def self.help
@@ -144,45 +141,13 @@ module ShopifyCli
         @ctx.puts("")
       end
 
-      def shopify_employee_by_dev?
-        @ctx.puts("are you a shopify developer by installing dev?")
-        if File.exist?('/opt/dev/bin/dev') && File.exist?('/opt/dev/.shopify-build')
-          @ctx.puts(" {{v}} oh you ARE a shopify developer!")
-        else
-          @ctx.puts(" {{x}} you are NOT a shopify developer!")
-        end
-      end
-
-      def shopify_employee_by_feature?
-        is_shopifolk = ShopifyCli::Feature.enabled?('shopifolk')
-        @ctx.puts("are you a shopify developer by feature flag?")
+      def shopifolk?
+        is_shopifolk = ShopifyCli::ShopifolkCheck.assume_shopifolk?
         if is_shopifolk
-          @ctx.puts(" {{v}} oh you ARE a shopify developer!")
-        else
-          @ctx.puts(" {{x}} you are NOT a shopify developer!")
+          @ctx.puts("{{v}} you are a shopifolk!")
+        else 
+          @ctx.puts("{{x}} you are not shopifolk!")
         end
-      end
-
-      def set_shopifolk_flag_by_gcloud_config
-        gcloud_account = all_configs.dig("[core]", 'account') || "nothing to put"
-        if gcloud_account.include?("@shopify.com")
-          ShopifyCli::Feature.enable('shopifolk')
-          @ctx.puts("{{v}} found shopify email #{gcloud_account}")
-        else
-          ShopifyCli::Feature.disable('shopifolk')
-        end
-      end
-
-      def ini
-        gcloud_config_path = '~/.config/gcloud/configurations/config_default'
-        file = File.expand_path(gcloud_config_path)
-        @ini ||= CLI::Kit::Ini
-          .new(file, default_section: "[global]", convert_types: false)
-          .tap(&:parse)
-      end
-
-      def all_configs
-        ini.ini
       end
     end
   end

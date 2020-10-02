@@ -117,6 +117,7 @@ module ShopifyCli
   autoload :ProjectType, 'shopify-cli/project_type'
   autoload :Resources, 'shopify-cli/resources'
   autoload :SubCommand, 'shopify-cli/sub_command'
+  autoload :ShopifolkCheck, 'shopify-cli/shopifolk_check'
   autoload :Task, 'shopify-cli/task'
   autoload :Tasks, 'shopify-cli/tasks'
   autoload :Tunnel, 'shopify-cli/tunnel'
