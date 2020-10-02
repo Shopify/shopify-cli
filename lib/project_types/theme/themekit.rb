@@ -22,12 +22,17 @@ module Theme
         stat.success?
       end
 
-      def serve(ctx)
-        out, stat = ctx.capture2e(THEMEKIT, 'open')
-        ctx.puts(out)
-        ctx.abort(ctx.message('theme.serve.open_fail')) unless stat.success?
+      def ensure_themekit_installed(ctx)
+        Tasks::EnsureThemekitInstalled.call(ctx)
+      end
 
-        ctx.system(THEMEKIT, 'watch')
+      def pull(ctx, store:, password:, themeid:)
+        stat = ctx.system(THEMEKIT,
+                          "get",
+                          "--store=#{store}",
+                          "--password=#{password}",
+                          "--themeid=#{themeid}")
+        stat.success?
       end
 
       def push(ctx, files: nil, flags: nil, remove: false)
@@ -39,8 +44,12 @@ module Theme
         stat.success?
       end
 
-      def ensure_themekit_installed(ctx)
-        Tasks::EnsureThemekitInstalled.call(ctx)
+      def serve(ctx)
+        out, stat = ctx.capture2e(THEMEKIT, 'open')
+        ctx.puts(out)
+        ctx.abort(ctx.message('theme.serve.open_fail')) unless stat.success?
+
+        ctx.system(THEMEKIT, 'watch')
       end
     end
   end
