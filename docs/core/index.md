@@ -68,3 +68,19 @@ Log out of the currently authenticated partner organization and store. The `logo
 $ shopify logout
 ```
 
+## `config`
+
+Configure Shopify App CLI options. Currently there are two available options.
+
+### `analytics`
+
+Configure anonymous usage reporting by enabling or disabling analytics 
+```console
+$ shopify config analytics [ --status | --enable | --disable ]
+```
+
+### `feature`
+Configure active [feature sets](https://github.com/Shopify/shopify-app-cli/wiki/Feature-Sets) in the CLI. This command is used for development and debugging work on the CLI tool itself. Only alter it if you know what you're doing. Check the [Shopify App CLI development guide](https://github.com/Shopify/shopify-app-cli/wiki) for more information.
+```console
+$ shopify config feature [ feature_name ] [ --status | --enable | --disable ]
+```
