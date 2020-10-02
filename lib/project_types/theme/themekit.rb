@@ -63,6 +63,7 @@ module Theme
       def build_command(action, env)
         command = [THEMEKIT, action]
         command << '--env=' + env if env
+        command
       end
     end
   end
