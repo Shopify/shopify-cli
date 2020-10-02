@@ -2,6 +2,10 @@
 module Theme
   module Commands
     class Deploy < ShopifyCli::Command
+      options do |parser, flags|
+        parser.on('--env=ENV') { |env| flags[:env] = env }
+      end
+
       def call(*)
         CLI::UI::Frame.open(@ctx.message('theme.checking_themekit')) do
           Themekit.ensure_themekit_installed(@ctx)
@@ -12,7 +16,7 @@ module Theme
             @ctx.abort(@ctx.message('theme.deploy.abort'))
           end
 
-          unless Themekit.deploy(@ctx)
+          unless Themekit.deploy(@ctx, env: options.flags[:env])
             @ctx.abort(@ctx.message('theme.deploy.error'))
           end
         end
