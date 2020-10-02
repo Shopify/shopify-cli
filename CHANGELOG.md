@@ -1,3 +1,7 @@
+Version 1.3.0
+------
+* Support for new `shopify config analytics` command to enable/disable anonymous usage reporting
+
 Version 1.2.0
 ------
 * Improvements and new functionality to various internal components
