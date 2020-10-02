@@ -13,8 +13,8 @@ module Theme
       end
 
       def test_env_can_be_provided_by_flag
-        form = ask(env: 'development')
-        assert_equal(form.env, 'development')
+        form = ask(env: 'test')
+        assert_equal(form.env, 'test')
       end
 
       def test_env_nil_if_not_provided
