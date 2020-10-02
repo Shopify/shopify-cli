@@ -71,11 +71,11 @@ module Theme
       def test_can_specify_env
         context = ShopifyCli::Context.new
         Themekit.expects(:ensure_themekit_installed).with(context)
-        Themekit.expects(:push).with(context, files: [], flags: ['--env=development'], remove: nil).returns(true)
+        Themekit.expects(:push).with(context, files: [], flags: ['--env=test'], remove: nil).returns(true)
         context.expects(:done).with(context.message('theme.push.info.push', context.root))
 
         command = Theme::Commands::Push.new(context)
-        command.options.flags['env'] = 'development'
+        command.options.flags['env'] = 'test'
         command.call([], 'push')
       end
 

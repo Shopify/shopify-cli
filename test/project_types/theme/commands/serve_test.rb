@@ -17,10 +17,10 @@ module Theme
       def test_can_specify_env
         context = ShopifyCli::Context.new
         Themekit.expects(:ensure_themekit_installed).with(context)
-        Themekit.expects(:serve).with(context, env: 'development')
+        Themekit.expects(:serve).with(context, env: 'test')
 
         command = Theme::Commands::Serve.new(context)
-        command.options.flags[:env] = 'development'
+        command.options.flags[:env] = 'test'
         command.call
       end
     end

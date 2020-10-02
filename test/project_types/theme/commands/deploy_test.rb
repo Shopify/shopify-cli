@@ -20,11 +20,11 @@ module Theme
         context = ShopifyCli::Context.new
         Themekit.expects(:ensure_themekit_installed).with(context)
         CLI::UI::Prompt.expects(:confirm).returns(true)
-        Themekit.expects(:deploy).with(context, env: 'development').returns(true)
+        Themekit.expects(:deploy).with(context, env: 'test').returns(true)
         context.expects(:done).with(context.message('theme.deploy.info.deployed'))
 
         command = Theme::Commands::Deploy.new(context)
-        command.options.flags[:env] = 'development'
+        command.options.flags[:env] = 'test'
         command.call
       end
 
