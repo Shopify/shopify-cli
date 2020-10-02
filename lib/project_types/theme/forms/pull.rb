@@ -2,7 +2,7 @@ module Theme
   module Forms
     class Pull < ShopifyCli::Form
       attr_accessor :name
-      flag_arguments :themeid, :password, :store
+      flag_arguments :themeid, :password, :store, :env
 
       def ask
         self.store ||= CLI::UI::Prompt.ask(ctx.message('theme.forms.ask_store'), allow_empty: false)
