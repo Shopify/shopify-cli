@@ -44,8 +44,13 @@ module Theme
         stat.success?
       end
 
-      def serve(ctx)
-        out, stat = ctx.capture2e(THEMEKIT, 'open')
+      def serve(ctx, env:)
+        command = [THEMEKIT, 'open']
+        if env
+          command << '--env=' + env
+        end
+
+        out, stat = ctx.capture2e(command.join(' '))
         ctx.puts(out)
         ctx.abort(ctx.message('theme.serve.open_fail')) unless stat.success?
 
