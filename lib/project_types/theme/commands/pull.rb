@@ -6,6 +6,7 @@ module Theme
         parser.on('--store=STORE') { |url| flags[:store] = url }
         parser.on('--password=PASSWORD') { |p| flags[:password] = p }
         parser.on('--themeid=THEME_ID') { |id| flags[:themeid] = id }
+        parser.on('--env=ENV') { |env| flags[:env] = env }
       end
 
       def call(args, _name)
@@ -16,7 +17,7 @@ module Theme
         form = Forms::Pull.ask(@ctx, args, options.flags)
         return @ctx.puts(self.class.help) if form.nil?
 
-        build(form.store, form.password, form.themeid, form.name)
+        build(form.store, form.password, form.themeid, form.name, form.env)
         ShopifyCli::Project.write(@ctx,
                                   project_type: 'theme',
                                   organization_id: nil)
@@ -30,7 +31,7 @@ module Theme
 
       private
 
-      def build(store, password, themeid, name)
+      def build(store, password, themeid, name, env)
         CLI::UI::Frame.open(@ctx.message('theme.checking_themekit')) do
           Themekit.ensure_themekit_installed(@ctx)
         end
@@ -43,7 +44,7 @@ module Theme
         @ctx.chdir(name)
 
         CLI::UI::Frame.open(@ctx.message('theme.pull.pull')) do
-          unless Themekit.pull(@ctx, store: store, password: password, themeid: themeid)
+          unless Themekit.pull(@ctx, store: store, password: password, themeid: themeid, env: env)
             @ctx.chdir('..')
             @ctx.rm_rf(name)
             @ctx.abort(@ctx.message('theme.pull.failed'))
