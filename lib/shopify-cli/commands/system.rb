@@ -142,7 +142,7 @@ module ShopifyCli
       end
 
       def shopifolk?
-        is_shopifolk = ShopifyCli::ShopifolkCheck.assume_shopifolk?
+        is_shopifolk = ShopifyCli::Shopifolk.check
         if is_shopifolk
           @ctx.puts("{{v}} you are a shopifolk!")
         else
