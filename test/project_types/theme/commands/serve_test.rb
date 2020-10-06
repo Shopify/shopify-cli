@@ -9,9 +9,19 @@ module Theme
       def test_serve_command
         context = ShopifyCli::Context.new
         Themekit.expects(:ensure_themekit_installed).with(context)
-        Themekit.expects(:serve).with(context)
+        Themekit.expects(:serve).with(context, env: nil)
 
         Theme::Commands::Serve.new(context).call
+      end
+
+      def test_can_specify_env
+        context = ShopifyCli::Context.new
+        Themekit.expects(:ensure_themekit_installed).with(context)
+        Themekit.expects(:serve).with(context, env: 'test')
+
+        command = Theme::Commands::Serve.new(context)
+        command.options.flags[:env] = 'test'
+        command.call
       end
     end
   end

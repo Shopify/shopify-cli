@@ -13,6 +13,18 @@ module Theme
         assert_equal(form.name, 'my_theme')
       end
 
+      def test_env_can_be_provided_by_flag
+        query_themes
+        form = ask(env: 'test')
+        assert_equal(form.env, 'test')
+      end
+
+      def test_env_nil_if_not_provided
+        query_themes
+        form = ask
+        assert_nil(form.env)
+      end
+
       def test_store_can_be_provided_by_flag
         query_themes
         form = ask(store: 'shop.myshopify.com')
@@ -51,13 +63,14 @@ module Theme
 
       private
 
-      def ask(password: 'boop', store: 'shop.myshopify.com', themeid: '2468')
+      def ask(password: 'boop', store: 'shop.myshopify.com', themeid: '2468', env: nil)
         Pull.ask(
           @context,
           [],
           password: password,
           store: store,
-          themeid: themeid
+          themeid: themeid,
+          env: env
         )
       end
 

@@ -6,12 +6,18 @@ module Theme
         parser.on('--remove') { flags['remove'] = true }
         parser.on('--nodelete') { flags['nodelete'] = true }
         parser.on('--allow-live') { flags['allow-live'] = true }
+        parser.on('--env=ENV') { |env| flags['env'] = env }
       end
 
       def call(args, _name)
         if options.flags['remove']
           remove = true
           options.flags.delete('remove')
+        end
+
+        if options.flags['env']
+          env = options.flags['env']
+          options.flags.delete('env')
         end
 
         flags = options.flags.map do |key, _value|
@@ -28,7 +34,7 @@ module Theme
               @ctx.abort(@ctx.message('theme.push.remove_abort'))
             end
 
-            unless Themekit.push(@ctx, files: args, flags: flags, remove: remove)
+            unless Themekit.push(@ctx, files: args, flags: flags, remove: remove, env: env)
               @ctx.abort(@ctx.message('theme.push.error.remove_error'))
             end
           end
@@ -36,7 +42,7 @@ module Theme
           @ctx.done(@ctx.message('theme.push.info.remove', @ctx.root))
         else
           CLI::UI::Frame.open(@ctx.message('theme.push.push')) do
-            unless Themekit.push(@ctx, files: args, flags: flags, remove: remove)
+            unless Themekit.push(@ctx, files: args, flags: flags, remove: remove, env: env)
               @ctx.abort(@ctx.message('theme.push.error.push_error'))
             end
           end

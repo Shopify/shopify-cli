@@ -20,7 +20,7 @@ module Theme
               '--name=My Theme')
         .returns(stat)
       stat.stubs(:success?).returns(true)
-      assert(Themekit.create(context, password: 'boop', store: 'shop.myshopify.com', name: 'My Theme'))
+      assert(Themekit.create(context, password: 'boop', store: 'shop.myshopify.com', name: 'My Theme', env: nil))
     end
 
     def test_create_theme_unsuccessful
@@ -35,7 +35,7 @@ module Theme
               '--name=My Theme')
         .returns(stat)
       stat.stubs(:success?).returns(false)
-      refute(Themekit.create(context, password: 'boop', store: 'shop.com', name: 'My Theme'))
+      refute(Themekit.create(context, password: 'boop', store: 'shop.com', name: 'My Theme', env: nil))
     end
 
     def test_push_deploy_successful
@@ -43,11 +43,11 @@ module Theme
       stat = mock
 
       context.expects(:system)
-        .with([Themekit::THEMEKIT,
-               'deploy'].join(' '))
+        .with(Themekit::THEMEKIT,
+              'deploy')
         .returns(stat)
       stat.stubs(:success?).returns(true)
-      assert(Themekit.push(context, files: [], flags: [], remove: nil))
+      assert(Themekit.push(context, files: [], flags: [], remove: nil, env: nil))
     end
 
     def test_push_remove_successful
@@ -55,13 +55,13 @@ module Theme
       stat = mock
 
       context.expects(:system)
-        .with([Themekit::THEMEKIT,
-               'remove',
-               'file.liquid',
-               'another_file.liquid'].join(' '))
+        .with(Themekit::THEMEKIT,
+              'remove',
+              'file.liquid',
+              'another_file.liquid')
         .returns(stat)
       stat.stubs(:success?).returns(true)
-      assert(Themekit.push(context, files: ['file.liquid', 'another_file.liquid'], flags: [], remove: true))
+      assert(Themekit.push(context, files: ['file.liquid', 'another_file.liquid'], flags: [], remove: true, env: nil))
     end
 
     def test_push_deploy_unsuccessful
@@ -69,11 +69,11 @@ module Theme
       stat = mock
 
       context.expects(:system)
-        .with([Themekit::THEMEKIT,
-               'deploy'].join(' '))
+        .with(Themekit::THEMEKIT,
+             'deploy')
         .returns(stat)
       stat.stubs(:success?).returns(false)
-      refute(Themekit.push(context, files: [], flags: [], remove: nil))
+      refute(Themekit.push(context, files: [], flags: [], remove: nil, env: nil))
     end
 
     def test_push_remove_unsuccessful
@@ -81,39 +81,39 @@ module Theme
       stat = mock
 
       context.expects(:system)
-        .with([Themekit::THEMEKIT,
-               'remove',
-               'file.liquid',
-               'another_file.liquid'].join(' '))
+        .with(Themekit::THEMEKIT,
+              'remove',
+              'file.liquid',
+              'another_file.liquid')
         .returns(stat)
       stat.stubs(:success?).returns(false)
-      refute(Themekit.push(context, files: ['file.liquid', 'another_file.liquid'], flags: [], remove: true))
+      refute(Themekit.push(context, files: ['file.liquid', 'another_file.liquid'], flags: [], remove: true, env: nil))
     end
 
     def test_deploy_successful
       context = ShopifyCli::Context.new
       stat = mock
 
-      Themekit.expects(:push).with(context).returns(true)
+      Themekit.expects(:push).with(context, env: nil).returns(true)
       context.expects(:done).with(context.message('theme.deploy.info.pushed'))
 
       context.expects(:system)
         .with(Themekit::THEMEKIT,
-              'publish')
+             'publish')
         .returns(stat)
       stat.stubs(:success?).returns(true)
 
-      assert(Themekit.deploy(context))
+      assert(Themekit.deploy(context, env: nil))
     end
 
     def test_deploy_push_fail
       context = ShopifyCli::Context.new
 
-      Themekit.expects(:push).with(context).returns(false)
+      Themekit.expects(:push).with(context, env: nil).returns(false)
       context.expects(:system).with(Themekit::THEMEKIT, 'publish').never
 
       assert_raises CLI::Kit::Abort do
-        Themekit.deploy(context)
+        Themekit.deploy(context, env: nil)
       end
     end
 
@@ -121,7 +121,7 @@ module Theme
       context = ShopifyCli::Context.new
       stat = mock
 
-      Themekit.expects(:push).with(context).returns(true)
+      Themekit.expects(:push).with(context, env: nil).returns(true)
       context.expects(:done).with(context.message('theme.deploy.info.pushed'))
 
       context.expects(:system)
@@ -130,7 +130,7 @@ module Theme
         .returns(stat)
       stat.stubs(:success?).returns(false)
 
-      refute(Themekit.deploy(context))
+      refute(Themekit.deploy(context, env: nil))
     end
 
     def test_pull_successful
@@ -139,12 +139,12 @@ module Theme
       context.expects(:system)
         .with(Themekit::THEMEKIT,
               'get',
-              '--store=shop.com',
               '--password=boop',
+              '--store=shop.com',
               '--themeid=2468')
         .returns(stat)
       stat.stubs(:success?).returns(true)
-      assert(Themekit.pull(context, store: 'shop.com', password: 'boop', themeid: '2468'))
+      assert(Themekit.pull(context, store: 'shop.com', password: 'boop', themeid: '2468', env: nil))
     end
 
     def test_pull_unsuccessful
@@ -153,12 +153,12 @@ module Theme
       context.expects(:system)
         .with(Themekit::THEMEKIT,
               'get',
-              '--store=shop.com',
               '--password=boop',
+              '--store=shop.com',
               '--themeid=2468')
         .returns(stat)
       stat.stubs(:success?).returns(false)
-      refute(Themekit.pull(context, store: 'shop.com', password: 'boop', themeid: '2468'))
+      refute(Themekit.pull(context, store: 'shop.com', password: 'boop', themeid: '2468', env: nil))
     end
 
     def test_serve_successful
@@ -174,7 +174,7 @@ module Theme
       context.expects(:system)
         .with(Themekit::THEMEKIT, 'watch')
 
-      Themekit.serve(context)
+      Themekit.serve(context, env: nil)
     end
 
     def test_aborts_serve_if_open_fails
@@ -192,7 +192,7 @@ module Theme
         .never
 
       assert_raises(ShopifyCli::Abort) do
-        Themekit.serve(context)
+        Themekit.serve(context, env: nil)
       end
     end
   end
