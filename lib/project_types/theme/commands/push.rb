@@ -15,12 +15,13 @@ module Theme
           options.flags.delete('remove')
         end
 
-        flags = options.flags.map do |key, value|
-          flag = '--' + key
-          if value.is_a?(String)
-            flag += '=' + value
-          end
-          flag
+        if options.flags['env']
+          env = options.flags['env']
+          options.flags.delete('env')
+        end
+
+        flags = options.flags.map do |key, _value|
+          '--' + key
         end
 
         CLI::UI::Frame.open(@ctx.message('theme.checking_themekit')) do
@@ -33,7 +34,7 @@ module Theme
               @ctx.abort(@ctx.message('theme.push.remove_abort'))
             end
 
-            unless Themekit.push(@ctx, files: args, flags: flags, remove: remove)
+            unless Themekit.push(@ctx, files: args, flags: flags, remove: remove, env: env)
               @ctx.abort(@ctx.message('theme.push.error.remove_error'))
             end
           end
@@ -41,7 +42,7 @@ module Theme
           @ctx.done(@ctx.message('theme.push.info.remove', @ctx.root))
         else
           CLI::UI::Frame.open(@ctx.message('theme.push.push')) do
-            unless Themekit.push(@ctx, files: args, flags: flags, remove: remove)
+            unless Themekit.push(@ctx, files: args, flags: flags, remove: remove, env: env)
               @ctx.abort(@ctx.message('theme.push.error.push_error'))
             end
           end
