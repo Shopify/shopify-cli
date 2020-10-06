@@ -22,7 +22,7 @@ module Theme
       private
 
       def ask_theme(themes)
-        CLI::UI::Prompt.ask("Select theme") do |handler|
+        CLI::UI::Prompt.ask(ctx.message('theme.forms.pull.ask_theme')) do |handler|
           themes.each do |name, id|
             handler.option(name) { id }
           end
@@ -38,9 +38,9 @@ module Theme
             path: "themes.json",
           )
         rescue ShopifyCli::API::APIRequestUnauthorizedError
-          ctx.abort('bad password')
+          ctx.abort(ctx.message('theme.forms.pull.errors.invalid_password'))
         rescue StandardError
-          ctx.abort('could not connect to given shop')
+          ctx.abort(ctx.message('theme.forms.pull.errors.connect_error'))
         end
 
         resp[1]['themes'].map { |theme| [theme['name'], theme['id']] }.to_h

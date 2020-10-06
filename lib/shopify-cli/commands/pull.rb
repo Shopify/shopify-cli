@@ -16,7 +16,9 @@ module ShopifyCli
           @ctx.abort(@ctx.message('theme.pull.inside_project'))
         end
 
-        form = Forms::Pull.ask(@ctx, args, options.flags)
+        ProjectType.load_type(:theme)
+
+        form = Theme::Forms::Pull.ask(@ctx, args, options.flags)
         return @ctx.puts(self.class.help) if form.nil?
 
         build(form.store, form.password, form.themeid, form.name, form.env)
@@ -34,8 +36,6 @@ module ShopifyCli
       private
 
       def build(store, password, themeid, name, env)
-        ProjectType.load_type(:theme)
-
         CLI::UI::Frame.open(@ctx.message('theme.checking_themekit')) do
           Themekit.ensure_themekit_installed(@ctx)
         end
