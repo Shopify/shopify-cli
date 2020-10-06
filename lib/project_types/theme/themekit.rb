@@ -9,19 +9,18 @@ module Theme
         command << "--store=#{store}"
         command << "--name=#{name}"
 
-        stat = ctx.system(command.join(' '))
+        stat = ctx.system(*command)
         stat.success?
       end
 
       def deploy(ctx, env:)
-        flags = '--env=' + env if env
-        unless push(ctx, flags: flags)
+        unless push(ctx, env: env)
           ctx.abort(ctx.message('theme.deploy.push_fail'))
         end
         ctx.done(ctx.message('theme.deploy.info.pushed'))
 
         command = build_command('publish', env)
-        stat = ctx.system(command.join(' '))
+        stat = ctx.system(*command)
         stat.success?
       end
 
@@ -35,34 +34,34 @@ module Theme
         command << "--store=#{store}"
         command << "--themeid=#{themeid}"
 
-        stat = ctx.system(command.join(' '))
+        stat = ctx.system(*command)
         stat.success?
       end
 
-      def push(ctx, files: nil, flags: nil, remove: false)
-        command = [THEMEKIT, (remove ? 'remove' : 'deploy')]
+      def push(ctx, files: nil, flags: nil, remove: false, env:)
+        action = remove ? 'remove' : 'deploy'
+        command = build_command(action, env)
         (command << flags << files).flatten!
 
-        stat = ctx.system(command.join(' '))
+        stat = ctx.system(*command)
         stat.success?
       end
 
       def serve(ctx, env:)
         command = build_command('open', env)
-
-        out, stat = ctx.capture2e(command.join(' '))
+        out, stat = ctx.capture2e(*command)
         ctx.puts(out)
         ctx.abort(ctx.message('theme.serve.open_fail')) unless stat.success?
 
         command = build_command('watch', env)
-        ctx.system(command.join(' '))
+        ctx.system(*command)
       end
 
       private
 
       def build_command(action, env)
         command = [THEMEKIT, action]
-        command << '--env=' + env if env
+        command << "--env=#{env}" if env
         command
       end
     end
