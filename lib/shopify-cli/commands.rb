@@ -23,6 +23,7 @@ module ShopifyCli
     register :Create, 'create', 'shopify-cli/commands/create', true
     register :Help, 'help', 'shopify-cli/commands/help', true
     register :Logout, 'logout', 'shopify-cli/commands/logout', true
+    register :Pull, 'pull', 'shopify-cli/commands/pull', true # TODO: rename??
     register :System, 'system', 'shopify-cli/commands/system', true
     register :Version, 'version', 'shopify-cli/commands/version', true
   end

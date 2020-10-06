@@ -70,7 +70,7 @@ module Theme
 
       context.expects(:system)
         .with(Themekit::THEMEKIT,
-             'deploy')
+              'deploy')
         .returns(stat)
       stat.stubs(:success?).returns(false)
       refute(Themekit.push(context, files: [], flags: [], remove: nil, env: nil))

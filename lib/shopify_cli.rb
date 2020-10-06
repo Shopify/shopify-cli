@@ -103,6 +103,7 @@ module ShopifyCli
   autoload :DB, 'shopify-cli/db'
   autoload :Feature, 'shopify-cli/feature'
   autoload :Form, 'shopify-cli/form'
+  autoload :Forms, 'shopify-cli/forms'
   autoload :Git, 'shopify-cli/git'
   autoload :Helpers, 'shopify-cli/helpers'
   autoload :Heroku, 'shopify-cli/heroku'

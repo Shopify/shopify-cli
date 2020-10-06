@@ -4,9 +4,9 @@ module Theme
     hidden_feature
     creator 'Theme App', 'Theme::Commands::Create'
     register_command('Theme::Commands::Deploy', "deploy")
+    register_command('Theme::Commands::Pull', "pull")
     register_command('Theme::Commands::Push', "push")
     register_command('Theme::Commands::Serve', "serve")
-    register_command('Theme::Commands::Pull', "pull")
 
     require Project.project_filepath('messages/messages')
     register_messages(Theme::Messages::MESSAGES)
@@ -15,7 +15,7 @@ module Theme
   module Commands
     autoload :Create, Project.project_filepath('commands/create')
     autoload :Deploy, Project.project_filepath('commands/deploy')
-    autoload :Pull, Project.project_filepath('commands/pull')
+    # autoload :Pull, Project.project_filepath('commands/pull')
     autoload :Push, Project.project_filepath('commands/push')
     autoload :Serve, Project.project_filepath('commands/serve')
   end
