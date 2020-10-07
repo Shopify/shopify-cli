@@ -55,7 +55,7 @@ module ShopifyCli
 
     def shopifolk_feature_by_gcloud_config
       if File.exist?(File.expand_path(@gcloud_config_path))
-        gcloud_account = ini.dig("[#{SECTION}]", 'account') || ""
+        gcloud_account = ini.dig("[#{SECTION}]", 'account')
       end
       if gcloud_account&.include?("@shopify.com")
         ShopifyCli::Feature.enable(GCLOUD_FEATURE_NAME)
