@@ -10,8 +10,7 @@ module ShopifyCli
     GCLOUD_CONFIG_PATH = '~/.config/gcloud/configurations/config_default'
     DEV_PATH = '/opt/dev'
     SECTION = 'core'
-    GCLOUD_FEATURE_NAME = 'gcloud_shopifolk'
-    DEV_FEATURE_NAME = 'dev_shopifolk'
+    FEATURE_NAME = 'shopifolk'
     def self.check
       ##
       # will return if the user appears to be a Shopify employee, based on several heuristics
@@ -38,19 +37,23 @@ module ShopifyCli
       #
       @gcloud_config_path = gcloud_config_path
       @dev_path = dev_path
-      shopifolk_feature_by_gcloud_config
-      shopifolk_feature_by_dev
-      shopifolk_by_dev? && shopifolk_by_gcloud?
+      if shopifolk_by_dev? && shopifolk_by_gcloud?
+        ShopifyCli::Feature.enable(FEATURE_NAME)
+        true
+      else
+        ShopifyCli::Feature.disable(FEATURE_NAME)
+        false
+      end
     end
 
     private
 
     def shopifolk_by_dev?
-      ShopifyCli::Feature.enabled?(DEV_FEATURE_NAME)
+      shopifolk_feature_by_dev
     end
 
     def shopifolk_by_gcloud?
-      ShopifyCli::Feature.enabled?(GCLOUD_FEATURE_NAME)
+      shopifolk_feature_by_gcloud_config
     end
 
     def shopifolk_feature_by_gcloud_config
@@ -58,17 +61,17 @@ module ShopifyCli
         gcloud_account = ini.dig("[#{SECTION}]", 'account')
       end
       if gcloud_account&.match?(/@shopify.com\z/)
-        ShopifyCli::Feature.enable(GCLOUD_FEATURE_NAME)
+        true
       else
-        ShopifyCli::Feature.disable(GCLOUD_FEATURE_NAME)
+        false
       end
     end
 
     def shopifolk_feature_by_dev
       if File.exist?("#{@dev_path}/bin/dev") && File.exist?("#{@dev_path}/.shopify-build")
-        ShopifyCli::Feature.enable(DEV_FEATURE_NAME)
+        true
       else
-        ShopifyCli::Feature.disable(DEV_FEATURE_NAME)
+        false
       end
     end
 
