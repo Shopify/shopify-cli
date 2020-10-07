@@ -210,7 +210,7 @@ module ShopifyCli
       end
 
       def parse_account
-        account, timeout, _ = @log.match(/AccountName:([\w\s\d@._\-]*) SessionDuration:([\d]+) PlanName/)&.captures
+        account, timeout, _ = @log.match(/AccountName:(.*)\s+SessionDuration:([\d]+) PlanName/)&.captures
         @account = account&.empty? ? nil : account
         @timeout = timeout&.empty? ? 0 : timeout.to_i
       end
