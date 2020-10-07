@@ -48,15 +48,7 @@ module ShopifyCli
 
     private
 
-    def shopifolk_by_dev?
-      shopifolk_feature_by_dev
-    end
-
     def shopifolk_by_gcloud?
-      shopifolk_feature_by_gcloud_config
-    end
-
-    def shopifolk_feature_by_gcloud_config
       if File.exist?(File.expand_path(@gcloud_config_path))
         gcloud_account = ini.dig("[#{SECTION}]", 'account')
       end
@@ -67,7 +59,7 @@ module ShopifyCli
       end
     end
 
-    def shopifolk_feature_by_dev
+    def shopifolk_by_dev?
       if File.exist?("#{@dev_path}/bin/dev") && File.exist?("#{@dev_path}/.shopify-build")
         true
       else
