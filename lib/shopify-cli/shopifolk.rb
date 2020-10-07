@@ -2,7 +2,7 @@ require 'fileutils'
 
 module ShopifyCli
   ##
-  # ShopifyCli::Shopifolk contains the logic to determine if the user appears to be a Shopify employee
+  # ShopifyCli::Shopifolk contains the logic to determine if the user appears to be a Shopify staff
   #
   # The Shopifolk Feature flag will persist between runs so if the flag is enabled or disabled,
   # it will still be in that same state until the next class invocation.
@@ -57,7 +57,7 @@ module ShopifyCli
       if File.exist?(File.expand_path(@gcloud_config_path))
         gcloud_account = ini.dig("[#{SECTION}]", 'account')
       end
-      if gcloud_account&.include?("@shopify.com")
+      if gcloud_account&.match?(/@shopify.com\z/)
         ShopifyCli::Feature.enable(GCLOUD_FEATURE_NAME)
       else
         ShopifyCli::Feature.disable(GCLOUD_FEATURE_NAME)

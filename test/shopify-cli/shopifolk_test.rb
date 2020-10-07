@@ -8,7 +8,7 @@ module ShopifyCli
     def test_correct_features_is_shopifolk
       gcloud_path = '../shopifolk_correct.conf'
       ShopifyCli::Feature.disable(GCLOUD_FEATURE_NAME)
-      ShopifyCli::Feature.disable(DEV_FEATURE_NAM)
+      ShopifyCli::Feature.disable(DEV_FEATURE_NAME)
       Dir.mktmpdir do |dev_dir|
         FileUtils.mkdir_p("#{dev_dir}/bin")
         FileUtils.touch("#{dev_dir}/bin/dev")

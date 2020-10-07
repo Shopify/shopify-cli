@@ -237,6 +237,8 @@ module ShopifyCli
           },
           environment_header: "{{bold:Environment}}",
           env: "%-17s = %s",
+          identity_header: "{{bold:Identity}}",
+          identity_is_shopifolk: "{{v}} you are a shopifolk!",
         },
 
         tasks: {

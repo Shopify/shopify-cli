@@ -23,7 +23,7 @@ module ShopifyCli
         display_cli_ruby(show_all_details)
         display_utility_commands(show_all_details)
         display_project_commands(show_all_details)
-        shopifolk?
+        display_shopify_staff_identity if show_all_details
       end
 
       def self.help
@@ -141,12 +141,11 @@ module ShopifyCli
         @ctx.puts("")
       end
 
-      def shopifolk?
+      def display_shopify_staff_identity
         is_shopifolk = ShopifyCli::Shopifolk.check
         if is_shopifolk
-          @ctx.puts("{{v}} you are a shopifolk!")
-        else
-          @ctx.puts("{{x}} you are not shopifolk!")
+          @ctx.puts("\n" + @ctx.message('core.system.identity_header'))
+          @ctx.puts("  " + @ctx.message('core.system.identity_is_shopifolk'))
         end
       end
     end
