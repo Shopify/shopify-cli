@@ -1,5 +1,3 @@
-require 'fileutils'
-
 module ShopifyCli
   ##
   # ShopifyCli::Shopifolk contains the logic to determine if the user appears to be a Shopify staff

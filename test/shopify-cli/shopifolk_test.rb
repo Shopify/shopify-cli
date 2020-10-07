@@ -1,4 +1,5 @@
 require 'test_helper'
+require 'fileutils'
 
 module ShopifyCli
   class ShopifolkTest < MiniTest::Test
