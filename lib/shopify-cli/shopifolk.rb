@@ -33,10 +33,8 @@ module ShopifyCli
     # * `is_shopifolk` - returns true if the user has `dev` installed and
     # a valid google cloud config file with email ending in "@shopify.com"
     #
-    def shopifolk?(debug = false)
-      unless debug
-        return true if Feature.enabled?(FEATURE_NAME)
-      end
+    def shopifolk?
+      return true if Feature.enabled?(FEATURE_NAME)
       if shopifolk_by_gcloud? && shopifolk_by_dev?
         ShopifyCli::Feature.enable(FEATURE_NAME)
         true
