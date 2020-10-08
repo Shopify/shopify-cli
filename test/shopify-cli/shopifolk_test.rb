@@ -5,40 +5,65 @@ module ShopifyCli
   class ShopifolkTest < MiniTest::Test
     FEATURE_NAME = "shopifolk"
     def test_correct_features_is_shopifolk
-      gcloud_path = '../shopifolk_correct.conf'
+      # gcloud_path = '../shopifolk_correct.conf'
       ShopifyCli::Feature.disable(FEATURE_NAME)
       Dir.mktmpdir do |dev_dir|
         FileUtils.mkdir_p("#{dev_dir}/bin")
         FileUtils.touch("#{dev_dir}/bin/dev")
         FileUtils.touch("#{dev_dir}/.shopify-build")
-        ShopifyCli::Shopifolk.new.shopifolk?(gcloud_path, dev_dir, true)
+        ShopifyCli::Shopifolk.new.shopifolk?(true)
       end
       assert ShopifyCli::Config.get_bool(Feature::SECTION, FEATURE_NAME)
     end
 
-    def test_incorrect_gcloud_disables_shopifolk_feature
-      fake_dev_path = "/fakepath"
+    def test_feature_always_returns_true_without_debug
       ShopifyCli::Feature.enable(FEATURE_NAME)
-      path_no_core = 'shopifolk_incorrect_no_core.conf'
-      ShopifyCli::Shopifolk.new.shopifolk?(path_no_core, fake_dev_path, true)
-      refute ShopifyCli::Config.get_bool(Feature::SECTION, FEATURE_NAME)
+      assert ShopifyCli::Shopifolk.check
+    end
 
+    def test_no_gcloud_config_disables_shopifolk_feature
       ShopifyCli::Feature.enable(FEATURE_NAME)
-      path_no_account = '../shopifolk_incorrect_no_account.conf'
-      ShopifyCli::Shopifolk.new.shopifolk?(path_no_account, fake_dev_path, true)
+      File.expects(:exist?).with(::ShopifyCli::Shopifolk::GCLOUD_CONFIG_FILE).returns(false)
+      ShopifyCli::Shopifolk.new.shopifolk?(true)
       refute ShopifyCli::Config.get_bool(Feature::SECTION, FEATURE_NAME)
+    end
 
+    def test_no_section_in_gcloud_config_disables_shopifolk_feature
       ShopifyCli::Feature.enable(FEATURE_NAME)
-      path_no_email = '../shopifolk_incorrect_no_email.conf'
-      ShopifyCli::Shopifolk.new.shopifolk?(path_no_email, fake_dev_path, true)
+      stub_ini({ "account" => "test@shopify.com", "project" => "shopify-dev" })
+      ShopifyCli::Shopifolk.new.shopifolk?(true)
+      refute ShopifyCli::Config.get_bool(Feature::SECTION, FEATURE_NAME)
+    end
+
+    def test_no_account_in_gcloud_config_disables_shopifolk_feature
+      ShopifyCli::Feature.enable(FEATURE_NAME)
+      stub_ini({ "[core]" => { "project" => "shopify-dev" } })
+      ShopifyCli::Shopifolk.new.shopifolk?(true)
+      refute ShopifyCli::Config.get_bool(Feature::SECTION, FEATURE_NAME)
+    end
+
+    def test_incorrect_email_in_gcloud_config_disables_shopifolk_feature
+      ShopifyCli::Feature.enable(FEATURE_NAME)
+      stub_ini({ "[core]" => { "account" => "test@test.com", "project" => "shopify-dev" } })
+      ShopifyCli::Shopifolk.new.shopifolk?(true)
       refute ShopifyCli::Config.get_bool(Feature::SECTION, FEATURE_NAME)
     end
 
     def test_incorrect_dev_path_disables_dev_shopifolk_feature
-      fake_path = "/fakepath"
       ShopifyCli::Feature.enable(FEATURE_NAME)
-      ShopifyCli::Shopifolk.new.shopifolk?(fake_path, fake_path, true)
+      File.expects(:exist?).twice.with(::ShopifyCli::Shopifolk::GCLOUD_CONFIG_FILE).returns(true)
+      File.expects(:exist?).with("#{::ShopifyCli::Shopifolk::DEV_PATH}/bin/dev").returns(false)
+      ShopifyCli::Shopifolk.new.shopifolk?(true)
       refute ShopifyCli::Config.get_bool(Feature::SECTION, FEATURE_NAME)
+    end
+
+    private
+
+    def stub_ini(ret_val)
+      ini = CLI::Kit::Ini.new
+      ini.expects(:parse).returns(ini)
+      ini.expects(:ini).returns(ret_val)
+      CLI::Kit::Ini.expects(:new).returns(ini)
     end
   end
 end
