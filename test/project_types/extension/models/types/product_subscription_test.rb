@@ -16,7 +16,7 @@ module Extension
 
           Features::Argo::Admin.any_instance
             .expects(:create)
-            .with(directory_name, @product_subscription.graphql_identifier, @context)
+            .with(directory_name, ProductSubscription::IDENTIFIER, @context)
             .once
 
           @product_subscription.create(directory_name, @context)
