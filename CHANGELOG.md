@@ -1,3 +1,7 @@
+Version 1.3.1
+------
+* Allow any characters in ngrok account names
+
 Version 1.3.0
 ------
 * Support for new `shopify config analytics` command to enable/disable anonymous usage reporting
