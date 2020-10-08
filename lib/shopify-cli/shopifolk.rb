@@ -50,8 +50,9 @@ module ShopifyCli
     private
 
     def shopifolk_by_gcloud?
-      if File.exist?(File.expand_path(@gcloud_config_path))
-        gcloud_account = ini.dig("[#{SECTION}]", 'account')
+      gcloud_config = File.expand_path(@gcloud_config_path)
+      if File.exist?(gcloud_config)
+        gcloud_account = ini(gcloud_config).dig("[#{SECTION}]", 'account')
       end
       gcloud_account&.match?(/@shopify.com\z/)
     end
@@ -60,10 +61,9 @@ module ShopifyCli
       File.exist?("#{@dev_path}/bin/dev") && File.exist?("#{@dev_path}/.shopify-build")
     end
 
-    def ini
-      file = File.expand_path(@gcloud_config_path)
+    def ini(gcloud_config)
       @ini ||= CLI::Kit::Ini
-        .new(file, default_section: "[#{SECTION}]", convert_types: false)
+        .new(gcloud_config, default_section: "[#{SECTION}]", convert_types: false)
         .tap(&:parse).ini
     end
   end
