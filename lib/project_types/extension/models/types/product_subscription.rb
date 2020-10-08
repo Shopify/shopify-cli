@@ -12,7 +12,7 @@ module Extension
         end
 
         def create(directory_name, context)
-          Features::Argo::Admin.new.create(directory_name, graphql_identifier, context)
+          Features::Argo::Admin.new.create(directory_name, IDENTIFIER, context)
         end
 
         def config(context)
