@@ -11,32 +11,33 @@ module ShopifyCli
         FileUtils.mkdir_p("#{dev_dir}/bin")
         FileUtils.touch("#{dev_dir}/bin/dev")
         FileUtils.touch("#{dev_dir}/.shopify-build")
-        ShopifyCli::Shopifolk.new.shopifolk?(gcloud_path, dev_dir)
+        ShopifyCli::Shopifolk.new.shopifolk?(gcloud_path, dev_dir, true)
       end
       assert ShopifyCli::Config.get_bool(Feature::SECTION, FEATURE_NAME)
     end
 
     def test_incorrect_gcloud_disables_shopifolk_feature
+      fake_dev_path = "/fakepath"
       ShopifyCli::Feature.enable(FEATURE_NAME)
       path_no_core = 'shopifolk_incorrect_no_core.conf'
-      ShopifyCli::Shopifolk.new.shopifolk?(path_no_core)
+      ShopifyCli::Shopifolk.new.shopifolk?(path_no_core, fake_dev_path, true)
       refute ShopifyCli::Config.get_bool(Feature::SECTION, FEATURE_NAME)
 
       ShopifyCli::Feature.enable(FEATURE_NAME)
       path_no_account = '../shopifolk_incorrect_no_account.conf'
-      ShopifyCli::Shopifolk.new.shopifolk?(path_no_account)
+      ShopifyCli::Shopifolk.new.shopifolk?(path_no_account, fake_dev_path, true)
       refute ShopifyCli::Config.get_bool(Feature::SECTION, FEATURE_NAME)
 
       ShopifyCli::Feature.enable(FEATURE_NAME)
       path_no_email = '../shopifolk_incorrect_no_email.conf'
-      ShopifyCli::Shopifolk.new.shopifolk?(path_no_email)
+      ShopifyCli::Shopifolk.new.shopifolk?(path_no_email, fake_dev_path, true)
       refute ShopifyCli::Config.get_bool(Feature::SECTION, FEATURE_NAME)
     end
 
     def test_incorrect_dev_path_disables_dev_shopifolk_feature
       fake_path = "/fakepath"
       ShopifyCli::Feature.enable(FEATURE_NAME)
-      ShopifyCli::Shopifolk.new.shopifolk?(fake_path, fake_path)
+      ShopifyCli::Shopifolk.new.shopifolk?(fake_path, fake_path, true)
       refute ShopifyCli::Config.get_bool(Feature::SECTION, FEATURE_NAME)
     end
   end

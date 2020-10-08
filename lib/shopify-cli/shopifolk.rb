@@ -24,7 +24,7 @@ module ShopifyCli
       ShopifyCli::Shopifolk.new.shopifolk?
     end
 
-    def shopifolk?(gcloud_config_path = GCLOUD_CONFIG_PATH, dev_path = DEV_PATH)
+    def shopifolk?(gcloud_config_path = GCLOUD_CONFIG_PATH, dev_path = DEV_PATH, debug = false)
       ##
       # will return if the user is a Shopify employee
       #
@@ -33,6 +33,9 @@ module ShopifyCli
       # * `is_shopifolk` - returns true if the user has `dev` installed and
       # a valid google cloud config file with email ending in "@shopify.com"
       #
+      unless debug
+        return true if Feature.enabled?(FEATURE_NAME)
+      end
       @gcloud_config_path = gcloud_config_path
       @dev_path = dev_path
       if shopifolk_by_dev? && shopifolk_by_gcloud?
