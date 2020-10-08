@@ -5,7 +5,6 @@ module ShopifyCli
   class ShopifolkTest < MiniTest::Test
     FEATURE_NAME = "shopifolk"
     def test_correct_features_is_shopifolk
-      # gcloud_path = '../shopifolk_correct.conf'
       ShopifyCli::Feature.disable(FEATURE_NAME)
       Dir.mktmpdir do |dev_dir|
         FileUtils.mkdir_p("#{dev_dir}/bin")
