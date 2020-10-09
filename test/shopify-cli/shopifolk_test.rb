@@ -6,19 +6,14 @@ module ShopifyCli
     FEATURE_NAME = "shopifolk"
     def test_correct_features_is_shopifolk
       ShopifyCli::Feature.disable(FEATURE_NAME)
-      Dir.mktmpdir do |dev_dir|
-        FileUtils.mkdir_p("#{dev_dir}/bin")
-        FileUtils.touch("#{dev_dir}/bin/dev")
-        FileUtils.touch("#{dev_dir}/.shopify-build")
-        File.stubs(:exist?).with("#{::ShopifyCli::Shopifolk::DEV_PATH}/bin/dev").returns(true)
-        File.stubs(:exist?).with("#{::ShopifyCli::Shopifolk::DEV_PATH}/.shopify-build").returns(true)
-        stub_ini({ "[core]" => { "account" => "test@shopify.com", "project" => "shopify-dev" } })
-        ShopifyCli::Shopifolk.check
-      end
+      File.stubs(:exist?).with("#{::ShopifyCli::Shopifolk::DEV_PATH}/bin/dev").returns(true)
+      File.stubs(:exist?).with("#{::ShopifyCli::Shopifolk::DEV_PATH}/.shopify-build").returns(true)
+      stub_ini({ "[core]" => { "account" => "test@shopify.com", "project" => "shopify-dev" } })
+      ShopifyCli::Shopifolk.check
       assert ShopifyCli::Config.get_bool(Feature::SECTION, FEATURE_NAME)
     end
 
-    def test_feature_always_returns_true_without_debug
+    def test_feature_always_returns_true
       ShopifyCli::Feature.enable(FEATURE_NAME)
       assert ShopifyCli::Shopifolk.check
     end
