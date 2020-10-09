@@ -3,6 +3,13 @@ require 'project_types/theme/test_helper'
 
 module Theme
   class ThemekitTest < MiniTest::Test
+    RESP = [200,
+            { "themes" =>
+               [{ "id" => 2468,
+                  "name" => "my_theme" },
+                { "id" => 1357,
+                  "name" => "your_theme" }] }]
+
     def test_themekit_install
       Theme::Tasks::EnsureThemekitInstalled.expects(:call).with(@context)
       Themekit.ensure_themekit_installed(@context)
@@ -216,6 +223,98 @@ module Theme
         .returns(true)
 
       Themekit.update(context)
+    end
+
+    def test_can_generate_env
+      context = ShopifyCli::Context.new
+      stat = mock
+
+      context.expects(:system)
+        .with(Themekit::THEMEKIT,
+              'configure',
+              '--password=boop',
+              '--store=shop.myshopify.com',
+              '--themeid=2468')
+        .returns(stat)
+      stat.stubs(:success?).returns(true)
+
+      Themekit.generate_env(context, store: 'shop.myshopify.com', password: 'boop', themeid: 2468, env: nil)
+    end
+
+    def test_can_generate_env_with_env_flag
+      context = ShopifyCli::Context.new
+      stat = mock
+
+      context.expects(:system)
+        .with(Themekit::THEMEKIT,
+              'configure',
+              '--env=test',
+              '--password=boop',
+              '--store=shop.myshopify.com',
+              '--themeid=2468')
+        .returns(stat)
+      stat.stubs(:success?).returns(true)
+
+      Themekit.generate_env(context, store: 'shop.myshopify.com', password: 'boop', themeid: 2468, env: 'test')
+    end
+
+    def test_generate_env_returns_false_if_bad_info
+      context = ShopifyCli::Context.new
+      stat = mock
+
+      context.expects(:system)
+        .with(Themekit::THEMEKIT,
+              'configure',
+              '--password=boop',
+              '--store=shop.myshopify.com',
+              '--themeid=1357')
+        .returns(stat)
+      stat.stubs(:success?).returns(false)
+
+      Themekit.generate_env(context, store: 'shop.myshopify.com', password: 'boop', themeid: 1357, env: nil)
+    end
+
+    def test_can_query_themes
+      context = ShopifyCli::Context.new
+
+      ShopifyCli::AdminAPI.expects(:rest_request)
+        .with(context,
+              shop: 'shop.myshopify.com',
+              token: 'boop',
+              path: 'themes.json')
+        .returns(RESP)
+
+      Themekit.query_themes(context, store: 'shop.myshopify.com', password: 'boop')
+    end
+
+    def test_aborts_query_if_bad_password
+      context = ShopifyCli::Context.new
+
+      ShopifyCli::AdminAPI.expects(:rest_request)
+        .with(context,
+              shop: 'shop.myshopify.com',
+              token: 'meep',
+              path: 'themes.json')
+        .raises(ShopifyCli::API::APIRequestUnauthorizedError)
+
+      assert_raises CLI::Kit::Abort do
+        Themekit.query_themes(context, store: 'shop.myshopify.com', password: 'meep')
+      end
+    end
+
+    def test_querying_handles_errors
+      context = ShopifyCli::Context.new
+
+      ShopifyCli::AdminAPI.expects(:rest_request)
+        .with(context,
+              shop: 'market.myshopify.com',
+              token: 'boop',
+              path: 'themes.json')
+        .raises(StandardError)
+
+      assert_raises CLI::Kit::Abort do
+        Themekit.query_themes(context, store: 'market.myshopify.com', password: 'boop')
+      end
     end
   end
 end
