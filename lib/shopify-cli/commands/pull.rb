@@ -1,6 +1,4 @@
 # frozen_string_literal: true
-require 'project_types/theme/themekit.rb'
-
 module ShopifyCli
   module Commands
     class Pull < ShopifyCli::Command
@@ -37,7 +35,7 @@ module ShopifyCli
 
       def build(store, password, themeid, name, env)
         CLI::UI::Frame.open(@ctx.message('theme.checking_themekit')) do
-          Themekit.ensure_themekit_installed(@ctx)
+          Theme::Themekit.ensure_themekit_installed(@ctx)
         end
 
         if @ctx.dir_exist?(name)
@@ -48,7 +46,7 @@ module ShopifyCli
         @ctx.chdir(name)
 
         CLI::UI::Frame.open(@ctx.message('theme.pull.pull')) do
-          unless Themekit.pull(@ctx, store: store, password: password, themeid: themeid, env: env)
+          unless Theme::Themekit.pull(@ctx, store: store, password: password, themeid: themeid, env: env)
             @ctx.chdir('..')
             @ctx.rm_rf(name)
             @ctx.abort(@ctx.message('theme.pull.failed'))

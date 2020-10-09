@@ -1,7 +1,5 @@
 # frozen_string_literal: true
-require 'test_helper'
-require 'project_types/theme/themekit.rb'
-require 'project_types/theme/forms/pull.rb'
+require 'project_types/theme/test_helper.rb'
 
 module ShopifyCli
   module Commands
@@ -18,7 +16,6 @@ module ShopifyCli
         FakeFS do
           context = ShopifyCli::Context.new
           ShopifyCli::Project.expects(:has_current?).returns(false)
-          # ProjectType.expects(:load_type).with(:theme)
 
           Theme::Forms::Pull.expects(:ask)
             .with(context, [], {})
@@ -43,108 +40,104 @@ module ShopifyCli
         end
       end
 
-      # def test_can_specify_env
-      #   FakeFS do
-      #     context = ShopifyCli::Context.new
-      #     ShopifyCli::Project.expects(:has_current?).returns(false)
-      #     ProjectType.expects(:load_type).with(:theme)
-      #
-      #     Theme::Forms::Pull.expects(:ask)
-      #       .with(context, [], { env: 'test' })
-      #       .returns(Theme::Forms::Pull.new(context, [], { store: 'shop.myshopify.com',
-      #                                                      password: 'boop',
-      #                                                      themeid: '2468',
-      #                                                      name: 'my_theme',
-      #                                                      env: 'test' }))
-      #
-      #     Themekit.expects(:ensure_themekit_installed).with(context)
-      #     context.expects(:dir_exist?).with('my_theme').returns(false)
-      #     Themekit.expects(:pull)
-      #       .with(context, store: 'shop.myshopify.com', password: 'boop', themeid: '2468', env: 'test')
-      #       .returns(true)
-      #     context.expects(:done).with(context.message('theme.pull.pulled',
-      #                                                 'my_theme',
-      #                                                 'shop.myshopify.com',
-      #                                                 File.join(context.root, 'my_theme')))
-      #
-      #     command = Theme::Commands::Pull.new(context)
-      #     command.options.flags[:env] = 'test'
-      #     command.call([], 'pull')
-      #
-      #     assert_equal SHOPIFYCLI_FILE, File.read(".shopify-cli.yml")
-      #   end
-      # end
-      #
-      # def test_aborts_if_inside_project
-      #   FakeFS do
-      #     context = ShopifyCli::Context.new
-      #     ShopifyCli::Project.expects(:has_current?).returns(true)
-      #     ProjectType.expects(:load_type).with(:theme).never
-      #
-      #     Theme::Forms::Pull.expects(:ask).with(context, [], {}).never
-      #     Themekit.expects(:ensure_themekit_installed).with(context).never
-      #     context.expects(:dir_exist?).with('my_theme').never
-      #     Themekit.expects(:pull)
-      #       .with(context, store: 'shop.myshopify.com', password: 'boop', themeid: '2468', env: nil)
-      #       .never
-      #
-      #     assert_raises CLI::Kit::Abort do
-      #       Theme::Commands::Pull.new(context).call([], 'pull')
-      #     end
-      #   end
-      # end
-      #
-      # def test_aborts_if_duplicate_directory
-      #   FakeFS do
-      #     context = ShopifyCli::Context.new
-      #     ShopifyCli::Project.expects(:has_current?).returns(false)
-      #     ProjectType.expects(:load_type).with(:theme)
-      #
-      #     Theme::Forms::Pull.expects(:ask)
-      #       .with(context, [], {})
-      #       .returns(Theme::Forms::Pull.new(context, [], { store: 'shop.myshopify.com',
-      #                                                      password: 'boop',
-      #                                                      themeid: '2468',
-      #                                                      name: 'my_theme',
-      #                                                      env: nil }))
-      #
-      #     Themekit.expects(:ensure_themekit_installed).with(context)
-      #     context.expects(:dir_exist?).with('my_theme').returns(true)
-      #     Themekit.expects(:pull)
-      #       .with(context, store: 'shop.myshopify.com', password: 'boop', themeid: '2468', env: nil)
-      #       .never
-      #
-      #     assert_raises CLI::Kit::Abort do
-      #       Theme::Commands::Pull.new(context).call([], 'pull')
-      #     end
-      #   end
-      # end
-      #
-      # def test_aborts_if_invalid_credentials
-      #   FakeFS do
-      #     context = ShopifyCli::Context.new
-      #     ShopifyCli::Project.expects(:has_current?).returns(false)
-      #     ProjectType.expects(:load_type).with(:theme)
-      #
-      #     Theme::Forms::Pull.expects(:ask)
-      #       .with(context, [], {})
-      #       .returns(Theme::Forms::Pull.new(context, [], { store: 'shop.myshopify.com',
-      #                                                      password: 'merp',
-      #                                                      themeid: '1357',
-      #                                                      name: 'your_theme',
-      #                                                      env: nil }))
-      #
-      #     Themekit.expects(:ensure_themekit_installed).with(context)
-      #     context.expects(:dir_exist?).with('your_theme').returns(false)
-      #     Themekit.expects(:pull)
-      #       .with(context, store: 'shop.myshopify.com', password: 'merp', themeid: '1357', env: nil)
-      #       .returns(false)
-      #
-      #     assert_raises CLI::Kit::Abort do
-      #       Theme::Commands::Pull.new(context).call([], 'pull')
-      #     end
-      #   end
-      # end
+      def test_can_specify_env
+        FakeFS do
+          context = ShopifyCli::Context.new
+          ShopifyCli::Project.expects(:has_current?).returns(false)
+
+          Theme::Forms::Pull.expects(:ask)
+            .with(context, [], { env: 'test' })
+            .returns(Theme::Forms::Pull.new(context, [], { store: 'shop.myshopify.com',
+                                                           password: 'boop',
+                                                           themeid: '2468',
+                                                           name: 'my_theme',
+                                                           env: 'test' }))
+
+          Theme::Themekit.expects(:ensure_themekit_installed).with(context)
+          context.expects(:dir_exist?).with('my_theme').returns(false)
+          Theme::Themekit.expects(:pull)
+            .with(context, store: 'shop.myshopify.com', password: 'boop', themeid: '2468', env: 'test')
+            .returns(true)
+          context.expects(:done).with(context.message('theme.pull.pulled',
+                                                      'my_theme',
+                                                      'shop.myshopify.com',
+                                                      File.join(context.root, 'my_theme')))
+
+          command = ShopifyCli::Commands::Pull.new(context)
+          command.options.flags[:env] = 'test'
+          command.call([], 'pull')
+
+          assert_equal SHOPIFYCLI_FILE, File.read(".shopify-cli.yml")
+        end
+      end
+
+      def test_aborts_if_inside_project
+        FakeFS do
+          context = ShopifyCli::Context.new
+          ShopifyCli::Project.expects(:has_current?).returns(true)
+
+          Theme::Forms::Pull.expects(:ask).with(context, [], {}).never
+          Theme::Themekit.expects(:ensure_themekit_installed).with(context).never
+          context.expects(:dir_exist?).with('my_theme').never
+          Theme::Themekit.expects(:pull)
+            .with(context, store: 'shop.myshopify.com', password: 'boop', themeid: '2468', env: nil)
+            .never
+
+          assert_raises CLI::Kit::Abort do
+            ShopifyCli::Commands::Pull.new(context).call([], 'pull')
+          end
+        end
+      end
+
+      def test_aborts_if_duplicate_directory
+        FakeFS do
+          context = ShopifyCli::Context.new
+          ShopifyCli::Project.expects(:has_current?).returns(false)
+
+          Theme::Forms::Pull.expects(:ask)
+            .with(context, [], {})
+            .returns(Theme::Forms::Pull.new(context, [], { store: 'shop.myshopify.com',
+                                                           password: 'boop',
+                                                           themeid: '2468',
+                                                           name: 'my_theme',
+                                                           env: nil }))
+
+          Theme::Themekit.expects(:ensure_themekit_installed).with(context)
+          context.expects(:dir_exist?).with('my_theme').returns(true)
+          Theme::Themekit.expects(:pull)
+            .with(context, store: 'shop.myshopify.com', password: 'boop', themeid: '2468', env: nil)
+            .never
+
+          assert_raises CLI::Kit::Abort do
+            ShopifyCli::Commands::Pull.new(context).call([], 'pull')
+          end
+        end
+      end
+
+      def test_aborts_if_invalid_credentials
+        FakeFS do
+          context = ShopifyCli::Context.new
+          ShopifyCli::Project.expects(:has_current?).returns(false)
+
+          Theme::Forms::Pull.expects(:ask)
+            .with(context, [], {})
+            .returns(Theme::Forms::Pull.new(context, [], { store: 'shop.myshopify.com',
+                                                           password: 'merp',
+                                                           themeid: '1357',
+                                                           name: 'your_theme',
+                                                           env: nil }))
+
+          Theme::Themekit.expects(:ensure_themekit_installed).with(context)
+          context.expects(:dir_exist?).with('your_theme').returns(false)
+          Theme::Themekit.expects(:pull)
+            .with(context, store: 'shop.myshopify.com', password: 'merp', themeid: '1357', env: nil)
+            .returns(false)
+
+          assert_raises CLI::Kit::Abort do
+            ShopifyCli::Commands::Pull.new(context).call([], 'pull')
+          end
+        end
+      end
     end
   end
 end
