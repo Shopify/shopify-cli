@@ -8,6 +8,7 @@ module Theme
     connector('Theme::Commands::Connect')
 
     register_command('Theme::Commands::Deploy', "deploy")
+    register_command('Theme::Commands::Generate', "generate")
     register_command('Theme::Commands::Push', "push")
     register_command('Theme::Commands::Serve', "serve")
 
@@ -19,6 +20,7 @@ module Theme
     autoload :Connect, Project.project_filepath('commands/connect')
     autoload :Create, Project.project_filepath('commands/create')
     autoload :Deploy, Project.project_filepath('commands/deploy')
+    autoload :Generate, Project.project_filepath('commands/generate')
     autoload :Push, Project.project_filepath('commands/push')
     autoload :Serve, Project.project_filepath('commands/serve')
   end

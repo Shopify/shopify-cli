@@ -73,24 +73,6 @@ module Theme
           env: env
         )
       end
-
-      def query_themes
-        resp = [200,
-                { "themes" =>
-                   [{ "id" => 2468,
-                      "name" => "my_theme" },
-                    { "id" => 1357,
-                      "name" => "your_theme" }] }]
-
-        ShopifyCli::AdminAPI.expects(:rest_request)
-          .with(@context,
-                shop: 'shop.myshopify.com',
-                token: 'boop',
-                path: 'themes.json')
-          .returns(resp)
-
-        @themes = resp[1]['themes'].map { |theme| [theme['name'], theme['id']] }.to_h
-      end
     end
   end
 end

@@ -67,6 +67,38 @@ module Theme
             APP
           },
           errors: "%s can't be blank",
+          duplicate: "Duplicate directory, theme files weren't pulled",
+          help: <<~HELP,
+            {{command:%s pull}}: Connects an existing theme in your store to Shopify App CLI. Downloads a copy of the theme files to your local development environment.
+              Usage: {{command:%s pull}}
+              Options:
+                {{command:--store=MYSHOPIFYDOMAIN}} Store URL. Must be an existing store with private apps enabled.
+                {{command:--password=PASSWORD}} Private app password. App must have Read and Write Theme access.
+                {{command:--themeid=THEMEID}} Theme ID. Must be an existing theme on your store.
+          HELP
+          inside_project: "You are inside an existing theme, theme files weren't pulled",
+          pull: "Pulling theme files...",
+          failed: "Couldn't pull theme files from store",
+          pulled: "{{green:%s}} files were pulled from {{underline:%s}} to {{green:%s}}",
+        },
+        generate: {
+          env: {
+            ask_password: "Password (defaults to {{green:%s}})",
+            ask_store: "Store (defaults to {{green:%s}})",
+            ask_theme: "Select theme",
+            help: <<~HELP,
+              Generate a new env in {{green:config.yml}}.
+                Usage: {{command:%s generate env}}
+                Options:
+                  {{command:--store=MYSHOPIFYDOMAIN}} Store URL. Must be an existing store with private apps enabled.
+                  {{command:--password=PASSWORD}} Private app password. App must have Read and Write Theme access.
+                  {{command:--themeid=THEMEID}} Theme ID. Must be an existing theme on your store.
+            HELP
+          },
+          help: <<~HELP,
+            Generate code in your Theme. Currently supports generating new envs.
+              Usage: {{command:%s generate [ env ]}}
+          HELP
         },
         push: {
           remove_abort: "Theme files weren't deleted",
@@ -110,6 +142,12 @@ module Theme
             },
             successful: "Theme Kit installed successfully",
             verifying: "Verifying download...",
+          },
+        },
+        themekit: {
+          query_themes: {
+            bad_password: "Bad password",
+            not_connect: "Couldn't connect to given shop",
           },
         },
       },
