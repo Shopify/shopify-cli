@@ -10,6 +10,9 @@ module ShopifyCli
         FileUtils.mkdir_p("#{dev_dir}/bin")
         FileUtils.touch("#{dev_dir}/bin/dev")
         FileUtils.touch("#{dev_dir}/.shopify-build")
+        File.stubs(:exist?).with("#{::ShopifyCli::Shopifolk::DEV_PATH}/bin/dev").returns(true)
+        File.stubs(:exist?).with("#{::ShopifyCli::Shopifolk::DEV_PATH}/.shopify-build").returns(true)
+        stub_ini({ "[core]" => { "account" => "test@shopify.com", "project" => "shopify-dev" } })
         ShopifyCli::Shopifolk.check
       end
       assert ShopifyCli::Config.get_bool(Feature::SECTION, FEATURE_NAME)
@@ -55,8 +58,8 @@ module ShopifyCli
     def test_incorrect_dev_path_disables_dev_shopifolk_feature
       ShopifyCli::Feature.enable(FEATURE_NAME)
       ShopifyCli::Feature.stubs(:enabled?).with(FEATURE_NAME).returns(false)
-      File.expects(:exist?).twice.with(::ShopifyCli::Shopifolk::GCLOUD_CONFIG_FILE).returns(true)
-      File.expects(:exist?).with("#{::ShopifyCli::Shopifolk::DEV_PATH}/bin/dev").returns(false)
+      File.stubs(:exist?).with("#{::ShopifyCli::Shopifolk::DEV_PATH}/bin/dev").returns(false)
+      stub_ini({ "[core]" => { "account" => "test@shopify.com", "project" => "shopify-dev" } })
       ShopifyCli::Shopifolk.check
       refute ShopifyCli::Config.get_bool(Feature::SECTION, FEATURE_NAME)
     end
@@ -64,6 +67,7 @@ module ShopifyCli
     private
 
     def stub_ini(ret_val)
+      File.stubs(:exist?).with(::ShopifyCli::Shopifolk::GCLOUD_CONFIG_FILE).returns(true)
       ini = CLI::Kit::Ini.new
       ini.expects(:parse).returns(ini)
       ini.expects(:ini).returns(ret_val)
