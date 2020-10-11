@@ -45,3 +45,4 @@ Style/MethodCallWithArgsParentheses:
     - assert_equal
     - assert
     - refute
+    - assert_requested # from Webmock
