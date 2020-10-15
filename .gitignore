@@ -7,7 +7,6 @@
 *.log
 docs/_site/
 tmp/
-.git/*
 markdown_intermediate
 .idea
 vendor/bundle
