@@ -41,7 +41,9 @@ module Theme
       def push(ctx, files: nil, flags: nil, remove: false, env:)
         action = remove ? 'remove' : 'deploy'
         command = build_command(action, env)
-        (command << files << flags).flatten!.compact!
+
+        (command << files << flags).compact!
+        command.flatten!
 
         stat = ctx.system(*command)
         stat.success?
