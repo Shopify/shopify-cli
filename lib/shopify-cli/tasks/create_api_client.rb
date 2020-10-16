@@ -17,12 +17,14 @@ module ShopifyCli
           redir: [OAuth::REDIRECT_HOST]
         )
 
-        user_errors = resp["data"]["appCreate"]["userErrors"]
+        user_errors = resp.dig("data", "appCreate", "userErrors")
         if !user_errors.nil? && user_errors.any?
           ctx.abort(user_errors.map { |err| "#{err['field']} #{err['message']}" }.join(", "))
         end
 
-        resp["data"]["appCreate"]["app"]
+        ShopifyCli::Core::Monorail.metadata[:api_key] = resp.dig("data", "appCreate", "app", "apiKey")
+
+        resp.dig("data", "appCreate", "app")
       end
     end
   end

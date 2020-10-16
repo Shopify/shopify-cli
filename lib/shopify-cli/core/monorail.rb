@@ -81,7 +81,6 @@ module ShopifyCli
               post.body = JSON.dump(payload)
               http.request(post)
             end
-          rescue
             # silently fail on errors, fire-and-forget approach
           end
         end
@@ -102,13 +101,15 @@ module ShopifyCli
               cli_version: ShopifyCli::VERSION,
               ruby_version: RUBY_VERSION,
             }.tap do |payload|
-              payload[:metadata] = JSON.dump(metadata) unless metadata.empty?
-
               if Project.has_current?
-                project = Project.current
+                project = Project.current(force_reload: true)
                 payload[:api_key] = project.env&.api_key
                 payload[:partner_id] = project.config['organization_id']
+              else
+                payload[:api_key] = metadata.delete(:api_key)
+                payload[:partner_id] = metadata.delete(:organization_id)
               end
+              payload[:metadata] = JSON.dump(metadata) unless metadata.empty?
             end,
           }
         end
