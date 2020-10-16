@@ -81,6 +81,7 @@ module ShopifyCli
               post.body = JSON.dump(payload)
               http.request(post)
             end
+          rescue
             # silently fail on errors, fire-and-forget approach
           end
         end
