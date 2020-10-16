@@ -5,6 +5,10 @@ module ShopifyCli
     class SelectOrgAndShopTest < MiniTest::Test
       include TestHelpers::Partners
 
+      def teardown
+        ShopifyCli::Core::Monorail.metadata = {}
+      end
+
       def test_user_will_be_prompted_if_more_than_one_organization
         stub_partner_req(
           'all_organizations',
@@ -36,6 +40,7 @@ module ShopifyCli
           .with(@context.message('core.tasks.select_org_and_shop.organization_select'))
           .returns(431)
         form = call(org_id: nil, shop: nil)
+        assert_equal(431, ShopifyCli::Core::Monorail.metadata[:organization_id])
         assert_equal(431, form[:organization_id])
         assert_equal('other.myshopify.com', form[:shop_domain])
       end

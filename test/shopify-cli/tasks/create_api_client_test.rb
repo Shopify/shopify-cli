@@ -5,6 +5,10 @@ module ShopifyCli
     class CreateApiClientTest < MiniTest::Test
       include TestHelpers::Partners
 
+      def teardown
+        ShopifyCli::Core::Monorail.metadata = {}
+      end
+
       def test_call_will_query_partners_dashboard
         stub_partner_req(
           'create_app',
@@ -36,6 +40,7 @@ module ShopifyCli
 
         refute_nil(api_client)
         assert_equal('newapikey', api_client['apiKey'])
+        assert_equal("newapikey", ShopifyCli::Core::Monorail.metadata[:api_key])
       end
 
       def test_call_will_return_any_user_errors
