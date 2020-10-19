@@ -110,7 +110,7 @@ module ShopifyCli
     def in_repo
       Dir.mktmpdir do |dir|
         Dir.chdir(dir) do
-          system('git init > /dev/null')
+          system('git init --template="" > /dev/null')
           yield(dir)
         end
       end
