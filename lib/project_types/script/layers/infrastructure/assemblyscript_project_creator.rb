@@ -87,7 +87,7 @@ module Script
                 "#{extension_point.sdks[:ts].package}": "#{extension_point.sdks[:ts].version}",
                 "@as-pect/cli": "4.0.0",
                 "as-wasi": "^0.2.1",
-                "assemblyscript": "^0.12.0"
+                "assemblyscript": "^0.14.0"
               },
               "scripts": {
                 "test": "asp --config test/as-pect.config.js --summary --verbose"
