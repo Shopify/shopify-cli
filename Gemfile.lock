@@ -23,7 +23,7 @@ GEM
     mocha (1.7.0)
       metaclass (~> 0.0.1)
     parallel (1.19.2)
-    parser (2.7.1.4)
+    parser (2.7.2.0)
       ast (~> 2.4.1)
     pry (0.12.2)
       coderay (~> 1.1.0)
@@ -34,19 +34,21 @@ GEM
     public_suffix (3.0.3)
     rainbow (3.0.0)
     rake (13.0.1)
-    regexp_parser (1.7.1)
+    regexp_parser (1.8.2)
     rexml (3.2.4)
-    rubocop (0.89.1)
+    rubocop (0.93.1)
       parallel (~> 1.10)
-      parser (>= 2.7.1.1)
+      parser (>= 2.7.1.5)
       rainbow (>= 2.2.2, < 4.0)
-      regexp_parser (>= 1.7)
+      regexp_parser (>= 1.8)
       rexml
-      rubocop-ast (>= 0.3.0, < 1.0)
+      rubocop-ast (>= 0.6.0)
       ruby-progressbar (~> 1.7)
       unicode-display_width (>= 1.4.0, < 2.0)
-    rubocop-ast (0.3.0)
-      parser (>= 2.7.1.4)
+    rubocop-ast (0.8.0)
+      parser (>= 2.7.1.5)
+    rubocop-shopify (1.0.6)
+      rubocop (>= 0.92, < 0.94)
     ruby-progressbar (1.10.1)
     safe_yaml (1.0.4)
     timecop (0.9.1)
@@ -67,7 +69,7 @@ DEPENDENCIES
   mocha
   pry-byebug
   rake
-  rubocop
+  rubocop-shopify
   timecop
   webmock
 

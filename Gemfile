@@ -8,7 +8,7 @@ group :development, :test do
   gem 'rake'
   gem 'pry-byebug'
   gem 'byebug'
-  gem 'rubocop'
+  gem 'rubocop-shopify', require: false
 end
 
 group :test do
