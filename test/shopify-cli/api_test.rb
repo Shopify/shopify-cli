@@ -30,21 +30,18 @@ module ShopifyCli
     end
 
     def test_mutation_makes_request_to_shopify
-      stub_request(:post, 'https://my-test-shop.myshopify.com/admin/api/2019-04/graphql.json')
-        .with(body: File.read(File.join(FIXTURE_DIR, 'api/mutation.json')).tr("\n", ''),
-          headers: {
-            'Accept' => '*/*',
-            'Accept-Encoding' => 'gzip;q=1.0,deflate;q=0.6,identity;q=0.3',
-            'Content-Type' => 'application/json',
-            'User-Agent' => "Shopify App CLI #{ShopifyCli::VERSION} abcde | Mac",
-            'Auth' => 'faketoken',
-          })
-        .to_return(status: 200, body: '{}')
+      headers = {
+        'User-Agent' => "Shopify App CLI #{ShopifyCli::VERSION} abcde | Mac",
+        'Auth' => 'faketoken',
+      }
+      uri = URI.parse("https://my-test-shop.myshopify.com/admin/api/2019-04/graphql.json")
+      variables = { var_name: 'var_value' }
       File.stubs(:read)
         .with(File.join(ShopifyCli::ROOT, "lib/graphql/api/mutation.graphql"))
         .returns(@mutation)
-
-      @api.query('api/mutation')
+      response = stub('response', code: '200', body: '{}')
+      HttpRequest.expects(:call).with(uri, @mutation, variables, headers).returns(response)
+      @api.query('api/mutation', variables: variables)
     end
 
     def test_raises_error_with_invalid_url
@@ -64,16 +61,8 @@ module ShopifyCli
     end
 
     def test_query_fails_gracefully_with_internal_server_error
-      stub_request(:post, 'https://my-test-shop.myshopify.com/admin/api/2019-04/graphql.json')
-        .with(body: File.read(File.join(FIXTURE_DIR, 'api/mutation.json')).tr("\n", ''),
-          headers: {
-            'Accept' => '*/*',
-            'Accept-Encoding' => 'gzip;q=1.0,deflate;q=0.6,identity;q=0.3',
-            'Content-Type' => 'application/json',
-            'User-Agent' => "Shopify App CLI #{ShopifyCli::VERSION} abcde | Mac",
-            'Auth' => 'faketoken',
-          })
-        .to_return(status: 500, body: '{}')
+      response = stub('response', code: '500', body: '{}')
+      HttpRequest.expects(:call).returns(response).times(4)
       File.stubs(:read)
         .with(File.join(ShopifyCli::ROOT, "lib/graphql/api/mutation.graphql"))
         .returns(@mutation)
@@ -87,16 +76,8 @@ module ShopifyCli
     end
 
     def test_query_fails_gracefully_with_unexpected_error
-      stub_request(:post, 'https://my-test-shop.myshopify.com/admin/api/2019-04/graphql.json')
-        .with(body: File.read(File.join(FIXTURE_DIR, 'api/mutation.json')).tr("\n", ''),
-          headers: {
-            'Accept' => '*/*',
-            'Accept-Encoding' => 'gzip;q=1.0,deflate;q=0.6,identity;q=0.3',
-            'Content-Type' => 'application/json',
-            'User-Agent' => "Shopify App CLI #{ShopifyCli::VERSION} abcde | Mac",
-            'Auth' => 'faketoken',
-          })
-        .to_return(status: 600, body: '{}')
+      response = stub('response', code: '600', body: '{}')
+      HttpRequest.expects(:call).returns(response)
       File.stubs(:read)
         .with(File.join(ShopifyCli::ROOT, "lib/graphql/api/mutation.graphql"))
         .returns(@mutation)

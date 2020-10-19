@@ -1,5 +1,4 @@
 require 'shopify_cli'
-require 'net/http'
 
 module ShopifyCli
   class API
@@ -58,14 +57,10 @@ module ShopifyCli
         unless uri.is_a?(URI::HTTP)
           ctx.abort("Invalid URL: #{graphql_url}")
         end
-        http = ::Net::HTTP.new(uri.host, uri.port)
-        http.use_ssl = true
 
-        req = ::Net::HTTP::Post.new(uri.request_uri)
-        req.body = JSON.dump(query: body.tr("\n", ""), variables: variables)
-        req['Content-Type'] = 'application/json'
-        headers.each { |header, value| req[header] = value }
-        response = http.request(req)
+        # we delay this require so as to avoid a performance hit on starting the CLI
+        require 'shopify-cli/http_request'
+        response = HttpRequest.call(uri, body, variables, headers)
 
         case response.code.to_i
         when 200..399
