@@ -76,6 +76,23 @@ module ShopifyCli
       end
     end
 
+    def test_query_fails_gracefully_with_internal_server_error_on_debug_mode
+      @context.stubs(:getenv).with('DEBUG').returns(true)
+      response = stub('response', code: '500', body: '{}')
+      HttpRequest.expects(:call).returns(response).times(4)
+      File.stubs(:read)
+        .with(File.join(ShopifyCli::ROOT, "lib/graphql/api/mutation.graphql"))
+        .returns(@mutation)
+
+      @context.expects(:debug).with(@context.message('core.api.error.internal_server_error_debug', "500\n{}"))
+      @context.expects(:puts).with(@context.message('core.api.error.internal_server_error'))
+      @api.query('api/mutation')
+      @api.stubs(:query).raises(API::APIRequestServerError)
+      assert_raises(API::APIRequestServerError) do
+        @api.query('api/mutation')
+      end
+    end
+
     def test_query_fails_gracefully_with_unexpected_error
       response = stub('response', code: '600', body: '{}')
       HttpRequest.expects(:call).returns(response)
