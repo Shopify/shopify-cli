@@ -31,8 +31,9 @@ module ShopifyCli
       )
       ctx.debug(resp)
       resp
-    rescue API::APIRequestServerError, API::APIRequestUnexpectedError
+    rescue API::APIRequestServerError, API::APIRequestUnexpectedError => e
       ctx.puts(ctx.message('core.api.error.internal_server_error'))
+      ctx.debug(ctx.message('core.api.error.internal_server_error_debug', e.message))
     end
 
     protected
