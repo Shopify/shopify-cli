@@ -70,6 +70,7 @@ module ShopifyCli
                   metadata: "{\"foo\":\"identifier\"}",
                   api_key: "apikey",
                   partner_id: 42,
+                  is_employee: false,
                 },
               })
             )
@@ -109,6 +110,7 @@ module ShopifyCli
                   ruby_version: RUBY_VERSION,
                   api_key: "apikey",
                   partner_id: 42,
+                  is_employee: false,
                 },
               })
             )
