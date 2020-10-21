@@ -76,23 +76,40 @@ module ShopifyCli
     # - `ctx`: running context from your command
     # - `yarn`: The proc, array, or string command to run if yarn is available
     # - `npm`: The proc, array, or string command to run if npm is available
+    # - `capture_response`: The boolean flag to capture the output of the running command if it is set to true
     #
     # #### Example
     #
-    #   ShopifyCli::JsSystem.new(ctx: ctx).call(yarn: ['install', '--silent'], npm: ['install', '--no-audit'])
+    #   ShopifyCli::JsSystem.new(ctx: ctx).call(
+    #     yarn: ['install', '--silent'],
+    #     npm: ['install', '--no-audit'],
+    #     capture_response: false
+    #   )
     #
-    def call(yarn:, npm:)
-      yarn? ? call_command(yarn, YARN_CORE_COMMAND) : call_command(npm, NPM_CORE_COMMAND)
+    def call(yarn:, npm:, capture_response: false)
+      if yarn?
+        call_command(yarn, YARN_CORE_COMMAND, capture_response)
+      else
+        call_command(npm, NPM_CORE_COMMAND, capture_response)
+      end
     end
 
     private
 
-    def call_command(command, core_command)
+    def call_command(command, core_command, capture_response)
       if command.is_a?(String) || command.is_a?(Array)
-        CLI::Kit::System.system(core_command, *command, chdir: ctx.root).success?
+        capture_response ? call_with_capture(command, core_command) : call_without_capture(command, core_command)
       else
         command.call
       end
+    end
+
+    def call_with_capture(command, core_command)
+      CLI::Kit::System.capture3(core_command, *command, chdir: ctx.root)
+    end
+
+    def call_without_capture(command, core_command)
+      CLI::Kit::System.system(core_command, *command, chdir: ctx.root).success?
     end
   end
 end

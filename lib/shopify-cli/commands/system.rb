@@ -23,6 +23,7 @@ module ShopifyCli
         display_cli_ruby(show_all_details)
         display_utility_commands(show_all_details)
         display_project_commands(show_all_details)
+        display_shopify_staff_identity if show_all_details
       end
 
       def self.help
@@ -138,6 +139,14 @@ module ShopifyCli
           @ctx.puts("  " + @ctx.message('core.system.env', k, ENV[k])) unless ENV[k].nil?
         end
         @ctx.puts("")
+      end
+
+      def display_shopify_staff_identity
+        is_shopifolk = ShopifyCli::Shopifolk.check
+        if is_shopifolk
+          @ctx.puts("\n" + @ctx.message('core.system.identity_header'))
+          @ctx.puts("  " + @ctx.message('core.system.identity_is_shopifolk'))
+        end
       end
     end
   end

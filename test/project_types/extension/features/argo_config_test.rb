@@ -24,9 +24,7 @@ module Extension
       end
 
       def test_aborts_when_yaml_is_invalid
-        Psych::SyntaxError.any_instance.stubs(:initialize)
-        YAML.stubs(:load_file).raises(Psych::SyntaxError)
-
+        YAML.stubs(:load_file).raises(Psych::SyntaxError.new(nil, 1, 1, nil, nil, nil))
         assert_raises(ShopifyCli::Abort) { ArgoConfig.parse_yaml(@context) }
       end
 

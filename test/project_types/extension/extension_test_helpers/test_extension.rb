@@ -5,6 +5,10 @@ module Extension
     class TestExtension < Models::Type
       IDENTIFIER = 'TEST_EXTENSION'
 
+      def graphql_identifier
+        'TEST_EXTENSION_GQL'
+      end
+
       def name
         'Test Extension'
       end

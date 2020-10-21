@@ -145,7 +145,10 @@ module Script
               'script.error.packages_outdated_cause',
               e.outdated_packages.join(', ')
             ),
-            help_suggestion: ShopifyCli::Context.message('script.error.packages_outdated_help'),
+            help_suggestion: ShopifyCli::Context.message(
+              'script.error.packages_outdated_help',
+              e.outdated_packages.collect { |package| "#{package}@latest" }.join(' ')
+            ),
           }
         end
       end
