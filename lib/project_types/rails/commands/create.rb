@@ -12,6 +12,8 @@ module Rails
 
       DEFAULT_RAILS_FLAGS = %w(--skip-spring)
 
+      LOCAL_DEBUG = 'SHOPIFY_APP_CLI_LOCAL_PARTNERS'
+
       options do |parser, flags|
         # backwards compatibility allow 'title' for now
         parser.on('--title=TITLE') { |t| flags[:title] = t }
@@ -55,7 +57,7 @@ module Rails
           scopes: 'write_products,write_customers,write_draft_orders',
         ).write(@ctx)
 
-        partners_url = "https://partners.shopify.com/#{form.organization_id}/apps/#{api_client['id']}"
+        partners_url = "#{partners_endpoint}/#{form.organization_id}/apps/#{api_client['id']}"
 
         @ctx.puts(@ctx.message('rails.create.info.created', form.title, partners_url))
         @ctx.puts(@ctx.message('rails.create.info.serve', form.name, ShopifyCli::TOOL_NAME))
@@ -171,6 +173,11 @@ module Rails
 
       def install_gem(name, version = nil)
         Gem.install(@ctx, name, version)
+      end
+
+      def partners_endpoint
+        return 'https://partners.shopify.com' if ENV[LOCAL_DEBUG].nil?
+        'https://partners.myshopify.io'
       end
     end
   end
