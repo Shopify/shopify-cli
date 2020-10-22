@@ -40,7 +40,7 @@ module Node
           scopes: 'write_products,write_customers,write_draft_orders',
         ).write(@ctx)
 
-        partners_url = "https://partners.shopify.com/#{form.organization_id}/apps/#{api_client['id']}"
+        partners_url = "#{partners_endpoint}/#{form.organization_id}/apps/#{api_client['id']}"
 
         @ctx.puts(@ctx.message('node.create.info.created', form.title, partners_url))
         @ctx.puts(@ctx.message('node.create.info.serve', form.name, ShopifyCli::TOOL_NAME))
@@ -111,6 +111,11 @@ module Node
         rescue Errno::ENOENT => e
           @ctx.debug(e)
         end
+      end
+
+      def partners_endpoint
+        return 'https://partners.myshopify.io' if @ctx.getenv(ShopifyCli::PartnersAPI::LOCAL_DEBUG)
+        'https://partners.shopify.com'
       end
     end
   end
