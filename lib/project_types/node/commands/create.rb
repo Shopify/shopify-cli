@@ -2,7 +2,6 @@
 module Node
   module Commands
     class Create < ShopifyCli::SubCommand
-      LOCAL_DEBUG = 'SHOPIFY_APP_CLI_LOCAL_PARTNERS'
       options do |parser, flags|
         # backwards compatibility allow 'title' for now
         parser.on('--title=TITLE') { |t| flags[:title] = t }
@@ -115,7 +114,7 @@ module Node
       end
 
       def partners_endpoint
-        return 'https://partners.shopify.com' if ENV[LOCAL_DEBUG].nil?
+        return 'https://partners.shopify.com' if ENV[ShopifyCli::PartnersAPI::LOCAL_DEBUG].nil?
         'https://partners.myshopify.io'
       end
     end
