@@ -174,8 +174,8 @@ module Rails
       end
 
       def partners_endpoint
-        return 'https://partners.shopify.com' if ENV[ShopifyCli::PartnersAPI::LOCAL_DEBUG].nil?
-        'https://partners.myshopify.io'
+        return 'https://partners.myshopify.io' if @ctx.getenv(ShopifyCli::PartnersAPI::LOCAL_DEBUG)
+        'https://partners.shopify.com'
       end
     end
   end
