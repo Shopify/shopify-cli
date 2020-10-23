@@ -14,15 +14,15 @@ module Theme
         errors << "password" if password.strip.empty?
         ctx.abort(ctx.message('theme.forms.errors', errors.join(", ").capitalize)) unless errors.empty?
 
-        self.themeid, self.name = ask_theme(store: store, password: password)
+        self.themeid, self.name = ask_theme(store: store, password: password, themeid: themeid)
       end
 
       private
 
-      def ask_theme(store:, password:)
+      def ask_theme(store:, password:, themeid:)
         themes = Themekit.query_themes(@ctx, store: store, password: password)
 
-        themeid = CLI::UI::Prompt.ask("Select theme") do |handler|
+        themeid ||= CLI::UI::Prompt.ask("Select theme") do |handler|
           themes.each do |name, id|
             handler.option(name) { id }
           end
