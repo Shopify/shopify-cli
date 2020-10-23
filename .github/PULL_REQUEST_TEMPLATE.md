@@ -20,3 +20,11 @@ Fixes #0000 <!-- link to issue if one exists -->
   Summary of the changes committed.
   Before / after screenshots appreciated for UI changes.
 -->
+
+### Update checklist
+<!--
+  Ideally, CHANGELOG entries should be in the format
+  `* [#PR](PR URL): Message`. You should consider adding your PR
+  and then making the CHANGELOG update once you know the PR number.
+-->
+- [ ] I've added a CHANGELOG entry for this PR
