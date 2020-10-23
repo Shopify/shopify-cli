@@ -1,3 +1,11 @@
+Unreleased
+------
+
+Version 1.4.0
+------
+* Updates to tests, dependencies and internal tooling
+* #924: Improve debugging messages on Partner API errors
+
 Version 1.3.1
 ------
 * Allow any characters in ngrok account names
