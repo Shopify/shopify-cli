@@ -4,7 +4,7 @@ Unreleased
 Version 1.4.0
 ------
 * Updates to tests, dependencies and internal tooling
-* #924: Improve debugging messages on Partner API errors
+* [#924](https://github.com/Shopify/shopify-app-cli/pull/924): Improve debugging messages on Partner API errors
 
 Version 1.3.1
 ------
