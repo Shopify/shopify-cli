@@ -26,35 +26,50 @@ module Theme
         private
 
         def fetch_credentials
+          unless File.exist?('config.yml')
+            return nil
+          end
+
           config = YAML.load_file('config.yml')
           store = config['development']['store']
           password = config['development']['password']
+
           [store, password]
         end
 
         def ask_store(default)
           store = options.flags[:store] ||
-            CLI::UI::Prompt.ask(@ctx.message('theme.generate.env.ask_store', default))
+            if default
+              CLI::UI::Prompt.ask(@ctx.message('theme.generate.env.ask_store_default', default))
+            else
+              CLI::UI::Prompt.ask(@ctx.message('theme.generate.env.ask_store'), allow_empty: false)
+            end
           return nil if store.empty?
           store
         end
 
         def ask_password(default)
           password = options.flags[:password] ||
-            CLI::UI::Prompt.ask(@ctx.message('theme.generate.env.ask_password', default))
+            if default
+              CLI::UI::Prompt.ask(@ctx.message('theme.generate.env.ask_password_default', default))
+            else
+              CLI::UI::Prompt.ask(@ctx.message('theme.generate.env.ask_password'), allow_empty: false)
+            end
           return nil if password.empty?
           password
         end
 
         def ask_theme(store:, password:)
+          theme = options.flags[:themeid]
+          return theme if theme
+
           themes = Themekit.query_themes(@ctx, store: store, password: password)
 
-          theme = options.flags[:themeid] ||
-            CLI::UI::Prompt.ask(@ctx.message('theme.generate.env.ask_theme')) do |handler|
-              themes.each do |name, id|
-                handler.option(name) { id }
-              end
+          theme = CLI::UI::Prompt.ask(@ctx.message('theme.generate.env.ask_theme')) do |handler|
+            themes.each do |name, id|
+              handler.option(name) { id }
             end
+          end
           theme
         end
       end

@@ -3,9 +3,24 @@ require 'project_types/theme/test_helper'
 
 module Theme
   module Forms
+<<<<<<< HEAD:test/project_types/theme/forms/connect_test.rb
     class ConnectTest < MiniTest::Test
+=======
+    class PullTest < MiniTest::Test
+      resp = [200,
+              { "themes" =>
+               [{ "id" => 2468,
+                  "name" => "my_theme" },
+                { "id" => 1357,
+                  "name" => "your_theme" }] }]
+      THEMES = resp[1]['themes'].map { |theme| [theme['name'], theme['id']] }.to_h
+
+>>>>>>> 58d1e78... Add tests:test/project_types/theme/forms/pull_test.rb
       def test_returns_all_defined_attributes_if_valid
-        query_themes
+        Themekit.expects(:query_themes)
+          .with(@context, store: 'shop.myshopify.com', password: 'boop')
+          .returns(THEMES)
+
         form = ask
         assert_equal('shop.myshopify.com', form.store)
         assert_equal('boop', form.password)
@@ -14,25 +29,37 @@ module Theme
       end
 
       def test_env_can_be_provided_by_flag
-        query_themes
+        Themekit.expects(:query_themes)
+          .with(@context, store: 'shop.myshopify.com', password: 'boop')
+          .returns(THEMES)
+
         form = ask(env: 'test')
         assert_equal('test', form.env)
       end
 
       def test_env_nil_if_not_provided
-        query_themes
+        Themekit.expects(:query_themes)
+          .with(@context, store: 'shop.myshopify.com', password: 'boop')
+          .returns(THEMES)
+
         form = ask
         assert_nil(form.env)
       end
 
       def test_store_can_be_provided_by_flag
-        query_themes
+        Themekit.expects(:query_themes)
+          .with(@context, store: 'shop.myshopify.com', password: 'boop')
+          .returns(THEMES)
+
         form = ask(store: 'shop.myshopify.com')
         assert_equal('shop.myshopify.com', form.store)
       end
 
       def test_store_is_prompted
-        query_themes
+        Themekit.expects(:query_themes)
+          .with(@context, store: 'shop.myshopify.com', password: 'boop')
+          .returns(THEMES)
+
         CLI::UI::Prompt.expects(:ask)
           .with(@context.message('theme.forms.ask_store'), allow_empty: false)
           .returns('shop.myshopify.com')
@@ -40,13 +67,19 @@ module Theme
       end
 
       def test_password_can_be_provided_by_flag
-        query_themes
+        Themekit.expects(:query_themes)
+          .with(@context, store: 'shop.myshopify.com', password: 'boop')
+          .returns(THEMES)
+
         form = ask(password: 'boop')
         assert_equal('boop', form.password)
       end
 
       def test_password_is_prompted
-        query_themes
+        Themekit.expects(:query_themes)
+          .with(@context, store: 'shop.myshopify.com', password: 'boop')
+          .returns(THEMES)
+
         CLI::UI::Prompt.expects(:ask).with(@context.message('theme.forms.ask_password'), allow_empty: false)
           .returns('boop')
         ask(password: nil)
@@ -63,6 +96,7 @@ module Theme
 
       private
 
+<<<<<<< HEAD:test/project_types/theme/forms/connect_test.rb
       def ask(password: 'boop', store: 'shop.myshopify.com', themeid: '2468', env: nil)
         Connect.ask(
           @context,
@@ -72,6 +106,15 @@ module Theme
           themeid: themeid,
           env: env
         )
+=======
+      def ask(password: 'boop', store: 'shop.myshopify.com', themeid: 2468, env: nil)
+        Pull.ask(@context,
+                 [],
+                 password: password,
+                 store: store,
+                 themeid: themeid,
+                 env: env)
+>>>>>>> 58d1e78... Add tests:test/project_types/theme/forms/pull_test.rb
       end
     end
   end
