@@ -8,12 +8,15 @@ module ShopifyCli
       File.stubs(:exist?).with("/opt/dev/bin/dev").returns(true)
       File.stubs(:exist?).with("/opt/dev/.shopify-build").returns(true)
       stub_ini({ "[core]" => { "account" => "test@shopify.com", "project" => "shopify-dev" } })
+
       ShopifyCli::Shopifolk.check
+
       assert ShopifyCli::Config.get_bool('features', 'shopifolk')
     end
 
     def test_feature_always_returns_true
       ShopifyCli::Feature.enable('shopifolk')
+
       assert ShopifyCli::Shopifolk.check
     end
 
@@ -21,7 +24,9 @@ module ShopifyCli
       ShopifyCli::Feature.enable('shopifolk')
       ShopifyCli::Feature.stubs(:enabled?).with('shopifolk').returns(false)
       File.expects(:exist?).with(File.expand_path('~/.config/gcloud/configurations/config_default')).returns(false)
+
       ShopifyCli::Shopifolk.check
+
       refute ShopifyCli::Config.get_bool('features', 'shopifolk')
     end
 
@@ -29,7 +34,9 @@ module ShopifyCli
       ShopifyCli::Feature.enable('shopifolk')
       ShopifyCli::Feature.stubs(:enabled?).with('shopifolk').returns(false)
       stub_ini({ "account" => "test@shopify.com", "project" => "shopify-dev" })
+
       ShopifyCli::Shopifolk.check
+
       refute ShopifyCli::Config.get_bool('features', 'shopifolk')
     end
 
@@ -37,7 +44,9 @@ module ShopifyCli
       ShopifyCli::Feature.enable('shopifolk')
       ShopifyCli::Feature.stubs(:enabled?).with('shopifolk').returns(false)
       stub_ini({ "[core]" => { "project" => "shopify-dev" } })
+
       ShopifyCli::Shopifolk.check
+
       refute ShopifyCli::Config.get_bool('features', 'shopifolk')
     end
 
@@ -45,7 +54,9 @@ module ShopifyCli
       ShopifyCli::Feature.enable('shopifolk')
       ShopifyCli::Feature.stubs(:enabled?).with('shopifolk').returns(false)
       stub_ini({ "[core]" => { "account" => "test@test.com", "project" => "shopify-dev" } })
+
       ShopifyCli::Shopifolk.check
+
       refute ShopifyCli::Config.get_bool('features', 'shopifolk')
     end
 
@@ -54,7 +65,9 @@ module ShopifyCli
       ShopifyCli::Feature.stubs(:enabled?).with('shopifolk').returns(false)
       File.stubs(:exist?).with("/opt/dev/bin/dev").returns(false)
       stub_ini({ "[core]" => { "account" => "test@shopify.com", "project" => "shopify-dev" } })
+
       ShopifyCli::Shopifolk.check
+
       refute ShopifyCli::Config.get_bool('features', 'shopifolk')
     end
 
