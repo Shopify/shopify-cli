@@ -26,7 +26,7 @@ module ShopifyCli
       refute ShopifyCli::Config.get_bool(Feature::SECTION, TEST_FEATURE.to_s)
     end
 
-    def enabled_returns_bool_status
+    def test_enabled_returns_bool_status
       Feature.enable(TEST_FEATURE)
       assert ShopifyCli::Config.get_bool(Feature::SECTION, TEST_FEATURE.to_s)
       assert Feature.enabled?(TEST_FEATURE)

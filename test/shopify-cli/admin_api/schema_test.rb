@@ -4,7 +4,6 @@ module ShopifyCli
   class AdminAPI
     class SchemaTest < MiniTest::Test
       include TestHelpers::Project
-      include TestHelpers::Constants
 
       def setup
         super

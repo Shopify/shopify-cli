@@ -61,7 +61,6 @@ describe Script::Layers::Application::ProjectDependencies do
           @context.expects(:puts).with("\n#{error_message}")
           assert_raises(Script::Layers::Infrastructure::Errors::DependencyInstallError) do
             subject
-            assert_raises(Script::Layers::Infrastructure::Errors::DependencyInstallError)
           end
         end
       end
