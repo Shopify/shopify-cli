@@ -7,7 +7,7 @@ module ShopifyCli
       ShopifyCli::Feature.disable('shopifolk')
       File.stubs(:exist?).with("/opt/dev/bin/dev").returns(true)
       File.stubs(:exist?).with("/opt/dev/.shopify-build").returns(true)
-      stub_ini({ "[core]" => { "account" => "test@shopify.com", "project" => "shopify-dev" } })
+      stub_gcloud_ini({ "[core]" => { "account" => "test@shopify.com", "project" => "shopify-dev" } })
 
       ShopifyCli::Shopifolk.check
 
@@ -33,7 +33,7 @@ module ShopifyCli
     def test_no_section_in_gcloud_config_disables_shopifolk_feature
       ShopifyCli::Feature.enable('shopifolk')
       ShopifyCli::Feature.stubs(:enabled?).with('shopifolk').returns(false)
-      stub_ini({ "account" => "test@shopify.com", "project" => "shopify-dev" })
+      stub_gcloud_ini({ "account" => "test@shopify.com", "project" => "shopify-dev" })
 
       ShopifyCli::Shopifolk.check
 
@@ -43,7 +43,7 @@ module ShopifyCli
     def test_no_account_in_gcloud_config_disables_shopifolk_feature
       ShopifyCli::Feature.enable('shopifolk')
       ShopifyCli::Feature.stubs(:enabled?).with('shopifolk').returns(false)
-      stub_ini({ "[core]" => { "project" => "shopify-dev" } })
+      stub_gcloud_ini({ "[core]" => { "project" => "shopify-dev" } })
 
       ShopifyCli::Shopifolk.check
 
@@ -53,7 +53,7 @@ module ShopifyCli
     def test_incorrect_email_in_gcloud_config_disables_shopifolk_feature
       ShopifyCli::Feature.enable('shopifolk')
       ShopifyCli::Feature.stubs(:enabled?).with('shopifolk').returns(false)
-      stub_ini({ "[core]" => { "account" => "test@test.com", "project" => "shopify-dev" } })
+      stub_gcloud_ini({ "[core]" => { "account" => "test@test.com", "project" => "shopify-dev" } })
 
       ShopifyCli::Shopifolk.check
 
@@ -64,7 +64,7 @@ module ShopifyCli
       ShopifyCli::Feature.enable('shopifolk')
       ShopifyCli::Feature.stubs(:enabled?).with('shopifolk').returns(false)
       File.stubs(:exist?).with("/opt/dev/bin/dev").returns(false)
-      stub_ini({ "[core]" => { "account" => "test@shopify.com", "project" => "shopify-dev" } })
+      stub_gcloud_ini({ "[core]" => { "account" => "test@shopify.com", "project" => "shopify-dev" } })
 
       ShopifyCli::Shopifolk.check
 
@@ -73,7 +73,7 @@ module ShopifyCli
 
     private
 
-    def stub_ini(ret_val)
+    def stub_gcloud_ini(ret_val)
       File.stubs(:exist?).with(File.expand_path('~/.config/gcloud/configurations/config_default')).returns(true)
       ini = CLI::Kit::Ini.new
       ini.expects(:parse).returns(ini)
