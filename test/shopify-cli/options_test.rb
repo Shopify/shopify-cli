@@ -14,7 +14,7 @@ module ShopifyCli
     def test_parses_subcommand_and_flags
       opts = Options.new
       assert_equal ['subc', 'foo', 'bar'], opts.parse(@block, ['subc', '-v', 'foo', 'bar'])
-      assert_equal true, opts.flags[:verbose]
+      assert opts.flags[:verbose]
     end
 
     def test_parse_returns_empty_array_when_no_args_provided
@@ -26,7 +26,7 @@ module ShopifyCli
       block = proc {}
       opts = Options.new
       opts.parse(block, ['-h'])
-      assert_equal true, opts.help
+      assert opts.help
     end
   end
 end

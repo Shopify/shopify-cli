@@ -30,10 +30,10 @@ module ShopifyCli
         )
 
         orgs = PartnersAPI::Organizations.fetch_all(@context)
-        assert_equal(orgs.count, 1)
-        assert_equal(orgs.first['id'], 42)
-        assert_equal(orgs.first['stores'].count, 1)
-        assert_equal(orgs.first['stores'].first['shopDomain'], 'shopdomain.myshopify.com')
+        assert_equal(1, orgs.count)
+        assert_equal(42, orgs.first['id'])
+        assert_equal(1, orgs.first['stores'].count)
+        assert_equal('shopdomain.myshopify.com', orgs.first['stores'].first['shopDomain'])
       end
 
       def test_fetch_all_handles_no_shops
@@ -45,9 +45,9 @@ module ShopifyCli
         )
 
         orgs = PartnersAPI::Organizations.fetch_all(@context)
-        assert_equal(orgs.count, 1)
-        assert_equal(orgs.first['id'], 42)
-        assert_equal(orgs.first['stores'].count, 0)
+        assert_equal(1, orgs.count)
+        assert_equal(42, orgs.first['id'])
+        assert_equal(0, orgs.first['stores'].count)
       end
 
       def test_fetch_all_handles_no_orgs
@@ -57,7 +57,7 @@ module ShopifyCli
         )
 
         orgs = PartnersAPI::Organizations.fetch_all(@context)
-        assert_equal(orgs.count, 0)
+        assert_equal(0, orgs.count)
       end
 
       def test_fetch_queries_partners
@@ -85,9 +85,9 @@ module ShopifyCli
         )
 
         org = PartnersAPI::Organizations.fetch(@context, id: 42)
-        assert_equal(org['id'], 42)
-        assert_equal(org['stores'].count, 1)
-        assert_equal(org['stores'].first['shopDomain'], 'shopdomain.myshopify.com')
+        assert_equal(42, org['id'])
+        assert_equal(1, org['stores'].count)
+        assert_equal('shopdomain.myshopify.com', org['stores'].first['shopDomain'])
       end
 
       def test_fetch_returns_nil_when_not_found
@@ -126,8 +126,8 @@ module ShopifyCli
         )
 
         org = PartnersAPI::Organizations.fetch(@context, id: 42)
-        assert_equal(org['id'], 42)
-        assert_equal(org['stores'].count, 0)
+        assert_equal(42, org['id'])
+        assert_equal(0, org['stores'].count)
       end
 
       def test_fetch_org_with_app_info
@@ -179,9 +179,9 @@ module ShopifyCli
           },
         )
         orgs = PartnersAPI::Organizations.fetch_with_app(@context)
-        assert_equal(orgs.count, 2)
-        assert_equal(orgs.first['id'], 421)
-        assert_equal(orgs.first['stores'].first['shopDomain'], 'store.myshopify.com')
+        assert_equal(2, orgs.count)
+        assert_equal(421, orgs.first['id'])
+        assert_equal('store.myshopify.com', orgs.first['stores'].first['shopDomain'])
       end
 
       def test_fetch_org_with_empty_app_info
@@ -203,10 +203,10 @@ module ShopifyCli
           },
         )
         orgs = PartnersAPI::Organizations.fetch_with_app(@context)
-        assert_equal(orgs.count, 1)
-        assert_equal(orgs.first['id'], 421)
-        assert_equal(orgs.first['stores'].count, 0)
-        assert_equal(orgs.first['apps'].count, 0)
+        assert_equal(1, orgs.count)
+        assert_equal(421, orgs.first['id'])
+        assert_equal(0, orgs.first['stores'].count)
+        assert_equal(0, orgs.first['apps'].count)
       end
     end
   end

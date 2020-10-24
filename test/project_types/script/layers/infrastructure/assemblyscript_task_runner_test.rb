@@ -67,13 +67,13 @@ describe Script::Layers::Infrastructure::AssemblyScriptTaskRunner do
 
     it "should return true if node_modules folder exists" do
       stub_npm_outdated({})
-      assert_equal true, subject
+      assert subject
     end
 
     it "should return false if node_modules folder does not exists" do
       Dir.stubs(:exist?).returns(false)
       stub_npm_outdated({})
-      assert_equal false, subject
+      refute subject
     end
 
     it "should not error if `npm outdated` returns nothing" do

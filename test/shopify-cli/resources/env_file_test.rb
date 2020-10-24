@@ -8,20 +8,20 @@ module ShopifyCli
 
       def test_read_reads_env_content_from_file
         env_file = EnvFile.read
-        assert_equal(env_file.api_key, 'apikey')
-        assert_equal(env_file.secret, 'secret')
-        assert_equal(env_file.host, 'https://example.com')
-        assert_equal(env_file.shop, 'my-test-shop.myshopify.com')
-        assert_equal(env_file.extra['AWSKEY'], 'awskey')
+        assert_equal('apikey', env_file.api_key)
+        assert_equal('secret', env_file.secret)
+        assert_equal('https://example.com', env_file.host)
+        assert_equal('my-test-shop.myshopify.com', env_file.shop)
+        assert_equal('awskey', env_file.extra['AWSKEY'])
       end
 
       def test_parse_external_env
         env_file = EnvFile.parse_external_env
-        assert_equal(env_file[:api_key], 'apikey')
-        assert_equal(env_file[:secret], 'secret')
-        assert_equal(env_file[:host], 'https://example.com')
-        assert_equal(env_file[:shop], 'my-test-shop.myshopify.com')
-        assert_equal(env_file[:extra], { 'AWSKEY' => 'awskey' })
+        assert_equal('apikey', env_file[:api_key])
+        assert_equal('secret', env_file[:secret])
+        assert_equal('https://example.com', env_file[:host])
+        assert_equal('my-test-shop.myshopify.com', env_file[:shop])
+        assert_equal({ 'AWSKEY' => 'awskey' }, env_file[:extra])
       end
 
       def test_write_writes_env_content_to_file

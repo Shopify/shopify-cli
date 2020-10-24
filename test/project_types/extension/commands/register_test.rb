@@ -98,6 +98,8 @@ module Extension
         ])
       end
 
+      private
+
       def run_register_command(api_key: @api_key)
         Commands::Register.ctx = @context
         Commands::Register.call(

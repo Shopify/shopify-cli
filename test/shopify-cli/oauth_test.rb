@@ -44,8 +44,8 @@ module ShopifyCli
         .to_return(status: 200, body: token_resp, headers: {})
 
       client.authenticate(endpoint)
-      assert_equal client.store.get(:test_access_token), 'accesstoken123'
-      assert_equal client.store.get(:test_refresh_token), 'refreshtoken123'
+      assert_equal('accesstoken123', client.store.get(:test_access_token))
+      assert_equal('refreshtoken123', client.store.get(:test_refresh_token))
     end
 
     def test_authenticate_without_secret
@@ -75,8 +75,8 @@ module ShopifyCli
         .to_return(status: 200, body: token_resp, headers: {})
 
       client.authenticate(endpoint)
-      assert_equal client.store.get(:test_access_token), 'accesstoken123'
-      assert_equal client.store.get(:test_refresh_token), 'refreshtoken123'
+      assert_equal('accesstoken123', client.store.get(:test_access_token))
+      assert_equal('refreshtoken123', client.store.get(:test_refresh_token))
     end
 
     def test_request_exchange_token
@@ -119,9 +119,9 @@ module ShopifyCli
         .to_return(status: 200, body: '{"access_token":"exchangetoken123"}', headers: {})
 
       client.authenticate(endpoint)
-      assert_equal client.store.get(:test_access_token), 'accesstoken123'
-      assert_equal client.store.get(:test_refresh_token), 'refreshtoken123'
-      assert_equal client.store.get(:test_exchange_token), 'exchangetoken123'
+      assert_equal('accesstoken123', client.store.get(:test_access_token))
+      assert_equal('refreshtoken123', client.store.get(:test_refresh_token))
+      assert_equal('exchangetoken123', client.store.get(:test_exchange_token))
     end
 
     def test_refresh_exchange_token
@@ -147,7 +147,7 @@ module ShopifyCli
         .to_return(status: 200, body: '{"access_token":"exchangetoken456"}', headers: {})
 
       client.authenticate(endpoint)
-      assert_equal client.store.get(:test_exchange_token), 'exchangetoken456'
+      assert_equal('exchangetoken456', client.store.get(:test_exchange_token))
     end
 
     def test_refresh_access_token_fallback
@@ -203,9 +203,9 @@ module ShopifyCli
         .to_return(status: 200, body: '{"access_token":"exchangetoken456"}', headers: {})
 
       client.authenticate(endpoint)
-      assert_equal client.store.get(:test_access_token), 'accesstoken456'
-      assert_equal client.store.get(:test_refresh_token), 'refreshtoken456'
-      assert_equal client.store.get(:test_exchange_token), 'exchangetoken456'
+      assert_equal('accesstoken456', client.store.get(:test_access_token))
+      assert_equal('refreshtoken456', client.store.get(:test_refresh_token))
+      assert_equal('exchangetoken456', client.store.get(:test_exchange_token))
     end
 
     def test_authenticate_with_invalid_request

@@ -6,20 +6,20 @@ module ShopifyCli
       db = new_db
       db.set(foo: 'bar', life: 42)
       db.db.transaction do
-        assert_equal db.db[:foo], 'bar'
-        assert_equal db.db[:life], 42
+        assert_equal('bar', db.db[:foo])
+        assert_equal(42, db.db[:life])
       end
     end
 
     def test_get
       db = new_db
-      assert_equal db.get(:keyone), 'value'
-      assert_equal db.get(:keytwo), 42
+      assert_equal('value', db.get(:keyone))
+      assert_equal(42, db.get(:keytwo))
     end
 
     def test_keys
       db = new_db
-      assert_equal db.keys, [:keyone, :keytwo]
+      assert_equal([:keyone, :keytwo], db.keys)
     end
 
     def test_exists?

@@ -9,6 +9,7 @@ group :development, :test do
   gem 'pry-byebug'
   gem 'byebug'
   gem 'rubocop-shopify', require: false
+  gem 'rubocop-minitest', require: false
 end
 
 group :test do
