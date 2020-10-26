@@ -1,0 +1,55 @@
+name: Ruby
+
+on:
+  push:
+    tags:
+      - 'v*'
+
+jobs:
+  job1:
+    runs-on: ubuntu-latest
+
+    steps:
+    - uses: actions/checkout@v2
+    - name: Set up Ruby
+      uses: actions/setup-ruby@v1.1.2
+      with:
+        ruby-version: 2.6
+    - name: Install dependencies
+      run: bundle install
+    - name: Create package
+      run: bundle exec rake package
+    - name: finding packages...
+      run: |
+        cd /github/workspace/packaging/builds/1.4.0
+        ls
+        echo ${{ github.ref }}
+        echo ::set-env name=version::$(basename "$PWD")
+        find . -type f -name "*.deb"
+        echo ::set-env name=deb_file::$(find . -type f -name "*.deb")
+        echo ${{ env.deb_file }}
+
+    - name: Create Release
+      id: create_release
+      uses: actions/create-release@v1
+      env:
+        GITHUB_TOKEN: ${{ secrets.GITHUB_TOKEN }}
+      with:
+        tag_name: v${{ env.version }}
+        release_name: Release ${{ env.version }}
+        body: |
+          Changes in this Release
+          - First Change
+          - Second Change
+        draft: true
+        prerelease: false
+    - name: Upload Release Asset
+      id: upload-release-asset 
+      uses: actions/upload-release-asset@v1
+      env:
+        GITHUB_TOKEN: ${{ secrets.GITHUB_TOKEN }}
+      with:
+        upload_url: ${{ steps.create_release.outputs.upload_url }} # This pulls from the CREATE RELEASE step above, referencing it's ID to get its outputs object, which include a `upload_url`. See this blog post for more info: https://jasonet.co/posts/new-features-of-github-actions/#passing-data-to-future-steps 
+        asset_path: ${{ env.deb_file }}
+        asset_name: ${{ env.deb_file }}
+        asset_content_type: application/x-binary
