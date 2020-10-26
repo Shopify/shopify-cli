@@ -2,6 +2,8 @@ require 'test_helper'
 
 module ShopifyCli
   class FeatureTest < MiniTest::Test
+    include TestHelpers::FakeFS
+
     TEST_FEATURE = :feature_set_flag_test
 
     class TestClass
