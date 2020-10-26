@@ -1,4 +1,4 @@
-name: Ruby
+name: Create Release
 
 on:
   push:
@@ -6,29 +6,27 @@ on:
       - 'v*'
 
 jobs:
-  job1:
+  create-release:
     runs-on: ubuntu-latest
-
     steps:
     - uses: actions/checkout@v2
+    
     - name: Set up Ruby
       uses: actions/setup-ruby@v1.1.2
       with:
         ruby-version: 2.6
+    
     - name: Install dependencies
       run: bundle install
+    
     - name: Create package
       run: bundle exec rake package
+    
     - name: finding packages...
       run: |
-        cd /github/workspace/packaging/builds/1.4.0
-        ls
-        echo ${{ github.ref }}
-        echo ::set-env name=version::$(basename "$PWD")
-        find . -type f -name "*.deb"
+        cd /github/workspace/packaging/builds/
+        echo ::set-env name=version::$(ls)
         echo ::set-env name=deb_file::$(find . -type f -name "*.deb")
-        echo ${{ env.deb_file }}
-
     - name: Create Release
       id: create_release
       uses: actions/create-release@v1
@@ -43,6 +41,7 @@ jobs:
           - Second Change
         draft: true
         prerelease: false
+    
     - name: Upload Release Asset
       id: upload-release-asset 
       uses: actions/upload-release-asset@v1
