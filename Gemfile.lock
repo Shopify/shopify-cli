@@ -47,6 +47,8 @@ GEM
       unicode-display_width (>= 1.4.0, < 2.0)
     rubocop-ast (0.8.0)
       parser (>= 2.7.1.5)
+    rubocop-minitest (0.10.1)
+      rubocop (>= 0.87)
     rubocop-shopify (1.0.6)
       rubocop (>= 0.92, < 0.94)
     ruby-progressbar (1.10.1)
@@ -69,6 +71,7 @@ DEPENDENCIES
   mocha
   pry-byebug
   rake
+  rubocop-minitest
   rubocop-shopify
   timecop
   webmock

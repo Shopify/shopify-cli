@@ -46,7 +46,7 @@ module ShopifyCli
         .once
       mock_rubygems_https_call(response_body: "{\"version\":\"99.99.99\"}")
 
-      assert_equal(@ctx.new_version, "99.99.99")
+      assert_equal("99.99.99", @ctx.new_version)
     end
 
     def test_no_check_for_new_version_if_config_section_and_interval_not_passed
@@ -70,7 +70,7 @@ module ShopifyCli
         .once
       mock_rubygems_https_call(response_body: "{\"version\":\"99.99.99\"}")
 
-      assert_equal(@ctx.new_version, "99.99.99")
+      assert_equal("99.99.99", @ctx.new_version)
     end
 
     def test_check_for_new_version_returns_nil_if_https_call_returns_garbage

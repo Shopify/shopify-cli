@@ -36,8 +36,8 @@ module ShopifyCli
           .with(@context.message('core.tasks.select_org_and_shop.organization_select'))
           .returns(431)
         form = call(org_id: nil, shop: nil)
-        assert_equal(form[:organization_id], 431)
-        assert_equal(form[:shop_domain], 'other.myshopify.com')
+        assert_equal(431, form[:organization_id])
+        assert_equal('other.myshopify.com', form[:shop_domain])
       end
 
       def test_will_auto_pick_with_only_one_org
@@ -57,8 +57,8 @@ module ShopifyCli
         )
         io = capture_io do
           form = call(org_id: nil, shop: nil)
-          assert_equal(form[:organization_id], 421)
-          assert_equal(form[:shop_domain], 'next.myshopify.com')
+          assert_equal(421, form[:organization_id])
+          assert_equal('next.myshopify.com', form[:shop_domain])
         end
         assert_match(
           CLI::UI.fmt(@context.message('core.tasks.select_org_and_shop.organization', 'hoopy froods', 421)),
@@ -84,8 +84,8 @@ module ShopifyCli
           }
         )
         form = call(org_id: 123, shop: nil)
-        assert_equal(form[:organization_id], 123)
-        assert_equal(form[:shop_domain], 'shopdomain.myshopify.com')
+        assert_equal(123, form[:organization_id])
+        assert_equal('shopdomain.myshopify.com', form[:shop_domain])
       end
 
       def test_it_will_fail_if_no_orgs_are_available
@@ -146,7 +146,7 @@ module ShopifyCli
         )
         io = capture_io do
           form = call(org_id: 123, shop: nil)
-          assert_equal(form[:shop_domain], 'shopdomain.myshopify.com')
+          assert_equal('shopdomain.myshopify.com', form[:shop_domain])
         end
         assert_match(CLI::UI.fmt(
           @context.message('core.tasks.select_org_and_shop.development_store', 'shopdomain.myshopify.com')
@@ -182,7 +182,7 @@ module ShopifyCli
           )
           .returns('selected')
         form = call(org_id: 123, shop: nil)
-        assert_equal(form[:shop_domain], 'selected')
+        assert_equal('selected', form[:shop_domain])
       end
 
       private

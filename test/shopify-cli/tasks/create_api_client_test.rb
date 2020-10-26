@@ -35,7 +35,7 @@ module ShopifyCli
         )
 
         refute_nil(api_client)
-        assert_equal(api_client['apiKey'], 'newapikey')
+        assert_equal('newapikey', api_client['apiKey'])
       end
 
       def test_call_will_return_any_user_errors
@@ -67,7 +67,7 @@ module ShopifyCli
             type: 'public',
           )
         end
-        assert_equal(err.message, "{{x}} title is not a valid title")
+        assert_equal("{{x}} title is not a valid title", err.message)
       end
     end
   end
