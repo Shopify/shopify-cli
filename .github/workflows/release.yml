@@ -35,7 +35,6 @@ jobs:
       id: binaries
       run: |
         cd packaging/builds/${{ steps.folder.outputs.name }}
-        find . -type f -name "*.deb"
         deb=$(find . -type f -name '*.deb')
         rpm=$(find . -type f -name "*.rpm")
         echo ::set-output name=deb_file::"${deb:2}"
@@ -45,9 +44,10 @@ jobs:
       env:
         GITHUB_TOKEN: ${{ secrets.GITHUB_TOKEN }}
       run: |
+        cd packaging/builds/${{ steps.folder.outputs.name }}
         hub release create ${{ steps.tag.outputs.value }} \
-        -a /home/runner/work/shopify-app-cli/shopify-app-cli/packaging/builds/${{ steps.folder.outputs.name }}/${{ steps.binaries.outputs.deb_file }} \
-        -a /home/runner/work/shopify-app-cli/shopify-app-cli/packaging/builds/${{ steps.folder.outputs.name }}/${{ steps.binaries.outputs.rpm_file }} \
+        -a ${{ steps.binaries.outputs.deb_file }} \
+        -a ${{ steps.binaries.outputs.rpm_file }} \
         -m "Version ${{ steps.folder.outputs.name }}
 
         Release of version ${{ steps.folder.outputs.name }} of the Shopify App CLI
