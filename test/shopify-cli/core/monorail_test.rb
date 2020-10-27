@@ -67,9 +67,9 @@ module ShopifyCli
                   uname: RbConfig::CONFIG["host"],
                   cli_version: ShopifyCli::VERSION,
                   ruby_version: RUBY_VERSION,
-                  metadata: "{\"foo\":\"identifier\"}",
                   api_key: "apikey",
                   partner_id: 42,
+                  metadata: "{\"foo\":\"identifier\"}",
                 },
               })
             )
