@@ -9,6 +9,9 @@ jobs:
   create-release:
     runs-on: ubuntu-latest
     steps:
+    - name: Extract tag name
+      id: tag
+      run: echo "::set-output name=value::${GITHUB_REF##*/}"
     - uses: actions/checkout@v2
     
     - name: Set up Ruby
@@ -21,34 +24,32 @@ jobs:
     
     - name: Create package
       run: bundle exec rake package
-    
-    - name: finding packages...
+
+    - name: Get Directory
+      id: folder
       run: |
-        cd /github/workspace/packaging/builds/
-        echo ::set-env name=version::$(ls)
-        echo ::set-env name=deb_file::$(find . -type f -name "*.deb")
-    - name: Create Release
-      id: create_release
-      uses: actions/create-release@v1
-      env:
-        GITHUB_TOKEN: ${{ secrets.GITHUB_TOKEN }}
-      with:
-        tag_name: v${{ env.version }}
-        release_name: Release ${{ env.version }}
-        body: |
-          Changes in this Release
-          - First Change
-          - Second Change
-        draft: true
-        prerelease: false
+        cd packaging/builds
+        echo ::set-output name=name::$(ls)
     
-    - name: Upload Release Asset
-      id: upload-release-asset 
-      uses: actions/upload-release-asset@v1
+    - name: Get Packages
+      id: binaries
+      run: |
+        cd packaging/builds/${{ steps.folder.outputs.name }}
+        echo $PWD
+        find . -type f -name "*.deb"
+        deb=$(find . -type f -name '*.deb')
+        rpm=$(find . -type f -name "*.rpm")
+        echo ::set-output name=deb_file::"${deb:2}"
+        echo ::set-output name=rpm_file::"${rpm:2}"
+
+    - name: Create Release # https://hub.github.com/hub-release.1.html
       env:
         GITHUB_TOKEN: ${{ secrets.GITHUB_TOKEN }}
-      with:
-        upload_url: ${{ steps.create_release.outputs.upload_url }} # This pulls from the CREATE RELEASE step above, referencing it's ID to get its outputs object, which include a `upload_url`. See this blog post for more info: https://jasonet.co/posts/new-features-of-github-actions/#passing-data-to-future-steps 
-        asset_path: ${{ env.deb_file }}
-        asset_name: ${{ env.deb_file }}
-        asset_content_type: application/x-binary
+      run: |
+        hub release create ${{ steps.tag.outputs.value }} \
+        -a /home/runner/work/shopify-app-cli/shopify-app-cli/packaging/builds/${{ steps.folder.outputs.name }}/${{ steps.binaries.outputs.deb_file }} \
+        -a /home/runner/work/shopify-app-cli/shopify-app-cli/packaging/builds/${{ steps.folder.outputs.name }}/${{ steps.binaries.outputs.rpm_file }} \
+        -m "Version ${{ steps.folder.outputs.name }}
+
+        Release of version ${{ steps.folder.outputs.name }} of the Shopify App CLI
+        Please refer to [CHANGELOG](https://github.com/Shopify/shopify-app-cli/blob/master/CHANGELOG.md) for details."
