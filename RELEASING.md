@@ -49,7 +49,12 @@
     * commit the change and create a PR on the [Shopify Homebrew repository](https://github.com/Shopify/homebrew-shopify)
     * when PR is approved, merge into main branch
 
-1. Go to [releases](https://github.com/Shopify/shopify-app-cli/releases) page of `Shopify/shopify-app-cli` repo and create a new release:
+1. Check the "Actions" tab to see if the _Create Release_ workflow is successful. 
+   The workflow will automatically create a release with the latest tag and the `.deb`, `.rpm` assets attached.
+   
+   [Manual Instructions]
+   
+   Go to [releases](https://github.com/Shopify/shopify-app-cli/releases) page of `Shopify/shopify-app-cli` repo and create a new release:
     * use the tag created in step 8 by Shipit (should be "vX.Y.Z")
     * release title = "Version X.Y.Z"
     * description should be 
