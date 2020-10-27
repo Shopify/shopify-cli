@@ -35,7 +35,6 @@ jobs:
       id: binaries
       run: |
         cd packaging/builds/${{ steps.folder.outputs.name }}
-        echo $PWD
         find . -type f -name "*.deb"
         deb=$(find . -type f -name '*.deb')
         rpm=$(find . -type f -name "*.rpm")
