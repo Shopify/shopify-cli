@@ -10,6 +10,8 @@ module Script
       include TestHelpers::FakeFS
 
       def setup
+        super
+        ShopifyCli::Core::Monorail.stubs(:log).yields
         @context = TestHelpers::FakeContext.new
         @language = 'ts'
         @script_name = 'name'
@@ -22,6 +24,8 @@ module Script
       end
 
       def test_prints_help_with_no_name_argument
+        root = File.expand_path(__dir__ + '../../../../..')
+        FakeFS::FileSystem.clone(root + '/lib/project_types/script/config/extension_points.yml')
         @script_name = nil
         io = capture_io { perform_command }
         assert_match(CLI::UI.fmt(Script::Commands::Create.help), io.join)
