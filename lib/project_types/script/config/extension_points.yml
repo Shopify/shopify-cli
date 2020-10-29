@@ -13,7 +13,7 @@ unit_limit_per_order:
 payment_filter:
   assemblyscript:
     package: "@shopify/extension-point-as-payment-filter"
-    version: "^0.5.0"
+    version: "^0.6.0"
     sdk-version: "^7.0.0"
     toolchain-version: "^1.1.0"
 shipping_filter:
