@@ -21,7 +21,7 @@ jobs:
     
     - name: Install dependencies
       run: bundle install
-    
+
     - name: Create package
       run: bundle exec rake package
 
@@ -39,6 +39,14 @@ jobs:
         rpm=$(find . -type f -name "*.rpm")
         echo ::set-output name=deb_file::"${deb:2}"
         echo ::set-output name=rpm_file::"${rpm:2}"
+
+    - uses: dawidd6/action-homebrew-bump-formula@v3
+      with:
+        token: ${{secrets.TOKEN}}
+        tap: shopify/shopify
+        formula: shopify-cli
+        tag: ${{ steps.folder.outputs.name }}
+        message: "Version bump, created by github actions"
 
     - name: Create Release # https://hub.github.com/hub-release.1.html
       env:
