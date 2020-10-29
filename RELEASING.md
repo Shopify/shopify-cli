@@ -43,11 +43,7 @@
    ```
    This will generate the `.deb`, `.rpm` and brew formula files, which will be located in `packaging/builds/X.Y.Z/`.
 
-1. Clone the `Shopify/homebrew-shopify` repository (if not already cloned), and then
-    * create a branch named `release_X_Y_Z_of_shopify-cli`
-    * update the brew formula in `shopify-cli.rb` with the generated formula in `packaging/builds/X.Y.Z/` in the `Shopify/shopify-app-cli` repo (from step 9)
-    * commit the change and create a PR on the [Shopify Homebrew repository](https://github.com/Shopify/homebrew-shopify)
-    * when PR is approved, merge into main branch
-
 1. Check the "Actions" tab to see if the _Create Release_ workflow is successful. 
    The workflow will automatically create a release with the latest tag and the `.deb`, `.rpm` assets attached.
+
+1. Check the `Shopify/homebrew-shopify` repository for new branch `bump-shopify-cli-{version}` and create PR.
