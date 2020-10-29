@@ -1,6 +1,10 @@
 Unreleased
 ------
 
+Version 1.4.1
+------
+* [#917](https://github.com/Shopify/shopify-app-cli/pull/917): Ensure analytics for create action includes the same fields as other commands
+
 Version 1.4.0
 ------
 * Updates to tests, dependencies and internal tooling
