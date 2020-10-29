@@ -1,6 +1,10 @@
 Unreleased
 ------
 
+Version 1.4.1
+------
+* Improve and simplify testing 
+
 Version 1.4.0
 ------
 * Updates to tests, dependencies and internal tooling
