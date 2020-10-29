@@ -3,8 +3,7 @@ Unreleased
 
 Version 1.4.1
 ------
-* Improve and simplify testing 
-* [#917](https://github.com/Shopify/shopify-app-cli/pull/917): Add APIClient and OrgID to monorail 
+* [#917](https://github.com/Shopify/shopify-app-cli/pull/917): Ensure analytics for create action includes the same fields as other commands
 
 Version 1.4.0
 ------
