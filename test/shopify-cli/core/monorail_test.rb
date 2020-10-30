@@ -12,6 +12,7 @@ module ShopifyCli
         context = TestHelpers::FakeContext.new(root: root)
         Project.write(context, project_type: :fake, organization_id: 42)
         FileUtils.cd(context.root)
+        FakeFS::FileSystem.clone(ShopifyCli::ROOT + '/test/fixtures/project/.shopify-cli.yml')
         CLI::UI::Prompt.stubs(:confirm).returns(true)
         ShopifyCli::Core::Monorail.metadata = {}
       end
