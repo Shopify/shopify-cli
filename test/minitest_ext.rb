@@ -12,6 +12,7 @@ module Minitest
 
     def setup
       project_context('project')
+      ::ShopifyCli::Project.clear
       super
     end
 
