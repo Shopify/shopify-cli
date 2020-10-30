@@ -50,6 +50,18 @@ module Theme
       assert(Themekit.push(context, files: [], flags: [], remove: nil, env: nil))
     end
 
+    def test_push_deploy_successful_with_nil
+      context = ShopifyCli::Context.new
+      stat = mock
+
+      context.expects(:system)
+        .with(Themekit::THEMEKIT,
+              'deploy')
+        .returns(stat)
+      stat.stubs(:success?).returns(true)
+      assert(Themekit.push(context, files: nil, flags: nil, remove: nil, env: nil))
+    end
+
     def test_push_remove_successful
       context = ShopifyCli::Context.new
       stat = mock
