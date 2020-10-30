@@ -1,3 +1,5 @@
+require 'digest'
+
 module Minitest
   module Assertions
     def assert_nothing_raised(*)
@@ -11,6 +13,10 @@ module Minitest
     include TestHelpers::Project
 
     def setup
+      begin
+        @old = Digest::SHA256.hexdigest(File.read(File.expand_path("~/.config/shopify/config")))
+      rescue Errno::ENOENT
+      end
       @minitest_ext_setup_called = true
       project_context('project')
       ::ShopifyCli::Project.clear
@@ -18,12 +24,18 @@ module Minitest
     end
 
     def teardown
+
       unless @minitest_ext_setup_called
         raise "teardown called without setup - you may have forgotten to call `super`"
       end
 
       @minitest_ext_setup_called = nil
       super
+      # puts
+      # puts @old
+      # puts @new
+      # @new = Digest::SHA256.hexdigest(File.read(File.expand_path("~/.config/shopify/config")))
+      # raise unless @old == @new
     end
 
     def run_cmd(cmd, split_cmd = true)

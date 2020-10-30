@@ -4,8 +4,14 @@ require 'timecop'
 module ShopifyCli
   module Core
     class MonorailTest < MiniTest::Test
+      include TestHelpers::FakeFS
+
       def setup
         super
+        root = Dir.mktmpdir
+        context = TestHelpers::FakeContext.new(root: root)
+        Project.write(context, project_type: :fake, organization_id: 42)
+        FileUtils.cd(context.root)
         CLI::UI::Prompt.stubs(:confirm).returns(true)
         ShopifyCli::Core::Monorail.metadata = {}
       end
@@ -47,6 +53,7 @@ module ShopifyCli
         enabled_and_consented(true, true)
         Timecop.freeze do |time|
           this_time = (time.utc.to_f * 1000).to_i
+
           stub_request(:post, Monorail::ENDPOINT_URI)
             .with(
               headers: {
@@ -68,7 +75,7 @@ module ShopifyCli
                   uname: RbConfig::CONFIG["host"],
                   cli_version: ShopifyCli::VERSION,
                   ruby_version: RUBY_VERSION,
-                  api_key: "apikey",
+                  api_key: nil,
                   partner_id: 42,
                   metadata: "{\"foo\":\"identifier\"}",
                 },
@@ -108,7 +115,7 @@ module ShopifyCli
                   uname: RbConfig::CONFIG["host"],
                   cli_version: ShopifyCli::VERSION,
                   ruby_version: RUBY_VERSION,
-                  api_key: "apikey",
+                  api_key: nil,
                   partner_id: 42,
                 },
               })

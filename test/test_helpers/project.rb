@@ -2,8 +2,8 @@
 module TestHelpers
   module Project
     def setup
-      project_context('project')
       super
+      project_context('project')
     end
 
     def project_context(*dir)
