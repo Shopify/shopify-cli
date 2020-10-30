@@ -34,7 +34,8 @@ module ShopifyCli
       #   project = ShopifyCli::Project.current
       #
       def current(force_reload: false)
-        at(Dir.pwd, force_reload: force_reload)
+        clear if force_reload
+        at(Dir.pwd)
       end
 
       ##
@@ -102,17 +103,13 @@ module ShopifyCli
 
       private
 
-      def directory(dir, force_reload: false)
-        @dir = nil if force_reload
-
+      def directory(dir)
         @dir ||= Hash.new { |h, k| h[k] = __directory(k) }
         @dir[dir]
       end
 
-      def at(dir, force_reload: false)
-        @at = nil if force_reload
-
-        proj_dir = directory(dir, force_reload: force_reload)
+      def at(dir)
+        proj_dir = directory(dir)
         unless proj_dir
           raise(ShopifyCli::Abort, Context.message('core.project.error.not_in_project'))
         end
