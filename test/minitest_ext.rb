@@ -11,8 +11,18 @@ module Minitest
     include TestHelpers::Project
 
     def setup
+      @minitest_ext_setup_called = true
       project_context('project')
       ::ShopifyCli::Project.clear
+      super
+    end
+
+    def teardown
+      unless @minitest_ext_setup_called
+        raise "teardown called without setup - you may have forgotten to call `super`"
+      end
+
+      @minitest_ext_setup_called = nil
       super
     end
 

@@ -4,6 +4,7 @@ require 'test_helper'
 module ShopifyCli
   class ProjectTest < MiniTest::Test
     def setup
+      super
       @context = TestHelpers::FakeContext.new(root: Dir.mktmpdir)
       FileUtils.cd(@context.root)
     end

@@ -5,6 +5,7 @@ require 'project_types/script/test_helper'
 module Script
   class ScriptProjectTest < MiniTest::Test
     def setup
+      super
       @context = TestHelpers::FakeContext.new
       @script_name = 'name'
       @extension_point_type = 'ep_type'

@@ -7,6 +7,7 @@ module ShopifyCli
 
       def teardown
         ShopifyCli::Core::Monorail.metadata = {}
+        super
       end
 
       def test_call_will_query_partners_dashboard
