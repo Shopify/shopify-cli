@@ -95,6 +95,11 @@ module ShopifyCli
         File.basename(current.directory)
       end
 
+      def clear
+        @at = nil
+        @dir = nil
+      end
+
       private
 
       def directory(dir, force_reload: false)
