@@ -6,6 +6,7 @@ module Script
   module Commands
     class PushTest < MiniTest::Test
       def setup
+        super
         @context = TestHelpers::FakeContext.new
         @language = 'ts'
         @script_name = 'name'

@@ -14,6 +14,7 @@ module Rails
     def teardown
       @context.setenv('GEM_HOME', nil)
       @context.setenv('GEM_PATH', nil)
+      super
     end
 
     def test_install_installs_with_gem_home_unpopulated

@@ -12,6 +12,7 @@ module ShopifyCli
 
       def teardown
         ShopifyCli::Core::Monorail.metadata = {}
+        super
       end
 
       def test_log_prompts_for_consent_and_saves_answer
