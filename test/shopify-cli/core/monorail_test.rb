@@ -182,6 +182,7 @@ module ShopifyCli
       private
 
       def enabled_and_consented(enabled, consented)
+        ShopifyCli::Config.stubs(:get_section).with('analytics').returns({ 'enabled' => consented.to_s })
         ShopifyCli::Context.any_instance.stubs(:system?).returns(enabled)
         ShopifyCli::Config.stubs(:get_bool).with('analytics', 'enabled').returns(consented)
       end

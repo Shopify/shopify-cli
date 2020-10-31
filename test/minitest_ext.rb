@@ -7,17 +7,39 @@ module Minitest
 
   class Test
     FIXTURE_DIR = File.expand_path('fixtures', File.dirname(__FILE__))
+    CONFIG_FILE = CLI::Kit::Config.new(tool_name: ShopifyCli::TOOL_NAME).file
 
     include TestHelpers::Project
 
     def setup
       @minitest_ext_setup_called = true
+      if File.exist?(CONFIG_FILE)
+        @config_sha_before = Digest::SHA256.hexdigest(File.read(CONFIG_FILE))
+      end
       project_context('project')
       ::ShopifyCli::Project.clear
       super
     end
 
     def teardown
+      # Some tests stub the File class, but we need to call the real methods when checking if the config file has
+      # changed.
+      #
+      # We could unstub them individually:
+      #  File.unstub(:read)
+      #  File.unstub(:exist?)
+      #
+      # Or we can use `mocha_teardown` which is documented as "only for use by authors of test libraries" but seems safe
+      # here.
+
+      mocha_teardown
+
+      if File.exist?(CONFIG_FILE)
+        @config_sha_after = Digest::SHA256.hexdigest(File.read(CONFIG_FILE))
+      end
+
+      raise "Local #{CONFIG_FILE} was modified by a test" unless @config_sha_before == @config_sha_after
+
       unless @minitest_ext_setup_called
         raise "teardown called without setup - you may have forgotten to call `super`"
       end
