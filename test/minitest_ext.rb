@@ -85,7 +85,7 @@ module Minitest
     end
 
     def stub_prompt_for_cli_updates
-      ShopifyCli::Config.stubs(:get_section).with("autoupdate").returns(stub("key?" => true))
+      ShopifyCli::Config.stubs(:get_section).with("autoupdate").returns('enabled' => 'true')
     end
 
     def stub_new_version_check
