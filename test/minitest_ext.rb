@@ -50,7 +50,6 @@ module Minitest
 
     def run_cmd(cmd, split_cmd = true)
       stub_prompt_for_cli_updates
-      stub_monorail_log_git_sha
       stub_new_version_check
 
       new_cmd = split_cmd ? cmd.split : cmd
@@ -79,10 +78,6 @@ module Minitest
     end
 
     private
-
-    def stub_monorail_log_git_sha
-      ShopifyCli::Git.stubs(:sha).returns("bb6f42193239a248f054e5019e469bc75f3adf1b")
-    end
 
     def stub_prompt_for_cli_updates
       ShopifyCli::Config.stubs(:get_section).with("autoupdate").returns('enabled' => 'true')
