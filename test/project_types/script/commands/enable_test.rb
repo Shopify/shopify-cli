@@ -100,6 +100,37 @@ module Script
         end
       end
 
+      def test_with_config_props_with_spaces
+        expected_configuration = {
+          entries: [
+            {
+              key: "key1",
+              value: "value1",
+            },
+            {
+              key: "key2",
+              value: "with spaces",
+            },
+          ],
+        }
+
+        expect_successful_enable(expected_configuration)
+
+        capture_io do
+          perform_command(config_props: "key1:value1 , key2:with spaces")
+        end
+      end
+
+      def test_should_call_error_handler_when_given_invalid_config_props
+        Script::UI::ErrorHandler
+          .expects(:pretty_print_and_raise)
+          .with { |e| e.is_a?(Errors::InvalidConfigProps) }
+
+        capture_io do
+          perform_command(config_props: "key1:value1:value2")
+        end
+      end
+
       def test_calls_application_enable_with_configuration_file
         File.open("enable_config_file.yml", "w+") { |file| file.write("key1: \"value1\"\nkey2: \"value2\"") }
         expected_configuration = {
@@ -199,12 +230,12 @@ module Script
                        "HOST=https://example.com\n" \
                        "SHOP=my-test-shop.myshopify.com\n" \
                        "AWSKEY=awskey"
-        command = "enable"
-        command += " --config_props=#{config_props}" unless config_props.nil?
-        command += " --config_file=#{config_file_path}" unless config_file_path.nil?
+        command = ["enable"]
+        command << "--config_props=#{config_props}" unless config_props.nil?
+        command << "--config_file=#{config_file_path}" unless config_file_path.nil?
         ShopifyCli::Core::Monorail.stubs(:log).yields
         File.open(".env", "w+") { |file| file.write(env_contents) }
-        run_cmd(command)
+        run_cmd(command, false)
       end
     end
   end

@@ -4,9 +4,7 @@ module Script
   module Commands
     class Enable < ShopifyCli::Command
       options do |parser, flags|
-        parser.on('--config_props=KEYVALUEPAIRS', Array) do |t|
-          flags[:config_props] = Hash[t.map { |s| s.split(':') }]
-        end
+        parser.on('--config_props=KEYVALUEPAIRS', Array) { |t| flags[:config_props] = t }
         parser.on('--config_file=CONFIGFILEPATH') { |t| flags[:config_file] = t }
       end
 
@@ -47,7 +45,7 @@ module Script
       def acquire_configuration(config_file: nil, config_props: nil)
         properties = {}
         properties = YAML.load(File.read(config_file)) unless config_file.nil?
-        properties = properties.merge(config_props) unless config_props.nil?
+        properties = properties.merge(parse_config_props(config_props)) unless config_props.nil?
 
         configuration = { entries: [] }
         properties.each do |key, value|
@@ -59,6 +57,16 @@ module Script
         configuration
       rescue Errno::ENOENT, Psych::SyntaxError
         raise Errors::InvalidConfigYAMLError, options.flags[:config_file]
+      end
+
+      def parse_config_props(config_props)
+        Hash[
+          config_props.map do |s|
+            args = s.split(':').map(&:strip)
+            raise Errors::InvalidConfigProps unless args.size == 2
+            args
+          end
+        ]
       end
 
       # No slice pre Ruby 2.5 so roll our own
