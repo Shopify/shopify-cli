@@ -17,7 +17,7 @@ module ShopifyCli
 
       def test_log_prompts_for_consent_and_saves_answer
         enabled_and_consented(true, nil)
-        ShopifyCli::Config.expects(:get_section).with('analytics').returns(stub("key?" => false))
+        ShopifyCli::Config.expects(:get_section).with('analytics').returns({})
         CLI::UI::Prompt.expects(:confirm).returns(true)
         ShopifyCli::Config.expects(:set).with('analytics', 'enabled', true)
         Net::HTTP.expects(:start).never
@@ -36,7 +36,7 @@ module ShopifyCli
 
       def test_log_doesnt_prompt_for_consent_if_already_answered
         enabled_and_consented(true, false)
-        ShopifyCli::Config.expects(:get_section).with('analytics').returns(stub("key?" => true))
+        ShopifyCli::Config.expects(:get_section).with('analytics').returns("enabled" => "true")
         CLI::UI::Prompt.expects(:confirm).never
         Net::HTTP.expects(:start).never
 
@@ -182,6 +182,7 @@ module ShopifyCli
       private
 
       def enabled_and_consented(enabled, consented)
+        ShopifyCli::Config.stubs(:get_section).with('analytics').returns({ 'enabled' => consented.to_s })
         ShopifyCli::Context.any_instance.stubs(:system?).returns(enabled)
         ShopifyCli::Config.stubs(:get_bool).with('analytics', 'enabled').returns(consented)
       end

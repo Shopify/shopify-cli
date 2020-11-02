@@ -11,4 +11,3 @@ install:
 - bundle install
 script:
   - bundle exec rake
-  - if [ -f "~/.config/shopify/config" ]; then echo "Found a config file in home directory. This means the tests would modify a developer's local config. Consider using FakeFS"; exit 1; fi
