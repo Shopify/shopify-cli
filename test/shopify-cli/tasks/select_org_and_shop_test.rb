@@ -3,40 +3,27 @@ require 'test_helper'
 module ShopifyCli
   module Tasks
     class SelectOrgAndShopTest < MiniTest::Test
-      include TestHelpers::Partners
-
       def teardown
         ShopifyCli::Core::Monorail.metadata = {}
         super
       end
 
       def test_user_will_be_prompted_if_more_than_one_organization
-        stub_partner_req(
-          'all_organizations',
-          resp: {
-            data: {
-              organizations: {
-                nodes: [
-                  {
-                    'id': 421,
-                    'businessName': "one",
-                    'stores': { 'nodes': [{ 'shopDomain': 'store.myshopify.com' }] },
-                  },
-                  {
-                    'id': 431,
-                    'businessName': "two",
-                    'stores': {
-                      'nodes': [
-                        { 'shopDomain': 'other.myshopify.com', 'transferDisabled': true },
-                        { 'shopDomain': 'yet-another.myshopify.com' },
-                      ],
-                    },
-                  },
-                ],
-              },
-            },
+        ShopifyCli::PartnersAPI::Organizations.expects(:fetch_all).with(@context).returns([
+          {
+            'id' => 421,
+            'businessName' => "one",
+            'stores' => [{ 'shopDomain' => 'store.myshopify.com' }],
           },
-        )
+          {
+            'id' => 431,
+            'businessName' => "two",
+            'stores' => [
+              { 'shopDomain' => 'other.myshopify.com', 'transferDisabled' => true },
+              { 'shopDomain' => 'yet-another.myshopify.com' },
+            ],
+          },
+        ])
         CLI::UI::Prompt.expects(:ask)
           .with(@context.message('core.tasks.select_org_and_shop.organization_select'))
           .returns(431)
@@ -47,20 +34,18 @@ module ShopifyCli
       end
 
       def test_will_auto_pick_with_only_one_org
-        stub_partner_req(
-          'all_organizations',
-          resp: {
-            data: {
-              organizations: {
-                nodes: [{
-                  'id': 421,
-                  'businessName': "hoopy froods",
-                  'stores': { 'nodes': [{ 'shopDomain': 'next.myshopify.com', 'transferDisabled': true }] },
-                }],
-              },
+        ShopifyCli::PartnersAPI::Organizations.expects(:fetch_all).with(@context).returns(
+          [
+            {
+              "id" => 421,
+              "businessName" => "hoopy froods",
+              "stores" => [
+                { "shopDomain" => "next.myshopify.com", "transferDisabled" => true },
+              ],
             },
-          },
+          ]
         )
+
         io = capture_io do
           form = call(org_id: nil, shop: nil)
           assert_equal(421, form[:organization_id])
@@ -73,20 +58,12 @@ module ShopifyCli
       end
 
       def test_organization_will_be_fetched_if_id_is_provided_but_not_shop
-        stub_partner_req(
-          'find_organization',
-          variables: { id: 123 },
-          resp: {
-            data: {
-              organizations: {
-                nodes: [
-                  {
-                    id: 123,
-                    stores: { nodes: [{ shopDomain: 'shopdomain.myshopify.com', 'transferDisabled': true }] },
-                  },
-                ],
-              },
-            },
+        ShopifyCli::PartnersAPI::Organizations.expects(:fetch).with(@context, id: 123).returns(
+          {
+            "id" => 123,
+            "stores" => [
+              { "shopDomain" => "shopdomain.myshopify.com", "transferDisabled" => true },
+            ],
           }
         )
         form = call(org_id: 123, shop: nil)
@@ -95,10 +72,7 @@ module ShopifyCli
       end
 
       def test_it_will_fail_if_no_orgs_are_available
-        stub_partner_req(
-          'all_organizations',
-          resp: { data: { organizations: { nodes: [] } } },
-        )
+        ShopifyCli::PartnersAPI::Organizations.expects(:fetch_all).with(@context).returns([])
 
         assert_raises ShopifyCli::Abort do
           io = capture_io do
@@ -112,16 +86,8 @@ module ShopifyCli
       end
 
       def test_returns_no_shop_if_none_are_available
-        stub_partner_req(
-          'find_organization',
-          variables: { id: 123 },
-          resp: {
-            data: {
-              organizations: {
-                nodes: [{ id: 123, stores: { nodes: [] } }],
-              },
-            },
-          }
+        ShopifyCli::PartnersAPI::Organizations.expects(:fetch).with(@context, id: 123).returns(
+          { "id" => 123, "stores" => [] },
         )
 
         io = capture_io do
@@ -134,20 +100,12 @@ module ShopifyCli
       end
 
       def test_autopicks_only_shop
-        stub_partner_req(
-          'find_organization',
-          variables: { id: 123 },
-          resp: {
-            data: {
-              organizations: {
-                nodes: [
-                  {
-                    id: 123,
-                    stores: { nodes: [{ shopDomain: 'shopdomain.myshopify.com', 'transferDisabled': true }] },
-                  },
-                ],
-              },
-            },
+        ShopifyCli::PartnersAPI::Organizations.expects(:fetch).with(@context, id: 123).returns(
+          {
+            "id" => 123,
+            "stores" => [
+              { "shopDomain" => "shopdomain.myshopify.com", "transferDisabled" => true },
+            ],
           }
         )
         io = capture_io do
@@ -160,24 +118,14 @@ module ShopifyCli
       end
 
       def test_prompts_user_to_pick_from_shops
-        stub_partner_req(
-          'find_organization',
-          variables: { id: 123 },
-          resp: {
-            data: {
-              organizations: {
-                nodes: [
-                  {
-                    id: 123,
-                    stores: { nodes: [
-                      { shopDomain: 'shopdomain.myshopify.com', 'transferDisabled': true },
-                      { shopDomain: 'shop.myshopify.com', 'convertableToPartnerTest': true },
-                      { shopDomain: 'other.myshopify.com' },
-                    ] },
-                  },
-                ],
-              },
-            },
+        ShopifyCli::PartnersAPI::Organizations.expects(:fetch).with(@context, id: 123).returns(
+          {
+            "id" => 123,
+            "stores" => [
+              { "shopDomain" => "shopdomain.myshopify.com", "transferDisabled" => true },
+              { "shopDomain" => "shop.myshopify.com", "convertableToPartnerTest" => true },
+              { "shopDomain" => "other.myshopify.com" },
+            ],
           }
         )
 
