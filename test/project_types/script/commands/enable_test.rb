@@ -28,28 +28,8 @@ module Script
         ShopifyCli::Tasks::EnsureEnv
           .any_instance.expects(:call)
           .with(@context, required: [:api_key, :secret, :shop])
-        Script::Layers::Application::EnableScript.expects(:call).with(
-          ctx: @context,
-          api_key: @api_key,
-          shop_domain: @shop_domain,
-          configuration: @configuration,
-          extension_point_type: @ep_type,
-          title: @script_name
-        )
 
-        @context
-          .expects(:puts)
-          .with(@context.message(
-            'script.enable.script_enabled',
-            api_key: @api_key,
-            shop_domain: @shop_domain,
-            type: @ep_type.capitalize,
-            title: @script_name
-          ))
-
-        @context
-          .expects(:puts)
-          .with(@context.message('script.enable.info'))
+        expect_successful_enable(@configuration)
 
         capture_io do
           perform_command
@@ -112,28 +92,8 @@ module Script
             },
           ],
         }
-        Script::Layers::Application::EnableScript.expects(:call).with(
-          ctx: @context,
-          api_key: @api_key,
-          shop_domain: @shop_domain,
-          configuration: expected_configuration,
-          extension_point_type: @ep_type,
-          title: @script_name
-        )
 
-        @context
-          .expects(:puts)
-          .with(@context.message(
-            'script.enable.script_enabled',
-            api_key: @api_key,
-            shop_domain: @shop_domain,
-            type: @ep_type.capitalize,
-            title: @script_name
-          ))
-
-        @context
-          .expects(:puts)
-          .with(@context.message('script.enable.info'))
+        expect_successful_enable(expected_configuration)
 
         capture_io do
           perform_command(config_props: "key1:value1,key2:value2")
@@ -154,28 +114,9 @@ module Script
             },
           ],
         }
-        Script::Layers::Application::EnableScript.expects(:call).with(
-          ctx: @context,
-          api_key: @api_key,
-          shop_domain: @shop_domain,
-          configuration: expected_configuration,
-          extension_point_type: @ep_type,
-          title: @script_name
-        )
 
-        @context
-          .expects(:puts)
-          .with(@context.message(
-            'script.enable.script_enabled',
-            api_key: @api_key,
-            shop_domain: @shop_domain,
-            type: @ep_type.capitalize,
-            title: @script_name
-          ))
+        expect_successful_enable(expected_configuration)
 
-        @context
-          .expects(:puts)
-          .with(@context.message('script.enable.info'))
         capture_io do
           perform_command(config_file_path: "enable_config_file.yml")
         end
@@ -195,28 +136,8 @@ module Script
             },
           ],
         }
-        Script::Layers::Application::EnableScript.expects(:call).with(
-          ctx: @context,
-          api_key: @api_key,
-          shop_domain: @shop_domain,
-          configuration: expected_configuration,
-          extension_point_type: @ep_type,
-          title: @script_name
-        )
 
-        @context
-          .expects(:puts)
-          .with(@context.message(
-            'script.enable.script_enabled',
-            api_key: @api_key,
-            shop_domain: @shop_domain,
-            type: @ep_type.capitalize,
-            title: @script_name
-          ))
-
-        @context
-          .expects(:puts)
-          .with(@context.message('script.enable.info'))
+        expect_successful_enable(expected_configuration)
 
         capture_io do
           perform_command(config_props: "key1:overriddenValue", config_file_path: "enable_config_file.yml")
@@ -246,6 +167,31 @@ module Script
       end
 
       private
+
+      def expect_successful_enable(configuration)
+        Script::Layers::Application::EnableScript.expects(:call).with(
+          ctx: @context,
+          api_key: @api_key,
+          shop_domain: @shop_domain,
+          configuration: configuration,
+          extension_point_type: @ep_type,
+          title: @script_name
+        )
+
+        @context
+          .expects(:puts)
+          .with(@context.message(
+            'script.enable.script_enabled',
+            api_key: @api_key,
+            shop_domain: @shop_domain,
+            type: @ep_type.capitalize,
+            title: @script_name
+          ))
+
+        @context
+          .expects(:puts)
+          .with(@context.message('script.enable.info'))
+      end
 
       def perform_command(config_props: nil, config_file_path: nil)
         env_contents = "SHOPIFY_API_KEY=apikey\n" \
