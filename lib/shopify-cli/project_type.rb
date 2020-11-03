@@ -45,14 +45,26 @@ module ShopifyCli
         File.join(ShopifyCli::PROJECT_TYPES_DIR, project_type.to_s, path)
       end
 
-      def creator(name, command_const)
+      def title(name)
         @project_name = name
+      end
+
+      def creator(command_const)
         @project_creator_command_class = command_const
         ShopifyCli::Commands::Create.subcommand(command_const, @project_type)
       end
 
       def create_command
         const_get(@project_creator_command_class)
+      end
+
+      def connector(command_const)
+        @project_connector_command_class = command_const
+        ShopifyCli::Commands::Connect.subcommand(command_const, @project_type)
+      end
+
+      def connect_command
+        const_get(@project_connector_command_class)
       end
 
       def register_command(const, cmd)
