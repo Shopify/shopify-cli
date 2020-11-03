@@ -18,8 +18,8 @@ module Script
           invalid_context_cause: "Your .shopify-cli.yml file is not correct.",
           invalid_context_help: "See https://help.shopify.com",
 
-          invalid_config_props_cause: "The provided {{command:--config_props}} argument is invalid.",
-          invalid_config_props_help: "Try again using the following format: "\
+          invalid_config_props_cause: "{{command:--config_props}} is formatted incorrectly.",
+          invalid_config_props_help: "Try again using this format: "\
                                      "{{cyan:--config_props='name1:value1, name2:value2'}}",
 
           invalid_script_name_cause: "Invalid script name.",
