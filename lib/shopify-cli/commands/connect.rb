@@ -3,23 +3,33 @@ require 'shopify_cli'
 module ShopifyCli
   module Commands
     class Connect < ShopifyCli::Command
-      def call(*)
-        project_type = ask_project_type unless Project.has_current?
+      def self.call(args, command_name)
+        ProjectType.load_type(args[0]) unless args.empty?
+        super
+      end
 
+      def call(args, command_name)
         if Project.has_current? && Project.current && Project.current.env
           @ctx.puts @ctx.message('core.connect.already_connected_warning')
-          prod_warning = @ctx.message('core.connect.production_warning')
-          @ctx.puts prod_warning if [:rails, :node].include?(Project.current_project_type)
         end
 
+        project_type = ask_project_type
+
+        klass = ProjectType.load_type(project_type).connect_command
+        klass.ctx = @ctx
+        if klass
+          klass.call(args, command_name, 'connect')
+        else
+          org, api_key = default_connect(project_type)
+        end
+        [org, api_key]
+      end
+
+      def self.default_connect(project_type)
         org = ShopifyCli::Tasks::EnsureEnv.call(@ctx, regenerate: true)
         write_cli_yml(project_type, org['id']) unless Project.has_current?
         api_key = Project.current(force_reload: true).env['api_key']
-        @ctx.puts(@ctx.message('core.connect.connected', get_app(org['apps'], api_key).first["title"]))
-      end
-
-      def get_app(apps, api_key)
-        apps.select { |app| app["apiKey"] == api_key }
+        [org, api_key]
       end
 
       def ask_project_type
