@@ -122,9 +122,10 @@ module Script
       end
 
       def test_should_call_error_handler_when_given_invalid_config_props
-        Script::UI::ErrorHandler
-          .expects(:pretty_print_and_raise)
-          .with { |e| e.is_a?(Errors::InvalidConfigProps) }
+        Script::UI::ErrorHandler.expects(:pretty_print_and_raise).with(
+          instance_of(Errors::InvalidConfigProps),
+          failed_op: @context.message('script.enable.error.operation_failed')
+        )
 
         capture_io do
           perform_command(config_props: "key1:value1:value2")
@@ -180,7 +181,7 @@ module Script
 
         Script::UI::ErrorHandler
           .expects(:pretty_print_and_raise)
-          .with { |e| e.is_a?(Errors::InvalidConfigYAMLError) }
+          .with(instance_of(Errors::InvalidConfigYAMLError))
 
         capture_io do
           perform_command(config_file_path: "enable_config_file.yml")
@@ -190,7 +191,7 @@ module Script
       def test_calls_application_enable_with_missing_configuration_file
         Script::UI::ErrorHandler
           .expects(:pretty_print_and_raise)
-          .with { |e| e.is_a?(Errors::InvalidConfigYAMLError) }
+          .with(instance_of(Errors::InvalidConfigYAMLError))
 
         capture_io do
           perform_command(config_file_path: "enable_config_file.yml")
