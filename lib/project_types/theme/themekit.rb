@@ -59,9 +59,14 @@ module Theme
         ctx.system(*command)
       end
 
+      def update(ctx)
+        command = build_command('update')
+        ctx.system(*command)
+      end
+
       private
 
-      def build_command(action, env)
+      def build_command(action, env = nil)
         command = [THEMEKIT, action]
         command << "--env=#{env}" if env
         command
