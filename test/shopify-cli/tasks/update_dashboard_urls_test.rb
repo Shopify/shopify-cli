@@ -205,9 +205,10 @@ module ShopifyCli
       end
 
       def test_whitelist_urls_are_updated_even_if_app_url_is_set
+        CLI::UI::Prompt.stubs(:confirm).returns(true)
         Project.current.stubs(:env).returns(Resources::EnvFile.new(api_key: '123', secret: 'foo'))
         api_key = '123'
-        stub_partner_req(
+        get_request = stub_partner_req(
           'get_app_urls',
           variables: {
             apiKey: api_key,
@@ -215,20 +216,19 @@ module ShopifyCli
           resp: {
             data: {
               app: {
-                applicationUrl: 'https://newone123.ngrok.io',
+                applicationUrl: 'https://oldone123.ngrok.io',
                 redirectUrlWhitelist: [],
               },
             },
           }
         )
 
-        stub_partner_req(
+        update_request = stub_partner_req(
           'update_dashboard_urls',
           variables: {
             input: {
               applicationUrl: 'https://newone123.ngrok.io',
               redirectUrlWhitelist: [
-                'https://newone123.ngrok.io',
                 'https://newone123.ngrok.io/callback/fake',
               ],
               apiKey: api_key,
@@ -240,6 +240,8 @@ module ShopifyCli
           url: 'https://newone123.ngrok.io',
           callback_url: '/callback/fake',
         )
+        assert_requested(get_request)
+        assert_requested(update_request)
       end
 
       def test_user_is_prompted_to_update_application_url
