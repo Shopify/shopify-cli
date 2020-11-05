@@ -116,6 +116,11 @@ module Script
             cause_of_error: ShopifyCli::Context.message('script.error.dependency_install_cause'),
             help_suggestion: ShopifyCli::Context.message('script.error.dependency_install_help'),
           }
+        when Layers::Infrastructure::Errors::EmptyResponseError
+          {
+            cause_of_error: ShopifyCli::Context.message('script.error.failed_api_request_cause'),
+            help_suggestion: ShopifyCli::Context.message('script.error.failed_api_request_help'),
+          }
         when Layers::Infrastructure::Errors::ForbiddenError
           {
             cause_of_error: ShopifyCli::Context.message('script.error.forbidden_error_cause'),
