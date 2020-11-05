@@ -46,7 +46,6 @@ jobs:
         tap: shopify/shopify
         formula: shopify-cli
         tag: ${{ steps.folder.outputs.name }}
-        message: "Version bump, created by github actions"
 
     - name: Create Release # https://hub.github.com/hub-release.1.html
       env:
