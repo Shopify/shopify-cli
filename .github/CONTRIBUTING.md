@@ -19,6 +19,14 @@ When contributing to the Shopify App CLI, there are a set of [design guidelines]
 
 We track all of our issues in GitHub and [bugs](https://github.com/Shopify/shopify-app-cli/labels/Bug) are labeled accordingly. If you are planning to work on an issue, avoid ones which already have an assignee, where someone has commented within the last two weeks they are working on it, or the issue is labeled with [fix in progress](https://github.com/Shopify/shopify-app-cli/labels/fix%20in%20progress). We will do our best to communicate when an issue is being worked on internally.
 
+### Running against a local environment
+
+This section only applies to Shopify staff:
+
+To run against a local Partners or Identity instance, you can use:
+
+`SHOPIFY_APP_CLI_LOCAL_PARTNERS=1 shopify`
+
 ### Reporting new issues
 
 To reduce duplicates, look through open issues before filing one. When [opening an issue](https://github.com/Shopify/shopify-app-cli/issues/new?template=ISSUE.md), complete as much of the template as possible.
