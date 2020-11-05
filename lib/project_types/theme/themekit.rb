@@ -3,8 +3,8 @@ module Theme
     THEMEKIT = File.join(ShopifyCli.cache_dir, "themekit")
 
     class << self
-      def create(ctx, password:, store:, name:, env:)
-        command = build_command('new', env)
+      def create(ctx, password:, store:, name:, env:, opts: nil)
+        command = build_command('new', env, opts)
         command << "--password=#{password}"
         command << "--store=#{store}"
         command << "--name=#{name}"
@@ -13,13 +13,13 @@ module Theme
         stat.success?
       end
 
-      def deploy(ctx, env:)
-        unless push(ctx, env: env)
+      def deploy(ctx, env:, opts: nil)
+        unless push(ctx, env: env, opts: opts)
           ctx.abort(ctx.message('theme.deploy.push_fail'))
         end
         ctx.done(ctx.message('theme.deploy.info.pushed'))
 
-        command = build_command('publish', env)
+        command = build_command('publish', env, opts)
         stat = ctx.system(*command)
         stat.success?
       end
@@ -28,8 +28,8 @@ module Theme
         Tasks::EnsureThemekitInstalled.call(ctx)
       end
 
-      def pull(ctx, store:, password:, themeid:, env:)
-        command = build_command('get', env)
+      def pull(ctx, store:, password:, themeid:, env:, opts: nil)
+        command = build_command('get', env, opts)
         command << "--password=#{password}"
         command << "--store=#{store}"
         command << "--themeid=#{themeid}"
@@ -38,32 +38,33 @@ module Theme
         stat.success?
       end
 
-      def push(ctx, files: nil, flags: nil, remove: false, env:)
+      def push(ctx, files: nil, remove: false, env:, opts: nil)
         action = remove ? 'remove' : 'deploy'
-        command = build_command(action, env)
+        command = build_command(action, env, opts)
 
-        (command << files << flags).compact!
+        (command << files).compact!
         command.flatten!
 
         stat = ctx.system(*command)
         stat.success?
       end
 
-      def serve(ctx, env:)
-        command = build_command('open', env)
+      def serve(ctx, env:, opts: nil)
+        command = build_command('open', env, opts)
         out, stat = ctx.capture2e(*command)
         ctx.puts(out)
         ctx.abort(ctx.message('theme.serve.open_fail')) unless stat.success?
 
-        command = build_command('watch', env)
+        command = build_command('watch', env, opts)
         ctx.system(*command)
       end
 
       private
 
-      def build_command(action, env)
+      def build_command(action, env, opts)
         command = [THEMEKIT, action]
         command << "--env=#{env}" if env
+        command += opts.split unless opts.nil?
         command
       end
     end

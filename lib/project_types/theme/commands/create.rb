@@ -7,13 +7,14 @@ module Theme
         parser.on('--password=PASSWORD') { |p| flags[:password] = p }
         parser.on('--store=STORE') { |url| flags[:store] = url }
         parser.on('--env=ENV') { |env| flags[:env] = env }
+        parser.on('--themekit_opts=OPTS') { |opts| flags[:opts] = opts }
       end
 
       def call(args, _name)
         form = Forms::Create.ask(@ctx, args, options.flags)
         return @ctx.puts(self.class.help) if form.nil?
 
-        build(form.name, form.password, form.store, form.env)
+        build(form.name, form.password, form.store, form.env, options.flags[:opts])
         ShopifyCli::Project.write(@ctx,
                                   project_type: 'theme',
                                   organization_id: nil) # private apps are different
@@ -27,7 +28,7 @@ module Theme
 
       private
 
-      def build(name, password, store, env)
+      def build(name, password, store, env, opts)
         @ctx.abort(@ctx.message('theme.create.duplicate_theme')) if @ctx.dir_exist?(name)
 
         CLI::UI::Frame.open(@ctx.message('theme.checking_themekit')) do
@@ -38,7 +39,7 @@ module Theme
         @ctx.chdir(name)
 
         CLI::UI::Frame.open(@ctx.message('theme.create.creating_theme', name)) do
-          unless Themekit.create(@ctx, name: name, password: password, store: store, env: env)
+          unless Themekit.create(@ctx, name: name, password: password, store: store, env: env, opts: opts)
             @ctx.chdir('..')
             @ctx.rm_rf(name)
             @ctx.abort(@ctx.message('theme.create.failed'))

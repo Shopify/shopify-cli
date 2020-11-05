@@ -4,6 +4,7 @@ module Theme
     class Serve < ShopifyCli::Command
       options do |parser, flags|
         parser.on('--env=ENV') { |env| flags[:env] = env }
+        parser.on('--themekit_opts=OPTS') { |opts| flags[:opts] = opts }
       end
 
       def call(*)
@@ -12,7 +13,7 @@ module Theme
         end
 
         CLI::UI::Frame.open(@ctx.message('theme.serve.serve')) do
-          Themekit.serve(@ctx, env: options.flags[:env])
+          Themekit.serve(@ctx, env: options.flags[:env], opts: options.flags[:opts])
         end
       end
 

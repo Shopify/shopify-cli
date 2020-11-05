@@ -4,9 +4,8 @@ module Theme
     class Push < ShopifyCli::Command
       options do |parser, flags|
         parser.on('--remove') { flags['remove'] = true }
-        parser.on('--nodelete') { flags['nodelete'] = true }
-        parser.on('--allow-live') { flags['allow-live'] = true }
         parser.on('--env=ENV') { |env| flags['env'] = env }
+        parser.on('--themekit_opts=OPTS') { |opts| flags[:opts] = opts }
       end
 
       def call(args, _name)
@@ -20,10 +19,6 @@ module Theme
           options.flags.delete('env')
         end
 
-        flags = options.flags.map do |key, _value|
-          '--' + key
-        end
-
         CLI::UI::Frame.open(@ctx.message('theme.checking_themekit')) do
           Themekit.ensure_themekit_installed(@ctx)
         end
@@ -34,7 +29,7 @@ module Theme
               @ctx.abort(@ctx.message('theme.push.remove_abort'))
             end
 
-            unless Themekit.push(@ctx, files: args, flags: flags, remove: remove, env: env)
+            unless Themekit.push(@ctx, files: args, remove: remove, env: env, opts: options.flags[:opts])
               @ctx.abort(@ctx.message('theme.push.error.remove_error'))
             end
           end
@@ -42,7 +37,7 @@ module Theme
           @ctx.done(@ctx.message('theme.push.info.remove', @ctx.root))
         else
           CLI::UI::Frame.open(@ctx.message('theme.push.push')) do
-            unless Themekit.push(@ctx, files: args, flags: flags, remove: remove, env: env)
+            unless Themekit.push(@ctx, files: args, remove: remove, env: env, opts: options.flags[:opts])
               @ctx.abort(@ctx.message('theme.push.error.push_error'))
             end
           end
