@@ -10,19 +10,35 @@ module ShopifyCli
     SECTION = 'core'
     FEATURE_NAME = 'shopifolk'
 
-    ##
-    # will return if the user appears to be a Shopify employee, based on several heuristics
-    #
-    # #### Returns
-    #
-    # * `is_shopifolk` - returns true if the user is a Shopify Employee
-    #
-    # #### Example
-    #
-    #     ShopifyCli::Shopifolk.check
-    #
-    def self.check
-      ShopifyCli::Shopifolk.new.shopifolk?
+    class << self
+      attr_writer :acting_as_shopify_organization
+
+      ##
+      # will return if the user appears to be a Shopify employee, based on several heuristics
+      #
+      # #### Returns
+      #
+      # * `is_shopifolk` - returns true if the user is a Shopify Employee
+      #
+      # #### Example
+      #
+      #     ShopifyCli::Shopifolk.check
+      #
+      def check
+        ShopifyCli::Shopifolk.new.shopifolk?
+      end
+
+      def act_as_shopify_organization
+        @acting_as_shopify_organization = true
+      end
+
+      def acting_as_shopify_organization?
+        !!@acting_as_shopify_organization || (Project.has_current? && Project.current.config['shopify_organization'])
+      end
+
+      def reset
+        @acting_as_shopify_organization = nil
+      end
     end
 
     ##

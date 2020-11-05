@@ -72,6 +72,24 @@ module ShopifyCli
       refute ShopifyCli::Config.get_bool('features', 'shopifolk')
     end
 
+    def test_setting_act_as_shopify_organization
+      refute ShopifyCli::Shopifolk.acting_as_shopify_organization?
+
+      ShopifyCli::Shopifolk.act_as_shopify_organization
+      assert ShopifyCli::Shopifolk.acting_as_shopify_organization?
+
+      ShopifyCli::Shopifolk.reset
+      refute ShopifyCli::Shopifolk.acting_as_shopify_organization?
+    end
+
+    def test_reading_shopify_organization_from_config
+      Project.expects(:has_current?).returns(true)
+      project = stub('project', config: { 'shopify_organization' => true })
+      Project.expects(:current).returns(project)
+
+      assert ShopifyCli::Shopifolk.acting_as_shopify_organization?
+    end
+
     private
 
     def stub_gcloud_ini(ret_val)
