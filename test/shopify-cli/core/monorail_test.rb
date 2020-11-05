@@ -45,6 +45,7 @@ module ShopifyCli
 
       def test_log_event_contains_schema_and_payload_values
         enabled_and_consented(true, true)
+        ShopifyCli::Shopifolk.expects(:acting_as_shopify_organization?).returns(false)
         Timecop.freeze do |time|
           this_time = (time.utc.to_f * 1000).to_i
           stub_request(:post, Monorail::ENDPOINT_URI)
@@ -68,10 +69,10 @@ module ShopifyCli
                   uname: RbConfig::CONFIG["host"],
                   cli_version: ShopifyCli::VERSION,
                   ruby_version: RUBY_VERSION,
+                  is_employee: false,
                   api_key: "apikey",
                   partner_id: 42,
                   metadata: "{\"foo\":\"identifier\"}",
-                  is_employee: false
                 },
               })
             )
@@ -86,6 +87,7 @@ module ShopifyCli
 
       def test_log_event_handles_errors
         enabled_and_consented(true, true)
+        ShopifyCli::Shopifolk.expects(:acting_as_shopify_organization?).returns(false)
         Timecop.freeze do |time|
           this_time = (time.utc.to_f * 1000).to_i
           stub_request(:post, Monorail::ENDPOINT_URI)
@@ -109,9 +111,9 @@ module ShopifyCli
                   uname: RbConfig::CONFIG["host"],
                   cli_version: ShopifyCli::VERSION,
                   ruby_version: RUBY_VERSION,
+                  is_employee: false,
                   api_key: "apikey",
                   partner_id: 42,
-                  is_employee: false,
                 },
               })
             )
