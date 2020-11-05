@@ -7,7 +7,7 @@ module ShopifyCli
   module Core
     module Monorail
       ENDPOINT_URI = URI.parse('https://monorail-edge.shopifycloud.com/v1/produce')
-      INVOCATIONS_SCHEMA = 'app_cli_command/4.0'
+      INVOCATIONS_SCHEMA = 'app_cli_command/5.0'
 
       # Extra hash of data that will be sent in the payload
       @metadata = {}
@@ -101,6 +101,7 @@ module ShopifyCli
               uname: RbConfig::CONFIG["host"],
               cli_version: ShopifyCli::VERSION,
               ruby_version: RUBY_VERSION,
+              is_employee: ShopifyCli::Shopifolk.acting_as_shopify_organization?,
             }.tap do |payload|
               payload[:api_key] = metadata.delete(:api_key)
               payload[:partner_id] = metadata.delete(:organization_id)
