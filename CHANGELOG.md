@@ -1,6 +1,6 @@
 Unreleased
 ------
-* Remove --no-optional when using npm to create new extension
+* [#965](https://github.com/Shopify/shopify-app-cli/pull/965): Remove --no-optional when using npm to create new extension
 
 Version 1.4.1
 ------
