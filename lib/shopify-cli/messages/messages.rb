@@ -14,7 +14,7 @@ module ShopifyCli
           {{yellow:! Warning: if you have connected to an {{bold:app in production}}, running {{command:serve}} may update the app URL and cause an outage.
           MESSAGE
           already_connected_warning: "{{yellow:! This app appears to be already connected}}",
-          connected: "{{v}} Project now connected to {{green:%s}}",
+          connected: "Project now connected to {{green:%s}}",
           project_type_select: "What type of project would you like to connect?",
           cli_yml_saved: ".shopify-cli.yml saved to project root",
         },
