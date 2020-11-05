@@ -4,6 +4,7 @@ require 'project_types/node/test_helper'
 module ShopifyCli
   class JsDepsTest < MiniTest::Test
     def setup
+      super
       project_context('app_types', 'node')
       @node_fixture_dependencies = 37
     end

@@ -6,13 +6,6 @@ module TestHelpers
       def wait; end
     end
 
-    class FakeFrame
-      def self.open(str)
-        Thread.current[:cliui_output_hook].call(str, :stdout)
-        yield
-      end
-    end
-
     class FakeProgress
       def tick(*); end
     end

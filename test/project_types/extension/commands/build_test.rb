@@ -7,16 +7,6 @@ module Extension
       include TestHelpers::Partners
       include TestHelpers::FakeUI
 
-      class FakeProcessStatus
-        def initialize(success)
-          @success = success
-        end
-
-        def success?
-          @success
-        end
-      end
-
       def setup
         super
         ShopifyCli::ProjectType.load_type(:extension)

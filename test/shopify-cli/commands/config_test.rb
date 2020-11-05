@@ -3,7 +3,14 @@ require 'test_helper'
 module ShopifyCli
   module Commands
     class ConfigTest < MiniTest::Test
+      include TestHelpers::FakeFS
+
       TEST_FEATURE = :feature_flag_test
+
+      def setup
+        super
+        ShopifyCli::Core::Monorail.stubs(:log).yields
+      end
 
       def test_help_argument_calls_help
         @context.expects(:puts).with(ShopifyCli::Commands::Config.help)

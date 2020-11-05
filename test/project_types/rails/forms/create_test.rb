@@ -8,22 +8,22 @@ module Rails
 
       def test_returns_all_defined_attributes_if_valid
         form = ask
-        assert_equal(form.name, 'test_app')
-        assert_equal(form.title, 'Test App')
-        assert_equal(form.organization_id, 42)
-        assert_equal(form.shop_domain, 'shop.myshopify.com')
-        assert_equal(form.db, 'sqlite3')
+        assert_equal('test_app', form.name)
+        assert_equal('Test App', form.title)
+        assert_equal(42, form.organization_id)
+        assert_equal('shop.myshopify.com', form.shop_domain)
+        assert_equal('sqlite3', form.db)
       end
 
       def test_title_can_be_provided_by_flag
         form = ask(title: 'My New App')
-        assert_equal(form.name, 'my_new_app')
-        assert_equal(form.title, 'My New App')
+        assert_equal('my_new_app', form.name)
+        assert_equal('My New App', form.title)
       end
 
       def test_type_can_be_provided_by_flag
         form = ask(type: 'public')
-        assert_equal(form.type, 'public')
+        assert_equal('public', form.type)
       end
 
       def test_type_is_validated
@@ -41,7 +41,7 @@ module Rails
 
       def test_db_can_be_provided_by_flag
         form = ask(db: 'sqlite3')
-        assert_equal(form.db, 'sqlite3')
+        assert_equal('sqlite3', form.db)
       end
 
       def test_db_is_validated
@@ -61,7 +61,7 @@ module Rails
           .with(@context.message('rails.forms.create.db.select'))
           .returns('mysql')
         form = ask(db: nil)
-        assert_equal(form.db, 'mysql')
+        assert_equal('mysql', form.db)
       end
 
       def test_user_asked_if_they_want_to_change_db
@@ -73,7 +73,7 @@ module Rails
           .with(@context.message('rails.forms.create.db.select'))
           .never
         form = ask(db: nil)
-        assert_equal(form.db, 'sqlite3')
+        assert_equal('sqlite3', form.db)
       end
 
       def test_user_will_be_prompted_if_more_than_one_organization
@@ -105,8 +105,8 @@ module Rails
         )
         CLI::UI::Prompt.expects(:ask).returns(431)
         form = ask(org_id: nil, shop: nil)
-        assert_equal(form.organization_id, 431)
-        assert_equal(form.shop_domain, 'other.myshopify.com')
+        assert_equal(431, form.organization_id)
+        assert_equal('other.myshopify.com', form.shop_domain)
       end
 
       def test_will_auto_pick_with_only_one_org
@@ -126,8 +126,8 @@ module Rails
         )
         io = capture_io do
           form = ask(org_id: nil, shop: nil)
-          assert_equal(form.organization_id, 421)
-          assert_equal(form.shop_domain, 'next.myshopify.com')
+          assert_equal(421, form.organization_id)
+          assert_equal('next.myshopify.com', form.shop_domain)
         end
         assert_match(
           CLI::UI.fmt(@context.message('core.tasks.select_org_and_shop.organization', 'hoopy froods', 421)),
@@ -153,8 +153,8 @@ module Rails
           }
         )
         form = ask(org_id: 123, shop: nil)
-        assert_equal(form.organization_id, 123)
-        assert_equal(form.shop_domain, 'shopdomain.myshopify.com')
+        assert_equal(123, form.organization_id)
+        assert_equal('shopdomain.myshopify.com', form.shop_domain)
       end
 
       def test_it_will_fail_if_no_orgs_are_available
@@ -212,7 +212,7 @@ module Rails
         )
         io = capture_io do
           form = ask(org_id: 123, shop: nil)
-          assert_equal(form.shop_domain, 'shopdomain.myshopify.com')
+          assert_equal('shopdomain.myshopify.com', form.shop_domain)
         end
         assert_match(CLI::UI.fmt(
           @context.message('core.tasks.select_org_and_shop.development_store', 'shopdomain.myshopify.com')
@@ -248,7 +248,7 @@ module Rails
           )
           .returns('selected')
         form = ask(org_id: 123, shop: nil)
-        assert_equal(form.shop_domain, 'selected')
+        assert_equal('selected', form.shop_domain)
       end
 
       private

@@ -5,10 +5,15 @@ module TestHelpers
       super
       ::FakeFS.clear!
       ::FakeFS.activate!
+      @fake_fs_active = true
     end
 
     def teardown
+      unless @fake_fs_active
+        raise "FakeFS `teardown` was called but `setup` wasn't. You may be missing a call to `super`"
+      end
       ::FakeFS.deactivate!
+      @fake_fs_active = nil
       super
     end
   end

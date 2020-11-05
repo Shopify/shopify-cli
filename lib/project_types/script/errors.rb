@@ -14,6 +14,7 @@ module Script
       end
     end
     class ScriptProjectAlreadyExistsError < ScriptProjectError; end
+    class InvalidConfigProps < ScriptProjectError; end
     class InvalidConfigYAMLError < ScriptProjectError
       attr_reader :config_file
       def initialize(config_file)

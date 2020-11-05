@@ -76,6 +76,23 @@ module ShopifyCli
       end
     end
 
+    def test_query_fails_gracefully_with_internal_server_error_on_debug_mode
+      @context.stubs(:getenv).with('DEBUG').returns(true)
+      response = stub('response', code: '500', body: '{}')
+      HttpRequest.expects(:call).returns(response).times(4)
+      File.stubs(:read)
+        .with(File.join(ShopifyCli::ROOT, "lib/graphql/api/mutation.graphql"))
+        .returns(@mutation)
+
+      @context.expects(:debug).with(@context.message('core.api.error.internal_server_error_debug', "500\n{}"))
+      @context.expects(:puts).with(@context.message('core.api.error.internal_server_error'))
+      @api.query('api/mutation')
+      @api.stubs(:query).raises(API::APIRequestServerError)
+      assert_raises(API::APIRequestServerError) do
+        @api.query('api/mutation')
+      end
+    end
+
     def test_query_fails_gracefully_with_unexpected_error
       response = stub('response', code: '600', body: '{}')
       HttpRequest.expects(:call).returns(response)
@@ -99,7 +116,7 @@ module ShopifyCli
       File.expects(:exist?).with(expected_path).returns(true)
       File.expects(:read).with(expected_path).returns('content')
 
-      assert_equal(new_api.call_load_query('my_query'), 'content')
+      assert_equal('content', new_api.call_load_query('my_query'))
     end
 
     def test_load_query_will_fall_back_to_core_queries
@@ -112,7 +129,7 @@ module ShopifyCli
       expected_path = File.join(ShopifyCli::ROOT, 'lib', 'graphql', 'my_query.graphql')
       File.expects(:read).with(expected_path).returns('content')
 
-      assert_equal(new_api.call_load_query('my_query'), 'content')
+      assert_equal('content', new_api.call_load_query('my_query'))
     end
 
     def test_load_query_will_not_read_project_type_queries_if_not_in_project
@@ -120,7 +137,7 @@ module ShopifyCli
       ShopifyCli::Project.expects(:current_project_type).returns(nil)
       expected_path = File.join(ShopifyCli::ROOT, 'lib', 'graphql', 'my_query.graphql')
       File.expects(:read).with(expected_path).returns('content')
-      assert_equal(new_api.call_load_query('my_query'), 'content')
+      assert_equal('content', new_api.call_load_query('my_query'))
     end
   end
 end

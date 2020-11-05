@@ -14,8 +14,8 @@ module ShopifyCli
 
     def test_load_all_will_find_and_load_all_types
       all_types = ProjectType.all_loaded
-      assert(all_types.include?(Rails::Project))
-      assert(all_types.include?(Node::Project))
+      assert_includes(all_types, Rails::Project)
+      assert_includes(all_types, Node::Project)
     end
 
     def test_for_app_type_can_find_the_app_by_name

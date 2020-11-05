@@ -10,6 +10,7 @@ module ShopifyCli
         return response(organization_id.to_i, shop_domain) unless organization_id.nil? || shop_domain.nil?
         org = get_organization(organization_id)
         shop_domain ||= get_shop_domain(org)
+        ShopifyCli::Core::Monorail.metadata[:organization_id] = org["id"].to_i
         response(org["id"].to_i, shop_domain)
       end
 

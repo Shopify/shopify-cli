@@ -4,6 +4,7 @@ require 'project_types/node/test_helper'
 module ShopifyCli
   class JsSystemTest < MiniTest::Test
     def setup
+      super
       project_context('app_types', 'node')
       @system = JsSystem.new(ctx: @context)
 

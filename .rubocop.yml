@@ -1,8 +1,43 @@
 inherit_from: .rubocop_todo.yml
 
+require: rubocop-minitest
+
 inherit_gem:
   rubocop-shopify:
     - rubocop-cli.yml
+
+Minitest:
+  Enabled: true
+  Include:
+    - '**/test/**/*'
+    - '**/*_test.rb'
+
+Minitest/AssertInDelta: # (new in 0.10)
+  Enabled: true
+Minitest/AssertionInLifecycleHook: # (new in 0.10)
+  Enabled: true
+Minitest/AssertKindOf: # (new in 0.10)
+  Enabled: true
+Minitest/AssertOutput: # (new in 0.10)
+  Enabled: true
+Minitest/AssertPathExists: # (new in 0.10)
+  Enabled: false # only available from minitest 5.13.0
+Minitest/AssertSilent: # (new in 0.10)
+  Enabled: true
+Minitest/LiteralAsActualArgument: # (new in 0.10)
+  Enabled: true
+Minitest/MultipleAssertions: # (new in 0.10)
+  Enabled: true
+Minitest/RefuteInDelta: # (new in 0.10)
+  Enabled: true
+Minitest/RefuteKindOf: # (new in 0.10)
+  Enabled: true
+Minitest/RefutePathExists: # (new in 0.10)
+  Enabled: false # only available from minitest 5.13.0
+Minitest/TestMethodName: # (new in 0.10)
+  Enabled: true
+Minitest/UnspecifiedException: # (new in 0.10)
+  Enabled: true
 
 AllCops:
   Exclude:

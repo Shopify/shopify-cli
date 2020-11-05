@@ -5,6 +5,11 @@ module ShopifyCli
     class CreateApiClientTest < MiniTest::Test
       include TestHelpers::Partners
 
+      def teardown
+        ShopifyCli::Core::Monorail.metadata = {}
+        super
+      end
+
       def test_call_will_query_partners_dashboard
         stub_partner_req(
           'create_app',
@@ -35,7 +40,8 @@ module ShopifyCli
         )
 
         refute_nil(api_client)
-        assert_equal(api_client['apiKey'], 'newapikey')
+        assert_equal('newapikey', api_client['apiKey'])
+        assert_equal("newapikey", ShopifyCli::Core::Monorail.metadata[:api_key])
       end
 
       def test_call_will_return_any_user_errors
@@ -67,7 +73,7 @@ module ShopifyCli
             type: 'public',
           )
         end
-        assert_equal(err.message, "{{x}} title is not a valid title")
+        assert_equal("{{x}} title is not a valid title", err.message)
       end
     end
   end

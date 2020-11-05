@@ -7,17 +7,49 @@ module Minitest
 
   class Test
     FIXTURE_DIR = File.expand_path('fixtures', File.dirname(__FILE__))
+    CONFIG_FILE = CLI::Kit::Config.new(tool_name: ShopifyCli::TOOL_NAME).file
 
     include TestHelpers::Project
 
     def setup
+      @minitest_ext_setup_called = true
+      if File.exist?(CONFIG_FILE)
+        @config_sha_before = Digest::SHA256.hexdigest(File.read(CONFIG_FILE))
+      end
       project_context('project')
+      ::ShopifyCli::Project.clear
+      super
+    end
+
+    def teardown
+      # Some tests stub the File class, but we need to call the real methods when checking if the config file has
+      # changed.
+      #
+      # We could unstub them individually:
+      #  File.unstub(:read)
+      #  File.unstub(:exist?)
+      #
+      # Or we can use `mocha_teardown` which is documented as "only for use by authors of test libraries" but seems safe
+      # here.
+
+      mocha_teardown
+
+      if File.exist?(CONFIG_FILE)
+        @config_sha_after = Digest::SHA256.hexdigest(File.read(CONFIG_FILE))
+      end
+
+      raise "Local #{CONFIG_FILE} was modified by a test" unless @config_sha_before == @config_sha_after
+
+      unless @minitest_ext_setup_called
+        raise "teardown called without setup - you may have forgotten to call `super`"
+      end
+
+      @minitest_ext_setup_called = nil
       super
     end
 
     def run_cmd(cmd, split_cmd = true)
       stub_prompt_for_cli_updates
-      stub_monorail_log_git_sha
       stub_new_version_check
 
       new_cmd = split_cmd ? cmd.split : cmd
@@ -47,12 +79,8 @@ module Minitest
 
     private
 
-    def stub_monorail_log_git_sha
-      ShopifyCli::Git.stubs(:sha).returns("bb6f42193239a248f054e5019e469bc75f3adf1b")
-    end
-
     def stub_prompt_for_cli_updates
-      ShopifyCli::Config.stubs(:get_section).with("autoupdate").returns(stub("key?" => true))
+      ShopifyCli::Config.stubs(:get_section).with("autoupdate").returns('enabled' => 'true')
     end
 
     def stub_new_version_check

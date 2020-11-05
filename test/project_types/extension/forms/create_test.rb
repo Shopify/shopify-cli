@@ -15,7 +15,7 @@ module Extension
 
       def test_returns_defined_attributes_if_valid
         form = ask
-        assert_equal form.name, 'test-extension'
+        assert_equal('test-extension', form.name)
         assert_equal form.type, @test_extension_type
       end
 
@@ -36,7 +36,7 @@ module Extension
 
         capture_io do
           form = ask(name: nil)
-          assert_equal form.name, 'A name'
+          assert_equal('A name', form.name)
         end
       end
 
@@ -44,7 +44,7 @@ module Extension
         CLI::UI::Prompt.expects(:ask).with(@context.message('create.ask_name')).returns('  A name  ')
         capture_io do
           form = ask(name: nil)
-          assert_equal form.name, 'A name'
+          assert_equal('A name', form.name)
         end
       end
 

@@ -1,3 +1,15 @@
+Unreleased
+------
+
+Version 1.4.1
+------
+* [#917](https://github.com/Shopify/shopify-app-cli/pull/917): Ensure analytics for create action includes the same fields as other commands
+
+Version 1.4.0
+------
+* Updates to tests, dependencies and internal tooling
+* [#924](https://github.com/Shopify/shopify-app-cli/pull/924): Improve debugging messages on Partner API errors
+
 Version 1.3.1
 ------
 * Allow any characters in ngrok account names

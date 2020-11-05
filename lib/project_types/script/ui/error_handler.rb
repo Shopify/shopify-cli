@@ -44,6 +44,11 @@ module Script
             cause_of_error: ShopifyCli::Context.message('script.error.invalid_context_cause'),
             help_suggestion: ShopifyCli::Context.message('script.error.invalid_context_help'),
           }
+        when Errors::InvalidConfigProps
+          {
+            cause_of_error: ShopifyCli::Context.message('script.error.invalid_config_props_cause'),
+            help_suggestion: ShopifyCli::Context.message('script.error.invalid_config_props_help'),
+          }
         when Errors::InvalidConfigYAMLError
           {
             cause_of_error: ShopifyCli::Context.message('script.error.invalid_config', e.config_file),

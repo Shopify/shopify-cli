@@ -4,7 +4,6 @@ module ShopifyCli
   class AdminAPI
     class SchemaTest < MiniTest::Test
       include TestHelpers::Project
-      include TestHelpers::Constants
 
       def setup
         super
@@ -38,7 +37,7 @@ module ShopifyCli
       end
 
       def test_get_names_from_enum
-        assert_equal(@test_obj.get_names_from_type('WebhookSubscriptionTopic'), ["APP_UNINSTALLED"])
+        assert_equal(["APP_UNINSTALLED"], @test_obj.get_names_from_type('WebhookSubscriptionTopic'))
       end
     end
   end

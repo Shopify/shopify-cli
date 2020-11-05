@@ -2,6 +2,8 @@ require 'test_helper'
 
 module ShopifyCli
   class FeatureTest < MiniTest::Test
+    include TestHelpers::FakeFS
+
     TEST_FEATURE = :feature_set_flag_test
 
     class TestClass
@@ -26,7 +28,7 @@ module ShopifyCli
       refute ShopifyCli::Config.get_bool(Feature::SECTION, TEST_FEATURE.to_s)
     end
 
-    def enabled_returns_bool_status
+    def test_enabled_returns_bool_status
       Feature.enable(TEST_FEATURE)
       assert ShopifyCli::Config.get_bool(Feature::SECTION, TEST_FEATURE.to_s)
       assert Feature.enabled?(TEST_FEATURE)
