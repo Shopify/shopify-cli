@@ -104,6 +104,7 @@ module Theme
             errors: {
               digest_fail: "Unable to verify download",
               releases_fail: "Unable to fetch Theme Kit's list of releases",
+              update_fail: "Unable to update Theme Kit",
               write_fail: "Unable to download Theme Kit",
             },
             successful: "Theme Kit installed successfully",

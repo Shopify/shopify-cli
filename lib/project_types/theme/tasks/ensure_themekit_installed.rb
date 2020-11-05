@@ -45,12 +45,14 @@ module Theme
         end
 
         if (time_of_last_check + VERSION_CHECK_INTERVAL) < (now = Time.now.to_i)
-          update_time_of_last_check(now)
           unless Themekit.update(ctx)
-            ctx.abort('Unable to update Theme Kit')
+            ctx.abort(ctx.message('theme.tasks.ensure_themekit_installed.errors.update_fail'))
           end
+          update_time_of_last_check(now)
         end
       end
+
+      private
 
       def time_of_last_check
         (val = ShopifyCli::Config.get(VERSION_CHECK_SECTION, LAST_CHECKED_AT_FIELD)) ? val.to_i : 0
