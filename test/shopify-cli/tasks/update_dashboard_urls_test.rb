@@ -33,9 +33,10 @@ module ShopifyCli
       end
 
       def test_url_is_transformed_if_different_and_callback_is_appended
+        CLI::UI::Prompt.stubs(:confirm).returns(true)
         Project.current.stubs(:env).returns(Resources::EnvFile.new(api_key: '1234', secret: 'foo'))
         api_key = '1234'
-        stub_partner_req(
+        get_request = stub_partner_req(
           'get_app_urls',
           variables: {
             apiKey: api_key,
@@ -43,7 +44,7 @@ module ShopifyCli
           resp: {
             data: {
               app: {
-                applicationUrl: 'https://newone123.ngrok.io',
+                applicationUrl: 'https://oldone123.ngrok.io',
                 redirectUrlWhitelist: [
                   'https://123abc.ngrok.io',
                   'https://newone123.ngrok.io/callback/fake',
@@ -53,7 +54,7 @@ module ShopifyCli
           },
         )
 
-        stub_partner_req(
+        update_request = stub_partner_req(
           'update_dashboard_urls',
           variables: {
             input: {
@@ -68,9 +69,12 @@ module ShopifyCli
           url: 'https://newone123.ngrok.io',
           callback_url: '/callback/fake',
         )
+        assert_requested(get_request)
+        assert_requested(update_request)
       end
 
       def test_only_ngrok_urls_are_updated
+        CLI::UI::Prompt.stubs(:confirm).returns(true)
         Project.current.stubs(:env).returns(Resources::EnvFile.new(api_key: '1234', secret: 'foo'))
         api_key = '1234'
         stub_partner_req(
@@ -81,7 +85,7 @@ module ShopifyCli
           resp: {
             data: {
               app: {
-                applicationUrl: 'https://newone123.ngrok.io',
+                applicationUrl: 'https://oldone123.ngrok.io',
                 redirectUrlWhitelist: [
                   'https://123abc.ngrok.io',
                   'https://fake.fakeurl.com',
