@@ -1,5 +1,6 @@
 Unreleased
 ------
+* Remove --no-optional when using npm to create new extension
 
 Version 1.4.1
 ------
