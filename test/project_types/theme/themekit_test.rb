@@ -207,5 +207,15 @@ module Theme
         Themekit.serve(context, env: nil)
       end
     end
+
+    def test_can_update
+      context = ShopifyCli::Context.new
+
+      context.expects(:system)
+        .with(Themekit::THEMEKIT, 'update')
+        .returns(true)
+
+      Themekit.update(context)
+    end
   end
 end

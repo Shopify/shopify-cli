@@ -9,10 +9,10 @@ module Theme
         @context = TestHelpers::FakeContext.new
       end
 
-      def test_does_nothing_if_themekit_installed
-        stat = mock
-        @context.expects(:capture2e).with(Themekit::THEMEKIT).returns(['out', stat])
-        stat.stubs(:success?).returns(true)
+      def test_does_nothing_if_themekit_installed_and_not_update_time
+        stub_check_executable(true)
+        stub_time_check
+        Themekit.expects(:update).with(@context).never
 
         assert_nothing_raised do
           EnsureThemekitInstalled.call(@context)
@@ -23,6 +23,7 @@ module Theme
         stub_check_executable
         stub_releases
         stub_themekit_file_write
+        stub_time_check
 
         Digest::MD5.expects(:file).with(Themekit::THEMEKIT).returns('boop')
         FileUtils.expects(:chmod).with('+x', Themekit::THEMEKIT)
@@ -84,12 +85,39 @@ module Theme
         end
       end
 
+      def test_updates_if_has_been_a_week
+        stub_check_executable(true)
+        stub_time_check(604801)
+        Themekit.expects(:update).with(@context).returns(true)
+        ShopifyCli::Config
+          .expects(:set)
+          .once
+
+        assert_nothing_raised do
+          EnsureThemekitInstalled.call(@context)
+        end
+      end
+
+      def test_aborts_if_cannot_update
+        stub_check_executable(true)
+        stub_time_check(604801)
+        Themekit.expects(:update).with(@context).returns(false)
+        ShopifyCli::Config
+          .expects(:set)
+          .never
+
+        assert_raises(ShopifyCli::Abort,
+                      @context.message('theme.tasks.ensure_themekit_installed.errors.update_fail')) do
+          EnsureThemekitInstalled.call(@context)
+        end
+      end
+
       private
 
-      def stub_check_executable
+      def stub_check_executable(status = false)
         stat = mock
         @context.expects(:capture2e).with(Themekit::THEMEKIT).returns(['out', stat])
-        stat.stubs(:success?).returns(false)
+        stat.stubs(:success?).returns(status)
       end
 
       def stub_releases
@@ -122,6 +150,12 @@ module Theme
           .with('curl', '-o', Themekit::THEMEKIT, 'http://www.website.ca')
           .returns(['out', stat])
         stat.stubs(:success?).returns(true)
+      end
+
+      def stub_time_check(ago = 5)
+        ShopifyCli::Config
+          .expects(:get)
+          .returns(Time.now.to_i - ago)
       end
     end
   end
