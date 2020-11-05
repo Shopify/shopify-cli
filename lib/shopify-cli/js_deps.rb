@@ -59,7 +59,7 @@ module ShopifyCli
     end
 
     def npm(verbose = false)
-      cmd = %w(npm install --no-audit --no-optional)
+      cmd = %w(npm install --no-audit)
       cmd << '--quiet' unless verbose
 
       run_install_command(cmd)

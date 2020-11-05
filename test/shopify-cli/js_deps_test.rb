@@ -12,7 +12,7 @@ module ShopifyCli
     def test_installs_with_npm_and_returns_true
       JsSystem.any_instance.stubs(:yarn?).returns(false)
       mock_install_call(
-        command: %w(npm install --no-audit --no-optional --quiet),
+        command: %w(npm install --no-audit --quiet),
         returns: ['', '', mock(success?: true)]
       )
 
@@ -28,7 +28,7 @@ module ShopifyCli
     def test_install_with_npm_outputs_an_error_message_if_install_fails_and_returns_false
       JsSystem.any_instance.stubs(:yarn?).returns(false)
       mock_install_call(
-        command: %w(npm install --no-audit --no-optional --quiet),
+        command: %w(npm install --no-audit --quiet),
         returns: ['', mock(lines: ['error message']), mock(success?: false)]
       )
 
