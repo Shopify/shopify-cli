@@ -31,14 +31,32 @@ module ShopifyCli
     def test_write_writes_yaml
       Dir.stubs(:pwd).returns(@context.root)
       FileUtils.touch(".shopify-cli.yml")
+      Shopifolk.stubs(:acting_as_shopify_organization?).returns(false)
       ShopifyCli::Project.write(@context, project_type: :node, organization_id: 42)
       assert_equal :node, Project.current.config['project_type']
       assert_equal 42, Project.current.config['organization_id']
     end
 
+    def test_write_writes_yaml_with_shopify_organization_field
+      Dir.stubs(:pwd).returns(@context.root)
+      FileUtils.touch(".shopify-cli.yml")
+      Shopifolk.stubs(:acting_as_shopify_organization?).returns(true)
+      ShopifyCli::Project.write(@context, project_type: :node, organization_id: 42)
+      assert Project.current.config['shopify_organization']
+    end
+
+    def test_write_writes_yaml_without_shopify_organization_field
+      Dir.stubs(:pwd).returns(@context.root)
+      FileUtils.touch(".shopify-cli.yml")
+      Shopifolk.stubs(:acting_as_shopify_organization?).returns(false)
+      ShopifyCli::Project.write(@context, project_type: :node, organization_id: 42)
+      refute Project.current.config['shopify_organization']
+    end
+
     def test_write_includes_identifiers
       Dir.stubs(:pwd).returns(@context.root)
       FileUtils.touch(".shopify-cli.yml")
+      Shopifolk.stubs(:acting_as_shopify_organization?).returns(false)
       ShopifyCli::Project.write(
         @context,
         project_type: :node,
