@@ -8,6 +8,13 @@ module Node
           generic: "Error",
         },
 
+        connect: {
+          connected: "Project now connected to {{green:%s}}",
+          production_warning: <<~MESSAGE,
+          {{yellow:! Warning: if you have connected to an {{bold:app in production}}, running {{command:serve}} may update the app URL and cause an outage.
+          MESSAGE
+        },
+
         create: {
           help: <<~HELP,
           {{command:%s create node}}: Creates an embedded nodejs app.

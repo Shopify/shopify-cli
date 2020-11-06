@@ -64,7 +64,11 @@ module ShopifyCli
       end
 
       def connect_command
-        const_get(@project_connector_command_class)
+        if @project_connector_command_class.nil?
+          nil
+        else
+          const_get(@project_connector_command_class)
+        end
       end
 
       def register_command(const, cmd)
