@@ -1,5 +1,6 @@
 Unreleased
 ------
+* [#965](https://github.com/Shopify/shopify-app-cli/pull/965): Remove --no-optional when using npm to create new project
 
 Version 1.4.1
 ------
