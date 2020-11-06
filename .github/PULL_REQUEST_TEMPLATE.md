@@ -3,7 +3,7 @@
   - Prefix it with [Feature] (if applicable)
   - Start with a verb, for example: Add, Delete, Improve, Fix…
   - Give as much context as necessary and as little as possible
-  - Prefix it with [WIP] while it’s a work in progress
+  - Use a draft PR while it’s a work in progress
 -->
 
 ### WHY are these changes introduced?
