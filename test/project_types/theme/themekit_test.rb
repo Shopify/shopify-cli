@@ -145,7 +145,7 @@ module Theme
       refute(Themekit.deploy(context, env: nil))
     end
 
-    def test_pull_successful
+    def test_connect_successful
       context = ShopifyCli::Context.new
       stat = mock
       context.expects(:system)
@@ -156,10 +156,10 @@ module Theme
               '--themeid=2468')
         .returns(stat)
       stat.stubs(:success?).returns(true)
-      assert(Themekit.pull(context, store: 'shop.com', password: 'boop', themeid: '2468', env: nil))
+      assert(Themekit.connect(context, store: 'shop.com', password: 'boop', themeid: '2468', env: nil))
     end
 
-    def test_pull_unsuccessful
+    def test_connect_unsuccessful
       context = ShopifyCli::Context.new
       stat = mock
       context.expects(:system)
@@ -170,7 +170,7 @@ module Theme
               '--themeid=2468')
         .returns(stat)
       stat.stubs(:success?).returns(false)
-      refute(Themekit.pull(context, store: 'shop.com', password: 'boop', themeid: '2468', env: nil))
+      refute(Themekit.connect(context, store: 'shop.com', password: 'boop', themeid: '2468', env: nil))
     end
 
     def test_serve_successful
