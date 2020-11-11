@@ -3,6 +3,16 @@
 module ShopifyCli
   module Messages
     MESSAGES = {
+      project: {
+        create: {
+          info: {
+            created: "{{v}} {{green:%s}} was created in your Partner Dashboard {{underline:%s}}",
+            serve: "{{*}} Change directories to your new project folder {{green:%s}} and run {{command:%s serve}} " \
+            "to start a local server",
+            install: "{{*}} Then, visit {{underline:%s/test}} to install {{green:%s}} on your Dev Store",
+          },
+        },
+      },
       core: {
         connect: {
           help: <<~HELP,
