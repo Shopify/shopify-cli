@@ -61,12 +61,7 @@ module Node
       end
 
       def test_check_default_npm_registry_is_production
-        FileUtils.mkdir_p('test-app')
-        FileUtils.mkdir_p('test-app/server/handlers')
-        FileUtils.touch('test-app/.git')
-        FileUtils.touch('test-app/.github')
-        FileUtils.touch('test-app/server/handlers/client.js')
-        FileUtils.touch('test-app/server/handlers/client.cli.js')
+        create_test_app_directory_structure
 
         expect_node_npm_check_commands
         @context.expects(:capture2).with('npm config get @shopify:registry').returns(
@@ -88,12 +83,7 @@ module Node
       end
 
       def test_check_default_npm_registry_is_not_production
-        FileUtils.mkdir_p('test-app')
-        FileUtils.mkdir_p('test-app/server/handlers')
-        FileUtils.touch('test-app/.git')
-        FileUtils.touch('test-app/.github')
-        FileUtils.touch('test-app/server/handlers/client.js')
-        FileUtils.touch('test-app/server/handlers/client.cli.js')
+        create_test_app_directory_structure
 
         expect_node_npm_check_commands
         @context.expects(:capture2).with('npm config get @shopify:registry').returns(
@@ -125,12 +115,7 @@ module Node
       end
 
       def test_can_create_new_app
-        FileUtils.mkdir_p('test-app')
-        FileUtils.mkdir_p('test-app/server/handlers')
-        FileUtils.touch('test-app/.git')
-        FileUtils.touch('test-app/.github')
-        FileUtils.touch('test-app/server/handlers/client.js')
-        FileUtils.touch('test-app/server/handlers/client.cli.js')
+        create_test_app_directory_structure
 
         @context.stubs(:uname).returns('Mac')
         expect_node_npm_check_commands
@@ -175,12 +160,7 @@ module Node
       end
 
       def test_can_create_new_app_registry_not_found
-        FileUtils.mkdir_p('test-app')
-        FileUtils.mkdir_p('test-app/server/handlers')
-        FileUtils.touch('test-app/.git')
-        FileUtils.touch('test-app/.github')
-        FileUtils.touch('test-app/server/handlers/client.js')
-        FileUtils.touch('test-app/server/handlers/client.cli.js')
+        create_test_app_directory_structure
 
         @context.stubs(:uname).returns('Mac')
         expect_node_npm_check_commands
@@ -248,6 +228,15 @@ module Node
         @context.expects(:capture2e).with('node', '-v').returns(['8.0.0', mock(success?: true)])
         @context.expects(:which).with('npm').returns('/usr/bin/npm')
         @context.expects(:capture2e).with('npm', '-v').returns(['1', mock(success?: true)])
+      end
+
+      def create_test_app_directory_structure
+        FileUtils.mkdir_p('test-app')
+        FileUtils.mkdir_p('test-app/server/handlers')
+        FileUtils.touch('test-app/.git')
+        FileUtils.touch('test-app/.github')
+        FileUtils.touch('test-app/server/handlers/client.js')
+        FileUtils.touch('test-app/server/handlers/client.cli.js')
       end
     end
   end
