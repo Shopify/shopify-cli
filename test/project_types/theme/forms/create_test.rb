@@ -6,15 +6,15 @@ module Theme
     class CreateTest < MiniTest::Test
       def test_returns_all_defined_attributes_if_valid
         form = ask
-        assert_equal(form.store, 'shop.myshopify.com')
-        assert_equal(form.password, 'boop')
-        assert_equal(form.title, 'My Theme')
-        assert_equal(form.name, 'my_theme')
+        assert_equal('shop.myshopify.com', form.store)
+        assert_equal('boop', form.password)
+        assert_equal('My Theme', form.title)
+        assert_equal('my_theme', form.name)
       end
 
       def test_env_can_be_provided_by_flag
         form = ask(env: 'test')
-        assert_equal(form.env, 'test')
+        assert_equal('test', form.env)
       end
 
       def test_env_nil_if_not_provided
@@ -24,7 +24,7 @@ module Theme
 
       def test_store_can_be_provided_by_flag
         form = ask(store: 'shop.myshopify.com')
-        assert_equal(form.store, 'shop.myshopify.com')
+        assert_equal('shop.myshopify.com', form.store)
       end
 
       def test_store_is_prompted
@@ -36,7 +36,7 @@ module Theme
 
       def test_password_can_be_provided_by_flag
         form = ask(password: 'boop')
-        assert_equal(form.password, 'boop')
+        assert_equal('boop', form.password)
       end
 
       def test_password_is_prompted
@@ -47,14 +47,14 @@ module Theme
 
       def test_title_can_be_provided_by_flag
         form = ask(title: 'My Theme')
-        assert_equal(form.name, 'my_theme')
-        assert_equal(form.title, 'My Theme')
+        assert_equal('my_theme', form.name)
+        assert_equal('My Theme', form.title)
       end
 
       def test_title_is_prompted
         CLI::UI::Prompt.expects(:ask).with(@context.message('theme.forms.create.ask_title'), allow_empty: false)
           .returns('My Theme')
-        assert_equal(ask.name, 'my_theme')
+        assert_equal('my_theme', ask.name)
         ask(title: nil)
       end
 

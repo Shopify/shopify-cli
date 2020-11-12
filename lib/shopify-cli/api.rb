@@ -41,16 +41,9 @@ module ShopifyCli
           ctx.abort(ctx.message('core.api.error.invalid_url', url))
         end
 
-        req = if method == "POST"
-          ::Net::HTTP::Post.new(uri.request_uri)
-        elsif method == "GET"
-          ::Net::HTTP::Get.new(uri.request_uri)
-        end
-        headers = headers.merge(default_headers)
-        req.body = body unless body.nil?
-        req['Content-Type'] = 'application/json'
-        headers.each { |header, value| req[header] = value }
-        response = http.request(req)
+        # we delay this require so as to avoid a performance hit on starting the CLI
+        require 'shopify-cli/http_request'
+        response = HttpRequest.call(uri, body, headers.merge(default_headers), method)
 
         case response.code.to_i
         when 200..399

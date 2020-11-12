@@ -15,7 +15,7 @@ module Theme
       def test_can_pull_theme
         FakeFS do
           context = ShopifyCli::Context.new
-          ShopifyCli::Project.expects(:has_current?).returns(false)
+          ShopifyCli::Project.expects(:has_current?).returns(false).twice
 
           Theme::Forms::Pull.expects(:ask)
             .with(context, [], {})
@@ -43,7 +43,7 @@ module Theme
       def test_can_specify_env
         FakeFS do
           context = ShopifyCli::Context.new
-          ShopifyCli::Project.expects(:has_current?).returns(false)
+          ShopifyCli::Project.expects(:has_current?).returns(false).twice
 
           Theme::Forms::Pull.expects(:ask)
             .with(context, [], { env: 'test' })
