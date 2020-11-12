@@ -7,16 +7,16 @@ module Theme
       def test_returns_all_defined_attributes_if_valid
         query_themes
         form = ask
-        assert_equal(form.store, 'shop.myshopify.com')
-        assert_equal(form.password, 'boop')
-        assert_equal(form.themeid, '2468')
-        assert_equal(form.name, 'my_theme')
+        assert_equal('shop.myshopify.com', form.store)
+        assert_equal('boop', form.password)
+        assert_equal('2468', form.themeid)
+        assert_equal('my_theme', form.name)
       end
 
       def test_env_can_be_provided_by_flag
         query_themes
         form = ask(env: 'test')
-        assert_equal(form.env, 'test')
+        assert_equal('test', form.env)
       end
 
       def test_env_nil_if_not_provided
@@ -28,7 +28,7 @@ module Theme
       def test_store_can_be_provided_by_flag
         query_themes
         form = ask(store: 'shop.myshopify.com')
-        assert_equal(form.store, 'shop.myshopify.com')
+        assert_equal('shop.myshopify.com', form.store)
       end
 
       def test_store_is_prompted
@@ -42,7 +42,7 @@ module Theme
       def test_password_can_be_provided_by_flag
         query_themes
         form = ask(password: 'boop')
-        assert_equal(form.password, 'boop')
+        assert_equal('boop', form.password)
       end
 
       def test_password_is_prompted
