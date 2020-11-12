@@ -3,7 +3,7 @@
 module ShopifyCli
   module Messages
     MESSAGES = {
-      project: {
+      apps: {
         create: {
           info: {
             created: "{{v}} {{green:%s}} was created in your Partner Dashboard {{underline:%s}}",

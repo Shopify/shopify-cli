@@ -42,9 +42,9 @@ module Node
 
         partners_url = "#{partners_endpoint}/#{form.organization_id}/apps/#{api_client['id']}"
 
-        @ctx.puts(@ctx.message('project.create.info.created', form.title, partners_url))
-        @ctx.puts(@ctx.message('project.create.info.serve', form.name, ShopifyCli::TOOL_NAME))
-        @ctx.puts(@ctx.message('project.create.info.install', partners_url, form.title))
+        @ctx.puts(@ctx.message('apps.create.info.created', form.title, partners_url))
+        @ctx.puts(@ctx.message('apps.create.info.serve', form.name, ShopifyCli::TOOL_NAME))
+        @ctx.puts(@ctx.message('apps.create.info.install', partners_url, form.title))
       end
 
       def self.help
