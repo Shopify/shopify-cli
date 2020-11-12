@@ -2,7 +2,8 @@
 module Theme
   class Project < ShopifyCli::ProjectType
     hidden_feature
-    creator 'Theme App', 'Theme::Commands::Create'
+    title('Theme')
+    creator('Theme::Commands::Create')
     register_command('Theme::Commands::Deploy', "deploy")
     register_command('Theme::Commands::Push', "push")
     register_command('Theme::Commands::Serve', "serve")

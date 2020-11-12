@@ -5,8 +5,8 @@ module ShopifyCli
   class HttpRequestTest < MiniTest::Test
     def test_makes_http_request
       uri = URI.parse("https://example.com")
-      body = "body content"
       variables = { var_name: "var_value" }
+      body = JSON.dump(query: "body content".tr("\n", ""), variables: variables)
       headers = { header_name: "header_value" }
       request = stub_request(:post, "https://example.com/")
         .with(
@@ -20,7 +20,7 @@ module ShopifyCli
           }
         )
 
-      HttpRequest.call(uri, body, variables, headers)
+      HttpRequest.call(uri, body, headers, "POST")
 
       assert_requested request
     end
