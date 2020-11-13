@@ -43,7 +43,12 @@ module ShopifyCli
 
         # we delay this require so as to avoid a performance hit on starting the CLI
         require 'shopify-cli/http_request'
-        response = HttpRequest.call(uri, body, headers.merge(default_headers), method)
+        headers = default_headers.merge(headers)
+        response = if method == "POST"
+          HttpRequest.post(uri, body, headers)
+        elsif method == "GET"
+          HttpRequest.get(uri, body, headers)
+        end
 
         case response.code.to_i
         when 200..399

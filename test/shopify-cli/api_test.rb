@@ -42,7 +42,7 @@ module ShopifyCli
         .with(File.join(ShopifyCli::ROOT, "lib/graphql/api/mutation.graphql"))
         .returns(@mutation)
       response = stub('response', code: '200', body: '{}')
-      HttpRequest.expects(:call).with(uri, body, headers, "POST").returns(response)
+      HttpRequest.expects(:post).with(uri, body, headers).returns(response)
       @api.query('api/mutation', variables: variables)
     end
 
@@ -64,7 +64,7 @@ module ShopifyCli
 
     def test_query_fails_gracefully_with_internal_server_error
       response = stub('response', code: '500', body: '{}')
-      HttpRequest.expects(:call).returns(response).times(4)
+      HttpRequest.expects(:post).returns(response).times(4)
       File.stubs(:read)
         .with(File.join(ShopifyCli::ROOT, "lib/graphql/api/mutation.graphql"))
         .returns(@mutation)
@@ -80,7 +80,7 @@ module ShopifyCli
     def test_query_fails_gracefully_with_internal_server_error_on_debug_mode
       @context.stubs(:getenv).with('DEBUG').returns(true)
       response = stub('response', code: '500', body: '{}')
-      HttpRequest.expects(:call).returns(response).times(4)
+      HttpRequest.expects(:post).returns(response).times(4)
       File.stubs(:read)
         .with(File.join(ShopifyCli::ROOT, "lib/graphql/api/mutation.graphql"))
         .returns(@mutation)
@@ -96,7 +96,7 @@ module ShopifyCli
 
     def test_query_fails_gracefully_with_unexpected_error
       response = stub('response', code: '600', body: '{}')
-      HttpRequest.expects(:call).returns(response)
+      HttpRequest.expects(:post).returns(response)
       File.stubs(:read)
         .with(File.join(ShopifyCli::ROOT, "lib/graphql/api/mutation.graphql"))
         .returns(@mutation)
