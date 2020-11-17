@@ -8,7 +8,7 @@ module Theme
         windows: 'windows-amd64',
       }
       VERSION_CHECK_INTERVAL = 604800
-      VERSION_CHECK_SECTION = 'themekitversioncheck'
+      VERSION_CHECK_SECTION = 'themekit_version_check'
       LAST_CHECKED_AT_FIELD = 'last_checked_at'
 
       def call(ctx)
@@ -35,6 +35,9 @@ module Theme
             if Digest::MD5.file(Themekit::THEMEKIT) == release['digest']
               FileUtils.chmod("+x", Themekit::THEMEKIT)
               ctx.puts(ctx.message('theme.tasks.ensure_themekit_installed.successful'))
+
+              auto = CLI::UI.confirm(ctx.message('theme.tasks.ensure_themekit_installed.auto_update'))
+              ShopifyCli::Feature.set(:themekit_auto_update, auto)
             else
               ctx.abort(ctx.message('theme.tasks.ensure_themekit_installed.errors.digest_fail'))
             end
@@ -44,7 +47,8 @@ module Theme
           end
         end
 
-        if (time_of_last_check + VERSION_CHECK_INTERVAL) < (now = Time.now.to_i)
+        now = Time.now.to_i
+        if ShopifyCli::Feature.enabled?(:themekit_auto_update) && (time_of_last_check + VERSION_CHECK_INTERVAL) < now
           unless Themekit.update(ctx)
             ctx.abort(ctx.message('theme.tasks.ensure_themekit_installed.errors.update_fail'))
           end
