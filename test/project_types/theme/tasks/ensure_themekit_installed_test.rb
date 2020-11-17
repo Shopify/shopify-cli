@@ -11,6 +11,7 @@ module Theme
 
       def test_does_nothing_if_themekit_installed_and_not_update_time
         stub_check_executable(true)
+        ShopifyCli::Feature.expects(:enabled?).returns(true)
         stub_time_check
         Themekit.expects(:update).with(@context).never
 
@@ -23,10 +24,15 @@ module Theme
         stub_check_executable
         stub_releases
         stub_themekit_file_write
+        CLI::UI.expects(:confirm)
+          .with(@context.message('theme.tasks.ensure_themekit_installed.auto_update'))
+          .returns(true)
+        ShopifyCli::Feature.expects(:set).with(:themekit_auto_update, true)
         stub_time_check
 
         Digest::MD5.expects(:file).with(Themekit::THEMEKIT).returns('boop')
         FileUtils.expects(:chmod).with('+x', Themekit::THEMEKIT)
+        ShopifyCli::Feature.expects(:enabled?).returns(true)
 
         EnsureThemekitInstalled.call(@context)
       end
@@ -87,6 +93,7 @@ module Theme
 
       def test_updates_if_has_been_a_week
         stub_check_executable(true)
+        ShopifyCli::Feature.expects(:enabled?).returns(true)
         stub_time_check(604801)
         Themekit.expects(:update).with(@context).returns(true)
         ShopifyCli::Config
@@ -100,6 +107,7 @@ module Theme
 
       def test_aborts_if_cannot_update
         stub_check_executable(true)
+        ShopifyCli::Feature.expects(:enabled?).returns(true)
         stub_time_check(604801)
         Themekit.expects(:update).with(@context).returns(false)
         ShopifyCli::Config
