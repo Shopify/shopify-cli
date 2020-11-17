@@ -28,7 +28,7 @@ module Theme
         Tasks::EnsureThemekitInstalled.call(ctx)
       end
 
-      def pull(ctx, store:, password:, themeid:, env:)
+      def connect(ctx, store:, password:, themeid:, env:)
         command = build_command('get', env)
         command << "--password=#{password}"
         command << "--store=#{store}"

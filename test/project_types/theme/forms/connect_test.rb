@@ -3,7 +3,7 @@ require 'project_types/theme/test_helper'
 
 module Theme
   module Forms
-    class PullTest < MiniTest::Test
+    class ConnectTest < MiniTest::Test
       def test_returns_all_defined_attributes_if_valid
         query_themes
         form = ask
@@ -64,7 +64,7 @@ module Theme
       private
 
       def ask(password: 'boop', store: 'shop.myshopify.com', themeid: '2468', env: nil)
-        Pull.ask(
+        Connect.ask(
           @context,
           [],
           password: password,
