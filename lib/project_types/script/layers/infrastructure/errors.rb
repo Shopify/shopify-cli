@@ -41,6 +41,7 @@ module Script
             @outdated_packages = outdated_packages
           end
         end
+        class UnmetCompilationDepdencyError < ScriptProjectError; end
       end
     end
   end
