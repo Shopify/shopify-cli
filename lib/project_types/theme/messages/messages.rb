@@ -100,10 +100,12 @@ module Theme
         },
         tasks: {
           ensure_themekit_installed: {
+            auto_update: "Would you like to enable auto-updating?",
             downloading: "Downloading Theme Kit %s",
             errors: {
               digest_fail: "Unable to verify download",
               releases_fail: "Unable to fetch Theme Kit's list of releases",
+              update_fail: "Unable to update Theme Kit",
               write_fail: "Unable to download Theme Kit",
             },
             successful: "Theme Kit installed successfully",
