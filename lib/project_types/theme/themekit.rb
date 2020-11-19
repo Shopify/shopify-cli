@@ -23,13 +23,16 @@ module Theme
         stat.success?
       end
 
-      def deploy(ctx, env:)
-        unless push(ctx, env: env)
+      def deploy(ctx, flags: nil, env:)
+        unless push(ctx, flags: flags, env: env)
           ctx.abort(ctx.message('theme.deploy.push_fail'))
         end
         ctx.done(ctx.message('theme.deploy.info.pushed'))
 
         command = build_command('publish', env)
+        (command << flags).compact!
+        command.flatten!
+
         stat = ctx.system(*command)
         stat.success?
       end
@@ -72,13 +75,16 @@ module Theme
         resp[1]['themes'].map { |theme| [theme['name'], theme['id']] }.to_h
       end
 
-      def serve(ctx, env:)
+      def serve(ctx, flags: nil, env:)
         command = build_command('open', env)
         out, stat = ctx.capture2e(*command)
         ctx.puts(out)
         ctx.abort(ctx.message('theme.serve.open_fail')) unless stat.success?
 
         command = build_command('watch', env)
+        (command << flags).compact!
+        command.flatten!
+        p command
         ctx.system(*command)
       end
 

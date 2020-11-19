@@ -6,6 +6,7 @@ module Theme
 
       options do |parser, flags|
         parser.on('--env=ENV') { |env| flags[:env] = env }
+        parser.on('--allow-live') { flags['allow_live'] = true }
       end
 
       def call(*)
@@ -14,7 +15,16 @@ module Theme
             @ctx.abort(@ctx.message('theme.deploy.abort'))
           end
 
-          unless Themekit.deploy(@ctx, env: options.flags[:env])
+          if options.flags['env']
+            env = options.flags['env']
+            options.flags.delete('env')
+          end
+
+          flags = options.flags.map do |key, _value|
+            '--' + key
+          end
+
+          unless Themekit.deploy(@ctx, flags: flags, env: env)
             @ctx.abort(@ctx.message('theme.deploy.error'))
           end
         end
