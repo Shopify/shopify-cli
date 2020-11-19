@@ -65,12 +65,13 @@ module Theme
 
           themes = Themekit.query_themes(@ctx, store: store, password: password)
 
-          theme = CLI::UI::Prompt.ask(@ctx.message('theme.generate.env.ask_theme')) do |handler|
+          @ctx.abort(@ctx.message('theme.generate.env.no_themes', ShopifyCli::TOOL_NAME)) if themes.empty?
+
+          CLI::UI::Prompt.ask(@ctx.message('theme.generate.env.ask_theme')) do |handler|
             themes.each do |name, id|
               handler.option(name) { id }
             end
           end
-          theme
         end
       end
     end

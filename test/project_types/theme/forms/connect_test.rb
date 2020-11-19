@@ -3,10 +3,7 @@ require 'project_types/theme/test_helper'
 
 module Theme
   module Forms
-<<<<<<< HEAD:test/project_types/theme/forms/connect_test.rb
     class ConnectTest < MiniTest::Test
-=======
-    class PullTest < MiniTest::Test
       resp = [200,
               { "themes" =>
                [{ "id" => 2468,
@@ -15,7 +12,6 @@ module Theme
                   "name" => "your_theme" }] }]
       THEMES = resp[1]['themes'].map { |theme| [theme['name'], theme['id']] }.to_h
 
->>>>>>> 58d1e78... Add tests:test/project_types/theme/forms/pull_test.rb
       def test_returns_all_defined_attributes_if_valid
         Themekit.expects(:query_themes)
           .with(@context, store: 'shop.myshopify.com', password: 'boop')
@@ -96,7 +92,6 @@ module Theme
 
       private
 
-<<<<<<< HEAD:test/project_types/theme/forms/connect_test.rb
       def ask(password: 'boop', store: 'shop.myshopify.com', themeid: '2468', env: nil)
         Connect.ask(
           @context,
@@ -106,15 +101,6 @@ module Theme
           themeid: themeid,
           env: env
         )
-=======
-      def ask(password: 'boop', store: 'shop.myshopify.com', themeid: 2468, env: nil)
-        Pull.ask(@context,
-                 [],
-                 password: password,
-                 store: store,
-                 themeid: themeid,
-                 env: env)
->>>>>>> 58d1e78... Add tests:test/project_types/theme/forms/pull_test.rb
       end
     end
   end

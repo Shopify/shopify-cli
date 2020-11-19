@@ -70,17 +70,20 @@ module Theme
         },
         generate: {
           env: {
-            ask_password: "Password (defaults to {{green:%s}})",
-            ask_store: "Store (defaults to {{green:%s}})",
+            ask_password: "Password",
+            ask_password_default: "Password (defaults to {{green:%s}})",
+            ask_store: "Store",
+            ask_store_default: "Store (defaults to {{green:%s}})",
             ask_theme: "Select theme",
             help: <<~HELP,
-              Generate a new env in {{green:config.yml}}.
+              Create or update configuration file in the current directory.
                 Usage: {{command:%s generate env}}
                 Options:
                   {{command:--store=MYSHOPIFYDOMAIN}} Store URL. Must be an existing store with private apps enabled.
                   {{command:--password=PASSWORD}} Private app password. App must have Read and Write Theme access.
                   {{command:--themeid=THEMEID}} Theme ID. Must be an existing theme on your store.
             HELP
+            no_themes: "Please create a new theme using %s create theme",
           },
           help: <<~HELP,
             Generate code in your Theme. Currently supports generating new envs.

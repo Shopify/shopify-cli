@@ -38,9 +38,9 @@ module Theme
 
           Themekit.expects(:generate_env)
             .with(context,
+                  store: 'office.myshopify.com',
                   password: 'beep',
                   themeid: '2468',
-                  store: 'office.myshopify.com',
                   env: nil)
             .returns(true)
 
@@ -69,9 +69,9 @@ module Theme
 
           Themekit.expects(:generate_env)
             .with(context,
+                  store: 'shop.myshopify.com',
                   password: 'boop',
                   themeid: '2468',
-                  store: 'shop.myshopify.com',
                   env: nil)
             .returns(true)
 
@@ -100,9 +100,9 @@ module Theme
 
           Themekit.expects(:generate_env)
             .with(context,
+                  store: 'office.myshopify.com',
                   password: 'beep',
                   themeid: '2468',
-                  store: 'office.myshopify.com',
                   env: nil)
             .returns(true)
 
@@ -134,9 +134,9 @@ module Theme
 
           Themekit.expects(:generate_env)
             .with(context,
+                  store: 'shop.myshopify.com',
                   password: 'boop',
                   themeid: '2468',
-                  store: 'shop.myshopify.com',
                   env: 'test')
             .returns(true)
 
@@ -165,14 +165,35 @@ module Theme
 
           Themekit.expects(:generate_env)
             .with(context,
+                  store: 'shop.myshopify.com',
                   password: 'boop',
                   themeid: '2468',
-                  store: 'shop.myshopify.com',
                   env: nil)
             .returns(true)
 
           command = Theme::Commands::Generate::Env.new(context)
           command.call
+        end
+
+        def test_abort_if_no_themes
+          context = ShopifyCli::Context.new
+
+          CLI::UI::Prompt.expects(:ask)
+            .with(context.message('theme.generate.env.ask_store'), allow_empty: false)
+            .returns('shop.myshopify.com')
+
+          CLI::UI::Prompt.expects(:ask)
+            .with(context.message('theme.generate.env.ask_password'), allow_empty: false)
+            .returns('boop')
+
+          Themekit.expects(:query_themes)
+            .with(context, store: 'shop.myshopify.com', password: 'boop')
+            .returns({})
+
+          assert_raises CLI::Kit::Abort do
+            command = Theme::Commands::Generate::Env.new(context)
+            command.call
+          end
         end
       end
     end
