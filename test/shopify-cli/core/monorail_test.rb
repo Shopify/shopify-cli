@@ -6,7 +6,7 @@ module ShopifyCli
     class MonorailTest < MiniTest::Test
       def setup
         super
-        CLI::UI::Prompt.stubs(:confirm).returns(true)
+        stub_shopify_org_confirmation
         ShopifyCli::Core::Monorail.metadata = {}
       end
 
@@ -189,6 +189,13 @@ module ShopifyCli
         ShopifyCli::Config.stubs(:get_section).with('analytics').returns({ 'enabled' => consented.to_s })
         ShopifyCli::Context.any_instance.stubs(:system?).returns(enabled)
         ShopifyCli::Config.stubs(:get_bool).with('analytics', 'enabled').returns(consented)
+      end
+
+      def stub_shopify_org_confirmation(response: true)
+        CLI::UI::Prompt
+          .stubs(:confirm)
+          .with(includes("Are you working a 1P (1st Party) app?"), anything)
+          .returns(response)
       end
     end
   end

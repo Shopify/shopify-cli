@@ -12,6 +12,7 @@ module Extension
       FileUtils.cd(new_context.root)
 
       ExtensionProject.write_cli_file(context: new_context, type: @test_extension_type.identifier)
+      ::ShopifyCli::Project.clear
 
       assert File.exist?('.shopify-cli.yml')
       assert_equal :extension, ShopifyCli::Project.current_project_type

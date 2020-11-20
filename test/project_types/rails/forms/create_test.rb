@@ -6,6 +6,12 @@ module Rails
     class CreateTest < MiniTest::Test
       include TestHelpers::Partners
 
+      def setup
+        super
+        ShopifyCli::Shopifolk.stubs(:check)
+        stub_shopify_org_confirmation
+      end
+
       def test_returns_all_defined_attributes_if_valid
         form = ask
         assert_equal('test_app', form.name)

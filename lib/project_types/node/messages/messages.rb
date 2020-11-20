@@ -26,12 +26,6 @@ module Node
             npm_version_failure: "Failed to get the current npm version. Please make sure it is installed as per " \
               "the instructions at https://www.npmjs.com/get-npm.",
           },
-          info: {
-            created: "{{v}} {{green:%s}} was created in your Partner Dashboard {{underline:%s}}",
-            serve: "{{*}} Change directories to your new project folder {{green:%s}} and run {{command:%s serve}} " \
-              "to start a local server",
-            install: "{{*}} Then, visit {{underline:%s/test}} to install {{green:%s}} on your Dev Store",
-          },
           node_version: "node %s",
           npm_version: "npm %s",
         },

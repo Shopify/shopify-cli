@@ -27,7 +27,7 @@ module ShopifyCli
       # #### Parameters
       # - `ctx`: running context from your command
       # - `query_name`: name of the query you want to use, loaded from the `lib/graphql` directory.
-      # - `**variable`: a hash of variables to be supplied to the query ro mutation
+      # - `**variables`: a hash of variables to be supplied to the query or mutation
       #
       # #### Raises
       #

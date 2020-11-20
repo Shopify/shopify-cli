@@ -13,6 +13,8 @@ GEM
     hashdiff (1.0.1)
     method_source (1.0.0)
     minitest (5.14.2)
+    minitest-fail-fast (0.1.0)
+      minitest (~> 5)
     minitest-reporters (1.4.2)
       ansi
       builder
@@ -63,6 +65,7 @@ DEPENDENCIES
   byebug
   fakefs (>= 1.0)
   minitest (>= 5.0.0)
+  minitest-fail-fast
   minitest-reporters
   mocha
   pry-byebug
