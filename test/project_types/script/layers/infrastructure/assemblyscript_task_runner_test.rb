@@ -26,6 +26,14 @@ describe Script::Layers::Infrastructure::AssemblyScriptTaskRunner do
       .new(language: language, extension_point_type: extension_point_type, script_name: script_name)
   end
 
+  let(:package_json) do
+    {
+      scripts: {
+        build: "npx shopify-scripts-toolchain-as build --src src/script.ts -b script.wasm -- --lib node_modules",
+      },
+    }
+  end
+
   before do
     Script::ScriptProject.stubs(:current).returns(script_project)
   end
@@ -33,20 +41,63 @@ describe Script::Layers::Infrastructure::AssemblyScriptTaskRunner do
   describe ".build" do
     subject { as_task_runner.build }
 
-    it "should trigger the compilation process" do
-      wasm = "some compiled code"
-      File.write("#{script_name}.wasm", wasm)
+    it "should raise an error if no build script is defined" do
+      File.expects(:read).with('package.json').once.returns(JSON.generate(package_json.delete(:scripts)))
+      assert_raises(Script::Layers::Infrastructure::Errors::BuildScriptNotFoundError) do
+        subject
+      end
+    end
+
+    it "should raise an error if the build script is not compliant" do
+      package_json[:scripts][:build] = ""
+      File.expects(:read).with('package.json').once.returns(JSON.generate(package_json))
+      assert_raises(Script::Layers::Infrastructure::Errors::InvalidBuildScriptError) do
+        subject
+      end
+    end
+
+    it "should raise an error if the generated web assembly is not found" do
+      File.expects(:read).with('package.json').once.returns(JSON.generate(package_json))
+      ctx
+        .expects(:file_exist?)
+        .with('foo.wasm')
+        .once
+        .returns(false)
 
       ctx
         .expects(:capture2e)
-        .at_most(1)
+        .with("npm run build")
+        .once
         .returns(['output', mock(success?: true)])
+
+      assert_raises(Script::Layers::Infrastructure::Errors::WebAssemblyBinaryNotFoundError) { subject }
+    end
+
+    it "should trigger the compilation process" do
+      wasm = "some compiled code"
+      File.expects(:read).with('package.json').once.returns(JSON.generate(package_json))
+      File.expects(:read).with('foo.wasm').once.returns(wasm)
+
+      ctx
+        .expects(:capture2e)
+        .with("npm run build")
+        .once
+        .returns(['output', mock(success?: true)])
+
+      ctx
+        .expects(:file_exist?)
+        .with('foo.wasm')
+        .once
+        .returns(true)
+
+      ctx.expects('rm').with('foo.wasm').once
 
       assert_equal wasm, subject
     end
 
     it "should raise error without command output on failure" do
       output = 'error_output'
+      File.expects(:read).with('package.json').once.returns(JSON.generate(package_json))
       File.expects(:read).never
       ctx
         .stubs(:capture2e)

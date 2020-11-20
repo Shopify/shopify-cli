@@ -59,41 +59,20 @@ module Script
         end
 
         def check_compilation_dependencies!
-          pkg = JSON.parse(File.read('../package.json'))
+          pkg = JSON.parse(File.read('package.json'))
           build_script = pkg.dig('scripts', 'build')
 
-          raise Errors::UnmetCompilationDepdencyError,
-            unmet_compilation_dependency_error_message(header: "Build script not found") if build_script.nil?
+          raise Errors::BuildScriptNotFoundError,
+            "Build script not found" if build_script.nil?
 
           unless build_script.start_with?("npx shopify-scripts")
-            raise Errors::UnmetCompilationDepdencyError,
-              unmet_compilation_dependency_error_message(header: "Invalid build script")
+            raise Errors::InvalidBuildScriptError, "Invalid build script"
           end
-        end
-
-        def unmet_compilation_dependency_error_message(header:)
-          <<~MSG
-            #{header}
-            The package.json should contain a script named build, which
-            should rely on @shopify/scripts-toolchain-as to compile to
-            WebAssembly.
-
-            Example:
-
-            "build": "npx shopify-scripts-toolchain-as build --src src/script.ts --binary #{script_name}.wasm -- --lib node_modules --optimize --use Date="
-          MSG
         end
 
         def bytecode
-          blob = "../#{format(BYTECODE_FILE, name: script_name)}"
-          unless @ctx.file_exist?(blob)
-            raise Errors::UnmetCompilationDepdencyError,
-              <<~MSG
-                No WebAssembly binary found. Make sure that your build npm script
-                outputs the generated binary in the root of the directory. 
-                The generated binary should match the script name: <script_name>.wasm
-              MSG
-          end
+          blob = format(BYTECODE_FILE, name: script_name)
+          raise Errors::WebAssemblyBinaryNotFoundError unless @ctx.file_exist?(blob)
 
           contents = File.read(blob)
           @ctx.rm(blob)
