@@ -53,7 +53,7 @@ module ShopifyCli
 
     def test_write_includes_identifiers
       create_empty_config
-      File.write(".shopify-cli.yml", YAML.dump({}))
+      Shopifolk.stubs(:acting_as_shopify_organization?).returns(false)
       ShopifyCli::Project.write(
         @context,
         project_type: :node,
