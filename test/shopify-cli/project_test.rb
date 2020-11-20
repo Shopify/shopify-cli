@@ -31,7 +31,6 @@ module ShopifyCli
     def test_write_writes_yaml
       Shopifolk.stubs(:acting_as_shopify_organization?).returns(false)
       Dir.stubs(:pwd).returns(@context.root)
-      FileUtils.touch(".shopify-cli.yml")
       ShopifyCli::Project.write(@context, project_type: :node, organization_id: 42)
       assert_equal :node, Project.current.config['project_type']
       assert_equal 42, Project.current.config['organization_id']
