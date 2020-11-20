@@ -55,7 +55,7 @@ module Rails
           scopes: 'write_products,write_customers,write_draft_orders',
         ).write(@ctx)
 
-        partners_url = partners_url_for(form.organization_id, api_client['id'])
+        partners_url = ShopifyCli::PartnersAPI.partners_url_for(form.organization_id, api_client['id'], local_debug?)
 
         @ctx.puts(@ctx.message('apps.create.info.created', form.title, partners_url))
         @ctx.puts(@ctx.message('apps.create.info.serve', form.name, ShopifyCli::TOOL_NAME))
@@ -173,20 +173,8 @@ module Rails
         Gem.install(@ctx, name, version)
       end
 
-      def partners_url_for(organization_id, api_client_id)
-        if ShopifyCli::Shopifolk.acting_as_shopify_organization?
-          organization_id = 'internal'
-        end
-        "#{partners_endpoint}/#{organization_id}/apps/#{api_client_id}"
-      end
-
-      def partners_endpoint
-        domain = if @ctx.getenv(ShopifyCli::PartnersAPI::LOCAL_DEBUG)
-          'partners.myshopify.io'
-        else
-          'partners.shopify.com'
-        end
-        "https://#{domain}"
+      def local_debug?
+        @ctx.getenv(ShopifyCli::PartnersAPI::LOCAL_DEBUG)
       end
     end
   end

@@ -50,6 +50,13 @@ module ShopifyCli
         end
       end
 
+      def partners_url_for(organization_id, api_client_id, local_debug)
+        if ShopifyCli::Shopifolk.acting_as_shopify_organization?
+          organization_id = 'internal'
+        end
+        "#{partners_endpoint(local_debug)}/#{organization_id}/apps/#{api_client_id}"
+      end
+
       private
 
       def authenticated_req(ctx)
@@ -104,6 +111,15 @@ module ShopifyCli
       def endpoint
         return 'https://partners.shopify.com' if ENV[LOCAL_DEBUG].nil?
         'https://partners.myshopify.io/'
+      end
+
+      def partners_endpoint(local_debug)
+        domain = if local_debug
+          'partners.myshopify.io'
+        else
+          'partners.shopify.com'
+        end
+        "https://#{domain}"
       end
     end
 
