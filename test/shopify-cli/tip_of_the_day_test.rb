@@ -6,19 +6,23 @@ module ShopifyCli
   class TipOfTheDayTest < MiniTest::Test
     include TestHelpers::FakeFS
 
-    def test_displays_a_random_tip
+    def setup
+      super
       root = ShopifyCli::ROOT
       FakeFS::FileSystem.clone(root + '/lib/tips.json')
+    end
 
-      tip = {
-      "id" => "0",
-      "text" => "Creating a new store and need some sample products? Try the `populate` command: https://shopify.github.io/shopify-app-cli/app/rails/commands/#populate",
-      "difficulty" => "beginner"
-    }
-      Array.any_instance.expects(:sample).returns(tip)
+    def test_displays_first_tip
       result = TipOfTheDay.call
       puts result.inspect
       assert_includes result, 'Creating a new store'
+    end
+
+    def test_displays_sequential_tip
+      TipOfTheDay.call
+      result = TipOfTheDay.call
+      puts result.inspect
+      assert_includes result, 'Did you know this CLI is open source'
     end
   end
 end
