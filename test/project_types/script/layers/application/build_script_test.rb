@@ -70,8 +70,6 @@ describe Script::Layers::Application::BuildScript do
           capture_io do
             assert_raises(e) { subject }
           end
-
-          # assert_match(err_msg, output)
         end
       end
     end
