@@ -5,7 +5,7 @@ module ShopifyCli
     def self.call
       tip = random_tip
       log_tips(tip)
-      puts tip["text"]
+      tip["text"]
     end
 
     def self.read_file

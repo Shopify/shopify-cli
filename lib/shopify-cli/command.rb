@@ -13,7 +13,7 @@ module ShopifyCli
       attr_writer :ctx, :task_registry
 
       def call(args, command_name)
-        TipOfTheDay.call
+        puts TipOfTheDay.call
         subcommand, resolved_name = subcommand_registry.lookup_command(args.first)
         if subcommand
           subcommand.ctx = @ctx
