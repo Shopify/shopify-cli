@@ -77,7 +77,7 @@ module Script
           packages_outdated_cause: "The following npm packages are out of date: %s.",
           packages_outdated_help: "Update them by running {{cyan:npm install --save-dev %s}}.",
 
-          invalid_build_script: "Invalid build script",
+          invalid_build_script: "Invalid build script.",
           build_script_not_found: "Build script not found.",
           build_script_suggestion: <<~HELP,
             The root package.json should contain a script named build, which
@@ -89,7 +89,7 @@ module Script
             "build": "npx shopify-scripts-toolchain-as build --src src/script.ts --binary <script_name>.wasm -- --lib node_modules --optimize --use Date="
           HELP
 
-          web_assembly_binary_not_found: "WebAssembly binary not found",
+          web_assembly_binary_not_found: "WebAssembly binary not found.",
           web_assembly_binary_not_found_suggestion: <<~HELP,
             No WebAssembly binary found. Make sure that your build npm script
             outputs the generated binary in the root of the directory. 
