@@ -3,7 +3,9 @@ require 'json'
 module ShopifyCli
   class TipOfTheDay
     def self.call
-      puts random_tip
+      tip = random_tip
+      log_tips(tip)
+      puts tip["text"]
     end
 
     def self.read_file
@@ -14,7 +16,11 @@ module ShopifyCli
 
     def self.random_tip
       tips = read_file
-      tips.sample["text"]
+      tips.sample
+    end
+
+    def self.log_tips(tip)
+      ShopifyCli::Config.set('tip_log', tip["id"], (Time.now.utc.to_f * 1000).to_i)
     end
   end
 end
