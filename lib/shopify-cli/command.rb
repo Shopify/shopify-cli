@@ -1,5 +1,6 @@
 # frozen_string_literal: true
 require 'shopify_cli'
+require 'shopify-cli/tip_of_the_day'
 
 module ShopifyCli
   class Command < CLI::Kit::BaseCommand
@@ -12,6 +13,7 @@ module ShopifyCli
       attr_writer :ctx, :task_registry
 
       def call(args, command_name)
+        TipOfTheDay.call
         subcommand, resolved_name = subcommand_registry.lookup_command(args.first)
         if subcommand
           subcommand.ctx = @ctx
