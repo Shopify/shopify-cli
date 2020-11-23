@@ -2,20 +2,34 @@ require 'json'
 
 module ShopifyCli
   class TipOfTheDay
-    def self.call
+
+    def initialize(path = nil)
+      if path 
+        @path = path 
+      else 
+        @path = File.expand_path(ShopifyCli::ROOT + '/lib/tips.json')
+      end 
+    end 
+
+    attr_reader :path 
+
+    def self.call(*args) 
+      new(*args).call
+    end 
+
+    def call
       tip = next_tip
       return if tip.nil?
       log_tips(tip)
       tip["text"]
     end
 
-    def self.read_file
-      path = File.expand_path(ShopifyCli::ROOT + '/lib/tips.json')
+    def read_file
       file = File.read(path)
       JSON.parse(file)['tips']
     end
 
-    def self.next_tip
+    def next_tip
       tips = read_file
       log = ShopifyCli::Config.get_section("tip_log")
 
@@ -28,7 +42,7 @@ module ShopifyCli
       return nil
     end
 
-    def self.log_tips(tip)
+    def log_tips(tip)
       ShopifyCli::Config.set('tip_log', tip["id"], Time.now.to_i)
     end
   end

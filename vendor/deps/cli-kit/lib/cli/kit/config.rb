@@ -80,6 +80,10 @@ module CLI
         (all_configs["[#{section}]"] || {}).dup
       end
 
+      def clear  # remember to make PR on CLI Kit for this method
+        @ini = nil
+      end 
+
       # Returns a path from config in expanded form
       # e.g. shopify corresponds to ~/src/shopify, but is expanded to /Users/name/src/shopify
       #
