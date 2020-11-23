@@ -48,7 +48,7 @@ module ShopifyCli
         config: {
           help: <<~HELP,
           Change configuration of how the CLI operates
-            Usage: {{command:%s config [ feature | analytics ] }}
+            Usage: {{command:%s config [ feature | analytics | tipoftheday ] }}
           HELP
           feature: {
             help: <<~HELP,
@@ -69,6 +69,16 @@ module ShopifyCli
             disabled: "{{v}} analytics have been disabled",
             is_enabled: "{{v}} analytics are currently enabled",
             is_disabled: "{{v}} analytics are currently disabled",
+          },
+          tipoftheday: {
+            help: <<~HELP,
+            Opt in/out of tip of the day
+              Usage: {{command:%s config [ tipoftheday ] }}
+            HELP
+            enabled: "{{v}} Tip Of The Day has been enabled",
+            disabled: "{{v}} Tip Of The Day has been disabled",
+            is_enabled: "{{v}} Tip Of The Day is currently enabled",
+            is_disabled: "{{v}} Tip Of The Day is currently disabled",
           },
         },
 

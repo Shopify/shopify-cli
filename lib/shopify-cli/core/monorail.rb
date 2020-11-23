@@ -17,6 +17,7 @@ module ShopifyCli
 
         def log(name, args, &block) # rubocop:disable Lint/UnusedMethodArgument
           prompt_for_consent
+          ShopifyCli::Config.set('tipoftheday', 'enabled', 'true') # better place for this?
           return yield unless enabled? && consented?
 
           command, command_name = Commands::Registry.lookup_command(name)

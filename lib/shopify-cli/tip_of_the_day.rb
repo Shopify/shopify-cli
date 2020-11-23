@@ -4,20 +4,23 @@ module ShopifyCli
   class TipOfTheDay
 
     def initialize(path = nil)
-      if path 
-        @path = path 
-      else 
+      if path
+        @path = path
+      else
         @path = File.expand_path(ShopifyCli::ROOT + '/lib/tips.json')
-      end 
-    end 
+      end
+    end
 
-    attr_reader :path 
+    attr_reader :path
 
-    def self.call(*args) 
+    def self.call(*args)
       new(*args).call
-    end 
+    end
 
     def call
+      x = ShopifyCli::Config.get_bool('tipoftheday', 'enabled')
+      pp x
+      return nil unless x
       tip = next_tip
       return if tip.nil?
       log_tips(tip)
@@ -43,6 +46,7 @@ module ShopifyCli
     end
 
     def log_tips(tip)
+      # TODO: change 'tip_log' to tiplog ?
       ShopifyCli::Config.set('tip_log', tip["id"], Time.now.to_i)
     end
   end

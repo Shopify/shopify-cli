@@ -7,6 +7,7 @@ module ShopifyCli
 
       subcommand :Feature, 'feature'
       subcommand :Analytics, 'analytics'
+      subcommand :TipOfTheDay, 'tipoftheday'
 
       def call(*)
         @ctx.puts(self.class.help)
@@ -68,6 +69,36 @@ module ShopifyCli
             @ctx.puts(@ctx.message('core.config.analytics.is_enabled'))
           else
             @ctx.puts(@ctx.message('core.config.analytics.is_disabled'))
+          end
+        end
+      end
+
+      class TipOfTheDay < ShopifyCli::SubCommand
+        def self.help
+          # TODO write help message
+          ShopifyCli::Context.message('core.config.tipoftheday.help', ShopifyCli::TOOL_NAME)
+        end
+
+        options do |parser, flags|
+          parser.on('--enable') { flags[:action] = 'enable' }
+          parser.on('--disable') { flags[:action] = 'disable' }
+          parser.on('--status') { flags[:action] = 'status' }
+        end
+
+        def call(_args, _name)
+          puts "1"
+          is_enabled = ShopifyCli::Config.get_bool('tipoftheday', 'enabled')
+          if options.flags[:action] == 'disable' && is_enabled
+            ShopifyCli::Config.set('tipoftheday', 'enabled', false)
+            @ctx.puts(@ctx.message('core.config.tipoftheday.disabled'))
+          elsif options.flags[:action] == 'enable' && !is_enabled
+            ShopifyCli::Config.set('tipoftheday', 'enabled', true)
+            @ctx.puts(@ctx.message('core.config.tipoftheday.enabled'))
+          elsif is_enabled
+            @ctx.puts(@ctx.message('core.config.tipoftheday.is_enabled'))
+          else
+            puts "2"
+            @ctx.puts(@ctx.message('core.config.tipoftheday.is_disabled'))
           end
         end
       end
