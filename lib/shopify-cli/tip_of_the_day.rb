@@ -37,6 +37,7 @@ module ShopifyCli
       tips = read_file
       log = ShopifyCli::Config.get_section("tip_log")
 
+      return unless has_it_been_a_day_since_last_tip?(log)
       tips.each do |tip|
         id = tip["id"]
         unless log.keys.include?(id)
@@ -49,6 +50,13 @@ module ShopifyCli
     def log_tips(tip)
       # TODO: change 'tip_log' to tiplog ?
       ShopifyCli::Config.set('tip_log', tip["id"], Time.now.to_i)
+    end
+
+    def has_it_been_a_day_since_last_tip?(log)
+      most_recent_tip = log.values.last
+      return true unless most_recent_tip
+      now = Time.now.to_i
+      now - most_recent_tip.to_i > 24 * 60 * 60
     end
   end
 end
