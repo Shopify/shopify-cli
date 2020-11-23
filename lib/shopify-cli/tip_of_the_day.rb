@@ -20,7 +20,7 @@ module ShopifyCli
     end
 
     def self.log_tips(tip)
-      ShopifyCli::Config.set('tip_log', tip["id"], (Time.now.utc.to_f * 1000).to_i)
+      ShopifyCli::Config.set('tip_log', tip["id"], Time.now.to_i)
     end
   end
 end
