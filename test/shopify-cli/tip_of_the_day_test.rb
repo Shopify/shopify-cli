@@ -39,7 +39,6 @@ module ShopifyCli
     end
 
     def test_no_tips_shown_if_disabled_in_config
-      # run_cmd("config tipoftheday --disable")
       ShopifyCli::Config.set('tipoftheday', 'enabled', false)
 
       assert_nil TipOfTheDay.call(@tips_path)

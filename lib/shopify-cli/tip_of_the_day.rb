@@ -18,9 +18,10 @@ module ShopifyCli
     end
 
     def call
-      x = ShopifyCli::Config.get_bool('tipoftheday', 'enabled')
-      pp x
-      return nil unless x
+      if ShopifyCli::Config.get_section('tipoftheday') == {}
+        ShopifyCli::Config.set('tipoftheday', 'enabled', true)
+      end
+      return nil unless ShopifyCli::Config.get_bool('tipoftheday', 'enabled')
       tip = next_tip
       return if tip.nil?
       log_tips(tip)
