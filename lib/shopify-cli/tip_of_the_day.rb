@@ -36,7 +36,8 @@ module ShopifyCli
 
     def next_tip
       # tips = read_file
-      tips = fetch_tip_from_remote
+
+      tips = fetch_tip
       log = ShopifyCli::Config.get_section("tip_log")
 
       return unless has_it_been_a_day_since_last_tip?(log)
@@ -61,12 +62,17 @@ module ShopifyCli
       now - most_recent_tip.to_i > 24 * 60 * 60
     end
 
-    def fetch_tip_from_remote
-      remote_uri = URI("https://gist.githubusercontent.com/andyw8/c772d254b381789f9526c7b823755274/raw/4b227372049d6a6e5bb7fa005f261c4570c53229/tips.json")
-      json = JSON.parse(Net::HTTP.get(remote_uri))
-      File.write(File.expand_path('~/.config/shopify/tips.json'), json)
-      ShopifyCli::Config.set('tipoftheday','lastfetched', Time.now.to_i)
-      json["tips"]
-    end 
+    def fetch_tip
+      last_read_time = ShopifyCli::Config.get('tipoftheday', 'lastfetched')
+      if !last_read_time || (Time.now.to_i - last_read_time.to_i > 7 * 24 * 60 * 60)
+        remote_uri = URI("https://gist.githubusercontent.com/andyw8/c772d254b381789f9526c7b823755274/raw/4b227372049d6a6e5bb7fa005f261c4570c53229/tips.json")
+        file = Net::HTTP.get(remote_uri)
+        File.write(File.expand_path('~/.config/shopify/tips.json'), file)
+        ShopifyCli::Config.set('tipoftheday', 'lastfetched', Time.now.to_i)
+      else
+        file = File.read(File.expand_path('~/.config/shopify/tips.json'))
+      end
+      JSON.parse(file)["tips"]
+    end
   end
 end
