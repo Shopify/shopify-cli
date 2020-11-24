@@ -35,6 +35,7 @@ module ShopifyCli
 
     def next_tip
       tips = fetch_tip
+      return if tips.nil?
       log = ShopifyCli::Config.get_section("tiplog")
 
       return unless has_it_been_a_day_since_last_tip?(log)
@@ -62,13 +63,17 @@ module ShopifyCli
       last_read_time = ShopifyCli::Config.get('tipoftheday', 'lastfetched')
       if !last_read_time || (Time.now.to_i - last_read_time.to_i > WEEK_IN_SECONDS)
         remote_uri = URI(TIPS_URL)
-        file = Net::HTTP.get(remote_uri)
-        File.write(ShopifyCli.tips_file, file)
+        response = Net::HTTP.get_response(remote_uri)
+        unless response.is_a?(Net::HTTPSuccess)
+          return
+        end
+        tips_content = response.body
+        File.write(ShopifyCli.tips_file, tips_content)
         ShopifyCli::Config.set('tipoftheday', 'lastfetched', Time.now.to_i)
       else
-        file = File.read(ShopifyCli.tips_file)
+        tips_content = File.read(ShopifyCli.tips_file)
       end
-      JSON.parse(file)["tips"]
+      JSON.parse(tips_content)["tips"]
     end
   end
 end

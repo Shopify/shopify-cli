@@ -100,5 +100,13 @@ module ShopifyCli
 
       assert_requested(@remote_request, times: 1)
     end
+
+    def test_skip_when_4xx_error
+      failed_request = stub_request(:get, "https://gist.githubusercontent.com/andyw8/c772d254b381789f9526c7b823755274/raw/4b227372049d6a6e5bb7fa005f261c4570c53229/tips.json").
+        to_return(status: 404, body: "", headers: {})
+
+      assert_nil TipOfTheDay.call
+      assert_equal({}, ShopifyCli::Config.get_section('tiplog'))
+    end
   end
 end
