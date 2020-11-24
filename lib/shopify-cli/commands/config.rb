@@ -75,7 +75,6 @@ module ShopifyCli
 
       class TipOfTheDay < ShopifyCli::SubCommand
         def self.help
-          # TODO write help message
           ShopifyCli::Context.message('core.config.tipoftheday.help', ShopifyCli::TOOL_NAME)
         end
 

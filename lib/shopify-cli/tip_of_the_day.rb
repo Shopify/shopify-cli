@@ -3,16 +3,23 @@ require 'net/http'
 
 module ShopifyCli
   class TipOfTheDay
-
-    WEEK_IN_SECONDS =  7 * 24 * 60 * 60
+    WEEK_IN_SECONDS = 7 * 24 * 60 * 60
     DAY_IN_SECONDS = 24 * 60 * 60
     TIPS_URL = "https://gist.githubusercontent.com/andyw8/c772d254b381789f9526c7b823755274/raw/4b227372049d6a6e5bb7fa005f261c4570c53229/tips.json"
+    NETWORK_ERRORS = [Net::OpenTimeout,
+                      Net::ReadTimeout,
+                      EOFError,
+                      Errno::ECONNREFUSED,
+                      Errno::ECONNRESET,
+                      Errno::EHOSTUNREACH,
+                      Errno::ETIMEDOUT,
+                      SocketError]
 
     def initialize(path = nil)
-      if path
-        @path = path
+      @path = if path
+        path
       else
-        @path = File.expand_path(ShopifyCli::ROOT + '/lib/tips.json')
+        File.expand_path(ShopifyCli::ROOT + '/lib/tips.json')
       end
     end
 
@@ -45,7 +52,7 @@ module ShopifyCli
           return tip
         end
       end
-      return nil
+      nil
     end
 
     def log_tips(tip)
@@ -63,7 +70,14 @@ module ShopifyCli
       last_read_time = ShopifyCli::Config.get('tipoftheday', 'lastfetched')
       if !last_read_time || (Time.now.to_i - last_read_time.to_i > WEEK_IN_SECONDS)
         remote_uri = URI(TIPS_URL)
-        response = Net::HTTP.get_response(remote_uri)
+        begin
+          http = Net::HTTP.new(remote_uri.host, '')
+          http.read_timeout = 5 # seconds
+          http.use_ssl = true
+          response = http.request_get(remote_uri.path)
+        rescue *NETWORK_ERRORS
+          return
+        end
         unless response.is_a?(Net::HTTPSuccess)
           return
         end
