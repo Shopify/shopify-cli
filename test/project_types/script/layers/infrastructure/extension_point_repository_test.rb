@@ -14,7 +14,6 @@ describe Script::Layers::Infrastructure::ExtensionPointRepository do
           extension_point = subject.get_extension_point(extension_point_type)
           assert_equal extension_point_type, extension_point.type
           refute_nil extension_point.sdks[:ts].package
-          refute_nil extension_point.sdks[:ts].version
           refute_nil extension_point.sdks[:ts].sdk_version
         end
       end

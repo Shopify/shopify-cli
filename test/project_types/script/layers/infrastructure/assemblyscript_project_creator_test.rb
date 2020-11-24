@@ -28,7 +28,6 @@ describe Script::Layers::Infrastructure::AssemblyScriptProjectCreator do
     {
       "assemblyscript" => {
         "package": "@shopify/extension-point-as-fake",
-        "version": "*",
         "sdk-version": "*",
         "toolchain-version": "*",
       },
@@ -58,6 +57,48 @@ describe Script::Layers::Infrastructure::AssemblyScriptProjectCreator do
       context.expects(:system).twice
       subject
       assert context.file_exist?("package.json")
+    end
+
+    it "should fetch the latest extension point version" do
+      context.expects(:system).twice
+
+      context
+        .expects(:capture2e)
+        .with("npm show @shopify/extension-point-as-fake version --json")
+        .once
+        .returns([JSON.generate("2.0.0"), OpenStruct.new(success?: true)])
+
+      sdk = mock
+      sdk.expects(:sdk_version)
+      sdk.expects(:toolchain_version)
+      sdk.expects(:package).twice.returns("@shopify/extension-point-as-fake")
+      extension_point.expects(:sdks).times(4).returns({
+        ts: sdk,
+      })
+
+      subject
+      version = JSON.parse(File.read("package.json")).dig("devDependencies", "@shopify/extension-point-as-fake")
+      assert_equal "^2.0.0", version
+    end
+
+    it "should raise if the latest extension point version can't be fetched" do
+      context.expects(:system).twice
+
+      context
+        .expects(:capture2e)
+        .with("npm show @shopify/extension-point-as-fake version --json")
+        .once
+        .returns([JSON.generate(""), OpenStruct.new(success?: false)])
+
+      sdk = mock
+      sdk.expects(:sdk_version)
+      sdk.expects(:toolchain_version)
+      sdk.expects(:package).twice.returns("@shopify/extension-point-as-fake")
+      extension_point.expects(:sdks).times(4).returns({
+        ts: sdk,
+      })
+
+      assert_raises(Script::Layers::Domain::Errors::ServiceFailureError) { subject }
     end
   end
 
