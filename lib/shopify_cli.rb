@@ -154,6 +154,10 @@ module ShopifyCli
     File.join(tool_config_path, 'logs', 'log.log')
   end
 
+  def self.tips_file
+    File.join(tool_config_path, 'tips.json')
+  end
+
   def self.debug_log_file
     File.join(tool_config_path, 'logs', 'debug.log')
   end

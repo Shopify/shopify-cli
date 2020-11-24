@@ -12,6 +12,7 @@ module ShopifyCli
       root = ShopifyCli::ROOT
       FakeFS::FileSystem.clone(root + '/test/fixtures/tips.json')
       FakeFS::FileSystem.clone(root + '/lib/tips.json')
+      Dir.mkdir(root + '/.tmp')
       @tips_path = File.expand_path(ShopifyCli::ROOT + '/test/fixtures/tips.json')
 
       @remote_request = stub_request(:get, "https://gist.githubusercontent.com/andyw8/c772d254b381789f9526c7b823755274/raw/4b227372049d6a6e5bb7fa005f261c4570c53229/tips.json").
@@ -74,7 +75,7 @@ module ShopifyCli
 
     def test_saves_local_copy_of_fetched_tip_data
       TipOfTheDay.call
-      assert File.exists?(File.expand_path('~/.config/shopify/tips.json'))
+      assert File.exists?(ShopifyCli.tips_file)
     end
 
     def test_fetching_tips_updates_config_timestamp
