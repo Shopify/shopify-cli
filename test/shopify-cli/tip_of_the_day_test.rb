@@ -11,7 +11,6 @@ module ShopifyCli
       super
       root = ShopifyCli::ROOT
       FakeFS::FileSystem.clone(root + '/test/fixtures/tips.json')
-      FakeFS::FileSystem.clone(root + '/lib/tips.json')
       Dir.mkdir(root + '/.tmp')
       @tips_path = File.expand_path(ShopifyCli::ROOT + '/test/fixtures/tips.json')
 

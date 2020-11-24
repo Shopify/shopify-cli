@@ -71,7 +71,7 @@ module ShopifyCli
       if !last_read_time || (Time.now.to_i - last_read_time.to_i > WEEK_IN_SECONDS)
         remote_uri = URI(TIPS_URL)
         begin
-          http = Net::HTTP.new(remote_uri.host, '')
+          http = Net::HTTP.new(remote_uri.host, remote_uri.port)
           http.read_timeout = 5 # seconds
           http.use_ssl = true
           response = http.request_get(remote_uri.path)

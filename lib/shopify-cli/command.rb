@@ -11,9 +11,10 @@ module ShopifyCli
 
     class << self
       attr_writer :ctx, :task_registry
+      LIGHT_BULB = "\u{1f4a1}"
 
       def call(args, command_name)
-        puts TipOfTheDay.call
+        call_tip_of_the_day
         subcommand, resolved_name = subcommand_registry.lookup_command(args.first)
         if subcommand
           subcommand.ctx = @ctx
@@ -60,6 +61,15 @@ module ShopifyCli
       def call_help(*cmds)
         help = Commands::Help.new(@ctx)
         help.call(cmds, nil)
+      end
+
+      def call_tip_of_the_day
+        tip = TipOfTheDay.call
+        if tip
+          @ctx.in_frame("#{LIGHT_BULB} Tip of the Day") do
+            @ctx.puts(@ctx.message(tip))
+          end
+        end
       end
     end
 
