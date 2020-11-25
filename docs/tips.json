@@ -1,49 +1,52 @@
 {
   "tips": [
     {
-      "id": "0",
-      "text": "Creating a new store and need some sample products? Try the `populate` command: https://shopify.github.io/shopify-app-cli/app/rails/commands/#populate",
-      "difficulty": "beginner"
+      "id": "b61ab2d0-24b6-4923-9031-1ca3127f882a",
+      "text": "Creating a new store and need some sample products? \nTry the `populate` command: https://shopify.github.io/shopify-app-cli/app/rails/commands/#populate"
     },
     {
-      "id": "1",
-      "text":"Did you know this CLI is open source? Get involved and learn how to contribute: [github link]",
-      "difficulty": "beginner"
+      "id": "72a4986f-e71a-4a8f-9f35-c170a72087ce",
+      "text":"Did you know the Shopify CLI is open source? Get involved and learn how to contribute: https://github.com/Shopify/shopify-app-cli"
     },
     {
-      "id": "2",
-      "text":"New to ngrok.io? Learn all about it here: https://www.shopify.ca/partners/blog/shopify-admin-authenticate-app",
-      "difficulty": "beginner"
+      "id": "5056a082-f82f-42e5-a3ca-6d9817b18584",
+      "text":"New to ngrok.io? Learn all about it here: https://www.shopify.ca/partners/blog/shopify-admin-authenticate-app"
     },
     {
-      "id": "3",
-      "text":"Remember to keep your API updated! Read more about the latest release: https://www.shopify.ca/partners/blog/shopify-api-release-october-2020",
-      "difficulty": "beginner"
+      "id": "817b7369-8aa9-458a-a2ae-4de2215ae515",
+      "text":"Remember to keep your API updated! Read more about the latest release: https://shopify.dev/concepts/about-apis/versioning"
     },
     {
-      "id": "4",
-      "text":"Did you know we release a new API version every quarter? Read more about API deprecation: https://www.shopify.ca/partners/blog/api-deprecation-update-2020-10",
-      "difficulty": "beginner"
+      "id": "4249041e-4fdc-4361-a751-9407f99a6a19",
+      "text":"Did you know we release a new API version every quarter? Read more about API deprecation: https://www.shopify.ca/partners/blog/api-deprecation-update-2020-10"
     },
     {
-      "id": "5",
-      "text":"How to Get Reviews for Your Shopify Apps: https://www.shopify.ca/partners/blog/get-reviews-for-your-shopify-apps",
-      "difficulty": "beginner"
+      "id": "d3e86934-38f1-40a3-8753-b59beba3f60e",
+      "text":"How to Get Reviews for Your Shopify Apps: https://www.shopify.ca/partners/blog/get-reviews-for-your-shopify-apps"
     },
     {
-      "id": "6",
-      "text":"Be sure to check Shopify’s Style Guide Polaris (https://polaris.shopify.com)",
-      "difficulty": "beginner"
+      "id": "39261ed7-5cfd-4e91-abd5-82abd5827854",
+      "text":"Save design time by using pre-styled React components with Polaris, already available to you in your app scaffold! https://polaris.shopify.com"
     },
     {
-      "id": "7",
-      "text":"This is your A11y reminder!",
-      "difficulty": "beginner"
+      "id": "ec19d776-063d-41dd-a812-649ca1b5779c",
+      "text":"Expedite your app review process by considering accessibility from the start with Polaris https://polaris.shopify.com/foundations/accessibility"
     },
     {
-      "id": "8",
-      "text":"Reminder to keep your requested scopes limited to only necessary access",
-      "difficulty": "beginner"
+      "id": "a2328fa4-67ca-4457-9e63-acbf51cc2c1c",
+      "text":"Reminder to keep your requested scopes limited to only what you need"
+    },
+    {
+      "id": "62d5eafc-a898-4657-a2a2-53d0c9aaab30",
+      "text": "Learn about all the awesome features of the CLI here: https://shopify.github.io/shopify-app-cli/"
+    },
+    {
+      "id": "f7a9386b-0b8b-4a00-bad7-593c37901a64",
+      "text": "Keep up to date with changes to the Shopify platform @ https://shopify.dev/changelog"
+    },
+    {
+      "id": "af2fc7dd-6f13-496d-944b-43877646df05",
+      "text": "Check out our Partners Slack and Facebook group"
     }
   ]
 }
