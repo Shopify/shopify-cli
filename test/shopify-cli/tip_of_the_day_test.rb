@@ -16,6 +16,7 @@ module ShopifyCli
 
       @remote_request = stub_request(:get, "https://gist.githubusercontent.com/andyw8/c772d254b381789f9526c7b823755274/raw/4b227372049d6a6e5bb7fa005f261c4570c53229/tips.json")
         .to_return(status: 200, body: File.read(@tips_path), headers: {})
+      TipOfTheDay.unstub(:call)
     end
 
     def teardown
