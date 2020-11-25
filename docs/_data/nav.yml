@@ -33,6 +33,6 @@ sidebar:
         url: /app/rails/
       - title: Command reference
         url: /app/rails/commands/
-  - title: Tip Of The Day
+  - title: Tip of the day
     section: tip-of-the-day
     url: /tip-of-the-day/

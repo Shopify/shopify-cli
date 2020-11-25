@@ -61,10 +61,8 @@ module ShopifyCli
 
     def has_it_been_a_day_since_last_tip?(log)
       most_recent_tip = log.values.last
-      puts(most_recent_tip)
       return true unless most_recent_tip
       now = Time.now.to_i
-      puts(now - most_recent_tip.to_i > DAY_IN_SECONDS)
       now - most_recent_tip.to_i > DAY_IN_SECONDS
     end
 

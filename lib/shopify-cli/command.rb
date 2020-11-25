@@ -66,8 +66,8 @@ module ShopifyCli
       def call_tip_of_the_day
         tip = TipOfTheDay.call
         if tip
-          @ctx.in_frame("#{LIGHT_BULB} Tip of the Day") do
-            @ctx.puts(@ctx.message(tip))
+          @ctx.in_frame("Tip of the Day") do
+            @ctx.puts(@ctx.message("{{*}} " + tip))
           end
         end
       end

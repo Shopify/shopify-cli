@@ -470,7 +470,7 @@ module ShopifyCli
       end
     end
 
-    def in_frame(text, color: :cyan, &block)
+    def in_frame(text, color: :magenta, &block)
       CLI::UI.frame(
         text,
         color: color,
