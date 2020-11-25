@@ -85,7 +85,6 @@ module ShopifyCli
         end
 
         def call(_args, _name)
-          puts "1"
           is_enabled = ShopifyCli::Config.get_bool('tipoftheday', 'enabled')
           if options.flags[:action] == 'disable' && is_enabled
             ShopifyCli::Config.set('tipoftheday', 'enabled', false)
@@ -96,7 +95,6 @@ module ShopifyCli
           elsif is_enabled
             @ctx.puts(@ctx.message('core.config.tipoftheday.is_enabled'))
           else
-            puts "2"
             @ctx.puts(@ctx.message('core.config.tipoftheday.is_disabled'))
           end
         end
