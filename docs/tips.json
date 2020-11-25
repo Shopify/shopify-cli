@@ -14,6 +14,36 @@
       "id": "2",
       "text":"New to ngrok.io? Learn all about it here: https://www.shopify.ca/partners/blog/shopify-admin-authenticate-app",
       "difficulty": "beginner"
+    },
+    {
+      "id": "3",
+      "text":"Remember to keep your API updated! Read more about the latest release: https://www.shopify.ca/partners/blog/shopify-api-release-october-2020",
+      "difficulty": "beginner"
+    },
+    {
+      "id": "4",
+      "text":"Did you know we release a new API version every quarter? Read more about API deprecation: https://www.shopify.ca/partners/blog/api-deprecation-update-2020-10",
+      "difficulty": "beginner"
+    },
+    {
+      "id": "5",
+      "text":"How to Get Reviews for Your Shopify Apps: https://www.shopify.ca/partners/blog/get-reviews-for-your-shopify-apps",
+      "difficulty": "beginner"
+    },
+    {
+      "id": "6",
+      "text":"Be sure to check Shopify’s Style Guide Polaris (https://polaris.shopify.com)",
+      "difficulty": "beginner"
+    },
+    {
+      "id": "7",
+      "text":"This is your A11y reminder!",
+      "difficulty": "beginner"
+    },
+    {
+      "id": "8",
+      "text":"Reminder to keep your requested scopes limited to only necessary access",
+      "difficulty": "beginner"
     }
   ]
 }

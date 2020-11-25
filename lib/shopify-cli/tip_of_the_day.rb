@@ -5,7 +5,7 @@ module ShopifyCli
   class TipOfTheDay
     WEEK_IN_SECONDS = 7 * 24 * 60 * 60
     DAY_IN_SECONDS = 24 * 60 * 60
-    TIPS_URL = "https://gist.githubusercontent.com/andyw8/c772d254b381789f9526c7b823755274/raw/4b227372049d6a6e5bb7fa005f261c4570c53229/tips.json"
+    TIPS_URL = "https://raw.githubusercontent.com/Shopify/shopify-app-cli/tip-of-the-day/docs/tips.json"
     NETWORK_ERRORS = [Net::OpenTimeout,
                       Net::ReadTimeout,
                       EOFError,
@@ -61,8 +61,10 @@ module ShopifyCli
 
     def has_it_been_a_day_since_last_tip?(log)
       most_recent_tip = log.values.last
+      puts(most_recent_tip)
       return true unless most_recent_tip
       now = Time.now.to_i
+      puts(now - most_recent_tip.to_i > DAY_IN_SECONDS)
       now - most_recent_tip.to_i > DAY_IN_SECONDS
     end
 

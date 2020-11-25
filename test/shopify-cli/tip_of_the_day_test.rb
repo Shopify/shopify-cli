@@ -14,7 +14,8 @@ module ShopifyCli
       Dir.mkdir(root + '/.tmp')
       @tips_path = File.expand_path(ShopifyCli::ROOT + '/test/fixtures/tips.json')
 
-      @remote_request = stub_request(:get, "https://gist.githubusercontent.com/andyw8/c772d254b381789f9526c7b823755274/raw/4b227372049d6a6e5bb7fa005f261c4570c53229/tips.json")
+      @remote_request = stub_request(:get,
+        "https://raw.githubusercontent.com/Shopify/shopify-app-cli/tip-of-the-day/docs/tips.json")
         .to_return(status: 200, body: File.read(@tips_path), headers: {})
       TipOfTheDay.unstub(:call)
     end
@@ -103,7 +104,7 @@ module ShopifyCli
 
     def test_skip_when_4xx_error
       remove_request_stub(@remote_request)
-      stub_request(:get, "https://gist.githubusercontent.com/andyw8/c772d254b381789f9526c7b823755274/raw/4b227372049d6a6e5bb7fa005f261c4570c53229/tips.json")
+      stub_request(:get, "https://raw.githubusercontent.com/Shopify/shopify-app-cli/tip-of-the-day/docs/tips.json")
         .to_return(status: 404, body: "", headers: {})
 
       assert_nil TipOfTheDay.call
@@ -112,7 +113,7 @@ module ShopifyCli
 
     def test_skip_when_request_timeout
       remove_request_stub(@remote_request)
-      stub_request(:get, "https://gist.githubusercontent.com/andyw8/c772d254b381789f9526c7b823755274/raw/4b227372049d6a6e5bb7fa005f261c4570c53229/tips.json")
+      stub_request(:get, "https://raw.githubusercontent.com/Shopify/shopify-app-cli/tip-of-the-day/docs/tips.json")
         .to_timeout
 
       assert_nil TipOfTheDay.call
