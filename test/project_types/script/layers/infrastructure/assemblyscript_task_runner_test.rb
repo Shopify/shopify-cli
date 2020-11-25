@@ -181,21 +181,37 @@ describe Script::Layers::Infrastructure::AssemblyScriptTaskRunner do
   describe ".install_dependencies" do
     subject { as_task_runner.install_dependencies }
 
-    it "should install using npm" do
-      ctx.expects(:capture2e)
-        .with("node", "--version")
-        .returns(["v12.16.1", mock(success?: true)])
-      ctx.expects(:capture2e)
-        .with("npm", "install", "--no-audit", "--no-optional", "--loglevel error")
-        .returns([nil, mock(success?: true)])
-      subject
+    describe "when node version is above minimum" do
+      it "should install using npm" do
+        ctx.expects(:capture2e)
+          .with("node", "--version")
+          .returns(["v14.5.1", mock(success?: true)])
+        ctx.expects(:capture2e)
+          .with("npm", "install", "--no-audit", "--no-optional", "--loglevel error")
+          .returns([nil, mock(success?: true)])
+        subject
+      end
     end
 
-    it "should raise error on failure" do
-      msg = 'error message'
-      ctx.expects(:capture2e).returns([msg, mock(success?: false)])
-      assert_raises Script::Layers::Infrastructure::Errors::DependencyInstallError, msg do
-        subject
+    describe "when node version is below minimum" do
+      it "should raise error" do
+        ctx.expects(:capture2e)
+          .with("node", "--version")
+          .returns(["v14.4.0", mock(success?: true)])
+
+        assert_raises Script::Layers::Infrastructure::Errors::DependencyInstallError do
+          subject
+        end
+      end
+    end
+
+    describe "when capture2e fails" do
+      it "should raise error" do
+        msg = 'error message'
+        ctx.expects(:capture2e).returns([msg, mock(success?: false)])
+        assert_raises Script::Layers::Infrastructure::Errors::DependencyInstallError, msg do
+          subject
+        end
       end
     end
   end
