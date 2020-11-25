@@ -2,7 +2,7 @@
   "tips": [
     {
       "id": "b61ab2d0-24b6-4923-9031-1ca3127f882a",
-      "text": "Creating a new store and need some sample products? \nTry the `populate` command: https://shopify.github.io/shopify-app-cli/app/rails/commands/#populate"
+      "text": "Creating a new store and need some sample products? \nTry the populate command: https://shopify.github.io/shopify-app-cli/app/rails/commands/#populate"
     },
     {
       "id": "72a4986f-e71a-4a8f-9f35-c170a72087ce",
