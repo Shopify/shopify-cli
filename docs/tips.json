@@ -1,0 +1,19 @@
+{
+  "tips": [
+    {
+      "id": "0",
+      "text": "Creating a new store and need some sample products? Try the `populate` command: https://shopify.github.io/shopify-app-cli/app/rails/commands/#populate",
+      "difficulty": "beginner"
+    },
+    {
+      "id": "1",
+      "text":"Did you know this CLI is open source? Get involved and learn how to contribute: [github link]",
+      "difficulty": "beginner"
+    },
+    {
+      "id": "2",
+      "text":"New to ngrok.io? Learn all about it here: https://www.shopify.ca/partners/blog/shopify-admin-authenticate-app",
+      "difficulty": "beginner"
+    }
+  ]
+}
