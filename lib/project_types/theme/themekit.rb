@@ -34,10 +34,6 @@ module Theme
         stat.success?
       end
 
-      def ensure_themekit_installed(ctx)
-        Tasks::EnsureThemekitInstalled.call(ctx)
-      end
-
       def generate_env(ctx, store:, password:, themeid:, env:)
         command = build_command('configure', env)
         command << "--password=#{password}"

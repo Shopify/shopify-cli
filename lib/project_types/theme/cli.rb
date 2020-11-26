@@ -7,10 +7,12 @@ module Theme
     creator('Theme::Commands::Create')
     connector('Theme::Commands::Connect')
 
-    register_command('Theme::Commands::Deploy', "deploy")
-    register_command('Theme::Commands::Generate', "generate")
-    register_command('Theme::Commands::Push', "push")
-    register_command('Theme::Commands::Serve', "serve")
+    register_command('Theme::Commands::Deploy', 'deploy')
+    register_command('Theme::Commands::Generate', 'generate')
+    register_command('Theme::Commands::Push', 'push')
+    register_command('Theme::Commands::Serve', 'serve')
+
+    register_task('Theme::Tasks::EnsureThemekitInstalled', :ensure_themekit_installed)
 
     require Project.project_filepath('messages/messages')
     register_messages(Theme::Messages::MESSAGES)

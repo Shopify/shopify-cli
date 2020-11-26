@@ -2,6 +2,8 @@
 module Theme
   module Commands
     class Connect < ShopifyCli::SubCommand
+      prerequisite_task :ensure_themekit_installed
+
       options do |parser, flags|
         parser.on('--store=STORE') { |url| flags[:store] = url }
         parser.on('--password=PASSWORD') { |p| flags[:password] = p }
@@ -32,10 +34,6 @@ module Theme
       private
 
       def build(store, password, themeid, name, env)
-        CLI::UI::Frame.open(@ctx.message('theme.checking_themekit')) do
-          Themekit.ensure_themekit_installed(@ctx)
-        end
-
         if @ctx.dir_exist?(name)
           @ctx.abort(@ctx.message('theme.connect.duplicate'))
         end

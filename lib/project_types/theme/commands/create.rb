@@ -2,6 +2,8 @@
 module Theme
   module Commands
     class Create < ShopifyCli::SubCommand
+      prerequisite_task :ensure_themekit_installed
+
       options do |parser, flags|
         parser.on('--name=NAME') { |t| flags[:title] = t }
         parser.on('--password=PASSWORD') { |p| flags[:password] = p }
@@ -29,10 +31,6 @@ module Theme
 
       def build(name, password, store, env)
         @ctx.abort(@ctx.message('theme.create.duplicate_theme')) if @ctx.dir_exist?(name)
-
-        CLI::UI::Frame.open(@ctx.message('theme.checking_themekit')) do
-          Themekit.ensure_themekit_installed(@ctx)
-        end
 
         @ctx.mkdir_p(name)
         @ctx.chdir(name)
