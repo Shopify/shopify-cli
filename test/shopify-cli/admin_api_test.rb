@@ -5,7 +5,7 @@ module ShopifyCli
     include TestHelpers::Project
 
     def test_latest_api_version
-      unstable_stub = Object.new
+      unstable_stub = stub
       AdminAPI.expects(:new).with(
         ctx: @context,
         auth_header: 'X-Shopify-Access-Token',
@@ -17,7 +17,7 @@ module ShopifyCli
         .returns(JSON.parse(File.read(File.join(FIXTURE_DIR, 'api/versions.json'))))
 
       ShopifyCli::DB.expects(:get).with(:admin_access_token).returns('token123').twice
-      api_stub = Object.new
+      api_stub = stub
       AdminAPI.expects(:new).with(
         ctx: @context,
         auth_header: 'X-Shopify-Access-Token',
@@ -30,7 +30,7 @@ module ShopifyCli
 
     def test_query_calls_admin_api
       ShopifyCli::DB.expects(:get).with(:admin_access_token).returns('token123')
-      api_stub = Object.new
+      api_stub = stub
       AdminAPI.expects(:new).with(
         ctx: @context,
         auth_header: 'X-Shopify-Access-Token',
@@ -46,7 +46,7 @@ module ShopifyCli
 
     def test_query_can_reauth
       ShopifyCli::DB.expects(:get).with(:admin_access_token).returns('token123').twice
-      api_stub = Object.new
+      api_stub = stub
       AdminAPI.expects(:new).with(
         ctx: @context,
         auth_header: 'X-Shopify-Access-Token',
@@ -56,7 +56,7 @@ module ShopifyCli
       api_stub.expects(:query).with('query', variables: {}).returns('response')
       api_stub.expects(:query).raises(API::APIRequestUnauthorizedError)
 
-      @oauth_client = Object.new
+      @oauth_client = mock
       ShopifyCli::OAuth
         .expects(:new)
         .with(
@@ -77,7 +77,7 @@ module ShopifyCli
 
     def test_query_calls_admin_api_with_different_shop
       ShopifyCli::DB.expects(:get).with(:admin_access_token).returns('token123')
-      api_stub = Object.new
+      api_stub = stub
       AdminAPI.expects(:new).with(
         ctx: @context,
         auth_header: 'X-Shopify-Access-Token',

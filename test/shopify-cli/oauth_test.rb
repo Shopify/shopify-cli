@@ -279,7 +279,7 @@ module ShopifyCli
     end
 
     def stub_server(client, resp)
-      server = Object.new
+      server = mock
       client.stubs(:server).returns(server)
       server.expects(:start)
       client.response_query = resp
