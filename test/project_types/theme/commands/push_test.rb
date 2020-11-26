@@ -8,7 +8,6 @@ module Theme
 
       def test_can_push_entire_theme
         context = ShopifyCli::Context.new
-        Themekit.expects(:ensure_themekit_installed).with(context)
         Themekit.expects(:push).with(context, files: [], flags: [], remove: nil, env: nil).returns(true)
         context.expects(:done).with(context.message('theme.push.info.push', context.root))
 
@@ -17,7 +16,6 @@ module Theme
 
       def test_can_push_individual_files
         context = ShopifyCli::Context.new
-        Themekit.expects(:ensure_themekit_installed).with(context)
         Themekit.expects(:push)
           .with(context, files: ['file.liquid', 'another_file.liquid'], flags: [], remove: nil, env: nil)
           .returns(true)
@@ -29,7 +27,6 @@ module Theme
       def test_can_remove_files
         context = ShopifyCli::Context.new
         CLI::UI::Prompt.expects(:confirm).returns(true)
-        Themekit.expects(:ensure_themekit_installed).with(context)
         Themekit.expects(:push)
           .with(context, files: ['file.liquid', 'another_file.liquid'], flags: [], remove: true, env: nil)
           .returns(true)
@@ -43,7 +40,6 @@ module Theme
       def test_can_abort_remove
         context = ShopifyCli::Context.new
         CLI::UI::Prompt.expects(:confirm).returns(false)
-        Themekit.expects(:ensure_themekit_installed).with(context)
         Themekit.expects(:push)
           .with(context, files: ['file.liquid', 'another_file.liquid'], flags: [], remove: true, env: nil)
           .never
@@ -57,7 +53,6 @@ module Theme
 
       def test_can_add_flags
         context = ShopifyCli::Context.new
-        Themekit.expects(:ensure_themekit_installed).with(context)
         Themekit.expects(:push)
           .with(context, files: ['file.liquid', 'another_file.liquid'], flags: ['--nodelete'], remove: nil, env: nil)
           .returns(true)
@@ -70,7 +65,6 @@ module Theme
 
       def test_can_specify_env
         context = ShopifyCli::Context.new
-        Themekit.expects(:ensure_themekit_installed).with(context)
         Themekit.expects(:push).with(context, files: [], flags: [], remove: nil, env: 'test')
           .returns(true)
         context.expects(:done).with(context.message('theme.push.info.push', context.root))
@@ -82,7 +76,6 @@ module Theme
 
       def test_aborts_if_push_fails
         context = ShopifyCli::Context.new
-        Themekit.expects(:ensure_themekit_installed).with(context)
         Themekit.expects(:push).with(context, files: [], flags: [], remove: nil, env: nil).returns(false)
 
         assert_raises CLI::Kit::Abort do

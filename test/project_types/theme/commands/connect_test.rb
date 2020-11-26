@@ -25,7 +25,6 @@ module Theme
                                                               name: 'my_theme',
                                                               env: nil }))
 
-          Themekit.expects(:ensure_themekit_installed).with(context)
           context.expects(:dir_exist?).with('my_theme').returns(false)
           Themekit.expects(:connect)
             .with(context, store: 'shop.myshopify.com', password: 'boop', themeid: '2468', env: nil)
@@ -53,7 +52,6 @@ module Theme
                                                               name: 'my_theme',
                                                               env: 'test' }))
 
-          Themekit.expects(:ensure_themekit_installed).with(context)
           context.expects(:dir_exist?).with('my_theme').returns(false)
           Themekit.expects(:connect)
             .with(context, store: 'shop.myshopify.com', password: 'boop', themeid: '2468', env: 'test')
@@ -77,7 +75,6 @@ module Theme
           ShopifyCli::Project.expects(:has_current?).returns(true)
 
           Theme::Forms::Connect.expects(:ask).with(context, [], {}).never
-          Themekit.expects(:ensure_themekit_installed).with(context).never
           context.expects(:dir_exist?).with('my_theme').never
           Themekit.expects(:connect)
             .with(context, store: 'shop.myshopify.com', password: 'boop', themeid: '2468', env: nil)
@@ -102,7 +99,6 @@ module Theme
                                                               name: 'my_theme',
                                                               env: nil }))
 
-          Themekit.expects(:ensure_themekit_installed).with(context)
           context.expects(:dir_exist?).with('my_theme').returns(true)
           Themekit.expects(:connect)
             .with(context, store: 'shop.myshopify.com', password: 'boop', themeid: '2468', env: nil)
@@ -127,7 +123,6 @@ module Theme
                                                               name: 'your_theme',
                                                               env: nil }))
 
-          Themekit.expects(:ensure_themekit_installed).with(context)
           context.expects(:dir_exist?).with('your_theme').returns(false)
           Themekit.expects(:connect)
             .with(context, store: 'shop.myshopify.com', password: 'merp', themeid: '1357', env: nil)
