@@ -10,11 +10,6 @@ module Theme
                 { "id" => 1357,
                   "name" => "your_theme" }] }]
 
-    def test_themekit_install
-      Theme::Tasks::EnsureThemekitInstalled.expects(:call).with(@context)
-      Themekit.ensure_themekit_installed(@context)
-    end
-
     def test_create_theme_successful
       context = ShopifyCli::Context.new
       stat = mock

@@ -4,6 +4,8 @@ require 'project_types/theme/test_helper'
 module Theme
   module Tasks
     class EnsureThemekitInstalledTest < MiniTest::Test
+      include TestHelpers::FakeUI
+
       def setup
         super
         @context = TestHelpers::FakeContext.new

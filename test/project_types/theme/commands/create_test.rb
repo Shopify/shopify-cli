@@ -15,7 +15,6 @@ module Theme
       def test_can_create_new_theme
         FakeFS do
           context = ShopifyCli::Context.new
-          Themekit.expects(:ensure_themekit_installed).with(context)
           Theme::Forms::Create.expects(:ask)
             .with(context, [], {})
             .returns(Theme::Forms::Create.new(context, [], { password: 'boop',
@@ -39,7 +38,6 @@ module Theme
       def test_can_specify_env
         FakeFS do
           context = ShopifyCli::Context.new
-          Themekit.expects(:ensure_themekit_installed).with(context)
           Theme::Forms::Create.expects(:ask)
             .with(context, [], { env: 'test' })
             .returns(Theme::Forms::Create.new(context, [], { password: 'boop',
