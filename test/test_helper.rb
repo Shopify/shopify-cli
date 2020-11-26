@@ -14,3 +14,8 @@ require 'fakefs/safe'
 require 'webmock/minitest'
 
 require 'mocha/minitest'
+
+Mocha.configure do |c|
+  c.stubbing_non_existent_method = :prevent
+  c.stubbing_method_on_nil = :prevent
+end

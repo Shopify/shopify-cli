@@ -5,11 +5,6 @@ module ShopifyCli
     class EntryPointTest < MiniTest::Test
       include TestHelpers::Project
 
-      def setup
-        super
-        ShopifyCli::Core::EntryPoint.stubs(:before_resolve)
-      end
-
       def test_calls_executor_with_args
         args = %w(help argone argtwo)
 

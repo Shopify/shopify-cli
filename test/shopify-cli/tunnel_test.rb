@@ -87,7 +87,6 @@ module ShopifyCli
     end
 
     def test_start_raises_error_on_ngrok_failure
-      Tunnel.any_instance.stubs(:running?).returns(false)
       with_log(fixture: 'ngrok_error') do
         ShopifyCli::ProcessSupervision.expects(:start).with(
           :ngrok,

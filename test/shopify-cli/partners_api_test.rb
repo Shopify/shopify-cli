@@ -6,7 +6,7 @@ module ShopifyCli
 
     def test_query_calls_partners_api
       ShopifyCli::DB.expects(:get).with(:identity_exchange_token).returns('token123')
-      api_stub = Object.new
+      api_stub = stub
       PartnersAPI.expects(:new).with(
         ctx: @context,
         token: 'token123',
@@ -19,7 +19,7 @@ module ShopifyCli
     def test_query_can_reauth
       ShopifyCli::DB.expects(:get).with(:identity_exchange_token).returns('token123').twice
 
-      api_stub = Object.new
+      api_stub = stub
       PartnersAPI.expects(:new).with(
         ctx: @context,
         token: 'token123',
@@ -28,7 +28,7 @@ module ShopifyCli
       api_stub.expects(:query).with('query', variables: {}).returns('response')
       api_stub.expects(:query).raises(API::APIRequestUnauthorizedError)
 
-      @oauth_client = Object.new
+      @oauth_client = mock
       ShopifyCli::OAuth
         .expects(:new)
         .with(
@@ -47,7 +47,7 @@ module ShopifyCli
 
     def test_query_fails_gracefully_without_partners_account
       ShopifyCli::DB.expects(:get).with(:identity_exchange_token).returns('token123')
-      api_stub = Object.new
+      api_stub = stub
       PartnersAPI.expects(:new).with(
         ctx: @context,
         token: 'token123',
@@ -60,7 +60,7 @@ module ShopifyCli
 
     def test_query
       ShopifyCli::DB.expects(:get).with(:identity_exchange_token).returns('token123')
-      api_stub = Object.new
+      api_stub = stub
       PartnersAPI.expects(:new).with(
         ctx: @context,
         token: 'token123',
