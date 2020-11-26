@@ -8,7 +8,7 @@ module Theme
         parser.on('--remove') { flags['remove'] = true }
         parser.on('--nodelete') { flags['nodelete'] = true }
         parser.on('--allow-live') { flags['allow-live'] = true }
-        parser.on('--env=ENV') { |env| flags['env'] = env }
+        parser.on('--env=ENV') { |env| flags[:env] = env }
       end
 
       def call(args, _name)
@@ -17,9 +17,9 @@ module Theme
           options.flags.delete('remove')
         end
 
-        if options.flags['env']
-          env = options.flags['env']
-          options.flags.delete('env')
+        if options.flags[:env]
+          env = options.flags[:env]
+          options.flags.delete(:env)
         end
 
         flags = options.flags.map do |key, _value|

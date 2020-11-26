@@ -9,7 +9,7 @@ module Theme
       def test_deploy_command
         context = ShopifyCli::Context.new
         CLI::UI::Prompt.expects(:confirm).returns(true)
-        Themekit.expects(:deploy).with(context, env: nil).returns(true)
+        Themekit.expects(:deploy).with(context, flags: [], env: nil).returns(true)
         context.expects(:done).with(context.message('theme.deploy.info.deployed'))
 
         Theme::Commands::Deploy.new(context).call
@@ -18,7 +18,7 @@ module Theme
       def test_can_specify_env
         context = ShopifyCli::Context.new
         CLI::UI::Prompt.expects(:confirm).returns(true)
-        Themekit.expects(:deploy).with(context, env: 'test').returns(true)
+        Themekit.expects(:deploy).with(context, flags: [], env: 'test').returns(true)
         context.expects(:done).with(context.message('theme.deploy.info.deployed'))
 
         command = Theme::Commands::Deploy.new(context)
@@ -39,7 +39,7 @@ module Theme
       def test_aborts_if_errors
         context = ShopifyCli::Context.new
         CLI::UI::Prompt.expects(:confirm).returns(true)
-        Themekit.expects(:deploy).with(context, env: nil).returns(false)
+        Themekit.expects(:deploy).with(context, flags: [], env: nil).returns(false)
         context.expects(:done).with(context.message('theme.deploy.info.deployed')).never
 
         assert_raises CLI::Kit::Abort do

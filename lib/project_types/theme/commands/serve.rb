@@ -11,13 +11,9 @@ module Theme
       end
 
       def call(*)
-        CLI::UI::Frame.open(@ctx.message('theme.checking_themekit')) do
-          Themekit.ensure_themekit_installed(@ctx)
-        end
-
-        if options.flags['env']
-          env = options.flags['env']
-          options.flags.delete('env')
+        if options.flags[:env]
+          env = options.flags[:env]
+          options.flags.delete(:env)
         end
 
         flags = options.flags.map do |key, _value|

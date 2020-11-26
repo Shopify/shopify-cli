@@ -84,7 +84,6 @@ module Theme
         command = build_command('watch', env)
         (command << flags).compact!
         command.flatten!
-        p command
         ctx.system(*command)
       end
 

@@ -78,6 +78,19 @@ module Theme
       assert(Themekit.push(context, files: ['file.liquid', 'another_file.liquid'], flags: [], remove: true, env: nil))
     end
 
+    def test_push_successful_with_flags
+      context = ShopifyCli::Context.new
+      stat = mock
+
+      context.expects(:system)
+        .with(Themekit::THEMEKIT,
+              'deploy',
+              '--allow-live')
+        .returns(stat)
+      stat.stubs(:success?).returns(true)
+      assert(Themekit.push(context, files: [], flags: ['--allow-live'], remove: nil, env: nil))
+    end
+
     def test_push_deploy_unsuccessful
       context = ShopifyCli::Context.new
       stat = mock
@@ -108,7 +121,7 @@ module Theme
       context = ShopifyCli::Context.new
       stat = mock
 
-      Themekit.expects(:push).with(context, env: nil).returns(true)
+      Themekit.expects(:push).with(context, flags: nil, env: nil).returns(true)
       context.expects(:done).with(context.message('theme.deploy.info.pushed'))
 
       context.expects(:system)
@@ -120,10 +133,27 @@ module Theme
       assert(Themekit.deploy(context, env: nil))
     end
 
+    def test_deploy_with_flags
+      context = ShopifyCli::Context.new
+      stat = mock
+
+      Themekit.expects(:push).with(context, flags: ['--allow-live'], env: nil).returns(true)
+      context.expects(:done).with(context.message('theme.deploy.info.pushed'))
+
+      context.expects(:system)
+        .with(Themekit::THEMEKIT,
+             'publish',
+             '--allow-live')
+        .returns(stat)
+      stat.stubs(:success?).returns(true)
+
+      assert(Themekit.deploy(context, flags: ['--allow-live'], env: nil))
+    end
+
     def test_deploy_push_fail
       context = ShopifyCli::Context.new
 
-      Themekit.expects(:push).with(context, env: nil).returns(false)
+      Themekit.expects(:push).with(context, flags: nil, env: nil).returns(false)
       context.expects(:system).with(Themekit::THEMEKIT, 'publish').never
 
       assert_raises CLI::Kit::Abort do
@@ -135,7 +165,7 @@ module Theme
       context = ShopifyCli::Context.new
       stat = mock
 
-      Themekit.expects(:push).with(context, env: nil).returns(true)
+      Themekit.expects(:push).with(context, flags: nil, env: nil).returns(true)
       context.expects(:done).with(context.message('theme.deploy.info.pushed'))
 
       context.expects(:system)
@@ -189,6 +219,22 @@ module Theme
         .with(Themekit::THEMEKIT, 'watch')
 
       Themekit.serve(context, env: nil)
+    end
+
+    def test_serve_takes_flags
+      context = ShopifyCli::Context.new
+      stat = mock
+
+      context.expects(:capture2e)
+        .with(Themekit::THEMEKIT, 'open')
+        .returns(['out', stat])
+      stat.stubs(:success?).returns(true)
+      context.expects(:puts).with('out')
+
+      context.expects(:system)
+        .with(Themekit::THEMEKIT, 'watch', '--allow-live')
+
+      Themekit.serve(context, flags: ['--allow-live'], env: nil)
     end
 
     def test_aborts_serve_if_open_fails

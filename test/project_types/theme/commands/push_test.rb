@@ -70,7 +70,7 @@ module Theme
         context.expects(:done).with(context.message('theme.push.info.push', context.root))
 
         command = Theme::Commands::Push.new(context)
-        command.options.flags['env'] = 'test'
+        command.options.flags[:env] = 'test'
         command.call([], 'push')
       end
 
