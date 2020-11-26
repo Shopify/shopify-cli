@@ -3,7 +3,6 @@ module Theme
   module Messages
     MESSAGES = {
       theme: {
-        checking_themekit: "Verifying Theme Kit",
         connect: {
           duplicate: "Duplicate directory, theme files weren't connected",
           help: <<~HELP,
@@ -130,7 +129,9 @@ module Theme
               update_fail: "Unable to update Theme Kit",
               write_fail: "Unable to download Theme Kit",
             },
+            installing_themekit: "Installing Theme Kit",
             successful: "Theme Kit installed successfully",
+            updating_themekit: "Updating Theme Kit",
             verifying: "Verifying download...",
           },
         },

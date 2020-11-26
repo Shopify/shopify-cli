@@ -2,15 +2,13 @@
 module Theme
   module Commands
     class Deploy < ShopifyCli::Command
+      prerequisite_task :ensure_themekit_installed
+
       options do |parser, flags|
         parser.on('--env=ENV') { |env| flags[:env] = env }
       end
 
       def call(*)
-        CLI::UI::Frame.open(@ctx.message('theme.checking_themekit')) do
-          Themekit.ensure_themekit_installed(@ctx)
-        end
-
         CLI::UI::Frame.open(@ctx.message('theme.deploy.deploying')) do
           unless CLI::UI::Prompt.confirm(@ctx.message('theme.deploy.confirmation'))
             @ctx.abort(@ctx.message('theme.deploy.abort'))

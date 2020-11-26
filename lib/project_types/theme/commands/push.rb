@@ -2,6 +2,8 @@
 module Theme
   module Commands
     class Push < ShopifyCli::Command
+      prerequisite_task :ensure_themekit_installed
+
       options do |parser, flags|
         parser.on('--remove') { flags['remove'] = true }
         parser.on('--nodelete') { flags['nodelete'] = true }
@@ -22,10 +24,6 @@ module Theme
 
         flags = options.flags.map do |key, _value|
           '--' + key
-        end
-
-        CLI::UI::Frame.open(@ctx.message('theme.checking_themekit')) do
-          Themekit.ensure_themekit_installed(@ctx)
         end
 
         if remove
