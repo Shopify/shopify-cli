@@ -1,19 +1,12 @@
 require 'json'
 require 'net/http'
+require 'shopify-cli/http_request'
 
 module ShopifyCli
   class TipOfTheDay
     WEEK_IN_SECONDS = 7 * 24 * 60 * 60
     DAY_IN_SECONDS = 24 * 60 * 60
     TIPS_URL = "https://raw.githubusercontent.com/Shopify/shopify-app-cli/tip-of-the-day/docs/tips.json"
-    NETWORK_ERRORS = [Net::OpenTimeout,
-                      Net::ReadTimeout,
-                      EOFError,
-                      Errno::ECONNREFUSED,
-                      Errno::ECONNRESET,
-                      Errno::EHOSTUNREACH,
-                      Errno::ETIMEDOUT,
-                      SocketError]
 
     def initialize(path = nil)
       @path = if path
@@ -69,13 +62,9 @@ module ShopifyCli
     def fetch_tip
       last_read_time = ShopifyCli::Config.get('tipoftheday', 'lastfetched')
       if !last_read_time || (Time.now.to_i - last_read_time.to_i > WEEK_IN_SECONDS)
-        remote_uri = URI(TIPS_URL)
 
-        response = with_network_errors_silenced do
-          http = Net::HTTP.new(remote_uri.host, remote_uri.port)
-          http.read_timeout = 5 # seconds
-          http.use_ssl = true
-          response = http.request_get(remote_uri.path)
+        response = HttpRequest.with_network_errors_silenced do
+          HttpRequest.get(URI(TIPS_URL), read_timeout: 5)
         end
 
         return unless response
@@ -87,21 +76,6 @@ module ShopifyCli
         tips_content = File.read(ShopifyCli.tips_file)
       end
       JSON.parse(tips_content)["tips"]
-    end
-
-    private
-
-    def with_network_errors_silenced
-      response = nil
-      begin
-        response = yield
-      rescue *NETWORK_ERRORS
-        return
-      end
-      unless response.is_a?(Net::HTTPSuccess)
-        return
-      end
-      response
     end
   end
 end
