@@ -470,15 +470,8 @@ module ShopifyCli
       end
     end
 
-    def in_frame(text, color: :magenta, &block)
-      CLI::UI.frame(
-        text,
-        color: color,
-        failure_text: nil,
-        success_text: nil,
-        timing: false,
-        &block
-      )
+    def in_frame(text, &block)
+      CLI::UI.frame(text, color: :magenta, &block)
     end
 
     private
