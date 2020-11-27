@@ -13,4 +13,3 @@ The Tip of the day feature provides useful advice relating to CLI and Shopify ap
 ```
 
 You can disable them using `config` in [core commands](https://shopify.github.io/shopify-app-cli/core/#tipoftheday).
-
