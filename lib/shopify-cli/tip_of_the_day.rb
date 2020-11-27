@@ -1,7 +1,3 @@
-require 'json'
-require 'net/http'
-require 'shopify-cli/http_request'
-
 module ShopifyCli
   class TipOfTheDay
     WEEK_IN_SECONDS = 7 * 24 * 60 * 60
@@ -60,6 +56,9 @@ module ShopifyCli
     end
 
     def fetch_tip
+      require 'shopify-cli/http_request'
+      require 'json'
+
       last_read_time = ShopifyCli::Config.get('tipoftheday', 'lastfetched')
       if !last_read_time || (Time.now.to_i - last_read_time.to_i > WEEK_IN_SECONDS)
 
