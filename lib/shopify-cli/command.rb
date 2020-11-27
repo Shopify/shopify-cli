@@ -11,7 +11,6 @@ module ShopifyCli
 
     class << self
       attr_writer :ctx, :task_registry
-      LIGHT_BULB = "\u{1f4a1}"
 
       def call(args, command_name)
         call_tip_of_the_day
