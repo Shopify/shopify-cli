@@ -70,17 +70,16 @@ module ShopifyCli
       last_read_time = ShopifyCli::Config.get('tipoftheday', 'lastfetched')
       if !last_read_time || (Time.now.to_i - last_read_time.to_i > WEEK_IN_SECONDS)
         remote_uri = URI(TIPS_URL)
-        begin
+
+        response = with_network_errors_silenced do
           http = Net::HTTP.new(remote_uri.host, remote_uri.port)
           http.read_timeout = 5 # seconds
           http.use_ssl = true
           response = http.request_get(remote_uri.path)
-        rescue *NETWORK_ERRORS
-          return
         end
-        unless response.is_a?(Net::HTTPSuccess)
-          return
-        end
+
+        return unless response
+
         tips_content = response.body
         File.write(ShopifyCli.tips_file, tips_content)
         ShopifyCli::Config.set('tipoftheday', 'lastfetched', Time.now.to_i)
@@ -88,6 +87,21 @@ module ShopifyCli
         tips_content = File.read(ShopifyCli.tips_file)
       end
       JSON.parse(tips_content)["tips"]
+    end
+
+    private
+
+    def with_network_errors_silenced
+      response = nil
+      begin
+        response = yield
+      rescue *NETWORK_ERRORS
+        return
+      end
+      unless response.is_a?(Net::HTTPSuccess)
+        return
+      end
+      response
     end
   end
 end
