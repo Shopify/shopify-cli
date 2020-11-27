@@ -61,7 +61,7 @@ module ShopifyCli
 
         # we delay this require so as to avoid a performance hit on starting the CLI
         require 'shopify-cli/http_request'
-        response = HttpRequest.call(uri, body, variables, headers)
+        response = HttpRequest.post(uri, body, variables, headers)
 
         case response.code.to_i
         when 200..399

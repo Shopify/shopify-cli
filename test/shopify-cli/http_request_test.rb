@@ -3,7 +3,7 @@ require 'shopify-cli/http_request'
 
 module ShopifyCli
   class HttpRequestTest < MiniTest::Test
-    def test_makes_http_request
+    def test_makes_http_post_request
       uri = URI.parse("https://example.com")
       body = "body content"
       variables = { var_name: "var_value" }
@@ -20,7 +20,7 @@ module ShopifyCli
           }
         )
 
-      HttpRequest.call(uri, body, variables, headers)
+      HttpRequest.post(uri, body, variables, headers)
 
       assert_requested request
     end
