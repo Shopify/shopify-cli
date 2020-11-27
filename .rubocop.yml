@@ -51,6 +51,9 @@ Layout/EmptyLines:
     # Need extra line so comment at top isnt registered to the Dev namespace
     - 'lib/dev/helpers/chruby_reset.rb'
 
+Layout/EmptyLineBetweenDefs:
+  AllowAdjacentOneLineDefs: true
+
 # Changing this could effect the way the content is rendered.
 Layout/HeredocIndentation:
   Exclude:
