@@ -11,6 +11,7 @@ module Script
         property! :path_to_project, accepts: String
 
         BOOTSTRAP = "npx --no-install shopify-scripts-toolchain-as bootstrap --from %{extension_point} --dest %{base}"
+        MIN_NODE_VERSION = "14.5.0"
 
         def setup_dependencies
           write_npmrc
@@ -58,7 +59,7 @@ module Script
                 "build": "shopify-scripts-toolchain-as build --src src/script.ts --binary #{script_name}.wasm -- --lib node_modules --optimize --use Date="
               },
               "engines": {
-                "node": ">=14.5"
+                "node": ">=#{MIN_NODE_VERSION}"
               }
             }
           HERE
