@@ -1,7 +1,9 @@
 # frozen_string_literal: true
 module Node
   class Project < ShopifyCli::ProjectType
-    creator 'Node.js App', 'Node::Commands::Create'
+    title('Node.js App')
+    creator('Node::Commands::Create')
+    connector('Node::Commands::Connect')
 
     register_command('Node::Commands::Deploy', "deploy")
     register_command('Node::Commands::Generate', "generate")
@@ -17,6 +19,7 @@ module Node
 
   # define/autoload project specific Commands
   module Commands
+    autoload :Connect, Project.project_filepath('commands/connect')
     autoload :Create, Project.project_filepath('commands/create')
     autoload :Deploy, Project.project_filepath('commands/deploy')
     autoload :Generate, Project.project_filepath('commands/generate')
