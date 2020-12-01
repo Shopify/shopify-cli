@@ -20,9 +20,7 @@ module Theme
             options.flags.delete(:env)
           end
 
-          flags = options.flags.map do |key, _value|
-            '--' + key
-          end
+          flags = Themekit.add_flags(options.flags)
 
           unless Themekit.deploy(@ctx, flags: flags, env: env)
             @ctx.abort(@ctx.message('theme.deploy.error'))

@@ -10,6 +10,11 @@ module Theme
                 { "id" => 1357,
                   "name" => "your_theme" }] }]
 
+    def test_add_flags_successful
+      flags = { 'key': 'value' }
+      assert(Themekit.add_flags(flags), ["--key=value"])
+    end
+
     def test_create_theme_successful
       context = ShopifyCli::Context.new
       stat = mock

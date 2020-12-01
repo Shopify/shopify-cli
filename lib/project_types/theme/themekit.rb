@@ -3,6 +3,14 @@ module Theme
     THEMEKIT = File.join(ShopifyCli.cache_dir, "themekit")
 
     class << self
+      def add_flags(flags)
+        flags.map do |key, value|
+          flag = "--#{key}"
+          flag += "=#{value}" if value.is_a? String
+          flag
+        end
+      end
+
       def connect(ctx, store:, password:, themeid:, env:)
         command = build_command('get', env)
         command << "--password=#{password}"

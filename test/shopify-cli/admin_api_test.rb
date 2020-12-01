@@ -45,7 +45,7 @@ module ShopifyCli
     end
 
     def test_rest_request_calls_admin_api
-      api_stub = Object.new
+      api_stub = stub
       AdminAPI.expects(:new).with(
         ctx: @context,
         auth_header: 'X-Shopify-Access-Token',

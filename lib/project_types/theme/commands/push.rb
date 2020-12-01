@@ -22,9 +22,7 @@ module Theme
           options.flags.delete(:env)
         end
 
-        flags = options.flags.map do |key, _value|
-          '--' + key
-        end
+        flags = Themekit.add_flags(options.flags)
 
         if remove
           CLI::UI::Frame.open(@ctx.message('theme.push.remove')) do
