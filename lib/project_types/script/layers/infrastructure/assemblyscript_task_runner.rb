@@ -65,7 +65,7 @@ module Script
           raise Errors::BuildScriptNotFoundError,
             "Build script not found" if build_script.nil?
 
-          unless build_script.start_with?("npx shopify-scripts")
+          unless build_script.start_with?("shopify-scripts")
             raise Errors::InvalidBuildScriptError, "Invalid build script"
           end
         end

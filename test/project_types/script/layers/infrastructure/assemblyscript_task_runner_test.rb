@@ -29,7 +29,7 @@ describe Script::Layers::Infrastructure::AssemblyScriptTaskRunner do
   let(:package_json) do
     {
       scripts: {
-        build: "npx shopify-scripts-toolchain-as build --src src/script.ts -b script.wasm -- --lib node_modules",
+        build: "shopify-scripts-toolchain-as build --src src/script.ts -b script.wasm -- --lib node_modules",
       },
     }
   end

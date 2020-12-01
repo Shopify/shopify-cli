@@ -49,7 +49,7 @@ module Script
               },
               "scripts": {
                 "test": "asp --summary --verbose",
-                "build": "npx shopify-scripts-toolchain-as build --src src/script.ts --binary #{script_name}.wasm -- --lib node_modules --optimize --use Date="
+                "build": "shopify-scripts-toolchain-as build --src src/script.ts --binary #{script_name}.wasm -- --lib node_modules --optimize --use Date="
               },
               "engines": {
                 "node": ">=14.5"
