@@ -9,6 +9,7 @@ module Script
         class AppScriptUndefinedError < ScriptProjectError; end
         class BuildError < ScriptProjectError; end
         class DependencyInstallError < ScriptProjectError; end
+        class EmptyResponseError < ScriptProjectError; end
         class ForbiddenError < ScriptProjectError; end
 
         class GraphqlError < ScriptProjectError

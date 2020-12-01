@@ -57,6 +57,9 @@ module Script
           dependency_install_cause: "Something went wrong while installing the dependencies that are needed.",
           dependency_install_help: "Correct the errors and try again.",
 
+          failed_api_request_cause: "Something went wrong while communicating with Shopify.",
+          failed_api_request_help: "Try again.",
+
           forbidden_error_cause: "You do not have permission to do this action.",
 
           graphql_error_cause: "An error was returned: %s.",
