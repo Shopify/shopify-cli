@@ -20,8 +20,8 @@ module Script
           prev_dir = Dir.pwd
           temp_dir = "#{project_base}/temp"
           ctx.mkdir_p(temp_dir)
+          FileUtils.cp_r(Dir['**'].reject { |f| f == 'temp' }, temp_dir)
           ctx.chdir(temp_dir)
-          ctx.cp_r("#{src_base}/.", ".")
           yield
         ensure
           ctx.chdir(prev_dir)

@@ -74,8 +74,21 @@ module Script
 
           shop_script_undefined_cause: "Script is already turned off in store.",
 
-          packages_outdated_cause: "The following npm packages are out of date: %s.",
-          packages_outdated_help: "Update them by running {{cyan:npm install --save-dev %s}}.",
+          packages_outdated_cause: "These npm packages are out of date: %s.",
+          packages_outdated_help: "To update them, run {{cyan:npm install --save-dev %s}}.",
+
+          invalid_build_script: "Invalid build script.",
+          build_script_not_found: "Build script not found.",
+          # rubocop:disable Layout/LineLength
+          build_script_suggestion: "Root package.json needs a script named build, which" \
+            "uses @shopify/scripts-toolchain-as to compile to WebAssembly.\n" \
+            "Example:\n" \
+            "build: npx shopify-scripts-toolchain-as build --src src/script.ts --binary <script_name>.wasm -- --lib node_modules --optimize --use Date=",
+
+          web_assembly_binary_not_found: "WebAssembly binary not found.",
+          web_assembly_binary_not_found_suggestion: "No WebAssembly binary found." \
+            "Check that your build npm script outputs the generated binary to the root of the directory." \
+            "Generated binary should match the script name: <script_name>.wasm",
         },
 
         create: {

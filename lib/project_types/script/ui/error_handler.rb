@@ -155,6 +155,21 @@ module Script
               e.outdated_packages.collect { |package| "#{package}@latest" }.join(' ')
             ),
           }
+        when Layers::Infrastructure::Errors::BuildScriptNotFoundError
+          {
+            cause_of_error: ShopifyCli::Context.message('script.error.build_script_not_found'),
+            help_suggestion: ShopifyCli::Context.message('script.error.build_script_suggestion'),
+          }
+        when Layers::Infrastructure::Errors::InvalidBuildScriptError
+          {
+            cause_of_error: ShopifyCli::Context.message('script.error.invalid_build_script'),
+            help_suggestion: ShopifyCli::Context.message('script.error.build_script_suggestion'),
+          }
+        when Layers::Infrastructure::Errors::WebAssemblyBinaryNotFoundError
+          {
+            cause_of_error: ShopifyCli::Context.message('script.error.web_assembly_binary_not_found'),
+            help_suggestion: ShopifyCli::Context.message('script.error.web_assembly_binary_not_found_suggestion'),
+          }
         end
       end
     end
