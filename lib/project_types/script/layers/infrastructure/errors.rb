@@ -47,8 +47,10 @@ module Script
             @outdated_packages = outdated_packages
           end
         end
+
         class BuildScriptNotFoundError < ScriptProjectError; end
         class InvalidBuildScriptError < ScriptProjectError; end
+
         class WebAssemblyBinaryNotFoundError < ScriptProjectError
           def initialize
             super("WebAssembly binary not found")
