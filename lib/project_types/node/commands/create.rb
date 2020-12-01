@@ -40,11 +40,11 @@ module Node
           scopes: 'write_products,write_customers,write_draft_orders',
         ).write(@ctx)
 
-        partners_url = "#{partners_endpoint}/#{form.organization_id}/apps/#{api_client['id']}"
+        partners_url = ShopifyCli::PartnersAPI.partners_url_for(form.organization_id, api_client['id'], local_debug?)
 
-        @ctx.puts(@ctx.message('node.create.info.created', form.title, partners_url))
-        @ctx.puts(@ctx.message('node.create.info.serve', form.name, ShopifyCli::TOOL_NAME))
-        @ctx.puts(@ctx.message('node.create.info.install', partners_url, form.title))
+        @ctx.puts(@ctx.message('apps.create.info.created', form.title, partners_url))
+        @ctx.puts(@ctx.message('apps.create.info.serve', form.name, ShopifyCli::TOOL_NAME))
+        @ctx.puts(@ctx.message('apps.create.info.install', partners_url, form.title))
       end
 
       def self.help
@@ -113,9 +113,8 @@ module Node
         end
       end
 
-      def partners_endpoint
-        return 'https://partners.myshopify.io' if @ctx.getenv(ShopifyCli::PartnersAPI::LOCAL_DEBUG)
-        'https://partners.shopify.com'
+      def local_debug?
+        @ctx.getenv(ShopifyCli::PartnersAPI::LOCAL_DEBUG)
       end
     end
   end

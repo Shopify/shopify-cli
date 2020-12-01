@@ -29,11 +29,12 @@ module ShopifyCli
     end
 
     def test_write_writes_yaml
-      create_empty_config
       Shopifolk.stubs(:acting_as_shopify_organization?).returns(false)
+      Dir.stubs(:pwd).returns(@context.root)
       ShopifyCli::Project.write(@context, project_type: :node, organization_id: 42)
       assert_equal :node, Project.current.config['project_type']
       assert_equal 42, Project.current.config['organization_id']
+      refute Project.current.config['shopify_organization']
     end
 
     def test_write_writes_yaml_with_shopify_organization_field
@@ -59,6 +60,7 @@ module ShopifyCli
         organization_id: 42,
         other_option: true,
       )
+      Project.clear
       assert Project.current.config['other_option']
     end
 

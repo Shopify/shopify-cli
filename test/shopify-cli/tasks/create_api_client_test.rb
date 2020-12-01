@@ -44,6 +44,34 @@ module ShopifyCli
         assert_equal("newapikey", ShopifyCli::Core::Monorail.metadata[:api_key])
       end
 
+      def test_call_will_return_any_general_errors
+        stub_partner_req(
+          'create_app',
+          variables: {
+            org: 42,
+            title: 'Test app',
+            type: 'public',
+            app_url: ShopifyCli::Tasks::CreateApiClient::DEFAULT_APP_URL,
+            redir: ["http://127.0.0.1:3456"],
+          },
+          resp: {
+            'errors': [
+              { 'field': 'title', 'message': 'is not a valid title' },
+            ],
+          }
+        )
+
+        err = assert_raises ShopifyCli::Abort do
+          Tasks::CreateApiClient.call(
+            @context,
+            org_id: 42,
+            title: 'Test app',
+            type: 'public',
+          )
+        end
+        assert_equal("{{x}} title is not a valid title", err.message)
+      end
+
       def test_call_will_return_any_user_errors
         stub_partner_req(
           'create_app',

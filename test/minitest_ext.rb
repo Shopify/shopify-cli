@@ -22,6 +22,7 @@ module Minitest
     end
 
     def teardown
+      ShopifyCli::Shopifolk.reset
       # Some tests stub the File class, but we need to call the real methods when checking if the config file has
       # changed.
       #
