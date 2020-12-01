@@ -77,13 +77,24 @@ Style/RegexpLiteral:
 
 Style/MethodCallWithArgsParentheses:
   IgnoredMethods:
-    - require
-    - require_relative
-    - require_dependency
-    - yield
-    - raise
-    - puts
-    - assert_equal
     - assert
-    - refute
+    - assert_equal
+    - assert_includes
+    - assert_nil
+    - assert_raises
     - assert_requested # from Webmock
+    - puts
+    - raise
+    - refute
+    - refute_empty
+    - refute_nil
+    - require
+    - require_dependency
+    - require_relative
+    - yield
+
+Layout/TrailingWhitespace:
+  Exclude:
+    - 'ext/shopify-cli/extconf.rb' # unsure if safe to remove
+    - 'lib/project_types/extension/messages/messages.rb' # unsure if safe to remove
+    - 'test/project_types/extension/extension_test_helpers/stubs/argo_script.rb' # unsure if save to remove
