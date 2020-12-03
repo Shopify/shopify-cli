@@ -10,6 +10,7 @@ module Extension
     autoload :DummyArgo, 'project_types/extension/extension_test_helpers/dummy_argo'
 
     module Stubs
+      autoload :GetTypeDeclarations, 'project_types/extension/extension_test_helpers/stubs/get_type_declarations'
       autoload :GetOrganizations, 'project_types/extension/extension_test_helpers/stubs/get_organizations'
       autoload :GetApp, 'project_types/extension/extension_test_helpers/stubs/get_app'
       autoload :CreateExtension, 'project_types/extension/extension_test_helpers/stubs/create_extension'

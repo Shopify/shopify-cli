@@ -15,11 +15,12 @@ module Extension
         assert_equal extension_type_count, Models::Type.repository.size
       end
 
-      def test_all_type_identifiers_are_defined_and_uppercase
+      def test_all_type_identifiers_are_lower_case_symbols
         Models::Type.repository.values.each do |type|
           refute_nil type.identifier
-          assert_equal type.identifier.upcase, type.identifier
-          refute_empty type.identifier.strip
+          assert_kind_of Symbol, type.identifier
+          assert_equal type.identifier.to_s.downcase, type.identifier.to_s
+          refute_empty type.identifier.to_s.strip
         end
       end
 

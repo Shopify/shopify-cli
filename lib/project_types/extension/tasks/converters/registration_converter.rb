@@ -15,7 +15,7 @@ module Extension
 
           Models::Registration.new(
             id: hash[ID_FIELD].to_i,
-            type: hash[TYPE_FIELD],
+            type: hash[TYPE_FIELD].to_sym,
             title: hash[TITLE_FIELD],
             draft_version: VersionConverter.from_hash(context, hash[DRAFT_VERSION_FIELD])
           )

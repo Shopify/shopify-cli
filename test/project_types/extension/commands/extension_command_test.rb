@@ -29,17 +29,6 @@ module Extension
         @command.project
       end
 
-      def test_extension_type_aborts_if_the_type_is_unknown
-        unknown_type = 'unknown_type'
-        setup_temp_project(type_identifier: unknown_type)
-
-        io = capture_io_and_assert_raises(ShopifyCli::Abort) { @command.extension_type }
-
-        assert_message_output(io: io, expected_content: [
-          @context.message('errors.unknown_type', unknown_type),
-        ])
-      end
-
       def test_extension_type_returns_the_extension_type_instance_if_it_exists
         setup_temp_project
 

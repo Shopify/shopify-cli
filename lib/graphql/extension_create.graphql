@@ -1,4 +1,4 @@
-mutation ExtensionCreate($api_key: String!, $type: ExtensionType!, $title: String!, $config: JSON!, $extension_context: String) {
+mutation ExtensionCreate($api_key: String!, $type: String!, $title: String!, $config: JSON!, $extension_context: String) {
   extensionCreate(input: {apiKey: $api_key, type: $type, title: $title, config: $config, context: $extension_context}) {
     extensionRegistration {
       id

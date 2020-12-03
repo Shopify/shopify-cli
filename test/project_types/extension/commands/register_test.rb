@@ -74,7 +74,7 @@ module Extension
         Tasks::CreateExtension.any_instance.expects(:call).with(
           context: @context,
           api_key: @app.api_key,
-          type: @test_extension_type.graphql_identifier,
+          type: @test_extension_type.identifier,
           title: @project.title,
           config: {},
           extension_context: @test_extension_type.extension_context(@context)

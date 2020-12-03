@@ -38,16 +38,16 @@ module Extension
         self.class::IDENTIFIER
       end
 
-      def graphql_identifier
-        identifier
-      end
-
       def name
         message('name')
       end
 
       def tagline
         message('tagline') || ""
+      end
+
+      def cli_identifier
+        identifier
       end
 
       def config(_context)
@@ -66,6 +66,10 @@ module Extension
         []
       end
 
+      def template_identifier
+        identifier.to_s.upcase
+      end
+
       private
 
       def message(key, *params)
@@ -74,7 +78,7 @@ module Extension
       end
 
       def messages
-        @messages ||= Messages::TYPES[identifier.downcase.to_sym] || {}
+        @messages ||= Messages::TYPES[cli_identifier] || {}
       end
     end
   end

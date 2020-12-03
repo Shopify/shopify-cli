@@ -26,12 +26,21 @@ module Extension
       end
 
       def ask_type
-        return Models::Type.load_type(type) if Models::Type.valid?(type)
-        ctx.puts(ctx.message('create.invalid_type')) unless type.nil?
+        type_symbol = @type.to_s.downcase.to_sym unless @type.nil?
+
+        types_declarations = Tasks::GetTypeDeclarations.call(context: ctx)
+
+        if !@type.nil? && types_declarations.any? { |declaration| declaration.load_type.cli_identifier == type_symbol }
+          return Models::Type.load_type(type_symbol)
+        end
+
+        ctx.puts(ctx.message('create.invalid_type')) unless @type.nil?
 
         CLI::UI::Prompt.ask(ctx.message('create.ask_type')) do |handler|
-          Models::Type.repository.values.each do |type|
-            handler.option("#{type.name} #{type.tagline}") { type }
+          types_declarations.each do |type_declaration|
+            handler.option("#{type_declaration.load_type.name} #{type_declaration.load_type.tagline}") do
+              Models::Type.load_type(type_declaration.type)
+            end
           end
         end
       end

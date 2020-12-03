@@ -29,6 +29,7 @@ module Extension
   end
 
   module Tasks
+    autoload :GetTypeDeclarations, Project.project_filepath('tasks/get_type_declarations')
     autoload :UserErrors, Project.project_filepath('tasks/user_errors')
     autoload :GetApps, Project.project_filepath('tasks/get_apps')
     autoload :GetApp, Project.project_filepath('tasks/get_app')
@@ -36,6 +37,7 @@ module Extension
     autoload :UpdateDraft, Project.project_filepath('tasks/update_draft')
 
     module Converters
+      autoload :TypeDeclarationConverter, Project.project_filepath('tasks/converters/type_declaration_converter')
       autoload :RegistrationConverter, Project.project_filepath('tasks/converters/registration_converter')
       autoload :VersionConverter, Project.project_filepath('tasks/converters/version_converter')
       autoload :ValidationErrorConverter, Project.project_filepath('tasks/converters/validation_error_converter')
@@ -63,6 +65,7 @@ module Extension
 
   module Models
     autoload :App, Project.project_filepath('models/app')
+    autoload :TypeDeclaration, Project.project_filepath('models/type_declaration')
     autoload :Registration, Project.project_filepath('models/registration')
     autoload :Version, Project.project_filepath('models/version')
     autoload :Type, Project.project_filepath('models/type')

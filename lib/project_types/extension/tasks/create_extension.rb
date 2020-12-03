@@ -14,7 +14,7 @@ module Extension
       def call(context:, api_key:, type:, title:, config:, extension_context: nil)
         input = {
           api_key: api_key,
-          type: type,
+          type: type.to_s,
           title: title,
           config: JSON.generate(config),
           extension_context: extension_context,

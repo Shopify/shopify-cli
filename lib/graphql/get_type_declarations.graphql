@@ -1,0 +1,11 @@
+query getTypeDeclarations {
+  extensionTypeDeclarations {
+    type
+    name
+    features {
+      argo {
+        surface
+      }
+    }
+  }
+}

@@ -43,7 +43,7 @@ module Extension
 
           assert_kind_of(Models::Registration, parsed_registration)
           assert_equal @registration_id, parsed_registration.id
-          assert_equal @fake_type, parsed_registration.type
+          assert_equal @fake_type.to_sym, parsed_registration.type
           assert_equal @fake_title, parsed_registration.title
           assert_equal @registration_id, parsed_registration.draft_version.registration_id
           assert_kind_of(Time, parsed_registration.draft_version.last_user_interaction_at)

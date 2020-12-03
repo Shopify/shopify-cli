@@ -3,11 +3,7 @@
 module Extension
   module ExtensionTestHelpers
     class TestExtension < Models::Type
-      IDENTIFIER = 'TEST_EXTENSION'
-
-      def graphql_identifier
-        'TEST_EXTENSION_GQL'
-      end
+      IDENTIFIER = :test_extension
 
       def name
         'Test Extension'

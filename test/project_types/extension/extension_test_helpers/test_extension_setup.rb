@@ -7,6 +7,10 @@ module Extension
         ShopifyCli::ProjectType.load_type(:extension)
 
         @test_extension_type = ExtensionTestHelpers::TestExtension.new
+        @test_extension_declaration = Models::TypeDeclaration.new(
+          name: @test_extension_type.name,
+          type: @test_extension_type.identifier
+        )
         Models::Type.repository[@test_extension_type.identifier] = @test_extension_type
         super
       end

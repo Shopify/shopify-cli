@@ -7,10 +7,12 @@ module Extension
     class CreateTest < MiniTest::Test
       include TestHelpers::FakeUI
       include ExtensionTestHelpers::TestExtensionSetup
+      include ExtensionTestHelpers::Stubs::GetTypeDeclarations
 
       def setup
         super
         @app = Models::App.new(title: 'Fake', api_key: '1234', secret: '4567', business_name: 'Fake Business')
+        stub_get_type_declarations([@test_extension_declaration])
       end
 
       def test_returns_defined_attributes_if_valid
@@ -61,10 +63,15 @@ module Extension
         assert_equal form.type, @test_extension_type
       end
 
+      def test_accepts_any_valid_extension_type_as_a_string
+        form = ask(type: @test_extension_type.identifier.to_s.upcase)
+        assert_equal form.type, @test_extension_type
+      end
+
       def test_outputs_an_error_and_prompts_the_user_to_choose_a_type_if_an_unknown_type_was_provided_as_flag
         CLI::UI::Prompt
           .expects(:interactive_prompt)
-          .returns("#{@test_extension_type.name} #{@test_extension_type.tagline}")
+          .returns("#{@test_extension_declaration.load_type.name} #{@test_extension_declaration.load_type.tagline}")
           .once
 
         io = capture_io { ask(type: 'unknown-type') }

@@ -9,9 +9,12 @@ module Extension
       include ExtensionTestHelpers::TestExtensionSetup
       include ExtensionTestHelpers::Messages
       include ExtensionTestHelpers::Stubs::GetOrganizations
+      include ExtensionTestHelpers::Stubs::GetTypeDeclarations
 
       def setup
         super
+        stub_get_type_declarations([@test_extension_declaration])
+
         @name = "My Ext"
         @directory_name = 'my_ext'
       end
@@ -26,7 +29,7 @@ module Extension
         @test_extension_type.expects(:create).never
 
         io = capture_io_and_assert_raises(ShopifyCli::Abort) do
-          run_create(%W(extension --name=#{@name} --type=#{@test_extension_type.identifier}))
+          run_create(%W(extension --name=#{@name} --type=#{@test_extension_type.identifier.to_s}))
         end
 
         assert_message_output(io: io, expected_content: [
@@ -37,11 +40,14 @@ module Extension
       def test_runs_type_create_and_writes_project_files
         Dir.expects(:exist?).with(@directory_name).returns(false).once
         @test_extension_type.expects(:create).with(@directory_name, @context).returns(true).once
-        ExtensionProject.expects(:write_cli_file).with(context: @context, type: @test_extension_type.identifier).once
+        ExtensionProject
+          .expects(:write_cli_file)
+          .with(context: @context, type: @test_extension_type.identifier)
+          .once
         ExtensionProject.expects(:write_env_file).with(context: @context, title: @name).once
 
         io = capture_io do
-          run_create(%W(extension --name=#{@name} --type=#{@test_extension_type.identifier}))
+          run_create(%W(extension --name=#{@name} --type=#{@test_extension_type.identifier.to_s}))
         end
 
         assert_message_output(io: io, expected_content: [
@@ -57,7 +63,7 @@ module Extension
         ExtensionProject.expects(:write_env_file).never
 
         io = capture_io do
-          run_create(%W(extension --name=#{@name} --type=#{@test_extension_type.identifier}))
+          run_create(%W(extension --name=#{@name} --type=#{@test_extension_type.identifier.to_s}))
         end
 
         assert_message_output(io: io, expected_content: @context.message('create.try_again'))

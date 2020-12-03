@@ -15,7 +15,7 @@ module Extension
         ShopifyCli::ProjectType.load_type(:extension)
 
         @api_key = 'FAKE_API_KEY'
-        @fake_type = 'TEST_EXTENSION'
+        @fake_type = :test_extension
         @fake_title = 'Fake Title'
         @fake_config = {
           field: 'with stuff',

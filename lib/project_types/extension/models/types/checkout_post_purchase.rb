@@ -5,10 +5,15 @@ module Extension
   module Models
     module Types
       class CheckoutPostPurchase < Models::Type
-        IDENTIFIER = 'CHECKOUT_POST_PURCHASE'
+        IDENTIFIER = :checkout_post_purchase
         PERMITTED_CONFIG_KEYS = [:metafields]
+
+        def template_identifier
+          "CHECKOUT_POST_PURCHASE"
+        end
+
         def create(directory_name, context)
-          Features::Argo::Checkout.new.create(directory_name, IDENTIFIER, context)
+          Features::Argo::Checkout.new.create(directory_name, template_identifier, context)
         end
 
         def config(context)

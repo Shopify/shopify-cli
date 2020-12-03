@@ -20,7 +20,7 @@ module Extension
 
           Features::Argo::Checkout.any_instance
             .expects(:create)
-            .with(directory_name, CheckoutPostPurchase::IDENTIFIER, @context)
+            .with(directory_name, CheckoutPostPurchase.new.template_identifier, @context)
             .once
 
           @checkout_post_purchase.create(directory_name, @context)

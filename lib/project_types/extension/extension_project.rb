@@ -9,7 +9,7 @@ module Extension
           context,
           project_type: :extension,
           organization_id: nil,
-          "#{ExtensionProjectKeys::EXTENSION_TYPE_KEY}": type
+          "#{ExtensionProjectKeys::EXTENSION_TYPE_KEY}": type.to_s
         )
       end
 
@@ -46,7 +46,7 @@ module Extension
     end
 
     def extension_type_identifier
-      config[ExtensionProjectKeys::EXTENSION_TYPE_KEY]
+      config[ExtensionProjectKeys::EXTENSION_TYPE_KEY].to_sym
     end
 
     def registration_id?
