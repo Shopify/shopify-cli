@@ -8,7 +8,12 @@ module Extension
       include ExtensionTestHelpers::TestExtensionSetup
 
       def test_can_load_type_by_identifier
-        assert_equal @test_extension_type.identifier, Models::Type.load_type(@test_extension_type.identifier).identifier
+        assert_equal @test_extension_type.identifier, Models::Type.load_type(@test_extension_declaration).identifier
+      end
+
+      def test_loads_a_default_extension_type_if_no_concrete_type_exists
+        declaration = TypeDeclaration.new(type: :dynamic, name: 'Dynamic')
+        assert_kind_of DefaultExtensionType, Models::Type.load_type(declaration)
       end
 
       def test_valid_determines_if_a_type_is_valid

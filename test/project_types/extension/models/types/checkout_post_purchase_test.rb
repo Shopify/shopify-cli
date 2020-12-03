@@ -12,7 +12,7 @@ module Extension
           Features::Argo::Checkout.any_instance.stubs(:config).returns({})
           Features::ArgoConfig.stubs(:parse_yaml).returns({})
 
-          @checkout_post_purchase = Models::Type.load_type(CheckoutPostPurchase::IDENTIFIER)
+          @checkout_post_purchase = Models::TypeDeclaration.new(type: CheckoutPostPurchase.new.identifier).load_type
         end
 
         def test_create_uses_standard_argo_create_implementation

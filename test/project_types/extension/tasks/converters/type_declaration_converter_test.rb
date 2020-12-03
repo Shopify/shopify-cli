@@ -64,6 +64,23 @@ module Extension
           assert parsed_type_declarations.any? { |declaration| declaration.type == @type.to_sym }
           assert parsed_type_declarations.any? { |declaration| declaration.type == :fake_type2 }
         end
+
+        def test_from_hash_parses_feature_argo_surface_from_the_features
+          hash = {
+            Converters::TypeDeclarationConverter::TYPE_FIELD => @type,
+            Converters::TypeDeclarationConverter::NAME_FIELD => @name,
+            Converters::TypeDeclarationConverter::FEATURES_FIELD => {
+              Converters::TypeDeclarationConverter::FEATURES_ARGO_FIELD => {
+                Converters::TypeDeclarationConverter::FEATURES_ARGO_SURFACE_FIELD => 'admin'
+              }
+            }
+          }
+
+          parsed_type_declaration = Converters::TypeDeclarationConverter.from_hash(@context, hash)
+
+          assert_kind_of(Models::TypeDeclaration, parsed_type_declaration)
+          assert_equal :admin, parsed_type_declaration.feature_argo_surface
+        end
       end
     end
   end

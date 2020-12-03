@@ -70,6 +70,7 @@ module Extension
     autoload :Version, Project.project_filepath('models/version')
     autoload :Type, Project.project_filepath('models/type')
     autoload :ValidationError, Project.project_filepath('models/validation_error')
+    autoload :DefaultExtensionType, Project.project_filepath('models/default_extension_type')
 
     class << self
       Models::Type.load_all

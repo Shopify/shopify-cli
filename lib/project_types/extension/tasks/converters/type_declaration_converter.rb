@@ -22,7 +22,8 @@ module Extension
 
           Models::TypeDeclaration.new(
             type: hash[TYPE_FIELD].to_sym,
-            name: hash[NAME_FIELD]
+            name: hash[NAME_FIELD],
+            feature_argo_surface: hash.dig(FEATURES_FIELD, FEATURES_ARGO_FIELD, FEATURES_ARGO_SURFACE_FIELD)&.to_sym
           )
         end
       end

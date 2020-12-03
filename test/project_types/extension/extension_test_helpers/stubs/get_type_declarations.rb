@@ -22,6 +22,11 @@ module Extension
             {
               type: declaration.type.to_s,
               name: declaration.name,
+              features: {
+                argo: {
+                  surface: declaration.feature_argo_surface.to_s
+                }
+              }
             }
           end
         end

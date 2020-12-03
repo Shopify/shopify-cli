@@ -29,8 +29,9 @@ module Extension
           end
         end
 
-        def load_type(identifier)
-          repository[identifier]
+        def load_type(declaration)
+          return repository[declaration.type] if repository.key?(declaration.type)
+          DefaultExtensionType.new(declaration)
         end
       end
 

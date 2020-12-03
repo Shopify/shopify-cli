@@ -28,18 +28,18 @@ module Extension
       def ask_type
         type_symbol = @type.to_s.downcase.to_sym unless @type.nil?
 
-        types_declarations = Tasks::GetTypeDeclarations.call(context: ctx)
+        types_declaration = Tasks::GetTypeDeclarations.call(context: ctx)
 
-        if !@type.nil? && types_declarations.any? { |declaration| declaration.load_type.cli_identifier == type_symbol }
-          return Models::Type.load_type(type_symbol)
+        if !@type.nil? && types_declaration.any? { |declaration| declaration.load_type.cli_identifier == type_symbol }
+          return Models::TypeDeclaration.new(type: type_symbol).load_type
         end
 
         ctx.puts(ctx.message('create.invalid_type')) unless @type.nil?
 
         CLI::UI::Prompt.ask(ctx.message('create.ask_type')) do |handler|
-          types_declarations.each do |type_declaration|
+          types_declaration.each do |type_declaration|
             handler.option("#{type_declaration.load_type.name} #{type_declaration.load_type.tagline}") do
-              Models::Type.load_type(type_declaration.type)
+              type_declaration.load_type
             end
           end
         end
