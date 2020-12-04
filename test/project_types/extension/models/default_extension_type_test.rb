@@ -20,7 +20,7 @@ module Extension
 
         Features::Argo::Admin.any_instance
           .expects(:create)
-          .with(directory_name, 'DYNAMIC', @context)
+          .with(directory_name, 'DEFAULT', @context)
           .once
 
         declaration.load_type.create(directory_name, @context)
@@ -32,7 +32,7 @@ module Extension
 
         Features::Argo::Checkout.any_instance
           .expects(:create)
-          .with(directory_name, 'DYNAMIC', @context)
+          .with(directory_name, 'DEFAULT', @context)
           .once
 
         declaration.load_type.create(directory_name, @context)
@@ -42,7 +42,7 @@ module Extension
         @context.expects(:abort).with('Unknown feature set').raises(ShopifyCli::Abort).once
         declaration = TypeDeclaration.new(type: :dynamic, name: 'Dynamic')
 
-        assert_raises(ShopifyCli::Abort) { declaration.load_type.create('dyanmic_extension', @context) }
+        assert_raises(ShopifyCli::Abort) { declaration.load_type.create('dynamic_extension', @context) }
       end
 
       def test_admin_and_checkout_have_same_config_implementation_so_just_use_admin
@@ -53,13 +53,6 @@ module Extension
 
         admin_declaration.load_type.config(@context)
         checkout_declaration.load_type.config(@context)
-      end
-
-      def test_aborts_config_if_no_features_are_enabled
-        @context.expects(:abort).with('Unknown feature set').raises(ShopifyCli::Abort).once
-        declaration = TypeDeclaration.new(type: :dynamic, name: 'Dynamic')
-
-        assert_raises(ShopifyCli::Abort) { declaration.load_type.config(@context) }
       end
     end
   end

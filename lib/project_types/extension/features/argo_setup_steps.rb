@@ -15,13 +15,25 @@ module Extension
         end
       end
 
-      def self.clone_template(git_template)
+      def self.clone_template(git_template, single_branch: true)
         ArgoSetupStep.default do |context, _identifier, directory_name, _js_system|
           begin
-            ShopifyCli::Git.clone(git_template, directory_name, ctx: context)
+            ShopifyCli::Git.clone(git_template, directory_name, ctx: context, single_branch: single_branch)
             context.root = File.join(context.root, directory_name)
           rescue StandardError
             context.puts('{{x}} Unable to clone the repository.')
+          end
+        end
+      end
+
+      def self.switch_branch(git_branch)
+        ArgoSetupStep.always_successful do |context, _identifier, directory_name, _js_system|
+          return if git_branch.nil?
+
+          if context.system('git', 'checkout', git_branch, chdir: context.root)
+            context.puts("Cloned into: #{git_branch}")
+          else
+            context.puts("Could not clone into: #{git_branch}")
           end
         end
       end

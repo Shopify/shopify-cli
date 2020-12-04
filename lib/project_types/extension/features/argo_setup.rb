@@ -9,12 +9,14 @@ module Extension
       SCRIPTS_DIRECTORY = 'scripts'
 
       property! :git_template, accepts: String
+      property :git_branch, accepts: String
       property! :dependency_checks, default: []
 
       def call(directory_name, identifier, context)
         steps = [
           ArgoSetupSteps.check_dependencies(dependency_checks),
-          ArgoSetupSteps.clone_template(git_template),
+          ArgoSetupSteps.clone_template(git_template, single_branch: git_branch.nil?),
+          ArgoSetupSteps.switch_branch(git_branch),
           ArgoSetupSteps.install_dependencies,
           ArgoSetupSteps.initialize_project,
         ]

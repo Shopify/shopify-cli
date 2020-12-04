@@ -18,6 +18,10 @@ module Extension
         super || @type_declaration.name
       end
 
+      def template_identifier
+        'DEFAULT'
+      end
+
       def create(directory_name, context)
         context.abort('Unknown feature set') if @type_declaration.feature_argo_surface.nil?
 
@@ -28,7 +32,6 @@ module Extension
       end
 
       def config(context)
-        context.abort('Unknown feature set') if @type_declaration.feature_argo_surface.nil?
         Features::Argo::Admin.new.config(context)
       end
     end

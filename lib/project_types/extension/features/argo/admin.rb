@@ -11,6 +11,10 @@ module Extension
           GIT_TEMPLATE
         end
 
+        def git_branch
+          'default-extension-template'
+        end
+
         def renderer_package_name
           RENDERER_PACKAGE
         end

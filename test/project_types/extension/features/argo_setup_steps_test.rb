@@ -31,7 +31,7 @@ module Extension
       end
 
       def test_clone_template_clones_argo_template_git_repo_into_directory_and_updates_context_root
-        ShopifyCli::Git.expects(:clone).with(@git_template, @directory, ctx: @context).once
+        ShopifyCli::Git.expects(:clone).with(@git_template, @directory, ctx: @context, single_branch: true).once
 
         call_step(ArgoSetupSteps.clone_template(@git_template))
 

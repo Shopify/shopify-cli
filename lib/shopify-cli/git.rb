@@ -42,13 +42,15 @@ module ShopifyCli
       #
       #   ShopifyCli::Git.clone('git@github.com:shopify/test.git', 'test-app')
       #
-      def clone(repository, dest, ctx: Context.new)
+      def clone(repository, dest, ctx: Context.new, single_branch: true)
         if Dir.exist?(dest)
           ctx.abort(ctx.message('core.git.error.directory_exists'))
         else
           success_message = ctx.message('core.git.cloned', dest)
           CLI::UI::Frame.open(ctx.message('core.git.cloning', repository, dest), success_text: success_message) do
-            clone_progress('clone', '--single-branch', repository, dest, ctx: ctx)
+            clone_command = ['clone']
+            clone_command << '--single-branch' if single_branch
+            clone_progress(*clone_command, repository, dest, ctx: ctx)
           end
         end
       end

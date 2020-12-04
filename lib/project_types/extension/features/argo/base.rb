@@ -24,7 +24,9 @@ module Extension
         private_constant :YARN_INSTALL_COMMAND, :YARN_INSTALL_PARAMETERS, :YARN_RUN_COMMAND, :YARN_RUN_SCRIPT_NAME
 
         def create(directory_name, identifier, context)
-          Features::ArgoSetup.new(git_template: git_template).call(directory_name, identifier, context)
+          Features::ArgoSetup
+            .new(git_template: git_template, git_branch: git_branch)
+            .call(directory_name, identifier, context)
         end
 
         def config(context)
@@ -47,6 +49,10 @@ module Extension
 
         def git_template
           raise NotImplementedError, "'#{__method__}' must be implemented for #{self.class}"
+        end
+
+        def git_branch
+          nil
         end
 
         def renderer_package_name

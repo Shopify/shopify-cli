@@ -24,7 +24,8 @@ module Extension
 
       def test_call_sets_up_the_default_setup_steps_runs_them_and_cleans_up
         ArgoSetupSteps.expects(:check_dependencies).with([]).returns(@passing_step).once
-        ArgoSetupSteps.expects(:clone_template).with(@git_template).returns(@passing_step).once
+        ArgoSetupSteps.expects(:clone_template).with(@git_template, single_branch: true).returns(@passing_step).once
+        ArgoSetupSteps.expects(:switch_branch).with(nil).returns(@passing_step).once
         ArgoSetupSteps.expects(:install_dependencies).returns(@passing_step).once
         ArgoSetupSteps.expects(:initialize_project).returns(@passing_step).once
 
@@ -34,7 +35,8 @@ module Extension
 
       def test_if_any_step_fails_subsequent_steps_are_not_run_and_cleanup_is_called
         ArgoSetupSteps.expects(:check_dependencies).with([]).returns(@passing_step).once
-        ArgoSetupSteps.expects(:clone_template).with(@git_template).returns(@passing_step).once
+        ArgoSetupSteps.expects(:clone_template).with(@git_template, single_branch: true).returns(@passing_step).once
+        ArgoSetupSteps.expects(:switch_branch).with(nil).returns(@passing_step).once
         ArgoSetupSteps.expects(:install_dependencies).returns(@failing_step).once
         ArgoSetupSteps.expects(:initialize_project).returns(@never_run_step).once
 
