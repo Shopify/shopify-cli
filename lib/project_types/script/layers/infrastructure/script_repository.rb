@@ -16,18 +16,6 @@ module Script
           Domain::Script.new(script_id(language), script_name, extension_point_type, language)
         end
 
-        def with_temp_build_context
-          prev_dir = Dir.pwd
-          temp_dir = "#{project_base}/temp"
-          ctx.mkdir_p(temp_dir)
-          FileUtils.cp_r(Dir['**'].reject { |f| f == 'temp' }, temp_dir)
-          ctx.chdir(temp_dir)
-          yield
-        ensure
-          ctx.chdir(prev_dir)
-          ctx.rm_rf(temp_dir)
-        end
-
         def relative_path_to_src
           "src"
         end

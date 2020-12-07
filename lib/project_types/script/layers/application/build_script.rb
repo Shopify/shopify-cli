@@ -9,7 +9,9 @@ module Script
             CLI::UI::Frame.open(ctx.message('script.application.building')) do
               begin
                 UI::StrictSpinner.spin(ctx.message('script.application.building_script')) do |spinner|
-                  build(ctx, task_runner, script)
+                  Infrastructure::PushPackageRepository
+                    .new(ctx: ctx)
+                    .create_push_package(script, task_runner.build, task_runner.compiled_type)
                   spinner.update_title(ctx.message('script.application.built'))
                 end
               rescue StandardError => e
@@ -26,17 +28,6 @@ module Script
                 raise
               end
             end
-          end
-
-          private
-
-          def build(ctx, task_runner, script)
-            script_repo = Infrastructure::ScriptRepository.new(ctx: ctx)
-            script_content = script_repo.with_temp_build_context do
-              task_runner.build
-            end
-            Infrastructure::PushPackageRepository.new(ctx: ctx)
-              .create_push_package(script, script_content, task_runner.compiled_type)
           end
         end
       end
