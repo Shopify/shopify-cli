@@ -52,46 +52,4 @@ describe Script::Layers::Infrastructure::ScriptRepository do
       end
     end
   end
-
-  describe ".with_temp_build_context" do
-    let(:script_file) { "script.#{language}" }
-    let(:helper_file) { "helper.#{language}" }
-
-    before do
-      context.mkdir_p(script_source_base)
-      Dir.chdir(script_source_base)
-      context.root = script_source_base
-      context.write(script_file, "//run code")
-    end
-
-    it "should go to a tempdir with all its files" do
-      context.write(helper_file, "//helper code")
-      context.mkdir_p("other_dir")
-
-      script_repository.with_temp_build_context do
-        refute_equal script_source_base, Dir.pwd
-        assert context.file_exist?(script_file)
-        assert context.file_exist?(helper_file)
-      end
-    end
-
-    it "should create temp directory in the script root" do
-      nested_dir = "#{script_folder_base}/some/nested/directory"
-      context.mkdir_p(nested_dir)
-      context.chdir(nested_dir)
-
-      temp_dir = "#{script_folder_base}/temp"
-      script_repository.with_temp_build_context do
-        assert_equal Dir.pwd, temp_dir
-      end
-    end
-
-    it "should delete the script root temp directory afterwards" do
-      temp_dir = "#{script_folder_base}/temp"
-      script_repository.with_temp_build_context do
-        assert context.dir_exist?(temp_dir)
-      end
-      refute context.dir_exist?(temp_dir)
-    end
-  end
 end
