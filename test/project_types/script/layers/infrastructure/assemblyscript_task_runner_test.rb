@@ -60,7 +60,7 @@ describe Script::Layers::Infrastructure::AssemblyScriptTaskRunner do
       File.expects(:read).with('package.json').once.returns(JSON.generate(package_json))
       ctx
         .expects(:file_exist?)
-        .with('foo.wasm')
+        .with('build/foo.wasm')
         .once
         .returns(false)
 
@@ -76,7 +76,7 @@ describe Script::Layers::Infrastructure::AssemblyScriptTaskRunner do
     it "should trigger the compilation process" do
       wasm = "some compiled code"
       File.expects(:read).with('package.json').once.returns(JSON.generate(package_json))
-      File.expects(:read).with('foo.wasm').once.returns(wasm)
+      File.expects(:read).with('build/foo.wasm').once.returns(wasm)
 
       ctx
         .expects(:capture2e)
@@ -86,11 +86,11 @@ describe Script::Layers::Infrastructure::AssemblyScriptTaskRunner do
 
       ctx
         .expects(:file_exist?)
-        .with('foo.wasm')
+        .with('build/foo.wasm')
         .once
         .returns(true)
 
-      ctx.expects('rm').with('foo.wasm').once
+      ctx.expects('rm').with('build/foo.wasm').once
 
       assert_equal wasm, subject
     end

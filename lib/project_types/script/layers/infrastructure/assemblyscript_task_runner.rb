@@ -4,7 +4,7 @@ module Script
   module Layers
     module Infrastructure
       class AssemblyScriptTaskRunner
-        BYTECODE_FILE = "%{name}.wasm"
+        BYTECODE_FILE = "build/%{name}.wasm"
         SCRIPT_SDK_BUILD = "npm run build"
 
         attr_reader :ctx, :script_name, :script_source_file
