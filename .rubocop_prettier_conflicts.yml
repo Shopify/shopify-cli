@@ -1,0 +1,8 @@
+Layout:
+  Enabled: false
+Style/TrailingCommaInArrayLiteral:
+  Enabled: false
+Style/TrailingCommaInHashLiteral:
+  Enabled: false
+Style/NumericLiteralPrefix:
+  Enabled: false

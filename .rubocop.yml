@@ -1,15 +1,8 @@
-inherit_from: .rubocop_todo.yml
+inherit_from:
+  - .rubocop_todo.yml
+  - .rubocop_prettier_conflicts.yml
 
 require: rubocop-minitest
-
-Layout:
-  Enabled: false
-Style/TrailingCommaInArrayLiteral:
-  Enabled: false
-Style/TrailingCommaInHashLiteral:
-  Enabled: false
-Style/NumericLiteralPrefix:
-  Enabled: false
 
 inherit_gem:
   rubocop-shopify:

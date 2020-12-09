@@ -1,1 +1,2 @@
 vendor
+lib/shopify-cli/core/monorail.rb # https://github.com/prettier/plugin-ruby/issues/706
