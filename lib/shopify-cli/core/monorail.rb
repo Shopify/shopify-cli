@@ -30,8 +30,7 @@ module ShopifyCli
           err = nil
           begin
             yield
-          rescue Exception => e
-            # rubocop:disable Lint/RescueException
+          rescue Exception => e # rubocop:disable Lint/RescueException
             err = e
             raise
           ensure
@@ -67,21 +66,22 @@ module ShopifyCli
           headers = {
             'Content-Type': 'application/json; charset=utf-8',
             'X-Monorail-Edge-Event-Created-At-Ms': start_time.to_s,
-            'X-Monorail-Edge-Event-Sent-At-Ms': end_time.to_s
+            'X-Monorail-Edge-Event-Sent-At-Ms': end_time.to_s,
           }
           begin
             Net::HTTP.start(
               ENDPOINT_URI.host,
               ENDPOINT_URI.port,
               # timeouts for opening a connection, reading, writing (in seconds)
-              open_timeout: 0.2, read_timeout: 0.2, write_timeout: 0.2, use_ssl: ENDPOINT_URI.scheme == 'https'
+              open_timeout: 0.2, read_timeout: 0.2, write_timeout: 0.2,
+              use_ssl: ENDPOINT_URI.scheme == 'https'
             ) do |http|
               payload = build_payload(start_time, end_time, commands, args, err)
               post = Net::HTTP::Post.new(ENDPOINT_URI.request_uri, headers)
               post.body = JSON.dump(payload)
               http.request(post)
             end
-          rescue StandardError
+          rescue
             # silently fail on errors, fire-and-forget approach
           end
         end
@@ -89,30 +89,29 @@ module ShopifyCli
         def build_payload(start_time, end_time, commands, args, err = nil)
           {
             schema_id: INVOCATIONS_SCHEMA,
-            payload:
-              {
-                project_type: Project.current_project_type.to_s,
-                command: commands.join(' '),
-                args: args.join(' '),
-                time_start: start_time,
-                time_end: end_time,
-                total_time: end_time - start_time,
-                success: err.nil?,
-                error_message: err,
-                uname: RbConfig::CONFIG['host'],
-                cli_version: ShopifyCli::VERSION,
-                ruby_version: RUBY_VERSION,
-                is_employee: ShopifyCli::Shopifolk.acting_as_shopify_organization?
-              }.tap do |payload|
-                payload[:api_key] = metadata.delete(:api_key)
-                payload[:partner_id] = metadata.delete(:organization_id)
-                if Project.has_current?
-                  project = Project.current(force_reload: true)
-                  payload[:api_key] = project.env&.api_key
-                  payload[:partner_id] = project.config['organization_id']
-                end
-                payload[:metadata] = JSON.dump(metadata) unless metadata.empty?
+            payload: {
+              project_type: Project.current_project_type.to_s,
+              command: commands.join(' '),
+              args: args.join(' '),
+              time_start: start_time,
+              time_end: end_time,
+              total_time: end_time - start_time,
+              success: err.nil?,
+              error_message: err,
+              uname: RbConfig::CONFIG["host"],
+              cli_version: ShopifyCli::VERSION,
+              ruby_version: RUBY_VERSION,
+              is_employee: ShopifyCli::Shopifolk.acting_as_shopify_organization?,
+            }.tap do |payload|
+              payload[:api_key] = metadata.delete(:api_key)
+              payload[:partner_id] = metadata.delete(:organization_id)
+              if Project.has_current?
+                project = Project.current(force_reload: true)
+                payload[:api_key] = project.env&.api_key
+                payload[:partner_id] = project.config['organization_id']
               end
+              payload[:metadata] = JSON.dump(metadata) unless metadata.empty?
+            end,
           }
         end
       end
