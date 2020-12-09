@@ -12,6 +12,7 @@ module ShopifyCli
         Project.write(@context, project_type: :fake, organization_id: 42)
         FileUtils.cd(@context.root)
         ShopifyCli::Tunnel.stubs(:start)
+        Shopifolk.stubs(:check)
       end
 
       def test_create_new_app_if_none_available

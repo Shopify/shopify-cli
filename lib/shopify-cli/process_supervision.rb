@@ -206,7 +206,7 @@ module ShopifyCli
       unless ctx.windows?
         Process.kill('TERM', id)
         50.times do
-          sleep 0.1
+          sleep(0.1)
           break unless stat(id)
         end
       end

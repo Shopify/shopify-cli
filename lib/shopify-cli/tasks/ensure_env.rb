@@ -22,6 +22,9 @@ module ShopifyCli
       private
 
       def fetch_org
+        if Shopifolk.check && wants_to_run_against_shopify_org?
+          Shopifolk.act_as_shopify_organization
+        end
         orgs = PartnersAPI::Organizations.fetch_with_app(@ctx)
         org_id = if orgs.count == 1
           orgs.first["id"]

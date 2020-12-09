@@ -1,7 +1,9 @@
 # frozen_string_literal: true
 module Rails
   class Project < ShopifyCli::ProjectType
-    creator 'Ruby on Rails App', 'Rails::Commands::Create'
+    title('Ruby on Rails App')
+    creator('Rails::Commands::Create')
+    connector('Rails::Commands::Connect')
 
     register_command('Rails::Commands::Deploy', "deploy")
     register_command('Rails::Commands::Generate', "generate")
@@ -17,6 +19,7 @@ module Rails
 
   # define/autoload project specific Commands
   module Commands
+    autoload :Connect, Project.project_filepath('commands/connect')
     autoload :Create, Project.project_filepath('commands/create')
     autoload :Deploy, Project.project_filepath('commands/deploy')
     autoload :Generate, Project.project_filepath('commands/generate')

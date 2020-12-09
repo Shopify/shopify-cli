@@ -27,7 +27,7 @@ module ShopifyCli
       # #### Parameters
       # - `ctx`: running context from your command
       # - `query_name`: name of the query you want to use, loaded from the `lib/graphql` directory.
-      # - `**variable`: a hash of variables to be supplied to the query ro mutation
+      # - `**variables`: a hash of variables to be supplied to the query or mutation
       #
       # #### Raises
       #
@@ -48,6 +48,13 @@ module ShopifyCli
         authenticated_req(ctx) do
           api_client(ctx).query(query_name, variables: variables)
         end
+      end
+
+      def partners_url_for(organization_id, api_client_id, local_debug)
+        if ShopifyCli::Shopifolk.acting_as_shopify_organization?
+          organization_id = 'internal'
+        end
+        "#{partners_endpoint(local_debug)}/#{organization_id}/apps/#{api_client_id}"
       end
 
       private
@@ -104,6 +111,15 @@ module ShopifyCli
       def endpoint
         return 'https://partners.shopify.com' if ENV[LOCAL_DEBUG].nil?
         'https://partners.myshopify.io/'
+      end
+
+      def partners_endpoint(local_debug)
+        domain = if local_debug
+          'partners.myshopify.io'
+        else
+          'partners.shopify.com'
+        end
+        "https://#{domain}"
       end
     end
 

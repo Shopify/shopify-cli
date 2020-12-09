@@ -116,6 +116,11 @@ module Script
             cause_of_error: ShopifyCli::Context.message('script.error.dependency_install_cause'),
             help_suggestion: ShopifyCli::Context.message('script.error.dependency_install_help'),
           }
+        when Layers::Infrastructure::Errors::EmptyResponseError
+          {
+            cause_of_error: ShopifyCli::Context.message('script.error.failed_api_request_cause'),
+            help_suggestion: ShopifyCli::Context.message('script.error.failed_api_request_help'),
+          }
         when Layers::Infrastructure::Errors::ForbiddenError
           {
             cause_of_error: ShopifyCli::Context.message('script.error.forbidden_error_cause'),
@@ -154,6 +159,21 @@ module Script
               'script.error.packages_outdated_help',
               e.outdated_packages.collect { |package| "#{package}@latest" }.join(' ')
             ),
+          }
+        when Layers::Infrastructure::Errors::BuildScriptNotFoundError
+          {
+            cause_of_error: ShopifyCli::Context.message('script.error.build_script_not_found'),
+            help_suggestion: ShopifyCli::Context.message('script.error.build_script_suggestion'),
+          }
+        when Layers::Infrastructure::Errors::InvalidBuildScriptError
+          {
+            cause_of_error: ShopifyCli::Context.message('script.error.invalid_build_script'),
+            help_suggestion: ShopifyCli::Context.message('script.error.build_script_suggestion'),
+          }
+        when Layers::Infrastructure::Errors::WebAssemblyBinaryNotFoundError
+          {
+            cause_of_error: ShopifyCli::Context.message('script.error.web_assembly_binary_not_found'),
+            help_suggestion: ShopifyCli::Context.message('script.error.web_assembly_binary_not_found_suggestion'),
           }
         end
       end

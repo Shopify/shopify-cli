@@ -182,6 +182,14 @@ describe Script::Layers::Infrastructure::ScriptService do
           assert_raises(Script::Layers::Infrastructure::Errors::ScriptRepushError) { subject }
         end
       end
+
+      describe "when response is empty" do
+        let(:response) { nil }
+
+        it "should raise EmptyResponseError error" do
+          assert_raises(Script::Layers::Infrastructure::Errors::EmptyResponseError) { subject }
+        end
+      end
     end
   end
 

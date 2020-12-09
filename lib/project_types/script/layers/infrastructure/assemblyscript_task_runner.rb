@@ -4,9 +4,8 @@ module Script
   module Layers
     module Infrastructure
       class AssemblyScriptTaskRunner
-        BYTECODE_FILE = "%{name}.wasm"
-        SCRIPT_SDK_BUILD = "npx --no-install shopify-scripts-build --src=../%{source} --binary=#{BYTECODE_FILE} "\
-                           "-- --lib=../node_modules --optimize --use Date="
+        BYTECODE_FILE = "build/%{name}.wasm"
+        SCRIPT_SDK_BUILD = "npm run build"
 
         attr_reader :ctx, :script_name, :script_source_file
 
@@ -47,18 +46,40 @@ module Script
 
           require 'semantic/semantic'
           version = ::Semantic::Version.new(output[1..-1])
-          unless version >= ::Semantic::Version.new("12.16.0")
-            raise Errors::DependencyInstallError, "Node version must be >= v12.16.0. Current version: #{output.strip}."
+          unless version >= ::Semantic::Version.new(AssemblyScriptProjectCreator::MIN_NODE_VERSION)
+            raise Errors::DependencyInstallError,
+                  "Node version must be >= v#{AssemblyScriptProjectCreator::MIN_NODE_VERSION}. "\
+                  "Current version: #{output.strip}."
           end
         end
 
         def compile
-          out, status = ctx.capture2e(format(SCRIPT_SDK_BUILD, source: script_source_file, name: script_name))
+          check_compilation_dependencies!
+
+          out, status = ctx.capture2e(SCRIPT_SDK_BUILD)
           raise Domain::Errors::ServiceFailureError, out unless status.success?
         end
 
+        def check_compilation_dependencies!
+          pkg = JSON.parse(File.read('package.json'))
+          build_script = pkg.dig('scripts', 'build')
+
+          raise Errors::BuildScriptNotFoundError,
+            "Build script not found" if build_script.nil?
+
+          unless build_script.start_with?("shopify-scripts")
+            raise Errors::InvalidBuildScriptError, "Invalid build script"
+          end
+        end
+
         def bytecode
-          File.read(format(BYTECODE_FILE, name: script_name))
+          blob = format(BYTECODE_FILE, name: script_name)
+          raise Errors::WebAssemblyBinaryNotFoundError unless @ctx.file_exist?(blob)
+
+          contents = File.read(blob)
+          @ctx.rm(blob)
+
+          contents
         end
 
         def check_if_ep_dependencies_up_to_date!

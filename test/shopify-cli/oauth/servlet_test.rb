@@ -52,7 +52,7 @@ module ShopifyCli
       private
 
       def new_server
-        server = Object.new
+        server = mock
         server.stubs(:[])
         server.expects(:shutdown)
         server

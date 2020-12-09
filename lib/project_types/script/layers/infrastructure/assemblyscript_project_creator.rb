@@ -10,11 +10,8 @@ module Script
         property! :script_name, accepts: String
         property! :path_to_project, accepts: String
 
-        BOOTSTRAP_SRC = "npx --no-install shopify-scripts-bootstrap src %{src_base}"
-        BOOTSTRAP_TEST = "npx --no-install shopify-scripts-bootstrap test %{test_base}"
-        SOURCE_DIR = "src"
-        TEST_DIR = "test"
-        LANGUAGE = "ts"
+        BOOTSTRAP = "npx --no-install shopify-scripts-toolchain-as bootstrap --from %{extension_point} --dest %{base}"
+        MIN_NODE_VERSION = "14.5.0"
 
         def setup_dependencies
           write_npmrc
@@ -22,42 +19,12 @@ module Script
         end
 
         def bootstrap
-          create_src_folder
-          create_test_folder
+          type = extension_point.type.gsub('_', '-')
+          out, status = ctx.capture2e(format(BOOTSTRAP, extension_point: type, base: path_to_project))
+          raise Domain::Errors::ServiceFailureError, out unless status.success?
         end
 
         private
-
-        def create_src_folder
-          ctx.mkdir_p(src_base)
-          out, status = ctx.capture2e(format(BOOTSTRAP_SRC, src_base: src_base))
-          raise Domain::Errors::ServiceFailureError, out unless status.success?
-
-          write_tsconfig_file(SOURCE_DIR, ".")
-        end
-
-        def create_test_folder
-          ctx.mkdir_p(test_base)
-          out, status = ctx.capture2e(format(BOOTSTRAP_TEST, test_base: test_base))
-          raise Domain::Errors::ServiceFailureError, out unless status.success?
-
-          copy_template_file(test_base, 'as-pect.config.js')
-          copy_template_file(test_base, 'as-pect.d.ts')
-          write_tsconfig_file(TEST_DIR, "../#{SOURCE_DIR}")
-        end
-
-        def test_base
-          "#{path_to_project}/#{TEST_DIR}"
-        end
-
-        def src_base
-          "#{path_to_project}/#{SOURCE_DIR}"
-        end
-
-        def copy_template_file(destination, name)
-          template_file = Project.project_filepath("templates/#{LANGUAGE}/#{name}")
-          ctx.cp(template_file, "#{destination}/#{name}")
-        end
 
         def write_npmrc
           ctx.system(
@@ -68,12 +35,10 @@ module Script
           )
         end
 
-        def write_tsconfig_file(dir, path_to_source)
-          AssemblyScriptTsConfig
-            .new(dir_to_write_in: dir)
-            .with_extends_assemblyscript_config(relative_path_to_node_modules: ".")
-            .with_module_resolution_paths(paths: { "*": ["#{path_to_source}/*.ts"] })
-            .write
+        def extension_point_version
+          out, status = ctx.capture2e("npm show #{extension_point.sdks[:ts].package} version --json")
+          raise Domain::Errors::ServiceFailureError, out unless status.success?
+          JSON.parse(out)
         end
 
         def write_package_json
@@ -84,20 +49,20 @@ module Script
               "devDependencies": {
                 "@shopify/scripts-sdk-as": "#{extension_point.sdks[:ts].sdk_version}",
                 "@shopify/scripts-toolchain-as": "#{extension_point.sdks[:ts].toolchain_version}",
-                "#{extension_point.sdks[:ts].package}": "#{extension_point.sdks[:ts].version}",
+                "#{extension_point.sdks[:ts].package}": "^#{extension_point_version}",
                 "@as-pect/cli": "4.0.0",
                 "as-wasi": "^0.2.1",
                 "assemblyscript": "^0.14.0"
               },
               "scripts": {
-                "test": "asp --config test/as-pect.config.js --summary --verbose"
+                "test": "asp --summary --verbose",
+                "build": "shopify-scripts-toolchain-as build --src src/script.ts --binary build/#{script_name}.wasm -- --lib node_modules --optimize --use Date="
               },
               "engines": {
-                "node": ">=14.5"
+                "node": ">=#{MIN_NODE_VERSION}"
               }
             }
           HERE
-
           ctx.write("package.json", package_json)
         end
       end

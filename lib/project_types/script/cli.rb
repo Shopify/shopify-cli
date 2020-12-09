@@ -3,7 +3,8 @@
 module Script
   class Project < ShopifyCli::ProjectType
     hidden_feature(feature_set: :script_project)
-    creator 'Script', 'Script::Commands::Create'
+    title('Script')
+    creator('Script::Commands::Create')
 
     register_command('Script::Commands::Push', 'push')
     register_command('Script::Commands::Disable', 'disable')

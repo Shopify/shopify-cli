@@ -3,6 +3,16 @@
 module ShopifyCli
   module Messages
     MESSAGES = {
+      apps: {
+        create: {
+          info: {
+            created: "{{v}} {{green:%s}} was created in the organization's Partner Dashboard {{underline:%s}}",
+            serve: "{{*}} Change directories to your new project folder {{green:%s}} and run {{command:%s serve}} " \
+            "to start a local server",
+            install: "{{*}} Then, visit {{underline:%s/test}} to install {{green:%s}} on your Dev Store",
+          },
+        },
+      },
       core: {
         connect: {
           help: <<~HELP,
@@ -10,11 +20,7 @@ module ShopifyCli
             Usage: {{command:%s connect}}
           HELP
 
-          production_warning: <<~MESSAGE,
-          {{yellow:! Warning: if you have connected to an {{bold:app in production}}, running {{command:serve}} may update the app URL and cause an outage.
-          MESSAGE
           already_connected_warning: "{{yellow:! This app appears to be already connected}}",
-          connected: "{{v}} Project now connected to {{green:%s}}",
           project_type_select: "What type of project would you like to connect?",
           cli_yml_saved: ".shopify-cli.yml saved to project root",
         },
@@ -310,6 +316,8 @@ module ShopifyCli
               organization_not_found: "Cannot find a partner organization with that ID",
               partners_notice: "Please visit https://partners.shopify.com/ to create a partners account",
             },
+            first_party: "Are you working on a 1P (1st Party) app?",
+            identified_as_shopify: "We've identified you as a {{green:Shopify}} employee.",
             organization: "Partner organization {{green:%s (%s)}}",
             organization_select: "Select partner organization",
           },

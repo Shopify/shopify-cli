@@ -19,7 +19,6 @@ module Script
 
         def initialize(config)
           @package = config["package"]
-          @version = config["version"]
           @sdk_version = config["sdk-version"]
           @toolchain_version = config["toolchain-version"]
         end

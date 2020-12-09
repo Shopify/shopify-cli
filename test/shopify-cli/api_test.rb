@@ -139,5 +139,18 @@ module ShopifyCli
       File.expects(:read).with(expected_path).returns('content')
       assert_equal('content', new_api.call_load_query('my_query'))
     end
+
+    def test_include_shopify_cli_header_if_acting_as_shopify_organization
+      Shopifolk.act_as_shopify_organization
+      File.stubs(:read)
+        .with(File.join(ShopifyCli::ROOT, "lib/graphql/api/mutation.graphql"))
+        .returns(@mutation)
+      response = stub('response', code: '200', body: '{}')
+      HttpRequest
+        .expects(:call)
+        .with(anything, @mutation, {}, has_entry({ 'X-Shopify-Cli-Employee' => '1' }))
+        .returns(response)
+      @api.query('api/mutation')
+    end
   end
 end

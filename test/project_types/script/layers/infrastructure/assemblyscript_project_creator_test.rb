@@ -28,7 +28,6 @@ describe Script::Layers::Infrastructure::AssemblyScriptProjectCreator do
     {
       "assemblyscript" => {
         "package": "@shopify/extension-point-as-fake",
-        "version": "*",
         "sdk-version": "*",
         "toolchain-version": "*",
       },
@@ -59,54 +58,71 @@ describe Script::Layers::Infrastructure::AssemblyScriptProjectCreator do
       subject
       assert context.file_exist?("package.json")
     end
+
+    it "should fetch the latest extension point version" do
+      context.expects(:system).twice
+
+      context
+        .expects(:capture2e)
+        .with("npm show @shopify/extension-point-as-fake version --json")
+        .once
+        .returns([JSON.generate("2.0.0"), OpenStruct.new(success?: true)])
+
+      sdk = mock
+      sdk.expects(:sdk_version)
+      sdk.expects(:toolchain_version)
+      sdk.expects(:package).twice.returns("@shopify/extension-point-as-fake")
+      extension_point.expects(:sdks).times(4).returns({
+        ts: sdk,
+      })
+
+      subject
+      version = JSON.parse(File.read("package.json")).dig("devDependencies", "@shopify/extension-point-as-fake")
+      assert_equal "^2.0.0", version
+    end
+
+    it "should raise if the latest extension point version can't be fetched" do
+      context.expects(:system).twice
+
+      context
+        .expects(:capture2e)
+        .with("npm show @shopify/extension-point-as-fake version --json")
+        .once
+        .returns([JSON.generate(""), OpenStruct.new(success?: false)])
+
+      sdk = mock
+      sdk.expects(:sdk_version)
+      sdk.expects(:toolchain_version)
+      sdk.expects(:package).twice.returns("@shopify/extension-point-as-fake")
+      extension_point.expects(:sdks).times(4).returns({
+        ts: sdk,
+      })
+
+      assert_raises(Script::Layers::Domain::Errors::ServiceFailureError) { subject }
+    end
   end
 
   describe ".bootstrap" do
     subject { project_creator.bootstrap }
 
-    it "should create a test suite" do
-      project_creator.stubs(:create_src_folder).returns(true)
-      FakeFS::FileSystem.clone(aspect_config_template_file)
-      FakeFS::FileSystem.clone(aspect_definition_template_file)
-
+    it "should delegate the bootstrapping process to the language toolchain" do
       context.expects(:capture2e)
-        .with("npx --no-install shopify-scripts-bootstrap test myscript/test")
+        .with(
+          "npx --no-install shopify-scripts-toolchain-as bootstrap --from #{extension_point.type} --dest #{script_name}"
+        )
         .returns(["", OpenStruct.new(success?: true)])
-
-      expect_write_tsconfig_file("../src")
-
-      context.expects(:cp).with(aspect_config_template_file, aspect_config_file)
-      context.expects(:cp).with(aspect_definition_template_file, aspect_dts_file)
 
       subject
     end
 
-    it "should create all src files" do
-      project_creator.stubs(:create_test_folder).returns(true)
-
+    it "raises an error when the bootstrapping process fails to find the requested extension point" do
       context.expects(:capture2e)
-        .with("npx --no-install shopify-scripts-bootstrap src myscript/src")
-        .returns(["", OpenStruct.new(success?: true)])
+        .with(
+          "npx --no-install shopify-scripts-toolchain-as bootstrap --from #{extension_point.type} --dest #{script_name}"
+        )
+        .returns(["", OpenStruct.new(success?: false)])
 
-      expect_write_tsconfig_file(".")
-
-      subject
+      assert_raises(Script::Layers::Domain::Errors::ServiceFailureError) { subject }
     end
-  end
-
-  private
-
-  def expect_write_tsconfig_file(path_to_source)
-    tsconfig_stub = stub("tsconfig")
-    tsconfig_stub
-      .expects(:with_extends_assemblyscript_config)
-      .with(relative_path_to_node_modules: relative_path_to_node_modules)
-      .returns(tsconfig_stub)
-    tsconfig_stub
-      .expects(:with_module_resolution_paths)
-      .with(paths: { "*": ["#{path_to_source}/*.ts"] })
-      .returns(tsconfig_stub)
-    tsconfig_stub.expects(:write)
-    Script::Layers::Infrastructure::AssemblyScriptTsConfig.stubs(:new).returns(tsconfig_stub)
   end
 end

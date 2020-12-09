@@ -17,6 +17,13 @@ module Rails
           setting_gem_path: "GEM_PATH being set to %s",
         },
 
+        connect: {
+          connected: "Project now connected to {{green:%s}}",
+          production_warning: <<~MESSAGE,
+          {{yellow:! Warning: if you have connected to an {{bold:app in production}}, running {{command:serve}} may update the app URL and cause an outage.
+          MESSAGE
+        },
+
         create: {
           help: <<~HELP,
           {{command:%s create rails}}: Creates a ruby on rails app.
@@ -48,10 +55,6 @@ module Rails
           },
 
           info: {
-            created: "{{v}} {{green:%s}} was created in your Partner Dashboard {{underline:%s}}",
-            serve: "{{*}} Change directories to your new project folder {{green:%s}} and run {{command:%s serve}} " \
-              "to start a local server",
-            install: "{{*}} Then, visit {{underline:%s/test}} to install {{green:%s}} on your Dev Store",
             open_new_shell: "{{*}} {{yellow:After installing %s, please open a new Command Prompt or PowerShell " \
               "window to continue.}}",
           },

@@ -58,6 +58,20 @@ describe Script::Layers::Application::BuildScript do
         output = io.join
         assert_match(err_msg, output)
       end
+
+      [
+        Script::Layers::Infrastructure::Errors::InvalidBuildScriptError,
+        Script::Layers::Infrastructure::Errors::BuildScriptNotFoundError,
+        Script::Layers::Infrastructure::Errors::WebAssemblyBinaryNotFoundError,
+      ].each do |e|
+        it "it should re-raise #{e} when the raised error is #{e}" do
+          CLI::UI::Frame.expects(:with_frame_color_override).yields.once
+          task_runner.expects(:build).raises(e)
+          capture_io do
+            assert_raises(e) { subject }
+          end
+        end
+      end
     end
   end
 end

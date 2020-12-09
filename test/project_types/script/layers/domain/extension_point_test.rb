@@ -8,7 +8,6 @@ describe Script::Layers::Domain::ExtensionPoint do
     {
       "assemblyscript" => {
         "package" => "@shopify/extension-point-as-fake",
-        "version" => "*",
         "sdk-version" => "*",
         "toolchain-version" => "*",
       },
@@ -23,7 +22,6 @@ describe Script::Layers::Domain::ExtensionPoint do
 
       sdk = extension_point.sdks[:ts]
       refute_nil sdk.package
-      refute_nil sdk.version
       refute_nil sdk.sdk_version
       refute_nil sdk.toolchain_version
     end

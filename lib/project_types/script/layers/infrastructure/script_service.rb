@@ -146,6 +146,8 @@ module Script
         end
 
         def raise_if_graphql_failed(response)
+          raise Errors::EmptyResponseError if response.nil?
+
           return unless response.key?('errors')
           case error_code(response['errors'])
           when 'forbidden'
