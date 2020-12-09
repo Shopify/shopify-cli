@@ -118,5 +118,16 @@ module ShopifyCli
       assert_nil TipOfTheDay.call
       assert_empty ShopifyCli::Config.get_section('tiplog')
     end
+
+    def test_skip_when_invalid_json
+      remove_request_stub(@remote_request)
+      FakeFS::FileSystem.clone(ROOT + '/test/fixtures/tips_invalid_structure.json')
+      tips_invalid_structure_path = File.expand_path(ShopifyCli::ROOT + '/test/fixtures/tips_invalid_structure.json')
+      stub_request(:get, "https://raw.githubusercontent.com/Shopify/shopify-app-cli/tip-of-the-day/docs/tips.json")
+        .to_return(status: 200, body: File.read(tips_invalid_structure_path), headers: {})
+
+      assert_nil TipOfTheDay.call
+      assert_empty ShopifyCli::Config.get_section('tiplog')
+    end
   end
 end

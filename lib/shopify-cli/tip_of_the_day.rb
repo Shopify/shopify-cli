@@ -74,7 +74,11 @@ module ShopifyCli
       else
         tips_content = File.read(ShopifyCli.tips_file)
       end
-      JSON.parse(tips_content)["tips"]
+      begin
+        JSON.parse(tips_content).fetch("tips")
+      rescue KeyError
+        # fail  silently
+      end
     end
   end
 end
