@@ -57,7 +57,7 @@ describe Script::Layers::Application::BuildScript do
       [
         Script::Layers::Infrastructure::Errors::InvalidBuildScriptError,
         Script::Layers::Infrastructure::Errors::BuildScriptNotFoundError,
-        Script::Layers::Infrastructure::Errors::WebAssemblyBinaryNotFoundError
+        Script::Layers::Infrastructure::Errors::WebAssemblyBinaryNotFoundError,
       ].each do |e|
         it "it should re-raise #{e} when the raised error is #{e}" do
           CLI::UI::Frame.expects(:with_frame_color_override).yields.once

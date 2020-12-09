@@ -6,7 +6,7 @@ module Node
       class Billing < ShopifyCli::SubCommand
         BILLING_TYPES = {
           'recurring-billing' => %w[./node_modules/.bin/generate-node-app recurring-billing],
-          'one-time-billing' => %w[./node_modules/.bin/generate-node-app one-time-billing]
+          'one-time-billing' => %w[./node_modules/.bin/generate-node-app one-time-billing],
         }
         def call(args, _name)
           selected_type = BILLING_TYPES[args[1]]

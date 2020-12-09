@@ -13,9 +13,9 @@ module Rails
                 originalUnitPrice: price,
                 quantity: 1,
                 weight: { value: 10, unit: 'GRAMS' },
-                title: ShopifyCli::Helpers::Haikunator.title
-              }
-            ]
+                title: ShopifyCli::Helpers::Haikunator.title,
+              },
+            ],
           }
         end
 

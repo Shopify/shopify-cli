@@ -21,7 +21,7 @@ module Extension
           initial_value: name,
           break_condition: ->(current_name) { Models::Registration.valid_title?(current_name) },
           prompt_message: ctx.message('create.ask_name'),
-          reprompt_message: ctx.message('create.invalid_name', Models::Registration::MAX_TITLE_LENGTH)
+          reprompt_message: ctx.message('create.invalid_name', Models::Registration::MAX_TITLE_LENGTH),
         )
       end
 

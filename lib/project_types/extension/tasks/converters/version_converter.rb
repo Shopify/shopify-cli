@@ -19,7 +19,7 @@ module Extension
             context: hash[CONTEXT_FIELD],
             last_user_interaction_at: Time.parse(hash[LAST_USER_INTERACTION_AT_FIELD]),
             location: hash[LOCATION_FIELD],
-            validation_errors: Converters::ValidationErrorConverter.from_array(context, hash[VALIDATION_ERRORS_FIELD])
+            validation_errors: Converters::ValidationErrorConverter.from_array(context, hash[VALIDATION_ERRORS_FIELD]),
           )
         end
       end

@@ -36,8 +36,8 @@ module Extension
             Converters::RegistrationConverter::TITLE_FIELD => @fake_title,
             Converters::RegistrationConverter::DRAFT_VERSION_FIELD => {
               Converters::VersionConverter::REGISTRATION_ID_FIELD => @registration_id,
-              Converters::VersionConverter::LAST_USER_INTERACTION_AT_FIELD => @last_user_interaction_at
-            }
+              Converters::VersionConverter::LAST_USER_INTERACTION_AT_FIELD => @last_user_interaction_at,
+            },
           }
 
           parsed_registration = Converters::RegistrationConverter.from_hash(@context, hash)

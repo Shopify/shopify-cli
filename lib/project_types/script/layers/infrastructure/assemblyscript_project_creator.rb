@@ -34,7 +34,7 @@ module Script
             'config',
             'set',
             '@shopify:registry',
-            'https://registry.npmjs.com'
+            'https://registry.npmjs.com',
           )
           ctx.system('npm', '--userconfig', './.npmrc', 'config', 'set', 'engine-strict', 'true')
         end
@@ -60,9 +60,7 @@ module Script
               },
               "scripts": {
                 "test": "asp --summary --verbose",
-                "build": "shopify-scripts-toolchain-as build --src src/script.ts --binary build/#{
-            script_name
-          }.wasm -- --lib node_modules --optimize --use Date="
+                "build": "shopify-scripts-toolchain-as build --src src/script.ts --binary build/#{script_name}.wasm -- --lib node_modules --optimize --use Date="
               },
               "engines": {
                 "node": ">=#{MIN_NODE_VERSION}"

@@ -17,7 +17,7 @@ describe Script::Layers::Application::EnableScript do
         shop_domain: shop_domain,
         configuration: configuration,
         extension_point_type: extension_point_type,
-        title: title
+        title: title,
       )
     end
 
@@ -30,7 +30,7 @@ describe Script::Layers::Application::EnableScript do
         shop_domain: shop_domain,
         configuration: configuration,
         extension_point_type: extension_point_type,
-        title: title
+        title: title,
       )
       capture_io { subject }
     end

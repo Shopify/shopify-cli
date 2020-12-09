@@ -53,7 +53,7 @@ module ShopifyCli
             headers: {
               'Content-Type': 'application/json; charset=utf-8',
               'X-Monorail-Edge-Event-Created-At-Ms': this_time.to_s,
-              'X-Monorail-Edge-Event-Sent-At-Ms': this_time.to_s
+              'X-Monorail-Edge-Event-Sent-At-Ms': this_time.to_s,
             },
             body:
               JSON.dump(
@@ -74,10 +74,10 @@ module ShopifyCli
                     is_employee: true,
                     api_key: 'apikey',
                     partner_id: 42,
-                    metadata: "{\"foo\":\"identifier\"}"
-                  }
-                }
-              )
+                    metadata: "{\"foo\":\"identifier\"}",
+                  },
+                },
+              ),
           )
             .to_return(status: 200)
 
@@ -98,7 +98,7 @@ module ShopifyCli
             headers: {
               'Content-Type': 'application/json; charset=utf-8',
               'X-Monorail-Edge-Event-Created-At-Ms': this_time.to_s,
-              'X-Monorail-Edge-Event-Sent-At-Ms': this_time.to_s
+              'X-Monorail-Edge-Event-Sent-At-Ms': this_time.to_s,
             },
             body:
               JSON.dump(
@@ -118,10 +118,10 @@ module ShopifyCli
                     ruby_version: RUBY_VERSION,
                     is_employee: false,
                     api_key: 'apikey',
-                    partner_id: 42
-                  }
-                }
-              )
+                    partner_id: 42,
+                  },
+                },
+              ),
           )
             .to_return(status: 200)
 

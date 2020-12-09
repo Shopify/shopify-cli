@@ -25,7 +25,7 @@ module ShopifyCli
           ctx: @context,
           auth_header: 'Auth',
           token: 'faketoken',
-          url: 'https://my-test-shop.myshopify.com/admin/api/2019-04/graphql.json'
+          url: 'https://my-test-shop.myshopify.com/admin/api/2019-04/graphql.json',
         )
       Git.stubs(:sha).returns('abcde')
       @context.stubs(:uname).returns('Mac')

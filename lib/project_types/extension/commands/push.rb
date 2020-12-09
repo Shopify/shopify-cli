@@ -58,7 +58,7 @@ module Extension
             api_key: project.app.api_key,
             registration_id: project.registration_id,
             config: extension_type.config(@ctx),
-            extension_context: extension_type.extension_context(@ctx)
+            extension_context: extension_type.extension_context(@ctx),
           )
         end
       end

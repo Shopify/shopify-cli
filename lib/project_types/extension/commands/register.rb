@@ -53,7 +53,7 @@ module Extension
           type: extension_type.graphql_identifier,
           title: project.title,
           config: {},
-          extension_context: extension_type.extension_context(@ctx)
+          extension_context: extension_type.extension_context(@ctx),
         )
       end
 
@@ -63,7 +63,7 @@ module Extension
           api_key: app.api_key,
           api_secret: app.secret,
           registration_id: registration.id,
-          title: project.title
+          title: project.title,
         )
       end
 

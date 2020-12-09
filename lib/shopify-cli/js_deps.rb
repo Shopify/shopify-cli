@@ -99,7 +99,7 @@ module ShopifyCli
     rescue JSON::ParserError
       ctx.puts(
         ctx.message('core.js_deps.error.invalid_package', File.read(File.join(path, 'package.json'))),
-        error: true
+        error: true,
       )
       raise ShopifyCli::AbortSilent
     end

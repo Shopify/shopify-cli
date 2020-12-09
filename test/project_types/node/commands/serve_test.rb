@@ -27,8 +27,8 @@ module Node
             'SHOP' => 'my-test-shop.myshopify.com',
             'SCOPES' => 'read_products',
             'HOST' => 'https://example.com',
-            'PORT' => '8081'
-          }
+            'PORT' => '8081',
+          },
         )
         run_cmd('serve')
       end
@@ -47,8 +47,8 @@ module Node
             'SHOP' => 'my-test-shop.myshopify.com',
             'SCOPES' => 'read_products',
             'HOST' => 'garbage://example.com',
-            'PORT' => '8081'
-          }
+            'PORT' => '8081',
+          },
         )
           .never
 
@@ -65,7 +65,7 @@ module Node
           .expects(:puts)
           .with(
           "\n" + @context.message('node.serve.open_info', 'https://example.com/auth?shop=my-test-shop.myshopify.com') +
-            "\n"
+            "\n",
         )
         run_cmd('serve')
       end

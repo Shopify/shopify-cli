@@ -42,7 +42,7 @@ module Extension
 
           errors = [
             { 'field' => %w[field1], 'message' => message },
-            { 'field' => %w[config name], 'message' => message2 }
+            { 'field' => %w[config name], 'message' => message2 },
           ]
           parsed_validation_messages = ValidationErrorConverter.from_array(@context, errors).map(&:message)
 

@@ -8,7 +8,7 @@ module Node
           'empty-state' => %w[./node_modules/.bin/generate-node-app empty-state-page],
           'two-column' => %w[./node_modules/.bin/generate-node-app two-column-page],
           'annotated' => %w[./node_modules/.bin/generate-node-app settings-page],
-          'list' => %w[./node_modules/.bin/generate-node-app list-page]
+          'list' => %w[./node_modules/.bin/generate-node-app list-page],
         }
 
         options { |parser, flags| parser.on('--type=TYPE') { |t| flags[:type] = t.downcase } }

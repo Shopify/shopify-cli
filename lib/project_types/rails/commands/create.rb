@@ -41,7 +41,7 @@ module Rails
         api_client =
           ShopifyCli::Tasks::CreateApiClient.call(
             @ctx,
-            org_id: form.organization_id, title: form.title, type: form.type
+            org_id: form.organization_id, title: form.title, type: form.type,
           )
 
         ShopifyCli::Resources::EnvFile
@@ -49,7 +49,7 @@ module Rails
           api_key: api_client['apiKey'],
           secret: api_client['apiSecretKeys'].first['secret'],
           shop: form.shop_domain,
-          scopes: 'write_products,write_customers,write_draft_orders'
+          scopes: 'write_products,write_customers,write_draft_orders',
         )
           .write(@ctx)
 

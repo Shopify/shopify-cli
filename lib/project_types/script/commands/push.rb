@@ -19,7 +19,7 @@ module Script
           script_name: project.script_name,
           source_file: project.source_file,
           api_key: api_key,
-          force: options.flags.key?(:force)
+          force: options.flags.key?(:force),
         )
         @ctx.puts(@ctx.message('script.push.script_pushed', api_key: api_key))
       rescue StandardError => e

@@ -10,14 +10,14 @@ module ShopifyCli
         end
         return if shop['transferDisabled'] == true
         unless CLI::UI::Prompt.confirm(
-                 ctx.message('core.tasks.ensure_dev_store.convert_to_dev_store', project.env.shop)
+                 ctx.message('core.tasks.ensure_dev_store.convert_to_dev_store', project.env.shop),
                )
           return
         end
         ShopifyCli::PartnersAPI.query(
           ctx,
           'convert_dev_to_test_store',
-          input: { organizationID: shop['orgID'].to_i, shopId: shop['shopId'] }
+          input: { organizationID: shop['orgID'].to_i, shopId: shop['shopId'] },
         )
         ctx.puts(ctx.message('core.tasks.ensure_dev_store.transfer_disabled', project.env.shop))
       end

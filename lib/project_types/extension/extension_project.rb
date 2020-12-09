@@ -7,7 +7,7 @@ module Extension
       def write_cli_file(context:, type:)
         ShopifyCli::Project.write(
           context,
-          project_type: :extension, organization_id: nil, "#{ExtensionProjectKeys::EXTENSION_TYPE_KEY}": type
+          project_type: :extension, organization_id: nil, "#{ExtensionProjectKeys::EXTENSION_TYPE_KEY}": type,
         )
       end
 
@@ -17,8 +17,8 @@ module Extension
           api_key: api_key,
           secret: api_secret,
           extra: {
-            ExtensionProjectKeys::TITLE_KEY => title, ExtensionProjectKeys::REGISTRATION_ID_KEY => registration_id
-          }.compact
+            ExtensionProjectKeys::TITLE_KEY => title, ExtensionProjectKeys::REGISTRATION_ID_KEY => registration_id,
+          }.compact,
         )
           .write(context)
 

@@ -12,7 +12,7 @@ module Script
               shop_domain: shop_domain,
               configuration: configuration,
               extension_point_type: extension_point_type,
-              title: title
+              title: title,
             )
             spinner.update_title(p_ctx.message('script.application.enabled'))
           end

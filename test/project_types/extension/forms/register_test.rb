@@ -21,7 +21,7 @@ module Extension
 
         assert_message_output(
           io: io,
-          expected_content: [@context.message('register.no_apps'), @context.message('register.learn_about_apps')]
+          expected_content: [@context.message('register.no_apps'), @context.message('register.learn_about_apps')],
         )
       end
 

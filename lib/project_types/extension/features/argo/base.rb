@@ -38,7 +38,7 @@ module Extension
           begin
             {
               renderer_version: extract_argo_renderer_version(context),
-              serialized_script: Base64.strict_encode64(File.read(filepath).chomp)
+              serialized_script: Base64.strict_encode64(File.read(filepath).chomp),
             }
           rescue StandardError
             context.abort(context.message('features.argo.script_prepare_error'))
@@ -87,7 +87,7 @@ module Extension
             js_system.call(
               yarn: YARN_LIST_COMMAND + [renderer_package_name] + YARN_LIST_PARAMETERS,
               npm: NPM_LIST_COMMAND + [renderer_package_name] + NPM_LIST_PARAMETERS,
-              capture_response: true
+              capture_response: true,
             )
           unless status.success?
             context.abort(context.message('features.argo.dependencies.argo_missing_renderer_package_error', error))

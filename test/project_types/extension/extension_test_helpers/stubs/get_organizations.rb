@@ -13,7 +13,7 @@ module Extension
         def stub_get_organizations(organizations)
           stub_partner_req(
             'all_orgs_with_apps',
-            resp: { data: { organizations: { nodes: create_organizations_json(organizations) } } }
+            resp: { data: { organizations: { nodes: create_organizations_json(organizations) } } },
           )
         end
 
@@ -28,7 +28,7 @@ module Extension
             'id': rand(9999),
             'businessName': name,
             'stores': { 'nodes': [{ 'shopDomain': 'store.myshopify.com' }] },
-            'apps': { nodes: create_apps_json(apps) }
+            'apps': { nodes: create_apps_json(apps) },
           }
         end
 

@@ -25,7 +25,7 @@ module ShopifyCli
 
         file_contents = File.read(File.join(root_dir, "#{file}.base"))
         file_contents = file_contents.gsub('SHOPIFY_CLI_VERSION', ShopifyCli::VERSION)
-        File.open(file_path, 'w', 0o775) { |f| f.write(file_contents) }
+        File.open(file_path, 'w', 0775) { |f| f.write(file_contents) }
       end
 
       puts 'Building package...'

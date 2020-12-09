@@ -60,7 +60,7 @@ module ShopifyCli
           secret: env.secret,
           scopes: env.scopes,
           token_path: '/access_token',
-          options: { 'grant_options[]' => 'per user' }
+          options: { 'grant_options[]' => 'per user' },
         )
           .authenticate("https://#{shop}/admin/oauth")
       end
@@ -70,7 +70,7 @@ module ShopifyCli
           ctx: ctx,
           auth_header: 'X-Shopify-Access-Token',
           token: admin_access_token(ctx, shop),
-          url: "https://#{shop}/admin/api/#{fetch_api_version(ctx, api_version, shop)}/graphql.json"
+          url: "https://#{shop}/admin/api/#{fetch_api_version(ctx, api_version, shop)}/graphql.json",
         )
       end
 
@@ -88,7 +88,7 @@ module ShopifyCli
             ctx: ctx,
             auth_header: 'X-Shopify-Access-Token',
             token: admin_access_token(ctx, shop),
-            url: "https://#{shop}/admin/api/unstable/graphql.json"
+            url: "https://#{shop}/admin/api/unstable/graphql.json",
           )
         versions = client.query('api_versions')['data']['publicApiVersions']
         latest = versions.find { |version| version['displayName'].include?('Latest') }

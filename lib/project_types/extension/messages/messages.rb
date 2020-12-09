@@ -21,11 +21,11 @@ module Extension
         MESSAGE
         try_again: '{{*}} Fix the errors and run {{command:shopify create extension}} again.',
         errors: {
-          directory_exists: 'Directory ‘%s’ already exists. Please remove it or choose a new name for your project.'
-        }
+          directory_exists: 'Directory ‘%s’ already exists. Please remove it or choose a new name for your project.',
+        },
       },
       build: {
-        frame_title: 'Building extension with: %s...', build_failure_message: 'Failed to build extension code.'
+        frame_title: 'Building extension with: %s...', build_failure_message: 'Failed to build extension code.',
       },
       register: {
         frame_title: 'Registering Extension',
@@ -42,7 +42,7 @@ module Extension
         confirm_question: 'Would you like to register this extension with {{green:%s}}? (y/n)',
         confirm_abort: 'Extension was not registered.',
         success: '{{v}} Registered {{green:%s}} with {{green:%s}}.',
-        success_info: '{{*}} Run {{command:shopify push}} to push your extension to Shopify.'
+        success_info: '{{*}} Run {{command:shopify push}} to push your extension to Shopify.',
       },
       push: {
         frame_title: 'Pushing your extension to Shopify',
@@ -50,7 +50,7 @@ module Extension
         pushed_with_errors: '{{x}} Code pushed to Shopify with errors on %s.',
         push_with_errors_info: '{{*}} Fix these errors and run {{command:shopify push}} to revalidate your extension.',
         success_confirmation: '{{v}} Pushed {{green:%s}} to a draft on %s.',
-        success_info: '{{*}} Visit %s to version and publish your extension.'
+        success_info: '{{*}} Visit %s to version and publish your extension.',
       },
       serve: { frame_title: 'Serving extension...', serve_failure_message: 'Failed to run extension code.' },
       tunnel: {
@@ -64,7 +64,7 @@ module Extension
           Start or stop an http tunnel to your local development extension using ngrok.
             Usage: {{command:%s tunnel [ auth | start | stop | status ]}}
         HELP
-        extended_help: <<~HELP
+        extended_help: <<~HELP,
           {{bold:Subcommands:}}
 
             {{cyan:auth}}: Writes an ngrok auth token to ~/.ngrok2/ngrok.yml to connect with an ngrok account. 
@@ -91,20 +91,20 @@ module Extension
           dependencies: {
             node: {
               node_not_installed: 'Node must be installed to create this extension.',
-              version_too_low: 'Your node version %s does not meet the minimum required version %s'
+              version_too_low: 'Your node version %s does not meet the minimum required version %s',
             },
             argo_missing_renderer_package_error: '%s Install the missing package and try again.',
             argo_renderer_package_invalid_version_error: <<~MESSAGE,
               The renderer package version is not a valid SemVer Version (http://semver.org)
             MESSAGE
             yarn_install_error: "Something went wrong while running 'yarn install'. %s.",
-            yarn_run_script_error: 'Something went wrong while running script. %s.'
+            yarn_run_script_error: 'Something went wrong while running script. %s.',
           },
-          config: { unpermitted_keys: '`%s` contains the following unpermitted keys: %s' }
-        }
+          config: { unpermitted_keys: '`%s` contains the following unpermitted keys: %s' },
+        },
       },
       tasks: { errors: { parse_error: 'Unable to parse response from Partners Dashboard.' } },
-      errors: { unknown_type: 'Unknown extension type %s' }
+      errors: { unknown_type: 'Unknown extension type %s' },
     }
 
     TYPES = {
@@ -112,10 +112,10 @@ module Extension
         name: 'Product Subscription',
         tagline: '(limit 1 per app)',
         overrides: {
-          register: { confirm_info: 'You can only create one %s extension per app, which can’t be undone.' }
-        }
+          register: { confirm_info: 'You can only create one %s extension per app, which can’t be undone.' },
+        },
       },
-      checkout_post_purchase: { name: 'Checkout Post Purchase' }
+      checkout_post_purchase: { name: 'Checkout Post Purchase' },
     }
   end
 end

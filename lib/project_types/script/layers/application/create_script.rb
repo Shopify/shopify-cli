@@ -26,7 +26,7 @@ module Script
               project_type: :script,
               organization_id: nil, # TODO: can you provide this at creation
               extension_point_type: extension_point.type,
-              script_name: script_name
+              script_name: script_name,
             )
             ScriptProject.current
           end

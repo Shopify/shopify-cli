@@ -1,9 +1,9 @@
 GIT
   remote: git://github.com/prettier/plugin-ruby.git
-  revision: 8e1bbb0fb37e10228c12953d91621a076a6683d8
+  revision: fb501f94de10995f33a6d6d0cee6dabcf6bcac6c
   branch: master
   specs:
-    prettier (0.22.0)
+    prettier (1.0.0.pre.rc1)
 
 GEM
   remote: https://rubygems.org/

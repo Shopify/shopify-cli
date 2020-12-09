@@ -19,7 +19,7 @@ module Script
                 errors = [
                   Infrastructure::Errors::InvalidBuildScriptError,
                   Infrastructure::Errors::BuildScriptNotFoundError,
-                  Infrastructure::Errors::WebAssemblyBinaryNotFoundError
+                  Infrastructure::Errors::WebAssemblyBinaryNotFoundError,
                 ]
 
                 raise Infrastructure::Errors::BuildError unless errors.any? { |err| e.is_a?(err) }

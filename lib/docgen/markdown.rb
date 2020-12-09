@@ -18,7 +18,7 @@ module RDoc
           :extended,
           :included,
           :filename,
-          keyword_init: true
+          keyword_init: true,
         )
       ClassMember = Struct.new(:title, :comment, :signature, :source_code, keyword_init: true)
 
@@ -58,7 +58,7 @@ module RDoc
               instance_methods: build_members(klass.method_list.select { |m| m.type == 'instance' }),
               attributes: build_members(klass.attributes),
               extended: build_members(klass.extends),
-              included: build_members(klass.includes)
+              included: build_members(klass.includes),
             )
           end
 
@@ -75,7 +75,7 @@ module RDoc
             title: m.name,
             comment: @converter.convert(m.comment.parse),
             signature: m.respond_to?(:arglists) ? m.arglists : '',
-            source_code: source(m)
+            source_code: source(m),
           )
         end
       end

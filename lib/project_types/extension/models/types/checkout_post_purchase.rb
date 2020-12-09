@@ -14,7 +14,7 @@ module Extension
         def config(context)
           {
             **Features::ArgoConfig.parse_yaml(context, PERMITTED_CONFIG_KEYS),
-            **Features::Argo::Checkout.new.config(context)
+            **Features::Argo::Checkout.new.config(context),
           }
         end
       end

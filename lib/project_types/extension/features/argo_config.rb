@@ -31,7 +31,7 @@ module Extension
           rescue Psych::SyntaxError => e
             raise(
               ShopifyCli::Abort,
-              ShopifyCli::Context.message('core.yaml.error.invalid', CONFIG_FILE_NAME, e.message)
+              ShopifyCli::Context.message('core.yaml.error.invalid', CONFIG_FILE_NAME, e.message),
             )
           end
         end
@@ -47,8 +47,8 @@ module Extension
               ShopifyCli::Context.message(
                 'features.argo.config.unpermitted_keys',
                 CONFIG_FILE_NAME,
-                unpermitted_keys.map { |k| "\n- #{k}" }.join
-              )
+                unpermitted_keys.map { |k| "\n- #{k}" }.join,
+              ),
             )
           end
         end

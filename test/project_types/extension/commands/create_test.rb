@@ -31,7 +31,7 @@ module Extension
           end
 
         assert_message_output(
-          io: io, expected_content: [@context.message('create.errors.directory_exists', @directory_name)]
+          io: io, expected_content: [@context.message('create.errors.directory_exists', @directory_name)],
         )
       end
 
@@ -47,8 +47,8 @@ module Extension
           io: io,
           expected_content: [
             @context.message('create.ready_to_start', @directory_name, @name),
-            @context.message('create.learn_more', @test_extension_type.name)
-          ]
+            @context.message('create.learn_more', @test_extension_type.name),
+          ],
         )
       end
 

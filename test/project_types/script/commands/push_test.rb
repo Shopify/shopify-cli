@@ -13,7 +13,7 @@ module Script
         @ep_type = 'discount'
         @script_project =
           TestHelpers::FakeScriptProject.new(
-            language: @language, extension_point_type: @ep_type, script_name: @script_name
+            language: @language, extension_point_type: @ep_type, script_name: @script_name,
           )
         @api_key = 'apikey'
         @source_file = 'src/script.ts'
@@ -34,7 +34,7 @@ module Script
           script_name: @script_name,
           source_file: @source_file,
           extension_point_type: @ep_type,
-          force: @force
+          force: @force,
         )
 
         @context.expects(:puts).with(@context.message('script.push.script_pushed', api_key: @api_key))

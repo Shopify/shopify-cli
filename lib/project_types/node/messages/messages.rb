@@ -26,10 +26,10 @@ module Node
             npm_required: 'npm is required to create an app project. Download at https://www.npmjs.com/get-npm.',
             npm_version_failure:
               'Failed to get the current npm version. Please make sure it is installed as per ' \
-                'the instructions at https://www.npmjs.com/get-npm.'
+                'the instructions at https://www.npmjs.com/get-npm.',
           },
           node_version: 'node %s',
-          npm_version: 'npm %s'
+          npm_version: 'npm %s',
         },
         deploy: {
           help: <<~HELP,
@@ -60,7 +60,7 @@ module Node
               checking: 'Checking git repo…',
               initialized: 'Git repo initialized',
               what_branch: 'What branch would you like to deploy?',
-              branch_selected: '{{v}} Git branch `%s` selected for deploy'
+              branch_selected: '{{v}} Git branch `%s` selected for deploy',
             },
             app: {
               no_apps_found: 'No existing Heroku app found. What would you like to do?',
@@ -70,9 +70,9 @@ module Node
               selected: '{{v}} Heroku app `%s` selected',
               create: 'Create a new Heroku app',
               creating: 'Creating new Heroku app…',
-              created: '{{v}} New Heroku app created'
-            }
-          }
+              created: '{{v}} New Heroku app created',
+            },
+          },
         },
         generate: {
           help: <<~HELP,
@@ -92,7 +92,7 @@ module Node
             HELP
             type_select: 'How would you like to charge for your app?',
             generating: 'Generating %s code ...',
-            generated: '{{green:%s}} generated in server/server.js'
+            generated: '{{green:%s}} generated in server/server.js',
           },
           page: {
             help: <<~HELP,
@@ -102,7 +102,7 @@ module Node
             error: { invalid_page_type: 'Invalid page type.' },
             type_select: 'Which template would you like to use?',
             generating: 'Generating %s page...',
-            generated: '{{green: %s}} generated in pages/%s'
+            generated: '{{green: %s}} generated in pages/%s',
           },
           webhook: {
             help: <<~HELP,
@@ -111,8 +111,8 @@ module Node
             HELP
             type_select: 'What type of webhook would you like to create?',
             generating: 'Generating webhook: %s',
-            generated: '{{green:%s}} generated in server/server.js'
-          }
+            generated: '{{green:%s}} generated in server/server.js',
+          },
         },
         open: { help: <<~HELP },
           Open your local development app in the default browser.
@@ -157,7 +157,7 @@ module Node
           HELP
           customer: { added: '%s added to {{green:%s}} at {{underline:%scustomers/%d}}' },
           draft_order: { added: 'DraftOrder added to {{green:%s}} at {{underline:%sdraft_orders/%d}}' },
-          product: { added: '%s added to {{green:%s}} at {{underline:%sproducts/%d}}' }
+          product: { added: '%s added to {{green:%s}} at {{underline:%sproducts/%d}}' },
         },
         serve: {
           help: <<~HELP,
@@ -173,7 +173,7 @@ module Node
             {{*}} To install and start using your app, open this URL in your browser:
             {{green:%s}}
           MESSAGE
-          running_server: 'Running server...'
+          running_server: 'Running server...',
         },
         tunnel: {
           help: <<~HELP,
@@ -193,7 +193,7 @@ module Node
               Usage: {{command:%1$s tunnel stop}}
 
           HELP
-          error: { token_argument_missing: "{{x}} {{red:auth requires a token argument}}\n\n" }
+          error: { token_argument_missing: "{{x}} {{red:auth requires a token argument}}\n\n" },
         },
         forms: {
           create: {
@@ -203,11 +203,11 @@ module Node
               select: 'What type of app are you building?',
               select_public: 'Public: An app built for a wide merchant audience.',
               select_custom: 'Custom: An app custom built for a single client.',
-              selected: 'App type {{green:%s}}'
-            }
-          }
-        }
-      }
+              selected: 'App type {{green:%s}}',
+            },
+          },
+        },
+      },
     }.freeze
   end
 end

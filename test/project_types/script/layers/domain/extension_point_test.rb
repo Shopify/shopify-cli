@@ -7,8 +7,8 @@ describe Script::Layers::Domain::ExtensionPoint do
   let(:config) do
     {
       'assemblyscript' => {
-        'package' => '@shopify/extension-point-as-fake', 'sdk-version' => '*', 'toolchain-version' => '*'
-      }
+        'package' => '@shopify/extension-point-as-fake', 'sdk-version' => '*', 'toolchain-version' => '*',
+      },
     }
   end
 

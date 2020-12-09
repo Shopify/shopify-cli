@@ -20,7 +20,7 @@ module Script
           shop_domain: shop_domain,
           configuration: acquire_configuration(**slice(options.flags, :config_file, :config_props)),
           extension_point_type: project.extension_point_type,
-          title: project.script_name
+          title: project.script_name,
         )
         @ctx.puts(
           @ctx.message(
@@ -28,8 +28,8 @@ module Script
             api_key: api_key,
             shop_domain: shop_domain,
             type: project.extension_point_type.capitalize,
-            title: project.script_name
-          )
+            title: project.script_name,
+          ),
         )
         @ctx.puts(@ctx.message('script.enable.info'))
       rescue Errors::InvalidConfigYAMLError => e

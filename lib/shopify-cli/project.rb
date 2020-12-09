@@ -195,9 +195,9 @@ module ShopifyCli
         YAML.load_file(f)
       rescue Psych::SyntaxError => e
         raise(ShopifyCli::Abort, Context.message('core.yaml.error.invalid', relative_path, e.message))
-      # rescue Errno::EACCES => e
-      # TODO
-      #   Dev::Helpers::EaccesHandler.diagnose_and_raise(f, e, mode: :read)
+        # rescue Errno::EACCES => e
+        # TODO
+        #   Dev::Helpers::EaccesHandler.diagnose_and_raise(f, e, mode: :read)
       rescue Errno::ENOENT
         raise ShopifyCli::Abort, Context.message('core.yaml.error.not_found', f)
       end

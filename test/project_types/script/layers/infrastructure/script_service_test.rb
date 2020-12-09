@@ -64,11 +64,11 @@ describe Script::Layers::Infrastructure::ScriptService do
             title: script_name,
             sourceCode: Base64.encode64(script_content),
             language: 'ts',
-            force: false
+            force: false,
           }.to_json,
-          query: app_script_update_or_create
+          query: app_script_update_or_create,
         },
-        resp: response
+        resp: response,
       )
     end
 
@@ -78,7 +78,7 @@ describe Script::Layers::Infrastructure::ScriptService do
         script_name: script_name,
         script_content: script_content,
         compiled_type: 'ts',
-        api_key: api_key
+        api_key: api_key,
       )
     end
 
@@ -91,11 +91,11 @@ describe Script::Layers::Infrastructure::ScriptService do
                 'apiKey' => 'fake_key',
                 'configSchema' => nil,
                 'extensionPointName' => extension_point_type,
-                'title' => 'foo2'
+                'title' => 'foo2',
               },
-              'userErrors' => []
-            }
-          }
+              'userErrors' => [],
+            },
+          },
         }
       end
 
@@ -131,11 +131,11 @@ describe Script::Layers::Infrastructure::ScriptService do
                 JSON.dump(
                   'data' => {
                     'appScriptUpdateOrCreate' => {
-                      'userErrors' => [{ 'message' => 'invalid', 'field' => 'appKey', 'tag' => 'user_error' }]
-                    }
-                  }
-                )
-            }
+                      'userErrors' => [{ 'message' => 'invalid', 'field' => 'appKey', 'tag' => 'user_error' }],
+                    },
+                  },
+                ),
+            },
           }
         end
 
@@ -152,11 +152,11 @@ describe Script::Layers::Infrastructure::ScriptService do
                 JSON.dump(
                   'data' => {
                     'appScriptUpdateOrCreate' => {
-                      'userErrors' => [{ 'message' => 'error', 'tag' => 'already_exists_error' }]
-                    }
-                  }
-                )
-            }
+                      'userErrors' => [{ 'message' => 'error', 'tag' => 'already_exists_error' }],
+                    },
+                  },
+                ),
+            },
           }
         end
 
@@ -219,11 +219,11 @@ describe Script::Layers::Infrastructure::ScriptService do
           api_key: api_key,
           shop_domain: formatted_shop_domain,
           variables: {
-            extensionPointName: extension_point_type.upcase, configuration: configuration, title: title
+            extensionPointName: extension_point_type.upcase, configuration: configuration, title: title,
           }.to_json,
-          query: shop_script_update_or_create
+          query: shop_script_update_or_create,
         },
-        resp: response
+        resp: response,
       )
     end
 
@@ -233,7 +233,7 @@ describe Script::Layers::Infrastructure::ScriptService do
         shop_domain: shop_domain,
         configuration: configuration,
         extension_point_type: extension_point_type,
-        title: title
+        title: title,
       )
     end
 
@@ -244,11 +244,14 @@ describe Script::Layers::Infrastructure::ScriptService do
           'data' => {
             'shopScriptUpdateOrCreate' => {
               'shopScript' => {
-                'shopId' => '1', 'configuration' => nil, 'extensionPointName' => extension_point_type, 'title' => 'foo2'
+                'shopId' => '1',
+                'configuration' => nil,
+                'extensionPointName' => extension_point_type,
+                'title' => 'foo2',
               },
-              'userErrors' => []
-            }
-          }
+              'userErrors' => [],
+            },
+          },
         }
       end
 
@@ -263,11 +266,14 @@ describe Script::Layers::Infrastructure::ScriptService do
           'data' => {
             'shopScriptUpdateOrCreate' => {
               'shopScript' => {
-                'shopId' => '1', 'configuration' => nil, 'extensionPointName' => extension_point_type, 'title' => 'foo2'
+                'shopId' => '1',
+                'configuration' => nil,
+                'extensionPointName' => extension_point_type,
+                'title' => 'foo2',
               },
-              'userErrors' => []
-            }
-          }
+              'userErrors' => [],
+            },
+          },
         }
       end
 
@@ -282,9 +288,9 @@ describe Script::Layers::Infrastructure::ScriptService do
         {
           'data' => {
             'shopScriptUpdateOrCreate' => {
-              'shopScript' => {}, 'userErrors' => [{ 'message' => 'error', 'tag' => tag }]
-            }
-          }
+              'shopScript' => {}, 'userErrors' => [{ 'message' => 'error', 'tag' => tag }],
+            },
+          },
         }
       end
 
@@ -316,8 +322,8 @@ describe Script::Layers::Infrastructure::ScriptService do
         let(:script_service_response) do
           {
             'data' => {
-              'shopScriptUpdateOrCreate' => { 'shopScript' => {}, 'userErrors' => [{ 'message' => 'error' }] }
-            }
+              'shopScriptUpdateOrCreate' => { 'shopScript' => {}, 'userErrors' => [{ 'message' => 'error' }] },
+            },
           }
         end
 
@@ -361,9 +367,9 @@ describe Script::Layers::Infrastructure::ScriptService do
           api_key: api_key,
           shop_domain: formatted_shop_domain,
           variables: { extensionPointName: extension_point_type }.to_json,
-          query: shop_script_delete
+          query: shop_script_delete,
         },
-        resp: response
+        resp: response,
       )
     end
 
@@ -378,9 +384,9 @@ describe Script::Layers::Infrastructure::ScriptService do
           'data' => {
             'shopScriptDelete' => {
               'shopScript' => { 'shopId' => '1', 'extensionPointName' => extension_point_type, 'title' => 'foo2' },
-              'userErrors' => []
-            }
-          }
+              'userErrors' => [],
+            },
+          },
         }
       end
 
@@ -395,9 +401,9 @@ describe Script::Layers::Infrastructure::ScriptService do
           'data' => {
             'shopScriptDelete' => {
               'shopScript' => { 'shopId' => '1', 'extensionPointName' => extension_point_type, 'title' => 'foo2' },
-              'userErrors' => []
-            }
-          }
+              'userErrors' => [],
+            },
+          },
         }
       end
 
@@ -412,9 +418,9 @@ describe Script::Layers::Infrastructure::ScriptService do
           {
             'data' => {
               'shopScriptDelete' => {
-                'shopScript' => {}, 'userErrors' => [{ 'message' => 'error', 'tag' => 'shop_script_not_found' }]
-              }
-            }
+                'shopScript' => {}, 'userErrors' => [{ 'message' => 'error', 'tag' => 'shop_script_not_found' }],
+              },
+            },
           }
         end
 
@@ -428,9 +434,9 @@ describe Script::Layers::Infrastructure::ScriptService do
           {
             'data' => {
               'shopScriptDelete' => {
-                'shopScript' => {}, 'userErrors' => [{ 'message' => 'error', 'tag' => 'other_error' }]
-              }
-            }
+                'shopScript' => {}, 'userErrors' => [{ 'message' => 'error', 'tag' => 'other_error' }],
+              },
+            },
           }
         end
 

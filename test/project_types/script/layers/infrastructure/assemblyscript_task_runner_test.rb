@@ -17,13 +17,13 @@ describe Script::Layers::Infrastructure::AssemblyScriptTaskRunner do
   let(:as_task_runner) { Script::Layers::Infrastructure::AssemblyScriptTaskRunner.new(ctx, script_name, script_source) }
   let(:script_project) do
     TestHelpers::FakeScriptProject.new(
-      language: language, extension_point_type: extension_point_type, script_name: script_name
+      language: language, extension_point_type: extension_point_type, script_name: script_name,
     )
   end
 
   let(:package_json) do
     {
-      scripts: { build: 'shopify-scripts-toolchain-as build --src src/script.ts -b script.wasm -- --lib node_modules' }
+      scripts: { build: 'shopify-scripts-toolchain-as build --src src/script.ts -b script.wasm -- --lib node_modules' },
     }
   end
 

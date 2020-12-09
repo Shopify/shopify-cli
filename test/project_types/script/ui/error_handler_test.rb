@@ -9,7 +9,7 @@ describe Script::UI::ErrorHandler do
     let(:help_suggestion) { "Perhaps this is what's wrong." }
     subject do
       Script::UI::ErrorHandler.display_and_raise(
-        failed_op: failed_op, cause_of_error: cause_of_error, help_suggestion: help_suggestion
+        failed_op: failed_op, cause_of_error: cause_of_error, help_suggestion: help_suggestion,
       )
     end
 

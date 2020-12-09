@@ -14,7 +14,7 @@ module Rails
             .with(
             @context,
             'create_customer',
-            shop: 'my-test-shop.myshopify.com', input: { firstName: 'first', lastName: 'last' }
+            shop: 'my-test-shop.myshopify.com', input: { firstName: 'first', lastName: 'last' },
           )
             .returns(JSON.parse(File.read(File.join(FIXTURE_DIR, 'populate/customer_data.json'))))
           ShopifyCli::API.expects(:gid_to_id).returns(12_345_678)
@@ -23,7 +23,7 @@ module Rails
             .expects(:done)
             .with(
             'first last added to {{green:my-test-shop.myshopify.com}} at ' \
-              '{{underline:https://my-test-shop.myshopify.com/admin/customers/12345678}}'
+              '{{underline:https://my-test-shop.myshopify.com/admin/customers/12345678}}',
           )
           run_cmd('populate customers -c 1')
         end

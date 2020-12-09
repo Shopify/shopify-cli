@@ -17,7 +17,7 @@ module Extension
             id: hash[ID_FIELD].to_i,
             type: hash[TYPE_FIELD],
             title: hash[TITLE_FIELD],
-            draft_version: VersionConverter.from_hash(context, hash[DRAFT_VERSION_FIELD])
+            draft_version: VersionConverter.from_hash(context, hash[DRAFT_VERSION_FIELD]),
           )
         end
       end

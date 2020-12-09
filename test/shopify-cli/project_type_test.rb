@@ -29,7 +29,7 @@ module ShopifyCli
     def test_project_filepath
       assert_equal(
         Rails::Project.project_filepath('myfile'),
-        File.join(ShopifyCli::PROJECT_TYPES_DIR, 'rails', 'myfile')
+        File.join(ShopifyCli::PROJECT_TYPES_DIR, 'rails', 'myfile'),
       )
     end
 

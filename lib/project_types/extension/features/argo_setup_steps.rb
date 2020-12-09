@@ -40,7 +40,7 @@ module Extension
             result =
               js_system.call(
                 yarn: YARN_INITIALIZE_COMMAND + [INITIALIZE_TYPE_PARAMETER % identifier],
-                npm: NPM_INITIALIZE_COMMAND + [INITIALIZE_TYPE_PARAMETER % identifier]
+                npm: NPM_INITIALIZE_COMMAND + [INITIALIZE_TYPE_PARAMETER % identifier],
               )
           end
 

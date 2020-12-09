@@ -88,7 +88,7 @@ module Rails
               organizations: {
                 nodes: [
                   {
-                    'id': 421, 'businessName': 'one', 'stores': { 'nodes': [{ 'shopDomain': 'store.myshopify.com' }] }
+                    'id': 421, 'businessName': 'one', 'stores': { 'nodes': [{ 'shopDomain': 'store.myshopify.com' }] },
                   },
                   {
                     'id': 431,
@@ -96,14 +96,14 @@ module Rails
                     'stores': {
                       'nodes': [
                         { 'shopDomain': 'other.myshopify.com', 'transferDisabled': true },
-                        { 'shopDomain': 'yet-another.myshopify.com' }
-                      ]
-                    }
-                  }
-                ]
-              }
-            }
-          }
+                        { 'shopDomain': 'yet-another.myshopify.com' },
+                      ],
+                    },
+                  },
+                ],
+              },
+            },
+          },
         )
         CLI::UI::Prompt.expects(:ask).returns(431)
         form = ask(org_id: nil, shop: nil)
@@ -121,12 +121,12 @@ module Rails
                   {
                     'id': 421,
                     'businessName': 'hoopy froods',
-                    'stores': { 'nodes': [{ 'shopDomain': 'next.myshopify.com', 'transferDisabled': true }] }
-                  }
-                ]
-              }
-            }
-          }
+                    'stores': { 'nodes': [{ 'shopDomain': 'next.myshopify.com', 'transferDisabled': true }] },
+                  },
+                ],
+              },
+            },
+          },
         )
         io =
           capture_io do
@@ -136,7 +136,7 @@ module Rails
           end
         assert_match(
           CLI::UI.fmt(@context.message('core.tasks.select_org_and_shop.organization', 'hoopy froods', 421)),
-          io.join
+          io.join,
         )
       end
 
@@ -148,11 +148,13 @@ module Rails
             data: {
               organizations: {
                 nodes: [
-                  { id: 123, stores: { nodes: [{ shopDomain: 'shopdomain.myshopify.com', 'transferDisabled': true }] } }
-                ]
-              }
-            }
-          }
+                  {
+                    id: 123, stores: { nodes: [{ shopDomain: 'shopdomain.myshopify.com', 'transferDisabled': true }] },
+                  },
+                ],
+              },
+            },
+          },
         )
         form = ask(org_id: 123, shop: nil)
         assert_equal(123, form.organization_id)
@@ -174,7 +176,7 @@ module Rails
       def test_returns_no_shop_if_none_are_available
         stub_partner_req(
           'find_organization',
-          variables: { id: 123 }, resp: { data: { organizations: { nodes: [{ id: 123, stores: { nodes: [] } }] } } }
+          variables: { id: 123 }, resp: { data: { organizations: { nodes: [{ id: 123, stores: { nodes: [] } }] } } },
         )
 
         io =
@@ -195,11 +197,13 @@ module Rails
             data: {
               organizations: {
                 nodes: [
-                  { id: 123, stores: { nodes: [{ shopDomain: 'shopdomain.myshopify.com', 'transferDisabled': true }] } }
-                ]
-              }
-            }
-          }
+                  {
+                    id: 123, stores: { nodes: [{ shopDomain: 'shopdomain.myshopify.com', 'transferDisabled': true }] },
+                  },
+                ],
+              },
+            },
+          },
         )
         io =
           capture_io do
@@ -208,7 +212,7 @@ module Rails
           end
         assert_match(
           CLI::UI.fmt(@context.message('core.tasks.select_org_and_shop.development_store', 'shopdomain.myshopify.com')),
-          io.join
+          io.join,
         )
       end
 
@@ -226,21 +230,21 @@ module Rails
                       nodes: [
                         { shopDomain: 'shopdomain.myshopify.com', 'transferDisabled': true },
                         { shopDomain: 'shop.myshopify.com', 'convertableToPartnerTest': true },
-                        { shopDomain: 'other.myshopify.com' }
-                      ]
-                    }
-                  }
-                ]
-              }
-            }
-          }
+                        { shopDomain: 'other.myshopify.com' },
+                      ],
+                    },
+                  },
+                ],
+              },
+            },
+          },
         )
 
         CLI::UI::Prompt
           .expects(:ask)
           .with(
           @context.message('core.tasks.select_org_and_shop.development_store_select'),
-          options: %w[shopdomain.myshopify.com shop.myshopify.com]
+          options: %w[shopdomain.myshopify.com shop.myshopify.com],
         )
           .returns('selected')
         form = ask(org_id: 123, shop: nil)

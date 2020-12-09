@@ -85,8 +85,8 @@ module ShopifyCli
           'Accept' => '*/*',
           'Accept-Encoding' => 'gzip;q=1.0,deflate;q=0.6,identity;q=0.3',
           'Host' => 'rubygems.org',
-          'User-Agent' => 'Ruby'
-        }
+          'User-Agent' => 'Ruby',
+        },
       )
         .to_return(status: 200, body: response_body, headers: {})
     end

@@ -18,7 +18,7 @@ module Extension
             api_key: hash[API_KEY_FIELD],
             secret: hash[API_SECRET_KEYS_FIELD].first[API_SECRET_FIELD],
             title: hash[TITLE_FIELD],
-            business_name: organization[ORGANIZATION_NAME_FIELD]
+            business_name: organization[ORGANIZATION_NAME_FIELD],
           )
         end
       end

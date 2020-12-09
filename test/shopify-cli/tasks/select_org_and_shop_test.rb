@@ -28,10 +28,10 @@ module ShopifyCli
               'businessName' => 'two',
               'stores' => [
                 { 'shopDomain' => 'other.myshopify.com', 'transferDisabled' => true },
-                { 'shopDomain' => 'yet-another.myshopify.com' }
-              ]
-            }
-          ]
+                { 'shopDomain' => 'yet-another.myshopify.com' },
+              ],
+            },
+          ],
         )
         CLI::UI::Prompt
           .expects(:ask)
@@ -52,9 +52,9 @@ module ShopifyCli
             {
               'id' => 421,
               'businessName' => 'hoopy froods',
-              'stores' => [{ 'shopDomain' => 'next.myshopify.com', 'transferDisabled' => true }]
-            }
-          ]
+              'stores' => [{ 'shopDomain' => 'next.myshopify.com', 'transferDisabled' => true }],
+            },
+          ],
         )
 
         io =
@@ -65,7 +65,7 @@ module ShopifyCli
           end
         assert_match(
           CLI::UI.fmt(@context.message('core.tasks.select_org_and_shop.organization', 'hoopy froods', 421)),
-          io.join
+          io.join,
         )
       end
 
@@ -74,7 +74,7 @@ module ShopifyCli
           .expects(:fetch)
           .with(@context, id: 123)
           .returns(
-          { 'id' => 123, 'stores' => [{ 'shopDomain' => 'shopdomain.myshopify.com', 'transferDisabled' => true }] }
+          { 'id' => 123, 'stores' => [{ 'shopDomain' => 'shopdomain.myshopify.com', 'transferDisabled' => true }] },
         )
         form = call(org_id: 123, shop: nil)
         assert_equal(123, form[:organization_id])
@@ -93,7 +93,7 @@ module ShopifyCli
           assert_match(@context.message('core.tasks.select_org_and_shop.error.partners_notice'), io.join)
           assert_match(
             @context.message('core.tasks.select_org_and_shop.authentication_issue', ShopifyCli::TOOL_NAME),
-            io.join
+            io.join,
           )
         end
       end
@@ -119,7 +119,7 @@ module ShopifyCli
           .expects(:fetch)
           .with(@context, id: 123)
           .returns(
-          { 'id' => 123, 'stores' => [{ 'shopDomain' => 'shopdomain.myshopify.com', 'transferDisabled' => true }] }
+          { 'id' => 123, 'stores' => [{ 'shopDomain' => 'shopdomain.myshopify.com', 'transferDisabled' => true }] },
         )
         io =
           capture_io do
@@ -128,7 +128,7 @@ module ShopifyCli
           end
         assert_match(
           CLI::UI.fmt(@context.message('core.tasks.select_org_and_shop.development_store', 'shopdomain.myshopify.com')),
-          io.join
+          io.join,
         )
       end
 
@@ -142,16 +142,16 @@ module ShopifyCli
             'stores' => [
               { 'shopDomain' => 'shopdomain.myshopify.com', 'transferDisabled' => true },
               { 'shopDomain' => 'shop.myshopify.com', 'convertableToPartnerTest' => true },
-              { 'shopDomain' => 'other.myshopify.com' }
-            ]
-          }
+              { 'shopDomain' => 'other.myshopify.com' },
+            ],
+          },
         )
 
         CLI::UI::Prompt
           .expects(:ask)
           .with(
           @context.message('core.tasks.select_org_and_shop.development_store_select'),
-          options: %w[shopdomain.myshopify.com shop.myshopify.com]
+          options: %w[shopdomain.myshopify.com shop.myshopify.com],
         )
           .returns('selected')
         form = call(org_id: 123, shop: nil)

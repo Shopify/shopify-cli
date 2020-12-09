@@ -42,8 +42,8 @@ module ShopifyCli
           {
             'state' => 'nope',
             'error' => 'invalid_state',
-            'error_description' => Context.message('core.oauth.servlet.invalid_state_response')
-          }
+            'error_description' => Context.message('core.oauth.servlet.invalid_state_response'),
+          },
         )
         assert_equal(403, resp.status)
         assert_match(Context.message('core.oauth.servlet.not_authenticated'), resp.body)

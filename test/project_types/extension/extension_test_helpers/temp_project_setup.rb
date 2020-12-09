@@ -22,7 +22,7 @@ module Extension
 
         @project =
           FakeExtensionProject.new(
-            api_key: @api_key, api_secret: @api_secret, title: @title, type: @type, registration_id: @registration_id
+            api_key: @api_key, api_secret: @api_secret, title: @title, type: @type, registration_id: @registration_id,
           )
 
         ShopifyCli::Project.stubs(:current).returns(@project)

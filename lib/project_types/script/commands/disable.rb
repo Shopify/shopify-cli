@@ -10,7 +10,7 @@ module Script
           ctx: @ctx,
           api_key: project.env[:api_key],
           shop_domain: project.env[:shop],
-          extension_point_type: project.extension_point_type
+          extension_point_type: project.extension_point_type,
         )
         @ctx.puts(@ctx.message('script.disable.script_disabled'))
       rescue StandardError => e

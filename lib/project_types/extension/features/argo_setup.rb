@@ -16,7 +16,7 @@ module Extension
           ArgoSetupSteps.check_dependencies(dependency_checks),
           ArgoSetupSteps.clone_template(git_template),
           ArgoSetupSteps.install_dependencies,
-          ArgoSetupSteps.initialize_project
+          ArgoSetupSteps.initialize_project,
         ]
 
         install_result = run_install_steps(context, steps, identifier, directory_name)

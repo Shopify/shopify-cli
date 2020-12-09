@@ -10,7 +10,7 @@ describe Script::Layers::Application::DisableScript do
 
     subject do
       Script::Layers::Application::DisableScript.call(
-        ctx: @context, api_key: api_key, shop_domain: shop_domain, extension_point_type: extension_point_type
+        ctx: @context, api_key: api_key, shop_domain: shop_domain, extension_point_type: extension_point_type,
       )
     end
 

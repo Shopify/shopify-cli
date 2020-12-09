@@ -24,7 +24,9 @@ module Extension
 
       def test_aborts_with_message_if_only_one_user_error_present
         fake_response = {
-          UserErrors::USER_ERRORS_FIELD => [{ field: %w[field], UserErrors::MESSAGE_FIELD => 'An error has occurred.' }]
+          UserErrors::USER_ERRORS_FIELD => [
+            { :field => %w[field], UserErrors::MESSAGE_FIELD => 'An error has occurred.' },
+          ],
         }
 
         @context.expects(:abort).with('An error has occurred.').once
@@ -32,8 +34,8 @@ module Extension
       end
 
       def test_no_matter_how_many_errors_only_last_error_calls_abort
-        fake_errors = Array.new(6, { field: %w[field], UserErrors::MESSAGE_FIELD => 'An error has occurred.' })
-        fake_errors << { field: %w[field2], UserErrors::MESSAGE_FIELD => 'Last error abort.' }
+        fake_errors = Array.new(6, { :field => %w[field], UserErrors::MESSAGE_FIELD => 'An error has occurred.' })
+        fake_errors << { :field => %w[field2], UserErrors::MESSAGE_FIELD => 'Last error abort.' }
         fake_response = { UserErrors::USER_ERRORS_FIELD => fake_errors }
 
         @context.expects(:puts).with('{{x}} An error has occurred.').times(6)
@@ -44,7 +46,7 @@ module Extension
 
       def test_aborts_with_parse_error_message_if_user_errors_parsing_fails
         fake_response = {
-          UserErrors::USER_ERRORS_FIELD => [{ field: %w[field], wrong_message_field: 'An error has occurred.' }]
+          UserErrors::USER_ERRORS_FIELD => [{ field: %w[field], wrong_message_field: 'An error has occurred.' }],
         }
 
         @context.expects(:abort).with(UserErrors::USER_ERRORS_PARSE_ERROR).once

@@ -11,11 +11,10 @@ module Extension
 
       def capture_io_and_assert_raises(exception_class)
         io = []
-        io <<
-          capture_io do
-            exception = assert_raises(exception_class) { yield }
-            io << CLI::UI.fmt(exception.message.gsub('{{x}} ', ''))
-          end
+        io << capture_io do
+          exception = assert_raises(exception_class) { yield }
+          io << CLI::UI.fmt(exception.message.gsub('{{x}} ', ''))
+        end
       end
     end
   end

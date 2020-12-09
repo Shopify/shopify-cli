@@ -17,7 +17,7 @@ module Script
         @shop_domain = 'my-test-shop.myshopify.com'
         @script_project =
           TestHelpers::FakeScriptProject.new(
-            language: @language, extension_point_type: @ep_type, script_name: @script_name
+            language: @language, extension_point_type: @ep_type, script_name: @script_name,
           )
         ScriptProject.stubs(:current).returns(@script_project)
         @script_project.stubs(:env).returns({ api_key: @api_key, shop: @shop_domain })
@@ -46,7 +46,7 @@ module Script
           shop_domain: @shop_domain,
           configuration: @configuration,
           extension_point_type: @ep_type,
-          title: @script_name
+          title: @script_name,
         )
           .raises(StandardError)
 
@@ -55,8 +55,8 @@ module Script
           .with(
           @context.message(
             'script.enable.script_enabled',
-            api_key: @api_key, shop_domain: @shop_domain, type: @ep_type.capitalize, title: @script_name
-          )
+            api_key: @api_key, shop_domain: @shop_domain, type: @ep_type.capitalize, title: @script_name,
+          ),
         )
           .never
 
@@ -88,7 +88,7 @@ module Script
           .expects(:pretty_print_and_raise)
           .with(
           instance_of(Errors::InvalidConfigProps),
-          failed_op: @context.message('script.enable.error.operation_failed')
+          failed_op: @context.message('script.enable.error.operation_failed'),
         )
 
         capture_io { perform_command(config_props: 'key1:value1:value2') }
@@ -106,7 +106,7 @@ module Script
       def test_calls_application_enable_with_configuration_file_and_properties_override
         File.open('enable_config_file.yml', 'w+') { |file| file.write("key1: \"value1\"\nkey2: \"value2\"") }
         expected_configuration = {
-          entries: [{ key: 'key1', value: 'overriddenValue' }, { key: 'key2', value: 'value2' }]
+          entries: [{ key: 'key1', value: 'overriddenValue' }, { key: 'key2', value: 'value2' }],
         }
 
         expect_successful_enable(expected_configuration)
@@ -139,7 +139,7 @@ module Script
           shop_domain: @shop_domain,
           configuration: configuration,
           extension_point_type: @ep_type,
-          title: @script_name
+          title: @script_name,
         )
 
         @context
@@ -147,8 +147,8 @@ module Script
           .with(
           @context.message(
             'script.enable.script_enabled',
-            api_key: @api_key, shop_domain: @shop_domain, type: @ep_type.capitalize, title: @script_name
-          )
+            api_key: @api_key, shop_domain: @shop_domain, type: @ep_type.capitalize, title: @script_name,
+          ),
         )
 
         @context.expects(:puts).with(@context.message('script.enable.info'))

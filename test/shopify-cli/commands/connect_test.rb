@@ -59,9 +59,9 @@ module ShopifyCli
           'businessName' => 'two',
           'stores' => [
             { 'shopDomain' => 'store2.myshopify.com', 'shopName' => 'foo' },
-            { 'shopDomain' => 'store1.myshopify.com', 'shopName' => 'bar' }
+            { 'shopDomain' => 'store1.myshopify.com', 'shopName' => 'bar' },
           ],
-          'apps' => [{ 'title' => 'app', 'apiKey' => 'apikey', 'apiSecretKeys' => [{ 'secret' => 1234 }] }]
+          'apps' => [{ 'title' => 'app', 'apiKey' => 'apikey', 'apiSecretKeys' => [{ 'secret' => 1234 }] }],
         }
       end
     end

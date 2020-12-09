@@ -11,7 +11,7 @@ module Rails
           installed_debug: '%s installed: %s',
           installing: 'Installing %s gem...',
           setting_gem_home: 'GEM_HOME being set to %s',
-          setting_gem_path: 'GEM_PATH being set to %s'
+          setting_gem_path: 'GEM_PATH being set to %s',
         },
         connect: { connected: 'Project now connected to {{green:%s}}', production_warning: <<~MESSAGE },
           {{yellow:! Warning: if you have connected to an {{bold:app in production}}, running {{command:serve}} may update the app URL and cause an outage.
@@ -45,12 +45,12 @@ module Rails
                 'https://classic.yarnpkg.com/en/docs/install.',
             yarn_version_failure:
               'Failed to get the current yarn version. Please make sure it is installed as per ' \
-                'the instructions at https://classic.yarnpkg.com/en/docs/install.'
+                'the instructions at https://classic.yarnpkg.com/en/docs/install.',
           },
           info: {
             open_new_shell:
               '{{*}} {{yellow:After installing %s, please open a new Command Prompt or PowerShell ' \
-                'window to continue.}}'
+                'window to continue.}}',
           },
           installing_bundler: 'Installing bundler...',
           generating_app: 'Generating new rails app project in %s...',
@@ -60,7 +60,7 @@ module Rails
           running_bundle_install: 'Running bundle install...',
           running_generator: 'Running shopify_app generator...',
           running_migrations: 'Running migrations...',
-          running_webpacker_install: 'Running webpacker:install...'
+          running_webpacker_install: 'Running webpacker:install...',
         },
         deploy: {
           help: <<~HELP,
@@ -91,7 +91,7 @@ module Rails
               checking: 'Checking database type...',
               validated: "Database type \"%s\" validated for platform \"Heroku\"",
               problem: 'A problem was encountered while checking your database type.',
-              sqlite: <<~SQLITE
+              sqlite: <<~SQLITE,
               Heroku does not support deployment using the SQLite database system.
               Change the database type using {{command:rails db:system:change --to=[new_db_type]}}. For more info:
               {{underline:https://gorails.com/episodes/rails-6-db-system-change-command}}
@@ -101,7 +101,7 @@ module Rails
               checking: 'Checking git repo...',
               initialized: 'Git repo initialized',
               what_branch: 'What branch would you like to deploy?',
-              branch_selected: '{{v}} Git branch `%s` selected for deploy'
+              branch_selected: '{{v}} Git branch `%s` selected for deploy',
             },
             app: {
               no_apps_found: 'No existing Heroku app found. What would you like to do?',
@@ -111,9 +111,9 @@ module Rails
               selected: '{{v}} Heroku app `%s` selected',
               create: 'Create a new Heroku app',
               creating: 'Creating new Heroku app...',
-              created: '{{v}} New Heroku app created'
-            }
-          }
+              created: '{{v}} New Heroku app created',
+            },
+          },
         },
         generate: {
           help: <<~HELP,
@@ -127,11 +127,11 @@ module Rails
           EXAMPLES
           error: { name_exists: '%s already exists!', generic: 'Error generating %s' },
           webhook: {
-            help: <<~HELP, select: 'What type of webhook would you like to create?', selected: 'Generating webhook: %s'
+            help: <<~HELP, select: 'What type of webhook would you like to create?', selected: 'Generating webhook: %s',
             Generate and register a new webhook that listens for the specified Shopify store event.
               Usage: {{command:%s generate webhook <type>}}
             HELP
-          }
+          },
         },
         open: { help: <<~HELP },
           Open your local development app in the default browser.
@@ -176,7 +176,7 @@ module Rails
           HELP
           customer: { added: '%s added to {{green:%s}} at {{underline:%scustomers/%d}}' },
           draft_order: { added: 'DraftOrder added to {{green:%s}} at {{underline:%sdraft_orders/%d}}' },
-          product: { added: '%s added to {{green:%s}} at {{underline:%sproducts/%d}}' }
+          product: { added: '%s added to {{green:%s}} at {{underline:%sproducts/%d}}' },
         },
         serve: {
           help: <<~HELP,
@@ -192,7 +192,7 @@ module Rails
             {{*}} To install and start using your app, open this URL in your browser:
             {{green:%s}}
           MESSAGE
-          running_server: 'Running server...'
+          running_server: 'Running server...',
         },
         tunnel: {
           help: <<~HELP,
@@ -212,7 +212,7 @@ module Rails
               Usage: {{command:%1$s tunnel stop}}
 
           HELP
-          error: { token_argument_missing: "{{x}} {{red:auth requires a token argument}}\n\n" }
+          error: { token_argument_missing: "{{x}} {{red:auth requires a token argument}}\n\n" },
         },
         forms: {
           create: {
@@ -222,7 +222,7 @@ module Rails
               select: 'What type of app are you building?',
               select_public: 'Public: An app built for a wide merchant audience.',
               select_custom: 'Custom: An app custom built for a single client.',
-              selected: 'App type {{green:%s}}'
+              selected: 'App type {{green:%s}}',
             },
             db: {
               want_select: <<~WANT_SELECT,
@@ -242,11 +242,11 @@ module Rails
               select_jdbcsqlite3: 'JDBC SQlite',
               select_jdbcpostgresql: 'JDBC PostgreSQL',
               select_jdbc: 'JDBC',
-              selected: 'Database Type {{green:%s}}'
-            }
-          }
-        }
-      }
+              selected: 'Database Type {{green:%s}}',
+            },
+          },
+        },
+      },
     }.freeze
   end
 end

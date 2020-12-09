@@ -11,7 +11,7 @@ module ShopifyCli
           ShopifyCli::PartnersAPI.query(
             ctx,
             'create_app',
-            org: org_id.to_i, title: title, type: type, app_url: DEFAULT_APP_URL, redir: [OAuth::REDIRECT_HOST]
+            org: org_id.to_i, title: title, type: type, app_url: DEFAULT_APP_URL, redir: [OAuth::REDIRECT_HOST],
           )
 
         ctx.abort('Error - empty response') unless resp

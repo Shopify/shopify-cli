@@ -79,7 +79,7 @@ module ShopifyCli
             opts.on(
               "-c #{DEFAULT_COUNT}",
               "--count=#{DEFAULT_COUNT}",
-              @ctx.message('core.populate.options.count_help')
+              @ctx.message('core.populate.options.count_help'),
             ) { |value| @count = value.to_i }
 
             opts.on('-h', '--help', 'print help') { |value| @help = value }
@@ -123,7 +123,7 @@ module ShopifyCli
           Project.current.env.shop,
           camel_case_resource_type,
           admin_url,
-          snake_case_resource_type
+          snake_case_resource_type,
         )
       end
 

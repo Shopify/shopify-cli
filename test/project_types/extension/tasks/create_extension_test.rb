@@ -25,7 +25,7 @@ module Extension
           type: @fake_type,
           title: @fake_title,
           config: @fake_config,
-          extension_context: @fake_extension_context
+          extension_context: @fake_extension_context,
         }
       end
 
@@ -39,7 +39,7 @@ module Extension
             type: @fake_type,
             title: @fake_title,
             config: @fake_config,
-            extension_context: @fake_extension_context
+            extension_context: @fake_extension_context,
           )
 
         assert_kind_of(Models::Registration, created_registration)
@@ -56,7 +56,7 @@ module Extension
               type: @fake_type,
               title: @fake_title,
               config: @fake_config,
-              extension_context: @fake_extension_context
+              extension_context: @fake_extension_context,
             )
           end
 
@@ -64,7 +64,7 @@ module Extension
       end
 
       def test_aborts_with_errors_if_user_errors_are_returned
-        user_errors = [{ field: %w[field], UserErrors::MESSAGE_FIELD => 'An error occurred on field' }]
+        user_errors = [{ :field => %w[field], UserErrors::MESSAGE_FIELD => 'An error occurred on field' }]
         stub_create_extension_failure(userErrors: user_errors, **@input)
 
         io =
@@ -75,7 +75,7 @@ module Extension
               type: @fake_type,
               title: @fake_title,
               config: @fake_config,
-              extension_context: @fake_extension_context
+              extension_context: @fake_extension_context,
             )
           end
 

@@ -96,7 +96,7 @@ module Node
           'set',
           '@shopify:registry',
           'https://registry.yarnpkg.com',
-          chdir: @context.root + '/test-app'
+          chdir: @context.root + '/test-app',
         )
 
         ShopifyCli::Git.expects(:clone).with('https://github.com/Shopify/shopify-app-node.git', 'test-app')
@@ -130,11 +130,11 @@ module Node
             title: 'test-app',
             type: 'public',
             app_url: ShopifyCli::Tasks::CreateApiClient::DEFAULT_APP_URL,
-            redir: %w[http://127.0.0.1:3456]
+            redir: %w[http://127.0.0.1:3456],
           },
           resp: {
-            'data': { 'appCreate': { 'app': { 'apiKey': 'newapikey', 'apiSecretKeys': [{ 'secret': 'secret' }] } } }
-          }
+            'data': { 'appCreate': { 'app': { 'apiKey': 'newapikey', 'apiSecretKeys': [{ 'secret': 'secret' }] } } },
+          },
         )
 
         perform_command
@@ -167,7 +167,7 @@ module Node
           'set',
           '@shopify:registry',
           'https://registry.yarnpkg.com',
-          chdir: @context.root + '/test-app'
+          chdir: @context.root + '/test-app',
         )
         ShopifyCli::JsDeps.expects(:install)
 
@@ -178,11 +178,11 @@ module Node
             title: 'test-app',
             type: 'public',
             app_url: ShopifyCli::Tasks::CreateApiClient::DEFAULT_APP_URL,
-            redir: %w[http://127.0.0.1:3456]
+            redir: %w[http://127.0.0.1:3456],
           },
           resp: {
-            'data': { 'appCreate': { 'app': { 'apiKey': 'newapikey', 'apiSecretKeys': [{ 'secret': 'secret' }] } } }
-          }
+            'data': { 'appCreate': { 'app': { 'apiKey': 'newapikey', 'apiSecretKeys': [{ 'secret': 'secret' }] } } },
+          },
         )
 
         perform_command
@@ -205,7 +205,7 @@ module Node
           --name=test-app \
           --type=public \
           --organization_id=42 \
-          --shop_domain=testshop.myshopify.com"
+          --shop_domain=testshop.myshopify.com",
         )
       end
 

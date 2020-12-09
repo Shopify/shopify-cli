@@ -22,7 +22,7 @@ module Script
 
       assert_equal(
         { 'script_name' => @script_name, 'extension_point_type' => @extension_point_type, 'language' => 'ts' },
-        ShopifyCli::Core::Monorail.metadata
+        ShopifyCli::Core::Monorail.metadata,
       )
     end
 

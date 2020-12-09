@@ -18,7 +18,7 @@ module Rails
             ret['title'],
             ShopifyCli::Project.current.env.shop,
             admin_url,
-            id
+            id,
           )
         end
       end

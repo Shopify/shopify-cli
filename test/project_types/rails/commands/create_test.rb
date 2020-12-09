@@ -49,7 +49,7 @@ module Rails
         expect_command(%W[#{gem_path}/bin/rails db:create], chdir: File.join(@context.root, 'test-app'))
         expect_command(
           %W[#{gem_path}/bin/rails db:migrate RAILS_ENV=development],
-          chdir: File.join(@context.root, 'test-app')
+          chdir: File.join(@context.root, 'test-app'),
         )
         expect_command(%W[#{gem_path}/bin/rails webpacker:install], chdir: File.join(@context.root, 'test-app'))
 
@@ -60,11 +60,11 @@ module Rails
             title: 'test-app',
             type: 'public',
             app_url: ShopifyCli::Tasks::CreateApiClient::DEFAULT_APP_URL,
-            redir: %w[http://127.0.0.1:3456]
+            redir: %w[http://127.0.0.1:3456],
           },
           resp: {
-            'data': { 'appCreate': { 'app': { 'apiKey': 'newapikey', 'apiSecretKeys': [{ 'secret': 'secret' }] } } }
-          }
+            'data': { 'appCreate': { 'app': { 'apiKey': 'newapikey', 'apiSecretKeys': [{ 'secret': 'secret' }] } } },
+          },
         )
 
         perform_command
@@ -93,7 +93,7 @@ module Rails
         expect_command(%W[#{gem_path}/bin/rails db:create], chdir: File.join(@context.root, 'test-app'))
         expect_command(
           %W[#{gem_path}/bin/rails db:migrate RAILS_ENV=development],
-          chdir: File.join(@context.root, 'test-app')
+          chdir: File.join(@context.root, 'test-app'),
         )
         expect_command(%W[#{gem_path}/bin/rails webpacker:install], chdir: File.join(@context.root, 'test-app'))
 
@@ -104,11 +104,11 @@ module Rails
             title: 'test-app',
             type: 'public',
             app_url: ShopifyCli::Tasks::CreateApiClient::DEFAULT_APP_URL,
-            redir: %w[http://127.0.0.1:3456]
+            redir: %w[http://127.0.0.1:3456],
           },
           resp: {
-            'data': { 'appCreate': { 'app': { 'apiKey': 'newapikey', 'apiSecretKeys': [{ 'secret': 'secret' }] } } }
-          }
+            'data': { 'appCreate': { 'app': { 'apiKey': 'newapikey', 'apiSecretKeys': [{ 'secret': 'secret' }] } } },
+          },
         )
 
         perform_command('--db=postgresql')
@@ -133,7 +133,7 @@ module Rails
         expect_command(%W[#{gem_path}/bin/rails db:create], chdir: File.join(@context.root, 'test-app'))
         expect_command(
           %W[#{gem_path}/bin/rails db:migrate RAILS_ENV=development],
-          chdir: File.join(@context.root, 'test-app')
+          chdir: File.join(@context.root, 'test-app'),
         )
         expect_command(%W[#{gem_path}/bin/rails webpacker:install], chdir: File.join(@context.root, 'test-app'))
 
@@ -144,11 +144,11 @@ module Rails
             title: 'test-app',
             type: 'public',
             app_url: ShopifyCli::Tasks::CreateApiClient::DEFAULT_APP_URL,
-            redir: %w[http://127.0.0.1:3456]
+            redir: %w[http://127.0.0.1:3456],
           },
           resp: {
-            'data': { 'appCreate': { 'app': { 'apiKey': 'newapikey', 'apiSecretKeys': [{ 'secret': 'secret' }] } } }
-          }
+            'data': { 'appCreate': { 'app': { 'apiKey': 'newapikey', 'apiSecretKeys': [{ 'secret': 'secret' }] } } },
+          },
         )
 
         perform_command('--rails-opts=--edge -J')

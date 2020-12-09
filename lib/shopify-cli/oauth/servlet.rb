@@ -32,7 +32,7 @@ module ShopifyCli
           respond_with(
             res,
             400,
-            Context.message('core.oauth.servlet.invalid_request_response', req.query['error_description'])
+            Context.message('core.oauth.servlet.invalid_request_response', req.query['error_description']),
           )
         elsif req.query['state'] != @state_token
           response_message = Context.message('core.oauth.servlet.invalid_state_response')
@@ -53,7 +53,7 @@ module ShopifyCli
           color: successful ? 'black' : 'red',
           title:
             Context.message(successful ? 'core.oauth.servlet.authenticated' : 'core.oauth.servlet.not_authenticated'),
-          autoclose: successful ? AUTOCLOSE_TEMPLATE : ''
+          autoclose: successful ? AUTOCLOSE_TEMPLATE : '',
         }
         response.status = status
         response.body = format(TEMPLATE, locals)

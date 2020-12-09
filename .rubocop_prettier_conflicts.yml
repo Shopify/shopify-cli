@@ -1,8 +1,10 @@
-Layout:
-  Enabled: false
-Style/TrailingCommaInArrayLiteral:
-  Enabled: false
 Style/TrailingCommaInHashLiteral:
   Enabled: false
-Style/NumericLiteralPrefix:
+Layout/FirstArgumentIndentation:
   Enabled: false
+Layout/HeredocIndentation:
+  Enabled: false
+Layout/LineLength:
+  Exclude:
+    - lib/project_types/script/messages/messages.rb
+    - lib/project_types/script/ui/error_handler.rb

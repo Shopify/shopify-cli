@@ -17,7 +17,7 @@ module Script
             title: script_name,
             sourceCode: Base64.encode64(script_content),
             language: compiled_type,
-            force: force
+            force: force,
           }
           resp_hash = script_service_request(query_name: query_name, api_key: api_key, variables: variables)
           user_errors = resp_hash['data']['appScriptUpdateOrCreate']['userErrors']
@@ -40,7 +40,7 @@ module Script
               query_name: query_name,
               api_key: api_key,
               shop_domain: format_shop_domain(shop_domain),
-              variables: variables
+              variables: variables,
             )
           user_errors = resp_hash['data']['shopScriptUpdateOrCreate']['userErrors']
 
@@ -66,7 +66,7 @@ module Script
               query_name: query_name,
               api_key: api_key,
               shop_domain: format_shop_domain(shop_domain),
-              variables: variables
+              variables: variables,
             )
           user_errors = resp_hash['data']['shopScriptDelete']['userErrors']
           return resp_hash if user_errors.empty?
@@ -98,7 +98,7 @@ module Script
               url: 'https://script-service.myshopify.io/graphql',
               token: '',
               api_key: api_key,
-              shop_id: shop_domain&.to_i
+              shop_id: shop_domain&.to_i,
             )
           end
 

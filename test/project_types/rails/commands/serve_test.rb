@@ -29,8 +29,8 @@ module Rails
             'SHOP' => 'my-test-shop.myshopify.com',
             'SCOPES' => 'write_products,write_customers,write_orders',
             'PORT' => '8081',
-            'GEM_PATH' => '/gem/path'
-          }
+            'GEM_PATH' => '/gem/path',
+          },
         )
         Rails::Commands::Serve.new(@context).call
       end
@@ -48,8 +48,8 @@ module Rails
             'SHOPIFY_API_SECRET' => 'secret',
             'SHOP' => 'my-test-shop.myshopify.com',
             'SCOPES' => 'write_products,write_customers,write_orders',
-            'PORT' => '8081'
-          }
+            'PORT' => '8081',
+          },
         )
           .never
 
@@ -67,7 +67,7 @@ module Rails
           .with(
           "\n" +
             @context.message('rails.serve.open_info', 'https://example.com/login?shop=my-test-shop.myshopify.com') +
-            "\n"
+            "\n",
         )
         Rails::Commands::Serve.new(@context).call
       end

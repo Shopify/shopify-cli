@@ -18,11 +18,11 @@ module ShopifyCli
             title: 'Test app',
             type: 'public',
             app_url: ShopifyCli::Tasks::CreateApiClient::DEFAULT_APP_URL,
-            redir: %w[http://127.0.0.1:3456]
+            redir: %w[http://127.0.0.1:3456],
           },
           resp: {
-            'data': { 'appCreate': { 'app': { 'apiKey': 'newapikey', 'apiSecretKeys': [{ 'secret': 'secret' }] } } }
-          }
+            'data': { 'appCreate': { 'app': { 'apiKey': 'newapikey', 'apiSecretKeys': [{ 'secret': 'secret' }] } } },
+          },
         )
 
         api_client = Tasks::CreateApiClient.call(@context, org_id: 42, title: 'Test app', type: 'public')
@@ -40,9 +40,9 @@ module ShopifyCli
             title: 'Test app',
             type: 'public',
             app_url: ShopifyCli::Tasks::CreateApiClient::DEFAULT_APP_URL,
-            redir: %w[http://127.0.0.1:3456]
+            redir: %w[http://127.0.0.1:3456],
           },
-          resp: { 'errors': [{ 'field': 'title', 'message': 'is not a valid title' }] }
+          resp: { 'errors': [{ 'field': 'title', 'message': 'is not a valid title' }] },
         )
 
         err =
@@ -60,9 +60,11 @@ module ShopifyCli
             title: 'Test app',
             type: 'public',
             app_url: ShopifyCli::Tasks::CreateApiClient::DEFAULT_APP_URL,
-            redir: %w[http://127.0.0.1:3456]
+            redir: %w[http://127.0.0.1:3456],
           },
-          resp: { 'data': { 'appCreate': { 'userErrors': [{ 'field': 'title', 'message': 'is not a valid title' }] } } }
+          resp: {
+            'data': { 'appCreate': { 'userErrors': [{ 'field': 'title', 'message': 'is not a valid title' }] } },
+          },
         )
 
         err =

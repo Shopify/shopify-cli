@@ -12,7 +12,7 @@ module Rails
           @context
             .expects(:system)
             .with(
-            'bin/rails g shopify_app:add_webhook -t app/uninstalled -a https://example.com/webhooks/app/uninstalled'
+            'bin/rails g shopify_app:add_webhook -t app/uninstalled -a https://example.com/webhooks/app/uninstalled',
           )
             .returns(mock(success?: true))
           Rails::Commands::Generate::Webhook.new(@context).call(%w[APP_UNINSTALLED], '')
@@ -23,7 +23,7 @@ module Rails
           @context
             .expects(:system)
             .with(
-            'bin/rails g shopify_app:add_webhook -t app/uninstalled -a https://example.com/webhooks/app/uninstalled'
+            'bin/rails g shopify_app:add_webhook -t app/uninstalled -a https://example.com/webhooks/app/uninstalled',
           )
             .returns(mock(success?: true))
           Rails::Commands::Generate::Webhook.new(@context).call(%w[create_webhook_fake], '')
@@ -34,7 +34,7 @@ module Rails
           @context
             .expects(:system)
             .with(
-            'bin/rails g shopify_app:add_webhook -t product/create -a https://example.com/webhooks/product/create'
+            'bin/rails g shopify_app:add_webhook -t product/create -a https://example.com/webhooks/product/create',
           )
             .returns(mock(success?: true))
           Rails::Commands::Generate::Webhook.new(@context).call([], '')

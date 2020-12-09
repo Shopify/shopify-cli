@@ -21,7 +21,7 @@ module Extension
         @location = 'https://www.fakeurl.com'
 
         @input = {
-          api_key: @api_key, registration_id: @registration_id, config: @config, extension_context: @extension_context
+          api_key: @api_key, registration_id: @registration_id, config: @config, extension_context: @extension_context,
         }
       end
 
@@ -34,7 +34,7 @@ module Extension
             api_key: @api_key,
             registration_id: @registration_id,
             config: @config,
-            extension_context: @extension_context
+            extension_context: @extension_context,
           )
 
         assert_kind_of(Models::Version, updated_draft)
@@ -51,7 +51,7 @@ module Extension
               api_key: @api_key,
               registration_id: @registration_id,
               config: @config,
-              extension_context: @extension_context
+              extension_context: @extension_context,
             )
           end
 
@@ -59,7 +59,7 @@ module Extension
       end
 
       def test_aborts_with_errors_if_user_errors_are_returned
-        user_errors = [{ field: %w[field], UserErrors::MESSAGE_FIELD => 'An error occurred on field' }]
+        user_errors = [{ :field => %w[field], UserErrors::MESSAGE_FIELD => 'An error occurred on field' }]
         stub_update_draft_failure(errors: user_errors, **@input)
 
         io =
@@ -69,7 +69,7 @@ module Extension
               api_key: @api_key,
               registration_id: @registration_id,
               config: @config,
-              extension_context: @extension_context
+              extension_context: @extension_context,
             )
           end
 

@@ -10,7 +10,7 @@ module ShopifyCli
         'SHOPIFY_API_SECRET' => :secret,
         'SHOP' => :shop,
         'SCOPES' => :scopes,
-        'HOST' => :host
+        'HOST' => :host,
       }
 
       class << self

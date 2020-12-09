@@ -9,7 +9,7 @@ module Extension
         def stub_get_app(api_key:, app:)
           stub_partner_req(
             'get_app_by_api_key',
-            variables: { api_key: api_key }, resp: { data: { app: create_app_json(app: app) } }
+            variables: { api_key: api_key }, resp: { data: { app: create_app_json(app: app) } },
           )
         end
 

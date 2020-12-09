@@ -71,7 +71,7 @@ module Script
           web_assembly_binary_not_found_suggestion:
             'No WebAssembly binary found.' \
               'Check that your build npm script outputs the generated binary to the root of the directory.' \
-              'Generated binary should match the script name: <script_name>.wasm'
+              'Generated binary should match the script name: <script_name>.wasm',
         },
         create: {
           help: <<~HELP,
@@ -84,7 +84,7 @@ module Script
           error: { operation_failed: 'Script not created.' },
           change_directory_notice: '{{*}} Change directories to {{green:%s}} to run script commands',
           creating: 'Creating script',
-          created: 'Created script: {{green:%s}}'
+          created: 'Created script: {{green:%s}}',
         },
         push: {
           help: <<~HELP,
@@ -94,7 +94,7 @@ module Script
               {{command:[--force]}} Forces the script to be overwritten if an instance of it already exists.
           HELP
           error: { operation_failed: "Couldn't push script to app." },
-          script_pushed: '{{v}} Script pushed to app (API key: %{api_key}).'
+          script_pushed: '{{v}} Script pushed to app (API key: %{api_key}).',
         },
         disable: {
           help: <<~HELP,
@@ -102,7 +102,7 @@ module Script
             Usage: {{command:%s disable}}
           HELP
           error: { operation_failed: "Can't disable script." },
-          script_disabled: '{{v}} Script disabled. Script is turned off in store.'
+          script_disabled: '{{v}} Script disabled. Script is turned off in store.',
         },
         enable: {
           help: <<~HELP,
@@ -119,16 +119,16 @@ module Script
           error: { operation_failed: "Can't enable script." },
           script_enabled:
             '{{v}} Script enabled. %{type} script %{title} in app (API key: %{api_key}) ' \
-              'is turned on in store {{green:%{shop_domain}}}'
+              'is turned on in store {{green:%{shop_domain}}}',
         },
         project_deps: {
           none_required: '{{v}} None required',
           checking_with_npm: 'Checking dependencies with npm',
           installing: 'Dependencies installing',
-          installed: 'Missing dependencies installed'
+          installed: 'Missing dependencies installed',
         },
         forms: {
-          create: { select_extension_point: 'Which extension point do you want to use?', script_name: 'Script Name' }
+          create: { select_extension_point: 'Which extension point do you want to use?', script_name: 'Script Name' },
         },
         application: {
           building: 'Building',
@@ -139,9 +139,9 @@ module Script
           disabling: 'Disabling',
           disabled: 'Disabled',
           enabling: 'Enabling',
-          enabled: 'Enabled'
-        }
-      }
+          enabled: 'Enabled',
+        },
+      },
     }.freeze
   end
 end

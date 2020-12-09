@@ -47,7 +47,7 @@ module ShopifyCli
           sections = [
             adjectives[random_seed % adjectives.length],
             nouns[random_seed % nouns.length],
-            token(token_range)
+            token(token_range),
           ]
 
           sections.compact.join(delimiter)

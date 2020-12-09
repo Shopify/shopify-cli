@@ -50,8 +50,8 @@ module Extension
           io: io,
           expected_content: [
             @context.message('register.confirm_abort'),
-            @context.message('register.confirm_info', @test_extension_type.name)
-          ]
+            @context.message('register.confirm_info', @test_extension_type.name),
+          ],
         )
       end
 
@@ -61,7 +61,7 @@ module Extension
             id: 55,
             type: @test_extension_type.identifier,
             title: @project.title,
-            draft_version: Models::Version.new(registration_id: 55, last_user_interaction_at: Time.now.utc)
+            draft_version: Models::Version.new(registration_id: 55, last_user_interaction_at: Time.now.utc),
           )
         refute @project.registered?
 
@@ -80,7 +80,7 @@ module Extension
           type: @test_extension_type.graphql_identifier,
           title: @project.title,
           config: {},
-          extension_context: @test_extension_type.extension_context(@context)
+          extension_context: @test_extension_type.extension_context(@context),
         )
           .returns(registration)
           .once
@@ -92,7 +92,7 @@ module Extension
           api_key: @app.api_key,
           api_secret: @app.secret,
           registration_id: registration.id,
-          title: @project.title
+          title: @project.title,
         )
           .once
 
@@ -104,8 +104,8 @@ module Extension
             @context.message('register.confirm_info', @test_extension_type.name),
             @context.message('register.waiting_text'),
             @context.message('register.success', @project.title, @app.title),
-            @context.message('register.success_info')
-          ]
+            @context.message('register.success_info'),
+          ],
         )
       end
 

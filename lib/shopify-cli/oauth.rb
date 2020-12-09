@@ -52,7 +52,7 @@ module ShopifyCli
         begin
           server =
             WEBrick::HTTPServer.new(
-              Port: DEFAULT_PORT, Logger: WEBrick::Log.new(File.open(File::NULL, 'w')), AccessLog: []
+              Port: DEFAULT_PORT, Logger: WEBrick::Log.new(File.open(File::NULL, 'w')), AccessLog: [],
             )
           server.mount('/', Servlet, self, state_token)
           server
@@ -64,7 +64,7 @@ module ShopifyCli
     def initiate_authentication(url)
       @server_thread = Thread.new { server.start }
       params = {
-        client_id: client_id, scope: scopes, redirect_uri: REDIRECT_HOST, state: state_token, response_type: :code
+        client_id: client_id, scope: scopes, redirect_uri: REDIRECT_HOST, state: state_token, response_type: :code,
       }
       params.merge!(challange_params) if secret.nil?
       uri = URI.parse("#{url}#{auth_path}")
@@ -93,12 +93,12 @@ module ShopifyCli
         post_token_request(
           "#{url}#{token_path}",
           { grant_type: :authorization_code, code: code, redirect_uri: REDIRECT_HOST, client_id: client_id }.merge(
-            confirmation_param
-          )
+            confirmation_param,
+          ),
         )
       store.set(
         "#{service}_access_token".to_sym => resp['access_token'],
-        "#{service}_refresh_token".to_sym => resp['refresh_token']
+        "#{service}_refresh_token".to_sym => resp['refresh_token'],
       )
     end
 
@@ -121,11 +121,11 @@ module ShopifyCli
           grant_type: :refresh_token,
           access_token: store.get("#{service}_access_token".to_sym),
           refresh_token: store.get("#{service}_refresh_token".to_sym),
-          client_id: client_id
+          client_id: client_id,
         )
       store.set(
         "#{service}_access_token".to_sym => resp['access_token'],
-        "#{service}_refresh_token".to_sym => resp['refresh_token']
+        "#{service}_refresh_token".to_sym => resp['refresh_token'],
       )
     end
 
@@ -148,7 +148,7 @@ module ShopifyCli
           client_id: client_id,
           audience: request_exchange,
           scope: scopes,
-          subject_token: store.get("#{service}_access_token".to_sym)
+          subject_token: store.get("#{service}_access_token".to_sym),
         )
       store.set("#{service}_exchange_token".to_sym => resp['access_token'])
     end

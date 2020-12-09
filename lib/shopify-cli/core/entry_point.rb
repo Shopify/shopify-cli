@@ -24,7 +24,10 @@ module ShopifyCli
 
           if ctx.development?
             ctx.puts(
-              ctx.message('core.warning.development_version', File.join(ShopifyCli::ROOT, 'bin', ShopifyCli::TOOL_NAME))
+              ctx.message(
+                'core.warning.development_version',
+                File.join(ShopifyCli::ROOT, 'bin', ShopifyCli::TOOL_NAME),
+              ),
             )
           elsif !ctx.testing?
             new_version = ctx.new_version

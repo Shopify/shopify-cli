@@ -20,7 +20,7 @@ module Script
             script_content: @script_content,
             compiled_type: @compiled_type,
             api_key: api_key,
-            force: force
+            force: force,
           )
         end
       end

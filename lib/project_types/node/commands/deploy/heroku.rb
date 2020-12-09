@@ -38,7 +38,7 @@ module Node
           else
             CLI::UI::Frame.open(
               @ctx.message('node.deploy.heroku.authenticating'),
-              success_text: @ctx.message('node.deploy.heroku.authenticated')
+              success_text: @ctx.message('node.deploy.heroku.authenticated'),
             ) { heroku_service.authenticate }
           end
 
@@ -55,12 +55,12 @@ module Node
               app_name = CLI::UI::Prompt.ask(@ctx.message('node.deploy.heroku.app.name'))
               CLI::UI::Frame.open(
                 @ctx.message('node.deploy.heroku.app.selecting', app_name),
-                success_text: @ctx.message('node.deploy.heroku.app.selected', app_name)
+                success_text: @ctx.message('node.deploy.heroku.app.selected', app_name),
               ) { heroku_service.select_existing_app(app_name) }
             elsif app_type == :new
               CLI::UI::Frame.open(
                 @ctx.message('node.deploy.heroku.app.creating'),
-                success_text: @ctx.message('node.deploy.heroku.app.created')
+                success_text: @ctx.message('node.deploy.heroku.app.created'),
               ) { heroku_service.create_new_app }
             end
           end
@@ -78,7 +78,7 @@ module Node
 
           CLI::UI::Frame.open(
             @ctx.message('node.deploy.heroku.deploying'),
-            success_text: @ctx.message('node.deploy.heroku.deployed')
+            success_text: @ctx.message('node.deploy.heroku.deployed'),
           ) { heroku_service.deploy(branch_to_deploy) }
         end
       end

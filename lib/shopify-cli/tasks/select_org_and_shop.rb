@@ -72,7 +72,7 @@ module ShopifyCli
         else
           CLI::UI::Prompt.ask(
             ctx.message('core.tasks.select_org_and_shop.development_store_select'),
-            options: valid_stores.map { |s| s['shopDomain'] }
+            options: valid_stores.map { |s| s['shopDomain'] },
           )
         end
       end

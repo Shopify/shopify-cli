@@ -27,7 +27,7 @@ module ShopifyCli
           .expects(:start)
           .with(
           :ngrok,
-          "\"#{File.join(ShopifyCli.cache_dir, 'ngrok')}\" http -inspect=false -log=stdout -log-level=debug 8081"
+          "\"#{File.join(ShopifyCli.cache_dir, 'ngrok')}\" http -inspect=false -log=stdout -log-level=debug 8081",
         )
           .returns(ShopifyCli::ProcessSupervision.new(:ngrok, pid: 40_000))
         @context.expects(:puts).with(@context.message('core.tunnel.start', 'https://example.ngrok.io'))
@@ -45,7 +45,7 @@ module ShopifyCli
           .twice
           .with(
           :ngrok,
-          "\"#{File.join(ShopifyCli.cache_dir, 'ngrok')}\" http -inspect=false -log=stdout -log-level=debug 8081"
+          "\"#{File.join(ShopifyCli.cache_dir, 'ngrok')}\" http -inspect=false -log=stdout -log-level=debug 8081",
         )
           .returns(ShopifyCli::ProcessSupervision.new(:ngrok, pid: 40_000, time: start_time.to_s))
           .then
@@ -68,7 +68,7 @@ module ShopifyCli
           .with(
           :ngrok,
           "\"#{File.join(ShopifyCli.cache_dir, 'ngrok')}\" http -inspect=false" \
-            " -log=stdout -log-level=debug #{configured_port}"
+            " -log=stdout -log-level=debug #{configured_port}",
         )
           .returns(ShopifyCli::ProcessSupervision.new(:ngrok, pid: 40_000))
         @context.expects(:puts).with(@context.message('core.tunnel.start', 'https://example.ngrok.io'))
@@ -85,7 +85,7 @@ module ShopifyCli
           .expects(:start)
           .with(
           :ngrok,
-          "\"#{File.join(ShopifyCli.cache_dir, 'ngrok')}\" http -inspect=false -log=stdout -log-level=debug 8081"
+          "\"#{File.join(ShopifyCli.cache_dir, 'ngrok')}\" http -inspect=false -log=stdout -log-level=debug 8081",
         )
           .returns(ShopifyCli::ProcessSupervision.new(:ngrok, pid: 40_000))
         @context
@@ -101,7 +101,7 @@ module ShopifyCli
           .expects(:start)
           .with(
           :ngrok,
-          "\"#{File.join(ShopifyCli.cache_dir, 'ngrok')}\" http -inspect=false -log=stdout -log-level=debug 8081"
+          "\"#{File.join(ShopifyCli.cache_dir, 'ngrok')}\" http -inspect=false -log=stdout -log-level=debug 8081",
         )
           .returns(ShopifyCli::ProcessSupervision.new(:ngrok, pid: 40_000))
         assert_raises ShopifyCli::Tunnel::NgrokError do

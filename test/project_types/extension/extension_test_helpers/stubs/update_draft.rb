@@ -13,9 +13,9 @@ module Extension
               api_key: api_key,
               registration_id: registration_id,
               config: JSON.generate(config),
-              extension_context: extension_context
+              extension_context: extension_context,
             },
-            resp: { data: yield(registration_id, config, extension_context) }
+            resp: { data: yield(registration_id, config, extension_context) },
           )
         end
 
@@ -23,14 +23,14 @@ module Extension
           stub_update_draft(**args) do |registration_id, _config, extension_context|
             {
               extensionUpdateDraft: {
-                extensionVersion: {
+                :extensionVersion => {
                   registrationId: registration_id,
                   context: extension_context,
                   lastUserInteractionAt: Time.now.utc.to_s,
-                  location: 'https://www.fakeurl.com'
+                  location: 'https://www.fakeurl.com',
                 },
-                Tasks::UserErrors::USER_ERRORS_FIELD => []
-              }
+                Tasks::UserErrors::USER_ERRORS_FIELD => [],
+              },
             }
           end
         end

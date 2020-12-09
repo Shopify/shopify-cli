@@ -62,7 +62,7 @@ module Extension
           api_key: @api_key,
           registration_id: @registration_id,
           config: @test_extension_type.config(@context),
-          extension_context: @test_extension_type.extension_context(@context)
+          extension_context: @test_extension_type.extension_context(@context),
         )
           .returns(@version)
           .once
@@ -84,8 +84,8 @@ module Extension
           expected_content: [
             @context.message('push.waiting_text'),
             @context.message('push.success_confirmation', @title, 'May 07, 2020 19:01:56 UTC'),
-            @context.message('push.success_info', 'https://www.fakeurl.com')
-          ]
+            @context.message('push.success_info', 'https://www.fakeurl.com'),
+          ],
         )
       end
 
@@ -102,7 +102,7 @@ module Extension
 
         assert_message_output(
           io: io,
-          expected_content: [@context.message('push.success_confirmation', @title, expected_formatted_time_in_utc)]
+          expected_content: [@context.message('push.success_confirmation', @title, expected_formatted_time_in_utc)],
         )
       end
 
@@ -110,7 +110,7 @@ module Extension
         @version.last_user_interaction_at = Time.parse('2020-05-07 19:01:56 UTC')
         @version.validation_errors = [
           Models::ValidationError.new(field: %w[test_field], message: 'Error message'),
-          Models::ValidationError.new(field: %w[test_field1 test_field2], message: 'Error message2')
+          Models::ValidationError.new(field: %w[test_field1 test_field2], message: 'Error message2'),
         ]
 
         Commands::Build.any_instance.stubs(:call)
@@ -125,8 +125,8 @@ module Extension
             @context.message('push.pushed_with_errors', 'May 07, 2020 19:01:56 UTC'),
             '{{x}} test_field: Error message',
             '{{x}} test_field2: Error message2',
-            @context.message('push.push_with_errors_info')
-          ]
+            @context.message('push.push_with_errors_info'),
+          ],
         )
       end
 

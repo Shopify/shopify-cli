@@ -28,7 +28,7 @@ module ShopifyCli
         scope: client.scopes,
         redirect_uri: OAuth::REDIRECT_HOST,
         state: client.state_token,
-        response_type: :code
+        response_type: :code,
       }
       stub_request(:post, "#{endpoint}/authorize?#{URI.encode_www_form(authorize_query)}")
 
@@ -37,7 +37,7 @@ module ShopifyCli
         code: 'mycode',
         redirect_uri: OAuth::REDIRECT_HOST,
         client_id: client.client_id,
-        client_secret: 'secret'
+        client_secret: 'secret',
       }
       stub_request(:post, "#{endpoint}/token")
         .with(body: URI.encode_www_form(token_query))
@@ -59,7 +59,7 @@ module ShopifyCli
         scope: client.scopes,
         redirect_uri: OAuth::REDIRECT_HOST,
         state: client.state_token,
-        response_type: :code
+        response_type: :code,
       }
       stub_request(:post, "#{endpoint}/authorize?#{URI.encode_www_form(authorize_query)}")
 
@@ -68,7 +68,7 @@ module ShopifyCli
         code: 'mycode',
         redirect_uri: OAuth::REDIRECT_HOST,
         client_id: client.client_id,
-        code_verifier: client.code_verifier
+        code_verifier: client.code_verifier,
       }
       stub_request(:post, "#{endpoint}/token")
         .with(body: URI.encode_www_form(token_query))
@@ -90,7 +90,7 @@ module ShopifyCli
         scope: client.scopes,
         redirect_uri: OAuth::REDIRECT_HOST,
         state: client.state_token,
-        response_type: :code
+        response_type: :code,
       }
       stub_request(:post, "#{endpoint}/authorize?#{URI.encode_www_form(authorize_query)}")
 
@@ -99,7 +99,7 @@ module ShopifyCli
         code: 'mycode',
         redirect_uri: OAuth::REDIRECT_HOST,
         client_id: client.client_id,
-        code_verifier: client.code_verifier
+        code_verifier: client.code_verifier,
       }
       stub_request(:post, "#{endpoint}/token")
         .with(body: URI.encode_www_form(token_query))
@@ -112,7 +112,7 @@ module ShopifyCli
         client_id: client.client_id,
         audience: '123',
         scope: client.scopes,
-        subject_token: 'accesstoken123'
+        subject_token: 'accesstoken123',
       }
       stub_request(:post, "#{endpoint}/token")
         .with(body: URI.encode_www_form(token_query))
@@ -130,7 +130,7 @@ module ShopifyCli
       client.store.set(
         test_access_token: 'accesstoken123',
         test_refresh_token: 'refreshtoken123',
-        test_exchange_token: 'exchangetoken123'
+        test_exchange_token: 'exchangetoken123',
       )
 
       token_query = {
@@ -140,7 +140,7 @@ module ShopifyCli
         client_id: client.client_id,
         audience: '123',
         scope: client.scopes,
-        subject_token: 'accesstoken123'
+        subject_token: 'accesstoken123',
       }
       stub_request(:post, "#{endpoint}/token")
         .with(body: URI.encode_www_form(token_query))
@@ -156,7 +156,7 @@ module ShopifyCli
       client.store.set(
         test_access_token: 'accesstoken123',
         test_refresh_token: 'refreshtoken123',
-        test_exchange_token: 'exchangetoken123'
+        test_exchange_token: 'exchangetoken123',
       )
 
       token_query = {
@@ -166,7 +166,7 @@ module ShopifyCli
         client_id: client.client_id,
         audience: '123',
         scope: client.scopes,
-        subject_token: 'accesstoken123'
+        subject_token: 'accesstoken123',
       }
 
       stub_request(:post, "#{endpoint}/token").with(body: URI.encode_www_form(token_query)).to_return(status: 403)
@@ -175,7 +175,7 @@ module ShopifyCli
         grant_type: :refresh_token,
         access_token: 'accesstoken123',
         refresh_token: 'refreshtoken123',
-        client_id: client.client_id
+        client_id: client.client_id,
       }
 
       token_resp = { access_token: 'accesstoken456', refresh_token: 'refreshtoken456' }.to_json
@@ -191,7 +191,7 @@ module ShopifyCli
         client_id: client.client_id,
         audience: '123',
         scope: client.scopes,
-        subject_token: 'accesstoken456'
+        subject_token: 'accesstoken456',
       }
       stub_request(:post, "#{endpoint}/token")
         .with(body: URI.encode_www_form(token_query))
@@ -225,7 +225,7 @@ module ShopifyCli
         scope: client.scopes,
         redirect_uri: OAuth::REDIRECT_HOST,
         state: client.state_token,
-        response_type: :code
+        response_type: :code,
       }
       stub_request(:post, "#{endpoint}/authorize?#{URI.encode_www_form(authorize_query)}")
 
@@ -234,14 +234,14 @@ module ShopifyCli
         code: 'mycode',
         redirect_uri: OAuth::REDIRECT_HOST,
         client_id: client.client_id,
-        client_secret: 'secret'
+        client_secret: 'secret',
       }
       stub_request(:post, "#{endpoint}/token")
         .with(body: URI.encode_www_form(token_query))
         .to_return(
         status: 400,
         body: '{ "error": "invalid_code", "error_description": "your code has expired or is invalid" }',
-        headers: {}
+        headers: {},
       )
 
       assert_raises OAuth::Error do

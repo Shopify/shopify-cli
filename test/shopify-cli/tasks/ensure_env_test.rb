@@ -18,8 +18,8 @@ module ShopifyCli
       def test_create_new_app_if_none_available
         response = [
           {
-            'id' => 421, 'businessName' => 'one', 'stores' => [{ 'shopDomain' => 'store.myshopify.com' }], 'apps' => []
-          }
+            'id' => 421, 'businessName' => 'one', 'stores' => [{ 'shopDomain' => 'store.myshopify.com' }], 'apps' => [],
+          },
         ]
         ShopifyCli::PartnersAPI::Organizations.expects(:fetch_with_app).with(@context).returns(response)
         CLI::UI::Prompt.expects(:ask).with(@context.message('core.tasks.ensure_env.app_name')).returns('new app')
@@ -40,8 +40,8 @@ module ShopifyCli
             'id' => 421,
             'businessName' => 'one',
             'stores' => [{ 'shopDomain' => 'store.myshopify.com' }],
-            'apps' => [{ 'title' => 'app', 'apiKey' => 1235, 'apiSecretKeys' => [{ 'secret' => 1234 }] }]
-          }
+            'apps' => [{ 'title' => 'app', 'apiKey' => 1235, 'apiSecretKeys' => [{ 'secret' => 1234 }] }],
+          },
         ]
         ShopifyCli::PartnersAPI::Organizations.expects(:fetch_with_app).with(@context).returns(response)
         env_file = Minitest::Mock.new
@@ -124,7 +124,7 @@ module ShopifyCli
           secret: 1234,
           shop: 'store.myshopify.com',
           scopes: 'write_products,write_customers,write_draft_orders',
-          extra: {}
+          extra: {},
         }
       end
 
@@ -138,17 +138,17 @@ module ShopifyCli
             'id' => 100,
             'businessName' => 'one',
             'stores' => [{ 'shopDomain' => 'store.myshopify.com' }],
-            'apps' => [{ 'title' => 'app', 'apiKey' => 1234, 'apiSecretKeys' => [{ 'secret' => 1233 }] }]
+            'apps' => [{ 'title' => 'app', 'apiKey' => 1234, 'apiSecretKeys' => [{ 'secret' => 1233 }] }],
           },
           {
             'id' => 101,
             'businessName' => 'two',
             'stores' => [
               { 'shopDomain' => 'store2.myshopify.com', 'shopName' => 'foo' },
-              { 'shopDomain' => 'store1.myshopify.com', 'shopName' => 'bar' }
+              { 'shopDomain' => 'store1.myshopify.com', 'shopName' => 'bar' },
             ],
-            'apps' => [{ 'title' => 'app', 'apiKey' => 1235, 'apiSecretKeys' => [{ 'secret' => 1234 }] }]
-          }
+            'apps' => [{ 'title' => 'app', 'apiKey' => 1235, 'apiSecretKeys' => [{ 'secret' => 1234 }] }],
+          },
         ]
       end
     end

@@ -13,7 +13,7 @@ module ShopifyCli
           ShopifyCli::PartnersAPI.query(
             @ctx,
             'update_dashboard_urls',
-            input: { redirectUrlWhitelist: with_loopback, apiKey: api_key }
+            input: { redirectUrlWhitelist: with_loopback, apiKey: api_key },
           )
         end
       end

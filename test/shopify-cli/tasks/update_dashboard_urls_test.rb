@@ -15,14 +15,14 @@ module ShopifyCli
             data: {
               app: {
                 applicationUrl: 'https://123abc.ngrok.io',
-                redirectUrlWhitelist: %w[https://123abc.ngrok.io https://123abc.ngrok.io/callback/fake]
-              }
-            }
-          }
+                redirectUrlWhitelist: %w[https://123abc.ngrok.io https://123abc.ngrok.io/callback/fake],
+              },
+            },
+          },
         )
         ShopifyCli::Tasks::UpdateDashboardURLS.call(
           @context,
-          url: 'https://123abc.ngrok.io', callback_url: '/callback/fake'
+          url: 'https://123abc.ngrok.io', callback_url: '/callback/fake',
         )
       end
 
@@ -38,10 +38,10 @@ module ShopifyCli
               data: {
                 app: {
                   applicationUrl: 'https://oldone123.ngrok.io',
-                  redirectUrlWhitelist: %w[https://123abc.ngrok.io https://newone123.ngrok.io/callback/fake]
-                }
-              }
-            }
+                  redirectUrlWhitelist: %w[https://123abc.ngrok.io https://newone123.ngrok.io/callback/fake],
+                },
+              },
+            },
           )
 
         update_request =
@@ -51,13 +51,13 @@ module ShopifyCli
               input: {
                 applicationUrl: 'https://newone123.ngrok.io',
                 redirectUrlWhitelist: %w[https://newone123.ngrok.io https://newone123.ngrok.io/callback/fake],
-                apiKey: api_key
-              }
-            }
+                apiKey: api_key,
+              },
+            },
           )
         ShopifyCli::Tasks::UpdateDashboardURLS.call(
           @context,
-          url: 'https://newone123.ngrok.io', callback_url: '/callback/fake'
+          url: 'https://newone123.ngrok.io', callback_url: '/callback/fake',
         )
         assert_requested(get_request)
         assert_requested(update_request)
@@ -78,10 +78,10 @@ module ShopifyCli
                   https://123abc.ngrok.io
                   https://fake.fakeurl.com
                   https://fake.fakeurl.com/callback/fake
-                ]
-              }
-            }
-          }
+                ],
+              },
+            },
+          },
         )
 
         stub_partner_req(
@@ -95,13 +95,13 @@ module ShopifyCli
                 https://fake.fakeurl.com/callback/fake
                 https://newone123.ngrok.io/callback/fake
               ],
-              apiKey: api_key
-            }
-          }
+              apiKey: api_key,
+            },
+          },
         )
         ShopifyCli::Tasks::UpdateDashboardURLS.call(
           @context,
-          url: 'https://newone123.ngrok.io', callback_url: '/callback/fake'
+          url: 'https://newone123.ngrok.io', callback_url: '/callback/fake',
         )
       end
 
@@ -119,10 +119,10 @@ module ShopifyCli
                   https://123abc.ngrok.io
                   https://fake.fakeurl.com
                   https://fake.fakeurl.com/callback/fake
-                ]
-              }
-            }
-          }
+                ],
+              },
+            },
+          },
         )
 
         stub_partner_req(
@@ -136,14 +136,14 @@ module ShopifyCli
                 https://fake.fakeurl.com/callback/fake
                 https://myowndomain.io/callback/fake
               ],
-              apiKey: api_key
-            }
-          }
+              apiKey: api_key,
+            },
+          },
         )
         CLI::UI::Prompt.expects(:confirm).returns(false)
         ShopifyCli::Tasks::UpdateDashboardURLS.call(
           @context,
-          url: 'https://myowndomain.io', callback_url: '/callback/fake'
+          url: 'https://myowndomain.io', callback_url: '/callback/fake',
         )
       end
 
@@ -161,10 +161,10 @@ module ShopifyCli
                   https://123abc.ngrok.io
                   https://fake.fakeurl.com
                   https://fake.fakeurl.com/callback/fake
-                ]
-              }
-            }
-          }
+                ],
+              },
+            },
+          },
         )
 
         stub_partner_req(
@@ -178,14 +178,14 @@ module ShopifyCli
                 https://fake.fakeurl.com/callback/fake
                 https://myowndomain.io/callback/fake
               ],
-              apiKey: api_key
-            }
-          }
+              apiKey: api_key,
+            },
+          },
         )
         CLI::UI::Prompt.expects(:confirm).returns(true)
         ShopifyCli::Tasks::UpdateDashboardURLS.call(
           @context,
-          url: 'https://myowndomain.io', callback_url: '/callback/fake'
+          url: 'https://myowndomain.io', callback_url: '/callback/fake',
         )
       end
 
@@ -197,7 +197,7 @@ module ShopifyCli
           stub_partner_req(
             'get_app_urls',
             variables: { apiKey: api_key },
-            resp: { data: { app: { applicationUrl: 'https://oldone123.ngrok.io', redirectUrlWhitelist: [] } } }
+            resp: { data: { app: { applicationUrl: 'https://oldone123.ngrok.io', redirectUrlWhitelist: [] } } },
           )
 
         update_request =
@@ -207,13 +207,13 @@ module ShopifyCli
               input: {
                 applicationUrl: 'https://newone123.ngrok.io',
                 redirectUrlWhitelist: %w[https://newone123.ngrok.io/callback/fake],
-                apiKey: api_key
-              }
-            }
+                apiKey: api_key,
+              },
+            },
           )
         ShopifyCli::Tasks::UpdateDashboardURLS.call(
           @context,
-          url: 'https://newone123.ngrok.io', callback_url: '/callback/fake'
+          url: 'https://newone123.ngrok.io', callback_url: '/callback/fake',
         )
         assert_requested(get_request)
         assert_requested(update_request)
@@ -229,10 +229,10 @@ module ShopifyCli
             data: {
               app: {
                 applicationUrl: 'https://123abc.ngrok.io',
-                redirectUrlWhitelist: %w[https://123abc.ngrok.io https://123abc.ngrok.io/callback/fake]
-              }
-            }
-          }
+                redirectUrlWhitelist: %w[https://123abc.ngrok.io https://123abc.ngrok.io/callback/fake],
+              },
+            },
+          },
         )
 
         stub_partner_req(
@@ -244,14 +244,14 @@ module ShopifyCli
                 https://123adifferenturl.ngrok.io
                 https://123adifferenturl.ngrok.io/callback/fake
               ],
-              apiKey: api_key
-            }
-          }
+              apiKey: api_key,
+            },
+          },
         )
         CLI::UI::Prompt.expects(:confirm).returns(true)
         ShopifyCli::Tasks::UpdateDashboardURLS.call(
           @context,
-          url: 'https://123adifferenturl.ngrok.io', callback_url: '/callback/fake'
+          url: 'https://123adifferenturl.ngrok.io', callback_url: '/callback/fake',
         )
       end
     end

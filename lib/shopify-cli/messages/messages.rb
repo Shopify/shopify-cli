@@ -10,9 +10,9 @@ module ShopifyCli
             serve:
               '{{*}} Change directories to your new project folder {{green:%s}} and run {{command:%s serve}} ' \
                 'to start a local server',
-            install: '{{*}} Then, visit {{underline:%s/test}} to install {{green:%s}} on your Dev Store'
-          }
-        }
+            install: '{{*}} Then, visit {{underline:%s/test}} to install {{green:%s}} on your Dev Store',
+          },
+        },
       },
       core: {
         connect: {
@@ -22,7 +22,7 @@ module ShopifyCli
           HELP
           already_connected_warning: '{{yellow:! This app appears to be already connected}}',
           project_type_select: 'What type of project would you like to connect?',
-          cli_yml_saved: '.shopify-cli.yml saved to project root'
+          cli_yml_saved: '.shopify-cli.yml saved to project root',
         },
         context: { open_url: <<~OPEN },
           Please open this URL in your browser:
@@ -34,7 +34,7 @@ module ShopifyCli
             Usage: {{command:%s create [ %s ]}}
           HELP
           error: { invalid_app_type: '{{red:Error}}: invalid app type {{bold:%s}}' },
-          project_type_select: 'What type of project would you like to create?'
+          project_type_select: 'What type of project would you like to create?',
         },
         env_file: { saving_header: 'writing %s file...', saving: 'writing %s file', saved: '%s saved to project root' },
         config: {
@@ -50,7 +50,7 @@ module ShopifyCli
             enabled: '{{v}} feature {{green:%s}} has been enabled',
             disabled: '{{v}} feature {{green:%s}} has been disabled',
             is_enabled: '{{v}} feature {{green:%s}} is currently enabled',
-            is_disabled: '{{v}} feature {{green:%s}} is currently disabled'
+            is_disabled: '{{v}} feature {{green:%s}} is currently disabled',
           },
           analytics: {
             help: <<~HELP,
@@ -60,18 +60,18 @@ module ShopifyCli
             enabled: '{{v}} analytics have been enabled',
             disabled: '{{v}} analytics have been disabled',
             is_enabled: '{{v}} analytics are currently enabled',
-            is_disabled: '{{v}} analytics are currently disabled'
-          }
+            is_disabled: '{{v}} analytics are currently disabled',
+          },
         },
         git: {
           error: {
             directory_exists: 'Project directory already exists. Please create a project with a new name.',
             no_branches_found: 'Could not find any git branches',
             repo_not_initiated: 'Git repo is not initiated. Please run `git init` and make at least one commit.',
-            no_commits_made: 'No git commits have been made. Please make at least one commit.'
+            no_commits_made: 'No git commits have been made. Please make at least one commit.',
           },
           cloning: 'Cloning %s into %s...',
-          cloned: '{{v}} Cloned into %s'
+          cloned: '{{v}} Cloned into %s',
         },
         help: { error: { command_not_found: 'Command %s not found.' }, preamble: <<~MESSAGE },
           Use {{command:%s help <command>}} to display detailed information about a specific command.
@@ -86,20 +86,20 @@ module ShopifyCli
             deploy: 'Could not deploy to Heroku',
             download: 'Heroku CLI could not be downloaded',
             install: 'Could not install Heroku CLI',
-            could_not_select_app: 'Heroku app `%s` could not be selected'
-          }
+            could_not_select_app: 'Heroku app `%s` could not be selected',
+          },
         },
         js_deps: {
           error: {
             missing_package: 'expected to have a file at: %s',
             invalid_package: '{{info:%s}} was not valid JSON. Fix this then try again',
             install_spinner_error: 'Unable to install all %d dependencies',
-            install_error: 'An error occurred while installing dependencies'
+            install_error: 'An error occurred while installing dependencies',
           },
           installing: 'Installing dependencies with %s...',
           installed: 'Dependencies installed',
           npm_installing_deps: 'Installing %d dependencies...',
-          npm_installed_deps: '%d npm dependencies installed'
+          npm_installed_deps: '%d npm dependencies installed',
         },
         logout: { help: <<~HELP, success: 'Logged out of partner organization and store' },
           Log out of a currently authenticated partner organization and store, or clear invalid credentials
@@ -120,8 +120,8 @@ module ShopifyCli
             invalid_request_response: 'Invalid request: %s',
             invalid_state_response: 'Anti-forgery state token does not match the initial request.',
             authenticated: 'Authenticated successfully',
-            not_authenticated: 'Failed to authenticate'
-          }
+            not_authenticated: 'Failed to authenticate',
+          },
         },
         options: { help_text: 'Print help for command' },
         partners_api: { org_name_and_id: '%s (%s)', error: { account_not_found: <<~MESSAGE } },
@@ -131,13 +131,13 @@ module ShopifyCli
         api: {
           error: {
             internal_server_error: '{{red:{{x}} An unexpected error occurred on Shopify.}}',
-            internal_server_error_debug: "\n{{red:Response details:}}\n%s\n\n"
-          }
+            internal_server_error_debug: "\n{{red:Response details:}}\n%s\n\n",
+          },
         },
         populate: {
           options: { header: '{{bold:{{cyan:%s}} options:}}', count_help: 'Number of resources to generate' },
           populating: 'Populating %d %ss...',
-          completion_message: <<~COMPLETION_MESSAGE
+          completion_message: <<~COMPLETION_MESSAGE,
           Successfully added %d %s to {{green:%s}}
           {{*}} View all %ss at {{underline:%s%ss}}
           COMPLETION_MESSAGE
@@ -150,8 +150,8 @@ module ShopifyCli
           error: {
             not_hash: '{{x}} %s was not a proper YAML file. Expecting a hash.',
             invalid: '{{x}} %s contains invalid YAML: %s',
-            not_found: '{{x}} %s not found'
-          }
+            not_found: '{{x}} %s not found',
+          },
         },
         project_type: { error: { cannot_override_core: "Can't register duplicate core command '%s' from %s" } },
         system: {
@@ -182,12 +182,12 @@ module ShopifyCli
             env_header: '{{bold:Project environment}}',
             env_not_set: 'not set',
             env: '%-18s = %s',
-            no_env: '{{x}} .env file not present'
+            no_env: '{{x}} .env file not present',
           },
           environment_header: '{{bold:Environment}}',
           env: '%-17s = %s',
           identity_header: '{{bold:Identity}}',
-          identity_is_shopifolk: '{{v}} Checked user settings: you’re Shopify staff!'
+          identity_is_shopifolk: '{{v}} Checked user settings: you’re Shopify staff!',
         },
         tasks: {
           ensure_env: {
@@ -204,8 +204,8 @@ module ShopifyCli
               select: 'What type of app are you building?',
               select_public: 'Public: An app built for a wide merchant audience.',
               select_custom: 'Custom: An app custom built for a single client.',
-              selected: 'App type {{green:%s}}'
-            }
+              selected: 'App type {{green:%s}}',
+            },
           },
           ensure_dev_store: {
             could_not_verify_store: "Couldn't verify your store %s",
@@ -214,13 +214,13 @@ module ShopifyCli
               Doing this will allow you to install your app, but the store will become {{bold:transfer-disabled}}.
               Learn more: https://shopify.dev/tutorials/transfer-a-development-store-to-a-merchant#transfer-disabled-stores
               MESSAGE
-            transfer_disabled: '{{v}} Transfer has been disabled on %s.'
+            transfer_disabled: '{{v}} Transfer has been disabled on %s.',
           },
           update_dashboard_urls: {
             updated: '{{v}} Whitelist URLS updated in Partners Dashboard}}',
             update_error:
               '{{x}} error: For authentication issues, run {{command:%s logout}} to clear invalid credentials',
-            update_prompt: 'Do you want to update your application url?'
+            update_prompt: 'Do you want to update your application url?',
           },
           select_org_and_shop: {
             authentication_issue: 'For authentication issues, run {{command:%s logout}} to clear invalid credentials',
@@ -231,13 +231,13 @@ module ShopifyCli
               no_development_stores: '{{x}} No Development Stores available.',
               no_organizations: 'No partner organizations available.',
               organization_not_found: 'Cannot find a partner organization with that ID',
-              partners_notice: 'Please visit https://partners.shopify.com/ to create a partners account'
+              partners_notice: 'Please visit https://partners.shopify.com/ to create a partners account',
             },
             first_party: 'Are you working on a 1P (1st Party) app?',
             identified_as_shopify: "We've identified you as a {{green:Shopify}} employee.",
             organization: 'Partner organization {{green:%s (%s)}}',
-            organization_select: 'Select partner organization'
-          }
+            organization_select: 'Select partner organization',
+          },
         },
         tunnel: {
           error: {
@@ -245,7 +245,7 @@ module ShopifyCli
             url_fetch_failure: 'Unable to fetch external url',
             prereq_command_required:
               '%1$s is required for installing ngrok. Please install %1$s using the appropriate' \
-                ' package manager for your system.'
+                ' package manager for your system.',
           },
           not_running: '{{green:x}} ngrok tunnel not running',
           signup_suggestion: <<~MESSAGE,
@@ -258,13 +258,13 @@ module ShopifyCli
           stopped: '{{green:x}} ngrok tunnel stopped',
           timed_out: '{{x}} ngrok tunnel has timed out, restarting ...',
           will_timeout: '{{*}} This tunnel will timeout in {{red:%s}}',
-          prereq_command_location: '%s @ %s'
+          prereq_command_location: '%s @ %s',
         },
         version: { help: <<~HELP },
           Prints version number.
             Usage: {{command:%s version}}
           HELP
-        warning: { development_version: <<~DEVELOPMENT, shell_shim: <<~MESSAGE, new_version: <<~MESSAGE }
+        warning: { development_version: <<~DEVELOPMENT, shell_shim: <<~MESSAGE, new_version: <<~MESSAGE },
           {{*}} {{yellow:You are running a development version of the CLI at:}}
             {{yellow:%s}}
 
@@ -281,7 +281,7 @@ module ShopifyCli
             {{underline:https://shopify.github.io/shopify-app-cli/getting-started/upgrade/}}}}
 
           MESSAGE
-      }
+      },
     }.freeze
   end
 end

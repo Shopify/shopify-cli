@@ -11,9 +11,9 @@ module ShopifyCli
           'all_organizations',
           resp: {
             data: {
-              organizations: { nodes: [{ id: 42, stores: { nodes: [{ shopDomain: 'shopdomain.myshopify.com' }] } }] }
-            }
-          }
+              organizations: { nodes: [{ id: 42, stores: { nodes: [{ shopDomain: 'shopdomain.myshopify.com' }] } }] },
+            },
+          },
         )
 
         orgs = PartnersAPI::Organizations.fetch_all(@context)
@@ -26,7 +26,7 @@ module ShopifyCli
       def test_fetch_all_handles_no_shops
         stub_partner_req(
           'all_organizations',
-          resp: { data: { organizations: { nodes: [{ id: 42, stores: { nodes: [] } }] } } }
+          resp: { data: { organizations: { nodes: [{ id: 42, stores: { nodes: [] } }] } } },
         )
 
         orgs = PartnersAPI::Organizations.fetch_all(@context)
@@ -48,9 +48,9 @@ module ShopifyCli
           variables: { id: 42 },
           resp: {
             data: {
-              organizations: { nodes: [{ id: 42, stores: { nodes: [{ shopDomain: 'shopdomain.myshopify.com' }] } }] }
-            }
-          }
+              organizations: { nodes: [{ id: 42, stores: { nodes: [{ shopDomain: 'shopdomain.myshopify.com' }] } }] },
+            },
+          },
         )
 
         org = PartnersAPI::Organizations.fetch(@context, id: 42)
@@ -69,7 +69,7 @@ module ShopifyCli
       def test_fetch_handles_no_shops
         stub_partner_req(
           'find_organization',
-          variables: { id: 42 }, resp: { data: { organizations: { nodes: [{ id: 42, stores: { nodes: [] } }] } } }
+          variables: { id: 42 }, resp: { data: { organizations: { nodes: [{ id: 42, stores: { nodes: [] } }] } } },
         )
 
         org = PartnersAPI::Organizations.fetch(@context, id: 42)
@@ -88,7 +88,7 @@ module ShopifyCli
                     'id': 421,
                     'businessName': 'one',
                     'stores': { 'nodes': [{ 'shopDomain': 'store.myshopify.com' }] },
-                    'apps': { nodes: [{ title: 'app', apiKey: 1234, apiSecretKeys: [{ secret: 1233 }] }] }
+                    'apps': { nodes: [{ title: 'app', apiKey: 1234, apiSecretKeys: [{ secret: 1233 }] }] },
                   },
                   {
                     'id': 431,
@@ -96,15 +96,17 @@ module ShopifyCli
                     'stores': {
                       'nodes': [
                         { 'shopDomain': 'store.myshopify.com', 'shopName': 'store1' },
-                        { 'shopDomain': 'store2.myshopify.com', 'shopName': 'store2' }
-                      ]
+                        { 'shopDomain': 'store2.myshopify.com', 'shopName': 'store2' },
+                      ],
                     },
-                    'apps': { nodes: [{ id: 123, title: 'fake', apiKey: '1234', apiSecretKeys: [{ secret: '1233' }] }] }
-                  }
-                ]
-              }
-            }
-          }
+                    'apps': {
+                      nodes: [{ id: 123, title: 'fake', apiKey: '1234', apiSecretKeys: [{ secret: '1233' }] }],
+                    },
+                  },
+                ],
+              },
+            },
+          },
         )
         orgs = PartnersAPI::Organizations.fetch_with_app(@context)
         assert_equal(2, orgs.count)
@@ -118,10 +120,10 @@ module ShopifyCli
           resp: {
             data: {
               organizations: {
-                nodes: [{ 'id': 421, 'businessName': 'one', 'stores': { 'nodes': [] }, 'apps': { nodes: [] } }]
-              }
-            }
-          }
+                nodes: [{ 'id': 421, 'businessName': 'one', 'stores': { 'nodes': [] }, 'apps': { nodes: [] } }],
+              },
+            },
+          },
         )
         orgs = PartnersAPI::Organizations.fetch_with_app(@context)
         assert_equal(1, orgs.count)

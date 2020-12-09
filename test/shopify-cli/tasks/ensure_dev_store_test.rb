@@ -60,13 +60,13 @@ module ShopifyCli
                   {
                     'id': 42,
                     'stores': {
-                      'nodes': [{ 'shopId': 142, 'shopDomain': domain, 'transferDisabled': transfer_disabled }]
-                    }
-                  }
-                ]
-              }
-            }
-          }
+                      'nodes': [{ 'shopId': 142, 'shopDomain': domain, 'transferDisabled': transfer_disabled }],
+                    },
+                  },
+                ],
+              },
+            },
+          },
         )
       end
     end

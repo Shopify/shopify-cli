@@ -3,7 +3,7 @@ module ShopifyCli
     DOWNLOAD_URLS = {
       linux: 'https://cli-assets.heroku.com/heroku-linux-x64.tar.gz',
       mac: 'https://cli-assets.heroku.com/heroku-darwin-x64.tar.gz',
-      windows: 'https://cli-assets.heroku.com/heroku-x64.exe'
+      windows: 'https://cli-assets.heroku.com/heroku-x64.exe',
     }
 
     def initialize(ctx)

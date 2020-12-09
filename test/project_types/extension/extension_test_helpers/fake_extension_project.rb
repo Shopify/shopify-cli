@@ -22,8 +22,8 @@ module Extension
             api_key: api_key,
             secret: api_secret,
             extra: {
-              ExtensionProjectKeys::TITLE_KEY => title, ExtensionProjectKeys::REGISTRATION_ID_KEY => registration_id
-            }
+              ExtensionProjectKeys::TITLE_KEY => title, ExtensionProjectKeys::REGISTRATION_ID_KEY => registration_id,
+            },
           )
       end
     end

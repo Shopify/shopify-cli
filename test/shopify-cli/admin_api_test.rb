@@ -12,7 +12,7 @@ module ShopifyCli
         ctx: @context,
         auth_header: 'X-Shopify-Access-Token',
         token: 'token123',
-        url: 'https://my-test-shop.myshopify.com/admin/api/unstable/graphql.json'
+        url: 'https://my-test-shop.myshopify.com/admin/api/unstable/graphql.json',
       )
         .returns(unstable_stub)
       unstable_stub
@@ -28,7 +28,7 @@ module ShopifyCli
         ctx: @context,
         auth_header: 'X-Shopify-Access-Token',
         token: 'token123',
-        url: 'https://my-test-shop.myshopify.com/admin/api/2019-04/graphql.json'
+        url: 'https://my-test-shop.myshopify.com/admin/api/2019-04/graphql.json',
       )
         .returns(api_stub)
       api_stub.expects(:query).with('query', variables: {}).returns('response')
@@ -44,13 +44,13 @@ module ShopifyCli
         ctx: @context,
         auth_header: 'X-Shopify-Access-Token',
         token: 'token123',
-        url: 'https://my-test-shop.myshopify.com/admin/api/2019-04/graphql.json'
+        url: 'https://my-test-shop.myshopify.com/admin/api/2019-04/graphql.json',
       )
         .returns(api_stub)
       api_stub.expects(:query).with('query', variables: {}).returns('response')
       assert_equal(
         'response',
-        AdminAPI.query(@context, 'query', shop: 'my-test-shop.myshopify.com', api_version: '2019-04')
+        AdminAPI.query(@context, 'query', shop: 'my-test-shop.myshopify.com', api_version: '2019-04'),
       )
     end
 
@@ -63,7 +63,7 @@ module ShopifyCli
         ctx: @context,
         auth_header: 'X-Shopify-Access-Token',
         token: 'token123',
-        url: 'https://my-test-shop.myshopify.com/admin/api/2019-04/graphql.json'
+        url: 'https://my-test-shop.myshopify.com/admin/api/2019-04/graphql.json',
       )
         .returns(api_stub)
         .twice
@@ -80,7 +80,7 @@ module ShopifyCli
         secret: 'secret',
         scopes: nil,
         token_path: '/access_token',
-        options: { 'grant_options[]' => 'per user' }
+        options: { 'grant_options[]' => 'per user' },
       )
         .returns(@oauth_client)
       @oauth_client.expects(:authenticate).with('https://my-test-shop.myshopify.com/admin/oauth')
@@ -97,7 +97,7 @@ module ShopifyCli
         ctx: @context,
         auth_header: 'X-Shopify-Access-Token',
         token: 'token123',
-        url: 'https://other-test-shop.myshopify.com/admin/api/2019-04/graphql.json'
+        url: 'https://other-test-shop.myshopify.com/admin/api/2019-04/graphql.json',
       )
         .returns(api_stub)
       api_stub.expects(:query).with('query', variables: {}).returns('response')

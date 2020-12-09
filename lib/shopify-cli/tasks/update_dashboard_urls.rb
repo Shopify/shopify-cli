@@ -18,8 +18,8 @@ module ShopifyCli
           input: {
             applicationUrl: consent ? url : app['applicationUrl'],
             redirectUrlWhitelist: constructed_urls,
-            apiKey: api_key
-          }
+            apiKey: api_key,
+          },
         )
         @ctx.puts(@ctx.message('core.tasks.update_dashboard_urls.updated'))
       rescue StandardError

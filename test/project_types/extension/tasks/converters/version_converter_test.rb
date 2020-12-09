@@ -33,7 +33,7 @@ module Extension
             Converters::VersionConverter::LAST_USER_INTERACTION_AT_FIELD => @last_user_interaction_at,
             Converters::VersionConverter::CONTEXT_FIELD => @extension_context,
             Converters::VersionConverter::LOCATION_FIELD => @location,
-            Converters::VersionConverter::VALIDATION_ERRORS_FIELD => []
+            Converters::VersionConverter::VALIDATION_ERRORS_FIELD => [],
           }
 
           parsed_version = Tasks::Converters::VersionConverter.from_hash(@context, hash)

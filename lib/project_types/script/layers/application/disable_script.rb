@@ -8,7 +8,7 @@ module Script
           UI::PrintingSpinner.spin(ctx, ctx.message('script.application.disabling')) do |p_ctx, spinner|
             script_service = Infrastructure::ScriptService.new(ctx: p_ctx)
             script_service.disable(
-              api_key: api_key, shop_domain: shop_domain, extension_point_type: extension_point_type
+              api_key: api_key, shop_domain: shop_domain, extension_point_type: extension_point_type,
             )
             spinner.update_title(p_ctx.message('script.application.disabled'))
           end

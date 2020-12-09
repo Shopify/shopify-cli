@@ -22,7 +22,7 @@ module ShopifyCli
     DOWNLOAD_URLS = {
       mac: 'https://bin.equinox.io/c/4VmDzA7iaHb/ngrok-stable-darwin-amd64.zip',
       linux: 'https://bin.equinox.io/c/4VmDzA7iaHb/ngrok-stable-linux-amd64.zip',
-      windows: 'https://bin.equinox.io/c/4VmDzA7iaHb/ngrok-stable-windows-amd64.zip'
+      windows: 'https://bin.equinox.io/c/4VmDzA7iaHb/ngrok-stable-windows-amd64.zip',
     }
 
     NGROK_TUNNELS_URI = URI.parse('http://localhost:4040/api/tunnels')

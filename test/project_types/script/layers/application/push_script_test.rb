@@ -17,7 +17,7 @@ describe Script::Layers::Application::PushScript do
   let(:source_file) { 'src/script.ts' }
   let(:project) do
     TestHelpers::FakeScriptProject.new(
-      language: @language, extension_point_type: @extension_point_type, script_name: @script_name
+      language: @language, extension_point_type: @extension_point_type, script_name: @script_name,
     )
   end
   let(:push_package_repository) { Script::Layers::Infrastructure::FakePushPackageRepository.new }
@@ -49,7 +49,7 @@ describe Script::Layers::Application::PushScript do
         script_name: script_name,
         source_file: source_file,
         api_key: api_key,
-        force: force
+        force: force,
       )
     end
 
