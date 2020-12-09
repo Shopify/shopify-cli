@@ -76,8 +76,8 @@ module ShopifyCli
       end
       begin
         JSON.parse(tips_content).fetch("tips")
-      rescue KeyError
-        # fail  silently
+      rescue JSON::ParserError, KeyError
+        # fail silently
       end
     end
   end
