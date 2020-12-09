@@ -108,7 +108,7 @@ module ShopifyCli
         .to_return(status: 404, body: "", headers: {})
 
       assert_nil TipOfTheDay.call
-      assert_equal({}, ShopifyCli::Config.get_section('tiplog'))
+      assert_empty ShopifyCli::Config.get_section('tiplog')
     end
 
     def test_skip_when_request_timeout
@@ -117,7 +117,7 @@ module ShopifyCli
         .to_timeout
 
       assert_nil TipOfTheDay.call
-      assert_equal({}, ShopifyCli::Config.get_section('tiplog'))
+      assert_empty ShopifyCli::Config.get_section('tiplog')
     end
   end
 end
