@@ -78,6 +78,7 @@ Style/RegexpLiteral:
 Style/MethodCallWithArgsParentheses:
   IgnoredMethods:
     - assert
+    - assert_empty
     - assert_equal
     - assert_includes
     - assert_nil
