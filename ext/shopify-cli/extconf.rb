@@ -31,7 +31,7 @@ else
   SCRIPT
 
   File.write(script, script_content)
-  FileUtils.chmod("+x", script)
+  FileUtils.chmod('+x', script)
 
   makefile_content = <<~MAKEFILE
     .PHONY: clean install

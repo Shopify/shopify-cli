@@ -54,7 +54,7 @@ module Script
 
         class WebAssemblyBinaryNotFoundError < ScriptProjectError
           def initialize
-            super("WebAssembly binary not found")
+            super('WebAssembly binary not found')
           end
         end
       end

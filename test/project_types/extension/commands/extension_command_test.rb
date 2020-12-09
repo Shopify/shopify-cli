@@ -35,9 +35,7 @@ module Extension
 
         io = capture_io_and_assert_raises(ShopifyCli::Abort) { @command.extension_type }
 
-        assert_message_output(io: io, expected_content: [
-          @context.message('errors.unknown_type', unknown_type),
-        ])
+        assert_message_output(io: io, expected_content: [@context.message('errors.unknown_type', unknown_type)])
       end
 
       def test_extension_type_returns_the_extension_type_instance_if_it_exists

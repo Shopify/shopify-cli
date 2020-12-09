@@ -19,15 +19,17 @@ module Rails
         ShopifyCli::Resources::EnvFile.any_instance.expects(:update)
         @context.stubs(:getenv).with('GEM_HOME').returns('/gem/path')
         @context.stubs(:getenv).with('GEM_PATH').returns('/gem/path')
-        @context.expects(:system).with(
+        @context
+          .expects(:system)
+          .with(
           'bin/rails server',
           env: {
-            "SHOPIFY_API_KEY" => "api_key",
-            "SHOPIFY_API_SECRET" => "secret",
-            "SHOP" => "my-test-shop.myshopify.com",
-            "SCOPES" => "write_products,write_customers,write_orders",
+            'SHOPIFY_API_KEY' => 'api_key',
+            'SHOPIFY_API_SECRET' => 'secret',
+            'SHOP' => 'my-test-shop.myshopify.com',
+            'SCOPES' => 'write_products,write_customers,write_orders',
             'PORT' => '8081',
-            'GEM_PATH' => '/gem/path',
+            'GEM_PATH' => '/gem/path'
           }
         )
         Rails::Commands::Serve.new(@context).call
@@ -37,16 +39,19 @@ module Rails
         ShopifyCli::Tunnel.stubs(:start).returns('garbage://example.com')
         ShopifyCli::Tasks::UpdateDashboardURLS.expects(:call).never
         ShopifyCli::Resources::EnvFile.any_instance.expects(:update).never
-        @context.expects(:system).with(
+        @context
+          .expects(:system)
+          .with(
           'bin/rails server',
           env: {
-            "SHOPIFY_API_KEY" => "api_key",
-            "SHOPIFY_API_SECRET" => "secret",
-            "SHOP" => "my-test-shop.myshopify.com",
-            "SCOPES" => "write_products,write_customers,write_orders",
-            'PORT' => '8081',
+            'SHOPIFY_API_KEY' => 'api_key',
+            'SHOPIFY_API_SECRET' => 'secret',
+            'SHOP' => 'my-test-shop.myshopify.com',
+            'SCOPES' => 'write_products,write_customers,write_orders',
+            'PORT' => '8081'
           }
-        ).never
+        )
+          .never
 
         assert_raises ShopifyCli::Abort do
           Rails::Commands::Serve.new(@context).call
@@ -56,13 +61,13 @@ module Rails
       def test_open_while_run
         ShopifyCli::Tunnel.stubs(:start).returns('https://example.com')
         ShopifyCli::Tasks::UpdateDashboardURLS.expects(:call)
-        ShopifyCli::Resources::EnvFile.any_instance.expects(:update).with(
-          @context, :host, 'https://example.com'
-        )
-        @context.expects(:puts).with(
+        ShopifyCli::Resources::EnvFile.any_instance.expects(:update).with(@context, :host, 'https://example.com')
+        @context
+          .expects(:puts)
+          .with(
           "\n" +
-          @context.message('rails.serve.open_info', 'https://example.com/login?shop=my-test-shop.myshopify.com') +
-          "\n"
+            @context.message('rails.serve.open_info', 'https://example.com/login?shop=my-test-shop.myshopify.com') +
+            "\n"
         )
         Rails::Commands::Serve.new(@context).call
       end
@@ -70,9 +75,7 @@ module Rails
       def test_update_env_with_host
         ShopifyCli::Tunnel.expects(:start).never
         ShopifyCli::Tasks::UpdateDashboardURLS.expects(:call)
-        ShopifyCli::Resources::EnvFile.any_instance.expects(:update).with(
-          @context, :host, 'https://example-foo.com'
-        )
+        ShopifyCli::Resources::EnvFile.any_instance.expects(:update).with(@context, :host, 'https://example-foo.com')
         command = Rails::Commands::Serve.new(@context)
         command.options.flags[:host] = 'https://example-foo.com'
         command.call

@@ -6,11 +6,11 @@ module Extension
     title('App Extension')
     creator('Extension::Commands::Create')
 
-    register_command('Extension::Commands::Build', "build")
-    register_command('Extension::Commands::Register', "register")
-    register_command('Extension::Commands::Push', "push")
-    register_command('Extension::Commands::Serve', "serve")
-    register_command('Extension::Commands::Tunnel', "tunnel")
+    register_command('Extension::Commands::Build', 'build')
+    register_command('Extension::Commands::Register', 'register')
+    register_command('Extension::Commands::Push', 'push')
+    register_command('Extension::Commands::Serve', 'serve')
+    register_command('Extension::Commands::Tunnel', 'tunnel')
 
     require Project.project_filepath('messages/messages')
     require Project.project_filepath('messages/message_loading')

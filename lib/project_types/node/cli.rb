@@ -5,12 +5,13 @@ module Node
     creator('Node::Commands::Create')
     connector('Node::Commands::Connect')
 
-    register_command('Node::Commands::Deploy', "deploy")
-    register_command('Node::Commands::Generate', "generate")
-    register_command('Node::Commands::Open', "open")
-    register_command('Node::Commands::Populate', "populate")
-    register_command('Node::Commands::Serve', "serve")
-    register_command('Node::Commands::Tunnel', "tunnel")
+    register_command('Node::Commands::Deploy', 'deploy')
+    register_command('Node::Commands::Generate', 'generate')
+    register_command('Node::Commands::Open', 'open')
+    register_command('Node::Commands::Populate', 'populate')
+    register_command('Node::Commands::Serve', 'serve')
+    register_command('Node::Commands::Tunnel', 'tunnel')
+
     # register_task('Node::Tasks::NodeTask', 'node_task')
 
     require Project.project_filepath('messages/messages')
@@ -30,8 +31,7 @@ module Node
   end
 
   # define/autoload project specific Tasks
-  module Tasks
-  end
+  module Tasks; end
 
   # define/autoload project specific Forms
   module Forms

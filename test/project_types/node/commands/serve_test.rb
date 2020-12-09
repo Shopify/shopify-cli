@@ -17,15 +17,17 @@ module Node
         ShopifyCli::Tunnel.stubs(:start).returns('https://example.com')
         ShopifyCli::Tasks::UpdateDashboardURLS.expects(:call)
         ShopifyCli::Resources::EnvFile.any_instance.expects(:update)
-        @context.expects(:system).with(
+        @context
+          .expects(:system)
+          .with(
           'npm run dev',
           env: {
-            "SHOPIFY_API_KEY" => "mykey",
-            "SHOPIFY_API_SECRET" => "mysecretkey",
-            "SHOP" => "my-test-shop.myshopify.com",
-            "SCOPES" => "read_products",
-            "HOST" => "https://example.com",
-            "PORT" => "8081",
+            'SHOPIFY_API_KEY' => 'mykey',
+            'SHOPIFY_API_SECRET' => 'mysecretkey',
+            'SHOP' => 'my-test-shop.myshopify.com',
+            'SCOPES' => 'read_products',
+            'HOST' => 'https://example.com',
+            'PORT' => '8081'
           }
         )
         run_cmd('serve')
@@ -35,17 +37,20 @@ module Node
         ShopifyCli::Tunnel.stubs(:start).returns('garbage://example.com')
         ShopifyCli::Tasks::UpdateDashboardURLS.expects(:call).never
         ShopifyCli::Resources::EnvFile.any_instance.expects(:update).never
-        @context.expects(:system).with(
+        @context
+          .expects(:system)
+          .with(
           'npm run dev',
           env: {
-            "SHOPIFY_API_KEY" => "mykey",
-            "SHOPIFY_API_SECRET" => "mysecretkey",
-            "SHOP" => "my-test-shop.myshopify.com",
-            "SCOPES" => "read_products",
-            "HOST" => "garbage://example.com",
-            "PORT" => "8081",
+            'SHOPIFY_API_KEY' => 'mykey',
+            'SHOPIFY_API_SECRET' => 'mysecretkey',
+            'SHOP' => 'my-test-shop.myshopify.com',
+            'SCOPES' => 'read_products',
+            'HOST' => 'garbage://example.com',
+            'PORT' => '8081'
           }
-        ).never
+        )
+          .never
 
         assert_raises ShopifyCli::Abort do
           run_cmd('serve')
@@ -55,13 +60,12 @@ module Node
       def test_open_while_run
         ShopifyCli::Tunnel.stubs(:start).returns('https://example.com')
         ShopifyCli::Tasks::UpdateDashboardURLS.expects(:call)
-        ShopifyCli::Resources::EnvFile.any_instance.expects(:update).with(
-          @context, :host, 'https://example.com'
-        )
-        @context.expects(:puts).with(
-          "\n" +
-          @context.message('node.serve.open_info', 'https://example.com/auth?shop=my-test-shop.myshopify.com') +
-          "\n"
+        ShopifyCli::Resources::EnvFile.any_instance.expects(:update).with(@context, :host, 'https://example.com')
+        @context
+          .expects(:puts)
+          .with(
+          "\n" + @context.message('node.serve.open_info', 'https://example.com/auth?shop=my-test-shop.myshopify.com') +
+            "\n"
         )
         run_cmd('serve')
       end
@@ -69,9 +73,7 @@ module Node
       def test_update_env_with_host
         ShopifyCli::Tunnel.expects(:start).never
         ShopifyCli::Tasks::UpdateDashboardURLS.expects(:call)
-        ShopifyCli::Resources::EnvFile.any_instance.expects(:update).with(
-          @context, :host, 'https://example-foo.com'
-        )
+        ShopifyCli::Resources::EnvFile.any_instance.expects(:update).with(@context, :host, 'https://example-foo.com')
         run_cmd('serve --host="https://example-foo.com"')
       end
     end

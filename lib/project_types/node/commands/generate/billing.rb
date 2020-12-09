@@ -5,17 +5,16 @@ module Node
     class Generate
       class Billing < ShopifyCli::SubCommand
         BILLING_TYPES = {
-          'recurring-billing' => ['./node_modules/.bin/generate-node-app', 'recurring-billing'],
-          'one-time-billing' => ['./node_modules/.bin/generate-node-app', 'one-time-billing'],
+          'recurring-billing' => %w[./node_modules/.bin/generate-node-app recurring-billing],
+          'one-time-billing' => %w[./node_modules/.bin/generate-node-app one-time-billing]
         }
         def call(args, _name)
           selected_type = BILLING_TYPES[args[1]]
           unless selected_type
-            selected_type = CLI::UI::Prompt.ask(@ctx.message('node.generate.billing.type_select')) do |handler|
-              BILLING_TYPES.each do |key, value|
-                handler.option(key) { value }
+            selected_type =
+              CLI::UI::Prompt.ask(@ctx.message('node.generate.billing.type_select')) do |handler|
+                BILLING_TYPES.each { |key, value| handler.option(key) { value } }
               end
-            end
           end
           billing_type_name = BILLING_TYPES.key(selected_type)
           selected_type[0] = File.join(ShopifyCli::Project.current.directory, selected_type[0])

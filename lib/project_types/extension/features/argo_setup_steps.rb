@@ -3,15 +3,13 @@
 module Extension
   module Features
     module ArgoSetupSteps
-      YARN_INITIALIZE_COMMAND = %w(generate).freeze
-      NPM_INITIALIZE_COMMAND = %w(run generate --).freeze
+      YARN_INITIALIZE_COMMAND = %w[generate].freeze
+      NPM_INITIALIZE_COMMAND = %w[run generate --].freeze
       INITIALIZE_TYPE_PARAMETER = '--type=%s'
 
       def self.check_dependencies(dependency_checks)
         ArgoSetupStep.always_successful do |context, _identifier, _directory_name, _js_system|
-          dependency_checks.each do |dependency_check|
-            dependency_check.call(context)
-          end
+          dependency_checks.each { |dependency_check| dependency_check.call(context) }
         end
       end
 
@@ -39,10 +37,11 @@ module Extension
 
           result = true
           CLI::UI::Frame.open(frame_title, failure_text: failure_message) do
-            result = js_system.call(
-              yarn: YARN_INITIALIZE_COMMAND + [INITIALIZE_TYPE_PARAMETER % identifier],
-              npm: NPM_INITIALIZE_COMMAND + [INITIALIZE_TYPE_PARAMETER % identifier]
-            )
+            result =
+              js_system.call(
+                yarn: YARN_INITIALIZE_COMMAND + [INITIALIZE_TYPE_PARAMETER % identifier],
+                npm: NPM_INITIALIZE_COMMAND + [INITIALIZE_TYPE_PARAMETER % identifier]
+              )
           end
 
           result

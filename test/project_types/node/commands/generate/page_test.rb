@@ -16,7 +16,7 @@ module Node
             .expects(:system)
             .with(regexp_matches(Regexp.new("^.*#{BIN_REGEX}\\\" empty-state-page name$")))
             .returns(mock(success?: true))
-          Node::Commands::Generate::Page.new(@context).call(['name'], '')
+          Node::Commands::Generate::Page.new(@context).call(%w[name], '')
         end
 
         def test_with_type_argument
@@ -27,14 +27,14 @@ module Node
             .returns(mock(success?: true))
           command = Node::Commands::Generate::Page.new(@context)
           command.options.flags[:type] = 'list'
-          command.call(['name'], '')
+          command.call(%w[name], '')
         end
 
         def test_raises_with_invalid_type
           assert_raises ShopifyCli::Abort do
             command = Node::Commands::Generate::Page.new(@context)
             command.options.flags[:type] = 'list_TYPE'
-            command.call(['name'], '')
+            command.call(%w[name], '')
           end
         end
 

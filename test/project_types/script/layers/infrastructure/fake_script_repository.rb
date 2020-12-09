@@ -1,6 +1,6 @@
 # frozen_string_literal: true
 
-require "project_types/script/test_helper"
+require 'project_types/script/test_helper'
 
 module Script
   module Layers

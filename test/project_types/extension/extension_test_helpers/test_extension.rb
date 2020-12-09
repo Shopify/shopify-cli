@@ -18,10 +18,7 @@ module Extension
       end
 
       def config(_context)
-        {
-          title: 'A Test Extension Title',
-          field: 'field_for_test_extension',
-        }
+        { title: 'A Test Extension Title', field: 'field_for_test_extension' }
       end
     end
   end

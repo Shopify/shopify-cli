@@ -17,7 +17,7 @@ module Script
         end
 
         def relative_path_to_src
-          "src"
+          'src'
         end
 
         private

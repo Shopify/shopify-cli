@@ -1,9 +1,9 @@
 # frozen_string_literal: true
 
-require "project_types/script/test_helper"
-require "project_types/script/layers/infrastructure/fake_script_repository"
-require "project_types/script/layers/infrastructure/fake_extension_point_repository"
-require "project_types/script/layers/infrastructure/fake_push_package_repository"
+require 'project_types/script/test_helper'
+require 'project_types/script/layers/infrastructure/fake_script_repository'
+require 'project_types/script/layers/infrastructure/fake_extension_point_repository'
+require 'project_types/script/layers/infrastructure/fake_push_package_repository'
 
 describe Script::Layers::Application::PushScript do
   include TestHelpers::FakeFS
@@ -16,8 +16,9 @@ describe Script::Layers::Application::PushScript do
   let(:script_name) { 'name' }
   let(:source_file) { 'src/script.ts' }
   let(:project) do
-    TestHelpers::FakeScriptProject
-      .new(language: @language, extension_point_type: @extension_point_type, script_name: @script_name)
+    TestHelpers::FakeScriptProject.new(
+      language: @language, extension_point_type: @extension_point_type, script_name: @script_name
+    )
   end
   let(:push_package_repository) { Script::Layers::Infrastructure::FakePushPackageRepository.new }
   let(:extension_point_repository) { Script::Layers::Infrastructure::FakeExtensionPointRepository.new }
@@ -54,14 +55,12 @@ describe Script::Layers::Application::PushScript do
 
     it 'should prepare and push script' do
       script_service_instance = Script::Layers::Infrastructure::ScriptService.new(ctx: @context)
-      Script::Layers::Application::ProjectDependencies
-        .expects(:install).with(ctx: @context, task_runner: task_runner)
+      Script::Layers::Application::ProjectDependencies.expects(:install).with(ctx: @context, task_runner: task_runner)
       Script::Layers::Application::BuildScript
-        .expects(:call).with(ctx: @context, task_runner: task_runner, script: script)
-      Script::Layers::Infrastructure::ScriptService
-        .expects(:new).returns(script_service_instance)
-      Script::Layers::Domain::PushPackage
-        .any_instance.expects(:push).with(script_service_instance, api_key, force)
+        .expects(:call)
+        .with(ctx: @context, task_runner: task_runner, script: script)
+      Script::Layers::Infrastructure::ScriptService.expects(:new).returns(script_service_instance)
+      Script::Layers::Domain::PushPackage.any_instance.expects(:push).with(script_service_instance, api_key, force)
       capture_io { subject }
     end
   end

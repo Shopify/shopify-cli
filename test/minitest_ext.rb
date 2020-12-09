@@ -13,9 +13,7 @@ module Minitest
 
     def setup
       @minitest_ext_setup_called = true
-      if File.exist?(CONFIG_FILE)
-        @config_sha_before = Digest::SHA256.hexdigest(File.read(CONFIG_FILE))
-      end
+      @config_sha_before = Digest::SHA256.hexdigest(File.read(CONFIG_FILE)) if File.exist?(CONFIG_FILE)
       project_context('project')
       ::ShopifyCli::Project.clear
       super
@@ -23,6 +21,7 @@ module Minitest
 
     def teardown
       ShopifyCli::Shopifolk.reset
+
       # Some tests stub the File class, but we need to call the real methods when checking if the config file has
       # changed.
       #
@@ -35,15 +34,11 @@ module Minitest
 
       mocha_teardown
 
-      if File.exist?(CONFIG_FILE)
-        @config_sha_after = Digest::SHA256.hexdigest(File.read(CONFIG_FILE))
-      end
+      @config_sha_after = Digest::SHA256.hexdigest(File.read(CONFIG_FILE)) if File.exist?(CONFIG_FILE)
 
       raise "Local #{CONFIG_FILE} was modified by a test" unless @config_sha_before == @config_sha_after
 
-      unless @minitest_ext_setup_called
-        raise "teardown called without setup - you may have forgotten to call `super`"
-      end
+      raise 'teardown called without setup - you may have forgotten to call `super`' unless @minitest_ext_setup_called
 
       @minitest_ext_setup_called = nil
       super
@@ -66,32 +61,28 @@ module Minitest
     end
 
     def to_s # :nodoc:
-      if passed? && !skipped?
-        return location
-      end
+      return location if passed? && !skipped?
       failures.flat_map do |failure|
-        [
-          "#{failure.result_label}:",
-          "#{location}:",
-          failure.message.force_encoding(Encoding::UTF_8),
-        ]
+        ["#{failure.result_label}:", "#{location}:", failure.message.force_encoding(Encoding::UTF_8)]
       end.join("\n")
     end
 
     private
 
     def stub_prompt_for_cli_updates
-      ShopifyCli::Config.stubs(:get_section).with("autoupdate").returns('enabled' => 'true')
+      ShopifyCli::Config.stubs(:get_section).with('autoupdate').returns('enabled' => 'true')
     end
 
     def stub_new_version_check
       stub_request(:get, ShopifyCli::Context::GEM_LATEST_URI)
-        .with(headers: {
+        .with(
+        headers: {
           'Accept' => '*/*',
           'Accept-Encoding' => 'gzip;q=1.0,deflate;q=0.6,identity;q=0.3',
           'Host' => 'rubygems.org',
-          'User-Agent' => 'Ruby',
-        })
+          'User-Agent' => 'Ruby'
+        }
+      )
         .to_return(status: 200, body: "{\"version\":\"#{ShopifyCli::VERSION}\"}", headers: {})
     end
   end

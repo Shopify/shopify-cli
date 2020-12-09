@@ -2,15 +2,12 @@ require 'shopify_cli'
 
 module ShopifyCli
   module Commands
-    Registry = CLI::Kit::CommandRegistry.new(
-      default: 'help',
-      contextual_resolver: nil,
-    )
+    Registry = CLI::Kit::CommandRegistry.new(default: 'help', contextual_resolver: nil)
     @core_commands = []
 
     def self.register(const, cmd, path = nil, is_core = false)
       autoload(const, path) if path
-      Registry.add(->() { const_get(const) }, cmd)
+      Registry.add(-> { const_get(const) }, cmd)
       @core_commands.push(cmd) if is_core
     end
 

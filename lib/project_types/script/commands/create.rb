@@ -19,12 +19,10 @@ module Script
           return @ctx.puts(self.class.help)
         end
 
-        project = Layers::Application::CreateScript.call(
-          ctx: @ctx,
-          language: language,
-          script_name: form.name,
-          extension_point_type: form.extension_point
-        )
+        project =
+          Layers::Application::CreateScript.call(
+            ctx: @ctx, language: language, script_name: form.name, extension_point_type: form.extension_point
+          )
         @ctx.puts(@ctx.message('script.create.change_directory_notice', project.script_name))
       rescue Script::Errors::ScriptProjectAlreadyExistsError => e
         UI::ErrorHandler.pretty_print_and_raise(e, failed_op: @ctx.message('script.create.error.operation_failed'))

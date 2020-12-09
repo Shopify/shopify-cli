@@ -16,7 +16,7 @@ module ShopifyCli
     GEM_LATEST_URI = URI.parse('https://rubygems.org/api/v1/versions/shopify-cli/latest.json')
     VERSION_CHECK_SECTION = 'versioncheck'
     LAST_CHECKED_AT_FIELD = 'last_checked_at'
-    VERSION_CHECK_INTERVAL = 86400
+    VERSION_CHECK_INTERVAL = 86_400
 
     class << self
       attr_reader :messages
@@ -29,9 +29,10 @@ module ShopifyCli
       # * `messages` - Hash containing the new keys to register
       def load_messages(messages)
         @messages ||= {}
-        @messages = @messages.merge(messages) do |key|
-          Context.new.abort("Message key '#{key}' already exists and cannot be registered") if @messages.key?(key)
-        end
+        @messages =
+          @messages.merge(messages) do |key|
+            Context.new.abort("Message key '#{key}' already exists and cannot be registered") if @messages.key?(key)
+          end
       end
 
       # returns the user-facing messages for the given key. Returns the key if no message is available.
@@ -49,6 +50,7 @@ module ShopifyCli
     # is the directory root that the current command is running in. If you want to
     # simulate a `cd` for the file operations, you can change this variable.
     attr_accessor :root
+
     # is an accessor for environment variables. These variables are also added to
     # any command run by the context.
     attr_accessor :env
@@ -318,7 +320,7 @@ module ShopifyCli
     # will grab the host info of the computer running the cli. This indicates the
     # computer architecture and operating system
     def uname
-      @uname ||= RbConfig::CONFIG["host"]
+      @uname ||= RbConfig::CONFIG['host']
     end
 
     # Execute a command in the user's environment
@@ -474,18 +476,14 @@ module ShopifyCli
 
     def ctx_path(fname)
       require 'pathname'
-      if Pathname.new(fname).absolute?
-        fname
-      else
-        File.join(root, fname)
-      end
+      Pathname.new(fname).absolute? ? fname : File.join(root, fname)
     end
 
     def retrieve_latest_gem_version
       response = Net::HTTP.get_response(GEM_LATEST_URI)
       latest = JSON.parse(response.body)
-      latest["version"]
-    rescue
+      latest['version']
+    rescue StandardError
       nil
     end
 

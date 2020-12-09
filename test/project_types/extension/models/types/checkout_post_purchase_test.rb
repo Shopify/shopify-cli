@@ -18,7 +18,8 @@ module Extension
         def test_create_uses_standard_argo_create_implementation
           directory_name = 'checkout_post_purchase'
 
-          Features::Argo::Checkout.any_instance
+          Features::Argo::Checkout
+            .any_instance
             .expects(:create)
             .with(directory_name, CheckoutPostPurchase::IDENTIFIER, @context)
             .once
@@ -32,7 +33,7 @@ module Extension
         end
 
         def test_config_merges_with_standard_argo_config_implementation
-          script_content = "alert(true)"
+          script_content = 'alert(true)'
           metafields = [{ key: 'a-key', namespace: 'a-namespace' }]
 
           initial_config = { script_content: script_content }
@@ -49,7 +50,7 @@ module Extension
 
         def test_config_passes_allowed_keys
           Features::Argo::Checkout.any_instance.stubs(:config).returns({})
-          Features::ArgoConfig.expects(:parse_yaml).with(@context, [:metafields]).once.returns({})
+          Features::ArgoConfig.expects(:parse_yaml).with(@context, %i[metafields]).once.returns({})
           @checkout_post_purchase.config(@context)
         end
       end

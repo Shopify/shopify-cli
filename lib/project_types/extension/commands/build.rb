@@ -6,8 +6,8 @@ module Extension
     class Build < ExtensionCommand
       hidden_feature
 
-      YARN_BUILD_COMMAND = %w(build)
-      NPM_BUILD_COMMAND = %w(run-script build)
+      YARN_BUILD_COMMAND = %w[build]
+      NPM_BUILD_COMMAND = %w[run-script build]
 
       def call(_args, _command_name)
         system = ShopifyCli::JsSystem.new(ctx: @ctx)

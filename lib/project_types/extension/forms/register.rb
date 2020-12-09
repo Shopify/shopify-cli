@@ -23,9 +23,7 @@ module Extension
         else
           apps = load_apps
           CLI::UI::Prompt.ask(ctx.message('register.ask_app')) do |handler|
-            apps.each do |app|
-              handler.option("#{app.title} by #{app.business_name}") { app }
-            end
+            apps.each { |app| handler.option("#{app.title} by #{app.business_name}") { app } }
           end
         end
       end

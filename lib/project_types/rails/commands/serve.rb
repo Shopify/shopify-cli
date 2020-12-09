@@ -4,22 +4,14 @@ module Rails
     class Serve < ShopifyCli::Command
       prerequisite_task :ensure_env, :ensure_dev_store
 
-      options do |parser, flags|
-        parser.on('--host=HOST') do |h|
-          flags[:host] = h.gsub('"', '')
-        end
-      end
+      options { |parser, flags| parser.on('--host=HOST') { |h| flags[:host] = h.gsub('"', '') } }
 
       def call(*)
         project = ShopifyCli::Project.current
         url = options.flags[:host] || ShopifyCli::Tunnel.start(@ctx)
         @ctx.abort(@ctx.message('rails.serve.error.host_must_be_https')) if url.match(/^https/i).nil?
         project.env.update(@ctx, :host, url)
-        ShopifyCli::Tasks::UpdateDashboardURLS.call(
-          @ctx,
-          url: url,
-          callback_url: "/auth/shopify/callback",
-        )
+        ShopifyCli::Tasks::UpdateDashboardURLS.call(@ctx, url: url, callback_url: '/auth/shopify/callback')
 
         if project.env.shop
           project_url = "#{project.env.host}/login?shop=#{project.env.shop}"
@@ -31,11 +23,7 @@ module Rails
           env.delete('HOST')
           env['PORT'] = ShopifyCli::Tunnel::PORT.to_s
           env['GEM_PATH'] = Gem.gem_path(@ctx)
-          if @ctx.windows?
-            @ctx.system("ruby bin\\rails server", env: env)
-          else
-            @ctx.system('bin/rails server', env: env)
-          end
+          @ctx.windows? ? @ctx.system("ruby bin\\rails server", env: env) : @ctx.system('bin/rails server', env: env)
         end
       end
 

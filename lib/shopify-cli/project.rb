@@ -85,9 +85,12 @@ module ShopifyCli
       #
       def write(ctx, project_type:, organization_id:, **identifiers)
         require 'yaml' # takes 20ms, so deferred as late as possible.
-        content = Hash[{ project_type: project_type, organization_id: organization_id.to_i }
-          .merge(identifiers)
-          .collect { |k, v| [k.to_s, v] }]
+        content =
+          Hash[
+            { project_type: project_type, organization_id: organization_id.to_i }.merge(identifiers).collect do |k, v|
+              [k.to_s, v]
+            end
+          ]
         content['shopify_organization'] = true if Shopifolk.acting_as_shopify_organization?
 
         ctx.write('.shopify-cli.yml', YAML.dump(content))
@@ -112,16 +115,14 @@ module ShopifyCli
 
       def at(dir)
         proj_dir = directory(dir)
-        unless proj_dir
-          raise(ShopifyCli::Abort, Context.message('core.project.error.not_in_project'))
-        end
+        raise(ShopifyCli::Abort, Context.message('core.project.error.not_in_project')) unless proj_dir
         @at ||= Hash.new { |h, k| h[k] = new(directory: k) }
         @at[proj_dir]
       end
 
       def __directory(curr)
         loop do
-          return nil if curr == '/' || /^[A-Z]:\/$/.match?(curr)
+          return nil if curr == '/' || %r{^[A-Z]:\/$}.match?(curr)
           file = File.join(curr, '.shopify-cli.yml')
           return curr if File.exist?(file)
           curr = File.dirname(curr)
@@ -143,11 +144,12 @@ module ShopifyCli
     #   ShopifyCli::Project.current.env
     #
     def env
-      @env ||= begin
-                 Resources::EnvFile.read(directory)
-               rescue Errno::ENOENT
-                 nil
-               end
+      @env ||=
+        begin
+          Resources::EnvFile.read(directory)
+        rescue Errno::ENOENT
+          nil
+        end
     end
 
     ##
@@ -167,20 +169,21 @@ module ShopifyCli
     #   ShopifyCli::Project.current.config
     #
     def config
-      @config ||= begin
-        config = load_yaml_file('.shopify-cli.yml')
-        unless config.is_a?(Hash)
-          raise ShopifyCli::Abort, Context.message('core.yaml.error.not_hash', '.shopify-cli.yml')
-        end
+      @config ||=
+        begin
+          config = load_yaml_file('.shopify-cli.yml')
+          unless config.is_a?(Hash)
+            raise ShopifyCli::Abort, Context.message('core.yaml.error.not_hash', '.shopify-cli.yml')
+          end
 
-        # The app_type key was deprecated in favour of project_type, so replace it
-        if config.key?('app_type')
-          config['project_type'] = config['app_type']
-          config.delete('app_type')
-        end
+          # The app_type key was deprecated in favour of project_type, so replace it
+          if config.key?('app_type')
+            config['project_type'] = config['app_type']
+            config.delete('app_type')
+          end
 
-        config
-      end
+          config
+        end
     end
 
     private

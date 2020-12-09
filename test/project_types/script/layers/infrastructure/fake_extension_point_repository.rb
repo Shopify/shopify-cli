@@ -1,6 +1,6 @@
 # frozen_string_literal: true
 
-require "project_types/script/test_helper"
+require 'project_types/script/test_helper'
 
 module Script
   module Layers
@@ -23,19 +23,13 @@ module Script
         end
 
         def extension_point_types
-          %w(discount unit_limit_per_order)
+          %w[discount unit_limit_per_order]
         end
 
         private
 
         def example_config(type)
-          {
-            "assemblyscript" => {
-              "package" => type,
-              "version" => "1",
-              "sdk" => "1",
-            },
-          }
+          { 'assemblyscript' => { 'package' => type, 'version' => '1', 'sdk' => '1' } }
         end
       end
     end

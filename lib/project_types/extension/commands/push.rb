@@ -4,7 +4,7 @@ require 'shopify_cli'
 module Extension
   module Commands
     class Push < ExtensionCommand
-      TIME_DISPLAY_FORMAT = "%B %d, %Y %H:%M:%S %Z"
+      TIME_DISPLAY_FORMAT = '%B %d, %Y %H:%M:%S %Z'
 
       def call(args, name)
         Commands::Register.new(@ctx).call(args, name) unless project.registered?
@@ -37,9 +37,7 @@ module Extension
       def output_validation_errors(draft)
         @ctx.puts(@ctx.message('push.pushed_with_errors', format_time(draft.last_user_interaction_at)))
 
-        draft.validation_errors.each do |error|
-          @ctx.puts(format('{{x}} %s: %s', error.field.last, error.message))
-        end
+        draft.validation_errors.each { |error| @ctx.puts(format('{{x}} %s: %s', error.field.last, error.message)) }
 
         @ctx.puts(@ctx.message('push.push_with_errors_info'))
       end

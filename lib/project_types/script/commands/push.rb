@@ -3,16 +3,15 @@
 module Script
   module Commands
     class Push < ShopifyCli::Command
-      options do |parser, flags|
-        parser.on('--force') { |t| flags[:force] = t }
-      end
+      options { |parser, flags| parser.on('--force') { |t| flags[:force] = t } }
 
       def call(_args, _name)
-        ShopifyCli::Tasks::EnsureEnv.call(@ctx, required: [:api_key, :secret, :shop])
+        ShopifyCli::Tasks::EnsureEnv.call(@ctx, required: %i[api_key secret shop])
         project = ScriptProject.current
         api_key = project.env[:api_key]
-        return @ctx.puts(self.class.help) unless api_key &&
-          ScriptProject::SUPPORTED_LANGUAGES.include?(project.language)
+        unless api_key && ScriptProject::SUPPORTED_LANGUAGES.include?(project.language)
+          return @ctx.puts(self.class.help)
+        end
         Layers::Application::PushScript.call(
           ctx: @ctx,
           language: project.language,

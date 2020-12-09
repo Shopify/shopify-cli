@@ -32,14 +32,11 @@ module ShopifyCli
 
       def subcommand(const, cmd, path = nil)
         autoload(const, path) if path
-        subcommand_registry.add(->() { const_get(const) }, cmd.to_s)
+        subcommand_registry.add(-> { const_get(const) }, cmd.to_s)
       end
 
       def subcommand_registry
-        @subcommand_registry ||= CLI::Kit::CommandRegistry.new(
-          default: nil,
-          contextual_resolver: nil,
-        )
+        @subcommand_registry ||= CLI::Kit::CommandRegistry.new(default: nil, contextual_resolver: nil)
       end
 
       def prerequisite_task(*tasks)

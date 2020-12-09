@@ -12,10 +12,10 @@ ENV['PATH'] = ENV['PATH'].split(':').select { |p| p.start_with?('/', '~') }.join
 
 # Load vendor and CLI UI/Kit.
 # Nothing else should be loaded at this point and nothing else should be added to the load path on boot
-vendor_path = File.expand_path("../../vendor/lib", __FILE__)
+vendor_path = File.expand_path('../../vendor/lib', __FILE__)
 $LOAD_PATH.unshift(vendor_path) unless $LOAD_PATH.include?(vendor_path)
 
-deps = %w(cli-ui cli-kit smart_properties)
+deps = %w[cli-ui cli-kit smart_properties]
 deps.each do |dep|
   vendor_path = File.expand_path("../../vendor/deps/#{dep}/lib", __FILE__)
   $LOAD_PATH.unshift(vendor_path) unless $LOAD_PATH.include?(vendor_path)
@@ -39,14 +39,15 @@ CLI::UI::StdoutRouter.enable
 module ShopifyCli
   extend CLI::Kit::Autocall
 
-  TOOL_NAME         = 'shopify'
-  TOOL_FULL_NAME    = 'Shopify CLI'
-  ROOT              = File.expand_path('../..', __FILE__)
+  TOOL_NAME = 'shopify'
+  TOOL_FULL_NAME = 'Shopify CLI'
+  ROOT = File.expand_path('../..', __FILE__)
   PROJECT_TYPES_DIR = File.join(ROOT, 'lib', 'project_types')
-  TEMP_DIR          = File.join(ROOT, '.tmp')
+  TEMP_DIR = File.join(ROOT, '.tmp')
 
   # programmer emoji if default install location, else wrench emoji
-  EMOJI    = ROOT == '/opt/shopify' ? "\u{1f469}\u{200d}\u{1f4bb}" : "\u{1f527}"
+  EMOJI = ROOT == '/opt/shopify' ? "\u{1f469}\u{200d}\u{1f4bb}" : "\u{1f527}"
+
   # shrug or boom emoji
   FAILMOJI = ROOT == '/opt/shopify' ? "\u{1f937}" : "\u{1f4a5}"
 
@@ -56,8 +57,8 @@ module ShopifyCli
   #
   # These should *never* be called outside of the entrypoint and its delegations.
   EXIT_FAILURE_BUT_NOT_BUG = CLI::Kit::EXIT_FAILURE_BUT_NOT_BUG
-  EXIT_BUG                 = CLI::Kit::EXIT_BUG
-  EXIT_SUCCESS             = CLI::Kit::EXIT_SUCCESS
+  EXIT_BUG = CLI::Kit::EXIT_BUG
+  EXIT_SUCCESS = CLI::Kit::EXIT_SUCCESS
 
   # `shopify-app-cli` uses CLI Kit's exception management
   # These are documented here: https://github.com/Shopify/cli-kit/blob/master/lib/cli/kit.rb
@@ -66,33 +67,28 @@ module ShopifyCli
   # AbortSilent and BugSilent should never have messages. They are mostly used when we output explanations
   # and need to exit
   GenericAbort = CLI::Kit::GenericAbort
-  Abort        = CLI::Kit::Abort
-  Bug          = CLI::Kit::Bug
-  BugSilent    = CLI::Kit::BugSilent
-  AbortSilent  = CLI::Kit::AbortSilent
+  Abort = CLI::Kit::Abort
+  Bug = CLI::Kit::Bug
+  BugSilent = CLI::Kit::BugSilent
+  AbortSilent = CLI::Kit::AbortSilent
 
   # The rest of this file outlines classes and modules required by the shopify-app-cli
   # application and CLI kit framework.
   # To understand how this works, read https://github.com/Shopify/cli-kit/blob/master/lib/cli/kit.rb
 
   # ShopifyCli::Config
-  autocall(:Config)   { CLI::Kit::Config.new(tool_name: TOOL_NAME) }
+  autocall(:Config) { CLI::Kit::Config.new(tool_name: TOOL_NAME) }
+
   # ShopifyCli::Logger
-  autocall(:Logger)   { CLI::Kit::Logger.new(debug_log_file: ShopifyCli.debug_log_file) }
+  autocall(:Logger) { CLI::Kit::Logger.new(debug_log_file: ShopifyCli.debug_log_file) }
+
   # ShopifyCli::Resolver
   autocall(:Resolver) do
-    ShopifyCli::Core::HelpResolver.new(
-      tool_name: TOOL_NAME,
-      command_registry: ShopifyCli::Commands::Registry
-    )
+    ShopifyCli::Core::HelpResolver.new(tool_name: TOOL_NAME, command_registry: ShopifyCli::Commands::Registry)
   end
+
   # ShopifyCli::ErrorHandler
-  autocall(:ErrorHandler) do
-    CLI::Kit::ErrorHandler.new(
-      log_file: ShopifyCli.log_file,
-      exception_reporter: nil,
-    )
-  end
+  autocall(:ErrorHandler) { CLI::Kit::ErrorHandler.new(log_file: ShopifyCli.log_file, exception_reporter: nil) }
 
   autoload :AdminAPI, 'shopify-cli/admin_api'
   autoload :API, 'shopify-cli/api'
@@ -126,13 +122,14 @@ module ShopifyCli
   Context.load_messages(ShopifyCli::Messages::MESSAGES)
 
   def self.cache_dir
-    cache_dir = if ENV.key?('RUNNING_SHOPIFY_CLI_TESTS')
-      TEMP_DIR
-    elsif ENV['LOCALAPPDATA'].nil?
-      File.join(File.expand_path(ENV.fetch('XDG_CACHE_HOME', '~/.cache')), TOOL_NAME)
-    else
-      File.join(File.expand_path(ENV['LOCALAPPDATA']), TOOL_NAME)
-    end
+    cache_dir =
+      if ENV.key?('RUNNING_SHOPIFY_CLI_TESTS')
+        TEMP_DIR
+      elsif ENV['LOCALAPPDATA'].nil?
+        File.join(File.expand_path(ENV.fetch('XDG_CACHE_HOME', '~/.cache')), TOOL_NAME)
+      else
+        File.join(File.expand_path(ENV['LOCALAPPDATA']), TOOL_NAME)
+      end
 
     # Make sure the cache dir always exists
     @cache_dir_exists ||= FileUtils.mkdir_p(cache_dir)

@@ -14,7 +14,8 @@ module Extension
         def test_create_uses_standard_argo_create_implementation
           directory_name = 'product_subscription'
 
-          Features::Argo::Admin.any_instance
+          Features::Argo::Admin
+            .any_instance
             .expects(:create)
             .with(directory_name, ProductSubscription::IDENTIFIER, @context)
             .once

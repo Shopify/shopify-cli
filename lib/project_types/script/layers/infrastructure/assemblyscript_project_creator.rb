@@ -10,8 +10,8 @@ module Script
         property! :script_name, accepts: String
         property! :path_to_project, accepts: String
 
-        BOOTSTRAP = "npx --no-install shopify-scripts-toolchain-as bootstrap --from %{extension_point} --dest %{base}"
-        MIN_NODE_VERSION = "14.5.0"
+        BOOTSTRAP = 'npx --no-install shopify-scripts-toolchain-as bootstrap --from %{extension_point} --dest %{base}'
+        MIN_NODE_VERSION = '14.5.0'
 
         def setup_dependencies
           write_npmrc
@@ -28,11 +28,15 @@ module Script
 
         def write_npmrc
           ctx.system(
-            'npm', '--userconfig', './.npmrc', 'config', 'set', '@shopify:registry', 'https://registry.npmjs.com'
+            'npm',
+            '--userconfig',
+            './.npmrc',
+            'config',
+            'set',
+            '@shopify:registry',
+            'https://registry.npmjs.com'
           )
-          ctx.system(
-            'npm', '--userconfig', './.npmrc', 'config', 'set', 'engine-strict', 'true'
-          )
+          ctx.system('npm', '--userconfig', './.npmrc', 'config', 'set', 'engine-strict', 'true')
         end
 
         def extension_point_version
@@ -56,14 +60,16 @@ module Script
               },
               "scripts": {
                 "test": "asp --summary --verbose",
-                "build": "shopify-scripts-toolchain-as build --src src/script.ts --binary build/#{script_name}.wasm -- --lib node_modules --optimize --use Date="
+                "build": "shopify-scripts-toolchain-as build --src src/script.ts --binary build/#{
+            script_name
+          }.wasm -- --lib node_modules --optimize --use Date="
               },
               "engines": {
                 "node": ">=#{MIN_NODE_VERSION}"
               }
             }
           HERE
-          ctx.write("package.json", package_json)
+          ctx.write('package.json', package_json)
         end
       end
     end

@@ -46,23 +46,23 @@ module Extension
 
         io = capture_io_and_assert_raises(ShopifyCli::AbortSilent) { run_register_command }
 
-        assert_message_output(io: io, expected_content: [
-          @context.message('register.confirm_abort'),
-          @context.message('register.confirm_info', @test_extension_type.name),
-        ])
+        assert_message_output(
+          io: io,
+          expected_content: [
+            @context.message('register.confirm_abort'),
+            @context.message('register.confirm_info', @test_extension_type.name)
+          ]
+        )
       end
 
       def test_creates_the_extension_if_user_confirms
-        registration = Models::Registration.new(
-          id: 55,
-          type: @test_extension_type.identifier,
-          title: @project.title,
-          draft_version: Models::Version.new(
-            registration_id: 55,
-            last_user_interaction_at: Time.now.utc,
+        registration =
+          Models::Registration.new(
+            id: 55,
+            type: @test_extension_type.identifier,
+            title: @project.title,
+            draft_version: Models::Version.new(registration_id: 55, last_user_interaction_at: Time.now.utc)
           )
-
-        )
         refute @project.registered?
 
         CLI::UI::Prompt
@@ -71,41 +71,49 @@ module Extension
           .returns(true)
           .once
 
-        Tasks::CreateExtension.any_instance.expects(:call).with(
+        Tasks::CreateExtension
+          .any_instance
+          .expects(:call)
+          .with(
           context: @context,
           api_key: @app.api_key,
           type: @test_extension_type.graphql_identifier,
           title: @project.title,
           config: {},
           extension_context: @test_extension_type.extension_context(@context)
-        ).returns(registration).once
+        )
+          .returns(registration)
+          .once
 
-        ExtensionProject.expects(:write_env_file).with(
+        ExtensionProject
+          .expects(:write_env_file)
+          .with(
           context: @context,
           api_key: @app.api_key,
           api_secret: @app.secret,
           registration_id: registration.id,
           title: @project.title
-        ).once
+        )
+          .once
 
         io = capture_io { run_register_command }
 
-        assert_message_output(io: io, expected_content: [
-          @context.message('register.confirm_info', @test_extension_type.name),
-          @context.message('register.waiting_text'),
-          @context.message('register.success', @project.title, @app.title),
-          @context.message('register.success_info'),
-        ])
+        assert_message_output(
+          io: io,
+          expected_content: [
+            @context.message('register.confirm_info', @test_extension_type.name),
+            @context.message('register.waiting_text'),
+            @context.message('register.success', @project.title, @app.title),
+            @context.message('register.success_info')
+          ]
+        )
       end
 
       private
 
       def run_register_command(api_key: @api_key)
         Commands::Register.ctx = @context
-        Commands::Register.call(
-          %W(--api_key=#{api_key}),
-          :register
-        )
+        Commands::Register.call(%W[--api_key=#{api_key}], :register)
       end
     end
   end

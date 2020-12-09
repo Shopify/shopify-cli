@@ -4,11 +4,11 @@ module Extension
   module Features
     class ArgoDependencies
       def self.node_installed(min_major:, min_minor: nil)
-        -> (context) do
+        ->(context) do
           out, status = CLI::Kit::System.capture2('node', '-v')
           context.abort(context.message('features.argo.dependencies.node.node_not_installed')) unless status.success?
 
-          min_version = 'v' + min_major .to_s + '.' + (min_minor.nil? ? 'x' : min_minor.to_s) + '.x'
+          min_version = 'v' + min_major.to_s + '.' + (min_minor.nil? ? 'x' : min_minor.to_s) + '.x'
           version = out.strip
           parsed_version = version.match(/v(?<major>\d+).(?<minor>\d+).(?<patch>\d+)/)
 

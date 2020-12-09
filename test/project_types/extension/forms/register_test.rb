@@ -17,23 +17,17 @@ module Extension
       def test_aborts_and_informs_user_if_there_are_no_apps
         Tasks::GetApps.any_instance.expects(:call).with(context: @context).returns([]).once
 
-        io = capture_io do
-          assert_raises(ShopifyCli::AbortSilent) { ask(api_key: nil) }
-        end
+        io = capture_io { assert_raises(ShopifyCli::AbortSilent) { ask(api_key: nil) } }
 
-        assert_message_output(io: io, expected_content: [
-          @context.message('register.no_apps'),
-          @context.message('register.learn_about_apps'),
-        ])
+        assert_message_output(
+          io: io,
+          expected_content: [@context.message('register.no_apps'), @context.message('register.learn_about_apps')]
+        )
       end
 
       def test_accepts_the_api_key_and_fetches_single_app_to_associate_with_extension
         Tasks::GetApps.any_instance.expects(:call).never
-        Tasks::GetApp
-          .any_instance.expects(:call)
-          .with(context: @context, api_key: @app.api_key)
-          .returns(@app)
-          .once
+        Tasks::GetApp.any_instance.expects(:call).with(context: @context, api_key: @app.api_key).returns(@app).once
 
         form = ask(api_key: @app.api_key)
         assert_equal form.app, @app
@@ -44,20 +38,14 @@ module Extension
         Tasks::GetApps.any_instance.expects(:call).with(context: @context).returns([@app]).once
         CLI::UI::Prompt.expects(:ask).with(@context.message('register.ask_app'))
 
-        capture_io do
-          ask(api_key: nil)
-        end
+        capture_io { ask(api_key: nil) }
       end
 
       def test_fails_with_invalid_api_key_to_associate_with_extension
         api_key = '00001'
 
         Tasks::GetApps.any_instance.expects(:call).never
-        Tasks::GetApp
-          .any_instance.expects(:call)
-          .with(context: @context, api_key: api_key)
-          .returns(nil)
-          .once
+        Tasks::GetApp.any_instance.expects(:call).with(context: @context, api_key: api_key).returns(nil).once
 
         io = capture_io { ask(api_key: api_key) }
 

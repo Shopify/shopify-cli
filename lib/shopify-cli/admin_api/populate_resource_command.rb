@@ -65,46 +65,38 @@ module ShopifyCli
       end
 
       def display_parent_help
-        parent_command_klass.respond_to?(:help) ? parent_command_klass.help : ""
+        parent_command_klass.respond_to?(:help) ? parent_command_klass.help : ''
       end
 
       def display_parent_extended_help
-        parent_command_klass.respond_to?(:extended_help) ? parent_command_klass.extended_help : ""
+        parent_command_klass.respond_to?(:extended_help) ? parent_command_klass.extended_help : ''
       end
 
       def resource_options
-        @resource_options ||= OptionParser.new do |opts|
-          opts.banner = ""
-          opts.on(
-            "-c #{DEFAULT_COUNT}",
-            "--count=#{DEFAULT_COUNT}",
-            @ctx.message('core.populate.options.count_help')
-          ) do |value|
-            @count = value.to_i
+        @resource_options ||=
+          OptionParser.new do |opts|
+            opts.banner = ''
+            opts.on(
+              "-c #{DEFAULT_COUNT}",
+              "--count=#{DEFAULT_COUNT}",
+              @ctx.message('core.populate.options.count_help')
+            ) { |value| @count = value.to_i }
+
+            opts.on('-h', '--help', 'print help') { |value| @help = value }
+
+            opts.on('--silent') { |v| @silent = v }
+
+            opts.on('--shop=', '-s') { |value| @shop = value }
           end
-
-          opts.on('-h', '--help', 'print help') do |value|
-            @help = value
-          end
-
-          opts.on("--silent") { |v| @silent = v }
-
-          opts.on('--shop=', '-s') { |value| @shop = value }
-        end
       end
 
       def populate
-        @count.times do
-          run_mutation(defaults.merge(@input))
-        end
+        @count.times { run_mutation(defaults.merge(@input)) }
       end
 
       def input_options
         schema.type(self.class.input_type)['inputFields'].each do |field|
-          resource_options.on(
-            "--#{field['name']}=#{field['defaultValue']}",
-            field['description']
-          ) do |value|
+          resource_options.on("--#{field['name']}=#{field['defaultValue']}", field['description']) do |value|
             @input[field['name']] = value
           end
         end
@@ -117,15 +109,13 @@ module ShopifyCli
       def run_mutation(data)
         kwargs = { input: data }
         kwargs[:shop] = @shop
-        resp = AdminAPI.query(
-          @ctx, "create_#{snake_case_resource_type}", **kwargs
-        )
+        resp = AdminAPI.query(@ctx, "create_#{snake_case_resource_type}", **kwargs)
         @ctx.abort(resp['errors']) if resp['errors']
         @ctx.done(message(resp['data'])) unless @silent
       end
 
       def completion_message
-        plural = @count > 1 ? "s" : ""
+        plural = @count > 1 ? 's' : ''
         @ctx.message(
           'core.populate.completion_message',
           @count,
@@ -159,11 +149,13 @@ module ShopifyCli
       end
 
       def snake_case_resource_type
-        @snake_case_resource_type ||= camel_case_resource_type.to_s
-          .gsub(/([A-Z]+)([A-Z][a-z])/, '\1_\2')
-          .gsub(/([a-z\d])([A-Z])/, '\1_\2')
-          .tr("-", "_")
-          .downcase
+        @snake_case_resource_type ||=
+          camel_case_resource_type
+            .to_s
+            .gsub(/([A-Z]+)([A-Z][a-z])/, '\1_\2')
+            .gsub(/([a-z\d])([A-Z])/, '\1_\2')
+            .tr('-', '_')
+            .downcase
       end
 
       def parent_command_klass

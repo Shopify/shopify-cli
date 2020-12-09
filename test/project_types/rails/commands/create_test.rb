@@ -42,19 +42,16 @@ module Rails
         Ruby.expects(:version).returns(Semantic::Version.new('2.5.0'))
         Gem.expects(:install).with(@context, 'rails', nil).returns(true)
         Gem.expects(:install).with(@context, 'bundler', '~>2.0').returns(true)
-        expect_command(%W(#{gem_path}/bin/rails new --skip-spring --database=sqlite3 test-app))
-        expect_command(%W(#{gem_path}/bin/bundle install),
-                       chdir: File.join(@context.root, 'test-app'))
-        expect_command(%W(#{gem_path}/bin/spring stop),
-                       chdir: File.join(@context.root, 'test-app'))
-        expect_command(%W(#{gem_path}/bin/rails generate shopify_app),
-                       chdir: File.join(@context.root, 'test-app'))
-        expect_command(%W(#{gem_path}/bin/rails db:create),
-                       chdir: File.join(@context.root, 'test-app'))
-        expect_command(%W(#{gem_path}/bin/rails db:migrate RAILS_ENV=development),
-                       chdir: File.join(@context.root, 'test-app'))
-        expect_command(%W(#{gem_path}/bin/rails webpacker:install),
-                       chdir: File.join(@context.root, 'test-app'))
+        expect_command(%W[#{gem_path}/bin/rails new --skip-spring --database=sqlite3 test-app])
+        expect_command(%W[#{gem_path}/bin/bundle install], chdir: File.join(@context.root, 'test-app'))
+        expect_command(%W[#{gem_path}/bin/spring stop], chdir: File.join(@context.root, 'test-app'))
+        expect_command(%W[#{gem_path}/bin/rails generate shopify_app], chdir: File.join(@context.root, 'test-app'))
+        expect_command(%W[#{gem_path}/bin/rails db:create], chdir: File.join(@context.root, 'test-app'))
+        expect_command(
+          %W[#{gem_path}/bin/rails db:migrate RAILS_ENV=development],
+          chdir: File.join(@context.root, 'test-app')
+        )
+        expect_command(%W[#{gem_path}/bin/rails webpacker:install], chdir: File.join(@context.root, 'test-app'))
 
         stub_partner_req(
           'create_app',
@@ -63,25 +60,18 @@ module Rails
             title: 'test-app',
             type: 'public',
             app_url: ShopifyCli::Tasks::CreateApiClient::DEFAULT_APP_URL,
-            redir: ["http://127.0.0.1:3456"],
+            redir: %w[http://127.0.0.1:3456]
           },
           resp: {
-            'data': {
-              'appCreate': {
-                'app': {
-                  'apiKey': 'newapikey',
-                  'apiSecretKeys': [{ 'secret': 'secret' }],
-                },
-              },
-            },
+            'data': { 'appCreate': { 'app': { 'apiKey': 'newapikey', 'apiSecretKeys': [{ 'secret': 'secret' }] } } }
           }
         )
 
         perform_command
 
-        assert_equal SHOPIFYCLI_FILE, File.read("test-app/.shopify-cli.yml")
-        assert_equal ENV_FILE, File.read("test-app/.env")
-        assert_equal Create::USER_AGENT_CODE, File.read("test-app/config/initializers/user_agent.rb")
+        assert_equal SHOPIFYCLI_FILE, File.read('test-app/.shopify-cli.yml')
+        assert_equal ENV_FILE, File.read('test-app/.env')
+        assert_equal Create::USER_AGENT_CODE, File.read('test-app/config/initializers/user_agent.rb')
 
         delete_gem_path_and_binaries
         FileUtils.rm_r('test-app')
@@ -96,19 +86,16 @@ module Rails
         Ruby.expects(:version).returns(Semantic::Version.new('2.5.0'))
         Gem.expects(:install).with(@context, 'rails', nil).returns(true)
         Gem.expects(:install).with(@context, 'bundler', '~>2.0').returns(true)
-        expect_command(%W(#{gem_path}/bin/rails new --skip-spring --database=postgresql test-app))
-        expect_command(%W(#{gem_path}/bin/bundle install),
-                       chdir: File.join(@context.root, 'test-app'))
-        expect_command(%W(#{gem_path}/bin/spring stop),
-                       chdir: File.join(@context.root, 'test-app'))
-        expect_command(%W(#{gem_path}/bin/rails generate shopify_app),
-                       chdir: File.join(@context.root, 'test-app'))
-        expect_command(%W(#{gem_path}/bin/rails db:create),
-                       chdir: File.join(@context.root, 'test-app'))
-        expect_command(%W(#{gem_path}/bin/rails db:migrate RAILS_ENV=development),
-                       chdir: File.join(@context.root, 'test-app'))
-        expect_command(%W(#{gem_path}/bin/rails webpacker:install),
-                       chdir: File.join(@context.root, 'test-app'))
+        expect_command(%W[#{gem_path}/bin/rails new --skip-spring --database=postgresql test-app])
+        expect_command(%W[#{gem_path}/bin/bundle install], chdir: File.join(@context.root, 'test-app'))
+        expect_command(%W[#{gem_path}/bin/spring stop], chdir: File.join(@context.root, 'test-app'))
+        expect_command(%W[#{gem_path}/bin/rails generate shopify_app], chdir: File.join(@context.root, 'test-app'))
+        expect_command(%W[#{gem_path}/bin/rails db:create], chdir: File.join(@context.root, 'test-app'))
+        expect_command(
+          %W[#{gem_path}/bin/rails db:migrate RAILS_ENV=development],
+          chdir: File.join(@context.root, 'test-app')
+        )
+        expect_command(%W[#{gem_path}/bin/rails webpacker:install], chdir: File.join(@context.root, 'test-app'))
 
         stub_partner_req(
           'create_app',
@@ -117,17 +104,10 @@ module Rails
             title: 'test-app',
             type: 'public',
             app_url: ShopifyCli::Tasks::CreateApiClient::DEFAULT_APP_URL,
-            redir: ["http://127.0.0.1:3456"],
+            redir: %w[http://127.0.0.1:3456]
           },
           resp: {
-            'data': {
-              'appCreate': {
-                'app': {
-                  'apiKey': 'newapikey',
-                  'apiSecretKeys': [{ 'secret': 'secret' }],
-                },
-              },
-            },
+            'data': { 'appCreate': { 'app': { 'apiKey': 'newapikey', 'apiSecretKeys': [{ 'secret': 'secret' }] } } }
           }
         )
 
@@ -146,19 +126,16 @@ module Rails
         Ruby.expects(:version).returns(Semantic::Version.new('2.5.0'))
         Gem.expects(:install).with(@context, 'rails', nil).returns(true)
         Gem.expects(:install).with(@context, 'bundler', '~>2.0').returns(true)
-        expect_command(%W(#{gem_path}/bin/rails new --skip-spring --database=sqlite3 --edge -J test-app))
-        expect_command(%W(#{gem_path}/bin/bundle install),
-                       chdir: File.join(@context.root, 'test-app'))
-        expect_command(%W(#{gem_path}/bin/spring stop),
-                       chdir: File.join(@context.root, 'test-app'))
-        expect_command(%W(#{gem_path}/bin/rails generate shopify_app),
-                       chdir: File.join(@context.root, 'test-app'))
-        expect_command(%W(#{gem_path}/bin/rails db:create),
-                       chdir: File.join(@context.root, 'test-app'))
-        expect_command(%W(#{gem_path}/bin/rails db:migrate RAILS_ENV=development),
-                       chdir: File.join(@context.root, 'test-app'))
-        expect_command(%W(#{gem_path}/bin/rails webpacker:install),
-                       chdir: File.join(@context.root, 'test-app'))
+        expect_command(%W[#{gem_path}/bin/rails new --skip-spring --database=sqlite3 --edge -J test-app])
+        expect_command(%W[#{gem_path}/bin/bundle install], chdir: File.join(@context.root, 'test-app'))
+        expect_command(%W[#{gem_path}/bin/spring stop], chdir: File.join(@context.root, 'test-app'))
+        expect_command(%W[#{gem_path}/bin/rails generate shopify_app], chdir: File.join(@context.root, 'test-app'))
+        expect_command(%W[#{gem_path}/bin/rails db:create], chdir: File.join(@context.root, 'test-app'))
+        expect_command(
+          %W[#{gem_path}/bin/rails db:migrate RAILS_ENV=development],
+          chdir: File.join(@context.root, 'test-app')
+        )
+        expect_command(%W[#{gem_path}/bin/rails webpacker:install], chdir: File.join(@context.root, 'test-app'))
 
         stub_partner_req(
           'create_app',
@@ -167,17 +144,10 @@ module Rails
             title: 'test-app',
             type: 'public',
             app_url: ShopifyCli::Tasks::CreateApiClient::DEFAULT_APP_URL,
-            redir: ["http://127.0.0.1:3456"],
+            redir: %w[http://127.0.0.1:3456]
           },
           resp: {
-            'data': {
-              'appCreate': {
-                'app': {
-                  'apiKey': 'newapikey',
-                  'apiSecretKeys': [{ 'secret': 'secret' }],
-                },
-              },
-            },
+            'data': { 'appCreate': { 'app': { 'apiKey': 'newapikey', 'apiSecretKeys': [{ 'secret': 'secret' }] } } }
           }
         )
 
@@ -199,13 +169,11 @@ module Rails
         Gem.expects(:install).with(@context, 'bundler', '~>2.0').returns(true)
         Dir.stubs(:exist?).returns(true)
 
-        exception = assert_raises ShopifyCli::Abort do
-          perform_command
-        end
-        assert_equal(
-          "{{x}} " + @context.message('rails.create.error.dir_exists', 'test-app'),
-          exception.message
-        )
+        exception =
+          assert_raises ShopifyCli::Abort do
+            perform_command
+          end
+        assert_equal('{{x}} ' + @context.message('rails.create.error.dir_exists', 'test-app'), exception.message)
 
         delete_gem_path_and_binaries
         FileUtils.rm_r('test-app')
@@ -218,21 +186,32 @@ module Rails
       end
 
       def perform_command(add_cmd = nil)
-        default_new_cmd = %w(create rails \
-                             --type=public \
-                             --name=test-app \
-                             --organization_id=42 \
-                             --db=sqlite3 \
-                             --shop_domain=testshop.myshopify.com)
+        default_new_cmd = %w[
+          create
+          rails
+          \
+
+          --type=public
+          \
+
+          --name=test-app
+          \
+
+          --organization_id=42
+          \
+
+          --db=sqlite3
+          \
+
+          --shop_domain=testshop.myshopify.com
+        ]
         run_cmd(default_new_cmd << add_cmd, false)
       end
 
       def create_gem_path_and_binaries
         FileUtils.mkdir_p('gem/path/bin')
         gem_path = File.expand_path('gem/path')
-        ['bundle', 'rails', 'spring'].each do |f|
-          FileUtils.touch("#{gem_path}/bin/#{f}")
-        end
+        %w[bundle rails spring].each { |f| FileUtils.touch("#{gem_path}/bin/#{f}") }
         gem_path
       end
 

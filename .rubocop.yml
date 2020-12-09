@@ -2,6 +2,15 @@ inherit_from: .rubocop_todo.yml
 
 require: rubocop-minitest
 
+Layout:
+  Enabled: false
+Style/TrailingCommaInArrayLiteral:
+  Enabled: false
+Style/TrailingCommaInHashLiteral:
+  Enabled: false
+Style/NumericLiteralPrefix:
+  Enabled: false
+
 inherit_gem:
   rubocop-shopify:
     - rubocop-cli.yml

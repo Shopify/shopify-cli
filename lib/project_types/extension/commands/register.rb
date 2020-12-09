@@ -3,9 +3,7 @@
 module Extension
   module Commands
     class Register < ExtensionCommand
-      options do |parser, flags|
-        parser.on('--api_key=KEY') { |key| flags[:api_key] = key.downcase }
-      end
+      options { |parser, flags| parser.on('--api_key=KEY') { |key| flags[:api_key] = key.downcase } }
 
       def call(args, _command_name)
         CLI::UI::Frame.open(@ctx.message('register.frame_title')) do

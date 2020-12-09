@@ -125,13 +125,12 @@ module Node
           expects_git_remote_get_url_heroku(status: false, remote: 'heroku')
           expects_heroku_select_app(status: true)
 
-          CLI::UI::Prompt.expects(:ask)
+          CLI::UI::Prompt
+            .expects(:ask)
             .with(@context.message('node.deploy.heroku.app.no_apps_found'))
             .returns(:existing)
 
-          CLI::UI::Prompt.expects(:ask)
-            .with(@context.message('node.deploy.heroku.app.name'))
-            .returns('app-name')
+          CLI::UI::Prompt.expects(:ask).with(@context.message('node.deploy.heroku.app.name')).returns('app-name')
 
           Node::Commands::Deploy::Heroku.new(@context).call
         end
@@ -140,13 +139,12 @@ module Node
           expects_git_remote_get_url_heroku(status: false, remote: 'heroku')
           expects_heroku_select_app(status: false)
 
-          CLI::UI::Prompt.expects(:ask)
+          CLI::UI::Prompt
+            .expects(:ask)
             .with(@context.message('node.deploy.heroku.app.no_apps_found'))
             .returns(:existing)
 
-          CLI::UI::Prompt.expects(:ask)
-            .with(@context.message('node.deploy.heroku.app.name'))
-            .returns('app-name')
+          CLI::UI::Prompt.expects(:ask).with(@context.message('node.deploy.heroku.app.name')).returns('app-name')
 
           assert_raises ShopifyCli::Abort do
             Node::Commands::Deploy::Heroku.new(@context).call
@@ -157,9 +155,7 @@ module Node
           expects_git_remote_get_url_heroku(status: false, remote: 'heroku')
           expects_heroku_create(status: true)
 
-          CLI::UI::Prompt.expects(:ask)
-            .with(@context.message('node.deploy.heroku.app.no_apps_found'))
-            .returns(:new)
+          CLI::UI::Prompt.expects(:ask).with(@context.message('node.deploy.heroku.app.no_apps_found')).returns(:new)
 
           Node::Commands::Deploy::Heroku.new(@context).call
         end
@@ -168,9 +164,7 @@ module Node
           expects_git_remote_get_url_heroku(status: false, remote: 'heroku')
           expects_heroku_create(status: false)
 
-          CLI::UI::Prompt.expects(:ask)
-            .with(@context.message('node.deploy.heroku.app.no_apps_found'))
-            .returns(:new)
+          CLI::UI::Prompt.expects(:ask).with(@context.message('node.deploy.heroku.app.no_apps_found')).returns(:new)
 
           assert_raises ShopifyCli::Abort do
             Node::Commands::Deploy::Heroku.new(@context).call
@@ -187,9 +181,10 @@ module Node
 
         def test_call_lets_you_specify_a_branch_if_multiple_exist
           expects_git_branch(status: true, multiple: true)
-          expects_git_push_heroku(status: true, branch: "other_branch:master")
+          expects_git_push_heroku(status: true, branch: 'other_branch:master')
 
-          CLI::UI::Prompt.expects(:ask)
+          CLI::UI::Prompt
+            .expects(:ask)
             .with(@context.message('node.deploy.heroku.git.what_branch'))
             .returns('other_branch')
 
@@ -205,13 +200,13 @@ module Node
         end
 
         def test_call_successfully_deploys_to_heroku
-          expects_git_push_heroku(status: true, branch: "master:master")
+          expects_git_push_heroku(status: true, branch: 'master:master')
 
           Node::Commands::Deploy::Heroku.new(@context).call
         end
 
         def test_call_raises_if_deploy_to_heroku_fails
-          expects_git_push_heroku(status: false, branch: "master:master")
+          expects_git_push_heroku(status: false, branch: 'master:master')
 
           assert_raises ShopifyCli::Abort do
             Node::Commands::Deploy::Heroku.new(@context).call

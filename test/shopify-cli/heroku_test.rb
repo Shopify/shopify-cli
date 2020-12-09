@@ -83,7 +83,7 @@ module ShopifyCli
 
       heroku_service = ShopifyCli::Heroku.new(@context)
 
-      assert_nil(heroku_service.deploy("master"))
+      assert_nil(heroku_service.deploy('master'))
     end
 
     def test_deploy_raises_if_deploy_fails
@@ -92,7 +92,7 @@ module ShopifyCli
       heroku_service = ShopifyCli::Heroku.new(@context)
 
       assert_raises ShopifyCli::Abort do
-        heroku_service.deploy("master")
+        heroku_service.deploy('master')
       end
     end
 

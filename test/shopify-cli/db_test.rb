@@ -19,7 +19,7 @@ module ShopifyCli
 
     def test_keys
       db = new_db
-      assert_equal([:keyone, :keytwo], db.keys)
+      assert_equal(%i[keyone keytwo], db.keys)
     end
 
     def test_exists?
@@ -49,7 +49,7 @@ module ShopifyCli
     private
 
     def new_db
-      db = DB.new(path: File.join(ShopifyCli::TEMP_DIR, ".test_db.pdb"))
+      db = DB.new(path: File.join(ShopifyCli::TEMP_DIR, '.test_db.pdb'))
       db.clear
       db.db.transaction do
         db.db[:keyone] = 'value'

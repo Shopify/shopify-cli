@@ -38,9 +38,7 @@ module ShopifyCli
       #   ShopifyCli::AdminAPI.query(@ctx, 'all_organizations')
       #
       def query(ctx, query_name, shop:, api_version: nil, **variables)
-        authenticated_req(ctx, shop) do
-          api_client(ctx, api_version, shop).query(query_name, variables: variables)
-        end
+        authenticated_req(ctx, shop) { api_client(ctx, api_version, shop).query(query_name, variables: variables) }
       end
 
       private
@@ -54,15 +52,17 @@ module ShopifyCli
 
       def authenticate(ctx, shop)
         env = Project.current.env
-        ShopifyCli::OAuth.new(
+        ShopifyCli::OAuth
+          .new(
           ctx: ctx,
           service: 'admin',
           client_id: env.api_key,
           secret: env.secret,
           scopes: env.scopes,
-          token_path: "/access_token",
-          options: { 'grant_options[]' => 'per user' },
-        ).authenticate("https://#{shop}/admin/oauth")
+          token_path: '/access_token',
+          options: { 'grant_options[]' => 'per user' }
+        )
+          .authenticate("https://#{shop}/admin/oauth")
       end
 
       def api_client(ctx, api_version, shop)
@@ -70,7 +70,7 @@ module ShopifyCli
           ctx: ctx,
           auth_header: 'X-Shopify-Access-Token',
           token: admin_access_token(ctx, shop),
-          url: "https://#{shop}/admin/api/#{fetch_api_version(ctx, api_version, shop)}/graphql.json",
+          url: "https://#{shop}/admin/api/#{fetch_api_version(ctx, api_version, shop)}/graphql.json"
         )
       end
 
@@ -83,12 +83,13 @@ module ShopifyCli
 
       def fetch_api_version(ctx, api_version, shop)
         return api_version unless api_version.nil?
-        client = new(
-          ctx: ctx,
-          auth_header: 'X-Shopify-Access-Token',
-          token: admin_access_token(ctx, shop),
-          url: "https://#{shop}/admin/api/unstable/graphql.json",
-        )
+        client =
+          new(
+            ctx: ctx,
+            auth_header: 'X-Shopify-Access-Token',
+            token: admin_access_token(ctx, shop),
+            url: "https://#{shop}/admin/api/unstable/graphql.json"
+          )
         versions = client.query('api_versions')['data']['publicApiVersions']
         latest = versions.find { |version| version['displayName'].include?('Latest') }
         latest['handle']

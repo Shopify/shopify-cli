@@ -14,7 +14,7 @@ module ShopifyCli
 
     attr_reader :db # :nodoc:
 
-    def initialize(path: File.join(ShopifyCli.cache_dir, ".db.pstore")) # :nodoc:
+    def initialize(path: File.join(ShopifyCli.cache_dir, '.db.pstore')) # :nodoc:
       @db = PStore.new(path)
     end
 

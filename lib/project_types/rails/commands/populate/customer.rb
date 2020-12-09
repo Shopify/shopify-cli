@@ -8,10 +8,7 @@ module Rails
 
         def defaults
           first_name, last_name = ShopifyCli::Helpers::Haikunator.name
-          {
-            firstName: first_name,
-            lastName: last_name,
-          }
+          { firstName: first_name, lastName: last_name }
         end
 
         def message(data)

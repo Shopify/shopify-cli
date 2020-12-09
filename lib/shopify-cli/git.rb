@@ -72,11 +72,7 @@ module ShopifyCli
         output, status = ctx.capture2e('git', 'branch', '--list', '--format=%(refname:short)')
         ctx.abort(ctx.message('core.git.error.no_branches_found')) unless status.success?
 
-        branches = if output == ''
-          ['master']
-        else
-          output.split("\n")
-        end
+        branches = output == '' ? %w[master] : output.split("\n")
 
         branches
       end
@@ -96,19 +92,15 @@ module ShopifyCli
       def init(ctx)
         output, status = ctx.capture2e('git', 'status')
 
-        unless status.success?
-          ctx.abort(ctx.message('core.git.error.repo_not_initiated'))
-        end
+        ctx.abort(ctx.message('core.git.error.repo_not_initiated')) unless status.success?
 
-        if output.include?('No commits yet')
-          ctx.abort(ctx.message('core.git.error.no_commits_made'))
-        end
+        ctx.abort(ctx.message('core.git.error.no_commits_made')) if output.include?('No commits yet')
       end
 
       private
 
       def exec(*args, dir: Dir.pwd, default: nil, ctx: Context.new)
-        args = %w(git) + args
+        args = %w[git] + args
         out, _, stat = ctx.capture3(*args, chdir: dir)
         return default unless stat.success?
         out.chomp
@@ -123,17 +115,18 @@ module ShopifyCli
           msg = []
           require 'open3'
 
-          success = Open3.popen3('git', *git_command, '--progress') do |_stdin, _stdout, stderr, thread|
-            while (line = stderr.gets)
-              msg << line.chomp
-              next unless line.strip.start_with?('Receiving objects:')
-              percent = (line.match(/Receiving objects:\s+(\d+)/)[1].to_f / 100).round(2)
-              bar.tick(set_percent: percent)
-              next
-            end
+          success =
+            Open3.popen3('git', *git_command, '--progress') do |_stdin, _stdout, stderr, thread|
+              while (line = stderr.gets)
+                msg << line.chomp
+                next unless line.strip.start_with?('Receiving objects:')
+                percent = (line.match(/Receiving objects:\s+(\d+)/)[1].to_f / 100).round(2)
+                bar.tick(set_percent: percent)
+                next
+              end
 
-            thread.value
-          end.success?
+              thread.value
+            end.success?
 
           ctx.abort(msg.join("\n")) unless success
           bar.tick(set_percent: 1.0)

@@ -31,9 +31,7 @@ module Node
 
       def self.run_generate(script, name, ctx)
         stat = ctx.system(script)
-        unless stat.success?
-          ctx.abort(response(stat.exitstatus, name, ctx))
-        end
+        ctx.abort(response(stat.exitstatus, name, ctx)) unless stat.success?
       end
 
       def self.response(code, name, ctx)

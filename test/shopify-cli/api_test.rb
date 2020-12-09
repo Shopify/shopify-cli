@@ -20,92 +20,67 @@ module ShopifyCli
           }
         }
       MUTATION
-      @api = API.new(
-        ctx: @context,
-        auth_header: 'Auth',
-        token: 'faketoken',
-        url: "https://my-test-shop.myshopify.com/admin/api/2019-04/graphql.json",
-      )
+      @api =
+        API.new(
+          ctx: @context,
+          auth_header: 'Auth',
+          token: 'faketoken',
+          url: 'https://my-test-shop.myshopify.com/admin/api/2019-04/graphql.json'
+        )
       Git.stubs(:sha).returns('abcde')
       @context.stubs(:uname).returns('Mac')
     end
 
     def test_mutation_makes_request_to_shopify
-      headers = {
-        'User-Agent' => "Shopify App CLI #{ShopifyCli::VERSION} abcde | Mac",
-        'Auth' => 'faketoken',
-      }
-      uri = URI.parse("https://my-test-shop.myshopify.com/admin/api/2019-04/graphql.json")
+      headers = { 'User-Agent' => "Shopify App CLI #{ShopifyCli::VERSION} abcde | Mac", 'Auth' => 'faketoken' }
+      uri = URI.parse('https://my-test-shop.myshopify.com/admin/api/2019-04/graphql.json')
       variables = { var_name: 'var_value' }
-      File.stubs(:read)
-        .with(File.join(ShopifyCli::ROOT, "lib/graphql/api/mutation.graphql"))
-        .returns(@mutation)
+      File.stubs(:read).with(File.join(ShopifyCli::ROOT, 'lib/graphql/api/mutation.graphql')).returns(@mutation)
       response = stub('response', code: '200', body: '{}')
       HttpRequest.expects(:call).with(uri, @mutation, variables, headers).returns(response)
       @api.query('api/mutation', variables: variables)
     end
 
     def test_raises_error_with_invalid_url
-      File.stubs(:read)
-        .with(File.join(ShopifyCli::ROOT, "lib/graphql/api/mutation.graphql"))
-        .returns(@mutation)
-      api = API.new(
-        ctx: @context,
-        auth_header: 'Auth',
-        token: 'faketoken',
-        url: 'https//https://invalidurl',
-      )
+      File.stubs(:read).with(File.join(ShopifyCli::ROOT, 'lib/graphql/api/mutation.graphql')).returns(@mutation)
+      api = API.new(ctx: @context, auth_header: 'Auth', token: 'faketoken', url: 'https//https://invalidurl')
 
-      assert_raises(ShopifyCli::Abort) do
-        api.query('api/mutation')
-      end
+      assert_raises(ShopifyCli::Abort) { api.query('api/mutation') }
     end
 
     def test_query_fails_gracefully_with_internal_server_error
       response = stub('response', code: '500', body: '{}')
       HttpRequest.expects(:call).returns(response).times(4)
-      File.stubs(:read)
-        .with(File.join(ShopifyCli::ROOT, "lib/graphql/api/mutation.graphql"))
-        .returns(@mutation)
+      File.stubs(:read).with(File.join(ShopifyCli::ROOT, 'lib/graphql/api/mutation.graphql')).returns(@mutation)
 
       @context.expects(:puts).with(@context.message('core.api.error.internal_server_error'))
       @api.query('api/mutation')
       @api.stubs(:query).raises(API::APIRequestServerError)
-      assert_raises(API::APIRequestServerError) do
-        @api.query('api/mutation')
-      end
+      assert_raises(API::APIRequestServerError) { @api.query('api/mutation') }
     end
 
     def test_query_fails_gracefully_with_internal_server_error_on_debug_mode
       @context.stubs(:getenv).with('DEBUG').returns(true)
       response = stub('response', code: '500', body: '{}')
       HttpRequest.expects(:call).returns(response).times(4)
-      File.stubs(:read)
-        .with(File.join(ShopifyCli::ROOT, "lib/graphql/api/mutation.graphql"))
-        .returns(@mutation)
+      File.stubs(:read).with(File.join(ShopifyCli::ROOT, 'lib/graphql/api/mutation.graphql')).returns(@mutation)
 
       @context.expects(:debug).with(@context.message('core.api.error.internal_server_error_debug', "500\n{}"))
       @context.expects(:puts).with(@context.message('core.api.error.internal_server_error'))
       @api.query('api/mutation')
       @api.stubs(:query).raises(API::APIRequestServerError)
-      assert_raises(API::APIRequestServerError) do
-        @api.query('api/mutation')
-      end
+      assert_raises(API::APIRequestServerError) { @api.query('api/mutation') }
     end
 
     def test_query_fails_gracefully_with_unexpected_error
       response = stub('response', code: '600', body: '{}')
       HttpRequest.expects(:call).returns(response)
-      File.stubs(:read)
-        .with(File.join(ShopifyCli::ROOT, "lib/graphql/api/mutation.graphql"))
-        .returns(@mutation)
+      File.stubs(:read).with(File.join(ShopifyCli::ROOT, 'lib/graphql/api/mutation.graphql')).returns(@mutation)
 
       @context.expects(:puts).with(@context.message('core.api.error.internal_server_error'))
       @api.query('api/mutation')
       @api.stubs(:query).raises(API::APIRequestUnexpectedError)
-      assert_raises(API::APIRequestUnexpectedError) do
-        @api.query('api/mutation')
-      end
+      assert_raises(API::APIRequestUnexpectedError) { @api.query('api/mutation') }
     end
 
     def test_load_query_can_load_project_type_queries
@@ -142,9 +117,7 @@ module ShopifyCli
 
     def test_include_shopify_cli_header_if_acting_as_shopify_organization
       Shopifolk.act_as_shopify_organization
-      File.stubs(:read)
-        .with(File.join(ShopifyCli::ROOT, "lib/graphql/api/mutation.graphql"))
-        .returns(@mutation)
+      File.stubs(:read).with(File.join(ShopifyCli::ROOT, 'lib/graphql/api/mutation.graphql')).returns(@mutation)
       response = stub('response', code: '200', body: '{}')
       HttpRequest
         .expects(:call)

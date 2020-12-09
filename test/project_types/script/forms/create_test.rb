@@ -1,6 +1,6 @@
 # frozen_string_literal: true
 
-require "project_types/script/test_helper"
+require 'project_types/script/test_helper'
 
 module Script
   module Forms
@@ -22,12 +22,9 @@ module Script
       end
 
       def test_asks_extension_point_if_no_flag
-        eps = ['discount', 'another']
+        eps = %w[discount another]
         Layers::Application::ExtensionPoints.stubs(:types).returns(eps)
-        CLI::UI::Prompt.expects(:ask).with(
-          @context.message('script.forms.create.select_extension_point'),
-          options: eps
-        )
+        CLI::UI::Prompt.expects(:ask).with(@context.message('script.forms.create.select_extension_point'), options: eps)
         ask(name: 'name')
       end
 
@@ -58,9 +55,7 @@ module Script
       end
 
       def test_invalid_name_as_option
-        assert_raises(Script::Errors::InvalidScriptNameError) do
-          ask(name: 'na/me')
-        end
+        assert_raises(Script::Errors::InvalidScriptNameError) { ask(name: 'na/me') }
       end
 
       private

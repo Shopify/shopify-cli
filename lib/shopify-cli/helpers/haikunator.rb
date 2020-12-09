@@ -21,7 +21,7 @@
 # OF CONTRACT, TORT OR OTHERWISE, ARISING FROM, OUT OF OR IN CONNECTION
 # WITH THE SOFTWARE OR THE USE OR OTHER DEALINGS IN THE SOFTWARE.
 
-require "securerandom"
+require 'securerandom'
 
 module ShopifyCli
   module Helpers
@@ -31,7 +31,7 @@ module ShopifyCli
           build(0, ' ')
         end
 
-        def haikunate(token_range = 9999, delimiter = "-")
+        def haikunate(token_range = 9999, delimiter = '-')
           build(token_range, delimiter)
         end
 
@@ -47,7 +47,7 @@ module ShopifyCli
           sections = [
             adjectives[random_seed % adjectives.length],
             nouns[random_seed % nouns.length],
-            token(token_range),
+            token(token_range)
           ]
 
           sections.compact.join(delimiter)
@@ -62,29 +62,141 @@ module ShopifyCli
         end
 
         def adjectives
-          %w(
-            autumn hidden bitter misty silent empty dry dark summer
-            icy delicate quiet white cool spring winter patient
-            twilight dawn crimson wispy weathered blue billowing
-            broken cold damp falling frosty green long late lingering
-            bold little morning muddy old red rough still small
-            sparkling throbbing shy wandering withered wild black
-            young holy solitary fragrant aged snowy proud floral
-            restless divine polished ancient purple lively nameless
-          )
+          %w[
+            autumn
+            hidden
+            bitter
+            misty
+            silent
+            empty
+            dry
+            dark
+            summer
+            icy
+            delicate
+            quiet
+            white
+            cool
+            spring
+            winter
+            patient
+            twilight
+            dawn
+            crimson
+            wispy
+            weathered
+            blue
+            billowing
+            broken
+            cold
+            damp
+            falling
+            frosty
+            green
+            long
+            late
+            lingering
+            bold
+            little
+            morning
+            muddy
+            old
+            red
+            rough
+            still
+            small
+            sparkling
+            throbbing
+            shy
+            wandering
+            withered
+            wild
+            black
+            young
+            holy
+            solitary
+            fragrant
+            aged
+            snowy
+            proud
+            floral
+            restless
+            divine
+            polished
+            ancient
+            purple
+            lively
+            nameless
+          ]
         end
 
         def nouns
-          %w(
-            waterfall river breeze moon rain wind sea morning
-            snow lake sunset pine shadow leaf dawn glitter forest
-            hill cloud meadow sun glade bird brook butterfly
-            bush dew dust field fire flower firefly feather grass
-            haze mountain night pond darkness snowflake silence
-            sound sky shape surf thunder violet water wildflower
-            wave water resonance sun wood dream cherry tree fog
-            frost voice paper frog smoke star
-          )
+          %w[
+            waterfall
+            river
+            breeze
+            moon
+            rain
+            wind
+            sea
+            morning
+            snow
+            lake
+            sunset
+            pine
+            shadow
+            leaf
+            dawn
+            glitter
+            forest
+            hill
+            cloud
+            meadow
+            sun
+            glade
+            bird
+            brook
+            butterfly
+            bush
+            dew
+            dust
+            field
+            fire
+            flower
+            firefly
+            feather
+            grass
+            haze
+            mountain
+            night
+            pond
+            darkness
+            snowflake
+            silence
+            sound
+            sky
+            shape
+            surf
+            thunder
+            violet
+            water
+            wildflower
+            wave
+            water
+            resonance
+            sun
+            wood
+            dream
+            cherry
+            tree
+            fog
+            frost
+            voice
+            paper
+            frog
+            smoke
+            star
+          ]
         end
       end
     end

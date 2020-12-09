@@ -33,10 +33,11 @@ module Rails
       end
 
       def test_type_is_validated
-        io = capture_io do
-          form = ask(type: "not_a_type")
-          assert_nil(form)
-        end
+        io =
+          capture_io do
+            form = ask(type: 'not_a_type')
+            assert_nil(form)
+          end
         assert_match(@context.message('rails.forms.create.error.invalid_app_type', 'not_a_type'), io.join)
       end
 
@@ -51,33 +52,30 @@ module Rails
       end
 
       def test_db_is_validated
-        io = capture_io do
-          form = ask(db: "not_a_db")
-          assert_nil(form)
-        end
+        io =
+          capture_io do
+            form = ask(db: 'not_a_db')
+            assert_nil(form)
+          end
         assert_match(@context.message('rails.forms.create.error.invalid_db_type', 'not_a_db'), io.join)
       end
 
       def test_user_can_change_db_in_app
-        CLI::UI::Prompt.expects(:confirm)
-          .with(@context.message('rails.forms.create.db.want_select'),
-                default: false)
+        CLI::UI::Prompt
+          .expects(:confirm)
+          .with(@context.message('rails.forms.create.db.want_select'), default: false)
           .returns(true)
-        CLI::UI::Prompt.expects(:ask)
-          .with(@context.message('rails.forms.create.db.select'))
-          .returns('mysql')
+        CLI::UI::Prompt.expects(:ask).with(@context.message('rails.forms.create.db.select')).returns('mysql')
         form = ask(db: nil)
         assert_equal('mysql', form.db)
       end
 
       def test_user_asked_if_they_want_to_change_db
-        CLI::UI::Prompt.expects(:confirm)
-          .with(@context.message('rails.forms.create.db.want_select'),
-                default: false)
+        CLI::UI::Prompt
+          .expects(:confirm)
+          .with(@context.message('rails.forms.create.db.want_select'), default: false)
           .returns(false)
-        CLI::UI::Prompt.expects(:ask)
-          .with(@context.message('rails.forms.create.db.select'))
-          .never
+        CLI::UI::Prompt.expects(:ask).with(@context.message('rails.forms.create.db.select')).never
         form = ask(db: nil)
         assert_equal('sqlite3', form.db)
       end
@@ -90,24 +88,22 @@ module Rails
               organizations: {
                 nodes: [
                   {
-                    'id': 421,
-                    'businessName': "one",
-                    'stores': { 'nodes': [{ 'shopDomain': 'store.myshopify.com' }] },
+                    'id': 421, 'businessName': 'one', 'stores': { 'nodes': [{ 'shopDomain': 'store.myshopify.com' }] }
                   },
                   {
                     'id': 431,
-                    'businessName': "two",
+                    'businessName': 'two',
                     'stores': {
                       'nodes': [
                         { 'shopDomain': 'other.myshopify.com', 'transferDisabled': true },
-                        { 'shopDomain': 'yet-another.myshopify.com' },
-                      ],
-                    },
-                  },
-                ],
-              },
-            },
-          },
+                        { 'shopDomain': 'yet-another.myshopify.com' }
+                      ]
+                    }
+                  }
+                ]
+              }
+            }
+          }
         )
         CLI::UI::Prompt.expects(:ask).returns(431)
         form = ask(org_id: nil, shop: nil)
@@ -121,23 +117,26 @@ module Rails
           resp: {
             data: {
               organizations: {
-                nodes: [{
-                  'id': 421,
-                  'businessName': "hoopy froods",
-                  'stores': { 'nodes': [{ 'shopDomain': 'next.myshopify.com', 'transferDisabled': true }] },
-                }],
-              },
-            },
-          },
+                nodes: [
+                  {
+                    'id': 421,
+                    'businessName': 'hoopy froods',
+                    'stores': { 'nodes': [{ 'shopDomain': 'next.myshopify.com', 'transferDisabled': true }] }
+                  }
+                ]
+              }
+            }
+          }
         )
-        io = capture_io do
-          form = ask(org_id: nil, shop: nil)
-          assert_equal(421, form.organization_id)
-          assert_equal('next.myshopify.com', form.shop_domain)
-        end
+        io =
+          capture_io do
+            form = ask(org_id: nil, shop: nil)
+            assert_equal(421, form.organization_id)
+            assert_equal('next.myshopify.com', form.shop_domain)
+          end
         assert_match(
           CLI::UI.fmt(@context.message('core.tasks.select_org_and_shop.organization', 'hoopy froods', 421)),
-          io.join,
+          io.join
         )
       end
 
@@ -149,13 +148,10 @@ module Rails
             data: {
               organizations: {
                 nodes: [
-                  {
-                    id: 123,
-                    stores: { nodes: [{ shopDomain: 'shopdomain.myshopify.com', 'transferDisabled': true }] },
-                  },
-                ],
-              },
-            },
+                  { id: 123, stores: { nodes: [{ shopDomain: 'shopdomain.myshopify.com', 'transferDisabled': true }] } }
+                ]
+              }
+            }
           }
         )
         form = ask(org_id: 123, shop: nil)
@@ -164,15 +160,13 @@ module Rails
       end
 
       def test_it_will_fail_if_no_orgs_are_available
-        stub_partner_req(
-          'all_organizations',
-          resp: { data: { organizations: { nodes: [] } } },
-        )
+        stub_partner_req('all_organizations', resp: { data: { organizations: { nodes: [] } } })
 
-        io = capture_io do
-          form = ask(org_id: nil, shop: nil)
-          assert_nil(form)
-        end
+        io =
+          capture_io do
+            form = ask(org_id: nil, shop: nil)
+            assert_nil(form)
+          end
         assert_match(@context.message('core.tasks.select_org_and_shop.error.partners_notice'), io.join)
         assert_match(@context.message('core.tasks.select_org_and_shop.error.no_organizations'), io.join)
       end
@@ -180,20 +174,14 @@ module Rails
       def test_returns_no_shop_if_none_are_available
         stub_partner_req(
           'find_organization',
-          variables: { id: 123 },
-          resp: {
-            data: {
-              organizations: {
-                nodes: [{ id: 123, stores: { nodes: [] } }],
-              },
-            },
-          }
+          variables: { id: 123 }, resp: { data: { organizations: { nodes: [{ id: 123, stores: { nodes: [] } }] } } }
         )
 
-        io = capture_io do
-          form = ask(org_id: 123, shop: nil)
-          assert_nil form.shop_domain
-        end
+        io =
+          capture_io do
+            form = ask(org_id: 123, shop: nil)
+            assert_nil form.shop_domain
+          end
         log = io.join
         assert_match(CLI::UI.fmt(@context.message('core.tasks.select_org_and_shop.error.no_development_stores')), log)
         assert_match(CLI::UI.fmt(@context.message('core.tasks.select_org_and_shop.create_store', 123)), log)
@@ -207,22 +195,21 @@ module Rails
             data: {
               organizations: {
                 nodes: [
-                  {
-                    id: 123,
-                    stores: { nodes: [{ shopDomain: 'shopdomain.myshopify.com', 'transferDisabled': true }] },
-                  },
-                ],
-              },
-            },
+                  { id: 123, stores: { nodes: [{ shopDomain: 'shopdomain.myshopify.com', 'transferDisabled': true }] } }
+                ]
+              }
+            }
           }
         )
-        io = capture_io do
-          form = ask(org_id: 123, shop: nil)
-          assert_equal('shopdomain.myshopify.com', form.shop_domain)
-        end
-        assert_match(CLI::UI.fmt(
-          @context.message('core.tasks.select_org_and_shop.development_store', 'shopdomain.myshopify.com')
-        ), io.join)
+        io =
+          capture_io do
+            form = ask(org_id: 123, shop: nil)
+            assert_equal('shopdomain.myshopify.com', form.shop_domain)
+          end
+        assert_match(
+          CLI::UI.fmt(@context.message('core.tasks.select_org_and_shop.development_store', 'shopdomain.myshopify.com')),
+          io.join
+        )
       end
 
       def test_prompts_user_to_pick_from_shops
@@ -235,23 +222,26 @@ module Rails
                 nodes: [
                   {
                     id: 123,
-                    stores: { nodes: [
-                      { shopDomain: 'shopdomain.myshopify.com', 'transferDisabled': true },
-                      { shopDomain: 'shop.myshopify.com', 'convertableToPartnerTest': true },
-                      { shopDomain: 'other.myshopify.com' },
-                    ] },
-                  },
-                ],
-              },
-            },
+                    stores: {
+                      nodes: [
+                        { shopDomain: 'shopdomain.myshopify.com', 'transferDisabled': true },
+                        { shopDomain: 'shop.myshopify.com', 'convertableToPartnerTest': true },
+                        { shopDomain: 'other.myshopify.com' }
+                      ]
+                    }
+                  }
+                ]
+              }
+            }
           }
         )
 
-        CLI::UI::Prompt.expects(:ask)
+        CLI::UI::Prompt
+          .expects(:ask)
           .with(
-            @context.message('core.tasks.select_org_and_shop.development_store_select'),
-            options: %w(shopdomain.myshopify.com shop.myshopify.com)
-          )
+          @context.message('core.tasks.select_org_and_shop.development_store_select'),
+          options: %w[shopdomain.myshopify.com shop.myshopify.com]
+        )
           .returns('selected')
         form = ask(org_id: 123, shop: nil)
         assert_equal('selected', form.shop_domain)
@@ -260,15 +250,7 @@ module Rails
       private
 
       def ask(title: 'Test App', org_id: 42, shop: 'shop.myshopify.com', type: 'custom', db: 'sqlite3')
-        Create.ask(
-          @context,
-          [],
-          title: title,
-          type: type,
-          organization_id: org_id,
-          shop_domain: shop,
-          db: db,
-        )
+        Create.ask(@context, [], title: title, type: type, organization_id: org_id, shop_domain: shop, db: db)
       end
     end
   end

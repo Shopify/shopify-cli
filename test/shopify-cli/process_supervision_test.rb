@@ -6,12 +6,8 @@ module ShopifyCli
       process = ProcessSupervision.new('web', pid: 1234)
       assert_equal(1234, process.pid)
       assert_equal('web', process.identifier)
-      assert_equal(
-        File.join(ShopifyCli.cache_dir, 'sv/web.pid'), process.pid_path
-      )
-      assert_equal(
-        File.join(ShopifyCli.cache_dir, 'sv/web.log'), process.log_path
-      )
+      assert_equal(File.join(ShopifyCli.cache_dir, 'sv/web.pid'), process.pid_path)
+      assert_equal(File.join(ShopifyCli.cache_dir, 'sv/web.log'), process.log_path)
     end
 
     def test_start

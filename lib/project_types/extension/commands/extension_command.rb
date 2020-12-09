@@ -9,13 +9,14 @@ module Extension
       end
 
       def extension_type
-        @extension_type ||= begin
-          unless Models::Type.valid?(project.extension_type_identifier)
-            @ctx.abort(@ctx.message('errors.unknown_type', project.extension_type_identifier))
-          end
+        @extension_type ||=
+          begin
+            unless Models::Type.valid?(project.extension_type_identifier)
+              @ctx.abort(@ctx.message('errors.unknown_type', project.extension_type_identifier))
+            end
 
-          Models::Type.load_type(project.extension_type_identifier)
-        end
+            Models::Type.load_type(project.extension_type_identifier)
+          end
       end
     end
   end

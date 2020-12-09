@@ -42,24 +42,21 @@ module ShopifyCli
       failure = ctx.message('core.js_deps.error.install_error', @system.package_manager)
 
       CLI::UI::Frame.open(title, success_text: success, failure_text: failure) do
-        @system.call(
-          yarn: -> { yarn(verbose) },
-          npm: -> { npm(verbose) }
-        )
+        @system.call(yarn: -> { yarn(verbose) }, npm: -> { npm(verbose) })
       end
     end
 
     private
 
     def yarn(verbose = false)
-      cmd = %w(yarn install)
+      cmd = %w[yarn install]
       cmd << '--silent' unless verbose
 
       run_install_command(cmd)
     end
 
     def npm(verbose = false)
-      cmd = %w(npm install --no-audit)
+      cmd = %w[npm install --no-audit]
       cmd << '--quiet' unless verbose
 
       run_install_command(cmd)
@@ -70,10 +67,11 @@ module ShopifyCli
       errors = nil
 
       spinner_title = ctx.message('core.js_deps.installing', @system.package_manager)
-      success = CLI::UI::Spinner.spin(spinner_title, auto_debrief: false) do |spinner|
-        _, errors, status = CLI::Kit::System.capture3(*cmd, env: @ctx.env, chdir: ctx.root)
-        update_spinner_title_and_status(spinner, status, deps)
-      end
+      success =
+        CLI::UI::Spinner.spin(spinner_title, auto_debrief: false) do |spinner|
+          _, errors, status = CLI::Kit::System.capture3(*cmd, env: @ctx.env, chdir: ctx.root)
+          update_spinner_title_and_status(spinner, status, deps)
+        end
 
       errors.lines.each { |e| ctx.puts e } unless success || errors.nil?
       success
@@ -90,15 +88,14 @@ module ShopifyCli
 
     def parse_dependencies
       package_json = File.join(ctx.root, 'package.json')
-      pkg = begin
-              JSON.parse(File.read(package_json))
-            rescue Errno::ENOENT, Errno::ENOTDIR
-              ctx.abort(ctx.message('core.js_deps.error.missing_package', package_json))
-            end
+      pkg =
+        begin
+          JSON.parse(File.read(package_json))
+        rescue Errno::ENOENT, Errno::ENOTDIR
+          ctx.abort(ctx.message('core.js_deps.error.missing_package', package_json))
+        end
 
-      %w(dependencies devDependencies).map do |key|
-        pkg.fetch(key, []).keys
-      end.flatten
+      %w[dependencies devDependencies].map { |key| pkg.fetch(key, []).keys }.flatten
     rescue JSON::ParserError
       ctx.puts(
         ctx.message('core.js_deps.error.invalid_package', File.read(File.join(path, 'package.json'))),

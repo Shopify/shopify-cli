@@ -18,18 +18,10 @@ module ShopifyCli
 
         subcommand :FakeSubCommand, 'fakesub'
 
-        options do |parser, flags|
-          parser.on('-v', '--verbose', 'print verbosely') do |v|
-            flags[:verbose] = v
-          end
-        end
+        options { |parser, flags| parser.on('-v', '--verbose', 'print verbosely') { |v| flags[:verbose] = v } }
 
         def call(_args, _name)
-          if options.flags[:verbose]
-            @ctx.puts('verbose!')
-          else
-            @ctx.puts('command!')
-          end
+          options.flags[:verbose] ? @ctx.puts('verbose!') : @ctx.puts('command!')
         end
       end
 
@@ -53,7 +45,7 @@ module ShopifyCli
         reg.add(FakeCommand, :fake)
         @context.expects(:puts).with('success!')
         @context.expects(:puts).with('verbose!')
-        executor.call(FakeCommand, 'fake', ['-v'])
+        executor.call(FakeCommand, 'fake', %w[-v])
       end
 
       def test_subcommand
@@ -62,7 +54,7 @@ module ShopifyCli
         reg.add(FakeCommand, :fake)
         @context.expects(:puts).with('success!')
         @context.expects(:puts).with('subcommand!')
-        executor.call(FakeCommand, 'fake', ['fakesub'])
+        executor.call(FakeCommand, 'fake', %w[fakesub])
       end
     end
   end

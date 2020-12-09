@@ -35,11 +35,14 @@ module Rails
 
       def apply_gem_home(ctx)
         path = ''
+
         # extract GEM_HOME from `gem environment home` command
         out, stat = ctx.capture2e('gem', 'environment', 'home')
         path = out&.empty? ? '' : out.strip if stat.success?
+
         # fallback if return from `gem environment home` is empty (somewhat unlikely)
         path = fallback_gem_home_path(ctx) if path.empty?
+
         # fallback if path isn't writable (if using a system installed ruby)
         path = fallback_gem_home_path(ctx) unless File.writable?(path)
         ctx.mkdir_p(path) unless Dir.exist?(path)
@@ -51,6 +54,7 @@ module Rails
         path = ''
         out, stat = ctx.capture2e('gem', 'environment', 'path')
         path = out&.empty? ? '' : out.strip if stat.success?
+
         # usually GEM_PATH already contains GEM_HOME
         # if gem_home() falls back to our fallback path, we need to add it
         path = gem_home(ctx) + File::PATH_SEPARATOR + path unless path.include?(gem_home(ctx))
@@ -68,9 +72,7 @@ module Rails
       paths = self.class.gem_path(ctx).split(File::PATH_SEPARATOR)
       paths.each do |path|
         ctx.debug(ctx.message('rails.gem.checking_installation_path', "#{path}/gems/", name))
-        found = !!Dir.glob("#{path}/gems/#{name}-*").detect do |f|
-          gem_satisfies_version?(f)
-        end
+        found = !!Dir.glob("#{path}/gems/#{name}-*").detect { |f| gem_satisfies_version?(f) }
         break if found
       end
       found
@@ -79,14 +81,10 @@ module Rails
     def install!
       spin = CLI::UI::SpinGroup.new
       spin.add(ctx.message('rails.gem.installing', name)) do |spinner|
-        args = %w(gem install)
+        args = %w[gem install]
         args.push(name)
         unless version.nil?
-          if ctx.windows? && version.include?('~')
-            args.push('-v', "\"#{version}\"")
-          else
-            args.push('-v', version)
-          end
+          ctx.windows? && version.include?('~') ? args.push('-v', "\"#{version}\"") : args.push('-v', version)
         end
         ctx.system(*args)
         spinner.update_title(ctx.message('rails.gem.installed', name))

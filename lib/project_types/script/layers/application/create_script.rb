@@ -1,6 +1,6 @@
 # frozen_string_literal: true
 
-require "shopify_cli"
+require 'shopify_cli'
 
 module Script
   module Layers
@@ -10,8 +10,8 @@ module Script
           def call(ctx:, language:, script_name:, extension_point_type:)
             extension_point = ExtensionPoints.get(type: extension_point_type)
             project = setup_project(ctx, script_name, extension_point)
-            project_creator = Infrastructure::ProjectCreator
-              .for(ctx, language, extension_point, script_name, project.directory)
+            project_creator =
+              Infrastructure::ProjectCreator.for(ctx, language, extension_point, script_name, project.directory)
             install_dependencies(ctx, language, script_name, project.source_file, project_creator)
             bootstrap(ctx, project.source_path, project_creator)
             project

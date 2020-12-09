@@ -10,7 +10,7 @@ module ShopifyCli
         'SHOPIFY_API_SECRET' => :secret,
         'SHOP' => :shop,
         'SCOPES' => :scopes,
-        'HOST' => :host,
+        'HOST' => :host
       }
 
       class << self
@@ -20,18 +20,25 @@ module ShopifyCli
         end
 
         def parse(directory)
-          File.read(File.join(directory, FILENAME))
-            .gsub("\r\n", "\n").split("\n").each_with_object({}) do |line, output|
+          File
+            .read(File.join(directory, FILENAME))
+            .gsub("\r\n", "\n")
+            .split("\n")
+            .each_with_object({}) do |line, output|
             match = /\A([A-Za-z_0-9]+)=(.*)\z/.match(line)
             if match
               key = match[1]
-              output[key] = case match[2]
-              # Remove single quotes
-              when /\A'(.*)'\z/ then match[2]
-              # Remove double quotes and unescape string preserving newline characters
-              when /\A"(.*)"\z/ then match[2].gsub('\n', "\n").gsub(/\\(.)/, '\1')
-              else match[2]
-              end
+              output[key] =
+                case match[2]
+                # Remove single quotes
+                when /\A'(.*)'\z/
+                  match[2]
+                  # Remove double quotes and unescape string preserving newline characters
+                when /\A"(.*)"\z/
+                  match[2].gsub('\n', "\n").gsub(/\\(.)/, '\1')
+                else
+                  match[2]
+                end
             end
             output
           end
@@ -61,12 +68,8 @@ module ShopifyCli
 
       def to_h
         out = {}
-        KEY_MAP.each do |key, value|
-          out[key] = send(value).to_s if send(value)
-        end
-        extra.each do |key, value|
-          out[key] = value.to_s
-        end
+        KEY_MAP.each { |key, value| out[key] = send(value).to_s if send(value) }
+        extra.each { |key, value| out[key] = value.to_s }
         out
       end
 
@@ -74,12 +77,8 @@ module ShopifyCli
         spin_group = CLI::UI::SpinGroup.new
         spin_group.add(ctx.message('core.env_file.saving_header', FILENAME)) do |spinner|
           output = []
-          KEY_MAP.each do |key, value|
-            output << "#{key}=#{send(value)}" if send(value)
-          end
-          extra.each do |key, value|
-            output << "#{key}=#{value}"
-          end
+          KEY_MAP.each { |key, value| output << "#{key}=#{send(value)}" if send(value) }
+          extra.each { |key, value| output << "#{key}=#{value}" }
           ctx.print_task(ctx.message('core.env_file.saving', FILENAME))
           ctx.write(FILENAME, output.join("\n") + "\n")
           spinner.update_title(ctx.message('core.env_file.saved', FILENAME))

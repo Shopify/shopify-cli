@@ -3,7 +3,7 @@
 module Extension
   module Models
     class Type
-      TYPES_PATH = %w(lib project_types extension models types *.rb)
+      TYPES_PATH = %w[lib project_types extension models types *.rb]
 
       class << self
         def load_all
@@ -24,9 +24,8 @@ module Extension
         def repository
           load_all if @all_extension_types.empty?
 
-          @repository ||= @all_extension_types.map(&:new).each_with_object({}) do |type, hash|
-            hash[type.identifier] = type
-          end
+          @repository ||=
+            @all_extension_types.map(&:new).each_with_object({}) { |type, hash| hash[type.identifier] = type }
         end
 
         def load_type(identifier)
@@ -47,7 +46,7 @@ module Extension
       end
 
       def tagline
-        message('tagline') || ""
+        message('tagline') || ''
       end
 
       def config(_context)

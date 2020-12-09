@@ -4,18 +4,14 @@ module ShopifyCli
   module Commands
     class CreateTest < MiniTest::Test
       def test_help_loads_app_types
-        io = capture_io do
-          run_cmd('create --help')
-        end
+        io = capture_io { run_cmd('create --help') }
         output = io.join
         assert_match('node', output)
         assert_match('rails', output)
       end
 
       def test_type_is_validated_and_will_call_help_on_bad_type
-        io = capture_io do
-          run_cmd('create nope')
-        end
+        io = capture_io { run_cmd('create nope') }
         assert_match(CLI::UI.fmt(@context.message('core.create.error.invalid_app_type', 'nope')), io.join)
       end
 

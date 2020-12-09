@@ -27,7 +27,7 @@ module ShopifyCli
 
     def self.register(task, name, path = nil)
       autoload(task, path) if path
-      Registry.add(-> () { const_get(task) }, name)
+      Registry.add(-> { const_get(task) }, name)
     end
 
     register :CreateApiClient, :create_api_client, 'shopify-cli/tasks/create_api_client'

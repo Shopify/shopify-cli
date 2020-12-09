@@ -21,11 +21,9 @@ module Extension
       def test_auth_errors_if_no_token_is_provided
         io = capture_io { run_tunnel(Tunnel::AUTH_SUBCOMMAND) }
 
-        assert_message_output(io: io, expected_content: [
-          @context.message('tunnel.missing_token'),
-          Tunnel.help,
-          Tunnel.extended_help,
-        ])
+        assert_message_output(
+          io: io, expected_content: [@context.message('tunnel.missing_token'), Tunnel.help, Tunnel.extended_help]
+        )
       end
 
       def test_auth_runs_the_core_cli_tunnel_auth_if_token_is_present
@@ -52,13 +50,12 @@ module Extension
 
         ShopifyCli::Tunnel.expects(:start).never
 
-        io = capture_io_and_assert_raises(ShopifyCli::Abort) do
-          run_tunnel(Tunnel::START_SUBCOMMAND, "--port=#{invalid_port}")
-        end
+        io =
+          capture_io_and_assert_raises(ShopifyCli::Abort) do
+            run_tunnel(Tunnel::START_SUBCOMMAND, "--port=#{invalid_port}")
+          end
 
-        assert_message_output(io: io, expected_content: [
-          @context.message('tunnel.invalid_port', invalid_port),
-        ])
+        assert_message_output(io: io, expected_content: [@context.message('tunnel.invalid_port', invalid_port)])
       end
 
       def test_stop_runs_the_core_cli_tunnel_stop

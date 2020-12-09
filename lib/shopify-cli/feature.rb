@@ -44,9 +44,7 @@ module ShopifyCli
       #     ShopifyCli::Commands::Config.hidden?
       #
       def hidden?
-        enabled = (@hidden_feature_set || []).any? do |feature|
-          Feature.enabled?(feature)
-        end
+        enabled = (@hidden_feature_set || []).any? { |feature| Feature.enabled?(feature) }
         @feature_hidden && !enabled
       end
     end

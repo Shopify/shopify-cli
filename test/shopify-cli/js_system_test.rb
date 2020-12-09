@@ -29,21 +29,21 @@ module ShopifyCli
     end
 
     def test_call_executes_yarn_command_array_if_yarn_is_available
-      yarn_command = %w(install --silent)
+      yarn_command = %w[install --silent]
 
       @system.stubs(:yarn?).returns(true)
       mock_kit_system(JsSystem::YARN_CORE_COMMAND, *yarn_command)
 
-      @system.call(yarn: yarn_command, npm: ['npm'])
+      @system.call(yarn: yarn_command, npm: %w[npm])
     end
 
     def test_call_executes_npm_command_array_if_yarn_is_unavailable
-      npm_command = %w(install --other)
+      npm_command = %w[install --other]
 
       @system.stubs(:yarn?).returns(false)
       mock_kit_system(JsSystem::NPM_CORE_COMMAND, *npm_command)
 
-      @system.call(yarn: ['yarn'], npm: npm_command)
+      @system.call(yarn: %w[yarn], npm: npm_command)
     end
 
     def test_call_executes_yarn_command_string_if_yarn_is_available
@@ -115,24 +115,12 @@ module ShopifyCli
     private
 
     def mock_yarn_check(response:, lock_exists:)
-      @context
-        .expects(:which)
-        .with('yarn')
-        .returns(response)
-        .once
-      File
-        .expects(:exist?)
-        .with(File.join(@context.root, 'yarn.lock'))
-        .returns(lock_exists)
-        .once
+      @context.expects(:which).with('yarn').returns(response).once
+      File.expects(:exist?).with(File.join(@context.root, 'yarn.lock')).returns(lock_exists).once
     end
 
     def mock_kit_system(*input)
-      CLI::Kit::System
-        .expects(:system)
-        .with(*input, chdir: @context.root)
-        .returns(mock(success?: true))
-        .once
+      CLI::Kit::System.expects(:system).with(*input, chdir: @context.root).returns(mock(success?: true)).once
     end
   end
 end

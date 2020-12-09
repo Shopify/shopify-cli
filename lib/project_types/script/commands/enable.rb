@@ -9,7 +9,7 @@ module Script
       end
 
       def call(_args, _name)
-        ShopifyCli::Tasks::EnsureEnv.call(@ctx, required: [:api_key, :secret, :shop])
+        ShopifyCli::Tasks::EnsureEnv.call(@ctx, required: %i[api_key secret shop])
         project = ScriptProject.current
         api_key = project.env[:api_key]
         shop_domain = project.env[:shop]
@@ -22,13 +22,15 @@ module Script
           extension_point_type: project.extension_point_type,
           title: project.script_name
         )
-        @ctx.puts(@ctx.message(
-          'script.enable.script_enabled',
-          api_key: api_key,
-          shop_domain: shop_domain,
-          type: project.extension_point_type.capitalize,
-          title: project.script_name
-        ))
+        @ctx.puts(
+          @ctx.message(
+            'script.enable.script_enabled',
+            api_key: api_key,
+            shop_domain: shop_domain,
+            type: project.extension_point_type.capitalize,
+            title: project.script_name
+          )
+        )
         @ctx.puts(@ctx.message('script.enable.info'))
       rescue Errors::InvalidConfigYAMLError => e
         UI::ErrorHandler.pretty_print_and_raise(e)
@@ -48,12 +50,7 @@ module Script
         properties = properties.merge(parse_config_props(config_props)) unless config_props.nil?
 
         configuration = { entries: [] }
-        properties.each do |key, value|
-          configuration[:entries].push({
-            key: key,
-            value: value,
-          })
-        end
+        properties.each { |key, value| configuration[:entries].push({ key: key, value: value }) }
         configuration
       rescue Errno::ENOENT, Psych::SyntaxError
         raise Errors::InvalidConfigYAMLError, options.flags[:config_file]

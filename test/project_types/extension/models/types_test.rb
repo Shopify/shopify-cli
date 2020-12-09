@@ -24,15 +24,11 @@ module Extension
       end
 
       def test_all_type_identifiers_are_accessible_as_class_or_instance_methods
-        Models::Type.repository.values.each do |type|
-          assert_equal type.class::IDENTIFIER, type.identifier
-        end
+        Models::Type.repository.values.each { |type| assert_equal type.class::IDENTIFIER, type.identifier }
       end
 
       def test_all_type_names_are_defined
-        Models::Type.repository.values.each do |type|
-          refute_empty type.name.strip
-        end
+        Models::Type.repository.values.each { |type| refute_empty type.name.strip }
       end
     end
   end

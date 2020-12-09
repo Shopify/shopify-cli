@@ -54,12 +54,7 @@ module ShopifyCli
     def test_write_includes_identifiers
       create_empty_config
       Shopifolk.stubs(:acting_as_shopify_organization?).returns(false)
-      ShopifyCli::Project.write(
-        @context,
-        project_type: :node,
-        organization_id: 42,
-        other_option: true,
-      )
+      ShopifyCli::Project.write(@context, project_type: :node, organization_id: 42, other_option: true)
       Project.clear
       assert Project.current.config['other_option']
     end
@@ -70,7 +65,7 @@ module ShopifyCli
         FileUtils.touch("#{dir}/myapp/.shopify-cli.yml")
         FileUtils.cd("#{dir}/myapp")
         project_name = Project.project_name
-        assert_equal "myapp", project_name
+        assert_equal 'myapp', project_name
       end
     end
 
@@ -80,7 +75,7 @@ module ShopifyCli
         FileUtils.touch("#{dir}/myapp/.shopify-cli.yml")
         FileUtils.cd("#{dir}/myapp/lib")
         project_name = Project.project_name
-        assert_equal "myapp", project_name
+        assert_equal 'myapp', project_name
       end
     end
 
@@ -111,7 +106,7 @@ module ShopifyCli
 
     def create_empty_config
       Dir.stubs(:pwd).returns(@context.root)
-      FileUtils.touch(".shopify-cli.yml")
+      FileUtils.touch('.shopify-cli.yml')
     end
   end
 end

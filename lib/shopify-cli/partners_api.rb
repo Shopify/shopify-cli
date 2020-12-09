@@ -45,15 +45,11 @@ module ShopifyCli
       #   ShopifyCli::PartnersAPI.query(@ctx, 'all_organizations')
       #
       def query(ctx, query_name, **variables)
-        authenticated_req(ctx) do
-          api_client(ctx).query(query_name, variables: variables)
-        end
+        authenticated_req(ctx) { api_client(ctx).query(query_name, variables: variables) }
       end
 
       def partners_url_for(organization_id, api_client_id, local_debug)
-        if ShopifyCli::Shopifolk.acting_as_shopify_organization?
-          organization_id = 'internal'
-        end
+        organization_id = 'internal' if ShopifyCli::Shopifolk.acting_as_shopify_organization?
         "#{partners_endpoint(local_debug)}/#{organization_id}/apps/#{api_client_id}"
       end
 
@@ -69,11 +65,7 @@ module ShopifyCli
       end
 
       def api_client(ctx)
-        new(
-          ctx: ctx,
-          token: access_token(ctx),
-          url: "#{endpoint}/api/cli/graphql",
-        )
+        new(ctx: ctx, token: access_token(ctx), url: "#{endpoint}/api/cli/graphql")
       end
 
       def access_token(ctx)
@@ -84,13 +76,15 @@ module ShopifyCli
       end
 
       def authenticate(ctx)
-        OAuth.new(
+        OAuth
+          .new(
           ctx: ctx,
           service: 'identity',
           client_id: cli_id,
           scopes: 'openid https://api.shopify.com/auth/partners.app.cli.access',
-          request_exchange: partners_id,
-        ).authenticate("#{auth_endpoint}/oauth")
+          request_exchange: partners_id
+        )
+          .authenticate("#{auth_endpoint}/oauth")
       end
 
       def partners_id
@@ -114,11 +108,7 @@ module ShopifyCli
       end
 
       def partners_endpoint(local_debug)
-        domain = if local_debug
-          'partners.myshopify.io'
-        else
-          'partners.shopify.com'
-        end
+        domain = local_debug ? 'partners.myshopify.io' : 'partners.shopify.com'
         "https://#{domain}"
       end
     end

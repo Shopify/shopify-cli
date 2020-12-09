@@ -14,11 +14,9 @@ module Extension
               type: type,
               title: title,
               config: JSON.generate(config),
-              extension_context: extension_context,
+              extension_context: extension_context
             },
-            resp: {
-              data: yield(title, type, config, extension_context),
-            }
+            resp: { data: yield(title, type, config, extension_context) }
           )
         end
 
@@ -31,13 +29,10 @@ module Extension
                   id: registration_id,
                   type: type,
                   title: title,
-                  draftVersion: {
-                    registrationId: registration_id,
-                    lastUserInteractionAt: Time.now.utc.to_s,
-                  },
+                  draftVersion: { registrationId: registration_id, lastUserInteractionAt: Time.now.utc.to_s }
                 },
-                userErrors: [],
-              },
+                userErrors: []
+              }
             }
           end
         end
@@ -46,8 +41,8 @@ module Extension
           stub_create_extension(**args) do
             {
               extensionCreate: {
-                userErrors: userErrors, # rubocop:disable Naming/VariableName
-              },
+                userErrors: userErrors # rubocop:disable Naming/VariableName
+              }
             }
           end
         end

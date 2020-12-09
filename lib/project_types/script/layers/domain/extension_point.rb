@@ -8,9 +8,7 @@ module Script
 
         def initialize(type, config)
           @type = type
-          @sdks = {
-            ts: ExtensionPointAssemblyScriptSDK.new(config["assemblyscript"]),
-          }
+          @sdks = { ts: ExtensionPointAssemblyScriptSDK.new(config['assemblyscript']) }
         end
       end
 
@@ -18,9 +16,9 @@ module Script
         attr_reader :package, :version, :sdk_version, :toolchain_version
 
         def initialize(config)
-          @package = config["package"]
-          @sdk_version = config["sdk-version"]
-          @toolchain_version = config["toolchain-version"]
+          @package = config['package']
+          @sdk_version = config['sdk-version']
+          @toolchain_version = config['toolchain-version']
         end
       end
     end

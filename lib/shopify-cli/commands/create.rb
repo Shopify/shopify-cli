@@ -14,11 +14,10 @@ module ShopifyCli
           return @ctx.puts(self.class.help)
         end
 
-        type_name = CLI::UI::Prompt.ask(@ctx.message('core.create.project_type_select')) do |handler|
-          self.class.all_visible_type.each do |type|
-            handler.option(type.project_name) { type.project_type }
+        type_name =
+          CLI::UI::Prompt.ask(@ctx.message('core.create.project_type_select')) do |handler|
+            self.class.all_visible_type.each { |type| handler.option(type.project_name) { type.project_type } }
           end
-        end
 
         klass = ProjectType.load_type(type_name).create_command
         klass.ctx = @ctx
@@ -26,23 +25,17 @@ module ShopifyCli
       end
 
       def self.all_visible_type
-        ProjectType
-          .load_all
-          .select { |type| !type.hidden? }
+        ProjectType.load_all.select { |type| !type.hidden? }
       end
 
       def self.help
-        project_types = all_visible_type.map(&:project_type).sort.join(" | ")
+        project_types = all_visible_type.map(&:project_type).sort.join(' | ')
         ShopifyCli::Context.message('core.create.help', ShopifyCli::TOOL_NAME, project_types)
       end
 
       def self.extended_help
         <<~HELP
-          #{
-            all_visible_type.map do |type|
-              type.create_command.help
-            end.join("\n")
-          }
+          #{all_visible_type.map { |type| type.create_command.help }.join("\n")}
         HELP
       end
     end

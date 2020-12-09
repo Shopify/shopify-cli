@@ -17,7 +17,8 @@ module Extension
       end
 
       def test_uses_js_system_to_run_npm_or_yarn_serve_commands
-        ShopifyCli::JsSystem.any_instance
+        ShopifyCli::JsSystem
+          .any_instance
           .expects(:call)
           .with(yarn: Serve::YARN_SERVE_COMMAND, npm: Serve::NPM_SERVE_COMMAND)
           .returns(true)
@@ -27,7 +28,8 @@ module Extension
       end
 
       def test_aborts_and_informs_the_user_when_serve_fails
-        ShopifyCli::JsSystem.any_instance
+        ShopifyCli::JsSystem
+          .any_instance
           .expects(:call)
           .with(yarn: Serve::YARN_SERVE_COMMAND, npm: Serve::NPM_SERVE_COMMAND)
           .returns(false)

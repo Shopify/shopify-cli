@@ -5,8 +5,7 @@ module ShopifyCli
     # this class and fail.
     module Finalize
       class << self
-        def deliver!
-        end
+        def deliver!; end
       end
     end
   end

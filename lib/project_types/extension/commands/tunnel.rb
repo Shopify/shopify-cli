@@ -4,25 +4,28 @@ require 'shopify_cli'
 module Extension
   module Commands
     class Tunnel < ExtensionCommand
-      options do |parser, flags|
-        parser.on('--port=PORT') { |port| flags[:port] = port }
-      end
+      options { |parser, flags| parser.on('--port=PORT') { |port| flags[:port] = port } }
 
       AUTH_SUBCOMMAND = 'auth'
       START_SUBCOMMAND = 'start'
       STOP_SUBCOMMAND = 'stop'
       STATUS_SUBCOMMAND = 'status'
-      DEFAULT_PORT = 39351
+      DEFAULT_PORT = 39_351
 
       def call(args, _name)
         subcommand = args.shift
 
         case subcommand
-        when AUTH_SUBCOMMAND then authorize(args)
-        when START_SUBCOMMAND then ShopifyCli::Tunnel.start(@ctx, port: port)
-        when STOP_SUBCOMMAND then ShopifyCli::Tunnel.stop(@ctx)
-        when STATUS_SUBCOMMAND then status
-        else @ctx.puts(self.class.help)
+        when AUTH_SUBCOMMAND
+          authorize(args)
+        when START_SUBCOMMAND
+          ShopifyCli::Tunnel.start(@ctx, port: port)
+        when STOP_SUBCOMMAND
+          ShopifyCli::Tunnel.stop(@ctx)
+        when STATUS_SUBCOMMAND
+          status
+        else
+          @ctx.puts(self.class.help)
         end
       end
 

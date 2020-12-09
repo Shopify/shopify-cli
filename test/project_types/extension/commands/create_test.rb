@@ -12,7 +12,7 @@ module Extension
 
       def setup
         super
-        @name = "My Ext"
+        @name = 'My Ext'
         @directory_name = 'my_ext'
       end
 
@@ -25,13 +25,14 @@ module Extension
         Dir.expects(:exist?).with(@directory_name).returns(true).once
         @test_extension_type.expects(:create).never
 
-        io = capture_io_and_assert_raises(ShopifyCli::Abort) do
-          run_create(%W(extension --name=#{@name} --type=#{@test_extension_type.identifier}))
-        end
+        io =
+          capture_io_and_assert_raises(ShopifyCli::Abort) do
+            run_create(%W[extension --name=#{@name} --type=#{@test_extension_type.identifier}])
+          end
 
-        assert_message_output(io: io, expected_content: [
-          @context.message('create.errors.directory_exists', @directory_name),
-        ])
+        assert_message_output(
+          io: io, expected_content: [@context.message('create.errors.directory_exists', @directory_name)]
+        )
       end
 
       def test_runs_type_create_and_writes_project_files
@@ -40,14 +41,15 @@ module Extension
         ExtensionProject.expects(:write_cli_file).with(context: @context, type: @test_extension_type.identifier).once
         ExtensionProject.expects(:write_env_file).with(context: @context, title: @name).once
 
-        io = capture_io do
-          run_create(%W(extension --name=#{@name} --type=#{@test_extension_type.identifier}))
-        end
+        io = capture_io { run_create(%W[extension --name=#{@name} --type=#{@test_extension_type.identifier}]) }
 
-        assert_message_output(io: io, expected_content: [
-          @context.message('create.ready_to_start', @directory_name, @name),
-          @context.message('create.learn_more', @test_extension_type.name),
-        ])
+        assert_message_output(
+          io: io,
+          expected_content: [
+            @context.message('create.ready_to_start', @directory_name, @name),
+            @context.message('create.learn_more', @test_extension_type.name)
+          ]
+        )
       end
 
       def test_does_not_create_project_files_and_outputs_try_again_message_if_type_create_failed
@@ -56,17 +58,13 @@ module Extension
         ExtensionProject.expects(:write_cli_file).never
         ExtensionProject.expects(:write_env_file).never
 
-        io = capture_io do
-          run_create(%W(extension --name=#{@name} --type=#{@test_extension_type.identifier}))
-        end
+        io = capture_io { run_create(%W[extension --name=#{@name} --type=#{@test_extension_type.identifier}]) }
 
         assert_message_output(io: io, expected_content: @context.message('create.try_again'))
       end
 
       def test_help_does_not_load_extension_project_type
-        io = capture_io do
-          run_create(%w(create --help))
-        end
+        io = capture_io { run_create(%w[create --help]) }
 
         output = io.join
         refute_match(' extension ', output)

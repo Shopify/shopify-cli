@@ -11,12 +11,7 @@ module Script
           build_file_path = file_path(script.name, compiled_type)
           write_to_path(build_file_path, script_content)
 
-          Domain::PushPackage.new(
-            build_file_path,
-            script,
-            script_content,
-            compiled_type,
-          )
+          Domain::PushPackage.new(build_file_path, script, script_content, compiled_type)
         end
 
         def get_push_package(script, compiled_type)
@@ -26,12 +21,7 @@ module Script
 
           script_content = File.read(build_file_path)
 
-          Domain::PushPackage.new(
-            build_file_path,
-            script,
-            script_content,
-            compiled_type,
-          )
+          Domain::PushPackage.new(build_file_path, script, script_content, compiled_type)
         end
 
         private

@@ -20,25 +20,22 @@ module Node
         check_npm
         build(form.name)
 
-        ShopifyCli::Project.write(
-          @ctx,
-          project_type: 'node',
-          organization_id: form.organization_id,
-        )
+        ShopifyCli::Project.write(@ctx, project_type: 'node', organization_id: form.organization_id)
 
-        api_client = ShopifyCli::Tasks::CreateApiClient.call(
-          @ctx,
-          org_id: form.organization_id,
-          title: form.title,
-          type: form.type,
-        )
+        api_client =
+          ShopifyCli::Tasks::CreateApiClient.call(
+            @ctx,
+            org_id: form.organization_id, title: form.title, type: form.type
+          )
 
-        ShopifyCli::Resources::EnvFile.new(
-          api_key: api_client["apiKey"],
-          secret: api_client["apiSecretKeys"].first["secret"],
+        ShopifyCli::Resources::EnvFile
+          .new(
+          api_key: api_client['apiKey'],
+          secret: api_client['apiSecretKeys'].first['secret'],
           shop: form.shop_domain,
-          scopes: 'write_products,write_customers,write_draft_orders',
-        ).write(@ctx)
+          scopes: 'write_products,write_customers,write_draft_orders'
+        )
+          .write(@ctx)
 
         partners_url = ShopifyCli::PartnersAPI.partners_url_for(form.organization_id, api_client['id'], local_debug?)
 
@@ -104,10 +101,7 @@ module Node
           @ctx.rm_r('.git')
           @ctx.rm_r('.github')
           @ctx.rm(File.join('server', 'handlers', 'client.js'))
-          @ctx.rename(
-            File.join('server', 'handlers', 'client.cli.js'),
-            File.join('server', 'handlers', 'client.js')
-          )
+          @ctx.rename(File.join('server', 'handlers', 'client.cli.js'), File.join('server', 'handlers', 'client.js'))
         rescue Errno::ENOENT => e
           @ctx.debug(e)
         end

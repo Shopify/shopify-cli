@@ -21,9 +21,10 @@ module Extension
         end
 
         def test_from_hash_aborts_with_a_parse_error_if_the_hash_is_nil
-          io = capture_io_and_assert_raises(ShopifyCli::Abort) do
-            Converters::RegistrationConverter.from_hash(@context, nil)
-          end
+          io =
+            capture_io_and_assert_raises(ShopifyCli::Abort) do
+              Converters::RegistrationConverter.from_hash(@context, nil)
+            end
 
           assert_message_output(io: io, expected_content: @context.message('tasks.errors.parse_error'))
         end
@@ -35,8 +36,8 @@ module Extension
             Converters::RegistrationConverter::TITLE_FIELD => @fake_title,
             Converters::RegistrationConverter::DRAFT_VERSION_FIELD => {
               Converters::VersionConverter::REGISTRATION_ID_FIELD => @registration_id,
-              Converters::VersionConverter::LAST_USER_INTERACTION_AT_FIELD => @last_user_interaction_at,
-            },
+              Converters::VersionConverter::LAST_USER_INTERACTION_AT_FIELD => @last_user_interaction_at
+            }
           }
 
           parsed_registration = Converters::RegistrationConverter.from_hash(@context, hash)

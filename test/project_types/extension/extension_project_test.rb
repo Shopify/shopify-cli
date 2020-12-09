@@ -30,11 +30,7 @@ module Extension
 
       ExtensionProject.write_cli_file(context: new_context, type: @test_extension_type.identifier)
       ExtensionProject.write_env_file(
-        context: new_context,
-        api_key: api_key,
-        api_secret: api_secret,
-        title: title,
-        registration_id: registration_id
+        context: new_context, api_key: api_key, api_secret: api_secret, title: title, registration_id: registration_id
       )
 
       assert File.exist?('.env')

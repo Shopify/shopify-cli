@@ -13,7 +13,6 @@ module Extension
         type_identifier: @test_extension_type.identifier,
         registration_id: 55
       )
-
         @context = TestHelpers::FakeContext.new(root: '/fake/root')
         @api_key = api_key
         @api_secret = api_secret
@@ -21,13 +20,10 @@ module Extension
         @type = type_identifier
         @registration_id = registration_id
 
-        @project = FakeExtensionProject.new(
-          api_key: @api_key,
-          api_secret: @api_secret,
-          title: @title,
-          type: @type,
-          registration_id: @registration_id
-        )
+        @project =
+          FakeExtensionProject.new(
+            api_key: @api_key, api_secret: @api_secret, title: @title, type: @type, registration_id: @registration_id
+          )
 
         ShopifyCli::Project.stubs(:current).returns(@project)
         ShopifyCli::Project.stubs(:has_current?).returns(true)

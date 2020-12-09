@@ -3,10 +3,7 @@ module ShopifyCli
     extend Feature::Set
 
     class << self
-      attr_accessor :project_type,
-        :project_name,
-        :project_creator_command_class,
-        :project_load_shallow
+      attr_accessor :project_type, :project_name, :project_creator_command_class, :project_load_shallow
 
       def repository
         @repository ||= []
@@ -64,18 +61,14 @@ module ShopifyCli
       end
 
       def connect_command
-        if @project_connector_command_class.nil?
-          nil
-        else
-          const_get(@project_connector_command_class)
-        end
+        @project_connector_command_class.nil? ? nil : const_get(@project_connector_command_class)
       end
 
       def register_command(const, cmd)
         return if project_load_shallow
-        Context.new.abort(
-          Context.message('core.project_type.error.cannot_override_core', cmd, const)
-        ) if Commands.core_command?(cmd)
+        if Commands.core_command?(cmd)
+          Context.new.abort(Context.message('core.project_type.error.cannot_override_core', cmd, const))
+        end
         Commands.register(const, cmd)
       end
 

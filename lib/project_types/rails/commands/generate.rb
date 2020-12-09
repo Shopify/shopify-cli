@@ -30,9 +30,7 @@ module Rails
       def self.run_generate(script, name, ctx)
         Gem.gem_path(ctx)
         stat = ctx.system(script)
-        unless stat.success?
-          ctx.abort(response(stat.exitstatus, name, ctx))
-        end
+        ctx.abort(response(stat.exitstatus, name, ctx)) unless stat.success?
       end
 
       def self.response(code, name, ctx)

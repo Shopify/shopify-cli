@@ -6,7 +6,7 @@ module Extension
     module Types
       class CheckoutPostPurchase < Models::Type
         IDENTIFIER = 'CHECKOUT_POST_PURCHASE'
-        PERMITTED_CONFIG_KEYS = [:metafields]
+        PERMITTED_CONFIG_KEYS = %i[metafields]
         def create(directory_name, context)
           Features::Argo::Checkout.new.create(directory_name, IDENTIFIER, context)
         end
@@ -14,7 +14,7 @@ module Extension
         def config(context)
           {
             **Features::ArgoConfig.parse_yaml(context, PERMITTED_CONFIG_KEYS),
-            **Features::Argo::Checkout.new.config(context),
+            **Features::Argo::Checkout.new.config(context)
           }
         end
       end

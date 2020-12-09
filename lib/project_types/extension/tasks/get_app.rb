@@ -6,7 +6,7 @@ module Extension
     class GetApp < ShopifyCli::Task
       GRAPHQL_FILE = 'get_app_by_api_key'
 
-      RESPONSE_FIELD = %w(data)
+      RESPONSE_FIELD = %w[data]
       APP_FIELD = 'app'
 
       def call(context:, api_key:)

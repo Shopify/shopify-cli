@@ -6,32 +6,32 @@ module ShopifyCli
     def setup
       super
 
-      @status_mock = {
-        false: mock,
-        true: mock,
-      }
+      @status_mock = { false: mock, true: mock }
       @status_mock[:false].stubs(:success?).returns(false)
       @status_mock[:true].stubs(:success?).returns(true)
     end
 
     def test_branches_returns_master_if_no_branches_exist
-      @context.expects(:capture2e)
+      @context
+        .expects(:capture2e)
         .with('git', 'branch', '--list', '--format=%(refname:short)')
         .returns(['', @status_mock[:true]])
 
-      assert_equal(['master'], ShopifyCli::Git.branches(@context))
+      assert_equal(%w[master], ShopifyCli::Git.branches(@context))
     end
 
     def test_branches_returns_list_of_branches_if_multiple_exist
-      @context.expects(:capture2e)
+      @context
+        .expects(:capture2e)
         .with('git', 'branch', '--list', '--format=%(refname:short)')
         .returns(["master\nsecond_branch\n", @status_mock[:true]])
 
-      assert_equal(['master', 'second_branch'], ShopifyCli::Git.branches(@context))
+      assert_equal(%w[master second_branch], ShopifyCli::Git.branches(@context))
     end
 
     def test_branches_raises_if_finding_branches_fails
-      @context.stubs(:capture2e)
+      @context
+        .stubs(:capture2e)
         .with('git', 'branch', '--list', '--format=%(refname:short)')
         .returns(['', @status_mock[:false]])
 
@@ -76,32 +76,20 @@ module ShopifyCli
     end
 
     def test_clones_git_repo
-      Open3.expects(:popen3).with(
-        'git',
-        'clone',
-        '--single-branch',
-        'git@github.com:shopify/test.git',
-        'test-app',
-        '--progress'
-      ).returns(mock(success?: true))
-      capture_io do
-        ShopifyCli::Git.clone('git@github.com:shopify/test.git', 'test-app', ctx: @context)
-      end
+      Open3
+        .expects(:popen3)
+        .with('git', 'clone', '--single-branch', 'git@github.com:shopify/test.git', 'test-app', '--progress')
+        .returns(mock(success?: true))
+      capture_io { ShopifyCli::Git.clone('git@github.com:shopify/test.git', 'test-app', ctx: @context) }
     end
 
     def test_clone_failure
       assert_raises(ShopifyCli::Abort) do
-        Open3.expects(:popen3).with(
-          'git',
-          'clone',
-          '--single-branch',
-          'git@github.com:shopify/test.git',
-          'test-app',
-          '--progress'
-        ).returns(mock(success?: false))
-        capture_io do
-          ShopifyCli::Git.clone('git@github.com:shopify/test.git', 'test-app', ctx: @context)
-        end
+        Open3
+          .expects(:popen3)
+          .with('git', 'clone', '--single-branch', 'git@github.com:shopify/test.git', 'test-app', '--progress')
+          .returns(mock(success?: false))
+        capture_io { ShopifyCli::Git.clone('git@github.com:shopify/test.git', 'test-app', ctx: @context) }
       end
     end
 
@@ -121,24 +109,18 @@ module ShopifyCli
     end
 
     def stub_git_init(status:, commits:)
-      output = if commits == true
-        <<~EOS
+      output = commits == true ? <<~EOS : <<~EOS
           On branch master
           Your branch is up to date with 'origin/master'.
 
           nothing to commit, working tree clean
         EOS
-      else
-        <<~EOS
           On branch master
 
           No commits yet
         EOS
-      end
 
-      @context.stubs(:capture2e)
-        .with('git', 'status')
-        .returns([output, @status_mock[:"#{status}"]])
+      @context.stubs(:capture2e).with('git', 'status').returns([output, @status_mock[:"#{status}"]])
     end
   end
 end

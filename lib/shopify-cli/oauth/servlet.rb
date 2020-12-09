@@ -1,7 +1,8 @@
 module ShopifyCli
   class OAuth
     class Servlet < WEBrick::HTTPServlet::AbstractServlet
-      TEMPLATE = %{<!DOCTYPE html>
+      TEMPLATE =
+        '<!DOCTYPE html>
         <html>
         <head>
           <title>%{title}</title>
@@ -11,12 +12,13 @@ module ShopifyCli
           %{autoclose}
         </body>
         </html>
-      }
-      AUTOCLOSE_TEMPLATE = %{
+      '
+      AUTOCLOSE_TEMPLATE =
+        '
         <script>
           setTimeout(function() { window.close(); }, 3000)
         </script>
-      }
+      '
 
       def initialize(server, oauth, token)
         super
@@ -51,7 +53,7 @@ module ShopifyCli
           color: successful ? 'black' : 'red',
           title:
             Context.message(successful ? 'core.oauth.servlet.authenticated' : 'core.oauth.servlet.not_authenticated'),
-          autoclose: successful ? AUTOCLOSE_TEMPLATE : '',
+          autoclose: successful ? AUTOCLOSE_TEMPLATE : ''
         }
         response.status = status
         response.body = format(TEMPLATE, locals)

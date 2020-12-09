@@ -13,26 +13,10 @@ module Node
         m = mock
         m.stubs(:success?).returns(false)
         m.stubs(:exitstatus).returns(1)
-        @context.expects(:system).with(
-          [
-            'npm',
-            'run-dev',
-            'run-script',
-            'generate-page',
-            '--silent',
-          ]
-        ).returns(m)
+        @context.expects(:system).with(%w[npm run-dev run-script generate-page --silent]).returns(m)
 
         assert_raises(ShopifyCli::Abort) do
-          Node::Commands::Generate.run_generate(
-            [
-              'npm',
-              'run-dev',
-              'run-script',
-              'generate-page',
-              '--silent',
-            ], 'test', @context
-          )
+          Node::Commands::Generate.run_generate(%w[npm run-dev run-script generate-page --silent], 'test', @context)
         end
       end
     end

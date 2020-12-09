@@ -6,13 +6,9 @@ module ShopifyCli
       include TestHelpers::Project
 
       def test_calls_executor_with_args
-        args = %w(help argone argtwo)
+        args = %w[help argone argtwo]
 
-        Core::Executor.any_instance.expects(:call).with(
-          ShopifyCli::Commands::Help,
-          'help',
-          args.dup[1..-1]
-        )
+        Core::Executor.any_instance.expects(:call).with(ShopifyCli::Commands::Help, 'help', args.dup[1..-1])
         EntryPoint.call(args, @context)
       end
     end

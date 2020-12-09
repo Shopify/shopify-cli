@@ -20,9 +20,7 @@ module Extension
       end
 
       def test_valid_title_returns_false_when_title_too_long
-        refute Models::Registration.valid_title?(
-          Array.new(Registration::MAX_TITLE_LENGTH + 1, 'a').join
-        )
+        refute Models::Registration.valid_title?(Array.new(Registration::MAX_TITLE_LENGTH + 1, 'a').join)
       end
     end
   end

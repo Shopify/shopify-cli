@@ -8,12 +8,14 @@ module Node
 
         def defaults
           {
-            lineItems: [{
-              originalUnitPrice: price,
-              quantity: 1,
-              weight: { value: 10, unit: 'GRAMS' },
-              title: ShopifyCli::Helpers::Haikunator.title,
-            }],
+            lineItems: [
+              {
+                originalUnitPrice: price,
+                quantity: 1,
+                weight: { value: 10, unit: 'GRAMS' },
+                title: ShopifyCli::Helpers::Haikunator.title
+              }
+            ]
           }
         end
 

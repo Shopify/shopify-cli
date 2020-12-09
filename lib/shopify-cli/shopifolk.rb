@@ -71,13 +71,15 @@ module ShopifyCli
     end
 
     def ini
-      @ini ||= begin
-        if File.exist?(GCLOUD_CONFIG_FILE)
-          CLI::Kit::Ini
-            .new(GCLOUD_CONFIG_FILE, default_section: "[#{SECTION}]", convert_types: false)
-            .tap(&:parse).ini
+      @ini ||=
+        begin
+          if File.exist?(GCLOUD_CONFIG_FILE)
+            CLI::Kit::Ini
+              .new(GCLOUD_CONFIG_FILE, default_section: "[#{SECTION}]", convert_types: false)
+              .tap(&:parse)
+              .ini
+          end
         end
-      end
     end
   end
 end

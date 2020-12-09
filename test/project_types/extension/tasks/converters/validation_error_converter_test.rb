@@ -19,17 +19,13 @@ module Extension
         end
 
         def test_from_hash_aborts_with_parse_error_if_errors_are_not_an_array_and_not_nil
-          io = capture_io_and_assert_raises(ShopifyCli::Abort) do
-            ValidationErrorConverter.from_array(@context, Object)
-          end
+          io = capture_io_and_assert_raises(ShopifyCli::Abort) { ValidationErrorConverter.from_array(@context, Object) }
 
-          assert_message_output(io: io, expected_content: [
-            @context.message('tasks.errors.parse_error'),
-          ])
+          assert_message_output(io: io, expected_content: [@context.message('tasks.errors.parse_error')])
         end
 
         def test_from_hash_returns_parsed_validation_errors_if_valid
-          fields = %w(config name)
+          fields = %w[config name]
           message = 'error message'
 
           errors = [{ 'field' => fields, 'message' => message }]
@@ -45,8 +41,8 @@ module Extension
           message2 = 'error message 2'
 
           errors = [
-            { 'field' => %w(field1), 'message' => message },
-            { 'field' => %w(config name), 'message' => message2 },
+            { 'field' => %w[field1], 'message' => message },
+            { 'field' => %w[config name], 'message' => message2 }
           ]
           parsed_validation_messages = ValidationErrorConverter.from_array(@context, errors).map(&:message)
 

@@ -1,7 +1,7 @@
 # frozen_string_literal: true
 
-require "project_types/script/test_helper"
-require "project_types/script/layers/infrastructure/fake_extension_point_repository"
+require 'project_types/script/test_helper'
+require 'project_types/script/layers/infrastructure/fake_extension_point_repository'
 
 describe Script::Layers::Application::ExtensionPoints do
   include TestHelpers::FakeFS
@@ -36,7 +36,7 @@ describe Script::Layers::Application::ExtensionPoints do
 
   describe '.types' do
     it 'should return an array of all types' do
-      assert_equal %w(discount unit_limit_per_order), Script::Layers::Application::ExtensionPoints.types
+      assert_equal %w[discount unit_limit_per_order], Script::Layers::Application::ExtensionPoints.types
     end
   end
 end

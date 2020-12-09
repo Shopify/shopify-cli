@@ -1,7 +1,7 @@
 module Extension
   module ExtensionTestHelpers
     class DummyArgo < Extension::Features::Argo::Base
-      GIT_TEMPLATE = "https://something"
+      GIT_TEMPLATE = 'https://something'
       RENDERER_PACKAGE = '@test-renderer-package'
       private_constant :GIT_TEMPLATE, :RENDERER_PACKAGE
 

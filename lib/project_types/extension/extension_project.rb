@@ -7,21 +7,20 @@ module Extension
       def write_cli_file(context:, type:)
         ShopifyCli::Project.write(
           context,
-          project_type: :extension,
-          organization_id: nil,
-          "#{ExtensionProjectKeys::EXTENSION_TYPE_KEY}": type
+          project_type: :extension, organization_id: nil, "#{ExtensionProjectKeys::EXTENSION_TYPE_KEY}": type
         )
       end
 
       def write_env_file(context:, title:, api_key: '', api_secret: '', registration_id: nil)
-        ShopifyCli::Resources::EnvFile.new(
+        ShopifyCli::Resources::EnvFile
+          .new(
           api_key: api_key,
           secret: api_secret,
           extra: {
-            ExtensionProjectKeys::TITLE_KEY => title,
-            ExtensionProjectKeys::REGISTRATION_ID_KEY => registration_id,
+            ExtensionProjectKeys::TITLE_KEY => title, ExtensionProjectKeys::REGISTRATION_ID_KEY => registration_id
           }.compact
-        ).write(context)
+        )
+          .write(context)
 
         current.reload unless project_empty?
       end
@@ -51,8 +50,7 @@ module Extension
 
     def registration_id?
       extra_property_present?(ExtensionProjectKeys::REGISTRATION_ID_KEY) &&
-        integer?(get_extra_field(ExtensionProjectKeys::REGISTRATION_ID_KEY)) &&
-        registration_id > 0
+        integer?(get_extra_field(ExtensionProjectKeys::REGISTRATION_ID_KEY)) && registration_id > 0
     end
 
     def registration_id

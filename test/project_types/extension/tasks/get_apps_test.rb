@@ -15,9 +15,7 @@ module Extension
       end
 
       def test_loads_all_apps_into_a_list_from_organizations
-        stub_get_organizations([
-          organization(name: 'Organization One', apps: [@app]),
-        ])
+        stub_get_organizations([organization(name: 'Organization One', apps: [@app])])
 
         app_list = Tasks::GetApps.call(context: @context)
         app = app_list.first
@@ -36,18 +34,15 @@ module Extension
       end
 
       def test_returns_empty_array_if_there_are_no_apps
-        stub_get_organizations([
-          organization(name: 'Organization One', apps: []),
-        ])
+        stub_get_organizations([organization(name: 'Organization One', apps: [])])
 
         assert_empty(Tasks::GetApps.call(context: @context))
       end
 
       def test_can_handle_multiple_organizations_where_one_has_no_apps
-        stub_get_organizations([
-          organization(name: 'Organization One', apps: [@app]),
-          organization(name: 'Organization Two', apps: []),
-        ])
+        stub_get_organizations(
+          [organization(name: 'Organization One', apps: [@app]), organization(name: 'Organization Two', apps: [])]
+        )
 
         assert_equal 1, Tasks::GetApps.call(context: @context).size
       end

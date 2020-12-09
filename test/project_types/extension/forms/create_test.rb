@@ -22,17 +22,17 @@ module Extension
       def test_prompts_the_user_to_choose_a_name_if_no_name_was_provided
         CLI::UI::Prompt.expects(:ask).with(@context.message('create.ask_name')).times(3).returns('A name')
         capture_io { ask(name: nil) }
-        capture_io { ask(name: "") }
-        capture_io { ask(name: " ") }
+        capture_io { ask(name: '') }
+        capture_io { ask(name: ' ') }
       end
 
       def test_reprompts_the_user_to_choose_a_name_until_valid_response_is_given
-        CLI::UI::Prompt.stubs(:ask).with(@context.message('create.ask_name'))
-          .returns(nil, nil)
-          .then.returns('A name')
-        ShopifyCli::Context.any_instance.expects(:puts).with(
-          @context.message('create.invalid_name', Models::Registration::MAX_TITLE_LENGTH)
-        ).times(2)
+        CLI::UI::Prompt.stubs(:ask).with(@context.message('create.ask_name')).returns(nil, nil).then.returns('A name')
+        ShopifyCli::Context
+          .any_instance
+          .expects(:puts)
+          .with(@context.message('create.invalid_name', Models::Registration::MAX_TITLE_LENGTH))
+          .times(2)
 
         capture_io do
           form = ask(name: nil)
@@ -76,20 +76,13 @@ module Extension
       def test_prompts_the_user_to_choose_a_type_if_no_type_was_provided
         CLI::UI::Prompt.expects(:ask).with(@context.message('create.ask_type'))
 
-        capture_io do
-          ask(type: nil)
-        end
+        capture_io { ask(type: nil) }
       end
 
       private
 
       def ask(name: 'test-extension', type: @test_extension_type.identifier)
-        Create.ask(
-          @context,
-          [],
-          name: name,
-          type: type,
-        )
+        Create.ask(@context, [], name: name, type: type)
       end
     end
   end

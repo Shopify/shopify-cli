@@ -4,9 +4,7 @@ module Script
   module Layers
     module Infrastructure
       class TaskRunner
-        TASK_RUNNERS = {
-          "ts" => Infrastructure::AssemblyScriptTaskRunner,
-        }
+        TASK_RUNNERS = { 'ts' => Infrastructure::AssemblyScriptTaskRunner }
 
         def self.for(ctx, language, script_name, script_source_file)
           raise Errors::TaskRunnerNotFoundError unless TASK_RUNNERS[language]

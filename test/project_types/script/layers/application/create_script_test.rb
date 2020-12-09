@@ -1,8 +1,8 @@
 # frozen_string_literal: true
 
-require "project_types/script/test_helper"
-require "project_types/script/layers/infrastructure/fake_script_repository"
-require "project_types/script/layers/infrastructure/fake_extension_point_repository"
+require 'project_types/script/test_helper'
+require 'project_types/script/layers/infrastructure/fake_script_repository'
+require 'project_types/script/layers/infrastructure/fake_extension_point_repository'
 
 describe Script::Layers::Application::CreateScript do
   include TestHelpers::FakeFS
@@ -39,15 +39,13 @@ describe Script::Layers::Application::CreateScript do
 
   describe '.call' do
     subject do
-      Script::Layers::Application::CreateScript
-        .call(ctx: @context, language: language, script_name: script_name, extension_point_type: extension_point_type)
+      Script::Layers::Application::CreateScript.call(
+        ctx: @context, language: language, script_name: script_name, extension_point_type: extension_point_type
+      )
     end
 
     it 'should create a new script' do
-      Script::Layers::Application::ExtensionPoints
-        .expects(:get)
-        .with(type: extension_point_type)
-        .returns(ep)
+      Script::Layers::Application::ExtensionPoints.expects(:get).with(type: extension_point_type).returns(ep)
       Script::Layers::Application::CreateScript
         .expects(:setup_project)
         .with(@context, script_name, ep)
@@ -62,37 +60,34 @@ describe Script::Layers::Application::CreateScript do
     end
 
     describe '.setup_project' do
-      subject do
-        Script::Layers::Application::CreateScript.send(:setup_project, @context, script_name, ep)
-      end
+      subject { Script::Layers::Application::CreateScript.send(:setup_project, @context, script_name, ep) }
 
       it 'should succeed and update ctx root' do
         Script::ScriptProject.expects(:create).with(@context, script_name).once
         Script::ScriptProject
           .expects(:write)
           .with(
-            @context,
-            project_type: :script,
-            organization_id: nil,
-            extension_point_type: ep.type,
-            script_name: script_name,
-          )
-        capture_io do
-          assert_equal script_project, subject
-        end
+          @context,
+          project_type: :script, organization_id: nil, extension_point_type: ep.type, script_name: script_name
+        )
+        capture_io { assert_equal script_project, subject }
       end
     end
 
     describe 'install_dependencies' do
       subject do
-        Script::Layers::Application::CreateScript
-          .send(:install_dependencies, @context, language, script_name, script_project.source_file, project_creator)
+        Script::Layers::Application::CreateScript.send(
+          :install_dependencies,
+          @context,
+          language,
+          script_name,
+          script_project.source_file,
+          project_creator
+        )
       end
 
       it 'should return new script' do
-        Script::Layers::Application::ProjectDependencies
-          .expects(:install)
-          .with(ctx: @context, task_runner: task_runner)
+        Script::Layers::Application::ProjectDependencies.expects(:install).with(ctx: @context, task_runner: task_runner)
         project_creator.expects(:setup_dependencies)
         capture_io { subject }
       end
@@ -100,8 +95,12 @@ describe Script::Layers::Application::CreateScript do
 
     describe 'bootstrap' do
       subject do
-        Script::Layers::Application::CreateScript
-          .send(:bootstrap, @context, script_project.source_path, project_creator)
+        Script::Layers::Application::CreateScript.send(
+          :bootstrap,
+          @context,
+          script_project.source_path,
+          project_creator
+        )
       end
 
       it 'should return new script' do

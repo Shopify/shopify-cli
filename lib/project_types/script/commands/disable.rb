@@ -4,7 +4,7 @@ module Script
   module Commands
     class Disable < ShopifyCli::Command
       def call(_args, _name)
-        ShopifyCli::Tasks::EnsureEnv.call(@ctx, required: [:api_key, :secret, :shop])
+        ShopifyCli::Tasks::EnsureEnv.call(@ctx, required: %i[api_key secret shop])
         project = ScriptProject.current
         Layers::Application::DisableScript.call(
           ctx: @ctx,

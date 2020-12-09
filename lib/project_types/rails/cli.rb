@@ -5,12 +5,13 @@ module Rails
     creator('Rails::Commands::Create')
     connector('Rails::Commands::Connect')
 
-    register_command('Rails::Commands::Deploy', "deploy")
-    register_command('Rails::Commands::Generate', "generate")
-    register_command('Rails::Commands::Open', "open")
-    register_command('Rails::Commands::Populate', "populate")
-    register_command('Rails::Commands::Serve', "serve")
-    register_command('Rails::Commands::Tunnel', "tunnel")
+    register_command('Rails::Commands::Deploy', 'deploy')
+    register_command('Rails::Commands::Generate', 'generate')
+    register_command('Rails::Commands::Open', 'open')
+    register_command('Rails::Commands::Populate', 'populate')
+    register_command('Rails::Commands::Serve', 'serve')
+    register_command('Rails::Commands::Tunnel', 'tunnel')
+
     # register_task('Rails::Tasks::RailsTask', 'rails_task')
 
     require Project.project_filepath('messages/messages')
@@ -30,8 +31,7 @@ module Rails
   end
 
   # define/autoload project specific Tasks
-  module Tasks
-  end
+  module Tasks; end
 
   # define/autoload project specific Forms
   module Forms

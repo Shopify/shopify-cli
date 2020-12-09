@@ -9,11 +9,7 @@ module ShopifyCli
           if Registry.exist?(command)
             cmd, _ = Registry.lookup_command(command)
             subcmd, _ = cmd.subcommand_registry.lookup_command(args.first)
-            if subcmd
-              display_help(subcmd)
-            else
-              display_help(cmd)
-            end
+            subcmd ? display_help(subcmd) : display_help(cmd)
             return
           else
             @ctx.puts(@ctx.message('core.help.error.command_not_found', command))
@@ -46,14 +42,11 @@ module ShopifyCli
       end
 
       def core_commands
-        resolved_commands
-          .select { |_name, c| !c.hidden? }
-          .select { |name, _c| Commands.core_command?(name) }
+        resolved_commands.select { |_name, c| !c.hidden? }.select { |name, _c| Commands.core_command?(name) }
       end
 
       def local_commands
-        resolved_commands
-          .reject { |name, _c| Commands.core_command?(name) }
+        resolved_commands.reject { |name, _c| Commands.core_command?(name) }
       end
 
       def display_help(klass)
@@ -66,9 +59,7 @@ module ShopifyCli
       end
 
       def resolved_commands
-        ShopifyCli::Commands::Registry
-          .resolved_commands
-          .sort
+        ShopifyCli::Commands::Registry.resolved_commands.sort
       end
 
       def inside_supported_project?

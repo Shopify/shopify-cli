@@ -12,16 +12,9 @@ module Extension
         super
         ShopifyCli::ProjectType.load_type(:extension)
 
-        @fake_messages = {
-          name: 'Fake Type',
-          tagline: 'Fake tagline',
-        }
+        @fake_messages = { name: 'Fake Type', tagline: 'Fake tagline' }
 
-        @fake_overrides = {
-          build: {
-            frame_title: 'Overridden Title',
-          },
-        }
+        @fake_overrides = { build: { frame_title: 'Overridden Title' } }
 
         @fake_override_messages = @fake_messages.merge(overrides: @fake_overrides)
       end

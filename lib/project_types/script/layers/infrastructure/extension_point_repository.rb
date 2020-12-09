@@ -20,10 +20,11 @@ module Script
         end
 
         def extension_points
-          @extension_points ||= begin
-            require 'yaml'
-            YAML.load_file(Project.project_filepath('config/extension_points.yml'))
-          end
+          @extension_points ||=
+            begin
+              require 'yaml'
+              YAML.load_file(Project.project_filepath('config/extension_points.yml'))
+            end
         end
       end
     end

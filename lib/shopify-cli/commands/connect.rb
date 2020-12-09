@@ -15,9 +15,7 @@ module ShopifyCli
       end
 
       def call(args, command_name)
-        if Project.current&.env
-          @ctx.puts(@ctx.message('core.connect.already_connected_warning'))
-        end
+        @ctx.puts(@ctx.message('core.connect.already_connected_warning')) if Project.current&.env
 
         project_type = ask_project_type
 
@@ -48,16 +46,12 @@ module ShopifyCli
       end
 
       def write_cli_yml(project_type, org_id)
-        ShopifyCli::Project.write(
-          @ctx,
-          project_type: project_type,
-          organization_id: org_id,
-        )
+        ShopifyCli::Project.write(@ctx, project_type: project_type, organization_id: org_id)
         @ctx.done(@ctx.message('core.connect.cli_yml_saved'))
       end
 
       def get_app(apps, api_key)
-        apps.select { |app| app["apiKey"] == api_key }
+        apps.select { |app| app['apiKey'] == api_key }
       end
     end
   end

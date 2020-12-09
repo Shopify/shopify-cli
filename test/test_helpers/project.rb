@@ -8,13 +8,7 @@ module TestHelpers
 
     def project_context(*dir)
       root = File.join(MiniTest::Test::FIXTURE_DIR, *dir)
-      @context = TestHelpers::FakeContext.new(
-        root: root,
-        env: {
-          'HOME' => '~',
-          'XDG_CONFIG_HOME' => root,
-        }
-      )
+      @context = TestHelpers::FakeContext.new(root: root, env: { 'HOME' => '~', 'XDG_CONFIG_HOME' => root })
       FileUtils.cd(@context.root)
     end
 

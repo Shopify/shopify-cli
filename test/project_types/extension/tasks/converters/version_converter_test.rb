@@ -22,9 +22,7 @@ module Extension
         end
 
         def test_from_hash_aborts_with_a_parse_error_if_the_hash_is_nil
-          io = capture_io_and_assert_raises(ShopifyCli::Abort) do
-            Converters::VersionConverter.from_hash(@context, nil)
-          end
+          io = capture_io_and_assert_raises(ShopifyCli::Abort) { Converters::VersionConverter.from_hash(@context, nil) }
 
           assert_message_output(io: io, expected_content: @context.message('tasks.errors.parse_error'))
         end
@@ -35,7 +33,7 @@ module Extension
             Converters::VersionConverter::LAST_USER_INTERACTION_AT_FIELD => @last_user_interaction_at,
             Converters::VersionConverter::CONTEXT_FIELD => @extension_context,
             Converters::VersionConverter::LOCATION_FIELD => @location,
-            Converters::VersionConverter::VALIDATION_ERRORS_FIELD => [],
+            Converters::VersionConverter::VALIDATION_ERRORS_FIELD => []
           }
 
           parsed_version = Tasks::Converters::VersionConverter.from_hash(@context, hash)

@@ -28,26 +28,23 @@ module Extension
       end
 
       def test_all_step_types_catch_shopify_cli_abort_exceptions_and_output_their_message_and_return_false
-        always_successful_io = capture_io do
-          refute call_step(ArgoSetupStep.always_successful { raise ShopifyCli::Abort, 'always_successful error' })
-        end
+        always_successful_io =
+          capture_io do
+            refute call_step(ArgoSetupStep.always_successful { raise ShopifyCli::Abort, 'always_successful error' })
+          end
 
-        default_io = capture_io do
-          refute call_step(ArgoSetupStep.default { raise ShopifyCli::Abort, 'default_io error' })
-        end
+        default_io =
+          capture_io { refute call_step(ArgoSetupStep.default { raise ShopifyCli::Abort, 'default_io error' }) }
 
         assert_message_output(io: always_successful_io, expected_content: 'always_successful error')
         assert_message_output(io: default_io, expected_content: 'default_io error')
       end
 
       def test_all_step_types_catch_any_exceptions_and_output_their_message_and_return_false
-        always_successful_io = capture_io do
-          refute call_step(ArgoSetupStep.always_successful { raise 'always_successful error' })
-        end
+        always_successful_io =
+          capture_io { refute call_step(ArgoSetupStep.always_successful { raise 'always_successful error' }) }
 
-        default_io = capture_io do
-          refute call_step(ArgoSetupStep.default { raise 'default_io error' })
-        end
+        default_io = capture_io { refute call_step(ArgoSetupStep.default { raise 'default_io error' }) }
 
         assert_message_output(io: always_successful_io, expected_content: '{{x}} always_successful error')
         assert_message_output(io: default_io, expected_content: '{{x}} default_io error')

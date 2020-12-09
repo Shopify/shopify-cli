@@ -9,8 +9,7 @@ module ShopifyCli
         ShopifyCli::Project.stubs(:has_current?).returns(false)
         CLI::UI::Prompt.expects(:ask).with(@context.message('core.connect.project_type_select')).returns('node')
         ShopifyCli::ProjectType.load_type('node')
-        ::Node::Commands::Connect.expects(:call)
-          .with([], 'connect', 'connect')
+        ::Node::Commands::Connect.expects(:call).with([], 'connect', 'connect')
 
         ShopifyCli::Commands::Connect.new(@context).call([], 'connect')
       end
@@ -19,10 +18,9 @@ module ShopifyCli
         ShopifyCli::Project.stubs(:has_current?).returns(false)
         CLI::UI::Prompt.expects(:ask).with(@context.message('core.connect.project_type_select')).returns('node')
         ShopifyCli::ProjectType.load_type('node')
-        ::Node::Commands::Connect.expects(:call)
-          .with(['edge'], 'connect', 'connect')
+        ::Node::Commands::Connect.expects(:call).with(%w[edge], 'connect', 'connect')
 
-        ShopifyCli::Commands::Connect.new(@context).call(['edge'], 'connect')
+        ShopifyCli::Commands::Connect.new(@context).call(%w[edge], 'connect')
       end
 
       def test_runs_default_behaviour_if_no_connect_command
@@ -57,19 +55,13 @@ module ShopifyCli
 
       def org_response
         {
-          "id" => 101,
-          "businessName" => "two",
-          "stores" => [
-            { "shopDomain" => "store2.myshopify.com", "shopName" => "foo" },
-            { "shopDomain" => "store1.myshopify.com", "shopName" => "bar" },
+          'id' => 101,
+          'businessName' => 'two',
+          'stores' => [
+            { 'shopDomain' => 'store2.myshopify.com', 'shopName' => 'foo' },
+            { 'shopDomain' => 'store1.myshopify.com', 'shopName' => 'bar' }
           ],
-          "apps" => [{
-            "title" => "app",
-            "apiKey" => "apikey",
-            "apiSecretKeys" => [{
-              "secret" => 1234,
-            }],
-          }],
+          'apps' => [{ 'title' => 'app', 'apiKey' => 'apikey', 'apiSecretKeys' => [{ 'secret' => 1234 }] }]
         }
       end
     end

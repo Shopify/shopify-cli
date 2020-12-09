@@ -10,19 +10,8 @@ module ShopifyCli
         api_key = '123'
         stub_partner_req(
           'get_app_urls',
-          variables: {
-            apiKey: api_key,
-          },
-          resp: {
-            data: {
-              app: {
-                redirectUrlWhitelist: [
-                  'https://123abc.ngrok.io',
-                  'http://127.0.0.1:3456',
-                ],
-              },
-            },
-          },
+          variables: { apiKey: api_key },
+          resp: { data: { app: { redirectUrlWhitelist: %w[https://123abc.ngrok.io http://127.0.0.1:3456] } } }
         )
         ShopifyCli::Tasks::EnsureLoopbackURL.call(@context)
       end
@@ -32,31 +21,14 @@ module ShopifyCli
         api_key = '123'
         stub_partner_req(
           'get_app_urls',
-          variables: {
-            apiKey: api_key,
-          },
-          resp: {
-            data: {
-              app: {
-                redirectUrlWhitelist: [
-                  'https://123abc.ngrok.io',
-                ],
-              },
-            },
-          },
+          variables: { apiKey: api_key }, resp: { data: { app: { redirectUrlWhitelist: %w[https://123abc.ngrok.io] } } }
         )
 
         stub_partner_req(
           'update_dashboard_urls',
           variables: {
-            input: {
-              redirectUrlWhitelist: [
-                'https://123abc.ngrok.io',
-                'http://127.0.0.1:3456',
-              ],
-              apiKey: api_key,
-            },
-          },
+            input: { redirectUrlWhitelist: %w[https://123abc.ngrok.io http://127.0.0.1:3456], apiKey: api_key }
+          }
         )
         ShopifyCli::Tasks::EnsureLoopbackURL.call(@context)
       end

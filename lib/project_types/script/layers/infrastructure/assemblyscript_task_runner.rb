@@ -4,8 +4,8 @@ module Script
   module Layers
     module Infrastructure
       class AssemblyScriptTaskRunner
-        BYTECODE_FILE = "build/%{name}.wasm"
-        SCRIPT_SDK_BUILD = "npm run build"
+        BYTECODE_FILE = 'build/%{name}.wasm'
+        SCRIPT_SDK_BUILD = 'npm run build'
 
         attr_reader :ctx, :script_name, :script_source_file
 
@@ -21,19 +21,19 @@ module Script
         end
 
         def compiled_type
-          "wasm"
+          'wasm'
         end
 
         def install_dependencies
           check_node_version!
 
-          output, status = ctx.capture2e("npm", "install", "--no-audit", "--no-optional", "--loglevel error")
+          output, status = ctx.capture2e('npm', 'install', '--no-audit', '--no-optional', '--loglevel error')
           raise Errors::DependencyInstallError, output unless status.success?
         end
 
         def dependencies_installed?
           # Assuming if node_modules folder exist at root of script folder, all deps are installed
-          return false unless ctx.dir_exist?("node_modules")
+          return false unless ctx.dir_exist?('node_modules')
           check_if_ep_dependencies_up_to_date!
           true
         end
@@ -41,15 +41,15 @@ module Script
         private
 
         def check_node_version!
-          output, status = @ctx.capture2e("node", "--version")
+          output, status = @ctx.capture2e('node', '--version')
           raise Errors::DependencyInstallError, output unless status.success?
 
           require 'semantic/semantic'
           version = ::Semantic::Version.new(output[1..-1])
           unless version >= ::Semantic::Version.new(AssemblyScriptProjectCreator::MIN_NODE_VERSION)
             raise Errors::DependencyInstallError,
-                  "Node version must be >= v#{AssemblyScriptProjectCreator::MIN_NODE_VERSION}. "\
-                  "Current version: #{output.strip}."
+                  "Node version must be >= v#{AssemblyScriptProjectCreator::MIN_NODE_VERSION}. " \
+                    "Current version: #{output.strip}."
           end
         end
 
@@ -64,11 +64,10 @@ module Script
           pkg = JSON.parse(File.read('package.json'))
           build_script = pkg.dig('scripts', 'build')
 
-          raise Errors::BuildScriptNotFoundError,
-            "Build script not found" if build_script.nil?
+          raise Errors::BuildScriptNotFoundError, 'Build script not found' if build_script.nil?
 
-          unless build_script.start_with?("shopify-scripts")
-            raise Errors::InvalidBuildScriptError, "Invalid build script"
+          unless build_script.start_with?('shopify-scripts')
+            raise Errors::InvalidBuildScriptError, 'Invalid build script'
           end
         end
 
@@ -86,14 +85,16 @@ module Script
           return true if ENV['SHOPIFY_CLI_SCRIPTS_IGNORE_OUTDATED']
 
           # ignore exit code since it will not be 0 unless every package is up to date which they probably won't be
-          out, _ = ctx.capture2e("npm", "outdated", "--json", "--depth", "0")
+          out, _ = ctx.capture2e('npm', 'outdated', '--json', '--depth', '0')
           parsed_outdated_check = JSON.parse(out)
-          outdated_ep_packages = parsed_outdated_check
-            .select { |package_name, _| package_name.start_with?('@shopify/extension-point-as-') }
-            .select { |_, version_info| !package_is_up_to_date?(version_info) }
-            .keys
-          raise Errors::PackagesOutdatedError.new(outdated_ep_packages),
-            "NPM packages out of date: #{outdated_ep_packages.join(', ')}" unless outdated_ep_packages.empty?
+          outdated_ep_packages =
+            parsed_outdated_check.select do |package_name, _|
+              package_name.start_with?('@shopify/extension-point-as-')
+            end.select { |_, version_info| !package_is_up_to_date?(version_info) }.keys
+          unless outdated_ep_packages.empty?
+            raise Errors::PackagesOutdatedError.new(outdated_ep_packages),
+                  "NPM packages out of date: #{outdated_ep_packages.join(', ')}"
+          end
         end
 
         def package_is_up_to_date?(version_info)

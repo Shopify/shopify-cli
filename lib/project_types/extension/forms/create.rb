@@ -19,7 +19,7 @@ module Extension
       def ask_name
         ask_with_reprompt(
           initial_value: name,
-          break_condition: -> (current_name) { Models::Registration.valid_title?(current_name) },
+          break_condition: ->(current_name) { Models::Registration.valid_title?(current_name) },
           prompt_message: ctx.message('create.ask_name'),
           reprompt_message: ctx.message('create.invalid_name', Models::Registration::MAX_TITLE_LENGTH)
         )
@@ -30,9 +30,7 @@ module Extension
         ctx.puts(ctx.message('create.invalid_type')) unless type.nil?
 
         CLI::UI::Prompt.ask(ctx.message('create.ask_type')) do |handler|
-          Models::Type.repository.values.each do |type|
-            handler.option("#{type.name} #{type.tagline}") { type }
-          end
+          Models::Type.repository.values.each { |type| handler.option("#{type.name} #{type.tagline}") { type } }
         end
       end
 

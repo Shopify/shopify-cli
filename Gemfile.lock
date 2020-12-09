@@ -1,3 +1,10 @@
+GIT
+  remote: git://github.com/prettier/plugin-ruby.git
+  revision: 8e1bbb0fb37e10228c12953d91621a076a6683d8
+  branch: master
+  specs:
+    prettier (0.22.0)
+
 GEM
   remote: https://rubygems.org/
   specs:
@@ -68,6 +75,7 @@ DEPENDENCIES
   minitest-fail-fast
   minitest-reporters
   mocha
+  prettier!
   pry-byebug
   rake
   rubocop-minitest

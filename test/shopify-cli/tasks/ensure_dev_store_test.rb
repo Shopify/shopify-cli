@@ -13,9 +13,9 @@ module ShopifyCli
       def test_outputs_if_shop_cant_be_queried
         stub_org_request
         stub_env(domain: 'notther.myshopify.com')
-        @context.expects(:puts).with(
-          @context.message('core.tasks.ensure_dev_store.could_not_verify_store', 'notther.myshopify.com')
-        )
+        @context
+          .expects(:puts)
+          .with(@context.message('core.tasks.ensure_dev_store.could_not_verify_store', 'notther.myshopify.com'))
         EnsureDevStore.call(@context)
       end
 
@@ -37,31 +37,17 @@ module ShopifyCli
         stub_org_request
         stub_env
         CLI::UI::Prompt.expects(:confirm).returns(true)
-        stub_partner_req(
-          'convert_dev_to_test_store',
-          variables: {
-            input: {
-              organizationID: 42,
-              shopId: 142,
-            },
-          }
-        )
-        @context.expects(:puts).with(
-          @context.message('core.tasks.ensure_dev_store.transfer_disabled', 'shopdomain.myshopify.com')
-        )
+        stub_partner_req('convert_dev_to_test_store', variables: { input: { organizationID: 42, shopId: 142 } })
+        @context
+          .expects(:puts)
+          .with(@context.message('core.tasks.ensure_dev_store.transfer_disabled', 'shopdomain.myshopify.com'))
         EnsureDevStore.call(@context)
       end
 
       private
 
       def stub_env(domain: 'shopdomain.myshopify.com')
-        Project.current.stubs(:env).returns(
-          Resources::EnvFile.new(
-            api_key: '123',
-            secret: 'kjhasas',
-            shop: domain,
-          )
-        )
+        Project.current.stubs(:env).returns(Resources::EnvFile.new(api_key: '123', secret: 'kjhasas', shop: domain))
       end
 
       def stub_org_request(domain: 'shopdomain.myshopify.com', transfer_disabled: false)
@@ -74,16 +60,12 @@ module ShopifyCli
                   {
                     'id': 42,
                     'stores': {
-                      'nodes': [{
-                        'shopId': 142,
-                        'shopDomain': domain,
-                        'transferDisabled': transfer_disabled,
-                      }],
-                    },
-                  },
-                ],
-              },
-            },
+                      'nodes': [{ 'shopId': 142, 'shopDomain': domain, 'transferDisabled': transfer_disabled }]
+                    }
+                  }
+                ]
+              }
+            }
           }
         )
       end

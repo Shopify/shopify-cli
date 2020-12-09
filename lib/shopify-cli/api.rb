@@ -23,12 +23,7 @@ module ShopifyCli
     end
 
     def query(query_name, variables: {})
-      _, resp = request(
-        load_query(query_name),
-        variables: variables,
-        headers: default_headers,
-        graphql_url: url,
-      )
+      _, resp = request(load_query(query_name), variables: variables, headers: default_headers, graphql_url: url)
       ctx.debug(resp)
       resp
     rescue API::APIRequestServerError, API::APIRequestUnexpectedError => e
@@ -40,9 +35,8 @@ module ShopifyCli
 
     def load_query(name)
       project_type = ShopifyCli::Project.current_project_type
-      project_file_path = File.join(
-        ShopifyCli::ROOT, 'lib', 'project_types', project_type.to_s, 'graphql', "#{name}.graphql"
-      )
+      project_file_path =
+        File.join(ShopifyCli::ROOT, 'lib', 'project_types', project_type.to_s, 'graphql', "#{name}.graphql")
       if !project_type.nil? && File.exist?(project_file_path)
         File.read(project_file_path)
       else
@@ -55,9 +49,7 @@ module ShopifyCli
     def request(body, graphql_url:, variables: {}, headers: {})
       CLI::Kit::Util.begin do
         uri = URI.parse(graphql_url)
-        unless uri.is_a?(URI::HTTP)
-          ctx.abort("Invalid URL: #{graphql_url}")
-        end
+        ctx.abort("Invalid URL: #{graphql_url}") unless uri.is_a?(URI::HTTP)
 
         # we delay this require so as to avoid a performance hit on starting the CLI
         require 'shopify-cli/http_request'
@@ -79,9 +71,7 @@ module ShopifyCli
         else
           raise APIRequestUnexpectedError, "#{response.code}\n#{response.body}"
         end
-      end.retry_after(APIRequestRetriableError, retries: 3) do |e|
-        sleep(1) if e.is_a?(APIRequestThrottledError)
-      end
+      end.retry_after(APIRequestRetriableError, retries: 3) { |e| sleep(1) if e.is_a?(APIRequestThrottledError) }
     end
 
     def current_sha
@@ -89,9 +79,7 @@ module ShopifyCli
     end
 
     def default_headers
-      {
-        'User-Agent' => "Shopify App CLI #{ShopifyCli::VERSION} #{current_sha} | #{ctx.uname}",
-      }.tap do |headers|
+      { 'User-Agent' => "Shopify App CLI #{ShopifyCli::VERSION} #{current_sha} | #{ctx.uname}" }.tap do |headers|
         headers['X-Shopify-Cli-Employee'] = '1' if Shopifolk.acting_as_shopify_organization?
       end.merge(auth_headers(token))
     end

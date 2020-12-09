@@ -25,12 +25,7 @@ module ShopifyCli
       end
 
       def test_write_writes_env_content_to_file
-        env_file = EnvFile.new(
-          api_key: 'foo',
-          secret: 'bar',
-          host: 'baz',
-          extra: { 'AWSKEY' => 'awskey' },
-        )
+        env_file = EnvFile.new(api_key: 'foo', secret: 'bar', host: 'baz', extra: { 'AWSKEY' => 'awskey' })
         content = <<~CONTENT
           SHOPIFY_API_KEY=foo
           SHOPIFY_API_SECRET=bar
@@ -43,11 +38,7 @@ module ShopifyCli
       end
 
       def test_update_writes_new_value_to_file
-        env_file = EnvFile.new(
-          api_key: 'foo',
-          secret: 'bar',
-          host: 'baz'
-        )
+        env_file = EnvFile.new(api_key: 'foo', secret: 'bar', host: 'baz')
         content = <<~CONTENT
           SHOPIFY_API_KEY=foo
           SHOPIFY_API_SECRET=bar

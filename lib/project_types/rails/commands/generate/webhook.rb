@@ -9,11 +9,10 @@ module Rails
           schema = ShopifyCli::AdminAPI::Schema.get(@ctx)
           webhooks = schema.get_names_from_type('WebhookSubscriptionTopic')
           unless selected_type && webhooks.include?(selected_type)
-            selected_type = CLI::UI::Prompt.ask(@ctx.message('rails.generate.webhook.select')) do |handler|
-              webhooks.each do |type|
-                handler.option(type) { type }
+            selected_type =
+              CLI::UI::Prompt.ask(@ctx.message('rails.generate.webhook.select')) do |handler|
+                webhooks.each { |type| handler.option(type) { type } }
               end
-            end
           end
           spin_group = CLI::UI::SpinGroup.new
           spin_group.add(@ctx.message('rails.generate.webhook.selected', selected_type)) do |spinner|
@@ -28,10 +27,10 @@ module Rails
         end
 
         def generate_command(selected_type)
-          parts = selected_type.downcase.split("_")
+          parts = selected_type.downcase.split('_')
           host = ShopifyCli::Project.current.env.host
-          selected_type = parts[0..-2].join("_") + "/" + parts[-1]
-          command = @ctx.windows? ? "ruby bin\\rails" : "bin/rails"
+          selected_type = parts[0..-2].join('_') + '/' + parts[-1]
+          command = @ctx.windows? ? "ruby bin\\rails" : 'bin/rails'
           "#{command} g shopify_app:add_webhook -t #{selected_type} -a #{host}/webhooks/#{selected_type.downcase}"
         end
       end

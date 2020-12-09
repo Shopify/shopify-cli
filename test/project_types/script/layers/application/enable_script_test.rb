@@ -1,6 +1,6 @@
 # frozen_string_literal: true
 
-require "project_types/script/test_helper"
+require 'project_types/script/test_helper'
 
 describe Script::Layers::Application::EnableScript do
   describe '.call' do
@@ -22,7 +22,10 @@ describe Script::Layers::Application::EnableScript do
     end
 
     it 'should authenticate and make enable request' do
-      Script::Layers::Infrastructure::ScriptService.any_instance.expects(:enable).with(
+      Script::Layers::Infrastructure::ScriptService
+        .any_instance
+        .expects(:enable)
+        .with(
         api_key: api_key,
         shop_domain: shop_domain,
         configuration: configuration,

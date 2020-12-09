@@ -39,9 +39,7 @@ module Extension
         private
 
         def assert_valid_config(config, permitted_keys)
-          unpermitted_keys = config.keys.select do |k|
-            !permitted_keys.include?(k)
-          end
+          unpermitted_keys = config.keys.select { |k| !permitted_keys.include?(k) }
 
           unless unpermitted_keys.empty?
             raise(

@@ -7,12 +7,16 @@ module ShopifyCli
   class ProcessSupervision
     # a string or a symbol to identify this process by
     attr_reader :identifier
+
     # process ID for the running process
     attr_accessor :pid
+
     # starttime of the process
     attr_reader :time
+
     # filepath to the pidfile for this process
     attr_reader :pid_path
+
     # filepath to the logfile for this process
     attr_reader :log_path
 
@@ -67,12 +71,11 @@ module ShopifyCli
 
           # Make sure the file exists and is empty, otherwise Windows fails
           File.open(pid_file.log_path, 'w') {}
-          pid = Process.spawn(
-            *args,
-            out: pid_file.log_path,
-            err: pid_file.log_path,
-            in: Context.new.windows? ? "nul" : "/dev/null",
-          )
+          pid =
+            Process.spawn(
+              *args,
+              out: pid_file.log_path, err: pid_file.log_path, in: Context.new.windows? ? 'nul' : '/dev/null'
+            )
           pid_file.pid = pid
           pid_file.write
 
@@ -81,9 +84,9 @@ module ShopifyCli
           fork do
             pid_file = new(identifier, pid: Process.pid)
             pid_file.write
-            STDOUT.reopen(pid_file.log_path, "w")
-            STDERR.reopen(pid_file.log_path, "w")
-            STDIN.reopen("/dev/null", "r")
+            STDOUT.reopen(pid_file.log_path, 'w')
+            STDERR.reopen(pid_file.log_path, 'w')
+            STDIN.reopen('/dev/null', 'r')
             Process.setsid
             exec(*args)
           end
@@ -152,7 +155,7 @@ module ShopifyCli
       kill_proc
       unlink
       true
-    rescue
+    rescue StandardError
       false
     end
 
@@ -194,7 +197,8 @@ module ShopifyCli
     rescue Errno::ESRCH
       begin
         kill(pid)
-      rescue Errno::ESRCH # The process group does not exist, try the pid itself
+      rescue Errno::ESRCH
+        # The process group does not exist, try the pid itself
         # Race condition, process died in the middle
       end
     end

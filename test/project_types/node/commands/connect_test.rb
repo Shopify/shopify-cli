@@ -11,11 +11,8 @@ module Node
         context = ShopifyCli::Context.new
 
         ShopifyCli::Project.stubs(:has_current?).returns(false)
-        ShopifyCli::Commands::Connect.any_instance.expects(:default_connect)
-          .with('node')
-          .returns('node-app')
-        context.expects(:done)
-          .with(context.message('node.connect.connected', 'node-app'))
+        ShopifyCli::Commands::Connect.any_instance.expects(:default_connect).with('node').returns('node-app')
+        context.expects(:done).with(context.message('node.connect.connected', 'node-app'))
 
         Node::Commands::Connect.new(context).call
       end
@@ -23,13 +20,9 @@ module Node
       def test_warns_if_in_production
         context = ShopifyCli::Context.new
 
-        context.expects(:puts)
-          .with(context.message('node.connect.production_warning'))
-        ShopifyCli::Commands::Connect.any_instance.expects(:default_connect)
-          .with('node')
-          .returns('node-app')
-        context.expects(:done)
-          .with(context.message('node.connect.connected', 'node-app'))
+        context.expects(:puts).with(context.message('node.connect.production_warning'))
+        ShopifyCli::Commands::Connect.any_instance.expects(:default_connect).with('node').returns('node-app')
+        context.expects(:done).with(context.message('node.connect.connected', 'node-app'))
 
         Node::Commands::Connect.new(context).call
       end

@@ -16,11 +16,10 @@ module Script
         @language = 'ts'
         @script_name = 'name'
         @ep_type = 'discount'
-        @script_project = TestHelpers::FakeScriptProject.new(
-          language: @language,
-          extension_point_type: @ep_type,
-          script_name: @script_name
-        )
+        @script_project =
+          TestHelpers::FakeScriptProject.new(
+            language: @language, extension_point_type: @ep_type, script_name: @script_name
+          )
       end
 
       def test_prints_help_with_no_name_argument
@@ -44,7 +43,7 @@ module Script
       end
 
       def test_help
-        Script::Layers::Application::ExtensionPoints.expects(:types).returns(%w(ep1 ep2))
+        Script::Layers::Application::ExtensionPoints.expects(:types).returns(%w[ep1 ep2])
         ShopifyCli::Context
           .expects(:message)
           .with('script.create.help', ShopifyCli::TOOL_NAME, '{{cyan:ep1}}, {{cyan:ep2}}')
@@ -53,23 +52,15 @@ module Script
 
       def test_cleanup_after_error
         Dir.mktmpdir(@script_name)
-        Layers::Application::CreateScript.expects(:call).with(
-          ctx: @context,
-          language: @language,
-          script_name: @script_name,
-          extension_point_type: @ep_type
-        ).raises(StandardError)
+        Layers::Application::CreateScript
+          .expects(:call)
+          .with(ctx: @context, language: @language, script_name: @script_name, extension_point_type: @ep_type)
+          .raises(StandardError)
 
-        ScriptProject.expects(:cleanup).with(
-          ctx: @context,
-          script_name: @script_name,
-          root_dir: @context.root
-        )
+        ScriptProject.expects(:cleanup).with(ctx: @context, script_name: @script_name, root_dir: @context.root)
 
         assert_raises StandardError do
-          capture_io do
-            perform_command
-          end
+          capture_io { perform_command }
         end
 
         refute @context.dir_exist?(@script_name)
@@ -78,23 +69,18 @@ module Script
       def test_directory_already_exists
         error = Script::Errors::ScriptProjectAlreadyExistsError.new
         Dir.mktmpdir(@script_name)
-        Layers::Application::CreateScript.expects(:call).with(
-          ctx: @context,
-          language: @language,
-          script_name: @script_name,
-          extension_point_type: @ep_type
-        ).raises(error)
+        Layers::Application::CreateScript
+          .expects(:call)
+          .with(ctx: @context, language: @language, script_name: @script_name, extension_point_type: @ep_type)
+          .raises(error)
 
-        UI::ErrorHandler.expects(:pretty_print_and_raise).with(
-          error,
-          failed_op: @context.message('script.create.error.operation_failed')
-        )
+        UI::ErrorHandler
+          .expects(:pretty_print_and_raise)
+          .with(error, failed_op: @context.message('script.create.error.operation_failed'))
 
         ScriptProject.expects(:cleanup).never
 
-        capture_io do
-          perform_command
-        end
+        capture_io { perform_command }
       end
 
       private

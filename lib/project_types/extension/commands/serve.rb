@@ -3,8 +3,8 @@
 module Extension
   module Commands
     class Serve < ExtensionCommand
-      YARN_SERVE_COMMAND = %w(server)
-      NPM_SERVE_COMMAND = %w(run-script server)
+      YARN_SERVE_COMMAND = %w[server]
+      NPM_SERVE_COMMAND = %w[run-script server]
 
       def call(_args, _command_name)
         CLI::UI::Frame.open(@ctx.message('serve.frame_title')) do

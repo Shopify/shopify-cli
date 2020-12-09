@@ -5,17 +5,13 @@ module Node
     class Generate
       class Page < ShopifyCli::SubCommand
         PAGE_TYPES = {
-          'empty-state' => ['./node_modules/.bin/generate-node-app', 'empty-state-page'],
-          'two-column' => ['./node_modules/.bin/generate-node-app', 'two-column-page'],
-          'annotated' => ['./node_modules/.bin/generate-node-app', 'settings-page'],
-          'list' => ['./node_modules/.bin/generate-node-app', 'list-page'],
+          'empty-state' => %w[./node_modules/.bin/generate-node-app empty-state-page],
+          'two-column' => %w[./node_modules/.bin/generate-node-app two-column-page],
+          'annotated' => %w[./node_modules/.bin/generate-node-app settings-page],
+          'list' => %w[./node_modules/.bin/generate-node-app list-page]
         }
 
-        options do |parser, flags|
-          parser.on('--type=TYPE') do |t|
-            flags[:type] = t.downcase
-          end
-        end
+        options { |parser, flags| parser.on('--type=TYPE') { |t| flags[:type] = t.downcase } }
 
         def call(args, _name)
           name = args.first
@@ -25,18 +21,15 @@ module Node
             return
           end
 
-          selected_type = if flag
-            unless PAGE_TYPES.key?(flag)
-              @ctx.abort(@ctx.message('node.generate.page.error.invalid_page_type'))
-            end
-            PAGE_TYPES[flag]
-          else
-            CLI::UI::Prompt.ask(@ctx.message('node.generate.page.type_select')) do |handler|
-              PAGE_TYPES.each do |key, value|
-                handler.option(key) { value }
+          selected_type =
+            if flag
+              @ctx.abort(@ctx.message('node.generate.page.error.invalid_page_type')) unless PAGE_TYPES.key?(flag)
+              PAGE_TYPES[flag]
+            else
+              CLI::UI::Prompt.ask(@ctx.message('node.generate.page.type_select')) do |handler|
+                PAGE_TYPES.each { |key, value| handler.option(key) { value } }
               end
             end
-          end
           page_type_name = PAGE_TYPES.key(selected_type)
           selected_type[0] = File.join(ShopifyCli::Project.current.directory, selected_type[0])
           selected_type[0] = "\"#{selected_type[0]}\""

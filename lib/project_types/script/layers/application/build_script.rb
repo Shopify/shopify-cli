@@ -15,13 +15,11 @@ module Script
                   spinner.update_title(ctx.message('script.application.built'))
                 end
               rescue StandardError => e
-                CLI::UI::Frame.with_frame_color_override(:red) do
-                  ctx.puts("\n{{red:#{e.message}}}")
-                end
+                CLI::UI::Frame.with_frame_color_override(:red) { ctx.puts("\n{{red:#{e.message}}}") }
                 errors = [
                   Infrastructure::Errors::InvalidBuildScriptError,
                   Infrastructure::Errors::BuildScriptNotFoundError,
-                  Infrastructure::Errors::WebAssemblyBinaryNotFoundError,
+                  Infrastructure::Errors::WebAssemblyBinaryNotFoundError
                 ]
 
                 raise Infrastructure::Errors::BuildError unless errors.any? { |err| e.is_a?(err) }

@@ -21,10 +21,11 @@ module Extension
         execution_mock = Minitest::Mock.new
         execution_mock.expect(:executed, nil)
 
-        test_proc = proc do |context|
-          execution_mock.executed
-          assert_equal @context, context
-        end
+        test_proc =
+          proc do |context|
+            execution_mock.executed
+            assert_equal @context, context
+          end
 
         call_step(ArgoSetupSteps.check_dependencies([test_proc]))
         execution_mock.verify
@@ -51,11 +52,7 @@ module Extension
         expected_npm_command = ArgoSetupSteps::NPM_INITIALIZE_COMMAND + type_parameter
         expected_yarn_command = ArgoSetupSteps::YARN_INITIALIZE_COMMAND + type_parameter
 
-        @system
-          .expects(:call)
-          .with(yarn: expected_yarn_command, npm: expected_npm_command)
-          .returns(true)
-          .once
+        @system.expects(:call).with(yarn: expected_yarn_command, npm: expected_npm_command).returns(true).once
 
         assert call_step(ArgoSetupSteps.initialize_project)
       end
@@ -65,11 +62,7 @@ module Extension
         expected_npm_command = ArgoSetupSteps::NPM_INITIALIZE_COMMAND + type_parameter
         expected_yarn_command = ArgoSetupSteps::YARN_INITIALIZE_COMMAND + type_parameter
 
-        @system
-          .expects(:call)
-          .with(yarn: expected_yarn_command, npm: expected_npm_command)
-          .returns(false)
-          .once
+        @system.expects(:call).with(yarn: expected_yarn_command, npm: expected_npm_command).returns(false).once
 
         refute call_step(ArgoSetupSteps.initialize_project)
       end

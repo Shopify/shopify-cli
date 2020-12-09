@@ -17,11 +17,12 @@ module ShopifyCli
     class NgrokError < RuntimeError; end
 
     PORT = 8081 # port that ngrok will bind to
+
     # mapping for supported operating systems for where to download ngrok from.
     DOWNLOAD_URLS = {
       mac: 'https://bin.equinox.io/c/4VmDzA7iaHb/ngrok-stable-darwin-amd64.zip',
       linux: 'https://bin.equinox.io/c/4VmDzA7iaHb/ngrok-stable-linux-amd64.zip',
-      windows: 'https://bin.equinox.io/c/4VmDzA7iaHb/ngrok-stable-windows-amd64.zip',
+      windows: 'https://bin.equinox.io/c/4VmDzA7iaHb/ngrok-stable-windows-amd64.zip'
     }
 
     NGROK_TUNNELS_URI = URI.parse('http://localhost:4040/api/tunnels')
@@ -102,7 +103,7 @@ module ShopifyCli
     def stats
       response = Net::HTTP.get_response(NGROK_TUNNELS_URI)
       JSON.parse(response.body)
-    rescue
+    rescue StandardError
       {}
     end
 
@@ -116,7 +117,7 @@ module ShopifyCli
     def urls
       tunnels = stats.dig(TUNNELS_FIELD)
       tunnels.map { |tunnel| tunnel.dig(PUBLIC_URL_FIELD) }
-    rescue
+    rescue StandardError
       []
     end
 
@@ -132,11 +133,7 @@ module ShopifyCli
         unless File.exist?(zip_dest)
           ctx.system('curl', '-o', zip_dest, DOWNLOAD_URLS[ctx.os], chdir: ShopifyCli.cache_dir)
         end
-        args = if ctx.linux?
-          %W(unzip -u #{zip_dest})
-        else
-          %W(tar -xf #{zip_dest})
-        end
+        args = ctx.linux? ? %W[unzip -u #{zip_dest}] : %W[tar -xf #{zip_dest}]
         ctx.system(*args, chdir: ShopifyCli.cache_dir)
         ctx.rm(zip_dest)
       end
@@ -155,7 +152,7 @@ module ShopifyCli
     end
 
     def seconds_to_hm(seconds)
-      format("%d hours %d minutes", seconds / 3600, seconds / 60 % 60)
+      format('%d hours %d minutes', seconds / 3600, seconds / 60 % 60)
     end
 
     def start_ngrok(ctx, port)
@@ -166,9 +163,7 @@ module ShopifyCli
     end
 
     def restart_ngrok(ctx, port)
-      unless ShopifyCli::ProcessSupervision.stop(:ngrok)
-        ctx.abort(ctx.message('core.tunnel.error.stop'))
-      end
+      ctx.abort(ctx.message('core.tunnel.error.stop')) unless ShopifyCli::ProcessSupervision.stop(:ngrok)
       start_ngrok(ctx, port)
     end
 
@@ -198,15 +193,13 @@ module ShopifyCli
 
       def parse
         @log = File.read(@log_path)
-        unless error.empty?
-          raise NgrokError, error.first
-        end
+        raise NgrokError, error.first unless error.empty?
         parse_account
         parse_url
       end
 
       def parse_url
-        @url, _ = @log.match(/msg="started tunnel".*url=(https:\/\/.+)/)&.captures
+        @url, _ = @log.match(%r{msg="started tunnel".*url=(https:\/\/.+)})&.captures
       end
 
       def parse_account

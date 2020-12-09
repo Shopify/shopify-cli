@@ -21,7 +21,8 @@ module Extension
       end
 
       def test_uses_js_system_to_call_yarn_or_npm_commands
-        ShopifyCli::JsSystem.any_instance
+        ShopifyCli::JsSystem
+          .any_instance
           .expects(:call)
           .with(yarn: Build::YARN_BUILD_COMMAND, npm: Build::NPM_BUILD_COMMAND)
           .returns(true)

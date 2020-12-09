@@ -28,8 +28,8 @@ module Extension
             Converters::AppConverter::API_KEY_FIELD => @api_key,
             Converters::AppConverter::TITLE_FIELD => @title,
             Converters::AppConverter::API_SECRET_KEYS_FIELD => [
-              { Converters::AppConverter::API_SECRET_FIELD => @secret },
-            ],
+              { Converters::AppConverter::API_SECRET_FIELD => @secret }
+            ]
           }
 
           parsed_app = Converters::AppConverter.from_hash(hash)
@@ -46,13 +46,11 @@ module Extension
             Converters::AppConverter::API_KEY_FIELD => @api_key,
             Converters::AppConverter::TITLE_FIELD => @title,
             Converters::AppConverter::API_SECRET_KEYS_FIELD => [
-              { Converters::AppConverter::API_SECRET_FIELD => @secret },
-            ],
+              { Converters::AppConverter::API_SECRET_FIELD => @secret }
+            ]
           }
 
-          organization_hash = {
-            Converters::AppConverter::ORGANIZATION_NAME_FIELD => @organization_name,
-          }
+          organization_hash = { Converters::AppConverter::ORGANIZATION_NAME_FIELD => @organization_name }
 
           parsed_app = Converters::AppConverter.from_hash(app_hash, organization_hash)
 

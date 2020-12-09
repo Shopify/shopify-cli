@@ -9,20 +9,18 @@ module Node
           schema = ShopifyCli::AdminAPI::Schema.get(@ctx)
           webhooks = schema.get_names_from_type('WebhookSubscriptionTopic')
           unless selected_type && webhooks.include?(selected_type)
-            selected_type = CLI::UI::Prompt.ask(@ctx.message('node.generate.webhook.type_select')) do |handler|
-              webhooks.each do |type|
-                handler.option(type) { type }
+            selected_type =
+              CLI::UI::Prompt.ask(@ctx.message('node.generate.webhook.type_select')) do |handler|
+                webhooks.each { |type| handler.option(type) { type } }
               end
-            end
           end
 
-          generate_path = File.join(ShopifyCli::Project.current.directory, "node_modules/.bin/generate-node-app")
+          generate_path = File.join(ShopifyCli::Project.current.directory, 'node_modules/.bin/generate-node-app')
           generate_path = "\"#{generate_path}\""
 
           spin_group = CLI::UI::SpinGroup.new
           spin_group.add(@ctx.message('node.generate.webhook.generating', selected_type)) do |spinner|
-            Node::Commands::Generate.run_generate("#{generate_path} webhook #{selected_type}",
-              selected_type, @ctx)
+            Node::Commands::Generate.run_generate("#{generate_path} webhook #{selected_type}", selected_type, @ctx)
             spinner.update_title(@ctx.message('node.generate.webhook.generated', selected_type))
           end
           spin_group.wait

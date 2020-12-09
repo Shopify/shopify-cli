@@ -41,9 +41,7 @@ module Script
 
         def self.from(ctx, spinner)
           new_ctx = new(spinner: spinner)
-          ctx.instance_variables.each do |var|
-            new_ctx.instance_variable_set(var, ctx.instance_variable_get(var))
-          end
+          ctx.instance_variables.each { |var| new_ctx.instance_variable_set(var, ctx.instance_variable_get(var)) }
           new_ctx
         end
 
@@ -54,11 +52,9 @@ module Script
         private
 
         def encoded_lines(*lines)
-          lines
-            .join("\n")
-            .split("\n")
-            .map { |line| encode_ansi(line) unless line.nil? }
-            .join(CLI::UI::ANSI.next_line + "\n")
+          lines.join("\n").split("\n").map { |line| encode_ansi(line) unless line.nil? }.join(
+            CLI::UI::ANSI.next_line + "\n"
+          )
         end
 
         def encode_ansi(line)

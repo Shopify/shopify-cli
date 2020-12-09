@@ -15,9 +15,7 @@ module Rails
         failure.stubs(:exitstatus).returns(1)
         ShopifyCli::Context.any_instance.expects(:system).returns(failure)
 
-        assert_raises(ShopifyCli::Abort) do
-          Rails::Commands::Generate.run_generate(['script'], 'test-name', @context)
-        end
+        assert_raises(ShopifyCli::Abort) { Rails::Commands::Generate.run_generate(%w[script], 'test-name', @context) }
       end
     end
   end
