@@ -9,10 +9,9 @@ module ShopifyCli
 
     def setup
       super
-      root = ShopifyCli::ROOT
-      FakeFS::FileSystem.clone(root + '/test/fixtures/tips.json')
-      Dir.mkdir(root + '/.tmp')
-      @tips_path = File.expand_path(ShopifyCli::ROOT + '/test/fixtures/tips.json')
+      FakeFS::FileSystem.clone(ROOT + '/test/fixtures/tips.json')
+      Dir.mkdir(ROOT + '/.tmp')
+      @tips_path = File.expand_path(ROOT + '/test/fixtures/tips.json')
 
       @remote_request = stub_request(:get,
         "https://raw.githubusercontent.com/Shopify/shopify-app-cli/tip-of-the-day/docs/tips.json")
