@@ -5,8 +5,13 @@ module ShopifyCli
   class ShopifolkTest < MiniTest::Test
     include TestHelpers::FakeFS
 
-    def test_correct_features_is_shopifolk
+    def setup
+      super
+      ShopifyCli::Feature.enable('shopifolk-beta')
       ShopifyCli::Feature.disable('shopifolk')
+    end
+
+    def test_correct_features_is_shopifolk
       FileUtils.mkdir_p("/opt/dev/bin")
       FileUtils.touch("/opt/dev/bin/dev")
       FileUtils.touch("/opt/dev/.shopify-build")
@@ -24,8 +29,7 @@ module ShopifyCli
     end
 
     def test_no_gcloud_config_disables_shopifolk_feature
-      ShopifyCli::Feature.enable('shopifolk')
-      ShopifyCli::Feature.stubs(:enabled?).with('shopifolk').returns(false)
+      refute ShopifyCli::Config.get_bool('features', 'shopifolk')
 
       ShopifyCli::Shopifolk.check
 
@@ -33,8 +37,6 @@ module ShopifyCli
     end
 
     def test_no_section_in_gcloud_config_disables_shopifolk_feature
-      ShopifyCli::Feature.enable('shopifolk')
-      ShopifyCli::Feature.stubs(:enabled?).with('shopifolk').returns(false)
       stub_gcloud_ini({ "account" => "test@shopify.com", "project" => "shopify-dev" })
 
       ShopifyCli::Shopifolk.check
@@ -43,8 +45,6 @@ module ShopifyCli
     end
 
     def test_no_account_in_gcloud_config_disables_shopifolk_feature
-      ShopifyCli::Feature.enable('shopifolk')
-      ShopifyCli::Feature.stubs(:enabled?).with('shopifolk').returns(false)
       stub_gcloud_ini({ "[core]" => { "project" => "shopify-dev" } })
 
       ShopifyCli::Shopifolk.check
@@ -53,8 +53,6 @@ module ShopifyCli
     end
 
     def test_incorrect_email_in_gcloud_config_disables_shopifolk_feature
-      ShopifyCli::Feature.enable('shopifolk')
-      ShopifyCli::Feature.stubs(:enabled?).with('shopifolk').returns(false)
       stub_gcloud_ini({ "[core]" => { "account" => "test@test.com", "project" => "shopify-dev" } })
 
       ShopifyCli::Shopifolk.check
@@ -63,8 +61,6 @@ module ShopifyCli
     end
 
     def test_incorrect_dev_path_disables_dev_shopifolk_feature
-      ShopifyCli::Feature.enable('shopifolk')
-      ShopifyCli::Feature.stubs(:enabled?).with('shopifolk').returns(false)
       stub_gcloud_ini({ "[core]" => { "account" => "test@shopify.com", "project" => "shopify-dev" } })
 
       ShopifyCli::Shopifolk.check

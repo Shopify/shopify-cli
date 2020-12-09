@@ -7,6 +7,7 @@ module ShopifyCli
 
       subcommand :Feature, 'feature'
       subcommand :Analytics, 'analytics'
+      subcommand :ShopifolkBeta, 'shopifolk-beta'
 
       def call(*)
         @ctx.puts(self.class.help)
@@ -68,6 +69,29 @@ module ShopifyCli
             @ctx.puts(@ctx.message('core.config.analytics.is_enabled'))
           else
             @ctx.puts(@ctx.message('core.config.analytics.is_disabled'))
+          end
+        end
+      end
+
+      class ShopifolkBeta < ShopifyCli::SubCommand
+        options do |parser, flags|
+          parser.on('--enable') { flags[:action] = 'enable' }
+          parser.on('--disable') { flags[:action] = 'disable' }
+          parser.on('--status') { flags[:action] = 'status' }
+        end
+
+        def call(_args, _name)
+          is_enabled = ShopifyCli::Config.get_bool('shopifolk-beta', 'enabled')
+          if options.flags[:action] == 'disable' && is_enabled
+            ShopifyCli::Config.set('shopifolk-beta', 'enabled', false)
+            @ctx.puts(@ctx.message('core.config.shopifolk-beta.disabled'))
+          elsif options.flags[:action] == 'enable' && !is_enabled
+            ShopifyCli::Config.set('shopifolk-beta', 'enabled', true)
+            @ctx.puts(@ctx.message('core.config.shopifolk-beta.enabled'))
+          elsif is_enabled
+            @ctx.puts(@ctx.message('core.config.shopifolk-beta.is_enabled'))
+          else
+            @ctx.puts(@ctx.message('core.config.shopifolk-beta.is_disabled'))
           end
         end
       end

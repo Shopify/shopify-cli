@@ -62,6 +62,18 @@ module ShopifyCli
         run_cmd("config analytics --disable")
         refute ShopifyCli::Config.get_bool('analytics', 'enabled')
       end
+
+      def test_will_enable_shopifolk_beta_that_is_disabled
+        ShopifyCli::Config.set('shopifolk-beta', 'enabled', false)
+        run_cmd("config shopifolk-beta --enable")
+        assert ShopifyCli::Config.get_bool('shopifolk-beta', 'enabled')
+      end
+
+      def test_will_disable_shopifolk_beta_that_is_enabled
+        ShopifyCli::Config.set('shopifolk-beta', 'enabled', true)
+        run_cmd("config shopifolk-beta --disable")
+        refute ShopifyCli::Config.get_bool('shopifolk-beta', 'enabled')
+      end
     end
   end
 end
