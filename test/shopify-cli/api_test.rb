@@ -147,7 +147,7 @@ module ShopifyCli
         .returns(@mutation)
       response = stub('response', code: '200', body: '{}')
       HttpRequest
-        .expects(:call)
+        .expects(:post)
         .with(anything, @mutation, {}, has_entry({ 'X-Shopify-Cli-Employee' => '1' }))
         .returns(response)
       @api.query('api/mutation')
