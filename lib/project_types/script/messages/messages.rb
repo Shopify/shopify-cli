@@ -83,10 +83,10 @@ module Script
           invalid_build_script: "Invalid build script.",
           build_script_not_found: "Build script not found.",
           # rubocop:disable Layout/LineLength
-          build_script_suggestion: "Root package.json needs a script named build, which" \
+          build_script_suggestion: "Root package.json needs a script named build, which " \
             "uses @shopify/scripts-toolchain-as to compile to WebAssembly.\n" \
             "Example:\n" \
-            "build: npx shopify-scripts-toolchain-as build --src src/script.ts --binary <script_name>.wasm -- --lib node_modules --optimize --use Date=",
+            "build: npx shopify-scripts-toolchain-as build --src src/script.ts --binary build/<script_name>.wasm --metadata build/metadata.json -- --lib node_modules --optimize --use Date=",
 
           web_assembly_binary_not_found: "WebAssembly binary not found.",
           web_assembly_binary_not_found_suggestion: "No WebAssembly binary found." \
