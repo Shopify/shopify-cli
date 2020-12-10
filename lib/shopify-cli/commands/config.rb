@@ -84,14 +84,14 @@ module ShopifyCli
           is_enabled = ShopifyCli::Config.get_bool('shopifolk-beta', 'enabled')
           if options.flags[:action] == 'disable' && is_enabled
             ShopifyCli::Config.set('shopifolk-beta', 'enabled', false)
-            @ctx.puts(@ctx.message('core.config.shopifolk-beta.disabled'))
+            @ctx.puts(@ctx.message('core.config.shopifolk_beta.disabled'))
           elsif options.flags[:action] == 'enable' && !is_enabled
             ShopifyCli::Config.set('shopifolk-beta', 'enabled', true)
-            @ctx.puts(@ctx.message('core.config.shopifolk-beta.enabled'))
+            @ctx.puts(@ctx.message('core.config.shopifolk_beta.enabled'))
           elsif is_enabled
-            @ctx.puts(@ctx.message('core.config.shopifolk-beta.is_enabled'))
+            @ctx.puts(@ctx.message('core.config.shopifolk_beta.is_enabled'))
           else
-            @ctx.puts(@ctx.message('core.config.shopifolk-beta.is_disabled'))
+            @ctx.puts(@ctx.message('core.config.shopifolk_beta.is_disabled'))
           end
         end
       end
