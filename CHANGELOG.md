@@ -1,5 +1,8 @@
 Unreleased
 ------
+
+Version 1.5.0
+-----
 * [#965](https://github.com/Shopify/shopify-app-cli/pull/965): Remove --no-optional when using npm to create new project
 * [#958](https://github.com/Shopify/shopify-app-cli/pull/958): Split `connect` command into project-specific functionality
 
