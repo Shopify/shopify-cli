@@ -87,8 +87,6 @@ module ShopifyCli
         ShopifyCli::Config.get_bool(SECTION, feature.to_s)
       end
 
-      private
-
       def set(feature, value)
         ShopifyCli::Config.set(SECTION, feature.to_s, value)
       end

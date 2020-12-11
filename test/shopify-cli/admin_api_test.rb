@@ -44,6 +44,27 @@ module ShopifyCli
       )
     end
 
+    def test_rest_request_calls_admin_api
+      api_stub = stub
+      AdminAPI.expects(:new).with(
+        ctx: @context,
+        auth_header: 'X-Shopify-Access-Token',
+        token: 'boop',
+        url: 'https://shop.myshopify.com/admin/api/unstable/data.json',
+      ).returns(api_stub)
+      api_stub.expects(:request).with(url: 'https://shop.myshopify.com/admin/api/unstable/data.json',
+                                      body: nil,
+                                      method: "GET").returns('response')
+      assert_equal(
+        'response',
+        AdminAPI.rest_request(@context,
+                             shop: 'shop.myshopify.com',
+                             path: 'data.json',
+                             api_version: 'unstable',
+                             token: 'boop'),
+      )
+    end
+
     def test_query_can_reauth
       ShopifyCli::DB.expects(:get).with(:admin_access_token).returns('token123').twice
       api_stub = stub

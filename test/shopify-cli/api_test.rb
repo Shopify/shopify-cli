@@ -37,11 +37,12 @@ module ShopifyCli
       }
       uri = URI.parse("https://my-test-shop.myshopify.com/admin/api/2019-04/graphql.json")
       variables = { var_name: 'var_value' }
+      body = JSON.dump(query: @mutation.tr("\n", ""), variables: variables)
       File.stubs(:read)
         .with(File.join(ShopifyCli::ROOT, "lib/graphql/api/mutation.graphql"))
         .returns(@mutation)
       response = stub('response', code: '200', body: '{}')
-      HttpRequest.expects(:call).with(uri, @mutation, variables, headers).returns(response)
+      HttpRequest.expects(:post).with(uri, body, headers).returns(response)
       @api.query('api/mutation', variables: variables)
     end
 
@@ -63,7 +64,7 @@ module ShopifyCli
 
     def test_query_fails_gracefully_with_internal_server_error
       response = stub('response', code: '500', body: '{}')
-      HttpRequest.expects(:call).returns(response).times(4)
+      HttpRequest.expects(:post).returns(response).times(4)
       File.stubs(:read)
         .with(File.join(ShopifyCli::ROOT, "lib/graphql/api/mutation.graphql"))
         .returns(@mutation)
@@ -79,7 +80,7 @@ module ShopifyCli
     def test_query_fails_gracefully_with_internal_server_error_on_debug_mode
       @context.stubs(:getenv).with('DEBUG').returns(true)
       response = stub('response', code: '500', body: '{}')
-      HttpRequest.expects(:call).returns(response).times(4)
+      HttpRequest.expects(:post).returns(response).times(4)
       File.stubs(:read)
         .with(File.join(ShopifyCli::ROOT, "lib/graphql/api/mutation.graphql"))
         .returns(@mutation)
@@ -95,7 +96,7 @@ module ShopifyCli
 
     def test_query_fails_gracefully_with_unexpected_error
       response = stub('response', code: '600', body: '{}')
-      HttpRequest.expects(:call).returns(response)
+      HttpRequest.expects(:post).returns(response)
       File.stubs(:read)
         .with(File.join(ShopifyCli::ROOT, "lib/graphql/api/mutation.graphql"))
         .returns(@mutation)
@@ -145,10 +146,11 @@ module ShopifyCli
       File.stubs(:read)
         .with(File.join(ShopifyCli::ROOT, "lib/graphql/api/mutation.graphql"))
         .returns(@mutation)
+      mutation = JSON.dump(query: @mutation.tr("\n", ""), variables: {})
       response = stub('response', code: '200', body: '{}')
       HttpRequest
-        .expects(:call)
-        .with(anything, @mutation, {}, has_entry({ 'X-Shopify-Cli-Employee' => '1' }))
+        .expects(:post)
+        .with(anything, mutation, has_entry({ 'X-Shopify-Cli-Employee' => '1' }))
         .returns(response)
       @api.query('api/mutation')
     end
