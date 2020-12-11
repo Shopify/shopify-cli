@@ -52,9 +52,11 @@ module Script
         private
 
         def encoded_lines(*lines)
-          lines.join("\n").split("\n").map { |line| encode_ansi(line) unless line.nil? }.join(
-            CLI::UI::ANSI.next_line + "\n",
-          )
+          lines
+            .join("\n")
+            .split("\n")
+            .map { |line| encode_ansi(line) unless line.nil? }
+            .join(CLI::UI::ANSI.next_line + "\n")
         end
 
         def encode_ansi(line)

@@ -69,7 +69,8 @@ module ShopifyCli
       def test_fetch_handles_no_shops
         stub_partner_req(
           'find_organization',
-          variables: { id: 42 }, resp: { data: { organizations: { nodes: [{ id: 42, stores: { nodes: [] } }] } } },
+          variables: { id: 42 },
+          resp: { data: { organizations: { nodes: [{ id: 42, stores: { nodes: [] } }] } } },
         )
 
         org = PartnersAPI::Organizations.fetch(@context, id: 42)

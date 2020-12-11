@@ -58,12 +58,12 @@ module Extension
           .any_instance
           .expects(:call)
           .with(
-          context: @context,
-          api_key: @api_key,
-          registration_id: @registration_id,
-          config: @test_extension_type.config(@context),
-          extension_context: @test_extension_type.extension_context(@context),
-        )
+            context: @context,
+            api_key: @api_key,
+            registration_id: @registration_id,
+            config: @test_extension_type.config(@context),
+            extension_context: @test_extension_type.extension_context(@context),
+          )
           .returns(@version)
           .once
 

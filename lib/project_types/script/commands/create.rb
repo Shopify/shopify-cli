@@ -21,7 +21,10 @@ module Script
 
         project =
           Layers::Application::CreateScript.call(
-            ctx: @ctx, language: language, script_name: form.name, extension_point_type: form.extension_point,
+            ctx: @ctx,
+            language: language,
+            script_name: form.name,
+            extension_point_type: form.extension_point,
           )
         @ctx.puts(@ctx.message('script.create.change_directory_notice', project.script_name))
       rescue Script::Errors::ScriptProjectAlreadyExistsError => e

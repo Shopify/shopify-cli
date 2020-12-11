@@ -39,7 +39,8 @@ module Extension
           end
 
         assert_message_output(
-          io: io, expected_content: [@context.message('features.argo.dependencies.node.node_not_installed')],
+          io: io,
+          expected_content: [@context.message('features.argo.dependencies.node.node_not_installed')],
         )
       end
 

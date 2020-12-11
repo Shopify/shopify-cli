@@ -52,7 +52,9 @@ module ShopifyCli
         begin
           server =
             WEBrick::HTTPServer.new(
-              Port: DEFAULT_PORT, Logger: WEBrick::Log.new(File.open(File::NULL, 'w')), AccessLog: [],
+              Port: DEFAULT_PORT,
+              Logger: WEBrick::Log.new(File.open(File::NULL, 'w')),
+              AccessLog: [],
             )
           server.mount('/', Servlet, self, state_token)
           server
@@ -64,7 +66,11 @@ module ShopifyCli
     def initiate_authentication(url)
       @server_thread = Thread.new { server.start }
       params = {
-        client_id: client_id, scope: scopes, redirect_uri: REDIRECT_HOST, state: state_token, response_type: :code,
+        client_id: client_id,
+        scope: scopes,
+        redirect_uri: REDIRECT_HOST,
+        state: state_token,
+        response_type: :code,
       }
       params.merge!(challange_params) if secret.nil?
       uri = URI.parse("#{url}#{auth_path}")

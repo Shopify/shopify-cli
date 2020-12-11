@@ -93,7 +93,8 @@ module Script
           }
         when Layers::Infrastructure::Errors::AppNotInstalledError
           { cause_of_error: ShopifyCli::Context.message('script.error.app_not_installed_cause') }
-        when Layers::Infrastructure::Errors::AppScriptNotPushedError, Layers::Infrastructure::Errors::AppScriptUndefinedError
+        when Layers::Infrastructure::Errors::AppScriptNotPushedError,
+             Layers::Infrastructure::Errors::AppScriptUndefinedError
           { cause_of_error: ShopifyCli::Context.message('script.error.app_script_not_pushed_help') }
         when Layers::Infrastructure::Errors::BuildError
           {

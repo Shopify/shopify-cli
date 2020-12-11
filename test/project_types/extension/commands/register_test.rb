@@ -75,25 +75,25 @@ module Extension
           .any_instance
           .expects(:call)
           .with(
-          context: @context,
-          api_key: @app.api_key,
-          type: @test_extension_type.graphql_identifier,
-          title: @project.title,
-          config: {},
-          extension_context: @test_extension_type.extension_context(@context),
-        )
+            context: @context,
+            api_key: @app.api_key,
+            type: @test_extension_type.graphql_identifier,
+            title: @project.title,
+            config: {},
+            extension_context: @test_extension_type.extension_context(@context),
+          )
           .returns(registration)
           .once
 
         ExtensionProject
           .expects(:write_env_file)
           .with(
-          context: @context,
-          api_key: @app.api_key,
-          api_secret: @app.secret,
-          registration_id: registration.id,
-          title: @project.title,
-        )
+            context: @context,
+            api_key: @app.api_key,
+            api_secret: @app.secret,
+            registration_id: registration.id,
+            title: @project.title,
+          )
           .once
 
         io = capture_io { run_register_command }

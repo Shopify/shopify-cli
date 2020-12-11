@@ -116,17 +116,19 @@ module ShopifyCli
           require 'open3'
 
           success =
-            Open3.popen3('git', *git_command, '--progress') do |_stdin, _stdout, stderr, thread|
-              while (line = stderr.gets)
-                msg << line.chomp
-                next unless line.strip.start_with?('Receiving objects:')
-                percent = (line.match(/Receiving objects:\s+(\d+)/)[1].to_f / 100).round(2)
-                bar.tick(set_percent: percent)
-                next
-              end
+            Open3
+              .popen3('git', *git_command, '--progress') do |_stdin, _stdout, stderr, thread|
+                while (line = stderr.gets)
+                  msg << line.chomp
+                  next unless line.strip.start_with?('Receiving objects:')
+                  percent = (line.match(/Receiving objects:\s+(\d+)/)[1].to_f / 100).round(2)
+                  bar.tick(set_percent: percent)
+                  next
+                end
 
-              thread.value
-            end.success?
+                thread.value
+              end
+              .success?
 
           ctx.abort(msg.join("\n")) unless success
           bar.tick(set_percent: 1.0)

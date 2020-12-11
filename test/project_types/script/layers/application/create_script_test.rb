@@ -40,7 +40,10 @@ describe Script::Layers::Application::CreateScript do
   describe '.call' do
     subject do
       Script::Layers::Application::CreateScript.call(
-        ctx: @context, language: language, script_name: script_name, extension_point_type: extension_point_type,
+        ctx: @context,
+        language: language,
+        script_name: script_name,
+        extension_point_type: extension_point_type,
       )
     end
 
@@ -67,9 +70,12 @@ describe Script::Layers::Application::CreateScript do
         Script::ScriptProject
           .expects(:write)
           .with(
-          @context,
-          project_type: :script, organization_id: nil, extension_point_type: ep.type, script_name: script_name,
-        )
+            @context,
+            project_type: :script,
+            organization_id: nil,
+            extension_point_type: ep.type,
+            script_name: script_name,
+          )
         capture_io { assert_equal script_project, subject }
       end
     end

@@ -21,7 +21,10 @@ module Extension
         @location = 'https://www.fakeurl.com'
 
         @input = {
-          api_key: @api_key, registration_id: @registration_id, config: @config, extension_context: @extension_context,
+          api_key: @api_key,
+          registration_id: @registration_id,
+          config: @config,
+          extension_context: @extension_context,
         }
       end
 

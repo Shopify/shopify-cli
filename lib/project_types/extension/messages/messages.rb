@@ -25,7 +25,8 @@ module Extension
         },
       },
       build: {
-        frame_title: 'Building extension with: %s...', build_failure_message: 'Failed to build extension code.',
+        frame_title: 'Building extension with: %s...',
+        build_failure_message: 'Failed to build extension code.',
       },
       register: {
         frame_title: 'Registering Extension',

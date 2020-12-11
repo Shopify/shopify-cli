@@ -54,14 +54,14 @@ module ShopifyCli
         env = Project.current.env
         ShopifyCli::OAuth
           .new(
-          ctx: ctx,
-          service: 'admin',
-          client_id: env.api_key,
-          secret: env.secret,
-          scopes: env.scopes,
-          token_path: '/access_token',
-          options: { 'grant_options[]' => 'per user' },
-        )
+            ctx: ctx,
+            service: 'admin',
+            client_id: env.api_key,
+            secret: env.secret,
+            scopes: env.scopes,
+            token_path: '/access_token',
+            options: { 'grant_options[]' => 'per user' },
+          )
           .authenticate("https://#{shop}/admin/oauth")
       end
 

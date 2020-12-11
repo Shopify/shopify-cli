@@ -74,7 +74,9 @@ module ShopifyCli
           pid =
             Process.spawn(
               *args,
-              out: pid_file.log_path, err: pid_file.log_path, in: Context.new.windows? ? 'nul' : '/dev/null',
+              out: pid_file.log_path,
+              err: pid_file.log_path,
+              in: Context.new.windows? ? 'nul' : '/dev/null',
             )
           pid_file.pid = pid
           pid_file.write

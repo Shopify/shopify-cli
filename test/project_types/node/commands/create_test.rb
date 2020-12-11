@@ -89,15 +89,15 @@ module Node
         @context
           .expects(:system)
           .with(
-          'npm',
-          '--userconfig',
-          './.npmrc',
-          'config',
-          'set',
-          '@shopify:registry',
-          'https://registry.yarnpkg.com',
-          chdir: @context.root + '/test-app',
-        )
+            'npm',
+            '--userconfig',
+            './.npmrc',
+            'config',
+            'set',
+            '@shopify:registry',
+            'https://registry.yarnpkg.com',
+            chdir: @context.root + '/test-app',
+          )
 
         ShopifyCli::Git.expects(:clone).with('https://github.com/Shopify/shopify-app-node.git', 'test-app')
         ShopifyCli::JsDeps.expects(:install)
@@ -160,15 +160,15 @@ module Node
         @context
           .expects(:system)
           .with(
-          'npm',
-          '--userconfig',
-          './.npmrc',
-          'config',
-          'set',
-          '@shopify:registry',
-          'https://registry.yarnpkg.com',
-          chdir: @context.root + '/test-app',
-        )
+            'npm',
+            '--userconfig',
+            './.npmrc',
+            'config',
+            'set',
+            '@shopify:registry',
+            'https://registry.yarnpkg.com',
+            chdir: @context.root + '/test-app',
+          )
         ShopifyCli::JsDeps.expects(:install)
 
         stub_partner_req(

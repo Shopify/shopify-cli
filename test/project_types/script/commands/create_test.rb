@@ -18,7 +18,9 @@ module Script
         @ep_type = 'discount'
         @script_project =
           TestHelpers::FakeScriptProject.new(
-            language: @language, extension_point_type: @ep_type, script_name: @script_name,
+            language: @language,
+            extension_point_type: @ep_type,
+            script_name: @script_name,
           )
       end
 

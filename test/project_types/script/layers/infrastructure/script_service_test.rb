@@ -219,7 +219,9 @@ describe Script::Layers::Infrastructure::ScriptService do
           api_key: api_key,
           shop_domain: formatted_shop_domain,
           variables: {
-            extensionPointName: extension_point_type.upcase, configuration: configuration, title: title,
+            extensionPointName: extension_point_type.upcase,
+            configuration: configuration,
+            title: title,
           }.to_json,
           query: shop_script_update_or_create,
         },
@@ -288,7 +290,8 @@ describe Script::Layers::Infrastructure::ScriptService do
         {
           'data' => {
             'shopScriptUpdateOrCreate' => {
-              'shopScript' => {}, 'userErrors' => [{ 'message' => 'error', 'tag' => tag }],
+              'shopScript' => {},
+              'userErrors' => [{ 'message' => 'error', 'tag' => tag }],
             },
           },
         }
@@ -418,7 +421,8 @@ describe Script::Layers::Infrastructure::ScriptService do
           {
             'data' => {
               'shopScriptDelete' => {
-                'shopScript' => {}, 'userErrors' => [{ 'message' => 'error', 'tag' => 'shop_script_not_found' }],
+                'shopScript' => {},
+                'userErrors' => [{ 'message' => 'error', 'tag' => 'shop_script_not_found' }],
               },
             },
           }
@@ -434,7 +438,8 @@ describe Script::Layers::Infrastructure::ScriptService do
           {
             'data' => {
               'shopScriptDelete' => {
-                'shopScript' => {}, 'userErrors' => [{ 'message' => 'error', 'tag' => 'other_error' }],
+                'shopScript' => {},
+                'userErrors' => [{ 'message' => 'error', 'tag' => 'other_error' }],
               },
             },
           }

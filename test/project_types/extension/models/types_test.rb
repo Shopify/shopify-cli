@@ -16,11 +16,14 @@ module Extension
       end
 
       def test_all_type_identifiers_are_defined_and_uppercase
-        Models::Type.repository.values.each do |type|
-          refute_nil type.identifier
-          assert_equal type.identifier.upcase, type.identifier
-          refute_empty type.identifier.strip
-        end
+        Models::Type
+          .repository
+          .values
+          .each do |type|
+            refute_nil type.identifier
+            assert_equal type.identifier.upcase, type.identifier
+            refute_empty type.identifier.strip
+          end
       end
 
       def test_all_type_identifiers_are_accessible_as_class_or_instance_methods

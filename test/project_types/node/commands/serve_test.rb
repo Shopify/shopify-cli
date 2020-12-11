@@ -20,16 +20,16 @@ module Node
         @context
           .expects(:system)
           .with(
-          'npm run dev',
-          env: {
-            'SHOPIFY_API_KEY' => 'mykey',
-            'SHOPIFY_API_SECRET' => 'mysecretkey',
-            'SHOP' => 'my-test-shop.myshopify.com',
-            'SCOPES' => 'read_products',
-            'HOST' => 'https://example.com',
-            'PORT' => '8081',
-          },
-        )
+            'npm run dev',
+            env: {
+              'SHOPIFY_API_KEY' => 'mykey',
+              'SHOPIFY_API_SECRET' => 'mysecretkey',
+              'SHOP' => 'my-test-shop.myshopify.com',
+              'SCOPES' => 'read_products',
+              'HOST' => 'https://example.com',
+              'PORT' => '8081',
+            },
+          )
         run_cmd('serve')
       end
 
@@ -40,16 +40,16 @@ module Node
         @context
           .expects(:system)
           .with(
-          'npm run dev',
-          env: {
-            'SHOPIFY_API_KEY' => 'mykey',
-            'SHOPIFY_API_SECRET' => 'mysecretkey',
-            'SHOP' => 'my-test-shop.myshopify.com',
-            'SCOPES' => 'read_products',
-            'HOST' => 'garbage://example.com',
-            'PORT' => '8081',
-          },
-        )
+            'npm run dev',
+            env: {
+              'SHOPIFY_API_KEY' => 'mykey',
+              'SHOPIFY_API_SECRET' => 'mysecretkey',
+              'SHOP' => 'my-test-shop.myshopify.com',
+              'SCOPES' => 'read_products',
+              'HOST' => 'garbage://example.com',
+              'PORT' => '8081',
+            },
+          )
           .never
 
         assert_raises ShopifyCli::Abort do
@@ -64,9 +64,10 @@ module Node
         @context
           .expects(:puts)
           .with(
-          "\n" + @context.message('node.serve.open_info', 'https://example.com/auth?shop=my-test-shop.myshopify.com') +
-            "\n",
-        )
+            "\n" +
+              @context.message('node.serve.open_info', 'https://example.com/auth?shop=my-test-shop.myshopify.com') +
+              "\n",
+          )
         run_cmd('serve')
       end
 

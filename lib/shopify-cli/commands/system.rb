@@ -110,15 +110,19 @@ module ShopifyCli
       def display_project_environment
         @ctx.puts("\n  " + @ctx.message('core.system.project.env_header'))
         if File.exist?('./.env')
-          Project.current.env.to_h.each do |k, v|
-            display_value =
-              if v.nil? || v.strip == ''
-                @ctx.message('core.system.project.env_not_set')
-              else
-                k.match(/^SHOPIFY_API/) ? '********' : v
-              end
-            @ctx.puts('  ' + @ctx.message('core.system.project.env', k, display_value))
-          end
+          Project
+            .current
+            .env
+            .to_h
+            .each do |k, v|
+              display_value =
+                if v.nil? || v.strip == ''
+                  @ctx.message('core.system.project.env_not_set')
+                else
+                  k.match(/^SHOPIFY_API/) ? '********' : v
+                end
+              @ctx.puts('  ' + @ctx.message('core.system.project.env', k, display_value))
+            end
         else
           @ctx.puts('  ' + @ctx.message('core.system.project.no_env'))
         end

@@ -15,7 +15,9 @@ module Script
         @shop_domain = 'my-test-shop.myshopify.com'
         @script_project =
           TestHelpers::FakeScriptProject.new(
-            language: @language, extension_point_type: @ep_type, script_name: @script_name,
+            language: @language,
+            extension_point_type: @ep_type,
+            script_name: @script_name,
           )
         ScriptProject.stubs(:current).returns(@script_project)
       end

@@ -31,7 +31,8 @@ module Extension
           end
 
         assert_message_output(
-          io: io, expected_content: [@context.message('create.errors.directory_exists', @directory_name)],
+          io: io,
+          expected_content: [@context.message('create.errors.directory_exists', @directory_name)],
         )
       end
 

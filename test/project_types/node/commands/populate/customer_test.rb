@@ -12,19 +12,20 @@ module Node
           ShopifyCli::AdminAPI
             .expects(:query)
             .with(
-            @context,
-            'create_customer',
-            shop: 'my-test-shop.myshopify.com', input: { firstName: 'first', lastName: 'last' },
-          )
+              @context,
+              'create_customer',
+              shop: 'my-test-shop.myshopify.com',
+              input: { firstName: 'first', lastName: 'last' },
+            )
             .returns(JSON.parse(File.read(File.join(FIXTURE_DIR, 'populate/customer_data.json'))))
           ShopifyCli::API.expects(:gid_to_id).returns(12_345_678)
           ShopifyCli::AdminAPI::PopulateResourceCommand.any_instance.stubs(:price).returns('1.00')
           @context
             .expects(:done)
             .with(
-            'first last added to {{green:my-test-shop.myshopify.com}} at ' \
-              '{{underline:https://my-test-shop.myshopify.com/admin/customers/12345678}}',
-          )
+              'first last added to {{green:my-test-shop.myshopify.com}} at ' \
+                '{{underline:https://my-test-shop.myshopify.com/admin/customers/12345678}}',
+            )
           run_cmd('populate customers -c 1')
         end
       end

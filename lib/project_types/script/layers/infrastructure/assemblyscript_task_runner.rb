@@ -88,9 +88,10 @@ module Script
           out, _ = ctx.capture2e('npm', 'outdated', '--json', '--depth', '0')
           parsed_outdated_check = JSON.parse(out)
           outdated_ep_packages =
-            parsed_outdated_check.select do |package_name, _|
-              package_name.start_with?('@shopify/extension-point-as-')
-            end.select { |_, version_info| !package_is_up_to_date?(version_info) }.keys
+            parsed_outdated_check
+              .select { |package_name, _| package_name.start_with?('@shopify/extension-point-as-') }
+              .select { |_, version_info| !package_is_up_to_date?(version_info) }
+              .keys
           unless outdated_ep_packages.empty?
             raise Errors::PackagesOutdatedError.new(outdated_ep_packages),
                   "NPM packages out of date: #{outdated_ep_packages.join(', ')}"

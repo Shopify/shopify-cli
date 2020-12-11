@@ -26,12 +26,12 @@ describe Script::Layers::Application::EnableScript do
         .any_instance
         .expects(:enable)
         .with(
-        api_key: api_key,
-        shop_domain: shop_domain,
-        configuration: configuration,
-        extension_point_type: extension_point_type,
-        title: title,
-      )
+          api_key: api_key,
+          shop_domain: shop_domain,
+          configuration: configuration,
+          extension_point_type: extension_point_type,
+          title: title,
+        )
       capture_io { subject }
     end
   end

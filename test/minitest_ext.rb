@@ -62,9 +62,11 @@ module Minitest
 
     def to_s # :nodoc:
       return location if passed? && !skipped?
-      failures.flat_map do |failure|
-        ["#{failure.result_label}:", "#{location}:", failure.message.force_encoding(Encoding::UTF_8)]
-      end.join("\n")
+      failures
+        .flat_map do |failure|
+          ["#{failure.result_label}:", "#{location}:", failure.message.force_encoding(Encoding::UTF_8)]
+        end
+        .join("\n")
     end
 
     private
@@ -76,13 +78,13 @@ module Minitest
     def stub_new_version_check
       stub_request(:get, ShopifyCli::Context::GEM_LATEST_URI)
         .with(
-        headers: {
-          'Accept' => '*/*',
-          'Accept-Encoding' => 'gzip;q=1.0,deflate;q=0.6,identity;q=0.3',
-          'Host' => 'rubygems.org',
-          'User-Agent' => 'Ruby',
-        },
-      )
+          headers: {
+            'Accept' => '*/*',
+            'Accept-Encoding' => 'gzip;q=1.0,deflate;q=0.6,identity;q=0.3',
+            'Host' => 'rubygems.org',
+            'User-Agent' => 'Ruby',
+          },
+        )
         .to_return(status: 200, body: "{\"version\":\"#{ShopifyCli::VERSION}\"}", headers: {})
     end
   end

@@ -25,23 +25,23 @@ module ShopifyCli
             .gsub("\r\n", "\n")
             .split("\n")
             .each_with_object({}) do |line, output|
-            match = /\A([A-Za-z_0-9]+)=(.*)\z/.match(line)
-            if match
-              key = match[1]
-              output[key] =
-                case match[2]
-                # Remove single quotes
-                when /\A'(.*)'\z/
-                  match[2]
-                  # Remove double quotes and unescape string preserving newline characters
-                when /\A"(.*)"\z/
-                  match[2].gsub('\n', "\n").gsub(/\\(.)/, '\1')
-                else
-                  match[2]
-                end
+              match = /\A([A-Za-z_0-9]+)=(.*)\z/.match(line)
+              if match
+                key = match[1]
+                output[key] =
+                  case match[2]
+                  # Remove single quotes
+                  when /\A'(.*)'\z/
+                    match[2]
+                    # Remove double quotes and unescape string preserving newline characters
+                  when /\A"(.*)"\z/
+                    match[2].gsub('\n', "\n").gsub(/\\(.)/, '\1')
+                  else
+                    match[2]
+                  end
+              end
+              output
             end
-            output
-          end
         end
 
         def parse_external_env(directory = Dir.pwd)

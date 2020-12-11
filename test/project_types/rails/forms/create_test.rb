@@ -88,7 +88,9 @@ module Rails
               organizations: {
                 nodes: [
                   {
-                    'id': 421, 'businessName': 'one', 'stores': { 'nodes': [{ 'shopDomain': 'store.myshopify.com' }] },
+                    'id': 421,
+                    'businessName': 'one',
+                    'stores': { 'nodes': [{ 'shopDomain': 'store.myshopify.com' }] },
                   },
                   {
                     'id': 431,
@@ -149,7 +151,8 @@ module Rails
               organizations: {
                 nodes: [
                   {
-                    id: 123, stores: { nodes: [{ shopDomain: 'shopdomain.myshopify.com', 'transferDisabled': true }] },
+                    id: 123,
+                    stores: { nodes: [{ shopDomain: 'shopdomain.myshopify.com', 'transferDisabled': true }] },
                   },
                 ],
               },
@@ -176,7 +179,8 @@ module Rails
       def test_returns_no_shop_if_none_are_available
         stub_partner_req(
           'find_organization',
-          variables: { id: 123 }, resp: { data: { organizations: { nodes: [{ id: 123, stores: { nodes: [] } }] } } },
+          variables: { id: 123 },
+          resp: { data: { organizations: { nodes: [{ id: 123, stores: { nodes: [] } }] } } },
         )
 
         io =
@@ -198,7 +202,8 @@ module Rails
               organizations: {
                 nodes: [
                   {
-                    id: 123, stores: { nodes: [{ shopDomain: 'shopdomain.myshopify.com', 'transferDisabled': true }] },
+                    id: 123,
+                    stores: { nodes: [{ shopDomain: 'shopdomain.myshopify.com', 'transferDisabled': true }] },
                   },
                 ],
               },
@@ -243,9 +248,9 @@ module Rails
         CLI::UI::Prompt
           .expects(:ask)
           .with(
-          @context.message('core.tasks.select_org_and_shop.development_store_select'),
-          options: %w[shopdomain.myshopify.com shop.myshopify.com],
-        )
+            @context.message('core.tasks.select_org_and_shop.development_store_select'),
+            options: %w[shopdomain.myshopify.com shop.myshopify.com],
+          )
           .returns('selected')
         form = ask(org_id: 123, shop: nil)
         assert_equal('selected', form.shop_domain)

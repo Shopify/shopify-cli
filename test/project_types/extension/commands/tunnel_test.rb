@@ -22,7 +22,8 @@ module Extension
         io = capture_io { run_tunnel(Tunnel::AUTH_SUBCOMMAND) }
 
         assert_message_output(
-          io: io, expected_content: [@context.message('tunnel.missing_token'), Tunnel.help, Tunnel.extended_help],
+          io: io,
+          expected_content: [@context.message('tunnel.missing_token'), Tunnel.help, Tunnel.extended_help],
         )
       end
 

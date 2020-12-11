@@ -73,7 +73,10 @@ module ShopifyCli
               ENDPOINT_URI.host,
               ENDPOINT_URI.port,
               # timeouts for opening a connection, reading, writing (in seconds)
-              open_timeout: 0.2, read_timeout: 0.2, write_timeout: 0.2, use_ssl: ENDPOINT_URI.scheme == 'https',
+              open_timeout: 0.2,
+              read_timeout: 0.2,
+              write_timeout: 0.2,
+              use_ssl: ENDPOINT_URI.scheme == 'https',
             ) do |http|
               payload = build_payload(start_time, end_time, commands, args, err)
               post = Net::HTTP::Post.new(ENDPOINT_URI.request_uri, headers)

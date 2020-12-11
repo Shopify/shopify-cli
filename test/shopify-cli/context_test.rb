@@ -81,13 +81,13 @@ module ShopifyCli
     def mock_rubygems_https_call(response_body:)
       stub_request(:get, ShopifyCli::Context::GEM_LATEST_URI)
         .with(
-        headers: {
-          'Accept' => '*/*',
-          'Accept-Encoding' => 'gzip;q=1.0,deflate;q=0.6,identity;q=0.3',
-          'Host' => 'rubygems.org',
-          'User-Agent' => 'Ruby',
-        },
-      )
+          headers: {
+            'Accept' => '*/*',
+            'Accept-Encoding' => 'gzip;q=1.0,deflate;q=0.6,identity;q=0.3',
+            'Host' => 'rubygems.org',
+            'User-Agent' => 'Ruby',
+          },
+        )
         .to_return(status: 200, body: response_body, headers: {})
     end
   end

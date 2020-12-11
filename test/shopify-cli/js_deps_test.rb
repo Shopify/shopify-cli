@@ -49,7 +49,8 @@ module ShopifyCli
     def test_install_with_yarn_outputs_errors_and_an_error_message_if_install_fails_and_returns_false
       JsSystem.any_instance.stubs(:yarn?).returns(true)
       mock_install_call(
-        command: %w[yarn install --silent], returns: ['', mock(lines: ['error message']), mock(success?: false)],
+        command: %w[yarn install --silent],
+        returns: ['', mock(lines: ['error message']), mock(success?: false)],
       )
 
       io = capture_io { refute JsDeps.install(@context) }

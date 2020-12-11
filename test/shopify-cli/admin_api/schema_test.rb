@@ -10,7 +10,9 @@ module ShopifyCli
         json_data = File.read(File.join(ShopifyCli::ROOT, 'test/fixtures/shopify_schema.json'))
         @test_obj = AdminAPI::Schema[JSON.parse(json_data)]
         @enum = {
-          'kind' => 'ENUM', 'name' => 'WebhookSubscriptionTopic', 'enumValues' => [{ 'name' => 'APP_UNINSTALLED' }],
+          'kind' => 'ENUM',
+          'name' => 'WebhookSubscriptionTopic',
+          'enumValues' => [{ 'name' => 'APP_UNINSTALLED' }],
         }
       end
 

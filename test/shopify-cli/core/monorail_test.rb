@@ -50,35 +50,35 @@ module ShopifyCli
           this_time = (time.utc.to_f * 1000).to_i
           stub_request(:post, Monorail::ENDPOINT_URI)
             .with(
-            headers: {
-              'Content-Type': 'application/json; charset=utf-8',
-              'X-Monorail-Edge-Event-Created-At-Ms': this_time.to_s,
-              'X-Monorail-Edge-Event-Sent-At-Ms': this_time.to_s,
-            },
-            body:
-              JSON.dump(
-                {
-                  schema_id: ShopifyCli::Core::Monorail::INVOCATIONS_SCHEMA,
-                  payload: {
-                    project_type: 'fake',
-                    command: 'testcommand',
-                    args: 'arg argtwo',
-                    time_start: this_time,
-                    time_end: this_time,
-                    total_time: 0,
-                    success: true,
-                    error_message: nil,
-                    uname: RbConfig::CONFIG['host'],
-                    cli_version: ShopifyCli::VERSION,
-                    ruby_version: RUBY_VERSION,
-                    is_employee: true,
-                    api_key: 'apikey',
-                    partner_id: 42,
-                    metadata: "{\"foo\":\"identifier\"}",
+              headers: {
+                'Content-Type': 'application/json; charset=utf-8',
+                'X-Monorail-Edge-Event-Created-At-Ms': this_time.to_s,
+                'X-Monorail-Edge-Event-Sent-At-Ms': this_time.to_s,
+              },
+              body:
+                JSON.dump(
+                  {
+                    schema_id: ShopifyCli::Core::Monorail::INVOCATIONS_SCHEMA,
+                    payload: {
+                      project_type: 'fake',
+                      command: 'testcommand',
+                      args: 'arg argtwo',
+                      time_start: this_time,
+                      time_end: this_time,
+                      total_time: 0,
+                      success: true,
+                      error_message: nil,
+                      uname: RbConfig::CONFIG['host'],
+                      cli_version: ShopifyCli::VERSION,
+                      ruby_version: RUBY_VERSION,
+                      is_employee: true,
+                      api_key: 'apikey',
+                      partner_id: 42,
+                      metadata: "{\"foo\":\"identifier\"}",
+                    },
                   },
-                },
-              ),
-          )
+                ),
+            )
             .to_return(status: 200)
 
           ShopifyCli::Core::Monorail.log('testcommand', %w[arg argtwo]) do
@@ -95,34 +95,34 @@ module ShopifyCli
           this_time = (time.utc.to_f * 1000).to_i
           stub_request(:post, Monorail::ENDPOINT_URI)
             .with(
-            headers: {
-              'Content-Type': 'application/json; charset=utf-8',
-              'X-Monorail-Edge-Event-Created-At-Ms': this_time.to_s,
-              'X-Monorail-Edge-Event-Sent-At-Ms': this_time.to_s,
-            },
-            body:
-              JSON.dump(
-                {
-                  schema_id: ShopifyCli::Core::Monorail::INVOCATIONS_SCHEMA,
-                  payload: {
-                    project_type: 'fake',
-                    command: 'testcommand',
-                    args: 'arg argtwo',
-                    time_start: this_time,
-                    time_end: this_time,
-                    total_time: 0,
-                    success: false,
-                    error_message: 'test error',
-                    uname: RbConfig::CONFIG['host'],
-                    cli_version: ShopifyCli::VERSION,
-                    ruby_version: RUBY_VERSION,
-                    is_employee: false,
-                    api_key: 'apikey',
-                    partner_id: 42,
+              headers: {
+                'Content-Type': 'application/json; charset=utf-8',
+                'X-Monorail-Edge-Event-Created-At-Ms': this_time.to_s,
+                'X-Monorail-Edge-Event-Sent-At-Ms': this_time.to_s,
+              },
+              body:
+                JSON.dump(
+                  {
+                    schema_id: ShopifyCli::Core::Monorail::INVOCATIONS_SCHEMA,
+                    payload: {
+                      project_type: 'fake',
+                      command: 'testcommand',
+                      args: 'arg argtwo',
+                      time_start: this_time,
+                      time_end: this_time,
+                      total_time: 0,
+                      success: false,
+                      error_message: 'test error',
+                      uname: RbConfig::CONFIG['host'],
+                      cli_version: ShopifyCli::VERSION,
+                      ruby_version: RUBY_VERSION,
+                      is_employee: false,
+                      api_key: 'apikey',
+                      partner_id: 42,
+                    },
                   },
-                },
-              ),
-          )
+                ),
+            )
             .to_return(status: 200)
 
           begin

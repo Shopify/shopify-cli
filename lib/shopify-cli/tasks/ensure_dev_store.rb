@@ -32,12 +32,16 @@ module ShopifyCli
         @shop ||=
           begin
             current_domain = project.env.shop
-            ShopifyCli::PartnersAPI::Organizations.fetch_all(@ctx).map do |org|
-              org['stores'].find do |store|
-                store['orgID'] = org['id']
-                store['shopDomain'] == current_domain
+            ShopifyCli::PartnersAPI::Organizations
+              .fetch_all(@ctx)
+              .map do |org|
+                org['stores'].find do |store|
+                  store['orgID'] = org['id']
+                  store['shopDomain'] == current_domain
+                end
               end
-            end.compact.first
+              .compact
+              .first
           end
       end
     end

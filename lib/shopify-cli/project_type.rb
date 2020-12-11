@@ -29,9 +29,9 @@ module ShopifyCli
       end
 
       def load_all
-        Dir.glob(File.join(ShopifyCli::ROOT, 'lib', 'project_types', '*', 'cli.rb')).map do |filepath|
-          load_type(filepath.split(File::Separator)[-2].to_sym, true)
-        end
+        Dir
+          .glob(File.join(ShopifyCli::ROOT, 'lib', 'project_types', '*', 'cli.rb'))
+          .map { |filepath| load_type(filepath.split(File::Separator)[-2].to_sym, true) }
       end
 
       def for_app_type(type)

@@ -127,10 +127,12 @@ module Rails
           EXAMPLES
           error: { name_exists: '%s already exists!', generic: 'Error generating %s' },
           webhook: {
-            help: <<~HELP, select: 'What type of webhook would you like to create?', selected: 'Generating webhook: %s',
+            help: <<~HELP,
             Generate and register a new webhook that listens for the specified Shopify store event.
               Usage: {{command:%s generate webhook <type>}}
             HELP
+            select: 'What type of webhook would you like to create?',
+            selected: 'Generating webhook: %s',
           },
         },
         open: { help: <<~HELP },

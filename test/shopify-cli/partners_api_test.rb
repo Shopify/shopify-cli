@@ -31,12 +31,12 @@ module ShopifyCli
       ShopifyCli::OAuth
         .expects(:new)
         .with(
-        ctx: @context,
-        service: 'identity',
-        client_id: 'fbdb2649-e327-4907-8f67-908d24cfd7e3',
-        scopes: 'openid https://api.shopify.com/auth/partners.app.cli.access',
-        request_exchange: '271e16d403dfa18082ffb3d197bd2b5f4479c3fc32736d69296829cbb28d41a6',
-      )
+          ctx: @context,
+          service: 'identity',
+          client_id: 'fbdb2649-e327-4907-8f67-908d24cfd7e3',
+          scopes: 'openid https://api.shopify.com/auth/partners.app.cli.access',
+          request_exchange: '271e16d403dfa18082ffb3d197bd2b5f4479c3fc32736d69296829cbb28d41a6',
+        )
         .returns(@oauth_client)
       @oauth_client.expects(:authenticate).with('https://accounts.shopify.com/oauth')
 

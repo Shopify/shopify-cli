@@ -1,10 +1,8 @@
-Style/TrailingCommaInHashLiteral:
-  Enabled: false
 Layout/FirstArgumentIndentation:
-  Enabled: false
+  Exclude:
+    - lib/shopify-cli/tasks/ensure_dev_store.rb
 Layout/HeredocIndentation:
   Enabled: false
 Layout/LineLength:
   Exclude:
     - lib/project_types/script/messages/messages.rb
-    - lib/project_types/script/ui/error_handler.rb

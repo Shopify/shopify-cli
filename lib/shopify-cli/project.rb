@@ -87,9 +87,9 @@ module ShopifyCli
         require 'yaml' # takes 20ms, so deferred as late as possible.
         content =
           Hash[
-            { project_type: project_type, organization_id: organization_id.to_i }.merge(identifiers).collect do |k, v|
-              [k.to_s, v]
-            end
+            { project_type: project_type, organization_id: organization_id.to_i }
+              .merge(identifiers)
+              .collect { |k, v| [k.to_s, v] }
           ]
         content['shopify_organization'] = true if Shopifolk.acting_as_shopify_organization?
 

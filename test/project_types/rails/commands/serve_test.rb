@@ -22,16 +22,16 @@ module Rails
         @context
           .expects(:system)
           .with(
-          'bin/rails server',
-          env: {
-            'SHOPIFY_API_KEY' => 'api_key',
-            'SHOPIFY_API_SECRET' => 'secret',
-            'SHOP' => 'my-test-shop.myshopify.com',
-            'SCOPES' => 'write_products,write_customers,write_orders',
-            'PORT' => '8081',
-            'GEM_PATH' => '/gem/path',
-          },
-        )
+            'bin/rails server',
+            env: {
+              'SHOPIFY_API_KEY' => 'api_key',
+              'SHOPIFY_API_SECRET' => 'secret',
+              'SHOP' => 'my-test-shop.myshopify.com',
+              'SCOPES' => 'write_products,write_customers,write_orders',
+              'PORT' => '8081',
+              'GEM_PATH' => '/gem/path',
+            },
+          )
         Rails::Commands::Serve.new(@context).call
       end
 
@@ -42,15 +42,15 @@ module Rails
         @context
           .expects(:system)
           .with(
-          'bin/rails server',
-          env: {
-            'SHOPIFY_API_KEY' => 'api_key',
-            'SHOPIFY_API_SECRET' => 'secret',
-            'SHOP' => 'my-test-shop.myshopify.com',
-            'SCOPES' => 'write_products,write_customers,write_orders',
-            'PORT' => '8081',
-          },
-        )
+            'bin/rails server',
+            env: {
+              'SHOPIFY_API_KEY' => 'api_key',
+              'SHOPIFY_API_SECRET' => 'secret',
+              'SHOP' => 'my-test-shop.myshopify.com',
+              'SCOPES' => 'write_products,write_customers,write_orders',
+              'PORT' => '8081',
+            },
+          )
           .never
 
         assert_raises ShopifyCli::Abort do
@@ -65,10 +65,10 @@ module Rails
         @context
           .expects(:puts)
           .with(
-          "\n" +
-            @context.message('rails.serve.open_info', 'https://example.com/login?shop=my-test-shop.myshopify.com') +
-            "\n",
-        )
+            "\n" +
+              @context.message('rails.serve.open_info', 'https://example.com/login?shop=my-test-shop.myshopify.com') +
+              "\n",
+          )
         Rails::Commands::Serve.new(@context).call
       end
 

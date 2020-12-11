@@ -26,9 +26,9 @@ module ShopifyCli
         ShopifyCli::ProcessSupervision
           .expects(:start)
           .with(
-          :ngrok,
-          "\"#{File.join(ShopifyCli.cache_dir, 'ngrok')}\" http -inspect=false -log=stdout -log-level=debug 8081",
-        )
+            :ngrok,
+            "\"#{File.join(ShopifyCli.cache_dir, 'ngrok')}\" http -inspect=false -log=stdout -log-level=debug 8081",
+          )
           .returns(ShopifyCli::ProcessSupervision.new(:ngrok, pid: 40_000))
         @context.expects(:puts).with(@context.message('core.tunnel.start', 'https://example.ngrok.io'))
         @context.expects(:puts).with(@context.message('core.tunnel.will_timeout', '7 hours 59 minutes'))
@@ -44,9 +44,9 @@ module ShopifyCli
           .expects(:start)
           .twice
           .with(
-          :ngrok,
-          "\"#{File.join(ShopifyCli.cache_dir, 'ngrok')}\" http -inspect=false -log=stdout -log-level=debug 8081",
-        )
+            :ngrok,
+            "\"#{File.join(ShopifyCli.cache_dir, 'ngrok')}\" http -inspect=false -log=stdout -log-level=debug 8081",
+          )
           .returns(ShopifyCli::ProcessSupervision.new(:ngrok, pid: 40_000, time: start_time.to_s))
           .then
           .returns(ShopifyCli::ProcessSupervision.new(:ngrok, pid: 40_000))
@@ -66,10 +66,10 @@ module ShopifyCli
         ShopifyCli::ProcessSupervision
           .expects(:start)
           .with(
-          :ngrok,
-          "\"#{File.join(ShopifyCli.cache_dir, 'ngrok')}\" http -inspect=false" \
-            " -log=stdout -log-level=debug #{configured_port}",
-        )
+            :ngrok,
+            "\"#{File.join(ShopifyCli.cache_dir, 'ngrok')}\" http -inspect=false" \
+              " -log=stdout -log-level=debug #{configured_port}",
+          )
           .returns(ShopifyCli::ProcessSupervision.new(:ngrok, pid: 40_000))
         @context.expects(:puts).with(@context.message('core.tunnel.start', 'https://example.ngrok.io'))
         @context.expects(:puts).with(@context.message('core.tunnel.will_timeout', '7 hours 59 minutes'))
@@ -84,9 +84,9 @@ module ShopifyCli
         ShopifyCli::ProcessSupervision
           .expects(:start)
           .with(
-          :ngrok,
-          "\"#{File.join(ShopifyCli.cache_dir, 'ngrok')}\" http -inspect=false -log=stdout -log-level=debug 8081",
-        )
+            :ngrok,
+            "\"#{File.join(ShopifyCli.cache_dir, 'ngrok')}\" http -inspect=false -log=stdout -log-level=debug 8081",
+          )
           .returns(ShopifyCli::ProcessSupervision.new(:ngrok, pid: 40_000))
         @context
           .expects(:puts)
@@ -100,9 +100,9 @@ module ShopifyCli
         ShopifyCli::ProcessSupervision
           .expects(:start)
           .with(
-          :ngrok,
-          "\"#{File.join(ShopifyCli.cache_dir, 'ngrok')}\" http -inspect=false -log=stdout -log-level=debug 8081",
-        )
+            :ngrok,
+            "\"#{File.join(ShopifyCli.cache_dir, 'ngrok')}\" http -inspect=false -log=stdout -log-level=debug 8081",
+          )
           .returns(ShopifyCli::ProcessSupervision.new(:ngrok, pid: 40_000))
         assert_raises ShopifyCli::Tunnel::NgrokError do
           ShopifyCli::Tunnel.start(@context)

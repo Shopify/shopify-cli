@@ -18,7 +18,10 @@ module ShopifyCli
       def test_create_new_app_if_none_available
         response = [
           {
-            'id' => 421, 'businessName' => 'one', 'stores' => [{ 'shopDomain' => 'store.myshopify.com' }], 'apps' => [],
+            'id' => 421,
+            'businessName' => 'one',
+            'stores' => [{ 'shopDomain' => 'store.myshopify.com' }],
+            'apps' => [],
           },
         ]
         ShopifyCli::PartnersAPI::Organizations.expects(:fetch_with_app).with(@context).returns(response)

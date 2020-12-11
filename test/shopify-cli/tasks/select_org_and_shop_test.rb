@@ -21,18 +21,18 @@ module ShopifyCli
           .expects(:fetch_all)
           .with(@context)
           .returns(
-          [
-            { 'id' => 421, 'businessName' => 'one', 'stores' => [{ 'shopDomain' => 'store.myshopify.com' }] },
-            {
-              'id' => 431,
-              'businessName' => 'two',
-              'stores' => [
-                { 'shopDomain' => 'other.myshopify.com', 'transferDisabled' => true },
-                { 'shopDomain' => 'yet-another.myshopify.com' },
-              ],
-            },
-          ],
-        )
+            [
+              { 'id' => 421, 'businessName' => 'one', 'stores' => [{ 'shopDomain' => 'store.myshopify.com' }] },
+              {
+                'id' => 431,
+                'businessName' => 'two',
+                'stores' => [
+                  { 'shopDomain' => 'other.myshopify.com', 'transferDisabled' => true },
+                  { 'shopDomain' => 'yet-another.myshopify.com' },
+                ],
+              },
+            ],
+          )
         CLI::UI::Prompt
           .expects(:ask)
           .with(@context.message('core.tasks.select_org_and_shop.organization_select'))
@@ -48,14 +48,14 @@ module ShopifyCli
           .expects(:fetch_all)
           .with(@context)
           .returns(
-          [
-            {
-              'id' => 421,
-              'businessName' => 'hoopy froods',
-              'stores' => [{ 'shopDomain' => 'next.myshopify.com', 'transferDisabled' => true }],
-            },
-          ],
-        )
+            [
+              {
+                'id' => 421,
+                'businessName' => 'hoopy froods',
+                'stores' => [{ 'shopDomain' => 'next.myshopify.com', 'transferDisabled' => true }],
+              },
+            ],
+          )
 
         io =
           capture_io do
@@ -74,8 +74,8 @@ module ShopifyCli
           .expects(:fetch)
           .with(@context, id: 123)
           .returns(
-          { 'id' => 123, 'stores' => [{ 'shopDomain' => 'shopdomain.myshopify.com', 'transferDisabled' => true }] },
-        )
+            { 'id' => 123, 'stores' => [{ 'shopDomain' => 'shopdomain.myshopify.com', 'transferDisabled' => true }] },
+          )
         form = call(org_id: 123, shop: nil)
         assert_equal(123, form[:organization_id])
         assert_equal('shopdomain.myshopify.com', form[:shop_domain])
@@ -119,8 +119,8 @@ module ShopifyCli
           .expects(:fetch)
           .with(@context, id: 123)
           .returns(
-          { 'id' => 123, 'stores' => [{ 'shopDomain' => 'shopdomain.myshopify.com', 'transferDisabled' => true }] },
-        )
+            { 'id' => 123, 'stores' => [{ 'shopDomain' => 'shopdomain.myshopify.com', 'transferDisabled' => true }] },
+          )
         io =
           capture_io do
             form = call(org_id: 123, shop: nil)
@@ -137,22 +137,22 @@ module ShopifyCli
           .expects(:fetch)
           .with(@context, id: 123)
           .returns(
-          {
-            'id' => 123,
-            'stores' => [
-              { 'shopDomain' => 'shopdomain.myshopify.com', 'transferDisabled' => true },
-              { 'shopDomain' => 'shop.myshopify.com', 'convertableToPartnerTest' => true },
-              { 'shopDomain' => 'other.myshopify.com' },
-            ],
-          },
-        )
+            {
+              'id' => 123,
+              'stores' => [
+                { 'shopDomain' => 'shopdomain.myshopify.com', 'transferDisabled' => true },
+                { 'shopDomain' => 'shop.myshopify.com', 'convertableToPartnerTest' => true },
+                { 'shopDomain' => 'other.myshopify.com' },
+              ],
+            },
+          )
 
         CLI::UI::Prompt
           .expects(:ask)
           .with(
-          @context.message('core.tasks.select_org_and_shop.development_store_select'),
-          options: %w[shopdomain.myshopify.com shop.myshopify.com],
-        )
+            @context.message('core.tasks.select_org_and_shop.development_store_select'),
+            options: %w[shopdomain.myshopify.com shop.myshopify.com],
+          )
           .returns('selected')
         form = call(org_id: 123, shop: nil)
         assert_equal('selected', form[:shop_domain])

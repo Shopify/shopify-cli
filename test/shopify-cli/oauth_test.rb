@@ -239,10 +239,10 @@ module ShopifyCli
       stub_request(:post, "#{endpoint}/token")
         .with(body: URI.encode_www_form(token_query))
         .to_return(
-        status: 400,
-        body: '{ "error": "invalid_code", "error_description": "your code has expired or is invalid" }',
-        headers: {},
-      )
+          status: 400,
+          body: '{ "error": "invalid_code", "error_description": "your code has expired or is invalid" }',
+          headers: {},
+        )
 
       assert_raises OAuth::Error do
         client.authenticate(endpoint)

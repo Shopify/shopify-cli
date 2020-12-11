@@ -17,7 +17,9 @@ module Script
         @shop_domain = 'my-test-shop.myshopify.com'
         @script_project =
           TestHelpers::FakeScriptProject.new(
-            language: @language, extension_point_type: @ep_type, script_name: @script_name,
+            language: @language,
+            extension_point_type: @ep_type,
+            script_name: @script_name,
           )
         ScriptProject.stubs(:current).returns(@script_project)
         @script_project.stubs(:env).returns({ api_key: @api_key, shop: @shop_domain })
@@ -41,23 +43,26 @@ module Script
         Script::Layers::Application::EnableScript
           .expects(:call)
           .with(
-          ctx: @context,
-          api_key: @api_key,
-          shop_domain: @shop_domain,
-          configuration: @configuration,
-          extension_point_type: @ep_type,
-          title: @script_name,
-        )
+            ctx: @context,
+            api_key: @api_key,
+            shop_domain: @shop_domain,
+            configuration: @configuration,
+            extension_point_type: @ep_type,
+            title: @script_name,
+          )
           .raises(StandardError)
 
         @context
           .expects(:puts)
           .with(
-          @context.message(
-            'script.enable.script_enabled',
-            api_key: @api_key, shop_domain: @shop_domain, type: @ep_type.capitalize, title: @script_name,
-          ),
-        )
+            @context.message(
+              'script.enable.script_enabled',
+              api_key: @api_key,
+              shop_domain: @shop_domain,
+              type: @ep_type.capitalize,
+              title: @script_name,
+            ),
+          )
           .never
 
         @context.expects(:puts).with(@context.message('script.enable.info')).never
@@ -87,9 +92,9 @@ module Script
         Script::UI::ErrorHandler
           .expects(:pretty_print_and_raise)
           .with(
-          instance_of(Errors::InvalidConfigProps),
-          failed_op: @context.message('script.enable.error.operation_failed'),
-        )
+            instance_of(Errors::InvalidConfigProps),
+            failed_op: @context.message('script.enable.error.operation_failed'),
+          )
 
         capture_io { perform_command(config_props: 'key1:value1:value2') }
       end
@@ -134,22 +139,25 @@ module Script
         Script::Layers::Application::EnableScript
           .expects(:call)
           .with(
-          ctx: @context,
-          api_key: @api_key,
-          shop_domain: @shop_domain,
-          configuration: configuration,
-          extension_point_type: @ep_type,
-          title: @script_name,
-        )
+            ctx: @context,
+            api_key: @api_key,
+            shop_domain: @shop_domain,
+            configuration: configuration,
+            extension_point_type: @ep_type,
+            title: @script_name,
+          )
 
         @context
           .expects(:puts)
           .with(
-          @context.message(
-            'script.enable.script_enabled',
-            api_key: @api_key, shop_domain: @shop_domain, type: @ep_type.capitalize, title: @script_name,
-          ),
-        )
+            @context.message(
+              'script.enable.script_enabled',
+              api_key: @api_key,
+              shop_domain: @shop_domain,
+              type: @ep_type.capitalize,
+              title: @script_name,
+            ),
+          )
 
         @context.expects(:puts).with(@context.message('script.enable.info'))
       end
