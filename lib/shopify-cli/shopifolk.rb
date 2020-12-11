@@ -25,6 +25,7 @@ module ShopifyCli
       #     ShopifyCli::Shopifolk.check
       #
       def check
+        return false unless Feature.enabled?('shopifolk-beta')
         ShopifyCli::Shopifolk.new.shopifolk?
       end
 
@@ -50,7 +51,9 @@ module ShopifyCli
     # a valid google cloud config file with email ending in "@shopify.com"
     #
     def shopifolk?
+      return false unless Feature.enabled?('shopifolk-beta')
       return true if Feature.enabled?(FEATURE_NAME)
+
       if shopifolk_by_gcloud? && shopifolk_by_dev?
         ShopifyCli::Feature.enable(FEATURE_NAME)
         true
