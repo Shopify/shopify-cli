@@ -59,7 +59,7 @@ $ shopify serve
 
 ## `tunnel`
 
-Control an HTTP tunnel to your local development app using [ngrok](https://ngrok.com). With the `tunnel` command you can authenticate with ngrok and start or stop the tunnel. (Note that the `serve` command will automatically run `tunnel start` for you.)
+Control an HTTP tunnel to your local development app using [ngrok](https://ngrok.com). With the `tunnel` command you can authenticate with ngrok and start or stop the tunnel without needing to call the `ngrok` command directly. (Note that the `serve` command will automatically run `tunnel start` for you.)
 
 If `ngrok` cannot be found in your system path, the `auth` and `start` subcommands will download `ngrok` into your system's application cache as necessary and call it from there.
 
@@ -69,7 +69,7 @@ To authenticate with ngrok, you need an authentication token. You can find it in
 $ shopify tunnel auth <token>
 ```
 
-This will write your ngrok auth token to `~/.ngrok2/ngrok.yml`. To learn more about ngrok configuration, [consult ngrok’s documentation](https://ngrok.com/docs#config).
+This will write your ngrok auth token to `~/.ngrok2/ngrok.yml`, and is functionally the same as calling `ngrok authtoken your-authtoken`. To learn more about ngrok configuration, [consult ngrok’s documentation](https://ngrok.com/docs#config).
 
 To start an ngrok tunnel to your app in your localhost development environment:
 
