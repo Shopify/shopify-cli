@@ -67,7 +67,7 @@ To authenticate with ngrok, you need an authentication token. You can find it in
 $ shopify tunnel auth <token>
 ```
 
-This will write your ngrok auth token to `~/.ngrok2/ngrok.yml`, and is functionally the same as calling `ngrok authtoken your-authtoken`. To learn more about ngrok configuration, [consult ngrok’s documentation](https://ngrok.com/docs#config).
+This will write your ngrok auth token to `~/.ngrok2/ngrok.yml`, and is functionally the same as calling `ngrok authtoken <token>`. To learn more about ngrok configuration, [consult ngrok’s documentation](https://ngrok.com/docs#config).
 
 To start an ngrok tunnel to your app in your localhost development environment:
 
