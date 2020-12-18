@@ -22,4 +22,4 @@ tax_filter:
   assemblyscript:
     package: "@shopify/extension-point-as-tax-filter"
     sdk-version: "^7.0.0"
-    toolchain-version: "^2.0.1"
+    toolchain-version: "^3.0.0"
