@@ -19,3 +19,5 @@ Mocha.configure do |c|
   c.stubbing_non_existent_method = :prevent
   c.stubbing_method_on_nil = :prevent
 end
+
+Minitest::Reporters.use!([Minitest::Reporters::DefaultReporter.new(color: true)])
