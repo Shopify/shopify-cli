@@ -166,7 +166,8 @@ module Rails
 
       def syscall(args)
         args[0] = Gem.binary_path_for(@ctx, args[0])
-        @ctx.system(*args, chdir: @ctx.root)
+        env = {'SHOPIFY_API_KEY' => 'dummy', 'SHOPIFY_API_SECRET' => 'dummy'}
+        @ctx.system(*args, chdir: @ctx.root, env: env)
       end
 
       def install_gem(name, version = nil)
