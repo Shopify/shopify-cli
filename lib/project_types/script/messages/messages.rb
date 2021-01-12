@@ -80,13 +80,13 @@ module Script
           packages_outdated_cause: "These npm packages are out of date: %s.",
           packages_outdated_help: "To update them, run {{cyan:npm install --save-dev %s}}.",
 
-          invalid_build_script: "Invalid build script.",
-          build_script_not_found: "Build script not found.",
+          invalid_build_script: "The root package.json contains an invalid build command that " \
+                                "is needed to compile your script to WebAssembly.",
+          build_script_not_found: "The root package.json is missing the build command that " \
+                                  "is needed to compile your script to WebAssembly.",
           # rubocop:disable Layout/LineLength
-          build_script_suggestion: "Root package.json needs a script named build, which " \
-            "uses @shopify/scripts-toolchain-as to compile to WebAssembly.\n" \
-            "Example:\n" \
-            "build: npx shopify-scripts-toolchain-as build --src src/script.ts --binary build/<script_name>.wasm --metadata build/metadata.json -- --lib node_modules --optimize --use Date=",
+          build_script_suggestion: "\n\nFor example, your package.json needs the following command:" \
+            "\nbuild: npx shopify-scripts-toolchain-as build --src src/script.ts --binary build/<script_name>.wasm --metadata build/metadata.json -- --lib node_modules --optimize --use Date=",
 
           web_assembly_binary_not_found: "WebAssembly binary not found.",
           web_assembly_binary_not_found_suggestion: "No WebAssembly binary found." \
