@@ -27,16 +27,16 @@ describe Script::Layers::Domain::ExtensionPoint do
         refute_nil sdk.sdk_version
         refute_nil sdk.toolchain_version
       end
+    end
 
-      describe "when deprecation status is specified" do
-        let(:config_with_deprecation) { config.merge({ "deprecated" => true }) }
+    describe "when deprecation status is specified" do
+      let(:config_with_deprecation) { config.merge({ "deprecated" => true }) }
 
-        subject { Script::Layers::Domain::ExtensionPoint.new(type, config_with_deprecation) }
+      subject { Script::Layers::Domain::ExtensionPoint.new(type, config_with_deprecation) }
 
-        it "should construct a deprecated extension point" do
-          extension_point = subject
-          assert extension_point.deprecated?
-        end
+      it "should construct a deprecated extension point" do
+        extension_point = subject
+        assert extension_point.deprecated?
       end
     end
   end
