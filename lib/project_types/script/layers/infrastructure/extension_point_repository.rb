@@ -9,8 +9,8 @@ module Script
         end
 
         def extension_points
-          extension_point_configs.map do |type, extension_point_data|
-            Domain::ExtensionPoint.new(type, extension_point_data)
+          extension_point_configs.map do |type, extension_point_config|
+            Domain::ExtensionPoint.new(type, extension_point_config)
           end
         end
 
