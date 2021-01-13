@@ -8,18 +8,24 @@ module Script
           Domain::ExtensionPoint.new(type, fetch_extension_point(type))
         end
 
+        def extension_points
+          extension_point_configs.map do |type, extension_point_data|
+            Domain::ExtensionPoint.new(type, extension_point_data)
+          end
+        end
+
         def extension_point_types
-          extension_points.keys
+          extension_point_configs.keys
         end
 
         private
 
         def fetch_extension_point(type)
-          raise Domain::Errors::InvalidExtensionPointError, type unless extension_points[type]
-          extension_points[type]
+          raise Domain::Errors::InvalidExtensionPointError, type unless extension_point_configs[type]
+          extension_point_configs[type]
         end
 
-        def extension_points
+        def extension_point_configs
           @extension_points ||= begin
             require 'yaml'
             YAML.load_file(Project.project_filepath('config/extension_points.yml'))
