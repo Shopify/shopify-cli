@@ -9,13 +9,6 @@ describe Script::Layers::Infrastructure::AssemblyScriptProjectCreator do
   let(:language) { "ts" }
   let(:script_id) { 'id' }
   let(:script) { Script::Layers::Domain::Script.new(script_id, script_name, extension_point, language) }
-  let(:template_base) { Script::Project.project_filepath('templates') }
-  let(:aspect_config_template_file) { "#{template_base}/ts/as-pect.config.js" }
-  let(:aspect_definition_template_file) { "#{template_base}/ts/as-pect.d.ts" }
-  let(:spec_test_base) { "#{script_name}/test" }
-  let(:relative_path_to_node_modules) { "." }
-  let(:aspect_dts_file) { "#{spec_test_base}/as-pect.d.ts" }
-  let(:aspect_config_file) { "#{spec_test_base}/as-pect.config.js" }
   let(:project) { TestHelpers::FakeProject.new }
   let(:context) { TestHelpers::FakeContext.new }
   let(:extension_point_type) { "discount" }
