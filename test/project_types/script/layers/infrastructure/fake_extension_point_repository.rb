@@ -14,6 +14,10 @@ module Script
           @cache[type] = Domain::ExtensionPoint.new(type, example_config(type))
         end
 
+        def create_deprecated_extension_point(type)
+          @cache[type] = Domain::ExtensionPoint.new(type, deprecated_config(type))
+        end
+
         def get_extension_point(type)
           if @cache.key?(type)
             @cache[type]
@@ -22,11 +26,19 @@ module Script
           end
         end
 
+        def extension_points
+          @cache.values
+        end
+
         def extension_point_types
-          %w(discount unit_limit_per_order)
+          @cache.keys
         end
 
         private
+
+        def deprecated_config(type)
+          example_config(type).merge({ "deprecated" => true })
+        end
 
         def example_config(type)
           {

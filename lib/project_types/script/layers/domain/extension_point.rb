@@ -4,13 +4,18 @@ module Script
   module Layers
     module Domain
       class ExtensionPoint
-        attr_reader :type, :sdks
+        attr_reader :type, :deprecated, :sdks
 
         def initialize(type, config)
           @type = type
+          @deprecated = config["deprecated"] || false
           @sdks = {
             ts: ExtensionPointAssemblyScriptSDK.new(config["assemblyscript"]),
           }
+        end
+
+        def deprecated?
+          @deprecated
         end
       end
 

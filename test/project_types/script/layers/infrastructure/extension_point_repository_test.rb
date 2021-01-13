@@ -8,7 +8,7 @@ describe Script::Layers::Infrastructure::ExtensionPointRepository do
   describe ".get_extension_point" do
     describe "when the extension point is configured" do
       Script::Layers::Infrastructure::ExtensionPointRepository.new
-        .send(:extension_points)
+        .send(:extension_point_configs)
         .each do |extension_point_type, _config|
         it "should be able to load the #{extension_point_type} extension point" do
           extension_point = subject.get_extension_point(extension_point_type)
@@ -32,7 +32,7 @@ describe Script::Layers::Infrastructure::ExtensionPointRepository do
 
   describe ".extension_point_types" do
     it 'should return the ep keys' do
-      subject.stubs(:extension_points).returns({ "discount" => {}, "other" => {} })
+      subject.stubs(:extension_point_configs).returns({ "discount" => {}, "other" => {} })
       assert_equal ['discount', 'other'], subject.send(:extension_point_types)
     end
   end

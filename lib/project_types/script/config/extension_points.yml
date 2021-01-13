@@ -1,4 +1,5 @@
 discount:
+  deprecated: true
   assemblyscript:
     package: "@shopify/extension-point-as-discount"
     sdk-version: "^7.0.0"
