@@ -84,7 +84,7 @@ module Script
         when Errors::DeprecatedEPError
           {
             cause_of_error: ShopifyCli::Context.message('script.error.deprecated_ep', e.ep),
-            help_suggestion: ShopifyCli::Context.message('script.error.deprecated_ep_cause')
+            help_suggestion: ShopifyCli::Context.message('script.error.deprecated_ep_cause'),
           }
         when Layers::Domain::Errors::InvalidExtensionPointError
           {
