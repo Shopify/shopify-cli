@@ -25,5 +25,13 @@ module Script
         @config_file = config_file
       end
     end
+
+    class DeprecatedEPError < ScriptProjectError
+      attr_reader :ep
+      def initialize(ep)
+        super()
+        @ep = ep
+      end
+    end
   end
 end

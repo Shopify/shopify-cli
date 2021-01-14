@@ -30,6 +30,23 @@ module Script
       }, ShopifyCli::Core::Monorail.metadata)
     end
 
+    def test_initialize_with_deprecated_ep
+      ShopifyCli::Project
+        .any_instance
+        .expects(:load_yaml_file)
+        .with('.shopify-cli.yml')
+        .returns({
+          'extension_point_type' => @extension_point_type,
+          'script_name' => @script_name,
+        })
+
+      Script::Layers::Application::ExtensionPoints.stubs(:deprecated_types).returns([@extension_point_type])
+
+      assert_raises Errors::DeprecatedEPError do
+        ScriptProject.new(directory: 'testdir')
+      end
+    end
+
     def test_create_when_directory_does_not_exist
       @context
         .expects(:dir_exist?)

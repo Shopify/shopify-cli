@@ -43,8 +43,14 @@ describe Script::Layers::Application::ExtensionPoints do
   end
 
   describe '.non_deprecated_types' do
-    it 'should return an array of all types' do
+    it 'should return an array of all non deprecated types' do
       assert_equal %w(discount), Script::Layers::Application::ExtensionPoints.non_deprecated_types
+    end
+  end
+
+  describe '.deprecated_types' do
+    it 'should return an array of all deprecated types' do
+      assert_equal %w(unit_limit_per_order), Script::Layers::Application::ExtensionPoints.deprecated_types
     end
   end
 end
