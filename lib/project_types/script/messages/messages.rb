@@ -5,9 +5,9 @@ module Script
     MESSAGES = {
       script: {
         error: {
-          deprecated_ep: "This project uses Extension point %s which has been deprecated. "\
+          deprecated_ep: "This project uses an extension point %s which has been deprecated. "\
                          "This Script will no longer function in production.",
-          deprecated_ep_cause: "Try using a different Extension point.",
+          deprecated_ep_cause: "Try using a different extension point.",
           generic: "{{red:{{x}} Error}}",
           eacces_cause: "You don't have permission to write to this directory.",
           eacces_help: "Change your directory permissions and try again.",
