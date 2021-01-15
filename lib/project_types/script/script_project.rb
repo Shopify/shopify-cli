@@ -10,6 +10,7 @@ module Script
     def initialize(*args)
       super
       @extension_point_type = lookup_config('extension_point_type')
+      raise Errors::DeprecatedEPError, @extension_point_type if deprecated?(@extension_point_type)
       @script_name = lookup_config('script_name')
       @language = 'ts'
       ShopifyCli::Core::Monorail.metadata = {
@@ -32,6 +33,10 @@ module Script
     end
 
     private
+
+    def deprecated?(ep)
+      Script::Layers::Application::ExtensionPoints.deprecated_types.include?(ep)
+    end
 
     def lookup_config(key)
       raise Errors::InvalidContextError, key unless config.key?(key)

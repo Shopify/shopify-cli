@@ -17,6 +17,13 @@ module Script
             !ep.deprecated?
           end.map(&:type)
         end
+
+        def self.deprecated_types
+          Infrastructure::ExtensionPointRepository.new
+            .extension_points
+            .select(&:deprecated?)
+            .map(&:type)
+        end
       end
     end
   end
