@@ -336,7 +336,11 @@ module ShopifyCli
     #   stat = @ctx.system('ls', 'a_folder')
     #
     def system(*args, **kwargs)
-      CLI::Kit::System.system(*args, env: @env, **kwargs)
+      process_status = CLI::Kit::System.system(*args, env: @env, **kwargs)
+      unless process_status.success?
+        abort("System call failed: #{args.join(' ')}")
+      end
+      true
     end
 
     # Execute a command in the user's environment
