@@ -329,7 +329,7 @@ module ShopifyCli
     # - `**kwargs`: additional keyword arguments to pass to Process.spawn
     #
     # #### Returns
-    # - `status`: boolean success status of the command execution
+    # - `status`: The `Process::Status` result of the command execution.
     #
     # #### Usage
     #
@@ -340,7 +340,7 @@ module ShopifyCli
       unless process_status.success?
         abort("System call failed: #{args.join(' ')}")
       end
-      true
+      process_status
     end
 
     # Execute a command in the user's environment
