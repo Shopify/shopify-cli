@@ -24,6 +24,8 @@ module Script
         end
 
         class ServiceFailureError < ScriptProjectError; end
+
+        class MetadataNotFoundError < ScriptProjectError; end
       end
     end
   end
