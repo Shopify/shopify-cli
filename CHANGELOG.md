@@ -1,6 +1,8 @@
 Unreleased
 ------
 
+* [#1034](https://github.com/Shopify/shopify-app-cli/pull/1034): Abort if a system call fails.
+
 Version 1.5.0
 -----
 * [#965](https://github.com/Shopify/shopify-app-cli/pull/965): Remove --no-optional when using npm to create new project

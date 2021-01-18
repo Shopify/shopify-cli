@@ -45,7 +45,7 @@ module Rails
         expect_command(%W(#{gem_path}/bin/rails new --skip-spring --database=sqlite3 test-app))
         expect_command(%W(#{gem_path}/bin/bundle install),
                        chdir: File.join(@context.root, 'test-app'))
-        expect_command(%W(#{gem_path}/bin/spring stop),
+        expect_command(["spring stop || true"],
                        chdir: File.join(@context.root, 'test-app'))
         expect_command(%W(#{gem_path}/bin/rails generate shopify_app),
                        chdir: File.join(@context.root, 'test-app'))
@@ -99,7 +99,7 @@ module Rails
         expect_command(%W(#{gem_path}/bin/rails new --skip-spring --database=postgresql test-app))
         expect_command(%W(#{gem_path}/bin/bundle install),
                        chdir: File.join(@context.root, 'test-app'))
-        expect_command(%W(#{gem_path}/bin/spring stop),
+        expect_command(["spring stop || true"],
                        chdir: File.join(@context.root, 'test-app'))
         expect_command(%W(#{gem_path}/bin/rails generate shopify_app),
                        chdir: File.join(@context.root, 'test-app'))
@@ -149,7 +149,7 @@ module Rails
         expect_command(%W(#{gem_path}/bin/rails new --skip-spring --database=sqlite3 --edge -J test-app))
         expect_command(%W(#{gem_path}/bin/bundle install),
                        chdir: File.join(@context.root, 'test-app'))
-        expect_command(%W(#{gem_path}/bin/spring stop),
+        expect_command(["spring stop || true"],
                        chdir: File.join(@context.root, 'test-app'))
         expect_command(%W(#{gem_path}/bin/rails generate shopify_app),
                        chdir: File.join(@context.root, 'test-app'))
@@ -214,7 +214,8 @@ module Rails
       private
 
       def expect_command(command, chdir: @context.root)
-        @context.expects(:system).with(*command, chdir: chdir)
+        process_status = stub('process_status', success?: true)
+        @context.expects(:system).with(*command, chdir: chdir).returns(process_status)
       end
 
       def perform_command(add_cmd = nil)
