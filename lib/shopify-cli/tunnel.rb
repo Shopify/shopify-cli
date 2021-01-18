@@ -141,6 +141,13 @@ module ShopifyCli
         ctx.rm(zip_dest)
       end
       spinner.wait
+
+      # final check to see if ngrok is accessible
+      file_name = ctx.windows? ? 'ngrok.exe' : 'ngrok'
+      unless File.exist?(File.join(ShopifyCli.cache_dir, file_name))
+        raise "Something went wrong with ngrok installation, "\
+        "please make sure #{file_name} is under #{ShopifyCli.cache_dir} before trying again"
+      end
     end
 
     def fetch_url(ctx, log_path)
