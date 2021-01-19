@@ -26,12 +26,12 @@ module Extension
       end
 
       def ask_type
-        return Models::Type.load_type(type) if Models::Type.valid?(type)
+        return Specifications[type] if Specifications.exists?(type)
         ctx.puts(ctx.message('create.invalid_type')) unless type.nil?
 
         CLI::UI::Prompt.ask(ctx.message('create.ask_type')) do |handler|
-          Models::Type.repository.values.each do |type|
-            handler.option("#{type.name} #{type.tagline}") { type }
+          Specifications.each do |spec|
+            handler.option(spec.title) { spec }
           end
         end
       end

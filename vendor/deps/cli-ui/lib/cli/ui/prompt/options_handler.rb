@@ -15,12 +15,13 @@ module CLI
           @options[option] = handler
         end
 
-        def call(options)
-          case options
+        def call(selected_options)
+          case selected_options
           when Array
-            options.map { |option| @options[option].call(options) }
+            selected_options.map { |option| @options[option].call(selected_options) }
           else
-            @options[options].call(options)
+            option = @options.fetch(selected_options) { raise ArgumentError, "Unknown Option" }
+            option.call(selected_options)
           end
         end
       end

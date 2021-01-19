@@ -75,4 +75,7 @@ module Extension
 
   autoload :ExtensionProjectKeys, Project.project_filepath('extension_project_keys')
   autoload :ExtensionProject, Project.project_filepath('extension_project')
+  autoload :MethodObject, Project.project_filepath('method_object')
+  autoload :Result, Project.project_filepath('result')
+  autoload :Specifications, Project.project_filepath('specifications')
 end

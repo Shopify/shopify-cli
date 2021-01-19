@@ -16,7 +16,7 @@ module Extension
       def test_returns_defined_attributes_if_valid
         form = ask
         assert_equal('test-extension', form.name)
-        assert_equal form.type, @test_extension_type
+        assert_kind_of Extension::Specifications::Handlers::Default, form.type
       end
 
       def test_prompts_the_user_to_choose_a_name_if_no_name_was_provided
@@ -58,13 +58,13 @@ module Extension
 
       def test_accepts_any_valid_extension_type
         form = ask(type: @test_extension_type.identifier)
-        assert_equal form.type, @test_extension_type
+        assert_kind_of Extension::Specifications::Handlers::Default, form.type
       end
 
       def test_outputs_an_error_and_prompts_the_user_to_choose_a_type_if_an_unknown_type_was_provided_as_flag
         CLI::UI::Prompt
           .expects(:interactive_prompt)
-          .returns("#{@test_extension_type.name} #{@test_extension_type.tagline}")
+          .returns("Test Extension")
           .once
 
         io = capture_io { ask(type: 'unknown-type') }
