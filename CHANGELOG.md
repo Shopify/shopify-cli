@@ -1,6 +1,7 @@
 Unreleased
 ------
 
+* [#1041](https://github.com/Shopify/shopify-app-cli/pull/1041): Remove unnecessary shell call to `spring stop`. We already pass `--skip-spring` when creating the app so running `spring stop` would have no effect.
 * [#1034](https://github.com/Shopify/shopify-app-cli/pull/1034): Abort if a system call fails.
 
 Version 1.5.0
