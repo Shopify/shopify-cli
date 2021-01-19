@@ -45,8 +45,6 @@ module Rails
         expect_command(%W(#{gem_path}/bin/rails new --skip-spring --database=sqlite3 test-app))
         expect_command(%W(#{gem_path}/bin/bundle install),
                        chdir: File.join(@context.root, 'test-app'))
-        expect_command(["spring stop || true"],
-                       chdir: File.join(@context.root, 'test-app'))
         expect_command(%W(#{gem_path}/bin/rails generate shopify_app),
                        chdir: File.join(@context.root, 'test-app'))
         expect_command(%W(#{gem_path}/bin/rails db:create),
@@ -99,8 +97,6 @@ module Rails
         expect_command(%W(#{gem_path}/bin/rails new --skip-spring --database=postgresql test-app))
         expect_command(%W(#{gem_path}/bin/bundle install),
                        chdir: File.join(@context.root, 'test-app'))
-        expect_command(["spring stop || true"],
-                       chdir: File.join(@context.root, 'test-app'))
         expect_command(%W(#{gem_path}/bin/rails generate shopify_app),
                        chdir: File.join(@context.root, 'test-app'))
         expect_command(%W(#{gem_path}/bin/rails db:create),
@@ -148,8 +144,6 @@ module Rails
         Gem.expects(:install).with(@context, 'bundler', '~>2.0').returns(true)
         expect_command(%W(#{gem_path}/bin/rails new --skip-spring --database=sqlite3 --edge -J test-app))
         expect_command(%W(#{gem_path}/bin/bundle install),
-                       chdir: File.join(@context.root, 'test-app'))
-        expect_command(["spring stop || true"],
                        chdir: File.join(@context.root, 'test-app'))
         expect_command(%W(#{gem_path}/bin/rails generate shopify_app),
                        chdir: File.join(@context.root, 'test-app'))
@@ -231,7 +225,7 @@ module Rails
       def create_gem_path_and_binaries
         FileUtils.mkdir_p('gem/path/bin')
         gem_path = File.expand_path('gem/path')
-        ['bundle', 'rails', 'spring'].each do |f|
+        ['bundle', 'rails'].each do |f|
           FileUtils.touch("#{gem_path}/bin/#{f}")
         end
         gem_path
