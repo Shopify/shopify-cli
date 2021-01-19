@@ -330,7 +330,8 @@ module ShopifyCli
             url_fetch_failure: "Unable to fetch external url",
             prereq_command_required: "%1$s is required for installing ngrok. Please install %1$s using the appropriate"\
               " package manager for your system.",
-            ngrok: "Something went wrong with ngrok installation, please make sure %s exists within %s before trying again"
+            ngrok: "Something went wrong with ngrok installation,"\
+              "please make sure %s exists within %s before trying again",
           },
 
           not_running: "{{green:x}} ngrok tunnel not running",
