@@ -141,9 +141,6 @@ module Rails
         end
 
         CLI::UI::Frame.open(@ctx.message('rails.create.running_generator')) do
-          # `spring stop` will fail if Spring isn't present, but it's safe to continue so we force
-          # a success exit code.
-          syscall(["spring stop || true"])
           syscall(%w(rails generate shopify_app))
         end
 
