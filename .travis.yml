@@ -3,11 +3,10 @@ rvm:
  - 2.5.8
  - 2.6.6
  - 2.7.1
-before_install:
-- gem install bundler -v '1.17.3'
 cache:
   bundler: true
 install:
+- bundle -v
 - bundle install
 script:
   - bundle exec rake
