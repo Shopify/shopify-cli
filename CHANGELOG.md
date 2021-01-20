@@ -1,6 +1,7 @@
 Unreleased
 ------
 
+* [#1046](https://github.com/Shopify/shopify-app-cli/pull/1046): Include a vendored copy of Webrick, as it's no longer included in Ruby 3.
 * [#1034](https://github.com/Shopify/shopify-app-cli/pull/1034): Abort if a system call fails.
 
 Version 1.5.0
