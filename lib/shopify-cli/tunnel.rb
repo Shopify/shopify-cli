@@ -123,7 +123,7 @@ module ShopifyCli
     private
 
     def install(ctx)
-      ngrok = ctx.windows? ? 'ngrok.exe' : 'ngrok'
+      ngrok = "ngrok#{ctx.executable_file_extension}"
       return if File.exist?(File.join(ShopifyCli.cache_dir, ngrok))
       check_prereq_command(ctx, 'curl')
       check_prereq_command(ctx, ctx.linux? ? 'unzip' : 'tar')

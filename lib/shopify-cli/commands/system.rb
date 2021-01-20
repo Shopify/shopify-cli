@@ -84,7 +84,7 @@ module ShopifyCli
       end
 
       def display_ngrok
-        ngrok_location = File.join(ShopifyCli.cache_dir, @ctx.windows? ? 'ngrok.exe' : 'ngrok')
+        ngrok_location = File.join(ShopifyCli.cache_dir, "ngrok#{@ctx.executable_file_extension}")
         if File.exist?(ngrok_location)
           @ctx.puts("  " + @ctx.message('core.system.ngrok_available', ngrok_location))
         else

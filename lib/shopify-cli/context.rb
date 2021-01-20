@@ -474,6 +474,23 @@ module ShopifyCli
       end
     end
 
+    # Returns file extension depending on OS
+    # since windows has multiple extensions, the default is .exe unless otherwise specified
+    #
+    # #### Parameters
+    # - ext: optional extension for windows file
+    #
+    # #### Returns
+    # - ext: string for file extension on windows
+    #      : empty string otherwise
+    def executable_file_extension(ext = '.exe')
+      if windows?
+        ext
+      else
+        ''
+      end
+    end
+
     private
 
     def ctx_path(fname)
