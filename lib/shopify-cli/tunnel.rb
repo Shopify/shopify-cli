@@ -123,7 +123,8 @@ module ShopifyCli
     private
 
     def install(ctx)
-      return if File.exist?(File.join(ShopifyCli.cache_dir, ctx.windows? ? 'ngrok.exe' : 'ngrok'))
+      ngrok = ctx.windows? ? 'ngrok.exe' : 'ngrok'
+      return if File.exist?(File.join(ShopifyCli.cache_dir, ngrok))
       check_prereq_command(ctx, 'curl')
       check_prereq_command(ctx, ctx.linux? ? 'unzip' : 'tar')
       spinner = CLI::UI::SpinGroup.new
@@ -141,6 +142,11 @@ module ShopifyCli
         ctx.rm(zip_dest)
       end
       spinner.wait
+
+      # final check to see if ngrok is accessible
+      unless File.exist?(File.join(ShopifyCli.cache_dir, ngrok))
+        ctx.abort(ctx.message('core.tunnel.error.ngrok', ngrok, ShopifyCli.cache_dir))
+      end
     end
 
     def fetch_url(ctx, log_path)
