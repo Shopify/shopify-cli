@@ -55,7 +55,7 @@ module Script
           }
         when Errors::InvalidLanguageError
           {
-            cause_of_error: ShopifyCli::Context.message('script.error.invalid_language_cause', e.name),
+            cause_of_error: ShopifyCli::Context.message('script.error.invalid_language_cause', e.language),
             help_suggestion: ShopifyCli::Context.message(
               'script.error.invalid_language_help',
               Script::Layers::Application::SupportedLanguages.all.join(', ')

@@ -6,6 +6,7 @@ module Script
       options do |parser, flags|
         parser.on('--name=NAME') { |name| flags[:name] = name }
         parser.on('--extension_point=EP_NAME') { |ep_name| flags[:extension_point] = ep_name }
+        parser.on('--language=LANGUAGE') { |language| flags[:language] = language }
       end
 
       def call(args, _name)

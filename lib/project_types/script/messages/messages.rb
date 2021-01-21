@@ -42,11 +42,11 @@ module Script
           project_exists_cause: "Directory with the same name as the script already exists.",
           project_exists_help: "Use different script name and try again.",
 
-          invalid_extension_cause: "Invalid extension point %s",
+          invalid_extension_cause: "Invalid extension point %s.",
           invalid_extension_help: "Allowed values: %s.",
 
-          invalid_language_cause: "Invalid language %s",
-          invalid_language_help: "Allowed values: %s",
+          invalid_language_cause: "Invalid language %s.",
+          invalid_language_help: "Allowed values: %s.",
 
           invalid_config: "Can't change the configuration values because %1$s is missing or "\
                           "it is not formatted properly.",
