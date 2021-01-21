@@ -18,7 +18,7 @@ describe Script::Layers::Infrastructure::AssemblyScriptTaskRunner do
     }
   end
   let(:extension_point_type) { "discount" }
-  let(:language) { "ts" }
+  let(:language) { "AssemblyScript" }
   let(:as_task_runner) { Script::Layers::Infrastructure::AssemblyScriptTaskRunner.new(ctx, script_name) }
   let(:script_project) do
     TestHelpers::FakeScriptProject

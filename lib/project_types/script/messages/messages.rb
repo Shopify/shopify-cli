@@ -45,6 +45,9 @@ module Script
           invalid_extension_cause: "Invalid extension point %s",
           invalid_extension_help: "Allowed values: %s.",
 
+          invalid_language_cause: "Invalid language %s",
+          invalid_language_help: "Allowed values: %s",
+
           invalid_config: "Can't change the configuration values because %1$s is missing or "\
                           "it is not formatted properly.",
 
@@ -112,7 +115,7 @@ module Script
 
           change_directory_notice: "{{*}} Change directories to {{green:%s}} to run script commands",
           creating: "Creating script",
-          created: "Created script: {{green:%s}}",
+          created: "Created script",
         },
 
         push: {
@@ -174,6 +177,7 @@ module Script
         forms: {
           create: {
             select_extension_point: "Which extension point do you want to use?",
+            select_language: "Which language do you want to use?",
             script_name: "Script Name",
           },
         },

@@ -26,7 +26,7 @@ module Script
       assert_equal({
         "script_name" => @script_name,
         "extension_point_type" => @extension_point_type,
-        "language" => 'ts',
+        "language" => 'AssemblyScript',
       }, ShopifyCli::Core::Monorail.metadata)
     end
 

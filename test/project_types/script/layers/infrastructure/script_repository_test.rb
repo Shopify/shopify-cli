@@ -17,7 +17,7 @@ describe Script::Layers::Infrastructure::ScriptRepository do
   end
   let(:extension_point) { Script::Layers::Domain::ExtensionPoint.new(extension_point_type, extension_point_config) }
   let(:script_name) { "myscript" }
-  let(:language) { "ts" }
+  let(:language) { "AssemblyScript" }
   let(:script_folder_base) { "/some/directory/#{script_name}" }
   let(:script_source_base) { "#{script_folder_base}/src" }
   let(:script_source_file) { "#{script_source_base}/script.#{language}" }

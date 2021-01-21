@@ -13,7 +13,7 @@ module Script
         super
         ShopifyCli::Core::Monorail.stubs(:log).yields
         @context = TestHelpers::FakeContext.new
-        @language = 'ts'
+        @language = 'AssemblyScript'
         @script_name = 'name'
         @ep_type = 'discount'
         @script_project = TestHelpers::FakeScriptProject.new(
@@ -21,6 +21,7 @@ module Script
           extension_point_type: @ep_type,
           script_name: @script_name
         )
+        Layers::Application::SupportedLanguages.stubs(:all).returns(%w(AssemblyScript))
       end
 
       def test_prints_help_with_no_name_argument

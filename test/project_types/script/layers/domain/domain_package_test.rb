@@ -7,7 +7,7 @@ describe Script::Layers::Domain::PushPackage do
   let(:script_id) { 'id' }
   let(:script_name) { "foo_script" }
   let(:script) do
-    Script::Layers::Domain::Script.new(script_id, script_name, extension_point_type, "ts")
+    Script::Layers::Domain::Script.new(script_id, script_name, extension_point_type, "AssemblyScript")
   end
 
   let(:api_key) { "fake_key" }

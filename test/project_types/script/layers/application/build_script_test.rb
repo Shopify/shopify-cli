@@ -7,7 +7,7 @@ require "project_types/script/layers/infrastructure/fake_extension_point_reposit
 describe Script::Layers::Application::BuildScript do
   include TestHelpers::FakeFS
   describe '.call' do
-    let(:language) { 'ts' }
+    let(:language) { 'AssemblyScript' }
     let(:extension_point_type) { 'discount' }
     let(:script_name) { 'name' }
     let(:op_failed_msg) { 'msg' }

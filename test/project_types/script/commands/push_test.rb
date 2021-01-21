@@ -8,7 +8,7 @@ module Script
       def setup
         super
         @context = TestHelpers::FakeContext.new
-        @language = 'ts'
+        @language = 'AssemblyScript'
         @script_name = 'name'
         @ep_type = 'discount'
         @script_project = TestHelpers::FakeScriptProject.new(

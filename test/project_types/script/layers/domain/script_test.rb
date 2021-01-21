@@ -4,7 +4,7 @@ require "project_types/script/test_helper"
 
 describe Script::Layers::Domain::Script do
   let(:script_id) { "discount/myscript.ts" }
-  let(:language) { "ts" }
+  let(:language) { "AssemblyScript" }
   let(:extension_point_type) { "discount" }
   let(:script_name) { "myscript" }
 

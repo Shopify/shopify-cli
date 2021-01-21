@@ -9,7 +9,7 @@ describe Script::Layers::Application::PushScript do
   include TestHelpers::FakeFS
 
   let(:compiled_type) { 'wasm' }
-  let(:language) { 'ts' }
+  let(:language) { 'AssemblyScript' }
   let(:api_key) { 'api_key' }
   let(:force) { true }
   let(:extension_point_type) { 'discount' }

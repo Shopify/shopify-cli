@@ -2,9 +2,6 @@
 
 module Script
   class ScriptProject < ShopifyCli::Project
-    SUPPORTED_LANGUAGES = %w(ts)
-    SOURCE_DIR = "src"
-
     attr_reader :extension_point_type, :script_name, :language
 
     def initialize(*args)
@@ -12,24 +9,12 @@ module Script
       @extension_point_type = lookup_config('extension_point_type')
       raise Errors::DeprecatedEPError, @extension_point_type if deprecated?(@extension_point_type)
       @script_name = lookup_config('script_name')
-      @language = 'ts'
+      @language = 'AssemblyScript'
       ShopifyCli::Core::Monorail.metadata = {
         "script_name" => @script_name,
         "extension_point_type" => @extension_point_type,
         "language" => @language,
       }
-    end
-
-    def file_name
-      "script.#{language}"
-    end
-
-    def source_file
-      "#{SOURCE_DIR}/#{file_name}"
-    end
-
-    def source_path
-      "#{script_name}/#{source_file}"
     end
 
     private

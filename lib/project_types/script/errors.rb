@@ -26,6 +26,14 @@ module Script
       end
     end
 
+    class InvalidLanguageError < ScriptProjectError
+      attr_reader :language
+      def initialize(language)
+        super()
+        @language = language
+      end
+    end
+
     class DeprecatedEPError < ScriptProjectError
       attr_reader :ep
       def initialize(ep)

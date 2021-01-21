@@ -37,6 +37,7 @@ module Script
       autoload :EnableScript, Project.project_filepath('layers/application/enable_script')
       autoload :ExtensionPoints, Project.project_filepath('layers/application/extension_points')
       autoload :ProjectDependencies, Project.project_filepath('layers/application/project_dependencies')
+      autoload :SupportedLanguages, Project.project_filepath('layers/application/supported_languages')
     end
 
     module Domain

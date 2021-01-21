@@ -20,7 +20,7 @@ describe Script::Layers::Infrastructure::ProjectCreator do
     end
 
     describe "when the script language does match an entry in the registry" do
-      let(:language) { "ts" }
+      let(:language) { "AssemblyScript" }
 
       it "should return the entry from the registry" do
         assert_instance_of(Script::Layers::Infrastructure::AssemblyScriptProjectCreator, subject)

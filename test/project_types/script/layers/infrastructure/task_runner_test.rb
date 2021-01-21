@@ -8,7 +8,7 @@ describe Script::Layers::Infrastructure::TaskRunner do
     subject { Script::Layers::Infrastructure::TaskRunner.for(@context, language, script_name) }
 
     describe "when the script language and compile type match an entry in the registry" do
-      let(:language) { "ts" }
+      let(:language) { "AssemblyScript" }
 
       it "should return the entry from the registry" do
         Script::Layers::Infrastructure::AssemblyScriptTaskRunner

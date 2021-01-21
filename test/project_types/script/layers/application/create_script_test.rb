@@ -7,11 +7,10 @@ require "project_types/script/layers/infrastructure/fake_extension_point_reposit
 describe Script::Layers::Application::CreateScript do
   include TestHelpers::FakeFS
 
-  let(:language) { 'ts' }
+  let(:language) { 'AssemblyScript' }
   let(:extension_point_type) { 'discount' }
   let(:script_name) { 'name' }
   let(:compiled_type) { 'wasm' }
-  let(:script_source) { 'src/script.ts' }
   let(:extension_point_repository) { Script::Layers::Infrastructure::FakeExtensionPointRepository.new }
   let(:ep) { extension_point_repository.get_extension_point(extension_point_type) }
   let(:script_repo) { Script::Layers::Infrastructure::FakeScriptRepository.new(ctx: @context) }
@@ -57,7 +56,7 @@ describe Script::Layers::Application::CreateScript do
         .with(@context, language, script_name, project_creator)
       Script::Layers::Application::CreateScript
         .expects(:bootstrap)
-        .with(@context, script_project.source_path, project_creator)
+        .with(@context, project_creator)
       subject
     end
 
@@ -101,13 +100,12 @@ describe Script::Layers::Application::CreateScript do
     describe 'bootstrap' do
       subject do
         Script::Layers::Application::CreateScript
-          .send(:bootstrap, @context, script_project.source_path, project_creator)
+          .send(:bootstrap, @context, project_creator)
       end
 
       it 'should return new script' do
-        script_path = "#{script_name}/#{script_source}"
         spinner = TestHelpers::FakeUI::FakeSpinner.new
-        spinner.expects(:update_title).with(@context.message('script.create.created', script_path))
+        spinner.expects(:update_title).with(@context.message('script.create.created'))
         Script::UI::StrictSpinner.expects(:spin).with(@context.message('script.create.creating')).yields(spinner)
         project_creator.expects(:bootstrap)
         capture_io { subject }

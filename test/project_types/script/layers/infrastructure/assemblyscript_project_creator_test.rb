@@ -6,7 +6,7 @@ describe Script::Layers::Infrastructure::AssemblyScriptProjectCreator do
   include TestHelpers::FakeFS
 
   let(:script_name) { "myscript" }
-  let(:language) { "ts" }
+  let(:language) { "AssemblyScript" }
   let(:script_id) { 'id' }
   let(:script) { Script::Layers::Domain::Script.new(script_id, script_name, extension_point, language) }
   let(:project) { TestHelpers::FakeProject.new }

@@ -12,7 +12,8 @@ module Script
         project = ScriptProject.current
         api_key = project.env[:api_key]
         return @ctx.puts(self.class.help) unless api_key &&
-          ScriptProject::SUPPORTED_LANGUAGES.include?(project.language)
+          Layers::Application::SupportedLanguages.all.include?(project.language)
+
         Layers::Application::PushScript.call(
           ctx: @ctx,
           language: project.language,
