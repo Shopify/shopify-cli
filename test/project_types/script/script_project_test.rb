@@ -112,5 +112,55 @@ module Script
         root_dir: @context.root
       )
     end
+
+    def test_reads_language_from_config_file
+      language = 'Rust'
+      Script::Layers::Application::SupportedLanguages.expects(:all).returns(%(AssemblyScript Rust))
+      ShopifyCli::Project
+        .any_instance
+        .expects(:load_yaml_file)
+        .with('.shopify-cli.yml')
+        .returns({
+          'extension_point_type' => @extension_point_type,
+          'script_name' => @script_name,
+          'language' => language,
+        })
+
+      script = ScriptProject.new(directory: 'testdir')
+      assert_equal language, script.language
+    end
+
+    def test_fallsback_to_assemblyscript_if_config_doesnt_specify_language
+      Script::Layers::Application::SupportedLanguages.expects(:all).returns(%(AssemblyScript Rust))
+      ShopifyCli::Project
+        .any_instance
+        .expects(:load_yaml_file)
+        .with('.shopify-cli.yml')
+        .returns({
+          'extension_point_type' => @extension_point_type,
+          'script_name' => @script_name,
+        })
+
+      script = ScriptProject.new(directory: 'testdir')
+      assert_equal 'AssemblyScript', script.language
+    end
+
+    def test_unsupported_language_in_config_will_raise
+      language = 'C++'
+      Script::Layers::Application::SupportedLanguages.expects(:all).returns(%(AssemblyScript Rust))
+      ShopifyCli::Project
+        .any_instance
+        .expects(:load_yaml_file)
+        .with('.shopify-cli.yml')
+        .returns({
+          'extension_point_type' => @extension_point_type,
+          'script_name' => @script_name,
+          'language' => language,
+        })
+
+      assert_raises(Script::Errors::InvalidLanguageError) do
+        ScriptProject.new(directory: 'testdir')
+      end
+    end
   end
 end

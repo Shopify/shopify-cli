@@ -9,7 +9,7 @@ module Script
         class << self
           def call(ctx:, language:, script_name:, extension_point_type:)
             extension_point = ExtensionPoints.get(type: extension_point_type)
-            project = setup_project(ctx, script_name, extension_point)
+            project = setup_project(ctx, language, script_name, extension_point)
             project_creator = Infrastructure::ProjectCreator
               .for(ctx, language, extension_point, script_name, project.directory)
             install_dependencies(ctx, language, script_name, project_creator)
@@ -19,14 +19,15 @@ module Script
 
           private
 
-          def setup_project(ctx, script_name, extension_point)
+          def setup_project(ctx, language, script_name, extension_point)
             ScriptProject.create(ctx, script_name)
             ScriptProject.write(
               ctx,
               project_type: :script,
               organization_id: nil, # TODO: can you provide this at creation
               extension_point_type: extension_point.type,
-              script_name: script_name
+              script_name: script_name,
+              language: language
             )
             ScriptProject.current
           end

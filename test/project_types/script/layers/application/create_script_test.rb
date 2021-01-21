@@ -49,7 +49,7 @@ describe Script::Layers::Application::CreateScript do
         .returns(ep)
       Script::Layers::Application::CreateScript
         .expects(:setup_project)
-        .with(@context, script_name, ep)
+        .with(@context, language, script_name, ep)
         .returns(script_project)
       Script::Layers::Application::CreateScript
         .expects(:install_dependencies)
@@ -62,7 +62,7 @@ describe Script::Layers::Application::CreateScript do
 
     describe '.setup_project' do
       subject do
-        Script::Layers::Application::CreateScript.send(:setup_project, @context, script_name, ep)
+        Script::Layers::Application::CreateScript.send(:setup_project, @context, language, script_name, ep)
       end
 
       it 'should succeed and update ctx root' do
@@ -75,6 +75,7 @@ describe Script::Layers::Application::CreateScript do
             organization_id: nil,
             extension_point_type: ep.type,
             script_name: script_name,
+            language: language
           )
         capture_io do
           assert_equal script_project, subject

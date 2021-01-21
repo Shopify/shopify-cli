@@ -6,10 +6,10 @@ module Script
 
     def initialize(*args)
       super
-      @extension_point_type = lookup_config('extension_point_type')
+      @extension_point_type = lookup_config!('extension_point_type')
       raise Errors::DeprecatedEPError, @extension_point_type if deprecated?(@extension_point_type)
-      @script_name = lookup_config('script_name')
-      @language = 'AssemblyScript'
+      @script_name = lookup_config!('script_name')
+      @language = lookup_language
       ShopifyCli::Core::Monorail.metadata = {
         "script_name" => @script_name,
         "extension_point_type" => @extension_point_type,
@@ -24,8 +24,19 @@ module Script
     end
 
     def lookup_config(key)
+      return nil unless config.key?(key)
+      config[key]
+    end
+
+    def lookup_config!(key)
       raise Errors::InvalidContextError, key unless config.key?(key)
       config[key]
+    end
+
+    def lookup_language
+      lang = lookup_config('language') || 'AssemblyScript'
+      return lang if Script::Layers::Application::SupportedLanguages.all.include?(lang)
+      raise Errors::InvalidLanguageError, lang
     end
 
     class << self
