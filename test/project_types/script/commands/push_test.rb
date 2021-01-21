@@ -17,7 +17,6 @@ module Script
           script_name: @script_name
         )
         @api_key = 'apikey'
-        @source_file = 'src/script.ts'
         @force = true
         ScriptProject.stubs(:current).returns(@script_project)
         @script_project.stubs(:env).returns({ api_key: @api_key })
@@ -33,7 +32,6 @@ module Script
           api_key: @api_key,
           language: @language,
           script_name: @script_name,
-          source_file: @source_file,
           extension_point_type: @ep_type,
           force: @force
         )

@@ -7,12 +7,11 @@ module Script
         BYTECODE_FILE = "build/%{name}.wasm"
         SCRIPT_SDK_BUILD = "npm run build"
 
-        attr_reader :ctx, :script_name, :script_source_file
+        attr_reader :ctx, :script_name
 
-        def initialize(ctx, script_name, script_source_file)
+        def initialize(ctx, script_name)
           @ctx = ctx
           @script_name = script_name
-          @script_source_file = script_source_file
         end
 
         def build

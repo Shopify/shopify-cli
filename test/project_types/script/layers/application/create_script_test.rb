@@ -29,7 +29,7 @@ describe Script::Layers::Application::CreateScript do
     extension_point_repository.create_extension_point(extension_point_type)
     Script::Layers::Infrastructure::TaskRunner
       .stubs(:for)
-      .with(@context, language, script_name, script_source)
+      .with(@context, language, script_name)
       .returns(task_runner)
     Script::Layers::Infrastructure::ProjectCreator
       .stubs(:for)
@@ -54,7 +54,7 @@ describe Script::Layers::Application::CreateScript do
         .returns(script_project)
       Script::Layers::Application::CreateScript
         .expects(:install_dependencies)
-        .with(@context, language, script_name, script_project.source_file, project_creator)
+        .with(@context, language, script_name, project_creator)
       Script::Layers::Application::CreateScript
         .expects(:bootstrap)
         .with(@context, script_project.source_path, project_creator)
@@ -86,7 +86,7 @@ describe Script::Layers::Application::CreateScript do
     describe 'install_dependencies' do
       subject do
         Script::Layers::Application::CreateScript
-          .send(:install_dependencies, @context, language, script_name, script_project.source_file, project_creator)
+          .send(:install_dependencies, @context, language, script_name, project_creator)
       end
 
       it 'should return new script' do

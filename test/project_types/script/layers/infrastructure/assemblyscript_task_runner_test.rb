@@ -8,7 +8,6 @@ describe Script::Layers::Infrastructure::AssemblyScriptTaskRunner do
   let(:ctx) { TestHelpers::FakeContext.new }
   let(:script_id) { 'id' }
   let(:script_name) { "foo" }
-  let(:script_source) { 'script.ts' }
   let(:extension_point_config) do
     {
       "assemblyscript" => {
@@ -20,7 +19,7 @@ describe Script::Layers::Infrastructure::AssemblyScriptTaskRunner do
   end
   let(:extension_point_type) { "discount" }
   let(:language) { "ts" }
-  let(:as_task_runner) { Script::Layers::Infrastructure::AssemblyScriptTaskRunner.new(ctx, script_name, script_source) }
+  let(:as_task_runner) { Script::Layers::Infrastructure::AssemblyScriptTaskRunner.new(ctx, script_name) }
   let(:script_project) do
     TestHelpers::FakeScriptProject
       .new(language: language, extension_point_type: extension_point_type, script_name: script_name)
