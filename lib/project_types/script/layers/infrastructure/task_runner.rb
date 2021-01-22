@@ -5,7 +5,7 @@ module Script
     module Infrastructure
       class TaskRunner
         TASK_RUNNERS = {
-          "AssemblyScript" => Infrastructure::AssemblyScriptTaskRunner,
+          "assemblyscript" => Infrastructure::AssemblyScriptTaskRunner,
         }
 
         def self.for(ctx, language, script_name)

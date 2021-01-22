@@ -6,7 +6,6 @@ require "project_types/script/layers/infrastructure/fake_extension_point_reposit
 describe Script::Layers::Application::ProjectDependencies do
   include TestHelpers::FakeFS
 
-  let(:language) { 'AssemblyScript' }
   let(:script_name) { 'name' }
   let(:extension_point_type) { 'discount' }
   let(:extension_point_repository) { Script::Layers::Infrastructure::FakeExtensionPointRepository.new }

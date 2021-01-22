@@ -25,7 +25,6 @@ describe Script::Layers::Infrastructure::ScriptService do
   describe ".push" do
     let(:script_name) { "foo_bar" }
     let(:script_content) { "(module)" }
-    let(:content_type) { "AssemblyScript" }
     let(:api_key) { "fake_key" }
     let(:app_script_update_or_create) do
       <<~HERE

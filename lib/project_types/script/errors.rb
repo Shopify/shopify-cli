@@ -27,10 +27,11 @@ module Script
     end
 
     class InvalidLanguageError < ScriptProjectError
-      attr_reader :language
-      def initialize(language)
+      attr_reader :language, :extension_point_type
+      def initialize(language, extension_point_type)
         super()
         @language = language
+        @extension_point_type = extension_point_type
       end
     end
 

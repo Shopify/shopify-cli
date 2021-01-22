@@ -24,6 +24,17 @@ module Script
             .select(&:deprecated?)
             .map(&:type)
         end
+
+        def self.languages(type:)
+          get(type: type).sdks.all.map do |sdk|
+            next nil if sdk.beta? && !ShopifyCli::Feature.enabled?(:scripts_beta_languages)
+            sdk.language
+          end.compact
+        end
+
+        def self.supported_language?(type:, language:)
+          languages(type: type).include?(language.downcase)
+        end
       end
     end
   end

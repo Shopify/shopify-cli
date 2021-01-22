@@ -14,6 +14,9 @@ payment_filter:
     package: "@shopify/extension-point-as-payment-filter"
     sdk-version: "^7.0.0"
     toolchain-version: "^4.0.0"
+  rust:
+    beta: true
+    package: "@shopify/extension-point-rs-payment-filter"
 shipping_filter:
   assemblyscript:
     package: "@shopify/extension-point-as-shipping-filter"

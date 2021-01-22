@@ -65,9 +65,7 @@ describe Script::Layers::Infrastructure::AssemblyScriptProjectCreator do
       sdk.expects(:sdk_version)
       sdk.expects(:toolchain_version)
       sdk.expects(:package).twice.returns("@shopify/extension-point-as-fake")
-      extension_point.expects(:sdks).times(4).returns({
-        ts: sdk,
-      })
+      extension_point.expects(:sdks).times(4).returns(stub(all: [sdk], assemblyscript: sdk))
 
       subject
       version = JSON.parse(File.read("package.json")).dig("devDependencies", "@shopify/extension-point-as-fake")
@@ -87,9 +85,7 @@ describe Script::Layers::Infrastructure::AssemblyScriptProjectCreator do
       sdk.expects(:sdk_version)
       sdk.expects(:toolchain_version)
       sdk.expects(:package).twice.returns("@shopify/extension-point-as-fake")
-      extension_point.expects(:sdks).times(4).returns({
-        ts: sdk,
-      })
+      extension_point.expects(:sdks).times(4).returns(stub(all: [sdk], assemblyscript: sdk))
 
       assert_raises(Script::Layers::Domain::Errors::ServiceFailureError) { subject }
     end

@@ -11,8 +11,7 @@ module Script
         ShopifyCli::Tasks::EnsureEnv.call(@ctx, required: [:api_key, :secret, :shop])
         project = ScriptProject.current
         api_key = project.env[:api_key]
-        return @ctx.puts(self.class.help) unless api_key &&
-          Layers::Application::SupportedLanguages.all.include?(project.language)
+        return @ctx.puts(self.class.help) unless api_key
 
         Layers::Application::PushScript.call(
           ctx: @ctx,

@@ -21,12 +21,13 @@ module Script
           'script_name' => @script_name,
         })
 
+      Script::Layers::Application::ExtensionPoints.expects(:supported_language?).returns(true)
       ScriptProject.new(directory: 'testdir')
 
       assert_equal({
         "script_name" => @script_name,
         "extension_point_type" => @extension_point_type,
-        "language" => 'AssemblyScript',
+        "language" => 'assemblyscript',
       }, ShopifyCli::Core::Monorail.metadata)
     end
 
@@ -115,7 +116,7 @@ module Script
 
     def test_reads_language_from_config_file
       language = 'Rust'
-      Script::Layers::Application::SupportedLanguages.expects(:all).returns(%(AssemblyScript Rust))
+      Script::Layers::Application::ExtensionPoints.expects(:languages).returns(%(assemblyscript rust))
       ShopifyCli::Project
         .any_instance
         .expects(:load_yaml_file)
@@ -127,11 +128,11 @@ module Script
         })
 
       script = ScriptProject.new(directory: 'testdir')
-      assert_equal language, script.language
+      assert_equal language.downcase, script.language
     end
 
     def test_fallsback_to_assemblyscript_if_config_doesnt_specify_language
-      Script::Layers::Application::SupportedLanguages.expects(:all).returns(%(AssemblyScript Rust))
+      Script::Layers::Application::ExtensionPoints.expects(:languages).returns(%(assemblyscript rust))
       ShopifyCli::Project
         .any_instance
         .expects(:load_yaml_file)
@@ -142,12 +143,12 @@ module Script
         })
 
       script = ScriptProject.new(directory: 'testdir')
-      assert_equal 'AssemblyScript', script.language
+      assert_equal 'assemblyscript', script.language
     end
 
     def test_unsupported_language_in_config_will_raise
       language = 'C++'
-      Script::Layers::Application::SupportedLanguages.expects(:all).returns(%(AssemblyScript Rust))
+      Script::Layers::Application::ExtensionPoints.expects(:languages).returns(%(assemblyscript rust))
       ShopifyCli::Project
         .any_instance
         .expects(:load_yaml_file)

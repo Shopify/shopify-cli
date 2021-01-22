@@ -34,9 +34,12 @@ module Script
     end
 
     def lookup_language
-      lang = lookup_config('language') || 'AssemblyScript'
-      return lang if Script::Layers::Application::SupportedLanguages.all.include?(lang)
-      raise Errors::InvalidLanguageError, lang
+      lang = lookup_config('language')&.downcase || 'assemblyscript'
+      if Layers::Application::ExtensionPoints.supported_language?(type: extension_point_type, language: lang)
+        lang
+      else
+        raise Errors::InvalidLanguageError.new(lang, extension_point_type)
+      end
     end
 
     class << self

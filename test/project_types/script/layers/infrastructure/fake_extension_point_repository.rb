@@ -47,6 +47,12 @@ module Script
               "version" => "1",
               "sdk" => "1",
             },
+            "rust" => {
+              "beta" => true,
+              "package" => type,
+              "version" => "1",
+              "sdk" => "1",
+            },
           }
         end
       end

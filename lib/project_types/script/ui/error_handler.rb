@@ -58,7 +58,7 @@ module Script
             cause_of_error: ShopifyCli::Context.message('script.error.invalid_language_cause', e.language),
             help_suggestion: ShopifyCli::Context.message(
               'script.error.invalid_language_help',
-              Script::Layers::Application::SupportedLanguages.all.join(', ')
+              Script::Layers::Application::ExtensionPoints.languages(type: e.extension_point_type).join(', ')
             ),
           }
         when Errors::InvalidScriptNameError

@@ -7,8 +7,8 @@ module Script
 
       def ask
         self.name = valid_name
-        self.language = ask_language
         self.extension_point ||= ask_extension_point
+        self.language = ask_language
       end
 
       private
@@ -16,7 +16,7 @@ module Script
       def ask_extension_point
         CLI::UI::Prompt.ask(
           @ctx.message('script.forms.create.select_extension_point'),
-          options: Script::Layers::Application::ExtensionPoints.non_deprecated_types
+          options: Layers::Application::ExtensionPoints.non_deprecated_types
         )
       end
 
@@ -31,14 +31,15 @@ module Script
       end
 
       def ask_language
-        all_languages = Layers::Application::SupportedLanguages.all
-
         if language
-          requested = all_languages.find { |l| l == language }
-          return requested if requested
-          raise Errors::InvalidLanguageError, language
+          if Layers::Application::ExtensionPoints.supported_language?(type: extension_point, language: language)
+            return language.downcase
+          else
+            raise Errors::InvalidLanguageError.new(language, extension_point)
+          end
         end
 
+        all_languages = Layers::Application::ExtensionPoints.languages(type: extension_point)
         return all_languages.first if all_languages.count == 1
 
         CLI::UI::Prompt.ask(
