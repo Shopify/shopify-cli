@@ -4,11 +4,12 @@ module Script
   module Layers
     module Domain
       class PushPackage
-        attr_reader :id, :script, :script_content, :compiled_type, :metadata
+        attr_reader :id, :extension_point_type, :script_project, :script_content, :compiled_type, :metadata
 
-        def initialize(id, script, script_content, compiled_type, metadata)
+        def initialize(id:, extension_point_type:, script_name:, script_content:, compiled_type:, metadata:)
           @id = id
-          @script = script
+          @extension_point_type = extension_point_type
+          @script_name = script_name
           @script_content = script_content
           @compiled_type = compiled_type
           @metadata = metadata
@@ -16,8 +17,8 @@ module Script
 
         def push(script_service, api_key, force)
           script_service.push(
-            extension_point_type: @script.extension_point_type,
-            script_name: @script.name,
+            extension_point_type: @extension_point_type,
+            script_name: @script_name,
             script_content: @script_content,
             compiled_type: @compiled_type,
             api_key: api_key,

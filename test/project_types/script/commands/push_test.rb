@@ -11,15 +11,15 @@ module Script
         @language = 'assemblyscript'
         @script_name = 'name'
         @ep_type = 'discount'
+        @api_key = 'apikey'
         @script_project = TestHelpers::FakeScriptProject.new(
           language: @language,
           extension_point_type: @ep_type,
-          script_name: @script_name
+          script_name: @script_name,
+          env: { api_key: @api_key }
         )
-        @api_key = 'apikey'
         @force = true
         ScriptProject.stubs(:current).returns(@script_project)
-        @script_project.stubs(:env).returns({ api_key: @api_key })
         ShopifyCli::ProjectType.load_type(:script)
       end
 
@@ -27,14 +27,7 @@ module Script
         ShopifyCli::Tasks::EnsureEnv
           .any_instance.expects(:call)
           .with(@context, required: [:api_key, :secret, :shop])
-        Layers::Application::PushScript.expects(:call).with(
-          ctx: @context,
-          api_key: @api_key,
-          language: @language,
-          script_name: @script_name,
-          extension_point_type: @ep_type,
-          force: @force
-        )
+        Layers::Application::PushScript.expects(:call).with(ctx: @context, force: @force)
 
         @context
           .expects(:puts)

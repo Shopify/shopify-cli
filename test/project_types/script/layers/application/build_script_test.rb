@@ -1,8 +1,6 @@
 # frozen_string_literal: true
 
 require "project_types/script/test_helper"
-require "project_types/script/layers/infrastructure/fake_script_repository"
-require "project_types/script/layers/infrastructure/fake_extension_point_repository"
 
 describe Script::Layers::Application::BuildScript do
   include TestHelpers::FakeFS
@@ -14,20 +12,15 @@ describe Script::Layers::Application::BuildScript do
     let(:content) { 'content' }
     let(:compiled_type) { 'wasm' }
     let(:metadata) { Script::Layers::Domain::Metadata.new('1', '0', false) }
-    let(:extension_point_repository) { Script::Layers::Infrastructure::FakeExtensionPointRepository.new }
-    let(:ep) { extension_point_repository.get_extension_point(extension_point_type) }
     let(:task_runner) { stub(compiled_type: compiled_type, metadata: metadata) }
-    let(:script_repository) { Script::Layers::Infrastructure::FakeScriptRepository.new(ctx: @context) }
-    let(:script) do
-      Script::Layers::Infrastructure::FakeScriptRepository.new(ctx: @context).create_script(language, ep, script_name)
-    end
 
-    subject { Script::Layers::Application::BuildScript.call(ctx: @context, task_runner: task_runner, script: script) }
-
-    before do
-      Script::Layers::Infrastructure::ScriptRepository.stubs(:new).with(ctx: @context).returns(script_repository)
-      Script::Layers::Infrastructure::ExtensionPointRepository.stubs(:new).returns(extension_point_repository)
-      extension_point_repository.create_extension_point(extension_point_type)
+    subject do
+      Script::Layers::Application::BuildScript.call(
+        ctx: @context,
+        task_runner: task_runner,
+        script_name: script_name,
+        extension_point_type: extension_point_type
+      )
     end
 
     describe 'when build succeeds' do
@@ -37,7 +30,7 @@ describe Script::Layers::Application::BuildScript do
         Script::Layers::Infrastructure::PushPackageRepository
           .any_instance
           .expects(:create_push_package)
-          .with(script, content, 'wasm', metadata)
+          .with(extension_point_type, script_name, content, 'wasm', metadata)
         capture_io { subject }
       end
     end

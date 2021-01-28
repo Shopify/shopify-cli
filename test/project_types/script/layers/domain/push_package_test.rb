@@ -6,10 +6,6 @@ describe Script::Layers::Domain::PushPackage do
   let(:extension_point_type) { "discount" }
   let(:script_id) { 'id' }
   let(:script_name) { "foo_script" }
-  let(:script) do
-    Script::Layers::Domain::Script.new(script_id, script_name, extension_point_type, "AssemblyScript")
-  end
-
   let(:api_key) { "fake_key" }
   let(:force) { false }
   let(:script_content) { "(module)" }
@@ -17,11 +13,12 @@ describe Script::Layers::Domain::PushPackage do
   let(:metadata) { Script::Layers::Domain::Metadata.new('1', '0', true) }
   let(:push_package) do
     Script::Layers::Domain::PushPackage.new(
-      id,
-      script,
-      script_content,
-      compiled_type,
-      metadata,
+      id: id,
+      extension_point_type: extension_point_type,
+      script_name: script_name,
+      script_content: script_content,
+      compiled_type: compiled_type,
+      metadata: metadata
     )
   end
   let(:script_service) { Minitest::Mock.new }
