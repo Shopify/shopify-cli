@@ -88,7 +88,7 @@ module ShopifyCli
           ctx: ctx,
           service: 'identity',
           client_id: cli_id,
-          scopes: 'openid https://api.shopify.com/auth/partners.app.cli.access',
+          scopes: scopes.join(" "),
           request_exchange: partners_id,
         ).authenticate("#{auth_endpoint}/oauth")
       end
@@ -120,6 +120,12 @@ module ShopifyCli
           'partners.shopify.com'
         end
         "https://#{domain}"
+      end
+
+      def scopes
+        %w[openid https://api.shopify.com/auth/partners.app.cli.access].tap do |result|
+          result << "employee" if Shopifolk.check
+        end
       end
     end
 
