@@ -28,10 +28,10 @@ module ShopifyCli
 
       def test_calls_help_with_subcommand_h_flag
         io = capture_io do
-          run_cmd('generate page --help')
+          run_cmd('populate customer --help')
         end
 
-        assert_match(CLI::UI.fmt(Node::Commands::Generate::Page.help), io.join)
+        assert_match(CLI::UI.fmt(Node::Commands::Populate::Customer.help), io.join)
       end
     end
   end

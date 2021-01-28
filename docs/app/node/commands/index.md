@@ -11,16 +11,6 @@ Deploy the current Node.js app to a hosting service. Currently, the only option 
 $ shopify deploy heroku
 ```
 
-## `generate`
-
-Generate boilerplate code inside your app project. Node.js apps support generating new **pages**, **Billing API calls**, and **webhooks**.
-
-```console
-$ shopify generate page
-$ shopify generate billing
-$ shopify generate webhook
-```
-
 ## `open`
 
 Open your local development app in your default browser.

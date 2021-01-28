@@ -83,52 +83,18 @@ module Node
 
         generate: {
           help: <<~HELP,
-          Generate code in your Node project. Supports generating new billing API calls, new pages, or new webhooks.
-            Usage: {{command:%s generate [ billing | page | webhook ]}}
+          {{red:The {{command:generate}} command is no longer supported.}}
+
+          You can complete any tasks previously supported by {{command:generate}} with these guides:
+          {{green:page}}
+            Create a page with Polaris design components: {{green:https://shopify.dev/tutorials/build-a-shopify-app-with-node-and-react/build-your-user-interface-with-polaris}}
+
+          {{green:webhook}}
+            Register and process webhooks: {{green:https://github.com/Shopify/shopify-node-api/blob/main/docs/usage/webhooks.md}}
+
+          {{green:billing}}
+            Create and manage app billing models: {{green:https://shopify.dev/tutorials/bill-for-your-app-using-graphql-admin-api}}
           HELP
-          extended_help: <<~EXAMPLES,
-          {{bold:Examples:}}
-            {{cyan:%s generate webhook PRODUCTS_CREATE}}
-              Generate and register a new webhook that will be called every time a new product is created on your store.
-          EXAMPLES
-
-          error: {
-            name_exists: "%s already exists!",
-            generic: "Error generating %s",
-          },
-
-          billing: {
-            help: <<~HELP,
-            Enable charging for your app. This command generates the necessary code to call Shopify’s billing API.
-              Usage: {{command:%s generate billing [ one-time-billing | recurring-billing ]}}
-            HELP
-            type_select: "How would you like to charge for your app?",
-            generating: "Generating %s code ...",
-            generated: "{{green:%s}} generated in server/server.js",
-          },
-
-          page: {
-            help: <<~HELP,
-            Generate a new page in your app with the specified name. New files are generated inside the project’s “/pages” directory.
-              Usage: {{command:%s generate page <pagename>}}
-            HELP
-            error: {
-              invalid_page_type: "Invalid page type.",
-            },
-            type_select: "Which template would you like to use?",
-            generating: "Generating %s page...",
-            generated: "{{green: %s}} generated in pages/%s",
-          },
-
-          webhook: {
-            help: <<~HELP,
-            Generate and register a new webhook that listens for the specified Shopify store event.
-              Usage: {{command:%s generate webhook <type>}}
-            HELP
-            type_select: "What type of webhook would you like to create?",
-            generating: "Generating webhook: %s",
-            generated: "{{green:%s}} generated in server/server.js",
-          },
         },
 
         open: {
