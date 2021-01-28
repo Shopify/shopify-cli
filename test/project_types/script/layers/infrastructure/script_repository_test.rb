@@ -20,8 +20,8 @@ describe Script::Layers::Infrastructure::ScriptRepository do
   let(:language) { "AssemblyScript" }
   let(:script_folder_base) { "/some/directory/#{script_name}" }
   let(:script_source_base) { "#{script_folder_base}/src" }
-  let(:script_source_file) { "#{script_source_base}/script.#{language}" }
-  let(:expected_script_id) { "src/script.#{language}" }
+  let(:script_source_file) { "#{script_source_base}/script.ts" }
+  let(:expected_script_id) { "src/script.ts" }
   let(:project) { TestHelpers::FakeProject.new }
   let(:context) { TestHelpers::FakeContext.new }
   let(:script_repository) { Script::Layers::Infrastructure::ScriptRepository.new(ctx: context) }
