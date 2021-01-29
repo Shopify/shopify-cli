@@ -29,7 +29,7 @@ Refer to [*Getting started with Shopify App CLI*](https://shopify.dev/tools/cli/
 
 ## Troubleshooting
 
-Refer to [*Troubleshooting Shopify App CLI*](https://shopify.dev/tools/cli/getting-started) to learn how to upgrade, migrate from a legacy version, and uninstall Shopify App CLI.
+Refer to [*Troubleshooting Shopify App CLI*](https://shopify.dev/tools/cli/troubleshooting) to learn how to upgrade, migrate from a legacy version, and uninstall Shopify App CLI.
 
 ## Contributing to Shopify App CLI
 
