@@ -2,7 +2,7 @@
 
 [![License: MIT](https://img.shields.io/badge/License-MIT-green.svg)](LICENSE.md)[![Build Status](https://travis-ci.com/Shopify/shopify-app-cli.svg?token=qtPazgjyosjEEgxgq7VZ&branch=master)](https://travis-ci.com/Shopify/shopify-app-cli)
 
-Shopify App CLI helps you build Shopify apps faster. It quickly scaffolds Node.js and Ruby on Rails apps and automates many common development tasks.
+Shopify App CLI helps you build Shopify apps faster. It quickly generates Node.js and Ruby on Rails apps and automates many common development tasks.
 
 ## Features
 
@@ -11,7 +11,7 @@ The Shopify App CLI helps your app development process in the following ways:
 - Creates an app in the [Partner dashboard](https://partners.shopify.com/current/resources)
 - Populates test data for your app, including products, customers, and draft orders
 - Generates new [webhooks](https://shopify.dev/tutorials/manage-webhooks) for your app
-- Deploys your app to [Heroku](https://www.heroku.com/)
+- Deploys your app to an external platform, such as [Heroku](https://www.heroku.com/)
 
 ## Installation
 
