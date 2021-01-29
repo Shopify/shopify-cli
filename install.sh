@@ -3,5 +3,5 @@
 This install method for Shopify App CLI is no longer supported.
 
 Please visit this page for complete instructions:
-  https://shopify.github.io/shopify-app-cli/migrate/
+  https://shopify.dev/tools/cli/troubleshooting#migrate-from-a-legacy-version
 EOF

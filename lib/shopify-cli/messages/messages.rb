@@ -366,7 +366,7 @@ module ShopifyCli
           {{x}} This version of Shopify App CLI is no longer supported. You’ll need to migrate to the new CLI version to continue.
 
             Please visit this page for complete instructions:
-            {{underline:https://shopify.github.io/shopify-app-cli/migrate/}}
+            {{underline:https://shopify.dev/tools/cli/troubleshooting#migrate-from-a-legacy-version}}
 
           MESSAGE
 
@@ -374,7 +374,7 @@ module ShopifyCli
           {{*}} {{yellow:A new version of the Shopify App CLI is available! You have version %s and the latest version is %s.
 
             To upgrade, follow the instructions for the package manager you’re using:
-            {{underline:https://shopify.github.io/shopify-app-cli/getting-started/upgrade/}}}}
+            {{underline:https://shopify.dev/tools/cli/troubleshooting#upgrade-shopify-app-cli}}}}
 
           MESSAGE
         },
