@@ -10,7 +10,7 @@ module ShopifyCli
 
     # Defines the environment variable that this API looks for to operate on local
     # services. If you set this environment variable in your shell then the partners
-    # api will operation on your local instance
+    # API will operate on your local instance
     #
     # #### Example
     #
