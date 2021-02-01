@@ -9,6 +9,8 @@ describe Script::Layers::Infrastructure::ScriptService do
   let(:script_service) { Script::Layers::Infrastructure::ScriptService.new(ctx: ctx) }
   let(:api_key) { "fake_key" }
   let(:extension_point_type) { "DISCOUNT" }
+  let(:schema_major_version) { "1" }
+  let(:schema_minor_version) { "0" }
   let(:script_service_proxy) do
     <<~HERE
       query ProxyRequest($api_key: String, $shop_domain: String, $query: String!, $variables: String) {
@@ -34,12 +36,16 @@ describe Script::Layers::Infrastructure::ScriptService do
           $title: String,
           $sourceCode: String,
           $language: String,
+          $schemaMajorVersion: String,
+          $schemaMinorVersion: String
         ) {
           appScriptUpdateOrCreate(
             extensionPointName: $extensionPointName
             title: $title
             sourceCode: $sourceCode
             language: $language
+            schemaMajorVersion: $schemaMajorVersion
+            schemaMinorVersion: $schemaMinorVersion
         ) {
             userErrors {
               field
@@ -69,6 +75,8 @@ describe Script::Layers::Infrastructure::ScriptService do
             sourceCode: Base64.encode64(script_content),
             language: "ts",
             force: false,
+            schemaMajorVersion: schema_major_version,
+            schemaMinorVersion: schema_minor_version,
           }.to_json,
           query: app_script_update_or_create,
         },
@@ -79,6 +87,8 @@ describe Script::Layers::Infrastructure::ScriptService do
     subject do
       script_service.push(
         extension_point_type: extension_point_type,
+        schema_major_version: schema_major_version,
+        schema_minor_version: schema_minor_version,
         script_name: script_name,
         script_content: script_content,
         compiled_type: "ts",

@@ -11,7 +11,7 @@ module Script
                 UI::StrictSpinner.spin(ctx.message('script.application.building_script')) do |spinner|
                   Infrastructure::PushPackageRepository
                     .new(ctx: ctx)
-                    .create_push_package(script, task_runner.build, task_runner.compiled_type)
+                    .create_push_package(script, task_runner.build, task_runner.compiled_type, task_runner.metadata)
                   spinner.update_title(ctx.message('script.application.built'))
                 end
               rescue StandardError => e

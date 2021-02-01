@@ -50,6 +50,25 @@ module Script
 
           script_not_found_cause: "Couldn't find script %s for extension point %s",
 
+          service_failure_cause: "Internal service error.",
+          service_failure_help: "Ensure the 'shopify/scripts-toolchain-as' package is up to date.",
+
+          metadata_validation_cause: "Invalid script extension metadata.",
+          metadata_validation_help: "Ensure the 'shopify/scripts-toolchain-as' package is up to date.",
+
+          metadata_schema_versions_missing: "Invalid script metadata:" \
+                                            " 'schemaVersions' field is missing",
+          metadata_schema_versions_single_key: "Invalid script extension metadata:" \
+                                               " 'schemaVersions' can have only one extension point name.",
+          metadata_schema_versions_missing_major: "Invalid script extension metadata:" \
+                                                  " 'schemaVersions' is missing the 'major' field",
+          metadata_schema_versions_missing_minor: "Invalid script extension metadata:" \
+                                                  " 'schemaVersions' is missing the 'minor' field",
+
+          metadata_not_found_cause: "Script version file (%s) cannot be found.",
+          metadata_not_found_help: "Ensure the 'shopify/scripts-toolchain-as' package is up to date and " \
+                                     "'package.json' contains a 'scripts/build' entry with a " \
+                                     "'--metadata build/metadata.json' argument",
           app_not_installed_cause: "App not installed on store.",
 
           app_script_not_pushed_help: "Script isn't on the app. Run {{command:shopify push}}, and then try again.",

@@ -5,6 +5,7 @@ module Script
     module Infrastructure
       class AssemblyScriptTaskRunner
         BYTECODE_FILE = "build/%{name}.wasm"
+        METADATA_FILE = "build/metadata.json"
         SCRIPT_SDK_BUILD = "npm run build"
 
         attr_reader :ctx, :script_name, :script_source_file
@@ -36,6 +37,16 @@ module Script
           return false unless ctx.dir_exist?("node_modules")
           check_if_ep_dependencies_up_to_date!
           true
+        end
+
+        def metadata
+          unless @ctx.file_exist?(METADATA_FILE)
+            msg = @ctx.message('script.error.metadata_not_found_cause', METADATA_FILE)
+            raise Domain::Errors::MetadataNotFoundError, msg
+          end
+
+          raw_contents = File.read(METADATA_FILE)
+          Domain::Metadata.create_from_json(@ctx, raw_contents)
         end
 
         private

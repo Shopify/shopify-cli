@@ -42,6 +42,7 @@ module Script
     module Domain
       autoload :Errors, Project.project_filepath('layers/domain/errors')
       autoload :PushPackage, Project.project_filepath('layers/domain/push_package')
+      autoload :Metadata, Project.project_filepath('layers/domain/metadata')
       autoload :ExtensionPoint, Project.project_filepath('layers/domain/extension_point')
       autoload :Script, Project.project_filepath('layers/domain/script')
     end
