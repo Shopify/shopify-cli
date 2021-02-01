@@ -27,16 +27,17 @@ module Script
         end
 
         def assemblyscript
-          @assemblyscript ||= new_sdk(ExtensionPointAssemblyScriptSDK, @config['assemblyscript'])
+          @assemblyscript ||= new_sdk(ExtensionPointAssemblyScriptSDK)
         end
 
         def rust
-          @rust ||= new_sdk(ExtensionPointRustSDK, @config['rust'])
+          @rust ||= new_sdk(ExtensionPointRustSDK)
         end
 
         private
 
-        def new_sdk(klass, config)
+        def new_sdk(klass)
+          config = @config[klass.language]
           return nil if config.nil?
           klass.new(config)
         end
@@ -54,7 +55,7 @@ module Script
           @beta
         end
 
-        def language
+        def self.language
           raise NotImplementedError
         end
       end
@@ -68,13 +69,13 @@ module Script
           @toolchain_version = config["toolchain-version"]
         end
 
-        def language
+        def self.language
           "assemblyscript"
         end
       end
 
       class ExtensionPointRustSDK < ExtensionPointSDK
-        def language
+        def self.language
           "rust"
         end
       end

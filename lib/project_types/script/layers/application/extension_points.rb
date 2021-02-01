@@ -28,7 +28,7 @@ module Script
         def self.languages(type:)
           get(type: type).sdks.all.map do |sdk|
             next nil if sdk.beta? && !ShopifyCli::Feature.enabled?(:scripts_beta_languages)
-            sdk.language
+            sdk.class.language
           end.compact
         end
 

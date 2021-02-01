@@ -59,14 +59,14 @@ describe Script::Layers::Domain::ExtensionPoint do
 
         assert_equal 2, extension_point.sdks.all.count
         as_sdk = extension_point.sdks.assemblyscript
-        assert_equal "assemblyscript", as_sdk.language
+        assert_equal "assemblyscript", as_sdk.class.language
         refute_nil as_sdk.package
         refute_nil as_sdk.sdk_version
         refute_nil as_sdk.toolchain_version
         refute as_sdk.beta?
 
         rs_sdk = extension_point.sdks.rust
-        assert_equal "rust", rs_sdk.language
+        assert_equal "rust", rs_sdk.class.language
         refute_nil rs_sdk.package
         assert rs_sdk.beta?
       end
@@ -80,7 +80,7 @@ describe Script::Layers::Domain::ExtensionPoint do
 
         assert_equal 1, extension_point.sdks.all.count
         as_sdk = extension_point.sdks.assemblyscript
-        assert_equal "assemblyscript", as_sdk.language
+        assert_equal "assemblyscript", as_sdk.class.language
         refute_nil as_sdk.package
         refute_nil as_sdk.sdk_version
         refute_nil as_sdk.toolchain_version
