@@ -155,6 +155,11 @@ module Script
             cause_of_error: ShopifyCli::Context.message('script.error.script_repush_cause', e.api_key),
             help_suggestion: ShopifyCli::Context.message('script.error.script_repush_help'),
           }
+        when Layers::Infrastructure::Errors::ScriptServiceUserError
+          {
+            cause_of_error: ShopifyCli::Context.message('script.error.user_error_cause'),
+            help_suggestion: ShopifyCli::Context.message('script.error.user_error_help'),
+          }
         when Layers::Infrastructure::Errors::ShopAuthenticationError
           {
             cause_of_error: ShopifyCli::Context.message('script.error.shop_auth_cause'),

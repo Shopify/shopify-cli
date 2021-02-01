@@ -53,6 +53,9 @@ module Script
           service_failure_cause: "Internal service error.",
           service_failure_help: "Ensure the 'shopify/scripts-toolchain-as' package is up to date.",
 
+          user_error_cause: "Invalid script extension metadata.",
+          user_error_help: "Ensure the 'shopify/scripts-toolchain-as' package is up to date.",
+
           metadata_validation_cause: "Invalid script extension metadata.",
           metadata_validation_help: "Ensure the 'shopify/scripts-toolchain-as' package is up to date.",
 
