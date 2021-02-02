@@ -6,22 +6,22 @@ module Script
       options do |parser, flags|
         parser.on('--name=NAME') { |name| flags[:name] = name }
         parser.on('--extension_point=EP_NAME') { |ep_name| flags[:extension_point] = ep_name }
+        parser.on('--language=LANGUAGE') { |language| flags[:language] = language }
       end
 
       def call(args, _name)
-        language = 'ts'
         cur_dir = @ctx.root
 
         form = Forms::Create.ask(@ctx, args, options.flags)
         return @ctx.puts(self.class.help) if form.nil?
 
-        unless !form.name.empty? && form.extension_point && ScriptProject::SUPPORTED_LANGUAGES.include?(language)
+        unless !form.name.empty? && form.extension_point && form.language
           return @ctx.puts(self.class.help)
         end
 
         project = Layers::Application::CreateScript.call(
           ctx: @ctx,
-          language: language,
+          language: form.language,
           script_name: form.name,
           extension_point_type: form.extension_point
         )

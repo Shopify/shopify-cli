@@ -8,12 +8,11 @@ module Script
         property! :ctx, accepts: ShopifyCli::Context
 
         def get_script(language, extension_point_type, script_name)
-          source_file_path = src_code_file(language)
-          unless ctx.file_exist?(source_file_path)
-            raise Domain::Errors::ScriptNotFoundError.new(extension_point_type, source_file_path)
+          unless ctx.file_exist?(src_code_file)
+            raise Domain::Errors::ScriptNotFoundError.new(extension_point_type, src_code_file)
           end
 
-          Domain::Script.new(script_id(language), script_name, extension_point_type, language)
+          Domain::Script.new(script_id, script_name, extension_point_type, language)
         end
 
         def relative_path_to_src
@@ -30,16 +29,16 @@ module Script
           "#{project_base}/#{relative_path_to_src}"
         end
 
-        def script_id(language)
-          "#{relative_path_to_src}/#{file_name(language)}"
+        def script_id
+          "#{relative_path_to_src}/#{file_name}"
         end
 
-        def src_code_file(language)
-          "#{src_base}/#{file_name(language)}"
+        def src_code_file
+          "#{src_base}/#{file_name}"
         end
 
-        def file_name(language)
-          "script.#{language}"
+        def file_name
+          "script.ts"
         end
       end
     end

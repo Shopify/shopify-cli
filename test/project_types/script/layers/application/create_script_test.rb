@@ -7,11 +7,10 @@ require "project_types/script/layers/infrastructure/fake_extension_point_reposit
 describe Script::Layers::Application::CreateScript do
   include TestHelpers::FakeFS
 
-  let(:language) { 'ts' }
+  let(:language) { 'AssemblyScript' }
   let(:extension_point_type) { 'discount' }
   let(:script_name) { 'name' }
   let(:compiled_type) { 'wasm' }
-  let(:script_source) { 'src/script.ts' }
   let(:extension_point_repository) { Script::Layers::Infrastructure::FakeExtensionPointRepository.new }
   let(:ep) { extension_point_repository.get_extension_point(extension_point_type) }
   let(:script_repo) { Script::Layers::Infrastructure::FakeScriptRepository.new(ctx: @context) }
@@ -29,7 +28,7 @@ describe Script::Layers::Application::CreateScript do
     extension_point_repository.create_extension_point(extension_point_type)
     Script::Layers::Infrastructure::TaskRunner
       .stubs(:for)
-      .with(@context, language, script_name, script_source)
+      .with(@context, language, script_name)
       .returns(task_runner)
     Script::Layers::Infrastructure::ProjectCreator
       .stubs(:for)
@@ -50,20 +49,20 @@ describe Script::Layers::Application::CreateScript do
         .returns(ep)
       Script::Layers::Application::CreateScript
         .expects(:setup_project)
-        .with(@context, script_name, ep)
+        .with(@context, language, script_name, ep)
         .returns(script_project)
       Script::Layers::Application::CreateScript
         .expects(:install_dependencies)
-        .with(@context, language, script_name, script_project.source_file, project_creator)
+        .with(@context, language, script_name, project_creator)
       Script::Layers::Application::CreateScript
         .expects(:bootstrap)
-        .with(@context, script_project.source_path, project_creator)
+        .with(@context, project_creator)
       subject
     end
 
     describe '.setup_project' do
       subject do
-        Script::Layers::Application::CreateScript.send(:setup_project, @context, script_name, ep)
+        Script::Layers::Application::CreateScript.send(:setup_project, @context, language, script_name, ep)
       end
 
       it 'should succeed and update ctx root' do
@@ -76,6 +75,7 @@ describe Script::Layers::Application::CreateScript do
             organization_id: nil,
             extension_point_type: ep.type,
             script_name: script_name,
+            language: language
           )
         capture_io do
           assert_equal script_project, subject
@@ -86,7 +86,7 @@ describe Script::Layers::Application::CreateScript do
     describe 'install_dependencies' do
       subject do
         Script::Layers::Application::CreateScript
-          .send(:install_dependencies, @context, language, script_name, script_project.source_file, project_creator)
+          .send(:install_dependencies, @context, language, script_name, project_creator)
       end
 
       it 'should return new script' do
@@ -101,13 +101,12 @@ describe Script::Layers::Application::CreateScript do
     describe 'bootstrap' do
       subject do
         Script::Layers::Application::CreateScript
-          .send(:bootstrap, @context, script_project.source_path, project_creator)
+          .send(:bootstrap, @context, project_creator)
       end
 
       it 'should return new script' do
-        script_path = "#{script_name}/#{script_source}"
         spinner = TestHelpers::FakeUI::FakeSpinner.new
-        spinner.expects(:update_title).with(@context.message('script.create.created', script_path))
+        spinner.expects(:update_title).with(@context.message('script.create.created'))
         Script::UI::StrictSpinner.expects(:spin).with(@context.message('script.create.creating')).yields(spinner)
         project_creator.expects(:bootstrap)
         capture_io { subject }

@@ -8,7 +8,7 @@ module Script
       def setup
         super
         @context = TestHelpers::FakeContext.new
-        @language = 'ts'
+        @language = 'assemblyscript'
         @script_name = 'name'
         @ep_type = 'discount'
         @script_project = TestHelpers::FakeScriptProject.new(
@@ -17,7 +17,6 @@ module Script
           script_name: @script_name
         )
         @api_key = 'apikey'
-        @source_file = 'src/script.ts'
         @force = true
         ScriptProject.stubs(:current).returns(@script_project)
         @script_project.stubs(:env).returns({ api_key: @api_key })
@@ -33,7 +32,6 @@ module Script
           api_key: @api_key,
           language: @language,
           script_name: @script_name,
-          source_file: @source_file,
           extension_point_type: @ep_type,
           force: @force
         )
@@ -41,15 +39,6 @@ module Script
         @context
           .expects(:puts)
           .with(@context.message('script.push.script_pushed', api_key: @api_key))
-        perform_command
-      end
-
-      def test_returns_help_if_language_is_not_supported
-        ShopifyCli::Tasks::EnsureEnv
-          .any_instance.expects(:call)
-          .with(@context, required: [:api_key, :secret, :shop])
-        @script_project.stubs(:language).returns('invalid')
-        @context.expects(:puts).with(Push.help)
         perform_command
       end
 

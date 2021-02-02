@@ -9,14 +9,13 @@ describe Script::Layers::Application::PushScript do
   include TestHelpers::FakeFS
 
   let(:compiled_type) { 'wasm' }
-  let(:language) { 'ts' }
+  let(:language) { 'AssemblyScript' }
   let(:api_key) { 'api_key' }
   let(:force) { true }
   let(:extension_point_type) { 'discount' }
   let(:metadata) { Script::Layers::Domain::Metadata.new('1', '0') }
   let(:schema_minor_version) { '0' }
   let(:script_name) { 'name' }
-  let(:source_file) { 'src/script.ts' }
   let(:project) do
     TestHelpers::FakeScriptProject
       .new(language: @language, extension_point_type: @extension_point_type, script_name: @script_name)
@@ -34,7 +33,7 @@ describe Script::Layers::Application::PushScript do
     Script::Layers::Infrastructure::ExtensionPointRepository.stubs(:new).returns(extension_point_repository)
     Script::Layers::Infrastructure::TaskRunner
       .stubs(:for)
-      .with(@context, language, script_name, source_file)
+      .with(@context, language, script_name)
       .returns(task_runner)
     Script::ScriptProject.stubs(:current).returns(project)
     extension_point_repository.create_extension_point(extension_point_type)
@@ -48,7 +47,6 @@ describe Script::Layers::Application::PushScript do
         language: language,
         extension_point_type: extension_point_type,
         script_name: script_name,
-        source_file: source_file,
         api_key: api_key,
         force: force
       )

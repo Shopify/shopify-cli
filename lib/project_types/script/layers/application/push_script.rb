@@ -5,13 +5,13 @@ module Script
     module Application
       class PushScript
         class << self
-          def call(ctx:, language:, extension_point_type:, script_name:, source_file:, api_key:, force:)
+          def call(ctx:, language:, extension_point_type:, script_name:, api_key:, force:)
             script = Infrastructure::ScriptRepository.new(ctx: ctx).get_script(
               language,
               extension_point_type,
               script_name
             )
-            task_runner = Infrastructure::TaskRunner.for(ctx, language, script_name, source_file)
+            task_runner = Infrastructure::TaskRunner.for(ctx, language, script_name)
             ProjectDependencies.install(ctx: ctx, task_runner: task_runner)
             BuildScript.call(ctx: ctx, task_runner: task_runner, script: script)
             push_script(ctx, task_runner, script, api_key, force)

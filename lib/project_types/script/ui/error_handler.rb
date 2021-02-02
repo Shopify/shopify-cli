@@ -53,6 +53,14 @@ module Script
           {
             cause_of_error: ShopifyCli::Context.message('script.error.invalid_config', e.config_file),
           }
+        when Errors::InvalidLanguageError
+          {
+            cause_of_error: ShopifyCli::Context.message('script.error.invalid_language_cause', e.language),
+            help_suggestion: ShopifyCli::Context.message(
+              'script.error.invalid_language_help',
+              Script::Layers::Application::ExtensionPoints.languages(type: e.extension_point_type).join(', ')
+            ),
+          }
         when Errors::InvalidScriptNameError
           {
             cause_of_error: ShopifyCli::Context.message('script.error.invalid_script_name_cause'),
