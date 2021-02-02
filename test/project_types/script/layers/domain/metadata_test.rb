@@ -16,7 +16,7 @@ describe Script::Layers::Domain::Metadata do
           },
         },
         flags: {
-          use_msgpack: true
+          use_msgpack: true,
         },
       },
     )
