@@ -15,7 +15,7 @@ module ShopifyCli
       end
 
       def call(args, command_name)
-        if Project.current&.env
+        if Project.has_current? && Project.current&.env
           @ctx.puts(@ctx.message('core.connect.already_connected_warning'))
         end
 
