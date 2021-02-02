@@ -3,7 +3,7 @@ require 'test_helper'
 
 module Extension
   module Models
-    module Types
+    module SpecificationHandlers
       class CheckoutPostPurchaseTest < MiniTest::Test
         def setup
           super
@@ -12,7 +12,7 @@ module Extension
           Features::Argo::Checkout.any_instance.stubs(:config).returns({})
           Features::ArgoConfig.stubs(:parse_yaml).returns({})
 
-          @checkout_post_purchase = Models::Type.load_type(CheckoutPostPurchase::IDENTIFIER)
+          @checkout_post_purchase = Extension.specifications[CheckoutPostPurchase::IDENTIFIER]
         end
 
         def test_create_uses_standard_argo_create_implementation

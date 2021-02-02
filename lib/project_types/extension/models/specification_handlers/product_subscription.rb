@@ -3,8 +3,8 @@ require 'base64'
 
 module Extension
   module Models
-    module Types
-      class ProductSubscription < Models::Type
+    module SpecificationHandlers
+      class ProductSubscription < Default
         IDENTIFIER = 'PRODUCT_SUBSCRIPTION'
 
         def graphql_identifier
