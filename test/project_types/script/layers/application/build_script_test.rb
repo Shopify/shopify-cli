@@ -13,7 +13,7 @@ describe Script::Layers::Application::BuildScript do
     let(:op_failed_msg) { 'msg' }
     let(:content) { 'content' }
     let(:compiled_type) { 'wasm' }
-    let(:metadata) { Script::Layers::Domain::Metadata.new('1', '0') }
+    let(:metadata) { Script::Layers::Domain::Metadata.new('1', '0', false) }
     let(:extension_point_repository) { Script::Layers::Infrastructure::FakeExtensionPointRepository.new }
     let(:ep) { extension_point_repository.get_extension_point(extension_point_type) }
     let(:task_runner) { stub(compiled_type: compiled_type, metadata: metadata) }

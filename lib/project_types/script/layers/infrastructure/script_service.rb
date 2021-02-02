@@ -17,8 +17,7 @@ module Script
           compiled_type:,
           api_key: nil,
           force: false,
-          schema_major_version:,
-          schema_minor_version:
+          metadata:
         )
           query_name = "app_script_update_or_create"
           variables = {
@@ -27,8 +26,9 @@ module Script
             sourceCode: Base64.encode64(script_content),
             language: compiled_type,
             force: force,
-            schemaMajorVersion: schema_major_version.to_s, # API expects string value
-            schemaMinorVersion: schema_minor_version.to_s, # API expects string value
+            schemaMajorVersion: metadata.schema_major_version.to_s, # API expects string value
+            schemaMinorVersion: metadata.schema_minor_version.to_s, # API expects string value
+            useMsgpack: metadata.use_msgpack,
           }
           resp_hash = script_service_request(query_name: query_name, api_key: api_key, variables: variables)
           user_errors = resp_hash["data"]["appScriptUpdateOrCreate"]["userErrors"]

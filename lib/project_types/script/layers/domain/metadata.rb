@@ -4,11 +4,12 @@ module Script
   module Layers
     module Domain
       class Metadata
-        attr_reader :schema_major_version, :schema_minor_version
+        attr_reader :schema_major_version, :schema_minor_version, :use_msgpack
 
-        def initialize(schema_major_version, schema_minor_version)
+        def initialize(schema_major_version, schema_minor_version, use_msgpack)
           @schema_major_version = schema_major_version
           @schema_minor_version = schema_minor_version
+          @use_msgpack = use_msgpack
         end
 
         class << self
@@ -38,7 +39,13 @@ module Script
               raise ::Script::Layers::Domain::Errors::MetadataValidationError, ctx.message(err_msg)
             end
 
-            Metadata.new(schema_major_version, schema_minor_version)
+            use_msgpack = if metadata_hash["flags"]
+              metadata_hash["flags"]["use_msgpack"]
+            else
+              false
+            end
+
+            Metadata.new(schema_major_version, schema_minor_version, use_msgpack)
           rescue ::Script::Layers::Domain::Errors::MetadataValidationError
             raise
           rescue

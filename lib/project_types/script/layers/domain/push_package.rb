@@ -22,8 +22,7 @@ module Script
             compiled_type: @compiled_type,
             api_key: api_key,
             force: force,
-            schema_major_version: @metadata.schema_major_version,
-            schema_minor_version: @metadata.schema_minor_version,
+            metadata: @metadata,
           )
         end
       end

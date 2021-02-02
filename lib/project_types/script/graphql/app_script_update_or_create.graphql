@@ -5,7 +5,8 @@ mutation AppScriptUpdateOrCreate(
   $language: String,
   $force: Boolean,
   $schemaMajorVersion: String,
-  $schemaMinorVersion: String
+  $schemaMinorVersion: String,
+  $useMsgpack: Boolean
 ) {
   appScriptUpdateOrCreate(
     extensionPointName: $extensionPointName
@@ -15,6 +16,7 @@ mutation AppScriptUpdateOrCreate(
     force: $force
     schemaMajorVersion: $schemaMajorVersion
     schemaMinorVersion: $schemaMinorVersion
+    useMsgpack: $useMsgpack
 ) {
     userErrors {
       field

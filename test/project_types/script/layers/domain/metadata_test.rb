@@ -5,6 +5,7 @@ require "project_types/script/test_helper"
 describe Script::Layers::Domain::Metadata do
   let(:schema_major_version) { "1" }
   let(:schema_minor_version) { "0" }
+  let(:use_msgpack) { true }
   let(:ctx) { ShopifyCli::Context.new }
   let(:raw_json) do
     JSON.dump(
@@ -14,12 +15,15 @@ describe Script::Layers::Domain::Metadata do
             major: schema_major_version, minor: schema_minor_version
           },
         },
+        flags: {
+          use_msgpack: true
+        },
       },
     )
   end
 
   describe ".new" do
-    subject { Script::Layers::Domain::Metadata.new(schema_major_version, schema_minor_version) }
+    subject { Script::Layers::Domain::Metadata.new(schema_major_version, schema_minor_version, use_msgpack) }
 
     it "should construct new Metadata" do
       assert_equal schema_major_version, subject.schema_major_version

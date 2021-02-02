@@ -12,8 +12,9 @@ describe Script::Layers::Application::PushScript do
   let(:language) { 'ts' }
   let(:api_key) { 'api_key' }
   let(:force) { true }
+  let(:use_msgpack) { true }
   let(:extension_point_type) { 'discount' }
-  let(:metadata) { Script::Layers::Domain::Metadata.new('1', '0') }
+  let(:metadata) { Script::Layers::Domain::Metadata.new('1', '0', use_msgpack) }
   let(:schema_minor_version) { '0' }
   let(:script_name) { 'name' }
   let(:source_file) { 'src/script.ts' }
