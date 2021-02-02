@@ -39,11 +39,7 @@ module Script
               raise ::Script::Layers::Domain::Errors::MetadataValidationError, ctx.message(err_msg)
             end
 
-            use_msgpack = if metadata_hash["flags"]
-              metadata_hash["flags"]["use_msgpack"]
-            else
-              false
-            end
+            use_msgpack = !!metadata_hash.dig("flags", "use_msgpack")
 
             Metadata.new(schema_major_version, schema_minor_version, use_msgpack)
           rescue ::Script::Layers::Domain::Errors::MetadataValidationError
