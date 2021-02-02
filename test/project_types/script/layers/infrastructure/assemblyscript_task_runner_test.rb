@@ -216,6 +216,42 @@ describe Script::Layers::Infrastructure::AssemblyScriptTaskRunner do
     end
   end
 
+  describe ".metadata" do
+    subject { as_task_runner.metadata }
+
+    describe "when metadata file is present and valid" do
+      let(:metadata_json) do
+        JSON.dump(
+          {
+            schemaVersions: {
+              example: { major: '1', minor: '0' },
+            },
+          },
+        )
+      end
+
+      it "should return a proper metadata object" do
+        File.expects(:read).with('build/metadata.json').once.returns(metadata_json)
+
+        ctx
+          .expects(:file_exist?)
+          .with('build/metadata.json')
+          .once
+          .returns(true)
+
+        assert subject
+      end
+    end
+
+    describe "when metadata file is missing" do
+      it "should raise an exception" do
+        assert_raises(Script::Layers::Domain::Errors::MetadataNotFoundError) do
+          subject
+        end
+      end
+    end
+  end
+
   private
 
   def stub_npm_outdated(output)

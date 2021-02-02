@@ -13,9 +13,10 @@ describe Script::Layers::Application::BuildScript do
     let(:op_failed_msg) { 'msg' }
     let(:content) { 'content' }
     let(:compiled_type) { 'wasm' }
+    let(:metadata) { Script::Layers::Domain::Metadata.new('1', '0') }
     let(:extension_point_repository) { Script::Layers::Infrastructure::FakeExtensionPointRepository.new }
     let(:ep) { extension_point_repository.get_extension_point(extension_point_type) }
-    let(:task_runner) { stub(compiled_type: compiled_type) }
+    let(:task_runner) { stub(compiled_type: compiled_type, metadata: metadata) }
     let(:script_repository) { Script::Layers::Infrastructure::FakeScriptRepository.new(ctx: @context) }
     let(:script) do
       Script::Layers::Infrastructure::FakeScriptRepository.new(ctx: @context).create_script(language, ep, script_name)
@@ -36,7 +37,7 @@ describe Script::Layers::Application::BuildScript do
         Script::Layers::Infrastructure::PushPackageRepository
           .any_instance
           .expects(:create_push_package)
-          .with(script, content, 'wasm')
+          .with(script, content, 'wasm', metadata)
         capture_io { subject }
       end
     end

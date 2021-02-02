@@ -13,6 +13,8 @@ describe Script::Layers::Application::PushScript do
   let(:api_key) { 'api_key' }
   let(:force) { true }
   let(:extension_point_type) { 'discount' }
+  let(:metadata) { Script::Layers::Domain::Metadata.new('1', '0') }
+  let(:schema_minor_version) { '0' }
   let(:script_name) { 'name' }
   let(:source_file) { 'src/script.ts' }
   let(:project) do
@@ -21,7 +23,7 @@ describe Script::Layers::Application::PushScript do
   end
   let(:push_package_repository) { Script::Layers::Infrastructure::FakePushPackageRepository.new }
   let(:extension_point_repository) { Script::Layers::Infrastructure::FakeExtensionPointRepository.new }
-  let(:task_runner) { stub(compiled_type: 'wasm') }
+  let(:task_runner) { stub(compiled_type: 'wasm', metadata: metadata) }
   let(:ep) { extension_point_repository.get_extension_point(extension_point_type) }
   let(:script_repository) { Script::Layers::Infrastructure::FakeScriptRepository.new(@context) }
   let(:script) { script_repository.create_script(language, ep, script_name) }
@@ -36,7 +38,7 @@ describe Script::Layers::Application::PushScript do
       .returns(task_runner)
     Script::ScriptProject.stubs(:current).returns(project)
     extension_point_repository.create_extension_point(extension_point_type)
-    push_package_repository.create_push_package(script, 'content', compiled_type)
+    push_package_repository.create_push_package(script, 'content', compiled_type, metadata)
   end
 
   describe '.call' do
