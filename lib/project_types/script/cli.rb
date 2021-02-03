@@ -55,6 +55,10 @@ module Script
                Project.project_filepath('layers/infrastructure/assemblyscript_project_creator')
       autoload :AssemblyScriptTaskRunner, Project.project_filepath('layers/infrastructure/assemblyscript_task_runner')
       autoload :AssemblyScriptTsConfig, Project.project_filepath('layers/infrastructure/assemblyscript_tsconfig')
+      autoload :RustProjectCreator,
+               Project.project_filepath('layers/infrastructure/rust_project_creator.rb')
+      autoload :RustTaskRunner, Project.project_filepath('layers/infrastructure/rust_task_runner')
+
       autoload :PushPackageRepository, Project.project_filepath('layers/infrastructure/push_package_repository')
       autoload :ExtensionPointRepository, Project.project_filepath('layers/infrastructure/extension_point_repository')
       autoload :ProjectCreator, Project.project_filepath('layers/infrastructure/project_creator')
