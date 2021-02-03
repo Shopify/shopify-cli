@@ -21,7 +21,7 @@ describe Script::Layers::Infrastructure::RustProjectCreator do
     {
       "rust" => {
         "package": "https://github.com/Shopify/scripts-apis-rs",
-        "beta": true
+        "beta": true,
       },
     }
   end
@@ -44,24 +44,31 @@ describe Script::Layers::Infrastructure::RustProjectCreator do
         .expects(:capture2e)
         .with("git init").once
         .returns(system_output(msg: "", success: true))
-
       context
         .expects(:capture2e)
         .with("git remote add -f origin #{extension_point.sdks.rust.package}")
         .once
         .returns(system_output(msg: "", success: true))
-
       context
         .expects(:capture2e)
         .with("git config core.sparsecheckout true")
         .once
         .returns(system_output(msg: "", success: true))
-      
       context
         .expects(:capture2e)
         .with("echo #{extension_point.type}/default >> .git/info/sparse-checkout")
         .once
         .returns(system_output(msg: "", success: true))
+      context
+        .expects(:capture2e)
+        .with("git pull origin main")
+        .once
+        .returns(system_output(msg: "", success: true))
+      context.expects(:rm_rf).with(".git")
+      type = extension_point.type
+      source = File.join(script_name, File.join(type, 'default'))
+      FileUtils.expects(:copy_entry).with(source, script_name)
+      context.expects(:rm_rf).with(type)
 
       subject
     end
@@ -72,7 +79,7 @@ describe Script::Layers::Infrastructure::RustProjectCreator do
         .with("git init").once
         .returns(system_output(msg: "Couldn't initialize git repository", success: false))
 
-      assert_raises (Script::Layers::Domain::Errors::ServiceFailureError) { subject }
+      assert_raises(Script::Layers::Domain::Errors::ServiceFailureError) { subject }
     end
 
     it "should raise a service failure error if the git remote cannot be configured" do
@@ -83,7 +90,7 @@ describe Script::Layers::Infrastructure::RustProjectCreator do
         .with("git remote add -f origin #{extension_point.sdks.rust.package}").once
         .returns(system_output(msg: "Couldn't set remote origin", success: false))
 
-      assert_raises (Script::Layers::Domain::Errors::ServiceFailureError) { subject }
+      assert_raises(Script::Layers::Domain::Errors::ServiceFailureError) { subject }
     end
 
     it "should raise a service failure error if sparse checkout cannot be configured" do
@@ -94,47 +101,27 @@ describe Script::Layers::Infrastructure::RustProjectCreator do
         .with("git config core.sparsecheckout true").once
         .returns(system_output(msg: "Couldn't set sparse checkout", success: false))
 
-      assert_raises (Script::Layers::Domain::Errors::ServiceFailureError) { subject }
+      assert_raises(Script::Layers::Domain::Errors::ServiceFailureError) { subject }
     end
 
     it "should raise a service failure error if the sparse checkout config cannot be written" do
       context.expects(:capture2e).times(3).returns(system_output(msg: "", success: true))
       context
-          .expects(:capture2e)
-          .with("echo #{extension_point.type}/default >> .git/info/sparse-checkout").once
-          .returns(system_output(msg: "Couldn't write to the sparse checkout config", success: false))
-
-        assert_raises (Script::Layers::Domain::Errors::ServiceFailureError) { subject }
-    end
-  end
-
-  describe ".bootstrap" do
-    subject { project_creator.bootstrap }
-    it "should perform a git pull from the repository's origin and clean the unused directories" do
-      context
         .expects(:capture2e)
-        .with("git pull origin main")
-        .once
-        .returns(system_output(msg: "", success: true))
-      
-      context.expects(:rm_rf).with(".git")
-      
-      type = extension_point.type
-      source = File.join(script_name, File.join(type, 'default'))
-      FileUtils.expects(:copy_entry).with(source, script_name)
-      context.expects(:rm_rf).with(type)
+        .with("echo #{extension_point.type}/default >> .git/info/sparse-checkout").once
+        .returns(system_output(msg: "Couldn't write to the sparse checkout config", success: false))
 
-      subject
+      assert_raises(Script::Layers::Domain::Errors::ServiceFailureError) { subject }
     end
 
     it "raises if there is an error pulling from the remote's origin" do
+      context.expects(:capture2e).times(4).returns(system_output(msg: "", success: true))
       context
         .expects(:capture2e)
         .with("git pull origin main")
         .once
         .returns(system_output(msg: "Fatal", success: false))
- 
-      assert_raises(Script::Layers::Domain::Errors::ServiceFailureError) { subject } 
+      assert_raises(Script::Layers::Domain::Errors::ServiceFailureError) { subject }
     end
   end
 end

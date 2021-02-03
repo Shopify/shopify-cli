@@ -16,7 +16,7 @@ payment_filter:
     toolchain-version: "^4.0.0"
   rust:
     beta: true
-    package: "@shopify/extension-point-rs-payment-filter"
+    package: "https://github.com/Shopify/scripts-apis-rs"
 shipping_filter:
   assemblyscript:
     package: "@shopify/extension-point-as-shipping-filter"

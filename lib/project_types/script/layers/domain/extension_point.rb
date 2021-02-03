@@ -47,7 +47,7 @@ module Script
         attr_reader :beta, :package
 
         def initialize(config)
-          @beta = config["beta"]
+          @beta = config["beta"] || false
           @package = config["package"]
         end
 

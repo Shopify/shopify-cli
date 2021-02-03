@@ -17,11 +17,11 @@ module Script
           git_init
           setup_remote
           setup_sparse_checkout
+          pull
+          clean
         end
 
         def bootstrap
-          pull
-          clean
         end
 
         private
