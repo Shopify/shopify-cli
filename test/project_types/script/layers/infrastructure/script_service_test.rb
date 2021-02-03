@@ -11,6 +11,7 @@ describe Script::Layers::Infrastructure::ScriptService do
   let(:extension_point_type) { "DISCOUNT" }
   let(:schema_major_version) { "1" }
   let(:schema_minor_version) { "0" }
+  let(:use_msgpack) { true }
   let(:script_service_proxy) do
     <<~HERE
       query ProxyRequest($api_key: String, $shop_domain: String, $query: String!, $variables: String) {
@@ -36,7 +37,8 @@ describe Script::Layers::Infrastructure::ScriptService do
           $sourceCode: String,
           $language: String,
           $schemaMajorVersion: String,
-          $schemaMinorVersion: String
+          $schemaMinorVersion: String,
+          $useMsgpack: Boolean
         ) {
           appScriptUpdateOrCreate(
             extensionPointName: $extensionPointName
@@ -45,6 +47,7 @@ describe Script::Layers::Infrastructure::ScriptService do
             language: $language
             schemaMajorVersion: $schemaMajorVersion
             schemaMinorVersion: $schemaMinorVersion
+            useMsgpack: $useMsgpack
         ) {
             userErrors {
               field
@@ -76,6 +79,7 @@ describe Script::Layers::Infrastructure::ScriptService do
             force: false,
             schemaMajorVersion: schema_major_version,
             schemaMinorVersion: schema_minor_version,
+            useMsgpack: use_msgpack,
           }.to_json,
           query: app_script_update_or_create,
         },
@@ -86,8 +90,11 @@ describe Script::Layers::Infrastructure::ScriptService do
     subject do
       script_service.push(
         extension_point_type: extension_point_type,
-        schema_major_version: schema_major_version,
-        schema_minor_version: schema_minor_version,
+        metadata: Script::Layers::Domain::Metadata.new(
+          schema_major_version,
+          schema_minor_version,
+          use_msgpack,
+        ),
         script_name: script_name,
         script_content: script_content,
         compiled_type: "AssemblyScript",

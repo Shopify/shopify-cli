@@ -14,7 +14,7 @@ describe Script::Layers::Domain::PushPackage do
   let(:force) { false }
   let(:script_content) { "(module)" }
   let(:compiled_type) { "wasm" }
-  let(:metadata) { Script::Layers::Domain::Metadata.new('1', '0') }
+  let(:metadata) { Script::Layers::Domain::Metadata.new('1', '0', true) }
   let(:push_package) do
     Script::Layers::Domain::PushPackage.new(
       id,
