@@ -396,11 +396,11 @@ module ShopifyCli
     #     result.value # => "HELLO"
     #   end
     #
-    def self.wrap(*args, &block)
-      raise ArgumentError, "expected either a value or a block" unless args.one? ^ block
+    def self.wrap(*values, &block)
+      raise ArgumentError, "expected either a value or a block" unless values.one? ^ block
 
-      if args.one?
-        args.pop.yield_self do |value|
+      if values.one?
+        values.pop.yield_self do |value|
           case value
           when Result::Success, Result::Failure
             value
@@ -411,9 +411,9 @@ module ShopifyCli
           end
         end
       else
-        ->(value = nil) do
+        ->(*args) do
           begin
-            wrap(block.call(value))
+            wrap(block.call(*args))
           rescue => error
             wrap(error)
           end
