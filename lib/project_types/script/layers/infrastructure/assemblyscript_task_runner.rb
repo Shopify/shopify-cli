@@ -27,7 +27,7 @@ module Script
         def install_dependencies
           check_node_version!
 
-          output, status = ctx.capture2e("npm", "install", "--no-audit", "--no-optional", "--loglevel error")
+          output, status = ctx.capture2e("npm install --no-audit --no-optional --legacy-peer-deps --loglevel error")
           raise Errors::DependencyInstallError, output unless status.success?
         end
 
