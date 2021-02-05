@@ -6,6 +6,7 @@ module Script
       class ProjectCreator
         PROJECT_CREATORS = {
           "assemblyscript" => Infrastructure::AssemblyScriptProjectCreator,
+          "rust" => Infrastructure::RustProjectCreator,
         }
 
         def self.for(ctx, language, extension_point, script_name, path_to_project)
