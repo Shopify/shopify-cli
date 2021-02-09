@@ -186,7 +186,7 @@ describe Script::Layers::Infrastructure::AssemblyScriptTaskRunner do
           .with("node", "--version")
           .returns(["v14.5.1", mock(success?: true)])
         ctx.expects(:capture2e)
-          .with("npm", "install", "--no-audit", "--no-optional", "--loglevel error")
+          .with("npm install --no-audit --no-optional --legacy-peer-deps --loglevel error")
           .returns([nil, mock(success?: true)])
         subject
       end
