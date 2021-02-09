@@ -17,6 +17,10 @@ module Script
       }
     end
 
+    def api_key
+      env[:api_key]
+    end
+
     private
 
     def deprecated?(ep)

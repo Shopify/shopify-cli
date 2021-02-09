@@ -5,13 +5,17 @@ module Script
     module Application
       class BuildScript
         class << self
-          def call(ctx:, task_runner:, script:)
+          def call(ctx:, task_runner:, script_name:, extension_point_type:)
             CLI::UI::Frame.open(ctx.message('script.application.building')) do
               begin
                 UI::StrictSpinner.spin(ctx.message('script.application.building_script')) do |spinner|
-                  Infrastructure::PushPackageRepository
-                    .new(ctx: ctx)
-                    .create_push_package(script, task_runner.build, task_runner.compiled_type, task_runner.metadata)
+                  Infrastructure::PushPackageRepository.new(ctx: ctx).create_push_package(
+                    extension_point_type,
+                    script_name,
+                    task_runner.build,
+                    task_runner.compiled_type,
+                    task_runner.metadata
+                  )
                   spinner.update_title(ctx.message('script.application.built'))
                 end
               rescue StandardError => e

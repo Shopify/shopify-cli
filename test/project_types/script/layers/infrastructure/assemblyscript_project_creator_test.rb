@@ -8,7 +8,6 @@ describe Script::Layers::Infrastructure::AssemblyScriptProjectCreator do
   let(:script_name) { "myscript" }
   let(:language) { "AssemblyScript" }
   let(:script_id) { 'id' }
-  let(:script) { Script::Layers::Domain::Script.new(script_id, script_name, extension_point, language) }
   let(:project) { TestHelpers::FakeProject.new }
   let(:context) { TestHelpers::FakeContext.new }
   let(:extension_point_type) { "discount" }

@@ -44,7 +44,6 @@ module Script
       autoload :PushPackage, Project.project_filepath('layers/domain/push_package')
       autoload :Metadata, Project.project_filepath('layers/domain/metadata')
       autoload :ExtensionPoint, Project.project_filepath('layers/domain/extension_point')
-      autoload :Script, Project.project_filepath('layers/domain/script')
     end
 
     module Infrastructure
@@ -62,7 +61,6 @@ module Script
       autoload :PushPackageRepository, Project.project_filepath('layers/infrastructure/push_package_repository')
       autoload :ExtensionPointRepository, Project.project_filepath('layers/infrastructure/extension_point_repository')
       autoload :ProjectCreator, Project.project_filepath('layers/infrastructure/project_creator')
-      autoload :ScriptRepository, Project.project_filepath('layers/infrastructure/script_repository')
       autoload :ScriptService, Project.project_filepath('layers/infrastructure/script_service')
       autoload :TaskRunner, Project.project_filepath('layers/infrastructure/task_runner')
     end

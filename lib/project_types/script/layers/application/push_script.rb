@@ -5,25 +5,25 @@ module Script
     module Application
       class PushScript
         class << self
-          def call(ctx:, language:, extension_point_type:, script_name:, api_key:, force:)
-            script = Infrastructure::ScriptRepository.new(ctx: ctx).get_script(
-              language,
-              extension_point_type,
-              script_name
-            )
-            task_runner = Infrastructure::TaskRunner.for(ctx, language, script_name)
+          def call(ctx:, force:)
+            script_project = ScriptProject.current
+            task_runner = Infrastructure::TaskRunner.for(ctx, script_project.language, script_project.script_name)
             ProjectDependencies.install(ctx: ctx, task_runner: task_runner)
-            BuildScript.call(ctx: ctx, task_runner: task_runner, script: script)
-            push_script(ctx, task_runner, script, api_key, force)
-          end
+            BuildScript.call(
+              ctx: ctx,
+              task_runner: task_runner,
+              extension_point_type: script_project.extension_point_type,
+              script_name: script_project.script_name
+            )
 
-          private
-
-          def push_script(ctx, task_runner, script, api_key, force)
             UI::PrintingSpinner.spin(ctx, ctx.message('script.application.pushing')) do |p_ctx, spinner|
-              Infrastructure::PushPackageRepository.new(ctx: p_ctx)
-                .get_push_package(script, task_runner.compiled_type, task_runner.metadata)
-                .push(Infrastructure::ScriptService.new(ctx: p_ctx), api_key, force)
+              package = Infrastructure::PushPackageRepository.new(ctx: p_ctx).get_push_package(
+                script_project.extension_point_type,
+                script_project.script_name,
+                task_runner.compiled_type,
+                task_runner.metadata
+              )
+              package.push(Infrastructure::ScriptService.new(ctx: p_ctx), script_project.api_key, force)
               spinner.update_title(p_ctx.message('script.application.pushed'))
             end
           end

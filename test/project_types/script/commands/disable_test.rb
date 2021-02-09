@@ -16,7 +16,11 @@ module Script
         @script_project = TestHelpers::FakeScriptProject.new(
           language: @language,
           extension_point_type: @ep_type,
-          script_name: @script_name
+          script_name: @script_name,
+          env: {
+            api_key: @api_key,
+            shop: @shop_domain,
+          }
         )
         ScriptProject.stubs(:current).returns(@script_project)
       end
