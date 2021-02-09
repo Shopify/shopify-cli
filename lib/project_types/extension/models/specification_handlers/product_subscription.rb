@@ -12,11 +12,11 @@ module Extension
         end
 
         def create(directory_name, context)
-          Features::Argo::Admin.new.create(directory_name, IDENTIFIER, context)
+          argo.create(directory_name, IDENTIFIER, context)
         end
 
         def config(context)
-          Features::Argo::Admin.new.config(context)
+          argo.config(context)
         end
       end
     end

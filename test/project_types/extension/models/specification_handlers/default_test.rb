@@ -21,23 +21,29 @@ module Extension
         end
 
         def test_tagline_returns_empty_string_if_not_defined_in_content
-          base_type = Default.new
+          base_type = Default.new(specification)
           base_type.stubs(:identifier).returns('INVALID')
 
           assert_equal '', base_type.tagline
         end
 
         def test_raises_not_implemented_error_for_required_methods
-          assert_raises(NotImplementedError) { Default.new.config(@context) }
-          assert_raises(NotImplementedError) { Default.new.create('name', @context) }
+          assert_raises(NotImplementedError) { Default.new(specification).config(@context) }
+          assert_raises(NotImplementedError) { Default.new(specification).create('name', @context) }
         end
 
         def test_valid_extension_contexts_returns_empty_array
-          assert_empty(Default.new.valid_extension_contexts)
+          assert_empty(Default.new(specification).valid_extension_contexts)
         end
 
         def test_extension_context_returns_nil
-          assert_nil(Default.new.extension_context(@context))
+          assert_nil(Default.new(specification).extension_context(@context))
+        end
+
+        private
+
+        def specification
+          Models::Specification.new(identifier: 'test_extension')
         end
       end
     end

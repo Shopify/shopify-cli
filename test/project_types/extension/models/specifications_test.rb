@@ -16,14 +16,14 @@ module Extension
 
       def test_supports_retrieving_all_specification_handlers
         specifications = build_specifications_domain(
-          specifications: Specification.new(identifier: 'test_extension')
+          specifications: { identifier: 'test_extension' }
         )
         assert_kind_of(SpecificationHandlers::Default, specifications['TEST_EXTENSION'])
       end
 
       def test_supports_retrieving_an_individual_specification_handler
         specifications = build_specifications_domain(
-          specifications: Specification.new(identifier: 'test_extension')
+          specifications: { identifier: 'test_extension' }
         )
         assert specifications.each.to_a.all? do |handler|
           handler.is_a?(SpeficiationHandlers::Default)

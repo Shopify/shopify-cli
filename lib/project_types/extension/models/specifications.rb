@@ -14,11 +14,6 @@ module Extension
       property! :fetch_specifications,
         accepts: ->(p) { p.respond_to?(:to_proc) }
 
-      def initialize(*)
-        super
-        @handlers = fetch_specifications_and_build_handlers
-      end
-
       def [](identifier)
         handlers[identifier]
       end
@@ -33,14 +28,18 @@ module Extension
 
       protected
 
-      attr_reader :handlers
+      def handlers
+        @handlers ||= fetch_specifications_and_build_handlers
+      end
 
       private
 
       def fetch_specifications_and_build_handlers
         ShopifyCli::Result
-          .wrap(&fetch_specifications)
-          .call
+          .call(&fetch_specifications)
+          .then(&Tasks::ConfigureFeatures)
+          .then(&method(:ensure_legacy_compatibility))
+          .then(&method(:build_specifications))
           .then(&method(:require_handler_implementations))
           .then(&method(:instantiate_specification_handlers))
           .unwrap { |err| raise err }
@@ -52,9 +51,22 @@ module Extension
 
       def instantiate_specification_handlers(specifications)
         specifications.each_with_object({}) do |specification, handlers|
-          handler = custom_handler_namespace.const_get(specification.handler_class_name).new
-          handlers[handler.identifier] = handler
+          ShopifyCli::ResolveConstant.call(specification.identifier, namespace: custom_handler_namespace)
+            .then { |handler_class| handler_class.new(specification) }
+            .unwrap { |error| raise error }
+            .yield_self { |handler| handlers[handler.identifier] = handler }
         end
+      end
+
+      def ensure_legacy_compatibility(specification_attribute_sets)
+        specification_attribute_sets.each do |attributes|
+          next unless attributes.fetch(:identifier) == 'product_subscription'
+          attributes[:graphql_identifier] = 'SUBSCRIPTION_MANAGEMENT'
+        end
+      end
+
+      def build_specifications(specification_attribute_sets)
+        specification_attribute_sets.map { |attributes| Models::Specification.new(**attributes) }
       end
     end
   end

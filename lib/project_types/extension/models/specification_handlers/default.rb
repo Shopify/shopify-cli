@@ -4,8 +4,14 @@ module Extension
   module Models
     module SpecificationHandlers
       class Default
+        attr_reader :specification
+
+        def initialize(specification)
+          @specification = specification
+        end
+
         def identifier
-          self.class::IDENTIFIER
+          specification.identifier.to_s.upcase
         end
 
         def graphql_identifier
@@ -34,6 +40,15 @@ module Extension
 
         def valid_extension_contexts
           []
+        end
+
+        protected
+
+        def argo
+          Features::Argo.new(
+            git_template: specification.features.argo.git_template,
+            renderer_package_name: specification.features.argo.renderer_package_name,
+          )
         end
 
         private

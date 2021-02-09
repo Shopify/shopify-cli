@@ -11,7 +11,7 @@ module Extension
         Extension.specifications = Models::Specifications.new(
           custom_handler_root: File.expand_path('../', __FILE__),
           custom_handler_namespace: ::Extension::ExtensionTestHelpers,
-          fetch_specifications: -> { [Models::Specification.new(identifier: 'test_extension')] }
+          fetch_specifications: -> { [{ identifier: 'test_extension' }] }
         )
         @test_extension_type = Extension.specifications['TEST_EXTENSION']
 
