@@ -5,6 +5,7 @@ module Extension
     class Register < ExtensionCommand
       options do |parser, flags|
         parser.on('--api_key=KEY') { |key| flags[:api_key] = key.downcase }
+        parser.on('--api-key=KEY') { |key| flags[:api_key] = key.downcase }
       end
 
       def call(args, _command_name)

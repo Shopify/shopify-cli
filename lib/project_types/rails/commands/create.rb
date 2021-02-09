@@ -17,10 +17,13 @@ module Rails
         parser.on('--title=TITLE') { |t| flags[:title] = t }
         parser.on('--name=NAME') { |t| flags[:title] = t }
         parser.on('--organization_id=ID') { |url| flags[:organization_id] = url }
+        parser.on('--organization-id=ID') { |url| flags[:organization_id] = url }
         parser.on('--shop_domain=MYSHOPIFYDOMAIN') { |url| flags[:shop_domain] = url }
+        parser.on('--shop-domain=MYSHOPIFYDOMAIN') { |url| flags[:shop_domain] = url }
         parser.on('--type=APPTYPE') { |url| flags[:type] = url }
         parser.on('--db=DB') { |db| flags[:db] = db }
         parser.on('--rails_opts=RAILSOPTS') { |opts| flags[:rails_opts] = opts }
+        parser.on('--rails-opts=RAILSOPTS') { |opts| flags[:rails_opts] = opts }
       end
 
       def call(args, _name)

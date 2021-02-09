@@ -5,7 +5,9 @@ module Script
     class Enable < ShopifyCli::Command
       options do |parser, flags|
         parser.on('--config_props=KEYVALUEPAIRS', Array) { |t| flags[:config_props] = t }
+        parser.on('--config-props=KEYVALUEPAIRS', Array) { |t| flags[:config_props] = t }
         parser.on('--config_file=CONFIGFILEPATH') { |t| flags[:config_file] = t }
+        parser.on('--config-file=CONFIGFILEPATH') { |t| flags[:config_file] = t }
       end
 
       def call(_args, _name)
