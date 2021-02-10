@@ -10,6 +10,7 @@ describe Script::Layers::Application::CreateScript do
   let(:extension_point_type) { 'discount' }
   let(:script_name) { 'name' }
   let(:compiled_type) { 'wasm' }
+  let(:description) { 'description' }
   let(:extension_point_repository) { Script::Layers::Infrastructure::FakeExtensionPointRepository.new }
   let(:ep) { extension_point_repository.get_extension_point(extension_point_type) }
   let(:task_runner) { stub(compiled_type: compiled_type) }
@@ -35,8 +36,13 @@ describe Script::Layers::Application::CreateScript do
 
   describe '.call' do
     subject do
-      Script::Layers::Application::CreateScript
-        .call(ctx: @context, language: language, script_name: script_name, extension_point_type: extension_point_type)
+      Script::Layers::Application::CreateScript.call(
+        ctx: @context,
+        language: language,
+        script_name: script_name,
+        extension_point_type: extension_point_type,
+        description: description
+      )
     end
 
     it 'should create a new script' do
@@ -46,7 +52,7 @@ describe Script::Layers::Application::CreateScript do
         .returns(ep)
       Script::Layers::Application::CreateScript
         .expects(:setup_project)
-        .with(@context, language, script_name, ep)
+        .with(@context, language, script_name, ep, description)
         .returns(script_project)
       Script::Layers::Application::CreateScript
         .expects(:install_dependencies)
@@ -59,7 +65,8 @@ describe Script::Layers::Application::CreateScript do
 
     describe '.setup_project' do
       subject do
-        Script::Layers::Application::CreateScript.send(:setup_project, @context, language, script_name, ep)
+        Script::Layers::Application::CreateScript
+          .send(:setup_project, @context, language, script_name, ep, description)
       end
 
       it 'should succeed and update ctx root' do
@@ -72,7 +79,8 @@ describe Script::Layers::Application::CreateScript do
             organization_id: nil,
             extension_point_type: ep.type,
             script_name: script_name,
-            language: language
+            language: language,
+            description: description
           )
         capture_io do
           assert_equal script_project, subject

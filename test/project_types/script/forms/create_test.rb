@@ -15,10 +15,12 @@ module Script
 
       def test_returns_all_defined_attributes_if_valid
         name = 'name'
+        description = 'my description'
         extension_point = 'discount'
-        form = ask(name: name, extension_point: extension_point, language: 'assemblyscript')
+        form = ask(name: name, description: description, extension_point: extension_point, language: 'assemblyscript')
         assert_equal(form.name, name)
         assert_equal(form.extension_point, extension_point)
+        assert_equal(form.description, description)
       end
 
       def test_asks_extension_point_if_no_flag
@@ -29,25 +31,37 @@ module Script
           @context.message('script.forms.create.select_extension_point'),
           options: eps
         )
-        ask(name: 'name', language: 'assemblyscript')
+        ask(name: 'name', description: 'my description', language: 'assemblyscript')
       end
 
       def test_asks_name_if_no_flag
         name = 'name'
         CLI::UI::Prompt.expects(:ask).with(@context.message('script.forms.create.script_name')).returns(name)
-        form = ask(extension_point: 'discount', language: 'assemblyscript')
+        form = ask(description: 'my description', extension_point: 'discount', language: 'assemblyscript')
         assert_equal name, form.name
+      end
+
+      def test_asks_description_if_no_flag
+        description = 'description'
+        CLI::UI::Prompt.expects(:ask).with(@context.message('script.forms.create.description')).returns(description)
+        form = ask(name: 'name', extension_point: 'discount', language: 'assemblyscript')
+        assert_equal description, form.description
       end
 
       def test_name_is_cleaned_after_prompt
         name = 'name with space'
         CLI::UI::Prompt.expects(:ask).with(@context.message('script.forms.create.script_name')).returns(name)
-        form = ask(extension_point: 'discount', language: 'assemblyscript')
+        form = ask(description: 'my description', extension_point: 'discount', language: 'assemblyscript')
         assert_equal 'name_with_space', form.name
       end
 
       def test_name_is_cleaned_when_using_flag
-        form = ask(name: 'name with space', extension_point: 'discount', language: 'assemblyscript')
+        form = ask(
+          name: 'name with space',
+          description: 'my description',
+          extension_point: 'discount',
+          language: 'assemblyscript'
+        )
         assert_equal 'name_with_space', form.name
       end
 
@@ -60,7 +74,7 @@ module Script
 
       def test_invalid_name_as_option
         assert_raises(Script::Errors::InvalidScriptNameError) do
-          ask(name: 'na/me', language: 'assemblyscript')
+          ask(name: 'na/me', description: 'my description', language: 'assemblyscript')
         end
       end
 
@@ -68,7 +82,7 @@ module Script
         language = 'assemblyscript'
         Layers::Application::ExtensionPoints.expects(:languages).returns(%w(assemblyscript))
         CLI::UI::Prompt.expects(:ask).never
-        form = ask(name: 'name', extension_point: 'discount')
+        form = ask(name: 'name', description: 'my description', extension_point: 'discount')
         assert_equal language, form.language
       end
 
@@ -80,7 +94,7 @@ module Script
           .expects(:ask)
           .with(@context.message('script.forms.create.select_language'), options: all_languages)
           .returns(language)
-        form = ask(name: 'name', extension_point: 'discount')
+        form = ask(name: 'name', description: 'my description', extension_point: 'discount')
         assert_equal language, form.language
       end
 
@@ -88,7 +102,7 @@ module Script
         language = 'AssemblyScript'
         all_languages = %w(assemblyscript rust)
         Layers::Application::ExtensionPoints.expects(:languages).returns(all_languages)
-        form = ask(name: 'name', extension_point: 'discount', language: language)
+        form = ask(name: 'name', description: 'my description', extension_point: 'discount', language: language)
         assert_equal language.downcase, form.language
       end
 
@@ -97,14 +111,21 @@ module Script
         all_languages = %w(assemblyscript rust)
         Layers::Application::ExtensionPoints.expects(:languages).returns(all_languages)
         assert_raises(Script::Errors::InvalidLanguageError) do
-          ask(name: 'name', extension_point: 'discount', language: language)
+          ask(name: 'name', description: 'my description', extension_point: 'discount', language: language)
         end
       end
 
       private
 
-      def ask(name: nil, extension_point: nil, language: nil)
-        Create.ask(@context, [], name: name, extension_point: extension_point, language: language)
+      def ask(name: nil, description: nil, extension_point: nil, language: nil)
+        Create.ask(
+          @context,
+          [],
+          name: name,
+          description: description,
+          extension_point: extension_point,
+          language: language
+        )
       end
     end
   end
