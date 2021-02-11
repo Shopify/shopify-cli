@@ -44,15 +44,15 @@ module Rails
         Gem.expects(:install).with(@context, 'bundler', '~>2.0').returns(true)
         expect_command(%W(#{gem_path}/bin/rails new --skip-spring --database=sqlite3 test-app))
         expect_command(%W(#{gem_path}/bin/bundle install),
-                       chdir: File.join(@context.root, 'test-app'))
+          chdir: File.join(@context.root, 'test-app'))
         expect_command(%W(#{gem_path}/bin/rails generate shopify_app),
-                       chdir: File.join(@context.root, 'test-app'))
+          chdir: File.join(@context.root, 'test-app'))
         expect_command(%W(#{gem_path}/bin/rails db:create),
-                       chdir: File.join(@context.root, 'test-app'))
+          chdir: File.join(@context.root, 'test-app'))
         expect_command(%W(#{gem_path}/bin/rails db:migrate RAILS_ENV=development),
-                       chdir: File.join(@context.root, 'test-app'))
+          chdir: File.join(@context.root, 'test-app'))
         expect_command(%W(#{gem_path}/bin/rails webpacker:install),
-                       chdir: File.join(@context.root, 'test-app'))
+          chdir: File.join(@context.root, 'test-app'))
 
         stub_partner_req(
           'create_app',
@@ -96,15 +96,15 @@ module Rails
         Gem.expects(:install).with(@context, 'bundler', '~>2.0').returns(true)
         expect_command(%W(#{gem_path}/bin/rails new --skip-spring --database=postgresql test-app))
         expect_command(%W(#{gem_path}/bin/bundle install),
-                       chdir: File.join(@context.root, 'test-app'))
+          chdir: File.join(@context.root, 'test-app'))
         expect_command(%W(#{gem_path}/bin/rails generate shopify_app),
-                       chdir: File.join(@context.root, 'test-app'))
+          chdir: File.join(@context.root, 'test-app'))
         expect_command(%W(#{gem_path}/bin/rails db:create),
-                       chdir: File.join(@context.root, 'test-app'))
+          chdir: File.join(@context.root, 'test-app'))
         expect_command(%W(#{gem_path}/bin/rails db:migrate RAILS_ENV=development),
-                       chdir: File.join(@context.root, 'test-app'))
+          chdir: File.join(@context.root, 'test-app'))
         expect_command(%W(#{gem_path}/bin/rails webpacker:install),
-                       chdir: File.join(@context.root, 'test-app'))
+          chdir: File.join(@context.root, 'test-app'))
 
         stub_partner_req(
           'create_app',
@@ -144,15 +144,15 @@ module Rails
         Gem.expects(:install).with(@context, 'bundler', '~>2.0').returns(true)
         expect_command(%W(#{gem_path}/bin/rails new --skip-spring --database=sqlite3 --edge -J test-app))
         expect_command(%W(#{gem_path}/bin/bundle install),
-                       chdir: File.join(@context.root, 'test-app'))
+          chdir: File.join(@context.root, 'test-app'))
         expect_command(%W(#{gem_path}/bin/rails generate shopify_app),
-                       chdir: File.join(@context.root, 'test-app'))
+          chdir: File.join(@context.root, 'test-app'))
         expect_command(%W(#{gem_path}/bin/rails db:create),
-                       chdir: File.join(@context.root, 'test-app'))
+          chdir: File.join(@context.root, 'test-app'))
         expect_command(%W(#{gem_path}/bin/rails db:migrate RAILS_ENV=development),
-                       chdir: File.join(@context.root, 'test-app'))
+          chdir: File.join(@context.root, 'test-app'))
         expect_command(%W(#{gem_path}/bin/rails webpacker:install),
-                       chdir: File.join(@context.root, 'test-app'))
+          chdir: File.join(@context.root, 'test-app'))
 
         stub_partner_req(
           'create_app',

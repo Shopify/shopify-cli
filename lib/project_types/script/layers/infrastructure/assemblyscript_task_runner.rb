@@ -58,8 +58,8 @@ module Script
           version = ::Semantic::Version.new(output[1..-1])
           unless version >= ::Semantic::Version.new(AssemblyScriptProjectCreator::MIN_NODE_VERSION)
             raise Errors::DependencyInstallError,
-                  "Node version must be >= v#{AssemblyScriptProjectCreator::MIN_NODE_VERSION}. "\
-                  "Current version: #{output.strip}."
+              "Node version must be >= v#{AssemblyScriptProjectCreator::MIN_NODE_VERSION}. "\
+              "Current version: #{output.strip}."
           end
         end
 

@@ -49,13 +49,13 @@ module Script
     module Infrastructure
       autoload :Errors, Project.project_filepath('layers/infrastructure/errors')
       autoload :AssemblyScriptDependencyManager,
-               Project.project_filepath('layers/infrastructure/assemblyscript_dependency_manager')
+        Project.project_filepath('layers/infrastructure/assemblyscript_dependency_manager')
       autoload :AssemblyScriptProjectCreator,
-               Project.project_filepath('layers/infrastructure/assemblyscript_project_creator')
+        Project.project_filepath('layers/infrastructure/assemblyscript_project_creator')
       autoload :AssemblyScriptTaskRunner, Project.project_filepath('layers/infrastructure/assemblyscript_task_runner')
       autoload :AssemblyScriptTsConfig, Project.project_filepath('layers/infrastructure/assemblyscript_tsconfig')
       autoload :RustProjectCreator,
-               Project.project_filepath('layers/infrastructure/rust_project_creator.rb')
+        Project.project_filepath('layers/infrastructure/rust_project_creator.rb')
       autoload :RustTaskRunner, Project.project_filepath('layers/infrastructure/rust_task_runner')
 
       autoload :PushPackageRepository, Project.project_filepath('layers/infrastructure/push_package_repository')

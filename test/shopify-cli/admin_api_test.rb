@@ -58,10 +58,10 @@ module ShopifyCli
       assert_equal(
         'response',
         AdminAPI.rest_request(@context,
-                             shop: 'shop.myshopify.com',
-                             path: 'data.json',
-                             api_version: 'unstable',
-                             token: 'boop'),
+          shop: 'shop.myshopify.com',
+          path: 'data.json',
+          api_version: 'unstable',
+          token: 'boop'),
       )
     end
 

@@ -61,7 +61,7 @@ module Rails
       def test_user_can_change_db_in_app
         CLI::UI::Prompt.expects(:confirm)
           .with(@context.message('rails.forms.create.db.want_select'),
-                default: false)
+            default: false)
           .returns(true)
         CLI::UI::Prompt.expects(:ask)
           .with(@context.message('rails.forms.create.db.select'))
@@ -73,7 +73,7 @@ module Rails
       def test_user_asked_if_they_want_to_change_db
         CLI::UI::Prompt.expects(:confirm)
           .with(@context.message('rails.forms.create.db.want_select'),
-                default: false)
+            default: false)
           .returns(false)
         CLI::UI::Prompt.expects(:ask)
           .with(@context.message('rails.forms.create.db.select'))

@@ -26,9 +26,9 @@ module Theme
             .with(context, password: 'boop', store: 'shop.myshopify.com', name: 'my_theme', env: nil)
             .returns(true)
           context.expects(:done).with(context.message('theme.create.info.created',
-                                                      'my_theme',
-                                                      'shop.myshopify.com',
-                                                      File.join(context.root, 'my_theme')))
+            'my_theme',
+            'shop.myshopify.com',
+            File.join(context.root, 'my_theme')))
 
           Theme::Commands::Create.new(context).call([], 'create')
           assert_equal SHOPIFYCLI_FILE, File.read(".shopify-cli.yml")
@@ -49,9 +49,9 @@ module Theme
             .with(context, password: 'boop', store: 'shop.myshopify.com', name: 'my_theme', env: 'test')
             .returns(true)
           context.expects(:done).with(context.message('theme.create.info.created',
-                                                      'my_theme',
-                                                      'shop.myshopify.com',
-                                                      File.join(context.root, 'my_theme')))
+            'my_theme',
+            'shop.myshopify.com',
+            File.join(context.root, 'my_theme')))
 
           command = Theme::Commands::Create.new(context)
           command.options.flags[:env] = 'test'

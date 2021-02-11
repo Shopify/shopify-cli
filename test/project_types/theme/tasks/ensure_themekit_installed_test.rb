@@ -50,7 +50,7 @@ module Theme
         FileUtils.expects(:rm).with(Themekit::THEMEKIT)
 
         assert_raises(ShopifyCli::Abort,
-                      @context.message('theme.tasks.ensure_themekit_installed.errors.digest_fail')) do
+          @context.message('theme.tasks.ensure_themekit_installed.errors.digest_fail')) do
           EnsureThemekitInstalled.call(@context)
         end
       end
@@ -68,7 +68,7 @@ module Theme
         FileUtils.expects(:chmod).with('+x', Themekit::THEMEKIT).never
 
         assert_raises(ShopifyCli::Abort,
-                      @context.message('theme.tasks.ensure_themekit_installed.errors.releases_fail')) do
+          @context.message('theme.tasks.ensure_themekit_installed.errors.releases_fail')) do
           EnsureThemekitInstalled.call(@context)
         end
       end
@@ -117,7 +117,7 @@ module Theme
           .never
 
         assert_raises(ShopifyCli::Abort,
-                      @context.message('theme.tasks.ensure_themekit_installed.errors.update_fail')) do
+          @context.message('theme.tasks.ensure_themekit_installed.errors.update_fail')) do
           EnsureThemekitInstalled.call(@context)
         end
       end

@@ -38,10 +38,10 @@ module Theme
 
           Themekit.expects(:generate_env)
             .with(context,
-                  store: 'office.myshopify.com',
-                  password: 'beep',
-                  themeid: '2468',
-                  env: nil)
+              store: 'office.myshopify.com',
+              password: 'beep',
+              themeid: '2468',
+              env: nil)
             .returns(true)
 
           command = Theme::Commands::Generate::Env.new(context)
@@ -69,10 +69,10 @@ module Theme
 
           Themekit.expects(:generate_env)
             .with(context,
-                  store: 'shop.myshopify.com',
-                  password: 'boop',
-                  themeid: '2468',
-                  env: nil)
+              store: 'shop.myshopify.com',
+              password: 'boop',
+              themeid: '2468',
+              env: nil)
             .returns(true)
 
           command = Theme::Commands::Generate::Env.new(context)
@@ -100,10 +100,10 @@ module Theme
 
           Themekit.expects(:generate_env)
             .with(context,
-                  store: 'office.myshopify.com',
-                  password: 'beep',
-                  themeid: '2468',
-                  env: nil)
+              store: 'office.myshopify.com',
+              password: 'beep',
+              themeid: '2468',
+              env: nil)
             .returns(true)
 
           command = Theme::Commands::Generate::Env.new(context)
@@ -134,10 +134,10 @@ module Theme
 
           Themekit.expects(:generate_env)
             .with(context,
-                  store: 'shop.myshopify.com',
-                  password: 'boop',
-                  themeid: '2468',
-                  env: 'test')
+              store: 'shop.myshopify.com',
+              password: 'boop',
+              themeid: '2468',
+              env: 'test')
             .returns(true)
 
           command = Theme::Commands::Generate::Env.new(context)
@@ -165,10 +165,10 @@ module Theme
 
           Themekit.expects(:generate_env)
             .with(context,
-                  store: 'shop.myshopify.com',
-                  password: 'boop',
-                  themeid: '2468',
-                  env: nil)
+              store: 'shop.myshopify.com',
+              password: 'boop',
+              themeid: '2468',
+              env: nil)
             .returns(true)
 
           command = Theme::Commands::Generate::Env.new(context)

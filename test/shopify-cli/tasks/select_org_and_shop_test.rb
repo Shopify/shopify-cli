@@ -89,7 +89,7 @@ module ShopifyCli
           end
           assert_match(@context.message('core.tasks.select_org_and_shop.error.partners_notice'), io.join)
           assert_match(@context.message('core.tasks.select_org_and_shop.authentication_issue', ShopifyCli::TOOL_NAME),
-                       io.join)
+            io.join)
         end
       end
 

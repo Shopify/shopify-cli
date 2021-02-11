@@ -30,9 +30,9 @@ module Theme
             .with(context, store: 'shop.myshopify.com', password: 'boop', themeid: '2468', env: nil)
             .returns(true)
           context.expects(:done).with(context.message('theme.connect.connected',
-                                                      'my_theme',
-                                                      'shop.myshopify.com',
-                                                      File.join(context.root, 'my_theme')))
+            'my_theme',
+            'shop.myshopify.com',
+            File.join(context.root, 'my_theme')))
 
           Theme::Commands::Connect.new(context).call([], 'connect')
           assert_equal SHOPIFYCLI_FILE, File.read(".shopify-cli.yml")
@@ -57,9 +57,9 @@ module Theme
             .with(context, store: 'shop.myshopify.com', password: 'boop', themeid: '2468', env: 'test')
             .returns(true)
           context.expects(:done).with(context.message('theme.connect.connected',
-                                                      'my_theme',
-                                                      'shop.myshopify.com',
-                                                      File.join(context.root, 'my_theme')))
+            'my_theme',
+            'shop.myshopify.com',
+            File.join(context.root, 'my_theme')))
 
           command = Theme::Commands::Connect.new(context)
           command.options.flags[:env] = 'test'
