@@ -1,6 +1,4 @@
 ---
-title: Start your app
-toc: false
+title: Getting started with Shopify App CLI
+redirect_to: https://shopify.dev/tools/cli/getting-started
 ---
-
-Your app is not running, and no app URL has been set. Try running `shopify serve` in your project to get started.

@@ -7,6 +7,6 @@ if [ $status != "0" ]
   echo "This version of Shopify App CLI is no longer supported. You’ll need to migrate to the new CLI version to continue.
 
 Please visit this page for complete instructions:
-  https://shopify.github.io/shopify-app-cli/migrate/
+  https://shopify.dev/tools/cli/troubleshooting#migrate-from-a-legacy-version
 "
 end

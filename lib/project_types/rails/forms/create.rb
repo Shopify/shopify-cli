@@ -48,7 +48,7 @@ module Rails
       def ask_db
         if db.nil?
           return 'sqlite3' unless CLI::UI::Prompt.confirm(ctx.message('rails.forms.create.db.want_select'),
-                                                          default: false)
+            default: false)
           @db = CLI::UI::Prompt.ask(ctx.message('rails.forms.create.db.select')) do |handler|
             VALID_DB_TYPES.each do |db_type|
               handler.option(ctx.message("rails.forms.create.db.select_#{db_type}")) { db_type }

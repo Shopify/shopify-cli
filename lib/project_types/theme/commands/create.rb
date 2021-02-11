@@ -17,8 +17,8 @@ module Theme
 
         build(form.name, form.password, form.store, form.env)
         ShopifyCli::Project.write(@ctx,
-                                  project_type: 'theme',
-                                  organization_id: nil) # private apps are different
+          project_type: 'theme',
+          organization_id: nil) # private apps are different
 
         @ctx.done(@ctx.message('theme.create.info.created', form.name, form.store, @ctx.root))
       end

@@ -21,11 +21,11 @@ module Theme
 
       context.expects(:system)
         .with(Themekit::THEMEKIT,
-              'new',
-              '--no-update-notifier',
-              '--password=boop',
-              '--store=shop.myshopify.com',
-              '--name=My Theme')
+          'new',
+          '--no-update-notifier',
+          '--password=boop',
+          '--store=shop.myshopify.com',
+          '--name=My Theme')
         .returns(stat)
       stat.stubs(:success?).returns(true)
       assert(Themekit.create(context, password: 'boop', store: 'shop.myshopify.com', name: 'My Theme', env: nil))
@@ -37,11 +37,11 @@ module Theme
 
       context.expects(:system)
         .with(Themekit::THEMEKIT,
-              'new',
-              '--no-update-notifier',
-              '--password=boop',
-              '--store=shop.com',
-              '--name=My Theme')
+          'new',
+          '--no-update-notifier',
+          '--password=boop',
+          '--store=shop.com',
+          '--name=My Theme')
         .returns(stat)
       stat.stubs(:success?).returns(false)
       refute(Themekit.create(context, password: 'boop', store: 'shop.com', name: 'My Theme', env: nil))
@@ -53,8 +53,8 @@ module Theme
 
       context.expects(:system)
         .with(Themekit::THEMEKIT,
-              'deploy',
-              '--no-update-notifier')
+          'deploy',
+          '--no-update-notifier')
         .returns(stat)
       stat.stubs(:success?).returns(true)
       assert(Themekit.push(context, files: [], flags: [], remove: nil, env: nil))
@@ -66,8 +66,8 @@ module Theme
 
       context.expects(:system)
         .with(Themekit::THEMEKIT,
-              'deploy',
-              '--no-update-notifier')
+          'deploy',
+          '--no-update-notifier')
         .returns(stat)
       stat.stubs(:success?).returns(true)
       assert(Themekit.push(context, files: nil, flags: nil, remove: nil, env: nil))
@@ -79,10 +79,10 @@ module Theme
 
       context.expects(:system)
         .with(Themekit::THEMEKIT,
-              'remove',
-              '--no-update-notifier',
-              'file.liquid',
-              'another_file.liquid')
+          'remove',
+          '--no-update-notifier',
+          'file.liquid',
+          'another_file.liquid')
         .returns(stat)
       stat.stubs(:success?).returns(true)
       assert(Themekit.push(context, files: ['file.liquid', 'another_file.liquid'], flags: [], remove: true, env: nil))
@@ -94,9 +94,9 @@ module Theme
 
       context.expects(:system)
         .with(Themekit::THEMEKIT,
-              'deploy',
-              '--no-update-notifier',
-              '--allow-live')
+          'deploy',
+          '--no-update-notifier',
+          '--allow-live')
         .returns(stat)
       stat.stubs(:success?).returns(true)
       assert(Themekit.push(context, files: [], flags: ['--allow-live'], remove: nil, env: nil))
@@ -108,8 +108,8 @@ module Theme
 
       context.expects(:system)
         .with(Themekit::THEMEKIT,
-             'deploy',
-              '--no-update-notifier')
+          'deploy',
+          '--no-update-notifier')
         .returns(stat)
       stat.stubs(:success?).returns(false)
       refute(Themekit.push(context, files: [], flags: [], remove: nil, env: nil))
@@ -121,10 +121,10 @@ module Theme
 
       context.expects(:system)
         .with(Themekit::THEMEKIT,
-              'remove',
-              '--no-update-notifier',
-              'file.liquid',
-              'another_file.liquid')
+          'remove',
+          '--no-update-notifier',
+          'file.liquid',
+          'another_file.liquid')
         .returns(stat)
       stat.stubs(:success?).returns(false)
       refute(Themekit.push(context, files: ['file.liquid', 'another_file.liquid'], flags: [], remove: true, env: nil))
@@ -139,8 +139,8 @@ module Theme
 
       context.expects(:system)
         .with(Themekit::THEMEKIT,
-             'publish',
-              '--no-update-notifier')
+          'publish',
+          '--no-update-notifier')
         .returns(stat)
       stat.stubs(:success?).returns(true)
 
@@ -156,9 +156,9 @@ module Theme
 
       context.expects(:system)
         .with(Themekit::THEMEKIT,
-             'publish',
-              '--no-update-notifier',
-             '--allow-live')
+          'publish',
+          '--no-update-notifier',
+          '--allow-live')
         .returns(stat)
       stat.stubs(:success?).returns(true)
 
@@ -170,8 +170,8 @@ module Theme
 
       Themekit.expects(:push).with(context, flags: nil, env: nil).returns(false)
       context.expects(:system).with(Themekit::THEMEKIT,
-                                    'publish',
-                                    '--no-update-notifier').never
+        'publish',
+        '--no-update-notifier').never
 
       assert_raises CLI::Kit::Abort do
         Themekit.deploy(context, env: nil)
@@ -187,8 +187,8 @@ module Theme
 
       context.expects(:system)
         .with(Themekit::THEMEKIT,
-              'publish',
-              '--no-update-notifier')
+          'publish',
+          '--no-update-notifier')
         .returns(stat)
       stat.stubs(:success?).returns(false)
 
@@ -200,11 +200,11 @@ module Theme
       stat = mock
       context.expects(:system)
         .with(Themekit::THEMEKIT,
-              'get',
-              '--no-update-notifier',
-              '--password=boop',
-              '--store=shop.com',
-              '--themeid=2468')
+          'get',
+          '--no-update-notifier',
+          '--password=boop',
+          '--store=shop.com',
+          '--themeid=2468')
         .returns(stat)
       stat.stubs(:success?).returns(true)
       assert(Themekit.connect(context, store: 'shop.com', password: 'boop', themeid: '2468', env: nil))
@@ -215,11 +215,11 @@ module Theme
       stat = mock
       context.expects(:system)
         .with(Themekit::THEMEKIT,
-              'get',
-              '--no-update-notifier',
-              '--password=boop',
-              '--store=shop.com',
-              '--themeid=2468')
+          'get',
+          '--no-update-notifier',
+          '--password=boop',
+          '--store=shop.com',
+          '--themeid=2468')
         .returns(stat)
       stat.stubs(:success?).returns(false)
       refute(Themekit.connect(context, store: 'shop.com', password: 'boop', themeid: '2468', env: nil))
@@ -231,16 +231,16 @@ module Theme
 
       context.expects(:capture2e)
         .with(Themekit::THEMEKIT,
-              'open',
-              '--no-update-notifier')
+          'open',
+          '--no-update-notifier')
         .returns(['out', stat])
       stat.stubs(:success?).returns(true)
       context.expects(:puts).with('out')
 
       context.expects(:system)
         .with(Themekit::THEMEKIT,
-              'watch',
-              '--no-update-notifier')
+          'watch',
+          '--no-update-notifier')
 
       Themekit.serve(context, env: nil)
     end
@@ -251,17 +251,17 @@ module Theme
 
       context.expects(:capture2e)
         .with(Themekit::THEMEKIT,
-              'open',
-              '--no-update-notifier')
+          'open',
+          '--no-update-notifier')
         .returns(['out', stat])
       stat.stubs(:success?).returns(true)
       context.expects(:puts).with('out')
 
       context.expects(:system)
         .with(Themekit::THEMEKIT,
-              'watch',
-              '--no-update-notifier',
-              '--allow-live')
+          'watch',
+          '--no-update-notifier',
+          '--allow-live')
 
       Themekit.serve(context, flags: ['--allow-live'], env: nil)
     end
@@ -272,16 +272,16 @@ module Theme
 
       context.expects(:capture2e)
         .with(Themekit::THEMEKIT,
-              'open',
-              '--no-update-notifier')
+          'open',
+          '--no-update-notifier')
         .returns(['out', stat])
       stat.stubs(:success?).returns(false)
       context.expects(:puts).with('out')
 
       context.expects(:system)
         .with(Themekit::THEMEKIT,
-              'watch',
-              '--no-update-notifier')
+          'watch',
+          '--no-update-notifier')
         .never
 
       assert_raises(ShopifyCli::Abort) do
@@ -294,8 +294,8 @@ module Theme
 
       context.expects(:system)
         .with(Themekit::THEMEKIT,
-              'update',
-              '--no-update-notifier')
+          'update',
+          '--no-update-notifier')
         .returns(true)
 
       Themekit.update(context)
@@ -307,11 +307,11 @@ module Theme
 
       context.expects(:system)
         .with(Themekit::THEMEKIT,
-              'configure',
-              '--no-update-notifier',
-              '--password=boop',
-              '--store=shop.myshopify.com',
-              '--themeid=2468')
+          'configure',
+          '--no-update-notifier',
+          '--password=boop',
+          '--store=shop.myshopify.com',
+          '--themeid=2468')
         .returns(stat)
       stat.stubs(:success?).returns(true)
 
@@ -324,12 +324,12 @@ module Theme
 
       context.expects(:system)
         .with(Themekit::THEMEKIT,
-              'configure',
-              '--no-update-notifier',
-              '--env=test',
-              '--password=boop',
-              '--store=shop.myshopify.com',
-              '--themeid=2468')
+          'configure',
+          '--no-update-notifier',
+          '--env=test',
+          '--password=boop',
+          '--store=shop.myshopify.com',
+          '--themeid=2468')
         .returns(stat)
       stat.stubs(:success?).returns(true)
 
@@ -342,11 +342,11 @@ module Theme
 
       context.expects(:system)
         .with(Themekit::THEMEKIT,
-              'configure',
-              '--no-update-notifier',
-              '--password=boop',
-              '--store=shop.myshopify.com',
-              '--themeid=1357')
+          'configure',
+          '--no-update-notifier',
+          '--password=boop',
+          '--store=shop.myshopify.com',
+          '--themeid=1357')
         .returns(stat)
       stat.stubs(:success?).returns(false)
 
@@ -358,9 +358,9 @@ module Theme
 
       ShopifyCli::AdminAPI.expects(:rest_request)
         .with(context,
-              shop: 'shop.myshopify.com',
-              token: 'boop',
-              path: 'themes.json')
+          shop: 'shop.myshopify.com',
+          token: 'boop',
+          path: 'themes.json')
         .returns(RESP)
 
       Themekit.query_themes(context, store: 'shop.myshopify.com', password: 'boop')
@@ -371,9 +371,9 @@ module Theme
 
       ShopifyCli::AdminAPI.expects(:rest_request)
         .with(context,
-              shop: 'shop.myshopify.com',
-              token: 'meep',
-              path: 'themes.json')
+          shop: 'shop.myshopify.com',
+          token: 'meep',
+          path: 'themes.json')
         .raises(ShopifyCli::API::APIRequestUnauthorizedError)
 
       assert_raises CLI::Kit::Abort do
@@ -386,9 +386,9 @@ module Theme
 
       ShopifyCli::AdminAPI.expects(:rest_request)
         .with(context,
-              shop: 'market.myshopify.com',
-              token: 'boop',
-              path: 'themes.json')
+          shop: 'market.myshopify.com',
+          token: 'boop',
+          path: 'themes.json')
         .raises(StandardError)
 
       assert_raises CLI::Kit::Abort do

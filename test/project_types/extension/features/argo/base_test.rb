@@ -106,7 +106,7 @@ module Extension
             assert_includes error
               .message, @context.message(
                 'features.argo.dependencies.argo_missing_renderer_package_error',
-                  @error_message
+                @error_message
               )
           end
         end
@@ -124,7 +124,7 @@ module Extension
             assert_includes error
               .message, @context.message(
                 'features.argo.dependencies.argo_renderer_package_invalid_version_error',
-                  error_message
+                error_message
               )
           end
         end
@@ -143,7 +143,7 @@ module Extension
             assert_includes error
               .message, @context.message(
                 'features.argo.dependencies.argo_missing_renderer_package_error',
-                  error_message
+                error_message
               )
           end
         end

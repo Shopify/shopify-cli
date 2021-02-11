@@ -158,8 +158,8 @@ module TestHelpers
       if status.nil?
         @context.expects(:system)
           .with('curl', '-o', download_path,
-          ShopifyCli::Heroku::DOWNLOAD_URLS[:mac],
-          chdir: ShopifyCli.cache_dir)
+            ShopifyCli::Heroku::DOWNLOAD_URLS[:mac],
+            chdir: ShopifyCli.cache_dir)
           .never
       else
         @context.expects(:system)
