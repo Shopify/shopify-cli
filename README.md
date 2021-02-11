@@ -6,7 +6,7 @@ Shopify App CLI helps you build Shopify apps faster. It quickly generates Node.j
 
 ## Features
 
-The Shopify App CLI helps your app development process in the following ways:
+Shopify App CLI helps your app development process in the following ways:
 
 - Creates an app in the [Partner dashboard](https://partners.shopify.com/current/resources)
 - Populates test data for your app, including products, customers, and draft orders

@@ -371,7 +371,7 @@ module ShopifyCli
           MESSAGE
 
           new_version: <<~MESSAGE,
-          {{*}} {{yellow:A new version of the Shopify App CLI is available! You have version %s and the latest version is %s.
+          {{*}} {{yellow:A new version of Shopify App CLI is available! You have version %s and the latest version is %s.
 
             To upgrade, follow the instructions for the package manager you’re using:
             {{underline:https://shopify.dev/tools/cli/troubleshooting#upgrade-shopify-app-cli}}}}
