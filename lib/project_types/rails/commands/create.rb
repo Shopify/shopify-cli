@@ -27,8 +27,9 @@ module Rails
         form = Forms::Create.ask(@ctx, args, options.flags)
         return @ctx.puts(self.class.help) if form.nil?
 
+        ruby_version = Ruby.version(@ctx)
         @ctx.abort(@ctx.message('rails.create.error.invalid_ruby_version')) unless
-          Ruby.version(@ctx).satisfies?('~>2.5')
+          ruby_version.satisfies?('~>2.5') || ruby_version.satisfies?('<3.1')
 
         check_node
         check_yarn

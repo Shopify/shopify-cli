@@ -3,24 +3,24 @@ discount:
   assemblyscript:
     package: "@shopify/extension-point-as-discount"
     sdk-version: "^7.0.0"
-    toolchain-version: "^3.0.0"
+    toolchain-version: "^4.0.0"
 unit_limit_per_order:
   assemblyscript:
     package: "@shopify/extension-point-as-unit-limit-per-order"
     sdk-version: "^7.0.0"
-    toolchain-version: "^3.0.0"
+    toolchain-version: "^4.0.0"
 payment_filter:
   assemblyscript:
     package: "@shopify/extension-point-as-payment-filter"
     sdk-version: "^7.0.0"
-    toolchain-version: "^3.0.0"
+    toolchain-version: "^4.0.0"
 shipping_filter:
   assemblyscript:
     package: "@shopify/extension-point-as-shipping-filter"
     sdk-version: "^7.0.0"
-    toolchain-version: "^3.0.0"
+    toolchain-version: "^4.0.0"
 tax_filter:
   assemblyscript:
     package: "@shopify/extension-point-as-tax-filter"
     sdk-version: "^7.0.0"
-    toolchain-version: "^3.0.0"
+    toolchain-version: "^4.0.0"

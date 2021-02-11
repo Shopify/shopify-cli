@@ -52,7 +52,7 @@ module Script
                 "#{extension_point.sdks[:ts].package}": "^#{extension_point_version}",
                 "@as-pect/cli": "4.0.0",
                 "as-wasi": "^0.2.1",
-                "assemblyscript": "^0.14.0"
+                "assemblyscript": "^0.16.1"
               },
               "scripts": {
                 "test": "asp --summary --verbose",
