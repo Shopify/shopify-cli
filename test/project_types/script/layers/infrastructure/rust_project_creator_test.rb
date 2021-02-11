@@ -69,6 +69,8 @@ describe Script::Layers::Infrastructure::RustProjectCreator do
       source = File.join(script_name, File.join(type, 'default'))
       FileUtils.expects(:copy_entry).with(source, script_name)
       context.expects(:rm_rf).with(type)
+      File.expects(:read).with('Cargo.toml').returns("name = payment-filter-default")
+      File.expects(:write).with('Cargo.toml', "name = #{script_name}")
 
       subject
     end
