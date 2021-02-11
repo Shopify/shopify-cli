@@ -59,7 +59,9 @@ module Rails
 
         @ctx.puts(@ctx.message('apps.create.info.created', form.title, partners_url))
         @ctx.puts(@ctx.message('apps.create.info.serve', form.name, ShopifyCli::TOOL_NAME))
-        @ctx.puts(@ctx.message('apps.create.info.install', partners_url, form.title))
+        unless Shopifolk.acting_as_shopify_organization?
+          @ctx.puts(@ctx.message('apps.create.info.install', partners_url, form.title))
+        end
       end
 
       def self.help
