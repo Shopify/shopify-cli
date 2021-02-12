@@ -19,6 +19,7 @@ module Script
           setup_sparse_checkout
           pull
           clean
+          set_script_name
         end
 
         def bootstrap
@@ -56,6 +57,14 @@ module Script
           source = File.join(path_to_project, File.join(type, SAMPLE_PATH))
           FileUtils.copy_entry(source, path_to_project)
           ctx.rm_rf(type)
+        end
+
+        def set_script_name
+          config_file = 'Cargo.toml'
+          upstream_name = "#{extension_point.type.gsub('_', '-')}-default"
+          contents = File.read(config_file)
+          new_contents = contents.sub(upstream_name, script_name)
+          File.write(config_file, new_contents)
         end
       end
     end
