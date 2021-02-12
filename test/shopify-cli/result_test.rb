@@ -31,6 +31,10 @@ module ShopifyCli
         assert_equal "Success", Result.wrap { |value| value }.call("Success").value
       end
 
+      def test_supports_wrapping_blocks_that_do_not_take_arguments
+        assert_equal 1, Result.wrap { 1 }.call.value
+      end
+
       def test_captures_exceptions_and_wraps_them_in_an_error_when_deferring_result_construction
         assert_kind_of(Result::Failure, Result.wrap { raise "Failure" }.call)
       end

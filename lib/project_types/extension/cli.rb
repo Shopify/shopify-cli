@@ -34,6 +34,7 @@ module Extension
     autoload :GetApp, Project.project_filepath('tasks/get_app')
     autoload :CreateExtension, Project.project_filepath('tasks/create_extension')
     autoload :UpdateDraft, Project.project_filepath('tasks/update_draft')
+    autoload :FetchSpecifications, Project.project_filepath('tasks/fetch_specifications')
 
     module Converters
       autoload :RegistrationConverter, Project.project_filepath('tasks/converters/registration_converter')
@@ -62,17 +63,28 @@ module Extension
   end
 
   module Models
+    module SpecificationHandlers
+      autoload :Default, Project.project_filepath('models/specification_handlers/default')
+    end
+
     autoload :App, Project.project_filepath('models/app')
     autoload :Registration, Project.project_filepath('models/registration')
     autoload :Version, Project.project_filepath('models/version')
-    autoload :Type, Project.project_filepath('models/type')
     autoload :ValidationError, Project.project_filepath('models/validation_error')
-
-    class << self
-      Models::Type.load_all
-    end
+    autoload :Specification, Project.project_filepath('models/specification')
+    autoload :Specifications, Project.project_filepath('models/specifications')
   end
 
   autoload :ExtensionProjectKeys, Project.project_filepath('extension_project_keys')
   autoload :ExtensionProject, Project.project_filepath('extension_project')
+
+  def self.specifications
+    @specifications ||= Models::Specifications.new(
+      fetch_specifications: Tasks::FetchSpecifications
+    )
+  end
+
+  def self.specifications=(specifications)
+    @specifications = specifications
+  end
 end

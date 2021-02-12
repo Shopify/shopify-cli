@@ -3,8 +3,8 @@ require 'base64'
 
 module Extension
   module Models
-    module Types
-      class CheckoutPostPurchase < Models::Type
+    module SpecificationHandlers
+      class CheckoutPostPurchase < Default
         IDENTIFIER = 'CHECKOUT_POST_PURCHASE'
         PERMITTED_CONFIG_KEYS = [:metafields]
         def create(directory_name, context)

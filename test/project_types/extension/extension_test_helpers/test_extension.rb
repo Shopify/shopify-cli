@@ -2,7 +2,7 @@
 
 module Extension
   module ExtensionTestHelpers
-    class TestExtension < Models::Type
+    class TestExtension < Models::SpecificationHandlers::Default
       IDENTIFIER = 'TEST_EXTENSION'
 
       def graphql_identifier

@@ -6,14 +6,21 @@ module Extension
       def setup
         ShopifyCli::ProjectType.load_type(:extension)
 
-        @test_extension_type = ExtensionTestHelpers::TestExtension.new
-        Models::Type.repository[@test_extension_type.identifier] = @test_extension_type
+        @_original_extension_specifications = Extension.specifications
+
+        Extension.specifications = Models::Specifications.new(
+          custom_handler_root: File.expand_path('../', __FILE__),
+          custom_handler_namespace: ::Extension::ExtensionTestHelpers,
+          fetch_specifications: -> { [Models::Specification.new(identifier: 'test_extension')] }
+        )
+        @test_extension_type = Extension.specifications['TEST_EXTENSION']
+
         super
       end
 
       def teardown
         super
-        Models::Type.repository.delete(ExtensionTestHelpers::TestExtension::IDENTIFIER)
+        Extension.specifications = @_original_extension_specifications
       end
     end
   end

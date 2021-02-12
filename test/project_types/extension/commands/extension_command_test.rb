@@ -48,7 +48,7 @@ module Extension
 
       def test_extension_type_memoizes_the_extension_type
         setup_temp_project
-        Models::Type.expects(:load_type).returns(@test_extension_type).once
+        Extension.specifications.expects(:[]).returns(@test_extension_type).once
 
         @command.extension_type
         @command.extension_type
