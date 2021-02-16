@@ -11,7 +11,7 @@ test:
   run: |
     if [ "$#" -eq 1 ] && [[ -f $1 ]];
     then
-      rake test TEST=$1
+      bundle exec rake test TEST=$1
     else
-      rake test $@
+      bundle exec rake test $@
     fi
