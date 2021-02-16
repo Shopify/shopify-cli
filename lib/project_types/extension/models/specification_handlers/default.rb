@@ -15,7 +15,7 @@ module Extension
         end
 
         def graphql_identifier
-          identifier
+          specification.graphql_identifier.to_s.upcase
         end
 
         def name
@@ -26,12 +26,12 @@ module Extension
           message('tagline') || ""
         end
 
-        def config(_context)
-          raise NotImplementedError, "'#{__method__}' must be implemented for #{self.class}"
+        def config(context)
+          argo.config(context)
         end
 
-        def create(_directory_name, _context)
-          raise NotImplementedError, "'#{__method__}' must be implemented for #{self.class}"
+        def create(directory_name, context)
+          argo.create(directory_name, identifier, context)
         end
 
         def extension_context(_context)

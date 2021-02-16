@@ -12,7 +12,8 @@ module Extension
           Features::Argo.any_instance.stubs(:config).returns({})
           Features::ArgoConfig.stubs(:parse_yaml).returns({})
 
-          @checkout_post_purchase = Extension.specifications[CheckoutPostPurchase::IDENTIFIER]
+          @identifier = 'CHECKOUT_POST_PURCHASE'
+          @checkout_post_purchase = Extension.specifications[@identifier]
         end
 
         def test_create_uses_standard_argo_create_implementation
@@ -20,7 +21,7 @@ module Extension
 
           Features::Argo.any_instance
             .expects(:create)
-            .with(directory_name, CheckoutPostPurchase::IDENTIFIER, @context)
+            .with(directory_name, @identifier, @context)
             .once
 
           @checkout_post_purchase.create(directory_name, @context)
@@ -51,6 +52,10 @@ module Extension
           Features::Argo.any_instance.stubs(:config).returns({})
           Features::ArgoConfig.expects(:parse_yaml).with(@context, [:metafields]).once.returns({})
           @checkout_post_purchase.config(@context)
+        end
+
+        def test_graphql_identifier
+          assert_equal @identifier, @checkout_post_purchase.graphql_identifier
         end
       end
     end

@@ -23,12 +23,6 @@ module Extension
         end
       end
 
-      def test_all_type_identifiers_are_accessible_as_class_or_instance_methods
-        Extension.specifications.each do |type|
-          assert_equal type.class::IDENTIFIER, type.identifier
-        end
-      end
-
       def test_all_type_names_are_defined
         Extension.specifications.each do |type|
           refute_empty type.name.strip

@@ -46,12 +46,16 @@ module Extension
       end
 
       def require_handler_implementations(specifications)
-        specifications.each { |s| require(File.join(custom_handler_root, "#{s.identifier}.rb")) }
+        specifications.each do |s|
+          implementation_file = File.join(custom_handler_root, "#{s.identifier}.rb")
+          require(implementation_file) if File.file?(implementation_file)
+        end
       end
 
       def instantiate_specification_handlers(specifications)
         specifications.each_with_object({}) do |specification, handlers|
           ShopifyCli::ResolveConstant.call(specification.identifier, namespace: custom_handler_namespace)
+            .rescue { |error| error.is_a?(NameError) ? SpecificationHandlers::Default : raise(error) }
             .then { |handler_class| handler_class.new(specification) }
             .unwrap { |error| raise error }
             .yield_self { |handler| handlers[handler.identifier] = handler }

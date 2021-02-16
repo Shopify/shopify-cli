@@ -27,17 +27,16 @@ module Extension
           assert_equal '', base_type.tagline
         end
 
-        def test_raises_not_implemented_error_for_required_methods
-          assert_raises(NotImplementedError) { Default.new(specification).config(@context) }
-          assert_raises(NotImplementedError) { Default.new(specification).create('name', @context) }
-        end
-
         def test_valid_extension_contexts_returns_empty_array
           assert_empty(Default.new(specification).valid_extension_contexts)
         end
 
         def test_extension_context_returns_nil
           assert_nil(Default.new(specification).extension_context(@context))
+        end
+
+        def test_graphql_identifier_is_upcased
+          assert_equal specification.identifier.upcase, Default.new(specification).graphql_identifier
         end
 
         private

@@ -8,7 +8,8 @@ module Extension
         def setup
           super
           ShopifyCli::ProjectType.load_type(:extension)
-          @product_subscription = Extension.specifications[ProductSubscription::IDENTIFIER]
+          @identifier = 'PRODUCT_SUBSCRIPTION'
+          @product_subscription = Extension.specifications[@identifier]
         end
 
         def test_create_uses_standard_argo_create_implementation
@@ -16,7 +17,7 @@ module Extension
 
           Features::Argo.any_instance
             .expects(:create)
-            .with(directory_name, ProductSubscription::IDENTIFIER, @context)
+            .with(directory_name, @identifier, @context)
             .once
 
           @product_subscription.create(directory_name, @context)
@@ -26,6 +27,10 @@ module Extension
           Features::Argo.any_instance.expects(:config).with(@context).once
 
           @product_subscription.config(@context)
+        end
+
+        def test_custom_graphql_identifier
+          assert_equal 'SUBSCRIPTION_MANAGEMENT', @product_subscription.graphql_identifier
         end
       end
     end
