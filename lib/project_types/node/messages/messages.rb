@@ -22,7 +22,7 @@ module Node
             Options:
               {{command:--name=NAME}} App name. Any string.
               {{command:--app_url=APPURL}} App URL. Must be a valid URL.
-              {{command:--organization_id=ID}} Partner organization ID. Must be an existing organization.
+              {{command:--organization-id=ID}} Partner organization ID. Must be an existing organization.
               {{command:--shop_domain=MYSHOPIFYDOMAIN }} Development store URL. Must be an existing development store.
           HELP
           error: {

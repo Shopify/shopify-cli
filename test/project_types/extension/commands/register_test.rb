@@ -103,7 +103,7 @@ module Extension
       def run_register_command(api_key: @api_key)
         Commands::Register.ctx = @context
         Commands::Register.call(
-          %W(--api_key=#{api_key}),
+          %W(--api-key=#{api_key}),
           :register
         )
       end

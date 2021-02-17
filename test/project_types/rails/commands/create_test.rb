@@ -216,7 +216,7 @@ module Rails
         default_new_cmd = %w(create rails \
                              --type=public \
                              --name=test-app \
-                             --organization_id=42 \
+                             --organization-id=42 \
                              --db=sqlite3 \
                              --shop_domain=testshop.myshopify.com)
         run_cmd(default_new_cmd << add_cmd, false)

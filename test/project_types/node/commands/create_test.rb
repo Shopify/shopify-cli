@@ -219,7 +219,7 @@ module Node
         run_cmd("create node \
           --name=test-app \
           --type=public \
-          --organization_id=42 \
+          --organization-id=42 \
           --shop_domain=testshop.myshopify.com")
       end
 
