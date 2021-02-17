@@ -17,6 +17,7 @@ module ShopifyCli
     end
 
     def test_query_can_reauth
+      Shopifolk.stubs(:check).returns(false)
       ShopifyCli::DB.expects(:get).with(:identity_exchange_token).returns('token123').twice
 
       api_stub = stub

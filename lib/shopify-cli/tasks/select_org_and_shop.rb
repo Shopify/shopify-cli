@@ -12,7 +12,9 @@ module ShopifyCli
           Shopifolk.act_as_shopify_organization
         end
         org = get_organization(organization_id)
-        shop_domain ||= get_shop_domain(org)
+        unless Shopifolk.acting_as_shopify_organization?
+          shop_domain ||= get_shop_domain(org)
+        end
         ShopifyCli::Core::Monorail.metadata[:organization_id] = org["id"].to_i
         response(org["id"].to_i, shop_domain)
       end
@@ -20,10 +22,9 @@ module ShopifyCli
       private
 
       def response(organization_id, shop_domain)
-        {
-          organization_id: organization_id,
-          shop_domain: shop_domain,
-        }
+        result = { organization_id: organization_id }
+        result[:shop_domain] = shop_domain if shop_domain
+        result
       end
 
       def organizations
