@@ -232,7 +232,7 @@ module Script
                        "SHOP=my-test-shop.myshopify.com\n" \
                        "AWSKEY=awskey"
         command = ["enable"]
-        command << "--config_props=#{config_props}" unless config_props.nil?
+        command << "--config-props=#{config_props}" unless config_props.nil?
         command << "--config_file=#{config_file_path}" unless config_file_path.nil?
         ShopifyCli::Core::Monorail.stubs(:log).yields
         File.open(".env", "w+") { |file| file.write(env_contents) }

@@ -218,7 +218,7 @@ module Rails
                              --name=test-app \
                              --organization-id=42 \
                              --db=sqlite3 \
-                             --shop_domain=testshop.myshopify.com)
+                             --shop-domain=testshop.myshopify.com)
         run_cmd(default_new_cmd << add_cmd, false)
       end
 
