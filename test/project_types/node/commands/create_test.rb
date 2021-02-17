@@ -219,8 +219,8 @@ module Node
         run_cmd("create node \
           --name=test-app \
           --type=public \
-          --organization-id=42 \
-          --shop-domain=testshop.myshopify.com")
+          --organization_id=42 \
+          --shop_domain=testshop.myshopify.com")
       end
 
       def expect_node_npm_check_commands
