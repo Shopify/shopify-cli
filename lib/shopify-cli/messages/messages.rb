@@ -13,6 +13,7 @@ module ShopifyCli
           },
         },
       },
+
       core: {
         connect: {
           help: <<~HELP,
@@ -379,6 +380,22 @@ module ShopifyCli
           MESSAGE
         },
       },
+
+      kit: {
+        resolver: {
+          any_possible_matches: "{{bold:Did you mean?}}",
+          command_not_found: "Command not found",
+          in_project: <<~INFO,
+              Project: {{green:%s}} (%s)
+              Run {{command:%s help}} to see available commands for %s projects.
+#{'              '}
+              INFO
+          not_in_project: "You aren't in a project folder. Run {{command:%s help}} to see available core commands.\n\n",
+          possible_matches: "{{command:%s %s}}",
+          tool_not_found: "{{command:%s %s}} was not found",
+        },
+      },
+
     }.freeze
   end
 end

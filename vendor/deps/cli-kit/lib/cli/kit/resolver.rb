@@ -6,6 +6,7 @@ module CLI
       def initialize(tool_name:, command_registry:)
         @tool_name = tool_name
         @command_registry = command_registry
+        @ctx = ShopifyCli::Context.new
       end
 
       def call(args)
@@ -25,8 +26,20 @@ module CLI
       private
 
       def command_not_found(name)
-        CLI::UI::Frame.open("Command not found", color: :red, timing: false) do
-          $stderr.puts(CLI::UI.fmt("{{command:#{@tool_name} #{name}}} was not found"))
+        CLI::UI::Frame.open(@ctx.message('kit.resolver.command_not_found'),
+                            color: :red,
+                            timing: false) do
+          @ctx.puts(@ctx.message('kit.resolver.tool_not_found', @tool_name, name))
+        end
+
+        if ShopifyCli::Project.has_current?
+          @ctx.puts(@ctx.message('kit.resolver.in_project', 
+                                 ShopifyCli::Project.project_name, 
+                                 ShopifyCli::Project.current_project_type, 
+                                 @tool_name, 
+                                 ShopifyCli::Project.current_project_type))
+        else
+          @ctx.puts(@ctx.message('kit.resolver.not_in_project', @tool_name))
         end
 
         cmds = commands_and_aliases
@@ -43,9 +56,13 @@ module CLI
 
           # If we have any matches left, tell the user
           if possible_matches.any?
-            CLI::UI::Frame.open("{{bold:Did you mean?}}", timing: false, color: :blue) do
+            CLI::UI::Frame.open(@ctx.message('kit.resolver.any_possible_matches'), 
+                                timing: false, 
+                                color: :blue) do
               possible_matches.each do |possible_match|
-                $stderr.puts CLI::UI.fmt("{{command:#{@tool_name} #{possible_match}}}")
+                @ctx.puts(@ctx.message('kit.resolver.possible_matches',
+                                       @tool_name,
+                                       possible_match))
               end
             end
           end

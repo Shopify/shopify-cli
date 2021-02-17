@@ -1,6 +1,7 @@
 Unreleased
 ------
 
+* [#1079](https://github.com/Shopify/shopify-app-cli/pull/1079): Add detailed message with context when command is not found
 * [#1049](https://github.com/Shopify/shopify-app-cli/pull/1049): Add schema versioning support to the script project type
 * [#1059](https://github.com/Shopify/shopify-app-cli/pull/1059): Remove the functionality of the `generate` command for node apps, since it will no longer be feasible with the new node library
 * [#1046](https://github.com/Shopify/shopify-app-cli/pull/1046): Include a vendored copy of Webrick, as it's no longer included in Ruby 3.
@@ -18,7 +19,7 @@ Version 1.4.1
 * [#917](https://github.com/Shopify/shopify-app-cli/pull/917): Ensure analytics for create action includes the same fields as other commands
 
 Version 1.4.0
-------
+-----
 * Updates to tests, dependencies and internal tooling
 * [#924](https://github.com/Shopify/shopify-app-cli/pull/924): Improve debugging messages on Partner API errors
 
