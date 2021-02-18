@@ -124,7 +124,7 @@ module ShopifyCli
 
       def scopes
         %w[openid https://api.shopify.com/auth/partners.app.cli.access].tap do |result|
-          result << "employee" if Shopifolk.check
+          result << "employee" if ShopifyCli::Shopifolk.acting_as_shopify_organization?
         end
       end
     end
