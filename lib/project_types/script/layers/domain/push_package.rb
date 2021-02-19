@@ -5,12 +5,12 @@ module Script
     module Domain
       class PushPackage
         attr_reader :id,
-                    :extension_point_type,
-                    :script_name,
-                    :description,
-                    :script_content,
-                    :compiled_type,
-                    :metadata
+          :extension_point_type,
+          :script_name,
+          :description,
+          :script_content,
+          :compiled_type,
+          :metadata
 
         def initialize(
           id:,
