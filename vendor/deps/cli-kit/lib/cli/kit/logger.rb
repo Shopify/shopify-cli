@@ -61,7 +61,7 @@ module CLI
       #
       # @param msg [String] the message to log
       def debug(msg)
-        $stdout.puts CLI::UI.fmt(msg) if is_debug?
+        $stdout.puts CLI::UI.fmt(msg) if debug?
         @debug_logger.debug(format_debug(msg))
       end
 
@@ -73,7 +73,7 @@ module CLI
         "[#{CLI::UI::StdoutRouter.current_id[:id]}] #{msg}"
       end
 
-      def is_debug?
+      def debug?
         val = ENV[@env_debug_name]
         val && val != '0' && val != ''
       end

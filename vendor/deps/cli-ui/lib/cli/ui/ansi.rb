@@ -21,6 +21,8 @@ module CLI
           when 0x200d # zero-width joiner
             zwj = true
             acc
+          when "\n"
+            acc
           else
             acc + 1
           end
@@ -138,17 +140,13 @@ module CLI
       # Move to the next line
       #
       def self.next_line
-        cmd = cursor_down + control('1', 'G')
-        cmd += control('1', 'D') if CLI::UI::OS.current.shift_cursor_on_line_reset?
-        cmd
+        cursor_down + cursor_horizontal_absolute
       end
 
       # Move to the previous line
       #
       def self.previous_line
-        cmd = cursor_up + control('1', 'G')
-        cmd += control('1', 'D') if CLI::UI::OS.current.shift_cursor_on_line_reset?
-        cmd
+        cursor_up + cursor_horizontal_absolute
       end
 
       def self.clear_to_end_of_line
