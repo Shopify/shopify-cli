@@ -16,11 +16,13 @@ describe Script::Layers::Application::PushScript do
   let(:metadata) { Script::Layers::Domain::Metadata.new('1', '0', use_msgpack) }
   let(:schema_minor_version) { '0' }
   let(:script_name) { 'name' }
+  let(:description) { 'my description' }
   let(:project) do
     TestHelpers::FakeScriptProject.new(
       language: language,
       extension_point_type: extension_point_type,
       script_name: script_name,
+      description: description,
       env: { api_key: api_key }
     )
   end
@@ -38,7 +40,14 @@ describe Script::Layers::Application::PushScript do
       .returns(task_runner)
     Script::ScriptProject.stubs(:current).returns(project)
     extension_point_repository.create_extension_point(extension_point_type)
-    push_package_repository.create_push_package(extension_point_type, script_name, 'content', compiled_type, metadata)
+    push_package_repository.create_push_package(
+      extension_point_type: extension_point_type,
+      script_name: script_name,
+      description: description,
+      script_content: 'content',
+      compiled_type: compiled_type,
+      metadata: metadata
+    )
   end
 
   describe '.call' do
@@ -52,7 +61,8 @@ describe Script::Layers::Application::PushScript do
         ctx: @context,
         task_runner: task_runner,
         extension_point_type: extension_point_type,
-        script_name: script_name
+        script_name: script_name,
+        description: description
       )
       Script::Layers::Infrastructure::ScriptService
         .expects(:new).returns(script_service_instance)

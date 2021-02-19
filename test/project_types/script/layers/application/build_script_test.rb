@@ -8,6 +8,7 @@ describe Script::Layers::Application::BuildScript do
     let(:language) { 'assemblyscript' }
     let(:extension_point_type) { 'discount' }
     let(:script_name) { 'name' }
+    let(:description) { 'my description' }
     let(:op_failed_msg) { 'msg' }
     let(:content) { 'content' }
     let(:compiled_type) { 'wasm' }
@@ -19,7 +20,8 @@ describe Script::Layers::Application::BuildScript do
         ctx: @context,
         task_runner: task_runner,
         script_name: script_name,
-        extension_point_type: extension_point_type
+        extension_point_type: extension_point_type,
+        description: description
       )
     end
 
@@ -27,10 +29,14 @@ describe Script::Layers::Application::BuildScript do
       it 'should return normally' do
         CLI::UI::Frame.expects(:with_frame_color_override).never
         task_runner.expects(:build).returns(content)
-        Script::Layers::Infrastructure::PushPackageRepository
-          .any_instance
-          .expects(:create_push_package)
-          .with(extension_point_type, script_name, content, 'wasm', metadata)
+        Script::Layers::Infrastructure::PushPackageRepository.any_instance.expects(:create_push_package).with(
+          extension_point_type: extension_point_type,
+          script_name: script_name,
+          description: description,
+          script_content: content,
+          compiled_type: 'wasm',
+          metadata: metadata
+        )
         capture_io { subject }
       end
     end

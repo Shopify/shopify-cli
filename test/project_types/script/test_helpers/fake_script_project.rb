@@ -3,6 +3,7 @@ module TestHelpers
     property :extension_point_type
     property :script_name
     property :language
+    property :description
     property :env
 
     def api_key
