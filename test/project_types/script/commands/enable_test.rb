@@ -225,6 +225,20 @@ module Script
           .with(@context.message('script.enable.info'))
       end
 
+      def perform_command_snake_case(config_props: nil, config_file_path: nil)
+        env_contents = "SHOPIFY_API_KEY=apikey\n" \
+                       "SHOPIFY_API_SECRET=secret\n" \
+                       "HOST=https://example.com\n" \
+                       "SHOP=my-test-shop.myshopify.com\n" \
+                       "AWSKEY=awskey"
+        command = ["enable"]
+        command << "--config_props=#{config_props}" unless config_props.nil?
+        command << "--config_file=#{config_file_path}" unless config_file_path.nil?
+        ShopifyCli::Core::Monorail.stubs(:log).yields
+        File.open(".env", "w+") { |file| file.write(env_contents) }
+        run_cmd(command, false)
+      end
+
       def perform_command(config_props: nil, config_file_path: nil)
         env_contents = "SHOPIFY_API_KEY=apikey\n" \
                        "SHOPIFY_API_SECRET=secret\n" \
@@ -233,7 +247,7 @@ module Script
                        "AWSKEY=awskey"
         command = ["enable"]
         command << "--config-props=#{config_props}" unless config_props.nil?
-        command << "--config_file=#{config_file_path}" unless config_file_path.nil?
+        command << "--config-file=#{config_file_path}" unless config_file_path.nil?
         ShopifyCli::Core::Monorail.stubs(:log).yields
         File.open(".env", "w+") { |file| file.write(env_contents) }
         run_cmd(command, false)

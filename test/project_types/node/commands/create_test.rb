@@ -215,6 +215,14 @@ module Node
 
       private
 
+      def perform_command_snake_case
+        run_cmd("create node \
+          --name=test-app \
+          --type=public \
+          --organization_id=42 \
+          --shop_domain=testshop.myshopify.com")
+      end
+
       def perform_command
         run_cmd("create node \
           --name=test-app \

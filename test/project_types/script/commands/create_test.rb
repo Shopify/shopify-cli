@@ -100,6 +100,10 @@ module Script
 
       private
 
+      def perform_command_snake_case
+        run_cmd("create script --name=#{@script_name} --extension_point=#{@ep_type} --language=#{@language}")
+      end
+
       def perform_command
         run_cmd("create script --name=#{@script_name} --extension-point=#{@ep_type} --language=#{@language}")
       end

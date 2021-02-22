@@ -212,6 +212,16 @@ module Rails
         @context.expects(:system).with(*command, chdir: chdir).returns(process_status)
       end
 
+      def perform_command_snake_case(add_cmd = nil)
+        default_new_cmd = %w(create rails \
+                             --type=public \
+                             --name=test-app \
+                             --organization_id=42 \
+                             --db=sqlite3 \
+                             --shop_domain=testshop.myshopify.com)
+        run_cmd(default_new_cmd << add_cmd, false)
+      end
+
       def perform_command(add_cmd = nil)
         default_new_cmd = %w(create rails \
                              --type=public \
