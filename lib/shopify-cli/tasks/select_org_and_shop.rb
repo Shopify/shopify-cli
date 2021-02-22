@@ -5,14 +5,14 @@ module ShopifyCli
     class SelectOrgAndShop < ShopifyCli::Task
       attr_reader :ctx
 
-      def call(ctx, organization_id: nil, shop_domain: nil)
+      def call(ctx, organization_id: nil, shop_domain: nil, skip_shop: false)
         @ctx = ctx
         return response(organization_id.to_i, shop_domain) unless organization_id.nil? || shop_domain.nil?
         if Shopifolk.check && wants_to_run_against_shopify_org?
           Shopifolk.act_as_shopify_organization
         end
         org = get_organization(organization_id)
-        unless Shopifolk.acting_as_shopify_organization?
+        unless Shopifolk.acting_as_shopify_organization? || skip_shop
           shop_domain ||= get_shop_domain(org)
         end
         ShopifyCli::Core::Monorail.metadata[:organization_id] = org["id"].to_i
