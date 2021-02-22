@@ -3,10 +3,11 @@
 module Script
   module Forms
     class Create < ShopifyCli::Form
-      flag_arguments :extension_point, :name, :language
+      flag_arguments :extension_point, :name, :language, :description
 
       def ask
         self.name = valid_name
+        self.description ||= ask_description
         self.extension_point ||= ask_extension_point
         self.language = ask_language
       end
@@ -22,6 +23,10 @@ module Script
 
       def ask_name
         CLI::UI::Prompt.ask(@ctx.message('script.forms.create.script_name'))
+      end
+
+      def ask_description
+        CLI::UI::Prompt.ask(@ctx.message('script.forms.create.description'))
       end
 
       def valid_name

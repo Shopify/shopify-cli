@@ -16,10 +16,12 @@ module Script
         @language = 'assemblyscript'
         @script_name = 'name'
         @ep_type = 'discount'
+        @description = 'description'
         @script_project = TestHelpers::FakeScriptProject.new(
           language: @language,
           extension_point_type: @ep_type,
-          script_name: @script_name
+          script_name: @script_name,
+          description: @description
         )
         Layers::Application::ExtensionPoints.stubs(:languages).returns(%w(assemblyscript))
       end
@@ -33,10 +35,13 @@ module Script
       end
 
       def test_can_create_new_script
-        Script::Layers::Application::CreateScript
-          .expects(:call)
-          .with(ctx: @context, language: @language, script_name: @script_name, extension_point_type: @ep_type)
-          .returns(@script_project)
+        Script::Layers::Application::CreateScript.expects(:call).with(
+          ctx: @context,
+          language: @language,
+          script_name: @script_name,
+          extension_point_type: @ep_type,
+          description: @description
+        ).returns(@script_project)
 
         @context
           .expects(:puts)
@@ -58,7 +63,8 @@ module Script
           ctx: @context,
           language: @language,
           script_name: @script_name,
-          extension_point_type: @ep_type
+          extension_point_type: @ep_type,
+          description: @description
         ).raises(StandardError)
 
         ScriptProject.expects(:cleanup).with(
@@ -83,7 +89,8 @@ module Script
           ctx: @context,
           language: @language,
           script_name: @script_name,
-          extension_point_type: @ep_type
+          extension_point_type: @ep_type,
+          description: @description
         ).raises(error)
 
         UI::ErrorHandler.expects(:pretty_print_and_raise).with(
@@ -101,8 +108,14 @@ module Script
       private
 
       def perform_command_snake_case
-        run_cmd("create script --name=#{@script_name} --extension_point=#{@ep_type} --language=#{@language}")
-      end
+        args = {
+          name: @script_name,
+          description: @description,
+          extension_point: @ep_type,
+          language: @language,
+        }
+
+        run_cmd("create script #{args.map { |k, v| "--#{k}=#{v}" }.join(' ')}")
 
       def perform_command
         run_cmd("create script --name=#{@script_name} --extension-point=#{@ep_type} --language=#{@language}")
