@@ -1,18 +1,19 @@
 module CLI
   module UI
-    autoload :ANSI,               'cli/ui/ansi'
-    autoload :Glyph,              'cli/ui/glyph'
-    autoload :Color,              'cli/ui/color'
-    autoload :Frame,              'cli/ui/frame'
-    autoload :OS,                 'cli/ui/os'
-    autoload :Printer,            'cli/ui/printer'
-    autoload :Progress,           'cli/ui/progress'
-    autoload :Prompt,             'cli/ui/prompt'
-    autoload :Terminal,           'cli/ui/terminal'
-    autoload :Truncater,          'cli/ui/truncater'
-    autoload :Formatter,          'cli/ui/formatter'
-    autoload :Spinner,            'cli/ui/spinner'
-    autoload :Widgets,            'cli/ui/widgets'
+    autoload :ANSI,      'cli/ui/ansi'
+    autoload :Glyph,     'cli/ui/glyph'
+    autoload :Color,     'cli/ui/color'
+    autoload :Frame,     'cli/ui/frame'
+    autoload :OS,        'cli/ui/os'
+    autoload :Printer,   'cli/ui/printer'
+    autoload :Progress,  'cli/ui/progress'
+    autoload :Prompt,    'cli/ui/prompt'
+    autoload :Terminal,  'cli/ui/terminal'
+    autoload :Truncater, 'cli/ui/truncater'
+    autoload :Formatter, 'cli/ui/formatter'
+    autoload :Spinner,   'cli/ui/spinner'
+    autoload :Widgets,   'cli/ui/widgets'
+    autoload :Wrap,      'cli/ui/wrap'
 
     # Convenience accessor to +CLI::UI::Spinner::SpinGroup+
     SpinGroup = Spinner::SpinGroup
@@ -29,7 +30,7 @@ module CLI
     end
 
     # Color resolution using +CLI::UI::Color.lookup+
-    # Will lookup using +Color.lookup+ if a symbol, otherwise we assume it is a valid color and return it
+    # Will lookup using +Color.lookup+ unless it's already a CLI::UI::Color (or nil)
     #
     # ==== Attributes
     #
@@ -37,26 +38,25 @@ module CLI
     #
     def self.resolve_color(input)
       case input
-      when Symbol
-        CLI::UI::Color.lookup(input)
-      else
+      when CLI::UI::Color, nil
         input
+      else
+        CLI::UI::Color.lookup(input)
       end
     end
 
     # Frame style resolution using +CLI::UI::Frame::FrameStyle.lookup+.
-    # Will lookup using +FrameStyle.lookup+ if the input is a symbol.  Otherwise,
-    # we assume it's a valid FrameStyle
+    # Will lookup using +FrameStyle.lookup+ unless it's already a CLI::UI::Frame::FrameStyle(or nil)
     #
     # ==== Attributes
     #
     # * +input+ - frame style to resolve
     def self.resolve_style(input)
       case input
-      when Symbol
-        CLI::UI::Frame::FrameStyle.lookup(input)
-      else
+      when CLI::UI::Frame::FrameStyle, nil
         input
+      else
+        CLI::UI::Frame::FrameStyle.lookup(input)
       end
     end
 
@@ -112,6 +112,10 @@ module CLI
     #
     def self.fmt(input, enable_color: enable_color?)
       CLI::UI::Formatter.new(input).format(enable_color: enable_color)
+    end
+
+    def self.wrap(input)
+      CLI::UI::Wrap.new(input).wrap
     end
 
     # Convenience Method for +CLI::UI::Printer.puts+
