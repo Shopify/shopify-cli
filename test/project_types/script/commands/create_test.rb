@@ -116,6 +116,7 @@ module Script
         }
 
         run_cmd("create script #{args.map { |k, v| "--#{k}=#{v}" }.join(' ')}")
+      end
 
       def perform_command
         run_cmd("create script --name=#{@script_name} --extension-point=#{@ep_type} --language=#{@language}")
