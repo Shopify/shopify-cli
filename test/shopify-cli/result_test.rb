@@ -38,6 +38,24 @@ module ShopifyCli
       def test_captures_exceptions_and_wraps_them_in_an_error_when_deferring_result_construction
         assert_kind_of(Result::Failure, Result.wrap { raise "Failure" }.call)
       end
+
+      def test_call_wraps_a_block_and_invokes_it_immediately
+        Result.call(1) { |n| n }.tap do |result|
+          assert_predicate(result, :success?)
+          assert_equal 1, result.value
+        end
+      end
+
+      def test_call_does_not_require_any_positional_arguments
+        Result.call { 1 }.tap do |result|
+          assert_predicate(result, :success?)
+          assert_equal 1, result.value
+        end
+      end
+
+      def test_call_requires_a_block
+        assert_raises(ArgumentError) { Result.call }
+      end
     end
 
     class SuccessTest < Minitest::Test
