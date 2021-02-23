@@ -45,7 +45,7 @@ module Rails
         expect_command(%W(#{gem_path}/bin/rails new --skip-spring --database=sqlite3 test-app))
         expect_command(%W(#{gem_path}/bin/bundle install),
           chdir: File.join(@context.root, 'test-app'))
-        expect_command(%W(#{gem_path}/bin/rails generate shopify_app),
+        expect_command(%W(#{gem_path}/bin/rails generate shopify_app --new-shopify-cli-app),
           chdir: File.join(@context.root, 'test-app'))
         expect_command(%W(#{gem_path}/bin/rails db:create),
           chdir: File.join(@context.root, 'test-app'))
@@ -97,7 +97,7 @@ module Rails
         expect_command(%W(#{gem_path}/bin/rails new --skip-spring --database=postgresql test-app))
         expect_command(%W(#{gem_path}/bin/bundle install),
           chdir: File.join(@context.root, 'test-app'))
-        expect_command(%W(#{gem_path}/bin/rails generate shopify_app),
+        expect_command(%W(#{gem_path}/bin/rails generate shopify_app --new-shopify-cli-app),
           chdir: File.join(@context.root, 'test-app'))
         expect_command(%W(#{gem_path}/bin/rails db:create),
           chdir: File.join(@context.root, 'test-app'))
@@ -145,7 +145,7 @@ module Rails
         expect_command(%W(#{gem_path}/bin/rails new --skip-spring --database=sqlite3 --edge -J test-app))
         expect_command(%W(#{gem_path}/bin/bundle install),
           chdir: File.join(@context.root, 'test-app'))
-        expect_command(%W(#{gem_path}/bin/rails generate shopify_app),
+        expect_command(%W(#{gem_path}/bin/rails generate shopify_app --new-shopify-cli-app),
           chdir: File.join(@context.root, 'test-app'))
         expect_command(%W(#{gem_path}/bin/rails db:create),
           chdir: File.join(@context.root, 'test-app'))

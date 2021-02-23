@@ -143,7 +143,7 @@ module Rails
         end
 
         CLI::UI::Frame.open(@ctx.message('rails.create.running_generator')) do
-          syscall(%w(rails generate shopify_app))
+          syscall(%w(rails generate shopify_app --new-shopify-cli-app))
         end
 
         CLI::UI::Frame.open(@ctx.message('rails.create.running_migrations')) do
