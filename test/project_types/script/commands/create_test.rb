@@ -119,7 +119,7 @@ module Script
       end
 
       def perform_command
-        run_cmd("create script --name=#{@script_name} --extension-point=#{@ep_type} --language=#{@language}")
+        run_cmd("create script --name=#{@script_name} --description=#{@description} --extension-point=#{@ep_type} --language=#{@language}")
       end
     end
   end
