@@ -3,24 +3,17 @@
 module Extension
   module Commands
     class Register < ExtensionCommand
-      options do |parser, flags|
-        parser.on("--api_key=KEY") { |key| flags[:api_key] = key.downcase }
-        parser.on("--api-key=KEY") { |key| flags[:api_key] = key.downcase }
-      end
-
-      def call(args, _command_name)
+      def call(_args, _command_name)
         CLI::UI::Frame.open(@ctx.message("register.frame_title")) do
           @ctx.abort(@ctx.message("register.already_registered")) if project.registered?
 
-          with_register_form(args) do |form|
-            should_continue = confirm_registration(form.app)
-            registration = should_continue ? register_extension(form.app) : abort_not_registered
+          should_continue = confirm_registration
+          registration = should_continue ? register_extension : abort_not_registered
 
-            update_project_files(form.app, registration)
+          update_project_files(registration)
 
-            @ctx.puts(@ctx.message("register.success", project.title, form.app.title))
-            @ctx.puts(@ctx.message("register.success_info"))
-          end
+          @ctx.puts(@ctx.message("register.success", project.title, app.title))
+          @ctx.puts(@ctx.message("register.success_info"))
         end
       end
 
@@ -28,26 +21,17 @@ module Extension
         <<~HELP
           Register your local extension to a Shopify app
               Usage: {{command:#{ShopifyCli::TOOL_NAME} register}}
-              Options:
-                {{command:--api-key=API_KEY}} The API key used to register an app with the extension. This can be found on the app page on Partners Dashboard.
         HELP
       end
 
       private
 
-      def with_register_form(args)
-        form = Forms::Register.ask(@ctx, args, options.flags)
-        return @ctx.puts(self.class.help) if form.nil?
-
-        yield form
-      end
-
-      def confirm_registration(app)
+      def confirm_registration
         @ctx.puts(@ctx.message("register.confirm_info", extension_type.name))
         CLI::UI::Prompt.confirm(@ctx.message("register.confirm_question", app.title))
       end
 
-      def register_extension(app)
+      def register_extension
         @ctx.puts(@ctx.message("register.waiting_text"))
 
         Tasks::CreateExtension.call(
@@ -60,7 +44,7 @@ module Extension
         )
       end
 
-      def update_project_files(app, registration)
+      def update_project_files(registration)
         ExtensionProject.write_env_file(
           context: @ctx,
           api_key: app.api_key,
@@ -68,6 +52,10 @@ module Extension
           registration_id: registration.id,
           title: project.title
         )
+      end
+
+      def app
+        @app ||= project.app
       end
 
       def abort_not_registered
