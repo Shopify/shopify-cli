@@ -39,6 +39,21 @@ module Extension
           assert_equal specification.identifier.upcase, Default.new(specification).graphql_identifier
         end
 
+        def test_name_defaults_to_specification_name
+          assert_equal "Test Extension", @test_extension_type.name
+        end
+
+        def test_name_can_be_overriden_using_messages
+          Messages::TYPES.merge!({
+            test_extension: {
+              name: "Overridden Name",
+            },
+          })
+          assert_equal "Overridden Name", @test_extension_type.name
+        ensure
+          Messages::TYPES.delete(:test_extension)
+        end
+
         private
 
         def specification

@@ -37,7 +37,7 @@ module Extension
       def argo_admin?
         ShopifyCli::Shopifolk.check &&
           ShopifyCli::Feature.enabled?(:argo_admin_beta) &&
-          extension_type.specification.features&.argo&.surface_area == "admin"
+          extension_type.specification.features&.argo&.surface == "admin"
       end
     end
   end

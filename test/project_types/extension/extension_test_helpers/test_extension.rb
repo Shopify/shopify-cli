@@ -16,10 +16,6 @@ module Extension
         "TEST_EXTENSION_GQL"
       end
 
-      def name
-        "Test Extension"
-      end
-
       def tagline
         "An extension for testing"
       end

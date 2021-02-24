@@ -44,12 +44,10 @@ module Extension
         setup_temp_project
 
         assert_kind_of(Models::LazySpecificationHandler, @command.extension_type)
-        assert_equal @test_extension_type.specification, @command.extension_type.specification
       end
 
       def test_extension_type_memoizes_the_extension_type
         setup_temp_project
-        Extension.specifications.expects(:[]).returns(@test_extension_type).once
 
         @command.extension_type.specification
         @command.extension_type.specification

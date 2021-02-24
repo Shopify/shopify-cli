@@ -12,11 +12,15 @@ module Extension
         @extension_type ||= begin
           identifier = project.extension_type_identifier
           Models::LazySpecificationHandler.new(identifier) do
-            unless Extension.specifications.valid?(identifier)
+            specifications = Models::Specifications.new(
+              fetch_specifications: Tasks::FetchSpecifications.new(api_key: project.app.api_key, context: @ctx)
+            )
+
+            unless specifications.valid?(identifier)
               @ctx.abort(@ctx.message("errors.unknown_type", project.extension_type_identifier))
             end
 
-            Extension.specifications[identifier]
+            specifications[identifier]
           end
         end
       end
