@@ -9,11 +9,15 @@ module Extension
       include ExtensionTestHelpers::TestExtensionSetup
       include ExtensionTestHelpers::Messages
       include ExtensionTestHelpers::Stubs::GetOrganizations
+      include ExtensionTestHelpers::Stubs::GetApp
 
       def setup
         super
         @name = "My Ext"
         @directory_name = "my_ext"
+
+        @app = Models::App.new(title: "Fake", api_key: "1234", secret: "4567", business_name: "Fake Business")
+        stub_get_app(api_key: "1234", app: @app)
       end
 
       def test_prints_help
@@ -26,7 +30,7 @@ module Extension
         @test_extension_type.expects(:create).never
 
         io = capture_io_and_assert_raises(ShopifyCli::Abort) do
-          run_create(%W(extension --name=#{@name} --type=#{@test_extension_type.identifier}))
+          run_create(%W(extension --name=#{@name} --type=#{@test_extension_type.identifier} --api-key=#{@app.api_key}))
         end
 
         assert_message_output(io: io, expected_content: [
@@ -38,10 +42,13 @@ module Extension
         Dir.expects(:exist?).with(@directory_name).returns(false).once
         @test_extension_type.expects(:create).with(@directory_name, @context).returns(true).once
         ExtensionProject.expects(:write_cli_file).with(context: @context, type: @test_extension_type.identifier).once
-        ExtensionProject.expects(:write_env_file).with(context: @context, title: @name).once
+        ExtensionProject
+          .expects(:write_env_file)
+          .with(context: @context, title: @name, api_key: @app.api_key, api_secret: @app.secret)
+          .once
 
         io = capture_io do
-          run_create(%W(extension --name=#{@name} --type=#{@test_extension_type.identifier}))
+          run_create(%W(extension --name=#{@name} --type=#{@test_extension_type.identifier} --api-key=#{@app.api_key}))
         end
 
         assert_message_output(io: io, expected_content: [
@@ -57,7 +64,7 @@ module Extension
         ExtensionProject.expects(:write_env_file).never
 
         io = capture_io do
-          run_create(%W(extension --name=#{@name} --type=#{@test_extension_type.identifier}))
+          run_create(%W(extension --name=#{@name} --type=#{@test_extension_type.identifier} --api-key=#{@app.api_key}))
         end
 
         assert_message_output(io: io, expected_content: @context.message("create.try_again"))
