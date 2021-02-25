@@ -2,7 +2,9 @@
 
 module Script
   class ScriptProject < ShopifyCli::Project
-    attr_reader :extension_point_type, :script_name, :language, :description
+    CONFIG_UI_DEFINITION_PATH = 'configuration-ui.yml'
+
+    attr_reader :extension_point_type, :script_name, :language, :description, :configuration_ui_yaml
 
     def initialize(*args)
       super
@@ -10,6 +12,7 @@ module Script
       raise Errors::DeprecatedEPError, @extension_point_type if deprecated?(@extension_point_type)
       @script_name = lookup_config!("script_name")
       @description = lookup_config("description")
+      @configuration_ui_yaml = lookup_configuration_ui_yaml
       @language = lookup_language
       ShopifyCli::Core::Monorail.metadata = {
         "script_name" => @script_name,
@@ -36,6 +39,12 @@ module Script
     def lookup_config!(key)
       raise Errors::InvalidContextError, key unless config.key?(key)
       config[key]
+    end
+
+    def lookup_configuration_ui_yaml
+      path = File.join(directory, CONFIG_UI_DEFINITION_PATH)
+      return nil unless File.exist?(path)
+      File.read(path)
     end
 
     def lookup_language

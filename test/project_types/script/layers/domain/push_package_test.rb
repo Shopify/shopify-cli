@@ -7,6 +7,7 @@ describe Script::Layers::Domain::PushPackage do
   let(:script_id) { "id" }
   let(:script_name) { "foo_script" }
   let(:description) { "my description" }
+  let(:configuration_ui_yaml) { "---\nversion: 1\n" }
   let(:api_key) { "fake_key" }
   let(:force) { false }
   let(:script_content) { "(module)" }
@@ -18,6 +19,7 @@ describe Script::Layers::Domain::PushPackage do
       extension_point_type: extension_point_type,
       script_name: script_name,
       description: description,
+      configuration_ui_yaml: configuration_ui_yaml,
       script_content: script_content,
       compiled_type: compiled_type,
       metadata: metadata

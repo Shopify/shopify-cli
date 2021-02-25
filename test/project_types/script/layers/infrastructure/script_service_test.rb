@@ -12,6 +12,7 @@ describe Script::Layers::Infrastructure::ScriptService do
   let(:schema_major_version) { "1" }
   let(:schema_minor_version) { "0" }
   let(:use_msgpack) { true }
+  let(:configuration_ui_yaml) { "---\nversion:1\n" }
   let(:script_service_proxy) do
     <<~HERE
       query ProxyRequest($api_key: String, $shop_domain: String, $query: String!, $variables: String) {
@@ -36,6 +37,7 @@ describe Script::Layers::Infrastructure::ScriptService do
           $extensionPointName: ExtensionPointName!,
           $title: String,
           $description: String,
+          $configUiYaml: String,
           $sourceCode: String,
           $language: String,
           $schemaMajorVersion: String,
@@ -46,6 +48,7 @@ describe Script::Layers::Infrastructure::ScriptService do
             extensionPointName: $extensionPointName
             title: $title
             description: $description
+            configUiYaml: $configUiYaml
             sourceCode: $sourceCode
             language: $language
             schemaMajorVersion: $schemaMajorVersion
@@ -79,6 +82,7 @@ describe Script::Layers::Infrastructure::ScriptService do
             extensionPointName: extension_point_type,
             title: script_name,
             description: description,
+            configUiYaml: configuration_ui_yaml,
             sourceCode: Base64.encode64(script_content),
             language: "AssemblyScript",
             force: false,
@@ -104,6 +108,7 @@ describe Script::Layers::Infrastructure::ScriptService do
         script_content: script_content,
         compiled_type: "AssemblyScript",
         description: description,
+        configuration_ui_yaml: configuration_ui_yaml,
         api_key: api_key,
       )
     end

@@ -14,14 +14,13 @@ describe Script::Layers::Application::BuildScript do
     let(:compiled_type) { "wasm" }
     let(:metadata) { Script::Layers::Domain::Metadata.new("1", "0", false) }
     let(:task_runner) { stub(compiled_type: compiled_type, metadata: metadata) }
+    let(:script_project) { stub }
 
     subject do
       Script::Layers::Application::BuildScript.call(
         ctx: @context,
         task_runner: task_runner,
-        script_name: script_name,
-        extension_point_type: extension_point_type,
-        description: description
+        script_project: script_project
       )
     end
 
@@ -30,9 +29,7 @@ describe Script::Layers::Application::BuildScript do
         CLI::UI::Frame.expects(:with_frame_color_override).never
         task_runner.expects(:build).returns(content)
         Script::Layers::Infrastructure::PushPackageRepository.any_instance.expects(:create_push_package).with(
-          extension_point_type: extension_point_type,
-          script_name: script_name,
-          description: description,
+          script_project: script_project,
           script_content: content,
           compiled_type: "wasm",
           metadata: metadata

@@ -18,13 +18,15 @@ module Script
           description: nil,
           api_key: nil,
           force: false,
-          metadata:
+          metadata:,
+          configuration_ui_yaml:
         )
           query_name = "app_script_update_or_create"
           variables = {
             extensionPointName: extension_point_type.upcase,
             title: script_name,
             description: description,
+            configUiYaml: configuration_ui_yaml,
             sourceCode: Base64.encode64(script_content),
             language: compiled_type,
             force: force,
