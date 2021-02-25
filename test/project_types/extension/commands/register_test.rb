@@ -8,7 +8,6 @@ module Extension
       include TestHelpers::FakeUI
       include ExtensionTestHelpers::TempProjectSetup
       include ExtensionTestHelpers::Messages
-      # include ExtensionTestHelpers::Stubs::GetApp
 
       def setup
         super

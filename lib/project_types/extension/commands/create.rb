@@ -35,7 +35,7 @@ module Extension
       def self.help
         <<~HELP
           Create a new app extension.
-            Usage: {{command:#{ShopifyCli::TOOL_NAME} create extension <name>}}
+            Usage: {{command:#{ShopifyCli::TOOL_NAME} create extension}}
             Options:
               {{command:--type=TYPE}} The type of extension you would like to create.
               {{command:--name=NAME}} The name of your extension (50 characters).”

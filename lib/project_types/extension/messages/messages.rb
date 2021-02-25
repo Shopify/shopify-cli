@@ -23,6 +23,13 @@ module Extension
         errors: {
           directory_exists: "Directory ‘%s’ already exists. Please remove it or choose a new name for your project.",
         },
+        incomplete_configuration: "Cannot create extension due to missing configuration information",
+        invalid_api_key: "The API key %s does not match any of your apps.",
+        ask_app: "Which app would you like to register this extension with?",
+        no_apps: "{{x}} You don’t have any apps.",
+        learn_about_apps: "{{*}} Learn more about building apps at <https://shopify.dev/concepts/apps>, " \
+          "or try creating a new app using {{command:shopify create}}.",
+        loading_apps: "Loading your apps...",
       },
       build: {
         frame_title: "Building extension with: %s...",
@@ -32,12 +39,6 @@ module Extension
         frame_title: "Registering Extension",
         waiting_text: "Registering with Shopify...",
         already_registered: "Extension is already registered.",
-        loading_apps: "Loading your apps...",
-        ask_app: "Which app would you like to register this extension with?",
-        no_apps: "{{x}} You don’t have any apps.",
-        learn_about_apps: "{{*}} Learn more about building apps at <https://shopify.dev/concepts/apps>, " \
-          "or try creating a new app using {{command:shopify create}}.",
-        invalid_api_key: "The API key %s does not match any of your apps.",
         confirm_info: "This will create a new extension registration for %s, which can’t be undone.",
         confirm_question: "Would you like to register this extension with {{green:%s}}? (y/n)",
         confirm_abort: "Extension was not registered.",
@@ -69,7 +70,7 @@ module Extension
         extended_help: <<~HELP,
           {{bold:Subcommands:}}
 
-            {{cyan:auth}}: Writes an ngrok auth token to ~/.ngrok2/ngrok.yml to connect with an ngrok account. 
+            {{cyan:auth}}: Writes an ngrok auth token to ~/.ngrok2/ngrok.yml to connect with an ngrok account.
             Visit https://dashboard.ngrok.com/signup to sign up.
               Usage: {{command:%1$s tunnel auth <token>}}
 

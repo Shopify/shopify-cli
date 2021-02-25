@@ -7,79 +7,40 @@ module Extension
 
       attr_reader :app
 
+      class ExtensionProjectDetails
+        include SmartProperties
+
+        property :app, accepts: Models::App
+        property :name, accepts: String
+        property :type, accepts: Models::SpecificationHandlers::Default
+
+        def complete?
+          !!(app && name && type)
+        end
+      end
+
       def ask
-        self.app = ask_app
-        self.type = ask_type
-        self.name = ask_name
+        ShopifyCli::Result.wrap(ExtensionProjectDetails.new)
+          .then(&Questions::AskApp.new(ctx: ctx, api_key: api_key))
+          .then(&Questions::AskType.new(ctx: ctx, type: type))
+          .then(&Questions::AskName.new(ctx: ctx, name: name))
+          .unwrap { |e| raise e }
+          .tap do |project_details|
+            ctx.abort(ctx.message("create.incomplete_configuration")) unless project_details.complete?
+
+            self.app = project_details.app
+            self.type = project_details.type
+            self.name = project_details.name
+          end
       end
 
       def directory_name
-        @directory_name ||= name.strip.gsub(/( )/, "_").downcase
+        name.strip.gsub(/( )/, "_").downcase
       end
 
       private
 
       attr_writer :app
-
-      def ask_app
-        if !api_key.nil?
-          found_app = Tasks::GetApp.call(context: ctx, api_key: api_key)
-          ctx.abort(ctx.message("register.invalid_api_key", api_key)) if found_app.nil?
-          found_app
-        else
-          apps = load_apps
-          CLI::UI::Prompt.ask(ctx.message("register.ask_app")) do |handler|
-            apps.each do |app|
-              handler.option("#{app.title} by #{app.business_name}") { app }
-            end
-          end
-        end
-      end
-
-      def load_apps
-        ctx.puts(@ctx.message("register.loading_apps"))
-        apps = Tasks::GetApps.call(context: ctx)
-
-        apps.empty? ? abort_no_apps : apps
-      end
-
-      def abort_no_apps
-        ctx.puts(@ctx.message("register.no_apps"))
-        ctx.puts(@ctx.message("register.learn_about_apps"))
-        raise ShopifyCli::AbortSilent
-      end
-
-      def ask_name
-        ask_with_reprompt(
-          initial_value: name,
-          break_condition: -> (current_name) { Models::Registration.valid_title?(current_name) },
-          prompt_message: ctx.message("create.ask_name"),
-          reprompt_message: ctx.message("create.invalid_name", Models::Registration::MAX_TITLE_LENGTH)
-        )
-      end
-
-      def ask_type
-        return Extension.specifications[type] if Extension.specifications.valid?(type)
-        ctx.puts(ctx.message("create.invalid_type")) unless type.nil?
-
-        CLI::UI::Prompt.ask(ctx.message("create.ask_type")) do |handler|
-          Extension.specifications.each do |type|
-            handler.option("#{type.name} #{type.tagline}") { type }
-          end
-        end
-      end
-
-      def ask_with_reprompt(initial_value:, break_condition:, prompt_message:, reprompt_message:)
-        value = initial_value
-        reprompt = false
-
-        until break_condition.call(value)
-          ctx.puts(reprompt_message) if reprompt
-          value = CLI::UI::Prompt.ask(prompt_message)&.strip
-          reprompt = true
-        end
-        value
-      end
     end
   end
 end
