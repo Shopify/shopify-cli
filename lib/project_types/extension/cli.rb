@@ -35,6 +35,7 @@ module Extension
     autoload :CreateExtension, Project.project_filepath('tasks/create_extension')
     autoload :UpdateDraft, Project.project_filepath('tasks/update_draft')
     autoload :FetchSpecifications, Project.project_filepath('tasks/fetch_specifications')
+    autoload :ConfigureFeatures, Project.project_filepath('tasks/configure_features')
 
     module Converters
       autoload :RegistrationConverter, Project.project_filepath('tasks/converters/registration_converter')
@@ -55,11 +56,7 @@ module Extension
     autoload :ArgoSetupSteps, Project.project_filepath('features/argo_setup_steps')
     autoload :ArgoDependencies, Project.project_filepath('features/argo_dependencies')
     autoload :ArgoConfig, Project.project_filepath('features/argo_config')
-    module Argo
-      autoload :Base, Project.project_filepath('features/argo/base')
-      autoload :Admin, Project.project_filepath('features/argo/admin')
-      autoload :Checkout, Project.project_filepath('features/argo/checkout')
-    end
+    autoload :Argo, Project.project_filepath('features/argo')
   end
 
   module Models

@@ -94,11 +94,11 @@ module CLI
           delegate_open3(*a, sudo: sudo, env: env, method: :popen2, **kwargs, &block)
         end
 
-        def popen2e(*a, sudo: false, env: ENV, **kwargs)
+        def popen2e(*a, sudo: false, env: ENV, **kwargs, &block)
           delegate_open3(*a, sudo: sudo, env: env, method: :popen2e, **kwargs, &block)
         end
 
-        def popen3(*a, sudo: false, env: ENV, **kwargs)
+        def popen3(*a, sudo: false, env: ENV, **kwargs, &block)
           delegate_open3(*a, sudo: sudo, env: env, method: :popen3, **kwargs, &block)
         end
 
@@ -112,7 +112,7 @@ module CLI
         # - `**kwargs`: additional keyword arguments to pass to Process.spawn
         #
         # #### Returns
-        # - `status`: boolean success status of the command execution
+        # - `status`: The `Process:Status` result for the command execution
         #
         # #### Usage
         # `stat = CLI::Kit::System.system('ls', 'a_folder')`

@@ -1,6 +1,13 @@
 # frozen_string_literal: true
+require 'test_helper'
 
 module Extension
+  module Models
+    module SpecificationHandlers
+      autoload(:Default, 'project_types/extension/models/specification_handlers/default')
+    end
+  end
+
   module ExtensionTestHelpers
     class TestExtension < Models::SpecificationHandlers::Default
       IDENTIFIER = 'TEST_EXTENSION'

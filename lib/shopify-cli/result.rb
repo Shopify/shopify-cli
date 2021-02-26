@@ -420,5 +420,13 @@ module ShopifyCli
         end
       end
     end
+
+    ##
+    # Wraps the given block and invokes it with the passed arguments.
+    #
+    def self.call(*args, &block)
+      raise ArgumentError, "expected a block" unless block
+      wrap(&block).call(*args)
+    end
   end
 end

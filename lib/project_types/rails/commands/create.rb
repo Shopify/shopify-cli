@@ -32,7 +32,7 @@ module Rails
 
         ruby_version = Ruby.version(@ctx)
         @ctx.abort(@ctx.message('rails.create.error.invalid_ruby_version')) unless
-          ruby_version.satisfies?('~>2.5') || ruby_version.satisfies?('<3.1')
+          ruby_version.satisfies?('~>2.5') || ruby_version.satisfies?('~>3.0.0')
 
         check_node
         check_yarn
@@ -116,7 +116,7 @@ module Rails
       end
 
       def build(name, db)
-        @ctx.abort(@ctx.message('rails.create.error.install_failure', 'rails')) unless install_gem('rails')
+        @ctx.abort(@ctx.message('rails.create.error.install_failure', 'rails')) unless install_gem('rails', '<6.1')
         @ctx.abort(@ctx.message('rails.create.error.install_failure', 'bundler ~>2.0')) unless
           install_gem('bundler', '~>2.0')
 
@@ -139,14 +139,14 @@ module Rails
 
         @ctx.puts(@ctx.message('rails.create.adding_shopify_gem'))
         File.open(File.join(@ctx.root, 'Gemfile'), 'a') do |f|
-          f.puts "\ngem 'shopify_app', '>=11.3.0'"
+          f.puts "\ngem 'shopify_app', '>=17.0.3'"
         end
         CLI::UI::Frame.open(@ctx.message('rails.create.running_bundle_install')) do
           syscall(%w(bundle install))
         end
 
         CLI::UI::Frame.open(@ctx.message('rails.create.running_generator')) do
-          syscall(%w(rails generate shopify_app))
+          syscall(%w(rails generate shopify_app --new-shopify-cli-app))
         end
 
         CLI::UI::Frame.open(@ctx.message('rails.create.running_migrations')) do

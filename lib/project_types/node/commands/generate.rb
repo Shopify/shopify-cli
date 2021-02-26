@@ -13,20 +13,11 @@ module Node
       end
 
       def self.help
-        ShopifyCli::Context.message('node.generate.help', ShopifyCli::TOOL_NAME)
+        ShopifyCli::Context.message('node.generate.help')
       end
 
       def self.extended_help
-        extended_help = "{{bold:Subcommands:}}\n"
-        subcommand_registry.resolved_commands.sort.each do |name, klass|
-          extended_help += "  {{cyan:#{name}}}: "
-
-          if (subcmd_help = klass.help)
-            extended_help += subcmd_help.gsub("\n  ", "\n    ")
-          end
-          extended_help += "\n"
-        end
-        extended_help += ShopifyCli::Context.message('node.generate.extended_help', ShopifyCli::TOOL_NAME)
+        help
       end
 
       def self.run_generate(script, name, ctx)

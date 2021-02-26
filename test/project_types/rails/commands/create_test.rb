@@ -31,6 +31,11 @@ module Rails
         assert_raises ShopifyCli::Abort do
           perform_command
         end
+
+        Ruby.expects(:version).returns(Semantic::Version.new('3.1.0'))
+        assert_raises ShopifyCli::Abort do
+          perform_command
+        end
       end
 
       def test_can_create_new_app
@@ -40,12 +45,12 @@ module Rails
         Gem.stubs(:gem_home).returns(gem_path)
 
         Ruby.expects(:version).returns(Semantic::Version.new('2.5.0'))
-        Gem.expects(:install).with(@context, 'rails', nil).returns(true)
+        Gem.expects(:install).with(@context, 'rails', '<6.1').returns(true)
         Gem.expects(:install).with(@context, 'bundler', '~>2.0').returns(true)
         expect_command(%W(#{gem_path}/bin/rails new --skip-spring --database=sqlite3 test-app))
         expect_command(%W(#{gem_path}/bin/bundle install),
           chdir: File.join(@context.root, 'test-app'))
-        expect_command(%W(#{gem_path}/bin/rails generate shopify_app),
+        expect_command(%W(#{gem_path}/bin/rails generate shopify_app --new-shopify-cli-app),
           chdir: File.join(@context.root, 'test-app'))
         expect_command(%W(#{gem_path}/bin/rails db:create),
           chdir: File.join(@context.root, 'test-app'))
@@ -92,12 +97,12 @@ module Rails
         Gem.stubs(:gem_home).returns(gem_path)
 
         Ruby.expects(:version).returns(Semantic::Version.new('2.5.0'))
-        Gem.expects(:install).with(@context, 'rails', nil).returns(true)
+        Gem.expects(:install).with(@context, 'rails', '<6.1').returns(true)
         Gem.expects(:install).with(@context, 'bundler', '~>2.0').returns(true)
         expect_command(%W(#{gem_path}/bin/rails new --skip-spring --database=postgresql test-app))
         expect_command(%W(#{gem_path}/bin/bundle install),
           chdir: File.join(@context.root, 'test-app'))
-        expect_command(%W(#{gem_path}/bin/rails generate shopify_app),
+        expect_command(%W(#{gem_path}/bin/rails generate shopify_app --new-shopify-cli-app),
           chdir: File.join(@context.root, 'test-app'))
         expect_command(%W(#{gem_path}/bin/rails db:create),
           chdir: File.join(@context.root, 'test-app'))
@@ -140,12 +145,12 @@ module Rails
         Gem.stubs(:gem_home).returns(gem_path)
 
         Ruby.expects(:version).returns(Semantic::Version.new('2.5.0'))
-        Gem.expects(:install).with(@context, 'rails', nil).returns(true)
+        Gem.expects(:install).with(@context, 'rails', '<6.1').returns(true)
         Gem.expects(:install).with(@context, 'bundler', '~>2.0').returns(true)
         expect_command(%W(#{gem_path}/bin/rails new --skip-spring --database=sqlite3 --edge -J test-app))
         expect_command(%W(#{gem_path}/bin/bundle install),
           chdir: File.join(@context.root, 'test-app'))
-        expect_command(%W(#{gem_path}/bin/rails generate shopify_app),
+        expect_command(%W(#{gem_path}/bin/rails generate shopify_app --new-shopify-cli-app),
           chdir: File.join(@context.root, 'test-app'))
         expect_command(%W(#{gem_path}/bin/rails db:create),
           chdir: File.join(@context.root, 'test-app'))
@@ -189,7 +194,7 @@ module Rails
         Gem.stubs(:gem_home).returns(gem_path)
 
         Ruby.expects(:version).returns(Semantic::Version.new('2.5.0'))
-        Gem.expects(:install).with(@context, 'rails', nil).returns(true)
+        Gem.expects(:install).with(@context, 'rails', '<6.1').returns(true)
         Gem.expects(:install).with(@context, 'bundler', '~>2.0').returns(true)
         Dir.stubs(:exist?).returns(true)
 

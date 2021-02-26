@@ -1,8 +1,11 @@
 Unreleased
 ------
-
 * [#1075](https://github.com/Shopify/shopify-app-cli/pull/1075): Add support for kebab-case flags
+
+Version 1.6.0
+-----
 * [#1049](https://github.com/Shopify/shopify-app-cli/pull/1049): Add schema versioning support to the script project type
+* [#1059](https://github.com/Shopify/shopify-app-cli/pull/1059): Remove the functionality of the `generate` command for node apps, since it will no longer be feasible with the new node library
 * [#1046](https://github.com/Shopify/shopify-app-cli/pull/1046): Include a vendored copy of Webrick, as it's no longer included in Ruby 3.
 * [#1041](https://github.com/Shopify/shopify-app-cli/pull/1041): Remove unnecessary shell call to `spring stop`. We already pass `--skip-spring` when creating the app so running `spring stop` would have no effect.
 * [#1034](https://github.com/Shopify/shopify-app-cli/pull/1034): Abort if a system call fails.

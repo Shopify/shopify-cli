@@ -99,7 +99,7 @@ module Rails
         # there was a specific version given during new(), so
         # check version of gem found to determine match
         require 'semantic/semantic'
-        found_version, _ = path.match(%r{/#{Regexp.quote(name)}-([\d\.]+)})&.captures
+        found_version, _ = path.match(%r{/#{Regexp.quote(name)}-(\d\.\d\.\d)})&.captures
         found_version.nil? ? false : Semantic::Version.new(found_version).satisfies?(version)
       else
         # otherwise ignore the actual version number,
