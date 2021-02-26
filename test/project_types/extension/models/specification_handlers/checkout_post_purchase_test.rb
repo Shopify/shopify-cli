@@ -9,25 +9,26 @@ module Extension
           super
           YAML.stubs(:load_file).returns({})
           ShopifyCli::ProjectType.load_type(:extension)
-          Features::Argo::Checkout.any_instance.stubs(:config).returns({})
+          Features::Argo.any_instance.stubs(:config).returns({})
           Features::ArgoConfig.stubs(:parse_yaml).returns({})
 
-          @checkout_post_purchase = Extension.specifications[CheckoutPostPurchase::IDENTIFIER]
+          @identifier = 'CHECKOUT_POST_PURCHASE'
+          @checkout_post_purchase = Extension.specifications[@identifier]
         end
 
         def test_create_uses_standard_argo_create_implementation
           directory_name = 'checkout_post_purchase'
 
-          Features::Argo::Checkout.any_instance
+          Features::Argo.any_instance
             .expects(:create)
-            .with(directory_name, CheckoutPostPurchase::IDENTIFIER, @context)
+            .with(directory_name, @identifier, @context)
             .once
 
           @checkout_post_purchase.create(directory_name, @context)
         end
 
         def test_config_uses_standard_argo_config_implementation
-          Features::Argo::Checkout.any_instance.expects(:config).with(@context).once.returns({})
+          Features::Argo.any_instance.expects(:config).with(@context).once.returns({})
           @checkout_post_purchase.config(@context)
         end
 
@@ -38,7 +39,7 @@ module Extension
           initial_config = { script_content: script_content }
           yaml_config = { "metafields": metafields }
 
-          Features::Argo::Checkout.any_instance.expects(:config).with(@context).once.returns(initial_config)
+          Features::Argo.any_instance.expects(:config).with(@context).once.returns(initial_config)
           Features::ArgoConfig.stubs(:parse_yaml).returns(yaml_config)
 
           config = @checkout_post_purchase.config(@context)
@@ -48,9 +49,13 @@ module Extension
         end
 
         def test_config_passes_allowed_keys
-          Features::Argo::Checkout.any_instance.stubs(:config).returns({})
+          Features::Argo.any_instance.stubs(:config).returns({})
           Features::ArgoConfig.expects(:parse_yaml).with(@context, [:metafields]).once.returns({})
           @checkout_post_purchase.config(@context)
+        end
+
+        def test_graphql_identifier
+          assert_equal @identifier, @checkout_post_purchase.graphql_identifier
         end
       end
     end

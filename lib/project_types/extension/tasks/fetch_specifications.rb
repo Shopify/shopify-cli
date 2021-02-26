@@ -13,11 +13,25 @@ module Extension
       private
 
       def product_subscription_specification
-        Models::Specification.new(identifier: 'product_subscription')
+        {
+          identifier: 'product_subscription',
+          features: {
+            argo: {
+              surface_area: 'admin',
+            },
+          },
+        }
       end
 
       def checkout_post_purchase_specification
-        Models::Specification.new(identifier: 'checkout_post_purchase')
+        {
+          identifier: 'checkout_post_purchase',
+          features: {
+            argo: {
+              surface_area: 'checkout',
+            },
+          },
+        }
       end
     end
   end

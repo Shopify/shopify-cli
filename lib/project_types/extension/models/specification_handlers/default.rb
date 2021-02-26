@@ -4,12 +4,18 @@ module Extension
   module Models
     module SpecificationHandlers
       class Default
+        attr_reader :specification
+
+        def initialize(specification)
+          @specification = specification
+        end
+
         def identifier
-          self.class::IDENTIFIER
+          specification.identifier.to_s.upcase
         end
 
         def graphql_identifier
-          identifier
+          specification.graphql_identifier.to_s.upcase
         end
 
         def name
@@ -20,12 +26,12 @@ module Extension
           message('tagline') || ""
         end
 
-        def config(_context)
-          raise NotImplementedError, "'#{__method__}' must be implemented for #{self.class}"
+        def config(context)
+          argo.config(context)
         end
 
-        def create(_directory_name, _context)
-          raise NotImplementedError, "'#{__method__}' must be implemented for #{self.class}"
+        def create(directory_name, context)
+          argo.create(directory_name, identifier, context)
         end
 
         def extension_context(_context)
@@ -34,6 +40,15 @@ module Extension
 
         def valid_extension_contexts
           []
+        end
+
+        protected
+
+        def argo
+          Features::Argo.new(
+            git_template: specification.features.argo.git_template,
+            renderer_package_name: specification.features.argo.renderer_package_name,
+          )
         end
 
         private
