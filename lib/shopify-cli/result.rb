@@ -304,12 +304,12 @@ module ShopifyCli
       #
       #   Failure
       #     .new(RuntimeError.new)
-      #     .resuce { "All good! "}
+      #     .rescue { "All good! "}
       #     .success? # => true
       #
       #   Failure
       #     .new(RuntimeError.new)
-      #     .resuce { Failure.new("Still broken!") }
+      #     .rescue { Failure.new("Still broken!") }
       #     .success? # => false
       #
       def rescue(&block)
@@ -414,7 +414,7 @@ module ShopifyCli
         ->(*args) do
           begin
             wrap(block.call(*args))
-          rescue => error
+          rescue Exception => error # rubocop:disable Lint/RescueException
             wrap(error)
           end
         end

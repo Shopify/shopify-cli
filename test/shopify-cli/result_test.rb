@@ -36,7 +36,7 @@ module ShopifyCli
       end
 
       def test_captures_exceptions_and_wraps_them_in_an_error_when_deferring_result_construction
-        assert_kind_of(Result::Failure, Result.wrap { raise "Failure" }.call)
+        assert_kind_of(Result::Failure, Result.wrap { raise Exception, "Failure" }.call)
       end
 
       def test_call_wraps_a_block_and_invokes_it_immediately
