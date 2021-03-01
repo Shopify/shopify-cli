@@ -7,7 +7,9 @@ module Node
         parser.on('--title=TITLE') { |t| flags[:title] = t }
         parser.on('--name=NAME') { |t| flags[:title] = t }
         parser.on('--organization_id=ID') { |url| flags[:organization_id] = url }
+        parser.on('--organization-id=ID') { |url| flags[:organization_id] = url }
         parser.on('--shop_domain=MYSHOPIFYDOMAIN') { |url| flags[:shop_domain] = url }
+        parser.on('--shop-domain=MYSHOPIFYDOMAIN') { |url| flags[:shop_domain] = url }
         parser.on('--type=APPTYPE') { |url| flags[:type] = url }
         parser.on('--verbose') { flags[:verbose] = true }
       end

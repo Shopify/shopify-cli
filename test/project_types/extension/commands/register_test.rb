@@ -100,10 +100,18 @@ module Extension
 
       private
 
-      def run_register_command(api_key: @api_key)
+      def run_register_command_snake_case(api_key: @api_key)
         Commands::Register.ctx = @context
         Commands::Register.call(
           %W(--api_key=#{api_key}),
+          :register
+        )
+      end
+
+      def run_register_command(api_key: @api_key)
+        Commands::Register.ctx = @context
+        Commands::Register.call(
+          %W(--api-key=#{api_key}),
           :register
         )
       end

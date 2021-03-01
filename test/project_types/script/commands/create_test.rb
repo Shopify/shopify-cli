@@ -107,7 +107,7 @@ module Script
 
       private
 
-      def perform_command
+      def perform_command_snake_case
         args = {
           name: @script_name,
           description: @description,
@@ -116,6 +116,13 @@ module Script
         }
 
         run_cmd("create script #{args.map { |k, v| "--#{k}=#{v}" }.join(' ')}")
+      end
+
+      def perform_command
+        run_cmd(
+          "create script --name=#{@script_name} --description=#{@description}
+          --extension-point=#{@ep_type} --language=#{@language}"
+        )
       end
     end
   end

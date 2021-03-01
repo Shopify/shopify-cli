@@ -1,5 +1,6 @@
 Unreleased
 ------
+* [#1075](https://github.com/Shopify/shopify-app-cli/pull/1075): Add support for kebab-case flags
 
 Version 1.6.0
 -----

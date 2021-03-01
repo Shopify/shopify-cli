@@ -7,6 +7,7 @@ module Script
         parser.on('--name=NAME') { |name| flags[:name] = name }
         parser.on('--description=DESCRIPTION') { |description| flags[:description] = description }
         parser.on('--extension_point=EP_NAME') { |ep_name| flags[:extension_point] = ep_name }
+        parser.on('--extension-point=EP_NAME') { |ep_name| flags[:extension_point] = ep_name }
         parser.on('--language=LANGUAGE') { |language| flags[:language] = language }
       end
 
