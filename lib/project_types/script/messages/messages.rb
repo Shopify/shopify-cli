@@ -30,11 +30,11 @@ module Script
                                     "are numbers, letters, hyphens, or underscores.",
 
           no_existing_apps_cause: "You don't have any apps.",
-          no_existing_apps_help: "Please create an app with {{command:shopify create}} or "\
+          no_existing_apps_help: "Create an app with {{command:shopify create}} or "\
                                  "visit https://partners.shopify.com/.",
 
           no_existing_orgs_cause: "You don't have any partner organizations.",
-          no_existing_orgs_help: "Please visit https://partners.shopify.com/ to create a partners account.",
+          no_existing_orgs_help: "Visit https://partners.shopify.com/ to create a partners account.",
 
           no_existing_stores_cause: "You don't have any stores.",
           no_existing_stores_help: "Visit https://partners.shopify.com/%{organization_id}/stores/ to create one.",
@@ -150,7 +150,7 @@ module Script
           HELP
 
           error: {
-            operation_failed: "Couldn't push script to app.",
+            operation_failed: "Couldn't push script to app (API key: %{api_key}).",
           },
 
           script_pushed: "{{v}} Script pushed to app (API key: %{api_key}).",
