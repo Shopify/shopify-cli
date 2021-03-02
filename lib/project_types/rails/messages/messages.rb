@@ -26,15 +26,15 @@ module Rails
 
         create: {
           help: <<~HELP,
-          {{command:%s create rails}}: Creates a ruby on rails app.
+          {{command:%s create rails}}: Creates a Ruby on Rails app.
             Usage: {{command:%s create rails}}
             Options:
-              {{command:--name=NAME}} App name. Any string.
-              {{command:--app-url=APPURL}} App URL. Must be a valid URL.
-              {{command:--organization-id=ID}} Partner organization ID. Must be an existing organization.
-              {{command:--shop-domain=MYSHOPIFYDOMAIN }} Development store URL. Must be an existing development store.
-              {{command:--db=DB}} Database type. Must be one of: mysql, postgresql, sqlite3, oracle, frontbase, ibm_db, sqlserver, jdbcmysql, jdbcsqlite3, jdbcpostgresql, jdbc.
-              {{command:--rails-opts=RAILSOPTS}} Additional options. Must be string containing one or more valid Rails options, separated by spaces.
+              {{command:--name=<name>}}           App name. Any string.
+              {{command:--app-url=<url>}}         App URL. Must be a valid URL.
+              {{command:--organization-id=<id>}}  Partner organization ID. Must be an existing organization.
+              {{command:--shop-domain=<domain>}}  Development store URL. Must be an existing development store.
+              {{command:--db=<system>}}           Database system. Must be one of: mysql, postgresql, sqlite3, oracle, frontbase, ibm_db, sqlserver, jdbcmysql, jdbcsqlite3, jdbcpostgresql, jdbc.
+              {{command:--rails-opts=<options>}}  Additional options. Must be a string containing one or more valid Rails options, separated by spaces.
           HELP
 
           error: {
@@ -45,12 +45,12 @@ module Rails
             MSG
             dir_exists: "Project directory %s already exists. Please use a different name.",
             install_failure: "Error installing %s gem",
-            node_required: "node is required to create a rails project. Download at https://nodejs.org/en/download.",
-            node_version_failure: "Failed to get the current node version. Please make sure it is installed as " \
-              "per the instructions at https://nodejs.org/en.",
-            yarn_required: "yarn is required to create a rails project. Download at " \
+            node_required: "Node.js is required to create a Rails project. Download at https://nodejs.org/en/download/.",
+            node_version_failure: "Failed to get the current Node.js version. Please make sure it is installed as " \
+              "per the instructions at https://nodejs.org/en/.",
+            yarn_required: "Yarn is required to create a Rails project. Download at " \
               "https://classic.yarnpkg.com/en/docs/install.",
-            yarn_version_failure: "Failed to get the current yarn version. Please make sure it is installed as per " \
+            yarn_version_failure: "Failed to get the current Yarn version. Please make sure it is installed as per " \
               "the instructions at https://classic.yarnpkg.com/en/docs/install.",
           },
 
@@ -59,7 +59,7 @@ module Rails
               "window to continue.}}",
           },
           installing_bundler: "Installing bundler...",
-          generating_app: "Generating new rails app project in %s...",
+          generating_app: "Generating new Rails app project in %s...",
           adding_shopify_gem: "{{v}} Adding shopify_app gem...",
           node_version: "node %s",
           yarn_version: "yarn %s",
@@ -96,12 +96,12 @@ module Rails
             deployed: "{{v}} Deployed to Heroku",
             db_check: {
               validating: "Validating application...",
-              checking: "Checking database type...",
-              validated: "Database type \"%s\" validated for platform \"Heroku\"",
-              problem: "A problem was encountered while checking your database type.",
+              checking: "Checking database system...",
+              validated: "Database system \"%s\" validated for platform \"Heroku\"",
+              problem: "A problem was encountered while checking your database system.",
               sqlite: <<~SQLITE,
               Heroku does not support deployment using the SQLite database system.
-              Change the database type using {{command:rails db:system:change --to=[new_db_type]}}. For more info:
+              Change the database system using {{command:rails db:system:change --to=<new-system>}}. For more info:
               {{underline:https://gorails.com/episodes/rails-6-db-system-change-command}}
               SQLITE
             },
@@ -127,7 +127,7 @@ module Rails
         generate: {
           help: <<~HELP,
           Generate code in your Rails project. Currently supports generating new webhooks.
-            Usage: {{command:%s generate [ webhook ]}}
+            Usage: {{command:%s generate [webhook]}}
           HELP
           extended_help: <<~EXAMPLES,
           {{bold:Examples:}}
@@ -161,7 +161,7 @@ module Rails
         populate: {
           help: <<~HELP,
           Populate your Shopify development store with example customers, orders, or products.
-            Usage: {{command:%s populate [ customers | draftorders | products ]}}
+            Usage: {{command:%s populate [customers|draftorders|products]}}
           HELP
           extended_help: <<~HELP,
           {{bold:Subcommands:}}
@@ -177,7 +177,7 @@ module Rails
 
           {{bold:Options:}}
 
-            {{cyan:--count [integer]}}: The number of dummy items to populate. Defaults to 5.
+            {{cyan:--count=<integer>}}: The number of dummy items to populate. Defaults to 5.
             {{cyan:--silent}}: Silence the populate output.
             {{cyan:--help}}: Display more options specific to each subcommand.
 
@@ -186,7 +186,7 @@ module Rails
             {{command:%1$s populate products}}
               Populate your development store with 5 additional products.
 
-            {{command:%1$s populate customers --count 30}}
+            {{command:%1$s populate customers --count=30}}
               Populate your development store with 30 additional customers.
 
             {{command:%1$s populate draftorders}}
@@ -216,11 +216,11 @@ module Rails
           HELP
           extended_help: <<~HELP,
           {{bold:Options:}}
-            {{cyan:--host=HOST}}: Bypass running tunnel and use custom host. HOST must be HTTPS url.
+            {{cyan:--host=<host>}}: Bypass running tunnel and use custom host. <host> must be an HTTPS url.
           HELP
 
           error: {
-            host_must_be_https: "{{red:HOST must be a HTTPS url.}}",
+            host_must_be_https: "{{red:<host> must be an HTTPS url.}}",
           },
 
           open_info: <<~MESSAGE,
@@ -233,7 +233,7 @@ module Rails
         tunnel: {
           help: <<~HELP,
           Start or stop an http tunnel to your local development app using ngrok.
-            Usage: {{command:%s tunnel [ auth | start | stop ]}}
+            Usage: {{command:%s tunnel [auth|start|stop]}}
           HELP
           extended_help: <<~HELP,
           {{bold:Subcommands:}}
@@ -258,7 +258,7 @@ module Rails
           create: {
             error: {
               invalid_app_type: "Invalid app type %s",
-              invalid_db_type: "Invalid database type %s",
+              invalid_db_type: "Invalid database system %s",
             },
             app_name: "App name",
             app_type: {
@@ -269,11 +269,11 @@ module Rails
             },
             db: {
               want_select: <<~WANT_SELECT,
-              Would you like to select what database type to use now? (SQLite is the default)
-              If you want to change this in the future, run {{command:rails db:system:change --to=[new_db_type]}}. For more info:
+              Would you like to select what database system to use now? (SQLite is the default)
+              If you want to change this in the future, run {{command:rails db:system:change --to=<new-system>]}}. For more info:
               {{underline:https://gorails.com/episodes/rails-6-db-system-change-command}}
               WANT_SELECT
-              select: "What database type would you like to use? Please ensure the database is installed.",
+              select: "What database system would you like to use? Please ensure the database is installed.",
               select_sqlite3: "SQLite (default)",
               select_mysql: "MySQL",
               select_postgresql: "PostgreSQL",
@@ -285,7 +285,7 @@ module Rails
               select_jdbcsqlite3: "JDBC SQlite",
               select_jdbcpostgresql: "JDBC PostgreSQL",
               select_jdbc: "JDBC",
-              selected: "Database Type {{green:%s}}",
+              selected: "Database system {{green:%s}}",
             },
           },
         },
