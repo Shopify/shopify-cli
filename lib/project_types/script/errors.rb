@@ -4,6 +4,23 @@ module Script
   module Errors
     class InvalidContextError < ScriptProjectError; end
     class InvalidScriptNameError < ScriptProjectError; end
+
+    class InvalidConfigUiDefinitionError < ScriptProjectError
+      attr_reader :filename
+      def initialize(filename)
+        super()
+        @filename = filename
+      end
+    end
+
+    class MissingSpecifiedConfigUiDefinitionError < ScriptProjectError
+      attr_reader :filename
+      def initialize(filename)
+        super()
+        @filename = filename
+      end
+    end
+
     class NoExistingAppsError < ScriptProjectError; end
     class NoExistingOrganizationsError < ScriptProjectError; end
 

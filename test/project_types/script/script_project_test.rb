@@ -6,7 +6,7 @@ module Script
   class ScriptProjectTest < MiniTest::Test
     def setup
       super
-      @context = TestHelpers::FakeContext.new
+      @context = TestHelpers::FakeContext.new(root: Dir.mktmpdir)
       @script_name = "name"
       @extension_point_type = "ep_type"
     end
@@ -22,7 +22,7 @@ module Script
         })
 
       Script::Layers::Application::ExtensionPoints.expects(:supported_language?).returns(true)
-      ScriptProject.new(directory: "testdir")
+      ScriptProject.new(directory: @context.root)
 
       assert_equal({
         "script_name" => @script_name,
@@ -44,7 +44,7 @@ module Script
       Script::Layers::Application::ExtensionPoints.stubs(:deprecated_types).returns([@extension_point_type])
 
       assert_raises Errors::DeprecatedEPError do
-        ScriptProject.new(directory: "testdir")
+        ScriptProject.new(directory: @context.root)
       end
     end
 
@@ -127,7 +127,7 @@ module Script
           "language" => language,
         })
 
-      script = ScriptProject.new(directory: "testdir")
+      script = ScriptProject.new(directory: @context.root)
       assert_equal language.downcase, script.language
     end
 
@@ -142,7 +142,7 @@ module Script
           "script_name" => @script_name,
         })
 
-      script = ScriptProject.new(directory: "testdir")
+      script = ScriptProject.new(directory: @context.root)
       assert_equal "assemblyscript", script.language
     end
 
@@ -160,7 +160,77 @@ module Script
         })
 
       assert_raises(Script::Errors::InvalidLanguageError) do
-        ScriptProject.new(directory: "testdir")
+        ScriptProject.new(directory: @context.root)
+      end
+    end
+
+    describe "#configuration_ui_yaml" do
+      let(:configuration_ui_file) { "ui-config.yml" }
+      let(:language) { "assemblyscript" }
+
+      before do
+        @context.root = Dir.mktmpdir
+        Dir.stubs(:pwd).returns(@context.root)
+        Script::Layers::Application::ExtensionPoints.stubs(:deprecated_types).returns([])
+        Script::Layers::Application::ExtensionPoints.stubs(:languages).returns(%(assemblyscript rust))
+      end
+
+      subject do
+        Script::ScriptProject.current.configuration_ui_yaml
+      end
+
+      describe "when ui_configuration_file field exists in config" do
+        before do
+          Script::ScriptProject.write(
+            @context,
+            project_type: :script,
+            organization_id: nil,
+            extension_point_type: @extension_point_type,
+            script_name: @script_name,
+            language: language,
+            configuration_ui_file: configuration_ui_file
+          )
+        end
+
+        describe "when file exists" do
+          describe "when YAML is valid" do
+            let(:configuration_ui_yaml) { "---\nversion: 1" }
+
+            it "returns the raw contents" do
+              @context.write(configuration_ui_file, configuration_ui_yaml)
+              assert_equal configuration_ui_yaml, subject
+            end
+          end
+
+          describe "when YAML is invalid" do
+            let(:configuration_ui_yaml) { "*" }
+
+            it "raises InvalidConfigUiDefinitionError" do
+              @context.write(configuration_ui_file, configuration_ui_yaml)
+              assert_raises(Script::Errors::InvalidConfigUiDefinitionError) { subject }
+            end
+          end
+        end
+
+        describe "when file does not exist" do
+          it "raises MissingSpecifiedConfigUiDefinitionError" do
+            assert_raises(Script::Errors::MissingSpecifiedConfigUiDefinitionError) { subject }
+          end
+        end
+      end
+
+      describe "when ui_configuration_file field does not exist in config" do
+        it "returns nil" do
+          Script::ScriptProject.write(
+            @context,
+            project_type: :script,
+            organization_id: nil,
+            extension_point_type: @extension_point_type,
+            script_name: @script_name,
+            language: language,
+          )
+          assert_nil subject
+        end
       end
     end
   end

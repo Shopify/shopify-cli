@@ -2,8 +2,6 @@
 
 module Script
   class ScriptProject < ShopifyCli::Project
-    CONFIG_UI_DEFINITION_PATH = 'configuration-ui.yml'
-
     attr_reader :extension_point_type, :script_name, :language, :description, :configuration_ui_yaml
 
     def initialize(*args)
@@ -42,9 +40,16 @@ module Script
     end
 
     def lookup_configuration_ui_yaml
-      path = File.join(directory, CONFIG_UI_DEFINITION_PATH)
-      return nil unless File.exist?(path)
-      File.read(path)
+      filename = lookup_config("configuration_ui_file")
+      return nil unless filename
+
+      path = File.join(directory, filename)
+      raise Errors::MissingSpecifiedConfigUiDefinitionError unless File.exist?(path)
+
+      contents = File.read(path)
+      raise Errors::InvalidConfigUiDefinitionError unless valid_configuration_ui_yaml?(contents)
+
+      contents
     end
 
     def lookup_language
@@ -54,6 +59,14 @@ module Script
       else
         raise Errors::InvalidLanguageError.new(lang, extension_point_type)
       end
+    end
+
+    def valid_configuration_ui_yaml?(raw_yaml)
+      require "yaml" # takes 20ms, so deferred as late as possible.
+      YAML.safe_load(raw_yaml)
+      true
+    rescue Psych::SyntaxError
+      false
     end
 
     class << self

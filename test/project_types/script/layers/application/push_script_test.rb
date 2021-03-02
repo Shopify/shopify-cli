@@ -23,7 +23,7 @@ describe Script::Layers::Application::PushScript do
       extension_point_type: extension_point_type,
       script_name: script_name,
       description: description,
-      configuration_ui_yaml: '',
+      configuration_ui_yaml: "",
       env: { api_key: api_key }
     )
   end
