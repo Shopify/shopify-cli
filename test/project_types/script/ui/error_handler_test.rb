@@ -147,7 +147,21 @@ describe Script::UI::ErrorHandler do
       end
 
       describe "when InvalidLanguageError" do
-        let(:err) { Script::Layers::Domain::Errors::InvalidExtensionPointError.new("ruby") }
+        let(:err) { Script::Errors::InvalidLanguageError.new("ruby", "discount") }
+        it "should call display_and_raise" do
+          should_call_display_and_raise
+        end
+      end
+
+      describe "when InvalidConfigUiDefinitionError" do
+        let(:err) { Script::Errors::InvalidConfigUiDefinitionError.new("filename") }
+        it "should call display_and_raise" do
+          should_call_display_and_raise
+        end
+      end
+
+      describe "when MissingSpecifiedConfigUiDefinitionError" do
+        let(:err) { Script::Errors::MissingSpecifiedConfigUiDefinitionError.new("filename") }
         it "should call display_and_raise" do
           should_call_display_and_raise
         end

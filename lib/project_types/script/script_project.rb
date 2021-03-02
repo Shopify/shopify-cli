@@ -44,10 +44,10 @@ module Script
       return nil unless filename
 
       path = File.join(directory, filename)
-      raise Errors::MissingSpecifiedConfigUiDefinitionError unless File.exist?(path)
+      raise Errors::MissingSpecifiedConfigUiDefinitionError, filename unless File.exist?(path)
 
       contents = File.read(path)
-      raise Errors::InvalidConfigUiDefinitionError unless valid_configuration_ui_yaml?(contents)
+      raise Errors::InvalidConfigUiDefinitionError, filename unless valid_configuration_ui_yaml?(contents)
 
       contents
     end
