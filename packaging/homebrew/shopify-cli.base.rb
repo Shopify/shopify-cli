@@ -28,7 +28,7 @@ class ShopifyCli < Formula
 
     script_content = <<~SCRIPT
       #!/usr/bin/env bash
-      #{RbConfig.ruby} --disable=gems -I #{prefix} #{exe} $@
+      #{RbConfig.ruby} -I #{prefix} #{exe} $@
     SCRIPT
 
     File.write(script, script_content)

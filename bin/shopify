@@ -1,4 +1,4 @@
-#!/usr/bin/env ruby --disable=gems
+#!/usr/bin/env ruby
 
 module Kernel
   # make an alias of the original require
