@@ -20,6 +20,8 @@ module ShopifyCli
 
     DEFAULT_PORT = 3456
     REDIRECT_HOST = "http://127.0.0.1:#{DEFAULT_PORT}"
+    SHOPIFY_SCOPES = %w[https://api.shopify.com/auth/shop.admin.graphql https://api.shopify.com/auth/shop.admin.themes]
+    PARTNER_SCOPES = %w[https://api.shopify.com/auth/partners.app.cli.access]
 
     APPLICATION_SCOPES = {
       "shopify" => %w[https://api.shopify.com/auth/shop.admin.graphql https://api.shopify.com/auth/shop.admin.themes],
