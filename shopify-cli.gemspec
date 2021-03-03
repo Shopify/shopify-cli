@@ -38,4 +38,6 @@ Gem::Specification.new do |spec|
   spec.add_development_dependency("bundler", "~> 1.17")
   spec.add_development_dependency("rake", "~> 12.3", ">= 12.3.3")
   spec.add_development_dependency("minitest", "~> 5.0")
+
+  spec.add_dependency("listen")
 end
