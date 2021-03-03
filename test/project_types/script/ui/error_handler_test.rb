@@ -15,8 +15,8 @@ describe Script::UI::ErrorHandler do
 
     describe "when failed operation message, cause of error, and help suggestion are all provided" do
       it "should abort with the cause of error and help suggestion" do
-        $stderr.expects(:puts).with("\e[0;31m✗ Error\e[0m")
-        $stderr.expects(:puts).with("\e[0m#{failed_op} #{cause_of_error} #{help_suggestion}")
+        $stderr.expects(:puts).with("✗ Error")
+        $stderr.expects(:puts).with("#{failed_op} #{cause_of_error} #{help_suggestion}")
         assert_raises(ShopifyCli::AbortSilent) do
           subject
         end
@@ -26,8 +26,8 @@ describe Script::UI::ErrorHandler do
     describe "when failed operation message is missing" do
       let(:failed_op) { nil }
       it "should abort with the cause of error and help suggestion" do
-        $stderr.expects(:puts).with("\e[0;31m✗ Error\e[0m")
-        $stderr.expects(:puts).with("\e[0m#{cause_of_error} #{help_suggestion}")
+        $stderr.expects(:puts).with("✗ Error")
+        $stderr.expects(:puts).with("#{cause_of_error} #{help_suggestion}")
         assert_raises(ShopifyCli::AbortSilent) do
           subject
         end
@@ -37,8 +37,8 @@ describe Script::UI::ErrorHandler do
     describe "when cause of error is missing" do
       let(:cause_of_error) { nil }
       it "should abort with the failed operation message and help suggestion" do
-        $stderr.expects(:puts).with("\e[0;31m✗ Error\e[0m")
-        $stderr.expects(:puts).with("\e[0m#{failed_op} #{help_suggestion}")
+        $stderr.expects(:puts).with("✗ Error")
+        $stderr.expects(:puts).with("#{failed_op} #{help_suggestion}")
         assert_raises(ShopifyCli::AbortSilent) do
           subject
         end
@@ -48,8 +48,8 @@ describe Script::UI::ErrorHandler do
     describe "when help suggestion is missing" do
       let(:help_suggestion) { nil }
       it "should abort with the failed operation message and cause of error" do
-        $stderr.expects(:puts).with("\e[0;31m✗ Error\e[0m")
-        $stderr.expects(:puts).with("\e[0m#{failed_op} #{cause_of_error}")
+        $stderr.expects(:puts).with("✗ Error")
+        $stderr.expects(:puts).with("#{failed_op} #{cause_of_error}")
         assert_raises(ShopifyCli::AbortSilent) do
           subject
         end
