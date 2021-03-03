@@ -18,6 +18,8 @@ module ShopifyCli
 
     DEFAULT_PORT = 3456
     REDIRECT_HOST = "http://127.0.0.1:#{DEFAULT_PORT}"
+    SHOPIFY_SCOPES = %w[https://api.shopify.com/auth/shop.admin.graphql https://api.shopify.com/auth/shop.admin.themes]
+    PARTNER_SCOPES = %w[https://api.shopify.com/auth/partners.app.cli.access]
 
     property! :ctx
     property :store, default: ShopifyCli::DB.new
@@ -59,7 +61,7 @@ module ShopifyCli
       @server_thread = Thread.new { server.start }
       params = {
         client_id: client_id,
-        scope: scopes,
+        scope: scopes(SHOPIFY_SCOPES + PARTNER_SCOPES),
         redirect_uri: REDIRECT_HOST,
         state: state_token,
         response_type: :code,
@@ -133,18 +135,18 @@ module ShopifyCli
     end
 
     def request_exchange_tokens
-      request_exchange_token("partners", partners_id)
-      # request_exchange_token("shopify", shopify_id)
+      request_exchange_token("partners", partners_id, PARTNER_SCOPES)
+      request_exchange_token("shopify", shopify_id, SHOPIFY_SCOPES)
     end
 
-    def request_exchange_token(name, audience)
+    def request_exchange_token(name, audience, additional_scopes)
       resp = post_token_request(
         grant_type: "urn:ietf:params:oauth:grant-type:token-exchange",
         requested_token_type: "urn:ietf:params:oauth:token-type:access_token",
         subject_token_type: "urn:ietf:params:oauth:token-type:access_token",
         client_id: client_id,
         audience: audience,
-        scope: scopes,
+        scope: scopes(additional_scopes),
         subject_token: store.get("identity_access_token".to_sym),
       )
       store.set("#{name}_exchange_token".to_sym => resp['access_token'])
@@ -184,8 +186,8 @@ module ShopifyCli
       # 'don't have a DEBUG one yet'
     end
 
-    def scopes
-      %w[openid https://api.shopify.com/auth/partners.app.cli.access].tap do |result|
+    def scopes(additional_scopes = [])
+      (["openid"] + additional_scopes).tap do |result|
         result << "employee" if ShopifyCli::Shopifolk.acting_as_shopify_organization?
       end.join(" ")
     end
