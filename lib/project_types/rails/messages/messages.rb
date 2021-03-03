@@ -45,7 +45,8 @@ module Rails
             MSG
             dir_exists: "Project directory %s already exists. Please use a different name.",
             install_failure: "Error installing %s gem",
-            node_required: "Node.js is required to create a Rails project. Download at https://nodejs.org/en/download/.",
+            node_required: "Node.js is required to create a Rails project. Download at " \
+              "https://nodejs.org/en/download/.",
             node_version_failure: "Failed to get the current Node.js version. Please make sure it is installed as " \
               "per the instructions at https://nodejs.org/en/.",
             yarn_required: "Yarn is required to create a Rails project. Download at " \
