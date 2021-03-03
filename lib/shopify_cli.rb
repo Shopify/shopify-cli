@@ -94,40 +94,39 @@ module ShopifyCli
     )
   end
 
-  autoload :AdminAPI, "shopify-cli/admin_api"
-  autoload :API, "shopify-cli/api"
-  autoload :Command, "shopify-cli/command"
-  autoload :Commands, "shopify-cli/commands"
-  autoload :Context, "shopify-cli/context"
-  autoload :Core, "shopify-cli/core"
-  autoload :DB, "shopify-cli/db"
-  autoload :Feature, "shopify-cli/feature"
-  autoload :Form, "shopify-cli/form"
-  autoload :Git, "shopify-cli/git"
-  autoload :Helpers, "shopify-cli/helpers"
-  autoload :Heroku, "shopify-cli/heroku"
-  autoload :JsDeps, "shopify-cli/js_deps"
-  autoload :JsSystem, "shopify-cli/js_system"
-  autoload :MethodObject, "shopify-cli/method_object"
-  autoload :LazyDelegator, "shopify-cli/lazy_delegator"
-  autoload :Log, "shopify-cli/log"
-  autoload :OAuth, "shopify-cli/oauth"
-  autoload :Options, "shopify-cli/options"
-  autoload :PartnersAPI, "shopify-cli/partners_api"
-  autoload :ProcessSupervision, "shopify-cli/process_supervision"
-  autoload :Project, "shopify-cli/project"
-  autoload :ProjectType, "shopify-cli/project_type"
-  autoload :ResolveConstant, "shopify-cli/resolve_constant"
-  autoload :Resources, "shopify-cli/resources"
-  autoload :Result, "shopify-cli/result"
-  autoload :Shopifolk, "shopify-cli/shopifolk"
-  autoload :SubCommand, "shopify-cli/sub_command"
-  autoload :Task, "shopify-cli/task"
-  autoload :Tasks, "shopify-cli/tasks"
-  autoload :TransformDataStructure, "shopify-cli/transform_data_structure"
-  autoload :Tunnel, "shopify-cli/tunnel"
+  autoload :AdminAPI, 'shopify-cli/admin_api'
+  autoload :API, 'shopify-cli/api'
+  autoload :Command, 'shopify-cli/command'
+  autoload :Commands, 'shopify-cli/commands'
+  autoload :Context, 'shopify-cli/context'
+  autoload :Core, 'shopify-cli/core'
+  autoload :DB, 'shopify-cli/db'
+  autoload :Feature, 'shopify-cli/feature'
+  autoload :Form, 'shopify-cli/form'
+  autoload :Git, 'shopify-cli/git'
+  autoload :Helpers, 'shopify-cli/helpers'
+  autoload :Heroku, 'shopify-cli/heroku'
+  autoload :IdentityAuth, 'shopify-cli/identity_auth'
+  autoload :JsDeps, 'shopify-cli/js_deps'
+  autoload :JsSystem, 'shopify-cli/js_system'
+  autoload :MethodObject, 'shopify-cli/method_object'
+  autoload :Log, 'shopify-cli/log'
+  autoload :OAuth, 'shopify-cli/oauth'
+  autoload :Options, 'shopify-cli/options'
+  autoload :PartnersAPI, 'shopify-cli/partners_api'
+  autoload :ProcessSupervision, 'shopify-cli/process_supervision'
+  autoload :Project, 'shopify-cli/project'
+  autoload :ProjectType, 'shopify-cli/project_type'
+  autoload :ResolveConstant, 'shopify-cli/resolve_constant'
+  autoload :Resources, 'shopify-cli/resources'
+  autoload :Result, 'shopify-cli/result'
+  autoload :Shopifolk, 'shopify-cli/shopifolk'
+  autoload :SubCommand, 'shopify-cli/sub_command'
+  autoload :Task, 'shopify-cli/task'
+  autoload :Tasks, 'shopify-cli/tasks'
+  autoload :Tunnel, 'shopify-cli/tunnel'
 
-  require "shopify-cli/messages/messages"
+  require 'shopify-cli/messages/messages'
   Context.load_messages(ShopifyCli::Messages::MESSAGES)
 
   def self.cache_dir
