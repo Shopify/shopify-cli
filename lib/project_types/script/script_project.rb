@@ -2,7 +2,7 @@
 
 module Script
   class ScriptProject < ShopifyCli::Project
-    attr_reader :extension_point_type, :script_name, :language, :description, :configuration_ui_yaml
+    attr_reader :extension_point_type, :script_name, :language, :description, :config_ui
 
     def initialize(*args)
       super
@@ -10,7 +10,7 @@ module Script
       raise Errors::DeprecatedEPError, @extension_point_type if deprecated?(@extension_point_type)
       @script_name = lookup_config!("script_name")
       @description = lookup_config("description")
-      @configuration_ui_yaml = lookup_configuration_ui_yaml
+      @config_ui = lookup_config_ui
       @language = lookup_language
       ShopifyCli::Core::Monorail.metadata = {
         "script_name" => @script_name,
@@ -39,15 +39,15 @@ module Script
       config[key]
     end
 
-    def lookup_configuration_ui_yaml
-      filename = lookup_config("configuration_ui_file")
+    def lookup_config_ui
+      filename = lookup_config("config_ui_file")
       return nil unless filename
 
       path = File.join(directory, filename)
       raise Errors::MissingSpecifiedConfigUiDefinitionError, filename unless File.exist?(path)
 
       contents = File.read(path)
-      raise Errors::InvalidConfigUiDefinitionError, filename unless valid_configuration_ui_yaml?(contents)
+      raise Errors::InvalidConfigUiDefinitionError, filename unless valid_config_ui?(contents)
 
       contents
     end
@@ -61,7 +61,7 @@ module Script
       end
     end
 
-    def valid_configuration_ui_yaml?(raw_yaml)
+    def valid_config_ui?(raw_yaml)
       require "yaml" # takes 20ms, so deferred as late as possible.
       YAML.safe_load(raw_yaml)
       true

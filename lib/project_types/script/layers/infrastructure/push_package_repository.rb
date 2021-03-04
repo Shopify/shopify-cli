@@ -19,7 +19,7 @@ module Script
             script_content: script_content,
             compiled_type: compiled_type,
             metadata: metadata,
-            configuration_ui_yaml: script_project.configuration_ui_yaml,
+            config_ui: script_project.config_ui,
           )
         end
 
@@ -37,7 +37,7 @@ module Script
             script_content: script_content,
             compiled_type: compiled_type,
             metadata: metadata,
-            configuration_ui_yaml: script_project.configuration_ui_yaml,
+            config_ui: script_project.config_ui,
           )
         end
 

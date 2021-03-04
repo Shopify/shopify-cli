@@ -164,8 +164,8 @@ module Script
       end
     end
 
-    describe "#configuration_ui_yaml" do
-      let(:configuration_ui_file) { "ui-config.yml" }
+    describe "#config_ui" do
+      let(:config_ui_file) { "ui-config.yml" }
       let(:language) { "assemblyscript" }
 
       before do
@@ -176,7 +176,7 @@ module Script
       end
 
       subject do
-        Script::ScriptProject.current.configuration_ui_yaml
+        Script::ScriptProject.current.config_ui
       end
 
       describe "when ui_configuration_file field exists in config" do
@@ -188,25 +188,25 @@ module Script
             extension_point_type: @extension_point_type,
             script_name: @script_name,
             language: language,
-            configuration_ui_file: configuration_ui_file
+            config_ui_file: config_ui_file
           )
         end
 
         describe "when file exists" do
           describe "when YAML is valid" do
-            let(:configuration_ui_yaml) { "---\nversion: 1" }
+            let(:config_ui) { "---\nversion: 1" }
 
             it "returns the raw contents" do
-              @context.write(configuration_ui_file, configuration_ui_yaml)
-              assert_equal configuration_ui_yaml, subject
+              @context.write(config_ui_file, config_ui)
+              assert_equal config_ui, subject
             end
           end
 
           describe "when YAML is invalid" do
-            let(:configuration_ui_yaml) { "*" }
+            let(:config_ui) { "*" }
 
             it "raises InvalidConfigUiDefinitionError" do
-              @context.write(configuration_ui_file, configuration_ui_yaml)
+              @context.write(config_ui_file, config_ui)
               assert_raises(Script::Errors::InvalidConfigUiDefinitionError) { subject }
             end
           end
