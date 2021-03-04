@@ -23,6 +23,7 @@ module Script
           script_name: @script_name,
           description: @description
         )
+        @no_config_ui = false
         Layers::Application::ExtensionPoints.stubs(:languages).returns(%w(assemblyscript))
       end
 
@@ -40,7 +41,26 @@ module Script
           language: @language,
           script_name: @script_name,
           extension_point_type: @ep_type,
-          description: @description
+          description: @description,
+          no_config_ui: @no_config_ui
+        ).returns(@script_project)
+
+        @context
+          .expects(:puts)
+          .with(@context.message("script.create.change_directory_notice", @script_project.script_name))
+        perform_command
+      end
+
+      def test_can_create_new_script_with_no_config_ui
+        @no_config_ui = true
+
+        Script::Layers::Application::CreateScript.expects(:call).with(
+          ctx: @context,
+          language: @language,
+          script_name: @script_name,
+          extension_point_type: @ep_type,
+          description: @description,
+          no_config_ui: @no_config_ui
         ).returns(@script_project)
 
         @context
@@ -64,7 +84,8 @@ module Script
           language: @language,
           script_name: @script_name,
           extension_point_type: @ep_type,
-          description: @description
+          description: @description,
+          no_config_ui: @no_config_ui
         ).raises(StandardError)
 
         ScriptProject.expects(:cleanup).with(
@@ -90,7 +111,8 @@ module Script
           language: @language,
           script_name: @script_name,
           extension_point_type: @ep_type,
-          description: @description
+          description: @description,
+          no_config_ui: @no_config_ui
         ).raises(error)
 
         UI::ErrorHandler.expects(:pretty_print_and_raise).with(
@@ -121,7 +143,7 @@ module Script
       def perform_command
         run_cmd(
           "create script --name=#{@script_name} --description=#{@description}
-          --extension-point=#{@ep_type} --language=#{@language}"
+          --extension-point=#{@ep_type} --language=#{@language} #{@no_config_ui ? "--no-config-ui" : ""}"
         )
       end
     end
