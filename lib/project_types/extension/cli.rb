@@ -70,6 +70,7 @@ module Extension
     autoload :ValidationError, Project.project_filepath("models/validation_error")
     autoload :Specification, Project.project_filepath("models/specification")
     autoload :Specifications, Project.project_filepath("models/specifications")
+    autoload :LazySpecificationHandler, Project.project_filepath("models/lazy_specification_handler")
   end
 
   autoload :ExtensionProjectKeys, Project.project_filepath("extension_project_keys")

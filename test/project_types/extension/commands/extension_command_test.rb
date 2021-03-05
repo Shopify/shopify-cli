@@ -29,29 +29,36 @@ module Extension
         @command.project
       end
 
-      def test_extension_type_aborts_if_the_type_is_unknown
+      def test_extension_type_aborts_if_a_lazily_initialized_field_of_an_unknown_type_is_accessed
         unknown_type = "unknown_type"
         setup_temp_project(type_identifier: unknown_type)
 
-        io = capture_io_and_assert_raises(ShopifyCli::Abort) { @command.extension_type }
+        io = capture_io_and_assert_raises(ShopifyCli::Abort) { @command.extension_type.features }
 
         assert_message_output(io: io, expected_content: [
           @context.message("errors.unknown_type", unknown_type),
         ])
       end
 
-      def test_extension_type_returns_the_extension_type_instance_if_it_exists
+      def test_extension_type_returns_a_lazy_specification_handler
         setup_temp_project
 
-        assert_equal @test_extension_type, @command.extension_type
+        assert_kind_of(Models::LazySpecificationHandler, @command.extension_type)
+        assert_equal @test_extension_type.specification, @command.extension_type.specification
       end
 
       def test_extension_type_memoizes_the_extension_type
         setup_temp_project
         Extension.specifications.expects(:[]).returns(@test_extension_type).once
 
-        @command.extension_type
-        @command.extension_type
+        @command.extension_type.specification
+        @command.extension_type.specification
+      end
+
+      def test_accessing_the_extension_type_identifier_does_not_result_in_fetching_specifications
+        setup_temp_project
+        Extension.specifications.expects(:[]).never
+        @command.extension_type.identifier
       end
     end
   end

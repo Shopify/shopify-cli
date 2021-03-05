@@ -1,5 +1,5 @@
-require 'test_helper'
-require 'securerandom'
+require "test_helper"
+require "securerandom"
 
 module ShopifyCli
   class LazyDelegatorTest < MiniTest::Test
