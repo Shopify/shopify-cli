@@ -50,9 +50,12 @@ module ShopifyCli
       ).returns(api_stub).twice
       api_stub.expects(:query).raises(API::APIRequestUnauthorizedError).twice
 
-      @oauth_client = mock
-      ShopifyCli::OAuth.expects(:new).returns(@oauth_client)
-      @oauth_client.expects(:authenticate).with("https://accounts.shopify.com/oauth")
+      @identity_auth_client = mock
+      ShopifyCli::IdentityAuth
+        .expects(:new)
+        .with(ctx: @context).returns(@identity_auth_client)
+      @identity_auth_client
+        .expects(:authenticate)
 
       io = capture_io_and_assert_raises(ShopifyCli::Abort) do
         PartnersAPI.query(@context, "query")
