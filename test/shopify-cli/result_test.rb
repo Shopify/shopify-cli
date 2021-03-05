@@ -46,6 +46,13 @@ module ShopifyCli
         end
       end
 
+      def test_allow_nil_to_be_wrapped
+        Result.wrap(nil).tap do |result|
+          assert_predicate(result, :failure?)
+          assert_nil result.error
+        end
+      end
+
       def test_call_does_not_require_any_positional_arguments
         Result.call { 1 }.tap do |result|
           assert_predicate(result, :success?)
@@ -76,6 +83,10 @@ module ShopifyCli
 
       def test_unwrap_returns_the_value
         assert_equal :value, Success.new(:value).unwrap {}
+      end
+
+      def test_unwrap_permits_nil_as_fallback_value
+        assert_nothing_raised { Success.new(:value).unwrap(nil) }
       end
 
       def test_additional_arguments_to_unwrap_are_ignored
@@ -170,6 +181,10 @@ module ShopifyCli
         assert_raises ArgumentError do
           Failure.new(:error).unwrap(:fallback) {}
         end
+      end
+
+      def test_unwrap_permits_nil_as_fallback_value
+        assert_nil Failure.new(:error).unwrap(nil)
       end
 
       def test_map_returns_itself
