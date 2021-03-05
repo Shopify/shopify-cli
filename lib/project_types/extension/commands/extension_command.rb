@@ -10,11 +10,14 @@ module Extension
 
       def extension_type
         @extension_type ||= begin
-          unless Extension.specifications.valid?(project.extension_type_identifier)
-            @ctx.abort(@ctx.message("errors.unknown_type", project.extension_type_identifier))
-          end
+          identifier = project.extension_type_identifier
+          Models::LazySpecificationHandler.new(identifier) do
+            unless Extension.specifications.valid?(identifier)
+              @ctx.abort(@ctx.message("errors.unknown_type", project.extension_type_identifier))
+            end
 
-          Extension.specifications[project.extension_type_identifier]
+            Extension.specifications[identifier]
+          end
         end
       end
     end
