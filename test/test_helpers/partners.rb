@@ -2,7 +2,7 @@
 module TestHelpers
   module Partners
     def setup
-      ShopifyCli::DB.set(partners_exchange_token: 'faketoken')
+      ShopifyCli::DB.set(partners_exchange_token: "faketoken")
       super
     end
 
