@@ -126,7 +126,11 @@ module Script
           when "app_not_installed_on_shop"
             raise Errors::AppNotInstalledError
           else
+<<<<<<< HEAD
             raise Errors::GraphqlError, response["errors"]
+=======
+            raise Errors::GraphqlError, response["errors"].map { |e| e["message"] }
+>>>>>>> 31cb1a92 (updates due to Shopify Rubocop Style Rules changes)
           end
         end
 
