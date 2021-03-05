@@ -1,6 +1,6 @@
 # frozen_string_literal: true
-require 'test_helper'
-require 'project_types/extension/extension_test_helpers'
+require "test_helper"
+require "project_types/extension/extension_test_helpers"
 
 module Extension
   module Tasks
@@ -13,10 +13,10 @@ module Extension
           super
           ShopifyCli::ProjectType.load_type(:extension)
 
-          @api_key = 'fake_key'
-          @secret = 'fake_secret'
-          @title = 'Fake Title'
-          @organization_name = 'Organization One'
+          @api_key = "fake_key"
+          @secret = "fake_secret"
+          @title = "Fake Title"
+          @organization_name = "Organization One"
         end
 
         def test_from_hash_returns_nil_if_the_hash_is_nil

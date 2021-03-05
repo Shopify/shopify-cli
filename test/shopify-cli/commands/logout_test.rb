@@ -1,4 +1,4 @@
-require 'test_helper'
+require "test_helper"
 
 module ShopifyCli
   module Commands
@@ -22,12 +22,12 @@ module ShopifyCli
         ShopifyCli::DB.expects(:exists?).with(:admin_exchange_token).returns(false)
         ShopifyCli::DB.expects(:del).with(:admin_exchange_token).never
 
-        run_cmd('logout')
+        run_cmd("logout")
       end
 
       def test_help_argument_calls_help
         @context.expects(:puts).with(ShopifyCli::Commands::Logout.help)
-        run_cmd('help logout')
+        run_cmd("help logout")
       end
     end
   end

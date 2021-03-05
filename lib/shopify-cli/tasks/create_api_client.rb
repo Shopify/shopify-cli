@@ -1,15 +1,15 @@
-require 'shopify_cli'
+require "shopify_cli"
 
 module ShopifyCli
   module Tasks
     class CreateApiClient < ShopifyCli::Task
       VALID_APP_TYPES = %w(public custom)
-      DEFAULT_APP_URL = 'https://shopify.github.io/shopify-app-cli/help/start-app/'
+      DEFAULT_APP_URL = "https://shopify.github.io/shopify-app-cli/help/start-app/"
 
       def call(ctx, org_id:, title:, type:)
         resp = ShopifyCli::PartnersAPI.query(
           ctx,
-          'create_app',
+          "create_app",
           org: org_id.to_i,
           title: title,
           type: type,
@@ -23,12 +23,12 @@ module ShopifyCli
 
         errors = resp.dig("errors")
         if !errors.nil? && errors.any?
-          ctx.abort(errors.map { |err| "#{err['field']} #{err['message']}" }.join(", "))
+          ctx.abort(errors.map { |err| "#{err["field"]} #{err["message"]}" }.join(", "))
         end
 
         user_errors = resp.dig("data", "appCreate", "userErrors")
         if !user_errors.nil? && user_errors.any?
-          ctx.abort(user_errors.map { |err| "#{err['field']} #{err['message']}" }.join(", "))
+          ctx.abort(user_errors.map { |err| "#{err["field"]} #{err["message"]}" }.join(", "))
         end
 
         ShopifyCli::Core::Monorail.metadata[:api_key] = resp.dig("data", "appCreate", "app", "apiKey")

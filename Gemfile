@@ -5,19 +5,19 @@ source "https://rubygems.org"
 # They are all for CI and tests
 # `dev` uses no gems
 group :development, :test do
-  gem 'rake'
-  gem 'pry-byebug'
-  gem 'byebug'
-  gem 'rubocop-shopify', require: false
-  gem 'rubocop-minitest', require: false
+  gem "rake"
+  gem "pry-byebug"
+  gem "byebug"
+  gem "rubocop-shopify", require: false
+  gem "rubocop-minitest", require: false
 end
 
 group :test do
-  gem 'mocha', require: false
-  gem 'minitest', '>= 5.0.0', require: false
-  gem 'minitest-reporters', require: false
-  gem 'minitest-fail-fast', require: false
-  gem 'fakefs', '>= 1.0', require: false
-  gem 'webmock', require: false
-  gem 'timecop', require: false
+  gem "mocha", require: false
+  gem "minitest", ">= 5.0.0", require: false
+  gem "minitest-reporters", require: false
+  gem "minitest-fail-fast", require: false
+  gem "fakefs", ">= 1.0", require: false
+  gem "webmock", require: false
+  gem "timecop", require: false
 end

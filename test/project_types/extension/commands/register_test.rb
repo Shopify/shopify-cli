@@ -1,6 +1,6 @@
 # frozen_string_literal: true
-require 'test_helper'
-require 'project_types/extension/extension_test_helpers'
+require "test_helper"
+require "project_types/extension/extension_test_helpers"
 
 module Extension
   module Commands
@@ -13,7 +13,7 @@ module Extension
       def setup
         super
         ShopifyCli::ProjectType.load_type(:extension)
-        setup_temp_project(api_key: '', api_secret: '', registration_id: nil)
+        setup_temp_project(api_key: "", api_secret: "", registration_id: nil)
 
         @app = Models::App.new(api_key: @api_key, secret: @api_secret)
         stub_get_app(app: @app, api_key: @app.api_key)
@@ -30,7 +30,7 @@ module Extension
 
         io = capture_io_and_assert_raises(ShopifyCli::Abort) { run_register_command }
 
-        assert_message_output(io: io, expected_content: @context.message('register.already_registered'))
+        assert_message_output(io: io, expected_content: @context.message("register.already_registered"))
       end
 
       def test_does_not_run_create_if_user_does_not_confirm
@@ -40,15 +40,15 @@ module Extension
 
         CLI::UI::Prompt
           .expects(:confirm)
-          .with(@context.message('register.confirm_question', @app.title))
+          .with(@context.message("register.confirm_question", @app.title))
           .returns(false)
           .once
 
         io = capture_io_and_assert_raises(ShopifyCli::AbortSilent) { run_register_command }
 
         assert_message_output(io: io, expected_content: [
-          @context.message('register.confirm_abort'),
-          @context.message('register.confirm_info', @test_extension_type.name),
+          @context.message("register.confirm_abort"),
+          @context.message("register.confirm_info", @test_extension_type.name),
         ])
       end
 
@@ -67,7 +67,7 @@ module Extension
 
         CLI::UI::Prompt
           .expects(:confirm)
-          .with(@context.message('register.confirm_question', @app.title))
+          .with(@context.message("register.confirm_question", @app.title))
           .returns(true)
           .once
 
@@ -91,10 +91,10 @@ module Extension
         io = capture_io { run_register_command }
 
         assert_message_output(io: io, expected_content: [
-          @context.message('register.confirm_info', @test_extension_type.name),
-          @context.message('register.waiting_text'),
-          @context.message('register.success', @project.title, @app.title),
-          @context.message('register.success_info'),
+          @context.message("register.confirm_info", @test_extension_type.name),
+          @context.message("register.waiting_text"),
+          @context.message("register.success", @project.title, @app.title),
+          @context.message("register.success_info"),
         ])
       end
 

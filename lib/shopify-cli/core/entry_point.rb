@@ -1,4 +1,4 @@
-require 'shopify_cli'
+require "shopify_cli"
 
 module ShopifyCli
   module Core
@@ -14,23 +14,23 @@ module ShopifyCli
           rescue ArgumentError => e
             # This can happen on RVM, because it can use fd 9 itself and block access to it. That only happens if the fd
             # did not exist beforehand, so that means there was no fd 9 before Ruby started.
-            unless e.message == 'The given fd is not accessible because RubyVM reserves it'
+            unless e.message == "The given fd is not accessible because RubyVM reserves it"
               raise e
             end
           end
 
           if !ctx.testing? && is_shell_shim
-            ctx.puts(ctx.message('core.warning.shell_shim'))
+            ctx.puts(ctx.message("core.warning.shell_shim"))
             return
           end
 
           if ctx.development?
             ctx.puts(
-              ctx.message('core.warning.development_version', File.join(ShopifyCli::ROOT, 'bin', ShopifyCli::TOOL_NAME))
+              ctx.message("core.warning.development_version", File.join(ShopifyCli::ROOT, "bin", ShopifyCli::TOOL_NAME))
             )
           elsif !ctx.testing?
             new_version = ctx.new_version
-            ctx.puts(ctx.message('core.warning.new_version', ShopifyCli::VERSION, new_version)) unless new_version.nil?
+            ctx.puts(ctx.message("core.warning.new_version", ShopifyCli::VERSION, new_version)) unless new_version.nil?
           end
 
           ProjectType.load_type(Project.current_project_type)

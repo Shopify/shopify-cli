@@ -1,5 +1,5 @@
 # frozen_string_literal: true
-require 'shopify_cli'
+require "shopify_cli"
 
 module Extension
   module Commands
@@ -12,9 +12,9 @@ module Extension
       def call(_args, _command_name)
         system = ShopifyCli::JsSystem.new(ctx: @ctx)
 
-        CLI::UI::Frame.open(@ctx.message('build.frame_title', system.package_manager)) do
+        CLI::UI::Frame.open(@ctx.message("build.frame_title", system.package_manager)) do
           success = system.call(yarn: YARN_BUILD_COMMAND, npm: NPM_BUILD_COMMAND)
-          @ctx.abort(@ctx.message('build.build_failure_message')) unless success
+          @ctx.abort(@ctx.message("build.build_failure_message")) unless success
         end
       end
 

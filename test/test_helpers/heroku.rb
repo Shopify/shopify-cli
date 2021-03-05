@@ -9,8 +9,8 @@ module TestHelpers
         .returns(true)
 
       @context.stubs(:capture2e)
-        .with(heroku_command(full_path: full_path), '--version')
-        .returns(['', status_mock[:true]])
+        .with(heroku_command(full_path: full_path), "--version")
+        .returns(["", status_mock[:true]])
 
       # init
       init_output = <<~EOS
@@ -21,32 +21,32 @@ module TestHelpers
       EOS
 
       @context.stubs(:capture2e)
-        .with('git', 'status')
+        .with("git", "status")
         .returns([init_output, status_mock[:true]])
 
       # db validation
       @context.stubs(:capture2e)
         .with('bundle exec rails runner "puts ActiveRecord::Base.connection.adapter_name.downcase"')
-        .returns(['mysql', status_mock[:true]])
+        .returns(["mysql", status_mock[:true]])
 
       # whoami
       @context.stubs(:capture2e)
-        .with(heroku_command(full_path: full_path), 'whoami')
-        .returns(['username', status_mock[:true]])
+        .with(heroku_command(full_path: full_path), "whoami")
+        .returns(["username", status_mock[:true]])
 
       # heroku.app
       @context.stubs(:capture2e)
-        .with('git', 'remote', 'get-url', 'heroku')
+        .with("git", "remote", "get-url", "heroku")
         .returns([heroku_remote, status_mock[:true]])
 
       # git branches
       @context.stubs(:capture2e)
-        .with('git', 'branch', '--list', '--format=%(refname:short)')
+        .with("git", "branch", "--list", "--format=%(refname:short)")
         .returns(["master\n", status_mock[:true]])
 
       # deploy
       @context.stubs(:system)
-        .with('git', 'push', '-u', 'heroku', 'master:master')
+        .with("git", "push", "-u", "heroku", "master:master")
         .returns(status_mock[:true])
 
       # user outputs
@@ -56,11 +56,11 @@ module TestHelpers
     def expects_tar_heroku(status:)
       if status.nil?
         @context.expects(:system)
-          .with('tar', '-xf', download_path, chdir: ShopifyCli.cache_dir)
+          .with("tar", "-xf", download_path, chdir: ShopifyCli.cache_dir)
           .never
       else
         @context.expects(:system)
-          .with('tar', '-xf', download_path, chdir: ShopifyCli.cache_dir)
+          .with("tar", "-xf", download_path, chdir: ShopifyCli.cache_dir)
           .returns(status_mock[:"#{status}"])
       end
 
@@ -76,7 +76,7 @@ module TestHelpers
       output << "other_branch\n" if multiple
 
       @context.expects(:capture2e)
-        .with('git', 'branch', '--list', '--format=%(refname:short)')
+        .with("git", "branch", "--list", "--format=%(refname:short)")
         .returns([output, status_mock[:"#{status}"]])
     end
 
@@ -97,7 +97,7 @@ module TestHelpers
       end
 
       @context.expects(:capture2e)
-        .with('git', 'status')
+        .with("git", "status")
         .returns([output, status_mock[:"#{status}"]])
     end
 
@@ -109,13 +109,13 @@ module TestHelpers
       end
 
       @context.expects(:capture2e)
-        .with('git', 'remote', 'get-url', remote)
+        .with("git", "remote", "get-url", remote)
         .returns([output, status_mock[:"#{status}"]])
     end
 
     def expects_git_push_heroku(status:, branch:)
       @context.expects(:system)
-        .with('git', 'push', '-u', 'heroku', branch)
+        .with("git", "push", "-u", "heroku", branch)
         .returns(status_mock[:"#{status}"])
     end
 
@@ -126,19 +126,19 @@ module TestHelpers
       EOS
 
       @context.expects(:capture2e)
-        .with(heroku_command(full_path: full_path), 'create')
+        .with(heroku_command(full_path: full_path), "create")
         .returns([output, status_mock[:"#{status}"]])
     end
 
     def expects_heroku_login(status:, full_path: false)
       @context.expects(:system)
-        .with(heroku_command(full_path: full_path), 'login')
+        .with(heroku_command(full_path: full_path), "login")
         .returns(status_mock[:"#{status}"])
     end
 
     def expects_heroku_deploy(status:)
       @context.expects(:system)
-        .with('git', 'push', '-u', 'heroku', "master:master")
+        .with("git", "push", "-u", "heroku", "master:master")
         .returns(status_mock[:"#{status}"])
     end
 
@@ -157,13 +157,13 @@ module TestHelpers
     def expects_heroku_download(status:)
       if status.nil?
         @context.expects(:system)
-          .with('curl', '-o', download_path,
+          .with("curl", "-o", download_path,
             ShopifyCli::Heroku::DOWNLOAD_URLS[:mac],
             chdir: ShopifyCli.cache_dir)
           .never
       else
         @context.expects(:system)
-          .with('curl', '-o', download_path,
+          .with("curl", "-o", download_path,
             ShopifyCli::Heroku::DOWNLOAD_URLS[:mac],
             chdir: ShopifyCli.cache_dir)
           .returns(status_mock[:"#{status}"])
@@ -177,33 +177,33 @@ module TestHelpers
 
       if twice
         @context.expects(:capture2e)
-          .with(heroku_command(full_path: full_path), '--version')
-          .returns(['', status_mock[:"#{status}"]]).twice
+          .with(heroku_command(full_path: full_path), "--version")
+          .returns(["", status_mock[:"#{status}"]]).twice
       else
         @context.expects(:capture2e)
-          .with(heroku_command(full_path: full_path), '--version')
-          .returns(['', status_mock[:"#{status}"]])
+          .with(heroku_command(full_path: full_path), "--version")
+          .returns(["", status_mock[:"#{status}"]])
       end
     end
 
     def expects_heroku_select_app(status:, full_path: false)
       @context.expects(:system)
-        .with(heroku_command(full_path: full_path), 'git:remote', '-a', 'app-name')
+        .with(heroku_command(full_path: full_path), "git:remote", "-a", "app-name")
         .returns(status_mock[:"#{status}"])
     end
 
     def expects_heroku_whoami(status:, full_path: false)
-      output = status ? 'username' : nil
+      output = status ? "username" : nil
 
       @context.expects(:capture2e)
-        .with(heroku_command(full_path: full_path), 'whoami')
+        .with(heroku_command(full_path: full_path), "whoami")
         .returns([output, status_mock[:"#{status}"]])
     end
 
     private
 
     def download_filename
-      'heroku-darwin-x64.tar.gz'
+      "heroku-darwin-x64.tar.gz"
     end
 
     def download_path
@@ -213,14 +213,14 @@ module TestHelpers
     def heroku_command(full_path: false)
       if full_path
         File.stubs(:exist?).returns(true)
-        File.join(ShopifyCli.cache_dir, 'heroku', 'bin', 'heroku').to_s
+        File.join(ShopifyCli.cache_dir, "heroku", "bin", "heroku").to_s
       else
-        'heroku'
+        "heroku"
       end
     end
 
     def heroku_remote
-      'https://git.heroku.com/app-name.git'
+      "https://git.heroku.com/app-name.git"
     end
 
     def status_mock

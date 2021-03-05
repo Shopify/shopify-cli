@@ -1,4 +1,4 @@
-require 'test_helper'
+require "test_helper"
 
 module ShopifyCli
   class HerokuTest < MiniTest::Test
@@ -11,15 +11,15 @@ module ShopifyCli
     end
 
     def test_app_uses_existing_heroku_app_if_available
-      expects_git_remote_get_url_heroku(status: true, remote: 'heroku')
+      expects_git_remote_get_url_heroku(status: true, remote: "heroku")
 
       heroku_service = ShopifyCli::Heroku.new(@context)
 
-      assert_equal 'app-name', heroku_service.app
+      assert_equal "app-name", heroku_service.app
     end
 
     def test_app_returns_nil_if_choosing_existing_heroku_app_fails
-      expects_git_remote_get_url_heroku(status: false, remote: 'heroku')
+      expects_git_remote_get_url_heroku(status: false, remote: "heroku")
 
       heroku_service = ShopifyCli::Heroku.new(@context)
 
@@ -181,7 +181,7 @@ module ShopifyCli
 
       heroku_service = ShopifyCli::Heroku.new(@context)
 
-      assert_nil(heroku_service.select_existing_app('app-name'))
+      assert_nil(heroku_service.select_existing_app("app-name"))
     end
 
     def test_select_existing_app_using_non_full_path_heroku_lets_you_choose_existing_heroku_app
@@ -189,7 +189,7 @@ module ShopifyCli
 
       heroku_service = ShopifyCli::Heroku.new(@context)
 
-      assert_nil(heroku_service.select_existing_app('app-name'))
+      assert_nil(heroku_service.select_existing_app("app-name"))
     end
 
     def test_select_existing_app_raises_if_choosing_existing_heroku_app_fails
@@ -198,7 +198,7 @@ module ShopifyCli
       heroku_service = ShopifyCli::Heroku.new(@context)
 
       assert_raises ShopifyCli::Abort do
-        heroku_service.select_existing_app('app-name')
+        heroku_service.select_existing_app("app-name")
       end
     end
 
@@ -207,7 +207,7 @@ module ShopifyCli
 
       heroku_service = ShopifyCli::Heroku.new(@context)
 
-      assert_equal 'username', heroku_service.whoami
+      assert_equal "username", heroku_service.whoami
     end
 
     def test_whoami_using_non_full_path_heroku_returns_username_if_logged_in
@@ -215,7 +215,7 @@ module ShopifyCli
 
       heroku_service = ShopifyCli::Heroku.new(@context)
 
-      assert_equal 'username', heroku_service.whoami
+      assert_equal "username", heroku_service.whoami
     end
 
     def test_whoami_returns_nil_if_not_logged_in

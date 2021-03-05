@@ -1,5 +1,5 @@
 # frozen_string_literal: true
-require 'shopify_cli'
+require "shopify_cli"
 
 module ShopifyCli
   ##
@@ -64,7 +64,7 @@ module ShopifyCli
       #
       def current_project_type
         return unless has_current?
-        current.config['project_type'].to_sym
+        current.config["project_type"].to_sym
       end
 
       ##
@@ -84,13 +84,13 @@ module ShopifyCli
       #   type = ShopifyCli::Project.current_project_type
       #
       def write(ctx, project_type:, organization_id:, **identifiers)
-        require 'yaml' # takes 20ms, so deferred as late as possible.
+        require "yaml" # takes 20ms, so deferred as late as possible.
         content = Hash[{ project_type: project_type, organization_id: organization_id.to_i }
           .merge(identifiers)
           .collect { |k, v| [k.to_s, v] }]
-        content['shopify_organization'] = true if Shopifolk.acting_as_shopify_organization?
+        content["shopify_organization"] = true if Shopifolk.acting_as_shopify_organization?
 
-        ctx.write('.shopify-cli.yml', YAML.dump(content))
+        ctx.write(".shopify-cli.yml", YAML.dump(content))
         clear
       end
 
@@ -113,7 +113,7 @@ module ShopifyCli
       def at(dir)
         proj_dir = directory(dir)
         unless proj_dir
-          raise(ShopifyCli::Abort, Context.message('core.project.error.not_in_project'))
+          raise(ShopifyCli::Abort, Context.message("core.project.error.not_in_project"))
         end
         @at ||= Hash.new { |h, k| h[k] = new(directory: k) }
         @at[proj_dir]
@@ -121,8 +121,8 @@ module ShopifyCli
 
       def __directory(curr)
         loop do
-          return nil if curr == '/' || /^[A-Z]:\/$/.match?(curr)
-          file = File.join(curr, '.shopify-cli.yml')
+          return nil if curr == "/" || /^[A-Z]:\/$/.match?(curr)
+          file = File.join(curr, ".shopify-cli.yml")
           return curr if File.exist?(file)
           curr = File.dirname(curr)
         end
@@ -168,15 +168,15 @@ module ShopifyCli
     #
     def config
       @config ||= begin
-        config = load_yaml_file('.shopify-cli.yml')
+        config = load_yaml_file(".shopify-cli.yml")
         unless config.is_a?(Hash)
-          raise ShopifyCli::Abort, Context.message('core.yaml.error.not_hash', '.shopify-cli.yml')
+          raise ShopifyCli::Abort, Context.message("core.yaml.error.not_hash", ".shopify-cli.yml")
         end
 
         # The app_type key was deprecated in favour of project_type, so replace it
-        if config.key?('app_type')
-          config['project_type'] = config['app_type']
-          config.delete('app_type')
+        if config.key?("app_type")
+          config["project_type"] = config["app_type"]
+          config.delete("app_type")
         end
 
         config
@@ -187,16 +187,16 @@ module ShopifyCli
 
     def load_yaml_file(relative_path)
       f = File.join(directory, relative_path)
-      require 'yaml' # takes 20ms, so deferred as late as possible.
+      require "yaml" # takes 20ms, so deferred as late as possible.
       begin
         YAML.load_file(f)
       rescue Psych::SyntaxError => e
-        raise(ShopifyCli::Abort, Context.message('core.yaml.error.invalid', relative_path, e.message))
+        raise(ShopifyCli::Abort, Context.message("core.yaml.error.invalid", relative_path, e.message))
       # rescue Errno::EACCES => e
       # TODO
       #   Dev::Helpers::EaccesHandler.diagnose_and_raise(f, e, mode: :read)
       rescue Errno::ENOENT
-        raise ShopifyCli::Abort, Context.message('core.yaml.error.not_found', f)
+        raise ShopifyCli::Abort, Context.message("core.yaml.error.not_found", f)
       end
     end
   end

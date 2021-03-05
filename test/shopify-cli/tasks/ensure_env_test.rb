@@ -1,4 +1,4 @@
-require 'test_helper'
+require "test_helper"
 
 module ShopifyCli
   module Tasks
@@ -25,13 +25,13 @@ module ShopifyCli
           "apps" => [],
         }]
         ShopifyCli::PartnersAPI::Organizations.expects(:fetch_with_app).with(@context).returns(response)
-        CLI::UI::Prompt.expects(:ask).with(@context.message('core.tasks.ensure_env.app_name')).returns('new app')
-        CLI::UI::Prompt.expects(:ask).with(@context.message('core.tasks.ensure_env.app_type.select')).returns('public')
+        CLI::UI::Prompt.expects(:ask).with(@context.message("core.tasks.ensure_env.app_name")).returns("new app")
+        CLI::UI::Prompt.expects(:ask).with(@context.message("core.tasks.ensure_env.app_type.select")).returns("public")
         ShopifyCli::Tasks::CreateApiClient.expects(:call).with(
           @context,
           org_id: 421,
-          title: 'new app',
-          type: 'public',
+          title: "new app",
+          type: "public",
         ).returns({
           "apiKey" => 1235,
           "apiSecretKeys" => [{ "secret" => 1234 }],
@@ -126,10 +126,10 @@ module ShopifyCli
       private
 
       def expect_user_prompts
-        CLI::UI::Prompt.expects(:ask).with(@context.message('core.tasks.ensure_env.organization_select')).returns(101)
+        CLI::UI::Prompt.expects(:ask).with(@context.message("core.tasks.ensure_env.organization_select")).returns(101)
         CLI::UI::Prompt.expects(:ask).with(
-          @context.message('core.tasks.ensure_env.development_store_select')
-        ).returns('store.myshopify.com')
+          @context.message("core.tasks.ensure_env.development_store_select")
+        ).returns("store.myshopify.com")
       end
 
       def new_env_file_values

@@ -1,33 +1,33 @@
 # frozen_string_literal: true
 
-require 'project_types/script/test_helper'
+require "project_types/script/test_helper"
 
 module Script
   class ScriptProjectTest < MiniTest::Test
     def setup
       super
       @context = TestHelpers::FakeContext.new
-      @script_name = 'name'
-      @extension_point_type = 'ep_type'
+      @script_name = "name"
+      @extension_point_type = "ep_type"
     end
 
     def test_initialize
       ShopifyCli::Project
         .any_instance
         .expects(:load_yaml_file)
-        .with('.shopify-cli.yml')
+        .with(".shopify-cli.yml")
         .returns({
-          'extension_point_type' => @extension_point_type,
-          'script_name' => @script_name,
+          "extension_point_type" => @extension_point_type,
+          "script_name" => @script_name,
         })
 
       Script::Layers::Application::ExtensionPoints.expects(:supported_language?).returns(true)
-      ScriptProject.new(directory: 'testdir')
+      ScriptProject.new(directory: "testdir")
 
       assert_equal({
         "script_name" => @script_name,
         "extension_point_type" => @extension_point_type,
-        "language" => 'assemblyscript',
+        "language" => "assemblyscript",
       }, ShopifyCli::Core::Monorail.metadata)
     end
 
@@ -35,16 +35,16 @@ module Script
       ShopifyCli::Project
         .any_instance
         .expects(:load_yaml_file)
-        .with('.shopify-cli.yml')
+        .with(".shopify-cli.yml")
         .returns({
-          'extension_point_type' => @extension_point_type,
-          'script_name' => @script_name,
+          "extension_point_type" => @extension_point_type,
+          "script_name" => @script_name,
         })
 
       Script::Layers::Application::ExtensionPoints.stubs(:deprecated_types).returns([@extension_point_type])
 
       assert_raises Errors::DeprecatedEPError do
-        ScriptProject.new(directory: 'testdir')
+        ScriptProject.new(directory: "testdir")
       end
     end
 
@@ -115,19 +115,19 @@ module Script
     end
 
     def test_reads_language_from_config_file
-      language = 'Rust'
+      language = "Rust"
       Script::Layers::Application::ExtensionPoints.expects(:languages).returns(%(assemblyscript rust))
       ShopifyCli::Project
         .any_instance
         .expects(:load_yaml_file)
-        .with('.shopify-cli.yml')
+        .with(".shopify-cli.yml")
         .returns({
-          'extension_point_type' => @extension_point_type,
-          'script_name' => @script_name,
-          'language' => language,
+          "extension_point_type" => @extension_point_type,
+          "script_name" => @script_name,
+          "language" => language,
         })
 
-      script = ScriptProject.new(directory: 'testdir')
+      script = ScriptProject.new(directory: "testdir")
       assert_equal language.downcase, script.language
     end
 
@@ -136,31 +136,31 @@ module Script
       ShopifyCli::Project
         .any_instance
         .expects(:load_yaml_file)
-        .with('.shopify-cli.yml')
+        .with(".shopify-cli.yml")
         .returns({
-          'extension_point_type' => @extension_point_type,
-          'script_name' => @script_name,
+          "extension_point_type" => @extension_point_type,
+          "script_name" => @script_name,
         })
 
-      script = ScriptProject.new(directory: 'testdir')
-      assert_equal 'assemblyscript', script.language
+      script = ScriptProject.new(directory: "testdir")
+      assert_equal "assemblyscript", script.language
     end
 
     def test_unsupported_language_in_config_will_raise
-      language = 'C++'
+      language = "C++"
       Script::Layers::Application::ExtensionPoints.expects(:languages).returns(%(assemblyscript rust))
       ShopifyCli::Project
         .any_instance
         .expects(:load_yaml_file)
-        .with('.shopify-cli.yml')
+        .with(".shopify-cli.yml")
         .returns({
-          'extension_point_type' => @extension_point_type,
-          'script_name' => @script_name,
-          'language' => language,
+          "extension_point_type" => @extension_point_type,
+          "script_name" => @script_name,
+          "language" => language,
         })
 
       assert_raises(Script::Errors::InvalidLanguageError) do
-        ScriptProject.new(directory: 'testdir')
+        ScriptProject.new(directory: "testdir")
       end
     end
   end

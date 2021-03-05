@@ -1,5 +1,5 @@
 # frozen_string_literal: true
-require 'project_types/rails/test_helper'
+require "project_types/rails/test_helper"
 
 module Rails
   module Commands
@@ -11,13 +11,13 @@ module Rails
         def setup
           super
           File.stubs(:exist?)
-          File.stubs(:exist?).with(File.join(ShopifyCli::ROOT, 'lib', 'project_types', 'rails', 'cli.rb')).returns(true)
+          File.stubs(:exist?).with(File.join(ShopifyCli::ROOT, "lib", "project_types", "rails", "cli.rb")).returns(true)
           @context.stubs(:os).returns(:mac)
           stub_successful_heroku_flow
         end
 
         def test_call_raises_if_using_sqlite
-          expects_heroku_db_validated(status: false, db: 'sqlite')
+          expects_heroku_db_validated(status: false, db: "sqlite")
 
           assert_raises ShopifyCli::Abort do
             Rails::Commands::Deploy::Heroku.new(@context).call
@@ -33,7 +33,7 @@ module Rails
         end
 
         def test_call_validates_db_if_not_sqlite
-          expects_heroku_db_validated(status: true, db: 'mysql')
+          expects_heroku_db_validated(status: true, db: "mysql")
           Rails::Commands::Deploy::Heroku.new(@context).call
         end
 
@@ -116,7 +116,7 @@ module Rails
         def test_call_uses_existing_heroku_auth_if_available
           expects_heroku_whoami(status: true)
 
-          @context.expects(:puts).with(@context.message('rails.deploy.heroku.authenticated_with_account', 'username'))
+          @context.expects(:puts).with(@context.message("rails.deploy.heroku.authenticated_with_account", "username"))
 
           Rails::Commands::Deploy::Heroku.new(@context).call
         end
@@ -138,39 +138,39 @@ module Rails
         end
 
         def test_call_uses_existing_heroku_app_if_available
-          expects_git_remote_get_url_heroku(status: true, remote: 'heroku')
+          expects_git_remote_get_url_heroku(status: true, remote: "heroku")
 
-          @context.expects(:puts).with(@context.message('rails.deploy.heroku.authenticated_with_account', 'username'))
+          @context.expects(:puts).with(@context.message("rails.deploy.heroku.authenticated_with_account", "username"))
 
           Rails::Commands::Deploy::Heroku.new(@context).call
         end
 
         def test_call_lets_you_choose_existing_heroku_app
-          expects_git_remote_get_url_heroku(status: false, remote: 'heroku')
+          expects_git_remote_get_url_heroku(status: false, remote: "heroku")
           expects_heroku_select_app(status: true)
 
           CLI::UI::Prompt.expects(:ask)
-            .with(@context.message('rails.deploy.heroku.app.no_apps_found'))
+            .with(@context.message("rails.deploy.heroku.app.no_apps_found"))
             .returns(:existing)
 
           CLI::UI::Prompt.expects(:ask)
-            .with(@context.message('rails.deploy.heroku.app.name'))
-            .returns('app-name')
+            .with(@context.message("rails.deploy.heroku.app.name"))
+            .returns("app-name")
 
           Rails::Commands::Deploy::Heroku.new(@context).call
         end
 
         def test_call_raises_if_choosing_existing_heroku_app_fails
-          expects_git_remote_get_url_heroku(status: false, remote: 'heroku')
+          expects_git_remote_get_url_heroku(status: false, remote: "heroku")
           expects_heroku_select_app(status: false)
 
           CLI::UI::Prompt.expects(:ask)
-            .with(@context.message('rails.deploy.heroku.app.no_apps_found'))
+            .with(@context.message("rails.deploy.heroku.app.no_apps_found"))
             .returns(:existing)
 
           CLI::UI::Prompt.expects(:ask)
-            .with(@context.message('rails.deploy.heroku.app.name'))
-            .returns('app-name')
+            .with(@context.message("rails.deploy.heroku.app.name"))
+            .returns("app-name")
 
           assert_raises ShopifyCli::Abort do
             Rails::Commands::Deploy::Heroku.new(@context).call
@@ -178,22 +178,22 @@ module Rails
         end
 
         def test_call_lets_you_create_new_heroku_app
-          expects_git_remote_get_url_heroku(status: false, remote: 'heroku')
+          expects_git_remote_get_url_heroku(status: false, remote: "heroku")
           expects_heroku_create(status: true)
 
           CLI::UI::Prompt.expects(:ask)
-            .with(@context.message('rails.deploy.heroku.app.no_apps_found'))
+            .with(@context.message("rails.deploy.heroku.app.no_apps_found"))
             .returns(:new)
 
           Rails::Commands::Deploy::Heroku.new(@context).call
         end
 
         def test_call_raises_if_creating_new_heroku_app_fails
-          expects_git_remote_get_url_heroku(status: false, remote: 'heroku')
+          expects_git_remote_get_url_heroku(status: false, remote: "heroku")
           expects_heroku_create(status: false)
 
           CLI::UI::Prompt.expects(:ask)
-            .with(@context.message('rails.deploy.heroku.app.no_apps_found'))
+            .with(@context.message("rails.deploy.heroku.app.no_apps_found"))
             .returns(:new)
 
           assert_raises ShopifyCli::Abort do
@@ -204,7 +204,7 @@ module Rails
         def test_call_doesnt_prompt_if_only_one_branch_exists
           expects_git_branch(status: true, multiple: false)
 
-          @context.expects(:puts).with(@context.message('rails.deploy.heroku.git.branch_selected', 'master'))
+          @context.expects(:puts).with(@context.message("rails.deploy.heroku.git.branch_selected", "master"))
 
           Rails::Commands::Deploy::Heroku.new(@context).call
         end
@@ -214,8 +214,8 @@ module Rails
           expects_git_push_heroku(status: true, branch: "other_branch:master")
 
           CLI::UI::Prompt.expects(:ask)
-            .with(@context.message('rails.deploy.heroku.git.what_branch'))
-            .returns('other_branch')
+            .with(@context.message("rails.deploy.heroku.git.what_branch"))
+            .returns("other_branch")
 
           Rails::Commands::Deploy::Heroku.new(@context).call
         end

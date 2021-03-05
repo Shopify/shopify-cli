@@ -1,9 +1,9 @@
 # frozen_string_literal: true
-require 'shopify_cli'
-require 'fileutils'
-require 'rbconfig'
-require 'net/http'
-require 'json'
+require "shopify_cli"
+require "fileutils"
+require "rbconfig"
+require "net/http"
+require "json"
 
 module ShopifyCli
   ##
@@ -13,9 +13,9 @@ module ShopifyCli
   # resoures.
   #
   class Context
-    GEM_LATEST_URI = URI.parse('https://rubygems.org/api/v1/versions/shopify-cli/latest.json')
-    VERSION_CHECK_SECTION = 'versioncheck'
-    LAST_CHECKED_AT_FIELD = 'last_checked_at'
+    GEM_LATEST_URI = URI.parse("https://rubygems.org/api/v1/versions/shopify-cli/latest.json")
+    VERSION_CHECK_SECTION = "versioncheck"
+    LAST_CHECKED_AT_FIELD = "last_checked_at"
     VERSION_CHECK_INTERVAL = 86400
 
     class << self
@@ -40,7 +40,7 @@ module ShopifyCli
       # * `key` - a symbol representing the message
       # * `params` - the parameters to format the string with
       def message(key, *params)
-        key_parts = key.split('.').map(&:to_sym)
+        key_parts = key.split(".").map(&:to_sym)
         str = Context.messages.dig(*key_parts)
         str ? str % params : key
       end
@@ -86,7 +86,7 @@ module ShopifyCli
     # See `#development?` for checking for development environment.
     #
     def system?
-      !Dir.exist?(File.join(ShopifyCli::ROOT, 'test'))
+      !Dir.exist?(File.join(ShopifyCli::ROOT, "test"))
     end
 
     # will return true if the cli is running on your development instance.
@@ -97,13 +97,13 @@ module ShopifyCli
 
     # will return true while tests are running, either locally or on CI
     def testing?
-      ci? || ENV['TEST']
+      ci? || ENV["TEST"]
     end
 
     ##
     # will return true if the cli is being tested on CI
     def ci?
-      ENV['CI']
+      ENV["CI"]
     end
 
     # get a environment variable value by name.
@@ -116,7 +116,7 @@ module ShopifyCli
     #
     def getenv(name)
       v = @env[name]
-      v == '' ? nil : v
+      v == "" ? nil : v
     end
 
     # set a environment variable value by name.
@@ -254,7 +254,7 @@ module ShopifyCli
     # * `uri` - a http URI to open in a browser
     #
     def open_url!(uri)
-      help = message('core.context.open_url', uri)
+      help = message("core.context.open_url", uri)
       puts(help)
     end
 
@@ -303,7 +303,7 @@ module ShopifyCli
     # * `text` - a string message to output
     #
     def debug(text)
-      puts("{{red:DEBUG}} #{text}") if getenv('DEBUG')
+      puts("{{red:DEBUG}} #{text}") if getenv("DEBUG")
     end
 
     # proxy call to Context.message.
@@ -338,7 +338,7 @@ module ShopifyCli
     def system(*args, **kwargs)
       process_status = CLI::Kit::System.system(*args, env: @env, **kwargs)
       unless process_status.success?
-        abort("System call failed: #{args.join(' ')}")
+        abort("System call failed: #{args.join(" ")}")
       end
       process_status
     end
@@ -414,13 +414,13 @@ module ShopifyCli
     #
     def on_siginfo
       # Reset any previous SIGINFO handling we had so the only action we take is the given block
-      trap('INFO', 'DEFAULT')
+      trap("INFO", "DEFAULT")
 
       fork do
         begin
           r, w = IO.pipe
           @signal = false
-          trap('SIGINFO') do
+          trap("SIGINFO") do
             @signal = true
             w.write(0)
           end
@@ -446,8 +446,8 @@ module ShopifyCli
     # @todo This is currently a duplicate of CLI::Kit::System.which() - we should make that method public when we make
     #       Kit changes and make this a wrapper instead.
     def which(cmd)
-      exts = ENV['PATHEXT'] ? ENV['PATHEXT'].split(';') : ['']
-      ENV['PATH'].split(File::PATH_SEPARATOR).each do |path|
+      exts = ENV["PATHEXT"] ? ENV["PATHEXT"].split(";") : [""]
+      ENV["PATH"].split(File::PATH_SEPARATOR).each do |path|
         exts.each do |ext|
           exe = File.join(File.expand_path(path), "#{cmd}#{ext}")
           return exe if File.executable?(exe) && !File.directory?(exe)
@@ -483,18 +483,18 @@ module ShopifyCli
     # #### Returns
     # - ext: string for file extension on windows
     #      : empty string otherwise
-    def executable_file_extension(ext = '.exe')
+    def executable_file_extension(ext = ".exe")
       if windows?
         ext
       else
-        ''
+        ""
       end
     end
 
     private
 
     def ctx_path(fname)
-      require 'pathname'
+      require "pathname"
       if Pathname.new(fname).absolute?
         fname
       else

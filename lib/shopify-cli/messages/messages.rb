@@ -129,7 +129,7 @@ module ShopifyCli
             missing_package: "expected to have a file at: %s",
             invalid_package: "{{info:%s}} was not valid JSON. Fix this then try again",
             install_spinner_error: "Unable to install all %d dependencies",
-            install_error: 'An error occurred while installing dependencies',
+            install_error: "An error occurred while installing dependencies",
           },
 
           installing: "Installing dependencies with %s...",
@@ -192,9 +192,9 @@ module ShopifyCli
 
         api: {
           error: {
-            internal_server_error: '{{red:{{x}} An unexpected error occurred on Shopify.}}',
+            internal_server_error: "{{red:{{x}} An unexpected error occurred on Shopify.}}",
             internal_server_error_debug: "\n{{red:Response details:}}\n%s\n\n",
-            invalid_url: 'Invalid URL: %s',
+            invalid_url: "Invalid URL: %s",
           },
         },
 
@@ -282,7 +282,7 @@ module ShopifyCli
             MESSAGE
             development_store_select: "Which development store would you like to use?",
             app_select: "To which app does this project belong?",
-            no_apps: 'You have no apps to connect to, creating a new app.',
+            no_apps: "You have no apps to connect to, creating a new app.",
             app_name: "App name",
             app_type: {
               select: "What type of app are you building?",

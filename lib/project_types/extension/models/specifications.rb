@@ -5,7 +5,7 @@ module Extension
 
       property! :custom_handler_root,
         accepts: ->(d) { File.directory?(d) },
-        default: -> { File.expand_path('lib/project_types/extension/models/specification_handlers', ShopifyCli::ROOT) }
+        default: -> { File.expand_path("lib/project_types/extension/models/specification_handlers", ShopifyCli::ROOT) }
 
       property! :custom_handler_namespace,
         accepts: ->(m) { m.respond_to?(:const_get) },
@@ -64,8 +64,8 @@ module Extension
 
       def ensure_legacy_compatibility(specification_attribute_sets)
         specification_attribute_sets.each do |attributes|
-          next unless attributes.fetch(:identifier) == 'product_subscription'
-          attributes[:graphql_identifier] = 'SUBSCRIPTION_MANAGEMENT'
+          next unless attributes.fetch(:identifier) == "product_subscription"
+          attributes[:graphql_identifier] = "SUBSCRIPTION_MANAGEMENT"
         end
       end
 

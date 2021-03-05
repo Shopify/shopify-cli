@@ -1,5 +1,5 @@
 # frozen_string_literal: true
-require 'project_types/node/test_helper'
+require "project_types/node/test_helper"
 
 module Node
   module Commands

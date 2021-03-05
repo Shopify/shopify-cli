@@ -1,17 +1,17 @@
 # frozen_string_literal: true
-require 'shopify_cli'
+require "shopify_cli"
 
 module Extension
   module Commands
     class Tunnel < ExtensionCommand
       options do |parser, flags|
-        parser.on('--port=PORT') { |port| flags[:port] = port }
+        parser.on("--port=PORT") { |port| flags[:port] = port }
       end
 
-      AUTH_SUBCOMMAND = 'auth'
-      START_SUBCOMMAND = 'start'
-      STOP_SUBCOMMAND = 'stop'
-      STATUS_SUBCOMMAND = 'status'
+      AUTH_SUBCOMMAND = "auth"
+      START_SUBCOMMAND = "start"
+      STOP_SUBCOMMAND = "stop"
+      STATUS_SUBCOMMAND = "status"
       DEFAULT_PORT = 39351
 
       def call(args, _name)
@@ -27,11 +27,11 @@ module Extension
       end
 
       def self.help
-        ShopifyCli::Context.message('tunnel.help', ShopifyCli::TOOL_NAME)
+        ShopifyCli::Context.message("tunnel.help", ShopifyCli::TOOL_NAME)
       end
 
       def self.extended_help
-        ShopifyCli::Context.message('tunnel.extended_help', ShopifyCli::TOOL_NAME, DEFAULT_PORT)
+        ShopifyCli::Context.message("tunnel.extended_help", ShopifyCli::TOOL_NAME, DEFAULT_PORT)
       end
 
       private
@@ -40,9 +40,9 @@ module Extension
         tunnel_url = ShopifyCli::Tunnel.urls.first
 
         if tunnel_url.nil?
-          @ctx.puts(@ctx.message('tunnel.no_tunnel_running'))
+          @ctx.puts(@ctx.message("tunnel.no_tunnel_running"))
         else
-          @ctx.puts(@ctx.message('tunnel.tunnel_running_at', tunnel_url))
+          @ctx.puts(@ctx.message("tunnel.tunnel_running_at", tunnel_url))
         end
       end
 
@@ -50,7 +50,7 @@ module Extension
         return DEFAULT_PORT unless options.flags.key?(:port)
 
         port = options.flags[:port].to_i
-        @ctx.abort(@ctx.message('tunnel.invalid_port', options.flags[:port])) unless port > 0
+        @ctx.abort(@ctx.message("tunnel.invalid_port", options.flags[:port])) unless port > 0
         port
       end
 
@@ -58,7 +58,7 @@ module Extension
         token = args.shift
 
         if token.nil?
-          @ctx.puts(@ctx.message('tunnel.missing_token'))
+          @ctx.puts(@ctx.message("tunnel.missing_token"))
           @ctx.puts("#{self.class.help}\n#{self.class.extended_help}")
         else
           ShopifyCli::Tunnel.auth(@ctx, token)

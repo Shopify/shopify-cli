@@ -5,7 +5,7 @@ module Script
     module Application
       class EnableScript
         def self.call(ctx:, api_key:, shop_domain:, configuration:, extension_point_type:, title:)
-          UI::PrintingSpinner.spin(ctx, ctx.message('script.application.enabling')) do |p_ctx, spinner|
+          UI::PrintingSpinner.spin(ctx, ctx.message("script.application.enabling")) do |p_ctx, spinner|
             script_service = Infrastructure::ScriptService.new(ctx: p_ctx)
             script_service.enable(
               api_key: api_key,
@@ -14,7 +14,7 @@ module Script
               extension_point_type: extension_point_type,
               title: title
             )
-            spinner.update_title(p_ctx.message('script.application.enabled'))
+            spinner.update_title(p_ctx.message("script.application.enabled"))
           end
         end
       end

@@ -6,7 +6,7 @@ module Minitest
   end
 
   class Test
-    FIXTURE_DIR = File.expand_path('fixtures', File.dirname(__FILE__))
+    FIXTURE_DIR = File.expand_path("fixtures", File.dirname(__FILE__))
     CONFIG_FILE = CLI::Kit::Config.new(tool_name: ShopifyCli::TOOL_NAME).file
 
     include TestHelpers::Project
@@ -16,7 +16,7 @@ module Minitest
       if File.exist?(CONFIG_FILE)
         @config_sha_before = Digest::SHA256.hexdigest(File.read(CONFIG_FILE))
       end
-      project_context('project')
+      project_context("project")
       ::ShopifyCli::Project.clear
       super
     end
@@ -81,16 +81,16 @@ module Minitest
     private
 
     def stub_prompt_for_cli_updates
-      ShopifyCli::Config.stubs(:get_section).with("autoupdate").returns('enabled' => 'true')
+      ShopifyCli::Config.stubs(:get_section).with("autoupdate").returns("enabled" => "true")
     end
 
     def stub_new_version_check
       stub_request(:get, ShopifyCli::Context::GEM_LATEST_URI)
         .with(headers: {
-          'Accept' => '*/*',
-          'Accept-Encoding' => 'gzip;q=1.0,deflate;q=0.6,identity;q=0.3',
-          'Host' => 'rubygems.org',
-          'User-Agent' => 'Ruby',
+          "Accept" => "*/*",
+          "Accept-Encoding" => "gzip;q=1.0,deflate;q=0.6,identity;q=0.3",
+          "Host" => "rubygems.org",
+          "User-Agent" => "Ruby",
         })
         .to_return(status: 200, body: "{\"version\":\"#{ShopifyCli::VERSION}\"}", headers: {})
     end

@@ -1,5 +1,5 @@
 # frozen_string_literal: true
-require 'base64'
+require "base64"
 
 module Extension
   module Models

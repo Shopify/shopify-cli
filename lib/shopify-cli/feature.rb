@@ -6,7 +6,7 @@ module ShopifyCli
   # Feature flags will persist between runs so if the flag is enabled or disabled,
   # it will still be in that same state on the next cli invocation.
   class Feature
-    SECTION = 'features'
+    SECTION = "features"
 
     ##
     # ShopifyCli::Feature::Set is included on commands and projects to allow you to hide

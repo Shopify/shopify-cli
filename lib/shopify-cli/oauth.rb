@@ -1,18 +1,18 @@
-require 'base64'
-require 'digest'
-require 'json'
-require 'net/http'
-require 'securerandom'
-require 'openssl'
-require 'shopify_cli'
-require 'uri'
-require 'webrick'
+require "base64"
+require "digest"
+require "json"
+require "net/http"
+require "securerandom"
+require "openssl"
+require "shopify_cli"
+require "uri"
+require "webrick"
 
 module ShopifyCli
   class OAuth
     include SmartProperties
 
-    autoload :Servlet, 'shopify-cli/oauth/servlet'
+    autoload :Servlet, "shopify-cli/oauth/servlet"
 
     class Error < StandardError; end
     LocalRequest = Struct.new(:method, :path, :query, :protocol)
@@ -54,10 +54,10 @@ module ShopifyCli
       @server ||= begin
         server = WEBrick::HTTPServer.new(
           Port: DEFAULT_PORT,
-          Logger: WEBrick::Log.new(File.open(File::NULL, 'w')),
+          Logger: WEBrick::Log.new(File.open(File::NULL, "w")),
           AccessLog: [],
         )
-        server.mount('/', Servlet, self, state_token)
+        server.mount("/", Servlet, self, state_token)
         server
       end
     end
@@ -80,17 +80,17 @@ module ShopifyCli
     end
 
     def output_authentication_info(uri)
-      login_location = ctx.message(service == 'admin' ? 'core.oauth.location.admin' : 'core.oauth.location.partner')
-      ctx.puts(ctx.message('core.oauth.authentication_required', login_location))
+      login_location = ctx.message(service == "admin" ? "core.oauth.location.admin" : "core.oauth.location.partner")
+      ctx.puts(ctx.message("core.oauth.authentication_required", login_location))
       ctx.open_url!(uri)
     end
 
     def receive_access_code
       @access_code ||= begin
         @server_thread.join(240)
-        raise Error, ctx.message('core.oauth.error.timeout') if response_query.nil?
-        raise Error, response_query['error_description'] unless response_query['error'].nil?
-        response_query['code']
+        raise Error, ctx.message("core.oauth.error.timeout") if response_query.nil?
+        raise Error, response_query["error_description"] unless response_query["error"].nil?
+        response_query["code"]
       end
     end
 
@@ -105,8 +105,8 @@ module ShopifyCli
         }.merge(confirmation_param)
       )
       store.set(
-        "#{service}_access_token".to_sym => resp['access_token'],
-        "#{service}_refresh_token".to_sym => resp['refresh_token'],
+        "#{service}_access_token".to_sym => resp["access_token"],
+        "#{service}_refresh_token".to_sym => resp["refresh_token"],
       )
     end
 
@@ -130,8 +130,8 @@ module ShopifyCli
         client_id: client_id,
       )
       store.set(
-        "#{service}_access_token".to_sym => resp['access_token'],
-        "#{service}_refresh_token".to_sym => resp['refresh_token'],
+        "#{service}_access_token".to_sym => resp["access_token"],
+        "#{service}_refresh_token".to_sym => resp["refresh_token"],
       )
     end
 
@@ -155,7 +155,7 @@ module ShopifyCli
         scope: scopes,
         subject_token: store.get("#{service}_access_token".to_sym),
       )
-      store.set("#{service}_exchange_token".to_sym => resp['access_token'])
+      store.set("#{service}_exchange_token".to_sym => resp["access_token"])
     end
 
     def post_token_request(url, params)
@@ -163,17 +163,17 @@ module ShopifyCli
       https = Net::HTTP.new(uri.host, uri.port)
       https.use_ssl = true
       request = Net::HTTP::Post.new(uri.path)
-      request['User-Agent'] = "Shopify App CLI #{::ShopifyCli::VERSION}"
+      request["User-Agent"] = "Shopify App CLI #{::ShopifyCli::VERSION}"
       request.body = URI.encode_www_form(params)
       res = https.request(request)
-      raise Error, JSON.parse(res.body)['error_description'] unless res.is_a?(Net::HTTPSuccess)
+      raise Error, JSON.parse(res.body)["error_description"] unless res.is_a?(Net::HTTPSuccess)
       JSON.parse(res.body)
     end
 
     def challange_params
       {
         code_challenge: code_challenge,
-        code_challenge_method: 'S256',
+        code_challenge_method: "S256",
       }
     end
 

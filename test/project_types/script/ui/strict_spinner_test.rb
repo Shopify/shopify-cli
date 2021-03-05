@@ -4,7 +4,7 @@ require "project_types/script/test_helper"
 
 describe Script::UI::StrictSpinner do
   describe ".spin" do
-    let(:title) { 'title' }
+    let(:title) { "title" }
 
     describe "when an error is thrown in the block" do
       it "should abort" do

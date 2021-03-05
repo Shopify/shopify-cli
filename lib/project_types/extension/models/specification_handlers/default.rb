@@ -19,11 +19,11 @@ module Extension
         end
 
         def name
-          message('name')
+          message("name")
         end
 
         def tagline
-          message('tagline') || ""
+          message("tagline") || ""
         end
 
         def config(context)

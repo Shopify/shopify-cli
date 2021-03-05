@@ -15,7 +15,7 @@ module Extension
 
         def stub_get_organizations(organizations)
           stub_partner_req(
-            'all_orgs_with_apps',
+            "all_orgs_with_apps",
             resp: {
               data: {
                 organizations: {
@@ -38,7 +38,7 @@ module Extension
             'businessName': name,
             'stores': {
               'nodes': [
-                { 'shopDomain': 'store.myshopify.com' },
+                { 'shopDomain': "store.myshopify.com" },
               ],
             },
             'apps': {

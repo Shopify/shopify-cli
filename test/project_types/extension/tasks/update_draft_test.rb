@@ -1,6 +1,6 @@
 # frozen_string_literal: true
-require 'test_helper'
-require 'project_types/extension/extension_test_helpers'
+require "test_helper"
+require "project_types/extension/extension_test_helpers"
 
 module Extension
   module Tasks
@@ -14,11 +14,11 @@ module Extension
         super
         ShopifyCli::ProjectType.load_type(:extension)
 
-        @api_key = 'FAKE_API_KEY'
+        @api_key = "FAKE_API_KEY"
         @registration_id = 42
         @config = {}
-        @extension_context = 'fake#context'
-        @location = 'https://www.fakeurl.com'
+        @extension_context = "fake#context"
+        @location = "https://www.fakeurl.com"
 
         @input = {
           api_key: @api_key,
@@ -56,11 +56,11 @@ module Extension
           )
         end
 
-        assert_message_output(io: io, expected_content: @context.message('tasks.errors.parse_error'))
+        assert_message_output(io: io, expected_content: @context.message("tasks.errors.parse_error"))
       end
 
       def test_aborts_with_errors_if_user_errors_are_returned
-        user_errors = [{ field: ['field'], UserErrors::MESSAGE_FIELD => 'An error occurred on field' }]
+        user_errors = [{ field: ["field"], UserErrors::MESSAGE_FIELD => "An error occurred on field" }]
         stub_update_draft_failure(errors: user_errors, **@input)
 
         io = capture_io_and_assert_raises(ShopifyCli::Abort) do
@@ -73,7 +73,7 @@ module Extension
           )
         end
 
-        assert_message_output(io: io, expected_content: 'An error occurred on field')
+        assert_message_output(io: io, expected_content: "An error occurred on field")
       end
     end
   end

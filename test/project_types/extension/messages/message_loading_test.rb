@@ -1,6 +1,6 @@
 # frozen_string_literal: true
-require 'test_helper'
-require 'project_types/extension/extension_test_helpers'
+require "test_helper"
+require "project_types/extension/extension_test_helpers"
 
 module Extension
   module Messages
@@ -13,13 +13,13 @@ module Extension
         ShopifyCli::ProjectType.load_type(:extension)
 
         @fake_messages = {
-          name: 'Fake Type',
-          tagline: 'Fake tagline',
+          name: "Fake Type",
+          tagline: "Fake tagline",
         }
 
         @fake_overrides = {
           build: {
-            frame_title: 'Overridden Title',
+            frame_title: "Overridden Title",
           },
         }
 

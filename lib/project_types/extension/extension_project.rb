@@ -1,5 +1,5 @@
 # frozen_string_literal: true
-require 'shopify_cli'
+require "shopify_cli"
 
 module Extension
   class ExtensionProject < ShopifyCli::Project
@@ -13,7 +13,7 @@ module Extension
         )
       end
 
-      def write_env_file(context:, title:, api_key: '', api_secret: '', registration_id: nil)
+      def write_env_file(context:, title:, api_key: "", api_secret: "", registration_id: nil)
         ShopifyCli::Resources::EnvFile.new(
           api_key: api_key,
           secret: api_secret,
@@ -34,11 +34,11 @@ module Extension
     end
 
     def app
-      Models::App.new(api_key: env['api_key'], secret: env['secret'])
+      Models::App.new(api_key: env["api_key"], secret: env["secret"])
     end
 
     def registered?
-      property_present?('api_key') && property_present?('secret') && registration_id?
+      property_present?("api_key") && property_present?("secret") && registration_id?
     end
 
     def title

@@ -1,9 +1,9 @@
 module ShopifyCli
   class Heroku
     DOWNLOAD_URLS = {
-      linux: 'https://cli-assets.heroku.com/heroku-linux-x64.tar.gz',
-      mac: 'https://cli-assets.heroku.com/heroku-darwin-x64.tar.gz',
-      windows: 'https://cli-assets.heroku.com/heroku-x64.exe',
+      linux: "https://cli-assets.heroku.com/heroku-linux-x64.tar.gz",
+      mac: "https://cli-assets.heroku.com/heroku-darwin-x64.tar.gz",
+      windows: "https://cli-assets.heroku.com/heroku-x64.exe",
     }
 
     def initialize(ctx)
@@ -12,33 +12,33 @@ module ShopifyCli
 
     def app
       return nil unless (app = git_remote)
-      app = app.split('/').last
-      app = app.split('.').first
+      app = app.split("/").last
+      app = app.split(".").first
       app
     end
 
     def authenticate
-      result = @ctx.system(heroku_command, 'login')
-      @ctx.abort(@ctx.message('core.heroku.error.authentication')) unless result.success?
+      result = @ctx.system(heroku_command, "login")
+      @ctx.abort(@ctx.message("core.heroku.error.authentication")) unless result.success?
     end
 
     def create_new_app
-      output, status = @ctx.capture2e(heroku_command, 'create')
-      @ctx.abort(@ctx.message('core.heroku.error.creation')) unless status.success?
+      output, status = @ctx.capture2e(heroku_command, "create")
+      @ctx.abort(@ctx.message("core.heroku.error.creation")) unless status.success?
       @ctx.puts(output)
     end
 
     def deploy(branch_to_deploy)
-      result = @ctx.system('git', 'push', '-u', 'heroku', "#{branch_to_deploy}:master")
-      @ctx.abort(@ctx.message('core.heroku.error.deploy')) unless result.success?
+      result = @ctx.system("git", "push", "-u", "heroku", "#{branch_to_deploy}:master")
+      @ctx.abort(@ctx.message("core.heroku.error.deploy")) unless result.success?
     end
 
     def download
       return if installed?
 
-      result = @ctx.system('curl', '-o', download_path, DOWNLOAD_URLS[@ctx.os], chdir: ShopifyCli.cache_dir)
-      @ctx.abort(@ctx.message('core.heroku.error.download')) unless result.success?
-      @ctx.abort(@ctx.message('core.heroku.error.download')) unless File.exist?(download_path)
+      result = @ctx.system("curl", "-o", download_path, DOWNLOAD_URLS[@ctx.os], chdir: ShopifyCli.cache_dir)
+      @ctx.abort(@ctx.message("core.heroku.error.download")) unless result.success?
+      @ctx.abort(@ctx.message("core.heroku.error.download")) unless File.exist?(download_path)
     end
 
     def install
@@ -47,22 +47,22 @@ module ShopifyCli
       result = if @ctx.windows?
         @ctx.system("\"#{download_path}\"")
       else
-        @ctx.system('tar', '-xf', download_path, chdir: ShopifyCli.cache_dir)
+        @ctx.system("tar", "-xf", download_path, chdir: ShopifyCli.cache_dir)
       end
-      @ctx.abort(@ctx.message('core.heroku.error.install')) unless result.success?
+      @ctx.abort(@ctx.message("core.heroku.error.install")) unless result.success?
 
       @ctx.rm(download_path)
     end
 
     def select_existing_app(app_name)
-      result = @ctx.system(heroku_command, 'git:remote', '-a', app_name)
+      result = @ctx.system(heroku_command, "git:remote", "-a", app_name)
 
-      msg = @ctx.message('core.heroku.error.could_not_select_app', app_name)
+      msg = @ctx.message("core.heroku.error.could_not_select_app", app_name)
       @ctx.abort(msg) unless result.success?
     end
 
     def whoami
-      output, status = @ctx.capture2e(heroku_command, 'whoami')
+      output, status = @ctx.capture2e(heroku_command, "whoami")
       return output.strip if status.success?
       nil
     end
@@ -70,7 +70,7 @@ module ShopifyCli
     private
 
     def download_filename
-      URI.parse(DOWNLOAD_URLS[@ctx.os]).path.split('/').last
+      URI.parse(DOWNLOAD_URLS[@ctx.os]).path.split("/").last
     end
 
     def download_path
@@ -78,33 +78,33 @@ module ShopifyCli
     end
 
     def git_remote
-      output, status = @ctx.capture2e('git', 'remote', 'get-url', 'heroku')
+      output, status = @ctx.capture2e("git", "remote", "get-url", "heroku")
       status.success? ? output : nil
     end
 
     def heroku_command
-      local_path = File.join(ShopifyCli.cache_dir, 'heroku', 'bin', 'heroku').to_s
+      local_path = File.join(ShopifyCli.cache_dir, "heroku", "bin", "heroku").to_s
       if File.exist?(local_path)
         local_path
       elsif @ctx.windows?
         # Check if Heroku exists in the Windows registry and run it from there
-        require 'win32/registry'
+        require "win32/registry"
         begin
           windows_path = Win32::Registry::HKEY_CURRENT_USER.open('SOFTWARE\heroku') do |reg|
-            reg[''] # This reads the 'Default' registry key
+            reg[""] # This reads the 'Default' registry key
           end
 
-          File.join(windows_path, 'bin', 'heroku').to_s
+          File.join(windows_path, "bin", "heroku").to_s
         rescue
-          'heroku'
+          "heroku"
         end
       else
-        'heroku'
+        "heroku"
       end
     end
 
     def installed?
-      _output, status = @ctx.capture2e(heroku_command, '--version')
+      _output, status = @ctx.capture2e(heroku_command, "--version")
       status.success?
     rescue
       false

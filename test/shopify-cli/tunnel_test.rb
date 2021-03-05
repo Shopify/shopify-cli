@@ -1,4 +1,4 @@
-require 'test_helper'
+require "test_helper"
 
 module ShopifyCli
   class TunnelTest < MiniTest::Test
@@ -8,8 +8,8 @@ module ShopifyCli
     end
 
     def test_auth_calls_ngrok_authtoken
-      @context.expects(:system).with("#{ShopifyCli.cache_dir}/ngrok", 'authtoken', 'token')
-      ShopifyCli::Tunnel.auth(@context, 'token')
+      @context.expects(:system).with("#{ShopifyCli.cache_dir}/ngrok", "authtoken", "token")
+      ShopifyCli::Tunnel.auth(@context, "token")
     end
 
     def test_start_running_returns_url
@@ -17,7 +17,7 @@ module ShopifyCli
         .with(:ngrok).returns(:true)
       with_log do
         ShopifyCli::Tunnel.start(@context)
-        assert_equal 'https://example.ngrok.io', ShopifyCli::Tunnel.start(@context)
+        assert_equal "https://example.ngrok.io", ShopifyCli::Tunnel.start(@context)
       end
     end
 
@@ -26,12 +26,12 @@ module ShopifyCli
         ShopifyCli::ProcessSupervision.stubs(:running?).returns(false)
         ShopifyCli::ProcessSupervision.expects(:start).with(
           :ngrok,
-          "\"#{File.join(ShopifyCli.cache_dir, 'ngrok')}\" http -inspect=false -log=stdout -log-level=debug 8081"
+          "\"#{File.join(ShopifyCli.cache_dir, "ngrok")}\" http -inspect=false -log=stdout -log-level=debug 8081"
         ).returns(ShopifyCli::ProcessSupervision.new(:ngrok, pid: 40000))
-        @context.expects(:puts).with(@context.message('core.tunnel.start', 'https://example.ngrok.io'))
-        @context.expects(:puts).with(@context.message('core.tunnel.will_timeout', '7 hours 59 minutes'))
-        @context.expects(:puts).with(@context.message('core.tunnel.signup_suggestion', ShopifyCli::TOOL_NAME))
-        assert_equal 'https://example.ngrok.io', ShopifyCli::Tunnel.start(@context)
+        @context.expects(:puts).with(@context.message("core.tunnel.start", "https://example.ngrok.io"))
+        @context.expects(:puts).with(@context.message("core.tunnel.will_timeout", "7 hours 59 minutes"))
+        @context.expects(:puts).with(@context.message("core.tunnel.signup_suggestion", ShopifyCli::TOOL_NAME))
+        assert_equal "https://example.ngrok.io", ShopifyCli::Tunnel.start(@context)
       end
     end
 
@@ -40,19 +40,19 @@ module ShopifyCli
       with_log(time: start_time.to_s) do
         ShopifyCli::ProcessSupervision.expects(:start).twice.with(
           :ngrok,
-          "\"#{File.join(ShopifyCli.cache_dir, 'ngrok')}\" http -inspect=false -log=stdout -log-level=debug 8081"
+          "\"#{File.join(ShopifyCli.cache_dir, "ngrok")}\" http -inspect=false -log=stdout -log-level=debug 8081"
         ).returns(
           ShopifyCli::ProcessSupervision.new(:ngrok, pid: 40000, time: start_time.to_s)
         ).then.returns(
           ShopifyCli::ProcessSupervision.new(:ngrok, pid: 40000)
         )
-        @context.expects(:puts).with(@context.message('core.tunnel.timed_out'))
+        @context.expects(:puts).with(@context.message("core.tunnel.timed_out"))
         ShopifyCli::ProcessSupervision.expects(:stop)
           .with(:ngrok).returns(true)
-        @context.expects(:puts).with(@context.message('core.tunnel.start', 'https://example.ngrok.io'))
-        @context.expects(:puts).with(@context.message('core.tunnel.will_timeout', '7 hours 59 minutes'))
-        @context.expects(:puts).with(@context.message('core.tunnel.signup_suggestion', ShopifyCli::TOOL_NAME))
-        assert_equal 'https://example.ngrok.io', ShopifyCli::Tunnel.start(@context)
+        @context.expects(:puts).with(@context.message("core.tunnel.start", "https://example.ngrok.io"))
+        @context.expects(:puts).with(@context.message("core.tunnel.will_timeout", "7 hours 59 minutes"))
+        @context.expects(:puts).with(@context.message("core.tunnel.signup_suggestion", ShopifyCli::TOOL_NAME))
+        assert_equal "https://example.ngrok.io", ShopifyCli::Tunnel.start(@context)
       end
     end
 
@@ -62,35 +62,35 @@ module ShopifyCli
         ShopifyCli::ProcessSupervision.stubs(:running?).returns(false)
         ShopifyCli::ProcessSupervision.expects(:start).with(
           :ngrok,
-          "\"#{File.join(ShopifyCli.cache_dir, 'ngrok')}\" http -inspect=false"\
+          "\"#{File.join(ShopifyCli.cache_dir, "ngrok")}\" http -inspect=false"\
             " -log=stdout -log-level=debug #{configured_port}"
         ).returns(ShopifyCli::ProcessSupervision.new(:ngrok, pid: 40000))
-        @context.expects(:puts).with(@context.message('core.tunnel.start', 'https://example.ngrok.io'))
-        @context.expects(:puts).with(@context.message('core.tunnel.will_timeout', '7 hours 59 minutes'))
-        @context.expects(:puts).with(@context.message('core.tunnel.signup_suggestion', ShopifyCli::TOOL_NAME))
-        assert_equal 'https://example.ngrok.io', ShopifyCli::Tunnel.start(@context, port: configured_port)
+        @context.expects(:puts).with(@context.message("core.tunnel.start", "https://example.ngrok.io"))
+        @context.expects(:puts).with(@context.message("core.tunnel.will_timeout", "7 hours 59 minutes"))
+        @context.expects(:puts).with(@context.message("core.tunnel.signup_suggestion", ShopifyCli::TOOL_NAME))
+        assert_equal "https://example.ngrok.io", ShopifyCli::Tunnel.start(@context, port: configured_port)
       end
     end
 
     def test_start_displays_url_with_account
-      with_log(fixture: 'ngrok_account') do
+      with_log(fixture: "ngrok_account") do
         ShopifyCli::ProcessSupervision.stubs(:running?).returns(false)
         ShopifyCli::ProcessSupervision.expects(:start).with(
           :ngrok,
-          "\"#{File.join(ShopifyCli.cache_dir, 'ngrok')}\" http -inspect=false -log=stdout -log-level=debug 8081"
+          "\"#{File.join(ShopifyCli.cache_dir, "ngrok")}\" http -inspect=false -log=stdout -log-level=debug 8081"
         ).returns(ShopifyCli::ProcessSupervision.new(:ngrok, pid: 40000))
         @context.expects(:puts).with(
-          @context.message('core.tunnel.start_with_account', 'https://example.ngrok.io', 'Tom Cruise')
+          @context.message("core.tunnel.start_with_account", "https://example.ngrok.io", "Tom Cruise")
         )
-        assert_equal 'https://example.ngrok.io', ShopifyCli::Tunnel.start(@context)
+        assert_equal "https://example.ngrok.io", ShopifyCli::Tunnel.start(@context)
       end
     end
 
     def test_start_raises_error_on_ngrok_failure
-      with_log(fixture: 'ngrok_error') do
+      with_log(fixture: "ngrok_error") do
         ShopifyCli::ProcessSupervision.expects(:start).with(
           :ngrok,
-          "\"#{File.join(ShopifyCli.cache_dir, 'ngrok')}\" http -inspect=false -log=stdout -log-level=debug 8081"
+          "\"#{File.join(ShopifyCli.cache_dir, "ngrok")}\" http -inspect=false -log=stdout -log-level=debug 8081"
         ).returns(ShopifyCli::ProcessSupervision.new(:ngrok, pid: 40000))
         assert_raises ShopifyCli::Tunnel::NgrokError do
           ShopifyCli::Tunnel.start(@context)
@@ -100,7 +100,7 @@ module ShopifyCli
 
     def test_stop_doesnt_stop_what_isnt_started
       ShopifyCli::ProcessSupervision.expects(:running?).with(:ngrok).returns(false)
-      @context.expects(:puts).with(@context.message('core.tunnel.not_running'))
+      @context.expects(:puts).with(@context.message("core.tunnel.not_running"))
       ShopifyCli::Tunnel.stop(@context)
     end
 
@@ -143,7 +143,7 @@ module ShopifyCli
 
     private
 
-    def with_log(fixture: 'ngrok', time: Time.now.strftime('%s'))
+    def with_log(fixture: "ngrok", time: Time.now.strftime("%s"))
       log_path = File.join(ShopifyCli::ROOT, "test/fixtures/#{fixture}.log")
       process = ShopifyCli::ProcessSupervision.new(:ngrok, pid: 40000, time: time)
       process.write
@@ -162,7 +162,7 @@ module ShopifyCli
 
     def fake_ngrok_api_response
       @ngrok_api_response ||= begin
-        JSON.parse(File.read(File.join(ShopifyCli::ROOT, 'test', 'fixtures', 'ngrok_api.json')))
+        JSON.parse(File.read(File.join(ShopifyCli::ROOT, "test", "fixtures", "ngrok_api.json")))
       end
     end
   end

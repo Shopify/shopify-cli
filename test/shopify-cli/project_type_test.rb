@@ -1,5 +1,5 @@
 # frozen_string_literal: true
-require 'test_helper'
+require "test_helper"
 
 module ShopifyCli
   class ProjectTypeTest < MiniTest::Test
@@ -21,28 +21,28 @@ module ShopifyCli
     def test_for_app_type_can_find_the_app_by_name
       assert_equal(ProjectType.for_app_type(:rails), Rails::Project)
       assert_equal(ProjectType.for_app_type(:node), Node::Project)
-      assert_equal(ProjectType.for_app_type('rails'), Rails::Project)
-      assert_equal(ProjectType.for_app_type('node'), Node::Project)
-      assert_nil(ProjectType.for_app_type('nope'))
+      assert_equal(ProjectType.for_app_type("rails"), Rails::Project)
+      assert_equal(ProjectType.for_app_type("node"), Node::Project)
+      assert_nil(ProjectType.for_app_type("nope"))
     end
 
     def test_project_filepath
       assert_equal(
-        Rails::Project.project_filepath('myfile'),
-        File.join(ShopifyCli::PROJECT_TYPES_DIR, 'rails', 'myfile')
+        Rails::Project.project_filepath("myfile"),
+        File.join(ShopifyCli::PROJECT_TYPES_DIR, "rails", "myfile")
       )
     end
 
     def test_duplicate_command
       assert_raises ShopifyCli::Abort, "Can't register duplicate core command" do
-        ProjectType.register_command('Nonsense::Module::Help', 'help')
+        ProjectType.register_command("Nonsense::Module::Help", "help")
       end
     end
 
     def test_register_command_does_not_call_if_shallow
       ShopifyCli::Commands.expects(:register).never
       Rails::Project.project_load_shallow = true
-      Rails::Project.register_command('Nonsense::Module::Help', 'help')
+      Rails::Project.register_command("Nonsense::Module::Help", "help")
     end
   end
 end

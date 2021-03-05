@@ -1,12 +1,12 @@
 # frozen_string_literal: true
-require 'shopify_cli'
+require "shopify_cli"
 
 module Extension
   module Tasks
     module UserErrors
-      USER_ERRORS_FIELD = 'userErrors'
-      MESSAGE_FIELD = 'message'
-      USER_ERRORS_PARSE_ERROR = 'Unable to parse errors from server.'
+      USER_ERRORS_FIELD = "userErrors"
+      MESSAGE_FIELD = "message"
+      USER_ERRORS_PARSE_ERROR = "Unable to parse errors from server."
 
       def abort_if_user_errors(context, response)
         return if response.nil?

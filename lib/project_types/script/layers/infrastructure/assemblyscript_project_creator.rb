@@ -19,7 +19,7 @@ module Script
         end
 
         def bootstrap
-          type = extension_point.type.gsub('_', '-')
+          type = extension_point.type.gsub("_", "-")
           out, status = ctx.capture2e(format(BOOTSTRAP, extension_point: type, base: path_to_project))
           raise Domain::Errors::ServiceFailureError, out unless status.success?
         end
@@ -28,10 +28,10 @@ module Script
 
         def write_npmrc
           ctx.system(
-            'npm', '--userconfig', './.npmrc', 'config', 'set', '@shopify:registry', 'https://registry.npmjs.com'
+            "npm", "--userconfig", "./.npmrc", "config", "set", "@shopify:registry", "https://registry.npmjs.com"
           )
           ctx.system(
-            'npm', '--userconfig', './.npmrc', 'config', 'set', 'engine-strict', 'true'
+            "npm", "--userconfig", "./.npmrc", "config", "set", "engine-strict", "true"
           )
         end
 

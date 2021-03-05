@@ -1,4 +1,4 @@
-require 'shopify_cli'
+require "shopify_cli"
 
 module ShopifyCli
   ##
@@ -7,8 +7,8 @@ module ShopifyCli
   class JsSystem
     include SmartProperties
 
-    YARN_CORE_COMMAND = 'yarn'
-    NPM_CORE_COMMAND = 'npm'
+    YARN_CORE_COMMAND = "yarn"
+    NPM_CORE_COMMAND = "npm"
 
     class << self
       ##
@@ -64,8 +64,8 @@ module ShopifyCli
     #
     def yarn?
       @has_yarn ||= begin
-        cmd_path = @ctx.which('yarn')
-        File.exist?(File.join(ctx.root, 'yarn.lock')) && !cmd_path.nil?
+        cmd_path = @ctx.which("yarn")
+        File.exist?(File.join(ctx.root, "yarn.lock")) && !cmd_path.nil?
       end
     end
 

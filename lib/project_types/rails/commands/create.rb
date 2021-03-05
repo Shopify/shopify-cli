@@ -14,16 +14,16 @@ module Rails
 
       options do |parser, flags|
         # backwards compatibility allow 'title' for now
-        parser.on('--title=TITLE') { |t| flags[:title] = t }
-        parser.on('--name=NAME') { |t| flags[:title] = t }
-        parser.on('--organization_id=ID') { |url| flags[:organization_id] = url }
-        parser.on('--organization-id=ID') { |url| flags[:organization_id] = url }
-        parser.on('--shop_domain=MYSHOPIFYDOMAIN') { |url| flags[:shop_domain] = url }
-        parser.on('--shop-domain=MYSHOPIFYDOMAIN') { |url| flags[:shop_domain] = url }
-        parser.on('--type=APPTYPE') { |url| flags[:type] = url }
-        parser.on('--db=DB') { |db| flags[:db] = db }
-        parser.on('--rails_opts=RAILSOPTS') { |opts| flags[:rails_opts] = opts }
-        parser.on('--rails-opts=RAILSOPTS') { |opts| flags[:rails_opts] = opts }
+        parser.on("--title=TITLE") { |t| flags[:title] = t }
+        parser.on("--name=NAME") { |t| flags[:title] = t }
+        parser.on("--organization_id=ID") { |url| flags[:organization_id] = url }
+        parser.on("--organization-id=ID") { |url| flags[:organization_id] = url }
+        parser.on("--shop_domain=MYSHOPIFYDOMAIN") { |url| flags[:shop_domain] = url }
+        parser.on("--shop-domain=MYSHOPIFYDOMAIN") { |url| flags[:shop_domain] = url }
+        parser.on("--type=APPTYPE") { |url| flags[:type] = url }
+        parser.on("--db=DB") { |db| flags[:db] = db }
+        parser.on("--rails_opts=RAILSOPTS") { |opts| flags[:rails_opts] = opts }
+        parser.on("--rails-opts=RAILSOPTS") { |opts| flags[:rails_opts] = opts }
       end
 
       def call(args, _name)
@@ -31,8 +31,8 @@ module Rails
         return @ctx.puts(self.class.help) if form.nil?
 
         ruby_version = Ruby.version(@ctx)
-        @ctx.abort(@ctx.message('rails.create.error.invalid_ruby_version')) unless
-          ruby_version.satisfies?('~>2.5') || ruby_version.satisfies?('~>3.0.0')
+        @ctx.abort(@ctx.message("rails.create.error.invalid_ruby_version")) unless
+          ruby_version.satisfies?("~>2.5") || ruby_version.satisfies?("~>3.0.0")
 
         check_node
         check_yarn
@@ -41,7 +41,7 @@ module Rails
         set_custom_ua
         ShopifyCli::Project.write(
           @ctx,
-          project_type: 'rails',
+          project_type: "rails",
           organization_id: form.organization_id,
         )
 
@@ -56,74 +56,74 @@ module Rails
           api_key: api_client["apiKey"],
           secret: api_client["apiSecretKeys"].first["secret"],
           shop: form.shop_domain,
-          scopes: 'write_products,write_customers,write_draft_orders',
+          scopes: "write_products,write_customers,write_draft_orders",
         ).write(@ctx)
 
-        partners_url = ShopifyCli::PartnersAPI.partners_url_for(form.organization_id, api_client['id'], local_debug?)
+        partners_url = ShopifyCli::PartnersAPI.partners_url_for(form.organization_id, api_client["id"], local_debug?)
 
-        @ctx.puts(@ctx.message('apps.create.info.created', form.title, partners_url))
-        @ctx.puts(@ctx.message('apps.create.info.serve', form.name, ShopifyCli::TOOL_NAME))
+        @ctx.puts(@ctx.message("apps.create.info.created", form.title, partners_url))
+        @ctx.puts(@ctx.message("apps.create.info.serve", form.name, ShopifyCli::TOOL_NAME))
         unless ShopifyCli::Shopifolk.acting_as_shopify_organization?
-          @ctx.puts(@ctx.message('apps.create.info.install', partners_url, form.title))
+          @ctx.puts(@ctx.message("apps.create.info.install", partners_url, form.title))
         end
       end
 
       def self.help
-        ShopifyCli::Context.message('rails.create.help', ShopifyCli::TOOL_NAME, ShopifyCli::TOOL_NAME)
+        ShopifyCli::Context.message("rails.create.help", ShopifyCli::TOOL_NAME, ShopifyCli::TOOL_NAME)
       end
 
       private
 
       def check_node
-        cmd_path = @ctx.which('node')
+        cmd_path = @ctx.which("node")
         if cmd_path.nil?
-          @ctx.abort(@ctx.message('rails.create.error.node_required')) unless @ctx.windows?
-          @ctx.puts("{{x}} {{red:" + @ctx.message('rails.create.error.node_required') + "}}")
-          @ctx.puts(@ctx.message('rails.create.info.open_new_shell', 'node'))
+          @ctx.abort(@ctx.message("rails.create.error.node_required")) unless @ctx.windows?
+          @ctx.puts("{{x}} {{red:" + @ctx.message("rails.create.error.node_required") + "}}")
+          @ctx.puts(@ctx.message("rails.create.info.open_new_shell", "node"))
           raise ShopifyCli::AbortSilent
         end
 
-        version, stat = @ctx.capture2e('node', '-v')
+        version, stat = @ctx.capture2e("node", "-v")
         unless stat.success?
-          @ctx.abort(@ctx.message('rails.create.error.node_version_failure')) unless @ctx.windows?
+          @ctx.abort(@ctx.message("rails.create.error.node_version_failure")) unless @ctx.windows?
           # execution stops above if not Windows
-          @ctx.puts("{{x}} {{red:" + @ctx.message('rails.create.error.node_version_failure') + "}}")
-          @ctx.puts(@ctx.message('rails.create.info.open_new_shell', 'node'))
+          @ctx.puts("{{x}} {{red:" + @ctx.message("rails.create.error.node_version_failure") + "}}")
+          @ctx.puts(@ctx.message("rails.create.info.open_new_shell", "node"))
           raise ShopifyCli::AbortSilent
         end
 
-        @ctx.done(@ctx.message('rails.create.node_version', version))
+        @ctx.done(@ctx.message("rails.create.node_version", version))
       end
 
       def check_yarn
-        cmd_path = @ctx.which('yarn')
+        cmd_path = @ctx.which("yarn")
         if cmd_path.nil?
-          @ctx.abort(@ctx.message('rails.create.error.yarn_required')) unless @ctx.windows?
-          @ctx.puts("{{x}} {{red:" + @ctx.message('rails.create.error.yarn_required') + "}}")
-          @ctx.puts(@ctx.message('rails.create.info.open_new_shell', 'yarn'))
+          @ctx.abort(@ctx.message("rails.create.error.yarn_required")) unless @ctx.windows?
+          @ctx.puts("{{x}} {{red:" + @ctx.message("rails.create.error.yarn_required") + "}}")
+          @ctx.puts(@ctx.message("rails.create.info.open_new_shell", "yarn"))
           raise ShopifyCli::AbortSilent
         end
 
-        version, stat = @ctx.capture2e('yarn', '-v')
+        version, stat = @ctx.capture2e("yarn", "-v")
         unless stat.success?
-          @ctx.abort(@ctx.message('rails.create.error.yarn_version_failure')) unless @ctx.windows?
-          @ctx.puts("{{x}} {{red:" + @ctx.message('rails.create.error.yarn_version_failure') + "}}")
-          @ctx.puts(@ctx.message('rails.create.info.open_new_shell', 'yarn'))
+          @ctx.abort(@ctx.message("rails.create.error.yarn_version_failure")) unless @ctx.windows?
+          @ctx.puts("{{x}} {{red:" + @ctx.message("rails.create.error.yarn_version_failure") + "}}")
+          @ctx.puts(@ctx.message("rails.create.info.open_new_shell", "yarn"))
           raise ShopifyCli::AbortSilent
         end
 
-        @ctx.done(@ctx.message('rails.create.yarn_version', version))
+        @ctx.done(@ctx.message("rails.create.yarn_version", version))
       end
 
       def build(name, db)
-        @ctx.abort(@ctx.message('rails.create.error.install_failure', 'rails')) unless install_gem('rails', '<6.1')
-        @ctx.abort(@ctx.message('rails.create.error.install_failure', 'bundler ~>2.0')) unless
-          install_gem('bundler', '~>2.0')
+        @ctx.abort(@ctx.message("rails.create.error.install_failure", "rails")) unless install_gem("rails", "<6.1")
+        @ctx.abort(@ctx.message("rails.create.error.install_failure", "bundler ~>2.0")) unless
+          install_gem("bundler", "~>2.0")
 
         full_path = File.join(@ctx.root, name)
-        @ctx.abort(@ctx.message('rails.create.error.dir_exists', name)) if Dir.exist?(full_path)
+        @ctx.abort(@ctx.message("rails.create.error.dir_exists", name)) if Dir.exist?(full_path)
 
-        CLI::UI::Frame.open(@ctx.message('rails.create.generating_app', name)) do
+        CLI::UI::Frame.open(@ctx.message("rails.create.generating_app", name)) do
           new_command = %w(rails new)
           new_command += DEFAULT_RAILS_FLAGS
           new_command << "--database=#{db}"
@@ -135,34 +135,34 @@ module Rails
 
         @ctx.root = full_path
 
-        File.open(File.join(@ctx.root, '.gitignore'), 'a') { |f| f.write('.env') }
+        File.open(File.join(@ctx.root, ".gitignore"), "a") { |f| f.write(".env") }
 
-        @ctx.puts(@ctx.message('rails.create.adding_shopify_gem'))
-        File.open(File.join(@ctx.root, 'Gemfile'), 'a') do |f|
+        @ctx.puts(@ctx.message("rails.create.adding_shopify_gem"))
+        File.open(File.join(@ctx.root, "Gemfile"), "a") do |f|
           f.puts "\ngem 'shopify_app', '>=17.0.3'"
         end
-        CLI::UI::Frame.open(@ctx.message('rails.create.running_bundle_install')) do
+        CLI::UI::Frame.open(@ctx.message("rails.create.running_bundle_install")) do
           syscall(%w(bundle install))
         end
 
-        CLI::UI::Frame.open(@ctx.message('rails.create.running_generator')) do
+        CLI::UI::Frame.open(@ctx.message("rails.create.running_generator")) do
           syscall(%w(rails generate shopify_app --new-shopify-cli-app))
         end
 
-        CLI::UI::Frame.open(@ctx.message('rails.create.running_migrations')) do
+        CLI::UI::Frame.open(@ctx.message("rails.create.running_migrations")) do
           syscall(%w(rails db:create))
           syscall(%w(rails db:migrate RAILS_ENV=development))
         end
 
-        unless File.exist?(File.join(@ctx.root, 'config/webpacker.yml'))
-          CLI::UI::Frame.open(@ctx.message('rails.create.running_webpacker_install')) do
+        unless File.exist?(File.join(@ctx.root, "config/webpacker.yml"))
+          CLI::UI::Frame.open(@ctx.message("rails.create.running_webpacker_install")) do
             syscall(%w(rails webpacker:install))
           end
         end
       end
 
       def set_custom_ua
-        ua_path = File.join('config', 'initializers', 'user_agent.rb')
+        ua_path = File.join("config", "initializers", "user_agent.rb")
         @ctx.write(ua_path, USER_AGENT_CODE)
       end
 

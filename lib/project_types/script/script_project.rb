@@ -6,10 +6,10 @@ module Script
 
     def initialize(*args)
       super
-      @extension_point_type = lookup_config!('extension_point_type')
+      @extension_point_type = lookup_config!("extension_point_type")
       raise Errors::DeprecatedEPError, @extension_point_type if deprecated?(@extension_point_type)
-      @script_name = lookup_config!('script_name')
-      @description = lookup_config('description')
+      @script_name = lookup_config!("script_name")
+      @description = lookup_config("description")
       @language = lookup_language
       ShopifyCli::Core::Monorail.metadata = {
         "script_name" => @script_name,
@@ -39,7 +39,7 @@ module Script
     end
 
     def lookup_language
-      lang = lookup_config('language')&.downcase || Layers::Domain::ExtensionPointAssemblyScriptSDK.language
+      lang = lookup_config("language")&.downcase || Layers::Domain::ExtensionPointAssemblyScriptSDK.language
       if Layers::Application::ExtensionPoints.supported_language?(type: extension_point_type, language: lang)
         lang
       else

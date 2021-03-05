@@ -1,25 +1,25 @@
-require 'test_helper'
+require "test_helper"
 
 module ShopifyCli
   class OAuthTest < MiniTest::Test
     def test_new
       client = oauth
-      assert_equal 'test', client.service
-      assert_equal 'key', client.client_id
-      assert_equal 'test,one', client.scopes
+      assert_equal "test", client.service
+      assert_equal "key", client.client_id
+      assert_equal "test,one", client.scopes
       assert_nil(client.secret)
       assert_equal({}, client.options)
 
-      client = oauth(secret: 'secret', options: { foo: :bar })
-      assert_equal 'key', client.client_id
-      assert_equal 'test,one', client.scopes
-      assert_equal 'secret', client.secret
+      client = oauth(secret: "secret", options: { foo: :bar })
+      assert_equal "key", client.client_id
+      assert_equal "test,one", client.scopes
+      assert_equal "secret", client.secret
       assert_equal({ foo: :bar }, client.options)
     end
 
     def test_authenticate_with_secret
       endpoint = "https://example.com/auth"
-      client = oauth(secret: 'secret')
+      client = oauth(secret: "secret")
       @context.expects(:open_url!)
       stub_auth_response(client)
 
@@ -37,15 +37,15 @@ module ShopifyCli
         code: "mycode",
         redirect_uri: OAuth::REDIRECT_HOST,
         client_id: client.client_id,
-        client_secret: 'secret',
+        client_secret: "secret",
       }
       stub_request(:post, "#{endpoint}/token")
         .with(body: URI.encode_www_form(token_query))
         .to_return(status: 200, body: token_resp, headers: {})
 
       client.authenticate(endpoint)
-      assert_equal('accesstoken123', client.store.get(:test_access_token))
-      assert_equal('refreshtoken123', client.store.get(:test_refresh_token))
+      assert_equal("accesstoken123", client.store.get(:test_access_token))
+      assert_equal("refreshtoken123", client.store.get(:test_refresh_token))
     end
 
     def test_authenticate_without_secret
@@ -75,13 +75,13 @@ module ShopifyCli
         .to_return(status: 200, body: token_resp, headers: {})
 
       client.authenticate(endpoint)
-      assert_equal('accesstoken123', client.store.get(:test_access_token))
-      assert_equal('refreshtoken123', client.store.get(:test_refresh_token))
+      assert_equal("accesstoken123", client.store.get(:test_access_token))
+      assert_equal("refreshtoken123", client.store.get(:test_refresh_token))
     end
 
     def test_request_exchange_token
       endpoint = "https://example.com/auth"
-      client = oauth(request_exchange: '123')
+      client = oauth(request_exchange: "123")
       @context.expects(:open_url!)
       stub_auth_response(client)
 
@@ -110,27 +110,27 @@ module ShopifyCli
         requested_token_type: "urn:ietf:params:oauth:token-type:access_token",
         subject_token_type: "urn:ietf:params:oauth:token-type:access_token",
         client_id: client.client_id,
-        audience: '123',
+        audience: "123",
         scope: client.scopes,
-        subject_token: 'accesstoken123',
+        subject_token: "accesstoken123",
       }
       stub_request(:post, "#{endpoint}/token")
         .with(body: URI.encode_www_form(token_query))
         .to_return(status: 200, body: '{"access_token":"exchangetoken123"}', headers: {})
 
       client.authenticate(endpoint)
-      assert_equal('accesstoken123', client.store.get(:test_access_token))
-      assert_equal('refreshtoken123', client.store.get(:test_refresh_token))
-      assert_equal('exchangetoken123', client.store.get(:test_exchange_token))
+      assert_equal("accesstoken123", client.store.get(:test_access_token))
+      assert_equal("refreshtoken123", client.store.get(:test_refresh_token))
+      assert_equal("exchangetoken123", client.store.get(:test_exchange_token))
     end
 
     def test_refresh_exchange_token
       endpoint = "https://example.com/auth"
-      client = oauth(request_exchange: '123')
+      client = oauth(request_exchange: "123")
       client.store.set(
-        test_access_token: 'accesstoken123',
-        test_refresh_token: 'refreshtoken123',
-        test_exchange_token: 'exchangetoken123',
+        test_access_token: "accesstoken123",
+        test_refresh_token: "refreshtoken123",
+        test_exchange_token: "exchangetoken123",
       )
 
       token_query = {
@@ -138,25 +138,25 @@ module ShopifyCli
         requested_token_type: "urn:ietf:params:oauth:token-type:access_token",
         subject_token_type: "urn:ietf:params:oauth:token-type:access_token",
         client_id: client.client_id,
-        audience: '123',
+        audience: "123",
         scope: client.scopes,
-        subject_token: 'accesstoken123',
+        subject_token: "accesstoken123",
       }
       stub_request(:post, "#{endpoint}/token")
         .with(body: URI.encode_www_form(token_query))
         .to_return(status: 200, body: '{"access_token":"exchangetoken456"}', headers: {})
 
       client.authenticate(endpoint)
-      assert_equal('exchangetoken456', client.store.get(:test_exchange_token))
+      assert_equal("exchangetoken456", client.store.get(:test_exchange_token))
     end
 
     def test_refresh_access_token_fallback
       endpoint = "https://example.com/auth"
-      client = oauth(request_exchange: '123')
+      client = oauth(request_exchange: "123")
       client.store.set(
-        test_access_token: 'accesstoken123',
-        test_refresh_token: 'refreshtoken123',
-        test_exchange_token: 'exchangetoken123',
+        test_access_token: "accesstoken123",
+        test_refresh_token: "refreshtoken123",
+        test_exchange_token: "exchangetoken123",
       )
 
       token_query = {
@@ -164,9 +164,9 @@ module ShopifyCli
         requested_token_type: "urn:ietf:params:oauth:token-type:access_token",
         subject_token_type: "urn:ietf:params:oauth:token-type:access_token",
         client_id: client.client_id,
-        audience: '123',
+        audience: "123",
         scope: client.scopes,
-        subject_token: 'accesstoken123',
+        subject_token: "accesstoken123",
       }
 
       stub_request(:post, "#{endpoint}/token")
@@ -175,8 +175,8 @@ module ShopifyCli
 
       token_query = {
         grant_type: :refresh_token,
-        access_token: 'accesstoken123',
-        refresh_token: 'refreshtoken123',
+        access_token: "accesstoken123",
+        refresh_token: "refreshtoken123",
         client_id: client.client_id,
       }
 
@@ -194,18 +194,18 @@ module ShopifyCli
         requested_token_type: "urn:ietf:params:oauth:token-type:access_token",
         subject_token_type: "urn:ietf:params:oauth:token-type:access_token",
         client_id: client.client_id,
-        audience: '123',
+        audience: "123",
         scope: client.scopes,
-        subject_token: 'accesstoken456',
+        subject_token: "accesstoken456",
       }
       stub_request(:post, "#{endpoint}/token")
         .with(body: URI.encode_www_form(token_query))
         .to_return(status: 200, body: '{"access_token":"exchangetoken456"}', headers: {})
 
       client.authenticate(endpoint)
-      assert_equal('accesstoken456', client.store.get(:test_access_token))
-      assert_equal('refreshtoken456', client.store.get(:test_refresh_token))
-      assert_equal('exchangetoken456', client.store.get(:test_exchange_token))
+      assert_equal("accesstoken456", client.store.get(:test_access_token))
+      assert_equal("refreshtoken456", client.store.get(:test_refresh_token))
+      assert_equal("exchangetoken456", client.store.get(:test_exchange_token))
     end
 
     def test_authenticate_with_invalid_request
@@ -213,8 +213,8 @@ module ShopifyCli
       client = oauth
       @context.expects(:open_url!)
       stub_server(client, {
-        'error' => 'err',
-        'error_description' => 'error',
+        "error" => "err",
+        "error_description" => "error",
       })
       stub_request(:post, "#{endpoint}/authorize")
       assert_raises OAuth::Error do
@@ -224,7 +224,7 @@ module ShopifyCli
 
     def test_authenticate_with_invalid_code
       endpoint = "https://example.com/auth"
-      client = oauth(secret: 'secret')
+      client = oauth(secret: "secret")
       @context.expects(:open_url!)
       stub_auth_response(client)
 
@@ -242,7 +242,7 @@ module ShopifyCli
         code: "mycode",
         redirect_uri: OAuth::REDIRECT_HOST,
         client_id: client.client_id,
-        client_secret: 'secret',
+        client_secret: "secret",
       }
       stub_request(:post, "#{endpoint}/token")
         .with(body: URI.encode_www_form(token_query))
@@ -264,17 +264,17 @@ module ShopifyCli
       db.clear
       OAuth.new({
         ctx: @context,
-        service: 'test',
-        client_id: 'key',
-        scopes: 'test,one',
+        service: "test",
+        client_id: "key",
+        scopes: "test,one",
         store: db,
       }.merge(args))
     end
 
     def stub_auth_response(client)
       stub_server(client, {
-        'code' => 'mycode',
-        'state' => client.state_token,
+        "code" => "mycode",
+        "state" => client.state_token,
       })
     end
 
