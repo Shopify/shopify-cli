@@ -1,4 +1,4 @@
-require 'test_helper'
+require "test_helper"
 
 module ShopifyCli
   module Tasks
@@ -6,10 +6,10 @@ module ShopifyCli
       include TestHelpers::Partners
 
       def test_url_is_not_added_if_it_exists
-        Project.current.stubs(:env).returns(Resources::EnvFile.new(api_key: '123', secret: 'foo'))
-        api_key = '123'
+        Project.current.stubs(:env).returns(Resources::EnvFile.new(api_key: "123", secret: "foo"))
+        api_key = "123"
         stub_partner_req(
-          'get_app_urls',
+          "get_app_urls",
           variables: {
             apiKey: api_key,
           },
@@ -17,8 +17,8 @@ module ShopifyCli
             data: {
               app: {
                 redirectUrlWhitelist: [
-                  'https://123abc.ngrok.io',
-                  'http://127.0.0.1:3456',
+                  "https://123abc.ngrok.io",
+                  "http://127.0.0.1:3456",
                 ],
               },
             },
@@ -28,10 +28,10 @@ module ShopifyCli
       end
 
       def test_url_is_added_if_it_is_not_there
-        Project.current.stubs(:env).returns(Resources::EnvFile.new(api_key: '123', secret: 'foo'))
-        api_key = '123'
+        Project.current.stubs(:env).returns(Resources::EnvFile.new(api_key: "123", secret: "foo"))
+        api_key = "123"
         stub_partner_req(
-          'get_app_urls',
+          "get_app_urls",
           variables: {
             apiKey: api_key,
           },
@@ -39,7 +39,7 @@ module ShopifyCli
             data: {
               app: {
                 redirectUrlWhitelist: [
-                  'https://123abc.ngrok.io',
+                  "https://123abc.ngrok.io",
                 ],
               },
             },
@@ -47,12 +47,12 @@ module ShopifyCli
         )
 
         stub_partner_req(
-          'update_dashboard_urls',
+          "update_dashboard_urls",
           variables: {
             input: {
               redirectUrlWhitelist: [
-                'https://123abc.ngrok.io',
-                'http://127.0.0.1:3456',
+                "https://123abc.ngrok.io",
+                "http://127.0.0.1:3456",
               ],
               apiKey: api_key,
             },

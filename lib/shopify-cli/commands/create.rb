@@ -1,4 +1,4 @@
-require 'shopify_cli'
+require "shopify_cli"
 
 module ShopifyCli
   module Commands
@@ -10,11 +10,11 @@ module ShopifyCli
 
       def call(args, command_name)
         unless args.empty?
-          @ctx.puts(@ctx.message('core.create.error.invalid_app_type', args[0]))
+          @ctx.puts(@ctx.message("core.create.error.invalid_app_type", args[0]))
           return @ctx.puts(self.class.help)
         end
 
-        type_name = CLI::UI::Prompt.ask(@ctx.message('core.create.project_type_select')) do |handler|
+        type_name = CLI::UI::Prompt.ask(@ctx.message("core.create.project_type_select")) do |handler|
           self.class.all_visible_type.each do |type|
             handler.option(type.project_name) { type.project_type }
           end
@@ -22,7 +22,7 @@ module ShopifyCli
 
         klass = ProjectType.load_type(type_name).create_command
         klass.ctx = @ctx
-        klass.call(args, command_name, 'create')
+        klass.call(args, command_name, "create")
       end
 
       def self.all_visible_type
@@ -33,7 +33,7 @@ module ShopifyCli
 
       def self.help
         project_types = all_visible_type.map(&:project_type).sort.join(" | ")
-        ShopifyCli::Context.message('core.create.help', ShopifyCli::TOOL_NAME, project_types)
+        ShopifyCli::Context.message("core.create.help", ShopifyCli::TOOL_NAME, project_types)
       end
 
       def self.extended_help

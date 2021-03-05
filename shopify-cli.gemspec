@@ -1,11 +1,11 @@
-require_relative 'lib/shopify-cli/version'
+require_relative "lib/shopify-cli/version"
 
 Gem::Specification.new do |spec|
   spec.name = "shopify-cli"
   spec.version = ShopifyCli::VERSION
   spec.authors = ["Shopify"]
   spec.email = ["dev-tools-education@shopify.com"]
-  spec.license = 'MIT'
+  spec.license = "MIT"
 
   spec.summary = "Shopify CLI helps you build Shopify apps faster."
   spec.description = <<~HERE
@@ -25,7 +25,7 @@ Gem::Specification.new do |spec|
 
   # Specify which files should be added to the gem when it is released.
   # The `git ls-files -z` loads the files in the RubyGem that have been added into git.
-  spec.files = Dir.chdir(File.expand_path('..', __FILE__)) do
+  spec.files = Dir.chdir(File.expand_path("..", __FILE__)) do
     %x(git ls-files -z).split("\x0").reject do |f|
       f.match(%r{^(test|spec|features|packaging)/}) ||
       f.match(%r{^bin/(update-deps|shopify.bat)$})
@@ -35,7 +35,7 @@ Gem::Specification.new do |spec|
   spec.require_paths = ["lib", "vendor"]
   spec.extensions = ["ext/shopify-cli/extconf.rb"]
 
-  spec.add_development_dependency('bundler', '~> 1.17')
-  spec.add_development_dependency('rake', '~> 12.3', '>= 12.3.3')
-  spec.add_development_dependency('minitest', '~> 5.0')
+  spec.add_development_dependency("bundler", "~> 1.17")
+  spec.add_development_dependency("rake", "~> 12.3", ">= 12.3.3")
+  spec.add_development_dependency("minitest", "~> 5.0")
 end

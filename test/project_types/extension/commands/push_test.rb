@@ -1,6 +1,6 @@
 # frozen_string_literal: true
-require 'test_helper'
-require 'project_types/extension/extension_test_helpers'
+require "test_helper"
+require "project_types/extension/extension_test_helpers"
 
 module Extension
   module Commands
@@ -83,15 +83,15 @@ module Extension
         io = capture_io { run_push }
 
         assert_message_output(io: io, expected_content: [
-          @context.message('push.waiting_text'),
-          @context.message('push.success_confirmation', @title, 'May 07, 2020 19:01:56 UTC'),
-          @context.message('push.success_info', 'https://www.fakeurl.com'),
+          @context.message("push.waiting_text"),
+          @context.message("push.success_confirmation", @title, "May 07, 2020 19:01:56 UTC"),
+          @context.message("push.success_info", "https://www.fakeurl.com"),
         ])
       end
 
       def test_displays_time_the_draft_was_updated_at_in_utc
-        response_time = '2020-05-07T19:01:56-04:00'
-        expected_formatted_time_in_utc = 'May 07, 2020 23:01:56 UTC'
+        response_time = "2020-05-07T19:01:56-04:00"
+        expected_formatted_time_in_utc = "May 07, 2020 23:01:56 UTC"
 
         @version.last_user_interaction_at = Time.parse(response_time)
         Commands::Build.any_instance.stubs(:call)
@@ -101,15 +101,15 @@ module Extension
         io = capture_io { run_push }
 
         assert_message_output(io: io, expected_content: [
-          @context.message('push.success_confirmation', @title, expected_formatted_time_in_utc),
+          @context.message("push.success_confirmation", @title, expected_formatted_time_in_utc),
         ])
       end
 
       def test_shows_error_messages_and_validation_errors_if_any_occurred_on_push
         @version.last_user_interaction_at = Time.parse("2020-05-07 19:01:56 UTC")
         @version.validation_errors = [
-          Models::ValidationError.new(field: %w(test_field), message: 'Error message'),
-          Models::ValidationError.new(field: %w(test_field1 test_field2), message: 'Error message2'),
+          Models::ValidationError.new(field: %w(test_field), message: "Error message"),
+          Models::ValidationError.new(field: %w(test_field1 test_field2), message: "Error message2"),
         ]
 
         Commands::Build.any_instance.stubs(:call)
@@ -119,10 +119,10 @@ module Extension
         io = capture_io { run_push }
 
         assert_message_output(io: io, expected_content: [
-          @context.message('push.pushed_with_errors', 'May 07, 2020 19:01:56 UTC'),
-          '{{x}} test_field: Error message',
-          '{{x}} test_field2: Error message2',
-          @context.message('push.push_with_errors_info'),
+          @context.message("push.pushed_with_errors", "May 07, 2020 19:01:56 UTC"),
+          "{{x}} test_field: Error message",
+          "{{x}} test_field2: Error message2",
+          @context.message("push.push_with_errors_info"),
         ])
       end
 

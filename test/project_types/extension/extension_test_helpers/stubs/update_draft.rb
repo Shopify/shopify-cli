@@ -6,7 +6,7 @@ module Extension
       module UpdateDraft
         include TestHelpers::Partners
 
-        def stub_update_draft(registration_id:, config:, extension_context: nil, api_key: 'FAKE_API_KEY')
+        def stub_update_draft(registration_id:, config:, extension_context: nil, api_key: "FAKE_API_KEY")
           stub_partner_req(Tasks::UpdateDraft::GRAPHQL_FILE,
             variables: {
               api_key: api_key,
@@ -27,7 +27,7 @@ module Extension
                   registrationId: registration_id,
                   context: extension_context,
                   lastUserInteractionAt: Time.now.utc.to_s,
-                  location: 'https://www.fakeurl.com',
+                  location: "https://www.fakeurl.com",
                 },
                 Tasks::UserErrors::USER_ERRORS_FIELD => [],
               },

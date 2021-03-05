@@ -37,7 +37,7 @@ module Script
 
           return resp_hash if user_errors.empty?
 
-          if user_errors.any? { |e| e['tag'] == 'already_exists_error' }
+          if user_errors.any? { |e| e["tag"] == "already_exists_error" }
             raise Errors::ScriptRepushError, api_key
           else
             raise Errors::ScriptServiceUserError.new(query_name, user_errors.to_s)
@@ -62,11 +62,11 @@ module Script
 
           return resp_hash if user_errors.empty?
 
-          if user_errors.any? { |e| e['tag'] == 'app_script_not_found' }
+          if user_errors.any? { |e| e["tag"] == "app_script_not_found" }
             raise Errors::AppScriptUndefinedError, api_key
-          elsif user_errors.any? { |e| e['tag'] == 'shop_script_conflict' }
+          elsif user_errors.any? { |e| e["tag"] == "shop_script_conflict" }
             raise Errors::ShopScriptConflictError
-          elsif user_errors.any? { |e| e['tag'] == 'app_script_not_pushed' }
+          elsif user_errors.any? { |e| e["tag"] == "app_script_not_pushed" }
             raise Errors::AppScriptNotPushedError
           else
             raise Errors::ScriptServiceUserError.new(query_name, user_errors.to_s)
@@ -88,7 +88,7 @@ module Script
           user_errors = resp_hash["data"]["shopScriptDelete"]["userErrors"]
           return resp_hash if user_errors.empty?
 
-          if user_errors.any? { |e| e['tag'] == 'shop_script_not_found' }
+          if user_errors.any? { |e| e["tag"] == "shop_script_not_found" }
             raise Errors::ShopScriptUndefinedError, api_key
           else
             raise Errors::ScriptServiceUserError.new(query_name, user_errors.to_s)
@@ -112,8 +112,8 @@ module Script
           def self.api_client(ctx, api_key, shop_domain)
             new(
               ctx: ctx,
-              url: 'https://script-service.myshopify.io/graphql',
-              token: '',
+              url: "https://script-service.myshopify.io/graphql",
+              token: "",
               api_key: api_key,
               shop_id: shop_domain&.to_i
             )
@@ -148,28 +148,28 @@ module Script
           options[:variables] = variables.to_json if variables
           resp = PartnersProxyAPI.query(ctx, query_name, **options)
           raise_if_graphql_failed(resp)
-          JSON.parse(resp['data']['scriptServiceProxy'])
+          JSON.parse(resp["data"]["scriptServiceProxy"])
         end
 
         def raise_if_graphql_failed(response)
           raise Errors::EmptyResponseError if response.nil?
 
-          return unless response.key?('errors')
-          case error_code(response['errors'])
-          when 'forbidden'
+          return unless response.key?("errors")
+          case error_code(response["errors"])
+          when "forbidden"
             raise Errors::ForbiddenError
-          when 'forbidden_on_shop'
+          when "forbidden_on_shop"
             raise Errors::ShopAuthenticationError
-          when 'app_not_installed_on_shop'
+          when "app_not_installed_on_shop"
             raise Errors::AppNotInstalledError
           else
-            raise Errors::GraphqlError, response['errors'].map { |e| e['message'] }
+            raise Errors::GraphqlError, response["errors"].map { |e| e["message"] }
           end
         end
 
         def error_code(errors)
           errors.map do |e|
-            code = e.dig('extensions', 'code')
+            code = e.dig("extensions", "code")
             return code if code
           end
         end

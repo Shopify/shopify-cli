@@ -3,7 +3,7 @@
 module Extension
   module Features
     class ArgoConfig
-      CONFIG_FILE_NAME = 'extension.config.yml'
+      CONFIG_FILE_NAME = "extension.config.yml"
 
       class << self
         def parse_yaml(context, permitted_keys = [])
@@ -11,7 +11,7 @@ module Extension
 
           return {} unless File.size?(file_name)
 
-          require 'yaml' # takes 20ms, so deferred as late as possible.
+          require "yaml" # takes 20ms, so deferred as late as possible.
           begin
             config = YAML.load_file(file_name)
 
@@ -21,7 +21,7 @@ module Extension
             return {} if config.nil?
 
             unless config.is_a?(Hash)
-              raise ShopifyCli::Abort, ShopifyCli::Context.message('core.yaml.error.not_hash', CONFIG_FILE_NAME)
+              raise ShopifyCli::Abort, ShopifyCli::Context.message("core.yaml.error.not_hash", CONFIG_FILE_NAME)
             end
 
             config.transform_keys!(&:to_sym)
@@ -31,7 +31,7 @@ module Extension
           rescue Psych::SyntaxError => e
             raise(
               ShopifyCli::Abort,
-              ShopifyCli::Context.message('core.yaml.error.invalid', CONFIG_FILE_NAME, e.message)
+              ShopifyCli::Context.message("core.yaml.error.invalid", CONFIG_FILE_NAME, e.message)
             )
           end
         end
@@ -47,7 +47,7 @@ module Extension
             raise(
               ShopifyCli::Abort,
               ShopifyCli::Context.message(
-                'features.argo.config.unpermitted_keys',
+                "features.argo.config.unpermitted_keys",
                 CONFIG_FILE_NAME,
                 unpermitted_keys.map { |k| "\n- #{k}" }.join
               )

@@ -1,5 +1,5 @@
 # frozen_string_literal: true
-require 'test_helper'
+require "test_helper"
 
 module Extension
   module Commands
@@ -32,7 +32,7 @@ module Extension
           .with(yarn: Serve::YARN_SERVE_COMMAND, npm: Serve::NPM_SERVE_COMMAND)
           .returns(false)
           .once
-        @context.expects(:abort).with(@context.message('serve.serve_failure_message'))
+        @context.expects(:abort).with(@context.message("serve.serve_failure_message"))
 
         run_serve
       end
@@ -41,7 +41,7 @@ module Extension
 
       def run_serve(*args)
         Serve.ctx = @context
-        Serve.call(args, 'serve')
+        Serve.call(args, "serve")
       end
     end
   end

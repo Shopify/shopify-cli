@@ -6,9 +6,9 @@ module Script
       class BuildScript
         class << self
           def call(ctx:, task_runner:, script_name:, description:, extension_point_type:)
-            CLI::UI::Frame.open(ctx.message('script.application.building')) do
+            CLI::UI::Frame.open(ctx.message("script.application.building")) do
               begin
-                UI::StrictSpinner.spin(ctx.message('script.application.building_script')) do |spinner|
+                UI::StrictSpinner.spin(ctx.message("script.application.building_script")) do |spinner|
                   Infrastructure::PushPackageRepository.new(ctx: ctx).create_push_package(
                     extension_point_type: extension_point_type,
                     script_name: script_name,
@@ -17,7 +17,7 @@ module Script
                     compiled_type: task_runner.compiled_type,
                     metadata: task_runner.metadata
                   )
-                  spinner.update_title(ctx.message('script.application.built'))
+                  spinner.update_title(ctx.message("script.application.built"))
                 end
               rescue StandardError => e
                 CLI::UI::Frame.with_frame_color_override(:red) do

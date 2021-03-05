@@ -40,7 +40,7 @@ module Script
 
         def metadata
           unless @ctx.file_exist?(METADATA_FILE)
-            msg = @ctx.message('script.error.metadata_not_found_cause', METADATA_FILE)
+            msg = @ctx.message("script.error.metadata_not_found_cause", METADATA_FILE)
             raise Domain::Errors::MetadataNotFoundError, msg
           end
 
@@ -54,7 +54,7 @@ module Script
           output, status = @ctx.capture2e("node", "--version")
           raise Errors::DependencyInstallError, output unless status.success?
 
-          require 'semantic/semantic'
+          require "semantic/semantic"
           version = ::Semantic::Version.new(output[1..-1])
           unless version >= ::Semantic::Version.new(AssemblyScriptProjectCreator::MIN_NODE_VERSION)
             raise Errors::DependencyInstallError,
@@ -71,8 +71,8 @@ module Script
         end
 
         def check_compilation_dependencies!
-          pkg = JSON.parse(File.read('package.json'))
-          build_script = pkg.dig('scripts', 'build')
+          pkg = JSON.parse(File.read("package.json"))
+          build_script = pkg.dig("scripts", "build")
 
           raise Errors::BuildScriptNotFoundError,
             "Build script not found" if build_script.nil?
@@ -93,23 +93,23 @@ module Script
         end
 
         def check_if_ep_dependencies_up_to_date!
-          return true if ENV['SHOPIFY_CLI_SCRIPTS_IGNORE_OUTDATED']
+          return true if ENV["SHOPIFY_CLI_SCRIPTS_IGNORE_OUTDATED"]
 
           # ignore exit code since it will not be 0 unless every package is up to date which they probably won't be
           out, _ = ctx.capture2e("npm", "outdated", "--json", "--depth", "0")
           parsed_outdated_check = JSON.parse(out)
           outdated_ep_packages = parsed_outdated_check
-            .select { |package_name, _| package_name.start_with?('@shopify/extension-point-as-') }
+            .select { |package_name, _| package_name.start_with?("@shopify/extension-point-as-") }
             .select { |_, version_info| !package_is_up_to_date?(version_info) }
             .keys
           raise Errors::PackagesOutdatedError.new(outdated_ep_packages),
-            "NPM packages out of date: #{outdated_ep_packages.join(', ')}" unless outdated_ep_packages.empty?
+            "NPM packages out of date: #{outdated_ep_packages.join(", ")}" unless outdated_ep_packages.empty?
         end
 
         def package_is_up_to_date?(version_info)
-          require 'semantic/semantic'
-          current_version = version_info['current']
-          latest_version = version_info['latest']
+          require "semantic/semantic"
+          current_version = version_info["current"]
+          latest_version = version_info["latest"]
 
           # making an assumption that the script developer knows what they're doing if they're not referencing a
           # semver version

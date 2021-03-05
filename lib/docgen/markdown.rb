@@ -1,5 +1,5 @@
-require 'rdoc/rdoc'
-require 'erb'
+require "rdoc/rdoc"
+require "erb"
 
 module RDoc
   module Generator
@@ -26,13 +26,13 @@ module RDoc
       private
 
       def render(data)
-        class_template_path = File.join(File.dirname(__FILE__), 'class_template.md.erb')
-        class_renderer = ERB.new(File.read(class_template_path), nil, '-')
+        class_template_path = File.join(File.dirname(__FILE__), "class_template.md.erb")
+        class_renderer = ERB.new(File.read(class_template_path), nil, "-")
         data.each do |cls|
           File.write("#{cls.filename}.md", class_renderer.result(cls.instance_eval { binding }))
         end
-        index_template_path = File.join(File.dirname(__FILE__), 'index_template.md.erb')
-        index_renderer = ERB.new(File.read(index_template_path), nil, '-')
+        index_template_path = File.join(File.dirname(__FILE__), "index_template.md.erb")
+        index_renderer = ERB.new(File.read(index_template_path), nil, "-")
         File.write("Core-APIs.md", index_renderer.result(OpenStruct.new(classes: data).instance_eval { binding }))
       end
 
@@ -46,8 +46,8 @@ module RDoc
             kind: kind,
             comment: @converter.convert(klass.comment.parse),
             constants: build_members(klass.constants),
-            class_methods: build_members(klass.method_list.select { |m| m.type == 'class' }),
-            instance_methods: build_members(klass.method_list.select { |m| m.type == 'instance' }),
+            class_methods: build_members(klass.method_list.select { |m| m.type == "class" }),
+            instance_methods: build_members(klass.method_list.select { |m| m.type == "instance" }),
             attributes: build_members(klass.attributes),
             extended: build_members(klass.extends),
             included: build_members(klass.includes),
@@ -68,7 +68,7 @@ module RDoc
           ClassMember.new(
             title:     m.name,
             comment:   @converter.convert(m.comment.parse),
-            signature: m.respond_to?(:arglists) ? m.arglists : '',
+            signature: m.respond_to?(:arglists) ? m.arglists : "",
             source_code: source(m),
           )
         end
@@ -77,7 +77,7 @@ module RDoc
       # Just extracts sourcecode from html formatting/highlighting into a text
       # blob so that markdown can format it with a codeblock
       def source(m)
-        return '' unless m.respond_to?(:token_stream)
+        return "" unless m.respond_to?(:token_stream)
         # each line, get the text
         src = (m.token_stream || []).map do |t|
           next unless t
@@ -93,7 +93,7 @@ module RDoc
           indent = n if n < indent
           break if n == 0
         end
-        src.gsub!(/^#{' ' * indent}/, '') if indent > 0
+        src.gsub!(/^#{' ' * indent}/, "") if indent > 0
         src
       end
     end

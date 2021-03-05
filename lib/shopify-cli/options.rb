@@ -1,6 +1,6 @@
 # frozen_string_literal: true
-require 'shopify_cli'
-require 'optparse'
+require "shopify_cli"
+require "optparse"
 
 module ShopifyCli
   class Options
@@ -31,7 +31,7 @@ module ShopifyCli
     def parser
       @parser ||= begin
         opt = OptionParser.new
-        opt.on('--help', '-h', Context.message('core.options.help_text')) do |v|
+        opt.on("--help", "-h", Context.message("core.options.help_text")) do |v|
           @help = v
         end
       end

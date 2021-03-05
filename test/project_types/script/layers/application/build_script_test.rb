@@ -4,15 +4,15 @@ require "project_types/script/test_helper"
 
 describe Script::Layers::Application::BuildScript do
   include TestHelpers::FakeFS
-  describe '.call' do
-    let(:language) { 'assemblyscript' }
-    let(:extension_point_type) { 'discount' }
-    let(:script_name) { 'name' }
-    let(:description) { 'my description' }
-    let(:op_failed_msg) { 'msg' }
-    let(:content) { 'content' }
-    let(:compiled_type) { 'wasm' }
-    let(:metadata) { Script::Layers::Domain::Metadata.new('1', '0', false) }
+  describe ".call" do
+    let(:language) { "assemblyscript" }
+    let(:extension_point_type) { "discount" }
+    let(:script_name) { "name" }
+    let(:description) { "my description" }
+    let(:op_failed_msg) { "msg" }
+    let(:content) { "content" }
+    let(:compiled_type) { "wasm" }
+    let(:metadata) { Script::Layers::Domain::Metadata.new("1", "0", false) }
     let(:task_runner) { stub(compiled_type: compiled_type, metadata: metadata) }
 
     subject do
@@ -25,8 +25,8 @@ describe Script::Layers::Application::BuildScript do
       )
     end
 
-    describe 'when build succeeds' do
-      it 'should return normally' do
+    describe "when build succeeds" do
+      it "should return normally" do
         CLI::UI::Frame.expects(:with_frame_color_override).never
         task_runner.expects(:build).returns(content)
         Script::Layers::Infrastructure::PushPackageRepository.any_instance.expects(:create_push_package).with(
@@ -34,16 +34,16 @@ describe Script::Layers::Application::BuildScript do
           script_name: script_name,
           description: description,
           script_content: content,
-          compiled_type: 'wasm',
+          compiled_type: "wasm",
           metadata: metadata
         )
         capture_io { subject }
       end
     end
 
-    describe 'when build raises' do
-      it 'should output message and raise BuildError' do
-        err_msg = 'some error message'
+    describe "when build raises" do
+      it "should output message and raise BuildError" do
+        err_msg = "some error message"
         CLI::UI::Frame.expects(:with_frame_color_override).yields.once
         task_runner.expects(:build).returns(content)
         Script::Layers::Infrastructure::PushPackageRepository

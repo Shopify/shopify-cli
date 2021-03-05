@@ -8,7 +8,7 @@ Thread.report_on_exception = false
 # require_relative 'support/ruby_backports'
 
 # See bin/load_shopify.rb
-ENV['PATH'] = ENV['PATH'].split(':').select { |p| p.start_with?('/', '~') }.join(':') unless defined?($original_env)
+ENV["PATH"] = ENV["PATH"].split(":").select { |p| p.start_with?("/", "~") }.join(":") unless defined?($original_env)
 
 # Load vendor and CLI UI/Kit.
 # Nothing else should be loaded at this point and nothing else should be added to the load path on boot
@@ -21,10 +21,10 @@ deps.each do |dep|
   $LOAD_PATH.unshift(vendor_path) unless $LOAD_PATH.include?(vendor_path)
 end
 
-require 'cli/ui'
-require 'cli/kit'
-require 'smart_properties'
-require_relative 'shopify-cli/version'
+require "cli/ui"
+require "cli/kit"
+require "smart_properties"
+require_relative "shopify-cli/version"
 
 # Enable stdout routing. At this point all calls to STDOUT (and STDERR) will go through this class.
 # See https://github.com/Shopify/cli-ui/blob/master/lib/cli/ui/stdout_router.rb for more info
@@ -39,16 +39,16 @@ CLI::UI::StdoutRouter.enable
 module ShopifyCli
   extend CLI::Kit::Autocall
 
-  TOOL_NAME         = 'shopify'
-  TOOL_FULL_NAME    = 'Shopify CLI'
-  ROOT              = File.expand_path('../..', __FILE__)
-  PROJECT_TYPES_DIR = File.join(ROOT, 'lib', 'project_types')
-  TEMP_DIR          = File.join(ROOT, '.tmp')
+  TOOL_NAME         = "shopify"
+  TOOL_FULL_NAME    = "Shopify CLI"
+  ROOT              = File.expand_path("../..", __FILE__)
+  PROJECT_TYPES_DIR = File.join(ROOT, "lib", "project_types")
+  TEMP_DIR          = File.join(ROOT, ".tmp")
 
   # programmer emoji if default install location, else wrench emoji
-  EMOJI    = ROOT == '/opt/shopify' ? "\u{1f469}\u{200d}\u{1f4bb}" : "\u{1f527}"
+  EMOJI    = ROOT == "/opt/shopify" ? "\u{1f469}\u{200d}\u{1f4bb}" : "\u{1f527}"
   # shrug or boom emoji
-  FAILMOJI = ROOT == '/opt/shopify' ? "\u{1f937}" : "\u{1f4a5}"
+  FAILMOJI = ROOT == "/opt/shopify" ? "\u{1f937}" : "\u{1f4a5}"
 
   # Exit management in `shopify-app-cli` follows the management set out by CLI Kit.
   # https://github.com/Shopify/cli-kit/blob/master/lib/cli/kit.rb
@@ -94,47 +94,47 @@ module ShopifyCli
     )
   end
 
-  autoload :AdminAPI, 'shopify-cli/admin_api'
-  autoload :API, 'shopify-cli/api'
-  autoload :Command, 'shopify-cli/command'
-  autoload :Commands, 'shopify-cli/commands'
-  autoload :Context, 'shopify-cli/context'
-  autoload :Core, 'shopify-cli/core'
-  autoload :DB, 'shopify-cli/db'
-  autoload :Feature, 'shopify-cli/feature'
-  autoload :Form, 'shopify-cli/form'
-  autoload :Git, 'shopify-cli/git'
-  autoload :Helpers, 'shopify-cli/helpers'
-  autoload :Heroku, 'shopify-cli/heroku'
-  autoload :JsDeps, 'shopify-cli/js_deps'
-  autoload :JsSystem, 'shopify-cli/js_system'
-  autoload :MethodObject, 'shopify-cli/method_object'
-  autoload :Log, 'shopify-cli/log'
-  autoload :OAuth, 'shopify-cli/oauth'
-  autoload :Options, 'shopify-cli/options'
-  autoload :PartnersAPI, 'shopify-cli/partners_api'
-  autoload :ProcessSupervision, 'shopify-cli/process_supervision'
-  autoload :Project, 'shopify-cli/project'
-  autoload :ProjectType, 'shopify-cli/project_type'
-  autoload :ResolveConstant, 'shopify-cli/resolve_constant'
-  autoload :Resources, 'shopify-cli/resources'
-  autoload :Result, 'shopify-cli/result'
-  autoload :Shopifolk, 'shopify-cli/shopifolk'
-  autoload :SubCommand, 'shopify-cli/sub_command'
-  autoload :Task, 'shopify-cli/task'
-  autoload :Tasks, 'shopify-cli/tasks'
-  autoload :Tunnel, 'shopify-cli/tunnel'
+  autoload :AdminAPI, "shopify-cli/admin_api"
+  autoload :API, "shopify-cli/api"
+  autoload :Command, "shopify-cli/command"
+  autoload :Commands, "shopify-cli/commands"
+  autoload :Context, "shopify-cli/context"
+  autoload :Core, "shopify-cli/core"
+  autoload :DB, "shopify-cli/db"
+  autoload :Feature, "shopify-cli/feature"
+  autoload :Form, "shopify-cli/form"
+  autoload :Git, "shopify-cli/git"
+  autoload :Helpers, "shopify-cli/helpers"
+  autoload :Heroku, "shopify-cli/heroku"
+  autoload :JsDeps, "shopify-cli/js_deps"
+  autoload :JsSystem, "shopify-cli/js_system"
+  autoload :MethodObject, "shopify-cli/method_object"
+  autoload :Log, "shopify-cli/log"
+  autoload :OAuth, "shopify-cli/oauth"
+  autoload :Options, "shopify-cli/options"
+  autoload :PartnersAPI, "shopify-cli/partners_api"
+  autoload :ProcessSupervision, "shopify-cli/process_supervision"
+  autoload :Project, "shopify-cli/project"
+  autoload :ProjectType, "shopify-cli/project_type"
+  autoload :ResolveConstant, "shopify-cli/resolve_constant"
+  autoload :Resources, "shopify-cli/resources"
+  autoload :Result, "shopify-cli/result"
+  autoload :Shopifolk, "shopify-cli/shopifolk"
+  autoload :SubCommand, "shopify-cli/sub_command"
+  autoload :Task, "shopify-cli/task"
+  autoload :Tasks, "shopify-cli/tasks"
+  autoload :Tunnel, "shopify-cli/tunnel"
 
-  require 'shopify-cli/messages/messages'
+  require "shopify-cli/messages/messages"
   Context.load_messages(ShopifyCli::Messages::MESSAGES)
 
   def self.cache_dir
-    cache_dir = if ENV.key?('RUNNING_SHOPIFY_CLI_TESTS')
+    cache_dir = if ENV.key?("RUNNING_SHOPIFY_CLI_TESTS")
       TEMP_DIR
-    elsif ENV['LOCALAPPDATA'].nil?
-      File.join(File.expand_path(ENV.fetch('XDG_CACHE_HOME', '~/.cache')), TOOL_NAME)
+    elsif ENV["LOCALAPPDATA"].nil?
+      File.join(File.expand_path(ENV.fetch("XDG_CACHE_HOME", "~/.cache")), TOOL_NAME)
     else
-      File.join(File.expand_path(ENV['LOCALAPPDATA']), TOOL_NAME)
+      File.join(File.expand_path(ENV["LOCALAPPDATA"]), TOOL_NAME)
     end
 
     # Make sure the cache dir always exists
@@ -144,20 +144,20 @@ module ShopifyCli
   end
 
   def self.tool_config_path
-    if ENV.key?('RUNNING_SHOPIFY_CLI_TESTS')
+    if ENV.key?("RUNNING_SHOPIFY_CLI_TESTS")
       TEMP_DIR
-    elsif ENV['APPDATA'].nil?
-      File.join(File.expand_path(ENV.fetch('XDG_CONFIG_HOME', '~/.config')), TOOL_NAME)
+    elsif ENV["APPDATA"].nil?
+      File.join(File.expand_path(ENV.fetch("XDG_CONFIG_HOME", "~/.config")), TOOL_NAME)
     else
-      File.join(File.expand_path(ENV['APPDATA']), TOOL_NAME)
+      File.join(File.expand_path(ENV["APPDATA"]), TOOL_NAME)
     end
   end
 
   def self.log_file
-    File.join(tool_config_path, 'logs', 'log.log')
+    File.join(tool_config_path, "logs", "log.log")
   end
 
   def self.debug_log_file
-    File.join(tool_config_path, 'logs', 'debug.log')
+    File.join(tool_config_path, "logs", "debug.log")
   end
 end

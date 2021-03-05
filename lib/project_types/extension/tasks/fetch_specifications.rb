@@ -14,10 +14,10 @@ module Extension
 
       def product_subscription_specification
         {
-          identifier: 'product_subscription',
+          identifier: "product_subscription",
           features: {
             argo: {
-              surface_area: 'admin',
+              surface_area: "admin",
             },
           },
         }
@@ -25,10 +25,10 @@ module Extension
 
       def checkout_post_purchase_specification
         {
-          identifier: 'checkout_post_purchase',
+          identifier: "checkout_post_purchase",
           features: {
             argo: {
-              surface_area: 'checkout',
+              surface_area: "checkout",
             },
           },
         }

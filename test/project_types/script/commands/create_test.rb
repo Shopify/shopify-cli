@@ -1,6 +1,6 @@
 # frozen_string_literal: true
 
-require 'project_types/script/test_helper'
+require "project_types/script/test_helper"
 
 module Script
   module Commands
@@ -13,10 +13,10 @@ module Script
         super
         ShopifyCli::Core::Monorail.stubs(:log).yields
         @context = TestHelpers::FakeContext.new
-        @language = 'assemblyscript'
-        @script_name = 'name'
-        @ep_type = 'discount'
-        @description = 'description'
+        @language = "assemblyscript"
+        @script_name = "name"
+        @ep_type = "discount"
+        @description = "description"
         @script_project = TestHelpers::FakeScriptProject.new(
           language: @language,
           extension_point_type: @ep_type,
@@ -27,8 +27,8 @@ module Script
       end
 
       def test_prints_help_with_no_name_argument
-        root = File.expand_path(__dir__ + '../../../../..')
-        FakeFS::FileSystem.clone(root + '/lib/project_types/script/config/extension_points.yml')
+        root = File.expand_path(__dir__ + "../../../../..")
+        FakeFS::FileSystem.clone(root + "/lib/project_types/script/config/extension_points.yml")
         @script_name = nil
         io = capture_io { perform_command }
         assert_match(CLI::UI.fmt(Script::Commands::Create.help), io.join)
@@ -45,7 +45,7 @@ module Script
 
         @context
           .expects(:puts)
-          .with(@context.message('script.create.change_directory_notice', @script_project.script_name))
+          .with(@context.message("script.create.change_directory_notice", @script_project.script_name))
         perform_command
       end
 
@@ -53,7 +53,7 @@ module Script
         Script::Layers::Application::ExtensionPoints.expects(:types).returns(%w(ep1 ep2))
         ShopifyCli::Context
           .expects(:message)
-          .with('script.create.help', ShopifyCli::TOOL_NAME, '{{cyan:ep1}}, {{cyan:ep2}}')
+          .with("script.create.help", ShopifyCli::TOOL_NAME, "{{cyan:ep1}}, {{cyan:ep2}}")
         Script::Commands::Create.help
       end
 
@@ -95,7 +95,7 @@ module Script
 
         UI::ErrorHandler.expects(:pretty_print_and_raise).with(
           error,
-          failed_op: @context.message('script.create.error.operation_failed')
+          failed_op: @context.message("script.create.error.operation_failed")
         )
 
         ScriptProject.expects(:cleanup).never
@@ -115,7 +115,7 @@ module Script
           language: @language,
         }
 
-        run_cmd("create script #{args.map { |k, v| "--#{k}=#{v}" }.join(' ')}")
+        run_cmd("create script #{args.map { |k, v| "--#{k}=#{v}" }.join(" ")}")
       end
 
       def perform_command

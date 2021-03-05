@@ -1,17 +1,17 @@
 # frozen_string_literal: true
-require 'shopify_cli'
+require "shopify_cli"
 
 module Rails
   module Commands
     class Generate < ShopifyCli::Command
-      subcommand :Webhook, 'webhook', Project.project_filepath('commands/generate/webhook')
+      subcommand :Webhook, "webhook", Project.project_filepath("commands/generate/webhook")
 
       def call(*)
         @ctx.puts(self.class.help)
       end
 
       def self.help
-        ShopifyCli::Context.message('rails.generate.help', ShopifyCli::TOOL_NAME)
+        ShopifyCli::Context.message("rails.generate.help", ShopifyCli::TOOL_NAME)
       end
 
       def self.extended_help
@@ -24,7 +24,7 @@ module Rails
           end
           extended_help += "\n"
         end
-        extended_help += ShopifyCli::Context.message('rails.generate.extended_help', ShopifyCli::TOOL_NAME)
+        extended_help += ShopifyCli::Context.message("rails.generate.extended_help", ShopifyCli::TOOL_NAME)
       end
 
       def self.run_generate(script, name, ctx)
@@ -38,11 +38,11 @@ module Rails
       def self.response(code, name, ctx)
         case code
         when 1
-          ctx.message('rails.generate.error.generic', name)
+          ctx.message("rails.generate.error.generic", name)
         when 2
-          ctx.message('rails.generate.error.name_exists', name)
+          ctx.message("rails.generate.error.name_exists", name)
         else
-          ctx.message('rails.error.generic')
+          ctx.message("rails.error.generic")
         end
       end
     end

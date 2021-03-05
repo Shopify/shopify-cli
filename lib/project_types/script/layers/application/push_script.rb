@@ -17,7 +17,7 @@ module Script
               description: script_project.description
             )
 
-            UI::PrintingSpinner.spin(ctx, ctx.message('script.application.pushing')) do |p_ctx, spinner|
+            UI::PrintingSpinner.spin(ctx, ctx.message("script.application.pushing")) do |p_ctx, spinner|
               package = Infrastructure::PushPackageRepository.new(ctx: p_ctx).get_push_package(
                 extension_point_type: script_project.extension_point_type,
                 script_name: script_project.script_name,
@@ -26,7 +26,7 @@ module Script
                 metadata: task_runner.metadata
               )
               package.push(Infrastructure::ScriptService.new(ctx: p_ctx), script_project.api_key, force)
-              spinner.update_title(p_ctx.message('script.application.pushed'))
+              spinner.update_title(p_ctx.message("script.application.pushed"))
             end
           end
         end

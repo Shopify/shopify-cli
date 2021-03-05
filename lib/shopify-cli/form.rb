@@ -1,4 +1,4 @@
-require 'shopify_cli'
+require "shopify_cli"
 
 module ShopifyCli
   class Form

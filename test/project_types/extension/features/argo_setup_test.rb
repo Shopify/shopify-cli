@@ -1,7 +1,7 @@
 # frozen_string_literal: true
-require 'test_helper'
-require 'project_types/extension/extension_test_helpers'
-require 'pathname'
+require "test_helper"
+require "project_types/extension/extension_test_helpers"
+require "pathname"
 
 module Extension
   module Features
@@ -12,10 +12,10 @@ module Extension
         super
         ShopifyCli::ProjectType.load_type(:extension)
 
-        @git_template = 'https://www.github.com/fake_template.git'
+        @git_template = "https://www.github.com/fake_template.git"
         @initializer = ArgoSetup.new(git_template: @git_template)
-        @identifier = 'FAKE_ARGO_TYPE'
-        @directory = 'fake_directory'
+        @identifier = "FAKE_ARGO_TYPE"
+        @directory = "fake_directory"
 
         @passing_step = ArgoSetupStep.default { true }
         @failing_step = ArgoSetupStep.default { false }

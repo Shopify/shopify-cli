@@ -1,6 +1,6 @@
 # frozen_string_literal: true
 
-require 'shopify_cli'
+require "shopify_cli"
 
 module Script
   module UI

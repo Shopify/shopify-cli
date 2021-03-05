@@ -2,7 +2,7 @@ module TestHelpers
   module FakeTask
     class FakeTask < ShopifyCli::Task
       def call(ctx)
-        ctx.puts('success!')
+        ctx.puts("success!")
       end
     end
 

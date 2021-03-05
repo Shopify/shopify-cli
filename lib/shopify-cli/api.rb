@@ -1,4 +1,4 @@
-require 'shopify_cli'
+require "shopify_cli"
 
 module ShopifyCli
   class API
@@ -19,7 +19,7 @@ module ShopifyCli
     class APIRequestThrottledError < APIRequestRetriableError; end
 
     def self.gid_to_id(gid)
-      gid.split('/').last
+      gid.split("/").last
     end
 
     def query(query_name, variables: {})
@@ -30,19 +30,19 @@ module ShopifyCli
       ctx.debug(resp)
       resp
     rescue API::APIRequestServerError, API::APIRequestUnexpectedError => e
-      ctx.puts(ctx.message('core.api.error.internal_server_error'))
-      ctx.debug(ctx.message('core.api.error.internal_server_error_debug', e.message))
+      ctx.puts(ctx.message("core.api.error.internal_server_error"))
+      ctx.debug(ctx.message("core.api.error.internal_server_error_debug", e.message))
     end
 
     def request(url:, body: nil, headers: {}, method: "POST")
       CLI::Kit::Util.begin do
         uri = URI.parse(url)
         unless uri.is_a?(URI::HTTP)
-          ctx.abort(ctx.message('core.api.error.invalid_url', url))
+          ctx.abort(ctx.message("core.api.error.invalid_url", url))
         end
 
         # we delay this require so as to avoid a performance hit on starting the CLI
-        require 'shopify-cli/http_request'
+        require "shopify-cli/http_request"
         headers = default_headers.merge(headers)
         response = if method == "POST"
           HttpRequest.post(uri, body, headers)
@@ -76,12 +76,12 @@ module ShopifyCli
     def load_query(name)
       project_type = ShopifyCli::Project.current_project_type
       project_file_path = File.join(
-        ShopifyCli::ROOT, 'lib', 'project_types', project_type.to_s, 'graphql', "#{name}.graphql"
+        ShopifyCli::ROOT, "lib", "project_types", project_type.to_s, "graphql", "#{name}.graphql"
       )
       if !project_type.nil? && File.exist?(project_file_path)
         File.read(project_file_path)
       else
-        File.read(File.join(ShopifyCli::ROOT, 'lib', 'graphql', "#{name}.graphql"))
+        File.read(File.join(ShopifyCli::ROOT, "lib", "graphql", "#{name}.graphql"))
       end
     end
 
@@ -93,9 +93,9 @@ module ShopifyCli
 
     def default_headers
       {
-        'User-Agent' => "Shopify App CLI #{ShopifyCli::VERSION} #{current_sha} | #{ctx.uname}",
+        "User-Agent" => "Shopify App CLI #{ShopifyCli::VERSION} #{current_sha} | #{ctx.uname}",
       }.tap do |headers|
-        headers['X-Shopify-Cli-Employee'] = '1' if Shopifolk.acting_as_shopify_organization?
+        headers["X-Shopify-Cli-Employee"] = "1" if Shopifolk.acting_as_shopify_organization?
       end.merge(auth_headers(token))
     end
 

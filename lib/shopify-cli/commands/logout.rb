@@ -1,4 +1,4 @@
-require 'shopify_cli'
+require "shopify_cli"
 
 module ShopifyCli
   module Commands
@@ -12,11 +12,11 @@ module ShopifyCli
         LOGIN_TOKENS.each do |token|
           ShopifyCli::DB.del(token) if ShopifyCli::DB.exists?(token)
         end
-        @ctx.puts(@ctx.message('core.logout.success'))
+        @ctx.puts(@ctx.message("core.logout.success"))
       end
 
       def self.help
-        ShopifyCli::Context.message('core.logout.help', ShopifyCli::TOOL_NAME)
+        ShopifyCli::Context.message("core.logout.help", ShopifyCli::TOOL_NAME)
       end
     end
   end

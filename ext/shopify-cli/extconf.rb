@@ -1,8 +1,8 @@
-require 'rbconfig'
-require 'fileutils'
+require "rbconfig"
+require "fileutils"
 
-gem = File.expand_path('../../../', __FILE__)
-exe = File.join(gem, 'bin', 'shopify')
+gem = File.expand_path("../../../", __FILE__)
+exe = File.join(gem, "bin", "shopify")
 
 if RUBY_PLATFORM.match(/mingw32/)
   bat_path = File.dirname(RbConfig.ruby)
@@ -22,8 +22,8 @@ if RUBY_PLATFORM.match(/mingw32/)
     \t echo "#{script_content}">> "#{bat}"
   MAKEFILE
 else
-  script = exe + '.sh'
-  symlink = '/usr/local/bin/shopify'
+  script = exe + ".sh"
+  symlink = "/usr/local/bin/shopify"
 
   script_content = <<~SCRIPT
     #!/usr/bin/env bash
@@ -44,4 +44,4 @@ else
   MAKEFILE
 end
 
-File.write('Makefile', makefile_content)
+File.write("Makefile", makefile_content)

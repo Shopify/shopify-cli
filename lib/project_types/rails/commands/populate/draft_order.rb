@@ -1,4 +1,4 @@
-require 'shopify_cli'
+require "shopify_cli"
 
 module Rails
   module Commands
@@ -11,16 +11,16 @@ module Rails
             lineItems: [{
               originalUnitPrice: price,
               quantity: 1,
-              weight: { value: 10, unit: 'GRAMS' },
+              weight: { value: 10, unit: "GRAMS" },
               title: ShopifyCli::Helpers::Haikunator.title,
             }],
           }
         end
 
         def message(data)
-          ret = data['draftOrderCreate']['draftOrder']
-          id = ShopifyCli::API.gid_to_id(ret['id'])
-          @ctx.message('rails.populate.draft_order.added', ShopifyCli::Project.current.env.shop, admin_url, id)
+          ret = data["draftOrderCreate"]["draftOrder"]
+          id = ShopifyCli::API.gid_to_id(ret["id"])
+          @ctx.message("rails.populate.draft_order.added", ShopifyCli::Project.current.env.shop, admin_url, id)
         end
       end
     end

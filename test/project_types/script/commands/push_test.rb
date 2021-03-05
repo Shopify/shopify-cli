@@ -1,6 +1,6 @@
 # frozen_string_literal: true
 
-require 'project_types/script/test_helper'
+require "project_types/script/test_helper"
 
 module Script
   module Commands
@@ -8,10 +8,10 @@ module Script
       def setup
         super
         @context = TestHelpers::FakeContext.new
-        @language = 'assemblyscript'
-        @script_name = 'name'
-        @ep_type = 'discount'
-        @api_key = 'apikey'
+        @language = "assemblyscript"
+        @script_name = "name"
+        @ep_type = "discount"
+        @api_key = "apikey"
         @script_project = TestHelpers::FakeScriptProject.new(
           language: @language,
           extension_point_type: @ep_type,
@@ -31,14 +31,14 @@ module Script
 
         @context
           .expects(:puts)
-          .with(@context.message('script.push.script_pushed', api_key: @api_key))
+          .with(@context.message("script.push.script_pushed", api_key: @api_key))
         perform_command
       end
 
       def test_help
         ShopifyCli::Context
           .expects(:message)
-          .with('script.push.help', ShopifyCli::TOOL_NAME)
+          .with("script.push.help", ShopifyCli::TOOL_NAME)
         Script::Commands::Push.help
       end
 

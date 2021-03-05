@@ -16,21 +16,21 @@ module Script
 
       def ask_extension_point
         CLI::UI::Prompt.ask(
-          @ctx.message('script.forms.create.select_extension_point'),
+          @ctx.message("script.forms.create.select_extension_point"),
           options: Layers::Application::ExtensionPoints.non_deprecated_types
         )
       end
 
       def ask_name
-        CLI::UI::Prompt.ask(@ctx.message('script.forms.create.script_name'))
+        CLI::UI::Prompt.ask(@ctx.message("script.forms.create.script_name"))
       end
 
       def ask_description
-        CLI::UI::Prompt.ask(@ctx.message('script.forms.create.description'))
+        CLI::UI::Prompt.ask(@ctx.message("script.forms.create.description"))
       end
 
       def valid_name
-        n = (name || ask_name).downcase.gsub(' ', '_')
+        n = (name || ask_name).downcase.gsub(" ", "_")
         return n if n.match?(/^[0-9A-Za-z_-]*$/)
         raise Errors::InvalidScriptNameError
       end
@@ -48,7 +48,7 @@ module Script
         return all_languages.first if all_languages.count == 1
 
         CLI::UI::Prompt.ask(
-          ctx.message('script.forms.create.select_language'),
+          ctx.message("script.forms.create.select_language"),
           options: all_languages
         )
       end
