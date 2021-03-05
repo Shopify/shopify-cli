@@ -29,6 +29,7 @@ namespace :rdoc do
     "lib/shopify-cli/git.rb",
     "lib/shopify-cli/heroku.rb",
     "lib/shopify-cli/js_deps.rb",
+    "lib/shopify-cli/lazy_delegator.rb",
     "lib/shopify-cli/method_object.rb",
     "lib/shopify-cli/partners_api.rb",
     "lib/shopify-cli/process_supervision.rb",
@@ -36,7 +37,6 @@ namespace :rdoc do
     "lib/shopify-cli/result.rb",
     "lib/shopify-cli/transform_data_structure.rb",
     "lib/shopify-cli/tunnel.rb",
-    "lib/shopify-cli/lazy_delegator.rb",
   ]
 
   task all: [:markdown, :wiki, :cleanup]
