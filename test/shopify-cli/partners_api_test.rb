@@ -40,7 +40,7 @@ module ShopifyCli
 
     def test_query_fails_gracefully_when_unable_to_authenticate
       Shopifolk.stubs(:check).returns(false)
-      ShopifyCli::DB.expects(:get).with(:identity_exchange_token).returns("token123").twice
+      ShopifyCli::DB.expects(:get).with(:partners_exchange_token).returns("token123").twice
 
       api_stub = stub
       PartnersAPI.expects(:new).with(
