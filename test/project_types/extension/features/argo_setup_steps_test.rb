@@ -1,6 +1,6 @@
 # frozen_string_literal: true
-require 'test_helper'
-require 'project_types/extension/extension_test_helpers'
+require "test_helper"
+require "project_types/extension/extension_test_helpers"
 
 module Extension
   module Features
@@ -11,9 +11,9 @@ module Extension
         super
         ShopifyCli::ProjectType.load_type(:extension)
 
-        @git_template = 'https://www.github.com/fake_template.git'
-        @identifier = 'FAKE_ARGO_TYPE'
-        @directory = 'fake_directory'
+        @git_template = "https://www.github.com/fake_template.git"
+        @identifier = "FAKE_ARGO_TYPE"
+        @directory = "fake_directory"
         @system = ShopifyCli::JsSystem.new(ctx: @context)
       end
 

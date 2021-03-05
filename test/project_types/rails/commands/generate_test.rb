@@ -1,5 +1,5 @@
 # frozen_string_literal: true
-require 'project_types/rails/test_helper'
+require "project_types/rails/test_helper"
 
 module Rails
   module Commands
@@ -16,7 +16,7 @@ module Rails
         ShopifyCli::Context.any_instance.expects(:system).returns(failure)
 
         assert_raises(ShopifyCli::Abort) do
-          Rails::Commands::Generate.run_generate(['script'], 'test-name', @context)
+          Rails::Commands::Generate.run_generate(["script"], "test-name", @context)
         end
       end
     end

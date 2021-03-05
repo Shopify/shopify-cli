@@ -1,4 +1,4 @@
-require 'shopify_cli'
+require "shopify_cli"
 
 module Node
   module Commands
@@ -15,11 +15,11 @@ module Node
         end
 
         def message(data)
-          ret = data['customerCreate']['customer']
-          id = ShopifyCli::API.gid_to_id(ret['id'])
+          ret = data["customerCreate"]["customer"]
+          id = ShopifyCli::API.gid_to_id(ret["id"])
           @ctx.message(
-            'node.populate.customer.added',
-            ret['displayName'],
+            "node.populate.customer.added",
+            ret["displayName"],
             ShopifyCli::Project.current.env.shop,
             admin_url,
             id

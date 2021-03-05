@@ -1,4 +1,4 @@
-require 'fileutils'
+require "fileutils"
 
 module ShopifyCli
   ##
@@ -19,7 +19,7 @@ module ShopifyCli
     class << self
       def run_dir
         # is the directory where the pid and logfile are kept
-        File.join(ShopifyCli.cache_dir, 'sv')
+        File.join(ShopifyCli.cache_dir, "sv")
       end
 
       ##
@@ -36,7 +36,7 @@ module ShopifyCli
       #   will be nil if the process is not running.
       #
       def for_ident(identifier)
-        pid, time = File.read(File.join(ShopifyCli::ProcessSupervision.run_dir, "#{identifier}.pid")).split(':')
+        pid, time = File.read(File.join(ShopifyCli::ProcessSupervision.run_dir, "#{identifier}.pid")).split(":")
         new(identifier, pid: Integer(pid), time: time)
       rescue Errno::ENOENT
         nil
@@ -66,7 +66,7 @@ module ShopifyCli
           pid_file = new(identifier)
 
           # Make sure the file exists and is empty, otherwise Windows fails
-          File.open(pid_file.log_path, 'w') {}
+          File.open(pid_file.log_path, "w") {}
           pid = Process.spawn(
             *args,
             out: pid_file.log_path,
@@ -128,7 +128,7 @@ module ShopifyCli
       end
     end
 
-    def initialize(identifier, pid: nil, time: Time.now.strftime('%s')) # :nodoc:
+    def initialize(identifier, pid: nil, time: Time.now.strftime("%s")) # :nodoc:
       @identifier = identifier
       @pid = pid
       @time = time
@@ -204,13 +204,13 @@ module ShopifyCli
 
       # Windows does not handle SIGTERM, go straight to SIGKILL
       unless ctx.windows?
-        Process.kill('TERM', id)
+        Process.kill("TERM", id)
         50.times do
           sleep(0.1)
           break unless stat(id)
         end
       end
-      Process.kill('KILL', id) if stat(id)
+      Process.kill("KILL", id) if stat(id)
       sleep(0.1) if ctx.windows? # Give Windows a second to actually close the process
     end
 

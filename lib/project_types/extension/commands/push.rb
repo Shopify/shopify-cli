@@ -1,5 +1,5 @@
 # frozen_string_literal: true
-require 'shopify_cli'
+require "shopify_cli"
 
 module Extension
   module Commands
@@ -10,7 +10,7 @@ module Extension
         Commands::Register.new(@ctx).call(args, name) unless project.registered?
         Commands::Build.new(@ctx).call(args, name)
 
-        CLI::UI::Frame.open(@ctx.message('push.frame_title')) do
+        CLI::UI::Frame.open(@ctx.message("push.frame_title")) do
           updated_draft_version = update_draft
           show_message(updated_draft_version)
         end
@@ -30,18 +30,18 @@ module Extension
       end
 
       def output_success_messages(draft)
-        @ctx.puts(@ctx.message('push.success_confirmation', project.title, format_time(draft.last_user_interaction_at)))
-        @ctx.puts(@ctx.message('push.success_info', draft.location))
+        @ctx.puts(@ctx.message("push.success_confirmation", project.title, format_time(draft.last_user_interaction_at)))
+        @ctx.puts(@ctx.message("push.success_info", draft.location))
       end
 
       def output_validation_errors(draft)
-        @ctx.puts(@ctx.message('push.pushed_with_errors', format_time(draft.last_user_interaction_at)))
+        @ctx.puts(@ctx.message("push.pushed_with_errors", format_time(draft.last_user_interaction_at)))
 
         draft.validation_errors.each do |error|
-          @ctx.puts(format('{{x}} %s: %s', error.field.last, error.message))
+          @ctx.puts(format("{{x}} %s: %s", error.field.last, error.message))
         end
 
-        @ctx.puts(@ctx.message('push.push_with_errors_info'))
+        @ctx.puts(@ctx.message("push.push_with_errors_info"))
       end
 
       def format_time(time)
@@ -49,7 +49,7 @@ module Extension
       end
 
       def with_waiting_text
-        @ctx.puts(@ctx.message('push.waiting_text'))
+        @ctx.puts(@ctx.message("push.waiting_text"))
         yield
       end
 

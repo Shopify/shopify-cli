@@ -12,7 +12,7 @@ module Theme
       end
 
       def connect(ctx, store:, password:, themeid:, env:)
-        command = build_command('get', env)
+        command = build_command("get", env)
         command << "--password=#{password}"
         command << "--store=#{store}"
         command << "--themeid=#{themeid}"
@@ -22,7 +22,7 @@ module Theme
       end
 
       def create(ctx, password:, store:, name:, env:)
-        command = build_command('new', env)
+        command = build_command("new", env)
         command << "--password=#{password}"
         command << "--store=#{store}"
         command << "--name=#{name}"
@@ -33,11 +33,11 @@ module Theme
 
       def deploy(ctx, flags: nil, env:)
         unless push(ctx, flags: flags, env: env)
-          ctx.abort(ctx.message('theme.deploy.push_fail'))
+          ctx.abort(ctx.message("theme.deploy.push_fail"))
         end
-        ctx.done(ctx.message('theme.deploy.info.pushed'))
+        ctx.done(ctx.message("theme.deploy.info.pushed"))
 
-        command = build_command('publish', env)
+        command = build_command("publish", env)
         (command << flags).compact!
         command.flatten!
 
@@ -46,7 +46,7 @@ module Theme
       end
 
       def generate_env(ctx, store:, password:, themeid:, env:)
-        command = build_command('configure', env)
+        command = build_command("configure", env)
         command << "--password=#{password}"
         command << "--store=#{store}"
         command << "--themeid=#{themeid}"
@@ -56,7 +56,7 @@ module Theme
       end
 
       def push(ctx, files: nil, flags: nil, remove: false, env:)
-        action = remove ? 'remove' : 'deploy'
+        action = remove ? "remove" : "deploy"
         command = build_command(action, env)
 
         (command << files << flags).compact!
@@ -75,28 +75,28 @@ module Theme
             path: "themes.json",
           )
         rescue ShopifyCli::API::APIRequestUnauthorizedError
-          ctx.abort(ctx.message('theme.themekit.query_themes.bad_password'))
+          ctx.abort(ctx.message("theme.themekit.query_themes.bad_password"))
         rescue StandardError
-          ctx.abort(ctx.message('theme.themekit.query_themes.not_connect'))
+          ctx.abort(ctx.message("theme.themekit.query_themes.not_connect"))
         end
 
-        resp[1]['themes'].map { |theme| [theme['name'], theme['id']] }.to_h
+        resp[1]["themes"].map { |theme| [theme["name"], theme["id"]] }.to_h
       end
 
       def serve(ctx, flags: nil, env:)
-        command = build_command('open', env)
+        command = build_command("open", env)
         out, stat = ctx.capture2e(*command)
         ctx.puts(out)
-        ctx.abort(ctx.message('theme.serve.open_fail')) unless stat.success?
+        ctx.abort(ctx.message("theme.serve.open_fail")) unless stat.success?
 
-        command = build_command('watch', env)
+        command = build_command("watch", env)
         (command << flags).compact!
         command.flatten!
         ctx.system(*command)
       end
 
       def update(ctx)
-        command = build_command('update')
+        command = build_command("update")
         ctx.system(*command)
       end
 
@@ -104,7 +104,7 @@ module Theme
 
       def build_command(action, env = nil)
         command = [THEMEKIT, action]
-        command << '--no-update-notifier'
+        command << "--no-update-notifier"
         command << "--env=#{env}" if env
         command
       end

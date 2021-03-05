@@ -1,12 +1,12 @@
 # frozen_string_literal: true
 
-require 'project_types/script/test_helper'
+require "project_types/script/test_helper"
 
 describe Script::Layers::Infrastructure::AssemblyScriptTaskRunner do
   include TestHelpers::FakeFS
 
   let(:ctx) { TestHelpers::FakeContext.new }
-  let(:script_id) { 'id' }
+  let(:script_id) { "id" }
   let(:script_name) { "foo" }
   let(:extension_point_config) do
     {
@@ -41,7 +41,7 @@ describe Script::Layers::Infrastructure::AssemblyScriptTaskRunner do
     subject { as_task_runner.build }
 
     it "should raise an error if no build script is defined" do
-      File.expects(:read).with('package.json').once.returns(JSON.generate(package_json.delete(:scripts)))
+      File.expects(:read).with("package.json").once.returns(JSON.generate(package_json.delete(:scripts)))
       assert_raises(Script::Layers::Infrastructure::Errors::BuildScriptNotFoundError) do
         subject
       end
@@ -49,17 +49,17 @@ describe Script::Layers::Infrastructure::AssemblyScriptTaskRunner do
 
     it "should raise an error if the build script is not compliant" do
       package_json[:scripts][:build] = ""
-      File.expects(:read).with('package.json').once.returns(JSON.generate(package_json))
+      File.expects(:read).with("package.json").once.returns(JSON.generate(package_json))
       assert_raises(Script::Layers::Infrastructure::Errors::InvalidBuildScriptError) do
         subject
       end
     end
 
     it "should raise an error if the generated web assembly is not found" do
-      File.expects(:read).with('package.json').once.returns(JSON.generate(package_json))
+      File.expects(:read).with("package.json").once.returns(JSON.generate(package_json))
       ctx
         .expects(:file_exist?)
-        .with('build/foo.wasm')
+        .with("build/foo.wasm")
         .once
         .returns(false)
 
@@ -67,36 +67,36 @@ describe Script::Layers::Infrastructure::AssemblyScriptTaskRunner do
         .expects(:capture2e)
         .with("npm run build")
         .once
-        .returns(['output', mock(success?: true)])
+        .returns(["output", mock(success?: true)])
 
       assert_raises(Script::Layers::Infrastructure::Errors::WebAssemblyBinaryNotFoundError) { subject }
     end
 
     it "should trigger the compilation process" do
       wasm = "some compiled code"
-      File.expects(:read).with('package.json').once.returns(JSON.generate(package_json))
-      File.expects(:read).with('build/foo.wasm').once.returns(wasm)
+      File.expects(:read).with("package.json").once.returns(JSON.generate(package_json))
+      File.expects(:read).with("build/foo.wasm").once.returns(wasm)
 
       ctx
         .expects(:capture2e)
         .with("npm run build")
         .once
-        .returns(['output', mock(success?: true)])
+        .returns(["output", mock(success?: true)])
 
       ctx
         .expects(:file_exist?)
-        .with('build/foo.wasm')
+        .with("build/foo.wasm")
         .once
         .returns(true)
 
-      ctx.expects('rm').with('build/foo.wasm').once
+      ctx.expects("rm").with("build/foo.wasm").once
 
       assert_equal wasm, subject
     end
 
     it "should raise error without command output on failure" do
-      output = 'error_output'
-      File.expects(:read).with('package.json').once.returns(JSON.generate(package_json))
+      output = "error_output"
+      File.expects(:read).with("package.json").once.returns(JSON.generate(package_json))
       File.expects(:read).never
       ctx
         .stubs(:capture2e)
@@ -206,7 +206,7 @@ describe Script::Layers::Infrastructure::AssemblyScriptTaskRunner do
 
     describe "when capture2e fails" do
       it "should raise error" do
-        msg = 'error message'
+        msg = "error message"
         ctx.expects(:capture2e).returns([msg, mock(success?: false)])
         assert_raises Script::Layers::Infrastructure::Errors::DependencyInstallError, msg do
           subject
@@ -223,18 +223,18 @@ describe Script::Layers::Infrastructure::AssemblyScriptTaskRunner do
         JSON.dump(
           {
             schemaVersions: {
-              example: { major: '1', minor: '0' },
+              example: { major: "1", minor: "0" },
             },
           },
         )
       end
 
       it "should return a proper metadata object" do
-        File.expects(:read).with('build/metadata.json').once.returns(metadata_json)
+        File.expects(:read).with("build/metadata.json").once.returns(metadata_json)
 
         ctx
           .expects(:file_exist?)
-          .with('build/metadata.json')
+          .with("build/metadata.json")
           .once
           .returns(true)
 

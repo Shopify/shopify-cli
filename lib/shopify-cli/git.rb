@@ -21,7 +21,7 @@ module ShopifyCli
       #   ShopifyCli::Git.sha
       #
       def sha(dir: Dir.pwd, ctx: Context.new)
-        rev_parse('HEAD', dir: dir, ctx: ctx)
+        rev_parse("HEAD", dir: dir, ctx: ctx)
       end
 
       ##
@@ -44,11 +44,11 @@ module ShopifyCli
       #
       def clone(repository, dest, ctx: Context.new)
         if Dir.exist?(dest)
-          ctx.abort(ctx.message('core.git.error.directory_exists'))
+          ctx.abort(ctx.message("core.git.error.directory_exists"))
         else
-          success_message = ctx.message('core.git.cloned', dest)
-          CLI::UI::Frame.open(ctx.message('core.git.cloning', repository, dest), success_text: success_message) do
-            clone_progress('clone', '--single-branch', repository, dest, ctx: ctx)
+          success_message = ctx.message("core.git.cloned", dest)
+          CLI::UI::Frame.open(ctx.message("core.git.cloning", repository, dest), success_text: success_message) do
+            clone_progress("clone", "--single-branch", repository, dest, ctx: ctx)
           end
         end
       end
@@ -69,11 +69,11 @@ module ShopifyCli
       #   branches = ShopifyCli::Git.branches(@ctx)
       #
       def branches(ctx)
-        output, status = ctx.capture2e('git', 'branch', '--list', '--format=%(refname:short)')
-        ctx.abort(ctx.message('core.git.error.no_branches_found')) unless status.success?
+        output, status = ctx.capture2e("git", "branch", "--list", "--format=%(refname:short)")
+        ctx.abort(ctx.message("core.git.error.no_branches_found")) unless status.success?
 
-        branches = if output == ''
-          ['master']
+        branches = if output == ""
+          ["master"]
         else
           output.split("\n")
         end
@@ -94,14 +94,14 @@ module ShopifyCli
       #   ShopifyCli::Git.init(@ctx)
       #
       def init(ctx)
-        output, status = ctx.capture2e('git', 'status')
+        output, status = ctx.capture2e("git", "status")
 
         unless status.success?
-          ctx.abort(ctx.message('core.git.error.repo_not_initiated'))
+          ctx.abort(ctx.message("core.git.error.repo_not_initiated"))
         end
 
-        if output.include?('No commits yet')
-          ctx.abort(ctx.message('core.git.error.no_commits_made'))
+        if output.include?("No commits yet")
+          ctx.abort(ctx.message("core.git.error.no_commits_made"))
         end
       end
 
@@ -115,18 +115,18 @@ module ShopifyCli
       end
 
       def rev_parse(*args, dir: nil, ctx: Context.new)
-        exec('rev-parse', *args, dir: dir, ctx: ctx)
+        exec("rev-parse", *args, dir: dir, ctx: ctx)
       end
 
       def clone_progress(*git_command, ctx:)
         CLI::UI::Progress.progress do |bar|
           msg = []
-          require 'open3'
+          require "open3"
 
-          success = Open3.popen3('git', *git_command, '--progress') do |_stdin, _stdout, stderr, thread|
+          success = Open3.popen3("git", *git_command, "--progress") do |_stdin, _stdout, stderr, thread|
             while (line = stderr.gets)
               msg << line.chomp
-              next unless line.strip.start_with?('Receiving objects:')
+              next unless line.strip.start_with?("Receiving objects:")
               percent = (line.match(/Receiving objects:\s+(\d+)/)[1].to_f / 100).round(2)
               bar.tick(set_percent: percent)
               next

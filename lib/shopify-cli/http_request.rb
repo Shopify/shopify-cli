@@ -1,4 +1,4 @@
-require 'net/http'
+require "net/http"
 
 module ShopifyCli
   class HttpRequest
@@ -18,7 +18,7 @@ module ShopifyCli
         http.use_ssl = true
 
         req.body = body unless body.nil?
-        req['Content-Type'] = 'application/json'
+        req["Content-Type"] = "application/json"
         headers.each { |header, value| req[header] = value }
         http.request(req)
       end

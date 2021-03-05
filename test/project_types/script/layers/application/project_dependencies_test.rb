@@ -6,8 +6,8 @@ require "project_types/script/layers/infrastructure/fake_extension_point_reposit
 describe Script::Layers::Application::ProjectDependencies do
   include TestHelpers::FakeFS
 
-  let(:script_name) { 'name' }
-  let(:extension_point_type) { 'discount' }
+  let(:script_name) { "name" }
+  let(:extension_point_type) { "discount" }
   let(:extension_point_repository) { Script::Layers::Infrastructure::FakeExtensionPointRepository.new }
   let(:extension_point) { extension_point_repository.get_extension_point(extension_point_type) }
   let(:task_runner) { stub }
@@ -17,7 +17,7 @@ describe Script::Layers::Application::ProjectDependencies do
     Script::Layers::Infrastructure::TaskRunner.stubs(:for).returns(task_runner)
   end
 
-  describe '.install' do
+  describe ".install" do
     subject do
       capture_io do
         Script::Layers::Application::ProjectDependencies
@@ -50,7 +50,7 @@ describe Script::Layers::Application::ProjectDependencies do
       end
 
       describe "when dependency installer fails" do
-        let(:error_message) { 'some message' }
+        let(:error_message) { "some message" }
         before do
           task_runner.stubs(:install_dependencies)
             .raises(Script::Layers::Infrastructure::Errors::DependencyInstallError, error_message)

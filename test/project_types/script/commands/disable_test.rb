@@ -9,10 +9,10 @@ module Script
         super
         @cmd = Disable
         @cmd.ctx = @context
-        @ep_type = 'discount'
-        @script_name = 'script'
-        @api_key = 'apikey'
-        @shop_domain = 'my-test-shop.myshopify.com'
+        @ep_type = "discount"
+        @script_name = "script"
+        @api_key = "apikey"
+        @shop_domain = "my-test-shop.myshopify.com"
         @script_project = TestHelpers::FakeScriptProject.new(
           language: @language,
           extension_point_type: @ep_type,
@@ -43,7 +43,7 @@ module Script
       def test_help
         ShopifyCli::Context
           .expects(:message)
-          .with('script.disable.help', ShopifyCli::TOOL_NAME)
+          .with("script.disable.help", ShopifyCli::TOOL_NAME)
         Script::Commands::Disable.help
       end
 

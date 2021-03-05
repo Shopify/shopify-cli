@@ -1,13 +1,13 @@
-require 'json'
-require 'net/http'
-require 'time'
-require 'rbconfig'
+require "json"
+require "net/http"
+require "time"
+require "rbconfig"
 
 module ShopifyCli
   module Core
     module Monorail
-      ENDPOINT_URI = URI.parse('https://monorail-edge.shopifycloud.com/v1/produce')
-      INVOCATIONS_SCHEMA = 'app_cli_command/5.0'
+      ENDPOINT_URI = URI.parse("https://monorail-edge.shopifycloud.com/v1/produce")
+      INVOCATIONS_SCHEMA = "app_cli_command/5.0"
 
       # Extra hash of data that will be sent in the payload
       @metadata = {}
@@ -46,25 +46,25 @@ module ShopifyCli
 
         # we only want to send Monorail events in production or when explicitly developing
         def enabled?
-          Context.new.system? || ENV['MONORAIL_REAL_EVENTS'] == '1'
+          Context.new.system? || ENV["MONORAIL_REAL_EVENTS"] == "1"
         end
 
         def consented?
-          ShopifyCli::Config.get_bool('analytics', 'enabled')
+          ShopifyCli::Config.get_bool("analytics", "enabled")
         end
 
         def prompt_for_consent
           return unless enabled?
-          return if ShopifyCli::Config.get_section('analytics').key?('enabled')
-          msg = Context.message('core.monorail.consent_prompt')
+          return if ShopifyCli::Config.get_section("analytics").key?("enabled")
+          msg = Context.message("core.monorail.consent_prompt")
           opt = CLI::UI::Prompt.confirm(msg)
-          ShopifyCli::Config.set('analytics', 'enabled', opt)
+          ShopifyCli::Config.set("analytics", "enabled", opt)
         end
 
         def send_event(start_time, commands, args, err = nil)
           end_time = now_in_milliseconds
           headers = {
-            'Content-Type': 'application/json; charset=utf-8',
+            'Content-Type': "application/json; charset=utf-8",
             'X-Monorail-Edge-Event-Created-At-Ms': start_time.to_s,
             'X-Monorail-Edge-Event-Sent-At-Ms': end_time.to_s,
           }
@@ -74,7 +74,7 @@ module ShopifyCli
               ENDPOINT_URI.port,
               # timeouts for opening a connection, reading, writing (in seconds)
               open_timeout: 0.2, read_timeout: 0.2, write_timeout: 0.2,
-              use_ssl: ENDPOINT_URI.scheme == 'https'
+              use_ssl: ENDPOINT_URI.scheme == "https"
             ) do |http|
               payload = build_payload(start_time, end_time, commands, args, err)
               post = Net::HTTP::Post.new(ENDPOINT_URI.request_uri, headers)
@@ -91,8 +91,8 @@ module ShopifyCli
             schema_id: INVOCATIONS_SCHEMA,
             payload: {
               project_type: Project.current_project_type.to_s,
-              command: commands.join(' '),
-              args: args.join(' '),
+              command: commands.join(" "),
+              args: args.join(" "),
               time_start: start_time,
               time_end: end_time,
               total_time: end_time - start_time,
@@ -108,7 +108,7 @@ module ShopifyCli
               if Project.has_current?
                 project = Project.current(force_reload: true)
                 payload[:api_key] = project.env&.api_key
-                payload[:partner_id] = project.config['organization_id']
+                payload[:partner_id] = project.config["organization_id"]
               end
               payload[:metadata] = JSON.dump(metadata) unless metadata.empty?
             end,

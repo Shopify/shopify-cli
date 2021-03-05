@@ -7,14 +7,14 @@ module Extension
       include ExtensionTestHelpers::TestExtensionSetup
 
       def setup_temp_project(
-        api_key: 'TEST_KEY',
-        api_secret: 'TEST_SECRET',
-        title: 'Test',
+        api_key: "TEST_KEY",
+        api_secret: "TEST_SECRET",
+        title: "Test",
         type_identifier: @test_extension_type.identifier,
         registration_id: 55
       )
 
-        @context = TestHelpers::FakeContext.new(root: '/fake/root')
+        @context = TestHelpers::FakeContext.new(root: "/fake/root")
         @api_key = api_key
         @api_secret = api_secret
         @title = title

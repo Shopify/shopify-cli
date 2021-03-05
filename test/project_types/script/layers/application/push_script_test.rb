@@ -7,16 +7,16 @@ require "project_types/script/layers/infrastructure/fake_push_package_repository
 describe Script::Layers::Application::PushScript do
   include TestHelpers::FakeFS
 
-  let(:compiled_type) { 'wasm' }
-  let(:language) { 'AssemblyScript' }
-  let(:api_key) { 'api_key' }
+  let(:compiled_type) { "wasm" }
+  let(:language) { "AssemblyScript" }
+  let(:api_key) { "api_key" }
   let(:force) { true }
   let(:use_msgpack) { true }
-  let(:extension_point_type) { 'discount' }
-  let(:metadata) { Script::Layers::Domain::Metadata.new('1', '0', use_msgpack) }
-  let(:schema_minor_version) { '0' }
-  let(:script_name) { 'name' }
-  let(:description) { 'my description' }
+  let(:extension_point_type) { "discount" }
+  let(:metadata) { Script::Layers::Domain::Metadata.new("1", "0", use_msgpack) }
+  let(:schema_minor_version) { "0" }
+  let(:script_name) { "name" }
+  let(:description) { "my description" }
   let(:project) do
     TestHelpers::FakeScriptProject.new(
       language: language,
@@ -28,7 +28,7 @@ describe Script::Layers::Application::PushScript do
   end
   let(:push_package_repository) { Script::Layers::Infrastructure::FakePushPackageRepository.new }
   let(:extension_point_repository) { Script::Layers::Infrastructure::FakeExtensionPointRepository.new }
-  let(:task_runner) { stub(compiled_type: 'wasm', metadata: metadata) }
+  let(:task_runner) { stub(compiled_type: "wasm", metadata: metadata) }
   let(:ep) { extension_point_repository.get_extension_point(extension_point_type) }
 
   before do
@@ -44,16 +44,16 @@ describe Script::Layers::Application::PushScript do
       extension_point_type: extension_point_type,
       script_name: script_name,
       description: description,
-      script_content: 'content',
+      script_content: "content",
       compiled_type: compiled_type,
       metadata: metadata
     )
   end
 
-  describe '.call' do
+  describe ".call" do
     subject { Script::Layers::Application::PushScript.call(ctx: @context, force: force) }
 
-    it 'should prepare and push script' do
+    it "should prepare and push script" do
       script_service_instance = Script::Layers::Infrastructure::ScriptService.new(ctx: @context)
       Script::Layers::Application::ProjectDependencies
         .expects(:install).with(ctx: @context, task_runner: task_runner)

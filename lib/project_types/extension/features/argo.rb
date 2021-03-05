@@ -1,7 +1,7 @@
 # frozen_string_literal: true
-require 'base64'
-require 'shopify_cli'
-require 'semantic/semantic'
+require "base64"
+require "shopify_cli"
+require "semantic/semantic"
 
 module Extension
   module Features
@@ -31,19 +31,19 @@ module Extension
 
       def config(context)
         js_system = ShopifyCli::JsSystem.new(ctx: context)
-        if js_system.package_manager == 'yarn'
+        if js_system.package_manager == "yarn"
           run_yarn_install(context, js_system)
           run_yarn_run_script(context, js_system)
         end
         filepath = File.join(context.root, SCRIPT_PATH)
-        context.abort(context.message('features.argo.missing_file_error')) unless File.exist?(filepath)
+        context.abort(context.message("features.argo.missing_file_error")) unless File.exist?(filepath)
         begin
           {
             renderer_version: extract_argo_renderer_version(context),
             serialized_script: Base64.strict_encode64(File.read(filepath).chomp),
           }
         rescue StandardError
-          context.abort(context.message('features.argo.script_prepare_error'))
+          context.abort(context.message("features.argo.script_prepare_error"))
         end
       end
 
@@ -53,12 +53,12 @@ module Extension
         result = run_list_command(context)
         found_version = find_version_number(context, result)
         context.abort(
-          context.message('features.argo.dependencies.argo_renderer_package_invalid_version_error')
+          context.message("features.argo.dependencies.argo_renderer_package_invalid_version_error")
         ) if found_version.nil?
         ::Semantic::Version.new(found_version).to_s
       rescue ArgumentError
         context.abort(
-          context.message('features.argo.dependencies.argo_renderer_package_invalid_version_error')
+          context.message("features.argo.dependencies.argo_renderer_package_invalid_version_error")
         )
       end
 
@@ -70,10 +70,10 @@ module Extension
         if found_package.nil?
           error = "'#{renderer_package_name}' not found."
           context.abort(
-            context.message('features.argo.dependencies.argo_missing_renderer_package_error', error)
+            context.message("features.argo.dependencies.argo_missing_renderer_package_error", error)
           )
         end
-        found_package.split('@')[2]&.strip
+        found_package.split("@")[2]&.strip
       end
 
       def run_list_command(context)
@@ -84,7 +84,7 @@ module Extension
           capture_response: true
         )
         context.abort(
-          context.message('features.argo.dependencies.argo_missing_renderer_package_error', error)
+          context.message("features.argo.dependencies.argo_missing_renderer_package_error", error)
         ) unless status.success?
         result
       end
@@ -97,7 +97,7 @@ module Extension
         )
 
         context.abort(
-          context.message('features.argo.dependencies.yarn_install_error', error)
+          context.message("features.argo.dependencies.yarn_install_error", error)
         ) unless status.success?
       end
 
@@ -109,7 +109,7 @@ module Extension
         )
 
         context.abort(
-          context.message('features.argo.dependencies.yarn_run_script_error', error)
+          context.message("features.argo.dependencies.yarn_run_script_error", error)
         ) unless status.success?
       end
     end

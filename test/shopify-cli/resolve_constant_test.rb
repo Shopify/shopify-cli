@@ -10,12 +10,12 @@ module ShopifyCli
 
     def test_handles_seperators_correctly
       assert_equal OpenStruct, ResolveConstant.call(:open_struct).value
-      assert_equal OpenStruct, ResolveConstant.call('open-struct').value
+      assert_equal OpenStruct, ResolveConstant.call("open-struct").value
     end
 
     def test_traverse_namespace
-      assert_equal ::MiniTest::Test, ResolveConstant.call('mini_test/test').value
-      assert_equal ::MiniTest::Test, ResolveConstant.call('mini_test::test').value
+      assert_equal ::MiniTest::Test, ResolveConstant.call("mini_test/test").value
+      assert_equal ::MiniTest::Test, ResolveConstant.call("mini_test::test").value
     end
   end
 end

@@ -8,7 +8,7 @@ module Extension
 
         def stub_get_app(api_key:, app:)
           stub_partner_req(
-            'get_app_by_api_key',
+            "get_app_by_api_key",
             variables: {
               api_key: api_key,
             },

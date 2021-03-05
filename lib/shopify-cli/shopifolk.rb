@@ -5,10 +5,10 @@ module ShopifyCli
   # The Shopifolk Feature flag will persist between runs so if the flag is enabled or disabled,
   # it will still be in that same state until the next class invocation.
   class Shopifolk
-    GCLOUD_CONFIG_FILE = File.expand_path('~/.config/gcloud/configurations/config_default')
-    DEV_PATH = '/opt/dev'
-    SECTION = 'core'
-    FEATURE_NAME = 'shopifolk'
+    GCLOUD_CONFIG_FILE = File.expand_path("~/.config/gcloud/configurations/config_default")
+    DEV_PATH = "/opt/dev"
+    SECTION = "core"
+    FEATURE_NAME = "shopifolk"
 
     class << self
       attr_writer :acting_as_shopify_organization
@@ -25,7 +25,7 @@ module ShopifyCli
       #     ShopifyCli::Shopifolk.check
       #
       def check
-        return false unless ShopifyCli::Config.get_bool('shopifolk-beta', 'enabled')
+        return false unless ShopifyCli::Config.get_bool("shopifolk-beta", "enabled")
 
         ShopifyCli::Shopifolk.new.shopifolk?
       end
@@ -35,7 +35,7 @@ module ShopifyCli
       end
 
       def acting_as_shopify_organization?
-        !!@acting_as_shopify_organization || (Project.has_current? && Project.current.config['shopify_organization'])
+        !!@acting_as_shopify_organization || (Project.has_current? && Project.current.config["shopify_organization"])
       end
 
       def reset
@@ -52,7 +52,7 @@ module ShopifyCli
     # a valid google cloud config file with email ending in "@shopify.com"
     #
     def shopifolk?
-      return false unless ShopifyCli::Config.get_bool('shopifolk-beta', 'enabled')
+      return false unless ShopifyCli::Config.get_bool("shopifolk-beta", "enabled")
       return true if Feature.enabled?(FEATURE_NAME)
 
       if shopifolk_by_gcloud? && shopifolk_by_dev?
@@ -67,7 +67,7 @@ module ShopifyCli
     private
 
     def shopifolk_by_gcloud?
-      ini&.dig("[#{SECTION}]", 'account')&.match?(/@shopify.com\z/)
+      ini&.dig("[#{SECTION}]", "account")&.match?(/@shopify.com\z/)
     end
 
     def shopifolk_by_dev?

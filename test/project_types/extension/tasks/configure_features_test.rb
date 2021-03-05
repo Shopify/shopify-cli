@@ -22,7 +22,7 @@ module Extension
 
       def test_fails_when_surface_area_is_unknown
         result = ConfigureFeatures
-          .call(build_set_of_specification_attributes(surface_area: 'unknown'))
+          .call(build_set_of_specification_attributes(surface_area: "unknown"))
         assert_predicate(result, :failure?)
         assert_kind_of(ConfigureFeatures::UnknownSurfaceArea, result.error)
       end
@@ -37,40 +37,40 @@ module Extension
       end
 
       def test_correct_git_template_for_admin_extensions
-        set_of_attributes = build_set_of_specification_attributes(surface_area: 'admin')
+        set_of_attributes = build_set_of_specification_attributes(surface_area: "admin")
         result = ConfigureFeatures.call(set_of_attributes)
         assert_equal(
-          'https://github.com/Shopify/argo-admin-template.git',
+          "https://github.com/Shopify/argo-admin-template.git",
           result.value.dig(0, :features, :argo, :git_template)
         )
       end
 
       def test_correct_renderer_package_name_for_admin_extensions
-        set_of_attributes = build_set_of_specification_attributes(surface_area: 'admin')
+        set_of_attributes = build_set_of_specification_attributes(surface_area: "admin")
         result = ConfigureFeatures.call(set_of_attributes)
-        assert_equal '@shopify/argo-admin', result.value.dig(0, :features, :argo, :renderer_package_name)
+        assert_equal "@shopify/argo-admin", result.value.dig(0, :features, :argo, :renderer_package_name)
       end
 
       def test_correct_git_template_for_checkout_extensions
-        set_of_attributes = build_set_of_specification_attributes(surface_area: 'checkout')
+        set_of_attributes = build_set_of_specification_attributes(surface_area: "checkout")
         result = ConfigureFeatures.call(set_of_attributes)
         assert_equal(
-          'https://github.com/Shopify/argo-checkout-template.git',
+          "https://github.com/Shopify/argo-checkout-template.git",
           result.value.dig(0, :features, :argo, :git_template)
         )
       end
 
       def test_correct_renderer_package_name_for_checkout_extensions
-        set_of_attributes = build_set_of_specification_attributes(surface_area: 'checkout')
+        set_of_attributes = build_set_of_specification_attributes(surface_area: "checkout")
         result = ConfigureFeatures.call(set_of_attributes)
-        assert_equal '@shopify/argo-checkout', result.value.dig(0, :features, :argo, :renderer_package_name)
+        assert_equal "@shopify/argo-checkout", result.value.dig(0, :features, :argo, :renderer_package_name)
       end
 
       private
 
-      def build_set_of_specification_attributes(surface_area: 'admin')
+      def build_set_of_specification_attributes(surface_area: "admin")
         [{
-          identifier: 'test_extension',
+          identifier: "test_extension",
           features: {
             argo: {
               surface_area: surface_area,

@@ -1,4 +1,4 @@
-require 'shopify_cli'
+require "shopify_cli"
 
 module ShopifyCli
   module Tasks
@@ -35,45 +35,45 @@ module ShopifyCli
         @organization ||= if !organization_id.nil?
           org = ShopifyCli::PartnersAPI::Organizations.fetch(ctx, id: organization_id)
           if org.nil?
-            ctx.puts(ctx.message('core.tasks.select_org_and_shop.error.authentication_issue', ShopifyCli::TOOL_NAME))
-            ctx.abort(ctx.message('core.tasks.select_org_and_shop.error.organization_not_found'))
+            ctx.puts(ctx.message("core.tasks.select_org_and_shop.error.authentication_issue", ShopifyCli::TOOL_NAME))
+            ctx.abort(ctx.message("core.tasks.select_org_and_shop.error.organization_not_found"))
           end
           org
         elsif organizations.count == 0
-          ctx.puts(ctx.message('core.tasks.select_org_and_shop.error.partners_notice'))
-          ctx.puts(ctx.message('core.tasks.select_org_and_shop.authentication_issue', ShopifyCli::TOOL_NAME))
-          ctx.abort(ctx.message('core.tasks.select_org_and_shop.error.no_organizations'))
+          ctx.puts(ctx.message("core.tasks.select_org_and_shop.error.partners_notice"))
+          ctx.puts(ctx.message("core.tasks.select_org_and_shop.authentication_issue", ShopifyCli::TOOL_NAME))
+          ctx.abort(ctx.message("core.tasks.select_org_and_shop.error.no_organizations"))
         elsif organizations.count == 1
           org = organizations.first
-          ctx.puts(ctx.message('core.tasks.select_org_and_shop.organization', org['businessName'], org['id']))
+          ctx.puts(ctx.message("core.tasks.select_org_and_shop.organization", org["businessName"], org["id"]))
           org
         else
-          org_id = CLI::UI::Prompt.ask(ctx.message('core.tasks.select_org_and_shop.organization_select')) do |handler|
+          org_id = CLI::UI::Prompt.ask(ctx.message("core.tasks.select_org_and_shop.organization_select")) do |handler|
             organizations.each do |o|
-              handler.option(ctx.message('core.partners_api.org_name_and_id', o['businessName'], o['id'])) { o['id'] }
+              handler.option(ctx.message("core.partners_api.org_name_and_id", o["businessName"], o["id"])) { o["id"] }
             end
           end
-          organizations.find { |o| o['id'] == org_id }
+          organizations.find { |o| o["id"] == org_id }
         end
       end
 
       def get_shop_domain(organization)
-        valid_stores = organization['stores'].select do |store|
-          store['transferDisabled'] == true || store['convertableToPartnerTest'] == true
+        valid_stores = organization["stores"].select do |store|
+          store["transferDisabled"] == true || store["convertableToPartnerTest"] == true
         end
 
         if valid_stores.count == 0
-          ctx.puts(ctx.message('core.tasks.select_org_and_shop.error.no_development_stores'))
-          ctx.puts(ctx.message('core.tasks.select_org_and_shop.create_store', organization['id']))
-          ctx.puts(ctx.message('core.tasks.select_org_and_shop.authentication_issue', ShopifyCli::TOOL_NAME))
+          ctx.puts(ctx.message("core.tasks.select_org_and_shop.error.no_development_stores"))
+          ctx.puts(ctx.message("core.tasks.select_org_and_shop.create_store", organization["id"]))
+          ctx.puts(ctx.message("core.tasks.select_org_and_shop.authentication_issue", ShopifyCli::TOOL_NAME))
         elsif valid_stores.count == 1
-          domain = valid_stores.first['shopDomain']
-          ctx.puts(ctx.message('core.tasks.select_org_and_shop.development_store', domain))
+          domain = valid_stores.first["shopDomain"]
+          ctx.puts(ctx.message("core.tasks.select_org_and_shop.development_store", domain))
           domain
         else
           CLI::UI::Prompt.ask(
-            ctx.message('core.tasks.select_org_and_shop.development_store_select'),
-            options: valid_stores.map { |s| s['shopDomain'] }
+            ctx.message("core.tasks.select_org_and_shop.development_store_select"),
+            options: valid_stores.map { |s| s["shopDomain"] }
           )
         end
       end

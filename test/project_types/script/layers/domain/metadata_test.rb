@@ -44,7 +44,7 @@ describe Script::Layers::Domain::Metadata do
     describe "with missing schemaVersions" do
       it "should raise an appropriate error" do
         assert_raises(::Script::Layers::Domain::Errors::MetadataValidationError) do
-          Script::Layers::Domain::Metadata.create_from_json(ctx, '{}')
+          Script::Layers::Domain::Metadata.create_from_json(ctx, "{}")
         end
       end
     end

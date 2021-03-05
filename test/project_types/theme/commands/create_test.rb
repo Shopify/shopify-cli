@@ -1,5 +1,5 @@
 # frozen_string_literal: true
-require 'project_types/theme/test_helper'
+require "project_types/theme/test_helper"
 
 module Theme
   module Commands
@@ -17,20 +17,20 @@ module Theme
           context = ShopifyCli::Context.new
           Theme::Forms::Create.expects(:ask)
             .with(context, [], {})
-            .returns(Theme::Forms::Create.new(context, [], { password: 'boop',
-                                                             store: 'shop.myshopify.com',
-                                                             title: 'My Theme',
-                                                             name: 'my_theme',
+            .returns(Theme::Forms::Create.new(context, [], { password: "boop",
+                                                             store: "shop.myshopify.com",
+                                                             title: "My Theme",
+                                                             name: "my_theme",
                                                              env: nil }))
           Themekit.expects(:create)
-            .with(context, password: 'boop', store: 'shop.myshopify.com', name: 'my_theme', env: nil)
+            .with(context, password: "boop", store: "shop.myshopify.com", name: "my_theme", env: nil)
             .returns(true)
-          context.expects(:done).with(context.message('theme.create.info.created',
-            'my_theme',
-            'shop.myshopify.com',
-            File.join(context.root, 'my_theme')))
+          context.expects(:done).with(context.message("theme.create.info.created",
+            "my_theme",
+            "shop.myshopify.com",
+            File.join(context.root, "my_theme")))
 
-          Theme::Commands::Create.new(context).call([], 'create')
+          Theme::Commands::Create.new(context).call([], "create")
           assert_equal SHOPIFYCLI_FILE, File.read(".shopify-cli.yml")
         end
       end
@@ -39,23 +39,23 @@ module Theme
         FakeFS do
           context = ShopifyCli::Context.new
           Theme::Forms::Create.expects(:ask)
-            .with(context, [], { env: 'test' })
-            .returns(Theme::Forms::Create.new(context, [], { password: 'boop',
-                                                             store: 'shop.myshopify.com',
-                                                             title: 'My Theme',
-                                                             name: 'my_theme',
-                                                             env: 'test' }))
+            .with(context, [], { env: "test" })
+            .returns(Theme::Forms::Create.new(context, [], { password: "boop",
+                                                             store: "shop.myshopify.com",
+                                                             title: "My Theme",
+                                                             name: "my_theme",
+                                                             env: "test" }))
           Themekit.expects(:create)
-            .with(context, password: 'boop', store: 'shop.myshopify.com', name: 'my_theme', env: 'test')
+            .with(context, password: "boop", store: "shop.myshopify.com", name: "my_theme", env: "test")
             .returns(true)
-          context.expects(:done).with(context.message('theme.create.info.created',
-            'my_theme',
-            'shop.myshopify.com',
-            File.join(context.root, 'my_theme')))
+          context.expects(:done).with(context.message("theme.create.info.created",
+            "my_theme",
+            "shop.myshopify.com",
+            File.join(context.root, "my_theme")))
 
           command = Theme::Commands::Create.new(context)
-          command.options.flags[:env] = 'test'
-          command.call([], 'create')
+          command.options.flags[:env] = "test"
+          command.call([], "create")
 
           assert_equal SHOPIFYCLI_FILE, File.read(".shopify-cli.yml")
         end

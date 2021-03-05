@@ -1,4 +1,4 @@
-require 'shopify_cli'
+require "shopify_cli"
 
 module Rails
   module Commands
@@ -9,7 +9,7 @@ module Rails
       end
 
       def self.help
-        ShopifyCli::Context.message('rails.open.help', ShopifyCli::TOOL_NAME)
+        ShopifyCli::Context.message("rails.open.help", ShopifyCli::TOOL_NAME)
       end
     end
   end

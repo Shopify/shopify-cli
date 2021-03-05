@@ -23,7 +23,7 @@ module Extension
           directory = File.dirname(filepath)
 
           FileUtils.mkdir_p(directory)
-          File.open(filepath, 'w+') { |file| file.puts(script) }
+          File.open(filepath, "w+") { |file| file.puts(script) }
           yield
         ensure
           FileUtils.rm_r(directory)

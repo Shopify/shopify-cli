@@ -1,6 +1,6 @@
 # frozen_string_literal: true
-require 'test_helper'
-require 'project_types/extension/extension_test_helpers'
+require "test_helper"
+require "project_types/extension/extension_test_helpers"
 
 module Extension
   class ExtensionProjectTest < MiniTest::Test
@@ -14,15 +14,15 @@ module Extension
       ExtensionProject.write_cli_file(context: new_context, type: @test_extension_type.identifier)
       ::ShopifyCli::Project.clear
 
-      assert File.exist?('.shopify-cli.yml')
+      assert File.exist?(".shopify-cli.yml")
       assert_equal :extension, ShopifyCli::Project.current_project_type
       assert_equal @test_extension_type.identifier, ExtensionProject.current.extension_type_identifier
     end
 
     def test_write_env_file_creates_env_file
-      api_key = '1234'
-      api_secret = '5678'
-      title = 'Test Title'
+      api_key = "1234"
+      api_secret = "5678"
+      title = "Test Title"
       registration_id = 55
 
       new_context = TestHelpers::FakeContext.new(root: Dir.mktmpdir)
@@ -37,7 +37,7 @@ module Extension
         registration_id: registration_id
       )
 
-      assert File.exist?('.env')
+      assert File.exist?(".env")
       project = ExtensionProject.current
       assert_equal api_key, project.app.api_key
       assert_equal api_secret, project.app.secret
@@ -46,19 +46,19 @@ module Extension
     end
 
     def test_ensures_registered_is_true_only_if_api_key_api_secret_and_registration_id_are_present
-      setup_temp_project(api_key: '', api_secret: '', title: 'title', registration_id: nil)
+      setup_temp_project(api_key: "", api_secret: "", title: "title", registration_id: nil)
       refute @project.registered?
 
-      setup_temp_project(api_key: '1234', api_secret: '', title: 'title', registration_id: nil)
+      setup_temp_project(api_key: "1234", api_secret: "", title: "title", registration_id: nil)
       refute @project.registered?
 
-      setup_temp_project(api_key: '1234', api_secret: '456', title: 'title', registration_id: nil)
+      setup_temp_project(api_key: "1234", api_secret: "456", title: "title", registration_id: nil)
       refute @project.registered?
 
-      setup_temp_project(api_key: '', api_secret: '', title: 'title', registration_id: 5)
+      setup_temp_project(api_key: "", api_secret: "", title: "title", registration_id: 5)
       refute @project.registered?
 
-      setup_temp_project(api_key: '1234', api_secret: '456', title: 'title', registration_id: 55)
+      setup_temp_project(api_key: "1234", api_secret: "456", title: "title", registration_id: 55)
       assert @project.registered?
     end
 
@@ -94,7 +94,7 @@ module Extension
       setup_temp_project(registration_id: 0)
       refute @project.registration_id?
 
-      setup_temp_project(registration_id: 'wrong')
+      setup_temp_project(registration_id: "wrong")
       refute @project.registration_id?
     end
   end

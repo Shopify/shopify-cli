@@ -1,5 +1,5 @@
 # frozen_string_literal: true
-require 'project_types/node/test_helper'
+require "project_types/node/test_helper"
 
 module Node
   module Commands
@@ -12,10 +12,10 @@ module Node
 
         ShopifyCli::Project.stubs(:has_current?).returns(false)
         ShopifyCli::Commands::Connect.any_instance.expects(:default_connect)
-          .with('node')
-          .returns('node-app')
+          .with("node")
+          .returns("node-app")
         context.expects(:done)
-          .with(context.message('node.connect.connected', 'node-app'))
+          .with(context.message("node.connect.connected", "node-app"))
 
         Node::Commands::Connect.new(context).call
       end
@@ -24,12 +24,12 @@ module Node
         context = ShopifyCli::Context.new
 
         context.expects(:puts)
-          .with(context.message('node.connect.production_warning'))
+          .with(context.message("node.connect.production_warning"))
         ShopifyCli::Commands::Connect.any_instance.expects(:default_connect)
-          .with('node')
-          .returns('node-app')
+          .with("node")
+          .returns("node-app")
         context.expects(:done)
-          .with(context.message('node.connect.connected', 'node-app'))
+          .with(context.message("node.connect.connected", "node-app"))
 
         Node::Commands::Connect.new(context).call
       end

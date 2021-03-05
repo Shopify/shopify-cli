@@ -1,25 +1,25 @@
-require 'uri'
+require "uri"
 
 module Rails
   module Forms
     class Create < ShopifyCli::Form
       attr_accessor :name
       flag_arguments :title, :organization_id, :shop_domain, :type, :db
-      VALID_DB_TYPES = ['sqlite3',
-                        'mysql',
-                        'postgresql',
-                        'sqlite3',
-                        'oracle',
-                        'frontbase',
-                        'ibm_db',
-                        'sqlserver',
-                        'jdbcmysql',
-                        'jdbcsqlite3',
-                        'jdbcpostgresql',
-                        'jdbc']
+      VALID_DB_TYPES = ["sqlite3",
+                        "mysql",
+                        "postgresql",
+                        "sqlite3",
+                        "oracle",
+                        "frontbase",
+                        "ibm_db",
+                        "sqlserver",
+                        "jdbcmysql",
+                        "jdbcsqlite3",
+                        "jdbcpostgresql",
+                        "jdbc"]
 
       def ask
-        self.title ||= CLI::UI::Prompt.ask(ctx.message('rails.forms.create.app_name'))
+        self.title ||= CLI::UI::Prompt.ask(ctx.message("rails.forms.create.app_name"))
         self.type = ask_type
         self.name = self.title.downcase.split(" ").join("_")
         res = ShopifyCli::Tasks::SelectOrgAndShop.call(ctx, organization_id: organization_id, shop_domain: shop_domain)
@@ -32,24 +32,24 @@ module Rails
 
       def ask_type
         if type.nil?
-          return CLI::UI::Prompt.ask(ctx.message('rails.forms.create.app_type.select')) do |handler|
-            handler.option(ctx.message('rails.forms.create.app_type.select_public')) { 'public' }
-            handler.option(ctx.message('rails.forms.create.app_type.select_custom')) { 'custom' }
+          return CLI::UI::Prompt.ask(ctx.message("rails.forms.create.app_type.select")) do |handler|
+            handler.option(ctx.message("rails.forms.create.app_type.select_public")) { "public" }
+            handler.option(ctx.message("rails.forms.create.app_type.select_custom")) { "custom" }
           end
         end
 
         unless ShopifyCli::Tasks::CreateApiClient::VALID_APP_TYPES.include?(type)
-          ctx.abort(ctx.message('rails.forms.create.error.invalid_app_type', type))
+          ctx.abort(ctx.message("rails.forms.create.error.invalid_app_type", type))
         end
-        ctx.puts(ctx.message('rails.forms.create.app_type.selected', type))
+        ctx.puts(ctx.message("rails.forms.create.app_type.selected", type))
         type
       end
 
       def ask_db
         if db.nil?
-          return 'sqlite3' unless CLI::UI::Prompt.confirm(ctx.message('rails.forms.create.db.want_select'),
+          return "sqlite3" unless CLI::UI::Prompt.confirm(ctx.message("rails.forms.create.db.want_select"),
             default: false)
-          @db = CLI::UI::Prompt.ask(ctx.message('rails.forms.create.db.select')) do |handler|
+          @db = CLI::UI::Prompt.ask(ctx.message("rails.forms.create.db.select")) do |handler|
             VALID_DB_TYPES.each do |db_type|
               handler.option(ctx.message("rails.forms.create.db.select_#{db_type}")) { db_type }
             end
@@ -57,9 +57,9 @@ module Rails
         end
 
         unless VALID_DB_TYPES.include?(db)
-          ctx.abort(ctx.message('rails.forms.create.error.invalid_db_type', db))
+          ctx.abort(ctx.message("rails.forms.create.error.invalid_db_type", db))
         end
-        ctx.puts(ctx.message('rails.forms.create.db.selected', db))
+        ctx.puts(ctx.message("rails.forms.create.db.selected", db))
         db
       end
     end

@@ -1,5 +1,5 @@
-require 'test_helper'
-require 'shopify-cli/http_request'
+require "test_helper"
+require "shopify-cli/http_request"
 
 module ShopifyCli
   class HttpRequestTest < MiniTest::Test
@@ -12,11 +12,11 @@ module ShopifyCli
         .with(
           body: '{"query":"body content","variables":{"var_name":"var_value"}}',
           headers: {
-            'Accept' => '*/*',
-            'Accept-Encoding' => 'gzip;q=1.0,deflate;q=0.6,identity;q=0.3',
-            'Content-Type' => 'application/json',
-            'User-Agent' => 'Ruby',
-            'Header-Name' => 'header_value',
+            "Accept" => "*/*",
+            "Accept-Encoding" => "gzip;q=1.0,deflate;q=0.6,identity;q=0.3",
+            "Content-Type" => "application/json",
+            "User-Agent" => "Ruby",
+            "Header-Name" => "header_value",
           }
         )
 
@@ -34,11 +34,11 @@ module ShopifyCli
         .with(
           body: '{"query":"body content","variables":{"var_name":"var_value"}}',
           headers: {
-            'Accept' => '*/*',
-            'Accept-Encoding' => 'gzip;q=1.0,deflate;q=0.6,identity;q=0.3',
-            'Content-Type' => 'application/json',
-            'User-Agent' => 'Ruby',
-            'Header-Name' => 'header_value',
+            "Accept" => "*/*",
+            "Accept-Encoding" => "gzip;q=1.0,deflate;q=0.6,identity;q=0.3",
+            "Content-Type" => "application/json",
+            "User-Agent" => "Ruby",
+            "Header-Name" => "header_value",
           }
         )
 

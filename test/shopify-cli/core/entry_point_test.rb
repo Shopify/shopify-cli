@@ -1,4 +1,4 @@
-require 'test_helper'
+require "test_helper"
 
 module ShopifyCli
   module Core
@@ -10,7 +10,7 @@ module ShopifyCli
 
         Core::Executor.any_instance.expects(:call).with(
           ShopifyCli::Commands::Help,
-          'help',
+          "help",
           args.dup[1..-1]
         )
         EntryPoint.call(args, @context)

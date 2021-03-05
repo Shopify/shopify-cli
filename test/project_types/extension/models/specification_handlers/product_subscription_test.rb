@@ -1,5 +1,5 @@
 # frozen_string_literal: true
-require 'test_helper'
+require "test_helper"
 
 module Extension
   module Models
@@ -8,12 +8,12 @@ module Extension
         def setup
           super
           ShopifyCli::ProjectType.load_type(:extension)
-          @identifier = 'PRODUCT_SUBSCRIPTION'
+          @identifier = "PRODUCT_SUBSCRIPTION"
           @product_subscription = Extension.specifications[@identifier]
         end
 
         def test_create_uses_standard_argo_create_implementation
-          directory_name = 'product_subscription'
+          directory_name = "product_subscription"
 
           Features::Argo.any_instance
             .expects(:create)
@@ -30,7 +30,7 @@ module Extension
         end
 
         def test_custom_graphql_identifier
-          assert_equal 'SUBSCRIPTION_MANAGEMENT', @product_subscription.graphql_identifier
+          assert_equal "SUBSCRIPTION_MANAGEMENT", @product_subscription.graphql_identifier
         end
       end
     end

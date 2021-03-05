@@ -1,4 +1,4 @@
-require 'test_helper'
+require "test_helper"
 
 module ShopifyCli
   class AdminAPI
@@ -21,7 +21,7 @@ module ShopifyCli
         ShopifyCli::DB.expects(:set).with(shopify_admin_schema: "{\"foo\":\"baz\"}")
         ShopifyCli::DB.expects(:get).with(:shopify_admin_schema).returns("{\"foo\":\"baz\"}")
         ShopifyCli::AdminAPI.expects(:query)
-          .with(@context, 'admin_introspection', shop: 'my-test-shop.myshopify.com')
+          .with(@context, "admin_introspection", shop: "my-test-shop.myshopify.com")
           .returns(foo: "baz")
         assert_equal({ "foo" => "baz" }, AdminAPI::Schema.get(@context))
       end
@@ -33,11 +33,11 @@ module ShopifyCli
       end
 
       def test_access
-        assert_equal(@test_obj.type('WebhookSubscriptionTopic'), @enum)
+        assert_equal(@test_obj.type("WebhookSubscriptionTopic"), @enum)
       end
 
       def test_get_names_from_enum
-        assert_equal(["APP_UNINSTALLED"], @test_obj.get_names_from_type('WebhookSubscriptionTopic'))
+        assert_equal(["APP_UNINSTALLED"], @test_obj.get_names_from_type("WebhookSubscriptionTopic"))
       end
     end
   end

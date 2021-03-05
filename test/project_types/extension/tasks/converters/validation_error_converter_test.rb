@@ -1,6 +1,6 @@
 # frozen_string_literal: true
-require 'test_helper'
-require 'project_types/extension/extension_test_helpers'
+require "test_helper"
+require "project_types/extension/extension_test_helpers"
 
 module Extension
   module Tasks
@@ -24,15 +24,15 @@ module Extension
           end
 
           assert_message_output(io: io, expected_content: [
-            @context.message('tasks.errors.parse_error'),
+            @context.message("tasks.errors.parse_error"),
           ])
         end
 
         def test_from_hash_returns_parsed_validation_errors_if_valid
           fields = %w(config name)
-          message = 'error message'
+          message = "error message"
 
-          errors = [{ 'field' => fields, 'message' => message }]
+          errors = [{ "field" => fields, "message" => message }]
           parsed_validation_errors = ValidationErrorConverter.from_array(@context, errors)
 
           assert_equal 1, parsed_validation_errors.count
@@ -41,12 +41,12 @@ module Extension
         end
 
         def test_from_hash_returns_all_parsed_validation_errors_if_valid
-          message = 'error message'
-          message2 = 'error message 2'
+          message = "error message"
+          message2 = "error message 2"
 
           errors = [
-            { 'field' => %w(field1), 'message' => message },
-            { 'field' => %w(config name), 'message' => message2 },
+            { "field" => %w(field1), "message" => message },
+            { "field" => %w(config name), "message" => message2 },
           ]
           parsed_validation_messages = ValidationErrorConverter.from_array(@context, errors).map(&:message)
 

@@ -1,6 +1,6 @@
 # frozen_string_literal: true
-require 'test_helper'
-require 'project_types/extension/extension_test_helpers'
+require "test_helper"
+require "project_types/extension/extension_test_helpers"
 
 module Extension
   module Commands
@@ -13,11 +13,11 @@ module Extension
       def setup
         super
         @name = "My Ext"
-        @directory_name = 'my_ext'
+        @directory_name = "my_ext"
       end
 
       def test_prints_help
-        io = capture_io { run_cmd('create extension --help') }
+        io = capture_io { run_cmd("create extension --help") }
         assert_message_output(io: io, expected_content: [Extension::Commands::Create.help])
       end
 
@@ -30,7 +30,7 @@ module Extension
         end
 
         assert_message_output(io: io, expected_content: [
-          @context.message('create.errors.directory_exists', @directory_name),
+          @context.message("create.errors.directory_exists", @directory_name),
         ])
       end
 
@@ -45,8 +45,8 @@ module Extension
         end
 
         assert_message_output(io: io, expected_content: [
-          @context.message('create.ready_to_start', @directory_name, @name),
-          @context.message('create.learn_more', @test_extension_type.name),
+          @context.message("create.ready_to_start", @directory_name, @name),
+          @context.message("create.learn_more", @test_extension_type.name),
         ])
       end
 
@@ -60,7 +60,7 @@ module Extension
           run_create(%W(extension --name=#{@name} --type=#{@test_extension_type.identifier}))
         end
 
-        assert_message_output(io: io, expected_content: @context.message('create.try_again'))
+        assert_message_output(io: io, expected_content: @context.message("create.try_again"))
       end
 
       def test_help_does_not_load_extension_project_type
@@ -69,14 +69,14 @@ module Extension
         end
 
         output = io.join
-        refute_match(' extension ', output)
+        refute_match(" extension ", output)
       end
 
       private
 
       def run_create(arguments)
         Commands::Create.ctx = @context
-        Commands::Create.call(arguments, 'create', 'create')
+        Commands::Create.call(arguments, "create", "create")
       end
     end
   end

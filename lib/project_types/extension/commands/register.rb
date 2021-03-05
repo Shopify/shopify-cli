@@ -4,13 +4,13 @@ module Extension
   module Commands
     class Register < ExtensionCommand
       options do |parser, flags|
-        parser.on('--api_key=KEY') { |key| flags[:api_key] = key.downcase }
-        parser.on('--api-key=KEY') { |key| flags[:api_key] = key.downcase }
+        parser.on("--api_key=KEY") { |key| flags[:api_key] = key.downcase }
+        parser.on("--api-key=KEY") { |key| flags[:api_key] = key.downcase }
       end
 
       def call(args, _command_name)
-        CLI::UI::Frame.open(@ctx.message('register.frame_title')) do
-          @ctx.abort(@ctx.message('register.already_registered')) if project.registered?
+        CLI::UI::Frame.open(@ctx.message("register.frame_title")) do
+          @ctx.abort(@ctx.message("register.already_registered")) if project.registered?
 
           with_register_form(args) do |form|
             should_continue = confirm_registration(form.app)
@@ -18,8 +18,8 @@ module Extension
 
             update_project_files(form.app, registration)
 
-            @ctx.puts(@ctx.message('register.success', project.title, form.app.title))
-            @ctx.puts(@ctx.message('register.success_info'))
+            @ctx.puts(@ctx.message("register.success", project.title, form.app.title))
+            @ctx.puts(@ctx.message("register.success_info"))
           end
         end
       end
@@ -43,12 +43,12 @@ module Extension
       end
 
       def confirm_registration(app)
-        @ctx.puts(@ctx.message('register.confirm_info', extension_type.name))
-        CLI::UI::Prompt.confirm(@ctx.message('register.confirm_question', app.title))
+        @ctx.puts(@ctx.message("register.confirm_info", extension_type.name))
+        CLI::UI::Prompt.confirm(@ctx.message("register.confirm_question", app.title))
       end
 
       def register_extension(app)
-        @ctx.puts(@ctx.message('register.waiting_text'))
+        @ctx.puts(@ctx.message("register.waiting_text"))
 
         Tasks::CreateExtension.call(
           context: @ctx,
@@ -71,7 +71,7 @@ module Extension
       end
 
       def abort_not_registered
-        @ctx.puts(@ctx.message('register.confirm_abort'))
+        @ctx.puts(@ctx.message("register.confirm_abort"))
         raise ShopifyCli::AbortSilent
       end
     end

@@ -1,5 +1,5 @@
 # frozen_string_literal: true
-require 'shopify_cli'
+require "shopify_cli"
 
 module Extension
   module Tasks
@@ -18,9 +18,9 @@ module Extension
       end
 
       def apps_owned_by_organization(organization)
-        return [] unless organization.key?('apps') && organization['apps'].any?
+        return [] unless organization.key?("apps") && organization["apps"].any?
 
-        organization['apps'].map do |app|
+        organization["apps"].map do |app|
           Converters::AppConverter.from_hash(app, organization)
         end
       end

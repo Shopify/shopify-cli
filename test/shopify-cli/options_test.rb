@@ -1,11 +1,11 @@
-require 'test_helper'
+require "test_helper"
 
 module ShopifyCli
   class OptionsTest < MiniTest::Test
     def setup
       super
       @block = proc do |parser, flags|
-        parser.on('-v', '--verbose', 'run verbosely') do |v|
+        parser.on("-v", "--verbose", "run verbosely") do |v|
           flags[:verbose] = v
         end
       end
@@ -13,7 +13,7 @@ module ShopifyCli
 
     def test_parses_subcommand_and_flags
       opts = Options.new
-      assert_equal ['subc', 'foo', 'bar'], opts.parse(@block, ['subc', '-v', 'foo', 'bar'])
+      assert_equal ["subc", "foo", "bar"], opts.parse(@block, ["subc", "-v", "foo", "bar"])
       assert opts.flags[:verbose]
     end
 
@@ -25,7 +25,7 @@ module ShopifyCli
     def test_parses_help_flag_and_sets_help_attribute
       block = proc {}
       opts = Options.new
-      opts.parse(block, ['-h'])
+      opts.parse(block, ["-h"])
       assert opts.help
     end
   end

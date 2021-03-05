@@ -1,4 +1,4 @@
-require 'test_helper'
+require "test_helper"
 
 module ShopifyCli
   module Tasks
@@ -12,9 +12,9 @@ module ShopifyCli
 
       def test_outputs_if_shop_cant_be_queried
         stub_org_request
-        stub_env(domain: 'notther.myshopify.com')
+        stub_env(domain: "notther.myshopify.com")
         @context.expects(:puts).with(
-          @context.message('core.tasks.ensure_dev_store.could_not_verify_store', 'notther.myshopify.com')
+          @context.message("core.tasks.ensure_dev_store.could_not_verify_store", "notther.myshopify.com")
         )
         EnsureDevStore.call(@context)
       end
@@ -38,7 +38,7 @@ module ShopifyCli
         stub_env
         CLI::UI::Prompt.expects(:confirm).returns(true)
         stub_partner_req(
-          'convert_dev_to_test_store',
+          "convert_dev_to_test_store",
           variables: {
             input: {
               organizationID: 42,
@@ -47,26 +47,26 @@ module ShopifyCli
           }
         )
         @context.expects(:puts).with(
-          @context.message('core.tasks.ensure_dev_store.transfer_disabled', 'shopdomain.myshopify.com')
+          @context.message("core.tasks.ensure_dev_store.transfer_disabled", "shopdomain.myshopify.com")
         )
         EnsureDevStore.call(@context)
       end
 
       private
 
-      def stub_env(domain: 'shopdomain.myshopify.com')
+      def stub_env(domain: "shopdomain.myshopify.com")
         Project.current.stubs(:env).returns(
           Resources::EnvFile.new(
-            api_key: '123',
-            secret: 'kjhasas',
+            api_key: "123",
+            secret: "kjhasas",
             shop: domain,
           )
         )
       end
 
-      def stub_org_request(domain: 'shopdomain.myshopify.com', transfer_disabled: false)
+      def stub_org_request(domain: "shopdomain.myshopify.com", transfer_disabled: false)
         stub_partner_req(
-          'all_organizations',
+          "all_organizations",
           'resp': {
             'data': {
               'organizations': {

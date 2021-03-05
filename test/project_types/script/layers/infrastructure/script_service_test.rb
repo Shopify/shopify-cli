@@ -1,6 +1,6 @@
 # frozen_string_literal: true
 
-require 'project_types/script/test_helper'
+require "project_types/script/test_helper"
 
 describe Script::Layers::Infrastructure::ScriptService do
   include TestHelpers::Partners
@@ -69,10 +69,10 @@ describe Script::Layers::Infrastructure::ScriptService do
     end
 
     before do
-      stub_load_query('script_service_proxy', script_service_proxy)
-      stub_load_query('app_script_update_or_create', app_script_update_or_create)
+      stub_load_query("script_service_proxy", script_service_proxy)
+      stub_load_query("app_script_update_or_create", app_script_update_or_create)
       stub_partner_req(
-        'script_service_proxy',
+        "script_service_proxy",
         variables: {
           api_key: api_key,
           variables: {
@@ -215,13 +215,13 @@ describe Script::Layers::Infrastructure::ScriptService do
     end
   end
 
-  describe '.enable' do
-    let(:api_key) { 'api_key' }
-    let(:shop_domain) { 'my.shop.com' }
-    let(:formatted_shop_domain) { 'my.shop.com' }
-    let(:configuration) { '{}' }
-    let(:extension_point_type) { 'discount' }
-    let(:title) { 'title' }
+  describe ".enable" do
+    let(:api_key) { "api_key" }
+    let(:shop_domain) { "my.shop.com" }
+    let(:formatted_shop_domain) { "my.shop.com" }
+    let(:configuration) { "{}" }
+    let(:extension_point_type) { "discount" }
+    let(:title) { "title" }
     let(:shop_script_update_or_create) do
       <<~HERE
         mutation ShopScriptUpdateOrCreate(
@@ -258,10 +258,10 @@ describe Script::Layers::Infrastructure::ScriptService do
     end
 
     before do
-      stub_load_query('script_service_proxy', script_service_proxy)
-      stub_load_query('shop_script_update_or_create', shop_script_update_or_create)
+      stub_load_query("script_service_proxy", script_service_proxy)
+      stub_load_query("shop_script_update_or_create", shop_script_update_or_create)
       stub_partner_req(
-        'script_service_proxy',
+        "script_service_proxy",
         variables: {
           api_key: api_key,
           shop_domain: formatted_shop_domain,
@@ -286,8 +286,8 @@ describe Script::Layers::Infrastructure::ScriptService do
       )
     end
 
-    describe 'when shop domain ends with /' do
-      let(:shop_domain) { 'my.shop.com/' }
+    describe "when shop domain ends with /" do
+      let(:shop_domain) { "my.shop.com/" }
       let(:script_service_response) do
         {
           "data" => {
@@ -304,12 +304,12 @@ describe Script::Layers::Infrastructure::ScriptService do
         }
       end
 
-      it 'should have no errors when shop domain is formatted' do
+      it "should have no errors when shop domain is formatted" do
         assert_equal(script_service_response, subject)
       end
     end
 
-    describe 'when successful' do
+    describe "when successful" do
       let(:script_service_response) do
         {
           "data" => {
@@ -326,61 +326,61 @@ describe Script::Layers::Infrastructure::ScriptService do
         }
       end
 
-      it 'should have no errors' do
+      it "should have no errors" do
         assert_equal(script_service_response, subject)
       end
     end
 
-    describe 'when failure' do
+    describe "when failure" do
       let(:tag) { nil }
       let(:script_service_response) do
         {
           "data" => {
             "shopScriptUpdateOrCreate" => {
               "shopScript" => {},
-              "userErrors" => [{ "message" => 'error', "tag" => tag }],
+              "userErrors" => [{ "message" => "error", "tag" => tag }],
             },
           },
         }
       end
 
-      describe 'when app script not found' do
+      describe "when app script not found" do
         let(:tag) { "app_script_not_found" }
 
-        it 'should raise AppScriptUndefinedError' do
+        it "should raise AppScriptUndefinedError" do
           assert_raises(Script::Layers::Infrastructure::Errors::AppScriptUndefinedError) { subject }
         end
       end
 
-      describe 'when app script not pushed' do
+      describe "when app script not pushed" do
         let(:tag) { "app_script_not_pushed" }
 
-        it 'should raise AppScriptNotPushedError' do
+        it "should raise AppScriptNotPushedError" do
           assert_raises(Script::Layers::Infrastructure::Errors::AppScriptNotPushedError) { subject }
         end
       end
 
-      describe 'when shop script conflict' do
+      describe "when shop script conflict" do
         let(:tag) { "shop_script_conflict" }
 
-        it 'should raise ShopScriptConflictError' do
+        it "should raise ShopScriptConflictError" do
           assert_raises(Script::Layers::Infrastructure::Errors::ShopScriptConflictError) { subject }
         end
       end
 
-      describe 'when general error' do
+      describe "when general error" do
         let(:script_service_response) do
           {
             "data" => {
               "shopScriptUpdateOrCreate" => {
                 "shopScript" => {},
-                "userErrors" => [{ "message" => 'error' }],
+                "userErrors" => [{ "message" => "error" }],
               },
             },
           }
         end
 
-        it 'should raise ScriptServiceUserError' do
+        it "should raise ScriptServiceUserError" do
           assert_raises(Script::Layers::Infrastructure::Errors::ScriptServiceUserError) { subject }
         end
       end
@@ -389,8 +389,8 @@ describe Script::Layers::Infrastructure::ScriptService do
 
   describe ".disable" do
     let(:extension_point_type) { "DISCOUNT" }
-    let(:shop_domain) { 'shop.myshopify.com' }
-    let(:formatted_shop_domain) { 'shop.myshopify.com' }
+    let(:shop_domain) { "shop.myshopify.com" }
+    let(:formatted_shop_domain) { "shop.myshopify.com" }
     let(:api_key) { "fake_key" }
     let(:shop_script_delete) do
       <<~HERE
@@ -420,10 +420,10 @@ describe Script::Layers::Infrastructure::ScriptService do
     end
 
     before do
-      stub_load_query('script_service_proxy', script_service_proxy)
-      stub_load_query('shop_script_delete', shop_script_delete)
+      stub_load_query("script_service_proxy", script_service_proxy)
+      stub_load_query("shop_script_delete", shop_script_delete)
       stub_partner_req(
-        'script_service_proxy',
+        "script_service_proxy",
         variables: {
           api_key: api_key,
           shop_domain: formatted_shop_domain,
@@ -444,8 +444,8 @@ describe Script::Layers::Infrastructure::ScriptService do
       )
     end
 
-    describe 'when shop domain ends with /' do
-      let(:shop_domain) { 'shop.myshopify.com' }
+    describe "when shop domain ends with /" do
+      let(:shop_domain) { "shop.myshopify.com" }
       let(:script_service_response) do
         {
           "data" => {
@@ -461,12 +461,12 @@ describe Script::Layers::Infrastructure::ScriptService do
         }
       end
 
-      it 'should have no errors when shop domain is formatted' do
+      it "should have no errors when shop domain is formatted" do
         assert_equal(script_service_response, subject)
       end
     end
 
-    describe 'when successful' do
+    describe "when successful" do
       let(:script_service_response) do
         {
           "data" => {
@@ -482,42 +482,42 @@ describe Script::Layers::Infrastructure::ScriptService do
         }
       end
 
-      it 'should have no errors' do
+      it "should have no errors" do
         assert_equal(script_service_response, subject)
       end
     end
 
-    describe 'when failure' do
-      describe 'when shop_script_not_found error' do
+    describe "when failure" do
+      describe "when shop_script_not_found error" do
         let(:script_service_response) do
           {
             "data" => {
               "shopScriptDelete" => {
                 "shopScript" => {},
-                "userErrors" => [{ "message" => 'error', "tag" => "shop_script_not_found" }],
+                "userErrors" => [{ "message" => "error", "tag" => "shop_script_not_found" }],
               },
             },
           }
         end
 
-        it 'should raise ShopScriptUndefinedError' do
+        it "should raise ShopScriptUndefinedError" do
           assert_raises(Script::Layers::Infrastructure::Errors::ShopScriptUndefinedError) { subject }
         end
       end
 
-      describe 'when other error' do
+      describe "when other error" do
         let(:script_service_response) do
           {
             "data" => {
               "shopScriptDelete" => {
                 "shopScript" => {},
-                "userErrors" => [{ "message" => 'error', "tag" => "other_error" }],
+                "userErrors" => [{ "message" => "error", "tag" => "other_error" }],
               },
             },
           }
         end
 
-        it 'should raise ShopScriptUndefinedError' do
+        it "should raise ShopScriptUndefinedError" do
           assert_raises(Script::Layers::Infrastructure::Errors::ScriptServiceUserError) { subject }
         end
       end

@@ -5,8 +5,8 @@ module Extension
     class ArgoSetup
       include SmartProperties
 
-      GIT_DIRECTORY = '.git'
-      SCRIPTS_DIRECTORY = 'scripts'
+      GIT_DIRECTORY = ".git"
+      SCRIPTS_DIRECTORY = "scripts"
 
       property! :git_template, accepts: String
       property! :dependency_checks, default: []

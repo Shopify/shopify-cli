@@ -27,8 +27,8 @@ module Script
 
         def extension_point_configs
           @extension_points ||= begin
-            require 'yaml'
-            YAML.load_file(Project.project_filepath('config/extension_points.yml'))
+            require "yaml"
+            YAML.load_file(Project.project_filepath("config/extension_points.yml"))
           end
         end
       end

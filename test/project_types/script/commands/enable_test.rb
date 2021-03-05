@@ -1,5 +1,5 @@
 # frozen_string_literal: true
-require 'project_types/script/test_helper'
+require "project_types/script/test_helper"
 
 module Script
   module Commands
@@ -11,10 +11,10 @@ module Script
         @cmd = Enable
         @cmd.ctx = @context
         @configuration = { entries: [] }
-        @ep_type = 'discount'
-        @script_name = 'script'
-        @api_key = 'apikey'
-        @shop_domain = 'my-test-shop.myshopify.com'
+        @ep_type = "discount"
+        @script_name = "script"
+        @api_key = "apikey"
+        @shop_domain = "my-test-shop.myshopify.com"
         @script_project = TestHelpers::FakeScriptProject.new(
           language: @language,
           extension_point_type: @ep_type,
@@ -39,7 +39,7 @@ module Script
       def test_help
         ShopifyCli::Context
           .expects(:message)
-          .with('script.enable.help', ShopifyCli::TOOL_NAME)
+          .with("script.enable.help", ShopifyCli::TOOL_NAME)
         Script::Commands::Enable.help
       end
 
@@ -59,7 +59,7 @@ module Script
         @context
           .expects(:puts)
           .with(@context.message(
-            'script.enable.script_enabled',
+            "script.enable.script_enabled",
             api_key: @api_key,
             shop_domain: @shop_domain,
             type: @ep_type.capitalize,
@@ -69,7 +69,7 @@ module Script
 
         @context
           .expects(:puts)
-          .with(@context.message('script.enable.info'))
+          .with(@context.message("script.enable.info"))
           .never
 
         assert_raises StandardError do
@@ -124,7 +124,7 @@ module Script
       def test_should_call_error_handler_when_given_invalid_config_props
         Script::UI::ErrorHandler.expects(:pretty_print_and_raise).with(
           instance_of(Errors::InvalidConfigProps),
-          failed_op: @context.message('script.enable.error.operation_failed')
+          failed_op: @context.message("script.enable.error.operation_failed")
         )
 
         capture_io do
@@ -213,7 +213,7 @@ module Script
         @context
           .expects(:puts)
           .with(@context.message(
-            'script.enable.script_enabled',
+            "script.enable.script_enabled",
             api_key: @api_key,
             shop_domain: @shop_domain,
             type: @ep_type.capitalize,
@@ -222,7 +222,7 @@ module Script
 
         @context
           .expects(:puts)
-          .with(@context.message('script.enable.info'))
+          .with(@context.message("script.enable.info"))
       end
 
       def perform_command_snake_case(config_props: nil, config_file_path: nil)

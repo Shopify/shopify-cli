@@ -1,5 +1,5 @@
 # frozen_string_literal: true
-require 'project_types/node/test_helper'
+require "project_types/node/test_helper"
 
 module Node
   module Commands
@@ -8,17 +8,17 @@ module Node
 
       def setup
         super
-        project_context('app_types', 'node')
+        project_context("app_types", "node")
         ShopifyCli::Tasks::EnsureDevStore.stubs(:call)
         @context.stubs(:system)
       end
 
       def test_server_command
-        ShopifyCli::Tunnel.stubs(:start).returns('https://example.com')
+        ShopifyCli::Tunnel.stubs(:start).returns("https://example.com")
         ShopifyCli::Tasks::UpdateDashboardURLS.expects(:call)
         ShopifyCli::Resources::EnvFile.any_instance.expects(:update)
         @context.expects(:system).with(
-          'npm run dev',
+          "npm run dev",
           env: {
             "SHOPIFY_API_KEY" => "mykey",
             "SHOPIFY_API_SECRET" => "mysecretkey",
@@ -28,15 +28,15 @@ module Node
             "PORT" => "8081",
           }
         )
-        run_cmd('serve')
+        run_cmd("serve")
       end
 
       def test_server_command_with_invalid_host_url
-        ShopifyCli::Tunnel.stubs(:start).returns('garbage://example.com')
+        ShopifyCli::Tunnel.stubs(:start).returns("garbage://example.com")
         ShopifyCli::Tasks::UpdateDashboardURLS.expects(:call).never
         ShopifyCli::Resources::EnvFile.any_instance.expects(:update).never
         @context.expects(:system).with(
-          'npm run dev',
+          "npm run dev",
           env: {
             "SHOPIFY_API_KEY" => "mykey",
             "SHOPIFY_API_SECRET" => "mysecretkey",
@@ -48,29 +48,29 @@ module Node
         ).never
 
         assert_raises ShopifyCli::Abort do
-          run_cmd('serve')
+          run_cmd("serve")
         end
       end
 
       def test_open_while_run
-        ShopifyCli::Tunnel.stubs(:start).returns('https://example.com')
+        ShopifyCli::Tunnel.stubs(:start).returns("https://example.com")
         ShopifyCli::Tasks::UpdateDashboardURLS.expects(:call)
         ShopifyCli::Resources::EnvFile.any_instance.expects(:update).with(
-          @context, :host, 'https://example.com'
+          @context, :host, "https://example.com"
         )
         @context.expects(:puts).with(
           "\n" +
-          @context.message('node.serve.open_info', 'https://example.com/auth?shop=my-test-shop.myshopify.com') +
+          @context.message("node.serve.open_info", "https://example.com/auth?shop=my-test-shop.myshopify.com") +
           "\n"
         )
-        run_cmd('serve')
+        run_cmd("serve")
       end
 
       def test_update_env_with_host
         ShopifyCli::Tunnel.expects(:start).never
         ShopifyCli::Tasks::UpdateDashboardURLS.expects(:call)
         ShopifyCli::Resources::EnvFile.any_instance.expects(:update).with(
-          @context, :host, 'https://example-foo.com'
+          @context, :host, "https://example-foo.com"
         )
         run_cmd('serve --host="https://example-foo.com"')
       end

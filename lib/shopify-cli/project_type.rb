@@ -21,7 +21,7 @@ module ShopifyCli
       end
 
       def load_type(current_type, shallow = false)
-        filepath = File.join(ShopifyCli::ROOT, 'lib', 'project_types', current_type.to_s, 'cli.rb')
+        filepath = File.join(ShopifyCli::ROOT, "lib", "project_types", current_type.to_s, "cli.rb")
         return unless File.exist?(filepath)
         @shallow_load = shallow
         @current_type = current_type
@@ -32,7 +32,7 @@ module ShopifyCli
       end
 
       def load_all
-        Dir.glob(File.join(ShopifyCli::ROOT, 'lib', 'project_types', '*', 'cli.rb')).map do |filepath|
+        Dir.glob(File.join(ShopifyCli::ROOT, "lib", "project_types", "*", "cli.rb")).map do |filepath|
           load_type(filepath.split(File::Separator)[-2].to_sym, true)
         end
       end
@@ -74,7 +74,7 @@ module ShopifyCli
       def register_command(const, cmd)
         return if project_load_shallow
         Context.new.abort(
-          Context.message('core.project_type.error.cannot_override_core', cmd, const)
+          Context.message("core.project_type.error.cannot_override_core", cmd, const)
         ) if Commands.core_command?(cmd)
         Commands.register(const, cmd)
       end

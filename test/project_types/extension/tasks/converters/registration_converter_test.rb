@@ -1,6 +1,6 @@
 # frozen_string_literal: true
-require 'test_helper'
-require 'project_types/extension/extension_test_helpers'
+require "test_helper"
+require "project_types/extension/extension_test_helpers"
 
 module Extension
   module Tasks
@@ -14,9 +14,9 @@ module Extension
           ShopifyCli::ProjectType.load_type(:extension)
 
           @registration_id = 42
-          @fake_type = 'TEST_EXTENSION'
-          @fake_title = 'Fake Title'
-          @fake_extension_context = 'fake_context'
+          @fake_type = "TEST_EXTENSION"
+          @fake_title = "Fake Title"
+          @fake_extension_context = "fake_context"
           @last_user_interaction_at = Time.now.to_s
         end
 
@@ -25,7 +25,7 @@ module Extension
             Converters::RegistrationConverter.from_hash(@context, nil)
           end
 
-          assert_message_output(io: io, expected_content: @context.message('tasks.errors.parse_error'))
+          assert_message_output(io: io, expected_content: @context.message("tasks.errors.parse_error"))
         end
 
         def test_from_hash_parses_registration_from_a_hash
