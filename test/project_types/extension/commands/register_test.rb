@@ -12,7 +12,12 @@ module Extension
       def setup
         super
         ShopifyCli::ProjectType.load_type(:extension)
+<<<<<<< HEAD
         setup_temp_project(registration_id: nil)
+=======
+        setup_temp_project(api_key: "", api_secret: "", registration_id: nil)
+
+>>>>>>> 31cb1a92 (updates due to Shopify Rubocop Style Rules changes)
         @app = Models::App.new(api_key: @api_key, secret: @api_secret)
       end
 
@@ -37,7 +42,11 @@ module Extension
 
         CLI::UI::Prompt
           .expects(:confirm)
+<<<<<<< HEAD
           .with(@context.message("register.confirm_question"))
+=======
+          .with(@context.message("register.confirm_question", @app.title))
+>>>>>>> 31cb1a92 (updates due to Shopify Rubocop Style Rules changes)
           .returns(false)
           .once
 
