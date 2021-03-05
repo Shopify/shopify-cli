@@ -5,7 +5,7 @@ module ShopifyCli
     include TestHelpers::Project
 
     def test_query_calls_partners_api
-      ShopifyCli::DB.expects(:get).with(:partners_exchange_token).returns('token123')
+      ShopifyCli::DB.expects(:get).with(:partners_exchange_token).returns("token123")
       api_stub = stub
       PartnersAPI.expects(:new).with(
         ctx: @context,
@@ -18,7 +18,7 @@ module ShopifyCli
 
     def test_query_can_reauth
       Shopifolk.stubs(:check).returns(false)
-      ShopifyCli::DB.expects(:get).with(:partners_exchange_token).returns('token123').twice
+      ShopifyCli::DB.expects(:get).with(:partners_exchange_token).returns("token123").twice
 
       api_stub = stub
       PartnersAPI.expects(:new).with(
@@ -67,7 +67,7 @@ module ShopifyCli
     end
 
     def test_query_fails_gracefully_without_partners_account
-      ShopifyCli::DB.expects(:get).with(:partners_exchange_token).returns('token123')
+      ShopifyCli::DB.expects(:get).with(:partners_exchange_token).returns("token123")
       api_stub = stub
       PartnersAPI.expects(:new).with(
         ctx: @context,
@@ -80,7 +80,7 @@ module ShopifyCli
     end
 
     def test_query
-      ShopifyCli::DB.expects(:get).with(:partners_exchange_token).returns('token123')
+      ShopifyCli::DB.expects(:get).with(:partners_exchange_token).returns("token123")
       api_stub = stub
       PartnersAPI.expects(:new).with(
         ctx: @context,
