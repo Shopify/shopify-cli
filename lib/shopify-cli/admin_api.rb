@@ -1,4 +1,4 @@
-require 'shopify_cli'
+require "shopify_cli"
 
 module ShopifyCli
   ##
@@ -6,8 +6,8 @@ module ShopifyCli
   # these concerns are taken care of.
   #
   class AdminAPI < API
-    autoload :PopulateResourceCommand, 'shopify-cli/admin_api/populate_resource_command'
-    autoload :Schema, 'shopify-cli/admin_api/schema'
+    autoload :PopulateResourceCommand, "shopify-cli/admin_api/populate_resource_command"
+    autoload :Schema, "shopify-cli/admin_api/schema"
 
     class << self
       ##
@@ -96,19 +96,19 @@ module ShopifyCli
         env = Project.current.env
         ShopifyCli::OAuth.new(
           ctx: ctx,
-          service: 'admin',
+          service: "admin",
           client_id: env.api_key,
           secret: env.secret,
           scopes: env.scopes,
           token_path: "/access_token",
-          options: { 'grant_options[]' => 'per user' },
+          options: { "grant_options[]" => "per user" },
         ).authenticate("https://#{shop}/admin/oauth")
       end
 
-      def api_client(ctx, api_version, shop, path: 'graphql.json')
+      def api_client(ctx, api_version, shop, path: "graphql.json")
         new(
           ctx: ctx,
-          auth_header: 'X-Shopify-Access-Token',
+          auth_header: "X-Shopify-Access-Token",
           token: admin_access_token(ctx, shop),
           url: "https://#{shop}/admin/api/#{fetch_api_version(ctx, api_version, shop)}/#{path}",
         )
@@ -125,13 +125,13 @@ module ShopifyCli
         return api_version unless api_version.nil?
         client = new(
           ctx: ctx,
-          auth_header: 'X-Shopify-Access-Token',
+          auth_header: "X-Shopify-Access-Token",
           token: admin_access_token(ctx, shop),
           url: "https://#{shop}/admin/api/unstable/graphql.json",
         )
-        versions = client.query('api_versions')['data']['publicApiVersions']
-        latest = versions.find { |version| version['displayName'].include?('Latest') }
-        latest['handle']
+        versions = client.query("api_versions")["data"]["publicApiVersions"]
+        latest = versions.find { |version| version["displayName"].include?("Latest") }
+        latest["handle"]
       end
     end
   end

@@ -4,10 +4,10 @@ module Script
   module Commands
     class Enable < ShopifyCli::Command
       options do |parser, flags|
-        parser.on('--config_props=KEYVALUEPAIRS', Array) { |t| flags[:config_props] = t }
-        parser.on('--config-props=KEYVALUEPAIRS', Array) { |t| flags[:config_props] = t }
-        parser.on('--config_file=CONFIGFILEPATH') { |t| flags[:config_file] = t }
-        parser.on('--config-file=CONFIGFILEPATH') { |t| flags[:config_file] = t }
+        parser.on("--config_props=KEYVALUEPAIRS", Array) { |t| flags[:config_props] = t }
+        parser.on("--config-props=KEYVALUEPAIRS", Array) { |t| flags[:config_props] = t }
+        parser.on("--config_file=CONFIGFILEPATH") { |t| flags[:config_file] = t }
+        parser.on("--config-file=CONFIGFILEPATH") { |t| flags[:config_file] = t }
       end
 
       def call(_args, _name)
@@ -25,21 +25,21 @@ module Script
           title: project.script_name
         )
         @ctx.puts(@ctx.message(
-          'script.enable.script_enabled',
+          "script.enable.script_enabled",
           api_key: api_key,
           shop_domain: shop_domain,
           type: project.extension_point_type.capitalize,
           title: project.script_name
         ))
-        @ctx.puts(@ctx.message('script.enable.info'))
+        @ctx.puts(@ctx.message("script.enable.info"))
       rescue Errors::InvalidConfigYAMLError => e
         UI::ErrorHandler.pretty_print_and_raise(e)
       rescue StandardError => e
-        UI::ErrorHandler.pretty_print_and_raise(e, failed_op: @ctx.message('script.enable.error.operation_failed'))
+        UI::ErrorHandler.pretty_print_and_raise(e, failed_op: @ctx.message("script.enable.error.operation_failed"))
       end
 
       def self.help
-        ShopifyCli::Context.message('script.enable.help', ShopifyCli::TOOL_NAME)
+        ShopifyCli::Context.message("script.enable.help", ShopifyCli::TOOL_NAME)
       end
 
       private
@@ -64,7 +64,7 @@ module Script
       def parse_config_props(config_props)
         Hash[
           config_props.map do |s|
-            args = s.split(':').map(&:strip)
+            args = s.split(":").map(&:strip)
             raise Errors::InvalidConfigProps unless args.size == 2
             args
           end

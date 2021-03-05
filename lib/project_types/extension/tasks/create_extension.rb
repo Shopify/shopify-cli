@@ -1,15 +1,15 @@
 # frozen_string_literal: true
-require 'shopify_cli'
+require "shopify_cli"
 
 module Extension
   module Tasks
     class CreateExtension < ShopifyCli::Task
       include UserErrors
 
-      GRAPHQL_FILE = 'extension_create'
+      GRAPHQL_FILE = "extension_create"
 
       RESPONSE_FIELD = %w(data extensionCreate)
-      REGISTRATION_FIELD = 'extensionRegistration'
+      REGISTRATION_FIELD = "extensionRegistration"
 
       def call(context:, api_key:, type:, title:, config:, extension_context: nil)
         input = {
@@ -21,7 +21,7 @@ module Extension
         }
 
         response = ShopifyCli::PartnersAPI.query(context, GRAPHQL_FILE, **input).dig(*RESPONSE_FIELD)
-        context.abort(context.message('tasks.errors.parse_error')) if response.nil?
+        context.abort(context.message("tasks.errors.parse_error")) if response.nil?
 
         abort_if_user_errors(context, response)
         Converters::RegistrationConverter.from_hash(context, response.dig(REGISTRATION_FIELD))

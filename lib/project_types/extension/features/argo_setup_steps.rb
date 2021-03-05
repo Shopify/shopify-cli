@@ -5,7 +5,7 @@ module Extension
     module ArgoSetupSteps
       YARN_INITIALIZE_COMMAND = %w(generate).freeze
       NPM_INITIALIZE_COMMAND = %w(run generate --).freeze
-      INITIALIZE_TYPE_PARAMETER = '--type=%s'
+      INITIALIZE_TYPE_PARAMETER = "--type=%s"
 
       def self.check_dependencies(dependency_checks)
         ArgoSetupStep.always_successful do |context, _identifier, _directory_name, _js_system|
@@ -21,7 +21,7 @@ module Extension
             ShopifyCli::Git.clone(git_template, directory_name, ctx: context)
             context.root = File.join(context.root, directory_name)
           rescue StandardError
-            context.puts('{{x}} Unable to clone the repository.')
+            context.puts("{{x}} Unable to clone the repository.")
           end
         end
       end
@@ -34,8 +34,8 @@ module Extension
 
       def self.initialize_project
         ArgoSetupStep.default do |context, identifier, _directory_name, js_system|
-          frame_title = context.message('create.setup_project_frame_title')
-          failure_message = context.message('features.argo.initialization_error')
+          frame_title = context.message("create.setup_project_frame_title")
+          failure_message = context.message("features.argo.initialization_error")
 
           result = true
           CLI::UI::Frame.open(frame_title, failure_text: failure_message) do

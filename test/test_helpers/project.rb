@@ -2,7 +2,7 @@
 module TestHelpers
   module Project
     def setup
-      project_context('project')
+      project_context("project")
       super
     end
 
@@ -11,8 +11,8 @@ module TestHelpers
       @context = TestHelpers::FakeContext.new(
         root: root,
         env: {
-          'HOME' => '~',
-          'XDG_CONFIG_HOME' => root,
+          "HOME" => "~",
+          "XDG_CONFIG_HOME" => root,
         }
       )
       FileUtils.cd(@context.root)
@@ -20,7 +20,7 @@ module TestHelpers
 
     def teardown
       @context = nil
-      FileUtils.cd('/')
+      FileUtils.cd("/")
       super
     end
   end

@@ -1,5 +1,5 @@
 Gem.post_uninstall do |uninstaller|
-  if uninstaller.spec.name == 'shopify-cli'
+  if uninstaller.spec.name == "shopify-cli"
     if RUBY_PLATFORM.match(/mingw32/)
       bat_path = File.dirname(RbConfig.ruby)
       bat = "#{bat_path}\\shopify.bat"
@@ -7,9 +7,9 @@ Gem.post_uninstall do |uninstaller|
       # delete the auto-generated batch script
       File.unlink(bat)
     else
-      require 'fileutils'
+      require "fileutils"
 
-      symlink = '/usr/local/bin/shopify'
+      symlink = "/usr/local/bin/shopify"
 
       # delete the symbolic link IFF it exists AND it does not point to a file
       # (i.e., it's been left hanging as a result of the uninstall, as expected)

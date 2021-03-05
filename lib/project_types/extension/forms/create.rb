@@ -11,7 +11,7 @@ module Extension
       end
 
       def directory_name
-        @directory_name ||= name.strip.gsub(/( )/, '_').downcase
+        @directory_name ||= name.strip.gsub(/( )/, "_").downcase
       end
 
       private
@@ -20,16 +20,16 @@ module Extension
         ask_with_reprompt(
           initial_value: name,
           break_condition: -> (current_name) { Models::Registration.valid_title?(current_name) },
-          prompt_message: ctx.message('create.ask_name'),
-          reprompt_message: ctx.message('create.invalid_name', Models::Registration::MAX_TITLE_LENGTH)
+          prompt_message: ctx.message("create.ask_name"),
+          reprompt_message: ctx.message("create.invalid_name", Models::Registration::MAX_TITLE_LENGTH)
         )
       end
 
       def ask_type
         return Extension.specifications[type] if Extension.specifications.valid?(type)
-        ctx.puts(ctx.message('create.invalid_type')) unless type.nil?
+        ctx.puts(ctx.message("create.invalid_type")) unless type.nil?
 
-        CLI::UI::Prompt.ask(ctx.message('create.ask_type')) do |handler|
+        CLI::UI::Prompt.ask(ctx.message("create.ask_type")) do |handler|
           Extension.specifications.each do |type|
             handler.option("#{type.name} #{type.tagline}") { type }
           end

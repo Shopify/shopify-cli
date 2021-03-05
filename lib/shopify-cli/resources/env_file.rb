@@ -4,13 +4,13 @@ module ShopifyCli
   module Resources
     class EnvFile
       include SmartProperties
-      FILENAME = '.env'
+      FILENAME = ".env"
       KEY_MAP = {
-        'SHOPIFY_API_KEY' => :api_key,
-        'SHOPIFY_API_SECRET' => :secret,
-        'SHOP' => :shop,
-        'SCOPES' => :scopes,
-        'HOST' => :host,
+        "SHOPIFY_API_KEY" => :api_key,
+        "SHOPIFY_API_SECRET" => :secret,
+        "SHOP" => :shop,
+        "SCOPES" => :scopes,
+        "HOST" => :host,
       }
 
       class << self
@@ -72,7 +72,7 @@ module ShopifyCli
 
       def write(ctx)
         spin_group = CLI::UI::SpinGroup.new
-        spin_group.add(ctx.message('core.env_file.saving_header', FILENAME)) do |spinner|
+        spin_group.add(ctx.message("core.env_file.saving_header", FILENAME)) do |spinner|
           output = []
           KEY_MAP.each do |key, value|
             output << "#{key}=#{send(value)}" if send(value)
@@ -80,9 +80,9 @@ module ShopifyCli
           extra.each do |key, value|
             output << "#{key}=#{value}"
           end
-          ctx.print_task(ctx.message('core.env_file.saving', FILENAME))
+          ctx.print_task(ctx.message("core.env_file.saving", FILENAME))
           ctx.write(FILENAME, output.join("\n") + "\n")
-          spinner.update_title(ctx.message('core.env_file.saved', FILENAME))
+          spinner.update_title(ctx.message("core.env_file.saved", FILENAME))
         end
         spin_group.wait
       end

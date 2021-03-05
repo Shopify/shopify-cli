@@ -1,4 +1,4 @@
-require 'shopify_cli'
+require "shopify_cli"
 
 module ShopifyCli
   class AdminAPI
@@ -7,7 +7,7 @@ module ShopifyCli
         def get(ctx)
           unless ShopifyCli::DB.exists?(:shopify_admin_schema)
             shop = Project.current.env.shop || get_shop(ctx)
-            schema = AdminAPI.query(ctx, 'admin_introspection', shop: shop)
+            schema = AdminAPI.query(ctx, "admin_introspection", shop: shop)
             ShopifyCli::DB.set(shopify_admin_schema: JSON.dump(schema))
           end
           # This is ruby magic for making a new hash with another hash.
@@ -30,7 +30,7 @@ module ShopifyCli
         data = self["data"]
         schema = data["__schema"]
         schema["types"].find do |object|
-          object['name'] == name.to_s
+          object["name"] == name.to_s
         end
       end
 

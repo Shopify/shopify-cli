@@ -1,8 +1,8 @@
 #!/usr/bin/env ruby
 
 $LOAD_PATH.unshift(File.expand_path("../../vendor/deps/cli-ui/lib", __FILE__))
-require 'open3'
-require 'fileutils'
+require "open3"
+require "fileutils"
 
 def fmt(tag, msg)
   # Not really CLI::UI.fmt compatible: no nesting support, for example.
@@ -27,7 +27,7 @@ def warn(msg)
 end
 
 def source_path
-  File.expand_path(ENV.fetch('SOURCE_ROOT', File.expand_path('../../..', __FILE__)))
+  File.expand_path(ENV.fetch("SOURCE_ROOT", File.expand_path("../../..", __FILE__)))
 end
 
 deps = %w(cli-ui cli-kit)
@@ -50,18 +50,18 @@ deps.each do |dep|
   dirty = false
 
   Dir.chdir(path) do
-    _, _, stat = Open3.capture3('git fetch origin master')
+    _, _, stat = Open3.capture3("git fetch origin master")
     bail("couldn't git fetch in dependency: {{yellow:#{dep}}}") unless stat.success?
 
-    head_sha, stat = Open3.capture2('git rev-parse HEAD')
+    head_sha, stat = Open3.capture2("git rev-parse HEAD")
     bail("couldn't determine HEAD: {{yellow:#{dep}}}") unless stat.success?
     head_sha.chomp!
 
-    fetch_head_sha, stat = Open3.capture2('git rev-parse FETCH_HEAD')
+    fetch_head_sha, stat = Open3.capture2("git rev-parse FETCH_HEAD")
     bail("couldn't determine FETCH_HEAD: {{yellow:#{dep}}}") unless stat.success?
     fetch_head_sha.chomp!
 
-    git_status, stat = Open3.capture2('git status --porcelain')
+    git_status, stat = Open3.capture2("git status --porcelain")
     bail("couldn't determine git status: {{yellow:#{dep}}}") unless stat.success?
 
     if head_sha != fetch_head_sha
@@ -84,8 +84,8 @@ deps.each do |dep|
   depdir = File.expand_path("../../vendor/deps/#{dep}", __FILE__)
   FileUtils.rm_rf(depdir)
   FileUtils.mkdir_p(depdir)
-  dstlib = File.expand_path('lib', depdir)
-  srclib = File.expand_path('lib', path)
+  dstlib = File.expand_path("lib", depdir)
+  srclib = File.expand_path("lib", path)
 
   FileUtils.cp_r(srclib, dstlib)
 

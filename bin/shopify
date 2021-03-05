@@ -14,7 +14,7 @@ module Kernel
     raise if name == "#{RUBY_VERSION[/\d+\.\d+/]}/psych.so"
     STDERR.puts "[Note] You cannot use gems with Shopify App CLI."
     STDERR.puts "[LoadError] #{e.message}"
-    if ENV['DEBUG']
+    if ENV["DEBUG"]
       STDERR.puts e.backtrace
       STDERR.puts "\n"
     end
@@ -27,7 +27,7 @@ module Kernel
   end
 end
 
-require_relative './load_shopify'
+require_relative "./load_shopify"
 
 exit(ShopifyCli::ErrorHandler.call do
   ShopifyCli::Core::EntryPoint.call(ARGV.dup)

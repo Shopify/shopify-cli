@@ -1,4 +1,4 @@
-require 'test_helper'
+require "test_helper"
 
 module ShopifyCli
   module Core
@@ -12,23 +12,23 @@ module ShopifyCli
           prerequisite_task :fake
 
           def call(*)
-            @ctx.puts('subcommand!')
+            @ctx.puts("subcommand!")
           end
         end
 
-        subcommand :FakeSubCommand, 'fakesub'
+        subcommand :FakeSubCommand, "fakesub"
 
         options do |parser, flags|
-          parser.on('-v', '--verbose', 'print verbosely') do |v|
+          parser.on("-v", "--verbose", "print verbosely") do |v|
             flags[:verbose] = v
           end
         end
 
         def call(_args, _name)
           if options.flags[:verbose]
-            @ctx.puts('verbose!')
+            @ctx.puts("verbose!")
           else
-            @ctx.puts('command!')
+            @ctx.puts("command!")
           end
         end
       end
@@ -42,27 +42,27 @@ module ShopifyCli
         executor = ShopifyCli::Core::Executor.new(@context, @registry, log_file: @log)
         reg = CLI::Kit::CommandRegistry.new(default: nil, contextual_resolver: nil)
         reg.add(FakeCommand, :fake)
-        @context.expects(:puts).with('success!')
-        @context.expects(:puts).with('command!')
-        executor.call(FakeCommand, 'fake', [])
+        @context.expects(:puts).with("success!")
+        @context.expects(:puts).with("command!")
+        executor.call(FakeCommand, "fake", [])
       end
 
       def test_options
         executor = ShopifyCli::Core::Executor.new(@context, @registry, log_file: @log)
         reg = CLI::Kit::CommandRegistry.new(default: nil, contextual_resolver: nil)
         reg.add(FakeCommand, :fake)
-        @context.expects(:puts).with('success!')
-        @context.expects(:puts).with('verbose!')
-        executor.call(FakeCommand, 'fake', ['-v'])
+        @context.expects(:puts).with("success!")
+        @context.expects(:puts).with("verbose!")
+        executor.call(FakeCommand, "fake", ["-v"])
       end
 
       def test_subcommand
         executor = ShopifyCli::Core::Executor.new(@context, @registry, log_file: @log)
         reg = CLI::Kit::CommandRegistry.new(default: nil, contextual_resolver: nil)
         reg.add(FakeCommand, :fake)
-        @context.expects(:puts).with('success!')
-        @context.expects(:puts).with('subcommand!')
-        executor.call(FakeCommand, 'fake', ['fakesub'])
+        @context.expects(:puts).with("success!")
+        @context.expects(:puts).with("subcommand!")
+        executor.call(FakeCommand, "fake", ["fakesub"])
       end
     end
   end

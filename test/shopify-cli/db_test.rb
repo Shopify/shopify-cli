@@ -1,19 +1,19 @@
-require 'test_helper'
+require "test_helper"
 
 module ShopifyCli
   class DBTest < MiniTest::Test
     def test_set
       db = new_db
-      db.set(foo: 'bar', life: 42)
+      db.set(foo: "bar", life: 42)
       db.db.transaction do
-        assert_equal('bar', db.db[:foo])
+        assert_equal("bar", db.db[:foo])
         assert_equal(42, db.db[:life])
       end
     end
 
     def test_get
       db = new_db
-      assert_equal('value', db.get(:keyone))
+      assert_equal("value", db.get(:keyone))
       assert_equal(42, db.get(:keytwo))
     end
 
@@ -31,7 +31,7 @@ module ShopifyCli
 
     def test_del
       db = new_db
-      db.set(foo: 'bar', life: 42)
+      db.set(foo: "bar", life: 42)
       db.del(:keytwo, :foo)
       assert db.exists?(:keyone)
       assert db.exists?(:life)
@@ -52,7 +52,7 @@ module ShopifyCli
       db = DB.new(path: File.join(ShopifyCli::TEMP_DIR, ".test_db.pdb"))
       db.clear
       db.db.transaction do
-        db.db[:keyone] = 'value'
+        db.db[:keyone] = "value"
         db.db[:keytwo] = 42
       end
       db

@@ -7,7 +7,7 @@ describe Script::Layers::Infrastructure::RustProjectCreator do
 
   let(:script_name) { "payment_filter_rs" }
   let(:language) { "rust" }
-  let(:script_id) { 'id' }
+  let(:script_id) { "id" }
   let(:script) { Script::Layers::Domain::Script.new(script_id, script_name, extension_point, language) }
   let(:project) { TestHelpers::FakeProject.new }
   let(:context) { TestHelpers::FakeContext.new }
@@ -66,11 +66,11 @@ describe Script::Layers::Infrastructure::RustProjectCreator do
         .returns(system_output(msg: "", success: true))
       context.expects(:rm_rf).with(".git")
       type = extension_point.type
-      source = File.join(script_name, File.join(type, 'default'))
+      source = File.join(script_name, File.join(type, "default"))
       FileUtils.expects(:copy_entry).with(source, script_name)
       context.expects(:rm_rf).with(type)
-      File.expects(:read).with('Cargo.toml').returns("name = payment-filter-default")
-      File.expects(:write).with('Cargo.toml', "name = #{script_name}")
+      File.expects(:read).with("Cargo.toml").returns("name = payment-filter-default")
+      File.expects(:write).with("Cargo.toml", "name = #{script_name}")
 
       subject
     end

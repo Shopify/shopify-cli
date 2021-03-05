@@ -1,10 +1,10 @@
 # frozen_string_literal: true
 
-require 'project_types/script/test_helper'
+require "project_types/script/test_helper"
 
 describe Script::Layers::Infrastructure::TaskRunner do
   describe "build" do
-    let(:script_name) { 'script_name' }
+    let(:script_name) { "script_name" }
     subject { Script::Layers::Infrastructure::TaskRunner.for(@context, language, script_name) }
 
     describe "when the script language and compile type match an entry in the registry" do

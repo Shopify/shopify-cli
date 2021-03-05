@@ -7,7 +7,7 @@ describe Script::UI::ErrorHandler do
     let(:failed_op) { "Operation didn't complete." }
     let(:cause_of_error) { "This is why it failed." }
     let(:help_suggestion) { "Perhaps this is what's wrong." }
-    let(:ctx_root) { '/some/dir/here' }
+    let(:ctx_root) { "/some/dir/here" }
     let(:ctx) { TestHelpers::FakeContext.new(root: ctx_root) }
     let(:ci?) { ctx.ci? }
     subject do
@@ -82,7 +82,7 @@ describe Script::UI::ErrorHandler do
 
   describe ".pretty_print_and_raise" do
     let(:err) { nil }
-    let(:failed_op) { 'message' }
+    let(:failed_op) { "message" }
     subject { Script::UI::ErrorHandler.pretty_print_and_raise(err, failed_op: failed_op) }
 
     describe "when exception is not in list" do
@@ -121,14 +121,14 @@ describe Script::UI::ErrorHandler do
       end
 
       describe "when InvalidContextError" do
-        let(:err) { Script::Errors::InvalidContextError.new('') }
+        let(:err) { Script::Errors::InvalidContextError.new("") }
         it "should call display_and_raise" do
           should_call_display_and_raise
         end
       end
 
       describe "when InvalidConfigProps" do
-        let(:err) { Script::Errors::InvalidConfigProps.new('') }
+        let(:err) { Script::Errors::InvalidConfigProps.new("") }
         it "should call display_and_raise" do
           should_call_display_and_raise
         end
@@ -163,28 +163,28 @@ describe Script::UI::ErrorHandler do
       end
 
       describe "when ScriptProjectAlreadyExistsError" do
-        let(:err) { Script::Errors::ScriptProjectAlreadyExistsError.new('/') }
+        let(:err) { Script::Errors::ScriptProjectAlreadyExistsError.new("/") }
         it "should call display_and_raise" do
           should_call_display_and_raise
         end
       end
 
       describe "when InvalidLanguageError" do
-        let(:err) { Script::Layers::Domain::Errors::InvalidExtensionPointError.new('ruby') }
+        let(:err) { Script::Layers::Domain::Errors::InvalidExtensionPointError.new("ruby") }
         it "should call display_and_raise" do
           should_call_display_and_raise
         end
       end
 
       describe "when InvalidExtensionPointError" do
-        let(:err) { Script::Layers::Domain::Errors::InvalidExtensionPointError.new('') }
+        let(:err) { Script::Layers::Domain::Errors::InvalidExtensionPointError.new("") }
         it "should call display_and_raise" do
           should_call_display_and_raise
         end
       end
 
       describe "when ScriptNotFoundError" do
-        let(:err) { Script::Layers::Domain::Errors::ScriptNotFoundError.new('ep type', 'name') }
+        let(:err) { Script::Layers::Domain::Errors::ScriptNotFoundError.new("ep type", "name") }
         it "should call display_and_raise" do
           should_call_display_and_raise
         end
@@ -240,7 +240,7 @@ describe Script::UI::ErrorHandler do
       end
 
       describe "when ScriptRepushError" do
-        let(:err) { Script::Layers::Infrastructure::Errors::ScriptRepushError.new('api_key') }
+        let(:err) { Script::Layers::Infrastructure::Errors::ScriptRepushError.new("api_key") }
         it "should call display_and_raise" do
           should_call_display_and_raise
         end

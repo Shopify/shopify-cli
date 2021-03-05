@@ -4,9 +4,9 @@ require "project_types/script/test_helper"
 
 describe Script::UI::PrintingSpinner do
   describe ".spin" do
-    let(:ctx_root) { '/some/dir/here' }
+    let(:ctx_root) { "/some/dir/here" }
     let(:ctx) { TestHelpers::FakeContext.new(root: ctx_root) }
-    let(:title) { 'title' }
+    let(:title) { "title" }
 
     it "yields a block with a ctx parameter" do
       capture_io do

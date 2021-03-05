@@ -31,9 +31,9 @@ describe Script::Layers::Infrastructure::ExtensionPointRepository do
   end
 
   describe ".extension_point_types" do
-    it 'should return the ep keys' do
+    it "should return the ep keys" do
       subject.stubs(:extension_point_configs).returns({ "discount" => {}, "other" => {} })
-      assert_equal ['discount', 'other'], subject.send(:extension_point_types)
+      assert_equal ["discount", "other"], subject.send(:extension_point_types)
     end
   end
 end

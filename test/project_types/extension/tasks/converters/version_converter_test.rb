@@ -1,6 +1,6 @@
 # frozen_string_literal: true
-require 'test_helper'
-require 'project_types/extension/extension_test_helpers'
+require "test_helper"
+require "project_types/extension/extension_test_helpers"
 
 module Extension
   module Tasks
@@ -13,11 +13,11 @@ module Extension
           super
           ShopifyCli::ProjectType.load_type(:extension)
 
-          @api_key = 'FAKE_API_KEY'
+          @api_key = "FAKE_API_KEY"
           @registration_id = 42
           @config = {}
-          @extension_context = 'fake#context'
-          @location = 'https://www.fakeurl.com'
+          @extension_context = "fake#context"
+          @location = "https://www.fakeurl.com"
           @last_user_interaction_at = Time.now.to_s
         end
 
@@ -26,7 +26,7 @@ module Extension
             Converters::VersionConverter.from_hash(@context, nil)
           end
 
-          assert_message_output(io: io, expected_content: @context.message('tasks.errors.parse_error'))
+          assert_message_output(io: io, expected_content: @context.message("tasks.errors.parse_error"))
         end
 
         def test_from_hash_parses_a_version_from_a_hash

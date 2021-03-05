@@ -1,4 +1,4 @@
-require 'test_helper'
+require "test_helper"
 
 module Extension
   module Models
@@ -75,12 +75,12 @@ module Extension
 
       def valid_attributes
         {
-          identifier: 'test_extension',
+          identifier: "test_extension",
           features: {
             argo: {
-              surface_area: 'admin',
-              git_template: 'https://github.com/Shopify/argo-test-template.git',
-              renderer_package_name: '@shopify/argo-test',
+              surface_area: "admin",
+              git_template: "https://github.com/Shopify/argo-test-template.git",
+              renderer_package_name: "@shopify/argo-test",
             },
           },
         }

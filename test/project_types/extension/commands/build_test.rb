@@ -1,5 +1,5 @@
 # frozen_string_literal: true
-require 'test_helper'
+require "test_helper"
 
 module Extension
   module Commands
@@ -32,7 +32,7 @@ module Extension
 
       def test_aborts_and_informs_the_user_when_build_fails
         ShopifyCli::JsSystem.any_instance.stubs(:call).returns(false)
-        @context.expects(:abort).with(@context.message('build.build_failure_message'))
+        @context.expects(:abort).with(@context.message("build.build_failure_message"))
 
         run_build
       end
@@ -41,7 +41,7 @@ module Extension
 
       def run_build(*args)
         Build.ctx = @context
-        Build.call(args, 'build')
+        Build.call(args, "build")
       end
     end
   end

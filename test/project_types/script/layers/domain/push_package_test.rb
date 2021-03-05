@@ -4,14 +4,14 @@ require "project_types/script/test_helper"
 
 describe Script::Layers::Domain::PushPackage do
   let(:extension_point_type) { "discount" }
-  let(:script_id) { 'id' }
+  let(:script_id) { "id" }
   let(:script_name) { "foo_script" }
   let(:description) { "my description" }
   let(:api_key) { "fake_key" }
   let(:force) { false }
   let(:script_content) { "(module)" }
   let(:compiled_type) { "wasm" }
-  let(:metadata) { Script::Layers::Domain::Metadata.new('1', '0', true) }
+  let(:metadata) { Script::Layers::Domain::Metadata.new("1", "0", true) }
   let(:push_package) do
     Script::Layers::Domain::PushPackage.new(
       id: id,

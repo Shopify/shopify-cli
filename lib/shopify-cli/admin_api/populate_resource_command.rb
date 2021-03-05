@@ -1,5 +1,5 @@
-require 'shopify_cli'
-require 'optparse'
+require "shopify_cli"
+require "optparse"
 
 module ShopifyCli
   class AdminAPI
@@ -36,7 +36,7 @@ module ShopifyCli
 
         if @help
           output = display_parent_extended_help
-          output += "\n#{@ctx.message('core.populate.options.header', camel_case_resource_type)}\n"
+          output += "\n#{@ctx.message("core.populate.options.header", camel_case_resource_type)}\n"
           output += resource_options.help
           return @ctx.puts(output)
         end
@@ -45,7 +45,7 @@ module ShopifyCli
 
         if @silent
           spin_group = CLI::UI::SpinGroup.new
-          spin_group.add(@ctx.message('core.populate.populating', @count, camel_case_resource_type)) do |spinner|
+          spin_group.add(@ctx.message("core.populate.populating", @count, camel_case_resource_type)) do |spinner|
             populate
             spinner.update_title(completion_message)
           end
@@ -78,18 +78,18 @@ module ShopifyCli
           opts.on(
             "-c #{DEFAULT_COUNT}",
             "--count=#{DEFAULT_COUNT}",
-            @ctx.message('core.populate.options.count_help')
+            @ctx.message("core.populate.options.count_help")
           ) do |value|
             @count = value.to_i
           end
 
-          opts.on('-h', '--help', 'print help') do |value|
+          opts.on("-h", "--help", "print help") do |value|
             @help = value
           end
 
           opts.on("--silent") { |v| @silent = v }
 
-          opts.on('--shop=', '-s') { |value| @shop = value }
+          opts.on("--shop=", "-s") { |value| @shop = value }
         end
       end
 
@@ -100,12 +100,12 @@ module ShopifyCli
       end
 
       def input_options
-        schema.type(self.class.input_type)['inputFields'].each do |field|
+        schema.type(self.class.input_type)["inputFields"].each do |field|
           resource_options.on(
-            "--#{field['name']}=#{field['defaultValue']}",
-            field['description']
+            "--#{field["name"]}=#{field["defaultValue"]}",
+            field["description"]
           ) do |value|
-            @input[field['name']] = value
+            @input[field["name"]] = value
           end
         end
       end
@@ -120,14 +120,14 @@ module ShopifyCli
         resp = AdminAPI.query(
           @ctx, "create_#{snake_case_resource_type}", **kwargs
         )
-        @ctx.abort(resp['errors']) if resp['errors']
-        @ctx.done(message(resp['data'])) unless @silent
+        @ctx.abort(resp["errors"]) if resp["errors"]
+        @ctx.done(message(resp["data"])) unless @silent
       end
 
       def completion_message
         plural = @count > 1 ? "s" : ""
         @ctx.message(
-          'core.populate.completion_message',
+          "core.populate.completion_message",
           @count,
           "#{camel_case_resource_type}#{plural}",
           Project.current.env.shop,
@@ -142,7 +142,7 @@ module ShopifyCli
       end
 
       def price
-        format('%.2f', rand(1..10))
+        format("%.2f", rand(1..10))
       end
 
       private
@@ -155,7 +155,7 @@ module ShopifyCli
       end
 
       def camel_case_resource_type
-        @camel_case_resource_type ||= self.class.to_s.split('::').last
+        @camel_case_resource_type ||= self.class.to_s.split("::").last
       end
 
       def snake_case_resource_type
@@ -167,7 +167,7 @@ module ShopifyCli
       end
 
       def parent_command_klass
-        @parent_command_klass ||= Module.const_get(self.class.to_s.split('::')[0..-2].join('::'))
+        @parent_command_klass ||= Module.const_get(self.class.to_s.split("::")[0..-2].join("::"))
       end
     end
   end

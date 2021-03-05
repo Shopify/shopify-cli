@@ -1,17 +1,17 @@
 # frozen_string_literal: true
-require 'shopify_cli'
+require "shopify_cli"
 
 module Extension
   module Tasks
     module Converters
       module RegistrationConverter
-        ID_FIELD = 'id'
-        TYPE_FIELD = 'type'
-        TITLE_FIELD = 'title'
-        DRAFT_VERSION_FIELD = 'draftVersion'
+        ID_FIELD = "id"
+        TYPE_FIELD = "type"
+        TITLE_FIELD = "title"
+        DRAFT_VERSION_FIELD = "draftVersion"
 
         def self.from_hash(context, hash)
-          context.abort(context.message('tasks.errors.parse_error')) if hash.nil?
+          context.abort(context.message("tasks.errors.parse_error")) if hash.nil?
 
           Models::Registration.new(
             id: hash[ID_FIELD].to_i,

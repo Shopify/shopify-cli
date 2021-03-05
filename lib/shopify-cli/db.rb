@@ -1,5 +1,5 @@
-require 'pstore'
-require 'forwardable'
+require "pstore"
+require "forwardable"
 
 module ShopifyCli
   # Persists transient data like access tokens that may be cleared

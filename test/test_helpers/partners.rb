@@ -2,7 +2,7 @@
 module TestHelpers
   module Partners
     def setup
-      ShopifyCli::DB.set(identity_exchange_token: 'faketoken')
+      ShopifyCli::DB.set(identity_exchange_token: "faketoken")
       super
     end
 
@@ -12,12 +12,12 @@ module TestHelpers
     end
 
     def stub_partner_req(query, variables: {}, status: 200, resp: {})
-      filepaths = Dir[File.join(ShopifyCli::ROOT, 'lib', '**', 'graphql', "#{query}.graphql")]
+      filepaths = Dir[File.join(ShopifyCli::ROOT, "lib", "**", "graphql", "#{query}.graphql")]
       if filepaths.count > 1
         raise "Multiple queries in the codebase with filename #{query}.graphql, please rename your query."
       end
       stub_request(:post, "https://partners.shopify.com/api/cli/graphql").with(body: {
-        query: File.read(filepaths.first).tr("\n", ''),
+        query: File.read(filepaths.first).tr("\n", ""),
         variables: variables,
       }.to_json).to_return(status: status, body: resp.to_json)
     end

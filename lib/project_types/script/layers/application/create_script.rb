@@ -40,9 +40,9 @@ module Script
           end
 
           def bootstrap(ctx, project_creator)
-            UI::StrictSpinner.spin(ctx.message('script.create.creating')) do |spinner|
+            UI::StrictSpinner.spin(ctx.message("script.create.creating")) do |spinner|
               project_creator.bootstrap
-              spinner.update_title(ctx.message('script.create.created'))
+              spinner.update_title(ctx.message("script.create.created"))
             end
           end
         end

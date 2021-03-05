@@ -4,11 +4,11 @@ module Script
   module Commands
     class Create < ShopifyCli::SubCommand
       options do |parser, flags|
-        parser.on('--name=NAME') { |name| flags[:name] = name }
-        parser.on('--description=DESCRIPTION') { |description| flags[:description] = description }
-        parser.on('--extension_point=EP_NAME') { |ep_name| flags[:extension_point] = ep_name }
-        parser.on('--extension-point=EP_NAME') { |ep_name| flags[:extension_point] = ep_name }
-        parser.on('--language=LANGUAGE') { |language| flags[:language] = language }
+        parser.on("--name=NAME") { |name| flags[:name] = name }
+        parser.on("--description=DESCRIPTION") { |description| flags[:description] = description }
+        parser.on("--extension_point=EP_NAME") { |ep_name| flags[:extension_point] = ep_name }
+        parser.on("--extension-point=EP_NAME") { |ep_name| flags[:extension_point] = ep_name }
+        parser.on("--language=LANGUAGE") { |language| flags[:language] = language }
       end
 
       def call(args, _name)
@@ -28,17 +28,17 @@ module Script
           extension_point_type: form.extension_point,
           description: form.description
         )
-        @ctx.puts(@ctx.message('script.create.change_directory_notice', project.script_name))
+        @ctx.puts(@ctx.message("script.create.change_directory_notice", project.script_name))
       rescue Script::Errors::ScriptProjectAlreadyExistsError => e
-        UI::ErrorHandler.pretty_print_and_raise(e, failed_op: @ctx.message('script.create.error.operation_failed'))
+        UI::ErrorHandler.pretty_print_and_raise(e, failed_op: @ctx.message("script.create.error.operation_failed"))
       rescue StandardError => e
         ScriptProject.cleanup(ctx: @ctx, script_name: form.name, root_dir: cur_dir) if form
-        UI::ErrorHandler.pretty_print_and_raise(e, failed_op: @ctx.message('script.create.error.operation_failed'))
+        UI::ErrorHandler.pretty_print_and_raise(e, failed_op: @ctx.message("script.create.error.operation_failed"))
       end
 
       def self.help
         allowed_values = Script::Layers::Application::ExtensionPoints.types.map { |type| "{{cyan:#{type}}}" }
-        ShopifyCli::Context.message('script.create.help', ShopifyCli::TOOL_NAME, allowed_values.join(', '))
+        ShopifyCli::Context.message("script.create.help", ShopifyCli::TOOL_NAME, allowed_values.join(", "))
       end
     end
   end

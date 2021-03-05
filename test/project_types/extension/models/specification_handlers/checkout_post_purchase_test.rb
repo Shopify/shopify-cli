@@ -1,5 +1,5 @@
 # frozen_string_literal: true
-require 'test_helper'
+require "test_helper"
 
 module Extension
   module Models
@@ -12,12 +12,12 @@ module Extension
           Features::Argo.any_instance.stubs(:config).returns({})
           Features::ArgoConfig.stubs(:parse_yaml).returns({})
 
-          @identifier = 'CHECKOUT_POST_PURCHASE'
+          @identifier = "CHECKOUT_POST_PURCHASE"
           @checkout_post_purchase = Extension.specifications[@identifier]
         end
 
         def test_create_uses_standard_argo_create_implementation
-          directory_name = 'checkout_post_purchase'
+          directory_name = "checkout_post_purchase"
 
           Features::Argo.any_instance
             .expects(:create)
@@ -34,7 +34,7 @@ module Extension
 
         def test_config_merges_with_standard_argo_config_implementation
           script_content = "alert(true)"
-          metafields = [{ key: 'a-key', namespace: 'a-namespace' }]
+          metafields = [{ key: "a-key", namespace: "a-namespace" }]
 
           initial_config = { script_content: script_content }
           yaml_config = { "metafields": metafields }

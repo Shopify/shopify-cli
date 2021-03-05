@@ -8,7 +8,7 @@ module Extension
 
         def stub_create_extension(api_key:, type:, title:, config:, extension_context: nil)
           stub_partner_req(
-            'extension_create',
+            "extension_create",
             variables: {
               api_key: api_key,
               type: type,

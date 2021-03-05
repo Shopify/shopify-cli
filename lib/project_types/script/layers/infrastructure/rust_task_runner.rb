@@ -31,7 +31,7 @@ module Script
 
         def metadata
           unless @ctx.file_exist?(METADATA_FILE)
-            msg = @ctx.message('script.error.metadata_not_found_cause', METADATA_FILE)
+            msg = @ctx.message("script.error.metadata_not_found_cause", METADATA_FILE)
             raise Domain::Errors::MetadataNotFoundError, msg
           end
 

@@ -1,6 +1,6 @@
 # frozen_string_literal: true
-require 'test_helper'
-require 'project_types/extension/extension_test_helpers'
+require "test_helper"
+require "project_types/extension/extension_test_helpers"
 
 module Extension
   module Tasks
@@ -13,7 +13,7 @@ module Extension
         super
         ShopifyCli::ProjectType.load_type(:extension)
         setup_temp_project
-        @app = Models::App.new(title: 'App One', api_key: '1234', secret: '5678')
+        @app = Models::App.new(title: "App One", api_key: "1234", secret: "5678")
       end
 
       def test_loads_app_into_a_single_app_model
@@ -21,9 +21,9 @@ module Extension
 
         app = Tasks::GetApp.call(context: @context, api_key: @app.api_key)
 
-        assert_equal 'App One', app.title
-        assert_equal '1234', app.api_key
-        assert_equal '5678', app.secret
+        assert_equal "App One", app.title
+        assert_equal "1234", app.api_key
+        assert_equal "5678", app.secret
       end
 
       def test_returns_nil_if_the_app_was_not_found

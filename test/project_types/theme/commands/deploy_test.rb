@@ -1,5 +1,5 @@
 # frozen_string_literal: true
-require 'project_types/theme/test_helper'
+require "project_types/theme/test_helper"
 
 module Theme
   module Commands
@@ -10,7 +10,7 @@ module Theme
         context = ShopifyCli::Context.new
         CLI::UI::Prompt.expects(:confirm).returns(true)
         Themekit.expects(:deploy).with(context, flags: [], env: nil).returns(true)
-        context.expects(:done).with(context.message('theme.deploy.info.deployed'))
+        context.expects(:done).with(context.message("theme.deploy.info.deployed"))
 
         Theme::Commands::Deploy.new(context).call
       end
@@ -18,11 +18,11 @@ module Theme
       def test_can_specify_env
         context = ShopifyCli::Context.new
         CLI::UI::Prompt.expects(:confirm).returns(true)
-        Themekit.expects(:deploy).with(context, flags: [], env: 'test').returns(true)
-        context.expects(:done).with(context.message('theme.deploy.info.deployed'))
+        Themekit.expects(:deploy).with(context, flags: [], env: "test").returns(true)
+        context.expects(:done).with(context.message("theme.deploy.info.deployed"))
 
         command = Theme::Commands::Deploy.new(context)
-        command.options.flags[:env] = 'test'
+        command.options.flags[:env] = "test"
         command.call
       end
 
@@ -40,7 +40,7 @@ module Theme
         context = ShopifyCli::Context.new
         CLI::UI::Prompt.expects(:confirm).returns(true)
         Themekit.expects(:deploy).with(context, flags: [], env: nil).returns(false)
-        context.expects(:done).with(context.message('theme.deploy.info.deployed')).never
+        context.expects(:done).with(context.message("theme.deploy.info.deployed")).never
 
         assert_raises CLI::Kit::Abort do
           Theme::Commands::Deploy.new(context).call

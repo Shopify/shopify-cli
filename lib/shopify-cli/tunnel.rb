@@ -1,7 +1,7 @@
-require 'json'
-require 'fileutils'
-require 'shopify_cli'
-require 'forwardable'
+require "json"
+require "fileutils"
+require "shopify_cli"
+require "forwardable"
 
 module ShopifyCli
   ##
@@ -19,14 +19,14 @@ module ShopifyCli
     PORT = 8081 # port that ngrok will bind to
     # mapping for supported operating systems for where to download ngrok from.
     DOWNLOAD_URLS = {
-      mac: 'https://bin.equinox.io/c/4VmDzA7iaHb/ngrok-stable-darwin-amd64.zip',
-      linux: 'https://bin.equinox.io/c/4VmDzA7iaHb/ngrok-stable-linux-amd64.zip',
-      windows: 'https://bin.equinox.io/c/4VmDzA7iaHb/ngrok-stable-windows-amd64.zip',
+      mac: "https://bin.equinox.io/c/4VmDzA7iaHb/ngrok-stable-darwin-amd64.zip",
+      linux: "https://bin.equinox.io/c/4VmDzA7iaHb/ngrok-stable-linux-amd64.zip",
+      windows: "https://bin.equinox.io/c/4VmDzA7iaHb/ngrok-stable-windows-amd64.zip",
     }
 
-    NGROK_TUNNELS_URI = URI.parse('http://localhost:4040/api/tunnels')
-    TUNNELS_FIELD = 'tunnels'
-    PUBLIC_URL_FIELD = 'public_url'
+    NGROK_TUNNELS_URI = URI.parse("http://localhost:4040/api/tunnels")
+    TUNNELS_FIELD = "tunnels"
+    PUBLIC_URL_FIELD = "public_url"
 
     ##
     # will find and stop a running tunnel process. It will also output if the
@@ -39,12 +39,12 @@ module ShopifyCli
     def stop(ctx)
       if ShopifyCli::ProcessSupervision.running?(:ngrok)
         if ShopifyCli::ProcessSupervision.stop(:ngrok)
-          ctx.puts(ctx.message('core.tunnel.stopped'))
+          ctx.puts(ctx.message("core.tunnel.stopped"))
         else
-          ctx.abort(ctx.message('core.tunnel.error.stop'))
+          ctx.abort(ctx.message("core.tunnel.error.stop"))
         end
       else
-        ctx.puts(ctx.message('core.tunnel.not_running'))
+        ctx.puts(ctx.message("core.tunnel.not_running"))
       end
     end
 
@@ -65,15 +65,15 @@ module ShopifyCli
       install(ctx)
       url, account, seconds_remaining = start_ngrok(ctx, port)
       if account
-        ctx.puts(ctx.message('core.tunnel.start_with_account', url, account))
+        ctx.puts(ctx.message("core.tunnel.start_with_account", url, account))
       else
         if seconds_remaining <= 0
-          ctx.puts(ctx.message('core.tunnel.timed_out'))
+          ctx.puts(ctx.message("core.tunnel.timed_out"))
           url, _account, seconds_remaining = restart_ngrok(ctx, port)
         end
-        ctx.puts(ctx.message('core.tunnel.start', url))
-        ctx.puts(ctx.message('core.tunnel.will_timeout', seconds_to_hm(seconds_remaining)))
-        ctx.puts(ctx.message('core.tunnel.signup_suggestion', ShopifyCli::TOOL_NAME))
+        ctx.puts(ctx.message("core.tunnel.start", url))
+        ctx.puts(ctx.message("core.tunnel.will_timeout", seconds_to_hm(seconds_remaining)))
+        ctx.puts(ctx.message("core.tunnel.signup_suggestion", ShopifyCli::TOOL_NAME))
       end
       url
     end
@@ -89,7 +89,7 @@ module ShopifyCli
     #
     def auth(ctx, token)
       install(ctx)
-      ctx.system(File.join(ShopifyCli.cache_dir, 'ngrok'), 'authtoken', token)
+      ctx.system(File.join(ShopifyCli.cache_dir, "ngrok"), "authtoken", token)
     end
 
     ##
@@ -125,13 +125,13 @@ module ShopifyCli
     def install(ctx)
       ngrok = "ngrok#{ctx.executable_file_extension}"
       return if File.exist?(File.join(ShopifyCli.cache_dir, ngrok))
-      check_prereq_command(ctx, 'curl')
-      check_prereq_command(ctx, ctx.linux? ? 'unzip' : 'tar')
+      check_prereq_command(ctx, "curl")
+      check_prereq_command(ctx, ctx.linux? ? "unzip" : "tar")
       spinner = CLI::UI::SpinGroup.new
-      spinner.add('Installing ngrok...') do
-        zip_dest = File.join(ShopifyCli.cache_dir, 'ngrok.zip')
+      spinner.add("Installing ngrok...") do
+        zip_dest = File.join(ShopifyCli.cache_dir, "ngrok.zip")
         unless File.exist?(zip_dest)
-          ctx.system('curl', '-o', zip_dest, DOWNLOAD_URLS[ctx.os], chdir: ShopifyCli.cache_dir)
+          ctx.system("curl", "-o", zip_dest, DOWNLOAD_URLS[ctx.os], chdir: ShopifyCli.cache_dir)
         end
         args = if ctx.linux?
           %W(unzip -u #{zip_dest})
@@ -145,7 +145,7 @@ module ShopifyCli
 
       # final check to see if ngrok is accessible
       unless File.exist?(File.join(ShopifyCli.cache_dir, ngrok))
-        ctx.abort(ctx.message('core.tunnel.error.ngrok', ngrok, ShopifyCli.cache_dir))
+        ctx.abort(ctx.message("core.tunnel.error.ngrok", ngrok, ShopifyCli.cache_dir))
       end
     end
 
@@ -157,7 +157,7 @@ module ShopifyCli
     end
 
     def ngrok_command(port)
-      "\"#{File.join(ShopifyCli.cache_dir, 'ngrok')}\" http -inspect=false -log=stdout -log-level=debug #{port}"
+      "\"#{File.join(ShopifyCli.cache_dir, "ngrok")}\" http -inspect=false -log=stdout -log-level=debug #{port}"
     end
 
     def seconds_to_hm(seconds)
@@ -173,15 +173,15 @@ module ShopifyCli
 
     def restart_ngrok(ctx, port)
       unless ShopifyCli::ProcessSupervision.stop(:ngrok)
-        ctx.abort(ctx.message('core.tunnel.error.stop'))
+        ctx.abort(ctx.message("core.tunnel.error.stop"))
       end
       start_ngrok(ctx, port)
     end
 
     def check_prereq_command(ctx, command)
       cmd_path = ctx.which(command)
-      ctx.abort(ctx.message('core.tunnel.error.prereq_command_required', command)) if cmd_path.nil?
-      ctx.done(ctx.message('core.tunnel.prereq_command_location', command, cmd_path))
+      ctx.abort(ctx.message("core.tunnel.error.prereq_command_required", command)) if cmd_path.nil?
+      ctx.done(ctx.message("core.tunnel.prereq_command_location", command, cmd_path))
     end
 
     class LogParser # :nodoc:
@@ -199,7 +199,7 @@ module ShopifyCli
           sleep(1)
         end
 
-        raise FetchUrlError, Context.message('core.tunnel.error.url_fetch_failure') unless url
+        raise FetchUrlError, Context.message("core.tunnel.error.url_fetch_failure") unless url
       end
 
       def parse

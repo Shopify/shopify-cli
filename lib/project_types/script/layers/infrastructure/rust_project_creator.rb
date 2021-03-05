@@ -10,8 +10,8 @@ module Script
         property! :script_name, accepts: String
         property! :path_to_project, accepts: String
 
-        ORIGIN_BRANCH = 'main'
-        SAMPLE_PATH = 'default'
+        ORIGIN_BRANCH = "main"
+        SAMPLE_PATH = "default"
 
         def setup_dependencies
           git_init
@@ -60,8 +60,8 @@ module Script
         end
 
         def set_script_name
-          config_file = 'Cargo.toml'
-          upstream_name = "#{extension_point.type.gsub('_', '-')}-default"
+          config_file = "Cargo.toml"
+          upstream_name = "#{extension_point.type.gsub("_", "-")}-default"
           contents = File.read(config_file)
           new_contents = contents.sub(upstream_name, script_name)
           File.write(config_file, new_contents)

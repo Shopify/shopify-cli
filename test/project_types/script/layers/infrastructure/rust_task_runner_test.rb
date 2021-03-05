@@ -1,11 +1,11 @@
 # frozen_string_literal: true
 
-require 'project_types/script/test_helper'
+require "project_types/script/test_helper"
 
 describe Script::Layers::Infrastructure::AssemblyScriptTaskRunner do
   include TestHelpers::FakeFS
   let(:ctx) { TestHelpers::FakeContext.new }
-  let(:script_id) { 'id' }
+  let(:script_id) { "id" }
   let(:script_name) { "foo" }
   let(:extension_point_config) do
     {
@@ -89,18 +89,18 @@ describe Script::Layers::Infrastructure::AssemblyScriptTaskRunner do
         JSON.dump(
           {
             schemaVersions: {
-              example: { major: '1', minor: '0' },
+              example: { major: "1", minor: "0" },
             },
           },
         )
       end
 
       it "should return a proper metadata object" do
-        File.expects(:read).with('build/metadata.json').once.returns(metadata_json)
+        File.expects(:read).with("build/metadata.json").once.returns(metadata_json)
 
         ctx
           .expects(:file_exist?)
-          .with('build/metadata.json')
+          .with("build/metadata.json")
           .once
           .returns(true)
 

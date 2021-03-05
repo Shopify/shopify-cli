@@ -1,5 +1,5 @@
 # frozen_string_literal: true
-require 'project_types/theme/test_helper'
+require "project_types/theme/test_helper"
 
 module Theme
   module Commands
@@ -19,22 +19,22 @@ module Theme
 
           Theme::Forms::Connect.expects(:ask)
             .with(context, [], {})
-            .returns(Theme::Forms::Connect.new(context, [], { store: 'shop.myshopify.com',
-                                                              password: 'boop',
-                                                              themeid: '2468',
-                                                              name: 'my_theme',
+            .returns(Theme::Forms::Connect.new(context, [], { store: "shop.myshopify.com",
+                                                              password: "boop",
+                                                              themeid: "2468",
+                                                              name: "my_theme",
                                                               env: nil }))
 
-          context.expects(:dir_exist?).with('my_theme').returns(false)
+          context.expects(:dir_exist?).with("my_theme").returns(false)
           Themekit.expects(:connect)
-            .with(context, store: 'shop.myshopify.com', password: 'boop', themeid: '2468', env: nil)
+            .with(context, store: "shop.myshopify.com", password: "boop", themeid: "2468", env: nil)
             .returns(true)
-          context.expects(:done).with(context.message('theme.connect.connected',
-            'my_theme',
-            'shop.myshopify.com',
-            File.join(context.root, 'my_theme')))
+          context.expects(:done).with(context.message("theme.connect.connected",
+            "my_theme",
+            "shop.myshopify.com",
+            File.join(context.root, "my_theme")))
 
-          Theme::Commands::Connect.new(context).call([], 'connect')
+          Theme::Commands::Connect.new(context).call([], "connect")
           assert_equal SHOPIFYCLI_FILE, File.read(".shopify-cli.yml")
         end
       end
@@ -45,25 +45,25 @@ module Theme
           ShopifyCli::Project.expects(:has_current?).returns(false).twice
 
           Theme::Forms::Connect.expects(:ask)
-            .with(context, [], { env: 'test' })
-            .returns(Theme::Forms::Connect.new(context, [], { store: 'shop.myshopify.com',
-                                                              password: 'boop',
-                                                              themeid: '2468',
-                                                              name: 'my_theme',
-                                                              env: 'test' }))
+            .with(context, [], { env: "test" })
+            .returns(Theme::Forms::Connect.new(context, [], { store: "shop.myshopify.com",
+                                                              password: "boop",
+                                                              themeid: "2468",
+                                                              name: "my_theme",
+                                                              env: "test" }))
 
-          context.expects(:dir_exist?).with('my_theme').returns(false)
+          context.expects(:dir_exist?).with("my_theme").returns(false)
           Themekit.expects(:connect)
-            .with(context, store: 'shop.myshopify.com', password: 'boop', themeid: '2468', env: 'test')
+            .with(context, store: "shop.myshopify.com", password: "boop", themeid: "2468", env: "test")
             .returns(true)
-          context.expects(:done).with(context.message('theme.connect.connected',
-            'my_theme',
-            'shop.myshopify.com',
-            File.join(context.root, 'my_theme')))
+          context.expects(:done).with(context.message("theme.connect.connected",
+            "my_theme",
+            "shop.myshopify.com",
+            File.join(context.root, "my_theme")))
 
           command = Theme::Commands::Connect.new(context)
-          command.options.flags[:env] = 'test'
-          command.call([], 'connect')
+          command.options.flags[:env] = "test"
+          command.call([], "connect")
 
           assert_equal SHOPIFYCLI_FILE, File.read(".shopify-cli.yml")
         end
@@ -75,13 +75,13 @@ module Theme
           ShopifyCli::Project.expects(:has_current?).returns(true)
 
           Theme::Forms::Connect.expects(:ask).with(context, [], {}).never
-          context.expects(:dir_exist?).with('my_theme').never
+          context.expects(:dir_exist?).with("my_theme").never
           Themekit.expects(:connect)
-            .with(context, store: 'shop.myshopify.com', password: 'boop', themeid: '2468', env: nil)
+            .with(context, store: "shop.myshopify.com", password: "boop", themeid: "2468", env: nil)
             .never
 
           assert_raises CLI::Kit::Abort do
-            Theme::Commands::Connect.new(context).call([], 'connect')
+            Theme::Commands::Connect.new(context).call([], "connect")
           end
         end
       end
@@ -93,19 +93,19 @@ module Theme
 
           Theme::Forms::Connect.expects(:ask)
             .with(context, [], {})
-            .returns(Theme::Forms::Connect.new(context, [], { store: 'shop.myshopify.com',
-                                                              password: 'boop',
-                                                              themeid: '2468',
-                                                              name: 'my_theme',
+            .returns(Theme::Forms::Connect.new(context, [], { store: "shop.myshopify.com",
+                                                              password: "boop",
+                                                              themeid: "2468",
+                                                              name: "my_theme",
                                                               env: nil }))
 
-          context.expects(:dir_exist?).with('my_theme').returns(true)
+          context.expects(:dir_exist?).with("my_theme").returns(true)
           Themekit.expects(:connect)
-            .with(context, store: 'shop.myshopify.com', password: 'boop', themeid: '2468', env: nil)
+            .with(context, store: "shop.myshopify.com", password: "boop", themeid: "2468", env: nil)
             .never
 
           assert_raises CLI::Kit::Abort do
-            Theme::Commands::Connect.new(context).call([], 'connect')
+            Theme::Commands::Connect.new(context).call([], "connect")
           end
         end
       end
@@ -117,19 +117,19 @@ module Theme
 
           Theme::Forms::Connect.expects(:ask)
             .with(context, [], {})
-            .returns(Theme::Forms::Connect.new(context, [], { store: 'shop.myshopify.com',
-                                                              password: 'merp',
-                                                              themeid: '1357',
-                                                              name: 'your_theme',
+            .returns(Theme::Forms::Connect.new(context, [], { store: "shop.myshopify.com",
+                                                              password: "merp",
+                                                              themeid: "1357",
+                                                              name: "your_theme",
                                                               env: nil }))
 
-          context.expects(:dir_exist?).with('your_theme').returns(false)
+          context.expects(:dir_exist?).with("your_theme").returns(false)
           Themekit.expects(:connect)
-            .with(context, store: 'shop.myshopify.com', password: 'merp', themeid: '1357', env: nil)
+            .with(context, store: "shop.myshopify.com", password: "merp", themeid: "1357", env: nil)
             .returns(false)
 
           assert_raises CLI::Kit::Abort do
-            Theme::Commands::Connect.new(context).call([], 'connect')
+            Theme::Commands::Connect.new(context).call([], "connect")
           end
         end
       end
