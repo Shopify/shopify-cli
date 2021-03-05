@@ -1,4 +1,4 @@
-require 'shopify_cli'
+require "shopify_cli"
 
 module ShopifyCli
   module Commands
@@ -8,7 +8,7 @@ module ShopifyCli
       end
 
       def self.help
-        ShopifyCli::Context.message('core.login.help', ShopifyCli::TOOL_NAME)
+        ShopifyCli::Context.message("core.login.help", ShopifyCli::TOOL_NAME)
       end
     end
   end
