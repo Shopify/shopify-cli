@@ -59,7 +59,6 @@ module Extension
             registration_id: 55,
             last_user_interaction_at: Time.now.utc,
           )
-
         )
         refute @project.registered?
 
