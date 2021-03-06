@@ -46,6 +46,12 @@ module Extension
   end
 
   module Forms
+    module Questions
+      autoload :AskApp, Project.project_filepath("forms/questions/ask_app")
+      autoload :AskName, Project.project_filepath("forms/questions/ask_name")
+      autoload :AskType, Project.project_filepath("forms/questions/ask_type")
+    end
+
     autoload :Create, Project.project_filepath("forms/create")
     autoload :Register, Project.project_filepath("forms/register")
   end
