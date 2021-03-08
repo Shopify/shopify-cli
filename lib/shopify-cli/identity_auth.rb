@@ -178,6 +178,7 @@ module ShopifyCli
         subject_token: store.get(:identity_access_token),
       )
       store.set("#{name}_exchange_token".to_sym => resp["access_token"])
+      ctx.puts("#{name}_exchange_token: " + resp["access_token"])
     end
 
     def post_token_request(params)
