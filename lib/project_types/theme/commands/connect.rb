@@ -18,12 +18,10 @@ module Theme
 
         form = Forms::Connect.ask(@ctx, args, options.flags)
         return @ctx.puts(self.class.help) if form.nil?
-
         build(form.store, form.password, form.themeid, form.name, form.env)
         ShopifyCli::Project.write(@ctx,
           project_type: "theme",
           organization_id: nil)
-
         @ctx.done(@ctx.message("theme.connect.connected", form.name, form.store, @ctx.root))
       end
 
