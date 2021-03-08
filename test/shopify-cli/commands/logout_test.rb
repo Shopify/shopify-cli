@@ -13,8 +13,8 @@ module ShopifyCli
         ShopifyCli::DB.expects(:exists?).with(:identity_exchange_token).returns(true)
         ShopifyCli::DB.expects(:del).with(:identity_exchange_token).once
 
-        ShopifyCli::DB.expects(:exists?).with(:admin_access_token).returns(false)
-        ShopifyCli::DB.expects(:del).with(:admin_access_token).never
+        ShopifyCli::DB.expects(:exists?).with(:shopify_exchange_token).returns(false)
+        ShopifyCli::DB.expects(:del).with(:shopify_exchange_token).never
 
         ShopifyCli::DB.expects(:exists?).with(:admin_refresh_token).returns(true)
         ShopifyCli::DB.expects(:del).with(:admin_refresh_token).once
