@@ -1,3 +1,5 @@
+require "delegate"
+
 module ShopifyCli
   ##
   # `LazyDelegator` defers initialization of its underlying delegatee until the
