@@ -68,7 +68,7 @@ module ShopifyCli
     def underscore_key(key)
       return key unless underscore_keys? && key.respond_to?(:to_str)
 
-      key.to_str.dup.yield_self do |k|
+      key.to_str.dup.tap do |k|
         k.gsub!(/([A-Z\d]+)([A-Z][a-z])/, '\1_\2')
         k.gsub!(/([a-z\d])([A-Z])/, '\1_\2')
         k.tr!("-", "_")
