@@ -34,6 +34,7 @@ namespace :rdoc do
     "lib/shopify-cli/process_supervision.rb",
     "lib/shopify-cli/project.rb",
     "lib/shopify-cli/result.rb",
+    "lib/shopify-cli/transform_data_structure.rb",
     "lib/shopify-cli/tunnel.rb",
     "lib/shopify-cli/lazy_delegator.rb",
   ]

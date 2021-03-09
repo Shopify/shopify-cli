@@ -124,6 +124,7 @@ module ShopifyCli
   autoload :SubCommand, "shopify-cli/sub_command"
   autoload :Task, "shopify-cli/task"
   autoload :Tasks, "shopify-cli/tasks"
+  autoload :TransformDataStructure, "shopify-cli/transform_data_structure"
   autoload :Tunnel, "shopify-cli/tunnel"
 
   require "shopify-cli/messages/messages"
