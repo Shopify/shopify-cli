@@ -61,7 +61,7 @@ module ShopifyCli
       ##
       # creates a new instance and invokes `call`. Any positional argument
       # is forward to `call`. Keyword arguments are either forwarded to the
-      # inializer or to `call`. If the keyword argument matches the name of
+      # initializer or to `call`. If the keyword argument matches the name of
       # property, it is forwarded to the initializer, otherwise to call.
       #
       def call(*args, **kwargs)
