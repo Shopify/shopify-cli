@@ -5,17 +5,15 @@ module Script
     module Application
       class BuildScript
         class << self
-          def call(ctx:, task_runner:, script_name:, description:, extension_point_type:)
+          def call(ctx:, task_runner:, script_project:)
             CLI::UI::Frame.open(ctx.message("script.application.building")) do
               begin
                 UI::StrictSpinner.spin(ctx.message("script.application.building_script")) do |spinner|
                   Infrastructure::PushPackageRepository.new(ctx: ctx).create_push_package(
-                    extension_point_type: extension_point_type,
-                    script_name: script_name,
-                    description: description,
+                    script_project: script_project,
                     script_content: task_runner.build,
                     compiled_type: task_runner.compiled_type,
-                    metadata: task_runner.metadata
+                    metadata: task_runner.metadata,
                   )
                   spinner.update_title(ctx.message("script.application.built"))
                 end

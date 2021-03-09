@@ -51,6 +51,12 @@ module Script
           invalid_config: "Can't change the configuration values because %1$s is missing or "\
                           "it is not formatted properly.",
 
+          invalid_config_ui_definition_cause: "The UI configuration file %s contains invalid YAML.",
+          invalid_config_ui_definition_help: "Fix the errors and try again.",
+
+          missing_config_ui_definition_cause: "You are missing the UI configuration file %s.",
+          missing_config_ui_definition_help: "Create this file and try again.",
+
           script_not_found_cause: "Couldn't find script %s for extension point %s",
 
           service_failure_cause: "Internal service error.",

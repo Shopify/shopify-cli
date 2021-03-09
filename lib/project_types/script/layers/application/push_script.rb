@@ -9,19 +9,11 @@ module Script
             script_project = ScriptProject.current
             task_runner = Infrastructure::TaskRunner.for(ctx, script_project.language, script_project.script_name)
             ProjectDependencies.install(ctx: ctx, task_runner: task_runner)
-            BuildScript.call(
-              ctx: ctx,
-              task_runner: task_runner,
-              extension_point_type: script_project.extension_point_type,
-              script_name: script_project.script_name,
-              description: script_project.description
-            )
+            BuildScript.call(ctx: ctx, task_runner: task_runner, script_project: script_project)
 
             UI::PrintingSpinner.spin(ctx, ctx.message("script.application.pushing")) do |p_ctx, spinner|
               package = Infrastructure::PushPackageRepository.new(ctx: p_ctx).get_push_package(
-                extension_point_type: script_project.extension_point_type,
-                script_name: script_project.script_name,
-                description: script_project.description,
+                script_project: script_project,
                 compiled_type: task_runner.compiled_type,
                 metadata: task_runner.metadata
               )

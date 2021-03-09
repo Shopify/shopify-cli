@@ -23,6 +23,7 @@ describe Script::Layers::Application::PushScript do
       extension_point_type: extension_point_type,
       script_name: script_name,
       description: description,
+      config_ui: "",
       env: { api_key: api_key }
     )
   end
@@ -41,9 +42,7 @@ describe Script::Layers::Application::PushScript do
     Script::ScriptProject.stubs(:current).returns(project)
     extension_point_repository.create_extension_point(extension_point_type)
     push_package_repository.create_push_package(
-      extension_point_type: extension_point_type,
-      script_name: script_name,
-      description: description,
+      script_project: project,
       script_content: "content",
       compiled_type: compiled_type,
       metadata: metadata
@@ -60,9 +59,7 @@ describe Script::Layers::Application::PushScript do
       Script::Layers::Application::BuildScript.expects(:call).with(
         ctx: @context,
         task_runner: task_runner,
-        extension_point_type: extension_point_type,
-        script_name: script_name,
-        description: description
+        script_project: project
       )
       Script::Layers::Infrastructure::ScriptService
         .expects(:new).returns(script_service_instance)

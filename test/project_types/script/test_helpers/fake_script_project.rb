@@ -4,6 +4,7 @@ module TestHelpers
     property :script_name
     property :language
     property :description
+    property :config_ui
     property :env
 
     def api_key
