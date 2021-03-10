@@ -11,7 +11,7 @@ module Extension
         super
         ShopifyCli::ProjectType.load_type(:extension)
         ShopifyCli::Shopifolk.stubs(:check).returns(false)
-        ShopifyCli::Config.stubs(:get_bool).with("argo-admin-beta", "enabled").returns(false)
+        ShopifyCli::Feature.stubs(:enabled?).with(:argo_admin_beta).returns(false)
       end
 
       def test_implements_help
@@ -43,7 +43,7 @@ module Extension
         ShopifyCli::Shopifolk.stubs(:check).returns(true)
         ShopifyCli::Tasks::EnsureEnv.stubs(:call)
         ShopifyCli::Tasks::EnsureDevStore.stubs(:call)
-        ShopifyCli::Config.stubs(:get_bool).with("argo-admin-beta", "enabled").returns(true)
+        ShopifyCli::Feature.stubs(:enabled?).with(:argo_admin_beta).returns(true)
 
         Extension.specifications.stubs(:valid?).returns(true)
         Extension.specifications.stubs(:[]).returns(

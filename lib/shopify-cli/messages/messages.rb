@@ -76,16 +76,6 @@ module ShopifyCli
             is_enabled: "{{v}} analytics are currently enabled",
             is_disabled: "{{v}} analytics are currently disabled",
           },
-          argo_admin_beta: {
-            help: <<~HELP,
-            Opt in/out of argo admin beta
-              Usage: {{command:%s config [ argo-admin-beta ] }}
-            HELP
-            enabled: "{{v}} argo-admin-beta has been enabled",
-            disabled: "{{v}} argo-admin-beta has been disabled",
-            is_enabled: "{{v}} argo-admin-beta is currently enabled",
-            is_disabled: "{{v}} argo-admin-beta is currently disabled",
-          },
         },
 
         git: {

@@ -7,7 +7,6 @@ module ShopifyCli
 
       subcommand :Feature, "feature"
       subcommand :Analytics, "analytics"
-      subcommand :ArgoAdminBeta, "argo-admin-beta"
 
       def call(*)
         @ctx.puts(self.class.help)
@@ -69,29 +68,6 @@ module ShopifyCli
             @ctx.puts(@ctx.message("core.config.analytics.is_enabled"))
           else
             @ctx.puts(@ctx.message("core.config.analytics.is_disabled"))
-          end
-        end
-      end
-
-      class ArgoAdminBeta < ShopifyCli::SubCommand
-        options do |parser, flags|
-          parser.on("--enable") { flags[:action] = "enable" }
-          parser.on("--disable") { flags[:action] = "disable" }
-          parser.on("--status") { flags[:action] = "status" }
-        end
-
-        def call(_args, _name)
-          is_enabled = ShopifyCli::Config.get_bool("argo-admin-beta", "enabled")
-          if options.flags[:action] == "disable" && is_enabled
-            ShopifyCli::Config.set("argo-admin-beta", "enabled", false)
-            @ctx.puts(@ctx.message("core.config.argo_admin_beta.disabled"))
-          elsif options.flags[:action] == "enable" && !is_enabled
-            ShopifyCli::Config.set("argo-admin-beta", "enabled", true)
-            @ctx.puts(@ctx.message("core.config.argo_admin_beta.enabled"))
-          elsif is_enabled
-            @ctx.puts(@ctx.message("core.config.argo_admin_beta.is_enabled"))
-          else
-            @ctx.puts(@ctx.message("core.config.argo_admin_beta.is_disabled"))
           end
         end
       end
