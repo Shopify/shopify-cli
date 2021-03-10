@@ -131,6 +131,9 @@ module Extension
       checkout_post_purchase: {
         name: "Checkout Post Purchase",
       },
+      checkout_argo_extension: {
+        name: "Checkout Argo Extension",
+      },
     }
   end
 end

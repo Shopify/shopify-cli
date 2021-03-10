@@ -11,7 +11,7 @@ module Extension
       end
 
       def test_loads_all_extension_types_within_types_folder
-        extension_type_count = 2
+        extension_type_count = 3
         assert_equal extension_type_count, Extension.specifications.each.count
       end
 
