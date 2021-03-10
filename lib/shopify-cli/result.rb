@@ -104,7 +104,7 @@ module ShopifyCli
       end
 
       ##
-      # raises an `UnexpectedSuccess` as a `Failure` does not carry an error
+      # raises an `UnexpectedSuccess` as a `Success` does not carry an error
       # value.
       #
       def error
@@ -221,8 +221,8 @@ module ShopifyCli
     #     .then { |data| data.values_at(:firstname, :lastname) } # Ignored
     #     .unwrap(Person.new("John", "Doe"))                     # => Person
     #
-    # Alternatively, we could resucue from the error and then proceed with the
-    # remanining transformations:
+    # Alternatively, we could rescue from the error and then proceed with the
+    # remaining transformations:
     #
     #   Person = Struct.new(:firstname, :lastname)
     #   Failure
