@@ -58,7 +58,7 @@ module AppConfig
             skip_shop: !install_app
           )
 
-          res[:organization_id];
+          res[:organization_id]
         end
 
         organization_id
