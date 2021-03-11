@@ -19,6 +19,7 @@ module ShopifyCli
     DEFAULT_PORT = 3456
     REDIRECT_HOST = "http://127.0.0.1:#{DEFAULT_PORT}"
     SHOPIFY_SCOPES = %w[https://api.shopify.com/auth/shop.admin.graphql https://api.shopify.com/auth/shop.admin.themes]
+    STOREFRONT_RENDERER_SCOPES = %w[https://api.shopify.com/auth/shop.storefront-renderer.devtools]
     PARTNER_SCOPES = %w[https://api.shopify.com/auth/partners.app.cli.access]
 
     property! :ctx
@@ -61,7 +62,7 @@ module ShopifyCli
       @server_thread = Thread.new { server.start }
       params = {
         client_id: client_id,
-        scope: scopes(SHOPIFY_SCOPES + PARTNER_SCOPES),
+        scope: scopes(SHOPIFY_SCOPES + STOREFRONT_RENDERER_SCOPES + PARTNER_SCOPES),
         redirect_uri: REDIRECT_HOST,
         state: state_token,
         response_type: :code,
@@ -131,12 +132,14 @@ module ShopifyCli
     rescue
       store.del("partners_exchange_token".to_sym)
       store.del("shopify_exchange_token".to_sym)
+      store.del("storefront-renderer-production_exchange_token".to_sym)
       false
     end
 
     def request_exchange_tokens
       request_exchange_token("partners", partners_id, PARTNER_SCOPES)
       request_exchange_token("shopify", shopify_id, SHOPIFY_SCOPES)
+      request_exchange_token("storefront-renderer-production", storefront_renderer_id, STOREFRONT_RENDERER_SCOPES)
     end
 
     def request_exchange_token(name, audience, additional_scopes)
@@ -184,6 +187,10 @@ module ShopifyCli
     def shopify_id
       return "7ee65a63608843c577db8b23c4d7316ea0a01bd2f7594f8a9c06ea668c1b775c" if ENV[LOCAL_DEBUG].nil?
       # 'don't have a DEBUG one yet'
+    end
+
+    def storefront_renderer_id
+      'ee139b3d-5861-4d45-b387-1bc3ada7811c'
     end
 
     def scopes(additional_scopes = [])
