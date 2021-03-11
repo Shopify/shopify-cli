@@ -19,6 +19,7 @@ module ShopifyCli
     DEFAULT_PORT = 3456
     REDIRECT_HOST = "http://127.0.0.1:#{DEFAULT_PORT}"
     SHOPIFY_SCOPES = %w[https://api.shopify.com/auth/shop.admin.graphql https://api.shopify.com/auth/shop.admin.themes]
+    STOREFRONT_RENDERER_SCOPES = %w[https://api.shopify.com/auth/shop.storefront-renderer.devtools]
     PARTNER_SCOPES = %w[https://api.shopify.com/auth/partners.app.cli.access]
 
     APPLICATION_SCOPES = {
@@ -233,6 +234,10 @@ module ShopifyCli
       end
 
       client_ids[application_name]
+    end
+
+    def storefront_renderer_id
+      'ee139b3d-5861-4d45-b387-1bc3ada7811c'
     end
 
     def scopes(additional_scopes = [])
