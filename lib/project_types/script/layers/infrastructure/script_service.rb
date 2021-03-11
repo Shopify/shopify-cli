@@ -121,17 +121,15 @@ module Script
             )
           end
 
-          def auth_headers(*)
-            tokens = { "APP_KEY" => api_key, "SHOP_ID" => shop_id }.compact.to_json
-            { "X-Shopify-Authenticated-Tokens" => tokens }
-          end
-
-          private
-
           def self.infer_shop_id(shop_domain)
             return unless shop_domain
 
             [shop_domain.to_i, 1].max
+          end
+
+          def auth_headers(*)
+            tokens = { "APP_KEY" => api_key, "SHOP_ID" => shop_id }.compact.to_json
+            { "X-Shopify-Authenticated-Tokens" => tokens }
           end
         end
         private_constant(:ScriptServiceAPI)
