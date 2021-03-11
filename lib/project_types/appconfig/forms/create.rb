@@ -12,13 +12,7 @@ module AppConfig
         install_app = false # TODO: Add flow to install app on dev stores
         self.app_url ||= CLI::UI::Prompt.ask(ctx.message('appconfig.forms.create.app_url'))
         self.allowed_redirection_urls = ask_redirection_urls
-        res = ShopifyCli::Tasks::SelectOrgAndShop.call(
-          ctx,
-          organization_id: organization_id,
-          shop_domain: nil,
-          skip_shop: !install_app
-        )
-        self.organization_id = res[:organization_id]
+        self.organization_id = ask_organization_id
       end
 
       private
@@ -53,6 +47,21 @@ module AppConfig
         end
 
         valid_urls
+      end
+
+      def ask_organization_id
+        if organization_id.nil?
+          res = ShopifyCli::Tasks::SelectOrgAndShop.call(
+            ctx,
+            organization_id: organization_id,
+            shop_domain: nil,
+            skip_shop: !install_app
+          )
+
+          res[:organization_id];
+        end
+
+        organization_id
       end
     end
   end
