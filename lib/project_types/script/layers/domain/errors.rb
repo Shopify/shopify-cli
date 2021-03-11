@@ -14,6 +14,22 @@ module Script
           end
         end
 
+        class InvalidConfigUiDefinitionError < ScriptProjectError
+          attr_reader :filename
+          def initialize(filename)
+            super()
+            @filename = filename
+          end
+        end
+
+        class MissingSpecifiedConfigUiDefinitionError < ScriptProjectError
+          attr_reader :filename
+          def initialize(filename)
+            super()
+            @filename = filename
+          end
+        end
+
         class ScriptNotFoundError < ScriptProjectError
           attr_reader :script_name, :extension_point_type
           def initialize(extension_point_type, script_name)

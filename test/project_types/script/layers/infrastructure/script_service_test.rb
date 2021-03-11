@@ -12,7 +12,7 @@ describe Script::Layers::Infrastructure::ScriptService do
   let(:schema_major_version) { "1" }
   let(:schema_minor_version) { "0" }
   let(:use_msgpack) { true }
-  let(:config_ui) { "---\nversion:1\n" }
+  let(:config_ui) { Script::Layers::Domain::ConfigUi.new(filename: "filename", content: "content") }
   let(:script_service_proxy) do
     <<~HERE
       query ProxyRequest($api_key: String, $shop_domain: String, $query: String!, $variables: String) {
@@ -82,7 +82,7 @@ describe Script::Layers::Infrastructure::ScriptService do
             extensionPointName: extension_point_type,
             title: script_name,
             description: description,
-            configUi: config_ui,
+            configUi: config_ui.content,
             sourceCode: Base64.encode64(script_content),
             language: "AssemblyScript",
             force: false,

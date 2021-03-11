@@ -41,6 +41,7 @@ module Script
 
     module Domain
       autoload :Errors, Project.project_filepath("layers/domain/errors")
+      autoload :ConfigUi, Project.project_filepath("layers/domain/config_ui")
       autoload :PushPackage, Project.project_filepath("layers/domain/push_package")
       autoload :Metadata, Project.project_filepath("layers/domain/metadata")
       autoload :ExtensionPoint, Project.project_filepath("layers/domain/extension_point")
@@ -58,6 +59,7 @@ module Script
         Project.project_filepath("layers/infrastructure/rust_project_creator.rb")
       autoload :RustTaskRunner, Project.project_filepath("layers/infrastructure/rust_task_runner")
 
+      autoload :ConfigUiRepository, Project.project_filepath("layers/infrastructure/config_ui_repository")
       autoload :PushPackageRepository, Project.project_filepath("layers/infrastructure/push_package_repository")
       autoload :ExtensionPointRepository, Project.project_filepath("layers/infrastructure/extension_point_repository")
       autoload :ProjectCreator, Project.project_filepath("layers/infrastructure/project_creator")
