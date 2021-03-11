@@ -120,7 +120,7 @@ module Script
                                   "is needed to compile your script to WebAssembly.",
           # rubocop:disable Layout/LineLength
           build_script_suggestion: "\n\nFor example, your package.json needs the following command:" \
-            "\nbuild: npx shopify-scripts-toolchain-as build --src src/script.ts --binary build/<script_name>.wasm --metadata build/metadata.json -- --lib node_modules --optimize --use Date=",
+            "\nbuild: npx shopify-scripts-toolchain-as build --src src/shopify_main.ts --binary build/<script_name>.wasm --metadata build/metadata.json -- --lib node_modules --optimize --use Date=",
 
           web_assembly_binary_not_found: "WebAssembly binary not found.",
           web_assembly_binary_not_found_suggestion: "No WebAssembly binary found." \
