@@ -51,7 +51,6 @@ module Script
                 "@shopify/scripts-toolchain-as": "#{extension_point.sdks.assemblyscript.toolchain_version}",
                 "#{extension_point.sdks.assemblyscript.package}": "^#{extension_point_version}",
                 "@as-pect/cli": "4.0.0",
-                "as-wasi": "^0.2.1",
                 "assemblyscript": "^0.16.1"
               },
               "scripts": {
