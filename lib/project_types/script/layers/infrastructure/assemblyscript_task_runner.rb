@@ -34,7 +34,9 @@ module Script
         def dependencies_installed?
           # Assuming if node_modules folder exist at root of script folder, all deps are installed
           return false unless ctx.dir_exist?("node_modules")
-          check_if_ep_dependencies_up_to_date!
+          # NOTE: Temporarily disable this dependency check, as the latest EP version with guest serialization enabled
+          # has breaking changes on user script.
+          # check_if_ep_dependencies_up_to_date!
           true
         end
 
