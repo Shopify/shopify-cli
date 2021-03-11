@@ -14,7 +14,7 @@ module ShopifyCli
 
     class Error < StandardError; end
     LocalRequest = Struct.new(:method, :path, :query, :protocol)
-    LOCAL_DEBUG = "SHOPIFY_APP_CLI_LOCAL"
+    LOCAL_DEBUG = "SHOPIFY_APP_CLI_LOCAL_PARTNERS"
 
     DEFAULT_PORT = 3456
     REDIRECT_HOST = "http://127.0.0.1:#{DEFAULT_PORT}"
@@ -168,17 +168,21 @@ module ShopifyCli
     end
 
     def request_exchange_token(name, audience, additional_scopes)
-      resp = post_token_request(
+      params = {
         grant_type: "urn:ietf:params:oauth:grant-type:token-exchange",
         requested_token_type: "urn:ietf:params:oauth:token-type:access_token",
         subject_token_type: "urn:ietf:params:oauth:token-type:access_token",
         client_id: client_id,
         audience: audience,
         scope: scopes(additional_scopes),
-        subject_token: store.get(:identity_access_token),
-      )
+        subject_token: store.get("identity_access_token".to_sym),
+      }.tap do |result|
+        result[:destination] = store.get("shop".to_sym) if name == "shopify"
+      end
+      ctx.debug(params)
+      resp = post_token_request(params)
       store.set("#{name}_exchange_token".to_sym => resp["access_token"])
-      ctx.puts("#{name}_exchange_token: " + resp["access_token"])
+      ctx.debug("#{name}_exchange_token: " + resp["access_token"])
     end
 
     def post_token_request(params)
