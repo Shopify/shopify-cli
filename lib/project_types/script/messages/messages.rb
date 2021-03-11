@@ -57,6 +57,17 @@ module Script
           missing_config_ui_definition_cause: "You are missing the UI configuration file %s.",
           missing_config_ui_definition_help: "Create this file and try again.",
 
+          config_ui_syntax_error_cause: "The UI configuration file %{filename} is not formatted properly.",
+          config_ui_syntax_error_help: "Fix the errors and try again.",
+
+          config_ui_missing_keys_error_cause: "The UI configuration file %{filename} is missing required keys: "\
+                                              "%{missing_keys}.",
+          config_ui_missing_keys_error_help: "Add the keys and try again.",
+
+          config_ui_fields_missing_keys_error_cause: "A field entry in the UI configuration file %{filename} is "\
+                                                     "missing required keys: %{missing_keys}.",
+          config_ui_fields_missing_keys_error_help: "Add the keys and try again.",
+
           script_not_found_cause: "Couldn't find script %s for extension point %s",
 
           service_failure_cause: "Internal service error.",

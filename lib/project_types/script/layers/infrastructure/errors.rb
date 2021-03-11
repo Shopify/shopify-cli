@@ -8,6 +8,26 @@ module Script
         class AppScriptNotPushedError < ScriptProjectError; end
         class AppScriptUndefinedError < ScriptProjectError; end
         class BuildError < ScriptProjectError; end
+        class ConfigUiSyntaxError < ScriptProjectError; end
+
+        class ConfigUiMissingKeysError < ScriptProjectError
+          attr_reader :filename, :missing_keys
+          def initialize(filename, missing_keys)
+            super()
+            @filename = filename
+            @missing_keys = missing_keys
+          end
+        end
+
+        class ConfigUiFieldsMissingKeysError < ScriptProjectError
+          attr_reader :filename, :missing_keys
+          def initialize(filename, missing_keys)
+            super()
+            @filename = filename
+            @missing_keys = missing_keys
+          end
+        end
+
         class DependencyInstallError < ScriptProjectError; end
         class EmptyResponseError < ScriptProjectError; end
         class ForbiddenError < ScriptProjectError; end
