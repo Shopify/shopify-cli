@@ -26,7 +26,7 @@ module ShopifyCli
 
       def call(args, _)
         return unless Project.current
-        Tasks::EnsureEnv.call(@ctx)
+        # Tasks::EnsureEnv.call(@ctx)
         @args = args
         @input = Hash.new
         @count = DEFAULT_COUNT
@@ -41,8 +41,10 @@ module ShopifyCli
           return @ctx.puts(output)
         end
 
-        @shop ||= Project.current.env.shop || get_shop(@ctx)
-
+        # @shop ||= Project.current.env.shop || get_shop(@ctx)
+        # @shop = 'shop1.myshopify.io'
+        Project.current.env.shop = "shop1.myshopify.io"
+        @shop = Project.current.env.shop
         if @silent
           spin_group = CLI::UI::SpinGroup.new
           spin_group.add(@ctx.message("core.populate.populating", @count, camel_case_resource_type)) do |spinner|
@@ -117,6 +119,7 @@ module ShopifyCli
       def run_mutation(data)
         kwargs = { input: data }
         kwargs[:shop] = @shop
+        kwargs[:api_version] = "2021-01"
         resp = AdminAPI.query(
           @ctx, "create_#{snake_case_resource_type}", **kwargs
         )
