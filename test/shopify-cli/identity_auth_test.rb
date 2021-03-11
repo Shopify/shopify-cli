@@ -29,10 +29,41 @@ module ShopifyCli
         .with(body: URI.encode_www_form(token_query))
         .to_return(status: 200, body: token_resp, headers: {})
 
+<<<<<<< HEAD
       stub_exchange_token_calls
 
       client.authenticate
 
+=======
+      partners_token_query = {
+        grant_type: "urn:ietf:params:oauth:grant-type:token-exchange",
+        requested_token_type: "urn:ietf:params:oauth:token-type:access_token",
+        subject_token_type: "urn:ietf:params:oauth:token-type:access_token",
+        client_id: client_id,
+        audience: partner_audience,
+        scope: scopes(PARTNER_SCOPES),
+        subject_token: "accesstoken123",
+      }
+      stub_request(:post, "#{endpoint}/token")
+        .with(body: URI.encode_www_form(partners_token_query))
+        .to_return(status: 200, body: '{"access_token":"partnerexchangetoken123"}', headers: {})
+
+      shopify_token_query = {
+        grant_type: "urn:ietf:params:oauth:grant-type:token-exchange",
+        requested_token_type: "urn:ietf:params:oauth:token-type:access_token",
+        subject_token_type: "urn:ietf:params:oauth:token-type:access_token",
+        client_id: client_id,
+        audience: shopify_audience,
+        scope: scopes(SHOPIFY_SCOPES),
+        subject_token: "accesstoken123",
+        destination: "testshop",
+      }
+      stub_request(:post, "#{endpoint}/token")
+        .with(body: URI.encode_www_form(shopify_token_query))
+        .to_return(status: 200, body: '{"access_token":"shopifyexchangetoken123"}', headers: {})
+
+      client.authenticate(shop: "testshop")
+>>>>>>> 67112e4 (Changes to tophat adminAPI)
       assert_equal("accesstoken123", client.store.get(:identity_access_token))
       assert_equal("refreshtoken123", client.store.get(:identity_refresh_token))
 
@@ -44,11 +75,31 @@ module ShopifyCli
 
       with_existing_tokens_in_database(client: client)
 
+<<<<<<< HEAD
       stub_exchange_token_calls(exchange_token: "exchangetoken456")
 
       client.authenticate
 
       assert_expected_exchange_tokens(token_suffix: "exchangetoken456", client: client)
+=======
+      shopify_token_query = {
+        grant_type: "urn:ietf:params:oauth:grant-type:token-exchange",
+        requested_token_type: "urn:ietf:params:oauth:token-type:access_token",
+        subject_token_type: "urn:ietf:params:oauth:token-type:access_token",
+        client_id: client_id,
+        audience: shopify_audience,
+        scope: scopes(SHOPIFY_SCOPES),
+        subject_token: "accesstoken123",
+        destination: nil,
+      }
+      stub_request(:post, "#{endpoint}/token")
+        .with(body: URI.encode_www_form(shopify_token_query))
+        .to_return(status: 200, body: '{"access_token":"shopifyexchangetoken456"}', headers: {})
+
+      client.authenticate(shop: "testshop")
+      assert_equal("partnerexchangetoken456", client.store.get(:partners_exchange_token))
+      assert_equal("shopifyexchangetoken456", client.store.get(:shopify_exchange_token))
+>>>>>>> 67112e4 (Changes to tophat adminAPI)
     end
 
     def test_refresh_access_token_fallback
@@ -56,7 +107,24 @@ module ShopifyCli
 
       with_existing_tokens_in_database(client: client)
 
+<<<<<<< HEAD
       stub_exchange_token_calls(status: 403)
+=======
+      shopify_token_query = {
+        grant_type: "urn:ietf:params:oauth:grant-type:token-exchange",
+        requested_token_type: "urn:ietf:params:oauth:token-type:access_token",
+        subject_token_type: "urn:ietf:params:oauth:token-type:access_token",
+        client_id: client_id,
+        audience: shopify_audience,
+        scope: scopes(SHOPIFY_SCOPES),
+        subject_token: "accesstoken123",
+        destination: nil,
+      }
+
+      stub_request(:post, "#{endpoint}/token")
+        .with(body: URI.encode_www_form(shopify_token_query))
+        .to_return(status: 403)
+>>>>>>> 67112e4 (Changes to tophat adminAPI)
 
       token_query = {
         grant_type: :refresh_token,
@@ -73,9 +141,40 @@ module ShopifyCli
         .with(body: URI.encode_www_form(token_query))
         .to_return(status: 200, body: token_resp, headers: {})
 
+<<<<<<< HEAD
       stub_exchange_token_calls(exchange_token: "exchangetoken456", access_token: "accesstoken456")
       client.authenticate
 
+=======
+      partner_token_query = {
+        grant_type: "urn:ietf:params:oauth:grant-type:token-exchange",
+        requested_token_type: "urn:ietf:params:oauth:token-type:access_token",
+        subject_token_type: "urn:ietf:params:oauth:token-type:access_token",
+        client_id: client_id,
+        audience: partner_audience,
+        scope: scopes(PARTNER_SCOPES),
+        subject_token: "accesstoken456",
+      }
+      stub_request(:post, "#{endpoint}/token")
+        .with(body: URI.encode_www_form(partner_token_query))
+        .to_return(status: 200, body: '{"access_token":"partnerexchangetoken456"}', headers: {})
+
+      shopify_token_query = {
+        grant_type: "urn:ietf:params:oauth:grant-type:token-exchange",
+        requested_token_type: "urn:ietf:params:oauth:token-type:access_token",
+        subject_token_type: "urn:ietf:params:oauth:token-type:access_token",
+        client_id: client_id,
+        audience: shopify_audience,
+        scope: scopes(SHOPIFY_SCOPES),
+        subject_token: "accesstoken456",
+        destination: nil,
+      }
+      stub_request(:post, "#{endpoint}/token")
+        .with(body: URI.encode_www_form(shopify_token_query))
+        .to_return(status: 200, body: '{"access_token":"shopifyexchangetoken456"}', headers: {})
+
+      client.authenticate(shop: "testshop")
+>>>>>>> 67112e4 (Changes to tophat adminAPI)
       assert_equal("accesstoken456", client.store.get(:identity_access_token))
       assert_equal("refreshtoken456", client.store.get(:identity_refresh_token))
 
@@ -93,7 +192,7 @@ module ShopifyCli
 
       stub_request(:post, "#{endpoint}/authorize")
       assert_raises IdentityAuth::Error do
-        client.authenticate
+        client.authenticate(shop: "testshop")
       end
     end
 
@@ -129,7 +228,7 @@ module ShopifyCli
         )
 
       assert_raises IdentityAuth::Error do
-        client.authenticate
+        client.authenticate(shop: "testshop")
       end
     end
 
