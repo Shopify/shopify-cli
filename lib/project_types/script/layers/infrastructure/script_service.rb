@@ -117,8 +117,14 @@ module Script
               url: "https://script-service.myshopify.io/graphql",
               token: "",
               api_key: api_key,
-              shop_id: shop_domain&.to_i
+              shop_id: infer_shop_id(shop_domain)
             )
+          end
+
+          def self.infer_shop_id(shop_domain)
+            return unless shop_domain
+
+            [shop_domain.to_i, 1].max
           end
 
           def auth_headers(*)
