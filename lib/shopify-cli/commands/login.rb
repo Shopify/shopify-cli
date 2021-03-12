@@ -15,7 +15,7 @@ module ShopifyCli
         shop = options.flags[:shop] || CLI::UI::Prompt.ask(@ctx.message("core.login.shop_prompt"), allow_empty: false)
         ShopifyCli::DB.set(shop: validate_shop(shop))
         IdentityAuth.new(ctx: @ctx).authenticate
-        puts ShopifyCli::DB.get('storefront-renderer-production_exchange_token'.to_sym)
+        puts ShopifyCli::DB.get("storefront-renderer-production_exchange_token".to_sym)
       end
 
       def self.help
