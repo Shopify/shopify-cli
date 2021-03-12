@@ -2,21 +2,15 @@ require "test_helper"
 
 module ShopifyCli
   class IdentityAuthTest < MiniTest::Test
-    SHOPIFY_SCOPES = %w[https://api.shopify.com/auth/shop.admin.graphql https://api.shopify.com/auth/shop.admin.themes]
-    PARTNER_SCOPES = %w[https://api.shopify.com/auth/partners.app.cli.access]
-
     def test_authenticate
-      endpoint = "https://accounts.shopify.com/oauth"
-      client_id = "fbdb2649-e327-4907-8f67-908d24cfd7e3"
-      partner_audience = "271e16d403dfa18082ffb3d197bd2b5f4479c3fc32736d69296829cbb28d41a6"
-      shopify_audience = "7ee65a63608843c577db8b23c4d7316ea0a01bd2f7594f8a9c06ea668c1b775c"
-      client = oauth
+      client = oauth_client
       @context.expects(:open_url!)
+
       stub_auth_response(client)
 
       authorize_query = {
         client_id: client_id,
-        scope: scopes(SHOPIFY_SCOPES + PARTNER_SCOPES),
+        scope: scopes(authorization_scopes),
         redirect_uri: IdentityAuth::REDIRECT_HOST,
         state: client.state_token,
         response_type: :code,
@@ -35,45 +29,18 @@ module ShopifyCli
         .with(body: URI.encode_www_form(token_query))
         .to_return(status: 200, body: token_resp, headers: {})
 
-      partners_token_query = {
-        grant_type: "urn:ietf:params:oauth:grant-type:token-exchange",
-        requested_token_type: "urn:ietf:params:oauth:token-type:access_token",
-        subject_token_type: "urn:ietf:params:oauth:token-type:access_token",
-        client_id: client_id,
-        audience: partner_audience,
-        scope: scopes(PARTNER_SCOPES),
-        subject_token: "accesstoken123",
-      }
-      stub_request(:post, "#{endpoint}/token")
-        .with(body: URI.encode_www_form(partners_token_query))
-        .to_return(status: 200, body: '{"access_token":"partnerexchangetoken123"}', headers: {})
-
-      shopify_token_query = {
-        grant_type: "urn:ietf:params:oauth:grant-type:token-exchange",
-        requested_token_type: "urn:ietf:params:oauth:token-type:access_token",
-        subject_token_type: "urn:ietf:params:oauth:token-type:access_token",
-        client_id: client_id,
-        audience: shopify_audience,
-        scope: scopes(SHOPIFY_SCOPES),
-        subject_token: "accesstoken123",
-      }
-      stub_request(:post, "#{endpoint}/token")
-        .with(body: URI.encode_www_form(shopify_token_query))
-        .to_return(status: 200, body: '{"access_token":"shopifyexchangetoken123"}', headers: {})
+      stub_exchange_token_calls
 
       client.authenticate
+
       assert_equal("accesstoken123", client.store.get(:identity_access_token))
       assert_equal("refreshtoken123", client.store.get(:identity_refresh_token))
-      assert_equal("partnerexchangetoken123", client.store.get(:partners_exchange_token))
-      assert_equal("shopifyexchangetoken123", client.store.get(:shopify_exchange_token))
+
+      assert_expected_exchange_tokens(token_suffix: "exchangetoken123", client: client)
     end
 
     def test_refresh_exchange_token
-      endpoint = "https://accounts.shopify.com/oauth"
-      client_id = "fbdb2649-e327-4907-8f67-908d24cfd7e3"
-      partner_audience = "271e16d403dfa18082ffb3d197bd2b5f4479c3fc32736d69296829cbb28d41a6"
-      shopify_audience = "7ee65a63608843c577db8b23c4d7316ea0a01bd2f7594f8a9c06ea668c1b775c"
-      client = oauth(request_exchange: "123")
+      client = oauth_client(request_exchange: "123")
       client.store.set(
         identity_access_token: "accesstoken123",
         identity_refresh_token: "refreshtoken123",
@@ -81,43 +48,15 @@ module ShopifyCli
         shopify_exchange_token: "shopifyexchangetoken123"
       )
 
-      partners_token_query = {
-        grant_type: "urn:ietf:params:oauth:grant-type:token-exchange",
-        requested_token_type: "urn:ietf:params:oauth:token-type:access_token",
-        subject_token_type: "urn:ietf:params:oauth:token-type:access_token",
-        client_id: client_id,
-        audience: partner_audience,
-        scope: scopes(PARTNER_SCOPES),
-        subject_token: "accesstoken123",
-      }
-      stub_request(:post, "#{endpoint}/token")
-        .with(body: URI.encode_www_form(partners_token_query))
-        .to_return(status: 200, body: '{"access_token":"partnerexchangetoken456"}', headers: {})
-
-      shopify_token_query = {
-        grant_type: "urn:ietf:params:oauth:grant-type:token-exchange",
-        requested_token_type: "urn:ietf:params:oauth:token-type:access_token",
-        subject_token_type: "urn:ietf:params:oauth:token-type:access_token",
-        client_id: client_id,
-        audience: shopify_audience,
-        scope: scopes(SHOPIFY_SCOPES),
-        subject_token: "accesstoken123",
-      }
-      stub_request(:post, "#{endpoint}/token")
-        .with(body: URI.encode_www_form(shopify_token_query))
-        .to_return(status: 200, body: '{"access_token":"shopifyexchangetoken456"}', headers: {})
+      stub_exchange_token_calls(exchange_token: "exchangetoken456")
 
       client.authenticate
-      assert_equal("partnerexchangetoken456", client.store.get(:partners_exchange_token))
-      assert_equal("shopifyexchangetoken456", client.store.get(:shopify_exchange_token))
+
+      assert_expected_exchange_tokens(token_suffix: "exchangetoken456", client: client)
     end
 
     def test_refresh_access_token_fallback
-      endpoint = "https://accounts.shopify.com/oauth"
-      client_id = "fbdb2649-e327-4907-8f67-908d24cfd7e3"
-      partner_audience = "271e16d403dfa18082ffb3d197bd2b5f4479c3fc32736d69296829cbb28d41a6"
-      shopify_audience = "7ee65a63608843c577db8b23c4d7316ea0a01bd2f7594f8a9c06ea668c1b775c"
-      client = oauth(request_exchange: "123")
+      client = oauth_client(request_exchange: "123")
       client.store.set(
         identity_access_token: "accesstoken123",
         identity_refresh_token: "refreshtoken123",
@@ -125,33 +64,7 @@ module ShopifyCli
         shopify_exchange_token: "shopifyexchangetoken123",
       )
 
-      partners_token_query = {
-        grant_type: "urn:ietf:params:oauth:grant-type:token-exchange",
-        requested_token_type: "urn:ietf:params:oauth:token-type:access_token",
-        subject_token_type: "urn:ietf:params:oauth:token-type:access_token",
-        client_id: client_id,
-        audience: partner_audience,
-        scope: scopes(PARTNER_SCOPES),
-        subject_token: "accesstoken123",
-      }
-
-      stub_request(:post, "#{endpoint}/token")
-        .with(body: URI.encode_www_form(partners_token_query))
-        .to_return(status: 403)
-
-      shopify_token_query = {
-        grant_type: "urn:ietf:params:oauth:grant-type:token-exchange",
-        requested_token_type: "urn:ietf:params:oauth:token-type:access_token",
-        subject_token_type: "urn:ietf:params:oauth:token-type:access_token",
-        client_id: client_id,
-        audience: shopify_audience,
-        scope: scopes(SHOPIFY_SCOPES),
-        subject_token: "accesstoken123",
-      }
-
-      stub_request(:post, "#{endpoint}/token")
-        .with(body: URI.encode_www_form(shopify_token_query))
-        .to_return(status: 403)
+      stub_exchange_token_calls(status: 403)
 
       token_query = {
         grant_type: :refresh_token,
@@ -168,47 +81,25 @@ module ShopifyCli
         .with(body: URI.encode_www_form(token_query))
         .to_return(status: 200, body: token_resp, headers: {})
 
-      partner_token_query = {
-        grant_type: "urn:ietf:params:oauth:grant-type:token-exchange",
-        requested_token_type: "urn:ietf:params:oauth:token-type:access_token",
-        subject_token_type: "urn:ietf:params:oauth:token-type:access_token",
-        client_id: client_id,
-        audience: partner_audience,
-        scope: scopes(PARTNER_SCOPES),
-        subject_token: "accesstoken456",
-      }
-      stub_request(:post, "#{endpoint}/token")
-        .with(body: URI.encode_www_form(partner_token_query))
-        .to_return(status: 200, body: '{"access_token":"partnerexchangetoken456"}', headers: {})
-
-      shopify_token_query = {
-        grant_type: "urn:ietf:params:oauth:grant-type:token-exchange",
-        requested_token_type: "urn:ietf:params:oauth:token-type:access_token",
-        subject_token_type: "urn:ietf:params:oauth:token-type:access_token",
-        client_id: client_id,
-        audience: shopify_audience,
-        scope: scopes(SHOPIFY_SCOPES),
-        subject_token: "accesstoken456",
-      }
-      stub_request(:post, "#{endpoint}/token")
-        .with(body: URI.encode_www_form(shopify_token_query))
-        .to_return(status: 200, body: '{"access_token":"shopifyexchangetoken456"}', headers: {})
+      stub_exchange_token_calls(exchange_token: "exchangetoken456", access_token: "accesstoken456")
 
       client.authenticate
+
       assert_equal("accesstoken456", client.store.get(:identity_access_token))
       assert_equal("refreshtoken456", client.store.get(:identity_refresh_token))
-      assert_equal("partnerexchangetoken456", client.store.get(:partners_exchange_token))
-      assert_equal("shopifyexchangetoken456", client.store.get(:shopify_exchange_token))
+
+      assert_expected_exchange_tokens(token_suffix: "exchangetoken456", client: client)
     end
 
     def test_authenticate_with_invalid_request
-      endpoint = "https://accounts.shopify.com/oauth"
-      client = oauth
+      client = oauth_client
       @context.expects(:open_url!)
+
       stub_server(client, {
         "error" => "err",
         "error_description" => "error",
       })
+
       stub_request(:post, "#{endpoint}/authorize")
       assert_raises IdentityAuth::Error do
         client.authenticate
@@ -216,16 +107,14 @@ module ShopifyCli
     end
 
     def test_authenticate_with_invalid_code
-      endpoint = "https://accounts.shopify.com/oauth"
-      client_id = "fbdb2649-e327-4907-8f67-908d24cfd7e3"
+      client = oauth_client(secret: "secret")
       code_verifier = "123456"
-      client = oauth(secret: "secret")
       @context.expects(:open_url!)
       stub_auth_response(client)
 
       authorize_query = {
         client_id: client_id,
-        scope: scopes(SHOPIFY_SCOPES + PARTNER_SCOPES),
+        scope: scopes(authorization_scopes),
         redirect_uri: IdentityAuth::REDIRECT_HOST,
         state: client.state_token,
         response_type: :code,
@@ -255,10 +144,57 @@ module ShopifyCli
 
     private
 
-    def oauth(*)
-      db = ShopifyCli::DB.new(path: File.join(ShopifyCli::TEMP_DIR, ".test_db.pstore"))
-      db.clear
-      IdentityAuth.new(ctx: @context, store: db, code_verifier: "123456")
+    def assert_expected_exchange_tokens(token_suffix:, client:)
+      ShopifyCli::IdentityAuth::APPLICATION_SCOPES.keys.each do |key|
+        assert_equal(key + token_suffix, client.store.get("#{key}_exchange_token".to_sym))
+      end
+    end
+
+    def stub_exchange_token_calls(exchange_token: "exchangetoken123", access_token: "accesstoken123", status: nil)
+      ShopifyCli::IdentityAuth::APPLICATION_SCOPES.keys.each do |application|
+        token_query = {
+          grant_type: "urn:ietf:params:oauth:grant-type:token-exchange",
+          requested_token_type: "urn:ietf:params:oauth:token-type:access_token",
+          subject_token_type: "urn:ietf:params:oauth:token-type:access_token",
+          client_id: client_id,
+          audience: ShopifyCli::IdentityAuth::APPLICATION_CLIENT_IDS[application],
+          scope: scopes(scopes_for(application)),
+          subject_token: access_token,
+        }
+        if status
+          stub_request(:post, "#{endpoint}/token")
+            .with(body: URI.encode_www_form(token_query))
+            .to_return(status: status)
+        else
+          stub_request(:post, "#{endpoint}/token")
+            .with(body: URI.encode_www_form(token_query))
+            .to_return(status: 200, body: { access_token: application + exchange_token }.to_json, headers: {})
+        end
+      end
+    end
+
+    def oauth_client(*)
+      @oauth_client ||= begin
+        db = ShopifyCli::DB.new(path: File.join(ShopifyCli::TEMP_DIR, ".test_db.pstore"))
+        db.clear
+        IdentityAuth.new(ctx: @context, store: db, code_verifier: "123456")
+      end
+    end
+
+    def endpoint
+      "https://accounts.shopify.com/oauth"
+    end
+
+    def client_id
+      "fbdb2649-e327-4907-8f67-908d24cfd7e3"
+    end
+
+    def authorization_scopes
+      ShopifyCli::IdentityAuth::APPLICATION_SCOPES.values.flatten
+    end
+
+    def scopes_for(name)
+      ShopifyCli::IdentityAuth::APPLICATION_SCOPES[name]
     end
 
     def stub_auth_response(client)
