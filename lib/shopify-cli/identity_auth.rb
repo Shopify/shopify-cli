@@ -18,9 +18,22 @@ module ShopifyCli
 
     DEFAULT_PORT = 3456
     REDIRECT_HOST = "http://127.0.0.1:#{DEFAULT_PORT}"
-    SHOPIFY_SCOPES = %w[https://api.shopify.com/auth/shop.admin.graphql https://api.shopify.com/auth/shop.admin.themes]
-    STOREFRONT_RENDERER_SCOPES = %w[https://api.shopify.com/auth/shop.storefront-renderer.devtools]
-    PARTNER_SCOPES = %w[https://api.shopify.com/auth/partners.app.cli.access]
+
+    APPLICATION_SCOPES = {
+      "shopify" => %w[https://api.shopify.com/auth/shop.admin.graphql https://api.shopify.com/auth/shop.admin.themes],
+      "storefront-renderer-production" => %w[https://api.shopify.com/auth/shop.storefront-renderer.devtools],
+      "partners" => %w[https://api.shopify.com/auth/partners.app.cli.access],
+    }
+
+    APPLICATION_CLIENT_IDS = {
+      "shopify" => "7ee65a63608843c577db8b23c4d7316ea0a01bd2f7594f8a9c06ea668c1b775c",
+      "storefront-renderer-production" => "ee139b3d-5861-4d45-b387-1bc3ada7811c",
+      "partners" => "271e16d403dfa18082ffb3d197bd2b5f4479c3fc32736d69296829cbb28d41a6",
+    }
+
+    DEV_APPLICATION_CLIENT_IDS = {
+      "partners" => "df89d73339ac3c6c5f0a98d9ca93260763e384d51d6038da129889c308973978",
+    }
 
     property! :ctx
     property :store, default: ShopifyCli::DB.new
@@ -62,7 +75,7 @@ module ShopifyCli
       @server_thread = Thread.new { server.start }
       params = {
         client_id: client_id,
-        scope: scopes(SHOPIFY_SCOPES + STOREFRONT_RENDERER_SCOPES + PARTNER_SCOPES),
+        scope: scopes(APPLICATION_SCOPES.values.flatten),
         redirect_uri: REDIRECT_HOST,
         state: state_token,
         response_type: :code,
@@ -137,9 +150,9 @@ module ShopifyCli
     end
 
     def request_exchange_tokens
-      request_exchange_token("partners", partners_id, PARTNER_SCOPES)
-      request_exchange_token("shopify", shopify_id, SHOPIFY_SCOPES)
-      request_exchange_token("storefront-renderer-production", storefront_renderer_id, STOREFRONT_RENDERER_SCOPES)
+      APPLICATION_SCOPES.each do |key, scopes|
+        request_exchange_token(key, client_id_for_application(key), scopes)
+      end
     end
 
     def request_exchange_token(name, audience, additional_scopes)
@@ -179,18 +192,14 @@ module ShopifyCli
       "https://identity.myshopify.io/oauth"
     end
 
-    def partners_id
-      return "271e16d403dfa18082ffb3d197bd2b5f4479c3fc32736d69296829cbb28d41a6" if ENV[LOCAL_DEBUG].nil?
-      "df89d73339ac3c6c5f0a98d9ca93260763e384d51d6038da129889c308973978"
-    end
+    def client_id_for_application(application_name)
+      client_ids = if ENV[LOCAL_DEBUG]
+        DEV_APPLICATION_CLIENT_IDS
+      else
+        APPLICATION_CLIENT_IDS
+      end
 
-    def shopify_id
-      return "7ee65a63608843c577db8b23c4d7316ea0a01bd2f7594f8a9c06ea668c1b775c" if ENV[LOCAL_DEBUG].nil?
-      # 'don't have a DEBUG one yet'
-    end
-
-    def storefront_renderer_id
-      'ee139b3d-5861-4d45-b387-1bc3ada7811c'
+      client_ids[application_name]
     end
 
     def scopes(additional_scopes = [])
