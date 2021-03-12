@@ -35,6 +35,11 @@ module ShopifyCli
       "partners" => "df89d73339ac3c6c5f0a98d9ca93260763e384d51d6038da129889c308973978",
     }
 
+    IDENTITY_ACCESS_TOKENS = %i[
+      identity_access_token
+      identity_refresh_token
+    ]
+
     property! :ctx
     property :store, default: ShopifyCli::DB.new
     property :state_token, accepts: String, default: SecureRandom.hex(30)
@@ -43,9 +48,10 @@ module ShopifyCli
     attr_accessor :response_query
 
     def authenticate
-      return if refresh_exchange_token
-      return if refresh_access_token
+      return if refresh_exchange_tokens || refresh_access_tokens
+
       initiate_authentication
+
       request_access_token(code: receive_access_code)
       request_exchange_tokens
     end
@@ -113,18 +119,9 @@ module ShopifyCli
       )
     end
 
-    def refresh_access_token
-      return false if !store.exists?("identity_access_token".to_sym) ||
-        !store.exists?("identity_refresh_token".to_sym)
-      refresh_token
-      request_exchange_tokens
-      true
-    rescue
-      store.del("identity_access_token".to_sym, "identity_refresh_token".to_sym)
-      false
-    end
+    def refresh_access_tokens
+      return false unless IDENTITY_ACCESS_TOKENS.all? { |key| store.exists?(key) }
 
-    def refresh_token
       resp = post_token_request(
         grant_type: :refresh_token,
         access_token: store.get("identity_access_token".to_sym),
@@ -135,12 +132,21 @@ module ShopifyCli
         "identity_access_token".to_sym => resp["access_token"],
         "identity_refresh_token".to_sym => resp["refresh_token"],
       )
+
+      # Need to refresh the exchange token on successful access token refresh
+      request_exchange_tokens
+
+      true
+    rescue
+      store.del(*IDENTITY_ACCESS_TOKENS)
+      false
     end
 
-    def refresh_exchange_token
+    def refresh_exchange_tokens
       return false unless exchange_token_keys.all? { |key| store.exists?(key) }
 
       request_exchange_tokens
+
       true
     rescue
       store.del(*exchange_token_keys)

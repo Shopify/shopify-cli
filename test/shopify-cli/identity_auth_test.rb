@@ -41,13 +41,8 @@ module ShopifyCli
 
     def test_refresh_exchange_token
       client = oauth_client(request_exchange: "123")
-      client.store.set(
-        :identity_access_token => "accesstoken123",
-        :identity_refresh_token => "refreshtoken123",
-        :partners_exchange_token => "partnerexchangetoken123",
-        :shopify_exchange_token => "shopifyexchangetoken123",
-        'storefront-renderer-production_exchange_token'.to_sym => "shopifyexchangetoken123"
-      )
+
+      set_existing_tokens_in_database(client: client)
 
       stub_exchange_token_calls(exchange_token: "exchangetoken456")
 
@@ -58,12 +53,8 @@ module ShopifyCli
 
     def test_refresh_access_token_fallback
       client = oauth_client(request_exchange: "123")
-      client.store.set(
-        identity_access_token: "accesstoken123",
-        identity_refresh_token: "refreshtoken123",
-        partners_exchange_token: "partnerexchangetoken123",
-        shopify_exchange_token: "shopifyexchangetoken123",
-      )
+
+      set_existing_tokens_in_database(client: client)
 
       stub_exchange_token_calls(status: 403)
 
@@ -149,6 +140,16 @@ module ShopifyCli
       ShopifyCli::IdentityAuth::APPLICATION_SCOPES.keys.each do |key|
         assert_equal(key + token_suffix, client.store.get("#{key}_exchange_token".to_sym))
       end
+    end
+
+    def set_existing_tokens_in_database(client:)
+      client.store.set(
+        :identity_access_token => "accesstoken123",
+        :identity_refresh_token => "refreshtoken123",
+        :partners_exchange_token => "partnerexchangetoken123",
+        :shopify_exchange_token => "shopifyexchangetoken123",
+        "storefront-renderer-production_exchange_token".to_sym => "storefront-renderer-productionexchangetoken123"
+      )
     end
 
     def stub_exchange_token_calls(exchange_token: "exchangetoken123", access_token: "accesstoken123", status: nil)
