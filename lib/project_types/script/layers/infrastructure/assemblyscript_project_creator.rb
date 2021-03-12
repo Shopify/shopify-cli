@@ -50,8 +50,8 @@ module Script
                 "@shopify/scripts-sdk-as": "#{extension_point.sdks.assemblyscript.sdk_version}",
                 "@shopify/scripts-toolchain-as": "#{extension_point.sdks.assemblyscript.toolchain_version}",
                 "#{extension_point.sdks.assemblyscript.package}": "^#{extension_point_version}",
-                "@as-pect/cli": "4.0.0",
-                "assemblyscript": "^0.16.1"
+                "@as-pect/cli": "^6.0.0",
+                "assemblyscript": "^0.18.13"
               },
               "scripts": {
                 "test": "asp --summary --verbose",
