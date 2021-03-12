@@ -50,13 +50,12 @@ module Script
                 "@shopify/scripts-sdk-as": "#{extension_point.sdks.assemblyscript.sdk_version}",
                 "@shopify/scripts-toolchain-as": "#{extension_point.sdks.assemblyscript.toolchain_version}",
                 "#{extension_point.sdks.assemblyscript.package}": "^#{extension_point_version}",
-                "@as-pect/cli": "4.0.0",
-                "as-wasi": "^0.2.1",
-                "assemblyscript": "^0.16.1"
+                "@as-pect/cli": "^6.0.0",
+                "assemblyscript": "^0.18.13"
               },
               "scripts": {
                 "test": "asp --summary --verbose",
-                "build": "shopify-scripts-toolchain-as build --src src/script.ts --binary build/#{script_name}.wasm --metadata build/metadata.json -- --lib node_modules --optimize --use Date="
+                "build": "shopify-scripts-toolchain-as build --src src/shopify_main.ts --binary build/#{script_name}.wasm --metadata build/metadata.json -- --lib node_modules --optimize --use Date="
               },
               "engines": {
                 "node": ">=#{MIN_NODE_VERSION}"
