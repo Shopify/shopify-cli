@@ -138,15 +138,19 @@ module ShopifyCli
     end
 
     def refresh_exchange_token
-      return false if !store.exists?("partners_exchange_token".to_sym) ||
-      !store.exists?("shopify_exchange_token".to_sym)
+      return false unless exchange_token_keys.all? { |key| store.exists?(key) }
+
       request_exchange_tokens
       true
     rescue
-      store.del("partners_exchange_token".to_sym)
-      store.del("shopify_exchange_token".to_sym)
-      store.del("storefront-renderer-production_exchange_token".to_sym)
+      store.del(*exchange_token_keys)
       false
+    end
+
+    def exchange_token_keys
+      APPLICATION_SCOPES.keys.map do |key|
+        "#{key}_exchange_token".to_sym
+      end
     end
 
     def request_exchange_tokens
