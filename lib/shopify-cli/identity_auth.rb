@@ -187,6 +187,12 @@ module ShopifyCli
       false
     end
 
+    def exchange_token_keys
+      APPLICATION_SCOPES.keys.map do |key|
+        "#{key}_exchange_token".to_sym
+      end
+    end
+
     def request_exchange_tokens
       APPLICATION_SCOPES.each do |key, scopes|
         request_exchange_token(key, client_id_for_application(key), scopes)
