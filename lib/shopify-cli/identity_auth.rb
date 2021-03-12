@@ -18,9 +18,22 @@ module ShopifyCli
 
     DEFAULT_PORT = 3456
     REDIRECT_HOST = "http://127.0.0.1:#{DEFAULT_PORT}"
-    SHOPIFY_SCOPES = %w[https://api.shopify.com/auth/shop.admin.graphql https://api.shopify.com/auth/shop.admin.themes]
-    STOREFRONT_RENDERER_SCOPES = %w[https://api.shopify.com/auth/shop.storefront-renderer.devtools]
-    PARTNER_SCOPES = %w[https://api.shopify.com/auth/partners.app.cli.access]
+
+    APPLICATION_SCOPES = {
+      "shopify" => %w[https://api.shopify.com/auth/shop.admin.graphql https://api.shopify.com/auth/shop.admin.themes],
+      "storefront-renderer-production" => %w[https://api.shopify.com/auth/shop.storefront-renderer.devtools],
+      "partners" => %w[https://api.shopify.com/auth/partners.app.cli.access],
+    }
+
+    APPLICATION_CLIENT_IDS = {
+      "shopify" => "7ee65a63608843c577db8b23c4d7316ea0a01bd2f7594f8a9c06ea668c1b775c",
+      "storefront-renderer-production" => "ee139b3d-5861-4d45-b387-1bc3ada7811c",
+      "partners" => "271e16d403dfa18082ffb3d197bd2b5f4479c3fc32736d69296829cbb28d41a6",
+    }
+
+    DEV_APPLICATION_CLIENT_IDS = {
+      "partners" => "df89d73339ac3c6c5f0a98d9ca93260763e384d51d6038da129889c308973978",
+    }
 
     APPLICATION_SCOPES = {
       "shopify" => %w[https://api.shopify.com/auth/shop.admin.graphql https://api.shopify.com/auth/shop.admin.themes],
@@ -234,10 +247,6 @@ module ShopifyCli
       end
 
       client_ids[application_name]
-    end
-
-    def storefront_renderer_id
-      'ee139b3d-5861-4d45-b387-1bc3ada7811c'
     end
 
     def scopes(additional_scopes = [])
