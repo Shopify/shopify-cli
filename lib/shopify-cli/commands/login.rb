@@ -5,7 +5,6 @@ module ShopifyCli
     class Login < ShopifyCli::Command
       def call(*)
         IdentityAuth.new(ctx: @ctx).authenticate
-        puts ShopifyCli::DB.get("storefront-renderer-production_exchange_token".to_sym)
       end
 
       def self.help

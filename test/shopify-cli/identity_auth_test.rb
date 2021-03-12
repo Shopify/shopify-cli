@@ -42,10 +42,11 @@ module ShopifyCli
     def test_refresh_exchange_token
       client = oauth_client(request_exchange: "123")
       client.store.set(
-        identity_access_token: "accesstoken123",
-        identity_refresh_token: "refreshtoken123",
-        partners_exchange_token: "partnerexchangetoken123",
-        shopify_exchange_token: "shopifyexchangetoken123"
+        :identity_access_token => "accesstoken123",
+        :identity_refresh_token => "refreshtoken123",
+        :partners_exchange_token => "partnerexchangetoken123",
+        :shopify_exchange_token => "shopifyexchangetoken123",
+        'storefront-renderer-production_exchange_token'.to_sym => "shopifyexchangetoken123"
       )
 
       stub_exchange_token_calls(exchange_token: "exchangetoken456")
