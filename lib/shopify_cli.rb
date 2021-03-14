@@ -162,4 +162,41 @@ module ShopifyCli
   def self.debug_log_file
     File.join(tool_config_path, "logs", "debug.log")
   end
+
+  if RUBY_ENGINE == "jruby"
+    # JRuby's autoload has bugs - is this possibly
+    # https://github.com/jruby/jruby/issues/5403? Need to be required in a
+    # different order than they were defined for it to work.
+    ShopifyCli::API
+    ShopifyCli::AdminAPI
+    ShopifyCli::Command
+    ShopifyCli::Commands
+    ShopifyCli::Context
+    ShopifyCli::Core
+    ShopifyCli::DB
+    ShopifyCli::Feature
+    ShopifyCli::Form
+    ShopifyCli::Git
+    ShopifyCli::Helpers
+    ShopifyCli::Heroku
+    ShopifyCli::JsDeps
+    ShopifyCli::JsSystem
+    ShopifyCli::MethodObject
+    ShopifyCli::LazyDelegator
+    ShopifyCli::OAuth
+    ShopifyCli::Options
+    ShopifyCli::PartnersAPI
+    ShopifyCli::ProcessSupervision
+    ShopifyCli::Project
+    ShopifyCli::ProjectType
+    ShopifyCli::ResolveConstant
+    ShopifyCli::Resources
+    ShopifyCli::Result
+    ShopifyCli::Shopifolk
+    ShopifyCli::SubCommand
+    ShopifyCli::Task
+    ShopifyCli::Tasks
+    ShopifyCli::TransformDataStructure
+    ShopifyCli::Tunnel
+  end
 end

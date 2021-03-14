@@ -6,8 +6,8 @@ source "https://rubygems.org"
 # `dev` uses no gems
 group :development, :test do
   gem "rake"
-  gem "pry-byebug"
-  gem "byebug"
+  #gem "pry-byebug"
+  #gem "byebug"
   gem "rubocop-shopify", require: false
   gem "rubocop-minitest", require: false
 end

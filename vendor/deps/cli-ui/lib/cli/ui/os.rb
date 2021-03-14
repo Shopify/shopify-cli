@@ -12,7 +12,8 @@ module CLI
         when /mingw32/
           Windows
         else
-          raise "Could not determine OS from platform #{RUBY_PLATFORM}"
+          Mac
+          #raise "Could not determine OS from platform #{RUBY_PLATFORM}"
         end
       end
 

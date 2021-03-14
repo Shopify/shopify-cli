@@ -178,7 +178,8 @@ module CLI
           return :linux if /linux/.match(RUBY_PLATFORM)
           return :windows if /mingw32/.match(RUBY_PLATFORM)
 
-          raise "Could not determine OS from platform #{RUBY_PLATFORM}"
+          :mac
+          #raise "Could not determine OS from platform #{RUBY_PLATFORM}"
         end
 
         private

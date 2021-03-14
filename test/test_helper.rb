@@ -3,8 +3,8 @@ ENV["RUNNING_SHOPIFY_CLI_TESTS"] = 1.to_s
 require "rubygems"
 require "bundler/setup"
 require "shopify_cli"
-require "byebug"
-require "pry"
+#require "byebug"
+#require "pry"
 
 require "minitest/autorun"
 require "minitest/reporters"
@@ -21,3 +21,13 @@ Mocha.configure do |c|
 end
 
 Minitest::Reporters.use!([Minitest::Reporters::DefaultReporter.new(color: true)])
+
+if RUBY_ENGINE == "jruby"
+  ObjectSpace.each_object(Module) do |m|
+    if m.respond_to?(:constants)
+      m.constants(false).each do |c|
+        m.const_get(c)
+      end
+    end
+  end
+end
