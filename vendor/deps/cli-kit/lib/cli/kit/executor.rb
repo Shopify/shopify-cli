@@ -51,10 +51,17 @@ module CLI
         return yield unless Signal.list.key?(signal)
 
         begin
-          prev_handler = trap(signal, handler)
+          begin
+            prev_handler = trap(signal, handler)
+            installed = true
+          rescue ArgumentError
+            # If we couldn't install a signal handler because the signal is
+            # reserved, remember not to uninstall it later.
+            installed = false
+          end
           yield
         ensure
-          trap(signal, prev_handler)
+          trap(signal, prev_handler) if installed
         end
       end
 
