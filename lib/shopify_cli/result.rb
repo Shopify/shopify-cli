@@ -363,70 +363,72 @@ module ShopifyCLI
       Result::Failure.new(error)
     end
 
-    ##
-    # takes either a value or a block and chooses the appropriate result
-    # container based on the type of the value or the type of the block's return
-    # value. If the type is an exception, it is wrapped in a
-    # `ShopifyCLI::Result::Failure` and otherwise in a
-    # `ShopifyCLI::Result::Success`. If a block was provided instead of value, a
-    # `Proc` is returned and the result wrapping doesn't occur until the block
-    # is invoked.
-    #
-    # #### Parameters
-    #
-    # * `*args` should be an `Array` with zero or one element
-    # * `&block` should be a `Proc` that takes zero or one argument
-    #
-    # #### Returns
-    #
-    # Returns either a `Result::Success`, `Result::Failure` or a `Proc` that
-    # produces one of the former when invoked.
-    #
-    # #### Examples
-    #
-    #   Result.wrap(1) # => ShopifyCLI::Result::Success
-    #   Result.wrap(RuntimeError.new) # => ShopifyCLI::Result::Failure
-    #
-    #   Result.wrap { 1 } # => Proc
-    #   Result.wrap { 1 }.call # => ShopifyCLI::Result::Success
-    #   Result.wrap { raise }.call # => ShopifyCLI::Result::Failure
-    #
-    #   Result.wrap { |s| s.upcase }.call("hello").tap do |result|
-    #     result # => Result::Success
-    #     result.value # => "HELLO"
-    #   end
-    #
-    def self.wrap(*values, &block)
-      raise ArgumentError, "expected either a value or a block" unless (values.length == 1) ^ block
+    class << self
+      ##
+      # takes either a value or a block and chooses the appropriate result
+      # container based on the type of the value or the type of the block's return
+      # value. If the type is an exception, it is wrapped in a
+      # `ShopifyCli::Result::Failure` and otherwise in a
+      # `ShopifyCli::Result::Success`. If a block was provided instead of value, a
+      # `Proc` is returned and the result wrapping doesn't occur until the block
+      # is invoked.
+      #
+      # #### Parameters
+      #
+      # * `*args` should be an `Array` with zero or one element
+      # * `&block` should be a `Proc` that takes zero or one argument
+      #
+      # #### Returns
+      #
+      # Returns either a `Result::Success`, `Result::Failure` or a `Proc` that
+      # produces one of the former when invoked.
+      #
+      # #### Examples
+      #
+      #   Result.wrap(1) # => ShopifyCli::Result::Success
+      #   Result.wrap(RuntimeError.new) # => ShopifyCli::Result::Failure
+      #
+      #   Result.wrap { 1 } # => Proc
+      #   Result.wrap { 1 }.call # => ShopifyCli::Result::Success
+      #   Result.wrap { raise }.call # => ShopifyCli::Result::Failure
+      #
+      #   Result.wrap { |s| s.upcase }.call("hello").tap do |result|
+      #     result # => Result::Success
+      #     result.value # => "HELLO"
+      #   end
+      #
+      ruby2_keywords def wrap(*values, &block)
+        raise ArgumentError, "expected either a value or a block" unless (values.length == 1) ^ block
 
-      if values.length == 1
-        values.pop.yield_self do |value|
-          case value
-          when Result::Success, Result::Failure
-            value
-          when NilClass, Exception
-            Result.failure(value)
-          else
-            Result.success(value)
+        if values.length == 1
+          values.pop.yield_self do |value|
+            case value
+            when Result::Success, Result::Failure
+              value
+            when NilClass, Exception
+              Result.failure(value)
+            else
+              Result.success(value)
+            end
           end
-        end
-      else
-        ->(*args) do
-          begin
-            wrap(block.call(*args))
-          rescue Exception => error # rubocop:disable Lint/RescueException
-            wrap(error)
-          end
+        else
+          ->(*args) do
+            begin
+              wrap(block.call(*args))
+            rescue Exception => error # rubocop:disable Lint/RescueException
+              wrap(error)
+            end
+          end.ruby2_keywords
         end
       end
-    end
 
-    ##
-    # Wraps the given block and invokes it with the passed arguments.
-    #
-    def self.call(*args, &block)
-      raise ArgumentError, "expected a block" unless block
-      wrap(&block).call(*args)
+      ##
+      # Wraps the given block and invokes it with the passed arguments.
+      #
+      ruby2_keywords def call(*args, &block)
+        raise ArgumentError, "expected a block" unless block
+        wrap(&block).call(*args)
+      end
     end
   end
 end

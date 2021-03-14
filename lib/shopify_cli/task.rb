@@ -2,9 +2,11 @@ require "shopify_cli"
 
 module ShopifyCLI
   class Task
-    def self.call(*args, **kwargs)
-      task = new
-      task.call(*args, **kwargs)
+    class << self
+      ruby2_keywords def call(*args)
+        task = new
+        task.call(*args)
+      end
     end
 
     private
