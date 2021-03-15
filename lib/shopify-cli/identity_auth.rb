@@ -161,11 +161,7 @@ module ShopifyCli
     end
 
     def refresh_exchange_tokens
-<<<<<<< HEAD
       return false unless EXCHANGE_TOKENS.all? { |key| store.exists?(key) }
-=======
-      return false unless exchange_token_keys.all? { |key| store.exists?(key) }
->>>>>>> 0d1d51bd (Rename some methods)
 
       request_exchange_tokens
 
