@@ -114,8 +114,8 @@ module ShopifyCli
         code_verifier: code_verifier,
       )
       store.set(
-        "identity_access_token".to_sym => resp["access_token"],
-        "identity_refresh_token".to_sym => resp["refresh_token"],
+        identity_access_token: resp["access_token"],
+        identity_refresh_token: resp["refresh_token"],
       )
     end
 
@@ -124,13 +124,13 @@ module ShopifyCli
 
       resp = post_token_request(
         grant_type: :refresh_token,
-        access_token: store.get("identity_access_token".to_sym),
-        refresh_token: store.get("identity_refresh_token".to_sym),
+        access_token: store.get(:identity_access_token),
+        refresh_token: store.get(:identity_refresh_token),
         client_id: client_id,
       )
       store.set(
-        "identity_access_token".to_sym => resp["access_token"],
-        "identity_refresh_token".to_sym => resp["refresh_token"],
+        identity_access_token: resp["access_token"],
+        identity_refresh_token: resp["refresh_token"],
       )
 
       # Need to refresh the exchange token on successful access token refresh
@@ -173,7 +173,7 @@ module ShopifyCli
         client_id: client_id,
         audience: audience,
         scope: scopes(additional_scopes),
-        subject_token: store.get("identity_access_token".to_sym),
+        subject_token: store.get(:identity_access_token),
       )
       store.set("#{name}_exchange_token".to_sym => resp["access_token"])
     end
