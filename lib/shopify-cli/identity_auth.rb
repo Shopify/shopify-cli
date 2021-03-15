@@ -34,6 +34,8 @@ module ShopifyCli
     }
 
     DEV_APPLICATION_CLIENT_IDS = {
+      "shopify" => "e92482cebb9bfb9fb5a0199cc770fde3de6c8d16b798ee73e36c9d815e070e52",
+      "storefront-renderer-production" => "46f603de-894f-488d-9471-5b721280ff49",
       "partners" => "df89d73339ac3c6c5f0a98d9ca93260763e384d51d6038da129889c308973978",
     }
 
