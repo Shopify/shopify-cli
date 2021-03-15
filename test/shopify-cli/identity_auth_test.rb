@@ -42,7 +42,7 @@ module ShopifyCli
     def test_refresh_exchange_token
       client = oauth_client(request_exchange: "123")
 
-      set_existing_tokens_in_database(client: client)
+      with_existing_tokens_in_database(client: client)
 
       stub_exchange_token_calls(exchange_token: "exchangetoken456")
 
@@ -54,7 +54,7 @@ module ShopifyCli
     def test_refresh_access_token_fallback
       client = oauth_client(request_exchange: "123")
 
-      set_existing_tokens_in_database(client: client)
+      with_existing_tokens_in_database(client: client)
 
       stub_exchange_token_calls(status: 403)
 
@@ -142,7 +142,7 @@ module ShopifyCli
       end
     end
 
-    def set_existing_tokens_in_database(client:)
+    def with_existing_tokens_in_database(client:)
       client.store.set(
         :identity_access_token => "accesstoken123",
         :identity_refresh_token => "refreshtoken123",
