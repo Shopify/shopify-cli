@@ -23,13 +23,13 @@ module ShopifyCli
 
     APPLICATION_SCOPES = {
       "shopify" => %w[https://api.shopify.com/auth/shop.admin.graphql https://api.shopify.com/auth/shop.admin.themes],
-      "storefront-renderer-production" => %w[https://api.shopify.com/auth/shop.storefront-renderer.devtools],
+      "storefront_renderer_production" => %w[https://api.shopify.com/auth/shop.storefront-renderer.devtools],
       "partners" => %w[https://api.shopify.com/auth/partners.app.cli.access],
     }
 
     APPLICATION_CLIENT_IDS = {
       "shopify" => "7ee65a63608843c577db8b23c4d7316ea0a01bd2f7594f8a9c06ea668c1b775c",
-      "storefront-renderer-production" => "ee139b3d-5861-4d45-b387-1bc3ada7811c",
+      "storefront_renderer_production" => "ee139b3d-5861-4d45-b387-1bc3ada7811c",
       "partners" => "271e16d403dfa18082ffb3d197bd2b5f4479c3fc32736d69296829cbb28d41a6",
     }
 
