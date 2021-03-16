@@ -61,18 +61,6 @@ module Script
               Script::Layers::Application::ExtensionPoints.languages(type: e.extension_point_type).join(", ")
             ),
           }
-        when Errors::InvalidConfigUiDefinitionError
-          {
-            cause_of_error: ShopifyCli::Context
-              .message("script.error.invalid_config_ui_definition_cause", e.filename),
-            help_suggestion: ShopifyCli::Context.message("script.error.invalid_config_ui_definition_help"),
-          }
-        when Errors::MissingSpecifiedConfigUiDefinitionError
-          {
-            cause_of_error: ShopifyCli::Context
-              .message("script.error.missing_config_ui_definition_cause", e.filename),
-            help_suggestion: ShopifyCli::Context.message("script.error.missing_config_ui_definition_help"),
-          }
         when Errors::InvalidScriptNameError
           {
             cause_of_error: ShopifyCli::Context.message("script.error.invalid_script_name_cause"),
@@ -136,6 +124,18 @@ module Script
           {
             cause_of_error: ShopifyCli::Context.message("script.error.metadata_not_found_cause"),
             help_suggestion: ShopifyCli::Context.message("script.error.metadata_not_found_help"),
+          }
+        when Layers::Domain::Errors::InvalidConfigUiDefinitionError
+          {
+            cause_of_error: ShopifyCli::Context
+              .message("script.error.invalid_config_ui_definition_cause", e.filename),
+            help_suggestion: ShopifyCli::Context.message("script.error.invalid_config_ui_definition_help"),
+          }
+        when Layers::Domain::Errors::MissingSpecifiedConfigUiDefinitionError
+          {
+            cause_of_error: ShopifyCli::Context
+              .message("script.error.missing_config_ui_definition_cause", e.filename),
+            help_suggestion: ShopifyCli::Context.message("script.error.missing_config_ui_definition_help"),
           }
         when Layers::Infrastructure::Errors::AppNotInstalledError
           {

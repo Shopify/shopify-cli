@@ -12,7 +12,8 @@ module Script
           script_project:,
           script_content:,
           compiled_type:,
-          metadata:
+          metadata:,
+          config_ui:
         )
           id = id(script_project.script_name, compiled_type)
           @cache[id] = Domain::PushPackage.new(
@@ -23,12 +24,12 @@ module Script
             script_content: script_content,
             compiled_type: compiled_type,
             metadata: metadata,
-            config_ui: script_project.config_ui,
+            config_ui: config_ui,
           )
         end
 
-        def get_push_package(script_project:, compiled_type:, metadata:)
-          _ = metadata
+        def get_push_package(script_project:, compiled_type:, metadata:, config_ui:)
+          _ = metadata, config_ui
           id = id(script_project.script_name, compiled_type)
           if @cache.key?(id)
             @cache[id]

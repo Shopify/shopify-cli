@@ -26,7 +26,7 @@ module Script
             extensionPointName: extension_point_type.upcase,
             title: script_name,
             description: description,
-            configUi: config_ui,
+            configUi: config_ui.content,
             sourceCode: Base64.encode64(script_content),
             language: compiled_type,
             force: force,
