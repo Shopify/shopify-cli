@@ -202,6 +202,27 @@ describe Script::UI::ErrorHandler do
         end
       end
 
+      describe "when ConfigUiSyntaxError" do
+        let(:err) { Script::Layers::Infrastructure::Errors::ConfigUiSyntaxError.new }
+        it "should call display_and_raise" do
+          should_call_display_and_raise
+        end
+      end
+
+      describe "when ConfigUiMissingKeysError" do
+        let(:err) { Script::Layers::Infrastructure::Errors::ConfigUiMissingKeysError.new("file", "keys") }
+        it "should call display_and_raise" do
+          should_call_display_and_raise
+        end
+      end
+
+      describe "when ConfigUiFieldsMissingKeysError" do
+        let(:err) { Script::Layers::Infrastructure::Errors::ConfigUiFieldsMissingKeysError.new("file", "keys") }
+        it "should call display_and_raise" do
+          should_call_display_and_raise
+        end
+      end
+
       describe "when DependencyInstallError" do
         let(:err) { Script::Layers::Infrastructure::Errors::DependencyInstallError.new }
         it "should call display_and_raise" do
