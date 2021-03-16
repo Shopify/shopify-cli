@@ -9,6 +9,7 @@ module Script
         parser.on("--extension_point=EP_NAME") { |ep_name| flags[:extension_point] = ep_name }
         parser.on("--extension-point=EP_NAME") { |ep_name| flags[:extension_point] = ep_name }
         parser.on("--language=LANGUAGE") { |language| flags[:language] = language }
+        parser.on("--no-config-ui") { |no_config_ui| flags[:no_config_ui] = no_config_ui }
       end
 
       def call(args, _name)
@@ -26,7 +27,8 @@ module Script
           language: form.language,
           script_name: form.name,
           extension_point_type: form.extension_point,
-          description: form.description
+          description: form.description,
+          no_config_ui: options.flags.key?(:no_config_ui)
         )
         @ctx.puts(@ctx.message("script.create.change_directory_notice", project.script_name))
       rescue Script::Errors::ScriptProjectAlreadyExistsError => e

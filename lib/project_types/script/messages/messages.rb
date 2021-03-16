@@ -136,6 +136,7 @@ module Script
               {{command:--name=NAME}} Script project name. Use any string.
               {{command:--description=DESCRIPTION}} Description of the project. Use any string.
               {{command:--extension-point=TYPE}} Extension point name. Allowed values: %2$s.
+              {{command:--no-config-ui}} Specify this option if you don’t want Scripts to render an interface in the Shopify admin.
           HELP
 
           error: {

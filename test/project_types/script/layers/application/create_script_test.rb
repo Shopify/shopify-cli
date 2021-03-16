@@ -2,6 +2,7 @@
 
 require "project_types/script/test_helper"
 require "project_types/script/layers/infrastructure/fake_extension_point_repository"
+require "project_types/script/layers/infrastructure/fake_config_ui_repository"
 
 describe Script::Layers::Application::CreateScript do
   include TestHelpers::FakeFS
@@ -11,7 +12,9 @@ describe Script::Layers::Application::CreateScript do
   let(:script_name) { "name" }
   let(:compiled_type) { "wasm" }
   let(:description) { "description" }
+  let(:no_config_ui) { false }
   let(:extension_point_repository) { Script::Layers::Infrastructure::FakeExtensionPointRepository.new }
+  let(:config_ui_repository) { Script::Layers::Infrastructure::FakeConfigUiRepository.new }
   let(:ep) { extension_point_repository.get_extension_point(extension_point_type) }
   let(:task_runner) { stub(compiled_type: compiled_type) }
   let(:project_creator) { stub }
@@ -23,6 +26,8 @@ describe Script::Layers::Application::CreateScript do
   before do
     Script::ScriptProject.stubs(:current).returns(script_project)
     Script::Layers::Infrastructure::ExtensionPointRepository.stubs(:new).returns(extension_point_repository)
+    Script::Layers::Infrastructure::ConfigUiRepository.stubs(:new).returns(config_ui_repository)
+
     extension_point_repository.create_extension_point(extension_point_type)
     Script::Layers::Infrastructure::TaskRunner
       .stubs(:for)
@@ -41,7 +46,8 @@ describe Script::Layers::Application::CreateScript do
         language: language,
         script_name: script_name,
         extension_point_type: extension_point_type,
-        description: description
+        description: description,
+        no_config_ui: no_config_ui
       )
     end
 
@@ -52,8 +58,14 @@ describe Script::Layers::Application::CreateScript do
         .returns(ep)
       Script::Layers::Application::CreateScript
         .expects(:setup_project)
-        .with(@context, language, script_name, ep, description)
-        .returns(script_project)
+        .with(
+          ctx: @context,
+          language: language,
+          script_name: script_name,
+          extension_point: ep,
+          description: description,
+          no_config_ui: no_config_ui
+        ).returns(script_project)
       Script::Layers::Application::CreateScript
         .expects(:install_dependencies)
         .with(@context, language, script_name, project_creator)
@@ -65,25 +77,65 @@ describe Script::Layers::Application::CreateScript do
 
     describe ".setup_project" do
       subject do
-        Script::Layers::Application::CreateScript
-          .send(:setup_project, @context, language, script_name, ep, description)
+        Script::Layers::Application::CreateScript.send(
+          :setup_project,
+          ctx: @context,
+          language: language,
+          script_name: script_name,
+          extension_point: ep,
+          description: description,
+          no_config_ui: no_config_ui
+        )
       end
 
-      it "should succeed and update ctx root" do
-        Script::ScriptProject.expects(:create).with(@context, script_name).once
-        Script::ScriptProject
-          .expects(:write)
-          .with(
-            @context,
-            project_type: :script,
-            organization_id: nil,
-            extension_point_type: ep.type,
-            script_name: script_name,
-            language: language,
-            description: description
-          )
-        capture_io do
-          assert_equal script_project, subject
+      describe "when no_config_ui is false" do
+        let(:no_config_ui) { false }
+        let(:expected_config_ui_filename) { "config-ui.yml" }
+        let(:expected_config_ui_content) { "---\nversion: 1\ntype: single\nfields: []\n" }
+
+        it "should create a config_ui_file and store the filename in the project config" do
+          Script::ScriptProject.expects(:create).with(@context, script_name).once
+          Script::ScriptProject
+            .expects(:write)
+            .with(
+              @context,
+              project_type: :script,
+              organization_id: nil,
+              extension_point_type: ep.type,
+              script_name: script_name,
+              language: language,
+              description: description,
+              config_ui_file: expected_config_ui_filename
+            )
+          capture_io { subject }
+
+          config_ui = config_ui_repository.get_config_ui(expected_config_ui_filename)
+
+          refute_nil config_ui
+          assert_equal expected_config_ui_filename, config_ui.filename
+          assert_equal expected_config_ui_content, config_ui.content
+        end
+      end
+
+      describe "when no_config_ui is true" do
+        let(:no_config_ui) { true }
+
+        it "should write the config without config_ui_file field" do
+          Script::ScriptProject.expects(:create).with(@context, script_name).once
+          Script::ScriptProject
+            .expects(:write)
+            .with(
+              @context,
+              project_type: :script,
+              organization_id: nil,
+              extension_point_type: ep.type,
+              script_name: script_name,
+              language: language,
+              description: description,
+            )
+          capture_io do
+            assert_equal script_project, subject
+          end
         end
       end
     end
