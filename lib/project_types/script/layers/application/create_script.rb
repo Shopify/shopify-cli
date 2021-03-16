@@ -26,7 +26,7 @@ module Script
 
           private
 
-          DEFAULT_CONFIG_UI_FILENAME = "ui-config.yml"
+          DEFAULT_CONFIG_UI_FILENAME = "config-ui.yml"
           DEFAULT_CONFIG = {
             "version" => 1,
             "type" => "single",
