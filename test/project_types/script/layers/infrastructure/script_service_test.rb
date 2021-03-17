@@ -12,7 +12,8 @@ describe Script::Layers::Infrastructure::ScriptService do
   let(:schema_major_version) { "1" }
   let(:schema_minor_version) { "0" }
   let(:use_msgpack) { true }
-  let(:config_ui) { Script::Layers::Domain::ConfigUi.new(filename: "filename", content: "content") }
+  let(:config_ui) { Script::Layers::Domain::ConfigUi.new(filename: "filename", content: expected_config_ui_content) }
+  let(:expected_config_ui_content) { "content" }
   let(:script_service_proxy) do
     <<~HERE
       query ProxyRequest($api_key: String, $shop_domain: String, $query: String!, $variables: String) {
@@ -82,7 +83,7 @@ describe Script::Layers::Infrastructure::ScriptService do
             extensionPointName: extension_point_type,
             title: script_name,
             description: description,
-            configUi: config_ui.content,
+            configUi: expected_config_ui_content,
             sourceCode: Base64.encode64(script_content),
             language: "AssemblyScript",
             force: false,
@@ -140,6 +141,15 @@ describe Script::Layers::Infrastructure::ScriptService do
 
       it "should post the form without scope" do
         assert_equal(script_service_response, subject)
+      end
+
+      describe "when config_ui is nil" do
+        let(:config_ui) { nil }
+        let(:expected_config_ui_content) { nil }
+
+        it "should succeed with a valid response" do
+          assert_equal(script_service_response, subject)
+        end
       end
     end
 
