@@ -199,6 +199,8 @@ module ShopifyCli
     def client_id
       return "fbdb2649-e327-4907-8f67-908d24cfd7e3" if ENV[LOCAL_DEBUG].nil?
 
+      ctx.abort(ctx.message("core.oauth.error.local_identity_not_running")) unless local_identity_running?
+
       # Fetch the client ID from the local Identity Dynamic Registration endpoint
       response = post_request("/client", {
         name: "shopify-cli-development",
@@ -207,5 +209,13 @@ module ShopifyCli
 
       response["client_id"]
     end
-  end
+
+    def local_identity_running?
+      Net::HTTP.start("identity.myshopify.io", 443, use_ssl: true, open_timeout: 1, read_timeout: 10) do |http|
+        req = Net::HTTP::Get.new(URI.join("https://identity.myshopify.io", "/services/ping"))
+        http.request(req).is_a?(Net::HTTPSuccess)
+      end
+    rescue Timeout::Error, Errno::EHOSTUNREACH, Errno::EHOSTDOWN, Errno::EADDRNOTAVAIL, Errno::ECONNREFUSED
+      false
+    end
 end
