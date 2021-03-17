@@ -19,10 +19,7 @@ GEM
     fakefs (1.2.2)
     ffi (1.15.0)
     hashdiff (1.0.1)
-<<<<<<< HEAD
-=======
     liquid (5.0.1)
->>>>>>> 9c8897c2 (Add theme check command)
     listen (3.5.1)
       rb-fsevent (~> 0.10, >= 0.10.3)
       rb-inotify (~> 0.9, >= 0.9.10)
