@@ -179,7 +179,7 @@ module ShopifyCli
       }.tap do |result|
         result[:destination] = store.get("shop".to_sym) if name == "shopify"
       end
-      ctx.debug(params)
+      # ctx.debug(params)
       resp = post_token_request(params)
       store.set("#{name}_exchange_token".to_sym => resp["access_token"])
       ctx.debug("#{name}_exchange_token: " + resp["access_token"])
