@@ -88,9 +88,9 @@ module ShopifyCli
       def authenticated_req(ctx)
         yield
       rescue API::APIRequestUnauthorizedError
-        # authenticate(ctx)
-        # retry
-        ctx.debug("APIRequestUnauthorizedError!!")
+        authenticate(ctx)
+        retry
+        # ctx.debug("APIRequestUnauthorizedError!!")
       end
 
       def authenticate(ctx)
