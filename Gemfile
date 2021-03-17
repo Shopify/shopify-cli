@@ -1,6 +1,8 @@
 # NOTE: These are development-only dependencies
 source "https://rubygems.org"
 
+gemspec
+
 # None of these can actually be used in a development copy of dev
 # They are all for CI and tests
 # `dev` uses no gems
@@ -20,4 +22,5 @@ group :test do
   gem "fakefs", ">= 1.0", require: false
   gem "webmock", require: false
   gem "timecop", require: false
+  gem "rack", require: false
 end
