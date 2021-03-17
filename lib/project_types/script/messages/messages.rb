@@ -122,9 +122,6 @@ module Script
 
           shop_script_undefined_cause: "Script is already turned off in store.",
 
-          packages_outdated_cause: "These npm packages are out of date: %s.",
-          packages_outdated_help: "To update them, run {{cyan:npm install --save-dev %s}}.",
-
           invalid_build_script: "The root package.json contains an invalid build command that " \
                                 "is needed to compile your script to WebAssembly.",
           build_script_not_found: "The root package.json is missing the build command that " \
