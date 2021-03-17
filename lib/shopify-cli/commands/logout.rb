@@ -5,7 +5,7 @@ module ShopifyCli
     class Logout < ShopifyCli::Command
       LOGIN_TOKENS = [
         :identity_access_token, :identity_refresh_token, :identity_exchange_token,
-        :shopify_exchange_token, :admin_refresh_token, :admin_exchange_token
+        :shopify_exchange_token
       ]
 
       def call(*)
