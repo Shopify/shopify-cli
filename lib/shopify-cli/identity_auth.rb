@@ -153,7 +153,11 @@ module ShopifyCli
     end
 
     def post_token_request(params)
-      uri = URI.parse("#{auth_url}/token")
+      post_request("/token", params)
+    end
+
+    def post_request(endpoint, params)
+      uri = URI.parse("#{auth_url}#{endpoint}")
       https = Net::HTTP.new(uri.host, uri.port)
       https.use_ssl = true
       request = Net::HTTP::Post.new(uri.path)
@@ -194,7 +198,14 @@ module ShopifyCli
 
     def client_id
       return "fbdb2649-e327-4907-8f67-908d24cfd7e3" if ENV[LOCAL_DEBUG].nil?
-      "e5380e02-312a-7408-5718-e07017e9cf52"
+
+      # Fetch the client ID from the local Identity Dynamic Registration endpoint
+      response = post_request("/client", {
+        name: "shopify-cli-development",
+        public_type: "native",
+      })
+
+      response["client_id"]
     end
   end
 end
