@@ -218,4 +218,5 @@ module ShopifyCli
     rescue Timeout::Error, Errno::EHOSTUNREACH, Errno::EHOSTDOWN, Errno::EADDRNOTAVAIL, Errno::ECONNREFUSED
       false
     end
+  end
 end
