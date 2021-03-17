@@ -43,7 +43,11 @@ module ShopifyCli
 
         # @shop ||= Project.current.env.shop || get_shop(@ctx)
         # @shop = 'shop1.myshopify.io'
-        Project.current.env.shop = "shop1.myshopify.io"
+        Project.current.env.shop = if @ctx.testing?
+          "my-test-shop.myshopify.com"
+        else
+          "shop1.myshopify.io"
+        end
         @shop = Project.current.env.shop
         if @silent
           spin_group = CLI::UI::SpinGroup.new
