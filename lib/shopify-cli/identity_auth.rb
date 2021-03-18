@@ -18,8 +18,29 @@ module ShopifyCli
 
     DEFAULT_PORT = 3456
     REDIRECT_HOST = "http://127.0.0.1:#{DEFAULT_PORT}"
-    SHOPIFY_SCOPES = %w[https://api.shopify.com/auth/shop.admin.graphql https://api.shopify.com/auth/shop.admin.themes]
-    PARTNER_SCOPES = %w[https://api.shopify.com/auth/partners.app.cli.access]
+
+    APPLICATION_SCOPES = {
+      "shopify" => %w[https://api.shopify.com/auth/shop.admin.graphql https://api.shopify.com/auth/shop.admin.themes],
+      "storefront-renderer-production" => %w[https://api.shopify.com/auth/shop.storefront-renderer.devtools],
+      "partners" => %w[https://api.shopify.com/auth/partners.app.cli.access],
+    }
+
+    APPLICATION_CLIENT_IDS = {
+      "shopify" => "7ee65a63608843c577db8b23c4d7316ea0a01bd2f7594f8a9c06ea668c1b775c",
+      "storefront-renderer-production" => "ee139b3d-5861-4d45-b387-1bc3ada7811c",
+      "partners" => "271e16d403dfa18082ffb3d197bd2b5f4479c3fc32736d69296829cbb28d41a6",
+    }
+
+    DEV_APPLICATION_CLIENT_IDS = {
+      "shopify" => "e92482cebb9bfb9fb5a0199cc770fde3de6c8d16b798ee73e36c9d815e070e52",
+      "storefront-renderer-production" => "46f603de-894f-488d-9471-5b721280ff49",
+      "partners" => "df89d73339ac3c6c5f0a98d9ca93260763e384d51d6038da129889c308973978",
+    }
+
+    IDENTITY_ACCESS_TOKENS = %i[
+      identity_access_token
+      identity_refresh_token
+    ]
 
     property! :ctx
     property :store, default: ShopifyCli::DB.new
@@ -29,9 +50,10 @@ module ShopifyCli
     attr_accessor :response_query
 
     def authenticate
-      return if refresh_exchange_token
-      return if refresh_access_token
+      return if refresh_exchange_tokens || refresh_access_tokens
+
       initiate_authentication
+
       request_access_token(code: receive_access_code)
       request_exchange_tokens
     end
@@ -61,7 +83,7 @@ module ShopifyCli
       @server_thread = Thread.new { server.start }
       params = {
         client_id: client_id,
-        scope: scopes(SHOPIFY_SCOPES + PARTNER_SCOPES),
+        scope: scopes(APPLICATION_SCOPES.values.flatten),
         redirect_uri: REDIRECT_HOST,
         state: state_token,
         response_type: :code,
@@ -94,49 +116,55 @@ module ShopifyCli
         code_verifier: code_verifier,
       )
       store.set(
-        "identity_access_token".to_sym => resp["access_token"],
-        "identity_refresh_token".to_sym => resp["refresh_token"],
+        identity_access_token: resp["access_token"],
+        identity_refresh_token: resp["refresh_token"],
       )
     end
 
-    def refresh_access_token
-      return false if !store.exists?("identity_access_token".to_sym) ||
-        !store.exists?("identity_refresh_token".to_sym)
-      refresh_token
-      request_exchange_tokens
-      true
-    rescue
-      store.del("identity_access_token".to_sym, "identity_refresh_token".to_sym)
-      false
-    end
+    def refresh_access_tokens
+      return false unless IDENTITY_ACCESS_TOKENS.all? { |key| store.exists?(key) }
 
-    def refresh_token
       resp = post_token_request(
         grant_type: :refresh_token,
-        access_token: store.get("identity_access_token".to_sym),
-        refresh_token: store.get("identity_refresh_token".to_sym),
+        access_token: store.get(:identity_access_token),
+        refresh_token: store.get(:identity_refresh_token),
         client_id: client_id,
       )
       store.set(
-        "identity_access_token".to_sym => resp["access_token"],
-        "identity_refresh_token".to_sym => resp["refresh_token"],
+        identity_access_token: resp["access_token"],
+        identity_refresh_token: resp["refresh_token"],
       )
-    end
 
-    def refresh_exchange_token
-      return false if !store.exists?("partners_exchange_token".to_sym) ||
-      !store.exists?("shopify_exchange_token".to_sym)
+      # Need to refresh the exchange token on successful access token refresh
       request_exchange_tokens
+
       true
     rescue
-      store.del("partners_exchange_token".to_sym)
-      store.del("shopify_exchange_token".to_sym)
+      store.del(*IDENTITY_ACCESS_TOKENS)
       false
     end
 
+    def refresh_exchange_tokens
+      return false unless exchange_token_keys.all? { |key| store.exists?(key) }
+
+      request_exchange_tokens
+
+      true
+    rescue
+      store.del(*exchange_token_keys)
+      false
+    end
+
+    def exchange_token_keys
+      APPLICATION_SCOPES.keys.map do |key|
+        "#{key}_exchange_token".to_sym
+      end
+    end
+
     def request_exchange_tokens
-      request_exchange_token("partners", partners_id, PARTNER_SCOPES)
-      request_exchange_token("shopify", shopify_id, SHOPIFY_SCOPES)
+      APPLICATION_SCOPES.each do |key, scopes|
+        request_exchange_token(key, client_id_for_application(key), scopes)
+      end
     end
 
     def request_exchange_token(name, audience, additional_scopes)
@@ -147,7 +175,7 @@ module ShopifyCli
         client_id: client_id,
         audience: audience,
         scope: scopes(additional_scopes),
-        subject_token: store.get("identity_access_token".to_sym),
+        subject_token: store.get(:identity_access_token),
       )
       store.set("#{name}_exchange_token".to_sym => resp["access_token"])
     end
@@ -176,14 +204,14 @@ module ShopifyCli
       "https://identity.myshopify.io/oauth"
     end
 
-    def partners_id
-      return "271e16d403dfa18082ffb3d197bd2b5f4479c3fc32736d69296829cbb28d41a6" if ENV[LOCAL_DEBUG].nil?
-      "df89d73339ac3c6c5f0a98d9ca93260763e384d51d6038da129889c308973978"
-    end
+    def client_id_for_application(application_name)
+      client_ids = if ENV[LOCAL_DEBUG]
+        DEV_APPLICATION_CLIENT_IDS
+      else
+        APPLICATION_CLIENT_IDS
+      end
 
-    def shopify_id
-      return "7ee65a63608843c577db8b23c4d7316ea0a01bd2f7594f8a9c06ea668c1b775c" if ENV[LOCAL_DEBUG].nil?
-      # 'don't have a DEBUG one yet'
+      client_ids[application_name]
     end
 
     def scopes(additional_scopes = [])
