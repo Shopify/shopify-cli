@@ -86,7 +86,6 @@ module Extension
         exception = assert_raises ShopifyCli::Abort do
           run_serve
         end
-
         assert_includes exception.message, @context.message("serve.serve_missing_information")
       end
 
@@ -114,7 +113,6 @@ module Extension
         exception = assert_raises ShopifyCli::Abort do
           run_serve
         end
-
         assert_includes exception.message, @context.message("serve.serve_missing_information")
       end
 
@@ -142,7 +140,6 @@ module Extension
         exception = assert_raises ShopifyCli::Abort do
           run_serve
         end
-
         assert_includes exception.message, @context.message("serve.serve_missing_information")
       end
 
@@ -170,7 +167,6 @@ module Extension
         exception = assert_raises ShopifyCli::Abort do
           run_serve
         end
-
         assert_includes exception.message, @context.message("serve.serve_missing_information")
       end
 
