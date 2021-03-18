@@ -41,12 +41,12 @@ module ShopifyCli
 
         def upload(file)
           if @theme.ignore?(file)
-            puts "Ignoring #{file.relative_path}" if ThemeDevServer.debug
+            puts "Ignoring #{file.relative_path}" if DevServer.debug
             return
           end
 
           if @theme.file_has_changed?(file)
-            puts "Uploading #{file.relative_path} to #{@theme.assets_api_uri}" if ThemeDevServer.debug
+            puts "Uploading #{file.relative_path} to #{@theme.assets_api_uri}" if DevServer.debug
 
             response = Net::HTTP.start(@theme.assets_api_uri.host, 443, use_ssl: true) do |http|
               req = Net::HTTP::Put.new(@theme.assets_api_uri)
@@ -64,7 +64,7 @@ module ShopifyCli
             end
 
             @theme.update_checksums!(response)
-          elsif ThemeDevServer.debug
+          elsif DevServer.debug
             puts "#{file.relative_path} has not changed, skipping upload"
           end
         ensure
