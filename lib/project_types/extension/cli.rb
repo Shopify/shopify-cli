@@ -36,6 +36,7 @@ module Extension
     autoload :UpdateDraft, Project.project_filepath("tasks/update_draft")
     autoload :FetchSpecifications, Project.project_filepath("tasks/fetch_specifications")
     autoload :ConfigureFeatures, Project.project_filepath("tasks/configure_features")
+    autoload :ConfigureOptions, Project.project_filepath("tasks/configure_options")
 
     module Converters
       autoload :RegistrationConverter, Project.project_filepath("tasks/converters/registration_converter")
