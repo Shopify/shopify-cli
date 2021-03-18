@@ -38,8 +38,8 @@ module Extension
             Usage: {{command:#{ShopifyCli::TOOL_NAME} create extension}}
             Options:
               {{command:--type=TYPE}} The type of extension you would like to create.
-              {{command:--name=NAME}} The name of your extension (50 characters).”
-              {{command:--api-key=KEY}} The API key of your app.”
+              {{command:--name=NAME}} The name of your extension (50 characters).
+              {{command:--api-key=KEY}} The API key of your app.
         HELP
       end
 
