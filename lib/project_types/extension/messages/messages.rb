@@ -165,6 +165,9 @@ module Extension
       checkout_post_purchase: {
         name: "Checkout Post Purchase",
       },
+      online_store_theme_extension: {
+        name: "Online Store Theme Extension",
+      },
     }
   end
 end
