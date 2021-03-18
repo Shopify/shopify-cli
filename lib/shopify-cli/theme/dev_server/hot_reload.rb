@@ -36,7 +36,7 @@ module ShopifyCli
             modified: files,
           ))
 
-          puts "[HotReload] Modified #{files.join(", ")}" if ThemeDevServer.debug
+          puts "[HotReload] Modified #{files.join(", ")}" if DevServer.debug
         end
 
         private
@@ -56,7 +56,7 @@ module ShopifyCli
         def create_stream
           stream = @streams.new
 
-          puts "[HotReload] Connected to SSE stream" if ThemeDevServer.debug
+          puts "[HotReload] Connected to SSE stream" if DevServer.debug
 
           [
             200,
