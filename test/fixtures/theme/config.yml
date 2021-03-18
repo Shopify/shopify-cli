@@ -1,0 +1,8 @@
+development:
+  password: notapassword
+  theme_id: '123456789'
+  store: dev-theme-server-store.myshopify.com
+  ignore_files:
+  - config/*_secret.json
+  ignores:
+  - ignores_file
