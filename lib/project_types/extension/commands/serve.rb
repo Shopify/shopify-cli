@@ -10,6 +10,9 @@ module Extension
         if argo_admin?
           ShopifyCli::Tasks::EnsureEnv.call(@ctx, required: [:api_key, :secret, :shop])
           ShopifyCli::Tasks::EnsureDevStore.call(@ctx)
+          @ctx.abort(@ctx.message("serve.serve_missing_information")) if
+            project.env.shop.nil? || project.env.api_key.nil? ||
+            project.env.shop.strip.empty? || project.env.api_key.strip.empty?
         end
 
         CLI::UI::Frame.open(@ctx.message("serve.frame_title")) do
