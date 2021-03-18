@@ -10,6 +10,7 @@ require_relative "dev_server/theme"
 require_relative "dev_server/uploader"
 require_relative "dev_server/watcher"
 require_relative "dev_server/web_server"
+require_relative "dev_server/certificate_manager"
 
 require "pathname"
 
