@@ -23,6 +23,10 @@ module Extension
           }.compact
         ).write(context)
 
+        reload
+      end
+
+      def reload
         current.reload unless project_empty?
       end
 

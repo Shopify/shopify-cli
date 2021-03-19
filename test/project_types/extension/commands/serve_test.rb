@@ -67,6 +67,7 @@ module Extension
         ShopifyCli::Tasks::EnsureEnv.stubs(:call)
         ShopifyCli::Tasks::EnsureDevStore.stubs(:call)
         ShopifyCli::Feature.stubs(:enabled?).with(:argo_admin_beta).returns(true)
+        ExtensionProject.stubs(:reload)
 
         Extension.specifications.stubs(:valid?).returns(true)
         Extension.specifications.stubs(:[]).returns(DummySpecifications.build(
@@ -85,6 +86,7 @@ module Extension
         ShopifyCli::Tasks::EnsureEnv.stubs(:call)
         ShopifyCli::Tasks::EnsureDevStore.stubs(:call)
         ShopifyCli::Feature.stubs(:enabled?).with(:argo_admin_beta).returns(true)
+        ExtensionProject.stubs(:reload)
 
         Extension.specifications.stubs(:valid?).returns(true)
         Extension.specifications.stubs(:[]).returns(DummySpecifications.build(
