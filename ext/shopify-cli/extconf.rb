@@ -8,7 +8,7 @@ if RUBY_PLATFORM.match(/mingw32/)
   bat_path = File.dirname(RbConfig.ruby)
   bat = "#{bat_path}\\shopify.bat"
 
-  script_content = "#{RbConfig.ruby} --disable=gems -I '#{gem}' '#{exe}' %*"
+  script_content = "#{RbConfig.ruby} -I '#{gem}' '#{exe}' %*"
 
   FileUtils.mkdir_p(bat_path)
   makefile_content = <<~MAKEFILE
@@ -27,7 +27,7 @@ else
 
   script_content = <<~SCRIPT
     #!/usr/bin/env bash
-    #{RbConfig.ruby} --disable=gems -I #{gem} #{exe} $@
+    #{RbConfig.ruby} -I #{gem} #{exe} $@
   SCRIPT
 
   File.write(script, script_content)
@@ -35,10 +35,10 @@ else
 
   makefile_content = <<~MAKEFILE
     .PHONY: clean install
-    
+
     clean:
     \t@sudo rm -f #{symlink}
-    
+
     install: clean
     \t@sudo ln -s #{script} #{symlink}
   MAKEFILE

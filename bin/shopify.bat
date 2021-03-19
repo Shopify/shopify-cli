@@ -1,3 +1,3 @@
 @ECHO OFF
 
-ruby --disable=gems "%~dp0\shopify" %*
+ruby "%~dp0\shopify" %*
