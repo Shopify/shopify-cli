@@ -28,7 +28,7 @@ module Extension
 
       def test_argo_feature_requires_surface_area
         invalid_attributes = valid_attributes.tap do |attrs|
-          attrs[:features][:argo].delete(:surface_area)
+          attrs[:features][:argo].delete(:surface)
         end
 
         assert_raises SmartProperties::Error do
@@ -78,7 +78,7 @@ module Extension
           identifier: "test_extension",
           features: {
             argo: {
-              surface_area: "admin",
+              surface: "admin",
               git_template: "https://github.com/Shopify/argo-test-template.git",
               renderer_package_name: "@shopify/argo-test",
             },

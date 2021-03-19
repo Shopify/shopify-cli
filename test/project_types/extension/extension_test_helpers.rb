@@ -8,6 +8,7 @@ module Extension
     autoload :TempProjectSetup, "project_types/extension/extension_test_helpers/temp_project_setup"
     autoload :Messages, "project_types/extension/extension_test_helpers/messages"
     autoload :DummyArgo, "project_types/extension/extension_test_helpers/dummy_argo"
+    autoload :DummySpecifications, "project_types/extension/extension_test_helpers/dummy_specifications"
 
     module Stubs
       autoload :GetOrganizations, "project_types/extension/extension_test_helpers/stubs/get_organizations"
@@ -15,6 +16,7 @@ module Extension
       autoload :CreateExtension, "project_types/extension/extension_test_helpers/stubs/create_extension"
       autoload :UpdateDraft, "project_types/extension/extension_test_helpers/stubs/update_draft"
       autoload :ArgoScript, "project_types/extension/extension_test_helpers/stubs/argo_script"
+      autoload :FetchSpecifications, "project_types/extension/extension_test_helpers/stubs/fetch_specifications"
     end
   end
 end

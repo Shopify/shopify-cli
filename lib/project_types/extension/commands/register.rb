@@ -12,7 +12,7 @@ module Extension
 
           update_project_files(registration)
 
-          @ctx.puts(@ctx.message("register.success", project.title, app.title))
+          @ctx.puts(@ctx.message("register.success", project.title))
           @ctx.puts(@ctx.message("register.success_info"))
         end
       end
@@ -28,7 +28,7 @@ module Extension
 
       def confirm_registration
         @ctx.puts(@ctx.message("register.confirm_info", extension_type.name))
-        CLI::UI::Prompt.confirm(@ctx.message("register.confirm_question", app.title))
+        CLI::UI::Prompt.confirm(@ctx.message("register.confirm_question"))
       end
 
       def register_extension

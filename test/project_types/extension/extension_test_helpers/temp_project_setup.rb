@@ -4,6 +4,7 @@ module Extension
   module ExtensionTestHelpers
     module TempProjectSetup
       include TestHelpers::Partners
+      include ExtensionTestHelpers
       include ExtensionTestHelpers::TestExtensionSetup
 
       def setup_temp_project(
@@ -32,6 +33,12 @@ module Extension
         ShopifyCli::Project.stubs(:current).returns(@project)
         ShopifyCli::Project.stubs(:has_current?).returns(true)
         ExtensionProject.stubs(:current).returns(@project)
+        specifications = DummySpecifications.build(
+          identifier: type_identifier.downcase,
+          custom_handler_root: File.expand_path("../", __FILE__),
+          custom_handler_namespace: ::Extension::ExtensionTestHelpers,
+        )
+        Models::Specifications.stubs(:new).returns(specifications)
       end
     end
   end

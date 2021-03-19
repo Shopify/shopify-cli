@@ -3,35 +3,15 @@ module Extension
     class FetchSpecifications
       include ShopifyCli::MethodObject
 
+      property :context
+      property :api_key
+
       def call
-        [
-          product_subscription_specification,
-          checkout_post_purchase_specification,
-        ]
-      end
-
-      private
-
-      def product_subscription_specification
-        {
-          identifier: "product_subscription",
-          features: {
-            argo: {
-              surface_area: "admin",
-            },
-          },
-        }
-      end
-
-      def checkout_post_purchase_specification
-        {
-          identifier: "checkout_post_purchase",
-          features: {
-            argo: {
-              surface_area: "checkout",
-            },
-          },
-        }
+        response = ShopifyCli::PartnersAPI
+          .query(context, "fetch_specifications", api_key: api_key)
+          .dig("data", "extensionSpecifications")
+        context.abort(context.message("tasks.errors.parse_error")) if response.nil?
+        response
       end
     end
   end

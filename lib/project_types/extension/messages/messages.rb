@@ -30,6 +30,7 @@ module Extension
         learn_about_apps: "{{*}} Learn more about building apps at <https://shopify.dev/concepts/apps>, " \
           "or try creating a new app using {{command:shopify create}}.",
         loading_apps: "Loading your apps...",
+        no_available_extensions: "{{x}} There are no available extensions for this app.",
       },
       build: {
         frame_title: "Building extension with: %s...",
@@ -40,9 +41,9 @@ module Extension
         waiting_text: "Registering with Shopify...",
         already_registered: "Extension is already registered.",
         confirm_info: "This will create a new extension registration for %s, which can’t be undone.",
-        confirm_question: "Would you like to register this extension with {{green:%s}}? (y/n)",
+        confirm_question: "Would you like to register this extension? (y/n)",
         confirm_abort: "Extension was not registered.",
-        success: "{{v}} Registered {{green:%s}} with {{green:%s}}.",
+        success: "{{v}} Registered {{green:%s}}.",
         success_info: "{{*}} Run {{command:shopify push}} to push your extension to Shopify.",
       },
       push: {

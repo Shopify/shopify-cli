@@ -37,7 +37,7 @@ module Extension
 
         CLI::UI::Prompt
           .expects(:confirm)
-          .with(@context.message("register.confirm_question", @app.title))
+          .with(@context.message("register.confirm_question"))
           .returns(false)
           .once
 
@@ -90,7 +90,7 @@ module Extension
         assert_message_output(io: io, expected_content: [
           @context.message("register.confirm_info", @test_extension_type.name),
           @context.message("register.waiting_text"),
-          @context.message("register.success", @project.title, @app.title),
+          @context.message("register.success", @project.title),
           @context.message("register.success_info"),
         ])
       end
