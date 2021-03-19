@@ -8,7 +8,7 @@ module ShopifyCli
           "What store are you connecting to? (e.g. shop1.myshopify.io)"
         ),
           allow_empty: false)
-        IdentityAuth.new(ctx: @ctx).authenticate(shop: "https://#{shop}/admin")
+        IdentityAuth.new(ctx: @ctx).authenticate(shop: shop)
       end
 
       def self.help
