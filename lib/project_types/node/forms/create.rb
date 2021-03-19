@@ -8,14 +8,23 @@ module Node
 
       def ask
         self.title ||= CLI::UI::Prompt.ask(ctx.message("node.forms.create.app_name"))
+        self.name = format_name
         self.type = ask_type
-        self.name = self.title.downcase.split(" ").join("_")
         res = ShopifyCli::Tasks::SelectOrgAndShop.call(ctx, organization_id: organization_id, shop_domain: shop_domain)
         self.organization_id = res[:organization_id]
         self.shop_domain = res[:shop_domain]
       end
 
       private
+
+      def format_name
+        name = title.downcase.split(" ").join("_")
+
+        if name.include?("shopify")
+          ctx.abort(ctx.message("node.forms.create.error.invalid_app_name"))
+        end
+        name
+      end
 
       def ask_type
         if type.nil?

@@ -202,6 +202,7 @@ module Node
         forms: {
           create: {
             error: {
+              invalid_app_name: "App name cannot contain 'Shopify'",
               invalid_app_type: "Invalid app type %s",
             },
             app_name: "App name",
