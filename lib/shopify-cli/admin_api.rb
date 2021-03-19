@@ -38,7 +38,7 @@ module ShopifyCli
       #   ShopifyCli::AdminAPI.query(@ctx, 'all_organizations')
       #
       def query(ctx, query_name, shop:, api_version: nil, **variables)
-        authenticated_req(ctx) do
+        authenticated_req(ctx, shop) do
           api_client(ctx, api_version, shop).query(query_name, variables: variables)
         end
       end
@@ -85,18 +85,18 @@ module ShopifyCli
 
       private
 
-      def authenticated_req(ctx)
+      def authenticated_req(ctx, shop)
         yield
       rescue API::APIRequestUnauthorizedError
-        authenticate(ctx)
+        authenticate(ctx, shop)
         retry
         # ctx.debug("APIRequestUnauthorizedError!!")
       end
 
-      def authenticate(ctx)
+      def authenticate(ctx, shop)
         ShopifyCli::IdentityAuth.new(
           ctx: ctx
-        ).authenticate
+        ).authenticate(shop: shop)
       end
 
       def api_client(ctx, api_version, shop, path: "graphql.json")
