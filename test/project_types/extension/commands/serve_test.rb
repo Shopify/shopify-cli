@@ -62,33 +62,6 @@ module Extension
         run_serve
       end
 
-      def test_raises_exception_if_shop_is_missing
-        ShopifyCli::Shopifolk.stubs(:check).returns(true)
-        ShopifyCli::Tasks::EnsureEnv.stubs(:call)
-        ShopifyCli::Tasks::EnsureDevStore.stubs(:call)
-        ShopifyCli::Feature.stubs(:enabled?).with(:argo_admin_beta).returns(true)
-
-        Extension.specifications.stubs(:valid?).returns(true)
-        Extension.specifications.stubs(:[]).returns(
-          Models::SpecificationHandlers::Default.new(Models::Specification.new(
-            identifier: "test-extension",
-            features: {
-              argo: {
-                surface_area: "admin",
-                git_template: "https://github.com/Shopify/argo-admin-template.git",
-                renderer_package_name: "Shopify/argo-admin",
-              },
-            },
-          ))
-        )
-        ExtensionProject.current.env.stubs(:shop).returns(nil)
-
-        exception = assert_raises ShopifyCli::Abort do
-          run_serve
-        end
-        assert_includes exception.message, @context.message("serve.serve_missing_information")
-      end
-
       def test_raises_exception_if_shop_is_empty
         ShopifyCli::Shopifolk.stubs(:check).returns(true)
         ShopifyCli::Tasks::EnsureEnv.stubs(:call)
@@ -96,46 +69,10 @@ module Extension
         ShopifyCli::Feature.stubs(:enabled?).with(:argo_admin_beta).returns(true)
 
         Extension.specifications.stubs(:valid?).returns(true)
-        Extension.specifications.stubs(:[]).returns(
-          Models::SpecificationHandlers::Default.new(Models::Specification.new(
-            identifier: "test-extension",
-            features: {
-              argo: {
-                surface_area: "admin",
-                git_template: "https://github.com/Shopify/argo-admin-template.git",
-                renderer_package_name: "Shopify/argo-admin",
-              },
-            },
-          ))
-        )
+        Extension.specifications.stubs(:[]).returns(DummySpecifications.build(
+          identifier: "test-extension", surface: "admin"
+        ))
         ExtensionProject.current.env.stubs(:shop).returns(" ")
-
-        exception = assert_raises ShopifyCli::Abort do
-          run_serve
-        end
-        assert_includes exception.message, @context.message("serve.serve_missing_information")
-      end
-
-      def test_raises_exception_if_api_key_is_missing
-        ShopifyCli::Shopifolk.stubs(:check).returns(true)
-        ShopifyCli::Tasks::EnsureEnv.stubs(:call)
-        ShopifyCli::Tasks::EnsureDevStore.stubs(:call)
-        ShopifyCli::Feature.stubs(:enabled?).with(:argo_admin_beta).returns(true)
-
-        Extension.specifications.stubs(:valid?).returns(true)
-        Extension.specifications.stubs(:[]).returns(
-          Models::SpecificationHandlers::Default.new(Models::Specification.new(
-            identifier: "test-extension",
-            features: {
-              argo: {
-                surface_area: "admin",
-                git_template: "https://github.com/Shopify/argo-admin-template.git",
-                renderer_package_name: "Shopify/argo-admin",
-              },
-            },
-          ))
-        )
-        ExtensionProject.current.env.stubs(:api_key).returns(nil)
 
         exception = assert_raises ShopifyCli::Abort do
           run_serve
@@ -150,18 +87,9 @@ module Extension
         ShopifyCli::Feature.stubs(:enabled?).with(:argo_admin_beta).returns(true)
 
         Extension.specifications.stubs(:valid?).returns(true)
-        Extension.specifications.stubs(:[]).returns(
-          Models::SpecificationHandlers::Default.new(Models::Specification.new(
-            identifier: "test-extension",
-            features: {
-              argo: {
-                surface_area: "admin",
-                git_template: "https://github.com/Shopify/argo-admin-template.git",
-                renderer_package_name: "Shopify/argo-admin",
-              },
-            },
-          ))
-        )
+        Extension.specifications.stubs(:[]).returns(DummySpecifications.build(
+          identifier: "test-extension", surface: "admin"
+        ))
         ExtensionProject.current.env.stubs(:api_key).returns(" ")
 
         exception = assert_raises ShopifyCli::Abort do
