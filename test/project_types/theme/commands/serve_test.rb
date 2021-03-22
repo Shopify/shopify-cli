@@ -9,7 +9,7 @@ module Theme
 
       def test_serve_command
         context = ShopifyCli::Context.new
-        ShopifyCli::Theme::DevServer.expects(:start).with(".")
+        ShopifyCli::Theme::DevServer.expects(:start).with(".", optionally({}))
 
         Theme::Commands::Serve.new(context).call
       end
