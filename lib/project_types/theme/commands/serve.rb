@@ -7,7 +7,8 @@ module Theme
       options do |parser, flags|
         # TODO: add env support. Now defaults to 'development'.
         # parser.on("--env=ENV") { |env| flags[:env] = env }
-        parser.on("--port") { |port| flags[:port] = port.to_i }
+        parser.on("--port=PORT") { |port| flags[:port] = port.to_i }
+        parser.on("--debug") { flags[:debug] = true }
       end
 
       def call(*)
