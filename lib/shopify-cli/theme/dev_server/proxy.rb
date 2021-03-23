@@ -137,7 +137,7 @@ module ShopifyCli
 
         def request(method, path, headers: nil, query: {}, form_data: nil)
           uri = URI.join("https://#{@theme.config.store}", path)
-          uri.query = URI.encode_www_form(query.merge(_fd: 0))
+          uri.query = URI.encode_www_form(query.merge(_fd: 0, pb: 0))
 
           puts "Proxying #{method} #{uri}" if DevServer.debug
 

@@ -12,7 +12,7 @@ class ProxyTest < Minitest::Test
   end
 
   def test_form_data_is_proxied_to_request
-    stub_request(:post, "https://dev-theme-server-store.myshopify.com/password?_fd=0")
+    stub_request(:post, "https://dev-theme-server-store.myshopify.com/password?_fd=0&pb=0")
       .with(
         body: {
           "form_type" => "storefront_password",
@@ -37,7 +37,7 @@ class ProxyTest < Minitest::Test
   end
 
   def test_storefront_redirect_headers_are_rewritten
-    stub_request(:get, "https://dev-theme-server-store.myshopify.com/?_fd=0")
+    stub_request(:get, "https://dev-theme-server-store.myshopify.com/?_fd=0&pb=0")
       .with(headers: default_proxy_headers)
       .to_return(status: 302, headers: {
         "Location" => "https://dev-theme-server-store.myshopify.com/password",
@@ -50,7 +50,7 @@ class ProxyTest < Minitest::Test
   end
 
   def test_non_storefront_redirect_headers_are_not_rewritten
-    stub_request(:get, "https://dev-theme-server-store.myshopify.com/?_fd=0")
+    stub_request(:get, "https://dev-theme-server-store.myshopify.com/?_fd=0&pb=0")
       .with(headers: default_proxy_headers)
       .to_return(status: 302, headers: {
         "Location" => "https://some-other-site.com/",
@@ -63,7 +63,7 @@ class ProxyTest < Minitest::Test
   end
 
   def test_hop_to_hop_headers_are_removed_from_proxied_response
-    stub_request(:get, "https://dev-theme-server-store.myshopify.com/?_fd=0")
+    stub_request(:get, "https://dev-theme-server-store.myshopify.com/?_fd=0&pb=0")
       .with(headers: default_proxy_headers)
       .to_return(status: 200, headers: {
         "Connection" => 1,
@@ -94,7 +94,7 @@ class ProxyTest < Minitest::Test
       mock(relative_path: "layout/theme.liquid", read: "CONTENT"),
     ])
 
-    stub_request(:post, "https://dev-theme-server-store.myshopify.com/?_fd=0")
+    stub_request(:post, "https://dev-theme-server-store.myshopify.com/?_fd=0&pb=0")
       .with(
         body: {
           "_method" => "GET",
@@ -133,7 +133,7 @@ class ProxyTest < Minitest::Test
   end
 
   def stub_session_id_request
-    stub_request(:get, "https://dev-theme-server-store.myshopify.com/?_fd=0&preview_theme_id=123456789")
+    stub_request(:get, "https://dev-theme-server-store.myshopify.com/?_fd=0&pb=0&preview_theme_id=123456789")
       .with(
         headers: {
           "Accept" => "*/*",
