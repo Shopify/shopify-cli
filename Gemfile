@@ -12,6 +12,7 @@ group :development, :test do
   gem "byebug"
   gem "rubocop-shopify", require: false
   gem "rubocop-minitest", require: false
+  gem "rubocop-rake", require: false
 end
 
 group :test do
