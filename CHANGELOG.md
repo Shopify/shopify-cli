@@ -1,6 +1,11 @@
 Unreleased
 ------
 
+Version 1.8.0
+-------------
+
+* [1119](https://github.com/Shopify/shopify-app-cli/pull/1119): Enable guest serialization for scripts
+
 Version 1.7.1
 ------
 * Updating internal features in development
