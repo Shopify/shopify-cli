@@ -107,6 +107,7 @@ module ShopifyCli
             body.close if body.respond_to?(:close)
           else
             res.body = lambda do |out|
+              out.set_encoding(Encoding::BINARY) if out.respond_to?(:set_encoding)
               body.each do |part|
                 out.write(part)
               end
