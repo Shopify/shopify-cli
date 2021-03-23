@@ -220,17 +220,6 @@ module Script
           {
             cause_of_error: ShopifyCli::Context.message("script.error.shop_script_undefined_cause"),
           }
-        when Layers::Infrastructure::Errors::PackagesOutdatedError
-          {
-            cause_of_error: ShopifyCli::Context.message(
-              "script.error.packages_outdated_cause",
-              e.outdated_packages.join(", ")
-            ),
-            help_suggestion: ShopifyCli::Context.message(
-              "script.error.packages_outdated_help",
-              e.outdated_packages.collect { |package| "#{package}@latest" }.join(" ")
-            ),
-          }
         when Layers::Infrastructure::Errors::BuildScriptNotFoundError
           {
             cause_of_error: ShopifyCli::Context.message("script.error.build_script_not_found"),
