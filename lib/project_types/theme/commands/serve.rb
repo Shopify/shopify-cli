@@ -12,8 +12,11 @@ module Theme
       end
 
       def call(*)
+        flags = options.flags.dup
+        ShopifyCli::Theme::DevServer.debug = true if flags.delete(:debug)
+
         CLI::UI::Frame.open(@ctx.message("theme.serve.serve")) do
-          ShopifyCli::Theme::DevServer.start(".", **options.flags)
+          ShopifyCli::Theme::DevServer.start(".", **flags)
         end
       end
 
