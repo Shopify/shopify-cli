@@ -1,8 +1,6 @@
 # frozen_string_literal: true
 module Theme
   class Project < ShopifyCli::ProjectType
-    hidden_feature
-
     title("Theme")
     creator("Theme::Commands::Create")
     connector("Theme::Commands::Connect")
