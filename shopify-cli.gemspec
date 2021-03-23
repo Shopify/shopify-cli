@@ -32,6 +32,7 @@ Gem::Specification.new do |spec|
     end
   end
   spec.bindir = "bin"
+  spec.executables << "shopify"
   spec.require_paths = ["lib", "vendor"]
   spec.extensions = ["ext/shopify-cli/extconf.rb"]
 
