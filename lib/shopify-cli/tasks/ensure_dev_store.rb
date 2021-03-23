@@ -5,7 +5,7 @@ module ShopifyCli
     class EnsureDevStore < ShopifyCli::Task
       def call(ctx)
         @ctx = ctx
-        return ctx.puts(ctx.message(
+        return ctx.abort(ctx.message(
           "core.tasks.ensure_dev_store.could_not_verify_store", project.env.shop
         )) if shop.nil?
         return if shop["transferDisabled"] == true

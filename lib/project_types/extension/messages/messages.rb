@@ -57,6 +57,7 @@ module Extension
       serve: {
         frame_title: "Serving extension...",
         serve_failure_message: "Failed to run extension code.",
+        serve_missing_information: "Missing shop or api_key.",
       },
       tunnel: {
         missing_token: "{{x}} {{red:auth requires a token argument}}. "\

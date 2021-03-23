@@ -62,6 +62,44 @@ module Extension
         run_serve
       end
 
+      def test_raises_exception_if_shop_is_empty
+        ShopifyCli::Shopifolk.stubs(:check).returns(true)
+        ShopifyCli::Tasks::EnsureEnv.stubs(:call)
+        ShopifyCli::Tasks::EnsureDevStore.stubs(:call)
+        ShopifyCli::Feature.stubs(:enabled?).with(:argo_admin_beta).returns(true)
+        ExtensionProject.stubs(:reload)
+
+        Extension.specifications.stubs(:valid?).returns(true)
+        Extension.specifications.stubs(:[]).returns(DummySpecifications.build(
+          identifier: "test-extension", surface: "admin"
+        ))
+        ExtensionProject.current.env.stubs(:shop).returns(" ")
+
+        exception = assert_raises ShopifyCli::Abort do
+          run_serve
+        end
+        assert_includes exception.message, @context.message("serve.serve_missing_information")
+      end
+
+      def test_raises_exception_if_api_key_is_empty
+        ShopifyCli::Shopifolk.stubs(:check).returns(true)
+        ShopifyCli::Tasks::EnsureEnv.stubs(:call)
+        ShopifyCli::Tasks::EnsureDevStore.stubs(:call)
+        ShopifyCli::Feature.stubs(:enabled?).with(:argo_admin_beta).returns(true)
+        ExtensionProject.stubs(:reload)
+
+        Extension.specifications.stubs(:valid?).returns(true)
+        Extension.specifications.stubs(:[]).returns(DummySpecifications.build(
+          identifier: "test-extension", surface: "admin"
+        ))
+        ExtensionProject.current.env.stubs(:api_key).returns(" ")
+
+        exception = assert_raises ShopifyCli::Abort do
+          run_serve
+        end
+        assert_includes exception.message, @context.message("serve.serve_missing_information")
+      end
+
       private
 
       def run_serve(*args)
