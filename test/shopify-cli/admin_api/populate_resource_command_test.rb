@@ -23,6 +23,7 @@ module ShopifyCli
       end
 
       def test_prompts_and_writes_to_env_if_no_shop
+        skip("test to be resumed when populate command hack is properly resolved")
         Project.current.stubs(:env).returns(Resources::EnvFile.new(api_key: "123", secret: "foo"))
         assert_nil(Project.current.env.shop)
         ShopifyCli::Tasks::SelectOrgAndShop.expects(:call)
@@ -44,6 +45,7 @@ module ShopifyCli
       end
 
       def test_populate_runs_mutation_against_other_shop
+        skip("test to be resumed when populate command hack is properly resolved")
         ShopifyCli::AdminAPI.expects(:query).with(
           @context, "create_product", has_entry(shop: "my-other-test-shop.myshopify.com")
         ).returns(Hash.new)

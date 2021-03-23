@@ -76,10 +76,10 @@ module ShopifyCli
       #                                     token: 'password')
       #
       def rest_request(ctx, shop:, path:, body: nil, method: "GET", api_version: nil, token: nil)
-        ShopifyCli::DB.set(admin_access_token: token) unless token.nil?
+        ShopifyCli::DB.set(shopify_exchange_token: token) unless token.nil?
         url = URI::HTTPS.build(host: shop, path: "/admin/api/#{fetch_api_version(ctx, api_version, shop)}/#{path}")
         resp = api_client(ctx, api_version, shop, path: path).request(url: url.to_s, body: body, method: method)
-        ShopifyCli::DB.set(admin_access_token: nil) unless token.nil?
+        ShopifyCli::DB.set(shopify_exchange_token: nil) unless token.nil?
         resp
       end
 
@@ -90,34 +90,27 @@ module ShopifyCli
       rescue API::APIRequestUnauthorizedError
         authenticate(ctx, shop)
         retry
+        # ctx.debug("APIRequestUnauthorizedError!!")
       end
 
       def authenticate(ctx, shop)
-        env = Project.current.env
-        ShopifyCli::OAuth.new(
-          ctx: ctx,
-          service: "admin",
-          client_id: env.api_key,
-          secret: env.secret,
-          scopes: env.scopes,
-          token_path: "/access_token",
-          options: { "grant_options[]" => "per user" },
-        ).authenticate("https://#{shop}/admin/oauth")
+        ShopifyCli::IdentityAuth.new(
+          ctx: ctx
+        ).authenticate(shop: shop)
       end
 
       def api_client(ctx, api_version, shop, path: "graphql.json")
         new(
           ctx: ctx,
-          auth_header: "X-Shopify-Access-Token",
-          token: admin_access_token(ctx, shop),
+          token: access_token(ctx),
           url: "https://#{shop}/admin/api/#{fetch_api_version(ctx, api_version, shop)}/#{path}",
         )
       end
 
-      def admin_access_token(ctx, shop)
-        ShopifyCli::DB.get(:admin_access_token) do
-          authenticate(ctx, shop)
-          ShopifyCli::DB.get(:admin_access_token)
+      def access_token(ctx)
+        ShopifyCli::DB.get(:shopify_exchange_token) do
+          authenticate(ctx)
+          ShopifyCli::DB.get(:shopify_exchange_token)
         end
       end
 
@@ -125,14 +118,17 @@ module ShopifyCli
         return api_version unless api_version.nil?
         client = new(
           ctx: ctx,
-          auth_header: "X-Shopify-Access-Token",
-          token: admin_access_token(ctx, shop),
+          token: access_token(ctx),
           url: "https://#{shop}/admin/api/unstable/graphql.json",
         )
         versions = client.query("api_versions")["data"]["publicApiVersions"]
         latest = versions.find { |version| version["displayName"].include?("Latest") }
         latest["handle"]
       end
+    end
+
+    def auth_headers(token)
+      { Authorization: "Bearer #{token}" }
     end
   end
 end

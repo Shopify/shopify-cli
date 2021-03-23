@@ -31,7 +31,7 @@ module ShopifyCli
 
       stub_exchange_token_calls
 
-      client.authenticate
+      client.authenticate(shop: "testshop")
 
       assert_equal("accesstoken123", client.store.get(:identity_access_token))
       assert_equal("refreshtoken123", client.store.get(:identity_refresh_token))
@@ -46,7 +46,7 @@ module ShopifyCli
 
       stub_exchange_token_calls(exchange_token: "exchangetoken456")
 
-      client.authenticate
+      client.authenticate(shop: "testshop")
 
       assert_expected_exchange_tokens(token_suffix: "exchangetoken456", client: client)
     end
@@ -74,8 +74,7 @@ module ShopifyCli
         .to_return(status: 200, body: token_resp, headers: {})
 
       stub_exchange_token_calls(exchange_token: "exchangetoken456", access_token: "accesstoken456")
-
-      client.authenticate
+      client.authenticate(shop: "testshop")
 
       assert_equal("accesstoken456", client.store.get(:identity_access_token))
       assert_equal("refreshtoken456", client.store.get(:identity_refresh_token))
@@ -94,7 +93,7 @@ module ShopifyCli
 
       stub_request(:post, "#{endpoint}/authorize")
       assert_raises IdentityAuth::Error do
-        client.authenticate
+        client.authenticate(shop: "testshop")
       end
     end
 
@@ -130,7 +129,7 @@ module ShopifyCli
         )
 
       assert_raises IdentityAuth::Error do
-        client.authenticate
+        client.authenticate(shop: "testshop")
       end
     end
 
@@ -162,7 +161,11 @@ module ShopifyCli
           audience: ShopifyCli::IdentityAuth::APPLICATION_CLIENT_IDS[application],
           scope: scopes(scopes_for(application)),
           subject_token: access_token,
-        }
+        }.tap do |result|
+          if application == "shopify"
+            result[:destination] = "https://testshop/admin"
+          end
+        end
         if status
           stub_request(:post, "#{endpoint}/token")
             .with(body: URI.encode_www_form(token_query))

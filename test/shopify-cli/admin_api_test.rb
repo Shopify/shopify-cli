@@ -8,7 +8,6 @@ module ShopifyCli
       unstable_stub = stub
       AdminAPI.expects(:new).with(
         ctx: @context,
-        auth_header: "X-Shopify-Access-Token",
         token: "token123",
         url: "https://my-test-shop.myshopify.com/admin/api/unstable/graphql.json",
       ).returns(unstable_stub)
@@ -16,11 +15,10 @@ module ShopifyCli
         .with("api_versions")
         .returns(JSON.parse(File.read(File.join(FIXTURE_DIR, "api/versions.json"))))
 
-      ShopifyCli::DB.expects(:get).with(:admin_access_token).returns("token123").twice
+      ShopifyCli::DB.expects(:get).with(:shopify_exchange_token).returns("token123").twice
       api_stub = stub
       AdminAPI.expects(:new).with(
         ctx: @context,
-        auth_header: "X-Shopify-Access-Token",
         token: "token123",
         url: "https://my-test-shop.myshopify.com/admin/api/2019-04/graphql.json",
       ).returns(api_stub)
@@ -29,11 +27,10 @@ module ShopifyCli
     end
 
     def test_query_calls_admin_api
-      ShopifyCli::DB.expects(:get).with(:admin_access_token).returns("token123")
+      ShopifyCli::DB.expects(:get).with(:shopify_exchange_token).returns("token123")
       api_stub = stub
       AdminAPI.expects(:new).with(
         ctx: @context,
-        auth_header: "X-Shopify-Access-Token",
         token: "token123",
         url: "https://my-test-shop.myshopify.com/admin/api/2019-04/graphql.json",
       ).returns(api_stub)
@@ -48,7 +45,6 @@ module ShopifyCli
       api_stub = stub
       AdminAPI.expects(:new).with(
         ctx: @context,
-        auth_header: "X-Shopify-Access-Token",
         token: "boop",
         url: "https://shop.myshopify.com/admin/api/unstable/data.json",
       ).returns(api_stub)
@@ -66,11 +62,10 @@ module ShopifyCli
     end
 
     def test_query_can_reauth
-      ShopifyCli::DB.expects(:get).with(:admin_access_token).returns("token123").twice
+      ShopifyCli::DB.expects(:get).with(:shopify_exchange_token).returns("token123").twice
       api_stub = stub
       AdminAPI.expects(:new).with(
         ctx: @context,
-        auth_header: "X-Shopify-Access-Token",
         token: "token123",
         url: "https://my-test-shop.myshopify.com/admin/api/2019-04/graphql.json",
       ).returns(api_stub).twice
@@ -78,30 +73,21 @@ module ShopifyCli
       api_stub.expects(:query).raises(API::APIRequestUnauthorizedError)
 
       @oauth_client = mock
-      ShopifyCli::OAuth
+      ShopifyCli::IdentityAuth
         .expects(:new)
-        .with(
-          ctx: @context,
-          service: "admin",
-          client_id: "apikey",
-          secret: "secret",
-          scopes: nil,
-          token_path: "/access_token",
-          options: { "grant_options[]" => "per user" },
-        ).returns(@oauth_client)
+        .with(ctx: @context)
+        .returns(@oauth_client)
       @oauth_client
         .expects(:authenticate)
-        .with("https://my-test-shop.myshopify.com/admin/oauth")
 
       AdminAPI.query(@context, "query", shop: "my-test-shop.myshopify.com", api_version: "2019-04")
     end
 
     def test_query_calls_admin_api_with_different_shop
-      ShopifyCli::DB.expects(:get).with(:admin_access_token).returns("token123")
+      ShopifyCli::DB.expects(:get).with(:shopify_exchange_token).returns("token123")
       api_stub = stub
       AdminAPI.expects(:new).with(
         ctx: @context,
-        auth_header: "X-Shopify-Access-Token",
         token: "token123",
         url: "https://other-test-shop.myshopify.com/admin/api/2019-04/graphql.json",
       ).returns(api_stub)

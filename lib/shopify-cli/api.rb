@@ -49,7 +49,6 @@ module ShopifyCli
         elsif method == "GET"
           HttpRequest.get(uri, body, headers)
         end
-
         case response.code.to_i
         when 200..399
           [response.code.to_i, JSON.parse(response.body)]

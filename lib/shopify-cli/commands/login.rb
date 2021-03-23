@@ -4,7 +4,11 @@ module ShopifyCli
   module Commands
     class Login < ShopifyCli::Command
       def call(*)
-        IdentityAuth.new(ctx: @ctx).authenticate
+        shop = CLI::UI::Prompt.ask(@ctx.message(
+          "What store are you connecting to? (e.g. shop1.myshopify.io)"
+        ),
+          allow_empty: false)
+        IdentityAuth.new(ctx: @ctx).authenticate(shop: shop)
       end
 
       def self.help
