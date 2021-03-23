@@ -74,6 +74,8 @@ GEM
       rubocop
     rubocop-shopify (2.0.1)
       rubocop (~> 1.11)
+    rubocop-rake (0.5.1)
+      rubocop
     ruby-progressbar (1.11.0)
     theme-check (0.9.0)
       liquid (>= 5.0.1)
