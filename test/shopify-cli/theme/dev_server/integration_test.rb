@@ -23,8 +23,8 @@ class IntegrationTest < Minitest::Test
   def test_proxy_to_sfr
     stub_request(:any, ASSETS_API_URL)
       .to_return(status: 200, body: "{}")
-    stub_request(:get, "https://dev-theme-server-store.myshopify.com/?_fd=0&preview_theme_id=123456789")
-    stub_sfr = stub_request(:get, "https://dev-theme-server-store.myshopify.com/?_fd=0")
+    stub_request(:get, "https://dev-theme-server-store.myshopify.com/?_fd=0&pb=0&preview_theme_id=123456789")
+    stub_sfr = stub_request(:get, "https://dev-theme-server-store.myshopify.com/?_fd=0&pb=0")
 
     start_server
     response = get("/")
