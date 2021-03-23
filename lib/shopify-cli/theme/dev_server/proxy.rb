@@ -33,6 +33,7 @@ module ShopifyCli
 
           response = if @theme.pending_files.any?
             # Pass to SFR the recently modified templates in `replace_templates` body param
+            headers["Authorization"] = "Bearer #{bearer_token}" if bearer_token
             request(
               "POST", env["PATH_INFO"],
               headers: headers,
@@ -57,6 +58,10 @@ module ShopifyCli
         end
 
         private
+
+        def bearer_token
+          ShopifyCli::DB.get(:"storefront-renderer-production_exchange_token")
+        end
 
         def extract_http_request_headers(env)
           headers = env.reject do |k, v|
