@@ -43,11 +43,17 @@ module ShopifyCli
             stop
           end
 
+          logger = if debug
+            WEBrick::Log.new(nil, WEBrick::BasicLog::INFO)
+          else
+            WEBrick::Log.new(nil, WEBrick::BasicLog::FATAL)
+          end
+
           WebServer.run(
             @app,
             Port: port,
-            Logger: silent ? WEBrick::Log.new(nil, WEBrick::BasicLog::FATAL) : nil,
-            AccessLog: silent ? [] : nil,
+            Logger: logger,
+            AccessLog: [],
           )
           watcher.stop
         end
