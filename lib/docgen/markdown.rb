@@ -89,7 +89,7 @@ module RDoc
         lines.shift if src =~ /\A.*#\ *File/i # remove '# File' comment
         lines.each do |line|
           next unless line =~ /^ *(?=\S)/
-          n = $&.length
+          n = Regexp.last_match(0).length
           indent = n if n < indent
           break if n == 0
         end
