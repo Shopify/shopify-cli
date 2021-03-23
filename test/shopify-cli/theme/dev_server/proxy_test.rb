@@ -4,6 +4,13 @@ require "shopify-cli/theme/dev_server"
 require "rack/mock"
 
 class ProxyTest < Minitest::Test
+  def setup
+    super
+    config = ShopifyCli::Theme::DevServer::Config.from_path(ShopifyCli::ROOT + "/test/fixtures/theme")
+    @theme = ShopifyCli::Theme::DevServer::Theme.new(config)
+    @proxy = ShopifyCli::Theme::DevServer::Proxy.new(@theme)
+  end
+
   def test_form_data_is_proxied_to_request
     stub_request(:post, "https://dev-theme-server-store.myshopify.com/password?_fd=0")
       .with(
@@ -77,13 +84,43 @@ class ProxyTest < Minitest::Test
     end
   end
 
+  def test_pass_pending_files_to_storefront
+    ShopifyCli::DB
+      .stubs(:get)
+      .with(:"storefront-renderer-production_exchange_token")
+      .returns("TOKEN")
+
+    @theme.stubs(:pending_files).returns([
+      mock(relative_path: "layout/theme.liquid", read: "CONTENT"),
+    ])
+
+    stub_request(:post, "https://dev-theme-server-store.myshopify.com/?_fd=0")
+      .with(
+        body: {
+          "_method" => "GET",
+          "replace_templates" => { "layout/theme.liquid" => "CONTENT" },
+        },
+        headers: {
+          "Accept-Encoding" => "none",
+          "Authorization" => "Bearer TOKEN",
+          "Content-Type" => "application/x-www-form-urlencoded",
+          "Cookie" => "; _secure_session_id=",
+          "Host" => "dev-theme-server-store.myshopify.com",
+          "X-Forwarded-For" => "",
+        }
+      )
+      .to_return(status: 200, body: "PROXY RESPONSE")
+
+    stub_session_id_request
+    response = request.get("/")
+
+    assert_equal("PROXY RESPONSE", response.body)
+  end
+
   private
 
   def request
-    config = ShopifyCli::Theme::DevServer::Config.from_path(ShopifyCli::ROOT + "/test/fixtures/theme")
-    theme = ShopifyCli::Theme::DevServer::Theme.new(config)
-    stack = ShopifyCli::Theme::DevServer::Proxy.new(theme)
-    Rack::MockRequest.new(stack)
+    Rack::MockRequest.new(@proxy)
   end
 
   def default_proxy_headers
