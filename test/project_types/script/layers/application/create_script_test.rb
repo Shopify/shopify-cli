@@ -91,7 +91,7 @@ describe Script::Layers::Application::CreateScript do
       describe "when no_config_ui is false" do
         let(:no_config_ui) { false }
         let(:expected_config_ui_filename) { "config-ui.yml" }
-        let(:expected_config_ui_content) { "---\nversion: 1\ntype: single\nfields: []\n" }
+        let(:expected_config_ui_content) { "---\nversion: 1\ntype: single\ntitle: #{script_name}\nfields: []\n" }
 
         it "should create a config_ui_file and store the filename in the project config" do
           Script::ScriptProject.expects(:create).with(@context, script_name).once

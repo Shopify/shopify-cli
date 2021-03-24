@@ -27,11 +27,6 @@ module Script
           private
 
           DEFAULT_CONFIG_UI_FILENAME = "config-ui.yml"
-          DEFAULT_CONFIG = {
-            "version" => 1,
-            "type" => "single",
-            "fields" => [],
-          }
 
           def setup_project(ctx:, language:, script_name:, extension_point:, description:, no_config_ui:)
             ScriptProject.create(ctx, script_name)
@@ -48,7 +43,7 @@ module Script
               identifiers.merge!(config_ui_file: DEFAULT_CONFIG_UI_FILENAME)
               Infrastructure::ConfigUiRepository
                 .new(ctx: ctx)
-                .create_config_ui(DEFAULT_CONFIG_UI_FILENAME, YAML.dump(DEFAULT_CONFIG))
+                .create_config_ui(DEFAULT_CONFIG_UI_FILENAME, default_config_ui_content(script_name))
             end
 
             ScriptProject.write(
@@ -71,6 +66,15 @@ module Script
               project_creator.bootstrap
               spinner.update_title(ctx.message("script.create.created"))
             end
+          end
+
+          def default_config_ui_content(title)
+            YAML.dump({
+              "version" => 1,
+              "type" => "single",
+              "title" => title,
+              "fields" => [],
+            })
           end
         end
       end
