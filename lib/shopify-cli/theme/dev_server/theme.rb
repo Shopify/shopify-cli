@@ -83,11 +83,7 @@ module ShopifyCli
         end
 
         def update_checksums!(api_response)
-          assets = if api_response["asset"]
-            [api_response["asset"]]
-          else
-            api_response["assets"]
-          end
+          assets = api_response.values.flatten
 
           @checksums = assets.each_with_object({}) do |asset, hash|
             hash[asset["key"]] = asset["checksum"]
