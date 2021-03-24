@@ -10,6 +10,7 @@ class IntegrationTest < Minitest::Test
   def setup
     super
     WebMock.disable_net_connect!(allow: "localhost:#{@@port}")
+    ShopifyCli::DB.expects(:get).with(:shopify_exchange_token).at_least_once.returns('token123')
   end
 
   def teardown
@@ -123,6 +124,10 @@ class IntegrationTest < Minitest::Test
     @ctx = TestHelpers::FakeContext.new(root: "#{ShopifyCli::ROOT}/test/fixtures/theme")
     @server_thread = Thread.new do
       ShopifyCli::Theme::DevServer.start(@ctx, "#{ShopifyCli::ROOT}/test/fixtures/theme", silent: true, port: @@port)
+    rescue Exception => e
+      puts "Failed to start DevServer:"
+      puts e.message
+      puts e.backtrace
     end
   end
 
