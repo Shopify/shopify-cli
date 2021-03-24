@@ -55,7 +55,6 @@ module Extension
 
       def test_accessing_the_extension_type_identifier_does_not_result_in_fetching_specifications
         setup_temp_project
-        Extension.specifications.expects(:[]).never
         @command.extension_type.identifier
       end
     end
