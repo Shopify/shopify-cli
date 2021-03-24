@@ -34,7 +34,6 @@ module ShopifyCli
             shop: @theme.config.store,
             path: "themes/#{@theme.id}/assets.json",
             api_version: "unstable",
-            token: @theme.config.password ? @theme.config.password : nil
           )
 
           @theme.update_checksums!(response[1])
@@ -61,7 +60,6 @@ module ShopifyCli
             path: "themes/#{@theme.id}/assets.json",
             method: "PUT",
             api_version: "unstable",
-            token: @theme.config.password ? @theme.config.password : nil,
             body: JSON.generate({
               asset: {
                 key: file.relative_path.to_s,

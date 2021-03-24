@@ -9,34 +9,32 @@ class UploaderTest < Minitest::Test
     super
     config = ShopifyCli::Theme::DevServer::Config.from_path(ShopifyCli::ROOT + "/test/fixtures/theme")
     @theme = ShopifyCli::Theme::DevServer::Theme.new(config)
-    @uploader = ShopifyCli::Theme::DevServer::Uploader.new(@theme)
+    @ctx = TestHelpers::FakeContext.new(root: Dir.mktmpdir)
+    @uploader = ShopifyCli::Theme::DevServer::Uploader.new(@ctx, @theme)
   end
 
   def test_upload
-    stub_request(:put, ASSETS_API_URL)
-      .with(
-        body: JSON.generate(
-          asset: {
-            key: "assets/theme.css",
-            attachment: Base64.encode64(File.read("#{ShopifyCli::ROOT}/test/fixtures/theme/assets/theme.css")),
-          }
-        ),
-        headers: {
-          "Accept" => "application/json",
-          "Content-Type" => "application/json",
-          "Host" => "dev-theme-server-store.myshopify.com",
-          "X-Shopify-Access-Token" => "notapassword",
-        }
-      )
-      .to_return(
-        status: 200,
-        body: JSON.generate({
-          asset: {
-            key: "assets/theme.css",
-            checksum: Digest::MD5.hexdigest(File.read("#{ShopifyCli::ROOT}/test/fixtures/theme/assets/theme.css")),
-          },
-        })
-      )
+    ShopifyCli::AdminAPI.expects(:rest_request).with(
+      @ctx,
+      shop: @theme.config.store,
+      path: "themes/#{@theme.id}/assets.json",
+      method: "PUT",
+      api_version: "unstable",
+      body: JSON.generate({
+        asset: {
+          key: "assets/theme.css",
+          attachment: Base64.encode64(File.read("#{ShopifyCli::ROOT}/test/fixtures/theme/assets/theme.css")),
+        },
+      })
+    ).returns([
+      200,
+      {
+        "asset" => {
+          "key" => "assets/theme.css",
+          "checksum" => Digest::MD5.hexdigest(File.read("#{ShopifyCli::ROOT}/test/fixtures/theme/assets/theme.css")),
+        },
+      },
+    ])
 
     @uploader.upload(@theme["assets/theme.css"])
   end
@@ -52,24 +50,20 @@ class UploaderTest < Minitest::Test
   end
 
   def test_fetch_checksums
-    stub_request(:get, ASSETS_API_URL)
-      .with(
-        headers: {
-          "Accept" => "application/json",
-          "Content-Type" => "application/json",
-          "Host" => "dev-theme-server-store.myshopify.com",
-          "X-Shopify-Access-Token" => "notapassword",
-        }
-      )
-      .to_return(
-        status: 200,
-        body: JSON.generate({
-          assets: [{
-            key: "assets/theme.css",
-            checksum: Digest::MD5.hexdigest(File.read("#{ShopifyCli::ROOT}/test/fixtures/theme/assets/theme.css")),
-          }],
-        })
-      )
+    ShopifyCli::AdminAPI.expects(:rest_request).with(
+      @ctx,
+      shop: @theme.config.store,
+      path: "themes/#{@theme.id}/assets.json",
+      api_version: "unstable",
+    ).returns([
+      200,
+      {
+        "assets" => [{
+          "key" => "assets/theme.css",
+          "checksum" => Digest::MD5.hexdigest(File.read("#{ShopifyCli::ROOT}/test/fixtures/theme/assets/theme.css")),
+        }],
+      }
+    ])
 
     @uploader.fetch_checksums!
 
