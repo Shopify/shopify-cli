@@ -31,7 +31,7 @@ module ShopifyCli
 
       stub_exchange_token_calls
 
-      client.authenticate(shop: "testshop")
+      client.authenticate
 
       assert_equal("accesstoken123", client.store.get(:identity_access_token))
       assert_equal("refreshtoken123", client.store.get(:identity_refresh_token))
@@ -46,7 +46,7 @@ module ShopifyCli
 
       stub_exchange_token_calls(exchange_token: "exchangetoken456")
 
-      client.authenticate(shop: "testshop")
+      client.authenticate
 
       assert_expected_exchange_tokens(token_suffix: "exchangetoken456", client: client)
     end
@@ -93,7 +93,7 @@ module ShopifyCli
 
       stub_request(:post, "#{endpoint}/authorize")
       assert_raises IdentityAuth::Error do
-        client.authenticate(shop: "testshop")
+        client.authenticate
       end
     end
 
@@ -129,7 +129,7 @@ module ShopifyCli
         )
 
       assert_raises IdentityAuth::Error do
-        client.authenticate(shop: "testshop")
+        client.authenticate
       end
     end
 
