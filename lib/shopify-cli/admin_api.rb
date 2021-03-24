@@ -130,7 +130,10 @@ module ShopifyCli
     end
 
     def auth_headers(token)
-      { Authorization: "Bearer #{token}" }
+      {
+        Authorization: "Bearer #{token}",
+        "X-Shopify-Access-Token" => token, # TODO: Remove when we no longer need private apps
+      }
     end
   end
 end
