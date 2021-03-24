@@ -18,12 +18,13 @@ module ShopifyCli
   module Theme
     module DevServer
       class << self
-        attr_accessor :debug
+        attr_accessor :debug, :ctx
 
-        def start(root, silent: false, port: 9292)
+        def start(ctx, root, silent: false, port: 9292)
+          @ctx = ctx
           config = Config.from_path(root)
           theme = Theme.new(config)
-          watcher = Watcher.new(theme)
+          watcher = Watcher.new(ctx, theme)
 
           # Setup the middleware stack. Mimics Rack::Builder / config.ru, but in reverse order
           @app = Proxy.new(theme)
