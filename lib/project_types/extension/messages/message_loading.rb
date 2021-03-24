@@ -16,7 +16,9 @@ module Extension
 
       def self.load_current_type_messages
         return unless ShopifyCli::Project.has_current?
-        messages_for_type(ShopifyCli::Project.current.config[Extension::ExtensionProjectKeys::EXTENSION_TYPE_KEY])
+        messages_for_type(
+          ShopifyCli::Project.current.config[Extension::ExtensionProjectKeys::SPECIFICATION_IDENTIFIER_KEY]
+        )
       end
 
       def self.messages_for_type(type_identifier)

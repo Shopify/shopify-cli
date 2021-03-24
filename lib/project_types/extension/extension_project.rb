@@ -9,7 +9,7 @@ module Extension
           context,
           project_type: :extension,
           organization_id: nil,
-          "#{ExtensionProjectKeys::EXTENSION_TYPE_KEY}": type
+          "#{ExtensionProjectKeys::SPECIFICATION_IDENTIFIER_KEY}": type
         )
       end
 
@@ -49,8 +49,8 @@ module Extension
       get_extra_field(ExtensionProjectKeys::TITLE_KEY)
     end
 
-    def extension_type_identifier
-      config[ExtensionProjectKeys::EXTENSION_TYPE_KEY]
+    def specification_identifier
+      config[ExtensionProjectKeys::SPECIFICATION_IDENTIFIER_KEY]
     end
 
     def registration_id?

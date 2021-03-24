@@ -8,16 +8,16 @@ module Extension
         @project ||= ExtensionProject.current
       end
 
-      def extension_type
-        @extension_type ||= begin
-          identifier = project.extension_type_identifier
+      def specification_handler
+        @specification_handler ||= begin
+          identifier = project.specification_identifier
           Models::LazySpecificationHandler.new(identifier) do
             specifications = Models::Specifications.new(
               fetch_specifications: Tasks::FetchSpecifications.new(api_key: project.app.api_key, context: @ctx)
             )
 
             unless specifications.valid?(identifier)
-              @ctx.abort(@ctx.message("errors.unknown_type", project.extension_type_identifier))
+              @ctx.abort(@ctx.message("errors.unknown_type", project.specification_identifier))
             end
 
             specifications[identifier]
