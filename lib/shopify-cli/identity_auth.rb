@@ -73,8 +73,7 @@ module ShopifyCli
 
     attr_accessor :response_query
 
-    def authenticate(shop: nil)
-      store.set(shop: "https://#{shop}/admin")
+    def authenticate
       return if refresh_exchange_tokens || refresh_access_tokens
 
       initiate_authentication
