@@ -102,14 +102,14 @@ module ShopifyCli
       def api_client(ctx, api_version, shop, path: "graphql.json")
         new(
           ctx: ctx,
-          token: access_token(ctx),
+          token: access_token(ctx, shop),
           url: "https://#{shop}/admin/api/#{fetch_api_version(ctx, api_version, shop)}/#{path}",
         )
       end
 
-      def access_token(ctx)
+      def access_token(ctx, shop)
         ShopifyCli::DB.get(:shopify_exchange_token) do
-          authenticate(ctx)
+          authenticate(ctx, shop)
           ShopifyCli::DB.get(:shopify_exchange_token)
         end
       end
@@ -118,7 +118,7 @@ module ShopifyCli
         return api_version unless api_version.nil?
         client = new(
           ctx: ctx,
-          token: access_token(ctx),
+          token: access_token(ctx, shop),
           url: "https://#{shop}/admin/api/unstable/graphql.json",
         )
         versions = client.query("api_versions")["data"]["publicApiVersions"]

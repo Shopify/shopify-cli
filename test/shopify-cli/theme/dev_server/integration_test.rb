@@ -5,11 +5,12 @@ require "shopify-cli/theme/dev_server"
 class IntegrationTest < Minitest::Test
   @@port = 9292 # rubocop:disable Style/ClassVars
 
-  ASSETS_API_URL = "https://dev-theme-server-store.myshopify.com/admin/api/2021-01/themes/123456789/assets.json"
+  ASSETS_API_URL = "https://dev-theme-server-store.myshopify.com/admin/api/unstable/themes/123456789/assets.json"
 
   def setup
     super
     WebMock.disable_net_connect!(allow: "localhost:#{@@port}")
+    ShopifyCli::DB.expects(:get).with(:shopify_exchange_token).at_least_once.returns('token123')
   end
 
   def teardown
@@ -120,8 +121,13 @@ class IntegrationTest < Minitest::Test
   private
 
   def start_server
+    @ctx = TestHelpers::FakeContext.new(root: "#{ShopifyCli::ROOT}/test/fixtures/theme")
     @server_thread = Thread.new do
-      ShopifyCli::Theme::DevServer.start("#{ShopifyCli::ROOT}/test/fixtures/theme", silent: true, port: @@port)
+      ShopifyCli::Theme::DevServer.start(@ctx, "#{ShopifyCli::ROOT}/test/fixtures/theme", silent: true, port: @@port)
+    rescue Exception => e
+      puts "Failed to start DevServer:"
+      puts e.message
+      puts e.backtrace
     end
   end
 
