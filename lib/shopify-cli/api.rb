@@ -46,6 +46,8 @@ module ShopifyCli
         headers = default_headers.merge(headers)
         response = if method == "POST"
           HttpRequest.post(uri, body, headers)
+        elsif method == "PUT"
+          HttpRequest.put(uri, body, headers)
         elsif method == "GET"
           HttpRequest.get(uri, body, headers)
         end

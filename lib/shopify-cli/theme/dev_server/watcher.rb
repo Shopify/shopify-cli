@@ -9,9 +9,9 @@ module ShopifyCli
       class Watcher
         include Observable
 
-        def initialize(theme)
+        def initialize(ctx, theme)
           @theme = theme
-          @uploader = Uploader.new(theme)
+          @uploader = Uploader.new(ctx, theme)
           @listener = Listen.to(@theme.root) do |modified, added, removed|
             changed
             notify_observers(modified, added, removed)
