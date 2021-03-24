@@ -118,7 +118,7 @@ module ShopifyCli
         return api_version unless api_version.nil?
         client = new(
           ctx: ctx,
-          token: access_token(ctx),
+          token: access_token(ctx, shop),
           url: "https://#{shop}/admin/api/unstable/graphql.json",
         )
         versions = client.query("api_versions")["data"]["publicApiVersions"]
