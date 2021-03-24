@@ -82,8 +82,12 @@ module ShopifyCli
           Digest::MD5.hexdigest(file.read) != checksums[file.relative_path.to_s]
         end
 
-        def update_checksums!(response_from_api)
-          assets = JSON.parse(response_from_api.body).values.flatten
+        def update_checksums!(api_response)
+          assets = if api_response["asset"]
+            [api_response["asset"]]
+          else
+            api_response["assets"]
+          end
 
           @checksums = assets.each_with_object({}) do |asset, hash|
             hash[asset["key"]] = asset["checksum"]
