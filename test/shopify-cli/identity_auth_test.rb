@@ -93,7 +93,7 @@ module ShopifyCli
 
       stub_request(:post, "#{endpoint}/authorize")
       assert_raises IdentityAuth::Error do
-        client.authenticate(shop: "testshop")
+        client.authenticate
       end
     end
 
@@ -129,7 +129,7 @@ module ShopifyCli
         )
 
       assert_raises IdentityAuth::Error do
-        client.authenticate(shop: "testshop")
+        client.authenticate
       end
     end
 
