@@ -3,7 +3,7 @@ require "test_helper"
 require "shopify-cli/theme/dev_server"
 
 class UploaderTest < Minitest::Test
-  ASSETS_API_URL = "https://dev-theme-server-store.myshopify.com/admin/api/2021-01/themes/123456789/assets.json"
+  ASSETS_API_URL = "https://dev-theme-server-store.myshopify.com/admin/api/unstable/themes/123456789/assets.json"
 
   def setup
     super
