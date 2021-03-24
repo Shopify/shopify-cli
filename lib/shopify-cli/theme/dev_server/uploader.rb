@@ -7,7 +7,8 @@ module ShopifyCli
   module Theme
     module DevServer
       class Uploader
-        def initialize(theme)
+        def initialize(ctx, theme)
+          @ctx = ctx
           @theme = theme
           @queue = Queue.new
           @threads = []
@@ -28,15 +29,17 @@ module ShopifyCli
         end
 
         def fetch_checksums!
-          response = Net::HTTP.start(@theme.assets_api_uri.host, 443, use_ssl: true) do |http|
-            req = Net::HTTP::Get.new(@theme.assets_api_uri)
-            req["X-Shopify-Access-Token"] = @theme.config.password
-            req["Accept"] = "application/json"
-            req["Content-Type"] = "application/json"
-            http.request(req)
-          end
+          response = ShopifyCli::AdminAPI.rest_request(
+            @ctx,
+            shop: @theme.config.store,
+            path: "themes/#{@theme.id}/assets.json",
+            api_version: "unstable",
+            token: @theme.config.password ? @theme.config.password : nil
+          )
 
-          @theme.update_checksums!(response)
+          @theme.update_checksums!(response[1])
+        rescue ShopifyCli::API::APIRequestError => e
+          @ctx.abort("Could not fetch checksums for theme assets: #{e.message}")
         end
 
         def upload(file)
@@ -45,28 +48,31 @@ module ShopifyCli
             return
           end
 
-          if @theme.file_has_changed?(file)
-            puts "Uploading #{file.relative_path} to #{@theme.assets_api_uri}" if DevServer.debug
-
-            response = Net::HTTP.start(@theme.assets_api_uri.host, 443, use_ssl: true) do |http|
-              req = Net::HTTP::Put.new(@theme.assets_api_uri)
-              req["X-Shopify-Access-Token"] = @theme.config.password
-              req["Accept"] = "application/json"
-              req["Content-Type"] = "application/json"
-              req.body = JSON.generate({
-                asset: {
-                  key: file.relative_path.to_s,
-                  attachment: Base64.encode64(file.read),
-                },
-              })
-
-              http.request(req)
-            end
-
-            @theme.update_checksums!(response)
-          elsif DevServer.debug
-            puts "#{file.relative_path} has not changed, skipping upload"
+          unless @theme.file_has_changed?(file)
+            @ctx.debug("#{file.relative_path} has not changed, skipping upload")
+            return
           end
+
+          @ctx.debug("Uploading #{file.relative_path} to #{@theme.assets_api_uri}")
+
+          response = ShopifyCli::AdminAPI.rest_request(
+            @ctx,
+            shop: @theme.config.store,
+            path: "themes/#{@theme.id}/assets.json",
+            method: "PUT",
+            api_version: "unstable",
+            token: @theme.config.password ? @theme.config.password : nil,
+            body: JSON.generate({
+              asset: {
+                key: file.relative_path.to_s,
+                attachment: Base64.encode64(file.read),
+              },
+            })
+          )
+
+          @theme.update_checksums!(response[1])
+        rescue ShopifyCli::API::APIRequestError => e
+          @ctx.abort("Could not upload theme asset: #{e.message}")
         ensure
           @theme.pending_files.delete(file)
         end
