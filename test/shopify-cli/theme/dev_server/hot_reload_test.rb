@@ -7,8 +7,9 @@ class HotReloadTest < Minitest::Test
   def setup
     super
     config = ShopifyCli::Theme::DevServer::Config.from_path(ShopifyCli::ROOT + "/test/fixtures/theme")
+    @ctx = TestHelpers::FakeContext.new(root: config.root)
     @theme = ShopifyCli::Theme::DevServer::Theme.new(config)
-    @watcher = ShopifyCli::Theme::DevServer::Watcher.new(@theme)
+    @watcher = ShopifyCli::Theme::DevServer::Watcher.new(@ctx, @theme)
   end
 
   def test_hot_reload_js_injected_if_html_request
