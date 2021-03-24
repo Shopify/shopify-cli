@@ -9,14 +9,14 @@ module Theme
 
       def test_serve_command
         context = ShopifyCli::Context.new
-        ShopifyCli::Theme::DevServer.expects(:start).with(".", optionally({}))
+        ShopifyCli::Theme::DevServer.expects(:start).with(context, ".", optionally({}))
 
         Theme::Commands::Serve.new(context).call
       end
 
       def test_can_specify_port
         context = ShopifyCli::Context.new
-        ShopifyCli::Theme::DevServer.expects(:start).with(".", port: 9293)
+        ShopifyCli::Theme::DevServer.expects(:start).with(context, ".", port: 9293)
 
         command = Theme::Commands::Serve.new(context)
         command.options.flags[:port] = 9293
