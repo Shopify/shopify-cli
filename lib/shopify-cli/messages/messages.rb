@@ -129,6 +129,20 @@ module ShopifyCli
           npm_installed_deps: "%d npm dependencies installed",
         },
 
+        login: {
+          help: <<~HELP,
+            Log in to a store or partner organization
+              Usage: {{command:%s login [--shop=SHOP]}}
+          HELP
+          invalid_shop: <<~MESSAGE,
+            Invalid store provided (%s). Please provide the store in the following format: my-store.myshopify.com
+          MESSAGE
+          shop_prompt: <<~PROMPT,
+            What store are you connecting to? (e.g. my-store.myshopify.com; do {{bold:NOT}} include protocol part, e.g., https://)
+          PROMPT
+          success: "Logged out of partner organization and store",
+        },
+
         logout: {
           help: <<~HELP,
             Log out of a currently authenticated partner organization and store, or clear invalid credentials
