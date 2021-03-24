@@ -69,10 +69,6 @@ module Extension
         ShopifyCli::Feature.stubs(:enabled?).with(:argo_admin_beta).returns(true)
         ExtensionProject.stubs(:reload)
 
-        Extension.specifications.stubs(:valid?).returns(true)
-        Extension.specifications.stubs(:[]).returns(DummySpecifications.build(
-          identifier: "test-extension", surface: "admin"
-        ))
         ExtensionProject.current.env.stubs(:shop).returns(" ")
 
         exception = assert_raises ShopifyCli::Abort do
@@ -88,10 +84,6 @@ module Extension
         ShopifyCli::Feature.stubs(:enabled?).with(:argo_admin_beta).returns(true)
         ExtensionProject.stubs(:reload)
 
-        Extension.specifications.stubs(:valid?).returns(true)
-        Extension.specifications.stubs(:[]).returns(DummySpecifications.build(
-          identifier: "test-extension", surface: "admin"
-        ))
         ExtensionProject.current.env.stubs(:api_key).returns(" ")
 
         exception = assert_raises ShopifyCli::Abort do

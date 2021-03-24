@@ -8,18 +8,6 @@ module Extension
       class DefaultTest < MiniTest::Test
         include ExtensionTestHelpers::TestExtensionSetup
 
-        def test_can_load_type_by_identifier
-          assert_equal(
-            @test_extension_type.identifier,
-            Extension.specifications[@test_extension_type.identifier].identifier
-          )
-        end
-
-        def test_valid_determines_if_a_type_is_valid
-          assert Extension.specifications.valid?(ExtensionTestHelpers::TestExtension::IDENTIFIER)
-          refute Extension.specifications.valid?("INVALID")
-        end
-
         def test_tagline_returns_empty_string_if_not_defined_in_content
           base_type = Default.new(specification)
           base_type.stubs(:identifier).returns("INVALID")

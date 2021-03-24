@@ -6,20 +6,13 @@ module Extension
       def setup
         ShopifyCli::ProjectType.load_type(:extension)
 
-        @_original_extension_specifications = Extension.specifications
-
-        Extension.specifications = DummySpecifications.build(
+        specifications = DummySpecifications.build(
           custom_handler_root: File.expand_path("../", __FILE__),
           custom_handler_namespace: ::Extension::ExtensionTestHelpers,
         )
-        @test_extension_type = Extension.specifications["TEST_EXTENSION"]
+        @test_extension_type = specifications["TEST_EXTENSION"]
 
         super
-      end
-
-      def teardown
-        super
-        Extension.specifications = @_original_extension_specifications
       end
     end
   end

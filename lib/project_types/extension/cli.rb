@@ -81,14 +81,4 @@ module Extension
 
   autoload :ExtensionProjectKeys, Project.project_filepath("extension_project_keys")
   autoload :ExtensionProject, Project.project_filepath("extension_project")
-
-  def self.specifications
-    @specifications ||= Models::Specifications.new(
-      fetch_specifications: Tasks::FetchSpecifications
-    )
-  end
-
-  def self.specifications=(specifications)
-    @specifications = specifications
-  end
 end
