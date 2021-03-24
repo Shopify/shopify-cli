@@ -49,8 +49,7 @@ module ShopifyCli
 
     attr_accessor :response_query
 
-    def authenticate(shop: nil)
-      store.set(shop: "https://#{shop}/admin")
+    def authenticate
       return if refresh_exchange_tokens || refresh_access_tokens
 
       initiate_authentication
@@ -179,7 +178,7 @@ module ShopifyCli
         subject_token: store.get(:identity_access_token),
       }.tap do |result|
         if name == "shopify"
-          result[:destination] = store.get(:shop)
+          result[:destination] = "https://#{store.get(:shop)}/admin"
         end
       end
       # ctx.debug(params)
