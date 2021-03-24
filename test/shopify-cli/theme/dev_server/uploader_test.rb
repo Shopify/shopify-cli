@@ -62,7 +62,7 @@ class UploaderTest < Minitest::Test
           "key" => "assets/theme.css",
           "checksum" => Digest::MD5.hexdigest(File.read("#{ShopifyCli::ROOT}/test/fixtures/theme/assets/theme.css")),
         }],
-      }
+      },
     ])
 
     @uploader.fetch_checksums!
