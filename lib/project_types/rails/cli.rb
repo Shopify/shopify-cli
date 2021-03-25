@@ -8,7 +8,6 @@ module Rails
     register_command("Rails::Commands::Deploy", "deploy")
     register_command("Rails::Commands::Generate", "generate")
     register_command("Rails::Commands::Open", "open")
-    register_command("Rails::Commands::Populate", "populate")
     register_command("Rails::Commands::Serve", "serve")
     register_command("Rails::Commands::Tunnel", "tunnel")
     # register_task('Rails::Tasks::RailsTask', 'rails_task')
@@ -24,7 +23,6 @@ module Rails
     autoload :Deploy, Project.project_filepath("commands/deploy")
     autoload :Generate, Project.project_filepath("commands/generate")
     autoload :Open, Project.project_filepath("commands/open")
-    autoload :Populate, Project.project_filepath("commands/populate")
     autoload :Serve, Project.project_filepath("commands/serve")
     autoload :Tunnel, Project.project_filepath("commands/tunnel")
   end

@@ -1,6 +1,6 @@
 require "shopify_cli"
 
-module Rails
+module ShopifyCli
   module Commands
     class Populate
       class DraftOrder < ShopifyCli::AdminAPI::PopulateResourceCommand
@@ -20,7 +20,7 @@ module Rails
         def message(data)
           ret = data["draftOrderCreate"]["draftOrder"]
           id = ShopifyCli::API.gid_to_id(ret["id"])
-          @ctx.message("rails.populate.draft_order.added", ShopifyCli::Project.current.env.shop, admin_url, id)
+          @ctx.message("core.populate.draft_order.added", @shop, admin_url, id)
         end
       end
     end

@@ -25,8 +25,6 @@ module ShopifyCli
       end
 
       def call(args, _)
-        return unless Project.current
-        # Tasks::EnsureEnv.call(@ctx)
         @args = args
         @input = Hash.new
         @count = DEFAULT_COUNT
@@ -41,14 +39,7 @@ module ShopifyCli
           return @ctx.puts(output)
         end
 
-        # @shop ||= Project.current.env.shop || get_shop(@ctx)
-        # @shop = 'shop1.myshopify.io'
-        Project.current.env.shop = if @ctx.testing?
-          "my-test-shop.myshopify.com"
-        else
-          "shop1.myshopify.io"
-        end
-        @shop = Project.current.env.shop
+        @shop = AdminAPI.get_shop(@ctx)
         if @silent
           spin_group = CLI::UI::SpinGroup.new
           spin_group.add(@ctx.message("core.populate.populating", @count, camel_case_resource_type)) do |spinner|
@@ -94,8 +85,6 @@ module ShopifyCli
           end
 
           opts.on("--silent") { |v| @silent = v }
-
-          opts.on("--shop=", "-s") { |value| @shop = value }
         end
       end
 
@@ -137,7 +126,7 @@ module ShopifyCli
           "core.populate.completion_message",
           @count,
           "#{camel_case_resource_type}#{plural}",
-          Project.current.env.shop,
+          @shop,
           camel_case_resource_type,
           admin_url,
           snake_case_resource_type
@@ -145,7 +134,7 @@ module ShopifyCli
       end
 
       def admin_url
-        "https://#{Project.current.env.shop}/admin/"
+        "https://#{@shop}/admin/"
       end
 
       def price
@@ -153,13 +142,6 @@ module ShopifyCli
       end
 
       private
-
-      def get_shop(ctx)
-        res = ShopifyCli::Tasks::SelectOrgAndShop.call(ctx)
-        domain = res[:shop_domain]
-        Project.current.env.update(ctx, :shop, domain)
-        domain
-      end
 
       def camel_case_resource_type
         @camel_case_resource_type ||= self.class.to_s.split("::").last
