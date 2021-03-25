@@ -44,7 +44,7 @@ module ShopifyCli
             stop
           end
 
-          logger = if ctx.getenv("DEBUG")
+          logger = if ctx.debug?
             WEBrick::Log.new(nil, WEBrick::BasicLog::INFO)
           else
             WEBrick::Log.new(nil, WEBrick::BasicLog::FATAL)
