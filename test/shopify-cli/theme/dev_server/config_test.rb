@@ -10,7 +10,10 @@ class ThemeTest < Minitest::Test
   end
 
   def test_uses_another_environment_if_specified
-    config = ShopifyCli::Theme::DevServer::Config.from_path(ShopifyCli::ROOT + "/test/fixtures/theme", environment: "staging")
+    config = ShopifyCli::Theme::DevServer::Config.from_path(
+      ShopifyCli::ROOT + "/test/fixtures/theme",
+      environment: "staging"
+    )
 
     assert_equal("567891234", config.theme_id)
   end
