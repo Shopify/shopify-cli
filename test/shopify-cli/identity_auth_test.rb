@@ -143,11 +143,11 @@ module ShopifyCli
 
     def with_existing_tokens_in_database(client:)
       client.store.set(
-        :identity_access_token => "accesstoken123",
-        :identity_refresh_token => "refreshtoken123",
-        :partners_exchange_token => "partnerexchangetoken123",
-        :shopify_exchange_token => "shopifyexchangetoken123",
-        "storefront-renderer-production_exchange_token".to_sym => "storefront-renderer-productionexchangetoken123"
+        identity_access_token: "accesstoken123",
+        identity_refresh_token: "refreshtoken123",
+        partners_exchange_token: "partnerexchangetoken123",
+        shopify_exchange_token: "shopifyexchangetoken123",
+        storefront_renderer_production_exchange_token: "storefront-renderer-productionexchangetoken123"
       )
     end
 
