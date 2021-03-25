@@ -21,21 +21,25 @@ module ShopifyCli
 
     APPLICATION_SCOPES = {
       "shopify" => %w[https://api.shopify.com/auth/shop.admin.graphql https://api.shopify.com/auth/shop.admin.themes],
-      "storefront-renderer-production" => %w[https://api.shopify.com/auth/shop.storefront-renderer.devtools],
+      "storefront_renderer_production" => %w[https://api.shopify.com/auth/shop.storefront-renderer.devtools],
       "partners" => %w[https://api.shopify.com/auth/partners.app.cli.access],
     }
 
     APPLICATION_CLIENT_IDS = {
       "shopify" => "7ee65a63608843c577db8b23c4d7316ea0a01bd2f7594f8a9c06ea668c1b775c",
-      "storefront-renderer-production" => "ee139b3d-5861-4d45-b387-1bc3ada7811c",
+      "storefront_renderer_production" => "ee139b3d-5861-4d45-b387-1bc3ada7811c",
       "partners" => "271e16d403dfa18082ffb3d197bd2b5f4479c3fc32736d69296829cbb28d41a6",
     }
 
     DEV_APPLICATION_CLIENT_IDS = {
       "shopify" => "e92482cebb9bfb9fb5a0199cc770fde3de6c8d16b798ee73e36c9d815e070e52",
-      "storefront-renderer-production" => "46f603de-894f-488d-9471-5b721280ff49",
+      "storefront_renderer_production" => "46f603de-894f-488d-9471-5b721280ff49",
       "partners" => "df89d73339ac3c6c5f0a98d9ca93260763e384d51d6038da129889c308973978",
     }
+
+    EXCHANGE_TOKENS = APPLICATION_SCOPES.keys.map do |key|
+      "#{key}_exchange_token".to_sym
+    end
 
     IDENTITY_ACCESS_TOKENS = %i[
       identity_access_token
@@ -80,6 +84,11 @@ module ShopifyCli
         server.mount("/", OAuth::Servlet, self, state_token)
         server
       end
+    end
+
+    def self.delete_tokens_and_keys
+      ShopifyCli::DB.del(*IDENTITY_ACCESS_TOKENS)
+      ShopifyCli::DB.del(*EXCHANGE_TOKENS)
     end
 
     private
@@ -150,20 +159,14 @@ module ShopifyCli
     end
 
     def refresh_exchange_tokens
-      return false unless exchange_token_keys.all? { |key| store.exists?(key) }
+      return false unless EXCHANGE_TOKENS.all? { |key| store.exists?(key) }
 
       request_exchange_tokens
 
       true
     rescue
-      store.del(*exchange_token_keys)
+      store.del(*EXCHANGE_TOKENS)
       false
-    end
-
-    def exchange_token_keys
-      APPLICATION_SCOPES.keys.map do |key|
-        "#{key}_exchange_token".to_sym
-      end
     end
 
     def request_exchange_tokens
