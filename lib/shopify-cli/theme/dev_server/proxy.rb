@@ -17,7 +17,8 @@ module ShopifyCli
       ]
 
       class Proxy
-        def initialize(theme)
+        def initialize(ctx, theme)
+          @ctx = ctx
           @theme = theme
         end
 
@@ -139,7 +140,7 @@ module ShopifyCli
           uri = URI.join("https://#{@theme.config.store}", path)
           uri.query = URI.encode_www_form(query.merge(_fd: 0, pb: 0))
 
-          puts "Proxying #{method} #{uri}" if DevServer.debug
+          @ctx.debug("Proxying #{method} #{uri}")
 
           Net::HTTP.start(uri.host, 443, use_ssl: true) do |http|
             req_class = Net::HTTP.const_get(method.capitalize)
@@ -147,7 +148,7 @@ module ShopifyCli
             req.initialize_http_header(headers) if headers
             req.set_form_data(form_data) if form_data
             response = http.request(req)
-            puts "`-> #{response.code} request_id: #{response["x-request-id"]}" if DevServer.debug
+            @ctx.debug("`-> #{response.code} request_id: #{response["x-request-id"]}")
             response
           end
         end
