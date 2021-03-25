@@ -61,7 +61,7 @@ class HotReloadTest < Minitest::Test
       .with(JSON.generate(modified: modified))
 
     app = -> { [200, {}, []] }
-    ShopifyCli::Theme::DevServer::HotReload.new(app, @theme, @watcher)
+    ShopifyCli::Theme::DevServer::HotReload.new(@ctx, app, @theme, @watcher)
 
     @watcher.changed
     @watcher.notify_observers(modified, [], [])
@@ -73,7 +73,7 @@ class HotReloadTest < Minitest::Test
     app = lambda do |_env|
       [200, headers, [response_body]]
     end
-    stack = ShopifyCli::Theme::DevServer::HotReload.new(app, @theme, @watcher)
+    stack = ShopifyCli::Theme::DevServer::HotReload.new(@ctx, app, @theme, @watcher)
     request = Rack::MockRequest.new(stack)
     request.get(path).body
   end

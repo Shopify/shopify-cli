@@ -4,7 +4,8 @@ module ShopifyCli
   module Theme
     module DevServer
       class HotReload
-        def initialize(app, theme, watcher)
+        def initialize(ctx, app, theme, watcher)
+          @ctx = ctx
           @app = app
           @theme = theme
           @streams = SSE::Streams.new
@@ -36,7 +37,7 @@ module ShopifyCli
             modified: files,
           ))
 
-          puts "[HotReload] Modified #{files.join(", ")}" if DevServer.debug
+          @ctx.debug("[HotReload] Modified #{files.join(", ")}")
         end
 
         private
@@ -56,7 +57,7 @@ module ShopifyCli
         def create_stream
           stream = @streams.new
 
-          puts "[HotReload] Connected to SSE stream" if DevServer.debug
+          @ctx.debug("[HotReload] Connected to SSE stream")
 
           [
             200,
