@@ -7,8 +7,9 @@ class ProxyTest < Minitest::Test
   def setup
     super
     config = ShopifyCli::Theme::DevServer::Config.from_path(ShopifyCli::ROOT + "/test/fixtures/theme")
+    @ctx = TestHelpers::FakeContext.new(root: config.root)
     @theme = ShopifyCli::Theme::DevServer::Theme.new(config)
-    @proxy = ShopifyCli::Theme::DevServer::Proxy.new(@theme)
+    @proxy = ShopifyCli::Theme::DevServer::Proxy.new(@ctx, @theme)
   end
 
   def test_form_data_is_proxied_to_request
