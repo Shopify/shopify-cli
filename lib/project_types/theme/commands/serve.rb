@@ -9,6 +9,7 @@ module Theme
         # parser.on("--env=ENV") { |env| flags[:env] = env }
         parser.on("--port=PORT") { |port| flags[:port] = port.to_i }
         parser.on("--debug") { flags[:debug] = true }
+        parser.on("--env=ENV") { |env| flags[:env] = env }
       end
 
       def call(*)
