@@ -106,6 +106,12 @@ module ShopifyCli
       ENV["CI"]
     end
 
+    ##
+    # will return true if the cli is running with the DEBUG flag
+    def debug?
+      getenv("DEBUG")
+    end
+
     # get a environment variable value by name.
     #
     # #### Parameters
@@ -303,7 +309,7 @@ module ShopifyCli
     # * `text` - a string message to output
     #
     def debug(text)
-      puts("{{red:DEBUG}} #{text}") if getenv("DEBUG")
+      puts("{{red:DEBUG}} #{text}") if debug?
     end
 
     # proxy call to Context.message.

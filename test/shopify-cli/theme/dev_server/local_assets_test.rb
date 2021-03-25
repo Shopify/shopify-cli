@@ -64,8 +64,9 @@ class LocalAssetsTest < Minitest::Test
       [200, {}, [response_body]]
     end
     config = ShopifyCli::Theme::DevServer::Config.from_path(ShopifyCli::ROOT + "/test/fixtures/theme")
+    ctx = TestHelpers::FakeContext.new(root: config.root)
     theme = ShopifyCli::Theme::DevServer::Theme.new(config)
-    stack = ShopifyCli::Theme::DevServer::LocalAssets.new(app, theme)
+    stack = ShopifyCli::Theme::DevServer::LocalAssets.new(ctx, app, theme)
     request = Rack::MockRequest.new(stack)
     request.get(path)
   end
