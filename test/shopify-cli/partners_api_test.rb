@@ -18,15 +18,14 @@ module ShopifyCli
 
     def test_query_can_reauth
       Shopifolk.stubs(:check).returns(false)
-      ShopifyCli::DB.expects(:get).with(:partners_exchange_token).returns("token123").twice
+      ShopifyCli::DB.expects(:get).with(:partners_exchange_token).returns("token123")
 
       api_stub = stub
       PartnersAPI.expects(:new).with(
         ctx: @context,
         token: "token123",
         url: "https://partners.shopify.com/api/cli/graphql",
-      ).returns(api_stub).twice
-      api_stub.expects(:query).with("query", variables: {}).returns("response")
+      ).returns(api_stub)
       api_stub.expects(:query).raises(API::APIRequestUnauthorizedError)
 
       @oauth_client = mock
@@ -34,7 +33,7 @@ module ShopifyCli
         .expects(:new)
         .with(ctx: @context).returns(@oauth_client)
       @oauth_client
-        .expects(:authenticate)
+        .expects(:reauthenticate)
 
       PartnersAPI.query(@context, "query")
     end

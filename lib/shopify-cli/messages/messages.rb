@@ -164,6 +164,7 @@ module ShopifyCli
           error: {
             timeout: "Timed out while waiting for response from Shopify",
             local_identity_not_running: "Identity needs to be running locally in order to proceed.",
+            reauthenticate: "Please login again with {{command:shopify logout}}",
           },
 
           location: {
