@@ -74,7 +74,6 @@ describe Script::Layers::Domain::ExtensionPoint do
       end
     end
 
-
     describe "when multiple sdks are implemented" do
       subject { Script::Layers::Domain::ExtensionPoint.new(type, config_with_rust) }
       it "should construct new, non-deprecated ExtensionPoint" do

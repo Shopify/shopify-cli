@@ -11,7 +11,8 @@ module Script
         property! :path_to_project, accepts: String
 
         BOOTSTRAP = "npx --no-install shopify-scripts-toolchain-as bootstrap --from %{extension_point} --dest %{base}"
-        BUILD = "shopify-scripts-toolchain-as build --src src/shopify_main.ts --binary build/%{script_name}.wasm --metadata build/metadata.json"
+        BUILD = "shopify-scripts-toolchain-as build --src src/shopify_main.ts " \
+        "--binary build/%{script_name}.wasm --metadata build/metadata.json"
         MIN_NODE_VERSION = "14.5.0"
         ASC_ARGS = "-- --lib node_modules --optimize --use Date="
 

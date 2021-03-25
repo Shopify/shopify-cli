@@ -18,7 +18,7 @@ module Script
         end
 
         def dasherize_type
-          @type.gsub('_', '-')
+          @type.gsub("_", "-")
         end
       end
 

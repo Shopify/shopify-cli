@@ -48,12 +48,13 @@ describe Script::Layers::Infrastructure::AssemblyScriptProjectCreator do
     it "should write to package.json" do
       context.expects(:system).twice
       context.expects(:capture2e).once.returns([JSON.generate("2.0.0"), OpenStruct.new(success?: true)])
-      context.expects(:write).with() do |_file, contents|
+      context.expects(:write).with do |_file, contents|
         payload = JSON.parse(contents)
         build = payload.dig("scripts", "build")
         expected = [
-          "shopify-scripts-toolchain-as build --src src/shopify_main.ts --binary build/myscript.wasm --metadata build/metadata.json",
-          "-- --lib node_modules --optimize --use Date="
+          "shopify-scripts-toolchain-as build --src src/shopify_main.ts",
+          "--binary build/myscript.wasm --metadata build/metadata.json",
+          "-- --lib node_modules --optimize --use Date=",
         ].join(" ")
         expected == build
       end
@@ -127,35 +128,41 @@ describe Script::Layers::Infrastructure::AssemblyScriptProjectCreator do
   describe "bootstrap extension points with domain" do
     subject { project_creator.bootstrap }
 
-    let(:extension_point_config_with_domain) { extension_point_config.merge({ "domain" => "checkout" })}
-    let(:extension_point) { Script::Layers::Domain::ExtensionPoint.new(extension_point_type, extension_point_config_with_domain) }
+    let(:extension_point_config_with_domain) { extension_point_config.merge({ "domain" => "checkout" }) }
+    let(:extension_point) do
+      Script::Layers::Domain::ExtensionPoint.new(extension_point_type, extension_point_config_with_domain)
+    end
 
     it "should call the language toolchain with the appropriate domain arguments" do
       context.expects(:capture2e)
         .with(
-          "npx --no-install shopify-scripts-toolchain-as bootstrap --from #{extension_point.type} --dest #{script_name} --domain checkout"
+          "npx --no-install shopify-scripts-toolchain-as bootstrap --from #{extension_point.type} " \
+          "--dest #{script_name} --domain checkout"
         )
         .returns(["", OpenStruct.new(success?: true)])
 
-        subject
+      subject
     end
   end
 
   describe "dependencies for extension points with domain" do
     subject { project_creator.setup_dependencies }
 
-    let(:extension_point_config_with_domain) { extension_point_config.merge({ "domain" => "checkout" })}
-    let(:extension_point) { Script::Layers::Domain::ExtensionPoint.new(extension_point_type, extension_point_config_with_domain) }
+    let(:extension_point_config_with_domain) { extension_point_config.merge({ "domain" => "checkout" }) }
+    let(:extension_point) do
+      Script::Layers::Domain::ExtensionPoint.new(extension_point_type, extension_point_config_with_domain)
+    end
 
     it "should create the build command in the package.json with the appropriate domain arguments" do
       context.expects(:system).twice
       context.expects(:capture2e).once.returns([JSON.generate("2.0.0"), OpenStruct.new(success?: true)])
-      context.expects(:write).with() do |_file, contents|
+      context.expects(:write).with do |_file, contents|
         payload = JSON.parse(contents)
         build = payload.dig("scripts", "build")
         expected = [
-          "shopify-scripts-toolchain-as build --src src/shopify_main.ts --binary build/myscript.wasm --metadata build/metadata.json --domain checkout --ep discount",
-          "-- --lib node_modules --optimize --use Date="
+          "shopify-scripts-toolchain-as build --src src/shopify_main.ts --binary build/myscript.wasm",
+          "--metadata build/metadata.json --domain checkout --ep discount",
+          "-- --lib node_modules --optimize --use Date=",
         ].join(" ")
         expected == build
       end
