@@ -1,7 +1,7 @@
 PATH
   remote: .
   specs:
-    shopify-cli (1.6.0)
+    shopify-cli (1.9.0)
       listen
 
 GEM
@@ -18,7 +18,7 @@ GEM
     fakefs (1.2.2)
     ffi (1.15.0)
     hashdiff (1.0.1)
-    listen (3.4.1)
+    listen (3.5.1)
       rb-fsevent (~> 0.10, >= 0.10.3)
       rb-inotify (~> 0.9, >= 0.9.10)
     method_source (1.0.0)
@@ -62,10 +62,10 @@ GEM
       parser (>= 2.7.1.5)
     rubocop-minitest (0.10.1)
       rubocop (>= 0.87)
-    rubocop-shopify (2.0.1)
-      rubocop (~> 1.11)
     rubocop-rake (0.5.1)
       rubocop
+    rubocop-shopify (2.0.1)
+      rubocop (~> 1.11)
     ruby-progressbar (1.11.0)
     timecop (0.9.2)
     unicode-display_width (2.0.0)
