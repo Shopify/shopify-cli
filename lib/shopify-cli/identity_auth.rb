@@ -59,6 +59,11 @@ module ShopifyCli
       request_exchange_tokens
     end
 
+    def reauthenticate
+      return if refresh_exchange_tokens || refresh_access_tokens
+      ctx.abort(ctx.message("core.oauth.error.reauthenticate", ShopifyCli::TOOL_NAME))
+    end
+
     def code_challenge
       @code_challenge ||= Base64.urlsafe_encode64(
         OpenSSL::Digest::SHA256.digest(code_verifier),
