@@ -11,7 +11,9 @@ module Script
         property! :path_to_project, accepts: String
 
         BOOTSTRAP = "npx --no-install shopify-scripts-toolchain-as bootstrap --from %{extension_point} --dest %{base}"
+        BUILD = "shopify-scripts-toolchain-as build --src src/shopify_main.ts --binary build/%{script_name}.wasm --metadata build/metadata.json"
         MIN_NODE_VERSION = "14.5.0"
+        ASC_ARGS = "-- --lib node_modules --optimize --use Date="
 
         def setup_dependencies
           write_npmrc
@@ -19,8 +21,7 @@ module Script
         end
 
         def bootstrap
-          type = extension_point.type.gsub("_", "-")
-          out, status = ctx.capture2e(format(BOOTSTRAP, extension_point: type, base: path_to_project))
+          out, status = ctx.capture2e(bootstap_command)
           raise Domain::Errors::ServiceFailureError, out unless status.success?
         end
 
@@ -55,7 +56,7 @@ module Script
               },
               "scripts": {
                 "test": "asp --summary --verbose",
-                "build": "shopify-scripts-toolchain-as build --src src/shopify_main.ts --binary build/#{script_name}.wasm --metadata build/metadata.json -- --lib node_modules --optimize --use Date="
+                "build": "#{build_command}"
               },
               "engines": {
                 "node": ">=#{MIN_NODE_VERSION}"
@@ -63,6 +64,30 @@ module Script
             }
           HERE
           ctx.write("package.json", package_json)
+        end
+
+        def bootstap_command
+          type = extension_point.dasherize_type
+          base_command = format(BOOTSTRAP, extension_point: type, base: path_to_project)
+          domain = extension_point.domain
+
+          if domain.nil?
+            base_command
+          else
+            "#{base_command} --domain #{domain}"
+          end
+        end
+
+        def build_command
+          type = extension_point.dasherize_type
+          base_command = format(BUILD, script_name: script_name)
+          domain = extension_point.domain
+
+          if domain.nil?
+            "#{base_command} #{ASC_ARGS}"
+          else
+            "#{base_command} --domain #{domain} --ep #{type} #{ASC_ARGS}"
+          end
         end
       end
     end
