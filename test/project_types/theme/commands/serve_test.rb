@@ -23,6 +23,15 @@ module Theme
         command.call
       end
 
+      def test_can_specify_env
+        context = ShopifyCli::Context.new
+        ShopifyCli::Theme::DevServer.expects(:start).with(context, ".", env: "staging")
+
+        command = Theme::Commands::Serve.new(context)
+        command.options.flags[:env] = "staging"
+        command.call
+      end
+
       def test_can_specify_debug
         context = ShopifyCli::Context.new
         ShopifyCli::Theme::DevServer.expects(:debug=).with(true)
