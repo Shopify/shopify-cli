@@ -43,7 +43,7 @@ module ShopifyCli
 
         def upload(file)
           if @theme.ignore?(file)
-            puts "Ignoring #{file.relative_path}" if DevServer.debug
+            @ctx.debug("Ignoring #{file.relative_path}")
             return
           end
 
