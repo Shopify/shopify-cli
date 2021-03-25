@@ -1,7 +1,7 @@
 # frozen_string_literal: true
-require "project_types/rails/test_helper"
+require "project_types/node/test_helper"
 
-module Rails
+module ShopifyCli
   module Commands
     module PopulateTests
       class DraftOrderTest < MiniTest::Test
@@ -10,6 +10,8 @@ module Rails
 
         def test_populate_calls_api_with_mutation
           ShopifyCli::Helpers::Haikunator.stubs(:title).returns("fake order")
+          ShopifyCli::DB.expects(:exists?).with(:shop).returns(true)
+          ShopifyCli::DB.expects(:get).with(:shop).returns("my-test-shop.myshopify.com")
           ShopifyCli::AdminAPI.expects(:query)
             .with(@context, "create_draft_order", shop: "my-test-shop.myshopify.com", api_version: "2021-01", input: {
               lineItems: [{
@@ -27,6 +29,18 @@ module Rails
             "{{underline:https://my-test-shop.myshopify.com/admin/draft_orders/12345678}}"
           )
           run_cmd("populate draftorders -c 1")
+        end
+
+        def test_populate_if_no_shop
+          ShopifyCli::DB.expects(:exists?).with(:shop).returns(false)
+          ShopifyCli::AdminAPI.expects(:query).never
+          exception = assert_raises ShopifyCli::Abort do
+            run_cmd("populate draftorders")
+          end
+          assert_equal(
+            "{{x}} " + @context.message("core.populate.error.no_shop", ShopifyCli::TOOL_NAME),
+            exception.message
+          )
         end
       end
     end
