@@ -20,9 +20,9 @@ module ShopifyCli
       class << self
         attr_accessor :debug, :ctx
 
-        def start(ctx, root, silent: false, port: 9292)
+        def start(ctx, root, silent: false, port: 9292, env: "development")
           @ctx = ctx
-          config = Config.from_path(root)
+          config = Config.from_path(root, environment: env)
           theme = Theme.new(config)
           watcher = Watcher.new(ctx, theme)
 
