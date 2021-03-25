@@ -24,6 +24,7 @@ module ShopifyCli
     register :Help, "help", "shopify-cli/commands/help", true
     register :Login, "login", "shopify-cli/commands/login", true
     register :Logout, "logout", "shopify-cli/commands/logout", true
+    register :Populate, "populate", "shopify-cli/commands/populate", true
     register :System, "system", "shopify-cli/commands/system", true
     register :Version, "version", "shopify-cli/commands/version", true
   end

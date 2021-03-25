@@ -38,9 +38,11 @@ module ShopifyCli
       #   ShopifyCli::AdminAPI.query(@ctx, 'all_organizations')
       #
       def query(ctx, query_name, shop:, api_version: nil, **variables)
-        authenticated_req(ctx) do
-          api_client(ctx, api_version, shop).query(query_name, variables: variables)
-        end
+        client = api_client(ctx, api_version, shop)
+        client.query(query_name, variables: variables)
+      rescue API::APIRequestUnauthorizedError
+        ShopifyCli::IdentityAuth.new(ctx: ctx).reauthenticate
+        client.query(query_name, variables: variables)
       end
 
       ##
@@ -83,22 +85,17 @@ module ShopifyCli
         resp
       end
 
-      private
-
-      def authenticated_req(ctx, &block)
-        CLI::Kit::Util
-          .begin(&block)
-          .retry_after(API::APIRequestUnauthorizedError, retries: 1) do
-            authenticate(ctx)
-          end
-      rescue API::APIRequestUnauthorizedError
-        ctx.abort(ctx.message("core.api.error.failed_auth"))
+      def get_shop(ctx)
+        ctx.abort(
+          ctx.message("core.populate.error.no_shop", ShopifyCli::TOOL_NAME)
+        ) unless ShopifyCli::DB.exists?(:shop)
+        ShopifyCli::DB.get(:shop)
       end
 
-      def authenticate(ctx)
-        ShopifyCli::IdentityAuth.new(
-          ctx: ctx
-        ).authenticate
+      private
+
+      def authenticate(ctx, _shop)
+        ShopifyCli::IdentityAuth.new(ctx: ctx).authenticate
       end
 
       def api_client(ctx, api_version, shop, path: "graphql.json")

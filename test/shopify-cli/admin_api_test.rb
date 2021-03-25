@@ -69,6 +69,7 @@ module ShopifyCli
         token: "token123",
         url: "https://my-test-shop.myshopify.com/admin/api/2019-04/graphql.json",
       ).returns(api_stub)
+      api_stub.expects(:query).with("query", variables: {}).returns("response")
       api_stub.expects(:query).raises(API::APIRequestUnauthorizedError)
 
       @oauth_client = mock
@@ -79,7 +80,10 @@ module ShopifyCli
       @oauth_client
         .expects(:reauthenticate)
 
-      AdminAPI.query(@context, "query", shop: "my-test-shop.myshopify.com", api_version: "2019-04")
+      assert_equal(
+        "response",
+        AdminAPI.query(@context, "query", shop: "my-test-shop.myshopify.com", api_version: "2019-04"),
+      )
     end
 
     def test_query_calls_admin_api_with_different_shop
