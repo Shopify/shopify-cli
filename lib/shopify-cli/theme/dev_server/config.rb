@@ -15,7 +15,6 @@ module ShopifyCli
           # TODO: valid config
         end
 
-        # TODO: support specifying a environment?
         def self.from_path(root, environment: "development")
           root = Pathname.new(root)
           new(root, YAML.load_file(root.join(NAME))[environment])
