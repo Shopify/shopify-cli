@@ -27,3 +27,10 @@ staging:
   - config/*_secret.json
   ignores:
   - ignores_file
+staging:
+  theme_id: '567891234'
+  store: dev-theme-server-store.myshopify.com
+  ignore_files:
+  - config/*_secret.json
+  ignores:
+  - ignores_file
