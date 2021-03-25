@@ -4,17 +4,11 @@ module ShopifyCli
   module Commands
     class LogoutTest < MiniTest::Test
       def test_call_deletes_db_keys_that_exist
-        ShopifyCli::DB.expects(:exists?).with(:identity_access_token).returns(true)
-        ShopifyCli::DB.expects(:del).with(:identity_access_token).once
+        ShopifyCli::DB.expects(:del).with(*ShopifyCli::IdentityAuth::IDENTITY_ACCESS_TOKENS)
+        ShopifyCli::DB.expects(:del).with(*ShopifyCli::IdentityAuth::EXCHANGE_TOKENS)
 
-        ShopifyCli::DB.expects(:exists?).with(:identity_refresh_token).returns(false)
-        ShopifyCli::DB.expects(:del).with(:identity_refresh_token).never
-
-        ShopifyCli::DB.expects(:exists?).with(:identity_exchange_token).returns(true)
-        ShopifyCli::DB.expects(:del).with(:identity_exchange_token).once
-
-        ShopifyCli::DB.expects(:exists?).with(:shopify_exchange_token).returns(false)
-        ShopifyCli::DB.expects(:del).with(:shopify_exchange_token).never
+        ShopifyCli::DB.expects(:exists?).with(:shop).returns(true)
+        ShopifyCli::DB.expects(:del).with(:shop).once
 
         run_cmd("logout")
       end
