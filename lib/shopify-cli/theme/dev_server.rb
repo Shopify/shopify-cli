@@ -18,7 +18,7 @@ module ShopifyCli
   module Theme
     module DevServer
       class << self
-        attr_accessor :debug, :ctx
+        attr_accessor :ctx
 
         def start(ctx, root, silent: false, port: 9292, env: "development")
           @ctx = ctx
@@ -27,9 +27,9 @@ module ShopifyCli
           watcher = Watcher.new(ctx, theme)
 
           # Setup the middleware stack. Mimics Rack::Builder / config.ru, but in reverse order
-          @app = Proxy.new(theme)
-          @app = LocalAssets.new(@app, theme)
-          @app = HotReload.new(@app, theme, watcher)
+          @app = Proxy.new(ctx, theme)
+          @app = LocalAssets.new(ctx, @app, theme)
+          @app = HotReload.new(ctx, @app, theme, watcher)
 
           puts "Syncing theme ##{config.theme_id} on #{config.store} ..." unless silent
           watcher.start
@@ -44,7 +44,7 @@ module ShopifyCli
             stop
           end
 
-          logger = if debug
+          logger = if ctx.getenv("DEBUG")
             WEBrick::Log.new(nil, WEBrick::BasicLog::INFO)
           else
             WEBrick::Log.new(nil, WEBrick::BasicLog::FATAL)
