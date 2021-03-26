@@ -7,8 +7,6 @@ module Script
     creator("Script::Commands::Create")
 
     register_command("Script::Commands::Push", "push")
-    register_command("Script::Commands::Disable", "disable")
-    register_command("Script::Commands::Enable", "enable")
 
     require Project.project_filepath("messages/messages")
     register_messages(Script::Messages::MESSAGES)
@@ -18,8 +16,6 @@ module Script
   module Commands
     autoload :Create, Project.project_filepath("commands/create")
     autoload :Push, Project.project_filepath("commands/push")
-    autoload :Disable, Project.project_filepath("commands/disable")
-    autoload :Enable, Project.project_filepath("commands/enable")
   end
 
   # define/autoload project specific Forms
@@ -33,8 +29,6 @@ module Script
       autoload :BuildScript, Project.project_filepath("layers/application/build_script")
       autoload :CreateScript, Project.project_filepath("layers/application/create_script")
       autoload :PushScript, Project.project_filepath("layers/application/push_script")
-      autoload :DisableScript, Project.project_filepath("layers/application/disable_script")
-      autoload :EnableScript, Project.project_filepath("layers/application/enable_script")
       autoload :ExtensionPoints, Project.project_filepath("layers/application/extension_points")
       autoload :ProjectDependencies, Project.project_filepath("layers/application/project_dependencies")
     end
