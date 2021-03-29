@@ -106,6 +106,8 @@ module ShopifyCli
 
         def ensure_development_theme_exists!
           create_development_theme unless development_theme_exists?
+
+          @ctx.debug("Using temporary development theme: ##{id} #{name}")
         end
 
         private
@@ -139,6 +141,8 @@ module ShopifyCli
           )
 
           theme_id = body["id"]
+
+          @ctx.debug("Created temporary development theme: #{theme_id}")
 
           ShopifyCli::DB.set(:development_theme_id, theme_id)
         end
