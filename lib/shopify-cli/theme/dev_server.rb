@@ -34,7 +34,7 @@ module ShopifyCli
 
           theme.ensure_development_theme_exists!
 
-          puts "Syncing theme ##{config.theme_id} on #{config.store} ..." unless silent
+          puts "Syncing theme ##{config.theme_id} on #{theme.shop} ..." unless silent
           watcher.start
 
           unless silent
