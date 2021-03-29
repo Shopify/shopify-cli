@@ -9,12 +9,17 @@ class UploaderTest < Minitest::Test
     @theme = ShopifyCli::Theme::DevServer::Theme.new(config)
     @ctx = TestHelpers::FakeContext.new(root: Dir.mktmpdir)
     @uploader = ShopifyCli::Theme::DevServer::Uploader.new(@ctx, @theme)
+
+    ShopifyCli::DB
+      .stubs(:get)
+      .with(:shop)
+      .returns("dev-theme-server-store.myshopify.com")
   end
 
   def test_upload_text_file
     ShopifyCli::AdminAPI.expects(:rest_request).with(
       @ctx,
-      shop: @theme.config.store,
+      shop: @theme.shop,
       path: "themes/#{@theme.id}/assets.json",
       method: "PUT",
       api_version: "unstable",
@@ -73,7 +78,7 @@ class UploaderTest < Minitest::Test
   def test_fetch_remote_checksums
     ShopifyCli::AdminAPI.expects(:rest_request).with(
       @ctx,
-      shop: @theme.config.store,
+      shop: @theme.shop,
       path: "themes/#{@theme.id}/assets.json",
       api_version: "unstable",
     ).returns([
