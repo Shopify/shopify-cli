@@ -24,16 +24,8 @@ module ShopifyCli
           @attributes
         end
 
-        def password
-          @attributes["password"]
-        end
-
         def theme_id
           @attributes["theme_id"]
-        end
-
-        def store
-          @attributes["store"]
         end
 
         def ignore_files

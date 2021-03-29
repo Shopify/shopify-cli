@@ -32,7 +32,7 @@ module ShopifyCli
           @app = LocalAssets.new(ctx, @app, theme)
           @app = HotReload.new(ctx, @app, theme, watcher)
 
-          puts "Syncing theme ##{config.theme_id} on #{config.store} ..." unless silent
+          puts "Syncing theme ##{config.theme_id} on #{theme.shop} ..." unless silent
           watcher.start
 
           unless silent
