@@ -215,15 +215,71 @@ module ShopifyCli
         },
 
         populate: {
+          help: <<~HELP,
+          Populate your Shopify development store with example customers, orders, or products.
+            Usage: {{command:%s populate [ customers | draftorders | products ]}}
+          HELP
+
+          extended_help: <<~HELP,
+          {{bold:Subcommands:}}
+
+            {{cyan:customers [options]}}: Add dummy customers to the specified development store.
+              Usage: {{command:%1$s populate customers}}
+
+            {{cyan:draftorders [options]}}: Add dummy orders to the specified development store.
+              Usage: {{command:%1$s populate draftorders}}
+
+            {{cyan:products [options]}}: Add dummy products to the specified development store.
+              Usage: {{command:%1$s populate products}}
+
+          {{bold:Options:}}
+
+            {{cyan:--count [integer]}}: The number of dummy items to populate. Defaults to 5.
+            {{cyan:--silent}}: Silence the populate output.
+            {{cyan:--help}}: Display more options specific to each subcommand.
+
+          {{bold:Examples:}}
+
+            {{command:%1$s populate products}}
+              Populate your development store with 5 additional products.
+
+            {{command:%1$s populate customers --count 30}}
+              Populate your development store with 30 additional customers.
+
+            {{command:%1$s populate draftorders}}
+              Populate your development store with 5 additional orders.
+
+            {{command:%1$s populate products --help}}
+              Display the list of options available to customize the {{command:%1$s populate products}} command.
+          HELP
+
+          error: {
+            no_shop: "No store found. Please run {{command:%s login}} to login to a specific store",
+          },
+
+          customer: {
+            added: "%s added to {{green:%s}} at {{underline:%scustomers/%d}}",
+          },
+
+          draft_order: {
+            added: "DraftOrder added to {{green:%s}} at {{underline:%sdraft_orders/%d}}",
+          },
+
           options: {
             header: "{{bold:{{cyan:%s}} options:}}",
             count_help: "Number of resources to generate",
           },
+
           populating: "Populating %d %ss...",
+
           completion_message: <<~COMPLETION_MESSAGE,
             Successfully added %d %s to {{green:%s}}
             {{*}} View all %ss at {{underline:%s%ss}}
           COMPLETION_MESSAGE
+
+          product: {
+            added: "%s added to {{green:%s}} at {{underline:%sproducts/%d}}",
+          },
         },
 
         project: {

@@ -17,7 +17,9 @@ module ShopifyCli
       end
 
       def test_gets_schema
-        ShopifyCli::DB.expects(:exists?).returns(false)
+        ShopifyCli::DB.expects(:exists?).with(:shopify_admin_schema).returns(false)
+        ShopifyCli::DB.expects(:exists?).with(:shop).returns(true)
+        ShopifyCli::DB.expects(:get).with(:shop).returns("my-test-shop.myshopify.com")
         ShopifyCli::DB.expects(:set).with(shopify_admin_schema: "{\"foo\":\"baz\"}")
         ShopifyCli::DB.expects(:get).with(:shopify_admin_schema).returns("{\"foo\":\"baz\"}")
         ShopifyCli::AdminAPI.expects(:query)
