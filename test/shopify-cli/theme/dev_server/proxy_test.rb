@@ -88,7 +88,7 @@ class ProxyTest < Minitest::Test
   def test_pass_pending_files_to_storefront
     ShopifyCli::DB
       .stubs(:get)
-      .with(:"storefront-renderer-production_exchange_token")
+      .with(:storefront_renderer_production_exchange_token)
       .returns("TOKEN")
 
     @theme.stubs(:pending_files).returns([
@@ -116,6 +116,22 @@ class ProxyTest < Minitest::Test
     response = request.get("/")
 
     assert_equal("PROXY RESPONSE", response.body)
+  end
+
+  def test_requires_exchange_token
+    ShopifyCli::DB
+      .stubs(:get)
+      .with(:storefront_renderer_production_exchange_token)
+      .returns(nil)
+
+    @theme.stubs(:pending_files).returns([
+      stub(relative_path: "layout/theme.liquid", read: "CONTENT"),
+    ])
+
+    stub_session_id_request
+    assert_raises(KeyError) do
+      request.get("/")
+    end
   end
 
   private
