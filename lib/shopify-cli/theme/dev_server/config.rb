@@ -29,11 +29,11 @@ module ShopifyCli
         end
 
         def theme_id
-          @attributes["theme_id"]
+          ShopifyCli::DB.get(:development_theme_id)
         end
 
         def store
-          @attributes["store"]
+          ShopifyCli::DB.get(:shop)
         end
 
         def ignore_files
