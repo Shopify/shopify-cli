@@ -44,28 +44,30 @@ class ThemeTest < Minitest::Test
 
   def test_creates_development_theme_if_missing_from_storage
     shop = "dev-theme-server-store.myshopify.com"
-    theme_name = "Development 5676d8 (theme-dev)"
+    theme_name = "Development (5676d8-theme-dev)"
 
     ShopifyCli::DB.stubs(:get).with(:shop).returns(shop)
     ShopifyCli::DB.stubs(:get).with(:development_theme_id).returns(nil)
-    ShopifyCli::DB.expects(:set).with(:development_theme_id, "12345678")
+    ShopifyCli::DB.expects(:set).with(development_theme_id: "12345678")
     @theme.stubs(:name).returns(theme_name)
 
     ShopifyCli::AdminAPI.expects(:rest_request).with(
       @ctx,
       shop: shop,
-      path: "themes",
+      path: "themes.json",
       method: "POST",
-      body: {
+      body: JSON.generate({
         theme: {
           name: theme_name,
           role: "development",
         },
-      },
+      }),
       api_version: "unstable",
     ).returns([
-      200,
-      "id" => "12345678",
+      201,
+      "theme" => {
+        "id" => "12345678",
+      },
     ])
 
     @theme.ensure_development_theme_exists!
@@ -73,36 +75,38 @@ class ThemeTest < Minitest::Test
 
   def test_creates_development_theme_if_missing_from_api
     shop = "dev-theme-server-store.myshopify.com"
-    theme_name = "Development 5676d8 (theme-dev)"
+    theme_name = "Development (5676d8-theme-dev)"
     theme_id = "12345678"
 
     ShopifyCli::DB.stubs(:get).with(:shop).returns(shop)
     ShopifyCli::DB.stubs(:get).with(:development_theme_id).returns(theme_id)
-    ShopifyCli::DB.expects(:set).with(:development_theme_id, "12345678")
+    ShopifyCli::DB.expects(:set).with(development_theme_id: "12345678")
     @theme.stubs(:name).returns(theme_name)
 
     ShopifyCli::AdminAPI.expects(:rest_request).with(
       @ctx,
       shop: shop,
-      path: "themes/#{theme_id}",
+      path: "themes/#{theme_id}.json",
       api_version: "unstable",
     ).raises(ShopifyCli::API::APIRequestNotFoundError)
 
     ShopifyCli::AdminAPI.expects(:rest_request).with(
       @ctx,
       shop: shop,
-      path: "themes",
+      path: "themes.json",
       method: "POST",
-      body: {
+      body: JSON.generate({
         theme: {
           name: theme_name,
           role: "development",
         },
-      },
+      }),
       api_version: "unstable",
     ).returns([
-      200,
-      "id" => "12345678",
+      201,
+      "theme" => {
+        "id" => "12345678",
+      },
     ])
 
     @theme.ensure_development_theme_exists!
@@ -111,12 +115,12 @@ class ThemeTest < Minitest::Test
   def test_name_is_generated_unless_exists_in_db
     hostname = "theme-dev.lan"
     hash = "5676d"
-    theme_name = "Development #{hash} (#{hostname.split(".").shift})"
+    theme_name = "Development (#{hash}-#{hostname.split(".").shift})"
 
     ShopifyCli::DB.stubs(:get).with(:development_theme_name).returns(nil)
     SecureRandom.expects(:hex).returns(hash)
     Socket.expects(:gethostname).returns(hostname)
-    ShopifyCli::DB.expects(:set).with(:development_theme_name, theme_name)
+    ShopifyCli::DB.expects(:set).with(development_theme_name: theme_name)
 
     assert_equal(theme_name, @theme.name)
   end
