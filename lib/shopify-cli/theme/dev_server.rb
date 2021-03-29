@@ -31,7 +31,7 @@ module ShopifyCli
           @app = LocalAssets.new(ctx, @app, theme)
           @app = HotReload.new(ctx, @app, theme, watcher)
 
-          @theme.ensure_development_theme_exists!
+          theme.ensure_development_theme_exists!
 
           puts "Syncing theme ##{config.theme_id} on #{config.store} ..." unless silent
           watcher.start
