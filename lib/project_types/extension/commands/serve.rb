@@ -38,7 +38,7 @@ module Extension
       def argo_admin?
         ShopifyCli::Shopifolk.check &&
           ShopifyCli::Feature.enabled?(:argo_admin_beta) &&
-          extension_type.specification.features&.argo&.surface == "admin"
+          specification_handler.specification.features&.argo&.surface == "admin"
       end
 
       def validate_env
