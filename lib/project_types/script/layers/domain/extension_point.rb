@@ -4,16 +4,21 @@ module Script
   module Layers
     module Domain
       class ExtensionPoint
-        attr_reader :type, :deprecated, :sdks
+        attr_reader :type, :deprecated, :sdks, :domain
 
         def initialize(type, config)
           @type = type
           @deprecated = config["deprecated"] || false
+          @domain = config["domain"] || nil
           @sdks = ExtensionPointSDKs.new(config)
         end
 
         def deprecated?
           @deprecated
+        end
+
+        def dasherize_type
+          @type.gsub("_", "-")
         end
       end
 
