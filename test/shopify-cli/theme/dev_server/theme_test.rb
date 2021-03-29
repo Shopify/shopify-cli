@@ -49,7 +49,7 @@ class ThemeTest < Minitest::Test
     ShopifyCli::DB.stubs(:get).with(:shop).returns(shop)
     ShopifyCli::DB.stubs(:get).with(:development_theme_id).returns(nil)
     ShopifyCli::DB.expects(:set).with(:development_theme_id, "12345678")
-    @theme.expects(:name).returns(theme_name)
+    @theme.stubs(:name).returns(theme_name)
 
     ShopifyCli::AdminAPI.expects(:rest_request).with(
       @ctx,
@@ -79,7 +79,7 @@ class ThemeTest < Minitest::Test
     ShopifyCli::DB.stubs(:get).with(:shop).returns(shop)
     ShopifyCli::DB.stubs(:get).with(:development_theme_id).returns(theme_id)
     ShopifyCli::DB.expects(:set).with(:development_theme_id, "12345678")
-    @theme.expects(:name).returns(theme_name)
+    @theme.stubs(:name).returns(theme_name)
 
     ShopifyCli::AdminAPI.expects(:rest_request).with(
       @ctx,
