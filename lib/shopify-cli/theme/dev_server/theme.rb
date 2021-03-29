@@ -103,6 +103,10 @@ module ShopifyCli
           end
         end
 
+        def shop
+          ShopifyCli::DB.get(:shop) || raise(KeyError, "shop missing")
+        end
+
         def file_has_changed?(file)
           file.checksum != remote_checksums[file.relative_path.to_s]
         end
