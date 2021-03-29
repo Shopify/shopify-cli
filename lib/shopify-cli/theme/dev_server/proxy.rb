@@ -24,7 +24,7 @@ module ShopifyCli
 
         def call(env)
           headers = extract_http_request_headers(env)
-          headers["Host"] = @theme.config.store
+          headers["Host"] = @theme.shop
           headers["Cookie"] = add_session_cookie(headers["Cookie"])
           # TODO: add decoding support
           headers["Accept-Encoding"] = "none"
@@ -131,14 +131,14 @@ module ShopifyCli
           response_headers.reject! { |k| HOP_BY_HOP_HEADERS.include?(k.downcase) }
 
           if response_headers["location"]&.include?("myshopify.com")
-            response_headers["location"].gsub!(%r{(https://#{@theme.config.store})}, "http://127.0.0.1:9292")
+            response_headers["location"].gsub!(%r{(https://#{@theme.shop})}, "http://127.0.0.1:9292")
           end
 
           response_headers
         end
 
         def request(method, path, headers: nil, query: {}, form_data: nil)
-          uri = URI.join("https://#{@theme.config.store}", path)
+          uri = URI.join("https://#{@theme.shop}", path)
           uri.query = URI.encode_www_form(query.merge(_fd: 0, pb: 0))
 
           @ctx.debug("Proxying #{method} #{uri}")
