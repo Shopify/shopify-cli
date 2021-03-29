@@ -31,7 +31,7 @@ module ShopifyCli
         def fetch_remote_checksums!
           response = ShopifyCli::AdminAPI.rest_request(
             @ctx,
-            shop: @theme.config.store,
+            shop: @theme.shop,
             path: "themes/#{@theme.id}/assets.json",
             api_version: "unstable",
           )
@@ -63,7 +63,7 @@ module ShopifyCli
 
           response = ShopifyCli::AdminAPI.rest_request(
             @ctx,
-            shop: @theme.config.store,
+            shop: @theme.shop,
             path: "themes/#{@theme.id}/assets.json",
             method: "PUT",
             api_version: "unstable",
