@@ -51,10 +51,7 @@ module ShopifyCli
         end
 
         def name
-          theme_name = ShopifyCli::DB.get(:development_theme_name)
-          return theme_name unless theme_name.nil?
-
-          generate_theme_name
+          ShopifyCli::DB.get(:development_theme_name) || generate_theme_name
         end
 
         def assets
@@ -118,7 +115,7 @@ module ShopifyCli
           ShopifyCli::AdminAPI.rest_request(
             @ctx,
             shop: ShopifyCli::DB.get(:shop),
-            path: "themes/#{id}",
+            path: "themes/#{id}.json",
             api_version: "unstable",
           )
         rescue ShopifyCli::API::APIRequestNotFoundError
@@ -129,31 +126,31 @@ module ShopifyCli
           _status, body = ShopifyCli::AdminAPI.rest_request(
             @ctx,
             shop: ShopifyCli::DB.get(:shop),
-            path: "themes",
-            body: {
+            path: "themes.json",
+            body: JSON.generate({
               theme: {
                 name: name,
                 role: "development",
               },
-            },
+            }),
             method: "POST",
             api_version: "unstable",
           )
 
-          theme_id = body["id"]
+          theme_id = body["theme"]["id"]
 
           @ctx.debug("Created temporary development theme: #{theme_id}")
 
-          ShopifyCli::DB.set(:development_theme_id, theme_id)
+          ShopifyCli::DB.set(development_theme_id: theme_id)
         end
 
         def generate_theme_name
           hostname = Socket.gethostname.split(".").shift
           hash = SecureRandom.hex[0..5]
 
-          theme_name = "Development #{hash} (#{hostname})"
+          theme_name = "Development (#{hash}-#{hostname})"
 
-          ShopifyCli::DB.set(:development_theme_name, theme_name)
+          ShopifyCli::DB.set(development_theme_name: theme_name)
 
           theme_name
         end
