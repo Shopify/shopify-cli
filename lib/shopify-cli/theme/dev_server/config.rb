@@ -24,16 +24,8 @@ module ShopifyCli
           @attributes
         end
 
-        def password
-          @attributes["password"]
-        end
-
         def theme_id
           ShopifyCli::DB.get(:development_theme_id)
-        end
-
-        def store
-          ShopifyCli::DB.get(:shop)
         end
 
         def ignore_files
