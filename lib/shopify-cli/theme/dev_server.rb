@@ -23,13 +23,15 @@ module ShopifyCli
         def start(ctx, root, silent: false, port: 9292, env: "development")
           @ctx = ctx
           config = Config.from_path(root, environment: env)
-          theme = Theme.new(config)
+          theme = Theme.new(ctx, config)
           watcher = Watcher.new(ctx, theme)
 
           # Setup the middleware stack. Mimics Rack::Builder / config.ru, but in reverse order
           @app = Proxy.new(ctx, theme)
           @app = LocalAssets.new(ctx, @app, theme)
           @app = HotReload.new(ctx, @app, theme, watcher)
+
+          @theme.ensure_development_theme_exists!
 
           puts "Syncing theme ##{config.theme_id} on #{config.store} ..." unless silent
           watcher.start

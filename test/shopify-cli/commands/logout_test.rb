@@ -10,6 +10,12 @@ module ShopifyCli
         ShopifyCli::DB.expects(:exists?).with(:shop).returns(true)
         ShopifyCli::DB.expects(:del).with(:shop).once
 
+        ShopifyCli::DB.expects(:exists?).with(:development_theme_id).returns(true)
+        ShopifyCli::DB.expects(:del).with(:development_theme_id).once
+
+        ShopifyCli::DB.expects(:exists?).with(:development_theme_name).returns(true)
+        ShopifyCli::DB.expects(:del).with(:development_theme_name).once
+
         run_cmd("logout")
       end
 
