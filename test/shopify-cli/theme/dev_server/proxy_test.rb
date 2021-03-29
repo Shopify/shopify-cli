@@ -10,6 +10,11 @@ class ProxyTest < Minitest::Test
     @ctx = TestHelpers::FakeContext.new(root: config.root)
     @theme = ShopifyCli::Theme::DevServer::Theme.new(config)
     @proxy = ShopifyCli::Theme::DevServer::Proxy.new(@ctx, @theme)
+
+    ShopifyCli::DB
+      .stubs(:get)
+      .with(:shop)
+      .returns("dev-theme-server-store.myshopify.com")
   end
 
   def test_form_data_is_proxied_to_request
@@ -86,6 +91,11 @@ class ProxyTest < Minitest::Test
   end
 
   def test_pass_pending_files_to_storefront
+    ShopifyCli::DB
+      .stubs(:get)
+      .with(:shop)
+      .returns("dev-theme-server-store.myshopify.com")
+
     ShopifyCli::DB
       .stubs(:get)
       .with(:storefront_renderer_production_exchange_token)
