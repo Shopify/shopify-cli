@@ -54,7 +54,8 @@ module ShopifyCli
         attr_reader :config
         attr_reader :remote_checksums
 
-        def initialize(config)
+        def initialize(ctx, config)
+          @ctx = ctx
           @config = config
           @pending_files = Set.new
           @remote_checksums = {}
@@ -94,6 +95,10 @@ module ShopifyCli
           when String
             File.new(root.join(file), root)
           end
+        end
+
+        def shop
+          AdminAPI.get_shop(@ctx)
         end
 
         def file_has_changed?(file)

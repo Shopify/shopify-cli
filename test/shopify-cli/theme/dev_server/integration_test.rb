@@ -10,7 +10,15 @@ class IntegrationTest < Minitest::Test
   def setup
     super
     WebMock.disable_net_connect!(allow: "localhost:#{@@port}")
-    ShopifyCli::DB.expects(:get).with(:shopify_exchange_token).at_least_once.returns('token123')
+
+    ShopifyCli::DB.expects(:get)
+      .with(:shopify_exchange_token)
+      .at_least_once.returns('token123')
+
+    ShopifyCli::DB.expects(:exists?).with(:shop).at_least_once.returns(true)
+    ShopifyCli::DB.expects(:get)
+      .with(:shop)
+      .at_least_once.returns("dev-theme-server-store.myshopify.com")
   end
 
   def teardown

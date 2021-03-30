@@ -6,7 +6,8 @@ class ThemeTest < Minitest::Test
   def setup
     super
     config = ShopifyCli::Theme::DevServer::Config.from_path(ShopifyCli::ROOT + "/test/fixtures/theme")
-    @theme = ShopifyCli::Theme::DevServer::Theme.new(config)
+    ctx = TestHelpers::FakeContext.new(root: config.root)
+    @theme = ShopifyCli::Theme::DevServer::Theme.new(ctx, config)
   end
 
   def test_assets

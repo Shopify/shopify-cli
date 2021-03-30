@@ -8,8 +8,14 @@ class ProxyTest < Minitest::Test
     super
     config = ShopifyCli::Theme::DevServer::Config.from_path(ShopifyCli::ROOT + "/test/fixtures/theme")
     @ctx = TestHelpers::FakeContext.new(root: config.root)
-    @theme = ShopifyCli::Theme::DevServer::Theme.new(config)
+    @theme = ShopifyCli::Theme::DevServer::Theme.new(@ctx, config)
     @proxy = ShopifyCli::Theme::DevServer::Proxy.new(@ctx, @theme)
+
+    ShopifyCli::DB.stubs(:exists?).with(:shop).returns(true)
+    ShopifyCli::DB
+      .stubs(:get)
+      .with(:shop)
+      .returns("dev-theme-server-store.myshopify.com")
   end
 
   def test_form_data_is_proxied_to_request
@@ -86,6 +92,11 @@ class ProxyTest < Minitest::Test
   end
 
   def test_pass_pending_files_to_storefront
+    ShopifyCli::DB
+      .stubs(:get)
+      .with(:shop)
+      .returns("dev-theme-server-store.myshopify.com")
+
     ShopifyCli::DB
       .stubs(:get)
       .with(:storefront_renderer_production_exchange_token)
