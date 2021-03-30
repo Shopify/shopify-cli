@@ -28,7 +28,7 @@ module ShopifyCli
           Thread.pass until @queue.empty?
         end
 
-        def fetch_checksums!
+        def fetch_remote_checksums!
           response = ShopifyCli::AdminAPI.rest_request(
             @ctx,
             shop: @theme.config.store,
@@ -36,7 +36,7 @@ module ShopifyCli
             api_version: "unstable",
           )
 
-          @theme.update_checksums!(response[1])
+          @theme.update_remote_checksums!(response[1])
         rescue ShopifyCli::API::APIRequestError => e
           @ctx.abort("Could not fetch checksums for theme assets: #{e.message}")
         end
@@ -52,7 +52,14 @@ module ShopifyCli
             return
           end
 
-          @ctx.debug("Uploading #{file.relative_path} to #{@theme.assets_api_uri}")
+          @ctx.debug("Uploading #{file.relative_path}")
+
+          asset = { key: file.relative_path.to_s }
+          if file.text?
+            asset[:value] = file.read
+          else
+            asset[:attachment] = Base64.encode64(file.read)
+          end
 
           response = ShopifyCli::AdminAPI.rest_request(
             @ctx,
@@ -60,15 +67,10 @@ module ShopifyCli
             path: "themes/#{@theme.id}/assets.json",
             method: "PUT",
             api_version: "unstable",
-            body: JSON.generate({
-              asset: {
-                key: file.relative_path.to_s,
-                attachment: Base64.encode64(file.read),
-              },
-            })
+            body: JSON.generate(asset: asset)
           )
 
-          @theme.update_checksums!(response[1])
+          @theme.update_remote_checksums!(response[1])
         rescue ShopifyCli::API::APIRequestError => e
           @ctx.abort("Could not upload theme asset: #{e.message}")
         ensure
