@@ -38,4 +38,23 @@ class ThemeTest < Minitest::Test
     assert(@theme.ignore?(@theme["config/super_secret.json"]))
     refute(@theme.ignore?(@theme["assets/theme.css"]))
   end
+
+  def test_mime_type
+    assert_equal("text/x-liquid", @theme["layout/theme.liquid"].mime_type.name)
+    assert_equal("text/css", @theme["assets/theme.css"].mime_type.name)
+  end
+
+  def test_text
+    assert(@theme["layout/theme.liquid"].mime_type.text?)
+  end
+
+  def test_checksum
+    content = @theme["layout/theme.liquid"].read
+    assert_equal(Digest::MD5.hexdigest(content), @theme["layout/theme.liquid"].checksum)
+  end
+
+  def test_normalize_json_for_checksum
+    normalized = JSON.parse(@theme["templates/blog.json"].read).to_json
+    assert_equal(Digest::MD5.hexdigest(normalized), @theme["templates/blog.json"].checksum)
+  end
 end
