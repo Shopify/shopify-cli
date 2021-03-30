@@ -42,86 +42,22 @@ class ThemeTest < Minitest::Test
     refute(@theme.ignore?(@theme["assets/theme.css"]))
   end
 
-  def test_creates_development_theme_if_missing_from_storage
-    shop = "dev-theme-server-store.myshopify.com"
-    theme_name = "Development (5676d8-theme-dev)"
-
-    ShopifyCli::DB.stubs(:get).with(:shop).returns(shop)
-    ShopifyCli::DB.stubs(:get).with(:development_theme_id).returns(nil)
-    ShopifyCli::DB.expects(:set).with(development_theme_id: "12345678")
-    @theme.stubs(:name).returns(theme_name)
-
-    ShopifyCli::AdminAPI.expects(:rest_request).with(
-      @ctx,
-      shop: shop,
-      path: "themes.json",
-      method: "POST",
-      body: JSON.generate({
-        theme: {
-          name: theme_name,
-          role: "development",
-        },
-      }),
-      api_version: "unstable",
-    ).returns([
-      201,
-      "theme" => {
-        "id" => "12345678",
-      },
-    ])
-
-    @theme.ensure_development_theme_exists!
+  def test_mime_type
+    assert_equal("text/x-liquid", @theme["layout/theme.liquid"].mime_type.name)
+    assert_equal("text/css", @theme["assets/theme.css"].mime_type.name)
   end
 
-  def test_creates_development_theme_if_missing_from_api
-    shop = "dev-theme-server-store.myshopify.com"
-    theme_name = "Development (5676d8-theme-dev)"
-    theme_id = "12345678"
-
-    ShopifyCli::DB.stubs(:get).with(:shop).returns(shop)
-    ShopifyCli::DB.stubs(:get).with(:development_theme_id).returns(theme_id)
-    ShopifyCli::DB.expects(:set).with(development_theme_id: "12345678")
-    @theme.stubs(:name).returns(theme_name)
-
-    ShopifyCli::AdminAPI.expects(:rest_request).with(
-      @ctx,
-      shop: shop,
-      path: "themes/#{theme_id}.json",
-      api_version: "unstable",
-    ).raises(ShopifyCli::API::APIRequestNotFoundError)
-
-    ShopifyCli::AdminAPI.expects(:rest_request).with(
-      @ctx,
-      shop: shop,
-      path: "themes.json",
-      method: "POST",
-      body: JSON.generate({
-        theme: {
-          name: theme_name,
-          role: "development",
-        },
-      }),
-      api_version: "unstable",
-    ).returns([
-      201,
-      "theme" => {
-        "id" => "12345678",
-      },
-    ])
-
-    @theme.ensure_development_theme_exists!
+  def test_text
+    assert(@theme["layout/theme.liquid"].mime_type.text?)
   end
 
-  def test_name_is_generated_unless_exists_in_db
-    hostname = "theme-dev.lan"
-    hash = "5676d"
-    theme_name = "Development (#{hash}-#{hostname.split(".").shift})"
+  def test_checksum
+    content = @theme["layout/theme.liquid"].read
+    assert_equal(Digest::MD5.hexdigest(content), @theme["layout/theme.liquid"].checksum)
+  end
 
-    ShopifyCli::DB.stubs(:get).with(:development_theme_name).returns(nil)
-    SecureRandom.expects(:hex).returns(hash)
-    Socket.expects(:gethostname).returns(hostname)
-    ShopifyCli::DB.expects(:set).with(development_theme_name: theme_name)
-
-    assert_equal(theme_name, @theme.name)
+  def test_normalize_json_for_checksum
+    normalized = JSON.parse(@theme["templates/blog.json"].read).to_json
+    assert_equal(Digest::MD5.hexdigest(normalized), @theme["templates/blog.json"].checksum)
   end
 end
