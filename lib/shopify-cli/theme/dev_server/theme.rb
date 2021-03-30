@@ -81,7 +81,7 @@ module ShopifyCli
         end
 
         def theme_files
-          root.glob(["**/*.liquid", "**/*.json", "assets/*.css", "assets/*.js"]).map { |path| File.new(path, root) }
+          root.glob(["**/*.liquid", "**/*.json", "assets/*"]).map { |path| File.new(path, root) }
         end
 
         def theme_file?(file)
