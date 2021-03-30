@@ -6,33 +6,14 @@ module Theme
     class CreateTest < MiniTest::Test
       include TestHelpers::FakeUI
 
+      SETTINGS_DATA = Theme::Commands::Create::SETTINGS_DATA
+      SETTINGS_SCHEMA = Theme::Commands::Create::SETTINGS_SCHEMA
+
       SHOPIFYCLI_FILE = <<~CLI
         ---
         project_type: theme
         organization_id: 0
       CLI
-
-      SETTINGS_DATA_FILE = <<~SETTINGS_DATA
-        {
-          "current": "Default",
-          "presets": {
-            "Default": { }
-          }
-        }
-      SETTINGS_DATA
-
-      SETTINGS_SCHEMA_FILE = <<~SETTINGS_SCHEMA
-        [
-          {
-            "name": "theme_info",
-            "theme_name": "Shopify CLI template theme",
-            "theme_version": "1.0.0",
-            "theme_author": "Shopify",
-            "theme_documentation_url": "https://github.com/Shopify/shopify-app-cli",
-            "theme_support_url": "https://github.com/Shopify/shopify-app-cli/issues"
-          }
-        ]
-      SETTINGS_SCHEMA
 
       def test_can_create_new_theme
         FakeFS do
@@ -53,8 +34,8 @@ module Theme
 
           Theme::Commands::Create.new(context).call([], "create")
           assert_equal SHOPIFYCLI_FILE, File.read(".shopify-cli.yml")
-          assert_equal SETTINGS_DATA_FILE, File.read("config/settings_data.json")
-          assert_equal SETTINGS_SCHEMA_FILE, File.read("config/settings_schema.json")
+          assert_equal SETTINGS_DATA, File.read("config/settings_data.json")
+          assert_equal SETTINGS_SCHEMA, File.read("config/settings_schema.json")
         end
       end
 
