@@ -3,7 +3,31 @@ require "json"
 module Theme
   module Commands
     class Create < ShopifyCli::SubCommand
-      options do |parser, flags|
+      TEMPLATE_DIRS = ["assets", "config", "layout", "locales", "templates"]
+
+      SETTINGS_DATA = <<~SETTINGS_DATA
+          {
+            "current": "Default",
+            "presets": {
+              "Default": { }
+            }
+          }
+        SETTINGS_DATA
+
+        SETTINGS_SCHEMA = <<~SETTINGS_SCHEMA
+          [
+            {
+              "name": "theme_info",
+              "theme_name": "Shopify CLI template theme",
+              "theme_version": "1.0.0",
+              "theme_author": "Shopify",
+              "theme_documentation_url": "https://github.com/Shopify/shopify-app-cli",
+              "theme_support_url": "https://github.com/Shopify/shopify-app-cli/issues"
+            }
+          ]
+        SETTINGS_SCHEMA
+
+        options do |parser, flags|
         parser.on("--name=NAME") { |t| flags[:title] = t }
         parser.on("--env=ENV") { |env| flags[:env] = env }
       end
@@ -48,35 +72,10 @@ module Theme
       end
 
       def create_directories
-        @ctx.mkdir_p("assets")
-        @ctx.mkdir_p("config")
-        @ctx.mkdir_p("layout")
-        @ctx.mkdir_p("locales")
-        @ctx.mkdir_p("templates")
-        settings_data = <<~SETTINGS_DATA
-          {
-            "current": "Default",
-            "presets": {
-              "Default": { }
-            }
-          }
-        SETTINGS_DATA
+        TEMPLATE_DIRS.each { |dir| @ctx.mkdir_p(dir) }
 
-        settings_schema = <<~SETTINGS_SCHEMA
-          [
-            {
-              "name": "theme_info",
-              "theme_name": "Shopify CLI template theme",
-              "theme_version": "1.0.0",
-              "theme_author": "Shopify",
-              "theme_documentation_url": "https://github.com/Shopify/shopify-app-cli",
-              "theme_support_url": "https://github.com/Shopify/shopify-app-cli/issues"
-            }
-          ]
-        SETTINGS_SCHEMA
-
-        @ctx.write("config/settings_data.json", settings_data)
-        @ctx.write("config/settings_schema.json", settings_schema)
+        @ctx.write("config/settings_data.json", SETTINGS_DATA)
+        @ctx.write("config/settings_schema.json", SETTINGS_SCHEMA)
       end
 
       def upload_theme(name)
