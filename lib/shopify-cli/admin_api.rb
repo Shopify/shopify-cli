@@ -78,17 +78,15 @@ module ShopifyCli
       #                                     token: 'password')
       #
       def rest_request(ctx, shop:, path:, body: nil, method: "GET", api_version: nil, token: nil)
-        ShopifyCli::DB.set(shopify_exchange_token: token) unless token.nil?
-        url = URI::HTTPS.build(host: shop, path: "/admin/api/#{fetch_api_version(ctx, api_version, shop)}/#{path}")
-        client = api_client(ctx, api_version, shop, path: path)
-        resp = client.request(url: url.to_s, body: body, method: method)
-        ShopifyCli::DB.set(shopify_exchange_token: nil) unless token.nil?
-        resp
-      rescue API::APIRequestUnauthorizedError
-        ShopifyCli::IdentityAuth.new(ctx).reauthenticate
-        resp = client.request(url: url.to_s, body: body, method: method)
-        ShopifyCli::DB.set(shopify_exchange_token: nil) unless token.nil?
-        resp
+        CLI::Kit::Util.begin do
+          ShopifyCli::DB.set(shopify_exchange_token: token) unless token.nil?
+          url = URI::HTTPS.build(host: shop, path: "/admin/api/#{fetch_api_version(ctx, api_version, shop)}/#{path}")
+          resp = api_client(ctx, api_version, shop, path: path).request(url: url.to_s, body: body, method: method)
+          ShopifyCli::DB.set(shopify_exchange_token: nil) unless token.nil?
+          resp
+        end.retry_after(API::APIRequestUnauthorizedError) do
+          ShopifyCli::IdentityAuth.new(ctx).reauthenticate
+        end
       end
 
       def get_shop(ctx)
