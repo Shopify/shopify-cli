@@ -11,7 +11,6 @@ describe Script::Layers::Application::CreateScript do
   let(:extension_point_type) { "discount" }
   let(:script_name) { "name" }
   let(:compiled_type) { "wasm" }
-  let(:description) { "description" }
   let(:no_config_ui) { false }
   let(:extension_point_repository) { Script::Layers::Infrastructure::FakeExtensionPointRepository.new }
   let(:config_ui_repository) { Script::Layers::Infrastructure::FakeConfigUiRepository.new }
@@ -46,7 +45,6 @@ describe Script::Layers::Application::CreateScript do
         language: language,
         script_name: script_name,
         extension_point_type: extension_point_type,
-        description: description,
         no_config_ui: no_config_ui
       )
     end
@@ -63,7 +61,6 @@ describe Script::Layers::Application::CreateScript do
           language: language,
           script_name: script_name,
           extension_point: ep,
-          description: description,
           no_config_ui: no_config_ui
         ).returns(script_project)
       Script::Layers::Application::CreateScript
@@ -83,7 +80,6 @@ describe Script::Layers::Application::CreateScript do
           language: language,
           script_name: script_name,
           extension_point: ep,
-          description: description,
           no_config_ui: no_config_ui
         )
       end
@@ -106,7 +102,6 @@ describe Script::Layers::Application::CreateScript do
               extension_point_type: ep.type,
               script_name: script_name,
               language: language,
-              description: description,
               config_ui_file: expected_config_ui_filename
             )
           capture_io { subject }
@@ -133,7 +128,6 @@ describe Script::Layers::Application::CreateScript do
               extension_point_type: ep.type,
               script_name: script_name,
               language: language,
-              description: description,
             )
           capture_io do
             assert_equal script_project, subject
