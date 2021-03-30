@@ -136,7 +136,7 @@ module ShopifyCli
 
           ShopifyCli::AdminAPI.rest_request(
             @ctx,
-            shop: ShopifyCli::DB.get(:shop),
+            shop: shop,
             path: "themes/#{id}.json",
             api_version: "unstable",
           )
@@ -147,7 +147,7 @@ module ShopifyCli
         def create_development_theme
           _status, body = ShopifyCli::AdminAPI.rest_request(
             @ctx,
-            shop: ShopifyCli::DB.get(:shop),
+            shop: shop,
             path: "themes.json",
             body: JSON.generate({
               theme: {
