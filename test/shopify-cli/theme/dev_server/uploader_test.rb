@@ -67,7 +67,7 @@ class UploaderTest < Minitest::Test
     @theme.remote_checksums["assets/theme.css"] = @theme["assets/theme.css"].checksum
 
     ShopifyCli::AdminAPI.expects(:rest_request).never
-    @uploader.upload(@theme.assets.first)
+    @uploader.upload(@theme["assets/theme.css"])
   end
 
   def test_fetch_remote_checksums
