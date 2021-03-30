@@ -86,6 +86,37 @@ module ShopifyCli
       )
     end
 
+    def test_rest_request_can_reauth
+      ShopifyCli::DB.expects(:get).with(:shopify_exchange_token).returns("token123")
+      api_stub = stub
+      AdminAPI.expects(:new).with(
+        ctx: @context,
+        token: "token123",
+        url: "https://shop.myshopify.com/admin/api/unstable/data.json",
+      ).returns(api_stub)
+      api_stub.expects(:request).with(url: "https://shop.myshopify.com/admin/api/unstable/data.json",
+        body: nil,
+        method: "GET").returns("response")
+      api_stub.expects(:request).raises(API::APIRequestUnauthorizedError)
+
+      @oauth_client = mock
+      ShopifyCli::IdentityAuth
+        .expects(:new)
+        .with(@context)
+        .returns(@oauth_client)
+      @oauth_client
+        .expects(:reauthenticate)
+
+      assert_equal(
+        "response",
+        AdminAPI.rest_request(@context,
+          shop: "shop.myshopify.com",
+          path: "data.json",
+          api_version: "unstable",
+          token: "boop"),
+      )
+    end
+
     def test_query_calls_admin_api_with_different_shop
       ShopifyCli::DB.expects(:get).with(:shopify_exchange_token).returns("token123")
       api_stub = stub
