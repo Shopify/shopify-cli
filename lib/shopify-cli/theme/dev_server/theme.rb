@@ -104,7 +104,7 @@ module ShopifyCli
         end
 
         def shop
-          ShopifyCli::DB.get(:shop) || raise(KeyError, "shop missing")
+          AdminAPI.get_shop(@ctx)
         end
 
         def file_has_changed?(file)
