@@ -73,6 +73,7 @@ module Script
               "version" => 1,
               "type" => "single",
               "title" => title,
+              "description" => "",
               "fields" => [],
             })
           end
