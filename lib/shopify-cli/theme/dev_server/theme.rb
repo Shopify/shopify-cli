@@ -6,6 +6,7 @@ module ShopifyCli
       class Theme
         class File < Struct.new(:path)
           attr_reader :relative_path
+          attr_accessor :remote_checksum
 
           def initialize(path, root)
             super(Pathname.new(path))
@@ -20,6 +21,27 @@ module ShopifyCli
             path.read
           end
 
+          def mime_type
+            @mime_type ||= MimeType.by_filename(relative_path)
+          end
+
+          def text?
+            mime_type.text?
+          end
+
+          def checksum
+            content = read
+            if mime_type.json?
+              # Normalize JSON to match backend
+              begin
+                content = JSON.generate(JSON.parse(content))
+              rescue JSON::JSONError
+                # Fallback to using the raw content
+              end
+            end
+            Digest::MD5.hexdigest(content)
+          end
+
           # Make it possible to check whether a given File is within a list of Files with `include?`,
           # some of which may be relative paths while others are absolute paths.
           def ==(other)
@@ -30,12 +52,12 @@ module ShopifyCli
         # Files waiting to be uploaded to the Online Store
         attr_reader :pending_files
         attr_reader :config
-        attr_reader :checksums
+        attr_reader :remote_checksums
 
         def initialize(config)
           @config = config
           @pending_files = Set.new
-          @checksums = {}
+          @remote_checksums = {}
           @ignore_filter = IgnoreFilter.new(root, patterns: config.ignore_files, files: config.ignores)
         end
 
@@ -52,7 +74,7 @@ module ShopifyCli
         end
 
         def theme_files
-          root.glob(["**/*.liquid", "**/*.json", "assets/*.css", "assets/*.js"]).map { |path| File.new(path, root) }
+          root.glob(["**/*.liquid", "**/*.json", "assets/*"]).map { |path| File.new(path, root) }
         end
 
         def theme_file?(file)
@@ -74,18 +96,14 @@ module ShopifyCli
           end
         end
 
-        def assets_api_uri
-          URI("https://#{config.store}/admin/api/2021-01/themes/#{id}/assets.json")
-        end
-
         def file_has_changed?(file)
-          Digest::MD5.hexdigest(file.read) != checksums[file.relative_path.to_s]
+          file.checksum != remote_checksums[file.relative_path.to_s]
         end
 
-        def update_checksums!(api_response)
+        def update_remote_checksums!(api_response)
           assets = api_response.values.flatten
 
-          @checksums = assets.each_with_object({}) do |asset, hash|
+          @remote_checksums = assets.each_with_object({}) do |asset, hash|
             hash[asset["key"]] = asset["checksum"]
           end
         end
