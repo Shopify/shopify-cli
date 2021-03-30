@@ -48,7 +48,7 @@ class IgnoreFilterTest < Minitest::Test
     )
 
     assert_includes(filter.globs, "*config/settings_data.json")
-    assert_includes(filter.globs, "*.png")
+    assert_includes(filter.globs, "*.jpg")
     assert_includes(filter.regexes, /\.(txt|gif|bat)$/)
 
     # Don't consider empty lines
@@ -59,7 +59,7 @@ class IgnoreFilterTest < Minitest::Test
     tests = [
       { pattern: "config/settings_data.json", glob: "*config/settings_data.json" },
       { pattern: "config/", glob: "*config/*" },
-      { pattern: "*.png", glob: "*.png" },
+      { pattern: "*.jpg", glob: "*.jpg" },
       { pattern: "/\\.(txt|gif|bat)$/", regex: /\.(txt|gif|bat)$/ },
     ]
 
