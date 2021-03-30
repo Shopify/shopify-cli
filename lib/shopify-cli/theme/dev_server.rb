@@ -4,6 +4,7 @@ require_relative "dev_server/hot_reload"
 require_relative "dev_server/ignore_filter"
 require_relative "dev_server/header_hash"
 require_relative "dev_server/local_assets"
+require_relative "dev_server/mime_type"
 require_relative "dev_server/proxy"
 require_relative "dev_server/sse"
 require_relative "dev_server/theme"
@@ -33,7 +34,7 @@ module ShopifyCli
 
           theme.ensure_development_theme_exists!
 
-          puts "Syncing theme ##{config.theme_id} on #{config.store} ..." unless silent
+          puts "Syncing theme ##{config.theme_id} on #{theme.shop} ..." unless silent
           watcher.start
 
           unless silent

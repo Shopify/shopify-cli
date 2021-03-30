@@ -8,7 +8,7 @@ class ThemeTest < Minitest::Test
   def setup
     super
     config = ShopifyCli::Theme::DevServer::Config.from_path(ShopifyCli::ROOT + "/test/fixtures/theme")
-    @ctx = TestHelpers::FakeContext.new(root: ShopifyCli::ROOT + "/test/fixtures/theme")
+    @ctx = TestHelpers::FakeContext.new(root: config.root)
     @theme = ShopifyCli::Theme::DevServer::Theme.new(@ctx, config)
   end
 
@@ -123,5 +123,24 @@ class ThemeTest < Minitest::Test
     ShopifyCli::DB.expects(:set).with(development_theme_name: theme_name)
 
     assert_equal(theme_name, @theme.name)
+  end
+
+  def test_mime_type
+    assert_equal("text/x-liquid", @theme["layout/theme.liquid"].mime_type.name)
+    assert_equal("text/css", @theme["assets/theme.css"].mime_type.name)
+  end
+
+  def test_text
+    assert(@theme["layout/theme.liquid"].mime_type.text?)
+  end
+
+  def test_checksum
+    content = @theme["layout/theme.liquid"].read
+    assert_equal(Digest::MD5.hexdigest(content), @theme["layout/theme.liquid"].checksum)
+  end
+
+  def test_normalize_json_for_checksum
+    normalized = JSON.parse(@theme["templates/blog.json"].read).to_json
+    assert_equal(Digest::MD5.hexdigest(normalized), @theme["templates/blog.json"].checksum)
   end
 end

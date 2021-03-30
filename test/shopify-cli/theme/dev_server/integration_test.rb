@@ -10,7 +10,15 @@ class IntegrationTest < Minitest::Test
   def setup
     super
     WebMock.disable_net_connect!(allow: "localhost:#{@@port}")
-    ShopifyCli::DB.expects(:get).with(:shopify_exchange_token).at_least_once.returns('token123')
+
+    ShopifyCli::DB.expects(:get)
+      .with(:shopify_exchange_token)
+      .at_least_once.returns('token123')
+
+    ShopifyCli::DB.expects(:exists?).with(:shop).at_least_once.returns(true)
+    ShopifyCli::DB.expects(:get)
+      .with(:shop)
+      .at_least_once.returns("dev-theme-server-store.myshopify.com")
   end
 
   def teardown
@@ -34,14 +42,14 @@ class IntegrationTest < Minitest::Test
     assert_requested(stub_sfr)
   end
 
-  def test_uploads_files
+  def test_uploads_files_on_boot
     # Get the checksums
     stub_request(:any, ASSETS_API_URL)
       .to_return(status: 200, body: "{}")
 
     start_server
     # Wait for server to start & sync the files
-    get("/assets/theme.css")
+    get("/assets/bogus.css")
 
     # Should upload all theme files except the ignored files
     ignored_files = [
@@ -50,20 +58,36 @@ class IntegrationTest < Minitest::Test
       "settings_data.json",
       "ignores_file",
     ]
-    Pathname.new("#{__dir__}/theme").glob("**/*").each do |file|
+    theme_root = "#{ShopifyCli::ROOT}/test/fixtures/theme"
+
+    Pathname.new(theme_root).glob("**/*").each do |file|
       next unless file.file? && !ignored_files.include?(file.basename.to_s)
+      asset = { key: file.relative_path_from(theme_root).to_s }
+      if file.extname == ".png"
+        asset[:attachment] = Base64.encode64(file.read)
+      else
+        asset[:value] = file.read
+      end
+
       assert_requested(:put, ASSETS_API_URL,
-        body: JSON.generate(
-          asset: {
-            key: file.relative_path_from("#{__dir__}/theme").to_s,
-            attachment: Base64.encode64(file.read),
-          }
-        ),
-        at_least_times: 1,)
+        body: JSON.generate(asset: asset),
+        at_least_times: 1)
     end
+  end
+
+  def test_uploads_files_on_modification
+    # Get the checksums
+    stub_request(:any, ASSETS_API_URL)
+      .to_return(status: 200, body: "{}")
+
+    start_server
+    # Wait for server to start & sync the files
+    get("/assets/bogus.css")
+
+    theme_root = "#{ShopifyCli::ROOT}/test/fixtures/theme"
 
     # Modify a file. Should upload on the fly.
-    file = Pathname.new("#{ShopifyCli::ROOT}/test/fixtures/theme/assets/theme.css")
+    file = Pathname.new("#{theme_root}/assets/theme.css")
     begin
       file.write("modified")
       with_retries(Minitest::Assertion) do
@@ -71,10 +95,10 @@ class IntegrationTest < Minitest::Test
           body: JSON.generate(
             asset: {
               key: "assets/theme.css",
-              attachment: Base64.encode64("modified"),
+              value: "modified",
             }
           ),
-          at_least_times: 1,)
+          at_least_times: 1)
       end
     ensure
       file.write("")

@@ -44,7 +44,7 @@ module ShopifyCli
         private
 
         def upload_theme!
-          @uploader.fetch_checksums!
+          @uploader.fetch_remote_checksums!
           @uploader.enqueue_uploads(@theme.theme_files)
           @uploader.wait_for_uploads!
         end

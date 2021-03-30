@@ -1,6 +1,6 @@
 require "shopify_cli"
 
-module Node
+module ShopifyCli
   module Commands
     class Populate
       class Customer < ShopifyCli::AdminAPI::PopulateResourceCommand
@@ -17,13 +17,7 @@ module Node
         def message(data)
           ret = data["customerCreate"]["customer"]
           id = ShopifyCli::API.gid_to_id(ret["id"])
-          @ctx.message(
-            "node.populate.customer.added",
-            ret["displayName"],
-            ShopifyCli::Project.current.env.shop,
-            admin_url,
-            id
-          )
+          @ctx.message("core.populate.customer.added", ret["displayName"], @shop, admin_url, id)
         end
       end
     end

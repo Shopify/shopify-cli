@@ -8,7 +8,7 @@ class HotReloadTest < Minitest::Test
     super
     config = ShopifyCli::Theme::DevServer::Config.from_path(ShopifyCli::ROOT + "/test/fixtures/theme")
     @ctx = TestHelpers::FakeContext.new(root: config.root)
-    @theme = ShopifyCli::Theme::DevServer::Theme.new(config)
+    @theme = ShopifyCli::Theme::DevServer::Theme.new(@ctx, config)
     @watcher = ShopifyCli::Theme::DevServer::Watcher.new(@ctx, @theme)
   end
 
