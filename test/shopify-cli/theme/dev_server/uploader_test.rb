@@ -6,10 +6,11 @@ class UploaderTest < Minitest::Test
   def setup
     super
     config = ShopifyCli::Theme::DevServer::Config.from_path(ShopifyCli::ROOT + "/test/fixtures/theme")
-    @theme = ShopifyCli::Theme::DevServer::Theme.new(config)
-    @ctx = TestHelpers::FakeContext.new(root: Dir.mktmpdir)
+    @ctx = TestHelpers::FakeContext.new(root: config.root)
+    @theme = ShopifyCli::Theme::DevServer::Theme.new(@ctx, config)
     @uploader = ShopifyCli::Theme::DevServer::Uploader.new(@ctx, @theme)
 
+    ShopifyCli::DB.stubs(:exists?).with(:shop).returns(true)
     ShopifyCli::DB
       .stubs(:get)
       .with(:shop)
@@ -45,7 +46,7 @@ class UploaderTest < Minitest::Test
   def test_upload_binary_file
     ShopifyCli::AdminAPI.expects(:rest_request).with(
       @ctx,
-      shop: @theme.config.store,
+      shop: @theme.shop,
       path: "themes/#{@theme.id}/assets.json",
       method: "PUT",
       api_version: "unstable",
