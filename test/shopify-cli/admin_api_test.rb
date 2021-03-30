@@ -87,13 +87,13 @@ module ShopifyCli
     end
 
     def test_rest_request_can_reauth
-      ShopifyCli::DB.expects(:get).with(:shopify_exchange_token).returns("token123")
+      ShopifyCli::DB.expects(:get).with(:shopify_exchange_token).returns("token123").twice
       api_stub = stub
       AdminAPI.expects(:new).with(
         ctx: @context,
         token: "token123",
         url: "https://shop.myshopify.com/admin/api/unstable/data.json",
-      ).returns(api_stub)
+      ).returns(api_stub).twice
       api_stub.expects(:request).with(url: "https://shop.myshopify.com/admin/api/unstable/data.json",
         body: nil,
         method: "GET").returns("response")
