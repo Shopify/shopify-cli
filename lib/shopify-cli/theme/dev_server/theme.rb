@@ -54,7 +54,8 @@ module ShopifyCli
         attr_reader :config
         attr_reader :remote_checksums
 
-        def initialize(config)
+        def initialize(ctx, config)
+          @ctx = ctx
           @config = config
           @pending_files = Set.new
           @remote_checksums = {}
@@ -97,7 +98,7 @@ module ShopifyCli
         end
 
         def shop
-          ShopifyCli::DB.get(:shop) || raise(KeyError, "shop missing")
+          AdminAPI.get_shop(@ctx)
         end
 
         def file_has_changed?(file)
