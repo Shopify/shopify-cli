@@ -3,8 +3,6 @@ require "test_helper"
 require "shopify-cli/theme/dev_server"
 
 class UploaderTest < Minitest::Test
-  ASSETS_API_URL = "https://dev-theme-server-store.myshopify.com/admin/api/unstable/themes/123456789/assets.json"
-
   def setup
     super
     config = ShopifyCli::Theme::DevServer::Config.from_path(ShopifyCli::ROOT + "/test/fixtures/theme")
@@ -13,7 +11,7 @@ class UploaderTest < Minitest::Test
     @uploader = ShopifyCli::Theme::DevServer::Uploader.new(@ctx, @theme)
   end
 
-  def test_upload
+  def test_upload_text_file
     ShopifyCli::AdminAPI.expects(:rest_request).with(
       @ctx,
       shop: @theme.config.store,
@@ -23,7 +21,7 @@ class UploaderTest < Minitest::Test
       body: JSON.generate({
         asset: {
           key: "assets/theme.css",
-          attachment: Base64.encode64(File.read("#{ShopifyCli::ROOT}/test/fixtures/theme/assets/theme.css")),
+          value: @theme["assets/theme.css"].read,
         },
       })
     ).returns([
@@ -31,7 +29,7 @@ class UploaderTest < Minitest::Test
       {
         "asset" => {
           "key" => "assets/theme.css",
-          "checksum" => Digest::MD5.hexdigest(File.read("#{ShopifyCli::ROOT}/test/fixtures/theme/assets/theme.css")),
+          "checksum" => @theme["assets/theme.css"].checksum,
         },
       },
     ])
@@ -39,17 +37,40 @@ class UploaderTest < Minitest::Test
     @uploader.upload(@theme["assets/theme.css"])
   end
 
-  def test_upload_when_unmodified
-    @theme.checksums["assets/theme.css"] = Digest::MD5.hexdigest(File.read(
-      "#{ShopifyCli::ROOT}/test/fixtures/theme/assets/theme.css"
-    ))
+  def test_upload_binary_file
+    ShopifyCli::AdminAPI.expects(:rest_request).with(
+      @ctx,
+      shop: @theme.config.store,
+      path: "themes/#{@theme.id}/assets.json",
+      method: "PUT",
+      api_version: "unstable",
+      body: JSON.generate({
+        asset: {
+          key: "assets/logo.png",
+          attachment: Base64.encode64(@theme["assets/logo.png"].read),
+        },
+      })
+    ).returns([
+      200,
+      {
+        "asset" => {
+          "key" => "assets/logo.png",
+          "checksum" => @theme["assets/logo.png"].checksum,
+        },
+      },
+    ])
 
-    assert_not_requested(:put, ASSETS_API_URL) do
-      @uploader.upload(@theme.assets.first)
-    end
+    @uploader.upload(@theme["assets/logo.png"])
   end
 
-  def test_fetch_checksums
+  def test_upload_when_unmodified
+    @theme.remote_checksums["assets/theme.css"] = @theme["assets/theme.css"].checksum
+
+    ShopifyCli::AdminAPI.expects(:rest_request).never
+    @uploader.upload(@theme.assets.first)
+  end
+
+  def test_fetch_remote_checksums
     ShopifyCli::AdminAPI.expects(:rest_request).with(
       @ctx,
       shop: @theme.config.store,
@@ -60,14 +81,14 @@ class UploaderTest < Minitest::Test
       {
         "assets" => [{
           "key" => "assets/theme.css",
-          "checksum" => Digest::MD5.hexdigest(File.read("#{ShopifyCli::ROOT}/test/fixtures/theme/assets/theme.css")),
+          "checksum" => @theme["assets/theme.css"].checksum,
         }],
       },
     ])
 
-    @uploader.fetch_checksums!
+    @uploader.fetch_remote_checksums!
 
-    assert_equal("d41d8cd98f00b204e9800998ecf8427e", @theme.checksums["assets/theme.css"])
+    assert_equal(@theme["assets/theme.css"].checksum, @theme.remote_checksums["assets/theme.css"])
   end
 
   def test_upload_from_threads
