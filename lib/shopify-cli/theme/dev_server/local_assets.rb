@@ -5,10 +5,6 @@ module ShopifyCli
     module DevServer
       class LocalAssets
         ASSET_REGEX = %r{//cdn.shopify.com/s/.*?/(assets/.+\.(?:css|js))}
-        MIME_TYPES = {
-          ".css" => "text/css",
-          ".js" => "application/javascript",
-        }
 
         class FileBody
           def initialize(path)
@@ -52,7 +48,7 @@ module ShopifyCli
             [
               200,
               {
-                "Content-Type" => MIME_TYPES.fetch(path.extname, "text/plain"),
+                "Content-Type" => MimeType.by_filename(path).to_s,
                 "Content-Length" => path.size.to_s,
               },
               FileBody.new(path),
