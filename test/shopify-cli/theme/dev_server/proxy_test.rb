@@ -35,6 +35,7 @@ class ProxyTest < Minitest::Test
           "Cookie" => "; _secure_session_id=",
           "Host" => "dev-theme-server-store.myshopify.com",
           "X-Forwarded-For" => "",
+          "User-Agent" => "Shopify CLI",
         }
       )
       .to_return(status: 200)
@@ -123,6 +124,7 @@ class ProxyTest < Minitest::Test
           "Cookie" => "; _secure_session_id=",
           "Host" => "dev-theme-server-store.myshopify.com",
           "X-Forwarded-For" => "",
+          "User-Agent" => "Shopify CLI",
         }
       )
       .to_return(status: 200, body: "PROXY RESPONSE")
@@ -161,6 +163,7 @@ class ProxyTest < Minitest::Test
       "Cookie" => "; _secure_session_id=",
       "Host" => "dev-theme-server-store.myshopify.com",
       "X-Forwarded-For" => "",
+      "User-Agent" => "Shopify CLI",
     }
   end
 
