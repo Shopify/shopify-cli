@@ -46,7 +46,7 @@ class ThemeTest < Minitest::Test
     shop = "dev-theme-server-store.myshopify.com"
     theme_name = "Development (5676d8-theme-dev)"
 
-    ShopifyCli::DB.stubs(:get).with(:shop).returns(shop)
+    ShopifyCli::AdminAPI.stubs(:get_shop).returns(shop)
     ShopifyCli::DB.stubs(:get).with(:development_theme_id).returns(nil)
     ShopifyCli::DB.expects(:set).with(development_theme_id: "12345678")
     @theme.stubs(:name).returns(theme_name)
@@ -78,7 +78,7 @@ class ThemeTest < Minitest::Test
     theme_name = "Development (5676d8-theme-dev)"
     theme_id = "12345678"
 
-    ShopifyCli::DB.stubs(:get).with(:shop).returns(shop)
+    ShopifyCli::AdminAPI.stubs(:get_shop).returns(shop)
     ShopifyCli::DB.stubs(:get).with(:development_theme_id).returns(theme_id)
     ShopifyCli::DB.expects(:set).with(development_theme_id: "12345678")
     @theme.stubs(:name).returns(theme_name)
