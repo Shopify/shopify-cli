@@ -6,7 +6,7 @@ class ThemeTest < Minitest::Test
   def test_uses_development_environment_by_default
     config = ShopifyCli::Theme::DevServer::Config.from_path(ShopifyCli::ROOT + "/test/fixtures/theme")
 
-    assert_equal("123456789", config.theme_id)
+    assert_equal(["config/*_secret.json", "config/more_secrets.json"], config.ignore_files)
   end
 
   def test_uses_another_environment_if_specified
@@ -15,6 +15,6 @@ class ThemeTest < Minitest::Test
       environment: "staging"
     )
 
-    assert_equal("567891234", config.theme_id)
+    assert_equal(["config/*_secret.json"], config.ignore_files)
   end
 end
