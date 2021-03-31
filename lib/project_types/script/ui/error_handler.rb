@@ -115,7 +115,8 @@ module Script
             cause_of_error: ShopifyCli::Context.message("script.error.service_failure_cause"),
             help_suggestion: ShopifyCli::Context.message("script.error.service_failure_help"),
           }
-        when Layers::Domain::Errors::MetadataValidationError
+        when Layers::Domain::Errors::MetadataValidationError,
+          Layers::Infrastructure::Errors::InvalidSchemaMetadataError
           {
             cause_of_error: ShopifyCli::Context.message("script.error.metadata_validation_cause"),
             help_suggestion: ShopifyCli::Context.message("script.error.metadata_validation_help"),

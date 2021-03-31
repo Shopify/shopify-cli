@@ -153,6 +153,20 @@ describe Script::UI::ErrorHandler do
         end
       end
 
+      describe "when MetadataValidationError" do
+        let(:err) { Script::Layers::Domain::Errors::MetadataValidationError.new }
+        it "should call display_and_raise" do
+          should_call_display_and_raise
+        end
+      end
+
+      describe "when InvalidSchemaMetadataError" do
+        let(:err) { Script::Layers::Infrastructure::Errors::InvalidSchemaMetadataError.new }
+        it "should call display_and_raise" do
+          should_call_display_and_raise
+        end
+      end
+
       describe "when InvalidConfigUiDefinitionError" do
         let(:err) { Script::Layers::Domain::Errors::InvalidConfigUiDefinitionError.new("filename") }
         it "should call display_and_raise" do

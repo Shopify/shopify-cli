@@ -45,6 +45,8 @@ module Script
             raise Errors::ConfigUiMissingKeysError.new(config_ui&.filename, e["message"])
           elsif (e = user_errors.find { |err| err["tag"] == "config_ui_fields_missing_keys_error" })
             raise Errors::ConfigUiFieldsMissingKeysError.new(config_ui&.filename, e["message"])
+          elsif user_errors.find { |err| %w(not_use_msgpack_error schema_version_argument_error).include?(err["tag"]) }
+            raise Errors::InvalidSchemaMetadataError
           else
             raise Errors::GraphqlError, user_errors
           end

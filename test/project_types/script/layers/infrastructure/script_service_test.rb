@@ -213,6 +213,36 @@ describe Script::Layers::Infrastructure::ScriptService do
         end
       end
 
+      describe "when invalid_metadata" do
+        let(:response) do
+          {
+            data: {
+              scriptServiceProxy: JSON.dump(
+                "data" => {
+                  "appScriptUpdateOrCreate" => {
+                    "userErrors" => [{ "message" => "error", "tag" => error_tag }],
+                  },
+                }
+              ),
+            },
+          }
+        end
+
+        describe "when not using msgpack" do
+          let(:error_tag) { "not_use_msgpack_error" }
+          it "should raise InvalidSchemaMetadataError error" do
+            assert_raises(Script::Layers::Infrastructure::Errors::InvalidSchemaMetadataError) { subject }
+          end
+        end
+
+        describe "when invalid metadata" do
+          let(:error_tag) { "schema_version_argument_error" }
+          it "should raise InvalidSchemaMetadataError error" do
+            assert_raises(Script::Layers::Infrastructure::Errors::InvalidSchemaMetadataError) { subject }
+          end
+        end
+      end
+
       describe "when response is empty" do
         let(:response) { nil }
 
