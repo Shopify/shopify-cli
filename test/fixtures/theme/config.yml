@@ -13,10 +13,10 @@ staging:
 staging:
   ignore_files:
   - config/*_secret.json
+  - config/more_secrets.json
   ignores:
   - ignores_file
 staging:
-  theme_id: '567891234'
   ignore_files:
   - config/*_secret.json
   ignores:
