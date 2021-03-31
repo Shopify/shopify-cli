@@ -31,13 +31,11 @@ describe Script::Layers::Infrastructure::ScriptService do
     let(:script_name) { "foo_bar" }
     let(:script_content) { "(module)" }
     let(:api_key) { "fake_key" }
-    let(:description) { "my description" }
     let(:app_script_update_or_create) do
       <<~HERE
         mutation AppScriptUpdateOrCreate(
           $extensionPointName: ExtensionPointName!,
           $title: String,
-          $description: String,
           $configUi: String,
           $sourceCode: String,
           $language: String,
@@ -48,7 +46,6 @@ describe Script::Layers::Infrastructure::ScriptService do
           appScriptUpdateOrCreate(
             extensionPointName: $extensionPointName
             title: $title
-            description: $description
             configUi: $configUi
             sourceCode: $sourceCode
             language: $language
@@ -65,7 +62,6 @@ describe Script::Layers::Infrastructure::ScriptService do
               configSchema
               extensionPointName
               title
-              description
             }
           }
         }
@@ -82,7 +78,6 @@ describe Script::Layers::Infrastructure::ScriptService do
           variables: {
             extensionPointName: extension_point_type,
             title: script_name,
-            description: description,
             configUi: expected_config_ui_content,
             sourceCode: Base64.encode64(script_content),
             language: "AssemblyScript",
@@ -108,7 +103,6 @@ describe Script::Layers::Infrastructure::ScriptService do
         script_name: script_name,
         script_content: script_content,
         compiled_type: "AssemblyScript",
-        description: description,
         config_ui: config_ui,
         api_key: api_key,
       )

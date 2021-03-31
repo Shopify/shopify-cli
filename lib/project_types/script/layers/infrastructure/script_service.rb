@@ -15,7 +15,6 @@ module Script
           script_name:,
           script_content:,
           compiled_type:,
-          description: nil,
           api_key: nil,
           force: false,
           metadata:,
@@ -25,7 +24,6 @@ module Script
           variables = {
             extensionPointName: extension_point_type.upcase,
             title: script_name,
-            description: description,
             configUi: config_ui&.content,
             sourceCode: Base64.encode64(script_content),
             language: compiled_type,

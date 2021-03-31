@@ -16,12 +16,10 @@ module Script
         @language = "assemblyscript"
         @script_name = "name"
         @ep_type = "discount"
-        @description = "description"
         @script_project = TestHelpers::FakeScriptProject.new(
           language: @language,
           extension_point_type: @ep_type,
           script_name: @script_name,
-          description: @description
         )
         @no_config_ui = false
         Layers::Application::ExtensionPoints.stubs(:languages).returns(%w(assemblyscript))
@@ -41,7 +39,6 @@ module Script
           language: @language,
           script_name: @script_name,
           extension_point_type: @ep_type,
-          description: @description,
           no_config_ui: @no_config_ui
         ).returns(@script_project)
 
@@ -59,7 +56,6 @@ module Script
           language: @language,
           script_name: @script_name,
           extension_point_type: @ep_type,
-          description: @description,
           no_config_ui: @no_config_ui
         ).returns(@script_project)
 
@@ -84,7 +80,6 @@ module Script
           language: @language,
           script_name: @script_name,
           extension_point_type: @ep_type,
-          description: @description,
           no_config_ui: @no_config_ui
         ).raises(StandardError)
 
@@ -111,7 +106,6 @@ module Script
           language: @language,
           script_name: @script_name,
           extension_point_type: @ep_type,
-          description: @description,
           no_config_ui: @no_config_ui
         ).raises(error)
 
@@ -132,7 +126,6 @@ module Script
       def perform_command_snake_case
         args = {
           name: @script_name,
-          description: @description,
           extension_point: @ep_type,
           language: @language,
         }
@@ -142,7 +135,7 @@ module Script
 
       def perform_command
         run_cmd(
-          "create script --name=#{@script_name} --description=#{@description}
+          "create script --name=#{@script_name}
           --extension-point=#{@ep_type} --language=#{@language} #{@no_config_ui ? "--no-config-ui" : ""}"
         )
       end

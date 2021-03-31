@@ -5,7 +5,6 @@ module Script
     class Create < ShopifyCli::SubCommand
       options do |parser, flags|
         parser.on("--name=NAME") { |name| flags[:name] = name }
-        parser.on("--description=DESCRIPTION") { |description| flags[:description] = description }
         parser.on("--extension_point=EP_NAME") { |ep_name| flags[:extension_point] = ep_name }
         parser.on("--extension-point=EP_NAME") { |ep_name| flags[:extension_point] = ep_name }
         parser.on("--language=LANGUAGE") { |language| flags[:language] = language }
@@ -27,7 +26,6 @@ module Script
           language: form.language,
           script_name: form.name,
           extension_point_type: form.extension_point,
-          description: form.description,
           no_config_ui: options.flags.key?(:no_config_ui)
         )
         @ctx.puts(@ctx.message("script.create.change_directory_notice", project.script_name))

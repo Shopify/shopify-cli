@@ -3,7 +3,6 @@ module TestHelpers
     property :extension_point_type
     property :script_name
     property :language
-    property :description
     property :config_ui_file
     property :env
 

@@ -7,14 +7,13 @@ module Script
     module Application
       class CreateScript
         class << self
-          def call(ctx:, language:, script_name:, extension_point_type:, description:, no_config_ui:)
+          def call(ctx:, language:, script_name:, extension_point_type:, no_config_ui:)
             extension_point = ExtensionPoints.get(type: extension_point_type)
             project = setup_project(
               ctx: ctx,
               language: language,
               script_name: script_name,
               extension_point: extension_point,
-              description: description,
               no_config_ui: no_config_ui
             )
             project_creator = Infrastructure::ProjectCreator
@@ -28,14 +27,13 @@ module Script
 
           DEFAULT_CONFIG_UI_FILENAME = "config-ui.yml"
 
-          def setup_project(ctx:, language:, script_name:, extension_point:, description:, no_config_ui:)
+          def setup_project(ctx:, language:, script_name:, extension_point:, no_config_ui:)
             ScriptProject.create(ctx, script_name)
 
             identifiers = {
               extension_point_type: extension_point.type,
               script_name: script_name,
               language: language,
-              description: description,
             }
 
             unless no_config_ui
@@ -73,6 +71,7 @@ module Script
               "version" => 1,
               "type" => "single",
               "title" => title,
+              "description" => "",
               "fields" => [],
             })
           end

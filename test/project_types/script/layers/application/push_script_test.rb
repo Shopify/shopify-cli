@@ -17,7 +17,6 @@ describe Script::Layers::Application::PushScript do
   let(:metadata) { Script::Layers::Domain::Metadata.new("1", "0", use_msgpack) }
   let(:schema_minor_version) { "0" }
   let(:script_name) { "name" }
-  let(:description) { "my description" }
   let(:config_ui_filename) { "filename" }
   let(:config_ui_contents) { "---" }
   let(:project) do
@@ -25,7 +24,6 @@ describe Script::Layers::Application::PushScript do
       language: language,
       extension_point_type: extension_point_type,
       script_name: script_name,
-      description: description,
       config_ui_file: config_ui_filename,
       env: { api_key: api_key }
     )
