@@ -10,6 +10,7 @@ module ShopifyCli
         include Observable
 
         def initialize(ctx, theme)
+          @ctx = ctx
           @theme = theme
           @uploader = Uploader.new(ctx, theme)
           @listener = Listen.to(@theme.root) do |modified, added, removed|
@@ -47,6 +48,8 @@ module ShopifyCli
           @uploader.fetch_remote_checksums!
           @uploader.enqueue_uploads(@theme.theme_files)
           @uploader.wait_for_uploads!
+
+          @ctx.done("Synced theme ##{@theme.id} on #{@theme.shop}")
         end
       end
     end
