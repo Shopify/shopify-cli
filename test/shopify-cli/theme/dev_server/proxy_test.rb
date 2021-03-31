@@ -4,6 +4,8 @@ require "shopify-cli/theme/dev_server"
 require "rack/mock"
 
 class ProxyTest < Minitest::Test
+  SECURE_SESSION_ID = "deadbeef"
+
   def setup
     super
     config = ShopifyCli::Theme::DevServer::Config.from_path(ShopifyCli::ROOT + "/test/fixtures/theme")
@@ -28,7 +30,7 @@ class ProxyTest < Minitest::Test
         headers: {
           "Accept-Encoding" => "none",
           "Content-Type" => "application/x-www-form-urlencoded",
-          "Cookie" => "; _secure_session_id=",
+          "Cookie" => "_secure_session_id=#{SECURE_SESSION_ID}",
           "Host" => "dev-theme-server-store.myshopify.com",
           "X-Forwarded-For" => "",
           "User-Agent" => "Shopify CLI",
@@ -117,7 +119,7 @@ class ProxyTest < Minitest::Test
           "Accept-Encoding" => "none",
           "Authorization" => "Bearer TOKEN",
           "Content-Type" => "application/x-www-form-urlencoded",
-          "Cookie" => "; _secure_session_id=",
+          "Cookie" => "_secure_session_id=#{SECURE_SESSION_ID}",
           "Host" => "dev-theme-server-store.myshopify.com",
           "X-Forwarded-For" => "",
           "User-Agent" => "Shopify CLI",
@@ -129,6 +131,32 @@ class ProxyTest < Minitest::Test
     response = request.get("/")
 
     assert_equal("PROXY RESPONSE", response.body)
+  end
+
+  def test_replaces_secure_session_id_cookie
+    stub_request(:get, "https://dev-theme-server-store.myshopify.com/?_fd=0&pb=0")
+      .with(
+        headers: {
+          "Cookie" => "_secure_session_id=#{SECURE_SESSION_ID}",
+        }
+      )
+
+    stub_session_id_request
+    request.get("/",
+      "HTTP_COOKIE" => "_secure_session_id=a12cef")
+  end
+
+  def test_appends_secure_session_id_cookie
+    stub_request(:get, "https://dev-theme-server-store.myshopify.com/?_fd=0&pb=0")
+      .with(
+        headers: {
+          "Cookie" => "cart_currency=CAD; secure_customer_sig=; _secure_session_id=#{SECURE_SESSION_ID}",
+        }
+      )
+
+    stub_session_id_request
+    request.get("/",
+      "HTTP_COOKIE" => "cart_currency=CAD; secure_customer_sig=")
   end
 
   def test_requires_exchange_token
@@ -156,7 +184,7 @@ class ProxyTest < Minitest::Test
   def default_proxy_headers
     {
       "Accept-Encoding" => "none",
-      "Cookie" => "; _secure_session_id=",
+      "Cookie" => "_secure_session_id=#{SECURE_SESSION_ID}",
       "Host" => "dev-theme-server-store.myshopify.com",
       "X-Forwarded-For" => "",
       "User-Agent" => "Shopify CLI",
@@ -164,15 +192,17 @@ class ProxyTest < Minitest::Test
   end
 
   def stub_session_id_request
-    stub_request(:get, "https://dev-theme-server-store.myshopify.com/?_fd=0&pb=0&preview_theme_id=123456789")
+    stub_request(:head, "https://dev-theme-server-store.myshopify.com/?_fd=0&pb=0&preview_theme_id=123456789")
       .with(
         headers: {
-          "Accept" => "*/*",
-          "Accept-Encoding" => "gzip;q=1.0,deflate;q=0.6,identity;q=0.3",
           "Host" => "dev-theme-server-store.myshopify.com",
-          "User-Agent" => "Ruby",
         }
       )
-      .to_return(status: 200, body: "", headers: {})
+      .to_return(
+        status: 200,
+        headers: {
+          "Set-Cookie" => "_secure_session_id=#{SECURE_SESSION_ID}",
+        }
+      )
   end
 end

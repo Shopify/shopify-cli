@@ -17,6 +17,9 @@ module ShopifyCli
       ]
 
       class Proxy
+        SESSION_COOKIE_NAME = "_secure_session_id"
+        SESSION_COOKIE_REGEXP = /#{SESSION_COOKIE_NAME}=(\h+)/
+
         def initialize(ctx, theme)
           @ctx = ctx
           @theme = theme
@@ -103,21 +106,31 @@ module ShopifyCli
         end
 
         def add_session_cookie(cookie_header)
-          # Transfer the session to use the preview one
-          cookie_header ||= ""
-          # TODO: find a more robust approach to injecting the session ID
-          has_session_id = cookie_header.include?("_secure_session_id=")
-          unless has_session_id
-            cookie_header += "; _secure_session_id=#{secure_session_id}"
+          cookie_header = if cookie_header
+            cookie_header.dup
+          else
+            +""
           end
+
+          expected_session_cookie = "#{SESSION_COOKIE_NAME}=#{secure_session_id}"
+
+          unless cookie_header.include?(expected_session_cookie)
+            if cookie_header.include?(SESSION_COOKIE_NAME)
+              cookie_header.sub!(SESSION_COOKIE_REGEXP, expected_session_cookie)
+            else
+              cookie_header << "; " unless cookie_header.empty?
+              cookie_header << expected_session_cookie
+            end
+          end
+
           cookie_header
         end
 
         def secure_session_id
           @secure_session_id ||= begin
-            response = request("GET", "/", query: { preview_theme_id: @theme.config.theme_id })
+            response = request("HEAD", "/", query: { preview_theme_id: @theme.config.theme_id })
             if response && response["set-cookie"]
-              response["set-cookie"][/_secure_session_id=(\h+)/, 1]
+              response["set-cookie"][SESSION_COOKIE_REGEXP, 1]
             end
           end
         end
