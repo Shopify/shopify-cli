@@ -29,21 +29,19 @@ module ShopifyCli
           headers = extract_http_request_headers(env)
           headers["Host"] = @theme.shop
           headers["Cookie"] = add_session_cookie(headers["Cookie"])
-          # TODO: add decoding support
           headers["Accept-Encoding"] = "none"
           headers["User-Agent"] = "Shopify CLI"
 
           query = URI.decode_www_form(env["QUERY_STRING"]).to_h
-          form_data = URI.decode_www_form(env["rack.input"].read).to_h
 
           response = if @theme.pending_files.any?
             # Pass to SFR the recently modified templates in `replace_templates` body param
             headers["Authorization"] = "Bearer #{bearer_token}"
+            form_data = URI.decode_www_form(env["rack.input"].read).to_h
             request(
               "POST", env["PATH_INFO"],
               headers: headers,
               query: query,
-              # TODO: use multipart
               form_data: form_data.merge(replace_templates_params).merge(_method: env["REQUEST_METHOD"]),
             )
           else
@@ -51,7 +49,7 @@ module ShopifyCli
               env["REQUEST_METHOD"], env["PATH_INFO"],
               headers: headers,
               query: query,
-              form_data: form_data
+              body_stream: (env["rack.input"] if headers["Content-Type"]),
             )
           end
 
@@ -70,18 +68,20 @@ module ShopifyCli
         end
 
         def extract_http_request_headers(env)
-          headers = env.reject do |k, v|
-            !/^HTTP_[A-Z0-9_]+$/.match?(k) || v.nil?
-          end.map do |k, v|
-            [reconstruct_header_name(k), v]
-          end.each_with_object(HeaderHash.new) do |k_v, hash|
-            k, v = k_v
-            hash[k] = v
+          headers = HeaderHash.new
+
+          env.each do |name, value|
+            next if value.nil?
+
+            if /^HTTP_[A-Z0-9_]+$/.match?(name) || name == "CONTENT_TYPE" || name == "CONTENT_LENGTH"
+              headers[reconstruct_header_name(name)] = value
+            end
           end
 
           x_forwarded_for = (headers["X-Forwarded-For"].to_s.split(/, +/) << env["REMOTE_ADDR"]).join(", ")
+          headers["X-Forwarded-For"] = x_forwarded_for
 
-          headers.merge!("X-Forwarded-For" => x_forwarded_for)
+          headers
         end
 
         def normalize_headers(headers)
@@ -151,7 +151,7 @@ module ShopifyCli
           response_headers
         end
 
-        def request(method, path, headers: nil, query: {}, form_data: nil)
+        def request(method, path, headers: nil, query: {}, form_data: nil, body_stream: nil)
           uri = URI.join("https://#{@theme.shop}", path)
           uri.query = URI.encode_www_form(query.merge(_fd: 0, pb: 0))
 
@@ -162,6 +162,7 @@ module ShopifyCli
             req = req_class.new(uri)
             req.initialize_http_header(headers) if headers
             req.set_form_data(form_data) if form_data
+            req.body_stream = body_stream if body_stream
             response = http.request(req)
             @ctx.debug("`-> #{response.code} request_id: #{response["x-request-id"]}")
             response
