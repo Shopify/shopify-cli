@@ -34,13 +34,19 @@ module ShopifyCli
 
           theme.ensure_development_theme_exists!
 
-          puts "Syncing theme ##{theme.id} on #{theme.shop} ..." unless silent
+          ctx.print_task("Syncing theme ##{theme.id} on #{theme.shop} ...") unless silent
           watcher.start
 
           unless silent
-            puts "Serving #{theme.root}"
-            puts "Browse to http://127.0.0.1:#{port}"
-            puts "(Use Ctrl-C to stop)"
+            ctx.puts("")
+            ctx.puts("Serving #{theme.root}")
+            ctx.puts("")
+            ctx.open_url!("http://127.0.0.1:#{port}")
+            ctx.puts("")
+            ctx.puts("Customize this theme in the Online Store Editor:")
+            ctx.puts("{{green:#{theme.editor_url}}}")
+            ctx.puts("")
+            ctx.puts("(Use Ctrl-C to stop)")
           end
 
           trap("INT") do
