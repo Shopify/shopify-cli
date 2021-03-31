@@ -28,6 +28,7 @@ module ShopifyCli
           headers["Cookie"] = add_session_cookie(headers["Cookie"])
           # TODO: add decoding support
           headers["Accept-Encoding"] = "none"
+          headers["User-Agent"] = "Shopify CLI"
 
           query = URI.decode_www_form(env["QUERY_STRING"]).to_h
           form_data = URI.decode_www_form(env["rack.input"].read).to_h
