@@ -5,6 +5,7 @@ require "shopify-cli/theme/dev_server"
 class IntegrationTest < Minitest::Test
   @@port = 9292 # rubocop:disable Style/ClassVars
 
+  THEMES_API_URL = "https://dev-theme-server-store.myshopify.com/admin/api/unstable/themes/123456789.json"
   ASSETS_API_URL = "https://dev-theme-server-store.myshopify.com/admin/api/unstable/themes/123456789/assets.json"
 
   def setup
@@ -19,6 +20,12 @@ class IntegrationTest < Minitest::Test
     ShopifyCli::DB.expects(:get)
       .with(:shop)
       .at_least_once.returns("dev-theme-server-store.myshopify.com")
+    ShopifyCli::DB.stubs(:get)
+      .with(:development_theme_name)
+      .returns("Development theme")
+    ShopifyCli::DB.stubs(:get)
+      .with(:development_theme_id)
+      .returns("123456789")
   end
 
   def teardown
@@ -31,6 +38,8 @@ class IntegrationTest < Minitest::Test
 
   def test_proxy_to_sfr
     stub_request(:any, ASSETS_API_URL)
+      .to_return(status: 200, body: "{}")
+    stub_request(:any, THEMES_API_URL)
       .to_return(status: 200, body: "{}")
     stub_request(:get, "https://dev-theme-server-store.myshopify.com/?_fd=0&pb=0&preview_theme_id=123456789")
     stub_sfr = stub_request(:get, "https://dev-theme-server-store.myshopify.com/?_fd=0&pb=0")
@@ -45,6 +54,8 @@ class IntegrationTest < Minitest::Test
   def test_uploads_files_on_boot
     # Get the checksums
     stub_request(:any, ASSETS_API_URL)
+      .to_return(status: 200, body: "{}")
+    stub_request(:any, THEMES_API_URL)
       .to_return(status: 200, body: "{}")
 
     start_server
@@ -79,6 +90,8 @@ class IntegrationTest < Minitest::Test
     # Get the checksums
     stub_request(:any, ASSETS_API_URL)
       .to_return(status: 200, body: "{}")
+    stub_request(:any, THEMES_API_URL)
+      .to_return(status: 200, body: "{}")
 
     start_server
     # Wait for server to start & sync the files
@@ -108,6 +121,8 @@ class IntegrationTest < Minitest::Test
   def test_serve_assets_locally
     stub_request(:any, ASSETS_API_URL)
       .to_return(status: 200, body: "{}")
+    stub_request(:any, THEMES_API_URL)
+      .to_return(status: 200, body: "{}")
 
     start_server
     response = get("/assets/theme.css")
@@ -117,6 +132,8 @@ class IntegrationTest < Minitest::Test
 
   def test_streams_hot_reload_events
     stub_request(:any, ASSETS_API_URL)
+      .to_return(status: 200, body: "{}")
+    stub_request(:any, THEMES_API_URL)
       .to_return(status: 200, body: "{}")
 
     start_server

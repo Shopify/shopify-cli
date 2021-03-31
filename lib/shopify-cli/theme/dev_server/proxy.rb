@@ -114,7 +114,7 @@ module ShopifyCli
 
         def secure_session_id
           @secure_session_id ||= begin
-            response = request("GET", "/", query: { preview_theme_id: @theme.config.theme_id })
+            response = request("GET", "/", query: { preview_theme_id: @theme.id })
             if response && response["set-cookie"]
               response["set-cookie"][/_secure_session_id=(\h+)/, 1]
             end
