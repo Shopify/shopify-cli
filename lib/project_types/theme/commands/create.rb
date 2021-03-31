@@ -40,7 +40,6 @@ module Theme
         ShopifyCli::Project.write(@ctx,
           project_type: "theme",
           organization_id: nil) # private apps are different
-
         @ctx.done(@ctx.message("theme.create.info.created", form.name, ShopifyCli::AdminAPI.get_shop(@ctx), @ctx.root))
       end
 
@@ -57,18 +56,16 @@ module Theme
 
         CLI::UI::Frame.open(@ctx.message("theme.create.creating_theme", name)) do
           create(name)
-        rescue
+        rescue => e
             @ctx.chdir("..")
             @ctx.rm_rf(name)
-            @ctx.abort("Failed to create theme")
+            @ctx.abort(@ctx.message("theme.create.failed", e))
         end
       end
 
       def create(name)
-        # create the skeleton
         create_directories
         upload_theme(name)
-        true
       end
 
       def create_directories
@@ -79,13 +76,12 @@ module Theme
       end
 
       def upload_theme(name)
-        # uploads new theme to shopify (is this needed?)
         params = {
           "theme": {
-            "name": name,
+            "name": name
           },
         }
-        response = ShopifyCli::AdminAPI.rest_request(
+        code, response = ShopifyCli::AdminAPI.rest_request(
           @ctx,
           shop: ShopifyCli::AdminAPI.get_shop(@ctx),
           path: "themes.json",
@@ -93,10 +89,7 @@ module Theme
           method: "POST",
           api_version: "unstable",
         )
-        if response[0]!= 201
-          ctx.abort("Failed to connect theme to Shopify")
-        end
-        # @ctx.debug(response[1]["theme"]["id"])
+        ShopifyCli::DB.set(theme_id: response[:theme][:id])
       end
     end
   end
