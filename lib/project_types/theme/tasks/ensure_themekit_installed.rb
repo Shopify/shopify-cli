@@ -22,9 +22,7 @@ module Theme
         now = Time.now.to_i
         if ShopifyCli::Feature.enabled?(:themekit_auto_update) && (time_of_last_check + VERSION_CHECK_INTERVAL) < now
           CLI::UI::Frame.open(ctx.message("theme.tasks.ensure_themekit_installed.updating_themekit")) do
-            unless Themekit.update(ctx)
-              ctx.abort(ctx.message("theme.tasks.ensure_themekit_installed.errors.update_fail"))
-            end
+            Themekit.update(ctx)
             update_time_of_last_check(now)
           end
         end
