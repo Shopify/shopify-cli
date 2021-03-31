@@ -189,7 +189,7 @@ describe Script::Layers::Infrastructure::ScriptService do
         end
 
         it "should raise error" do
-          assert_raises(Script::Layers::Infrastructure::Errors::ScriptServiceUserError) { subject }
+          assert_raises(Script::Layers::Infrastructure::Errors::GraphqlError) { subject }
         end
       end
 

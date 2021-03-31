@@ -188,18 +188,15 @@ module Script
           }
         when Layers::Infrastructure::Errors::GraphqlError
           {
-            cause_of_error: ShopifyCli::Context.message("script.error.graphql_error_cause", e.errors.join(", ")),
+            cause_of_error: ShopifyCli::Context.message(
+              "script.error.graphql_error_cause", JSON.pretty_generate(e.errors)
+            ),
             help_suggestion: ShopifyCli::Context.message("script.error.graphql_error_help"),
           }
         when Layers::Infrastructure::Errors::ScriptRepushError
           {
             cause_of_error: ShopifyCli::Context.message("script.error.script_repush_cause", e.api_key),
             help_suggestion: ShopifyCli::Context.message("script.error.script_repush_help"),
-          }
-        when Layers::Infrastructure::Errors::ScriptServiceUserError
-          {
-            cause_of_error: ShopifyCli::Context.message("script.error.user_error_cause"),
-            help_suggestion: ShopifyCli::Context.message("script.error.user_error_help"),
           }
         when Layers::Infrastructure::Errors::ShopAuthenticationError
           {

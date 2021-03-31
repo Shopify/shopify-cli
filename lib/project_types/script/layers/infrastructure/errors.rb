@@ -48,12 +48,6 @@ module Script
           end
         end
 
-        class ScriptServiceUserError < ScriptProjectError
-          def initialize(query_name, errors)
-            super("Failed performing #{query_name}. Errors: #{errors}.")
-          end
-        end
-
         class ShopAuthenticationError < ScriptProjectError; end
         class TaskRunnerNotFoundError < ScriptProjectError; end
         class BuildScriptNotFoundError < ScriptProjectError; end

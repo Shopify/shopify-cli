@@ -46,7 +46,7 @@ module Script
           elsif (e = user_errors.find { |err| err["tag"] == "config_ui_fields_missing_keys_error" })
             raise Errors::ConfigUiFieldsMissingKeysError.new(config_ui&.filename, e["message"])
           else
-            raise Errors::ScriptServiceUserError.new(query_name, user_errors.to_s)
+            raise Errors::GraphqlError, user_errors
           end
         end
 
@@ -112,7 +112,7 @@ module Script
           when "app_not_installed_on_shop"
             raise Errors::AppNotInstalledError
           else
-            raise Errors::GraphqlError, response["errors"].map { |e| e["message"] }
+            raise Errors::GraphqlError, response["errors"]
           end
         end
 
