@@ -21,7 +21,7 @@ module ShopifyCli
       class << self
         attr_accessor :ctx
 
-        def start(ctx, root, silent: false, port: 9292, env: "development")
+        def start(ctx, root, port: 9292, env: "development")
           @ctx = ctx
           config = Config.from_path(root, environment: env)
           theme = Theme.new(ctx, config)
@@ -34,20 +34,18 @@ module ShopifyCli
 
           theme.ensure_development_theme_exists!
 
-          ctx.print_task("Syncing theme ##{theme.id} on #{theme.shop} ...") unless silent
+          ctx.print_task("Syncing theme ##{theme.id} on #{theme.shop} ...")
           watcher.start
 
-          unless silent
-            ctx.puts("")
-            ctx.puts("Serving #{theme.root}")
-            ctx.puts("")
-            ctx.open_url!("http://127.0.0.1:#{port}")
-            ctx.puts("")
-            ctx.puts("Customize this theme in the Online Store Editor:")
-            ctx.puts("{{green:#{theme.editor_url}}}")
-            ctx.puts("")
-            ctx.puts("(Use Ctrl-C to stop)")
-          end
+          ctx.puts("")
+          ctx.puts("Serving #{theme.root}")
+          ctx.puts("")
+          ctx.open_url!("http://127.0.0.1:#{port}")
+          ctx.puts("")
+          ctx.puts("Customize this theme in the Online Store Editor:")
+          ctx.puts("{{green:#{theme.editor_url}}}")
+          ctx.puts("")
+          ctx.puts("(Use Ctrl-C to stop)")
 
           trap("INT") do
             stop

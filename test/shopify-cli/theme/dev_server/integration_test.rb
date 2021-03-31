@@ -164,7 +164,7 @@ class IntegrationTest < Minitest::Test
   def start_server
     @ctx = TestHelpers::FakeContext.new(root: "#{ShopifyCli::ROOT}/test/fixtures/theme")
     @server_thread = Thread.new do
-      ShopifyCli::Theme::DevServer.start(@ctx, "#{ShopifyCli::ROOT}/test/fixtures/theme", silent: true, port: @@port)
+      ShopifyCli::Theme::DevServer.start(@ctx, "#{ShopifyCli::ROOT}/test/fixtures/theme", port: @@port)
     rescue Exception => e
       puts "Failed to start DevServer:"
       puts e.message
