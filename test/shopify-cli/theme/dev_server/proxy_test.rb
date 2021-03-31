@@ -20,21 +20,16 @@ class ProxyTest < Minitest::Test
       .returns("dev-theme-server-store.myshopify.com")
   end
 
-  def test_form_data_is_proxied_to_request
+  def test_form_data_is_proxied_to_online_store
     stub_request(:post, "https://dev-theme-server-store.myshopify.com/password?_fd=0&pb=0")
       .with(
         body: {
           "form_type" => "storefront_password",
           "password" => "notapassword",
         },
-        headers: {
-          "Accept-Encoding" => "none",
+        headers: default_proxy_headers.merge(
           "Content-Type" => "application/x-www-form-urlencoded",
-          "Cookie" => "_secure_session_id=#{SECURE_SESSION_ID}",
-          "Host" => "dev-theme-server-store.myshopify.com",
-          "X-Forwarded-For" => "",
-          "User-Agent" => "Shopify CLI",
-        }
+        )
       )
       .to_return(status: 200)
 
@@ -43,6 +38,27 @@ class ProxyTest < Minitest::Test
     request.post("/password", params: {
       "form_type" => "storefront_password",
       "password" => "notapassword",
+    })
+  end
+
+  def test_multipart_is_proxied_to_online_store
+    stub_request(:post, "https://dev-theme-server-store.myshopify.com/cart/add?_fd=0&pb=0")
+      .with(
+        headers: default_proxy_headers.merge(
+          "Content-Length" => "272",
+          "Content-Type" => "multipart/form-data; boundary=AaB03x",
+        )
+      )
+      .to_return(status: 200)
+
+    stub_session_id_request
+
+    file = ShopifyCli::ROOT + "/test/fixtures/theme/assets/theme.css"
+
+    request.post("/cart/add", params: {
+      "form_type" => "product",
+      "quantity" => 1,
+      "file" => Rack::Multipart::UploadedFile.new(file), # To force multipart
     })
   end
 
