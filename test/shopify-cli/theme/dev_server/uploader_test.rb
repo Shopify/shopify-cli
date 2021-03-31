@@ -15,6 +15,10 @@ class UploaderTest < Minitest::Test
       .stubs(:get)
       .with(:shop)
       .returns("dev-theme-server-store.myshopify.com")
+    ShopifyCli::DB
+      .stubs(:get)
+      .with(:development_theme_id)
+      .returns("12345678")
   end
 
   def test_upload_text_file
