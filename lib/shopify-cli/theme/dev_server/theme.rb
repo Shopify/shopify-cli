@@ -129,6 +129,10 @@ module ShopifyCli
           @ctx.debug("Using temporary development theme: ##{id} #{name}")
         end
 
+        def editor_url
+          "https://#{shop}/admin/themes/#{id}/editor"
+        end
+
         private
 
         def development_theme_exists?
