@@ -124,4 +124,30 @@ class ThemeTest < Minitest::Test
 
     assert_equal(theme_name, @theme.name)
   end
+
+  def test_update_remote_checksum
+    @theme.update_remote_checksums!(
+      "asset" => [
+        {
+          "key" => "templates/product.json",
+          "checksum" => "16f0c357cd150aac7758c144a3ff576f",
+        },
+        {
+          "key" => "templates/search.liquid",
+          "checksum" => "8a90fadd03f8ef7f08511b5509cada4d",
+        },
+      ]
+    )
+
+    @theme.update_remote_checksums!(
+      "asset" => {
+        "key" => "config/settings_schema.json",
+        "checksum" => "a785758d09023273fda4bb57bd42a724",
+      }
+    )
+
+    assert_equal("16f0c357cd150aac7758c144a3ff576f", @theme.remote_checksums["templates/product.json"])
+    assert_equal("8a90fadd03f8ef7f08511b5509cada4d", @theme.remote_checksums["templates/search.liquid"])
+    assert_equal("a785758d09023273fda4bb57bd42a724", @theme.remote_checksums["config/settings_schema.json"])
+  end
 end
