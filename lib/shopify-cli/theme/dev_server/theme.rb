@@ -84,6 +84,14 @@ module ShopifyCli
           root.glob(["**/*.liquid", "**/*.json", "assets/*"]).map { |path| File.new(path, root) }
         end
 
+        def liquid_files
+          root.glob("**/*.liquid").map { |path| File.new(path, root) }
+        end
+
+        def json_files
+          root.glob("**/*.json").map { |path| File.new(path, root) }
+        end
+
         def theme_file?(file)
           theme_files.include?(self[file])
         end
@@ -114,8 +122,8 @@ module ShopifyCli
         def update_remote_checksums!(api_response)
           assets = api_response.values.flatten
 
-          @remote_checksums = assets.each_with_object({}) do |asset, hash|
-            hash[asset["key"]] = asset["checksum"]
+          assets.each do |asset|
+            @remote_checksums[asset["key"]] = asset["checksum"]
           end
         end
 
