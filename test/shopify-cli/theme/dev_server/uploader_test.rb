@@ -123,4 +123,18 @@ class UploaderTest < Minitest::Test
   ensure
     @uploader.shutdown
   end
+
+  def test_logs_upload_error
+    @uploader.start_threads
+
+    file = @theme.assets.first
+    @ctx.expects(:puts).once
+    @uploader.expects(:upload).with(file).raises(RuntimeError.new("oops"))
+
+    @uploader.enqueue_upload(file)
+    @uploader.wait_for_uploads!
+
+  ensure
+    @uploader.shutdown
+  end
 end
