@@ -25,24 +25,39 @@ module ShopifyCli
           @ctx = ctx
           config = Config.from_path(root, environment: env)
           theme = Theme.new(ctx, config)
-          watcher = Watcher.new(ctx, theme)
+          @uploader = Uploader.new(ctx, theme)
+          watcher = Watcher.new(ctx, theme, @uploader)
 
           # Setup the middleware stack. Mimics Rack::Builder / config.ru, but in reverse order
           @app = Proxy.new(ctx, theme)
           @app = LocalAssets.new(ctx, @app, theme)
           @app = HotReload.new(ctx, @app, theme, watcher)
+          stopped = false
 
-          puts "Syncing theme ##{config.theme_id} on #{theme.shop} ..." unless silent
-          watcher.start
+          trap("INT") do
+            stopped = true
+            stop
+          end
+
+          puts "Syncing theme ##{config.theme_id} on #{theme.shop}" unless silent
+          @uploader.start_threads
+          if silent
+            @uploader.upload_theme!
+          else
+            CLI::UI::Progress.progress do |bar|
+              @uploader.upload_theme! do |left, total|
+                bar.tick(set_percent: 1 - left.to_f / total)
+              end
+              bar.tick(set_percent: 1)
+            end
+          end
+
+          return if stopped
 
           unless silent
             puts "Serving #{theme.root}"
             puts "Browse to http://127.0.0.1:#{port}"
             puts "(Use Ctrl-C to stop)"
-          end
-
-          trap("INT") do
-            stop
           end
 
           logger = if ctx.debug?
@@ -51,6 +66,7 @@ module ShopifyCli
             WEBrick::Log.new(nil, WEBrick::BasicLog::FATAL)
           end
 
+          watcher.start
           WebServer.run(
             @app,
             Port: port,
@@ -61,7 +77,9 @@ module ShopifyCli
         end
 
         def stop
+          @ctx.puts("Stopping ...")
           @app.close
+          @uploader.shutdown
           WebServer.shutdown
         end
       end
