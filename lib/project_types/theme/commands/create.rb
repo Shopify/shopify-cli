@@ -52,14 +52,16 @@ module Theme
         @ctx.abort(@ctx.message("theme.create.duplicate_theme")) if @ctx.dir_exist?(name)
         @ctx.mkdir_p(name)
         @ctx.chdir(name)
-
-        CLI::UI::Frame.open(@ctx.message("theme.create.creating_theme", name)) do
+        spin = CLI::UI::SpinGroup.new
+        spin.add(@ctx.message("theme.create.creating_theme", name)) do |spinner|
           create_directories
+          spinner.update_title(@ctx.message("theme.create.info.dir_created"))
         rescue => e
             @ctx.chdir("..")
             @ctx.rm_rf(name)
             @ctx.abort(@ctx.message("theme.create.failed", e))
         end
+        spin.wait
       end
 
       def create_directories
