@@ -27,6 +27,7 @@ module Theme
           HELP
           info: {
             created: "{{green:%s}} was created for {{underline:%s}} in {{green:%s}}",
+            dir_created: "Created directories",
           },
         },
         deploy: {
