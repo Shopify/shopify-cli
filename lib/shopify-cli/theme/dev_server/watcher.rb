@@ -9,10 +9,10 @@ module ShopifyCli
       class Watcher
         include Observable
 
-        def initialize(ctx, theme)
+        def initialize(ctx, theme, uploader)
           @ctx = ctx
           @theme = theme
-          @uploader = Uploader.new(ctx, theme)
+          @uploader = uploader
           @listener = Listen.to(@theme.root) do |modified, added, removed|
             changed
             notify_observers(modified, added, removed)
@@ -22,13 +22,10 @@ module ShopifyCli
         end
 
         def start
-          @uploader.start_threads
-          upload_theme!
           @listener.start
         end
 
         def stop
-          @uploader.shutdown
           @listener.stop
         end
 
@@ -40,16 +37,6 @@ module ShopifyCli
             @uploader.enqueue_uploads(modified_theme_files)
           end
           # TODO: how to deal w/ removed files?
-        end
-
-        private
-
-        def upload_theme!
-          @uploader.fetch_remote_checksums!
-          @uploader.enqueue_uploads(@theme.theme_files)
-          @uploader.wait_for_uploads!
-
-          @ctx.done("Synced theme ##{@theme.id} on #{@theme.shop}")
         end
       end
     end
