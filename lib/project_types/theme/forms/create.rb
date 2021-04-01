@@ -2,7 +2,7 @@ module Theme
   module Forms
     class Create < ShopifyCli::Form
       attr_accessor :name
-      flag_arguments :title, :env
+      flag_arguments :title
 
       def ask
         self.title ||= CLI::UI::Prompt.ask(ctx.message("theme.forms.create.ask_title"), allow_empty: false)
