@@ -2,6 +2,7 @@
 require "thread"
 require "json"
 require "base64"
+require "benchmark"
 
 module ShopifyCli
   module Theme
@@ -17,7 +18,7 @@ module ShopifyCli
         def enqueue_upload(file)
           file = @theme[file]
           @theme.pending_files << file
-          @queue << file
+          @queue << file unless @queue.closed?
         end
 
         def enqueue_uploads(files)
@@ -25,7 +26,15 @@ module ShopifyCli
         end
 
         def wait_for_uploads!
-          Thread.pass until @queue.empty?
+          total = @queue.size
+          last_size = @queue.size
+          until @queue.empty? || @queue.closed?
+            if block_given? && last_size != @queue.size
+              yield @queue.size, total
+              last_size = @queue.size
+            end
+            Thread.pass
+          end
         end
 
         def fetch_remote_checksums!
@@ -52,6 +61,7 @@ module ShopifyCli
             return
           end
 
+          return if @queue.closed?
           @ctx.debug("Uploading #{file.relative_path}")
 
           asset = { key: file.relative_path.to_s }
@@ -61,7 +71,7 @@ module ShopifyCli
             asset[:attachment] = Base64.encode64(file.read)
           end
 
-          response = ShopifyCli::AdminAPI.rest_request(
+          _status, response = ShopifyCli::AdminAPI.rest_request(
             @ctx,
             shop: @theme.shop,
             path: "themes/#{@theme.id}/assets.json",
@@ -70,9 +80,7 @@ module ShopifyCli
             body: JSON.generate(asset: asset)
           )
 
-          @theme.update_remote_checksums!(response[1])
-        rescue ShopifyCli::API::APIRequestError => e
-          @ctx.abort("Could not upload theme asset: #{e.message}")
+          @theme.update_remote_checksums!(response)
         ensure
           @theme.pending_files.delete(file)
         end
@@ -91,10 +99,27 @@ module ShopifyCli
                 break if file.nil? # shutdown was called
                 upload(file)
               rescue => e
-                puts "Error while uploading '#{file&.relative_path}': #{e}"
+                @ctx.puts("{{red:ERROR}} while uploading '#{file&.relative_path}': #{e}")
+                @ctx.debug("\t#{e.backtrace.join("\n\t")}")
               end
             end
           end
+        end
+
+        def upload_theme!(&block)
+          fetch_remote_checksums!
+
+          enqueue_uploads(@theme.liquid_files)
+          enqueue_uploads(@theme.json_files)
+
+          # Wait for liquid & JSON files to upload, because those are rendered remotely
+          time = Benchmark.realtime do
+            wait_for_uploads!(&block)
+          end
+          @ctx.debug("Theme uploaded in #{time} seconds")
+
+          # Assets are served locally, so can be uploaded in the background
+          enqueue_uploads(@theme.assets)
         end
       end
     end
