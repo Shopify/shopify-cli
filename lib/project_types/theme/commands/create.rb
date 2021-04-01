@@ -29,7 +29,6 @@ module Theme
 
         options do |parser, flags|
         parser.on("--name=NAME") { |t| flags[:title] = t }
-        parser.on("--env=ENV") { |env| flags[:env] = env }
       end
 
       def call(args, _name)
@@ -55,7 +54,7 @@ module Theme
         @ctx.chdir(name)
 
         CLI::UI::Frame.open(@ctx.message("theme.create.creating_theme", name)) do
-          create(name)
+          create_directories
         rescue => e
             @ctx.chdir("..")
             @ctx.rm_rf(name)
@@ -63,33 +62,11 @@ module Theme
         end
       end
 
-      def create(name)
-        create_directories
-        upload_theme(name)
-      end
-
       def create_directories
         TEMPLATE_DIRS.each { |dir| @ctx.mkdir_p(dir) }
 
         @ctx.write("config/settings_data.json", SETTINGS_DATA)
         @ctx.write("config/settings_schema.json", SETTINGS_SCHEMA)
-      end
-
-      def upload_theme(name)
-        params = {
-          "theme": {
-            "name": name
-          },
-        }
-        code, response = ShopifyCli::AdminAPI.rest_request(
-          @ctx,
-          shop: ShopifyCli::AdminAPI.get_shop(@ctx),
-          path: "themes.json",
-          body: params.to_json,
-          method: "POST",
-          api_version: "unstable",
-        )
-        ShopifyCli::DB.set(theme_id: response[:theme][:id])
       end
     end
   end
