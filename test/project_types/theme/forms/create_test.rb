@@ -10,16 +10,6 @@ module Theme
         assert_equal("my_theme", form.name)
       end
 
-      def test_env_can_be_provided_by_flag
-        form = ask(env: "test")
-        assert_equal("test", form.env)
-      end
-
-      def test_env_nil_if_not_provided
-        form = ask
-        assert_nil(form.env)
-      end
-
       def test_title_can_be_provided_by_flag
         form = ask(title: "My Theme")
         assert_equal("my_theme", form.name)
@@ -44,12 +34,11 @@ module Theme
 
       private
 
-      def ask(title: "My Theme", env: nil)
+      def ask(title: "My Theme")
         Create.ask(
           @context,
           [],
           title: title,
-          env: env
         )
       end
     end
