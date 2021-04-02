@@ -23,6 +23,7 @@ module ShopifyCli
         def initialize(ctx, theme)
           @ctx = ctx
           @theme = theme
+          @core_endpoints = Set.new
         end
 
         def call(env)
@@ -34,7 +35,7 @@ module ShopifyCli
 
           query = URI.decode_www_form(env["QUERY_STRING"]).to_h
 
-          response = if @theme.pending_files.any?
+          response = if replace_templates?(env["PATH_INFO"])
             # Pass to SFR the recently modified templates in `replace_templates` body param
             headers["Authorization"] = "Bearer #{bearer_token}"
             form_data = URI.decode_www_form(env["rack.input"].read).to_h
@@ -55,12 +56,20 @@ module ShopifyCli
 
           headers = get_response_headers(response)
 
+          unless headers["x-storefront-renderer-rendered"]
+            @core_endpoints << env["PATH_INFO"]
+          end
+
           body = response.body || [""]
           body = [body] unless body.respond_to?(:each)
           [response.code, headers, body]
         end
 
         private
+
+        def replace_templates?(path_info)
+          !@core_endpoints.include?(path_info) && @theme.pending_files.any?
+        end
 
         def bearer_token
           ShopifyCli::DB.get(:storefront_renderer_production_exchange_token) ||
