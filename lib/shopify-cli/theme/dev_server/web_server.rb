@@ -15,11 +15,10 @@ module ShopifyCli
         def cleanup_listener
           # Force a Thread#join with a timeout to prevent any deadlock error on stop
           Thread.list.each do |thread|
-            if thread[:WEBrickThread]
-              thread.join(2)
-              # Prevent the `join` call without a timeout inside WEBrick.
-              thread[:WEBrickThread] = false
-            end
+            next unless thread[:WEBrickThread]
+            thread.join(2)
+            # Prevent the `join` call without a timeout inside WEBrick.
+            thread[:WEBrickThread] = false
           end
           super
         end
