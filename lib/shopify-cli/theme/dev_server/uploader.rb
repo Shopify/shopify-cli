@@ -126,7 +126,7 @@ module ShopifyCli
         end
 
         def upload_theme!(&block)
-          # fetch_remote_checksums!
+          fetch_remote_checksums!
 
           enqueue_uploads(@theme.liquid_files)
           enqueue_uploads(@theme.json_files)
