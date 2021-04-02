@@ -133,7 +133,7 @@ class UploaderTest < Minitest::Test
   end
 
   def test_theme_files_are_pending_during_upload
-    file = @theme.assets.first
+    file = @theme.asset_files.first
 
     @uploader.enqueue_upload(file)
     assert_includes(@theme.pending_files, file)
@@ -146,7 +146,7 @@ class UploaderTest < Minitest::Test
   def test_logs_upload_error
     @uploader.start_threads
 
-    file = @theme.assets.first
+    file = @theme.asset_files.first
     @ctx.expects(:puts).once
     ShopifyCli::AdminAPI.expects(:rest_request).raises(RuntimeError.new("oops"))
 
