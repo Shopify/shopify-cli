@@ -40,6 +40,9 @@ module Extension
           admin: {
             git_template: "https://github.com/Shopify/argo-admin-template.git",
             renderer_package_name: "@shopify/argo-admin",
+            serve_requires_api_key: true,
+            serve_requires_shop: true,
+            required_beta_flags: [:argo_admin_beta],
           },
           checkout: {
             git_template: "https://github.com/Shopify/argo-checkout-template.git",

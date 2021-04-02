@@ -7,20 +7,9 @@ module Extension
       NPM_SERVE_COMMAND = %w(run-script server)
 
       def call(_args, _command_name)
-        if argo_admin?
-          ShopifyCli::Tasks::EnsureEnv.call(@ctx, required: [:api_key, :secret, :shop])
-          ShopifyCli::Tasks::EnsureDevStore.call(@ctx)
-          validate_env
-        end
+        validate_env!
 
         CLI::UI::Frame.open(@ctx.message("serve.frame_title")) do
-          yarn_serve_command = YARN_SERVE_COMMAND
-          npm_serve_command = NPM_SERVE_COMMAND
-          if argo_admin?
-            serve_args = %W(--shop=#{project.env.shop} --apiKey=#{project.env.api_key})
-            yarn_serve_command += serve_args
-            npm_serve_command += %w(--) + serve_args
-          end
           success = ShopifyCli::JsSystem.call(@ctx, yarn: yarn_serve_command, npm: npm_serve_command)
           @ctx.abort(@ctx.message("serve.serve_failure_message")) unless success
         end
@@ -35,17 +24,43 @@ module Extension
 
       private
 
-      def argo_admin?
-        ShopifyCli::Shopifolk.check &&
-          ShopifyCli::Feature.enabled?(:argo_admin_beta) &&
-          specification_handler.specification.features&.argo&.surface == "admin"
+      def validate_env!
+        return unless ShopifyCli::Shopifolk.check &&
+          specification.feature?(:argo) &&
+          specification.required_beta_flags.all? { |beta| ShopifyCli::Feature.enabled?(beta) }
+
+        required_fields = [].tap do |fields|
+          fields << :api_key if specification.features.argo.serve_requires_api_key?
+          fields << :shop if specification.features.argo.serve_requires_shop?
+        end
+
+        return if required_fields.none?
+
+        ShopifyCli::Tasks::EnsureEnv.call(@ctx, required: required_fields)
+        ShopifyCli::Tasks::EnsureDevStore.call(@ctx) if required_fields.include?(:shop)
+        ExtensionProject.reload
+
+        return if required_fields.all? do |field|
+          value = project.env.public_send(field)
+          value && !value.strip.empty?
+        end
+
+        @ctx.abort(@ctx.message("serve.serve_missing_information"))
       end
 
-      def validate_env
-        ExtensionProject.reload
-        @ctx.abort(@ctx.message("serve.serve_missing_information")) if
-          project.env.shop.nil? || project.env.api_key.nil? ||
-          project.env.shop.strip.empty? || project.env.api_key.strip.empty?
+      def yarn_serve_command
+        YARN_SERVE_COMMAND + serve_options
+      end
+
+      def npm_serve_command
+        NPM_SERVE_COMMAND + ["--"] + serve_options
+      end
+
+      def serve_options
+        @serve_options ||= [].tap do |options|
+          options << "--shop=#{project.env.shop}" if specification.features.argo.serve_requires_shop?
+          options << "--apiKey=#{project.env.api_key}" if specification.features.argo.serve_requires_api_key?
+        end
       end
     end
   end

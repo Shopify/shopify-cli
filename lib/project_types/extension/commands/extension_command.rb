@@ -8,6 +8,10 @@ module Extension
         @project ||= ExtensionProject.current
       end
 
+      def specification
+        specification_handler.specification
+      end
+
       def specification_handler
         @specification_handler ||= begin
           identifier = project.specification_identifier
