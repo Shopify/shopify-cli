@@ -87,21 +87,21 @@ class IntegrationTest < Minitest::Test
     theme_root = "#{ShopifyCli::ROOT}/test/fixtures/theme"
 
     # Modify a file. Should upload on the fly.
-    file = Pathname.new("#{theme_root}/assets/theme.css")
+    file = Pathname.new("#{theme_root}/assets/added.css")
     begin
-      file.write("modified")
+      file.write("added")
       with_retries(Minitest::Assertion) do
         assert_requested(:put, ASSETS_API_URL,
           body: JSON.generate(
             asset: {
-              key: "assets/theme.css",
-              value: "modified",
+              key: "assets/added.css",
+              value: "added",
             }
           ),
           at_least_times: 1)
       end
     ensure
-      file.write("")
+      file.delete
     end
   end
 
