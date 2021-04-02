@@ -53,7 +53,7 @@ module ShopifyCli
         end
         case response.code.to_i
         when 200..399
-          [response.code.to_i, JSON.parse(response.body)]
+          [response.code.to_i, JSON.parse(response.body), response]
         when 401
           raise APIRequestUnauthorizedError, "#{response.code}\n#{response.body}"
         when 404
