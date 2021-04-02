@@ -29,6 +29,18 @@ module ShopifyCli
             mime_type.text?
           end
 
+          def liquid?
+            path.extname == ".liquid"
+          end
+
+          def json?
+            path.extname == ".json"
+          end
+
+          def template?
+            relative_path.to_s.start_with?("templates/")
+          end
+
           def checksum
             content = read
             if mime_type.json?
@@ -70,20 +82,24 @@ module ShopifyCli
           @config.theme_id
         end
 
-        def assets
-          root.glob("assets/*").map { |path| File.new(path, root) }
+        def theme_files
+          glob(["**/*.liquid", "**/*.json", "assets/*"])
         end
 
-        def theme_files
-          root.glob(["**/*.liquid", "**/*.json", "assets/*"]).map { |path| File.new(path, root) }
+        def asset_files
+          glob("assets/*")
         end
 
         def liquid_files
-          root.glob("**/*.liquid").map { |path| File.new(path, root) }
+          glob("**/*.liquid")
         end
 
         def json_files
-          root.glob("**/*.json").map { |path| File.new(path, root) }
+          glob("**/*.json")
+        end
+
+        def glob(pattern)
+          root.glob(pattern).map { |path| File.new(path, root) }
         end
 
         def theme_file?(file)
@@ -91,7 +107,7 @@ module ShopifyCli
         end
 
         def asset_paths
-          assets.map(&:relative_path)
+          asset_files.map(&:relative_path)
         end
 
         def [](file)
