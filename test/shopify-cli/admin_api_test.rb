@@ -102,7 +102,7 @@ module ShopifyCli
       @oauth_client = mock
       ShopifyCli::IdentityAuth
         .expects(:new)
-        .with(@context)
+        .with(ctx: @context)
         .returns(@oauth_client)
       @oauth_client
         .expects(:reauthenticate)
