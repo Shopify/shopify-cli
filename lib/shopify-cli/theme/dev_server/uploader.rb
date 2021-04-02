@@ -13,10 +13,12 @@ module ShopifyCli
           @theme = theme
           @queue = Queue.new
           @threads = []
+          @backoff_mutex = Mutex.new
         end
 
         def enqueue_upload(file)
           file = @theme[file]
+          return if @theme.pending_files.include?(file) || @theme.ignore?(file)
           @theme.pending_files << file
           @queue << file unless @queue.closed?
         end
@@ -25,13 +27,21 @@ module ShopifyCli
           files.each { |file| enqueue_upload(file) }
         end
 
+        def size
+          @theme.pending_files.size
+        end
+
+        def empty?
+          @theme.pending_files.empty?
+        end
+
         def wait_for_uploads!
-          total = @queue.size
-          last_size = @queue.size
-          until @queue.empty? || @queue.closed?
-            if block_given? && last_size != @queue.size
-              yield @queue.size, total
-              last_size = @queue.size
+          total = size
+          last_size = size
+          until empty? || @queue.closed?
+            if block_given? && last_size != size
+              yield size, total
+              last_size = size
             end
             Thread.pass
           end
@@ -62,6 +72,7 @@ module ShopifyCli
           end
 
           return if @queue.closed?
+          wait_for_backoff!
           @ctx.debug("Uploading #{file.relative_path}")
 
           asset = { key: file.relative_path.to_s }
@@ -71,7 +82,7 @@ module ShopifyCli
             asset[:attachment] = Base64.encode64(file.read)
           end
 
-          _status, response = ShopifyCli::AdminAPI.rest_request(
+          _status, body, headers = ShopifyCli::AdminAPI.rest_request(
             @ctx,
             shop: @theme.shop,
             path: "themes/#{@theme.id}/assets.json",
@@ -80,7 +91,15 @@ module ShopifyCli
             body: JSON.generate(asset: asset)
           )
 
-          @theme.update_remote_checksums!(response)
+          # Check if the API told us we're near the rate limit
+          if !backingoff? && (limit = headers["x-shopify-shop-api-call-limit"])
+            used, total = limit.split("/").map(&:to_i)
+            backoff_if_near_limit!(used, total)
+          end
+
+          @theme.update_remote_checksums!(body)
+        rescue ShopifyCli::API::APIRequestError => e
+          @ctx.message("Could not upload theme asset: #{e.message}")
         ensure
           @theme.pending_files.delete(file)
         end
@@ -91,7 +110,7 @@ module ShopifyCli
           @threads.each { |thread| thread.join if thread.alive? }
         end
 
-        def start_threads(count = 10)
+        def start_threads(count = 2)
           count.times do
             @threads << Thread.new do
               loop do
@@ -107,7 +126,7 @@ module ShopifyCli
         end
 
         def upload_theme!(&block)
-          fetch_remote_checksums!
+          # fetch_remote_checksums!
 
           enqueue_uploads(@theme.liquid_files)
           enqueue_uploads(@theme.json_files)
@@ -120,6 +139,24 @@ module ShopifyCli
 
           # Assets are served locally, so can be uploaded in the background
           enqueue_uploads(@theme.assets)
+        end
+
+        private
+
+        def backoff_if_near_limit!(used, limit)
+          if used > limit - @threads.size
+            @ctx.debug("Near API call limit, waiting 2 sec ...")
+            @backoff_mutex.synchronize { sleep 2 }
+          end
+        end
+
+        def backingoff?
+          @backoff_mutex.locked?
+        end
+
+        def wait_for_backoff!
+          # Sleeping in the mutex in another thread. Wait for unlock
+          @backoff_mutex.synchronize {} if backingoff?
         end
       end
     end
