@@ -21,6 +21,11 @@ class UploaderTest < Minitest::Test
       .returns("12345678")
   end
 
+  def teardown
+    super
+    @uploader.shutdown
+  end
+
   def test_upload_text_file
     ShopifyCli::AdminAPI.expects(:rest_request).with(
       @ctx,
@@ -42,6 +47,7 @@ class UploaderTest < Minitest::Test
           "checksum" => @theme["assets/theme.css"].checksum,
         },
       },
+      {},
     ])
 
     @uploader.upload(@theme["assets/theme.css"])
@@ -68,6 +74,7 @@ class UploaderTest < Minitest::Test
           "checksum" => @theme["assets/logo.png"].checksum,
         },
       },
+      {},
     ])
 
     @uploader.upload(@theme["assets/logo.png"])
@@ -94,6 +101,7 @@ class UploaderTest < Minitest::Test
           "checksum" => @theme["assets/theme.css"].checksum,
         }],
       },
+      {},
     ])
 
     @uploader.fetch_remote_checksums!
@@ -104,14 +112,24 @@ class UploaderTest < Minitest::Test
   def test_upload_from_threads
     @uploader.start_threads
 
-    file = @theme.assets.first
-    @uploader.expects(:upload).with(file).times(10)
+    @theme.liquid_files.each do |file|
+      ShopifyCli::AdminAPI.expects(:rest_request).with(
+        @ctx,
+        shop: @theme.shop,
+        path: "themes/#{@theme.id}/assets.json",
+        method: "PUT",
+        api_version: "unstable",
+        body: JSON.generate({
+          asset: {
+            key: file.relative_path,
+            value: file.read,
+          },
+        })
+      ).returns([200, {}, {}])
+    end
 
-    @uploader.enqueue_uploads([file] * 10)
+    @uploader.enqueue_uploads(@theme.liquid_files)
     @uploader.wait_for_uploads!
-
-  ensure
-    @uploader.shutdown
   end
 
   def test_theme_files_are_pending_during_upload
@@ -120,8 +138,9 @@ class UploaderTest < Minitest::Test
     @uploader.enqueue_upload(file)
     assert_includes(@theme.pending_files, file)
 
-  ensure
-    @uploader.shutdown
+    @uploader.start_threads
+    @uploader.wait_for_uploads!
+    assert_empty(@theme.pending_files)
   end
 
   def test_logs_upload_error
@@ -129,12 +148,88 @@ class UploaderTest < Minitest::Test
 
     file = @theme.assets.first
     @ctx.expects(:puts).once
-    @uploader.expects(:upload).with(file).raises(RuntimeError.new("oops"))
+    ShopifyCli::AdminAPI.expects(:rest_request).raises(RuntimeError.new("oops"))
 
     @uploader.enqueue_upload(file)
     @uploader.wait_for_uploads!
+  end
 
-  ensure
-    @uploader.shutdown
+  def test_upload_theme
+    @uploader.start_threads
+
+    expected_size = (@theme.liquid_files + @theme.json_files)
+      .reject { |file| @theme.ignore?(file) }
+      .size
+
+    ShopifyCli::AdminAPI.expects(:rest_request)
+      .at_least(expected_size)
+      .returns([200, {}, {}])
+
+    @uploader.upload_theme!
+    # Still has pending assets to upload
+    refute_empty(@uploader)
+
+    @uploader.wait_for_uploads!
+    assert_empty(@uploader)
+  end
+
+  def test_backoff_near_api_limit
+    @uploader.start_threads
+    file = @theme.assets.first
+
+    ShopifyCli::AdminAPI.expects(:rest_request).with(
+      @ctx,
+      shop: @theme.shop,
+      path: "themes/#{@theme.id}/assets.json",
+      method: "PUT",
+      api_version: "unstable",
+      body: JSON.generate({
+        asset: {
+          key: file.relative_path,
+          value: file.read,
+        },
+      })
+    ).returns([
+      200,
+      {},
+      {
+        "x-shopify-shop-api-call-limit" => "39/40",
+      },
+    ])
+
+    @uploader.expects(:sleep).with(2)
+
+    @uploader.enqueue_upload(file)
+    @uploader.wait_for_uploads!
+  end
+
+  def test_dont_backoff_under_api_limit
+    @uploader.start_threads
+    file = @theme.assets.first
+
+    ShopifyCli::AdminAPI.expects(:rest_request).with(
+      @ctx,
+      shop: @theme.shop,
+      path: "themes/#{@theme.id}/assets.json",
+      method: "PUT",
+      api_version: "unstable",
+      body: JSON.generate({
+        asset: {
+          key: file.relative_path,
+          value: file.read,
+        },
+      })
+    ).returns([
+      200,
+      {},
+      {
+        "x-shopify-shop-api-call-limit" => "5/40",
+      },
+    ])
+
+    @uploader.expects(:sleep).never
+
+    @uploader.enqueue_upload(file)
+    @uploader.wait_for_uploads!
   end
 end
