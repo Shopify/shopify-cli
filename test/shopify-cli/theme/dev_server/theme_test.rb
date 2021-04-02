@@ -31,6 +31,15 @@ class ThemeTest < Minitest::Test
     assert_equal(@theme.theme_files.first, @theme[@theme.theme_files.first])
   end
 
+  def test_theme_file
+    assert(@theme["layout/theme.liquid"].liquid?)
+    refute(@theme["layout/theme.liquid"].json?)
+    assert(@theme["templates/blog.json"].json?)
+    assert(@theme["templates/blog.json"].template?)
+    assert(@theme["locales/en.default.json"].json?)
+    refute(@theme["locales/en.default.json"].template?)
+  end
+
   def test_is_theme_file
     assert(@theme.theme_file?(@theme["layout/theme.liquid"]))
     assert(@theme.theme_file?(@theme[Pathname.new(ShopifyCli::ROOT).join("test/fixtures/theme/layout/theme.liquid")]))
