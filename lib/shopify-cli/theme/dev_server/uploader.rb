@@ -138,7 +138,7 @@ module ShopifyCli
           @ctx.debug("Theme uploaded in #{time} seconds")
 
           # Assets are served locally, so can be uploaded in the background
-          enqueue_uploads(@theme.assets)
+          enqueue_uploads(@theme.asset_files)
         end
 
         private
