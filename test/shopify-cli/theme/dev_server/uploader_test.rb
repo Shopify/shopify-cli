@@ -171,7 +171,7 @@ class UploaderTest < Minitest::Test
 
   def test_backoff_near_api_limit
     @uploader.start_threads
-    file = @theme.assets.first
+    file = @theme.liquid_files.first
 
     ShopifyCli::AdminAPI.expects(:rest_request).with(
       @ctx,
@@ -201,7 +201,7 @@ class UploaderTest < Minitest::Test
 
   def test_dont_backoff_under_api_limit
     @uploader.start_threads
-    file = @theme.assets.first
+    file = @theme.liquid_files.first
 
     ShopifyCli::AdminAPI.expects(:rest_request).with(
       @ctx,
