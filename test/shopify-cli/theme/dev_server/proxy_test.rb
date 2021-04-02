@@ -114,7 +114,7 @@ class ProxyTest < Minitest::Test
     end
   end
 
-  def test_pass_pending_files_to_storefront
+  def test_pass_pending_templates_to_storefront
     ShopifyCli::DB
       .stubs(:get)
       .with(:shop)
@@ -126,14 +126,17 @@ class ProxyTest < Minitest::Test
       .returns("TOKEN")
 
     @theme.stubs(:pending_files).returns([
-      mock(relative_path: "layout/theme.liquid", read: "CONTENT"),
+      @theme["layout/theme.liquid"],
+      @theme["assets/theme.css"], # Should not be included in the POST body
     ])
 
     stub_request(:post, "https://dev-theme-server-store.myshopify.com/?_fd=0&pb=0")
       .with(
         body: {
           "_method" => "GET",
-          "replace_templates" => { "layout/theme.liquid" => "CONTENT" },
+          "replace_templates" => {
+            "layout/theme.liquid" => @theme["layout/theme.liquid"].read,
+          },
         },
         headers: {
           "Accept-Encoding" => "none",
@@ -175,7 +178,7 @@ class ProxyTest < Minitest::Test
 
     # Introduce pending files, but should not hit the POST endpoint
     @theme.stubs(:pending_files).returns([
-      stub(relative_path: "layout/theme.liquid", read: "CONTENT"),
+      @theme["layout/theme.liquid"],
     ])
     request.get("/on-core")
   end
@@ -213,7 +216,7 @@ class ProxyTest < Minitest::Test
       .returns(nil)
 
     @theme.stubs(:pending_files).returns([
-      stub(relative_path: "layout/theme.liquid", read: "CONTENT"),
+      @theme["layout/theme.liquid"],
     ])
 
     stub_session_id_request
