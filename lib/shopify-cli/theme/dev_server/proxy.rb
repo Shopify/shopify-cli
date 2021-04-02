@@ -34,8 +34,9 @@ module ShopifyCli
           headers["User-Agent"] = "Shopify CLI"
 
           query = URI.decode_www_form(env["QUERY_STRING"]).to_h
+          replace_templates = build_replace_templates_param(env)
 
-          response = if replace_templates?(env["PATH_INFO"])
+          response = if replace_templates.any?
             # Pass to SFR the recently modified templates in `replace_templates` body param
             headers["Authorization"] = "Bearer #{bearer_token}"
             form_data = URI.decode_www_form(env["rack.input"].read).to_h
@@ -43,7 +44,7 @@ module ShopifyCli
               "POST", env["PATH_INFO"],
               headers: headers,
               query: query,
-              form_data: form_data.merge(replace_templates_params).merge(_method: env["REQUEST_METHOD"]),
+              form_data: form_data.merge(replace_templates).merge(_method: env["REQUEST_METHOD"]),
             )
           else
             request(
@@ -66,10 +67,6 @@ module ShopifyCli
         end
 
         private
-
-        def replace_templates?(path_info)
-          !@core_endpoints.include?(path_info) && @theme.pending_files.any?
-        end
 
         def bearer_token
           ShopifyCli::DB.get(:storefront_renderer_production_exchange_token) ||
@@ -104,10 +101,18 @@ module ShopifyCli
           name.sub(/^HTTP_/, "").gsub("_", "-")
         end
 
-        def replace_templates_params
+        def build_replace_templates_param(env)
           params = {}
 
-          @theme.pending_files.each do |path|
+          # Core doesn't support replace_templates
+          return params if @core_endpoints.include?(env["PATH_INFO"])
+
+          pending_templates = @theme.pending_files.select do |file|
+            # Only replace Liquid or JSON files
+            file.liquid? || file.json?
+          end
+
+          pending_templates.each do |path|
             params["replace_templates[#{path.relative_path}]"] = path.read
           end
 
