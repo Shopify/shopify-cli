@@ -14,41 +14,34 @@ module ShopifyCli
       }
 
       class << self
-        def read(_directory = Dir.pwd)
-          input = parse_external_env
-          new(input)
-        end
-
-        def parse(directory)
-          File.read(File.join(directory, FILENAME))
-            .gsub("\r\n", "\n").split("\n").each_with_object({}) do |line, output|
-            match = /\A([A-Za-z_0-9]+)=(.*)\z/.match(line)
-            if match
-              key = match[1]
-              output[key] = case match[2]
-              # Remove single quotes
-              when /\A'(.*)'\z/ then match[2]
-              # Remove double quotes and unescape string preserving newline characters
-              when /\A"(.*)"\z/ then match[2].gsub('\n', "\n").gsub(/\\(.)/, '\1')
-              else match[2]
-              end
-            end
-            output
-          end
+        def read(directory = Dir.pwd)
+          env_file_path = File.join(directory, '.env')
+          read_env_file(env_file_path)
+            .then(&method(:new))
+            .unwrap { |error| raise error }
         end
 
         def parse_external_env(directory = Dir.pwd)
-          env_details = {}
-          extra = {}
-          parse(directory).each do |key, value|
-            if KEY_MAP[key]
-              env_details[KEY_MAP[key]] = value
+          env_file_path = File.join(directory, '.env')
+          read_env_file(env_file_path).unwrap { |error| raise error }
+        end
+
+        private
+
+        def read_env_file(path)
+          ReadEnvFile
+            .call(path, transform_keys: ->(key) { KEY_MAP.fetch(key, key) })
+            .then(&method(:restructure_variables))
+        end
+
+        def restructure_variables(variables)
+          variables.each_with_object({extra: {}}) do |(name, value), restructured_variables|
+            if properties.keys.include?(name)
+              restructured_variables[name] = value
             else
-              extra[key] = value
+              restructured_variables[:extra][name] = value
             end
           end
-          env_details[:extra] = extra
-          env_details
         end
       end
 
@@ -57,7 +50,7 @@ module ShopifyCli
       property :shop
       property :scopes
       property :host
-      property :extra, default: {}
+      property :extra, default: -> { {} }
 
       def to_h
         out = {}
