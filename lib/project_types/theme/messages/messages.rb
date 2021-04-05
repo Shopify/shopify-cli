@@ -6,17 +6,12 @@ module Theme
         connect: {
           duplicate: "Duplicate directory, theme files weren't connected",
           help: <<~HELP,
-            {{command:%s connect theme}}: Connects an existing theme in your store to Shopify App CLI. Downloads a copy of the theme files to your local development environment.
+            {{command:%s connect theme}}: Connects an existing theme in your store to Shopify App CLI. Creates a config file.
               Usage: {{command:%s connect theme}}
-              Options:
-                {{command:--store=MYSHOPIFYDOMAIN}} Store URL. Must be an existing store with private apps enabled.
-                {{command:--password=PASSWORD}} Private app password. App must have Read and Write Theme access.
-                {{command:--themeid=THEMEID}} Theme ID. Must be an existing theme on your store.
           HELP
           inside_project: "You are inside an existing theme, theme files weren't connected",
           connect: "Downloading theme files...",
-          failed: "Couldn't download theme files from store",
-          connected: "{{green:%s}} files were downloaded from {{underline:%s}} to {{green:%s}}",
+          connected: "Successfully connected. Config file created at {{green:%s}}",
         },
         create: {
           creating_theme: "Creating theme %s",
