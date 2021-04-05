@@ -381,7 +381,7 @@ module ShopifyCli
     def system(*args, **kwargs)
       process_status = CLI::Kit::System.system(*args, env: @env, **kwargs)
       unless process_status.success?
-        puts("System call failed: #{args.join(" ")}")
+        abort("System call failed: #{args.join(" ")}")
       end
       process_status
     end
