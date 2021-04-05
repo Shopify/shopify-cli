@@ -97,7 +97,7 @@ module Theme
 
       def update(ctx)
         command = build_command("update")
-        ctx.system(*command)
+        ctx.capture2e(*command)
       end
 
       private
