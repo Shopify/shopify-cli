@@ -16,7 +16,7 @@ module Theme
         create: {
           creating_theme: "Creating theme %s",
           duplicate_theme: "Duplicate theme",
-          failed: "Couldn't create the theme",
+          failed: "Couldn't create the theme, %s",
           help: <<~HELP,
             {{command:%s create theme}}: Creates a theme.
               Usage: {{command:%s create theme}}
@@ -27,6 +27,7 @@ module Theme
           HELP
           info: {
             created: "{{green:%s}} was created for {{underline:%s}} in {{green:%s}}",
+            dir_created: "Created directories",
           },
         },
         deploy: {
