@@ -23,6 +23,7 @@ module ShopifyCli
         def initialize(ctx, theme)
           @ctx = ctx
           @theme = theme
+          @core_endpoints = Set.new
         end
 
         def call(env)
@@ -33,8 +34,9 @@ module ShopifyCli
           headers["User-Agent"] = "Shopify CLI"
 
           query = URI.decode_www_form(env["QUERY_STRING"]).to_h
+          replace_templates = build_replace_templates_param(env)
 
-          response = if @theme.pending_files.any?
+          response = if replace_templates.any?
             # Pass to SFR the recently modified templates in `replace_templates` body param
             headers["Authorization"] = "Bearer #{bearer_token}"
             form_data = URI.decode_www_form(env["rack.input"].read).to_h
@@ -42,7 +44,7 @@ module ShopifyCli
               "POST", env["PATH_INFO"],
               headers: headers,
               query: query,
-              form_data: form_data.merge(replace_templates_params).merge(_method: env["REQUEST_METHOD"]),
+              form_data: form_data.merge(replace_templates).merge(_method: env["REQUEST_METHOD"]),
             )
           else
             request(
@@ -54,6 +56,10 @@ module ShopifyCli
           end
 
           headers = get_response_headers(response)
+
+          unless headers["x-storefront-renderer-rendered"]
+            @core_endpoints << env["PATH_INFO"]
+          end
 
           body = response.body || [""]
           body = [body] unless body.respond_to?(:each)
@@ -95,10 +101,18 @@ module ShopifyCli
           name.sub(/^HTTP_/, "").gsub("_", "-")
         end
 
-        def replace_templates_params
+        def build_replace_templates_param(env)
           params = {}
 
-          @theme.pending_files.each do |path|
+          # Core doesn't support replace_templates
+          return params if @core_endpoints.include?(env["PATH_INFO"])
+
+          pending_templates = @theme.pending_files.select do |file|
+            # Only replace Liquid or JSON files
+            file.liquid? || file.json?
+          end
+
+          pending_templates.each do |path|
             params["replace_templates[#{path.relative_path}]"] = path.read
           end
 

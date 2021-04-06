@@ -170,7 +170,7 @@ class IntegrationTest < Minitest::Test
   rescue *exceptions
     retries -= 1
     if retries > 0
-      sleep(0.1)
+      sleep(0.5)
       retry
     else
       raise
