@@ -232,4 +232,91 @@ class UploaderTest < Minitest::Test
     @uploader.enqueue_upload(file)
     @uploader.wait_for_uploads!
   end
+
+  def test_log_api_errors
+    @uploader.start_threads
+    file = @theme["sections/footer.liquid"]
+
+    response_body = JSON.generate(
+      errors: {
+        asset: [
+          "An error",
+          "Then some\nThis is truncated",
+        ],
+      }
+    )
+
+    ShopifyCli::AdminAPI.expects(:rest_request)
+      .raises(ShopifyCli::API::APIRequestClientError.new(
+        "message", response: mock(body: response_body)
+      ))
+
+    @ctx.expects(:puts).with(<<~EOS.chomp)
+      {{red:ERROR}} {{blue:sections/footer.liquid}}:
+      \tAn error
+      \tThen some
+    EOS
+
+    @uploader.enqueue_upload(file)
+    @uploader.wait_for_uploads!
+  end
+
+  def test_log_api_errors_with_invalid_response_body
+    @uploader.start_threads
+    file = @theme["sections/footer.liquid"]
+
+    response_body = JSON.generate(
+      errors: {
+        message: "oops",
+      }
+    )
+
+    ShopifyCli::AdminAPI.expects(:rest_request)
+      .raises(ShopifyCli::API::APIRequestClientError.new(
+        "exception message", response: mock(body: response_body)
+      ))
+
+    @ctx.expects(:puts).with(<<~EOS.chomp)
+      {{red:ERROR}} {{blue:sections/footer.liquid}}:
+      \texception message
+    EOS
+
+    @uploader.enqueue_upload(file)
+    @uploader.wait_for_uploads!
+  end
+
+  def test_delays_reporting_errors
+    @uploader.start_threads
+    file = @theme["sections/footer.liquid"]
+
+    response_body = JSON.generate(
+      errors: {
+        asset: [
+          "An error",
+          "Then some",
+        ],
+      }
+    )
+
+    ShopifyCli::AdminAPI.expects(:rest_request)
+      .raises(ShopifyCli::API::APIRequestClientError.new(
+        "message", response: mock(body: response_body)
+      ))
+
+    @ctx.expects(:puts).never
+
+    @uploader.delay_errors!
+    @uploader.enqueue_upload(file)
+    @uploader.wait_for_uploads!
+
+    # Assert @ctx.puts was not called
+    mocha_verify
+
+    @ctx.expects(:puts).with(<<~EOS.chomp)
+      {{red:ERROR}} {{blue:sections/footer.liquid}}:
+      \tAn error
+      \tThen some
+    EOS
+    @uploader.report_errors!
+  end
 end
