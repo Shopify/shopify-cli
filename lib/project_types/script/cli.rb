@@ -4,19 +4,26 @@ module Script
   class Project < ShopifyCli::ProjectType
     hidden_feature(feature_set: :script_project)
     title("Script")
-    creator("Script::Commands::Create")
-
-    register_command("Script::Commands::Push", "push")
 
     require Project.project_filepath("messages/messages")
     register_messages(Script::Messages::MESSAGES)
   end
 
   # define/autoload project specific Commands
-  module Commands
-    autoload :Create, Project.project_filepath("commands/create")
-    autoload :Push, Project.project_filepath("commands/push")
+  class Command < ShopifyCli::Command
+    hidden_feature(feature_set: :script_project)
+    subcommand :Create, "create", Project.project_filepath("commands/create")
+    subcommand :Push, "push", Project.project_filepath("commands/push")
+
+    def call(*)
+      @ctx.puts(self.class.help)
+    end
+
+    def self.help
+      ShopifyCli::Context.message("script.help", ShopifyCli::TOOL_NAME, subcommand_registry.command_names.join(" | "))
+    end
   end
+  ShopifyCli::Commands.register("Script::Command", "script")
 
   # define/autoload project specific Forms
   module Forms

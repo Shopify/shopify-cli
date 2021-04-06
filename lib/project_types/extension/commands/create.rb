@@ -1,7 +1,7 @@
 # frozen_string_literal: true
 
 module Extension
-  module Commands
+  class Command
     class Create < ShopifyCli::SubCommand
       options do |parser, flags|
         parser.on("--name=NAME") { |name| flags[:name] = name }
@@ -33,14 +33,7 @@ module Extension
       end
 
       def self.help
-        <<~HELP
-          Create a new app extension.
-            Usage: {{command:#{ShopifyCli::TOOL_NAME} create extension}}
-            Options:
-              {{command:--type=TYPE}} The type of extension you would like to create.
-              {{command:--name=NAME}} The name of your extension (50 characters).
-              {{command:--api-key=KEY}} The API key of your app.
-        HELP
+        @ctx.message("create.help", ShopifyCli::TOOL_NAME)
       end
 
       private

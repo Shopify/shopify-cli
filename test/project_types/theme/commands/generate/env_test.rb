@@ -44,7 +44,7 @@ module Theme
               env: nil)
             .returns(true)
 
-          command = Theme::Commands::Generate::Env.new(context)
+          command = Theme::Command::Generate::Env.new(context)
           command.call
         end
 
@@ -75,7 +75,7 @@ module Theme
               env: nil)
             .returns(true)
 
-          command = Theme::Commands::Generate::Env.new(context)
+          command = Theme::Command::Generate::Env.new(context)
           command.call
         end
 
@@ -106,7 +106,7 @@ module Theme
               env: nil)
             .returns(true)
 
-          command = Theme::Commands::Generate::Env.new(context)
+          command = Theme::Command::Generate::Env.new(context)
           command.options.flags[:store] = "office.myshopify.com"
           command.options.flags[:password] = "beep"
           command.options.flags[:themeid] = "2468"
@@ -140,7 +140,7 @@ module Theme
               env: "test")
             .returns(true)
 
-          command = Theme::Commands::Generate::Env.new(context)
+          command = Theme::Command::Generate::Env.new(context)
           command.options.flags[:env] = "test"
           command.call
         end
@@ -171,7 +171,7 @@ module Theme
               env: nil)
             .returns(true)
 
-          command = Theme::Commands::Generate::Env.new(context)
+          command = Theme::Command::Generate::Env.new(context)
           command.call
         end
 
@@ -191,7 +191,7 @@ module Theme
             .returns({})
 
           assert_raises CLI::Kit::Abort do
-            command = Theme::Commands::Generate::Env.new(context)
+            command = Theme::Command::Generate::Env.new(context)
             command.call
           end
         end

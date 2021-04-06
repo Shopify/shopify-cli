@@ -2,8 +2,8 @@
 require "shopify_cli"
 
 module Node
-  module Commands
-    class Deploy < ShopifyCli::Command
+  class Command
+    class Deploy < ShopifyCli::SubCommand
       subcommand :Heroku, "heroku", Project.project_filepath("commands/deploy/heroku")
 
       def call(*)

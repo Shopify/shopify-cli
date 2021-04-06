@@ -19,8 +19,6 @@ module ShopifyCli
     end
 
     register :Config, "config", "shopify-cli/commands/config", true
-    register :Connect, "connect", "shopify-cli/commands/connect", true
-    register :Create, "create", "shopify-cli/commands/create", true
     register :Help, "help", "shopify-cli/commands/help", true
     register :Login, "login", "shopify-cli/commands/login", true
     register :Logout, "logout", "shopify-cli/commands/logout", true
@@ -28,5 +26,7 @@ module ShopifyCli
     register :Store, "store", "shopify-cli/commands/store", true
     register :System, "system", "shopify-cli/commands/system", true
     register :Version, "version", "shopify-cli/commands/version", true
+
+    autoload :Connect, "shopify-cli/commands/connect"
   end
 end

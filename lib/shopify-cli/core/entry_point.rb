@@ -33,7 +33,7 @@ module ShopifyCli
             ctx.puts(ctx.message("core.warning.new_version", ShopifyCli::VERSION, new_version)) unless new_version.nil?
           end
 
-          ProjectType.load_type(Project.current_project_type)
+          ProjectType.load_all
 
           task_registry = ShopifyCli::Tasks::Registry
 

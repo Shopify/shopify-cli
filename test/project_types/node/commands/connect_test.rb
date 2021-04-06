@@ -17,7 +17,7 @@ module Node
         context.expects(:done)
           .with(context.message("node.connect.connected", "node-app"))
 
-        Node::Commands::Connect.new(context).call
+        Node::Command::Connect.new(context).call
       end
 
       def test_warns_if_in_production
@@ -31,7 +31,7 @@ module Node
         context.expects(:done)
           .with(context.message("node.connect.connected", "node-app"))
 
-        Node::Commands::Connect.new(context).call
+        Node::Command::Connect.new(context).call
       end
     end
   end

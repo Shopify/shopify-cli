@@ -2,8 +2,8 @@
 require "shopify_cli"
 
 module Theme
-  module Commands
-    class Generate < ShopifyCli::Command
+  class Command
+    class Generate < ShopifyCli::SubCommand
       prerequisite_task :ensure_themekit_installed
 
       subcommand :Env, "env", Project.project_filepath("commands/generate/env")

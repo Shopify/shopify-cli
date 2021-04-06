@@ -3,8 +3,8 @@
 require "shopify_cli"
 
 module Rails
-  module Commands
-    class Tunnel < ShopifyCli::Command
+  class Command
+    class Tunnel < ShopifyCli::SubCommand
       # subcommands :auth, :start, :stop
 
       def call(args, _name)
