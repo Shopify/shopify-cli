@@ -17,10 +17,11 @@ module Extension
       end
 
       def test_help_implemented
-        assert_nothing_raised { refute_nil Commands::Register.help }
+        assert_nothing_raised { refute_nil Command::Register.help }
       end
 
       def test_if_extension_is_already_registered_the_register_command_aborts
+        # skip("Need to revisit processing of arguments to subcommands")
         @project.expects(:registered?).returns(true).once
         Tasks::CreateExtension.any_instance.expects(:call).never
         ExtensionProject.expects(:write_env_file).never
@@ -99,11 +100,7 @@ module Extension
       private
 
       def run_register_command
-        Commands::Register.ctx = @context
-        Commands::Register.call(
-          [],
-          :register
-        )
+        run_cmd("extension register")
       end
     end
   end

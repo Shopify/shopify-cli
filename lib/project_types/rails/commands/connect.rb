@@ -1,6 +1,6 @@
 # frozen_string_literal: true
 module Rails
-  module Commands
+  class Command
     class Connect < ShopifyCli::SubCommand
       def call(*)
         if ShopifyCli::Project.has_current? && ShopifyCli::Project.current.env
@@ -9,6 +9,10 @@ module Rails
 
         app = ShopifyCli::Commands::Connect.new.default_connect("rails")
         @ctx.done(@ctx.message("rails.connect.connected", app))
+      end
+
+      def self.help
+        ShopifyCli::Context.message("rails.connect.help", ShopifyCli::TOOL_NAME, ShopifyCli::TOOL_NAME)
       end
     end
   end

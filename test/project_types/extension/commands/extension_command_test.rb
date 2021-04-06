@@ -9,7 +9,7 @@ module Extension
         super
         ShopifyCli::ProjectType.load_type(:extension)
         @project = ExtensionTestHelpers.fake_extension_project(with_mocks: true)
-        @command = ExtensionCommand.new
+        @command = Extension::Command::ExtensionCommand.new
       end
 
       def test_project_returns_the_current_extension_project

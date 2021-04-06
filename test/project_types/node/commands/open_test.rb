@@ -12,7 +12,7 @@ module Node
 
       def test_run
         @context.expects(:open_url!).with("https://example.com/auth?shop=my-test-shop.myshopify.com")
-        Node::Commands::Open.new(@context).call
+        Node::Command::Open.new(@context).call
       end
     end
   end
