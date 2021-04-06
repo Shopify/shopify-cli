@@ -14,6 +14,8 @@ module ShopifyCli
           @queue = Queue.new
           @threads = []
           @backoff_mutex = Mutex.new
+          @delay_errors = false
+          @delayed_errors = []
         end
 
         def enqueue_upload(file)
@@ -97,7 +99,10 @@ module ShopifyCli
 
           @theme.update_remote_checksums!(body)
         rescue ShopifyCli::API::APIRequestError => e
-          @ctx.message("Could not upload theme asset: #{e.message}")
+          report_error(
+            "{{red:ERROR}} {{blue:#{file.relative_path}}}:\n\t" +
+            parse_api_error(e).join("\n\t")
+          )
         ensure
           @theme.pending_files.delete(file)
         end
@@ -116,16 +121,29 @@ module ShopifyCli
                 break if file.nil? # shutdown was called
                 upload(file)
               rescue => e
-                @ctx.puts("{{red:ERROR}} while uploading '#{file&.relative_path}': #{e}")
-                @ctx.debug("\t#{e.backtrace.join("\n\t")}")
+                report_error(
+                  "{{red:ERROR}} {{blue:#{file&.relative_path}}}: #{e}" +
+                  (@ctx.debug? ? "\n\t#{e.backtrace.join("\n\t")}" : "")
+                )
               end
             end
           end
         end
 
+        def delay_errors!
+          @delay_errors = true
+        end
+
+        def report_errors!
+          @delay_errors = false
+          @delayed_errors.each { |error| report_error(error) }
+          @delayed_errors.clear
+        end
+
         def upload_theme!(&block)
           fetch_remote_checksums!
 
+          delay_errors!
           enqueue_uploads(@theme.liquid_files)
           enqueue_uploads(@theme.json_files)
 
@@ -140,6 +158,23 @@ module ShopifyCli
         end
 
         private
+
+        def report_error(error)
+          if @delay_errors
+            @delayed_errors << error
+          else
+            @ctx.puts(error)
+          end
+        end
+
+        def parse_api_error(exception)
+          messages = JSON.parse(exception&.response&.body).dig("errors", "asset")
+          return [exception.message] unless messages
+          # Truncate to first lines
+          messages.map! { |message| message.split("\n", 2).first }
+        rescue JSON::ParserError
+          exception.message
+        end
 
         def backoff_if_near_limit!(used, limit)
           if used > limit - @threads.size
