@@ -319,6 +319,7 @@ module ShopifyCli
           },
 
           header: "{{bold:Shopify App CLI}}",
+          shop_header: "{{bold:Current Shop}}",
           const: "%17s = %s",
           ruby_header: <<~RUBY_MESSAGE,
             {{bold:Ruby (via RbConfig)}}
@@ -343,6 +344,15 @@ module ShopifyCli
           env: "%-17s = %s",
           identity_header: "{{bold:Identity}}",
           identity_is_shopifolk: "{{v}} Checked user settings: you’re Shopify staff!",
+        },
+
+        store: {
+          help: <<~HELP,
+            Display current store.
+              Usage: {{command:%s store}}
+
+          HELP
+          shop: "You're currently logged into {{green:%s}}",
         },
 
         tasks: {
