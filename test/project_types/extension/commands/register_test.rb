@@ -12,20 +12,16 @@ module Extension
       def setup
         super
         ShopifyCli::ProjectType.load_type(:extension)
-<<<<<<< HEAD
         setup_temp_project(registration_id: nil)
-=======
-        setup_temp_project(api_key: "", api_secret: "", registration_id: nil)
-
->>>>>>> 31cb1a92 (updates due to Shopify Rubocop Style Rules changes)
         @app = Models::App.new(api_key: @api_key, secret: @api_secret)
       end
 
       def test_help_implemented
-        assert_nothing_raised { refute_nil Commands::Register.help }
+        assert_nothing_raised { refute_nil Command::Register.help }
       end
 
       def test_if_extension_is_already_registered_the_register_command_aborts
+        # skip("Need to revisit processing of arguments to subcommands")
         @project.expects(:registered?).returns(true).once
         Tasks::CreateExtension.any_instance.expects(:call).never
         ExtensionProject.expects(:write_env_file).never
@@ -42,11 +38,7 @@ module Extension
 
         CLI::UI::Prompt
           .expects(:confirm)
-<<<<<<< HEAD
           .with(@context.message("register.confirm_question"))
-=======
-          .with(@context.message("register.confirm_question", @app.title))
->>>>>>> 31cb1a92 (updates due to Shopify Rubocop Style Rules changes)
           .returns(false)
           .once
 
@@ -107,8 +99,8 @@ module Extension
       private
 
       def run_register_command
-        Commands::Register.ctx = @context
-        Commands::Register.call(
+        Extension::Command::Register.ctx = @context
+        Extension::Command::Register.call(
           [],
           :register
         )

@@ -1,7 +1,7 @@
 # frozen_string_literal: true
 
 module Extension
-  module Commands
+  class Command
     class Register < ExtensionCommand
       def call(_args, _command_name)
         CLI::UI::Frame.open(@ctx.message("register.frame_title")) do
@@ -18,10 +18,7 @@ module Extension
       end
 
       def self.help
-        <<~HELP
-          Register your local extension to a Shopify app
-              Usage: {{command:#{ShopifyCli::TOOL_NAME} register}}
-        HELP
+        ShopifyCli::Context.new.message("register.help", ShopifyCli::TOOL_NAME)
       end
 
       private

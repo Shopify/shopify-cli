@@ -1,7 +1,7 @@
 # frozen_string_literal: true
 module Rails
-  module Commands
-    class Serve < ShopifyCli::Command
+  class Command
+    class Serve < ShopifyCli::SubCommand
       prerequisite_task :ensure_env, :ensure_dev_store
 
       options do |parser, flags|

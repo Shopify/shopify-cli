@@ -4,12 +4,21 @@ module Node
   module Messages
     MESSAGES = {
       node: {
+        help: <<~HELP,
+        Suite of commands for developing Node.js apps. See {{command:%1$s node <command> --help}} for usage of each command.
+          Usage: {{command:%1$s node [ %2$s ]}}
+        HELP
+
         error: {
           generic: "Error",
         },
 
         connect: {
           connected: "Project now connected to {{green:%s}}",
+          help: <<~HELP,
+          {{command:%s node connect}}: Connects an existing Node.js app to Shopify App CLI. Creates a config file.
+            Usage: {{command:%s node connect}}
+          HELP
           production_warning: <<~MESSAGE,
           {{yellow:! Warning: if you have connected to an {{bold:app in production}}, running {{command:serve}} may update the app URL and cause an outage.
           MESSAGE
@@ -17,8 +26,8 @@ module Node
 
         create: {
           help: <<~HELP,
-          {{command:%s create node}}: Creates an embedded nodejs app.
-            Usage: {{command:%s create node}}
+          {{command:%s node create}}: Creates an embedded nodejs app.
+            Usage: {{command:%s node create}}
             Options:
               {{command:--name=NAME}} App name. Any string.
               {{command:--app-url=APPURL}} App URL. Must be a valid URL.
@@ -40,17 +49,17 @@ module Node
         deploy: {
           help: <<~HELP,
           Deploy the current Node project to a hosting service. Heroku ({{underline:https://www.heroku.com}}) is currently the only option, but more will be added in the future.
-            Usage: {{command:%s deploy [ heroku ]}}
+            Usage: {{command:%s node deploy [ heroku ]}}
           HELP
           extended_help: <<~HELP,
           {{bold:Subcommands:}}
             {{cyan:heroku}}: Deploys the current Node project to Heroku.
-              Usage: {{command:%s deploy heroku}}
+              Usage: {{command:%s node deploy heroku}}
           HELP
           heroku: {
             help: <<~HELP,
             Deploy the current Node project to Heroku
-              Usage: {{command:%s deploy heroku}}
+              Usage: {{command:%s node deploy heroku}}
             HELP
             downloading: "Downloading Heroku CLI…",
             downloaded: "Downloaded Heroku CLI",
@@ -99,14 +108,14 @@ module Node
         open: {
           help: <<~HELP,
           Open your local development app in the default browser.
-            Usage: {{command:%s open}}
+            Usage: {{command:%s node open}}
           HELP
         },
 
         serve: {
           help: <<~HELP,
           Start a local development node server for your project, as well as a public ngrok tunnel to your localhost.
-            Usage: {{command:%s serve}}
+            Usage: {{command:%s node serve}}
           HELP
           extended_help: <<~HELP,
           {{bold:Options:}}
@@ -127,19 +136,19 @@ module Node
         tunnel: {
           help: <<~HELP,
           Start or stop an http tunnel to your local development app using ngrok.
-            Usage: {{command:%s tunnel [ auth | start | stop ]}}
+            Usage: {{command:%s node tunnel [ auth | start | stop ]}}
           HELP
           extended_help: <<~HELP,
           {{bold:Subcommands:}}
 
             {{cyan:auth}}: Writes an ngrok auth token to ~/.ngrok2/ngrok.yml to connect with an ngrok account. Visit https://dashboard.ngrok.com/signup to sign up.
-              Usage: {{command:%1$s tunnel auth <token>}}
+              Usage: {{command:%1$s node tunnel auth <token>}}
 
             {{cyan:start}}: Starts an ngrok tunnel, will print the URL for an existing tunnel if already running.
-              Usage: {{command:%1$s tunnel start}}
+              Usage: {{command:%1$s node tunnel start}}
 
             {{cyan:stop}}: Stops the ngrok tunnel.
-              Usage: {{command:%1$s tunnel stop}}
+              Usage: {{command:%1$s node tunnel stop}}
 
           HELP
 

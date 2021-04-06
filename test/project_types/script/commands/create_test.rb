@@ -30,7 +30,7 @@ module Script
         FakeFS::FileSystem.clone(root + "/lib/project_types/script/config/extension_points.yml")
         @script_name = nil
         io = capture_io { perform_command }
-        assert_match(CLI::UI.fmt(Script::Commands::Create.help), io.join)
+        assert_match(CLI::UI.fmt(Script::Command::Create.help), io.join)
       end
 
       def test_can_create_new_script
@@ -70,7 +70,7 @@ module Script
         ShopifyCli::Context
           .expects(:message)
           .with("script.create.help", ShopifyCli::TOOL_NAME, "{{cyan:ep1}}, {{cyan:ep2}}")
-        Script::Commands::Create.help
+        Script::Command::Create.help
       end
 
       def test_cleanup_after_error
@@ -130,12 +130,12 @@ module Script
           language: @language,
         }
 
-        run_cmd("create script #{args.map { |k, v| "--#{k}=#{v}" }.join(" ")}")
+        run_cmd("script create #{args.map { |k, v| "--#{k}=#{v}" }.join(" ")}")
       end
 
       def perform_command
         run_cmd(
-          "create script --name=#{@script_name}
+          "script create --name=#{@script_name}
           --extension-point=#{@ep_type} --language=#{@language} #{@no_config_ui ? "--no-config-ui" : ""}"
         )
       end

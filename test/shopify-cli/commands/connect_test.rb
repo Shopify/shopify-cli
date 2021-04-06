@@ -9,7 +9,7 @@ module ShopifyCli
         ShopifyCli::Project.stubs(:has_current?).returns(false)
         CLI::UI::Prompt.expects(:ask).with(@context.message("core.connect.project_type_select")).returns("node")
         ShopifyCli::ProjectType.load_type("node")
-        ::Node::Commands::Connect.expects(:call)
+        ::Node::Command::Connect.expects(:call)
           .with([], "connect", "connect")
 
         ShopifyCli::Commands::Connect.new(@context).call([], "connect")
@@ -19,7 +19,7 @@ module ShopifyCli
         ShopifyCli::Project.stubs(:has_current?).returns(false)
         CLI::UI::Prompt.expects(:ask).with(@context.message("core.connect.project_type_select")).returns("node")
         ShopifyCli::ProjectType.load_type("node")
-        ::Node::Commands::Connect.expects(:call)
+        ::Node::Command::Connect.expects(:call)
           .with(["edge"], "connect", "connect")
 
         ShopifyCli::Commands::Connect.new(@context).call(["edge"], "connect")
