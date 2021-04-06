@@ -56,8 +56,6 @@ module ShopifyCli
           )
 
           @theme.update_remote_checksums!(response[1])
-        rescue ShopifyCli::API::APIRequestError => e
-          @ctx.abort("Could not fetch checksums for theme assets: #{e.message}")
         end
 
         def upload(file)
