@@ -78,6 +78,11 @@ module ShopifyCli
             AccessLog: [],
           )
           watcher.stop
+
+        rescue ShopifyCli::API::APIRequestForbiddenError,
+               ShopifyCli::API::APIRequestUnauthorizedError
+          @ctx.abort("You are not authorized to edit themes on #{theme.shop}.\n" \
+                     "Make sure you are a user of that store, and allowed to edit themes.")
         end
 
         def stop
