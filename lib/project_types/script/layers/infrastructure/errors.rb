@@ -52,7 +52,6 @@ module Script
         class TaskRunnerNotFoundError < ScriptProjectError; end
         class BuildScriptNotFoundError < ScriptProjectError; end
         class InvalidBuildScriptError < ScriptProjectError; end
-        class InvalidSchemaMetadataError < ScriptProjectError; end
 
         class WebAssemblyBinaryNotFoundError < ScriptProjectError
           def initialize

@@ -230,15 +230,15 @@ describe Script::Layers::Infrastructure::ScriptService do
 
         describe "when not using msgpack" do
           let(:error_tag) { "not_use_msgpack_error" }
-          it "should raise InvalidSchemaMetadataError error" do
-            assert_raises(Script::Layers::Infrastructure::Errors::InvalidSchemaMetadataError) { subject }
+          it "should raise MetadataValidationError error" do
+            assert_raises(Script::Layers::Domain::Errors::MetadataValidationError) { subject }
           end
         end
 
         describe "when invalid schema version" do
           let(:error_tag) { "schema_version_argument_error" }
-          it "should raise InvalidSchemaMetadataError error" do
-            assert_raises(Script::Layers::Infrastructure::Errors::InvalidSchemaMetadataError) { subject }
+          it "should raise MetadataValidationError error" do
+            assert_raises(Script::Layers::Domain::Errors::MetadataValidationError) { subject }
           end
         end
       end
