@@ -2,7 +2,7 @@
 require "shopify_cli"
 
 module Rails
-  module Commands
+  class Command
     class Deploy
       class Heroku < ShopifyCli::SubCommand
         DB_CHECK_CMD = 'bundle exec rails runner "puts ActiveRecord::Base.connection.adapter_name.downcase"'

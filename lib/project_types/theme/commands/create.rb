@@ -1,7 +1,7 @@
 # frozen_string_literal: true
 require "json"
 module Theme
-  module Commands
+  class Command
     class Create < ShopifyCli::SubCommand
       TEMPLATE_DIRS = ["assets", "config", "layout", "locales", "templates"]
 

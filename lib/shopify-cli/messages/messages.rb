@@ -108,8 +108,6 @@ module ShopifyCli
           preamble: <<~MESSAGE,
             Use {{command:%s help <command>}} to display detailed information about a specific command.
 
-            {{bold:Available core commands:}}
-
           MESSAGE
         },
 

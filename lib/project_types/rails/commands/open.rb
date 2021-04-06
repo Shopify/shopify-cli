@@ -1,8 +1,8 @@
 require "shopify_cli"
 
 module Rails
-  module Commands
-    class Open < ShopifyCli::Command
+  class Command
+    class Open < ShopifyCli::SubCommand
       def call(*)
         project = ShopifyCli::Project.current
         @ctx.open_url!("#{project.env.host}/login?shop=#{project.env.shop}")

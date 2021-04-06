@@ -1,6 +1,6 @@
 # frozen_string_literal: true
 module Rails
-  module Commands
+  class Command
     class Create < ShopifyCli::SubCommand
       USER_AGENT_CODE = <<~USERAGENT
         module ShopifyAPI

@@ -19,7 +19,7 @@ module Theme
 
           context.expects(:done).with(context.message("theme.connect.connected", context.root))
 
-          Theme::Commands::Connect.new(context).call([], "connect")
+          Theme::Command::Connect.new(context).call([], "connect")
           assert_equal SHOPIFYCLI_FILE, File.read(".shopify-cli.yml")
         end
       end
@@ -32,7 +32,7 @@ module Theme
           ShopifyCli::Project.expects(:write).never
 
           assert_raises CLI::Kit::Abort do
-            Theme::Commands::Connect.new(context).call([], "connect")
+            Theme::Command::Connect.new(context).call([], "connect")
           end
         end
       end

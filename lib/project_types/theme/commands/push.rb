@@ -1,7 +1,7 @@
 # frozen_string_literal: true
 module Theme
-  module Commands
-    class Push < ShopifyCli::Command
+  class Command
+    class Push < ShopifyCli::SubCommand
       prerequisite_task :ensure_themekit_installed
 
       options do |parser, flags|

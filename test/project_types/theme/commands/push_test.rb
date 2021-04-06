@@ -11,7 +11,7 @@ module Theme
         Themekit.expects(:push).with(context, files: [], flags: [], remove: nil, env: nil).returns(true)
         context.expects(:done).with(context.message("theme.push.info.push", context.root))
 
-        Theme::Commands::Push.new(context).call([], "push")
+        Theme::Command::Push.new(context).call([], "push")
       end
 
       def test_can_push_individual_files
@@ -21,7 +21,7 @@ module Theme
           .returns(true)
         context.expects(:done).with(context.message("theme.push.info.push", context.root))
 
-        Theme::Commands::Push.new(context).call(["file.liquid", "another_file.liquid"], "push")
+        Theme::Command::Push.new(context).call(["file.liquid", "another_file.liquid"], "push")
       end
 
       def test_can_remove_files
@@ -32,7 +32,7 @@ module Theme
           .returns(true)
         context.expects(:done).with(context.message("theme.push.info.remove", context.root))
 
-        command = Theme::Commands::Push.new(context)
+        command = Theme::Command::Push.new(context)
         command.options.flags["remove"] = true
         command.call(["file.liquid", "another_file.liquid"], "push")
       end
@@ -44,7 +44,7 @@ module Theme
           .with(context, files: ["file.liquid", "another_file.liquid"], flags: [], remove: true, env: nil)
           .never
 
-        command = Theme::Commands::Push.new(context)
+        command = Theme::Command::Push.new(context)
         command.options.flags["remove"] = true
         assert_raises CLI::Kit::Abort do
           command.call(["file.liquid", "another_file.liquid"], "push")
@@ -58,7 +58,7 @@ module Theme
           .returns(true)
         context.expects(:done).with(context.message("theme.push.info.push", context.root))
 
-        command = Theme::Commands::Push.new(context)
+        command = Theme::Command::Push.new(context)
         command.options.flags["nodelete"] = true
         command.call(["file.liquid", "another_file.liquid"], "push")
       end
@@ -69,7 +69,7 @@ module Theme
           .returns(true)
         context.expects(:done).with(context.message("theme.push.info.push", context.root))
 
-        command = Theme::Commands::Push.new(context)
+        command = Theme::Command::Push.new(context)
         command.options.flags[:env] = "test"
         command.call([], "push")
       end
@@ -79,7 +79,7 @@ module Theme
         Themekit.expects(:push).with(context, files: [], flags: [], remove: nil, env: nil).returns(false)
 
         assert_raises CLI::Kit::Abort do
-          Theme::Commands::Push.new(context).call([], "push")
+          Theme::Command::Push.new(context).call([], "push")
         end
       end
     end

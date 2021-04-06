@@ -4,6 +4,11 @@ module Script
   module Messages
     MESSAGES = {
       script: {
+        help: <<~HELP,
+        Suite of commands for developing script applications. See {{command:%1$s script <command> --help}} for usage of each command.
+          Usage: {{command:%1$s script [ %2$s ]}}
+        HELP
+
         error: {
           deprecated_ep: "This project uses an extension point %s which has been deprecated. "\
                          "This Script will no longer function in production.",
@@ -124,8 +129,8 @@ module Script
 
         create: {
           help: <<~HELP,
-          {{command:%1$s create script}}: Creates a script project.
-            Usage: {{command:%1$s create script}}
+          {{command:%1$s script create}}: Creates a script project.
+            Usage: {{command:%1$s script create}}
             Options:
               {{command:--name=NAME}} Script project name. Use any string.
               {{command:--description=DESCRIPTION}} Description of the project. Use any string.
@@ -144,7 +149,7 @@ module Script
         push: {
           help: <<~HELP,
           Build the script and put it into production. If you've already pushed a script with the same extension point, use --force to replace the current script with the newest one.
-            Usage: {{command:%s push}}
+            Usage: {{command:%s script push}}
             Options:
               {{command:[--force]}} Forces the script to be overwritten if an instance of it already exists.
           HELP
@@ -159,7 +164,7 @@ module Script
         disable: {
           help: <<~HELP,
           Turn off script in store.
-            Usage: {{command:%s disable}}
+            Usage: {{command:%s script disable}}
           HELP
 
           error: {
@@ -172,7 +177,7 @@ module Script
         enable: {
           help: <<~HELP,
           Turn on script in store.
-            Usage: {{command:%s enable}}
+            Usage: {{command:%s script enable}}
             Options:
               {{command:--config-props='name1:value1, name2:value2'}} Optional. Define the configuration of your script by passing individual name and value pairs. If used with --config_file, then matching values in --config-props will override those set in the file.
               {{command:--config_file=<path/to/YAMLFilename>}} Optional. Define the configuration of your script using a YAML formatted file. --config-props values override properties in this file.

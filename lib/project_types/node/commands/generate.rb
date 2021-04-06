@@ -2,8 +2,8 @@
 require "shopify_cli"
 
 module Node
-  module Commands
-    class Generate < ShopifyCli::Command
+  class Command
+    class Generate < ShopifyCli::SubCommand
       subcommand :Page, "page", Project.project_filepath("commands/generate/page")
       subcommand :Billing, "billing", Project.project_filepath("commands/generate/billing")
       subcommand :Webhook, "webhook", Project.project_filepath("commands/generate/webhook")

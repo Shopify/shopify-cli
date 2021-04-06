@@ -12,7 +12,7 @@ module Extension
       def setup
         super
         ShopifyCli::ProjectType.load_type(:extension)
-        @command = ExtensionCommand.new
+        @command = Extension::Command::ExtensionCommand.new
       end
 
       def test_project_returns_the_current_extension_project

@@ -17,8 +17,8 @@ module Extension
       end
 
       def test_prints_help
-        io = capture_io { run_cmd("create extension --help") }
-        assert_message_output(io: io, expected_content: [Extension::Commands::Create.help])
+        io = capture_io { run_cmd("extension create --help") }
+        assert_message_output(io: io, expected_content: [Extension::Command::Create.help])
       end
 
       def test_create_aborts_if_the_directory_already_exists
@@ -75,8 +75,8 @@ module Extension
       private
 
       def run_create(arguments)
-        Commands::Create.ctx = @context
-        Commands::Create.call(arguments, "create", "create")
+        Extension::Command::Create.ctx = @context
+        Extension::Command::Create.call(arguments, "create", "create")
       end
     end
   end

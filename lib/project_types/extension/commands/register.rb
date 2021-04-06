@@ -1,7 +1,7 @@
 # frozen_string_literal: true
 
 module Extension
-  module Commands
+  class Command
     class Register < ExtensionCommand
       options do |parser, flags|
         parser.on("--api_key=KEY") { |key| flags[:api_key] = key.downcase }
@@ -25,12 +25,7 @@ module Extension
       end
 
       def self.help
-        <<~HELP
-          Register your local extension to a Shopify app
-              Usage: {{command:#{ShopifyCli::TOOL_NAME} register}}
-              Options:
-                {{command:--api-key=API_KEY}} The API key used to register an app with the extension. This can be found on the app page on Partners Dashboard.
-        HELP
+        ShopifyCli::Context.new.message("register.help", ShopifyCli::TOOL_NAME)
       end
 
       private

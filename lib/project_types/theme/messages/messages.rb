@@ -3,11 +3,16 @@ module Theme
   module Messages
     MESSAGES = {
       theme: {
+        help: <<~HELP,
+          Suite of commands for developing Shopify themes. See {{command:%1$s theme <command> --help}} for usage of each command.
+            Usage: {{command:%1$s theme [ %2$s ]}}
+        HELP
+
         connect: {
           duplicate: "Duplicate directory, theme files weren't connected",
           help: <<~HELP,
-            {{command:%s connect theme}}: Connects an existing theme in your store to Shopify App CLI. Creates a config file.
-              Usage: {{command:%s connect theme}}
+            {{command:%s theme connect}}: Connects an existing theme in your store to Shopify App CLI. Creates a config file.
+              Usage: {{command:%s theme connect}}
           HELP
           inside_project: "You are inside an existing theme, theme files weren't connected",
           connect: "Downloading theme files...",
@@ -18,8 +23,8 @@ module Theme
           duplicate_theme: "Duplicate theme",
           failed: "Couldn't create the theme, %s",
           help: <<~HELP,
-            {{command:%s create theme}}: Creates a theme.
-              Usage: {{command:%s create theme}}
+            {{command:%s theme create}}: Creates a theme.
+              Usage: {{command:%s theme create}}
               Options:
                 {{command:--store=MYSHOPIFYDOMAIN}} Store URL. Must be an existing store with private apps enabled.
                 {{command:--password=PASSWORD}} Private app password. App must have Read and Write Theme access.
@@ -36,8 +41,8 @@ module Theme
           deploying: "Deploying theme",
           error: "Theme couldn't be deployed",
           help: <<~HELP,
-            {{command:%s deploy}}: Uploads your local theme files to Shopify, then sets your theme as the live theme.
-              Usage: {{command:%s deploy}}
+            {{command:%s theme deploy}}: Uploads your local theme files to Shopify, then sets your theme as the live theme.
+              Usage: {{command:%s theme deploy}}
           HELP
           info: {
             deployed: "Theme was updated and set as the live theme",
@@ -72,7 +77,7 @@ module Theme
             ask_theme: "Select theme",
             help: <<~HELP,
               Create or update configuration file in the current directory.
-                Usage: {{command:%s generate env}}
+                Usage: {{command:%s theme generate env}}
                 Options:
                   {{command:--store=MYSHOPIFYDOMAIN}} Store URL. Must be an existing store with private apps enabled.
                   {{command:--password=PASSWORD}} Private app password. App must have Read and Write Theme access.
@@ -82,7 +87,7 @@ module Theme
           },
           help: <<~HELP,
             Generate code in your Theme. Currently supports generating new envs.
-              Usage: {{command:%s generate [ env ]}}
+              Usage: {{command:%s theme generate [ env ]}}
           HELP
         },
         push: {
@@ -93,8 +98,8 @@ module Theme
             remove_error: "Theme files couldn't be removed from Shopify",
           },
           help: <<~HELP,
-            {{command:%s push}}: Uploads your local theme files to Shopify, overwriting the remote versions. If you specify filenames, separated by a space, only those files will be replaced. Otherwise, the whole theme will be replaced.
-              Usage: {{command:%s push}}
+            {{command:%s theme push}}: Uploads your local theme files to Shopify, overwriting the remote versions. If you specify filenames, separated by a space, only those files will be replaced. Otherwise, the whole theme will be replaced.
+              Usage: {{command:%s theme push}}
               Options:
                 {{command:--remove}} Deletes both the local and the remote copies of the specified files. At least one filename must be specified.
                 {{command:--allow-live}} Allows Shopify App CLI to replace files on the store's live production theme.
@@ -110,7 +115,7 @@ module Theme
         serve: {
           help: <<~HELP,
             Sync your current changes, then view the active store in your default browser. Any theme edits will continue to update in real time. Also prints the active store's URL in your terminal.
-            Usage: {{command:%s serve}}
+            Usage: {{command:%s theme serve}}
           HELP
           serve: "Viewing theme...",
           open_fail: "Couldn't open the theme",
