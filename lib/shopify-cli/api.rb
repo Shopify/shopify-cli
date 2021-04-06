@@ -13,6 +13,7 @@ module ShopifyCli
     class APIRequestNotFoundError < APIRequestError; end
     class APIRequestClientError < APIRequestError; end
     class APIRequestUnauthorizedError < APIRequestClientError; end
+    class APIRequestForbiddenError < APIRequestClientError; end
     class APIRequestUnexpectedError < APIRequestError; end
     class APIRequestRetriableError < APIRequestError; end
     class APIRequestServerError < APIRequestRetriableError; end
@@ -56,6 +57,8 @@ module ShopifyCli
           [response.code.to_i, JSON.parse(response.body), response]
         when 401
           raise APIRequestUnauthorizedError, "#{response.code}\n#{response.body}"
+        when 403
+          raise APIRequestForbiddenError, "#{response.code}\n#{response.body}"
         when 404
           raise APIRequestNotFoundError, "#{response.code}\n#{response.body}"
         when 429
