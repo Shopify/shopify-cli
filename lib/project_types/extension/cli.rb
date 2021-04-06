@@ -6,13 +6,6 @@ module Extension
   class Project < ShopifyCli::ProjectType
     hidden_feature
     title("App Extension")
-    creator("Extension::Commands::Create")
-
-    register_command("Extension::Commands::Build", "build")
-    register_command("Extension::Commands::Register", "register")
-    register_command("Extension::Commands::Push", "push")
-    register_command("Extension::Commands::Serve", "serve")
-    register_command("Extension::Commands::Tunnel", "tunnel")
 
     require Project.project_filepath("messages/messages")
     require Project.project_filepath("messages/message_loading")
@@ -20,15 +13,30 @@ module Extension
     register_messages(Extension::Messages::MessageLoading.load)
   end
 
-  module Commands
+  class Command < ShopifyCli::Command
+    hidden_feature
     autoload :ExtensionCommand, Project.project_filepath("commands/extension_command")
-    autoload :Create, Project.project_filepath("commands/create")
-    autoload :Register, Project.project_filepath("commands/register")
-    autoload :Build, Project.project_filepath("commands/build")
-    autoload :Serve, Project.project_filepath("commands/serve")
-    autoload :Push, Project.project_filepath("commands/push")
-    autoload :Tunnel, Project.project_filepath("commands/tunnel")
+
+    subcommand :Create, "create", Project.project_filepath("commands/create")
+    subcommand :Register, "register", Project.project_filepath("commands/register")
+    subcommand :Build, "build", Project.project_filepath("commands/build")
+    subcommand :Serve, "serve", Project.project_filepath("commands/serve")
+    subcommand :Push, "push", Project.project_filepath("commands/push")
+    subcommand :Tunnel, "tunnel", Project.project_filepath("commands/tunnel")
+
+    def call(*)
+      @ctx.puts(self.class.help)
+    end
+
+    def self.help
+      ShopifyCli::Context.message(
+        "extension.help",
+        ShopifyCli::TOOL_NAME,
+        subcommand_registry.command_names.join(" | ")
+      )
+    end
   end
+  ShopifyCli::Commands.register("Extension::Command", "extension")
 
   module Tasks
     autoload :UserErrors, Project.project_filepath("tasks/user_errors")

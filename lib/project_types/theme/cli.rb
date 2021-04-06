@@ -2,13 +2,7 @@
 module Theme
   class Project < ShopifyCli::ProjectType
     title("Theme")
-    creator("Theme::Commands::Create")
-    connector("Theme::Commands::Connect")
-
-    register_command("Theme::Commands::Deploy", "deploy")
-    register_command("Theme::Commands::Generate", "generate")
-    register_command("Theme::Commands::Push", "push")
-    register_command("Theme::Commands::Serve", "serve")
+    connector("Theme::Command::Connect")
 
     register_task("Theme::Tasks::EnsureThemekitInstalled", :ensure_themekit_installed)
 
@@ -16,14 +10,23 @@ module Theme
     register_messages(Theme::Messages::MESSAGES)
   end
 
-  module Commands
-    autoload :Connect, Project.project_filepath("commands/connect")
-    autoload :Create, Project.project_filepath("commands/create")
-    autoload :Deploy, Project.project_filepath("commands/deploy")
-    autoload :Generate, Project.project_filepath("commands/generate")
-    autoload :Push, Project.project_filepath("commands/push")
-    autoload :Serve, Project.project_filepath("commands/serve")
+  class Command < ShopifyCli::Command
+    subcommand :Connect, "connect", Project.project_filepath("commands/connect")
+    subcommand :Create, "create", Project.project_filepath("commands/create")
+    subcommand :Deploy, "deploy", Project.project_filepath("commands/deploy")
+    subcommand :Generate, "generate", Project.project_filepath("commands/generate")
+    subcommand :Push, "push", Project.project_filepath("commands/push")
+    subcommand :Serve, "serve", Project.project_filepath("commands/serve")
+
+    def call(*)
+      @ctx.puts(self.class.help)
+    end
+
+    def self.help
+      ShopifyCli::Context.message("theme.help", ShopifyCli::TOOL_NAME, subcommand_registry.command_names.join(" | "))
+    end
   end
+  ShopifyCli::Commands.register("Theme::Command", "theme")
 
   module Tasks
     autoload :EnsureThemekitInstalled, Project.project_filepath("tasks/ensure_themekit_installed")

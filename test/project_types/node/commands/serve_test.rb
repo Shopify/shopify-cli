@@ -28,7 +28,7 @@ module Node
             "PORT" => "8081",
           }
         )
-        run_cmd("serve")
+        run_cmd("node serve")
       end
 
       def test_server_command_with_invalid_host_url
@@ -48,7 +48,7 @@ module Node
         ).never
 
         assert_raises ShopifyCli::Abort do
-          run_cmd("serve")
+          run_cmd("node serve")
         end
       end
 
@@ -63,7 +63,7 @@ module Node
           @context.message("node.serve.open_info", "https://example.com/auth?shop=my-test-shop.myshopify.com") +
           "\n"
         )
-        run_cmd("serve")
+        run_cmd("node serve")
       end
 
       def test_update_env_with_host
@@ -72,7 +72,7 @@ module Node
         ShopifyCli::Resources::EnvFile.any_instance.expects(:update).with(
           @context, :host, "https://example-foo.com"
         )
-        run_cmd('serve --host="https://example-foo.com"')
+        run_cmd('node serve --host="https://example-foo.com"')
       end
     end
   end

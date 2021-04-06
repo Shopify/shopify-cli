@@ -1,7 +1,7 @@
 # frozen_string_literal: true
 
 module Extension
-  module Commands
+  class Command
     class Serve < ExtensionCommand
       DEFAULT_PORT = 39351
 
@@ -31,12 +31,7 @@ module Extension
       end
 
       def self.help
-        <<~HELP
-          Serve your extension in a local simulator for development.
-            Usage: {{command:#{ShopifyCli::TOOL_NAME} serve}}
-            Options:
-            {{command:--tunnel=TUNNEL}} Establish an ngrok tunnel (default: false)
-        HELP
+        ShopifyCli::Context.new.message("serve.help", ShopifyCli::TOOL_NAME)
       end
 
       private

@@ -1,5 +1,5 @@
 module Theme
-  module Commands
+  class Command
     class Generate
       class Env < ShopifyCli::SubCommand
         options do |parser, flags|
