@@ -6,6 +6,24 @@ require "stringio"
 module ShopifyCli
   module Theme
     module DevServer
+      # WEBrick will sometimes cause a fatal deadlock error on shutdown.
+      # The error happens because `Thread#join` is called without a timeout argument.
+      # We monkey-patch WEBrick to call `Thread#join(timeout)` before the existing
+      # `Thread#join`.
+      module WEBrickGenericServerThreadJoinWithTimeout
+        # Hook into a method called right before the threads are shutdown.
+        def cleanup_listener
+          # Force a Thread#join with a timeout to prevent any deadlock error on stop
+          Thread.list.each do |thread|
+            next unless thread[:WEBrickThread]
+            thread.join(2)
+            # Prevent the `join` call without a timeout inside WEBrick.
+            thread[:WEBrickThread] = false
+          end
+          super
+        end
+      end
+
       # Base on Rack::Handler::WEBrick
       class WebServer < ::WEBrick::HTTPServlet::AbstractServlet
         def self.run(app, **options)
@@ -21,6 +39,7 @@ module ShopifyCli
           end
 
           @server = ::WEBrick::HTTPServer.new(options)
+          @server.extend(WEBrickGenericServerThreadJoinWithTimeout)
           @server.mount("/", WebServer, app)
           yield @server if block_given?
           @server.start
