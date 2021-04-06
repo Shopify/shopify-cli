@@ -16,7 +16,7 @@ module Script
       def ask_extension_point
         CLI::UI::Prompt.ask(
           @ctx.message("script.forms.create.select_extension_point"),
-          options: Layers::Application::ExtensionPoints.non_deprecated_types
+          options: Layers::Application::ExtensionPoints.visible_types
         )
       end
 

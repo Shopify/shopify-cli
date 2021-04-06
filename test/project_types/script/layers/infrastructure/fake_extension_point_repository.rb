@@ -14,6 +14,10 @@ module Script
           @cache[type] = Domain::ExtensionPoint.new(type, example_config(type))
         end
 
+        def create_beta_extension_point(type)
+          @cache[type] = Domain::ExtensionPoint.new(type, beta_config(type))
+        end
+
         def create_deprecated_extension_point(type)
           @cache[type] = Domain::ExtensionPoint.new(type, deprecated_config(type))
         end
@@ -35,6 +39,10 @@ module Script
         end
 
         private
+
+        def beta_config(type)
+          example_config(type).merge({ "beta" => true })
+        end
 
         def deprecated_config(type)
           example_config(type).merge({ "deprecated" => true })
