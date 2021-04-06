@@ -7,20 +7,6 @@ describe Script::Layers::Domain::Metadata do
   let(:schema_minor_version) { "0" }
   let(:use_msgpack) { true }
   let(:ctx) { ShopifyCli::Context.new }
-  let(:raw_json) do
-    JSON.dump(
-      {
-        schemaVersions: {
-          example: {
-            major: schema_major_version, minor: schema_minor_version
-          },
-        },
-        flags: {
-          use_msgpack: true,
-        },
-      },
-    )
-  end
 
   describe ".new" do
     subject { Script::Layers::Domain::Metadata.new(schema_major_version, schema_minor_version, use_msgpack) }
@@ -32,8 +18,31 @@ describe Script::Layers::Domain::Metadata do
   end
 
   describe ".create_from_json" do
+    subject { Script::Layers::Domain::Metadata.create_from_json(ctx, raw_json) }
+
+    describe "with invalid json" do
+      let(:raw_json) { "*" }
+
+      it "should raise an appropriate error" do
+        assert_raises(::Script::Layers::Domain::Errors::MetadataValidationError) { subject }
+      end
+    end
+
     describe "with valid json" do
-      subject { Script::Layers::Domain::Metadata.create_from_json(ctx, raw_json) }
+      let(:raw_json) do
+        JSON.dump(
+          {
+            schemaVersions: {
+              example: {
+                major: schema_major_version, minor: schema_minor_version
+              },
+            },
+            flags: {
+              use_msgpack: true,
+            },
+          },
+        )
+      end
 
       it "should construct new Metadata" do
         assert_equal schema_major_version, subject.schema_major_version
@@ -42,15 +51,15 @@ describe Script::Layers::Domain::Metadata do
     end
 
     describe "with missing schemaVersions" do
+      let(:raw_json) { "{}" }
+
       it "should raise an appropriate error" do
-        assert_raises(::Script::Layers::Domain::Errors::MetadataValidationError) do
-          Script::Layers::Domain::Metadata.create_from_json(ctx, "{}")
-        end
+        assert_raises(::Script::Layers::Domain::Errors::MetadataValidationError) { subject }
       end
     end
 
     describe "with multiple EPs" do
-      let(:raw_json_multiple_eps) do
+      let(:raw_json) do
         JSON.dump(
           {
             schemaVersions: {
@@ -62,14 +71,12 @@ describe Script::Layers::Domain::Metadata do
       end
 
       it "should raise an appropriate error" do
-        assert_raises(::Script::Layers::Domain::Errors::MetadataValidationError) do
-          Script::Layers::Domain::Metadata.create_from_json(ctx, raw_json_multiple_eps)
-        end
+        assert_raises(::Script::Layers::Domain::Errors::MetadataValidationError) { subject }
       end
     end
 
     describe "with missing major version" do
-      let(:raw_json_no_major) do
+      let(:raw_json) do
         JSON.dump(
           {
             schemaVersions: {
@@ -80,14 +87,12 @@ describe Script::Layers::Domain::Metadata do
       end
 
       it "should raise an appropriate error" do
-        assert_raises(::Script::Layers::Domain::Errors::MetadataValidationError) do
-          Script::Layers::Domain::Metadata.create_from_json(ctx, raw_json_no_major)
-        end
+        assert_raises(::Script::Layers::Domain::Errors::MetadataValidationError) { subject }
       end
     end
 
     describe "with missing minor version" do
-      let(:raw_json_no_minor) do
+      let(:raw_json) do
         JSON.dump(
           {
             schemaVersions: {
@@ -98,9 +103,7 @@ describe Script::Layers::Domain::Metadata do
       end
 
       it "should raise an appropriate error" do
-        assert_raises(::Script::Layers::Domain::Errors::MetadataValidationError) do
-          Script::Layers::Domain::Metadata.create_from_json(ctx, raw_json_no_minor)
-        end
+        assert_raises(::Script::Layers::Domain::Errors::MetadataValidationError) { subject }
       end
     end
   end
