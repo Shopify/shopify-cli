@@ -94,7 +94,7 @@ module Extension
         fake_http_url = "http://12345.ngrok.io"
         ShopifyCli::Tunnel.expects(:urls).returns([fake_http_url]).once
 
-        io = capture_io { run_tunnel(Tunnel::STATUS_SUBCOMMAND) }
+        io = capture_io { run_tunnel(Extension::Command::Tunnel::STATUS_SUBCOMMAND) }
 
         assert_message_output(io: io, expected_content: @context.message("tunnel.tunnel_running_at", fake_http_url))
       end
