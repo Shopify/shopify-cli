@@ -17,7 +17,7 @@ module Rails
         context.expects(:done)
           .with(context.message("rails.connect.connected", "rails-app"))
 
-        Rails::Commands::Connect.new(context).call
+        Rails::Command::Connect.new(context).call
       end
 
       def test_warns_if_in_production
@@ -32,7 +32,7 @@ module Rails
         context.expects(:done)
           .with(context.message("rails.connect.connected", "rails-app"))
 
-        Rails::Commands::Connect.new(context).call
+        Rails::Command::Connect.new(context).call
       end
     end
   end

@@ -2,7 +2,7 @@
 require "shopify_cli"
 
 module Node
-  module Commands
+  class Command
     class Deploy
       class Heroku < ShopifyCli::SubCommand
         def self.help

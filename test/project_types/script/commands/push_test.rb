@@ -40,7 +40,7 @@ module Script
         ShopifyCli::Context
           .expects(:message)
           .with("script.push.help", ShopifyCli::TOOL_NAME)
-        Script::Commands::Push.help
+        Script::Command::Push.help
       end
 
       def test_push_propagates_error_when_ensure_env_fails
@@ -59,7 +59,7 @@ module Script
       private
 
       def perform_command
-        capture_io { run_cmd("push --force") }
+        capture_io { run_cmd("script push --force") }
       end
     end
   end

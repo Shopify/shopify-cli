@@ -1,6 +1,6 @@
 # frozen_string_literal: true
 module Theme
-  module Commands
+  class Command
     class Connect < ShopifyCli::SubCommand
       def call(_args, _name)
         if ShopifyCli::Project.has_current?

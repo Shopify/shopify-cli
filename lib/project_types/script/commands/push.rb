@@ -1,8 +1,8 @@
 # frozen_string_literal: true
 
 module Script
-  module Commands
-    class Push < ShopifyCli::Command
+  class Command
+    class Push < ShopifyCli::SubCommand
       options do |parser, flags|
         parser.on("--force") { |t| flags[:force] = t }
       end

@@ -34,7 +34,7 @@ module Extension
         ShopifyCli::Shopifolk.stubs(:check).returns(false)
         ShopifyCli::Feature.stubs(:enabled?).with(:argo_admin_beta).returns(false)
 
-        refute_empty(Serve.help)
+        refute_empty(Command::Serve.help)
       end
 
       def test_uses_js_system_to_run_npm_or_yarn_serve_commands
@@ -96,8 +96,7 @@ module Extension
       private
 
       def run_serve(*args)
-        Serve.ctx = @context
-        Serve.call(args, "serve")
+        run_cmd("extension serve " + args.join(" "))
       end
 
       def stub_argo_enabled_shop
