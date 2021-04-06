@@ -213,7 +213,7 @@ describe Script::Layers::Infrastructure::ScriptService do
         end
       end
 
-      describe "when invalid_metadata" do
+      describe "when metadata is invalid" do
         let(:response) do
           {
             data: {
@@ -235,7 +235,7 @@ describe Script::Layers::Infrastructure::ScriptService do
           end
         end
 
-        describe "when invalid metadata" do
+        describe "when invalid schema version" do
           let(:error_tag) { "schema_version_argument_error" }
           it "should raise InvalidSchemaMetadataError error" do
             assert_raises(Script::Layers::Infrastructure::Errors::InvalidSchemaMetadataError) { subject }
