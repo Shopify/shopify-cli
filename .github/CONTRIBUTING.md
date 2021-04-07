@@ -1,6 +1,6 @@
 # How to contribute
 
-Shopify App CLI is an open source project. We want to make it as easy and transparent as possible to contribute. If we are missing anything or can make the process easier in any way, please let us know by [opening an issue](https://github.com/Shopify/shopify-app-cli/issues/new).
+Shopify CLI is an open source project. We want to make it as easy and transparent as possible to contribute. If we are missing anything or can make the process easier in any way, please let us know by [opening an issue](https://github.com/Shopify/shopify-app-cli/issues/new).
 
 ## Code of conduct
 
@@ -8,10 +8,10 @@ We expect all participants to read our [code of conduct](https://github.com/Shop
 
 ## Open development
 
-All work on Shopify App CLI happens directly on GitHub. Both team members and external contributors send pull requests which go through the same review process.
+All work on Shopify CLI happens directly on GitHub. Both team members and external contributors send pull requests which go through the same review process.
 
 ## Design guidelines
-When contributing to the Shopify App CLI, there are a set of [design guidelines](https://github.com/Shopify/shopify-app-cli/blob/master/.github/DESIGN.md) that should be followed. The design guidelines are meant to help create a consistent and predictable experience for all users of the tool, and help make descisions quicker when creating new commands or adding to existing ones.
+When contributing to the Shopify CLI, there are a set of [design guidelines](https://github.com/Shopify/shopify-app-cli/blob/master/.github/DESIGN.md) that should be followed. The design guidelines are meant to help create a consistent and predictable experience for all users of the tool, and help make descisions quicker when creating new commands or adding to existing ones.
 
 ## Bugs
 
