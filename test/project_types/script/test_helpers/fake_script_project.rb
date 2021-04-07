@@ -12,7 +12,7 @@ module TestHelpers
     end
 
     def api_key
-      env[:api_key]
+      env.api_key
     end
   end
 end

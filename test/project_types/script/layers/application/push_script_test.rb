@@ -26,7 +26,7 @@ describe Script::Layers::Application::PushScript do
       script_name: script_name,
       config_ui_file: config_ui_filename,
       config_ui: config_ui,
-      env: { api_key: api_key }
+      env: stub(api_key: api_key)
     )
   end
   let(:push_package_repository) { Script::Layers::Infrastructure::FakePushPackageRepository.new }

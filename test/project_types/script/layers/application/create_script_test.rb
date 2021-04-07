@@ -23,7 +23,6 @@ describe Script::Layers::Application::CreateScript do
   end
 
   before do
-    Script::ScriptProject.stubs(:current).returns(script_project)
     Script::Layers::Infrastructure::ExtensionPointRepository.stubs(:new).returns(extension_point_repository)
     Script::Layers::Infrastructure::ConfigUiRepository.stubs(:new).returns(config_ui_repository)
 

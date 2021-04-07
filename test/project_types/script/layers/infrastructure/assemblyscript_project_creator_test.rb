@@ -8,7 +8,6 @@ describe Script::Layers::Infrastructure::AssemblyScriptProjectCreator do
   let(:script_name) { "myscript" }
   let(:language) { "AssemblyScript" }
   let(:script_id) { "id" }
-  let(:project) { TestHelpers::FakeProject.new }
   let(:context) { TestHelpers::FakeContext.new }
   let(:extension_point_type) { "discount" }
   let(:extension_point) { Script::Layers::Domain::ExtensionPoint.new(extension_point_type, extension_point_config) }
@@ -28,8 +27,6 @@ describe Script::Layers::Infrastructure::AssemblyScriptProjectCreator do
 
   before do
     context.mkdir_p(script_name)
-    Script::ScriptProject.stubs(:current).returns(project)
-    project.directory = script_name
   end
 
   describe ".setup_dependencies" do
