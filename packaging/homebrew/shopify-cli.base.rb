@@ -1,6 +1,6 @@
 class ShopifyCli < Formula
   version 'SHOPIFY_CLI_VERSION'
-  homepage 'https://shopify.github.io/shopify-app-cli'
+  homepage 'https://shopify.github.io/shopify-cli'
   url "https://rubygems.org/downloads/shopify-cli-#{version}.gem"
   sha256 'SHOPIFY_CLI_GEM_CHECKSUM'
   desc <<~DESC

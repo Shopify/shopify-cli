@@ -4,7 +4,7 @@ Section: custom
 Priority: optional
 Architecture: all
 Essential: no
-Maintainer: github.com/Shopify/shopify-app-cli
+Maintainer: github.com/Shopify/shopify-cli
 Depends: ruby (>= 2.5), git (>= 2.13), sudo, make
 Description:
   Shopify CLI helps you build Shopify apps faster. It quickly scaffolds Node.js
