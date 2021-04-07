@@ -73,54 +73,6 @@ module Script
         Script::Commands::Create.help
       end
 
-      def test_cleanup_after_error
-        Dir.mktmpdir(@script_name)
-        Layers::Application::CreateScript.expects(:call).with(
-          ctx: @context,
-          language: @language,
-          script_name: @script_name,
-          extension_point_type: @ep_type,
-          no_config_ui: @no_config_ui
-        ).raises(StandardError)
-
-        ScriptProject.expects(:cleanup).with(
-          ctx: @context,
-          script_name: @script_name,
-          root_dir: @context.root
-        )
-
-        assert_raises StandardError do
-          capture_io do
-            perform_command
-          end
-        end
-
-        refute @context.dir_exist?(@script_name)
-      end
-
-      def test_directory_already_exists
-        error = Script::Layers::Infrastructure::Errors::ScriptProjectAlreadyExistsError.new
-        Dir.mktmpdir(@script_name)
-        Layers::Application::CreateScript.expects(:call).with(
-          ctx: @context,
-          language: @language,
-          script_name: @script_name,
-          extension_point_type: @ep_type,
-          no_config_ui: @no_config_ui
-        ).raises(error)
-
-        UI::ErrorHandler.expects(:pretty_print_and_raise).with(
-          error,
-          failed_op: @context.message("script.create.error.operation_failed")
-        )
-
-        ScriptProject.expects(:cleanup).never
-
-        capture_io do
-          perform_command
-        end
-      end
-
       private
 
       def perform_command_snake_case
