@@ -42,5 +42,5 @@ Read the [development guide](https://github.com/Shopify/shopify-cli/wiki).
 
 ## Where to get help
 
-- **[Open a GitHub issue](https://github.com/Shopify/shopify-app-cli/issues)** - To report bugs or request new features, open an issue in the Shopify CLI repository.
+- **[Open a GitHub issue](https://github.com/Shopify/shopify-cli/issues)** - To report bugs or request new features, open an issue in the Shopify CLI repository.
 - **[Shopify Community Forums](https://community.shopify.com/)** - Visit our forums to connect with the community and learn more about Shopify CLI development.
