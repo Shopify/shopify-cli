@@ -79,6 +79,7 @@ module Script
         end
 
         def default_config_ui_content(title)
+          require "yaml" # takes 20ms, so deferred as late as possible.
           YAML.dump({
             "version" => 1,
             "type" => "single",

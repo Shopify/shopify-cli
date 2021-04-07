@@ -1,7 +1,6 @@
 # frozen_string_literal: true
 
 require "project_types/script/test_helper"
-require "project_types/script/layers/infrastructure/fake_config_ui_repository"
 
 describe Script::Layers::Infrastructure::ScriptProjectRepository do
   include TestHelpers::FakeFS
@@ -28,8 +27,9 @@ describe Script::Layers::Infrastructure::ScriptProjectRepository do
     let(:no_config_ui) { false }
 
     before do
-      ctx.mkdir_p(script_name)
-      ctx.chdir(script_name)
+      dir = "/#{script_name}"
+      ctx.mkdir_p(dir)
+      ctx.chdir(dir)
     end
 
     subject do
@@ -40,11 +40,6 @@ describe Script::Layers::Infrastructure::ScriptProjectRepository do
         no_config_ui: no_config_ui
       )
     end
-
-    #before do
-    #  # TODO: replace
-    #  Script::Layers::Infrastructure::ScriptProjectRepository::ConfigUiRepository.stubs(:new).returns(config_ui_repository)
-    #end
 
     describe "failure" do
       describe "when extension point is deprecated" do
@@ -87,7 +82,6 @@ describe Script::Layers::Infrastructure::ScriptProjectRepository do
 
         it "should create a config_ui_file" do
           capture_io { subject }
-          ctx.chdir(File.join(ctx.root, script_name))
 
           config_ui = config_ui_repository.get(expected_config_ui_filename)
 
