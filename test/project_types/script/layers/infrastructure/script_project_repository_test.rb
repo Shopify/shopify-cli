@@ -9,12 +9,14 @@ describe Script::Layers::Infrastructure::ScriptProjectRepository do
   let(:ctx) { TestHelpers::FakeContext.new }
   let(:instance) { Script::Layers::Infrastructure::ScriptProjectRepository.new(ctx: ctx) }
 
-  let(:config_ui_repository) { Script::Layers::Infrastructure::FakeConfigUiRepository.new }
+  let(:config_ui_repository) do
+    Script::Layers::Infrastructure::ScriptProjectRepository::ConfigUiRepository.new(ctx: ctx)
+  end
+
   let(:deprecated_ep_types) { [] }
   let(:supported_languages) { ["assemblyscript"] }
 
   before do
-    Script::Layers::Infrastructure::ConfigUiRepository.stubs(:new).returns(config_ui_repository)
     Script::Layers::Application::ExtensionPoints.stubs(:deprecated_types).returns(deprecated_ep_types)
     Script::Layers::Application::ExtensionPoints.stubs(:languages).returns(supported_languages)
   end
@@ -38,6 +40,11 @@ describe Script::Layers::Infrastructure::ScriptProjectRepository do
         no_config_ui: no_config_ui
       )
     end
+
+    #before do
+    #  # TODO: replace
+    #  Script::Layers::Infrastructure::ScriptProjectRepository::ConfigUiRepository.stubs(:new).returns(config_ui_repository)
+    #end
 
     describe "failure" do
       describe "when extension point is deprecated" do
@@ -80,13 +87,15 @@ describe Script::Layers::Infrastructure::ScriptProjectRepository do
 
         it "should create a config_ui_file" do
           capture_io { subject }
+          ctx.chdir(File.join(ctx.root, script_name))
 
-          config_ui = config_ui_repository.get_config_ui(expected_config_ui_filename)
+          config_ui = config_ui_repository.get(expected_config_ui_filename)
 
           refute_nil config_ui
           assert_equal expected_config_ui_filename, config_ui.filename
           assert_equal expected_config_ui_content, config_ui.content
-          assert_equal config_ui, subject.config_ui
+          assert_equal config_ui.filename, subject.config_ui.filename
+          assert_equal config_ui.content, subject.config_ui.content
 
           assert_equal expected_config_ui_filename, ShopifyCli::Project.current.config["config_ui_file"]
         end
@@ -134,7 +143,7 @@ describe Script::Layers::Infrastructure::ScriptProjectRepository do
     before do
       ShopifyCli::Project.stubs(:has_current?).returns(true)
       ShopifyCli::Project.stubs(:current).returns(current_project)
-      config_ui_repository.create_config_ui(config_ui_file, config_ui_content)
+      config_ui_repository.create(config_ui_file, config_ui_content)
     end
 
     describe "when project config is valid" do
@@ -187,6 +196,71 @@ describe Script::Layers::Infrastructure::ScriptProjectRepository do
 
         it "should succeed" do
           assert subject
+        end
+      end
+    end
+  end
+
+  describe "ConfigUiRepository" do
+    let(:instance) { Script::Layers::Infrastructure::ScriptProjectRepository::ConfigUiRepository.new(ctx: ctx) }
+
+    describe "#create" do
+      let(:filename) { "filename" }
+      let(:content) { "content" }
+
+      subject { instance.create(filename, content) }
+
+      it "should write the content to the filename" do
+        subject
+        assert_equal content, File.read(filename)
+      end
+
+      it "should return a ConfigUi entity" do
+        assert subject.is_a?(Script::Layers::Domain::ConfigUi)
+      end
+    end
+
+    describe "#get" do
+      subject { instance.get(filename) }
+
+      describe "when filename is empty" do
+        let(:filename) { nil }
+
+        it "should return nil" do
+          assert_nil subject
+        end
+      end
+
+      describe "when filename is not empty" do
+        let(:filename) { "filename" }
+
+        describe "when file does not exist" do
+          it "raises MissingSpecifiedConfigUiDefinitionError" do
+            assert_raises(Script::Layers::Domain::Errors::MissingSpecifiedConfigUiDefinitionError) { subject }
+          end
+        end
+
+        describe "when file exists" do
+          before do
+            File.write(filename, content)
+          end
+
+          describe "when content is invalid yaml" do
+            let(:content) { "*" }
+
+            it "raises InvalidConfigUiDefinitionError" do
+              assert_raises(Script::Layers::Domain::Errors::InvalidConfigUiDefinitionError) { subject }
+            end
+          end
+
+          describe "when content is valid yaml" do
+            let(:content) { "---\nversion: 1" }
+
+            it "returns the entity" do
+              assert_equal filename, subject.filename
+              assert_equal content, subject.content
+            end
+          end
         end
       end
     end

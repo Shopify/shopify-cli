@@ -17,10 +17,9 @@ module Script
 
           unless no_config_ui
             optional_identifiers.merge!(config_ui_file: DEFAULT_CONFIG_UI_FILENAME)
-            # TODO: remove this repo and make it an implementation detail
-            config_ui_file = Infrastructure::ConfigUiRepository
+            config_ui_file = ConfigUiRepository
               .new(ctx: ctx)
-              .create_config_ui(DEFAULT_CONFIG_UI_FILENAME, default_config_ui_content(script_name))
+              .create(DEFAULT_CONFIG_UI_FILENAME, default_config_ui_content(script_name))
           end
 
           ShopifyCli::Project.write(
@@ -51,8 +50,7 @@ module Script
 
           validate_metadata!(extension_point_type, language)
 
-          # TODO: remove this repo and make it an implementation detail
-          config_ui = Infrastructure::ConfigUiRepository.new(ctx: ctx).get_config_ui(config_ui_file)
+          config_ui = ConfigUiRepository.new(ctx: ctx).get(config_ui_file)
 
           Domain::ScriptProject.new(
             id: project.directory,
@@ -99,6 +97,45 @@ module Script
             raise Errors::DeprecatedEPError, extension_point_type
           elsif !Application::ExtensionPoints.supported_language?(type: extension_point_type, language: language)
             raise Errors::InvalidLanguageError.new(language, extension_point_type)
+          end
+        end
+
+        class ConfigUiRepository
+          include SmartProperties
+          property! :ctx, accepts: ShopifyCli::Context
+
+          def create(filename, content)
+            File.write(filename, content)
+
+            Domain::ConfigUi.new(
+              filename: filename,
+              content: content,
+            )
+          end
+
+          def get(filename)
+            return nil unless filename
+
+            path = File.join(ctx.root, filename)
+            raise Domain::Errors::MissingSpecifiedConfigUiDefinitionError, filename unless File.exist?(path)
+
+            content = File.read(path)
+            raise Domain::Errors::InvalidConfigUiDefinitionError, filename unless valid_config_ui?(content)
+
+            Domain::ConfigUi.new(
+              filename: filename,
+              content: content,
+            )
+          end
+
+          private
+
+          def valid_config_ui?(raw_yaml)
+            require "yaml" # takes 20ms, so deferred as late as possible.
+            YAML.safe_load(raw_yaml)
+            true
+          rescue Psych::SyntaxError
+            false
           end
         end
       end

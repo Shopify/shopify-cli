@@ -17,42 +17,33 @@ describe Script::Layers::Application::PushScript do
   let(:metadata) { Script::Layers::Domain::Metadata.new("1", "0", use_msgpack) }
   let(:schema_minor_version) { "0" }
   let(:script_name) { "name" }
-  let(:config_ui_filename) { "filename" }
-  let(:config_ui_contents) { "---" }
   let(:project) do
     TestHelpers::FakeScriptProject.new(
       language: language,
       extension_point_type: extension_point_type,
       script_name: script_name,
-      config_ui_file: config_ui_filename,
-      config_ui: config_ui,
       env: stub(api_key: api_key)
     )
   end
   let(:push_package_repository) { Script::Layers::Infrastructure::FakePushPackageRepository.new }
   let(:extension_point_repository) { Script::Layers::Infrastructure::FakeExtensionPointRepository.new }
-  let(:config_ui_repository) { Script::Layers::Infrastructure::FakeConfigUiRepository.new }
   let(:task_runner) { stub(compiled_type: "wasm", metadata: metadata) }
   let(:ep) { extension_point_repository.get_extension_point(extension_point_type) }
-  let(:config_ui) { config_ui_repository.get_config_ui(config_ui_filename) }
 
   before do
     Script::Layers::Infrastructure::PushPackageRepository.stubs(:new).returns(push_package_repository)
     Script::Layers::Infrastructure::ExtensionPointRepository.stubs(:new).returns(extension_point_repository)
-    Script::Layers::Infrastructure::ConfigUiRepository.stubs(:new).returns(config_ui_repository)
     Script::Layers::Infrastructure::TaskRunner
       .stubs(:for)
       .with(@context, language, script_name)
       .returns(task_runner)
     Script::Layers::Infrastructure::ScriptProjectRepository.any_instance.stubs(:get).returns(project)
     extension_point_repository.create_extension_point(extension_point_type)
-    config_ui_repository.create_config_ui(config_ui_filename, config_ui_contents)
     push_package_repository.create_push_package(
       script_project: project,
       script_content: "content",
       compiled_type: compiled_type,
-      metadata: metadata,
-      config_ui: config_ui
+      metadata: metadata
     )
   end
 
@@ -66,8 +57,7 @@ describe Script::Layers::Application::PushScript do
       Script::Layers::Application::BuildScript.expects(:call).with(
         ctx: @context,
         task_runner: task_runner,
-        script_project: project,
-        config_ui: config_ui
+        script_project: project
       )
       Script::Layers::Infrastructure::ScriptService
         .expects(:new).returns(script_service_instance)

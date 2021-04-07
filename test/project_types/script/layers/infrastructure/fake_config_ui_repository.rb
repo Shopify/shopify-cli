@@ -8,14 +8,14 @@ module Script
           @cache = {}
         end
 
-        def create_config_ui(filename, content)
+        def create(filename, content)
           @cache[filename] = Domain::ConfigUi.new(
             filename: filename,
             content: content,
           )
         end
 
-        def get_config_ui(filename)
+        def get(filename)
           @cache[filename]
         end
       end

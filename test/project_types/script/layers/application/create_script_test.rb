@@ -2,7 +2,6 @@
 
 require "project_types/script/test_helper"
 require "project_types/script/layers/infrastructure/fake_extension_point_repository"
-require "project_types/script/layers/infrastructure/fake_config_ui_repository"
 
 describe Script::Layers::Application::CreateScript do
   include TestHelpers::FakeFS
@@ -13,7 +12,6 @@ describe Script::Layers::Application::CreateScript do
   let(:compiled_type) { "wasm" }
   let(:no_config_ui) { false }
   let(:extension_point_repository) { Script::Layers::Infrastructure::FakeExtensionPointRepository.new }
-  let(:config_ui_repository) { Script::Layers::Infrastructure::FakeConfigUiRepository.new }
   let(:ep) { extension_point_repository.get_extension_point(extension_point_type) }
   let(:task_runner) { stub(compiled_type: compiled_type) }
   let(:project_creator) { stub }
@@ -25,7 +23,6 @@ describe Script::Layers::Application::CreateScript do
 
   before do
     Script::Layers::Infrastructure::ExtensionPointRepository.stubs(:new).returns(extension_point_repository)
-    Script::Layers::Infrastructure::ConfigUiRepository.stubs(:new).returns(config_ui_repository)
 
     extension_point_repository.create_extension_point(extension_point_type)
     Script::Layers::Infrastructure::TaskRunner

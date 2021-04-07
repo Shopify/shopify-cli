@@ -54,7 +54,6 @@ module Script
         Project.project_filepath("layers/infrastructure/rust_project_creator.rb")
       autoload :RustTaskRunner, Project.project_filepath("layers/infrastructure/rust_task_runner")
 
-      autoload :ConfigUiRepository, Project.project_filepath("layers/infrastructure/config_ui_repository")
       autoload :PushPackageRepository, Project.project_filepath("layers/infrastructure/push_package_repository")
       autoload :ExtensionPointRepository, Project.project_filepath("layers/infrastructure/extension_point_repository")
       autoload :ProjectCreator, Project.project_filepath("layers/infrastructure/project_creator")
