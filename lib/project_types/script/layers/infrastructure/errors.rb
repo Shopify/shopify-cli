@@ -31,6 +31,7 @@ module Script
         class EmptyResponseError < ScriptProjectError; end
         class ForbiddenError < ScriptProjectError; end
         class InvalidContextError < ScriptProjectError; end
+
         class InvalidLanguageError < ScriptProjectError
           attr_reader :language, :extension_point_type
           def initialize(language, extension_point_type)

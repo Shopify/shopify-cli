@@ -29,7 +29,7 @@ module Script
           no_config_ui: options.flags.key?(:no_config_ui)
         )
         @ctx.puts(@ctx.message("script.create.change_directory_notice", project.script_name))
-      rescue Script::Errors::ScriptProjectAlreadyExistsError => e
+      rescue Script::Layers::Infrastructure::Errors::ScriptProjectAlreadyExistsError => e
         UI::ErrorHandler.pretty_print_and_raise(e, failed_op: @ctx.message("script.create.error.operation_failed"))
       rescue StandardError => e
         ScriptProject.cleanup(ctx: @ctx, script_name: form.name, root_dir: cur_dir) if form

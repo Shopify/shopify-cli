@@ -11,7 +11,7 @@ describe Script::Layers::Infrastructure::ScriptProjectRepository do
 
   let(:config_ui_repository) { Script::Layers::Infrastructure::FakeConfigUiRepository.new }
   let(:deprecated_ep_types) { [] }
-  let(:supported_languages) { ['assemblyscript'] }
+  let(:supported_languages) { ["assemblyscript"] }
 
   before do
     Script::Layers::Infrastructure::ConfigUiRepository.stubs(:new).returns(config_ui_repository)
@@ -22,7 +22,7 @@ describe Script::Layers::Infrastructure::ScriptProjectRepository do
   describe "#create" do
     let(:script_name) { "script_name" }
     let(:extension_point_type) { "tax_filter" }
-    let(:language) { 'assemblyscript' }
+    let(:language) { "assemblyscript" }
     let(:no_config_ui) { false }
 
     subject do
@@ -38,6 +38,22 @@ describe Script::Layers::Infrastructure::ScriptProjectRepository do
       it "should raise ScriptProjectAlreadyExistsError" do
         ctx.mkdir_p(script_name)
         assert_raises(Script::Layers::Infrastructure::Errors::ScriptProjectAlreadyExistsError) { subject }
+      end
+    end
+
+    describe "when extension point is deprecated" do
+      let(:deprecated_ep_types) { [extension_point_type] }
+
+      it "should raise DeprecatedEPError" do
+        assert_raises(Script::Layers::Infrastructure::Errors::DeprecatedEPError) { subject }
+      end
+    end
+
+    describe "when language is not supported" do
+      let(:supported_languages) { ["rust"] }
+
+      it "should raise InvalidLanguageError" do
+        assert_raises(Script::Layers::Infrastructure::Errors::InvalidLanguageError) { subject }
       end
     end
 
@@ -110,13 +126,13 @@ describe Script::Layers::Infrastructure::ScriptProjectRepository do
     end
 
     describe "when directory is in a script project" do
-      let(:script_name) { 'script_name' }
+      let(:script_name) { "script_name" }
 
       before do
         instance.create(
           script_name: script_name,
-          extension_point_type: 'discount',
-          language: 'assemblyscript',
+          extension_point_type: "discount",
+          language: "assemblyscript",
           no_config_ui: false
         )
       end
@@ -125,7 +141,7 @@ describe Script::Layers::Infrastructure::ScriptProjectRepository do
         initial_dir = ctx.root
         subject
         assert_equal File.join(initial_dir, "../"), ctx.root
-        refute File.exists?(File.join(initial_dir, script_name))
+        refute File.exist?(File.join(initial_dir, script_name))
       end
     end
   end
@@ -133,27 +149,38 @@ describe Script::Layers::Infrastructure::ScriptProjectRepository do
   describe "#get" do
     subject { instance.get }
 
-    let(:script_name) { 'script_name' }
-    let(:extension_point_type) { 'tax_filter' }
-    let(:language) { 'assemblyscript' }
+    let(:script_name) { "script_name" }
+    let(:extension_point_type) { "tax_filter" }
+    let(:language) { "assemblyscript" }
+    let(:config_ui_file) { "config-ui.yml" }
+    let(:config_ui_content) { "---\nversion: 1" }
+    let(:valid_config) do
+      {
+        "extension_point_type" => "tax_filter",
+        "script_name" => "script_name",
+        "config_ui_file" => config_ui_file,
+      }
+    end
+    let(:actual_config) { valid_config }
+    let(:current_project) do
+      TestHelpers::FakeProject.new(directory: File.join(ctx.root, script_name), config: actual_config)
+    end
 
     before do
-      instance.create(
-        script_name: script_name,
-        extension_point_type: extension_point_type,
-        language: language,
-        no_config_ui: false
-      )
+      ShopifyCli::Project.stubs(:has_current?).returns(true)
+      ShopifyCli::Project.stubs(:current).returns(current_project)
+      config_ui_repository.create_config_ui(config_ui_file, config_ui_content)
     end
 
     describe "when project config is valid" do
       it "should return the ScriptProject" do
-        assert_equal ctx.root, subject.id
+        assert_equal current_project.directory, subject.id
         assert_nil subject.env
         assert_equal script_name, subject.script_name
         assert_equal extension_point_type, subject.extension_point_type
         assert_equal language, subject.language
-        refute_nil subject.config_ui
+        assert_equal config_ui_file, subject.config_ui.filename
+        assert_equal config_ui_content, subject.config_ui.content
       end
     end
 
@@ -166,27 +193,14 @@ describe Script::Layers::Infrastructure::ScriptProjectRepository do
     end
 
     describe "when language is not supported" do
-      let(:supported_languages) { ['rust'] }
+      let(:supported_languages) { ["rust"] }
 
-      it "should raise DeprecatedEPError" do
+      it "should raise InvalidLanguageError" do
         assert_raises(Script::Layers::Infrastructure::Errors::InvalidLanguageError) { subject }
       end
     end
 
     describe "when project is missing metadata" do
-      let(:valid_config) do
-        {
-          "extension_point_type" => 'tax_filter',
-          "script_name" => 'script_name',
-          "config_ui_file" => 'config-ui.yml',
-        }
-      end
-      let(:actual_config) { valid_config }
-
-      before do
-        ShopifyCli::Project.any_instance.stubs(:config).returns(actual_config)
-      end
-
       describe "when missing extension_point_type" do
         let(:actual_config) { valid_config.slice("config_ui_file", "script_name") }
 

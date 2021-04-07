@@ -84,21 +84,10 @@ module Script
         assert_equal language, form.language
       end
 
-      def test_succeeds_when_requested_language_is_capitalized_and_supported
+      def test_succeeds_when_requested_language_is_capitalized
         language = "AssemblyScript"
-        all_languages = %w(assemblyscript rust)
-        Layers::Application::ExtensionPoints.expects(:languages).returns(all_languages)
         form = ask(name: "name", extension_point: "discount", language: language)
         assert_equal language.downcase, form.language
-      end
-
-      def test_raises_when_requested_language_is_not_supported
-        language = "C++"
-        all_languages = %w(assemblyscript rust)
-        Layers::Application::ExtensionPoints.expects(:languages).returns(all_languages)
-        assert_raises(Script::Errors::InvalidLanguageError) do
-          ask(name: "name", extension_point: "discount", language: language)
-        end
       end
 
       private

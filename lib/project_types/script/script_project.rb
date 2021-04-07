@@ -7,7 +7,11 @@ module Script
     def initialize(*args)
       super
       @extension_point_type = lookup_config!("extension_point_type")
-      raise Errors::DeprecatedEPError, @extension_point_type if deprecated?(@extension_point_type)
+
+      if deprecated?(@extension_point_type)
+        raise Layers::Infrastructure::Errors::DeprecatedEPError, @extension_point_type
+      end
+
       @script_name = lookup_config!("script_name")
       @config_ui_file = lookup_config("config_ui_file")
       @language = lookup_language
@@ -34,22 +38,23 @@ module Script
     end
 
     def lookup_config!(key)
-      raise Errors::InvalidContextError, key unless config.key?(key)
+      raise Layers::Infrastructure::Errors::InvalidContextError, key unless config.key?(key)
       config[key]
     end
 
     def lookup_language
-      lang = lookup_config("language")&.downcase || Layers::Domain::ExtensionPoint::ExtensionPointAssemblyScriptSDK.language
+      lang = lookup_config("language")&.downcase ||
+        Layers::Domain::ExtensionPoint::ExtensionPointAssemblyScriptSDK.language
       if Layers::Application::ExtensionPoints.supported_language?(type: extension_point_type, language: lang)
         lang
       else
-        raise Errors::InvalidLanguageError.new(lang, extension_point_type)
+        raise Layers::Infrastructure::Errors::InvalidLanguageError.new(lang, extension_point_type)
       end
     end
 
     class << self
       def create(ctx, dir)
-        raise Errors::ScriptProjectAlreadyExistsError, dir if ctx.dir_exist?(dir)
+        raise Layers::Infrastructure::Errors::ScriptProjectAlreadyExistsError, dir if ctx.dir_exist?(dir)
         ctx.mkdir_p(dir)
         ctx.chdir(dir)
       end

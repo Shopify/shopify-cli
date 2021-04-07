@@ -43,7 +43,7 @@ module Script
 
       Script::Layers::Application::ExtensionPoints.stubs(:deprecated_types).returns([@extension_point_type])
 
-      assert_raises Errors::DeprecatedEPError do
+      assert_raises Layers::Infrastructure::Errors::DeprecatedEPError do
         ScriptProject.new(directory: @context.root)
       end
     end
@@ -71,7 +71,7 @@ module Script
         .with(@script_name)
         .returns(true)
 
-      assert_raises Errors::ScriptProjectAlreadyExistsError do
+      assert_raises Layers::Infrastructure::Errors::ScriptProjectAlreadyExistsError do
         Script::ScriptProject.create(@context, @script_name)
       end
     end
@@ -159,7 +159,7 @@ module Script
           "language" => language,
         })
 
-      assert_raises(Script::Errors::InvalidLanguageError) do
+      assert_raises(Script::Layers::Infrastructure::Errors::InvalidLanguageError) do
         ScriptProject.new(directory: @context.root)
       end
     end

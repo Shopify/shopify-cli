@@ -10,7 +10,8 @@ module Script
         DEFAULT_CONFIG_UI_FILENAME = "config-ui.yml"
 
         def create(script_name:, extension_point_type:, language:, no_config_ui:)
-          # TODO: move all errors into infra layer
+          validate_metadata!(extension_point_type, language)
+
           raise Errors::ScriptProjectAlreadyExistsError, script_name if ctx.dir_exist?(script_name)
           ctx.mkdir_p(script_name)
           ctx.chdir(script_name)
@@ -61,11 +62,7 @@ module Script
           config_ui_file = project_config_value("config_ui_file")
           language = project_config_value("language")&.downcase || default_language
 
-          if deprecated_extension_point?(extension_point_type)
-            raise Errors::DeprecatedEPError, extension_point_type
-          elsif !supported_language?(extension_point_type, language)
-            raise Errors::InvalidLanguageError.new(language, extension_point_type)
-          end
+          validate_metadata!(extension_point_type, language)
 
           # TODO: remove this repo and make it an implementation detail
           config_ui = Infrastructure::ConfigUiRepository.new(ctx: ctx).get_config_ui(config_ui_file)
@@ -120,6 +117,14 @@ module Script
 
         def default_language
           Domain::ExtensionPoint::ExtensionPointAssemblyScriptSDK.language
+        end
+
+        def validate_metadata!(extension_point_type, language)
+          if Application::ExtensionPoints.deprecated_types.include?(extension_point_type)
+            raise Errors::DeprecatedEPError, extension_point_type
+          elsif !Application::ExtensionPoints.supported_language?(type: extension_point_type, language: language)
+            raise Errors::InvalidLanguageError.new(language, extension_point_type)
+          end
         end
 
         # TODO: call this somewhere

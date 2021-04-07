@@ -8,7 +8,9 @@ module Script
           def call(ctx:, force:)
             script_project = Infrastructure::ScriptProjectRepository.new(ctx: ctx).get
             task_runner = Infrastructure::TaskRunner.for(ctx, script_project.language, script_project.script_name)
-            config_ui = Infrastructure::ConfigUiRepository.new(ctx: ctx).get_config_ui(script_project.config_ui&.filename)
+            config_ui = Infrastructure::ConfigUiRepository
+              .new(ctx: ctx)
+              .get_config_ui(script_project.config_ui&.filename)
 
             ProjectDependencies.install(ctx: ctx, task_runner: task_runner)
             BuildScript.call(ctx: ctx, task_runner: task_runner, script_project: script_project, config_ui: config_ui)

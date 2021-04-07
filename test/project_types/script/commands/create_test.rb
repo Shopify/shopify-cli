@@ -99,7 +99,7 @@ module Script
       end
 
       def test_directory_already_exists
-        error = Script::Errors::ScriptProjectAlreadyExistsError.new
+        error = Script::Layers::Infrastructure::Errors::ScriptProjectAlreadyExistsError.new
         Dir.mktmpdir(@script_name)
         Layers::Application::CreateScript.expects(:call).with(
           ctx: @context,
