@@ -43,9 +43,9 @@ describe Script::Layers::Application::ExtensionPoints do
     end
   end
 
-  describe ".visible_types" do
+  describe ".available_types" do
     it "should return an array of all ep types that are not deprecated or in beta" do
-      assert_equal %w(discount), Script::Layers::Application::ExtensionPoints.visible_types
+      assert_equal %w(discount), Script::Layers::Application::ExtensionPoints.available_types
     end
   end
 
