@@ -4,7 +4,7 @@ module ShopifyCli
   module Tasks
     class CreateApiClient < ShopifyCli::Task
       VALID_APP_TYPES = %w(public custom)
-      DEFAULT_APP_URL = "https://shopify.github.io/shopify-app-cli/help/start-app/"
+      DEFAULT_APP_URL = "https://shopify.github.io/shopify-cli/help/start-app/"
 
       def call(ctx, org_id:, title:, type:)
         resp = ShopifyCli::PartnersAPI.query(

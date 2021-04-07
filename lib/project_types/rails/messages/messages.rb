@@ -40,7 +40,7 @@ module Rails
           error: {
             invalid_ruby_version: <<~MSG,
             This project requires a Ruby version ~> 2.5 or Ruby 3.0
-            See {{underline:https://github.com/Shopify/shopify-app-cli/blob/master/docs/installing-ruby.md}}
+            See {{underline:https://github.com/Shopify/shopify-cli/blob/master/docs/installing-ruby.md}}
             for our recommended method of installing ruby.
             MSG
             dir_exists: "Project directory %s already exists. Please use a different name.",
