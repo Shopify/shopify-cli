@@ -292,7 +292,7 @@ module Theme
     def test_can_update
       context = ShopifyCli::Context.new
 
-      context.expects(:system)
+      context.expects(:capture2e)
         .with(Themekit::THEMEKIT,
           "update",
           "--no-update-notifier")
