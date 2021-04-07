@@ -21,8 +21,8 @@ module Theme
               "theme_name": "Shopify CLI template theme",
               "theme_version": "1.0.0",
               "theme_author": "Shopify",
-              "theme_documentation_url": "https://github.com/Shopify/shopify-app-cli",
-              "theme_support_url": "https://github.com/Shopify/shopify-app-cli/issues"
+              "theme_documentation_url": "https://github.com/Shopify/shopify-cli",
+              "theme_support_url": "https://github.com/Shopify/shopify-cli/issues"
             }
           ]
         SETTINGS_SCHEMA
