@@ -119,15 +119,6 @@ module Script
             raise Errors::InvalidLanguageError.new(language, extension_point_type)
           end
         end
-
-        # TODO: call this somewhere
-        def monorail_metadata
-          ShopifyCli::Core::Monorail.metadata = {
-            "script_name" => @script_name,
-            "extension_point_type" => @extension_point_type,
-            "language" => @language,
-          }
-        end
       end
     end
   end

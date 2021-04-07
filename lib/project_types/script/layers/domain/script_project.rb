@@ -15,6 +15,16 @@ module Script
 
         property :config_ui, accepts: ConfigUi
 
+        def initialize(*)
+          super
+
+          ShopifyCli::Core::Monorail.metadata = {
+            "script_name" => script_name,
+            "extension_point_type" => extension_point_type,
+            "language" => language,
+          }
+        end
+
         def api_key
           env[:api_key]
         end
