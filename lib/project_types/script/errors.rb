@@ -16,6 +16,7 @@ module Script
       end
     end
 
+    # TODO: remove all of these
     class ScriptProjectAlreadyExistsError < ScriptProjectError; end
     class InvalidConfigProps < ScriptProjectError; end
 

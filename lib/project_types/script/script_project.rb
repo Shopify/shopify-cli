@@ -39,7 +39,7 @@ module Script
     end
 
     def lookup_language
-      lang = lookup_config("language")&.downcase || Layers::Domain::ExtensionPointAssemblyScriptSDK.language
+      lang = lookup_config("language")&.downcase || Layers::Domain::ExtensionPoint::ExtensionPointAssemblyScriptSDK.language
       if Layers::Application::ExtensionPoints.supported_language?(type: extension_point_type, language: lang)
         lang
       else

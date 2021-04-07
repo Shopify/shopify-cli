@@ -54,13 +54,13 @@ describe Script::Layers::Application::CreateScript do
         .expects(:get)
         .with(type: extension_point_type)
         .returns(ep)
-      Script::Layers::Application::CreateScript
-        .expects(:setup_project)
+      Script::Layers::Infrastructure::ScriptProjectRepository
+        .any_instance
+        .expects(:create)
         .with(
-          ctx: @context,
           language: language,
           script_name: script_name,
-          extension_point: ep,
+          extension_point_type: extension_point_type,
           no_config_ui: no_config_ui
         ).returns(script_project)
       Script::Layers::Application::CreateScript
@@ -70,70 +70,6 @@ describe Script::Layers::Application::CreateScript do
         .expects(:bootstrap)
         .with(@context, project_creator)
       subject
-    end
-
-    describe ".setup_project" do
-      subject do
-        Script::Layers::Application::CreateScript.send(
-          :setup_project,
-          ctx: @context,
-          language: language,
-          script_name: script_name,
-          extension_point: ep,
-          no_config_ui: no_config_ui
-        )
-      end
-
-      describe "when no_config_ui is false" do
-        let(:no_config_ui) { false }
-        let(:expected_config_ui_filename) { "config-ui.yml" }
-        let(:expected_config_ui_content) do
-          "---\nversion: 1\ntype: single\ntitle: #{script_name}\ndescription: ''\nfields: []\n"
-        end
-
-        it "should create a config_ui_file and store the filename in the project config" do
-          Script::ScriptProject.expects(:create).with(@context, script_name).once
-          Script::ScriptProject
-            .expects(:write)
-            .with(
-              @context,
-              project_type: :script,
-              organization_id: nil,
-              extension_point_type: ep.type,
-              script_name: script_name,
-              language: language,
-              config_ui_file: expected_config_ui_filename
-            )
-          capture_io { subject }
-
-          config_ui = config_ui_repository.get_config_ui(expected_config_ui_filename)
-
-          refute_nil config_ui
-          assert_equal expected_config_ui_filename, config_ui.filename
-          assert_equal expected_config_ui_content, config_ui.content
-        end
-      end
-
-      describe "when no_config_ui is true" do
-        let(:no_config_ui) { true }
-
-        it "should write the config without config_ui_file field" do
-          Script::ScriptProject.expects(:create).with(@context, script_name).once
-          Script::ScriptProject
-            .expects(:write)
-            .with(
-              @context,
-              project_type: :script,
-              organization_id: nil,
-              extension_point_type: ep.type,
-              script_name: script_name,
-              language: language,
-            )
-          capture_io do
-            assert_equal script_project, subject
-          end
-        end
-      end
     end
 
     describe "install_dependencies" do

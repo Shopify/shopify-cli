@@ -4,7 +4,12 @@ module TestHelpers
     property :script_name
     property :language
     property :config_ui_file
+    property :config_ui
     property :env
+
+    def id
+      directory
+    end
 
     def api_key
       env[:api_key]

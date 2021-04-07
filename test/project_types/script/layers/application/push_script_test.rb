@@ -25,6 +25,7 @@ describe Script::Layers::Application::PushScript do
       extension_point_type: extension_point_type,
       script_name: script_name,
       config_ui_file: config_ui_filename,
+      config_ui: config_ui,
       env: { api_key: api_key }
     )
   end
@@ -43,7 +44,7 @@ describe Script::Layers::Application::PushScript do
       .stubs(:for)
       .with(@context, language, script_name)
       .returns(task_runner)
-    Script::ScriptProject.stubs(:current).returns(project)
+    Script::Layers::Infrastructure::ScriptProjectRepository.any_instance.stubs(:get).returns(project)
     extension_point_repository.create_extension_point(extension_point_type)
     config_ui_repository.create_config_ui(config_ui_filename, config_ui_contents)
     push_package_repository.create_push_package(

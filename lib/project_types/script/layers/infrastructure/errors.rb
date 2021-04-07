@@ -27,8 +27,18 @@ module Script
         end
 
         class DependencyInstallError < ScriptProjectError; end
+        class DeprecatedEPError < ScriptProjectError; end
         class EmptyResponseError < ScriptProjectError; end
         class ForbiddenError < ScriptProjectError; end
+        class InvalidContextError < ScriptProjectError; end
+        class InvalidLanguageError < ScriptProjectError
+          attr_reader :language, :extension_point_type
+          def initialize(language, extension_point_type)
+            super()
+            @language = language
+            @extension_point_type = extension_point_type
+          end
+        end
 
         class GraphqlError < ScriptProjectError
           attr_reader :errors
@@ -48,6 +58,7 @@ module Script
           end
         end
 
+        class ScriptProjectAlreadyExistsError < ScriptProjectError; end
         class ShopAuthenticationError < ScriptProjectError; end
         class TaskRunnerNotFoundError < ScriptProjectError; end
         class BuildScriptNotFoundError < ScriptProjectError; end
