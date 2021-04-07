@@ -51,7 +51,7 @@ module ShopifyCli
               env["REQUEST_METHOD"], env["PATH_INFO"],
               headers: headers,
               query: query,
-              body_stream: (env["rack.input"] if headers["Content-Type"]),
+              body_stream: (env["rack.input"] if has_body?(headers)),
             )
           end
 
@@ -67,6 +67,10 @@ module ShopifyCli
         end
 
         private
+
+        def has_body?(headers)
+          headers["Content-Length"] || headers["Transfer-Encoding"]
+        end
 
         def bearer_token
           ShopifyCli::DB.get(:storefront_renderer_production_exchange_token) ||

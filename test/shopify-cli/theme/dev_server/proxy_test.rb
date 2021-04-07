@@ -20,6 +20,19 @@ class ProxyTest < Minitest::Test
       .returns("dev-theme-server-store.myshopify.com")
   end
 
+  def test_get_is_proxied_to_online_store
+    stub_request(:get, "https://dev-theme-server-store.myshopify.com/?_fd=0&pb=0")
+      .with(
+        body: nil,
+        headers: default_proxy_headers,
+      )
+      .to_return(status: 200)
+
+    stub_session_id_request
+
+    request.get("/")
+  end
+
   def test_form_data_is_proxied_to_online_store
     stub_request(:post, "https://dev-theme-server-store.myshopify.com/password?_fd=0&pb=0")
       .with(
