@@ -44,12 +44,14 @@ module ShopifyCli
           if silent
             @uploader.upload_theme!
           else
+            @uploader.delay_errors!
             CLI::UI::Progress.progress do |bar|
               @uploader.upload_theme! do |left, total|
                 bar.tick(set_percent: 1 - left.to_f / total)
               end
               bar.tick(set_percent: 1)
             end
+            @uploader.report_errors!
           end
 
           return if stopped
