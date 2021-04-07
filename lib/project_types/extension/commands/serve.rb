@@ -57,9 +57,11 @@ module Extension
       end
 
       def serve_options
+        requires_version = specification.features.argo.serve_requires_version?
         @serve_options ||= [].tap do |options|
           options << "--shop=#{project.env.shop}" if specification.features.argo.serve_requires_shop?
           options << "--apiKey=#{project.env.api_key}" if specification.features.argo.serve_requires_api_key?
+          options << "--argoVersion=#{specification_handler.argo_version}" if requires_version
         end
       end
     end

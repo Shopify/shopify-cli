@@ -48,7 +48,7 @@ module Extension
         ShopifyCli::Tasks::EnsureDevStore.stubs(:call)
         ShopifyCli::Feature.stubs(:enabled?).with(:argo_admin_beta).returns(true)
 
-        serve_args = ["--shop=my-test-shop.myshopify.com", "--apiKey=#{@api_key}"]
+        serve_args = ["--shop=my-test-shop.myshopify.com", "--apiKey=#{@api_key}", "--argoVersion=@shopify/argo-admin"]
         yarn_serve_command = Serve::YARN_SERVE_COMMAND + serve_args
         npm_serve_command = Serve::NPM_SERVE_COMMAND + %w(--) + serve_args
         ShopifyCli::JsSystem.any_instance

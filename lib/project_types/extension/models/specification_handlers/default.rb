@@ -42,6 +42,10 @@ module Extension
           []
         end
 
+        def argo_version
+          argo.renderer_package_name
+        end
+
         protected
 
         def argo

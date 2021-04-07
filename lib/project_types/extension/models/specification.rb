@@ -12,6 +12,7 @@ module Extension
           property! :git_template, converts: :to_str
           property! :serve_requires_api_key, accepts: [true, false], default: false, reader: :serve_requires_api_key?
           property! :serve_requires_shop, accepts: [true, false], default: false, reader: :serve_requires_shop?
+          property! :serve_requires_version, accepts: [true, false], default: false, reader: :serve_requires_version?
           property! :required_beta_flags, accepts: Array, default: -> { [] }
         end
 

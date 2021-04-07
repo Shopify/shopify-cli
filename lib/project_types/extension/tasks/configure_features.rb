@@ -42,6 +42,7 @@ module Extension
             renderer_package_name: "@shopify/argo-admin",
             serve_requires_api_key: true,
             serve_requires_shop: true,
+            serve_requires_version: true,
             required_beta_flags: [:argo_admin_beta],
           },
           checkout: {
