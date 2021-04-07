@@ -52,26 +52,26 @@ Version 1.7.0
 
 Version 1.6.0
 -----
-* [#1049](https://github.com/Shopify/shopify-cli/pull/1049): Add schema versioning support to the script project type
-* [#1059](https://github.com/Shopify/shopify-cli/pull/1059): Remove the functionality of the `generate` command for node apps, since it will no longer be feasible with the new node library
-* [#1046](https://github.com/Shopify/shopify-cli/pull/1046): Include a vendored copy of Webrick, as it's no longer included in Ruby 3.
-* [#1041](https://github.com/Shopify/shopify-cli/pull/1041): Remove unnecessary shell call to `spring stop`. We already pass `--skip-spring` when creating the app so running `spring stop` would have no effect.
-* [#1034](https://github.com/Shopify/shopify-cli/pull/1034): Abort if a system call fails.
+* [#1049](https://github.com/Shopify/shopify-app-cli/pull/1049): Add schema versioning support to the script project type
+* [#1059](https://github.com/Shopify/shopify-app-cli/pull/1059): Remove the functionality of the `generate` command for node apps, since it will no longer be feasible with the new node library
+* [#1046](https://github.com/Shopify/shopify-app-cli/pull/1046): Include a vendored copy of Webrick, as it's no longer included in Ruby 3.
+* [#1041](https://github.com/Shopify/shopify-app-cli/pull/1041): Remove unnecessary shell call to `spring stop`. We already pass `--skip-spring` when creating the app so running `spring stop` would have no effect.
+* [#1034](https://github.com/Shopify/shopify-app-cli/pull/1034): Abort if a system call fails.
 
 Version 1.5.0
 -----
-* [#965](https://github.com/Shopify/shopify-cli/pull/965): Remove --no-optional when using npm to create new project
-* [#958](https://github.com/Shopify/shopify-cli/pull/958): Split `connect` command into project-specific functionality
-* [#992](https://github.com/Shopify/shopify-cli/pull/992): Add Theme Kit functionality to CLI
+* [#965](https://github.com/Shopify/shopify-app-cli/pull/965): Remove --no-optional when using npm to create new project
+* [#958](https://github.com/Shopify/shopify-app-cli/pull/958): Split `connect` command into project-specific functionality
+* [#992](https://github.com/Shopify/shopify-app-cli/pull/992): Add Theme Kit functionality to CLI
 
 Version 1.4.1
 ------
-* [#917](https://github.com/Shopify/shopify-cli/pull/917): Ensure analytics for create action includes the same fields as other commands
+* [#917](https://github.com/Shopify/shopify-app-cli/pull/917): Ensure analytics for create action includes the same fields as other commands
 
 Version 1.4.0
 ------
 * Updates to tests, dependencies and internal tooling
-* [#924](https://github.com/Shopify/shopify-cli/pull/924): Improve debugging messages on Partner API errors
+* [#924](https://github.com/Shopify/shopify-app-cli/pull/924): Improve debugging messages on Partner API errors
 
 Version 1.3.1
 ------
