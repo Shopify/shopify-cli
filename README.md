@@ -34,13 +34,13 @@ Refer to [*Troubleshooting Shopify CLI*](https://shopify.dev/tools/cli/troublesh
 
 ## Contributing to Shopify CLI
 
-Shopify CLI is an [open source](https://github.com/Shopify/shopify-app-cli/blob/master/.github/LICENSE.md) tool and you can [help contribute to the GitHub repository](https://github.com/Shopify/shopify-app-cli/blob/master/.github/CONTRIBUTING.md).
+Shopify CLI is an [open source](https://github.com/Shopify/shopify-cli/blob/master/.github/LICENSE.md) tool and you can [help contribute to the GitHub repository](https://github.com/Shopify/shopify-cli/blob/master/.github/CONTRIBUTING.md).
 
 ## Developing Shopify CLI
 
-Read the [development guide](https://github.com/Shopify/shopify-app-cli/wiki).
+Read the [development guide](https://github.com/Shopify/shopify-cli/wiki).
 
 ## Where to get help
 
-- **[Open a GitHub issue](https://github.com/Shopify/shopify-app-cli/issues)** - To report bugs or request new features, open an issue in the Shopify CLI repository.
+- **[Open a GitHub issue](https://github.com/Shopify/shopify-cli/issues)** - To report bugs or request new features, open an issue in the Shopify CLI repository.
 - **[Shopify Community Forums](https://community.shopify.com/)** - Visit our forums to connect with the community and learn more about Shopify CLI development.

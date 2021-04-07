@@ -58,4 +58,4 @@ jobs:
         -m "Version ${{ steps.folder.outputs.name }}
 
         Release of version ${{ steps.folder.outputs.name }} of the Shopify CLI
-        Please refer to [CHANGELOG](https://github.com/Shopify/shopify-app-cli/blob/master/CHANGELOG.md) for details."
+        Please refer to [CHANGELOG](https://github.com/Shopify/shopify-cli/blob/master/CHANGELOG.md) for details."
