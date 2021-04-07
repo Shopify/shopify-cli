@@ -24,7 +24,6 @@ module Script
       def test_asks_extension_point_if_no_flag
         eps = ["discount", "another"]
         Layers::Application::ExtensionPoints.expects(:available_types).returns(eps)
-        Layers::Application::ExtensionPoints.expects(:languages).returns(["assemblyscript"])
         CLI::UI::Prompt.expects(:ask).with(
           @context.message("script.forms.create.select_extension_point"),
           options: eps

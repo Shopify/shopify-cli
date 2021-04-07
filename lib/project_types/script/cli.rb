@@ -70,7 +70,6 @@ module Script
     autoload :StrictSpinner, Project.project_filepath("ui/strict_spinner")
   end
 
-  autoload :ScriptProject, Project.project_filepath("script_project")
   autoload :Errors, Project.project_filepath("errors")
 
   class ScriptProjectError < StandardError; end
