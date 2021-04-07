@@ -204,7 +204,7 @@ module ShopifyCli
       https = Net::HTTP.new(uri.host, uri.port)
       https.use_ssl = true
       request = Net::HTTP::Post.new(uri.path)
-      request["User-Agent"] = "Shopify App CLI #{::ShopifyCli::VERSION}"
+      request["User-Agent"] = "Shopify CLI #{::ShopifyCli::VERSION}"
       request.body = URI.encode_www_form(params)
       res = https.request(request)
       raise Error, JSON.parse(res.body)["error_description"] unless res.is_a?(Net::HTTPSuccess)
