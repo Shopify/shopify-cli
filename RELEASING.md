@@ -32,7 +32,7 @@
 1. Deploy using Shipit
 
 1. Check the "Actions" tab to see if the _Create Release_ workflow is successful. 
-   The workflow will automatically create a [release](https://github.com/Shopify/shopify-app-cli/releases) with the latest tag and `.deb`, `.rpm` assets attached.
+   The workflow will automatically create a [release](https://github.com/Shopify/shopify-cli/releases) with the latest tag and `.deb`, `.rpm` assets attached.
 
 2. Check the `Shopify/homebrew-shopify` repository for new PR `shopify-cli {version}`
    * rename PR to `Packaging for release of v{version} of shopify-cli`
