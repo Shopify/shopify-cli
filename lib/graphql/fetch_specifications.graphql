@@ -1,0 +1,14 @@
+query fetchSpecifications($api_key: String!) {
+  extensionSpecifications(apiKey: $api_key) {
+    name
+    identifier
+    options {
+      managementExperience
+    }
+    features {
+      argo {
+        surface
+      }
+    }
+  }
+}

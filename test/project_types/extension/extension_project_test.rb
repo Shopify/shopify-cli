@@ -16,7 +16,7 @@ module Extension
 
       assert File.exist?(".shopify-cli.yml")
       assert_equal :extension, ShopifyCli::Project.current_project_type
-      assert_equal @test_extension_type.identifier, ExtensionProject.current.extension_type_identifier
+      assert_equal @test_extension_type.identifier, ExtensionProject.current.specification_identifier
     end
 
     def test_write_env_file_creates_env_file
@@ -84,7 +84,7 @@ module Extension
     def test_extension_type_returns_the_set_type_identifier
       setup_temp_project
 
-      assert_equal @type, @project.extension_type_identifier
+      assert_equal @type, @project.specification_identifier
     end
 
     def test_detects_if_registration_id_is_missing_or_invalid

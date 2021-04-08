@@ -7,7 +7,7 @@ module Extension
         class Argo
           include SmartProperties
 
-          property! :surface_area, converts: :to_str
+          property! :surface, converts: :to_str
           property! :renderer_package_name, converts: :to_str
           property! :git_template, converts: :to_str
         end
@@ -18,14 +18,16 @@ module Extension
               .call(identifier, namespace: Features)
               .rescue { OpenStruct }
               .then { |c| c.new(**feature_attributes) }
-              .unwrap { |error| raise error }
+              .unwrap { |error| raise(error) }
           end
         end
       end
 
       property! :identifier
+      property :name, converts: :to_str
       property :graphql_identifier, converts: :to_str
       property! :features, converts: Features.method(:build), default: -> { [] }
+      property! :options, converts: ->(options) { OpenStruct.new(options) }, default: -> { OpenStruct.new }
 
       def graphql_identifier
         super || identifier

@@ -1,7 +1,6 @@
-query ProxyRequest($api_key: String, $shop_domain: String, $query: String!, $variables: String) {
+query ProxyRequest($api_key: String, $query: String!, $variables: String) {
   scriptServiceProxy(
     apiKey: $api_key
-    shopDomain: $shop_domain
     query: $query
     variables: $variables
   )

@@ -1,15 +1,20 @@
 # frozen_string_literal: true
 require "test_helper"
+require "project_types/extension/extension_test_helpers"
 
 module Extension
   module Models
     module SpecificationHandlers
       class ProductSubscriptionTest < MiniTest::Test
+        include ExtensionTestHelpers
+
         def setup
           super
           ShopifyCli::ProjectType.load_type(:extension)
+          specifications = DummySpecifications.build(identifier: "subscription_management", surface: "admin")
+
           @identifier = "PRODUCT_SUBSCRIPTION"
-          @product_subscription = Extension.specifications[@identifier]
+          @product_subscription = specifications[@identifier]
         end
 
         def test_create_uses_standard_argo_create_implementation
@@ -27,6 +32,10 @@ module Extension
           Features::Argo.any_instance.expects(:config).with(@context).once
 
           @product_subscription.config(@context)
+        end
+
+        def test_custom_identifier
+          assert_equal "PRODUCT_SUBSCRIPTION", @product_subscription.identifier
         end
 
         def test_custom_graphql_identifier

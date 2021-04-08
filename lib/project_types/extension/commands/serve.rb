@@ -10,6 +10,7 @@ module Extension
         if argo_admin?
           ShopifyCli::Tasks::EnsureEnv.call(@ctx, required: [:api_key, :secret, :shop])
           ShopifyCli::Tasks::EnsureDevStore.call(@ctx)
+          validate_env
         end
 
         CLI::UI::Frame.open(@ctx.message("serve.frame_title")) do
@@ -37,7 +38,14 @@ module Extension
       def argo_admin?
         ShopifyCli::Shopifolk.check &&
           ShopifyCli::Feature.enabled?(:argo_admin_beta) &&
-          extension_type.specification.features&.argo&.surface_area == "admin"
+          specification_handler.specification.features&.argo&.surface == "admin"
+      end
+
+      def validate_env
+        ExtensionProject.reload
+        @ctx.abort(@ctx.message("serve.serve_missing_information")) if
+          project.env.shop.nil? || project.env.api_key.nil? ||
+          project.env.shop.strip.empty? || project.env.api_key.strip.empty?
       end
     end
   end

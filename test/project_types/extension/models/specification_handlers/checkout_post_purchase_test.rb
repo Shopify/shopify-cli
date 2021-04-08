@@ -1,10 +1,13 @@
 # frozen_string_literal: true
 require "test_helper"
+require "project_types/extension/extension_test_helpers"
 
 module Extension
   module Models
     module SpecificationHandlers
       class CheckoutPostPurchaseTest < MiniTest::Test
+        include ExtensionTestHelpers
+
         def setup
           super
           YAML.stubs(:load_file).returns({})
@@ -12,8 +15,10 @@ module Extension
           Features::Argo.any_instance.stubs(:config).returns({})
           Features::ArgoConfig.stubs(:parse_yaml).returns({})
 
+          specifications = DummySpecifications.build(identifier: "checkout_post_purchase", surface: "checkout")
+
           @identifier = "CHECKOUT_POST_PURCHASE"
-          @checkout_post_purchase = Extension.specifications[@identifier]
+          @checkout_post_purchase = specifications[@identifier]
         end
 
         def test_create_uses_standard_argo_create_implementation

@@ -1,17 +1,22 @@
 # frozen_string_literal: true
 require "test_helper"
+require "project_types/extension/extension_test_helpers"
 
 module Extension
   module Commands
     class ServeTest < MiniTest::Test
       include TestHelpers::Partners
       include TestHelpers::FakeUI
+      include ExtensionTestHelpers::TempProjectSetup
 
       def setup
         super
         ShopifyCli::ProjectType.load_type(:extension)
         ShopifyCli::Shopifolk.stubs(:check).returns(false)
         ShopifyCli::Feature.stubs(:enabled?).with(:argo_admin_beta).returns(false)
+
+        @api_key = "TEST"
+        setup_temp_project(api_key: @api_key)
       end
 
       def test_implements_help
@@ -45,21 +50,7 @@ module Extension
         ShopifyCli::Tasks::EnsureDevStore.stubs(:call)
         ShopifyCli::Feature.stubs(:enabled?).with(:argo_admin_beta).returns(true)
 
-        Extension.specifications.stubs(:valid?).returns(true)
-        Extension.specifications.stubs(:[]).returns(
-          Models::SpecificationHandlers::Default.new(Models::Specification.new(
-            identifier: "test-extension",
-            features: {
-              argo: {
-                surface_area: "admin",
-                git_template: "https://github.com/Shopify/argo-admin-template.git",
-                renderer_package_name: "Shopify/argo-admin",
-              },
-            },
-          ))
-        )
-
-        serve_args = %w(--shop=my-test-shop.myshopify.com --apiKey=apikey)
+        serve_args = ["--shop=my-test-shop.myshopify.com", "--apiKey=#{@api_key}"]
         yarn_serve_command = Serve::YARN_SERVE_COMMAND + serve_args
         npm_serve_command = Serve::NPM_SERVE_COMMAND + %w(--) + serve_args
         ShopifyCli::JsSystem.any_instance
@@ -69,6 +60,36 @@ module Extension
           .once
 
         run_serve
+      end
+
+      def test_raises_exception_if_shop_is_empty
+        ShopifyCli::Shopifolk.stubs(:check).returns(true)
+        ShopifyCli::Tasks::EnsureEnv.stubs(:call)
+        ShopifyCli::Tasks::EnsureDevStore.stubs(:call)
+        ShopifyCli::Feature.stubs(:enabled?).with(:argo_admin_beta).returns(true)
+        ExtensionProject.stubs(:reload)
+
+        ExtensionProject.current.env.stubs(:shop).returns(" ")
+
+        exception = assert_raises ShopifyCli::Abort do
+          run_serve
+        end
+        assert_includes exception.message, @context.message("serve.serve_missing_information")
+      end
+
+      def test_raises_exception_if_api_key_is_empty
+        ShopifyCli::Shopifolk.stubs(:check).returns(true)
+        ShopifyCli::Tasks::EnsureEnv.stubs(:call)
+        ShopifyCli::Tasks::EnsureDevStore.stubs(:call)
+        ShopifyCli::Feature.stubs(:enabled?).with(:argo_admin_beta).returns(true)
+        ExtensionProject.stubs(:reload)
+
+        ExtensionProject.current.env.stubs(:api_key).returns(" ")
+
+        exception = assert_raises ShopifyCli::Abort do
+          run_serve
+        end
+        assert_includes exception.message, @context.message("serve.serve_missing_information")
       end
 
       private

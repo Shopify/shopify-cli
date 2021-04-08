@@ -12,7 +12,7 @@ module Extension
 
           update_project_files(registration)
 
-          @ctx.puts(@ctx.message("register.success", project.title, app.title))
+          @ctx.puts(@ctx.message("register.success", project.title))
           @ctx.puts(@ctx.message("register.success_info"))
         end
       end
@@ -27,8 +27,8 @@ module Extension
       private
 
       def confirm_registration
-        @ctx.puts(@ctx.message("register.confirm_info", extension_type.name))
-        CLI::UI::Prompt.confirm(@ctx.message("register.confirm_question", app.title))
+        @ctx.puts(@ctx.message("register.confirm_info", specification_handler.name))
+        CLI::UI::Prompt.confirm(@ctx.message("register.confirm_question"))
       end
 
       def register_extension
@@ -37,10 +37,10 @@ module Extension
         Tasks::CreateExtension.call(
           context: @ctx,
           api_key: app.api_key,
-          type: extension_type.graphql_identifier,
+          type: specification_handler.graphql_identifier,
           title: project.title,
           config: {},
-          extension_context: extension_type.extension_context(@ctx)
+          extension_context: specification_handler.extension_context(@ctx)
         )
       end
 

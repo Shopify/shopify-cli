@@ -19,7 +19,7 @@ module Extension
         end
 
         def name
-          message("name")
+          message("name") || specification.name
         end
 
         def tagline
