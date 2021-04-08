@@ -165,6 +165,7 @@ module ShopifyCli
   end
 
   def self.sha
-    @sha ||= Git.sha(dir: ShopifyCli::ROOT)
+    return @sha if defined?(@sha)
+    @sha = Git.sha(dir: ShopifyCli::ROOT)
   end
 end
