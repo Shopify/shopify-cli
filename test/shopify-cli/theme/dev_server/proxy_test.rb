@@ -2,6 +2,7 @@
 require "test_helper"
 require "shopify-cli/theme/dev_server"
 require "rack/mock"
+require "timecop"
 
 class ProxyTest < Minitest::Test
   SECURE_SESSION_ID = "deadbeef"
@@ -31,6 +32,28 @@ class ProxyTest < Minitest::Test
     stub_session_id_request
 
     request.get("/")
+  end
+
+  def test_refreshes_session_cookie_on_expiry
+    stub_request(:get, "https://dev-theme-server-store.myshopify.com/?_fd=0&pb=0")
+      .with(
+        body: nil,
+        headers: default_proxy_headers,
+      )
+      .to_return(status: 200)
+      .times(2)
+
+    stub_session_id_request
+    request.get("/")
+
+    # Should refresh the session cookie after 1 day
+    Timecop.freeze(DateTime.now + 1) do # rubocop:disable Style/DateTime
+      request.get("/")
+    end
+
+    assert_requested(:head,
+      "https://dev-theme-server-store.myshopify.com/?_fd=0&pb=0&preview_theme_id=123456789",
+      times: 2)
   end
 
   def test_form_data_is_proxied_to_online_store
