@@ -34,7 +34,8 @@ GEM
       minitest (>= 5.0)
       ruby-progressbar
     mocha (1.11.2)
-    nokogiri (1.11.6-x86_64-darwin)
+    nokogiri (1.11.3)
+      mini_portile2 (~> 2.5.0)
       racc (~> 1.4)
     nokogumbo (2.0.5)
       nokogiri (~> 1.8, >= 1.8.4)
