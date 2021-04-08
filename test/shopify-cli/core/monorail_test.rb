@@ -43,6 +43,15 @@ module ShopifyCli
         ShopifyCli::Core::Monorail.log("testcommand", %w(arg argtwo)) { "This is the block and result" }
       end
 
+      def test_log_doesnt_prompt_for_consent_if_in_ci
+        ShopifyCli::Context.any_instance.stubs(:ci?).returns(true)
+        ShopifyCli::Context.any_instance.stubs(:system?).returns(true)
+        CLI::UI::Prompt.expects(:confirm).never
+        Net::HTTP.expects(:start).never
+
+        ShopifyCli::Core::Monorail.log("testcommand", %w(arg argtwo)) { "This is the block and result" }
+      end
+
       def test_log_event_contains_schema_and_payload_values
         enabled_and_consented(true, true)
         ShopifyCli::Shopifolk.expects(:acting_as_shopify_organization?).returns(true)
