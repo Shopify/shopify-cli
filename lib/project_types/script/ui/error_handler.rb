@@ -141,11 +141,6 @@ module Script
           {
             cause_of_error: ShopifyCli::Context.message("script.error.app_not_installed_cause"),
           }
-        when Layers::Infrastructure::Errors::AppScriptNotPushedError,
-          Layers::Infrastructure::Errors::AppScriptUndefinedError
-          {
-            cause_of_error: ShopifyCli::Context.message("script.error.app_script_not_pushed_help"),
-          }
         when Layers::Infrastructure::Errors::BuildError
           {
             cause_of_error: ShopifyCli::Context.message("script.error.build_error_cause"),
@@ -210,15 +205,6 @@ module Script
           {
             cause_of_error: ShopifyCli::Context.message("script.error.shop_auth_cause"),
             help_suggestion: ShopifyCli::Context.message("script.error.shop_auth_help"),
-          }
-        when Layers::Infrastructure::Errors::ShopScriptConflictError
-          {
-            cause_of_error: ShopifyCli::Context.message("script.error.shop_script_conflict_cause"),
-            help_suggestion: ShopifyCli::Context.message("script.error.shop_script_conflict_help"),
-          }
-        when Layers::Infrastructure::Errors::ShopScriptUndefinedError
-          {
-            cause_of_error: ShopifyCli::Context.message("script.error.shop_script_undefined_cause"),
           }
         when Layers::Infrastructure::Errors::BuildScriptNotFoundError
           {

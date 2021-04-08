@@ -94,8 +94,6 @@ module Script
                                      "'--metadata build/metadata.json' argument",
           app_not_installed_cause: "App not installed on store.",
 
-          app_script_not_pushed_help: "Script isn't on the app. Run {{command:shopify push}}, and then try again.",
-
           build_error_cause: "Something went wrong while building the script.",
           build_error_help: "Correct the errors and try again.",
 
@@ -115,12 +113,6 @@ module Script
 
           shop_auth_cause: "Unable to authenticate with the store.",
           shop_auth_help: "Try again.",
-
-          shop_script_conflict_cause: "Another app in this store has already enabled a script "\
-                                      "on this extension point.",
-          shop_script_conflict_help: "Disable that script or uninstall that app and try again.",
-
-          shop_script_undefined_cause: "Script is already turned off in store.",
 
           invalid_build_script: "The root package.json contains an invalid build command that " \
                                 "is needed to compile your script to WebAssembly.",
@@ -168,40 +160,6 @@ module Script
           },
 
           script_pushed: "{{v}} Script pushed to app (API key: %{api_key}).",
-        },
-
-        disable: {
-          help: <<~HELP,
-          Turn off script in store.
-            Usage: {{command:%s disable}}
-          HELP
-
-          error: {
-            operation_failed: "Can't disable script.",
-          },
-
-          script_disabled: "{{v}} Script disabled. Script is turned off in store.",
-        },
-
-        enable: {
-          help: <<~HELP,
-          Turn on script in store.
-            Usage: {{command:%s enable}}
-            Options:
-              {{command:--config-props='name1:value1, name2:value2'}} Optional. Define the configuration of your script by passing individual name and value pairs. If used with --config_file, then matching values in --config-props will override those set in the file.
-              {{command:--config_file=<path/to/YAMLFilename>}} Optional. Define the configuration of your script using a YAML formatted file. --config-props values override properties in this file.
-          HELP
-
-          info: "{{*}} A script always remains enabled until you disable it - even after pushing "\
-                "script changes with the same extension point to an app. To disable a script, use "\
-                "the 'disable' command.",
-
-          error: {
-            operation_failed: "Can't enable script.",
-          },
-
-          script_enabled: "{{v}} Script enabled. %{type} script %{title} in app (API key: %{api_key}) "\
-                          "is turned on in store {{green:%{shop_domain}}}",
         },
 
         project_deps: {
