@@ -40,9 +40,9 @@ module ShopifyCli
         case value
           # FIXME: Quotes aren't actually removed – this is a copy of the original code.
           # Remove single quotes
-          when /\A'(.*)'\z/ then value
+        when /\A'(.*)'\z/ then value
           # Remove double quotes and unescape string preserving newline characters
-          when /\A"(.*)"\z/ then value.gsub('\n', "\n").gsub(/\\(.)/, '\1')
+        when /\A"(.*)"\z/ then value.gsub('\n', "\n").gsub(/\\(.)/, '\1')
         else
           value
         end

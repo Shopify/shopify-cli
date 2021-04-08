@@ -6,12 +6,12 @@ module ShopifyCli
   module Resources
     class EnvFileTest < MiniTest::Test
       def test_default_settings
-        ReadEnvFile.call(File.join(Dir.pwd, '.env')).tap do |result|
-          assert_predicate result, :success?
+        ReadEnvFile.call(File.join(Dir.pwd, ".env")).tap do |result|
+          assert_predicate(result, :success?)
 
           result.value.tap do |variables|
-            assert_kind_of Hash, variables
-            assert_predicate variables, :any?
+            assert_kind_of(Hash, variables)
+            assert_predicate(variables, :any?)
 
             assert_equal "apikey", variables["SHOPIFY_API_KEY"]
             assert_equal "secret", variables["SHOPIFY_API_SECRET"]
@@ -25,9 +25,9 @@ module ShopifyCli
       def test_transforming_keys
         symbolize = ->(key) { key.downcase.to_sym }
         ReadEnvFile
-          .call(File.join(Dir.pwd, '.env'), transform_keys: symbolize)
+          .call(File.join(Dir.pwd, ".env"), transform_keys: symbolize)
           .tap do |result|
-            assert_predicate result, :success?
+            assert_predicate(result, :success?)
 
             result.value.tap do |variables|
               assert_equal "apikey", variables[:shopify_api_key]
@@ -50,13 +50,13 @@ module ShopifyCli
         end
 
         ReadEnvFile
-          .call(File.join(Dir.pwd, '.env'), transform_values: parse_urls)
+          .call(File.join(Dir.pwd, ".env"), transform_values: parse_urls)
           .tap do |result|
-            assert_predicate result, :success?
+            assert_predicate(result, :success?)
 
             result.value.tap do |variables|
-              assert_kind_of URI::HTTP, variables["HOST"]
-              assert_kind_of String, variables["SHOP"]
+              assert_kind_of(URI::HTTP, variables["HOST"])
+              assert_kind_of(String, variables["SHOP"])
             end
           end
       end

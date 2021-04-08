@@ -15,14 +15,14 @@ module ShopifyCli
 
       class << self
         def read(directory = Dir.pwd)
-          env_file_path = File.join(directory, '.env')
+          env_file_path = File.join(directory, ".env")
           read_env_file(env_file_path)
             .then(&method(:new))
             .unwrap { |error| raise error }
         end
 
         def parse_external_env(directory = Dir.pwd)
-          env_file_path = File.join(directory, '.env')
+          env_file_path = File.join(directory, ".env")
           read_env_file(env_file_path).unwrap { |error| raise error }
         end
 
@@ -35,7 +35,7 @@ module ShopifyCli
         end
 
         def restructure_variables(variables)
-          variables.each_with_object({extra: {}}) do |(name, value), restructured_variables|
+          variables.each_with_object({ extra: {} }) do |(name, value), restructured_variables|
             if properties.keys.include?(name)
               restructured_variables[name] = value
             else
@@ -64,20 +64,9 @@ module ShopifyCli
       end
 
       def write(ctx)
-        spin_group = CLI::UI::SpinGroup.new
-        spin_group.add(ctx.message("core.env_file.saving_header", FILENAME)) do |spinner|
-          output = []
-          KEY_MAP.each do |key, value|
-            output << "#{key}=#{send(value)}" if send(value)
-          end
-          extra.each do |key, value|
-            output << "#{key}=#{value}"
-          end
-          ctx.print_task(ctx.message("core.env_file.saving", FILENAME))
-          ctx.write(FILENAME, output.join("\n") + "\n")
-          spinner.update_title(ctx.message("core.env_file.saved", FILENAME))
-        end
-        spin_group.wait
+        WriteEnvFile
+          .call(to_h, path: FILENAME, ctx: ctx)
+          .unwrap { |error| raise error }
       end
 
       def update(ctx, field, value)
