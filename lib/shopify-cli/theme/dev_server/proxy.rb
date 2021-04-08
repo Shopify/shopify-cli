@@ -1,6 +1,7 @@
 # frozen_string_literal: true
 require "net/http"
 require "stringio"
+require "time"
 
 module ShopifyCli
   module Theme
@@ -19,11 +20,15 @@ module ShopifyCli
       class Proxy
         SESSION_COOKIE_NAME = "_secure_session_id"
         SESSION_COOKIE_REGEXP = /#{SESSION_COOKIE_NAME}=(\h+)/
+        SESSION_COOKIE_MAX_AGE = 60 * 60 * 23 # 1 day - leeway of 1h
 
         def initialize(ctx, theme)
           @ctx = ctx
           @theme = theme
           @core_endpoints = Set.new
+
+          @secure_session_id = nil
+          @last_session_cookie_refresh = nil
         end
 
         def call(env)
@@ -144,13 +149,20 @@ module ShopifyCli
           cookie_header
         end
 
+        def secure_session_id_expired?
+          return true unless @secure_session_id && @last_session_cookie_refresh
+          Time.now - @last_session_cookie_refresh >= SESSION_COOKIE_MAX_AGE
+        end
+
         def secure_session_id
-          @secure_session_id ||= begin
+          if secure_session_id_expired?
+            @ctx.debug("Refreshing preview _secure_session_id cookie")
             response = request("HEAD", "/", query: { preview_theme_id: @theme.config.theme_id })
-            if response && response["set-cookie"]
-              response["set-cookie"][SESSION_COOKIE_REGEXP, 1]
-            end
+            @secure_session_id = response["set-cookie"][SESSION_COOKIE_REGEXP, 1]
+            @last_session_cookie_refresh = Time.now
           end
+
+          @secure_session_id
         end
 
         def get_response_headers(response)

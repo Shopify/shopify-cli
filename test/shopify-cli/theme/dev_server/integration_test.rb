@@ -33,6 +33,12 @@ class IntegrationTest < Minitest::Test
     stub_request(:any, ASSETS_API_URL)
       .to_return(status: 200, body: "{}")
     stub_request(:head, "https://dev-theme-server-store.myshopify.com/?_fd=0&pb=0&preview_theme_id=123456789")
+      .to_return(
+        status: 200,
+        headers: {
+          "Set-Cookie" => "_secure_session_id=abcd1234",
+        }
+      )
     stub_sfr = stub_request(:get, "https://dev-theme-server-store.myshopify.com/?_fd=0&pb=0")
 
     start_server
@@ -156,7 +162,7 @@ class IntegrationTest < Minitest::Test
   end
 
   def refute_server_errors(response)
-    refute_includes(response, "error", response)
+    refute_match(/error/i, response, response)
   end
 
   def get(path)
