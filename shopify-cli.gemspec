@@ -14,14 +14,14 @@ Gem::Specification.new do |spec|
     development process and lets you quickly add popular features, such as billing
     and webhooks.
   HERE
-  spec.homepage = "https://shopify.github.io/shopify-app-cli/"
+  spec.homepage = "https://shopify.github.io/shopify-cli/"
   spec.required_ruby_version = Gem::Requirement.new(">= 2.6")
 
   spec.metadata["allowed_push_host"] = "https://rubygems.org"
 
   spec.metadata["homepage_uri"] = spec.homepage
-  spec.metadata["source_code_uri"] = "https://github.com/Shopify/shopify-app-cli"
-  spec.metadata["changelog_uri"] = "https://github.com/Shopify/shopify-app-cli/blob/master/CHANGELOG.md"
+  spec.metadata["source_code_uri"] = "https://github.com/Shopify/shopify-cli"
+  spec.metadata["changelog_uri"] = "https://github.com/Shopify/shopify-cli/blob/master/CHANGELOG.md"
 
   # Specify which files should be added to the gem when it is released.
   # The `git ls-files -z` loads the files in the RubyGem that have been added into git.

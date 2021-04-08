@@ -20,7 +20,7 @@ task :console do
 end
 
 namespace :rdoc do
-  repo = "https://github.com/Shopify/shopify-app-cli.wiki.git"
+  repo = "https://github.com/Shopify/shopify-cli.wiki.git"
   intermediate = "markdown_intermediate"
   file_to_doc = [
     "lib/shopify-cli/admin_api.rb",
