@@ -17,6 +17,7 @@ module Theme
     subcommand :Generate, "generate", Project.project_filepath("commands/generate")
     subcommand :Push, "push", Project.project_filepath("commands/push")
     subcommand :Serve, "serve", Project.project_filepath("commands/serve")
+    subcommand :Check, "check", Project.project_filepath("commands/check")
 
     def call(*)
       @ctx.puts(self.class.help)
