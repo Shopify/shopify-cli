@@ -12,9 +12,10 @@ module Script
           Infrastructure::ExtensionPointRepository.new.extension_point_types
         end
 
-        def self.non_deprecated_types
+        def self.available_types
           Infrastructure::ExtensionPointRepository.new.extension_points.select do |ep|
-            !ep.deprecated?
+            next false if ep.deprecated?
+            !ep.beta? || ShopifyCli::Feature.enabled?(:scripts_beta_extension_points)
           end.map(&:type)
         end
 

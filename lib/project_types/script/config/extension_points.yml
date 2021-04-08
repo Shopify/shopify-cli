@@ -5,6 +5,7 @@ discount:
     sdk-version: "^9.0.0"
     toolchain-version: "^5.0.0"
 unit_limit_per_order:
+  beta: true
   assemblyscript:
     package: "@shopify/extension-point-as-unit-limit-per-order"
     sdk-version: "^9.0.0"
@@ -23,6 +24,7 @@ shipping_filter:
     sdk-version: "^9.0.0"
     toolchain-version: "^5.0.0"
 tax_filter:
+  beta: true
   assemblyscript:
     package: "@shopify/extension-point-as-tax-filter"
     sdk-version: "^9.0.0"
