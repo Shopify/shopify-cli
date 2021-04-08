@@ -99,13 +99,9 @@ module ShopifyCli
 
     private
 
-    def current_sha
-      @current_sha ||= Git.sha(dir: ShopifyCli::ROOT)
-    end
-
     def default_headers
       {
-        "User-Agent" => "Shopify CLI #{ShopifyCli::VERSION} #{current_sha} | #{ctx.uname}",
+        "User-Agent" => "Shopify CLI #{ShopifyCli::VERSION} #{ShopifyCli.sha} | #{ctx.uname}",
       }.tap do |headers|
         headers["X-Shopify-Cli-Employee"] = "1" if Shopifolk.acting_as_shopify_organization?
       end.merge(auth_headers(token))
