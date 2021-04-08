@@ -8,11 +8,11 @@ describe Script::Layers::Application::BuildScript do
     let(:language) { "assemblyscript" }
     let(:extension_point_type) { "discount" }
     let(:script_name) { "name" }
-    let(:description) { "my description" }
     let(:op_failed_msg) { "msg" }
     let(:content) { "content" }
     let(:compiled_type) { "wasm" }
     let(:metadata) { Script::Layers::Domain::Metadata.new("1", "0", false) }
+    let(:config_ui) { Script::Layers::Domain::ConfigUi.new(filename: "filename", content: "content") }
     let(:task_runner) { stub(compiled_type: compiled_type, metadata: metadata) }
     let(:script_project) { stub }
 
@@ -20,7 +20,8 @@ describe Script::Layers::Application::BuildScript do
       Script::Layers::Application::BuildScript.call(
         ctx: @context,
         task_runner: task_runner,
-        script_project: script_project
+        script_project: script_project,
+        config_ui: config_ui
       )
     end
 
@@ -32,7 +33,8 @@ describe Script::Layers::Application::BuildScript do
           script_project: script_project,
           script_content: content,
           compiled_type: "wasm",
-          metadata: metadata
+          metadata: metadata,
+          config_ui: config_ui
         )
         capture_io { subject }
       end

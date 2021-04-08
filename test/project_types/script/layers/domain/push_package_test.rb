@@ -6,7 +6,6 @@ describe Script::Layers::Domain::PushPackage do
   let(:extension_point_type) { "discount" }
   let(:script_id) { "id" }
   let(:script_name) { "foo_script" }
-  let(:description) { "my description" }
   let(:config_ui) { "---\nversion: 1\n" }
   let(:api_key) { "fake_key" }
   let(:force) { false }
@@ -18,7 +17,6 @@ describe Script::Layers::Domain::PushPackage do
       id: id,
       extension_point_type: extension_point_type,
       script_name: script_name,
-      description: description,
       config_ui: config_ui,
       script_content: script_content,
       compiled_type: compiled_type,

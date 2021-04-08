@@ -7,8 +7,6 @@ module Script
     creator("Script::Commands::Create")
 
     register_command("Script::Commands::Push", "push")
-    register_command("Script::Commands::Disable", "disable")
-    register_command("Script::Commands::Enable", "enable")
 
     require Project.project_filepath("messages/messages")
     register_messages(Script::Messages::MESSAGES)
@@ -18,8 +16,6 @@ module Script
   module Commands
     autoload :Create, Project.project_filepath("commands/create")
     autoload :Push, Project.project_filepath("commands/push")
-    autoload :Disable, Project.project_filepath("commands/disable")
-    autoload :Enable, Project.project_filepath("commands/enable")
   end
 
   # define/autoload project specific Forms
@@ -33,14 +29,13 @@ module Script
       autoload :BuildScript, Project.project_filepath("layers/application/build_script")
       autoload :CreateScript, Project.project_filepath("layers/application/create_script")
       autoload :PushScript, Project.project_filepath("layers/application/push_script")
-      autoload :DisableScript, Project.project_filepath("layers/application/disable_script")
-      autoload :EnableScript, Project.project_filepath("layers/application/enable_script")
       autoload :ExtensionPoints, Project.project_filepath("layers/application/extension_points")
       autoload :ProjectDependencies, Project.project_filepath("layers/application/project_dependencies")
     end
 
     module Domain
       autoload :Errors, Project.project_filepath("layers/domain/errors")
+      autoload :ConfigUi, Project.project_filepath("layers/domain/config_ui")
       autoload :PushPackage, Project.project_filepath("layers/domain/push_package")
       autoload :Metadata, Project.project_filepath("layers/domain/metadata")
       autoload :ExtensionPoint, Project.project_filepath("layers/domain/extension_point")
@@ -58,6 +53,7 @@ module Script
         Project.project_filepath("layers/infrastructure/rust_project_creator.rb")
       autoload :RustTaskRunner, Project.project_filepath("layers/infrastructure/rust_task_runner")
 
+      autoload :ConfigUiRepository, Project.project_filepath("layers/infrastructure/config_ui_repository")
       autoload :PushPackageRepository, Project.project_filepath("layers/infrastructure/push_package_repository")
       autoload :ExtensionPointRepository, Project.project_filepath("layers/infrastructure/extension_point_repository")
       autoload :ProjectCreator, Project.project_filepath("layers/infrastructure/project_creator")

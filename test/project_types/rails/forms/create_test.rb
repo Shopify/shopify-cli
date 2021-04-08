@@ -27,6 +27,14 @@ module Rails
         assert_equal("My New App", form.title)
       end
 
+      def test_aborts_if_title_includes_shopify
+        io = capture_io do
+          form = ask(title: "Best Shopify Shipping App")
+          assert_nil(form)
+        end
+        assert_match(@context.message("rails.forms.create.error.invalid_app_name"), io.join)
+      end
+
       def test_type_can_be_provided_by_flag
         form = ask(type: "public")
         assert_equal("public", form.type)

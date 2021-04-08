@@ -6,6 +6,7 @@ module Extension
   module Commands
     class CreateTest < MiniTest::Test
       include TestHelpers::FakeUI
+      include ExtensionTestHelpers
       include ExtensionTestHelpers::TestExtensionSetup
       include ExtensionTestHelpers::Messages
       include ExtensionTestHelpers::Stubs::GetOrganizations
@@ -27,7 +28,7 @@ module Extension
 
       def test_create_aborts_if_the_directory_already_exists
         Dir.expects(:exist?).with(@directory_name).returns(true).once
-        @test_extension_type.expects(:create).never
+        Models::SpecificationHandlers::Default.any_instance.expects(:create).never
 
         io = capture_io_and_assert_raises(ShopifyCli::Abort) do
           run_create(%W(extension --name=#{@name} --type=#{@test_extension_type.identifier} --api-key=#{@app.api_key}))
@@ -40,7 +41,8 @@ module Extension
 
       def test_runs_type_create_and_writes_project_files
         Dir.expects(:exist?).with(@directory_name).returns(false).once
-        @test_extension_type.expects(:create).with(@directory_name, @context).returns(true).once
+        Models::SpecificationHandlers::Default
+          .any_instance.expects(:create).with(@directory_name, @context).returns(true).once
         ExtensionProject.expects(:write_cli_file).with(context: @context, type: @test_extension_type.identifier).once
         ExtensionProject
           .expects(:write_env_file)
@@ -59,7 +61,8 @@ module Extension
 
       def test_does_not_create_project_files_and_outputs_try_again_message_if_type_create_failed
         Dir.expects(:exist?).with(@directory_name).returns(false).once
-        @test_extension_type.expects(:create).with(@directory_name, @context).returns(false).once
+        Models::SpecificationHandlers::Default
+          .any_instance.expects(:create).with(@directory_name, @context).returns(false).once
         ExtensionProject.expects(:write_cli_file).never
         ExtensionProject.expects(:write_env_file).never
 
@@ -82,6 +85,11 @@ module Extension
       private
 
       def run_create(arguments)
+        specifications = DummySpecifications.build(
+          custom_handler_root: File.expand_path("../../", __FILE__),
+          custom_handler_namespace: ::Extension::ExtensionTestHelpers,
+        )
+        Models::Specifications.stubs(:new).returns(specifications)
         Commands::Create.ctx = @context
         Commands::Create.call(arguments, "create", "create")
       end

@@ -2,15 +2,14 @@
 
 module Script
   class ScriptProject < ShopifyCli::Project
-    attr_reader :extension_point_type, :script_name, :language, :description, :config_ui
+    attr_reader :extension_point_type, :script_name, :language, :config_ui_file
 
     def initialize(*args)
       super
       @extension_point_type = lookup_config!("extension_point_type")
       raise Errors::DeprecatedEPError, @extension_point_type if deprecated?(@extension_point_type)
       @script_name = lookup_config!("script_name")
-      @description = lookup_config("description")
-      @config_ui = lookup_config_ui
+      @config_ui_file = lookup_config("config_ui_file")
       @language = lookup_language
       ShopifyCli::Core::Monorail.metadata = {
         "script_name" => @script_name,
@@ -39,19 +38,6 @@ module Script
       config[key]
     end
 
-    def lookup_config_ui
-      filename = lookup_config("config_ui_file")
-      return nil unless filename
-
-      path = File.join(directory, filename)
-      raise Errors::MissingSpecifiedConfigUiDefinitionError, filename unless File.exist?(path)
-
-      contents = File.read(path)
-      raise Errors::InvalidConfigUiDefinitionError, filename unless valid_config_ui?(contents)
-
-      contents
-    end
-
     def lookup_language
       lang = lookup_config("language")&.downcase || Layers::Domain::ExtensionPointAssemblyScriptSDK.language
       if Layers::Application::ExtensionPoints.supported_language?(type: extension_point_type, language: lang)
@@ -59,14 +45,6 @@ module Script
       else
         raise Errors::InvalidLanguageError.new(lang, extension_point_type)
       end
-    end
-
-    def valid_config_ui?(raw_yaml)
-      require "yaml" # takes 20ms, so deferred as late as possible.
-      YAML.safe_load(raw_yaml)
-      true
-    rescue Psych::SyntaxError
-      false
     end
 
     class << self

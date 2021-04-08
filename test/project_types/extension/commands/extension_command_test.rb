@@ -33,7 +33,7 @@ module Extension
         unknown_type = "unknown_type"
         setup_temp_project(type_identifier: unknown_type)
 
-        io = capture_io_and_assert_raises(ShopifyCli::Abort) { @command.extension_type.features }
+        io = capture_io_and_assert_raises(ShopifyCli::Abort) { @command.specification_handler.features }
 
         assert_message_output(io: io, expected_content: [
           @context.message("errors.unknown_type", unknown_type),
@@ -43,22 +43,19 @@ module Extension
       def test_extension_type_returns_a_lazy_specification_handler
         setup_temp_project
 
-        assert_kind_of(Models::LazySpecificationHandler, @command.extension_type)
-        assert_equal @test_extension_type.specification, @command.extension_type.specification
+        assert_kind_of(Models::LazySpecificationHandler, @command.specification_handler)
       end
 
       def test_extension_type_memoizes_the_extension_type
         setup_temp_project
-        Extension.specifications.expects(:[]).returns(@test_extension_type).once
 
-        @command.extension_type.specification
-        @command.extension_type.specification
+        @command.specification_handler.specification
+        @command.specification_handler.specification
       end
 
       def test_accessing_the_extension_type_identifier_does_not_result_in_fetching_specifications
         setup_temp_project
-        Extension.specifications.expects(:[]).never
-        @command.extension_type.identifier
+        @command.specification_handler.identifier
       end
     end
   end

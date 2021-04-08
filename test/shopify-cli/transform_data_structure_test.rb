@@ -78,6 +78,18 @@ module ShopifyCli
         end
     end
 
+    def test_underscore_keys_works_with_already_underscored_keys
+      given_input = { "message_id" => 1 }
+      expected_output = given_input
+
+      TransformDataStructure
+        .new(underscore_keys: true)
+        .call(given_input).tap do |result|
+          assert_predicate(result, :success?)
+          assert_equal(expected_output, result.value)
+        end
+    end
+
     def test_replacing_hashes_with_another_associative_array_container
       TransformDataStructure.new(associative_array_container: OpenStruct).call({ a: 1 }).tap do |result|
         assert_predicate(result, :success?)

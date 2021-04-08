@@ -24,7 +24,7 @@ module Extension
       end
 
       def extract_surface_area(argo_configuration)
-        argo_configuration.fetch(:surface_area) do
+        argo_configuration.fetch(:surface) do
           raise UnspecifiedSurfaceArea, "Argo configuration does not specify surface area"
         end
       end

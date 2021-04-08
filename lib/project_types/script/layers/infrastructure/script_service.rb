@@ -15,7 +15,6 @@ module Script
           script_name:,
           script_content:,
           compiled_type:,
-          description: nil,
           api_key: nil,
           force: false,
           metadata:,
@@ -25,8 +24,7 @@ module Script
           variables = {
             extensionPointName: extension_point_type.upcase,
             title: script_name,
-            description: description,
-            configUi: config_ui,
+            configUi: config_ui&.content,
             sourceCode: Base64.encode64(script_content),
             language: compiled_type,
             force: force,
@@ -41,57 +39,12 @@ module Script
 
           if user_errors.any? { |e| e["tag"] == "already_exists_error" }
             raise Errors::ScriptRepushError, api_key
-          else
-            raise Errors::ScriptServiceUserError.new(query_name, user_errors.to_s)
-          end
-        end
-
-        def enable(api_key:, shop_domain:, configuration:, extension_point_type:, title:)
-          query_name = "shop_script_update_or_create"
-          variables = {
-            extensionPointName: extension_point_type.upcase,
-            configuration: configuration,
-            title: title,
-          }
-
-          resp_hash = script_service_request(
-            query_name: query_name,
-            api_key: api_key,
-            shop_domain: format_shop_domain(shop_domain),
-            variables: variables,
-          )
-          user_errors = resp_hash["data"]["shopScriptUpdateOrCreate"]["userErrors"]
-
-          return resp_hash if user_errors.empty?
-
-          if user_errors.any? { |e| e["tag"] == "app_script_not_found" }
-            raise Errors::AppScriptUndefinedError, api_key
-          elsif user_errors.any? { |e| e["tag"] == "shop_script_conflict" }
-            raise Errors::ShopScriptConflictError
-          elsif user_errors.any? { |e| e["tag"] == "app_script_not_pushed" }
-            raise Errors::AppScriptNotPushedError
-          else
-            raise Errors::ScriptServiceUserError.new(query_name, user_errors.to_s)
-          end
-        end
-
-        def disable(api_key:, shop_domain:, extension_point_type:)
-          query_name = "shop_script_delete"
-          variables = {
-            extensionPointName: extension_point_type.upcase,
-          }
-
-          resp_hash = script_service_request(
-            query_name: query_name,
-            api_key: api_key,
-            shop_domain: format_shop_domain(shop_domain),
-            variables: variables,
-          )
-          user_errors = resp_hash["data"]["shopScriptDelete"]["userErrors"]
-          return resp_hash if user_errors.empty?
-
-          if user_errors.any? { |e| e["tag"] == "shop_script_not_found" }
-            raise Errors::ShopScriptUndefinedError, api_key
+          elsif (e = user_errors.any? { |err| err["tag"] == "config_ui_syntax_error" })
+            raise Errors::ConfigUiSyntaxError, config_ui&.filename
+          elsif (e = user_errors.find { |err| err["tag"] == "config_ui_missing_keys_error" })
+            raise Errors::ConfigUiMissingKeysError.new(config_ui&.filename, e["message"])
+          elsif (e = user_errors.find { |err| err["tag"] == "config_ui_fields_missing_keys_error" })
+            raise Errors::ConfigUiFieldsMissingKeysError.new(config_ui&.filename, e["message"])
           else
             raise Errors::ScriptServiceUserError.new(query_name, user_errors.to_s)
           end
@@ -99,30 +52,24 @@ module Script
 
         private
 
-        def format_shop_domain(shop_domain)
-          shop_domain.delete_suffix("/")
-        end
-
         class ScriptServiceAPI < ShopifyCli::API
           property(:api_key, accepts: String)
-          property(:shop_id, accepts: Integer)
 
-          def self.query(ctx, query_name, api_key: nil, shop_domain: nil, variables: {})
-            api_client(ctx, api_key, shop_domain).query(query_name, variables: variables)
+          def self.query(ctx, query_name, api_key: nil, variables: {})
+            api_client(ctx, api_key).query(query_name, variables: variables)
           end
 
-          def self.api_client(ctx, api_key, shop_domain)
+          def self.api_client(ctx, api_key)
             new(
               ctx: ctx,
               url: "https://script-service.myshopify.io/graphql",
               token: "",
-              api_key: api_key,
-              shop_id: shop_domain&.to_i
+              api_key: api_key
             )
           end
 
           def auth_headers(*)
-            tokens = { "APP_KEY" => api_key, "SHOP_ID" => shop_id }.compact.to_json
+            tokens = { "APP_KEY" => api_key }.compact.to_json
             { "X-Shopify-Authenticated-Tokens" => tokens }
           end
         end

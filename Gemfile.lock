@@ -71,7 +71,7 @@ DEPENDENCIES
   pry-byebug
   rake
   rubocop-minitest
-  rubocop-shopify (= 2.0.1)
+  rubocop-shopify
   timecop
   webmock
 

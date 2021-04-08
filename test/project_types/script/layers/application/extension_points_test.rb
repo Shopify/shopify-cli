@@ -9,12 +9,14 @@ describe Script::Layers::Application::ExtensionPoints do
   let(:script_name) { "name" }
   let(:extension_point_type) { "discount" }
   let(:deprecated_extension_point_type) { "unit_limit_per_order" }
+  let(:beta_extension_point_type) { "tax_filter" }
   let(:extension_point_repository) { Script::Layers::Infrastructure::FakeExtensionPointRepository.new }
   let(:extension_point) { extension_point_repository.get_extension_point(extension_point_type) }
 
   before do
     extension_point_repository.create_extension_point(extension_point_type)
     extension_point_repository.create_deprecated_extension_point(deprecated_extension_point_type)
+    extension_point_repository.create_beta_extension_point(beta_extension_point_type)
     Script::Layers::Infrastructure::ExtensionPointRepository.stubs(:new).returns(extension_point_repository)
   end
 
@@ -37,13 +39,13 @@ describe Script::Layers::Application::ExtensionPoints do
 
   describe ".types" do
     it "should return an array of all types" do
-      assert_equal %w(discount unit_limit_per_order), Script::Layers::Application::ExtensionPoints.types
+      assert_equal %w(discount unit_limit_per_order tax_filter), Script::Layers::Application::ExtensionPoints.types
     end
   end
 
-  describe ".non_deprecated_types" do
-    it "should return an array of all non deprecated types" do
-      assert_equal %w(discount), Script::Layers::Application::ExtensionPoints.non_deprecated_types
+  describe ".available_types" do
+    it "should return an array of all ep types that are not deprecated or in beta" do
+      assert_equal %w(discount), Script::Layers::Application::ExtensionPoints.available_types
     end
   end
 
