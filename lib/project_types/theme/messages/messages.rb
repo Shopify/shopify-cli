@@ -120,6 +120,12 @@ module Theme
           serve: "Viewing theme...",
           open_fail: "Couldn't open the theme",
         },
+        check: {
+          help: <<~HELP,
+            Check your theme for errors, suggestions and best practices.
+            Usage: {{command:%s check}}
+          HELP
+        },
         tasks: {
           ensure_themekit_installed: {
             auto_update: "Would you like to enable auto-updating?",
