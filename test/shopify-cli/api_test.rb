@@ -26,7 +26,7 @@ module ShopifyCli
         token: "faketoken",
         url: "https://my-test-shop.myshopify.com/admin/api/2019-04/graphql.json",
       )
-      Git.stubs(:sha).returns("abcde")
+      ShopifyCli.stubs(:sha).returns("abcde")
       @context.stubs(:uname).returns("Mac")
     end
 
