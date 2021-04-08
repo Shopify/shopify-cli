@@ -5,6 +5,9 @@ type:
 up:
   - ruby: 2.5.1
   - bundler
+  - node:
+      version: 14.9.0
+      yarn: true
 
 test:
   desc: 'Run tests.'
