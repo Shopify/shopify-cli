@@ -45,8 +45,10 @@ module Script
             raise Errors::ConfigUiMissingKeysError.new(config_ui&.filename, e["message"])
           elsif (e = user_errors.find { |err| err["tag"] == "config_ui_fields_missing_keys_error" })
             raise Errors::ConfigUiFieldsMissingKeysError.new(config_ui&.filename, e["message"])
+          elsif user_errors.find { |err| %w(not_use_msgpack_error schema_version_argument_error).include?(err["tag"]) }
+            raise Domain::Errors::MetadataValidationError
           else
-            raise Errors::ScriptServiceUserError.new(query_name, user_errors.to_s)
+            raise Errors::GraphqlError, user_errors
           end
         end
 
@@ -112,7 +114,7 @@ module Script
           when "app_not_installed_on_shop"
             raise Errors::AppNotInstalledError
           else
-            raise Errors::GraphqlError, response["errors"].map { |e| e["message"] }
+            raise Errors::GraphqlError, response["errors"]
           end
         end
 

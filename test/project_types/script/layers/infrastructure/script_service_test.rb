@@ -189,7 +189,7 @@ describe Script::Layers::Infrastructure::ScriptService do
         end
 
         it "should raise error" do
-          assert_raises(Script::Layers::Infrastructure::Errors::ScriptServiceUserError) { subject }
+          assert_raises(Script::Layers::Infrastructure::Errors::GraphqlError) { subject }
         end
       end
 
@@ -210,6 +210,36 @@ describe Script::Layers::Infrastructure::ScriptService do
 
         it "should raise ScriptRepushError error" do
           assert_raises(Script::Layers::Infrastructure::Errors::ScriptRepushError) { subject }
+        end
+      end
+
+      describe "when metadata is invalid" do
+        let(:response) do
+          {
+            data: {
+              scriptServiceProxy: JSON.dump(
+                "data" => {
+                  "appScriptUpdateOrCreate" => {
+                    "userErrors" => [{ "message" => "error", "tag" => error_tag }],
+                  },
+                }
+              ),
+            },
+          }
+        end
+
+        describe "when not using msgpack" do
+          let(:error_tag) { "not_use_msgpack_error" }
+          it "should raise MetadataValidationError error" do
+            assert_raises(Script::Layers::Domain::Errors::MetadataValidationError) { subject }
+          end
+        end
+
+        describe "when invalid schema version" do
+          let(:error_tag) { "schema_version_argument_error" }
+          it "should raise MetadataValidationError error" do
+            assert_raises(Script::Layers::Domain::Errors::MetadataValidationError) { subject }
+          end
         end
       end
 
