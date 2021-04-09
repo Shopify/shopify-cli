@@ -10,14 +10,16 @@ module Script
         @context = TestHelpers::FakeContext.new
         @api_key = "apikey"
         @force = true
-        @env = stub(api_key: @api_key)
-        @script_project = TestHelpers::FakeScriptProject.new(
+        @env = ShopifyCli::Resources::EnvFile.new(api_key: @api_key, secret: "shh")
+        @script_project_repo = TestHelpers::FakeScriptProjectRepository.new
+        @script_project_repo.create(
           language: "assemblyscript",
           extension_point_type: "discount",
           script_name: "script_name",
+          no_config_ui: false,
           env: @env
         )
-        Script::Layers::Infrastructure::ScriptProjectRepository.any_instance.stubs(:get).returns(@script_project)
+        Script::Layers::Infrastructure::ScriptProjectRepository.stubs(:new).returns(@script_project_repo)
         ShopifyCli::ProjectType.load_type(:script)
       end
 
