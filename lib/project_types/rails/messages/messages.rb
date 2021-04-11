@@ -25,7 +25,7 @@ module Rails
         connect: {
           connected: "Project now connected to {{green:%s}}",
           help: <<~HELP,
-          {{command:%s rails connect}}: Connects an existing Ruby on Rails app to Shopify App CLI. Creates a config file.
+          {{command:%s rails connect}}: Connects an existing Ruby on Rails app to Shopify CLI. Creates a config file.
             Usage: {{command:%s rails connect}}
           HELP
           production_warning: <<~MESSAGE,
