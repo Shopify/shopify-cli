@@ -16,7 +16,7 @@ module Node
         connect: {
           connected: "Project now connected to {{green:%s}}",
           help: <<~HELP,
-          {{command:%s node connect}}: Connects an existing Node.js app to Shopify App CLI. Creates a config file.
+          {{command:%s node connect}}: Connects an existing Node.js app to Shopify CLI. Creates a config file.
             Usage: {{command:%s node connect}}
           HELP
           production_warning: <<~MESSAGE,
