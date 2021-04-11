@@ -35,7 +35,7 @@ module Script
                                     "are numbers, letters, hyphens, or underscores.",
 
           no_existing_apps_cause: "You don't have any apps.",
-          no_existing_apps_help: "Create an app with {{command:shopify create}} or "\
+          no_existing_apps_help: "Create an app with {{command:shopify <app type> create}} or "\
                                  "visit https://partners.shopify.com/.",
 
           no_existing_orgs_cause: "You don't have any partner organizations.",

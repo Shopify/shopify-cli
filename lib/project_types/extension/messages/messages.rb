@@ -83,7 +83,8 @@ module Extension
         frame_title: "Pushing your extension to Shopify",
         waiting_text: "Pushing code to Shopify...",
         pushed_with_errors: "{{x}} Code pushed to Shopify with errors on %s.",
-        push_with_errors_info: "{{*}} Fix these errors and run {{command:shopify push}} to revalidate your extension.",
+        push_with_errors_info: "{{*}} Fix these errors and run {{command:shopify extension push}} to " \
+          "revalidate your extension.",
         success_confirmation: "{{v}} Pushed {{green:%s}} to a draft on %s.",
         success_info: "{{*}} Visit %s to version and publish your extension.",
       },
