@@ -297,7 +297,8 @@ module ShopifyCli
             unknown_option: "{{x}} {{red:unknown option '%s'}}",
           },
 
-          header: "{{bold:Shopify App CLI}}",
+          header: "{{bold:Shopify CLI}}",
+          shop_header: "{{bold:Current Shop}}",
           const: "%17s = %s",
           ruby_header: <<~RUBY_MESSAGE,
             {{bold:Ruby (via RbConfig)}}
@@ -322,6 +323,15 @@ module ShopifyCli
           env: "%-17s = %s",
           identity_header: "{{bold:Identity}}",
           identity_is_shopifolk: "{{v}} Checked user settings: you’re Shopify staff!",
+        },
+
+        store: {
+          help: <<~HELP,
+            Display current store.
+              Usage: {{command:%s store}}
+
+          HELP
+          shop: "You're currently logged into {{green:%s}}",
         },
 
         tasks: {
@@ -414,7 +424,7 @@ module ShopifyCli
           DEVELOPMENT
 
           shell_shim: <<~MESSAGE,
-            {{x}} This version of Shopify App CLI is no longer supported. You’ll need to migrate to the new CLI version to continue.
+            {{x}} This version of Shopify CLI is no longer supported. You’ll need to migrate to the new CLI version to continue.
 
               Please visit this page for complete instructions:
               {{underline:https://shopify.dev/tools/cli/troubleshooting#migrate-from-a-legacy-version}}
@@ -422,10 +432,10 @@ module ShopifyCli
           MESSAGE
 
           new_version: <<~MESSAGE,
-            {{*}} {{yellow:A new version of Shopify App CLI is available! You have version %s and the latest version is %s.
+            {{*}} {{yellow:A new version of Shopify CLI is available! You have version %s and the latest version is %s.
 
               To upgrade, follow the instructions for the package manager you’re using:
-              {{underline:https://shopify.dev/tools/cli/troubleshooting#upgrade-shopify-app-cli}}}}
+              {{underline:https://shopify.dev/tools/cli/troubleshooting#upgrade-shopify-cli}}}}
 
           MESSAGE
         },

@@ -11,7 +11,7 @@ module Theme
         connect: {
           duplicate: "Duplicate directory, theme files weren't connected",
           help: <<~HELP,
-            {{command:%s theme connect}}: Connects an existing theme in your store to Shopify App CLI. Creates a config file.
+            {{command:%s theme connect}}: Connects an existing theme in your store to Shopify CLI. Creates a config file.
               Usage: {{command:%s theme connect}}
           HELP
           inside_project: "You are inside an existing theme, theme files weren't connected",
@@ -56,13 +56,13 @@ module Theme
           create: {
             ask_title: "Title:",
             private_app: <<~APP,
-              To create a new theme, Shopify App CLI needs to connect with a private app installed on your store. Visit {{underline:%s/admin/apps/private}} to create a new API key and password, or retrieve an existing password.
+              To create a new theme, Shopify CLI needs to connect with a private app installed on your store. Visit {{underline:%s/admin/apps/private}} to create a new API key and password, or retrieve an existing password.
               If you create a new private app, ensure that it has Read and Write Theme access.
             APP
           },
           connect: {
             private_app: <<~APP,
-              To fetch your existing themes, Shopify App CLI needs to connect with your store. Visit {{underline:%s/admin/apps/private}} to create a new API key and password, or retrieve an existing password.
+              To fetch your existing themes, Shopify CLI needs to connect with your store. Visit {{underline:%s/admin/apps/private}} to create a new API key and password, or retrieve an existing password.
               If you create a new private app, ensure that it has Read and Write Theme access.
             APP
           },
@@ -102,7 +102,7 @@ module Theme
               Usage: {{command:%s theme push}}
               Options:
                 {{command:--remove}} Deletes both the local and the remote copies of the specified files. At least one filename must be specified.
-                {{command:--allow-live}} Allows Shopify App CLI to replace files on the store's live production theme.
+                {{command:--allow-live}} Allows Shopify CLI to replace files on the store's live production theme.
                 {{command:--nodelete}} Runs the push command without deleting remote files from Shopify.
           HELP
           info: {
