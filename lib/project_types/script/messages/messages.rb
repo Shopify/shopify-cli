@@ -35,7 +35,7 @@ module Script
                                     "are numbers, letters, hyphens, or underscores.",
 
           no_existing_apps_cause: "You don't have any apps.",
-          no_existing_apps_help: "Please create an app with {{command:shopify create}} or "\
+          no_existing_apps_help: "Please create an app with {{command:shopify <app type> create}} or "\
                                  "visit https://partners.shopify.com/.",
 
           no_existing_orgs_cause: "You don't have any partner organizations.",
@@ -82,7 +82,8 @@ module Script
                                      "'--metadata build/metadata.json' argument",
           app_not_installed_cause: "App not installed on store.",
 
-          app_script_not_pushed_help: "Script isn't on the app. Run {{command:shopify push}}, and then try again.",
+          app_script_not_pushed_help: "Script isn't on the app. Run {{command:shopify script push}}, and " \
+            "then try again.",
 
           build_error_cause: "Something went wrong while building the script.",
           build_error_help: "Correct the errors and try again.",
