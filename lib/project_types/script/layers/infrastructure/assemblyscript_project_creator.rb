@@ -38,9 +38,13 @@ module Script
         end
 
         def extension_point_version
+          if extension_point.sdks.assemblyscript.versioned?
+            return extension_point.sdks.assemblyscript.version
+          end
+
           out, status = ctx.capture2e("npm show #{extension_point.sdks.assemblyscript.package} version --json")
           raise Domain::Errors::ServiceFailureError, out unless status.success?
-          JSON.parse(out)
+          "^#{JSON.parse(out)}"
         end
 
         def write_package_json
@@ -51,7 +55,7 @@ module Script
               "devDependencies": {
                 "@shopify/scripts-sdk-as": "#{extension_point.sdks.assemblyscript.sdk_version}",
                 "@shopify/scripts-toolchain-as": "#{extension_point.sdks.assemblyscript.toolchain_version}",
-                "#{extension_point.sdks.assemblyscript.package}": "^#{extension_point_version}",
+                "#{extension_point.sdks.assemblyscript.package}": "#{extension_point_version}",
                 "@as-pect/cli": "^6.0.0",
                 "assemblyscript": "^0.18.13"
               },

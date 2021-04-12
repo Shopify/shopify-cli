@@ -62,7 +62,7 @@ describe Script::Layers::Infrastructure::AssemblyScriptProjectCreator do
       subject
     end
 
-    it "should fetch the latest extension point version" do
+    it "should fetch the latest extension point version if the package is not versioned" do
       context.expects(:system).twice
 
       context
@@ -74,12 +74,34 @@ describe Script::Layers::Infrastructure::AssemblyScriptProjectCreator do
       sdk = mock
       sdk.expects(:sdk_version)
       sdk.expects(:toolchain_version)
+      sdk.expects(:versioned?).once.returns(false)
       sdk.expects(:package).twice.returns("@shopify/extension-point-as-fake")
-      extension_point.expects(:sdks).times(4).returns(stub(all: [sdk], assemblyscript: sdk))
+      extension_point.expects(:sdks).times(5).returns(stub(all: [sdk], assemblyscript: sdk))
 
       subject
       version = JSON.parse(File.read("package.json")).dig("devDependencies", "@shopify/extension-point-as-fake")
       assert_equal "^2.0.0", version
+    end
+
+    it "should set the specified package version when the package is versioned" do
+      context.expects(:system).twice
+
+      context
+        .expects(:capture2e)
+        .with("npm show @shopify/extension-point-as-fake version --json")
+        .never
+
+      sdk = mock
+      sdk.expects(:sdk_version)
+      sdk.expects(:toolchain_version)
+      sdk.expects(:package).once.returns("@shopify/extension-point-as-fake")
+      sdk.expects(:versioned?).once.returns(true)
+      sdk.expects(:version).once.returns("file:///path")
+      extension_point.expects(:sdks).times(5).returns(stub(all: [sdk], assemblyscript: sdk))
+
+      subject
+      version = JSON.parse(File.read("package.json")).dig("devDependencies", "@shopify/extension-point-as-fake")
+      assert_equal "file:///path", version
     end
 
     it "should raise if the latest extension point version can't be fetched" do
@@ -94,8 +116,9 @@ describe Script::Layers::Infrastructure::AssemblyScriptProjectCreator do
       sdk = mock
       sdk.expects(:sdk_version)
       sdk.expects(:toolchain_version)
+      sdk.expects(:versioned?).once.returns(false)
       sdk.expects(:package).twice.returns("@shopify/extension-point-as-fake")
-      extension_point.expects(:sdks).times(4).returns(stub(all: [sdk], assemblyscript: sdk))
+      extension_point.expects(:sdks).times(5).returns(stub(all: [sdk], assemblyscript: sdk))
 
       assert_raises(Script::Layers::Domain::Errors::ServiceFailureError) { subject }
     end
