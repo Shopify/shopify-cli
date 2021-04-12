@@ -161,4 +161,9 @@ module ShopifyCli
   def self.debug_log_file
     File.join(tool_config_path, "logs", "debug.log")
   end
+
+  def self.sha
+    return @sha if defined?(@sha)
+    @sha = Git.sha(dir: ShopifyCli::ROOT)
+  end
 end
