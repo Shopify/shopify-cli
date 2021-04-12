@@ -8,7 +8,7 @@ module Theme
         ShopifyCli::Context.expects(:message)
           .with("theme.generate.help", ShopifyCli::TOOL_NAME)
 
-        Theme::Commands::Generate.new(@context).call
+        Theme::Command::Generate.new(@context).call
       end
     end
   end

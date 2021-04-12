@@ -13,7 +13,7 @@ module Rails
             .with("bin/rails g shopify_app:add_webhook -t app/uninstalled "\
                   "-a https://example.com/webhooks/app/uninstalled")
             .returns(mock(success?: true))
-          Rails::Commands::Generate::Webhook.new(@context).call(["APP_UNINSTALLED"], "")
+          Rails::Command::Generate::Webhook.new(@context).call(["APP_UNINSTALLED"], "")
         end
 
         def test_with_incorrect_param_expects_ask
@@ -22,7 +22,7 @@ module Rails
             .with("bin/rails g shopify_app:add_webhook -t app/uninstalled "\
                   "-a https://example.com/webhooks/app/uninstalled")
             .returns(mock(success?: true))
-          Rails::Commands::Generate::Webhook.new(@context).call(["create_webhook_fake"], "")
+          Rails::Command::Generate::Webhook.new(@context).call(["create_webhook_fake"], "")
         end
 
         def test_with_selection
@@ -31,7 +31,7 @@ module Rails
             .with("bin/rails g shopify_app:add_webhook -t product/create "\
                   "-a https://example.com/webhooks/product/create")
             .returns(mock(success?: true))
-          Rails::Commands::Generate::Webhook.new(@context).call([], "")
+          Rails::Command::Generate::Webhook.new(@context).call([], "")
         end
       end
     end

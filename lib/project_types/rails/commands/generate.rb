@@ -2,8 +2,8 @@
 require "shopify_cli"
 
 module Rails
-  module Commands
-    class Generate < ShopifyCli::Command
+  class Command
+    class Generate < ShopifyCli::SubCommand
       subcommand :Webhook, "webhook", Project.project_filepath("commands/generate/webhook")
 
       def call(*)

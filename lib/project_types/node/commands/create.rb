@@ -1,6 +1,6 @@
 # frozen_string_literal: true
 module Node
-  module Commands
+  class Command
     class Create < ShopifyCli::SubCommand
       options do |parser, flags|
         # backwards compatibility allow 'title' for now

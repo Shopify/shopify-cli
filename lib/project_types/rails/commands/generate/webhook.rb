@@ -1,7 +1,7 @@
 require "shopify_cli"
 require "json"
 module Rails
-  module Commands
+  class Command
     class Generate
       class Webhook < ShopifyCli::SubCommand
         def call(args, _name)
@@ -17,7 +17,7 @@ module Rails
           end
           spin_group = CLI::UI::SpinGroup.new
           spin_group.add(@ctx.message("rails.generate.webhook.selected", selected_type)) do |spinner|
-            Rails::Commands::Generate.run_generate(generate_command(selected_type), selected_type, @ctx)
+            Rails::Command::Generate.run_generate(generate_command(selected_type), selected_type, @ctx)
             spinner.update_title("{{green:#{selected_type}}} config/initializers/shopify_app.rb")
           end
           spin_group.wait

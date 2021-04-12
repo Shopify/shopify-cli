@@ -6,9 +6,9 @@ module Theme
     class CreateTest < MiniTest::Test
       include TestHelpers::FakeUI
 
-      TEMPLATE_DIRS = Theme::Commands::Create::TEMPLATE_DIRS
-      SETTINGS_DATA = Theme::Commands::Create::SETTINGS_DATA
-      SETTINGS_SCHEMA = Theme::Commands::Create::SETTINGS_SCHEMA
+      TEMPLATE_DIRS = Theme::Command::Create::TEMPLATE_DIRS
+      SETTINGS_DATA = Theme::Command::Create::SETTINGS_DATA
+      SETTINGS_SCHEMA = Theme::Command::Create::SETTINGS_SCHEMA
 
       SHOPIFYCLI_FILE = <<~CLI
         ---
@@ -30,7 +30,7 @@ module Theme
             "shop.myshopify.com",
             File.join(context.root, "my_theme")))
 
-          Theme::Commands::Create.new(context).call([], "create")
+          Theme::Command::Create.new(context).call([], "create")
           assert_equal SHOPIFYCLI_FILE, File.read(".shopify-cli.yml")
           TEMPLATE_DIRS.each { |dir| assert Dir.exist?(dir) }
           assert_equal SETTINGS_DATA, File.read("config/settings_data.json")
