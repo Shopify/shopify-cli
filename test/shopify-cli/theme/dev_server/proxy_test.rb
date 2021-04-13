@@ -19,6 +19,10 @@ class ProxyTest < Minitest::Test
       .stubs(:get)
       .with(:shop)
       .returns("dev-theme-server-store.myshopify.com")
+    ShopifyCli::DB
+      .stubs(:get)
+      .with(:development_theme_id)
+      .returns("123456789")
   end
 
   def test_get_is_proxied_to_online_store

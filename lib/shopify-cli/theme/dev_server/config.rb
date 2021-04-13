@@ -24,10 +24,6 @@ module ShopifyCli
           @attributes
         end
 
-        def theme_id
-          @attributes["theme_id"]
-        end
-
         def ignore_files
           @attributes["ignore_files"] || []
         end

@@ -21,7 +21,7 @@ module ShopifyCli
       class << self
         attr_accessor :ctx
 
-        def start(ctx, root, silent: false, port: 9292, env: "development")
+        def start(ctx, root, port: 9292, env: "development", silent: false)
           @ctx = ctx
           config = Config.from_path(root, environment: env)
           theme = Theme.new(ctx, config)
@@ -34,12 +34,14 @@ module ShopifyCli
           @app = HotReload.new(ctx, @app, theme, watcher)
           stopped = false
 
+          theme.ensure_development_theme_exists!
+
           trap("INT") do
             stopped = true
             stop
           end
 
-          puts "Syncing theme ##{config.theme_id} on #{theme.shop}" unless silent
+          ctx.print_task("Syncing theme ##{theme.id} on #{theme.shop}")
           @uploader.start_threads
           if silent
             @uploader.upload_theme!
@@ -56,11 +58,15 @@ module ShopifyCli
 
           return if stopped
 
-          unless silent
-            puts "Serving #{theme.root}"
-            puts "Browse to http://127.0.0.1:#{port}"
-            puts "(Use Ctrl-C to stop)"
-          end
+          ctx.puts("")
+          ctx.puts("Serving #{theme.root}")
+          ctx.puts("")
+          ctx.open_url!("http://127.0.0.1:#{port}")
+          ctx.puts("")
+          ctx.puts("Customize this theme in the Online Store Editor:")
+          ctx.puts("{{green:#{theme.editor_url}}}")
+          ctx.puts("")
+          ctx.puts("(Use Ctrl-C to stop)")
 
           logger = if ctx.debug?
             WEBrick::Log.new(nil, WEBrick::BasicLog::INFO)

@@ -157,7 +157,7 @@ module ShopifyCli
         def secure_session_id
           if secure_session_id_expired?
             @ctx.debug("Refreshing preview _secure_session_id cookie")
-            response = request("HEAD", "/", query: { preview_theme_id: @theme.config.theme_id })
+            response = request("HEAD", "/", query: { preview_theme_id: @theme.id })
             @secure_session_id = response["set-cookie"][SESSION_COOKIE_REGEXP, 1]
             @last_session_cookie_refresh = Time.now
           end
