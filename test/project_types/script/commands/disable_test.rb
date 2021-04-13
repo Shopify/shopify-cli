@@ -7,7 +7,7 @@ module Script
     class DisableTest < MiniTest::Test
       def setup
         super
-        @cmd = Disable
+        @cmd = Script::Command::Disable
         @cmd.ctx = @context
         @ep_type = "discount"
         @script_name = "script"
@@ -44,13 +44,13 @@ module Script
         ShopifyCli::Context
           .expects(:message)
           .with("script.disable.help", ShopifyCli::TOOL_NAME)
-        Script::Commands::Disable.help
+        Script::Command::Disable.help
       end
 
       private
 
       def perform_command
-        run_cmd("disable")
+        run_cmd("script disable")
       end
     end
   end

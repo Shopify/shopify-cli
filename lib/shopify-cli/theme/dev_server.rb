@@ -25,17 +25,38 @@ module ShopifyCli
           @ctx = ctx
           config = Config.from_path(root, environment: env)
           theme = Theme.new(ctx, config)
-          watcher = Watcher.new(ctx, theme)
+          @uploader = Uploader.new(ctx, theme)
+          watcher = Watcher.new(ctx, theme, @uploader)
 
           # Setup the middleware stack. Mimics Rack::Builder / config.ru, but in reverse order
           @app = Proxy.new(ctx, theme)
           @app = LocalAssets.new(ctx, @app, theme)
           @app = HotReload.new(ctx, @app, theme, watcher)
+          stopped = false
 
           theme.ensure_development_theme_exists!
 
-          ctx.print_task("Syncing theme ##{theme.id} on #{theme.shop} ...")
-          watcher.start
+          trap("INT") do
+            stopped = true
+            stop
+          end
+
+          puts "Syncing theme ##{config.theme_id} on #{theme.shop}" unless silent
+          @uploader.start_threads
+          if silent
+            @uploader.upload_theme!
+          else
+            @uploader.delay_errors!
+            CLI::UI::Progress.progress do |bar|
+              @uploader.upload_theme! do |left, total|
+                bar.tick(set_percent: 1 - left.to_f / total)
+              end
+              bar.tick(set_percent: 1)
+            end
+            @uploader.report_errors!
+          end
+
+          return if stopped
 
           ctx.puts("")
           ctx.puts("Serving #{theme.root}")
@@ -47,16 +68,13 @@ module ShopifyCli
           ctx.puts("")
           ctx.puts("(Use Ctrl-C to stop)")
 
-          trap("INT") do
-            stop
-          end
-
           logger = if ctx.debug?
             WEBrick::Log.new(nil, WEBrick::BasicLog::INFO)
           else
             WEBrick::Log.new(nil, WEBrick::BasicLog::FATAL)
           end
 
+          watcher.start
           WebServer.run(
             @app,
             Port: port,
@@ -64,10 +82,17 @@ module ShopifyCli
             AccessLog: [],
           )
           watcher.stop
+
+        rescue ShopifyCli::API::APIRequestForbiddenError,
+               ShopifyCli::API::APIRequestUnauthorizedError
+          @ctx.abort("You are not authorized to edit themes on #{theme.shop}.\n" \
+                     "Make sure you are a user of that store, and allowed to edit themes.")
         end
 
         def stop
+          @ctx.puts("Stopping ...")
           @app.close
+          @uploader.shutdown
           WebServer.shutdown
         end
       end

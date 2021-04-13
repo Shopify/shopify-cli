@@ -57,5 +57,5 @@ jobs:
         -a ${{ steps.binaries.outputs.rpm_file }} \
         -m "Version ${{ steps.folder.outputs.name }}
 
-        Release of version ${{ steps.folder.outputs.name }} of the Shopify App CLI
-        Please refer to [CHANGELOG](https://github.com/Shopify/shopify-app-cli/blob/master/CHANGELOG.md) for details."
+        Release of version ${{ steps.folder.outputs.name }} of the Shopify CLI
+        Please refer to [CHANGELOG](https://github.com/Shopify/shopify-cli/blob/master/CHANGELOG.md) for details."

@@ -1,8 +1,8 @@
 # frozen_string_literal: true
 
 module Script
-  module Commands
-    class Enable < ShopifyCli::Command
+  class Command
+    class Enable < ShopifyCli::SubCommand
       options do |parser, flags|
         parser.on("--config_props=KEYVALUEPAIRS", Array) { |t| flags[:config_props] = t }
         parser.on("--config-props=KEYVALUEPAIRS", Array) { |t| flags[:config_props] = t }

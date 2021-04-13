@@ -41,7 +41,13 @@ class IntegrationTest < Minitest::Test
       .to_return(status: 200, body: "{}")
     stub_request(:any, THEMES_API_URL)
       .to_return(status: 200, body: "{}")
-    stub_request(:get, "https://dev-theme-server-store.myshopify.com/?_fd=0&pb=0&preview_theme_id=123456789")
+    stub_request(:head, "https://dev-theme-server-store.myshopify.com/?_fd=0&pb=0&preview_theme_id=123456789")
+      .to_return(
+        status: 200,
+        headers: {
+          "Set-Cookie" => "_secure_session_id=abcd1234",
+        }
+      )
     stub_sfr = stub_request(:get, "https://dev-theme-server-store.myshopify.com/?_fd=0&pb=0")
 
     start_server
@@ -100,21 +106,21 @@ class IntegrationTest < Minitest::Test
     theme_root = "#{ShopifyCli::ROOT}/test/fixtures/theme"
 
     # Modify a file. Should upload on the fly.
-    file = Pathname.new("#{theme_root}/assets/theme.css")
+    file = Pathname.new("#{theme_root}/assets/added.css")
     begin
-      file.write("modified")
+      file.write("added")
       with_retries(Minitest::Assertion) do
         assert_requested(:put, ASSETS_API_URL,
           body: JSON.generate(
             asset: {
-              key: "assets/theme.css",
-              value: "modified",
+              key: "assets/added.css",
+              value: "added",
             }
           ),
           at_least_times: 1)
       end
     ensure
-      file.write("")
+      file.delete
     end
   end
 
@@ -173,7 +179,7 @@ class IntegrationTest < Minitest::Test
   end
 
   def refute_server_errors(response)
-    refute_includes(response, "error", response)
+    refute_match(/error/i, response, response)
   end
 
   def get(path)
@@ -187,7 +193,7 @@ class IntegrationTest < Minitest::Test
   rescue *exceptions
     retries -= 1
     if retries > 0
-      sleep(0.1)
+      sleep(0.5)
       retry
     else
       raise

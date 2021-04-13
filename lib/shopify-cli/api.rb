@@ -9,10 +9,19 @@ module ShopifyCli
     property :auth_header, accepts: String
     property! :url, accepts: String
 
-    class APIRequestError < StandardError; end
+    class APIRequestError < StandardError
+      attr_reader :response
+
+      def initialize(message = nil, response: nil)
+        super(message)
+        @response = response
+      end
+    end
+
     class APIRequestNotFoundError < APIRequestError; end
     class APIRequestClientError < APIRequestError; end
     class APIRequestUnauthorizedError < APIRequestClientError; end
+    class APIRequestForbiddenError < APIRequestClientError; end
     class APIRequestUnexpectedError < APIRequestError; end
     class APIRequestRetriableError < APIRequestError; end
     class APIRequestServerError < APIRequestRetriableError; end
@@ -53,19 +62,21 @@ module ShopifyCli
         end
         case response.code.to_i
         when 200..399
-          [response.code.to_i, JSON.parse(response.body)]
+          [response.code.to_i, JSON.parse(response.body), response]
         when 401
-          raise APIRequestUnauthorizedError, "#{response.code}\n#{response.body}"
+          raise APIRequestUnauthorizedError.new("#{response.code}\n#{response.body}", response: response)
+        when 403
+          raise APIRequestForbiddenError.new("#{response.code}\n#{response.body}", response: response)
         when 404
-          raise APIRequestNotFoundError, "#{response.code}\n#{response.body}"
+          raise APIRequestNotFoundError.new("#{response.code}\n#{response.body}", response: response)
         when 429
-          raise APIRequestThrottledError, "#{response.code}\n#{response.body}"
+          raise APIRequestThrottledError.new("#{response.code}\n#{response.body}", response: response)
         when 400..499
-          raise APIRequestClientError, "#{response.code}\n#{response.body}"
+          raise APIRequestClientError.new("#{response.code}\n#{response.body}", response: response)
         when 500..599
-          raise APIRequestServerError, "#{response.code}\n#{response.body}"
+          raise APIRequestServerError.new("#{response.code}\n#{response.body}", response: response)
         else
-          raise APIRequestUnexpectedError, "#{response.code}\n#{response.body}"
+          raise APIRequestUnexpectedError.new("#{response.code}\n#{response.body}", response: response)
         end
       end.retry_after(APIRequestRetriableError, retries: 3) do |e|
         sleep(1) if e.is_a?(APIRequestThrottledError)
@@ -88,13 +99,9 @@ module ShopifyCli
 
     private
 
-    def current_sha
-      @current_sha ||= Git.sha(dir: ShopifyCli::ROOT)
-    end
-
     def default_headers
       {
-        "User-Agent" => "Shopify App CLI #{ShopifyCli::VERSION} #{current_sha} | #{ctx.uname}",
+        "User-Agent" => "Shopify CLI #{ShopifyCli::VERSION} #{ShopifyCli.sha} | #{ctx.uname}",
       }.tap do |headers|
         headers["X-Shopify-Cli-Employee"] = "1" if Shopifolk.acting_as_shopify_organization?
       end.merge(auth_headers(token))

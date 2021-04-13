@@ -107,21 +107,6 @@ module Theme
         end
       end
 
-      def test_aborts_if_cannot_update
-        stub_check_executable(true)
-        ShopifyCli::Feature.expects(:enabled?).returns(true)
-        stub_time_check(604801)
-        Themekit.expects(:update).with(@context).returns(false)
-        ShopifyCli::Config
-          .expects(:set)
-          .never
-
-        assert_raises(ShopifyCli::Abort,
-          @context.message("theme.tasks.ensure_themekit_installed.errors.update_fail")) do
-          EnsureThemekitInstalled.call(@context)
-        end
-      end
-
       private
 
       def stub_check_executable(status = false)

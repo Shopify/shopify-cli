@@ -31,6 +31,15 @@ class ThemeTest < Minitest::Test
     assert_equal(@theme.theme_files.first, @theme[@theme.theme_files.first])
   end
 
+  def test_theme_file
+    assert(@theme["layout/theme.liquid"].liquid?)
+    refute(@theme["layout/theme.liquid"].json?)
+    assert(@theme["templates/blog.json"].json?)
+    assert(@theme["templates/blog.json"].template?)
+    assert(@theme["locales/en.default.json"].json?)
+    refute(@theme["locales/en.default.json"].template?)
+  end
+
   def test_is_theme_file
     assert(@theme.theme_file?(@theme["layout/theme.liquid"]))
     assert(@theme.theme_file?(@theme[Pathname.new(ShopifyCli::ROOT).join("test/fixtures/theme/layout/theme.liquid")]))
@@ -142,5 +151,31 @@ class ThemeTest < Minitest::Test
   def test_normalize_json_for_checksum
     normalized = JSON.parse(@theme["templates/blog.json"].read).to_json
     assert_equal(Digest::MD5.hexdigest(normalized), @theme["templates/blog.json"].checksum)
+  end
+
+  def test_update_remote_checksum
+    @theme.update_remote_checksums!(
+      "asset" => [
+        {
+          "key" => "templates/product.json",
+          "checksum" => "16f0c357cd150aac7758c144a3ff576f",
+        },
+        {
+          "key" => "templates/search.liquid",
+          "checksum" => "8a90fadd03f8ef7f08511b5509cada4d",
+        },
+      ]
+    )
+
+    @theme.update_remote_checksums!(
+      "asset" => {
+        "key" => "config/settings_schema.json",
+        "checksum" => "a785758d09023273fda4bb57bd42a724",
+      }
+    )
+
+    assert_equal("16f0c357cd150aac7758c144a3ff576f", @theme.remote_checksums["templates/product.json"])
+    assert_equal("8a90fadd03f8ef7f08511b5509cada4d", @theme.remote_checksums["templates/search.liquid"])
+    assert_equal("a785758d09023273fda4bb57bd42a724", @theme.remote_checksums["config/settings_schema.json"])
   end
 end

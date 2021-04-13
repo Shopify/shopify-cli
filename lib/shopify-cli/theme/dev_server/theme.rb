@@ -31,6 +31,18 @@ module ShopifyCli
             mime_type.text?
           end
 
+          def liquid?
+            path.extname == ".liquid"
+          end
+
+          def json?
+            path.extname == ".json"
+          end
+
+          def template?
+            relative_path.to_s.start_with?("templates/")
+          end
+
           def checksum
             content = read
             if mime_type.json?
@@ -76,12 +88,24 @@ module ShopifyCli
           ShopifyCli::DB.get(:development_theme_name) || generate_theme_name
         end
 
-        def assets
-          root.glob("assets/*").map { |path| File.new(path, root) }
+        def theme_files
+          glob(["**/*.liquid", "**/*.json", "assets/*"])
         end
 
-        def theme_files
-          root.glob(["**/*.liquid", "**/*.json", "assets/*"]).map { |path| File.new(path, root) }
+        def asset_files
+          glob("assets/*")
+        end
+
+        def liquid_files
+          glob("**/*.liquid")
+        end
+
+        def json_files
+          glob("**/*.json")
+        end
+
+        def glob(pattern)
+          root.glob(pattern).map { |path| File.new(path, root) }
         end
 
         def theme_file?(file)
@@ -89,7 +113,7 @@ module ShopifyCli
         end
 
         def asset_paths
-          assets.map(&:relative_path)
+          asset_files.map(&:relative_path)
         end
 
         def [](file)
@@ -114,8 +138,8 @@ module ShopifyCli
         def update_remote_checksums!(api_response)
           assets = api_response.values.flatten
 
-          @remote_checksums = assets.each_with_object({}) do |asset, hash|
-            hash[asset["key"]] = asset["checksum"]
+          assets.each do |asset|
+            @remote_checksums[asset["key"]] = asset["checksum"]
           end
         end
 

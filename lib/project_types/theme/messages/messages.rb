@@ -3,28 +3,28 @@ module Theme
   module Messages
     MESSAGES = {
       theme: {
+        help: <<~HELP,
+          Suite of commands for developing Shopify themes. See {{command:%1$s theme <command> --help}} for usage of each command.
+            Usage: {{command:%1$s theme [ %2$s ]}}
+        HELP
+
         connect: {
           duplicate: "Duplicate directory, theme files weren't connected",
           help: <<~HELP,
-            {{command:%s connect theme}}: Connects an existing theme in your store to Shopify App CLI. Downloads a copy of the theme files to your local development environment.
-              Usage: {{command:%s connect theme}}
-              Options:
-                {{command:--store=MYSHOPIFYDOMAIN}} Store URL. Must be an existing store with private apps enabled.
-                {{command:--password=PASSWORD}} Private app password. App must have Read and Write Theme access.
-                {{command:--themeid=THEMEID}} Theme ID. Must be an existing theme on your store.
+            {{command:%s theme connect}}: Connects an existing theme in your store to Shopify CLI. Creates a config file.
+              Usage: {{command:%s theme connect}}
           HELP
           inside_project: "You are inside an existing theme, theme files weren't connected",
           connect: "Downloading theme files...",
-          failed: "Couldn't download theme files from store",
-          connected: "{{green:%s}} files were downloaded from {{underline:%s}} to {{green:%s}}",
+          connected: "Successfully connected. Config file created at {{green:%s}}",
         },
         create: {
           creating_theme: "Creating theme %s",
           duplicate_theme: "Duplicate theme",
-          failed: "Couldn't create the theme",
+          failed: "Couldn't create the theme, %s",
           help: <<~HELP,
-            {{command:%s create theme}}: Creates a theme.
-              Usage: {{command:%s create theme}}
+            {{command:%s theme create}}: Creates a theme.
+              Usage: {{command:%s theme create}}
               Options:
                 {{command:--store=MYSHOPIFYDOMAIN}} Store URL. Must be an existing store with private apps enabled.
                 {{command:--password=PASSWORD}} Private app password. App must have Read and Write Theme access.
@@ -32,6 +32,7 @@ module Theme
           HELP
           info: {
             created: "{{green:%s}} was created for {{underline:%s}} in {{green:%s}}",
+            dir_created: "Created directories",
           },
         },
         deploy: {
@@ -40,8 +41,8 @@ module Theme
           deploying: "Deploying theme",
           error: "Theme couldn't be deployed",
           help: <<~HELP,
-            {{command:%s deploy}}: Uploads your local theme files to Shopify, then sets your theme as the live theme.
-              Usage: {{command:%s deploy}}
+            {{command:%s theme deploy}}: Uploads your local theme files to Shopify, then sets your theme as the live theme.
+              Usage: {{command:%s theme deploy}}
           HELP
           info: {
             deployed: "Theme was updated and set as the live theme",
@@ -55,13 +56,13 @@ module Theme
           create: {
             ask_title: "Title:",
             private_app: <<~APP,
-              To create a new theme, Shopify App CLI needs to connect with a private app installed on your store. Visit {{underline:%s/admin/apps/private}} to create a new API key and password, or retrieve an existing password.
+              To create a new theme, Shopify CLI needs to connect with a private app installed on your store. Visit {{underline:%s/admin/apps/private}} to create a new API key and password, or retrieve an existing password.
               If you create a new private app, ensure that it has Read and Write Theme access.
             APP
           },
           connect: {
             private_app: <<~APP,
-              To fetch your existing themes, Shopify App CLI needs to connect with your store. Visit {{underline:%s/admin/apps/private}} to create a new API key and password, or retrieve an existing password.
+              To fetch your existing themes, Shopify CLI needs to connect with your store. Visit {{underline:%s/admin/apps/private}} to create a new API key and password, or retrieve an existing password.
               If you create a new private app, ensure that it has Read and Write Theme access.
             APP
           },
@@ -76,7 +77,7 @@ module Theme
             ask_theme: "Select theme",
             help: <<~HELP,
               Create or update configuration file in the current directory.
-                Usage: {{command:%s generate env}}
+                Usage: {{command:%s theme generate env}}
                 Options:
                   {{command:--store=MYSHOPIFYDOMAIN}} Store URL. Must be an existing store with private apps enabled.
                   {{command:--password=PASSWORD}} Private app password. App must have Read and Write Theme access.
@@ -86,7 +87,7 @@ module Theme
           },
           help: <<~HELP,
             Generate code in your Theme. Currently supports generating new envs.
-              Usage: {{command:%s generate [ env ]}}
+              Usage: {{command:%s theme generate [ env ]}}
           HELP
         },
         push: {
@@ -97,11 +98,11 @@ module Theme
             remove_error: "Theme files couldn't be removed from Shopify",
           },
           help: <<~HELP,
-            {{command:%s push}}: Uploads your local theme files to Shopify, overwriting the remote versions. If you specify filenames, separated by a space, only those files will be replaced. Otherwise, the whole theme will be replaced.
-              Usage: {{command:%s push}}
+            {{command:%s theme push}}: Uploads your local theme files to Shopify, overwriting the remote versions. If you specify filenames, separated by a space, only those files will be replaced. Otherwise, the whole theme will be replaced.
+              Usage: {{command:%s theme push}}
               Options:
                 {{command:--remove}} Deletes both the local and the remote copies of the specified files. At least one filename must be specified.
-                {{command:--allow-live}} Allows Shopify App CLI to replace files on the store's live production theme.
+                {{command:--allow-live}} Allows Shopify CLI to replace files on the store's live production theme.
                 {{command:--nodelete}} Runs the push command without deleting remote files from Shopify.
           HELP
           info: {
@@ -114,7 +115,7 @@ module Theme
         serve: {
           help: <<~HELP,
             Sync your current changes, then view the active store in your default browser. Any theme edits will continue to update in real time. Also prints the active store's URL in your terminal.
-            Usage: {{command:%s serve}}
+            Usage: {{command:%s theme serve}}
           HELP
           serve: "Viewing theme...",
           open_fail: "Couldn't open the theme",

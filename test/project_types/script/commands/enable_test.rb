@@ -8,7 +8,7 @@ module Script
 
       def setup
         super
-        @cmd = Enable
+        @cmd = Script::Command::Enable
         @cmd.ctx = @context
         @configuration = { entries: [] }
         @ep_type = "discount"
@@ -40,7 +40,7 @@ module Script
         ShopifyCli::Context
           .expects(:message)
           .with("script.enable.help", ShopifyCli::TOOL_NAME)
-        Script::Commands::Enable.help
+        Script::Command::Enable.help
       end
 
       def test_calls_application_enable_error
@@ -231,7 +231,7 @@ module Script
                        "HOST=https://example.com\n" \
                        "SHOP=my-test-shop.myshopify.com\n" \
                        "AWSKEY=awskey"
-        command = ["enable"]
+        command = ["script", "enable"]
         command << "--config_props=#{config_props}" unless config_props.nil?
         command << "--config_file=#{config_file_path}" unless config_file_path.nil?
         ShopifyCli::Core::Monorail.stubs(:log).yields
@@ -245,7 +245,7 @@ module Script
                        "HOST=https://example.com\n" \
                        "SHOP=my-test-shop.myshopify.com\n" \
                        "AWSKEY=awskey"
-        command = ["enable"]
+        command = ["script", "enable"]
         command << "--config-props=#{config_props}" unless config_props.nil?
         command << "--config-file=#{config_file_path}" unless config_file_path.nil?
         ShopifyCli::Core::Monorail.stubs(:log).yields

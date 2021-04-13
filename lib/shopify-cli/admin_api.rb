@@ -85,7 +85,7 @@ module ShopifyCli
           ShopifyCli::DB.set(shopify_exchange_token: nil) unless token.nil?
           resp
         end.retry_after(API::APIRequestUnauthorizedError) do
-          ShopifyCli::IdentityAuth.new(ctx).reauthenticate
+          ShopifyCli::IdentityAuth.new(ctx: ctx).reauthenticate
         end
       end
 

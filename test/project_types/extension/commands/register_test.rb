@@ -20,10 +20,11 @@ module Extension
       end
 
       def test_help_implemented
-        assert_nothing_raised { refute_nil Commands::Register.help }
+        assert_nothing_raised { refute_nil Command::Register.help }
       end
 
       def test_if_extension_is_already_registered_the_register_command_aborts
+        # skip("Need to revisit processing of arguments to subcommands")
         @project.expects(:registered?).returns(true).once
         Tasks::CreateExtension.any_instance.expects(:call).never
         ExtensionProject.expects(:write_env_file).never
@@ -101,19 +102,11 @@ module Extension
       private
 
       def run_register_command_snake_case(api_key: @api_key)
-        Commands::Register.ctx = @context
-        Commands::Register.call(
-          %W(--api_key=#{api_key}),
-          :register
-        )
+        run_cmd("extension register --api_key=#{api_key}")
       end
 
       def run_register_command(api_key: @api_key)
-        Commands::Register.ctx = @context
-        Commands::Register.call(
-          %W(--api-key=#{api_key}),
-          :register
-        )
+        run_cmd("extension register --api-key=#{api_key}")
       end
     end
   end

@@ -30,12 +30,12 @@ require_relative "shopify-cli/version"
 # See https://github.com/Shopify/cli-ui/blob/master/lib/cli/ui/stdout_router.rb for more info
 CLI::UI::StdoutRouter.enable
 
-# The main file to load for `shopify-app-cli`
+# The main file to load for `shopify-cli`
 # Contains all high level constants, exit management, exception management,
 # autoloads for commands, tasks, helpers, etc
 #
 # It is recommended to read through CLI Kit (https://github.com/shopify/cli-kit) and a CLI Kit example
-# (https://github.com/Shopify/cli-kit-example) to fully understand how shopify-app-cli functions
+# (https://github.com/Shopify/cli-kit-example) to fully understand how shopify-cli functions
 module ShopifyCli
   extend CLI::Kit::Autocall
 
@@ -50,7 +50,7 @@ module ShopifyCli
   # shrug or boom emoji
   FAILMOJI = ROOT == "/opt/shopify" ? "\u{1f937}" : "\u{1f4a5}"
 
-  # Exit management in `shopify-app-cli` follows the management set out by CLI Kit.
+  # Exit management in `shopify-cli` follows the management set out by CLI Kit.
   # https://github.com/Shopify/cli-kit/blob/master/lib/cli/kit.rb
   # That is to say, we differentiate between exit success (0), exit failure (1), and exit bug (not 1)
   #
@@ -59,7 +59,7 @@ module ShopifyCli
   EXIT_BUG                 = CLI::Kit::EXIT_BUG
   EXIT_SUCCESS             = CLI::Kit::EXIT_SUCCESS
 
-  # `shopify-app-cli` uses CLI Kit's exception management
+  # `shopify-cli` uses CLI Kit's exception management
   # These are documented here: https://github.com/Shopify/cli-kit/blob/master/lib/cli/kit.rb
   #
   # You should never subclass these exceptions, but instead rescue another exception and re-raise.
@@ -71,7 +71,7 @@ module ShopifyCli
   BugSilent    = CLI::Kit::BugSilent
   AbortSilent  = CLI::Kit::AbortSilent
 
-  # The rest of this file outlines classes and modules required by the shopify-app-cli
+  # The rest of this file outlines classes and modules required by the shopify-cli
   # application and CLI kit framework.
   # To understand how this works, read https://github.com/Shopify/cli-kit/blob/master/lib/cli/kit.rb
 
@@ -160,5 +160,10 @@ module ShopifyCli
 
   def self.debug_log_file
     File.join(tool_config_path, "logs", "debug.log")
+  end
+
+  def self.sha
+    return @sha if defined?(@sha)
+    @sha = Git.sha(dir: ShopifyCli::ROOT)
   end
 end

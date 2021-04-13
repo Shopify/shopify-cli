@@ -1,6 +1,7 @@
 # frozen_string_literal: true
 require "net/http"
 require "stringio"
+require "time"
 
 module ShopifyCli
   module Theme
@@ -17,41 +18,53 @@ module ShopifyCli
       ]
 
       class Proxy
+        SESSION_COOKIE_NAME = "_secure_session_id"
+        SESSION_COOKIE_REGEXP = /#{SESSION_COOKIE_NAME}=(\h+)/
+        SESSION_COOKIE_MAX_AGE = 60 * 60 * 23 # 1 day - leeway of 1h
+
         def initialize(ctx, theme)
           @ctx = ctx
           @theme = theme
+          @core_endpoints = Set.new
+
+          @secure_session_id = nil
+          @last_session_cookie_refresh = nil
         end
 
         def call(env)
           headers = extract_http_request_headers(env)
           headers["Host"] = @theme.shop
           headers["Cookie"] = add_session_cookie(headers["Cookie"])
-          # TODO: add decoding support
           headers["Accept-Encoding"] = "none"
+          headers["User-Agent"] = "Shopify CLI"
 
           query = URI.decode_www_form(env["QUERY_STRING"]).to_h
-          form_data = URI.decode_www_form(env["rack.input"].read).to_h
+          replace_templates = build_replace_templates_param(env)
 
-          response = if @theme.pending_files.any?
+          response = if replace_templates.any?
             # Pass to SFR the recently modified templates in `replace_templates` body param
             headers["Authorization"] = "Bearer #{bearer_token}"
+            form_data = URI.decode_www_form(env["rack.input"].read).to_h
             request(
               "POST", env["PATH_INFO"],
               headers: headers,
               query: query,
-              # TODO: use multipart
-              form_data: form_data.merge(replace_templates_params).merge(_method: env["REQUEST_METHOD"]),
+              form_data: form_data.merge(replace_templates).merge(_method: env["REQUEST_METHOD"]),
             )
           else
             request(
               env["REQUEST_METHOD"], env["PATH_INFO"],
               headers: headers,
               query: query,
-              form_data: form_data
+              body_stream: (env["rack.input"] if has_body?(headers)),
             )
           end
 
           headers = get_response_headers(response)
+
+          unless headers["x-storefront-renderer-rendered"]
+            @core_endpoints << env["PATH_INFO"]
+          end
 
           body = response.body || [""]
           body = [body] unless body.respond_to?(:each)
@@ -60,24 +73,30 @@ module ShopifyCli
 
         private
 
+        def has_body?(headers)
+          headers["Content-Length"] || headers["Transfer-Encoding"]
+        end
+
         def bearer_token
           ShopifyCli::DB.get(:storefront_renderer_production_exchange_token) ||
             raise(KeyError, "storefront_renderer_production_exchange_token missing")
         end
 
         def extract_http_request_headers(env)
-          headers = env.reject do |k, v|
-            !/^HTTP_[A-Z0-9_]+$/.match?(k) || v.nil?
-          end.map do |k, v|
-            [reconstruct_header_name(k), v]
-          end.each_with_object(HeaderHash.new) do |k_v, hash|
-            k, v = k_v
-            hash[k] = v
+          headers = HeaderHash.new
+
+          env.each do |name, value|
+            next if value.nil?
+
+            if /^HTTP_[A-Z0-9_]+$/.match?(name) || name == "CONTENT_TYPE" || name == "CONTENT_LENGTH"
+              headers[reconstruct_header_name(name)] = value
+            end
           end
 
           x_forwarded_for = (headers["X-Forwarded-For"].to_s.split(/, +/) << env["REMOTE_ADDR"]).join(", ")
+          headers["X-Forwarded-For"] = x_forwarded_for
 
-          headers.merge!("X-Forwarded-For" => x_forwarded_for)
+          headers
         end
 
         def normalize_headers(headers)
@@ -91,10 +110,18 @@ module ShopifyCli
           name.sub(/^HTTP_/, "").gsub("_", "-")
         end
 
-        def replace_templates_params
+        def build_replace_templates_param(env)
           params = {}
 
-          @theme.pending_files.each do |path|
+          # Core doesn't support replace_templates
+          return params if @core_endpoints.include?(env["PATH_INFO"])
+
+          pending_templates = @theme.pending_files.select do |file|
+            # Only replace Liquid or JSON files
+            file.liquid? || file.json?
+          end
+
+          pending_templates.each do |path|
             params["replace_templates[#{path.relative_path}]"] = path.read
           end
 
@@ -102,23 +129,40 @@ module ShopifyCli
         end
 
         def add_session_cookie(cookie_header)
-          # Transfer the session to use the preview one
-          cookie_header ||= ""
-          # TODO: find a more robust approach to injecting the session ID
-          has_session_id = cookie_header.include?("_secure_session_id=")
-          unless has_session_id
-            cookie_header += "; _secure_session_id=#{secure_session_id}"
+          cookie_header = if cookie_header
+            cookie_header.dup
+          else
+            +""
           end
+
+          expected_session_cookie = "#{SESSION_COOKIE_NAME}=#{secure_session_id}"
+
+          unless cookie_header.include?(expected_session_cookie)
+            if cookie_header.include?(SESSION_COOKIE_NAME)
+              cookie_header.sub!(SESSION_COOKIE_REGEXP, expected_session_cookie)
+            else
+              cookie_header << "; " unless cookie_header.empty?
+              cookie_header << expected_session_cookie
+            end
+          end
+
           cookie_header
         end
 
+        def secure_session_id_expired?
+          return true unless @secure_session_id && @last_session_cookie_refresh
+          Time.now - @last_session_cookie_refresh >= SESSION_COOKIE_MAX_AGE
+        end
+
         def secure_session_id
-          @secure_session_id ||= begin
-            response = request("GET", "/", query: { preview_theme_id: @theme.id })
-            if response && response["set-cookie"]
-              response["set-cookie"][/_secure_session_id=(\h+)/, 1]
-            end
+          if secure_session_id_expired?
+            @ctx.debug("Refreshing preview _secure_session_id cookie")
+            response = request("HEAD", "/", query: { preview_theme_id: @theme.id })
+            @secure_session_id = response["set-cookie"][SESSION_COOKIE_REGEXP, 1]
+            @last_session_cookie_refresh = Time.now
           end
+
+          @secure_session_id
         end
 
         def get_response_headers(response)
@@ -137,7 +181,7 @@ module ShopifyCli
           response_headers
         end
 
-        def request(method, path, headers: nil, query: {}, form_data: nil)
+        def request(method, path, headers: nil, query: {}, form_data: nil, body_stream: nil)
           uri = URI.join("https://#{@theme.shop}", path)
           uri.query = URI.encode_www_form(query.merge(_fd: 0, pb: 0))
 
@@ -148,6 +192,7 @@ module ShopifyCli
             req = req_class.new(uri)
             req.initialize_http_header(headers) if headers
             req.set_form_data(form_data) if form_data
+            req.body_stream = body_stream if body_stream
             response = http.request(req)
             @ctx.debug("`-> #{response.code} request_id: #{response["x-request-id"]}")
             response

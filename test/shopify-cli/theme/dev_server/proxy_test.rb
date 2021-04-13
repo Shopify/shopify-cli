@@ -2,8 +2,11 @@
 require "test_helper"
 require "shopify-cli/theme/dev_server"
 require "rack/mock"
+require "timecop"
 
 class ProxyTest < Minitest::Test
+  SECURE_SESSION_ID = "deadbeef"
+
   def setup
     super
     config = ShopifyCli::Theme::DevServer::Config.from_path(ShopifyCli::ROOT + "/test/fixtures/theme")
@@ -22,20 +25,51 @@ class ProxyTest < Minitest::Test
       .returns("123456789")
   end
 
-  def test_form_data_is_proxied_to_request
+  def test_get_is_proxied_to_online_store
+    stub_request(:get, "https://dev-theme-server-store.myshopify.com/?_fd=0&pb=0")
+      .with(
+        body: nil,
+        headers: default_proxy_headers,
+      )
+      .to_return(status: 200)
+
+    stub_session_id_request
+
+    request.get("/")
+  end
+
+  def test_refreshes_session_cookie_on_expiry
+    stub_request(:get, "https://dev-theme-server-store.myshopify.com/?_fd=0&pb=0")
+      .with(
+        body: nil,
+        headers: default_proxy_headers,
+      )
+      .to_return(status: 200)
+      .times(2)
+
+    stub_session_id_request
+    request.get("/")
+
+    # Should refresh the session cookie after 1 day
+    Timecop.freeze(DateTime.now + 1) do # rubocop:disable Style/DateTime
+      request.get("/")
+    end
+
+    assert_requested(:head,
+      "https://dev-theme-server-store.myshopify.com/?_fd=0&pb=0&preview_theme_id=123456789",
+      times: 2)
+  end
+
+  def test_form_data_is_proxied_to_online_store
     stub_request(:post, "https://dev-theme-server-store.myshopify.com/password?_fd=0&pb=0")
       .with(
         body: {
           "form_type" => "storefront_password",
           "password" => "notapassword",
         },
-        headers: {
-          "Accept-Encoding" => "none",
+        headers: default_proxy_headers.merge(
           "Content-Type" => "application/x-www-form-urlencoded",
-          "Cookie" => "; _secure_session_id=",
-          "Host" => "dev-theme-server-store.myshopify.com",
-          "X-Forwarded-For" => "",
-        }
+        )
       )
       .to_return(status: 200)
 
@@ -44,6 +78,27 @@ class ProxyTest < Minitest::Test
     request.post("/password", params: {
       "form_type" => "storefront_password",
       "password" => "notapassword",
+    })
+  end
+
+  def test_multipart_is_proxied_to_online_store
+    stub_request(:post, "https://dev-theme-server-store.myshopify.com/cart/add?_fd=0&pb=0")
+      .with(
+        headers: default_proxy_headers.merge(
+          "Content-Length" => "272",
+          "Content-Type" => "multipart/form-data; boundary=AaB03x",
+        )
+      )
+      .to_return(status: 200)
+
+    stub_session_id_request
+
+    file = ShopifyCli::ROOT + "/test/fixtures/theme/assets/theme.css"
+
+    request.post("/cart/add", params: {
+      "form_type" => "product",
+      "quantity" => 1,
+      "file" => Rack::Multipart::UploadedFile.new(file), # To force multipart
     })
   end
 
@@ -95,7 +150,7 @@ class ProxyTest < Minitest::Test
     end
   end
 
-  def test_pass_pending_files_to_storefront
+  def test_pass_pending_templates_to_storefront
     ShopifyCli::DB
       .stubs(:get)
       .with(:shop)
@@ -107,22 +162,26 @@ class ProxyTest < Minitest::Test
       .returns("TOKEN")
 
     @theme.stubs(:pending_files).returns([
-      mock(relative_path: "layout/theme.liquid", read: "CONTENT"),
+      @theme["layout/theme.liquid"],
+      @theme["assets/theme.css"], # Should not be included in the POST body
     ])
 
     stub_request(:post, "https://dev-theme-server-store.myshopify.com/?_fd=0&pb=0")
       .with(
         body: {
           "_method" => "GET",
-          "replace_templates" => { "layout/theme.liquid" => "CONTENT" },
+          "replace_templates" => {
+            "layout/theme.liquid" => @theme["layout/theme.liquid"].read,
+          },
         },
         headers: {
           "Accept-Encoding" => "none",
           "Authorization" => "Bearer TOKEN",
           "Content-Type" => "application/x-www-form-urlencoded",
-          "Cookie" => "; _secure_session_id=",
+          "Cookie" => "_secure_session_id=#{SECURE_SESSION_ID}",
           "Host" => "dev-theme-server-store.myshopify.com",
           "X-Forwarded-For" => "",
+          "User-Agent" => "Shopify CLI",
         }
       )
       .to_return(status: 200, body: "PROXY RESPONSE")
@@ -133,6 +192,59 @@ class ProxyTest < Minitest::Test
     assert_equal("PROXY RESPONSE", response.body)
   end
 
+  def test_do_not_pass_pending_files_to_core
+    ShopifyCli::DB
+      .stubs(:get)
+      .with(:shop)
+      .returns("dev-theme-server-store.myshopify.com")
+
+    ShopifyCli::DB
+      .stubs(:get)
+      .with(:storefront_renderer_production_exchange_token)
+      .returns("TOKEN")
+
+    # First request marks the endpoint as being served by Core
+    stub_request(:get, "https://dev-theme-server-store.myshopify.com/on-core?_fd=0&pb=0")
+      .to_return(status: 200, headers: {
+        # Doesn't have the x-storefront-renderer-rendered header
+      }).times(2)
+
+    stub_session_id_request
+    request.get("/on-core")
+
+    # Introduce pending files, but should not hit the POST endpoint
+    @theme.stubs(:pending_files).returns([
+      @theme["layout/theme.liquid"],
+    ])
+    request.get("/on-core")
+  end
+
+  def test_replaces_secure_session_id_cookie
+    stub_request(:get, "https://dev-theme-server-store.myshopify.com/?_fd=0&pb=0")
+      .with(
+        headers: {
+          "Cookie" => "_secure_session_id=#{SECURE_SESSION_ID}",
+        }
+      )
+
+    stub_session_id_request
+    request.get("/",
+      "HTTP_COOKIE" => "_secure_session_id=a12cef")
+  end
+
+  def test_appends_secure_session_id_cookie
+    stub_request(:get, "https://dev-theme-server-store.myshopify.com/?_fd=0&pb=0")
+      .with(
+        headers: {
+          "Cookie" => "cart_currency=CAD; secure_customer_sig=; _secure_session_id=#{SECURE_SESSION_ID}",
+        }
+      )
+
+    stub_session_id_request
+    request.get("/",
+      "HTTP_COOKIE" => "cart_currency=CAD; secure_customer_sig=")
+  end
+
   def test_requires_exchange_token
     ShopifyCli::DB
       .stubs(:get)
@@ -140,7 +252,7 @@ class ProxyTest < Minitest::Test
       .returns(nil)
 
     @theme.stubs(:pending_files).returns([
-      stub(relative_path: "layout/theme.liquid", read: "CONTENT"),
+      @theme["layout/theme.liquid"],
     ])
 
     stub_session_id_request
@@ -158,22 +270,25 @@ class ProxyTest < Minitest::Test
   def default_proxy_headers
     {
       "Accept-Encoding" => "none",
-      "Cookie" => "; _secure_session_id=",
+      "Cookie" => "_secure_session_id=#{SECURE_SESSION_ID}",
       "Host" => "dev-theme-server-store.myshopify.com",
       "X-Forwarded-For" => "",
+      "User-Agent" => "Shopify CLI",
     }
   end
 
   def stub_session_id_request
-    stub_request(:get, "https://dev-theme-server-store.myshopify.com/?_fd=0&pb=0&preview_theme_id=123456789")
+    stub_request(:head, "https://dev-theme-server-store.myshopify.com/?_fd=0&pb=0&preview_theme_id=123456789")
       .with(
         headers: {
-          "Accept" => "*/*",
-          "Accept-Encoding" => "gzip;q=1.0,deflate;q=0.6,identity;q=0.3",
           "Host" => "dev-theme-server-store.myshopify.com",
-          "User-Agent" => "Ruby",
         }
       )
-      .to_return(status: 200, body: "", headers: {})
+      .to_return(
+        status: 200,
+        headers: {
+          "Set-Cookie" => "_secure_session_id=#{SECURE_SESSION_ID}",
+        }
+      )
   end
 end

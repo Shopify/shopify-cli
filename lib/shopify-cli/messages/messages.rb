@@ -15,11 +15,6 @@ module ShopifyCli
       },
       core: {
         connect: {
-          help: <<~HELP,
-            Connect (or re-connect) an existing project to a Shopify partner organization and/or a store. Creates or updates the {{green:.env}} file, and creates the {{green:.shopify-cli.yml}} file.
-              Usage: {{command:%s connect}}
-          HELP
-
           already_connected_warning: "{{yellow:! This app appears to be already connected}}",
           project_type_select: "What type of project would you like to connect?",
           cli_yml_saved: ".shopify-cli.yml saved to project root",
@@ -30,19 +25,6 @@ module ShopifyCli
             Please open this URL in your browser:
             {{green:%s}}
           OPEN
-        },
-
-        create: {
-          help: <<~HELP,
-            Create a new project.
-              Usage: {{command:%s create [ %s ]}}
-          HELP
-
-          error: {
-            invalid_app_type: "{{red:Error}}: invalid app type {{bold:%s}}",
-          },
-
-          project_type_select: "What type of project would you like to create?",
         },
 
         env_file: {
@@ -108,8 +90,6 @@ module ShopifyCli
           preamble: <<~MESSAGE,
             Use {{command:%s help <command>}} to display detailed information about a specific command.
 
-            {{bold:Available core commands:}}
-
           MESSAGE
         },
 
@@ -149,7 +129,6 @@ module ShopifyCli
           shop_prompt: <<~PROMPT,
             What store are you connecting to? (e.g. my-store.myshopify.com; do {{bold:NOT}} include protocol part, e.g., https://)
           PROMPT
-          success: "Logged out of partner organization and store",
         },
 
         logout: {
@@ -216,41 +195,41 @@ module ShopifyCli
 
         populate: {
           help: <<~HELP,
-          Populate your Shopify development store with example customers, orders, or products.
-            Usage: {{command:%s populate [ customers | draftorders | products ]}}
+            Populate your Shopify development store with example customers, orders, or products.
+              Usage: {{command:%s populate [ customers | draftorders | products ]}}
           HELP
 
           extended_help: <<~HELP,
-          {{bold:Subcommands:}}
+            {{bold:Subcommands:}}
 
-            {{cyan:customers [options]}}: Add dummy customers to the specified development store.
-              Usage: {{command:%1$s populate customers}}
+              {{cyan:customers [options]}}: Add dummy customers to the specified development store.
+                Usage: {{command:%1$s populate customers}}
 
-            {{cyan:draftorders [options]}}: Add dummy orders to the specified development store.
-              Usage: {{command:%1$s populate draftorders}}
+              {{cyan:draftorders [options]}}: Add dummy orders to the specified development store.
+                Usage: {{command:%1$s populate draftorders}}
 
-            {{cyan:products [options]}}: Add dummy products to the specified development store.
-              Usage: {{command:%1$s populate products}}
+              {{cyan:products [options]}}: Add dummy products to the specified development store.
+                Usage: {{command:%1$s populate products}}
 
-          {{bold:Options:}}
+            {{bold:Options:}}
 
-            {{cyan:--count [integer]}}: The number of dummy items to populate. Defaults to 5.
-            {{cyan:--silent}}: Silence the populate output.
-            {{cyan:--help}}: Display more options specific to each subcommand.
+              {{cyan:--count [integer]}}: The number of dummy items to populate. Defaults to 5.
+              {{cyan:--silent}}: Silence the populate output.
+              {{cyan:--help}}: Display more options specific to each subcommand.
 
-          {{bold:Examples:}}
+            {{bold:Examples:}}
 
-            {{command:%1$s populate products}}
-              Populate your development store with 5 additional products.
+              {{command:%1$s populate products}}
+                Populate your development store with 5 additional products.
 
-            {{command:%1$s populate customers --count 30}}
-              Populate your development store with 30 additional customers.
+              {{command:%1$s populate customers --count 30}}
+                Populate your development store with 30 additional customers.
 
-            {{command:%1$s populate draftorders}}
-              Populate your development store with 5 additional orders.
+              {{command:%1$s populate draftorders}}
+                Populate your development store with 5 additional orders.
 
-            {{command:%1$s populate products --help}}
-              Display the list of options available to customize the {{command:%1$s populate products}} command.
+              {{command:%1$s populate products --help}}
+                Display the list of options available to customize the {{command:%1$s populate products}} command.
           HELP
 
           error: {
@@ -286,7 +265,7 @@ module ShopifyCli
           error: {
             not_in_project: <<~MESSAGE,
               {{x}} You are not in a Shopify app project
-              {{yellow:{{*}}}}{{reset: Run}}{{cyan: shopify create}}{{reset: to create your app}}
+              {{yellow:{{*}}}}{{reset: Run}}{{cyan: shopify rails create}}{{reset: or}}{{cyan: shopify node create}}{{reset: to create your app}}
             MESSAGE
           },
         },
@@ -318,7 +297,8 @@ module ShopifyCli
             unknown_option: "{{x}} {{red:unknown option '%s'}}",
           },
 
-          header: "{{bold:Shopify App CLI}}",
+          header: "{{bold:Shopify CLI}}",
+          shop_header: "{{bold:Current Shop}}",
           const: "%17s = %s",
           ruby_header: <<~RUBY_MESSAGE,
             {{bold:Ruby (via RbConfig)}}
@@ -343,6 +323,15 @@ module ShopifyCli
           env: "%-17s = %s",
           identity_header: "{{bold:Identity}}",
           identity_is_shopifolk: "{{v}} Checked user settings: you’re Shopify staff!",
+        },
+
+        store: {
+          help: <<~HELP,
+            Display current store.
+              Usage: {{command:%s store}}
+
+          HELP
+          shop: "You're currently logged into {{green:%s}}",
         },
 
         tasks: {
@@ -410,7 +399,7 @@ module ShopifyCli
           signup_suggestion: <<~MESSAGE,
             {{*}} To avoid tunnels that timeout, it is recommended to signup for a free ngrok
             account at {{underline:https://ngrok.com/signup}}. After you signup, install your
-            personalized authorization token using {{command:%s tunnel auth <token>}}.
+            personalized authorization token using {{command:%s [rails | node] tunnel auth <token>}}.
           MESSAGE
           start: "{{v}} ngrok tunnel running at {{underline:%s}}",
           start_with_account: "{{v}} ngrok tunnel running at {{underline:%s}}, with account %s",
@@ -435,7 +424,7 @@ module ShopifyCli
           DEVELOPMENT
 
           shell_shim: <<~MESSAGE,
-            {{x}} This version of Shopify App CLI is no longer supported. You’ll need to migrate to the new CLI version to continue.
+            {{x}} This version of Shopify CLI is no longer supported. You’ll need to migrate to the new CLI version to continue.
 
               Please visit this page for complete instructions:
               {{underline:https://shopify.dev/tools/cli/troubleshooting#migrate-from-a-legacy-version}}
@@ -443,10 +432,10 @@ module ShopifyCli
           MESSAGE
 
           new_version: <<~MESSAGE,
-            {{*}} {{yellow:A new version of Shopify App CLI is available! You have version %s and the latest version is %s.
+            {{*}} {{yellow:A new version of Shopify CLI is available! You have version %s and the latest version is %s.
 
               To upgrade, follow the instructions for the package manager you’re using:
-              {{underline:https://shopify.dev/tools/cli/troubleshooting#upgrade-shopify-app-cli}}}}
+              {{underline:https://shopify.dev/tools/cli/troubleshooting#upgrade-shopify-cli}}}}
 
           MESSAGE
         },

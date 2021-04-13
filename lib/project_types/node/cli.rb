@@ -2,14 +2,8 @@
 module Node
   class Project < ShopifyCli::ProjectType
     title("Node.js App")
-    creator("Node::Commands::Create")
-    connector("Node::Commands::Connect")
+    connector("Node::Command::Connect")
 
-    register_command("Node::Commands::Deploy", "deploy")
-    register_command("Node::Commands::Generate", "generate")
-    register_command("Node::Commands::Open", "open")
-    register_command("Node::Commands::Serve", "serve")
-    register_command("Node::Commands::Tunnel", "tunnel")
     # register_task('Node::Tasks::NodeTask', 'node_task')
 
     require Project.project_filepath("messages/messages")
@@ -17,15 +11,24 @@ module Node
   end
 
   # define/autoload project specific Commands
-  module Commands
-    autoload :Connect, Project.project_filepath("commands/connect")
-    autoload :Create, Project.project_filepath("commands/create")
-    autoload :Deploy, Project.project_filepath("commands/deploy")
-    autoload :Generate, Project.project_filepath("commands/generate")
-    autoload :Open, Project.project_filepath("commands/open")
-    autoload :Serve, Project.project_filepath("commands/serve")
-    autoload :Tunnel, Project.project_filepath("commands/tunnel")
+  class Command < ShopifyCli::Command
+    subcommand :Connect, "connect", Project.project_filepath("commands/connect")
+    subcommand :Create, "create", Project.project_filepath("commands/create")
+    subcommand :Deploy, "deploy", Project.project_filepath("commands/deploy")
+    subcommand :Generate, "generate", Project.project_filepath("commands/generate")
+    subcommand :Open, "open", Project.project_filepath("commands/open")
+    subcommand :Serve, "serve", Project.project_filepath("commands/serve")
+    subcommand :Tunnel, "tunnel", Project.project_filepath("commands/tunnel")
+
+    def call(*)
+      @ctx.puts(self.class.help)
+    end
+
+    def self.help
+      ShopifyCli::Context.message("node.help", ShopifyCli::TOOL_NAME, subcommand_registry.command_names.join(" | "))
+    end
   end
+  ShopifyCli::Commands.register("Node::Command", "node")
 
   # define/autoload project specific Tasks
   module Tasks

@@ -1,7 +1,7 @@
 # frozen_string_literal: true
 
 module Script
-  module Commands
+  class Command
     class Create < ShopifyCli::SubCommand
       options do |parser, flags|
         parser.on("--name=NAME") { |name| flags[:name] = name }
