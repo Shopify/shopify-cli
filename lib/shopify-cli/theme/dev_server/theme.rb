@@ -157,6 +157,10 @@ module ShopifyCli
           "https://#{shop}/admin/themes/#{id}/editor"
         end
 
+        def preview_url
+          "https://#{shop}/?preview_theme_id=#{id}"
+        end
+
         private
 
         def development_theme_exists?
