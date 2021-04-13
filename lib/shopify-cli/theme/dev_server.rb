@@ -41,32 +41,37 @@ module ShopifyCli
             stop
           end
 
-          ctx.print_task("Syncing theme ##{theme.id} on #{theme.shop}")
-          @uploader.start_threads
-          if silent
-            @uploader.upload_theme!
-          else
-            @uploader.delay_errors!
-            CLI::UI::Progress.progress do |bar|
-              @uploader.upload_theme! do |left, total|
-                bar.tick(set_percent: 1 - left.to_f / total)
+          CLI::UI::Frame.open(@ctx.message("theme.serve.serve")) do
+            ctx.print_task("Syncing theme ##{theme.id} on #{theme.shop}")
+            @uploader.start_threads
+            if silent
+              @uploader.upload_theme!
+            else
+              @uploader.delay_errors!
+              CLI::UI::Progress.progress do |bar|
+                @uploader.upload_theme! do |left, total|
+                  bar.tick(set_percent: 1 - left.to_f / total)
+                end
+                bar.tick(set_percent: 1)
               end
-              bar.tick(set_percent: 1)
+              @uploader.report_errors!
             end
-            @uploader.report_errors!
+
+            return if stopped
+
+            ctx.puts("")
+            ctx.puts("Serving #{theme.root}")
+            ctx.puts("")
+            ctx.open_url!("http://127.0.0.1:#{port}")
+            ctx.puts("")
+            ctx.puts("Customize this theme in the Online Store Editor:")
+            ctx.puts("{{green:#{theme.editor_url}}}")
+            ctx.puts("")
+            ctx.puts("Share this theme preview:")
+            ctx.puts("{{green:#{theme.preview_url}}}")
+            ctx.puts("")
+            ctx.puts("(Use Ctrl-C to stop)")
           end
-
-          return if stopped
-
-          ctx.puts("")
-          ctx.puts("Serving #{theme.root}")
-          ctx.puts("")
-          ctx.open_url!("http://127.0.0.1:#{port}")
-          ctx.puts("")
-          ctx.puts("Customize this theme in the Online Store Editor:")
-          ctx.puts("{{green:#{theme.editor_url}}}")
-          ctx.puts("")
-          ctx.puts("(Use Ctrl-C to stop)")
 
           logger = if ctx.debug?
             WEBrick::Log.new(nil, WEBrick::BasicLog::INFO)
