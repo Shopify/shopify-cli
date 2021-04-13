@@ -1,14 +1,13 @@
 # frozen_string_literal: true
-require_relative "dev_server/config"
+require_relative "config"
+require_relative "theme"
+require_relative "uploader"
+
 require_relative "dev_server/hot_reload"
-require_relative "dev_server/ignore_filter"
 require_relative "dev_server/header_hash"
 require_relative "dev_server/local_assets"
-require_relative "dev_server/mime_type"
 require_relative "dev_server/proxy"
 require_relative "dev_server/sse"
-require_relative "dev_server/theme"
-require_relative "dev_server/uploader"
 require_relative "dev_server/watcher"
 require_relative "dev_server/web_server"
 require_relative "dev_server/certificate_manager"
