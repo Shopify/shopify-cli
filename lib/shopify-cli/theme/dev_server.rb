@@ -21,7 +21,7 @@ module ShopifyCli
       class << self
         attr_accessor :ctx
 
-        def start(ctx, root, port: 9292, env: "development")
+        def start(ctx, root, port: 9292, env: "development", silent: false)
           @ctx = ctx
           config = Config.from_path(root, environment: env)
           theme = Theme.new(ctx, config)
@@ -39,7 +39,7 @@ module ShopifyCli
             stop
           end
 
-          puts "Syncing theme ##{config.theme_id} on #{theme.shop}" unless silent
+          ctx.print_task("Syncing theme ##{theme.id} on #{theme.shop}")
           @uploader.start_threads
           if silent
             @uploader.upload_theme!
