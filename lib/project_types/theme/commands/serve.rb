@@ -11,10 +11,7 @@ module Theme
 
       def call(*)
         flags = options.flags.dup
-
-        CLI::UI::Frame.open(@ctx.message("theme.serve.serve")) do
-          ShopifyCli::Theme::DevServer.start(@ctx, ".", **flags)
-        end
+        ShopifyCli::Theme::DevServer.start(@ctx, ".", **flags)
       end
 
       def self.help
