@@ -1,0 +1,32 @@
+export declare class DataReader {
+  readonly buffer: ArrayBuffer;
+  readonly dataStart: usize;
+  private byteOffset;
+  readonly byteLength: i32;
+  constructor(buffer: ArrayBuffer, byteOffset?: i32, byteLength?: i32);
+  getBytes(length: i32): ArrayBuffer;
+  setBytes(buf: ArrayBuffer): void;
+  peekUint8(): u8;
+  discard(length: i32): void;
+  getFloat32(): f32;
+  getFloat64(): f64;
+  getInt8(): i8;
+  getInt16(): i16;
+  getInt32(): i32;
+  getUint8(): u8;
+  getUint16(): u16;
+  getUint32(): u32;
+  setFloat32(value: f32): void;
+  setFloat64(value: f64): void;
+  setInt8(value: i8): void;
+  setInt16(value: i16): void;
+  setInt32(value: i32): void;
+  setUint8(value: u8): void;
+  setUint16(value: u16): void;
+  setUint32(value: u32): void;
+  getInt64(): i64;
+  getUint64(): u64;
+  setInt64(value: i64): void;
+  setUint64(value: u64): void;
+  toString(): string;
+}

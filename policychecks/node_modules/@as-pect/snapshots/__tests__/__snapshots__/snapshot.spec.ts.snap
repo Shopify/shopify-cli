@@ -1,0 +1,180 @@
+// Jest Snapshot v1, https://goo.gl/fbAQLP
+
+exports[`Snapshot should diff snapshots 1`] = `
+SnapshotDiff {
+  "left": Snapshot {
+    "values": Map {
+      "A" => "SomeA {
+      a: 1,
+      b: 2,
+      c: 3
+    }",
+      "B" => "SomeB {
+      d: 4,
+      e: 5,
+      f: 6
+    }",
+      "C" => "SomeC {
+      g: 7,
+      h: 8,
+      i: 9
+    }",
+    },
+  },
+  "results": Map {
+    "A" => SnapshotDiffResult {
+      "changes": Array [
+        Object {
+          "count": 5,
+          "value": "SomeA {
+      a: 1,
+      b: 2,
+      c: 3
+    }",
+        },
+      ],
+      "left": "SomeA {
+      a: 1,
+      b: 2,
+      c: 3
+    }",
+      "right": "SomeA {
+      a: 1,
+      b: 2,
+      c: 3
+    }",
+      "type": 0,
+    },
+    "B" => SnapshotDiffResult {
+      "changes": Array [
+        Object {
+          "added": true,
+          "count": 5,
+          "removed": undefined,
+          "value": "SomeB {
+      d: 4,
+      e: 5,
+      f: 6
+    }",
+        },
+      ],
+      "left": "SomeB {
+      d: 4,
+      e: 5,
+      f: 6
+    }",
+      "right": null,
+      "type": 1,
+    },
+    "C" => SnapshotDiffResult {
+      "changes": Array [
+        Object {
+          "count": 1,
+          "value": "SomeC {
+",
+        },
+        Object {
+          "added": undefined,
+          "count": 3,
+          "removed": true,
+          "value": "      g: 4,
+      h: 5,
+      i: 6
+",
+        },
+        Object {
+          "added": true,
+          "count": 3,
+          "removed": undefined,
+          "value": "      g: 7,
+      h: 8,
+      i: 9
+",
+        },
+        Object {
+          "count": 1,
+          "value": "    }",
+        },
+      ],
+      "left": "SomeC {
+      g: 7,
+      h: 8,
+      i: 9
+    }",
+      "right": "SomeC {
+      g: 4,
+      h: 5,
+      i: 6
+    }",
+      "type": 3,
+    },
+    "D" => SnapshotDiffResult {
+      "changes": Array [
+        Object {
+          "added": undefined,
+          "count": 5,
+          "removed": true,
+          "value": "SomeB {
+      d: 1,
+      e: 2,
+      f: 3
+    }",
+        },
+      ],
+      "left": null,
+      "right": "SomeB {
+      d: 1,
+      e: 2,
+      f: 3
+    }",
+      "type": 2,
+    },
+  },
+  "right": Snapshot {
+    "values": Map {
+      "A" => "SomeA {
+      a: 1,
+      b: 2,
+      c: 3
+    }",
+      "C" => "SomeC {
+      g: 4,
+      h: 5,
+      i: 6
+    }",
+      "D" => "SomeB {
+      d: 1,
+      e: 2,
+      f: 3
+    }",
+    },
+  },
+}
+`;
+
+exports[`Snapshot should parse a snapshot file 1`] = `
+Snapshot {
+  "values": Map {
+    "A" => "SomeA {
+      a: 1,
+      b: 2,
+      c: 3
+    }",
+    "B" => "SomeB {
+      d: 4,
+      e: 5,
+      f: 6
+    }",
+    "C" => "SomeC {
+      g: 7,
+      h: 8,
+      i: 9
+    }",
+  },
+}
+`;
+
+exports[`Snapshot should stringify a given snapshot 1`] = `
+"
+"
+`;

@@ -1,0 +1,1 @@
+{"version":3,"file":"SnapshotDiff.d.ts","sourceRoot":"","sources":["../src/SnapshotDiff.ts"],"names":[],"mappings":"AAAA,OAAO,EAAE,QAAQ,EAAE,MAAM,YAAY,CAAC;AACtC,OAAO,EACL,kBAAkB,EAEnB,MAAM,sBAAsB,CAAC;AAG9B,qBAAa,YAAY;IAGJ,IAAI,EAAE,QAAQ;IAAS,KAAK,EAAE,QAAQ;IAFzD,OAAO,kCAAyC;gBAE7B,IAAI,EAAE,QAAQ,EAAS,KAAK,EAAE,QAAQ;IAIlD,aAAa,IAAI,IAAI;CA2C7B"}

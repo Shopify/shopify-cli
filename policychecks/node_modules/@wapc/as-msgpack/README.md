@@ -1,0 +1,1 @@
+# MessagePack package for AssemblyScript

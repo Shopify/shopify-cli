@@ -1,0 +1,1 @@
+{"version":3,"file":"createGenericTypeParameter.d.ts","sourceRoot":"","sources":["../../src/transform/createGenericTypeParameter.ts"],"names":[],"mappings":"AAAA,OAAO,EAAE,KAAK,EAAE,QAAQ,EAAE,MAAM,kBAAkB,CAAC;AACnD;;;;;GAKG;AACH,wBAAgB,0BAA0B,CACxC,IAAI,EAAE,MAAM,EACZ,KAAK,EAAE,KAAK,GACX,QAAQ,CAOV"}

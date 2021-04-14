@@ -41,4 +41,8 @@ shipping_methods:
     package: "@shopify/scripts-checkout-apis"
     sdk-version: "^9.0.0"
     toolchain-version: "^5.0.0"
-
+product_policy_validations:
+  assemblyscript:
+    package: "@shopify/extension-point-as-product-policy-validations"
+    package-version: "file:///Users/jdubinsky/src/github.com/Shopify/extension-points/packages/default/extension-point-as-product-policy-validations"
+    toolchain-version: "^5.0.0"

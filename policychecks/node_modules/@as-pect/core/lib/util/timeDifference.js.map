@@ -1,0 +1,1 @@
+{"version":3,"file":"timeDifference.js","sourceRoot":"","sources":["../../src/util/timeDifference.ts"],"names":[],"mappings":";;;AAAA;;;;;;;;GAQG;AACI,IAAM,cAAc,GAAG,UAAC,GAAW,EAAE,KAAa;IACvD,OAAA,IAAI,CAAC,KAAK,CAAC,CAAC,GAAG,GAAG,KAAK,CAAC,GAAG,IAAI,CAAC,GAAG,IAAI;AAAvC,CAAuC,CAAC;AAD7B,QAAA,cAAc,kBACe"}

@@ -1,0 +1,7 @@
+---
+project_type: :script
+organization_id: 1
+extension_point_type: product_policy_validations
+script_name: policychecks
+language: assemblyscript
+config_ui_file: config-ui.yml
