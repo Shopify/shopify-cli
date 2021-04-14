@@ -7,7 +7,7 @@ module Node
           @ctx.puts(@ctx.message("node.connect.production_warning"))
         end
 
-        app = ShopifyCli::Commands::Connect.new.default_connect("node")
+        app = ShopifyCli::Connect.new(@ctx).default_connect("node")
         @ctx.done(@ctx.message("node.connect.connected", app))
       end
 
