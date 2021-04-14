@@ -133,18 +133,6 @@ module ShopifyCli
         AdminAPI.get_shop(@ctx)
       end
 
-      def file_has_changed?(file)
-        file.checksum != remote_checksums[file.relative_path.to_s]
-      end
-
-      def update_remote_checksums!(api_response)
-        assets = api_response.values.flatten
-
-        assets.each do |asset|
-          @remote_checksums[asset["key"]] = asset["checksum"]
-        end
-      end
-
       def ignore?(file)
         @ignore_filter.match?(self[file].path.to_s)
       end
