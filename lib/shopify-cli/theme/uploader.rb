@@ -2,41 +2,62 @@
 require "thread"
 require "json"
 require "base64"
-require "benchmark"
 
 module ShopifyCli
   module Theme
     class Uploader
+      class Operation < Struct.new(:method, :file)
+        def to_s
+          "#{method} #{file&.relative_path}"
+        end
+      end
+      API_VERSION = "unstable"
+
+      attr_reader :checksums
+
       def initialize(ctx, theme)
         @ctx = ctx
         @theme = theme
+
+        # Queue of `Operation`s waiting to be picked up from a thread for processing.
         @queue = Queue.new
+        # `Operation`s will be removed from this Array completed.
+        @pending = []
+        # Thread making the API requests.
         @threads = []
+        # Mutex used to pause all threads when backing-off when hitting API rate limits
         @backoff_mutex = Mutex.new
+
+        # Allows delaying log of errors, mainly to not break the progress bar.
         @delay_errors = false
         @delayed_errors = []
+
+        # Latest theme assets checksums. Updated on each upload.
+        @checksums = {}
       end
 
-      def enqueue_upload(file)
-        file = @theme[file]
-        return if @theme.pending_files.include?(file) || @theme.ignore?(file)
-        @theme.pending_files << file
-        @queue << file unless @queue.closed?
+      def enqueue_updates(files)
+        files.each { |file| enqueue(:update, file) }
       end
 
-      def enqueue_uploads(files)
-        files.each { |file| enqueue_upload(file) }
+      def enqueue_deletes(files)
+        files.each { |file| enqueue(:delete, file) }
       end
 
       def size
-        @theme.pending_files.size
+        @pending.size
       end
 
       def empty?
-        @theme.pending_files.empty?
+        @pending.empty?
       end
 
-      def wait_for_uploads!
+      def pending_updates
+        @pending.select { |op| op.method == :update }.map(&:file)
+      end
+
+      def wait!
+        raise ThreadError, "No uploader threads" if @threads.empty?
         total = size
         last_size = size
         until empty? || @queue.closed?
@@ -48,62 +69,14 @@ module ShopifyCli
         end
       end
 
-      def fetch_remote_checksums!
-        response = ShopifyCli::AdminAPI.rest_request(
+      def fetch_checksums!
+        _status, response = ShopifyCli::AdminAPI.rest_request(
           @ctx,
           shop: @theme.shop,
           path: "themes/#{@theme.id}/assets.json",
-          api_version: "unstable",
+          api_version: API_VERSION,
         )
-
-        @theme.update_remote_checksums!(response[1])
-      end
-
-      def upload(file)
-        if @theme.ignore?(file)
-          @ctx.debug("Ignoring #{file.relative_path}")
-          return
-        end
-
-        unless @theme.file_has_changed?(file)
-          @ctx.debug("#{file.relative_path} has not changed, skipping upload")
-          return
-        end
-
-        return if @queue.closed?
-        wait_for_backoff!
-        @ctx.debug("Uploading #{file.relative_path}")
-
-        asset = { key: file.relative_path.to_s }
-        if file.text?
-          asset[:value] = file.read
-        else
-          asset[:attachment] = Base64.encode64(file.read)
-        end
-
-        _status, body, headers = ShopifyCli::AdminAPI.rest_request(
-          @ctx,
-          shop: @theme.shop,
-          path: "themes/#{@theme.id}/assets.json",
-          method: "PUT",
-          api_version: "unstable",
-          body: JSON.generate(asset: asset)
-        )
-
-        # Check if the API told us we're near the rate limit
-        if !backingoff? && (limit = headers["x-shopify-shop-api-call-limit"])
-          used, total = limit.split("/").map(&:to_i)
-          backoff_if_near_limit!(used, total)
-        end
-
-        @theme.update_remote_checksums!(body)
-      rescue ShopifyCli::API::APIRequestError => e
-        report_error(
-          "{{red:ERROR}} {{blue:#{file.relative_path}}}:\n\t" +
-          parse_api_error(e).join("\n\t")
-        )
-      ensure
-        @theme.pending_files.delete(file)
+        update_checksums(response)
       end
 
       def shutdown
@@ -116,12 +89,12 @@ module ShopifyCli
         count.times do
           @threads << Thread.new do
             loop do
-              file = @queue.pop
-              break if file.nil? # shutdown was called
-              upload(file)
+              operation = @queue.pop
+              break if operation.nil? # shutdown was called
+              perform(operation)
             rescue => e
               report_error(
-                "{{red:ERROR}} {{blue:#{file&.relative_path}}}: #{e}" +
+                "{{red:ERROR}} {{blue:#{operation}}}: #{e}" +
                 (@ctx.debug? ? "\n\t#{e.backtrace.join("\n\t")}" : "")
               )
             end
@@ -140,23 +113,108 @@ module ShopifyCli
       end
 
       def upload_theme!(&block)
-        fetch_remote_checksums!
+        fetch_checksums!
 
         delay_errors!
-        enqueue_uploads(@theme.liquid_files)
-        enqueue_uploads(@theme.json_files)
+        enqueue_updates(@theme.liquid_files)
+        enqueue_updates(@theme.json_files)
 
         # Wait for liquid & JSON files to upload, because those are rendered remotely
-        time = Benchmark.realtime do
-          wait_for_uploads!(&block)
-        end
-        @ctx.debug("Theme uploaded in #{time} seconds")
+        wait!(&block)
 
         # Assets are served locally, so can be uploaded in the background
-        enqueue_uploads(@theme.asset_files)
+        enqueue_updates(@theme.asset_files)
       end
 
       private
+
+      def enqueue(method, file)
+        operation = Operation.new(method, @theme[file])
+
+        # Already enqueued
+        return if @pending.include?(operation)
+
+        if @theme.ignore?(operation.file)
+          @ctx.debug("Ignoring #{operation.file.relative_path}")
+          return
+        end
+
+        unless file_has_changed?(operation.file)
+          @ctx.debug("#{operation.file.relative_path} has not changed, skipping upload")
+          return
+        end
+
+        @pending << operation
+        @queue << operation unless @queue.closed?
+      end
+
+      def perform(operation)
+        return if @queue.closed?
+        wait_for_backoff!
+        @ctx.debug(operation.to_s)
+
+        response = send(operation.method, operation.file)
+
+        # Check if the API told us we're near the rate limit
+        if !backingoff? && (limit = response["x-shopify-shop-api-call-limit"])
+          used, total = limit.split("/").map(&:to_i)
+          backoff_if_near_limit!(used, total)
+        end
+      rescue ShopifyCli::API::APIRequestError => e
+        report_error(
+          "{{red:ERROR}} {{blue:#{operation}}}:\n\t" +
+          parse_api_error(e).join("\n\t")
+        )
+      ensure
+        @pending.delete(operation)
+      end
+
+      def update(file)
+        asset = { key: file.relative_path.to_s }
+        if file.text?
+          asset[:value] = file.read
+        else
+          asset[:attachment] = Base64.encode64(file.read)
+        end
+
+        _status, body, response = ShopifyCli::AdminAPI.rest_request(
+          @ctx,
+          shop: @theme.shop,
+          path: "themes/#{@theme.id}/assets.json",
+          method: "PUT",
+          api_version: API_VERSION,
+          body: JSON.generate(asset: asset)
+        )
+
+        update_checksums(body)
+
+        response
+      end
+
+      def delete(file)
+        _status, _body, response = ShopifyCli::AdminAPI.rest_request(
+          @ctx,
+          shop: @theme.shop,
+          path: "themes/#{@theme.id}/assets.json",
+          method: "DELETE",
+          api_version: API_VERSION,
+          body: JSON.generate(asset: {
+            key: file.relative_path.to_s
+          })
+        )
+
+        response
+      end
+
+      def update_checksums(api_response)
+        api_response.values.flatten.each do |asset|
+          @checksums[asset["key"]] = asset["checksum"]
+        end
+      end
+
+      def file_has_changed?(file)
+        file.checksum != @checksums[file.relative_path.to_s]
+      end
 
       def report_error(error)
         if @delay_errors
