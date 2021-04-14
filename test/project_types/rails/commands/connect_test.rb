@@ -11,7 +11,7 @@ module Rails
         context = ShopifyCli::Context.new
 
         ShopifyCli::Project.expects(:has_current?).returns(false)
-        ShopifyCli::Commands::Connect.any_instance.expects(:default_connect)
+        ShopifyCli::Connect.any_instance.expects(:default_connect)
           .with("rails")
           .returns("rails-app")
         context.expects(:done)
@@ -26,7 +26,7 @@ module Rails
         ShopifyCli::Project.stubs(:current_project_type).returns(:rails)
         context.expects(:puts)
           .with(context.message("rails.connect.production_warning"))
-        ShopifyCli::Commands::Connect.any_instance.expects(:default_connect)
+        ShopifyCli::Connect.any_instance.expects(:default_connect)
           .with("rails")
           .returns("rails-app")
         context.expects(:done)
