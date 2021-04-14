@@ -22,9 +22,10 @@ module ShopifyCli
         SESSION_COOKIE_REGEXP = /#{SESSION_COOKIE_NAME}=(\h+)/
         SESSION_COOKIE_MAX_AGE = 60 * 60 * 23 # 1 day - leeway of 1h
 
-        def initialize(ctx, theme)
+        def initialize(ctx, theme, uploader)
           @ctx = ctx
           @theme = theme
+          @uploader = uploader
           @core_endpoints = Set.new
 
           @secure_session_id = nil
@@ -116,7 +117,7 @@ module ShopifyCli
           # Core doesn't support replace_templates
           return params if @core_endpoints.include?(env["PATH_INFO"])
 
-          pending_templates = @theme.pending_files.select do |file|
+          pending_templates = @uploader.pending_updates.select do |file|
             # Only replace Liquid or JSON files
             file.liquid? || file.json?
           end
