@@ -98,6 +98,7 @@ module ShopifyCli
   autoload :API, "shopify-cli/api"
   autoload :Command, "shopify-cli/command"
   autoload :Commands, "shopify-cli/commands"
+  autoload :Connect, "shopify-cli/connect"
   autoload :Context, "shopify-cli/context"
   autoload :Core, "shopify-cli/core"
   autoload :DB, "shopify-cli/db"
