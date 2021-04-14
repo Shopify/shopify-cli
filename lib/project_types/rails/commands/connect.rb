@@ -7,7 +7,7 @@ module Rails
           @ctx.puts(@ctx.message("rails.connect.production_warning"))
         end
 
-        app = ShopifyCli::Commands::Connect.new.default_connect("rails")
+        app = ShopifyCli::Connect.new(@ctx).default_connect("rails")
         @ctx.done(@ctx.message("rails.connect.connected", app))
       end
 
