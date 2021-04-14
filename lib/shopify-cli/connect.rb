@@ -7,6 +7,9 @@ module ShopifyCli
     end
 
     def default_connect(project_type)
+      if Project.current&.env
+        @ctx.puts(@ctx.message("core.connect.already_connected_warning"))
+      end
       org = ShopifyCli::Tasks::EnsureEnv.call(@ctx, regenerate: true)
       write_cli_yml(project_type, org["id"]) unless Project.has_current?
       api_key = Project.current(force_reload: true).env["api_key"]

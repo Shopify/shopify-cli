@@ -11,7 +11,7 @@ module Node
         context = ShopifyCli::Context.new
 
         ShopifyCli::Project.stubs(:has_current?).returns(false)
-        ShopifyCli::Commands::Connect.any_instance.expects(:default_connect)
+        ShopifyCli::Connect.any_instance.expects(:default_connect)
           .with("node")
           .returns("node-app")
         context.expects(:done)
@@ -25,7 +25,7 @@ module Node
 
         context.expects(:puts)
           .with(context.message("node.connect.production_warning"))
-        ShopifyCli::Commands::Connect.any_instance.expects(:default_connect)
+        ShopifyCli::Connect.any_instance.expects(:default_connect)
           .with("node")
           .returns("node-app")
         context.expects(:done)
