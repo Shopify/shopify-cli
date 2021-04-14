@@ -23,6 +23,8 @@ module ShopifyCli
           .stubs(:get)
           .with(:development_theme_id)
           .returns("12345678")
+
+        @uploader.start_threads
       end
 
       def teardown
@@ -30,7 +32,7 @@ module ShopifyCli
         @uploader.shutdown
       end
 
-      def test_upload_text_file
+      def test_update_text_file
         ShopifyCli::AdminAPI.expects(:rest_request).with(
           @ctx,
           shop: @theme.shop,
@@ -54,10 +56,11 @@ module ShopifyCli
           {},
         ])
 
-        @uploader.upload(@theme["assets/theme.css"])
+        @uploader.enqueue_updates([@theme["assets/theme.css"]])
+        @uploader.wait!
       end
 
-      def test_upload_binary_file
+      def test_update_binary_file
         ShopifyCli::AdminAPI.expects(:rest_request).with(
           @ctx,
           shop: @theme.shop,
@@ -81,17 +84,44 @@ module ShopifyCli
           {},
         ])
 
-        @uploader.upload(@theme["assets/logo.png"])
+        @uploader.enqueue_updates([@theme["assets/logo.png"]])
+        @uploader.wait!
+      end
+
+      def test_delete_file
+        ShopifyCli::AdminAPI.expects(:rest_request).with(
+          @ctx,
+          shop: @theme.shop,
+          path: "themes/#{@theme.id}/assets.json",
+          method: "DELETE",
+          api_version: "unstable",
+          body: JSON.generate({
+            asset: {
+              key: "assets/theme.css",
+            },
+          })
+        ).returns([
+          200,
+          {
+            "message": "assets/theme.css was successfully deleted",
+          },
+          {},
+        ])
+
+        @uploader.enqueue_deletes([@theme["assets/theme.css"]])
+        @uploader.wait!
       end
 
       def test_upload_when_unmodified
-        @theme.remote_checksums["assets/theme.css"] = @theme["assets/theme.css"].checksum
+        @uploader.checksums["assets/theme.css"] = @theme["assets/theme.css"].checksum
 
         ShopifyCli::AdminAPI.expects(:rest_request).never
-        @uploader.upload(@theme["assets/theme.css"])
+
+        @uploader.enqueue_updates([@theme["assets/theme.css"]])
+        @uploader.wait!
       end
 
-      def test_fetch_remote_checksums
+      def test_fetch_checksums
         ShopifyCli::AdminAPI.expects(:rest_request).with(
           @ctx,
           shop: @theme.shop,
@@ -108,43 +138,20 @@ module ShopifyCli
           {},
         ])
 
-        @uploader.fetch_remote_checksums!
+        @uploader.fetch_checksums!
 
-        assert_equal(@theme["assets/theme.css"].checksum, @theme.remote_checksums["assets/theme.css"])
-      end
-
-      def test_upload_from_threads
-        @uploader.start_threads
-
-        @theme.liquid_files.each do |file|
-          ShopifyCli::AdminAPI.expects(:rest_request).with(
-            @ctx,
-            shop: @theme.shop,
-            path: "themes/#{@theme.id}/assets.json",
-            method: "PUT",
-            api_version: "unstable",
-            body: JSON.generate({
-              asset: {
-                key: file.relative_path,
-                value: file.read,
-              },
-            })
-          ).returns([200, {}, {}])
-        end
-
-        @uploader.enqueue_uploads(@theme.liquid_files)
-        @uploader.wait_for_uploads!
+        assert_equal(@theme["assets/theme.css"].checksum, @uploader.checksums["assets/theme.css"])
       end
 
       def test_theme_files_are_pending_during_upload
         file = @theme.asset_files.first
 
-        @uploader.enqueue_upload(file)
-        assert_includes(@theme.pending_files, file)
+        @uploader.enqueue_updates([file])
+        assert_includes(@uploader.pending_updates, file)
 
         @uploader.start_threads
-        @uploader.wait_for_uploads!
-        assert_empty(@theme.pending_files)
+        @uploader.wait!
+        assert_empty(@uploader.pending_updates)
       end
 
       def test_logs_upload_error
@@ -154,8 +161,8 @@ module ShopifyCli
         @ctx.expects(:puts).once
         ShopifyCli::AdminAPI.expects(:rest_request).raises(RuntimeError.new("oops"))
 
-        @uploader.enqueue_upload(file)
-        @uploader.wait_for_uploads!
+        @uploader.enqueue_updates([file])
+        @uploader.wait!
       end
 
       def test_upload_theme
@@ -173,7 +180,7 @@ module ShopifyCli
         # Still has pending assets to upload
         refute_empty(@uploader)
 
-        @uploader.wait_for_uploads!
+        @uploader.wait!
         assert_empty(@uploader)
       end
 
@@ -181,19 +188,7 @@ module ShopifyCli
         @uploader.start_threads
         file = @theme.liquid_files.first
 
-        ShopifyCli::AdminAPI.expects(:rest_request).with(
-          @ctx,
-          shop: @theme.shop,
-          path: "themes/#{@theme.id}/assets.json",
-          method: "PUT",
-          api_version: "unstable",
-          body: JSON.generate({
-            asset: {
-              key: file.relative_path,
-              value: file.read,
-            },
-          })
-        ).returns([
+        ShopifyCli::AdminAPI.expects(:rest_request).returns([
           200,
           {},
           {
@@ -203,27 +198,15 @@ module ShopifyCli
 
         @uploader.expects(:sleep).with(2)
 
-        @uploader.enqueue_upload(file)
-        @uploader.wait_for_uploads!
+        @uploader.enqueue_updates([file])
+        @uploader.wait!
       end
 
       def test_dont_backoff_under_api_limit
         @uploader.start_threads
         file = @theme.liquid_files.first
 
-        ShopifyCli::AdminAPI.expects(:rest_request).with(
-          @ctx,
-          shop: @theme.shop,
-          path: "themes/#{@theme.id}/assets.json",
-          method: "PUT",
-          api_version: "unstable",
-          body: JSON.generate({
-            asset: {
-              key: file.relative_path,
-              value: file.read,
-            },
-          })
-        ).returns([
+        ShopifyCli::AdminAPI.expects(:rest_request).returns([
           200,
           {},
           {
@@ -233,8 +216,8 @@ module ShopifyCli
 
         @uploader.expects(:sleep).never
 
-        @uploader.enqueue_upload(file)
-        @uploader.wait_for_uploads!
+        @uploader.enqueue_updates([file])
+        @uploader.wait!
       end
 
       def test_log_api_errors
@@ -256,13 +239,13 @@ module ShopifyCli
           ))
 
         @ctx.expects(:puts).with(<<~EOS.chomp)
-          {{red:ERROR}} {{blue:sections/footer.liquid}}:
+          {{red:ERROR}} {{blue:update sections/footer.liquid}}:
           \tAn error
           \tThen some
         EOS
 
-        @uploader.enqueue_upload(file)
-        @uploader.wait_for_uploads!
+        @uploader.enqueue_updates([file])
+        @uploader.wait!
       end
 
       def test_log_api_errors_with_invalid_response_body
@@ -281,12 +264,12 @@ module ShopifyCli
           ))
 
         @ctx.expects(:puts).with(<<~EOS.chomp)
-          {{red:ERROR}} {{blue:sections/footer.liquid}}:
+          {{red:ERROR}} {{blue:update sections/footer.liquid}}:
           \texception message
         EOS
 
-        @uploader.enqueue_upload(file)
-        @uploader.wait_for_uploads!
+        @uploader.enqueue_updates([file])
+        @uploader.wait!
       end
 
       def test_delays_reporting_errors
@@ -310,14 +293,14 @@ module ShopifyCli
         @ctx.expects(:puts).never
 
         @uploader.delay_errors!
-        @uploader.enqueue_upload(file)
-        @uploader.wait_for_uploads!
+        @uploader.enqueue_updates([file])
+        @uploader.wait!
 
         # Assert @ctx.puts was not called
         mocha_verify
 
         @ctx.expects(:puts).with(<<~EOS.chomp)
-          {{red:ERROR}} {{blue:sections/footer.liquid}}:
+          {{red:ERROR}} {{blue:update sections/footer.liquid}}:
           \tAn error
           \tThen some
         EOS
