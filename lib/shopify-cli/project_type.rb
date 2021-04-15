@@ -48,18 +48,6 @@ module ShopifyCli
         @project_name = name
       end
 
-      def connector(command_const)
-        @project_connector_command_class = command_const
-      end
-
-      def connect_command
-        if @project_connector_command_class.nil?
-          nil
-        else
-          const_get(@project_connector_command_class)
-        end
-      end
-
       def register_task(task, name)
         return if project_load_shallow
         ShopifyCli::Tasks.register(task, name)

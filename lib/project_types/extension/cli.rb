@@ -3,7 +3,6 @@
 module Extension
   class Project < ShopifyCli::ProjectType
     hidden_feature
-    title("App Extension")
 
     require Project.project_filepath("messages/messages")
     require Project.project_filepath("messages/message_loading")

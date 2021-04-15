@@ -1,11 +1,6 @@
 # frozen_string_literal: true
 module Rails
   class Project < ShopifyCli::ProjectType
-    title("Ruby on Rails App")
-    # connector("Rails::Command::Connect")
-
-    # register_task('Rails::Tasks::RailsTask', 'rails_task')
-
     require Project.project_filepath("messages/messages")
     register_messages(Rails::Messages::MESSAGES)
   end
