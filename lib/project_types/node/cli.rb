@@ -1,11 +1,6 @@
 # frozen_string_literal: true
 module Node
   class Project < ShopifyCli::ProjectType
-    title("Node.js App")
-    # connector("Node::Command::Connect")
-
-    # register_task('Node::Tasks::NodeTask', 'node_task')
-
     require Project.project_filepath("messages/messages")
     register_messages(Node::Messages::MESSAGES)
   end
