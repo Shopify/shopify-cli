@@ -117,6 +117,7 @@ module ShopifyCli
   autoload :PartnersAPI, "shopify-cli/partners_api"
   autoload :ProcessSupervision, "shopify-cli/process_supervision"
   autoload :Project, "shopify-cli/project"
+  autoload :ProjectCommands, "shopify-cli/project_commands"
   autoload :ProjectType, "shopify-cli/project_type"
   autoload :ResolveConstant, "shopify-cli/resolve_constant"
   autoload :Resources, "shopify-cli/resources"
