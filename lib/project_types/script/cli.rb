@@ -10,20 +10,12 @@ module Script
   end
 
   # define/autoload project specific Commands
-  class Command < ShopifyCli::Command
+  class Command < ShopifyCli::ProjectCommands
     hidden_feature(feature_set: :script_project)
     subcommand :Create, "create", Project.project_filepath("commands/create")
     subcommand :Push, "push", Project.project_filepath("commands/push")
     subcommand :Disable, "disable", Project.project_filepath("commands/disable")
     subcommand :Enable, "enable", Project.project_filepath("commands/enable")
-
-    def call(*)
-      @ctx.puts(self.class.help)
-    end
-
-    def self.help
-      ShopifyCli::Context.message("script.help", ShopifyCli::TOOL_NAME, subcommand_registry.command_names.join(" | "))
-    end
   end
   ShopifyCli::Commands.register("Script::Command", "script")
 
