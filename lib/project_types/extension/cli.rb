@@ -13,7 +13,7 @@ module Extension
     register_messages(Extension::Messages::MessageLoading.load)
   end
 
-  class Command < ShopifyCli::Command
+  class Command < ShopifyCli::ProjectCommands
     hidden_feature
     autoload :ExtensionCommand, Project.project_filepath("commands/extension_command")
 
@@ -23,18 +23,6 @@ module Extension
     subcommand :Serve, "serve", Project.project_filepath("commands/serve")
     subcommand :Push, "push", Project.project_filepath("commands/push")
     subcommand :Tunnel, "tunnel", Project.project_filepath("commands/tunnel")
-
-    def call(*)
-      @ctx.puts(self.class.help)
-    end
-
-    def self.help
-      ShopifyCli::Context.message(
-        "extension.help",
-        ShopifyCli::TOOL_NAME,
-        subcommand_registry.command_names.join(" | ")
-      )
-    end
   end
   ShopifyCli::Commands.register("Extension::Command", "extension")
 

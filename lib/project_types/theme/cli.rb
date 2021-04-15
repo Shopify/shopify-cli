@@ -2,7 +2,6 @@
 module Theme
   class Project < ShopifyCli::ProjectType
     title("Theme")
-    connector("Theme::Command::Connect")
 
     register_task("Theme::Tasks::EnsureThemekitInstalled", :ensure_themekit_installed)
 
@@ -10,7 +9,7 @@ module Theme
     register_messages(Theme::Messages::MESSAGES)
   end
 
-  class Command < ShopifyCli::Command
+  class Command < ShopifyCli::ProjectCommands
     subcommand :Connect, "connect", Project.project_filepath("commands/connect")
     subcommand :Create, "create", Project.project_filepath("commands/create")
     subcommand :Deploy, "deploy", Project.project_filepath("commands/deploy")
@@ -18,14 +17,6 @@ module Theme
     subcommand :Push, "push", Project.project_filepath("commands/push")
     subcommand :Serve, "serve", Project.project_filepath("commands/serve")
     subcommand :Check, "check", Project.project_filepath("commands/check")
-
-    def call(*)
-      @ctx.puts(self.class.help)
-    end
-
-    def self.help
-      ShopifyCli::Context.message("theme.help", ShopifyCli::TOOL_NAME, subcommand_registry.command_names.join(" | "))
-    end
   end
   ShopifyCli::Commands.register("Theme::Command", "theme")
 
