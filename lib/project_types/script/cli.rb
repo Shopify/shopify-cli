@@ -3,7 +3,6 @@
 module Script
   class Project < ShopifyCli::ProjectType
     hidden_feature(feature_set: :script_project)
-    title("Script")
 
     require Project.project_filepath("messages/messages")
     register_messages(Script::Messages::MESSAGES)

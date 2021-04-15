@@ -1,10 +1,6 @@
 # frozen_string_literal: true
 module Theme
   class Project < ShopifyCli::ProjectType
-    title("Theme")
-
-    register_task("Theme::Tasks::EnsureThemekitInstalled", :ensure_themekit_installed)
-
     require Project.project_filepath("messages/messages")
     register_messages(Theme::Messages::MESSAGES)
   end
