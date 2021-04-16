@@ -16,9 +16,15 @@ module Extension
         super
         stub_argo_enabled_shop
         api_key = "TEST"
-        setup_temp_project(api_key: api_key)
-        @argo_version = "0.0.1"
-        serve_args = ["--shop=my-test-shop.myshopify.com", "--apiKey=#{api_key}", "--argoVersion=#{@argo_version}"]
+        registration_uuid = "dev-123"
+        setup_temp_project(api_key: api_key, registration_uuid: registration_uuid)
+        @argo_version = "0.9.4"
+        serve_args = [
+          "--shop=my-test-shop.myshopify.com",
+          "--apiKey=#{api_key}",
+          "--argoVersion=#{@argo_version}",
+          "--uuid=#{registration_uuid}",
+        ]
         @yarn_serve_command = YARN_SERVE_COMMAND + serve_args
         @npm_serve_command = NPM_SERVE_COMMAND + %w(--) + serve_args
       end
@@ -32,6 +38,7 @@ module Extension
       end
 
       def test_uses_js_system_to_run_npm_or_yarn_serve_commands
+        Extension::Features::Argo.any_instance.stubs(:extract_argo_renderer_version).returns(@argo_version)
         ShopifyCli::JsSystem.any_instance
           .expects(:call)
           .with(yarn: @yarn_serve_command, npm: @npm_serve_command)
@@ -42,6 +49,7 @@ module Extension
       end
 
       def test_aborts_and_informs_the_user_when_serve_fails
+        Extension::Features::Argo.any_instance.stubs(:extract_argo_renderer_version).returns(@argo_version)
         ShopifyCli::JsSystem.any_instance
           .expects(:call)
           .with(yarn: @yarn_serve_command, npm: @npm_serve_command)
@@ -53,6 +61,7 @@ module Extension
       end
 
       def test_uses_js_system_to_run_npm_or_yarn_serve_commands_with_shop_argument_for_first_party
+        Extension::Features::Argo.any_instance.stubs(:extract_argo_renderer_version).returns(@argo_version)
         ShopifyCli::JsSystem.any_instance
           .expects(:call)
           .with(yarn: @yarn_serve_command, npm: @npm_serve_command)
@@ -96,7 +105,7 @@ module Extension
         ShopifyCli::Feature.stubs(:enabled?).with(:argo_admin_beta).returns(true)
         ShopifyCli::Tasks::EnsureEnv.stubs(:call)
         ShopifyCli::Tasks::EnsureDevStore.stubs(:call)
-        Extension::Features::Argo.any_instance.stubs(:extract_argo_renderer_version).returns("0.0.1")
+        Extension::Features::Argo.any_instance.stubs(:extract_argo_renderer_version).returns(@argo_version)
       end
     end
   end
