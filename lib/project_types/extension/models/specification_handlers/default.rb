@@ -42,8 +42,8 @@ module Extension
           []
         end
 
-        def serve(context)
-          Features::ArgoServe.new(specification_handler: self, context: context).call
+        def serve(context, flags)
+          Features::ArgoServe.new(specification_handler: self, context: context, flags: flags).call
         end
 
         def renderer_package(context)

@@ -5,9 +5,9 @@ module Extension
 
       property! :specification_handler, accepts: Extension::Models::SpecificationHandlers::Default
       property! :context, accepts: ShopifyCli::Context
+      property :flags, accepts: Hash, default: {}
 
-      YARN_SERVE_COMMAND = %w(server)
-      NPM_SERVE_COMMAND = %w(run-script server)
+      DEFAULT_PORT = 39351
 
       def call
         validate_env!
@@ -22,6 +22,20 @@ module Extension
 
       def specification
         specification_handler.specification
+      end
+
+      def tunnel_required?
+        !!flags[:tunnel]
+      end
+
+      def tunnel
+        context.abort("No ports available") if port.nil?
+        @tunnel ||= ShopifyCli::Tunnel.start(context, port: port)
+      end
+
+      def port
+        Tasks::ChooseNextAvailablePort.new(from: DEFAULT_PORT).call
+          .unwrap { nil }
       end
 
       def validate_env!
@@ -46,22 +60,30 @@ module Extension
         context.abort(context.message("serve.serve_missing_information"))
       end
 
+      def renderer_package
+        specification_handler.renderer_package(context)
+      end
+
+      def required_fields
+        specification.features.argo.required_fields
+      end
+
+      def public_url
+        return tunnel if tunnel_required?
+        ""
+      end
+
+      def serve_options
+        @options ||= Features::ArgoServeOptions.new(context: context, renderer_package: renderer_package,
+          required_fields: required_fields, public_url: public_url)
+      end
+
       def yarn_serve_command
-        YARN_SERVE_COMMAND + serve_options(specification.features.argo.required_fields)
+        serve_options.yarn_serve_command
       end
 
       def npm_serve_command
-        NPM_SERVE_COMMAND + ["--"] + serve_options(specification.features.argo.required_fields)
-      end
-
-      def serve_options(required_fields)
-        renderer_package = specification_handler.renderer_package(context)
-        project = ExtensionProject.current
-        @serve_options ||= [].tap do |options|
-          options << "--shop=#{project.env.shop}" if required_fields.include?(:shop)
-          options << "--apiKey=#{project.env.api_key}" if required_fields.include?(:api_key)
-          options << "--argoVersion=#{renderer_package.version}" if renderer_package.admin?
-        end
+        serve_options.npm_serve_command
       end
     end
   end

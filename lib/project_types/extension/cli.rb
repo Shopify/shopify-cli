@@ -36,6 +36,7 @@ module Extension
     autoload :UpdateDraft, Project.project_filepath("tasks/update_draft")
     autoload :FetchSpecifications, Project.project_filepath("tasks/fetch_specifications")
     autoload :ConfigureFeatures, Project.project_filepath("tasks/configure_features")
+    autoload :ChooseNextAvailablePort, Project.project_filepath("tasks/choose_next_available_port")
 
     module Converters
       autoload :RegistrationConverter, Project.project_filepath("tasks/converters/registration_converter")
@@ -59,6 +60,7 @@ module Extension
   module Features
     autoload :ArgoRendererPackage, Project.project_filepath("features/argo_renderer_package")
     autoload :ArgoServe, Project.project_filepath("features/argo_serve")
+    autoload :ArgoServeOptions, Project.project_filepath("features/argo_serve_options")
     autoload :ArgoSetup, Project.project_filepath("features/argo_setup")
     autoload :ArgoSetupStep, Project.project_filepath("features/argo_setup_step")
     autoload :ArgoSetupSteps, Project.project_filepath("features/argo_setup_steps")

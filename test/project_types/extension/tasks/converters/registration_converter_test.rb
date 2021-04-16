@@ -14,6 +14,7 @@ module Extension
           ShopifyCli::ProjectType.load_type(:extension)
 
           @registration_id = 42
+          @registration_uuid = "123"
           @fake_type = "TEST_EXTENSION"
           @fake_title = "Fake Title"
           @fake_extension_context = "fake_context"
@@ -31,6 +32,7 @@ module Extension
         def test_from_hash_parses_registration_from_a_hash
           hash = {
             Converters::RegistrationConverter::ID_FIELD => @registration_id,
+            Converters::RegistrationConverter::UUID_FIELD => @registration_uuid,
             Converters::RegistrationConverter::TYPE_FIELD => @fake_type,
             Converters::RegistrationConverter::TITLE_FIELD => @fake_title,
             Converters::RegistrationConverter::DRAFT_VERSION_FIELD => {
@@ -43,6 +45,7 @@ module Extension
 
           assert_kind_of(Models::Registration, parsed_registration)
           assert_equal @registration_id, parsed_registration.id
+          assert_equal @registration_uuid, parsed_registration.uuid
           assert_equal @fake_type, parsed_registration.type
           assert_equal @fake_title, parsed_registration.title
           assert_equal @registration_id, parsed_registration.draft_version.registration_id
