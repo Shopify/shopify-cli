@@ -33,10 +33,6 @@ module ShopifyCli
 
       private
 
-      def project_type_name
-        ProjectType.load_type(Project.current_project_type).project_name
-      end
-
       def display_help(klass)
         output = klass.help
         if klass.respond_to?(:extended_help)

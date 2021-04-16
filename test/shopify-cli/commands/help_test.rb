@@ -3,31 +3,13 @@ require "test_helper"
 module Rails
   module Commands
     class Fake < ShopifyCli::Command
-      class << self
-        def help
-          "basic rails help"
-        end
-
-        def extended_help
-          "extended rails help"
-        end
-      end
     end
   end
 end
 
 module ShopifyCli
   module Commands
-    class FakeCommand < ShopifyCli::Command
-      class << self
-        def help
-          "basic help"
-        end
-
-        def extended_help
-          "extended help"
-        end
-      end
+    class FakeCommand < ShopifyCli::ProjectCommands
     end
 
     class HelpTest < MiniTest::Test
@@ -41,8 +23,7 @@ module ShopifyCli
           run_cmd("help")
         end
         output = io.join
-
-        # assert_match("Available core commands:", output)
+        assert_match(/Use .*shopify help <command>.* to display detailed information about a specific command./, output)
         assert_match(/Usage: .*shopify/, output)
       end
 
@@ -51,7 +32,7 @@ module ShopifyCli
           run_cmd("help fake")
         end
         output = io.join
-        assert_match(/basic help.*extended help/m, output)
+        assert_match("shopifycli.help", output)
       end
     end
   end
