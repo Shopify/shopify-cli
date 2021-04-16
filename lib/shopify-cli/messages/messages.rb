@@ -186,6 +186,8 @@ module ShopifyCli
           },
         },
 
+        login_prompt: "Please ensure you've logged in with {{command:%s login}} and try again",
+
         populate: {
           help: <<~HELP,
             Populate a Shopify store with example customers, orders, or products. 
