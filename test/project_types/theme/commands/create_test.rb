@@ -16,6 +16,11 @@ module Theme
         organization_id: 0
       CLI
 
+      def setup
+        super
+        ShopifyCli::DB.stubs(:exists?).with(:shop).returns(true)
+      end
+
       def test_can_create_new_theme
         FakeFS do
           context = ShopifyCli::Context.new
