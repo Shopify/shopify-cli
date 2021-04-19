@@ -99,11 +99,7 @@ module Extension
       private
 
       def run_register_command
-        Extension::Command::Register.ctx = @context
-        Extension::Command::Register.call(
-          [],
-          :register
-        )
+        run_cmd("extension register")
       end
     end
   end

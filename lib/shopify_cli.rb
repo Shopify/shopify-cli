@@ -111,6 +111,7 @@ module ShopifyCli
   autoload :JsDeps, "shopify-cli/js_deps"
   autoload :JsSystem, "shopify-cli/js_system"
   autoload :MethodObject, "shopify-cli/method_object"
+  autoload :LazyDelegator, "shopify-cli/lazy_delegator"
   autoload :Log, "shopify-cli/log"
   autoload :OAuth, "shopify-cli/oauth"
   autoload :Options, "shopify-cli/options"
@@ -126,6 +127,7 @@ module ShopifyCli
   autoload :SubCommand, "shopify-cli/sub_command"
   autoload :Task, "shopify-cli/task"
   autoload :Tasks, "shopify-cli/tasks"
+  autoload :TransformDataStructure, "shopify-cli/transform_data_structure"
   autoload :Tunnel, "shopify-cli/tunnel"
 
   require "shopify-cli/messages/messages"

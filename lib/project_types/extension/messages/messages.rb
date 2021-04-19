@@ -72,7 +72,7 @@ module Extension
         confirm_info: "This will create a new extension registration for %s, which can’t be undone.",
         confirm_question: "Would you like to register this extension? (y/n)",
         confirm_abort: "Extension was not registered.",
-        success: "{{v}} Registered {{green:%s}} with {{green:%s}}.",
+        success: "{{v}} Registered {{green:%s}}.",
         success_info: "{{*}} Run {{command:shopify extension push}} to push your extension to Shopify.",
       },
       push: {
