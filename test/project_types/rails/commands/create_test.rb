@@ -21,6 +21,11 @@ module Rails
         organization_id: 42
       APPTYPE
 
+      def setup
+        super
+        ShopifyCli::DB.stubs(:exists?).with(:shop).returns(true)
+      end
+
       def test_prints_help_with_no_name_argument
         io = capture_io { run_cmd("rails create --help") }
         assert_match(CLI::UI.fmt(Rails::Command::Create.help), io.join)
