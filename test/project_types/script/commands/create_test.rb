@@ -24,6 +24,7 @@ module Script
           no_config_ui: @no_config_ui
         )
         Layers::Application::ExtensionPoints.stubs(:languages).returns(%w(assemblyscript))
+        ShopifyCli::DB.stubs(:exists?).with(:shop).returns(true)
       end
 
       def test_prints_help_with_no_name_argument
