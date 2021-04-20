@@ -186,6 +186,21 @@ module ShopifyCli
       def test_upload_theme
         @uploader.start_threads
 
+        expected_size = @theme.theme_files
+          .reject { |file| @theme.ignore?(file) }
+          .size
+
+        ShopifyCli::AdminAPI.expects(:rest_request)
+          .times(expected_size + 1) # +1 for checksums
+          .returns([200, {}, {}])
+
+        @uploader.upload_theme!
+        assert_empty(@uploader)
+      end
+
+      def test_upload_theme_with_delayed_low_priority_files
+        @uploader.start_threads
+
         expected_size = (@theme.liquid_files + @theme.json_files)
           .reject { |file| @theme.ignore?(file) }
           .size
@@ -194,7 +209,7 @@ module ShopifyCli
           .at_least(expected_size)
           .returns([200, {}, {}])
 
-        @uploader.upload_theme!
+        @uploader.upload_theme!(delay_low_priority_files: true)
         # Still has pending assets to upload
         refute_empty(@uploader)
 
@@ -250,8 +265,6 @@ module ShopifyCli
           .returns([200, {}, {}])
 
         @uploader.upload_theme!
-        # Wait for low priority uploads
-        @uploader.wait!
       end
 
       def test_backoff_near_api_limit

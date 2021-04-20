@@ -116,7 +116,7 @@ module ShopifyCli
         @delayed_errors.clear
       end
 
-      def upload_theme!(&block)
+      def upload_theme!(delay_low_priority_files: false, &block)
         fetch_checksums!
 
         removed_files = checksums.keys - @theme.theme_files.map { |file| file.relative_path.to_s }
@@ -124,8 +124,10 @@ module ShopifyCli
         enqueue_updates(@theme.liquid_files)
         enqueue_updates(@theme.json_files)
 
-        # Wait for liquid & JSON files to upload, because those are rendered remotely
-        wait!(&block)
+        if delay_low_priority_files
+          # Wait for liquid & JSON files to upload, because those are rendered remotely
+          wait!(&block)
+        end
 
         # Process lower-priority files in the background
 
@@ -134,6 +136,10 @@ module ShopifyCli
 
         # Delete removed files
         enqueue_deletes(removed_files)
+
+        unless delay_low_priority_files
+          wait!(&block)
+        end
       end
 
       private
