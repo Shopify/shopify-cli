@@ -41,7 +41,7 @@ module Extension
         ask_app: "Which app would you like to register this extension with?",
         no_apps: "{{x}} You don’t have any apps.",
         learn_about_apps: "{{*}} Learn more about building apps at <https://shopify.dev/concepts/apps>, " \
-          "or try creating a new app using {{command:shopify create}}.",
+          "or try creating a new app using {{command:shopify [ extension | node | rails | script ] create}}.",
         loading_apps: "Loading your apps...",
         no_available_extensions: "{{x}} There are no available extensions for this app.",
       },
@@ -63,12 +63,6 @@ module Extension
         frame_title: "Registering Extension",
         waiting_text: "Registering with Shopify...",
         already_registered: "Extension is already registered.",
-        loading_apps: "Loading your apps...",
-        ask_app: "Which app would you like to register this extension with?",
-        no_apps: "{{x}} You don’t have any apps.",
-        learn_about_apps: "{{*}} Learn more about building apps at <https://shopify.dev/concepts/apps>, " \
-          "or try creating a new app using {{command:shopify extension create}}.",
-        invalid_api_key: "The API key %s does not match any of your apps.",
         confirm_info: "This will create a new extension registration for %s, which can’t be undone.",
         confirm_question: "Would you like to register this extension? (y/n)",
         confirm_abort: "Extension was not registered.",
