@@ -25,6 +25,10 @@ module ShopifyCli
           path.read
         end
 
+        def exist?
+          path.exist?
+        end
+
         def mime_type
           @mime_type ||= MimeType.by_filename(relative_path)
         end
