@@ -184,6 +184,62 @@ module ShopifyCli
         assert_empty(@uploader)
       end
 
+      def test_upload_theme_deletes_missing_files
+        @uploader.start_threads
+
+        expected_files = (@theme.liquid_files + @theme.json_files)
+          .reject { |file| @theme.ignore?(file) }
+
+        response_assets = expected_files.map do |file|
+          {
+            "key" => file.relative_path,
+            "checksum" => file.checksum,
+          }
+        end
+
+        # Add a file that was removed locally
+        response_assets << {
+          "key" => "assets/removed.css",
+          "checksum" => "deadbeef",
+        }
+
+        ShopifyCli::AdminAPI.expects(:rest_request).with(
+          @ctx,
+          shop: @theme.shop,
+          path: "themes/#{@theme.id}/assets.json",
+          api_version: "unstable",
+        ).returns([
+          200,
+          { "assets" => response_assets },
+          {},
+        ])
+
+        ShopifyCli::AdminAPI.expects(:rest_request)
+          .with(@ctx, has_entries(method: "PUT"))
+          .at_least(expected_files.size)
+          .returns([
+            200,
+            { "assets" => response_assets },
+            {},
+          ])
+
+        ShopifyCli::AdminAPI.expects(:rest_request)
+          .with(@ctx, has_entries(body: JSON.generate(
+            asset: {
+              key: "assets/removed.css",
+            },
+          )))
+          .returns([
+            200,
+            { "assets" => response_assets },
+            {},
+          ])
+
+        @uploader.upload_theme!
+        # Wait for low priority uploads
+        @uploader.wait!
+      end
+
       def test_backoff_near_api_limit
         @uploader.start_threads
         file = @theme.liquid_files.first
