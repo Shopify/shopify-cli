@@ -58,16 +58,6 @@ module ShopifyCli
             is_enabled: "{{v}} analytics are currently enabled",
             is_disabled: "{{v}} analytics are currently disabled",
           },
-          shopifolk_beta: {
-            help: <<~HELP,
-              Opt in/out of shopifolk beta
-                Usage: {{command:%s config [ analytics ] }}
-            HELP
-            enabled: "{{v}} shopifolk-beta has been enabled",
-            disabled: "{{v}} shopifolk-beta has been disabled",
-            is_enabled: "{{v}} shopifolk-beta is currently enabled",
-            is_disabled: "{{v}} shopifolk-beta is currently disabled",
-          },
         },
 
         git: {

@@ -6,6 +6,7 @@ module Extension
       options do |parser, flags|
         parser.on("--name=NAME") { |name| flags[:name] = name }
         parser.on("--type=TYPE") { |type| flags[:type] = type.upcase }
+        parser.on("--api-key=KEY") { |key| flags[:api_key] = key.downcase }
       end
 
       def call(args, _)
@@ -16,7 +17,12 @@ module Extension
 
           if form.type.create(form.directory_name, @ctx)
             ExtensionProject.write_cli_file(context: @ctx, type: form.type.identifier)
-            ExtensionProject.write_env_file(context: @ctx, title: form.name)
+            ExtensionProject.write_env_file(
+              context: @ctx,
+              title: form.name,
+              api_key: form.app.api_key,
+              api_secret: form.app.secret
+            )
 
             @ctx.puts(@ctx.message("create.ready_to_start", form.directory_name, form.name))
             @ctx.puts(@ctx.message("create.learn_more", form.type.name))

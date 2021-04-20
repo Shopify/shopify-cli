@@ -1,7 +1,7 @@
 mutation AppScriptUpdateOrCreate(
   $extensionPointName: ExtensionPointName!,
   $title: String,
-  $description: String,
+  $configUi: String,
   $sourceCode: String,
   $language: String,
   $force: Boolean,
@@ -12,7 +12,7 @@ mutation AppScriptUpdateOrCreate(
   appScriptUpdateOrCreate(
     extensionPointName: $extensionPointName
     title: $title
-    description: $description
+    configUi: $configUi
     sourceCode: $sourceCode
     language: $language
     force: $force
@@ -30,7 +30,6 @@ mutation AppScriptUpdateOrCreate(
       configSchema
       extensionPointName
       title
-      description
     }
   }
 }

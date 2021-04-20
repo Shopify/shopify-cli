@@ -16,7 +16,8 @@ module Script
         Layers::Application::PushScript.call(ctx: @ctx, force: options.flags.key?(:force))
         @ctx.puts(@ctx.message("script.push.script_pushed", api_key: api_key))
       rescue StandardError => e
-        UI::ErrorHandler.pretty_print_and_raise(e, failed_op: @ctx.message("script.push.error.operation_failed"))
+        msg = @ctx.message("script.push.error.operation_failed", api_key: ShopifyCli::Project.current.env&.api_key)
+        UI::ErrorHandler.pretty_print_and_raise(e, failed_op: msg)
       end
 
       def self.help

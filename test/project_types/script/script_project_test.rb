@@ -6,7 +6,7 @@ module Script
   class ScriptProjectTest < MiniTest::Test
     def setup
       super
-      @context = TestHelpers::FakeContext.new
+      @context = TestHelpers::FakeContext.new(root: Dir.mktmpdir)
       @script_name = "name"
       @extension_point_type = "ep_type"
     end
@@ -22,7 +22,7 @@ module Script
         })
 
       Script::Layers::Application::ExtensionPoints.expects(:supported_language?).returns(true)
-      ScriptProject.new(directory: "testdir")
+      ScriptProject.new(directory: @context.root)
 
       assert_equal({
         "script_name" => @script_name,
@@ -44,7 +44,7 @@ module Script
       Script::Layers::Application::ExtensionPoints.stubs(:deprecated_types).returns([@extension_point_type])
 
       assert_raises Errors::DeprecatedEPError do
-        ScriptProject.new(directory: "testdir")
+        ScriptProject.new(directory: @context.root)
       end
     end
 
@@ -127,7 +127,7 @@ module Script
           "language" => language,
         })
 
-      script = ScriptProject.new(directory: "testdir")
+      script = ScriptProject.new(directory: @context.root)
       assert_equal language.downcase, script.language
     end
 
@@ -142,7 +142,7 @@ module Script
           "script_name" => @script_name,
         })
 
-      script = ScriptProject.new(directory: "testdir")
+      script = ScriptProject.new(directory: @context.root)
       assert_equal "assemblyscript", script.language
     end
 
@@ -160,7 +160,7 @@ module Script
         })
 
       assert_raises(Script::Errors::InvalidLanguageError) do
-        ScriptProject.new(directory: "testdir")
+        ScriptProject.new(directory: @context.root)
       end
     end
   end

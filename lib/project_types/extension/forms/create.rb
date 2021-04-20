@@ -3,50 +3,44 @@
 module Extension
   module Forms
     class Create < ShopifyCli::Form
-      flag_arguments :name, :type
+      flag_arguments :name, :type, :api_key
+
+      attr_reader :app
+
+      class ExtensionProjectDetails
+        include SmartProperties
+
+        property :app, accepts: Models::App
+        property :name, accepts: String
+        property :type, accepts: Models::SpecificationHandlers::Default
+
+        def complete?
+          !!(app && name && type)
+        end
+      end
 
       def ask
-        self.type = ask_type
-        self.name = ask_name
+        ShopifyCli::Result.wrap(ExtensionProjectDetails.new)
+          .then(&Questions::AskApp.new(ctx: ctx, api_key: api_key))
+          .then(&Questions::AskType.new(ctx: ctx, type: type))
+          .then(&Questions::AskName.new(ctx: ctx, name: name))
+          .unwrap { |e| raise e }
+          .tap do |project_details|
+            ctx.abort(ctx.message("create.incomplete_configuration")) unless project_details.complete?
+
+            self.app = project_details.app
+            self.type = project_details.type
+            self.name = project_details.name
+          end
       end
 
       def directory_name
-        @directory_name ||= name.strip.gsub(/( )/, "_").downcase
+        name.strip.gsub(/( )/, "_").downcase
       end
 
       private
 
-      def ask_name
-        ask_with_reprompt(
-          initial_value: name,
-          break_condition: -> (current_name) { Models::Registration.valid_title?(current_name) },
-          prompt_message: ctx.message("create.ask_name"),
-          reprompt_message: ctx.message("create.invalid_name", Models::Registration::MAX_TITLE_LENGTH)
-        )
-      end
-
-      def ask_type
-        return Extension.specifications[type] if Extension.specifications.valid?(type)
-        ctx.puts(ctx.message("create.invalid_type")) unless type.nil?
-
-        CLI::UI::Prompt.ask(ctx.message("create.ask_type")) do |handler|
-          Extension.specifications.each do |type|
-            handler.option("#{type.name} #{type.tagline}") { type }
-          end
-        end
-      end
-
-      def ask_with_reprompt(initial_value:, break_condition:, prompt_message:, reprompt_message:)
-        value = initial_value
-        reprompt = false
-
-        until break_condition.call(value)
-          ctx.puts(reprompt_message) if reprompt
-          value = CLI::UI::Prompt.ask(prompt_message)&.strip
-          reprompt = true
-        end
-        value
-      end
+      attr_writer :app
     end
   end
 end

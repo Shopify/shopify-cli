@@ -36,6 +36,14 @@ module Extension
         errors: {
           directory_exists: "Directory ‘%s’ already exists. Please remove it or choose a new name for your project.",
         },
+        incomplete_configuration: "Cannot create extension due to missing configuration information",
+        invalid_api_key: "The API key %s does not match any of your apps.",
+        ask_app: "Which app would you like to register this extension with?",
+        no_apps: "{{x}} You don’t have any apps.",
+        learn_about_apps: "{{*}} Learn more about building apps at <https://shopify.dev/concepts/apps>, " \
+          "or try creating a new app using {{command:shopify [ extension | node | rails | script ] create}}.",
+        loading_apps: "Loading your apps...",
+        no_available_extensions: "{{x}} There are no available extensions for this app.",
       },
       build: {
         help: <<~HELP,
@@ -55,16 +63,10 @@ module Extension
         frame_title: "Registering Extension",
         waiting_text: "Registering with Shopify...",
         already_registered: "Extension is already registered.",
-        loading_apps: "Loading your apps...",
-        ask_app: "Which app would you like to register this extension with?",
-        no_apps: "{{x}} You don’t have any apps.",
-        learn_about_apps: "{{*}} Learn more about building apps at <https://shopify.dev/concepts/apps>, " \
-          "or try creating a new app using {{command:shopify extension create}}.",
-        invalid_api_key: "The API key %s does not match any of your apps.",
         confirm_info: "This will create a new extension registration for %s, which can’t be undone.",
-        confirm_question: "Would you like to register this extension with {{green:%s}}? (y/n)",
+        confirm_question: "Would you like to register this extension? (y/n)",
         confirm_abort: "Extension was not registered.",
-        success: "{{v}} Registered {{green:%s}} with {{green:%s}}.",
+        success: "{{v}} Registered {{green:%s}}.",
         success_info: "{{*}} Run {{command:shopify extension push}} to push your extension to Shopify.",
       },
       push: {
@@ -87,6 +89,7 @@ module Extension
         HELP
         frame_title: "Serving extension...",
         serve_failure_message: "Failed to run extension code.",
+        serve_missing_information: "Missing shop or api_key.",
       },
       tunnel: {
         missing_token: "{{x}} {{red:auth requires a token argument}}. "\
@@ -101,7 +104,7 @@ module Extension
         extended_help: <<~HELP,
           {{bold:Subcommands:}}
 
-            {{cyan:auth}}: Writes an ngrok auth token to ~/.ngrok2/ngrok.yml to connect with an ngrok account.#{" "}
+            {{cyan:auth}}: Writes an ngrok auth token to ~/.ngrok2/ngrok.yml to connect with an ngrok account.
             Visit https://dashboard.ngrok.com/signup to sign up.
               Usage: {{command:%1$s extension tunnel auth <token>}}
 

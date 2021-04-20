@@ -8,15 +8,12 @@ module Extension
       include TestHelpers::FakeUI
       include ExtensionTestHelpers::TempProjectSetup
       include ExtensionTestHelpers::Messages
-      include ExtensionTestHelpers::Stubs::GetApp
 
       def setup
         super
         ShopifyCli::ProjectType.load_type(:extension)
-        setup_temp_project(api_key: "", api_secret: "", registration_id: nil)
-
+        setup_temp_project(registration_id: nil)
         @app = Models::App.new(api_key: @api_key, secret: @api_secret)
-        stub_get_app(app: @app, api_key: @app.api_key)
       end
 
       def test_help_implemented
@@ -41,7 +38,7 @@ module Extension
 
         CLI::UI::Prompt
           .expects(:confirm)
-          .with(@context.message("register.confirm_question", @app.title))
+          .with(@context.message("register.confirm_question"))
           .returns(false)
           .once
 
@@ -94,19 +91,15 @@ module Extension
         assert_message_output(io: io, expected_content: [
           @context.message("register.confirm_info", @test_extension_type.name),
           @context.message("register.waiting_text"),
-          @context.message("register.success", @project.title, @app.title),
+          @context.message("register.success", @project.title),
           @context.message("register.success_info"),
         ])
       end
 
       private
 
-      def run_register_command_snake_case(api_key: @api_key)
-        run_cmd("extension register --api_key=#{api_key}")
-      end
-
-      def run_register_command(api_key: @api_key)
-        run_cmd("extension register --api-key=#{api_key}")
+      def run_register_command
+        run_cmd("extension register")
       end
     end
   end

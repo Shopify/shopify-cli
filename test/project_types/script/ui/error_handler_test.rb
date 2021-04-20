@@ -170,7 +170,28 @@ describe Script::UI::ErrorHandler do
       end
 
       describe "when InvalidLanguageError" do
-        let(:err) { Script::Layers::Domain::Errors::InvalidExtensionPointError.new("ruby") }
+        let(:err) { Script::Errors::InvalidLanguageError.new("ruby", "discount") }
+        it "should call display_and_raise" do
+          should_call_display_and_raise
+        end
+      end
+
+      describe "when MetadataValidationError" do
+        let(:err) { Script::Layers::Domain::Errors::MetadataValidationError.new }
+        it "should call display_and_raise" do
+          should_call_display_and_raise
+        end
+      end
+
+      describe "when InvalidConfigUiDefinitionError" do
+        let(:err) { Script::Layers::Domain::Errors::InvalidConfigUiDefinitionError.new("filename") }
+        it "should call display_and_raise" do
+          should_call_display_and_raise
+        end
+      end
+
+      describe "when MissingSpecifiedConfigUiDefinitionError" do
+        let(:err) { Script::Layers::Domain::Errors::MissingSpecifiedConfigUiDefinitionError.new("filename") }
         it "should call display_and_raise" do
           should_call_display_and_raise
         end
@@ -197,15 +218,29 @@ describe Script::UI::ErrorHandler do
         end
       end
 
-      describe "when AppScriptUndefinedError" do
-        let(:err) { Script::Layers::Infrastructure::Errors::AppScriptUndefinedError.new }
+      describe "when BuildError" do
+        let(:err) { Script::Layers::Infrastructure::Errors::BuildError.new }
         it "should call display_and_raise" do
           should_call_display_and_raise
         end
       end
 
-      describe "when BuildError" do
-        let(:err) { Script::Layers::Infrastructure::Errors::BuildError.new }
+      describe "when ConfigUiSyntaxError" do
+        let(:err) { Script::Layers::Infrastructure::Errors::ConfigUiSyntaxError.new }
+        it "should call display_and_raise" do
+          should_call_display_and_raise
+        end
+      end
+
+      describe "when ConfigUiMissingKeysError" do
+        let(:err) { Script::Layers::Infrastructure::Errors::ConfigUiMissingKeysError.new("file", "keys") }
+        it "should call display_and_raise" do
+          should_call_display_and_raise
+        end
+      end
+
+      describe "when ConfigUiFieldsMissingKeysError" do
+        let(:err) { Script::Layers::Infrastructure::Errors::ConfigUiFieldsMissingKeysError.new("file", "keys") }
         it "should call display_and_raise" do
           should_call_display_and_raise
         end
@@ -248,27 +283,6 @@ describe Script::UI::ErrorHandler do
 
       describe "when ShopAuthenticationError" do
         let(:err) { Script::Layers::Infrastructure::Errors::ShopAuthenticationError.new }
-        it "should call display_and_raise" do
-          should_call_display_and_raise
-        end
-      end
-
-      describe "when ShopScriptConflictError" do
-        let(:err) { Script::Layers::Infrastructure::Errors::ShopScriptConflictError.new }
-        it "should call display_and_raise" do
-          should_call_display_and_raise
-        end
-      end
-
-      describe "when AppScriptNotPushedError" do
-        let(:err) { Script::Layers::Infrastructure::Errors::AppScriptNotPushedError.new }
-        it "should call display_and_raise" do
-          should_call_display_and_raise
-        end
-      end
-
-      describe "when ShopScriptUndefinedError" do
-        let(:err) { Script::Layers::Infrastructure::Errors::ShopScriptUndefinedError.new }
         it "should call display_and_raise" do
           should_call_display_and_raise
         end

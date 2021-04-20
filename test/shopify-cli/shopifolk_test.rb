@@ -7,7 +7,6 @@ module ShopifyCli
 
     def setup
       super
-      ShopifyCli::Config.set("shopifolk-beta", "enabled", true)
       ShopifyCli::Feature.disable("shopifolk")
     end
 

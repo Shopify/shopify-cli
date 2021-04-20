@@ -42,6 +42,19 @@ module Script
         Script::Command::Push.help
       end
 
+      def test_push_propagates_error_when_ensure_env_fails
+        ShopifyCli::Project.any_instance.expects(:env).returns(nil)
+
+        err_msg = "error message"
+        ShopifyCli::Tasks::EnsureEnv
+          .any_instance.expects(:call)
+          .with(@context, required: [:api_key, :secret, :shop])
+          .raises(StandardError.new(err_msg))
+
+        e = assert_raises(StandardError) { perform_command }
+        assert_equal err_msg, e.message
+      end
+
       private
 
       def perform_command

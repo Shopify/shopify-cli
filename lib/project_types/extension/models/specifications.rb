@@ -26,6 +26,10 @@ module Extension
         handlers.values.each(&block)
       end
 
+      def none?
+        each.none?
+      end
+
       protected
 
       def handlers
@@ -37,6 +41,8 @@ module Extension
       def fetch_specifications_and_build_handlers
         ShopifyCli::Result
           .call(&fetch_specifications)
+          .map(&ShopifyCli::TransformDataStructure.new(symbolize_keys: true, underscore_keys: true))
+          .then(&method(:select_cli_extensions))
           .then(&Tasks::ConfigureFeatures)
           .then(&method(:ensure_legacy_compatibility))
           .then(&method(:build_specifications))
@@ -64,13 +70,18 @@ module Extension
 
       def ensure_legacy_compatibility(specification_attribute_sets)
         specification_attribute_sets.each do |attributes|
-          next unless attributes.fetch(:identifier) == "product_subscription"
+          next unless attributes.fetch(:identifier) == "subscription_management"
+          attributes[:identifier] = "product_subscription"
           attributes[:graphql_identifier] = "SUBSCRIPTION_MANAGEMENT"
         end
       end
 
       def build_specifications(specification_attribute_sets)
         specification_attribute_sets.map { |attributes| Models::Specification.new(**attributes) }
+      end
+
+      def select_cli_extensions(specification_attribute_sets)
+        specification_attribute_sets.select { |attributes| attributes.dig(:options, :management_experience) == "cli" }
       end
     end
   end

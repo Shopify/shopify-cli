@@ -2,14 +2,14 @@
 
 module Script
   class ScriptProject < ShopifyCli::Project
-    attr_reader :extension_point_type, :script_name, :language, :description
+    attr_reader :extension_point_type, :script_name, :language, :config_ui_file
 
     def initialize(*args)
       super
       @extension_point_type = lookup_config!("extension_point_type")
       raise Errors::DeprecatedEPError, @extension_point_type if deprecated?(@extension_point_type)
       @script_name = lookup_config!("script_name")
-      @description = lookup_config("description")
+      @config_ui_file = lookup_config("config_ui_file")
       @language = lookup_language
       ShopifyCli::Core::Monorail.metadata = {
         "script_name" => @script_name,

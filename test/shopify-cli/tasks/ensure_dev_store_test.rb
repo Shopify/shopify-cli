@@ -13,10 +13,13 @@ module ShopifyCli
       def test_outputs_if_shop_cant_be_queried
         stub_org_request
         stub_env(domain: "notther.myshopify.com")
-        @context.expects(:puts).with(
-          @context.message("core.tasks.ensure_dev_store.could_not_verify_store", "notther.myshopify.com")
+
+        exception = assert_raises ShopifyCli::Abort do
+          EnsureDevStore.call(@context)
+        end
+        assert_includes exception.message, @context.message(
+          "core.tasks.ensure_dev_store.could_not_verify_store", "notther.myshopify.com"
         )
-        EnsureDevStore.call(@context)
       end
 
       def test_noop_if_already_transfer_disabled

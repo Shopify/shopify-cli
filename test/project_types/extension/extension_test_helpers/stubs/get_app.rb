@@ -28,6 +28,7 @@ module Extension
             title: app.title,
             'apiKey': app.api_key,
             'apiSecretKeys': [{ 'secret': app.secret }],
+            'businessName': app.business_name,
           }
         end
       end

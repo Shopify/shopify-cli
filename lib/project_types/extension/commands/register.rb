@@ -3,24 +3,17 @@
 module Extension
   class Command
     class Register < ExtensionCommand
-      options do |parser, flags|
-        parser.on("--api_key=KEY") { |key| flags[:api_key] = key.downcase }
-        parser.on("--api-key=KEY") { |key| flags[:api_key] = key.downcase }
-      end
-
-      def call(args, _command_name)
+      def call(_args, _command_name)
         CLI::UI::Frame.open(@ctx.message("register.frame_title")) do
           @ctx.abort(@ctx.message("register.already_registered")) if project.registered?
 
-          with_register_form(args) do |form|
-            should_continue = confirm_registration(form.app)
-            registration = should_continue ? register_extension(form.app) : abort_not_registered
+          should_continue = confirm_registration
+          registration = should_continue ? register_extension : abort_not_registered
 
-            update_project_files(form.app, registration)
+          update_project_files(registration)
 
-            @ctx.puts(@ctx.message("register.success", project.title, form.app.title))
-            @ctx.puts(@ctx.message("register.success_info"))
-          end
+          @ctx.puts(@ctx.message("register.success", project.title))
+          @ctx.puts(@ctx.message("register.success_info"))
         end
       end
 
@@ -30,32 +23,25 @@ module Extension
 
       private
 
-      def with_register_form(args)
-        form = Forms::Register.ask(@ctx, args, options.flags)
-        return @ctx.puts(self.class.help) if form.nil?
-
-        yield form
+      def confirm_registration
+        @ctx.puts(@ctx.message("register.confirm_info", specification_handler.name))
+        CLI::UI::Prompt.confirm(@ctx.message("register.confirm_question"))
       end
 
-      def confirm_registration(app)
-        @ctx.puts(@ctx.message("register.confirm_info", extension_type.name))
-        CLI::UI::Prompt.confirm(@ctx.message("register.confirm_question", app.title))
-      end
-
-      def register_extension(app)
+      def register_extension
         @ctx.puts(@ctx.message("register.waiting_text"))
 
         Tasks::CreateExtension.call(
           context: @ctx,
           api_key: app.api_key,
-          type: extension_type.graphql_identifier,
+          type: specification_handler.graphql_identifier,
           title: project.title,
           config: {},
-          extension_context: extension_type.extension_context(@ctx)
+          extension_context: specification_handler.extension_context(@ctx)
         )
       end
 
-      def update_project_files(app, registration)
+      def update_project_files(registration)
         ExtensionProject.write_env_file(
           context: @ctx,
           api_key: app.api_key,
@@ -63,6 +49,10 @@ module Extension
           registration_id: registration.id,
           title: project.title
         )
+      end
+
+      def app
+        @app ||= project.app
       end
 
       def abort_not_registered

@@ -1,5 +1,18 @@
 Unreleased
 ------
+
+Version 1.8.0
+-------------
+
+* [1119](https://github.com/Shopify/shopify-app-cli/pull/1119): Enable guest serialization for scripts
+
+Version 1.7.1
+------
+* Updating internal features in development
+
+Version 1.7.0
+-----
+* [#1109](https://github.com/Shopify/shopify-app-cli/pull/1109): Abort app generation if name contains disallowed text.
 * [#1075](https://github.com/Shopify/shopify-app-cli/pull/1075): Add support for kebab-case flags
 
 Version 1.6.0

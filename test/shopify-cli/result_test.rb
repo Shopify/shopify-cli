@@ -36,13 +36,20 @@ module ShopifyCli
       end
 
       def test_captures_exceptions_and_wraps_them_in_an_error_when_deferring_result_construction
-        assert_kind_of(Result::Failure, Result.wrap { raise "Failure" }.call)
+        assert_kind_of(Result::Failure, Result.wrap { raise Exception, "Failure" }.call)
       end
 
       def test_call_wraps_a_block_and_invokes_it_immediately
         Result.call(1) { |n| n }.tap do |result|
           assert_predicate(result, :success?)
           assert_equal 1, result.value
+        end
+      end
+
+      def test_allow_nil_to_be_wrapped
+        Result.wrap(nil).tap do |result|
+          assert_predicate(result, :failure?)
+          assert_nil result.error
         end
       end
 
@@ -76,6 +83,10 @@ module ShopifyCli
 
       def test_unwrap_returns_the_value
         assert_equal :value, Success.new(:value).unwrap {}
+      end
+
+      def test_unwrap_permits_nil_as_fallback_value
+        assert_nothing_raised { Success.new(:value).unwrap(nil) }
       end
 
       def test_additional_arguments_to_unwrap_are_ignored
@@ -170,6 +181,10 @@ module ShopifyCli
         assert_raises ArgumentError do
           Failure.new(:error).unwrap(:fallback) {}
         end
+      end
+
+      def test_unwrap_permits_nil_as_fallback_value
+        assert_nil Failure.new(:error).unwrap(nil)
       end
 
       def test_map_returns_itself

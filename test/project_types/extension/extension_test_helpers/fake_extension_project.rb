@@ -15,7 +15,7 @@ module Extension
       def config
         {
           "project_type" => "extension",
-          ExtensionProjectKeys::EXTENSION_TYPE_KEY => type,
+          ExtensionProjectKeys::SPECIFICATION_IDENTIFIER_KEY => type,
         }
       end
 
@@ -23,6 +23,7 @@ module Extension
         @env ||= ShopifyCli::Resources::EnvFile.new(
           api_key: api_key,
           secret: api_secret,
+          shop: "my-test-shop.myshopify.com",
           extra: {
             ExtensionProjectKeys::TITLE_KEY => title,
             ExtensionProjectKeys::REGISTRATION_ID_KEY => registration_id,

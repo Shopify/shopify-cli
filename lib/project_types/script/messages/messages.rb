@@ -35,11 +35,11 @@ module Script
                                     "are numbers, letters, hyphens, or underscores.",
 
           no_existing_apps_cause: "You don't have any apps.",
-          no_existing_apps_help: "Please create an app with {{command:shopify <app type> create}} or "\
-                                 "visit https://partners.shopify.com/.",
+          no_existing_apps_help: "Create an app with {{command:shopify [ extension | node | rails | script ] create}}"\
+                                 " or visit https://partners.shopify.com/.",
 
           no_existing_orgs_cause: "You don't have any partner organizations.",
-          no_existing_orgs_help: "Please visit https://partners.shopify.com/ to create a partners account.",
+          no_existing_orgs_help: "Visit https://partners.shopify.com/ to create a partners account.",
 
           no_existing_stores_cause: "You don't have any stores.",
           no_existing_stores_help: "Visit https://partners.shopify.com/%{organization_id}/stores/ to create one.",
@@ -56,13 +56,27 @@ module Script
           invalid_config: "Can't change the configuration values because %1$s is missing or "\
                           "it is not formatted properly.",
 
+          invalid_config_ui_definition_cause: "The UI configuration file %s contains invalid YAML.",
+          invalid_config_ui_definition_help: "Fix the errors and try again.",
+
+          missing_config_ui_definition_cause: "You are missing the UI configuration file %s.",
+          missing_config_ui_definition_help: "Create this file and try again.",
+
+          config_ui_syntax_error_cause: "The UI configuration file %{filename} is not formatted properly.",
+          config_ui_syntax_error_help: "Fix the errors and try again.",
+
+          config_ui_missing_keys_error_cause: "The UI configuration file %{filename} is missing required keys: "\
+                                              "%{missing_keys}.",
+          config_ui_missing_keys_error_help: "Add the keys and try again.",
+
+          config_ui_fields_missing_keys_error_cause: "A field entry in the UI configuration file %{filename} is "\
+                                                     "missing required keys: %{missing_keys}.",
+          config_ui_fields_missing_keys_error_help: "Add the keys and try again.",
+
           script_not_found_cause: "Couldn't find script %s for extension point %s",
 
           service_failure_cause: "Internal service error.",
           service_failure_help: "Ensure the 'shopify/scripts-toolchain-as' package is up to date.",
-
-          user_error_cause: "Invalid script extension metadata.",
-          user_error_help: "Ensure the 'shopify/scripts-toolchain-as' package is up to date.",
 
           metadata_validation_cause: "Invalid script extension metadata.",
           metadata_validation_help: "Ensure the 'shopify/scripts-toolchain-as' package is up to date.",
@@ -81,9 +95,6 @@ module Script
                                      "'package.json' contains a 'scripts/build' entry with a " \
                                      "'--metadata build/metadata.json' argument",
           app_not_installed_cause: "App not installed on store.",
-
-          app_script_not_pushed_help: "Script isn't on the app. Run {{command:shopify script push}}, and " \
-            "then try again.",
 
           build_error_cause: "Something went wrong while building the script.",
           build_error_help: "Correct the errors and try again.",
@@ -105,22 +116,13 @@ module Script
           shop_auth_cause: "Unable to authenticate with the store.",
           shop_auth_help: "Try again.",
 
-          shop_script_conflict_cause: "Another app in this store has already enabled a script "\
-                                      "on this extension point.",
-          shop_script_conflict_help: "Disable that script or uninstall that app and try again.",
-
-          shop_script_undefined_cause: "Script is already turned off in store.",
-
-          packages_outdated_cause: "These npm packages are out of date: %s.",
-          packages_outdated_help: "To update them, run {{cyan:npm install --save-dev %s}}.",
-
           invalid_build_script: "The root package.json contains an invalid build command that " \
                                 "is needed to compile your script to WebAssembly.",
           build_script_not_found: "The root package.json is missing the build command that " \
                                   "is needed to compile your script to WebAssembly.",
           # rubocop:disable Layout/LineLength
           build_script_suggestion: "\n\nFor example, your package.json needs the following command:" \
-            "\nbuild: npx shopify-scripts-toolchain-as build --src src/script.ts --binary build/<script_name>.wasm --metadata build/metadata.json -- --lib node_modules --optimize --use Date=",
+            "\nbuild: npx shopify-scripts-toolchain-as build --src src/shopify_main.ts --binary build/<script_name>.wasm --metadata build/metadata.json -- --lib node_modules --optimize --use Date=",
 
           web_assembly_binary_not_found: "WebAssembly binary not found.",
           web_assembly_binary_not_found_suggestion: "No WebAssembly binary found." \
@@ -134,8 +136,8 @@ module Script
             Usage: {{command:%1$s script create}}
             Options:
               {{command:--name=NAME}} Script project name. Use any string.
-              {{command:--description=DESCRIPTION}} Description of the project. Use any string.
               {{command:--extension-point=TYPE}} Extension point name. Allowed values: %2$s.
+              {{command:--no-config-ui}} Specify this option if you don’t want Scripts to render an interface in the Shopify admin.
           HELP
 
           error: {
@@ -156,44 +158,10 @@ module Script
           HELP
 
           error: {
-            operation_failed: "Couldn't push script to app.",
+            operation_failed: "Couldn't push script to app (API key: %{api_key}).",
           },
 
           script_pushed: "{{v}} Script pushed to app (API key: %{api_key}).",
-        },
-
-        disable: {
-          help: <<~HELP,
-          Turn off script in store.
-            Usage: {{command:%s script disable}}
-          HELP
-
-          error: {
-            operation_failed: "Can't disable script.",
-          },
-
-          script_disabled: "{{v}} Script disabled. Script is turned off in store.",
-        },
-
-        enable: {
-          help: <<~HELP,
-          Turn on script in store.
-            Usage: {{command:%s script enable}}
-            Options:
-              {{command:--config-props='name1:value1, name2:value2'}} Optional. Define the configuration of your script by passing individual name and value pairs. If used with --config_file, then matching values in --config-props will override those set in the file.
-              {{command:--config_file=<path/to/YAMLFilename>}} Optional. Define the configuration of your script using a YAML formatted file. --config-props values override properties in this file.
-          HELP
-
-          info: "{{*}} A script always remains enabled until you disable it - even after pushing "\
-                "script changes with the same extension point to an app. To disable a script, use "\
-                "the 'disable' command.",
-
-          error: {
-            operation_failed: "Can't enable script.",
-          },
-
-          script_enabled: "{{v}} Script enabled. %{type} script %{title} in app (API key: %{api_key}) "\
-                          "is turned on in store {{green:%{shop_domain}}}",
         },
 
         project_deps: {
@@ -208,7 +176,6 @@ module Script
             select_extension_point: "Which extension point do you want to use?",
             select_language: "Which language do you want to use?",
             script_name: "Script Name",
-            description: "Description",
           },
         },
 

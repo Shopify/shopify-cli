@@ -4,6 +4,7 @@ module Script
   module Errors
     class InvalidContextError < ScriptProjectError; end
     class InvalidScriptNameError < ScriptProjectError; end
+
     class NoExistingAppsError < ScriptProjectError; end
     class NoExistingOrganizationsError < ScriptProjectError; end
 

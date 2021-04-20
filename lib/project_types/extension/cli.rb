@@ -41,6 +41,12 @@ module Extension
   end
 
   module Forms
+    module Questions
+      autoload :AskApp, Project.project_filepath("forms/questions/ask_app")
+      autoload :AskName, Project.project_filepath("forms/questions/ask_name")
+      autoload :AskType, Project.project_filepath("forms/questions/ask_type")
+    end
+
     autoload :Create, Project.project_filepath("forms/create")
     autoload :Register, Project.project_filepath("forms/register")
   end
@@ -65,18 +71,9 @@ module Extension
     autoload :ValidationError, Project.project_filepath("models/validation_error")
     autoload :Specification, Project.project_filepath("models/specification")
     autoload :Specifications, Project.project_filepath("models/specifications")
+    autoload :LazySpecificationHandler, Project.project_filepath("models/lazy_specification_handler")
   end
 
   autoload :ExtensionProjectKeys, Project.project_filepath("extension_project_keys")
   autoload :ExtensionProject, Project.project_filepath("extension_project")
-
-  def self.specifications
-    @specifications ||= Models::Specifications.new(
-      fetch_specifications: Tasks::FetchSpecifications
-    )
-  end
-
-  def self.specifications=(specifications)
-    @specifications = specifications
-  end
 end

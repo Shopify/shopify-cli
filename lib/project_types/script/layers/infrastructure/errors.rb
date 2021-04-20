@@ -5,9 +5,27 @@ module Script
     module Infrastructure
       module Errors
         class AppNotInstalledError < ScriptProjectError; end
-        class AppScriptNotPushedError < ScriptProjectError; end
-        class AppScriptUndefinedError < ScriptProjectError; end
         class BuildError < ScriptProjectError; end
+        class ConfigUiSyntaxError < ScriptProjectError; end
+
+        class ConfigUiMissingKeysError < ScriptProjectError
+          attr_reader :filename, :missing_keys
+          def initialize(filename, missing_keys)
+            super()
+            @filename = filename
+            @missing_keys = missing_keys
+          end
+        end
+
+        class ConfigUiFieldsMissingKeysError < ScriptProjectError
+          attr_reader :filename, :missing_keys
+          def initialize(filename, missing_keys)
+            super()
+            @filename = filename
+            @missing_keys = missing_keys
+          end
+        end
+
         class DependencyInstallError < ScriptProjectError; end
         class EmptyResponseError < ScriptProjectError; end
         class ForbiddenError < ScriptProjectError; end
@@ -30,25 +48,8 @@ module Script
           end
         end
 
-        class ScriptServiceUserError < ScriptProjectError
-          def initialize(query_name, errors)
-            super("Failed performing #{query_name}. Errors: #{errors}.")
-          end
-        end
-
         class ShopAuthenticationError < ScriptProjectError; end
-        class ShopScriptConflictError < ScriptProjectError; end
-        class ShopScriptUndefinedError < ScriptProjectError; end
         class TaskRunnerNotFoundError < ScriptProjectError; end
-
-        class PackagesOutdatedError < ScriptProjectError
-          attr_reader :outdated_packages
-          def initialize(outdated_packages)
-            super("EP packages are outdated and need to be updated: #{outdated_packages.join(", ")}")
-            @outdated_packages = outdated_packages
-          end
-        end
-
         class BuildScriptNotFoundError < ScriptProjectError; end
         class InvalidBuildScriptError < ScriptProjectError; end
 

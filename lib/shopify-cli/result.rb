@@ -104,7 +104,7 @@ module ShopifyCli
       end
 
       ##
-      # raises an `UnexpectedSuccess` as a `Failure` does not carry an error
+      # raises an `UnexpectedSuccess` as a `Success` does not carry an error
       # value.
       #
       def error
@@ -191,7 +191,7 @@ module ShopifyCli
       #    Success.new(1).unwrap(0) => 1
       #
       def unwrap(*args, &block)
-        raise ArgumentError, "expected either a fallback value or a block" unless args.one? ^ block
+        raise ArgumentError, "expected either a fallback value or a block" unless (args.length == 1) ^ block
         @value
       end
     end
@@ -221,8 +221,8 @@ module ShopifyCli
     #     .then { |data| data.values_at(:firstname, :lastname) } # Ignored
     #     .unwrap(Person.new("John", "Doe"))                     # => Person
     #
-    # Alternatively, we could resucue from the error and then proceed with the
-    # remanining transformations:
+    # Alternatively, we could rescue from the error and then proceed with the
+    # remaining transformations:
     #
     #   Person = Struct.new(:firstname, :lastname)
     #   Failure
@@ -304,12 +304,12 @@ module ShopifyCli
       #
       #   Failure
       #     .new(RuntimeError.new)
-      #     .resuce { "All good! "}
+      #     .rescue { "All good! "}
       #     .success? # => true
       #
       #   Failure
       #     .new(RuntimeError.new)
-      #     .resuce { Failure.new("Still broken!") }
+      #     .rescue { Failure.new("Still broken!") }
       #     .success? # => false
       #
       def rescue(&block)
@@ -336,7 +336,7 @@ module ShopifyCli
       # * `ArgumentError` if both a fallback argument and a block is provided
       #
       def unwrap(*args, &block)
-        raise ArgumentError, "expected either a fallback value or a block" unless args.one? ^ block
+        raise ArgumentError, "expected either a fallback value or a block" unless (args.length == 1) ^ block
         block ? block.call(@error) : args.pop
       end
     end
@@ -397,14 +397,14 @@ module ShopifyCli
     #   end
     #
     def self.wrap(*values, &block)
-      raise ArgumentError, "expected either a value or a block" unless values.one? ^ block
+      raise ArgumentError, "expected either a value or a block" unless (values.length == 1) ^ block
 
-      if values.one?
+      if values.length == 1
         values.pop.yield_self do |value|
           case value
           when Result::Success, Result::Failure
             value
-          when Exception
+          when NilClass, Exception
             Result.failure(value)
           else
             Result.success(value)
@@ -414,7 +414,7 @@ module ShopifyCli
         ->(*args) do
           begin
             wrap(block.call(*args))
-          rescue => error
+          rescue Exception => error # rubocop:disable Lint/RescueException
             wrap(error)
           end
         end
