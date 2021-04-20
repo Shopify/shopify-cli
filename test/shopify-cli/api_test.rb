@@ -154,5 +154,13 @@ module ShopifyCli
         .returns(response)
       @api.query("api/mutation")
     end
+
+    def test_supports_delete_method
+      response = stub("response", code: "200", body: "{}")
+      HttpRequest
+        .expects(:delete)
+        .returns(response)
+      @api.request(url: "https://shop.com/api.json", method: "DELETE")
+    end
   end
 end
