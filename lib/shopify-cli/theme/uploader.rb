@@ -115,15 +115,21 @@ module ShopifyCli
       def upload_theme!(&block)
         fetch_checksums!
 
-        delay_errors!
+        removed_files = checksums.keys - @theme.theme_files.map(&:relative_path)
+
         enqueue_updates(@theme.liquid_files)
         enqueue_updates(@theme.json_files)
 
         # Wait for liquid & JSON files to upload, because those are rendered remotely
         wait!(&block)
 
+        # Process lower-priority files in the background
+
         # Assets are served locally, so can be uploaded in the background
         enqueue_updates(@theme.asset_files)
+
+        # Delete removed files
+        enqueue_deletes(removed_files)
       end
 
       private
@@ -139,7 +145,7 @@ module ShopifyCli
           return
         end
 
-        unless file_has_changed?(operation.file)
+        unless method == :delete || file_has_changed?(operation.file)
           @ctx.debug("#{operation.file.relative_path} has not changed, skipping upload")
           return
         end
