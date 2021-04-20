@@ -56,6 +56,10 @@ module ShopifyCli
         @pending.select { |op| op.method == :update }.map(&:file)
       end
 
+      def remote_file?(file)
+        checksums.key?(@theme[file].relative_path.to_s)
+      end
+
       def wait!
         raise ThreadError, "No uploader threads" if @threads.empty?
         total = size
@@ -115,7 +119,7 @@ module ShopifyCli
       def upload_theme!(&block)
         fetch_checksums!
 
-        removed_files = checksums.keys - @theme.theme_files.map(&:relative_path)
+        removed_files = checksums.keys - @theme.theme_files.map { |file| file.relative_path.to_s }
 
         enqueue_updates(@theme.liquid_files)
         enqueue_updates(@theme.json_files)
@@ -141,12 +145,12 @@ module ShopifyCli
         return if @pending.include?(operation)
 
         if @theme.ignore?(operation.file)
-          @ctx.debug("Ignoring #{operation.file.relative_path}")
+          @ctx.debug("ignore #{operation.file.relative_path}")
           return
         end
 
         unless method == :delete || file_has_changed?(operation.file)
-          @ctx.debug("#{operation.file.relative_path} has not changed, skipping upload")
+          @ctx.debug("skip #{operation}")
           return
         end
 
