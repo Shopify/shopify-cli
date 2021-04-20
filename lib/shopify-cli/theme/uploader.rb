@@ -120,9 +120,15 @@ module ShopifyCli
         fetch_checksums!
 
         removed_files = checksums.keys - @theme.theme_files.map { |file| file.relative_path.to_s }
+        # Some files must be uploaded after the other ones
+        delayed_config_files = [
+          @theme["config/settings_schema.json"],
+          @theme["config/settings_data.json"],
+        ]
 
         enqueue_updates(@theme.liquid_files)
-        enqueue_updates(@theme.json_files)
+        enqueue_updates(@theme.json_files - delayed_config_files)
+        enqueue_updates(delayed_config_files)
 
         if delay_low_priority_files
           # Wait for liquid & JSON files to upload, because those are rendered remotely
@@ -155,7 +161,7 @@ module ShopifyCli
           return
         end
 
-        unless method == :delete || file_has_changed?(operation.file)
+        if method == :update && operation.file.exist? && !file_has_changed?(operation.file)
           @ctx.debug("skip #{operation}")
           return
         end
