@@ -42,6 +42,14 @@ module Extension
           []
         end
 
+        def serve(context)
+          Features::ArgoServe.new(specification_handler: self, context: context).call
+        end
+
+        def renderer_package(context)
+          argo.renderer_package(context)
+        end
+
         protected
 
         def argo
