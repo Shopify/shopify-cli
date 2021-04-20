@@ -18,6 +18,11 @@ module ShopifyCli
         request(uri, body, headers, req)
       end
 
+      def delete(uri, body, headers)
+        req = ::Net::HTTP::Delete.new(uri.request_uri)
+        request(uri, body, headers, req)
+      end
+
       def request(uri, body, headers, req)
         http = ::Net::HTTP.new(uri.host, uri.port)
         http.use_ssl = true
