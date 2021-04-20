@@ -15,7 +15,8 @@ module ShopifyCli
           config = Config.from_path(ShopifyCli::ROOT + "/test/fixtures/theme")
           @ctx = TestHelpers::FakeContext.new(root: config.root)
           @theme = Theme.new(@ctx, config)
-          @proxy = Proxy.new(@ctx, @theme)
+          @uploader = stub(pending_updates: [])
+          @proxy = Proxy.new(@ctx, @theme, @uploader)
 
           ShopifyCli::DB.stubs(:exists?).with(:shop).returns(true)
           ShopifyCli::DB
@@ -164,7 +165,7 @@ module ShopifyCli
             .with(:storefront_renderer_production_exchange_token)
             .returns("TOKEN")
 
-          @theme.stubs(:pending_files).returns([
+          @uploader.expects(:pending_updates).returns([
             @theme["layout/theme.liquid"],
             @theme["assets/theme.css"], # Should not be included in the POST body
           ])
@@ -216,7 +217,7 @@ module ShopifyCli
           request.get("/on-core")
 
           # Introduce pending files, but should not hit the POST endpoint
-          @theme.stubs(:pending_files).returns([
+          @uploader.stubs(:pending_updates).returns([
             @theme["layout/theme.liquid"],
           ])
           request.get("/on-core")
@@ -254,7 +255,7 @@ module ShopifyCli
             .with(:storefront_renderer_production_exchange_token)
             .returns(nil)
 
-          @theme.stubs(:pending_files).returns([
+          @uploader.expects(:pending_updates).returns([
             @theme["layout/theme.liquid"],
           ])
 

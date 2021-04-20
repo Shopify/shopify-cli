@@ -143,6 +143,24 @@ module ShopifyCli
         assert_equal(@theme["assets/theme.css"].checksum, @uploader.checksums["assets/theme.css"])
       end
 
+      def test_update_checksum_after_upload
+        ShopifyCli::AdminAPI.expects(:rest_request).returns([
+          200,
+          {
+            "asset" => {
+              "key" => "assets/theme.css",
+              "checksum" => "deadbeef",
+            },
+          },
+          {},
+        ])
+
+        @uploader.enqueue_updates([@theme["assets/theme.css"]])
+        @uploader.wait!
+
+        assert_equal("deadbeef", @uploader.checksums["assets/theme.css"])
+      end
+
       def test_theme_files_are_pending_during_upload
         file = @theme.asset_files.first
 
@@ -187,12 +205,12 @@ module ShopifyCli
       def test_upload_theme_deletes_missing_files
         @uploader.start_threads
 
-        expected_files = (@theme.liquid_files + @theme.json_files)
+        expected_files = @theme.theme_files
           .reject { |file| @theme.ignore?(file) }
 
         response_assets = expected_files.map do |file|
           {
-            "key" => file.relative_path,
+            "key" => file.relative_path.to_s,
             "checksum" => file.checksum,
           }
         end
@@ -203,6 +221,7 @@ module ShopifyCli
           "checksum" => "deadbeef",
         }
 
+        # Checksum request
         ShopifyCli::AdminAPI.expects(:rest_request).with(
           @ctx,
           shop: @theme.shop,
@@ -214,26 +233,21 @@ module ShopifyCli
           {},
         ])
 
+        # Other assets have matching checksum, so should not be uploaded
         ShopifyCli::AdminAPI.expects(:rest_request)
           .with(@ctx, has_entries(method: "PUT"))
-          .at_least(expected_files.size)
-          .returns([
-            200,
-            { "assets" => response_assets },
-            {},
-          ])
+          .never
 
         ShopifyCli::AdminAPI.expects(:rest_request)
-          .with(@ctx, has_entries(body: JSON.generate(
-            asset: {
-              key: "assets/removed.css",
-            },
-          )))
-          .returns([
-            200,
-            { "assets" => response_assets },
-            {},
-          ])
+          .with(@ctx, has_entries(
+            method: "DELETE",
+            body: JSON.generate(
+              asset: {
+                key: "assets/removed.css",
+              },
+            )
+          ))
+          .returns([200, {}, {}])
 
         @uploader.upload_theme!
         # Wait for low priority uploads
