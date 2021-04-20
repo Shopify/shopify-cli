@@ -28,7 +28,7 @@ module ShopifyCli
           watcher = Watcher.new(ctx, theme, @uploader)
 
           # Setup the middleware stack. Mimics Rack::Builder / config.ru, but in reverse order
-          @app = Proxy.new(ctx, theme)
+          @app = Proxy.new(ctx, theme, @uploader)
           @app = LocalAssets.new(ctx, @app, theme)
           @app = HotReload.new(ctx, @app, theme, watcher)
           stopped = false
