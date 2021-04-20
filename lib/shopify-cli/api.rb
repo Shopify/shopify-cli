@@ -59,6 +59,8 @@ module ShopifyCli
           HttpRequest.put(uri, body, headers)
         elsif method == "GET"
           HttpRequest.get(uri, body, headers)
+        elsif method == "DELETE"
+          HttpRequest.delete(uri, body, headers)
         end
         case response.code.to_i
         when 200..399
