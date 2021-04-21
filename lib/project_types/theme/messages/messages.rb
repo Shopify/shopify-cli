@@ -107,7 +107,7 @@ module Theme
                 {{command:-d, --development}}     Push to your own remote development theme, creating it if needed.
                 {{command:    --nodelete}}        Runs the push command without deleting remote files from Shopify.
 
-              Run without options to select theme form a list.
+              Run without options to select theme from a list.
           HELP
           info: {
             pushing: "Pushing theme files to %s (#%s) on %s",
