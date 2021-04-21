@@ -1,6 +1,6 @@
 # frozen_string_literal: true
 require_relative "config"
-require_relative "theme"
+require_relative "development_theme"
 require_relative "uploader"
 
 require_relative "dev_server/hot_reload"
@@ -23,7 +23,7 @@ module ShopifyCli
         def start(ctx, root, port: 9292, env: "development", silent: false)
           @ctx = ctx
           config = Config.from_path(root, environment: env)
-          theme = Theme.new(ctx, config)
+          theme = DevelopmentTheme.new(ctx, config)
           @uploader = Uploader.new(ctx, theme)
           watcher = Watcher.new(ctx, theme, @uploader)
 

@@ -14,7 +14,7 @@ module ShopifyCli
           super
           config = Config.from_path(ShopifyCli::ROOT + "/test/fixtures/theme")
           @ctx = TestHelpers::FakeContext.new(root: config.root)
-          @theme = Theme.new(@ctx, config)
+          @theme = DevelopmentTheme.new(@ctx, config)
           @uploader = stub(pending_updates: [])
           @proxy = Proxy.new(@ctx, @theme, @uploader)
 
