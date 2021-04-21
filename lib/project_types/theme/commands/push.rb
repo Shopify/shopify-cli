@@ -61,6 +61,8 @@ module Theme
               @ctx.done(@ctx.message("theme.push.done", theme.preview_url, theme.editor_url))
             end
           end
+
+          @ctx.done(@ctx.message("theme.push.done", theme.preview_url, theme.editor_url))
         rescue ShopifyCli::API::APIRequestNotFoundError
           @ctx.abort(@ctx.message("theme.push.theme_not_found", theme.id))
         ensure
