@@ -43,7 +43,7 @@ module ShopifyCli
         end
 
         globs.each do |glob|
-          return true if File.fnmatch?(glob, path)
+          return true if ::File.fnmatch?(glob, path)
         end
 
         false
@@ -57,7 +57,7 @@ module ShopifyCli
 
         files.each do |file|
           begin
-            text = File.read(Pathname.new(@root).join(file))
+            text = Pathname.new(@root).join(file).read
           rescue Errno::ENOENT
             raise IgnoreFileDoesNotExist, "#{file} does not exist"
           end
