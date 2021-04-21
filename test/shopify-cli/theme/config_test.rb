@@ -20,6 +20,11 @@ module ShopifyCli
 
         assert_equal(["config/*_secret.json"], config.ignore_files)
       end
+
+      def test_unexisting_config_file
+        config = Config.from_path(ShopifyCli::ROOT + "/test/fixtures/doesnotexist")
+        refute_nil(config.root)
+      end
     end
   end
 end

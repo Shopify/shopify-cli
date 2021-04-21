@@ -12,12 +12,19 @@ module ShopifyCli
       def initialize(root, attributes = {})
         @root = root
         @attributes = attributes
-        # TODO: valid config
       end
 
       def self.from_path(root, environment: "development")
         root = Pathname.new(root)
-        new(root, YAML.load_file(root.join(NAME))[environment])
+        file = root.join(NAME)
+
+        attributes = if file.exist?
+          YAML.load_file(file)[environment]
+        else
+          {}
+        end
+
+        new(root, attributes)
       end
 
       def to_h
