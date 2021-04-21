@@ -148,6 +148,17 @@ module ShopifyCli
         end
       end
 
+      def upload_theme_with_progress_bar!(**args)
+        delay_errors!
+        CLI::UI::Progress.progress do |bar|
+          upload_theme!(**args) do |left, total|
+            bar.tick(set_percent: 1 - left.to_f / total)
+          end
+          bar.tick(set_percent: 1)
+        end
+        report_errors!
+      end
+
       private
 
       def enqueue(method, file)
