@@ -35,6 +35,8 @@ module Theme
           CLI::UI::Frame.open(@ctx.message("theme.push.info.pushing", theme.name, theme.id, theme.shop)) do
             uploader.upload_theme_with_progress_bar!(delete: !options.flags[:nodelete])
           end
+
+          @ctx.done(@ctx.message("theme.push.done", theme.preview_url, theme.editor_url))
         rescue ShopifyCli::API::APIRequestNotFoundError
           @ctx.abort(@ctx.message("theme.push.theme_not_found", theme.id))
         ensure
