@@ -32,7 +32,8 @@ module ShopifyCli
 
     def test_mutation_makes_request_to_shopify
       headers = {
-        "User-Agent" => "Shopify CLI #{ShopifyCli::VERSION} abcde | Mac",
+        "Sec-CH-UA" => "Shopify CLI; v=#{ShopifyCli::VERSION} sha=#{ShopifyCli.sha}",
+        "Sec-CH-UA-PLATFORM" => @context.os,
         "Auth" => "faketoken",
       }
       uri = URI.parse("https://my-test-shop.myshopify.com/admin/api/2019-04/graphql.json")
