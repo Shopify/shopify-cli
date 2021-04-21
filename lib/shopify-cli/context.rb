@@ -311,6 +311,15 @@ module ShopifyCli
       Kernel.puts(CLI::UI.fmt(*args))
     end
 
+    # a wrapper around Kernel.warn to allow for easy formatting
+    #
+    # #### Parameters
+    # * `text` - a string message to output
+    #
+    def warn(*args)
+      Kernel.warn(CLI::UI.fmt(*args))
+    end
+
     # outputs a message, prefixed by a checkmark indicating that something completed
     #
     # #### Parameters
