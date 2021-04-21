@@ -40,7 +40,7 @@ module ShopifyCli
           response = serve("<WRONG>", path: "/assets/theme.css")
           assert_equal("text/css", response["Content-Type"])
           assert_equal(
-            File.read("#{ShopifyCli::ROOT}/test/fixtures/theme/assets/theme.css"),
+            ::File.read("#{ShopifyCli::ROOT}/test/fixtures/theme/assets/theme.css"),
             response.body
           )
         end
@@ -49,7 +49,7 @@ module ShopifyCli
           response = serve("<WRONG>", path: "/assets/theme.js")
           assert_equal("application/javascript", response["Content-Type"])
           assert_equal(
-            File.read("#{ShopifyCli::ROOT}/test/fixtures/theme/assets/theme.css"),
+            ::File.read("#{ShopifyCli::ROOT}/test/fixtures/theme/assets/theme.css"),
             response.body
           )
         end

@@ -47,7 +47,7 @@ module ShopifyCli
         end
 
         def inject_hot_reload_javascript(body)
-          hot_reload_js = File.read("#{__dir__}/hot-reload.js")
+          hot_reload_js = ::File.read("#{__dir__}/hot-reload.js")
           hot_reload_script = "<script>\n#{hot_reload_js}</script>"
           body = body.join.gsub("</body>", "#{hot_reload_script}\n</body>")
 
