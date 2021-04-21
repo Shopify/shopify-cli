@@ -74,7 +74,11 @@ module ShopifyCli
       end
 
       def preview_url
-        "https://#{shop}/?preview_theme_id=#{id}"
+        if role == "live"
+          "https://#{shop}/"
+        else
+          "https://#{shop}/?preview_theme_id=#{id}"
+        end
       end
 
       def self.all(ctx, config)

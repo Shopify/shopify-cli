@@ -13,11 +13,19 @@ module Theme
         @command = Theme::Command::Push.new(@ctx)
 
         @config = mock("Config")
-        @theme = mock("Theme", id: 1234, name: "Test theme", shop: "test.myshopify.io")
+        @theme = mock(
+          "Theme",
+          id: 1234,
+          name: "Test theme",
+          shop: "test.myshopify.io",
+          preview_url: "https://test.myshopify.io/",
+          editor_url: "https://test.myshopify.io/",
+        )
         @uploader = mock("Uploader")
 
         @uploader.expects(:start_threads)
         @uploader.expects(:shutdown)
+        @ctx.expects(:done)
       end
 
       def test_push_to_theme_id
