@@ -20,17 +20,17 @@ module ShopifyCli
           end
 
           if !ctx.testing? && is_shell_shim
-            ctx.puts(ctx.message("core.warning.shell_shim"))
+            ctx.warn(ctx.message("core.warning.shell_shim"))
             return
           end
 
           if ctx.development?
-            ctx.puts(
+            ctx.warn(
               ctx.message("core.warning.development_version", File.join(ShopifyCli::ROOT, "bin", ShopifyCli::TOOL_NAME))
             )
           elsif !ctx.testing?
             new_version = ctx.new_version
-            ctx.puts(ctx.message("core.warning.new_version", ShopifyCli::VERSION, new_version)) unless new_version.nil?
+            ctx.warn(ctx.message("core.warning.new_version", ShopifyCli::VERSION, new_version)) unless new_version.nil?
           end
 
           ProjectType.load_all
