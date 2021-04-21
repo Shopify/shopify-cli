@@ -4,8 +4,6 @@ require_relative "file"
 require "pathname"
 require "time"
 
-require "time"
-
 module ShopifyCli
   module Theme
     class InvalidThemeRole < StandardError; end
@@ -200,28 +198,6 @@ module ShopifyCli
         @role = body.dig("theme", "role")
 
         self
-      end
-
-      def self.all(ctx, config)
-        _status, body = AdminAPI.rest_request(
-          ctx,
-          shop: AdminAPI.get_shop(ctx),
-          path: "themes.json",
-          api_version: "unstable",
-        )
-
-        body["themes"]
-          .sort_by { |attributes| DateTime.parse(attributes["updated_at"]) }
-          .reverse
-          .map do |attributes|
-            new(
-              ctx, config,
-              id: attributes["id"],
-              name: attributes["name"],
-              # Main theme is called Live in UI
-              role: attributes["role"] == "main" ? "live" : attributes["role"],
-            )
-          end
       end
     end
   end
