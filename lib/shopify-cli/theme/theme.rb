@@ -86,7 +86,7 @@ module ShopifyCli
         )
 
         body["themes"]
-          .sort_by { |attributes| DateTime.parse(attributes["updated_at"]) }
+          .sort_by { |attributes| Time.parse(attributes["updated_at"]) }
           .reverse
           .map do |attributes|
             new(
