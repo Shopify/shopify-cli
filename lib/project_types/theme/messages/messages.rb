@@ -115,6 +115,15 @@ module Theme
           push: "Pushing theme files to Shopify",
           select: "Select theme to push to",
           theme_not_found: "Theme #%s does not exist",
+          done: <<~DONE,
+            {{green:Your theme is ready!}}
+
+              {{info:View your theme:}}
+              {{underline:%s}}
+
+              {{info:Customize this theme in the Online Store Editor:}}
+              {{underline:%s}}
+          DONE
         },
         serve: {
           help: <<~HELP,
