@@ -46,14 +46,7 @@ module ShopifyCli
             if silent
               @uploader.upload_theme!(delay_low_priority_files: true)
             else
-              @uploader.delay_errors!
-              CLI::UI::Progress.progress do |bar|
-                @uploader.upload_theme!(delay_low_priority_files: true) do |left, total|
-                  bar.tick(set_percent: 1 - left.to_f / total)
-                end
-                bar.tick(set_percent: 1)
-              end
-              @uploader.report_errors!
+              @uploader.upload_theme_with_progress_bar!(delay_low_priority_files: true)
             end
 
             return if stopped

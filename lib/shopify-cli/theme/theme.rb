@@ -2,15 +2,19 @@
 require_relative "file"
 require_relative "ignore_filter"
 
+require "time"
+
 module ShopifyCli
   module Theme
     class Theme
-      attr_reader :config, :id
+      attr_reader :config, :id, :name, :role
 
-      def initialize(ctx, config, id: nil)
+      def initialize(ctx, config, id: nil, name: nil, role: nil)
         @ctx = ctx
         @config = config
         @id = id
+        @name = name
+        @role = role
         @ignore_filter = IgnoreFilter.new(root, patterns: config.ignore_files, files: config.ignores)
       end
 
@@ -71,6 +75,28 @@ module ShopifyCli
 
       def preview_url
         "https://#{shop}/?preview_theme_id=#{id}"
+      end
+
+      def self.all(ctx, config)
+        _status, body = AdminAPI.rest_request(
+          ctx,
+          shop: AdminAPI.get_shop(ctx),
+          path: "themes.json",
+          api_version: "unstable",
+        )
+
+        body["themes"]
+          .sort_by { |attributes| DateTime.parse(attributes["updated_at"]) }
+          .reverse
+          .map do |attributes|
+            new(
+              ctx, config,
+              id: attributes["id"],
+              name: attributes["name"],
+              # Main theme is called Live in UI
+              role: attributes["role"] == "main" ? "live" : attributes["role"],
+            )
+          end
       end
     end
   end
