@@ -28,7 +28,7 @@ module ShopifyCli
           watcher = Watcher.new(ctx, theme, @uploader)
 
           # Setup the middleware stack. Mimics Rack::Builder / config.ru, but in reverse order
-          @app = Proxy.new(ctx, theme)
+          @app = Proxy.new(ctx, theme, @uploader)
           @app = LocalAssets.new(ctx, @app, theme)
           @app = HotReload.new(ctx, @app, theme, watcher)
           stopped = false
@@ -44,11 +44,11 @@ module ShopifyCli
             ctx.print_task("Syncing theme ##{theme.id} on #{theme.shop}")
             @uploader.start_threads
             if silent
-              @uploader.upload_theme!
+              @uploader.upload_theme!(delay_low_priority_files: true)
             else
               @uploader.delay_errors!
               CLI::UI::Progress.progress do |bar|
-                @uploader.upload_theme! do |left, total|
+                @uploader.upload_theme!(delay_low_priority_files: true) do |left, total|
                   bar.tick(set_percent: 1 - left.to_f / total)
                 end
                 bar.tick(set_percent: 1)

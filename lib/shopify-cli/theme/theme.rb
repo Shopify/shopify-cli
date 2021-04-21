@@ -25,6 +25,10 @@ module ShopifyCli
           path.read
         end
 
+        def exist?
+          path.exist?
+        end
+
         def mime_type
           @mime_type ||= MimeType.by_filename(relative_path)
         end
@@ -131,18 +135,6 @@ module ShopifyCli
 
       def shop
         AdminAPI.get_shop(@ctx)
-      end
-
-      def file_has_changed?(file)
-        file.checksum != remote_checksums[file.relative_path.to_s]
-      end
-
-      def update_remote_checksums!(api_response)
-        assets = api_response.values.flatten
-
-        assets.each do |asset|
-          @remote_checksums[asset["key"]] = asset["checksum"]
-        end
       end
 
       def ignore?(file)

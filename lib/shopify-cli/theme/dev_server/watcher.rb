@@ -29,14 +29,28 @@ module ShopifyCli
           @listener.stop
         end
 
-        def upload_files_when_changed(modified, added, _removed)
-          modified_theme_files = (modified + added)
+        def upload_files_when_changed(modified, added, removed)
+          modified_theme_files = filter_theme_files(modified + added)
+          if modified_theme_files.any?
+            @uploader.enqueue_updates(modified_theme_files)
+          end
+
+          removed_theme_files = filter_remote_files(removed)
+          if removed_theme_files.any?
+            @uploader.enqueue_deletes(removed_theme_files)
+          end
+        end
+
+        def filter_theme_files(files)
+          files
             .select { |file| @theme.theme_file?(file) }
             .reject { |file| @theme.ignore?(file) }
-          if modified_theme_files.any?
-            @uploader.enqueue_uploads(modified_theme_files)
-          end
-          # TODO: how to deal w/ removed files?
+        end
+
+        def filter_remote_files(files)
+          files
+            .select { |file| @uploader.remote_file?(file) }
+            .reject { |file| @theme.ignore?(file) }
         end
       end
     end
