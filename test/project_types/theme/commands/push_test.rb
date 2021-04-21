@@ -6,81 +6,88 @@ module Theme
     class PushTest < MiniTest::Test
       include TestHelpers::FakeUI
 
-      def test_can_push_entire_theme
-        context = ShopifyCli::Context.new
-        Themekit.expects(:push).with(context, files: [], flags: [], remove: nil, env: nil).returns(true)
-        context.expects(:done).with(context.message("theme.push.info.push", context.root))
+      def setup
+        super
 
-        Theme::Command::Push.new(context).call([], "push")
+        @ctx = ShopifyCli::Context.new
+        @command = Theme::Command::Push.new(@ctx)
+
+        @config = mock("Config")
+        @theme = mock("Theme", id: 1234, name: "Test theme", shop: "test.myshopify.io")
+        @uploader = mock("Uploader")
+
+        @uploader.expects(:start_threads)
+        @uploader.expects(:shutdown)
       end
 
-      def test_can_push_individual_files
-        context = ShopifyCli::Context.new
-        Themekit.expects(:push)
-          .with(context, files: ["file.liquid", "another_file.liquid"], flags: [], remove: nil, env: nil)
-          .returns(true)
-        context.expects(:done).with(context.message("theme.push.info.push", context.root))
+      def test_push_to_theme_id
+        ShopifyCli::Theme::Config.expects(:from_path)
+          .returns(@config)
 
-        Theme::Command::Push.new(context).call(["file.liquid", "another_file.liquid"], "push")
+        ShopifyCli::Theme::Theme.expects(:new)
+          .with(@ctx, @config, id: 1234)
+          .returns(@theme)
+
+        ShopifyCli::Theme::Uploader.expects(:new)
+          .with(@ctx, @theme)
+          .returns(@uploader)
+
+        @uploader.expects(:upload_theme_with_progress_bar!).with(delete: true)
+
+        @command.options.flags[:theme_id] = 1234
+        @command.call([], "push")
       end
 
-      def test_can_remove_files
-        context = ShopifyCli::Context.new
-        CLI::UI::Prompt.expects(:confirm).returns(true)
-        Themekit.expects(:push)
-          .with(context, files: ["file.liquid", "another_file.liquid"], flags: [], remove: true, env: nil)
-          .returns(true)
-        context.expects(:done).with(context.message("theme.push.info.remove", context.root))
+      def test_push_to_development_theme
+        ShopifyCli::Theme::Config.expects(:from_path)
+          .returns(@config)
 
-        command = Theme::Command::Push.new(context)
-        command.options.flags["remove"] = true
-        command.call(["file.liquid", "another_file.liquid"], "push")
+        ShopifyCli::Theme::DevelopmentTheme.expects(:new)
+          .with(@ctx, @config)
+          .returns(@theme)
+
+        ShopifyCli::Theme::Uploader.expects(:new)
+          .with(@ctx, @theme)
+          .returns(@uploader)
+
+        @uploader.expects(:upload_theme_with_progress_bar!).with(delete: true)
+
+        @command.options.flags[:development] = true
+        @command.call([], "push")
       end
 
-      def test_can_abort_remove
-        context = ShopifyCli::Context.new
-        CLI::UI::Prompt.expects(:confirm).returns(false)
-        Themekit.expects(:push)
-          .with(context, files: ["file.liquid", "another_file.liquid"], flags: [], remove: true, env: nil)
-          .never
+      def test_push_pass_nodelete_to_uploader
+        ShopifyCli::Theme::Config.expects(:from_path)
+          .returns(@config)
 
-        command = Theme::Command::Push.new(context)
-        command.options.flags["remove"] = true
-        assert_raises CLI::Kit::Abort do
-          command.call(["file.liquid", "another_file.liquid"], "push")
-        end
+        ShopifyCli::Theme::Theme.expects(:new)
+          .with(@ctx, @config, id: 1234)
+          .returns(@theme)
+
+        ShopifyCli::Theme::Uploader.expects(:new)
+          .with(@ctx, @theme)
+          .returns(@uploader)
+
+        @uploader.expects(:upload_theme_with_progress_bar!).with(delete: false)
+
+        @command.options.flags[:theme_id] = 1234
+        @command.options.flags[:nodelete] = true
+        @command.call([], "push")
       end
 
-      def test_can_add_flags
-        context = ShopifyCli::Context.new
-        Themekit.expects(:push)
-          .with(context, files: ["file.liquid", "another_file.liquid"], flags: ["--nodelete"], remove: nil, env: nil)
-          .returns(true)
-        context.expects(:done).with(context.message("theme.push.info.push", context.root))
+      def test_push_asks_to_select
+        ShopifyCli::Theme::Config.expects(:from_path)
+          .returns(@config)
 
-        command = Theme::Command::Push.new(context)
-        command.options.flags["nodelete"] = true
-        command.call(["file.liquid", "another_file.liquid"], "push")
-      end
+        CLI::UI::Prompt.expects(:ask).returns(@theme)
 
-      def test_can_specify_env
-        context = ShopifyCli::Context.new
-        Themekit.expects(:push).with(context, files: [], flags: [], remove: nil, env: "test")
-          .returns(true)
-        context.expects(:done).with(context.message("theme.push.info.push", context.root))
+        @uploader.expects(:upload_theme_with_progress_bar!).with(delete: true)
 
-        command = Theme::Command::Push.new(context)
-        command.options.flags[:env] = "test"
-        command.call([], "push")
-      end
+        ShopifyCli::Theme::Uploader.expects(:new)
+          .with(@ctx, @theme)
+          .returns(@uploader)
 
-      def test_aborts_if_push_fails
-        context = ShopifyCli::Context.new
-        Themekit.expects(:push).with(context, files: [], flags: [], remove: nil, env: nil).returns(false)
-
-        assert_raises CLI::Kit::Abort do
-          Theme::Command::Push.new(context).call([], "push")
-        end
+        @command.call([], "push")
       end
     end
   end
