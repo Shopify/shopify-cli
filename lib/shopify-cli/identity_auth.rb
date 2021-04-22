@@ -93,6 +93,12 @@ module ShopifyCli
       ShopifyCli::DB.del(*EXCHANGE_TOKENS)
     end
 
+    def self.authenticated?(ctx)
+      ctx.abort(
+        ctx.message("core.oauth.login_prompt", ShopifyCli::TOOL_NAME)
+      ) unless EXCHANGE_TOKENS.all? { |key| ShopifyCli::DB.exists?(key) }
+    end
+
     private
 
     def initiate_authentication
