@@ -12,6 +12,7 @@ module Theme
         parser.on("-d", "--development") { flags[:development] = true }
         parser.on("-j", "--json") { flags[:json] = true }
         parser.on("-a", "--allow-live") { flags[:allow_live] = true }
+        parser.on("-p", "--publish") { flags[:publish] = true }
 
         # Only used for the config.yml, can be removed once usage is gone
         parser.on("--env=ENV") { |env| flags[:env] = env }
@@ -53,7 +54,12 @@ module Theme
               uploader.upload_theme_with_progress_bar!(delete: delete)
             end
 
-            @ctx.done(@ctx.message("theme.push.done", theme.preview_url, theme.editor_url))
+            if options.flags[:publish]
+              theme.publish
+              @ctx.done(@ctx.message("theme.publish.done", theme.preview_url))
+            else
+              @ctx.done(@ctx.message("theme.push.done", theme.preview_url, theme.editor_url))
+            end
           end
         rescue ShopifyCli::API::APIRequestNotFoundError
           @ctx.abort(@ctx.message("theme.push.theme_not_found", theme.id))

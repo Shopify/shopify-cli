@@ -112,6 +112,21 @@ module ShopifyCli
         )
       end
 
+      def publish
+        return if live?
+        AdminAPI.rest_request(
+          @ctx,
+          shop: shop,
+          method: "PUT",
+          path: "themes/#{id}.json",
+          api_version: "unstable",
+          body: JSON.generate(theme: {
+            role: "main",
+          })
+        )
+        @role = "live"
+      end
+
       def to_h
         {
           id: id,
