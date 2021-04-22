@@ -34,6 +34,16 @@ module ShopifyCli
         false
       end
 
+      def delete
+        super if exists?
+        ShopifyCli::DB.del(:development_theme_id) if ShopifyCli::DB.exists?(:development_theme_id)
+        ShopifyCli::DB.del(:development_theme_name) if ShopifyCli::DB.exists?(:development_theme_name)
+      end
+
+      def self.delete(ctx)
+        new(ctx).delete
+      end
+
       private
 
       def create
