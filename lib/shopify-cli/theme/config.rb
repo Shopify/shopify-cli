@@ -9,7 +9,7 @@ module ShopifyCli
 
       attr_reader :root
 
-      def initialize(root, attributes = {})
+      def initialize(root = ".", attributes = {})
         @root = root
         @attributes = attributes
       end
