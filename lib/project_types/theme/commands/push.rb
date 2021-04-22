@@ -1,5 +1,4 @@
 # frozen_string_literal: true
-require "shopify-cli/theme/config"
 require "shopify-cli/theme/theme"
 require "shopify-cli/theme/development_theme"
 require "shopify-cli/theme/uploader"
@@ -30,7 +29,12 @@ module Theme
           theme.ensure_exists!
           theme
         else
-          ask_select_theme(config)
+          Forms::Select.ask(
+            @ctx,
+            [],
+            title: @ctx.message("theme.push.select"),
+            config: config,
+          ).theme
         end
 
         uploader = ShopifyCli::Theme::Uploader.new(@ctx, theme)
@@ -55,16 +59,6 @@ module Theme
 
       def self.help
         ShopifyCli::Context.message("theme.push.help", ShopifyCli::TOOL_NAME, ShopifyCli::TOOL_NAME)
-      end
-
-      private
-
-      def ask_select_theme(config)
-        CLI::UI::Prompt.ask(@ctx.message("theme.push.select")) do |handler|
-          ShopifyCli::Theme::Theme.all(@ctx, config).each do |theme|
-            handler.option("#{theme.name} {{green:[#{theme.role}]}}") { theme }
-          end
-        end
       end
     end
   end
