@@ -8,7 +8,7 @@ module Theme
   class Command < ShopifyCli::ProjectCommands
     subcommand :Connect, "connect", Project.project_filepath("commands/connect")
     subcommand :Create, "create", Project.project_filepath("commands/create")
-    subcommand :Deploy, "deploy", Project.project_filepath("commands/deploy")
+    subcommand :Publish, "publish", Project.project_filepath("commands/publish")
     subcommand :Generate, "generate", Project.project_filepath("commands/generate")
     subcommand :Push, "push", Project.project_filepath("commands/push")
     subcommand :Serve, "serve", Project.project_filepath("commands/serve")
