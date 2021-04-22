@@ -8,7 +8,7 @@ require "time"
 module ShopifyCli
   module Theme
     class Theme
-      attr_reader :config, :id, :name, :role
+      attr_reader :config, :id
 
       def initialize(ctx, config = nil, id: nil, name: nil, role: nil)
         @ctx = ctx
@@ -74,8 +74,28 @@ module ShopifyCli
         "https://#{shop}/admin/themes/#{id}/editor"
       end
 
+      def name
+        return @name if @name
+        load_info_from_api.name
+      end
+
+      def role
+        if @role == "main"
+          # Main theme is called Live in UI
+          "live"
+        elsif @role
+          @role
+        else
+          load_info_from_api.role
+        end
+      end
+
+      def live?
+        role == "live"
+      end
+
       def preview_url
-        if role == "live"
+        if live?
           "https://#{shop}/"
         else
           "https://#{shop}/?preview_theme_id=#{id}"
@@ -119,10 +139,25 @@ module ShopifyCli
               ctx, config,
               id: attributes["id"],
               name: attributes["name"],
-              # Main theme is called Live in UI
-              role: attributes["role"] == "main" ? "live" : attributes["role"],
+              role: attributes["role"],
             )
           end
+      end
+
+      private
+
+      def load_info_from_api
+        _status, body = AdminAPI.rest_request(
+          @ctx,
+          shop: shop,
+          path: "themes/#{id}.json",
+          api_version: "unstable",
+        )
+
+        @name = body.dig("theme", "name")
+        @role = body.dig("theme", "role")
+
+        self
       end
     end
   end
