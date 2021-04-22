@@ -8,8 +8,6 @@ module ShopifyCli
         ShopifyCli::Theme::DevelopmentTheme.delete(@ctx)
         ShopifyCli::IdentityAuth.delete_tokens_and_keys
         ShopifyCli::DB.del(:shop) if ShopifyCli::DB.exists?(:shop)
-        ShopifyCli::DB.del(:development_theme_id) if ShopifyCli::DB.exists?(:development_theme_id)
-        ShopifyCli::DB.del(:development_theme_name) if ShopifyCli::DB.exists?(:development_theme_name)
         @ctx.puts(@ctx.message("core.logout.success"))
       end
 
