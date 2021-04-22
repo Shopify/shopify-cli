@@ -27,6 +27,16 @@ module ShopifyCli
         run_cmd("login --shop=testshop.myshopify.io")
       end
 
+      def test_call_login_with_shop_and_password_flag
+        CLI::UI::Prompt.expects(:ask).never
+
+        ShopifyCli::DB.expects(:set).with(shop: "testshop.myshopify.io")
+        ShopifyCli::DB.expects(:set).with(shopify_exchange_token: "muffin")
+        IdentityAuth.expects(:new).never
+
+        run_cmd("login --shop=testshop.myshopify.io --password=muffin")
+      end
+
       def test_login_with_bad_storenames
         [
           "testshop",
