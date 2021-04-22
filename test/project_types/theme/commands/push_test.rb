@@ -13,7 +13,7 @@ module Theme
         @command = Theme::Command::Push.new(@ctx)
 
         @config = mock("Config")
-        @theme = mock(
+        @theme = stub(
           "Theme",
           id: 1234,
           name: "Test theme",
@@ -25,7 +25,6 @@ module Theme
 
         @uploader.expects(:start_threads)
         @uploader.expects(:shutdown)
-        @ctx.expects(:done)
       end
 
       def test_push_to_theme_id
@@ -41,8 +40,33 @@ module Theme
           .returns(@uploader)
 
         @uploader.expects(:upload_theme_with_progress_bar!).with(delete: true)
+        @ctx.expects(:done)
 
         @command.options.flags[:theme_id] = 1234
+        @command.call([], "push")
+      end
+
+      def test_push_json
+        ShopifyCli::Theme::Config.expects(:from_path)
+          .returns(@config)
+
+        ShopifyCli::Theme::Theme.expects(:new)
+          .with(@ctx, @config, id: 1234)
+          .returns(@theme)
+
+        @theme.expects(:to_h).returns({})
+
+        ShopifyCli::Theme::Uploader.expects(:new)
+          .with(@ctx, @theme)
+          .returns(@uploader)
+
+        @uploader.expects(:upload_theme!).with(delete: true)
+        @command.expects(:puts).with("{\"theme\":{}}")
+
+        @ctx.expects(:puts).never
+
+        @command.options.flags[:theme_id] = 1234
+        @command.options.flags[:json] = 1234
         @command.call([], "push")
       end
 
@@ -62,6 +86,8 @@ module Theme
 
         @uploader.expects(:upload_theme_with_progress_bar!).with(delete: true)
 
+        @ctx.expects(:done)
+
         @command.options.flags[:development] = true
         @command.call([], "push")
       end
@@ -80,6 +106,8 @@ module Theme
 
         @uploader.expects(:upload_theme_with_progress_bar!).with(delete: false)
 
+        @ctx.expects(:done)
+
         @command.options.flags[:theme_id] = 1234
         @command.options.flags[:nodelete] = true
         @command.call([], "push")
@@ -90,6 +118,7 @@ module Theme
           .returns(@config)
 
         CLI::UI::Prompt.expects(:ask).returns(@theme)
+        @ctx.expects(:done)
 
         @uploader.expects(:upload_theme_with_progress_bar!).with(delete: true)
 
