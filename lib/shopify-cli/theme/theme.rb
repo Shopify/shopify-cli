@@ -1,5 +1,6 @@
 # frozen_string_literal: true
 require_relative "file"
+require_relative "config"
 require_relative "ignore_filter"
 
 require "time"
@@ -9,13 +10,13 @@ module ShopifyCli
     class Theme
       attr_reader :config, :id, :name, :role
 
-      def initialize(ctx, config, id: nil, name: nil, role: nil)
+      def initialize(ctx, config = nil, id: nil, name: nil, role: nil)
         @ctx = ctx
-        @config = config
+        @config = config || Config.new
         @id = id
         @name = name
         @role = role
-        @ignore_filter = IgnoreFilter.new(root, patterns: config.ignore_files, files: config.ignores)
+        @ignore_filter = IgnoreFilter.new(root, patterns: @config.ignore_files, files: @config.ignores)
       end
 
       def root
@@ -79,6 +80,16 @@ module ShopifyCli
         else
           "https://#{shop}/?preview_theme_id=#{id}"
         end
+      end
+
+      def delete
+        AdminAPI.rest_request(
+          @ctx,
+          shop: shop,
+          method: "DELETE",
+          path: "themes/#{id}.json",
+          api_version: "unstable",
+        )
       end
 
       def to_h
