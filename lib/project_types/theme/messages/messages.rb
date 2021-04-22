@@ -35,20 +35,19 @@ module Theme
             dir_created: "Created directories",
           },
         },
-        deploy: {
-          abort: "Theme wasn't deployed",
+        publish: {
           confirmation: "This will change your live theme. Do you wish to proceed?",
           deploying: "Deploying theme",
           error: "Theme couldn't be deployed",
           help: <<~HELP,
-            {{command:%s theme deploy}}: Uploads your local theme files to Shopify, then sets your theme as the live theme.
-              Usage: {{command:%s theme deploy}}
+            {{command:%s theme publish}}: Set a remote theme as the live theme.
+              Usage: {{command:%s theme publish [ THEME_ID ]}}
+
+              Run without arguments to select theme from a list.
           HELP
-          info: {
-            deployed: "Theme was updated and set as the live theme",
-            pushed: "All theme files were updated",
-          },
-          push_fail: "Theme files couldn't be updated",
+          done: "Your theme is now live at %s",
+          not_found: "Theme #%s does not exist",
+          select: "Select theme to push to",
         },
         forms: {
           ask_password: "Password:",
@@ -100,7 +99,7 @@ module Theme
           help: <<~HELP,
             {{command:%s theme push}}: Uploads your local theme files to Shopify, overwriting the remote versions.
 
-              Usage: {{command:%s theme push [ path ]}}
+              Usage: {{command:%s theme push [ ROOT ]}}
 
               Options:
                 {{command:-i, --themeid=THEMEID}} Theme ID. Must be an existing theme on your store.
@@ -108,6 +107,7 @@ module Theme
                 {{command:-n, --nodelete}}        Runs the push command without deleting remote files from Shopify.
                 {{command:-j, --json}}            Output JSON instead of a UI.
                 {{command:-a, --allow-live}}      Allow pushing to a live theme.
+                {{command:-p, --publish}}         Publish the theme after uploading.
 
               Run without options to select theme from a list.
           HELP
