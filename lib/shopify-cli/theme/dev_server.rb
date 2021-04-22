@@ -33,7 +33,7 @@ module ShopifyCli
           @app = HotReload.new(ctx, @app, theme, watcher)
           stopped = false
 
-          theme.ensure_development_theme_exists!
+          theme.ensure_exists!
 
           trap("INT") do
             stopped = true
