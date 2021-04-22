@@ -97,6 +97,53 @@ module Theme
         @command.call([], "push")
       end
 
+      def test_push_to_live_theme
+        ShopifyCli::Theme::Config.expects(:from_path)
+          .returns(@config)
+
+        ShopifyCli::Theme::Theme.expects(:new)
+          .with(@ctx, @config, id: 1234)
+          .returns(@theme)
+
+        @theme.expects(:live?).returns(true)
+
+        CLI::UI::Prompt.expects(:confirm).returns(true)
+
+        ShopifyCli::Theme::Uploader.expects(:new)
+          .with(@ctx, @theme)
+          .returns(@uploader)
+
+        @uploader.expects(:upload_theme_with_progress_bar!).with(delete: true)
+        @ctx.expects(:done)
+
+        @command.options.flags[:theme_id] = 1234
+        @command.call([], "push")
+      end
+
+      def test_allow_live
+        ShopifyCli::Theme::Config.expects(:from_path)
+          .returns(@config)
+
+        ShopifyCli::Theme::Theme.expects(:new)
+          .with(@ctx, @config, id: 1234)
+          .returns(@theme)
+
+        @theme.expects(:live?).returns(true)
+
+        CLI::UI::Prompt.expects(:confirm).never
+
+        ShopifyCli::Theme::Uploader.expects(:new)
+          .with(@ctx, @theme)
+          .returns(@uploader)
+
+        @uploader.expects(:upload_theme_with_progress_bar!).with(delete: true)
+        @ctx.expects(:done)
+
+        @command.options.flags[:theme_id] = 1234
+        @command.options.flags[:allow_live] = true
+        @command.call([], "push")
+      end
+
       def test_push_json
         ShopifyCli::Theme::Theme.expects(:new)
           .with(@ctx, root: ".", id: 1234)
