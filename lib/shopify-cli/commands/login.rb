@@ -15,10 +15,10 @@ module ShopifyCli
       end
 
       def call(*)
-        shop = options.flags[:shop] || CLI::UI::Prompt.ask(@ctx.message("core.login.shop_prompt"), allow_empty: false)
+        shop = options.flags[:shop] || @ctx.getenv("SHOPIFY_SHOP") || CLI::UI::Prompt.ask(@ctx.message("core.login.shop_prompt"), allow_empty: false)
         ShopifyCli::DB.set(shop: validate_shop(shop))
 
-        if (password = options.flags[:password])
+        if (password = options.flags[:password] || @ctx.getenv("SHOPIFY_PASSWORD"))
           ShopifyCli::DB.set(shopify_exchange_token: password)
         else
           IdentityAuth.new(ctx: @ctx).authenticate
