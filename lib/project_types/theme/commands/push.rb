@@ -24,7 +24,9 @@ module Theme
         theme = if (theme_id = options.flags[:theme_id])
           ShopifyCli::Theme::Theme.new(@ctx, config, id: theme_id)
         elsif options.flags[:development]
-          ShopifyCli::Theme::DevelopmentTheme.new(@ctx, config)
+          theme = ShopifyCli::Theme::DevelopmentTheme.new(@ctx, config)
+          theme.ensure_exists!
+          theme
         else
           ask_select_theme(config)
         end
