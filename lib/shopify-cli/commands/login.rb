@@ -15,7 +15,11 @@ module ShopifyCli
       end
 
       def call(*)
-        shop = options.flags[:shop] || @ctx.getenv("SHOPIFY_SHOP") || CLI::UI::Prompt.ask(@ctx.message("core.login.shop_prompt"), allow_empty: false)
+        shop = (
+          options.flags[:shop] ||
+          @ctx.getenv("SHOPIFY_SHOP") ||
+          CLI::UI::Prompt.ask(@ctx.message("core.login.shop_prompt"), allow_empty: false)
+        )
         ShopifyCli::DB.set(shop: validate_shop(shop))
 
         # As password auth will soon be deprecated, we enable only in CI
