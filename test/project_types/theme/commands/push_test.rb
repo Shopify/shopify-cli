@@ -54,6 +54,8 @@ module Theme
           .with(@ctx, @config)
           .returns(@theme)
 
+        @theme.expects(:ensure_exists!)
+
         ShopifyCli::Theme::Uploader.expects(:new)
           .with(@ctx, @theme)
           .returns(@uploader)
