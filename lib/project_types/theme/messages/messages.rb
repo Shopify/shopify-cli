@@ -98,19 +98,32 @@ module Theme
             remove_error: "Theme files couldn't be removed from Shopify",
           },
           help: <<~HELP,
-            {{command:%s theme push}}: Uploads your local theme files to Shopify, overwriting the remote versions. If you specify filenames, separated by a space, only those files will be replaced. Otherwise, the whole theme will be replaced.
-              Usage: {{command:%s theme push}}
+            {{command:%s theme push}}: Uploads your local theme files to Shopify, overwriting the remote versions.
+
+              Usage: {{command:%s theme push [ path ]}}
+
               Options:
-                {{command:--remove}} Deletes both the local and the remote copies of the specified files. At least one filename must be specified.
-                {{command:--allow-live}} Allows Shopify CLI to replace files on the store's live production theme.
-                {{command:--nodelete}} Runs the push command without deleting remote files from Shopify.
+                {{command:-i, --themeid=THEMEID}} Theme ID. Must be an existing theme on your store.
+                {{command:-d, --development}}     Push to your own remote development theme, creating it if needed.
+                {{command:    --nodelete}}        Runs the push command without deleting remote files from Shopify.
+
+              Run without options to select theme from a list.
           HELP
           info: {
-            push: "Theme files were pushed from {{green:%s}} to Shopify",
-            remove: "Theme files were deleted from {{green:%s}} and Shopify",
+            pushing: "Pushing theme files to %s (#%s) on %s",
           },
           push: "Pushing theme files to Shopify",
-          remove: "Deleting theme files",
+          select: "Select theme to push to",
+          theme_not_found: "Theme #%s does not exist",
+          done: <<~DONE,
+            {{green:Your theme is ready!}}
+
+              {{info:View your theme:}}
+              {{underline:%s}}
+
+              {{info:Customize this theme in the Online Store Editor:}}
+              {{underline:%s}}
+          DONE
         },
         serve: {
           help: <<~HELP,

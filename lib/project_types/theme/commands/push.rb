@@ -1,54 +1,61 @@
 # frozen_string_literal: true
+require "shopify-cli/theme/config"
+require "shopify-cli/theme/theme"
+require "shopify-cli/theme/development_theme"
+require "shopify-cli/theme/uploader"
+
 module Theme
   class Command
     class Push < ShopifyCli::SubCommand
-      prerequisite_task :ensure_themekit_installed
-
       options do |parser, flags|
-        parser.on("--remove") { flags["remove"] = true }
-        parser.on("--nodelete") { flags["nodelete"] = true }
-        parser.on("--allow-live") { flags["allow-live"] = true }
+        parser.on("--nodelete") { flags[:nodelete] = true }
+        parser.on("-i", "--themeid=ID") { |theme_id| flags[:theme_id] = theme_id }
+        parser.on("-d", "--development") { flags[:development] = true }
+
+        # Only used for the config.yml, can be removed once usage is gone
         parser.on("--env=ENV") { |env| flags[:env] = env }
       end
 
       def call(args, _name)
-        if options.flags["remove"]
-          remove = true
-          options.flags.delete("remove")
-        end
+        root = args.first || "."
+        environment = options.flags[:env] || "development"
+        config = ShopifyCli::Theme::Config.from_path(root, environment: environment)
 
-        if options.flags[:env]
-          env = options.flags[:env]
-          options.flags.delete(:env)
-        end
-
-        flags = Themekit.add_flags(options.flags)
-
-        if remove
-          CLI::UI::Frame.open(@ctx.message("theme.push.remove")) do
-            unless CLI::UI::Prompt.confirm(@ctx.message("theme.push.remove_confirm"))
-              @ctx.abort(@ctx.message("theme.push.remove_abort"))
-            end
-
-            unless Themekit.push(@ctx, files: args, flags: flags, remove: remove, env: env)
-              @ctx.abort(@ctx.message("theme.push.error.remove_error"))
-            end
-          end
-
-          @ctx.done(@ctx.message("theme.push.info.remove", @ctx.root))
+        theme = if (theme_id = options.flags[:theme_id])
+          ShopifyCli::Theme::Theme.new(@ctx, config, id: theme_id)
+        elsif options.flags[:development]
+          ShopifyCli::Theme::DevelopmentTheme.new(@ctx, config)
         else
-          CLI::UI::Frame.open(@ctx.message("theme.push.push")) do
-            unless Themekit.push(@ctx, files: args, flags: flags, remove: remove, env: env)
-              @ctx.abort(@ctx.message("theme.push.error.push_error"))
-            end
+          ask_select_theme(config)
+        end
+
+        uploader = ShopifyCli::Theme::Uploader.new(@ctx, theme)
+        begin
+          uploader.start_threads
+          CLI::UI::Frame.open(@ctx.message("theme.push.info.pushing", theme.name, theme.id, theme.shop)) do
+            uploader.upload_theme_with_progress_bar!(delete: !options.flags[:nodelete])
           end
 
-          @ctx.done(@ctx.message("theme.push.info.push", @ctx.root))
+          @ctx.done(@ctx.message("theme.push.done", theme.preview_url, theme.editor_url))
+        rescue ShopifyCli::API::APIRequestNotFoundError
+          @ctx.abort(@ctx.message("theme.push.theme_not_found", theme.id))
+        ensure
+          uploader.shutdown
         end
       end
 
       def self.help
         ShopifyCli::Context.message("theme.push.help", ShopifyCli::TOOL_NAME, ShopifyCli::TOOL_NAME)
+      end
+
+      private
+
+      def ask_select_theme(config)
+        CLI::UI::Prompt.ask(@ctx.message("theme.push.select")) do |handler|
+          ShopifyCli::Theme::Theme.all(@ctx, config).each do |theme|
+            handler.option("#{theme.name} {{green:[#{theme.role}]}}") { theme }
+          end
+        end
       end
     end
   end

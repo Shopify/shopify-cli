@@ -116,7 +116,7 @@ module ShopifyCli
         @delayed_errors.clear
       end
 
-      def upload_theme!(delay_low_priority_files: false, &block)
+      def upload_theme!(delay_low_priority_files: false, delete: true, &block)
         fetch_checksums!
 
         removed_files = checksums.keys - @theme.theme_files.map { |file| file.relative_path.to_s }
@@ -141,11 +141,22 @@ module ShopifyCli
         enqueue_updates(@theme.asset_files)
 
         # Delete removed files
-        enqueue_deletes(removed_files)
+        enqueue_deletes(removed_files) if delete
 
         unless delay_low_priority_files
           wait!(&block)
         end
+      end
+
+      def upload_theme_with_progress_bar!(**args)
+        delay_errors!
+        CLI::UI::Progress.progress do |bar|
+          upload_theme!(**args) do |left, total|
+            bar.tick(set_percent: 1 - left.to_f / total)
+          end
+          bar.tick(set_percent: 1)
+        end
+        report_errors!
       end
 
       private

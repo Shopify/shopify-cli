@@ -26,7 +26,9 @@ module ShopifyCli
             </html>
           HTML
 
-          reload_js = File.read(File.expand_path("lib/shopify-cli/theme/dev_server/hot-reload.js", ShopifyCli::ROOT))
+          reload_js = ::File.read(
+            ::File.expand_path("lib/shopify-cli/theme/dev_server/hot-reload.js", ShopifyCli::ROOT)
+          )
           reload_script = "<script>\n#{reload_js}</script>"
           expected_html = <<~HTML
             <html>
