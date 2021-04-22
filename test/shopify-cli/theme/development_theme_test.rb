@@ -41,7 +41,7 @@ module ShopifyCli
           },
         ])
 
-        @theme.ensure_development_theme_exists!
+        @theme.ensure_exists!
       end
 
       def test_creates_development_theme_if_missing_from_api
@@ -80,7 +80,7 @@ module ShopifyCli
           },
         ])
 
-        @theme.ensure_development_theme_exists!
+        @theme.ensure_exists!
       end
 
       def test_name_is_generated_unless_exists_in_db
