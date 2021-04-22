@@ -15,15 +15,13 @@ module ShopifyCli
         ShopifyCli::DB.get(:development_theme_name) || generate_theme_name
       end
 
-      def ensure_development_theme_exists!
-        create_development_theme unless development_theme_exists?
+      def ensure_exists!
+        create unless exists?
 
         @ctx.debug("Using temporary development theme: ##{id} #{name}")
       end
 
-      private
-
-      def development_theme_exists?
+      def exists?
         return false unless id
 
         ShopifyCli::AdminAPI.rest_request(
@@ -36,7 +34,9 @@ module ShopifyCli
         false
       end
 
-      def create_development_theme
+      private
+
+      def create
         _status, body = ShopifyCli::AdminAPI.rest_request(
           @ctx,
           shop: shop,
