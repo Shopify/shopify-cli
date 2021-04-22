@@ -118,6 +118,27 @@ module Theme
         @command.call([], "push")
       end
 
+      def test_push_and_publish
+        ShopifyCli::Theme::Config.expects(:from_path)
+          .returns(@config)
+
+        ShopifyCli::Theme::Theme.expects(:new)
+          .with(@ctx, @config, id: 1234)
+          .returns(@theme)
+
+        ShopifyCli::Theme::Uploader.expects(:new)
+          .with(@ctx, @theme)
+          .returns(@uploader)
+
+        @uploader.expects(:upload_theme_with_progress_bar!).with(delete: true)
+        @ctx.expects(:done)
+        @theme.expects(:publish)
+
+        @command.options.flags[:theme_id] = 1234
+        @command.options.flags[:publish] = true
+        @command.call([], "push")
+      end
+
       def test_push_to_development_theme
         ShopifyCli::Theme::Config.expects(:from_path)
           .returns(@config)
