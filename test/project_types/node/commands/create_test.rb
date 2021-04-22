@@ -23,7 +23,7 @@ module Node
 
       def setup
         super
-        ShopifyCli::DB.stubs(:exists?).with(:shop).returns(true)
+        ShopifyCli::IdentityAuth.stubs(:authenticated?)
       end
 
       def test_prints_help_with_no_name_argument
