@@ -9,12 +9,25 @@ module ShopifyCli
         parser.on("--shop=SHOP") do |shop|
           flags[:shop] = shop
         end
+        parser.on("--password=PASSWORD") do |password|
+          flags[:password] = password
+        end
       end
 
       def call(*)
-        shop = options.flags[:shop] || CLI::UI::Prompt.ask(@ctx.message("core.login.shop_prompt"), allow_empty: false)
+        shop = (
+          options.flags[:shop] ||
+          @ctx.getenv("SHOPIFY_SHOP") ||
+          CLI::UI::Prompt.ask(@ctx.message("core.login.shop_prompt"), allow_empty: false)
+        )
         ShopifyCli::DB.set(shop: validate_shop(shop))
-        IdentityAuth.new(ctx: @ctx).authenticate
+
+        # As password auth will soon be deprecated, we enable only in CI
+        if @ctx.ci? && (password = options.flags[:password] || @ctx.getenv("SHOPIFY_PASSWORD"))
+          ShopifyCli::DB.set(shopify_exchange_token: password)
+        else
+          IdentityAuth.new(ctx: @ctx).authenticate
+        end
       end
 
       def self.help

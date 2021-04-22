@@ -27,6 +27,48 @@ module ShopifyCli
         run_cmd("login --shop=testshop.myshopify.io")
       end
 
+      def test_call_login_with_shop_and_password_flag
+        CLI::UI::Prompt.expects(:ask).never
+
+        ShopifyCli::DB.expects(:set).with(shop: "testshop.myshopify.io")
+        ShopifyCli::DB.expects(:set).with(shopify_exchange_token: "muffin")
+        IdentityAuth.expects(:new).never
+
+        @context.expects(:ci?).returns(true)
+
+        run_cmd("login --shop=testshop.myshopify.io --password=muffin")
+      end
+
+      def test_cant_call_login_with_password_flag_not_on_ci
+        CLI::UI::Prompt.expects(:ask).never
+
+        ShopifyCli::DB.expects(:set).with(shop: "testshop.myshopify.io")
+        ShopifyCli::DB.expects(:set).with(shopify_exchange_token: "muffin").never
+
+        auth = mock
+        auth.expects(:authenticate)
+        IdentityAuth.expects(:new).with(ctx: @context).returns(auth)
+
+        @context.expects(:ci?).returns(false)
+
+        run_cmd("login --shop=testshop.myshopify.io --password=muffin")
+      end
+
+      def test_call_login_with_shop_and_password_env_vars
+        CLI::UI::Prompt.expects(:ask).never
+
+        ShopifyCli::DB.expects(:set).with(shop: "testshop.myshopify.io")
+        ShopifyCli::DB.expects(:set).with(shopify_exchange_token: "muffin")
+        IdentityAuth.expects(:new).never
+
+        @context.expects(:ci?).returns(true)
+
+        @context.expects(:getenv).with("SHOPIFY_SHOP").returns("testshop.myshopify.io")
+        @context.expects(:getenv).with("SHOPIFY_PASSWORD").returns("muffin")
+
+        run_cmd("login")
+      end
+
       def test_login_with_bad_storenames
         [
           "testshop",
