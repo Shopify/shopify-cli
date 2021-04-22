@@ -17,6 +17,8 @@ module Extension
             @ctx.abort(@ctx.message("create.errors.directory_exists", form.directory_name))
           end
 
+          ShopifyCli::IdentityAuth.authenticated?(@ctx)
+
           if form.type.create(form.directory_name, @ctx)
             ExtensionProject.write_cli_file(context: @ctx, type: form.type.identifier)
             ExtensionProject.write_env_file(
