@@ -11,6 +11,7 @@ module Theme
         parser.on("--nodelete") { flags[:nodelete] = true }
         parser.on("-i", "--themeid=ID") { |theme_id| flags[:theme_id] = theme_id }
         parser.on("-d", "--development") { flags[:development] = true }
+        parser.on("-j", "--json") { flags[:json] = true }
 
         # Only used for the config.yml, can be removed once usage is gone
         parser.on("--env=ENV") { |env| flags[:env] = env }
@@ -20,6 +21,7 @@ module Theme
         root = args.first || "."
         environment = options.flags[:env] || "development"
         config = ShopifyCli::Theme::Config.from_path(root, environment: environment)
+        delete = !options.flags[:nodelete]
 
         theme = if (theme_id = options.flags[:theme_id])
           ShopifyCli::Theme::Theme.new(@ctx, config, id: theme_id)
@@ -34,11 +36,16 @@ module Theme
         uploader = ShopifyCli::Theme::Uploader.new(@ctx, theme)
         begin
           uploader.start_threads
-          CLI::UI::Frame.open(@ctx.message("theme.push.info.pushing", theme.name, theme.id, theme.shop)) do
-            uploader.upload_theme_with_progress_bar!(delete: !options.flags[:nodelete])
-          end
+          if options.flags[:json]
+            uploader.upload_theme!(delete: delete)
+            puts(JSON.generate(theme: theme.to_h))
+          else
+            CLI::UI::Frame.open(@ctx.message("theme.push.info.pushing", theme.name, theme.id, theme.shop)) do
+              uploader.upload_theme_with_progress_bar!(delete: delete)
+            end
 
-          @ctx.done(@ctx.message("theme.push.done", theme.preview_url, theme.editor_url))
+            @ctx.done(@ctx.message("theme.push.done", theme.preview_url, theme.editor_url))
+          end
         rescue ShopifyCli::API::APIRequestNotFoundError
           @ctx.abort(@ctx.message("theme.push.theme_not_found", theme.id))
         ensure
