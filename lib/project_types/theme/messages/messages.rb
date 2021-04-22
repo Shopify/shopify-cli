@@ -67,28 +67,6 @@ module Theme
           },
           errors: "%s can't be blank",
         },
-        generate: {
-          env: {
-            ask_password: "Password",
-            ask_password_default: "Password (defaults to {{green:%s}})",
-            ask_store: "Store",
-            ask_store_default: "Store (defaults to {{green:%s}})",
-            ask_theme: "Select theme",
-            help: <<~HELP,
-              Create or update configuration file in the current directory.
-                Usage: {{command:%s theme generate env}}
-                Options:
-                  {{command:--store=MYSHOPIFYDOMAIN}} Store URL. Must be an existing store with private apps enabled.
-                  {{command:--password=PASSWORD}} Private app password. App must have Read and Write Theme access.
-                  {{command:--themeid=THEMEID}} Theme ID. Must be an existing theme on your store.
-            HELP
-            no_themes: "Please create a new theme using %s create theme",
-          },
-          help: <<~HELP,
-            Generate code in your Theme. Currently supports generating new envs.
-              Usage: {{command:%s theme generate [ env ]}}
-          HELP
-        },
         push: {
           remove_abort: "Theme files weren't deleted",
           remove_confirm: "This will delete the local and remote copies of the theme files. Do you wish to proceed?",
@@ -157,28 +135,6 @@ module Theme
           done: "%s theme(s) deleted",
           not_found: "{{x}} Theme #%s does not exist",
           live: "{{x}} Theme #%s is your live theme. You can't delete it.",
-        },
-        tasks: {
-          ensure_themekit_installed: {
-            auto_update: "Would you like to enable auto-updating?",
-            downloading: "Downloading Theme Kit %s",
-            errors: {
-              digest_fail: "Unable to verify download",
-              releases_fail: "Unable to fetch Theme Kit's list of releases",
-              update_fail: "Unable to update Theme Kit",
-              write_fail: "Unable to download Theme Kit",
-            },
-            installing_themekit: "Installing Theme Kit",
-            successful: "Theme Kit installed successfully",
-            updating_themekit: "Updating Theme Kit",
-            verifying: "Verifying download...",
-          },
-        },
-        themekit: {
-          query_themes: {
-            bad_password: "Bad password",
-            not_connect: "Couldn't connect to given shop",
-          },
         },
       },
     }.freeze
