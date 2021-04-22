@@ -7,10 +7,11 @@ module Theme
   class Command
     class Push < ShopifyCli::SubCommand
       options do |parser, flags|
-        parser.on("--nodelete") { flags[:nodelete] = true }
+        parser.on("-n", "--nodelete") { flags[:nodelete] = true }
         parser.on("-i", "--themeid=ID") { |theme_id| flags[:theme_id] = theme_id }
         parser.on("-d", "--development") { flags[:development] = true }
         parser.on("-j", "--json") { flags[:json] = true }
+        parser.on("-a", "--allow-live") { flags[:allow_live] = true }
 
         # Only used for the config.yml, can be removed once usage is gone
         parser.on("--env=ENV") { |env| flags[:env] = env }
@@ -35,6 +36,10 @@ module Theme
             title: @ctx.message("theme.push.select"),
             config: config,
           ).theme
+        end
+
+        if theme.live? && !options.flags[:allow_live]
+          return unless CLI::UI::Prompt.confirm(@ctx.message("theme.push.live"))
         end
 
         uploader = ShopifyCli::Theme::Uploader.new(@ctx, theme)
