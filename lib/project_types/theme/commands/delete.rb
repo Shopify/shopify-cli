@@ -19,11 +19,16 @@ module Theme
             @ctx,
             [],
             title: @ctx.message("theme.delete.select"),
+            exclude_live: true,
           ).theme]
         end
 
         deleted = 0
         themes.each do |theme|
+          if theme.live?
+            @ctx.puts(@ctx.message("theme.delete.live", theme.id))
+            next
+          end
           theme.delete
           deleted += 1
         rescue ShopifyCli::API::APIRequestNotFoundError
