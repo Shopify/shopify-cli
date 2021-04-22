@@ -160,6 +160,7 @@ module ShopifyCli
             authenticated: "Authenticated successfully",
             not_authenticated: "Failed to authenticate",
           },
+          login_prompt: "Please ensure you've logged in with {{command:%s login}} and try again",
         },
 
         options: {
@@ -183,8 +184,6 @@ module ShopifyCli
             invalid_url: "Invalid URL: %s",
           },
         },
-
-        login_prompt: "Please ensure you've logged in with {{command:%s login}} and try again",
 
         populate: {
           help: <<~HELP,
