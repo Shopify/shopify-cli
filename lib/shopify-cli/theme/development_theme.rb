@@ -15,6 +15,10 @@ module ShopifyCli
         ShopifyCli::DB.get(:development_theme_name) || generate_theme_name
       end
 
+      def role
+        "development"
+      end
+
       def ensure_exists!
         create unless exists?
 
@@ -32,6 +36,16 @@ module ShopifyCli
         )
       rescue ShopifyCli::API::APIRequestNotFoundError
         false
+      end
+
+      def delete
+        super if exists?
+        ShopifyCli::DB.del(:development_theme_id) if ShopifyCli::DB.exists?(:development_theme_id)
+        ShopifyCli::DB.del(:development_theme_name) if ShopifyCli::DB.exists?(:development_theme_name)
+      end
+
+      def self.delete(ctx)
+        new(ctx).delete
       end
 
       private

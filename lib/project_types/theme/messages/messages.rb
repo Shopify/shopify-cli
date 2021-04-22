@@ -140,6 +140,22 @@ module Theme
             Usage: {{command:%s check}}
           HELP
         },
+        delete: {
+          help: <<~HELP,
+            {{command:%s theme delete}}: Delete remote themes from Shopify.
+
+            Usage: {{command:%s theme delete [ THEME_ID [ ... ] ]}}
+
+            Options:
+              {{command:-d, --development}}     Delete your development theme.
+
+            Run without options to select the theme to delete from a list.
+          HELP
+          select: "Select theme to delete",
+          done: "%s theme(s) deleted",
+          not_found: "{{x}} Theme #%s does not exist",
+          live: "{{x}} Theme #%s is your live theme. You can't delete it.",
+        },
         tasks: {
           ensure_themekit_installed: {
             auto_update: "Would you like to enable auto-updating?",

@@ -95,6 +95,30 @@ module ShopifyCli
 
         assert_equal(theme_name, @theme.name)
       end
+
+      def test_delete
+        shop = "dev-theme-server-store.myshopify.com"
+        theme_id = "12345678"
+
+        ShopifyCli::AdminAPI.stubs(:get_shop).returns(shop)
+        ShopifyCli::DB.stubs(:get).with(:development_theme_id).returns(theme_id)
+        ShopifyCli::DB.stubs(:exists?).with(:development_theme_id).returns(true)
+        ShopifyCli::DB.stubs(:del).with(:development_theme_id)
+        ShopifyCli::DB.stubs(:exists?).with(:development_theme_name).returns(true)
+        ShopifyCli::DB.stubs(:del).with(:development_theme_name)
+
+        @theme.expects(:exists?).returns(true)
+
+        ShopifyCli::AdminAPI.expects(:rest_request).with(
+          @ctx,
+          shop: shop,
+          path: "themes/#{theme_id}.json",
+          method: "DELETE",
+          api_version: "unstable",
+        )
+
+        @theme.delete
+      end
     end
   end
 end
