@@ -154,6 +154,7 @@ module Theme
           select: "Select theme to delete",
           done: "%s theme(s) deleted",
           not_found: "{{x}} Theme #%s does not exist",
+          live: "{{x}} Theme #%s is your live theme. You can't delete it.",
         },
         tasks: {
           ensure_themekit_installed: {

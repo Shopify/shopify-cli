@@ -15,6 +15,10 @@ module ShopifyCli
         ShopifyCli::DB.get(:development_theme_name) || generate_theme_name
       end
 
+      def role
+        "development"
+      end
+
       def ensure_exists!
         create unless exists?
 
