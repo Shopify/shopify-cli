@@ -112,7 +112,7 @@ module ShopifyCli
         login: {
           help: <<~HELP,
             Log in to a store or partner organization
-              Usage: {{command:%s login [--shop=SHOP] [--password=PASSWORD]}}
+              Usage: {{command:%s login [--shop=SHOP]}}
           HELP
           invalid_shop: <<~MESSAGE,
             Invalid store provided (%s). Please provide the store in the following format: my-store.myshopify.com
