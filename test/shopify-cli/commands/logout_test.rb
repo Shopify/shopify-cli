@@ -10,6 +10,9 @@ module ShopifyCli
         ShopifyCli::DB.expects(:exists?).with(:shop).returns(true)
         ShopifyCli::DB.expects(:del).with(:shop).once
 
+        ShopifyCli::DB.expects(:exists?).with(:shopify_exchange_token).returns(true)
+        ShopifyCli::DB.expects(:del).with(:shopify_exchange_token).once
+
         ShopifyCli::DB.expects(:exists?).with(:development_theme_id).returns(true)
         ShopifyCli::DB.expects(:del).with(:development_theme_id).once
 
