@@ -20,6 +20,7 @@ module Theme
           shop: "test.myshopify.io",
           preview_url: "https://test.myshopify.io/",
           editor_url: "https://test.myshopify.io/",
+          live?: false,
         )
       end
 
@@ -41,6 +42,19 @@ module Theme
 
         @theme.expects(:delete).raises(ShopifyCli::API::APIRequestNotFoundError)
         @ctx.expects(:puts)
+        @ctx.expects(:done)
+
+        @command.call([1234], "delete")
+      end
+
+      def test_cant_delete_live_theme
+        ShopifyCli::Theme::Theme.expects(:new)
+          .with(@ctx, id: 1234)
+          .returns(@theme)
+
+        @theme.expects(:live?).returns(true)
+        @ctx.expects(:puts)
+        @theme.expects(:delete).never
         @ctx.expects(:done)
 
         @command.call([1234], "delete")
