@@ -1,9 +1,9 @@
 Unreleased
 ------
+* [1181](https://github.com/Shopify/shopify-app-cli/pull/1181): Remove the subcommand references of the `generate` command for node apps (fixes [1176](https://github.com/Shopify/shopify-app-cli/issues/1176))
 
 Version 1.8.0
 -------------
-
 * [1119](https://github.com/Shopify/shopify-app-cli/pull/1119): Enable guest serialization for scripts
 
 Version 1.7.1
