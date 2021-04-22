@@ -81,6 +81,17 @@ module ShopifyCli
         end
       end
 
+      def to_h
+        {
+          id: id,
+          name: name,
+          role: role,
+          shop: shop,
+          editor_url: editor_url,
+          preview_url: preview_url,
+        }
+      end
+
       def self.all(ctx, config)
         _status, body = AdminAPI.rest_request(
           ctx,
