@@ -7,7 +7,7 @@ module Theme
       def ask
         self.theme = CLI::UI::Prompt.ask(title, allow_empty: false) do |handler|
           ShopifyCli::Theme::Theme.all(@ctx, config).each do |theme|
-            next if exclude_roles.include?(theme.role)
+            next if exclude_roles&.include?(theme.role)
             handler.option("#{theme.name} {{green:[#{theme.role}]}}") { theme }
           end
         end
