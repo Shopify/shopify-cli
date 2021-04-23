@@ -10,7 +10,6 @@ module Script
       include TestHelpers::FakeFS
 
       def setup
-        ShopifyCli::IdentityAuth.stubs(:authenticated?)
         super
         ShopifyCli::Core::Monorail.stubs(:log).yields
         @context = TestHelpers::FakeContext.new
