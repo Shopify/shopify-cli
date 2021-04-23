@@ -11,7 +11,6 @@ module Script
         super
         ShopifyCli::ProjectType.load_type(:script)
         @context = TestHelpers::FakeContext.new
-        ShopifyCli::IdentityAuth.stubs(:authenticated?)
       end
 
       def test_returns_all_defined_attributes_if_valid
