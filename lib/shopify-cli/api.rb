@@ -103,6 +103,7 @@ module ShopifyCli
 
     def default_headers
       {
+        "User-Agent" => "Shopify CLI; v=#{ShopifyCli::VERSION}",
         "Sec-CH-UA" => "Shopify CLI; v=#{ShopifyCli::VERSION} sha=#{ShopifyCli.sha}",
         "Sec-CH-UA-PLATFORM" => ctx.os,
       }.tap do |headers|
