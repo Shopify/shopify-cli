@@ -17,12 +17,30 @@ module Script
           end
         end
 
+        class ConfigUiInvalidTypeError < ScriptProjectError
+          attr_reader :filename, :valid_types
+          def initialize(filename, valid_types)
+            super()
+            @filename = filename
+            @valid_types = valid_types
+          end
+        end
+
         class ConfigUiFieldsMissingKeysError < ScriptProjectError
           attr_reader :filename, :missing_keys
           def initialize(filename, missing_keys)
             super()
             @filename = filename
             @missing_keys = missing_keys
+          end
+        end
+
+        class ConfigUiFieldsInvalidTypeError < ScriptProjectError
+          attr_reader :filename, :valid_types
+          def initialize(filename, valid_types)
+            super()
+            @filename = filename
+            @valid_types = valid_types
           end
         end
 

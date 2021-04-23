@@ -163,6 +163,15 @@ module Script
             ),
             help_suggestion: ShopifyCli::Context.message("script.error.config_ui_missing_keys_error_help"),
           }
+        when Layers::Infrastructure::Errors::ConfigUiInvalidTypeError
+          {
+            cause_of_error: ShopifyCli::Context.message(
+              "script.error.config_ui_invalid_type_error_cause",
+              filename: e.filename,
+              valid_types: e.valid_types
+            ),
+            help_suggestion: ShopifyCli::Context.message("script.error.config_ui_invalid_type_error_help"),
+          }
         when Layers::Infrastructure::Errors::ConfigUiFieldsMissingKeysError
           {
             cause_of_error: ShopifyCli::Context.message(
@@ -171,6 +180,15 @@ module Script
               missing_keys: e.missing_keys
             ),
             help_suggestion: ShopifyCli::Context.message("script.error.config_ui_fields_missing_keys_error_help"),
+          }
+        when Layers::Infrastructure::Errors::ConfigUiFieldsInvalidTypeError
+          {
+            cause_of_error: ShopifyCli::Context.message(
+              "script.error.config_ui_fields_invalid_type_error_cause",
+              filename: e.filename,
+              valid_types: e.valid_types
+            ),
+            help_suggestion: ShopifyCli::Context.message("script.error.config_ui_fields_invalid_type_error_help"),
           }
         when Layers::Infrastructure::Errors::DependencyInstallError
           {
