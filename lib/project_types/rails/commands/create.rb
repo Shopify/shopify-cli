@@ -29,8 +29,6 @@ module Rails
       end
 
       def call(args, _name)
-        ShopifyCli::IdentityAuth.authenticated?(@ctx)
-
         form = Forms::Create.ask(@ctx, args, options.flags)
         return @ctx.puts(self.class.help) if form.nil?
 
