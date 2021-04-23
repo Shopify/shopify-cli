@@ -2,6 +2,8 @@
 module Node
   class Command
     class Create < ShopifyCli::SubCommand
+      prerequisite_task :ensure_authenticated
+
       options do |parser, flags|
         # backwards compatibility allow 'title' for now
         parser.on("--title=TITLE") { |t| flags[:title] = t }

@@ -3,6 +3,8 @@
 module Extension
   class Command
     class Create < ShopifyCli::SubCommand
+      prerequisite_task :ensure_authenticated
+
       options do |parser, flags|
         parser.on("--name=NAME") { |name| flags[:name] = name }
         parser.on("--type=TYPE") { |type| flags[:type] = type.upcase }

@@ -19,6 +19,8 @@ module Extension
 
         @app = Models::App.new(title: "Fake", api_key: "1234", secret: "4567", business_name: "Fake Business")
         stub_get_app(api_key: "1234", app: @app)
+
+        ShopifyCli::Tasks::EnsureAuthenticated.stubs(:call)
       end
 
       def test_prints_help

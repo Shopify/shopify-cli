@@ -159,6 +159,7 @@ module ShopifyCli
             authenticated: "Authenticated successfully",
             not_authenticated: "Failed to authenticate",
           },
+          login_prompt: "Please ensure you've logged in with {{command:%s login}} and try again",
         },
 
         options: {

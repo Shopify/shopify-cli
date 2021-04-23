@@ -23,6 +23,7 @@ module Script
         )
         @no_config_ui = false
         Layers::Application::ExtensionPoints.stubs(:languages).returns(%w(assemblyscript))
+        ShopifyCli::Tasks::EnsureAuthenticated.stubs(:call)
       end
 
       def test_prints_help_with_no_name_argument
