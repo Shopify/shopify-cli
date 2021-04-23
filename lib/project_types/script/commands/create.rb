@@ -3,6 +3,8 @@
 module Script
   class Command
     class Create < ShopifyCli::SubCommand
+      prerequisite_task :ensure_authenticated
+
       options do |parser, flags|
         parser.on("--name=NAME") { |name| flags[:name] = name }
         parser.on("--extension_point=EP_NAME") { |ep_name| flags[:extension_point] = ep_name }
@@ -13,7 +15,6 @@ module Script
 
       def call(args, _name)
         cur_dir = @ctx.root
-
         form = Forms::Create.ask(@ctx, args, options.flags)
         return @ctx.puts(self.class.help) if form.nil?
 

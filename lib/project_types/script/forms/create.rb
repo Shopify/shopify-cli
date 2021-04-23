@@ -14,8 +14,6 @@ module Script
       private
 
       def ask_extension_point
-        ShopifyCli::IdentityAuth.authenticated?(@ctx)
-
         CLI::UI::Prompt.ask(
           @ctx.message("script.forms.create.select_extension_point"),
           options: Layers::Application::ExtensionPoints.available_types

@@ -10,7 +10,6 @@ module Script
       include TestHelpers::FakeFS
 
       def setup
-        ShopifyCli::IdentityAuth.stubs(:authenticated?)
         super
         ShopifyCli::Core::Monorail.stubs(:log).yields
         @context = TestHelpers::FakeContext.new
@@ -24,6 +23,7 @@ module Script
         )
         @no_config_ui = false
         Layers::Application::ExtensionPoints.stubs(:languages).returns(%w(assemblyscript))
+        ShopifyCli::Tasks::EnsureAuthenticated.stubs(:call)
       end
 
       def test_prints_help_with_no_name_argument
