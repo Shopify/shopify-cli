@@ -32,6 +32,7 @@ module ShopifyCli
 
     def test_mutation_makes_request_to_shopify
       headers = {
+        "User-Agent" => "Shopify CLI; v=#{ShopifyCli::VERSION}",
         "Sec-CH-UA" => "Shopify CLI; v=#{ShopifyCli::VERSION} sha=#{ShopifyCli.sha}",
         "Sec-CH-UA-PLATFORM" => @context.os,
         "Auth" => "faketoken",
