@@ -19,7 +19,7 @@ module Theme
             @ctx,
             [],
             title: @ctx.message("theme.delete.select"),
-            exclude_live: true,
+            exclude_roles: ["live"],
           ).theme]
         end
 
