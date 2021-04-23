@@ -8,18 +8,22 @@ module Script
       class CreateScript
         class << self
           def call(ctx:, language:, script_name:, extension_point_type:, no_config_ui:)
-            extension_point = ExtensionPoints.get(type: extension_point_type)
-            project = Infrastructure::ScriptProjectRepository.new(ctx: ctx).create(
-              script_name: script_name,
-              extension_point_type: extension_point_type,
-              language: language,
-              no_config_ui: no_config_ui
-            )
-            project_creator = Infrastructure::ProjectCreator
-              .for(ctx, language, extension_point, script_name, project.id)
-            install_dependencies(ctx, language, script_name, project_creator)
-            bootstrap(ctx, project_creator)
-            project
+            raise Infrastructure::Errors::ScriptProjectAlreadyExistsError, script_name if ctx.dir_exist?(script_name)
+
+            in_new_directory_context(ctx, script_name) do
+              extension_point = ExtensionPoints.get(type: extension_point_type)
+              project = Infrastructure::ScriptProjectRepository.new(ctx: ctx).create(
+                script_name: script_name,
+                extension_point_type: extension_point_type,
+                language: language,
+                no_config_ui: no_config_ui
+              )
+              project_creator = Infrastructure::ProjectCreator
+                .for(ctx, language, extension_point, script_name, project.id)
+              install_dependencies(ctx, language, script_name, project_creator)
+              bootstrap(ctx, project_creator)
+              project
+            end
           end
 
           private
@@ -34,6 +38,21 @@ module Script
             UI::StrictSpinner.spin(ctx.message("script.create.creating")) do |spinner|
               project_creator.bootstrap
               spinner.update_title(ctx.message("script.create.created"))
+            end
+          end
+
+          def in_new_directory_context(ctx, directory)
+            initial_directory = ctx.root
+            begin
+              ctx.mkdir_p(directory)
+              ctx.chdir(directory)
+              yield
+            rescue
+              ctx.chdir(initial_directory)
+              ctx.rm_r(directory)
+              raise
+            ensure
+              ctx.chdir(initial_directory)
             end
           end
         end

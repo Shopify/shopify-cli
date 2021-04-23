@@ -11,39 +11,36 @@ module Script
 
         def create(script_name:, extension_point_type:, language:, no_config_ui:)
           validate_metadata!(extension_point_type, language)
-          raise Errors::ScriptProjectAlreadyExistsError, script_name if ctx.dir_exist?(script_name)
 
-          in_new_directory_context(script_name) do
-            optional_identifiers = {}
-            config_ui_file = nil
+          optional_identifiers = {}
+          config_ui_file = nil
 
-            unless no_config_ui
-              optional_identifiers.merge!(config_ui_file: DEFAULT_CONFIG_UI_FILENAME)
-              # TODO: remove this repo and make it an implementation detail
-              config_ui_file = Infrastructure::ConfigUiRepository
-                .new(ctx: ctx)
-                .create_config_ui(DEFAULT_CONFIG_UI_FILENAME, default_config_ui_content(script_name))
-            end
-
-            ShopifyCli::Project.write(
-              ctx,
-              project_type: :script,
-              organization_id: nil,
-              extension_point_type: extension_point_type,
-              script_name: script_name,
-              language: language,
-              **optional_identifiers
-            )
-
-            Domain::ScriptProject.new(
-              id: ctx.root,
-              env: project.env,
-              script_name: script_name,
-              extension_point_type: extension_point_type,
-              language: language,
-              config_ui: config_ui_file
-            )
+          unless no_config_ui
+            optional_identifiers.merge!(config_ui_file: DEFAULT_CONFIG_UI_FILENAME)
+            # TODO: remove this repo and make it an implementation detail
+            config_ui_file = Infrastructure::ConfigUiRepository
+              .new(ctx: ctx)
+              .create_config_ui(DEFAULT_CONFIG_UI_FILENAME, default_config_ui_content(script_name))
           end
+
+          ShopifyCli::Project.write(
+            ctx,
+            project_type: :script,
+            organization_id: nil,
+            extension_point_type: extension_point_type,
+            script_name: script_name,
+            language: language,
+            **optional_identifiers
+          )
+
+          Domain::ScriptProject.new(
+            id: ctx.root,
+            env: project.env,
+            script_name: script_name,
+            extension_point_type: extension_point_type,
+            language: language,
+            config_ui: config_ui_file
+          )
         end
 
         def get
@@ -68,21 +65,6 @@ module Script
         end
 
         private
-
-        def in_new_directory_context(directory)
-          initial_directory = ctx.root
-          begin
-            ctx.mkdir_p(directory)
-            ctx.chdir(directory)
-            yield
-          rescue
-            ctx.chdir(initial_directory)
-            ctx.rm_r(directory)
-            raise
-          ensure
-            ctx.chdir(initial_directory)
-          end
-        end
 
         def project_config_value(key)
           return nil unless project.config.key?(key)
