@@ -23,7 +23,7 @@ module Rails
 
       def setup
         super
-        ShopifyCli::IdentityAuth.stubs(:authenticated?)
+        ShopifyCli::Tasks::EnsureAuthenticated.stubs(:call)
       end
 
       def test_prints_help_with_no_name_argument

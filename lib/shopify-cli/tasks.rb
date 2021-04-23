@@ -31,6 +31,7 @@ module ShopifyCli
     end
 
     register :CreateApiClient, :create_api_client, "shopify-cli/tasks/create_api_client"
+    register :EnsureAuthenticated, :ensure_authenticated, "shopify-cli/tasks/ensure_authenticated"
     register :EnsureEnv, :ensure_env, "shopify-cli/tasks/ensure_env"
     register :EnsureLoopbackURL, :ensure_loopback_url, "shopify-cli/tasks/ensure_loopback_url"
     register :EnsureDevStore, :ensure_dev_store, "shopify-cli/tasks/ensure_dev_store"

@@ -2,6 +2,8 @@
 module Rails
   class Command
     class Create < ShopifyCli::SubCommand
+      prerequisite_task :ensure_authenticated
+
       USER_AGENT_CODE = <<~USERAGENT
         module ShopifyAPI
           class Base < ActiveResource::Base
@@ -27,8 +29,6 @@ module Rails
       end
 
       def call(args, _name)
-        ShopifyCli::IdentityAuth.authenticated?(@ctx)
-
         form = Forms::Create.ask(@ctx, args, options.flags)
         return @ctx.puts(self.class.help) if form.nil?
 

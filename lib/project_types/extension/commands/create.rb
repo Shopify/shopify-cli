@@ -3,6 +3,8 @@
 module Extension
   class Command
     class Create < ShopifyCli::SubCommand
+      prerequisite_task :ensure_authenticated
+
       options do |parser, flags|
         parser.on("--name=NAME") { |name| flags[:name] = name }
         parser.on("--type=TYPE") { |type| flags[:type] = type.upcase }
@@ -14,8 +16,6 @@ module Extension
           if Dir.exist?(form.directory_name)
             @ctx.abort(@ctx.message("create.errors.directory_exists", form.directory_name))
           end
-
-          ShopifyCli::IdentityAuth.authenticated?(@ctx)
 
           if form.type.create(form.directory_name, @ctx)
             ExtensionProject.write_cli_file(context: @ctx, type: form.type.identifier)
