@@ -2,6 +2,8 @@
 module Node
   class Command
     class Create < ShopifyCli::SubCommand
+      prerequisite_task :ensure_authenticated
+
       options do |parser, flags|
         # backwards compatibility allow 'title' for now
         parser.on("--title=TITLE") { |t| flags[:title] = t }
@@ -15,8 +17,6 @@ module Node
       end
 
       def call(args, _name)
-        ShopifyCli::IdentityAuth.authenticated?(@ctx)
-
         form = Forms::Create.ask(@ctx, args, options.flags)
         return @ctx.puts(self.class.help) if form.nil?
 
