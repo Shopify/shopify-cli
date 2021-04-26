@@ -6,7 +6,7 @@ module Rails
     class GenerateTest < MiniTest::Test
       def test_without_arguments_calls_help
         @context.expects(:puts).with(Rails::Command::Generate.help)
-        Rails::Command::Generate.new(@context).call
+        run_generate
       end
 
       def test_run_generate_raises_abort_when_not_successful
@@ -18,6 +18,17 @@ module Rails
         assert_raises(ShopifyCli::Abort) do
           Rails::Command::Generate.run_generate(["script"], "test-name", @context)
         end
+      end
+
+      def test_with_webhook_argument_calls_webhook
+        Rails::Command::Generate::Webhook.expects(:start)
+        run_generate("webhook")
+      end
+
+      private
+
+      def run_generate(*args)
+        run_cmd("rails generate " + args.join(" "))
       end
     end
   end
