@@ -16,6 +16,24 @@ module ShopifyCli
       assert File.exist?(File.join(@ctx.root, ".env"))
     end
 
+    def test_binwrite_writes_to_file_in_project
+      @ctx.root = Dir.mktmpdir
+      filename = "bin.out"
+      binary = "\x0a"
+      filepath = File.join(@ctx.root, filename)
+      @ctx.binwrite(filename, binary)
+      assert File.exist?(filepath)
+      assert_equal binary, File.binread(filepath)
+    end
+
+    def test_binread_writes_to_file_in_project
+      @ctx.root = Dir.mktmpdir
+      filename = "bin.out"
+      binary = "\x0a"
+      File.write(File.join(@ctx.root, filename), binary)
+      assert_equal binary, @ctx.binread(filename)
+    end
+
     def test_mac_matches
       @ctx.expects(:uname).returns("x86_64-apple-darwin19.3.0").times(3)
       assert(@ctx.mac?)

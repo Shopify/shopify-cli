@@ -75,7 +75,7 @@ describe Script::Layers::Infrastructure::AssemblyScriptTaskRunner do
     it "should trigger the compilation process" do
       wasm = "some compiled code"
       File.expects(:read).with("package.json").once.returns(JSON.generate(package_json))
-      File.expects(:read).with("build/foo.wasm").once.returns(wasm)
+      ctx.expects(:binread).with("build/foo.wasm").once.returns(wasm)
 
       ctx
         .expects(:capture2e)

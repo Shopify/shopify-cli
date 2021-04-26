@@ -18,3 +18,11 @@ module TestHelpers
     end
   end
 end
+
+module FakeFS
+  class File
+    def self.binwrite(*args)
+      File.write(*args, mode: "wb:ASCII-8BIT")
+    end
+  end
+end

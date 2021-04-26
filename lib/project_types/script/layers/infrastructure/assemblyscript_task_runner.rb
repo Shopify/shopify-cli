@@ -81,11 +81,11 @@ module Script
         end
 
         def bytecode
-          blob = format(BYTECODE_FILE, name: script_name)
-          raise Errors::WebAssemblyBinaryNotFoundError unless @ctx.file_exist?(blob)
+          filename = format(BYTECODE_FILE, name: script_name)
+          raise Errors::WebAssemblyBinaryNotFoundError unless ctx.file_exist?(filename)
 
-          contents = File.read(blob)
-          @ctx.rm(blob)
+          contents = ctx.binread(filename)
+          ctx.rm(filename)
 
           contents
         end

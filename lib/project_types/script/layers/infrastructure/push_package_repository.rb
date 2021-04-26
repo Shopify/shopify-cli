@@ -26,7 +26,7 @@ module Script
           build_file_path = file_path(script_project.script_name, compiled_type)
           raise Domain::PushPackageNotFoundError unless ctx.file_exist?(build_file_path)
 
-          script_content = File.read(build_file_path)
+          script_content = ctx.binread(build_file_path)
 
           Domain::PushPackage.new(
             id: build_file_path,
@@ -43,7 +43,7 @@ module Script
 
         def write_to_path(path, content)
           ctx.mkdir_p(File.dirname(path))
-          ctx.write(path, content)
+          ctx.binwrite(path, content)
         end
 
         def file_path(script_name, compiled_type)

@@ -2,7 +2,7 @@
 
 require "project_types/script/test_helper"
 
-describe Script::Layers::Infrastructure::AssemblyScriptTaskRunner do
+describe Script::Layers::Infrastructure::RustTaskRunner do
   include TestHelpers::FakeFS
   let(:ctx) { TestHelpers::FakeContext.new }
   let(:script_id) { "id" }
@@ -71,8 +71,8 @@ describe Script::Layers::Infrastructure::AssemblyScriptTaskRunner do
         .with("target/wasm32-unknown-unknown/release/#{script_name}.wasm")
         .returns(true)
 
-      File
-        .expects(:read)
+      ctx
+        .expects(:binread)
         .once
         .with("target/wasm32-unknown-unknown/release/#{script_name}.wasm")
         .returns("blob")
