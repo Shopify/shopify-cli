@@ -6,6 +6,7 @@ module Extension
     module Converters
       module RegistrationConverter
         ID_FIELD = "id"
+        UUID_FIELD = "uuid"
         TYPE_FIELD = "type"
         TITLE_FIELD = "title"
         DRAFT_VERSION_FIELD = "draftVersion"
@@ -15,6 +16,7 @@ module Extension
 
           Models::Registration.new(
             id: hash[ID_FIELD].to_i,
+            uuid: hash[UUID_FIELD],
             type: hash[TYPE_FIELD],
             title: hash[TITLE_FIELD],
             draft_version: VersionConverter.from_hash(context, hash[DRAFT_VERSION_FIELD])

@@ -61,6 +61,7 @@ module Extension
           options << "--shop=#{project.env.shop}" if required_fields.include?(:shop)
           options << "--apiKey=#{project.env.api_key}" if required_fields.include?(:api_key)
           options << "--argoVersion=#{renderer_package.version}" if renderer_package.admin?
+          options << "--uuid=#{project.registration_uuid}" if renderer_package.supports_uuid_flag?
         end
       end
     end

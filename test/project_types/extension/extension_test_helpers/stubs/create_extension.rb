@@ -1,4 +1,5 @@
 # frozen_string_literal: true
+require "securerandom"
 
 module Extension
   module ExtensionTestHelpers
@@ -24,11 +25,13 @@ module Extension
 
         def stub_create_extension_success(**args)
           registration_id = rand(9999)
+          registration_uuid = SecureRandom.uuid
           stub_create_extension(**args) do |title, type|
             {
               extensionCreate: {
                 extensionRegistration: {
                   id: registration_id,
+                  uuid: registration_uuid,
                   type: type,
                   title: title,
                   draftVersion: {

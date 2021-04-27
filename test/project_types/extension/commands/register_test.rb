@@ -52,6 +52,7 @@ module Extension
       def test_creates_the_extension_if_user_confirms
         registration = Models::Registration.new(
           id: 55,
+          uuid: "123",
           type: @test_extension_type.identifier,
           title: @project.title,
           draft_version: Models::Version.new(
@@ -82,6 +83,7 @@ module Extension
           api_key: @app.api_key,
           api_secret: @app.secret,
           registration_id: registration.id,
+          registration_uuid: registration.uuid,
           title: @project.title
         ).once
 
