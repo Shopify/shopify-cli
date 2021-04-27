@@ -13,6 +13,7 @@ module Script
 
           Domain::PushPackage.new(
             id: build_file_path,
+            uuid: script_project.uuid,
             extension_point_type: script_project.extension_point_type,
             script_name: script_project.script_name,
             script_content: script_content,
@@ -30,6 +31,7 @@ module Script
 
           Domain::PushPackage.new(
             id: build_file_path,
+            uuid: script_project.uuid,
             extension_point_type: script_project.extension_point_type,
             script_name: script_project.script_name,
             script_content: script_content,

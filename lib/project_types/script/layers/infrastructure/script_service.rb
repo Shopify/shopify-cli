@@ -11,6 +11,7 @@ module Script
         property! :ctx, accepts: ShopifyCli::Context
 
         def push(
+          uuid:,
           extension_point_type:,
           script_name:,
           script_content:,
@@ -22,6 +23,7 @@ module Script
         )
           query_name = "app_script_update_or_create"
           variables = {
+            uuid: uuid,
             extensionPointName: extension_point_type.upcase,
             title: script_name,
             configUi: config_ui&.content,

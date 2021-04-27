@@ -15,6 +15,7 @@ module TestHelpers
       id = id(script_project.script_name, compiled_type)
       @cache[id] = Script::Layers::Domain::PushPackage.new(
         id: id,
+        uuid: script_project.uuid,
         extension_point_type: script_project.extension_point_type,
         script_name: script_project.script_name,
         script_content: script_content,

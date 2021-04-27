@@ -5,6 +5,7 @@ module Script
     module Domain
       class PushPackage
         attr_reader :id,
+          :uuid,
           :extension_point_type,
           :script_name,
           :config_ui,
@@ -14,6 +15,7 @@ module Script
 
         def initialize(
           id:,
+          uuid:,
           extension_point_type:,
           script_name:,
           script_content:,
@@ -22,6 +24,7 @@ module Script
           config_ui:
         )
           @id = id
+          @uuid = uuid
           @extension_point_type = extension_point_type
           @script_name = script_name
           @script_content = script_content
@@ -32,6 +35,7 @@ module Script
 
         def push(script_service, api_key, force)
           script_service.push(
+            uuid: @uuid,
             extension_point_type: @extension_point_type,
             script_name: @script_name,
             script_content: @script_content,
