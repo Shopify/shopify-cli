@@ -1,9 +1,6 @@
 # frozen_string_literal: true
 
 require "project_types/script/test_helper"
-require "project_types/script/layers/infrastructure/fake_extension_point_repository"
-require "project_types/script/layers/infrastructure/fake_push_package_repository"
-require "project_types/script/layers/infrastructure/fake_script_project_repository"
 
 describe Script::Layers::Application::PushScript do
   include TestHelpers::FakeFS
@@ -26,9 +23,9 @@ describe Script::Layers::Application::PushScript do
       env: ShopifyCli::Resources::EnvFile.new(api_key: api_key, secret: "shh")
     )
   end
-  let(:push_package_repository) { Script::Layers::Infrastructure::FakePushPackageRepository.new }
-  let(:extension_point_repository) { Script::Layers::Infrastructure::FakeExtensionPointRepository.new }
-  let(:script_project_repository) { Script::Layers::Infrastructure::FakeScriptProjectRepository.new }
+  let(:push_package_repository) { TestHelpers::FakePushPackageRepository.new }
+  let(:extension_point_repository) { TestHelpers::FakeExtensionPointRepository.new }
+  let(:script_project_repository) { TestHelpers::FakeScriptProjectRepository.new }
   let(:task_runner) { stub(compiled_type: "wasm", metadata: metadata) }
   let(:ep) { extension_point_repository.get_extension_point(extension_point_type) }
 

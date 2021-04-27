@@ -1,8 +1,6 @@
 # frozen_string_literal: true
 
 require "project_types/script/test_helper"
-require "project_types/script/layers/infrastructure/fake_extension_point_repository"
-require "project_types/script/layers/infrastructure/fake_script_project_repository"
 
 describe Script::Layers::Application::CreateScript do
   include TestHelpers::FakeFS
@@ -12,8 +10,8 @@ describe Script::Layers::Application::CreateScript do
   let(:script_name) { "name" }
   let(:compiled_type) { "wasm" }
   let(:no_config_ui) { false }
-  let(:extension_point_repository) { Script::Layers::Infrastructure::FakeExtensionPointRepository.new }
-  let(:script_project_repository) { Script::Layers::Infrastructure::FakeScriptProjectRepository.new }
+  let(:extension_point_repository) { TestHelpers::FakeExtensionPointRepository.new }
+  let(:script_project_repository) { TestHelpers::FakeScriptProjectRepository.new }
   let(:ep) { extension_point_repository.get_extension_point(extension_point_type) }
   let(:task_runner) { stub(compiled_type: compiled_type) }
   let(:project_creator) { stub }
