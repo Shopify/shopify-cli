@@ -20,7 +20,7 @@ module Script
                 metadata: task_runner.metadata,
               )
               uuid = package.push(Infrastructure::ScriptService.new(ctx: p_ctx), script_project.api_key, force)
-              script_project_repo.update_config(uuid: uuid)
+              script_project_repo.update_env(uuid: uuid)
               spinner.update_title(p_ctx.message("script.application.pushed"))
             end
           end

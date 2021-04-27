@@ -126,7 +126,6 @@ describe Script::Layers::Infrastructure::ScriptProjectRepository do
     let(:config_ui_content) { "---\nversion: 1" }
     let(:valid_config) do
       {
-        "uuid" => uuid,
         "extension_point_type" => "tax_filter",
         "script_name" => "script_name",
         "config_ui_file" => config_ui_file,
@@ -144,10 +143,30 @@ describe Script::Layers::Infrastructure::ScriptProjectRepository do
     end
 
     describe "when project config is valid" do
+      describe "when env is empty" do
+        it "should have empty env values" do
+          assert_nil subject.env
+          assert_nil subject.uuid
+          assert_nil subject.api_key
+        end
+      end
+
+      describe "when env has values" do
+        let(:uuid) { "uuid" }
+        let(:api_key) { "api_key" }
+        let(:env) { ShopifyCli::Resources::EnvFile.new(api_key: api_key, secret: "foo", extra: { "uuid" => uuid }) }
+
+        it "should provide access to the env values" do
+          ShopifyCli::Project.any_instance.expects(:env).returns(env).at_least_once
+
+          assert_equal env, subject.env
+          assert_equal uuid, subject.uuid
+          assert_equal api_key, subject.api_key
+        end
+      end
+
       it "should return the ScriptProject" do
         assert_equal current_project.directory, subject.id
-        assert_nil subject.env
-        assert_equal uuid, subject.uuid
         assert_equal script_name, subject.script_name
         assert_equal extension_point_type, subject.extension_point_type
         assert_equal language, subject.language
@@ -212,8 +231,8 @@ describe Script::Layers::Infrastructure::ScriptProjectRepository do
     end
   end
 
-  describe "#update_config" do
-    subject { instance.update_config(**args) }
+  describe "#update_env" do
+    subject { instance.update_env(**args) }
 
     let(:script_name) { "script_name" }
     let(:extension_point_type) { "tax_filter" }
@@ -221,6 +240,8 @@ describe Script::Layers::Infrastructure::ScriptProjectRepository do
     let(:uuid) { "uuid" }
     let(:updated_uuid) { "updated_uuid" }
     let(:config_ui_file) { "config-ui.yml" }
+    let(:env) { ShopifyCli::Resources::EnvFile.new(api_key: "123", secret: "foo", extra: env_extra) }
+    let(:env_extra) { { "uuid" => "original_uuid", "something" => "else" } }
     let(:valid_config) do
       {
         "project_type" => "script",
@@ -230,10 +251,6 @@ describe Script::Layers::Infrastructure::ScriptProjectRepository do
         "script_name" => "script_name",
         "config_ui_file" => config_ui_file,
       }
-    end
-    let(:actual_config) { valid_config }
-    let(:current_project) do
-      TestHelpers::FakeProject.new(directory: File.join(ctx.root, script_name), config: actual_config)
     end
     let(:args) do
       {
@@ -252,6 +269,7 @@ describe Script::Layers::Infrastructure::ScriptProjectRepository do
         language: language,
         no_config_ui: true
       )
+      ShopifyCli::Project.any_instance.expects(:env).returns(env).at_least_once
     end
 
     describe "when updating an immutable property" do
@@ -279,14 +297,15 @@ describe Script::Layers::Infrastructure::ScriptProjectRepository do
       end
 
       it "should update the property" do
-        previous_config = ShopifyCli::Project.current.config
+        previous_env = ShopifyCli::Project.current.env.to_h
         assert subject
-        updated_config = ShopifyCli::Project.current.config
+        ShopifyCli::Project.clear
+        updated_env = ShopifyCli::Project.current.env.to_h
 
-        assert_equal hash_except(previous_config, "uuid"), hash_except(updated_config, "uuid")
-        refute_equal previous_config["uuid"], updated_config["uuid"]
-        assert_equal updated_uuid, updated_config["uuid"]
-        assert_equal updated_uuid, subject["uuid"]
+        assert_equal hash_except(previous_env, "uuid"), hash_except(updated_env, "uuid")
+        refute_equal previous_env["uuid"], updated_env["uuid"]
+        assert_equal updated_uuid, updated_env["uuid"]
+        assert_equal updated_uuid, subject.uuid
       end
     end
   end

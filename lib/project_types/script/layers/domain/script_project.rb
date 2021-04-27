@@ -7,7 +7,6 @@ module Script
         include SmartProperties
 
         property! :id, accepts: String
-        property :uuid, accepts: String
         property :env, accepts: ShopifyCli::Resources::EnvFile
 
         property! :extension_point_type, accepts: String
@@ -27,7 +26,11 @@ module Script
         end
 
         def api_key
-          env[:api_key]
+          env&.api_key
+        end
+
+        def uuid
+          env&.extra&.[]("uuid")
         end
       end
     end

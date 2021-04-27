@@ -15,7 +15,6 @@ module TestHelpers
 
       @project = Script::Layers::Domain::ScriptProject.new(
         id: "/#{script_name}",
-        uuid: nil,
         env: env || ShopifyCli::Resources::EnvFile.new(api_key: "1234", secret: "shh"),
         script_name: script_name,
         extension_point_type: extension_point_type,
@@ -28,10 +27,11 @@ module TestHelpers
       @project
     end
 
-    def update_config(**args)
-      mutable_args = args.slice(*Script::Layers::Infrastructure::ScriptProjectRepository::MUTABLE_CONFIG_VALUES)
+    def update_env(**args)
+      args.slice(*Script::Layers::Infrastructure::ScriptProjectRepository::MUTABLE_ENV_VALUES).each do |key, value|
+        @project.env.extra[key.to_s] = value
+      end
 
-      @project.uuid = mutable_args[:uuid]
       @project
     end
 

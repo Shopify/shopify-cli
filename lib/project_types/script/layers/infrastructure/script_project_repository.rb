@@ -8,7 +8,7 @@ module Script
         property! :ctx, accepts: ShopifyCli::Context
 
         DEFAULT_CONFIG_UI_FILENAME = "config-ui.yml"
-        MUTABLE_CONFIG_VALUES = %i(uuid)
+        MUTABLE_ENV_VALUES = %i(uuid)
 
         def create(script_name:, extension_point_type:, language:, no_config_ui:)
           validate_metadata!(extension_point_type, language)
@@ -27,7 +27,6 @@ module Script
             ctx,
             project_type: :script,
             organization_id: nil,
-            uuid: nil,
             extension_point_type: extension_point_type,
             script_name: script_name,
             language: language,
@@ -36,7 +35,6 @@ module Script
 
           Domain::ScriptProject.new(
             id: ctx.root,
-            uuid: nil,
             env: project.env,
             script_name: script_name,
             extension_point_type: extension_point_type,
@@ -52,7 +50,6 @@ module Script
 
           Domain::ScriptProject.new(
             id: project.directory,
-            uuid: uuid,
             env: project.env,
             script_name: script_name,
             extension_point_type: extension_point_type,
@@ -61,19 +58,16 @@ module Script
           )
         end
 
-        def update_config(**args)
-          mutable_args = args.slice(*MUTABLE_CONFIG_VALUES)
-
-          ShopifyCli::Project.write(
-            ctx,
-            **project.config.transform_keys(&:to_sym),
-            **mutable_args
-          )
-          ShopifyCli::Project.clear
+        def update_env(**args)
+          capture_io do
+            args.slice(*MUTABLE_ENV_VALUES).each do |key, value|
+              project.env.extra[key.to_s] = value
+              project.env.update(ctx, :extra, project.env.extra)
+            end
+          end
 
           Domain::ScriptProject.new(
             id: ctx.root,
-            uuid: uuid,
             env: project.env,
             script_name: script_name,
             extension_point_type: extension_point_type,
@@ -83,6 +77,10 @@ module Script
         end
 
         private
+
+        def capture_io(&block)
+          CLI::UI::StdoutRouter::Capture.new(&block).run
+        end
 
         def extension_point_type
           project_config_value!("extension_point_type")
@@ -94,10 +92,6 @@ module Script
 
         def config_ui_file
           project_config_value("config_ui_file")
-        end
-
-        def uuid
-          project_config_value("uuid")
         end
 
         def language
