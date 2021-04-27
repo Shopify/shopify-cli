@@ -143,6 +143,35 @@ module ShopifyCli
         assert_equal(@theme["assets/theme.css"].checksum, @uploader.checksums["assets/theme.css"])
       end
 
+      def test_fetch_checksums_with_duplicate_liquid_assets
+        ShopifyCli::AdminAPI.expects(:rest_request).with(
+          @ctx,
+          shop: @theme.shop,
+          path: "themes/#{@theme.id}/assets.json",
+          api_version: "unstable",
+        ).returns([
+          200,
+          {
+            "assets" => [
+              {
+                "key" => "assets/generated.css",
+                "checksum" => @theme["assets/generated.css.liquid"].checksum,
+              },
+              {
+                "key" => "assets/generated.css.liquid",
+                "checksum" => @theme["assets/generated.css.liquid"].checksum,
+              },
+            ],
+          },
+          {},
+        ])
+
+        @uploader.fetch_checksums!
+
+        assert(@uploader.checksums["assets/generated.css.liquid"])
+        refute(@uploader.checksums["assets/generated.css"])
+      end
+
       def test_update_checksum_after_upload
         ShopifyCli::AdminAPI.expects(:rest_request).returns([
           200,
@@ -323,8 +352,8 @@ module ShopifyCli
 
         @ctx.expects(:puts).with(<<~EOS.chomp)
           {{red:ERROR}} {{blue:update sections/footer.liquid}}:
-          \tAn error
-          \tThen some
+            An error
+            Then some
         EOS
 
         @uploader.enqueue_updates([file])
@@ -348,7 +377,7 @@ module ShopifyCli
 
         @ctx.expects(:puts).with(<<~EOS.chomp)
           {{red:ERROR}} {{blue:update sections/footer.liquid}}:
-          \texception message
+            exception message
         EOS
 
         @uploader.enqueue_updates([file])
@@ -384,8 +413,8 @@ module ShopifyCli
 
         @ctx.expects(:puts).with(<<~EOS.chomp)
           {{red:ERROR}} {{blue:update sections/footer.liquid}}:
-          \tAn error
-          \tThen some
+            An error
+            Then some
         EOS
         @uploader.report_errors!
       end
