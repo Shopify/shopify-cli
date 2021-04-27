@@ -3,7 +3,7 @@
 require "project_types/script/test_helper"
 
 describe Script::Layers::Domain::PushPackage do
-  let(:uuid) { 'uuid' }
+  let(:uuid) { "uuid" }
   let(:extension_point_type) { "discount" }
   let(:script_id) { "id" }
   let(:script_name) { "foo_script" }

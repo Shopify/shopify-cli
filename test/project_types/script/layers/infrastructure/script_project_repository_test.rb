@@ -237,7 +237,7 @@ describe Script::Layers::Infrastructure::ScriptProjectRepository do
     end
     let(:args) do
       {
-        uuid: updated_uuid
+        uuid: updated_uuid,
       }
     end
 
@@ -257,11 +257,11 @@ describe Script::Layers::Infrastructure::ScriptProjectRepository do
     describe "when updating an immutable property" do
       let(:args) do
         {
-          extension_point_type: 'a',
-          language: 'b',
-          script_name: 'c',
-          project_type: 'd',
-          organization_id: 'e',
+          extension_point_type: "a",
+          language: "b",
+          script_name: "c",
+          project_type: "d",
+          organization_id: "e",
         }
       end
 

@@ -121,7 +121,7 @@ describe Script::Layers::Infrastructure::ScriptService do
                 "configSchema" => nil,
                 "extensionPointName" => extension_point_type,
                 "title" => "foo2",
-                "uuid" => uuid_from_server
+                "uuid" => uuid_from_server,
               },
               "userErrors" => [],
             },
