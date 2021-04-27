@@ -26,6 +26,7 @@ mutation AppScriptUpdateOrCreate(
       tag
     }
     appScript {
+      uuid
       appKey
       configSchema
       extensionPointName

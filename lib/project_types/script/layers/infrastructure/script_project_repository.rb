@@ -34,6 +34,7 @@ module Script
 
           Domain::ScriptProject.new(
             id: ctx.root,
+            uuid: nil,
             env: project.env,
             script_name: script_name,
             extension_point_type: extension_point_type,
@@ -46,6 +47,7 @@ module Script
           extension_point_type = project_config_value!("extension_point_type")
           script_name = project_config_value!("script_name")
           config_ui_file = project_config_value("config_ui_file")
+          uuid = project_config_value("uuid")
           language = project_config_value("language")&.downcase || default_language
 
           validate_metadata!(extension_point_type, language)
@@ -54,6 +56,7 @@ module Script
 
           Domain::ScriptProject.new(
             id: project.directory,
+            uuid: uuid,
             env: project.env,
             script_name: script_name,
             extension_point_type: extension_point_type,

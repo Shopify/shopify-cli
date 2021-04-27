@@ -64,6 +64,7 @@ describe Script::Layers::Infrastructure::ScriptProjectRepository do
         capture_io { subject }
 
         assert_nil subject.env
+        assert_nil subject.uuid
         assert_equal script_name, subject.script_name
         assert_equal extension_point_type, subject.extension_point_type
         assert_equal language, subject.language
@@ -120,10 +121,12 @@ describe Script::Layers::Infrastructure::ScriptProjectRepository do
     let(:script_name) { "script_name" }
     let(:extension_point_type) { "tax_filter" }
     let(:language) { "assemblyscript" }
+    let(:uuid) { "uuid" }
     let(:config_ui_file) { "config-ui.yml" }
     let(:config_ui_content) { "---\nversion: 1" }
     let(:valid_config) do
       {
+        "uuid" => uuid,
         "extension_point_type" => "tax_filter",
         "script_name" => "script_name",
         "config_ui_file" => config_ui_file,
@@ -144,6 +147,7 @@ describe Script::Layers::Infrastructure::ScriptProjectRepository do
       it "should return the ScriptProject" do
         assert_equal current_project.directory, subject.id
         assert_nil subject.env
+        assert_equal uuid, subject.uuid
         assert_equal script_name, subject.script_name
         assert_equal extension_point_type, subject.extension_point_type
         assert_equal language, subject.language
@@ -169,8 +173,12 @@ describe Script::Layers::Infrastructure::ScriptProjectRepository do
     end
 
     describe "when project is missing metadata" do
+      def hash_except(config, *keys)
+        config.slice(*(config.keys - keys))
+      end
+
       describe "when missing extension_point_type" do
-        let(:actual_config) { valid_config.slice("config_ui_file", "script_name") }
+        let(:actual_config) { hash_except(valid_config, "extension_point_type") }
 
         it "should raise InvalidContextError" do
           assert_raises(Script::Layers::Infrastructure::Errors::InvalidContextError) { subject }
@@ -178,7 +186,7 @@ describe Script::Layers::Infrastructure::ScriptProjectRepository do
       end
 
       describe "when missing script_name" do
-        let(:actual_config) { valid_config.slice("extension_point_type", "config_ui_file") }
+        let(:actual_config) { hash_except(valid_config, "script_name") }
 
         it "should raise InvalidContextError" do
           assert_raises(Script::Layers::Infrastructure::Errors::InvalidContextError) { subject }
@@ -186,10 +194,19 @@ describe Script::Layers::Infrastructure::ScriptProjectRepository do
       end
 
       describe "when missing config_ui_file" do
-        let(:actual_config) { valid_config.slice("extension_point_type", "script_name") }
+        let(:actual_config) { hash_except(valid_config, "config_ui_file") }
 
         it "should succeed" do
           assert subject
+        end
+      end
+
+      describe "when missing uuid" do
+        let(:actual_config) { hash_except(valid_config, "uuid") }
+
+        it "should succeed" do
+          assert subject
+          assert_nil subject.uuid
         end
       end
     end

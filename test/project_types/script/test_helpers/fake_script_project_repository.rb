@@ -15,6 +15,7 @@ module TestHelpers
 
       @project = Script::Layers::Domain::ScriptProject.new(
         id: "/#{script_name}",
+        uuid: nil,
         env: env || ShopifyCli::Resources::EnvFile.new(api_key: "1234", secret: "shh"),
         script_name: script_name,
         extension_point_type: extension_point_type,
