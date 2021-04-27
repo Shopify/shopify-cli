@@ -8,6 +8,7 @@ module Script
         property! :ctx, accepts: ShopifyCli::Context
 
         DEFAULT_CONFIG_UI_FILENAME = "config-ui.yml"
+        MUTABLE_CONFIG_VALUES = %i(uuid)
 
         def create(script_name:, extension_point_type:, language:, no_config_ui:)
           validate_metadata!(extension_point_type, language)
@@ -44,12 +45,6 @@ module Script
         end
 
         def get
-          extension_point_type = project_config_value!("extension_point_type")
-          script_name = project_config_value!("script_name")
-          config_ui_file = project_config_value("config_ui_file")
-          uuid = project_config_value("uuid")
-          language = project_config_value("language")&.downcase || default_language
-
           validate_metadata!(extension_point_type, language)
 
           config_ui = ConfigUiRepository.new(ctx: ctx).get(config_ui_file)
@@ -65,7 +60,48 @@ module Script
           )
         end
 
+        def update_config(**args)
+          mutable_args = args.slice(*MUTABLE_CONFIG_VALUES)
+
+          ShopifyCli::Project.write(
+            ctx,
+            **project.config.transform_keys(&:to_sym),
+            **mutable_args
+          )
+          ShopifyCli::Project.clear
+
+          Domain::ScriptProject.new(
+            id: ctx.root,
+            uuid: uuid,
+            env: project.env,
+            script_name: script_name,
+            extension_point_type: extension_point_type,
+            language: language,
+            config_ui: ConfigUiRepository.new(ctx: ctx).get(config_ui_file),
+          )
+        end
+
         private
+
+        def extension_point_type
+          project_config_value!("extension_point_type")
+        end
+
+        def script_name
+          project_config_value!("script_name")
+        end
+
+        def config_ui_file
+          project_config_value("config_ui_file")
+        end
+
+        def uuid
+          project_config_value("uuid")
+        end
+
+        def language
+          project_config_value("language")&.downcase || default_language
+        end
 
         def project_config_value(key)
           return nil unless project.config.key?(key)

@@ -28,6 +28,13 @@ module TestHelpers
       @project
     end
 
+    def update_config(**args)
+      mutable_args = args.slice(*Script::Layers::Infrastructure::ScriptProjectRepository::MUTABLE_CONFIG_VALUES)
+
+      @project.uuid = mutable_args[:uuid]
+      @project
+    end
+
     class FakeConfigUiRepository
       def initialize
         @cache = {}

@@ -212,6 +212,85 @@ describe Script::Layers::Infrastructure::ScriptProjectRepository do
     end
   end
 
+  describe "#update_config" do
+    subject { instance.update_config(**args) }
+
+    let(:script_name) { "script_name" }
+    let(:extension_point_type) { "tax_filter" }
+    let(:language) { "assemblyscript" }
+    let(:uuid) { "uuid" }
+    let(:updated_uuid) { "updated_uuid" }
+    let(:config_ui_file) { "config-ui.yml" }
+    let(:valid_config) do
+      {
+        "project_type" => "script",
+        "organization_id" => 1,
+        "uuid" => uuid,
+        "extension_point_type" => "tax_filter",
+        "script_name" => "script_name",
+        "config_ui_file" => config_ui_file,
+      }
+    end
+    let(:actual_config) { valid_config }
+    let(:current_project) do
+      TestHelpers::FakeProject.new(directory: File.join(ctx.root, script_name), config: actual_config)
+    end
+    let(:args) do
+      {
+        uuid: updated_uuid
+      }
+    end
+
+    before do
+      dir = "/#{script_name}"
+      ctx.mkdir_p(dir)
+      ctx.chdir(dir)
+
+      instance.create(
+        script_name: script_name,
+        extension_point_type: extension_point_type,
+        language: language,
+        no_config_ui: true
+      )
+    end
+
+    describe "when updating an immutable property" do
+      let(:args) do
+        {
+          extension_point_type: 'a',
+          language: 'b',
+          script_name: 'c',
+          project_type: 'd',
+          organization_id: 'e',
+        }
+      end
+
+      it "should do nothing" do
+        previous_config = ShopifyCli::Project.current.config
+        assert subject
+        updated_config = ShopifyCli::Project.current.config
+        assert_equal previous_config, updated_config
+      end
+    end
+
+    describe "when updating uuid" do
+      def hash_except(config, *keys)
+        config.slice(*(config.keys - keys))
+      end
+
+      it "should update the property" do
+        previous_config = ShopifyCli::Project.current.config
+        assert subject
+        updated_config = ShopifyCli::Project.current.config
+
+        assert_equal hash_except(previous_config, "uuid"), hash_except(updated_config, "uuid")
+        refute_equal previous_config["uuid"], updated_config["uuid"]
+        assert_equal updated_uuid, updated_config["uuid"]
+        assert_equal updated_uuid, subject["uuid"]
+      end
+    end
+  end
+
   describe "ConfigUiRepository" do
     let(:instance) { Script::Layers::Infrastructure::ScriptProjectRepository::ConfigUiRepository.new(ctx: ctx) }
 
