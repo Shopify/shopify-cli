@@ -2,7 +2,7 @@
 
 require "project_types/script/test_helper"
 require "project_types/script/layers/infrastructure/fake_extension_point_repository"
-require "project_types/script/layers/infrastructure/fake_config_ui_repository"
+require "project_types/script/layers/infrastructure/fake_script_project_repository"
 
 describe Script::Layers::Application::CreateScript do
   include TestHelpers::FakeFS
@@ -13,19 +13,23 @@ describe Script::Layers::Application::CreateScript do
   let(:compiled_type) { "wasm" }
   let(:no_config_ui) { false }
   let(:extension_point_repository) { Script::Layers::Infrastructure::FakeExtensionPointRepository.new }
-  let(:config_ui_repository) { Script::Layers::Infrastructure::FakeConfigUiRepository.new }
+  let(:script_project_repository) { Script::Layers::Infrastructure::FakeScriptProjectRepository.new }
   let(:ep) { extension_point_repository.get_extension_point(extension_point_type) }
   let(:task_runner) { stub(compiled_type: compiled_type) }
   let(:project_creator) { stub }
-  let(:project_directory) { "/name" }
   let(:context) { TestHelpers::FakeContext.new }
+
   let(:script_project) do
-    TestHelpers::FakeScriptProject.new(language: language, directory: project_directory, script_name: script_name)
+    script_project_repository.create(
+      language: language,
+      extension_point_type: extension_point_type,
+      script_name: script_name,
+      no_config_ui: false
+    )
   end
 
   before do
     Script::Layers::Infrastructure::ExtensionPointRepository.stubs(:new).returns(extension_point_repository)
-    Script::Layers::Infrastructure::ConfigUiRepository.stubs(:new).returns(config_ui_repository)
 
     extension_point_repository.create_extension_point(extension_point_type)
     Script::Layers::Infrastructure::TaskRunner
@@ -34,7 +38,7 @@ describe Script::Layers::Application::CreateScript do
       .returns(task_runner)
     Script::Layers::Infrastructure::ProjectCreator
       .stubs(:for)
-      .with(context, language, ep, script_name, project_directory)
+      .with(context, language, ep, script_name, script_project.id)
       .returns(project_creator)
   end
 

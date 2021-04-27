@@ -1,6 +1,7 @@
 # frozen_string_literal: true
 
 require "project_types/script/test_helper"
+require "project_types/script/layers/infrastructure/fake_script_project_repository"
 
 module Script
   module Commands
@@ -16,12 +17,13 @@ module Script
         @language = "assemblyscript"
         @script_name = "name"
         @ep_type = "discount"
-        @script_project = TestHelpers::FakeScriptProject.new(
+        @no_config_ui = false
+        @script_project = Layers::Infrastructure::FakeScriptProjectRepository.new.create(
           language: @language,
           extension_point_type: @ep_type,
           script_name: @script_name,
+          no_config_ui: @no_config_ui
         )
-        @no_config_ui = false
         Layers::Application::ExtensionPoints.stubs(:languages).returns(%w(assemblyscript))
       end
 
