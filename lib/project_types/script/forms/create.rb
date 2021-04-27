@@ -31,13 +31,7 @@ module Script
       end
 
       def ask_language
-        if language
-          if Layers::Application::ExtensionPoints.supported_language?(type: extension_point, language: language)
-            return language.downcase
-          else
-            raise Errors::InvalidLanguageError.new(language, extension_point)
-          end
-        end
+        return language.downcase if language
 
         all_languages = Layers::Application::ExtensionPoints.languages(type: extension_point)
         return all_languages.first if all_languages.count == 1

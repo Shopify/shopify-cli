@@ -39,6 +39,7 @@ module Script
       autoload :PushPackage, Project.project_filepath("layers/domain/push_package")
       autoload :Metadata, Project.project_filepath("layers/domain/metadata")
       autoload :ExtensionPoint, Project.project_filepath("layers/domain/extension_point")
+      autoload :ScriptProject, Project.project_filepath("layers/domain/script_project")
     end
 
     module Infrastructure
@@ -57,6 +58,7 @@ module Script
       autoload :PushPackageRepository, Project.project_filepath("layers/infrastructure/push_package_repository")
       autoload :ExtensionPointRepository, Project.project_filepath("layers/infrastructure/extension_point_repository")
       autoload :ProjectCreator, Project.project_filepath("layers/infrastructure/project_creator")
+      autoload :ScriptProjectRepository, Project.project_filepath("layers/infrastructure/script_project_repository")
       autoload :ScriptService, Project.project_filepath("layers/infrastructure/script_service")
       autoload :TaskRunner, Project.project_filepath("layers/infrastructure/task_runner")
     end
@@ -68,7 +70,6 @@ module Script
     autoload :StrictSpinner, Project.project_filepath("ui/strict_spinner")
   end
 
-  autoload :ScriptProject, Project.project_filepath("script_project")
   autoload :Errors, Project.project_filepath("errors")
 
   class ScriptProjectError < StandardError; end

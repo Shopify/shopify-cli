@@ -2,7 +2,6 @@
 
 module Script
   module Errors
-    class InvalidContextError < ScriptProjectError; end
     class InvalidScriptNameError < ScriptProjectError; end
 
     class NoExistingAppsError < ScriptProjectError; end
@@ -16,7 +15,6 @@ module Script
       end
     end
 
-    class ScriptProjectAlreadyExistsError < ScriptProjectError; end
     class InvalidConfigProps < ScriptProjectError; end
 
     class InvalidConfigYAMLError < ScriptProjectError
@@ -24,23 +22,6 @@ module Script
       def initialize(config_file)
         super()
         @config_file = config_file
-      end
-    end
-
-    class InvalidLanguageError < ScriptProjectError
-      attr_reader :language, :extension_point_type
-      def initialize(language, extension_point_type)
-        super()
-        @language = language
-        @extension_point_type = extension_point_type
-      end
-    end
-
-    class DeprecatedEPError < ScriptProjectError
-      attr_reader :ep
-      def initialize(ep)
-        super()
-        @ep = ep
       end
     end
   end

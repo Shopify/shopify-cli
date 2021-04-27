@@ -20,10 +20,6 @@ describe Script::Layers::Infrastructure::AssemblyScriptTaskRunner do
   let(:extension_point_type) { "discount" }
   let(:language) { "AssemblyScript" }
   let(:as_task_runner) { Script::Layers::Infrastructure::AssemblyScriptTaskRunner.new(ctx, script_name) }
-  let(:script_project) do
-    TestHelpers::FakeScriptProject
-      .new(language: language, extension_point_type: extension_point_type, script_name: script_name)
-  end
 
   let(:package_json) do
     {
@@ -31,10 +27,6 @@ describe Script::Layers::Infrastructure::AssemblyScriptTaskRunner do
         build: "shopify-scripts-toolchain-as build --src src/shopify_main.ts -b script.wasm -- --lib node_modules",
       },
     }
-  end
-
-  before do
-    Script::ScriptProject.stubs(:current).returns(script_project)
   end
 
   describe ".build" do
