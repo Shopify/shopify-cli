@@ -73,7 +73,7 @@ describe Script::Layers::Infrastructure::ScriptProjectRepository do
         let(:no_config_ui) { false }
         let(:expected_config_ui_filename) { "config-ui.yml" }
         let(:expected_config_ui_content) do
-          "---\nversion: 1\ntype: single\ntitle: #{script_name}\ndescription: ''\nfields: []\n"
+          "---\nversion: 1\ninputMode: single\ntitle: #{script_name}\ndescription: ''\nfields: []\n"
         end
 
         it "should create a new script project" do

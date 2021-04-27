@@ -82,7 +82,7 @@ module Script
           require "yaml" # takes 20ms, so deferred as late as possible.
           YAML.dump({
             "version" => 1,
-            "type" => "single",
+            "inputMode" => "single",
             "title" => title,
             "description" => "",
             "fields" => [],
