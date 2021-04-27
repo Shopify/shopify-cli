@@ -6,7 +6,18 @@ module Node
     class DeployTest < MiniTest::Test
       def test_without_arguments_calls_help
         @context.expects(:puts).with(Node::Command::Deploy.help)
-        Node::Command::Deploy.new(@context).call
+        run_deploy
+      end
+
+      def test_with_heroku_argument_calls_heroku
+        Node::Command::Deploy::Heroku.expects(:start)
+        run_deploy("heroku")
+      end
+
+      private
+
+      def run_deploy(*args)
+        run_cmd("node deploy " + args.join(" "))
       end
     end
   end
