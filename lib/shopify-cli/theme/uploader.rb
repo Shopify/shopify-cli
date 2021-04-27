@@ -120,6 +120,7 @@ module ShopifyCli
         fetch_checksums!
 
         removed_files = checksums.keys - @theme.theme_files.map { |file| file.relative_path.to_s }
+
         # Some files must be uploaded after the other ones
         delayed_config_files = [
           @theme["config/settings_schema.json"],
@@ -195,8 +196,8 @@ module ShopifyCli
         end
       rescue ShopifyCli::API::APIRequestError => e
         report_error(
-          "{{red:ERROR}} {{blue:#{operation}}}:\n\t" +
-          parse_api_error(e).join("\n\t")
+          "{{red:ERROR}} {{blue:#{operation}}}:\n  " +
+          parse_api_errors(e).join("\n  ")
         )
       ensure
         @pending.delete(operation)
@@ -243,6 +244,10 @@ module ShopifyCli
         api_response.values.flatten.each do |asset|
           @checksums[asset["key"]] = asset["checksum"]
         end
+        # Generate .liquid asset files are reported twice in checksum:
+        # once of generated, once for .liquid. We only keep the .liquid, that's the one we have
+        # on disk.
+        @checksums.reject! { |key, _| @checksums.key?("#{key}.liquid") }
       end
 
       def file_has_changed?(file)
@@ -257,13 +262,13 @@ module ShopifyCli
         end
       end
 
-      def parse_api_error(exception)
-        messages = JSON.parse(exception&.response&.body).dig("errors", "asset")
-        return [exception.message] unless messages
+      def parse_api_errors(exception)
+        parsed_body = JSON.parse(exception&.response&.body)
+        message = parsed_body.dig("errors", "asset") || parsed_body["message"] || exception.message
         # Truncate to first lines
-        messages.map! { |message| message.split("\n", 2).first }
+        [message].flatten.map { |message| message.split("\n", 2).first }
       rescue JSON::ParserError
-        exception.message
+        [exception.message]
       end
 
       def backoff_if_near_limit!(used, limit)
