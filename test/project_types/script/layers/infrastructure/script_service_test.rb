@@ -30,6 +30,7 @@ describe Script::Layers::Infrastructure::ScriptService do
     let(:script_name) { "foo_bar" }
     let(:script_content) { "(module)" }
     let(:api_key) { "fake_key" }
+    let(:uuid) { "uuid" }
     let(:app_script_update_or_create) do
       <<~HERE
         mutation AppScriptUpdateOrCreate(
@@ -117,6 +118,7 @@ describe Script::Layers::Infrastructure::ScriptService do
                 "configSchema" => nil,
                 "extensionPointName" => extension_point_type,
                 "title" => "foo2",
+                "uuid" => uuid
               },
               "userErrors" => [],
             },
@@ -133,7 +135,7 @@ describe Script::Layers::Infrastructure::ScriptService do
       end
 
       it "should post the form without scope" do
-        assert_equal(script_service_response, subject)
+        assert_equal(uuid, subject)
       end
 
       describe "when config_ui is nil" do
@@ -141,7 +143,7 @@ describe Script::Layers::Infrastructure::ScriptService do
         let(:expected_config_ui_content) { nil }
 
         it "should succeed with a valid response" do
-          assert_equal(script_service_response, subject)
+          assert_equal(uuid, subject)
         end
       end
     end

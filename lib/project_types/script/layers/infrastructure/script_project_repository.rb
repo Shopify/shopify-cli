@@ -27,6 +27,7 @@ module Script
             ctx,
             project_type: :script,
             organization_id: nil,
+            uuid: nil,
             extension_point_type: extension_point_type,
             script_name: script_name,
             language: language,

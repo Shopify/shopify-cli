@@ -35,7 +35,7 @@ module Script
           resp_hash = script_service_request(query_name: query_name, api_key: api_key, variables: variables)
           user_errors = resp_hash["data"]["appScriptUpdateOrCreate"]["userErrors"]
 
-          return resp_hash if user_errors.empty?
+          return resp_hash["data"]["appScriptUpdateOrCreate"]["appScript"]["uuid"] if user_errors.empty?
 
           if user_errors.any? { |e| e["tag"] == "already_exists_error" }
             raise Errors::ScriptRepushError, api_key
