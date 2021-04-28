@@ -64,9 +64,17 @@ module Script
                                               "%{missing_keys}.",
           config_ui_missing_keys_error_help: "Add the keys and try again.",
 
+          config_ui_invalid_input_mode_error_cause: "The UI configuration file %{filename} only accept "\
+                                              "one of the following input mode(s): %{valid_input_modes}.",
+          config_ui_invalid_input_mode_error_help: "Change the input modes and try again.",
+
           config_ui_fields_missing_keys_error_cause: "A field entry in the UI configuration file %{filename} is "\
                                                      "missing required keys: %{missing_keys}.",
           config_ui_fields_missing_keys_error_help: "Add the keys and try again.",
+
+          config_ui_fields_invalid_type_error_cause: "The UI configuration file %{filename} fields only accept "\
+                                                     "one of the following type(s): %{valid_types}.",
+          config_ui_fields_invalid_type_error_help: "Change the types and try again.",
 
           script_not_found_cause: "Couldn't find script %s for extension point %s",
 
