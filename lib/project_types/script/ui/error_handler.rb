@@ -39,7 +39,7 @@ module Script
             cause_of_error: ShopifyCli::Context.message("script.error.oauth_cause"),
             help_suggestion: ShopifyCli::Context.message("script.error.oauth_help"),
           }
-        when Errors::InvalidContextError
+        when Layers::Infrastructure::Errors::InvalidContextError
           {
             cause_of_error: ShopifyCli::Context.message("script.error.invalid_context_cause"),
             help_suggestion: ShopifyCli::Context.message("script.error.invalid_context_help"),
@@ -53,7 +53,7 @@ module Script
           {
             cause_of_error: ShopifyCli::Context.message("script.error.invalid_config", e.config_file),
           }
-        when Errors::InvalidLanguageError
+        when Layers::Infrastructure::Errors::InvalidLanguageError
           {
             cause_of_error: ShopifyCli::Context.message("script.error.invalid_language_cause", e.language),
             help_suggestion: ShopifyCli::Context.message(
@@ -84,12 +84,12 @@ module Script
               organization_id: e.organization_id
             ),
           }
-        when Errors::ScriptProjectAlreadyExistsError
+        when Layers::Infrastructure::Errors::ScriptProjectAlreadyExistsError
           {
             cause_of_error: ShopifyCli::Context.message("script.error.project_exists_cause"),
             help_suggestion: ShopifyCli::Context.message("script.error.project_exists_help"),
           }
-        when Errors::DeprecatedEPError
+        when Layers::Infrastructure::Errors::DeprecatedEPError
           {
             cause_of_error: ShopifyCli::Context.message("script.error.deprecated_ep", e.ep),
             help_suggestion: ShopifyCli::Context.message("script.error.deprecated_ep_cause"),

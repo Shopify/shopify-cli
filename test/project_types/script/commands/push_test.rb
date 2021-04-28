@@ -8,18 +8,18 @@ module Script
       def setup
         super
         @context = TestHelpers::FakeContext.new
-        @language = "assemblyscript"
-        @script_name = "name"
-        @ep_type = "discount"
         @api_key = "apikey"
-        @script_project = TestHelpers::FakeScriptProject.new(
-          language: @language,
-          extension_point_type: @ep_type,
-          script_name: @script_name,
-          env: { api_key: @api_key }
-        )
         @force = true
-        ScriptProject.stubs(:current).returns(@script_project)
+        @env = ShopifyCli::Resources::EnvFile.new(api_key: @api_key, secret: "shh")
+        @script_project_repo = TestHelpers::FakeScriptProjectRepository.new
+        @script_project_repo.create(
+          language: "assemblyscript",
+          extension_point_type: "discount",
+          script_name: "script_name",
+          no_config_ui: false,
+          env: @env
+        )
+        Script::Layers::Infrastructure::ScriptProjectRepository.stubs(:new).returns(@script_project_repo)
         ShopifyCli::ProjectType.load_type(:script)
       end
 
@@ -27,6 +27,7 @@ module Script
         ShopifyCli::Tasks::EnsureEnv
           .any_instance.expects(:call)
           .with(@context, required: [:api_key, :secret, :shop])
+
         Layers::Application::PushScript.expects(:call).with(ctx: @context, force: @force)
 
         @context
@@ -43,7 +44,7 @@ module Script
       end
 
       def test_push_propagates_error_when_ensure_env_fails
-        ShopifyCli::Project.any_instance.expects(:env).returns(nil)
+        @env = nil
 
         err_msg = "error message"
         ShopifyCli::Tasks::EnsureEnv
@@ -58,7 +59,7 @@ module Script
       private
 
       def perform_command
-        run_cmd("push --force")
+        capture_io { run_cmd("push --force") }
       end
     end
   end

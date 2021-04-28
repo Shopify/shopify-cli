@@ -9,7 +9,6 @@ describe Script::Layers::Infrastructure::RustProjectCreator do
   let(:language) { "rust" }
   let(:script_id) { "id" }
   let(:script) { Script::Layers::Domain::Script.new(script_id, script_name, extension_point, language) }
-  let(:project) { TestHelpers::FakeProject.new }
   let(:context) { TestHelpers::FakeContext.new }
   let(:extension_point_type) { "payment_filter" }
   let(:extension_point) { Script::Layers::Domain::ExtensionPoint.new(extension_point_type, extension_point_config) }
@@ -28,8 +27,6 @@ describe Script::Layers::Infrastructure::RustProjectCreator do
 
   before do
     context.mkdir_p(script_name)
-    Script::ScriptProject.stubs(:current).returns(project)
-    project.directory = script_name
   end
 
   def system_output(msg:, success:)

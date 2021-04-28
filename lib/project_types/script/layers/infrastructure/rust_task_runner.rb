@@ -51,7 +51,7 @@ module Script
           binary_path = "target/#{BUILD_TARGET}/release/#{binary_name}"
           raise Errors::WebAssemblyBinaryNotFoundError unless ctx.file_exist?(binary_path)
 
-          File.read(binary_path)
+          ctx.binread(binary_path)
         end
       end
     end

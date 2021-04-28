@@ -1,7 +1,6 @@
 # frozen_string_literal: true
 
 require "project_types/script/test_helper"
-require "project_types/script/layers/infrastructure/fake_extension_point_repository"
 
 describe Script::Layers::Application::ExtensionPoints do
   include TestHelpers::FakeFS
@@ -10,7 +9,7 @@ describe Script::Layers::Application::ExtensionPoints do
   let(:extension_point_type) { "discount" }
   let(:deprecated_extension_point_type) { "unit_limit_per_order" }
   let(:beta_extension_point_type) { "tax_filter" }
-  let(:extension_point_repository) { Script::Layers::Infrastructure::FakeExtensionPointRepository.new }
+  let(:extension_point_repository) { TestHelpers::FakeExtensionPointRepository.new }
   let(:extension_point) { extension_point_repository.get_extension_point(extension_point_type) }
 
   before do
