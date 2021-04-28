@@ -18,23 +18,6 @@ module Theme
           connect: "Downloading theme files...",
           connected: "Successfully connected. Config file created at {{green:%s}}",
         },
-        create: {
-          creating_theme: "Creating theme %s",
-          duplicate_theme: "Duplicate theme",
-          failed: "Couldn't create the theme, %s",
-          help: <<~HELP,
-            {{command:%s theme create}}: Creates a theme.
-              Usage: {{command:%s theme create}}
-              Options:
-                {{command:--store=MYSHOPIFYDOMAIN}} Store URL. Must be an existing store with private apps enabled.
-                {{command:--password=PASSWORD}} Private app password. App must have Read and Write Theme access.
-                {{command:--name=NAME}} Theme name. Any string.
-          HELP
-          info: {
-            created: "{{green:%s}} was created for {{underline:%s}} in {{green:%s}}",
-            dir_created: "Created directories",
-          },
-        },
         publish: {
           confirmation: "This will change your live theme. Do you wish to proceed?",
           deploying: "Deploying theme",
@@ -52,13 +35,6 @@ module Theme
         forms: {
           ask_password: "Password:",
           ask_store: "Store domain:",
-          create: {
-            ask_title: "Title:",
-            private_app: <<~APP,
-              To create a new theme, Shopify CLI needs to connect with a private app installed on your store. Visit {{underline:%s/admin/apps/private}} to create a new API key and password, or retrieve an existing password.
-              If you create a new private app, ensure that it has Read and Write Theme access.
-            APP
-          },
           connect: {
             private_app: <<~APP,
               To fetch your existing themes, Shopify CLI needs to connect with your store. Visit {{underline:%s/admin/apps/private}} to create a new API key and password, or retrieve an existing password.
