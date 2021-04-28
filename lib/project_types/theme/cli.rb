@@ -7,11 +7,10 @@ module Theme
 
   class Command < ShopifyCli::ProjectCommands
     subcommand :Init, "init", Project.project_filepath("commands/init")
-    subcommand :Connect, "connect", Project.project_filepath("commands/connect")
-    subcommand :Publish, "publish", Project.project_filepath("commands/publish")
-    subcommand :Push, "push", Project.project_filepath("commands/push")
     subcommand :Serve, "serve", Project.project_filepath("commands/serve")
+    subcommand :Push, "push", Project.project_filepath("commands/push")
     subcommand :Check, "check", Project.project_filepath("commands/check")
+    subcommand :Publish, "publish", Project.project_filepath("commands/publish")
     subcommand :Delete, "delete", Project.project_filepath("commands/delete")
   end
   ShopifyCli::Commands.register("Theme::Command", "theme")

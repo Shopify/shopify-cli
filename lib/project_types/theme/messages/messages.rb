@@ -8,16 +8,6 @@ module Theme
             Usage: {{command:%1$s theme [ %2$s ]}}
         HELP
 
-        connect: {
-          duplicate: "Duplicate directory, theme files weren't connected",
-          help: <<~HELP,
-            {{command:%s theme connect}}: Connects an existing theme in your store to Shopify CLI. Creates a config file.
-              Usage: {{command:%s theme connect}}
-          HELP
-          inside_project: "You are inside an existing theme, theme files weren't connected",
-          connect: "Downloading theme files...",
-          connected: "Successfully connected. Config file created at {{green:%s}}",
-        },
         publish: {
           confirmation: "This will change your live theme. Do you wish to proceed?",
           deploying: "Deploying theme",
@@ -35,12 +25,6 @@ module Theme
         forms: {
           ask_password: "Password:",
           ask_store: "Store domain:",
-          connect: {
-            private_app: <<~APP,
-              To fetch your existing themes, Shopify CLI needs to connect with your store. Visit {{underline:%s/admin/apps/private}} to create a new API key and password, or retrieve an existing password.
-              If you create a new private app, ensure that it has Read and Write Theme access.
-            APP
-          },
           errors: "%s can't be blank",
         },
         push: {
