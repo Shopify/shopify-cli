@@ -216,8 +216,8 @@ describe Script::UI::ErrorHandler do
         end
       end
 
-      describe "when ConfigUiInvalidTypeError" do
-        let(:err) { Script::Layers::Infrastructure::Errors::ConfigUiInvalidTypeError.new("file", "types") }
+      describe "when ConfigUiInvalidInputModeError" do
+        let(:err) { Script::Layers::Infrastructure::Errors::ConfigUiInvalidInputModeError.new("file", "input modes") }
         it "should call display_and_raise" do
           should_call_display_and_raise
         end

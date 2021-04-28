@@ -43,8 +43,8 @@ module Script
             raise Errors::ConfigUiSyntaxError, config_ui&.filename
           elsif (e = user_errors.find { |err| err["tag"] == "config_ui_missing_keys_error" })
             raise Errors::ConfigUiMissingKeysError.new(config_ui&.filename, e["message"])
-          elsif (e = user_errors.find { |err| err["tag"] == "config_ui_invalid_type_error" })
-            raise Errors::ConfigUiInvalidTypeError.new(config_ui&.filename, e["message"])
+          elsif (e = user_errors.find { |err| err["tag"] == "config_ui_invalid_input_mode_error" })
+            raise Errors::ConfigUiInvalidInputModeError.new(config_ui&.filename, e["message"])
           elsif (e = user_errors.find { |err| err["tag"] == "config_ui_fields_missing_keys_error" })
             raise Errors::ConfigUiFieldsMissingKeysError.new(config_ui&.filename, e["message"])
           elsif (e = user_errors.find { |err| err["tag"] == "config_ui_fields_invalid_type_error" })

@@ -17,12 +17,12 @@ module Script
           end
         end
 
-        class ConfigUiInvalidTypeError < ScriptProjectError
-          attr_reader :filename, :valid_types
-          def initialize(filename, valid_types)
+        class ConfigUiInvalidInputModeError < ScriptProjectError
+          attr_reader :filename, :valid_input_modes
+          def initialize(filename, valid_input_modes)
             super()
             @filename = filename
-            @valid_types = valid_types
+            @valid_input_modes = valid_input_modes
           end
         end
 

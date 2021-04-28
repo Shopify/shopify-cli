@@ -163,14 +163,14 @@ module Script
             ),
             help_suggestion: ShopifyCli::Context.message("script.error.config_ui_missing_keys_error_help"),
           }
-        when Layers::Infrastructure::Errors::ConfigUiInvalidTypeError
+        when Layers::Infrastructure::Errors::ConfigUiInvalidInputModeError
           {
             cause_of_error: ShopifyCli::Context.message(
-              "script.error.config_ui_invalid_type_error_cause",
+              "script.error.config_ui_invalid_input_mode_error_cause",
               filename: e.filename,
-              valid_types: e.valid_types
+              valid_input_modes: e.valid_input_modes
             ),
-            help_suggestion: ShopifyCli::Context.message("script.error.config_ui_invalid_type_error_help"),
+            help_suggestion: ShopifyCli::Context.message("script.error.config_ui_invalid_input_mode_error_help"),
           }
         when Layers::Infrastructure::Errors::ConfigUiFieldsMissingKeysError
           {
