@@ -42,7 +42,7 @@ module ShopifyCli
     property! :symbolize_keys, accepts: [true, false], default: false, reader: :symbolize_keys?
     property! :associative_array_container,
       accepts: ->(c) { c.respond_to?(:new) && c.method_defined?(:[]=) },
-      default: Hash
+      default: -> { Hash }
 
     def call(object)
       case object

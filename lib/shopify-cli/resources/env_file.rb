@@ -57,7 +57,7 @@ module ShopifyCli
       property :shop
       property :scopes
       property :host
-      property :extra, default: {}
+      property :extra, default: -> { {} }
 
       def to_h
         out = {}
