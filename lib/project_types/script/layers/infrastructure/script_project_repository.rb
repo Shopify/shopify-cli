@@ -61,7 +61,7 @@ module Script
         def update_env(**args)
           capture_io do
             args.slice(*MUTABLE_ENV_VALUES).each do |key, value|
-              project.env.extra[key.to_s] = value
+              project.env.extra[key.to_s.upcase] = value
               project.env.update(ctx, :extra, project.env.extra)
             end
           end
