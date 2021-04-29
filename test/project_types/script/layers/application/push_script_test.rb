@@ -28,6 +28,7 @@ describe Script::Layers::Application::PushScript do
   let(:script_project_repository) { TestHelpers::FakeScriptProjectRepository.new }
   let(:task_runner) { stub(compiled_type: "wasm", metadata: metadata) }
   let(:ep) { extension_point_repository.get_extension_point(extension_point_type) }
+  let(:uuid) { "uuid" }
 
   before do
     Script::Layers::Infrastructure::PushPackageRepository.stubs(:new).returns(push_package_repository)
@@ -61,8 +62,9 @@ describe Script::Layers::Application::PushScript do
       Script::Layers::Infrastructure::ScriptService
         .expects(:new).returns(script_service_instance)
       Script::Layers::Domain::PushPackage
-        .any_instance.expects(:push).with(script_service_instance, api_key, force)
+        .any_instance.expects(:push).with(script_service_instance, api_key, force).returns(uuid)
       capture_io { subject }
+      assert_equal uuid, script_project_repository.get.uuid
     end
   end
 end

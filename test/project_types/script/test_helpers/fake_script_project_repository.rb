@@ -27,6 +27,14 @@ module TestHelpers
       @project
     end
 
+    def update_env(**args)
+      args.slice(*Script::Layers::Infrastructure::ScriptProjectRepository::MUTABLE_ENV_VALUES).each do |key, value|
+        @project.env.extra[key.to_s] = value
+      end
+
+      @project
+    end
+
     class FakeConfigUiRepository
       def initialize
         @cache = {}

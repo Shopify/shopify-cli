@@ -6,7 +6,8 @@ module Script
       class PushScript
         class << self
           def call(ctx:, force:)
-            script_project = Infrastructure::ScriptProjectRepository.new(ctx: ctx).get
+            script_project_repo = Infrastructure::ScriptProjectRepository.new(ctx: ctx)
+            script_project = script_project_repo.get
             task_runner = Infrastructure::TaskRunner.for(ctx, script_project.language, script_project.script_name)
 
             ProjectDependencies.install(ctx: ctx, task_runner: task_runner)
@@ -18,7 +19,8 @@ module Script
                 compiled_type: task_runner.compiled_type,
                 metadata: task_runner.metadata,
               )
-              package.push(Infrastructure::ScriptService.new(ctx: p_ctx), script_project.api_key, force)
+              uuid = package.push(Infrastructure::ScriptService.new(ctx: p_ctx), script_project.api_key, force)
+              script_project_repo.update_env(uuid: uuid)
               spinner.update_title(p_ctx.message("script.application.pushed"))
             end
           end

@@ -26,7 +26,11 @@ module Script
         end
 
         def api_key
-          env[:api_key]
+          env&.api_key
+        end
+
+        def uuid
+          env&.extra&.[]("uuid")
         end
       end
     end
