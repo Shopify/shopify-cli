@@ -154,7 +154,7 @@ describe Script::Layers::Infrastructure::ScriptProjectRepository do
       describe "when env has values" do
         let(:uuid) { "uuid" }
         let(:api_key) { "api_key" }
-        let(:env) { ShopifyCli::Resources::EnvFile.new(api_key: api_key, secret: "foo", extra: { "uuid" => uuid }) }
+        let(:env) { ShopifyCli::Resources::EnvFile.new(api_key: api_key, secret: "foo", extra: { "UUID" => uuid }) }
 
         it "should provide access to the env values" do
           ShopifyCli::Project.any_instance.expects(:env).returns(env).at_least_once
@@ -302,9 +302,9 @@ describe Script::Layers::Infrastructure::ScriptProjectRepository do
         ShopifyCli::Project.clear
         updated_env = ShopifyCli::Project.current.env.to_h
 
-        assert_equal hash_except(previous_env, "uuid"), hash_except(updated_env, "uuid")
-        refute_equal previous_env["uuid"], updated_env["uuid"]
-        assert_equal updated_uuid, updated_env["uuid"]
+        assert_equal hash_except(previous_env, "UUID"), hash_except(updated_env, "UUID")
+        refute_equal previous_env["UUID"], updated_env["UUID"]
+        assert_equal updated_uuid, updated_env["UUID"]
         assert_equal updated_uuid, subject.uuid
       end
     end

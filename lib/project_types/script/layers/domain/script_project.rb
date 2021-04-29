@@ -30,7 +30,7 @@ module Script
         end
 
         def uuid
-          env&.extra&.[]("uuid")
+          env&.extra&.[]("UUID")
         end
       end
     end
