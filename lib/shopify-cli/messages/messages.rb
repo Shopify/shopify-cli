@@ -82,7 +82,8 @@ module ShopifyCli
           error: {
             directory_exists: "Project directory already exists. Please create a project with a new name.",
             no_branches_found: "Could not find any git branches",
-            repo_not_initiated: "Git repo is not initiated. Please run `git init` and make at least one commit.",
+            repo_not_initiated:
+              "Git repo is not initiated. Please run {{command:git init}} and make at least one commit.",
             no_commits_made: "No git commits have been made. Please make at least one commit.",
           },
 
@@ -110,7 +111,7 @@ module ShopifyCli
             deploy: "Could not deploy to Heroku",
             download: "Heroku CLI could not be downloaded",
             install: "Could not install Heroku CLI",
-            could_not_select_app: "Heroku app `%s` could not be selected",
+            could_not_select_app: "Heroku app {{green:%s}} could not be selected",
           },
         },
 
