@@ -12,7 +12,6 @@ module Extension
         super
         ShopifyCli::ProjectType.load_type(:extension)
         @project = ExtensionTestHelpers.fake_extension_project(with_mocks: true, registration_id: nil)
-        @context = ExtensionTestHelpers.fake_context
         @specification_handler = ExtensionTestHelpers.test_specification_handler
 
         @app = Models::App.new(api_key: @project.api_key, secret: @project.api_secret)
