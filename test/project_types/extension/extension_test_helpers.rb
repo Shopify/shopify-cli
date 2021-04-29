@@ -18,5 +18,51 @@ module Extension
       autoload :ArgoScript, "project_types/extension/extension_test_helpers/stubs/argo_script"
       autoload :FetchSpecifications, "project_types/extension/extension_test_helpers/stubs/fetch_specifications"
     end
+
+    def self.test_specification_handler
+      specification_handlers = DummySpecifications.build(
+        custom_handler_root: File.expand_path("../", __FILE__),
+        custom_handler_namespace: ::Extension::ExtensionTestHelpers,
+      )
+
+      specification_handler = specification_handlers["TEST_EXTENSION"]
+      if specification_handler.nil?
+        raise "Unable to retrieve specification handler due to broken test setup"
+      end
+
+      specification_handler
+    end
+
+    def self.fake_extension_project(with_mocks:,
+      api_key: "TEST_KEY",
+      api_secret: "TEST_SECRET",
+      title: "Test",
+      type_identifier: test_specification_handler.identifier,
+      registration_id: 55,
+      registration_uuid: "db946ca8-a925-11eb-bcbc-0242ac130002")
+
+      project = FakeExtensionProject.new(
+        api_key: api_key,
+        api_secret: api_secret,
+        title: title,
+        type: type_identifier,
+        registration_id: registration_id,
+        registration_uuid: registration_uuid
+      )
+
+      if with_mocks
+        ShopifyCli::Project.stubs(:current).returns(project)
+        ShopifyCli::Project.stubs(:has_current?).returns(true)
+        ExtensionProject.stubs(:current).returns(project)
+        specifications = DummySpecifications.build(
+          identifier: type_identifier.downcase,
+          custom_handler_root: File.expand_path("../", __FILE__),
+          custom_handler_namespace: ::Extension::ExtensionTestHelpers,
+        )
+        Models::Specifications.stubs(:new).returns(specifications)
+      end
+
+      project
+    end
   end
 end
