@@ -6,14 +6,15 @@ module Extension
   module Commands
     class RegisterTest < MiniTest::Test
       include TestHelpers::FakeUI
-      include ExtensionTestHelpers::TempProjectSetup
       include ExtensionTestHelpers::Messages
 
       def setup
         super
         ShopifyCli::ProjectType.load_type(:extension)
-        setup_temp_project(registration_id: nil)
-        @app = Models::App.new(api_key: @api_key, secret: @api_secret)
+        @project = ExtensionTestHelpers.fake_extension_project(with_mocks: true, registration_id: nil)
+        @specification_handler = ExtensionTestHelpers.test_specification_handler
+
+        @app = Models::App.new(api_key: @project.api_key, secret: @project.api_secret)
       end
 
       def test_help_implemented
@@ -45,7 +46,7 @@ module Extension
 
         assert_message_output(io: io, expected_content: [
           @context.message("register.confirm_abort"),
-          @context.message("register.confirm_info", @test_extension_type.name),
+          @context.message("register.confirm_info", @specification_handler.name),
         ])
       end
 
@@ -53,7 +54,7 @@ module Extension
         registration = Models::Registration.new(
           id: 55,
           uuid: "123",
-          type: @test_extension_type.identifier,
+          type: @specification_handler.identifier,
           title: @project.title,
           draft_version: Models::Version.new(
             registration_id: 55,
@@ -72,10 +73,10 @@ module Extension
         Tasks::CreateExtension.any_instance.expects(:call).with(
           context: @context,
           api_key: @app.api_key,
-          type: @test_extension_type.graphql_identifier,
+          type: @specification_handler.graphql_identifier,
           title: @project.title,
           config: {},
-          extension_context: @test_extension_type.extension_context(@context)
+          extension_context: @specification_handler.extension_context(@context)
         ).returns(registration).once
 
         ExtensionProject.expects(:write_env_file).with(
@@ -90,7 +91,7 @@ module Extension
         io = capture_io { run_register_command }
 
         assert_message_output(io: io, expected_content: [
-          @context.message("register.confirm_info", @test_extension_type.name),
+          @context.message("register.confirm_info", @specification_handler.name),
           @context.message("register.waiting_text"),
           @context.message("register.success", @project.title),
           @context.message("register.success_info"),
