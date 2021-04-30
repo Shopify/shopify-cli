@@ -180,6 +180,19 @@ module ShopifyCli
           },
         },
 
+        php_deps: {
+          error: {
+              missing_package: "Expected to have a file at: %s",
+              invalid_package: "{{info:%s}} was not valid JSON. Fix this then try again",
+              install_spinner_error: "Unable to install all %d dependencies",
+              install_error: "An error occurred while installing dependencies",
+          },
+
+          installing: "Installing Composer dependencies...",
+          installed: "Dependencies installed",
+          installed_count: "%d dependencies installed",
+        },
+
         api: {
           error: {
             internal_server_error: "{{red:{{x}} An unexpected error occurred on Shopify.}}",
