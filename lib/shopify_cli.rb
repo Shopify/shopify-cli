@@ -110,6 +110,7 @@ module ShopifyCli
   autoload :IdentityAuth, "shopify-cli/identity_auth"
   autoload :JsDeps, "shopify-cli/js_deps"
   autoload :JsSystem, "shopify-cli/js_system"
+  autoload :PHPDeps, "shopify-cli/php_deps"
   autoload :LazyDelegator, "shopify-cli/lazy_delegator"
   autoload :MethodObject, "shopify-cli/method_object"
   autoload :Options, "shopify-cli/options"

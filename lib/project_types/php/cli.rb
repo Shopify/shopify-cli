@@ -22,6 +22,6 @@ module PHP
 
   # define/autoload project specific Forms
   module Forms
-    # autoload :Create, Project.project_filepath("forms/create")
+    autoload :Create, Project.project_filepath("forms/create")
   end
 end
