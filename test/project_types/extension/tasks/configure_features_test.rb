@@ -60,10 +60,10 @@ module Extension
         )
       end
 
-      def test_correct_renderer_package_name_for_checkout_extensions
+      def test_correct_renderer_package_name_for_checkout_post_purchase_extensions
         set_of_attributes = build_set_of_specification_attributes(surface: "checkout")
         result = ConfigureFeatures.call(set_of_attributes)
-        assert_equal "@shopify/argo-checkout", result.value.dig(0, :features, :argo, :renderer_package_name)
+        assert_equal "@shopify/argo-post-purchase", result.value.dig(0, :features, :argo, :renderer_package_name)
       end
 
       private

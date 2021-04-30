@@ -45,7 +45,7 @@ module Extension
           },
           checkout: {
             git_template: "https://github.com/Shopify/argo-checkout-template.git",
-            renderer_package_name: "@shopify/argo-checkout",
+            renderer_package_name: "@shopify/argo-post-purchase",
           },
         }
       end

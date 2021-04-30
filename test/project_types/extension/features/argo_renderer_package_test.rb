@@ -22,6 +22,14 @@ module Extension
         assert_predicate(argo_renderer_package, :admin?)
       end
 
+      def test_admin_is_returned_for_admin_package
+        argo_renderer_package = Features::ArgoRendererPackage.new(
+          package_name: Features::ArgoRendererPackage::ARGO_POST_PURCHASE,
+          version: "1.2.3"
+        )
+        assert_predicate(argo_renderer_package, :post_purchase?)
+      end
+
       def test_argo_minimum_version_supports_uuid_flag
         uuid_supported = Features::ArgoRendererPackage.new(
           package_name: Features::ArgoRendererPackage::ARGO_ADMIN,
