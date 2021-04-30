@@ -54,6 +54,7 @@ module Extension
       end
 
       def test_updates_the_extensions_draft_version
+        specification_handler = ExtensionTestHelpers.test_specification_handler
         Command::Build.any_instance.stubs(:call)
         ShopifyCli::JsSystem.any_instance.stubs(:call).returns(true)
         Tasks::UpdateDraft.any_instance.expects(:call)
