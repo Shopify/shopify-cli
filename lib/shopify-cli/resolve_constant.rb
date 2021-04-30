@@ -11,7 +11,7 @@
 module ShopifyCli
   class ResolveConstant
     include ShopifyCli::MethodObject
-    property! :namespace, accepts: ->(ns) { ns.respond_to?(:const_get) }, default: Kernel
+    property! :namespace, accepts: ->(ns) { ns.respond_to?(:const_get) }, default: -> { Kernel }
 
     def call(name)
       name

@@ -1,6 +1,7 @@
 module SmartProperties
   class Property
     MODULE_REFERENCE = :"@_smart_properties_method_scope"
+    ALLOWED_DEFAULT_CLASSES = [Proc, Numeric, String, Range, TrueClass, FalseClass, NilClass, Symbol, Module].freeze
 
     attr_reader :name
     attr_reader :converter
@@ -26,6 +27,11 @@ module SmartProperties
       @reader    ||= @name
 
       @instance_variable_name = :"@#{name}"
+
+      unless ALLOWED_DEFAULT_CLASSES.any? { |cls| @default.is_a?(cls) }
+        raise ConfigurationError, "Default attribute value #{@default.inspect} cannot be specified as literal, "\
+          "use the syntax `default: -> { ... }` instead."
+      end
 
       unless attrs.empty?
         raise ConfigurationError, "SmartProperties do not support the following configuration options: #{attrs.keys.map { |m| m.to_s }.sort.join(', ')}."
@@ -66,7 +72,7 @@ module SmartProperties
     end
 
     def default(scope)
-      @default.kind_of?(Proc) ? scope.instance_exec(&@default) : @default
+      @default.kind_of?(Proc) ? scope.instance_exec(&@default) : @default.dup
     end
 
     def accepts?(value, scope)
