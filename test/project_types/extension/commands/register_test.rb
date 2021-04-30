@@ -10,8 +10,10 @@ module Extension
       def setup
         super
         ShopifyCli::ProjectType.load_type(:extension)
-        setup_temp_project(registration_id: nil)
-        @app = Models::App.new(api_key: @api_key, secret: @api_secret)
+        @project = ExtensionTestHelpers.fake_extension_project(with_mocks: true, registration_id: nil)
+        @specification_handler = ExtensionTestHelpers.test_specification_handler
+
+        @app = Models::App.new(api_key: @project.api_key, secret: @project.api_secret)
       end
 
       def test_help_implemented
