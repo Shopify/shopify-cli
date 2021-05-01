@@ -1,6 +1,8 @@
 Unreleased
 ------
 
+* [1201](https://github.com/Shopify/shopify-app-cli/pull/1201) Determine Argo Renderer Dynamically. This fixes `shopify serve` and `shopify push` for extensions.
+
 Version 1.9.0
 -------------
 * [1181](https://github.com/Shopify/shopify-app-cli/pull/1181): Remove the subcommand references of the `generate` command for node apps (fixes [1176](https://github.com/Shopify/shopify-app-cli/issues/1176))

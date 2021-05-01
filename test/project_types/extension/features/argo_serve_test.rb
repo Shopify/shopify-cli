@@ -56,6 +56,8 @@ module Extension
       end
 
       def test_extension_versions_that_support_uuid_have_uuid_command_line_argument
+        skip("Passing the a UUID to the Argo Webpack server is currently not supported")
+
         stub_argo_enabled_shop
         dummy_handler = build_dummy_specification_handler(
           renderer_package_version: @argo_version,

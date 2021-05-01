@@ -26,7 +26,6 @@ module Extension
       def test_config_aborts_with_error_if_script_file_doesnt_exist
         File.stubs(:exist?).returns(false)
         stub_run_yarn_install_and_run_yarn_run_script_methods
-        @dummy_argo.stubs(:extract_argo_renderer_version).returns("0.0.1")
         error = assert_raises ShopifyCli::Abort do
           @dummy_argo.config(@context)
         end
@@ -36,28 +35,31 @@ module Extension
 
       def test_config_aborts_with_error_if_script_serialization_fails
         stub_run_yarn_install_and_run_yarn_run_script_methods
-        @dummy_argo.stubs(:extract_argo_renderer_version).returns("0.0.1")
         File.stubs(:exist?).returns(true)
         Base64.stubs(:strict_encode64).raises(IOError)
 
+        @dummy_argo.renderer_version = "0.0.1"
         error = assert_raises(ShopifyCli::Abort) { @dummy_argo.config(@context) }
         assert_includes error.message, @context.message("features.argo.script_prepare_error")
       end
 
       def test_config_aborts_with_error_if_file_read_fails
         stub_run_yarn_install_and_run_yarn_run_script_methods
-        @dummy_argo.stubs(:extract_argo_renderer_version).returns("0.0.1")
         File.stubs(:exist?).returns(true)
         File.any_instance.stubs(:read).raises(IOError)
+
+        @dummy_argo.renderer_version = "0.0.1"
 
         error = assert_raises(ShopifyCli::Abort) { @dummy_argo.config(@context) }
         assert_includes error.message, @context.message("features.argo.script_prepare_error")
       end
 
-      def test_config_encodes_script_into_context_if_it_exists
+      def test_config_encodes_script_into_config_if_it_exists
         with_stubbed_script(@context, Argo::SCRIPT_PATH) do
           stub_run_yarn_install_and_run_yarn_run_script_methods
-          @dummy_argo.stubs(:extract_argo_renderer_version).returns("0.0.1")
+
+          @dummy_argo.renderer_version = "0.0.1"
+
           config = @dummy_argo.config(@context)
 
           assert_includes config.keys, :serialized_script
@@ -68,7 +70,7 @@ module Extension
       def test_config_returns_argo_renderer_package_name_version_if_it_exists_using_yarn
         yarn_list_result = 'yarn list v1.22.5
         ├─ @fake-package@0.3.9
-        └─ @test-renderer-package@0.3.8
+        └─ @shopify/argo-admin@0.3.8
         ✨  Done in 0.40s.'
         with_stubbed_script(@context, Features::Argo::SCRIPT_PATH) do
           stub_run_yarn_install_and_run_yarn_run_script_methods
@@ -84,7 +86,7 @@ module Extension
       def test_config_returns_argo_renderer_package_version_if_it_exists_using_npm
         npm_list_result = 'test-extension-template@0.1.0
         └─┬ @fake-package@0.4.3
-          └── @test-renderer-package@0.4.3
+          └── @shopify/argo-admin@0.4.3
           ✨  Done in 0.40s.
           '
         with_stubbed_script(@context, Features::Argo::SCRIPT_PATH) do
@@ -100,6 +102,8 @@ module Extension
       end
 
       def test_config_aborts_with_error_if_run_list_command_fails
+        skip("Temporarily bypassing exit code check due to issues with NPM 7.")
+
         Base64.stubs(:strict_encode64).returns(@encoded_script)
         with_stubbed_script(@context, Argo::SCRIPT_PATH) do
           stub_run_yarn_install_and_run_yarn_run_script_methods
@@ -114,20 +118,17 @@ module Extension
       end
 
       def test_config_aborts_with_error_if_found_version_is_invalid
+        skip("Temporarily bypassing exit code check due to issues with NPM 7.")
+
         Base64.stubs(:strict_encode64).returns(@encoded_script)
         invalid_version = "2.invalid.0"
         with_stubbed_script(@context, Argo::SCRIPT_PATH) do
           stub_run_yarn_install_and_run_yarn_run_script_methods
           ShopifyCli::JsSystem.any_instance.stubs(:call).returns([@result, @no_error, mock(success?: true)])
-          Argo.any_instance.stubs(:find_version_number).returns(invalid_version)
+          ArgoRendererPackage.stubs(:from_package_manager).raises(Extension::PackageNotFound)
 
-          error_message = "The renderer package version is not a valid SemVer Version (http://semver.org)"
           error = assert_raises(ShopifyCli::Abort) { @dummy_argo.config(@context) }
-          assert_includes error
-            .message, @context.message(
-              "features.argo.dependencies.argo_renderer_package_invalid_version_error",
-              error_message
-            )
+          assert_includes error.message, @context.message("features.argo.dependencies.argo_missing_renderer_package_error")
         end
       end
 
@@ -155,7 +156,7 @@ module Extension
           ShopifyCli::JsSystem.any_instance.stubs(:package_manager).returns("yarn")
           Argo.any_instance.expects(:run_yarn_install).returns(true).once
           Argo.any_instance.expects(:run_yarn_run_script).returns(true).once
-          Argo.any_instance.stubs(:extract_argo_renderer_version).returns("0.0.1")
+          @dummy_argo.renderer_version = "0.0.1"
 
           @dummy_argo.config(@context)
         end
@@ -166,7 +167,7 @@ module Extension
           ShopifyCli::JsSystem.any_instance.stubs(:package_manager).returns("npm")
           Argo.any_instance.expects(:run_yarn_install).never
           Argo.any_instance.expects(:run_yarn_run_script).never
-          Argo.any_instance.stubs(:extract_argo_renderer_version).returns("0.0.1")
+          @dummy_argo.renderer_version = "0.0.1"
 
           @dummy_argo.config(@context)
         end
