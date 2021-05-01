@@ -27,7 +27,7 @@ module Extension
 
       def test_extension_command_aborts_if_a_lazily_initialized_field_of_an_unknown_type_is_accessed
         unknown_type = "unknown_type"
-        project = ExtensionTestHelpers.fake_extension_project(with_mocks: true, type_identifier: unknown_type)
+        ExtensionTestHelpers.fake_extension_project(with_mocks: true, type_identifier: unknown_type)
 
         io = capture_io_and_assert_raises(ShopifyCli::Abort) { @command.specification_handler.features }
 
