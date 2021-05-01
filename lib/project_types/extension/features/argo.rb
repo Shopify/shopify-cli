@@ -47,6 +47,12 @@ module Extension
         end
       end
 
+      def renderer_package(context)
+        Features::ArgoRendererPackage.new(
+          package_name: renderer_package_name, version: extract_argo_renderer_version(context)
+        )
+      end
+
       private
 
       def extract_argo_renderer_version(context)

@@ -1,5 +1,4 @@
 # frozen_string_literal: true
-
 module Extension
   module ExtensionTestHelpers
     module TempProjectSetup
@@ -12,7 +11,8 @@ module Extension
         api_secret: "TEST_SECRET",
         title: "Test",
         type_identifier: @test_extension_type.identifier,
-        registration_id: 55
+        registration_id: 55,
+        registration_uuid: nil
       )
 
         @context = TestHelpers::FakeContext.new(root: "/fake/root")
@@ -21,13 +21,15 @@ module Extension
         @title = title
         @type = type_identifier
         @registration_id = registration_id
+        @registration_uuid = registration_uuid
 
         @project = FakeExtensionProject.new(
           api_key: @api_key,
           api_secret: @api_secret,
           title: @title,
           type: @type,
-          registration_id: @registration_id
+          registration_id: @registration_id,
+          registration_uuid: @registration_uuid,
         )
 
         ShopifyCli::Project.stubs(:current).returns(@project)

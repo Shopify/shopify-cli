@@ -11,6 +11,7 @@ module Script
         property! :ctx, accepts: ShopifyCli::Context
 
         def push(
+          uuid:,
           extension_point_type:,
           script_name:,
           script_content:,
@@ -22,6 +23,7 @@ module Script
         )
           query_name = "app_script_update_or_create"
           variables = {
+            uuid: uuid,
             extensionPointName: extension_point_type.upcase,
             title: script_name,
             configUi: config_ui&.content,
@@ -35,7 +37,7 @@ module Script
           resp_hash = script_service_request(query_name: query_name, api_key: api_key, variables: variables)
           user_errors = resp_hash["data"]["appScriptUpdateOrCreate"]["userErrors"]
 
-          return resp_hash if user_errors.empty?
+          return resp_hash["data"]["appScriptUpdateOrCreate"]["appScript"]["uuid"] if user_errors.empty?
 
           if user_errors.any? { |e| e["tag"] == "already_exists_error" }
             raise Errors::ScriptRepushError, api_key
@@ -43,8 +45,12 @@ module Script
             raise Errors::ConfigUiSyntaxError, config_ui&.filename
           elsif (e = user_errors.find { |err| err["tag"] == "config_ui_missing_keys_error" })
             raise Errors::ConfigUiMissingKeysError.new(config_ui&.filename, e["message"])
+          elsif (e = user_errors.find { |err| err["tag"] == "config_ui_invalid_input_mode_error" })
+            raise Errors::ConfigUiInvalidInputModeError.new(config_ui&.filename, e["message"])
           elsif (e = user_errors.find { |err| err["tag"] == "config_ui_fields_missing_keys_error" })
             raise Errors::ConfigUiFieldsMissingKeysError.new(config_ui&.filename, e["message"])
+          elsif (e = user_errors.find { |err| err["tag"] == "config_ui_fields_invalid_type_error" })
+            raise Errors::ConfigUiFieldsInvalidTypeError.new(config_ui&.filename, e["message"])
           elsif user_errors.find { |err| %w(not_use_msgpack_error schema_version_argument_error).include?(err["tag"]) }
             raise Domain::Errors::MetadataValidationError
           else

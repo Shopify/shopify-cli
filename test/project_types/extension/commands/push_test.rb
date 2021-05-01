@@ -5,15 +5,12 @@ require "project_types/extension/extension_test_helpers"
 module Extension
   module Commands
     class PushTest < MiniTest::Test
-      include TestHelpers::FakeUI
-      include ExtensionTestHelpers::TempProjectSetup
       include ExtensionTestHelpers::Messages
 
       def setup
         super
         ShopifyCli::ProjectType.load_type(:extension)
-        setup_temp_project
-
+        @project = ExtensionTestHelpers.fake_extension_project(with_mocks: true)
         @version = Models::Version.new(
           registration_id: 42,
           last_user_interaction_at: Time.now.utc
@@ -57,15 +54,16 @@ module Extension
       end
 
       def test_updates_the_extensions_draft_version
+        specification_handler = ExtensionTestHelpers.test_specification_handler
         Command::Build.any_instance.stubs(:call)
         ShopifyCli::JsSystem.any_instance.stubs(:call).returns(true)
         Tasks::UpdateDraft.any_instance.expects(:call)
           .with(
             context: @context,
-            api_key: @api_key,
-            registration_id: @registration_id,
-            config: @test_extension_type.config(@context),
-            extension_context: @test_extension_type.extension_context(@context)
+            api_key: @project.api_key,
+            registration_id: @project.registration_id,
+            config: specification_handler.config(@context),
+            extension_context: specification_handler.extension_context(@context)
           )
           .returns(@version)
           .once
@@ -84,7 +82,7 @@ module Extension
 
         assert_message_output(io: io, expected_content: [
           @context.message("push.waiting_text"),
-          @context.message("push.success_confirmation", @title, "May 07, 2020 19:01:56 UTC"),
+          @context.message("push.success_confirmation", @project.title, "May 07, 2020 19:01:56 UTC"),
           @context.message("push.success_info", "https://www.fakeurl.com"),
         ])
       end
@@ -99,9 +97,8 @@ module Extension
         Tasks::UpdateDraft.any_instance.stubs(:call).returns(@version)
 
         io = capture_io { run_push }
-
         assert_message_output(io: io, expected_content: [
-          @context.message("push.success_confirmation", @title, expected_formatted_time_in_utc),
+          @context.message("push.success_confirmation", @project.title, expected_formatted_time_in_utc),
         ])
       end
 

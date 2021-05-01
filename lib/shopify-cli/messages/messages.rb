@@ -64,7 +64,8 @@ module ShopifyCli
           error: {
             directory_exists: "Project directory already exists. Please create a project with a new name.",
             no_branches_found: "Could not find any git branches",
-            repo_not_initiated: "Git repo is not initiated. Please run `git init` and make at least one commit.",
+            repo_not_initiated:
+              "Git repo is not initiated. Please run {{command:git init}} and make at least one commit.",
             no_commits_made: "No git commits have been made. Please make at least one commit.",
           },
 
@@ -90,7 +91,7 @@ module ShopifyCli
             deploy: "Could not deploy to Heroku",
             download: "Heroku CLI could not be downloaded",
             install: "Could not install Heroku CLI",
-            could_not_select_app: "Heroku app `%s` could not be selected",
+            could_not_select_app: "Heroku app {{green:%s}} could not be selected",
           },
         },
 
@@ -390,7 +391,7 @@ module ShopifyCli
           signup_suggestion: <<~MESSAGE,
             {{*}} To avoid tunnels that timeout, it is recommended to signup for a free ngrok
             account at {{underline:https://ngrok.com/signup}}. After you signup, install your
-            personalized authorization token using {{command:%s [rails | node] tunnel auth <token>}}.
+            personalized authorization token using {{command:%s [ node | rails ] tunnel auth <token>}}.
           MESSAGE
           start: "{{v}} ngrok tunnel running at {{underline:%s}}",
           start_with_account: "{{v}} ngrok tunnel running at {{underline:%s}}, with account %s",

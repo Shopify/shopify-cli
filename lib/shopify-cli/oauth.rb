@@ -24,10 +24,10 @@ module ShopifyCli
     property! :service, accepts: String
     property! :client_id, accepts: String
     property! :scopes
-    property :store, default: ShopifyCli::DB.new
+    property :store, default: -> { ShopifyCli::DB.new }
     property :secret, accepts: String
     property :request_exchange, accepts: String
-    property :options, default: {}, accepts: Hash
+    property :options, default: -> { {} }, accepts: Hash
     property :auth_path, default: "/authorize", accepts: ->(path) { path.is_a?(String) && path.start_with?("/") }
     property :token_path, default: "/token", accepts: ->(path) { path.is_a?(String) && path.start_with?("/") }
     property :state_token, accepts: String, default: SecureRandom.hex(30)

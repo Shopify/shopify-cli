@@ -47,6 +47,7 @@ module Extension
           api_key: app.api_key,
           api_secret: app.secret,
           registration_id: registration.id,
+          registration_uuid: registration.uuid,
           title: project.title
         )
       end

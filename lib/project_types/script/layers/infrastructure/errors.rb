@@ -17,6 +17,15 @@ module Script
           end
         end
 
+        class ConfigUiInvalidInputModeError < ScriptProjectError
+          attr_reader :filename, :valid_input_modes
+          def initialize(filename, valid_input_modes)
+            super()
+            @filename = filename
+            @valid_input_modes = valid_input_modes
+          end
+        end
+
         class ConfigUiFieldsMissingKeysError < ScriptProjectError
           attr_reader :filename, :missing_keys
           def initialize(filename, missing_keys)
@@ -26,9 +35,29 @@ module Script
           end
         end
 
+        class ConfigUiFieldsInvalidTypeError < ScriptProjectError
+          attr_reader :filename, :valid_types
+          def initialize(filename, valid_types)
+            super()
+            @filename = filename
+            @valid_types = valid_types
+          end
+        end
+
         class DependencyInstallError < ScriptProjectError; end
+        class DeprecatedEPError < ScriptProjectError; end
         class EmptyResponseError < ScriptProjectError; end
         class ForbiddenError < ScriptProjectError; end
+        class InvalidContextError < ScriptProjectError; end
+
+        class InvalidLanguageError < ScriptProjectError
+          attr_reader :language, :extension_point_type
+          def initialize(language, extension_point_type)
+            super()
+            @language = language
+            @extension_point_type = extension_point_type
+          end
+        end
 
         class GraphqlError < ScriptProjectError
           attr_reader :errors
@@ -48,6 +77,7 @@ module Script
           end
         end
 
+        class ScriptProjectAlreadyExistsError < ScriptProjectError; end
         class ShopAuthenticationError < ScriptProjectError; end
         class TaskRunnerNotFoundError < ScriptProjectError; end
         class BuildScriptNotFoundError < ScriptProjectError; end

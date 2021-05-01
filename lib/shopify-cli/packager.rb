@@ -99,7 +99,7 @@ module ShopifyCli
         raise <<~MESSAGE
 
           Could not find program #{program} which is required to build the package.
-          You can install it by running `#{installation_cmd}`.
+          You can install it by running #{installation_cmd}.
 
         MESSAGE
       end

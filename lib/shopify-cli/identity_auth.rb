@@ -47,7 +47,7 @@ module ShopifyCli
     ]
 
     property! :ctx
-    property :store, default: ShopifyCli::DB.new
+    property :store, default: -> { ShopifyCli::DB.new }
     property :state_token, accepts: String, default: SecureRandom.hex(30)
     property :code_verifier, accepts: String, default: SecureRandom.hex(30)
 

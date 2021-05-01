@@ -12,7 +12,6 @@ describe Script::Layers::Application::BuildScript do
     let(:content) { "content" }
     let(:compiled_type) { "wasm" }
     let(:metadata) { Script::Layers::Domain::Metadata.new("1", "0", false) }
-    let(:config_ui) { Script::Layers::Domain::ConfigUi.new(filename: "filename", content: "content") }
     let(:task_runner) { stub(compiled_type: compiled_type, metadata: metadata) }
     let(:script_project) { stub }
 
@@ -21,7 +20,6 @@ describe Script::Layers::Application::BuildScript do
         ctx: @context,
         task_runner: task_runner,
         script_project: script_project,
-        config_ui: config_ui
       )
     end
 
@@ -33,8 +31,7 @@ describe Script::Layers::Application::BuildScript do
           script_project: script_project,
           script_content: content,
           compiled_type: "wasm",
-          metadata: metadata,
-          config_ui: config_ui
+          metadata: metadata
         )
         capture_io { subject }
       end

@@ -9,7 +9,7 @@ module Extension
       SCRIPTS_DIRECTORY = "scripts"
 
       property! :git_template, accepts: String
-      property! :dependency_checks, default: []
+      property! :dependency_checks, default: -> { [] }
 
       def call(directory_name, identifier, context)
         steps = [

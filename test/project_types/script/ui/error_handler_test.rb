@@ -121,7 +121,7 @@ describe Script::UI::ErrorHandler do
       end
 
       describe "when InvalidContextError" do
-        let(:err) { Script::Errors::InvalidContextError.new("") }
+        let(:err) { Script::Layers::Infrastructure::Errors::InvalidContextError.new("") }
         it "should call display_and_raise" do
           should_call_display_and_raise
         end
@@ -163,14 +163,14 @@ describe Script::UI::ErrorHandler do
       end
 
       describe "when ScriptProjectAlreadyExistsError" do
-        let(:err) { Script::Errors::ScriptProjectAlreadyExistsError.new("/") }
+        let(:err) { Script::Layers::Infrastructure::Errors::ScriptProjectAlreadyExistsError.new("/") }
         it "should call display_and_raise" do
           should_call_display_and_raise
         end
       end
 
       describe "when InvalidLanguageError" do
-        let(:err) { Script::Errors::InvalidLanguageError.new("ruby", "discount") }
+        let(:err) { Script::Layers::Infrastructure::Errors::InvalidLanguageError.new("ruby", "discount") }
         it "should call display_and_raise" do
           should_call_display_and_raise
         end
@@ -239,8 +239,22 @@ describe Script::UI::ErrorHandler do
         end
       end
 
+      describe "when ConfigUiInvalidInputModeError" do
+        let(:err) { Script::Layers::Infrastructure::Errors::ConfigUiInvalidInputModeError.new("file", "input modes") }
+        it "should call display_and_raise" do
+          should_call_display_and_raise
+        end
+      end
+
       describe "when ConfigUiFieldsMissingKeysError" do
         let(:err) { Script::Layers::Infrastructure::Errors::ConfigUiFieldsMissingKeysError.new("file", "keys") }
+        it "should call display_and_raise" do
+          should_call_display_and_raise
+        end
+      end
+
+      describe "when ConfigUiFieldsInvalidTypeError" do
+        let(:err) { Script::Layers::Infrastructure::Errors::ConfigUiFieldsInvalidTypeError.new("file", "types") }
         it "should call display_and_raise" do
           should_call_display_and_raise
         end

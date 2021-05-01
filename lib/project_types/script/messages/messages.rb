@@ -5,8 +5,8 @@ module Script
     MESSAGES = {
       script: {
         help: <<~HELP,
-        Suite of commands for developing script applications. See {{command:%1$s script <command> --help}} for usage of each command.
-          Usage: {{command:%1$s script [ %2$s ]}}
+          Suite of commands for developing script applications. See {{command:%1$s script <command> --help}} for usage of each command.
+            Usage: {{command:%1$s script [ %2$s ]}}
         HELP
 
         error: {
@@ -35,7 +35,7 @@ module Script
                                     "are numbers, letters, hyphens, or underscores.",
 
           no_existing_apps_cause: "You don't have any apps.",
-          no_existing_apps_help: "Create an app with {{command:shopify [ extension | node | rails | script ] create}}"\
+          no_existing_apps_help: "Create an app with {{command:shopify [ extension | node | rails | script ] create}}" \
                                  " or visit https://partners.shopify.com/.",
 
           no_existing_orgs_cause: "You don't have any partner organizations.",
@@ -69,9 +69,17 @@ module Script
                                               "%{missing_keys}.",
           config_ui_missing_keys_error_help: "Add the keys and try again.",
 
+          config_ui_invalid_input_mode_error_cause: "The UI configuration file %{filename} only accept "\
+                                              "one of the following input mode(s): %{valid_input_modes}.",
+          config_ui_invalid_input_mode_error_help: "Change the input modes and try again.",
+
           config_ui_fields_missing_keys_error_cause: "A field entry in the UI configuration file %{filename} is "\
                                                      "missing required keys: %{missing_keys}.",
           config_ui_fields_missing_keys_error_help: "Add the keys and try again.",
+
+          config_ui_fields_invalid_type_error_cause: "The UI configuration file %{filename} fields only accept "\
+                                                     "one of the following type(s): %{valid_types}.",
+          config_ui_fields_invalid_type_error_help: "Change the types and try again.",
 
           script_not_found_cause: "Couldn't find script %s for extension point %s",
 
@@ -132,12 +140,12 @@ module Script
 
         create: {
           help: <<~HELP,
-          {{command:%1$s script create}}: Creates a script project.
-            Usage: {{command:%1$s script create}}
-            Options:
-              {{command:--name=NAME}} Script project name. Use any string.
-              {{command:--extension-point=TYPE}} Extension point name. Allowed values: %2$s.
-              {{command:--no-config-ui}} Specify this option if you don’t want Scripts to render an interface in the Shopify admin.
+            {{command:%1$s script create}}: Creates a script project.
+              Usage: {{command:%1$s script create}}
+              Options:
+                {{command:--name=NAME}} Script project name. Use any string.
+                {{command:--extension-point=TYPE}} Extension point name. Allowed values: %2$s.
+                {{command:--no-config-ui}} Specify this option if you don’t want Scripts to render an interface in the Shopify admin.
           HELP
 
           error: {
@@ -151,10 +159,10 @@ module Script
 
         push: {
           help: <<~HELP,
-          Build the script and put it into production. If you've already pushed a script with the same extension point, use --force to replace the current script with the newest one.
-            Usage: {{command:%s script push}}
-            Options:
-              {{command:[--force]}} Forces the script to be overwritten if an instance of it already exists.
+            Build the script and put it into production. If you've already pushed a script with the same extension point, use --force to replace the current script with the newest one.
+              Usage: {{command:%s script push}}
+              Options:
+                {{command:[--force]}} Forces the script to be overwritten if an instance of it already exists.
           HELP
 
           error: {

@@ -2,7 +2,7 @@
 
 require "project_types/script/test_helper"
 
-describe Script::Layers::Infrastructure::AssemblyScriptTaskRunner do
+describe Script::Layers::Infrastructure::RustTaskRunner do
   include TestHelpers::FakeFS
   let(:ctx) { TestHelpers::FakeContext.new }
   let(:script_id) { "id" }
@@ -18,14 +18,6 @@ describe Script::Layers::Infrastructure::AssemblyScriptTaskRunner do
   let(:extension_point_type) { "payment_filter" }
   let(:language) { "rust" }
   let(:rs_task_runner) { Script::Layers::Infrastructure::RustTaskRunner.new(ctx, script_name) }
-  let(:script_project) do
-    TestHelpers::FakeScriptProject
-      .new(language: language, extension_point_type: extension_point_type, script_name: script_name)
-  end
-
-  before do
-    Script::ScriptProject.stubs(:current).returns(script_project)
-  end
 
   def system_output(msg:, success:)
     [msg, OpenStruct.new(success?: success)]
@@ -71,8 +63,8 @@ describe Script::Layers::Infrastructure::AssemblyScriptTaskRunner do
         .with("target/wasm32-unknown-unknown/release/#{script_name}.wasm")
         .returns(true)
 
-      File
-        .expects(:read)
+      ctx
+        .expects(:binread)
         .once
         .with("target/wasm32-unknown-unknown/release/#{script_name}.wasm")
         .returns("blob")
