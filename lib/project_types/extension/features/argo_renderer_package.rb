@@ -34,9 +34,13 @@ module Extension
         package_name == ARGO_ADMIN
       end
 
+      ##
+      # Temporarily returns false in all cases as the argo webpack server is
+      # unable to handle the UUID flag.
       def supports_uuid_flag?
-        return false if checkout?
-        Gem::Version.new(version) > Gem::Version.new(MINIMUM_ARGO_VERSION)
+        return false
+        # return false if checkout?
+        # Gem::Version.new(version) > Gem::Version.new(MINIMUM_ARGO_VERSION)
       end
     end
   end

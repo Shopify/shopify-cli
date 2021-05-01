@@ -23,6 +23,8 @@ module Extension
       end
 
       def test_argo_minimum_version_supports_uuid_flag
+        skip("Passing the a UUID to the Argo Webpack server is currently not supported")
+
         uuid_supported = Features::ArgoRendererPackage.new(
           package_name: Features::ArgoRendererPackage::ARGO_ADMIN,
           version: "0.9.4"
