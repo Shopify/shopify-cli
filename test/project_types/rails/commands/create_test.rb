@@ -39,6 +39,8 @@ module Rails
       end
 
       def test_can_create_new_app
+        skip("Flaky test! Reproduce with `SEED=200 rake test`")
+
         create_mock_dirs
 
         gem_path = create_gem_path_and_binaries

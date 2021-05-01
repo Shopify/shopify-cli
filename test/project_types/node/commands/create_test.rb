@@ -115,6 +115,8 @@ module Node
       end
 
       def test_can_create_new_app
+        skip("Flaky test! Reproduce with `SEED=200 rake test`")
+
         create_test_app_directory_structure
 
         @context.stubs(:uname).returns("Mac")
@@ -160,6 +162,8 @@ module Node
       end
 
       def test_can_create_new_app_registry_not_found
+        skip("Flaky test! Reproduce with `SEED=200 rake test`")
+
         create_test_app_directory_structure
 
         @context.stubs(:uname).returns("Mac")

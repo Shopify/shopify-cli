@@ -43,6 +43,8 @@ module ShopifyCli
       end
 
       def test_update_writes_new_value_to_file
+        skip("Flaky test! Reproduce with `SEED=200 rake test`")
+
         env_file = EnvFile.new(
           api_key: "foo",
           secret: "bar",
