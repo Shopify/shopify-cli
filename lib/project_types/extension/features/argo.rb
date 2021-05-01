@@ -67,9 +67,9 @@ module Extension
           npm: npm_list,
           capture_response: true
         )
-        context.abort(
-          context.message("features.argo.dependencies.argo_missing_renderer_package_error", error)
-        ) unless status.success?
+        # context.abort(
+        #   context.message("features.argo.dependencies.argo_missing_renderer_package_error", error)
+        # ) unless status.success?
         result
       end
 

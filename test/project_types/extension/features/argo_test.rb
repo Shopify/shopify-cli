@@ -102,6 +102,8 @@ module Extension
       end
 
       def test_config_aborts_with_error_if_run_list_command_fails
+        skip("Temporarily bypassing exit code check due to issues with NPM 7.")
+
         Base64.stubs(:strict_encode64).returns(@encoded_script)
         with_stubbed_script(@context, Argo::SCRIPT_PATH) do
           stub_run_yarn_install_and_run_yarn_run_script_methods
@@ -116,6 +118,8 @@ module Extension
       end
 
       def test_config_aborts_with_error_if_found_version_is_invalid
+        skip("Temporarily bypassing exit code check due to issues with NPM 7.")
+
         Base64.stubs(:strict_encode64).returns(@encoded_script)
         invalid_version = "2.invalid.0"
         with_stubbed_script(@context, Argo::SCRIPT_PATH) do
