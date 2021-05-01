@@ -121,8 +121,7 @@ renderer_package_name: "@shopify/argo-checkout")
 renderer_package_name: "@shopify/argo-admin")
       end
 
-      def stub_argo_enabled_shop(api_key: @api_key, registration_uuid: @registration_uuid, argo_version: @argo_version)
-        _ = argo_version
+      def stub_argo_enabled_shop(api_key: @api_key, registration_uuid: @registration_uuid, _argo_version: @argo_version)
         ShopifyCli::Shopifolk.stubs(:check).returns(true)
         ShopifyCli::Feature.stubs(:enabled?).with(:argo_admin_beta).returns(true)
         ShopifyCli::Tasks::EnsureEnv.stubs(:call)
