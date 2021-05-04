@@ -29,16 +29,16 @@ module Extension
         no_apps: "{{x}} You don’t have any apps.",
         learn_about_apps: "{{*}} Learn more about building apps at <https://shopify.dev/concepts/apps>, " \
           "or try creating a new app using {{command:shopify create}}.",
-        loading_apps: "Loading your apps...",
+        loading_apps: "Loading your apps…",
         no_available_extensions: "{{x}} There are no available extensions for this app.",
       },
       build: {
-        frame_title: "Building extension with: %s...",
+        frame_title: "Building extension with: %s…",
         build_failure_message: "Failed to build extension code.",
       },
       register: {
         frame_title: "Registering Extension",
-        waiting_text: "Registering with Shopify...",
+        waiting_text: "Registering with Shopify…",
         already_registered: "Extension is already registered.",
         confirm_info: "This will create a new extension registration for %s, which can’t be undone.",
         confirm_question: "Would you like to register this extension? (y/n)",
@@ -48,14 +48,14 @@ module Extension
       },
       push: {
         frame_title: "Pushing your extension to Shopify",
-        waiting_text: "Pushing code to Shopify...",
+        waiting_text: "Pushing code to Shopify…",
         pushed_with_errors: "{{x}} Code pushed to Shopify with errors on %s.",
         push_with_errors_info: "{{*}} Fix these errors and run {{command:shopify push}} to revalidate your extension.",
         success_confirmation: "{{v}} Pushed {{green:%s}} to a draft on %s.",
         success_info: "{{*}} Visit %s to version and publish your extension.",
       },
       serve: {
-        frame_title: "Serving extension...",
+        frame_title: "Serving extension…",
         serve_failure_message: "Failed to run extension code.",
         serve_missing_information: "Missing shop or api_key.",
       },

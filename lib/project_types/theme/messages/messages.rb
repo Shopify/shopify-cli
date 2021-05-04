@@ -14,7 +14,7 @@ module Theme
                 {{command:--themeid=THEMEID}} Theme ID. Must be an existing theme on your store.
           HELP
           inside_project: "You are inside an existing theme, theme files weren't connected",
-          connect: "Downloading theme files...",
+          connect: "Downloading theme files…",
           failed: "Couldn't download theme files from store",
           connected: "{{green:%s}} files were downloaded from {{underline:%s}} to {{green:%s}}",
         },
@@ -116,7 +116,7 @@ module Theme
             Sync your current changes, then view the active store in your default browser. Any theme edits will continue to update in real time. Also prints the active store's URL in your terminal.
             Usage: {{command:%s serve}}
           HELP
-          serve: "Viewing theme...",
+          serve: "Viewing theme…",
           open_fail: "Couldn't open the theme",
         },
         tasks: {
@@ -132,7 +132,7 @@ module Theme
             installing_themekit: "Installing Theme Kit",
             successful: "Theme Kit installed successfully",
             updating_themekit: "Updating Theme Kit",
-            verifying: "Verifying download...",
+            verifying: "Verifying download…",
           },
         },
         themekit: {
