@@ -1,5 +1,6 @@
 Unreleased
 ------
+* [#1209](https://github.com/Shopify/shopify-app-cli/pull/1209): Inconsistent use of periods vs ellipsis in messages. This replaces periods with ellipsis.
 
 Version 1.9.1
 -------------
