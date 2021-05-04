@@ -1,6 +1,7 @@
 # [Shopify App CLI](https://shopify.dev/tools/cli)
 
-[![License: MIT](https://img.shields.io/badge/License-MIT-green.svg)](LICENSE.md)[![Build Status](https://travis-ci.com/Shopify/shopify-app-cli.svg?token=qtPazgjyosjEEgxgq7VZ&branch=master)](https://travis-ci.com/Shopify/shopify-app-cli)
+[![License: MIT](https://img.shields.io/badge/License-MIT-green.svg)](LICENSE.md)
+[![Build Status](https://github.com/Shopify/shopify-app-cli/workflows/CI/badge.svg)](https://github.com/Shopify/shopify-app-cli/actions)
 
 Shopify App CLI helps you build Shopify apps faster. It quickly generates Node.js and Ruby on Rails apps and automates many common development tasks.
 
