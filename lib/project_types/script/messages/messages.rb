@@ -192,6 +192,12 @@ module Script
           disabled: "Disabled",
           enabling: "Enabling",
           enabled: "Enabled",
+          ensure_env: {
+            organization_select: "To which partner organization does this project belong?",
+            app_select: "To which app does this project belong?",
+            ask_connect_to_existing_script: "Do you want to connect to an existing Script?",
+            ask_which_script_to_connect_to: "Which Script do you want to connect to?",
+          },
         },
       },
     }.freeze

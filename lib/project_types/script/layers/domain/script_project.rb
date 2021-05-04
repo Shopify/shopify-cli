@@ -6,6 +6,8 @@ module Script
       class ScriptProject
         include SmartProperties
 
+        UUID_ENV_KEY = "UUID"
+
         property! :id, accepts: String
         property :env, accepts: ShopifyCli::Resources::EnvFile
 
@@ -29,8 +31,22 @@ module Script
           env&.api_key
         end
 
+        def api_secret
+          env&.secret
+        end
+
         def uuid
-          env&.extra&.[]("UUID")
+          uuid_defined? && !raw_uuid.empty? ? raw_uuid : nil
+        end
+
+        def uuid_defined?
+          !raw_uuid.nil?
+        end
+
+        private
+
+        def raw_uuid
+          env&.extra&.[](UUID_ENV_KEY)
         end
       end
     end

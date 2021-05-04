@@ -28,7 +28,6 @@ module Script
           raise Domain::PushPackageNotFoundError unless ctx.file_exist?(build_file_path)
 
           script_content = ctx.binread(build_file_path)
-
           Domain::PushPackage.new(
             id: build_file_path,
             uuid: script_project.uuid,

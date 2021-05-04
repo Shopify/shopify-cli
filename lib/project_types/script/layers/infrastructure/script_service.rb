@@ -58,6 +58,12 @@ module Script
           end
         end
 
+        def get_app_scripts(api_key:, extension_point_type:)
+          query_name = "get_app_scripts"
+          variables = { appKey: api_key, extensionPointName: extension_point_type.upcase }
+          script_service_request(query_name: query_name, api_key: api_key, variables: variables)["data"]["appScripts"]
+        end
+
         private
 
         class ScriptServiceAPI < ShopifyCli::API

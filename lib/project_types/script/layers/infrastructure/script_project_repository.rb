@@ -76,6 +76,25 @@ module Script
           )
         end
 
+        def create_env(api_key:, secret:, uuid:)
+          ShopifyCli::Resources::EnvFile.new(
+            api_key: api_key,
+            secret: secret,
+            extra: {
+              Domain::ScriptProject::UUID_ENV_KEY => uuid,
+            }
+          ).write(ctx)
+
+          Domain::ScriptProject.new(
+            id: ctx.root,
+            env: project.env,
+            script_name: script_name,
+            extension_point_type: extension_point_type,
+            language: language,
+            config_ui: ConfigUiRepository.new(ctx: ctx).get(config_ui_file),
+          )
+        end
+
         private
 
         def capture_io(&block)
@@ -109,7 +128,7 @@ module Script
         end
 
         def project
-          ShopifyCli::Project.current
+          @project ||= ShopifyCli::Project.current(force_reload: true)
         end
 
         def default_config_ui_content(title)
