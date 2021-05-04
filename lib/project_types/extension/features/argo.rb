@@ -61,7 +61,7 @@ module Extension
         yarn_list = YARN_LIST_COMMAND + YARN_LIST_PARAMETERS
         npm_list = NPM_LIST_COMMAND + NPM_LIST_PARAMETERS
 
-        result, error, status = ShopifyCli::JsSystem.call(
+        result, _error, _status = ShopifyCli::JsSystem.call(
           context,
           yarn: yarn_list,
           npm: npm_list,

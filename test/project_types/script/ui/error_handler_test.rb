@@ -7,7 +7,7 @@ describe Script::UI::ErrorHandler do
     let(:failed_op) { "Operation didn't complete." }
     let(:cause_of_error) { "This is why it failed." }
     let(:help_suggestion) { "Perhaps this is what's wrong." }
-    let(:ctx_root) { '/some/dir/here' }
+    let(:ctx_root) { "/some/dir/here" }
     let(:ctx) { TestHelpers::FakeContext.new(root: ctx_root) }
     let(:ci?) { ctx.ci? }
 

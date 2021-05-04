@@ -10,7 +10,7 @@ module Extension
       PACKAGE_NAMES = [
         ARGO_CHECKOUT,
         ARGO_ADMIN,
-        ARGO_POST_PURCHASE
+        ARGO_POST_PURCHASE,
       ].freeze
       MINIMUM_ARGO_VERSION = "0.9.3".freeze
 
@@ -22,7 +22,7 @@ module Extension
           pattern = /(?<name>#{PACKAGE_NAMES.join("|")})@(?<version>\d.*)$/
           match = package_manager_output.match(pattern)
           raise PackageNotFound, package_manager_output if match.nil?
-          return new(package_name: match[:name], version: match[:version].strip)
+          new(package_name: match[:name], version: match[:version].strip)
         end
       end
 
@@ -38,7 +38,7 @@ module Extension
       # Temporarily returns false in all cases as the argo webpack server is
       # unable to handle the UUID flag.
       def supports_uuid_flag?
-        return false
+        false
         # return false if checkout?
         # Gem::Version.new(version) > Gem::Version.new(MINIMUM_ARGO_VERSION)
       end
