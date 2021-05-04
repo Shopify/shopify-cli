@@ -13,15 +13,9 @@ module Script
         def create(script_name:, extension_point_type:, language:, no_config_ui:)
           validate_metadata!(extension_point_type, language)
 
-          optional_identifiers = {}
           config_ui_file = nil
-
-          unless no_config_ui
-            optional_identifiers.merge!(config_ui_file: DEFAULT_CONFIG_UI_FILENAME)
-            config_ui_file = ConfigUiRepository
-              .new(ctx: ctx)
-              .create(DEFAULT_CONFIG_UI_FILENAME, default_config_ui_content(script_name))
-          end
+          optional_identifiers = {}
+          optional_identifiers.merge!(config_ui_file: DEFAULT_CONFIG_UI_FILENAME) unless no_config_ui
 
           ShopifyCli::Project.write(
             ctx,
@@ -131,17 +125,6 @@ module Script
           @project ||= ShopifyCli::Project.current(force_reload: true)
         end
 
-        def default_config_ui_content(title)
-          require "yaml" # takes 20ms, so deferred as late as possible.
-          YAML.dump({
-            "version" => 1,
-            "inputMode" => "single",
-            "title" => title,
-            "description" => "",
-            "fields" => [],
-          })
-        end
-
         def default_language
           Domain::ExtensionPoint::ExtensionPointAssemblyScriptSDK.language
         end
@@ -157,15 +140,6 @@ module Script
         class ConfigUiRepository
           include SmartProperties
           property! :ctx, accepts: ShopifyCli::Context
-
-          def create(filename, content)
-            File.write(filename, content)
-
-            Domain::ConfigUi.new(
-              filename: filename,
-              content: content,
-            )
-          end
 
           def get(filename)
             return nil unless filename
