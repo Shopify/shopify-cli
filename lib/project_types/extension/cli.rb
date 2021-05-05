@@ -39,6 +39,7 @@ module Extension
     autoload :FetchSpecifications, Project.project_filepath("tasks/fetch_specifications")
     autoload :ConfigureFeatures, Project.project_filepath("tasks/configure_features")
     autoload :ChooseNextAvailablePort, Project.project_filepath("tasks/choose_next_available_port")
+    autoload :FindNpmPackages, Project.project_filepath("tasks/find_npm_packages")
 
     module Converters
       autoload :RegistrationConverter, Project.project_filepath("tasks/converters/registration_converter")
