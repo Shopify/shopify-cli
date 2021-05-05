@@ -5,9 +5,8 @@ module Extension
 
       property! :specification_handler, accepts: Extension::Models::SpecificationHandlers::Default
       property! :context, accepts: ShopifyCli::Context
-
-      YARN_SERVE_COMMAND = %w(server)
-      NPM_SERVE_COMMAND = %w(run-script server)
+      property! :port, accepts: Integer, default: 39351
+      property  :tunnel_url, accepts: String, default: ""
 
       def call
         validate_env!
@@ -24,12 +23,31 @@ module Extension
         specification_handler.specification
       end
 
+      def renderer_package
+        specification_handler.renderer_package(context)
+      end
+
+      def required_fields
+        specification.features.argo.required_fields
+      end
+
+      def serve_options
+        @options ||= Features::ArgoServeOptions.new(port: port, context: context, required_fields: required_fields,
+          renderer_package: renderer_package, public_url: tunnel_url)
+      end
+
+      def yarn_serve_command
+        serve_options.yarn_serve_command
+      end
+
+      def npm_serve_command
+        serve_options.npm_serve_command
+      end
+
       def validate_env!
         ExtensionProject.reload
 
         ShopifyCli::Shopifolk.check && ShopifyCli::Feature.enabled?(:argo_admin_beta)
-
-        required_fields = specification.features.argo.required_fields
 
         return if required_fields.none?
 
@@ -44,25 +62,6 @@ module Extension
         end
 
         context.abort(context.message("serve.serve_missing_information"))
-      end
-
-      def yarn_serve_command
-        YARN_SERVE_COMMAND + serve_options(specification.features.argo.required_fields)
-      end
-
-      def npm_serve_command
-        NPM_SERVE_COMMAND + ["--"] + serve_options(specification.features.argo.required_fields)
-      end
-
-      def serve_options(required_fields)
-        renderer_package = specification_handler.renderer_package(context)
-        project = ExtensionProject.current
-        @serve_options ||= [].tap do |options|
-          options << "--shop=#{project.env.shop}" if required_fields.include?(:shop)
-          options << "--apiKey=#{project.env.api_key}" if required_fields.include?(:api_key)
-          options << "--argoVersion=#{renderer_package.version}" if renderer_package.admin?
-          options << "--uuid=#{project.registration_uuid}" if renderer_package.supports_uuid_flag?
-        end
       end
     end
   end
