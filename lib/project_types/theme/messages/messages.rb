@@ -16,7 +16,7 @@ module Theme
               Options:
                 {{command:-u, --clone-url=URL}} The Git URL to clone from. Defaults to https://github.com/Shopify/dawn.git
           HELP
-          ask_name: "App name",
+          ask_name: "Theme name",
         },
 
         publish: {
