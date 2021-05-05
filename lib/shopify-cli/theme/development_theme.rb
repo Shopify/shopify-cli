@@ -20,9 +20,13 @@ module ShopifyCli
       end
 
       def ensure_exists!
-        create unless exists?
-
-        @ctx.debug("Using temporary development theme: ##{id} #{name}")
+        if exists?
+          @ctx.debug("Using temporary development theme: ##{id} #{name}")
+        else
+          create
+          @ctx.debug("Created temporary development theme: #{@id}")
+          ShopifyCli::DB.set(development_theme_id: @id)
+        end
       end
 
       def exists?
@@ -49,28 +53,6 @@ module ShopifyCli
       end
 
       private
-
-      def create
-        _status, body = ShopifyCli::AdminAPI.rest_request(
-          @ctx,
-          shop: shop,
-          path: "themes.json",
-          body: JSON.generate({
-            theme: {
-              name: name,
-              role: "development",
-            },
-          }),
-          method: "POST",
-          api_version: "unstable",
-        )
-
-        theme_id = body["theme"]["id"]
-
-        @ctx.debug("Created temporary development theme: #{theme_id}")
-
-        ShopifyCli::DB.set(development_theme_id: theme_id)
-      end
 
       def generate_theme_name
         hostname = Socket.gethostname.split(".").shift

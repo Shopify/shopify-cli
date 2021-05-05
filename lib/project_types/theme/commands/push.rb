@@ -10,6 +10,7 @@ module Theme
         parser.on("-n", "--nodelete") { flags[:nodelete] = true }
         parser.on("-i", "--themeid=ID") { |theme_id| flags[:theme_id] = theme_id }
         parser.on("-d", "--development") { flags[:development] = true }
+        parser.on("-u", "--unpublished") { flags[:unpublished] = true }
         parser.on("-j", "--json") { flags[:json] = true }
         parser.on("-a", "--allow-live") { flags[:allow_live] = true }
         parser.on("-p", "--publish") { flags[:publish] = true }
@@ -29,6 +30,11 @@ module Theme
         elsif options.flags[:development]
           theme = ShopifyCli::Theme::DevelopmentTheme.new(@ctx, config)
           theme.ensure_exists!
+          theme
+        elsif options.flags[:unpublished]
+          name = CLI::UI::Prompt.ask(@ctx.message("theme.push.name"), allow_empty: false)
+          theme = ShopifyCli::Theme::Theme.new(@ctx, config, name: name, role: "unpublished")
+          theme.create
           theme
         else
           Forms::Select.ask(

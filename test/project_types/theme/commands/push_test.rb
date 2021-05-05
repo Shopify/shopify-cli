@@ -161,6 +161,30 @@ module Theme
         @command.call([], "push")
       end
 
+      def test_push_to_unpublished_theme
+        ShopifyCli::Theme::Config.expects(:from_path)
+          .returns(@config)
+
+        ShopifyCli::Theme::Theme.expects(:new)
+          .with(@ctx, @config, name: "NAME", role: "unpublished")
+          .returns(@theme)
+
+        CLI::UI::Prompt.expects(:ask).returns("NAME")
+
+        @theme.expects(:create)
+
+        ShopifyCli::Theme::Uploader.expects(:new)
+          .with(@ctx, @theme)
+          .returns(@uploader)
+
+        @uploader.expects(:upload_theme_with_progress_bar!).with(delete: true)
+
+        @ctx.expects(:done)
+
+        @command.options.flags[:unpublished] = true
+        @command.call([], "push")
+      end
+
       def test_push_pass_nodelete_to_uploader
         ShopifyCli::Theme::Config.expects(:from_path)
           .returns(@config)
