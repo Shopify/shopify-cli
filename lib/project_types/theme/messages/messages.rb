@@ -66,9 +66,9 @@ module Theme
           push: "Pushing theme files to Shopify",
           select: "Select theme to push to",
           live: "Are you sure you want to push to your live theme?",
-          theme_not_found: "Theme #%s does not exist",
+          theme_not_found: "Theme #%s doesn't exist",
           done: <<~DONE,
-            {{green:Your theme is ready!}}
+            {{green:Your theme was pushed successfully}}
 
               {{info:View your theme:}}
               {{underline:%s}}
