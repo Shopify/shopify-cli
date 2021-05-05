@@ -193,10 +193,11 @@ module Script
           enabling: "Enabling",
           enabled: "Enabled",
           ensure_env: {
-            organization_select: "To which partner organization does this project belong?",
-            app_select: "To which app does this project belong?",
-            ask_connect_to_existing_script: "Do you want to connect to an existing Script?",
-            ask_which_script_to_connect_to: "Which Script do you want to connect to?",
+            organization_select: "Which partner organization do you want to use?",
+            app_select: "Which app do you want to push this script to?",
+            ask_connect_to_existing_script: "This app has some scripts. Do you want to replace any of the "\
+              "existing scripts with the current script?",
+            ask_which_script_to_connect_to: "Which script do you want to replace?",
           },
         },
       },
