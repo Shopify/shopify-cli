@@ -8,33 +8,17 @@ module Theme
             Usage: {{command:%1$s theme [ %2$s ]}}
         HELP
 
-        connect: {
-          duplicate: "Duplicate directory, theme files weren't connected",
+        init: {
           help: <<~HELP,
-            {{command:%s theme connect}}: Connects an existing theme in your store to Shopify CLI. Creates a config file.
-              Usage: {{command:%s theme connect}}
-          HELP
-          inside_project: "You are inside an existing theme, theme files weren't connected",
-          connect: "Downloading theme files...",
-          connected: "Successfully connected. Config file created at {{green:%s}}",
-        },
-        create: {
-          creating_theme: "Creating theme %s",
-          duplicate_theme: "Duplicate theme",
-          failed: "Couldn't create the theme, %s",
-          help: <<~HELP,
-            {{command:%s theme create}}: Creates a theme.
-              Usage: {{command:%s theme create}}
+            {{command:%s theme init}}: Initialize a new theme from Git repository.
+              Usage: {{command:%s theme init [ NAME ]}}
+
               Options:
-                {{command:--store=MYSHOPIFYDOMAIN}} Store URL. Must be an existing store with private apps enabled.
-                {{command:--password=PASSWORD}} Private app password. App must have Read and Write Theme access.
-                {{command:--name=NAME}} Theme name. Any string.
+                {{command:-u, --clone-url=URL}} The Git URL to clone from. Defaults to https://github.com/Shopify/dawn.git
           HELP
-          info: {
-            created: "{{green:%s}} was created for {{underline:%s}} in {{green:%s}}",
-            dir_created: "Created directories",
-          },
+          ask_name: "App name",
         },
+
         publish: {
           confirmation: "This will change your live theme. Do you wish to proceed?",
           deploying: "Deploying theme",
@@ -52,19 +36,6 @@ module Theme
         forms: {
           ask_password: "Password:",
           ask_store: "Store domain:",
-          create: {
-            ask_title: "Title:",
-            private_app: <<~APP,
-              To create a new theme, Shopify CLI needs to connect with a private app installed on your store. Visit {{underline:%s/admin/apps/private}} to create a new API key and password, or retrieve an existing password.
-              If you create a new private app, ensure that it has Read and Write Theme access.
-            APP
-          },
-          connect: {
-            private_app: <<~APP,
-              To fetch your existing themes, Shopify CLI needs to connect with your store. Visit {{underline:%s/admin/apps/private}} to create a new API key and password, or retrieve an existing password.
-              If you create a new private app, ensure that it has Read and Write Theme access.
-            APP
-          },
           errors: "%s can't be blank",
         },
         push: {
