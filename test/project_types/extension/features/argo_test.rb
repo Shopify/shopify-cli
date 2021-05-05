@@ -128,7 +128,8 @@ module Extension
           ArgoRendererPackage.stubs(:from_package_manager).raises(Extension::PackageNotFound)
 
           error = assert_raises(ShopifyCli::Abort) { @dummy_argo.config(@context) }
-          assert_includes error.message, @context.message("features.argo.dependencies.argo_missing_renderer_package_error")
+          assert_includes error.message,
+            @context.message("features.argo.dependencies.argo_missing_renderer_package_error")
         end
       end
 
