@@ -8,9 +8,8 @@ module Extension
       include ShopifyCli::MethodObject
 
       property! :from
-      property! :to, default: -> { from + 25 }
+      property! :to, default: -> { from + 10 }
       property! :host, default: "localhost"
-      property! :max_tries, default: 25
 
       def call
         available_port = port_range(from: from, to: to).find { |p| available?(host, p) }
@@ -21,7 +20,7 @@ module Extension
       private
 
       def port_range(from:, to:)
-        (from...to)
+        (from..to)
       end
 
       def available?(host, port)
