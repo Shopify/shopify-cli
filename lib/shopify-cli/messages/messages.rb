@@ -334,7 +334,7 @@ module ShopifyCli
           start: "{{v}} ngrok tunnel running at {{underline:%s}}",
           start_with_account: "{{v}} ngrok tunnel running at {{underline:%s}}, with account %s",
           stopped: "{{green:x}} ngrok tunnel stopped",
-          timed_out: "{{x}} ngrok tunnel has timed out, restarting …",
+          timed_out: "{{x}} ngrok tunnel has timed out, restarting…",
           will_timeout: "{{*}} This tunnel will timeout in {{red:%s}}",
           prereq_command_location: "%s @ %s",
         },
