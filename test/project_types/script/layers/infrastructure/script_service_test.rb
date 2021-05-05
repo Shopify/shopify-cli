@@ -258,6 +258,74 @@ describe Script::Layers::Infrastructure::ScriptService do
     end
   end
 
+  describe ".get_app_scripts" do
+    let(:api_key) { "fake_key" }
+    let(:get_app_scripts) do
+      <<~HERE
+        query GetAppScripts($appKey: String!, $extensionPointName: ExtensionPointName!) {
+          appScripts(appKeys: [$appKey], extensionPointName: $extensionPointName) {
+            uuid
+            title
+          }
+        }
+      HERE
+    end
+    let(:partners_response) do
+      {
+        "data" => {
+          "scriptServiceProxy" => JSON.dump(script_service_response),
+        },
+      }
+    end
+    let(:script_service_response) do
+      {
+        "data" => {
+          "appScripts" => app_scripts,
+        },
+      }
+    end
+
+    before do
+      stub_load_query("script_service_proxy", script_service_proxy)
+      stub_load_query("get_app_scripts", get_app_scripts)
+      stub_partner_req(
+        "script_service_proxy",
+        variables: {
+          api_key: api_key,
+          variables: {
+            appKey: api_key,
+            extensionPointName: extension_point_type,
+          }.to_json,
+          query: get_app_scripts,
+        },
+        resp: partners_response
+      )
+    end
+
+    subject do
+      script_service.get_app_scripts(
+        api_key: api_key,
+        extension_point_type: extension_point_type,
+      )
+    end
+
+    describe "when some app scripts exist" do
+      let(:app_scripts) { [{ "id" => 1 }, { "id" => 2 }] }
+
+      it "returns the app scripts" do
+        assert_equal app_scripts, subject
+      end
+    end
+
+    describe "when no app scripts exist" do
+      let(:app_scripts) { [] }
+
+      it "returns empty" do
+        assert_empty subject
+      end
+    end
+  end
+
   private
 
   def stub_load_query(name, body)

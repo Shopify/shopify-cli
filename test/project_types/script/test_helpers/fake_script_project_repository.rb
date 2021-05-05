@@ -35,6 +35,11 @@ module TestHelpers
       @project
     end
 
+    def create_env(api_key:, secret:, uuid:)
+      @project.env = ShopifyCli::Resources::EnvFile.new(api_key: api_key, secret: secret, extra: { "UUID" => uuid })
+      @project
+    end
+
     class FakeConfigUiRepository
       def initialize
         @cache = {}

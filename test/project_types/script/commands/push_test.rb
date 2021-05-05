@@ -24,10 +24,7 @@ module Script
       end
 
       def test_calls_push_script
-        ShopifyCli::Tasks::EnsureEnv
-          .any_instance.expects(:call)
-          .with(@context, required: [:api_key, :secret, :shop])
-
+        Tasks::EnsureEnv.expects(:call).with(@context)
         Layers::Application::PushScript.expects(:call).with(ctx: @context, force: @force)
 
         @context
@@ -44,12 +41,10 @@ module Script
       end
 
       def test_push_propagates_error_when_ensure_env_fails
-        @env = nil
-
         err_msg = "error message"
-        ShopifyCli::Tasks::EnsureEnv
-          .any_instance.expects(:call)
-          .with(@context, required: [:api_key, :secret, :shop])
+        Tasks::EnsureEnv
+          .expects(:call)
+          .with(@context)
           .raises(StandardError.new(err_msg))
 
         e = assert_raises(StandardError) { perform_command }
