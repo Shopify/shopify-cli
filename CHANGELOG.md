@@ -1,6 +1,10 @@
 Unreleased
 ------
 
+Version 1.10.0
+-------------
+* Updating internal features in development
+
 Version 1.9.1
 -------------
 * [1201](https://github.com/Shopify/shopify-app-cli/pull/1201) Determine Argo Renderer Dynamically. This fixes `shopify serve` and `shopify push` for extensions.
