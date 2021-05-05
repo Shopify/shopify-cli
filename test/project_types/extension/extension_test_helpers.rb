@@ -33,7 +33,7 @@ module Extension
       specification_handler
     end
 
-    def self.fake_extension_project(with_mocks:,
+    def self.fake_extension_project(with_mocks: true,
       api_key: "TEST_KEY",
       api_secret: "TEST_SECRET",
       title: "Test",
