@@ -50,8 +50,8 @@ module Extension
           false
         end
 
-        def serve(context)
-          Features::ArgoServe.new(specification_handler: self, context: context).call
+        def serve(context:, port:, tunnel_url:)
+          Features::ArgoServe.new(specification_handler: self, context: context, port: port, tunnel_url: tunnel_url).call
         end
 
         def renderer_package(context)
