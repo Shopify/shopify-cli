@@ -77,6 +77,7 @@ module Theme
               {{info:Customize this theme in the Online Store Editor:}}
               {{underline:%s}}
           DONE
+          name: "Theme name",
         },
         serve: {
           help: <<~HELP,
