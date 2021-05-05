@@ -16,7 +16,7 @@ module Theme
               Options:
                 {{command:-u, --clone-url=URL}} The Git URL to clone from. Defaults to https://github.com/Shopify/dawn.git
           HELP
-          ask_name: "App name",
+          ask_name: "Theme name",
         },
 
         publish: {
@@ -40,23 +40,23 @@ module Theme
         },
         push: {
           remove_abort: "Theme files weren't deleted",
-          remove_confirm: "This will delete the local and remote copies of the theme files. Do you wish to proceed?",
+          remove_confirm: "This will delete the local and remote copies of the theme files, which can't be undone. Do you wish to proceed?",
           error: {
             push_error: "Theme files couldn't be pushed to Shopify",
             remove_error: "Theme files couldn't be removed from Shopify",
           },
           help: <<~HELP,
-            {{command:%s theme push}}: Uploads your local theme files to Shopify, overwriting the remote versions.
+            {{command:%s theme push}}: Uploads your local theme files to the connected store, overwriting the remote version.
 
               Usage: {{command:%s theme push [ ROOT ]}}
 
               Options:
                 {{command:-i, --themeid=THEMEID}} Theme ID. Must be an existing theme on your store.
-                {{command:-d, --development}}     Push to your own remote development theme, creating it if needed.
+                {{command:-d, --development}}     Push to your remote development theme, creating it if needed.
                 {{command:-n, --nodelete}}        Runs the push command without deleting remote files from Shopify.
                 {{command:-j, --json}}            Output JSON instead of a UI.
-                {{command:-a, --allow-live}}      Allow pushing to a live theme.
-                {{command:-p, --publish}}         Publish the theme after uploading.
+                {{command:-a, --allow-live}}      Allow push to a live theme.
+                {{command:-p, --publish}}         Publish as the live theme after uploading.
 
               Run without options to select theme from a list.
           HELP
@@ -79,7 +79,7 @@ module Theme
         },
         serve: {
           help: <<~HELP,
-            Sync your current changes, then view the active store in your default browser. Any theme edits will continue to update in real time. Also prints the active store's URL in your terminal.
+            Push your changes to the connected store and opens the theme in your default browser. While running, changes will push to the store in real time. Also prints the connected store URL to your terminal.
             Usage: {{command:%s theme serve}}
           HELP
           serve: "Viewing theme...",
@@ -87,13 +87,13 @@ module Theme
         },
         check: {
           help: <<~HELP,
-            Check your theme for errors, suggestions and best practices.
+            Check your theme for errors, suggestions, and best practices.
             Usage: {{command:%s check}}
           HELP
         },
         delete: {
           help: <<~HELP,
-            {{command:%s theme delete}}: Delete remote themes from Shopify.
+            {{command:%s theme delete}}: Delete remote themes from the connected store. This command can't be undone.
 
             Usage: {{command:%s theme delete [ THEME_ID [ ... ] ]}}
 
