@@ -26,10 +26,11 @@ module Extension
         assert_equal(12346, port.value)
       end
 
-      def test_aborts_after_max_tries_exceeded
-        socket = mock.tap { |s| s.expects(:close).twice }
+      def test_aborts_after_all_port_in_range_have_been_scanned
+        socket = mock.tap { |s| s.expects(:close).times(3) }
         Socket.expects(:tcp).with("example.com", 12345, connect_timeout: 1).yields(socket).returns(false)
         Socket.expects(:tcp).with("example.com", 12346, connect_timeout: 1).yields(socket).returns(false)
+        Socket.expects(:tcp).with("example.com", 12347, connect_timeout: 1).yields(socket).returns(false)
 
         port = Tasks::ChooseNextAvailablePort.new(from: 12345, host: "example.com", to: 12347).call
         assert_predicate(port, :failure?)
@@ -37,6 +38,10 @@ module Extension
           assert_kind_of(ArgumentError, error)
           assert_equal("Ports between 12345 and 12347 are unavailable", error.message)
         end
+      end
+
+      def test_scans_10_ports_by_default
+        assert_equal 12355, Tasks::ChooseNextAvailablePort.new(from: 12345).to
       end
     end
   end
