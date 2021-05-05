@@ -55,8 +55,11 @@ module Extension
       end
 
       def start_tunnel_if_required(runtime_configuration)
-        tunnel_url = ShopifyCli::Tunnel.start(@ctx, port: runtime_configuration.port)
-        runtime_configuration.tap { |c| c.tunnel_url = tunnel_url }
+        if runtime_configuration.tunnel_requested?
+          tunnel_url = ShopifyCli::Tunnel.start(@ctx, port: runtime_configuration.port)
+          runtime_configuration.tap { |c| c.tunnel_url = tunnel_url }
+        end
+        runtime_configuration
       end
 
       def serve(runtime_configuration)

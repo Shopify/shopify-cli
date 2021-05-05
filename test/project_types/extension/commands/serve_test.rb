@@ -22,11 +22,10 @@ module Extension
       def test_error_raised_if_no_available_ports_found
         serve = ::Extension::Commands::Serve.new(@context)
 
-        socket = mock.tap { |s| s.expects(:close).times(25) }
-        25.times do |i|
-          port = ::Extension::Commands::Serve::DEFAULT_PORT + i
-          Socket.expects(:tcp).with("localhost", port, connect_timeout: 1).yields(socket).returns(false)
-        end
+        Tasks::ChooseNextAvailablePort.expects(:call)
+          .with(from: ::Extension::Commands::Serve::DEFAULT_PORT)
+          .returns(ShopifyCli::Result.failure(ArgumentError))
+          .once
 
         error = assert_raises ShopifyCli::Abort do
           serve.call([], "serve")
