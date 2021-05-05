@@ -121,14 +121,14 @@ module Extension
         skip("Temporarily bypassing exit code check due to issues with NPM 7.")
 
         Base64.stubs(:strict_encode64).returns(@encoded_script)
-        invalid_version = "2.invalid.0"
         with_stubbed_script(@context, Argo::SCRIPT_PATH) do
           stub_run_yarn_install_and_run_yarn_run_script_methods
           ShopifyCli::JsSystem.any_instance.stubs(:call).returns([@result, @no_error, mock(success?: true)])
           ArgoRendererPackage.stubs(:from_package_manager).raises(Extension::PackageNotFound)
 
           error = assert_raises(ShopifyCli::Abort) { @dummy_argo.config(@context) }
-          assert_includes error.message, @context.message("features.argo.dependencies.argo_missing_renderer_package_error")
+          assert_includes error.message,
+            @context.message("features.argo.dependencies.argo_missing_renderer_package_error")
         end
       end
 
