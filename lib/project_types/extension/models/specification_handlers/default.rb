@@ -42,6 +42,14 @@ module Extension
           []
         end
 
+        def choose_port?
+          false
+        end
+
+        def establish_tunnel?
+          false
+        end
+
         def serve(context)
           Features::ArgoServe.new(specification_handler: self, context: context).call
         end
