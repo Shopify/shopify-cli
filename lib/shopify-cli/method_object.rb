@@ -53,7 +53,7 @@ module ShopifyCli
       # into a result object.
       #
       def call(*args, **kwargs)
-        Result.wrap { super(*args, **kwargs) }.call
+        Result.wrap { kwargs.any? ? super(*args, **kwargs) : super(*args) }.call
       end
     end
 
