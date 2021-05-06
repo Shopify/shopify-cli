@@ -80,20 +80,34 @@ module Extension
         end
       end
 
+      def test_js_system_is_invoked_with_the_correct_arguments
+        js_system = stub_js_system do |js_system|
+          js_system.with do |**args|
+            assert_equal ["list", "--production"], args.fetch(:yarn)
+            assert_equal ["list", "--prod", "--depth=1"], args.fetch(:npm)
+          end
+        end
+        result = FindNpmPackages.call(js_system: js_system)
+        assert_predicate(result, :success?)
+      end
+
       private
 
       def find_all_npm_packages(*names)
-        FindNpmPackages.all(*names, js_system: js_system)
+        FindNpmPackages.all(*names, js_system: stub_js_system)
       end
 
       def find_at_least_one_npm_package(*names)
-        FindNpmPackages.at_least_one_of(*names, js_system: js_system)
+        FindNpmPackages.at_least_one_of(*names, js_system: stub_js_system)
       end
 
-      def js_system
+      def stub_js_system(&customize)
+        customize ||= ->(system) { system }
         ShopifyCli::JsSystem.new(ctx: @context).tap do |js_system|
           success = mock(success?: true)
-          js_system.expects(:call).returns([yarn_output, nil, success])
+          customize
+            .call(js_system.expects(:call))
+            .returns([yarn_output, nil, success])
         end
       end
 
