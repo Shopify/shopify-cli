@@ -5,9 +5,7 @@ require "project_types/extension/extension_test_helpers"
 module Extension
   module Messages
     class MessageLoadingTest < MiniTest::Test
-      include TestHelpers::FakeUI
-      include ExtensionTestHelpers::TempProjectSetup
-
+      include ExtensionTestHelpers
       def setup
         super
         ShopifyCli::ProjectType.load_type(:extension)
@@ -61,10 +59,11 @@ module Extension
       end
 
       def test_load_current_type_messages_calls_messages_for_type_with_type_if_there_is_a_current_project
-        setup_temp_project
+        project = ExtensionTestHelpers.fake_extension_project(with_mocks: true)
+
         ShopifyCli::Project.expects(:has_current?).returns(true).once
-        ShopifyCli::Project.stubs(:current).returns(@project).once
-        Messages::MessageLoading.expects(:messages_for_type).with(@type).once
+        ShopifyCli::Project.stubs(:current).returns(project).once
+        Messages::MessageLoading.expects(:messages_for_type).with(project.type).once
 
         Messages::MessageLoading.load_current_type_messages
       end
@@ -74,18 +73,20 @@ module Extension
       end
 
       def test_messages_for_type_returns_nil_if_the_type_key_does_not_exist
-        setup_temp_project
-        Messages::TYPES.expects(:key?).with(@type.downcase.to_sym).returns(false).once
+        project = ExtensionTestHelpers.fake_extension_project(with_mocks: true)
 
-        assert_nil(Messages::MessageLoading.messages_for_type(@type))
+        Messages::TYPES.expects(:key?).with(project.type.downcase.to_sym).returns(false).once
+
+        assert_nil(Messages::MessageLoading.messages_for_type(project.type))
       end
 
       def test_messages_for_type_returns_type_messages_if_they_exist
-        setup_temp_project
-        Messages::TYPES.expects(:key?).with(@type.downcase.to_sym).returns(true).once
-        Messages::TYPES.expects(:[]).with(@type.downcase.to_sym).returns(@fake_overrides).once
+        project = ExtensionTestHelpers.fake_extension_project(with_mocks: true)
 
-        assert_equal @fake_overrides, Messages::MessageLoading.messages_for_type(@type)
+        Messages::TYPES.expects(:key?).with(project.type.downcase.to_sym).returns(true).once
+        Messages::TYPES.expects(:[]).with(project.type.downcase.to_sym).returns(@fake_overrides).once
+
+        assert_equal @fake_overrides, Messages::MessageLoading.messages_for_type(project.type)
       end
     end
   end
