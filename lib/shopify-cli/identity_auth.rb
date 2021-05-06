@@ -207,7 +207,15 @@ module ShopifyCli
       request["User-Agent"] = "Shopify CLI #{::ShopifyCli::VERSION}"
       request.body = URI.encode_www_form(params)
       res = https.request(request)
-      raise Error, JSON.parse(res.body)["error_description"] unless res.is_a?(Net::HTTPSuccess)
+      unless res.is_a?(Net::HTTPSuccess)
+        error_msg = JSON.parse(res.body)["error_description"]
+        shop = store.get(:shop)
+        store.del(:shop)
+        if error_msg.include?("destination")
+          ctx.abort(ctx.message("core.oauth.error.invalid_destination", shop))
+        end
+        raise Error, error_msg
+      end
       JSON.parse(res.body)
     end
 
