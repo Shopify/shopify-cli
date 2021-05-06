@@ -44,6 +44,14 @@ module ShopifyCli
       end
     end
 
+    class TransformArray
+      include ShopifyCli::MethodObject
+
+      def call(*elements, &transform)
+        elements.map(&transform)
+      end
+    end
+
     def test_returns_a_result
       GenerateHelloWorld.new.call.tap do |result|
         assert_kind_of(ShopifyCli::Result::Success, result)
@@ -96,6 +104,15 @@ module ShopifyCli
         .tap do |result|
           assert_predicate(result, :success?)
           assert_equal ["Hello", "World"], result.value
+        end
+    end
+
+    def test_forwards_blocks_to_call
+      TransformArray
+        .call("Hello", "World", &:upcase)
+        .tap do |result|
+          assert_predicate(result, :success?)
+          assert_equal %w[HELLO WORLD], result.value
         end
     end
   end

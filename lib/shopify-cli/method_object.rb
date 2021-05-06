@@ -52,8 +52,8 @@ module ShopifyCli
       # invokes the original `call` implementation and wraps its return value
       # into a result object.
       #
-      def call(*args, **kwargs)
-        Result.wrap { kwargs.any? ? super(*args, **kwargs) : super(*args) }.call
+      def call(*args, **kwargs, &block)
+        Result.wrap { kwargs.any? ? super(*args, **kwargs, &block) : super(*args, &block) }.call
       end
     end
 
@@ -64,10 +64,10 @@ module ShopifyCli
       # initializer or to `call`. If the keyword argument matches the name of
       # property, it is forwarded to the initializer, otherwise to call.
       #
-      def call(*args, **kwargs)
+      def call(*args, **kwargs, &block)
         properties.keys.yield_self do |properties|
           new(**kwargs.slice(*properties))
-            .call(*args, **kwargs.slice(*(kwargs.keys - properties)))
+            .call(*args, **kwargs.slice(*(kwargs.keys - properties)), &block)
         end
       end
 
