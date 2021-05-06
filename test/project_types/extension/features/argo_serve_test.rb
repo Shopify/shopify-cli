@@ -127,7 +127,8 @@ renderer_package_name: "@shopify/argo-admin")
         ShopifyCli::Feature.stubs(:enabled?).with(:argo_admin_beta).returns(true)
         ShopifyCli::Tasks::EnsureEnv.stubs(:call)
         ShopifyCli::Tasks::EnsureDevStore.stubs(:call)
-        ExtensionTestHelpers.fake_extension_project(with_mocks: true, api_key: api_key, registration_uuid: registration_uuid)
+        ExtensionTestHelpers.fake_extension_project(with_mocks: true, api_key: api_key,
+registration_uuid: registration_uuid)
       end
 
       def build_dummy_specification_handler(renderer_package_version:, specification:)

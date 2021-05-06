@@ -6,7 +6,6 @@ require "pathname"
 module Extension
   module Features
     class ArgoSetupTest < MiniTest::Test
-
       def setup
         super
         ShopifyCli::ProjectType.load_type(:extension)

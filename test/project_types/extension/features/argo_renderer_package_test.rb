@@ -4,7 +4,6 @@ require "project_types/extension/extension_test_helpers"
 module Extension
   module Features
     class ArgoRendererPackageTest < MiniTest::Test
-
       def setup
         super
         ShopifyCli::ProjectType.load_type("extension")
