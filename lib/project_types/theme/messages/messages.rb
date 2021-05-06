@@ -10,11 +10,12 @@ module Theme
 
         init: {
           help: <<~HELP,
-            {{command:%s theme init}}: Initialize a new theme from Git repository.
+            {{command:%s theme init}}: Clones a Git repository to use as the starting point for building a theme. 
+
               Usage: {{command:%s theme init [ NAME ]}}
 
               Options:
-                {{command:-u, --clone-url=URL}} The Git URL to clone from. Defaults to https://github.com/Shopify/dawn.git
+                {{command:-u, --clone-url=URL}} The Git URL to clone from. Defaults to Shopify's example theme, Dawn: https://github.com/Shopify/dawn.git
           HELP
           ask_name: "Theme name",
         },
@@ -46,7 +47,7 @@ module Theme
             remove_error: "Theme files couldn't be removed from Shopify",
           },
           help: <<~HELP,
-            {{command:%s theme push}}: Uploads your local theme files to the connected store, overwriting the remote version.
+            {{command:%s theme push}}: Uploads your local theme files to the connected store, overwriting the remote version if specified. Push will fail if the theme uses the GitHub integration.
 
               Usage: {{command:%s theme push [ ROOT ]}}
 
@@ -79,7 +80,7 @@ module Theme
         },
         serve: {
           help: <<~HELP,
-            Push your changes to the connected store and opens the theme in your default browser. While running, changes will push to the store in real time. Also prints the connected store URL to your terminal.
+            Uploads the current theme as a development theme on the store that you're connected to, and opens it in your default browser. While running, changes will push to the store in real time. Also prints the connected store URL to your terminal.
             Usage: {{command:%s theme serve}}
           HELP
           serve: "Viewing theme...",
