@@ -58,11 +58,11 @@ module Extension
       end
 
       def yarn_list
-        %w[yarn list --production]
+        %w[list --production]
       end
 
       def npm_list
-        %w[npm list --prod --depth=1]
+        %w[list --prod --depth=1]
       end
 
       def search_packages(packages, package_list)
