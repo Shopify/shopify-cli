@@ -111,7 +111,7 @@ module ShopifyCli
 
         login: {
           help: <<~HELP,
-            Log in to a store or partner organization
+            Log in to the Shopify CLI by authenticating with a store
               Usage: {{command:%s login [--shop=SHOP]}}
           HELP
           invalid_shop: <<~MESSAGE,
@@ -124,11 +124,11 @@ module ShopifyCli
 
         logout: {
           help: <<~HELP,
-            Log out of a currently authenticated partner organization and store, or clear invalid credentials
+            Log out of a currently authenticated account or clear invalid credentials
               Usage: {{command:%s logout}}
           HELP
 
-          success: "Logged out of partner organization and store",
+          success: "Successfully logged out of your account",
         },
 
         monorail: {
@@ -189,7 +189,7 @@ module ShopifyCli
 
         populate: {
           help: <<~HELP,
-            Populate your Shopify development store with example customers, orders, or products.
+            Populate a Shopify development store with example customers, orders, or products.
               Usage: {{command:%s populate [ customers | draftorders | products ]}}
           HELP
 
