@@ -15,7 +15,7 @@ module Extension
       end
 
       def test_defers_serving_to_the_specification_handler
-        serve = ::Extension::Commands::Serve.new(@context)
+        serve = ::Extension::Command::Serve.new(@context)
         serve.specification_handler.expects(:serve)
         serve.call([], "serve")
       end
