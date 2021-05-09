@@ -8,7 +8,7 @@ module Script
       end
 
       def call(_args, _name)
-        ShopifyCli::Tasks::EnsureEnv.call(@ctx, required: [:api_key, :secret, :shop])
+        Tasks::EnsureEnv.call(@ctx)
 
         api_key = Layers::Infrastructure::ScriptProjectRepository.new(ctx: @ctx).get.api_key
         return @ctx.puts(self.class.help) unless api_key

@@ -37,8 +37,8 @@ module ShopifyCli
       #
       #   ShopifyCli::JsSystem.call(ctx, yarn: ['install', '--silent'], npm: ['install', '--no-audit'])
       #
-      def call(ctx, yarn:, npm:)
-        JsSystem.new(ctx: ctx).call(yarn: yarn, npm: npm)
+      def call(ctx, yarn:, npm:, capture_response: false)
+        JsSystem.new(ctx: ctx).call(yarn: yarn, npm: npm, capture_response: capture_response)
       end
     end
 

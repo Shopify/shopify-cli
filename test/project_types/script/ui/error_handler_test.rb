@@ -10,6 +10,7 @@ describe Script::UI::ErrorHandler do
     let(:ctx_root) { "/some/dir/here" }
     let(:ctx) { TestHelpers::FakeContext.new(root: ctx_root) }
     let(:ci?) { ctx.ci? }
+
     subject do
       Script::UI::ErrorHandler.display_and_raise(
         failed_op: failed_op, cause_of_error: cause_of_error, help_suggestion: help_suggestion

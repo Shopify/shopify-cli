@@ -14,8 +14,8 @@ module Extension
       SCRIPT_PATH = %w(build main.js).freeze
 
       NPM_LIST_COMMAND = %w(list).freeze
-      YARN_LIST_COMMAND = %w(list --pattern).freeze
-      NPM_LIST_PARAMETERS = %w(--prod).freeze
+      YARN_LIST_COMMAND = %w(list).freeze
+      NPM_LIST_PARAMETERS = %w(--prod --depth=1).freeze
       YARN_LIST_PARAMETERS = %w(--production).freeze
       private_constant :NPM_LIST_COMMAND, :YARN_LIST_COMMAND, :NPM_LIST_PARAMETERS, :YARN_LIST_PARAMETERS
 
@@ -39,7 +39,7 @@ module Extension
         context.abort(context.message("features.argo.missing_file_error")) unless File.exist?(filepath)
         begin
           {
-            renderer_version: extract_argo_renderer_version(context),
+            renderer_version: renderer_package(context).version,
             serialized_script: Base64.strict_encode64(File.read(filepath).chomp),
           }
         rescue StandardError
@@ -48,50 +48,28 @@ module Extension
       end
 
       def renderer_package(context)
-        Features::ArgoRendererPackage.new(
-          package_name: renderer_package_name, version: extract_argo_renderer_version(context)
+        Features::ArgoRendererPackage.from_package_manager(run_list_command(context))
+      rescue Extension::PackageNotFound
+        context.abort(
+          context.message("features.argo.dependencies.argo_missing_renderer_package_error")
         )
       end
 
       private
 
-      def extract_argo_renderer_version(context)
-        result = run_list_command(context)
-        found_version = find_version_number(context, result)
-        context.abort(
-          context.message("features.argo.dependencies.argo_renderer_package_invalid_version_error")
-        ) if found_version.nil?
-        ::Semantic::Version.new(found_version).to_s
-      rescue ArgumentError
-        context.abort(
-          context.message("features.argo.dependencies.argo_renderer_package_invalid_version_error")
-        )
-      end
-
-      def find_version_number(context, result)
-        packages = result.to_json.split('\n')
-        found_package = packages.find do |package|
-          package.match(/#{renderer_package_name}@/)
-        end
-        if found_package.nil?
-          error = "'#{renderer_package_name}' not found."
-          context.abort(
-            context.message("features.argo.dependencies.argo_missing_renderer_package_error", error)
-          )
-        end
-        found_package.split("@")[2]&.strip
-      end
-
       def run_list_command(context)
-        js_system = ShopifyCli::JsSystem.new(ctx: context)
-        result, error, status = js_system.call(
-          yarn: YARN_LIST_COMMAND + [renderer_package_name] + YARN_LIST_PARAMETERS,
-          npm: NPM_LIST_COMMAND + [renderer_package_name] + NPM_LIST_PARAMETERS,
+        yarn_list = YARN_LIST_COMMAND + YARN_LIST_PARAMETERS
+        npm_list = NPM_LIST_COMMAND + NPM_LIST_PARAMETERS
+
+        result, _error, _status = ShopifyCli::JsSystem.call(
+          context,
+          yarn: yarn_list,
+          npm: npm_list,
           capture_response: true
         )
-        context.abort(
-          context.message("features.argo.dependencies.argo_missing_renderer_package_error", error)
-        ) unless status.success?
+        # context.abort(
+        #   context.message("features.argo.dependencies.argo_missing_renderer_package_error", error)
+        # ) unless status.success?
         result
       end
 

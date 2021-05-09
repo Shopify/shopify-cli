@@ -1,6 +1,8 @@
 # frozen_string_literal: true
 
 module Extension
+  class PackageNotFound < RuntimeError; end
+
   class Project < ShopifyCli::ProjectType
     hidden_feature
 

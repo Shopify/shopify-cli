@@ -22,6 +22,10 @@ module Script
     autoload :ScriptForm, Project.project_filepath("forms/script_form")
   end
 
+  module Tasks
+    autoload :EnsureEnv, Project.project_filepath("tasks/ensure_env")
+  end
+
   module Layers
     module Application
       autoload :BuildScript, Project.project_filepath("layers/application/build_script")
