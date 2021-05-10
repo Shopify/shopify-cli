@@ -110,10 +110,11 @@ module Script
               e.extension_point_type
             ),
           }
-        when Layers::Domain::Errors::ServiceFailureError
+        when Layers::Domain::Errors::SystemCallFailureError
           {
-            cause_of_error: ShopifyCli::Context.message("script.error.service_failure_cause"),
-            help_suggestion: ShopifyCli::Context.message("script.error.service_failure_help"),
+            cause_of_error: ShopifyCli::Context
+              .message("script.error.system_call_failure_cause", cmd: e.cmd),
+            help_suggestion: ShopifyCli::Context.message("script.error.system_call_failure_help", out: e.out.chomp),
           }
         when Layers::Domain::Errors::MetadataValidationError
           {
