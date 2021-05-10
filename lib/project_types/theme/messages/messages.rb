@@ -28,11 +28,15 @@ module Theme
             {{command:%s theme publish}}: Set a remote theme as the live theme.
               Usage: {{command:%s theme publish [ THEME_ID ]}}
 
+              Options:
+                {{command:-f, --force}}         Do not ask for confirmation.
+
               Run without arguments to select theme from a list.
           HELP
           done: "Your theme is now live at %s",
           not_found: "Theme #%s does not exist",
           select: "Select theme to push to",
+          confirm: "Are you sure you want to make %s the new live theme on %s?",
         },
         forms: {
           ask_password: "Password:",
@@ -101,6 +105,7 @@ module Theme
 
             Options:
               {{command:-d, --development}}     Delete your development theme.
+              {{command:-f, --force}}           Do not ask for confirmation.
 
             Run without options to select the theme to delete from a list.
           HELP
@@ -108,6 +113,7 @@ module Theme
           done: "%s theme(s) deleted",
           not_found: "{{x}} Theme #%s does not exist",
           live: "{{x}} Theme #%s is your live theme. You can't delete it.",
+          confirm: "Are you sure you want to delete %s on %s?",
         },
       },
     }.freeze
