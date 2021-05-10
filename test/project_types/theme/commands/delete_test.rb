@@ -29,6 +29,8 @@ module Theme
           .with(@ctx, id: 1234)
           .returns(@theme)
 
+        CLI::UI::Prompt.expects(:confirm).returns(true)
+
         @theme.expects(:delete)
         @ctx.expects(:done)
 
@@ -39,6 +41,8 @@ module Theme
         ShopifyCli::Theme::Theme.expects(:new)
           .with(@ctx, id: 1234)
           .returns(@theme)
+
+        CLI::UI::Prompt.expects(:confirm).returns(true)
 
         @theme.expects(:delete).raises(ShopifyCli::API::APIRequestNotFoundError)
         @ctx.expects(:puts)
@@ -65,6 +69,8 @@ module Theme
           .with(@ctx)
           .returns(@theme)
 
+        CLI::UI::Prompt.expects(:confirm).returns(true)
+
         @theme.expects(:delete)
         @ctx.expects(:done)
 
@@ -74,10 +80,31 @@ module Theme
 
       def test_delete_asks_to_select
         CLI::UI::Prompt.expects(:ask).returns(@theme)
+        CLI::UI::Prompt.expects(:confirm).returns(true)
 
         @theme.expects(:delete)
         @ctx.expects(:done)
 
+        @command.call([], "delete")
+      end
+
+      def test_delete_asks_to_confirm
+        CLI::UI::Prompt.expects(:ask).returns(@theme)
+        CLI::UI::Prompt.expects(:confirm).returns(false)
+
+        @theme.expects(:delete).never
+        @ctx.expects(:done)
+
+        @command.call([], "delete")
+      end
+
+      def test_delete_force_with_option
+        CLI::UI::Prompt.expects(:ask).returns(@theme)
+
+        @theme.expects(:delete)
+        @ctx.expects(:done)
+
+        @command.options.flags[:force] = true
         @command.call([], "delete")
       end
     end

@@ -16,7 +16,7 @@ module Theme
   ShopifyCli::Commands.register("Theme::Command", "theme")
 
   module Forms
-    autoload :Connect, Project.project_filepath("forms/connect")
+    autoload :ConfirmStore, Project.project_filepath("forms/confirm_store")
     autoload :Select, Project.project_filepath("forms/select")
   end
 end

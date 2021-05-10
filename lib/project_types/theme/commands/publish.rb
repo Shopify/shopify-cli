@@ -4,6 +4,10 @@ require "shopify-cli/theme/theme"
 module Theme
   class Command
     class Publish < ShopifyCli::SubCommand
+      options do |parser, flags|
+        parser.on("-f", "--force") { flags[:force] = true }
+      end
+
       def call(args, *)
         theme = if (theme_id = args.first)
           ShopifyCli::Theme::Theme.new(@ctx, id: theme_id)
@@ -15,6 +19,13 @@ module Theme
             exclude_roles: ["live", "development", "demo"],
           ).theme
         end
+
+        return unless Forms::ConfirmStore.ask(
+          @ctx,
+          [],
+          title: @ctx.message("theme.publish.confirm", theme.name, theme.shop),
+          force: options.flags[:force],
+        ).confirmed?
 
         theme.publish
         @ctx.done(@ctx.message("theme.publish.done", theme.preview_url))
