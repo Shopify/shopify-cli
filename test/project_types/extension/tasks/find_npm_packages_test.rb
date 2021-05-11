@@ -81,10 +81,10 @@ module Extension
       end
 
       def test_js_system_is_invoked_with_the_correct_arguments
-        js_system = stub_js_system do |js_system|
-          js_system.with do |**args|
-            assert_equal ["list", "--production"], args.fetch(:yarn)
-            assert_equal ["list", "--prod", "--depth=1"], args.fetch(:npm)
+        js_system = stub_js_system do |stub|
+          stub.with do |config|
+            assert_equal ["list", "--production"], config.fetch(:yarn)
+            assert_equal ["list", "--prod", "--depth=1"], config.fetch(:npm)
           end
         end
         result = FindNpmPackages.call(js_system: js_system)
