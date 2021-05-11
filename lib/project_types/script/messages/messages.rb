@@ -78,8 +78,8 @@ module Script
 
           script_not_found_cause: "Couldn't find script %s for extension point %s",
 
-          service_failure_cause: "Internal service error.",
-          service_failure_help: "Ensure the 'shopify/scripts-toolchain-as' package is up to date.",
+          system_call_failure_cause: "An error was returned while running {{command:%{cmd}}}.",
+          system_call_failure_help: "Review the following error and try again.\n{{red:%{out}}}",
 
           metadata_validation_cause: "Invalid script extension metadata.",
           metadata_validation_help: "Ensure the 'shopify/scripts-toolchain-as' package is up to date.",

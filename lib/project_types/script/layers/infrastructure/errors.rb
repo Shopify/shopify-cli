@@ -69,6 +69,15 @@ module Script
 
         class ProjectCreatorNotFoundError < ScriptProjectError; end
 
+        class SystemCallFailureError < ScriptProjectError
+          attr_reader :out, :cmd
+          def initialize(out:, cmd:)
+            super()
+            @out = out
+            @cmd = cmd
+          end
+        end
+
         class ScriptRepushError < ScriptProjectError
           attr_reader :api_key
           def initialize(api_key)
