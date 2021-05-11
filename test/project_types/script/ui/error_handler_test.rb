@@ -290,7 +290,7 @@ describe Script::UI::ErrorHandler do
       end
 
       describe "when ScriptRepushError" do
-        let(:err) { Script::Layers::Infrastructure::Errors::ScriptRepushError.new("api_key") }
+        let(:err) { Script::Layers::Infrastructure::Errors::ScriptRepushError.new("uuid") }
         it "should call display_and_raise" do
           should_call_display_and_raise
         end
