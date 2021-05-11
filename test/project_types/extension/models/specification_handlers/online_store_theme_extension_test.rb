@@ -1,19 +1,18 @@
 # frozen_string_literal: true
 require "test_helper"
 require "project_types/extension/extension_test_helpers"
-require "pry"
 
 module Extension
   module Models
     module SpecificationHandlers
-      class OnlineStoreAppExtensionTest < MiniTest::Test
+      class OnlineStoreThemeExtensionTest < MiniTest::Test
         include ExtensionTestHelpers
 
         def setup
           super
           ShopifyCli::ProjectType.load_type(:extension)
-          specifications = DummySpecifications.build(identifier: "online_store_app_extension")
-          @identifier = "ONLINE_STORE_APP_EXTENSION"
+          specifications = DummySpecifications.build(identifier: "online_store_theme_extension")
+          @identifier = "ONLINE_STORE_THEME_EXTENSION"
           @spec = specifications[@identifier]
           @context.root = Dir.mktmpdir
         end
@@ -59,7 +58,7 @@ module Extension
         end
 
         def test_skips_build
-          assert @spec.specification.options[:skip_build]
+          assert(@spec.specification.options[:skip_build])
         end
 
         private
