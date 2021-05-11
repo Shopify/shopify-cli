@@ -3,8 +3,6 @@ module Extension
     class FindNpmPackages
       include ShopifyCli::MethodObject
 
-      Package = Struct.new(:name, :version)
-
       property! :js_system, accepts: ShopifyCli::JsSystem
 
       def self.at_least_one_of(*package_names, **config)
@@ -68,7 +66,7 @@ module Extension
       def search_packages(packages, package_list)
         pattern = /(#{packages.join("|")})@(\d.*)$/
         package_list.scan(pattern).map do |(name, version)|
-          Package.new(name, version.strip)
+          Models::NpmPackage.new(name: name, version: version.strip)
         end
       end
     end
