@@ -27,29 +27,27 @@ module Script
 
         private
 
-        def run_cmd(cmd)
-          out, status = ctx.capture2e(cmd)
-          raise Domain::Errors::SystemCallFailureError.new(out: out, cmd: cmd) unless status.success?
-          out
+        def command_runner
+          @command_runner ||= CommandRunner.new(ctx: ctx)
         end
 
         def git_init
-          run_cmd("git init")
+          command_runner.call("git init")
         end
 
         def setup_remote
           repo = extension_point.sdks.rust.package
-          run_cmd("git remote add -f origin #{repo}")
+          command_runner.call("git remote add -f origin #{repo}")
         end
 
         def setup_sparse_checkout
           type = extension_point.type
-          run_cmd("git config core.sparsecheckout true")
-          run_cmd("echo #{type}/#{SAMPLE_PATH} >> .git/info/sparse-checkout")
+          command_runner.call("git config core.sparsecheckout true")
+          command_runner.call("echo #{type}/#{SAMPLE_PATH} >> .git/info/sparse-checkout")
         end
 
         def pull
-          run_cmd("git pull origin #{ORIGIN_BRANCH}")
+          command_runner.call("git pull origin #{ORIGIN_BRANCH}")
         end
 
         def clean

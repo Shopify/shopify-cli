@@ -31,7 +31,7 @@ describe Script::Layers::Infrastructure::RustTaskRunner do
         .with("cargo build --target=wasm32-unknown-unknown --release")
         .returns(system_output(msg: "", success: false))
 
-      assert_raises(Script::Layers::Domain::Errors::SystemCallFailureError) { subject }
+      assert_raises(Script::Layers::Infrastructure::Errors::SystemCallFailureError) { subject }
     end
 
     it "should raise if the generated wasm binary doesn't exist" do

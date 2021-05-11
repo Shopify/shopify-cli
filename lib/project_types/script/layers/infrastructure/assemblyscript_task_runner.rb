@@ -63,9 +63,7 @@ module Script
 
         def compile
           check_compilation_dependencies!
-
-          out, status = ctx.capture2e(SCRIPT_SDK_BUILD)
-          raise Domain::Errors::SystemCallFailureError.new(out: out, cmd: SCRIPT_SDK_BUILD) unless status.success?
+          CommandRunner.new(ctx: ctx).call(SCRIPT_SDK_BUILD)
         end
 
         def check_compilation_dependencies!

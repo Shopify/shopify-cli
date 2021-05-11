@@ -39,15 +39,6 @@ module Script
           end
         end
 
-        class SystemCallFailureError < ScriptProjectError
-          attr_reader :out, :cmd
-          def initialize(out:, cmd:)
-            super()
-            @out = out
-            @cmd = cmd
-          end
-        end
-
         class MetadataNotFoundError < ScriptProjectError; end
 
         class MetadataValidationError < ScriptProjectError; end

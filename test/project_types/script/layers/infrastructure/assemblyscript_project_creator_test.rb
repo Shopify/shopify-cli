@@ -127,7 +127,7 @@ describe Script::Layers::Infrastructure::AssemblyScriptProjectCreator do
       sdk.expects(:package).twice.returns("@shopify/extension-point-as-fake")
       extension_point.expects(:sdks).times(5).returns(stub(all: [sdk], assemblyscript: sdk))
 
-      assert_raises(Script::Layers::Domain::Errors::SystemCallFailureError) { subject }
+      assert_raises(Script::Layers::Infrastructure::Errors::SystemCallFailureError) { subject }
     end
   end
 
@@ -151,7 +151,7 @@ describe Script::Layers::Infrastructure::AssemblyScriptProjectCreator do
         )
         .returns(["", OpenStruct.new(success?: false)])
 
-      assert_raises(Script::Layers::Domain::Errors::SystemCallFailureError) { subject }
+      assert_raises(Script::Layers::Infrastructure::Errors::SystemCallFailureError) { subject }
     end
   end
 

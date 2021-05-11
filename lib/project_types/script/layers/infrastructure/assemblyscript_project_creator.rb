@@ -22,26 +22,24 @@ module Script
         end
 
         def bootstrap
-          run_cmd(bootstap_command)
+          command_runner.call(bootstap_command)
         end
 
         private
 
-        def run_cmd(cmd)
-          out, status = ctx.capture2e(cmd)
-          raise Domain::Errors::SystemCallFailureError.new(out: out, cmd: cmd) unless status.success?
-          out
+        def command_runner
+          @command_runner ||= CommandRunner.new(ctx: ctx)
         end
 
         def write_npmrc
-          run_cmd("npm --userconfig ./.npmrc config set @shopify:registry https://registry.npmjs.com")
-          run_cmd("npm --userconfig ./.npmrc config set engine-strict true")
+          command_runner.call("npm --userconfig ./.npmrc config set @shopify:registry https://registry.npmjs.com")
+          command_runner.call("npm --userconfig ./.npmrc config set engine-strict true")
         end
 
         def extension_point_version
           return extension_point.sdks.assemblyscript.version if extension_point.sdks.assemblyscript.versioned?
 
-          out = run_cmd("npm show #{extension_point.sdks.assemblyscript.package} version --json")
+          out = command_runner.call("npm show #{extension_point.sdks.assemblyscript.package} version --json")
           "^#{JSON.parse(out)}"
         end
 

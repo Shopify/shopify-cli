@@ -43,8 +43,7 @@ module Script
         private
 
         def compile
-          out, status = ctx.capture2e(CARGO_BUILD_CMD)
-          raise Domain::Errors::SystemCallFailureError.new(out: out, cmd: CARGO_BUILD_CMD) unless status.success?
+          CommandRunner.new(ctx: ctx).call(CARGO_BUILD_CMD)
         end
 
         def bytecode
