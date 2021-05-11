@@ -6,7 +6,6 @@ module Extension
     module Questions
       class AskAppTest < MiniTest::Test
         include TestHelpers
-        include TestHelpers::FakeUI
         include ExtensionTestHelpers::Messages
         include ExtensionTestHelpers::Stubs::GetApp
         include ExtensionTestHelpers::Stubs::GetOrganizations
