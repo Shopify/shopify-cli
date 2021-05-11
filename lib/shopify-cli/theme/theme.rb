@@ -7,6 +7,8 @@ require "time"
 
 module ShopifyCli
   module Theme
+    class InvalidThemeRole < StandardError; end
+
     class Theme
       attr_reader :config, :id
 
@@ -100,6 +102,26 @@ module ShopifyCli
         else
           "https://#{shop}/?preview_theme_id=#{id}"
         end
+      end
+
+      def create
+        raise InvalidThemeRole, "Can't create live theme. Use publish." if live?
+
+        _status, body = ShopifyCli::AdminAPI.rest_request(
+          @ctx,
+          shop: shop,
+          path: "themes.json",
+          body: JSON.generate({
+            theme: {
+              name: name,
+              role: role,
+            },
+          }),
+          method: "POST",
+          api_version: "unstable",
+        )
+
+        @id = body["theme"]["id"]
       end
 
       def delete
