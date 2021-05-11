@@ -5,7 +5,6 @@ require "project_types/extension/extension_test_helpers"
 module Extension
   module Features
     class ArgoSetupStepsTest < MiniTest::Test
-      include TestHelpers::FakeUI
       include ExtensionTestHelpers::Messages
 
       def setup

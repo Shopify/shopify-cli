@@ -6,7 +6,6 @@ require "base64"
 module Extension
   module Features
     class ArgoTest < MiniTest::Test
-      include TestHelpers::FakeUI
       include ExtensionTestHelpers::Stubs::ArgoScript
 
       def setup
