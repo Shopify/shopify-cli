@@ -11,13 +11,7 @@ module Extension
       ShopifyCli::ProjectType.load_type(:extension)
 
       @specification_handler = ExtensionTestHelpers.test_specification_handler
-      @api_key = "1234"
-      @api_secret = "5678"
-      @title = "Test title"
-      @registration_id = 56
-      @registration_uuid = "eb946ca8-a925-11eb-bcbc-0242ac130013"
       @type = @specification_handler.identifier
-
       @context = TestHelpers::FakeContext.new(root: Dir.mktmpdir)
 
       FileUtils.cd(@context.root)
@@ -33,32 +27,37 @@ module Extension
     end
 
     def test_write_env_file_creates_env_file
-      ExtensionProject.write_env_file(
-        context: @context,
-        api_key: @api_key,
-        api_secret: @api_secret,
-        title: @title,
-        registration_id: @registration_id,
-        registration_uuid: @registration_uuid
-      )
-
+      assert_nothing_raised { ExtensionProject.write_env_file(**valid_env_file_attributes) }
       assert File.exist?(".env")
-      project = ExtensionProject.current
-      assert_equal @api_key, project.app.api_key
-      assert_equal @api_secret, project.app.secret
-      assert_equal @title, project.title
-      assert_equal @registration_id, project.registration_id
-      assert_equal @registration_uuid, project.registration_uuid
+    end
+
+    def test_write_env_file_persists_api_key
+      ExtensionProject.write_env_file(**valid_env_file_attributes_with(api_key: "abc"))
+      assert_equal("abc", ExtensionProject.current.app.api_key)
+    end
+
+    def test_write_env_file_persists_api_secret
+      ExtensionProject.write_env_file(**valid_env_file_attributes_with(api_secret: "xyz"))
+      assert_equal("xyz", ExtensionProject.current.app.secret)
+    end
+
+    def test_write_env_file_persists_title
+      ExtensionProject.write_env_file(**valid_env_file_attributes_with(title: "Hello World"))
+      assert_equal("Hello World", ExtensionProject.current.title)
+    end
+
+    def test_write_env_file_persists_registration_id
+      ExtensionProject.write_env_file(**valid_env_file_attributes_with(registration_id: 123))
+      assert_equal(123, ExtensionProject.current.registration_id)
+    end
+
+    def test_write_env_file_persists_registration_uuid
+      ExtensionProject.write_env_file(**valid_env_file_attributes_with(registration_uuid: "0000"))
+      assert_equal("0000", ExtensionProject.current.registration_uuid)
     end
 
     def test_env_file_writes_temporary_uuid_if_no_registration_uuid_present
-      ExtensionProject.write_env_file(
-        context: @context,
-        api_key: @api_key,
-        api_secret: @api_secret,
-        title: @title,
-        registration_id: @registration_id
-      )
+      ExtensionProject.write_env_file(**valid_env_file_attributes_without(:registration_uuid))
 
       assert File.exist?(".env")
       project = ExtensionProject.current
@@ -66,77 +65,100 @@ module Extension
     end
 
     def test_env_file_does_not_write_temporary_registration_uuid_if_uuid_present
-      ExtensionProject.write_env_file(
-        context: @context,
-        api_key: @api_key,
-        api_secret: @api_secret,
-        title: @title,
-        registration_id: @registration_id,
-        registration_uuid: @registration_uuid
-      )
+      ExtensionProject.write_env_file(**valid_env_file_attributes_with(registration_uuid: "123"))
 
       assert File.exist?(".env")
       project = ExtensionProject.current
-      refute project.registration_uuid.start_with?("dev")
+      assert_equal "123", project.registration_uuid
     end
 
     def test_ensures_registered_is_true_only_if_api_key_api_secret_and_registration_id_are_present
-      project = ExtensionTestHelpers.fake_extension_project(api_key: "", api_secret: "", title: "title",
-registration_id: nil)
-      refute project.registered?
+      sets_of_invalid_attributes = [
+        { api_key: "", api_secret: "", title: "title", registration_id: nil },
+        { api_key: "1234", api_secret: "", title: "title", registration_id: nil },
+        { api_key: "1234", api_secret: "456", title: "title", registration_id: nil },
+        { api_key: "", api_secret: "", title: "title", registration_id: 5 },
+      ]
 
-      project = ExtensionTestHelpers.fake_extension_project(api_key: "1234", api_secret: "", title: "title",
-registration_id: nil)
-      refute project.registered?
+      sets_of_invalid_attributes.each do |invalid_attributes|
+        project = ExtensionTestHelpers.fake_extension_project(**invalid_attributes)
+        refute project.registered?
+      end
 
-      project = ExtensionTestHelpers.fake_extension_project(api_key: "1234", api_secret: "456", title: "title",
-registration_id: nil)
-      refute project.registered?
-
-      project = ExtensionTestHelpers.fake_extension_project(api_key: "", api_secret: "", title: "title",
-registration_id: 5)
-      refute project.registered?
-
-      project = ExtensionTestHelpers.fake_extension_project(api_key: "1234", api_secret: "456", title: "title",
-registration_id: 55)
-      assert project.registered?
+      ExtensionTestHelpers
+        .fake_extension_project(api_key: "1234", api_secret: "456", title: "title", registration_id: 55)
+        .tap do |project|
+          assert project.registered?
+        end
     end
 
     def test_can_access_app_specific_values_as_an_app
-      project = ExtensionTestHelpers.fake_extension_project(with_mocks: false, api_key: @api_key,
-api_secret: @api_secret)
+      api_key = "123"
+      api_secret = "abc"
+
+      project = ExtensionTestHelpers.fake_extension_project(
+        api_key: api_key,
+        api_secret: api_secret
+      )
 
       assert_kind_of(Models::App, project.app)
-      assert_equal @api_key, project.app.api_key
-      assert_equal @api_secret, project.app.secret
+      assert_equal api_key, project.app.api_key
+      assert_equal api_secret, project.app.secret
     end
 
     def test_title_returns_the_title
-      project = ExtensionTestHelpers.fake_extension_project(with_mocks: false, title: @title)
-
-      assert_equal @title, project.title
+      title = "Some title"
+      project = ExtensionTestHelpers.fake_extension_project(title: title)
+      assert_equal title, project.title
     end
 
     def test_title_returns_nil_if_title_is_missing
-      project = ExtensionTestHelpers.fake_extension_project(title: nil)
+      project = ExtensionTestHelpers.fake_extension_project(title: nil, with_mocks: true)
       assert_nil ExtensionProject.current.title
       assert_nil project.title
     end
 
     def test_extension_type_returns_the_set_type_identifier
-      project = ExtensionTestHelpers.fake_extension_project(with_mocks: false)
+      project = ExtensionTestHelpers.fake_extension_project
       assert_equal @type, project.specification_identifier
     end
 
     def test_detects_if_registration_id_is_missing_or_invalid
-      project = ExtensionTestHelpers.fake_extension_project(with_mocks: false, registration_id: nil)
-      refute project.registration_id?
+      invalid_registration_ids = [nil, 0, "wrong"]
 
-      project = ExtensionTestHelpers.fake_extension_project(with_mocks: false, registration_id: 0)
-      refute project.registration_id?
+      invalid_registration_ids.each do |invalid_registration_id|
+        project = ExtensionTestHelpers.fake_extension_project(
+          registration_id: invalid_registration_id
+        )
+        refute project.registration_id?
+      end
+    end
 
-      project = ExtensionTestHelpers.fake_extension_project(with_mocks: false, registration_id: "wrong")
-      refute project.registration_id?
+    private
+
+    def valid_env_file_attributes_without(*keys)
+      attributes = valid_env_file_attributes
+      unknown_keys = (keys - attributes.keys)
+      raise ArgumentError, "Unknown keys: #{unknown_keys.join(", ")}" if unknown_keys.any?
+      attributes.delete_if { |key, _| keys.include?(key) }
+    end
+
+    def valid_env_file_attributes_with(**overrides)
+      attributes = valid_env_file_attributes
+      unknown_keys = (overrides.keys - attributes.keys)
+      raise ArgumentError, "Unknown keys: #{unknown_keys.join(", ")}" if unknown_keys.any?
+      attributes.merge(overrides)
+    end
+
+    def valid_env_file_attributes
+      {
+        context: @context,
+        api_key: "1234",
+        api_secret: "5678",
+        title: "Test title",
+        registration_id: 56,
+        registration_uuid: "eb946ca8-a925-11eb-bcbc-0242ac130013",
+      }
     end
   end
 end
