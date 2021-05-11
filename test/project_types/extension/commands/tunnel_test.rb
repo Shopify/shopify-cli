@@ -67,7 +67,7 @@ module Extension
         capture_io { run_tunnel(Tunnel::STOP_SUBCOMMAND) }
       end
 
-      def test_status_outputs_no_tunnel_running_if_tunnel_url_returns_empty
+      def test_status_outputs_no_tunnel_running_if_tunnel_urls_returns_empty
         ShopifyCli::Tunnel.expects(:urls).returns([]).once
 
         io = capture_io { run_tunnel(Tunnel::STATUS_SUBCOMMAND) }
@@ -75,13 +75,23 @@ module Extension
         assert_message_output(io: io, expected_content: @context.message("tunnel.no_tunnel_running"))
       end
 
-      def test_status_outputs_the_running_tunnel_url_if_returned_by_tunnel_url
-        fake_url = "http://12345.ngrok.io"
-        ShopifyCli::Tunnel.expects(:urls).returns([fake_url]).once
+      def test_status_outputs_the_https_url_of_the_running_tunnel_url_if_returned_by_tunnel_urls
+        fake_http_url = "http://12345.ngrok.io"
+        fake_https_url = "https://12345.ngrok.io"
+        ShopifyCli::Tunnel.expects(:urls).returns([fake_http_url, fake_https_url]).once
 
         io = capture_io { run_tunnel(Tunnel::STATUS_SUBCOMMAND) }
 
-        assert_message_output(io: io, expected_content: @context.message("tunnel.tunnel_running_at", fake_url))
+        assert_message_output(io: io, expected_content: @context.message("tunnel.tunnel_running_at", fake_https_url))
+      end
+
+      def test_status_outputs_the_http_url_of_the_running_tunnel_url_if_no_https_url_is_returned_by_tunnel_urls
+        fake_http_url = "http://12345.ngrok.io"
+        ShopifyCli::Tunnel.expects(:urls).returns([fake_http_url]).once
+
+        io = capture_io { run_tunnel(Tunnel::STATUS_SUBCOMMAND) }
+
+        assert_message_output(io: io, expected_content: @context.message("tunnel.tunnel_running_at", fake_http_url))
       end
 
       private
