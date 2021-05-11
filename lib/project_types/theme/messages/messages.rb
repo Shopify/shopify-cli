@@ -29,7 +29,7 @@ module Theme
               Usage: {{command:%s theme publish [ THEME_ID ]}}
 
               Options:
-                {{command:-f, --force}}         Do not ask for confirmation.
+                {{command:-f, --force}}         Skip confirmation.
 
               Run without arguments to select theme from a list.
           HELP
