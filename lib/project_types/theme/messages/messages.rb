@@ -105,7 +105,7 @@ module Theme
 
             Options:
               {{command:-d, --development}}     Delete your development theme.
-              {{command:-f, --force}}           Do not ask for confirmation.
+              {{command:-f, --force}}           Skip confirmation.
 
             Run without options to select the theme to delete from a list.
           HELP
