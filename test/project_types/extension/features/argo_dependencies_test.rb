@@ -6,7 +6,6 @@ module Extension
   module Features
     class ArgoTest < MiniTest::Test
       include TestHelpers::FakeUI
-      include ExtensionTestHelpers::Messages
 
       def setup
         super

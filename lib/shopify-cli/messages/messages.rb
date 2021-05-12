@@ -16,8 +16,8 @@ module ShopifyCli
       core: {
         connect: {
           help: <<~HELP,
-          Connect (or re-connect) an existing project to a Shopify partner organization and/or a store. Creates or updates the {{green:.env}} file, and creates the {{green:.shopify-cli.yml}} file.
-            Usage: {{command:%s connect}}
+            Connect (or re-connect) an existing project to a Shopify partner organization and/or a store. Creates or updates the {{green:.env}} file, and creates the {{green:.shopify-cli.yml}} file.
+              Usage: {{command:%s connect}}
           HELP
 
           already_connected_warning: "{{yellow:! This app appears to be already connected}}",
@@ -27,15 +27,15 @@ module ShopifyCli
 
         context: {
           open_url: <<~OPEN,
-          Please open this URL in your browser:
-          {{green:%s}}
+            Please open this URL in your browser:
+            {{green:%s}}
           OPEN
         },
 
         create: {
           help: <<~HELP,
-          Create a new project.
-            Usage: {{command:%s create [ %s ]}}
+            Create a new project.
+              Usage: {{command:%s create [ %s ]}}
           HELP
 
           error: {
@@ -53,13 +53,13 @@ module ShopifyCli
 
         config: {
           help: <<~HELP,
-          Change configuration of how the CLI operates
-            Usage: {{command:%s config [ feature | analytics ] }}
+            Change configuration of how the CLI operates
+              Usage: {{command:%s config [ feature | analytics ] }}
           HELP
           feature: {
             help: <<~HELP,
-            Change configuration of various features
-              Usage: {{command:%s config [ feature ] [ feature_name ] }}
+              Change configuration of various features
+                Usage: {{command:%s config [ feature ] [ feature_name ] }}
             HELP
             enabled: "{{v}} feature {{green:%s}} has been enabled",
             disabled: "{{v}} feature {{green:%s}} has been disabled",
@@ -68,8 +68,8 @@ module ShopifyCli
           },
           analytics: {
             help: <<~HELP,
-            Opt in/out of anonymous usage reporting
-              Usage: {{command:%s config [ analytics ] }}
+              Opt in/out of anonymous usage reporting
+                Usage: {{command:%s config [ analytics ] }}
             HELP
             enabled: "{{v}} analytics have been enabled",
             disabled: "{{v}} analytics have been disabled",
@@ -97,9 +97,9 @@ module ShopifyCli
           },
 
           preamble: <<~MESSAGE,
-          Use {{command:%s help <command>}} to display detailed information about a specific command.
+            Use {{command:%s help <command>}} to display detailed information about a specific command.
 
-          {{bold:Available core commands:}}
+            {{bold:Available core commands:}}
 
           MESSAGE
         },
@@ -131,8 +131,8 @@ module ShopifyCli
 
         logout: {
           help: <<~HELP,
-          Log out of a currently authenticated partner organization and store, or clear invalid credentials
-            Usage: {{command:%s logout}}
+            Log out of a currently authenticated partner organization and store, or clear invalid credentials
+              Usage: {{command:%s logout}}
           HELP
 
           success: "Logged out of partner organization and store",
@@ -154,6 +154,7 @@ module ShopifyCli
           location: {
             admin: "development store",
             partner: "Shopify Partners account",
+            shopifolk: "{{green:Shopify Employee account}}",
           },
           authentication_required:
             "{{i}} Authentication required. Login to the URL below with your %s credentials to continue.",
@@ -175,8 +176,8 @@ module ShopifyCli
           org_name_and_id: "%s (%s)",
           error: {
             account_not_found: <<~MESSAGE,
-            {{x}} error: Your account was not found. Please sign up at https://partners.shopify.com/signup
-            For authentication issues, run {{command:%s logout}} to clear invalid credentials
+              {{x}} error: Your account was not found. Please sign up at https://partners.shopify.com/signup
+              For authentication issues, run {{command:%s logout}} to clear invalid credentials
             MESSAGE
           },
         },
@@ -196,16 +197,16 @@ module ShopifyCli
           },
           populating: "Populating %d %ss...",
           completion_message: <<~COMPLETION_MESSAGE,
-          Successfully added %d %s to {{green:%s}}
-          {{*}} View all %ss at {{underline:%s%ss}}
+            Successfully added %d %s to {{green:%s}}
+            {{*}} View all %ss at {{underline:%s%ss}}
           COMPLETION_MESSAGE
         },
 
         project: {
           error: {
             not_in_project: <<~MESSAGE,
-            {{x}} You are not in a Shopify app project
-            {{yellow:{{*}}}}{{reset: Run}}{{cyan: shopify create}}{{reset: to create your app}}
+              {{x}} You are not in a Shopify app project
+              {{yellow:{{*}}}}{{reset: Run}}{{cyan: shopify create}}{{reset: to create your app}}
             MESSAGE
           },
         },
@@ -226,10 +227,10 @@ module ShopifyCli
 
         system: {
           help: <<~HELP,
-          Print details about the development system.
-            Usage: {{command:%s system [all]}}
+            Print details about the development system.
+              Usage: {{command:%s system [all]}}
 
-          {{cyan:all}}: displays more details about development system and environment
+            {{cyan:all}}: displays more details about development system and environment
 
           HELP
 
@@ -240,8 +241,8 @@ module ShopifyCli
           header: "{{bold:Shopify App CLI}}",
           const: "%17s = %s",
           ruby_header: <<~RUBY_MESSAGE,
-          {{bold:Ruby (via RbConfig)}}
-            %s
+            {{bold:Ruby (via RbConfig)}}
+              %s
           RUBY_MESSAGE
           rb_config: "%-25s - RbConfig[\"%s\"]",
           command_header: "{{bold:Commands}}",
@@ -268,8 +269,8 @@ module ShopifyCli
           ensure_env: {
             organization_select: "To which partner organization does this project belong?",
             no_development_stores: <<~MESSAGE,
-            No development stores available.
-            Visit {{underline:https://partners.shopify.com/%d/stores}} to create one
+              No development stores available.
+              Visit {{underline:https://partners.shopify.com/%d/stores}} to create one
             MESSAGE
             development_store_select: "Which development store would you like to use?",
             app_select: "To which app does this project belong?",
@@ -306,7 +307,10 @@ module ShopifyCli
               no_development_stores: "{{x}} No Development Stores available.",
               no_organizations: "No partner organizations available.",
               organization_not_found: "Cannot find a partner organization with that ID",
-              partners_notice: "Please visit https://partners.shopify.com/ to create a partners account",
+              shopifolk_notice: <<~MESSAGE,
+                {{i}} As a {{green:Shopify}} employee, the authentication should take you to the Shopify Okta login,
+                NOT the Partner account login. Please run {{command:%s logout}} and try again.
+              MESSAGE
             },
             first_party: "Are you working on a 1P (1st Party) app?",
             identified_as_shopify: "We've identified you as a {{green:Shopify}} employee.",
@@ -327,9 +331,9 @@ module ShopifyCli
 
           not_running: "{{green:x}} ngrok tunnel not running",
           signup_suggestion: <<~MESSAGE,
-          {{*}} To avoid tunnels that timeout, it is recommended to signup for a free ngrok
-          account at {{underline:https://ngrok.com/signup}}. After you signup, install your
-          personalized authorization token using {{command:%s tunnel auth <token>}}.
+            {{*}} To avoid tunnels that timeout, it is recommended to signup for a free ngrok
+            account at {{underline:https://ngrok.com/signup}}. After you signup, install your
+            personalized authorization token using {{command:%s tunnel auth <token>}}.
           MESSAGE
           start: "{{v}} ngrok tunnel running at {{underline:%s}}",
           start_with_account: "{{v}} ngrok tunnel running at {{underline:%s}}, with account %s",
@@ -341,31 +345,31 @@ module ShopifyCli
 
         version: {
           help: <<~HELP,
-          Prints version number.
-            Usage: {{command:%s version}}
+            Prints version number.
+              Usage: {{command:%s version}}
           HELP
         },
 
         warning: {
           development_version: <<~DEVELOPMENT,
-          {{*}} {{yellow:You are running a development version of the CLI at:}}
-            {{yellow:%s}}
+            {{*}} {{yellow:You are running a development version of the CLI at:}}
+              {{yellow:%s}}
 
           DEVELOPMENT
 
           shell_shim: <<~MESSAGE,
-          {{x}} This version of Shopify App CLI is no longer supported. You’ll need to migrate to the new CLI version to continue.
+            {{x}} This version of Shopify App CLI is no longer supported. You’ll need to migrate to the new CLI version to continue.
 
-            Please visit this page for complete instructions:
-            {{underline:https://shopify.dev/tools/cli/troubleshooting#migrate-from-a-legacy-version}}
+              Please visit this page for complete instructions:
+              {{underline:https://shopify.dev/tools/cli/troubleshooting#migrate-from-a-legacy-version}}
 
           MESSAGE
 
           new_version: <<~MESSAGE,
-          {{*}} {{yellow:A new version of Shopify App CLI is available! You have version %s and the latest version is %s.
+            {{*}} {{yellow:A new version of Shopify App CLI is available! You have version %s and the latest version is %s.
 
-            To upgrade, follow the instructions for the package manager you’re using:
-            {{underline:https://shopify.dev/tools/cli/troubleshooting#upgrade-shopify-app-cli}}}}
+              To upgrade, follow the instructions for the package manager you’re using:
+              {{underline:https://shopify.dev/tools/cli/troubleshooting#upgrade-shopify-app-cli}}}}
 
           MESSAGE
         },

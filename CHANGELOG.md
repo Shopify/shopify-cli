@@ -1,5 +1,6 @@
 Unreleased
 ------
+* Improved handling of "account not found" scenario, plus improvements to related tests and UX messaging
 
 Version 1.10.0
 -------------

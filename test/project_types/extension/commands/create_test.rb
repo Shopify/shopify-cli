@@ -8,7 +8,6 @@ module Extension
       include TestHelpers::FakeUI
       include ExtensionTestHelpers
       include ExtensionTestHelpers::TestExtensionSetup
-      include ExtensionTestHelpers::Messages
       include ExtensionTestHelpers::Stubs::GetOrganizations
       include ExtensionTestHelpers::Stubs::GetApp
 

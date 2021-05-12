@@ -7,7 +7,6 @@ module Extension
       class AskTypeTest < MiniTest::Test
         include TestHelpers
         include TestHelpers::FakeUI
-        include ExtensionTestHelpers::Messages
         include ExtensionTestHelpers
 
         def setup

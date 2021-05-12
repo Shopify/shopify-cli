@@ -7,7 +7,6 @@ module Extension
     class UpdateDraftTest < MiniTest::Test
       include TestHelpers::FakeUI
       include TestHelpers::Partners
-      include ExtensionTestHelpers::Messages
       include ExtensionTestHelpers::Stubs::UpdateDraft
 
       def setup
