@@ -79,10 +79,10 @@ module Script
         end
 
         class ScriptRepushError < ScriptProjectError
-          attr_reader :api_key
-          def initialize(api_key)
+          attr_reader :uuid
+          def initialize(uuid)
             super()
-            @api_key = api_key
+            @uuid = uuid
           end
         end
 
