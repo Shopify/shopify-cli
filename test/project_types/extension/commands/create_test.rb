@@ -5,7 +5,6 @@ require "project_types/extension/extension_test_helpers"
 module Extension
   module Commands
     class CreateTest < MiniTest::Test
-
       include ExtensionTestHelpers::Stubs::GetApp
 
       def setup
