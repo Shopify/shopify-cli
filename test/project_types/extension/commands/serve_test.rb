@@ -44,15 +44,48 @@ module Extension
         serve.call([], "serve")
       end
 
-      def test_new_tunnel_started_if_specification_handler_supports_establish_tunnel
+      def test_new_tunnel_started_if_tunnel_supported_and_requirements_met
         serve = ::Extension::Commands::Serve.new(@context)
         stub_specification_handler_options(serve, choose_port: true, establish_tunnel: true)
+        Tasks::ChooseNextAvailablePort.expects(:call)
+          .returns(ShopifyCli::Result.success(Extension::Commands::Serve::DEFAULT_PORT))
+        ShopifyCli::Tunnel.expects(:urls).returns(["https://shopify.ngrok.io"])
+        ShopifyCli::Tunnel.expects(:running_on?).returns(true)
         ShopifyCli::Tunnel.expects(:start)
           .with(@context, port: Extension::Commands::Serve::DEFAULT_PORT)
           .returns("ngrok.example.com")
           .once
+
         serve.specification_handler.expects(:serve).once
         serve.call([], "serve")
+      end
+
+      def test_new_tunnel_started_if_tunnel_supported_and_no_tunnels_running
+        serve = ::Extension::Commands::Serve.new(@context)
+        stub_specification_handler_options(serve, choose_port: true, establish_tunnel: true)
+        Tasks::ChooseNextAvailablePort.expects(:call)
+          .returns(ShopifyCli::Result.success(Extension::Commands::Serve::DEFAULT_PORT))
+        ShopifyCli::Tunnel.expects(:urls).returns([])
+        ShopifyCli::Tunnel.expects(:start)
+          .with(@context, port: Extension::Commands::Serve::DEFAULT_PORT)
+          .returns("ngrok.example.com")
+          .once
+
+        serve.specification_handler.expects(:serve).once
+        serve.call([], "serve")
+      end
+
+      def test_serve_quits_if_tunnel_requested_but_tunnel_already_running_on_different_port
+        serve = ::Extension::Commands::Serve.new(@context)
+        stub_specification_handler_options(serve, choose_port: true, establish_tunnel: true)
+        ShopifyCli::Tunnel.expects(:urls).returns(["https://shopify.ngrok.io"])
+        ShopifyCli::Tunnel.expects(:running_on?).returns(false)
+
+        error = assert_raises ShopifyCli::Abort do
+          serve.call([], "serve")
+        end
+
+        assert_includes error.message, @context.message("serve.tunnel_already_running")
       end
 
       def test_tunnel_not_started_if_specification_handler_does_not_support_establish_tunnel

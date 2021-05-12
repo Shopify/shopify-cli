@@ -59,6 +59,7 @@ module Extension
         no_available_ports_found: "No available ports found to run extension.",
         serve_failure_message: "Failed to run extension code.",
         serve_missing_information: "Missing shop or api_key.",
+        tunnel_already_running: "A tunnel running on another port has been detected. Close the tunnel and try again.",
       },
       tunnel: {
         missing_token: "{{x}} {{red:auth requires a token argument}}. "\

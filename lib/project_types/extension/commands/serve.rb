@@ -59,6 +59,16 @@ module Extension
         return runtime_configuration unless specification_handler.establish_tunnel?(@ctx)
         return runtime_configuration unless runtime_configuration.tunnel_requested?
 
+        return start_tunnel(runtime_configuration) if can_start_tunnel?(runtime_configuration)
+        @ctx.abort(@ctx.message("serve.tunnel_already_running"))
+      end
+
+      def can_start_tunnel?(runtime_configuration)
+        return true if ShopifyCli::Tunnel.urls.empty?
+        ShopifyCli::Tunnel.running_on?(runtime_configuration.port)
+      end
+
+      def start_tunnel(runtime_configuration)
         tunnel_url = ShopifyCli::Tunnel.start(@ctx, port: runtime_configuration.port)
         runtime_configuration.tap { |c| c.tunnel_url = tunnel_url }
       end

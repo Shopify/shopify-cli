@@ -141,6 +141,24 @@ module ShopifyCli
       end
     end
 
+    def test_tunnel_running_on_returns_false_if_port_provided_is_available
+      mock_ngrok_tunnels_http_call(response_body: JSON.dump(fake_ngrok_api_response))
+      port_to_check = 12345
+      refute Tunnel.running_on?(port_to_check)
+    end
+
+    def test_tunnel_running_on_returns_true_if_tunnel_running_on_provided_port
+      mock_ngrok_tunnels_http_call(response_body: JSON.dump(fake_ngrok_api_response))
+      port_to_check = 39351
+      assert Tunnel.running_on?(port_to_check)
+    end
+
+    def test_tunnel_running_on_returns_false_if_tunnel_urls_empty
+      mock_ngrok_tunnels_http_call(response_body: JSON.dump({}))
+      port_to_check = 39351
+      refute Tunnel.running_on?(port_to_check)
+    end
+
     private
 
     def with_log(fixture: "ngrok", time: Time.now.strftime("%s"))
