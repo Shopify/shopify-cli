@@ -106,14 +106,25 @@ module Extension
         end
       end
 
-      def test_js_system_is_invoked_with_the_correct_arguments
-        js_system = stub_js_system do |stub|
-          stub.with do |config|
+      def test_includes_development_dependencies_by_default
+        js_system = stub_js_system do |expect_js_system_call|
+          expect_js_system_call.with do |config|
+            assert_equal ["list"], config.fetch(:yarn)
+            assert_equal ["list", "--depth=1"], config.fetch(:npm)
+          end
+        end
+        result = FindNpmPackages.call(js_system: js_system)
+        assert_predicate(result, :success?)
+      end
+
+      def test_supports_filtering_by_production_dependencies
+        js_system = stub_js_system do |expect_js_system_call|
+          expect_js_system_call.with do |config|
             assert_equal ["list", "--production"], config.fetch(:yarn)
             assert_equal ["list", "--prod", "--depth=1"], config.fetch(:npm)
           end
         end
-        result = FindNpmPackages.call(js_system: js_system)
+        result = FindNpmPackages.call(js_system: js_system, production_only: true)
         assert_predicate(result, :success?)
       end
 

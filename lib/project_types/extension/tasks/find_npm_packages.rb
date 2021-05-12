@@ -4,6 +4,7 @@ module Extension
       include ShopifyCli::MethodObject
 
       property! :js_system, accepts: ShopifyCli::JsSystem
+      property! :production_only, accepts: [true, false], default: false, reader: :production_only?
 
       def self.at_least_one_of(*package_names, **config)
         new(**config).at_least_one_of(*package_names)
@@ -82,11 +83,11 @@ module Extension
       end
 
       def yarn_list
-        %w[list --production]
+        production_only? ? %w[list --production] : %w[list]
       end
 
       def npm_list
-        %w[list --prod --depth=1]
+        production_only? ? %w[list --prod --depth=1] : %w[list --depth=1]
       end
 
       def search_packages(packages, package_list)
