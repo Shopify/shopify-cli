@@ -67,13 +67,16 @@ module Extension
       end
 
       def test_config_returns_argo_renderer_package_name_version_if_it_exists_using_yarn
-        yarn_list_result = 'yarn list v1.22.5
-        ├─ @fake-package@0.3.9
-        └─ @shopify/argo-admin@0.3.8
-        ✨  Done in 0.40s.'
+        yarn_list_result = <<~YARN
+          yarn list v1.22.5
+          ├─ @fake-package@0.3.9
+          └─ @shopify/argo-admin@0.3.8
+          ✨  Done in 0.40s.
+        YARN
+
         with_stubbed_script(@context, Features::Argo::SCRIPT_PATH) do
+          stub_package_manager(yarn_list_result)
           stub_run_yarn_install_and_run_yarn_run_script_methods
-          Argo.any_instance.stubs(:run_list_command).returns(yarn_list_result)
           config = @dummy_argo.config(@context)
 
           assert_includes(config.keys, :renderer_version)
@@ -83,15 +86,15 @@ module Extension
       end
 
       def test_config_returns_argo_renderer_package_version_if_it_exists_using_npm
-        npm_list_result = 'test-extension-template@0.1.0
-        └─┬ @fake-package@0.4.3
-          └── @shopify/argo-admin@0.4.3
-          ✨  Done in 0.40s.
-          '
+        npm_list_result = <<~NPM
+          test-extension-template@0.1.0
+          └─┬ @fake-package@0.4.3
+            └── @shopify/argo-admin@0.4.3
+            ✨  Done in 0.40s.
+        NPM
+
         with_stubbed_script(@context, Features::Argo::SCRIPT_PATH) do
-          ShopifyCli::JsSystem.any_instance.stubs(:package_manager).returns("npm")
-          Argo.any_instance.stubs(:run_list_command).returns(npm_list_result)
-          ShopifyCli::JsSystem.any_instance.stubs(:call)
+          stub_package_manager(npm_list_result)
           config = @dummy_argo.config(@context)
 
           assert_includes(config.keys, :renderer_version)
@@ -100,13 +103,11 @@ module Extension
         end
       end
 
-      def test_config_aborts_with_error_if_run_list_command_fails
-        skip("Temporarily bypassing exit code check due to issues with NPM 7.")
-
+      def test_config_aborts_if_renderer_package_cannot_be_resolved
         Base64.stubs(:strict_encode64).returns(@encoded_script)
         with_stubbed_script(@context, Argo::SCRIPT_PATH) do
           stub_run_yarn_install_and_run_yarn_run_script_methods
-          ShopifyCli::JsSystem.any_instance.stubs(:call).returns([@result, @error_message, mock(success?: false)])
+          Tasks::FindNpmPackages.expects(:exactly_one_of).raises(Extension::PackageResolutionFailed)
           error = assert_raises(ShopifyCli::Abort) { @dummy_argo.config(@context) }
           assert_includes error
             .message, @context.message(
@@ -116,29 +117,16 @@ module Extension
         end
       end
 
-      def test_config_aborts_with_error_if_found_version_is_invalid
-        skip("Temporarily bypassing exit code check due to issues with NPM 7.")
-
-        Base64.stubs(:strict_encode64).returns(@encoded_script)
-        with_stubbed_script(@context, Argo::SCRIPT_PATH) do
-          stub_run_yarn_install_and_run_yarn_run_script_methods
-          ShopifyCli::JsSystem.any_instance.stubs(:call).returns([@result, @no_error, mock(success?: true)])
-          ArgoRendererPackage.stubs(:from_package_manager).raises(Extension::PackageNotFound)
-
-          error = assert_raises(ShopifyCli::Abort) { @dummy_argo.config(@context) }
-          assert_includes error.message,
-            @context.message("features.argo.dependencies.argo_missing_renderer_package_error")
-        end
-      end
-
       def test_config_aborts_with_error_when_argo_renderer_package_name_not_found
-        result = 'test-extension-template@0.1.0
-        └─┬ @not-a-renderer-package@0.4.3
-          ✨  Done in 0.40s.
-          '
+        package_manager_output = <<~NPM
+          test-extension-template@0.1.0
+          └─┬ @not-a-renderer-package@0.4.3
+            ✨  Done in 0.40s.
+        NPM
+
         with_stubbed_script(@context, Features::Argo::SCRIPT_PATH) do
+          stub_package_manager(package_manager_output)
           stub_run_yarn_install_and_run_yarn_run_script_methods
-          Argo.any_instance.stubs(:run_list_command).returns(result)
 
           error_message = "'#{@dummy_argo.renderer_package_name}' not found."
           error = assert_raises(ShopifyCli::Abort) { @dummy_argo.config(@context) }
@@ -199,6 +187,14 @@ module Extension
         ShopifyCli::JsSystem.any_instance.stubs(:package_manager).returns("yarn")
         Argo.any_instance.stubs(:run_yarn_install).returns(true)
         Argo.any_instance.stubs(:run_yarn_run_script).returns(true)
+      end
+
+      def stub_package_manager(package_manager_output)
+        ShopifyCli::JsSystem
+          .new(ctx: @context)
+          .tap { |js_system| js_system.stubs(call: [package_manager_output, nil, stub(success?: true)]) }
+          .yield_self { |js_system| Tasks::FindNpmPackages.new(js_system: js_system) }
+          .tap { |find_npm_packages_stub| Tasks::FindNpmPackages.expects(:new).returns(find_npm_packages_stub) }
       end
     end
   end
