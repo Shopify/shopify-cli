@@ -2,6 +2,7 @@ require "json"
 require "fileutils"
 require "shopify_cli"
 require "forwardable"
+require "uri"
 
 module ShopifyCli
   ##
@@ -11,7 +12,7 @@ module ShopifyCli
   class Tunnel
     extend SingleForwardable
 
-    def_delegators :new, :start, :stop, :auth, :stats, :urls
+    def_delegators :new, :start, :stop, :auth, :stats, :urls, :running_on?
 
     class FetchUrlError < RuntimeError; end
     class NgrokError < RuntimeError; end
@@ -26,6 +27,7 @@ module ShopifyCli
 
     NGROK_TUNNELS_URI = URI.parse("http://localhost:4040/api/tunnels")
     TUNNELS_FIELD = "tunnels"
+    TUNNEL_ADDRESS_KEY_PATH = ["config", "addr"]
     PUBLIC_URL_FIELD = "public_url"
 
     ##
@@ -118,6 +120,25 @@ module ShopifyCli
       tunnels.map { |tunnel| tunnel.dig(PUBLIC_URL_FIELD) }
     rescue
       []
+    end
+
+    ##
+    # Returns Boolean if a tunnel is running on a given port
+    #
+    # #### Parameters
+    #
+    # * `port` - port to check
+    #
+    # #### Returns
+    #
+    # * true / false
+    #
+    def running_on?(port)
+      extract_port = ->(tunnel) { URI(tunnel.dig(*TUNNEL_ADDRESS_KEY_PATH)).port }
+      matches_port = ->(occupied_port) { occupied_port == port }
+      stats.fetch(TUNNELS_FIELD, []).map(&extract_port).any?(&matches_port)
+    rescue
+      false
     end
 
     private

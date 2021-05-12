@@ -53,7 +53,6 @@ module Extension
 
       def renderer_package(context)
         js_system = ShopifyCli::JsSystem.new(ctx: context)
-
         Tasks::FindNpmPackages
           .exactly_one_of(*PACKAGE_NAMES, js_system: js_system)
           .then { |package| Features::ArgoRendererPackage.from_npm_package(package) }
