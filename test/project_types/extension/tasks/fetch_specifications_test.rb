@@ -1,4 +1,3 @@
-
 require "test_helper"
 require "project_types/extension/extension_test_helpers"
 
@@ -8,7 +7,6 @@ module Extension
       include TestHelpers
       include TestHelpers::FakeUI
       include TestHelpers::Partners
-      include ExtensionTestHelpers::Messages
       include ExtensionTestHelpers::Stubs::FetchSpecifications
 
       def setup

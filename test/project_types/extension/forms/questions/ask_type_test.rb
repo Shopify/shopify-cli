@@ -6,7 +6,6 @@ module Extension
     module Questions
       class AskTypeTest < MiniTest::Test
         include TestHelpers
-        include ExtensionTestHelpers::Messages
         include ExtensionTestHelpers
 
         def setup

@@ -6,7 +6,6 @@ module Extension
     autoload :TestExtension, "project_types/extension/extension_test_helpers/test_extension"
     autoload :TestExtensionSetup, "project_types/extension/extension_test_helpers/test_extension_setup"
     autoload :TempProjectSetup, "project_types/extension/extension_test_helpers/temp_project_setup"
-    autoload :Messages, "project_types/extension/extension_test_helpers/messages"
     autoload :DummyArgo, "project_types/extension/extension_test_helpers/dummy_argo"
     autoload :DummySpecifications, "project_types/extension/extension_test_helpers/dummy_specifications"
 

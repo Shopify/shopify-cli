@@ -7,7 +7,6 @@ module Extension
     module Converters
       class VersionConverterTest < MiniTest::Test
         include TestHelpers::FakeUI
-        include ExtensionTestHelpers::Messages
 
         def setup
           super

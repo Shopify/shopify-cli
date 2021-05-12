@@ -5,8 +5,6 @@ require "project_types/extension/extension_test_helpers"
 module Extension
   module Commands
     class ExtensionCommandTest < MiniTest::Test
-      include ExtensionTestHelpers::Messages
-
       def setup
         super
         ShopifyCli::ProjectType.load_type(:extension)

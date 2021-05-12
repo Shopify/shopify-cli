@@ -80,7 +80,13 @@ module ShopifyCli
     end
 
     def output_authentication_info(uri)
-      login_location = ctx.message(service == "admin" ? "core.oauth.location.admin" : "core.oauth.location.partner")
+      login_location = if service == "admin"
+        ctx.message("core.oauth.location.admin")
+      elsif Shopifolk.acting_as_shopify_organization?
+        ctx.message("core.oauth.location.shopifolk")
+      else
+        ctx.message("core.oauth.location.partner")
+      end
       ctx.puts(ctx.message("core.oauth.authentication_required", login_location))
       ctx.open_url!(uri)
     end

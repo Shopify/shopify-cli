@@ -6,7 +6,6 @@ module Extension
   module Commands
     class TunnelTest < MiniTest::Test
       include TestHelpers::FakeUI
-      include ExtensionTestHelpers::Messages
 
       def setup
         super
