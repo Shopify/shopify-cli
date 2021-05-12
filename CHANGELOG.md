@@ -2,6 +2,8 @@ Unreleased
 ------
 * Improved handling of "account not found" scenario, plus improvements to related tests and UX messaging
 
+* [#1221](https://github.com/Shopify/shopify-app-cli/pull/1221): Prioritizes returning an HTTPS URL over HTTP from `shopify tunnel status`.
+
 Version 1.10.0
 -------------
 * Updating internal features in development

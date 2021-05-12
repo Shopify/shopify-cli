@@ -37,7 +37,9 @@ module Extension
       private
 
       def status
-        tunnel_url = ShopifyCli::Tunnel.urls.first
+        tunnel_urls = ShopifyCli::Tunnel.urls
+        tunnel_url = tunnel_urls.find { |url| url.start_with?("https://") }
+        tunnel_url = tunnel_urls.first if tunnel_url.nil?
 
         if tunnel_url.nil?
           @ctx.puts(@ctx.message("tunnel.no_tunnel_running"))

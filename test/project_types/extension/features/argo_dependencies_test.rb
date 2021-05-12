@@ -5,8 +5,6 @@ require "project_types/extension/extension_test_helpers"
 module Extension
   module Features
     class ArgoTest < MiniTest::Test
-      include TestHelpers::FakeUI
-
       def setup
         super
         ShopifyCli::ProjectType.load_type(:extension)

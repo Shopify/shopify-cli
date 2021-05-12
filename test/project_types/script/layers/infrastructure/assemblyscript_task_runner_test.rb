@@ -94,7 +94,7 @@ describe Script::Layers::Infrastructure::AssemblyScriptTaskRunner do
         .stubs(:capture2e)
         .returns([output, mock(success?: false)])
 
-      assert_raises(Script::Layers::Domain::Errors::ServiceFailureError, output) do
+      assert_raises(Script::Layers::Infrastructure::Errors::SystemCallFailureError, output) do
         subject
       end
     end

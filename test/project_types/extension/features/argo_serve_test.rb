@@ -7,7 +7,6 @@ module Extension
     class ArgoServeTest < MiniTest::Test
       include TestHelpers::Partners
       include TestHelpers::FakeUI
-      include ExtensionTestHelpers::TempProjectSetup
 
       ARGO_ADMIN_TEMPLATE = "https://github.com/Shopify/argo-admin.git"
       ARGO_CHECKOUT_TEMPLATE = "https://github.com/Shopify/argo-checkout.git"
@@ -17,6 +16,7 @@ module Extension
         @api_key = "123abc"
         @registration_uuid = "dev-123"
         @argo_version = "0.9.4"
+        ShopifyCli::ProjectType.load_type("extension")
       end
 
       def test_extensions_that_require_version_have_argo_version_command_line_argument
@@ -127,7 +127,8 @@ renderer_package_name: "@shopify/argo-admin")
         ShopifyCli::Feature.stubs(:enabled?).with(:argo_admin_beta).returns(true)
         ShopifyCli::Tasks::EnsureEnv.stubs(:call)
         ShopifyCli::Tasks::EnsureDevStore.stubs(:call)
-        setup_temp_project(api_key: api_key, registration_uuid: registration_uuid)
+        ExtensionTestHelpers.fake_extension_project(with_mocks: true, api_key: api_key,
+registration_uuid: registration_uuid)
       end
 
       def build_dummy_specification_handler(renderer_package_version:, specification:)
