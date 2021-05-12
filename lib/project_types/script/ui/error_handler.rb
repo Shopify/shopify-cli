@@ -214,7 +214,7 @@ module Script
           }
         when Layers::Infrastructure::Errors::ScriptRepushError
           {
-            cause_of_error: ShopifyCli::Context.message("script.error.script_repush_cause", e.api_key),
+            cause_of_error: ShopifyCli::Context.message("script.error.script_repush_cause", e.uuid),
             help_suggestion: ShopifyCli::Context.message("script.error.script_repush_help"),
           }
         when Layers::Infrastructure::Errors::ShopAuthenticationError

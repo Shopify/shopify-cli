@@ -113,7 +113,7 @@ module Script
           graphql_error_cause: "An error was returned: %s.",
           graphql_error_help: "\nReview the error and try again.",
 
-          script_repush_cause: "A script with the same extension point already exists on app (API key: %s).",
+          script_repush_cause: "A script with this UUID already exists (UUID: %s).",
           script_repush_help: "Use {{cyan:--force}} to replace the existing script.",
 
           shop_auth_cause: "Unable to authenticate with the store.",
