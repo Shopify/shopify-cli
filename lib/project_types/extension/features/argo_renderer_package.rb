@@ -18,11 +18,8 @@ module Extension
       property! :version, accepts: String
 
       class << self
-        def from_package_manager(package_manager_output)
-          pattern = /(?<name>#{PACKAGE_NAMES.join("|")})@(?<version>\d.*)$/
-          match = package_manager_output.match(pattern)
-          raise PackageNotFound, package_manager_output if match.nil?
-          new(package_name: match[:name], version: match[:version].strip)
+        def from_npm_package(package)
+          new(package_name: package.name, version: package.version)
         end
       end
 

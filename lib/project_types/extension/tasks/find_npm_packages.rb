@@ -13,11 +13,15 @@ module Extension
         new(**config).all(*package_names)
       end
 
+      def self.exactly_one_of(*package_names, **config)
+        new(**config).exactly_one_of(*package_names)
+      end
+
       def all(*package_names)
         call(*package_names) do |found_packages|
           found_package_names = found_packages.map(&:name)
           next found_packages if Set.new(found_package_names) == Set.new(package_names)
-          raise PackageNotFound, format(
+          raise PackageResolutionFailed, format(
             "Missing packages: %s",
             (package_names - found_package_names).join(", ")
           )
@@ -28,10 +32,32 @@ module Extension
         call(*package_names) do |found_packages|
           found_package_names = found_packages.map(&:name)
           next found_packages unless (found_package_names & package_names).empty?
-          raise PackageNotFound, format(
+          raise PackageResolutionFailed, format(
             "Expected at least one of the following packages: %s",
             package_names.join(", ")
           )
+        end
+      end
+
+      def exactly_one_of(*package_names)
+        call(*package_names) do |found_packages|
+          case found_packages.count
+          when 0
+            raise PackageResolutionFailed, format(
+              "Expected one of the following packages: %s",
+              package_names.join(", ")
+            )
+          when 1
+            found_packages.first.tap do |found_package|
+              next found_package if package_names.include?(found_package.name)
+              raise PackageResolutionFailed, format(
+                "Expected the following package: %s",
+                found_package.name
+              )
+            end
+          else
+            raise PackageResolutionFailed, "Found more than one package"
+          end
         end
       end
 
