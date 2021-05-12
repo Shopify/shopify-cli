@@ -40,7 +40,7 @@ describe Script::Layers::Infrastructure::AssemblyScriptProjectCreator do
         build = payload.dig("scripts", "build")
         expected = [
           "shopify-scripts-toolchain-as build --src src/shopify_main.ts",
-          "--binary build/myscript.wasm --metadata build/metadata.json",
+          "--binary build/script.wasm --metadata build/metadata.json",
           "-- --lib node_modules --optimize --use Date=",
         ].join(" ")
         expected == build
@@ -189,7 +189,7 @@ describe Script::Layers::Infrastructure::AssemblyScriptProjectCreator do
         payload = JSON.parse(contents)
         build = payload.dig("scripts", "build")
         expected = [
-          "shopify-scripts-toolchain-as build --src src/shopify_main.ts --binary build/myscript.wasm",
+          "shopify-scripts-toolchain-as build --src src/shopify_main.ts --binary build/script.wasm",
           "--metadata build/metadata.json --domain checkout --ep discount",
           "-- --lib node_modules --optimize --use Date=",
         ].join(" ")

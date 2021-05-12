@@ -12,7 +12,7 @@ module Script
 
         BOOTSTRAP = "npx --no-install shopify-scripts-toolchain-as bootstrap --from %{extension_point} --dest %{base}"
         BUILD = "shopify-scripts-toolchain-as build --src src/shopify_main.ts " \
-        "--binary build/%{script_name}.wasm --metadata build/metadata.json"
+        "--binary build/script.wasm --metadata build/metadata.json"
         MIN_NODE_VERSION = "14.5.0"
         ASC_ARGS = "-- --lib node_modules --optimize --use Date="
 
@@ -81,13 +81,12 @@ module Script
 
         def build_command
           type = extension_point.dasherize_type
-          base_command = format(BUILD, script_name: script_name)
           domain = extension_point.domain
 
           if domain.nil?
-            "#{base_command} #{ASC_ARGS}"
+            "#{BUILD} #{ASC_ARGS}"
           else
-            "#{base_command} --domain #{domain} --ep #{type} #{ASC_ARGS}"
+            "#{BUILD} --domain #{domain} --ep #{type} #{ASC_ARGS}"
           end
         end
       end
