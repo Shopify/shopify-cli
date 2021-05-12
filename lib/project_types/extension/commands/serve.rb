@@ -47,19 +47,20 @@ module Extension
       end
 
       def find_available_port(runtime_configuration)
+        return runtime_configuration unless specification_handler.choose_port?(@ctx)
+
         chosen_port = Tasks::ChooseNextAvailablePort
           .call(from: runtime_configuration.port)
           .unwrap { |_error| @ctx.abort(@ctx.message("serve.no_available_ports_found")) }
-
         runtime_configuration.tap { |c| c.port = chosen_port }
       end
 
       def start_tunnel_if_required(runtime_configuration)
-        if runtime_configuration.tunnel_requested?
-          tunnel_url = ShopifyCli::Tunnel.start(@ctx, port: runtime_configuration.port)
-          runtime_configuration.tap { |c| c.tunnel_url = tunnel_url }
-        end
-        runtime_configuration
+        return runtime_configuration unless specification_handler.establish_tunnel?(@ctx)
+        return runtime_configuration unless runtime_configuration.tunnel_requested?
+
+        tunnel_url = ShopifyCli::Tunnel.start(@ctx, port: runtime_configuration.port)
+        runtime_configuration.tap { |c| c.tunnel_url = tunnel_url }
       end
 
       def serve(runtime_configuration)

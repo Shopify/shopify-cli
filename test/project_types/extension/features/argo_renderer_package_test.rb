@@ -25,21 +25,6 @@ module Extension
         assert_predicate(argo_renderer_package, :admin?)
       end
 
-      def test_argo_minimum_version_supports_uuid_flag
-        skip("Passing the a UUID to the Argo Webpack server is currently not supported")
-
-        uuid_supported = Features::ArgoRendererPackage.new(
-          package_name: Features::ArgoRendererPackage::ARGO_ADMIN,
-          version: "0.9.4"
-        )
-        uuid_unsupported = Features::ArgoRendererPackage.new(
-          package_name: Features::ArgoRendererPackage::ARGO_ADMIN,
-          version: "0.1.2"
-        )
-        assert_predicate(uuid_supported, :supports_uuid_flag?)
-        refute_predicate(uuid_unsupported, :supports_uuid_flag?)
-      end
-
       def test_instantiation_from_npm_package
         npm_package = Models::NpmPackage.new(name: "@shopify/argo-admin", version: "0.9.3")
         argo_renderer_package = ArgoRendererPackage.from_npm_package(npm_package)

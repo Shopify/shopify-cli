@@ -42,10 +42,12 @@ module Extension
             renderer_package_name: "@shopify/argo-admin",
             required_fields: [:shop, :api_key],
             required_shop_beta_flags: [:argo_admin_beta],
+            cli_package_name: "@shopify/argo-admin-cli",
           },
           checkout: {
             git_template: "https://github.com/Shopify/argo-checkout-template.git",
             renderer_package_name: "@shopify/argo-checkout",
+            cli_package_name: "@shopify/argo-run",
           },
         }
       end
