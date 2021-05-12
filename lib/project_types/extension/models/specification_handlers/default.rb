@@ -42,21 +42,36 @@ module Extension
           []
         end
 
-        def choose_port?
-          false
+        def choose_port?(context)
+          cli_compatibility(context).accepts_port?
         end
 
-        def establish_tunnel?
-          false
+        def establish_tunnel?(context)
+          cli_compatibility(context).accepts_tunnel_url?
         end
 
         def serve(context:, port:, tunnel_url:)
-          Features::ArgoServe.new(specification_handler: self, context: context, port: port,
-tunnel_url: tunnel_url).call
+          Features::ArgoServe.new(specification_handler: self, cli_compatibility: cli_compatibility(context),
+          context: context, port: port, tunnel_url: tunnel_url).call
         end
 
         def renderer_package(context)
           argo.renderer_package(context)
+        end
+
+        def cli_compatibility(context)
+          @cli_compatibility ||= Features::ArgoCliCompatibility.new(renderer_package: renderer_package(context),
+          installed_cli_package: installed_cli_package(context))
+        end
+
+        def cli_package_name
+          specification.features.argo ? specification.features.argo.cli_package_name : ""
+        end
+
+        def installed_cli_package(context)
+          js_system = ShopifyCli::JsSystem.new(ctx: context)
+          Tasks::FindNpmPackages.exactly_one_of(cli_package_name, js_system: js_system)
+            .unwrap { |_e| context.abort(context.message("errors.package_not_found", cli_package_name)) }
         end
 
         protected
@@ -64,7 +79,7 @@ tunnel_url: tunnel_url).call
         def argo
           Features::Argo.new(
             git_template: specification.features.argo.git_template,
-            renderer_package_name: specification.features.argo.renderer_package_name,
+            renderer_package_name: specification.features.argo.renderer_package_name
           )
         end
 

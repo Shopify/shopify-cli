@@ -116,6 +116,7 @@ module Extension
       },
       errors: {
         unknown_type: "Unknown extension type %s",
+        package_not_found: "`%s` package not found.",
       },
     }
 
