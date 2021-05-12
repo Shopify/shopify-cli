@@ -6,12 +6,11 @@ module Extension
   module Commands
     class ServeTest < MiniTest::Test
       include TestHelpers::FakeUI
-      include ExtensionTestHelpers::TempProjectSetup
 
       def setup
         super
         ShopifyCli::ProjectType.load_type("extension")
-        setup_temp_project
+        ExtensionTestHelpers.fake_extension_project(with_mocks: true)
       end
 
       def test_defers_serving_to_the_specification_handler

@@ -35,14 +35,15 @@ module Extension
       specification_handler
     end
 
-    def self.fake_extension_project(with_mocks:,
+    def self.fake_extension_project(
+      with_mocks: false,
       api_key: "TEST_KEY",
       api_secret: "TEST_SECRET",
       title: "Test",
       type_identifier: "TEST_EXTENSION",
       registration_id: 55,
-      registration_uuid: "db946ca8-a925-11eb-bcbc-0242ac130002")
-
+      registration_uuid: "db946ca8-a925-11eb-bcbc-0242ac130002"
+    )
       project = FakeExtensionProject.new(
         api_key: api_key,
         api_secret: api_secret,

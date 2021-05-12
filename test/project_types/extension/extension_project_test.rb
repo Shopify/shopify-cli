@@ -5,145 +5,160 @@ require "project_types/extension/extension_test_helpers"
 module Extension
   class ExtensionProjectTest < MiniTest::Test
     include TestHelpers::FakeUI
-    include ExtensionTestHelpers::TempProjectSetup
+
+    def setup
+      super
+      ShopifyCli::ProjectType.load_type(:extension)
+
+      @specification_handler = ExtensionTestHelpers.test_specification_handler
+      @type = @specification_handler.identifier
+      @context = TestHelpers::FakeContext.new(root: Dir.mktmpdir)
+
+      FileUtils.cd(@context.root)
+      ExtensionProject.write_cli_file(context: @context, type: @type)
+    end
 
     def test_write_cli_file_create_shopify_cli_yml_file
-      new_context = TestHelpers::FakeContext.new(root: Dir.mktmpdir)
-      FileUtils.cd(new_context.root)
-
-      ExtensionProject.write_cli_file(context: new_context, type: @test_extension_type.identifier)
       ::ShopifyCli::Project.clear
 
       assert File.exist?(".shopify-cli.yml")
       assert_equal :extension, ShopifyCli::Project.current_project_type
-      assert_equal @test_extension_type.identifier, ExtensionProject.current.specification_identifier
+      assert_equal @specification_handler.identifier, ExtensionProject.current.specification_identifier
     end
 
     def test_write_env_file_creates_env_file
-      api_key = "1234"
-      api_secret = "5678"
-      title = "Test Title"
-      registration_id = 55
-
-      new_context = TestHelpers::FakeContext.new(root: Dir.mktmpdir)
-      FileUtils.cd(new_context.root)
-
-      ExtensionProject.write_cli_file(context: new_context, type: @test_extension_type.identifier)
-      ExtensionProject.write_env_file(
-        context: new_context,
-        api_key: api_key,
-        api_secret: api_secret,
-        title: title,
-        registration_id: registration_id
-      )
-
+      assert_nothing_raised { ExtensionProject.write_env_file(**valid_env_file_attributes) }
       assert File.exist?(".env")
-      project = ExtensionProject.current
-      assert_equal api_key, project.app.api_key
-      assert_equal api_secret, project.app.secret
-      assert_equal title, project.title
-      assert_equal registration_id, project.registration_id
+    end
+
+    def test_write_env_file_persists_api_key
+      ExtensionProject.write_env_file(**valid_env_file_attributes_with(api_key: "abc"))
+      assert_equal("abc", ExtensionProject.current.app.api_key)
+    end
+
+    def test_write_env_file_persists_api_secret
+      ExtensionProject.write_env_file(**valid_env_file_attributes_with(api_secret: "xyz"))
+      assert_equal("xyz", ExtensionProject.current.app.secret)
+    end
+
+    def test_write_env_file_persists_title
+      ExtensionProject.write_env_file(**valid_env_file_attributes_with(title: "Hello World"))
+      assert_equal("Hello World", ExtensionProject.current.title)
+    end
+
+    def test_write_env_file_persists_registration_id
+      ExtensionProject.write_env_file(**valid_env_file_attributes_with(registration_id: 123))
+      assert_equal(123, ExtensionProject.current.registration_id)
+    end
+
+    def test_write_env_file_persists_registration_uuid
+      ExtensionProject.write_env_file(**valid_env_file_attributes_with(registration_uuid: "0000"))
+      assert_equal("0000", ExtensionProject.current.registration_uuid)
     end
 
     def test_env_file_writes_temporary_uuid_if_no_registration_uuid_present
-      api_key = "1234"
-      api_secret = "5678"
-      title = "Test Title"
-      registration_id = 55
-
-      new_context = TestHelpers::FakeContext.new(root: Dir.mktmpdir)
-      FileUtils.cd(new_context.root)
-
-      ExtensionProject.write_cli_file(context: new_context, type: @test_extension_type.identifier)
-      ExtensionProject.write_env_file(
-        context: new_context,
-        api_key: api_key,
-        api_secret: api_secret,
-        title: title,
-        registration_id: registration_id
-      )
+      ExtensionProject.write_env_file(**valid_env_file_attributes_without(:registration_uuid))
 
       assert File.exist?(".env")
       project = ExtensionProject.current
-      project.registration_uuid.start_with?("dev")
+      assert project.registration_uuid.start_with?("dev")
     end
 
     def test_env_file_does_not_write_temporary_registration_uuid_if_uuid_present
-      api_key = "1234"
-      api_secret = "5678"
-      title = "Test Title"
-      registration_id = 55
-      registration_uuid = "123"
-
-      new_context = TestHelpers::FakeContext.new(root: Dir.mktmpdir)
-      FileUtils.cd(new_context.root)
-
-      ExtensionProject.write_cli_file(context: new_context, type: @test_extension_type.identifier)
-      ExtensionProject.write_env_file(
-        context: new_context,
-        api_key: api_key,
-        api_secret: api_secret,
-        title: title,
-        registration_id: registration_id,
-        registration_uuid: registration_uuid
-      )
+      ExtensionProject.write_env_file(**valid_env_file_attributes_with(registration_uuid: "123"))
 
       assert File.exist?(".env")
       project = ExtensionProject.current
-      refute project.registration_uuid.start_with?("dev")
+      assert_equal "123", project.registration_uuid
     end
 
     def test_ensures_registered_is_true_only_if_api_key_api_secret_and_registration_id_are_present
-      setup_temp_project(api_key: "", api_secret: "", title: "title", registration_id: nil)
-      refute @project.registered?
+      sets_of_invalid_attributes = [
+        { api_key: "", api_secret: "", title: "title", registration_id: nil },
+        { api_key: "1234", api_secret: "", title: "title", registration_id: nil },
+        { api_key: "1234", api_secret: "456", title: "title", registration_id: nil },
+        { api_key: "", api_secret: "", title: "title", registration_id: 5 },
+      ]
 
-      setup_temp_project(api_key: "1234", api_secret: "", title: "title", registration_id: nil)
-      refute @project.registered?
+      sets_of_invalid_attributes.each do |invalid_attributes|
+        project = ExtensionTestHelpers.fake_extension_project(**invalid_attributes)
+        refute project.registered?
+      end
 
-      setup_temp_project(api_key: "1234", api_secret: "456", title: "title", registration_id: nil)
-      refute @project.registered?
-
-      setup_temp_project(api_key: "", api_secret: "", title: "title", registration_id: 5)
-      refute @project.registered?
-
-      setup_temp_project(api_key: "1234", api_secret: "456", title: "title", registration_id: 55)
-      assert @project.registered?
+      ExtensionTestHelpers
+        .fake_extension_project(api_key: "1234", api_secret: "456", title: "title", registration_id: 55)
+        .tap do |project|
+          assert project.registered?
+        end
     end
 
     def test_can_access_app_specific_values_as_an_app
-      setup_temp_project
+      api_key = "123"
+      api_secret = "abc"
 
-      assert_kind_of(Models::App, @project.app)
-      assert_equal @api_key, @project.app.api_key
-      assert_equal @api_secret, @project.app.secret
+      project = ExtensionTestHelpers.fake_extension_project(
+        api_key: api_key,
+        api_secret: api_secret
+      )
+
+      assert_kind_of(Models::App, project.app)
+      assert_equal api_key, project.app.api_key
+      assert_equal api_secret, project.app.secret
     end
 
     def test_title_returns_the_title
-      setup_temp_project
-
-      assert_equal @title, @project.title
+      title = "Some title"
+      project = ExtensionTestHelpers.fake_extension_project(title: title)
+      assert_equal title, project.title
     end
 
     def test_title_returns_nil_if_title_is_missing
-      setup_temp_project(title: nil)
-      assert_nil(ExtensionProject.current.title)
+      project = ExtensionTestHelpers.fake_extension_project(title: nil, with_mocks: true)
+      assert_nil ExtensionProject.current.title
+      assert_nil project.title
     end
 
     def test_extension_type_returns_the_set_type_identifier
-      setup_temp_project
-
-      assert_equal @type, @project.specification_identifier
+      project = ExtensionTestHelpers.fake_extension_project
+      assert_equal @type, project.specification_identifier
     end
 
     def test_detects_if_registration_id_is_missing_or_invalid
-      setup_temp_project(registration_id: nil)
-      refute @project.registration_id?
+      invalid_registration_ids = [nil, 0, "wrong"]
 
-      setup_temp_project(registration_id: 0)
-      refute @project.registration_id?
+      invalid_registration_ids.each do |invalid_registration_id|
+        project = ExtensionTestHelpers.fake_extension_project(
+          registration_id: invalid_registration_id
+        )
+        refute project.registration_id?
+      end
+    end
 
-      setup_temp_project(registration_id: "wrong")
-      refute @project.registration_id?
+    private
+
+    def valid_env_file_attributes_without(*keys)
+      attributes = valid_env_file_attributes
+      unknown_keys = (keys - attributes.keys)
+      raise ArgumentError, "Unknown keys: #{unknown_keys.join(", ")}" if unknown_keys.any?
+      attributes.delete_if { |key, _| keys.include?(key) }
+    end
+
+    def valid_env_file_attributes_with(**overrides)
+      attributes = valid_env_file_attributes
+      unknown_keys = (overrides.keys - attributes.keys)
+      raise ArgumentError, "Unknown keys: #{unknown_keys.join(", ")}" if unknown_keys.any?
+      attributes.merge(overrides)
+    end
+
+    def valid_env_file_attributes
+      {
+        context: @context,
+        api_key: "1234",
+        api_secret: "5678",
+        title: "Test title",
+        registration_id: 56,
+        registration_uuid: "eb946ca8-a925-11eb-bcbc-0242ac130013",
+      }
     end
   end
 end
