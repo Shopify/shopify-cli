@@ -45,7 +45,7 @@ module Extension
 
         assert_predicate(result, :failure?)
         result.error.tap do |error|
-          assert_kind_of(PackageNotFound, error)
+          assert_kind_of(PackageResolutionFailed, error)
           assert_equal "Missing packages: @shopify/does-not-exist", error.message
         end
       end
@@ -66,6 +66,32 @@ module Extension
         end
       end
 
+      def test_finding_exactly_one_package
+        result = find_exactly_one_npm_package(
+          "@shopify/argo-post-purchase",
+          "@shopify/does-not-exist"
+        )
+
+        assert_predicate(result, :success?)
+        assert_kind_of(Models::NpmPackage, result.value)
+      end
+
+      def test_finding_exactly_one_package_fails_when_more_than_one_package_is_found
+        result = find_exactly_one_npm_package(
+          "@shopify/argo-post-purchase",
+          "react"
+        )
+
+        assert_predicate(result, :failure?)
+        assert_kind_of(PackageResolutionFailed, result.error)
+      end
+
+      def test_finding_exactly_one_package_fails_no_package_are_found
+        result = find_exactly_one_npm_package("@shopify/does-not-exist")
+        assert_predicate(result, :failure?)
+        assert_kind_of(PackageResolutionFailed, result.error)
+      end
+
       def test_finding_at_least_one_package_fails_if_no_package_can_be_found
         result = find_at_least_one_npm_package(
           "@shopify/does-not-exist",
@@ -74,7 +100,7 @@ module Extension
 
         assert_predicate(result, :failure?)
         result.error.tap do |error|
-          assert_kind_of(PackageNotFound, error)
+          assert_kind_of(PackageResolutionFailed, error)
           assert_equal "Expected at least one of the following packages: " \
             "@shopify/does-not-exist, @shopify/does-not-exist-either", error.message
         end
@@ -99,6 +125,10 @@ module Extension
 
       def find_at_least_one_npm_package(*names)
         FindNpmPackages.at_least_one_of(*names, js_system: stub_js_system)
+      end
+
+      def find_exactly_one_npm_package(*names)
+        FindNpmPackages.exactly_one_of(*names, js_system: stub_js_system)
       end
 
       def stub_js_system(&customize)
