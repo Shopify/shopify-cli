@@ -79,11 +79,19 @@ module Script
         end
 
         def bytecode
-          filename = format(BYTECODE_FILE, name: script_name)
-          raise Errors::WebAssemblyBinaryNotFoundError unless ctx.file_exist?(filename)
+          legacy_filename = format(BYTECODE_FILE, name: script_name)
+          filename = format(BYTECODE_FILE, name: "script")
 
-          contents = ctx.binread(filename)
-          ctx.rm(filename)
+          bytecode_file = if ctx.file_exist?(filename)
+            filename
+          elsif ctx.file_exist?(legacy_filename)
+            legacy_filename
+          else
+            raise Errors::WebAssemblyBinaryNotFoundError
+          end
+
+          contents = ctx.binread(bytecode_file)
+          ctx.rm(bytecode_file)
 
           contents
         end

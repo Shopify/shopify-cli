@@ -44,7 +44,7 @@ describe Script::Layers::Infrastructure::RustTaskRunner do
       ctx
         .expects(:file_exist?)
         .once
-        .with("target/wasm32-unknown-unknown/release/#{script_name}.wasm")
+        .with("target/wasm32-unknown-unknown/release/script.wasm")
         .returns(false)
 
       assert_raises(Script::Layers::Infrastructure::Errors::WebAssemblyBinaryNotFoundError) { subject }
@@ -60,13 +60,13 @@ describe Script::Layers::Infrastructure::RustTaskRunner do
       ctx
         .expects(:file_exist?)
         .once
-        .with("target/wasm32-unknown-unknown/release/#{script_name}.wasm")
+        .with("target/wasm32-unknown-unknown/release/script.wasm")
         .returns(true)
 
       ctx
         .expects(:binread)
         .once
-        .with("target/wasm32-unknown-unknown/release/#{script_name}.wasm")
+        .with("target/wasm32-unknown-unknown/release/script.wasm")
         .returns("blob")
 
       assert_equal "blob", subject

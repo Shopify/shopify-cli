@@ -3,15 +3,14 @@ module Script
   module Layers
     module Infrastructure
       class RustTaskRunner
-        attr_reader :ctx, :script_name
+        attr_reader :ctx
 
         BUILD_TARGET = "wasm32-unknown-unknown"
         METADATA_FILE = "build/metadata.json"
         CARGO_BUILD_CMD = "cargo build --target=#{BUILD_TARGET} --release"
 
-        def initialize(ctx, script_name)
+        def initialize(ctx, _)
           @ctx = ctx
-          @script_name = script_name
         end
 
         def dependencies_installed?
@@ -47,7 +46,7 @@ module Script
         end
 
         def bytecode
-          binary_name = "#{script_name}.wasm"
+          binary_name = "script.wasm"
           binary_path = "target/#{BUILD_TARGET}/release/#{binary_name}"
           raise Errors::WebAssemblyBinaryNotFoundError unless ctx.file_exist?(binary_path)
 
