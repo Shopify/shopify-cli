@@ -44,11 +44,12 @@ describe Script::Tasks::EnsureEnv do
     end
 
     describe "when env is not yet valid" do
-      def new_app(title, api_key, secret)
+      def new_app(title, api_key, secret, app_type = "custom")
         {
           "title" => title,
           "apiKey" => api_key,
           "apiSecretKeys" => [{ "secret" => secret }],
+          "appType" => app_type
         }
       end
 
@@ -133,6 +134,14 @@ describe Script::Tasks::EnsureEnv do
         describe("when asking app connection") do
           describe("when number of apps == 0") do
             let(:apps) { [] }
+
+            it("raises NoExistingAppsError") do
+              assert_raises(Script::Errors::NoExistingAppsError) { subject }
+            end
+          end
+
+          describe("when there is 1 public app") do
+            let(:apps) { new_app("app1", "1", "1", "public") }
 
             it("raises NoExistingAppsError") do
               assert_raises(Script::Errors::NoExistingAppsError) { subject }
