@@ -47,7 +47,7 @@ module Script
 
       def ask_app(apps)
         unless ShopifyCli::Shopifolk.acting_as_shopify_organization?
-          apps = apps.select { |app| app["appType"] == "custom" } 
+          apps = apps.select { |app| app["appType"] == "custom" }
         end
 
         if apps.count == 1
