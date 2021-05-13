@@ -1,18 +1,17 @@
 # frozen_string_literal: true
-require "base64"
 
 module Extension
   module Models
     module SpecificationHandlers
-      class CheckoutPostPurchase < Default
-        PERMITTED_CONFIG_KEYS = [:metafields]
-        CLI_PACKAGE_NAME = "@shopify/argo-run"
+      class ArgoAdmin < Default
+        CLI_PACKAGE_NAME = "@shopify/argo-admin-cli"
 
-        def config(context)
-          {
-            **Features::ArgoConfig.parse_yaml(context, PERMITTED_CONFIG_KEYS),
-            **argo.config(context),
-          }
+        def choose_port?(context)
+          cli_compatibility(context).accepts_port?
+        end
+
+        def establish_tunnel?(context)
+          cli_compatibility(context).accepts_tunnel_url?
         end
 
         def serve(context:, port:, tunnel_url:)

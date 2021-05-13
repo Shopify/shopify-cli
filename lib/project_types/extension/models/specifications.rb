@@ -61,7 +61,8 @@ module Extension
       def instantiate_specification_handlers(specifications)
         specifications.each_with_object({}) do |specification, handlers|
           ShopifyCli::ResolveConstant.call(specification.identifier, namespace: custom_handler_namespace)
-            .rescue { |error| error.is_a?(NameError) ? SpecificationHandlers::Default : raise(error) }
+            .rescue(&method(:resolve_argo_specific_handler).curry[specification])
+            .rescue(&method(:resolve_default_handler))
             .then { |handler_class| handler_class.new(specification) }
             .unwrap { |error| raise error }
             .yield_self { |handler| handlers[handler.identifier] = handler }
@@ -82,6 +83,18 @@ module Extension
 
       def select_cli_extensions(specification_attribute_sets)
         specification_attribute_sets.select { |attributes| attributes.dig(:options, :management_experience) == "cli" }
+      end
+
+      def resolve_argo_specific_handler(specification, error)
+        raise error unless error.is_a?(NameError)
+        handler = specification.features&.argo&.handler
+        raise NameError, "No specific handler for Argo target surface" if handler.nil?
+        handler
+      end
+
+      def resolve_default_handler(error)
+        raise error unless error.is_a?(NameError)
+        SpecificationHandlers::Default
       end
     end
   end

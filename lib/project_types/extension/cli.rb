@@ -40,6 +40,7 @@ module Extension
     autoload :ConfigureFeatures, Project.project_filepath("tasks/configure_features")
     autoload :ChooseNextAvailablePort, Project.project_filepath("tasks/choose_next_available_port")
     autoload :FindNpmPackages, Project.project_filepath("tasks/find_npm_packages")
+    autoload :Serve, Project.project_filepath("tasks/serve")
 
     module Converters
       autoload :RegistrationConverter, Project.project_filepath("tasks/converters/registration_converter")
@@ -76,6 +77,7 @@ module Extension
   module Models
     module SpecificationHandlers
       autoload :Default, Project.project_filepath("models/specification_handlers/default")
+      autoload :ArgoAdmin, Project.project_filepath("models/specification_handlers/argo_admin")
     end
 
     autoload :App, Project.project_filepath("models/app")

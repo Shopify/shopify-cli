@@ -17,9 +17,14 @@ module Extension
         assert_nothing_raised { Specifications.new(fetch_specifications: -> { [] }) }
       end
 
-      def test_supports_retrieving_all_specification_handlers
-        specifications = DummySpecifications.build
+      def test_returns_default_specification_handler_as_fallback
+        specifications = DummySpecifications.build(surface: "checkout")
         assert_kind_of(SpecificationHandlers::Default, specifications["TEST_EXTENSION"])
+      end
+
+      def test_returns_argo_admin_specific_specification_handler
+        specifications = DummySpecifications.build(surface: "admin")
+        assert_kind_of(SpecificationHandlers::ArgoAdmin, specifications["TEST_EXTENSION"])
       end
 
       def test_supports_retrieving_an_individual_specification_handler
