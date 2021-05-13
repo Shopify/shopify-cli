@@ -7,6 +7,7 @@ module Rails
     class CreateTest < MiniTest::Test
       include TestHelpers::Partners
       include TestHelpers::FakeUI
+      include TestHelpers::Shopifolk
 
       ENV_FILE = <<~CONTENT
         SHOPIFY_API_KEY=newapikey
@@ -24,6 +25,7 @@ module Rails
       def setup
         super
         ShopifyCli::Tasks::EnsureAuthenticated.stubs(:call)
+        ShopifyCli::Shopifolk.stubs(:acting_as_shopify_organization?).returns(false)
       end
 
       def test_prints_help_with_no_name_argument

@@ -11,6 +11,7 @@ module ShopifyCli
         config = Config.from_path(ShopifyCli::ROOT + "/test/fixtures/theme")
         @ctx = TestHelpers::FakeContext.new(root: config.root)
         @theme = DevelopmentTheme.new(@ctx, config)
+        ShopifyCli::DB.stubs(:del).with(:acting_as_shopify_organization)
       end
 
       def test_creates_development_theme_if_missing_from_storage

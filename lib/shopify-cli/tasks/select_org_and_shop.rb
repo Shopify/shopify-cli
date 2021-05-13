@@ -8,9 +8,6 @@ module ShopifyCli
       def call(ctx, organization_id: nil, shop_domain: nil)
         @ctx = ctx
         return response(organization_id.to_i, shop_domain) unless organization_id.nil? || shop_domain.nil?
-        if Shopifolk.check && wants_to_run_against_shopify_org?
-          Shopifolk.act_as_shopify_organization
-        end
         org = get_organization(organization_id)
         unless Shopifolk.acting_as_shopify_organization?
           shop_domain ||= get_shop_domain(org)

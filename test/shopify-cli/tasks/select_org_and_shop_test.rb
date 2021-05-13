@@ -3,14 +3,6 @@ require "test_helper"
 module ShopifyCli
   module Tasks
     class SelectOrgAndShopTest < MiniTest::Test
-      include TestHelpers::Partners
-
-      def setup
-        super
-        stub_shopify_org_confirmation
-        Shopifolk.stubs(:check).returns(false) # note that we re-stub this in some tests below
-      end
-
       def teardown
         ShopifyCli::Core::Monorail.metadata = {}
         super
@@ -203,35 +195,6 @@ module ShopifyCli
           .returns("selected")
         form = call(org_id: 123, shop: nil)
         assert_equal("selected", form[:shop_domain])
-      end
-
-      def test_persists_organization_preference_if_chosen
-        ShopifyCli::PartnersAPI::Organizations.expects(:fetch).with(@context, id: 123).returns({
-          "id" => 123,
-          "stores" => [
-            { "shopDomain" => "shopdomain.myshopify.com" },
-          ],
-        })
-
-        stub_shopify_org_confirmation(response: true)
-        Shopifolk.stubs(:check).returns(true)
-        call(org_id: 123, shop: nil)
-
-        assert(Shopifolk.acting_as_shopify_organization?)
-      end
-
-      def test_does_not_persist_organization_preference_if_not_chosen
-        ShopifyCli::PartnersAPI::Organizations.expects(:fetch).with(@context, id: 123).returns({
-          "id" => 123,
-          "stores" => [
-            { "shopDomain" => "shopdomain.myshopify.com" },
-          ],
-        })
-        stub_shopify_org_confirmation(response: false)
-        Shopifolk.stubs(:check).returns(true)
-        call(org_id: 123, shop: nil)
-
-        refute(Shopifolk.acting_as_shopify_organization?)
       end
 
       private

@@ -29,6 +29,7 @@ module ShopifyCli
           ShopifyCli::DB.stubs(:get)
             .with(:development_theme_id)
             .returns("123456789")
+          ShopifyCli::DB.stubs(:get).with(:acting_as_shopify_organization).returns(nil)
         end
 
         def teardown

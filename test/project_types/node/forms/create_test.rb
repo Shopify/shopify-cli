@@ -8,8 +8,6 @@ module Node
 
       def setup
         super
-        stub_shopify_org_confirmation
-        ShopifyCli::Shopifolk.stubs(:check)
         ShopifyCli::ProjectType.load_type(:node)
       end
 

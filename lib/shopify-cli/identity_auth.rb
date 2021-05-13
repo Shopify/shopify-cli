@@ -176,6 +176,8 @@ module ShopifyCli
     end
 
     def request_exchange_token(name, audience, additional_scopes)
+      return if name == "shopify" && !store.exists?(:shop)
+
       params = {
         grant_type: "urn:ietf:params:oauth:grant-type:token-exchange",
         requested_token_type: "urn:ietf:params:oauth:token-type:access_token",

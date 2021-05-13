@@ -33,6 +33,8 @@ describe Script::Layers::Infrastructure::ScriptProjectRepository do
     end
 
     subject do
+      ShopifyCli::DB.stubs(:get).with(:acting_as_shopify_organization).returns(nil)
+
       instance.create(
         script_name: script_name,
         extension_point_type: extension_point_type,
@@ -243,6 +245,7 @@ describe Script::Layers::Infrastructure::ScriptProjectRepository do
       ctx.mkdir_p(dir)
       ctx.chdir(dir)
 
+      ShopifyCli::DB.stubs(:get).with(:acting_as_shopify_organization).returns(nil)
       instance.create(
         script_name: script_name,
         extension_point_type: extension_point_type,

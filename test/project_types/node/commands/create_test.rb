@@ -7,6 +7,7 @@ module Node
     class CreateTest < MiniTest::Test
       include TestHelpers::Partners
       include TestHelpers::FakeUI
+      include TestHelpers::Shopifolk
 
       ENV_FILE = <<~CONTENT
         SHOPIFY_API_KEY=newapikey

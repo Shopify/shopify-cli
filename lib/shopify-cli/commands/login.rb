@@ -15,12 +15,13 @@ module ShopifyCli
       end
 
       def call(*)
-        shop = (
-          options.flags[:shop] ||
-          @ctx.getenv("SHOPIFY_SHOP") ||
-          CLI::UI::Prompt.ask(@ctx.message("core.login.shop_prompt"), allow_empty: false)
-        )
-        ShopifyCli::DB.set(shop: validate_shop(shop))
+        if Shopifolk.check
+          @ctx.puts(@ctx.message("core.tasks.select_org_and_shop.identified_as_shopify"))
+          message = @ctx.message("core.tasks.select_org_and_shop.first_party")
+          Shopifolk.act_as_shopify_organization if CLI::UI::Prompt.confirm(message, default: false)
+        end
+        shop = (options.flags[:shop] || @ctx.getenv("SHOPIFY_SHOP") || nil)
+        ShopifyCli::DB.set(shop: validate_shop(shop)) unless shop.nil?
 
         # As password auth will soon be deprecated, we enable only in CI
         if @ctx.ci? && (password = options.flags[:password] || @ctx.getenv("SHOPIFY_PASSWORD"))
