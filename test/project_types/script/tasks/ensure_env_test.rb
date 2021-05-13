@@ -49,7 +49,7 @@ describe Script::Tasks::EnsureEnv do
           "title" => title,
           "apiKey" => api_key,
           "apiSecretKeys" => [{ "secret" => secret }],
-          "appType" => app_type
+          "appType" => app_type,
         }
       end
 
