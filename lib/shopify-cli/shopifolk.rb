@@ -11,8 +11,6 @@ module ShopifyCli
     FEATURE_NAME = "shopifolk"
 
     class << self
-      attr_writer :acting_as_shopify_organization
-
       ##
       # will return if the user appears to be a Shopify employee, based on several heuristics
       #
@@ -29,7 +27,7 @@ module ShopifyCli
       end
 
       def act_as_shopify_organization
-        @acting_as_shopify_organization = true
+        DB.set(acting_as_shopify_organization: true)
       end
 
       def acting_as_shopify_organization?
@@ -37,7 +35,7 @@ module ShopifyCli
       end
 
       def reset
-        @acting_as_shopify_organization = nil
+        DB.del(:acting_as_shopify_organization)
       end
     end
 
@@ -72,12 +70,10 @@ module ShopifyCli
     end
 
     def ini
-      @ini ||= begin
-        if File.exist?(GCLOUD_CONFIG_FILE)
-          CLI::Kit::Ini
-            .new(GCLOUD_CONFIG_FILE, default_section: "[#{SECTION}]", convert_types: false)
-            .tap(&:parse).ini
-        end
+      @ini ||= if File.exist?(GCLOUD_CONFIG_FILE)
+        CLI::Kit::Ini
+          .new(GCLOUD_CONFIG_FILE, default_section: "[#{SECTION}]", convert_types: false)
+          .tap(&:parse).ini
       end
     end
   end
