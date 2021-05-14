@@ -41,15 +41,6 @@ module Extension
       def graphql_identifier
         super || identifier
       end
-
-      def surface
-        return nil unless feature?(:argo)
-        features.argo.surface
-      end
-
-      def feature?(name)
-        features.key?(name.to_sym)
-      end
     end
   end
 end
