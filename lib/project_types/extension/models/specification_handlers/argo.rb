@@ -6,6 +6,16 @@ module Extension
       class Argo < Default
         CLI_PACKAGE_NAME = "@shopify/argo-admin-cli"
 
+        def serve(context:, port:, tunnel_url:)
+          Features::ArgoServe.new(
+            specification_handler: self,
+            cli_compatibility: cli_compatibility(context),
+            context: context,
+            port: port,
+            tunnel_url: tunnel_url
+          ).call
+        end
+
         def choose_port?(context)
           cli_compatibility(context).accepts_port?
         end
@@ -14,14 +24,13 @@ module Extension
           cli_compatibility(context).accepts_tunnel_url?
         end
 
-        def serve(context:, port:, tunnel_url:)
-          Features::ArgoServe.new(specification_handler: self, cli_compatibility: cli_compatibility(context),
-          context: context, port: port, tunnel_url: tunnel_url).call
-        end
+        private
 
         def cli_compatibility(context)
-          @cli_compatibility ||= Features::ArgoCliCompatibility.new(renderer_package: renderer_package(context),
-          installed_cli_package: installed_cli_package(context))
+          @cli_compatibility ||= Features::ArgoCliCompatibility.new(
+            renderer_package: renderer_package(context),
+            installed_cli_package: installed_cli_package(context)
+          )
         end
 
         def installed_cli_package(context)
