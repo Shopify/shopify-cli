@@ -169,8 +169,14 @@ module Extension
       checkout_post_purchase: {
         name: "Checkout Post Purchase",
       },
-      online_store_app_extension: {
+      online_store_theme_extension: {
         name: "Online Store App Extension",
+        tagline: "(limit 1 per app)",
+        overrides: {
+          register: {
+            confirm_info: "You can only create one %s extension per app, which can’t be undone.",
+          },
+        },
       },
     }
   end
