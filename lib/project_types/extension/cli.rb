@@ -77,7 +77,7 @@ module Extension
   module Models
     module SpecificationHandlers
       autoload :Default, Project.project_filepath("models/specification_handlers/default")
-      autoload :ArgoAdmin, Project.project_filepath("models/specification_handlers/argo_admin")
+      autoload :Argo, Project.project_filepath("models/specification_handlers/argo")
     end
 
     autoload :App, Project.project_filepath("models/app")

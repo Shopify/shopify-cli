@@ -87,9 +87,8 @@ module Extension
 
       def resolve_argo_specific_handler(specification, error)
         raise error unless error.is_a?(NameError)
-        handler = specification.features&.argo&.handler
-        raise NameError, "No specific handler for Argo target surface" if handler.nil?
-        handler
+        return SpecificationHandlers::Argo if !!specification.features&.argo
+        raise NameError, "No specific handler for Argo target surface"
       end
 
       def resolve_default_handler(error)

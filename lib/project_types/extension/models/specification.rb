@@ -12,13 +12,6 @@ module Extension
           property! :git_template, converts: :to_str
           property! :required_fields, accepts: Array, default: -> { [] }
           property! :required_shop_beta_flags, accepts: Array, default: -> { [] }
-
-          def handler
-            case surface
-            when "admin"
-              SpecificationHandlers::ArgoAdmin
-            end
-          end
         end
 
         def self.build(feature_set_attributes)

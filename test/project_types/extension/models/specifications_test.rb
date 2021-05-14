@@ -24,7 +24,7 @@ module Extension
 
       def test_returns_argo_admin_specific_specification_handler
         specifications = DummySpecifications.build(surface: "admin")
-        assert_kind_of(SpecificationHandlers::ArgoAdmin, specifications["TEST_EXTENSION"])
+        assert_kind_of(SpecificationHandlers::Argo, specifications["TEST_EXTENSION"])
       end
 
       def test_supports_retrieving_an_individual_specification_handler

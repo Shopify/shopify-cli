@@ -3,7 +3,7 @@
 module Extension
   module Models
     module SpecificationHandlers
-      class ArgoAdmin < Default
+      class Argo < Default
         CLI_PACKAGE_NAME = "@shopify/argo-admin-cli"
 
         def choose_port?(context)
