@@ -14,14 +14,11 @@ module Extension
 
         def config(context)
           Dir.chdir(context.root) do
-            {
-              "theme_extension" => {
-                "files" => Dir.glob("**/*").select { |filename| File.file?(filename) }.map do |filename|
-                  validate(filename)
-                  [filename, Base64.encode64(File.read(filename))]
-                end.to_h,
-              },
-            }
+            Dir["**/*"].select { |filename| File.file?(filename) && validate(filename) }
+              .map { |filename| [filename, Base64.encode64(File.read(filename))] }
+              .yield_self do |encoded_files_by_name|
+                { "theme_extension" => { "files" => encoded_files_by_name.to_h } }
+              end
           end
         end
 
@@ -32,12 +29,9 @@ module Extension
         private
 
         def validate(filename)
-          # TODO: Check that the toplevel directory is correct
           dirname = File.dirname(filename)
-          raise(
-            Extension::Errors::InvalidDirectoryError,
-            "Invalid directory: #{dirname}"
-          ) unless SUPPORTED_BUCKETS.include?(dirname)
+          return true if SUPPORTED_BUCKETS.include?(dirname)
+          raise Extension::Errors::InvalidDirectoryError, "Invalid directory: #{dirname}"
         end
       end
     end
