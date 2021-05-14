@@ -47,6 +47,8 @@ module Extension
       def test_new_tunnel_started_if_specification_handler_supports_establish_tunnel
         serve = ::Extension::Commands::Serve.new(@context)
         stub_specification_handler_options(serve, choose_port: true, establish_tunnel: true)
+        Tasks::ChooseNextAvailablePort.expects(:call)
+          .returns(ShopifyCli::Result.success(Extension::Commands::Serve::DEFAULT_PORT))
         ShopifyCli::Tunnel.expects(:start)
           .with(@context, port: Extension::Commands::Serve::DEFAULT_PORT)
           .returns("ngrok.example.com")
