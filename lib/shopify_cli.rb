@@ -108,6 +108,7 @@ module ShopifyCli
   autoload :Heroku, "shopify-cli/heroku"
   autoload :JsDeps, "shopify-cli/js_deps"
   autoload :JsSystem, "shopify-cli/js_system"
+  autoload :PHPDeps, "shopify-cli/php_deps"
   autoload :MethodObject, "shopify-cli/method_object"
   autoload :LazyDelegator, "shopify-cli/lazy_delegator"
   autoload :Log, "shopify-cli/log"
