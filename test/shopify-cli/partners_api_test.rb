@@ -26,7 +26,7 @@ module ShopifyCli
         token: "token123",
         url: "https://partners.shopify.com/api/cli/graphql",
       ).returns(api_stub)
-      api_stub.expects(:query).raises(API::APIRequestUnauthorizedError)
+      api_stub.stubs(:query).raises(API::APIRequestUnauthorizedError).then.returns("response")
 
       @oauth_client = mock
       ShopifyCli::IdentityAuth
@@ -35,7 +35,7 @@ module ShopifyCli
       @oauth_client
         .expects(:reauthenticate)
 
-      PartnersAPI.query(@context, "query")
+      assert_equal "response", PartnersAPI.query(@context, "query")
     end
 
     def test_query_fails_gracefully_when_unable_to_authenticate

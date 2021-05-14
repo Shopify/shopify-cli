@@ -45,9 +45,13 @@ module ShopifyCli
       #   ShopifyCli::PartnersAPI.query(@ctx, 'all_organizations')
       #
       def query(ctx, query_name, **variables)
-        authenticated_req(ctx) do
-          api_client(ctx).query(query_name, variables: variables)
-        end
+        client = api_client(ctx)
+        client.query(query_name, variables: variables)
+      rescue API::APIRequestUnauthorizedError
+        ShopifyCli::IdentityAuth.new(ctx: ctx).reauthenticate
+        client.query(query_name, variables: variables)
+      rescue API::APIRequestNotFoundError
+        ctx.puts(ctx.message("core.partners_api.error.account_not_found", ShopifyCli::TOOL_NAME))
       end
 
       def partners_url_for(organization_id, api_client_id, local_debug)
@@ -58,18 +62,6 @@ module ShopifyCli
       end
 
       private
-
-      def authenticated_req(ctx, &block)
-        CLI::Kit::Util
-          .begin(&block)
-          .retry_after(API::APIRequestUnauthorizedError, retries: 1) do
-            authenticate(ctx)
-          end
-      rescue API::APIRequestUnauthorizedError
-        ctx.abort(ctx.message("core.api.error.failed_auth"))
-      rescue API::APIRequestNotFoundError
-        ctx.puts(ctx.message("core.partners_api.error.account_not_found", ShopifyCli::TOOL_NAME))
-      end
 
       def api_client(ctx)
         new(
