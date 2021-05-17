@@ -128,6 +128,19 @@ module Extension
         assert_predicate(result, :success?)
       end
 
+      def test_filters_duplicates
+        npm_output_with_duplicates = <<~NPM
+          argo-checkout-template@0.1.0 /Users/t6d/src/local/cli-specification-experiment/2021-04-30_post_purchase_test
+          ├── hello-world@0.0.1
+          └─┬ hello-universe@0.0.1
+            └── hello-world@0.0.1 deduped
+        NPM
+        js_system = stub_js_system(output: npm_output_with_duplicates)
+        result = FindNpmPackages.all("hello-world", js_system: js_system)
+        assert_predicate(result, :success?)
+        assert_equal 1, result.value.count
+      end
+
       private
 
       def find_all_npm_packages(*names)
@@ -142,13 +155,13 @@ module Extension
         FindNpmPackages.exactly_one_of(*names, js_system: stub_js_system)
       end
 
-      def stub_js_system(&customize)
+      def stub_js_system(output: yarn_output, &customize)
         customize ||= ->(system) { system }
         ShopifyCli::JsSystem.new(ctx: @context).tap do |js_system|
           success = mock(success?: true)
           customize
             .call(js_system.expects(:call))
-            .returns([yarn_output, nil, success])
+            .returns([output, nil, success])
         end
       end
 

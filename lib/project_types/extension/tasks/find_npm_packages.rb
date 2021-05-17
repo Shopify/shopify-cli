@@ -72,6 +72,7 @@ module Extension
         ShopifyCli::Result
           .call(&method(:list_packages))
           .then(&method(:search_packages).curry[package_names])
+          .then(&method(:filter_duplicates))
           .then(&validate)
       end
 
@@ -95,6 +96,10 @@ module Extension
         package_list.scan(pattern).map do |(name, version)|
           Models::NpmPackage.new(name: name, version: version.strip)
         end
+      end
+
+      def filter_duplicates(packages)
+        packages.reject { |p| p.version.match(/deduped/) }.uniq
       end
     end
   end
