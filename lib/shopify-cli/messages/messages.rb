@@ -228,7 +228,7 @@ module ShopifyCli
           HELP
 
           error: {
-            no_shop: "No store found. Please run {{command:%s login}} to login to a specific store",
+            no_shop: "No store found. Please run {{command:%s login --shop=SHOP}} to login to a specific store",
           },
 
           customer: {
@@ -330,6 +330,11 @@ module ShopifyCli
         },
 
         tasks: {
+          confirm_store: {
+            prompt: "You are currently logged into {{green:%s}}. Do you want to proceed using this store?",
+            confirmation: "Proceeding using {{green:%s}}",
+            cancelling: "Cancelling ...",
+          },
           ensure_env: {
             organization_select: "To which partner organization does this project belong?",
             no_development_stores: <<~MESSAGE,

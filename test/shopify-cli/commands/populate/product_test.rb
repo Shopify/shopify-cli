@@ -10,8 +10,11 @@ module ShopifyCli
         def test_populate_calls_api_with_mutation
           ShopifyCli::Helpers::Haikunator.expects(:title).returns("fake product")
           ShopifyCli::Helpers::Haikunator.expects(:title).returns("fake producttwo")
-          ShopifyCli::DB.expects(:exists?).with(:shop).returns(true)
-          ShopifyCli::DB.expects(:get).with(:shop).returns("my-test-shop.myshopify.com")
+          ShopifyCli::DB.expects(:exists?).with(:shop).returns(true).twice
+          ShopifyCli::DB.expects(:get).with(:shop).returns("my-test-shop.myshopify.com").twice
+          CLI::UI::Prompt.expects(:confirm)
+            .with(@context.message("core.tasks.confirm_store.prompt", "my-test-shop.myshopify.com"), default: false)
+            .returns(true)
           ShopifyCli::AdminAPI::PopulateResourceCommand.any_instance.stubs(:price).returns("1.00")
           return_data = JSON.parse(File.read(File.join(FIXTURE_DIR, "populate/product_data.json")))
           ShopifyCli::AdminAPI.expects(:query)
