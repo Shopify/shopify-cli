@@ -1,7 +1,7 @@
 # frozen_string_literal: true
 
 module Extension
-  class PackageNotFound < RuntimeError; end
+  class PackageResolutionFailed < RuntimeError; end
 
   class Project < ShopifyCli::ProjectType
     hidden_feature
@@ -38,6 +38,8 @@ module Extension
     autoload :UpdateDraft, Project.project_filepath("tasks/update_draft")
     autoload :FetchSpecifications, Project.project_filepath("tasks/fetch_specifications")
     autoload :ConfigureFeatures, Project.project_filepath("tasks/configure_features")
+    autoload :ChooseNextAvailablePort, Project.project_filepath("tasks/choose_next_available_port")
+    autoload :FindNpmPackages, Project.project_filepath("tasks/find_npm_packages")
 
     module Converters
       autoload :RegistrationConverter, Project.project_filepath("tasks/converters/registration_converter")
@@ -61,11 +63,13 @@ module Extension
   module Features
     autoload :ArgoRendererPackage, Project.project_filepath("features/argo_renderer_package")
     autoload :ArgoServe, Project.project_filepath("features/argo_serve")
+    autoload :ArgoServeOptions, Project.project_filepath("features/argo_serve_options")
     autoload :ArgoSetup, Project.project_filepath("features/argo_setup")
     autoload :ArgoSetupStep, Project.project_filepath("features/argo_setup_step")
     autoload :ArgoSetupSteps, Project.project_filepath("features/argo_setup_steps")
     autoload :ArgoDependencies, Project.project_filepath("features/argo_dependencies")
     autoload :ArgoConfig, Project.project_filepath("features/argo_config")
+    autoload :ArgoCliCompatibility, Project.project_filepath("features/argo_cli_compatibility")
     autoload :Argo, Project.project_filepath("features/argo")
   end
 
@@ -81,6 +85,7 @@ module Extension
     autoload :Specification, Project.project_filepath("models/specification")
     autoload :Specifications, Project.project_filepath("models/specifications")
     autoload :LazySpecificationHandler, Project.project_filepath("models/lazy_specification_handler")
+    autoload :NpmPackage, Project.project_filepath("models/npm_package")
   end
 
   autoload :ExtensionProjectKeys, Project.project_filepath("extension_project_keys")

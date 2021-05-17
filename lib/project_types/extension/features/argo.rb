@@ -13,17 +13,21 @@ module Extension
 
       SCRIPT_PATH = %w(build main.js).freeze
 
-      NPM_LIST_COMMAND = %w(list).freeze
-      YARN_LIST_COMMAND = %w(list).freeze
-      NPM_LIST_PARAMETERS = %w(--prod --depth=1).freeze
-      YARN_LIST_PARAMETERS = %w(--production).freeze
-      private_constant :NPM_LIST_COMMAND, :YARN_LIST_COMMAND, :NPM_LIST_PARAMETERS, :YARN_LIST_PARAMETERS
-
       YARN_INSTALL_COMMAND = %w(install).freeze
       YARN_INSTALL_PARAMETERS = %w(--silent).freeze
       YARN_RUN_COMMAND = %w(run).freeze
       YARN_RUN_SCRIPT_NAME = %w(build).freeze
       private_constant :YARN_INSTALL_COMMAND, :YARN_INSTALL_PARAMETERS, :YARN_RUN_COMMAND, :YARN_RUN_SCRIPT_NAME
+
+      ARGO_CHECKOUT = "@shopify/argo-checkout"
+      ARGO_ADMIN = "@shopify/argo-admin"
+      ARGO_POST_PURCHASE = "@shopify/argo-post-purchase"
+
+      PACKAGE_NAMES = [
+        ARGO_CHECKOUT,
+        ARGO_ADMIN,
+        ARGO_POST_PURCHASE,
+      ].freeze
 
       def create(directory_name, identifier, context)
         Features::ArgoSetup.new(git_template: git_template).call(directory_name, identifier, context)
@@ -48,30 +52,18 @@ module Extension
       end
 
       def renderer_package(context)
-        Features::ArgoRendererPackage.from_package_manager(run_list_command(context))
-      rescue Extension::PackageNotFound
+        js_system = ShopifyCli::JsSystem.new(ctx: context)
+        Tasks::FindNpmPackages
+          .exactly_one_of(*PACKAGE_NAMES, js_system: js_system)
+          .then { |package| Features::ArgoRendererPackage.from_npm_package(package) }
+          .unwrap { |err| raise err }
+      rescue Extension::PackageResolutionFailed
         context.abort(
           context.message("features.argo.dependencies.argo_missing_renderer_package_error")
         )
       end
 
       private
-
-      def run_list_command(context)
-        yarn_list = YARN_LIST_COMMAND + YARN_LIST_PARAMETERS
-        npm_list = NPM_LIST_COMMAND + NPM_LIST_PARAMETERS
-
-        result, _error, _status = ShopifyCli::JsSystem.call(
-          context,
-          yarn: yarn_list,
-          npm: npm_list,
-          capture_response: true
-        )
-        # context.abort(
-        #   context.message("features.argo.dependencies.argo_missing_renderer_package_error", error)
-        # ) unless status.success?
-        result
-      end
 
       def run_yarn_install(context, js_system)
         _result, error, status = js_system.call(
