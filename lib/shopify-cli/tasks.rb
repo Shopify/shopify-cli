@@ -30,6 +30,7 @@ module ShopifyCli
       Registry.add(-> () { const_get(task) }, name)
     end
 
+    register :ConfirmStore, :confirm_store, "shopify-cli/tasks/confirm_store"
     register :CreateApiClient, :create_api_client, "shopify-cli/tasks/create_api_client"
     register :EnsureAuthenticated, :ensure_authenticated, "shopify-cli/tasks/ensure_authenticated"
     register :EnsureEnv, :ensure_env, "shopify-cli/tasks/ensure_env"

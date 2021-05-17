@@ -10,8 +10,11 @@ module ShopifyCli
 
         def test_populate_calls_api_with_mutation
           ShopifyCli::Helpers::Haikunator.stubs(:title).returns("fake order")
-          ShopifyCli::DB.expects(:exists?).with(:shop).returns(true)
-          ShopifyCli::DB.expects(:get).with(:shop).returns("my-test-shop.myshopify.com")
+          ShopifyCli::DB.expects(:exists?).with(:shop).returns(true).twice
+          ShopifyCli::DB.expects(:get).with(:shop).returns("my-test-shop.myshopify.com").twice
+          CLI::UI::Prompt.expects(:confirm)
+            .with(@context.message("core.tasks.confirm_store.prompt", "my-test-shop.myshopify.com"), default: false)
+            .returns(true)
           ShopifyCli::AdminAPI.expects(:query)
             .with(@context, "create_draft_order", shop: "my-test-shop.myshopify.com", api_version: "2021-01", input: {
               lineItems: [{
