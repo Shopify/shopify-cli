@@ -18,7 +18,8 @@ module PHP
 
         check_php
         check_composer
-        build(form.name)
+        check_npm
+        app_id = build(form)
 
         ShopifyCli::Project.write(
           @ctx,
@@ -26,21 +27,7 @@ module PHP
           organization_id: form.organization_id,
         )
 
-        api_client = ShopifyCli::Tasks::CreateApiClient.call(
-          @ctx,
-          org_id: form.organization_id,
-          title: form.title,
-          type: form.type,
-        )
-
-        ShopifyCli::Resources::EnvFile.new(
-          api_key: api_client["apiKey"],
-          secret: api_client["apiSecretKeys"].first["secret"],
-          shop: form.shop_domain,
-          scopes: "write_products,write_customers,write_draft_orders",
-        ).write(@ctx)
-
-        partners_url = ShopifyCli::PartnersAPI.partners_url_for(form.organization_id, api_client["id"], local_debug?)
+        partners_url = ShopifyCli::PartnersAPI.partners_url_for(form.organization_id, app_id, local_debug?)
 
         @ctx.puts(@ctx.message("apps.create.info.created", form.title, partners_url))
         @ctx.puts(@ctx.message("apps.create.info.serve", form.name, ShopifyCli::TOOL_NAME))
@@ -62,8 +49,8 @@ module PHP
         version, stat = @ctx.capture2e("php", "-r", "echo phpversion();")
         @ctx.abort(@ctx.message("php.create.error.php_version_failure")) unless stat.success?
 
-        if ::Semantic::Version.new(version) < ::Semantic::Version.new('8.0.0')
-          @ctx.abort(@ctx.message("php.create.error.php_version_too_low", '8.0'))
+        if ::Semantic::Version.new(version) < ::Semantic::Version.new("8.0.0")
+          @ctx.abort(@ctx.message("php.create.error.php_version_too_low", "8.0"))
         end
 
         @ctx.done(@ctx.message("php.create.php_version", version))
@@ -74,12 +61,54 @@ module PHP
         @ctx.abort(@ctx.message("php.create.error.composer_required")) if cmd_path.nil?
       end
 
-      def build(name)
-        ShopifyCli::Git.clone("https://github.com/Shopify/shopify-app-php.git", name)
+      def check_npm
+        cmd_path = @ctx.which("npm")
+        @ctx.abort(@ctx.message("php.create.error.npm_required")) if cmd_path.nil?
 
-        @ctx.root = File.join(@ctx.root, name)
+        version, stat = @ctx.capture2e("npm", "-v")
+        @ctx.abort(@ctx.message("php.create.error.npm_version_failure")) unless stat.success?
+
+        @ctx.done(@ctx.message("php.create.npm_version", version))
+      end
+
+      def build(form)
+        ShopifyCli::Git.clone("https://github.com/Shopify/shopify-app-php.git", form.name)
+
+        @ctx.root = File.join(@ctx.root, form.name)
+        @ctx.chdir(@ctx.root)
+
+        api_client = ShopifyCli::Tasks::CreateApiClient.call(
+          @ctx,
+          org_id: form.organization_id,
+          title: form.title,
+          type: form.type,
+        )
+
+        # Override the example settings with our own
+        @ctx.cp(".env.example", ".env")
+
+        env_file = ShopifyCli::Resources::EnvFile.read
+        env_file.api_key = api_client["apiKey"]
+        env_file.secret = api_client["apiSecretKeys"].first["secret"]
+        env_file.shop = form.shop_domain
+        env_file.host = "localhost"
+        env_file.scopes = "read_products"
+        env_file.extra["DB_DATABASE"] = File.join(@ctx.root, env_file.extra["DB_DATABASE"])
+        env_file.write(@ctx)
 
         ShopifyCli::PHPDeps.install(@ctx, !options.flags[:verbose].nil?)
+
+        set_npm_config
+        ShopifyCli::JsDeps.install(@ctx, !options.flags[:verbose].nil?)
+
+        title = @ctx.message("php.create.app_setting_up")
+        success = @ctx.message("php.create.app_set_up")
+        failure = @ctx.message("php.create.error.app_setup")
+        CLI::UI::Frame.open(title, success_text: success, failure_text: failure) do
+          FileUtils.touch(env_file.extra["DB_DATABASE"])
+          @ctx.system("php", "artisan", "key:generate")
+          @ctx.system("php", "artisan", "migrate")
+        end
 
         begin
           @ctx.rm_r(".git")
@@ -87,10 +116,31 @@ module PHP
         rescue Errno::ENOENT => e
           @ctx.debug(e)
         end
+
+        api_client["id"]
       end
 
       def local_debug?
         @ctx.getenv(ShopifyCli::PartnersAPI::LOCAL_DEBUG)
+      end
+
+      def set_npm_config
+        # check available npmrc (either user or system) for production registry
+        registry, _ = @ctx.capture2("npm config get @shopify:registry")
+        return if registry.include?("https://registry.yarnpkg.com")
+
+        # available npmrc doesn't have production registry =>
+        # set a project-based .npmrc
+        @ctx.system(
+          "npm",
+          "--userconfig",
+          "./.npmrc",
+          "config",
+          "set",
+          "@shopify:registry",
+          "https://registry.yarnpkg.com",
+          chdir: @ctx.root
+        )
       end
     end
   end
