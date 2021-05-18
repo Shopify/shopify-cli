@@ -65,6 +65,8 @@ module ShopifyCli
       end
 
       errors.lines.each { |e| ctx.puts e } unless success || errors.nil?
+
+      ctx.abort unless success
       success
     end
 
@@ -79,11 +81,12 @@ module ShopifyCli
 
     def parse_dependencies
       composer_json = File.join(ctx.root, "composer.json")
-      pkg = begin
-        JSON.parse(File.read(composer_json))
-      rescue Errno::ENOENT, Errno::ENOTDIR
-        ctx.abort(ctx.message("core.php_deps.error.missing_package", composer_json))
-      end
+      pkg =
+        begin
+          JSON.parse(File.read(composer_json))
+        rescue Errno::ENOENT, Errno::ENOTDIR
+          ctx.abort(ctx.message("core.php_deps.error.missing_package", composer_json))
+        end
 
       %w(require require-dev).map do |key|
         pkg.fetch(key, []).keys
