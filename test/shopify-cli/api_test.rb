@@ -155,6 +155,7 @@ module ShopifyCli
         .with(anything, mutation, has_entry({ "X-Shopify-Cli-Employee" => "1" }))
         .returns(response)
       @api.query("api/mutation")
+      Shopifolk.reset
     end
 
     def test_supports_delete_method

@@ -371,7 +371,7 @@ module ShopifyCli
               organization_not_found: "Cannot find a partner organization with that ID",
               partners_notice: "Please visit https://partners.shopify.com/ to create a partners account",
             },
-            first_party: "Are you working on a 1P (1st Party) app?",
+            first_party: "Are you working on a {{green:Shopify project}}?",
             identified_as_shopify: "We've identified you as a {{green:Shopify}} employee.",
             organization: "Partner organization {{green:%s (%s)}}",
             organization_select: "Select partner organization",
