@@ -5,7 +5,7 @@ module Extension
       RENDERER_PACKAGE = "@shopify/argo-admin"
       private_constant :GIT_TEMPLATE, :RENDERER_PACKAGE
 
-      property :fake_renderer_package, accepts: Features::ArgoRendererPackage
+      property :fake_renderer_package, accepts: Models::NpmPackage
 
       def git_template
         GIT_TEMPLATE
@@ -16,8 +16,8 @@ module Extension
       end
 
       def renderer_version=(renderer_version)
-        self.fake_renderer_package = Features::ArgoRendererPackage.new(
-          package_name: renderer_package_name,
+        self.fake_renderer_package = Models::NpmPackage.new(
+          name: renderer_package_name,
           version: renderer_version
         )
       end

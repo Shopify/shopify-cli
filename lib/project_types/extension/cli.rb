@@ -61,7 +61,6 @@ module Extension
   end
 
   module Features
-    autoload :ArgoRendererPackage, Project.project_filepath("features/argo_renderer_package")
     autoload :ArgoServe, Project.project_filepath("features/argo_serve")
     autoload :ArgoServeOptions, Project.project_filepath("features/argo_serve_options")
     autoload :ArgoSetup, Project.project_filepath("features/argo_setup")
@@ -69,7 +68,7 @@ module Extension
     autoload :ArgoSetupSteps, Project.project_filepath("features/argo_setup_steps")
     autoload :ArgoDependencies, Project.project_filepath("features/argo_dependencies")
     autoload :ArgoConfig, Project.project_filepath("features/argo_config")
-    autoload :ArgoCliCompatibility, Project.project_filepath("features/argo_cli_compatibility")
+    autoload :ArgoRuntime, Project.project_filepath("features/argo_runtime")
     autoload :Argo, Project.project_filepath("features/argo")
   end
 
