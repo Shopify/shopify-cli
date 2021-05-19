@@ -42,6 +42,27 @@ module PHP
           app_set_up: "App is now set up",
         },
 
+        serve: {
+          help: <<~HELP,
+            Start a local development PHP server for your project, as well as a public ngrok tunnel to your localhost.
+              Usage: {{command:%s serve}}
+            HELP
+          extended_help: <<~HELP,
+            {{bold:Options:}}
+              {{cyan:--host=HOST}}: Bypass running tunnel and use custom host. HOST must be HTTPS url.
+            HELP
+
+          error: {
+            host_must_be_https: "HOST must be a HTTPS url.",
+          },
+
+          open_info: <<~MESSAGE,
+            {{*}} To install and start using your app, open this URL in your browser:
+            {{green:%s}}
+          MESSAGE
+          running_server: "Running server…",
+        },
+
         forms: {
           create: {
             error: {
