@@ -5,7 +5,7 @@ module PHP
     creator("PHP::Commands::Create")
     # connector("PHP::Commands::Connect")
 
-    # register_command("Node::Commands::Deploy", "deploy")
+    register_command("PHP::Commands::Serve", "serve")
 
     require Project.project_filepath("messages/messages")
     register_messages(PHP::Messages::MESSAGES)
@@ -14,6 +14,7 @@ module PHP
   # define/autoload project specific Commands
   module Commands
     autoload :Create, Project.project_filepath("commands/create")
+    autoload :Serve, Project.project_filepath("commands/serve")
   end
 
   # define/autoload project specific Tasks

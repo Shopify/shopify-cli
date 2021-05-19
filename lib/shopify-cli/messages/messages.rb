@@ -196,7 +196,7 @@ module ShopifyCli
             install_error: "An error occurred while installing dependencies",
           },
 
-          installing: "Installing Composer dependencies...",
+          installing: "Installing Composer dependencies…",
           installed: "Dependencies installed",
           installed_count: "%d dependencies installed",
         },
