@@ -43,15 +43,15 @@ module Extension
         end
 
         def choose_port?(context)
-          cli_compatibility(context).accepts_port?
+          argo_runtime(context).accepts_port?
         end
 
         def establish_tunnel?(context)
-          cli_compatibility(context).accepts_tunnel_url?
+          argo_runtime(context).accepts_tunnel_url?
         end
 
         def serve(context:, port:, tunnel_url:)
-          Features::ArgoServe.new(specification_handler: self, cli_compatibility: cli_compatibility(context),
+          Features::ArgoServe.new(specification_handler: self, argo_runtime: argo_runtime(context),
           context: context, port: port, tunnel_url: tunnel_url).call
         end
 
@@ -59,16 +59,17 @@ module Extension
           argo.renderer_package(context)
         end
 
-        def cli_compatibility(context)
-          @cli_compatibility ||= Features::ArgoCliCompatibility.new(renderer_package: renderer_package(context),
-          installed_cli_package: installed_cli_package(context))
+        def argo_runtime(context)
+          @argo_runtime ||= Features::ArgoRuntime.new(
+            renderer: renderer_package(context),
+            cli: cli_package(context)
+          )
         end
 
-        def cli_package_name
-          specification.features.argo ? specification.features.argo.cli_package_name : ""
-        end
+        def cli_package(context)
+          cli_package_name = specification.features.argo&.cli_package_name
+          return unless cli_package_name
 
-        def installed_cli_package(context)
           js_system = ShopifyCli::JsSystem.new(ctx: context)
           Tasks::FindNpmPackages.exactly_one_of(cli_package_name, js_system: js_system)
             .unwrap { |_e| context.abort(context.message("errors.package_not_found", cli_package_name)) }

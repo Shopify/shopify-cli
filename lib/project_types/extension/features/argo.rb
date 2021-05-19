@@ -55,7 +55,6 @@ module Extension
         js_system = ShopifyCli::JsSystem.new(ctx: context)
         Tasks::FindNpmPackages
           .exactly_one_of(*PACKAGE_NAMES, js_system: js_system)
-          .then { |package| Features::ArgoRendererPackage.from_npm_package(package) }
           .unwrap { |err| raise err }
       rescue Extension::PackageResolutionFailed
         context.abort(

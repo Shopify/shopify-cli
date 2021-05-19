@@ -4,7 +4,7 @@ module Extension
       include SmartProperties
 
       property! :specification_handler, accepts: Extension::Models::SpecificationHandlers::Default
-      property! :cli_compatibility, accepts: Features::ArgoCliCompatibility
+      property! :argo_runtime, accepts: Features::ArgoRuntime
       property! :context, accepts: ShopifyCli::Context
       property! :port, accepts: Integer, default: 39351
       property  :tunnel_url, accepts: String, default: ""
@@ -37,8 +37,14 @@ module Extension
       end
 
       def serve_options
-        @options ||= Features::ArgoServeOptions.new(cli_compatibility: cli_compatibility, port: port, context: context,
-          required_fields: required_fields, renderer_package: renderer_package, public_url: tunnel_url)
+        @options ||= Features::ArgoServeOptions.new(
+          argo_runtime: argo_runtime,
+          port: port,
+          context: context,
+          required_fields: required_fields,
+          renderer_package: renderer_package,
+          public_url: tunnel_url
+        )
       end
 
       def yarn_serve_command
