@@ -3,7 +3,7 @@ module PHP
   class Project < ShopifyCli::ProjectType
     title("PHP App")
     creator("PHP::Commands::Create")
-    # connector("PHP::Commands::Connect")
+    connector("PHP::Commands::Connect")
 
     register_command("PHP::Commands::Serve", "serve")
     register_command("PHP::Commands::Tunnel", "tunnel")
@@ -17,6 +17,7 @@ module PHP
     autoload :Create, Project.project_filepath("commands/create")
     autoload :Serve, Project.project_filepath("commands/serve")
     autoload :Tunnel, Project.project_filepath("commands/tunnel")
+    autoload :Connect, Project.project_filepath("commands/connect")
   end
 
   # define/autoload project specific Tasks
