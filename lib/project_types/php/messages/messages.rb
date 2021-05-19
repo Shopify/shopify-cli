@@ -63,6 +63,30 @@ module PHP
           running_server: "Running server…",
         },
 
+        tunnel: {
+          help: <<~HELP,
+            Start or stop an http tunnel to your local development app using ngrok.
+              Usage: {{command:%s tunnel [ auth | start | stop ]}}
+            HELP
+          extended_help: <<~HELP,
+            {{bold:Subcommands:}}
+
+              {{cyan:auth}}: Writes an ngrok auth token to ~/.ngrok2/ngrok.yml to connect with an ngrok account. Visit https://dashboard.ngrok.com/signup to sign up.
+                Usage: {{command:%1$s tunnel auth <token>}}
+
+              {{cyan:start}}: Starts an ngrok tunnel, will print the URL for an existing tunnel if already running.
+                Usage: {{command:%1$s tunnel start}}
+
+              {{cyan:stop}}: Stops the ngrok tunnel.
+                Usage: {{command:%1$s tunnel stop}}
+
+            HELP
+
+          error: {
+            token_argument_missing: "{{x}} {{red:auth requires a token argument}}\n\n",
+          },
+        },
+
         forms: {
           create: {
             error: {
