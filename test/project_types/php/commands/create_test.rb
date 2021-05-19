@@ -12,7 +12,18 @@ module PHP
         SHOPIFY_API_KEY=newapikey
         SHOPIFY_API_SECRET=secret
         SHOP=testshop.myshopify.com
-        SCOPES=write_products,write_customers,write_draft_orders
+        SCOPES=read_products
+        HOST=localhost
+        DB_DATABASE=storage/db.sqlite
+      CONTENT
+
+      FINAL_ENV_FILE = <<~CONTENT
+        SHOPIFY_API_KEY=newapikey
+        SHOPIFY_API_SECRET=secret
+        SHOP=testshop.myshopify.com
+        SCOPES=read_products
+        HOST=localhost
+        DB_DATABASE=#{ShopifyCli::ROOT}/test/fixtures/project/test-app/storage/db.sqlite
       CONTENT
 
       SHOPIFYCLI_FILE = <<~APPTYPE
@@ -54,8 +65,17 @@ module PHP
 
         @context.stubs(:uname).returns("Mac")
         expect_php_composer_check_commands
+
+        expect_npm_check_commands
+        @context.expects(:capture2).with("npm config get @shopify:registry").returns(
+          ["https://registry.yarnpkg.com", nil]
+        )
+
         ShopifyCli::Git.expects(:clone).with("https://github.com/Shopify/shopify-app-php.git", "test-app")
         ShopifyCli::PHPDeps.expects(:install)
+        ShopifyCli::JsDeps.expects(:install)
+        @context.expects(:system).with("php", "artisan", "key:generate")
+        @context.expects(:system).with("php", "artisan", "migrate")
 
         stub_partner_req(
           "create_app",
@@ -80,10 +100,14 @@ module PHP
 
         perform_command
 
+        @context.chdir("..")
+
         assert_equal SHOPIFYCLI_FILE, File.read("test-app/.shopify-cli.yml")
-        assert_equal ENV_FILE, File.read("test-app/.env")
+        assert_equal FINAL_ENV_FILE, File.read("test-app/.env")
         refute File.exist?("test-app/.git")
         refute File.exist?("test-app/.github")
+        assert File.exist?("test-app/.env")
+        assert File.exist?("test-app/storage/db.sqlite")
 
         FileUtils.rm_r("test-app")
       end
@@ -104,10 +128,16 @@ module PHP
         @context.expects(:which).with("composer").returns("/usr/bin/composer")
       end
 
+      def expect_npm_check_commands
+        @context.expects(:which).with("npm").returns("/usr/bin/npm")
+        @context.expects(:capture2e).with("npm", "-v").returns(["1", mock(success?: true)])
+      end
+
       def create_test_app_directory_structure
-        FileUtils.mkdir_p("test-app")
-        FileUtils.touch("test-app/.git")
-        FileUtils.touch("test-app/.github")
+        FileUtils.mkdir_p("test-app/storage")
+        FileUtils.touch(File.join("test-app/.git"))
+        FileUtils.touch(File.join("test-app/.github"))
+        File.write("test-app/.env.example", ENV_FILE)
       end
     end
   end
