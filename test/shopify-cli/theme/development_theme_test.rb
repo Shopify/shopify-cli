@@ -1,6 +1,5 @@
 # frozen_string_literal: true
 require "test_helper"
-require "shopify-cli/theme/config"
 require "shopify-cli/theme/development_theme"
 
 module ShopifyCli
@@ -8,9 +7,9 @@ module ShopifyCli
     class DevelopmentThemeTest < Minitest::Test
       def setup
         super
-        config = Config.from_path(ShopifyCli::ROOT + "/test/fixtures/theme")
-        @ctx = TestHelpers::FakeContext.new(root: config.root)
-        @theme = DevelopmentTheme.new(@ctx, config)
+        root = ShopifyCli::ROOT + "/test/fixtures/theme"
+        @ctx = TestHelpers::FakeContext.new(root: root)
+        @theme = DevelopmentTheme.new(@ctx, root: root)
         ShopifyCli::DB.stubs(:del).with(:acting_as_shopify_organization)
       end
 
