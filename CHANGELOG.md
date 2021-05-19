@@ -3,6 +3,7 @@ Unreleased
 * [#1197](https://github.com/Shopify/shopify-cli/pull/1197): Add `create` command for PHP app projects.
 * [#1241](https://github.com/Shopify/shopify-cli/pull/1241): Add `serve` command for PHP app projects.
 * [#1243](https://github.com/Shopify/shopify-cli/pull/1243): Add `tunnel` command for PHP app projects.
+* [#1245](https://github.com/Shopify/shopify-cli/pull/1245): Add `connect` command for PHP app projects.
 
 Version 2.4.0
 ------
