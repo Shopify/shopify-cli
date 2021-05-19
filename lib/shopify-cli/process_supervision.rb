@@ -50,19 +50,21 @@ module ShopifyCli
       #
       # * `identifier` - a string or symbol to identify the new process by.
       # * `args` - a command to run, either a string or array of strings
+      # * `force_spawn` - whether we want the child process to be a spawn and not a fork, so it is terminated along with
+      #                   the parent
       #
       # #### Returns
       #
       # * `process` - ProcessSupervision instance if the process is running, this
       #   will be nil if the process did not start.
       #
-      def start(identifier, args)
+      def start(identifier, args, force_spawn: false)
         return for_ident(identifier) if running?(identifier)
 
         # Windows doesn't support forking process without extra gems, so we resort to spawning a new child process -
         # that means that it dies along with the original process if it is interrupted. On UNIX, we fork the process so
         # that it doesn't have to be restarted on every run.
-        if Context.new.windows?
+        if Context.new.windows? || force_spawn
           pid_file = new(identifier)
 
           # Make sure the file exists and is empty, otherwise Windows fails
