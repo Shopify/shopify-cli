@@ -1,8 +1,0 @@
-# plain file names
-config/settings_data.json
-
-# globs
-*.jpg
-
-# regex
-/\.(txt|gif|bat)$/
