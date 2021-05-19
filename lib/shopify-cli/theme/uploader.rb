@@ -15,9 +15,10 @@ module ShopifyCli
 
       attr_reader :checksums
 
-      def initialize(ctx, theme)
+      def initialize(ctx, theme:, ignore_filter: nil)
         @ctx = ctx
         @theme = theme
+        @ignore_filter = ignore_filter
 
         # Queue of `Operation`s waiting to be picked up from a thread for processing.
         @queue = Queue.new
@@ -169,7 +170,7 @@ module ShopifyCli
         # Already enqueued
         return if @pending.include?(operation)
 
-        if @theme.ignore?(operation.file)
+        if @ignore_filter&.ignore?(operation.file.relative_path)
           @ctx.debug("ignore #{operation.file.relative_path}")
           return
         end

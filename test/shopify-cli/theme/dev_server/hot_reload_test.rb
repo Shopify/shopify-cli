@@ -9,11 +9,11 @@ module ShopifyCli
       class HotReloadTest < Minitest::Test
         def setup
           super
-          config = Config.from_path(ShopifyCli::ROOT + "/test/fixtures/theme")
-          @ctx = TestHelpers::FakeContext.new(root: config.root)
-          @theme = Theme.new(@ctx, config)
+          root = ShopifyCli::ROOT + "/test/fixtures/theme"
+          @ctx = TestHelpers::FakeContext.new(root: root)
+          @theme = Theme.new(@ctx, root: root)
           @uploader = stub("Uploader", enqueue_uploads: true)
-          @watcher = Watcher.new(@ctx, @theme, @uploader)
+          @watcher = Watcher.new(@ctx, theme: @theme, uploader: @uploader)
         end
 
         def test_hot_reload_js_injected_if_html_request
@@ -67,7 +67,7 @@ module ShopifyCli
             .with(JSON.generate(modified: modified))
 
           app = -> { [200, {}, []] }
-          HotReload.new(@ctx, app, @theme, @watcher)
+          HotReload.new(@ctx, app, theme: @theme, watcher: @watcher)
 
           @watcher.changed
           @watcher.notify_observers(modified, [], [])
@@ -79,7 +79,7 @@ module ShopifyCli
           app = lambda do |_env|
             [200, headers, [response_body]]
           end
-          stack = HotReload.new(@ctx, app, @theme, @watcher)
+          stack = HotReload.new(@ctx, app, theme: @theme, watcher: @watcher)
           request = Rack::MockRequest.new(stack)
           request.get(path).body
         end

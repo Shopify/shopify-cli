@@ -5,7 +5,6 @@ module Theme
   class Command
     class Serve < ShopifyCli::SubCommand
       options do |parser, flags|
-        parser.on("--env=ENV") { |env| flags[:env] = env }
         parser.on("--port=PORT") { |port| flags[:port] = port.to_i }
       end
 

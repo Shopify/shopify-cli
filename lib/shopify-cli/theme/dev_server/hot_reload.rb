@@ -4,13 +4,14 @@ module ShopifyCli
   module Theme
     module DevServer
       class HotReload
-        def initialize(ctx, app, theme, watcher)
+        def initialize(ctx, app, theme:, watcher:, ignore_filter: nil)
           @ctx = ctx
           @app = app
           @theme = theme
           @streams = SSE::Streams.new
           @watcher = watcher
           @watcher.add_observer(self, :notify_streams_of_file_change)
+          @ignore_filter = ignore_filter
         end
 
         def call(env)
@@ -30,7 +31,7 @@ module ShopifyCli
         end
 
         def notify_streams_of_file_change(modified, added, _removed)
-          files = (modified + added).reject { |file| @theme.ignore?(file) }
+          files = (modified + added).reject { |file| @ignore_filter&.ignore?(file) }
             .map { |file| @theme[file].relative_path }
 
           @streams.broadcast(JSON.generate(

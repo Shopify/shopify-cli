@@ -66,10 +66,10 @@ module ShopifyCli
           app = lambda do |_env|
             [200, {}, [response_body]]
           end
-          config = Config.from_path(ShopifyCli::ROOT + "/test/fixtures/theme")
-          ctx = TestHelpers::FakeContext.new(root: config.root)
-          theme = Theme.new(ctx, config)
-          stack = LocalAssets.new(ctx, app, theme)
+          root = ShopifyCli::ROOT + "/test/fixtures/theme"
+          ctx = TestHelpers::FakeContext.new(root: root)
+          theme = Theme.new(ctx, root: root)
+          stack = LocalAssets.new(ctx, app, theme: theme)
           request = Rack::MockRequest.new(stack)
           request.get(path)
         end

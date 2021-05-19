@@ -1,6 +1,6 @@
 # frozen_string_literal: true
-require_relative "config"
 require_relative "development_theme"
+require_relative "ignore_filter"
 require_relative "uploader"
 
 require_relative "dev_server/hot_reload"
@@ -20,17 +20,17 @@ module ShopifyCli
       class << self
         attr_accessor :ctx
 
-        def start(ctx, root, port: 9292, env: "development", silent: false)
+        def start(ctx, root, port: 9292, silent: false)
           @ctx = ctx
-          config = Config.from_path(root, environment: env)
-          theme = DevelopmentTheme.new(ctx, config)
-          @uploader = Uploader.new(ctx, theme)
-          watcher = Watcher.new(ctx, theme, @uploader)
+          theme = DevelopmentTheme.new(ctx, root: root)
+          ignore_filter = IgnoreFilter.from_path(root)
+          @uploader = Uploader.new(ctx, theme: theme, ignore_filter: ignore_filter)
+          watcher = Watcher.new(ctx, theme: theme, uploader: @uploader, ignore_filter: ignore_filter)
 
           # Setup the middleware stack. Mimics Rack::Builder / config.ru, but in reverse order
-          @app = Proxy.new(ctx, theme, @uploader)
-          @app = LocalAssets.new(ctx, @app, theme)
-          @app = HotReload.new(ctx, @app, theme, watcher)
+          @app = Proxy.new(ctx, theme: theme, uploader: @uploader)
+          @app = LocalAssets.new(ctx, @app, theme: theme)
+          @app = HotReload.new(ctx, @app, theme: theme, watcher: watcher, ignore_filter: ignore_filter)
           stopped = false
 
           theme.ensure_exists!

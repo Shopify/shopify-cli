@@ -12,11 +12,11 @@ module ShopifyCli
 
         def setup
           super
-          config = Config.from_path(ShopifyCli::ROOT + "/test/fixtures/theme")
-          @ctx = TestHelpers::FakeContext.new(root: config.root)
-          @theme = DevelopmentTheme.new(@ctx, config)
+          root = ShopifyCli::ROOT + "/test/fixtures/theme"
+          @ctx = TestHelpers::FakeContext.new(root: root)
+          @theme = DevelopmentTheme.new(@ctx, root: root)
           @uploader = stub(pending_updates: [])
-          @proxy = Proxy.new(@ctx, @theme, @uploader)
+          @proxy = Proxy.new(@ctx, theme: @theme, uploader: @uploader)
 
           ShopifyCli::DB.stubs(:exists?).with(:shop).returns(true)
           ShopifyCli::DB
