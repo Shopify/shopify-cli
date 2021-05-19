@@ -6,6 +6,7 @@ module PHP
     # connector("PHP::Commands::Connect")
 
     register_command("PHP::Commands::Serve", "serve")
+    register_command("PHP::Commands::Tunnel", "tunnel")
 
     require Project.project_filepath("messages/messages")
     register_messages(PHP::Messages::MESSAGES)
@@ -15,6 +16,7 @@ module PHP
   module Commands
     autoload :Create, Project.project_filepath("commands/create")
     autoload :Serve, Project.project_filepath("commands/serve")
+    autoload :Tunnel, Project.project_filepath("commands/tunnel")
   end
 
   # define/autoload project specific Tasks
