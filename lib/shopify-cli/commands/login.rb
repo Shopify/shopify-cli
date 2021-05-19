@@ -18,7 +18,11 @@ module ShopifyCli
         if Shopifolk.check
           @ctx.puts(@ctx.message("core.tasks.select_org_and_shop.identified_as_shopify"))
           message = @ctx.message("core.tasks.select_org_and_shop.first_party")
-          Shopifolk.act_as_shopify_organization if CLI::UI::Prompt.confirm(message, default: false)
+          if CLI::UI::Prompt.confirm(message, default: false)
+            Shopifolk.act_as_shopify_organization
+          else
+            ShopifyCli::Shopifolk.reset
+          end
         end
         shop = (options.flags[:shop] || @ctx.getenv("SHOPIFY_SHOP") || nil)
         ShopifyCli::DB.set(shop: validate_shop(shop)) unless shop.nil?
