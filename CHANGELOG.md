@@ -1,12 +1,16 @@
 Unreleased
 ------
-* Improved handling of "account not found" scenario, plus improvements to related tests and UX messaging
+
+Version 1.11.0
+--------------
 * [#1221](https://github.com/Shopify/shopify-app-cli/pull/1221): Prioritizes returning an HTTPS URL over HTTP from `shopify tunnel status`.
 * [#1223](https://github.com/Shopify/shopify-app-cli/pull/1233): Running `shopify serve` in an extension project now automatically runs `shopify tunnel`.
+* [#1225](https://github.com/Shopify/shopify-app-cli/pull/1225): Improved handling of "account not found" scenario, plus improvements to related tests and UX messaging
 * [#1229](https://github.com/Shopify/shopify-app-cli/pull/1229): Allows Checkout Extensions to specify configuration attributes in their extension.config.yml file.
+* [#1238](https://github.com/Shopify/shopify-app-cli/pull/1238): Auto Tunnel Support for Checkout Extension
 
 Version 1.10.0
--------------
+--------------
 * Updating internal features in development
 
 Version 1.9.1
