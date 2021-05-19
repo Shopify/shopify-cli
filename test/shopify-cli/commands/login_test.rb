@@ -21,6 +21,7 @@ module ShopifyCli
 
       def test_call_login_shopifolk_not_acting_as_shopify
         ShopifyCli::Shopifolk.stubs(:check).returns(true)
+        ShopifyCli::Shopifolk.expects(:reset).once
         ShopifyCli::DB.expects(:set).with(shop: anything).never
 
         auth = mock
