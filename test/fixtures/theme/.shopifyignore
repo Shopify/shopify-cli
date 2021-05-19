@@ -2,6 +2,7 @@
 config/settings_data.json
 
 # globs
+config/*_secret.json
 *.jpg
 
 # regex

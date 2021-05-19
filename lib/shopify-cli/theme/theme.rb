@@ -1,7 +1,5 @@
 # frozen_string_literal: true
 require_relative "file"
-require_relative "config"
-require_relative "ignore_filter"
 
 require "time"
 
@@ -10,19 +8,14 @@ module ShopifyCli
     class InvalidThemeRole < StandardError; end
 
     class Theme
-      attr_reader :config, :id
+      attr_reader :root, :id
 
-      def initialize(ctx, config = nil, id: nil, name: nil, role: nil)
+      def initialize(ctx, root: nil, id: nil, name: nil, role: nil)
         @ctx = ctx
-        @config = config || Config.new
+        @root = Pathname.new(root) if root
         @id = id
         @name = name
         @role = role
-        @ignore_filter = IgnoreFilter.new(root, patterns: @config.ignore_files, files: @config.ignores)
-      end
-
-      def root
-        @config.root
       end
 
       def theme_files
@@ -66,10 +59,6 @@ module ShopifyCli
 
       def shop
         AdminAPI.get_shop(@ctx)
-      end
-
-      def ignore?(file)
-        @ignore_filter.match?(self[file].path.to_s)
       end
 
       def editor_url
