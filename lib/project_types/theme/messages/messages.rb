@@ -80,7 +80,7 @@ module Theme
         },
         serve: {
           help: <<~HELP,
-            Uploads the current theme as a development theme on the store that you're connected to, and opens it in your default browser. While running, changes will push to the store in real time. Also prints the connected store URL to your terminal.
+            Uploads the current theme as a development theme to the store that you're connected to, and opens it in your default browser. While running, changes will push to the store in real time. Also prints the connected store URL to your terminal.
             Usage: {{command:%s theme serve}}
           HELP
           serve: "Viewing theme...",
