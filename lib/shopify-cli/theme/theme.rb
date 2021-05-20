@@ -1,6 +1,7 @@
 # frozen_string_literal: true
 require_relative "file"
 
+require "pathname"
 require "time"
 
 module ShopifyCli
