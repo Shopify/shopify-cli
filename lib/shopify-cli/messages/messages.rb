@@ -131,6 +131,15 @@ module ShopifyCli
           success: "Successfully logged out of your account",
         },
 
+        switch: {
+          help: <<~HELP,
+            Switch development stores
+              Usage: {{command:%s switch}}
+          HELP
+
+          success: "Switched your development store {{green:%s}}",
+        },
+
         monorail: {
           consent_prompt: <<~MSG,
             Would you like to enable anonymous usage reporting?

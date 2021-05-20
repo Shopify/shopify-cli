@@ -17,7 +17,7 @@ module ShopifyCli
         shop = "dev-theme-server-store.myshopify.com"
         theme_name = "Development (5676d8-theme-dev)"
 
-        ShopifyCli::AdminAPI.stubs(:get_shop).returns(shop)
+        ShopifyCli::AdminAPI.stubs(:get_shop_or_abort).returns(shop)
         ShopifyCli::DB.stubs(:get).with(:development_theme_id).returns(nil)
         ShopifyCli::DB.expects(:set).with(development_theme_id: "12345678")
         @theme.stubs(:name).returns(theme_name)
@@ -49,7 +49,7 @@ module ShopifyCli
         theme_name = "Development (5676d8-theme-dev)"
         theme_id = "12345678"
 
-        ShopifyCli::AdminAPI.stubs(:get_shop).returns(shop)
+        ShopifyCli::AdminAPI.stubs(:get_shop_or_abort).returns(shop)
         ShopifyCli::DB.stubs(:get).with(:development_theme_id).returns(theme_id)
         ShopifyCli::DB.expects(:set).with(development_theme_id: "12345678")
         @theme.stubs(:name).returns(theme_name)
@@ -100,7 +100,7 @@ module ShopifyCli
         shop = "dev-theme-server-store.myshopify.com"
         theme_id = "12345678"
 
-        ShopifyCli::AdminAPI.stubs(:get_shop).returns(shop)
+        ShopifyCli::AdminAPI.stubs(:get_shop_or_abort).returns(shop)
         ShopifyCli::DB.stubs(:get).with(:development_theme_id).returns(theme_id)
         ShopifyCli::DB.stubs(:exists?).with(:development_theme_id).returns(true)
         ShopifyCli::DB.stubs(:del).with(:development_theme_id)

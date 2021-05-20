@@ -89,7 +89,7 @@ module ShopifyCli
         end
       end
 
-      def get_shop(ctx)
+      def get_shop_or_abort(ctx)
         ctx.abort(
           ctx.message("core.populate.error.no_shop", ShopifyCli::TOOL_NAME)
         ) unless ShopifyCli::DB.exists?(:shop)

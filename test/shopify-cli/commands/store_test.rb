@@ -5,7 +5,7 @@ module ShopifyCli
     class StoreTest < MiniTest::Test
       def test_can_display_store
         shop = "testshop.myshopify.com"
-        ShopifyCli::AdminAPI.expects(:get_shop).with(@context).returns(shop)
+        ShopifyCli::AdminAPI.expects(:get_shop_or_abort).with(@context).returns(shop)
 
         @context.expects(:puts).with(@context.message("core.store.shop", shop))
 

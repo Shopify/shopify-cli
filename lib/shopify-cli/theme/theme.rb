@@ -59,7 +59,7 @@ module ShopifyCli
       end
 
       def shop
-        AdminAPI.get_shop(@ctx)
+        AdminAPI.get_shop_or_abort(@ctx)
       end
 
       def editor_url
@@ -165,7 +165,7 @@ module ShopifyCli
       def self.all(ctx, root: nil)
         _status, body = AdminAPI.rest_request(
           ctx,
-          shop: AdminAPI.get_shop(ctx),
+          shop: AdminAPI.get_shop_or_abort(ctx),
           path: "themes.json",
           api_version: "unstable",
         )
