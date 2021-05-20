@@ -53,7 +53,7 @@ module Theme
 
               Options:
                 {{command:-i, --themeid=THEMEID}} Theme ID. Must be an existing theme on your store.
-                {{command:-d, --development}}     Push to your remote development theme, creating it if needed.
+                {{command:-d, --development}}     Push to your remote development theme, and create it if needed.
                 {{command:-n, --nodelete}}        Runs the push command without deleting remote files from Shopify.
                 {{command:-j, --json}}            Output JSON instead of a UI.
                 {{command:-a, --allow-live}}      Allow push to a live theme.
