@@ -10,7 +10,7 @@ module Theme
 
         init: {
           help: <<~HELP,
-            {{command:%s theme init}}: Clones a Git repository to use as the starting point for building a theme. 
+            {{command:%s theme init}}: Clones a Git repository to use as a starting point for building a new theme. 
 
               Usage: {{command:%s theme init [ NAME ]}}
 
