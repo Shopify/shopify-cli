@@ -4,6 +4,7 @@ Unreleased
 * [#1241](https://github.com/Shopify/shopify-cli/pull/1241): Add `serve` command for PHP app projects.
 * [#1243](https://github.com/Shopify/shopify-cli/pull/1243): Add `tunnel` command for PHP app projects.
 * [#1245](https://github.com/Shopify/shopify-cli/pull/1245): Add `connect` command for PHP app projects.
+* [#1247](https://github.com/Shopify/shopify-cli/pull/1247): Add `open` command for PHP app projects.
 * [#1399](https://github.com/Shopify/shopify-cli/pull/1399): Fix error when running `shopify extension serve` in a theme app extension project
 
 Version 2.1.0
