@@ -7,7 +7,7 @@ module ShopifyCli
       def call(*)
         try_delete_development_theme
         ShopifyCli::IdentityAuth.delete_tokens_and_keys
-        ShopifyCli::DB.del(:shop) if ShopifyCli::DB.exists?(:shop)
+        ShopifyCli::DB.del(:shop) if has_shop?
         ShopifyCli::Shopifolk.reset
         @ctx.puts(@ctx.message("core.logout.success"))
       end
@@ -18,7 +18,13 @@ module ShopifyCli
 
       private
 
+      def has_shop?
+        ShopifyCli::DB.exists?(:shop)
+      end
+
       def try_delete_development_theme
+        return unless has_shop?
+
         ShopifyCli::Theme::DevelopmentTheme.delete(@ctx)
       rescue ShopifyCli::API::APIRequestError
         # Ignore since we can't delete it
