@@ -149,7 +149,7 @@ module ShopifyCli
         }
       end
 
-      def self.all(ctx, config)
+      def self.all(ctx, root: nil)
         _status, body = AdminAPI.rest_request(
           ctx,
           shop: AdminAPI.get_shop(ctx),
@@ -162,7 +162,8 @@ module ShopifyCli
           .reverse
           .map do |attributes|
             new(
-              ctx, config,
+              ctx,
+              root: root,
               id: attributes["id"],
               name: attributes["name"],
               role: attributes["role"],
