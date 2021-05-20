@@ -49,6 +49,13 @@ module PHP
           app_set_up: "App is now set up",
         },
 
+        open: {
+          help: <<~HELP,
+            Open your local development app in the default browser.
+              Usage: {{command:%s open}}
+            HELP
+        },
+
         serve: {
           help: <<~HELP,
             Start a local development PHP server for your project, as well as a public ngrok tunnel to your localhost.
