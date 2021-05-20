@@ -189,20 +189,20 @@ module ShopifyCli
 
         populate: {
           help: <<~HELP,
-            Populate a Shopify development store with example customers, orders, or products.
+            Populate a Shopify store with example customers, orders, or products. 
               Usage: {{command:%s populate [ customers | draftorders | products ]}}
           HELP
 
           extended_help: <<~HELP,
             {{bold:Subcommands:}}
 
-              {{cyan:customers [options]}}: Add dummy customers to the specified development store.
+              {{cyan:customers [options]}}: Add dummy customers to the specified store.
                 Usage: {{command:%1$s populate customers}}
 
-              {{cyan:draftorders [options]}}: Add dummy orders to the specified development store.
+              {{cyan:draftorders [options]}}: Add dummy orders to the specified store.
                 Usage: {{command:%1$s populate draftorders}}
 
-              {{cyan:products [options]}}: Add dummy products to the specified development store.
+              {{cyan:products [options]}}: Add dummy products to the specified store.
                 Usage: {{command:%1$s populate products}}
 
             {{bold:Options:}}
@@ -214,13 +214,13 @@ module ShopifyCli
             {{bold:Examples:}}
 
               {{command:%1$s populate products}}
-                Populate your development store with 5 additional products.
+                Populate your store with 5 additional products.
 
               {{command:%1$s populate customers --count 30}}
-                Populate your development store with 30 additional customers.
+                Populate your store with 30 additional customers.
 
               {{command:%1$s populate draftorders}}
-                Populate your development store with 5 additional orders.
+                Populate your store with 5 additional orders.
 
               {{command:%1$s populate products --help}}
                 Display the list of options available to customize the {{command:%1$s populate products}} command.
