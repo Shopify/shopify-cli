@@ -67,19 +67,29 @@ module ShopifyCLI
       nil
     end
 
-    private
-
-    def download_filename
-      URI.parse(DOWNLOAD_URLS[@ctx.os]).path.split("/").last
+    def get_config(config)
+      output, status = @ctx.capture2e(heroku_command, "config:get", config.to_s)
+      return output.strip if status.success?
+      nil
     end
 
-    def download_path
-      File.join(ShopifyCLI.cache_dir, download_filename)
+    def set_config(config, value)
+      result = @ctx.system(heroku_command, "config:set", "#{config}=#{value}")
+
+      msg = @ctx.message("core.heroku.error.set_config", config, value)
+      @ctx.abort(msg) unless result.success?
     end
 
-    def git_remote
-      output, status = @ctx.capture2e("git", "remote", "get-url", "heroku")
-      status.success? ? output : nil
+    def add_buildpacks(buildpacks)
+      result = @ctx.system(heroku_command, "buildpacks:clear")
+      msg = @ctx.message("core.heroku.error.add_buildpacks")
+      @ctx.abort(msg) unless result.success?
+
+      buildpacks.each do |buildpack|
+        result = @ctx.system(heroku_command, "buildpacks:add", buildpack)
+        msg = @ctx.message("core.heroku.error.add_buildpacks")
+        @ctx.abort(msg) unless result.success?
+      end
     end
 
     def heroku_command
@@ -101,6 +111,21 @@ module ShopifyCLI
       else
         "heroku"
       end
+    end
+
+    private
+
+    def download_filename
+      URI.parse(DOWNLOAD_URLS[@ctx.os]).path.split("/").last
+    end
+
+    def download_path
+      File.join(ShopifyCli.cache_dir, download_filename)
+    end
+
+    def git_remote
+      output, status = @ctx.capture2e("git", "remote", "get-url", "heroku")
+      status.success? ? output : nil
     end
 
     def installed?

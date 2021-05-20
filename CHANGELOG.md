@@ -6,6 +6,7 @@ Unreleased
 * [#1245](https://github.com/Shopify/shopify-cli/pull/1245): Add `connect` command for PHP app projects.
 * [#1247](https://github.com/Shopify/shopify-cli/pull/1247): Add `open` command for PHP app projects.
 * [#1252](https://github.com/Shopify/shopify-cli/pull/1252): Add `populate` command for PHP app projects.
+* [#1249](https://github.com/Shopify/shopify-cli/pull/1249): Add `deploy heroku` command for PHP app projects.
 
 Version 2.4.0
 ------
