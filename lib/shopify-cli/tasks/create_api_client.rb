@@ -14,7 +14,7 @@ module ShopifyCli
           title: title,
           type: type,
           app_url: DEFAULT_APP_URL,
-          redir: [OAuth::REDIRECT_HOST]
+          redir: [IdentityAuth::REDIRECT_HOST]
         )
 
         unless resp

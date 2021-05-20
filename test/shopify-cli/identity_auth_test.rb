@@ -3,7 +3,7 @@ require "test_helper"
 module ShopifyCli
   class IdentityAuthTest < MiniTest::Test
     def test_authenticate
-      client = oauth_client
+      client = identity_auth_client
       @context.expects(:open_url!)
 
       stub_auth_response(client)
@@ -40,7 +40,7 @@ module ShopifyCli
     end
 
     def test_refresh_exchange_token
-      client = oauth_client(request_exchange: "123")
+      client = identity_auth_client(request_exchange: "123")
 
       with_existing_tokens_in_database(client: client)
 
@@ -52,7 +52,7 @@ module ShopifyCli
     end
 
     def test_refresh_access_token_fallback
-      client = oauth_client(request_exchange: "123")
+      client = identity_auth_client(request_exchange: "123")
 
       with_existing_tokens_in_database(client: client)
 
@@ -83,7 +83,7 @@ module ShopifyCli
     end
 
     def test_authenticate_with_invalid_request
-      client = oauth_client
+      client = identity_auth_client
       @context.expects(:open_url!)
 
       stub_server(client, {
@@ -98,7 +98,7 @@ module ShopifyCli
     end
 
     def test_authenticate_with_invalid_code
-      client = oauth_client(secret: "secret")
+      client = identity_auth_client(secret: "secret")
       code_verifier = "123456"
       @context.expects(:open_url!)
       stub_auth_response(client)
@@ -178,8 +178,8 @@ module ShopifyCli
       end
     end
 
-    def oauth_client(*)
-      @oauth_client ||= begin
+    def identity_auth_client(*)
+      @identity_auth_client ||= begin
         db = ShopifyCli::DB.new(path: File.join(ShopifyCli::TEMP_DIR, ".test_db.pstore"))
         db.clear
         db.set(shop: "testshop")

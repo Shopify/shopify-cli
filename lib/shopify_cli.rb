@@ -112,7 +112,6 @@ module ShopifyCli
   autoload :JsSystem, "shopify-cli/js_system"
   autoload :LazyDelegator, "shopify-cli/lazy_delegator"
   autoload :MethodObject, "shopify-cli/method_object"
-  autoload :OAuth, "shopify-cli/oauth"
   autoload :Options, "shopify-cli/options"
   autoload :PartnersAPI, "shopify-cli/partners_api"
   autoload :ProcessSupervision, "shopify-cli/process_supervision"

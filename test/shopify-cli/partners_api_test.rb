@@ -28,11 +28,11 @@ module ShopifyCli
       ).returns(api_stub)
       api_stub.stubs(:query).raises(API::APIRequestUnauthorizedError).then.returns("response")
 
-      @oauth_client = mock
+      @identity_auth_client = mock
       ShopifyCli::IdentityAuth
         .expects(:new)
-        .with(ctx: @context).returns(@oauth_client)
-      @oauth_client
+        .with(ctx: @context).returns(@identity_auth_client)
+      @identity_auth_client
         .expects(:reauthenticate)
 
       assert_equal "response", PartnersAPI.query(@context, "query")
