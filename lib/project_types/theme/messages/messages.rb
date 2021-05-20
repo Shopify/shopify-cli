@@ -41,7 +41,7 @@ module Theme
         },
         push: {
           remove_abort: "Theme files weren't deleted",
-          remove_confirm: "This will delete the local and remote copies of the theme files, which can't be undone. Do you wish to proceed?",
+          remove_confirm: "This will delete the local and remote copies of the theme files, which can't be undone. Do you want to continue?",
           error: {
             push_error: "Theme files couldn't be pushed to Shopify",
             remove_error: "Theme files couldn't be removed from Shopify",
