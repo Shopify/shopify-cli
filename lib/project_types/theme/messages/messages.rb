@@ -21,7 +21,7 @@ module Theme
         },
 
         publish: {
-          confirmation: "This will change your live theme. Do you wish to proceed?",
+          confirmation: "This will change your live theme. Do you want to continue?",
           deploying: "Deploying theme",
           error: "Theme couldn't be deployed",
           help: <<~HELP,
