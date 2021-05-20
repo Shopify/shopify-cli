@@ -92,6 +92,8 @@ module ShopifyCli
             download: "Heroku CLI could not be downloaded",
             install: "Could not install Heroku CLI",
             could_not_select_app: "Heroku app {{green:%s}} could not be selected",
+            set_config: "Failed to set config %s to %s in Heroku app",
+            add_buildpacks: "Failed to add buildpacks in Heroku app",
           },
         },
 

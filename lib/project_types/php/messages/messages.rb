@@ -56,7 +56,6 @@ module PHP
             HELP
         },
 
-
         populate: {
           help: <<~HELP,
           Populate your Shopify development store with example customers, orders, or products.
@@ -105,6 +104,64 @@ module PHP
 
           product: {
             added: "%s added to {{green:%s}} at {{underline:%sproducts/%d}}",
+          },
+        },
+
+        deploy: {
+          help: <<~HELP,
+            Deploy the current PHP project to a hosting service. Heroku ({{underline:https://www.heroku.com}}) is currently the only option, but more will be added in the future.
+              Usage: {{command:%s deploy [ heroku ]}}
+            HELP
+
+          extended_help: <<~HELP,
+            {{bold:Subcommands:}}
+              {{cyan:heroku}}: Deploys the current PHP project to Heroku.
+                Usage: {{command:%s deploy heroku}}
+            HELP
+
+          heroku: {
+            help: <<~HELP,
+              Deploy the current PHP project to Heroku
+                Usage: {{command:%s deploy heroku}}
+              HELP
+
+            error: {
+              generate_app_key: "Failed to generate Laravel APP_KEY",
+            },
+
+            downloading: "Downloading Heroku CLI…",
+            downloaded: "Downloaded Heroku CLI",
+            installing: "Installing Heroku CLI…",
+            installing_windows: "Running Heroku CLI install wizard…",
+            installed: "Installed Heroku CLI",
+            authenticating: "Authenticating with Heroku…",
+            authenticated: "{{v}} Authenticated with Heroku",
+            authenticated_with_account: "{{v}} Authenticated with Heroku as `%s`",
+            deploying: "Deploying to Heroku…",
+            deployed: "Deployed to Heroku",
+            post_deploy: <<~DEPLOYED,
+              {{v}} Deployed to Heroku, you can access your app at {{green:%s}}
+
+                If you're deploying this app for the first time, make sure to set up your database and your app's environment at {{bold:App dashboard -> Settings -> Config Vars}}.
+              DEPLOYED
+            git: {
+              checking: "Checking git repo…",
+              initialized: "Git repo initialized",
+              what_branch: "What branch would you like to deploy?",
+              branch_selected: "{{v}} Git branch `%s` selected for deploy",
+            },
+            app: {
+              no_apps_found: "No existing Heroku app found. What would you like to do?",
+              name: "What is your Heroku app’s name?",
+              select: "Specify an existing Heroku app",
+              selecting: "Selecting Heroku app `%s`…",
+              selected: "{{v}} Heroku app `%s` selected",
+              create: "Create a new Heroku app",
+              creating: "Creating new Heroku app…",
+              created: "{{v}} New Heroku app created",
+              setting_configs: "Setting Shopify app configs…",
+              configs_set: "{{v}} Shopify app configs set",
+            },
           },
         },
 
