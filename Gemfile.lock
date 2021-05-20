@@ -24,7 +24,7 @@ GEM
       rb-fsevent (~> 0.10, >= 0.10.3)
       rb-inotify (~> 0.9, >= 0.9.10)
     method_source (1.0.0)
-    mini_portile2 (2.5.0)
+    mini_portile2 (2.5.1)
     minitest (5.14.2)
     minitest-fail-fast (0.1.0)
       minitest (~> 5)
@@ -34,7 +34,7 @@ GEM
       minitest (>= 5.0)
       ruby-progressbar
     mocha (1.11.2)
-    nokogiri (1.11.3)
+    nokogiri (1.11.5)
       mini_portile2 (~> 2.5.0)
       racc (~> 1.4)
     nokogumbo (2.0.5)
@@ -75,8 +75,6 @@ GEM
       rubocop
     rubocop-shopify (2.0.1)
       rubocop (~> 1.11)
-    rubocop-rake (0.5.1)
-      rubocop
     ruby-progressbar (1.11.0)
     theme-check (0.9.0)
       liquid (>= 5.0.1)
