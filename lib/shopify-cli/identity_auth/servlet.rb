@@ -1,5 +1,5 @@
 module ShopifyCli
-  class OAuth
+  class IdentityAuth
     class Servlet < WEBrick::HTTPServlet::AbstractServlet
       TEMPLATE = %{<!DOCTYPE html>
         <html>
@@ -18,10 +18,10 @@ module ShopifyCli
         </script>
       }
 
-      def initialize(server, oauth, token)
+      def initialize(server, identity_auth, token)
         super
         @server = server
-        @oauth = oauth
+        @identity_auth = identity_auth
         @state_token = token
       end
 
@@ -30,16 +30,16 @@ module ShopifyCli
           respond_with(
             res,
             400,
-            Context.message("core.oauth.servlet.invalid_request_response", req.query["error_description"])
+            Context.message("core.identity_auth.servlet.invalid_request_response", req.query["error_description"])
           )
         elsif req.query["state"] != @state_token
-          response_message = Context.message("core.oauth.servlet.invalid_state_response")
+          response_message = Context.message("core.identity_auth.servlet.invalid_state_response")
           req.query.merge!("error" => "invalid_state", "error_description" => response_message)
           respond_with(res, 403, response_message)
         else
-          respond_with(res, 200, Context.message("core.oauth.servlet.success_response"))
+          respond_with(res, 200, Context.message("core.identity_auth.servlet.success_response"))
         end
-        @oauth.response_query = req.query
+        @identity_auth.response_query = req.query
         @server.shutdown
       end
 
@@ -49,8 +49,9 @@ module ShopifyCli
           status: status,
           message: message,
           color: successful ? "black" : "red",
-          title:
-            Context.message(successful ? "core.oauth.servlet.authenticated" : "core.oauth.servlet.not_authenticated"),
+          title: Context.message(
+            successful ? "core.identity_auth.servlet.authenticated" : "core.identity_auth.servlet.not_authenticated"
+          ),
           autoclose: successful ? AUTOCLOSE_TEMPLATE : "",
         }
         response.status = status
