@@ -33,7 +33,7 @@ module ShopifyCli
       end
 
       def acting_as_shopify_organization?
-        !!@acting_as_shopify_organization || (Project.has_current? && Project.current.config["shopify_organization"])
+        !!(@acting_as_shopify_organization || (Project.has_current? && Project.current.config["shopify_organization"]))
       end
 
       def reset
