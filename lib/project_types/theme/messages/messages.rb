@@ -28,11 +28,15 @@ module Theme
             {{command:%s theme publish}}: Set a remote theme as the live theme.
               Usage: {{command:%s theme publish [ THEME_ID ]}}
 
+              Options:
+                {{command:-f, --force}}         Skip confirmation.
+
               Run without arguments to select theme from a list.
           HELP
           done: "Your theme is now live at %s",
           not_found: "Theme #%s does not exist",
           select: "Select theme to push to",
+          confirm: "Are you sure you want to make %s the new live theme on %s?",
         },
         forms: {
           ask_password: "Password:",
@@ -53,7 +57,8 @@ module Theme
 
               Options:
                 {{command:-i, --themeid=THEMEID}} Theme ID. Must be an existing theme on your store.
-                {{command:-d, --development}}     Push to your remote development theme, and create it if needed.
+                {{command:-d, --development}}     Push to your own remote development theme, creating it if needed.
+                {{command:-u, --unpublished}}     Create a new unpublished theme and push to it.
                 {{command:-n, --nodelete}}        Runs the push command without deleting remote files from Shopify.
                 {{command:-j, --json}}            Output JSON instead of a UI.
                 {{command:-a, --allow-live}}      Allow push to a live theme.
@@ -77,6 +82,7 @@ module Theme
               {{info:Customize this theme in the Online Store Editor:}}
               {{underline:%s}}
           DONE
+          name: "Theme name",
         },
         serve: {
           help: <<~HELP,
@@ -100,6 +106,7 @@ module Theme
 
             Options:
               {{command:-d, --development}}     Delete your development theme.
+              {{command:-f, --force}}           Skip confirmation.
 
             Run without options to select the theme to delete from a list.
           HELP
@@ -107,6 +114,7 @@ module Theme
           done: "%s theme(s) deleted",
           not_found: "{{x}} Theme #%s does not exist",
           live: "{{x}} Theme #%s is your live theme. You can't delete it.",
+          confirm: "Are you sure you want to delete %s on %s?",
         },
       },
     }.freeze

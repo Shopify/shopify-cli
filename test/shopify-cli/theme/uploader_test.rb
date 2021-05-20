@@ -1,6 +1,5 @@
 # frozen_string_literal: true
 require "test_helper"
-require "shopify-cli/theme/config"
 require "shopify-cli/theme/uploader"
 require "shopify-cli/theme/theme"
 
@@ -9,10 +8,10 @@ module ShopifyCli
     class UploaderTest < Minitest::Test
       def setup
         super
-        config = Config.from_path(ShopifyCli::ROOT + "/test/fixtures/theme")
-        @ctx = TestHelpers::FakeContext.new(root: config.root)
-        @theme = Theme.new(@ctx, config)
-        @uploader = Uploader.new(@ctx, @theme)
+        root = ShopifyCli::ROOT + "/test/fixtures/theme"
+        @ctx = TestHelpers::FakeContext.new(root: root)
+        @theme = Theme.new(@ctx, root: root)
+        @uploader = Uploader.new(@ctx, theme: @theme)
 
         ShopifyCli::DB.stubs(:exists?).with(:shop).returns(true)
         ShopifyCli::DB
@@ -215,9 +214,7 @@ module ShopifyCli
       def test_upload_theme
         @uploader.start_threads
 
-        expected_size = @theme.theme_files
-          .reject { |file| @theme.ignore?(file) }
-          .size
+        expected_size = @theme.theme_files.size
 
         ShopifyCli::AdminAPI.expects(:rest_request)
           .times(expected_size + 1) # +1 for checksums
@@ -230,9 +227,7 @@ module ShopifyCli
       def test_upload_theme_with_delayed_low_priority_files
         @uploader.start_threads
 
-        expected_size = (@theme.liquid_files + @theme.json_files)
-          .reject { |file| @theme.ignore?(file) }
-          .size
+        expected_size = (@theme.liquid_files + @theme.json_files).size
 
         ShopifyCli::AdminAPI.expects(:rest_request)
           .at_least(expected_size)
@@ -250,7 +245,6 @@ module ShopifyCli
         @uploader.start_threads
 
         expected_files = @theme.theme_files
-          .reject { |file| @theme.ignore?(file) }
 
         response_assets = expected_files.map do |file|
           {

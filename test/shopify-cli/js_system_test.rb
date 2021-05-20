@@ -67,7 +67,7 @@ module ShopifyCli
     def test_call_on_class_proxies_to_the_instance_version_of_call
       yarn_command = "yarn"
       npm_command = "npm"
-      JsSystem.any_instance.expects(:call).with(yarn: yarn_command, npm: npm_command).once
+      JsSystem.any_instance.expects(:call).with(yarn: yarn_command, npm: npm_command, capture_response: false).once
 
       JsSystem.call(@context, yarn: yarn_command, npm: npm_command)
     end

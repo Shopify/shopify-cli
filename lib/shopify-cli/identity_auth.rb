@@ -12,6 +12,8 @@ module ShopifyCli
   class IdentityAuth
     include SmartProperties
 
+    autoload :Servlet, "shopify-cli/identity_auth/servlet"
+
     class Error < StandardError; end
     LocalRequest = Struct.new(:method, :path, :query, :protocol)
     LOCAL_DEBUG = "SHOPIFY_APP_CLI_LOCAL_PARTNERS"
@@ -64,7 +66,7 @@ module ShopifyCli
 
     def reauthenticate
       return if refresh_exchange_tokens || refresh_access_tokens
-      ctx.abort(ctx.message("core.oauth.error.reauthenticate", ShopifyCli::TOOL_NAME))
+      ctx.abort(ctx.message("core.identity_auth.error.reauthenticate", ShopifyCli::TOOL_NAME))
     end
 
     def code_challenge
@@ -81,7 +83,7 @@ module ShopifyCli
           Logger: WEBrick::Log.new(File.open(File::NULL, "w")),
           AccessLog: [],
         )
-        server.mount("/", OAuth::Servlet, self, state_token)
+        server.mount("/", Servlet, self, state_token)
         server
       end
     end
@@ -115,7 +117,7 @@ module ShopifyCli
     def receive_access_code
       @access_code ||= begin
         @server_thread.join(240)
-        raise Error, ctx.message("core.oauth.error.timeout") if response_query.nil?
+        raise Error, ctx.message("core.identity_auth.error.timeout") if response_query.nil?
         raise Error, response_query["error_description"] unless response_query["error"].nil?
         response_query["code"]
       end
@@ -176,6 +178,8 @@ module ShopifyCli
     end
 
     def request_exchange_token(name, audience, additional_scopes)
+      return if name == "shopify" && !store.exists?(:shop)
+
       params = {
         grant_type: "urn:ietf:params:oauth:grant-type:token-exchange",
         requested_token_type: "urn:ietf:params:oauth:token-type:access_token",
@@ -207,7 +211,15 @@ module ShopifyCli
       request["User-Agent"] = "Shopify CLI #{::ShopifyCli::VERSION}"
       request.body = URI.encode_www_form(params)
       res = https.request(request)
-      raise Error, JSON.parse(res.body)["error_description"] unless res.is_a?(Net::HTTPSuccess)
+      unless res.is_a?(Net::HTTPSuccess)
+        error_msg = JSON.parse(res.body)["error_description"]
+        shop = store.get(:shop)
+        store.del(:shop)
+        if error_msg.include?("destination")
+          ctx.abort(ctx.message("core.identity_auth.error.invalid_destination", shop))
+        end
+        raise Error, error_msg
+      end
       JSON.parse(res.body)
     end
 
@@ -242,7 +254,7 @@ module ShopifyCli
     def client_id
       return "fbdb2649-e327-4907-8f67-908d24cfd7e3" if ENV[LOCAL_DEBUG].nil?
 
-      ctx.abort(ctx.message("core.oauth.error.local_identity_not_running")) unless local_identity_running?
+      ctx.abort(ctx.message("core.identity_auth.error.local_identity_not_running")) unless local_identity_running?
 
       # Fetch the client ID from the local Identity Dynamic Registration endpoint
       response = post_request("/client", {

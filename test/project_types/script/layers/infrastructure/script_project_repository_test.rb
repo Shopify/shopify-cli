@@ -33,6 +33,8 @@ describe Script::Layers::Infrastructure::ScriptProjectRepository do
     end
 
     subject do
+      ShopifyCli::DB.stubs(:get).with(:acting_as_shopify_organization).returns(nil)
+
       instance.create(
         script_name: script_name,
         extension_point_type: extension_point_type,
@@ -79,19 +81,6 @@ describe Script::Layers::Infrastructure::ScriptProjectRepository do
 
         it "should create a new script project" do
           it_should_create_a_new_script_project
-        end
-
-        it "should create a config_ui_file" do
-          capture_io { subject }
-
-          config_ui = config_ui_repository.get(expected_config_ui_filename)
-
-          refute_nil config_ui
-          assert_equal expected_config_ui_filename, config_ui.filename
-          assert_equal expected_config_ui_content, config_ui.content
-          assert_equal config_ui.filename, subject.config_ui.filename
-          assert_equal config_ui.content, subject.config_ui.content
-
           assert_equal expected_config_ui_filename, ShopifyCli::Project.current.config["config_ui_file"]
         end
       end
@@ -102,13 +91,6 @@ describe Script::Layers::Infrastructure::ScriptProjectRepository do
 
         it "should create a new script project" do
           it_should_create_a_new_script_project
-        end
-
-        it "should not create a config_ui_file" do
-          capture_io { subject }
-
-          assert_nil subject.config_ui
-
           assert_nil ShopifyCli::Project.current.config["config_ui_file"]
         end
       end
@@ -139,7 +121,7 @@ describe Script::Layers::Infrastructure::ScriptProjectRepository do
     before do
       ShopifyCli::Project.stubs(:has_current?).returns(true)
       ShopifyCli::Project.stubs(:current).returns(current_project)
-      config_ui_repository.create(config_ui_file, config_ui_content)
+      ctx.write(config_ui_file, config_ui_content)
     end
 
     describe "when project config is valid" do
@@ -263,6 +245,7 @@ describe Script::Layers::Infrastructure::ScriptProjectRepository do
       ctx.mkdir_p(dir)
       ctx.chdir(dir)
 
+      ShopifyCli::DB.stubs(:get).with(:acting_as_shopify_organization).returns(nil)
       instance.create(
         script_name: script_name,
         extension_point_type: extension_point_type,
@@ -312,22 +295,6 @@ describe Script::Layers::Infrastructure::ScriptProjectRepository do
 
   describe "ConfigUiRepository" do
     let(:instance) { Script::Layers::Infrastructure::ScriptProjectRepository::ConfigUiRepository.new(ctx: ctx) }
-
-    describe "#create" do
-      let(:filename) { "filename" }
-      let(:content) { "content" }
-
-      subject { instance.create(filename, content) }
-
-      it "should write the content to the filename" do
-        subject
-        assert_equal content, File.read(filename)
-      end
-
-      it "should return a ConfigUi entity" do
-        assert subject.is_a?(Script::Layers::Domain::ConfigUi)
-      end
-    end
 
     describe "#get" do
       subject { instance.get(filename) }

@@ -131,10 +131,8 @@ module Extension
               node_not_installed: "Node must be installed to create this extension.",
               version_too_low: "Your node version %s does not meet the minimum required version %s",
             },
-            argo_missing_renderer_package_error: "%s Install the missing package and try again.",
-            argo_renderer_package_invalid_version_error: <<~MESSAGE,
-              The renderer package version is not a valid SemVer Version (http://semver.org)
-            MESSAGE
+            argo_missing_renderer_package_error: "Extension template references invalid renderer package "\
+              "please contact Shopify for help.",
             yarn_install_error: "Something went wrong while running 'yarn install'. %s.",
             yarn_run_script_error: "Something went wrong while running script. %s.",
           },
@@ -165,6 +163,15 @@ module Extension
       },
       checkout_post_purchase: {
         name: "Checkout Post Purchase",
+      },
+      online_store_theme_extension: {
+        name: "Online Store App Extension",
+        tagline: "(limit 1 per app)",
+        overrides: {
+          register: {
+            confirm_info: "You can only create one %s extension per app, which can’t be undone.",
+          },
+        },
       },
     }
   end

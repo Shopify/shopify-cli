@@ -1,26 +1,22 @@
 # frozen_string_literal: true
 require_relative "file"
-require_relative "config"
-require_relative "ignore_filter"
 
+require "pathname"
 require "time"
 
 module ShopifyCli
   module Theme
-    class Theme
-      attr_reader :config, :id
+    class InvalidThemeRole < StandardError; end
 
-      def initialize(ctx, config = nil, id: nil, name: nil, role: nil)
+    class Theme
+      attr_reader :root, :id
+
+      def initialize(ctx, root: nil, id: nil, name: nil, role: nil)
         @ctx = ctx
-        @config = config || Config.new
+        @root = Pathname.new(root) if root
         @id = id
         @name = name
         @role = role
-        @ignore_filter = IgnoreFilter.new(root, patterns: @config.ignore_files, files: @config.ignores)
-      end
-
-      def root
-        @config.root
       end
 
       def theme_files
@@ -66,10 +62,6 @@ module ShopifyCli
         AdminAPI.get_shop(@ctx)
       end
 
-      def ignore?(file)
-        @ignore_filter.match?(self[file].path.to_s)
-      end
-
       def editor_url
         "https://#{shop}/admin/themes/#{id}/editor"
       end
@@ -100,6 +92,26 @@ module ShopifyCli
         else
           "https://#{shop}/?preview_theme_id=#{id}"
         end
+      end
+
+      def create
+        raise InvalidThemeRole, "Can't create live theme. Use publish." if live?
+
+        _status, body = ShopifyCli::AdminAPI.rest_request(
+          @ctx,
+          shop: shop,
+          path: "themes.json",
+          body: JSON.generate({
+            theme: {
+              name: name,
+              role: role,
+            },
+          }),
+          method: "POST",
+          api_version: "unstable",
+        )
+
+        @id = body["theme"]["id"]
       end
 
       def delete
@@ -138,7 +150,7 @@ module ShopifyCli
         }
       end
 
-      def self.all(ctx, config)
+      def self.all(ctx, root: nil)
         _status, body = AdminAPI.rest_request(
           ctx,
           shop: AdminAPI.get_shop(ctx),
@@ -151,7 +163,8 @@ module ShopifyCli
           .reverse
           .map do |attributes|
             new(
-              ctx, config,
+              ctx,
+              root: root,
               id: attributes["id"],
               name: attributes["name"],
               role: attributes["role"],

@@ -21,12 +21,5 @@ module TestHelpers
         variables: variables,
       }.to_json).to_return(status: status, body: resp.to_json)
     end
-
-    def stub_shopify_org_confirmation(response: false)
-      CLI::UI::Prompt
-        .stubs(:confirm)
-        .with(includes("Are you working on a 1P (1st Party) app?"), anything)
-        .returns(response)
-    end
   end
 end

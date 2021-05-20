@@ -10,6 +10,7 @@ describe Script::UI::ErrorHandler do
     let(:ctx_root) { "/some/dir/here" }
     let(:ctx) { TestHelpers::FakeContext.new(root: ctx_root) }
     let(:ci?) { ctx.ci? }
+
     subject do
       Script::UI::ErrorHandler.display_and_raise(
         failed_op: failed_op, cause_of_error: cause_of_error, help_suggestion: help_suggestion
@@ -114,7 +115,7 @@ describe Script::UI::ErrorHandler do
       end
 
       describe "when Oauth::Error" do
-        let(:err) { ShopifyCli::OAuth::Error.new }
+        let(:err) { ShopifyCli::IdentityAuth::Error.new }
         it "should call display_and_raise" do
           should_call_display_and_raise
         end

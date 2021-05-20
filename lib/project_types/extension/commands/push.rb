@@ -8,7 +8,7 @@ module Extension
 
       def call(args, name)
         Command::Register.new(@ctx).call(args, name) unless project.registered?
-        Command::Build.new(@ctx).call(args, name)
+        Command::Build.new(@ctx).call(args, name) unless specification_handler.specification.options[:skip_build]
 
         CLI::UI::Frame.open(@ctx.message("push.frame_title")) do
           updated_draft_version = update_draft

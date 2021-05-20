@@ -1,6 +1,5 @@
 # frozen_string_literal: true
 require "test_helper"
-require "shopify-cli/theme/config"
 require "shopify-cli/theme/theme"
 
 module ShopifyCli
@@ -8,9 +7,9 @@ module ShopifyCli
     class ThemeTest < Minitest::Test
       def setup
         super
-        config = Config.from_path(ShopifyCli::ROOT + "/test/fixtures/theme")
-        @ctx = TestHelpers::FakeContext.new(root: config.root)
-        @theme = Theme.new(@ctx, config, id: "123")
+        root = ShopifyCli::ROOT + "/test/fixtures/theme"
+        @ctx = TestHelpers::FakeContext.new(root: root)
+        @theme = Theme.new(@ctx, root: root, id: "123")
       end
 
       def test_assets
@@ -46,12 +45,6 @@ module ShopifyCli
         assert(@theme.theme_file?(
           @theme[Pathname.new(ShopifyCli::ROOT).join("test/fixtures/theme/layout/theme.liquid")]
         ))
-      end
-
-      def test_ignores_file
-        assert(@theme.ignore?(@theme["config/settings_data.json"]))
-        assert(@theme.ignore?(@theme["config/super_secret.json"]))
-        refute(@theme.ignore?(@theme["assets/theme.css"]))
       end
 
       def test_mime_type

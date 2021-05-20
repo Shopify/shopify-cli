@@ -6,6 +6,8 @@ module ShopifyCli
   module Theme
     module DevServer
       class IntegrationTest < Minitest::Test
+        include TestHelpers::FakeUI
+        
         @@port = 9292 # rubocop:disable Style/ClassVars
 
         THEMES_API_URL = "https://dev-theme-server-store.myshopify.com/admin/api/unstable/themes/123456789.json"
@@ -29,6 +31,7 @@ module ShopifyCli
           ShopifyCli::DB.stubs(:get)
             .with(:development_theme_id)
             .returns("123456789")
+          ShopifyCli::DB.stubs(:get).with(:acting_as_shopify_organization).returns(nil)
         end
 
         def teardown

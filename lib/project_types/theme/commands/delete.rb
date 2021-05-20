@@ -7,6 +7,7 @@ module Theme
     class Delete < ShopifyCli::SubCommand
       options do |parser, flags|
         parser.on("-d", "--development") { flags[:development] = true }
+        parser.on("-f", "--force") { flags[:force] = true }
       end
 
       def call(args, _name)
@@ -28,6 +29,8 @@ module Theme
           if theme.live?
             @ctx.puts(@ctx.message("theme.delete.live", theme.id))
             next
+          elsif !confirm?(theme)
+            next
           end
           theme.delete
           deleted += 1
@@ -40,6 +43,17 @@ module Theme
 
       def self.help
         ShopifyCli::Context.message("theme.delete.help", ShopifyCli::TOOL_NAME, ShopifyCli::TOOL_NAME)
+      end
+
+      private
+
+      def confirm?(theme)
+        Forms::ConfirmStore.ask(
+          @ctx,
+          [],
+          title: @ctx.message("theme.delete.confirm", theme.name, theme.shop),
+          force: options.flags[:force],
+        ).confirmed?
       end
     end
   end

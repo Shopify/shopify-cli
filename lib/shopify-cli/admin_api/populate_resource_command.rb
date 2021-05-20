@@ -29,6 +29,7 @@ module ShopifyCli
         @input = Hash.new
         @count = DEFAULT_COUNT
         @help = false
+        @skip_shop_confirmation = false
         input_options
         resource_options.parse(@args)
 
@@ -39,6 +40,7 @@ module ShopifyCli
           return @ctx.puts(output)
         end
 
+        ShopifyCli::Tasks::ConfirmStore.call(@ctx) unless @skip_shop_confirmation
         @shop = AdminAPI.get_shop(@ctx)
         if @silent
           spin_group = CLI::UI::SpinGroup.new
@@ -85,6 +87,8 @@ module ShopifyCli
           end
 
           opts.on("--silent") { |v| @silent = v }
+
+          opts.on("--skip-shop-confirmation") { |v| @skip_shop_confirmation = v }
         end
       end
 

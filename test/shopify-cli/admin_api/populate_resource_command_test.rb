@@ -13,8 +13,11 @@ module ShopifyCli
       end
 
       def test_with_schema_args_overrides_input
-        ShopifyCli::DB.expects(:exists?).with(:shop).returns(true)
-        ShopifyCli::DB.expects(:get).with(:shop).returns("my-test-shop.myshopify.io")
+        ShopifyCli::DB.expects(:exists?).with(:shop).returns(true).twice
+        ShopifyCli::DB.expects(:get).with(:shop).returns("my-test-shop.myshopify.io").twice
+        CLI::UI::Prompt.expects(:confirm)
+          .with(@context.message("core.tasks.confirm_store.prompt", "my-test-shop.myshopify.io"), default: false)
+          .returns(true)
         @resource.expects(:run_mutation).times(1)
         @resource.call([
           "-c 1", '--title="bad jeggings"', '--variants=[{price: "4.99"}]'
@@ -36,17 +39,33 @@ module ShopifyCli
       end
 
       def test_populate_runs_mutation_default_number_of_times
-        ShopifyCli::DB.expects(:exists?).with(:shop).returns(true)
-        ShopifyCli::DB.expects(:get).with(:shop).returns("my-test-shop.myshopify.io")
+        ShopifyCli::DB.expects(:exists?).with(:shop).returns(true).twice
+        ShopifyCli::DB.expects(:get).with(:shop).returns("my-test-shop.myshopify.io").twice
+        CLI::UI::Prompt.expects(:confirm)
+          .with(@context.message("core.tasks.confirm_store.prompt", "my-test-shop.myshopify.io"), default: false)
+          .returns(true)
         @resource.expects(:run_mutation).times(ShopifyCli::Commands::Populate::Product::DEFAULT_COUNT)
         @resource.call([], nil)
       end
 
       def test_populate_runs_mutation_count_number_of_times
-        ShopifyCli::DB.expects(:exists?).with(:shop).returns(true)
-        ShopifyCli::DB.expects(:get).with(:shop).returns("my-test-shop.myshopify.io")
+        ShopifyCli::DB.expects(:exists?).with(:shop).returns(true).twice
+        ShopifyCli::DB.expects(:get).with(:shop).returns("my-test-shop.myshopify.io").twice
+        CLI::UI::Prompt.expects(:confirm)
+          .with(@context.message("core.tasks.confirm_store.prompt", "my-test-shop.myshopify.io"), default: false)
+          .returns(true)
         @resource.expects(:run_mutation).times(2)
         @resource.call(["-c 2"], nil)
+      end
+
+      def test_populate_does_not_ask_confirmation_if_skip_shop_confirmation
+        ShopifyCli::DB.expects(:exists?).with(:shop).returns(true).once
+        ShopifyCli::DB.expects(:get).with(:shop).returns("my-test-shop.myshopify.io").once
+        CLI::UI::Prompt.expects(:confirm)
+          .with(@context.message("core.tasks.confirm_store.prompt", "my-test-shop.myshopify.io"), default: false)
+          .never
+        @resource.expects(:run_mutation).once
+        @resource.call(["-c 1", "--skip-shop-confirmation"], nil)
       end
 
       def test_populate_with_help_flag_shows_options

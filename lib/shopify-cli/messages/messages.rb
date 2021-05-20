@@ -7,8 +7,8 @@ module ShopifyCli
         create: {
           info: {
             created: "{{v}} {{green:%s}} was created in the organization's Partner Dashboard {{underline:%s}}",
-            serve: "{{*}} Change directories to your new project folder {{green:%s}} and run {{command:%s serve}} " \
-            "to start a local server",
+            serve: "{{*}} Change directories to your new project folder {{green:%s}} and run "\
+            "{{command:%s %s serve}} to start a local server",
             install: "{{*}} Then, visit {{underline:%s/test}} to install {{green:%s}} on your Dev Store",
           },
         },
@@ -139,11 +139,12 @@ module ShopifyCli
           MSG
         },
 
-        oauth: {
+        identity_auth: {
           error: {
             timeout: "Timed out while waiting for response from Shopify",
             local_identity_not_running: "Identity needs to be running locally in order to proceed.",
             reauthenticate: "Please login again with {{command:shopify login}}",
+            invalid_destination: "The store %s doesn't exist. Please log out and try again.",
           },
 
           location: {
@@ -225,7 +226,7 @@ module ShopifyCli
           HELP
 
           error: {
-            no_shop: "No store found. Please run {{command:%s login}} to login to a specific store",
+            no_shop: "No store found. Please run {{command:%s login --shop=SHOP}} to login to a specific store",
           },
 
           customer: {
@@ -327,6 +328,11 @@ module ShopifyCli
         },
 
         tasks: {
+          confirm_store: {
+            prompt: "You are currently logged into {{green:%s}}. Do you want to proceed using this store?",
+            confirmation: "Proceeding using {{green:%s}}",
+            cancelling: "Cancelling ...",
+          },
           ensure_env: {
             organization_select: "To which partner organization does this project belong?",
             no_development_stores: <<~MESSAGE,
@@ -370,7 +376,7 @@ module ShopifyCli
               organization_not_found: "Cannot find a partner organization with that ID",
               partners_notice: "Please visit https://partners.shopify.com/ to create a partners account",
             },
-            first_party: "Are you working on a 1P (1st Party) app?",
+            first_party: "Are you working on a {{green:Shopify project}} that is {{red:not a theme}}?",
             identified_as_shopify: "We've identified you as a {{green:Shopify}} employee.",
             organization: "Partner organization {{green:%s (%s)}}",
             organization_select: "Select partner organization",

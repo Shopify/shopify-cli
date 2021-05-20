@@ -3,6 +3,8 @@
 module ShopifyCli
   module Theme
     class IgnoreFilter
+      FILE = ".shopifyignore"
+
       DEFAULT_REGEXES = [
         /\.git/,
         /\.hg/,
@@ -23,19 +25,43 @@ module ShopifyCli
 
       attr_reader :root, :globs, :regexes
 
-      class IgnoreFileDoesNotExist < StandardError; end
+      def self.from_path(root)
+        root = Pathname.new(root)
+        ignore_file = root.join(FILE)
+        patterns = if ignore_file.file?
+          parse_ignore_file(ignore_file)
+        else
+          []
+        end
+        new(root, patterns: patterns)
+      end
 
-      def initialize(root, patterns: [], files: [])
+      def self.parse_ignore_file(file)
+        patterns = []
+
+        file.each_line do |line|
+          line.strip!
+
+          next if line.empty? || line.start_with?("#")
+
+          patterns << line
+        end
+
+        patterns
+      end
+
+      def initialize(root, patterns: [])
         @root = root
 
-        file_patterns = files_to_patterns(files)
-        regexes, globs = patterns_to_regexes_and_globs(file_patterns + patterns)
+        regexes, globs = patterns_to_regexes_and_globs(patterns)
 
         @regexes = regexes
         @globs = globs
       end
 
       def match?(path)
+        path = path.to_s
+
         return true if path.empty?
 
         regexes.each do |regex|
@@ -48,31 +74,9 @@ module ShopifyCli
 
         false
       end
+      alias_method :ignore?, :match?
 
       private
-
-      # Load files containing patterns and parse them
-      def files_to_patterns(files)
-        patterns = []
-
-        files.each do |file|
-          begin
-            text = Pathname.new(@root).join(file).read
-          rescue Errno::ENOENT
-            raise IgnoreFileDoesNotExist, "#{file} does not exist"
-          end
-
-          text.split("\n").each do |line|
-            line.strip!
-
-            next if line.empty? || line.start_with?("#")
-
-            patterns << line
-          end
-        end
-
-        patterns
-      end
 
       # Take in string patterns and convert them to either
       # regex patterns or glob patterns so that they are handled in an expected manner.
