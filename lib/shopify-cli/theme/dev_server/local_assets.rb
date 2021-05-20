@@ -22,7 +22,7 @@ module ShopifyCli
           end
         end
 
-        def initialize(ctx, app, theme)
+        def initialize(ctx, app, theme:)
           @ctx = ctx
           @app = app
           @theme = theme

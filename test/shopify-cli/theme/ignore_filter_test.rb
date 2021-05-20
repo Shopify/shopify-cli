@@ -11,10 +11,6 @@ module ShopifyCli
         assert_equal("/tmp", filter.root)
         assert_equal(IgnoreFilter::DEFAULT_REGEXES, filter.regexes)
         assert_equal(IgnoreFilter::DEFAULT_GLOBS, filter.globs)
-
-        assert_raises(IgnoreFilter::IgnoreFileDoesNotExist) do
-          IgnoreFilter.new("/tmp", files: ["does not exist"])
-        end
       end
 
       def test_filter_match
@@ -44,10 +40,8 @@ module ShopifyCli
         end
       end
 
-      def test_ignores_file
-        filter = IgnoreFilter.new(
-          "#{ShopifyCli::ROOT}/test/fixtures/theme", files: ["ignores_file"]
-        )
+      def test_from_path
+        filter = IgnoreFilter.from_path("#{ShopifyCli::ROOT}/test/fixtures/theme")
 
         assert_includes(filter.globs, "*config/settings_data.json")
         assert_includes(filter.globs, "*.jpg")

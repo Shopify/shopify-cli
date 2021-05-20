@@ -22,7 +22,7 @@ module ShopifyCli
         SESSION_COOKIE_REGEXP = /#{SESSION_COOKIE_NAME}=(\h+)/
         SESSION_COOKIE_MAX_AGE = 60 * 60 * 23 # 1 day - leeway of 1h
 
-        def initialize(ctx, theme, uploader)
+        def initialize(ctx, theme:, uploader:)
           @ctx = ctx
           @theme = theme
           @uploader = uploader
