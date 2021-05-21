@@ -124,7 +124,7 @@ module ShopifyCli
 
         logout: {
           help: <<~HELP,
-            Log out of a currently authenticated account or clear invalid credentials
+            Log out of an authenticated partner organization and store, or clear invalid credentials
               Usage: {{command:%s logout}}
           HELP
 
