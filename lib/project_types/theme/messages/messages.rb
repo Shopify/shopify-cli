@@ -10,7 +10,7 @@ module Theme
 
         init: {
           help: <<~HELP,
-            {{command:%s theme init}}: Clones a Git repository to use as a starting point for building a new theme. 
+            {{command:%s theme init}}: Clones a Git repository to use as a starting point for building a new theme.
 
               Usage: {{command:%s theme init [ NAME ]}}
 
@@ -45,7 +45,9 @@ module Theme
         },
         push: {
           remove_abort: "Theme files weren't deleted",
-          remove_confirm: "This will delete the local and remote copies of the theme files, which can't be undone. Do you want to continue?",
+          remove_confirm:
+            "This will delete the local and remote copies of the theme files, which " \
+            "can't be undone. Do you want to continue?",
           error: {
             push_error: "Theme files couldn't be pushed to Shopify",
             remove_error: "Theme files couldn't be removed from Shopify",
@@ -85,7 +87,7 @@ module Theme
         },
         serve: {
           help: <<~HELP,
-            Uploads the current theme as a development theme to the connected store, then prints theme editor and preview URLs to your terminal. While running, changes will push to the store in real time. 
+            Uploads the current theme as a development theme to the connected store, then prints theme editor and preview URLs to your terminal. While running, changes will push to the store in real time.
             Usage: {{command:%s theme serve}}
           HELP
           serve: "Viewing theme...",
