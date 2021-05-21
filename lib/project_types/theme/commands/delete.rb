@@ -7,6 +7,7 @@ module Theme
     class Delete < ShopifyCli::SubCommand
       options do |parser, flags|
         parser.on("-d", "--development") { flags[:development] = true }
+        parser.on("-a", "--show-all") { flags[:show_all] = true }
         parser.on("-f", "--force") { flags[:force] = true }
       end
 
@@ -21,6 +22,7 @@ module Theme
             [],
             title: @ctx.message("theme.delete.select"),
             exclude_roles: ["live"],
+            include_foreign_developments: options.flags[:show_all],
           ).theme]
         end
 

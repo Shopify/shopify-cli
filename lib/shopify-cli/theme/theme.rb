@@ -86,6 +86,10 @@ module ShopifyCli
         role == "live"
       end
 
+      def development?
+        role == "development"
+      end
+
       def preview_url
         if live?
           "https://#{shop}/"
@@ -137,6 +141,14 @@ module ShopifyCli
           })
         )
         @role = "live"
+      end
+
+      def current_development?
+        development? && id == ShopifyCli::DB.get(:development_theme_id)
+      end
+
+      def foreign_development?
+        development? && id != ShopifyCli::DB.get(:development_theme_id)
       end
 
       def to_h
