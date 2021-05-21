@@ -214,8 +214,8 @@ module ShopifyCli
       unless res.is_a?(Net::HTTPSuccess)
         error_msg = JSON.parse(res.body)["error_description"]
         shop = store.get(:shop)
-        store.del(:shop)
         if error_msg.include?("destination")
+          store.del(:shop)
           ctx.abort(ctx.message("core.identity_auth.error.invalid_destination", shop))
         end
         raise Error, error_msg
