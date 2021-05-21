@@ -190,7 +190,7 @@ module ShopifyCli
 
         populate: {
           help: <<~HELP,
-            Populate a Shopify store with example customers, orders, or products. 
+            Populate a Shopify store with example customers, orders, or products.
               Usage: {{command:%s populate [ customers | draftorders | products ]}}
           HELP
 
