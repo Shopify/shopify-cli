@@ -17,13 +17,15 @@ module Theme
         elsif args.any?
           args.map { |id| ShopifyCli::Theme::Theme.new(@ctx, id: id) }
         else
-          [Forms::Select.ask(
+          form = Forms::Select.ask(
             @ctx,
             [],
             title: @ctx.message("theme.delete.select"),
             exclude_roles: ["live"],
             include_foreign_developments: options.flags[:show_all],
-          ).theme]
+          )
+          return unless form
+          [form.theme]
         end
 
         deleted = 0

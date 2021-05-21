@@ -33,12 +33,14 @@ module Theme
           theme.create
           theme
         else
-          Forms::Select.ask(
+          form = Forms::Select.ask(
             @ctx,
             [],
             title: @ctx.message("theme.push.select"),
             root: root,
-          ).theme
+          )
+          return unless form
+          form.theme
         end
 
         if theme.live? && !options.flags[:allow_live]
