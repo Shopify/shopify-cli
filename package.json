@@ -1,0 +1,25 @@
+{
+  "name": "shopify-app-cli",
+  "version": "1.0.0",
+  "description": "[![License: MIT](https://img.shields.io/badge/License-MIT-green.svg)](LICENSE.md) [![Build Status](https://github.com/Shopify/shopify-app-cli/workflows/CI/badge.svg)](https://github.com/Shopify/shopify-app-cli/actions)",
+  "main": "index.js",
+  "directories": {
+    "doc": "docs",
+    "lib": "lib",
+    "test": "test"
+  },
+  "scripts": {
+    "test": "echo \"Error: no test specified\" && exit 1"
+  },
+  "repository": {
+    "type": "git",
+    "url": "git+https://github.com/Shopify/shopify-app-cli.git"
+  },
+  "keywords": [],
+  "author": "",
+  "license": "ISC",
+  "bugs": {
+    "url": "https://github.com/Shopify/shopify-app-cli/issues"
+  },
+  "homepage": "https://github.com/Shopify/shopify-app-cli#readme"
+}
