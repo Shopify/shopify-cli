@@ -111,7 +111,7 @@ module ShopifyCli
 
         login: {
           help: <<~HELP,
-            Log in to the Shopify CLI by authenticating with a store
+            Log in to the Shopify CLI by authenticating with a store or partner organization
               Usage: {{command:%s login [--shop=SHOP]}}
           HELP
           invalid_shop: <<~MESSAGE,
