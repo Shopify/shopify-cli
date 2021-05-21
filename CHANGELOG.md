@@ -5,6 +5,7 @@ Unreleased
 * [1243](https://github.com/Shopify/shopify-app-cli/pull/1243): Add `tunnel` command for PHP app projects.
 * [1245](https://github.com/Shopify/shopify-app-cli/pull/1245): Add `connect` command for PHP app projects.
 * [1247](https://github.com/Shopify/shopify-app-cli/pull/1247): Add `open` command for PHP app projects.
+* [1249](https://github.com/Shopify/shopify-app-cli/pull/1249): Add `deploy heroku` command for PHP app projects.
 
 Version 1.9.0
 -------------

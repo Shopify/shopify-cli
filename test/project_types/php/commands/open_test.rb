@@ -1,6 +1,6 @@
 # frozen_string_literal: true
 require "project_types/php/test_helper"
-require 'benchmark'
+
 module PHP
   module Commands
     class OpenTest < MiniTest::Test
