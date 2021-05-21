@@ -39,8 +39,6 @@ module ShopifyCli
         ShopifyCli::Context.message("core.login.help", ShopifyCli::TOOL_NAME)
       end
 
-      private
-
       def validate_shop(shop)
         @ctx.abort(@ctx.message("core.login.invalid_shop", shop)) unless shop.match(SHOP_REGEX)
         shop
