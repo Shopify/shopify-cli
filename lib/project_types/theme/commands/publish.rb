@@ -12,12 +12,14 @@ module Theme
         theme = if (theme_id = args.first)
           ShopifyCli::Theme::Theme.new(@ctx, id: theme_id)
         else
-          Forms::Select.ask(
+          form = Forms::Select.ask(
             @ctx,
             [],
             title: @ctx.message("theme.publish.select"),
             exclude_roles: ["live", "development", "demo"],
-          ).theme
+          )
+          return unless form
+          form.theme
         end
 
         return unless Forms::ConfirmStore.ask(

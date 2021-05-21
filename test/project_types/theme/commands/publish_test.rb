@@ -69,6 +69,15 @@ module Theme
 
         @command.call([])
       end
+
+      def test_publish_select_aborting
+        CLI::UI::Prompt.expects(:ask).raises(ShopifyCli::Abort)
+        @ctx.expects(:puts)
+
+        @theme.expects(:publish).never
+
+        @command.call([])
+      end
     end
   end
 end

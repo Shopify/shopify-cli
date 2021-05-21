@@ -88,6 +88,15 @@ module Theme
         @command.call([], "delete")
       end
 
+      def test_delete_select_aborting
+        CLI::UI::Prompt.expects(:ask).raises(ShopifyCli::Abort)
+        @ctx.expects(:puts)
+
+        @theme.expects(:delete).never
+
+        @command.call([], "delete")
+      end
+
       def test_delete_asks_to_confirm
         CLI::UI::Prompt.expects(:ask).returns(@theme)
         CLI::UI::Prompt.expects(:confirm).returns(false)
