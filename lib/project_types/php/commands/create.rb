@@ -92,7 +92,7 @@ module PHP
         env_file.secret = api_client["apiSecretKeys"].first["secret"]
         env_file.shop = form.shop_domain
         env_file.host = "localhost"
-        env_file.scopes = "read_products"
+        env_file.scopes = "write_products,write_draft_orders,write_customers"
         env_file.extra["DB_DATABASE"] = File.join(@ctx.root, env_file.extra["DB_DATABASE"])
         env_file.write(@ctx)
 
