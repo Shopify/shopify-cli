@@ -143,7 +143,6 @@ module PHP
           form = ask(org_id: nil, shop: nil)
           assert_nil(form)
         end
-        assert_match(@context.message("core.tasks.select_org_and_shop.error.partners_notice"), io.join)
         assert_match(@context.message("core.tasks.select_org_and_shop.error.no_organizations"), io.join)
       end
 
