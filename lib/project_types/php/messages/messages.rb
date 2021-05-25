@@ -56,57 +56,6 @@ module PHP
             HELP
         },
 
-        populate: {
-          help: <<~HELP,
-          Populate your Shopify development store with example customers, orders, or products.
-            Usage: {{command:%s populate [ customers | draftorders | products ]}}
-          HELP
-          extended_help: <<~HELP,
-          {{bold:Subcommands:}}
-
-            {{cyan:customers [options]}}: Add dummy customers to the specified development store.
-              Usage: {{command:%1$s populate customers}}
-
-            {{cyan:draftorders [options]}}: Add dummy orders to the specified development store.
-              Usage: {{command:%1$s populate draftorders}}
-
-            {{cyan:products [options]}}: Add dummy products to the specified development store.
-              Usage: {{command:%1$s populate products}}
-
-          {{bold:Options:}}
-
-            {{cyan:--count [integer]}}: The number of dummy items to populate. Defaults to 5.
-            {{cyan:--silent}}: Silence the populate output.
-            {{cyan:--help}}: Display more options specific to each subcommand.
-
-          {{bold:Examples:}}
-
-            {{command:%1$s populate products}}
-              Populate your development store with 5 additional products.
-
-            {{command:%1$s populate customers --count 30}}
-              Populate your development store with 30 additional customers.
-
-            {{command:%1$s populate draftorders}}
-              Populate your development store with 5 additional orders.
-
-            {{command:%1$s populate products --help}}
-              Display the list of options available to customize the {{command:%1$s populate products}} command.
-          HELP
-
-          customer: {
-            added: "%s added to {{green:%s}} at {{underline:%scustomers/%d}}",
-          },
-
-          draft_order: {
-            added: "DraftOrder added to {{green:%s}} at {{underline:%sdraft_orders/%d}}",
-          },
-
-          product: {
-            added: "%s added to {{green:%s}} at {{underline:%sproducts/%d}}",
-          },
-        },
-
         deploy: {
           help: <<~HELP,
             Deploy the current PHP project to a hosting service. Heroku ({{underline:https://www.heroku.com}}) is currently the only option, but more will be added in the future.
@@ -162,6 +111,57 @@ module PHP
               setting_configs: "Setting Shopify app configs…",
               configs_set: "{{v}} Shopify app configs set",
             },
+          },
+        },
+
+        populate: {
+          help: <<~HELP,
+            Populate your Shopify development store with example customers, orders, or products.
+              Usage: {{command:%s populate [ customers | draftorders | products ]}}
+            HELP
+          extended_help: <<~HELP,
+            {{bold:Subcommands:}}
+
+              {{cyan:customers [options]}}: Add dummy customers to the specified development store.
+                Usage: {{command:%1$s populate customers}}
+
+              {{cyan:draftorders [options]}}: Add dummy orders to the specified development store.
+                Usage: {{command:%1$s populate draftorders}}
+
+              {{cyan:products [options]}}: Add dummy products to the specified development store.
+                Usage: {{command:%1$s populate products}}
+
+            {{bold:Options:}}
+
+              {{cyan:--count [integer]}}: The number of dummy items to populate. Defaults to 5.
+              {{cyan:--silent}}: Silence the populate output.
+              {{cyan:--help}}: Display more options specific to each subcommand.
+
+            {{bold:Examples:}}
+
+              {{command:%1$s populate products}}
+                Populate your development store with 5 additional products.
+
+              {{command:%1$s populate customers --count 30}}
+                Populate your development store with 30 additional customers.
+
+              {{command:%1$s populate draftorders}}
+                Populate your development store with 5 additional orders.
+
+              {{command:%1$s populate products --help}}
+                Display the list of options available to customize the {{command:%1$s populate products}} command.
+            HELP
+
+          customer: {
+            added: "%s added to {{green:%s}} at {{underline:%scustomers/%d}}",
+          },
+
+          draft_order: {
+            added: "DraftOrder added to {{green:%s}} at {{underline:%sdraft_orders/%d}}",
+          },
+
+          product: {
+            added: "%s added to {{green:%s}} at {{underline:%sproducts/%d}}",
           },
         },
 
