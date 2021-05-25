@@ -113,44 +113,44 @@ module PHP
             },
           },
         },
-        
+
         populate: {
           help: <<~HELP,
-          Populate your Shopify development store with example customers, orders, or products.
-            Usage: {{command:%s populate [ customers | draftorders | products ]}}
-          HELP
+            Populate your Shopify development store with example customers, orders, or products.
+              Usage: {{command:%s populate [ customers | draftorders | products ]}}
+            HELP
           extended_help: <<~HELP,
-          {{bold:Subcommands:}}
+            {{bold:Subcommands:}}
 
-            {{cyan:customers [options]}}: Add dummy customers to the specified development store.
-              Usage: {{command:%1$s populate customers}}
+              {{cyan:customers [options]}}: Add dummy customers to the specified development store.
+                Usage: {{command:%1$s populate customers}}
 
-            {{cyan:draftorders [options]}}: Add dummy orders to the specified development store.
-              Usage: {{command:%1$s populate draftorders}}
+              {{cyan:draftorders [options]}}: Add dummy orders to the specified development store.
+                Usage: {{command:%1$s populate draftorders}}
 
-            {{cyan:products [options]}}: Add dummy products to the specified development store.
-              Usage: {{command:%1$s populate products}}
+              {{cyan:products [options]}}: Add dummy products to the specified development store.
+                Usage: {{command:%1$s populate products}}
 
-          {{bold:Options:}}
+            {{bold:Options:}}
 
-            {{cyan:--count [integer]}}: The number of dummy items to populate. Defaults to 5.
-            {{cyan:--silent}}: Silence the populate output.
-            {{cyan:--help}}: Display more options specific to each subcommand.
+              {{cyan:--count [integer]}}: The number of dummy items to populate. Defaults to 5.
+              {{cyan:--silent}}: Silence the populate output.
+              {{cyan:--help}}: Display more options specific to each subcommand.
 
-          {{bold:Examples:}}
+            {{bold:Examples:}}
 
-            {{command:%1$s populate products}}
-              Populate your development store with 5 additional products.
+              {{command:%1$s populate products}}
+                Populate your development store with 5 additional products.
 
-            {{command:%1$s populate customers --count 30}}
-              Populate your development store with 30 additional customers.
+              {{command:%1$s populate customers --count 30}}
+                Populate your development store with 30 additional customers.
 
-            {{command:%1$s populate draftorders}}
-              Populate your development store with 5 additional orders.
+              {{command:%1$s populate draftorders}}
+                Populate your development store with 5 additional orders.
 
-            {{command:%1$s populate products --help}}
-              Display the list of options available to customize the {{command:%1$s populate products}} command.
-          HELP
+              {{command:%1$s populate products --help}}
+                Display the list of options available to customize the {{command:%1$s populate products}} command.
+            HELP
 
           customer: {
             added: "%s added to {{green:%s}} at {{underline:%scustomers/%d}}",
