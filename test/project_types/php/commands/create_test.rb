@@ -21,7 +21,7 @@ module PHP
         SHOPIFY_API_KEY=newapikey
         SHOPIFY_API_SECRET=secret
         SHOP=testshop.myshopify.com
-        SCOPES=read_products
+        SCOPES=write_products,write_draft_orders,write_customers
         HOST=localhost
         DB_DATABASE=#{ShopifyCli::ROOT}/test/fixtures/project/test-app/storage/db.sqlite
       CONTENT
