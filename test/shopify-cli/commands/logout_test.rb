@@ -12,7 +12,7 @@ module ShopifyCli
         ShopifyCli::DB.expects(:del).with(*ShopifyCli::IdentityAuth::IDENTITY_ACCESS_TOKENS)
         ShopifyCli::DB.expects(:del).with(*ShopifyCli::IdentityAuth::EXCHANGE_TOKENS)
 
-        ShopifyCli::DB.expects(:exists?).with(:shop).returns(true)
+        ShopifyCli::DB.expects(:exists?).with(:shop).twice.returns(true)
         ShopifyCli::DB.expects(:del).with(:shop).once
 
         ShopifyCli::Shopifolk.expects(:reset).once
