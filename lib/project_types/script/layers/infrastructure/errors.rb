@@ -72,7 +72,7 @@ module Script
         class SystemCallFailureError < ScriptProjectError
           attr_reader :out, :cmd
           def initialize(out:, cmd:)
-            super()
+            super(out)
             @out = out
             @cmd = cmd
           end
