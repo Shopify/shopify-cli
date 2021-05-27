@@ -5,7 +5,7 @@ require "json"
 module Extension
   module Models
     module SpecificationHandlers
-      class OnlineStoreThemeExtension < Default
+      class ThemeAppExtension < Default
         SUPPORTED_BUCKETS = %w(assets blocks snippets locales)
         def create(directory_name, context)
           context.root = File.join(context.root, directory_name)
@@ -23,7 +23,7 @@ module Extension
         end
 
         def name
-          "Online Store Theme Extension"
+          "Theme App Extension"
         end
 
         private
