@@ -2,7 +2,7 @@
 
 require "project_types/script/test_helper"
 
-describe Script::Layers::Infrastructure::RustProjectCreator do
+describe Script::Layers::Infrastructure::Languages::RustProjectCreator do
   include TestHelpers::FakeFS
 
   let(:script_name) { "payment_filter_rs" }
@@ -13,7 +13,7 @@ describe Script::Layers::Infrastructure::RustProjectCreator do
   let(:extension_point_type) { "payment_filter" }
   let(:extension_point) { Script::Layers::Domain::ExtensionPoint.new(extension_point_type, extension_point_config) }
   let(:project_creator) do
-    Script::Layers::Infrastructure::RustProjectCreator
+    Script::Layers::Infrastructure::Languages::RustProjectCreator
       .new(ctx: context, extension_point: extension_point, script_name: script_name, path_to_project: script_name)
   end
   let(:extension_point_config) do
