@@ -8,18 +8,6 @@ module Theme
             Usage: {{command:%1$s theme [ %2$s ]}}
         HELP
 
-        init: {
-          help: <<~HELP,
-            {{command:%s theme init}}: Clones a Git repository to use as a starting point for building a new theme.
-
-              Usage: {{command:%s theme init [ NAME ]}}
-
-              Options:
-                {{command:-u, --clone-url=URL}} The Git URL to clone from. Defaults to Shopify's example theme, Dawn: https://github.com/Shopify/dawn.git
-          HELP
-          ask_name: "Theme name",
-        },
-
         publish: {
           confirmation: "This will change your live theme. Do you want to continue?",
           deploying: "Deploying theme",
