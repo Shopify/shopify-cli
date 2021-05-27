@@ -5,14 +5,14 @@ require "project_types/extension/extension_test_helpers"
 module Extension
   module Models
     module SpecificationHandlers
-      class OnlineStoreThemeExtensionTest < MiniTest::Test
+      class ThemeAppExtensionTest < MiniTest::Test
         include ExtensionTestHelpers
 
         def setup
           super
           ShopifyCli::ProjectType.load_type(:extension)
-          specifications = DummySpecifications.build(identifier: "online_store_theme_extension")
-          @identifier = "ONLINE_STORE_THEME_EXTENSION"
+          specifications = DummySpecifications.build(identifier: "theme_app_extension")
+          @identifier = "THEME_APP_EXTENSION"
           @spec = specifications[@identifier]
           @context.root = Dir.mktmpdir
         end
