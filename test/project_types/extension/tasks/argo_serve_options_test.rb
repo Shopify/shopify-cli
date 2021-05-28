@@ -22,6 +22,10 @@ renderer_package: argo_admin)
       def test_serve_options_include_api_key_when_required
         required_fields = [:api_key]
         argo_runtime = setup_argo_runtime(renderer_package: argo_admin, version: "0.1.2-doesnt-matter")
+
+        ShopifyCli::Shopifolk.expects(:check).returns(true)
+        ShopifyCli::Feature.expects(:enabled?).with(:argo_admin_beta).returns(true)
+
         options = Features::ArgoServeOptions.new(argo_runtime: argo_runtime, context: @context,
           renderer_package: argo_admin, required_fields: required_fields)
 
@@ -32,6 +36,10 @@ renderer_package: argo_admin)
       def test_serve_options_include_shop_when_required
         required_fields = [:shop]
         argo_runtime = setup_argo_runtime(renderer_package: argo_admin, version: "0.1.2-doesnt-matter")
+
+        ShopifyCli::Shopifolk.expects(:check).returns(true)
+        ShopifyCli::Feature.expects(:enabled?).with(:argo_admin_beta).returns(true)
+
         options = Features::ArgoServeOptions.new(argo_runtime: argo_runtime, context: @context,
           renderer_package: argo_admin, required_fields: required_fields)
 

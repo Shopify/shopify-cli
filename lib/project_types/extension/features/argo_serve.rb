@@ -55,12 +55,16 @@ module Extension
         serve_options.npm_serve_command
       end
 
+      def argo_admin_beta?
+        ShopifyCli::Shopifolk.check && ShopifyCli::Feature.enabled?(:argo_admin_beta)
+      end
+
       def validate_env!
         ExtensionProject.reload
 
-        ShopifyCli::Shopifolk.check && ShopifyCli::Feature.enabled?(:argo_admin_beta)
-
         return if required_fields.none?
+
+        return unless argo_admin_beta?
 
         ShopifyCli::Tasks::EnsureEnv.call(context, required: required_fields)
         ShopifyCli::Tasks::EnsureDevStore.call(context) if required_fields.include?(:shop)
