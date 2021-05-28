@@ -12,6 +12,7 @@ module Extension
 
       property! :renderer, accepts: Models::NpmPackage
       property! :cli, accepts: Models::NpmPackage
+      property :beta_access, accepts: Array, default: -> { [] }
 
       def accepts_port?
         case cli
@@ -44,6 +45,26 @@ module Extension
         case cli
         when admin?
           cli >= ARGO_ADMIN_CLI_0_9_3
+        else
+          false
+        end
+      end
+
+      def accepts_shop?
+        return false unless beta_access.include?(:argo_admin_beta)
+        case cli
+        when admin?
+          cli >= ARGO_ADMIN_CLI_0_11_0
+        else
+          false
+        end
+      end
+
+      def accepts_api_key?
+        return false unless beta_access.include?(:argo_admin_beta)
+        case cli
+        when admin?
+          cli >= ARGO_ADMIN_CLI_0_11_0
         else
           false
         end

@@ -8,6 +8,7 @@ module Extension
       property! :context, accepts: ShopifyCli::Context
       property! :port, accepts: Integer, default: 39351
       property  :tunnel_url, accepts: String, default: ""
+      property :beta_access, accepts: Array, default: -> { [] }
 
       def call
         validate_env!
@@ -55,16 +56,12 @@ module Extension
         serve_options.npm_serve_command
       end
 
-      def argo_admin_beta?
-        ShopifyCli::Shopifolk.check && ShopifyCli::Feature.enabled?(:argo_admin_beta)
-      end
-
       def validate_env!
         ExtensionProject.reload
 
         return if required_fields.none?
 
-        return unless argo_admin_beta?
+        return unless beta_access.include?(:argo_admin_beta)
 
         ShopifyCli::Tasks::EnsureEnv.call(context, required: required_fields)
         ShopifyCli::Tasks::EnsureDevStore.call(context) if required_fields.include?(:shop)
