@@ -51,8 +51,14 @@ module Extension
         end
 
         def serve(context:, port:, tunnel_url:)
-          Features::ArgoServe.new(specification_handler: self, argo_runtime: argo_runtime(context),
-          context: context, port: port, tunnel_url: tunnel_url).call
+          Features::ArgoServe.new(
+            specification_handler: self,
+            argo_runtime: argo_runtime(context),
+            context: context,
+            port: port,
+            tunnel_url: tunnel_url,
+            beta_access: beta_access
+          ).call
         end
 
         def renderer_package(context)
@@ -62,8 +68,17 @@ module Extension
         def argo_runtime(context)
           @argo_runtime ||= Features::ArgoRuntime.new(
             renderer: renderer_package(context),
-            cli: cli_package(context)
+            cli: cli_package(context),
+            beta_access: beta_access
           )
+        end
+
+        def beta_access
+          argo_admin_beta? ? [:argo_admin_beta] : []
+        end
+
+        def argo_admin_beta?
+          ShopifyCli::Shopifolk.check && ShopifyCli::Feature.enabled?(:argo_admin_beta)
         end
 
         def cli_package(context)
