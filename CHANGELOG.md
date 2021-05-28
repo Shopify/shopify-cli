@@ -1,6 +1,10 @@
 Unreleased
 ------
 
+Version 1.12.0
+--------------
+* [1255](https://github.com/Shopify/shopify-app-cli/pull/1255): Fix beta flag checks when running `shopify serve`
+
 Version 1.11.0
 --------------
 * [#1221](https://github.com/Shopify/shopify-app-cli/pull/1221): Prioritizes returning an HTTPS URL over HTTP from `shopify tunnel status`.
