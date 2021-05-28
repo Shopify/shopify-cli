@@ -381,7 +381,8 @@ module ShopifyCli
                 NOT the Partner account login. Please run {{command:%s logout}} and try again.
               MESSAGE
             },
-            first_party: "Are you working on a {{green:Shopify project}} that is {{red:not a theme}}?",
+            first_party: "Are you working on a {{green:Shopify project}} on behalf of the"\
+              " {{green:Shopify partners org}}?",
             identified_as_shopify: "We've identified you as a {{green:Shopify}} employee.",
             organization: "Partner organization {{green:%s (%s)}}",
             organization_select: "Select partner organization",

@@ -138,7 +138,8 @@ module ShopifyCli
       def stub_shopify_org_confirmation(response: false)
         CLI::UI::Prompt
           .stubs(:confirm)
-          .with(includes("Are you working on a {{green:Shopify project}} that is {{red:not a theme}}?"), anything)
+          .with(includes("Are you working on a {{green:Shopify project}} on behalf of the"\
+            " {{green:Shopify partners org}}?"), anything)
           .returns(response)
       end
     end
