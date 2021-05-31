@@ -28,6 +28,7 @@ module Extension
       end
 
       def test_auth_runs_the_core_cli_tunnel_auth_if_token_is_present
+        # skip("Need to revisit processing of sub-sub-commands")
         fake_token = "FAKE_TOKEN"
         ShopifyCli::Tunnel.expects(:auth).with(@context, fake_token).once
 
@@ -47,6 +48,7 @@ module Extension
       end
 
       def test_start_aborts_if_an_invalid_port_is_provided
+        # skip("Need to revisit processing of sub-sub-commands")
         invalid_port = "NOT_PORT"
 
         ShopifyCli::Tunnel.expects(:start).never
@@ -61,6 +63,7 @@ module Extension
       end
 
       def test_stop_runs_the_core_cli_tunnel_stop
+        # skip("Need to revisit processing of sub-sub-commands")
         ShopifyCli::Tunnel.expects(:stop).with(@context).once
 
         capture_io { run_tunnel(Extension::Command::Tunnel::STOP_SUBCOMMAND) }
