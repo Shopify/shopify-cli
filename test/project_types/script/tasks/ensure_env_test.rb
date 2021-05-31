@@ -22,6 +22,7 @@ describe Script::Tasks::EnsureEnv do
     before do
       context.output_captured = true
       ShopifyCli::Shopifolk.stubs(:check).returns(is_shopifolk)
+      ShopifyCli::Shopifolk.stubs(:acting_as_shopify_organization?).returns(false)
       Script::Layers::Infrastructure::ScriptProjectRepository.stubs(:new).returns(script_project_repository)
       script_project_repository.create(
         language: language,

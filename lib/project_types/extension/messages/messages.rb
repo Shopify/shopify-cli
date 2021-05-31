@@ -42,7 +42,7 @@ module Extension
         ask_app: "Which app would you like to register this extension with?",
         no_apps: "{{x}} You don’t have any apps.",
         learn_about_apps: "{{*}} Learn more about building apps at <https://shopify.dev/concepts/apps>, " \
-          "or try creating a new app using {{command:shopify create}}.",
+          "or try creating a new app using {{command:shopify [node|rails] create}}.",
         loading_apps: "Loading your apps...",
         no_available_extensions: "{{x}} There are no available extensions for this app.",
       },

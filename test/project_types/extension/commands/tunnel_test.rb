@@ -18,7 +18,6 @@ module Extension
       end
 
       def test_auth_errors_if_no_token_is_provided
-        # skip("Need to revisit processing of sub-sub-commands")
         io = capture_io { run_tunnel(Extension::Command::Tunnel::AUTH_SUBCOMMAND) }
 
         assert_message_output(io: io, expected_content: [
@@ -29,7 +28,6 @@ module Extension
       end
 
       def test_auth_runs_the_core_cli_tunnel_auth_if_token_is_present
-        # skip("Need to revisit processing of sub-sub-commands")
         fake_token = "FAKE_TOKEN"
         ShopifyCli::Tunnel.expects(:auth).with(@context, fake_token).once
 
@@ -37,21 +35,18 @@ module Extension
       end
 
       def test_start_runs_with_the_default_port_if_no_port_provided
-        # skip("Need to revisit processing of sub-sub-commands")
         ShopifyCli::Tunnel.expects(:start).with(@context, port: Extension::Command::Tunnel::DEFAULT_PORT).once
 
         capture_io { run_tunnel(Extension::Command::Tunnel::START_SUBCOMMAND) }
       end
 
       def test_start_runs_with_the_requested_port_if_provided
-        # skip("Need to revisit processing of sub-sub-commands")
         ShopifyCli::Tunnel.expects(:start).with(@context, port: 9999).once
 
-        run_tunnel(Extension::Command::Tunnel::START_SUBCOMMAND, "--port=9999")
+        capture_io { run_tunnel(Extension::Command::Tunnel::START_SUBCOMMAND, "--port=9999") }
       end
 
       def test_start_aborts_if_an_invalid_port_is_provided
-        # skip("Need to revisit processing of sub-sub-commands")
         invalid_port = "NOT_PORT"
 
         ShopifyCli::Tunnel.expects(:start).never
@@ -66,7 +61,6 @@ module Extension
       end
 
       def test_stop_runs_the_core_cli_tunnel_stop
-        # skip("Need to revisit processing of sub-sub-commands")
         ShopifyCli::Tunnel.expects(:stop).with(@context).once
 
         capture_io { run_tunnel(Extension::Command::Tunnel::STOP_SUBCOMMAND) }
