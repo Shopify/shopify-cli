@@ -59,11 +59,14 @@ module ShopifyCli
 
       private
 
-      def authenticated_req(ctx)
-        yield
+      def authenticated_req(ctx, &block)
+        CLI::Kit::Util
+          .begin(&block)
+          .retry_after(API::APIRequestUnauthorizedError, retries: 1) do
+            authenticate(ctx)
+          end
       rescue API::APIRequestUnauthorizedError
-        authenticate(ctx)
-        retry
+        ctx.abort(ctx.message("core.api.error.failed_auth"))
       rescue API::APIRequestNotFoundError
         ctx.puts(ctx.message("core.partners_api.error.account_not_found", ShopifyCli::TOOL_NAME))
       end

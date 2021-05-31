@@ -85,11 +85,14 @@ module ShopifyCli
 
       private
 
-      def authenticated_req(ctx, shop)
-        yield
+      def authenticated_req(ctx, shop, &block)
+        CLI::Kit::Util
+          .begin(&block)
+          .retry_after(API::APIRequestUnauthorizedError, retries: 1) do
+            authenticate(ctx, shop)
+          end
       rescue API::APIRequestUnauthorizedError
-        authenticate(ctx, shop)
-        retry
+        ctx.abort(ctx.message("core.api.error.failed_auth"))
       end
 
       def authenticate(ctx, shop)
