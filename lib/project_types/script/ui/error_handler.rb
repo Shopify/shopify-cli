@@ -110,11 +110,6 @@ module Script
               e.extension_point_type
             ),
           }
-        when Layers::Domain::Errors::ServiceFailureError
-          {
-            cause_of_error: ShopifyCli::Context.message("script.error.service_failure_cause"),
-            help_suggestion: ShopifyCli::Context.message("script.error.service_failure_help"),
-          }
         when Layers::Domain::Errors::MetadataValidationError
           {
             cause_of_error: ShopifyCli::Context.message("script.error.metadata_validation_cause"),
@@ -211,9 +206,15 @@ module Script
             ),
             help_suggestion: ShopifyCli::Context.message("script.error.graphql_error_help"),
           }
+        when Layers::Infrastructure::Errors::SystemCallFailureError
+          {
+            cause_of_error: ShopifyCli::Context
+              .message("script.error.system_call_failure_cause", cmd: e.cmd),
+            help_suggestion: ShopifyCli::Context.message("script.error.system_call_failure_help", out: e.out),
+          }
         when Layers::Infrastructure::Errors::ScriptRepushError
           {
-            cause_of_error: ShopifyCli::Context.message("script.error.script_repush_cause", e.api_key),
+            cause_of_error: ShopifyCli::Context.message("script.error.script_repush_cause", e.uuid),
             help_suggestion: ShopifyCli::Context.message("script.error.script_repush_help"),
           }
         when Layers::Infrastructure::Errors::ShopAuthenticationError

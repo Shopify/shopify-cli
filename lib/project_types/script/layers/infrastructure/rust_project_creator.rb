@@ -27,28 +27,27 @@ module Script
 
         private
 
+        def command_runner
+          @command_runner ||= CommandRunner.new(ctx: ctx)
+        end
+
         def git_init
-          out, status = ctx.capture2e("git init")
-          raise Domain::Errors::ServiceFailureError, out unless status.success?
+          command_runner.call("git init")
         end
 
         def setup_remote
           repo = extension_point.sdks.rust.package
-          out, status = ctx.capture2e("git remote add -f origin #{repo}")
-          raise Domain::Errors::ServiceFailureError, out unless status.success?
+          command_runner.call("git remote add -f origin #{repo}")
         end
 
         def setup_sparse_checkout
           type = extension_point.type
-          out, status = ctx.capture2e("git config core.sparsecheckout true")
-          raise Domain::Errors::ServiceFailureError, out unless status.success?
-          out, status = ctx.capture2e("echo #{type}/#{SAMPLE_PATH} >> .git/info/sparse-checkout")
-          raise Domain::Errors::ServiceFailureError, out unless status.success?
+          command_runner.call("git config core.sparsecheckout true")
+          command_runner.call("echo #{type}/#{SAMPLE_PATH} >> .git/info/sparse-checkout")
         end
 
         def pull
-          out, status = ctx.capture2e("git pull origin #{ORIGIN_BRANCH}")
-          raise Domain::Errors::ServiceFailureError, out unless status.success?
+          command_runner.call("git pull origin #{ORIGIN_BRANCH}")
         end
 
         def clean

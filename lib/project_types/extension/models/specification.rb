@@ -12,6 +12,7 @@ module Extension
           property! :git_template, converts: :to_str
           property! :required_fields, accepts: Array, default: -> { [] }
           property! :required_shop_beta_flags, accepts: Array, default: -> { [] }
+          property! :cli_package_name, accepts: String, converts: :to_str, default: ""
         end
 
         def self.build(feature_set_attributes)

@@ -40,7 +40,7 @@ module Script
           return resp_hash["data"]["appScriptUpdateOrCreate"]["appScript"]["uuid"] if user_errors.empty?
 
           if user_errors.any? { |e| e["tag"] == "already_exists_error" }
-            raise Errors::ScriptRepushError, api_key
+            raise Errors::ScriptRepushError, uuid
           elsif (e = user_errors.any? { |err| err["tag"] == "config_ui_syntax_error" })
             raise Errors::ConfigUiSyntaxError, config_ui&.filename
           elsif (e = user_errors.find { |err| err["tag"] == "config_ui_missing_keys_error" })

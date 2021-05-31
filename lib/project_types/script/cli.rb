@@ -52,6 +52,7 @@ module Script
         Project.project_filepath("layers/infrastructure/assemblyscript_project_creator")
       autoload :AssemblyScriptTaskRunner, Project.project_filepath("layers/infrastructure/assemblyscript_task_runner")
       autoload :AssemblyScriptTsConfig, Project.project_filepath("layers/infrastructure/assemblyscript_tsconfig")
+      autoload :CommandRunner, Project.project_filepath("layers/infrastructure/command_runner")
       autoload :RustProjectCreator,
         Project.project_filepath("layers/infrastructure/rust_project_creator.rb")
       autoload :RustTaskRunner, Project.project_filepath("layers/infrastructure/rust_task_runner")

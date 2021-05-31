@@ -48,13 +48,7 @@ describe Script::Layers::Infrastructure::AssemblyScriptTaskRunner do
     end
 
     it "should raise an error if the generated web assembly is not found" do
-      File.expects(:read).with("package.json").once.returns(JSON.generate(package_json))
-      ctx
-        .expects(:file_exist?)
-        .with("build/foo.wasm")
-        .once
-        .returns(false)
-
+      ctx.write("package.json", JSON.generate(package_json))
       ctx
         .expects(:capture2e)
         .with("npm run build")
@@ -64,26 +58,37 @@ describe Script::Layers::Infrastructure::AssemblyScriptTaskRunner do
       assert_raises(Script::Layers::Infrastructure::Errors::WebAssemblyBinaryNotFoundError) { subject }
     end
 
-    it "should trigger the compilation process" do
-      wasm = "some compiled code"
-      File.expects(:read).with("package.json").once.returns(JSON.generate(package_json))
-      ctx.expects(:binread).with("build/foo.wasm").once.returns(wasm)
+    describe "success" do
+      def self.it_triggers_compilation_process
+        it("triggers the compilation process") do
+          wasm = "some compiled code"
+          ctx.write("package.json", JSON.generate(package_json))
+          ctx.mkdir_p(File.dirname(wasmfile))
+          ctx.write(wasmfile, wasm)
 
-      ctx
-        .expects(:capture2e)
-        .with("npm run build")
-        .once
-        .returns(["output", mock(success?: true)])
+          ctx
+            .expects(:capture2e)
+            .with("npm run build")
+            .once
+            .returns(["output", mock(success?: true)])
 
-      ctx
-        .expects(:file_exist?)
-        .with("build/foo.wasm")
-        .once
-        .returns(true)
+          assert ctx.file_exist?(wasmfile)
+          assert_equal wasm, subject
+          refute ctx.file_exist?(wasmfile)
+        end
+      end
 
-      ctx.expects("rm").with("build/foo.wasm").once
+      describe "legacy naming" do
+        let(:wasmfile) { "build/#{script_name}.wasm" }
 
-      assert_equal wasm, subject
+        it_triggers_compilation_process
+      end
+
+      describe "new naming" do
+        let(:wasmfile) { "build/script.wasm" }
+
+        it_triggers_compilation_process
+      end
     end
 
     it "should raise error without command output on failure" do
@@ -94,7 +99,7 @@ describe Script::Layers::Infrastructure::AssemblyScriptTaskRunner do
         .stubs(:capture2e)
         .returns([output, mock(success?: false)])
 
-      assert_raises(Script::Layers::Domain::Errors::ServiceFailureError, output) do
+      assert_raises(Script::Layers::Infrastructure::Errors::SystemCallFailureError, output) do
         subject
       end
     end

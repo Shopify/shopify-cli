@@ -6,7 +6,6 @@ module Extension
   module Commands
     class PushTest < MiniTest::Test
       include TestHelpers::FakeUI
-      include ExtensionTestHelpers::Messages
 
       def setup
         super

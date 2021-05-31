@@ -8,6 +8,18 @@ module Theme
             Usage: {{command:%1$s theme [ %2$s ]}}
         HELP
 
+        init: {
+          help: <<~HELP,
+            {{command:%s theme init}}: Clones a Git repository to use as a starting point for building a new theme.
+
+              Usage: {{command:%s theme init [ NAME ]}}
+
+              Options:
+                {{command:-u, --clone-url=URL}} The Git URL to clone from. Defaults to Shopify's example theme, Dawn: https://github.com/Shopify/dawn.git
+          HELP
+          ask_name: "Theme name",
+        },
+
         publish: {
           confirmation: "This will change your live theme. Do you want to continue?",
           deploying: "Deploying theme",
@@ -47,7 +59,7 @@ module Theme
 
               Options:
                 {{command:-i, --themeid=THEMEID}} Theme ID. Must be an existing theme on your store.
-                {{command:-d, --development}}     Push to your own remote development theme, creating it if needed.
+                {{command:-d, --development}}     Push to your remote development theme, and create it if needed.
                 {{command:-u, --unpublished}}     Create a new unpublished theme and push to it.
                 {{command:-n, --nodelete}}        Runs the push command without deleting remote files from Shopify.
                 {{command:-j, --json}}            Output JSON instead of a UI.

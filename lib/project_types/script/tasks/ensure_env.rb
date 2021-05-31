@@ -33,7 +33,9 @@ module Script
 
         orgs = ShopifyCli::PartnersAPI::Organizations.fetch_with_app(ctx)
         if orgs.count == 1
-          orgs.first
+          default = orgs.first
+          ctx.puts(ctx.message("script.application.ensure_env.organization", default["businessName"], default["id"]))
+          default
         elsif orgs.count > 0
           CLI::UI::Prompt.ask(ctx.message("script.application.ensure_env.organization_select")) do |handler|
             orgs.each do |org|
@@ -46,8 +48,14 @@ module Script
       end
 
       def ask_app(apps)
+        unless ShopifyCli::Shopifolk.acting_as_shopify_organization?
+          apps = apps.select { |app| app["appType"] == "custom" }
+        end
+
         if apps.count == 1
-          apps.first
+          default = apps.first
+          ctx.puts(ctx.message("script.application.ensure_env.app", default["title"]))
+          default
         elsif apps.count > 0
           CLI::UI::Prompt.ask(ctx.message("script.application.ensure_env.app_select")) do |handler|
             apps.each do |app|

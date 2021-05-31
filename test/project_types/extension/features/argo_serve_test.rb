@@ -5,140 +5,51 @@ require "project_types/extension/extension_test_helpers"
 module Extension
   module Features
     class ArgoServeTest < MiniTest::Test
-      include TestHelpers::Partners
       include TestHelpers::FakeUI
-      include ExtensionTestHelpers::TempProjectSetup
-
-      ARGO_ADMIN_TEMPLATE = "https://github.com/Shopify/argo-admin.git"
-      ARGO_CHECKOUT_TEMPLATE = "https://github.com/Shopify/argo-checkout.git"
 
       def setup
+        ShopifyCli::ProjectType.load_type(:extension)
         super
-        @api_key = "123abc"
-        @registration_uuid = "dev-123"
-        @argo_version = "0.9.4"
       end
 
-      def test_extensions_that_require_version_have_argo_version_command_line_argument
-        stub_argo_enabled_shop
-        dummy_handler = build_dummy_specification_handler(
-          renderer_package_version: @argo_version,
-          specification: admin_specification
+      def test_argo_serve_defers_to_js_system_when_shopifolk_check_is_false
+        cli = Models::NpmPackage.new(name: "@shopify/argo-admin-cli", version: "0.11.0")
+        renderer = Models::NpmPackage.new(name: "@shopify/argo-admin", version: "0.0.1")
+        argo_runtime = Features::ArgoRuntime.new(cli: cli, renderer: renderer)
+        specification_handler = ExtensionTestHelpers.test_specifications["TEST_EXTENSION"]
+
+        argo_serve = Features::ArgoServe.new(
+          context: @context,
+          argo_runtime: argo_runtime,
+          specification_handler: specification_handler
         )
 
-        ShopifyCli::JsSystem.any_instance
-          .expects(:call)
-          .with do |args|
-            assert_includes args.fetch(:yarn), "--argoVersion=#{@argo_version}"
-            assert_includes args.fetch(:npm), "--argoVersion=#{@argo_version}"
-          end
-          .returns(true)
-          .once
-        ArgoServe.new(specification_handler: dummy_handler, context: @context).call
+        Tasks::FindNpmPackages.expects(:exactly_one_of).returns(ShopifyCli::Result.success(renderer))
+        argo_serve.expects(:validate_env!).once
+        argo_serve.expects(:call_js_system).returns(true).once
+        argo_serve.call
       end
 
-      def test_extension_versions_that_do_not_require_argo_version_do_not_have_argo_version_command_line_arg
-        stub_argo_enabled_shop
-        dummy_handler = build_dummy_specification_handler(
-          renderer_package_version: @argo_version,
-          specification: checkout_specification
-        )
+      def test_argo_serve_defers_to_js_system_for_argo_admin_beta
+        cli = Models::NpmPackage.new(name: "@shopify/argo-admin-cli", version: "0.11.0")
+        renderer = Models::NpmPackage.new(name: "@shopify/argo-admin", version: "0.0.1")
+        argo_runtime = Features::ArgoRuntime.new(cli: cli, renderer: renderer)
+        specification_handler = ExtensionTestHelpers.test_specifications["TEST_EXTENSION"]
 
-        ShopifyCli::JsSystem.any_instance
-          .expects(:call)
-          .with do |args|
-            refute_includes(args.fetch(:yarn), "--argoVersion=#{@argo_version}")
-            refute_includes(args.fetch(:npm), "--argoVersion=#{@argo_version}")
-          end
-          .returns(true)
-          .once
-        ArgoServe.new(specification_handler: dummy_handler, context: @context).call
-      end
-
-      def test_extension_versions_that_support_uuid_have_uuid_command_line_argument
-        skip("Passing the a UUID to the Argo Webpack server is currently not supported")
-
-        stub_argo_enabled_shop
-        dummy_handler = build_dummy_specification_handler(
-          renderer_package_version: @argo_version,
-          specification: admin_specification
-        )
-
-        ShopifyCli::JsSystem.any_instance
-          .expects(:call)
-          .with do |args|
-            assert_includes args.fetch(:yarn), "--uuid=#{@registration_uuid}"
-            assert_includes args.fetch(:npm), "--uuid=#{@registration_uuid}"
-          end
-          .returns(true)
-          .once
-        ArgoServe.new(specification_handler: dummy_handler, context: @context).call
-      end
-
-      def test_extension_versions_that_do_not_support_uuid_do_not_have_uuid_command_line_argument
-        stub_argo_enabled_shop
-        unsupported_argo = "0.9.2"
-        dummy_handler = build_dummy_specification_handler(
-          renderer_package_version: unsupported_argo,
-          specification: admin_specification
-        )
-
-        ShopifyCli::JsSystem.any_instance
-          .expects(:call)
-          .with do |args|
-            refute_includes(args.fetch(:yarn), "--uuid=#{@registration_uuid}")
-            refute_includes(args.fetch(:npm), "--uuid=#{@registration_uuid}")
-          end
-          .returns(true)
-          .once
-        ArgoServe.new(specification_handler: dummy_handler, context: @context).call
-      end
-
-      private
-
-      def mock_specification(surface:, git_template:, renderer_package_name:, required_fields: [], betas: [])
-        {
-          identifier: "test",
-          features: {
-            argo: {
-              surface: surface,
-              git_template: git_template,
-              renderer_package_name: renderer_package_name,
-              required_fields: required_fields,
-              required_shop_beta_flags: betas,
-            },
-          },
-        }
-      end
-
-      def checkout_specification
-        mock_specification(surface: "checkout", git_template: ARGO_CHECKOUT_TEMPLATE,
-renderer_package_name: "@shopify/argo-checkout")
-      end
-
-      def admin_specification
-        mock_specification(surface: "admin", git_template: ARGO_ADMIN_TEMPLATE,
-renderer_package_name: "@shopify/argo-admin")
-      end
-
-      def stub_argo_enabled_shop(api_key: @api_key, registration_uuid: @registration_uuid, _argo_version: @argo_version)
-        ShopifyCli::Shopifolk.stubs(:check).returns(true)
-        ShopifyCli::Feature.stubs(:enabled?).with(:argo_admin_beta).returns(true)
         ShopifyCli::Tasks::EnsureEnv.stubs(:call)
         ShopifyCli::Tasks::EnsureDevStore.stubs(:call)
-        setup_temp_project(api_key: api_key, registration_uuid: registration_uuid)
-      end
 
-      def build_dummy_specification_handler(renderer_package_version:, specification:)
-        dummy_specification = Extension::Models::Specification.new(specification)
-        dummy_handler = Extension::Models::SpecificationHandlers::Default.new(dummy_specification)
-        dummy_handler.stubs(:renderer_package).returns(
-          Extension::Features::ArgoRendererPackage.new(
-            package_name: dummy_specification.features.argo.renderer_package_name,
-            version: renderer_package_version
-          )
+        argo_serve = Features::ArgoServe.new(
+          context: @context,
+          argo_runtime: argo_runtime,
+          specification_handler: specification_handler,
+          beta_access: [:argo_admin_beta]
         )
-        dummy_handler
+
+        Tasks::FindNpmPackages.expects(:exactly_one_of).returns(ShopifyCli::Result.success(renderer))
+
+        argo_serve.expects(:call_js_system).returns(true).once
+        argo_serve.call
       end
     end
   end

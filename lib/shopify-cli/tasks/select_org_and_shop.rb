@@ -32,14 +32,16 @@ module ShopifyCli
         @organization ||= if !organization_id.nil?
           org = ShopifyCli::PartnersAPI::Organizations.fetch(ctx, id: organization_id)
           if org.nil?
-            ctx.puts(ctx.message("core.tasks.select_org_and_shop.error.authentication_issue", ShopifyCli::TOOL_NAME))
+            ctx.puts(ctx.message("core.tasks.select_org_and_shop.authentication_issue", ShopifyCli::TOOL_NAME))
             ctx.abort(ctx.message("core.tasks.select_org_and_shop.error.organization_not_found"))
           end
           org
         elsif organizations.count == 0
-          ctx.puts(ctx.message("core.tasks.select_org_and_shop.error.partners_notice"))
-          ctx.puts(ctx.message("core.tasks.select_org_and_shop.authentication_issue", ShopifyCli::TOOL_NAME))
-          ctx.abort(ctx.message("core.tasks.select_org_and_shop.error.no_organizations"))
+          if Shopifolk.acting_as_shopify_organization?
+            ctx.abort(ctx.message("core.tasks.select_org_and_shop.error.shopifolk_notice", ShopifyCli::TOOL_NAME))
+          else
+            ctx.abort(ctx.message("core.tasks.select_org_and_shop.error.no_organizations"))
+          end
         elsif organizations.count == 1
           org = organizations.first
           ctx.puts(ctx.message("core.tasks.select_org_and_shop.organization", org["businessName"], org["id"]))

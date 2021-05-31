@@ -5,7 +5,6 @@ module Extension
     module Questions
       class AskNameTest < MiniTest::Test
         include TestHelpers
-        include TestHelpers::FakeUI
 
         def setup
           super

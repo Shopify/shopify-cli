@@ -14,12 +14,15 @@ describe Script::Tasks::EnsureEnv do
     let(:script_project_repository) { TestHelpers::FakeScriptProjectRepository.new }
 
     subject do
-      Script::Tasks::EnsureEnv.call(context)
+      result = nil
+      capture_io { result = Script::Tasks::EnsureEnv.call(context) }
+      result
     end
 
     before do
       context.output_captured = true
       ShopifyCli::Shopifolk.stubs(:check).returns(is_shopifolk)
+      ShopifyCli::Shopifolk.stubs(:acting_as_shopify_organization?).returns(false)
       Script::Layers::Infrastructure::ScriptProjectRepository.stubs(:new).returns(script_project_repository)
       script_project_repository.create(
         language: language,
@@ -44,11 +47,12 @@ describe Script::Tasks::EnsureEnv do
     end
 
     describe "when env is not yet valid" do
-      def new_app(title, api_key, secret)
+      def new_app(title, api_key, secret, app_type = "custom")
         {
           "title" => title,
           "apiKey" => api_key,
           "apiSecretKeys" => [{ "secret" => secret }],
+          "appType" => app_type,
         }
       end
 
@@ -105,10 +109,16 @@ describe Script::Tasks::EnsureEnv do
           end
 
           describe("when number of orgs == 1") do
-            let(:orgs) { [new_org(1, "business1")] }
+            let(:org_id) { 1 }
+            let(:org_name) { "business1" }
+            let(:orgs) { [new_org(org_id, org_name)] }
             let(:selected_org) { orgs_with_apps.first }
 
             it("selects the org by default") do
+              selected_org_msg = context.message("script.application.ensure_env.organization", org_name, org_id)
+              context.expects(:puts).with(selected_org_msg)
+              context.stubs(:puts).with(Not(equals(selected_org_msg)))
+
               assert_equal selected_api_key, subject.env.api_key
               assert_equal selected_secret, subject.env.secret
               assert_nil subject.env.extra["UUID"]
@@ -139,12 +149,25 @@ describe Script::Tasks::EnsureEnv do
             end
           end
 
+          describe("when there is 1 public app") do
+            let(:apps) { new_app("app1", "1", "1", "public") }
+
+            it("raises NoExistingAppsError") do
+              assert_raises(Script::Errors::NoExistingAppsError) { subject }
+            end
+          end
+
           describe("when number of apps == 1") do
+            let(:app_title) { "app1" }
             let(:apps) { [new_app("app1", selected_api_key, selected_secret)] }
             let(:selected_api_key) { "selected_api_key" }
             let(:selected_secret) { "selected_secret" }
 
             it("selects the app by default") do
+              selected_app_msg = context.message("script.application.ensure_env.app", app_title)
+              context.expects(:puts).with(selected_app_msg)
+              context.stubs(:puts).with(Not(equals(selected_app_msg)))
+
               expect_new_env
             end
           end

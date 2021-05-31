@@ -74,15 +74,17 @@ module ShopifyCli
       def test_it_will_fail_if_no_orgs_are_available
         ShopifyCli::PartnersAPI::Organizations.expects(:fetch_all).with(@context).returns([])
 
-        assert_raises ShopifyCli::Abort do
-          io = capture_io do
-            form = call(org_id: nil, shop: nil)
-            assert_nil(form)
-          end
-          assert_match(@context.message("core.tasks.select_org_and_shop.error.partners_notice"), io.join)
-          assert_match(@context.message("core.tasks.select_org_and_shop.authentication_issue", ShopifyCli::TOOL_NAME),
-            io.join)
+        form = nil
+        io = capture_io_and_assert_raises(ShopifyCli::Abort) do
+          form = call(org_id: nil, shop: nil)
         end
+        assert_nil(form)
+        assert_message_output(
+          io: io,
+          expected_content: [
+            @context.message("core.tasks.select_org_and_shop.error.no_organizations"),
+          ]
+        )
       end
 
       def test_returns_no_shop_if_none_are_available

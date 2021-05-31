@@ -111,7 +111,6 @@ module ShopifyCli
   autoload :JsDeps, "shopify-cli/js_deps"
   autoload :JsSystem, "shopify-cli/js_system"
   autoload :LazyDelegator, "shopify-cli/lazy_delegator"
-  autoload :Log, "shopify-cli/log"
   autoload :MethodObject, "shopify-cli/method_object"
   autoload :Options, "shopify-cli/options"
   autoload :PartnersAPI, "shopify-cli/partners_api"

@@ -42,12 +42,52 @@ module Extension
           []
         end
 
-        def serve(context)
-          Features::ArgoServe.new(specification_handler: self, context: context).call
+        def choose_port?(context)
+          argo_runtime(context).accepts_port?
+        end
+
+        def establish_tunnel?(context)
+          argo_runtime(context).accepts_tunnel_url?
+        end
+
+        def serve(context:, port:, tunnel_url:)
+          Features::ArgoServe.new(
+            specification_handler: self,
+            argo_runtime: argo_runtime(context),
+            context: context,
+            port: port,
+            tunnel_url: tunnel_url,
+            beta_access: beta_access
+          ).call
         end
 
         def renderer_package(context)
           argo.renderer_package(context)
+        end
+
+        def argo_runtime(context)
+          @argo_runtime ||= Features::ArgoRuntime.new(
+            renderer: renderer_package(context),
+            cli: cli_package(context),
+            beta_access: beta_access
+          )
+        end
+
+        def beta_access
+          argo_admin_beta? ? [:argo_admin_beta] : []
+        end
+
+        def argo_admin_beta?
+          ShopifyCli::Shopifolk.check && ShopifyCli::Feature.enabled?(:argo_admin_beta)
+        end
+
+        def cli_package(context)
+          cli_package_name = specification.features.argo&.cli_package_name
+          return unless cli_package_name
+
+          js_system = ShopifyCli::JsSystem.new(ctx: context)
+          Tasks::FindNpmPackages.exactly_one_of(cli_package_name, js_system: js_system)
+            .unwrap { |_e| context.abort(context.message("errors.package_not_found", cli_package_name)) }
         end
 
         protected
@@ -55,7 +95,7 @@ module Extension
         def argo
           Features::Argo.new(
             git_template: specification.features.argo.git_template,
-            renderer_package_name: specification.features.argo.renderer_package_name,
+            renderer_package_name: specification.features.argo.renderer_package_name
           )
         end
 

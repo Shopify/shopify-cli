@@ -42,7 +42,7 @@ module Extension
         ask_app: "Which app would you like to register this extension with?",
         no_apps: "{{x}} You don’t have any apps.",
         learn_about_apps: "{{*}} Learn more about building apps at <https://shopify.dev/concepts/apps>, " \
-          "or try creating a new app using {{command:shopify [ extension | node | rails | script ] create}}.",
+          "or try creating a new app using {{command:shopify [node|rails] create}}.",
         loading_apps: "Loading your apps...",
         no_available_extensions: "{{x}} There are no available extensions for this app.",
       },
@@ -87,10 +87,14 @@ module Extension
         help: <<~HELP,
           Serve your extension in a local simulator for development.
             Usage: {{command:%s extension serve}}
+            Options:
+            {{command:--tunnel=TUNNEL}} Establish an ngrok tunnel (default: false)
         HELP
         frame_title: "Serving extension...",
+        no_available_ports_found: "No available ports found to run extension.",
         serve_failure_message: "Failed to run extension code.",
         serve_missing_information: "Missing shop or api_key.",
+        tunnel_already_running: "A tunnel running on another port has been detected. Close the tunnel and try again.",
       },
       tunnel: {
         missing_token: "{{x}} {{red:auth requires a token argument}}. "\
@@ -148,6 +152,7 @@ module Extension
       },
       errors: {
         unknown_type: "Unknown extension type %s",
+        package_not_found: "`%s` package not found.",
       },
     }
 
@@ -164,8 +169,8 @@ module Extension
       checkout_post_purchase: {
         name: "Checkout Post Purchase",
       },
-      theme_app_extension: {
-        name: "Theme App Extension",
+      online_store_theme_extension: {
+        name: "Online Store App Extension",
         tagline: "(limit 1 per app)",
         overrides: {
           register: {

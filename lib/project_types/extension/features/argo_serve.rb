@@ -4,34 +4,64 @@ module Extension
       include SmartProperties
 
       property! :specification_handler, accepts: Extension::Models::SpecificationHandlers::Default
+      property! :argo_runtime, accepts: Features::ArgoRuntime
       property! :context, accepts: ShopifyCli::Context
-
-      YARN_SERVE_COMMAND = %w(server)
-      NPM_SERVE_COMMAND = %w(run-script server)
+      property! :port, accepts: Integer, default: 39351
+      property  :tunnel_url, accepts: String, default: ""
+      property :beta_access, accepts: Array, default: -> { [] }
 
       def call
         validate_env!
 
         CLI::UI::Frame.open(context.message("serve.frame_title")) do
-          success = ShopifyCli::JsSystem.call(context, yarn: yarn_serve_command, npm: npm_serve_command)
+          success = call_js_system(yarn_command: yarn_serve_command, npm_command: npm_serve_command)
           context.abort(context.message("serve.serve_failure_message")) unless success
         end
       end
 
       private
 
+      def call_js_system(yarn_command:, npm_command:)
+        ShopifyCli::JsSystem.call(context, yarn: yarn_command, npm: npm_command)
+      end
+
       def specification
         specification_handler.specification
+      end
+
+      def renderer_package
+        specification_handler.renderer_package(context)
+      end
+
+      def required_fields
+        specification.features.argo.required_fields
+      end
+
+      def serve_options
+        @options ||= Features::ArgoServeOptions.new(
+          argo_runtime: argo_runtime,
+          port: port,
+          context: context,
+          required_fields: required_fields,
+          renderer_package: renderer_package,
+          public_url: tunnel_url
+        )
+      end
+
+      def yarn_serve_command
+        serve_options.yarn_serve_command
+      end
+
+      def npm_serve_command
+        serve_options.npm_serve_command
       end
 
       def validate_env!
         ExtensionProject.reload
 
-        ShopifyCli::Shopifolk.check && ShopifyCli::Feature.enabled?(:argo_admin_beta)
-
-        required_fields = specification.features.argo.required_fields
-
         return if required_fields.none?
+
+        return unless beta_access.include?(:argo_admin_beta)
 
         ShopifyCli::Tasks::EnsureEnv.call(context, required: required_fields)
         ShopifyCli::Tasks::EnsureDevStore.call(context) if required_fields.include?(:shop)
@@ -44,25 +74,6 @@ module Extension
         end
 
         context.abort(context.message("serve.serve_missing_information"))
-      end
-
-      def yarn_serve_command
-        YARN_SERVE_COMMAND + serve_options(specification.features.argo.required_fields)
-      end
-
-      def npm_serve_command
-        NPM_SERVE_COMMAND + ["--"] + serve_options(specification.features.argo.required_fields)
-      end
-
-      def serve_options(required_fields)
-        renderer_package = specification_handler.renderer_package(context)
-        project = ExtensionProject.current
-        @serve_options ||= [].tap do |options|
-          options << "--shop=#{project.env.shop}" if required_fields.include?(:shop)
-          options << "--apiKey=#{project.env.api_key}" if required_fields.include?(:api_key)
-          options << "--argoVersion=#{renderer_package.version}" if renderer_package.admin?
-          options << "--uuid=#{project.registration_uuid}" if renderer_package.supports_uuid_flag?
-        end
       end
     end
   end

@@ -150,6 +150,7 @@ module ShopifyCli
           location: {
             admin: "development store",
             partner: "Shopify Partners account",
+            shopifolk: "{{green:Shopify Employee account}}",
           },
           authentication_required:
             "{{i}} Authentication required. Login to the URL below with your %s credentials to continue.",
@@ -374,7 +375,10 @@ module ShopifyCli
               no_development_stores: "{{x}} No Development Stores available.",
               no_organizations: "No partner organizations available.",
               organization_not_found: "Cannot find a partner organization with that ID",
-              partners_notice: "Please visit https://partners.shopify.com/ to create a partners account",
+              shopifolk_notice: <<~MESSAGE,
+                {{i}} As a {{green:Shopify}} employee, the authentication should take you to the Shopify Okta login,
+                NOT the Partner account login. Please run {{command:%s logout}} and try again.
+              MESSAGE
             },
             first_party: "Are you working on a {{green:Shopify project}} on behalf of the"\
               " {{green:Shopify partners org}}?",

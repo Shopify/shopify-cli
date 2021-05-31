@@ -83,8 +83,8 @@ module Script
 
           script_not_found_cause: "Couldn't find script %s for extension point %s",
 
-          service_failure_cause: "Internal service error.",
-          service_failure_help: "Ensure the 'shopify/scripts-toolchain-as' package is up to date.",
+          system_call_failure_cause: "An error was returned while running {{command:%{cmd}}}.",
+          system_call_failure_help: "Review the following error and try again.\n{{red:%{out}}}",
 
           metadata_validation_cause: "Invalid script extension metadata.",
           metadata_validation_help: "Ensure the 'shopify/scripts-toolchain-as' package is up to date.",
@@ -118,7 +118,7 @@ module Script
           graphql_error_cause: "An error was returned: %s.",
           graphql_error_help: "\nReview the error and try again.",
 
-          script_repush_cause: "A script with the same extension point already exists on app (API key: %s).",
+          script_repush_cause: "A script with this UUID already exists (UUID: %s).",
           script_repush_help: "Use {{cyan:--force}} to replace the existing script.",
 
           shop_auth_cause: "Unable to authenticate with the store.",
@@ -198,9 +198,11 @@ module Script
           enabling: "Enabling",
           enabled: "Enabled",
           ensure_env: {
+            organization: "Partner organization {{green:%s (%s)}}.",
             organization_select: "Which partner organization do you want to use?",
+            app: "Script will be pushed to app {{green:%s}}.",
             app_select: "Which app do you want to push this script to?",
-            ask_connect_to_existing_script: "This app has some scripts. Do you want to replace any of the "\
+            ask_connect_to_existing_script: "The selected app has some scripts. Do you want to replace any of the "\
               "existing scripts with the current script?",
             ask_which_script_to_connect_to: "Which script do you want to replace?",
           },
