@@ -33,6 +33,7 @@ module Extension
     autoload :UpdateDraft, Project.project_filepath("tasks/update_draft")
     autoload :FetchSpecifications, Project.project_filepath("tasks/fetch_specifications")
     autoload :ConfigureFeatures, Project.project_filepath("tasks/configure_features")
+    autoload :ConfigureOptions, Project.project_filepath("tasks/configure_options")
     autoload :ChooseNextAvailablePort, Project.project_filepath("tasks/choose_next_available_port")
     autoload :FindNpmPackages, Project.project_filepath("tasks/find_npm_packages")
 
@@ -84,4 +85,5 @@ module Extension
 
   autoload :ExtensionProjectKeys, Project.project_filepath("extension_project_keys")
   autoload :ExtensionProject, Project.project_filepath("extension_project")
+  autoload :Errors, Project.project_filepath("errors")
 end
