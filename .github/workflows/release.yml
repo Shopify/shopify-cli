@@ -19,6 +19,9 @@ jobs:
       with:
         ruby-version: 2.6
     
+    - name: Update bundler
+      run: gem install bundler:2.1.4
+
     - name: Install dependencies
       run: bundle install
 
