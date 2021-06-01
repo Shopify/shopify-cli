@@ -41,7 +41,7 @@ module ShopifyCli
         end
 
         ShopifyCli::Tasks::ConfirmStore.call(@ctx) unless @skip_shop_confirmation
-        @shop = AdminAPI.get_shop(@ctx)
+        @shop = AdminAPI.get_shop_or_abort(@ctx)
         if @silent
           spin_group = CLI::UI::SpinGroup.new
           spin_group.add(@ctx.message("core.populate.populating", @count, camel_case_resource_type)) do |spinner|

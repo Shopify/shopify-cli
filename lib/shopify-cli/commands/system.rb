@@ -62,7 +62,7 @@ module ShopifyCli
 
       def display_shopify_store(_show_all_details)
         shop = if ShopifyCli::DB.exists?(:shop)
-          ShopifyCli::AdminAPI.get_shop(@ctx)
+          ShopifyCli::AdminAPI.get_shop_or_abort(@ctx)
         else
           @ctx.message("core.populate.error.no_shop", ShopifyCli::TOOL_NAME)
         end
