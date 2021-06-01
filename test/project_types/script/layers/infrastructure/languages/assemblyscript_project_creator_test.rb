@@ -2,7 +2,7 @@
 
 require "project_types/script/test_helper"
 
-describe Script::Layers::Infrastructure::AssemblyScriptProjectCreator do
+describe Script::Layers::Infrastructure::Languages::AssemblyScriptProjectCreator do
   include TestHelpers::FakeFS
 
   let(:script_name) { "myscript" }
@@ -12,7 +12,7 @@ describe Script::Layers::Infrastructure::AssemblyScriptProjectCreator do
   let(:extension_point_type) { "discount" }
   let(:extension_point) { Script::Layers::Domain::ExtensionPoint.new(extension_point_type, extension_point_config) }
   let(:project_creator) do
-    Script::Layers::Infrastructure::AssemblyScriptProjectCreator
+    Script::Layers::Infrastructure::Languages::AssemblyScriptProjectCreator
       .new(ctx: context, extension_point: extension_point, script_name: script_name, path_to_project: script_name)
   end
   let(:extension_point_config) do

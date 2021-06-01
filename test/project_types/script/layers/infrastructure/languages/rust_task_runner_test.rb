@@ -2,7 +2,7 @@
 
 require "project_types/script/test_helper"
 
-describe Script::Layers::Infrastructure::RustTaskRunner do
+describe Script::Layers::Infrastructure::Languages::RustTaskRunner do
   include TestHelpers::FakeFS
   let(:ctx) { TestHelpers::FakeContext.new }
   let(:script_id) { "id" }
@@ -17,7 +17,7 @@ describe Script::Layers::Infrastructure::RustTaskRunner do
   end
   let(:extension_point_type) { "payment_filter" }
   let(:language) { "rust" }
-  let(:rs_task_runner) { Script::Layers::Infrastructure::RustTaskRunner.new(ctx, script_name) }
+  let(:rs_task_runner) { Script::Layers::Infrastructure::Languages::RustTaskRunner.new(ctx, script_name) }
 
   def system_output(msg:, success:)
     [msg, OpenStruct.new(success?: success)]

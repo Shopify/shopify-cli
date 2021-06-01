@@ -34,7 +34,7 @@ describe Script::Layers::Application::PushScript do
     Script::Layers::Infrastructure::PushPackageRepository.stubs(:new).returns(push_package_repository)
     Script::Layers::Infrastructure::ExtensionPointRepository.stubs(:new).returns(extension_point_repository)
     Script::Layers::Infrastructure::ScriptProjectRepository.stubs(:new).returns(script_project_repository)
-    Script::Layers::Infrastructure::TaskRunner
+    Script::Layers::Infrastructure::Languages::TaskRunner
       .stubs(:for)
       .with(@context, language, script_name)
       .returns(task_runner)
