@@ -137,7 +137,7 @@ module ShopifyCli
               Usage: {{command:%s switch}}
           HELP
 
-          success: "Switched your development store {{green:%s}}",
+          success: "Switched your development store to {{green:%s}}",
         },
 
         monorail: {
