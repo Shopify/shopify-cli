@@ -134,7 +134,7 @@ module ShopifyCli
         switch: {
           help: <<~HELP,
             Switch development stores
-              Usage: {{command:%s switch}}
+              Usage: {{command:%s switch [--shop=SHOP]}}
           HELP
 
           success: "Switched your development store to {{green:%s}}",
