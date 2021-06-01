@@ -20,9 +20,6 @@ jobs:
         ruby-version: 2.6
         bundler-cache: true
 
-    - name: Install dependencies
-      run: bundle install
-
     - name: Create package
       run: bundle exec rake package
 
