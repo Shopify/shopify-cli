@@ -133,11 +133,11 @@ module ShopifyCli
 
         switch: {
           help: <<~HELP,
-            Switch development stores
+            Switch between development stores in your Partner organization
               Usage: {{command:%s switch [--shop=SHOP]}}
           HELP
 
-          success: "Switched your development store to {{green:%s}}",
+          success: "Switched development store to {{green:%s}}",
         },
 
         monorail: {

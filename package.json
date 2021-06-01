@@ -1,0 +1,25 @@
+{
+  "name": "shopify-cli-internal",
+  "version": "1.0.0",
+  "description": "[![License: MIT](https://img.shields.io/badge/License-MIT-green.svg)](LICENSE.md) [![Build Status](https://github.com/Shopify/shopify-cli-internal/workflows/CI/badge.svg)](https://github.com/Shopify/shopify-cli-internal/actions)",
+  "main": "index.js",
+  "directories": {
+    "doc": "docs",
+    "lib": "lib",
+    "test": "test"
+  },
+  "scripts": {
+    "test": "echo \"Error: no test specified\" && exit 1"
+  },
+  "repository": {
+    "type": "git",
+    "url": "git+https://github.com/Shopify/shopify-cli-internal.git"
+  },
+  "keywords": [],
+  "author": "",
+  "license": "ISC",
+  "bugs": {
+    "url": "https://github.com/Shopify/shopify-cli-internal/issues"
+  },
+  "homepage": "https://github.com/Shopify/shopify-cli-internal#readme"
+}
