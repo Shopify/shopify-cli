@@ -15,7 +15,7 @@ module ShopifyCli
             .with(@context.message("core.tasks.confirm_store.prompt", "my-test-shop.myshopify.com"), default: false)
             .returns(true)
           ShopifyCli::AdminAPI.expects(:query)
-            .with(@context, "create_customer", shop: "my-test-shop.myshopify.com", api_version: "2021-01", input: {
+            .with(@context, "create_customer", shop: "my-test-shop.myshopify.com", input: {
               firstName: "first",
               lastName: "last",
             })
