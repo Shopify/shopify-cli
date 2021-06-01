@@ -1,4 +1,4 @@
-*       @shopify/platform-dev-tools-education
+*       @shopify/core-build-learn
 
 /lib/project_types/script/ @shopify/scripts-experience
 /test/project_types/script/ @shopify/scripts-experience
