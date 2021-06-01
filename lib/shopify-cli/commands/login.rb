@@ -25,7 +25,7 @@ module ShopifyCli
           end
         end
         shop = (options.flags[:shop] || @ctx.getenv("SHOPIFY_SHOP") || nil)
-        ShopifyCli::DB.set(shop: validate_shop(shop)) unless shop.nil?
+        ShopifyCli::DB.set(shop: self.class.validate_shop(shop)) unless shop.nil?
 
         # As password auth will soon be deprecated, we enable only in CI
         if @ctx.ci? && (password = options.flags[:password] || @ctx.getenv("SHOPIFY_PASSWORD"))
@@ -39,7 +39,7 @@ module ShopifyCli
         ShopifyCli::Context.message("core.login.help", ShopifyCli::TOOL_NAME)
       end
 
-      def validate_shop(shop)
+      def self.validate_shop(shop)
         @ctx.abort(@ctx.message("core.login.invalid_shop", shop)) unless shop.match(SHOP_REGEX)
         shop
       end

@@ -11,7 +11,7 @@ module ShopifyCli
 
       def call(*)
         shop = if options.flags[:shop]
-          Login.new.validate_shop(options.flags[:shop])
+          Login.validate_shop(options.flags[:shop])
         else
           AdminAPI.get_shop_or_abort(@ctx)
           res = ShopifyCli::Tasks::SelectOrgAndShop.call(@ctx)
