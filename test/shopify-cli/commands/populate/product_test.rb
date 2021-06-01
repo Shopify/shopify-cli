@@ -18,13 +18,13 @@ module ShopifyCli
           ShopifyCli::AdminAPI::PopulateResourceCommand.any_instance.stubs(:price).returns("1.00")
           return_data = JSON.parse(File.read(File.join(FIXTURE_DIR, "populate/product_data.json")))
           ShopifyCli::AdminAPI.expects(:query)
-            .with(@context, "create_product", shop: "my-test-shop.myshopify.com", api_version: "2021-01", input: {
+            .with(@context, "create_product", shop: "my-test-shop.myshopify.com", input: {
               'title': "fake product",
               variants: [{ price: "1.00" }],
             })
             .returns(return_data)
           ShopifyCli::AdminAPI.expects(:query)
-            .with(@context, "create_product", shop: "my-test-shop.myshopify.com", api_version: "2021-01", input: {
+            .with(@context, "create_product", shop: "my-test-shop.myshopify.com", input: {
               'title': "fake producttwo",
               variants: [{ price: "1.00" }],
             })

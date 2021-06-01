@@ -116,7 +116,6 @@ module ShopifyCli
       def run_mutation(data)
         kwargs = { input: data }
         kwargs[:shop] = @shop
-        kwargs[:api_version] = "2021-01"
         resp = AdminAPI.query(
           @ctx, "create_#{snake_case_resource_type}", **kwargs
         )
