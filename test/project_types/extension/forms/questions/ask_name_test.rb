@@ -25,6 +25,18 @@ module Extension
           end
         end
 
+        def test_does_not_prompt_for_name_for_theme_app_extensions
+          project_details = OpenStruct.new(
+            type: OpenStruct.new(
+              identifier: "THEME_APP_EXTENSION",
+            )
+          )
+
+          AskName.new(ctx: context, prompt: ->(_msg) { "Not the name" }).call(project_details).tap do |result|
+            assert_equal("theme-app-extension", result.value.name)
+          end
+        end
+
         def test_reprompt_until_valid_name
           retries = (1..5).to_a.sample
           reprompter = Reprompt.new(retries)
