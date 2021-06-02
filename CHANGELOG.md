@@ -1,5 +1,6 @@
 Unreleased
 ------
+* [1265](https://github.com/Shopify/shopify-app-cli/pull/1265): Fix bug where commands hang after an unsuccessful authentication
 
 Version 1.12.0
 --------------
