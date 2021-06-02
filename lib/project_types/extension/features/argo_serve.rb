@@ -8,7 +8,6 @@ module Extension
       property! :context, accepts: ShopifyCli::Context
       property! :port, accepts: Integer, default: 39351
       property  :tunnel_url, accepts: String, default: ""
-      property :beta_access, accepts: Array, default: -> { [] }
 
       def call
         validate_env!
