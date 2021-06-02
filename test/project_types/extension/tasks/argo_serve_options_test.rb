@@ -24,7 +24,6 @@ renderer_package: argo_admin)
         argo_runtime = setup_argo_runtime(
           renderer_package: argo_admin,
           version: "0.11.0",
-          beta_access: [:argo_admin_beta]
         )
 
         options = Features::ArgoServeOptions.new(argo_runtime: argo_runtime, context: @context,
@@ -39,7 +38,6 @@ renderer_package: argo_admin)
         argo_runtime = setup_argo_runtime(
           renderer_package: argo_admin,
           version: "0.11.0",
-          beta_access: [:argo_admin_beta]
         )
 
         options = Features::ArgoServeOptions.new(argo_runtime: argo_runtime, context: @context,
@@ -94,10 +92,10 @@ renderer_package: argo_admin)
         )
       end
 
-      def setup_argo_runtime(renderer_package:, version:, cli_package_name: "@shopify/argo-admin-cli", beta_access: [])
+      def setup_argo_runtime(renderer_package:, version:, cli_package_name: "@shopify/argo-admin-cli")
         cli = Models::NpmPackage.new(name: cli_package_name, version: version)
 
-        Features::ArgoRuntime.new(renderer: renderer_package, cli: cli, beta_access: beta_access)
+        Features::ArgoRuntime.new(renderer: renderer_package, cli: cli)
       end
     end
   end

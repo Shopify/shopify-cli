@@ -61,8 +61,6 @@ module Extension
 
         return if required_fields.none?
 
-        return unless beta_access.include?(:argo_admin_beta)
-
         ShopifyCli::Tasks::EnsureEnv.call(context, required: required_fields)
         ShopifyCli::Tasks::EnsureDevStore.call(context) if required_fields.include?(:shop)
 

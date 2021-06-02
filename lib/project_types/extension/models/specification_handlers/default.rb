@@ -74,11 +74,7 @@ module Extension
         end
 
         def beta_access
-          argo_admin_beta? ? [:argo_admin_beta] : []
-        end
-
-        def argo_admin_beta?
-          ShopifyCli::Shopifolk.check && ShopifyCli::Feature.enabled?(:argo_admin_beta)
+          []
         end
 
         def cli_package(context)
