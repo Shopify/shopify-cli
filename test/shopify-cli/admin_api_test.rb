@@ -110,5 +110,31 @@ module ShopifyCli
         @context, "query", shop: "other-test-shop.myshopify.com", api_version: "2019-04"
       )
     end
+
+    def test_query_fails_gracefully_when_unable_to_authenticate
+      ShopifyCli::DB.expects(:get).with(:admin_access_token).returns("token123").twice
+      api_stub = stub
+      AdminAPI.expects(:new).with(
+        ctx: @context,
+        auth_header: "X-Shopify-Access-Token",
+        token: "token123",
+        url: "https://shop.myshopify.com/admin/api/2019-04/graphql.json",
+      ).returns(api_stub).twice
+      api_stub.expects(:query).raises(API::APIRequestUnauthorizedError).twice
+
+      @oauth_client = mock
+      ShopifyCli::OAuth.expects(:new).returns(@oauth_client)
+      @oauth_client.expects(:authenticate).with("https://shop.myshopify.com/admin/oauth")
+
+      io = capture_io_and_assert_raises(ShopifyCli::Abort) do
+        AdminAPI.query(@context, "query", shop: "shop.myshopify.com", api_version: "2019-04")
+      end
+      assert_message_output(
+        io: io,
+        expected_content: [
+          @context.message("core.api.error.failed_auth"),
+        ]
+      )
+    end
   end
 end

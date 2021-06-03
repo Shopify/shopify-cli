@@ -46,6 +46,33 @@ module ShopifyCli
       PartnersAPI.query(@context, "query")
     end
 
+    def test_query_fails_gracefully_when_unable_to_authenticate
+      Shopifolk.stubs(:check).returns(false)
+      ShopifyCli::DB.expects(:get).with(:identity_exchange_token).returns("token123").twice
+
+      api_stub = stub
+      PartnersAPI.expects(:new).with(
+        ctx: @context,
+        token: "token123",
+        url: "https://partners.shopify.com/api/cli/graphql",
+      ).returns(api_stub).twice
+      api_stub.expects(:query).raises(API::APIRequestUnauthorizedError).twice
+
+      @oauth_client = mock
+      ShopifyCli::OAuth.expects(:new).returns(@oauth_client)
+      @oauth_client.expects(:authenticate).with("https://accounts.shopify.com/oauth")
+
+      io = capture_io_and_assert_raises(ShopifyCli::Abort) do
+        PartnersAPI.query(@context, "query")
+      end
+      assert_message_output(
+        io: io,
+        expected_content: [
+          @context.message("core.api.error.failed_auth"),
+        ]
+      )
+    end
+
     def test_query_fails_gracefully_without_partners_account
       ShopifyCli::DB.expects(:get).with(:identity_exchange_token).returns("token123")
       api_stub = stub
