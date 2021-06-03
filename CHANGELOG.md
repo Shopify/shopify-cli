@@ -12,6 +12,7 @@ Version 1.11.0
 * [#1225](https://github.com/Shopify/shopify-app-cli/pull/1225): Improved handling of "account not found" scenario, plus improvements to related tests and UX messaging
 * [#1229](https://github.com/Shopify/shopify-app-cli/pull/1229): Allows Checkout Extensions to specify configuration attributes in their extension.config.yml file.
 * [#1238](https://github.com/Shopify/shopify-app-cli/pull/1238): Auto Tunnel Support for Checkout Extension
+* [#1256](https://github.com/Shopify/shopify-app-cli/pull/1256): Allow using spaces around the equal sign on .env file.
 
 Version 1.10.0
 --------------
