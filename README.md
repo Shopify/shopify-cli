@@ -1,46 +1,111 @@
-# [Shopify CLI](https://shopify.dev/tools/cli)
+# Shopify CLI
 
 [![License: MIT](https://img.shields.io/badge/License-MIT-green.svg)](LICENSE.md)
-[![Build Status](https://github.com/Shopify/shopify-cli-internal/workflows/CI/badge.svg)](https://github.com/Shopify/shopify-cli-internal/actions)
+[![Build Status](https://github.com/Shopify/shopify-cli/workflows/CI/badge.svg)](https://github.com/Shopify/shopify-cli/actions)
 
-Shopify CLI helps you build Shopify apps faster. It quickly generates Node.js and Ruby on Rails apps and automates many common development tasks.
 
-## Features
+Shopify CLI helps you build Shopify themes and apps. Use the Shopify CLI to automate and enhance your local development workflow.
 
-Shopify CLI helps your app development process in the following ways:
+The Shopify CLI is available as a gem and can be run and installed on Mac, Linux and Windows systems. 
 
-- Creates an app in the [Partner dashboard](https://partners.shopify.com/current/resources)
-- Populates test data for your app, including products, customers, and draft orders
-- Generates new [webhooks](https://shopify.dev/tutorials/manage-webhooks) for your app
-- Deploys your app to an external platform, such as [Heroku](https://www.heroku.com/)
+## Installation for Mac OS Users
 
-## Installation
+- Make sure you have [Homebrew](https://brew.sh/) installed
+- Open your terminal app
+- Run `brew tap shopify/shopify`
+- Run `brew install shopify-cli`
+- After the installation is completed, run `shopify version`, if this outputs a version number you've successfully installed the CLI.
 
-Refer to [*Install Shopify CLI*](https://shopify.dev/tools/cli/installation) to learn how to install Shopify CLI on Windows, macOS, or Linux.
+## Command specification and semantics
 
-## Getting started
+The shopify CLI offers a familiar command structure with other CLIs:
 
-Refer to [*Getting started with Shopify CLI*](https://shopify.dev/tools/cli/getting-started) to learn how to create and manage different types of projects with Shopify CLI.
+`shopify (RESOURCE | GLOBAL ACTION)  ACTION  VARIADIC ARGS`
 
-## References
+The top level command will always be a **resource** or a **global action**:
 
-- **[Shopify CLI core commands](https://shopify.dev/tools/cli/reference)** - A complete reference of core commands for Shopify CLI.
-- **[Node.js app commands](https://shopify.dev/tools/cli/reference/node-app)** - A complete Shopify CLI command reference for Node.js apps.
-- **[Ruby on Rails app commands](https://shopify.dev/tools/cli/reference/ruby-on-rails-app)** - A complete Shopify CLI command reference for Ruby on Rails apps.
+- Resources represent Shopify concepts that you can work with in the CLI, for example `theme`.
+- In general global actions are commands that alter the state of the CLI (e.g `config` or `login`)
+
+Actions will always be verbs you can apply to resources or global actions.
+
+When in doubt, add a `--help` or `-h` at the end of your command to get a full explanation of the available options for the command.
+
+## Quick start guide for theme developers
+
+This quick started guide will show you how to begin local theme development when working with a new theme from scratch.
+
+### 1.- Authenticate the CLI
+
+Once you installed the Shopify CLI the first recommended action when setting up your local development environment is that you authenticate your instance of the CLI. This will allow you to seamlessly develop themes.
+
+Run:
+
+`shopify login --shop=<your-shop-url>`
+
+This will ask you to open a URL in your browser where you'll have to sign in to complete the OAuth process.
+
+### 2.- Create a new theme
+
+Run:
+
+`shopify theme create`
+
+To create a initialize a theme on your current working directory. This will actually clone Shopify Dawn which you should be use as a reference when building themes for Shopify.
+
+### 3.- Start the local theme server
+
+The Shopify CLI comes with a local theme server which lets you preview your changes live on your local machine. In order to have the same rendering experience that you'll expect in production we proxy your instance of the CLI to the Shopify rendering system.
+
+Run:
+
+`shopify theme serve`
+
+To start the server. The server includes hot reload for CSS & Sections.
 
 ## Troubleshooting
 
-Refer to [*Troubleshooting Shopify CLI*](https://shopify.dev/tools/cli/troubleshooting) to learn how to upgrade, migrate from a legacy version, and uninstall Shopify CLI.
+### To upgrade the Shopify CLI
 
-## Contributing to Shopify CLI
+#### Homebrew (Mac OS)
 
-Shopify CLI is an [open source](https://github.com/Shopify/shopify-cli/blob/master/.github/LICENSE.md) tool and you can [help contribute to the GitHub repository](https://github.com/Shopify/shopify-cli/blob/master/.github/CONTRIBUTING.md).
+```shell
+$ brew update
+$ brew upgrade shopify-cli
+```
 
-## Developing Shopify CLI
+#### apt (Debian, Ubuntu)
 
-Read the [development guide](https://github.com/Shopify/shopify-cli/wiki).
+1.- Download the latest `.deb` binary for the Shopify CLI from the releases page.
 
-## Where to get help
+2.- Install the downloaded file and make sure to replace /path/to/download/shopify-cli-x.y.z.deb with the path to your file's location:
 
-- **[Open a GitHub issue](https://github.com/Shopify/shopify-cli/issues)** - To report bugs or request new features, open an issue in the Shopify CLI repository.
-- **[Shopify Community Forums](https://community.shopify.com/)** - Visit our forums to connect with the community and learn more about Shopify CLI development.
+```shell
+$ sudo apt install /path/to/downloaded/shopify-cli-x.y.z.deb
+```
+
+#### yum (CentOS 8+, Fedora, Red Hat, SUSE)
+
+1.- Download the latest .rpm file for Shopify App CLI from the releases page.
+
+2.- Install the downloaded file and make sure to replace /path/to/downloaded/shopify-cli-x.y.x.rpm with the path to your file's location:
+
+```shell
+ $ sudo yum install /path/to/downloaded/shopify-cli-x.y.x.rpm
+```
+
+#### RubyGems (macOS, Linux, Windows 10)
+
+```shell
+$ gem update shopify-cli
+```
+
+### Contributing
+
+The Shopify CLI is an [open source tool](https://github.com/Shopify/shopify-cli/blob/master/.github/LICENSE.md) and everyone is welcome to help the community by [contributing](https://github.com/Shopify/shopify-cli/blob/master/.github/CONTRIBUTING.md) to the project.
+
+### Where to get help
+
+- [Open a GitHub issue](https://github.com/Shopify/shopify-cli/issues) - To report bugs or request new features, open an issue in the Shopify CLI repository.
+
+- [Shopify Community Forums](https://community.shopify.com/) - Visit our forums to connect with the community and learn more about Shopify CLI development.
