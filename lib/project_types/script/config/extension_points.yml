@@ -36,11 +36,8 @@ payment_methods:
   assemblyscript:
     package: "@shopify/scripts-checkout-apis"
     toolchain-version: "^5.0.0"
-    sdk-version: "^9.0.0"
 shipping_methods:
   domain: 'checkout'
   assemblyscript:
     package: "@shopify/scripts-checkout-apis"
-    sdk-version: "^9.0.0"
     toolchain-version: "^5.0.0"
-
