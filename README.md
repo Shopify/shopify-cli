@@ -25,7 +25,7 @@ Shopify CLI offers a command structure similar to other CLIs:
 The top level command will always be a **resource** or a **global action**:
 
 - Resources represent Shopify concepts that you can work with in the CLI, for example `theme`.
-- In general global actions are commands that alter the state of the CLI (e.g `config` or `login`)
+- Usually, global actions are commands that alter the state of the CLI (e.g `config` or `login`)
 
 Actions will always be verbs you can apply to resources or global actions.
 
