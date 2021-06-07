@@ -67,8 +67,7 @@ module Extension
         runtimes = {
           checkout_runtime_0_3_8 => does_not_support_feature,
           checkout_runtime_0_4_0 => does_not_support_feature,
-          admin_runtime_0_11_0 => does_not_support_feature,
-          admin_runtime_0_11_0_with_beta_access => supports_feature,
+          admin_runtime_0_11_0 => supports_feature,
           admin_runtime_0_9_3 => does_not_support_feature,
           admin_runtime_0_9_2 => does_not_support_feature,
         }
@@ -82,8 +81,7 @@ module Extension
         runtimes = {
           checkout_runtime_0_3_8 => does_not_support_feature,
           checkout_runtime_0_4_0 => does_not_support_feature,
-          admin_runtime_0_11_0 => does_not_support_feature,
-          admin_runtime_0_11_0_with_beta_access => supports_feature,
+          admin_runtime_0_11_0 => supports_feature,
           admin_runtime_0_9_3 => does_not_support_feature,
           admin_runtime_0_9_2 => does_not_support_feature,
         }
@@ -120,14 +118,6 @@ module Extension
         ArgoRuntime.new(
           cli: Models::NpmPackage.new(name: "@shopify/argo-admin-cli", version: "0.11.0"),
           renderer: Models::NpmPackage.new(name: "@shopify/argo-admin", version: "0.9.3")
-        )
-      end
-
-      def admin_runtime_0_11_0_with_beta_access
-        ArgoRuntime.new(
-          cli: Models::NpmPackage.new(name: "@shopify/argo-admin-cli", version: "0.11.0"),
-          renderer: Models::NpmPackage.new(name: "@shopify/argo-admin", version: "0.9.3"),
-          beta_access: [:argo_admin_beta]
         )
       end
 
