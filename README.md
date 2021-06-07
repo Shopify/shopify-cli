@@ -29,7 +29,7 @@ The top level command will always be a **resource** or a **global action**:
 
 Actions will always be verbs you can apply to resources or global actions.
 
-When in doubt, add a `--help` or `-h` at the end of your command to get a full explanation of the available options for the command.
+You can add `--help` or `-h` to the end of your command to get a full explanation of the available options for the command.
 
 ## Quick start guide for theme developers
 
