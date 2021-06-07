@@ -49,7 +49,7 @@ module ShopifyCli
         if mime_type.json?
           # Normalize JSON to match backend
           begin
-            content = JSON.generate(JSON.parse(content))
+            content = normalize_json(content)
           rescue JSON::JSONError
             # Fallback to using the raw content
           end
@@ -61,6 +61,42 @@ module ShopifyCli
       # some of which may be relative paths while others are absolute paths.
       def ==(other)
         relative_path == other.relative_path
+      end
+
+      private
+
+      def normalize_json(content)
+        parsed = JSON.parse(content)
+
+        if template?
+          JsonTemplateNormalizer.new.visit_document(parsed)
+        end
+
+        normalized = JSON.generate(parsed)
+        # Backend escapes forward slashes
+        normalized.gsub!(/\//, "\\/")
+        normalized
+      end
+
+      class JsonTemplateNormalizer
+        def visit_document(value)
+          visit_hash(value["sections"])
+        end
+
+        def visit_hash(hash)
+          return unless hash.is_a?(Hash)
+          hash.each do |_, value|
+            visit_value(value)
+          end
+        end
+
+        def visit_value(value)
+          # Reinsert settings to force the same ordering as in the backend
+          settings = value.delete("settings") || {}
+          value["settings"] = settings
+
+          visit_hash(value["blocks"])
+        end
       end
     end
   end
