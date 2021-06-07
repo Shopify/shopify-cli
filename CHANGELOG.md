@@ -1,5 +1,10 @@
 Unreleased
 ------
+
+Version 1.13.0
+--------------
+
+* [1266](https://github.com/Shopify/shopify-app-cli/pull/1266): Developer Console release
 * [1265](https://github.com/Shopify/shopify-app-cli/pull/1265): Fix bug where commands hang after an unsuccessful authentication
 
 Version 1.12.0
