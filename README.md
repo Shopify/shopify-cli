@@ -18,7 +18,7 @@ The Shopify CLI is available as a gem and can be run and installed on Mac, Linux
 
 ## Command specification and semantics
 
-The shopify CLI offers a familiar command structure with other CLIs:
+Shopify CLI offers a command structure similar to other CLIs:
 
 `shopify (RESOURCE | GLOBAL ACTION)  ACTION  VARIADIC ARGS`
 
