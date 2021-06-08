@@ -19,7 +19,7 @@ module Script
             script_content: script_content,
             compiled_type: compiled_type,
             metadata: metadata,
-            config_ui: script_project.config_ui,
+            script_json: script_project.script_json,
           )
         end
 
@@ -36,7 +36,7 @@ module Script
             script_content: script_content,
             compiled_type: compiled_type,
             metadata: metadata,
-            config_ui: script_project.config_ui,
+            script_json: script_project.script_json,
           )
         end
 

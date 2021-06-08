@@ -14,7 +14,7 @@ module Script
           end
         end
 
-        class InvalidConfigUiDefinitionError < ScriptProjectError
+        class InvalidScriptJsonDefinitionError < ScriptProjectError
           attr_reader :filename
           def initialize(filename)
             super()
@@ -22,7 +22,7 @@ module Script
           end
         end
 
-        class MissingSpecifiedConfigUiDefinitionError < ScriptProjectError
+        class MissingSpecifiedScriptJsonDefinitionError < ScriptProjectError
           attr_reader :filename
           def initialize(filename)
             super()

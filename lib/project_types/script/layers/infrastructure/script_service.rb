@@ -19,20 +19,22 @@ module Script
           api_key: nil,
           force: false,
           metadata:,
-          config_ui:
+          script_json:
         )
           query_name = "app_script_update_or_create"
           variables = {
             uuid: uuid,
             extensionPointName: extension_point_type.upcase,
             title: script_name,
-            configUi: config_ui&.content,
             sourceCode: Base64.encode64(script_content),
             language: compiled_type,
             force: force,
             schemaMajorVersion: metadata.schema_major_version.to_s, # API expects string value
             schemaMinorVersion: metadata.schema_minor_version.to_s, # API expects string value
             useMsgpack: metadata.use_msgpack,
+            configurationUi: script_json&.configuration_ui,
+            configurationDefinitionVersion: script_json&.version,
+            configurationDefinition: script_json&.configuration,
           }
           resp_hash = script_service_request(query_name: query_name, api_key: api_key, variables: variables)
           user_errors = resp_hash["data"]["appScriptUpdateOrCreate"]["userErrors"]
@@ -42,15 +44,15 @@ module Script
           if user_errors.any? { |e| e["tag"] == "already_exists_error" }
             raise Errors::ScriptRepushError, uuid
           elsif (e = user_errors.any? { |err| err["tag"] == "config_ui_syntax_error" })
-            raise Errors::ConfigUiSyntaxError, config_ui&.filename
+            raise Errors::ScriptJsonSyntaxError, script_json&.filename
           elsif (e = user_errors.find { |err| err["tag"] == "config_ui_missing_keys_error" })
-            raise Errors::ConfigUiMissingKeysError.new(config_ui&.filename, e["message"])
+            raise Errors::ScriptJsonMissingKeysError.new(script_json&.filename, e["message"])
           elsif (e = user_errors.find { |err| err["tag"] == "config_ui_invalid_input_mode_error" })
-            raise Errors::ConfigUiInvalidInputModeError.new(config_ui&.filename, e["message"])
+            raise Errors::ScriptJsonInvalidInputModeError.new(script_json&.filename, e["message"])
           elsif (e = user_errors.find { |err| err["tag"] == "config_ui_fields_missing_keys_error" })
-            raise Errors::ConfigUiFieldsMissingKeysError.new(config_ui&.filename, e["message"])
+            raise Errors::ScriptJsonFieldsMissingKeysError.new(script_json&.filename, e["message"])
           elsif (e = user_errors.find { |err| err["tag"] == "config_ui_fields_invalid_type_error" })
-            raise Errors::ConfigUiFieldsInvalidTypeError.new(config_ui&.filename, e["message"])
+            raise Errors::ScriptJsonFieldsInvalidTypeError.new(script_json&.filename, e["message"])
           elsif user_errors.find { |err| %w(not_use_msgpack_error schema_version_argument_error).include?(err["tag"]) }
             raise Domain::Errors::MetadataValidationError
           else

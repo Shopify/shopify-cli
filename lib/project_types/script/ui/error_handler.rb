@@ -120,13 +120,13 @@ module Script
             cause_of_error: ShopifyCli::Context.message("script.error.metadata_not_found_cause"),
             help_suggestion: ShopifyCli::Context.message("script.error.metadata_not_found_help"),
           }
-        when Layers::Domain::Errors::InvalidConfigUiDefinitionError
+        when Layers::Domain::Errors::InvalidScriptJsonDefinitionError
           {
             cause_of_error: ShopifyCli::Context
               .message("script.error.invalid_config_ui_definition_cause", e.filename),
             help_suggestion: ShopifyCli::Context.message("script.error.invalid_config_ui_definition_help"),
           }
-        when Layers::Domain::Errors::MissingSpecifiedConfigUiDefinitionError
+        when Layers::Domain::Errors::MissingSpecifiedScriptJsonDefinitionError
           {
             cause_of_error: ShopifyCli::Context
               .message("script.error.missing_config_ui_definition_cause", e.filename),
@@ -141,7 +141,7 @@ module Script
             cause_of_error: ShopifyCli::Context.message("script.error.build_error_cause"),
             help_suggestion: ShopifyCli::Context.message("script.error.build_error_help"),
           }
-        when Layers::Infrastructure::Errors::ConfigUiSyntaxError
+        when Layers::Infrastructure::Errors::ScriptJsonSyntaxError
           {
             cause_of_error: ShopifyCli::Context.message(
               "script.error.config_ui_syntax_error_cause",
@@ -149,7 +149,7 @@ module Script
             ),
             help_suggestion: ShopifyCli::Context.message("script.error.config_ui_syntax_error_help"),
           }
-        when Layers::Infrastructure::Errors::ConfigUiMissingKeysError
+        when Layers::Infrastructure::Errors::ScriptJsonMissingKeysError
           {
             cause_of_error: ShopifyCli::Context.message(
               "script.error.config_ui_missing_keys_error_cause",
@@ -158,7 +158,7 @@ module Script
             ),
             help_suggestion: ShopifyCli::Context.message("script.error.config_ui_missing_keys_error_help"),
           }
-        when Layers::Infrastructure::Errors::ConfigUiInvalidInputModeError
+        when Layers::Infrastructure::Errors::ScriptJsonInvalidInputModeError
           {
             cause_of_error: ShopifyCli::Context.message(
               "script.error.config_ui_invalid_input_mode_error_cause",
@@ -167,7 +167,7 @@ module Script
             ),
             help_suggestion: ShopifyCli::Context.message("script.error.config_ui_invalid_input_mode_error_help"),
           }
-        when Layers::Infrastructure::Errors::ConfigUiFieldsMissingKeysError
+        when Layers::Infrastructure::Errors::ScriptJsonFieldsMissingKeysError
           {
             cause_of_error: ShopifyCli::Context.message(
               "script.error.config_ui_fields_missing_keys_error_cause",
@@ -176,7 +176,7 @@ module Script
             ),
             help_suggestion: ShopifyCli::Context.message("script.error.config_ui_fields_missing_keys_error_help"),
           }
-        when Layers::Infrastructure::Errors::ConfigUiFieldsInvalidTypeError
+        when Layers::Infrastructure::Errors::ScriptJsonFieldsInvalidTypeError
           {
             cause_of_error: ShopifyCli::Context.message(
               "script.error.config_ui_fields_invalid_type_error_cause",

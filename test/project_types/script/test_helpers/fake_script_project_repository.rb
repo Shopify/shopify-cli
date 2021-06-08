@@ -7,10 +7,10 @@ module TestHelpers
     end
 
     def create(script_name:, extension_point_type:, language:, no_config_ui:, env: nil)
-      config_ui_file = if no_config_ui
+      script_json = if no_config_ui
         nil
       else
-        FakeConfigUiRepository.new.create("config-ui.yml", "---\nversion: 1")
+        FakeScriptJsonRepository.new.create("script.json", "{\nversion: 1\n}")
       end
 
       @project = Script::Layers::Domain::ScriptProject.new(
@@ -19,7 +19,7 @@ module TestHelpers
         script_name: script_name,
         extension_point_type: extension_point_type,
         language: language,
-        config_ui: config_ui_file
+        script_json: script_json
       )
     end
 
@@ -40,13 +40,13 @@ module TestHelpers
       @project
     end
 
-    class FakeConfigUiRepository
+    class FakeScriptJsonRepository
       def initialize
         @cache = {}
       end
 
       def create(filename, content)
-        @cache[filename] = Script::Layers::Domain::ConfigUi.new(
+        @cache[filename] = Script::Layers::Domain::ScriptJson.new(
           filename: filename,
           content: content,
         )

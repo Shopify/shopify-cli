@@ -12,8 +12,33 @@ describe Script::Layers::Infrastructure::ScriptService do
   let(:schema_major_version) { "1" }
   let(:schema_minor_version) { "0" }
   let(:use_msgpack) { true }
-  let(:config_ui) { Script::Layers::Domain::ConfigUi.new(filename: "filename", content: expected_config_ui_content) }
-  let(:expected_config_ui_content) { "content" }
+  let(:script_json) do
+    Script::Layers::Domain::ScriptJson.new(filename: "filename", content: expected_script_json_content)
+  end
+  let(:expected_configuration_ui) { true }
+  let(:expected_configuration_definition_version) { "1" }
+  let(:expected_configuration) do
+    {
+      "type" => "single",
+      "schema" => [
+        {
+          "key" => "configurationKey",
+          "name" => "My configuration field",
+          "type" => "single_line_text_field",
+          "helpText" => "This is some help text",
+          "defaultValue" => "This is a default value",
+        },
+      ],
+    }
+  end
+  let(:expected_script_json_content) do
+    {
+      "version" => expected_configuration_definition_version,
+      "name" => "script",
+      "configurationUi" => expected_configuration_ui,
+      "configuration" => expected_configuration,
+    }
+  end
   let(:script_service_proxy) do
     <<~HERE
       query ProxyRequest($api_key: String, $query: String!, $variables: String) {
@@ -37,22 +62,26 @@ describe Script::Layers::Infrastructure::ScriptService do
         mutation AppScriptUpdateOrCreate(
           $extensionPointName: ExtensionPointName!,
           $title: String,
-          $configUi: String,
           $sourceCode: String,
           $language: String,
           $schemaMajorVersion: String,
           $schemaMinorVersion: String,
-          $useMsgpack: Boolean
+          $useMsgpack: Boolean,
+          $configurationUi: Boolean,
+          $configurationDefinitionVersion: String,
+          $configurationDefinition: String,
         ) {
           appScriptUpdateOrCreate(
             extensionPointName: $extensionPointName
             title: $title
-            configUi: $configUi
             sourceCode: $sourceCode
             language: $language
             schemaMajorVersion: $schemaMajorVersion
             schemaMinorVersion: $schemaMinorVersion
             useMsgpack: $useMsgpack
+            configurationUi: $configurationUi
+            configurationDefinitionVersion: $configurationDefinitionVersion
+            configurationDefinition: $configurationDefinition
         ) {
             userErrors {
               field
@@ -80,13 +109,15 @@ describe Script::Layers::Infrastructure::ScriptService do
             uuid: uuid_from_config,
             extensionPointName: extension_point_type,
             title: script_name,
-            configUi: expected_config_ui_content,
             sourceCode: Base64.encode64(script_content),
             language: "AssemblyScript",
             force: false,
             schemaMajorVersion: schema_major_version,
             schemaMinorVersion: schema_minor_version,
             useMsgpack: use_msgpack,
+            configurationUi: expected_configuration_ui,
+            configurationDefinitionVersion: expected_configuration_definition_version,
+            configurationDefinition: expected_configuration,
           }.to_json,
           query: app_script_update_or_create,
         },
@@ -106,7 +137,7 @@ describe Script::Layers::Infrastructure::ScriptService do
         script_name: script_name,
         script_content: script_content,
         compiled_type: "AssemblyScript",
-        config_ui: config_ui,
+        script_json: script_json,
         api_key: api_key,
       )
     end
@@ -141,14 +172,14 @@ describe Script::Layers::Infrastructure::ScriptService do
         assert_equal(uuid_from_server, subject)
       end
 
-      describe "when config_ui is nil" do
-        let(:config_ui) { nil }
-        let(:expected_config_ui_content) { nil }
-
-        it "should succeed with a valid response" do
-          assert_equal(uuid_from_server, subject)
-        end
-      end
+      # describe "when script_json is nil" do
+      #   let(:script_json) { nil }
+      #   let(:expected_script_json_content) { nil }
+      #
+      #   it "should succeed with a valid response" do
+      #     assert_equal(uuid_from_server, subject)
+      #   end
+      # end
     end
 
     describe "when push to script service responds with errors" do

@@ -15,7 +15,7 @@ module Script
         property! :script_name, accepts: String
         property! :language, accepts: String
 
-        property :config_ui, accepts: ConfigUi
+        property :script_json, accepts: ScriptJson
 
         def initialize(*)
           super

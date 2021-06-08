@@ -8,7 +8,7 @@ describe Script::Layers::Domain::ScriptProject do
   let(:extension_point_type) { "discount" }
   let(:script_name) { "foo_script" }
   let(:language) { "assemblyscript" }
-  let(:config_ui) { Script::Layers::Domain::ConfigUi.new(filename: "filename", content: "content") }
+  let(:script_json) { Script::Layers::Domain::ScriptJson.new(filename: "filename", content: "content") }
 
   describe ".new" do
     subject { Script::Layers::Domain::ScriptProject.new(**args) }
@@ -20,7 +20,7 @@ describe Script::Layers::Domain::ScriptProject do
         extension_point_type: extension_point_type,
         script_name: script_name,
         language: language,
-        config_ui: config_ui,
+        script_json: script_json,
       }
     end
     let(:args) { all_args }
@@ -41,7 +41,7 @@ describe Script::Layers::Domain::ScriptProject do
         assert_equal extension_point_type, subject.extension_point_type
         assert_equal script_name, subject.script_name
         assert_equal language, subject.language
-        assert_equal config_ui, subject.config_ui
+        assert_equal script_json, subject.script_json
       end
     end
 
@@ -54,12 +54,12 @@ describe Script::Layers::Domain::ScriptProject do
         assert_equal extension_point_type, subject.extension_point_type
         assert_equal script_name, subject.script_name
         assert_equal language, subject.language
-        assert_nil subject.config_ui
+        assert_nil subject.script_json
       end
     end
 
     describe "when required properties are missing" do
-      let(:args) { all_args.slice(:env, :config_ui) }
+      let(:args) { all_args.slice(:env, :script_json) }
 
       it "should raise" do
         assert_raises(SmartProperties::InitializationError) { subject }
