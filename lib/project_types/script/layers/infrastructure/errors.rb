@@ -17,7 +17,7 @@ module Script
           end
         end
 
-        class ScriptJsonInvalidInputModeError < ScriptProjectError
+        class ScriptJsonInvalidValueError < ScriptProjectError
           attr_reader :filename, :valid_input_modes
           def initialize(filename, valid_input_modes)
             super()
@@ -35,7 +35,7 @@ module Script
           end
         end
 
-        class ScriptJsonFieldsInvalidTypeError < ScriptProjectError
+        class ScriptJsonFieldsInvalidValueError < ScriptProjectError
           attr_reader :filename, :valid_types
           def initialize(filename, valid_types)
             super()

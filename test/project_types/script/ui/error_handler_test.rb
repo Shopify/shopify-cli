@@ -240,8 +240,8 @@ describe Script::UI::ErrorHandler do
         end
       end
 
-      describe "when ScriptJsonInvalidInputModeError" do
-        let(:err) { Script::Layers::Infrastructure::Errors::ScriptJsonInvalidInputModeError.new("file", "input modes") }
+      describe "when ScriptJsonInvalidValueError" do
+        let(:err) { Script::Layers::Infrastructure::Errors::ScriptJsonInvalidValueError.new("file", "input modes") }
         it "should call display_and_raise" do
           should_call_display_and_raise
         end
@@ -254,8 +254,8 @@ describe Script::UI::ErrorHandler do
         end
       end
 
-      describe "when ScriptJsonFieldsInvalidTypeError" do
-        let(:err) { Script::Layers::Infrastructure::Errors::ScriptJsonFieldsInvalidTypeError.new("file", "types") }
+      describe "when ScriptJsonFieldsInvalidValueError" do
+        let(:err) { Script::Layers::Infrastructure::Errors::ScriptJsonFieldsInvalidValueError.new("file", "types") }
         it "should call display_and_raise" do
           should_call_display_and_raise
         end
