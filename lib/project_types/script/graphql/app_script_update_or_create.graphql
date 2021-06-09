@@ -10,7 +10,7 @@ mutation AppScriptUpdateOrCreate(
   $useMsgpack: Boolean,
   $uuid: String,
   $configurationUi: Boolean,
-  $configurationDefinitionVersion: String,
+  $scriptJsonVersion: String,
   $configurationDefinition: String,
 ) {
   appScriptUpdateOrCreate(
@@ -25,7 +25,7 @@ mutation AppScriptUpdateOrCreate(
     useMsgpack: $useMsgpack,
     uuid: $uuid
     configurationUi: $configurationUi
-    configurationDefinitionVersion: $configurationDefinitionVersion
+    scriptJsonVersion: $scriptJsonVersion
     configurationDefinition: $configurationDefinition
 ) {
     userErrors {

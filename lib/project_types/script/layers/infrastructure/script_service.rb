@@ -33,8 +33,8 @@ module Script
             schemaMajorVersion: metadata.schema_major_version.to_s, # API expects string value
             schemaMinorVersion: metadata.schema_minor_version.to_s, # API expects string value
             useMsgpack: metadata.use_msgpack,
+            scriptJsonVersion: script_json&.version,
             configurationUi: script_json&.configuration_ui,
-            configurationDefinitionVersion: script_json&.version,
             configurationDefinition: script_json&.configuration&.to_json,
           }
           resp_hash = script_service_request(query_name: query_name, api_key: api_key, variables: variables)

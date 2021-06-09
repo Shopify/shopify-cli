@@ -17,7 +17,7 @@ describe Script::Layers::Infrastructure::ScriptService do
   end
   let(:expected_description) { "some description" }
   let(:expected_configuration_ui) { true }
-  let(:expected_configuration_definition_version) { "1" }
+  let(:expected_script_json_version) { "1" }
   let(:expected_configuration) do
     {
       "type" => "single",
@@ -34,7 +34,7 @@ describe Script::Layers::Infrastructure::ScriptService do
   end
   let(:expected_script_json_content) do
     {
-      "version" => expected_configuration_definition_version,
+      "version" => expected_script_json_version,
       "title" => "script",
       "description" => expected_description,
       "configurationUi" => expected_configuration_ui,
@@ -71,7 +71,7 @@ describe Script::Layers::Infrastructure::ScriptService do
           $schemaMinorVersion: String,
           $useMsgpack: Boolean,
           $configurationUi: Boolean,
-          $configurationDefinitionVersion: String,
+          $scriptJsonVersion: String,
           $configurationDefinition: String,
         ) {
           appScriptUpdateOrCreate(
@@ -84,7 +84,7 @@ describe Script::Layers::Infrastructure::ScriptService do
             schemaMinorVersion: $schemaMinorVersion
             useMsgpack: $useMsgpack
             configurationUi: $configurationUi
-            configurationDefinitionVersion: $configurationDefinitionVersion
+            scriptJsonVersion: $scriptJsonVersion
             configurationDefinition: $configurationDefinition
         ) {
             userErrors {
@@ -120,8 +120,8 @@ describe Script::Layers::Infrastructure::ScriptService do
             schemaMajorVersion: schema_major_version,
             schemaMinorVersion: schema_minor_version,
             useMsgpack: use_msgpack,
+            scriptJsonVersion: expected_script_json_version,
             configurationUi: expected_configuration_ui,
-            configurationDefinitionVersion: expected_configuration_definition_version,
             configurationDefinition: expected_configuration&.to_json,
           }.to_json,
           query: app_script_update_or_create,
@@ -181,7 +181,7 @@ describe Script::Layers::Infrastructure::ScriptService do
         let(:script_json) { nil }
         let(:expected_description) { nil }
         let(:expected_script_json_content) { nil }
-        let(:expected_configuration_definition_version) { nil }
+        let(:expected_script_json_version) { nil }
         let(:expected_configuration_ui) { nil }
         let(:expected_configuration) { nil }
 
