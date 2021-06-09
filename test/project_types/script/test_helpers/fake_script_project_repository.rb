@@ -41,7 +41,7 @@ module TestHelpers
 
     def update_script_json(title:, configuration_ui: false)
       script_json = fake_script_json_repo
-                      .update(SCRIPT_JSON_FILENAME, title: title, configuration_ui: configuration_ui)
+        .update(SCRIPT_JSON_FILENAME, title: title, configuration_ui: configuration_ui)
 
       @project.script_json = script_json
       @project

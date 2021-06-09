@@ -309,7 +309,7 @@ describe Script::Layers::Infrastructure::ScriptProjectRepository do
 
   describe "#update_script_json" do
     let(:script_json_filename) { "script.json" }
-    let(:new_title) { 'new title' }
+    let(:new_title) { "new title" }
     let(:new_configuration_ui) { true }
     let(:valid_config) do
       {
@@ -330,7 +330,7 @@ describe Script::Layers::Infrastructure::ScriptProjectRepository do
       ShopifyCli::Project.stubs(:current).returns(current_project)
     end
 
-    subject {  instance.update_script_json(title: new_title, configuration_ui: new_configuration_ui) }
+    subject { instance.update_script_json(title: new_title, configuration_ui: new_configuration_ui) }
 
     describe "when no script.json exists yet" do
       it "creates a new file" do

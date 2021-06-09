@@ -87,8 +87,8 @@ module Script
 
         def update_script_json(title:, configuration_ui: false)
           script_json = ScriptJsonRepository
-                          .new(ctx: ctx)
-                          .update(script_json_filename, title: title, configuration_ui: configuration_ui)
+            .new(ctx: ctx)
+            .update(script_json_filename, title: title, configuration_ui: configuration_ui)
 
           Domain::ScriptProject.new(
             id: ctx.root,

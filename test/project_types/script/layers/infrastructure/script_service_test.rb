@@ -172,14 +172,17 @@ describe Script::Layers::Infrastructure::ScriptService do
         assert_equal(uuid_from_server, subject)
       end
 
-      # describe "when script_json is nil" do
-      #   let(:script_json) { nil }
-      #   let(:expected_script_json_content) { nil }
-      #
-      #   it "should succeed with a valid response" do
-      #     assert_equal(uuid_from_server, subject)
-      #   end
-      # end
+      describe "when script_json is nil" do
+        let(:script_json) { nil }
+        let(:expected_script_json_content) { nil }
+        let(:expected_configuration_definition_version) { nil }
+        let(:expected_configuration_ui) { nil }
+        let(:expected_configuration) { nil }
+
+        it "should succeed with a valid response" do
+          assert_equal(uuid_from_server, subject)
+        end
+      end
     end
 
     describe "when push to script service responds with errors" do

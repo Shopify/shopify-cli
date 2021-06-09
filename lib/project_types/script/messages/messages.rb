@@ -57,24 +57,24 @@ module Script
           missing_config_ui_definition_cause: "You are missing the UI configuration file %s.",
           missing_config_ui_definition_help: "Create this file and try again.",
 
-          configuration_definition_syntax_error_cause: "The UI configuration file %{filename} is not formatted properly.",
-          configuration_definition_syntax_error_help: "Fix the errors and try again.",
+          configuration_syntax_error_cause: "The UI configuration file %{filename} is not formatted properly.",
+          configuration_syntax_error_help: "Fix the errors and try again.",
 
-          configuration_definition_missing_keys_error_cause: "The UI configuration file %{filename} is missing required keys: "\
+          configuration_missing_keys_error_cause: "The UI configuration file %{filename} is missing required keys: "\
                                               "%{missing_keys}.",
-          configuration_definition_missing_keys_error_help: "Add the keys and try again.",
+          configuration_missing_keys_error_help: "Add the keys and try again.",
 
-          configuration_definition_invalid_value_error_cause: "The UI configuration file %{filename} only accept "\
+          configuration_invalid_value_error_cause: "The UI configuration file %{filename} only accept "\
                                               "one of the following input mode(s): %{valid_input_modes}.",
-          configuration_definition_invalid_value_error_help: "Change the input modes and try again.",
+          configuration_invalid_value_error_help: "Change the input modes and try again.",
 
-          configuration_definition_schema_field_missing_keys_error_cause: "A field entry in the UI configuration file %{filename} is "\
-                                                     "missing required keys: %{missing_keys}.",
+          configuration_schema_field_missing_keys_error_cause: "A field entry in the UI configuration file "\
+                                                     "%{filename} is missing required keys: %{missing_keys}.",
           configuration_definition_schema_field_missing_keys_error_help: "Add the keys and try again.",
 
-          configuration_definition_schema_field_invalid_value_error_cause: "The UI configuration file %{filename} fields only accept "\
-                                                     "one of the following type(s): %{valid_types}.",
-          configuration_definition_schema_field_invalid_value_error_help: "Change the types and try again.",
+          configuration_schema_field_invalid_value_error_cause: "The UI configuration file %{filename} fields only "\
+                                                     "accept one of the following type(s): %{valid_types}.",
+          configuration_schema_field_invalid_value_error_help: "Change the types and try again.",
 
           script_not_found_cause: "Couldn't find script %s for extension point %s",
 

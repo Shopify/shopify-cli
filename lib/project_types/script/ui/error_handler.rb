@@ -144,46 +144,50 @@ module Script
         when Layers::Infrastructure::Errors::ScriptJsonSyntaxError
           {
             cause_of_error: ShopifyCli::Context.message(
-              "script.error.configuration_definition_syntax_error_cause",
+              "script.error.configuration_syntax_error_cause",
               filename: e.message
             ),
-            help_suggestion: ShopifyCli::Context.message("script.error.configuration_definition_syntax_error_help"),
+            help_suggestion: ShopifyCli::Context.message("script.error.configuration_syntax_error_help"),
           }
         when Layers::Infrastructure::Errors::ScriptJsonMissingKeysError
           {
             cause_of_error: ShopifyCli::Context.message(
-              "script.error.configuration_definition_missing_keys_error_cause",
+              "script.error.configuration_missing_keys_error_cause",
               filename: e.filename,
               missing_keys: e.missing_keys
             ),
-            help_suggestion: ShopifyCli::Context.message("script.error.configuration_definition_missing_keys_error_help"),
+            help_suggestion: ShopifyCli::Context.message("script.error.configuration_missing_keys_error_help"),
           }
         when Layers::Infrastructure::Errors::ScriptJsonInvalidValueError
           {
             cause_of_error: ShopifyCli::Context.message(
-              "script.error.configuration_definition_invalid_value_error_cause",
+              "script.error.configuration_invalid_value_error_cause",
               filename: e.filename,
               valid_input_modes: e.valid_input_modes
             ),
-            help_suggestion: ShopifyCli::Context.message("script.error.configuration_definition_invalid_value_error_help"),
+            help_suggestion: ShopifyCli::Context.message("script.error.configuration_invalid_value_error_help"),
           }
         when Layers::Infrastructure::Errors::ScriptJsonFieldsMissingKeysError
           {
             cause_of_error: ShopifyCli::Context.message(
-              "script.error.configuration_definition_schema_field_missing_keys_error_cause",
+              "script.error.configuration_schema_field_missing_keys_error_cause",
               filename: e.filename,
               missing_keys: e.missing_keys
             ),
-            help_suggestion: ShopifyCli::Context.message("script.error.configuration_definition_schema_field_missing_keys_error_help"),
+            help_suggestion: ShopifyCli::Context.message(
+              "script.error.configuration_definition_schema_field_missing_keys_error_help"
+            ),
           }
         when Layers::Infrastructure::Errors::ScriptJsonFieldsInvalidValueError
           {
             cause_of_error: ShopifyCli::Context.message(
-              "script.error.configuration_definition_schema_field_invalid_value_error_cause",
+              "script.error.configuration_schema_field_invalid_value_error_cause",
               filename: e.filename,
               valid_types: e.valid_types
             ),
-            help_suggestion: ShopifyCli::Context.message("script.error.configuration_definition_schema_field_invalid_value_error_help"),
+            help_suggestion: ShopifyCli::Context.message(
+              "script.error.configuration_schema_field_invalid_value_error_help"
+            ),
           }
         when Layers::Infrastructure::Errors::DependencyInstallError
           {
