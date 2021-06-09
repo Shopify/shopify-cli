@@ -16,8 +16,7 @@ module Script
               project = script_project_repo.create(
                 script_name: script_name,
                 extension_point_type: extension_point_type,
-                language: language,
-                no_config_ui: no_config_ui
+                language: language
               )
               project_creator = Infrastructure::Languages::ProjectCreator
                 .for(ctx, language, extension_point, script_name, project.id)

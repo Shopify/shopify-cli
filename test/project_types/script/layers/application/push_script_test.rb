@@ -19,7 +19,6 @@ describe Script::Layers::Application::PushScript do
       language: language,
       extension_point_type: extension_point_type,
       script_name: script_name,
-      no_config_ui: false,
       env: ShopifyCli::Resources::EnvFile.new(api_key: api_key, secret: "shh")
     )
   end

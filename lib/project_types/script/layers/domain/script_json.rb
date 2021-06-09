@@ -4,10 +4,9 @@ module Script
   module Layers
     module Domain
       class ScriptJson
-        attr_reader :filename, :content, :version, :title, :description, :configuration_ui, :configuration
+        attr_reader :content, :version, :title, :description, :configuration_ui, :configuration
 
-        def initialize(filename:, content:)
-          @filename = filename
+        def initialize(content:)
           @content = content
           @version = @content["version"].to_s
           @title = @content["title"]

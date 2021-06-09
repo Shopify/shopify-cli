@@ -8,7 +8,7 @@ describe Script::Layers::Domain::ScriptProject do
   let(:extension_point_type) { "discount" }
   let(:script_name) { "foo_script" }
   let(:language) { "assemblyscript" }
-  let(:script_json) { Script::Layers::Domain::ScriptJson.new(filename: "filename", content: "content") }
+  let(:script_json) { Script::Layers::Domain::ScriptJson.new(content: "content") }
 
   describe ".new" do
     subject { Script::Layers::Domain::ScriptProject.new(**args) }

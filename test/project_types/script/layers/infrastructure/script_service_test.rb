@@ -13,7 +13,7 @@ describe Script::Layers::Infrastructure::ScriptService do
   let(:schema_minor_version) { "0" }
   let(:use_msgpack) { true }
   let(:script_json) do
-    Script::Layers::Domain::ScriptJson.new(filename: "filename", content: expected_script_json_content)
+    Script::Layers::Domain::ScriptJson.new(content: expected_script_json_content)
   end
   let(:expected_description) { "some description" }
   let(:expected_configuration_ui) { true }

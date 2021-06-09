@@ -27,7 +27,6 @@ describe Script::Tasks::EnsureEnv do
         language: language,
         extension_point_type: extension_point_type,
         script_name: script_name,
-        no_config_ui: false,
         env: env
       )
     end

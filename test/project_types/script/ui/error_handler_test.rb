@@ -191,8 +191,8 @@ describe Script::UI::ErrorHandler do
         end
       end
 
-      describe "when MissingSpecifiedScriptJsonDefinitionError" do
-        let(:err) { Script::Layers::Domain::Errors::MissingSpecifiedScriptJsonDefinitionError.new("filename") }
+      describe "when NoScriptJsonFile" do
+        let(:err) { Script::Layers::Domain::Errors::NoScriptJsonFile.new("filename") }
         it "should call display_and_raise" do
           should_call_display_and_raise
         end
@@ -234,28 +234,28 @@ describe Script::UI::ErrorHandler do
       end
 
       describe "when ScriptJsonMissingKeysError" do
-        let(:err) { Script::Layers::Infrastructure::Errors::ScriptJsonMissingKeysError.new("file", "keys") }
+        let(:err) { Script::Layers::Infrastructure::Errors::ScriptJsonMissingKeysError.new("keys") }
         it "should call display_and_raise" do
           should_call_display_and_raise
         end
       end
 
       describe "when ScriptJsonInvalidValueError" do
-        let(:err) { Script::Layers::Infrastructure::Errors::ScriptJsonInvalidValueError.new("file", "input modes") }
+        let(:err) { Script::Layers::Infrastructure::Errors::ScriptJsonInvalidValueError.new("input modes") }
         it "should call display_and_raise" do
           should_call_display_and_raise
         end
       end
 
       describe "when ScriptJsonFieldsMissingKeysError" do
-        let(:err) { Script::Layers::Infrastructure::Errors::ScriptJsonFieldsMissingKeysError.new("file", "keys") }
+        let(:err) { Script::Layers::Infrastructure::Errors::ScriptJsonFieldsMissingKeysError.new("keys") }
         it "should call display_and_raise" do
           should_call_display_and_raise
         end
       end
 
       describe "when ScriptJsonFieldsInvalidValueError" do
-        let(:err) { Script::Layers::Infrastructure::Errors::ScriptJsonFieldsInvalidValueError.new("file", "types") }
+        let(:err) { Script::Layers::Infrastructure::Errors::ScriptJsonFieldsInvalidValueError.new("types") }
         it "should call display_and_raise" do
           should_call_display_and_raise
         end
