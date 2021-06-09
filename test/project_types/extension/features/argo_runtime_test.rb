@@ -91,6 +91,22 @@ module Extension
         end
       end
 
+      def test_accepts_name
+        runtimes = {
+          checkout_runtime_0_3_8 => does_not_support_feature,
+          checkout_runtime_0_4_0 => does_not_support_feature,
+          admin_runtime_0_11_0 => supports_feature,
+          admin_runtime_0_9_3 => supports_feature,
+          admin_runtime_0_9_2 => supports_feature,
+          admin_runtime_0_9_0 => supports_feature,
+          admin_runtime_0_8_9 => does_not_support_feature,
+        }
+
+        runtimes.each do |runtime, accepts_argo_version|
+          assert_equal accepts_argo_version, runtime.accepts_name?
+        end
+      end
+
       private
 
       def checkout_runtime_0_3_8
@@ -125,6 +141,20 @@ module Extension
         ArgoRuntime.new(
           cli: Models::NpmPackage.new(name: "@shopify/argo-admin-cli", version: "0.9.2"),
           renderer: Models::NpmPackage.new(name: "@shopify/argo-admin", version: "0.9.3")
+        )
+      end
+
+      def admin_runtime_0_9_0
+        ArgoRuntime.new(
+          cli: Models::NpmPackage.new(name: "@shopify/argo-admin-cli", version: "0.9.0"),
+          renderer: Models::NpmPackage.new(name: "@shopify/argo-admin", version: "0.9.0")
+        )
+      end
+
+      def admin_runtime_0_8_9
+        ArgoRuntime.new(
+          cli: Models::NpmPackage.new(name: "@shopify/argo-admin-cli", version: "0.8.9"),
+          renderer: Models::NpmPackage.new(name: "@shopify/argo-admin", version: "0.8.9")
         )
       end
 
