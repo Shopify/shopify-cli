@@ -42,6 +42,7 @@ module ShopifyCli
         client.query(query_name, variables: variables)
       rescue API::APIRequestUnauthorizedError
         ShopifyCli::IdentityAuth.new(ctx: ctx).reauthenticate
+        client = api_client(ctx, api_version, shop)
         client.query(query_name, variables: variables)
       end
 

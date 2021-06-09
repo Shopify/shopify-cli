@@ -49,6 +49,7 @@ module ShopifyCli
         client.query(query_name, variables: variables)
       rescue API::APIRequestUnauthorizedError
         ShopifyCli::IdentityAuth.new(ctx: ctx).reauthenticate
+        client = api_client(ctx)
         client.query(query_name, variables: variables)
       rescue API::APIRequestNotFoundError
         ctx.puts(ctx.message("core.partners_api.error.account_not_found", ShopifyCli::TOOL_NAME))
