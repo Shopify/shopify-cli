@@ -5,8 +5,7 @@ module Script
     class Create < ShopifyCli::SubCommand
       options do |parser, flags|
         parser.on("--name=NAME") { |name| flags[:name] = name }
-        parser.on("--extension_point=EP_NAME") { |ep_name| flags[:extension_point] = ep_name }
-        parser.on("--extension-point=EP_NAME") { |ep_name| flags[:extension_point] = ep_name }
+        parser.on("--api=SCRIPT_API_NAME") { |api| flags[:api] = api }
         parser.on("--language=LANGUAGE") { |language| flags[:language] = language }
         parser.on("--no-config-ui") { |no_config_ui| flags[:no_config_ui] = no_config_ui }
       end
@@ -15,7 +14,7 @@ module Script
         form = Forms::Create.ask(@ctx, args, options.flags)
         return @ctx.puts(self.class.help) if form.nil?
 
-        unless !form.name.empty? && form.extension_point && form.language
+        unless !form.name.empty? && form.api && form.language
           return @ctx.puts(self.class.help)
         end
 
@@ -23,7 +22,7 @@ module Script
           ctx: @ctx,
           language: form.language,
           script_name: form.name,
-          extension_point_type: form.extension_point,
+          extension_point_type: form.api,
           no_config_ui: options.flags.key?(:no_config_ui)
         )
         @ctx.puts(@ctx.message("script.create.change_directory_notice", project.script_name))

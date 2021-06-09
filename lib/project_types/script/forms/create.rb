@@ -3,19 +3,19 @@
 module Script
   module Forms
     class Create < ShopifyCli::Form
-      flag_arguments :extension_point, :name, :language
+      flag_arguments :api, :name, :language
 
       def ask
         self.name = valid_name
-        self.extension_point ||= ask_extension_point
+        self.api ||= ask_api
         self.language = ask_language
       end
 
       private
 
-      def ask_extension_point
+      def ask_api
         CLI::UI::Prompt.ask(
-          @ctx.message("script.forms.create.select_extension_point"),
+          @ctx.message("script.forms.create.select_api"),
           options: Layers::Application::ExtensionPoints.available_types
         )
       end
@@ -33,7 +33,7 @@ module Script
       def ask_language
         return language.downcase if language
 
-        all_languages = Layers::Application::ExtensionPoints.languages(type: extension_point)
+        all_languages = Layers::Application::ExtensionPoints.languages(type: api)
         return all_languages.first if all_languages.count == 1
 
         CLI::UI::Prompt.ask(

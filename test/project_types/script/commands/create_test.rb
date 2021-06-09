@@ -15,11 +15,11 @@ module Script
         @context = TestHelpers::FakeContext.new
         @language = "assemblyscript"
         @script_name = "name"
-        @ep_type = "discount"
+        @api = "discount"
         @no_config_ui = false
         @script_project = TestHelpers::FakeScriptProjectRepository.new.create(
           language: @language,
-          extension_point_type: @ep_type,
+          extension_point_type: @api,
           script_name: @script_name,
           no_config_ui: @no_config_ui
         )
@@ -39,7 +39,7 @@ module Script
           ctx: @context,
           language: @language,
           script_name: @script_name,
-          extension_point_type: @ep_type,
+          extension_point_type: @api,
           no_config_ui: @no_config_ui
         ).returns(@script_project)
 
@@ -56,7 +56,7 @@ module Script
           ctx: @context,
           language: @language,
           script_name: @script_name,
-          extension_point_type: @ep_type,
+          extension_point_type: @api,
           no_config_ui: @no_config_ui
         ).returns(@script_project)
 
@@ -79,7 +79,7 @@ module Script
       def perform_command_snake_case
         args = {
           name: @script_name,
-          extension_point: @ep_type,
+          extension_point: @api,
           language: @language,
         }
 
@@ -88,8 +88,11 @@ module Script
 
       def perform_command
         run_cmd(
-          "create script --name=#{@script_name}
-          --extension-point=#{@ep_type} --language=#{@language} #{@no_config_ui ? "--no-config-ui" : ""}"
+          "create script "\
+            "--name=#{@script_name} "\
+            "--api=#{@api} "\
+            "--language=#{@language} "\
+            "#{@no_config_ui ? "--no-config-ui" : ""}"
         )
       end
     end

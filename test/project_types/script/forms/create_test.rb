@@ -15,17 +15,17 @@ module Script
 
       def test_returns_all_defined_attributes_if_valid
         name = "name"
-        extension_point = "discount"
-        form = ask(name: name, extension_point: extension_point, language: "assemblyscript")
+        api = "discount"
+        form = ask(name: name, api: api, language: "assemblyscript")
         assert_equal(form.name, name)
-        assert_equal(form.extension_point, extension_point)
+        assert_equal(form.api, api)
       end
 
-      def test_asks_extension_point_if_no_flag
+      def test_asks_api_if_no_flag
         eps = ["discount", "another"]
         Layers::Application::ExtensionPoints.expects(:available_types).returns(eps)
         CLI::UI::Prompt.expects(:ask).with(
-          @context.message("script.forms.create.select_extension_point"),
+          @context.message("script.forms.create.select_api"),
           options: eps
         )
         ask(name: "name", language: "assemblyscript")
@@ -34,19 +34,19 @@ module Script
       def test_asks_name_if_no_flag
         name = "name"
         CLI::UI::Prompt.expects(:ask).with(@context.message("script.forms.create.script_name")).returns(name)
-        form = ask(extension_point: "discount", language: "assemblyscript")
+        form = ask(api: "discount", language: "assemblyscript")
         assert_equal name, form.name
       end
 
       def test_name_is_cleaned_after_prompt
         name = "name with space"
         CLI::UI::Prompt.expects(:ask).with(@context.message("script.forms.create.script_name")).returns(name)
-        form = ask(extension_point: "discount", language: "assemblyscript")
+        form = ask(api: "discount", language: "assemblyscript")
         assert_equal "name_with_space", form.name
       end
 
       def test_name_is_cleaned_when_using_flag
-        form = ask(name: "name with space", extension_point: "discount", language: "assemblyscript")
+        form = ask(name: "name with space", api: "discount", language: "assemblyscript")
         assert_equal "name_with_space", form.name
       end
 
@@ -67,7 +67,7 @@ module Script
         language = "assemblyscript"
         Layers::Application::ExtensionPoints.expects(:languages).returns(%w(assemblyscript))
         CLI::UI::Prompt.expects(:ask).never
-        form = ask(name: "name", extension_point: "discount")
+        form = ask(name: "name", api: "discount")
         assert_equal language, form.language
       end
 
@@ -79,24 +79,24 @@ module Script
           .expects(:ask)
           .with(@context.message("script.forms.create.select_language"), options: all_languages)
           .returns(language)
-        form = ask(name: "name", extension_point: "discount")
+        form = ask(name: "name", api: "discount")
         assert_equal language, form.language
       end
 
       def test_succeeds_when_requested_language_is_capitalized
         language = "AssemblyScript"
-        form = ask(name: "name", extension_point: "discount", language: language)
+        form = ask(name: "name", api: "discount", language: language)
         assert_equal language.downcase, form.language
       end
 
       private
 
-      def ask(name: nil, extension_point: nil, language: nil)
+      def ask(name: nil, api: nil, language: nil)
         Create.ask(
           @context,
           [],
           name: name,
-          extension_point: extension_point,
+          api: api,
           language: language
         )
       end

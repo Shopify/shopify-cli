@@ -5,9 +5,9 @@ module Script
     MESSAGES = {
       script: {
         error: {
-          deprecated_ep: "This project uses an extension point %s which has been deprecated. "\
+          deprecated_ep: "This project uses the %s Script API which has been deprecated. "\
                          "This Script will no longer function in production.",
-          deprecated_ep_cause: "Try using a different extension point.",
+          deprecated_ep_cause: "Try using a different Script API.",
           generic: "{{red:{{x}} Error}}",
           eacces_cause: "You don't have permission to write to this directory.",
           eacces_help: "Change your directory permissions and try again.",
@@ -42,8 +42,8 @@ module Script
           project_exists_cause: "Directory with the same name as the script already exists.",
           project_exists_help: "Use different script name and try again.",
 
-          invalid_extension_cause: "Invalid extension point %s.",
-          invalid_extension_help: "Allowed values: %s.",
+          invalid_script_api_cause: "Invalid Script API %s.",
+          invalid_script_api_help: "Allowed values: %s.",
 
           invalid_language_cause: "Invalid language %s.",
           invalid_language_help: "Allowed values: %s.",
@@ -76,21 +76,21 @@ module Script
                                                      "one of the following type(s): %{valid_types}.",
           config_ui_fields_invalid_type_error_help: "Change the types and try again.",
 
-          script_not_found_cause: "Couldn't find script %s for extension point %s",
+          script_not_found_cause: "Couldn't find script %s for Script API %s",
 
           system_call_failure_cause: "An error was returned while running {{command:%{cmd}}}.",
           system_call_failure_help: "Review the following error and try again.\n{{red:%{out}}}",
 
-          metadata_validation_cause: "Invalid script extension metadata.",
+          metadata_validation_cause: "Invalid Script API metadata.",
           metadata_validation_help: "Ensure the 'shopify/scripts-toolchain-as' package is up to date.",
 
           metadata_schema_versions_missing: "Invalid script metadata:" \
                                             " 'schemaVersions' field is missing",
-          metadata_schema_versions_single_key: "Invalid script extension metadata:" \
-                                               " 'schemaVersions' can have only one extension point name.",
-          metadata_schema_versions_missing_major: "Invalid script extension metadata:" \
+          metadata_schema_versions_single_key: "Invalid Script API metadata:" \
+                                               " 'schemaVersions' can have only one Script API name.",
+          metadata_schema_versions_missing_major: "Invalid Script API metadata:" \
                                                   " 'schemaVersions' is missing the 'major' field",
-          metadata_schema_versions_missing_minor: "Invalid script extension metadata:" \
+          metadata_schema_versions_missing_minor: "Invalid Script API metadata:" \
                                                   " 'schemaVersions' is missing the 'minor' field",
 
           metadata_not_found_cause: "Script version file (%s) cannot be found.",
@@ -139,7 +139,7 @@ module Script
             Usage: {{command:%1$s create script}}
             Options:
               {{command:--name=NAME}} Script project name. Use any string.
-              {{command:--extension-point=TYPE}} Extension point name. Allowed values: %2$s.
+              {{command:--api=TYPE}} Script API name. Allowed values: %2$s.
               {{command:--no-config-ui}} Specify this option if you don’t want Scripts to render an interface in the Shopify admin.
           HELP
 
@@ -154,7 +154,7 @@ module Script
 
         push: {
           help: <<~HELP,
-          Build the script and put it into production. If you've already pushed a script with the same extension point, use --force to replace the current script with the newest one.
+          Build the script and put it into production. If you've already pushed a script with the same Script API, use --force to replace the current script with the newest one.
             Usage: {{command:%s push}}
             Options:
               {{command:[--force]}} Forces the script to be overwritten if an instance of it already exists.
@@ -176,7 +176,7 @@ module Script
 
         forms: {
           create: {
-            select_extension_point: "Which extension point do you want to use?",
+            select_api: "Which Script API do you want to use?",
             select_language: "Which language do you want to use?",
             script_name: "Script Name",
           },
