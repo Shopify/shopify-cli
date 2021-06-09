@@ -117,7 +117,7 @@ describe Script::Layers::Infrastructure::ScriptService do
             useMsgpack: use_msgpack,
             configurationUi: expected_configuration_ui,
             configurationDefinitionVersion: expected_configuration_definition_version,
-            configurationDefinition: expected_configuration,
+            configurationDefinition: expected_configuration&.to_json,
           }.to_json,
           query: app_script_update_or_create,
         },

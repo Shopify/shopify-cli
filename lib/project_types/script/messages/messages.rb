@@ -64,12 +64,12 @@ module Script
                                               "%{missing_keys}.",
           configuration_missing_keys_error_help: "Add the keys and try again.",
 
-          configuration_invalid_value_error_cause: "The %{filename} configuration schema only accepts "\
+          configuration_invalid_value_error_cause: "The %{filename} configuration only accepts "\
                                               "one of the following types(s): %{valid_input_modes}.",
           configuration_invalid_value_error_help: "Change the type and try again.",
 
           configuration_schema_field_missing_keys_error_cause: "A field entry in the %{filename} configuration "\
-                                                     "is missing required keys: %{missing_keys}.",
+                                                     "schema is missing required keys: %{missing_keys}.",
           configuration_definition_schema_field_missing_keys_error_help: "Add the keys and try again.",
 
           configuration_schema_field_invalid_value_error_cause: "The %{filename} configuration schema fields only "\

@@ -34,7 +34,7 @@ module Script
             useMsgpack: metadata.use_msgpack,
             configurationUi: script_json&.configuration_ui,
             configurationDefinitionVersion: script_json&.version,
-            configurationDefinition: script_json&.configuration,
+            configurationDefinition: script_json&.configuration&.to_json,
           }
           resp_hash = script_service_request(query_name: query_name, api_key: api_key, variables: variables)
           user_errors = resp_hash["data"]["appScriptUpdateOrCreate"]["userErrors"]
