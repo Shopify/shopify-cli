@@ -7,6 +7,7 @@ module Extension
       ARGO_ADMIN_CLI_PACKAGE_NAME = "@shopify/argo-admin-cli"
 
       ARGO_RUN_0_4_0 = Models::NpmPackage.new(name: "@shopify/argo-run", version: "0.4.0")
+      ARGO_ADMIN_CLI_0_9_0 = Models::NpmPackage.new(name: "@shopify/argo-admin-cli", version: "0.9.0")
       ARGO_ADMIN_CLI_0_9_3 = Models::NpmPackage.new(name: "@shopify/argo-admin-cli", version: "0.9.3")
       ARGO_ADMIN_CLI_0_11_0 = Models::NpmPackage.new(name: "@shopify/argo-admin-cli", version: "0.11.0")
 
@@ -62,6 +63,15 @@ module Extension
         case cli
         when admin?
           cli >= ARGO_ADMIN_CLI_0_11_0
+        else
+          false
+        end
+      end
+
+      def accepts_name?
+        case cli
+        when admin?
+          cli >= ARGO_ADMIN_CLI_0_9_0
         else
           false
         end

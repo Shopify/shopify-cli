@@ -79,6 +79,19 @@ renderer_package: argo_admin)
         assert_includes(options.npm_serve_command, "--uuid=#{registration_uuid}")
       end
 
+      def test_serve_options_include_name_if_name_supported
+        argo_runtime = setup_argo_runtime(renderer_package: argo_admin, version: "0.9.0")
+        extension_title = "my test extension"
+        ExtensionProject.any_instance.expects(:title).returns(extension_title)
+        options = Features::ArgoServeOptions.new(
+          argo_runtime: argo_runtime, context: @context,
+          renderer_package: argo_admin
+        )
+
+        assert_includes(options.yarn_serve_command, "--name=#{extension_title}")
+        assert_includes(options.npm_serve_command, "--name=#{extension_title}")
+      end
+
       private
 
       def argo_admin(version = "0.1.2")
