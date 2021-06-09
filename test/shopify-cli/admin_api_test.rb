@@ -62,11 +62,16 @@ module ShopifyCli
     end
 
     def test_query_can_reauth
-      ShopifyCli::DB.expects(:get).with(:shopify_exchange_token).returns("token123")
+      ShopifyCli::DB.stubs(:get).with(:shopify_exchange_token).returns("token123").then.returns("token456")
       api_stub = stub
       AdminAPI.expects(:new).with(
         ctx: @context,
         token: "token123",
+        url: "https://my-test-shop.myshopify.com/admin/api/2019-04/graphql.json",
+      ).returns(api_stub)
+      AdminAPI.expects(:new).with(
+        ctx: @context,
+        token: "token456",
         url: "https://my-test-shop.myshopify.com/admin/api/2019-04/graphql.json",
       ).returns(api_stub)
       api_stub.expects(:query).with("query", variables: {}).returns("response")

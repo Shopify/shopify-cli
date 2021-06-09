@@ -18,7 +18,8 @@ module ShopifyCli
 
     def test_query_can_reauth
       Shopifolk.stubs(:check).returns(false)
-      ShopifyCli::DB.expects(:get).with(:partners_exchange_token).returns("token123")
+      ShopifyCli::DB.stubs(:get).with(:partners_exchange_token).returns("token123")
+        .then.returns("token456")
 
       api_stub = stub
       PartnersAPI.expects(:new).with(
@@ -26,6 +27,12 @@ module ShopifyCli
         token: "token123",
         url: "https://partners.shopify.com/api/cli/graphql",
       ).returns(api_stub)
+      PartnersAPI.expects(:new).with(
+        ctx: @context,
+        token: "token456",
+        url: "https://partners.shopify.com/api/cli/graphql",
+      ).returns(api_stub)
+
       api_stub.stubs(:query).raises(API::APIRequestUnauthorizedError).then.returns("response")
 
       @identity_auth_client = mock
