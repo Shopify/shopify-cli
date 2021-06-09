@@ -51,6 +51,30 @@ module Script
         assert_equal err_msg, e.message
       end
 
+      def test_push_doesnt_print_api_key_when_it_hasnt_been_selected
+        Tasks::EnsureEnv.expects(:call)
+        @script_project_repo.expects(:get).returns(nil)
+
+        UI::ErrorHandler.expects(:pretty_print_and_raise).with do |_error, args|
+          assert_equal args[:failed_op], @context.message("script.push.error.operation_failed_no_api_key")
+        end
+
+        perform_command
+      end
+
+      def test_push_prints_api_key_when_it_has_been_selected
+        Tasks::EnsureEnv.expects(:call)
+        Layers::Application::PushScript.expects(:call).raises(StandardError.new)
+
+        UI::ErrorHandler.expects(:pretty_print_and_raise).with do |_error, args|
+          assert_equal args[:failed_op], @context.message(
+            "script.push.error.operation_failed_with_api_key", api_key: @api_key
+          )
+        end
+
+        perform_command
+      end
+
       private
 
       def perform_command
