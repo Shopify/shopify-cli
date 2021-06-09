@@ -44,7 +44,7 @@ module Script
             script_name: script_name,
             extension_point_type: extension_point_type,
             language: language,
-            script_json: ScriptJsonRepository.new(ctx: ctx).get(script_json)
+            script_json: ScriptJsonRepository.new(ctx: ctx).get(script_json_filename)
           )
         end
 
@@ -62,7 +62,7 @@ module Script
             script_name: script_name,
             extension_point_type: extension_point_type,
             language: language,
-            script_json: ScriptJsonRepository.new(ctx: ctx).get(script_json),
+            script_json: ScriptJsonRepository.new(ctx: ctx).get(script_json_filename),
           )
         end
 
@@ -81,7 +81,22 @@ module Script
             script_name: script_name,
             extension_point_type: extension_point_type,
             language: language,
-            script_json: ScriptJsonRepository.new(ctx: ctx).get(script_json),
+            script_json: ScriptJsonRepository.new(ctx: ctx).get(script_json_filename),
+          )
+        end
+
+        def update_script_json(title:, configuration_ui: false)
+          script_json = ScriptJsonRepository
+                          .new(ctx: ctx)
+                          .update(script_json_filename, title: title, configuration_ui: configuration_ui)
+
+          Domain::ScriptProject.new(
+            id: ctx.root,
+            env: project.env,
+            script_name: script_name,
+            extension_point_type: extension_point_type,
+            language: language,
+            script_json: script_json,
           )
         end
 
@@ -99,7 +114,7 @@ module Script
           project_config_value!("script_name")
         end
 
-        def script_json
+        def script_json_filename
           project_config_value("script_json")
         end
 
@@ -149,6 +164,19 @@ module Script
             Domain::ScriptJson.new(
               filename: filename,
               content: JSON.parse(content),
+            )
+          end
+
+          def update(filename, title:, configuration_ui:)
+            json = ctx.file_exist?(filename) ? JSON.parse(ctx.read(filename)) : {}
+            json["title"] = title
+            json["configurationUi"] = !!configuration_ui
+
+            ctx.write(filename, JSON.pretty_generate(json))
+
+            Domain::ScriptJson.new(
+              filename: filename,
+              content: json,
             )
           end
 

@@ -144,6 +144,19 @@ module ShopifyCli
       File.write(ctx_path(fname), content)
     end
 
+    # will read a file relative to the context root unless the file path is absolute.
+    #
+    # #### Parameters
+    # * `fname` - filename of the file that you are reading, relative to root unless it is absolute.
+    #
+    # #### Example
+    #
+    #   @ctx.read('file.txt')
+    #
+    def read(fname)
+      File.read(ctx_path(fname))
+    end
+
     # will read a binary file relative to the context root unless the file path is absolute.
     #
     # #### Parameters

@@ -307,6 +307,100 @@ describe Script::Layers::Infrastructure::ScriptProjectRepository do
     end
   end
 
+  describe "#update_script_json" do
+    let(:script_json_filename) { "script.json" }
+    let(:new_title) { 'new title' }
+    let(:new_configuration_ui) { true }
+    let(:valid_config) do
+      {
+        "project_type" => "script",
+        "organization_id" => 1,
+        "uuid" => "uuid",
+        "extension_point_type" => "tax_filter",
+        "script_name" => "script_name",
+        "script_json" => script_json_filename,
+      }
+    end
+    let(:current_project) do
+      TestHelpers::FakeProject.new(directory: ctx.root, config: valid_config)
+    end
+
+    before do
+      ShopifyCli::Project.stubs(:has_current?).returns(true)
+      ShopifyCli::Project.stubs(:current).returns(current_project)
+    end
+
+    subject {  instance.update_script_json(title: new_title, configuration_ui: new_configuration_ui) }
+
+    describe "when no script.json exists yet" do
+      it "creates a new file" do
+        script_json = subject.script_json
+        file_content = JSON.parse(ctx.read(script_json_filename))
+
+        assert script_json.configuration_ui
+        assert file_content["configurationUi"]
+
+        assert_equal new_title, script_json.title
+        assert_equal new_title, file_content["title"]
+
+        assert_empty script_json.version
+        assert_nil file_content["version"]
+
+        assert_nil script_json.configuration
+        assert_nil file_content["configuration"]
+
+        assert_nil script_json.content["description"]
+        assert_nil file_content["description"]
+      end
+    end
+
+    describe "script.json already exists" do
+      let(:initial_title) { "my scripts title" }
+      let(:initial_description) { "my description" }
+      let(:script_json_content) do
+        {
+          "version" => "1",
+          "description" => initial_description,
+          "configurationUi" => false,
+          "configuration" => {
+            "type": "single",
+            "schema": [
+              {
+                "key": "configurationKey",
+                "name": "My configuration field",
+                "type": "single_line_text_field",
+                "helpText": "This is some help text",
+                "defaultValue": "This is a default value",
+              },
+            ],
+          },
+        }
+      end
+
+      before do
+        ctx.write(script_json_filename, script_json_content.to_json)
+      end
+
+      it "updates only the provided fields" do
+        script_json = subject.script_json
+        file_content = JSON.parse(ctx.read(script_json_filename))
+
+        assert script_json.configuration_ui
+        assert file_content["configurationUi"]
+        assert_equal new_title, script_json.title
+        assert_equal new_title, file_content["title"]
+        refute_equal initial_title, script_json.title
+
+        assert_equal initial_description, script_json.content["description"]
+        assert_equal initial_description, file_content["description"]
+        assert_equal script_json_content["version"], script_json.version
+        assert_equal script_json_content["version"], file_content["version"]
+        assert_equal script_json_content["configuration"].to_json, script_json.configuration.to_json
+        assert_equal script_json_content["configuration"].to_json, file_content["configuration"].to_json
+      end
+    end
+  end
+
   describe "ScriptJsonRepository" do
     let(:instance) { Script::Layers::Infrastructure::ScriptProjectRepository::ScriptJsonRepository.new(ctx: ctx) }
 
@@ -335,7 +429,7 @@ describe Script::Layers::Infrastructure::ScriptProjectRepository do
             File.write(filename, content)
           end
 
-          describe "when content is invalid yaml" do
+          describe "when content is invalid json" do
             let(:content) { "*" }
 
             it "raises InvalidScriptJsonDefinitionError" do
@@ -343,7 +437,7 @@ describe Script::Layers::Infrastructure::ScriptProjectRepository do
             end
           end
 
-          describe "when content is valid yaml" do
+          describe "when content is valid json" do
             let(:version) { "1" }
             let(:content) { { "version" => version }.to_json }
 
