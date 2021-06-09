@@ -81,10 +81,10 @@ module Script
           )
         end
 
-        def update_script_json(title:, configuration_ui: false)
+        def update_or_create_script_json(title:, configuration_ui: false)
           script_json = ScriptJsonRepository
             .new(ctx: ctx)
-            .update(title: title, configuration_ui: configuration_ui)
+            .update_or_create(title: title, configuration_ui: configuration_ui)
 
           Domain::ScriptProject.new(
             id: ctx.root,
@@ -145,16 +145,11 @@ module Script
           property! :ctx, accepts: ShopifyCli::Context
 
           def get
-            raise Domain::Errors::NoScriptJsonFile unless ctx.file_exist?(SCRIPT_JSON_FILENAME)
-
-            content = ctx.read(SCRIPT_JSON_FILENAME)
-            raise Domain::Errors::InvalidScriptJsonDefinitionError unless valid_script_json?(content)
-
-            Domain::ScriptJson.new(content: JSON.parse(content))
+            current_script_json || raise(Domain::Errors::NoScriptJsonFile)
           end
 
-          def update(title:, configuration_ui:)
-            json = get.content
+          def update_or_create(title:, configuration_ui:)
+            json = current_script_json&.content || {}
             json["title"] = title
             json["configurationUi"] = !!configuration_ui
 
@@ -164,6 +159,15 @@ module Script
           end
 
           private
+
+          def current_script_json
+            return nil unless ctx.file_exist?(SCRIPT_JSON_FILENAME)
+
+            content = ctx.read(SCRIPT_JSON_FILENAME)
+            raise Domain::Errors::InvalidScriptJsonDefinitionError unless valid_script_json?(content)
+
+            Domain::ScriptJson.new(content: JSON.parse(content))
+          end
 
           def valid_script_json?(content)
             JSON.parse(content)

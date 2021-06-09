@@ -36,9 +36,9 @@ module TestHelpers
       @project
     end
 
-    def update_script_json(title:, configuration_ui: false)
+    def update_or_create_script_json(title:, configuration_ui: false)
       script_json = fake_script_json_repo
-        .update(title: title, configuration_ui: configuration_ui)
+        .update_or_create(title: title, configuration_ui: configuration_ui)
 
       @project.script_json = script_json
       @project
@@ -61,8 +61,8 @@ module TestHelpers
         )
       end
 
-      def update(title:, configuration_ui:)
-        json = @cache.content
+      def update_or_create(title:, configuration_ui:)
+        json = @cache&.content || {}
         json["title"] = title
         json["configurationUi"] = !!configuration_ui
 

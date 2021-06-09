@@ -285,11 +285,20 @@ describe Script::Layers::Infrastructure::ScriptProjectRepository do
     end
   end
 
-  describe "#update_script_json" do
+  describe "#update_or_create_script_json" do
     let(:new_title) { "new title" }
     let(:new_configuration_ui) { true }
     let(:current_project) do
       TestHelpers::FakeProject.new(directory: ctx.root, config: project_config)
+    end
+    let(:project_config) do
+      {
+        "project_type" => "script",
+        "organization_id" => 1,
+        "uuid" => "uuid",
+        "extension_point_type" => "tax_filter",
+        "script_name" => "script_name",
+      }
     end
 
     before do
@@ -297,36 +306,30 @@ describe Script::Layers::Infrastructure::ScriptProjectRepository do
       ShopifyCli::Project.stubs(:current).returns(current_project)
     end
 
-    subject { instance.update_script_json(title: new_title, configuration_ui: new_configuration_ui) }
+    subject { instance.update_or_create_script_json(title: new_title, configuration_ui: new_configuration_ui) }
 
     describe "script.json does not exist" do
-      let(:project_config) do
-        {
-          "project_type" => "script",
-          "organization_id" => 1,
-          "uuid" => "uuid",
-          "extension_point_type" => "tax_filter",
-          "script_name" => "script_name",
-        }
-      end
+      it "creates a new file with the provided fields" do
+        refute ctx.file_exist?(script_json_filename)
 
-      it "raises NoScriptJsonFile" do
-        assert_raises(Script::Layers::Domain::Errors::NoScriptJsonFile) { subject }
+        script_json = subject.script_json
+        file_content = JSON.parse(ctx.read(script_json_filename))
+
+        assert script_json.configuration_ui
+        assert file_content["configurationUi"]
+        assert_equal new_title, script_json.title
+        assert_equal new_title, file_content["title"]
+
+        assert_nil script_json.content["description"]
+        assert_nil file_content["description"]
+        assert_empty script_json.version
+        assert_nil file_content["version"]
+        assert_nil script_json.configuration
+        assert_nil file_content["configuration"]
       end
     end
 
     describe "script.json already exists" do
-      let(:project_config) do
-        {
-          "project_type" => "script",
-          "organization_id" => 1,
-          "uuid" => "uuid",
-          "extension_point_type" => "tax_filter",
-          "script_name" => "script_name",
-          "script_json" => script_json_filename,
-        }
-      end
-
       let(:initial_title) { "my scripts title" }
       let(:initial_description) { "my description" }
       let(:script_json_content) do

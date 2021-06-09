@@ -22,7 +22,7 @@ module Script
                 .for(ctx, language, extension_point, script_name, project.id)
               install_dependencies(ctx, language, script_name, project_creator)
               bootstrap(ctx, project_creator)
-              script_project_repo.update_script_json(title: script_name, configuration_ui: !no_config_ui)
+              script_project_repo.update_or_create_script_json(title: script_name, configuration_ui: !no_config_ui)
               project
             end
           end
