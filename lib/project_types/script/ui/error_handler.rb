@@ -123,14 +123,14 @@ module Script
         when Layers::Domain::Errors::InvalidScriptJsonDefinitionError
           {
             cause_of_error: ShopifyCli::Context
-              .message("script.error.invalid_config_ui_definition_cause", e.filename),
-            help_suggestion: ShopifyCli::Context.message("script.error.invalid_config_ui_definition_help"),
+              .message("script.error.invalid_script_json_definition_cause", e.filename),
+            help_suggestion: ShopifyCli::Context.message("script.error.invalid_script_json_definition_help"),
           }
         when Layers::Domain::Errors::MissingSpecifiedScriptJsonDefinitionError
           {
             cause_of_error: ShopifyCli::Context
-              .message("script.error.missing_config_ui_definition_cause", e.filename),
-            help_suggestion: ShopifyCli::Context.message("script.error.missing_config_ui_definition_help"),
+              .message("script.error.missing_script_json_definition_cause", e.filename),
+            help_suggestion: ShopifyCli::Context.message("script.error.missing_script_json_definition_help"),
           }
         when Layers::Infrastructure::Errors::AppNotInstalledError
           {
