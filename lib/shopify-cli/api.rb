@@ -24,6 +24,7 @@ module ShopifyCli
     class APIRequestForbiddenError < APIRequestClientError; end
     class APIRequestUnexpectedError < APIRequestError; end
     class APIRequestRetriableError < APIRequestError; end
+    class APIRequestTimeoutError < APIRequestRetriableError; end
     class APIRequestServerError < APIRequestRetriableError; end
     class APIRequestThrottledError < APIRequestRetriableError; end
 
@@ -80,6 +81,8 @@ module ShopifyCli
         else
           raise APIRequestUnexpectedError.new("#{response.code}\n#{response.body}", response: response)
         end
+      rescue Net::OpenTimeout, Net::ReadTimeout, Net::WriteTimeout, Errno::ETIMEDOUT, Timeout::Error
+        raise APIRequestTimeoutError.new("Timeout")
       end.retry_after(APIRequestRetriableError, retries: 3) do |e|
         sleep(1) if e.is_a?(APIRequestThrottledError)
       end
