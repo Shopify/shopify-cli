@@ -1,6 +1,7 @@
 mutation AppScriptUpdateOrCreate(
   $extensionPointName: ExtensionPointName!,
   $title: String,
+  $description: String,
   $sourceCode: String,
   $language: String,
   $force: Boolean,
@@ -15,6 +16,7 @@ mutation AppScriptUpdateOrCreate(
   appScriptUpdateOrCreate(
     extensionPointName: $extensionPointName
     title: $title
+    description: $description
     sourceCode: $sourceCode
     language: $language
     force: $force

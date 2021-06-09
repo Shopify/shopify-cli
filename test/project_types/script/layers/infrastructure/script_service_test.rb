@@ -15,6 +15,7 @@ describe Script::Layers::Infrastructure::ScriptService do
   let(:script_json) do
     Script::Layers::Domain::ScriptJson.new(filename: "filename", content: expected_script_json_content)
   end
+  let(:expected_description) { "some description" }
   let(:expected_configuration_ui) { true }
   let(:expected_configuration_definition_version) { "1" }
   let(:expected_configuration) do
@@ -34,7 +35,8 @@ describe Script::Layers::Infrastructure::ScriptService do
   let(:expected_script_json_content) do
     {
       "version" => expected_configuration_definition_version,
-      "name" => "script",
+      "title" => "script",
+      "description" => expected_description,
       "configurationUi" => expected_configuration_ui,
       "configuration" => expected_configuration,
     }
@@ -62,6 +64,7 @@ describe Script::Layers::Infrastructure::ScriptService do
         mutation AppScriptUpdateOrCreate(
           $extensionPointName: ExtensionPointName!,
           $title: String,
+          $description: String,
           $sourceCode: String,
           $language: String,
           $schemaMajorVersion: String,
@@ -74,6 +77,7 @@ describe Script::Layers::Infrastructure::ScriptService do
           appScriptUpdateOrCreate(
             extensionPointName: $extensionPointName
             title: $title
+            description: $description
             sourceCode: $sourceCode
             language: $language
             schemaMajorVersion: $schemaMajorVersion
@@ -109,6 +113,7 @@ describe Script::Layers::Infrastructure::ScriptService do
             uuid: uuid_from_config,
             extensionPointName: extension_point_type,
             title: script_name,
+            description: expected_description,
             sourceCode: Base64.encode64(script_content),
             language: "AssemblyScript",
             force: false,
@@ -174,6 +179,7 @@ describe Script::Layers::Infrastructure::ScriptService do
 
       describe "when script_json is nil" do
         let(:script_json) { nil }
+        let(:expected_description) { nil }
         let(:expected_script_json_content) { nil }
         let(:expected_configuration_definition_version) { nil }
         let(:expected_configuration_ui) { nil }

@@ -26,6 +26,7 @@ module Script
             uuid: uuid,
             extensionPointName: extension_point_type.upcase,
             title: script_name,
+            description: script_json&.description,
             sourceCode: Base64.encode64(script_content),
             language: compiled_type,
             force: force,
