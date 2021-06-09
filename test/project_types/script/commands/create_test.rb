@@ -19,16 +19,16 @@ module Script
         @no_config_ui = false
         @script_project = TestHelpers::FakeScriptProjectRepository.new.create(
           language: @language,
-          extension_point_type: @api,
+          script_api_type: @api,
           script_name: @script_name,
           no_config_ui: @no_config_ui
         )
-        Layers::Application::ExtensionPoints.stubs(:languages).returns(%w(assemblyscript))
+        Layers::Application::ScriptApis.stubs(:languages).returns(%w(assemblyscript))
       end
 
       def test_prints_help_with_no_name_argument
         root = File.expand_path(__dir__ + "../../../../..")
-        FakeFS::FileSystem.clone(root + "/lib/project_types/script/config/extension_points.yml")
+        FakeFS::FileSystem.clone(root + "/lib/project_types/script/config/script_apis.yml")
         @script_name = nil
         io = capture_io { perform_command }
         assert_match(CLI::UI.fmt(Script::Commands::Create.help), io.join)
@@ -39,7 +39,7 @@ module Script
           ctx: @context,
           language: @language,
           script_name: @script_name,
-          extension_point_type: @api,
+          script_api_type: @api,
           no_config_ui: @no_config_ui
         ).returns(@script_project)
 
@@ -56,7 +56,7 @@ module Script
           ctx: @context,
           language: @language,
           script_name: @script_name,
-          extension_point_type: @api,
+          script_api_type: @api,
           no_config_ui: @no_config_ui
         ).returns(@script_project)
 
@@ -67,7 +67,7 @@ module Script
       end
 
       def test_help
-        Script::Layers::Application::ExtensionPoints.expects(:types).returns(%w(ep1 ep2))
+        Script::Layers::Application::ScriptApis.expects(:types).returns(%w(ep1 ep2))
         ShopifyCli::Context
           .expects(:message)
           .with("script.create.help", ShopifyCli::TOOL_NAME, "{{cyan:ep1}}, {{cyan:ep2}}")
@@ -79,7 +79,7 @@ module Script
       def perform_command_snake_case
         args = {
           name: @script_name,
-          extension_point: @api,
+          script_api: @api,
           language: @language,
         }
 

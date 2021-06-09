@@ -6,7 +6,7 @@ describe Script::Layers::Application::BuildScript do
   include TestHelpers::FakeFS
   describe ".call" do
     let(:language) { "assemblyscript" }
-    let(:extension_point_type) { "discount" }
+    let(:script_api_type) { "discount" }
     let(:script_name) { "name" }
     let(:op_failed_msg) { "msg" }
     let(:content) { "content" }

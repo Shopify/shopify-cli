@@ -2,18 +2,18 @@
 
 require "project_types/script/test_helper"
 
-describe Script::Layers::Infrastructure::ExtensionPointRepository do
-  subject { Script::Layers::Infrastructure::ExtensionPointRepository.new }
+describe Script::Layers::Infrastructure::ScriptApiRepository do
+  subject { Script::Layers::Infrastructure::ScriptApiRepository.new }
 
-  describe ".get_extension_point" do
+  describe ".get" do
     describe "when the extension point is configured" do
-      Script::Layers::Infrastructure::ExtensionPointRepository.new
-        .send(:extension_point_configs)
-        .each do |extension_point_type, _config|
-        it "should be able to load the #{extension_point_type} extension point" do
-          extension_point = subject.get_extension_point(extension_point_type)
-          assert_equal extension_point_type, extension_point.type
-          refute_nil extension_point.sdks.assemblyscript.package
+      Script::Layers::Infrastructure::ScriptApiRepository.new
+        .send(:script_api_configs)
+        .each do |script_api_type, _config|
+        it "should be able to load the #{script_api_type} extension point" do
+          script_api = subject.get(script_api_type)
+          assert_equal script_api_type, script_api.type
+          refute_nil script_api.sdks.assemblyscript.package
         end
       end
     end
@@ -21,18 +21,18 @@ describe Script::Layers::Infrastructure::ExtensionPointRepository do
     describe "when the extension point does not exist" do
       let(:bogus_extension) { "bogus" }
 
-      it "should raise InvalidExtensionPointError" do
-        assert_raises(Script::Layers::Domain::Errors::InvalidExtensionPointError) do
-          subject.get_extension_point(bogus_extension)
+      it "should raise InvalidScriptApiError" do
+        assert_raises(Script::Layers::Domain::Errors::InvalidScriptApiError) do
+          subject.get(bogus_extension)
         end
       end
     end
   end
 
-  describe ".extension_point_types" do
+  describe ".all_types" do
     it "should return the ep keys" do
-      subject.stubs(:extension_point_configs).returns({ "discount" => {}, "other" => {} })
-      assert_equal ["discount", "other"], subject.send(:extension_point_types)
+      subject.stubs(:script_api_configs).returns({ "discount" => {}, "other" => {} })
+      assert_equal ["discount", "other"], subject.send(:all_types)
     end
   end
 end

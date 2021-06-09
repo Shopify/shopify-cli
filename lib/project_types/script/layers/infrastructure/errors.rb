@@ -51,11 +51,11 @@ module Script
         class InvalidContextError < ScriptProjectError; end
 
         class InvalidLanguageError < ScriptProjectError
-          attr_reader :language, :extension_point_type
-          def initialize(language, extension_point_type)
+          attr_reader :language, :script_api_type
+          def initialize(language, script_api_type)
             super()
             @language = language
-            @extension_point_type = extension_point_type
+            @script_api_type = script_api_type
           end
         end
 

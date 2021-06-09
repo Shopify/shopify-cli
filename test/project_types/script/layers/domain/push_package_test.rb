@@ -4,7 +4,7 @@ require "project_types/script/test_helper"
 
 describe Script::Layers::Domain::PushPackage do
   let(:uuid) { "uuid" }
-  let(:extension_point_type) { "discount" }
+  let(:script_api_type) { "discount" }
   let(:script_id) { "id" }
   let(:script_name) { "foo_script" }
   let(:config_ui) { "---\nversion: 1\n" }
@@ -17,7 +17,7 @@ describe Script::Layers::Domain::PushPackage do
     Script::Layers::Domain::PushPackage.new(
       id: id,
       uuid: uuid,
-      extension_point_type: extension_point_type,
+      script_api_type: script_api_type,
       script_name: script_name,
       config_ui: config_ui,
       script_content: script_content,
@@ -43,7 +43,7 @@ describe Script::Layers::Domain::PushPackage do
 
     it "should open write to build file and push" do
       script_service.expect(:push, nil) do |kwargs|
-        kwargs[:extension_point_type] == extension_point_type &&
+        kwargs[:script_api_type] == script_api_type &&
           kwargs[:script_name] == script_name &&
           kwargs[:script_content] == script_content &&
           kwargs[:compiled_type] == compiled_type &&

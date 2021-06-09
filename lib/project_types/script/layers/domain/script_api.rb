@@ -3,7 +3,7 @@
 module Script
   module Layers
     module Domain
-      class ExtensionPoint
+      class ScriptApi
         attr_reader :type, :beta, :deprecated, :sdks, :domain
 
         def initialize(type, config)
@@ -11,7 +11,7 @@ module Script
           @beta = config["beta"] || false
           @deprecated = config["deprecated"] || false
           @domain = config["domain"] || nil
-          @sdks = ExtensionPointSDKs.new(config)
+          @sdks = ScriptApiSDKs.new(config)
         end
 
         def beta?
@@ -26,7 +26,7 @@ module Script
           @type.gsub("_", "-")
         end
 
-        class ExtensionPointSDKs
+        class ScriptApiSDKs
           def initialize(config)
             @config = config
           end
@@ -36,11 +36,11 @@ module Script
           end
 
           def assemblyscript
-            @assemblyscript ||= new_sdk(ExtensionPointAssemblyScriptSDK)
+            @assemblyscript ||= new_sdk(ScriptApiAssemblyScriptSDK)
           end
 
           def rust
-            @rust ||= new_sdk(ExtensionPointRustSDK)
+            @rust ||= new_sdk(ScriptApiRustSDK)
           end
 
           private
@@ -52,7 +52,7 @@ module Script
           end
         end
 
-        class ExtensionPointSDK
+        class ScriptApiSDK
           attr_reader :version, :beta, :package
 
           def initialize(config)
@@ -74,7 +74,7 @@ module Script
           end
         end
 
-        class ExtensionPointAssemblyScriptSDK < ExtensionPointSDK
+        class ScriptApiAssemblyScriptSDK < ScriptApiSDK
           attr_reader :sdk_version, :toolchain_version
 
           def initialize(config)
@@ -88,7 +88,7 @@ module Script
           end
         end
 
-        class ExtensionPointRustSDK < ExtensionPointSDK
+        class ScriptApiRustSDK < ScriptApiSDK
           def self.language
             "rust"
           end

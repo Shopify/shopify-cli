@@ -23,7 +23,7 @@ module Script
 
       def test_asks_api_if_no_flag
         eps = ["discount", "another"]
-        Layers::Application::ExtensionPoints.expects(:available_types).returns(eps)
+        Layers::Application::ScriptApis.expects(:available_types).returns(eps)
         CLI::UI::Prompt.expects(:ask).with(
           @context.message("script.forms.create.select_api"),
           options: eps
@@ -65,7 +65,7 @@ module Script
 
       def test_auto_selects_existing_language_if_only_one_exists
         language = "assemblyscript"
-        Layers::Application::ExtensionPoints.expects(:languages).returns(%w(assemblyscript))
+        Layers::Application::ScriptApis.expects(:languages).returns(%w(assemblyscript))
         CLI::UI::Prompt.expects(:ask).never
         form = ask(name: "name", api: "discount")
         assert_equal language, form.language
@@ -74,7 +74,7 @@ module Script
       def test_prompts_for_language_when_multiple_options_exist_and_no_flag_passed
         language = "rust"
         all_languages = %w(assemblyscript rust)
-        Layers::Application::ExtensionPoints.expects(:languages).returns(all_languages)
+        Layers::Application::ScriptApis.expects(:languages).returns(all_languages)
         CLI::UI::Prompt
           .expects(:ask)
           .with(@context.message("script.forms.create.select_language"), options: all_languages)

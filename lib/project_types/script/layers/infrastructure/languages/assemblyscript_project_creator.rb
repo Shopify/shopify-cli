@@ -7,11 +7,11 @@ module Script
         class AssemblyScriptProjectCreator
           include SmartProperties
           property! :ctx, accepts: ShopifyCli::Context
-          property! :extension_point, accepts: Domain::ExtensionPoint
+          property! :script_api, accepts: Domain::ScriptApi
           property! :script_name, accepts: String
           property! :path_to_project, accepts: String
 
-          BOOTSTRAP = "npx --no-install shopify-scripts-toolchain-as bootstrap --from %{extension_point} --dest %{base}"
+          BOOTSTRAP = "npx --no-install shopify-scripts-toolchain-as bootstrap --from %{script_api} --dest %{base}"
           BUILD = "shopify-scripts-toolchain-as build --src src/shopify_main.ts " \
           "--binary build/script.wasm --metadata build/metadata.json"
           MIN_NODE_VERSION = "14.5.0"
@@ -37,10 +37,10 @@ module Script
             command_runner.call("npm --userconfig ./.npmrc config set engine-strict true")
           end
 
-          def extension_point_version
-            return extension_point.sdks.assemblyscript.version if extension_point.sdks.assemblyscript.versioned?
+          def script_api_version
+            return script_api.sdks.assemblyscript.version if script_api.sdks.assemblyscript.versioned?
 
-            out = command_runner.call("npm show #{extension_point.sdks.assemblyscript.package} version --json")
+            out = command_runner.call("npm show #{script_api.sdks.assemblyscript.package} version --json")
             "^#{JSON.parse(out)}"
           end
 
@@ -50,9 +50,9 @@ module Script
                 "name": "#{script_name}",
                 "version": "1.0.0",
                 "devDependencies": {
-                  "@shopify/scripts-sdk-as": "#{extension_point.sdks.assemblyscript.sdk_version}",
-                  "@shopify/scripts-toolchain-as": "#{extension_point.sdks.assemblyscript.toolchain_version}",
-                  "#{extension_point.sdks.assemblyscript.package}": "#{extension_point_version}",
+                  "@shopify/scripts-sdk-as": "#{script_api.sdks.assemblyscript.sdk_version}",
+                  "@shopify/scripts-toolchain-as": "#{script_api.sdks.assemblyscript.toolchain_version}",
+                  "#{script_api.sdks.assemblyscript.package}": "#{script_api_version}",
                   "@as-pect/cli": "^6.0.0",
                   "assemblyscript": "^0.18.13"
                 },
@@ -69,9 +69,9 @@ module Script
           end
 
           def bootstap_command
-            type = extension_point.dasherize_type
-            base_command = format(BOOTSTRAP, extension_point: type, base: path_to_project)
-            domain = extension_point.domain
+            type = script_api.dasherize_type
+            base_command = format(BOOTSTRAP, script_api: type, base: path_to_project)
+            domain = script_api.domain
 
             if domain.nil?
               base_command
@@ -81,8 +81,8 @@ module Script
           end
 
           def build_command
-            type = extension_point.dasherize_type
-            domain = extension_point.domain
+            type = script_api.dasherize_type
+            domain = script_api.domain
 
             if domain.nil?
               "#{BUILD} #{ASC_ARGS}"

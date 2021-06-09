@@ -8,7 +8,7 @@ describe Script::Tasks::EnsureEnv do
   describe ".call" do
     let(:context) { TestHelpers::FakeContext.new(root: Dir.mktmpdir) }
     let(:language) { "assemblyscript" }
-    let(:extension_point_type) { "discount" }
+    let(:script_api_type) { "discount" }
     let(:script_name) { "name" }
     let(:is_shopifolk) { false }
     let(:script_project_repository) { TestHelpers::FakeScriptProjectRepository.new }
@@ -25,7 +25,7 @@ describe Script::Tasks::EnsureEnv do
       Script::Layers::Infrastructure::ScriptProjectRepository.stubs(:new).returns(script_project_repository)
       script_project_repository.create(
         language: language,
-        extension_point_type: extension_point_type,
+        script_api_type: script_api_type,
         script_name: script_name,
         no_config_ui: false,
         env: env
@@ -94,7 +94,7 @@ describe Script::Tasks::EnsureEnv do
           Script::Layers::Infrastructure::ScriptService
             .any_instance
             .stubs(:get_app_scripts)
-            .with(api_key: selected_api_key, extension_point_type: extension_point_type)
+            .with(api_key: selected_api_key, script_api_type: script_api_type)
             .returns(existing_scripts)
         end
 

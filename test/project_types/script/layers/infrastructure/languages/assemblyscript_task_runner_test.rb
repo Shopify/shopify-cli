@@ -8,7 +8,7 @@ describe Script::Layers::Infrastructure::Languages::AssemblyScriptTaskRunner do
   let(:ctx) { TestHelpers::FakeContext.new }
   let(:script_id) { "id" }
   let(:script_name) { "foo" }
-  let(:extension_point_config) do
+  let(:script_api_config) do
     {
       "assemblyscript" => {
         "package": "@shopify/extension-point-as-fake",
@@ -17,7 +17,7 @@ describe Script::Layers::Infrastructure::Languages::AssemblyScriptTaskRunner do
       },
     }
   end
-  let(:extension_point_type) { "discount" }
+  let(:script_api_type) { "discount" }
   let(:language) { "AssemblyScript" }
   let(:as_task_runner) { Script::Layers::Infrastructure::Languages::AssemblyScriptTaskRunner.new(ctx, script_name) }
 

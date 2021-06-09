@@ -11,7 +11,7 @@ module Script
         property! :id, accepts: String
         property :env, accepts: ShopifyCli::Resources::EnvFile
 
-        property! :extension_point_type, accepts: String
+        property! :script_api_type, accepts: String
         property! :script_name, accepts: String
         property! :language, accepts: String
 
@@ -22,7 +22,7 @@ module Script
 
           ShopifyCli::Core::Monorail.metadata = {
             "script_name" => script_name,
-            "extension_point_type" => extension_point_type,
+            "script_api_type" => script_api_type,
             "language" => language,
           }
         end

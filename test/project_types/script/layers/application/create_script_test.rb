@@ -6,13 +6,13 @@ describe Script::Layers::Application::CreateScript do
   include TestHelpers::FakeFS
 
   let(:language) { "AssemblyScript" }
-  let(:extension_point_type) { "discount" }
+  let(:script_api_type) { "discount" }
   let(:script_name) { "name" }
   let(:compiled_type) { "wasm" }
   let(:no_config_ui) { false }
-  let(:extension_point_repository) { TestHelpers::FakeExtensionPointRepository.new }
+  let(:script_api_repository) { TestHelpers::FakeScriptApiRepository.new }
   let(:script_project_repository) { TestHelpers::FakeScriptProjectRepository.new }
-  let(:ep) { extension_point_repository.get_extension_point(extension_point_type) }
+  let(:ep) { script_api_repository.get(script_api_type) }
   let(:task_runner) { stub(compiled_type: compiled_type) }
   let(:project_creator) { stub }
   let(:context) { TestHelpers::FakeContext.new }
@@ -20,16 +20,16 @@ describe Script::Layers::Application::CreateScript do
   let(:script_project) do
     script_project_repository.create(
       language: language,
-      extension_point_type: extension_point_type,
+      script_api_type: script_api_type,
       script_name: script_name,
       no_config_ui: false
     )
   end
 
   before do
-    Script::Layers::Infrastructure::ExtensionPointRepository.stubs(:new).returns(extension_point_repository)
+    Script::Layers::Infrastructure::ScriptApiRepository.stubs(:new).returns(script_api_repository)
 
-    extension_point_repository.create_extension_point(extension_point_type)
+    script_api_repository.create_script_api(script_api_type)
     Script::Layers::Infrastructure::Languages::TaskRunner
       .stubs(:for)
       .with(context, language, script_name)
@@ -46,7 +46,7 @@ describe Script::Layers::Application::CreateScript do
         ctx: context,
         language: language,
         script_name: script_name,
-        extension_point_type: extension_point_type,
+        script_api_type: script_api_type,
         no_config_ui: no_config_ui
       )
     end
@@ -84,9 +84,9 @@ describe Script::Layers::Application::CreateScript do
       initial_dir = context.root
       refute context.dir_exist?(script_name)
 
-      Script::Layers::Application::ExtensionPoints
+      Script::Layers::Application::ScriptApis
         .expects(:get)
-        .with(type: extension_point_type)
+        .with(type: script_api_type)
         .returns(ep)
       Script::Layers::Infrastructure::ScriptProjectRepository
         .any_instance
@@ -94,7 +94,7 @@ describe Script::Layers::Application::CreateScript do
         .with(
           language: language,
           script_name: script_name,
-          extension_point_type: extension_point_type,
+          script_api_type: script_api_type,
           no_config_ui: no_config_ui
         ).returns(script_project)
       Script::Layers::Application::CreateScript

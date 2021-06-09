@@ -10,11 +10,11 @@ module Script
             "rust" => RustProjectCreator,
           }
 
-          def self.for(ctx, language, extension_point, script_name, path_to_project)
+          def self.for(ctx, language, script_api, script_name, path_to_project)
             raise Errors::ProjectCreatorNotFoundError unless PROJECT_CREATORS[language]
             PROJECT_CREATORS[language].new(
               ctx: ctx,
-              extension_point: extension_point,
+              script_api: script_api,
               script_name: script_name,
               path_to_project: path_to_project
             )

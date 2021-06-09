@@ -198,8 +198,8 @@ describe Script::UI::ErrorHandler do
         end
       end
 
-      describe "when InvalidExtensionPointError" do
-        let(:err) { Script::Layers::Domain::Errors::InvalidExtensionPointError.new("") }
+      describe "when InvalidScriptApiError" do
+        let(:err) { Script::Layers::Domain::Errors::InvalidScriptApiError.new("") }
         it "should call display_and_raise" do
           should_call_display_and_raise
         end

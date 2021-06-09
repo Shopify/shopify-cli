@@ -16,13 +16,13 @@ describe Script::Layers::Infrastructure::ScriptProjectRepository do
   let(:supported_languages) { ["assemblyscript"] }
 
   before do
-    Script::Layers::Application::ExtensionPoints.stubs(:deprecated_types).returns(deprecated_ep_types)
-    Script::Layers::Application::ExtensionPoints.stubs(:languages).returns(supported_languages)
+    Script::Layers::Application::ScriptApis.stubs(:deprecated_types).returns(deprecated_ep_types)
+    Script::Layers::Application::ScriptApis.stubs(:languages).returns(supported_languages)
   end
 
   describe "#create" do
     let(:script_name) { "script_name" }
-    let(:extension_point_type) { "tax_filter" }
+    let(:script_api_type) { "tax_filter" }
     let(:language) { "assemblyscript" }
     let(:no_config_ui) { false }
 
@@ -35,7 +35,7 @@ describe Script::Layers::Infrastructure::ScriptProjectRepository do
     subject do
       instance.create(
         script_name: script_name,
-        extension_point_type: extension_point_type,
+        script_api_type: script_api_type,
         language: language,
         no_config_ui: no_config_ui
       )
@@ -43,7 +43,7 @@ describe Script::Layers::Infrastructure::ScriptProjectRepository do
 
     describe "failure" do
       describe "when extension point is deprecated" do
-        let(:deprecated_ep_types) { [extension_point_type] }
+        let(:deprecated_ep_types) { [script_api_type] }
 
         it "should raise DeprecatedEPError" do
           assert_raises(Script::Layers::Infrastructure::Errors::DeprecatedEPError) { subject }
@@ -66,7 +66,7 @@ describe Script::Layers::Infrastructure::ScriptProjectRepository do
         assert_nil subject.env
         assert_nil subject.uuid
         assert_equal script_name, subject.script_name
-        assert_equal extension_point_type, subject.extension_point_type
+        assert_equal script_api_type, subject.script_api_type
         assert_equal language, subject.language
       end
 
@@ -99,14 +99,14 @@ describe Script::Layers::Infrastructure::ScriptProjectRepository do
     subject { instance.get }
 
     let(:script_name) { "script_name" }
-    let(:extension_point_type) { "tax_filter" }
+    let(:script_api_type) { "tax_filter" }
     let(:language) { "assemblyscript" }
     let(:uuid) { "uuid" }
     let(:config_ui_file) { "config-ui.yml" }
     let(:config_ui_content) { "---\nversion: 1" }
     let(:valid_config) do
       {
-        "extension_point_type" => "tax_filter",
+        "script_api_type" => "tax_filter",
         "script_name" => "script_name",
         "config_ui_file" => config_ui_file,
       }
@@ -148,7 +148,7 @@ describe Script::Layers::Infrastructure::ScriptProjectRepository do
       it "should return the ScriptProject" do
         assert_equal current_project.directory, subject.id
         assert_equal script_name, subject.script_name
-        assert_equal extension_point_type, subject.extension_point_type
+        assert_equal script_api_type, subject.script_api_type
         assert_equal language, subject.language
         assert_equal config_ui_file, subject.config_ui.filename
         assert_equal config_ui_content, subject.config_ui.content
@@ -156,7 +156,7 @@ describe Script::Layers::Infrastructure::ScriptProjectRepository do
     end
 
     describe "when extension point is deprecated" do
-      let(:deprecated_ep_types) { [extension_point_type] }
+      let(:deprecated_ep_types) { [script_api_type] }
 
       it "should raise DeprecatedEPError" do
         assert_raises(Script::Layers::Infrastructure::Errors::DeprecatedEPError) { subject }
@@ -176,8 +176,8 @@ describe Script::Layers::Infrastructure::ScriptProjectRepository do
         config.slice(*(config.keys - keys))
       end
 
-      describe "when missing extension_point_type" do
-        let(:actual_config) { hash_except(valid_config, "extension_point_type") }
+      describe "when missing script_api_type" do
+        let(:actual_config) { hash_except(valid_config, "script_api_type") }
 
         it "should raise InvalidContextError" do
           assert_raises(Script::Layers::Infrastructure::Errors::InvalidContextError) { subject }
@@ -215,7 +215,7 @@ describe Script::Layers::Infrastructure::ScriptProjectRepository do
     subject { instance.update_env(**args) }
 
     let(:script_name) { "script_name" }
-    let(:extension_point_type) { "tax_filter" }
+    let(:script_api_type) { "tax_filter" }
     let(:language) { "assemblyscript" }
     let(:uuid) { "uuid" }
     let(:updated_uuid) { "updated_uuid" }
@@ -227,7 +227,7 @@ describe Script::Layers::Infrastructure::ScriptProjectRepository do
         "project_type" => "script",
         "organization_id" => 1,
         "uuid" => uuid,
-        "extension_point_type" => "tax_filter",
+        "script_api_type" => "tax_filter",
         "script_name" => "script_name",
         "config_ui_file" => config_ui_file,
       }
@@ -245,7 +245,7 @@ describe Script::Layers::Infrastructure::ScriptProjectRepository do
 
       instance.create(
         script_name: script_name,
-        extension_point_type: extension_point_type,
+        script_api_type: script_api_type,
         language: language,
         no_config_ui: true
       )
@@ -255,7 +255,7 @@ describe Script::Layers::Infrastructure::ScriptProjectRepository do
     describe "when updating an immutable property" do
       let(:args) do
         {
-          extension_point_type: "a",
+          script_api_type: "a",
           language: "b",
           script_name: "c",
           project_type: "d",

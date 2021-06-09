@@ -5,7 +5,7 @@ require "project_types/script/test_helper"
 describe Script::Layers::Infrastructure::Languages::ProjectCreator do
   describe ".for" do
     let(:script_name) { "foo_discount" }
-    let(:extension_point_config) do
+    let(:script_api_config) do
       {
         "assemblyscript" => {
           "package": "@shopify/extension-point-as-fake",
@@ -14,10 +14,10 @@ describe Script::Layers::Infrastructure::Languages::ProjectCreator do
         },
       }
     end
-    let(:extension_point) { Script::Layers::Domain::ExtensionPoint.new("discount", extension_point_config) }
+    let(:script_api) { Script::Layers::Domain::ScriptApi.new("discount", script_api_config) }
     subject do
       Script::Layers::Infrastructure::Languages::ProjectCreator
-        .for(@context, language, extension_point, script_name, "/path")
+        .for(@context, language, script_api, script_name, "/path")
     end
 
     describe "when the script language does match an entry in the registry" do

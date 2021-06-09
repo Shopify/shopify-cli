@@ -3,25 +3,25 @@
 module Script
   module Layers
     module Application
-      class ExtensionPoints
+      class ScriptApis
         def self.get(type:)
-          Infrastructure::ExtensionPointRepository.new.get_extension_point(type)
+          Infrastructure::ScriptApiRepository.new.get(type)
         end
 
         def self.types
-          Infrastructure::ExtensionPointRepository.new.extension_point_types
+          Infrastructure::ScriptApiRepository.new.all_types
         end
 
         def self.available_types
-          Infrastructure::ExtensionPointRepository.new.extension_points.select do |ep|
+          Infrastructure::ScriptApiRepository.new.all.select do |ep|
             next false if ep.deprecated?
-            !ep.beta? || ShopifyCli::Feature.enabled?(:scripts_beta_extension_points)
+            !ep.beta? || ShopifyCli::Feature.enabled?(:scripts_beta_apis)
           end.map(&:type)
         end
 
         def self.deprecated_types
-          Infrastructure::ExtensionPointRepository.new
-            .extension_points
+          Infrastructure::ScriptApiRepository.new
+            .all
             .select(&:deprecated?)
             .map(&:type)
         end

@@ -7,7 +7,7 @@ module Script
         class RustProjectCreator
           include SmartProperties
           property! :ctx, accepts: ShopifyCli::Context
-          property! :extension_point, accepts: Domain::ExtensionPoint
+          property! :script_api, accepts: Domain::ScriptApi
           property! :script_name, accepts: String
           property! :path_to_project, accepts: String
 
@@ -37,12 +37,12 @@ module Script
           end
 
           def setup_remote
-            repo = extension_point.sdks.rust.package
+            repo = script_api.sdks.rust.package
             command_runner.call("git remote add -f origin #{repo}")
           end
 
           def setup_sparse_checkout
-            type = extension_point.type
+            type = script_api.type
             command_runner.call("git config core.sparsecheckout true")
             command_runner.call("echo #{type}/#{SAMPLE_PATH} >> .git/info/sparse-checkout")
           end
@@ -52,7 +52,7 @@ module Script
           end
 
           def clean
-            type = extension_point.type
+            type = script_api.type
             ctx.rm_rf(".git")
             source = File.join(path_to_project, File.join(type, SAMPLE_PATH))
             FileUtils.copy_entry(source, path_to_project)
@@ -61,7 +61,7 @@ module Script
 
           def set_script_name
             config_file = "Cargo.toml"
-            upstream_name = "#{extension_point.type.gsub("_", "-")}-default"
+            upstream_name = "#{script_api.type.gsub("_", "-")}-default"
             contents = File.read(config_file)
             new_contents = contents.sub(upstream_name, script_name)
             File.write(config_file, new_contents)

@@ -10,35 +10,35 @@ describe Script::Layers::Application::PushScript do
   let(:api_key) { "api_key" }
   let(:force) { true }
   let(:use_msgpack) { true }
-  let(:extension_point_type) { "discount" }
+  let(:script_api_type) { "discount" }
   let(:metadata) { Script::Layers::Domain::Metadata.new("1", "0", use_msgpack) }
   let(:schema_minor_version) { "0" }
   let(:script_name) { "name" }
   let(:script_project) do
     script_project_repository.create(
       language: language,
-      extension_point_type: extension_point_type,
+      script_api_type: script_api_type,
       script_name: script_name,
       no_config_ui: false,
       env: ShopifyCli::Resources::EnvFile.new(api_key: api_key, secret: "shh")
     )
   end
   let(:push_package_repository) { TestHelpers::FakePushPackageRepository.new }
-  let(:extension_point_repository) { TestHelpers::FakeExtensionPointRepository.new }
+  let(:script_api_repository) { TestHelpers::FakeScriptApiRepository.new }
   let(:script_project_repository) { TestHelpers::FakeScriptProjectRepository.new }
   let(:task_runner) { stub(compiled_type: "wasm", metadata: metadata) }
-  let(:ep) { extension_point_repository.get_extension_point(extension_point_type) }
+  let(:ep) { script_api_repository.get(script_api_type) }
   let(:uuid) { "uuid" }
 
   before do
     Script::Layers::Infrastructure::PushPackageRepository.stubs(:new).returns(push_package_repository)
-    Script::Layers::Infrastructure::ExtensionPointRepository.stubs(:new).returns(extension_point_repository)
+    Script::Layers::Infrastructure::ScriptApiRepository.stubs(:new).returns(script_api_repository)
     Script::Layers::Infrastructure::ScriptProjectRepository.stubs(:new).returns(script_project_repository)
     Script::Layers::Infrastructure::Languages::TaskRunner
       .stubs(:for)
       .with(@context, language, script_name)
       .returns(task_runner)
-    extension_point_repository.create_extension_point(extension_point_type)
+    script_api_repository.create_script_api(script_api_type)
     push_package_repository.create_push_package(
       script_project: script_project,
       script_content: "content",

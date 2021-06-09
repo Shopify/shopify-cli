@@ -7,13 +7,13 @@ describe Script::Layers::Application::ProjectDependencies do
   include TestHelpers::FakeFS
 
   let(:script_name) { "name" }
-  let(:extension_point_type) { "discount" }
-  let(:extension_point_repository) { TestHelpers::FakeExtensionPointRepository.new }
-  let(:extension_point) { extension_point_repository.get_extension_point(extension_point_type) }
+  let(:script_api_type) { "discount" }
+  let(:script_api_repository) { TestHelpers::FakeScriptApiRepository.new }
+  let(:script_api) { script_api_repository.get(script_api_type) }
   let(:task_runner) { stub }
 
   before do
-    extension_point_repository.create_extension_point(extension_point_type)
+    script_api_repository.create_script_api(script_api_type)
     Script::Layers::Infrastructure::Languages::TaskRunner.stubs(:for).returns(task_runner)
   end
 

@@ -9,13 +9,13 @@ describe Script::Layers::Infrastructure::Languages::AssemblyScriptProjectCreator
   let(:language) { "AssemblyScript" }
   let(:script_id) { "id" }
   let(:context) { TestHelpers::FakeContext.new }
-  let(:extension_point_type) { "discount" }
-  let(:extension_point) { Script::Layers::Domain::ExtensionPoint.new(extension_point_type, extension_point_config) }
+  let(:script_api_type) { "discount" }
+  let(:script_api) { Script::Layers::Domain::ScriptApi.new(script_api_type, script_api_config) }
   let(:project_creator) do
     Script::Layers::Infrastructure::Languages::AssemblyScriptProjectCreator
-      .new(ctx: context, extension_point: extension_point, script_name: script_name, path_to_project: script_name)
+      .new(ctx: context, script_api: script_api, script_name: script_name, path_to_project: script_name)
   end
-  let(:extension_point_config) do
+  let(:script_api_config) do
     {
       "assemblyscript" => {
         "package": "@shopify/extension-point-as-fake",
@@ -69,7 +69,7 @@ describe Script::Layers::Infrastructure::Languages::AssemblyScriptProjectCreator
       sdk.expects(:toolchain_version)
       sdk.expects(:versioned?).once.returns(false)
       sdk.expects(:package).twice.returns("@shopify/extension-point-as-fake")
-      extension_point.expects(:sdks).times(5).returns(stub(all: [sdk], assemblyscript: sdk))
+      script_api.expects(:sdks).times(5).returns(stub(all: [sdk], assemblyscript: sdk))
 
       subject
       version = JSON.parse(File.read("package.json")).dig("devDependencies", "@shopify/extension-point-as-fake")
@@ -97,7 +97,7 @@ describe Script::Layers::Infrastructure::Languages::AssemblyScriptProjectCreator
       sdk.expects(:package).once.returns("@shopify/extension-point-as-fake")
       sdk.expects(:versioned?).once.returns(true)
       sdk.expects(:version).once.returns("file:///path")
-      extension_point.expects(:sdks).times(5).returns(stub(all: [sdk], assemblyscript: sdk))
+      script_api.expects(:sdks).times(5).returns(stub(all: [sdk], assemblyscript: sdk))
 
       subject
       version = JSON.parse(File.read("package.json")).dig("devDependencies", "@shopify/extension-point-as-fake")
@@ -125,7 +125,7 @@ describe Script::Layers::Infrastructure::Languages::AssemblyScriptProjectCreator
       sdk.expects(:toolchain_version)
       sdk.expects(:versioned?).once.returns(false)
       sdk.expects(:package).twice.returns("@shopify/extension-point-as-fake")
-      extension_point.expects(:sdks).times(5).returns(stub(all: [sdk], assemblyscript: sdk))
+      script_api.expects(:sdks).times(5).returns(stub(all: [sdk], assemblyscript: sdk))
 
       assert_raises(Script::Layers::Infrastructure::Errors::SystemCallFailureError) { subject }
     end
@@ -137,7 +137,7 @@ describe Script::Layers::Infrastructure::Languages::AssemblyScriptProjectCreator
     it "should delegate the bootstrapping process to the language toolchain" do
       context.expects(:capture2e)
         .with(
-          "npx --no-install shopify-scripts-toolchain-as bootstrap --from #{extension_point.type} --dest #{script_name}"
+          "npx --no-install shopify-scripts-toolchain-as bootstrap --from #{script_api.type} --dest #{script_name}"
         )
         .returns(["", OpenStruct.new(success?: true)])
 
@@ -147,7 +147,7 @@ describe Script::Layers::Infrastructure::Languages::AssemblyScriptProjectCreator
     it "raises an error when the bootstrapping process fails to find the requested extension point" do
       context.expects(:capture2e)
         .with(
-          "npx --no-install shopify-scripts-toolchain-as bootstrap --from #{extension_point.type} --dest #{script_name}"
+          "npx --no-install shopify-scripts-toolchain-as bootstrap --from #{script_api.type} --dest #{script_name}"
         )
         .returns(["", OpenStruct.new(success?: false)])
 
@@ -158,15 +158,15 @@ describe Script::Layers::Infrastructure::Languages::AssemblyScriptProjectCreator
   describe "bootstrap extension points with domain" do
     subject { project_creator.bootstrap }
 
-    let(:extension_point_config_with_domain) { extension_point_config.merge({ "domain" => "checkout" }) }
-    let(:extension_point) do
-      Script::Layers::Domain::ExtensionPoint.new(extension_point_type, extension_point_config_with_domain)
+    let(:script_api_config_with_domain) { script_api_config.merge({ "domain" => "checkout" }) }
+    let(:script_api) do
+      Script::Layers::Domain::ScriptApi.new(script_api_type, script_api_config_with_domain)
     end
 
     it "should call the language toolchain with the appropriate domain arguments" do
       context.expects(:capture2e)
         .with(
-          "npx --no-install shopify-scripts-toolchain-as bootstrap --from #{extension_point.type} " \
+          "npx --no-install shopify-scripts-toolchain-as bootstrap --from #{script_api.type} " \
           "--dest #{script_name} --domain checkout"
         )
         .returns(["", OpenStruct.new(success?: true)])
@@ -178,9 +178,9 @@ describe Script::Layers::Infrastructure::Languages::AssemblyScriptProjectCreator
   describe "dependencies for extension points with domain" do
     subject { project_creator.setup_dependencies }
 
-    let(:extension_point_config_with_domain) { extension_point_config.merge({ "domain" => "checkout" }) }
-    let(:extension_point) do
-      Script::Layers::Domain::ExtensionPoint.new(extension_point_type, extension_point_config_with_domain)
+    let(:script_api_config_with_domain) { script_api_config.merge({ "domain" => "checkout" }) }
+    let(:script_api) do
+      Script::Layers::Domain::ScriptApi.new(script_api_type, script_api_config_with_domain)
     end
 
     it "should create the build command in the package.json with the appropriate domain arguments" do

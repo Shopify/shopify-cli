@@ -58,7 +58,7 @@ module Script
             cause_of_error: ShopifyCli::Context.message("script.error.invalid_language_cause", e.language),
             help_suggestion: ShopifyCli::Context.message(
               "script.error.invalid_language_help",
-              Script::Layers::Application::ExtensionPoints.languages(type: e.extension_point_type).join(", ")
+              Script::Layers::Application::ScriptApis.languages(type: e.script_api_type).join(", ")
             ),
           }
         when Errors::InvalidScriptNameError
@@ -94,12 +94,12 @@ module Script
             cause_of_error: ShopifyCli::Context.message("script.error.deprecated_ep", e.ep),
             help_suggestion: ShopifyCli::Context.message("script.error.deprecated_ep_cause"),
           }
-        when Layers::Domain::Errors::InvalidExtensionPointError
+        when Layers::Domain::Errors::InvalidScriptApiError
           {
             cause_of_error: ShopifyCli::Context.message("script.error.invalid_script_api_cause", e.type),
             help_suggestion: ShopifyCli::Context.message(
               "script.error.invalid_script_api_help",
-              Script::Layers::Application::ExtensionPoints.types.join(", ")
+              Script::Layers::Application::ScriptApis.types.join(", ")
             ),
           }
         when Layers::Domain::Errors::ScriptNotFoundError
@@ -107,7 +107,7 @@ module Script
             cause_of_error: ShopifyCli::Context.message(
               "script.error.script_not_found_cause",
               e.script_name,
-              e.extension_point_type
+              e.script_api_type
             ),
           }
         when Layers::Domain::Errors::MetadataValidationError

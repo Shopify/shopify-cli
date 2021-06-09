@@ -7,7 +7,7 @@ describe Script::Layers::Infrastructure::Languages::RustTaskRunner do
   let(:ctx) { TestHelpers::FakeContext.new }
   let(:script_id) { "id" }
   let(:script_name) { "foo" }
-  let(:extension_point_config) do
+  let(:script_api_config) do
     {
       "rust" => {
         "package": "https://github.com/Shopify/scripts-apis-rs",
@@ -15,7 +15,7 @@ describe Script::Layers::Infrastructure::Languages::RustTaskRunner do
       },
     }
   end
-  let(:extension_point_type) { "payment_filter" }
+  let(:script_api_type) { "payment_filter" }
   let(:language) { "rust" }
   let(:rs_task_runner) { Script::Layers::Infrastructure::Languages::RustTaskRunner.new(ctx, script_name) }
 

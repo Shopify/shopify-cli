@@ -16,7 +16,7 @@ module Script
       def ask_api
         CLI::UI::Prompt.ask(
           @ctx.message("script.forms.create.select_api"),
-          options: Layers::Application::ExtensionPoints.available_types
+          options: Layers::Application::ScriptApis.available_types
         )
       end
 
@@ -33,7 +33,7 @@ module Script
       def ask_language
         return language.downcase if language
 
-        all_languages = Layers::Application::ExtensionPoints.languages(type: api)
+        all_languages = Layers::Application::ScriptApis.languages(type: api)
         return all_languages.first if all_languages.count == 1
 
         CLI::UI::Prompt.ask(

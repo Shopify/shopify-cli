@@ -14,7 +14,7 @@ module Script
         @script_project_repo = TestHelpers::FakeScriptProjectRepository.new
         @script_project_repo.create(
           language: "assemblyscript",
-          extension_point_type: "discount",
+          script_api_type: "discount",
           script_name: "script_name",
           no_config_ui: false,
           env: @env

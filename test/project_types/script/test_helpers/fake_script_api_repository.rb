@@ -3,36 +3,36 @@
 require "project_types/script/test_helper"
 
 module TestHelpers
-  class FakeExtensionPointRepository
+  class FakeScriptApiRepository
     def initialize
       @cache = {}
     end
 
-    def create_extension_point(type)
-      @cache[type] = Script::Layers::Domain::ExtensionPoint.new(type, example_config(type))
+    def create_script_api(type)
+      @cache[type] = Script::Layers::Domain::ScriptApi.new(type, example_config(type))
     end
 
-    def create_beta_extension_point(type)
-      @cache[type] = Script::Layers::Domain::ExtensionPoint.new(type, beta_config(type))
+    def create_beta_script_api(type)
+      @cache[type] = Script::Layers::Domain::ScriptApi.new(type, beta_config(type))
     end
 
-    def create_deprecated_extension_point(type)
-      @cache[type] = Script::Layers::Domain::ExtensionPoint.new(type, deprecated_config(type))
+    def create_deprecated_script_api(type)
+      @cache[type] = Script::Layers::Domain::ScriptApi.new(type, deprecated_config(type))
     end
 
-    def get_extension_point(type)
+    def get(type)
       if @cache.key?(type)
         @cache[type]
       else
-        raise Script::Layers::Domain::Errors::InvalidExtensionPointError, type
+        raise Script::Layers::Domain::Errors::InvalidScriptApiError, type
       end
     end
 
-    def extension_points
+    def all
       @cache.values
     end
 
-    def extension_point_types
+    def all_types
       @cache.keys
     end
 

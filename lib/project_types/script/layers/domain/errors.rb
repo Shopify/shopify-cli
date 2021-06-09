@@ -6,7 +6,7 @@ module Script
       module Errors
         class PushPackageNotFoundError < ScriptProjectError; end
 
-        class InvalidExtensionPointError < ScriptProjectError
+        class InvalidScriptApiError < ScriptProjectError
           attr_reader :type
           def initialize(type)
             super()
@@ -31,11 +31,11 @@ module Script
         end
 
         class ScriptNotFoundError < ScriptProjectError
-          attr_reader :script_name, :extension_point_type
-          def initialize(extension_point_type, script_name)
+          attr_reader :script_name, :script_api_type
+          def initialize(script_api_type, script_name)
             super()
             @script_name = script_name
-            @extension_point_type = extension_point_type
+            @script_api_type = script_api_type
           end
         end
 

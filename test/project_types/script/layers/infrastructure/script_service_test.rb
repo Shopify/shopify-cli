@@ -8,7 +8,7 @@ describe Script::Layers::Infrastructure::ScriptService do
   let(:ctx) { TestHelpers::FakeContext.new }
   let(:script_service) { Script::Layers::Infrastructure::ScriptService.new(ctx: ctx) }
   let(:api_key) { "fake_key" }
-  let(:extension_point_type) { "DISCOUNT" }
+  let(:script_api_type) { "DISCOUNT" }
   let(:schema_major_version) { "1" }
   let(:schema_minor_version) { "0" }
   let(:use_msgpack) { true }
@@ -78,7 +78,7 @@ describe Script::Layers::Infrastructure::ScriptService do
           api_key: api_key,
           variables: {
             uuid: uuid_from_config,
-            extensionPointName: extension_point_type,
+            extensionPointName: script_api_type,
             title: script_name,
             configUi: expected_config_ui_content,
             sourceCode: Base64.encode64(script_content),
@@ -97,7 +97,7 @@ describe Script::Layers::Infrastructure::ScriptService do
     subject do
       script_service.push(
         uuid: uuid_from_config,
-        extension_point_type: extension_point_type,
+        script_api_type: script_api_type,
         metadata: Script::Layers::Domain::Metadata.new(
           schema_major_version,
           schema_minor_version,
@@ -119,7 +119,7 @@ describe Script::Layers::Infrastructure::ScriptService do
               "appScript" => {
                 "apiKey" => "fake_key",
                 "configSchema" => nil,
-                "extensionPointName" => extension_point_type,
+                "extensionPointName" => script_api_type,
                 "title" => "foo2",
                 "uuid" => uuid_from_server,
               },
@@ -294,7 +294,7 @@ describe Script::Layers::Infrastructure::ScriptService do
           api_key: api_key,
           variables: {
             appKey: api_key,
-            extensionPointName: extension_point_type,
+            extensionPointName: script_api_type,
           }.to_json,
           query: get_app_scripts,
         },
@@ -305,7 +305,7 @@ describe Script::Layers::Infrastructure::ScriptService do
     subject do
       script_service.get_app_scripts(
         api_key: api_key,
-        extension_point_type: extension_point_type,
+        script_api_type: script_api_type,
       )
     end
 

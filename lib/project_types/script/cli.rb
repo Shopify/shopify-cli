@@ -33,8 +33,8 @@ module Script
       autoload :BuildScript, Project.project_filepath("layers/application/build_script")
       autoload :CreateScript, Project.project_filepath("layers/application/create_script")
       autoload :PushScript, Project.project_filepath("layers/application/push_script")
-      autoload :ExtensionPoints, Project.project_filepath("layers/application/extension_points")
       autoload :ProjectDependencies, Project.project_filepath("layers/application/project_dependencies")
+      autoload :ScriptApis, Project.project_filepath("layers/application/script_apis")
     end
 
     module Domain
@@ -42,7 +42,7 @@ module Script
       autoload :ConfigUi, Project.project_filepath("layers/domain/config_ui")
       autoload :PushPackage, Project.project_filepath("layers/domain/push_package")
       autoload :Metadata, Project.project_filepath("layers/domain/metadata")
-      autoload :ExtensionPoint, Project.project_filepath("layers/domain/extension_point")
+      autoload :ScriptApi, Project.project_filepath("layers/domain/script_api")
       autoload :ScriptProject, Project.project_filepath("layers/domain/script_project")
     end
 
@@ -50,7 +50,7 @@ module Script
       autoload :Errors, Project.project_filepath("layers/infrastructure/errors")
       autoload :CommandRunner, Project.project_filepath("layers/infrastructure/command_runner")
       autoload :PushPackageRepository, Project.project_filepath("layers/infrastructure/push_package_repository")
-      autoload :ExtensionPointRepository, Project.project_filepath("layers/infrastructure/extension_point_repository")
+      autoload :ScriptApiRepository, Project.project_filepath("layers/infrastructure/script_api_repository")
       autoload :ScriptProjectRepository, Project.project_filepath("layers/infrastructure/script_project_repository")
       autoload :ScriptService, Project.project_filepath("layers/infrastructure/script_service")
 

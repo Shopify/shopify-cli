@@ -6,7 +6,7 @@ module TestHelpers
       @project = nil
     end
 
-    def create(script_name:, extension_point_type:, language:, no_config_ui:, env: nil)
+    def create(script_name:, script_api_type:, language:, no_config_ui:, env: nil)
       config_ui_file = if no_config_ui
         nil
       else
@@ -17,7 +17,7 @@ module TestHelpers
         id: "/#{script_name}",
         env: env || ShopifyCli::Resources::EnvFile.new(api_key: "1234", secret: "shh", extra: {}),
         script_name: script_name,
-        extension_point_type: extension_point_type,
+        script_api_type: script_api_type,
         language: language,
         config_ui: config_ui_file
       )

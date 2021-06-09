@@ -8,15 +8,15 @@ describe Script::Layers::Infrastructure::Languages::RustProjectCreator do
   let(:script_name) { "payment_filter_rs" }
   let(:language) { "rust" }
   let(:script_id) { "id" }
-  let(:script) { Script::Layers::Domain::Script.new(script_id, script_name, extension_point, language) }
+  let(:script) { Script::Layers::Domain::Script.new(script_id, script_name, script_api, language) }
   let(:context) { TestHelpers::FakeContext.new }
-  let(:extension_point_type) { "payment_filter" }
-  let(:extension_point) { Script::Layers::Domain::ExtensionPoint.new(extension_point_type, extension_point_config) }
+  let(:script_api_type) { "payment_filter" }
+  let(:script_api) { Script::Layers::Domain::ScriptApi.new(script_api_type, script_api_config) }
   let(:project_creator) do
     Script::Layers::Infrastructure::Languages::RustProjectCreator
-      .new(ctx: context, extension_point: extension_point, script_name: script_name, path_to_project: script_name)
+      .new(ctx: context, script_api: script_api, script_name: script_name, path_to_project: script_name)
   end
-  let(:extension_point_config) do
+  let(:script_api_config) do
     {
       "rust" => {
         "package": "https://github.com/Shopify/scripts-apis-rs",
@@ -43,7 +43,7 @@ describe Script::Layers::Infrastructure::Languages::RustProjectCreator do
         .returns(system_output(msg: "", success: true))
       context
         .expects(:capture2e)
-        .with("git remote add -f origin #{extension_point.sdks.rust.package}")
+        .with("git remote add -f origin #{script_api.sdks.rust.package}")
         .once
         .returns(system_output(msg: "", success: true))
       context
@@ -53,7 +53,7 @@ describe Script::Layers::Infrastructure::Languages::RustProjectCreator do
         .returns(system_output(msg: "", success: true))
       context
         .expects(:capture2e)
-        .with("echo #{extension_point.type}/default >> .git/info/sparse-checkout")
+        .with("echo #{script_api.type}/default >> .git/info/sparse-checkout")
         .once
         .returns(system_output(msg: "", success: true))
       context
@@ -62,7 +62,7 @@ describe Script::Layers::Infrastructure::Languages::RustProjectCreator do
         .once
         .returns(system_output(msg: "", success: true))
       context.expects(:rm_rf).with(".git")
-      type = extension_point.type
+      type = script_api.type
       source = File.join(script_name, File.join(type, "default"))
       FileUtils.expects(:copy_entry).with(source, script_name)
       context.expects(:rm_rf).with(type)
@@ -86,7 +86,7 @@ describe Script::Layers::Infrastructure::Languages::RustProjectCreator do
 
       context
         .expects(:capture2e)
-        .with("git remote add -f origin #{extension_point.sdks.rust.package}").once
+        .with("git remote add -f origin #{script_api.sdks.rust.package}").once
         .returns(system_output(msg: "Couldn't set remote origin", success: false))
 
       assert_raises(Script::Layers::Infrastructure::Errors::SystemCallFailureError) { subject }
@@ -107,7 +107,7 @@ describe Script::Layers::Infrastructure::Languages::RustProjectCreator do
       context.expects(:capture2e).times(3).returns(system_output(msg: "", success: true))
       context
         .expects(:capture2e)
-        .with("echo #{extension_point.type}/default >> .git/info/sparse-checkout").once
+        .with("echo #{script_api.type}/default >> .git/info/sparse-checkout").once
         .returns(system_output(msg: "Couldn't write to the sparse checkout config", success: false))
 
       assert_raises(Script::Layers::Infrastructure::Errors::SystemCallFailureError) { subject }

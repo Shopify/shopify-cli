@@ -10,8 +10,8 @@ module Script
         DEFAULT_CONFIG_UI_FILENAME = "config-ui.yml"
         MUTABLE_ENV_VALUES = %i(uuid)
 
-        def create(script_name:, extension_point_type:, language:, no_config_ui:)
-          validate_metadata!(extension_point_type, language)
+        def create(script_name:, script_api_type:, language:, no_config_ui:)
+          validate_metadata!(script_api_type, language)
 
           config_ui_file = nil
           optional_identifiers = {}
@@ -21,7 +21,7 @@ module Script
             ctx,
             project_type: :script,
             organization_id: nil,
-            extension_point_type: extension_point_type,
+            script_api_type: script_api_type,
             script_name: script_name,
             language: language,
             **optional_identifiers
@@ -31,14 +31,14 @@ module Script
             id: ctx.root,
             env: project.env,
             script_name: script_name,
-            extension_point_type: extension_point_type,
+            script_api_type: script_api_type,
             language: language,
             config_ui: config_ui_file
           )
         end
 
         def get
-          validate_metadata!(extension_point_type, language)
+          validate_metadata!(script_api_type, language)
 
           config_ui = ConfigUiRepository.new(ctx: ctx).get(config_ui_file)
 
@@ -46,7 +46,7 @@ module Script
             id: project.directory,
             env: project.env,
             script_name: script_name,
-            extension_point_type: extension_point_type,
+            script_api_type: script_api_type,
             language: language,
             config_ui: config_ui
           )
@@ -64,7 +64,7 @@ module Script
             id: ctx.root,
             env: project.env,
             script_name: script_name,
-            extension_point_type: extension_point_type,
+            script_api_type: script_api_type,
             language: language,
             config_ui: ConfigUiRepository.new(ctx: ctx).get(config_ui_file),
           )
@@ -83,7 +83,7 @@ module Script
             id: ctx.root,
             env: project.env,
             script_name: script_name,
-            extension_point_type: extension_point_type,
+            script_api_type: script_api_type,
             language: language,
             config_ui: ConfigUiRepository.new(ctx: ctx).get(config_ui_file),
           )
@@ -95,8 +95,8 @@ module Script
           CLI::UI::StdoutRouter::Capture.new(&block).run
         end
 
-        def extension_point_type
-          project_config_value!("extension_point_type")
+        def script_api_type
+          project_config_value!("script_api_type") || project_config_value!("extension_point_type")
         end
 
         def script_name
@@ -126,14 +126,14 @@ module Script
         end
 
         def default_language
-          Domain::ExtensionPoint::ExtensionPointAssemblyScriptSDK.language
+          Domain::ScriptApi::ScriptApiAssemblyScriptSDK.language
         end
 
-        def validate_metadata!(extension_point_type, language)
-          if Application::ExtensionPoints.deprecated_types.include?(extension_point_type)
-            raise Errors::DeprecatedEPError, extension_point_type
-          elsif !Application::ExtensionPoints.supported_language?(type: extension_point_type, language: language)
-            raise Errors::InvalidLanguageError.new(language, extension_point_type)
+        def validate_metadata!(script_api_type, language)
+          if Application::ScriptApis.deprecated_types.include?(script_api_type)
+            raise Errors::DeprecatedEPError, script_api_type
+          elsif !Application::ScriptApis.supported_language?(type: script_api_type, language: language)
+            raise Errors::InvalidLanguageError.new(language, script_api_type)
           end
         end
 

@@ -15,7 +15,7 @@ module Script
 
         org = ask_org
         app = ask_app(org["apps"])
-        uuid = ask_script_uuid(app, script_project.extension_point_type)
+        uuid = ask_script_uuid(app, script_project.script_api_type)
 
         script_project_repo.create_env(
           api_key: app["apiKey"],
@@ -67,9 +67,9 @@ module Script
         end
       end
 
-      def ask_script_uuid(app, extension_point_type)
+      def ask_script_uuid(app, script_api_type)
         script_service = Layers::Infrastructure::ScriptService.new(ctx: ctx)
-        scripts = script_service.get_app_scripts(api_key: app["apiKey"], extension_point_type: extension_point_type)
+        scripts = script_service.get_app_scripts(api_key: app["apiKey"], script_api_type: script_api_type)
 
         return nil unless scripts.count > 0 &&
           CLI::UI::Prompt.confirm(ctx.message("script.application.ensure_env.ask_connect_to_existing_script"))

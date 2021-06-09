@@ -22,7 +22,7 @@ module Script
           ctx: @ctx,
           language: form.language,
           script_name: form.name,
-          extension_point_type: form.api,
+          script_api_type: form.api,
           no_config_ui: options.flags.key?(:no_config_ui)
         )
         @ctx.puts(@ctx.message("script.create.change_directory_notice", project.script_name))
@@ -31,7 +31,7 @@ module Script
       end
 
       def self.help
-        allowed_values = Script::Layers::Application::ExtensionPoints.types.map { |type| "{{cyan:#{type}}}" }
+        allowed_values = Script::Layers::Application::ScriptApis.types.map { |type| "{{cyan:#{type}}}" }
         ShopifyCli::Context.message("script.create.help", ShopifyCli::TOOL_NAME, allowed_values.join(", "))
       end
     end
