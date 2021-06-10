@@ -237,6 +237,14 @@ module Script
             cause_of_error: ShopifyCLI::Context.message("script.error.web_assembly_binary_not_found"),
             help_suggestion: ShopifyCLI::Context.message("script.error.web_assembly_binary_not_found_suggestion"),
           }
+        when Layers::Infrastructure::Errors::ProjectConfigNotFoundError
+          {
+            cause_of_error: ShopifyCLI::Context.message("script.error.project_config_not_found"),
+          }
+        when Layers::Infrastructure::Errors::InvalidProjectConfigError
+          {
+            cause_of_error: ShopifyCLI::Context.message("script.error.invalid_project_config"),
+          }
         when Layers::Infrastructure::Errors::ScriptUploadError
           {
             cause_of_error: ShopifyCLI::Context.message("script.error.script_upload_cause"),

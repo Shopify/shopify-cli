@@ -94,7 +94,11 @@ module Script
           end
         end
 
+        class InvalidProjectError < ScriptProjectError; end
+
         class ScriptUploadError < ScriptProjectError; end
+        class ProjectConfigNotFoundError < ScriptProjectError; end
+        class InvalidProjectConfigError < ScriptProjectError; end
       end
     end
   end

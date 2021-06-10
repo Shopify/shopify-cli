@@ -35,6 +35,10 @@ module Script
             [assemblyscript, rust].compact
           end
 
+          def for(language)
+            all.find { |ep| ep.class.language == language }
+          end
+
           def assemblyscript
             @assemblyscript ||= new_sdk(ExtensionPointAssemblyScriptSDK)
           end
@@ -53,12 +57,13 @@ module Script
         end
 
         class ExtensionPointSDK
-          attr_reader :version, :beta, :package
+          attr_reader :version, :beta, :package, :repo
 
           def initialize(config)
             @beta = config["beta"] || false
             @package = config["package"]
             @version = config["package-version"]
+            @repo = config["repo"]
           end
 
           def beta?

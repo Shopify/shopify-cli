@@ -106,6 +106,37 @@ module ShopifyCLI
       end
     end
 
+    def test_sparse_checkout
+      repo = "git@github.com:shopify/test.git"
+      set = "packages/"
+      branch = "fake-branch"
+
+      @context.expects(:capture2e)
+        .with("git init")
+        .once
+        .returns(["", @status_mock[:true]])
+      @context
+        .expects(:capture2e)
+        .with("git remote add -f origin #{repo}")
+        .once
+        .returns(["", @status_mock[:true]])
+      @context
+        .expects(:capture2e)
+        .with("git config core.sparsecheckout true")
+        .once
+        .returns(["", @status_mock[:true]])
+      @context
+        .expects(:capture2e)
+        .with("git sparse-checkout set #{set}")
+        .returns(["", @status_mock[:true]])
+      @context
+        .expects(:capture2e)
+        .with("git pull origin #{branch}")
+        .returns(["", @status_mock[:true]])
+
+      ShopifyCLI::Git.sparse_checkout(repo, set, branch, @context)
+    end
+
     private
 
     def in_repo
