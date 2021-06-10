@@ -37,6 +37,8 @@ module Script
         class MetadataNotFoundError < ScriptProjectError; end
 
         class MetadataValidationError < ScriptProjectError; end
+
+        class ServiceFailureError < ScriptProjectError; end
       end
     end
   end
