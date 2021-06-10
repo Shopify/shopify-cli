@@ -56,9 +56,9 @@ module Script
               "appType" => "custom",
               "apiKey" => "stubbed-api-key",
               "apiSecretKeys" => [{ "secret" => "stubbed-api-secret" }],
-              "title" => "Fake App (Not connected to Partners)"
-            }
-          ]
+              "title" => "Fake App (Not connected to Partners)",
+            },
+          ],
         }
       end
 
