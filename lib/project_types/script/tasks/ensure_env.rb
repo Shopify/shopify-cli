@@ -11,7 +11,7 @@ module Script
         script_project_repo = Layers::Infrastructure::ScriptProjectRepository.new(ctx: ctx)
         script_project = script_project_repo.get
 
-        return if script_project.api_key && script_project.api_secret && script_project.uuid_defined?
+        return false if script_project.api_key && script_project.api_secret && script_project.uuid_defined?
 
         org = ask_org
         app = ask_app(org["apps"])
@@ -22,6 +22,8 @@ module Script
           secret: app["apiSecretKeys"].first["secret"],
           uuid: uuid
         )
+
+        true
       end
 
       private
