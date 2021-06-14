@@ -62,7 +62,7 @@ module ShopifyCli
         .expects(:new)
         .with(ctx: @context).returns(@identity_auth_client)
       @identity_auth_client
-        .expects(:authenticate)
+        .expects(:reauthenticate)
 
       io = capture_io_and_assert_raises(ShopifyCli::Abort) do
         PartnersAPI.query(@context, "query")

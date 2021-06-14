@@ -38,12 +38,13 @@ module ShopifyCli
       #   ShopifyCli::AdminAPI.query(@ctx, 'all_organizations')
       #
       def query(ctx, query_name, shop:, api_version: nil, **variables)
-        client = api_client(ctx, api_version, shop)
-        client.query(query_name, variables: variables)
+        CLI::Kit::Util.begin do
+          api_client(ctx, api_version, shop).query(query_name, variables: variables)
+        end.retry_after(API::APIRequestUnauthorizedError, retries: 1) do
+          ShopifyCli::IdentityAuth.new(ctx: ctx).reauthenticate
+        end
       rescue API::APIRequestUnauthorizedError
-        ShopifyCli::IdentityAuth.new(ctx: ctx).reauthenticate
-        client = api_client(ctx, api_version, shop)
-        client.query(query_name, variables: variables)
+        ctx.abort(ctx.message("core.api.error.failed_auth"))
       end
 
       ##
