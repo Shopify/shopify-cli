@@ -18,7 +18,7 @@ module Script
                 language: language,
                 no_config_ui: no_config_ui
               )
-              project_creator = Infrastructure::ProjectCreator
+              project_creator = Infrastructure::Languages::ProjectCreator
                 .for(ctx, language, extension_point, script_name, project.id)
               install_dependencies(ctx, language, script_name, project_creator)
               bootstrap(ctx, project_creator)
@@ -29,7 +29,7 @@ module Script
           private
 
           def install_dependencies(ctx, language, script_name, project_creator)
-            task_runner = Infrastructure::TaskRunner.for(ctx, language, script_name)
+            task_runner = Infrastructure::Languages::TaskRunner.for(ctx, language, script_name)
             project_creator.setup_dependencies
             ProjectDependencies.install(ctx: ctx, task_runner: task_runner)
           end

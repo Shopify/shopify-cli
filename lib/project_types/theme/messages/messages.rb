@@ -19,7 +19,6 @@ module Theme
           HELP
           ask_name: "Theme name",
         },
-
         publish: {
           confirmation: "This will change your live theme. Do you want to continue?",
           deploying: "Deploying theme",

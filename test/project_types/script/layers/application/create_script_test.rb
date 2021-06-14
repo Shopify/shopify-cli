@@ -30,11 +30,11 @@ describe Script::Layers::Application::CreateScript do
     Script::Layers::Infrastructure::ExtensionPointRepository.stubs(:new).returns(extension_point_repository)
 
     extension_point_repository.create_extension_point(extension_point_type)
-    Script::Layers::Infrastructure::TaskRunner
+    Script::Layers::Infrastructure::Languages::TaskRunner
       .stubs(:for)
       .with(context, language, script_name)
       .returns(task_runner)
-    Script::Layers::Infrastructure::ProjectCreator
+    Script::Layers::Infrastructure::Languages::ProjectCreator
       .stubs(:for)
       .with(context, language, ep, script_name, script_project.id)
       .returns(project_creator)

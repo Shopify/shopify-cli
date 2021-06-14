@@ -22,7 +22,7 @@ module ShopifyCli
         def parse(directory)
           File.read(File.join(directory, FILENAME))
             .gsub("\r\n", "\n").split("\n").each_with_object({}) do |line, output|
-            match = /\A([A-Za-z_0-9]+)=(.*)\z/.match(line)
+            match = /\A([A-Za-z_0-9]+)\s*=\s*(.*)\z/.match(line)
             if match
               key = match[1]
               output[key] = case match[2]

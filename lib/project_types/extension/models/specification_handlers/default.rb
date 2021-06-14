@@ -57,7 +57,6 @@ module Extension
             context: context,
             port: port,
             tunnel_url: tunnel_url,
-            beta_access: beta_access
           ).call
         end
 
@@ -69,16 +68,7 @@ module Extension
           @argo_runtime ||= Features::ArgoRuntime.new(
             renderer: renderer_package(context),
             cli: cli_package(context),
-            beta_access: beta_access
           )
-        end
-
-        def beta_access
-          argo_admin_beta? ? [:argo_admin_beta] : []
-        end
-
-        def argo_admin_beta?
-          ShopifyCli::Shopifolk.check && ShopifyCli::Feature.enabled?(:argo_admin_beta)
         end
 
         def cli_package(context)

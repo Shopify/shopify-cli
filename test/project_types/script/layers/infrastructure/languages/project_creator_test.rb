@@ -2,7 +2,7 @@
 
 require "project_types/script/test_helper"
 
-describe Script::Layers::Infrastructure::ProjectCreator do
+describe Script::Layers::Infrastructure::Languages::ProjectCreator do
   describe ".for" do
     let(:script_name) { "foo_discount" }
     let(:extension_point_config) do
@@ -16,14 +16,15 @@ describe Script::Layers::Infrastructure::ProjectCreator do
     end
     let(:extension_point) { Script::Layers::Domain::ExtensionPoint.new("discount", extension_point_config) }
     subject do
-      Script::Layers::Infrastructure::ProjectCreator.for(@context, language, extension_point, script_name, "/path")
+      Script::Layers::Infrastructure::Languages::ProjectCreator
+        .for(@context, language, extension_point, script_name, "/path")
     end
 
     describe "when the script language does match an entry in the registry" do
       let(:language) { "assemblyscript" }
 
       it "should return the entry from the registry" do
-        assert_instance_of(Script::Layers::Infrastructure::AssemblyScriptProjectCreator, subject)
+        assert_instance_of(Script::Layers::Infrastructure::Languages::AssemblyScriptProjectCreator, subject)
       end
     end
 

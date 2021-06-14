@@ -27,6 +27,8 @@ module Script
       private
 
       def ask_org
+        return stubbed_org if partner_proxy_bypass
+
         if ShopifyCli::Shopifolk.check && wants_to_run_against_shopify_org?
           ShopifyCli::Shopifolk.act_as_shopify_organization
         end
@@ -45,6 +47,23 @@ module Script
         else
           raise Errors::NoExistingOrganizationsError
         end
+      end
+
+      def stubbed_org
+        {
+          "apps" => [
+            {
+              "appType" => "custom",
+              "apiKey" => "stubbed-api-key",
+              "apiSecretKeys" => [{ "secret" => "stubbed-api-secret" }],
+              "title" => "Fake App (Not connected to Partners)",
+            },
+          ],
+        }
+      end
+
+      def partner_proxy_bypass
+        !ENV["BYPASS_PARTNERS_PROXY"].nil?
       end
 
       def ask_app(apps)

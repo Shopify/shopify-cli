@@ -1,6 +1,17 @@
 Unreleased
 ------
 
+Version 1.13.1
+--------------
+* [1274](https://github.com/Shopify/shopify-app-cli/pull/1274): Only print api_key during error if it exists
+* [1272](https://github.com/Shopify/shopify-app-cli/pull/1272): Fix minor bug with extension serve for UI extensions
+
+Version 1.13.0
+--------------
+
+* [1266](https://github.com/Shopify/shopify-app-cli/pull/1266): Developer Console release
+* [1265](https://github.com/Shopify/shopify-app-cli/pull/1265): Fix bug where commands hang after an unsuccessful authentication
+
 Version 1.12.0
 --------------
 * [1255](https://github.com/Shopify/shopify-app-cli/pull/1255): Fix beta flag checks when running `shopify serve`
@@ -12,6 +23,7 @@ Version 1.11.0
 * [#1225](https://github.com/Shopify/shopify-app-cli/pull/1225): Improved handling of "account not found" scenario, plus improvements to related tests and UX messaging
 * [#1229](https://github.com/Shopify/shopify-app-cli/pull/1229): Allows Checkout Extensions to specify configuration attributes in their extension.config.yml file.
 * [#1238](https://github.com/Shopify/shopify-app-cli/pull/1238): Auto Tunnel Support for Checkout Extension
+* [#1256](https://github.com/Shopify/shopify-app-cli/pull/1256): Allow using spaces around the equal sign on .env file.
 
 Version 1.10.0
 --------------

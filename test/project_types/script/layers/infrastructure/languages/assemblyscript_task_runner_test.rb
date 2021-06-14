@@ -2,7 +2,7 @@
 
 require "project_types/script/test_helper"
 
-describe Script::Layers::Infrastructure::AssemblyScriptTaskRunner do
+describe Script::Layers::Infrastructure::Languages::AssemblyScriptTaskRunner do
   include TestHelpers::FakeFS
 
   let(:ctx) { TestHelpers::FakeContext.new }
@@ -19,7 +19,7 @@ describe Script::Layers::Infrastructure::AssemblyScriptTaskRunner do
   end
   let(:extension_point_type) { "discount" }
   let(:language) { "AssemblyScript" }
-  let(:as_task_runner) { Script::Layers::Infrastructure::AssemblyScriptTaskRunner.new(ctx, script_name) }
+  let(:as_task_runner) { Script::Layers::Infrastructure::Languages::AssemblyScriptTaskRunner.new(ctx, script_name) }
 
   let(:package_json) do
     {

@@ -34,6 +34,7 @@ module Extension
           options << "--argoVersion=#{renderer_package.version}" if argo_runtime.accepts_argo_version?
           options << "--uuid=#{project.registration_uuid}" if argo_runtime.accepts_uuid?
           options << "--publicUrl=#{public_url}" if argo_runtime.accepts_tunnel_url?
+          options << "--name=#{project.title}" if argo_runtime.accepts_name?
         end
       end
     end

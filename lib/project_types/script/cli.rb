@@ -46,23 +46,23 @@ module Script
 
     module Infrastructure
       autoload :Errors, Project.project_filepath("layers/infrastructure/errors")
-      autoload :AssemblyScriptDependencyManager,
-        Project.project_filepath("layers/infrastructure/assemblyscript_dependency_manager")
-      autoload :AssemblyScriptProjectCreator,
-        Project.project_filepath("layers/infrastructure/assemblyscript_project_creator")
-      autoload :AssemblyScriptTaskRunner, Project.project_filepath("layers/infrastructure/assemblyscript_task_runner")
-      autoload :AssemblyScriptTsConfig, Project.project_filepath("layers/infrastructure/assemblyscript_tsconfig")
       autoload :CommandRunner, Project.project_filepath("layers/infrastructure/command_runner")
-      autoload :RustProjectCreator,
-        Project.project_filepath("layers/infrastructure/rust_project_creator.rb")
-      autoload :RustTaskRunner, Project.project_filepath("layers/infrastructure/rust_task_runner")
-
       autoload :PushPackageRepository, Project.project_filepath("layers/infrastructure/push_package_repository")
       autoload :ExtensionPointRepository, Project.project_filepath("layers/infrastructure/extension_point_repository")
-      autoload :ProjectCreator, Project.project_filepath("layers/infrastructure/project_creator")
       autoload :ScriptProjectRepository, Project.project_filepath("layers/infrastructure/script_project_repository")
       autoload :ScriptService, Project.project_filepath("layers/infrastructure/script_service")
-      autoload :TaskRunner, Project.project_filepath("layers/infrastructure/task_runner")
+
+      module Languages
+        autoload :AssemblyScriptProjectCreator,
+          Project.project_filepath("layers/infrastructure/languages/assemblyscript_project_creator")
+        autoload :AssemblyScriptTaskRunner,
+          Project.project_filepath("layers/infrastructure/languages/assemblyscript_task_runner")
+        autoload :ProjectCreator, Project.project_filepath("layers/infrastructure/languages/project_creator")
+        autoload :RustProjectCreator,
+          Project.project_filepath("layers/infrastructure/languages/rust_project_creator.rb")
+        autoload :RustTaskRunner, Project.project_filepath("layers/infrastructure/languages/rust_task_runner")
+        autoload :TaskRunner, Project.project_filepath("layers/infrastructure/languages/task_runner")
+      end
     end
   end
 

@@ -7,12 +7,12 @@ module Extension
       ARGO_ADMIN_CLI_PACKAGE_NAME = "@shopify/argo-admin-cli"
 
       ARGO_RUN_0_4_0 = Models::NpmPackage.new(name: "@shopify/argo-run", version: "0.4.0")
+      ARGO_ADMIN_CLI_0_9_0 = Models::NpmPackage.new(name: "@shopify/argo-admin-cli", version: "0.9.0")
       ARGO_ADMIN_CLI_0_9_3 = Models::NpmPackage.new(name: "@shopify/argo-admin-cli", version: "0.9.3")
       ARGO_ADMIN_CLI_0_11_0 = Models::NpmPackage.new(name: "@shopify/argo-admin-cli", version: "0.11.0")
 
       property! :renderer, accepts: Models::NpmPackage
       property! :cli, accepts: Models::NpmPackage
-      property :beta_access, accepts: Array, default: -> { [] }
 
       def accepts_port?
         case cli
@@ -51,7 +51,6 @@ module Extension
       end
 
       def accepts_shop?
-        return false unless beta_access.include?(:argo_admin_beta)
         case cli
         when admin?
           cli >= ARGO_ADMIN_CLI_0_11_0
@@ -61,10 +60,18 @@ module Extension
       end
 
       def accepts_api_key?
-        return false unless beta_access.include?(:argo_admin_beta)
         case cli
         when admin?
           cli >= ARGO_ADMIN_CLI_0_11_0
+        else
+          false
+        end
+      end
+
+      def accepts_name?
+        case cli
+        when admin?
+          cli >= ARGO_ADMIN_CLI_0_9_0
         else
           false
         end

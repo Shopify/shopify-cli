@@ -14,7 +14,7 @@ describe Script::Layers::Application::ProjectDependencies do
 
   before do
     extension_point_repository.create_extension_point(extension_point_type)
-    Script::Layers::Infrastructure::TaskRunner.stubs(:for).returns(task_runner)
+    Script::Layers::Infrastructure::Languages::TaskRunner.stubs(:for).returns(task_runner)
   end
 
   describe ".install" do

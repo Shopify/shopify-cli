@@ -27,7 +27,8 @@ describe Script::Layers::Infrastructure::CommandRunner do
     describe "on failure" do
       it "raises SystemCallFailureError" do
         context.expects(:capture2e).with(cmd).returns(system_output(msg: expected_output, success: false))
-        assert_raises(Script::Layers::Infrastructure::Errors::SystemCallFailureError) { subject }
+        e = assert_raises(Script::Layers::Infrastructure::Errors::SystemCallFailureError) { subject }
+        assert_equal expected_output, e.message
       end
     end
   end

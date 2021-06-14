@@ -8,7 +8,8 @@ module Script
           def call(ctx:, force:)
             script_project_repo = Infrastructure::ScriptProjectRepository.new(ctx: ctx)
             script_project = script_project_repo.get
-            task_runner = Infrastructure::TaskRunner.for(ctx, script_project.language, script_project.script_name)
+            task_runner = Infrastructure::Languages::TaskRunner
+              .for(ctx, script_project.language, script_project.script_name)
 
             ProjectDependencies.install(ctx: ctx, task_runner: task_runner)
             BuildScript.call(ctx: ctx, task_runner: task_runner, script_project: script_project)
