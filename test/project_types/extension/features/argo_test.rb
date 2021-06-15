@@ -138,6 +138,14 @@ module Extension
         end
       end
 
+      def test_config_aborts_with_error_if_npm_list_fails
+        with_stubbed_script(@context, Features::Argo::SCRIPT_PATH) do
+          Tasks::FindNpmPackages.expects(:exactly_one_of).raises(RuntimeError)
+          error = assert_raises(ShopifyCli::Abort) { @dummy_argo.config(@context) }
+          assert_includes error.message, @context.message("features.argo.error_listing_dependencies")
+        end
+      end
+
       def test_runs_yarn_install_and_yarn_run_script_if_the_package_manager_is_yarn
         with_stubbed_script(@context, Features::Argo::SCRIPT_PATH) do
           ShopifyCli::JsSystem.any_instance.stubs(:package_manager).returns("yarn")

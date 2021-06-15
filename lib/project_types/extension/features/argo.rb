@@ -30,7 +30,12 @@ module Extension
       ].freeze
 
       def create(directory_name, identifier, context)
-        Features::ArgoSetup.new(git_template: git_template).call(directory_name, identifier, context)
+        dependencies = admin? ? [ArgoDependencies.node_installed(min_major: 16, min_minor: 1)] : []
+
+        Features::ArgoSetup.new(
+          git_template: git_template,
+          dependency_checks: dependencies
+        ).call(directory_name, identifier, context)
       end
 
       def config(context)
@@ -47,7 +52,11 @@ module Extension
             serialized_script: Base64.strict_encode64(File.read(filepath).chomp),
           }
         rescue StandardError
-          context.abort(context.message("features.argo.script_prepare_error"))
+          if js_system.package_manager != "yarn"
+            context.abort(context.message("features.argo.error_listing_dependencies"))
+          else
+            context.abort(context.message("features.argo.script_prepare_error"))
+          end
         end
       end
 
@@ -63,6 +72,10 @@ module Extension
       end
 
       private
+
+      def admin?
+        renderer_package_name == ARGO_ADMIN
+      end
 
       def run_yarn_install(context, js_system)
         _result, error, status = js_system.call(

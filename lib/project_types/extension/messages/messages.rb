@@ -95,6 +95,8 @@ module Extension
           missing_file_error: "Could not find built extension file.",
           script_prepare_error: "An error occurred while attempting to prepare your script.",
           initialization_error: "{{x}} There was an error while initializing the project.",
+          error_listing_dependencies: "An error occurred while preparing your script. "\
+            "You may need to run `npm prune` to fix your dependencies, or update Node to at least v16.1.0.",
           dependencies: {
             node: {
               node_not_installed: "Node must be installed to create this extension.",
