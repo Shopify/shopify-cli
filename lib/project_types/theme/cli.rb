@@ -6,7 +6,6 @@ module Theme
   end
 
   class Command < ShopifyCli::ProjectCommands
-    subcommand :Init, "init", Project.project_filepath("commands/init")
     subcommand :Serve, "serve", Project.project_filepath("commands/serve")
     subcommand :Push, "push", Project.project_filepath("commands/push")
     subcommand :Check, "check", Project.project_filepath("commands/check")
