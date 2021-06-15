@@ -125,7 +125,8 @@ module Theme
             Usage: {{command:%s theme package [ ROOT ]}}
           HELP
           error: {
-            prereq_command_required: "",
+            prereq_command_required: "%1$s is required for packaging a theme. Please install %1$s "\
+              "using the appropriate package manager for your system.",
             missing_config: "Provide a config/settings_schema.json to package your theme",
             missing_theme_name: "Provide a theme_info.theme_name configuration in config/settings_schema.json",
           },
