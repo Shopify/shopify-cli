@@ -11,6 +11,7 @@ module Theme
     subcommand :Check, "check", Project.project_filepath("commands/check")
     subcommand :Publish, "publish", Project.project_filepath("commands/publish")
     subcommand :Delete, "delete", Project.project_filepath("commands/delete")
+    subcommand :Package, "package", Project.project_filepath("commands/package")
   end
   ShopifyCli::Commands.register("Theme::Command", "theme")
 
