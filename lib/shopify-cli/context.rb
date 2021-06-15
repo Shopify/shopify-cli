@@ -292,6 +292,24 @@ module ShopifyCli
       puts(help)
     end
 
+    # will output to the console a link for the user to either copy/paste
+    # or click on.
+    #
+    # #### Parameters
+    # * `uri` - a http URI to open in a browser
+    #
+    def open_browser_url!(uri)
+      if RbConfig::CONFIG['host_os'] =~ /mswin|mingw|cygwin/
+        system "start #{uri}"
+      elsif RbConfig::CONFIG['host_os'] =~ /darwin/
+        system( "open", uri.to_s)
+      elsif RbConfig::CONFIG['host_os'] =~ /linux|bsd/
+        system "xdg-open #{uri}"
+      else
+        open_url!(uri)
+      end
+    end
+
     # will output a message, prefixed by a yellow star, indicating that task
     # started.
     #

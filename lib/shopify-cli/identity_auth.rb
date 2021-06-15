@@ -107,11 +107,11 @@ module ShopifyCli
       params.merge!(challange_params)
       uri = URI.parse("#{auth_url}/authorize")
       uri.query = URI.encode_www_form(params)
-      output_authentication_info(uri)
+      open_browser_authentication(uri)
     end
 
-    def output_authentication_info(uri)
-      ctx.open_url!(uri)
+    def open_browser_authentication(uri)
+      ctx.open_browser_url!(uri)
     end
 
     def receive_access_code
