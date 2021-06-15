@@ -118,6 +118,19 @@ module Theme
           live: "{{x}} Theme #%s is your live theme. You can't delete it.",
           confirm: "Are you sure you want to delete %s on %s?",
         },
+        package: {
+          help: <<~HELP,
+            {{command:%s theme package}}: Package your theme into a .zip file, ready to upload to the Online Store.
+
+            Usage: {{command:%s theme package [ ROOT ]}}
+          HELP
+          error: {
+            prereq_command_required: "",
+            missing_config: "Provide a config/settings_schema.json to package your theme",
+            missing_theme_name: "Provide a theme_info.theme_name configuration in config/settings_schema.json",
+          },
+          done: "Theme packaged in %s",
+        },
       },
     }.freeze
   end
