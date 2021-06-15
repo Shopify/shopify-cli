@@ -12,9 +12,9 @@ module Extension
       end
 
       def call(args, _)
-        with_create_form(args) do |form|
+        with_create_form(args) do |form, message_for_extension|
           if Dir.exist?(form.directory_name)
-            @ctx.abort(@ctx.message("create.errors.directory_exists", form.directory_name))
+            @ctx.abort(message_for_extension["create.errors.directory_exists", form.directory_name])
           end
 
           if form.type.create(form.directory_name, @ctx)
@@ -26,10 +26,10 @@ module Extension
               api_secret: form.app.secret
             )
 
-            @ctx.puts(@ctx.message("create.ready_to_start", form.directory_name, form.name))
-            @ctx.puts(@ctx.message("create.learn_more", form.type.name))
+            @ctx.puts(message_for_extension["create.ready_to_start", form.directory_name, form.name])
+            @ctx.puts(message_for_extension["create.learn_more", form.type.name])
           else
-            @ctx.puts(@ctx.message("create.try_again"))
+            @ctx.puts(message_for_extension["create.try_again"])
           end
         end
       end
@@ -44,7 +44,7 @@ module Extension
         form = Forms::Create.ask(@ctx, args, options.flags)
         return @ctx.puts(self.class.help) if form.nil?
 
-        yield form
+        yield form, form.type.method(:message_for_extension)
       end
     end
   end
