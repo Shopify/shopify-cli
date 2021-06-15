@@ -3,7 +3,7 @@ require "project_types/theme/test_helper"
 
 module Theme
   module Commands
-    class InitTest < MiniTest::Test
+    class PackageTest < MiniTest::Test
       include TestHelpers::FakeUI
 
       def setup
