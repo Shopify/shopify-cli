@@ -21,7 +21,6 @@ module Node
             Usage: {{command:%s create node}}
             Options:
               {{command:--name=NAME}} App name. Any string.
-              {{command:--app-url=APPURL}} App URL. Must be a valid URL.
               {{command:--organization-id=ID}} Partner organization ID. Must be an existing organization.
               {{command:--shop-domain=MYSHOPIFYDOMAIN }} Development store URL. Must be an existing development store.
           HELP
