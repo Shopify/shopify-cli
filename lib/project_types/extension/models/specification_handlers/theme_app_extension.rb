@@ -17,10 +17,8 @@ module Extension
       BLOCK
 
       APP_EMBED_BLOCK_SAMPLE = <<~BLOCK
-        /*
         Your theme app extension's liquid goes here and will be rendered inside
         the <head> section of product pages.
-        */
 
         {% schema %}
         {
