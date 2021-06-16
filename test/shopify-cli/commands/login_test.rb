@@ -7,6 +7,8 @@ module ShopifyCli
         super
         stub_shopify_org_confirmation
         ShopifyCli::Shopifolk.stubs(:check).returns(false)
+        stub_request(:head, "https://testshop.myshopify.io/admin")
+          .to_return(status: 200)
       end
 
       def test_call_login_non_shopifolk
@@ -109,28 +111,51 @@ module ShopifyCli
       end
 
       def test_login_with_shop_flag_bad_storenames
-        [
-          "testshop",
-          "-badname.myshopify.io",
-          "store.bad-doma.in",
-          "https://store.myshopify.io",
-          "https://store.myshopify.com",
-        ].each do |store|
-          CLI::UI::Prompt.expects(:ask).never
+        store = "unexisting-shop"
+        stub_request(:head, "https://#{store}.myshopify.com/admin")
+          .to_return(status: 404)
 
-          exception = assert_raises ShopifyCli::Abort do
-            run_cmd("login --shop=#{store}")
-          end
-          assert_equal(
-            "{{x}} " + @context.message("core.login.invalid_shop", store),
-            exception.message
-          )
+        CLI::UI::Prompt.expects(:ask).never
+
+        exception = assert_raises ShopifyCli::Abort do
+          run_cmd("login --shop=#{store}")
         end
+        assert_equal(
+          "{{x}} " + @context.message("core.login.invalid_shop", store),
+          exception.message
+        )
       end
 
       def test_help_argument_calls_help
         @context.expects(:puts).with(ShopifyCli::Commands::Login.help)
         run_cmd("help login")
+      end
+
+      def test_shop_to_permanent_domain
+        stub_request(:head, "https://shoesbycolin.com/admin")
+          .to_return(status: 302, headers: {
+            "Location": "https://shoesbycolin.myshopify.com/admin",
+          })
+        stub_request(:head, "https://shoesbycolin.myshopify.com/admin")
+          .to_return(status: 200)
+        stub_request(:head, "https://shoesbycolin.myshopify.io/admin")
+          .to_return(status: 200)
+        stub_request(:head, "https://not-found.myshopify.com/admin")
+          .to_return(status: 404)
+
+        assert_equal("shoesbycolin.myshopify.com",
+          ShopifyCli::Commands::Login.shop_to_permanent_domain("https://shoesbycolin.com"))
+        assert_equal("shoesbycolin.myshopify.com",
+          ShopifyCli::Commands::Login.shop_to_permanent_domain("shoesbycolin.com"))
+        assert_equal("shoesbycolin.myshopify.com",
+          ShopifyCli::Commands::Login.shop_to_permanent_domain("https://shoesbycolin.com/admin"))
+        assert_equal("shoesbycolin.myshopify.com",
+          ShopifyCli::Commands::Login.shop_to_permanent_domain("shoesbycolin"))
+        assert_equal("shoesbycolin.myshopify.com",
+          ShopifyCli::Commands::Login.shop_to_permanent_domain("http://shoesbycolin.myshopify.com/admin"))
+        assert_equal("shoesbycolin.myshopify.io",
+          ShopifyCli::Commands::Login.shop_to_permanent_domain("http://shoesbycolin.myshopify.io/admin"))
+        assert_nil(ShopifyCli::Commands::Login.shop_to_permanent_domain("not-found"))
       end
 
       private
