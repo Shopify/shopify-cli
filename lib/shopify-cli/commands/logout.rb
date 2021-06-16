@@ -8,6 +8,7 @@ module ShopifyCli
         try_delete_development_theme
         ShopifyCli::IdentityAuth.delete_tokens_and_keys
         ShopifyCli::DB.del(:shop) if has_shop?
+        ShopifyCli::DB.del(:organization_id) if has_organization_id?
         ShopifyCli::Shopifolk.reset
         @ctx.puts(@ctx.message("core.logout.success"))
       end
@@ -20,6 +21,10 @@ module ShopifyCli
 
       def has_shop?
         ShopifyCli::DB.exists?(:shop)
+      end
+
+      def has_organization_id?
+        ShopifyCli::DB.exists?(:organization_id)
       end
 
       def try_delete_development_theme

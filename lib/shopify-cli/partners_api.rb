@@ -75,13 +75,9 @@ module ShopifyCli
 
       def access_token(ctx)
         ShopifyCli::DB.get(:partners_exchange_token) do
-          authenticate(ctx)
+          IdentityAuth.new(ctx: ctx).authenticate
           ShopifyCli::DB.get(:partners_exchange_token)
         end
-      end
-
-      def authenticate(ctx)
-        IdentityAuth.new(ctx: ctx).authenticate
       end
 
       def endpoint

@@ -14,6 +14,8 @@ module ShopifyCli
 
         ShopifyCli::DB.expects(:exists?).with(:shop).twice.returns(true)
         ShopifyCli::DB.expects(:del).with(:shop).once
+        ShopifyCli::DB.expects(:exists?).with(:organization_id).once.returns(true)
+        ShopifyCli::DB.expects(:del).with(:organization_id).once
 
         ShopifyCli::Shopifolk.expects(:reset).once
 
