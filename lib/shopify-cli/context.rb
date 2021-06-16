@@ -300,11 +300,11 @@ module ShopifyCli
     #
     def open_browser_url!(uri)
       if RbConfig::CONFIG['host_os'] =~ /mswin|mingw|cygwin/
-        system "start #{uri}"
+        system("start", uri.to_s)
       elsif RbConfig::CONFIG['host_os'] =~ /darwin/
-        system( "open", uri.to_s)
+        system("open", uri.to_s)
       elsif RbConfig::CONFIG['host_os'] =~ /linux|bsd/
-        system "xdg-open #{uri}"
+        system("xdg-open", uri.to_s)
       else
         open_url!(uri)
       end
