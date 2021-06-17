@@ -13,9 +13,7 @@ module ShopifyCli
         </html>
       }
       AUTOCLOSE_TEMPLATE = %{
-        <script>
-          setTimeout(function() { window.close(); }, 3000)
-        </script>
+        <script>window.close();</script>
       }
 
       def initialize(server, identity_auth, token)
