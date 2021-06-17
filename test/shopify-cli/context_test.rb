@@ -35,16 +35,16 @@ module ShopifyCli
     end
 
     [
-      {host: "universal-arm64e-darwin20", mac: true, windows: false, linux: false},
-      {host: "x86_64-apple-darwin19.3.0", mac: true, windows: false, linux: false},
-      {host: "i386-apple-darwin19.3.0", mac: true, windows: false, linux: false},
-      {host: "x86_64-pc-linux-gnu", mac: false, windows: false, linux: true},
-      {host: "x86_64-linux-gnu", mac: false, windows: false, linux: true},
-      {host: "x86-64-kfreebsd-gnu", mac: false, windows: false, linux: true},
-      {host: "aarch64-linux-gnu", mac: false, windows: false, linux: true},
-      {host: "arm-linux-gnueabihf", mac: false, windows: false, linux: true},
-      {host: "x86_64-w64-mingw32", mac: false, windows: true, linux: false},
-      {host: "CYGWIN_NT-5.1", mac: false, windows: true, linux: false},
+      { host: "universal-arm64e-darwin20", mac: true, windows: false, linux: false },
+      { host: "x86_64-apple-darwin19.3.0", mac: true, windows: false, linux: false },
+      { host: "i386-apple-darwin19.3.0", mac: true, windows: false, linux: false },
+      { host: "x86_64-pc-linux-gnu", mac: false, windows: false, linux: true },
+      { host: "x86_64-linux-gnu", mac: false, windows: false, linux: true },
+      { host: "x86-64-kfreebsd-gnu", mac: false, windows: false, linux: true },
+      { host: "aarch64-linux-gnu", mac: false, windows: false, linux: true },
+      { host: "arm-linux-gnueabihf", mac: false, windows: false, linux: true },
+      { host: "x86_64-w64-mingw32", mac: false, windows: true, linux: false },
+      { host: "CYGWIN_NT-5.1", mac: false, windows: true, linux: false },
     ].each do |test|
       define_method("test_os_matches_#{test[:host]}") do
         @ctx.stubs(:uname).returns(test[:host])
@@ -63,21 +63,7 @@ module ShopifyCli
         refute(@ctx.windows?) unless test[:windows]
         refute(@ctx.linux?) unless test[:linux]
         refute(@ctx.unknown_os?) unless test[:unknown]
-
       end
-    end
-    def test_mac_matches
-      @ctx.expects(:uname).returns("x86_64-apple-darwin19.3.0").times(3)
-      assert(@ctx.mac?)
-      assert_equal(:mac, @ctx.os)
-      refute(@ctx.linux?)
-    end
-
-    def test_linux_matches
-      @ctx.expects(:uname).returns("x86_64-pc-linux-gnu").times(3)
-      assert(@ctx.linux?)
-      assert_equal(:linux, @ctx.os)
-      refute(@ctx.mac?)
     end
 
     def test_open_url_outputs_url_to_open
@@ -89,19 +75,20 @@ module ShopifyCli
     end
 
     [
-      {tty: true, mac:true, windows: false, linux: false, expect_output: false, expect_system: "open"},
-      {tty: true, mac:false, windows: true, linux: false, expect_output: false, expect_system: "start"},
-      {tty: true, mac:false, windows: false, linux: true, expect_output: false, expect_system: "xdg-open"},
-      {tty: true, mac:true, windows: true, linux: true, expect_output: false, expect_system: "xdg-open"}, # linux wins
-      {tty: true, mac:false, windows: false, linux: false, expect_output: true},
-      {tty: false, mac:true, windows: false, linux: false, expect_output: true},
+      { tty: true, mac: true, windows: false, linux: false, expect_output: false, expect_system: "open" },
+      { tty: true, mac: false, windows: true, linux: false, expect_output: false, expect_system: "start" },
+      { tty: true, mac: false, windows: false, linux: true, expect_output: false, expect_system: "xdg-open" },
+      { tty: true, mac: true, windows: true, linux: true, expect_output: false, expect_system: "xdg-open" },
+      { tty: true, mac: false, windows: false, linux: false, expect_output: true },
+      { tty: false, mac: true, windows: false, linux: false, expect_output: true },
     ].each do |test|
-      define_method("test_open_browser_url_with_#{test[:tty] ? "_tty" : "_no_tty"}" +
-                      "#{test[:mac] ? "_mac" : ""}" +
-                      "#{test[:windows] ? "_windows" : ""}" +
-                      "#{test[:linux] ? "_linux" : ""}" +
-                      "#{test[:expect_output] ? "_to_stdout" : ""}" +
-                      "#{test[:expect_system] ? "_call_system_" + test[:expect_system] : ""}") do
+      define_method("test_open_browser_url_with_" +
+        (test[:tty] ? "_tty" : "_no_tty") +
+        (test[:mac] ? "_mac" : "") +
+        (test[:windows] ? "_windows" : "") +
+        (test[:linux] ? "_linux" : "") +
+        (test[:expect_output] ? "_to_stdout" : "") +
+        (test[:expect_system] ? "_call_system_" + test[:expect_system] : "")) do
         url = "http://shoesbycolin.com"
         @ctx.stubs(:tty?).returns(test[:tty])
         @ctx.stubs(:mac?).returns(test[:mac])
