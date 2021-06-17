@@ -97,7 +97,6 @@ module Script
             tokens = { "APP_KEY" => api_key }.compact.to_json
             { "X-Shopify-Authenticated-Tokens" => tokens }
           end
-
         end
         private_constant(:ScriptServiceAPI)
 
@@ -110,13 +109,17 @@ module Script
         private_constant(:PartnersProxyAPI)
 
         def script_service_request(query_name:, variables: nil, **options)
-          resp = if ENV["BYPASS_PARTNERS_PROXY"]
+          resp = if bypass_partners_proxy
             ScriptServiceAPI.query(ctx, query_name, variables: variables, **options)
           else
             proxy_through_partners(query_name: query_name, variables: variables, **options)
           end
           raise_if_graphql_failed(resp)
           resp
+        end
+
+        def bypass_partners_proxy
+          !ENV["BYPASS_PARTNERS_PROXY"].nil?
         end
 
         def proxy_through_partners(query_name:, variables: nil, **options)
