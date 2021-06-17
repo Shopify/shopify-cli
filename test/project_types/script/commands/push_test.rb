@@ -20,7 +20,7 @@ module Script
           env: @env
         )
         Script::Layers::Infrastructure::ScriptProjectRepository.stubs(:new).returns(@script_project_repo)
-        ShopifyCli::ProjectType.load_type(:script)
+        ShopifyCli::Tasks::EnsureProjectType.stubs(:call).with(@context, :script).returns(true)
       end
 
       def test_calls_push_script
