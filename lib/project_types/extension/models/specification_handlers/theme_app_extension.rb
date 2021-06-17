@@ -45,7 +45,19 @@ module Extension
         def config(context)
           Dir.chdir(context.root) do
             Dir["**/*"].select { |filename| File.file?(filename) && validate(filename) }
-              .map { |filename| [filename, Base64.encode64(File.read(filename))] }
+              .map do |filename|
+                dirname = File.dirname(filename)
+                if dirname == "assets"
+                  # Assets should be read as binary data, since they could be images
+                  mode = "rb"
+                  encoding = "BINARY"
+                else
+                  # Other assets should be treated as UTF-8 encoded text
+                  mode = "rt"
+                  encoding = "UTF-8"
+                end
+                [filename, Base64.encode64(File.read(filename, mode: mode, encoding: encoding))]
+              end
               .yield_self do |encoded_files_by_name|
                 { "theme_extension" => { "files" => encoded_files_by_name.to_h } }
               end
