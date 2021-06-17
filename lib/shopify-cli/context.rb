@@ -61,9 +61,10 @@ module ShopifyCli
     # will return which operating system that the cli is running on [:mac, :linux]
     def os
       host = uname
-      return :mac if /darwin/.match(host)
-      return :linux if /linux/.match(host)
-      return :windows if /mingw32/.match(host)
+      return :mac if /darwin/i.match(host)
+      return :windows if /mswin|mingw|cygwin/i.match(host)
+      return :linux if /linux|bsd/i.match(host)
+      :unknown
     end
 
     # will return true if the cli is running on an apple computer.
@@ -79,6 +80,16 @@ module ShopifyCli
     # will return true if the cli is running on Windows
     def windows?
       os == :windows
+    end
+
+    # will return true if the os is unknown
+    def unknown_os?
+      os == :unknown
+    end
+
+    # will return true if being launched from a tty
+    def tty?
+      $stdin.tty? && testing?
     end
 
     # will return true if the cli is being run from an installation, and not a
@@ -299,12 +310,16 @@ module ShopifyCli
     # * `uri` - a http URI to open in a browser
     #
     def open_browser_url!(uri)
-      if RbConfig::CONFIG['host_os'] =~ /mswin|mingw|cygwin/
-        system("start", uri.to_s)
-      elsif RbConfig::CONFIG['host_os'] =~ /darwin/
-        system("open", uri.to_s)
-      elsif RbConfig::CONFIG['host_os'] =~ /linux|bsd/
-        system("xdg-open", uri.to_s)
+      if tty?
+        if linux?
+          system("xdg-open", uri.to_s)
+        elsif windows?
+          system("start", uri.to_s)
+        elsif mac?
+          system("open", uri.to_s)
+        else
+          open_url!(uri)
+        end
       else
         open_url!(uri)
       end

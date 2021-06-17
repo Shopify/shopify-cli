@@ -2,8 +2,11 @@ require "test_helper"
 
 module ShopifyCli
   class IdentityAuthTest < MiniTest::Test
+    def setup
+      super
+      @context.stubs(:tty?).returns(false)
+    end
     def test_authenticate
-      RbConfig::CONFIG['host_os'] = 'fake-os'
       client = identity_auth_client
       @context.expects(:open_url!)
 
