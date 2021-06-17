@@ -69,23 +69,35 @@ module Script
         class ScriptServiceAPI < ShopifyCli::API
           property(:api_key, accepts: String)
 
+          LOCAL_INSTANCE_URL = "https://script-service.myshopify.io"
+
           def self.query(ctx, query_name, api_key: nil, variables: {})
             api_client(ctx, api_key).query(query_name, variables: variables)
           end
 
           def self.api_client(ctx, api_key)
+            instance_url = spin_instance_url || LOCAL_INSTANCE_URL
             new(
               ctx: ctx,
-              url: "https://script-service.myshopify.io/graphql",
+              url: "#{instance_url}/graphql",
               token: "",
               api_key: api_key
             )
+          end
+
+          def self.spin_instance_url
+            workspace = ENV["SPIN_WORKSPACE"]
+            namespace = ENV["SPIN_NAMESPACE"]
+            return if workspace.nil? || namespace.nil?
+
+            "https://script-service.#{workspace}.#{namespace}.us.spin.dev"
           end
 
           def auth_headers(*)
             tokens = { "APP_KEY" => api_key }.compact.to_json
             { "X-Shopify-Authenticated-Tokens" => tokens }
           end
+
         end
         private_constant(:ScriptServiceAPI)
 
