@@ -373,6 +373,9 @@ module ShopifyCli
               MESSAGE
             transfer_disabled: "{{v}} Transfer has been disabled on %s.",
           },
+          ensure_project_type: {
+            wrong_project_type: "This command can only be run within %s projects.",
+          },
           update_dashboard_urls: {
             updated: "{{v}} Whitelist URLS updated in Partners Dashboard}}",
             update_error:
