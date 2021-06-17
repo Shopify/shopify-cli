@@ -8,7 +8,7 @@ module TestHelpers
 
     class FakeTaskWithArgs < ShopifyCli::Task
       def call(ctx, *args)
-        ctx.puts("success with args #{args.join}!")
+        ctx.puts("success with args #{args.reject(&:empty?).join}!")
       end
     end
 

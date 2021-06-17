@@ -7,12 +7,6 @@ module ShopifyCli
         return true if project_type.to_sym == ShopifyCli::Project.current_project_type
         ctx.abort(ctx.message("core.tasks.ensure_project_type.wrong_project_type", project_type))
       end
-
-      private
-
-      def project
-        @project ||= ShopifyCli::Project.current
-      end
     end
   end
 end
