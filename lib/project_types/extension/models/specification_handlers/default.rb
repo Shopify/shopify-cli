@@ -80,6 +80,16 @@ module Extension
             .unwrap { |_e| context.abort(context.message("errors.package_not_found", cli_package_name)) }
         end
 
+        def message_for_extension(key, *params)
+          override_key = "overrides.#{key}"
+          key_parts = override_key.split(".").map(&:to_sym)
+          if (str = messages.dig(*key_parts))
+            str % params
+          else
+            ShopifyCli::Context.message(key, *params)
+          end
+        end
+
         protected
 
         def argo

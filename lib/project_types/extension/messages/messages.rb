@@ -176,6 +176,12 @@ module Extension
           register: {
             confirm_info: "You can only create one %s extension per app, which can’t be undone.",
           },
+          create: {
+            ready_to_start: <<~MESSAGE,
+              {{v}} A new folder was generated at {{green:./%s}}.
+              {{*}} You’re ready to start building {{green:%s}}!
+            MESSAGE
+          },
         },
       },
     }
