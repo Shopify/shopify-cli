@@ -6,6 +6,7 @@ module ShopifyCli
       super
       @context.stubs(:tty?).returns(false)
     end
+    
     def test_authenticate
       client = identity_auth_client
       @context.expects(:open_url!)
