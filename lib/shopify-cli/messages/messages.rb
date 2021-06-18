@@ -191,6 +191,9 @@ module ShopifyCli
         api: {
           error: {
             failed_auth: "Failed to authenticate with Shopify. Please try again later.",
+            forbidden: <<~FORBIDDEN,
+              Command not allowed with current login. Please check your login details with {{command:%s whoami}}. You may need to request additional permissions for this action.
+            FORBIDDEN
             internal_server_error: "{{red:{{x}} An unexpected error occurred on Shopify.}}",
             internal_server_error_debug: "\n{{red:Response details:}}\n%s\n\n",
             invalid_url: "Invalid URL: %s",

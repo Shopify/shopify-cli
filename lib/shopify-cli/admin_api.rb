@@ -45,6 +45,8 @@ module ShopifyCli
         end
       rescue API::APIRequestUnauthorizedError
         ctx.abort(ctx.message("core.api.error.failed_auth"))
+      rescue API::APIRequestForbiddenError
+        ctx.abort(ctx.message("core.api.error.forbidden", ShopifyCli::TOOL_NAME))
       end
 
       ##
@@ -126,9 +128,17 @@ module ShopifyCli
           token: access_token(ctx, shop),
           url: "https://#{shop}/admin/api/unstable/graphql.json",
         )
-        versions = client.query("api_versions")["data"]["publicApiVersions"]
-        latest = versions.find { |version| version["displayName"].include?("Latest") }
-        latest["handle"]
+        CLI::Kit::Util.begin do
+          versions = client.query("api_versions")["data"]["publicApiVersions"]
+          latest = versions.find { |version| version["displayName"].include?("Latest") }
+          latest["handle"]
+        end.retry_after(API::APIRequestUnauthorizedError, retries: 1) do
+          ShopifyCli::IdentityAuth.new(ctx: ctx).reauthenticate
+        end
+      rescue API::APIRequestUnauthorizedError
+        ctx.abort(ctx.message("core.api.error.failed_auth"))
+      rescue API::APIRequestForbiddenError
+        ctx.abort(ctx.message("core.api.error.forbidden", ShopifyCli::TOOL_NAME))
       end
     end
 
