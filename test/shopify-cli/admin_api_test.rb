@@ -160,5 +160,28 @@ module ShopifyCli
         ]
       )
     end
+
+    def test_latest_api_version_fails_gracefully_when_forbidden
+      unstable_stub = stub
+      AdminAPI.expects(:new).with(
+        ctx: @context,
+        token: "token123",
+        url: "https://my-test-shop.myshopify.com/admin/api/unstable/graphql.json",
+      ).returns(unstable_stub)
+      unstable_stub.expects(:query)
+        .with("api_versions")
+        .raises(API::APIRequestForbiddenError)
+      ShopifyCli::DB.expects(:get).with(:shopify_exchange_token).returns("token123").twice
+
+      io = capture_io_and_assert_raises(ShopifyCli::Abort) do
+        AdminAPI.query(@context, "query", shop: "my-test-shop.myshopify.com")
+      end
+      assert_message_output(
+        io: io,
+        expected_content: [
+          @context.message("core.api.error.forbidden", ShopifyCli::TOOL_NAME),
+        ]
+      )
+    end
   end
 end
