@@ -30,7 +30,7 @@ module Extension
           argo.config(context)
         end
 
-        def create(directory_name, context)
+        def create(directory_name, context, **_args)
           argo.create(directory_name, identifier, context)
         end
 

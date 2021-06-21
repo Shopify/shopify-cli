@@ -5,42 +5,21 @@ require "json"
 module Extension
   module Models
     module SpecificationHandlers
-      APP_BLOCK_SAMPLE = <<~BLOCK
-        Your theme app extension's liquid goes here.
-
-        {% schema %}
-        {
-          "name": "Sample App Block",
-          "target": "section"
-        }
-        {% endschema %}
-      BLOCK
-
-      APP_EMBED_BLOCK_SAMPLE = <<~BLOCK
-        Your theme app extension's liquid goes here and will be rendered inside
-        the <head> section of product pages.
-
-        {% schema %}
-        {
-          "name": "Sample App Embed Block",
-          "target": "head",
-          "templates": ["product"]
-        }
-        {% endschema %}
-      BLOCK
-
       class ThemeAppExtension < Default
         SUPPORTED_BUCKETS = %w(assets blocks snippets)
         BUNDLE_SIZE_LIMIT = 10 * 1024 * 1024 # 10MB
         LIQUID_SIZE_LIMIT = 100 * 1024 # 100kb
         SUPPORTED_ASSET_EXTS = %w(.jpg .js .css .png .svg)
 
-        def create(directory_name, context)
+        def create(directory_name, context, getting_started: false)
           context.root = File.join(context.root, directory_name)
 
-          FileUtils.makedirs(SUPPORTED_BUCKETS.map { |b| File.join(context.root, b) })
-          File.write(File.join(context.root, "blocks", "app_block_sample.liquid"), APP_BLOCK_SAMPLE)
-          File.write(File.join(context.root, "blocks", "app_embed_block_sample.liquid"), APP_EMBED_BLOCK_SAMPLE)
+          if getting_started
+            ShopifyCli::Git.clone("https://github.com/Shopify/theme-extension-getting-started", context.root)
+            context.rm_r(".git")
+          else
+            FileUtils.makedirs(SUPPORTED_BUCKETS.map { |b| File.join(context.root, b) })
+          end
         end
 
         def config(context)
