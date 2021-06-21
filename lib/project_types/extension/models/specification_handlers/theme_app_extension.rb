@@ -30,7 +30,7 @@ module Extension
       BLOCK
 
       class ThemeAppExtension < Default
-        SUPPORTED_BUCKETS = %w(assets blocks snippets locales)
+        SUPPORTED_BUCKETS = %w(assets blocks snippets)
 
         def create(directory_name, context)
           context.root = File.join(context.root, directory_name)
