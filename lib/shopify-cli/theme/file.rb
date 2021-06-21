@@ -20,6 +20,15 @@ module ShopifyCli
         path.read
       end
 
+      def write(content)
+        path.parent.mkpath unless path.parent.directory?
+        path.write(content)
+      end
+
+      def delete
+        path.delete
+      end
+
       def exist?
         path.exist?
       end

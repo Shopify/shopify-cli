@@ -41,6 +41,10 @@ module ShopifyCli
         files.each { |file| enqueue(:update, file) }
       end
 
+      def enqueue_get(files)
+        files.each { |file| enqueue(:get, file) }
+      end
+
       def enqueue_deletes(files)
         files.each { |file| enqueue(:delete, file) }
       end
@@ -151,15 +155,18 @@ module ShopifyCli
         end
       end
 
-      def upload_theme_with_progress_bar!(**args)
-        delay_errors!
-        CLI::UI::Progress.progress do |bar|
-          upload_theme!(**args) do |left, total|
-            bar.tick(set_percent: 1 - left.to_f / total)
-          end
-          bar.tick(set_percent: 1)
+      def download_theme!(delete: true, &block)
+        fetch_checksums!
+
+        if delete
+          # Delete local files not present remotely
+          missing_files = @theme.theme_files.reject { |file| checksums.key?(file.relative_path.to_s) }
+          missing_files.each(&:delete)
         end
-        report_errors!
+
+        enqueue_get(checksums.keys)
+
+        wait!(&block)
       end
 
       private
@@ -175,7 +182,7 @@ module ShopifyCli
           return
         end
 
-        if method == :update && operation.file.exist? && !file_has_changed?(operation.file)
+        if [:update, :get].include?(method) && operation.file.exist? && !file_has_changed?(operation.file)
           @ctx.debug("skip #{operation}")
           return
         end
@@ -223,6 +230,22 @@ module ShopifyCli
         )
 
         update_checksums(body)
+
+        response
+      end
+
+      def get(file)
+        _status, body, response = ShopifyCli::AdminAPI.rest_request(
+          @ctx,
+          shop: @theme.shop,
+          path: "themes/#{@theme.id}/assets.json",
+          method: "GET",
+          api_version: API_VERSION,
+          query: URI.encode_www_form("asset[key]" => file.relative_path.to_s),
+        )
+
+        value = body.dig("asset", "value") || Base64.decode64(body.dig("asset", "attachment"))
+        file.write(value)
 
         response
       end

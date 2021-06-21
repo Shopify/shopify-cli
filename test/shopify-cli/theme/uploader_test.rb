@@ -224,6 +224,19 @@ module ShopifyCli
         assert_empty(@uploader)
       end
 
+      def test_download_theme
+        @uploader.start_threads
+
+        expected_size = @theme.theme_files.size
+
+        ShopifyCli::AdminAPI.expects(:rest_request)
+          .times(expected_size + 1) # +1 for checksums
+          .returns([200, {}, {}])
+
+        @uploader.download_theme!
+        assert_empty(@uploader)
+      end
+
       def test_upload_theme_with_delayed_low_priority_files
         @uploader.start_threads
 

@@ -41,7 +41,7 @@ module Theme
             remove_error: "Theme files couldn't be removed from Shopify",
           },
           help: <<~HELP,
-            {{command:%s theme push}}: Uploads your local theme files to the connected store, overwriting the remote version if specified. Push will fail if the theme uses the GitHub integration.
+            {{command:%s theme push}}: Uploads your local theme files to the connected store, overwriting the remote version if specified.
 
               Usage: {{command:%s theme push [ ROOT ]}}
 
@@ -127,6 +127,23 @@ module Theme
 
             Usage: {{command:%s theme language-server}}
           HELP
+        },
+        pull: {
+          help: <<~HELP,
+            {{command:%s theme pull}}: Downloads your remote theme locally.
+
+            Usage: {{command:%s theme pull [ ROOT ]}}
+
+            Options:
+              {{command:-i, --themeid=THEMEID}} Theme ID. Must be an existing theme on your store.
+              {{command:-n, --nodelete}}        Runs the push command without deleting local files.
+
+            Run without options to select theme from a list.
+          HELP
+          select: "Select theme to pull from",
+          pulling: "Pulling theme files from %s (#%s) on %s",
+          done: "Your theme was pulled successfully",
+          not_found: "{{x}} Theme #%s does not exist",
         },
       },
     }.freeze

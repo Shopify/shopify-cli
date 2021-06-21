@@ -56,7 +56,7 @@ module Theme
             puts(JSON.generate(theme: theme.to_h))
           else
             CLI::UI::Frame.open(@ctx.message("theme.push.info.pushing", theme.name, theme.id, theme.shop)) do
-              uploader.upload_theme_with_progress_bar!(delete: delete)
+              UI::SyncProgressBar.new(uploader).progress(:upload_theme!, delete: delete)
             end
 
             if options.flags[:publish]
