@@ -27,6 +27,7 @@ module ShopifyCli
     register :Switch, "switch", "shopify-cli/commands/switch", true
     register :System, "system", "shopify-cli/commands/system", true
     register :Version, "version", "shopify-cli/commands/version", true
+    register :Whoami, "whoami", "shopify-cli/commands/whoami", true
 
     autoload :Connect, "shopify-cli/commands/connect"
   end

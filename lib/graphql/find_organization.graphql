@@ -9,9 +9,10 @@ query FindOrg($id: ID!) {
           link
           shopDomain
           shopName
+          transferDisabled
+          convertableToPartnerTest
         }
       }
     }
   }
 }
-
