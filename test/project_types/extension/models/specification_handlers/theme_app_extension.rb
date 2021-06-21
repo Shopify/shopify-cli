@@ -43,6 +43,47 @@ module Extension
           assert_equal(expected, @spec.config(@context))
         end
 
+        def test_handles_unicode
+          block_content = "{% comment %} I'm a 🚀 block {% endcomment %}"
+          write("blocks/app.liquid", block_content)
+
+          expected = {
+            "theme_extension" => {
+              "files" => {
+                "blocks/app.liquid" => Base64.encode64(block_content),
+              },
+            },
+          }
+
+          original_encoding = Encoding.default_external
+          Encoding.default_external = "ascii"
+
+          config = @spec.config(@context)
+          assert_equal(expected, config)
+
+          decoded_config = Base64.decode64(config.dig("theme_extension", "files", "blocks/app.liquid"))
+            .force_encoding("utf-8")
+          assert_equal(block_content, decoded_config)
+        ensure
+          Encoding.default_external = original_encoding
+        end
+
+        def test_handles_binary
+          binary_data = "\x00\x01\x02\r\n\x03\x04".encode("BINARY")
+          write("assets/test.bin", binary_data, mode: "wb", encoding: "BINARY")
+
+          expected = {
+            "theme_extension" => {
+              "files" => {
+                "assets/test.bin" => Base64.encode64(binary_data),
+              },
+            },
+          }
+
+          config = @spec.config(@context)
+          assert_equal(expected, config)
+        end
+
         def test_validates_buckets
           write("invalid/readme.txt", "hello")
           assert_raises Extension::Errors::InvalidDirectoryError do
@@ -63,10 +104,10 @@ module Extension
 
         private
 
-        def write(filename, content)
+        def write(filename, content, mode: "w", encoding: "utf-8")
           filename = File.join(@context.root, filename)
           FileUtils.mkdir_p(File.dirname(filename))
-          File.write(filename, content)
+          File.write(filename, content, mode: mode, encoding: encoding)
         end
       end
     end
