@@ -4,12 +4,9 @@ module ShopifyCli
   module Commands
     class Switch < ShopifyCli::Command
       options do |parser, flags|
-        parser.on("--shop=SHOP") do |shop|
-          flags[:shop] = shop
-        end
-        parser.on("--store=STORE") do |store|
-          flags[:shop] = store
-        end
+        parser.on("--store=STORE") { |url| flags[:shop] = url }
+        # backwards compatibility allow 'shop' for now
+        parser.on("--shop=SHOP") { |url| flags[:shop] = url }
       end
 
       def call(*)

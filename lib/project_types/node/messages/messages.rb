@@ -31,7 +31,7 @@ module Node
               Options:
                 {{command:--name=NAME}} App name. Any string.
                 {{command:--organization-id=ID}} Partner organization ID. Must be an existing organization.
-                {{command:--shop-domain=MYSHOPIFYDOMAIN }} Development store URL. Must be an existing development store.
+                {{command:--store=MYSHOPIFYDOMAIN }} Development store URL. Must be an existing development store.
           HELP
           error: {
             node_required: "node is required to create an app project. Download at https://nodejs.org/en/download.",
