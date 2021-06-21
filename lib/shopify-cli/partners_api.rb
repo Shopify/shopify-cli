@@ -50,7 +50,10 @@ module ShopifyCli
         end.retry_after(API::APIRequestUnauthorizedError, retries: 1) do
           ShopifyCli::IdentityAuth.new(ctx: ctx).reauthenticate
         end
-      rescue API::APIRequestUnauthorizedError
+      rescue API::APIRequestUnauthorizedError => e
+        if (request_info = auth_failure_info(ctx, e))
+          ctx.puts(ctx.message("core.api.error.failed_auth_debugging", request_info))
+        end
         ctx.abort(ctx.message("core.api.error.failed_auth"))
       rescue API::APIRequestNotFoundError
         ctx.puts(ctx.message("core.partners_api.error.account_not_found", ShopifyCli::TOOL_NAME))
@@ -92,6 +95,17 @@ module ShopifyCli
           "partners.shopify.com"
         end
         "https://#{domain}"
+      end
+
+      def auth_failure_info(ctx, error)
+        if error.response
+          headers = %w(www-authenticate x-request-id)
+          request_info = headers.map { |h| "#{h}: #{error.response[h]}" if error.response.key?(h) }.join("\n")
+          ctx.debug("Full headers: #{error.response.each_header.to_h}")
+          request_info
+        end
+      rescue => e
+        ctx.debug("Couldn't fetch auth failure information from #{error}: #{e}")
       end
     end
 
