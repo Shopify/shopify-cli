@@ -31,11 +31,33 @@
 
 1. Deploy using Shipit
 
-1. Check the "Actions" tab to see if the _Create Release_ workflow is successful. 
-   The workflow will automatically create a [release](https://github.com/Shopify/shopify-cli/releases) with the latest tag and `.deb`, `.rpm` assets attached.
+1. Update your `master` branch to the latest version
+   ```
+   $ git checkout master
+   $ git pull
+   ```
 
-2. Check the `Shopify/homebrew-shopify` repository for new PR `shopify-cli {version}`
-   * rename PR to `Packaging for release of v{version} of shopify-cli`
-   * when PR is approved, merge into main branch
+1. On local machine and _AFTER_ gem has been published to https://rubygems.org, run
+   ```
+   $ rake package
+   ```
+   This will generate the `.deb`, `.rpm` and brew formula files, which will be located in `packaging/builds/X.Y.Z/`.
 
+1. Clone the `Shopify/homebrew-shopify` repository (if not already cloned), and then
+    * create a branch named `release_X_Y_Z_of_shopify-cli`
+    * update the brew formula in `shopify-cli.rb` with the generated formula in `packaging/builds/X.Y.Z/` in the `Shopify/shopify-cli` repo (from the `rake package` step above)
+    * commit the change and create a PR on the [Shopify Homebrew repository](https://github.com/Shopify/homebrew-shopify)
+    * when PR is approved, merge into main branch
 
+1. Go to [releases](https://github.com/Shopify/shopify-cli/releases) page of `Shopify/shopify-cli` repo and create a new release:
+    * use the tag created by Shipit (should be "vX.Y.Z")
+    * release title = "Version X.Y.Z"
+    * description should be
+      ```
+      Release of version X.Y.Z of Shopify CLI
+
+      Please refer to [CHANGELOG](https://github.com/Shopify/shopify-cli/blob/master/CHANGELOG.md) for details.
+      ```
+    * upload the `.deb` and `.rpm` files from `packaging/builds/X.Y.Z/` (generated in step 9)
+    * if it's a pre-release version, select the "This is a pre-release" checkbox
+    * and click "Publish release".
