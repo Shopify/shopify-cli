@@ -11,20 +11,21 @@ module Extension
       property! :context, accepts: ShopifyCli::Context
       property! :port, accepts: Integer, default: 39351
       property  :tunnel_url, accepts: String, default: ""
+      property! :js_system, accepts: ->(jss) { jss.respond_to?(:call) }, default: ShopifyCli::JsSystem
 
       def call
         validate_env!
 
         CLI::UI::Frame.open(context.message("serve.frame_title")) do
-          success = call_js_system(yarn_command: yarn_serve_command, npm_command: npm_serve_command)
-          context.abort(context.message("serve.serve_failure_message")) unless success
+          next if start_server
+          context.abort(context.message("serve.serve_failure_message"))
         end
       end
 
       private
 
-      def call_js_system(yarn_command:, npm_command:)
-        ShopifyCli::JsSystem.call(context, yarn: yarn_command, npm: npm_command)
+      def start_server
+        js_system.call(context, yarn: yarn_serve_command, npm: npm_serve_command)
       end
 
       def specification
