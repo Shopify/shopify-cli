@@ -66,7 +66,7 @@ module ShopifyCli
       end
 
       def wait!
-        raise ThreadError, "No uploader threads" if @threads.empty?
+        raise ThreadError, "No syncer threads" if @threads.empty?
         total = size
         last_size = size
         until empty? || @queue.closed?

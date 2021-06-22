@@ -1,7 +1,7 @@
 # frozen_string_literal: true
 require "shopify-cli/theme/theme"
 require "shopify-cli/theme/ignore_filter"
-require "shopify-cli/theme/uploader"
+require "shopify-cli/theme/syncer"
 
 module Theme
   class Command
@@ -29,17 +29,17 @@ module Theme
         end
 
         ignore_filter = ShopifyCli::Theme::IgnoreFilter.from_path(root)
-        uploader = ShopifyCli::Theme::Syncer.new(@ctx, theme: theme, ignore_filter: ignore_filter)
+        syncer = ShopifyCli::Theme::Syncer.new(@ctx, theme: theme, ignore_filter: ignore_filter)
         begin
-          uploader.start_threads
+          syncer.start_threads
           CLI::UI::Frame.open(@ctx.message("theme.pull.pulling", theme.name, theme.id, theme.shop)) do
-            UI::SyncProgressBar.new(uploader).progress(:download_theme!, delete: delete)
+            UI::SyncProgressBar.new(syncer).progress(:download_theme!, delete: delete)
           end
           @ctx.done(@ctx.message("theme.pull.done"))
         rescue ShopifyCli::API::APIRequestNotFoundError
           @ctx.abort(@ctx.message("theme.pull.theme_not_found", theme.id))
         ensure
-          uploader.shutdown
+          syncer.shutdown
         end
       end
 

@@ -12,8 +12,8 @@ module ShopifyCli
           root = ShopifyCli::ROOT + "/test/fixtures/theme"
           @ctx = TestHelpers::FakeContext.new(root: root)
           @theme = Theme.new(@ctx, root: root)
-          @uploader = stub("Syncer", enqueue_uploads: true)
-          @watcher = Watcher.new(@ctx, theme: @theme, uploader: @uploader)
+          @syncer = stub("Syncer", enqueue_uploads: true)
+          @watcher = Watcher.new(@ctx, theme: @theme, syncer: @syncer)
         end
 
         def test_hot_reload_js_injected_if_html_request

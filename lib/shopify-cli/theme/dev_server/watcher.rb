@@ -9,10 +9,10 @@ module ShopifyCli
       class Watcher
         include Observable
 
-        def initialize(ctx, theme:, uploader:, ignore_filter: nil)
+        def initialize(ctx, theme:, syncer:, ignore_filter: nil)
           @ctx = ctx
           @theme = theme
-          @uploader = uploader
+          @syncer = syncer
           @ignore_filter = ignore_filter
           @listener = Listen.to(@theme.root) do |modified, added, removed|
             changed
@@ -33,12 +33,12 @@ module ShopifyCli
         def upload_files_when_changed(modified, added, removed)
           modified_theme_files = filter_theme_files(modified + added)
           if modified_theme_files.any?
-            @uploader.enqueue_updates(modified_theme_files)
+            @syncer.enqueue_updates(modified_theme_files)
           end
 
           removed_theme_files = filter_remote_files(removed)
           if removed_theme_files.any?
-            @uploader.enqueue_deletes(removed_theme_files)
+            @syncer.enqueue_deletes(removed_theme_files)
           end
         end
 
@@ -50,7 +50,7 @@ module ShopifyCli
 
         def filter_remote_files(files)
           files
-            .select { |file| @uploader.remote_file?(file) }
+            .select { |file| @syncer.remote_file?(file) }
             .reject { |file| @ignore_filter&.ignore?(file) }
         end
       end

@@ -18,7 +18,7 @@ module Theme
           name: "Test theme",
           shop: "test.myshopify.io",
         )
-        @uploader = stub("Syncer", delay_errors!: nil, report_errors!: nil)
+        @syncer = stub("Syncer", delay_errors!: nil, report_errors!: nil)
         @ignore_filter = mock("IgnoreFilter")
       end
 
@@ -31,19 +31,19 @@ module Theme
 
         ShopifyCli::Theme::Syncer.expects(:new)
           .with(@ctx, theme: @theme, ignore_filter: @ignore_filter)
-          .returns(@uploader)
+          .returns(@syncer)
 
-        @uploader.expects(:start_threads)
-        @uploader.expects(:shutdown)
+        @syncer.expects(:start_threads)
+        @syncer.expects(:shutdown)
 
-        @uploader.expects(:download_theme!).with(delete: true)
+        @syncer.expects(:download_theme!).with(delete: true)
         @ctx.expects(:done)
 
         @command.options.flags[:theme_id] = 1234
         @command.call([], "pull")
       end
 
-      def test_pull_pass_nodelete_to_uploader
+      def test_pull_pass_nodelete_to_syncer
         ShopifyCli::Theme::Theme.expects(:new)
           .with(@ctx, root: ".", id: 1234)
           .returns(@theme)
@@ -52,12 +52,12 @@ module Theme
 
         ShopifyCli::Theme::Syncer.expects(:new)
           .with(@ctx, theme: @theme, ignore_filter: @ignore_filter)
-          .returns(@uploader)
+          .returns(@syncer)
 
-        @uploader.expects(:start_threads)
-        @uploader.expects(:shutdown)
+        @syncer.expects(:start_threads)
+        @syncer.expects(:shutdown)
 
-        @uploader.expects(:download_theme!).with(delete: false)
+        @syncer.expects(:download_theme!).with(delete: false)
 
         @ctx.expects(:done)
 
@@ -70,16 +70,16 @@ module Theme
         CLI::UI::Prompt.expects(:ask).returns(@theme)
         @ctx.expects(:done)
 
-        @uploader.expects(:download_theme!).with(delete: true)
+        @syncer.expects(:download_theme!).with(delete: true)
 
         ShopifyCli::Theme::IgnoreFilter.expects(:from_path).with(".").returns(@ignore_filter)
 
         ShopifyCli::Theme::Syncer.expects(:new)
           .with(@ctx, theme: @theme, ignore_filter: @ignore_filter)
-          .returns(@uploader)
+          .returns(@syncer)
 
-        @uploader.expects(:start_threads)
-        @uploader.expects(:shutdown)
+        @syncer.expects(:start_threads)
+        @syncer.expects(:shutdown)
 
         @command.call([], "pull")
       end

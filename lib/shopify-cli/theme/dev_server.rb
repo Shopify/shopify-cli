@@ -1,7 +1,7 @@
 # frozen_string_literal: true
 require_relative "development_theme"
 require_relative "ignore_filter"
-require_relative "uploader"
+require_relative "syncer"
 
 require_relative "dev_server/hot_reload"
 require_relative "dev_server/header_hash"
@@ -24,11 +24,11 @@ module ShopifyCli
           @ctx = ctx
           theme = DevelopmentTheme.new(ctx, root: root)
           ignore_filter = IgnoreFilter.from_path(root)
-          @uploader = Syncer.new(ctx, theme: theme, ignore_filter: ignore_filter)
-          watcher = Watcher.new(ctx, theme: theme, uploader: @uploader, ignore_filter: ignore_filter)
+          @syncer = Syncer.new(ctx, theme: theme, ignore_filter: ignore_filter)
+          watcher = Watcher.new(ctx, theme: theme, syncer: @syncer, ignore_filter: ignore_filter)
 
           # Setup the middleware stack. Mimics Rack::Builder / config.ru, but in reverse order
-          @app = Proxy.new(ctx, theme: theme, uploader: @uploader)
+          @app = Proxy.new(ctx, theme: theme, syncer: @syncer)
           @app = LocalAssets.new(ctx, @app, theme: theme)
           @app = HotReload.new(ctx, @app, theme: theme, watcher: watcher, ignore_filter: ignore_filter)
           stopped = false
@@ -42,11 +42,11 @@ module ShopifyCli
 
           CLI::UI::Frame.open(@ctx.message("theme.serve.serve")) do
             ctx.print_task("Syncing theme ##{theme.id} on #{theme.shop}")
-            @uploader.start_threads
+            @syncer.start_threads
             if silent
-              @uploader.upload_theme!(delay_low_priority_files: true)
+              @syncer.upload_theme!(delay_low_priority_files: true)
             else
-              @uploader.upload_theme_with_progress_bar!(delay_low_priority_files: true)
+              @syncer.upload_theme_with_progress_bar!(delay_low_priority_files: true)
             end
 
             return if stopped
@@ -89,7 +89,7 @@ module ShopifyCli
         def stop
           @ctx.puts("Stopping ...")
           @app.close
-          @uploader.shutdown
+          @syncer.shutdown
           WebServer.shutdown
         end
       end
