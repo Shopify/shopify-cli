@@ -15,6 +15,7 @@ module ShopifyCli
     autoload :Servlet, "shopify-cli/identity_auth/servlet"
 
     class Error < StandardError; end
+    class Timeout < StandardError; end
     LocalRequest = Struct.new(:method, :path, :query, :protocol)
     LOCAL_DEBUG = "SHOPIFY_APP_CLI_LOCAL_PARTNERS"
 
@@ -60,7 +61,11 @@ module ShopifyCli
 
       initiate_authentication
 
-      request_access_token(code: receive_access_code)
+      begin
+        request_access_token(code: receive_access_code)
+      rescue IdentityAuth::Timeout => e
+        ctx.abort(e.message)
+      end
       request_exchange_tokens
     end
 
@@ -117,7 +122,7 @@ module ShopifyCli
     def receive_access_code
       @access_code ||= begin
         @server_thread.join(240)
-        raise Error, ctx.message("core.identity_auth.error.timeout") if response_query.nil?
+        raise Timeout, ctx.message("core.identity_auth.error.timeout") if response_query.nil?
         raise Error, response_query["error_description"] unless response_query["error"].nil?
         response_query["code"]
       end

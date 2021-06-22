@@ -97,9 +97,15 @@ module ShopifyCli
       })
 
       stub_request(:post, "#{endpoint}/authorize")
-      assert_raises IdentityAuth::Error do
+      io = capture_io_and_assert_raises(IdentityAuth::Error) do
         client.authenticate
       end
+      assert_message_output(
+        io: io,
+        expected_content: [
+          @context.message("error"),
+        ]
+      )
     end
 
     def test_authenticate_with_invalid_code
@@ -133,9 +139,40 @@ module ShopifyCli
           headers: {},
         )
 
-      assert_raises IdentityAuth::Error do
+      io = capture_io_and_assert_raises(IdentityAuth::Error) do
         client.authenticate
       end
+      assert_message_output(
+        io: io,
+        expected_content: [
+          @context.message("your code has expired or is invalid"),
+        ]
+      )
+    end
+
+    def test_timeout_waiting_for_resp
+      client = identity_auth_client
+      @context.expects(:open_url!)
+
+      authorize_query = {
+        client_id: client_id,
+        scope: scopes(authorization_scopes),
+        redirect_uri: IdentityAuth::REDIRECT_HOST,
+        state: client.state_token,
+        response_type: :code,
+      }
+      stub_request(:post, "#{endpoint}/authorize?#{URI.encode_www_form(authorize_query)}")
+
+      stub_server(client, nil)
+      io = capture_io_and_assert_raises(ShopifyCli::Abort) do
+        client.authenticate
+      end
+      assert_message_output(
+        io: io,
+        expected_content: [
+          @context.message("core.identity_auth.error.timeout"),
+        ]
+      )
     end
 
     private
