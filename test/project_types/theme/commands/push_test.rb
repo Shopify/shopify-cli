@@ -21,7 +21,7 @@ module Theme
           editor_url: "https://test.myshopify.io/",
           live?: false,
         )
-        @uploader = stub("Uploader", delay_errors!: nil, report_errors!: nil)
+        @uploader = stub("Syncer", delay_errors!: nil, report_errors!: nil)
         @ignore_filter = mock("IgnoreFilter")
       end
 
@@ -32,7 +32,7 @@ module Theme
 
         ShopifyCli::Theme::IgnoreFilter.expects(:from_path).with(".").returns(@ignore_filter)
 
-        ShopifyCli::Theme::Uploader.expects(:new)
+        ShopifyCli::Theme::Syncer.expects(:new)
           .with(@ctx, theme: @theme, ignore_filter: @ignore_filter)
           .returns(@uploader)
 
@@ -57,7 +57,7 @@ module Theme
 
         ShopifyCli::Theme::IgnoreFilter.expects(:from_path).with(".").returns(@ignore_filter)
 
-        ShopifyCli::Theme::Uploader.expects(:new)
+        ShopifyCli::Theme::Syncer.expects(:new)
           .with(@ctx, theme: @theme, ignore_filter: @ignore_filter)
           .returns(@uploader)
 
@@ -82,7 +82,7 @@ module Theme
 
         ShopifyCli::Theme::IgnoreFilter.expects(:from_path).with(".").returns(@ignore_filter)
 
-        ShopifyCli::Theme::Uploader.expects(:new)
+        ShopifyCli::Theme::Syncer.expects(:new)
           .with(@ctx, theme: @theme, ignore_filter: @ignore_filter)
           .returns(@uploader)
 
@@ -106,7 +106,7 @@ module Theme
 
         ShopifyCli::Theme::IgnoreFilter.expects(:from_path).with(".").returns(@ignore_filter)
 
-        ShopifyCli::Theme::Uploader.expects(:new)
+        ShopifyCli::Theme::Syncer.expects(:new)
           .with(@ctx, theme: @theme, ignore_filter: @ignore_filter)
           .returns(@uploader)
 
@@ -130,7 +130,7 @@ module Theme
 
         ShopifyCli::Theme::IgnoreFilter.expects(:from_path).with(".").returns(@ignore_filter)
 
-        ShopifyCli::Theme::Uploader.expects(:new)
+        ShopifyCli::Theme::Syncer.expects(:new)
           .with(@ctx, theme: @theme, ignore_filter: @ignore_filter)
           .returns(@uploader)
 
@@ -155,7 +155,7 @@ module Theme
 
         ShopifyCli::Theme::IgnoreFilter.expects(:from_path).with(".").returns(@ignore_filter)
 
-        ShopifyCli::Theme::Uploader.expects(:new)
+        ShopifyCli::Theme::Syncer.expects(:new)
           .with(@ctx, theme: @theme, ignore_filter: @ignore_filter)
           .returns(@uploader)
 
@@ -181,7 +181,7 @@ module Theme
 
         ShopifyCli::Theme::IgnoreFilter.expects(:from_path).with(".").returns(@ignore_filter)
 
-        ShopifyCli::Theme::Uploader.expects(:new)
+        ShopifyCli::Theme::Syncer.expects(:new)
           .with(@ctx, theme: @theme, ignore_filter: @ignore_filter)
           .returns(@uploader)
 
@@ -203,7 +203,7 @@ module Theme
 
         ShopifyCli::Theme::IgnoreFilter.expects(:from_path).with(".").returns(@ignore_filter)
 
-        ShopifyCli::Theme::Uploader.expects(:new)
+        ShopifyCli::Theme::Syncer.expects(:new)
           .with(@ctx, theme: @theme, ignore_filter: @ignore_filter)
           .returns(@uploader)
 
@@ -227,7 +227,7 @@ module Theme
 
         ShopifyCli::Theme::IgnoreFilter.expects(:from_path).with(".").returns(@ignore_filter)
 
-        ShopifyCli::Theme::Uploader.expects(:new)
+        ShopifyCli::Theme::Syncer.expects(:new)
           .with(@ctx, theme: @theme, ignore_filter: @ignore_filter)
           .returns(@uploader)
 
@@ -241,7 +241,7 @@ module Theme
         CLI::UI::Prompt.expects(:ask).raises(ShopifyCli::Abort)
         @ctx.expects(:puts)
 
-        ShopifyCli::Theme::Uploader.expects(:new).never
+        ShopifyCli::Theme::Syncer.expects(:new).never
 
         @command.call([], "push")
       end

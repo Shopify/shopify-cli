@@ -5,13 +5,13 @@ require "shopify-cli/theme/theme"
 
 module ShopifyCli
   module Theme
-    class UploaderTest < Minitest::Test
+    class SyncerTest < Minitest::Test
       def setup
         super
         root = ShopifyCli::ROOT + "/test/fixtures/theme"
         @ctx = TestHelpers::FakeContext.new(root: root)
         @theme = Theme.new(@ctx, root: root)
-        @uploader = Uploader.new(@ctx, theme: @theme)
+        @uploader = Syncer.new(@ctx, theme: @theme)
 
         ShopifyCli::DB.stubs(:exists?).with(:shop).returns(true)
         ShopifyCli::DB

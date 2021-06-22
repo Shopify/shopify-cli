@@ -48,7 +48,7 @@ module Theme
         end
 
         ignore_filter = ShopifyCli::Theme::IgnoreFilter.from_path(root)
-        uploader = ShopifyCli::Theme::Uploader.new(@ctx, theme: theme, ignore_filter: ignore_filter)
+        uploader = ShopifyCli::Theme::Syncer.new(@ctx, theme: theme, ignore_filter: ignore_filter)
         begin
           uploader.start_threads
           if options.flags[:json]

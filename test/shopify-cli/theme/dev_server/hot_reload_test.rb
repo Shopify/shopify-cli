@@ -12,7 +12,7 @@ module ShopifyCli
           root = ShopifyCli::ROOT + "/test/fixtures/theme"
           @ctx = TestHelpers::FakeContext.new(root: root)
           @theme = Theme.new(@ctx, root: root)
-          @uploader = stub("Uploader", enqueue_uploads: true)
+          @uploader = stub("Syncer", enqueue_uploads: true)
           @watcher = Watcher.new(@ctx, theme: @theme, uploader: @uploader)
         end
 

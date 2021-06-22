@@ -5,7 +5,7 @@ require "base64"
 
 module ShopifyCli
   module Theme
-    class Uploader
+    class Syncer
       class Operation < Struct.new(:method, :file)
         def to_s
           "#{method} #{file&.relative_path}"
