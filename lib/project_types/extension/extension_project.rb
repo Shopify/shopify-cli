@@ -15,7 +15,13 @@ module Extension
       end
 
       def write_env_file(
-        context:, title:, api_key: "", api_secret: "", registration_id: nil, registration_uuid: nil
+        context:,
+        title:,
+        api_key: "",
+        api_secret: "",
+        registration_id: nil,
+        registration_uuid: nil,
+        resource_url: nil
       )
         ShopifyCli::Resources::EnvFile.new(
           api_key: api_key,
@@ -24,6 +30,7 @@ module Extension
             ExtensionProjectKeys::TITLE_KEY => title,
             ExtensionProjectKeys::REGISTRATION_ID_KEY => registration_id,
             ExtensionProjectKeys::REGISTRATION_UUID_KEY => registration_uuid || generate_temporary_uuid,
+            ExtensionProjectKeys::RESOURCE_URL_KEY => resource_url,
           }.compact
         ).write(context)
 
@@ -69,6 +76,10 @@ module Extension
 
     def registration_uuid
       get_extra_field(ExtensionProjectKeys::REGISTRATION_UUID_KEY)
+    end
+
+    def resource_url
+      get_extra_field(ExtensionProjectKeys::RESOURCE_URL_KEY)
     end
 
     def reload
