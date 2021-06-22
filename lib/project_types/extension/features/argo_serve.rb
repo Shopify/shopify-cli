@@ -3,6 +3,9 @@ module Extension
     class ArgoServe
       include SmartProperties
 
+      YARN_SERVE_COMMAND = %w(server)
+      NPM_SERVE_COMMAND = %w(run-script server)
+
       property! :specification_handler, accepts: Extension::Models::SpecificationHandlers::Default
       property! :argo_runtime, accepts: Features::ArgoRuntime
       property! :context, accepts: ShopifyCli::Context
@@ -36,23 +39,12 @@ module Extension
         specification.features.argo.required_fields
       end
 
-      def serve_options
-        @options ||= Features::ArgoServeOptions.new(
-          argo_runtime: argo_runtime,
-          port: port,
-          context: context,
-          required_fields: required_fields,
-          renderer_package: renderer_package,
-          public_url: tunnel_url
-        )
-      end
-
       def yarn_serve_command
-        serve_options.yarn_serve_command
+        YARN_SERVE_COMMAND + options
       end
 
       def npm_serve_command
-        serve_options.npm_serve_command
+        NPM_SERVE_COMMAND  + ["--"] + options
       end
 
       def validate_env!
@@ -71,6 +63,20 @@ module Extension
         end
 
         context.abort(context.message("serve.serve_missing_information"))
+      end
+
+      def options
+        project = ExtensionProject.current
+
+        @serve_options ||= [].tap do |options|
+          options << "--port=#{port}" if argo_runtime.supports?(:port)
+          options << "--shop=#{project.env.shop}" if argo_runtime.supports?(:shop)
+          options << "--apiKey=#{project.env.api_key}" if argo_runtime.supports?(:api_key)
+          options << "--rendererVersion=#{renderer_package.version}" if argo_runtime.supports?(:renderer_version)
+          options << "--uuid=#{project.registration_uuid}" if argo_runtime.supports?(:uuid)
+          options << "--publicUrl=#{tunnel_url}" if argo_runtime.supports?(:public_url)
+          options << "--name=#{project.title}" if argo_runtime.supports?(:name)
+        end
       end
     end
   end
