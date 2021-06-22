@@ -23,6 +23,8 @@ module ShopifyCli
           .with(:development_theme_id)
           .returns("12345678")
 
+        File.any_instance.stubs(:write)
+
         @uploader.start_threads
       end
 
@@ -226,12 +228,27 @@ module ShopifyCli
 
       def test_download_theme
         @uploader.start_threads
+        @uploader.checksums.replace(@theme.theme_files.map { |file| [file.relative_path.to_s, "OUTDATED"] }.to_h)
+        @uploader.checksums.delete("assets/generated.css.liquid")
 
-        expected_size = @theme.theme_files.size
+        expected_size = @theme.theme_files.size - 2 # 1 deleted file, 1 ignored file
+
+        File.any_instance.expects(:delete).times(1)
+        File.any_instance.expects(:write)
+          .times(expected_size)
+          .with("new content")
 
         ShopifyCli::AdminAPI.expects(:rest_request)
-          .times(expected_size + 1) # +1 for checksums
-          .returns([200, {}, {}])
+          .at_least(expected_size + 1) # +1 for checksums
+          .returns([
+            200,
+            {
+              "asset" => {
+                "value" => "new content",
+              },
+            },
+            {}
+          ])
 
         @uploader.download_theme!
         assert_empty(@uploader)

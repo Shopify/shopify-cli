@@ -101,7 +101,7 @@ module ShopifyCli
               operation = @queue.pop
               break if operation.nil? # shutdown was called
               perform(operation)
-            rescue => e
+            rescue Exception => e
               report_error(
                 "{{red:ERROR}} {{blue:#{operation}}}: #{e}" +
                 (@ctx.debug? ? "\n\t#{e.backtrace.join("\n\t")}" : "")
@@ -160,7 +160,7 @@ module ShopifyCli
 
         if delete
           # Delete local files not present remotely
-          missing_files = @theme.theme_files.reject { |file| checksums.key?(file.relative_path.to_s) }
+          missing_files = @theme.theme_files.reject { |file| checksums.key?(file.relative_path.to_s) }.uniq
           missing_files.each(&:delete)
         end
 
@@ -172,6 +172,8 @@ module ShopifyCli
       private
 
       def enqueue(method, file)
+        raise ArgumentError, "file required" unless file
+
         operation = Operation.new(method, @theme[file])
 
         # Already enqueued
@@ -244,6 +246,8 @@ module ShopifyCli
           query: URI.encode_www_form("asset[key]" => file.relative_path.to_s),
         )
 
+        update_checksums(body)
+
         value = body.dig("asset", "value") || Base64.decode64(body.dig("asset", "attachment"))
         file.write(value)
 
@@ -267,7 +271,9 @@ module ShopifyCli
 
       def update_checksums(api_response)
         api_response.values.flatten.each do |asset|
-          @checksums[asset["key"]] = asset["checksum"]
+          if asset["key"] && asset["checksum"]
+            @checksums[asset["key"]] = asset["checksum"]
+          end
         end
         # Generate .liquid asset files are reported twice in checksum:
         # once of generated, once for .liquid. We only keep the .liquid, that's the one we have
