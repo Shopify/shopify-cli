@@ -439,14 +439,6 @@ module ShopifyCli
 
           DEVELOPMENT
 
-          shell_shim: <<~MESSAGE,
-            {{x}} This version of Shopify CLI is no longer supported. You’ll need to migrate to the new CLI version to continue.
-
-              Please visit this page for complete instructions:
-              {{underline:https://shopify.dev/tools/cli/troubleshooting#migrate-from-a-legacy-version}}
-
-          MESSAGE
-
           new_version: <<~MESSAGE,
             {{*}} {{yellow:A new version of Shopify CLI is available! You have version %s and the latest version is %s.
 
