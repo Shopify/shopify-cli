@@ -247,7 +247,7 @@ module ShopifyCli
                 "value" => "new content",
               },
             },
-            {}
+            {},
           ])
 
         @syncer.download_theme!
