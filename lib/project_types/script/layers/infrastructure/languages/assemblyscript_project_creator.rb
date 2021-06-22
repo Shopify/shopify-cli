@@ -45,27 +45,20 @@ module Script
           end
 
           def write_package_json
-            package_json = <<~HERE
-              {
-                "name": "#{script_name}",
-                "version": "1.0.0",
-                "devDependencies": {
-                  "@shopify/scripts-sdk-as": "#{extension_point.sdks.assemblyscript.sdk_version}",
-                  "@shopify/scripts-toolchain-as": "#{extension_point.sdks.assemblyscript.toolchain_version}",
-                  "#{extension_point.sdks.assemblyscript.package}": "#{extension_point_version}",
-                  "@as-pect/cli": "^6.0.0",
-                  "assemblyscript": "^0.18.13"
-                },
-                "scripts": {
-                  "test": "asp --summary --verbose",
-                  "build": "#{build_command}"
-                },
-                "engines": {
-                  "node": ">=#{MIN_NODE_VERSION}"
-                }
+            package_json = {
+              name: script_name,
+              version: "1.0.0",
+              devDependencies: dev_dependencies,
+              scripts: {
+                test: "asp --summary --verbose",
+                build: build_command,
+              },
+              engines: {
+                node: ">=#{MIN_NODE_VERSION}"
               }
-            HERE
-            ctx.write("package.json", package_json)
+            }
+
+            ctx.write("package.json", JSON.pretty_generate(package_json))
           end
 
           def bootstap_command
@@ -89,6 +82,21 @@ module Script
             else
               "#{BUILD} --domain #{domain} --ep #{type} #{ASC_ARGS}"
             end
+          end
+
+          def dev_dependencies
+            dependencies = {
+              "@as-pect/cli": "^6.0.0",
+              "assemblyscript": "^0.18.13",
+              "@shopify/scripts-toolchain-as": extension_point.sdks.assemblyscript.toolchain_version,
+              "#{extension_point.sdks.assemblyscript.package}": extension_point_version,
+            }
+
+            if extension_point.sdks.assemblyscript.sdk_version
+              dependencies["@shopify/scripts-sdk-as"] = extension_point.sdks.assemblyscript.sdk_version
+            end
+            
+            dependencies
           end
         end
       end
