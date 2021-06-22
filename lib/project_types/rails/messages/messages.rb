@@ -46,11 +46,7 @@ module Rails
           HELP
 
           error: {
-            invalid_ruby_version: <<~MSG,
-              This project requires a Ruby version ~> 2.5 or Ruby 3.0
-              See {{underline:https://github.com/Shopify/shopify-cli/blob/master/docs/installing-ruby.md}}
-              for our recommended method of installing ruby.
-            MSG
+            invalid_ruby_version: "This project requires a Ruby version ~> 2.5 or Ruby 3.0.",
             dir_exists: "Project directory %s already exists. Please use a different name.",
             install_failure: "Error installing %s gem",
             node_required: "node is required to create a rails project. Download at https://nodejs.org/en/download.",
