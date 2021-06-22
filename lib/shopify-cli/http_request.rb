@@ -1,4 +1,5 @@
 require "net/http"
+require "openssl"
 
 module ShopifyCli
   class HttpRequest
