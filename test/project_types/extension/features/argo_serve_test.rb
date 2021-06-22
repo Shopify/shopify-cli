@@ -20,7 +20,6 @@ module Extension
           js_system: fake_js_system
         )
 
-        Tasks::FindNpmPackages.expects(:exactly_one_of).returns(ShopifyCli::Result.success(renderer))
         argo_serve.expects(:validate_env!).once
         argo_serve.call
       end
@@ -33,7 +32,6 @@ module Extension
           js_system: fake_js_system(success: false)
         )
 
-        Tasks::FindNpmPackages.expects(:exactly_one_of).returns(ShopifyCli::Result.success(renderer))
         argo_serve.expects(:validate_env!).once
         error = assert_raises CLI::Kit::Abort do
           argo_serve.call

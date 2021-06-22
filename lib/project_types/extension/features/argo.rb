@@ -19,14 +19,14 @@ module Extension
       YARN_RUN_SCRIPT_NAME = %w(build).freeze
       private_constant :YARN_INSTALL_COMMAND, :YARN_INSTALL_PARAMETERS, :YARN_RUN_COMMAND, :YARN_RUN_SCRIPT_NAME
 
-      ARGO_CHECKOUT = "@shopify/argo-checkout"
-      ARGO_ADMIN = "@shopify/argo-admin"
-      ARGO_POST_PURCHASE = "@shopify/argo-post-purchase"
+      UI_EXTENSIONS_CHECKOUT = "@shopify/checkout-ui-extensions"
+      UI_EXTENSIONS_ADMIN = "@shopify/admin-ui-extensions"
+      UI_EXTENSIONS_POST_PURCHASE = "@shopify/post-purchase-ui-extensions"
 
       PACKAGE_NAMES = [
-        ARGO_CHECKOUT,
-        ARGO_ADMIN,
-        ARGO_POST_PURCHASE,
+        UI_EXTENSIONS_CHECKOUT,
+        UI_EXTENSIONS_ADMIN,
+        UI_EXTENSIONS_POST_PURCHASE,
       ].freeze
 
       def create(directory_name, identifier, context)

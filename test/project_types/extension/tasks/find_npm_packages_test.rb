@@ -9,18 +9,18 @@ module Extension
       end
 
       def test_finds_single_package
-        result = find_all_npm_packages("@shopify/argo-post-purchase")
+        result = find_all_npm_packages("@shopify/post-purchase-ui-extensions")
         assert_predicate(result, :success?)
         result.value.first.tap do |package|
-          assert_equal "@shopify/argo-post-purchase", package.name
+          assert_equal "@shopify/post-purchase-ui-extensions", package.name
           assert_equal "0.9.1", package.version
         end
       end
 
       def test_finds_multiple_packages
         result = find_all_npm_packages(
-          "@shopify/argo-post-purchase",
-          "@shopify/argo-post-purchase-react"
+          "@shopify/post-purchase-ui-extensions",
+          "@shopify/post-purchase-ui-extensions-react"
         )
 
         assert_predicate(result, :success?)
@@ -28,18 +28,18 @@ module Extension
           assert_equal 2, packages.count
 
           packages
-            .find { |p| p.name == "@shopify/argo-post-purchase" }
+            .find { |p| p.name == "@shopify/post-purchase-ui-extensions" }
             .yield_self { |p| assert_equal "0.9.1", p.version }
 
           packages
-            .find { |p| p.name == "@shopify/argo-post-purchase-react" }
+            .find { |p| p.name == "@shopify/post-purchase-ui-extensions-react" }
             .yield_self { |p| assert_equal "0.9.3", p.version }
         end
       end
 
       def test_fails_if_at_least_one_package_cannot_be_found
         result = find_all_npm_packages(
-          "@shopify/argo-post-purchase",
+          "@shopify/post-purchase-ui-extensions",
           "@shopify/does-not-exist"
         )
 
@@ -52,7 +52,7 @@ module Extension
 
       def test_finding_at_least_one_package
         result = find_at_least_one_npm_package(
-          "@shopify/argo-post-purchase",
+          "@shopify/post-purchase-ui-extensions",
           "@shopify/does-not-exist"
         )
 
@@ -61,14 +61,14 @@ module Extension
           assert_equal 1, packages.count
 
           packages
-            .find { |p| p.name == "@shopify/argo-post-purchase" }
+            .find { |p| p.name == "@shopify/post-purchase-ui-extensions" }
             .yield_self { |p| assert_equal "0.9.1", p.version }
         end
       end
 
       def test_finding_exactly_one_package
         result = find_exactly_one_npm_package(
-          "@shopify/argo-post-purchase",
+          "@shopify/post-purchase-ui-extensions",
           "@shopify/does-not-exist"
         )
 
@@ -78,7 +78,7 @@ module Extension
 
       def test_finding_exactly_one_package_fails_when_more_than_one_package_is_found
         result = find_exactly_one_npm_package(
-          "@shopify/argo-post-purchase",
+          "@shopify/post-purchase-ui-extensions",
           "react"
         )
 
@@ -168,8 +168,8 @@ module Extension
       def yarn_output
         <<~YARN
           argo-checkout-template@0.1.0 /Users/t6d/src/local/cli-specification-experiment/2021-04-30_post_purchase_test
-          ├── @shopify/argo-post-purchase-react@0.9.3
-          ├── @shopify/argo-post-purchase@0.9.1
+          ├── @shopify/post-purchase-ui-extensions-react@0.9.3
+          ├── @shopify/post-purchase-ui-extensions@0.9.1
           └── react@17.0.1
         YARN
       end

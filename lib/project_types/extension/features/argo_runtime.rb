@@ -3,8 +3,8 @@ module Extension
     class ArgoRuntime
       include SmartProperties
 
-      ARGO_RUN_PACKAGE_NAME = "@shopify/argo-run"
-      ARGO_ADMIN_CLI_PACKAGE_NAME = "@shopify/argo-admin-cli"
+      UI_EXTENSIONS_CHECKOUT_RUN = "@shopify/checkout-ui-extensions-run"
+      UI_EXTENSIONS_ADMIN_RUN = "@shopify/admin-ui-extensions-run"
 
       ADMIN_RUN_FLAGS = [
         :api_key,
@@ -36,11 +36,11 @@ module Extension
       private
 
       def admin?
-        ->(cli) { cli.name == ARGO_ADMIN_CLI_PACKAGE_NAME }
+        ->(cli) { cli.name == UI_EXTENSIONS_ADMIN_RUN }
       end
 
       def checkout?
-        ->(cli) { cli.name == ARGO_RUN_PACKAGE_NAME }
+        ->(cli) { cli.name == UI_EXTENSIONS_CHECKOUT_RUN }
       end
     end
   end

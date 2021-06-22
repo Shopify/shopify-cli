@@ -88,15 +88,15 @@ module Extension
 
       def checkout_runtime
         ArgoRuntime.new(
-          cli: Models::NpmPackage.new(name: "@shopify/argo-run", version: "0.4.0"),
-          renderer: Models::NpmPackage.new(name: "@shopify/argo-post-purchase", version: "0.9.0")
+          cli: Models::NpmPackage.new(name: "@shopify/checkout-ui-extensions-run", version: "0.4.0"),
+          renderer: Models::NpmPackage.new(name: "@shopify/post-purchase-ui-extensions", version: "0.9.0")
         )
       end
 
       def admin_runtime
         ArgoRuntime.new(
-          cli: Models::NpmPackage.new(name: "@shopify/argo-admin-cli", version: "0.11.0"),
-          renderer: Models::NpmPackage.new(name: "@shopify/argo-admin", version: "0.9.3")
+          cli: Models::NpmPackage.new(name: "@shopify/admin-ui-extensions-run", version: "0.13.0"),
+          renderer: Models::NpmPackage.new(name: "@shopify/admin-ui-extensions", version: "0.12.0")
         )
       end
 
