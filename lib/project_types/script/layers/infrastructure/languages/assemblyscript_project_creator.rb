@@ -54,8 +54,8 @@ module Script
                 build: build_command,
               },
               engines: {
-                node: ">=#{MIN_NODE_VERSION}"
-              }
+                node: ">=#{MIN_NODE_VERSION}",
+              },
             }
 
             ctx.write("package.json", JSON.pretty_generate(package_json))
@@ -95,7 +95,7 @@ module Script
             if extension_point.sdks.assemblyscript.sdk_version
               dependencies["@shopify/scripts-sdk-as"] = extension_point.sdks.assemblyscript.sdk_version
             end
-            
+
             dependencies
           end
         end
