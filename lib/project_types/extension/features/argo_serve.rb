@@ -10,7 +10,7 @@ module Extension
       property! :argo_runtime, accepts: Features::ArgoRuntime
       property! :context, accepts: ShopifyCli::Context
       property! :port, accepts: Integer, default: 39351
-      property  :tunnel_url, accepts: String, default: ""
+      property  :tunnel_url, accepts: String, default: nil
       property! :js_system, accepts: ->(jss) { jss.respond_to?(:call) }, default: ShopifyCli::JsSystem
 
       def call
@@ -75,7 +75,7 @@ module Extension
           options << "--apiKey=#{project.env.api_key}" if argo_runtime.supports?(:api_key)
           options << "--rendererVersion=#{renderer_package.version}" if argo_runtime.supports?(:renderer_version)
           options << "--uuid=#{project.registration_uuid}" if argo_runtime.supports?(:uuid)
-          options << "--publicUrl=#{tunnel_url}" if argo_runtime.supports?(:public_url)
+          options << "--publicUrl=#{tunnel_url}" if !tunnel_url.nil? && argo_runtime.supports?(:public_url)
           options << "--name=#{project.title}" if argo_runtime.supports?(:name)
         end
       end
