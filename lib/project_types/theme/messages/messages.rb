@@ -130,7 +130,7 @@ module Theme
         },
         pull: {
           help: <<~HELP,
-            {{command:%s theme pull}}: Downloads your remote theme locally.
+            {{command:%s theme pull}}: Downloads your remote theme files locally.
 
             Usage: {{command:%s theme pull [ ROOT ]}}
 
