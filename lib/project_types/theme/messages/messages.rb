@@ -140,7 +140,7 @@ module Theme
 
             Run without options to select theme from a list.
           HELP
-          select: "Select theme to pull from",
+          select: "Select a theme to pull from",
           pulling: "Pulling theme files from %s (#%s) on %s",
           done: "Your theme was pulled successfully",
           not_found: "{{x}} Theme #%s does not exist",
