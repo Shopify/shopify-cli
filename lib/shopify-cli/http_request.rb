@@ -21,6 +21,7 @@ module ShopifyCli
         http = ::Net::HTTP.new(uri.host, uri.port)
         http.use_ssl = true
         http.cert_store = cert_store
+        http.verify_mode = OpenSSL::SSL::VERIFY_NONE if ENV["SSL_VERIFY_NONE"]
 
         req.body = body unless body.nil?
         req["Content-Type"] = "application/json"
