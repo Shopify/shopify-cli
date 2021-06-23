@@ -4,16 +4,27 @@ module Script
   module Layers
     module Domain
       class ScriptJson
-        attr_reader :filename, :content, :version, :title, :description, :configuration_ui, :configuration
+        attr_reader :content, :version, :title, :description, :configuration_ui, :configuration
 
-        def initialize(filename:, content:)
-          @filename = filename
+        REQUIRED_FIELDS = %w(version title)
+
+        def initialize(content:)
+          validate_content!(content)
+
           @content = content
           @version = @content["version"].to_s
           @title = @content["title"]
           @description = @content["description"]
           @configuration_ui = @content["configurationUi"]
           @configuration = @content["configuration"]
+        end
+
+        private
+
+        def validate_content!(content)
+          REQUIRED_FIELDS.each do |field|
+            raise Errors::MissingScriptJsonFieldError, field if content[field].nil?
+          end
         end
       end
     end

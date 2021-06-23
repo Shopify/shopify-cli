@@ -120,17 +120,20 @@ module Script
             cause_of_error: ShopifyCli::Context.message("script.error.metadata_not_found_cause"),
             help_suggestion: ShopifyCli::Context.message("script.error.metadata_not_found_help"),
           }
+        when Layers::Domain::Errors::MissingScriptJsonFieldError
+          {
+            cause_of_error: ShopifyCli::Context.message("script.error.missing_script_json_field_cause", e.field),
+            help_suggestion: ShopifyCli::Context.message("script.error.missing_script_json_field_help"),
+          }
         when Layers::Domain::Errors::InvalidScriptJsonDefinitionError
           {
-            cause_of_error: ShopifyCli::Context
-              .message("script.error.invalid_script_json_definition_cause", e.filename),
+            cause_of_error: ShopifyCli::Context.message("script.error.invalid_script_json_definition_cause"),
             help_suggestion: ShopifyCli::Context.message("script.error.invalid_script_json_definition_help"),
           }
-        when Layers::Domain::Errors::MissingSpecifiedScriptJsonDefinitionError
+        when Layers::Domain::Errors::NoScriptJsonFile
           {
-            cause_of_error: ShopifyCli::Context
-              .message("script.error.missing_script_json_definition_cause", e.filename),
-            help_suggestion: ShopifyCli::Context.message("script.error.missing_script_json_definition_help"),
+            cause_of_error: ShopifyCli::Context.message("script.error.no_script_json_file_cause"),
+            help_suggestion: ShopifyCli::Context.message("script.error.no_script_json_file_help"),
           }
         when Layers::Infrastructure::Errors::AppNotInstalledError
           {
@@ -143,17 +146,13 @@ module Script
           }
         when Layers::Infrastructure::Errors::ScriptJsonSyntaxError
           {
-            cause_of_error: ShopifyCli::Context.message(
-              "script.error.configuration_syntax_error_cause",
-              filename: e.message
-            ),
+            cause_of_error: ShopifyCli::Context.message("script.error.configuration_syntax_error_cause"),
             help_suggestion: ShopifyCli::Context.message("script.error.configuration_syntax_error_help"),
           }
         when Layers::Infrastructure::Errors::ScriptJsonMissingKeysError
           {
             cause_of_error: ShopifyCli::Context.message(
               "script.error.configuration_missing_keys_error_cause",
-              filename: e.filename,
               missing_keys: e.missing_keys
             ),
             help_suggestion: ShopifyCli::Context.message("script.error.configuration_missing_keys_error_help"),
@@ -162,7 +161,6 @@ module Script
           {
             cause_of_error: ShopifyCli::Context.message(
               "script.error.configuration_invalid_value_error_cause",
-              filename: e.filename,
               valid_input_modes: e.valid_input_modes
             ),
             help_suggestion: ShopifyCli::Context.message("script.error.configuration_invalid_value_error_help"),
@@ -171,7 +169,6 @@ module Script
           {
             cause_of_error: ShopifyCli::Context.message(
               "script.error.configuration_schema_field_missing_keys_error_cause",
-              filename: e.filename,
               missing_keys: e.missing_keys
             ),
             help_suggestion: ShopifyCli::Context.message(
@@ -182,7 +179,6 @@ module Script
           {
             cause_of_error: ShopifyCli::Context.message(
               "script.error.configuration_schema_field_invalid_value_error_cause",
-              filename: e.filename,
               valid_types: e.valid_types
             ),
             help_suggestion: ShopifyCli::Context.message(

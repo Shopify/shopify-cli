@@ -51,28 +51,31 @@ module Script
           invalid_config: "Can't change the configuration values because %1$s is missing or "\
                           "it is not formatted properly.",
 
-          invalid_script_json_definition_cause: "The %s file contains invalid JSON.",
+          missing_script_json_field_cause: "The script.json file is missing the required %s field.",
+          missing_script_json_field_help: "Add the field and try again.",
+
+          invalid_script_json_definition_cause: "The script.json file contains invalid JSON.",
           invalid_script_json_definition_help: "Fix the errors and try again.",
 
-          missing_script_json_definition_cause: "You are missing the required %s file.",
-          missing_script_json_definition_help: "Create this file and try again.",
+          no_script_json_file_cause: "You are missing the required script.json file.",
+          no_script_json_file_help: "Create this file and try again.",
 
-          configuration_syntax_error_cause: "The %{filename} configuration schema is not formatted properly.",
+          configuration_syntax_error_cause: "The script.json configuration schema is not formatted properly.",
           configuration_syntax_error_help: "Fix the errors and try again.",
 
-          configuration_missing_keys_error_cause: "The %{filename} configuration schema is missing required keys: "\
+          configuration_missing_keys_error_cause: "The script.json configuration schema is missing required keys: "\
                                               "%{missing_keys}.",
           configuration_missing_keys_error_help: "Add the keys and try again.",
 
-          configuration_invalid_value_error_cause: "The %{filename} configuration only accepts "\
+          configuration_invalid_value_error_cause: "The script.json configuration only accepts "\
                                               "one of the following types(s): %{valid_input_modes}.",
           configuration_invalid_value_error_help: "Change the type and try again.",
 
-          configuration_schema_field_missing_keys_error_cause: "A field entry in the %{filename} configuration "\
+          configuration_schema_field_missing_keys_error_cause: "A field entry in the script.json configuration "\
                                                      "schema is missing required keys: %{missing_keys}.",
           configuration_definition_schema_field_missing_keys_error_help: "Add the keys and try again.",
 
-          configuration_schema_field_invalid_value_error_cause: "The %{filename} configuration schema fields only "\
+          configuration_schema_field_invalid_value_error_cause: "The script.json configuration schema fields only "\
                                                      "accept one of the following type(s): %{valid_types}.",
           configuration_schema_field_invalid_value_error_help: "Change the types and try again.",
 

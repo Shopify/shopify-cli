@@ -9,37 +9,33 @@ module Script
         class ScriptJsonSyntaxError < ScriptProjectError; end
 
         class ScriptJsonMissingKeysError < ScriptProjectError
-          attr_reader :filename, :missing_keys
-          def initialize(filename, missing_keys)
+          attr_reader :missing_keys
+          def initialize(missing_keys)
             super()
-            @filename = filename
             @missing_keys = missing_keys
           end
         end
 
         class ScriptJsonInvalidValueError < ScriptProjectError
-          attr_reader :filename, :valid_input_modes
-          def initialize(filename, valid_input_modes)
+          attr_reader :valid_input_modes
+          def initialize(valid_input_modes)
             super()
-            @filename = filename
             @valid_input_modes = valid_input_modes
           end
         end
 
         class ScriptJsonFieldsMissingKeysError < ScriptProjectError
-          attr_reader :filename, :missing_keys
-          def initialize(filename, missing_keys)
+          attr_reader :missing_keys
+          def initialize(missing_keys)
             super()
-            @filename = filename
             @missing_keys = missing_keys
           end
         end
 
         class ScriptJsonFieldsInvalidValueError < ScriptProjectError
-          attr_reader :filename, :valid_types
-          def initialize(filename, valid_types)
+          attr_reader :valid_types
+          def initialize(valid_types)
             super()
-            @filename = filename
             @valid_types = valid_types
           end
         end

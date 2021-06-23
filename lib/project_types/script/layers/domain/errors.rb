@@ -14,21 +14,16 @@ module Script
           end
         end
 
-        class InvalidScriptJsonDefinitionError < ScriptProjectError
-          attr_reader :filename
-          def initialize(filename)
+        class MissingScriptJsonFieldError < ScriptProjectError
+          attr_reader :field
+          def initialize(field)
             super()
-            @filename = filename
+            @field = field
           end
         end
 
-        class MissingSpecifiedScriptJsonDefinitionError < ScriptProjectError
-          attr_reader :filename
-          def initialize(filename)
-            super()
-            @filename = filename
-          end
-        end
+        class InvalidScriptJsonDefinitionError < ScriptProjectError; end
+        class NoScriptJsonFile < ScriptProjectError; end
 
         class ScriptNotFoundError < ScriptProjectError
           attr_reader :script_name, :extension_point_type

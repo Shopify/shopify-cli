@@ -13,7 +13,6 @@ module Script
         def push(
           uuid:,
           extension_point_type:,
-          script_name:,
           script_content:,
           compiled_type:,
           api_key: nil,
@@ -25,17 +24,17 @@ module Script
           variables = {
             uuid: uuid,
             extensionPointName: extension_point_type.upcase,
-            title: script_name,
-            description: script_json&.description,
+            title: script_json.title,
+            description: script_json.description,
             sourceCode: Base64.encode64(script_content),
             language: compiled_type,
             force: force,
             schemaMajorVersion: metadata.schema_major_version.to_s, # API expects string value
             schemaMinorVersion: metadata.schema_minor_version.to_s, # API expects string value
             useMsgpack: metadata.use_msgpack,
-            scriptJsonVersion: script_json&.version,
-            configurationUi: script_json&.configuration_ui,
-            configurationDefinition: script_json&.configuration&.to_json,
+            scriptJsonVersion: script_json.version,
+            configurationUi: script_json.configuration_ui,
+            configurationDefinition: script_json.configuration&.to_json,
           }
           resp_hash = script_service_request(query_name: query_name, api_key: api_key, variables: variables)
           user_errors = resp_hash["data"]["appScriptUpdateOrCreate"]["userErrors"]
@@ -45,19 +44,19 @@ module Script
           if user_errors.any? { |e| e["tag"] == "already_exists_error" }
             raise Errors::ScriptRepushError, uuid
           elsif (e = user_errors.any? { |err| err["tag"] == "configuration_syntax_error" })
-            raise Errors::ScriptJsonSyntaxError, script_json&.filename
+            raise Errors::ScriptJsonSyntaxError
           elsif (e = user_errors.find { |err| err["tag"] == "configuration_definition_missing_keys_error" })
-            raise Errors::ScriptJsonMissingKeysError.new(script_json&.filename, e["message"])
+            raise Errors::ScriptJsonMissingKeysError, e["message"]
           elsif (e = user_errors.find { |err| err["tag"] == "configuration_definition_invalid_value_error" })
-            raise Errors::ScriptJsonInvalidValueError.new(script_json&.filename, e["message"])
+            raise Errors::ScriptJsonInvalidValueError, e["message"]
           elsif (e = user_errors.find do |err|
                    err["tag"] == "configuration_definition_schema_field_missing_keys_error"
                  end)
-            raise Errors::ScriptJsonFieldsMissingKeysError.new(script_json&.filename, e["message"])
+            raise Errors::ScriptJsonFieldsMissingKeysError, e["message"]
           elsif (e = user_errors.find do |err|
                    err["tag"] == "configuration_definition_schema_field_invalid_value_error"
                  end)
-            raise Errors::ScriptJsonFieldsInvalidValueError.new(script_json&.filename, e["message"])
+            raise Errors::ScriptJsonFieldsInvalidValueError, e["message"]
           elsif user_errors.find { |err| %w(not_use_msgpack_error schema_version_argument_error).include?(err["tag"]) }
             raise Domain::Errors::MetadataValidationError
           else

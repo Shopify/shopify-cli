@@ -20,8 +20,7 @@ module Script
         @script_project = TestHelpers::FakeScriptProjectRepository.new.create(
           language: @language,
           extension_point_type: @ep_type,
-          script_name: @script_name,
-          no_config_ui: @no_config_ui
+          script_name: @script_name
         )
         Layers::Application::ExtensionPoints.stubs(:languages).returns(%w(assemblyscript))
       end

@@ -22,8 +22,7 @@ describe Script::Layers::Application::CreateScript do
     script_project_repository.create(
       language: language,
       extension_point_type: extension_point_type,
-      script_name: script_name,
-      no_config_ui: false
+      script_name: script_name
     )
   end
 

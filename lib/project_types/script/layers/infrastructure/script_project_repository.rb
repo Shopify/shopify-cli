@@ -7,14 +7,11 @@ module Script
         include SmartProperties
         property! :ctx, accepts: ShopifyCli::Context
 
-        DEFAULT_SCRIPT_JSON_FILENAME = "script.json"
+        SCRIPT_JSON_FILENAME = "script.json"
         MUTABLE_ENV_VALUES = %i(uuid)
 
-        def create(script_name:, extension_point_type:, language:, no_config_ui:)
+        def create(script_name:, extension_point_type:, language:)
           validate_metadata!(extension_point_type, language)
-
-          optional_identifiers = {}
-          optional_identifiers.merge!(script_json: DEFAULT_SCRIPT_JSON_FILENAME) unless no_config_ui
 
           ShopifyCli::Project.write(
             ctx,
@@ -22,8 +19,7 @@ module Script
             organization_id: nil,
             extension_point_type: extension_point_type,
             script_name: script_name,
-            language: language,
-            **optional_identifiers
+            language: language
           )
 
           Domain::ScriptProject.new(
@@ -44,7 +40,7 @@ module Script
             script_name: script_name,
             extension_point_type: extension_point_type,
             language: language,
-            script_json: ScriptJsonRepository.new(ctx: ctx).get(script_json_filename)
+            script_json: ScriptJsonRepository.new(ctx: ctx).get
           )
         end
 
@@ -62,7 +58,7 @@ module Script
             script_name: script_name,
             extension_point_type: extension_point_type,
             language: language,
-            script_json: ScriptJsonRepository.new(ctx: ctx).get(script_json_filename),
+            script_json: ScriptJsonRepository.new(ctx: ctx).get,
           )
         end
 
@@ -81,14 +77,14 @@ module Script
             script_name: script_name,
             extension_point_type: extension_point_type,
             language: language,
-            script_json: ScriptJsonRepository.new(ctx: ctx).get(script_json_filename),
+            script_json: ScriptJsonRepository.new(ctx: ctx).get,
           )
         end
 
-        def update_script_json(title:, configuration_ui: false)
+        def update_or_create_script_json(title:, configuration_ui: false)
           script_json = ScriptJsonRepository
             .new(ctx: ctx)
-            .update(script_json_filename, title: title, configuration_ui: configuration_ui)
+            .update_or_create(title: title, configuration_ui: configuration_ui)
 
           Domain::ScriptProject.new(
             id: ctx.root,
@@ -112,10 +108,6 @@ module Script
 
         def script_name
           project_config_value!("script_name")
-        end
-
-        def script_json_filename
-          project_config_value("script_json")
         end
 
         def language
@@ -152,35 +144,31 @@ module Script
           include SmartProperties
           property! :ctx, accepts: ShopifyCli::Context
 
-          def get(filename)
-            return nil unless filename
-
-            path = File.join(ctx.root, filename)
-            raise Domain::Errors::MissingSpecifiedScriptJsonDefinitionError, filename unless File.exist?(path)
-
-            content = File.read(path)
-            raise Domain::Errors::InvalidScriptJsonDefinitionError, filename unless valid_script_json?(content)
-
-            Domain::ScriptJson.new(
-              filename: filename,
-              content: JSON.parse(content),
-            )
+          def get
+            current_script_json || raise(Domain::Errors::NoScriptJsonFile)
           end
 
-          def update(filename, title:, configuration_ui:)
-            json = ctx.file_exist?(filename) ? JSON.parse(ctx.read(filename)) : {}
+          def update_or_create(title:, configuration_ui:)
+            json = current_script_json&.content || {}
+            json["version"] ||= "1"
             json["title"] = title
             json["configurationUi"] = !!configuration_ui
 
-            ctx.write(filename, JSON.pretty_generate(json))
+            ctx.write(SCRIPT_JSON_FILENAME, JSON.pretty_generate(json))
 
-            Domain::ScriptJson.new(
-              filename: filename,
-              content: json,
-            )
+            Domain::ScriptJson.new(content: json)
           end
 
           private
+
+          def current_script_json
+            return nil unless ctx.file_exist?(SCRIPT_JSON_FILENAME)
+
+            content = ctx.read(SCRIPT_JSON_FILENAME)
+            raise Domain::Errors::InvalidScriptJsonDefinitionError unless valid_script_json?(content)
+
+            Domain::ScriptJson.new(content: JSON.parse(content))
+          end
 
           def valid_script_json?(content)
             JSON.parse(content)

@@ -2,15 +2,12 @@
 
 module TestHelpers
   class FakeScriptProjectRepository
-    SCRIPT_JSON_FILENAME = Script::Layers::Infrastructure::ScriptProjectRepository::DEFAULT_SCRIPT_JSON_FILENAME
-
     def initialize
       @project = nil
     end
 
-    def create(script_name:, extension_point_type:, language:, no_config_ui:, env: nil)
-      _ = no_config_ui
-      script_json = fake_script_json_repo.create(SCRIPT_JSON_FILENAME, { version: 1 }.to_json)
+    def create(script_name:, extension_point_type:, language:, env: nil)
+      script_json = fake_script_json_repo.create({ version: 1, title: script_name }.to_json)
 
       @project = Script::Layers::Domain::ScriptProject.new(
         id: "/#{script_name}",
@@ -39,9 +36,9 @@ module TestHelpers
       @project
     end
 
-    def update_script_json(title:, configuration_ui: false)
+    def update_or_create_script_json(title:, configuration_ui: false)
       script_json = fake_script_json_repo
-        .update(SCRIPT_JSON_FILENAME, title: title, configuration_ui: configuration_ui)
+        .update_or_create(title: title, configuration_ui: configuration_ui)
 
       @project.script_json = script_json
       @project
@@ -55,29 +52,27 @@ module TestHelpers
 
     class FakeScriptJsonRepository
       def initialize
-        @cache = {}
+        @cache = nil
       end
 
-      def create(filename, content)
-        @cache[filename] = Script::Layers::Domain::ScriptJson.new(
-          filename: filename,
+      def create(content)
+        @cache = Script::Layers::Domain::ScriptJson.new(
           content: JSON.parse(content),
         )
       end
 
-      def update(filename, title:, configuration_ui:)
-        json = @cache[filename].content || {}
+      def update_or_create(title:, configuration_ui:)
+        json = @cache&.content || {}
         json["title"] = title
         json["configurationUi"] = !!configuration_ui
 
-        @cache[filename] = Script::Layers::Domain::ScriptJson.new(
-          filename: filename,
+        @cache = Script::Layers::Domain::ScriptJson.new(
           content: json,
         )
       end
 
-      def get(filename)
-        @cache[filename]
+      def get
+        @cache
       end
     end
   end
