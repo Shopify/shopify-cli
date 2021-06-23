@@ -71,7 +71,7 @@ module Extension
 
         @serve_options ||= [].tap do |options|
           options << "--port=#{port}" if argo_runtime.supports?(:port)
-          options << "--shop=#{project.env.shop}" if argo_runtime.supports?(:shop)
+          options << "--store=#{project.env.shop}" if argo_runtime.supports?(:shop)
           options << "--apiKey=#{project.env.api_key}" if argo_runtime.supports?(:api_key)
           options << "--rendererVersion=#{renderer_package.version}" if argo_runtime.supports?(:renderer_version)
           options << "--uuid=#{project.registration_uuid}" if argo_runtime.supports?(:uuid)
