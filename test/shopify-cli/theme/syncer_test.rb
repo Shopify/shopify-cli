@@ -254,6 +254,26 @@ module ShopifyCli
         assert_empty(@syncer)
       end
 
+      def test_download_theme_with_ignores
+        @syncer.ignore_filter = mock("IgnoreFilter")
+        @syncer.ignore_filter.stubs(:ignore?).returns(false)
+        @syncer.ignore_filter.expects(:ignore?).with(@theme["assets/generated.css.liquid"]).returns(true)
+
+        @syncer.start_threads
+        @syncer.checksums.replace(@theme.theme_files.map { |file| [file.relative_path.to_s, file.checksum] }.to_h)
+        @syncer.checksums.delete("assets/generated.css.liquid")
+
+        File.any_instance.expects(:delete).never
+        File.any_instance.expects(:write).never
+
+        ShopifyCli::AdminAPI.expects(:rest_request)
+          .at_least(1) # 1 for checksums
+          .returns([200, {}, {}])
+
+        @syncer.download_theme!
+        assert_empty(@syncer)
+      end
+
       def test_upload_theme_with_delayed_low_priority_files
         @syncer.start_threads
 

@@ -14,6 +14,7 @@ module ShopifyCli
       API_VERSION = "unstable"
 
       attr_reader :checksums
+      attr_accessor :ignore_filter
 
       def initialize(ctx, theme:, ignore_filter: nil)
         @ctx = ctx
@@ -160,8 +161,13 @@ module ShopifyCli
 
         if delete
           # Delete local files not present remotely
-          missing_files = @theme.theme_files.reject { |file| checksums.key?(file.relative_path.to_s) }.uniq
-          missing_files.each(&:delete)
+          missing_files = @theme.theme_files
+            .reject { |file| checksums.key?(file.relative_path.to_s) }.uniq
+            .reject { |file| @ignore_filter&.ignore?(file) }
+          missing_files.each do |file|
+            @ctx.debug("rm #{file.relative_path}")
+            file.delete
+          end
         end
 
         enqueue_get(checksums.keys)
