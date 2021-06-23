@@ -19,6 +19,7 @@ module Extension
     subcommand :Create, "create", Project.project_filepath("commands/create")
     subcommand :Register, "register", Project.project_filepath("commands/register")
     subcommand :Info, "info", Project.project_filepath("commands/info")
+    subcommand :Connect, "connect", Project.project_filepath("commands/connect")
     subcommand :Build, "build", Project.project_filepath("commands/build")
     subcommand :Serve, "serve", Project.project_filepath("commands/serve")
     subcommand :Push, "push", Project.project_filepath("commands/push")
@@ -37,6 +38,7 @@ module Extension
     autoload :ConfigureOptions, Project.project_filepath("tasks/configure_options")
     autoload :ChooseNextAvailablePort, Project.project_filepath("tasks/choose_next_available_port")
     autoload :FindNpmPackages, Project.project_filepath("tasks/find_npm_packages")
+    autoload :GetExtensions, Project.project_filepath("tasks/get_extensions")
 
     module Converters
       autoload :RegistrationConverter, Project.project_filepath("tasks/converters/registration_converter")
@@ -51,10 +53,12 @@ module Extension
       autoload :AskApp, Project.project_filepath("forms/questions/ask_app")
       autoload :AskName, Project.project_filepath("forms/questions/ask_name")
       autoload :AskType, Project.project_filepath("forms/questions/ask_type")
+      autoload :AskRegistration, Project.project_filepath("forms/questions/ask_registration")
     end
 
     autoload :Create, Project.project_filepath("forms/create")
     autoload :Register, Project.project_filepath("forms/register")
+    autoload :Connect, Project.project_filepath("forms/connect")
   end
 
   module Features

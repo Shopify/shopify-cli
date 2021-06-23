@@ -1,0 +1,32 @@
+# frozen_string_literal: true
+require "shopify_cli"
+
+module Extension
+  module Tasks
+    class GetExtensions < ShopifyCli::Task
+      def call(context:, type:)
+        organizations = ShopifyCli::PartnersAPI::Organizations.fetch_with_extensions(context, type)
+        extensions_from_organizations(organizations, context: context)
+      end
+
+      private
+
+      def extensions_from_organizations(organizations, context:)
+        organizations.flat_map do |organization|
+          extensions_owned_by_organization(organization, context: context)
+        end
+      end
+
+      def extensions_owned_by_organization(organization, context:)
+        return [] unless organization.key?("apps") && organization["apps"].any?
+
+        organization["apps"].flat_map do |app|
+          app["extensionRegistrations"].map do |registration|
+            [Converters::AppConverter.from_hash(app, organization),
+             Converters::RegistrationConverter.from_hash(context, registration)]
+          end
+        end
+      end
+    end
+  end
+end
