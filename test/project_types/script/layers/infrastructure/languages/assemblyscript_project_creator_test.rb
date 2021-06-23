@@ -121,11 +121,10 @@ describe Script::Layers::Infrastructure::Languages::AssemblyScriptProjectCreator
         .returns([JSON.generate(""), OpenStruct.new(success?: false)])
 
       sdk = mock
-      sdk.expects(:sdk_version)
       sdk.expects(:toolchain_version)
       sdk.expects(:versioned?).once.returns(false)
       sdk.expects(:package).twice.returns("@shopify/extension-point-as-fake")
-      extension_point.expects(:sdks).times(5).returns(stub(all: [sdk], assemblyscript: sdk))
+      extension_point.expects(:sdks).times(4).returns(stub(all: [sdk], assemblyscript: sdk))
 
       assert_raises(Script::Layers::Infrastructure::Errors::SystemCallFailureError) { subject }
     end
@@ -194,6 +193,32 @@ describe Script::Layers::Infrastructure::Languages::AssemblyScriptProjectCreator
           "-- --lib node_modules --optimize --use Date=",
         ].join(" ")
         expected == build
+      end
+
+      subject
+    end
+  end
+
+  describe "dependencies for extension points without SDK" do
+    subject { project_creator.setup_dependencies }
+
+    let(:extension_point) do
+      Script::Layers::Domain::ExtensionPoint.new(extension_point_type, extension_point_config)
+    end
+    let(:extension_point_config) do
+      {
+        "assemblyscript" => {
+          "package": "@shopify/extension-point-as-fake",
+          "toolchain-version": "*",
+        },
+      }
+    end
+
+    it "does not include SDK in package.json" do
+      context.expects(:capture2e).returns([JSON.generate("2.0.0"), OpenStruct.new(success?: true)]).times(3)
+      context.expects(:write).with do |_file, contents|
+        payload = JSON.parse(contents)
+        payload.dig("devDependencies", "@shopify/scripts-sdk-as").nil?
       end
 
       subject

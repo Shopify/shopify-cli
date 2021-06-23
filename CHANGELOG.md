@@ -1,5 +1,6 @@
 Unreleased
 ------
+* [1288](https://github.com/Shopify/shopify-app-cli/pull/1288): Fix bug where Scripts SDK was included for projects that don't require it
 
 Version 1.13.1
 --------------
