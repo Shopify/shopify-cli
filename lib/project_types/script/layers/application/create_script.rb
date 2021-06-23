@@ -12,16 +12,17 @@ module Script
 
             in_new_directory_context(ctx, script_name) do
               extension_point = ExtensionPoints.get(type: extension_point_type)
-              project = Infrastructure::ScriptProjectRepository.new(ctx: ctx).create(
+              script_project_repo = Infrastructure::ScriptProjectRepository.new(ctx: ctx)
+              project = script_project_repo.create(
                 script_name: script_name,
                 extension_point_type: extension_point_type,
-                language: language,
-                no_config_ui: no_config_ui
+                language: language
               )
               project_creator = Infrastructure::Languages::ProjectCreator
                 .for(ctx, language, extension_point, script_name, project.id)
               install_dependencies(ctx, language, script_name, project_creator)
               bootstrap(ctx, project_creator)
+              script_project_repo.update_or_create_script_json(title: script_name, configuration_ui: !no_config_ui)
               project
             end
           end

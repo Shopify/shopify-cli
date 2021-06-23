@@ -1,6 +1,12 @@
 Unreleased
 ------
 
+Version 1.14.0
+--------------
+* [1275](https://github.com/Shopify/shopify-app-cli/pull/1275): Use script.json to specify script metadata
+* [1279](https://github.com/Shopify/shopify-app-cli/pull/1279): Fix bug where a script push still fails after the user answers the force push prompt
+* [1288](https://github.com/Shopify/shopify-app-cli/pull/1288): Fix bug where Scripts SDK was included for projects that don't require it
+
 Version 1.13.1
 --------------
 * [1274](https://github.com/Shopify/shopify-app-cli/pull/1274): Only print api_key during error if it exists

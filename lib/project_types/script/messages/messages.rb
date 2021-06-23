@@ -56,30 +56,33 @@ module Script
           invalid_config: "Can't change the configuration values because %1$s is missing or "\
                           "it is not formatted properly.",
 
-          invalid_config_ui_definition_cause: "The UI configuration file %s contains invalid YAML.",
-          invalid_config_ui_definition_help: "Fix the errors and try again.",
+          missing_script_json_field_cause: "The script.json file is missing the required %s field.",
+          missing_script_json_field_help: "Add the field and try again.",
 
-          missing_config_ui_definition_cause: "You are missing the UI configuration file %s.",
-          missing_config_ui_definition_help: "Create this file and try again.",
+          invalid_script_json_definition_cause: "The script.json file contains invalid JSON.",
+          invalid_script_json_definition_help: "Fix the errors and try again.",
 
-          config_ui_syntax_error_cause: "The UI configuration file %{filename} is not formatted properly.",
-          config_ui_syntax_error_help: "Fix the errors and try again.",
+          no_script_json_file_cause: "You are missing the required script.json file.",
+          no_script_json_file_help: "Create this file and try again.",
 
-          config_ui_missing_keys_error_cause: "The UI configuration file %{filename} is missing required keys: "\
+          configuration_syntax_error_cause: "The script.json configuration schema is not formatted properly.",
+          configuration_syntax_error_help: "Fix the errors and try again.",
+
+          configuration_missing_keys_error_cause: "The script.json configuration schema is missing required keys: "\
                                               "%{missing_keys}.",
-          config_ui_missing_keys_error_help: "Add the keys and try again.",
+          configuration_missing_keys_error_help: "Add the keys and try again.",
 
-          config_ui_invalid_input_mode_error_cause: "The UI configuration file %{filename} only accept "\
-                                              "one of the following input mode(s): %{valid_input_modes}.",
-          config_ui_invalid_input_mode_error_help: "Change the input modes and try again.",
+          configuration_invalid_value_error_cause: "The script.json configuration only accepts "\
+                                              "one of the following types(s): %{valid_input_modes}.",
+          configuration_invalid_value_error_help: "Change the type and try again.",
 
-          config_ui_fields_missing_keys_error_cause: "A field entry in the UI configuration file %{filename} is "\
-                                                     "missing required keys: %{missing_keys}.",
-          config_ui_fields_missing_keys_error_help: "Add the keys and try again.",
+          configuration_schema_field_missing_keys_error_cause: "A field entry in the script.json configuration "\
+                                                     "schema is missing required keys: %{missing_keys}.",
+          configuration_definition_schema_field_missing_keys_error_help: "Add the keys and try again.",
 
-          config_ui_fields_invalid_type_error_cause: "The UI configuration file %{filename} fields only accept "\
-                                                     "one of the following type(s): %{valid_types}.",
-          config_ui_fields_invalid_type_error_help: "Change the types and try again.",
+          configuration_schema_field_invalid_value_error_cause: "The script.json configuration schema fields only "\
+                                                     "accept one of the following type(s): %{valid_types}.",
+          configuration_schema_field_invalid_value_error_help: "Change the types and try again.",
 
           script_not_found_cause: "Couldn't find script %s for extension point %s",
 
