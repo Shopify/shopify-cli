@@ -18,6 +18,7 @@ module Extension
 
     subcommand :Create, "create", Project.project_filepath("commands/create")
     subcommand :Register, "register", Project.project_filepath("commands/register")
+    subcommand :Info, "info", Project.project_filepath("commands/info")
     subcommand :Build, "build", Project.project_filepath("commands/build")
     subcommand :Serve, "serve", Project.project_filepath("commands/serve")
     subcommand :Push, "push", Project.project_filepath("commands/push")
