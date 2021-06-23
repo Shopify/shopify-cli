@@ -6,7 +6,7 @@ require "project_types/extension/extension_test_helpers"
 module Extension
   module Models
     module SpecificationHandlers
-      class CheckoutArgoExtensionTest < MiniTest::Test
+      class CheckoutUiExtensionTest < MiniTest::Test
         include ExtensionTestHelpers
 
         def setup
@@ -16,26 +16,26 @@ module Extension
           Features::Argo.any_instance.stubs(:config).returns({})
           Features::ArgoConfig.stubs(:parse_yaml).returns({})
 
-          specifications = DummySpecifications.build(identifier: "checkout_argo_extension", surface: "checkout")
+          specifications = DummySpecifications.build(identifier: "checkout_ui_extension", surface: "checkout")
 
-          @identifier = "CHECKOUT_ARGO_EXTENSION"
-          @checkout_argo_extension = specifications[@identifier]
+          @identifier = "CHECKOUT_UI_EXTENSION"
+          @checkout_ui_extension = specifications[@identifier]
         end
 
         def test_create_uses_standard_argo_create_implementation
-          directory_name = "checkout_argo_extension"
+          directory_name = "checkout_ui_extension"
 
           Features::Argo.any_instance
             .expects(:create)
             .with(directory_name, @identifier, @context)
             .once
 
-          @checkout_argo_extension.create(directory_name, @context)
+          @checkout_ui_extension.create(directory_name, @context)
         end
 
         def test_config_uses_standard_argo_config_implementation
           Features::Argo.any_instance.expects(:config).with(@context).once.returns({})
-          @checkout_argo_extension.config(@context)
+          @checkout_ui_extension.config(@context)
         end
 
         def test_config_merges_with_standard_argo_config_implementation
@@ -49,7 +49,7 @@ module Extension
           Features::Argo.any_instance.expects(:config).with(@context).once.returns(initial_config)
           Features::ArgoConfig.stubs(:parse_yaml).returns(yaml_config)
 
-          config = @checkout_argo_extension.config(@context)
+          config = @checkout_ui_extension.config(@context)
           assert_equal(metafields, config[:metafields])
           assert_equal(extension_points, config[:extension_points])
           assert_equal(script_content, config[:script_content])
@@ -63,11 +63,11 @@ module Extension
             .once
             .returns({})
 
-          @checkout_argo_extension.config(@context)
+          @checkout_ui_extension.config(@context)
         end
 
         def test_graphql_identifier
-          assert_equal @identifier, @checkout_argo_extension.graphql_identifier
+          assert_equal @identifier, @checkout_ui_extension.graphql_identifier
         end
       end
     end

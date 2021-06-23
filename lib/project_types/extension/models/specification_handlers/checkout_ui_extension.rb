@@ -3,7 +3,7 @@
 module Extension
   module Models
     module SpecificationHandlers
-      class CheckoutArgoExtension < Default
+      class CheckoutUiExtension < Default
         PERMITTED_CONFIG_KEYS = [:metafields, :extension_points]
 
         def config(context)
@@ -13,6 +13,8 @@ module Extension
           }
         end
       end
+
+      CheckoutArgoExtension = CheckoutUiExtension
     end
   end
 end
