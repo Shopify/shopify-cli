@@ -40,7 +40,7 @@ module Extension
         set_of_attributes = build_set_of_specification_attributes(surface: "admin")
         result = ConfigureFeatures.call(set_of_attributes)
         assert_equal(
-          "https://github.com/Shopify/argo-admin-template.git",
+          "https://github.com/Shopify/admin-ui-extensions-template",
           result.value.dig(0, :features, :argo, :git_template)
         )
       end
@@ -48,14 +48,14 @@ module Extension
       def test_correct_renderer_package_name_for_admin_extensions
         set_of_attributes = build_set_of_specification_attributes(surface: "admin")
         result = ConfigureFeatures.call(set_of_attributes)
-        assert_equal "@shopify/argo-admin", result.value.dig(0, :features, :argo, :renderer_package_name)
+        assert_equal "@shopify/admin-ui-extensions", result.value.dig(0, :features, :argo, :renderer_package_name)
       end
 
       def test_correct_git_template_for_checkout_extensions
         set_of_attributes = build_set_of_specification_attributes(surface: "checkout")
         result = ConfigureFeatures.call(set_of_attributes)
         assert_equal(
-          "https://github.com/Shopify/argo-checkout-template.git",
+          "https://github.com/Shopify/checkout-ui-extensions-template",
           result.value.dig(0, :features, :argo, :git_template)
         )
       end
@@ -63,7 +63,7 @@ module Extension
       def test_correct_renderer_package_name_for_checkout_extensions
         set_of_attributes = build_set_of_specification_attributes(surface: "checkout")
         result = ConfigureFeatures.call(set_of_attributes)
-        assert_equal "@shopify/argo-checkout", result.value.dig(0, :features, :argo, :renderer_package_name)
+        assert_equal "@shopify/checkout-ui-extensions", result.value.dig(0, :features, :argo, :renderer_package_name)
       end
 
       private

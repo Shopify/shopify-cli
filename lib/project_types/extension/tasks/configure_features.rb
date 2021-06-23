@@ -38,16 +38,15 @@ module Extension
       def surface_area_configurations
         {
           admin: {
-            git_template: "https://github.com/Shopify/argo-admin-template.git",
-            renderer_package_name: "@shopify/argo-admin",
+            git_template: "https://github.com/Shopify/admin-ui-extensions-template",
+            renderer_package_name: "@shopify/admin-ui-extensions",
             required_fields: [:shop, :api_key],
-            required_shop_beta_flags: [:argo_admin_beta],
-            cli_package_name: "@shopify/argo-admin-cli",
+            cli_package_name: "@shopify/admin-ui-extensions-run",
           },
           checkout: {
-            git_template: "https://github.com/Shopify/argo-checkout-template.git",
-            renderer_package_name: "@shopify/argo-checkout",
-            cli_package_name: "@shopify/argo-run",
+            git_template: "https://github.com/Shopify/checkout-ui-extensions-template",
+            renderer_package_name: "@shopify/checkout-ui-extensions",
+            cli_package_name: "@shopify/checkout-ui-extensions-run",
           },
         }
       end
