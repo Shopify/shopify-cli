@@ -40,7 +40,7 @@ module Rails
               Options:
                 {{command:--name=NAME}} App name. Any string.
                 {{command:--organization-id=ID}} Partner organization ID. Must be an existing organization.
-                {{command:--shop-domain=MYSHOPIFYDOMAIN }} Development store URL. Must be an existing development store.
+                {{command:--store=MYSHOPIFYDOMAIN }} Development store URL. Must be an existing development store.
                 {{command:--db=DB}} Database type. Must be one of: mysql, postgresql, sqlite3, oracle, frontbase, ibm_db, sqlserver, jdbcmysql, jdbcsqlite3, jdbcpostgresql, jdbc.
                 {{command:--rails-opts=RAILSOPTS}} Additional options. Must be string containing one or more valid Rails options, separated by spaces.
           HELP

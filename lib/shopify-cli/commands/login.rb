@@ -7,15 +7,10 @@ module ShopifyCli
       PERMANENT_DOMAIN_SUFFIX = /\.myshopify\.(com|io)$/
 
       options do |parser, flags|
-        parser.on("--shop=SHOP") do |shop|
-          flags[:shop] = shop
-        end
-        parser.on("--store=STORE") do |store|
-          flags[:shop] = store
-        end
-        parser.on("--password=PASSWORD") do |password|
-          flags[:password] = password
-        end
+        parser.on("--store=STORE") { |url| flags[:shop] = url }
+        # backwards compatibility allow 'shop' for now
+        parser.on("--shop=SHOP") { |url| flags[:shop] = url }
+        parser.on("--password=PASSWORD") { |password| flags[:password] = password }
       end
 
       def call(*)
