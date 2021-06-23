@@ -8,12 +8,13 @@ module Script
       end
 
       def call(_args, _name)
-        Tasks::EnsureEnv.call(@ctx)
+        fresh_env = Tasks::EnsureEnv.call(@ctx)
+        force = options.flags.key?(:force) || !!fresh_env
 
         api_key = Layers::Infrastructure::ScriptProjectRepository.new(ctx: @ctx).get.api_key
         return @ctx.puts(self.class.help) unless api_key
 
-        Layers::Application::PushScript.call(ctx: @ctx, force: options.flags.key?(:force))
+        Layers::Application::PushScript.call(ctx: @ctx, force: force)
         @ctx.puts(@ctx.message("script.push.script_pushed", api_key: api_key))
       rescue StandardError => e
         msg = if api_key

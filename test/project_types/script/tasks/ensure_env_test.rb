@@ -40,7 +40,7 @@ describe Script::Tasks::EnsureEnv do
         ShopifyCli::PartnersAPI.expects(:query).never
         Script::Layers::Infrastructure::ScriptService.any_instance.expects(:get_app_scripts).never
 
-        assert_nil subject
+        refute subject
       end
     end
 
@@ -62,13 +62,16 @@ describe Script::Tasks::EnsureEnv do
       end
 
       def expect_new_env
-        assert_equal selected_api_key, subject.env.api_key
-        assert_equal selected_secret, subject.env.secret
+        assert subject
+
+        project = script_project_repository.get
+        assert_equal selected_api_key, project.env.api_key
+        assert_equal selected_secret, project.env.secret
 
         if selected_uuid.nil?
-          assert_nil subject.env.extra["UUID"]
+          assert_nil project.env.extra["UUID"]
         else
-          assert_equal selected_uuid, subject.env.extra["UUID"]
+          assert_equal selected_uuid, project.env.extra["UUID"]
         end
       end
 
@@ -117,9 +120,11 @@ describe Script::Tasks::EnsureEnv do
               context.expects(:puts).with(selected_org_msg)
               context.stubs(:puts).with(Not(equals(selected_org_msg)))
 
-              assert_equal selected_api_key, subject.env.api_key
-              assert_equal selected_secret, subject.env.secret
-              assert_nil subject.env.extra["UUID"]
+              assert subject
+              project = script_project_repository.get
+              assert_equal selected_api_key, project.env.api_key
+              assert_equal selected_secret, project.env.secret
+              assert_nil project.env.extra["UUID"]
             end
           end
 

@@ -9,8 +9,9 @@ module Script
         super
         @context = TestHelpers::FakeContext.new
         @api_key = "apikey"
+        @uuid = "uuid"
         @force = true
-        @env = ShopifyCli::Resources::EnvFile.new(api_key: @api_key, secret: "shh")
+        @env = ShopifyCli::Resources::EnvFile.new(api_key: @api_key, secret: "shh", extra: { "UUID" => @uuid })
         @script_project_repo = TestHelpers::FakeScriptProjectRepository.new
         @script_project_repo.create(
           language: "assemblyscript",
@@ -50,6 +51,19 @@ module Script
         assert_equal err_msg, e.message
       end
 
+      def test_does_not_force_push_if_user_env_already_existed
+        @force = false
+        Layers::Application::PushScript.expects(:call).with(ctx: @context, force: @force)
+        perform_command
+      end
+
+      def test_force_pushes_script_if_user_env_was_just_created
+        @force = false
+        Tasks::EnsureEnv.expects(:call).returns(true)
+        Layers::Application::PushScript.expects(:call).with(ctx: @context, force: true)
+        perform_command
+      end
+
       def test_push_doesnt_print_api_key_when_it_hasnt_been_selected
         Tasks::EnsureEnv.expects(:call)
         @script_project_repo.expects(:get).returns(nil)
@@ -77,7 +91,7 @@ module Script
       private
 
       def perform_command
-        capture_io { run_cmd("push --force") }
+        capture_io { run_cmd("push #{@force ? "--force" : ""}") }
       end
     end
   end
