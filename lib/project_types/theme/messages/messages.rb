@@ -135,7 +135,7 @@ module Theme
             Usage: {{command:%s theme pull [ ROOT ]}}
 
             Options:
-              {{command:-i, --themeid=THEMEID}} Theme ID. Must be an existing theme on your store.
+              {{command:-i, --themeid=THEMEID}} The Theme ID. Must be an existing theme on your store.
               {{command:-n, --nodelete}}        Runs the push command without deleting local files.
 
             Run without options to select theme from a list.
