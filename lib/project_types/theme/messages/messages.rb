@@ -121,6 +121,13 @@ module Theme
           },
           done: "Theme packaged in %s",
         },
+        language_server: {
+          help: <<~HELP,
+            {{command:%s theme language-server}}: Start a Language Server Protocol server.
+
+            Usage: {{command:%s theme language-server}}
+          HELP
+        },
       },
     }.freeze
   end
