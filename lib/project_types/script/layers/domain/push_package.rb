@@ -8,7 +8,7 @@ module Script
           :uuid,
           :extension_point_type,
           :script_name,
-          :config_ui,
+          :script_json,
           :script_content,
           :compiled_type,
           :metadata
@@ -21,7 +21,7 @@ module Script
           script_content:,
           compiled_type:,
           metadata:,
-          config_ui:
+          script_json:
         )
           @id = id
           @uuid = uuid
@@ -30,7 +30,7 @@ module Script
           @script_content = script_content
           @compiled_type = compiled_type
           @metadata = metadata
-          @config_ui = config_ui
+          @script_json = script_json
         end
 
         def push(script_service, api_key, force)
@@ -43,7 +43,7 @@ module Script
             api_key: api_key,
             force: force,
             metadata: @metadata,
-            config_ui: @config_ui,
+            script_json: @script_json,
           )
         end
       end

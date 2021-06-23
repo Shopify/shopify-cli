@@ -10,6 +10,7 @@ describe Script::Layers::Application::CreateScript do
   let(:script_name) { "name" }
   let(:compiled_type) { "wasm" }
   let(:no_config_ui) { false }
+  let(:script_json_filename) { "script.json" }
   let(:extension_point_repository) { TestHelpers::FakeExtensionPointRepository.new }
   let(:script_project_repository) { TestHelpers::FakeScriptProjectRepository.new }
   let(:ep) { extension_point_repository.get_extension_point(extension_point_type) }
@@ -28,6 +29,7 @@ describe Script::Layers::Application::CreateScript do
 
   before do
     Script::Layers::Infrastructure::ExtensionPointRepository.stubs(:new).returns(extension_point_repository)
+    Script::Layers::Infrastructure::ScriptProjectRepository.stubs(:new).returns(script_project_repository)
 
     extension_point_repository.create_extension_point(extension_point_type)
     Script::Layers::Infrastructure::Languages::TaskRunner
@@ -80,33 +82,38 @@ describe Script::Layers::Application::CreateScript do
       end
     end
 
-    it "should create a new script" do
-      initial_dir = context.root
-      refute context.dir_exist?(script_name)
+    describe "success" do
+      before do
+        Script::Layers::Application::ExtensionPoints
+          .expects(:get)
+          .with(type: extension_point_type)
+          .returns(ep)
+        Script::Layers::Application::CreateScript
+          .expects(:install_dependencies)
+          .with(context, language, script_name, project_creator)
+        Script::Layers::Application::CreateScript
+          .expects(:bootstrap)
+          .with(context, project_creator)
+      end
 
-      Script::Layers::Application::ExtensionPoints
-        .expects(:get)
-        .with(type: extension_point_type)
-        .returns(ep)
-      Script::Layers::Infrastructure::ScriptProjectRepository
-        .any_instance
-        .expects(:create)
-        .with(
-          language: language,
-          script_name: script_name,
-          extension_point_type: extension_point_type,
-          no_config_ui: no_config_ui
-        ).returns(script_project)
-      Script::Layers::Application::CreateScript
-        .expects(:install_dependencies)
-        .with(context, language, script_name, project_creator)
-      Script::Layers::Application::CreateScript
-        .expects(:bootstrap)
-        .with(context, project_creator)
-      subject
+      it "should create a new script" do
+        initial_dir = context.root
+        refute context.dir_exist?(script_name)
 
-      assert_equal initial_dir, context.root
-      context.dir_exist?(script_name)
+        subject
+
+        assert_equal initial_dir, context.root
+        context.dir_exist?(script_name)
+      end
+
+      it "should update the script.json file" do
+        subject
+
+        script_json = script_project_repository.get.script_json
+        assert_equal script_name, script_json.title
+        assert_equal "1", script_json.version
+        assert script_json.configuration_ui
+      end
     end
 
     describe "install_dependencies" do

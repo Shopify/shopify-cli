@@ -2,16 +2,15 @@
 
 module TestHelpers
   class FakeScriptProjectRepository
+    SCRIPT_JSON_FILENAME = Script::Layers::Infrastructure::ScriptProjectRepository::DEFAULT_SCRIPT_JSON_FILENAME
+
     def initialize
       @project = nil
     end
 
     def create(script_name:, extension_point_type:, language:, no_config_ui:, env: nil)
-      config_ui_file = if no_config_ui
-        nil
-      else
-        FakeConfigUiRepository.new.create("config-ui.yml", "---\nversion: 1")
-      end
+      _ = no_config_ui
+      script_json = fake_script_json_repo.create(SCRIPT_JSON_FILENAME, { version: 1 }.to_json)
 
       @project = Script::Layers::Domain::ScriptProject.new(
         id: "/#{script_name}",
@@ -19,7 +18,7 @@ module TestHelpers
         script_name: script_name,
         extension_point_type: extension_point_type,
         language: language,
-        config_ui: config_ui_file
+        script_json: script_json
       )
     end
 
@@ -40,15 +39,40 @@ module TestHelpers
       @project
     end
 
-    class FakeConfigUiRepository
+    def update_script_json(title:, configuration_ui: false)
+      script_json = fake_script_json_repo
+        .update(SCRIPT_JSON_FILENAME, title: title, configuration_ui: configuration_ui)
+
+      @project.script_json = script_json
+      @project
+    end
+
+    private
+
+    def fake_script_json_repo
+      @fake_script_json_repo ||= FakeScriptJsonRepository.new
+    end
+
+    class FakeScriptJsonRepository
       def initialize
         @cache = {}
       end
 
       def create(filename, content)
-        @cache[filename] = Script::Layers::Domain::ConfigUi.new(
+        @cache[filename] = Script::Layers::Domain::ScriptJson.new(
           filename: filename,
-          content: content,
+          content: JSON.parse(content),
+        )
+      end
+
+      def update(filename, title:, configuration_ui:)
+        json = @cache[filename].content || {}
+        json["title"] = title
+        json["configurationUi"] = !!configuration_ui
+
+        @cache[filename] = Script::Layers::Domain::ScriptJson.new(
+          filename: filename,
+          content: json,
         )
       end
 

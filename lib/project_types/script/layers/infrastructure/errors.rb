@@ -6,9 +6,9 @@ module Script
       module Errors
         class AppNotInstalledError < ScriptProjectError; end
         class BuildError < ScriptProjectError; end
-        class ConfigUiSyntaxError < ScriptProjectError; end
+        class ScriptJsonSyntaxError < ScriptProjectError; end
 
-        class ConfigUiMissingKeysError < ScriptProjectError
+        class ScriptJsonMissingKeysError < ScriptProjectError
           attr_reader :filename, :missing_keys
           def initialize(filename, missing_keys)
             super()
@@ -17,7 +17,7 @@ module Script
           end
         end
 
-        class ConfigUiInvalidInputModeError < ScriptProjectError
+        class ScriptJsonInvalidValueError < ScriptProjectError
           attr_reader :filename, :valid_input_modes
           def initialize(filename, valid_input_modes)
             super()
@@ -26,7 +26,7 @@ module Script
           end
         end
 
-        class ConfigUiFieldsMissingKeysError < ScriptProjectError
+        class ScriptJsonFieldsMissingKeysError < ScriptProjectError
           attr_reader :filename, :missing_keys
           def initialize(filename, missing_keys)
             super()
@@ -35,7 +35,7 @@ module Script
           end
         end
 
-        class ConfigUiFieldsInvalidTypeError < ScriptProjectError
+        class ScriptJsonFieldsInvalidValueError < ScriptProjectError
           attr_reader :filename, :valid_types
           def initialize(filename, valid_types)
             super()

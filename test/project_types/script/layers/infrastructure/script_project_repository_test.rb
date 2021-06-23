@@ -9,7 +9,7 @@ describe Script::Layers::Infrastructure::ScriptProjectRepository do
   let(:instance) { Script::Layers::Infrastructure::ScriptProjectRepository.new(ctx: ctx) }
 
   let(:config_ui_repository) do
-    Script::Layers::Infrastructure::ScriptProjectRepository::ConfigUiRepository.new(ctx: ctx)
+    Script::Layers::Infrastructure::ScriptProjectRepository::ScriptJsonRepository.new(ctx: ctx)
   end
 
   let(:deprecated_ep_types) { [] }
@@ -72,24 +72,21 @@ describe Script::Layers::Infrastructure::ScriptProjectRepository do
 
       describe "when no_config_ui is false" do
         let(:no_config_ui) { false }
-        let(:expected_config_ui_filename) { "config-ui.yml" }
-        let(:expected_config_ui_content) do
-          "---\nversion: 1\ninputMode: single\ntitle: #{script_name}\ndescription: ''\nfields: []\n"
-        end
+        let(:expected_script_json_filename) { "script.json" }
 
         it "should create a new script project" do
           it_should_create_a_new_script_project
-          assert_equal expected_config_ui_filename, ShopifyCli::Project.current.config["config_ui_file"]
+          assert_equal expected_script_json_filename, ShopifyCli::Project.current.config["script_json"]
         end
       end
 
       describe "when no_config_ui is true" do
         let(:no_config_ui) { true }
-        let(:expected_config_ui_filename) { nil }
+        let(:expected_script_json_filename) { nil }
 
         it "should create a new script project" do
           it_should_create_a_new_script_project
-          assert_nil ShopifyCli::Project.current.config["config_ui_file"]
+          assert_nil ShopifyCli::Project.current.config["script_json"]
         end
       end
     end
@@ -102,13 +99,30 @@ describe Script::Layers::Infrastructure::ScriptProjectRepository do
     let(:extension_point_type) { "tax_filter" }
     let(:language) { "assemblyscript" }
     let(:uuid) { "uuid" }
-    let(:config_ui_file) { "config-ui.yml" }
-    let(:config_ui_content) { "---\nversion: 1" }
+    let(:script_json) { "script.json" }
+    let(:script_json_content) do
+      {
+        "version" => "1",
+        "configurationUi" => true,
+        "configuration" => {
+          "type": "single",
+          "schema": [
+            {
+              "key": "configurationKey",
+              "name": "My configuration field",
+              "type": "single_line_text_field",
+              "helpText": "This is some help text",
+              "defaultValue": "This is a default value",
+            },
+          ],
+        },
+      }
+    end
     let(:valid_config) do
       {
         "extension_point_type" => "tax_filter",
         "script_name" => "script_name",
-        "config_ui_file" => config_ui_file,
+        "script_json" => script_json,
       }
     end
     let(:actual_config) { valid_config }
@@ -119,7 +133,7 @@ describe Script::Layers::Infrastructure::ScriptProjectRepository do
     before do
       ShopifyCli::Project.stubs(:has_current?).returns(true)
       ShopifyCli::Project.stubs(:current).returns(current_project)
-      ctx.write(config_ui_file, config_ui_content)
+      ctx.write(script_json, script_json_content.to_json)
     end
 
     describe "when project config is valid" do
@@ -150,8 +164,11 @@ describe Script::Layers::Infrastructure::ScriptProjectRepository do
         assert_equal script_name, subject.script_name
         assert_equal extension_point_type, subject.extension_point_type
         assert_equal language, subject.language
-        assert_equal config_ui_file, subject.config_ui.filename
-        assert_equal config_ui_content, subject.config_ui.content
+        assert_equal script_json, subject.script_json.filename
+        assert_equal script_json_content["version"], subject.script_json.version
+        assert_equal script_json_content["version"], subject.script_json.version
+        assert_equal script_json_content["configurationUi"], subject.script_json.configuration_ui
+        assert_equal script_json_content["configuration"].to_json, subject.script_json.configuration.to_json
       end
     end
 
@@ -192,8 +209,8 @@ describe Script::Layers::Infrastructure::ScriptProjectRepository do
         end
       end
 
-      describe "when missing config_ui_file" do
-        let(:actual_config) { hash_except(valid_config, "config_ui_file") }
+      describe "when missing script_json" do
+        let(:actual_config) { hash_except(valid_config, "script_json") }
 
         it "should succeed" do
           assert subject
@@ -219,7 +236,7 @@ describe Script::Layers::Infrastructure::ScriptProjectRepository do
     let(:language) { "assemblyscript" }
     let(:uuid) { "uuid" }
     let(:updated_uuid) { "updated_uuid" }
-    let(:config_ui_file) { "config-ui.yml" }
+    let(:script_json) { "script.json" }
     let(:env) { ShopifyCli::Resources::EnvFile.new(api_key: "123", secret: "foo", extra: env_extra) }
     let(:env_extra) { { "uuid" => "original_uuid", "something" => "else" } }
     let(:valid_config) do
@@ -229,7 +246,7 @@ describe Script::Layers::Infrastructure::ScriptProjectRepository do
         "uuid" => uuid,
         "extension_point_type" => "tax_filter",
         "script_name" => "script_name",
-        "config_ui_file" => config_ui_file,
+        "script_json" => script_json,
       }
     end
     let(:args) do
@@ -290,8 +307,102 @@ describe Script::Layers::Infrastructure::ScriptProjectRepository do
     end
   end
 
-  describe "ConfigUiRepository" do
-    let(:instance) { Script::Layers::Infrastructure::ScriptProjectRepository::ConfigUiRepository.new(ctx: ctx) }
+  describe "#update_script_json" do
+    let(:script_json_filename) { "script.json" }
+    let(:new_title) { "new title" }
+    let(:new_configuration_ui) { true }
+    let(:valid_config) do
+      {
+        "project_type" => "script",
+        "organization_id" => 1,
+        "uuid" => "uuid",
+        "extension_point_type" => "tax_filter",
+        "script_name" => "script_name",
+        "script_json" => script_json_filename,
+      }
+    end
+    let(:current_project) do
+      TestHelpers::FakeProject.new(directory: ctx.root, config: valid_config)
+    end
+
+    before do
+      ShopifyCli::Project.stubs(:has_current?).returns(true)
+      ShopifyCli::Project.stubs(:current).returns(current_project)
+    end
+
+    subject { instance.update_script_json(title: new_title, configuration_ui: new_configuration_ui) }
+
+    describe "when no script.json exists yet" do
+      it "creates a new file" do
+        script_json = subject.script_json
+        file_content = JSON.parse(ctx.read(script_json_filename))
+
+        assert script_json.configuration_ui
+        assert file_content["configurationUi"]
+
+        assert_equal new_title, script_json.title
+        assert_equal new_title, file_content["title"]
+
+        assert_empty script_json.version
+        assert_nil file_content["version"]
+
+        assert_nil script_json.configuration
+        assert_nil file_content["configuration"]
+
+        assert_nil script_json.content["description"]
+        assert_nil file_content["description"]
+      end
+    end
+
+    describe "script.json already exists" do
+      let(:initial_title) { "my scripts title" }
+      let(:initial_description) { "my description" }
+      let(:script_json_content) do
+        {
+          "version" => "1",
+          "description" => initial_description,
+          "configurationUi" => false,
+          "configuration" => {
+            "type": "single",
+            "schema": [
+              {
+                "key": "configurationKey",
+                "name": "My configuration field",
+                "type": "single_line_text_field",
+                "helpText": "This is some help text",
+                "defaultValue": "This is a default value",
+              },
+            ],
+          },
+        }
+      end
+
+      before do
+        ctx.write(script_json_filename, script_json_content.to_json)
+      end
+
+      it "updates only the provided fields" do
+        script_json = subject.script_json
+        file_content = JSON.parse(ctx.read(script_json_filename))
+
+        assert script_json.configuration_ui
+        assert file_content["configurationUi"]
+        assert_equal new_title, script_json.title
+        assert_equal new_title, file_content["title"]
+        refute_equal initial_title, script_json.title
+
+        assert_equal initial_description, script_json.content["description"]
+        assert_equal initial_description, file_content["description"]
+        assert_equal script_json_content["version"], script_json.version
+        assert_equal script_json_content["version"], file_content["version"]
+        assert_equal script_json_content["configuration"].to_json, script_json.configuration.to_json
+        assert_equal script_json_content["configuration"].to_json, file_content["configuration"].to_json
+      end
+    end
+  end
+
+  describe "ScriptJsonRepository" do
+    let(:instance) { Script::Layers::Infrastructure::ScriptProjectRepository::ScriptJsonRepository.new(ctx: ctx) }
 
     describe "#get" do
       subject { instance.get(filename) }
@@ -308,8 +419,8 @@ describe Script::Layers::Infrastructure::ScriptProjectRepository do
         let(:filename) { "filename" }
 
         describe "when file does not exist" do
-          it "raises MissingSpecifiedConfigUiDefinitionError" do
-            assert_raises(Script::Layers::Domain::Errors::MissingSpecifiedConfigUiDefinitionError) { subject }
+          it "raises MissingSpecifiedScriptJsonDefinitionError" do
+            assert_raises(Script::Layers::Domain::Errors::MissingSpecifiedScriptJsonDefinitionError) { subject }
           end
         end
 
@@ -318,20 +429,21 @@ describe Script::Layers::Infrastructure::ScriptProjectRepository do
             File.write(filename, content)
           end
 
-          describe "when content is invalid yaml" do
+          describe "when content is invalid json" do
             let(:content) { "*" }
 
-            it "raises InvalidConfigUiDefinitionError" do
-              assert_raises(Script::Layers::Domain::Errors::InvalidConfigUiDefinitionError) { subject }
+            it "raises InvalidScriptJsonDefinitionError" do
+              assert_raises(Script::Layers::Domain::Errors::InvalidScriptJsonDefinitionError) { subject }
             end
           end
 
-          describe "when content is valid yaml" do
-            let(:content) { "---\nversion: 1" }
+          describe "when content is valid json" do
+            let(:version) { "1" }
+            let(:content) { { "version" => version }.to_json }
 
             it "returns the entity" do
               assert_equal filename, subject.filename
-              assert_equal content, subject.content
+              assert_equal version, subject.version
             end
           end
         end
