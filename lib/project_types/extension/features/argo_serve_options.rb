@@ -29,7 +29,7 @@ module Extension
 
         @serve_options ||= [].tap do |options|
           options << "--port=#{port}" if argo_runtime.accepts_port?
-          options << "--store=#{project.env.shop}" if required_fields.include?(:shop) && argo_runtime.accepts_shop?
+          options << "--shop=#{project.env.shop}" if required_fields.include?(:shop) && argo_runtime.accepts_shop?
           options << "--apiKey=#{api_key}" if required_fields.include?(:api_key) && argo_runtime.accepts_api_key?
           options << "--argoVersion=#{renderer_package.version}" if argo_runtime.accepts_argo_version?
           options << "--uuid=#{project.registration_uuid}" if argo_runtime.accepts_uuid?

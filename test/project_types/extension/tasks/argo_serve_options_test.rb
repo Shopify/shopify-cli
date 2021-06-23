@@ -43,8 +43,8 @@ renderer_package: argo_admin)
         options = Features::ArgoServeOptions.new(argo_runtime: argo_runtime, context: @context,
           renderer_package: argo_admin, required_fields: required_fields)
 
-        assert_includes(options.yarn_serve_command, "--store=my-test-shop.myshopify.com")
-        assert_includes(options.npm_serve_command, "--store=my-test-shop.myshopify.com")
+        assert_includes(options.yarn_serve_command, "--shop=my-test-shop.myshopify.com")
+        assert_includes(options.npm_serve_command, "--shop=my-test-shop.myshopify.com")
       end
 
       def test_serve_options_include_argo_version_if_argo_version_supported
