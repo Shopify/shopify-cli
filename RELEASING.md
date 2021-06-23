@@ -2,9 +2,9 @@
 
 1. Check the Semantic Versioning page for info on how to version the new release: http://semver.org
 
-1. Make sure you're on the most recent `master`
+1. Make sure you're on the most recent `main`
    ```
-   $ git checkout master
+   $ git checkout main
    $ git pull
    ```
 
@@ -31,9 +31,9 @@
 
 1. Deploy using Shipit
 
-1. Update your `master` branch to the latest version
+1. Update your `main` branch to the latest version
    ```
-   $ git checkout master
+   $ git checkout main
    $ git pull
    ```
 
@@ -56,7 +56,7 @@
       ```
       Release of version X.Y.Z of Shopify CLI
 
-      Please refer to [CHANGELOG](https://github.com/Shopify/shopify-cli/blob/master/CHANGELOG.md) for details.
+      Please refer to [CHANGELOG](https://github.com/Shopify/shopify-cli/blob/main/CHANGELOG.md) for details.
       ```
     * upload the `.deb` and `.rpm` files from `packaging/builds/X.Y.Z/` (generated in step 9)
     * if it's a pre-release version, select the "This is a pre-release" checkbox

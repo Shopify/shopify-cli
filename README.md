@@ -103,7 +103,7 @@ To start the server. The server includes hot reload for CSS & Sections.
 
 ### Contributing
 
-Shopify CLI is an [open source tool](https://github.com/Shopify/shopify-cli/blob/master/.github/LICENSE.md) and everyone is welcome to help the community by [contributing](https://github.com/Shopify/shopify-cli/blob/master/.github/CONTRIBUTING.md) to the project.
+Shopify CLI is an [open source tool](https://github.com/Shopify/shopify-cli/blob/main/.github/LICENSE.md) and everyone is welcome to help the community by [contributing](https://github.com/Shopify/shopify-cli/blob/main/.github/CONTRIBUTING.md) to the project.
 
 ### Where to get help
 

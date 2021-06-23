@@ -27,7 +27,7 @@ require "smart_properties"
 require_relative "shopify-cli/version"
 
 # Enable stdout routing. At this point all calls to STDOUT (and STDERR) will go through this class.
-# See https://github.com/Shopify/cli-ui/blob/master/lib/cli/ui/stdout_router.rb for more info
+# See https://github.com/Shopify/cli-ui/blob/main/lib/cli/ui/stdout_router.rb for more info
 CLI::UI::StdoutRouter.enable
 
 # The main file to load for `shopify-cli`
@@ -51,7 +51,7 @@ module ShopifyCli
   FAILMOJI = ROOT == "/opt/shopify" ? "\u{1f937}" : "\u{1f4a5}"
 
   # Exit management in `shopify-cli` follows the management set out by CLI Kit.
-  # https://github.com/Shopify/cli-kit/blob/master/lib/cli/kit.rb
+  # https://github.com/Shopify/cli-kit/blob/main/lib/cli/kit.rb
   # That is to say, we differentiate between exit success (0), exit failure (1), and exit bug (not 1)
   #
   # These should *never* be called outside of the entrypoint and its delegations.
@@ -60,7 +60,7 @@ module ShopifyCli
   EXIT_SUCCESS             = CLI::Kit::EXIT_SUCCESS
 
   # `shopify-cli` uses CLI Kit's exception management
-  # These are documented here: https://github.com/Shopify/cli-kit/blob/master/lib/cli/kit.rb
+  # These are documented here: https://github.com/Shopify/cli-kit/blob/main/lib/cli/kit.rb
   #
   # You should never subclass these exceptions, but instead rescue another exception and re-raise.
   # AbortSilent and BugSilent should never have messages. They are mostly used when we output explanations
@@ -73,7 +73,7 @@ module ShopifyCli
 
   # The rest of this file outlines classes and modules required by the shopify-cli
   # application and CLI kit framework.
-  # To understand how this works, read https://github.com/Shopify/cli-kit/blob/master/lib/cli/kit.rb
+  # To understand how this works, read https://github.com/Shopify/cli-kit/blob/main/lib/cli/kit.rb
 
   # ShopifyCli::Config
   autocall(:Config)   { CLI::Kit::Config.new(tool_name: TOOL_NAME) }
