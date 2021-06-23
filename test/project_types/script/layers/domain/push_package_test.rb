@@ -6,8 +6,7 @@ describe Script::Layers::Domain::PushPackage do
   let(:uuid) { "uuid" }
   let(:extension_point_type) { "discount" }
   let(:script_id) { "id" }
-  let(:script_name) { "foo_script" }
-  let(:script_json) { { "version" => "1" } }
+  let(:script_json) { { "version" => "1", "title" => "title" } }
   let(:api_key) { "fake_key" }
   let(:force) { false }
   let(:script_content) { "(module)" }
@@ -18,7 +17,6 @@ describe Script::Layers::Domain::PushPackage do
       id: id,
       uuid: uuid,
       extension_point_type: extension_point_type,
-      script_name: script_name,
       script_json: script_json,
       script_content: script_content,
       compiled_type: compiled_type,
@@ -44,7 +42,6 @@ describe Script::Layers::Domain::PushPackage do
     it "should open write to build file and push" do
       script_service.expect(:push, nil) do |kwargs|
         kwargs[:extension_point_type] == extension_point_type &&
-          kwargs[:script_name] == script_name &&
           kwargs[:script_content] == script_content &&
           kwargs[:compiled_type] == compiled_type &&
           kwargs[:api_key] == api_key &&

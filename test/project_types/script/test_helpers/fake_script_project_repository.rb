@@ -7,7 +7,7 @@ module TestHelpers
     end
 
     def create(script_name:, extension_point_type:, language:, env: nil)
-      script_json = fake_script_json_repo.create({ version: 1 }.to_json)
+      script_json = fake_script_json_repo.create({ version: 1, title: script_name }.to_json)
 
       @project = Script::Layers::Domain::ScriptProject.new(
         id: "/#{script_name}",

@@ -82,6 +82,7 @@ describe Script::Layers::Infrastructure::ScriptProjectRepository do
     let(:script_json_content) do
       {
         "version" => "1",
+        "title" => script_name,
         "configurationUi" => true,
         "configuration" => {
           "type": "single",
@@ -215,6 +216,7 @@ describe Script::Layers::Infrastructure::ScriptProjectRepository do
     let(:uuid) { "uuid" }
     let(:updated_uuid) { "updated_uuid" }
     let(:script_json) { "script.json" }
+    let(:script_json_content) { { "version" => "1", "title" => script_name }.to_json }
     let(:env) { ShopifyCli::Resources::EnvFile.new(api_key: "123", secret: "foo", extra: env_extra) }
     let(:env_extra) { { "uuid" => "original_uuid", "something" => "else" } }
     let(:valid_config) do
@@ -243,7 +245,7 @@ describe Script::Layers::Infrastructure::ScriptProjectRepository do
         extension_point_type: extension_point_type,
         language: language
       )
-      ctx.write(script_json, "{}")
+      ctx.write(script_json, script_json_content)
       ShopifyCli::Project.any_instance.expects(:env).returns(env).at_least_once
     end
 
@@ -319,11 +321,11 @@ describe Script::Layers::Infrastructure::ScriptProjectRepository do
         assert file_content["configurationUi"]
         assert_equal new_title, script_json.title
         assert_equal new_title, file_content["title"]
+        assert_equal "1", file_content["version"]
+        assert_equal "1", script_json.version
 
         assert_nil script_json.content["description"]
         assert_nil file_content["description"]
-        assert_empty script_json.version
-        assert_nil file_content["version"]
         assert_nil script_json.configuration
         assert_nil file_content["configuration"]
       end
@@ -335,6 +337,7 @@ describe Script::Layers::Infrastructure::ScriptProjectRepository do
       let(:script_json_content) do
         {
           "version" => "1",
+          "title" => initial_title,
           "description" => initial_description,
           "configurationUi" => false,
           "configuration" => {
@@ -403,7 +406,7 @@ describe Script::Layers::Infrastructure::ScriptProjectRepository do
 
         describe "when content is valid json" do
           let(:version) { "1" }
-          let(:content) { { "version" => version }.to_json }
+          let(:content) { { "version" => version, "title" => "title" }.to_json }
 
           it "returns the entity" do
             assert_equal version, subject.version

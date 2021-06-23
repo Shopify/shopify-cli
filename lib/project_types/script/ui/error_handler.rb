@@ -120,6 +120,11 @@ module Script
             cause_of_error: ShopifyCli::Context.message("script.error.metadata_not_found_cause"),
             help_suggestion: ShopifyCli::Context.message("script.error.metadata_not_found_help"),
           }
+        when Layers::Domain::Errors::MissingScriptJsonFieldError
+          {
+            cause_of_error: ShopifyCli::Context.message("script.error.missing_script_json_field_cause", e.field),
+            help_suggestion: ShopifyCli::Context.message("script.error.missing_script_json_field_help"),
+          }
         when Layers::Domain::Errors::InvalidScriptJsonDefinitionError
           {
             cause_of_error: ShopifyCli::Context.message("script.error.invalid_script_json_definition_cause"),

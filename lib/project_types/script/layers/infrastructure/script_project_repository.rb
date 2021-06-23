@@ -150,6 +150,7 @@ module Script
 
           def update_or_create(title:, configuration_ui:)
             json = current_script_json&.content || {}
+            json["version"] ||= "1"
             json["title"] = title
             json["configurationUi"] = !!configuration_ui
 

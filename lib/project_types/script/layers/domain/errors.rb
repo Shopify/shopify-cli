@@ -14,6 +14,14 @@ module Script
           end
         end
 
+        class MissingScriptJsonFieldError < ScriptProjectError
+          attr_reader :field
+          def initialize(field)
+            super()
+            @field = field
+          end
+        end
+
         class InvalidScriptJsonDefinitionError < ScriptProjectError; end
         class NoScriptJsonFile < ScriptProjectError; end
 

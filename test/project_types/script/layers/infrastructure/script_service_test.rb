@@ -15,6 +15,7 @@ describe Script::Layers::Infrastructure::ScriptService do
   let(:script_json) do
     Script::Layers::Domain::ScriptJson.new(content: expected_script_json_content)
   end
+  let(:script_name) { "script name" }
   let(:expected_description) { "some description" }
   let(:expected_configuration_ui) { true }
   let(:expected_script_json_version) { "1" }
@@ -35,7 +36,7 @@ describe Script::Layers::Infrastructure::ScriptService do
   let(:expected_script_json_content) do
     {
       "version" => expected_script_json_version,
-      "title" => "script",
+      "title" => script_name,
       "description" => expected_description,
       "configurationUi" => expected_configuration_ui,
       "configuration" => expected_configuration,
@@ -54,7 +55,6 @@ describe Script::Layers::Infrastructure::ScriptService do
   end
 
   describe ".push" do
-    let(:script_name) { "foo_bar" }
     let(:script_content) { "(module)" }
     let(:api_key) { "fake_key" }
     let(:uuid_from_config) { "uuid_from_config" }
@@ -139,7 +139,6 @@ describe Script::Layers::Infrastructure::ScriptService do
           schema_minor_version,
           use_msgpack,
         ),
-        script_name: script_name,
         script_content: script_content,
         compiled_type: "AssemblyScript",
         script_json: script_json,
@@ -175,19 +174,6 @@ describe Script::Layers::Infrastructure::ScriptService do
 
       it "should post the form without scope" do
         assert_equal(uuid_from_server, subject)
-      end
-
-      describe "when script_json is nil" do
-        let(:script_json) { nil }
-        let(:expected_description) { nil }
-        let(:expected_script_json_content) { nil }
-        let(:expected_script_json_version) { nil }
-        let(:expected_configuration_ui) { nil }
-        let(:expected_configuration) { nil }
-
-        it "should succeed with a valid response" do
-          assert_equal(uuid_from_server, subject)
-        end
       end
     end
 

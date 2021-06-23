@@ -51,6 +51,9 @@ module Script
           invalid_config: "Can't change the configuration values because %1$s is missing or "\
                           "it is not formatted properly.",
 
+          missing_script_json_field_cause: "The script.json file is missing the required %s field.",
+          missing_script_json_field_help: "Add the field and try again.",
+
           invalid_script_json_definition_cause: "The script.json file contains invalid JSON.",
           invalid_script_json_definition_help: "Fix the errors and try again.",
 

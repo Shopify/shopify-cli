@@ -17,7 +17,6 @@ module TestHelpers
         id: id,
         uuid: script_project.uuid,
         extension_point_type: script_project.extension_point_type,
-        script_name: script_project.script_name,
         script_content: script_content,
         compiled_type: compiled_type,
         metadata: metadata,
