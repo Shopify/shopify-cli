@@ -4,6 +4,11 @@ require "project_types/rails/test_helper"
 module Rails
   module Commands
     class DeployTest < MiniTest::Test
+      def setup
+        super
+        ShopifyCli::Tasks::EnsureProjectType.expects(:call).with(@context, :rails)
+      end
+
       def test_without_arguments_calls_help
         @context.expects(:puts).with(Rails::Command::Deploy.help)
         run_deploy

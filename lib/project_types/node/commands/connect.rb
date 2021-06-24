@@ -2,6 +2,8 @@
 module Node
   class Command
     class Connect < ShopifyCli::SubCommand
+      prerequisite_task ensure_project_type: :node
+
       def call(*)
         if ShopifyCli::Project.has_current? && ShopifyCli::Project.current.env
           @ctx.puts(@ctx.message("node.connect.production_warning"))

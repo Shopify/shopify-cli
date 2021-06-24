@@ -10,6 +10,7 @@ module Extension
       def setup
         super
         ShopifyCli::ProjectType.load_type(:extension)
+        ShopifyCli::Tasks::EnsureProjectType.stubs(:call)
         @project = ExtensionTestHelpers.fake_extension_project(with_mocks: true, registration_id: nil)
         @specification_handler = ExtensionTestHelpers.test_specification_handler
 

@@ -3,6 +3,8 @@
 module Extension
   class Command
     class Serve < ExtensionCommand
+      prerequisite_task ensure_project_type: :extension
+
       DEFAULT_PORT = 39351
 
       options do |parser, flags|

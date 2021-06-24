@@ -4,6 +4,11 @@ require "project_types/rails/test_helper"
 module Rails
   module Commands
     class TunnelTest < MiniTest::Test
+      def setup
+        super
+        ShopifyCli::Tasks::EnsureProjectType.expects(:call).with(@context, :rails)
+      end
+
       def test_auth
         ShopifyCli::Tunnel.any_instance.expects(:auth)
         run_cmd("rails tunnel auth adfhauf98q7rtqhfkajf")

@@ -7,6 +7,8 @@ module Rails
     class Tunnel < ShopifyCli::SubCommand
       # subcommands :auth, :start, :stop
 
+      prerequisite_task ensure_project_type: :rails
+
       def call(args, _name)
         subcommand = args.shift
         case subcommand

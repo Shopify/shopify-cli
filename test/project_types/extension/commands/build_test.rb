@@ -10,6 +10,7 @@ module Extension
       def setup
         super
         ShopifyCli::ProjectType.load_type(:extension)
+        ShopifyCli::Tasks::EnsureProjectType.stubs(:call)
       end
 
       def test_is_a_hidden_command

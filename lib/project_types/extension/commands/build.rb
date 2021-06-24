@@ -6,6 +6,8 @@ module Extension
     class Build < ExtensionCommand
       hidden_feature
 
+      prerequisite_task ensure_project_type: :extension
+
       YARN_BUILD_COMMAND = %w(build)
       NPM_BUILD_COMMAND = %w(run-script build)
 

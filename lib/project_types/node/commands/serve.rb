@@ -2,6 +2,7 @@
 module Node
   class Command
     class Serve < ShopifyCli::SubCommand
+      prerequisite_task ensure_project_type: :node
       prerequisite_task :ensure_env, :ensure_dev_store
 
       options do |parser, flags|

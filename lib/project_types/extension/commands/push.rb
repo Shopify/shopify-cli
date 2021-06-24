@@ -4,6 +4,8 @@ require "shopify_cli"
 module Extension
   class Command
     class Push < ExtensionCommand
+      prerequisite_task ensure_project_type: :extension
+
       TIME_DISPLAY_FORMAT = "%B %d, %Y %H:%M:%S %Z"
 
       def call(args, name)
