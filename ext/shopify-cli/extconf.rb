@@ -4,7 +4,19 @@ require "fileutils"
 gem = File.expand_path("../../../", __FILE__)
 exe = File.join(gem, "bin", "shopify")
 
-if RUBY_PLATFORM.match(/mingw32/)
+# `--skip-cli-build` will be passed from the brew `shopify-cli.rb` formula, so
+# as to prevent this extension builder doing the script and sym-link creation;
+# the brew install process takes care of these itself - see
+# https://github.com/Shopify/homebrew-shopify/shopify-cli.rb
+if ARGV && ARGV[0]&.match(/skip-cli-build/)
+  makefile_content = <<~MAKEFILE
+    .PHONY: clean
+
+    clean: ;
+
+    install: ;
+  MAKEFILE
+elsif RUBY_PLATFORM.match(/mswin|mingw|cygwin/)
   bat_path = File.dirname(RbConfig.ruby)
   bat = "#{bat_path}\\shopify.bat"
 
