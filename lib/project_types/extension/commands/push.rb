@@ -60,6 +60,8 @@ module Extension
             extension_context: specification_handler.extension_context(@ctx)
           )
         end
+      rescue Extension::Errors::ExtensionError => e
+        @ctx.abort(e)
       end
     end
   end
