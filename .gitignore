@@ -11,6 +11,9 @@ markdown_intermediate
 .idea
 vendor/bundle
 *.gem
+node_modules
+package.json
+yarn.lock
 packaging/builds
 packaging/debian/shopify-cli
 packaging/debian/shopify-cli.deb
