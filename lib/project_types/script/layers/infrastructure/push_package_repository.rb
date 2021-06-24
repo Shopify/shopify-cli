@@ -15,11 +15,10 @@ module Script
             id: build_file_path,
             uuid: script_project.uuid,
             extension_point_type: script_project.extension_point_type,
-            script_name: script_project.script_name,
             script_content: script_content,
             compiled_type: compiled_type,
             metadata: metadata,
-            config_ui: script_project.config_ui,
+            script_json: script_project.script_json,
           )
         end
 
@@ -32,11 +31,10 @@ module Script
             id: build_file_path,
             uuid: script_project.uuid,
             extension_point_type: script_project.extension_point_type,
-            script_name: script_project.script_name,
             script_content: script_content,
             compiled_type: compiled_type,
             metadata: metadata,
-            config_ui: script_project.config_ui,
+            script_json: script_project.script_json,
           )
         end
 

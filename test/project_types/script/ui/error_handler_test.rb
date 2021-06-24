@@ -184,15 +184,15 @@ describe Script::UI::ErrorHandler do
         end
       end
 
-      describe "when InvalidConfigUiDefinitionError" do
-        let(:err) { Script::Layers::Domain::Errors::InvalidConfigUiDefinitionError.new("filename") }
+      describe "when InvalidScriptJsonDefinitionError" do
+        let(:err) { Script::Layers::Domain::Errors::InvalidScriptJsonDefinitionError.new("filename") }
         it "should call display_and_raise" do
           should_call_display_and_raise
         end
       end
 
-      describe "when MissingSpecifiedConfigUiDefinitionError" do
-        let(:err) { Script::Layers::Domain::Errors::MissingSpecifiedConfigUiDefinitionError.new("filename") }
+      describe "when NoScriptJsonFile" do
+        let(:err) { Script::Layers::Domain::Errors::NoScriptJsonFile.new("filename") }
         it "should call display_and_raise" do
           should_call_display_and_raise
         end
@@ -226,36 +226,36 @@ describe Script::UI::ErrorHandler do
         end
       end
 
-      describe "when ConfigUiSyntaxError" do
-        let(:err) { Script::Layers::Infrastructure::Errors::ConfigUiSyntaxError.new }
+      describe "when ScriptJsonSyntaxError" do
+        let(:err) { Script::Layers::Infrastructure::Errors::ScriptJsonSyntaxError.new }
         it "should call display_and_raise" do
           should_call_display_and_raise
         end
       end
 
-      describe "when ConfigUiMissingKeysError" do
-        let(:err) { Script::Layers::Infrastructure::Errors::ConfigUiMissingKeysError.new("file", "keys") }
+      describe "when ScriptJsonMissingKeysError" do
+        let(:err) { Script::Layers::Infrastructure::Errors::ScriptJsonMissingKeysError.new("keys") }
         it "should call display_and_raise" do
           should_call_display_and_raise
         end
       end
 
-      describe "when ConfigUiInvalidInputModeError" do
-        let(:err) { Script::Layers::Infrastructure::Errors::ConfigUiInvalidInputModeError.new("file", "input modes") }
+      describe "when ScriptJsonInvalidValueError" do
+        let(:err) { Script::Layers::Infrastructure::Errors::ScriptJsonInvalidValueError.new("input modes") }
         it "should call display_and_raise" do
           should_call_display_and_raise
         end
       end
 
-      describe "when ConfigUiFieldsMissingKeysError" do
-        let(:err) { Script::Layers::Infrastructure::Errors::ConfigUiFieldsMissingKeysError.new("file", "keys") }
+      describe "when ScriptJsonFieldsMissingKeysError" do
+        let(:err) { Script::Layers::Infrastructure::Errors::ScriptJsonFieldsMissingKeysError.new("keys") }
         it "should call display_and_raise" do
           should_call_display_and_raise
         end
       end
 
-      describe "when ConfigUiFieldsInvalidTypeError" do
-        let(:err) { Script::Layers::Infrastructure::Errors::ConfigUiFieldsInvalidTypeError.new("file", "types") }
+      describe "when ScriptJsonFieldsInvalidValueError" do
+        let(:err) { Script::Layers::Infrastructure::Errors::ScriptJsonFieldsInvalidValueError.new("types") }
         it "should call display_and_raise" do
           should_call_display_and_raise
         end

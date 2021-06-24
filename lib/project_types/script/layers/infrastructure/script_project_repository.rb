@@ -7,15 +7,11 @@ module Script
         include SmartProperties
         property! :ctx, accepts: ShopifyCli::Context
 
-        DEFAULT_CONFIG_UI_FILENAME = "config-ui.yml"
+        SCRIPT_JSON_FILENAME = "script.json"
         MUTABLE_ENV_VALUES = %i(uuid)
 
-        def create(script_name:, extension_point_type:, language:, no_config_ui:)
+        def create(script_name:, extension_point_type:, language:)
           validate_metadata!(extension_point_type, language)
-
-          config_ui_file = nil
-          optional_identifiers = {}
-          optional_identifiers.merge!(config_ui_file: DEFAULT_CONFIG_UI_FILENAME) unless no_config_ui
 
           ShopifyCli::Project.write(
             ctx,
@@ -23,8 +19,7 @@ module Script
             organization_id: nil,
             extension_point_type: extension_point_type,
             script_name: script_name,
-            language: language,
-            **optional_identifiers
+            language: language
           )
 
           Domain::ScriptProject.new(
@@ -32,15 +27,12 @@ module Script
             env: project.env,
             script_name: script_name,
             extension_point_type: extension_point_type,
-            language: language,
-            config_ui: config_ui_file
+            language: language
           )
         end
 
         def get
           validate_metadata!(extension_point_type, language)
-
-          config_ui = ConfigUiRepository.new(ctx: ctx).get(config_ui_file)
 
           Domain::ScriptProject.new(
             id: project.directory,
@@ -48,7 +40,7 @@ module Script
             script_name: script_name,
             extension_point_type: extension_point_type,
             language: language,
-            config_ui: config_ui
+            script_json: ScriptJsonRepository.new(ctx: ctx).get
           )
         end
 
@@ -66,7 +58,7 @@ module Script
             script_name: script_name,
             extension_point_type: extension_point_type,
             language: language,
-            config_ui: ConfigUiRepository.new(ctx: ctx).get(config_ui_file),
+            script_json: ScriptJsonRepository.new(ctx: ctx).get,
           )
         end
 
@@ -85,7 +77,22 @@ module Script
             script_name: script_name,
             extension_point_type: extension_point_type,
             language: language,
-            config_ui: ConfigUiRepository.new(ctx: ctx).get(config_ui_file),
+            script_json: ScriptJsonRepository.new(ctx: ctx).get,
+          )
+        end
+
+        def update_or_create_script_json(title:, configuration_ui: false)
+          script_json = ScriptJsonRepository
+            .new(ctx: ctx)
+            .update_or_create(title: title, configuration_ui: configuration_ui)
+
+          Domain::ScriptProject.new(
+            id: ctx.root,
+            env: project.env,
+            script_name: script_name,
+            extension_point_type: extension_point_type,
+            language: language,
+            script_json: script_json,
           )
         end
 
@@ -101,10 +108,6 @@ module Script
 
         def script_name
           project_config_value!("script_name")
-        end
-
-        def config_ui_file
-          project_config_value("config_ui_file")
         end
 
         def language
@@ -137,32 +140,40 @@ module Script
           end
         end
 
-        class ConfigUiRepository
+        class ScriptJsonRepository
           include SmartProperties
           property! :ctx, accepts: ShopifyCli::Context
 
-          def get(filename)
-            return nil unless filename
+          def get
+            current_script_json || raise(Domain::Errors::NoScriptJsonFile)
+          end
 
-            path = File.join(ctx.root, filename)
-            raise Domain::Errors::MissingSpecifiedConfigUiDefinitionError, filename unless File.exist?(path)
+          def update_or_create(title:, configuration_ui:)
+            json = current_script_json&.content || {}
+            json["version"] ||= "1"
+            json["title"] = title
+            json["configurationUi"] = !!configuration_ui
 
-            content = File.read(path)
-            raise Domain::Errors::InvalidConfigUiDefinitionError, filename unless valid_config_ui?(content)
+            ctx.write(SCRIPT_JSON_FILENAME, JSON.pretty_generate(json))
 
-            Domain::ConfigUi.new(
-              filename: filename,
-              content: content,
-            )
+            Domain::ScriptJson.new(content: json)
           end
 
           private
 
-          def valid_config_ui?(raw_yaml)
-            require "yaml" # takes 20ms, so deferred as late as possible.
-            YAML.safe_load(raw_yaml)
+          def current_script_json
+            return nil unless ctx.file_exist?(SCRIPT_JSON_FILENAME)
+
+            content = ctx.read(SCRIPT_JSON_FILENAME)
+            raise Domain::Errors::InvalidScriptJsonDefinitionError unless valid_script_json?(content)
+
+            Domain::ScriptJson.new(content: JSON.parse(content))
+          end
+
+          def valid_script_json?(content)
+            JSON.parse(content)
             true
-          rescue Psych::SyntaxError
+          rescue JSON::ParserError
             false
           end
         end

@@ -6,12 +6,8 @@ module TestHelpers
       @project = nil
     end
 
-    def create(script_name:, extension_point_type:, language:, no_config_ui:, env: nil)
-      config_ui_file = if no_config_ui
-        nil
-      else
-        FakeConfigUiRepository.new.create("config-ui.yml", "---\nversion: 1")
-      end
+    def create(script_name:, extension_point_type:, language:, env: nil)
+      script_json = fake_script_json_repo.create({ version: 1, title: script_name }.to_json)
 
       @project = Script::Layers::Domain::ScriptProject.new(
         id: "/#{script_name}",
@@ -19,7 +15,7 @@ module TestHelpers
         script_name: script_name,
         extension_point_type: extension_point_type,
         language: language,
-        config_ui: config_ui_file
+        script_json: script_json
       )
     end
 
@@ -40,20 +36,43 @@ module TestHelpers
       @project
     end
 
-    class FakeConfigUiRepository
+    def update_or_create_script_json(title:, configuration_ui: false)
+      script_json = fake_script_json_repo
+        .update_or_create(title: title, configuration_ui: configuration_ui)
+
+      @project.script_json = script_json
+      @project
+    end
+
+    private
+
+    def fake_script_json_repo
+      @fake_script_json_repo ||= FakeScriptJsonRepository.new
+    end
+
+    class FakeScriptJsonRepository
       def initialize
-        @cache = {}
+        @cache = nil
       end
 
-      def create(filename, content)
-        @cache[filename] = Script::Layers::Domain::ConfigUi.new(
-          filename: filename,
-          content: content,
+      def create(content)
+        @cache = Script::Layers::Domain::ScriptJson.new(
+          content: JSON.parse(content),
         )
       end
 
-      def get(filename)
-        @cache[filename]
+      def update_or_create(title:, configuration_ui:)
+        json = @cache&.content || {}
+        json["title"] = title
+        json["configurationUi"] = !!configuration_ui
+
+        @cache = Script::Layers::Domain::ScriptJson.new(
+          content: json,
+        )
+      end
+
+      def get
+        @cache
       end
     end
   end
