@@ -40,17 +40,13 @@ module Rails
               Options:
                 {{command:--name=NAME}} App name. Any string.
                 {{command:--organization-id=ID}} Partner organization ID. Must be an existing organization.
-                {{command:--shop-domain=MYSHOPIFYDOMAIN }} Development store URL. Must be an existing development store.
+                {{command:--store=MYSHOPIFYDOMAIN }} Development store URL. Must be an existing development store.
                 {{command:--db=DB}} Database type. Must be one of: mysql, postgresql, sqlite3, oracle, frontbase, ibm_db, sqlserver, jdbcmysql, jdbcsqlite3, jdbcpostgresql, jdbc.
                 {{command:--rails-opts=RAILSOPTS}} Additional options. Must be string containing one or more valid Rails options, separated by spaces.
           HELP
 
           error: {
-            invalid_ruby_version: <<~MSG,
-              This project requires a Ruby version ~> 2.5 or Ruby 3.0
-              See {{underline:https://github.com/Shopify/shopify-cli/blob/master/docs/installing-ruby.md}}
-              for our recommended method of installing ruby.
-            MSG
+            invalid_ruby_version: "This project requires a Ruby version ~> 2.5 or Ruby 3.0.",
             dir_exists: "Project directory %s already exists. Please use a different name.",
             install_failure: "Error installing %s gem",
             node_required: "node is required to create a rails project. Download at https://nodejs.org/en/download.",

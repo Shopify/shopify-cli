@@ -2,7 +2,7 @@ module Extension
   module ExtensionTestHelpers
     class DummyArgo < Extension::Features::Argo
       GIT_TEMPLATE = "https://something"
-      RENDERER_PACKAGE = "@shopify/argo-admin"
+      RENDERER_PACKAGE = "@shopify/admin-ui-extensions"
       private_constant :GIT_TEMPLATE, :RENDERER_PACKAGE
 
       property :fake_renderer_package, accepts: Models::NpmPackage

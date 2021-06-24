@@ -43,11 +43,11 @@ module Extension
         end
 
         def choose_port?(context)
-          argo_runtime(context).accepts_port?
+          argo_runtime(context).supports?(:port)
         end
 
         def establish_tunnel?(context)
-          argo_runtime(context).accepts_tunnel_url?
+          argo_runtime(context).supports?(:public_url)
         end
 
         def serve(context:, port:, tunnel_url:)

@@ -112,7 +112,7 @@ module ShopifyCli
         login: {
           help: <<~HELP,
             Log in to the Shopify CLI by authenticating with a store or partner organization
-              Usage: {{command:%s login [--shop=SHOP]}}
+              Usage: {{command:%s login [--store=STORE]}}
           HELP
           invalid_shop: <<~MESSAGE,
             Invalid store provided (%s). Please provide the store in the following format: my-store.myshopify.com
@@ -133,10 +133,10 @@ module ShopifyCli
 
         switch: {
           help: <<~HELP,
-            Switch between development stores in your Partner organization
-              Usage: {{command:%s switch [--shop=SHOP]}}
+            Switch between development stores in your partner organization
+              Usage: {{command:%s switch [--store=STORE]}}
           HELP
-
+          disabled_as_shopify_org: "Can't switch development stores logged in as {{green:Shopify partners org}}",
           success: "Switched development store to {{green:%s}}",
         },
 
@@ -191,6 +191,10 @@ module ShopifyCli
         api: {
           error: {
             failed_auth: "Failed to authenticate with Shopify. Please try again later.",
+            failed_auth_debugging: "{{red:Please provide this information with your report:}}\n%s\n\n",
+            forbidden: <<~FORBIDDEN,
+              Command not allowed with current login. Please check your login details with {{command:%s whoami}}. You may need to request additional permissions for this action.
+            FORBIDDEN
             internal_server_error: "{{red:{{x}} An unexpected error occurred on Shopify.}}",
             internal_server_error_debug: "\n{{red:Response details:}}\n%s\n\n",
             invalid_url: "Invalid URL: %s",
@@ -237,7 +241,7 @@ module ShopifyCli
           HELP
 
           error: {
-            no_shop: "No store found. Please run {{command:%s login --shop=SHOP}} to login to a specific store",
+            no_shop: "No store found. Please run {{command:%s login --store=STORE}} to login to a specific store",
           },
 
           customer: {
@@ -333,7 +337,6 @@ module ShopifyCli
           help: <<~HELP,
             Display current store.
               Usage: {{command:%s store}}
-
           HELP
           shop: "You're currently logged into {{green:%s}}",
         },
@@ -387,7 +390,7 @@ module ShopifyCli
               organization_not_found: "Cannot find a partner organization with that ID",
               shopifolk_notice: <<~MESSAGE,
                 {{i}} As a {{green:Shopify}} employee, the authentication should take you to the Shopify Okta login,
-                NOT the Partner account login. Please run {{command:%s logout}} and try again.
+                NOT the partner account login. Please run {{command:%s logout}} and try again.
               MESSAGE
             },
             first_party: "Are you working on a {{green:Shopify project}} on behalf of the"\
@@ -436,14 +439,6 @@ module ShopifyCli
 
           DEVELOPMENT
 
-          shell_shim: <<~MESSAGE,
-            {{x}} This version of Shopify CLI is no longer supported. You’ll need to migrate to the new CLI version to continue.
-
-              Please visit this page for complete instructions:
-              {{underline:https://shopify.dev/tools/cli/troubleshooting#migrate-from-a-legacy-version}}
-
-          MESSAGE
-
           new_version: <<~MESSAGE,
             {{*}} {{yellow:A new version of Shopify CLI is available! You have version %s and the latest version is %s.
 
@@ -451,6 +446,23 @@ module ShopifyCli
               {{underline:https://shopify.dev/tools/cli/troubleshooting#upgrade-shopify-cli}}}}
 
           MESSAGE
+        },
+
+        whoami: {
+          help: <<~HELP,
+            Identifies which partner organization or store you are currently logged into.
+              Usage: {{command:%s whoami}}
+          HELP
+          not_logged_in: <<~MESSAGE,
+            It doesn't appear that you're logged in. You must log into a partner organization or a store staff account.
+
+            If trying to log into a store staff account, please use {{command:%s login --store=STORE}} to log in.
+          MESSAGE
+          logged_in_shop_only: <<~MESSAGE,
+            Logged into store {{green:%s}} as staff (no partner organizations available for this login)
+          MESSAGE
+          logged_in_partner_only: "Logged into partner organization {{green:%s}}",
+          logged_in_partner_and_shop: "Logged into store {{green:%s}} in partner organization {{green:%s}}",
         },
       },
     }.freeze

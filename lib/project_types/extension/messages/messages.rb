@@ -46,6 +46,20 @@ module Extension
         loading_apps: "Loading your apps...",
         no_available_extensions: "{{x}} There are no available extensions for this app.",
       },
+      connect: {
+        connected: "Project now connected to {{green:%s: %s}}",
+        incomplete_configuration: "Cannot connect extension due to missing configuration information",
+        invalid_api_key: "The API key %s does not match any of your apps.",
+        ask_registration: "Which extension would you like to connect to?",
+        loading_extensions: "Loading your extensions...",
+        no_extensions: "{{x}} You don't have any extensions of type %s",
+        learn_about_extensions: "{{*}} Learn more about building extensions at <https://shopify.dev/concepts/apps>, " \
+          "or try creating a new extension using {{command:shopify extension create}}.",
+        help: <<~HELP,
+          {{command:%s extension connect}}: Connects an existing extension to Shopify CLI. Creates a config file.
+            Usage: {{command:%s extension connect}}
+        HELP
+      },
       build: {
         help: <<~HELP,
           Build your extension to prepare for deployment.

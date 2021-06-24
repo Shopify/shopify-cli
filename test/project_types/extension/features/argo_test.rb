@@ -70,7 +70,7 @@ module Extension
         yarn_list_result = <<~YARN
           yarn list v1.22.5
           ├─ @fake-package@0.3.9
-          └─ @shopify/argo-admin@0.3.8
+          └─ @shopify/admin-ui-extensions@0.3.8
           ✨  Done in 0.40s.
         YARN
 
@@ -89,7 +89,7 @@ module Extension
         npm_list_result = <<~NPM
           test-extension-template@0.1.0
           └─┬ @fake-package@0.4.3
-            └── @shopify/argo-admin@0.4.3
+            └── @shopify/admin-ui-extensions@0.4.3
             ✨  Done in 0.40s.
         NPM
 

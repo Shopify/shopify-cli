@@ -4,14 +4,14 @@ Shopify CLI is an open source project. We want to make it as easy and transparen
 
 ## Code of conduct
 
-We expect all participants to read our [code of conduct](https://github.com/Shopify/shopify-cli/blob/master/.github/CODE_OF_CONDUCT.md) to understand which actions are and aren’t tolerated.
+We expect all participants to read our [code of conduct](https://github.com/Shopify/shopify-cli/blob/main/.github/CODE_OF_CONDUCT.md) to understand which actions are and aren’t tolerated.
 
 ## Open development
 
 All work on Shopify CLI happens directly on GitHub. Both team members and external contributors send pull requests which go through the same review process.
 
 ## Design guidelines
-When contributing to the Shopify CLI, there are a set of [design guidelines](https://github.com/Shopify/shopify-cli/blob/master/.github/DESIGN.md) that should be followed. The design guidelines are meant to help create a consistent and predictable experience for all users of the tool, and help make descisions quicker when creating new commands or adding to existing ones.
+When contributing to the Shopify CLI, there are a set of [design guidelines](https://github.com/Shopify/shopify-cli/blob/main/.github/DESIGN.md) that should be followed. The design guidelines are meant to help create a consistent and predictable experience for all users of the tool, and help make descisions quicker when creating new commands or adding to existing ones.
 
 ## Bugs
 

@@ -1,5 +1,6 @@
 Unreleased
 ------
+* [#215](https://github.com/Shopify/shopify-cli/pull/215): Allows new Checkout Extensions to specify configuration attributes in their extension.config.yml file.
 
 Version 1.14.0
 --------------

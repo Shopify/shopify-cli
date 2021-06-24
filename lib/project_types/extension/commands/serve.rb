@@ -12,7 +12,7 @@ module Extension
       class RuntimeConfiguration
         include SmartProperties
 
-        property! :tunnel_url, accepts: String, default: ""
+        property :tunnel_url, accepts: String, default: nil
         property! :tunnel_requested, accepts: [true, false], reader: :tunnel_requested?, default: true
         property! :port, accepts: (1...(2**16)), default: DEFAULT_PORT
       end

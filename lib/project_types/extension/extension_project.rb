@@ -82,6 +82,11 @@ module Extension
     private
 
     def get_extra_field(key)
+      unless env
+        Kernel.puts("Run the command inside the correct extension directory.")
+        exit
+      end
+
       extra = env[:extra] || {}
       extra[key]
     end

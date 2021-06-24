@@ -8,11 +8,13 @@ module Node
         # backwards compatibility allow 'title' for now
         parser.on("--title=TITLE") { |t| flags[:title] = t }
         parser.on("--name=NAME") { |t| flags[:title] = t }
-        parser.on("--organization_id=ID") { |url| flags[:organization_id] = url }
-        parser.on("--organization-id=ID") { |url| flags[:organization_id] = url }
+        parser.on("--organization_id=ID") { |id| flags[:organization_id] = id }
+        parser.on("--organization-id=ID") { |id| flags[:organization_id] = id }
+        parser.on("--store=MYSHOPIFYDOMAIN") { |url| flags[:shop_domain] = url }
+        # backwards compatibility allow 'shop domain' for now
         parser.on("--shop_domain=MYSHOPIFYDOMAIN") { |url| flags[:shop_domain] = url }
         parser.on("--shop-domain=MYSHOPIFYDOMAIN") { |url| flags[:shop_domain] = url }
-        parser.on("--type=APPTYPE") { |url| flags[:type] = url }
+        parser.on("--type=APPTYPE") { |type| flags[:type] = type }
         parser.on("--verbose") { flags[:verbose] = true }
       end
 

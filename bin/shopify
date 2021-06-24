@@ -21,7 +21,7 @@ module Kernel
     STDERR.puts "       They are disabled."
     STDERR.puts "       Please don't modify the CLI locally."
     STDERR.puts "       If you would like to contribute to the CLI project, please refer to"
-    STDERR.puts "       https://github.com/Shopify/shopify-cli/blob/master/.github/CONTRIBUTING.md"
+    STDERR.puts "       https://github.com/Shopify/shopify-cli/blob/main/.github/CONTRIBUTING.md"
     STDERR.puts "\n"
     raise
   end

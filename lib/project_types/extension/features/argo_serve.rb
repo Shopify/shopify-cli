@@ -3,25 +3,29 @@ module Extension
     class ArgoServe
       include SmartProperties
 
+      YARN_SERVE_COMMAND = %w(server)
+      NPM_SERVE_COMMAND = %w(run-script server)
+
       property! :specification_handler, accepts: Extension::Models::SpecificationHandlers::Default
       property! :argo_runtime, accepts: Features::ArgoRuntime
       property! :context, accepts: ShopifyCli::Context
       property! :port, accepts: Integer, default: 39351
-      property  :tunnel_url, accepts: String, default: ""
+      property  :tunnel_url, accepts: String, default: nil
+      property! :js_system, accepts: ->(jss) { jss.respond_to?(:call) }, default: ShopifyCli::JsSystem
 
       def call
         validate_env!
 
         CLI::UI::Frame.open(context.message("serve.frame_title")) do
-          success = call_js_system(yarn_command: yarn_serve_command, npm_command: npm_serve_command)
-          context.abort(context.message("serve.serve_failure_message")) unless success
+          next if start_server
+          context.abort(context.message("serve.serve_failure_message"))
         end
       end
 
       private
 
-      def call_js_system(yarn_command:, npm_command:)
-        ShopifyCli::JsSystem.call(context, yarn: yarn_command, npm: npm_command)
+      def start_server
+        js_system.call(context, yarn: yarn_serve_command, npm: npm_serve_command)
       end
 
       def specification
@@ -36,23 +40,12 @@ module Extension
         specification.features.argo.required_fields
       end
 
-      def serve_options
-        @options ||= Features::ArgoServeOptions.new(
-          argo_runtime: argo_runtime,
-          port: port,
-          context: context,
-          required_fields: required_fields,
-          renderer_package: renderer_package,
-          public_url: tunnel_url
-        )
-      end
-
       def yarn_serve_command
-        serve_options.yarn_serve_command
+        YARN_SERVE_COMMAND + options
       end
 
       def npm_serve_command
-        serve_options.npm_serve_command
+        NPM_SERVE_COMMAND  + ["--"] + options
       end
 
       def validate_env!
@@ -71,6 +64,20 @@ module Extension
         end
 
         context.abort(context.message("serve.serve_missing_information"))
+      end
+
+      def options
+        project = ExtensionProject.current
+
+        @serve_options ||= [].tap do |options|
+          options << "--port=#{port}" if argo_runtime.supports?(:port)
+          options << "--store=#{project.env.shop}" if argo_runtime.supports?(:shop)
+          options << "--apiKey=#{project.env.api_key}" if argo_runtime.supports?(:api_key)
+          options << "--rendererVersion=#{renderer_package.version}" if argo_runtime.supports?(:renderer_version)
+          options << "--uuid=#{project.registration_uuid}" if argo_runtime.supports?(:uuid)
+          options << "--publicUrl=#{tunnel_url}" if !tunnel_url.nil? && argo_runtime.supports?(:public_url)
+          options << "--name=#{project.title}" if argo_runtime.supports?(:name)
+        end
       end
     end
   end
