@@ -324,7 +324,7 @@ module ShopifyCli
     #
     def open_browser_url!(uri)
       if tty?
-        if linux?
+        if linux? && which("xdg-open")
           system("xdg-open", uri.to_s)
         elsif windows?
           system("start", uri.to_s)

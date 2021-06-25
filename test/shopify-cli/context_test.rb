@@ -78,7 +78,7 @@ module ShopifyCli
       { tty: true, mac: true, windows: false, linux: false, expect_output: false, expect_system: "open" },
       { tty: true, mac: false, windows: true, linux: false, expect_output: false, expect_system: "start" },
       { tty: true, mac: false, windows: false, linux: true, expect_output: false, expect_system: "xdg-open" },
-      { tty: true, mac: true, windows: true, linux: true, expect_output: false, expect_system: "xdg-open" },
+      { tty: true, mac: false, windows: false, linux: true, expect_output: true, expect_system: nil },
       { tty: true, mac: false, windows: false, linux: false, expect_output: true },
       { tty: false, mac: true, windows: false, linux: false, expect_output: true },
     ].each do |test|
@@ -94,6 +94,7 @@ module ShopifyCli
         @ctx.stubs(:mac?).returns(test[:mac])
         @ctx.stubs(:windows?).returns(test[:windows])
         @ctx.stubs(:linux?).returns(test[:linux])
+        @ctx.stubs(:which).returns(test[:expect_system]) if test[:linux]
         if test[:expect_output]
           @ctx.expects(:open_url!)
         else
