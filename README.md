@@ -77,7 +77,7 @@ After you install Shopify CLI, you need to authenticate your CLI instance and co
 
 Run:
 
-`shopify login --shop=<your-shop-url>`
+`shopify login --store=<your-shop-url>`
 
 When prompted, open the provided accounts.shopify.com URL in a browser. In your browser window, log into the account that's attached to the store that you want to use for development.
 
