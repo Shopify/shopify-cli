@@ -70,12 +70,12 @@ module Extension
 
         def test_handles_binary
           binary_data = "\x00\x01\x02\r\n\x03\x04".encode("BINARY")
-          write("assets/test.bin", binary_data, mode: "wb", encoding: "BINARY")
+          write("assets/test.png", binary_data, mode: "wb", encoding: "BINARY")
 
           expected = {
             "theme_extension" => {
               "files" => {
-                "assets/test.bin" => Base64.encode64(binary_data),
+                "assets/test.png" => Base64.encode64(binary_data),
               },
             },
           }
@@ -84,16 +84,23 @@ module Extension
           assert_equal(expected, config)
         end
 
+        def test_files_at_root
+          write("readme.liquid", "hello")
+          assert_raises Extension::Errors::InvalidFilenameError do
+            @spec.config(@context)
+          end
+        end
+
         def test_validates_buckets
           write("invalid/readme.txt", "hello")
-          assert_raises Extension::Errors::InvalidDirectoryError do
+          assert_raises Extension::Errors::InvalidFilenameError do
             @spec.config(@context)
           end
         end
 
         def test_validates_nested_files
           write("invalid/blocks/app.liquid", "hello")
-          assert_raises Extension::Errors::InvalidDirectoryError do
+          assert_raises Extension::Errors::InvalidFilenameError do
             @spec.config(@context)
           end
         end
@@ -102,12 +109,55 @@ module Extension
           assert(@spec.specification.options[:skip_build])
         end
 
+        def test_max_filesize
+          stub_const(ThemeAppExtension, :BUNDLE_SIZE_LIMIT, 50) do
+            write("assets/test.png", "1" * 1000)
+            assert_raises Extension::Errors::BundleTooLargeError do
+              @spec.config(@context)
+            end
+          end
+        end
+
+        def test_bad_asset_types
+          ThemeAppExtension::SUPPORTED_ASSET_EXTS.each do |ext|
+            write("assets/test#{ext}1", "hello")
+            assert_raises Extension::Errors::InvalidFilenameError do
+              @spec.config(@context)
+            end
+          end
+        end
+
+        def test_too_much_liquid
+          stub_const(ThemeAppExtension, :LIQUID_SIZE_LIMIT, 50) do
+            write("blocks/app1.liquid", "1" * 25)
+            write("blocks/app2.liquid", "2" * 26)
+            assert_raises Extension::Errors::BundleTooLargeError do
+              @spec.config(@context)
+            end
+          end
+        end
+
         private
 
         def write(filename, content, mode: "w", encoding: "utf-8")
           filename = File.join(@context.root, filename)
           FileUtils.mkdir_p(File.dirname(filename))
           File.write(filename, content, mode: mode, encoding: encoding)
+        end
+
+        def stub_const(object, name, value)
+          original = object.const_get(name)
+          silent_const_set(object, name, value)
+          yield
+        ensure
+          silent_const_set(object, name, original)
+        end
+
+        def silent_const_set(object, name, value)
+          old_verbose = $VERBOSE
+          $VERBOSE = nil
+          object.const_set(name, value)
+          $VERBOSE = old_verbose
         end
       end
     end

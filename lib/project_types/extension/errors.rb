@@ -2,6 +2,8 @@
 
 module Extension
   module Errors
-    class InvalidDirectoryError < StandardError; end
+    class ExtensionError < StandardError; end
+    class InvalidFilenameError < ExtensionError; end
+    class BundleTooLargeError < ExtensionError; end
   end
 end
