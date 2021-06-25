@@ -4,6 +4,7 @@
 Vagrant.configure("2") do |config|
   config.vm.network("forwarded_port", guest: 3456, host: 3456, host_ip: "127.0.0.1")
   config.vm.network("forwarded_port", guest: 8081, host: 8081, host_ip: "127.0.0.1")
+  config.vm.network("forwarded_port", guest: 9292, host: 19292, host_ip: "127.0.0.1")
   config.vm.network("forwarded_port", guest: 39351, host: 39351, host_ip: "127.0.0.1")
 
   config.vm.define("ubuntu_chruby", autostart: false) do |chruby|
