@@ -21,7 +21,7 @@ module Theme
           editor_url: "https://test.myshopify.io/",
           live?: false,
         )
-        @uploader = mock("Uploader")
+        @syncer = stub("Syncer", delay_errors!: nil, report_errors!: nil)
         @ignore_filter = mock("IgnoreFilter")
       end
 
@@ -32,14 +32,14 @@ module Theme
 
         ShopifyCli::Theme::IgnoreFilter.expects(:from_path).with(".").returns(@ignore_filter)
 
-        ShopifyCli::Theme::Uploader.expects(:new)
+        ShopifyCli::Theme::Syncer.expects(:new)
           .with(@ctx, theme: @theme, ignore_filter: @ignore_filter)
-          .returns(@uploader)
+          .returns(@syncer)
 
-        @uploader.expects(:start_threads)
-        @uploader.expects(:shutdown)
+        @syncer.expects(:start_threads)
+        @syncer.expects(:shutdown)
 
-        @uploader.expects(:upload_theme_with_progress_bar!).with(delete: true)
+        @syncer.expects(:upload_theme!).with(delete: true)
         @ctx.expects(:done)
 
         @command.options.flags[:theme_id] = 1234
@@ -57,14 +57,14 @@ module Theme
 
         ShopifyCli::Theme::IgnoreFilter.expects(:from_path).with(".").returns(@ignore_filter)
 
-        ShopifyCli::Theme::Uploader.expects(:new)
+        ShopifyCli::Theme::Syncer.expects(:new)
           .with(@ctx, theme: @theme, ignore_filter: @ignore_filter)
-          .returns(@uploader)
+          .returns(@syncer)
 
-        @uploader.expects(:start_threads)
-        @uploader.expects(:shutdown)
+        @syncer.expects(:start_threads)
+        @syncer.expects(:shutdown)
 
-        @uploader.expects(:upload_theme_with_progress_bar!).with(delete: true)
+        @syncer.expects(:upload_theme!).with(delete: true)
         @ctx.expects(:done)
 
         @command.options.flags[:theme_id] = 1234
@@ -82,14 +82,14 @@ module Theme
 
         ShopifyCli::Theme::IgnoreFilter.expects(:from_path).with(".").returns(@ignore_filter)
 
-        ShopifyCli::Theme::Uploader.expects(:new)
+        ShopifyCli::Theme::Syncer.expects(:new)
           .with(@ctx, theme: @theme, ignore_filter: @ignore_filter)
-          .returns(@uploader)
+          .returns(@syncer)
 
-        @uploader.expects(:start_threads)
-        @uploader.expects(:shutdown)
+        @syncer.expects(:start_threads)
+        @syncer.expects(:shutdown)
 
-        @uploader.expects(:upload_theme_with_progress_bar!).with(delete: true)
+        @syncer.expects(:upload_theme!).with(delete: true)
         @ctx.expects(:done)
 
         @command.options.flags[:theme_id] = 1234
@@ -106,14 +106,14 @@ module Theme
 
         ShopifyCli::Theme::IgnoreFilter.expects(:from_path).with(".").returns(@ignore_filter)
 
-        ShopifyCli::Theme::Uploader.expects(:new)
+        ShopifyCli::Theme::Syncer.expects(:new)
           .with(@ctx, theme: @theme, ignore_filter: @ignore_filter)
-          .returns(@uploader)
+          .returns(@syncer)
 
-        @uploader.expects(:start_threads)
-        @uploader.expects(:shutdown)
+        @syncer.expects(:start_threads)
+        @syncer.expects(:shutdown)
 
-        @uploader.expects(:upload_theme!).with(delete: true)
+        @syncer.expects(:upload_theme!).with(delete: true)
         @command.expects(:puts).with("{\"theme\":{}}")
 
         @ctx.expects(:puts).never
@@ -130,14 +130,14 @@ module Theme
 
         ShopifyCli::Theme::IgnoreFilter.expects(:from_path).with(".").returns(@ignore_filter)
 
-        ShopifyCli::Theme::Uploader.expects(:new)
+        ShopifyCli::Theme::Syncer.expects(:new)
           .with(@ctx, theme: @theme, ignore_filter: @ignore_filter)
-          .returns(@uploader)
+          .returns(@syncer)
 
-        @uploader.expects(:start_threads)
-        @uploader.expects(:shutdown)
+        @syncer.expects(:start_threads)
+        @syncer.expects(:shutdown)
 
-        @uploader.expects(:upload_theme_with_progress_bar!).with(delete: true)
+        @syncer.expects(:upload_theme!).with(delete: true)
         @ctx.expects(:done)
         @theme.expects(:publish)
 
@@ -155,14 +155,14 @@ module Theme
 
         ShopifyCli::Theme::IgnoreFilter.expects(:from_path).with(".").returns(@ignore_filter)
 
-        ShopifyCli::Theme::Uploader.expects(:new)
+        ShopifyCli::Theme::Syncer.expects(:new)
           .with(@ctx, theme: @theme, ignore_filter: @ignore_filter)
-          .returns(@uploader)
+          .returns(@syncer)
 
-        @uploader.expects(:start_threads)
-        @uploader.expects(:shutdown)
+        @syncer.expects(:start_threads)
+        @syncer.expects(:shutdown)
 
-        @uploader.expects(:upload_theme_with_progress_bar!).with(delete: true)
+        @syncer.expects(:upload_theme!).with(delete: true)
 
         @ctx.expects(:done)
 
@@ -181,14 +181,14 @@ module Theme
 
         ShopifyCli::Theme::IgnoreFilter.expects(:from_path).with(".").returns(@ignore_filter)
 
-        ShopifyCli::Theme::Uploader.expects(:new)
+        ShopifyCli::Theme::Syncer.expects(:new)
           .with(@ctx, theme: @theme, ignore_filter: @ignore_filter)
-          .returns(@uploader)
+          .returns(@syncer)
 
-        @uploader.expects(:start_threads)
-        @uploader.expects(:shutdown)
+        @syncer.expects(:start_threads)
+        @syncer.expects(:shutdown)
 
-        @uploader.expects(:upload_theme_with_progress_bar!).with(delete: true)
+        @syncer.expects(:upload_theme!).with(delete: true)
 
         @ctx.expects(:done)
 
@@ -196,21 +196,21 @@ module Theme
         @command.call([], "push")
       end
 
-      def test_push_pass_nodelete_to_uploader
+      def test_push_pass_nodelete_to_syncer
         ShopifyCli::Theme::Theme.expects(:new)
           .with(@ctx, root: ".", id: 1234)
           .returns(@theme)
 
         ShopifyCli::Theme::IgnoreFilter.expects(:from_path).with(".").returns(@ignore_filter)
 
-        ShopifyCli::Theme::Uploader.expects(:new)
+        ShopifyCli::Theme::Syncer.expects(:new)
           .with(@ctx, theme: @theme, ignore_filter: @ignore_filter)
-          .returns(@uploader)
+          .returns(@syncer)
 
-        @uploader.expects(:start_threads)
-        @uploader.expects(:shutdown)
+        @syncer.expects(:start_threads)
+        @syncer.expects(:shutdown)
 
-        @uploader.expects(:upload_theme_with_progress_bar!).with(delete: false)
+        @syncer.expects(:upload_theme!).with(delete: false)
 
         @ctx.expects(:done)
 
@@ -223,16 +223,16 @@ module Theme
         CLI::UI::Prompt.expects(:ask).returns(@theme)
         @ctx.expects(:done)
 
-        @uploader.expects(:upload_theme_with_progress_bar!).with(delete: true)
+        @syncer.expects(:upload_theme!).with(delete: true)
 
         ShopifyCli::Theme::IgnoreFilter.expects(:from_path).with(".").returns(@ignore_filter)
 
-        ShopifyCli::Theme::Uploader.expects(:new)
+        ShopifyCli::Theme::Syncer.expects(:new)
           .with(@ctx, theme: @theme, ignore_filter: @ignore_filter)
-          .returns(@uploader)
+          .returns(@syncer)
 
-        @uploader.expects(:start_threads)
-        @uploader.expects(:shutdown)
+        @syncer.expects(:start_threads)
+        @syncer.expects(:shutdown)
 
         @command.call([], "push")
       end
@@ -241,7 +241,7 @@ module Theme
         CLI::UI::Prompt.expects(:ask).raises(ShopifyCli::Abort)
         @ctx.expects(:puts)
 
-        ShopifyCli::Theme::Uploader.expects(:new).never
+        ShopifyCli::Theme::Syncer.expects(:new).never
 
         @command.call([], "push")
       end

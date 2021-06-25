@@ -7,10 +7,11 @@ module Theme
 
   class Command < ShopifyCli::ProjectCommands
     subcommand :Serve, "serve", Project.project_filepath("commands/serve")
+    subcommand :Pull, "pull", Project.project_filepath("commands/pull")
     subcommand :Push, "push", Project.project_filepath("commands/push")
+    subcommand :Delete, "delete", Project.project_filepath("commands/delete")
     subcommand :Check, "check", Project.project_filepath("commands/check")
     subcommand :Publish, "publish", Project.project_filepath("commands/publish")
-    subcommand :Delete, "delete", Project.project_filepath("commands/delete")
     subcommand :Package, "package", Project.project_filepath("commands/package")
     subcommand :LanguageServer, "language-server", Project.project_filepath("commands/language_server")
   end
@@ -19,5 +20,9 @@ module Theme
   module Forms
     autoload :ConfirmStore, Project.project_filepath("forms/confirm_store")
     autoload :Select, Project.project_filepath("forms/select")
+  end
+
+  module UI
+    autoload :SyncProgressBar, Project.project_filepath("ui/sync_progress_bar")
   end
 end

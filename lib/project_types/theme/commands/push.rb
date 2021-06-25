@@ -2,7 +2,7 @@
 require "shopify-cli/theme/theme"
 require "shopify-cli/theme/development_theme"
 require "shopify-cli/theme/ignore_filter"
-require "shopify-cli/theme/uploader"
+require "shopify-cli/theme/syncer"
 
 module Theme
   class Command
@@ -48,15 +48,15 @@ module Theme
         end
 
         ignore_filter = ShopifyCli::Theme::IgnoreFilter.from_path(root)
-        uploader = ShopifyCli::Theme::Uploader.new(@ctx, theme: theme, ignore_filter: ignore_filter)
+        syncer = ShopifyCli::Theme::Syncer.new(@ctx, theme: theme, ignore_filter: ignore_filter)
         begin
-          uploader.start_threads
+          syncer.start_threads
           if options.flags[:json]
-            uploader.upload_theme!(delete: delete)
+            syncer.upload_theme!(delete: delete)
             puts(JSON.generate(theme: theme.to_h))
           else
             CLI::UI::Frame.open(@ctx.message("theme.push.info.pushing", theme.name, theme.id, theme.shop)) do
-              uploader.upload_theme_with_progress_bar!(delete: delete)
+              UI::SyncProgressBar.new(syncer).progress(:upload_theme!, delete: delete)
             end
 
             if options.flags[:publish]
@@ -69,7 +69,7 @@ module Theme
         rescue ShopifyCli::API::APIRequestNotFoundError
           @ctx.abort(@ctx.message("theme.push.theme_not_found", theme.id))
         ensure
-          uploader.shutdown
+          syncer.shutdown
         end
       end
 

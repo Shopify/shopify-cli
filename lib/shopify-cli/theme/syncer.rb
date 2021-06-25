@@ -5,7 +5,7 @@ require "base64"
 
 module ShopifyCli
   module Theme
-    class Uploader
+    class Syncer
       class Operation < Struct.new(:method, :file)
         def to_s
           "#{method} #{file&.relative_path}"
@@ -14,6 +14,7 @@ module ShopifyCli
       API_VERSION = "unstable"
 
       attr_reader :checksums
+      attr_accessor :ignore_filter
 
       def initialize(ctx, theme:, ignore_filter: nil)
         @ctx = ctx
@@ -41,6 +42,10 @@ module ShopifyCli
         files.each { |file| enqueue(:update, file) }
       end
 
+      def enqueue_get(files)
+        files.each { |file| enqueue(:get, file) }
+      end
+
       def enqueue_deletes(files)
         files.each { |file| enqueue(:delete, file) }
       end
@@ -62,7 +67,7 @@ module ShopifyCli
       end
 
       def wait!
-        raise ThreadError, "No uploader threads" if @threads.empty?
+        raise ThreadError, "No syncer threads" if @threads.empty?
         total = size
         last_size = size
         until empty? || @queue.closed?
@@ -97,7 +102,7 @@ module ShopifyCli
               operation = @queue.pop
               break if operation.nil? # shutdown was called
               perform(operation)
-            rescue => e
+            rescue Exception => e
               report_error(
                 "{{red:ERROR}} {{blue:#{operation}}}: #{e}" +
                 (@ctx.debug? ? "\n\t#{e.backtrace.join("\n\t")}" : "")
@@ -151,20 +156,30 @@ module ShopifyCli
         end
       end
 
-      def upload_theme_with_progress_bar!(**args)
-        delay_errors!
-        CLI::UI::Progress.progress do |bar|
-          upload_theme!(**args) do |left, total|
-            bar.tick(set_percent: 1 - left.to_f / total)
+      def download_theme!(delete: true, &block)
+        fetch_checksums!
+
+        if delete
+          # Delete local files not present remotely
+          missing_files = @theme.theme_files
+            .reject { |file| checksums.key?(file.relative_path.to_s) }.uniq
+            .reject { |file| @ignore_filter&.ignore?(file) }
+          missing_files.each do |file|
+            @ctx.debug("rm #{file.relative_path}")
+            file.delete
           end
-          bar.tick(set_percent: 1)
         end
-        report_errors!
+
+        enqueue_get(checksums.keys)
+
+        wait!(&block)
       end
 
       private
 
       def enqueue(method, file)
+        raise ArgumentError, "file required" unless file
+
         operation = Operation.new(method, @theme[file])
 
         # Already enqueued
@@ -175,7 +190,7 @@ module ShopifyCli
           return
         end
 
-        if method == :update && operation.file.exist? && !file_has_changed?(operation.file)
+        if [:update, :get].include?(method) && operation.file.exist? && !file_has_changed?(operation.file)
           @ctx.debug("skip #{operation}")
           return
         end
@@ -227,6 +242,24 @@ module ShopifyCli
         response
       end
 
+      def get(file)
+        _status, body, response = ShopifyCli::AdminAPI.rest_request(
+          @ctx,
+          shop: @theme.shop,
+          path: "themes/#{@theme.id}/assets.json",
+          method: "GET",
+          api_version: API_VERSION,
+          query: URI.encode_www_form("asset[key]" => file.relative_path.to_s),
+        )
+
+        update_checksums(body)
+
+        value = body.dig("asset", "value") || Base64.decode64(body.dig("asset", "attachment"))
+        file.write(value)
+
+        response
+      end
+
       def delete(file)
         _status, _body, response = ShopifyCli::AdminAPI.rest_request(
           @ctx,
@@ -244,7 +277,9 @@ module ShopifyCli
 
       def update_checksums(api_response)
         api_response.values.flatten.each do |asset|
-          @checksums[asset["key"]] = asset["checksum"]
+          if asset["key"] && asset["checksum"]
+            @checksums[asset["key"]] = asset["checksum"]
+          end
         end
         # Generate .liquid asset files are reported twice in checksum:
         # once of generated, once for .liquid. We only keep the .liquid, that's the one we have
