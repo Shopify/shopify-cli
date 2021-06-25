@@ -10,6 +10,7 @@ module Node
         super
         project_context("app_types", "node")
         ShopifyCli::Tasks::EnsureDevStore.stubs(:call)
+        ShopifyCli::Tasks::EnsureProjectType.expects(:call).with(@context, :node)
         @context.stubs(:system)
       end
 

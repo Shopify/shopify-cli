@@ -4,6 +4,8 @@ require "shopify_cli"
 module Rails
   class Command
     class Deploy < ShopifyCli::SubCommand
+      prerequisite_task ensure_project_type: :rails
+
       autoload :Heroku, Project.project_filepath("commands/deploy/heroku")
 
       HEROKU = "heroku"

@@ -42,13 +42,16 @@ module ShopifyCli
         )
       end
 
-      def prerequisite_task(*tasks)
+      def prerequisite_task(*tasks_without_args, **tasks_with_args)
         @prerequisite_tasks ||= []
-        @prerequisite_tasks += tasks
+        @prerequisite_tasks += tasks_without_args.map { |t| PrerequisiteTask.new(t) }
+        @prerequisite_tasks += tasks_with_args.map { |t, args| PrerequisiteTask.new(t, args) }
       end
 
       def run_prerequisites
-        (@prerequisite_tasks || []).each { |task| task_registry[task]&.call(@ctx) }
+        (@prerequisite_tasks || []).each do |task|
+          task_registry[task.name]&.call(@ctx, *task.args)
+        end
       end
 
       def task_registry
@@ -58,6 +61,15 @@ module ShopifyCli
       def call_help(*cmds)
         help = Commands::Help.new(@ctx)
         help.call(cmds, nil)
+      end
+
+      class PrerequisiteTask
+        attr_reader :name, :args
+
+        def initialize(name, args = [])
+          @name = name
+          @args = args
+        end
       end
     end
 

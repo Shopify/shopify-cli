@@ -4,6 +4,11 @@ require "project_types/rails/test_helper"
 module Rails
   module Commands
     class GenerateTest < MiniTest::Test
+      def setup
+        super
+        ShopifyCli::Tasks::EnsureProjectType.stubs(:call)
+      end
+
       def test_without_arguments_calls_help
         @context.expects(:puts).with(Rails::Command::Generate.help)
         run_generate

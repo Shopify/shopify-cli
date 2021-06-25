@@ -4,6 +4,8 @@ require "shopify_cli"
 module Extension
   class Command
     class Tunnel < ExtensionCommand
+      prerequisite_task ensure_project_type: :extension
+
       options do |parser, flags|
         parser.on("--port=PORT") { |port| flags[:port] = port }
       end
