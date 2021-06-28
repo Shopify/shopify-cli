@@ -3,143 +3,147 @@ module Theme
   module Messages
     MESSAGES = {
       theme: {
-        connect: {
-          duplicate: "Duplicate directory, theme files weren't connected",
-          help: <<~HELP,
-            {{command:%s connect theme}}: Connects an existing theme in your store to Shopify App CLI. Downloads a copy of the theme files to your local development environment.
-              Usage: {{command:%s connect theme}}
-              Options:
-                {{command:--store=MYSHOPIFYDOMAIN}} Store URL. Must be an existing store with private apps enabled.
-                {{command:--password=PASSWORD}} Private app password. App must have Read and Write Theme access.
-                {{command:--themeid=THEMEID}} Theme ID. Must be an existing theme on your store.
-          HELP
-          inside_project: "You are inside an existing theme, theme files weren't connected",
-          connect: "Downloading theme files...",
-          failed: "Couldn't download theme files from store",
-          connected: "{{green:%s}} files were downloaded from {{underline:%s}} to {{green:%s}}",
-        },
-        create: {
-          creating_theme: "Creating theme %s",
-          duplicate_theme: "Duplicate theme",
-          failed: "Couldn't create the theme",
-          help: <<~HELP,
-            {{command:%s create theme}}: Creates a theme.
-              Usage: {{command:%s create theme}}
-              Options:
-                {{command:--store=MYSHOPIFYDOMAIN}} Store URL. Must be an existing store with private apps enabled.
-                {{command:--password=PASSWORD}} Private app password. App must have Read and Write Theme access.
-                {{command:--name=NAME}} Theme name. Any string.
-          HELP
-          info: {
-            created: "{{green:%s}} was created for {{underline:%s}} in {{green:%s}}",
-          },
-        },
-        deploy: {
-          abort: "Theme wasn't deployed",
-          confirmation: "This will change your live theme. Do you wish to proceed?",
+        help: <<~HELP,
+          Suite of commands for developing Shopify themes. See {{command:%1$s theme <command> --help}} for usage of each command.
+            Usage: {{command:%1$s theme [ %2$s ]}}
+        HELP
+
+        publish: {
+          confirmation: "This will change your live theme. Do you want to continue?",
           deploying: "Deploying theme",
           error: "Theme couldn't be deployed",
           help: <<~HELP,
-            {{command:%s deploy}}: Uploads your local theme files to Shopify, then sets your theme as the live theme.
-              Usage: {{command:%s deploy}}
+            {{command:%s theme publish}}: Set a remote theme as the live theme.
+              Usage: {{command:%s theme publish [ THEME_ID ]}}
+
+              Options:
+                {{command:-f, --force}}         Skip confirmation.
+
+              Run without arguments to select theme from a list.
           HELP
-          info: {
-            deployed: "Theme was updated and set as the live theme",
-            pushed: "All theme files were updated",
-          },
-          push_fail: "Theme files couldn't be updated",
+          done: "Your theme is now live at %s",
+          not_found: "Theme #%s does not exist",
+          select: "Select theme to push to",
+          confirm: "Are you sure you want to make %s the new live theme on %s?",
         },
         forms: {
           ask_password: "Password:",
           ask_store: "Store domain:",
-          create: {
-            ask_title: "Title:",
-            private_app: <<~APP,
-              To create a new theme, Shopify App CLI needs to connect with a private app installed on your store. Visit {{underline:%s/admin/apps/private}} to create a new API key and password, or retrieve an existing password.
-              If you create a new private app, ensure that it has Read and Write Theme access.
-            APP
-          },
-          connect: {
-            private_app: <<~APP,
-              To fetch your existing themes, Shopify App CLI needs to connect with your store. Visit {{underline:%s/admin/apps/private}} to create a new API key and password, or retrieve an existing password.
-              If you create a new private app, ensure that it has Read and Write Theme access.
-            APP
-          },
           errors: "%s can't be blank",
-        },
-        generate: {
-          env: {
-            ask_password: "Password",
-            ask_password_default: "Password (defaults to {{green:%s}})",
-            ask_store: "Store",
-            ask_store_default: "Store (defaults to {{green:%s}})",
-            ask_theme: "Select theme",
-            help: <<~HELP,
-              Create or update configuration file in the current directory.
-                Usage: {{command:%s generate env}}
-                Options:
-                  {{command:--store=MYSHOPIFYDOMAIN}} Store URL. Must be an existing store with private apps enabled.
-                  {{command:--password=PASSWORD}} Private app password. App must have Read and Write Theme access.
-                  {{command:--themeid=THEMEID}} Theme ID. Must be an existing theme on your store.
-            HELP
-            no_themes: "Please create a new theme using %s create theme",
-          },
-          help: <<~HELP,
-            Generate code in your Theme. Currently supports generating new envs.
-              Usage: {{command:%s generate [ env ]}}
-          HELP
         },
         push: {
           remove_abort: "Theme files weren't deleted",
-          remove_confirm: "This will delete the local and remote copies of the theme files. Do you wish to proceed?",
+          remove_confirm:
+            "This will delete the local and remote copies of the theme files, which " \
+            "can't be undone. Do you want to continue?",
           error: {
             push_error: "Theme files couldn't be pushed to Shopify",
             remove_error: "Theme files couldn't be removed from Shopify",
           },
           help: <<~HELP,
-            {{command:%s push}}: Uploads your local theme files to Shopify, overwriting the remote versions. If you specify filenames, separated by a space, only those files will be replaced. Otherwise, the whole theme will be replaced.
-              Usage: {{command:%s push}}
+            {{command:%s theme push}}: Uploads your local theme files to the connected store, overwriting the remote version if specified.
+
+              Usage: {{command:%s theme push [ ROOT ]}}
+
               Options:
-                {{command:--remove}} Deletes both the local and the remote copies of the specified files. At least one filename must be specified.
-                {{command:--allow-live}} Allows Shopify App CLI to replace files on the store's live production theme.
-                {{command:--nodelete}} Runs the push command without deleting remote files from Shopify.
+                {{command:-i, --themeid=THEMEID}} Theme ID. Must be an existing theme on your store.
+                {{command:-d, --development}}     Push to your remote development theme, and create it if needed.
+                {{command:-u, --unpublished}}     Create a new unpublished theme and push to it.
+                {{command:-n, --nodelete}}        Runs the push command without deleting remote files from Shopify.
+                {{command:-j, --json}}            Output JSON instead of a UI.
+                {{command:-a, --allow-live}}      Allow push to a live theme.
+                {{command:-p, --publish}}         Publish as the live theme after uploading.
+
+              Run without options to select theme from a list.
           HELP
           info: {
-            push: "Theme files were pushed from {{green:%s}} to Shopify",
-            remove: "Theme files were deleted from {{green:%s}} and Shopify",
+            pushing: "Pushing theme files to %s (#%s) on %s",
           },
           push: "Pushing theme files to Shopify",
-          remove: "Deleting theme files",
+          select: "Select theme to push to",
+          live: "Are you sure you want to push to your live theme?",
+          theme_not_found: "Theme #%s doesn't exist",
+          done: <<~DONE,
+            {{green:Your theme was pushed successfully}}
+
+              {{info:View your theme:}}
+              {{underline:%s}}
+
+              {{info:Customize this theme in the Online Store Editor:}}
+              {{underline:%s}}
+          DONE
+          name: "Theme name",
         },
         serve: {
           help: <<~HELP,
-            Sync your current changes, then view the active store in your default browser. Any theme edits will continue to update in real time. Also prints the active store's URL in your terminal.
-            Usage: {{command:%s serve}}
+            Uploads the current theme as a development theme to the connected store, then prints theme editor and preview URLs to your terminal. While running, changes will push to the store in real time.
+            Usage: {{command:%s theme serve}}
           HELP
           serve: "Viewing theme...",
           open_fail: "Couldn't open the theme",
         },
-        tasks: {
-          ensure_themekit_installed: {
-            auto_update: "Would you like to enable auto-updating?",
-            downloading: "Downloading Theme Kit %s",
-            errors: {
-              digest_fail: "Unable to verify download",
-              releases_fail: "Unable to fetch Theme Kit's list of releases",
-              update_fail: "Unable to update Theme Kit",
-              write_fail: "Unable to download Theme Kit",
-            },
-            installing_themekit: "Installing Theme Kit",
-            successful: "Theme Kit installed successfully",
-            updating_themekit: "Updating Theme Kit",
-            verifying: "Verifying download...",
-          },
+        check: {
+          help: <<~HELP,
+            Check your theme for errors, suggestions, and best practices.
+            Usage: {{command:%s check}}
+          HELP
         },
-        themekit: {
-          query_themes: {
-            bad_password: "Bad password",
-            not_connect: "Couldn't connect to given shop",
+        delete: {
+          help: <<~HELP,
+            {{command:%s theme delete}}: Delete remote themes from the connected store. This command can't be undone.
+
+            Usage: {{command:%s theme delete [ THEME_ID [ ... ] ]}}
+
+            Options:
+              {{command:-d, --development}}     Delete your development theme.
+              {{command:-a, --show-all}}        Include others development themes in theme list.
+              {{command:-f, --force}}           Skip confirmation.
+
+            Run without options to select the theme to delete from a list.
+          HELP
+          select: "Select theme to delete",
+          done: "%s theme(s) deleted",
+          not_found: "{{x}} Theme #%s does not exist",
+          live: "{{x}} Theme #%s is your live theme. You can't delete it.",
+          confirm: "Are you sure you want to delete %s on %s?",
+        },
+        package: {
+          help: <<~HELP,
+            {{command:%s theme package}}: Package your theme into a .zip file, ready to upload to the Online Store.
+
+            Usage: {{command:%s theme package [ ROOT ]}}
+          HELP
+          error: {
+            prereq_command_required: "%1$s is required for packaging a theme. Please install %1$s "\
+              "using the appropriate package manager for your system.",
+            missing_config: "Provide a config/settings_schema.json to package your theme",
+            missing_theme_name: "Provide a theme_info.theme_name configuration in config/settings_schema.json",
           },
+          done: "Theme packaged in %s",
+        },
+        language_server: {
+          help: <<~HELP,
+            {{command:%s theme language-server}}: Start a Language Server Protocol server.
+
+            Usage: {{command:%s theme language-server}}
+          HELP
+        },
+        pull: {
+          help: <<~HELP,
+            {{command:%s theme pull}}: Downloads your remote theme files locally.
+
+            Usage: {{command:%s theme pull [ ROOT ]}}
+
+            Options:
+              {{command:-i, --themeid=THEMEID}} The Theme ID. Must be an existing theme on your store.
+              {{command:-n, --nodelete}}        Runs the pull command without deleting local files.
+
+            Run without options to select theme from a list.
+          HELP
+          select: "Select a theme to pull from",
+          pulling: "Pulling theme files from %s (#%s) on %s",
+          done: "Theme pulled successfully",
+          not_found: "{{x}} Theme #%s doesn't exist",
         },
       },
     }.freeze

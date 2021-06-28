@@ -3,9 +3,11 @@
 require "shopify_cli"
 
 module Node
-  module Commands
-    class Tunnel < ShopifyCli::Command
+  class Command
+    class Tunnel < ShopifyCli::SubCommand
       # subcommands :auth, :start, :stop
+
+      prerequisite_task ensure_project_type: :node
 
       def call(args, _name)
         subcommand = args.shift

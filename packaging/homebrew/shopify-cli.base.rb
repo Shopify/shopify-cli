@@ -1,39 +1,101 @@
+# frozen_string_literal: true
+
+# Modified from formula originally generated via `brew-gem` using
+# `brew gem formula shopify-cli`
+
+require "formula"
+require "fileutils"
+
 class ShopifyCli < Formula
-  version 'SHOPIFY_CLI_VERSION'
-  homepage 'https://shopify.github.io/shopify-app-cli'
-  url "https://rubygems.org/downloads/shopify-cli-#{version}.gem"
-  sha256 'SHOPIFY_CLI_GEM_CHECKSUM'
-  desc <<~DESC
-    Shopify CLI helps you build Shopify apps faster. It quickly scaffolds Node.js
-    and Ruby on Rails embedded apps. It also automates many common tasks in the
-    development process and lets you quickly add popular features, such as billing
-    and webhooks.
-  DESC
+  module RubyBin
+    def ruby_bin
+      Formula["ruby"].opt_bin
+    end
+  end
 
-  bottle :unneeded
+  class RubyGemsDownloadStrategy < AbstractDownloadStrategy
+    include RubyBin
 
-  depends_on 'git' => '2.13'
+    def fetch(_timeout: nil, **_options)
+      ohai("Fetching shopify-cli from gem source")
+      cache.cd do
+        ENV["GEM_SPEC_CACHE"] = "#{cache}/gem_spec_cache"
+        system("#{ruby_bin}/gem", "fetch", "shopify-cli", "--version", gem_version)
+      end
+    end
+
+    def cached_location
+      Pathname.new("#{cache}/shopify-cli-#{gem_version}.gem")
+    end
+
+    def cache
+      @cache ||= HOMEBREW_CACHE
+    end
+
+    def gem_version
+      @version ||= @resource&.version if defined?(@resource)
+      raise "Unable to determine version; did Homebrew change?" unless @version
+      @version
+    end
+
+    def clear_cache
+      cached_location.unlink if cached_location.exist?
+    end
+  end
+
+  include RubyBin
+
+  url "shopify-cli", using: RubyGemsDownloadStrategy
+  version "SHOPIFY_CLI_VERSION"
+  sha256 "SHOPIFY_CLI_GEM_CHECKSUM"
+  depends_on "ruby"
+  depends_on "git"
 
   def install
-    system 'tar', '-xf', cached_download, '--directory', buildpath
+    # set GEM_HOME and GEM_PATH to make sure we package all the dependent gems
+    # together without accidently picking up other gems on the gem path since
+    # they might not be there if, say, we change to a different rvm gemset
+    ENV["GEM_HOME"] = prefix.to_s
+    ENV["GEM_PATH"] = prefix.to_s
 
-    (buildpath/'src').mkpath
-    (buildpath/'symlink').mkpath
-    system 'tar', '-xzf', buildpath/'data.tar.gz', '--directory', buildpath/'src'
+    # Use /usr/local/bin at the front of the path instead of Homebrew shims,
+    # which mess with Ruby's own compiler config when building native extensions
+    if defined?(HOMEBREW_SHIMS_PATH)
+      ENV["PATH"] = ENV["PATH"].sub(HOMEBREW_SHIMS_PATH.to_s, "/usr/local/bin")
+    end
 
-    prefix.install buildpath/'src'
+    system(
+      "#{ruby_bin}/gem",
+      "install",
+      cached_download,
+      "--no-document",
+      "--no-wrapper",
+      "--no-user-install",
+      "--install-dir", prefix,
+      "--bindir", bin,
+      "--",
+      "--skip-cli-build"
+    )
 
-    exe = prefix/'src/bin/shopify'
-    script = buildpath/'symlink/shopify'
+    raise "gem install 'shopify-cli' failed with status #{$CHILD_STATUS.exitstatus}" unless $CHILD_STATUS.success?
 
-    script_content = <<~SCRIPT
-      #!/usr/bin/env bash
-      #{RbConfig.ruby} --disable=gems -I #{prefix} #{exe} $@
-    SCRIPT
+    bin.rmtree if bin.exist?
+    bin.mkpath
 
-    File.write(script, script_content)
-    FileUtils.chmod("+x", script)
+    brew_gem_prefix = "#{prefix}/gems/shopify-cli-#{version}"
 
-    bin.install script
+    ruby_libs = Dir.glob("#{prefix}/gems/*/lib")
+    exe = "shopify"
+    file = Pathname.new("#{brew_gem_prefix}/bin/#{exe}")
+    (bin + file.basename).open("w") do |f|
+      f << <<~RUBY
+        #!#{ruby_bin}/ruby --disable-gems
+        ENV['GEM_HOME']="#{prefix}"
+        ENV['GEM_PATH']="#{prefix}"
+        require 'rubygems'
+        $:.unshift(#{ruby_libs.map(&:inspect).join(",")})
+        load "#{file}"
+      RUBY
+    end
   end
 end

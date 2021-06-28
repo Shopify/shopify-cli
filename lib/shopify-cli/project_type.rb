@@ -5,7 +5,6 @@ module ShopifyCli
     class << self
       attr_accessor :project_type,
         :project_name,
-        :project_creator_command_class,
         :project_load_shallow
 
       def repository
@@ -47,36 +46,6 @@ module ShopifyCli
 
       def title(name)
         @project_name = name
-      end
-
-      def creator(command_const)
-        @project_creator_command_class = command_const
-        ShopifyCli::Commands::Create.subcommand(command_const, @project_type)
-      end
-
-      def create_command
-        const_get(@project_creator_command_class)
-      end
-
-      def connector(command_const)
-        @project_connector_command_class = command_const
-        ShopifyCli::Commands::Connect.subcommand(command_const, @project_type)
-      end
-
-      def connect_command
-        if @project_connector_command_class.nil?
-          nil
-        else
-          const_get(@project_connector_command_class)
-        end
-      end
-
-      def register_command(const, cmd)
-        return if project_load_shallow
-        Context.new.abort(
-          Context.message("core.project_type.error.cannot_override_core", cmd, const)
-        ) if Commands.core_command?(cmd)
-        Commands.register(const, cmd)
       end
 
       def register_task(task, name)

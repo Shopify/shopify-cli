@@ -1,11 +1,13 @@
 # frozen_string_literal: true
 module Rails
-  module Commands
+  class Command
     class Create < ShopifyCli::SubCommand
+      prerequisite_task :ensure_authenticated
+
       USER_AGENT_CODE = <<~USERAGENT
         module ShopifyAPI
           class Base < ActiveResource::Base
-            self.headers['User-Agent'] << " | ShopifyApp/\#{ShopifyApp::VERSION} | Shopify App CLI"
+            self.headers['User-Agent'] << " | ShopifyApp/\#{ShopifyApp::VERSION} | Shopify CLI"
           end
         end
       USERAGENT
@@ -16,11 +18,13 @@ module Rails
         # backwards compatibility allow 'title' for now
         parser.on("--title=TITLE") { |t| flags[:title] = t }
         parser.on("--name=NAME") { |t| flags[:title] = t }
-        parser.on("--organization_id=ID") { |url| flags[:organization_id] = url }
-        parser.on("--organization-id=ID") { |url| flags[:organization_id] = url }
+        parser.on("--organization_id=ID") { |id| flags[:organization_id] = id }
+        parser.on("--organization-id=ID") { |id| flags[:organization_id] = id }
+        parser.on("--store=MYSHOPIFYDOMAIN") { |url| flags[:shop_domain] = url }
+        # backwards compatibility allow 'shop domain' for now
         parser.on("--shop_domain=MYSHOPIFYDOMAIN") { |url| flags[:shop_domain] = url }
         parser.on("--shop-domain=MYSHOPIFYDOMAIN") { |url| flags[:shop_domain] = url }
-        parser.on("--type=APPTYPE") { |url| flags[:type] = url }
+        parser.on("--type=APPTYPE") { |type| flags[:type] = type }
         parser.on("--db=DB") { |db| flags[:db] = db }
         parser.on("--rails_opts=RAILSOPTS") { |opts| flags[:rails_opts] = opts }
         parser.on("--rails-opts=RAILSOPTS") { |opts| flags[:rails_opts] = opts }
@@ -62,7 +66,7 @@ module Rails
         partners_url = ShopifyCli::PartnersAPI.partners_url_for(form.organization_id, api_client["id"], local_debug?)
 
         @ctx.puts(@ctx.message("apps.create.info.created", form.title, partners_url))
-        @ctx.puts(@ctx.message("apps.create.info.serve", form.name, ShopifyCli::TOOL_NAME))
+        @ctx.puts(@ctx.message("apps.create.info.serve", form.name, ShopifyCli::TOOL_NAME, "rails"))
         unless ShopifyCli::Shopifolk.acting_as_shopify_organization?
           @ctx.puts(@ctx.message("apps.create.info.install", partners_url, form.title))
         end

@@ -7,19 +7,14 @@ module ShopifyCli
         create: {
           info: {
             created: "{{v}} {{green:%s}} was created in the organization's Partner Dashboard {{underline:%s}}",
-            serve: "{{*}} Change directories to your new project folder {{green:%s}} and run {{command:%s serve}} " \
-            "to start a local server",
+            serve: "{{*}} Change directories to your new project folder {{green:%s}} and run "\
+            "{{command:%s %s serve}} to start a local server",
             install: "{{*}} Then, visit {{underline:%s/test}} to install {{green:%s}} on your Dev Store",
           },
         },
       },
       core: {
         connect: {
-          help: <<~HELP,
-            Connect (or re-connect) an existing project to a Shopify partner organization and/or a store. Creates or updates the {{green:.env}} file, and creates the {{green:.shopify-cli.yml}} file.
-              Usage: {{command:%s connect}}
-          HELP
-
           already_connected_warning: "{{yellow:! This app appears to be already connected}}",
           project_type_select: "What type of project would you like to connect?",
           cli_yml_saved: ".shopify-cli.yml saved to project root",
@@ -30,19 +25,6 @@ module ShopifyCli
             Please open this URL in your browser:
             {{green:%s}}
           OPEN
-        },
-
-        create: {
-          help: <<~HELP,
-            Create a new project.
-              Usage: {{command:%s create [ %s ]}}
-          HELP
-
-          error: {
-            invalid_app_type: "{{red:Error}}: invalid app type {{bold:%s}}",
-          },
-
-          project_type_select: "What type of project would you like to create?",
         },
 
         env_file: {
@@ -99,8 +81,6 @@ module ShopifyCli
           preamble: <<~MESSAGE,
             Use {{command:%s help <command>}} to display detailed information about a specific command.
 
-            {{bold:Available core commands:}}
-
           MESSAGE
         },
 
@@ -129,13 +109,35 @@ module ShopifyCli
           npm_installed_deps: "%d npm dependencies installed",
         },
 
+        login: {
+          help: <<~HELP,
+            Log in to the Shopify CLI by authenticating with a store or partner organization
+              Usage: {{command:%s login [--store=STORE]}}
+          HELP
+          invalid_shop: <<~MESSAGE,
+            Invalid store provided (%s). Please provide the store in the following format: my-store.myshopify.com
+          MESSAGE
+          shop_prompt: <<~PROMPT,
+            What store are you connecting to? (e.g. my-store.myshopify.com; do {{bold:NOT}} include protocol part, e.g., https://)
+          PROMPT
+        },
+
         logout: {
           help: <<~HELP,
-            Log out of a currently authenticated partner organization and store, or clear invalid credentials
+            Log out of an authenticated partner organization and store, or clear invalid credentials
               Usage: {{command:%s logout}}
           HELP
 
-          success: "Logged out of partner organization and store",
+          success: "Successfully logged out of your account",
+        },
+
+        switch: {
+          help: <<~HELP,
+            Switch between development stores in your partner organization
+              Usage: {{command:%s switch [--store=STORE]}}
+          HELP
+          disabled_as_shopify_org: "Can't switch development stores logged in as {{green:Shopify partners org}}",
+          success: "Switched development store to {{green:%s}}",
         },
 
         monorail: {
@@ -146,9 +148,12 @@ module ShopifyCli
           MSG
         },
 
-        oauth: {
+        identity_auth: {
           error: {
             timeout: "Timed out while waiting for response from Shopify",
+            local_identity_not_running: "Identity needs to be running locally in order to proceed.",
+            reauthenticate: "Please login again with {{command:shopify login}}",
+            invalid_destination: "The store %s doesn't exist. Please log out and try again.",
           },
 
           location: {
@@ -166,6 +171,7 @@ module ShopifyCli
             authenticated: "Authenticated successfully",
             not_authenticated: "Failed to authenticate",
           },
+          login_prompt: "Please ensure you've logged in with {{command:%s login}} and try again",
         },
 
         options: {
@@ -185,6 +191,10 @@ module ShopifyCli
         api: {
           error: {
             failed_auth: "Failed to authenticate with Shopify. Please try again later.",
+            failed_auth_debugging: "{{red:Please provide this information with your report:}}\n%s\n\n",
+            forbidden: <<~FORBIDDEN,
+              Command not allowed with current login. Please check your login details with {{command:%s whoami}}. You may need to request additional permissions for this action.
+            FORBIDDEN
             internal_server_error: "{{red:{{x}} An unexpected error occurred on Shopify.}}",
             internal_server_error_debug: "\n{{red:Response details:}}\n%s\n\n",
             invalid_url: "Invalid URL: %s",
@@ -192,22 +202,78 @@ module ShopifyCli
         },
 
         populate: {
+          help: <<~HELP,
+            Populate a Shopify store with example customers, orders, or products.
+              Usage: {{command:%s populate [ customers | draftorders | products ]}}
+          HELP
+
+          extended_help: <<~HELP,
+            {{bold:Subcommands:}}
+
+              {{cyan:customers [options]}}: Add dummy customers to the specified store.
+                Usage: {{command:%1$s populate customers}}
+
+              {{cyan:draftorders [options]}}: Add dummy orders to the specified store.
+                Usage: {{command:%1$s populate draftorders}}
+
+              {{cyan:products [options]}}: Add dummy products to the specified store.
+                Usage: {{command:%1$s populate products}}
+
+            {{bold:Options:}}
+
+              {{cyan:--count [integer]}}: The number of dummy items to populate. Defaults to 5.
+              {{cyan:--silent}}: Silence the populate output.
+              {{cyan:--help}}: Display more options specific to each subcommand.
+
+            {{bold:Examples:}}
+
+              {{command:%1$s populate products}}
+                Populate your store with 5 additional products.
+
+              {{command:%1$s populate customers --count 30}}
+                Populate your store with 30 additional customers.
+
+              {{command:%1$s populate draftorders}}
+                Populate your store with 5 additional orders.
+
+              {{command:%1$s populate products --help}}
+                Display the list of options available to customize the {{command:%1$s populate products}} command.
+          HELP
+
+          error: {
+            no_shop: "No store found. Please run {{command:%s login --store=STORE}} to login to a specific store",
+          },
+
+          customer: {
+            added: "%s added to {{green:%s}} at {{underline:%scustomers/%d}}",
+          },
+
+          draft_order: {
+            added: "DraftOrder added to {{green:%s}} at {{underline:%sdraft_orders/%d}}",
+          },
+
           options: {
             header: "{{bold:{{cyan:%s}} options:}}",
             count_help: "Number of resources to generate",
           },
+
           populating: "Populating %d %ss...",
+
           completion_message: <<~COMPLETION_MESSAGE,
             Successfully added %d %s to {{green:%s}}
             {{*}} View all %ss at {{underline:%s%ss}}
           COMPLETION_MESSAGE
+
+          product: {
+            added: "%s added to {{green:%s}} at {{underline:%sproducts/%d}}",
+          },
         },
 
         project: {
           error: {
             not_in_project: <<~MESSAGE,
               {{x}} You are not in a Shopify app project
-              {{yellow:{{*}}}}{{reset: Run}}{{cyan: shopify create}}{{reset: to create your app}}
+              {{yellow:{{*}}}}{{reset: Run}}{{cyan: shopify rails create}}{{reset: or}}{{cyan: shopify node create}}{{reset: to create your app}}
             MESSAGE
           },
         },
@@ -239,7 +305,8 @@ module ShopifyCli
             unknown_option: "{{x}} {{red:unknown option '%s'}}",
           },
 
-          header: "{{bold:Shopify App CLI}}",
+          header: "{{bold:Shopify CLI}}",
+          shop_header: "{{bold:Current Shop}}",
           const: "%17s = %s",
           ruby_header: <<~RUBY_MESSAGE,
             {{bold:Ruby (via RbConfig)}}
@@ -266,7 +333,20 @@ module ShopifyCli
           identity_is_shopifolk: "{{v}} Checked user settings: you’re Shopify staff!",
         },
 
+        store: {
+          help: <<~HELP,
+            Display current store.
+              Usage: {{command:%s store}}
+          HELP
+          shop: "You're currently logged into {{green:%s}}",
+        },
+
         tasks: {
+          confirm_store: {
+            prompt: "You are currently logged into {{green:%s}}. Do you want to proceed using this store?",
+            confirmation: "Proceeding using {{green:%s}}",
+            cancelling: "Cancelling ...",
+          },
           ensure_env: {
             organization_select: "To which partner organization does this project belong?",
             no_development_stores: <<~MESSAGE,
@@ -293,6 +373,9 @@ module ShopifyCli
               MESSAGE
             transfer_disabled: "{{v}} Transfer has been disabled on %s.",
           },
+          ensure_project_type: {
+            wrong_project_type: "This command can only be run within %s projects.",
+          },
           update_dashboard_urls: {
             updated: "{{v}} Whitelist URLS updated in Partners Dashboard}}",
             update_error:
@@ -310,10 +393,11 @@ module ShopifyCli
               organization_not_found: "Cannot find a partner organization with that ID",
               shopifolk_notice: <<~MESSAGE,
                 {{i}} As a {{green:Shopify}} employee, the authentication should take you to the Shopify Okta login,
-                NOT the Partner account login. Please run {{command:%s logout}} and try again.
+                NOT the partner account login. Please run {{command:%s logout}} and try again.
               MESSAGE
             },
-            first_party: "Are you working on a 1P (1st Party) app?",
+            first_party: "Are you working on a {{green:Shopify project}} on behalf of the"\
+              " {{green:Shopify partners org}}?",
             identified_as_shopify: "We've identified you as a {{green:Shopify}} employee.",
             organization: "Partner organization {{green:%s (%s)}}",
             organization_select: "Select partner organization",
@@ -334,7 +418,7 @@ module ShopifyCli
           signup_suggestion: <<~MESSAGE,
             {{*}} To avoid tunnels that timeout, it is recommended to signup for a free ngrok
             account at {{underline:https://ngrok.com/signup}}. After you signup, install your
-            personalized authorization token using {{command:%s tunnel auth <token>}}.
+            personalized authorization token using {{command:%s [ node | rails ] tunnel auth <token>}}.
           MESSAGE
           start: "{{v}} ngrok tunnel running at {{underline:%s}}",
           start_with_account: "{{v}} ngrok tunnel running at {{underline:%s}}, with account %s",
@@ -358,21 +442,30 @@ module ShopifyCli
 
           DEVELOPMENT
 
-          shell_shim: <<~MESSAGE,
-            {{x}} This version of Shopify App CLI is no longer supported. You’ll need to migrate to the new CLI version to continue.
-
-              Please visit this page for complete instructions:
-              {{underline:https://shopify.dev/tools/cli/troubleshooting#migrate-from-a-legacy-version}}
-
-          MESSAGE
-
           new_version: <<~MESSAGE,
-            {{*}} {{yellow:A new version of Shopify App CLI is available! You have version %s and the latest version is %s.
+            {{*}} {{yellow:A new version of Shopify CLI is available! You have version %s and the latest version is %s.
 
               To upgrade, follow the instructions for the package manager you’re using:
-              {{underline:https://shopify.dev/tools/cli/troubleshooting#upgrade-shopify-app-cli}}}}
+              {{underline:https://shopify.dev/tools/cli/troubleshooting#upgrade-shopify-cli}}}}
 
           MESSAGE
+        },
+
+        whoami: {
+          help: <<~HELP,
+            Identifies which partner organization or store you are currently logged into.
+              Usage: {{command:%s whoami}}
+          HELP
+          not_logged_in: <<~MESSAGE,
+            It doesn't appear that you're logged in. You must log into a partner organization or a store staff account.
+
+            If trying to log into a store staff account, please use {{command:%s login --store=STORE}} to log in.
+          MESSAGE
+          logged_in_shop_only: <<~MESSAGE,
+            Logged into store {{green:%s}} as staff (no partner organizations available for this login)
+          MESSAGE
+          logged_in_partner_only: "Logged into partner organization {{green:%s}}",
+          logged_in_partner_and_shop: "Logged into store {{green:%s}} in partner organization {{green:%s}}",
         },
       },
     }.freeze

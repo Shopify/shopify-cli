@@ -10,6 +10,11 @@ module ShopifyCli
       ShopifyCli::Feature.disable("shopifolk")
     end
 
+    def teardown
+      ShopifyCli::DB.stubs(:del).with(:acting_as_shopify_organization)
+      super
+    end
+
     def test_correct_features_is_shopifolk
       FileUtils.mkdir_p("/opt/dev/bin")
       FileUtils.touch("/opt/dev/bin/dev")
@@ -68,16 +73,24 @@ module ShopifyCli
     end
 
     def test_setting_act_as_shopify_organization
+      ShopifyCli::DB.expects(:get).with(:acting_as_shopify_organization).returns(nil)
       refute ShopifyCli::Shopifolk.acting_as_shopify_organization?
 
+      ShopifyCli::DB.expects(:set).with(acting_as_shopify_organization: true)
       ShopifyCli::Shopifolk.act_as_shopify_organization
+
+      ShopifyCli::DB.expects(:get).with(:acting_as_shopify_organization).returns(true)
       assert ShopifyCli::Shopifolk.acting_as_shopify_organization?
 
+      ShopifyCli::DB.expects(:del).with(:acting_as_shopify_organization)
       ShopifyCli::Shopifolk.reset
+
+      ShopifyCli::DB.expects(:get).with(:acting_as_shopify_organization).returns(nil)
       refute ShopifyCli::Shopifolk.acting_as_shopify_organization?
     end
 
     def test_reading_shopify_organization_from_config
+      ShopifyCli::DB.expects(:get).with(:acting_as_shopify_organization).returns(nil)
       Project.expects(:has_current?).returns(true)
       project = stub("project", config: { "shopify_organization" => true })
       Project.expects(:current).returns(project)

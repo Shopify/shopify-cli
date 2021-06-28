@@ -1,8 +1,10 @@
 # frozen_string_literal: true
 
 module Extension
-  module Commands
+  class Command
     class Serve < ExtensionCommand
+      prerequisite_task ensure_project_type: :extension
+
       DEFAULT_PORT = 39351
 
       options do |parser, flags|
@@ -12,7 +14,7 @@ module Extension
       class RuntimeConfiguration
         include SmartProperties
 
-        property! :tunnel_url, accepts: String, default: ""
+        property :tunnel_url, accepts: String, default: nil
         property! :tunnel_requested, accepts: [true, false], reader: :tunnel_requested?, default: true
         property! :port, accepts: (1...(2**16)), default: DEFAULT_PORT
       end
@@ -31,12 +33,7 @@ module Extension
       end
 
       def self.help
-        <<~HELP
-          Serve your extension in a local simulator for development.
-            Usage: {{command:#{ShopifyCli::TOOL_NAME} serve}}
-            Options:
-            {{command:--tunnel=TUNNEL}} Establish an ngrok tunnel (default: false)
-        HELP
+        ShopifyCli::Context.new.message("serve.help", ShopifyCli::TOOL_NAME)
       end
 
       private

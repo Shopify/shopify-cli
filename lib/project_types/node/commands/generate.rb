@@ -2,8 +2,10 @@
 require "shopify_cli"
 
 module Node
-  module Commands
-    class Generate < ShopifyCli::Command
+  class Command
+    class Generate < ShopifyCli::SubCommand
+      prerequisite_task ensure_project_type: :node
+
       def call(*)
         @ctx.puts(self.class.help)
       end

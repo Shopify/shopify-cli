@@ -1,40 +1,28 @@
 # frozen_string_literal: true
 module Theme
   class Project < ShopifyCli::ProjectType
-    hidden_feature
-
-    title("Theme")
-    creator("Theme::Commands::Create")
-    connector("Theme::Commands::Connect")
-
-    register_command("Theme::Commands::Deploy", "deploy")
-    register_command("Theme::Commands::Generate", "generate")
-    register_command("Theme::Commands::Push", "push")
-    register_command("Theme::Commands::Serve", "serve")
-
-    register_task("Theme::Tasks::EnsureThemekitInstalled", :ensure_themekit_installed)
-
     require Project.project_filepath("messages/messages")
     register_messages(Theme::Messages::MESSAGES)
   end
 
-  module Commands
-    autoload :Connect, Project.project_filepath("commands/connect")
-    autoload :Create, Project.project_filepath("commands/create")
-    autoload :Deploy, Project.project_filepath("commands/deploy")
-    autoload :Generate, Project.project_filepath("commands/generate")
-    autoload :Push, Project.project_filepath("commands/push")
-    autoload :Serve, Project.project_filepath("commands/serve")
+  class Command < ShopifyCli::ProjectCommands
+    subcommand :Serve, "serve", Project.project_filepath("commands/serve")
+    subcommand :Pull, "pull", Project.project_filepath("commands/pull")
+    subcommand :Push, "push", Project.project_filepath("commands/push")
+    subcommand :Delete, "delete", Project.project_filepath("commands/delete")
+    subcommand :Check, "check", Project.project_filepath("commands/check")
+    subcommand :Publish, "publish", Project.project_filepath("commands/publish")
+    subcommand :Package, "package", Project.project_filepath("commands/package")
+    subcommand :LanguageServer, "language-server", Project.project_filepath("commands/language_server")
   end
-
-  module Tasks
-    autoload :EnsureThemekitInstalled, Project.project_filepath("tasks/ensure_themekit_installed")
-  end
+  ShopifyCli::Commands.register("Theme::Command", "theme")
 
   module Forms
-    autoload :Create, Project.project_filepath("forms/create")
-    autoload :Connect, Project.project_filepath("forms/connect")
+    autoload :ConfirmStore, Project.project_filepath("forms/confirm_store")
+    autoload :Select, Project.project_filepath("forms/select")
   end
 
-  autoload :Themekit, Project.project_filepath("themekit")
+  module UI
+    autoload :SyncProgressBar, Project.project_filepath("ui/sync_progress_bar")
+  end
 end

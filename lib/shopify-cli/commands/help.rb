@@ -23,38 +23,15 @@ module ShopifyCli
         preamble = @ctx.message("core.help.preamble", ShopifyCli::TOOL_NAME)
         @ctx.puts(preamble)
 
-        core_commands.each do |name, klass|
-          next if name == "help"
-          @ctx.puts("{{command:#{name}}}: #{klass.help}\n")
-        end
+        available_commands = resolved_commands.select { |_name, c| !c.hidden? }
 
-        return unless inside_supported_project?
-
-        @ctx.puts("{{bold:Project: #{Project.project_name} (#{project_type_name})}}")
-        @ctx.puts("{{bold:Available commands for #{project_type_name} projects:}}\n\n")
-
-        local_commands.each do |name, klass|
+        available_commands.each do |name, klass|
           next if name == "help"
           @ctx.puts("{{command:#{name}}}: #{klass.help}\n")
         end
       end
 
       private
-
-      def project_type_name
-        ProjectType.load_type(Project.current_project_type).project_name
-      end
-
-      def core_commands
-        resolved_commands
-          .select { |_name, c| !c.hidden? }
-          .select { |name, _c| Commands.core_command?(name) }
-      end
-
-      def local_commands
-        resolved_commands
-          .reject { |name, _c| Commands.core_command?(name) }
-      end
 
       def display_help(klass)
         output = klass.help
@@ -69,10 +46,6 @@ module ShopifyCli
         ShopifyCli::Commands::Registry
           .resolved_commands
           .sort
-      end
-
-      def inside_supported_project?
-        Project.current_project_type && ProjectType.load_type(Project.current_project_type)
       end
     end
   end

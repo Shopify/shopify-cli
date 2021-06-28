@@ -5,14 +5,6 @@ module Extension
 
   class Project < ShopifyCli::ProjectType
     hidden_feature
-    title("App Extension")
-    creator("Extension::Commands::Create")
-
-    register_command("Extension::Commands::Build", "build")
-    register_command("Extension::Commands::Register", "register")
-    register_command("Extension::Commands::Push", "push")
-    register_command("Extension::Commands::Serve", "serve")
-    register_command("Extension::Commands::Tunnel", "tunnel")
 
     require Project.project_filepath("messages/messages")
     require Project.project_filepath("messages/message_loading")
@@ -20,15 +12,20 @@ module Extension
     register_messages(Extension::Messages::MessageLoading.load)
   end
 
-  module Commands
+  class Command < ShopifyCli::ProjectCommands
+    hidden_feature
     autoload :ExtensionCommand, Project.project_filepath("commands/extension_command")
-    autoload :Create, Project.project_filepath("commands/create")
-    autoload :Register, Project.project_filepath("commands/register")
-    autoload :Build, Project.project_filepath("commands/build")
-    autoload :Serve, Project.project_filepath("commands/serve")
-    autoload :Push, Project.project_filepath("commands/push")
-    autoload :Tunnel, Project.project_filepath("commands/tunnel")
+
+    subcommand :Create, "create", Project.project_filepath("commands/create")
+    subcommand :Register, "register", Project.project_filepath("commands/register")
+    subcommand :Info, "info", Project.project_filepath("commands/info")
+    subcommand :Connect, "connect", Project.project_filepath("commands/connect")
+    subcommand :Build, "build", Project.project_filepath("commands/build")
+    subcommand :Serve, "serve", Project.project_filepath("commands/serve")
+    subcommand :Push, "push", Project.project_filepath("commands/push")
+    subcommand :Tunnel, "tunnel", Project.project_filepath("commands/tunnel")
   end
+  ShopifyCli::Commands.register("Extension::Command", "extension")
 
   module Tasks
     autoload :UserErrors, Project.project_filepath("tasks/user_errors")
@@ -38,8 +35,10 @@ module Extension
     autoload :UpdateDraft, Project.project_filepath("tasks/update_draft")
     autoload :FetchSpecifications, Project.project_filepath("tasks/fetch_specifications")
     autoload :ConfigureFeatures, Project.project_filepath("tasks/configure_features")
+    autoload :ConfigureOptions, Project.project_filepath("tasks/configure_options")
     autoload :ChooseNextAvailablePort, Project.project_filepath("tasks/choose_next_available_port")
     autoload :FindNpmPackages, Project.project_filepath("tasks/find_npm_packages")
+    autoload :GetExtensions, Project.project_filepath("tasks/get_extensions")
 
     module Converters
       autoload :RegistrationConverter, Project.project_filepath("tasks/converters/registration_converter")
@@ -54,10 +53,12 @@ module Extension
       autoload :AskApp, Project.project_filepath("forms/questions/ask_app")
       autoload :AskName, Project.project_filepath("forms/questions/ask_name")
       autoload :AskType, Project.project_filepath("forms/questions/ask_type")
+      autoload :AskRegistration, Project.project_filepath("forms/questions/ask_registration")
     end
 
     autoload :Create, Project.project_filepath("forms/create")
     autoload :Register, Project.project_filepath("forms/register")
+    autoload :Connect, Project.project_filepath("forms/connect")
   end
 
   module Features
@@ -75,6 +76,7 @@ module Extension
   module Models
     module SpecificationHandlers
       autoload :Default, Project.project_filepath("models/specification_handlers/default")
+      autoload :CheckoutArgoExtension, Project.project_filepath("models/specification_handlers/checkout_ui_extension")
     end
 
     autoload :App, Project.project_filepath("models/app")
@@ -89,4 +91,5 @@ module Extension
 
   autoload :ExtensionProjectKeys, Project.project_filepath("extension_project_keys")
   autoload :ExtensionProject, Project.project_filepath("extension_project")
+  autoload :Errors, Project.project_filepath("errors")
 end

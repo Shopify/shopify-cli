@@ -10,20 +10,21 @@ module Extension
       def setup
         super
         ShopifyCli::ProjectType.load_type(:extension)
+        ShopifyCli::Tasks::EnsureProjectType.stubs(:call)
       end
 
       def test_is_a_hidden_command
-        assert Commands::Build.hidden?
+        assert Command::Build.hidden?
       end
 
       def test_implements_help
-        refute_empty(Build.help)
+        refute_empty(Extension::Command::Build.help)
       end
 
       def test_uses_js_system_to_call_yarn_or_npm_commands
         ShopifyCli::JsSystem.any_instance
           .expects(:call)
-          .with(yarn: Build::YARN_BUILD_COMMAND, npm: Build::NPM_BUILD_COMMAND)
+          .with(yarn: Command::Build::YARN_BUILD_COMMAND, npm: Command::Build::NPM_BUILD_COMMAND)
           .returns(true)
           .once
 
@@ -40,8 +41,7 @@ module Extension
       private
 
       def run_build(*args)
-        Build.ctx = @context
-        Build.call(args, "build")
+        run_cmd("extension build " + args.join(" "))
       end
     end
   end

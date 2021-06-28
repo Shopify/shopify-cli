@@ -2,12 +2,22 @@
 require "shopify_cli"
 
 module Rails
-  module Commands
-    class Deploy < ShopifyCli::Command
-      subcommand :Heroku, "heroku", Project.project_filepath("commands/deploy/heroku")
+  class Command
+    class Deploy < ShopifyCli::SubCommand
+      prerequisite_task ensure_project_type: :rails
 
-      def call(*)
-        @ctx.puts(self.class.help)
+      autoload :Heroku, Project.project_filepath("commands/deploy/heroku")
+
+      HEROKU = "heroku"
+
+      def call(args, _name)
+        subcommand = args.shift
+        case subcommand
+        when HEROKU
+          Rails::Command::Deploy::Heroku.start(@ctx)
+        else
+          @ctx.puts(self.class.help)
+        end
       end
 
       def self.help

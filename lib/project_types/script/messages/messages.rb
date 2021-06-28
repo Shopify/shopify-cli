@@ -4,6 +4,11 @@ module Script
   module Messages
     MESSAGES = {
       script: {
+        help: <<~HELP,
+          Suite of commands for developing script applications. See {{command:%1$s script <command> --help}} for usage of each command.
+            Usage: {{command:%1$s script [ %2$s ]}}
+        HELP
+
         error: {
           deprecated_ep: "This project uses a Script API (%s) that has been deprecated. "\
                          "This Script won't work in production.",
@@ -31,8 +36,8 @@ module Script
                                     "are numbers, letters, hyphens, or underscores.",
 
           no_existing_apps_cause: "You don't have any apps in your Partner Dashboard.",
-          no_existing_apps_help: "Create an app with {{command:shopify create}} or "\
-                                 "visit https://partners.shopify.com/.",
+          no_existing_apps_help: "Create an app with {{command:shopify [node|rails] create}}" \
+                                 " or visit https://partners.shopify.com/.",
 
           no_existing_orgs_cause: "You don't have any partner organizations.",
           no_existing_orgs_help: "Visit https://partners.shopify.com/ to create a partners account.",
@@ -140,12 +145,12 @@ module Script
 
         create: {
           help: <<~HELP,
-          {{command:%1$s create script}}: Creates a script project.
-            Usage: {{command:%1$s create script}}
-            Options:
-              {{command:--name=NAME}} Script project name. Use any string.
-              {{command:--extension-point=TYPE}} Script API name. Allowed values: %2$s.
-              {{command:--no-config-ui}} Specify this option when you don’t want your script to render an interface in Shopify admin.
+            {{command:%1$s script create}}: Creates a script project.
+              Usage: {{command:%1$s script create}}
+              Options:
+                {{command:--name=NAME}} Script project name. Use any string.
+                {{command:--extension-point=TYPE}} Script API name. Allowed values: %2$s.
+                {{command:--no-config-ui}} Specify this option when you don’t want your script to render an interface in Shopify admin.
           HELP
 
           error: {
@@ -159,10 +164,10 @@ module Script
 
         push: {
           help: <<~HELP,
-          Build the script, upload it to Shopify, and register it to an app.  If you've already pushed the script to this app, then use --force to replace the existing version on the app.
-            Usage: {{command:%s push}}
-            Options:
-              {{command:[--force]}} Replaces the existing script on the app with this version.
+            Build the script, upload it to Shopify, and register it to an app.  If you've already pushed the script to this app, then use --force to replace the existing version on the app.
+              Usage: {{command:%s script push}}
+              Options:
+                {{command:[--force]}} Replaces the existing script on the app with this version.
           HELP
 
           error: {

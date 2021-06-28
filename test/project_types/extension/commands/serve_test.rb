@@ -10,21 +10,22 @@ module Extension
       def setup
         super
         ShopifyCli::ProjectType.load_type("extension")
+        ShopifyCli::Tasks::EnsureProjectType.stubs(:call)
         ExtensionTestHelpers.fake_extension_project(with_mocks: true)
       end
 
       def test_defers_serving_to_the_specification_handler
-        serve = ::Extension::Commands::Serve.new(@context)
+        serve = ::Extension::Command::Serve.new(@context)
         stub_specification_handler_options(serve)
         serve.specification_handler.expects(:serve)
         serve.call([], "serve")
       end
 
       def test_error_raised_if_specification_handler_supports_choosing_port_but_no_ports_available
-        serve = ::Extension::Commands::Serve.new(@context)
+        serve = ::Extension::Command::Serve.new(@context)
 
         Tasks::ChooseNextAvailablePort.expects(:call)
-          .with(from: ::Extension::Commands::Serve::DEFAULT_PORT)
+          .with(from: ::Extension::Command::Serve::DEFAULT_PORT)
           .returns(ShopifyCli::Result.failure(ArgumentError))
           .once
         serve.specification_handler.expects(:choose_port?).returns(true).once
@@ -37,7 +38,7 @@ module Extension
       end
 
       def test_port_not_chosen_if_specification_handler_does_not_support_chosen_port
-        serve = ::Extension::Commands::Serve.new(@context)
+        serve = ::Extension::Command::Serve.new(@context)
         stub_specification_handler_options(serve)
         Tasks::ChooseNextAvailablePort.expects(:call).never
         serve.specification_handler.expects(:serve).once
@@ -45,14 +46,14 @@ module Extension
       end
 
       def test_new_tunnel_started_if_tunnel_supported_and_requirements_met
-        serve = ::Extension::Commands::Serve.new(@context)
+        serve = ::Extension::Command::Serve.new(@context)
         stub_specification_handler_options(serve, choose_port: true, establish_tunnel: true)
         Tasks::ChooseNextAvailablePort.expects(:call)
-          .returns(ShopifyCli::Result.success(Extension::Commands::Serve::DEFAULT_PORT))
+          .returns(ShopifyCli::Result.success(Extension::Command::Serve::DEFAULT_PORT))
         ShopifyCli::Tunnel.expects(:urls).returns(["https://shopify.ngrok.io"])
         ShopifyCli::Tunnel.expects(:running_on?).returns(true)
         ShopifyCli::Tunnel.expects(:start)
-          .with(@context, port: Extension::Commands::Serve::DEFAULT_PORT)
+          .with(@context, port: Extension::Command::Serve::DEFAULT_PORT)
           .returns("ngrok.example.com")
           .once
 
@@ -61,13 +62,13 @@ module Extension
       end
 
       def test_new_tunnel_started_if_tunnel_supported_and_no_tunnels_running
-        serve = ::Extension::Commands::Serve.new(@context)
+        serve = ::Extension::Command::Serve.new(@context)
         stub_specification_handler_options(serve, choose_port: true, establish_tunnel: true)
         Tasks::ChooseNextAvailablePort.expects(:call)
-          .returns(ShopifyCli::Result.success(Extension::Commands::Serve::DEFAULT_PORT))
+          .returns(ShopifyCli::Result.success(Extension::Command::Serve::DEFAULT_PORT))
         ShopifyCli::Tunnel.expects(:urls).returns([])
         ShopifyCli::Tunnel.expects(:start)
-          .with(@context, port: Extension::Commands::Serve::DEFAULT_PORT)
+          .with(@context, port: Extension::Command::Serve::DEFAULT_PORT)
           .returns("ngrok.example.com")
           .once
 
@@ -76,7 +77,7 @@ module Extension
       end
 
       def test_serve_quits_if_tunnel_requested_but_tunnel_already_running_on_different_port
-        serve = ::Extension::Commands::Serve.new(@context)
+        serve = ::Extension::Command::Serve.new(@context)
         stub_specification_handler_options(serve, choose_port: true, establish_tunnel: true)
         ShopifyCli::Tunnel.expects(:urls).returns(["https://shopify.ngrok.io"])
         ShopifyCli::Tunnel.expects(:running_on?).returns(false)
@@ -89,7 +90,7 @@ module Extension
       end
 
       def test_tunnel_not_started_if_specification_handler_does_not_support_establish_tunnel
-        serve = ::Extension::Commands::Serve.new(@context)
+        serve = ::Extension::Command::Serve.new(@context)
         stub_specification_handler_options(serve)
         ShopifyCli::Tunnel.expects(:start).never
         serve.specification_handler.expects(:serve).once

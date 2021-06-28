@@ -20,7 +20,7 @@ module Script
           env: @env
         )
         Script::Layers::Infrastructure::ScriptProjectRepository.stubs(:new).returns(@script_project_repo)
-        ShopifyCli::ProjectType.load_type(:script)
+        ShopifyCli::Tasks::EnsureProjectType.stubs(:call).with(@context, :script).returns(true)
       end
 
       def test_calls_push_script
@@ -37,7 +37,7 @@ module Script
         ShopifyCli::Context
           .expects(:message)
           .with("script.push.help", ShopifyCli::TOOL_NAME)
-        Script::Commands::Push.help
+        Script::Command::Push.help
       end
 
       def test_push_propagates_error_when_ensure_env_fails
@@ -91,7 +91,7 @@ module Script
       private
 
       def perform_command
-        capture_io { run_cmd("push #{@force ? "--force" : ""}") }
+        capture_io { run_cmd("script push #{@force ? "--force" : ""}") }
       end
     end
   end

@@ -9,6 +9,7 @@ module ShopifyCli
         args = cmd.options.parse(@_options, args[1..-1] || [])
         return call_help(parent_command, command_name) if cmd.options.help
         run_prerequisites
+
         cmd.call(args, command_name)
       end
     end

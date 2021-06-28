@@ -1,4 +1,4 @@
-# Shopify App CLI design guidelines
+# Shopify CLI design guidelines
 
 #### Table of Contents
 
@@ -11,11 +11,11 @@
 
 ## Introduction
 
-The purpose of this doc is to outline all the heuristics, patterns, and templates we are using in the Shopify App CLI tool. All the content is based on the CLI Design and Style Guidelines doc, as well as the guidance on the Shopify cli-ui Github repo.
+The purpose of this doc is to outline all the heuristics, patterns, and templates we are using in the Shopify CLI tool. All the content is based on the CLI Design and Style Guidelines doc, as well as the guidance on the Shopify cli-ui Github repo.
 
 The most important principle to follow is **speed**. CLI tools are built to be extremely fast to use and to perform tasks quickly. If there is ever a collision between heuristics, default to whatever results in the fastest perceived or actual performance.
 
-To help visualize all the components and states available in the Shopify App CLI, we have created a [UI Kit](https://www.figma.com/file/ZXIgM4wQpfRNjGaIArjWOgTD/CLI-UI-Kit?node-id=67%3A0) in [Figma](http://figma.com) that you can use to build command flows.
+To help visualize all the components and states available in the Shopify CLI, we have created a [UI Kit](https://www.figma.com/file/ZXIgM4wQpfRNjGaIArjWOgTD/CLI-UI-Kit?node-id=67%3A0) in [Figma](http://figma.com) that you can use to build command flows.
 
 *Figma is a free web-based design tool.*
 

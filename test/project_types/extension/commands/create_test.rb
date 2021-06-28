@@ -19,11 +19,13 @@ module Extension
 
         @app = Models::App.new(title: "Fake", api_key: "1234", secret: "4567", business_name: "Fake Business")
         stub_get_app(api_key: "1234", app: @app)
+
+        ShopifyCli::Tasks::EnsureAuthenticated.stubs(:call)
       end
 
       def test_prints_help
-        io = capture_io { run_cmd("create extension --help") }
-        assert_message_output(io: io, expected_content: [Extension::Commands::Create.help])
+        io = capture_io { run_cmd("extension create --help") }
+        assert_message_output(io: io, expected_content: [Extension::Command::Create.help])
       end
 
       def test_create_aborts_if_the_directory_already_exists
@@ -43,7 +45,8 @@ module Extension
       def test_runs_type_create_and_writes_project_files
         Dir.expects(:exist?).with(@directory_name).returns(false).once
         Models::SpecificationHandlers::Default
-          .any_instance.expects(:create).with(@directory_name, @context).returns(true).once
+          .any_instance.expects(:create).with(@directory_name, @context, getting_started: nil)
+          .returns(true).once
         ExtensionProject.expects(:write_cli_file).with(context: @context, type: @specification_handler.identifier).once
         ExtensionProject
           .expects(:write_env_file)
@@ -64,7 +67,8 @@ module Extension
       def test_does_not_create_project_files_and_outputs_try_again_message_if_type_create_failed
         Dir.expects(:exist?).with(@directory_name).returns(false).once
         Models::SpecificationHandlers::Default
-          .any_instance.expects(:create).with(@directory_name, @context).returns(false).once
+          .any_instance.expects(:create).with(@directory_name, @context, getting_started: nil)
+          .returns(false).once
         ExtensionProject.expects(:write_cli_file).never
         ExtensionProject.expects(:write_env_file).never
 
@@ -90,8 +94,8 @@ module Extension
       def run_create(arguments)
         specifications = ExtensionTestHelpers.test_specifications
         Models::Specifications.stubs(:new).returns(specifications)
-        Commands::Create.ctx = @context
-        Commands::Create.call(arguments, "create", "create")
+        Extension::Command::Create.ctx = @context
+        Extension::Command::Create.call(arguments, "create", "create")
       end
     end
   end

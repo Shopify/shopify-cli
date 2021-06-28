@@ -5,7 +5,7 @@ module ShopifyCli
         @ctx = ctx
         api_key = Project.current.env.api_key
         result = ShopifyCli::PartnersAPI.query(ctx, "get_app_urls", apiKey: api_key)
-        loopback = OAuth::REDIRECT_HOST
+        loopback = IdentityAuth::REDIRECT_HOST
         app = result["data"]["app"]
         urls = app["redirectUrlWhitelist"]
         if urls.grep(/#{loopback}/).empty?

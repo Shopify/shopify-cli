@@ -11,13 +11,13 @@ module Node
         context = ShopifyCli::Context.new
 
         ShopifyCli::Project.stubs(:has_current?).returns(false)
-        ShopifyCli::Commands::Connect.any_instance.expects(:default_connect)
+        ShopifyCli::Connect.any_instance.expects(:default_connect)
           .with("node")
           .returns("node-app")
         context.expects(:done)
           .with(context.message("node.connect.connected", "node-app"))
 
-        Node::Commands::Connect.new(context).call
+        Node::Command::Connect.new(context).call
       end
 
       def test_warns_if_in_production
@@ -25,13 +25,13 @@ module Node
 
         context.expects(:puts)
           .with(context.message("node.connect.production_warning"))
-        ShopifyCli::Commands::Connect.any_instance.expects(:default_connect)
+        ShopifyCli::Connect.any_instance.expects(:default_connect)
           .with("node")
           .returns("node-app")
         context.expects(:done)
           .with(context.message("node.connect.connected", "node-app"))
 
-        Node::Commands::Connect.new(context).call
+        Node::Command::Connect.new(context).call
       end
     end
   end

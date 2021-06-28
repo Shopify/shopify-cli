@@ -6,7 +6,7 @@ module ShopifyCli
       class << self
         def get(ctx)
           unless ShopifyCli::DB.exists?(:shopify_admin_schema)
-            shop = Project.current.env.shop || get_shop(ctx)
+            shop = AdminAPI.get_shop_or_abort(ctx)
             schema = AdminAPI.query(ctx, "admin_introspection", shop: shop)
             ShopifyCli::DB.set(shopify_admin_schema: JSON.dump(schema))
           end
@@ -14,15 +14,6 @@ module ShopifyCli
           # It wraps the JSON in our Schema Class to have the helper methods
           # available
           self[JSON.parse(ShopifyCli::DB.get(:shopify_admin_schema))]
-        end
-
-        private
-
-        def get_shop(ctx)
-          res = ShopifyCli::Tasks::SelectOrgAndShop.call(ctx)
-          domain = res[:shop_domain]
-          Project.current.env.update(ctx, :shop, domain)
-          domain
         end
       end
 

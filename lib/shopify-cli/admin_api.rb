@@ -38,9 +38,15 @@ module ShopifyCli
       #   ShopifyCli::AdminAPI.query(@ctx, 'all_organizations')
       #
       def query(ctx, query_name, shop:, api_version: nil, **variables)
-        authenticated_req(ctx, shop) do
+        CLI::Kit::Util.begin do
           api_client(ctx, api_version, shop).query(query_name, variables: variables)
+        end.retry_after(API::APIRequestUnauthorizedError, retries: 1) do
+          ShopifyCli::IdentityAuth.new(ctx: ctx).reauthenticate
         end
+      rescue API::APIRequestUnauthorizedError
+        ctx.abort(ctx.message("core.api.error.failed_auth"))
+      rescue API::APIRequestForbiddenError
+        ctx.abort(ctx.message("core.api.error.forbidden", ShopifyCli::TOOL_NAME))
       end
 
       ##
@@ -75,52 +81,47 @@ module ShopifyCli
       #                                     path: 'data.json',
       #                                     token: 'password')
       #
-      def rest_request(ctx, shop:, path:, body: nil, method: "GET", api_version: nil, token: nil)
-        ShopifyCli::DB.set(admin_access_token: token) unless token.nil?
-        url = URI::HTTPS.build(host: shop, path: "/admin/api/#{fetch_api_version(ctx, api_version, shop)}/#{path}")
-        resp = api_client(ctx, api_version, shop, path: path).request(url: url.to_s, body: body, method: method)
-        ShopifyCli::DB.set(admin_access_token: nil) unless token.nil?
-        resp
+      def rest_request(ctx, shop:, path:, query: nil, body: nil, method: "GET", api_version: nil, token: nil)
+        CLI::Kit::Util.begin do
+          ShopifyCli::DB.set(shopify_exchange_token: token) unless token.nil?
+          url = URI::HTTPS.build(
+            host: shop,
+            path: "/admin/api/#{fetch_api_version(ctx, api_version, shop)}/#{path}",
+            query: query,
+          )
+          resp = api_client(ctx, api_version, shop, path: path).request(url: url.to_s, body: body, method: method)
+          ShopifyCli::DB.set(shopify_exchange_token: nil) unless token.nil?
+          resp
+        end.retry_after(API::APIRequestUnauthorizedError) do
+          ShopifyCli::IdentityAuth.new(ctx: ctx).reauthenticate
+        end
+      end
+
+      def get_shop_or_abort(ctx)
+        ctx.abort(
+          ctx.message("core.populate.error.no_shop", ShopifyCli::TOOL_NAME)
+        ) unless ShopifyCli::DB.exists?(:shop)
+        ShopifyCli::DB.get(:shop)
       end
 
       private
 
-      def authenticated_req(ctx, shop, &block)
-        CLI::Kit::Util
-          .begin(&block)
-          .retry_after(API::APIRequestUnauthorizedError, retries: 1) do
-            authenticate(ctx, shop)
-          end
-      rescue API::APIRequestUnauthorizedError
-        ctx.abort(ctx.message("core.api.error.failed_auth"))
-      end
-
-      def authenticate(ctx, shop)
-        env = Project.current.env
-        ShopifyCli::OAuth.new(
-          ctx: ctx,
-          service: "admin",
-          client_id: env.api_key,
-          secret: env.secret,
-          scopes: env.scopes,
-          token_path: "/access_token",
-          options: { "grant_options[]" => "per user" },
-        ).authenticate("https://#{shop}/admin/oauth")
+      def authenticate(ctx, _shop)
+        ShopifyCli::IdentityAuth.new(ctx: ctx).authenticate
       end
 
       def api_client(ctx, api_version, shop, path: "graphql.json")
         new(
           ctx: ctx,
-          auth_header: "X-Shopify-Access-Token",
-          token: admin_access_token(ctx, shop),
+          token: access_token(ctx, shop),
           url: "https://#{shop}/admin/api/#{fetch_api_version(ctx, api_version, shop)}/#{path}",
         )
       end
 
-      def admin_access_token(ctx, shop)
-        ShopifyCli::DB.get(:admin_access_token) do
+      def access_token(ctx, shop)
+        ShopifyCli::DB.get(:shopify_exchange_token) do
           authenticate(ctx, shop)
-          ShopifyCli::DB.get(:admin_access_token)
+          ShopifyCli::DB.get(:shopify_exchange_token)
         end
       end
 
@@ -128,14 +129,28 @@ module ShopifyCli
         return api_version unless api_version.nil?
         client = new(
           ctx: ctx,
-          auth_header: "X-Shopify-Access-Token",
-          token: admin_access_token(ctx, shop),
+          token: access_token(ctx, shop),
           url: "https://#{shop}/admin/api/unstable/graphql.json",
         )
-        versions = client.query("api_versions")["data"]["publicApiVersions"]
-        latest = versions.find { |version| version["displayName"].include?("Latest") }
-        latest["handle"]
+        CLI::Kit::Util.begin do
+          versions = client.query("api_versions")["data"]["publicApiVersions"]
+          latest = versions.find { |version| version["displayName"].include?("Latest") }
+          latest["handle"]
+        end.retry_after(API::APIRequestUnauthorizedError, retries: 1) do
+          ShopifyCli::IdentityAuth.new(ctx: ctx).reauthenticate
+        end
+      rescue API::APIRequestUnauthorizedError
+        ctx.abort(ctx.message("core.api.error.failed_auth"))
+      rescue API::APIRequestForbiddenError
+        ctx.abort(ctx.message("core.api.error.forbidden", ShopifyCli::TOOL_NAME))
       end
+    end
+
+    def auth_headers(token)
+      {
+        Authorization: "Bearer #{token}",
+        "X-Shopify-Access-Token" => token, # TODO: Remove when we no longer need private apps
+      }
     end
   end
 end

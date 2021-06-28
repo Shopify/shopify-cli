@@ -12,7 +12,7 @@ module Rails
 
       def test_run
         @context.expects(:open_url!).with("https://example.com/login?shop=my-test-shop.myshopify.com")
-        Rails::Commands::Open.new(@context).call
+        Rails::Command::Open.new(@context).call
       end
     end
   end

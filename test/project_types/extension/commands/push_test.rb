@@ -10,6 +10,7 @@ module Extension
       def setup
         super
         ShopifyCli::ProjectType.load_type(:extension)
+        ShopifyCli::Tasks::EnsureProjectType.stubs(:call)
         @project = ExtensionTestHelpers.fake_extension_project(with_mocks: true)
         @version = Models::Version.new(
           registration_id: 42,
@@ -19,15 +20,15 @@ module Extension
 
       def test_help_implemented
         assert_nothing_raised do
-          refute_nil Commands::Push.help
+          refute_nil Command::Push.help
         end
       end
 
       def test_runs_register_command_if_extension_not_yet_registered
         @project.expects(:registered?).returns(false).once
 
-        Commands::Register.any_instance.expects(:call).once
-        Commands::Build.any_instance.stubs(:call)
+        Command::Register.any_instance.expects(:call).once
+        Command::Build.any_instance.stubs(:call)
         ShopifyCli::JsSystem.any_instance.stubs(:call).returns(true)
         Tasks::UpdateDraft.any_instance.stubs(:call).returns(@version)
 
@@ -37,8 +38,8 @@ module Extension
       def test_does_not_run_register_command_if_extension_already_registered
         assert @project.registered?
 
-        Commands::Register.any_instance.expects(:call).never
-        Commands::Build.any_instance.stubs(:call)
+        Command::Register.any_instance.expects(:call).never
+        Command::Build.any_instance.stubs(:call)
         ShopifyCli::JsSystem.any_instance.stubs(:call).returns(true)
         Tasks::UpdateDraft.any_instance.stubs(:call).returns(@version)
 
@@ -46,7 +47,7 @@ module Extension
       end
 
       def test_runs_build_command
-        Commands::Build.any_instance.expects(:call).once
+        Command::Build.any_instance.expects(:call).once
         ShopifyCli::JsSystem.any_instance.stubs(:call).returns(true)
         Tasks::UpdateDraft.any_instance.stubs(:call).returns(@version)
 
@@ -55,7 +56,7 @@ module Extension
 
       def test_updates_the_extensions_draft_version
         specification_handler = ExtensionTestHelpers.test_specification_handler
-        Commands::Build.any_instance.stubs(:call)
+        Command::Build.any_instance.stubs(:call)
         ShopifyCli::JsSystem.any_instance.stubs(:call).returns(true)
         Tasks::UpdateDraft.any_instance.expects(:call)
           .with(
@@ -74,7 +75,7 @@ module Extension
       def test_shows_confirmation_message_with_time_updated_on_successful_update
         @version.last_user_interaction_at = Time.parse("2020-05-07 19:01:56 UTC")
         @version.location = "https://www.fakeurl.com"
-        Commands::Build.any_instance.stubs(:call)
+        Command::Build.any_instance.stubs(:call)
         ShopifyCli::JsSystem.any_instance.stubs(:call).returns(true)
         Tasks::UpdateDraft.any_instance.stubs(:call).returns(@version)
 
@@ -92,7 +93,7 @@ module Extension
         expected_formatted_time_in_utc = "May 07, 2020 23:01:56 UTC"
 
         @version.last_user_interaction_at = Time.parse(response_time)
-        Commands::Build.any_instance.stubs(:call)
+        Command::Build.any_instance.stubs(:call)
         ShopifyCli::JsSystem.any_instance.stubs(:call).returns(true)
         Tasks::UpdateDraft.any_instance.stubs(:call).returns(@version)
 
@@ -109,7 +110,7 @@ module Extension
           Models::ValidationError.new(field: %w(test_field1 test_field2), message: "Error message2"),
         ]
 
-        Commands::Build.any_instance.stubs(:call)
+        Command::Build.any_instance.stubs(:call)
         ShopifyCli::JsSystem.any_instance.stubs(:call).returns(true)
         Tasks::UpdateDraft.any_instance.stubs(:call).returns(@version)
 
@@ -126,7 +127,7 @@ module Extension
       private
 
       def run_push
-        push_command = Commands::Push.new
+        push_command = Command::Push.new
         push_command.ctx = @context
         push_command.call({}, :push)
       end

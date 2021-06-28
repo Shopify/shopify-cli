@@ -1,4 +1,4 @@
-#!/usr/bin/env ruby --disable=gems
+#!/usr/bin/env ruby
 
 module Kernel
   # make an alias of the original require
@@ -12,7 +12,7 @@ module Kernel
     raise if (name == "readline.so") && ShopifyCli::Context.new.windows?
     # Special case for psych (yaml), which rescues this itself
     raise if name == "#{RUBY_VERSION[/\d+\.\d+/]}/psych.so"
-    STDERR.puts "[Note] You cannot use gems with Shopify App CLI."
+    STDERR.puts "[Note] You cannot use gems with Shopify CLI."
     STDERR.puts "[LoadError] #{e.message}"
     if ENV["DEBUG"]
       STDERR.puts e.backtrace
@@ -21,7 +21,7 @@ module Kernel
     STDERR.puts "       They are disabled."
     STDERR.puts "       Please don't modify the CLI locally."
     STDERR.puts "       If you would like to contribute to the CLI project, please refer to"
-    STDERR.puts "       https://github.com/Shopify/shopify-app-cli/blob/master/.github/CONTRIBUTING.md"
+    STDERR.puts "       https://github.com/Shopify/shopify-cli/blob/main/.github/CONTRIBUTING.md"
     STDERR.puts "\n"
     raise
   end

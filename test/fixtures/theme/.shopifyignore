@@ -1,0 +1,9 @@
+# plain file names
+config/settings_data.json
+
+# globs
+config/*_secret.json
+*.jpg
+
+# regex
+/\.(txt|gif|bat)$/

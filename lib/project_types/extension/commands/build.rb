@@ -2,9 +2,11 @@
 require "shopify_cli"
 
 module Extension
-  module Commands
+  class Command
     class Build < ExtensionCommand
       hidden_feature
+
+      prerequisite_task ensure_project_type: :extension
 
       YARN_BUILD_COMMAND = %w(build)
       NPM_BUILD_COMMAND = %w(run-script build)
@@ -19,10 +21,7 @@ module Extension
       end
 
       def self.help
-        <<~HELP
-          Build your extension to prepare for deployment.
-            Usage: {{command:#{ShopifyCli::TOOL_NAME} build}}
-        HELP
+        ShopifyCli::Context.new.message("build.help", ShopifyCli::TOOL_NAME)
       end
     end
   end

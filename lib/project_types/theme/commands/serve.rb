@@ -1,26 +1,16 @@
 # frozen_string_literal: true
-module Theme
-  module Commands
-    class Serve < ShopifyCli::Command
-      prerequisite_task :ensure_themekit_installed
+require "shopify-cli/theme/dev_server"
 
+module Theme
+  class Command
+    class Serve < ShopifyCli::SubCommand
       options do |parser, flags|
-        parser.on("--env=ENV") { |env| flags[:env] = env }
-        parser.on("--allow-live") { flags["allow-live"] = true }
-        parser.on("--notify=FILES") { |files| flags["notify"] = files }
+        parser.on("--port=PORT") { |port| flags[:port] = port.to_i }
       end
 
       def call(*)
-        if options.flags[:env]
-          env = options.flags[:env]
-          options.flags.delete(:env)
-        end
-
-        flags = Themekit.add_flags(options.flags)
-
-        CLI::UI::Frame.open(@ctx.message("theme.serve.serve")) do
-          Themekit.serve(@ctx, flags: flags, env: env)
-        end
+        flags = options.flags.dup
+        ShopifyCli::Theme::DevServer.start(@ctx, ".", **flags)
       end
 
       def self.help

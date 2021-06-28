@@ -1,5 +1,6 @@
 # frozen_string_literal: true
 require "project_types/theme/test_helper"
+require "shopify-cli/theme/dev_server"
 
 module Theme
   module Commands
@@ -8,17 +9,26 @@ module Theme
 
       def test_serve_command
         context = ShopifyCli::Context.new
-        Themekit.expects(:serve).with(context, flags: [], env: nil)
+        ShopifyCli::Theme::DevServer.expects(:start).with(context, ".", optionally({}))
 
-        Theme::Commands::Serve.new(context).call
+        Theme::Command::Serve.new(context).call
+      end
+
+      def test_can_specify_port
+        context = ShopifyCli::Context.new
+        ShopifyCli::Theme::DevServer.expects(:start).with(context, ".", port: 9293)
+
+        command = Theme::Command::Serve.new(context)
+        command.options.flags[:port] = 9293
+        command.call
       end
 
       def test_can_specify_env
         context = ShopifyCli::Context.new
-        Themekit.expects(:serve).with(context, flags: [], env: "test")
+        ShopifyCli::Theme::DevServer.expects(:start).with(context, ".", env: "staging")
 
-        command = Theme::Commands::Serve.new(context)
-        command.options.flags[:env] = "test"
+        command = Theme::Command::Serve.new(context)
+        command.options.flags[:env] = "staging"
         command.call
       end
     end

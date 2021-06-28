@@ -45,9 +45,18 @@ module ShopifyCli
       #   ShopifyCli::PartnersAPI.query(@ctx, 'all_organizations')
       #
       def query(ctx, query_name, **variables)
-        authenticated_req(ctx) do
+        CLI::Kit::Util.begin do
           api_client(ctx).query(query_name, variables: variables)
+        end.retry_after(API::APIRequestUnauthorizedError, retries: 1) do
+          ShopifyCli::IdentityAuth.new(ctx: ctx).reauthenticate
         end
+      rescue API::APIRequestUnauthorizedError => e
+        if (request_info = auth_failure_info(ctx, e))
+          ctx.puts(ctx.message("core.api.error.failed_auth_debugging", request_info))
+        end
+        ctx.abort(ctx.message("core.api.error.failed_auth"))
+      rescue API::APIRequestNotFoundError
+        ctx.puts(ctx.message("core.partners_api.error.account_not_found", ShopifyCli::TOOL_NAME))
       end
 
       def partners_url_for(organization_id, api_client_id, local_debug)
@@ -59,18 +68,6 @@ module ShopifyCli
 
       private
 
-      def authenticated_req(ctx, &block)
-        CLI::Kit::Util
-          .begin(&block)
-          .retry_after(API::APIRequestUnauthorizedError, retries: 1) do
-            authenticate(ctx)
-          end
-      rescue API::APIRequestUnauthorizedError
-        ctx.abort(ctx.message("core.api.error.failed_auth"))
-      rescue API::APIRequestNotFoundError
-        ctx.puts(ctx.message("core.partners_api.error.account_not_found", ShopifyCli::TOOL_NAME))
-      end
-
       def api_client(ctx)
         new(
           ctx: ctx,
@@ -80,35 +77,10 @@ module ShopifyCli
       end
 
       def access_token(ctx)
-        ShopifyCli::DB.get(:identity_exchange_token) do
-          authenticate(ctx)
-          ShopifyCli::DB.get(:identity_exchange_token)
+        ShopifyCli::DB.get(:partners_exchange_token) do
+          IdentityAuth.new(ctx: ctx).authenticate
+          ShopifyCli::DB.get(:partners_exchange_token)
         end
-      end
-
-      def authenticate(ctx)
-        OAuth.new(
-          ctx: ctx,
-          service: "identity",
-          client_id: cli_id,
-          scopes: scopes.join(" "),
-          request_exchange: partners_id,
-        ).authenticate("#{auth_endpoint}/oauth")
-      end
-
-      def partners_id
-        return "271e16d403dfa18082ffb3d197bd2b5f4479c3fc32736d69296829cbb28d41a6" if ENV[LOCAL_DEBUG].nil?
-        "df89d73339ac3c6c5f0a98d9ca93260763e384d51d6038da129889c308973978"
-      end
-
-      def cli_id
-        return "fbdb2649-e327-4907-8f67-908d24cfd7e3" if ENV[LOCAL_DEBUG].nil?
-        "e5380e02-312a-7408-5718-e07017e9cf52"
-      end
-
-      def auth_endpoint
-        return "https://accounts.shopify.com" if ENV[LOCAL_DEBUG].nil?
-        "https://identity.myshopify.io"
       end
 
       def endpoint
@@ -125,10 +97,15 @@ module ShopifyCli
         "https://#{domain}"
       end
 
-      def scopes
-        %w[openid https://api.shopify.com/auth/partners.app.cli.access].tap do |result|
-          result << "employee" if ShopifyCli::Shopifolk.acting_as_shopify_organization?
+      def auth_failure_info(ctx, error)
+        if error.response
+          headers = %w(www-authenticate x-request-id)
+          request_info = headers.map { |h| "#{h}: #{error.response[h]}" if error.response.key?(h) }.join("\n")
+          ctx.debug("Full headers: #{error.response.each_header.to_h}")
+          request_info
         end
+      rescue => e
+        ctx.debug("Couldn't fetch auth failure information from #{error}: #{e}")
       end
     end
 

@@ -7,6 +7,7 @@ module Rails
     class CreateTest < MiniTest::Test
       include TestHelpers::Partners
       include TestHelpers::FakeUI
+      include TestHelpers::Shopifolk
 
       ENV_FILE = <<~CONTENT
         SHOPIFY_API_KEY=newapikey
@@ -21,9 +22,15 @@ module Rails
         organization_id: 42
       APPTYPE
 
+      def setup
+        super
+        ShopifyCli::Tasks::EnsureAuthenticated.stubs(:call)
+        ShopifyCli::Shopifolk.stubs(:acting_as_shopify_organization?).returns(false)
+      end
+
       def test_prints_help_with_no_name_argument
-        io = capture_io { run_cmd("create rails --help") }
-        assert_match(CLI::UI.fmt(Rails::Commands::Create.help), io.join)
+        io = capture_io { run_cmd("rails create --help") }
+        assert_match(CLI::UI.fmt(Rails::Command::Create.help), io.join)
       end
 
       def test_will_abort_if_bad_ruby
@@ -84,7 +91,7 @@ module Rails
 
         assert_equal SHOPIFYCLI_FILE, File.read("test-app/.shopify-cli.yml")
         assert_equal ENV_FILE, File.read("test-app/.env")
-        assert_equal Create::USER_AGENT_CODE, File.read("test-app/config/initializers/user_agent.rb")
+        assert_equal Rails::Command::Create::USER_AGENT_CODE, File.read("test-app/config/initializers/user_agent.rb")
 
         delete_gem_path_and_binaries
         FileUtils.rm_r("test-app")
@@ -218,7 +225,7 @@ module Rails
       end
 
       def perform_command_snake_case(add_cmd = nil)
-        default_new_cmd = %w(create rails \
+        default_new_cmd = %w(rails create \
                              --type=public \
                              --name=test-app \
                              --organization_id=42 \
@@ -228,7 +235,7 @@ module Rails
       end
 
       def perform_command(add_cmd = nil)
-        default_new_cmd = %w(create rails \
+        default_new_cmd = %w(rails create \
                              --type=public \
                              --name=test-app \
                              --organization-id=42 \

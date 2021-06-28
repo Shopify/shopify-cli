@@ -10,6 +10,7 @@ module Rails
         super
         project_context("app_types", "rails")
         ShopifyCli::Tasks::EnsureDevStore.stubs(:call)
+        ShopifyCli::Tasks::EnsureProjectType.stubs(:call)
         @context.stubs(:system)
       end
 
@@ -30,7 +31,7 @@ module Rails
             "GEM_PATH" => "/gem/path",
           }
         )
-        Rails::Commands::Serve.new(@context).call
+        Rails::Command::Serve.new(@context).call
       end
 
       def test_server_command_with_invalid_host_url
@@ -49,7 +50,7 @@ module Rails
         ).never
 
         assert_raises ShopifyCli::Abort do
-          Rails::Commands::Serve.new(@context).call
+          Rails::Command::Serve.new(@context).call
         end
       end
 
@@ -64,7 +65,7 @@ module Rails
           @context.message("rails.serve.open_info", "https://example.com/login?shop=my-test-shop.myshopify.com") +
           "\n"
         )
-        Rails::Commands::Serve.new(@context).call
+        Rails::Command::Serve.new(@context).call
       end
 
       def test_update_env_with_host
@@ -73,7 +74,7 @@ module Rails
         ShopifyCli::Resources::EnvFile.any_instance.expects(:update).with(
           @context, :host, "https://example-foo.com"
         )
-        command = Rails::Commands::Serve.new(@context)
+        command = Rails::Command::Serve.new(@context)
         command.options.flags[:host] = "https://example-foo.com"
         command.call
       end

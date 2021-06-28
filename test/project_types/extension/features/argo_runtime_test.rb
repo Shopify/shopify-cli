@@ -7,154 +7,96 @@ module Extension
     class ArgoRuntimeTest < MiniTest::Test
       include ExtensionTestHelpers::TempProjectSetup
 
-      def test_accepts_port
+      def test_supports_port
         runtimes = {
-          checkout_runtime_0_3_8 => does_not_support_feature,
-          checkout_runtime_0_4_0 => supports_feature,
-          admin_runtime_0_11_0 => supports_feature,
-          admin_runtime_0_9_3 => does_not_support_feature,
-          admin_runtime_0_9_2 => does_not_support_feature,
+          checkout_runtime => supports_feature,
+          admin_runtime => supports_feature,
         }
 
         runtimes.each do |runtime, accepts_port|
-          assert_equal accepts_port, runtime.accepts_port?
+          assert_equal accepts_port, runtime.supports?(:port)
         end
       end
 
-      def test_accepts_tunnel_url
+      def test_supports_public_url
         runtimes = {
-          checkout_runtime_0_3_8 => does_not_support_feature,
-          checkout_runtime_0_4_0 => supports_feature,
-          admin_runtime_0_11_0 => supports_feature,
-          admin_runtime_0_9_3 => does_not_support_feature,
-          admin_runtime_0_9_2 => does_not_support_feature,
+          checkout_runtime => supports_feature,
+          admin_runtime => supports_feature,
         }
 
         runtimes.each do |runtime, accepts_tunnel|
-          assert_equal accepts_tunnel, runtime.accepts_tunnel_url?
+          assert_equal accepts_tunnel, runtime.supports?(:public_url)
         end
       end
 
-      def test_accepts_uuid
+      def test_supports_uuid
         runtimes = {
-          checkout_runtime_0_3_8 => does_not_support_feature,
-          checkout_runtime_0_4_0 => does_not_support_feature,
-          admin_runtime_0_11_0 => supports_feature,
-          admin_runtime_0_9_3 => does_not_support_feature,
-          admin_runtime_0_9_2 => does_not_support_feature,
+          checkout_runtime => does_not_support_feature,
+          admin_runtime => supports_feature,
         }
 
         runtimes.each do |runtime, accepts_uuid|
-          assert_equal accepts_uuid, runtime.accepts_uuid?
+          assert_equal accepts_uuid, runtime.supports?(:uuid)
         end
       end
 
-      def test_accepts_argo_version
+      def test_supports_renderer_version
         runtimes = {
-          checkout_runtime_0_3_8 => does_not_support_feature,
-          checkout_runtime_0_4_0 => does_not_support_feature,
-          admin_runtime_0_11_0 => supports_feature,
-          admin_runtime_0_9_3 => supports_feature,
-          admin_runtime_0_9_2 => does_not_support_feature,
+          checkout_runtime => does_not_support_feature,
+          admin_runtime => supports_feature,
         }
 
-        runtimes.each do |runtime, accepts_argo_version|
-          assert_equal accepts_argo_version, runtime.accepts_argo_version?
+        runtimes.each do |runtime, accepts_renderer_version|
+          assert_equal accepts_renderer_version, runtime.supports?(:renderer_version)
         end
       end
 
-      def test_accepts_api_key
+      def test_supports_api_key
         runtimes = {
-          checkout_runtime_0_3_8 => does_not_support_feature,
-          checkout_runtime_0_4_0 => does_not_support_feature,
-          admin_runtime_0_11_0 => supports_feature,
-          admin_runtime_0_9_3 => does_not_support_feature,
-          admin_runtime_0_9_2 => does_not_support_feature,
+          checkout_runtime => does_not_support_feature,
+          admin_runtime => supports_feature,
         }
 
-        runtimes.each do |runtime, accepts_argo_version|
-          assert_equal accepts_argo_version, runtime.accepts_api_key?
+        runtimes.each do |runtime, accepts_api_key|
+          assert_equal accepts_api_key, runtime.supports?(:api_key)
         end
       end
 
-      def test_accepts_shop
+      def test_supports_shop
         runtimes = {
-          checkout_runtime_0_3_8 => does_not_support_feature,
-          checkout_runtime_0_4_0 => does_not_support_feature,
-          admin_runtime_0_11_0 => supports_feature,
-          admin_runtime_0_9_3 => does_not_support_feature,
-          admin_runtime_0_9_2 => does_not_support_feature,
+          checkout_runtime => does_not_support_feature,
+          admin_runtime => supports_feature,
         }
 
-        runtimes.each do |runtime, accepts_argo_version|
-          assert_equal accepts_argo_version, runtime.accepts_shop?
+        runtimes.each do |runtime, accepts_shop|
+          assert_equal accepts_shop, runtime.supports?(:shop)
         end
       end
 
-      def test_accepts_name
+      def test_supports_name
         runtimes = {
-          checkout_runtime_0_3_8 => does_not_support_feature,
-          checkout_runtime_0_4_0 => does_not_support_feature,
-          admin_runtime_0_11_0 => supports_feature,
-          admin_runtime_0_9_3 => supports_feature,
-          admin_runtime_0_9_2 => supports_feature,
-          admin_runtime_0_9_0 => supports_feature,
-          admin_runtime_0_8_9 => does_not_support_feature,
+          checkout_runtime => does_not_support_feature,
+          admin_runtime => supports_feature,
         }
 
-        runtimes.each do |runtime, accepts_argo_version|
-          assert_equal accepts_argo_version, runtime.accepts_name?
+        runtimes.each do |runtime, accepts_name|
+          assert_equal accepts_name, runtime.supports?(:name)
         end
       end
 
       private
 
-      def checkout_runtime_0_3_8
+      def checkout_runtime
         ArgoRuntime.new(
-          cli: Models::NpmPackage.new(name: "@shopify/argo-run", version: "0.3.8"),
-          renderer: Models::NpmPackage.new(name: "@shopify/argo-post-purchase", version: "0.9.0")
+          cli: Models::NpmPackage.new(name: "@shopify/checkout-ui-extensions-run", version: "0.4.0"),
+          renderer: Models::NpmPackage.new(name: "@shopify/post-purchase-ui-extensions", version: "0.9.0")
         )
       end
 
-      def checkout_runtime_0_4_0
+      def admin_runtime
         ArgoRuntime.new(
-          cli: Models::NpmPackage.new(name: "@shopify/argo-run", version: "0.4.0"),
-          renderer: Models::NpmPackage.new(name: "@shopify/argo-post-purchase", version: "0.9.0")
-        )
-      end
-
-      def admin_runtime_0_9_3
-        ArgoRuntime.new(
-          cli: Models::NpmPackage.new(name: "@shopify/argo-admin-cli", version: "0.9.3"),
-          renderer: Models::NpmPackage.new(name: "@shopify/argo-admin", version: "0.9.3")
-        )
-      end
-
-      def admin_runtime_0_11_0
-        ArgoRuntime.new(
-          cli: Models::NpmPackage.new(name: "@shopify/argo-admin-cli", version: "0.11.0"),
-          renderer: Models::NpmPackage.new(name: "@shopify/argo-admin", version: "0.9.3")
-        )
-      end
-
-      def admin_runtime_0_9_2
-        ArgoRuntime.new(
-          cli: Models::NpmPackage.new(name: "@shopify/argo-admin-cli", version: "0.9.2"),
-          renderer: Models::NpmPackage.new(name: "@shopify/argo-admin", version: "0.9.3")
-        )
-      end
-
-      def admin_runtime_0_9_0
-        ArgoRuntime.new(
-          cli: Models::NpmPackage.new(name: "@shopify/argo-admin-cli", version: "0.9.0"),
-          renderer: Models::NpmPackage.new(name: "@shopify/argo-admin", version: "0.9.0")
-        )
-      end
-
-      def admin_runtime_0_8_9
-        ArgoRuntime.new(
-          cli: Models::NpmPackage.new(name: "@shopify/argo-admin-cli", version: "0.8.9"),
-          renderer: Models::NpmPackage.new(name: "@shopify/argo-admin", version: "0.8.9")
+          cli: Models::NpmPackage.new(name: "@shopify/admin-ui-extensions-run", version: "0.13.0"),
+          renderer: Models::NpmPackage.new(name: "@shopify/admin-ui-extensions", version: "0.12.0")
         )
       end
 

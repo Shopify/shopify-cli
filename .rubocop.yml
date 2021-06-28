@@ -1,6 +1,8 @@
 inherit_from: .rubocop_todo.yml
 
-require: rubocop-minitest
+require:
+  - rubocop-minitest
+  - rubocop-rake
 
 inherit_gem:
   rubocop-shopify:

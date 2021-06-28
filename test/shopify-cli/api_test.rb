@@ -26,13 +26,15 @@ module ShopifyCli
         token: "faketoken",
         url: "https://my-test-shop.myshopify.com/admin/api/2019-04/graphql.json",
       )
-      Git.stubs(:sha).returns("abcde")
+      ShopifyCli.stubs(:sha).returns("abcde")
       @context.stubs(:uname).returns("Mac")
     end
 
     def test_mutation_makes_request_to_shopify
       headers = {
-        "User-Agent" => "Shopify App CLI #{ShopifyCli::VERSION} abcde | Mac",
+        "User-Agent" => "Shopify CLI; v=#{ShopifyCli::VERSION}",
+        "Sec-CH-UA" => "Shopify CLI; v=#{ShopifyCli::VERSION} sha=#{ShopifyCli.sha}",
+        "Sec-CH-UA-PLATFORM" => @context.os,
         "Auth" => "faketoken",
       }
       uri = URI.parse("https://my-test-shop.myshopify.com/admin/api/2019-04/graphql.json")
@@ -153,6 +155,15 @@ module ShopifyCli
         .with(anything, mutation, has_entry({ "X-Shopify-Cli-Employee" => "1" }))
         .returns(response)
       @api.query("api/mutation")
+      Shopifolk.reset
+    end
+
+    def test_supports_delete_method
+      response = stub("response", code: "200", body: "{}")
+      HttpRequest
+        .expects(:delete)
+        .returns(response)
+      @api.request(url: "https://shop.com/api.json", method: "DELETE")
     end
   end
 end

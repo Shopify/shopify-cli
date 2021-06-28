@@ -1,8 +1,10 @@
 require "shopify_cli"
 
 module Node
-  module Commands
-    class Open < ShopifyCli::Command
+  class Command
+    class Open < ShopifyCli::SubCommand
+      prerequisite_task ensure_project_type: :node
+
       def call(*)
         project = ShopifyCli::Project.current
         @ctx.open_url!("#{project.env.host}/auth?shop=#{project.env.shop}")

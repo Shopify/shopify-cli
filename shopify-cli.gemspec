@@ -14,14 +14,14 @@ Gem::Specification.new do |spec|
     development process and lets you quickly add popular features, such as billing
     and webhooks.
   HERE
-  spec.homepage = "https://shopify.github.io/shopify-app-cli/"
-  spec.required_ruby_version = Gem::Requirement.new(">= 2.5")
+  spec.homepage = "https://shopify.github.io/shopify-cli/"
+  spec.required_ruby_version = Gem::Requirement.new(">= 2.6")
 
   spec.metadata["allowed_push_host"] = "https://rubygems.org"
 
   spec.metadata["homepage_uri"] = spec.homepage
-  spec.metadata["source_code_uri"] = "https://github.com/Shopify/shopify-app-cli"
-  spec.metadata["changelog_uri"] = "https://github.com/Shopify/shopify-app-cli/blob/master/CHANGELOG.md"
+  spec.metadata["source_code_uri"] = "https://github.com/Shopify/shopify-cli"
+  spec.metadata["changelog_uri"] = "https://github.com/Shopify/shopify-cli/blob/main/CHANGELOG.md"
 
   # Specify which files should be added to the gem when it is released.
   # The `git ls-files -z` loads the files in the RubyGem that have been added into git.
@@ -34,8 +34,15 @@ Gem::Specification.new do |spec|
   spec.bindir = "bin"
   spec.require_paths = ["lib", "vendor"]
   spec.extensions = ["ext/shopify-cli/extconf.rb"]
+  # Do NOT include `shopify` as a listed executable via `spec.executables`.
+  # `ext/shopify-cli/extconf.rb` will dynamically create a script and soft-link
+  # `/usr/local/bin/shopify` to that script, in order to "lock" the Ruby used to
+  # a single Ruby (useful for debugging in multi-Ruby environments)
 
-  spec.add_development_dependency("bundler", "~> 1.17")
+  spec.add_development_dependency("bundler", "~> 2.1.4")
   spec.add_development_dependency("rake", "~> 12.3", ">= 12.3.3")
   spec.add_development_dependency("minitest", "~> 5.0")
+
+  spec.add_dependency("listen", "~> 3.5")
+  spec.add_dependency("theme-check", "~> 0.10")
 end

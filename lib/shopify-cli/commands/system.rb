@@ -20,6 +20,7 @@ module ShopifyCli
         display_environment if show_all_details
 
         display_cli_constants(show_all_details)
+        display_shopify_store(show_all_details)
         display_cli_ruby(show_all_details)
         display_utility_commands(show_all_details)
         display_project_commands(show_all_details)
@@ -57,6 +58,17 @@ module ShopifyCli
             @ctx.puts("  " + @ctx.message("core.system.const", m.upcase, ShopifyCli.send(m)) + "\n")
           end
         end
+      end
+
+      def display_shopify_store(_show_all_details)
+        shop = if ShopifyCli::DB.exists?(:shop)
+          ShopifyCli::AdminAPI.get_shop_or_abort(@ctx)
+        else
+          @ctx.message("core.populate.error.no_shop", ShopifyCli::TOOL_NAME)
+        end
+
+        @ctx.puts("\n" + @ctx.message("core.system.shop_header"))
+        @ctx.puts("  " + shop)
       end
 
       def display_cli_ruby(_show_all_details)

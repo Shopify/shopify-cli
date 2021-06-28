@@ -1,35 +1,36 @@
 Unreleased
 ------
+* Allows new Checkout Extensions to specify configuration attributes in their extension.config.yml file
 
 Version 1.14.0
 --------------
-* [1275](https://github.com/Shopify/shopify-app-cli/pull/1275): Use script.json to specify script metadata
-* [1279](https://github.com/Shopify/shopify-app-cli/pull/1279): Fix bug where a script push still fails after the user answers the force push prompt
-* [1288](https://github.com/Shopify/shopify-app-cli/pull/1288): Fix bug where Scripts SDK was included for projects that don't require it
+* [#1275](https://github.com/Shopify/shopify-cli/pull/1275): Use script.json to specify script metadata
+* [#1279](https://github.com/Shopify/shopify-cli/pull/1279): Fix bug where a script push still fails after the user answers the force push prompt
+* [#1288](https://github.com/Shopify/shopify-cli/pull/1288): Fix bug where Scripts SDK was included for projects that don't require it
 
 Version 1.13.1
 --------------
-* [1274](https://github.com/Shopify/shopify-app-cli/pull/1274): Only print api_key during error if it exists
-* [1272](https://github.com/Shopify/shopify-app-cli/pull/1272): Fix minor bug with extension serve for UI extensions
+* [#1274](https://github.com/Shopify/shopify-cli/pull/1274): Only print api_key during error if it exists
+* [#1272](https://github.com/Shopify/shopify-cli/pull/1272): Fix minor bug with extension serve for UI extensions
 
 Version 1.13.0
 --------------
 
-* [1266](https://github.com/Shopify/shopify-app-cli/pull/1266): Developer Console release
-* [1265](https://github.com/Shopify/shopify-app-cli/pull/1265): Fix bug where commands hang after an unsuccessful authentication
+* [#1266](https://github.com/Shopify/shopify-cli/pull/1266): Developer Console release
+* [#1265](https://github.com/Shopify/shopify-cli/pull/1265): Fix bug where commands hang after an unsuccessful authentication
 
 Version 1.12.0
 --------------
-* [1255](https://github.com/Shopify/shopify-app-cli/pull/1255): Fix beta flag checks when running `shopify serve`
+* [#1255](https://github.com/Shopify/shopify-cli/pull/1255): Fix beta flag checks when running `shopify serve`
 
 Version 1.11.0
 --------------
-* [#1221](https://github.com/Shopify/shopify-app-cli/pull/1221): Prioritizes returning an HTTPS URL over HTTP from `shopify tunnel status`.
-* [#1223](https://github.com/Shopify/shopify-app-cli/pull/1233): Running `shopify serve` in an extension project now automatically runs `shopify tunnel`.
-* [#1225](https://github.com/Shopify/shopify-app-cli/pull/1225): Improved handling of "account not found" scenario, plus improvements to related tests and UX messaging
-* [#1229](https://github.com/Shopify/shopify-app-cli/pull/1229): Allows Checkout Extensions to specify configuration attributes in their extension.config.yml file.
-* [#1238](https://github.com/Shopify/shopify-app-cli/pull/1238): Auto Tunnel Support for Checkout Extension
-* [#1256](https://github.com/Shopify/shopify-app-cli/pull/1256): Allow using spaces around the equal sign on .env file.
+* [#1221](https://github.com/Shopify/shopify-cli/pull/1221): Prioritizes returning an HTTPS URL over HTTP from `shopify tunnel status`.
+* [#1223](https://github.com/Shopify/shopify-cli/pull/1233): Running `shopify serve` in an extension project now automatically runs `shopify tunnel`.
+* [#1225](https://github.com/Shopify/shopify-cli/pull/1225): Improved handling of "account not found" scenario, plus improvements to related tests and UX messaging
+* [#1229](https://github.com/Shopify/shopify-cli/pull/1229): Allows Checkout Extensions to specify configuration attributes in their extension.config.yml file.
+* [#1238](https://github.com/Shopify/shopify-cli/pull/1238): Auto Tunnel Support for Checkout Extension
+* [#1256](https://github.com/Shopify/shopify-cli/pull/1256): Allow using spaces around the equal sign on .env file.
 
 Version 1.10.0
 --------------
@@ -37,15 +38,15 @@ Version 1.10.0
 
 Version 1.9.1
 -------------
-* [1201](https://github.com/Shopify/shopify-app-cli/pull/1201) Determine Argo Renderer Dynamically. This fixes `shopify serve` and `shopify push` for extensions.
+* [#1201](https://github.com/Shopify/shopify-cli/pull/1201) Determine Argo Renderer Dynamically. This fixes `shopify serve` and `shopify push` for extensions.
 
 Version 1.9.0
 -------------
-* [1181](https://github.com/Shopify/shopify-app-cli/pull/1181): Remove the subcommand references of the `generate` command for node apps (fixes [1176](https://github.com/Shopify/shopify-app-cli/issues/1176))
+* [#1181](https://github.com/Shopify/shopify-cli/pull/1181): Remove the subcommand references of the `generate` command for node apps (fixes [1176](https://github.com/Shopify/shopify-cli/issues/1176))
 
 Version 1.8.0
 -------------
-* [1119](https://github.com/Shopify/shopify-app-cli/pull/1119): Enable guest serialization for scripts
+* [#1119](https://github.com/Shopify/shopify-cli/pull/1119): Enable guest serialization for scripts
 
 Version 1.7.1
 ------
@@ -53,31 +54,31 @@ Version 1.7.1
 
 Version 1.7.0
 -----
-* [#1109](https://github.com/Shopify/shopify-app-cli/pull/1109): Abort app generation if name contains disallowed text.
-* [#1075](https://github.com/Shopify/shopify-app-cli/pull/1075): Add support for kebab-case flags
+* [#1109](https://github.com/Shopify/shopify-cli/pull/1109): Abort app generation if name contains disallowed text.
+* [#1075](https://github.com/Shopify/shopify-cli/pull/1075): Add support for kebab-case flags
 
 Version 1.6.0
 -----
-* [#1049](https://github.com/Shopify/shopify-app-cli/pull/1049): Add schema versioning support to the script project type
-* [#1059](https://github.com/Shopify/shopify-app-cli/pull/1059): Remove the functionality of the `generate` command for node apps, since it will no longer be feasible with the new node library
-* [#1046](https://github.com/Shopify/shopify-app-cli/pull/1046): Include a vendored copy of Webrick, as it's no longer included in Ruby 3.
-* [#1041](https://github.com/Shopify/shopify-app-cli/pull/1041): Remove unnecessary shell call to `spring stop`. We already pass `--skip-spring` when creating the app so running `spring stop` would have no effect.
-* [#1034](https://github.com/Shopify/shopify-app-cli/pull/1034): Abort if a system call fails.
+* [#1049](https://github.com/Shopify/shopify-cli/pull/1049): Add schema versioning support to the script project type
+* [#1059](https://github.com/Shopify/shopify-cli/pull/1059): Remove the functionality of the `generate` command for node apps, since it will no longer be feasible with the new node library
+* [#1046](https://github.com/Shopify/shopify-cli/pull/1046): Include a vendored copy of Webrick, as it's no longer included in Ruby 3.
+* [#1041](https://github.com/Shopify/shopify-cli/pull/1041): Remove unnecessary shell call to `spring stop`. We already pass `--skip-spring` when creating the app so running `spring stop` would have no effect.
+* [#1034](https://github.com/Shopify/shopify-cli/pull/1034): Abort if a system call fails.
 
 Version 1.5.0
 -----
-* [#965](https://github.com/Shopify/shopify-app-cli/pull/965): Remove --no-optional when using npm to create new project
-* [#958](https://github.com/Shopify/shopify-app-cli/pull/958): Split `connect` command into project-specific functionality
-* [#992](https://github.com/Shopify/shopify-app-cli/pull/992): Add Theme Kit functionality to CLI
+* [#965](https://github.com/Shopify/shopify-cli/pull/965): Remove --no-optional when using npm to create new project
+* [#958](https://github.com/Shopify/shopify-cli/pull/958): Split `connect` command into project-specific functionality
+* [#992](https://github.com/Shopify/shopify-cli/pull/992): Add Theme Kit functionality to CLI
 
 Version 1.4.1
 ------
-* [#917](https://github.com/Shopify/shopify-app-cli/pull/917): Ensure analytics for create action includes the same fields as other commands
+* [#917](https://github.com/Shopify/shopify-cli/pull/917): Ensure analytics for create action includes the same fields as other commands
 
 Version 1.4.0
 ------
 * Updates to tests, dependencies and internal tooling
-* [#924](https://github.com/Shopify/shopify-app-cli/pull/924): Improve debugging messages on Partner API errors
+* [#924](https://github.com/Shopify/shopify-cli/pull/924): Improve debugging messages on Partner API errors
 
 Version 1.3.1
 ------

@@ -7,7 +7,7 @@ echo "##########################################################################
 sudo apt-get --quiet --yes update
 sudo apt-get --quiet --yes upgrade
 
-# install necessary packages for installing/using shopify-app-cli
+# install necessary packages for installing/using shopify-cli
 echo "################################################################################"
 echo "### Installing build-essential, unzip, libsqlite3-dev, libmysqlclient-dev, mysql-server..."
 echo "################################################################################"
@@ -33,12 +33,12 @@ curl -sS https://dl.yarnpkg.com/debian/pubkey.gpg | sudo apt-key add -
 echo "deb https://dl.yarnpkg.com/debian/ stable main" | sudo tee /etc/apt/sources.list.d/yarn.list
 sudo apt-get --quiet --yes update && sudo apt-get --quiet --yes install yarn
 
-# download a clone of the shopify-app-cli repo
+# download a clone of the shopify-cli repo
 cd /home/vagrant
 echo "################################################################################"
-echo "### Cloning shopify-app-cli..."
+echo "### Cloning shopify-cli..."
 echo "################################################################################"
-mkdir src && cd src && git clone https://github.com/Shopify/shopify-app-cli.git && cd /home/vagrant
+mkdir src && cd src && git clone https://github.com/Shopify/shopify-cli.git && cd /home/vagrant
 echo "################################################################################"
-echo "### Clone of shopify-app-cli located at ~/src/shopify-app-cli"
+echo "### Clone of shopify-cli located at ~/src/shopify-cli"
 echo "################################################################################"

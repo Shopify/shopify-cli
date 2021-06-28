@@ -8,8 +8,18 @@ module ShopifyCli
         request(uri, body, headers, req)
       end
 
+      def put(uri, body, headers)
+        req = ::Net::HTTP::Put.new(uri.request_uri)
+        request(uri, body, headers, req)
+      end
+
       def get(uri, body, headers)
         req = ::Net::HTTP::Get.new(uri.request_uri)
+        request(uri, body, headers, req)
+      end
+
+      def delete(uri, body, headers)
+        req = ::Net::HTTP::Delete.new(uri.request_uri)
         request(uri, body, headers, req)
       end
 

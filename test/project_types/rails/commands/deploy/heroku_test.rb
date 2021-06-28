@@ -20,7 +20,7 @@ module Rails
           expects_heroku_db_validated(status: false, db: "sqlite")
 
           assert_raises ShopifyCli::Abort do
-            Rails::Commands::Deploy::Heroku.new(@context).call
+            Rails::Command::Deploy::Heroku.start(@context)
           end
         end
 
@@ -28,19 +28,19 @@ module Rails
           expects_heroku_db_validated(status: false, db: nil)
 
           assert_raises ShopifyCli::Abort do
-            Rails::Commands::Deploy::Heroku.new(@context).call
+            Rails::Command::Deploy::Heroku.start(@context)
           end
         end
 
         def test_call_validates_db_if_not_sqlite
           expects_heroku_db_validated(status: true, db: "mysql")
-          Rails::Commands::Deploy::Heroku.new(@context).call
+          Rails::Command::Deploy::Heroku.start(@context)
         end
 
         def test_call_doesnt_download_heroku_cli_if_it_is_installed
           expects_heroku_installed(status: true, twice: true)
           expects_heroku_download(status: nil)
-          Rails::Commands::Deploy::Heroku.new(@context).call
+          Rails::Command::Deploy::Heroku.start(@context)
         end
 
         def test_call_downloads_heroku_cli_if_it_is_not_installed
@@ -48,7 +48,7 @@ module Rails
           expects_heroku_download(status: true)
           expects_heroku_download_exists(status: true)
 
-          Rails::Commands::Deploy::Heroku.new(@context).call
+          Rails::Command::Deploy::Heroku.start(@context)
         end
 
         def test_call_raises_if_heroku_cli_download_fails
@@ -56,7 +56,7 @@ module Rails
           expects_heroku_download(status: false)
 
           assert_raises ShopifyCli::Abort do
-            Rails::Commands::Deploy::Heroku.new(@context).call
+            Rails::Command::Deploy::Heroku.start(@context)
           end
         end
 
@@ -66,7 +66,7 @@ module Rails
           expects_heroku_download(status: true)
 
           assert_raises ShopifyCli::Abort do
-            Rails::Commands::Deploy::Heroku.new(@context).call
+            Rails::Command::Deploy::Heroku.start(@context)
           end
         end
 
@@ -74,7 +74,7 @@ module Rails
           expects_heroku_installed(status: true, twice: true)
           expects_tar_heroku(status: nil)
 
-          Rails::Commands::Deploy::Heroku.new(@context).call
+          Rails::Command::Deploy::Heroku.start(@context)
         end
 
         def test_call_installs_heroku_cli_if_it_is_downloaded
@@ -83,7 +83,7 @@ module Rails
           expects_heroku_installed(status: false, twice: true)
           expects_tar_heroku(status: true)
 
-          Rails::Commands::Deploy::Heroku.new(@context).call
+          Rails::Command::Deploy::Heroku.start(@context)
         end
 
         def test_call_raises_if_heroku_cli_install_fails
@@ -93,7 +93,7 @@ module Rails
           expects_tar_heroku(status: false)
 
           assert_raises ShopifyCli::Abort do
-            Rails::Commands::Deploy::Heroku.new(@context).call
+            Rails::Command::Deploy::Heroku.start(@context)
           end
         end
 
@@ -101,7 +101,7 @@ module Rails
           expects_git_init_heroku(status: false, commits: false)
 
           assert_raises ShopifyCli::Abort do
-            Rails::Commands::Deploy::Heroku.new(@context).call
+            Rails::Command::Deploy::Heroku.start(@context)
           end
         end
 
@@ -109,7 +109,7 @@ module Rails
           expects_git_init_heroku(status: true, commits: false)
 
           assert_raises ShopifyCli::Abort do
-            Rails::Commands::Deploy::Heroku.new(@context).call
+            Rails::Command::Deploy::Heroku.start(@context)
           end
         end
 
@@ -118,14 +118,14 @@ module Rails
 
           @context.expects(:puts).with(@context.message("rails.deploy.heroku.authenticated_with_account", "username"))
 
-          Rails::Commands::Deploy::Heroku.new(@context).call
+          Rails::Command::Deploy::Heroku.start(@context)
         end
 
         def test_call_attempts_to_authenticate_with_heroku_if_not_already_authed
           expects_heroku_whoami(status: false)
           expects_heroku_login(status: true)
 
-          Rails::Commands::Deploy::Heroku.new(@context).call
+          Rails::Command::Deploy::Heroku.start(@context)
         end
 
         def test_call_raises_if_heroku_auth_fails
@@ -133,7 +133,7 @@ module Rails
           expects_heroku_login(status: false)
 
           assert_raises ShopifyCli::Abort do
-            Rails::Commands::Deploy::Heroku.new(@context).call
+            Rails::Command::Deploy::Heroku.start(@context)
           end
         end
 
@@ -142,7 +142,7 @@ module Rails
 
           @context.expects(:puts).with(@context.message("rails.deploy.heroku.authenticated_with_account", "username"))
 
-          Rails::Commands::Deploy::Heroku.new(@context).call
+          Rails::Command::Deploy::Heroku.start(@context)
         end
 
         def test_call_lets_you_choose_existing_heroku_app
@@ -157,7 +157,7 @@ module Rails
             .with(@context.message("rails.deploy.heroku.app.name"))
             .returns("app-name")
 
-          Rails::Commands::Deploy::Heroku.new(@context).call
+          Rails::Command::Deploy::Heroku.start(@context)
         end
 
         def test_call_raises_if_choosing_existing_heroku_app_fails
@@ -173,7 +173,7 @@ module Rails
             .returns("app-name")
 
           assert_raises ShopifyCli::Abort do
-            Rails::Commands::Deploy::Heroku.new(@context).call
+            Rails::Command::Deploy::Heroku.start(@context)
           end
         end
 
@@ -185,7 +185,7 @@ module Rails
             .with(@context.message("rails.deploy.heroku.app.no_apps_found"))
             .returns(:new)
 
-          Rails::Commands::Deploy::Heroku.new(@context).call
+          Rails::Command::Deploy::Heroku.start(@context)
         end
 
         def test_call_raises_if_creating_new_heroku_app_fails
@@ -197,7 +197,7 @@ module Rails
             .returns(:new)
 
           assert_raises ShopifyCli::Abort do
-            Rails::Commands::Deploy::Heroku.new(@context).call
+            Rails::Command::Deploy::Heroku.start(@context)
           end
         end
 
@@ -206,7 +206,7 @@ module Rails
 
           @context.expects(:puts).with(@context.message("rails.deploy.heroku.git.branch_selected", "master"))
 
-          Rails::Commands::Deploy::Heroku.new(@context).call
+          Rails::Command::Deploy::Heroku.start(@context)
         end
 
         def test_call_lets_you_specify_a_branch_if_multiple_exist
@@ -217,28 +217,28 @@ module Rails
             .with(@context.message("rails.deploy.heroku.git.what_branch"))
             .returns("other_branch")
 
-          Rails::Commands::Deploy::Heroku.new(@context).call
+          Rails::Command::Deploy::Heroku.start(@context)
         end
 
         def test_call_raises_if_finding_branches_fails
           expects_git_branch(status: false, multiple: false)
 
           assert_raises ShopifyCli::Abort do
-            Rails::Commands::Deploy::Heroku.new(@context).call
+            Rails::Command::Deploy::Heroku.start(@context)
           end
         end
 
         def test_call_successfully_deploys_to_heroku
           expects_git_push_heroku(status: true, branch: "master:master")
 
-          Rails::Commands::Deploy::Heroku.new(@context).call
+          Rails::Command::Deploy::Heroku.start(@context)
         end
 
         def test_call_raises_if_deploy_to_heroku_fails
           expects_git_push_heroku(status: false, branch: "master:master")
 
           assert_raises ShopifyCli::Abort do
-            Rails::Commands::Deploy::Heroku.new(@context).call
+            Rails::Command::Deploy::Heroku.start(@context)
           end
         end
       end

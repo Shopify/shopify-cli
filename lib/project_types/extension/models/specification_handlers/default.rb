@@ -30,7 +30,7 @@ module Extension
           argo.config(context)
         end
 
-        def create(directory_name, context)
+        def create(directory_name, context, **_args)
           argo.create(directory_name, identifier, context)
         end
 
@@ -43,11 +43,11 @@ module Extension
         end
 
         def choose_port?(context)
-          argo_runtime(context).accepts_port?
+          argo_runtime(context).supports?(:port)
         end
 
         def establish_tunnel?(context)
-          argo_runtime(context).accepts_tunnel_url?
+          argo_runtime(context).supports?(:public_url)
         end
 
         def serve(context:, port:, tunnel_url:)
@@ -78,6 +78,16 @@ module Extension
           js_system = ShopifyCli::JsSystem.new(ctx: context)
           Tasks::FindNpmPackages.exactly_one_of(cli_package_name, js_system: js_system)
             .unwrap { |_e| context.abort(context.message("errors.package_not_found", cli_package_name)) }
+        end
+
+        def message_for_extension(key, *params)
+          override_key = "overrides.#{key}"
+          key_parts = override_key.split(".").map(&:to_sym)
+          if (str = messages.dig(*key_parts))
+            str % params
+          else
+            ShopifyCli::Context.message(key, *params)
+          end
         end
 
         protected

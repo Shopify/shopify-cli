@@ -42,7 +42,7 @@ module ShopifyCli
     #
     # #### Usage
     #
-    #   exists = ShopifyCli::DB.exists?('admin_access_token')
+    #   exists = ShopifyCli::DB.exists?('shopify_exchange_token')
     #
     def exists?(key)
       db.transaction(true) { db.root?(key) }
@@ -55,7 +55,7 @@ module ShopifyCli
     #
     # #### Usage
     #
-    #   ShopifyCli::DB.set(admin_access_token: 'token', metric_consent: true)
+    #   ShopifyCli::DB.set(shopify_exchange_token: 'token', metric_consent: true)
     #
     def set(**args)
       db.transaction do
@@ -80,7 +80,7 @@ module ShopifyCli
     #
     # #### Usage
     #
-    #   ShopifyCli::DB.get(:admin_access_token)
+    #   ShopifyCli::DB.get(:shopify_exchange_token)
     #
     def get(key)
       val = db.transaction(true) { db[key] }
@@ -95,7 +95,7 @@ module ShopifyCli
     #
     # #### Usage
     #
-    #   ShopifyCli::DB.del(:admin_access_token)
+    #   ShopifyCli::DB.del(:shopify_exchange_token)
     #
     def del(*args)
       db.transaction { args.each { |key| db.delete(key) } }

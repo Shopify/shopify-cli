@@ -3,14 +3,6 @@ require "test_helper"
 module ShopifyCli
   module Tasks
     class SelectOrgAndShopTest < MiniTest::Test
-      include TestHelpers::Partners
-
-      def setup
-        super
-        stub_shopify_org_confirmation
-        Shopifolk.stubs(:check).returns(false) # note that we re-stub this in some tests below
-      end
-
       def teardown
         ShopifyCli::Core::Monorail.metadata = {}
         super
@@ -95,62 +87,6 @@ module ShopifyCli
         )
       end
 
-      def test_it_will_fail_if_notfound_is_raised
-        stub_partner_req_not_found("all_organizations")
-
-        form = nil
-        io = capture_io_and_assert_raises(ShopifyCli::Abort) do
-          form = call(org_id: nil, shop: nil)
-        end
-        assert_nil(form)
-        assert_message_output(
-          io: io,
-          expected_content: [
-            @context.message("core.partners_api.error.account_not_found", ShopifyCli::TOOL_NAME),
-            @context.message("core.tasks.select_org_and_shop.error.no_organizations"),
-          ]
-        )
-      end
-
-      def test_it_will_fail_shopifolk_if_notfound_is_raised
-        stub_shopify_org_confirmation(response: true)
-        Shopifolk.stubs(:check).returns(true)
-
-        stub_partner_req_not_found("all_organizations")
-
-        form = nil
-        io = capture_io_and_assert_raises(ShopifyCli::Abort) do
-          form = call(org_id: nil, shop: nil)
-        end
-        assert_nil(form)
-        assert_message_output(
-          io: io,
-          expected_content: [
-            @context.message("core.tasks.select_org_and_shop.error.shopifolk_notice", ShopifyCli::TOOL_NAME),
-          ]
-        )
-      end
-
-      def test_it_will_fail_shopifolk_but_not_acting_if_notfound_is_raised
-        stub_shopify_org_confirmation(response: false)
-        Shopifolk.stubs(:check).returns(true)
-
-        stub_partner_req_not_found("all_organizations")
-
-        form = nil
-        io = capture_io_and_assert_raises(ShopifyCli::Abort) do
-          form = call(org_id: nil, shop: nil)
-        end
-        assert_nil(form)
-        assert_message_output(
-          io: io,
-          expected_content: [
-            @context.message("core.partners_api.error.account_not_found", ShopifyCli::TOOL_NAME),
-            @context.message("core.tasks.select_org_and_shop.error.no_organizations"),
-          ]
-        )
-      end
-
       def test_returns_no_shop_if_none_are_available
         ShopifyCli::PartnersAPI::Organizations.expects(:fetch).with(@context, id: 123).returns(
           { "id" => 123, "stores" => [] },
@@ -203,35 +139,6 @@ module ShopifyCli
           .returns("selected")
         form = call(org_id: 123, shop: nil)
         assert_equal("selected", form[:shop_domain])
-      end
-
-      def test_persists_organization_preference_if_chosen
-        ShopifyCli::PartnersAPI::Organizations.expects(:fetch).with(@context, id: 123).returns({
-          "id" => 123,
-          "stores" => [
-            { "shopDomain" => "shopdomain.myshopify.com" },
-          ],
-        })
-
-        stub_shopify_org_confirmation(response: true)
-        Shopifolk.stubs(:check).returns(true)
-        call(org_id: 123, shop: nil)
-
-        assert(Shopifolk.acting_as_shopify_organization?)
-      end
-
-      def test_does_not_persist_organization_preference_if_not_chosen
-        ShopifyCli::PartnersAPI::Organizations.expects(:fetch).with(@context, id: 123).returns({
-          "id" => 123,
-          "stores" => [
-            { "shopDomain" => "shopdomain.myshopify.com" },
-          ],
-        })
-        stub_shopify_org_confirmation(response: false)
-        Shopifolk.stubs(:check).returns(true)
-        call(org_id: 123, shop: nil)
-
-        refute(Shopifolk.acting_as_shopify_organization?)
       end
 
       private

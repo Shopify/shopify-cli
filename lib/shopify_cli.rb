@@ -27,15 +27,15 @@ require "smart_properties"
 require_relative "shopify-cli/version"
 
 # Enable stdout routing. At this point all calls to STDOUT (and STDERR) will go through this class.
-# See https://github.com/Shopify/cli-ui/blob/master/lib/cli/ui/stdout_router.rb for more info
+# See https://github.com/Shopify/cli-ui/blob/main/lib/cli/ui/stdout_router.rb for more info
 CLI::UI::StdoutRouter.enable
 
-# The main file to load for `shopify-app-cli`
+# The main file to load for `shopify-cli`
 # Contains all high level constants, exit management, exception management,
 # autoloads for commands, tasks, helpers, etc
 #
 # It is recommended to read through CLI Kit (https://github.com/shopify/cli-kit) and a CLI Kit example
-# (https://github.com/Shopify/cli-kit-example) to fully understand how shopify-app-cli functions
+# (https://github.com/Shopify/cli-kit-example) to fully understand how shopify-cli functions
 module ShopifyCli
   extend CLI::Kit::Autocall
 
@@ -50,8 +50,8 @@ module ShopifyCli
   # shrug or boom emoji
   FAILMOJI = ROOT == "/opt/shopify" ? "\u{1f937}" : "\u{1f4a5}"
 
-  # Exit management in `shopify-app-cli` follows the management set out by CLI Kit.
-  # https://github.com/Shopify/cli-kit/blob/master/lib/cli/kit.rb
+  # Exit management in `shopify-cli` follows the management set out by CLI Kit.
+  # https://github.com/Shopify/cli-kit/blob/main/lib/cli/kit.rb
   # That is to say, we differentiate between exit success (0), exit failure (1), and exit bug (not 1)
   #
   # These should *never* be called outside of the entrypoint and its delegations.
@@ -59,8 +59,8 @@ module ShopifyCli
   EXIT_BUG                 = CLI::Kit::EXIT_BUG
   EXIT_SUCCESS             = CLI::Kit::EXIT_SUCCESS
 
-  # `shopify-app-cli` uses CLI Kit's exception management
-  # These are documented here: https://github.com/Shopify/cli-kit/blob/master/lib/cli/kit.rb
+  # `shopify-cli` uses CLI Kit's exception management
+  # These are documented here: https://github.com/Shopify/cli-kit/blob/main/lib/cli/kit.rb
   #
   # You should never subclass these exceptions, but instead rescue another exception and re-raise.
   # AbortSilent and BugSilent should never have messages. They are mostly used when we output explanations
@@ -71,9 +71,9 @@ module ShopifyCli
   BugSilent    = CLI::Kit::BugSilent
   AbortSilent  = CLI::Kit::AbortSilent
 
-  # The rest of this file outlines classes and modules required by the shopify-app-cli
+  # The rest of this file outlines classes and modules required by the shopify-cli
   # application and CLI kit framework.
-  # To understand how this works, read https://github.com/Shopify/cli-kit/blob/master/lib/cli/kit.rb
+  # To understand how this works, read https://github.com/Shopify/cli-kit/blob/main/lib/cli/kit.rb
 
   # ShopifyCli::Config
   autocall(:Config)   { CLI::Kit::Config.new(tool_name: TOOL_NAME) }
@@ -98,6 +98,7 @@ module ShopifyCli
   autoload :API, "shopify-cli/api"
   autoload :Command, "shopify-cli/command"
   autoload :Commands, "shopify-cli/commands"
+  autoload :Connect, "shopify-cli/connect"
   autoload :Context, "shopify-cli/context"
   autoload :Core, "shopify-cli/core"
   autoload :DB, "shopify-cli/db"
@@ -106,15 +107,16 @@ module ShopifyCli
   autoload :Git, "shopify-cli/git"
   autoload :Helpers, "shopify-cli/helpers"
   autoload :Heroku, "shopify-cli/heroku"
+  autoload :IdentityAuth, "shopify-cli/identity_auth"
   autoload :JsDeps, "shopify-cli/js_deps"
   autoload :JsSystem, "shopify-cli/js_system"
-  autoload :MethodObject, "shopify-cli/method_object"
   autoload :LazyDelegator, "shopify-cli/lazy_delegator"
-  autoload :OAuth, "shopify-cli/oauth"
+  autoload :MethodObject, "shopify-cli/method_object"
   autoload :Options, "shopify-cli/options"
   autoload :PartnersAPI, "shopify-cli/partners_api"
   autoload :ProcessSupervision, "shopify-cli/process_supervision"
   autoload :Project, "shopify-cli/project"
+  autoload :ProjectCommands, "shopify-cli/project_commands"
   autoload :ProjectType, "shopify-cli/project_type"
   autoload :ResolveConstant, "shopify-cli/resolve_constant"
   autoload :Resources, "shopify-cli/resources"
@@ -160,5 +162,10 @@ module ShopifyCli
 
   def self.debug_log_file
     File.join(tool_config_path, "logs", "debug.log")
+  end
+
+  def self.sha
+    return @sha if defined?(@sha)
+    @sha = Git.sha(dir: ShopifyCli::ROOT)
   end
 end

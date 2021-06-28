@@ -10,19 +10,19 @@ module Rails
 
         def test_with_existing_param
           @context.expects(:system).with(generate_command("app/uninstalled")).returns(mock(success?: true))
-          Rails::Commands::Generate::Webhook.new(@context).call(["APP_UNINSTALLED"], "")
+          Rails::Command::Generate::Webhook.start(@context, ["APP_UNINSTALLED"])
         end
 
         def test_with_incorrect_param_expects_ask
           CLI::UI::Prompt.expects(:ask).returns("APP_UNINSTALLED")
           @context.expects(:system).with(generate_command("app/uninstalled")).returns(mock(success?: true))
-          Rails::Commands::Generate::Webhook.new(@context).call(["create_webhook_fake"], "")
+          Rails::Command::Generate::Webhook.start(@context, ["create_webhook_fake"])
         end
 
         def test_with_selection
           CLI::UI::Prompt.expects(:ask).returns("PRODUCT_CREATE")
           @context.expects(:system).with(generate_command("product/create")).returns(mock(success?: true))
-          Rails::Commands::Generate::Webhook.new(@context).call([], "")
+          Rails::Command::Generate::Webhook.start(@context, [])
         end
 
         private

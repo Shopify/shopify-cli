@@ -10,6 +10,7 @@ module Extension
       def setup
         super
         ShopifyCli::ProjectType.load_type(:extension)
+        ShopifyCli::Tasks::EnsureProjectType.stubs(:call)
         @project = ExtensionTestHelpers.fake_extension_project(with_mocks: true, registration_id: nil)
         @specification_handler = ExtensionTestHelpers.test_specification_handler
 
@@ -17,10 +18,11 @@ module Extension
       end
 
       def test_help_implemented
-        assert_nothing_raised { refute_nil Commands::Register.help }
+        assert_nothing_raised { refute_nil Command::Register.help }
       end
 
       def test_if_extension_is_already_registered_the_register_command_aborts
+        # skip("Need to revisit processing of arguments to subcommands")
         @project.expects(:registered?).returns(true).once
         Tasks::CreateExtension.any_instance.expects(:call).never
         ExtensionProject.expects(:write_env_file).never
@@ -59,7 +61,6 @@ module Extension
             registration_id: 55,
             last_user_interaction_at: Time.now.utc,
           )
-
         )
         refute @project.registered?
 
@@ -100,11 +101,7 @@ module Extension
       private
 
       def run_register_command
-        Commands::Register.ctx = @context
-        Commands::Register.call(
-          [],
-          :register
-        )
+        run_cmd("extension register")
       end
     end
   end

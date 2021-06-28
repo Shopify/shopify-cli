@@ -34,7 +34,7 @@ module Script
             cause_of_error: ShopifyCli::Context.message("script.error.enospc_cause"),
             help_suggestion: ShopifyCli::Context.message("script.error.enospc_help"),
           }
-        when ShopifyCli::OAuth::Error
+        when ShopifyCli::IdentityAuth::Error
           {
             cause_of_error: ShopifyCli::Context.message("script.error.oauth_cause"),
             help_suggestion: ShopifyCli::Context.message("script.error.oauth_help"),

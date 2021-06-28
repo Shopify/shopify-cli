@@ -44,6 +44,7 @@ module Extension
           .map(&ShopifyCli::TransformDataStructure.new(symbolize_keys: true, underscore_keys: true))
           .then(&method(:select_cli_extensions))
           .then(&Tasks::ConfigureFeatures)
+          .then(&Tasks::ConfigureOptions)
           .then(&method(:ensure_legacy_compatibility))
           .then(&method(:build_specifications))
           .then(&method(:require_handler_implementations))

@@ -1,33 +1,21 @@
 # frozen_string_literal: true
 module Rails
   class Project < ShopifyCli::ProjectType
-    title("Ruby on Rails App")
-    creator("Rails::Commands::Create")
-    connector("Rails::Commands::Connect")
-
-    register_command("Rails::Commands::Deploy", "deploy")
-    register_command("Rails::Commands::Generate", "generate")
-    register_command("Rails::Commands::Open", "open")
-    register_command("Rails::Commands::Populate", "populate")
-    register_command("Rails::Commands::Serve", "serve")
-    register_command("Rails::Commands::Tunnel", "tunnel")
-    # register_task('Rails::Tasks::RailsTask', 'rails_task')
-
     require Project.project_filepath("messages/messages")
     register_messages(Rails::Messages::MESSAGES)
   end
 
   # define/autoload project specific Commands
-  module Commands
-    autoload :Connect, Project.project_filepath("commands/connect")
-    autoload :Create, Project.project_filepath("commands/create")
-    autoload :Deploy, Project.project_filepath("commands/deploy")
-    autoload :Generate, Project.project_filepath("commands/generate")
-    autoload :Open, Project.project_filepath("commands/open")
-    autoload :Populate, Project.project_filepath("commands/populate")
-    autoload :Serve, Project.project_filepath("commands/serve")
-    autoload :Tunnel, Project.project_filepath("commands/tunnel")
+  class Command < ShopifyCli::ProjectCommands
+    subcommand :Connect, "connect", Project.project_filepath("commands/connect")
+    subcommand :Create, "create", Project.project_filepath("commands/create")
+    subcommand :Deploy, "deploy", Project.project_filepath("commands/deploy")
+    subcommand :Generate, "generate", Project.project_filepath("commands/generate")
+    subcommand :Open, "open", Project.project_filepath("commands/open")
+    subcommand :Serve, "serve", Project.project_filepath("commands/serve")
+    subcommand :Tunnel, "tunnel", Project.project_filepath("commands/tunnel")
   end
+  ShopifyCli::Commands.register("Rails::Command", "rails")
 
   # define/autoload project specific Tasks
   module Tasks

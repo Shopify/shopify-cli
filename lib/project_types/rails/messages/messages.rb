@@ -4,6 +4,11 @@ module Rails
   module Messages
     MESSAGES = {
       rails: {
+        help: <<~HELP,
+          Suite of commands for developing Ruby on Rails apps. See {{command:%1$s rails <command> --help}} for usage of each command.
+            Usage: {{command:%1$s rails [ %2$s ]}}
+        HELP
+
         error: {
           generic: "Error",
         },
@@ -19,30 +24,29 @@ module Rails
 
         connect: {
           connected: "Project now connected to {{green:%s}}",
+          help: <<~HELP,
+            {{command:%s rails connect}}: Connects an existing Ruby on Rails app to Shopify CLI. Creates a config file.
+              Usage: {{command:%s rails connect}}
+          HELP
           production_warning: <<~MESSAGE,
-          {{yellow:! Warning: if you have connected to an {{bold:app in production}}, running {{command:serve}} may update the app URL and cause an outage.
+            {{yellow:! Warning: if you have connected to an {{bold:app in production}}, running {{command:serve}} may update the app URL and cause an outage.
           MESSAGE
         },
 
         create: {
           help: <<~HELP,
-          {{command:%s create rails}}: Creates a ruby on rails app.
-            Usage: {{command:%s create rails}}
-            Options:
-              {{command:--name=NAME}} App name. Any string.
-              {{command:--app-url=APPURL}} App URL. Must be a valid URL.
-              {{command:--organization-id=ID}} Partner organization ID. Must be an existing organization.
-              {{command:--shop-domain=MYSHOPIFYDOMAIN }} Development store URL. Must be an existing development store.
-              {{command:--db=DB}} Database type. Must be one of: mysql, postgresql, sqlite3, oracle, frontbase, ibm_db, sqlserver, jdbcmysql, jdbcsqlite3, jdbcpostgresql, jdbc.
-              {{command:--rails-opts=RAILSOPTS}} Additional options. Must be string containing one or more valid Rails options, separated by spaces.
+            {{command:%s rails create}}: Creates a ruby on rails app.
+              Usage: {{command:%s rails create}}
+              Options:
+                {{command:--name=NAME}} App name. Any string.
+                {{command:--organization-id=ID}} Partner organization ID. Must be an existing organization.
+                {{command:--store=MYSHOPIFYDOMAIN }} Development store URL. Must be an existing development store.
+                {{command:--db=DB}} Database type. Must be one of: mysql, postgresql, sqlite3, oracle, frontbase, ibm_db, sqlserver, jdbcmysql, jdbcsqlite3, jdbcpostgresql, jdbc.
+                {{command:--rails-opts=RAILSOPTS}} Additional options. Must be string containing one or more valid Rails options, separated by spaces.
           HELP
 
           error: {
-            invalid_ruby_version: <<~MSG,
-            This project requires a Ruby version ~> 2.5 or Ruby 3.0
-            See {{underline:https://github.com/Shopify/shopify-app-cli/blob/master/docs/installing-ruby.md}}
-            for our recommended method of installing ruby.
-            MSG
+            invalid_ruby_version: "This project requires a Ruby version ~> 2.5 or Ruby 3.0.",
             dir_exists: "Project directory %s already exists. Please use a different name.",
             install_failure: "Error installing %s gem",
             node_required: "node is required to create a rails project. Download at https://nodejs.org/en/download.",
@@ -71,19 +75,19 @@ module Rails
 
         deploy: {
           help: <<~HELP,
-          Deploy the current Rails project to a hosting service. Heroku ({{underline:https://www.heroku.com}}) is currently the only option, but more will be added in the future.
-            Usage: {{command:%s deploy [ heroku ]}}
+            Deploy the current Rails project to a hosting service. Heroku ({{underline:https://www.heroku.com}}) is currently the only option, but more will be added in the future.
+              Usage: {{command:%s rails deploy [ heroku ]}}
           HELP
           extended_help: <<~HELP,
-          {{bold:Subcommands:}}
-            {{cyan:heroku}}: Deploys the current Rails project to Heroku.
-              Usage: {{command:%s deploy heroku}}
+            {{bold:Subcommands:}}
+              {{cyan:heroku}}: Deploys the current Rails project to Heroku.
+                Usage: {{command:%s rails deploy heroku}}
           HELP
 
           heroku: {
             help: <<~HELP,
-            Deploy the current Rails project to Heroku
-            Usage: {{command:%s deploy heroku}}
+              Deploy the current Rails project to Heroku
+              Usage: {{command:%s rails deploy heroku}}
             HELP
             downloading: "Downloading Heroku CLI...",
             downloaded: "Downloaded Heroku CLI",
@@ -100,9 +104,9 @@ module Rails
               validated: "Database type \"%s\" validated for platform \"Heroku\"",
               problem: "A problem was encountered while checking your database type.",
               sqlite: <<~SQLITE,
-              Heroku does not support deployment using the SQLite database system.
-              Change the database type using {{command:rails db:system:change --to=[new_db_type]}}. For more info:
-              {{underline:https://gorails.com/episodes/rails-6-db-system-change-command}}
+                Heroku does not support deployment using the SQLite database system.
+                Change the database type using {{command:rails db:system:change --to=[new_db_type]}}. For more info:
+                {{underline:https://gorails.com/episodes/rails-6-db-system-change-command}}
               SQLITE
             },
             git: {
@@ -126,13 +130,13 @@ module Rails
 
         generate: {
           help: <<~HELP,
-          Generate code in your Rails project. Currently supports generating new webhooks.
-            Usage: {{command:%s generate [ webhook ]}}
+            Generate code in your Rails project. Currently supports generating new webhooks.
+              Usage: {{command:%s rails generate [ webhook ]}}
           HELP
           extended_help: <<~EXAMPLES,
-          {{bold:Examples:}}
-            {{cyan:%s generate webhook PRODUCTS_CREATE}}
-              Generate and register a new webhook that will be called every time a new product is created on your store.
+            {{bold:Examples:}}
+              {{cyan:%s generate webhook PRODUCTS_CREATE}}
+                Generate and register a new webhook that will be called every time a new product is created on your store.
           EXAMPLES
 
           error: {
@@ -142,8 +146,8 @@ module Rails
 
           webhook: {
             help: <<~HELP,
-            Generate and register a new webhook that listens for the specified Shopify store event.
-              Usage: {{command:%s generate webhook <type>}}
+              Generate and register a new webhook that listens for the specified Shopify store event.
+                Usage: {{command:%s rails generate webhook <type>}}
             HELP
 
             select: "What type of webhook would you like to create?",
@@ -153,70 +157,19 @@ module Rails
 
         open: {
           help: <<~HELP,
-          Open your local development app in the default browser.
-            Usage: {{command:%s open}}
+            Open your local development app in the default browser.
+              Usage: {{command:%s rails open}}
           HELP
-        },
-
-        populate: {
-          help: <<~HELP,
-          Populate your Shopify development store with example customers, orders, or products.
-            Usage: {{command:%s populate [ customers | draftorders | products ]}}
-          HELP
-          extended_help: <<~HELP,
-          {{bold:Subcommands:}}
-
-            {{cyan:customers [options]}}: Add dummy customers to the specified development store.
-              Usage: {{command:%1$s populate customers}}
-
-            {{cyan:draftorders [options]}}: Add dummy orders to the specified development store.
-              Usage: {{command:%1$s populate draftorders}}
-
-            {{cyan:products [options]}}: Add dummy products to the specified development store.
-              Usage: {{command:%1$s populate products}}
-
-          {{bold:Options:}}
-
-            {{cyan:--count [integer]}}: The number of dummy items to populate. Defaults to 5.
-            {{cyan:--silent}}: Silence the populate output.
-            {{cyan:--help}}: Display more options specific to each subcommand.
-
-          {{bold:Examples:}}
-
-            {{command:%1$s populate products}}
-              Populate your development store with 5 additional products.
-
-            {{command:%1$s populate customers --count 30}}
-              Populate your development store with 30 additional customers.
-
-            {{command:%1$s populate draftorders}}
-              Populate your development store with 5 additional orders.
-
-            {{command:%1$s populate products --help}}
-              Display the list of options available to customize the {{command:%1$s populate products}} command.
-          HELP
-
-          customer: {
-            added: "%s added to {{green:%s}} at {{underline:%scustomers/%d}}",
-          },
-
-          draft_order: {
-            added: "DraftOrder added to {{green:%s}} at {{underline:%sdraft_orders/%d}}",
-          },
-
-          product: {
-            added: "%s added to {{green:%s}} at {{underline:%sproducts/%d}}",
-          },
         },
 
         serve: {
           help: <<~HELP,
-          Start a local development rails server for your project, as well as a public ngrok tunnel to your localhost.
-            Usage: {{command:%s serve}}
+            Start a local development rails server for your project, as well as a public ngrok tunnel to your localhost.
+              Usage: {{command:%s rails serve}}
           HELP
           extended_help: <<~HELP,
-          {{bold:Options:}}
-            {{cyan:--host=HOST}}: Bypass running tunnel and use custom host. HOST must be HTTPS url.
+            {{bold:Options:}}
+              {{cyan:--host=HOST}}: Bypass running tunnel and use custom host. HOST must be HTTPS url.
           HELP
 
           error: {
@@ -232,20 +185,20 @@ module Rails
 
         tunnel: {
           help: <<~HELP,
-          Start or stop an http tunnel to your local development app using ngrok.
-            Usage: {{command:%s tunnel [ auth | start | stop ]}}
+            Start or stop an http tunnel to your local development app using ngrok.
+              Usage: {{command:%s rails tunnel [ auth | start | stop ]}}
           HELP
           extended_help: <<~HELP,
-          {{bold:Subcommands:}}
+            {{bold:Subcommands:}}
 
-            {{cyan:auth}}: Writes an ngrok auth token to ~/.ngrok2/ngrok.yml to connect with an ngrok account. Visit https://dashboard.ngrok.com/signup to sign up.
-              Usage: {{command:%1$s tunnel auth <token>}}
+              {{cyan:auth}}: Writes an ngrok auth token to ~/.ngrok2/ngrok.yml to connect with an ngrok account. Visit https://dashboard.ngrok.com/signup to sign up.
+                Usage: {{command:%1$s rails tunnel auth <token>}}
 
-            {{cyan:start}}: Starts an ngrok tunnel, will print the URL for an existing tunnel if already running.
-              Usage: {{command:%1$s tunnel start}}
+              {{cyan:start}}: Starts an ngrok tunnel, will print the URL for an existing tunnel if already running.
+                Usage: {{command:%1$s rails tunnel start}}
 
-            {{cyan:stop}}: Stops the ngrok tunnel.
-              Usage: {{command:%1$s tunnel stop}}
+              {{cyan:stop}}: Stops the ngrok tunnel.
+                Usage: {{command:%1$s rails tunnel stop}}
 
           HELP
 
@@ -270,9 +223,9 @@ module Rails
             },
             db: {
               want_select: <<~WANT_SELECT,
-              Would you like to select what database type to use now? (SQLite is the default)
-              If you want to change this in the future, run {{command:rails db:system:change --to=[new_db_type]}}. For more info:
-              {{underline:https://gorails.com/episodes/rails-6-db-system-change-command}}
+                Would you like to select what database type to use now? (SQLite is the default)
+                If you want to change this in the future, run {{command:rails db:system:change --to=[new_db_type]}}. For more info:
+                {{underline:https://gorails.com/episodes/rails-6-db-system-change-command}}
               WANT_SELECT
               select: "What database type would you like to use? Please ensure the database is installed.",
               select_sqlite3: "SQLite (default)",

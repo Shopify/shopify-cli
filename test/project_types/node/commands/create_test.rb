@@ -7,6 +7,7 @@ module Node
     class CreateTest < MiniTest::Test
       include TestHelpers::Partners
       include TestHelpers::FakeUI
+      include TestHelpers::Shopifolk
 
       ENV_FILE = <<~CONTENT
         SHOPIFY_API_KEY=newapikey
@@ -21,9 +22,14 @@ module Node
         organization_id: 42
       APPTYPE
 
+      def setup
+        super
+        ShopifyCli::Tasks::EnsureAuthenticated.stubs(:call)
+      end
+
       def test_prints_help_with_no_name_argument
-        io = capture_io { run_cmd("create node --help") }
-        assert_match(CLI::UI.fmt(Node::Commands::Create.help), io.join)
+        io = capture_io { run_cmd("node create --help") }
+        assert_match(CLI::UI.fmt(Node::Command::Create.help), io.join)
       end
 
       def test_check_node_installed
@@ -216,7 +222,7 @@ module Node
       private
 
       def perform_command_snake_case
-        run_cmd("create node \
+        run_cmd("node create \
           --name=test-app \
           --type=public \
           --organization_id=42 \
@@ -224,7 +230,7 @@ module Node
       end
 
       def perform_command
-        run_cmd("create node \
+        run_cmd("node create \
           --name=test-app \
           --type=public \
           --organization-id=42 \

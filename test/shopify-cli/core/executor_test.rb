@@ -7,9 +7,11 @@ module ShopifyCli
 
       class FakeCommand < ShopifyCli::Command
         prerequisite_task :fake
+        prerequisite_task fake_with_args: [:foo, :bar]
 
         class FakeSubCommand < ShopifyCli::SubCommand
           prerequisite_task :fake
+          prerequisite_task fake_with_args: [:sub, :command]
 
           def call(*)
             @ctx.puts("subcommand!")
@@ -43,6 +45,7 @@ module ShopifyCli
         reg = CLI::Kit::CommandRegistry.new(default: nil, contextual_resolver: nil)
         reg.add(FakeCommand, :fake)
         @context.expects(:puts).with("success!")
+        @context.expects(:puts).with("success with args foobar!")
         @context.expects(:puts).with("command!")
         executor.call(FakeCommand, "fake", [])
       end
@@ -52,6 +55,7 @@ module ShopifyCli
         reg = CLI::Kit::CommandRegistry.new(default: nil, contextual_resolver: nil)
         reg.add(FakeCommand, :fake)
         @context.expects(:puts).with("success!")
+        @context.expects(:puts).with("success with args foobar!")
         @context.expects(:puts).with("verbose!")
         executor.call(FakeCommand, "fake", ["-v"])
       end
@@ -61,6 +65,7 @@ module ShopifyCli
         reg = CLI::Kit::CommandRegistry.new(default: nil, contextual_resolver: nil)
         reg.add(FakeCommand, :fake)
         @context.expects(:puts).with("success!")
+        @context.expects(:puts).with("success with args subcommand!")
         @context.expects(:puts).with("subcommand!")
         executor.call(FakeCommand, "fake", ["fakesub"])
       end
