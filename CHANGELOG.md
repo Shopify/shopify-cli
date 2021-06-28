@@ -1,6 +1,11 @@
 Unreleased
 ------
-* Allows new Checkout Extensions to specify configuration attributes in their extension.config.yml file
+
+Version 2.0.0
+-------------
+* Adds support for theme development
+* Changes to command structure (note that these are breaking changes, see [README](README.md))
+* Checkout the [apps](https://shopify.dev/apps/tools/cli) and [themes](https://shopify.dev/themes/tools/cli) sections of the new [shopify.dev](https://shopify.dev) after Unite 2021 (June 29).
 
 Version 1.14.0
 --------------
