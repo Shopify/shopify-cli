@@ -45,7 +45,8 @@ module Extension
       def test_runs_type_create_and_writes_project_files
         Dir.expects(:exist?).with(@directory_name).returns(false).once
         Models::SpecificationHandlers::Default
-          .any_instance.expects(:create).with(@directory_name, @context).returns(true).once
+          .any_instance.expects(:create).with(@directory_name, @context, getting_started: nil)
+          .returns(true).once
         ExtensionProject.expects(:write_cli_file).with(context: @context, type: @specification_handler.identifier).once
         ExtensionProject
           .expects(:write_env_file)
@@ -66,7 +67,8 @@ module Extension
       def test_does_not_create_project_files_and_outputs_try_again_message_if_type_create_failed
         Dir.expects(:exist?).with(@directory_name).returns(false).once
         Models::SpecificationHandlers::Default
-          .any_instance.expects(:create).with(@directory_name, @context).returns(false).once
+          .any_instance.expects(:create).with(@directory_name, @context, getting_started: nil)
+          .returns(false).once
         ExtensionProject.expects(:write_cli_file).never
         ExtensionProject.expects(:write_env_file).never
 
