@@ -2,6 +2,7 @@ Unreleased
 ------
 * [#1298](https://github.com/Shopify/shopify-cli/pull/1298): Fix error in `theme serve` command
 * [#1296](https://github.com/Shopify/shopify-cli/pull/1296): Fix issue [#1294](https://github.com/Shopify/shopify-cli/issues/1294) regarding call to Windows `start` command with URL.
+* [#1301](https://github.com/Shopify/shopify-cli/pull/1301): Add `theme init` command
 
 Version 2.0.0
 -------------

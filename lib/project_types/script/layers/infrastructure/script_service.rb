@@ -75,17 +75,28 @@ module Script
         class ScriptServiceAPI < ShopifyCli::API
           property(:api_key, accepts: String)
 
+          LOCAL_INSTANCE_URL = "https://script-service.myshopify.io"
+
           def self.query(ctx, query_name, api_key: nil, variables: {})
             api_client(ctx, api_key).query(query_name, variables: variables)
           end
 
           def self.api_client(ctx, api_key)
+            instance_url = spin_instance_url || LOCAL_INSTANCE_URL
             new(
               ctx: ctx,
-              url: "https://script-service.myshopify.io/graphql",
+              url: "#{instance_url}/graphql",
               token: "",
               api_key: api_key
             )
+          end
+
+          def self.spin_instance_url
+            workspace = ENV["SPIN_WORKSPACE"]
+            namespace = ENV["SPIN_NAMESPACE"]
+            return if workspace.nil? || namespace.nil?
+
+            "https://script-service.#{workspace}.#{namespace}.us.spin.dev"
           end
 
           def auth_headers(*)
@@ -104,13 +115,17 @@ module Script
         private_constant(:PartnersProxyAPI)
 
         def script_service_request(query_name:, variables: nil, **options)
-          resp = if ENV["BYPASS_PARTNERS_PROXY"]
+          resp = if bypass_partners_proxy
             ScriptServiceAPI.query(ctx, query_name, variables: variables, **options)
           else
             proxy_through_partners(query_name: query_name, variables: variables, **options)
           end
           raise_if_graphql_failed(resp)
           resp
+        end
+
+        def bypass_partners_proxy
+          !ENV["BYPASS_PARTNERS_PROXY"].nil?
         end
 
         def proxy_through_partners(query_name:, variables: nil, **options)
