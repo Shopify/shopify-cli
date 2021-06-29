@@ -1,6 +1,7 @@
 Unreleased
 ------
 * [#1298](https://github.com/Shopify/shopify-cli/pull/1298): Fix error in `theme serve` command
+* [#1301](https://github.com/Shopify/shopify-cli/pull/1301): Add `theme init` command
 
 Version 2.0.0
 -------------
