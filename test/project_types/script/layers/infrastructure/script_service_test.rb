@@ -54,6 +54,10 @@ describe Script::Layers::Infrastructure::ScriptService do
     HERE
   end
 
+  before do
+    script_service.stubs(:bypass_partners_proxy).returns(false)
+  end
+
   describe ".push" do
     let(:script_content) { "(module)" }
     let(:api_key) { "fake_key" }
