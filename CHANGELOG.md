@@ -1,5 +1,6 @@
 Unreleased
 ------
+* [#1298](https://github.com/Shopify/shopify-cli/pull/1298): Fix error in `theme serve` command
 
 Version 2.0.0
 -------------
