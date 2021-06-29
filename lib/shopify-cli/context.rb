@@ -327,7 +327,7 @@ module ShopifyCli
         if linux? && which("xdg-open")
           system("xdg-open", uri.to_s)
         elsif windows?
-          system("start", uri.to_s)
+          system("start \"\" \"#{uri}\"")
         elsif mac?
           system("open", uri.to_s)
         else
