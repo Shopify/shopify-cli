@@ -64,6 +64,9 @@ module Extension
 
         def validate(filename)
           dirname = File.dirname(filename)
+          # Skip files in the root of the directory tree
+          return false if dirname == "."
+
           unless SUPPORTED_BUCKETS.include?(dirname)
             raise Extension::Errors::InvalidFilenameError, "Invalid directory: #{dirname}"
           end
