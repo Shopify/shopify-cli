@@ -98,7 +98,12 @@ module ShopifyCli
         if test[:expect_output]
           @ctx.expects(:open_url!)
         else
-          @ctx.expects(:system).with(test[:expect_system], url)
+          args = if test[:windows]
+            ["#{test[:expect_system]} \"\" \"#{url}\""]
+          else
+            [test[:expect_system], url]
+          end
+          @ctx.expects(:system).with(*args)
         end
         @ctx.open_browser_url!(url)
       end
