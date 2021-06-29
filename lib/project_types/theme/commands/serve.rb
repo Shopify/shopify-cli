@@ -10,7 +10,9 @@ module Theme
 
       def call(*)
         flags = options.flags.dup
-        ShopifyCli::Theme::DevServer.start(@ctx, ".", **flags)
+        ShopifyCli::Theme::DevServer.start(@ctx, ".", **flags) do |syncer|
+          UI::SyncProgressBar.new(syncer).progress(:upload_theme!, delay_low_priority_files: true)
+        end
       end
 
       def self.help

@@ -20,7 +20,7 @@ module ShopifyCli
       class << self
         attr_accessor :ctx
 
-        def start(ctx, root, port: 9292, silent: false)
+        def start(ctx, root, port: 9292)
           @ctx = ctx
           theme = DevelopmentTheme.new(ctx, root: root)
           ignore_filter = IgnoreFilter.from_path(root)
@@ -43,10 +43,10 @@ module ShopifyCli
           CLI::UI::Frame.open(@ctx.message("theme.serve.serve")) do
             ctx.print_task("Syncing theme ##{theme.id} on #{theme.shop}")
             @syncer.start_threads
-            if silent
-              @syncer.upload_theme!(delay_low_priority_files: true)
+            if block_given?
+              yield @syncer
             else
-              @syncer.upload_theme_with_progress_bar!(delay_low_priority_files: true)
+              @syncer.upload_theme!(delay_low_priority_files: true)
             end
 
             return if stopped
