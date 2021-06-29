@@ -176,7 +176,7 @@ module ShopifyCli
         def start_server
           @ctx = TestHelpers::FakeContext.new(root: "#{ShopifyCli::ROOT}/test/fixtures/theme")
           @server_thread = Thread.new do
-            DevServer.start(@ctx, "#{ShopifyCli::ROOT}/test/fixtures/theme", port: @@port, silent: true)
+            DevServer.start(@ctx, "#{ShopifyCli::ROOT}/test/fixtures/theme", port: @@port)
           rescue Exception => e
             puts "Failed to start DevServer:"
             puts e.message
