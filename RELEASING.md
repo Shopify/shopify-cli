@@ -15,6 +15,8 @@
 
 1. Update the version of Shopify CLI in `lib/shopify-cli/version.rb`
 
+1. Update the version of Shopify CLI at the top of `Gemfile.lock` (failing to do so causes the CI build to fail)
+
 1. Add an entry for the new release to `CHANGELOG.md`
 
 1. Commit the changes with a commit message like "Packaging for release X.Y.Z"
