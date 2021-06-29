@@ -139,6 +139,15 @@ module Extension
       end
     end
 
+    def test_missing_env_file_raises_error_when_accessing_app_attributes
+      project = ExtensionProject.new
+      refute File.exist?(".env")
+
+      assert_raises CLI::Kit::Abort do
+        project.app
+      end
+    end
+
     private
 
     def valid_env_file_attributes_without(*keys)
