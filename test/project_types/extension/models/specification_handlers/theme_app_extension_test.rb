@@ -84,11 +84,10 @@ module Extension
           assert_equal(expected, config)
         end
 
-        def test_files_at_root
-          write("readme.liquid", "hello")
-          assert_raises Extension::Errors::InvalidFilenameError do
-            @spec.config(@context)
-          end
+        def test_files_at_root_are_ignored
+          write("readme.txt", "hello")
+          config = @spec.config(@context)
+          refute_includes(config["theme_extension"]["files"], "readme.txt")
         end
 
         def test_validates_buckets
