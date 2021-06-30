@@ -1,5 +1,6 @@
 Unreleased
 ------
+* [1305](https://github.com/Shopify/shopify-cli/pull/1305): Fix `Uninitialized constant Net::WriteTimeout` error
 
 Version 2.0.1
 -------------
