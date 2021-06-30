@@ -149,7 +149,7 @@ module ShopifyCli
         # Process lower-priority files in the background
 
         # Assets are served locally, so can be uploaded in the background
-        enqueue_updates(@theme.asset_files)
+        enqueue_updates(@theme.static_asset_files)
 
         unless delay_low_priority_files
           wait!(&block)
@@ -281,7 +281,7 @@ module ShopifyCli
 
       def update_checksums(api_response)
         api_response.values.flatten.each do |asset|
-          if asset["key"] && asset["checksum"]
+          if asset["key"]
             @checksums[asset["key"]] = asset["checksum"]
           end
         end
