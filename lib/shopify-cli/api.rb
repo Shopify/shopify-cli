@@ -108,7 +108,7 @@ module ShopifyCli
       {
         "User-Agent" => "Shopify CLI; v=#{ShopifyCli::VERSION}",
         "Sec-CH-UA" => "Shopify CLI; v=#{ShopifyCli::VERSION} sha=#{ShopifyCli.sha}",
-        "Sec-CH-UA-PLATFORM" => ctx.os,
+        "Sec-CH-UA-PLATFORM" => ctx.os.to_s,
       }.tap do |headers|
         headers["X-Shopify-Cli-Employee"] = "1" if Shopifolk.acting_as_shopify_organization?
       end.merge(auth_headers(token))
