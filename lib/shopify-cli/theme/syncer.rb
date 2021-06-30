@@ -254,8 +254,12 @@ module ShopifyCli
 
         update_checksums(body)
 
-        value = body.dig("asset", "value") || Base64.decode64(body.dig("asset", "attachment"))
-        file.write(value)
+        attachment = body.dig("asset", "attachment")
+        value = if attachment
+          file.write(Base64.decode64(attachment), mode: "wb")
+        else
+          file.write(body.dig("asset", "value"))
+        end
 
         response
       end
