@@ -19,6 +19,7 @@ module Extension
       CHECKOUT_RUN_FLAGS = [
         :port,
         :public_url,
+        :shop,
       ]
 
       property! :renderer, accepts: Models::NpmPackage

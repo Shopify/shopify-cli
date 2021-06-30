@@ -64,7 +64,7 @@ module Extension
 
       def test_supports_shop
         runtimes = {
-          checkout_runtime => does_not_support_feature,
+          checkout_runtime => supports_feature,
           admin_runtime => supports_feature,
         }
 

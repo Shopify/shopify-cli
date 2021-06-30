@@ -66,6 +66,13 @@ module Extension
         assert_equal "@shopify/checkout-ui-extensions", result.value.dig(0, :features, :argo, :renderer_package_name)
       end
 
+      def test_correct_required_fields_are_configured_for_checkout_extensions
+        set_of_attributes = build_set_of_specification_attributes(surface: "checkout")
+        result = ConfigureFeatures.call(set_of_attributes)
+        checkout_required_fields = [:shop]
+        assert_equal checkout_required_fields, result.value.dig(0, :features, :argo, :required_fields)
+      end
+
       private
 
       def build_set_of_specification_attributes(surface: "admin")
