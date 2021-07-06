@@ -12,8 +12,8 @@ module ShopifyCli
         @theme = Theme.new(@ctx, root: root, id: "123")
       end
 
-      def test_assets
-        assert_includes(@theme.asset_paths, Pathname.new("assets/theme.css"))
+      def test_static_assets
+        assert_includes(@theme.static_asset_paths, Pathname.new("assets/theme.css"))
       end
 
       def test_theme_files

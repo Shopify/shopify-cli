@@ -72,7 +72,7 @@ module ShopifyCli
         def replace_asset_urls(body)
           replaced_body = body.join.gsub(ASSET_REGEX) do |match|
             path = Pathname.new(Regexp.last_match[1])
-            if @theme.asset_paths.include?(path)
+            if @theme.static_asset_paths.include?(path)
               "/#{path}"
             else
               match
