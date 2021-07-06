@@ -256,7 +256,7 @@ module ShopifyCli
 
         attachment = body.dig("asset", "attachment")
         value = if attachment
-          file.write(Base64.decode64(attachment), mode: "wb")
+          file.write(Base64.decode64(attachment), 0, mode: "wb")
         else
           file.write(body.dig("asset", "value"))
         end
