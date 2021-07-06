@@ -43,7 +43,7 @@ module Extension
         no_apps: "{{x}} You don’t have any apps.",
         learn_about_apps: "{{*}} Learn more about building apps at <https://shopify.dev/concepts/apps>, " \
           "or try creating a new app using {{command:shopify [node|rails] create}}.",
-        loading_apps: "Loading your apps...",
+        loading_apps: "Loading your apps…",
         no_available_extensions: "{{x}} There are no available extensions for this app.",
       },
       connect: {
@@ -51,7 +51,7 @@ module Extension
         incomplete_configuration: "Cannot connect extension due to missing configuration information",
         invalid_api_key: "The API key %s does not match any of your apps.",
         ask_registration: "Which extension would you like to connect to?",
-        loading_extensions: "Loading your extensions...",
+        loading_extensions: "Loading your extensions…",
         no_extensions: "{{x}} You don't have any extensions of type %s",
         learn_about_extensions: "{{*}} Learn more about building extensions at <https://shopify.dev/concepts/apps>, " \
           "or try creating a new extension using {{command:shopify extension create}}.",
@@ -65,7 +65,7 @@ module Extension
           Build your extension to prepare for deployment.
             Usage: {{command:%s extension build}}
         HELP
-        frame_title: "Building extension with: %s...",
+        frame_title: "Building extension with: %s…",
         build_failure_message: "Failed to build extension code.",
       },
       register: {
@@ -76,7 +76,7 @@ module Extension
                 {{command:--api-key=API_KEY}} The API key used to register an app with the extension. This can be found on the app page on Partners Dashboard.
         HELP
         frame_title: "Registering Extension",
-        waiting_text: "Registering with Shopify...",
+        waiting_text: "Registering with Shopify…",
         already_registered: "Extension is already registered.",
         confirm_info: "This will create a new extension registration for %s, which can’t be undone.",
         confirm_question: "Would you like to register this extension? (y/n)",
@@ -90,7 +90,7 @@ module Extension
             Usage: {{command:%s extension push}}
         HELP
         frame_title: "Pushing your extension to Shopify",
-        waiting_text: "Pushing code to Shopify...",
+        waiting_text: "Pushing code to Shopify…",
         pushed_with_errors: "{{x}} Code pushed to Shopify with errors on %s.",
         push_with_errors_info: "{{*}} Fix these errors and run {{command:shopify extension push}} to " \
           "revalidate your extension.",
@@ -104,7 +104,7 @@ module Extension
             Options:
             {{command:--tunnel=TUNNEL}} Establish an ngrok tunnel (default: false)
         HELP
-        frame_title: "Serving extension...",
+        frame_title: "Serving extension…",
         no_available_ports_found: "No available ports found to run extension.",
         serve_failure_message: "Failed to run extension code.",
         serve_missing_information: "Missing shop or api_key.",

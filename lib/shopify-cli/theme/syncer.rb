@@ -314,7 +314,7 @@ module ShopifyCli
 
       def backoff_if_near_limit!(used, limit)
         if used > limit - @threads.size
-          @ctx.debug("Near API call limit, waiting 2 sec ...")
+          @ctx.debug("Near API call limit, waiting 2 sec…")
           @backoff_mutex.synchronize { sleep 2 }
         end
       end

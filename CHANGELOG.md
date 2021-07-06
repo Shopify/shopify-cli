@@ -1,10 +1,11 @@
 Unreleased
 ------
 * [#1305](https://github.com/Shopify/shopify-cli/pull/1305): Fix `Uninitialized constant Net::WriteTimeout` error
-* [#1324](https://github.com/Shopify/shopify-cli/pull/1324): Fix issue [#1308](https://github.com/Shopify/shopify-cli/issues/1308) where a non-English language on Partner Account breaks how CLI determines latest API version.
-* [#1322](https://github.com/Shopify/shopify-cli/pull/1322): Fix error when running `shopify theme language-server --help`
-* [#1321](https://github.com/Shopify/shopify-cli/pull/1321): Fix error when pulling images with `theme pull`
 * [#1319](https://github.com/Shopify/shopify-cli/pull/1319): Fix `theme pull` not pulling some files
+* [#1321](https://github.com/Shopify/shopify-cli/pull/1321): Fix error when pulling images with `theme pull`
+* [#1322](https://github.com/Shopify/shopify-cli/pull/1322): Fix error when running `shopify theme language-server --help`
+* [#1324](https://github.com/Shopify/shopify-cli/pull/1324): Fix issue [#1308](https://github.com/Shopify/shopify-cli/issues/1308) where a non-English language on Partner Account breaks how CLI determines latest API version.
+* [#1343](https://github.com/Shopify/shopify-cli/pull/1343): Fix inconsistent use of periods vs ellipsis in messages. This replaces periods with ellipsis.
 
 Version 2.0.1
 -------------

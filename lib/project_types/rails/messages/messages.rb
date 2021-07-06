@@ -17,7 +17,7 @@ module Rails
           checking_installation_path: "Checking path %s for gem %s",
           installed: "Installed %s gem",
           installed_debug: "%s installed: %s",
-          installing: "Installing %s gem...",
+          installing: "Installing %s gem…",
           setting_gem_home: "GEM_HOME being set to %s",
           setting_gem_path: "GEM_PATH being set to %s",
         },
@@ -62,15 +62,15 @@ module Rails
             open_new_shell: "{{*}} {{yellow:After installing %s, please open a new Command Prompt or PowerShell " \
               "window to continue.}}",
           },
-          installing_bundler: "Installing bundler...",
-          generating_app: "Generating new rails app project in %s...",
-          adding_shopify_gem: "{{v}} Adding shopify_app gem...",
+          installing_bundler: "Installing bundler…",
+          generating_app: "Generating new rails app project in %s…",
+          adding_shopify_gem: "{{v}} Adding shopify_app gem…",
           node_version: "node %s",
           yarn_version: "yarn %s",
-          running_bundle_install: "Running bundle install...",
-          running_generator: "Running shopify_app generator...",
-          running_migrations: "Running migrations...",
-          running_webpacker_install: "Running webpacker:install...",
+          running_bundle_install: "Running bundle install…",
+          running_generator: "Running shopify_app generator…",
+          running_migrations: "Running migrations…",
+          running_webpacker_install: "Running webpacker:install…",
         },
 
         deploy: {
@@ -89,18 +89,18 @@ module Rails
               Deploy the current Rails project to Heroku
               Usage: {{command:%s rails deploy heroku}}
             HELP
-            downloading: "Downloading Heroku CLI...",
+            downloading: "Downloading Heroku CLI…",
             downloaded: "Downloaded Heroku CLI",
-            installing: "Installing Heroku CLI...",
+            installing: "Installing Heroku CLI…",
             installed: "Installed Heroku CLI",
             authenticated_with_account: "{{v}} Authenticated with Heroku as {{green:%s}}",
-            authenticating: "Authenticating with Heroku...",
+            authenticating: "Authenticating with Heroku…",
             authenticated: "{{v}} Authenticated with Heroku",
-            deploying: "Deploying to Heroku...",
+            deploying: "Deploying to Heroku…",
             deployed: "{{v}} Deployed to Heroku",
             db_check: {
-              validating: "Validating application...",
-              checking: "Checking database type...",
+              validating: "Validating application…",
+              checking: "Checking database type…",
               validated: "Database type \"%s\" validated for platform \"Heroku\"",
               problem: "A problem was encountered while checking your database type.",
               sqlite: <<~SQLITE,
@@ -110,7 +110,7 @@ module Rails
               SQLITE
             },
             git: {
-              checking: "Checking git repo...",
+              checking: "Checking git repo…",
               initialized: "Git repo initialized",
               what_branch: "What branch would you like to deploy?",
               branch_selected: "{{v}} Git branch {{green:%s}} selected for deploy",
@@ -119,10 +119,10 @@ module Rails
               no_apps_found: "No existing Heroku app found. What would you like to do?",
               name: "What is your Heroku app’s name?",
               select: "Specify an existing Heroku app",
-              selecting: "Selecting Heroku app %s...",
+              selecting: "Selecting Heroku app %s…",
               selected: "{{v}} Heroku app {{green:%s}} selected",
               create: "Create a new Heroku app",
-              creating: "Creating new Heroku app...",
+              creating: "Creating new Heroku app…",
               created: "{{v}} New Heroku app created",
             },
           },
@@ -180,7 +180,7 @@ module Rails
             {{*}} To install and start using your app, open this URL in your browser:
             {{green:%s}}
           MESSAGE
-          running_server: "Running server...",
+          running_server: "Running server…",
         },
 
         tunnel: {

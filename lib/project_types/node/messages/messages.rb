@@ -129,7 +129,7 @@ module Node
             {{*}} To install and start using your app, open this URL in your browser:
             {{green:%s}}
           MESSAGE
-          running_server: "Running server...",
+          running_server: "Running server…",
         },
 
         tunnel: {
