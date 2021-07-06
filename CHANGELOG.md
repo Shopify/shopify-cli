@@ -2,7 +2,8 @@ Unreleased
 ------
 * [#1305](https://github.com/Shopify/shopify-cli/pull/1305): Fix `Uninitialized constant Net::WriteTimeout` error
 * [#1324](https://github.com/Shopify/shopify-cli/pull/1324): Fix issue [#1308](https://github.com/Shopify/shopify-cli/issues/1308) where a non-English language on Partner Account breaks how CLI determines latest API version.
-* [1321](https://github.com/Shopify/shopify-cli/pull/1321): Fix error when pulling images with `theme pull`
+* [#1322](https://github.com/Shopify/shopify-cli/pull/1322): Fix error when running `shopify theme language-server --help`
+* [#1321](https://github.com/Shopify/shopify-cli/pull/1321): Fix error when pulling images with `theme pull`
 
 Version 2.0.1
 -------------
