@@ -65,9 +65,9 @@ module Extension
         end
 
         def argo_runtime(context)
-          @argo_runtime ||= Features::ArgoRuntime.new(
-            renderer: renderer_package(context),
-            cli: cli_package(context),
+          @argo_runtime ||= Features::ArgoRuntime.build(
+            cli_package: cli_package(context),
+            identifier: identifier
           )
         end
 

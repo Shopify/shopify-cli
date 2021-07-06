@@ -1,47 +1,32 @@
 module Extension
   module Features
     class ArgoRuntime
-      include SmartProperties
+      CHECKOUT_POST_PURCHASE ||= "CHECKOUT_POST_PURCHASE"
 
-      UI_EXTENSIONS_CHECKOUT_RUN = "@shopify/checkout-ui-extensions-run"
-      UI_EXTENSIONS_ADMIN_RUN = "@shopify/admin-ui-extensions-run"
-
-      ADMIN_RUN_FLAGS = [
-        :api_key,
-        :name,
-        :port,
-        :public_url,
-        :renderer_version,
-        :shop,
-        :uuid,
+      RUNTIMES ||= [
+        Runtimes::AdminRuntime.new,
+        Runtimes::CheckoutRuntime.new,
       ]
 
-      CHECKOUT_RUN_FLAGS = [
-        :port,
-        :public_url,
-        :shop,
-      ]
-
-      property! :renderer, accepts: Models::NpmPackage
-      property! :cli, accepts: Models::NpmPackage
+      def cli_package
+        raise NotImplementedError
+      end
 
       def supports?(flag)
-        case cli
-        when admin?
-          ADMIN_RUN_FLAGS.include?(flag.to_sym)
-        when checkout?
-          CHECKOUT_RUN_FLAGS.include?(flag.to_sym)
+        available_flags.include?(flag)
+      end
+
+      def available_flags
+        []
+      end
+
+      def self.build(cli_package:, identifier:)
+        case identifier
+        when CHECKOUT_POST_PURCHASE
+          Runtimes::CheckoutPostPurchaseRuntime.new
+        else
+          RUNTIMES.find { |runtime| runtime.cli_package == cli_package.name }
         end
-      end
-
-      private
-
-      def admin?
-        ->(cli) { cli.name == UI_EXTENSIONS_ADMIN_RUN }
-      end
-
-      def checkout?
-        ->(cli) { cli.name == UI_EXTENSIONS_CHECKOUT_RUN }
       end
     end
   end

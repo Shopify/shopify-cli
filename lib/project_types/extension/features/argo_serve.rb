@@ -7,7 +7,7 @@ module Extension
       NPM_SERVE_COMMAND = %w(run-script server)
 
       property! :specification_handler, accepts: Extension::Models::SpecificationHandlers::Default
-      property! :argo_runtime, accepts: Features::ArgoRuntime
+      property! :argo_runtime, accepts: -> (runtime) { runtime.class < Features::ArgoRuntime }
       property! :context, accepts: ShopifyCli::Context
       property! :port, accepts: Integer, default: 39351
       property  :tunnel_url, accepts: String, default: nil

@@ -62,6 +62,11 @@ module Extension
   end
 
   module Features
+    module Runtimes
+      autoload :AdminRuntime, Project.project_filepath("features/runtimes/admin_runtime")
+      autoload :CheckoutRuntime, Project.project_filepath("features/runtimes/checkout_runtime")
+      autoload :CheckoutPostPurchaseRuntime, Project.project_filepath("features/runtimes/checkout_post_purchase_runtime")
+    end
     autoload :ArgoServe, Project.project_filepath("features/argo_serve")
     autoload :ArgoServeOptions, Project.project_filepath("features/argo_serve_options")
     autoload :ArgoSetup, Project.project_filepath("features/argo_setup")

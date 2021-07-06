@@ -9,6 +9,7 @@ module Extension
 
       def setup
         ShopifyCli::ProjectType.load_type(:extension)
+        stub_package_manager
         super
       end
 
@@ -45,15 +46,11 @@ module Extension
       private
 
       def argo_runtime
-        Features::ArgoRuntime.new(cli: cli, renderer: renderer)
+        Features::ArgoRuntime.build(cli_package: cli, identifier: "PRODUCT_SUBSCRIPTION")
       end
 
       def cli
-        Models::NpmPackage.new(name: "@shopify/argo-admin-cli", version: "0.11.0")
-      end
-
-      def renderer
-        Models::NpmPackage.new(name: "@shopify/argo-admin", version: "0.0.1")
+        Models::NpmPackage.new(name: "@shopify/admin-ui-extensions-run", version: "0.11.0")
       end
 
       def specification_handler
@@ -62,6 +59,21 @@ module Extension
 
       def fake_js_system(success: true)
         proc { success }
+      end
+
+      def stub_package_manager
+        fake_list_result = <<~YARN
+          yarn list v1.22.5
+          ├─ @fake-package@0.3.9
+          └─ @shopify/admin-ui-extensions@0.3.8
+          ✨  Done in 0.40s.
+        YARN
+
+        ShopifyCli::JsSystem
+          .new(ctx: @context)
+          .tap { |js_system| js_system.stubs(call: [fake_list_result, nil, stub(success?: true)]) }
+          .yield_self { |js_system| Tasks::FindNpmPackages.new(js_system: js_system) }
+          .tap { |find_npm_packages_stub| Tasks::FindNpmPackages.expects(:new).returns(find_npm_packages_stub) }
       end
     end
   end

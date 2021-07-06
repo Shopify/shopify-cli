@@ -7,105 +7,31 @@ module Extension
     class ArgoRuntimeTest < MiniTest::Test
       include ExtensionTestHelpers::TempProjectSetup
 
-      def test_supports_port
-        runtimes = {
-          checkout_runtime => supports_feature,
-          admin_runtime => supports_feature,
-        }
-
-        runtimes.each do |runtime, accepts_port|
-          assert_equal accepts_port, runtime.supports?(:port)
-        end
-      end
-
-      def test_supports_public_url
-        runtimes = {
-          checkout_runtime => supports_feature,
-          admin_runtime => supports_feature,
-        }
-
-        runtimes.each do |runtime, accepts_tunnel|
-          assert_equal accepts_tunnel, runtime.supports?(:public_url)
-        end
-      end
-
-      def test_supports_uuid
-        runtimes = {
-          checkout_runtime => does_not_support_feature,
-          admin_runtime => supports_feature,
-        }
-
-        runtimes.each do |runtime, accepts_uuid|
-          assert_equal accepts_uuid, runtime.supports?(:uuid)
-        end
-      end
-
-      def test_supports_renderer_version
-        runtimes = {
-          checkout_runtime => does_not_support_feature,
-          admin_runtime => supports_feature,
-        }
-
-        runtimes.each do |runtime, accepts_renderer_version|
-          assert_equal accepts_renderer_version, runtime.supports?(:renderer_version)
-        end
-      end
-
-      def test_supports_api_key
-        runtimes = {
-          checkout_runtime => does_not_support_feature,
-          admin_runtime => supports_feature,
-        }
-
-        runtimes.each do |runtime, accepts_api_key|
-          assert_equal accepts_api_key, runtime.supports?(:api_key)
-        end
-      end
-
-      def test_supports_shop
-        runtimes = {
-          checkout_runtime => supports_feature,
-          admin_runtime => supports_feature,
-        }
-
-        runtimes.each do |runtime, accepts_shop|
-          assert_equal accepts_shop, runtime.supports?(:shop)
-        end
-      end
-
-      def test_supports_name
-        runtimes = {
-          checkout_runtime => does_not_support_feature,
-          admin_runtime => supports_feature,
-        }
-
-        runtimes.each do |runtime, accepts_name|
-          assert_equal accepts_name, runtime.supports?(:name)
-        end
-      end
-
-      private
-
-      def checkout_runtime
-        ArgoRuntime.new(
-          cli: Models::NpmPackage.new(name: "@shopify/checkout-ui-extensions-run", version: "0.4.0"),
-          renderer: Models::NpmPackage.new(name: "@shopify/post-purchase-ui-extensions", version: "0.9.0")
+      def test_checkout_runtime_is_returned_for_checkout_extensions
+        checkout_runtime = ArgoRuntime.build(
+          cli_package: Models::NpmPackage.new(name: "@shopify/checkout-ui-extensions-run", version: "0.4.0"),
+          identifier: "CHECKOUT_UI_EXTENSION"
         )
+
+        assert_equal Runtimes::CheckoutRuntime, checkout_runtime.class
       end
 
-      def admin_runtime
-        ArgoRuntime.new(
-          cli: Models::NpmPackage.new(name: "@shopify/admin-ui-extensions-run", version: "0.13.0"),
-          renderer: Models::NpmPackage.new(name: "@shopify/admin-ui-extensions", version: "0.12.0")
+      def test_admin_runtime_is_returned_for_admin_extensions
+        admin_runtime = ArgoRuntime.build(
+          cli_package: Models::NpmPackage.new(name: "@shopify/admin-ui-extensions-run", version: "0.13.0"),
+          identifier: "PRODUCT_SUBSCRIPTION"
         )
+
+        assert_equal Runtimes::AdminRuntime, admin_runtime.class
       end
 
-      def supports_feature
-        true
-      end
+      def test_checkout_post_purchase_runtime_is_returned_for_post_purchase_extensions
+        post_purchase_runtime = ArgoRuntime.build(
+          cli_package: Models::NpmPackage.new(name: "@shopify/checkout-ui-extensions-run", version: "0.13.0"),
+          identifier: "CHECKOUT_POST_PURCHASE"
+        )
 
-      def does_not_support_feature
-        false
+        assert_equal Runtimes::CheckoutPostPurchaseRuntime, post_purchase_runtime.class
       end
     end
   end
