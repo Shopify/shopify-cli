@@ -87,7 +87,7 @@ module ShopifyCli
         end
 
         def stop
-          @ctx.puts("Stopping ...")
+          @ctx.puts("Stopping…")
           @app.close
           @syncer.shutdown
           WebServer.shutdown
