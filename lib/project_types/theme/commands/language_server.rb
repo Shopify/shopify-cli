@@ -9,7 +9,7 @@ module Theme
       end
 
       def self.help
-        ShopifyCli::Context.message("theme.language_server.help", ShopifyCli::TOOL_NAME, ShopifyCli::TOOL_NAME)
+        ShopifyCli::Context.message("theme.language_server.help", ShopifyCli::TOOL_NAME)
       end
     end
   end

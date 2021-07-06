@@ -134,9 +134,9 @@ module Theme
         },
         language_server: {
           help: <<~HELP,
-            {{command:%s theme language-server}}: Start a Language Server Protocol server.
+            {{command:%1$s theme language-server}}: Start a Language Server Protocol server.
 
-            Usage: {{command:%s theme language-server}}
+            Usage: {{command:%1$s theme language-server}}
           HELP
         },
         pull: {
