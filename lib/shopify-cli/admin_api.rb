@@ -134,8 +134,12 @@ module ShopifyCli
         )
         CLI::Kit::Util.begin do
           versions = client.query("api_versions")["data"]["publicApiVersions"]
-          latest = versions.find { |version| version["displayName"].include?("Latest") }
-          latest["handle"]
+          # return the most recent supported version
+          versions
+            .select { |version| version["supported"] }
+            .map { |version| version["handle"] }
+            .sort
+            .reverse[0]
         end.retry_after(API::APIRequestUnauthorizedError, retries: 1) do
           ShopifyCli::IdentityAuth.new(ctx: ctx).reauthenticate
         end

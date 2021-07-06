@@ -3,15 +3,18 @@
     "publicApiVersions": [
       {
         "handle": "2019-04",
-        "displayName": "2019-04 (Latest)"
+        "displayName": "2019-04 (Latest)",
+        "supported": true
       },
       {
         "handle": "2019-07",
-        "displayName": "2019-07 (Release candidate)"
+        "displayName": "2019-07 (Release candidate)",
+        "supported": false
       },
       {
         "handle": "unstable",
-        "displayName": "unstable"
+        "displayName": "unstable",
+        "supported": false
       }
     ]
   }
