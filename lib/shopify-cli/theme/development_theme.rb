@@ -57,7 +57,6 @@ module ShopifyCli
       def generate_theme_name
         hostname = Socket.gethostname.split(".").shift
         hash = SecureRandom.hex(3)
-
         theme_name = "Development (#{hash}-#{hostname})"[0..50]
 
         ShopifyCli::DB.set(development_theme_name: theme_name)
