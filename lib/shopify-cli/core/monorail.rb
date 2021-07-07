@@ -90,7 +90,7 @@ module ShopifyCli
           {
             schema_id: INVOCATIONS_SCHEMA,
             payload: {
-              project_type: Project.current_project_type.to_s,
+              project_type: commands[0] == "theme" ? "theme" : Project.current_project_type.to_s,
               command: commands.join(" "),
               args: args.join(" "),
               time_start: start_time,
@@ -109,6 +109,8 @@ module ShopifyCli
                 project = Project.current(force_reload: true)
                 payload[:api_key] = project.env&.api_key
                 payload[:partner_id] = project.config["organization_id"]
+              else
+                payload[:partner_id] = ShopifyCli::DB.get(:organization_id)
               end
               payload[:metadata] = JSON.dump(metadata) unless metadata.empty?
             end,
