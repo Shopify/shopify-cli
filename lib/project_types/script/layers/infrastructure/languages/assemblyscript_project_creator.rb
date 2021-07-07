@@ -113,12 +113,13 @@ module Script
           end
 
           def build_command
+            type = extension_point.dasherize_type
             domain = extension_point.domain
 
             if domain.nil?
               "#{BUILD} #{ASC_ARGS}"
             else
-              "#{BUILD} --domain #{domain} --ep #{extension_point.dasherize_type} #{ASC_ARGS}"
+              "#{BUILD} --domain #{domain} --ep #{type} #{ASC_ARGS}"
             end
           end
         end

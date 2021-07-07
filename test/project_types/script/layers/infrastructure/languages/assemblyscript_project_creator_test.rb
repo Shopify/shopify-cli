@@ -83,7 +83,6 @@ describe Script::Layers::Infrastructure::Languages::AssemblyScriptProjectCreator
         .returns([JSON.generate("2.0.0"), OpenStruct.new(success?: true)])
 
       # moving files up to project root
-      type = extension_point.type
       source = File.join(project_creator.path_to_project, project_creator.sparse_checkout_set_path)
       FileUtils.expects(:copy_entry).with(source, project_creator.path_to_project)
 
