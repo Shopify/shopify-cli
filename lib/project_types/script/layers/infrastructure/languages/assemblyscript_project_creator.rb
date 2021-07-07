@@ -16,7 +16,7 @@ module Script
           MIN_NODE_VERSION = "14.5.0" # kept because task_runner uses this
           ASC_ARGS = "-- --lib node_modules --optimize --use Date="
 
-          ORIGIN_BRANCH = 'master'
+          ORIGIN_BRANCH = "master"
 
           def setup_dependencies
             # sparse checkout actions
@@ -55,16 +55,16 @@ module Script
             repo = extension_point.sdks.assemblyscript.repo
             command_runner.call("git remote add -f origin #{repo}")
           end
-  
+
           def setup_sparse_checkout
             command_runner.call("git config core.sparsecheckout true")
             command_runner.call("git sparse-checkout set #{sparse_checkout_set_path}")
           end
-          
+
           def pull
             command_runner.call("git pull origin #{ORIGIN_BRANCH}")
           end
-  
+
           def clean
             source = File.join(path_to_project, sparse_checkout_set_path)
             FileUtils.copy_entry(source, path_to_project)
@@ -106,13 +106,12 @@ module Script
           end
 
           def build_command
-            type = extension_point.dasherize_type
             domain = extension_point.domain
 
             if domain.nil?
               "#{BUILD} #{ASC_ARGS}"
             else
-              "#{BUILD} --domain #{domain} --ep #{type} #{ASC_ARGS}"
+              "#{BUILD} --domain #{domain} --ep #{extension_point.dasherize_type} #{ASC_ARGS}"
             end
           end
 
