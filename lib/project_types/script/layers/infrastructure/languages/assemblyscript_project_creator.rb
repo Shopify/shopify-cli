@@ -16,7 +16,6 @@ module Script
           MIN_NODE_VERSION = "14.5.0" # kept because task_runner uses this
           ASC_ARGS = "-- --lib node_modules --optimize --use Date="
 
-          EP_REPO = "https://github.com/Shopify/extension-points.git"
           ORIGIN_BRANCH = 'master'
 
           def setup_dependencies
@@ -35,26 +34,6 @@ module Script
           def bootstrap
           end
 
-          private
-
-          def git_init
-            out, status = ctx.capture2e("git init")
-            raise Domain::Errors::ServiceFailureError, out unless status.success?
-          end
-
-          def setup_remote
-            out, status = ctx.capture2e("git remote add -f origin #{EP_REPO}")
-            raise Domain::Errors::ServiceFailureError, out unless status.success?
-          end
-  
-          def setup_sparse_checkout
-            out, status = ctx.capture2e("git config core.sparsecheckout true")
-            raise Domain::Errors::ServiceFailureError, out unless status.success?
-
-            out, status = ctx.capture2e("git sparse-checkout set #{sparse_checkout_set_path}")
-            raise Domain::Errors::ServiceFailureError, out unless status.success?
-          end
-
           def sparse_checkout_set_path
             type = extension_point.dasherize_type
             domain = extension_point.domain
@@ -65,10 +44,25 @@ module Script
               "packages/#{domain}/samples/#{type}"
             end
           end
+
+          private
+
+          def git_init
+            command_runner.call("git init")
+          end
+
+          def setup_remote
+            repo = extension_point.sdks.assemblyscript.repo
+            command_runner.call("git remote add -f origin #{repo}")
+          end
   
+          def setup_sparse_checkout
+            command_runner.call("git config core.sparsecheckout true")
+            command_runner.call("git sparse-checkout set #{sparse_checkout_set_path}")
+          end
+          
           def pull
-            out, status = ctx.capture2e("git pull origin #{ORIGIN_BRANCH}")
-            raise Domain::Errors::ServiceFailureError, out unless status.success?
+            command_runner.call("git pull origin #{ORIGIN_BRANCH}")
           end
   
           def clean
