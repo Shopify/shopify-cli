@@ -53,12 +53,13 @@ module Script
         end
 
         class ExtensionPointSDK
-          attr_reader :version, :beta, :package
+          attr_reader :version, :beta, :package, :repo
 
           def initialize(config)
             @beta = config["beta"] || false
             @package = config["package"]
             @version = config["package-version"]
+            @repo = config["repo"]
           end
 
           def beta?
