@@ -9,7 +9,7 @@ describe Script::Layers::Infrastructure::Languages::AssemblyScriptProjectCreator
   let(:language) { "AssemblyScript" }
   let(:script_id) { "id" }
   let(:context) { TestHelpers::FakeContext.new }
-  let(:extension_point_type) { "discount" }
+  let(:extension_point_type) { "payment_methods" }
   let(:extension_point) { Script::Layers::Domain::ExtensionPoint.new(extension_point_type, extension_point_config) }
   let(:project_creator) do
     Script::Layers::Infrastructure::Languages::AssemblyScriptProjectCreator
@@ -18,9 +18,10 @@ describe Script::Layers::Infrastructure::Languages::AssemblyScriptProjectCreator
   let(:extension_point_config) do
     {
       "assemblyscript" => {
-        "package": "@shopify/extension-point-as-fake",
-        "sdk-version": "*",
-        "toolchain-version": "*",
+        "repo" => "https://github.com/Shopify/extension-points.git",
+        "package" => "@shopify/extension-point-as-fake",
+        "sdk-version" => "*",
+        "toolchain-version" => "*",
       },
     }
   end
@@ -30,173 +31,123 @@ describe Script::Layers::Infrastructure::Languages::AssemblyScriptProjectCreator
     context.mkdir_p(script_name)
   end
 
+  def system_output(msg:, success:)
+    [msg, OpenStruct.new(success?: success)]
+  end
+
   describe ".setup_dependencies" do
     subject { project_creator.setup_dependencies }
 
-    it "should write to package.json" do
-      context.expects(:capture2e).returns([JSON.generate("2.0.0"), OpenStruct.new(success?: true)]).times(3)
-      context.expects(:write).with do |_file, contents|
-        payload = JSON.parse(contents)
-        build = payload.dig("scripts", "build")
-        expected = [
-          "shopify-scripts-toolchain-as build --src src/shopify_main.ts",
-          "--binary build/script.wasm --metadata build/metadata.json",
-          "-- --lib node_modules --optimize --use Date=",
-        ].join(" ")
-        expected == build
-      end
+    it "should setup sparse checkout" do
+      # sparse checkout
+      context
+        .expects(:capture2e)
+        .with("git init").once
+        .returns(system_output(msg: "", success: true))
+      context
+        .expects(:capture2e)
+        .with("git remote add -f origin #{extension_point.sdks.assemblyscript.repo}")
+        .once
+        .returns(system_output(msg: "", success: true))
+      context
+        .expects(:capture2e)
+        .with("git config core.sparsecheckout true")
+        .once
+        .returns(system_output(msg: "", success: true))
+      context
+        .expects(:capture2e)
+        .with("git sparse-checkout set #{project_creator.sparse_checkout_set_path}")
+        .once
+        .returns(system_output(msg: "", success: true))
+      context
+        .expects(:capture2e)
+        .with("git pull origin master")
+        .once
+        .returns(system_output(msg: "", success: true))
 
-      subject
-    end
-
-    it "should fetch the latest extension point version if the package is not versioned" do
+      # npmrc generation
       context
         .expects(:capture2e)
         .with("npm --userconfig ./.npmrc config set @shopify:registry https://registry.npmjs.com")
         .returns(fake_capture2e_response)
       context
         .expects(:capture2e)
-        .with("npm --userconfig ./.npmrc config set engine-strict true")
+        .then.with("npm --userconfig ./.npmrc config set engine-strict true")
         .returns(fake_capture2e_response)
+
+      # package.json generation
       context
         .expects(:capture2e)
         .with("npm show @shopify/extension-point-as-fake version --json")
         .once
         .returns([JSON.generate("2.0.0"), OpenStruct.new(success?: true)])
 
-      sdk = mock
-      sdk.expects(:sdk_version)
-      sdk.expects(:toolchain_version)
-      sdk.expects(:versioned?).once.returns(false)
-      sdk.expects(:package).twice.returns("@shopify/extension-point-as-fake")
-      extension_point.expects(:sdks).times(5).returns(stub(all: [sdk], assemblyscript: sdk))
+      # moving files up to project root
+      type = extension_point.type
+      source = File.join(project_creator.path_to_project, project_creator.sparse_checkout_set_path)
+      FileUtils.expects(:copy_entry).with(source, project_creator.path_to_project)
+
+      # confirm package.json - only once this file is checked into the repo
+      # File.expects(:read).with("package.json").returns("name = payment-filter-default")
+      # File.expects(:write).with("package.json", "name = #{script_name}")
+
+      # clean-up git files
+      context.expects(:rm_rf).with(".git")
+      context.expects(:rm_rf).with("packages")
 
       subject
-      version = JSON.parse(File.read("package.json")).dig("devDependencies", "@shopify/extension-point-as-fake")
-      assert_equal "^2.0.0", version
     end
 
-    it "should set the specified package version when the package is versioned" do
+    it "should raise a service failure error if the git repository cannot be iniitialized" do
       context
         .expects(:capture2e)
-        .with("npm --userconfig ./.npmrc config set @shopify:registry https://registry.npmjs.com")
-        .returns(fake_capture2e_response)
-      context
-        .expects(:capture2e)
-        .then.with("npm --userconfig ./.npmrc config set engine-strict true")
-        .returns(fake_capture2e_response)
+        .with("git init").once
+        .returns(system_output(msg: "Couldn't initialize git repository", success: false))
 
-      context
-        .expects(:capture2e)
-        .with("npm show @shopify/extension-point-as-fake version --json")
-        .never
-
-      sdk = mock
-      sdk.expects(:sdk_version)
-      sdk.expects(:toolchain_version)
-      sdk.expects(:package).once.returns("@shopify/extension-point-as-fake")
-      sdk.expects(:versioned?).once.returns(true)
-      sdk.expects(:version).once.returns("file:///path")
-      extension_point.expects(:sdks).times(5).returns(stub(all: [sdk], assemblyscript: sdk))
-
-      subject
-      version = JSON.parse(File.read("package.json")).dig("devDependencies", "@shopify/extension-point-as-fake")
-      assert_equal "file:///path", version
+      assert_raises(Script::Layers::Infrastructure::Errors::SystemCallFailureError) { subject }
     end
 
-    it "should raise if the latest extension point version can't be fetched" do
-      context
-        .expects(:capture2e)
-        .with("npm --userconfig ./.npmrc config set @shopify:registry https://registry.npmjs.com")
-        .returns(fake_capture2e_response)
-      context
-        .expects(:capture2e)
-        .then.with("npm --userconfig ./.npmrc config set engine-strict true")
-        .returns(fake_capture2e_response)
+    it "should raise a service failure error if the git remote cannot be configured" do
+      context.expects(:capture2e).once.returns(system_output(msg: "", success: true))
 
       context
         .expects(:capture2e)
-        .with("npm show @shopify/extension-point-as-fake version --json")
+        .with("git remote add -f origin #{extension_point.sdks.assemblyscript.repo}").once
+        .returns(system_output(msg: "Couldn't set remote origin", success: false))
+
+      assert_raises(Script::Layers::Infrastructure::Errors::SystemCallFailureError) { subject }
+    end
+
+    it "should raise a service failure error if sparse checkout cannot be enabled" do
+      context.expects(:capture2e).twice.returns(system_output(msg: "", success: true))
+
+      context
+        .expects(:capture2e)
+        .with("git config core.sparsecheckout true").once
+        .returns(system_output(msg: "Couldn't enable sparse checkout", success: false))
+
+      assert_raises(Script::Layers::Infrastructure::Errors::SystemCallFailureError) { subject }
+    end
+
+    it "should raise a service failure error if sparse checkout cannot be set" do
+      context.expects(:capture2e).times(3).returns(system_output(msg: "", success: true))
+
+      context
+        .expects(:capture2e)
+        .with("git sparse-checkout set #{project_creator.sparse_checkout_set_path}").once
+        .returns(system_output(msg: "Couldn't set sparse checkout", success: false))
+
+      assert_raises(Script::Layers::Infrastructure::Errors::SystemCallFailureError) { subject }
+    end
+
+    it "raises if there is an error pulling from the remote's origin" do
+      context.expects(:capture2e).times(4).returns(system_output(msg: "", success: true))
+      context
+        .expects(:capture2e)
+        .with("git pull origin master")
         .once
-        .returns([JSON.generate(""), OpenStruct.new(success?: false)])
-
-      sdk = mock
-      sdk.expects(:sdk_version)
-      sdk.expects(:toolchain_version)
-      sdk.expects(:versioned?).once.returns(false)
-      sdk.expects(:package).twice.returns("@shopify/extension-point-as-fake")
-      extension_point.expects(:sdks).times(5).returns(stub(all: [sdk], assemblyscript: sdk))
-
+        .returns(system_output(msg: "Fatal", success: false))
       assert_raises(Script::Layers::Infrastructure::Errors::SystemCallFailureError) { subject }
-    end
-  end
-
-  describe ".bootstrap" do
-    subject { project_creator.bootstrap }
-
-    it "should delegate the bootstrapping process to the language toolchain" do
-      context.expects(:capture2e)
-        .with(
-          "npx --no-install shopify-scripts-toolchain-as bootstrap --from #{extension_point.type} --dest #{script_name}"
-        )
-        .returns(["", OpenStruct.new(success?: true)])
-
-      subject
-    end
-
-    it "raises an error when the bootstrapping process fails to find the requested extension point" do
-      context.expects(:capture2e)
-        .with(
-          "npx --no-install shopify-scripts-toolchain-as bootstrap --from #{extension_point.type} --dest #{script_name}"
-        )
-        .returns(["", OpenStruct.new(success?: false)])
-
-      assert_raises(Script::Layers::Infrastructure::Errors::SystemCallFailureError) { subject }
-    end
-  end
-
-  describe "bootstrap extension points with domain" do
-    subject { project_creator.bootstrap }
-
-    let(:extension_point_config_with_domain) { extension_point_config.merge({ "domain" => "checkout" }) }
-    let(:extension_point) do
-      Script::Layers::Domain::ExtensionPoint.new(extension_point_type, extension_point_config_with_domain)
-    end
-
-    it "should call the language toolchain with the appropriate domain arguments" do
-      context.expects(:capture2e)
-        .with(
-          "npx --no-install shopify-scripts-toolchain-as bootstrap --from #{extension_point.type} " \
-          "--dest #{script_name} --domain checkout"
-        )
-        .returns(["", OpenStruct.new(success?: true)])
-
-      subject
-    end
-  end
-
-  describe "dependencies for extension points with domain" do
-    subject { project_creator.setup_dependencies }
-
-    let(:extension_point_config_with_domain) { extension_point_config.merge({ "domain" => "checkout" }) }
-    let(:extension_point) do
-      Script::Layers::Domain::ExtensionPoint.new(extension_point_type, extension_point_config_with_domain)
-    end
-
-    it "should create the build command in the package.json with the appropriate domain arguments" do
-      context.expects(:capture2e).once.returns([JSON.generate("2.0.0"), OpenStruct.new(success?: true)]).times(3)
-      context.expects(:write).with do |_file, contents|
-        payload = JSON.parse(contents)
-        build = payload.dig("scripts", "build")
-        expected = [
-          "shopify-scripts-toolchain-as build --src src/shopify_main.ts --binary build/script.wasm",
-          "--metadata build/metadata.json --domain checkout --ep discount",
-          "-- --lib node_modules --optimize --use Date=",
-        ].join(" ")
-        expected == build
-      end
-
-      subject
     end
   end
 end
