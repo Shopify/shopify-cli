@@ -166,6 +166,7 @@ module Extension
       tasks: {
         errors: {
           parse_error: "Unable to parse response from Partners Dashboard.",
+          store_error: "There was an error getting store data. Try again later.",
         },
       },
       errors: {
