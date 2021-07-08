@@ -1,5 +1,6 @@
 Unreleased
 ------
+* [#1357](https://github.com/Shopify/shopify-cli/pull/1357): Update Theme-Check to 1.1
 
 Version 2.0.2
 -------------
