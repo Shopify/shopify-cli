@@ -24,6 +24,7 @@ module Extension
     subcommand :Serve, "serve", Project.project_filepath("commands/serve")
     subcommand :Push, "push", Project.project_filepath("commands/push")
     subcommand :Tunnel, "tunnel", Project.project_filepath("commands/tunnel")
+    subcommand :Check, "check", Project.project_filepath("commands/check")
   end
   ShopifyCli::Commands.register("Extension::Command", "extension")
 

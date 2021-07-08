@@ -139,6 +139,10 @@ module Extension
               Usage: {{command:%1$s extension tunnel status}}
         HELP
       },
+      check: {
+        help: "Check your extension for errors, suggestions, and best practices.",
+        unsupported: "{{red:%s projects are not supported for `extension check`}}",
+      },
       features: {
         argo: {
           missing_file_error: "Could not find built extension file.",
