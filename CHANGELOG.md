@@ -1,5 +1,8 @@
 Unreleased
 ------
+
+Version 2.1.0
+-------------
 * [#1357](https://github.com/Shopify/shopify-cli/pull/1357): Update Theme-Check to 1.1
 * [#1352](https://github.com/Shopify/shopify-cli/pull/1352): Add `shopify extension check` for checking theme app extensions
 * [#1304](https://github.com/Shopify/shopify-cli/pull/1304): Prompt user to run `shopify extension connect` if .env file is missing
