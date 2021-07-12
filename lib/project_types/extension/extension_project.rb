@@ -49,6 +49,7 @@ module Extension
     end
 
     def app
+      validate_env_present
       Models::App.new(api_key: env["api_key"], secret: env["secret"])
     end
 
@@ -107,7 +108,13 @@ module Extension
     end
 
     def property_present?(key)
+      validate_env_present
       !env[key].nil? && !env[key].strip.empty?
+    end
+
+    def validate_env_present
+      return if env
+      raise ShopifyCli::Abort, "Missing .env file. Run `shopify extension connect` to generate an .env file."
     end
 
     def integer?(value)
