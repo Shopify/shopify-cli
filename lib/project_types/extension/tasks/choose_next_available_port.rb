@@ -28,7 +28,7 @@ module Extension
           socket.close
           false
         end
-      rescue Errno::ECONNREFUSED
+      rescue Errno::ECONNREFUSED, Errno::ETIMEDOUT
         true
       end
     end
