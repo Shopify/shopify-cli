@@ -12,6 +12,7 @@ module Extension
         AVAILABLE_FLAGS = [
           :port,
           :public_url,
+          :resource_url,
           :shop,
         ]
 
