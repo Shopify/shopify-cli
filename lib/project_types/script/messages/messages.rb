@@ -141,6 +141,9 @@ module Script
           web_assembly_binary_not_found_suggestion: "No WebAssembly binary found." \
             "Check that your build npm script outputs the generated binary to the root of the directory." \
             "Generated binary should match the script name: <script_name>.wasm",
+
+          script_upload_cause: "Fail to upload script.",
+          script_upload_help: "Try again.",
         },
 
         create: {

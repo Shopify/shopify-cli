@@ -1,6 +1,10 @@
 Unreleased
 ------
 
+Version 2.1.1
+-------------
+* [1382](https://github.com/Shopify/shopify-cli/pull/1382): Client side module upload for Scripts
+
 Version 2.1.0
 -------------
 * [#1357](https://github.com/Shopify/shopify-cli/pull/1357): Update Theme-Check to 1.1
