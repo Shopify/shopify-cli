@@ -93,6 +93,8 @@ module Script
             super("WebAssembly binary not found")
           end
         end
+
+        class ScriptUploadError < ScriptProjectError; end
       end
     end
   end
