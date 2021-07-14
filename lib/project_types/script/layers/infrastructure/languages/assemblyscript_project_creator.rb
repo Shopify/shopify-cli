@@ -16,7 +16,7 @@ module Script
           MIN_NODE_VERSION = "14.5.0" # kept because task_runner uses this
           ASC_ARGS = "-- --lib node_modules --optimize --use Date="
 
-          ORIGIN_BRANCH = "master"
+          ORIGIN_BRANCH = "add-package-json"
 
           def setup_dependencies
             # sparse checkout actions
@@ -25,13 +25,17 @@ module Script
             setup_sparse_checkout
             pull
             clean
+            set_script_name
 
             # TODO: files that should be in the repo, but arent yet
             write_npmrc
-            write_package_json
           end
 
           def bootstrap
+          end
+
+          def origin_branch
+            ORIGIN_BRANCH
           end
 
           def sparse_checkout_set_path
@@ -70,6 +74,14 @@ module Script
             FileUtils.copy_entry(source, path_to_project)
             ctx.rm_rf("packages")
             ctx.rm_rf(".git")
+          end
+
+          def set_script_name
+            config_file = "package.json"
+            upstream_name = "#{extension_point.type.gsub("_", "-")}-default"
+            contents = File.read(config_file)
+            new_contents = contents.sub(upstream_name, script_name)
+            File.write(config_file, new_contents)
           end
 
           def command_runner
