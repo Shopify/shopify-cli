@@ -16,6 +16,7 @@ describe Script::Layers::Infrastructure::ScriptService do
     Script::Layers::Domain::ScriptJson.new(content: expected_script_json_content)
   end
   let(:script_name) { "script name" }
+  let(:script_json_version) { "1" }
   let(:expected_description) { "some description" }
   let(:expected_configuration_ui) { true }
   let(:expected_script_json_version) { "1" }
@@ -55,7 +56,8 @@ describe Script::Layers::Infrastructure::ScriptService do
   end
 
   before do
-    script_service.stubs(:bypass_partners_proxy).returns(false)
+    ::Script::Layers::Infrastructure::ScriptService::MakeRequest.stubs(:bypass_partners_proxy).returns(false)
+    # script_service.stubs(:bypass_partners_proxy).returns(false)
   end
 
   describe ".push" do
@@ -63,39 +65,41 @@ describe Script::Layers::Infrastructure::ScriptService do
     let(:api_key) { "fake_key" }
     let(:uuid_from_config) { "uuid_from_config" }
     let(:uuid_from_server) { "uuid_from_server" }
-    let(:app_script_update_or_create) do
+    let(:app_script_set) do
       <<~HERE
-        mutation AppScriptUpdateOrCreate(
+        mutation AppScriptSet(
+          $uuid: String
           $extensionPointName: ExtensionPointName!,
-          $title: String,
+          $title: String!,
           $description: String,
-          $sourceCode: String,
-          $language: String,
+          $force: Boolean,
           $schemaMajorVersion: String,
           $schemaMinorVersion: String,
-          $useMsgpack: Boolean,
-          $configurationUi: Boolean,
-          $scriptJsonVersion: String,
-          $configurationDefinition: String,
+          $scriptJsonVersion: String!,
+          $configurationUi: Boolean!,
+          $configurationDefinition: String!,
+          $moduleUploadUrl: String!,
         ) {
-          appScriptUpdateOrCreate(
+          appScriptSet(
+            uuid: $uuid
             extensionPointName: $extensionPointName
             title: $title
             description: $description
-            sourceCode: $sourceCode
-            language: $language
+            force: $force
             schemaMajorVersion: $schemaMajorVersion
-            schemaMinorVersion: $schemaMinorVersion
-            useMsgpack: $useMsgpack
-            configurationUi: $configurationUi
-            scriptJsonVersion: $scriptJsonVersion
-            configurationDefinition: $configurationDefinition
+            schemaMinorVersion: $schemaMinorVersion,
+            scriptJsonVersion: $scriptJsonVersion,
+            configurationUi: $configurationUi,
+            configurationDefinition: $configurationDefinition,
+            moduleUploadUrl: $moduleUploadUrl,
         ) {
             userErrors {
               field
               message
+              tag
             }
             appScript {
+              uuid
               appKey
               configSchema
               extensionPointName
@@ -105,10 +109,11 @@ describe Script::Layers::Infrastructure::ScriptService do
         }
       HERE
     end
+    let(:url) { "https://some-bucket" }
 
     before do
       stub_load_query("script_service_proxy", script_service_proxy)
-      stub_load_query("app_script_update_or_create", app_script_update_or_create)
+      stub_load_query("app_script_set", app_script_set)
       stub_partner_req(
         "script_service_proxy",
         variables: {
@@ -118,20 +123,19 @@ describe Script::Layers::Infrastructure::ScriptService do
             extensionPointName: extension_point_type,
             title: script_name,
             description: expected_description,
-            sourceCode: Base64.encode64(script_content),
-            language: "AssemblyScript",
             force: false,
             schemaMajorVersion: schema_major_version,
             schemaMinorVersion: schema_minor_version,
-            useMsgpack: use_msgpack,
             scriptJsonVersion: expected_script_json_version,
             configurationUi: expected_configuration_ui,
             configurationDefinition: expected_configuration&.to_json,
+            moduleUploadUrl: url,
           }.to_json,
-          query: app_script_update_or_create,
+          query: app_script_set,
         },
         resp: response
       )
+      Script::Layers::Infrastructure::ScriptService::UploadScript.any_instance.stubs(:call).returns(url)
     end
 
     subject do
@@ -144,7 +148,6 @@ describe Script::Layers::Infrastructure::ScriptService do
           use_msgpack,
         ),
         script_content: script_content,
-        compiled_type: "AssemblyScript",
         script_json: script_json,
         api_key: api_key,
       )
@@ -154,7 +157,7 @@ describe Script::Layers::Infrastructure::ScriptService do
       let(:script_service_response) do
         {
           "data" => {
-            "appScriptUpdateOrCreate" => {
+            "appScriptSet" => {
               "appScript" => {
                 "apiKey" => "fake_key",
                 "configSchema" => nil,
@@ -214,7 +217,7 @@ describe Script::Layers::Infrastructure::ScriptService do
             data: {
               scriptServiceProxy: JSON.dump(
                 "data" => {
-                  "appScriptUpdateOrCreate" => {
+                  "appScriptSet" => {
                     "userErrors" => [{ "message" => "invalid", "field" => "appKey", "tag" => "user_error" }],
                   },
                 }
@@ -234,7 +237,7 @@ describe Script::Layers::Infrastructure::ScriptService do
             data: {
               scriptServiceProxy: JSON.dump(
                 "data" => {
-                  "appScriptUpdateOrCreate" => {
+                  "appScriptSet" => {
                     "userErrors" => [{ "message" => "error", "tag" => "already_exists_error" }],
                   },
                 }
@@ -254,7 +257,7 @@ describe Script::Layers::Infrastructure::ScriptService do
             data: {
               scriptServiceProxy: JSON.dump(
                 "data" => {
-                  "appScriptUpdateOrCreate" => {
+                  "appScriptSet" => {
                     "userErrors" => [{ "message" => "error", "tag" => error_tag }],
                   },
                 }
@@ -283,6 +286,105 @@ describe Script::Layers::Infrastructure::ScriptService do
 
         it "should raise EmptyResponseError error" do
           assert_raises(Script::Layers::Infrastructure::Errors::EmptyResponseError) { subject }
+        end
+      end
+    end
+  end
+
+  describe "UploadScript" do
+    let(:instance) { Script::Layers::Infrastructure::ScriptService::UploadScript.new(ctx) }
+    subject { instance.call(api_key, script_content) }
+
+    let(:api_key) { "fake_key" }
+    let(:script_content) { "(module)" }
+    let(:module_upload_url_generate) do
+      <<~HERE
+        mutation moduleUploadUrlGenerate {
+          moduleUploadUrlGenerate {
+            url
+            userErrors {
+              field
+              message
+            }
+          }
+        }
+        HERE
+    end
+    let(:url) { "https://some-bucket" }
+    let(:response) do
+      {
+        data: {
+          scriptServiceProxy: JSON.dump(script_service_response),
+        },
+      }
+    end
+
+    before do
+      stub_load_query("script_service_proxy", script_service_proxy)
+      stub_load_query("module_upload_url_generate", module_upload_url_generate)
+      stub_partner_req(
+        "script_service_proxy",
+        variables: {
+          api_key: api_key,
+          variables: {}.to_json,
+          query: module_upload_url_generate,
+        },
+        resp: response
+      )
+    end
+
+    describe "when fail to apply module upload url" do
+      let(:script_service_response) do
+        {
+          "data" => {
+            "moduleUploadUrlGenerate" => {
+              "url" => nil,
+              "userErrors" => [{ "message" => "invalid", "field" => "appKey", "tag" => "user_error" }],
+            },
+          },
+        }
+      end
+
+      it "should raise GraphqlError" do
+        assert_raises(Script::Layers::Infrastructure::Errors::GraphqlError) { subject }
+      end
+    end
+
+    describe "when succeed to apply module upload url" do
+      let(:script_service_response) do
+        {
+          "data" => {
+            "moduleUploadUrlGenerate" => {
+              "url" => url,
+              "userErrors" => [],
+            },
+          },
+        }
+      end
+
+      describe "when fail to upload module" do
+        before do
+          stub_request(:put, url).with(
+            headers: { "Content-Type" => "application/wasm" },
+            body: script_content
+          ).to_return(status: 500)
+        end
+
+        it "should raise an ScriptUploadError" do
+          assert_raises(Script::Layers::Infrastructure::Errors::ScriptUploadError) { subject }
+        end
+      end
+
+      describe "when succeed to upload module" do
+        before do
+          stub_request(:put, url).with(
+            headers: { "Content-Type" => "application/wasm" },
+            body: script_content
+          ).to_return(status: 200)
+        end
+
+        it "should return the url" do
+          assert_equal(url, subject)
         end
       end
     end

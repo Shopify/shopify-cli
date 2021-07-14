@@ -1,0 +1,40 @@
+mutation AppScriptSet(
+  $uuid: String
+  $extensionPointName: ExtensionPointName!,
+  $title: String!,
+  $description: String,
+  $force: Boolean,
+  $schemaMajorVersion: String,
+  $schemaMinorVersion: String,
+  $scriptJsonVersion: String!,
+  $configurationUi: Boolean!,
+  $configurationDefinition: String!,
+  $moduleUploadUrl: String!,
+) {
+  appScriptSet(
+    uuid: $uuid
+    extensionPointName: $extensionPointName
+    title: $title
+    description: $description
+    force: $force
+    schemaMajorVersion: $schemaMajorVersion
+    schemaMinorVersion: $schemaMinorVersion,
+    scriptJsonVersion: $scriptJsonVersion,
+    configurationUi: $configurationUi,
+    configurationDefinition: $configurationDefinition,
+    moduleUploadUrl: $moduleUploadUrl,
+) {
+    userErrors {
+      field
+      message
+      tag
+    }
+    appScript {
+      uuid
+      appKey
+      configSchema
+      extensionPointName
+      title
+    }
+  }
+}
