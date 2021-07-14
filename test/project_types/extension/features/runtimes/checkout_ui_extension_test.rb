@@ -12,6 +12,7 @@ module Extension
           flags = [
             :port,
             :public_url,
+            :resource_url,
             :shop,
           ]
 

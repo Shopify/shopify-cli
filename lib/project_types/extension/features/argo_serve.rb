@@ -68,6 +68,7 @@ module Extension
 
       def options
         project = ExtensionProject.current
+        resource_url = project.resource_url
 
         @serve_options ||= [].tap do |options|
           options << "--port=#{port}" if argo_runtime.supports?(:port)
@@ -77,6 +78,7 @@ module Extension
           options << "--uuid=#{project.registration_uuid}" if argo_runtime.supports?(:uuid)
           options << "--publicUrl=#{tunnel_url}" if !tunnel_url.nil? && argo_runtime.supports?(:public_url)
           options << "--name=#{project.title}" if argo_runtime.supports?(:name)
+          options << "--resourceUrl=#{resource_url}" if !resource_url.nil? && argo_runtime.supports?(:resource_url)
         end
       end
     end
