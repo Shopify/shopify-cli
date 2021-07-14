@@ -61,7 +61,7 @@ describe Script::Layers::Infrastructure::Languages::AssemblyScriptProjectCreator
         .returns(system_output(msg: "", success: true))
       context
         .expects(:capture2e)
-        .with("git pull origin master")
+        .with("git pull origin #{project_creator.origin_branch}")
         .once
         .returns(system_output(msg: "", success: true))
 
@@ -75,20 +75,13 @@ describe Script::Layers::Infrastructure::Languages::AssemblyScriptProjectCreator
         .then.with("npm --userconfig ./.npmrc config set engine-strict true")
         .returns(fake_capture2e_response)
 
-      # package.json generation
-      context
-        .expects(:capture2e)
-        .with("npm show @shopify/extension-point-as-fake version --json")
-        .once
-        .returns([JSON.generate("2.0.0"), OpenStruct.new(success?: true)])
-
       # moving files up to project root
       source = File.join(project_creator.path_to_project, project_creator.sparse_checkout_set_path)
       FileUtils.expects(:copy_entry).with(source, project_creator.path_to_project)
 
-      # confirm package.json - only once this file is checked into the repo
-      # File.expects(:read).with("package.json").returns("name = payment-filter-default")
-      # File.expects(:write).with("package.json", "name = #{script_name}")
+      # confirm package.json
+      File.expects(:read).with("package.json").returns("name: payment-methods-default")
+      File.expects(:write).with("package.json", "name: #{script_name}")
 
       # clean-up git files
       context.expects(:rm_rf).with(".git")
@@ -143,7 +136,7 @@ describe Script::Layers::Infrastructure::Languages::AssemblyScriptProjectCreator
       context.expects(:capture2e).times(4).returns(system_output(msg: "", success: true))
       context
         .expects(:capture2e)
-        .with("git pull origin master")
+        .with("git pull origin #{project_creator.origin_branch}")
         .once
         .returns(system_output(msg: "Fatal", success: false))
       assert_raises(Script::Layers::Infrastructure::Errors::SystemCallFailureError) { subject }
