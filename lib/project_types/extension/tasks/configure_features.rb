@@ -46,6 +46,7 @@ module Extension
           checkout: {
             git_template: "https://github.com/Shopify/checkout-ui-extensions-template",
             renderer_package_name: "@shopify/checkout-ui-extensions",
+            required_fields: [:shop],
             cli_package_name: "@shopify/checkout-ui-extensions-run",
           },
         }
