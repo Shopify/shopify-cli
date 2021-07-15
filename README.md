@@ -85,7 +85,7 @@ When prompted, open the provided accounts.shopify.com URL in a browser. In your 
 
 Run:
 
-`shopify theme create`
+`shopify theme init`
 
 To initialize a theme on your current working directory. This will actually clone Shopify's starter theme which you should use as a reference when building themes for Shopify.
 
