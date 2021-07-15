@@ -13,8 +13,6 @@ module Extension
           }
         end
       end
-
-      CheckoutArgoExtension = CheckoutUiExtension
     end
   end
 end

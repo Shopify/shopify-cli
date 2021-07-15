@@ -83,7 +83,6 @@ module Extension
   module Models
     module SpecificationHandlers
       autoload :Default, Project.project_filepath("models/specification_handlers/default")
-      autoload :CheckoutArgoExtension, Project.project_filepath("models/specification_handlers/checkout_ui_extension")
     end
 
     autoload :App, Project.project_filepath("models/app")
