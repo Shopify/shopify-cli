@@ -60,6 +60,18 @@ module Extension
           "Theme App Extension"
         end
 
+        def choose_port?(ctx)
+          ctx.abort(ctx.message("serve.unsupported"))
+        end
+
+        def establish_tunnel?(ctx)
+          ctx.abort(ctx.message("serve.unsupported"))
+        end
+
+        def serve(ctx)
+          ctx.abort(ctx.message("serve.unsupported"))
+        end
+
         private
 
         def validate(filename)
