@@ -184,6 +184,9 @@ module Extension
           },
         },
       },
+      hack_days_30_argo_app_bridge: {
+        name: "App Bridge Embedded App UI Extension",
+      },
       checkout_post_purchase: {
         name: "Checkout Post Purchase",
       },
