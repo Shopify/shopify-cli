@@ -20,9 +20,9 @@ module Extension
           AVAILABLE_FLAGS
         end
 
-        def valid_identifier(identifier) {
+        def valid_identifier(identifier)
           identifier == PRODUCT_SUBSCRIPTION || identifier == HACKDAYS_30
-        }
+        end
 
         def active_runtime?(cli_package, identifier)
           cli_package.name == ADMIN_UI_EXTENSIONS_RUN && valid_identifier(identifier)
