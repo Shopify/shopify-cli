@@ -20,15 +20,15 @@ module ShopifyCli
       class << self
         attr_accessor :ctx
 
-        def start(ctx, root, port: 9292)
+        def start(ctx, working_dir: '.', host: 'localhost', port: 9292, use_tls: true)
           @ctx = ctx
-          theme = DevelopmentTheme.new(ctx, root: root)
-          ignore_filter = IgnoreFilter.from_path(root)
+          theme = DevelopmentTheme.new(ctx, working_dir: working_dir)
+          ignore_filter = IgnoreFilter.from_path(working_dir)
           @syncer = Syncer.new(ctx, theme: theme, ignore_filter: ignore_filter)
           watcher = Watcher.new(ctx, theme: theme, syncer: @syncer, ignore_filter: ignore_filter)
 
           # Setup the middleware stack. Mimics Rack::Builder / config.ru, but in reverse order
-          @app = Proxy.new(ctx, theme: theme, syncer: @syncer)
+          @app = Proxy.new(ctx, theme: theme, syncer: @syncer, host: host, port: port)
           @app = LocalAssets.new(ctx, @app, theme: theme)
           @app = HotReload.new(ctx, @app, theme: theme, watcher: watcher, ignore_filter: ignore_filter)
           stopped = false
@@ -40,6 +40,7 @@ module ShopifyCli
             stop
           end
 
+          protocol = use_tls ? 'https' : 'http'
           CLI::UI::Frame.open(@ctx.message("theme.serve.serve")) do
             ctx.print_task("Syncing theme ##{theme.id} on #{theme.shop}")
             @syncer.start_threads
@@ -51,10 +52,10 @@ module ShopifyCli
 
             return if stopped
 
+            ctx.print_task("Retrieving TLS certificate for {{green:#{host}}}")
+            ctx.print_task("Serving from {{green:#{theme.working_dir}}}")
             ctx.puts("")
-            ctx.puts("Serving #{theme.root}")
-            ctx.puts("")
-            ctx.open_url!("http://127.0.0.1:#{port}")
+            ctx.open_url!("#{protocol}://#{host}:#{port}")
             ctx.puts("")
             ctx.puts("Customize this theme in the Online Store Editor:")
             ctx.puts("{{green:#{theme.editor_url}}}")
@@ -71,13 +72,28 @@ module ShopifyCli
             WEBrick::Log.new(nil, WEBrick::BasicLog::FATAL)
           end
 
-          watcher.start
-          WebServer.run(
-            @app,
+          options = {
             Port: port,
             Logger: logger,
             AccessLog: [],
-          )
+            SSLEnable: use_tls,
+            StartCallback: -> {@ctx.open_browser_url!("#{protocol}://#{host}:#{port}")}
+          }
+
+          if use_tls
+            manager = CertificateManager.new(ctx)
+            certificate_file = manager.find_or_create_certificate!(host)
+            private_key_file = manager.private_key
+            intermediate_file = manager.intermediate_certificate
+            options[:SSLCertificate] = certificate_file
+            options[:SSLPrivateKey] = private_key_file
+            # WEBrick doesn't automatically extract the intermediate from the certificate so we must specify it ourselves
+            # This is more of an issue for Let's Encrypt TLS certificates (vs. self signed where the CA is the cert)
+            options[:SSLExtraChainCert] = intermediate_file if intermediate_file
+          end
+
+          watcher.start
+          WebServer.run(@app, **options)
           watcher.stop
 
         rescue ShopifyCli::API::APIRequestForbiddenError,

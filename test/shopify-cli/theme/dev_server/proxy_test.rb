@@ -14,7 +14,7 @@ module ShopifyCli
           super
           root = ShopifyCli::ROOT + "/test/fixtures/theme"
           @ctx = TestHelpers::FakeContext.new(root: root)
-          @theme = DevelopmentTheme.new(@ctx, root: root)
+          @theme = DevelopmentTheme.new(@ctx, working_dir: root)
           @syncer = stub(pending_updates: [])
           @proxy = Proxy.new(@ctx, theme: @theme, syncer: @syncer)
 
@@ -116,7 +116,7 @@ module ShopifyCli
           stub_session_id_request
           response = request.get("/")
 
-          assert_equal("http://127.0.0.1:9292/password", response.headers["Location"])
+          assert_equal("https://localhost:9292/password", response.headers["Location"])
         end
 
         def test_non_storefront_redirect_headers_are_not_rewritten

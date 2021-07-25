@@ -9,11 +9,11 @@ module ShopifyCli
     class InvalidThemeRole < StandardError; end
 
     class Theme
-      attr_reader :root, :id
+      attr_reader :working_dir, :id
 
-      def initialize(ctx, root: nil, id: nil, name: nil, role: nil)
+      def initialize(ctx, working_dir: nil, id: nil, name: nil, role: nil)
         @ctx = ctx
-        @root = Pathname.new(root) if root
+        @working_dir = Pathname.new(working_dir) if working_dir
         @id = id
         @name = name
         @role = role
@@ -36,7 +36,7 @@ module ShopifyCli
       end
 
       def glob(pattern)
-        root.glob(pattern).map { |path| File.new(path, root) }
+        working_dir.glob(pattern).map { |path| File.new(path, working_dir) }
       end
 
       def theme_file?(file)
@@ -52,9 +52,9 @@ module ShopifyCli
         when File
           file
         when Pathname
-          File.new(file, root)
+          File.new(file, working_dir)
         when String
-          File.new(root.join(file), root)
+          File.new(working_dir.join(file), working_dir)
         end
       end
 
@@ -162,7 +162,7 @@ module ShopifyCli
         }
       end
 
-      def self.all(ctx, root: nil)
+      def self.all(ctx, working_dir: nil)
         _status, body = AdminAPI.rest_request(
           ctx,
           shop: AdminAPI.get_shop_or_abort(ctx),
@@ -176,7 +176,7 @@ module ShopifyCli
           .map do |attributes|
             new(
               ctx,
-              root: root,
+              working_dir: working_dir,
               id: attributes["id"],
               name: attributes["name"],
               role: attributes["role"],

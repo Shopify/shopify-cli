@@ -9,7 +9,7 @@ module ShopifyCli
         super
         root = ShopifyCli::ROOT + "/test/fixtures/theme"
         @ctx = TestHelpers::FakeContext.new(root: root)
-        @theme = DevelopmentTheme.new(@ctx, root: root)
+        @theme = DevelopmentTheme.new(@ctx, working_dir: root)
         ShopifyCli::DB.stubs(:del).with(:acting_as_shopify_organization)
       end
 

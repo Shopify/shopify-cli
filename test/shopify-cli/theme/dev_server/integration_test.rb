@@ -15,7 +15,7 @@ module ShopifyCli
 
         def setup
           super
-          WebMock.disable_net_connect!(allow: "localhost:#{@@port}")
+          WebMock.disable_net_connect!(allow_localhost:true)
 
           ShopifyCli::DB.expects(:get)
             .with(:shopify_exchange_token)
@@ -32,6 +32,8 @@ module ShopifyCli
             .with(:development_theme_id)
             .returns("123456789")
           ShopifyCli::DB.stubs(:get).with(:acting_as_shopify_organization).returns(nil)
+          ShopifyCli::DB.stubs(:get).with(:tls_private_key).returns(nil)
+          ShopifyCli::DB.stubs(:get).with(:localhost_tls_certificate).returns(nil)
         end
 
         def teardown
@@ -153,7 +155,14 @@ module ShopifyCli
           get("/assets/theme.css")
 
           # Send the SSE request
-          socket = TCPSocket.new("localhost", @@port)
+          tcp_socket = TCPSocket.new("localhost", @@port)
+          # setup the TLS socket over the TCP socket
+          ssl_context = OpenSSL::SSL::SSLContext.new()
+          ssl_context.verify_mode = OpenSSL::SSL::VERIFY_NONE
+          socket = OpenSSL::SSL::SSLSocket.new(tcp_socket, ssl_context)
+          socket.sync_close = true
+          socket.connect
+
           socket.write("GET /hot-reload HTTP/1.1\r\n")
           socket.write("Host: localhost\r\n")
           socket.write("\r\n")
@@ -176,7 +185,7 @@ module ShopifyCli
         def start_server
           @ctx = TestHelpers::FakeContext.new(root: "#{ShopifyCli::ROOT}/test/fixtures/theme")
           @server_thread = Thread.new do
-            DevServer.start(@ctx, "#{ShopifyCli::ROOT}/test/fixtures/theme", port: @@port)
+            DevServer.start(@ctx, working_dir: "#{ShopifyCli::ROOT}/test/fixtures/theme", port: @@port)
           rescue Exception => e
             puts "Failed to start DevServer:"
             puts e.message
@@ -185,12 +194,21 @@ module ShopifyCli
         end
 
         def refute_server_errors(response)
-          refute_match(/error/i, response, response)
+          response_raw = response.each_header.to_h.inspect
+          response_raw += response.body
+          refute_match(/error/i, response_raw, response_raw)
         end
 
         def get(path)
           with_retries(Errno::ECONNREFUSED) do
-            Net::HTTP.get(URI("http://localhost:#{@@port}#{path}"))
+            # uri = URI("https://localhost:#{@@port}#{path}")
+            http = Net::HTTP.new("localhost", @@port)
+            http.use_ssl = true
+            # TODO: load the actual cert from teh dev server instead of blindly accepting all invalid certs
+            # we can get away with accepting invalid certs since it's a local integration test
+            http.verify_mode = OpenSSL::SSL::VERIFY_NONE
+            request = Net::HTTP::Get.new(path)
+            http.request(request)
           end
         end
 

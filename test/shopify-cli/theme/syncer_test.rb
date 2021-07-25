@@ -10,7 +10,7 @@ module ShopifyCli
         super
         root = ShopifyCli::ROOT + "/test/fixtures/theme"
         @ctx = TestHelpers::FakeContext.new(root: root)
-        @theme = Theme.new(@ctx, root: root)
+        @theme = Theme.new(@ctx, working_dir: root)
         @syncer = Syncer.new(@ctx, theme: @theme)
 
         ShopifyCli::DB.stubs(:exists?).with(:shop).returns(true)

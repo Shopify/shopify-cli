@@ -7,13 +7,13 @@ module ShopifyCli
       attr_reader :relative_path
       attr_accessor :remote_checksum
 
-      def initialize(path, root)
+      def initialize(path, working_dir)
         super(Pathname.new(path))
 
         # Path may be relative or absolute depending on the source.
-        # By converting both the path and the root to absolute paths, we
+        # By converting both the path and the working_dir to absolute paths, we
         # can safely fetch a relative path.
-        @relative_path = self.path.expand_path.relative_path_from(root.expand_path)
+        @relative_path = self.path.expand_path.relative_path_from(working_dir.expand_path)
       end
 
       def read

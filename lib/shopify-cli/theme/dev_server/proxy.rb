@@ -22,10 +22,12 @@ module ShopifyCli
         SESSION_COOKIE_REGEXP = /#{SESSION_COOKIE_NAME}=(\h+)/
         SESSION_COOKIE_MAX_AGE = 60 * 60 * 23 # 1 day - leeway of 1h
 
-        def initialize(ctx, theme:, syncer:)
+        def initialize(ctx, theme:, syncer:, host: 'localhost', port: 9292)
           @ctx = ctx
           @theme = theme
           @syncer = syncer
+          @host = host
+          @port = port
           @core_endpoints = Set.new
 
           @secure_session_id = nil
@@ -176,7 +178,7 @@ module ShopifyCli
           response_headers.reject! { |k| HOP_BY_HOP_HEADERS.include?(k.downcase) }
 
           if response_headers["location"]&.include?("myshopify.com")
-            response_headers["location"].gsub!(%r{(https://#{@theme.shop})}, "http://127.0.0.1:9292")
+            response_headers["location"].gsub!(%r{(https://#{@theme.shop})}, "https://#{@host}:#{@port}")
           end
 
           response_headers

@@ -17,7 +17,7 @@ module Theme
       private
 
       def themes
-        @themes ||= ShopifyCli::Theme::Theme.all(@ctx, root: root)
+        @themes ||= ShopifyCli::Theme::Theme.all(@ctx, working_dir: root)
           .sort_by { |theme| theme_sort_order(theme) }
       end
 

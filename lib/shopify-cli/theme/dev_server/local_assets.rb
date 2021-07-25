@@ -43,7 +43,7 @@ module ShopifyCli
         private
 
         def serve_file(path_info)
-          path = @theme.root.join(path_info[1..-1])
+          path = @theme.working_dir.join(path_info[1..-1])
           if path.file? && path.readable?
             [
               200,

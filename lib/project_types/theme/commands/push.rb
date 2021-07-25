@@ -18,18 +18,18 @@ module Theme
       end
 
       def call(args, _name)
-        root = args.first || "."
+        working_dir = args.first || "."
         delete = !options.flags[:nodelete]
 
         theme = if (theme_id = options.flags[:theme_id])
-          ShopifyCli::Theme::Theme.new(@ctx, root: root, id: theme_id)
+          ShopifyCli::Theme::Theme.new(@ctx, working_dir: working_dir, id: theme_id)
         elsif options.flags[:development]
-          theme = ShopifyCli::Theme::DevelopmentTheme.new(@ctx, root: root)
+          theme = ShopifyCli::Theme::DevelopmentTheme.new(@ctx, working_dir: working_dir)
           theme.ensure_exists!
           theme
         elsif options.flags[:unpublished]
           name = CLI::UI::Prompt.ask(@ctx.message("theme.push.name"), allow_empty: false)
-          theme = ShopifyCli::Theme::Theme.new(@ctx, root: root, name: name, role: "unpublished")
+          theme = ShopifyCli::Theme::Theme.new(@ctx, working_dir: working_dir, name: name, role: "unpublished")
           theme.create
           theme
         else
@@ -37,7 +37,7 @@ module Theme
             @ctx,
             [],
             title: @ctx.message("theme.push.select"),
-            root: root,
+            working_dir: working_dir,
           )
           return unless form
           form.theme
@@ -47,7 +47,7 @@ module Theme
           return unless CLI::UI::Prompt.confirm(@ctx.message("theme.push.live"))
         end
 
-        ignore_filter = ShopifyCli::Theme::IgnoreFilter.from_path(root)
+        ignore_filter = ShopifyCli::Theme::IgnoreFilter.from_path(working_dir)
         syncer = ShopifyCli::Theme::Syncer.new(@ctx, theme: theme, ignore_filter: ignore_filter)
         begin
           syncer.start_threads

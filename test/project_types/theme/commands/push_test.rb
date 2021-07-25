@@ -27,7 +27,7 @@ module Theme
 
       def test_push_to_theme_id
         ShopifyCli::Theme::Theme.expects(:new)
-          .with(@ctx, root: ".", id: 1234)
+          .with(@ctx, working_dir: ".", id: 1234)
           .returns(@theme)
 
         ShopifyCli::Theme::IgnoreFilter.expects(:from_path).with(".").returns(@ignore_filter)
@@ -48,7 +48,7 @@ module Theme
 
       def test_push_to_live_theme
         ShopifyCli::Theme::Theme.expects(:new)
-          .with(@ctx, root: ".", id: 1234)
+          .with(@ctx, working_dir: ".", id: 1234)
           .returns(@theme)
 
         @theme.expects(:live?).returns(true)
@@ -73,7 +73,7 @@ module Theme
 
       def test_allow_live
         ShopifyCli::Theme::Theme.expects(:new)
-          .with(@ctx, root: ".", id: 1234)
+          .with(@ctx, working_dir: ".", id: 1234)
           .returns(@theme)
 
         @theme.expects(:live?).returns(true)
@@ -99,7 +99,7 @@ module Theme
 
       def test_push_json
         ShopifyCli::Theme::Theme.expects(:new)
-          .with(@ctx, root: ".", id: 1234)
+          .with(@ctx, working_dir: ".", id: 1234)
           .returns(@theme)
 
         @theme.expects(:to_h).returns({})
@@ -125,7 +125,7 @@ module Theme
 
       def test_push_and_publish
         ShopifyCli::Theme::Theme.expects(:new)
-          .with(@ctx, root: ".", id: 1234)
+          .with(@ctx, working_dir: ".", id: 1234)
           .returns(@theme)
 
         ShopifyCli::Theme::IgnoreFilter.expects(:from_path).with(".").returns(@ignore_filter)
@@ -148,7 +148,7 @@ module Theme
 
       def test_push_to_development_theme
         ShopifyCli::Theme::DevelopmentTheme.expects(:new)
-          .with(@ctx, root: ".")
+          .with(@ctx, working_dir: ".")
           .returns(@theme)
 
         @theme.expects(:ensure_exists!)
@@ -172,7 +172,7 @@ module Theme
 
       def test_push_to_unpublished_theme
         ShopifyCli::Theme::Theme.expects(:new)
-          .with(@ctx, root: ".", name: "NAME", role: "unpublished")
+          .with(@ctx, working_dir: ".", name: "NAME", role: "unpublished")
           .returns(@theme)
 
         CLI::UI::Prompt.expects(:ask).returns("NAME")
@@ -198,7 +198,7 @@ module Theme
 
       def test_push_pass_nodelete_to_syncer
         ShopifyCli::Theme::Theme.expects(:new)
-          .with(@ctx, root: ".", id: 1234)
+          .with(@ctx, working_dir: ".", id: 1234)
           .returns(@theme)
 
         ShopifyCli::Theme::IgnoreFilter.expects(:from_path).with(".").returns(@ignore_filter)

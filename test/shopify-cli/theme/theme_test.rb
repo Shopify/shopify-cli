@@ -9,7 +9,7 @@ module ShopifyCli
         super
         root = ShopifyCli::ROOT + "/test/fixtures/theme"
         @ctx = TestHelpers::FakeContext.new(root: root)
-        @theme = Theme.new(@ctx, root: root, id: "123")
+        @theme = Theme.new(@ctx, working_dir: root, id: "123")
       end
 
       def test_static_assets

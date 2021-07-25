@@ -91,7 +91,7 @@ module ShopifyCli
     end
 
     def test_replacing_hashes_with_another_associative_array_container
-      TransformDataStructure.new(associative_array_container: OpenStruct).call({ a: 1 }).tap do |result|
+      TransformDataStructure.new(associative_array_container: OpenStruct).call(**{ a: 1 }).tap do |result|
         assert_predicate(result, :success?)
         assert_kind_of(OpenStruct, result.value)
         assert_equal(1, result.value.a)

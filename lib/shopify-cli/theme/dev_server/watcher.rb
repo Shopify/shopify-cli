@@ -14,7 +14,7 @@ module ShopifyCli
           @theme = theme
           @syncer = syncer
           @ignore_filter = ignore_filter
-          @listener = Listen.to(@theme.root) do |modified, added, removed|
+          @listener = Listen.to(@theme.working_dir) do |modified, added, removed|
             changed
             notify_observers(modified, added, removed)
           end
