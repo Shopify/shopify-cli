@@ -87,7 +87,7 @@ module ShopifyCli
             intermediate_file = manager.intermediate_certificate
             options[:SSLCertificate] = certificate_file
             options[:SSLPrivateKey] = private_key_file
-            # WEBrick doesn't automatically extract the intermediate from the certificate so we must specify it ourselves
+            # WEBrick doesn't automatically extract the intermediate from the certificate so we must specify it.
             # This is more of an issue for Let's Encrypt TLS certificates (vs. self signed where the CA is the cert)
             options[:SSLExtraChainCert] = intermediate_file if intermediate_file
           end
