@@ -15,12 +15,16 @@ module ShopifyCli
           return @private_key if @private_key
 
           private_key_pem = ShopifyCli::DB.get(:tls_private_key)
-          @private_key = OpenSSL::PKey::EC.new(private_key_pem) if private_key_pem rescue nil
+          begin
+            @private_key = OpenSSL::PKey::EC.new(private_key_pem) if private_key_pem
+          rescue
+            nil
+          end
           return @private_key if @private_key
 
           @private_key = OpenSSL::PKey::EC.new("secp384r1")
           @private_key.generate_key
-          ShopifyCli::DB.set(:tls_private_key => @private_key.to_pem)
+          ShopifyCli::DB.set(tls_private_key: @private_key.to_pem)
           @private_key
         end
 
@@ -33,7 +37,11 @@ module ShopifyCli
           # we generate one certificate per host
           certificate_cache_key = "#{host}_tls_certificate".to_sym
           certificate_pem = ShopifyCli::DB.get(certificate_cache_key)
-          certificate = OpenSSL::X509::Certificate.new(certificate_pem) rescue nil
+          certificate = begin
+                          OpenSSL::X509::Certificate.new(certificate_pem)
+                        rescue
+                          nil
+                        end
           # TODO: should we check dh_compute_key is the same as the current private_key in cache?
           return certificate if certificate && certificate.not_after > Time.now.utc + 1 * 24 * 60 * 60
 
@@ -56,7 +64,7 @@ module ShopifyCli
           public_ecdsa_key.public_key = key.public_key
 
           certificate.public_key = public_ecdsa_key
-          certificate.subject = OpenSSL::X509::Name.new([['CN', host]])
+          certificate.subject = OpenSSL::X509::Name.new([["CN", host]])
           certificate.version = 2
           certificate.serial = 0x0
 
@@ -84,7 +92,8 @@ module ShopifyCli
           # cRLSign: Subject public key is to verify signatures on revocation information, such as a CRL
           # digitalSignature: Certificate may be used to apply a digital signature
           # keyCertSign: Subject public key is used to verify signatures on certificates
-          certificate.add_extension(ef.create_extension("keyUsage", "critical,cRLSign,digitalSignature,keyCertSign", false))
+          certificate.add_extension(ef.create_extension("keyUsage", "critical,cRLSign,digitalSignature,keyCertSign",
+            false))
 
           # https://datatracker.ietf.org/doc/html/rfc5280#section-4.2.1.1
           # keyid - indicates that the subject key identifier is copied from the parent certificate.

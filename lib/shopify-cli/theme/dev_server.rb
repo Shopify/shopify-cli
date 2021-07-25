@@ -20,7 +20,7 @@ module ShopifyCli
       class << self
         attr_accessor :ctx
 
-        def start(ctx, working_dir: '.', host: 'localhost', port: 9292, use_tls: true)
+        def start(ctx, working_dir: ".", host: "localhost", port: 9292, use_tls: true)
           @ctx = ctx
           theme = DevelopmentTheme.new(ctx, working_dir: working_dir)
           ignore_filter = IgnoreFilter.from_path(working_dir)
@@ -40,7 +40,7 @@ module ShopifyCli
             stop
           end
 
-          protocol = use_tls ? 'https' : 'http'
+          protocol = use_tls ? "https" : "http"
           CLI::UI::Frame.open(@ctx.message("theme.serve.serve")) do
             ctx.print_task("Syncing theme ##{theme.id} on #{theme.shop}")
             @syncer.start_threads
@@ -77,7 +77,7 @@ module ShopifyCli
             Logger: logger,
             AccessLog: [],
             SSLEnable: use_tls,
-            StartCallback: -> {@ctx.open_browser_url!("#{protocol}://#{host}:#{port}")}
+            StartCallback: -> { @ctx.open_browser_url!("#{protocol}://#{host}:#{port}") },
           }
 
           if use_tls

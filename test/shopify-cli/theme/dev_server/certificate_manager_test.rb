@@ -19,7 +19,8 @@ module ShopifyCli
 
           assert(private_key_file.private?)
           assert_equal(expected_common_name, certificate_file.subject)
-          assert_includes(certificate_file.extensions.map(&:to_s).flatten, "subjectAltName = DNS:test.shopify.local, IP Address:127.0.0.1")
+          assert_includes(certificate_file.extensions.map(&:to_s).flatten,
+            "subjectAltName = DNS:test.shopify.local, IP Address:127.0.0.1")
         end
       end
     end

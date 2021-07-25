@@ -7,7 +7,7 @@ module ShopifyCli
     module DevServer
       class IntegrationTest < Minitest::Test
         include TestHelpers::FakeUI
-        
+
         @@port = 9292 # rubocop:disable Style/ClassVars
 
         THEMES_API_URL = "https://dev-theme-server-store.myshopify.com/admin/api/unstable/themes/123456789.json"
@@ -15,11 +15,11 @@ module ShopifyCli
 
         def setup
           super
-          WebMock.disable_net_connect!(allow_localhost:true)
+          WebMock.disable_net_connect!(allow_localhost: true)
 
           ShopifyCli::DB.expects(:get)
             .with(:shopify_exchange_token)
-            .at_least_once.returns('token123')
+            .at_least_once.returns("token123")
 
           ShopifyCli::DB.expects(:exists?).with(:shop).at_least_once.returns(true)
           ShopifyCli::DB.expects(:get)
@@ -157,7 +157,7 @@ module ShopifyCli
           # Send the SSE request
           tcp_socket = TCPSocket.new("localhost", @@port)
           # setup the TLS socket over the TCP socket
-          ssl_context = OpenSSL::SSL::SSLContext.new()
+          ssl_context = OpenSSL::SSL::SSLContext.new
           ssl_context.verify_mode = OpenSSL::SSL::VERIFY_NONE
           socket = OpenSSL::SSL::SSLSocket.new(tcp_socket, ssl_context)
           socket.sync_close = true
