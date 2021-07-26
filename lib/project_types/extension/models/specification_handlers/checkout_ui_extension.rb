@@ -12,6 +12,12 @@ module Extension
             **argo.config(context),
           }
         end
+
+        def build_resource_url(context:, shop:)
+          variant_id = Tasks::GetProduct.call(context, shop).variant_id
+          quantity = 1
+          format("/cart/%d:%d", variant_id, quantity)
+        end
       end
     end
   end

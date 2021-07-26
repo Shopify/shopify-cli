@@ -90,6 +90,10 @@ module Extension
           end
         end
 
+        def build_resource_url(shop)
+          raise NotImplementedError
+        end
+
         protected
 
         def argo

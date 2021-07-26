@@ -36,10 +36,6 @@ module Extension
         specification_handler.renderer_package(context)
       end
 
-      def required_fields
-        specification.features.argo.required_fields
-      end
-
       def yarn_serve_command
         YARN_SERVE_COMMAND + options
       end
@@ -51,12 +47,14 @@ module Extension
       def validate_env!
         ExtensionProject.reload
 
+        required_fields = specification.features.argo.required_fields.dup
         return if required_fields.none?
 
-        ShopifyCli::Tasks::EnsureEnv.call(context, required: required_fields)
-        ShopifyCli::Tasks::EnsureDevStore.call(context) if required_fields.include?(:shop)
+        ShopifyCli::Tasks::EnsureEnv.call(context, required: required_fields - [:resource_url])
+        ShopifyCli::Tasks::EnsureDevStore.call(context) if required_fields.delete(:shop)
 
         project = ExtensionProject.current
+        ensure_resource_resource_url! if required_fields.delete(:resource_url)
 
         return if required_fields.all? do |field|
           value = project.env.public_send(field)
@@ -80,6 +78,21 @@ module Extension
           options << "--name=#{project.title}" if argo_runtime.supports?(:name)
           options << "--resourceUrl=#{resource_url}" if !resource_url.nil? && argo_runtime.supports?(:resource_url)
         end
+      end
+
+      def ensure_resource_resource_url!
+        project = ExtensionProject.current(force_reload: true)
+
+        ShopifyCli::Result
+          .wrap(project.resource_url)
+          .rescue { specification_handler.build_resource_url(shop: project.env.shop, context: context) }
+          .then(&method(:persist_resource_url))
+          .unwrap { |e| raise e }
+      end
+
+      def persist_resource_url(resource_url)
+        ExtensionProject.update_env_file(context: context, resource_url: resource_url)
+        resource_url
       end
     end
   end
