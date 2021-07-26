@@ -105,6 +105,23 @@ module ShopifyCli
         end
       end
 
+      def sparse_checkout(repo, set, branch, ctx)
+
+        # init
+        output, status = ctx.capture2e("git init")
+
+        # setup_remote
+        output, status = ctx.capture2e("git remote add -f origin #{repo}")
+        
+        # setup_sparse_checkout
+        output, status = ctx.capture2e("git config core.sparsecheckout true")
+        output, status = ctx.capture2e("git sparse-checkout set #{set}")
+
+        # pull
+        output, status = ctx.capture2e("git pull origin #{branch}")
+
+      end
+
       private
 
       def exec(*args, dir: Dir.pwd, default: nil, ctx: Context.new)
