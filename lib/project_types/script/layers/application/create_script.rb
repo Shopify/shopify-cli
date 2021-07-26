@@ -18,8 +18,22 @@ module Script
                 extension_point_type: extension_point_type,
                 language: language
               )
+
+              # the default value of this should be master
+              branch = "master"
+              # and be overwritten with a CLI argument - for now we'll just overwrite it here during dev
+              branch = "add-package-json"
+
               project_creator = Infrastructure::Languages::ProjectCreator
-                .for(ctx, language, extension_point, script_name, project.id)
+                .for(
+                  ctx, 
+                  language, 
+                  extension_point, 
+                  script_name, 
+                  project.id, 
+                  branch
+                  )
+
               install_dependencies(ctx, language, script_name, project_creator)
               bootstrap(ctx, project_creator)
               script_project_repo.update_or_create_script_json(title: script_name, configuration_ui: !no_config_ui)
@@ -37,7 +51,7 @@ module Script
 
           def bootstrap(ctx, project_creator)
             UI::StrictSpinner.spin(ctx.message("script.create.creating")) do |spinner|
-              project_creator.bootstrap
+              # project_creator.bootstrap
               spinner.update_title(ctx.message("script.create.created"))
             end
           end
