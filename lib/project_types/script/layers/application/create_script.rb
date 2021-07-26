@@ -68,6 +68,13 @@ module Script
             ProjectDependencies.install(ctx: ctx, task_runner: task_runner)
           end
 
+          def bootstrap(ctx, project_creator)
+            UI::StrictSpinner.spin(ctx.message("script.create.creating")) do |spinner|
+              project_creator.bootstrap
+              spinner.update_title(ctx.message("script.create.created"))
+            end
+          end
+
           def in_new_directory_context(ctx, directory)
             initial_directory = ctx.root
             begin
