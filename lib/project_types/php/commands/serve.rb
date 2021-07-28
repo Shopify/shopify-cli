@@ -1,7 +1,7 @@
 # frozen_string_literal: true
 module PHP
-  module Commands
-    class Serve < ShopifyCli::Command
+  class Command
+    class Serve < ShopifyCli::SubCommand
       PORT = 3000
 
       prerequisite_task :ensure_env, :ensure_dev_store

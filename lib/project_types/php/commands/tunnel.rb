@@ -3,8 +3,8 @@
 require "shopify_cli"
 
 module PHP
-  module Commands
-    class Tunnel < ShopifyCli::Command
+  class Command
+    class Tunnel < ShopifyCli::SubCommand
       def call(args, _name)
         subcommand = args.shift
         case subcommand

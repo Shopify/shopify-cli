@@ -2,12 +2,12 @@
 require "semantic/semantic"
 
 module PHP
-  module Commands
+  class Command
     class Create < ShopifyCli::SubCommand
       options do |parser, flags|
         parser.on("--name=NAME") { |name| flags[:title] = name }
         parser.on("--organization-id=ID") { |organization_id| flags[:organization_id] = organization_id }
-        parser.on("--shop-domain=MYSHOPIFYDOMAIN") { |shop_domain| flags[:shop_domain] = shop_domain }
+        parser.on("--store=MYSHOPIFYDOMAIN") { |url| flags[:shop_domain] = url }
         parser.on("--type=APPTYPE") { |type| flags[:type] = type }
         parser.on("--verbose") { flags[:verbose] = true }
       end
@@ -30,7 +30,7 @@ module PHP
         partners_url = ShopifyCli::PartnersAPI.partners_url_for(form.organization_id, app_id, local_debug?)
 
         @ctx.puts(@ctx.message("apps.create.info.created", form.title, partners_url))
-        @ctx.puts(@ctx.message("apps.create.info.serve", form.name, ShopifyCli::TOOL_NAME))
+        @ctx.puts(@ctx.message("apps.create.info.serve", form.name, ShopifyCli::TOOL_NAME, "php"))
         unless ShopifyCli::Shopifolk.acting_as_shopify_organization?
           @ctx.puts(@ctx.message("apps.create.info.install", partners_url, form.title))
         end
@@ -49,8 +49,8 @@ module PHP
         version, stat = @ctx.capture2e("php", "-r", "echo phpversion();")
         @ctx.abort(@ctx.message("php.create.error.php_version_failure")) unless stat.success?
 
-        if ::Semantic::Version.new(version) < ::Semantic::Version.new("8.0.0")
-          @ctx.abort(@ctx.message("php.create.error.php_version_too_low", "8.0"))
+        if ::Semantic::Version.new(version) < ::Semantic::Version.new("7.3.0")
+          @ctx.abort(@ctx.message("php.create.error.php_version_too_low", "7.3"))
         end
 
         @ctx.done(@ctx.message("php.create.php_version", version))

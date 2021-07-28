@@ -66,7 +66,7 @@ module ShopifyCli
 
       errors.lines.each { |e| ctx.puts e } unless success || errors.nil?
 
-      ctx.abort unless success
+      ctx.abort(ctx.message("core.php_deps.error.install", "Composer")) unless success
       success
     end
 

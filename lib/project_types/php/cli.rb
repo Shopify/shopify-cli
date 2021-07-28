@@ -1,30 +1,20 @@
 # frozen_string_literal: true
 module PHP
   class Project < ShopifyCli::ProjectType
-    title("PHP App")
-    creator("PHP::Commands::Create")
-    connector("PHP::Commands::Connect")
-
-    register_command("PHP::Commands::Serve", "serve")
-    register_command("PHP::Commands::Tunnel", "tunnel")
-    register_command("PHP::Commands::Open", "open")
-    register_command("PHP::Commands::Populate", "populate")
-    register_command("PHP::Commands::Deploy", "deploy")
-
     require Project.project_filepath("messages/messages")
     register_messages(PHP::Messages::MESSAGES)
   end
 
   # define/autoload project specific Commands
-  module Commands
-    autoload :Create, Project.project_filepath("commands/create")
-    autoload :Serve, Project.project_filepath("commands/serve")
-    autoload :Tunnel, Project.project_filepath("commands/tunnel")
-    autoload :Connect, Project.project_filepath("commands/connect")
-    autoload :Open, Project.project_filepath("commands/open")
-    autoload :Populate, Project.project_filepath("commands/populate")
-    autoload :Deploy, Project.project_filepath("commands/deploy")
+  class Command < ShopifyCli::ProjectCommands
+    subcommand :Connect, "connect", Project.project_filepath("commands/connect")
+    subcommand :Create, "create", Project.project_filepath("commands/create")
+    subcommand :Deploy, "deploy", Project.project_filepath("commands/deploy")
+    subcommand :Open, "open", Project.project_filepath("commands/open")
+    subcommand :Serve, "serve", Project.project_filepath("commands/serve")
+    subcommand :Tunnel, "tunnel", Project.project_filepath("commands/tunnel")
   end
+  ShopifyCli::Commands.register("PHP::Command", "php")
 
   # define/autoload project specific Tasks
   module Tasks

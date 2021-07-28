@@ -194,6 +194,7 @@ module ShopifyCLI
           error: {
             missing_package: "Expected to have a file at: %s",
             invalid_package: "{{info:%s}} was not valid JSON. Fix this then try again",
+            install: "Failed to install %s packages",
             install_spinner_error: "Unable to install all %d dependencies",
             install_error: "An error occurred while installing dependencies",
           },
