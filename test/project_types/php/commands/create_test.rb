@@ -33,8 +33,8 @@ module PHP
       APPTYPE
 
       def test_prints_help_with_no_name_argument
-        io = capture_io { run_cmd("create php --help") }
-        assert_match(CLI::UI.fmt(PHP::Commands::Create.help), io.join)
+        io = capture_io { run_cmd("php create --help") }
+        assert_message_output(io: io, expected_content: [PHP::Command::Create.help])
       end
 
       def test_check_php_installed
@@ -115,11 +115,11 @@ module PHP
       private
 
       def perform_command
-        run_cmd("create php \
+        run_cmd("php create \
           --name=test-app \
           --type=public \
           --organization-id=42 \
-          --shop-domain=testshop.myshopify.com")
+          --store=testshop.myshopify.com")
       end
 
       def expect_php_composer_check_commands

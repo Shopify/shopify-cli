@@ -4,8 +4,17 @@ module PHP
   module Messages
     MESSAGES = {
       php: {
+        help: <<~HELP,
+          Suite of commands for developing PHP apps with Laravel. See {{command:%1$s php <command> --help}} for usage of each command.
+            Usage: {{command:%1$s php [ %2$s ]}}
+        HELP
+
         connect: {
           connected: "Project now connected to {{green:%s}}",
+          help: <<~HELP,
+            {{command:%s php connect}}: Connects an existing PHP app to Shopify CLI. Creates a config file.
+              Usage: {{command:%s php connect}}
+          HELP
           production_warning: <<~MESSAGE,
             {{yellow:! Warning: if you have connected to an {{bold:app in production}}, running {{command:serve}} may update the app URL and cause an outage.
             MESSAGE
@@ -92,6 +101,8 @@ module PHP
               {{v}} Deployed to Heroku, you can access your app at {{green:%s}}
 
                 If you're deploying this app for the first time, make sure to set up your database and your app's environment at {{bold:App dashboard -> Settings -> Config Vars}}.
+
+                When setting your config vars, don't forget to set up your database and the appropriate Laravel values for it, particularly {{bold:DB_CONNECTION and DB_DATABASE}}.
               DEPLOYED
             git: {
               checking: "Checking git repo…",
@@ -111,57 +122,6 @@ module PHP
               setting_configs: "Setting Shopify app configs…",
               configs_set: "{{v}} Shopify app configs set",
             },
-          },
-        },
-
-        populate: {
-          help: <<~HELP,
-            Populate your Shopify development store with example customers, orders, or products.
-              Usage: {{command:%s populate [ customers | draftorders | products ]}}
-            HELP
-          extended_help: <<~HELP,
-            {{bold:Subcommands:}}
-
-              {{cyan:customers [options]}}: Add dummy customers to the specified development store.
-                Usage: {{command:%1$s populate customers}}
-
-              {{cyan:draftorders [options]}}: Add dummy orders to the specified development store.
-                Usage: {{command:%1$s populate draftorders}}
-
-              {{cyan:products [options]}}: Add dummy products to the specified development store.
-                Usage: {{command:%1$s populate products}}
-
-            {{bold:Options:}}
-
-              {{cyan:--count [integer]}}: The number of dummy items to populate. Defaults to 5.
-              {{cyan:--silent}}: Silence the populate output.
-              {{cyan:--help}}: Display more options specific to each subcommand.
-
-            {{bold:Examples:}}
-
-              {{command:%1$s populate products}}
-                Populate your development store with 5 additional products.
-
-              {{command:%1$s populate customers --count 30}}
-                Populate your development store with 30 additional customers.
-
-              {{command:%1$s populate draftorders}}
-                Populate your development store with 5 additional orders.
-
-              {{command:%1$s populate products --help}}
-                Display the list of options available to customize the {{command:%1$s populate products}} command.
-            HELP
-
-          customer: {
-            added: "%s added to {{green:%s}} at {{underline:%scustomers/%d}}",
-          },
-
-          draft_order: {
-            added: "DraftOrder added to {{green:%s}} at {{underline:%sdraft_orders/%d}}",
-          },
-
-          product: {
-            added: "%s added to {{green:%s}} at {{underline:%sproducts/%d}}",
           },
         },
 

@@ -10,8 +10,8 @@ module PHP
       end
 
       def test_without_arguments_calls_help
-        @context.expects(:puts).with(PHP::Commands::Deploy.help)
-        run_cmd("deploy")
+        @context.expects(:puts).with(PHP::Command::Deploy.help)
+        run_cmd("php deploy")
       end
     end
   end
