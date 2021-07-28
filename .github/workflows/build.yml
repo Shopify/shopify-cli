@@ -3,26 +3,64 @@ name: CI
 on: [push, pull_request]
 
 jobs:
-  build:
-    name: Ruby ${{ matrix.version }}
-    runs-on: macos-latest
-    strategy:
-      matrix:
-        version:
-          - 3.0.0
-          - 2.6.6
-          - 2.7.1
+  rubocop:
+    name: Rubocop
+    runs-on: ubuntu-latest
     steps:
       - uses: actions/checkout@v2
 
-      - name: Set up Ruby ${{ matrix.version }}
+      - name: Set up Ruby
         uses: ruby/setup-ruby@v1
         with:
-          ruby-version: ${{ matrix.version }}
-          bundler-cache: true
-
-      - name: Install Dependencies
+          bundler-cache: false
+      
+      - name: Install dependencies
         run: bundle install
 
-      - name: Run Tests
-        run: bundle exec rake
+      - name: Run Rubocop
+        run: bundle exec rake rubocop
+  specs:
+    name: Ruby ${{ matrix.ruby }} on ${{ matrix.os }}
+    runs-on: ${{ matrix.os }}
+    strategy:
+      matrix:
+        os:
+          - ubuntu-latest
+          - macos-latest
+        ruby:
+          - '3.0'
+          - '2.7'
+          - '2.6'
+    steps:
+      - uses: actions/checkout@v2
+
+      - name: Set up Ruby ${{ matrix.ruby }}
+        uses: ruby/setup-ruby@v1
+        with:
+          ruby-version: ${{ matrix.ruby }}
+          bundler-cache: true
+
+      - name: Run tests
+        run: bundle exec rake test
+  specs-windows:
+    name: Ruby ${{ matrix.ruby }} on ${{ matrix.os }}
+    runs-on: ${{ matrix.os }}
+    strategy:
+      matrix:
+        os:
+          - windows-latest
+        ruby:
+          - '3.0'
+          - '2.7'
+          - '2.6'
+    steps:
+      - uses: actions/checkout@v2
+
+      - name: Set up Ruby ${{ matrix.ruby }}
+        uses: ruby/setup-ruby@v1
+        with:
+          ruby-version: ${{ matrix.ruby }}
+          bundler-cache: true
+
+      - name: Run tests
+        run: bundle exec rake test

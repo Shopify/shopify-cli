@@ -117,6 +117,8 @@ module ShopifyCli
     end
 
     def empty_commit
+      system("git config --local user.email foo@bar.com")
+      system("git config --local user.name 'Foo Bar'")
       Context.new.capture3("git", "commit", "-m", "commit", "--allow-empty")
     end
 
