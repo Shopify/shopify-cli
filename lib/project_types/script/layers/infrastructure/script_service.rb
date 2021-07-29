@@ -119,6 +119,10 @@ variables: variables)["data"]["appScripts"]
             @ctx = ctx
           end
 
+          def bypass_partners_proxy
+            !ENV["BYPASS_PARTNERS_PROXY"].nil?
+          end
+
           def call(query_name:, variables: nil, **options)
             resp = if bypass_partners_proxy
               ScriptServiceAPI.query(ctx, query_name, variables: variables, **options)
@@ -129,9 +133,7 @@ variables: variables)["data"]["appScripts"]
             resp
           end
 
-          def bypass_partners_proxy
-          !ENV["BYPASS_PARTNERS_PROXY"].nil?
-        enddef proxy_through_partners(query_name:, variables: nil, **options)
+          def proxy_through_partners(query_name:, variables: nil, **options)
             options[:variables] = variables.to_json if variables
             resp = PartnersProxyAPI.query(ctx, query_name, **options)
             raise_if_graphql_failed(resp)
