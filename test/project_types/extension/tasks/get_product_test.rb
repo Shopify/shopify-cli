@@ -6,55 +6,21 @@ module Extension
     class GetProductTest < MiniTest::Test
       include ExtensionTestHelpers::TempProjectSetup
 
-      def test_get_product_returns_a_product
-        response = JSON.parse(mock_api_response)
+      def test_get_performs_api_request_and_parses_response
+        response = mock
         ShopifyCli::AdminAPI.stubs(:query).returns(response)
-
-        result = Tasks::GetProduct.call(@context, "shop.myshopify.com")
-        assert_kind_of(Models::Product, result)
+        result = mock
+        Converters::ProductConverter.expects(:from_hash).with(response).returns(result)
+        assert_equal result, Tasks::GetProduct.call(@context, "shop.myshopify.com")
       end
 
-      def test_get_product_returns_nil_for_no_products
-        ShopifyCli::AdminAPI.stubs(:query).returns({})
-
-        result = Tasks::GetProduct.call(@context, "shop.myshopify.com")
-        assert_nil result
-      end
-
-      def test_get_product_raises_error_for_nil_response
+      def test_performs_api_request_and_aborts_if_api_response_is_nil
         ShopifyCli::AdminAPI.stubs(:query).returns(nil)
 
         error = assert_raises CLI::Kit::Abort do
           Tasks::GetProduct.call(@context, "shop.myshopify.com")
         end
         assert_includes error.message, "There was an error getting store data"
-      end
-
-      private
-
-      def mock_api_response
-        {
-          "data": {
-            "products": {
-              "edges": [
-                {
-                  "node": {
-                    "id": "gid://shopify/Product/123456789",
-                    "variants": {
-                      "edges": [
-                        {
-                          "node": {
-                            "id": "gid://shopify/ProductVariant/987654321",
-                          },
-                        },
-                      ],
-                    },
-                  },
-                },
-              ],
-            },
-          },
-        }.to_json
       end
     end
   end
