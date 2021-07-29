@@ -22,20 +22,6 @@ module Script
           url = UploadScript.new(ctx).call(api_key, script_content)
 
           query_name = "app_script_set"
-
-          # TODO: to be properly set https://github.com/Shopify/script-service/pull/3416
-          script_json_version = "1"
-          configuration_ui = true
-          configuration_definition = {
-            type: "single",
-            schema: [{
-              key: "stylePrefix",
-              name: "Product style tag prefix",
-              type: "single_line_text_field",
-              defaultValue: "style:",
-            }],
-          }
-
           variables = {
             uuid: uuid,
             extensionPointName: extension_point_type.upcase,
@@ -44,13 +30,10 @@ module Script
             force: force,
             schemaMajorVersion: metadata.schema_major_version.to_s, # API expects string value
             schemaMinorVersion: metadata.schema_minor_version.to_s, # API expects string value
-            scriptJsonVersion: script_json_version,
-            configurationUi: configuration_ui,
-            configurationDefinition: configuration_definition.to_json,
-            moduleUploadUrl: url,
             scriptJsonVersion: script_json.version,
             configurationUi: script_json.configuration_ui,
             configurationDefinition: script_json.configuration&.to_json,
+            moduleUploadUrl: url,
           }
           resp_hash = MakeRequest.new(ctx).call(query_name: query_name, api_key: api_key, variables: variables)
           user_errors = resp_hash["data"]["appScriptSet"]["userErrors"]
