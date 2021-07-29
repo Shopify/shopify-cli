@@ -46,7 +46,7 @@ module ShopifyCli
 
         # we only want to send Monorail events in production or when explicitly developing
         def enabled?
-          Context.new.system? || ENV["MONORAIL_REAL_EVENTS"] == "1"
+          (Context.new.system? || ENV["MONORAIL_REAL_EVENTS"] == "1") && !Context.new.ci?
         end
 
         def consented?
@@ -54,6 +54,7 @@ module ShopifyCli
         end
 
         def prompt_for_consent
+          return if Context.new.ci?
           return unless enabled?
           return if ShopifyCli::Config.get_section("analytics").key?("enabled")
           msg = Context.message("core.monorail.consent_prompt")
