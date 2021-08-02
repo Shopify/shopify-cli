@@ -18,9 +18,9 @@ module Extension
         end
 
         def build_resource_url(context:, shop:)
-          variant_id = Tasks::GetProduct.call(context, shop).variant_id
-          quantity = 1
-          format("/cart/%d:%d", variant_id, quantity)
+          product = Tasks::GetProduct.call(context, shop)
+          return unless product
+          format("/cart/%<variant_id>d:%<quantity>d", variant_id: product.variant_id, quantity: 1)
         end
       end
     end

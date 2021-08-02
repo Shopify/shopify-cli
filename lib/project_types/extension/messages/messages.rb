@@ -173,6 +173,11 @@ module Extension
         unknown_type: "Unknown extension type %s",
         package_not_found: "`%s` package not found.",
       },
+      warnings: {
+        resource_url_auto_generation_failed: "{{*}} {{yellow:Warning:}} Unable to auto generate " \
+        "the extension resource URL because %s does not have any products. " \
+        "Please run {{bold:shopify populate products}} to generate sample products.",
+      },
     }
 
     TYPES = {

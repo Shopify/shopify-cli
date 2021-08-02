@@ -90,7 +90,14 @@ module Extension
           .wrap(project.resource_url)
           .rescue { specification_handler.build_resource_url(shop: project.env.shop, context: context) }
           .then(&method(:persist_resource_url))
-          .unwrap { |e| raise e }
+          .unwrap do |nil_or_exception|
+            case nil_or_exception
+            when nil
+              context.warn(context.message("warnings.resource_url_auto_generation_failed", project.env.shop))
+            else
+              context.abort(nil_or_exception)
+            end
+          end
       end
 
       def persist_resource_url(resource_url)
