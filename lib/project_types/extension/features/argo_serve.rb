@@ -12,6 +12,7 @@ module Extension
       property! :port, accepts: Integer, default: 39351
       property  :tunnel_url, accepts: String, default: nil
       property! :js_system, accepts: ->(jss) { jss.respond_to?(:call) }, default: ShopifyCli::JsSystem
+      property :resource_url, accepts: String, default: nil
 
       def call
         validate_env!
@@ -20,6 +21,10 @@ module Extension
           next if start_server
           context.abort(context.message("serve.serve_failure_message"))
         end
+      end
+
+      def resource_url
+        super || ExtensionProject.current(force_reload: true).resource_url
       end
 
       private
@@ -69,7 +74,6 @@ module Extension
 
       def options
         project = ExtensionProject.current
-        resource_url = project.resource_url
 
         @serve_options ||= [].tap do |options|
           options << "--port=#{port}" if argo_runtime.supports?(:port)

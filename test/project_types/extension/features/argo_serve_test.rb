@@ -88,6 +88,29 @@ module Extension
         argo_serve.call
       end
 
+      def test_resource_url_is_used_if_given
+        ShopifyCli::Tasks::EnsureDevStore.stubs(:call)
+        ShopifyCli::Tasks::EnsureEnv.stubs(:call)
+
+        js_system = mock
+        js_system.expects(:call)
+          .with do |_, config|
+            assert_includes config.fetch(:yarn), "--resourceUrl=/provided"
+            assert_includes config.fetch(:npm), "--resourceUrl=/provided"
+          end
+          .returns(true)
+
+        argo_serve = Features::ArgoServe.new(
+          context: @context,
+          argo_runtime: checkout_ui_extension_runtime,
+          specification_handler: specification_handler,
+          js_system: js_system,
+          resource_url: "/provided"
+        )
+
+        argo_serve.call
+      end
+
       private
 
       def admin_ui_extension_runtime
