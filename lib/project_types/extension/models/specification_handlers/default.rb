@@ -90,6 +90,10 @@ module Extension
           end
         end
 
+        def supplies_resource_url?
+          false
+        end
+
         def build_resource_url(shop)
           raise NotImplementedError
         end

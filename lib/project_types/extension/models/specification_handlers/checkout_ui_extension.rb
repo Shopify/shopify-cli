@@ -13,6 +13,10 @@ module Extension
           }
         end
 
+        def supplies_resource_url?
+          true
+        end
+
         def build_resource_url(context:, shop:)
           variant_id = Tasks::GetProduct.call(context, shop).variant_id
           quantity = 1

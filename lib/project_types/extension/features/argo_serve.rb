@@ -36,6 +36,10 @@ module Extension
         specification_handler.renderer_package(context)
       end
 
+      def required_fields
+        specification.features.argo.required_fields
+      end
+
       def yarn_serve_command
         YARN_SERVE_COMMAND + options
       end
@@ -47,14 +51,13 @@ module Extension
       def validate_env!
         ExtensionProject.reload
 
-        required_fields = specification.features.argo.required_fields.dup
         return if required_fields.none?
 
-        ShopifyCli::Tasks::EnsureEnv.call(context, required: required_fields - [:resource_url])
-        ShopifyCli::Tasks::EnsureDevStore.call(context) if required_fields.delete(:shop)
+        ShopifyCli::Tasks::EnsureEnv.call(context, required: required_fields)
+        ShopifyCli::Tasks::EnsureDevStore.call(context) if required_fields.include?(:shop)
 
         project = ExtensionProject.current
-        ensure_resource_resource_url! if required_fields.delete(:resource_url)
+        ensure_resource_resource_url! if specification_handler.supplies_resource_url?
 
         return if required_fields.all? do |field|
           value = project.env.public_send(field)

@@ -79,6 +79,7 @@ module Extension
           context: @context,
           argo_runtime: checkout_ui_extension_runtime,
           specification_handler: specification_handler.tap do |handler|
+            handler.expects(:supplies_resource_url?).returns(true)
             handler.expects(:build_resource_url).returns("/generated")
           end,
           js_system: fake_js_system
@@ -98,9 +99,7 @@ module Extension
       end
 
       def specification_handler
-        ExtensionTestHelpers.test_specifications["TEST_EXTENSION"].tap do |handler|
-          handler.specification.features.argo.required_fields << :resource_url
-        end
+        ExtensionTestHelpers.test_specifications["TEST_EXTENSION"]
       end
 
       def fake_js_system(success: true)
