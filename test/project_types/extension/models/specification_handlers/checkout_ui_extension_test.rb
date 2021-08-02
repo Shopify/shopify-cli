@@ -69,6 +69,24 @@ module Extension
         def test_graphql_identifier
           assert_equal @identifier, @checkout_ui_extension.graphql_identifier
         end
+
+        def test_build_resource_url
+          shop = stub
+          product = mock(variant_id: 0)
+
+          Tasks::GetProduct.expects(:call).with(@context, shop).returns(product)
+
+          resource_url = @checkout_ui_extension.build_resource_url(context: @context, shop: shop)
+          assert_equal "/cart/0:1", resource_url
+        end
+
+        def test_build_resource_url_nil_safety
+          shop = stub
+          Tasks::GetProduct.expects(:call).with(@context, shop).returns(nil)
+
+          resource_url = @checkout_ui_extension.build_resource_url(context: @context, shop: shop)
+          assert_nil resource_url
+        end
       end
     end
   end
