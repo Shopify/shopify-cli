@@ -1,5 +1,6 @@
 Unreleased
 ------
+* [#1424](https://github.com/Shopify/shopify-cli/pull/1424/): Add `--resourceUrl` flag to extension serve command
 * [#1419](https://github.com/Shopify/shopify-cli/pull/1419): Remove analytics prompt when used in CI
 * [#1418](https://github.com/Shopify/shopify-cli/pull/1418): Auto configure resource URL for Checkout Extensions
 * [#1399](https://github.com/Shopify/shopify-cli/pull/1399): Fix error when running `shopify extension serve` in a theme app extension project

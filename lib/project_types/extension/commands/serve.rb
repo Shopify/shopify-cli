@@ -9,19 +9,24 @@ module Extension
 
       options do |parser, flags|
         parser.on("-t", "--[no-]tunnel", "Establish an ngrok tunnel") { |tunnel| flags[:tunnel] = tunnel }
+        parser.on("--resourceUrl=RESOURCE_URL", "Provide a resource URL") do |resource_url|
+          flags[:resource_url] = resource_url
+        end
       end
 
       class RuntimeConfiguration
         include SmartProperties
 
         property :tunnel_url, accepts: String, default: nil
+        property :resource_url, accepts: String, default: nil
         property! :tunnel_requested, accepts: [true, false], reader: :tunnel_requested?, default: true
         property! :port, accepts: (1...(2**16)), default: DEFAULT_PORT
       end
 
       def call(_args, _command_name)
         config = RuntimeConfiguration.new(
-          tunnel_requested: tunnel_requested?
+          tunnel_requested: tunnel_requested?,
+          resource_url: options.flags[:resource_url]
         )
 
         ShopifyCli::Result
@@ -74,7 +79,8 @@ module Extension
         specification_handler.serve(
           context: @ctx,
           tunnel_url: runtime_configuration.tunnel_url,
-          port: runtime_configuration.port
+          port: runtime_configuration.port,
+          resource_url: runtime_configuration.resource_url
         )
         runtime_configuration
       end
