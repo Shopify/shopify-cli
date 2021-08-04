@@ -56,6 +56,16 @@ module Extension
       assert_equal("0000", ExtensionProject.current.registration_uuid)
     end
 
+    def test_write_env_file_persists_resource_url
+      ExtensionProject.write_env_file(**valid_env_file_attributes_with(resource_url: "/cart/13:1"))
+      assert_equal("/cart/13:1", ExtensionProject.current.resource_url)
+    end
+
+    def test_write_env_file_persists_shop
+      ExtensionProject.write_env_file(**valid_env_file_attributes_with(shop: "johndoe.myshopify.com"))
+      assert_equal("johndoe.myshopify.com", ExtensionProject.current.env.shop)
+    end
+
     def test_env_file_writes_temporary_uuid_if_no_registration_uuid_present
       ExtensionProject.write_env_file(**valid_env_file_attributes_without(:registration_uuid))
 
@@ -134,6 +144,15 @@ module Extension
       end
     end
 
+    def test_missing_env_file_raises_error_when_accessing_app_attributes
+      project = ExtensionProject.new
+      refute File.exist?(".env")
+
+      assert_raises CLI::Kit::Abort do
+        project.app
+      end
+    end
+
     private
 
     def valid_env_file_attributes_without(*keys)
@@ -158,6 +177,8 @@ module Extension
         title: "Test title",
         registration_id: 56,
         registration_uuid: "eb946ca8-a925-11eb-bcbc-0242ac130013",
+        resource_url: "/cart/1:1",
+        shop: "test.myshopify.com",
       }
     end
   end

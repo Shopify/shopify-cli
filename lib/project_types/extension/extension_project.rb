@@ -14,16 +14,43 @@ module Extension
         )
       end
 
+      def update_env_file(context:, **updates)
+        current_config = {
+          title: current.title,
+          shop: current.env.shop,
+          api_key: current.app.api_key,
+          api_secret: current.app.secret,
+          registration_id: current.registration_id,
+          registration_uuid: current.registration_uuid,
+          resource_url: current.resource_url,
+        }
+
+        write_env_file(
+          context: context,
+          **current_config,
+          **updates
+        )
+      end
+
       def write_env_file(
-        context:, title:, api_key: "", api_secret: "", registration_id: nil, registration_uuid: nil
+        context:,
+        title:,
+        api_key: "",
+        api_secret: "",
+        registration_id: nil,
+        registration_uuid: nil,
+        resource_url: nil,
+        shop: nil
       )
         ShopifyCli::Resources::EnvFile.new(
           api_key: api_key,
           secret: api_secret,
+          shop: shop,
           extra: {
             ExtensionProjectKeys::TITLE_KEY => title,
             ExtensionProjectKeys::REGISTRATION_ID_KEY => registration_id,
             ExtensionProjectKeys::REGISTRATION_UUID_KEY => registration_uuid || generate_temporary_uuid,
+            ExtensionProjectKeys::RESOURCE_URL_KEY => resource_url,
           }.compact
         ).write(context)
 
@@ -42,6 +69,7 @@ module Extension
     end
 
     def app
+      validate_env_present
       Models::App.new(api_key: env["api_key"], secret: env["secret"])
     end
 
@@ -71,6 +99,10 @@ module Extension
       get_extra_field(ExtensionProjectKeys::REGISTRATION_UUID_KEY)
     end
 
+    def resource_url
+      get_extra_field(ExtensionProjectKeys::RESOURCE_URL_KEY)
+    end
+
     def reload
       @env = nil
     end
@@ -96,7 +128,13 @@ module Extension
     end
 
     def property_present?(key)
+      validate_env_present
       !env[key].nil? && !env[key].strip.empty?
+    end
+
+    def validate_env_present
+      return if env
+      raise ShopifyCli::Abort, "Missing .env file. Run `shopify extension connect` to generate an .env file."
     end
 
     def integer?(value)

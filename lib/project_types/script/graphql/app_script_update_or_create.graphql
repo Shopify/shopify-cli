@@ -9,9 +9,9 @@ mutation AppScriptUpdateOrCreate(
   $schemaMinorVersion: String,
   $useMsgpack: Boolean,
   $uuid: String,
-  $configurationUi: Boolean,
-  $scriptJsonVersion: String,
-  $configurationDefinition: String,
+  $configurationUi: Boolean!,
+  $scriptJsonVersion: String!,
+  $configurationDefinition: String!,
 ) {
   appScriptUpdateOrCreate(
     extensionPointName: $extensionPointName

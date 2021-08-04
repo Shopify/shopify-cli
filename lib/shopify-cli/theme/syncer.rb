@@ -149,7 +149,7 @@ module ShopifyCli
         # Process lower-priority files in the background
 
         # Assets are served locally, so can be uploaded in the background
-        enqueue_updates(@theme.asset_files)
+        enqueue_updates(@theme.static_asset_files)
 
         unless delay_low_priority_files
           wait!(&block)
@@ -254,8 +254,12 @@ module ShopifyCli
 
         update_checksums(body)
 
-        value = body.dig("asset", "value") || Base64.decode64(body.dig("asset", "attachment"))
-        file.write(value)
+        attachment = body.dig("asset", "attachment")
+        value = if attachment
+          file.write(Base64.decode64(attachment), 0, mode: "wb")
+        else
+          file.write(body.dig("asset", "value"))
+        end
 
         response
       end
@@ -277,7 +281,7 @@ module ShopifyCli
 
       def update_checksums(api_response)
         api_response.values.flatten.each do |asset|
-          if asset["key"] && asset["checksum"]
+          if asset["key"]
             @checksums[asset["key"]] = asset["checksum"]
           end
         end
@@ -310,7 +314,7 @@ module ShopifyCli
 
       def backoff_if_near_limit!(used, limit)
         if used > limit - @threads.size
-          @ctx.debug("Near API call limit, waiting 2 sec ...")
+          @ctx.debug("Near API call limit, waiting 2 sec…")
           @backoff_mutex.synchronize { sleep 2 }
         end
       end

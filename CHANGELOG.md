@@ -1,6 +1,27 @@
 Unreleased
 ------
-* [1305](https://github.com/Shopify/shopify-cli/pull/1305): Fix `Uninitialized constant Net::WriteTimeout` error
+
+Version 2.2.0
+------
+* [#1424](https://github.com/Shopify/shopify-cli/pull/1424/): Add `--resourceUrl` flag to extension serve command
+* [#1419](https://github.com/Shopify/shopify-cli/pull/1419): Remove analytics prompt when used in CI
+* [#1418](https://github.com/Shopify/shopify-cli/pull/1418): Auto configure resource URL for Checkout Extensions
+* [#1399](https://github.com/Shopify/shopify-cli/pull/1399): Fix error when running `shopify extension serve` in a theme app extension project
+
+Version 2.1.0
+-------------
+* [#1357](https://github.com/Shopify/shopify-cli/pull/1357): Update Theme-Check to 1.1
+* [#1352](https://github.com/Shopify/shopify-cli/pull/1352): Add `shopify extension check` for checking theme app extensions
+* [#1304](https://github.com/Shopify/shopify-cli/pull/1304): Prompt user to run `shopify extension connect` if .env file is missing
+
+Version 2.0.2
+-------------
+* [#1305](https://github.com/Shopify/shopify-cli/pull/1305): Fix `Uninitialized constant Net::WriteTimeout` error
+* [#1319](https://github.com/Shopify/shopify-cli/pull/1319): Fix `theme pull` not pulling some files
+* [#1321](https://github.com/Shopify/shopify-cli/pull/1321): Fix error when pulling images with `theme pull`
+* [#1322](https://github.com/Shopify/shopify-cli/pull/1322): Fix error when running `shopify theme language-server --help`
+* [#1324](https://github.com/Shopify/shopify-cli/pull/1324): Fix issue [#1308](https://github.com/Shopify/shopify-cli/issues/1308) where a non-English language on Partner Account breaks how CLI determines latest API version.
+* [#1343](https://github.com/Shopify/shopify-cli/pull/1343): Fix inconsistent use of periods vs ellipsis in messages. This replaces periods with ellipsis.
 
 Version 2.0.1
 -------------

@@ -46,7 +46,7 @@ module ShopifyCli
 
         # we only want to send Monorail events in production or when explicitly developing
         def enabled?
-          Context.new.system? || ENV["MONORAIL_REAL_EVENTS"] == "1"
+          (Context.new.system? || ENV["MONORAIL_REAL_EVENTS"] == "1") && !Context.new.ci?
         end
 
         def consented?
@@ -54,6 +54,7 @@ module ShopifyCli
         end
 
         def prompt_for_consent
+          return if Context.new.ci?
           return unless enabled?
           return if ShopifyCli::Config.get_section("analytics").key?("enabled")
           msg = Context.message("core.monorail.consent_prompt")
@@ -90,7 +91,7 @@ module ShopifyCli
           {
             schema_id: INVOCATIONS_SCHEMA,
             payload: {
-              project_type: Project.current_project_type.to_s,
+              project_type: project_type_from_dir_or_cmd(commands[0]).to_s,
               command: commands.join(" "),
               args: args.join(" "),
               time_start: start_time,
@@ -104,7 +105,7 @@ module ShopifyCli
               is_employee: ShopifyCli::Shopifolk.acting_as_shopify_organization?,
             }.tap do |payload|
               payload[:api_key] = metadata.delete(:api_key)
-              payload[:partner_id] = metadata.delete(:organization_id)
+              payload[:partner_id] = metadata.delete(:organization_id) || ShopifyCli::DB.get(:organization_id)
               if Project.has_current?
                 project = Project.current(force_reload: true)
                 payload[:api_key] = project.env&.api_key
@@ -113,6 +114,10 @@ module ShopifyCli
               payload[:metadata] = JSON.dump(metadata) unless metadata.empty?
             end,
           }
+        end
+
+        def project_type_from_dir_or_cmd(command)
+          Project.current_project_type || (command unless ShopifyCli::Commands.core_command?(command)) || nil
         end
       end
     end

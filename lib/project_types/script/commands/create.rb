@@ -34,7 +34,7 @@ module Script
       end
 
       def self.help
-        allowed_values = Script::Layers::Application::ExtensionPoints.types.map { |type| "{{cyan:#{type}}}" }
+        allowed_values = Script::Layers::Application::ExtensionPoints.available_types.map { |type| "{{cyan:#{type}}}" }
         ShopifyCli::Context.message("script.create.help", ShopifyCli::TOOL_NAME, allowed_values.join(", "))
       end
     end

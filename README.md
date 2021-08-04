@@ -101,9 +101,11 @@ Run:
 
 To start the server. The server includes hot reload for CSS & Sections.
 
+**Note:** Shopify CLI is the recommended and officially supported tool for developing themes and creating CI/CD workflows. Please refer to the [Theme Kit Migration Guide](https://github.com/Shopify/shopify-cli/blob/main/THEMEKIT_MIGRATION.md) for details.
+
 ### Contributing
 
-Shopify CLI is an [open source tool](https://github.com/Shopify/shopify-cli/blob/main/.github/LICENSE.md) and everyone is welcome to help the community by [contributing](https://github.com/Shopify/shopify-cli/blob/main/.github/CONTRIBUTING.md) to the project.
+Shopify CLI is an [open source tool](https://github.com/Shopify/shopify-cli/blob/main/LICENSE) and everyone is welcome to help the community by [contributing](https://github.com/Shopify/shopify-cli/blob/main/.github/CONTRIBUTING.md) to the project.
 
 ### Where to get help
 

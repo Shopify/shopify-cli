@@ -1,0 +1,16 @@
+query {
+  products(first: 1) {
+    edges {
+      node {
+        id
+        variants(first: 1) {
+          edges {
+            node {
+              id
+            }
+          }
+        }
+      }
+    }
+  }
+}

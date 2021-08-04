@@ -1,6 +1,6 @@
 query {
   publicApiVersions {
     handle
-    displayName
+    supported
   }
 }

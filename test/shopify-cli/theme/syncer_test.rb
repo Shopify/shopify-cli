@@ -192,7 +192,7 @@ module ShopifyCli
       end
 
       def test_theme_files_are_pending_during_upload
-        file = @theme.asset_files.first
+        file = @theme.static_asset_files.first
 
         @syncer.enqueue_updates([file])
         assert_includes(@syncer.pending_updates, file)
@@ -205,7 +205,7 @@ module ShopifyCli
       def test_logs_upload_error
         @syncer.start_threads
 
-        file = @theme.asset_files.first
+        file = @theme.static_asset_files.first
         @ctx.expects(:puts).once
         ShopifyCli::AdminAPI.expects(:rest_request).raises(RuntimeError.new("oops"))
 
@@ -231,7 +231,7 @@ module ShopifyCli
         @syncer.checksums.replace(@theme.theme_files.map { |file| [file.relative_path.to_s, "OUTDATED"] }.to_h)
         @syncer.checksums.delete("assets/generated.css.liquid")
 
-        expected_size = @theme.theme_files.size - 2 # 1 deleted file, 1 ignored file
+        expected_size = @theme.theme_files.size - 1 # 1 deleted file
 
         File.any_instance.expects(:delete).times(1)
         File.any_instance.expects(:write)
@@ -269,6 +269,32 @@ module ShopifyCli
         ShopifyCli::AdminAPI.expects(:rest_request)
           .at_least(1) # 1 for checksums
           .returns([200, {}, {}])
+
+        @syncer.download_theme!
+        assert_empty(@syncer)
+      end
+
+      def test_download_theme_without_checksum
+        @syncer.start_threads
+        @syncer.checksums.replace(@theme.theme_files.map { |file| [file.relative_path.to_s, nil] }.to_h)
+
+        expected_size = @theme.theme_files.size
+
+        File.any_instance.expects(:write)
+          .times(expected_size)
+          .with("new content")
+
+        ShopifyCli::AdminAPI.expects(:rest_request)
+          .at_least(expected_size + 1) # +1 for checksums
+          .returns([
+            200,
+            {
+              "asset" => {
+                "value" => "new content",
+              },
+            },
+            {},
+          ])
 
         @syncer.download_theme!
         assert_empty(@syncer)

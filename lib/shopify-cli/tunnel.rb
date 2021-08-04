@@ -149,7 +149,7 @@ module ShopifyCli
       check_prereq_command(ctx, "curl")
       check_prereq_command(ctx, ctx.linux? ? "unzip" : "tar")
       spinner = CLI::UI::SpinGroup.new
-      spinner.add("Installing ngrok...") do
+      spinner.add(ctx.message("core.tunnel.installing")) do
         zip_dest = File.join(ShopifyCli.cache_dir, "ngrok.zip")
         unless File.exist?(zip_dest)
           ctx.system("curl", "-o", zip_dest, DOWNLOAD_URLS[ctx.os], chdir: ShopifyCli.cache_dir)

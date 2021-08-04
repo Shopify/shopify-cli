@@ -1,9 +1,9 @@
 PATH
   remote: .
   specs:
-    shopify-cli (2.0.1)
+    shopify-cli (2.2.0)
       listen (~> 3.5)
-      theme-check (~> 1.0)
+      theme-check (~> 1.1)
 
 GEM
   remote: https://rubygems.org/
@@ -76,7 +76,7 @@ GEM
     rubocop-shopify (2.0.1)
       rubocop (~> 1.11)
     ruby-progressbar (1.11.0)
-    theme-check (1.0.0)
+    theme-check (1.1.0)
       liquid (>= 5.0.1)
       nokogumbo
     timecop (0.9.2)
@@ -108,4 +108,4 @@ DEPENDENCIES
   webmock
 
 BUNDLED WITH
-   2.1.4
+   2.2.22

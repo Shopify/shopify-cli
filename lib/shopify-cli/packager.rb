@@ -16,7 +16,7 @@ module ShopifyCli
 
       puts "\nBuilding Debian package"
 
-      puts "Generating metadata files..."
+      puts "Generating metadata files…"
       Dir.glob("#{debian_dir}/*").each { |file| File.delete(file) }
 
       metadata_files = %w(control preinst prerm)
@@ -28,7 +28,7 @@ module ShopifyCli
         File.open(file_path, "w", 0775) { |f| f.write(file_contents) }
       end
 
-      puts "Building package..."
+      puts "Building package…"
       Dir.chdir(root_dir)
       raise "Failed to build package" unless system("dpkg-deb", "-b", "shopify-cli")
 
@@ -49,14 +49,14 @@ module ShopifyCli
       spec_path = File.join(root_dir, "shopify-cli.spec")
       puts "\nBuilding RPM package"
 
-      puts "Generating spec file..."
+      puts "Generating spec file…"
       File.delete(spec_path) if File.exist?(spec_path)
 
       spec_contents = File.read(File.join(root_dir, "shopify-cli.spec.base"))
       spec_contents = spec_contents.gsub("SHOPIFY_CLI_VERSION", ShopifyCli::VERSION)
       File.write(spec_path, spec_contents)
 
-      puts "Building package..."
+      puts "Building package…"
       Dir.chdir(root_dir)
       system("rpmbuild", "-bb", File.basename(spec_path))
 
@@ -72,7 +72,7 @@ module ShopifyCli
       build_path = File.join(BUILDS_DIR, "shopify-cli.rb")
       puts "\nBuilding Homebrew package"
 
-      puts "Generating formula..."
+      puts "Generating formula…"
       File.delete(build_path) if File.exist?(build_path)
 
       spec_contents = File.read(File.join(root_dir, "shopify-cli.base.rb"))

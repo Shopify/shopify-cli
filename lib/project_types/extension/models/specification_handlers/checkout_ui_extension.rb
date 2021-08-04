@@ -12,9 +12,17 @@ module Extension
             **argo.config(context),
           }
         end
-      end
 
-      CheckoutArgoExtension = CheckoutUiExtension
+        def supplies_resource_url?
+          true
+        end
+
+        def build_resource_url(context:, shop:)
+          product = Tasks::GetProduct.call(context, shop)
+          return unless product
+          format("/cart/%<variant_id>d:%<quantity>d", variant_id: product.variant_id, quantity: 1)
+        end
+      end
     end
   end
 end

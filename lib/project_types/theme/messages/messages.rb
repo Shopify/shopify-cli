@@ -90,7 +90,7 @@ module Theme
             Uploads the current theme as a development theme to the connected store, then prints theme editor and preview URLs to your terminal. While running, changes will push to the store in real time.
             Usage: {{command:%s theme serve}}
           HELP
-          serve: "Viewing theme...",
+          serve: "Viewing theme…",
           open_fail: "Couldn't open the theme",
         },
         check: {
@@ -134,9 +134,9 @@ module Theme
         },
         language_server: {
           help: <<~HELP,
-            {{command:%s theme language-server}}: Start a Language Server Protocol server.
+            {{command:%1$s theme language-server}}: Start a Language Server Protocol server.
 
-            Usage: {{command:%s theme language-server}}
+            Usage: {{command:%1$s theme language-server}}
           HELP
         },
         pull: {

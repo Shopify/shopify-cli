@@ -50,13 +50,14 @@ module Extension
           argo_runtime(context).supports?(:public_url)
         end
 
-        def serve(context:, port:, tunnel_url:)
+        def serve(context:, port:, tunnel_url:, resource_url:)
           Features::ArgoServe.new(
             specification_handler: self,
             argo_runtime: argo_runtime(context),
             context: context,
             port: port,
             tunnel_url: tunnel_url,
+            resource_url: resource_url
           ).call
         end
 
@@ -65,9 +66,9 @@ module Extension
         end
 
         def argo_runtime(context)
-          @argo_runtime ||= Features::ArgoRuntime.new(
-            renderer: renderer_package(context),
-            cli: cli_package(context),
+          @argo_runtime ||= Features::ArgoRuntime.find(
+            cli_package: cli_package(context),
+            identifier: identifier
           )
         end
 
@@ -88,6 +89,14 @@ module Extension
           else
             ShopifyCli::Context.message(key, *params)
           end
+        end
+
+        def supplies_resource_url?
+          false
+        end
+
+        def build_resource_url(shop)
+          raise NotImplementedError
         end
 
         protected

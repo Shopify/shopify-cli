@@ -34,7 +34,7 @@ module ShopifyCli
       headers = {
         "User-Agent" => "Shopify CLI; v=#{ShopifyCli::VERSION}",
         "Sec-CH-UA" => "Shopify CLI; v=#{ShopifyCli::VERSION} sha=#{ShopifyCli.sha}",
-        "Sec-CH-UA-PLATFORM" => @context.os,
+        "Sec-CH-UA-PLATFORM" => @context.os.to_s,
         "Auth" => "faketoken",
       }
       uri = URI.parse("https://my-test-shop.myshopify.com/admin/api/2019-04/graphql.json")

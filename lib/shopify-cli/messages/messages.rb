@@ -28,7 +28,7 @@ module ShopifyCli
         },
 
         env_file: {
-          saving_header: "writing %s file...",
+          saving_header: "writing %s file…",
           saving: "writing %s file",
           saved: "%s saved to project root",
         },
@@ -69,7 +69,7 @@ module ShopifyCli
             no_commits_made: "No git commits have been made. Please make at least one commit.",
           },
 
-          cloning: "Cloning %s into %s...",
+          cloning: "Cloning %s into %s…",
           cloned: "{{v}} Cloned into %s",
         },
 
@@ -103,9 +103,9 @@ module ShopifyCli
             install_error: "An error occurred while installing dependencies",
           },
 
-          installing: "Installing dependencies with %s...",
+          installing: "Installing dependencies with %s…",
           installed: "Dependencies installed",
-          npm_installing_deps: "Installing %d dependencies...",
+          npm_installing_deps: "Installing %d dependencies…",
           npm_installed_deps: "%d npm dependencies installed",
         },
 
@@ -257,7 +257,7 @@ module ShopifyCli
             count_help: "Number of resources to generate",
           },
 
-          populating: "Populating %d %ss...",
+          populating: "Populating %d %ss…",
 
           completion_message: <<~COMPLETION_MESSAGE,
             Successfully added %d %s to {{green:%s}}
@@ -345,7 +345,7 @@ module ShopifyCli
           confirm_store: {
             prompt: "You are currently logged into {{green:%s}}. Do you want to proceed using this store?",
             confirmation: "Proceeding using {{green:%s}}",
-            cancelling: "Cancelling ...",
+            cancelling: "Cancelling…",
           },
           ensure_env: {
             organization_select: "To which partner organization does this project belong?",
@@ -414,7 +414,9 @@ module ShopifyCli
               "please make sure %s exists within %s before trying again",
           },
 
+          installing: "Installing ngrok…",
           not_running: "{{green:x}} ngrok tunnel not running",
+          prereq_command_location: "%s @ %s",
           signup_suggestion: <<~MESSAGE,
             {{*}} To avoid tunnels that timeout, it is recommended to signup for a free ngrok
             account at {{underline:https://ngrok.com/signup}}. After you signup, install your
@@ -423,9 +425,8 @@ module ShopifyCli
           start: "{{v}} ngrok tunnel running at {{underline:%s}}",
           start_with_account: "{{v}} ngrok tunnel running at {{underline:%s}}, with account %s",
           stopped: "{{green:x}} ngrok tunnel stopped",
-          timed_out: "{{x}} ngrok tunnel has timed out, restarting ...",
+          timed_out: "{{x}} ngrok tunnel has timed out, restarting…",
           will_timeout: "{{*}} This tunnel will timeout in {{red:%s}}",
-          prereq_command_location: "%s @ %s",
         },
 
         version: {

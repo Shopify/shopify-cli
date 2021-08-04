@@ -20,9 +20,9 @@ module ShopifyCli
         path.read
       end
 
-      def write(content)
+      def write(*args)
         path.parent.mkpath unless path.parent.directory?
-        path.write(content)
+        path.write(*args)
       end
 
       def delete
