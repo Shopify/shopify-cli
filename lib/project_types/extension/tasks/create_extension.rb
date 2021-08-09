@@ -11,10 +11,10 @@ module Extension
       RESPONSE_FIELD = %w(data extensionCreate)
       REGISTRATION_FIELD = "extensionRegistration"
 
-      def call(context:, api_key:, type:, title:, config:, extension_context: nil)
+      def call(context:, api_key:, specification_identifier:, title:, config:, extension_context: nil)
         input = {
           api_key: api_key,
-          type: type,
+          specification_identifier: specification_identifier,
           title: title,
           config: JSON.generate(config),
           extension_context: extension_context,

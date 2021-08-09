@@ -14,7 +14,7 @@ module Extension
         end
 
         def test_returns_if_the_given_extension_type_valid
-          ask(type: "TEST_EXTENSION").tap do |result|
+          ask(type: "test_extension").tap do |result|
             assert_predicate(result, :success?)
             result.value.tap do |project_details|
               refute_nil project_details.type
@@ -24,7 +24,7 @@ module Extension
         end
 
         def test_aborts_if_the_given_extension_type_is_invalid
-          ask(type: "INVALID_EXTENSION_IDENTIFIER").tap do |result|
+          ask(type: "invalid_extension_identifier").tap do |result|
             assert_predicate(result, :failure?)
             result.error.tap do |error|
               assert_kind_of(CLI::Kit::Abort, error)

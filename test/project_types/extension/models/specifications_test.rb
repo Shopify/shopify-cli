@@ -19,7 +19,7 @@ module Extension
 
       def test_supports_retrieving_all_specification_handlers
         specifications = DummySpecifications.build
-        assert_kind_of(SpecificationHandlers::Default, specifications["TEST_EXTENSION"])
+        assert_kind_of(SpecificationHandlers::Default, specifications["test_extension"])
       end
 
       def test_supports_retrieving_an_individual_specification_handler

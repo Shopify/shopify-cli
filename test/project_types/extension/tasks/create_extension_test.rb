@@ -14,7 +14,7 @@ module Extension
         ShopifyCli::ProjectType.load_type(:extension)
 
         @api_key = "FAKE_API_KEY"
-        @fake_type = "TEST_EXTENSION"
+        @fake_specification_identifier = "test_extension"
         @fake_title = "Fake Title"
         @fake_config = {
           field: "with stuff",
@@ -23,7 +23,7 @@ module Extension
 
         @input = {
           api_key: @api_key,
-          type: @fake_type,
+          specification_identifier: @fake_specification_identifier,
           title: @fake_title,
           config: @fake_config,
           extension_context: @fake_extension_context,
@@ -36,7 +36,7 @@ module Extension
         created_registration = Tasks::CreateExtension.call(
           context: @context,
           api_key: @api_key,
-          type: @fake_type,
+          specification_identifier: @fake_specification_identifier,
           title: @fake_title,
           config: @fake_config,
           extension_context: @fake_extension_context
@@ -52,7 +52,7 @@ module Extension
           Tasks::CreateExtension.call(
             context: @context,
             api_key: @api_key,
-            type: @fake_type,
+            specification_identifier: @fake_specification_identifier,
             title: @fake_title,
             config: @fake_config,
             extension_context: @fake_extension_context
@@ -70,7 +70,7 @@ module Extension
           Tasks::CreateExtension.call(
             context: @context,
             api_key: @api_key,
-            type: @fake_type,
+            specification_identifier: @fake_specification_identifier,
             title: @fake_title,
             config: @fake_config,
             extension_context: @fake_extension_context

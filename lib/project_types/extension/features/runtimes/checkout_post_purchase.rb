@@ -3,7 +3,7 @@ module Extension
     module Runtimes
       class CheckoutPostPurchase < Base
         CHECKOUT_UI_EXTENSIONS_RUN = "@shopify/checkout-ui-extensions-run"
-        CHECKOUT_POST_PURCHASE = "CHECKOUT_POST_PURCHASE"
+        CHECKOUT_POST_PURCHASE = "checkout_post_purchase"
 
         AVAILABLE_FLAGS = [
           :port,

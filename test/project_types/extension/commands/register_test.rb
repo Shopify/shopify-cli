@@ -55,7 +55,7 @@ module Extension
         registration = Models::Registration.new(
           id: 55,
           uuid: "123",
-          type: @specification_handler.identifier,
+          specification_identifier: @specification_handler.identifier,
           title: @project.title,
           draft_version: Models::Version.new(
             registration_id: 55,
@@ -73,7 +73,7 @@ module Extension
         Tasks::CreateExtension.any_instance.expects(:call).with(
           context: @context,
           api_key: @app.api_key,
-          type: @specification_handler.graphql_identifier,
+          specification_identifier: @specification_handler.graphql_identifier,
           title: @project.title,
           config: {},
           extension_context: @specification_handler.extension_context(@context)

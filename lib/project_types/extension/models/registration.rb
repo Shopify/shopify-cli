@@ -8,7 +8,7 @@ module Extension
 
       property! :id, accepts: Integer
       property! :uuid, accepts: String
-      property! :type, accepts: String
+      property! :specification_identifier, accepts: String
       property! :title, accepts: String
       property! :draft_version, accepts: Extension::Models::Version
 

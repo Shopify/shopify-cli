@@ -18,7 +18,7 @@ module Extension
 
           specifications = DummySpecifications.build(identifier: "checkout_ui_extension", surface: "checkout")
 
-          @identifier = "CHECKOUT_UI_EXTENSION"
+          @identifier = "checkout_ui_extension"
           @checkout_ui_extension = specifications[@identifier]
         end
 
@@ -27,7 +27,7 @@ module Extension
 
           Features::Argo.any_instance
             .expects(:create)
-            .with(directory_name, @identifier, @context)
+            .with(directory_name, @identifier.upcase, @context)
             .once
 
           @checkout_ui_extension.create(directory_name, @context)

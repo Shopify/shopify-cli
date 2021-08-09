@@ -18,7 +18,7 @@ module Extension
       autoload :FetchSpecifications, "project_types/extension/extension_test_helpers/stubs/fetch_specifications"
     end
 
-    def self.test_specifications(type_identifier: "TEST_EXTENSION")
+    def self.test_specifications(type_identifier: "test_extension")
       DummySpecifications.build(
           identifier: type_identifier.downcase,
         custom_handler_root: File.expand_path("../", __FILE__),
@@ -26,7 +26,7 @@ module Extension
         )
     end
 
-    def self.test_specification_handler(type_identifier: "TEST_EXTENSION")
+    def self.test_specification_handler(type_identifier: "test_extension")
       specification_handler = test_specifications[type_identifier]
       if specification_handler.nil?
         raise "Unable to retrieve specification handler due to broken test setup"
@@ -40,7 +40,7 @@ module Extension
       api_key: "TEST_KEY",
       api_secret: "TEST_SECRET",
       title: "Test",
-      type_identifier: "TEST_EXTENSION",
+      type_identifier: "test_extension",
       registration_id: 55,
       registration_uuid: "db946ca8-a925-11eb-bcbc-0242ac130002"
     )

@@ -13,7 +13,7 @@ module Extension
           ShopifyCli::ProjectType.load_type(:extension)
           specifications = DummySpecifications.build(identifier: "subscription_management", surface: "admin")
 
-          @identifier = "PRODUCT_SUBSCRIPTION"
+          @identifier = "product_subscription"
           @product_subscription = specifications[@identifier]
         end
 
@@ -22,7 +22,7 @@ module Extension
 
           Features::Argo.any_instance
             .expects(:create)
-            .with(directory_name, @identifier, @context)
+            .with(directory_name, @identifier.upcase, @context)
             .once
 
           @product_subscription.create(directory_name, @context)
@@ -35,11 +35,11 @@ module Extension
         end
 
         def test_custom_identifier
-          assert_equal "PRODUCT_SUBSCRIPTION", @product_subscription.identifier
+          assert_equal "product_subscription", @product_subscription.identifier
         end
 
         def test_custom_graphql_identifier
-          assert_equal "SUBSCRIPTION_MANAGEMENT", @product_subscription.graphql_identifier
+          assert_equal "subscription_management", @product_subscription.graphql_identifier
         end
       end
     end

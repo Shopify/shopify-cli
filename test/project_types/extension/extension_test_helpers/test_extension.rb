@@ -10,7 +10,7 @@ module Extension
 
   module ExtensionTestHelpers
     class TestExtension < Models::SpecificationHandlers::Default
-      IDENTIFIER = "TEST_EXTENSION"
+      IDENTIFIER = "test_extension"
 
       def graphql_identifier
         "TEST_EXTENSION_GQL"

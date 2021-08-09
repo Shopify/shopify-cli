@@ -11,11 +11,11 @@ module Extension
         end
 
         def identifier
-          specification.identifier.to_s.upcase
+          specification.identifier.to_s
         end
 
         def graphql_identifier
-          specification.graphql_identifier.to_s.upcase
+          specification.graphql_identifier.to_s
         end
 
         def name
@@ -31,7 +31,7 @@ module Extension
         end
 
         def create(directory_name, context, **_args)
-          argo.create(directory_name, identifier, context)
+          argo.create(directory_name, identifier.upcase, context)
         end
 
         def extension_context(_context)

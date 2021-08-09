@@ -1,6 +1,6 @@
 mutation ExtensionCreate(
   $api_key: String!
-  $type: ExtensionType!
+  $specification_identifier: String!
   $title: String!
   $config: JSON!
   $extension_context: String
@@ -8,7 +8,7 @@ mutation ExtensionCreate(
   extensionCreate(
     input: {
       apiKey: $api_key
-      type: $type
+      specificationIdentifier: $specification_identifier
       title: $title
       config: $config
       context: $extension_context
@@ -17,7 +17,7 @@ mutation ExtensionCreate(
     extensionRegistration {
       id
       uuid
-      type
+      specificationIdentifier
       title
       draftVersion {
         registrationId

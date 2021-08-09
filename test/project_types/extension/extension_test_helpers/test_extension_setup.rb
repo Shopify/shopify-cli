@@ -10,7 +10,7 @@ module Extension
           custom_handler_root: File.expand_path("../", __FILE__),
           custom_handler_namespace: ::Extension::ExtensionTestHelpers,
         )
-        @test_extension_type = specifications["TEST_EXTENSION"]
+        @test_extension_type = specifications["test_extension"]
 
         super
       end

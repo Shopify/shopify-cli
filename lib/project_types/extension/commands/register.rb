@@ -36,7 +36,7 @@ module Extension
         Tasks::CreateExtension.call(
           context: @ctx,
           api_key: app.api_key,
-          type: specification_handler.graphql_identifier,
+          specification_identifier: specification_handler.graphql_identifier,
           title: project.title,
           config: {},
           extension_context: specification_handler.extension_context(@ctx)

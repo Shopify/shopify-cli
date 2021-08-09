@@ -5,8 +5,8 @@ module Extension
         CHECKOUT_UI_EXTENSIONS_RUN = "@shopify/checkout-ui-extensions-run"
 
         IDENTIFIERS = [
-          "CHECKOUT_ARGO_EXTENSION",
-          "CHECKOUT_UI_EXTENSION",
+          "checkout_argo_extension",
+          "checkout_ui_extension",
         ]
 
         AVAILABLE_FLAGS = [

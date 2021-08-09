@@ -122,7 +122,7 @@ module Extension
       end
 
       def specification_handler
-        ExtensionTestHelpers.test_specifications["TEST_EXTENSION"]
+        ExtensionTestHelpers.test_specifications["test_extension"]
       end
 
       def fake_js_system(success: true)

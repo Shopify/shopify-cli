@@ -26,29 +26,29 @@ module Extension
         end
 
         def test_active_runtime_returns_true_for_valid_identifier_and_package_name
-          active_runtime = runtime.active_runtime?(cli_package, "CHECKOUT_UI_EXTENSION")
+          active_runtime = runtime.active_runtime?(cli_package, "checkout_ui_extension")
           assert_equal active_runtime, active
         end
 
         def test_active_runtime_returns_true_for_legacy_identifier_and_package_name
-          active_runtime = runtime.active_runtime?(cli_package, "CHECKOUT_ARGO_EXTENSION")
+          active_runtime = runtime.active_runtime?(cli_package, "checkout_argo_extension")
           assert_equal active_runtime, active
         end
 
         def test_active_runtime_returns_false_for_invalid_identifier_and_package_name
           invalid_package = Models::NpmPackage.new(name: "invalid-package", version: "0.11.0")
-          active_runtime = runtime.active_runtime?(invalid_package, "INVALID_IDENTIFIER")
+          active_runtime = runtime.active_runtime?(invalid_package, "invalid_identifier")
           assert_equal active_runtime, inactive
         end
 
         def test_active_runtime_returns_false_for_invalid_identifier
-          active_runtime = runtime.active_runtime?(cli_package, "INVALID_IDENTIFIER")
+          active_runtime = runtime.active_runtime?(cli_package, "invalid_identifier")
           assert_equal active_runtime, inactive
         end
 
         def test_active_runtime_returns_false_for_invalid_package
           invalid_package = Models::NpmPackage.new(name: "invalid-package", version: "0.11.0")
-          active_runtime = runtime.active_runtime?(invalid_package, "CHECKOUT_UI_EXTENSION")
+          active_runtime = runtime.active_runtime?(invalid_package, "checkout_ui_extension")
           assert_equal active_runtime, inactive
         end
 

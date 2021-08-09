@@ -14,7 +14,7 @@ module Extension
 
           @registration_id = 42
           @registration_uuid = "123"
-          @fake_type = "TEST_EXTENSION"
+          @fake_specification_identifier = "test_extension"
           @fake_title = "Fake Title"
           @fake_extension_context = "fake_context"
           @last_user_interaction_at = Time.now.to_s
@@ -32,7 +32,7 @@ module Extension
           hash = {
             Converters::RegistrationConverter::ID_FIELD => @registration_id,
             Converters::RegistrationConverter::UUID_FIELD => @registration_uuid,
-            Converters::RegistrationConverter::TYPE_FIELD => @fake_type,
+            Converters::RegistrationConverter::SPECIFICATION_IDENTIFIER_FIELD => @fake_specification_identifier,
             Converters::RegistrationConverter::TITLE_FIELD => @fake_title,
             Converters::RegistrationConverter::DRAFT_VERSION_FIELD => {
               Converters::VersionConverter::REGISTRATION_ID_FIELD => @registration_id,
@@ -45,7 +45,7 @@ module Extension
           assert_kind_of(Models::Registration, parsed_registration)
           assert_equal @registration_id, parsed_registration.id
           assert_equal @registration_uuid, parsed_registration.uuid
-          assert_equal @fake_type, parsed_registration.type
+          assert_equal @fake_specification_identifier, parsed_registration.specification_identifier
           assert_equal @fake_title, parsed_registration.title
           assert_equal @registration_id, parsed_registration.draft_version.registration_id
           assert_kind_of(Time, parsed_registration.draft_version.last_user_interaction_at)

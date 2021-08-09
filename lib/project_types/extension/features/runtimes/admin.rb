@@ -3,7 +3,7 @@ module Extension
     module Runtimes
       class Admin < Base
         ADMIN_UI_EXTENSIONS_RUN = "@shopify/admin-ui-extensions-run"
-        PRODUCT_SUBSCRIPTION = "PRODUCT_SUBSCRIPTION"
+        PRODUCT_SUBSCRIPTION = "product_subscription"
 
         AVAILABLE_FLAGS = [
           :api_key,

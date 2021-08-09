@@ -23,10 +23,6 @@ module Extension
           assert_nil(Default.new(specification).extension_context(@context))
         end
 
-        def test_graphql_identifier_is_upcased
-          assert_equal specification.identifier.upcase, Default.new(specification).graphql_identifier
-        end
-
         def test_name_defaults_to_specification_name
           assert_equal "Test Extension", @test_extension_type.name
         end

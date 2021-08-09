@@ -17,7 +17,7 @@ module Extension
 
           specifications = DummySpecifications.build(identifier: "checkout_post_purchase", surface: "checkout")
 
-          @identifier = "CHECKOUT_POST_PURCHASE"
+          @identifier = "checkout_post_purchase"
           @checkout_post_purchase = specifications[@identifier]
         end
 
@@ -26,7 +26,7 @@ module Extension
 
           Features::Argo.any_instance
             .expects(:create)
-            .with(directory_name, @identifier, @context)
+            .with(directory_name, @identifier.upcase, @context)
             .once
 
           @checkout_post_purchase.create(directory_name, @context)

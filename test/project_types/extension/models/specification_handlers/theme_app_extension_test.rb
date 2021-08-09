@@ -12,7 +12,7 @@ module Extension
           super
           ShopifyCli::ProjectType.load_type(:extension)
           specifications = DummySpecifications.build(identifier: "theme_app_extension")
-          @identifier = "THEME_APP_EXTENSION"
+          @identifier = "theme_app_extension"
           @spec = specifications[@identifier]
           @context.root = Dir.mktmpdir
         end

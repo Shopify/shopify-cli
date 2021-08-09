@@ -73,7 +73,7 @@ module Extension
         specification_attribute_sets.each do |attributes|
           next unless attributes.fetch(:identifier) == "subscription_management"
           attributes[:identifier] = "product_subscription"
-          attributes[:graphql_identifier] = "SUBSCRIPTION_MANAGEMENT"
+          attributes[:graphql_identifier] = "subscription_management"
         end
       end
 
