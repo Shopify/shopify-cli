@@ -1,6 +1,9 @@
 Unreleased
 ------
 
+Version 2.2.1
+------
+
 * [1432](https://github.com/Shopify/shopify-cli/pull/1432) New method for determining renderer package name
 
 Version 2.2.0
