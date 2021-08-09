@@ -1,6 +1,8 @@
 Unreleased
 ------
 
+* [1432](https://github.com/Shopify/shopify-cli/pull/1432) New method for determining renderer package name
+
 Version 2.2.0
 ------
 * [#1424](https://github.com/Shopify/shopify-cli/pull/1424/): Add `--resourceUrl` flag to extension serve command
