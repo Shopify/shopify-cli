@@ -4,7 +4,7 @@ module Extension
   module Models
     module SpecificationHandlers
       class CheckoutUiExtension < Default
-        PERMITTED_CONFIG_KEYS = [:metafields, :extension_points]
+        PERMITTED_CONFIG_KEYS = [:metafields, :extension_points, :name]
 
         def config(context)
           {
