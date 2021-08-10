@@ -85,7 +85,6 @@ describe Script::Layers::Infrastructure::Languages::ProjectCreator do
 
       # set_script_name
       File.expects(:read).with("package.json").returns("name = #{type.gsub("_", "-")}-default")
-      puts "ayyy"
       File.expects(:write).with("package.json", "name = #{script_name}")
 
       subject

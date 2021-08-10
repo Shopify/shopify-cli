@@ -19,16 +19,21 @@ module Script
                 language: language
               )
 
-              # the default value of this should be master
-              branch = "master"
-              # and be overwritten with a CLI argument - for now we'll just overwrite it here during dev
+              # to be overwritten with a CLI argument - for now we'll just overwrite it here during dev
               branch = "add-package-json"
+
+              # remove the need to pass the whole extension-point object to the infra layer
+              repo = extension_point.sdks.send(language).repo # is send() dangerous?
+              type = extension_point.dasherize_type
+              domain = extension_point.domain
 
               project_creator = Infrastructure::Languages::ProjectCreator
                 .for(
                   ctx, 
                   language, 
-                  extension_point, 
+                  domain, 
+                  type,
+                  repo,
                   script_name, 
                   project.id, 
                   branch

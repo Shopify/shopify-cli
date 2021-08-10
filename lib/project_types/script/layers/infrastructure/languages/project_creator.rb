@@ -68,12 +68,7 @@ module Script
           def set_script_name(config_file)
             upstream_name = "#{type.gsub("_", "-")}-default"
             contents = File.read(config_file)
-            puts contents
-            puts "HELLO"
-            puts upstream_name
-            puts script_name
             new_contents = contents.gsub(upstream_name, script_name)
-            puts new_contents
             File.write(config_file, new_contents)
           end
 
