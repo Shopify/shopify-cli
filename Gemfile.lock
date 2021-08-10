@@ -1,7 +1,7 @@
 PATH
   remote: .
   specs:
-    shopify-cli (2.2.1)
+    shopify-cli (2.2.2)
       listen (~> 3.5)
       theme-check (~> 1.1)
 

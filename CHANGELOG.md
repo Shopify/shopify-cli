@@ -1,5 +1,8 @@
 Unreleased
 ------
+
+Version 2.2.2
+------
 * [1382](https://github.com/Shopify/shopify-cli/pull/1382): Client side module upload for Scripts
 
 Version 2.2.1
