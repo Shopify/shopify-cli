@@ -5,7 +5,7 @@ module Script
         def self.install(ctx:, task_runner:)
           CLI::UI::Frame.open(ctx.message("script.project_deps.checking_with_npm")) do
             begin
-              if task_runner.dependencies_installed?
+              if task_runner.project_dependencies_installed?
                 ctx.puts(ctx.message("script.project_deps.none_required"))
               else
                 UI::StrictSpinner.spin(ctx.message("script.project_deps.installing")) do |spinner|

@@ -1,4 +1,5 @@
 # frozen_string_literal: true
+require 'byebug'
 
 module Script
   module Layers
@@ -8,6 +9,7 @@ module Script
           BYTECODE_FILE = "build/%{name}.wasm"
           METADATA_FILE = "build/metadata.json"
           SCRIPT_SDK_BUILD = "npm run build"
+          MIN_NPM_VERSION = "5.2.0"
 
           attr_reader :ctx, :script_name
 
@@ -26,13 +28,18 @@ module Script
           end
 
           def install_dependencies
-            check_node_version!
+            check_system_dependencies!
 
             output, status = ctx.capture2e("npm install --no-audit --no-optional --legacy-peer-deps --loglevel error")
             raise Errors::DependencyInstallError, output unless status.success?
           end
 
-          def dependencies_installed?
+          def check_system_dependencies!
+            check_tool_version!("npm", MIN_NPM_VERSION)
+            check_tool_version!("node", AssemblyScriptProjectCreator::MIN_NODE_VERSION)
+          end
+
+          def project_dependencies_installed?
             # Assuming if node_modules folder exist at root of script folder, all deps are installed
             ctx.dir_exist?("node_modules")
           end
@@ -49,16 +56,20 @@ module Script
 
           private
 
-          def check_node_version!
-            output, status = @ctx.capture2e("node", "--version")
-            raise Errors::DependencyInstallError, output unless status.success?
+          def check_tool_version!(tool, min_required_verison)
+            output, status = @ctx.capture2e(tool, "--version")
+            unless status.success?
+              raise Errors::MissingDependencyError,
+                    "#{tool} version must be >= v#{min_required_verison}. "\
+                    "No version of #{tool} installed."
+            end
 
             require "semantic/semantic"
-            version = ::Semantic::Version.new(output[1..-1])
-            unless version >= ::Semantic::Version.new(AssemblyScriptProjectCreator::MIN_NODE_VERSION)
-              raise Errors::DependencyInstallError,
-                "Node version must be >= v#{AssemblyScriptProjectCreator::MIN_NODE_VERSION}. "\
-                "Current version: #{output.strip}."
+            version = ::Semantic::Version.new(output.gsub(/^v/, ''))
+            unless version >= ::Semantic::Version.new(min_required_verison)
+              raise Errors::MissingDependencyError,
+                    "#{tool} version must be >= v#{min_required_verison}. "\
+                    "Current version: #{output.strip}."
             end
           end
 

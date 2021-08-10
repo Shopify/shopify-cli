@@ -115,6 +115,9 @@ module Script
           dependency_install_cause: "Something went wrong while installing the needed dependencies.",
           dependency_install_help: "Correct the errors and try again.",
 
+          missing_dependency_cause: "You're missing the required dependencies: %s.",
+          missing_dependency_help: "Correct the errors and try again.",
+
           failed_api_request_cause: "Something went wrong while communicating with Shopify.",
           failed_api_request_help: "Try again.",
 

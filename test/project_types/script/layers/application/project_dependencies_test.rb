@@ -27,7 +27,7 @@ describe Script::Layers::Application::ProjectDependencies do
 
     describe "when dependencies are already installed" do
       before do
-        task_runner.stubs(:dependencies_installed?).returns(true)
+        task_runner.stubs(:project_dependencies_installed?).returns(true)
       end
 
       it "should skip installation" do
@@ -38,7 +38,7 @@ describe Script::Layers::Application::ProjectDependencies do
 
     describe "when dependencies are not already installed" do
       before do
-        task_runner.stubs(:dependencies_installed?).returns(false)
+        task_runner.stubs(:project_dependencies_installed?).returns(false)
       end
 
       describe "when dependency installer succeeds" do

@@ -190,6 +190,11 @@ module Script
             cause_of_error: ShopifyCLI::Context.message("script.error.dependency_install_cause"),
             help_suggestion: ShopifyCLI::Context.message("script.error.dependency_install_help"),
           }
+        when Layers::Infrastructure::Errors::MissingDependencyError
+          {
+            cause_of_error: ShopifyCli::Context.message("script.error.missing_dependency_cause", e.message),
+            help_suggestion: ShopifyCli::Context.message("script.error.missing_dependency_help"),
+          }
         when Layers::Infrastructure::Errors::EmptyResponseError
           {
             cause_of_error: ShopifyCLI::Context.message("script.error.failed_api_request_cause"),
