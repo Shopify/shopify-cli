@@ -7,12 +7,15 @@ module Script
         class ProjectCreator
           include SmartProperties
           property! :ctx, accepts: ShopifyCli::Context
-          property! :extension_point, accepts: Domain::ExtensionPoint
+          property! :domain, accepts: String
+          property! :type, accepts: String
+          property! :repo, accepts: String
+          # property! :extension_point, accepts: Domain::ExtensionPoint
           property! :script_name, accepts: String
           property! :path_to_project, accepts: String
           property! :branch, accepts: String
 
-          def self.for(ctx, language, extension_point, script_name, path_to_project, branch)
+          def self.for(ctx, language, domain, type, repo, script_name, path_to_project, branch)
 
             project_creators = {
               "assemblyscript" => AssemblyScriptProjectCreator,
@@ -22,38 +25,31 @@ module Script
             raise Errors::ProjectCreatorNotFoundError unless project_creators[language]
             project_creators[language].new(
               ctx: ctx,
-              extension_point: extension_point,
+              domain: domain,
+              type: type,
+              repo: repo,
+              # extension_point: extension_point,
               script_name: script_name,
               path_to_project: path_to_project,
               branch: branch
             )
           end
 
-          # the sparse checkout process is common to all script types
-          def setup_dependencies
-            
-            setup_sparse_checkout
-
-            @config_files = {
-              "assemblyscript" => "package.json",
-              "rust" => "cargo.toml",
-            }
-
-            clean
-            set_script_name(@config_files["assemblyscript"])
-            
+          def self.config_file
+            # TODO: This error type may be wrong?
+            # http://chrisstump.online/2016/03/23/stop-abusing-notimplementederror/
+            raise NotImplementedError
           end
 
-          def setup_sparse_checkout
-            repo = extension_point.sdks.assemblyscript.repo
-            path = sparse_checkout_set_path
-            ShopifyCli::Git.sparse_checkout(repo, path, branch, ctx)
+          # the sparse checkout process is common to all script types
+          def setup_dependencies
+            setup_sparse_checkout
+            clean
+            set_script_name(self.class.config_file)            
           end
 
           # this should be passed to the ProjectCreator, we shouldn't have to do it manually ourselves
           def sparse_checkout_set_path
-            type = extension_point.dasherize_type
-            domain = extension_point.domain
 
             if domain.nil?
               "packages/default/extension-point-as-#{type}/assembly/sample"
@@ -62,11 +58,22 @@ module Script
             end
           end
 
-          def set_script_name(config_file)
+          private
 
-            upstream_name = "#{extension_point.type.gsub("_", "-")}-default"
+          def setup_sparse_checkout
+            path = sparse_checkout_set_path
+            ShopifyCli::Git.sparse_checkout(repo, path, branch, ctx)
+          end
+
+          def set_script_name(config_file)
+            upstream_name = "#{type.gsub("_", "-")}-default"
             contents = File.read(config_file)
-            new_contents = contents.sub(upstream_name, script_name)
+            puts contents
+            puts "HELLO"
+            puts upstream_name
+            puts script_name
+            new_contents = contents.gsub(upstream_name, script_name)
+            puts new_contents
             File.write(config_file, new_contents)
           end
 
