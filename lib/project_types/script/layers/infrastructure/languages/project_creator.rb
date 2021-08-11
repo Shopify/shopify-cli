@@ -15,7 +15,8 @@ module Script
           property! :path_to_project, accepts: String
           property! :branch, accepts: String
 
-          def self.for(ctx, language, domain, type, repo, script_name, path_to_project, branch)
+          def self.for(input)
+            ctx, language, domain, type, repo, script_name, path_to_project, branch = input
             project_creators = {
               "assemblyscript" => AssemblyScriptProjectCreator,
               "rust" => RustProjectCreator,

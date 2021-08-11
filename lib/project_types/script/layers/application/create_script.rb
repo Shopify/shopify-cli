@@ -27,17 +27,8 @@ module Script
               type = extension_point.dasherize_type
               domain = extension_point.domain
 
-              project_creator = Infrastructure::Languages::ProjectCreator
-                .for(
-                  ctx,
-                  language,
-                  domain,
-                  type,
-                  repo,
-                  script_name,
-                  project.id,
-                  branch
-                )
+              project_creator_input = [ctx, language, domain, type, repo, script_name, project.id, branch]
+              project_creator = Infrastructure::Languages::ProjectCreator.for(*project_creator_input)
 
               install_dependencies(ctx, language, script_name, project_creator)
               bootstrap(ctx, project_creator)
