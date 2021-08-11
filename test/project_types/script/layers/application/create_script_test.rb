@@ -101,9 +101,6 @@ describe Script::Layers::Application::CreateScript do
         Script::Layers::Application::CreateScript
           .expects(:install_dependencies)
           .with(context, language, script_name, project_creator)
-        Script::Layers::Application::CreateScript
-          .expects(:bootstrap)
-          .with(context, project_creator)
       end
 
       it "should create a new script" do
