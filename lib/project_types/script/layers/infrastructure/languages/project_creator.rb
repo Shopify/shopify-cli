@@ -16,7 +16,6 @@ module Script
           property! :branch, accepts: String
 
           def self.for(ctx, language, domain, type, repo, script_name, path_to_project, branch)
-
             project_creators = {
               "assemblyscript" => AssemblyScriptProjectCreator,
               "rust" => RustProjectCreator,
@@ -45,12 +44,11 @@ module Script
           def setup_dependencies
             setup_sparse_checkout
             clean
-            set_script_name(self.class.config_file)            
+            update_script_name(self.class.config_file)
           end
 
           # this should be passed to the ProjectCreator, we shouldn't have to do it manually ourselves
           def sparse_checkout_set_path
-
             if domain.nil?
               "packages/default/extension-point-as-#{type}/assembly/sample"
             else
@@ -65,7 +63,7 @@ module Script
             ShopifyCli::Git.sparse_checkout(repo, path, branch, ctx)
           end
 
-          def set_script_name(config_file)
+          def update_script_name(config_file)
             upstream_name = "#{type.gsub("_", "-")}-default"
             contents = File.read(config_file)
             new_contents = contents.gsub(upstream_name, script_name)
@@ -75,14 +73,13 @@ module Script
           def clean
             source = File.join(path_to_project, sparse_checkout_set_path)
             FileUtils.copy_entry(source, path_to_project)
-            ctx.rm_rf("packages") #TODO - needs to be language agnostic
+            ctx.rm_rf("packages") # TODO: - needs to be language agnostic
             ctx.rm_rf(".git")
           end
 
           def command_runner
             @command_runner ||= CommandRunner.new(ctx: ctx)
           end
-          
         end
       end
     end

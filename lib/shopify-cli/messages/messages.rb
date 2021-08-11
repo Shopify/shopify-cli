@@ -69,7 +69,7 @@ module ShopifyCli
             no_commits_made: "No git commits have been made. Please make at least one commit.",
             remote_not_added: "Remote could not be added.",
             sparse_checkout_not_enabled: "Sparse checkout could not be enabled.",
-            sparse_checkout_not_set:"Sparse checkout set command failed.",
+            sparse_checkout_not_set: "Sparse checkout set command failed.",
             pull_failed: "Pull failed.",
           },
 

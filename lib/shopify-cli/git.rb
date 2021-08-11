@@ -106,36 +106,34 @@ module ShopifyCli
       end
 
       def sparse_checkout(repo, set, branch, ctx)
-
         # init
-        output, status = ctx.capture2e("git init")
+        _, status = ctx.capture2e("git init")
         unless status.success?
           ctx.abort(ctx.message("core.git.error.repo_not_initiated"))
         end
 
         # setup_remote
-        output, status = ctx.capture2e("git remote add -f origin #{repo}")
+        _, status = ctx.capture2e("git remote add -f origin #{repo}")
         unless status.success?
           ctx.abort(ctx.message("core.git.error.remote_not_added"))
         end
-        
+
         # setup_sparse_checkout
-        output, status = ctx.capture2e("git config core.sparsecheckout true")
+        _, status = ctx.capture2e("git config core.sparsecheckout true")
         unless status.success?
           ctx.abort(ctx.message("core.git.error.sparse_checkout_not_enabled"))
         end
 
-        output, status = ctx.capture2e("git sparse-checkout set #{set}")
+        _, status = ctx.capture2e("git sparse-checkout set #{set}")
         unless status.success?
           ctx.abort(ctx.message("core.git.error.sparse_checkout_not_set"))
         end
 
         # pull
-        output, status = ctx.capture2e("git pull origin #{branch}")
+        _, status = ctx.capture2e("git pull origin #{branch}")
         unless status.success?
           ctx.abort(ctx.message("core.git.error.pull_failed"))
         end
-
       end
 
       private
