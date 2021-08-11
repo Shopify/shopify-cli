@@ -31,7 +31,6 @@ module Script
               project_creator = Infrastructure::Languages::ProjectCreator.for(*project_creator_input)
 
               install_dependencies(ctx, language, script_name, project_creator)
-              bootstrap(ctx, project_creator)
               script_project_repo.update_or_create_script_json(title: script_name, configuration_ui: !no_config_ui)
               project
             end
@@ -43,13 +42,6 @@ module Script
             task_runner = Infrastructure::Languages::TaskRunner.for(ctx, language, script_name)
             project_creator.setup_dependencies
             ProjectDependencies.install(ctx: ctx, task_runner: task_runner)
-          end
-
-          def bootstrap(ctx, _project_creator)
-            UI::StrictSpinner.spin(ctx.message("script.create.creating")) do |spinner|
-              # project_creator.bootstrap
-              spinner.update_title(ctx.message("script.create.created"))
-            end
           end
 
           def in_new_directory_context(ctx, directory)
