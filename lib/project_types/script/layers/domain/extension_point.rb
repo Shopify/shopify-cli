@@ -36,7 +36,6 @@ module Script
           end
 
           def for(language)
-            pp all.find {|ep| ep.class.language == language}
             all.find {|ep| ep.class.language == language}
           end
 
