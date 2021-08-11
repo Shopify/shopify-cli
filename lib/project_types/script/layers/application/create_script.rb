@@ -23,7 +23,7 @@ module Script
               branch = "add-package-json"
 
               # remove the need to pass the whole extension-point object to the infra layer
-              repo = extension_point.sdks.send(language).repo # is send() dangerous?
+              repo = extension_point.sdks.for(language).repo
               type = extension_point.dasherize_type
               domain = extension_point.domain
 

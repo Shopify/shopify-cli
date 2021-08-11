@@ -40,7 +40,7 @@ describe Script::Layers::Application::CreateScript do
       .with(context, language, script_name)
       .returns(task_runner)
 
-    repo = ep.sdks.send(language).repo # is send() dangerous?
+    repo = ep.sdks.for(language).repo
     type = ep.dasherize_type
     domain = ep.domain
 
