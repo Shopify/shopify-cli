@@ -29,15 +29,15 @@ module Script
 
               project_creator = Infrastructure::Languages::ProjectCreator
                 .for(
-                  ctx, 
-                  language, 
-                  domain, 
+                  ctx,
+                  language,
+                  domain,
                   type,
                   repo,
-                  script_name, 
-                  project.id, 
+                  script_name,
+                  project.id,
                   branch
-                  )
+                )
 
               install_dependencies(ctx, language, script_name, project_creator)
               bootstrap(ctx, project_creator)
@@ -54,7 +54,7 @@ module Script
             ProjectDependencies.install(ctx: ctx, task_runner: task_runner)
           end
 
-          def bootstrap(ctx, project_creator)
+          def bootstrap(ctx, _project_creator)
             UI::StrictSpinner.spin(ctx.message("script.create.creating")) do |spinner|
               # project_creator.bootstrap
               spinner.update_title(ctx.message("script.create.created"))

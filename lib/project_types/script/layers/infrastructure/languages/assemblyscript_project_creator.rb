@@ -6,7 +6,7 @@ module Script
       module Languages
         class AssemblyScriptProjectCreator < ProjectCreator
           MIN_NODE_VERSION = "14.5.0" # kept because task_runner uses this
-          
+
           def self.config_file
             "package.json"
           end

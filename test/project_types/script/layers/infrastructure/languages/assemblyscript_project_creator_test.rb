@@ -30,9 +30,4 @@ describe Script::Layers::Infrastructure::Languages::AssemblyScriptProjectCreator
   before do
     context.mkdir_p(script_name)
   end
-
-  def system_output(msg:, success:)
-    [msg, OpenStruct.new(success?: success)]
-  end
-  
 end

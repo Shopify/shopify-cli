@@ -24,17 +24,16 @@ describe Script::Layers::Infrastructure::Languages::ProjectCreator do
   end
   let(:project_creator) do
     Script::Layers::Infrastructure::Languages::ProjectCreator.for(
-      context, 
+      context,
       language,
       domain,
       type,
-      repo, 
-      script_name, 
+      repo,
+      script_name,
       script_name,
       branch
-      )
+    )
   end
-
 
   let(:fake_capture2e_response) { [nil, OpenStruct.new(success?: true)] }
   def system_output(msg:, success:)
@@ -48,7 +47,6 @@ describe Script::Layers::Infrastructure::Languages::ProjectCreator do
     end
 
     describe "when the script language does match an entry in the registry" do
-
       it "should return the entry from the registry" do
         assert_instance_of(Script::Layers::Infrastructure::Languages::AssemblyScriptProjectCreator, subject)
       end
@@ -67,7 +65,6 @@ describe Script::Layers::Infrastructure::Languages::ProjectCreator do
     subject { project_creator.setup_dependencies }
 
     it "should setup dependencies" do
-
       # setup_sparse_checkout
       ShopifyCli::Git
         .expects(:sparse_checkout)
@@ -90,5 +87,4 @@ describe Script::Layers::Infrastructure::Languages::ProjectCreator do
       subject
     end
   end
-
 end

@@ -48,7 +48,7 @@ module TestHelpers
 
     def example_config(type)
       {
-        "domain" => 'fake-domain',
+        "domain" => "fake-domain",
         "assemblyscript" => {
           "repo" => "fake-repo",
           "package" => type,

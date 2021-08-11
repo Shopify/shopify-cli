@@ -119,7 +119,7 @@ module ShopifyCli
         .expects(:capture2e)
         .with("git remote add -f origin #{repo}")
         .once
-        .returns(["", @status_mock[:true]])        
+        .returns(["", @status_mock[:true]])
       @context
         .expects(:capture2e)
         .with("git config core.sparsecheckout true")
@@ -136,8 +136,6 @@ module ShopifyCli
 
       ShopifyCli::Git.sparse_checkout(repo, set, branch, @context)
     end
-    
-    
 
     private
 
