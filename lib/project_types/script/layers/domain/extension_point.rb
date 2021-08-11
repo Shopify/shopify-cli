@@ -35,6 +35,11 @@ module Script
             [assemblyscript, rust].compact
           end
 
+          def for(language)
+            pp all.find {|ep| ep.class.language == language}
+            all.find {|ep| ep.class.language == language}
+          end
+
           def assemblyscript
             @assemblyscript ||= new_sdk(ExtensionPointAssemblyScriptSDK)
           end
