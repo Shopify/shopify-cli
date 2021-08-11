@@ -44,9 +44,11 @@ describe Script::Layers::Application::CreateScript do
     type = ep.dasherize_type
     domain = ep.domain
 
+    input = [context, language, domain, type, repo, script_name, script_project.id, branch]
+
     Script::Layers::Infrastructure::Languages::ProjectCreator
       .stubs(:for)
-      .with(context, language, domain, type, repo, script_name, script_project.id, branch)
+      .with(input)
       .returns(project_creator)
   end
 

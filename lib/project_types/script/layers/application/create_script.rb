@@ -28,7 +28,7 @@ module Script
               domain = extension_point.domain
 
               project_creator_input = [ctx, language, domain, type, repo, script_name, project.id, branch]
-              project_creator = Infrastructure::Languages::ProjectCreator.for(*project_creator_input)
+              project_creator = Infrastructure::Languages::ProjectCreator.for(project_creator_input)
 
               install_dependencies(ctx, language, script_name, project_creator)
               script_project_repo.update_or_create_script_json(title: script_name, configuration_ui: !no_config_ui)
