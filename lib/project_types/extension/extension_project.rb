@@ -14,6 +14,24 @@ module Extension
         )
       end
 
+      def update_env_file(context:, **updates)
+        current_config = {
+          title: current.title,
+          shop: current.env.shop,
+          api_key: current.app.api_key,
+          api_secret: current.app.secret,
+          registration_id: current.registration_id,
+          registration_uuid: current.registration_uuid,
+          resource_url: current.resource_url,
+        }
+
+        write_env_file(
+          context: context,
+          **current_config,
+          **updates
+        )
+      end
+
       def write_env_file(
         context:,
         title:,
@@ -21,11 +39,13 @@ module Extension
         api_secret: "",
         registration_id: nil,
         registration_uuid: nil,
-        resource_url: nil
+        resource_url: nil,
+        shop: nil
       )
         ShopifyCli::Resources::EnvFile.new(
           api_key: api_key,
           secret: api_secret,
+          shop: shop,
           extra: {
             ExtensionProjectKeys::TITLE_KEY => title,
             ExtensionProjectKeys::REGISTRATION_ID_KEY => registration_id,

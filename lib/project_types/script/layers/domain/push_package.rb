@@ -17,7 +17,7 @@ module Script
           uuid:,
           extension_point_type:,
           script_content:,
-          compiled_type:,
+          compiled_type: nil,
           metadata:,
           script_json:
         )
@@ -35,7 +35,6 @@ module Script
             uuid: @uuid,
             extension_point_type: @extension_point_type,
             script_content: @script_content,
-            compiled_type: @compiled_type,
             api_key: api_key,
             force: force,
             metadata: @metadata,

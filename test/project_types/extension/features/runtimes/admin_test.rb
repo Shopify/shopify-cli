@@ -15,6 +15,7 @@ module Extension
             :port,
             :public_url,
             :renderer_version,
+            :resource_url,
             :shop,
             :uuid,
           ]

@@ -237,6 +237,11 @@ module Script
             cause_of_error: ShopifyCli::Context.message("script.error.web_assembly_binary_not_found"),
             help_suggestion: ShopifyCli::Context.message("script.error.web_assembly_binary_not_found_suggestion"),
           }
+        when Layers::Infrastructure::Errors::ScriptUploadError
+          {
+            cause_of_error: ShopifyCli::Context.message("script.error.script_upload_cause"),
+            help_suggestion: ShopifyCli::Context.message("script.error.script_upload_help"),
+          }
         end
       end
     end

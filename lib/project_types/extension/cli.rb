@@ -40,12 +40,14 @@ module Extension
     autoload :ChooseNextAvailablePort, Project.project_filepath("tasks/choose_next_available_port")
     autoload :FindNpmPackages, Project.project_filepath("tasks/find_npm_packages")
     autoload :GetExtensions, Project.project_filepath("tasks/get_extensions")
+    autoload :GetProduct, Project.project_filepath("tasks/get_product")
 
     module Converters
       autoload :RegistrationConverter, Project.project_filepath("tasks/converters/registration_converter")
       autoload :VersionConverter, Project.project_filepath("tasks/converters/version_converter")
       autoload :ValidationErrorConverter, Project.project_filepath("tasks/converters/validation_error_converter")
       autoload :AppConverter, Project.project_filepath("tasks/converters/app_converter")
+      autoload :ProductConverter, Project.project_filepath("tasks/converters/product_converter")
     end
   end
 
@@ -83,7 +85,6 @@ module Extension
   module Models
     module SpecificationHandlers
       autoload :Default, Project.project_filepath("models/specification_handlers/default")
-      autoload :CheckoutArgoExtension, Project.project_filepath("models/specification_handlers/checkout_ui_extension")
     end
 
     autoload :App, Project.project_filepath("models/app")
@@ -94,6 +95,7 @@ module Extension
     autoload :Specifications, Project.project_filepath("models/specifications")
     autoload :LazySpecificationHandler, Project.project_filepath("models/lazy_specification_handler")
     autoload :NpmPackage, Project.project_filepath("models/npm_package")
+    autoload :Product, Project.project_filepath("models/product")
   end
 
   autoload :ExtensionProjectKeys, Project.project_filepath("extension_project_keys")

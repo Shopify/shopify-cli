@@ -3,6 +3,22 @@ Unreleased
 
 * [#1386](https://github.com/Shopify/shopify-cli/pull/1386): Update Theme-Check to 1.2
 
+Version 2.2.2
+------
+* [1382](https://github.com/Shopify/shopify-cli/pull/1382): Client side module upload for Scripts
+
+Version 2.2.1
+------
+
+* [1432](https://github.com/Shopify/shopify-cli/pull/1432) New method for determining renderer package name
+
+Version 2.2.0
+------
+* [#1424](https://github.com/Shopify/shopify-cli/pull/1424/): Add `--resourceUrl` flag to extension serve command
+* [#1419](https://github.com/Shopify/shopify-cli/pull/1419): Remove analytics prompt when used in CI
+* [#1418](https://github.com/Shopify/shopify-cli/pull/1418): Auto configure resource URL for Checkout Extensions
+* [#1399](https://github.com/Shopify/shopify-cli/pull/1399): Fix error when running `shopify extension serve` in a theme app extension project
+
 Version 2.1.0
 -------------
 * [#1357](https://github.com/Shopify/shopify-cli/pull/1357): Update Theme-Check to 1.1

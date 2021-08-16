@@ -43,7 +43,7 @@ module Theme
         when "development"
           "blue"
         else
-          "grey"
+          "italic"
         end
 
         tags = ["{{#{color}:[#{theme.role}]}}"]

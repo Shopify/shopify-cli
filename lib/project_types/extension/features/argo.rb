@@ -19,16 +19,6 @@ module Extension
       YARN_RUN_SCRIPT_NAME = %w(build).freeze
       private_constant :YARN_INSTALL_COMMAND, :YARN_INSTALL_PARAMETERS, :YARN_RUN_COMMAND, :YARN_RUN_SCRIPT_NAME
 
-      UI_EXTENSIONS_CHECKOUT = "@shopify/checkout-ui-extensions"
-      UI_EXTENSIONS_ADMIN = "@shopify/admin-ui-extensions"
-      UI_EXTENSIONS_POST_PURCHASE = "@shopify/post-purchase-ui-extensions"
-
-      PACKAGE_NAMES = [
-        UI_EXTENSIONS_CHECKOUT,
-        UI_EXTENSIONS_ADMIN,
-        UI_EXTENSIONS_POST_PURCHASE,
-      ].freeze
-
       def create(directory_name, identifier, context)
         Features::ArgoSetup.new(git_template: git_template).call(directory_name, identifier, context)
       end
@@ -54,7 +44,7 @@ module Extension
       def renderer_package(context)
         js_system = ShopifyCli::JsSystem.new(ctx: context)
         Tasks::FindNpmPackages
-          .exactly_one_of(*PACKAGE_NAMES, js_system: js_system)
+          .exactly_one_of(renderer_package_name, js_system: js_system)
           .unwrap { |err| raise err }
       rescue Extension::PackageResolutionFailed
         context.abort(

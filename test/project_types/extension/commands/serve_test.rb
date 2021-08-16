@@ -97,6 +97,18 @@ module Extension
         serve.call([], "serve")
       end
 
+      def test_resource_url_is_forwarded_to_specification_handler_if_one_is_provided
+        serve = ::Extension::Command::Serve.new(@context)
+        expected_resource_url = "foo/bar"
+        stub_specification_handler_options(serve)
+
+        serve.specification_handler
+          .expects(:serve)
+          .with(context: @context, tunnel_url: nil, port: 39351, resource_url: expected_resource_url)
+        serve.options.flags[:resource_url] = expected_resource_url
+        serve.call([], "serve")
+      end
+
       private
 
       def stub_specification_handler_options(serve, choose_port: false, establish_tunnel: false)

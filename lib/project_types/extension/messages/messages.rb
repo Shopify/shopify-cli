@@ -166,11 +166,17 @@ module Extension
       tasks: {
         errors: {
           parse_error: "Unable to parse response from Partners Dashboard.",
+          store_error: "There was an error getting store data. Try again later.",
         },
       },
       errors: {
         unknown_type: "Unknown extension type %s",
         package_not_found: "`%s` package not found.",
+      },
+      warnings: {
+        resource_url_auto_generation_failed: "{{*}} {{yellow:Warning:}} Unable to auto generate " \
+        "the extension resource URL because %s does not have any products. " \
+        "Please run {{bold:shopify populate products}} to generate sample products.",
       },
     }
 
@@ -199,6 +205,9 @@ module Extension
               {{v}} A new folder was generated at {{green:./%s}}.
               {{*}} You’re ready to start building {{green:%s}}!
             MESSAGE
+          },
+          serve: {
+            unsupported: "shopify extension serve is not supported for theme app extensions",
           },
         },
       },

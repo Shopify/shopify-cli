@@ -12,6 +12,7 @@ module Extension
       property! :port, accepts: Integer, default: 39351
       property  :tunnel_url, accepts: String, default: nil
       property! :js_system, accepts: ->(jss) { jss.respond_to?(:call) }, default: ShopifyCli::JsSystem
+      property :resource_url, accepts: String, default: nil
 
       def call
         validate_env!
@@ -20,6 +21,10 @@ module Extension
           next if start_server
           context.abort(context.message("serve.serve_failure_message"))
         end
+      end
+
+      def resource_url
+        super || ExtensionProject.current(force_reload: true).resource_url
       end
 
       private
@@ -57,6 +62,7 @@ module Extension
         ShopifyCli::Tasks::EnsureDevStore.call(context) if required_fields.include?(:shop)
 
         project = ExtensionProject.current
+        ensure_resource_resource_url! if specification_handler.supplies_resource_url?
 
         return if required_fields.all? do |field|
           value = project.env.public_send(field)
@@ -68,7 +74,6 @@ module Extension
 
       def options
         project = ExtensionProject.current
-        resource_url = project.resource_url
 
         @serve_options ||= [].tap do |options|
           options << "--port=#{port}" if argo_runtime.supports?(:port)
@@ -80,6 +85,28 @@ module Extension
           options << "--name=#{project.title}" if argo_runtime.supports?(:name)
           options << "--resourceUrl=#{resource_url}" if !resource_url.nil? && argo_runtime.supports?(:resource_url)
         end
+      end
+
+      def ensure_resource_resource_url!
+        project = ExtensionProject.current(force_reload: true)
+
+        ShopifyCli::Result
+          .wrap(project.resource_url)
+          .rescue { specification_handler.build_resource_url(shop: project.env.shop, context: context) }
+          .then(&method(:persist_resource_url))
+          .unwrap do |nil_or_exception|
+            case nil_or_exception
+            when nil
+              context.warn(context.message("warnings.resource_url_auto_generation_failed", project.env.shop))
+            else
+              context.abort(nil_or_exception)
+            end
+          end
+      end
+
+      def persist_resource_url(resource_url)
+        ExtensionProject.update_env_file(context: context, resource_url: resource_url)
+        resource_url
       end
     end
   end

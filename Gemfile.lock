@@ -1,7 +1,7 @@
 PATH
   remote: .
   specs:
-    shopify-cli (2.1.0)
+    shopify-cli (2.2.2)
       listen (~> 3.5)
       theme-check (~> 1.2)
 
@@ -108,4 +108,4 @@ DEPENDENCIES
   webmock
 
 BUNDLED WITH
-   2.1.4
+   2.2.22

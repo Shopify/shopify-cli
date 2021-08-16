@@ -1,0 +1,9 @@
+mutation moduleUploadUrlGenerate {
+  moduleUploadUrlGenerate {
+    url
+    userErrors {
+      field
+      message
+    }
+  }
+}
