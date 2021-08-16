@@ -1,0 +1,9 @@
+{
+  "version": "1",
+  "title": "test_pay_1",
+  "configurationUi": true,
+  "configuration": {
+    "schema": [],
+    "type": "single"
+  }
+}
