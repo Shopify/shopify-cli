@@ -1,6 +1,8 @@
 Unreleased
 ------
 
+* [#1386](https://github.com/Shopify/shopify-cli/pull/1386): Update Theme-Check to 1.2
+
 Version 2.2.2
 ------
 * [1382](https://github.com/Shopify/shopify-cli/pull/1382): Client side module upload for Scripts
