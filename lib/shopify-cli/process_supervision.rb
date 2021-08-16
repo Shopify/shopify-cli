@@ -59,10 +59,20 @@ module ShopifyCli
       def start(identifier, args)
         return for_ident(identifier) if running?(identifier)
 
-        # Windows doesn't support forking process without extra gems, so we resort to spawning a new child process -
-        # that means that it dies along with the original process if it is interrupted. On UNIX, we fork the process so
-        # that it doesn't have to be restarted on every run.
-        if Context.new.windows?
+        # Some systems don't support forking process without extra gems, so we resort to spawning a new child process -
+        # that means that it dies along with the original process if it is interrupted. If possible, we fork the process
+        # so that it doesn't have to be restarted on every run.
+        if Process.respond_to?(:fork)
+          fork do
+            pid_file = new(identifier, pid: Process.pid)
+            pid_file.write
+            STDOUT.reopen(pid_file.log_path, "w")
+            STDERR.reopen(pid_file.log_path, "w")
+            STDIN.reopen("/dev/null", "r")
+            Process.setsid
+            exec(*args)
+          end
+        else
           pid_file = new(identifier)
 
           # Make sure the file exists and is empty, otherwise Windows fails
@@ -77,16 +87,6 @@ module ShopifyCli
           pid_file.write
 
           Process.detach(pid)
-        else
-          fork do
-            pid_file = new(identifier, pid: Process.pid)
-            pid_file.write
-            STDOUT.reopen(pid_file.log_path, "w")
-            STDERR.reopen(pid_file.log_path, "w")
-            STDIN.reopen("/dev/null", "r")
-            Process.setsid
-            exec(*args)
-          end
         end
 
         sleep(0.1)
