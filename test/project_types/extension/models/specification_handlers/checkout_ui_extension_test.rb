@@ -42,9 +42,10 @@ module Extension
           script_content = "alert(true)"
           metafields = [{ key: "a-key", namespace: "a-namespace" }]
           extension_points = ["Checkout::Feature::Render"]
+          name = "Extension name"
 
           initial_config = { script_content: script_content }
-          yaml_config = { "metafields": metafields, "extension_points": extension_points }
+          yaml_config = { "extension_points": extension_points, "metafields": metafields, "name": name }
 
           Features::Argo.any_instance.expects(:config).with(@context).once.returns(initial_config)
           Features::ArgoConfig.stubs(:parse_yaml).returns(yaml_config)
@@ -52,6 +53,7 @@ module Extension
           config = @checkout_ui_extension.config(@context)
           assert_equal(metafields, config[:metafields])
           assert_equal(extension_points, config[:extension_points])
+          assert_equal(name, config[:name])
           assert_equal(script_content, config[:script_content])
         end
 
@@ -59,7 +61,7 @@ module Extension
           Features::Argo.any_instance.stubs(:config).returns({})
           Features::ArgoConfig
             .expects(:parse_yaml)
-            .with(@context, [:metafields, :extension_points])
+            .with(@context, [:extension_points, :metafields, :name])
             .once
             .returns({})
 
