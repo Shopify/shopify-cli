@@ -59,16 +59,16 @@ module Script
             output, status = @ctx.capture2e(tool, "--version")
             unless status.success?
               raise Errors::MissingDependencyError,
-                    "#{tool} version must be >= v#{min_required_verison}. "\
-                    "No version of #{tool} installed."
+                "#{tool} version must be >= v#{min_required_verison}. "\
+                "No version of #{tool} installed."
             end
 
             require "semantic/semantic"
-            version = ::Semantic::Version.new(output.gsub(/^v/, ''))
+            version = ::Semantic::Version.new(output.gsub(/^v/, ""))
             unless version >= ::Semantic::Version.new(min_required_verison)
               raise Errors::MissingDependencyError,
-                    "#{tool} version must be >= v#{min_required_verison}. "\
-                    "Current version: #{output.strip}."
+                "#{tool} version must be >= v#{min_required_verison}. "\
+                "Current version: #{output.strip}."
             end
           end
 
