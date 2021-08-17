@@ -22,9 +22,22 @@ describe Script::Layers::Infrastructure::Languages::ProjectCreator do
       },
     }
   end
+
+  let(:properties) do
+    OpenStruct.new(
+      ctx: context,
+      language: language,
+      domain: domain,
+      type: type,
+      repo: repo,
+      script_name: script_name,
+      path_to_project: "/path",
+      branch: branch
+    )
+  end
+
   let(:project_creator) do
-    input = [context, language, domain, type, repo, script_name, script_name, branch]
-    Script::Layers::Infrastructure::Languages::ProjectCreator.for(input)
+    Script::Layers::Infrastructure::Languages::ProjectCreator.for(properties)
   end
 
   let(:fake_capture2e_response) { [nil, OpenStruct.new(success?: true)] }
@@ -34,9 +47,8 @@ describe Script::Layers::Infrastructure::Languages::ProjectCreator do
 
   describe ".for" do
     subject do
-      input = [@context, language, domain, type, repo, script_name, "/path", "branch-name"]
       Script::Layers::Infrastructure::Languages::ProjectCreator
-        .for(input)
+        .for(properties)
     end
 
     describe "when the script language does match an entry in the registry" do
