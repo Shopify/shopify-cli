@@ -10,28 +10,25 @@ module Script
           property! :domain, accepts: String
           property! :type, accepts: String
           property! :repo, accepts: String
-          # property! :extension_point, accepts: Domain::ExtensionPoint
           property! :script_name, accepts: String
           property! :path_to_project, accepts: String
           property! :branch, accepts: String
 
-          def self.for(input)
-            ctx, language, domain, type, repo, script_name, path_to_project, branch = input
+          def self.for(properties)
             project_creators = {
               "assemblyscript" => AssemblyScriptProjectCreator,
               "rust" => RustProjectCreator,
             }
 
-            raise Errors::ProjectCreatorNotFoundError unless project_creators[language]
-            project_creators[language].new(
-              ctx: ctx,
-              domain: domain,
-              type: type,
-              repo: repo,
-              # extension_point: extension_point,
-              script_name: script_name,
-              path_to_project: path_to_project,
-              branch: branch
+            raise Errors::ProjectCreatorNotFoundError unless project_creators[properties.language]
+            project_creators[properties.language].new(
+              ctx: properties.ctx,
+              domain: properties.domain,
+              type: properties.type,
+              repo: properties.repo,
+              script_name: properties.script_name,
+              path_to_project: properties.path_to_project,
+              branch: properties.branch
             )
           end
 
