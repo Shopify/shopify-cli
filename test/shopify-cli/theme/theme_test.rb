@@ -88,6 +88,25 @@ module ShopifyCli
           "\"theme_support_url\":\"https:\\/\\/support.shopify.com\\/\"}]"
         assert_equal(Digest::MD5.hexdigest(normalized), @theme["config/settings_schema.json"].checksum)
       end
+
+      def test_read_binary_file
+        file = @theme["assets/logo.png"]
+
+        content = file.read
+        assert_equal(file.path.size, content.bytesize)
+      end
+
+      def test_write_binary_file
+        file = @theme["assets/logo.png"]
+        new_file = @theme["assets/logo2.png"]
+
+        begin
+          new_file.write(file.read)
+          assert_equal(file.path.size, new_file.path.size)
+        ensure
+          ::File.delete(new_file.path) if new_file.exist?
+        end
+      end
     end
   end
 end
