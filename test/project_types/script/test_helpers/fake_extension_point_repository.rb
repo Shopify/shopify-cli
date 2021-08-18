@@ -36,8 +36,6 @@ module TestHelpers
       @cache.keys
     end
 
-    private
-
     def beta_config(type)
       example_config(type).merge({ "beta" => true })
     end

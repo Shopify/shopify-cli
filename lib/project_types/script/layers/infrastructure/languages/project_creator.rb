@@ -20,21 +20,19 @@ module Script
               "rust" => RustProjectCreator,
             }
 
-            raise Errors::ProjectCreatorNotFoundError unless project_creators[properties.language]
-            project_creators[properties.language].new(
-              ctx: properties.ctx,
-              domain: properties.domain,
-              type: properties.type,
-              repo: properties.repo,
-              script_name: properties.script_name,
-              path_to_project: properties.path_to_project,
-              branch: properties.branch
+            raise Errors::ProjectCreatorNotFoundError unless project_creators[properties[:language]]
+            project_creators[properties[:language]].new(
+              ctx: properties[:ctx],
+              domain: properties[:domain],
+              type: properties[:type],
+              repo: properties[:repo],
+              script_name: properties[:script_name],
+              path_to_project: properties[:path_to_project],
+              branch: properties[:branch]
             )
           end
 
           def self.config_file
-            # TODO: This error type may be wrong?
-            # http://chrisstump.online/2016/03/23/stop-abusing-notimplementederror/
             raise NotImplementedError
           end
 

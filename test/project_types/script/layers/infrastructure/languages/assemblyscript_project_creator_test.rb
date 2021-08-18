@@ -43,7 +43,7 @@ describe Script::Layers::Infrastructure::Languages::AssemblyScriptProjectCreator
     context.mkdir_p(script_name)
   end
 
-  describe "setup_dependencies" do
+  describe ".setup_dependencies" do
     subject { project_creator.setup_dependencies }
 
     it "should setup dependencies" do
@@ -54,11 +54,11 @@ describe Script::Layers::Infrastructure::Languages::AssemblyScriptProjectCreator
 
       context
         .expects(:capture2e)
-        .with("npm --userconfig ./.npmrc config set @shopify:registry https://registry.npmjs.com")
+        .with(Script::Layers::Infrastructure::Languages::AssemblyScriptProjectCreator::NPM_SET_REGISTRY_COMMAND)
         .returns(fake_capture2e_response)
       context
         .expects(:capture2e)
-        .with("npm --userconfig ./.npmrc config set engine-strict true")
+        .with(Script::Layers::Infrastructure::Languages::AssemblyScriptProjectCreator::NPM_SET_ENGINE_STRICT_COMMAND)
         .returns(fake_capture2e_response)
 
       subject
