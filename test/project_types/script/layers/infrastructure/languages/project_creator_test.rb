@@ -8,7 +8,6 @@ describe Script::Layers::Infrastructure::Languages::ProjectCreator do
   let(:language) { "assemblyscript" }
   let(:context) { TestHelpers::FakeContext.new }
   let(:extension_point_type) { "payment_methods" }
-  let(:extension_point) { Script::Layers::Domain::ExtensionPoint.new(extension_point_type, extension_point_config) }
   let(:domain) { "fake-domain" }
   let(:type) { extension_point_type }
   let(:repo) { extension_point_config["assemblyscript"]["repo"] }
@@ -24,7 +23,7 @@ describe Script::Layers::Infrastructure::Languages::ProjectCreator do
   end
 
   let(:properties) do
-    OpenStruct.new(
+    {
       ctx: context,
       language: language,
       domain: domain,
@@ -32,8 +31,8 @@ describe Script::Layers::Infrastructure::Languages::ProjectCreator do
       repo: repo,
       script_name: script_name,
       path_to_project: "/path",
-      branch: branch
-    )
+      branch: branch,
+    }
   end
 
   let(:project_creator) do
@@ -74,7 +73,7 @@ describe Script::Layers::Infrastructure::Languages::ProjectCreator do
       ShopifyCli::Git
         .expects(:sparse_checkout)
         .with(
-          extension_point.sdks.assemblyscript.repo,
+          repo,
           project_creator.sparse_checkout_set_path,
           branch,
           context

@@ -27,7 +27,17 @@ module Script
               type = extension_point.dasherize_type
               domain = extension_point.domain
 
-              project_creator_input = [ctx, language, domain, type, repo, script_name, project.id, branch]
+              project_creator_input = {
+                ctx: ctx,
+                language: language,
+                domain: domain,
+                type: type,
+                repo: repo,
+                script_name: script_name,
+                path_to_project: project.id,
+                branch: branch,
+              }
+
               project_creator = Infrastructure::Languages::ProjectCreator.for(project_creator_input)
 
               install_dependencies(ctx, language, script_name, project_creator)

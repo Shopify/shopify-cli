@@ -5,11 +5,7 @@ require "project_types/script/test_helper"
 describe Script::Layers::Application::CreateScript do
   include TestHelpers::FakeFS
 
-  let(:language) { "assemblyscript" }
-  let(:extension_point_type) { "payment_methods" }
-  let(:branch) { "add-package-json" } # TODO: update once create script can take a command line argument
-
-  let(:script_name) { "name" }
+  let(:script_name) { "path" }
   let(:compiled_type) { "wasm" }
   let(:no_config_ui) { false }
   let(:script_json_filename) { "script.json" }
@@ -18,6 +14,15 @@ describe Script::Layers::Application::CreateScript do
   let(:script_project_repository) { TestHelpers::FakeScriptProjectRepository.new }
   let(:ep) { extension_point_repository.get_extension_point(extension_point_type) }
   let(:task_runner) { stub(compiled_type: compiled_type) }
+
+  let(:language) { "assemblyscript" }
+  let(:extension_point_type) { "payment-methods" }
+  let(:example_config) { extension_point_repository.example_config(extension_point_type) }
+
+  let(:branch) { "add-package-json" } # TODO: update once create script can take a command line argument
+  let(:repo) { example_config[language]["repo"] }
+  let(:type) { example_config[language][extension_point_type] }
+  let(:domain) { example_config["domain"] }
 
   let(:project_creator) { stub }
   let(:context) { TestHelpers::FakeContext.new }
@@ -30,6 +35,19 @@ describe Script::Layers::Application::CreateScript do
     )
   end
 
+  let(:properties) do
+    {
+      ctx: context,
+      language: language,
+      domain: domain,
+      type: extension_point_type,
+      repo: repo,
+      script_name: script_name,
+      path_to_project: script_project.id,
+      branch: branch,
+    }
+  end
+
   before do
     Script::Layers::Infrastructure::ExtensionPointRepository.stubs(:new).returns(extension_point_repository)
     Script::Layers::Infrastructure::ScriptProjectRepository.stubs(:new).returns(script_project_repository)
@@ -39,16 +57,9 @@ describe Script::Layers::Application::CreateScript do
       .stubs(:for)
       .with(context, language, script_name)
       .returns(task_runner)
-
-    repo = ep.sdks.for(language).repo
-    type = ep.dasherize_type
-    domain = ep.domain
-
-    input = [context, language, domain, type, repo, script_name, script_project.id, branch]
-
     Script::Layers::Infrastructure::Languages::ProjectCreator
       .stubs(:for)
-      .with(input)
+      .with(properties)
       .returns(project_creator)
   end
 
