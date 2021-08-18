@@ -165,7 +165,6 @@ describe Script::Layers::Infrastructure::Languages::AssemblyScriptTaskRunner do
         subject
       end
     end
-
   end
 
   describe ".metadata" do
@@ -210,8 +209,8 @@ describe Script::Layers::Infrastructure::Languages::AssemblyScriptTaskRunner do
     describe "when npm is not installed" do
       it "should raise error" do
         ctx.expects(:capture2e)
-           .with("npm", "--version")
-           .returns([nil, mock(success?: false)])
+          .with("npm", "--version")
+          .returns([nil, mock(success?: false)])
         assert_raises Script::Layers::Infrastructure::Errors::NoDependencyInstalledError do
           subject
         end
@@ -221,10 +220,10 @@ describe Script::Layers::Infrastructure::Languages::AssemblyScriptTaskRunner do
     describe "when node is not installed" do
       it "should raise error" do
         ctx.expects(:capture2e)
-           .with("npm", "--version")
-           .returns(["5.2.0", mock(success?: true)])
+          .with("npm", "--version")
+          .returns(["5.2.0", mock(success?: true)])
         ctx.expects(:capture2e)
-           .with("node", "--version")
+          .with("node", "--version")
           .returns([nil, mock(success?: false)])
         assert_raises Script::Layers::Infrastructure::Errors::NoDependencyInstalledError do
           subject

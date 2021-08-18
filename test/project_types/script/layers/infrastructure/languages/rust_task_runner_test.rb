@@ -115,8 +115,8 @@ describe Script::Layers::Infrastructure::Languages::RustTaskRunner do
     describe "when card is not installed" do
       it "should raise error" do
         ctx.expects(:capture2e)
-           .with("cargo", "--version")
-           .returns([nil, mock(success?: false)])
+          .with("cargo", "--version")
+          .returns([nil, mock(success?: false)])
         assert_raises Script::Layers::Infrastructure::Errors::NoDependencyInstalledError do
           subject
         end
