@@ -2,10 +2,13 @@
 require "thread"
 require "json"
 require "base64"
+require "observer"
 
 module ShopifyCli
   module Theme
     class Syncer
+      include Observable
+
       class Operation < Struct.new(:method, :file)
         def to_s
           "#{method} #{file&.relative_path}"
@@ -218,6 +221,11 @@ module ShopifyCli
         )
       ensure
         @pending.delete(operation)
+
+        if @pending.size == 0
+          changed
+          notify_observers(true);
+        end
       end
 
       def update(file)

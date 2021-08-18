@@ -30,7 +30,7 @@ module ShopifyCli
           # Setup the middleware stack. Mimics Rack::Builder / config.ru, but in reverse order
           @app = Proxy.new(ctx, theme: theme, syncer: @syncer)
           @app = LocalAssets.new(ctx, @app, theme: theme)
-          @app = HotReload.new(ctx, @app, theme: theme, watcher: watcher, ignore_filter: ignore_filter)
+          @app = HotReload.new(ctx, @app, theme: theme, watcher: watcher, syncer: @syncer, ignore_filter: ignore_filter)
           stopped = false
 
           theme.ensure_exists!

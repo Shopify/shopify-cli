@@ -4,13 +4,15 @@ module ShopifyCli
   module Theme
     module DevServer
       class HotReload
-        def initialize(ctx, app, theme:, watcher:, ignore_filter: nil)
+        def initialize(ctx, app, theme:, watcher:, syncer:, ignore_filter: nil)
           @ctx = ctx
           @app = app
           @theme = theme
           @streams = SSE::Streams.new
           @watcher = watcher
           @watcher.add_observer(self, :notify_streams_of_file_change)
+          @syncer = syncer
+          @syncer.add_observer(self, :notify_streams_of_upload_complete)
           @ignore_filter = ignore_filter
         end
 
@@ -39,6 +41,14 @@ module ShopifyCli
           ))
 
           @ctx.debug("[HotReload] Modified #{files.join(", ")}")
+        end
+
+        def notify_streams_of_upload_complete(complete)
+          @streams.broadcast(JSON.generate(
+            uploadComplete: complete
+          ))
+
+          @ctx.debug("[HotReload] upload complete")
         end
 
         private
