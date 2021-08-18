@@ -112,11 +112,14 @@ module Script
           build_error_cause: "Something went wrong while building the script.",
           build_error_help: "Correct the errors and try again.",
 
-          dependency_install_cause: "Something went wrong while installing the needed dependencies.",
-          dependency_install_help: "Correct the errors and try again.",
+          dependency_installation_cause: "Something went wrong while installing the needed dependencies.",
+          dependency_installation_help: "Correct the errors and try again.",
 
-          missing_dependency_cause: "You're missing the required dependencies: %s.",
-          missing_dependency_help: "Correct the errors and try again.",
+          no_dependency_installed_cause: "%s version must be >= (%s). No version of %s installed.",
+          no_dependency_installed_help: "Correct the errors and try again.",
+
+          missing_dependency_version_cause: "Your %s version (%s) does not meet the minimum required version (%s).",
+          missing_dependency_version_help: "Correct the errors and try again.",
 
           failed_api_request_cause: "Something went wrong while communicating with Shopify.",
           failed_api_request_help: "Try again.",

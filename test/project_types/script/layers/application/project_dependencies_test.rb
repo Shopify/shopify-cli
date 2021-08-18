@@ -53,12 +53,12 @@ describe Script::Layers::Application::ProjectDependencies do
         let(:error_message) { "some message" }
         before do
           task_runner.stubs(:install_dependencies)
-            .raises(Script::Layers::Infrastructure::Errors::DependencyInstallError, error_message)
+            .raises(Script::Layers::Infrastructure::Errors::DependencyInstallationError, error_message)
         end
 
         it "should display error message" do
           @context.expects(:puts).with("\n#{error_message}")
-          assert_raises(Script::Layers::Infrastructure::Errors::DependencyInstallError) do
+          assert_raises(Script::Layers::Infrastructure::Errors::DependencyInstallationError) do
             subject
           end
         end

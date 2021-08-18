@@ -14,7 +14,7 @@ module Script
                 end
               end
               true
-            rescue Infrastructure::Errors::DependencyInstallError => e
+            rescue Infrastructure::Errors::DependencyInstallationError => e
               CLI::UI::Frame.with_frame_color_override(:red) do
                 ctx.puts("\n#{e.message}")
               end

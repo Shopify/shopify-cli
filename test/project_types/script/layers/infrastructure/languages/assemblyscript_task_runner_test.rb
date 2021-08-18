@@ -131,7 +131,7 @@ describe Script::Layers::Infrastructure::Languages::AssemblyScriptTaskRunner do
           .with("npm", "--version")
           .returns(["2.4.0", mock(success?: true)])
 
-        assert_raises Script::Layers::Infrastructure::Errors::MissingDependencyError do
+        assert_raises Script::Layers::Infrastructure::Errors::MissingDependencyVersionError do
           subject
         end
       end
@@ -145,7 +145,7 @@ describe Script::Layers::Infrastructure::Languages::AssemblyScriptTaskRunner do
         ctx.expects(:capture2e)
           .with("node", "--version")
           .returns(["v14.4.0", mock(success?: true)])
-        assert_raises Script::Layers::Infrastructure::Errors::MissingDependencyError do
+        assert_raises Script::Layers::Infrastructure::Errors::MissingDependencyVersionError do
           subject
         end
       end
@@ -166,15 +166,6 @@ describe Script::Layers::Infrastructure::Languages::AssemblyScriptTaskRunner do
       end
     end
 
-    describe "when capture2e fails" do
-      it "should raise error" do
-        msg = "error message"
-        ctx.expects(:capture2e).returns([msg, mock(success?: false)])
-        assert_raises Script::Layers::Infrastructure::Errors::MissingDependencyError, msg do
-          subject
-        end
-      end
-    end
   end
 
   describe ".metadata" do
@@ -216,13 +207,38 @@ describe Script::Layers::Infrastructure::Languages::AssemblyScriptTaskRunner do
   describe ".check_system_dependencies!" do
     subject { as_task_runner.check_system_dependencies! }
 
+    describe "when npm is not installed" do
+      it "should raise error" do
+        ctx.expects(:capture2e)
+           .with("npm", "--version")
+           .returns([nil, mock(success?: false)])
+        assert_raises Script::Layers::Infrastructure::Errors::NoDependencyInstalledError do
+          subject
+        end
+      end
+    end
+
+    describe "when node is not installed" do
+      it "should raise error" do
+        ctx.expects(:capture2e)
+           .with("npm", "--version")
+           .returns(["5.2.0", mock(success?: true)])
+        ctx.expects(:capture2e)
+           .with("node", "--version")
+          .returns([nil, mock(success?: false)])
+        assert_raises Script::Layers::Infrastructure::Errors::NoDependencyInstalledError do
+          subject
+        end
+      end
+    end
+
     describe "when npm version is below minimum" do
       it "should raise error" do
         ctx.expects(:capture2e)
           .with("npm", "--version")
-          .returns(["2.4.0", mock(success?: true)])
+          .returns([nil, mock(success?: false)])
 
-        assert_raises Script::Layers::Infrastructure::Errors::MissingDependencyError do
+        assert_raises Script::Layers::Infrastructure::Errors::NoDependencyInstalledError do
           subject
         end
       end
@@ -236,7 +252,7 @@ describe Script::Layers::Infrastructure::Languages::AssemblyScriptTaskRunner do
         ctx.expects(:capture2e)
           .with("node", "--version")
           .returns(["v14.4.0", mock(success?: true)])
-        assert_raises Script::Layers::Infrastructure::Errors::MissingDependencyError do
+        assert_raises Script::Layers::Infrastructure::Errors::MissingDependencyVersionError do
           subject
         end
       end
