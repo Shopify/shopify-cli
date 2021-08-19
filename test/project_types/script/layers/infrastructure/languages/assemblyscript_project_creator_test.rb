@@ -21,21 +21,22 @@ describe Script::Layers::Infrastructure::Languages::AssemblyScriptProjectCreator
   end
 
   let(:domain) { "fake-domain" }
-  let(:type) { extension_point_type }
   let(:repo) { extension_point_config["assemblyscript"]["repo"] }
   let(:script_name) { "myscript" }
   let(:branch) { "fake-branch" }
+  let(:sparse_checkout_set_path) { "packages/#{domain}/samples/#{extension_point_type}" }
 
   let(:project_creator) do
     Script::Layers::Infrastructure::Languages::AssemblyScriptProjectCreator
       .new(
         ctx: context,
         domain: domain,
-        type: type,
+        type: extension_point_type,
         repo: repo,
         script_name: script_name,
         path_to_project: script_name,
-        branch: branch
+        branch: branch,
+        sparse_checkout_set_path: sparse_checkout_set_path,
       )
   end
 

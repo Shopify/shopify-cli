@@ -21,8 +21,8 @@ describe Script::Layers::Application::CreateScript do
 
   let(:branch) { "add-package-json" } # TODO: update once create script can take a command line argument
   let(:repo) { example_config[language]["repo"] }
-  let(:type) { example_config[language][extension_point_type] }
   let(:domain) { example_config["domain"] }
+  let(:sparse_checkout_set_path) { "packages/#{domain}/samples/#{extension_point_type}" }
 
   let(:project_creator) { stub }
   let(:context) { TestHelpers::FakeContext.new }
@@ -45,6 +45,7 @@ describe Script::Layers::Application::CreateScript do
       script_name: script_name,
       path_to_project: script_project.id,
       branch: branch,
+      sparse_checkout_set_path: sparse_checkout_set_path,
     }
   end
 
