@@ -13,6 +13,7 @@ module Script
           property! :script_name, accepts: String
           property! :path_to_project, accepts: String
           property! :branch, accepts: String
+          property! :sparse_checkout_set_path, accepts: String
 
           def self.for(properties)
             project_creators = {
@@ -28,7 +29,8 @@ module Script
               repo: properties[:repo],
               script_name: properties[:script_name],
               path_to_project: properties[:path_to_project],
-              branch: properties[:branch]
+              branch: properties[:branch],
+              sparse_checkout_set_path: properties[:sparse_checkout_set_path]
             )
           end
 
@@ -44,19 +46,19 @@ module Script
           end
 
           # this should be passed to the ProjectCreator, we shouldn't have to do it manually ourselves
-          def sparse_checkout_set_path
-            if domain.nil?
-              "packages/default/extension-point-as-#{type}/assembly/sample"
-            else
-              "packages/#{domain}/samples/#{type}"
-            end
-          end
+          # def sparse_checkout_set_path
+          #   if domain.nil?
+          #     "packages/default/extension-point-as-#{type}/assembly/sample"
+          #   else
+          #     "packages/#{domain}/samples/#{type}"
+          #   end
+          # end
 
           private
 
           def setup_sparse_checkout
-            path = sparse_checkout_set_path
-            ShopifyCli::Git.sparse_checkout(repo, path, branch, ctx)
+            # path = sparse_checkout_set_path
+            ShopifyCli::Git.sparse_checkout(repo, sparse_checkout_set_path, branch, ctx)
           end
 
           def update_script_name(config_file)

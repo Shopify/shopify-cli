@@ -27,6 +27,11 @@ module Script
               type = extension_point.dasherize_type
               domain = extension_point.domain
 
+              sparse_checkout_set_path = "packages/#{domain}/samples/#{type}"
+              if domain.nil?
+                sparse_checkout_set_path = "packages/default/extension-point-as-#{type}/assembly/sample"
+              end
+              
               project_creator_input = {
                 ctx: ctx,
                 language: language,
@@ -36,6 +41,7 @@ module Script
                 script_name: script_name,
                 path_to_project: project.id,
                 branch: branch,
+                sparse_checkout_set_path: sparse_checkout_set_path,
               }
 
               project_creator = Infrastructure::Languages::ProjectCreator.for(project_creator_input)
