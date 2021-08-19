@@ -24,8 +24,22 @@ describe Script::Layers::Infrastructure::Languages::ProjectCreator do
   end
   let(:sparse_checkout_set_path) { "packages/#{domain}/samples/#{extension_point_type}" }
 
-  let(:properties) do
-    {
+  # let(:properties) do
+  #   {
+  #     ctx: context,
+  #     language: language,
+  #     domain: domain,
+  #     type: extension_point_type,
+  #     repo: repo,
+  #     script_name: script_name,
+  #     path_to_project: "/path",
+  #     branch: branch,
+  #     sparse_checkout_set_path: sparse_checkout_set_path,
+  #   }
+  # end
+
+  let(:project_creator) do
+    Script::Layers::Infrastructure::Languages::ProjectCreator.for(
       ctx: context,
       language: language,
       domain: domain,
@@ -35,11 +49,7 @@ describe Script::Layers::Infrastructure::Languages::ProjectCreator do
       path_to_project: "/path",
       branch: branch,
       sparse_checkout_set_path: sparse_checkout_set_path,
-    }
-  end
-
-  let(:project_creator) do
-    Script::Layers::Infrastructure::Languages::ProjectCreator.for(properties)
+    )
   end
 
   let(:fake_capture2e_response) { [nil, OpenStruct.new(success?: true)] }
@@ -50,7 +60,17 @@ describe Script::Layers::Infrastructure::Languages::ProjectCreator do
   describe ".for" do
     subject do
       Script::Layers::Infrastructure::Languages::ProjectCreator
-        .for(properties)
+        .for(
+          ctx: context,
+          language: language,
+          domain: domain,
+          type: extension_point_type,
+          repo: repo,
+          script_name: script_name,
+          path_to_project: "/path",
+          branch: branch,
+          sparse_checkout_set_path: sparse_checkout_set_path,
+        )
     end
 
     describe "when the script language does match an entry in the registry" do

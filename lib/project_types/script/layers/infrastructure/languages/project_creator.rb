@@ -15,22 +15,26 @@ module Script
           property! :branch, accepts: String
           property! :sparse_checkout_set_path, accepts: String
 
-          def self.for(properties)
+          def self.for(
+            ctx:, language:, domain:, type:, repo:,
+            script_name:, path_to_project:, branch:, sparse_checkout_set_path:
+          )
+
             project_creators = {
               "assemblyscript" => AssemblyScriptProjectCreator,
               "rust" => RustProjectCreator,
             }
 
-            raise Errors::ProjectCreatorNotFoundError unless project_creators[properties[:language]]
-            project_creators[properties[:language]].new(
-              ctx: properties[:ctx],
-              domain: properties[:domain],
-              type: properties[:type],
-              repo: properties[:repo],
-              script_name: properties[:script_name],
-              path_to_project: properties[:path_to_project],
-              branch: properties[:branch],
-              sparse_checkout_set_path: properties[:sparse_checkout_set_path]
+            raise Errors::ProjectCreatorNotFoundError unless project_creators[language]
+            project_creators[language].new(
+              ctx: ctx,
+              domain: domain,
+              type: type,
+              repo: repo,
+              script_name: script_name,
+              path_to_project: path_to_project,
+              branch: branch,
+              sparse_checkout_set_path: sparse_checkout_set_path
             )
           end
 

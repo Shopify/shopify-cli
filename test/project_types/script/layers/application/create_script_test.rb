@@ -35,20 +35,6 @@ describe Script::Layers::Application::CreateScript do
     )
   end
 
-  let(:properties) do
-    {
-      ctx: context,
-      language: language,
-      domain: domain,
-      type: extension_point_type,
-      repo: repo,
-      script_name: script_name,
-      path_to_project: script_project.id,
-      branch: branch,
-      sparse_checkout_set_path: sparse_checkout_set_path,
-    }
-  end
-
   before do
     Script::Layers::Infrastructure::ExtensionPointRepository.stubs(:new).returns(extension_point_repository)
     Script::Layers::Infrastructure::ScriptProjectRepository.stubs(:new).returns(script_project_repository)
@@ -60,7 +46,17 @@ describe Script::Layers::Application::CreateScript do
       .returns(task_runner)
     Script::Layers::Infrastructure::Languages::ProjectCreator
       .stubs(:for)
-      .with(properties)
+      .with(
+        ctx: context,
+        language: language,
+        domain: domain,
+        type: extension_point_type,
+        repo: repo,
+        script_name: script_name,
+        path_to_project: script_project.id,
+        branch: branch,
+        sparse_checkout_set_path: sparse_checkout_set_path,
+      )
       .returns(project_creator)
   end
 
