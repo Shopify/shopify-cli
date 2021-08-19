@@ -31,7 +31,7 @@ module Script
               if domain.nil?
                 sparse_checkout_set_path = "packages/default/extension-point-as-#{type}/assembly/sample"
               end
-              
+
               project_creator_input = {
                 ctx: ctx,
                 language: language,
