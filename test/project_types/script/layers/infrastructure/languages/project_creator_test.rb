@@ -3,6 +3,7 @@
 require "project_types/script/test_helper"
 
 describe Script::Layers::Infrastructure::Languages::ProjectCreator do
+  include TestHelpers::FakeFS
   let(:script_name) { "myscript" }
   let(:branch) { "fake-branch" }
   let(:language) { "assemblyscript" }
