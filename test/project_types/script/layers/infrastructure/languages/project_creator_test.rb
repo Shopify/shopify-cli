@@ -21,17 +21,19 @@ describe Script::Layers::Infrastructure::Languages::ProjectCreator do
       },
     }
   end
+  let(:sparse_checkout_set_path) { "packages/#{domain}/samples/#{extension_point_type}" }
 
   let(:properties) do
     {
       ctx: context,
       language: language,
       domain: domain,
-      type: type,
+      type: extension_point_type,
       repo: repo,
       script_name: script_name,
       path_to_project: "/path",
       branch: branch,
+      sparse_checkout_set_path: sparse_checkout_set_path,
     }
   end
 
