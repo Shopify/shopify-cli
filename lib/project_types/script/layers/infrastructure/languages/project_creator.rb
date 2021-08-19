@@ -45,15 +45,6 @@ module Script
             update_script_name(self.class.config_file)
           end
 
-          # this should be passed to the ProjectCreator, we shouldn't have to do it manually ourselves
-          # def sparse_checkout_set_path
-          #   if domain.nil?
-          #     "packages/default/extension-point-as-#{type}/assembly/sample"
-          #   else
-          #     "packages/#{domain}/samples/#{type}"
-          #   end
-          # end
-
           private
 
           def setup_sparse_checkout
