@@ -12,7 +12,7 @@ describe Script::Layers::Infrastructure::Languages::ProjectCreator do
   let(:extension_point_type) { "fake-ep-type" }
   let(:repo) { "fake-repo" }
 
-  let(:script_name) { "myscript" }
+  let(:project_name) { "myscript" }
   let(:branch) { "fake-branch" }
   let(:path) { "/path" }
 
@@ -25,7 +25,7 @@ describe Script::Layers::Infrastructure::Languages::ProjectCreator do
       domain: domain,
       type: extension_point_type,
       repo: repo,
-      script_name: script_name,
+      project_name: project_name,
       path_to_project: path,
       branch: branch,
       sparse_checkout_set_path: sparse_checkout_set_path,
@@ -46,7 +46,7 @@ describe Script::Layers::Infrastructure::Languages::ProjectCreator do
           domain: domain,
           type: extension_point_type,
           repo: repo,
-          script_name: script_name,
+          project_name: project_name,
           path_to_project: path,
           branch: branch,
           sparse_checkout_set_path: sparse_checkout_set_path,
@@ -87,9 +87,9 @@ describe Script::Layers::Infrastructure::Languages::ProjectCreator do
       source = File.join(project_creator.path_to_project, project_creator.sparse_checkout_set_path)
       FileUtils.expects(:copy_entry).with(source, project_creator.path_to_project)
 
-      # set_script_name
+      # set_project_name
       File.expects(:read).with("package.json").returns("name = #{extension_point_type.gsub("_", "-")}-default")
-      File.expects(:write).with("package.json", "name = #{script_name}")
+      File.expects(:write).with("package.json", "name = #{project_name}")
 
       subject
     end

@@ -22,7 +22,7 @@ describe Script::Layers::Infrastructure::Languages::AssemblyScriptProjectCreator
 
   let(:domain) { "fake-domain" }
   let(:repo) { extension_point_config["assemblyscript"]["repo"] }
-  let(:script_name) { "myscript" }
+  let(:project_name) { "myscript" }
   let(:branch) { "fake-branch" }
   let(:sparse_checkout_set_path) { "packages/#{domain}/samples/#{extension_point_type}" }
 
@@ -33,15 +33,15 @@ describe Script::Layers::Infrastructure::Languages::AssemblyScriptProjectCreator
         domain: domain,
         type: extension_point_type,
         repo: repo,
-        script_name: script_name,
-        path_to_project: script_name,
+        project_name: project_name,
+        path_to_project: project_name,
         branch: branch,
         sparse_checkout_set_path: sparse_checkout_set_path,
       )
   end
 
   before do
-    context.mkdir_p(script_name)
+    context.mkdir_p(project_name)
   end
 
   describe ".setup_dependencies" do
