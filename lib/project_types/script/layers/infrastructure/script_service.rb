@@ -35,7 +35,7 @@ module Script
             configurationDefinition: script_json.configuration&.to_json,
             moduleUploadUrl: url,
           }
-          resp_hash = MakeRequest.new(ctx).call(query_name: query_name, api_key: api_key, variables: variables)
+          resp_hash = MakeRequest.new(ctx, api_key).call(query_name: query_name, variables: variables)
           user_errors = resp_hash["data"]["appScriptSet"]["userErrors"]
 
           return resp_hash["data"]["appScriptSet"]["appScript"]["uuid"] if user_errors.empty?
@@ -66,9 +66,8 @@ module Script
         def get_app_scripts(api_key:, extension_point_type:)
           query_name = "get_app_scripts"
           variables = { appKey: api_key, extensionPointName: extension_point_type.upcase }
-          response = MakeRequest.new(ctx).call(
+          response = MakeRequest.new(ctx, api_key).call(
             query_name: query_name,
-            api_key: api_key,
             variables: variables
           )
           response["data"]["appScripts"]
@@ -79,69 +78,39 @@ module Script
 
           LOCAL_INSTANCE_URL = "https://script-service.myshopify.io"
 
-          def self.query(ctx, query_name, api_key: nil, variables: {})
-            api_client(ctx, api_key).query(query_name, variables: variables)
-          end
-
-          def self.api_client(ctx, api_key)
+          def initialize(ctx, api_key)
             instance_url = spin_instance_url || LOCAL_INSTANCE_URL
-            new(
+            super(
               ctx: ctx,
               url: "#{instance_url}/graphql",
-              token: "",
+              token: { "APP_KEY" => api_key }.compact.to_json,
+              auth_header: "X-Shopify-Authenticated-Tokens",
               api_key: api_key
             )
           end
 
-          def self.spin_instance_url
+          private
+
+          def spin_instance_url
             workspace = ENV["SPIN_WORKSPACE"]
             namespace = ENV["SPIN_NAMESPACE"]
             return if workspace.nil? || namespace.nil?
 
             "https://script-service.#{workspace}.#{namespace}.us.spin.dev"
           end
-
-          def auth_headers(*)
-            tokens = { "APP_KEY" => api_key }.compact.to_json
-            { "X-Shopify-Authenticated-Tokens" => tokens }
-          end
         end
         private_constant(:ScriptServiceAPI)
 
-        class PartnersProxyAPI < ShopifyCli::PartnersAPI
-          def query(query_name, variables: {})
-            variables[:query] = load_query(query_name)
-            super("script_service_proxy", variables: variables)
-          end
-        end
-        private_constant(:PartnersProxyAPI)
-
-        class MakeRequest
-          attr_reader :ctx
-
-          def initialize(ctx)
+        class PartnersProxyAPI
+          def initialize(ctx, api_key)
             @ctx = ctx
+            @api_key = api_key
           end
 
-          def self.bypass_partners_proxy
-            !ENV["BYPASS_PARTNERS_PROXY"].nil?
-          end
-
-          def call(query_name:, variables: nil, **options)
-            resp = if MakeRequest.bypass_partners_proxy
-              ScriptServiceAPI.query(ctx, query_name, variables: variables, **options)
-            else
-              proxy_through_partners(query_name: query_name, variables: variables, **options)
-            end
-            raise_if_graphql_failed(resp)
-            resp
-          end
-
-          def proxy_through_partners(query_name:, variables: nil, **options)
-            options[:variables] = variables.to_json if variables
-            resp = PartnersProxyAPI.query(ctx, query_name, **options)
-            raise_if_graphql_failed(resp)
-            JSON.parse(resp["data"]["scriptServiceProxy"])
+          def query(query_name, variables: {})
+            response = ShimAPI.query(@ctx, query_name, api_key: @api_key, variables: variables.to_json)
+            raise_if_graphql_failed(response)
+            JSON.parse(response["data"]["scriptServiceProxy"])
           end
 
           def raise_if_graphql_failed(response)
@@ -166,6 +135,43 @@ module Script
               return code if code
             end
           end
+
+          class ShimAPI < ShopifyCli::PartnersAPI
+            def query(query_name, variables: {})
+              variables[:query] = load_query(query_name)
+              super("script_service_proxy", variables: variables)
+            end
+          end
+          private_constant(:ShimAPI)
+        end
+        private_constant(:PartnersProxyAPI)
+
+        class MakeRequest
+          attr_reader :ctx
+
+          def initialize(ctx, api_key)
+            @ctx = ctx
+            @client = if MakeRequest.bypass_partners_proxy
+              ScriptServiceAPI.new(ctx, api_key)
+            else
+              PartnersProxyAPI.new(ctx, api_key)
+            end
+          end
+
+          def self.bypass_partners_proxy
+            !ENV["BYPASS_PARTNERS_PROXY"].nil?
+          end
+
+          def call(query_name:, variables: {})
+            resp = @client.query(query_name, variables: variables)
+            raise_if_graphql_failed(resp)
+            resp
+          end
+
+          def raise_if_graphql_failed(response)
+            raise Errors::EmptyResponseError if response.nil?
+            raise Errors::GraphqlError, response["errors"] if response.key?("errors")
+          end
         end
 
         class UploadScript
@@ -186,7 +192,7 @@ module Script
           def apply_module_upload_url(api_key)
             query_name = "module_upload_url_generate"
             variables = {}
-            resp_hash = MakeRequest.new(ctx).call(query_name: query_name, api_key: api_key, variables: variables)
+            resp_hash = MakeRequest.new(ctx, api_key).call(query_name: query_name, variables: variables)
             user_errors = resp_hash["data"]["moduleUploadUrlGenerate"]["userErrors"]
 
             raise Errors::GraphqlError, user_errors if user_errors.any?
