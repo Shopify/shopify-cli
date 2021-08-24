@@ -21,6 +21,7 @@ module Script
           )
 
             project_creators = {
+              "generic" => GenericProjectCreator,
               "assemblyscript" => AssemblyScriptProjectCreator,
               "rust" => RustProjectCreator,
             }
@@ -52,7 +53,6 @@ module Script
           private
 
           def setup_sparse_checkout
-            # path = sparse_checkout_set_path
             ShopifyCli::Git.sparse_checkout(repo, sparse_checkout_set_path, branch, ctx)
           end
 
@@ -72,6 +72,12 @@ module Script
 
           def command_runner
             @command_runner ||= CommandRunner.new(ctx: ctx)
+          end
+        end
+
+        class GenericProjectCreator < ProjectCreator
+          def self.config_file
+            "package.json"
           end
         end
       end

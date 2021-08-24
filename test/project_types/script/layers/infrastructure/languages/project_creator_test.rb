@@ -4,39 +4,19 @@ require "project_types/script/test_helper"
 
 describe Script::Layers::Infrastructure::Languages::ProjectCreator do
   include TestHelpers::FakeFS
+  
+  let(:context) { TestHelpers::FakeContext.new }
+  let(:language) { "generic" }
+
+  let(:domain) { "fake-domain" }
+  let(:extension_point_type) { "fake-ep-type" }
+  let(:repo) { "fake-repo" }
+
   let(:script_name) { "myscript" }
   let(:branch) { "fake-branch" }
-  let(:language) { "assemblyscript" }
-  let(:context) { TestHelpers::FakeContext.new }
-  let(:extension_point_type) { "payment_methods" }
-  let(:domain) { "fake-domain" }
-  let(:type) { extension_point_type }
-  let(:repo) { extension_point_config["assemblyscript"]["repo"] }
-  let(:extension_point_config) do
-    {
-      "assemblyscript" => {
-        "repo" => "https://github.com/Shopify/extension-points.git",
-        "package" => "@shopify/extension-point-as-fake",
-        "sdk-version" => "*",
-        "toolchain-version" => "*",
-      },
-    }
-  end
-  let(:sparse_checkout_set_path) { "packages/#{domain}/samples/#{extension_point_type}" }
+  let(:path) {"/path"}
 
-  # let(:properties) do
-  #   {
-  #     ctx: context,
-  #     language: language,
-  #     domain: domain,
-  #     type: extension_point_type,
-  #     repo: repo,
-  #     script_name: script_name,
-  #     path_to_project: "/path",
-  #     branch: branch,
-  #     sparse_checkout_set_path: sparse_checkout_set_path,
-  #   }
-  # end
+  let(:sparse_checkout_set_path) { "packages/#{domain}/samples/#{extension_point_type}" }
 
   let(:project_creator) do
     Script::Layers::Infrastructure::Languages::ProjectCreator.for(
@@ -46,7 +26,7 @@ describe Script::Layers::Infrastructure::Languages::ProjectCreator do
       type: extension_point_type,
       repo: repo,
       script_name: script_name,
-      path_to_project: "/path",
+      path_to_project: path,
       branch: branch,
       sparse_checkout_set_path: sparse_checkout_set_path,
     )
@@ -67,7 +47,7 @@ describe Script::Layers::Infrastructure::Languages::ProjectCreator do
           type: extension_point_type,
           repo: repo,
           script_name: script_name,
-          path_to_project: "/path",
+          path_to_project: path,
           branch: branch,
           sparse_checkout_set_path: sparse_checkout_set_path,
         )
@@ -75,7 +55,7 @@ describe Script::Layers::Infrastructure::Languages::ProjectCreator do
 
     describe "when the script language does match an entry in the registry" do
       it "should return the entry from the registry" do
-        assert_instance_of(Script::Layers::Infrastructure::Languages::AssemblyScriptProjectCreator, subject)
+        assert_instance_of(Script::Layers::Infrastructure::Languages::GenericProjectCreator, subject)
       end
     end
 
@@ -108,7 +88,7 @@ describe Script::Layers::Infrastructure::Languages::ProjectCreator do
       FileUtils.expects(:copy_entry).with(source, project_creator.path_to_project)
 
       # set_script_name
-      File.expects(:read).with("package.json").returns("name = #{type.gsub("_", "-")}-default")
+      File.expects(:read).with("package.json").returns("name = #{extension_point_type.gsub("_", "-")}-default")
       File.expects(:write).with("package.json", "name = #{script_name}")
 
       subject
