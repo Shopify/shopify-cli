@@ -4,7 +4,7 @@ require "project_types/script/test_helper"
 
 describe Script::Layers::Infrastructure::Languages::ProjectCreator do
   include TestHelpers::FakeFS
-  
+
   let(:context) { TestHelpers::FakeContext.new }
   let(:language) { "generic" }
 
@@ -14,7 +14,7 @@ describe Script::Layers::Infrastructure::Languages::ProjectCreator do
 
   let(:script_name) { "myscript" }
   let(:branch) { "fake-branch" }
-  let(:path) {"/path"}
+  let(:path) { "/path" }
 
   let(:sparse_checkout_set_path) { "packages/#{domain}/samples/#{extension_point_type}" }
 
