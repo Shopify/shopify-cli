@@ -67,6 +67,7 @@ describe Script::Layers::Application::CreateScript do
       Script::Layers::Application::CreateScript.call(
         ctx: context,
         language: language,
+        branch: branch,
         script_name: script_name,
         extension_point_type: extension_point_type,
         no_config_ui: no_config_ui
