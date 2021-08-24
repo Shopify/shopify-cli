@@ -22,7 +22,7 @@ module Script
           extension_point_type: @ep_type,
           script_name: @script_name
         )
-        @branch = nil
+        @branch = "master"
         Layers::Application::ExtensionPoints.stubs(:languages).returns(%w(assemblyscript))
         ShopifyCli::Tasks::EnsureAuthenticated.stubs(:call)
       end
