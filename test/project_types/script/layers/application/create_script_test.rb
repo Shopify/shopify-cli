@@ -148,20 +148,5 @@ describe Script::Layers::Application::CreateScript do
         capture_io { subject }
       end
     end
-
-    # describe "bootstrap" do
-    #   subject do
-    #     Script::Layers::Application::CreateScript
-    #       .send(:bootstrap, context, project_creator)
-    #   end
-
-    #   it "should return new script" do
-    #     spinner = TestHelpers::FakeUI::FakeSpinner.new
-    #     spinner.expects(:update_title).with(context.message("script.create.created"))
-    #     Script::UI::StrictSpinner.expects(:spin).with(context.message("script.create.creating")).yields(spinner)
-    #     project_creator.expects(:bootstrap)
-    #     capture_io { subject }
-    #   end
-    # end
   end
 end
