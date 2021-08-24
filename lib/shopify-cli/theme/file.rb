@@ -17,12 +17,20 @@ module ShopifyCli
       end
 
       def read
-        path.read
+        if text?
+          path.read
+        else
+          path.read(mode: "rb")
+        end
       end
 
-      def write(*args)
+      def write(content)
         path.parent.mkpath unless path.parent.directory?
-        path.write(*args)
+        if text?
+          path.write(content)
+        else
+          path.write(content, 0, mode: "wb")
+        end
       end
 
       def delete
