@@ -7,7 +7,7 @@ module Script
     module Application
       class CreateScript
         class << self
-          def call(ctx:, language:, script_name:, extension_point_type:, no_config_ui:)
+          def call(ctx:, language:, branch:, script_name:, extension_point_type:, no_config_ui:)
             raise Infrastructure::Errors::ScriptProjectAlreadyExistsError, script_name if ctx.dir_exist?(script_name)
 
             in_new_directory_context(ctx, script_name) do
@@ -18,9 +18,6 @@ module Script
                 extension_point_type: extension_point_type,
                 language: language
               )
-
-              # to be overwritten with a CLI argument - for now we'll just overwrite it here during dev
-              branch = "add-package-json"
 
               # remove the need to pass the whole extension-point object to the infra layer
               repo = extension_point.sdks.for(language).repo

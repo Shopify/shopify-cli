@@ -22,6 +22,7 @@ module Script
           extension_point_type: @ep_type,
           script_name: @script_name
         )
+        @branch = nil
         Layers::Application::ExtensionPoints.stubs(:languages).returns(%w(assemblyscript))
         ShopifyCli::Tasks::EnsureAuthenticated.stubs(:call)
       end
@@ -38,6 +39,7 @@ module Script
         Script::Layers::Application::CreateScript.expects(:call).with(
           ctx: @context,
           language: @language,
+          branch: @branch,
           script_name: @script_name,
           extension_point_type: @ep_type,
           no_config_ui: @no_config_ui
@@ -55,6 +57,7 @@ module Script
         Script::Layers::Application::CreateScript.expects(:call).with(
           ctx: @context,
           language: @language,
+          branch: @branch,
           script_name: @script_name,
           extension_point_type: @ep_type,
           no_config_ui: @no_config_ui
