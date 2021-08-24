@@ -10,14 +10,14 @@ module Script
           property! :domain, accepts: String
           property! :type, accepts: String
           property! :repo, accepts: String
-          property! :script_name, accepts: String
+          property! :project_name, accepts: String
           property! :path_to_project, accepts: String
           property! :branch, accepts: String
           property! :sparse_checkout_set_path, accepts: String
 
           def self.for(
             ctx:, language:, domain:, type:, repo:,
-            script_name:, path_to_project:, branch:, sparse_checkout_set_path:
+            project_name:, path_to_project:, branch:, sparse_checkout_set_path:
           )
 
             project_creators = {
@@ -32,7 +32,7 @@ module Script
               domain: domain,
               type: type,
               repo: repo,
-              script_name: script_name,
+              project_name: project_name,
               path_to_project: path_to_project,
               branch: branch,
               sparse_checkout_set_path: sparse_checkout_set_path
@@ -47,7 +47,7 @@ module Script
           def setup_dependencies
             setup_sparse_checkout
             clean
-            update_script_name(self.class.config_file)
+            update_project_name(self.class.config_file)
           end
 
           private
@@ -56,10 +56,10 @@ module Script
             ShopifyCli::Git.sparse_checkout(repo, sparse_checkout_set_path, branch, ctx)
           end
 
-          def update_script_name(config_file)
+          def update_project_name(config_file)
             upstream_name = "#{type.gsub("_", "-")}-default"
             contents = File.read(config_file)
-            new_contents = contents.gsub(upstream_name, script_name)
+            new_contents = contents.gsub(upstream_name, project_name)
             File.write(config_file, new_contents)
           end
 
