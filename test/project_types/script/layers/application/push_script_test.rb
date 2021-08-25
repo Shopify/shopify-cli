@@ -51,6 +51,7 @@ describe Script::Layers::Application::PushScript do
 
     it "should prepare and push script" do
       script_service_instance = Script::Layers::Infrastructure::ScriptService.new(ctx: @context, api_key: api_key)
+      script_service_instance.expects(:push).returns(uuid)
       Script::Layers::Application::ProjectDependencies
         .expects(:install).with(ctx: @context, task_runner: task_runner)
       Script::Layers::Application::BuildScript.expects(:call).with(
@@ -60,8 +61,6 @@ describe Script::Layers::Application::PushScript do
       )
       Script::Layers::Infrastructure::ScriptService
         .expects(:new).returns(script_service_instance)
-      Script::Layers::Domain::PushPackage
-        .any_instance.expects(:push).with(script_service_instance, api_key, force).returns(uuid)
       capture_io { subject }
       assert_equal uuid, script_project_repository.get.uuid
     end
