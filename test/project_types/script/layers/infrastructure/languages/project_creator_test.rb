@@ -20,9 +20,14 @@ describe Script::Layers::Infrastructure::Languages::ProjectCreator do
 
   let(:project_name) { "myscript" }
   let(:branch) { "fake-branch" }
-  let(:path) { "/path" }
 
-  let(:sparse_checkout_set_path) { "packages/#{domain}/samples/#{extension_point_type}" }
+  # TODO: Fails with any other path
+  let(:path) { "." }
+
+  # TODO: fakeFS doesn't seem to support copy_entry properly so we need add a trailing /.
+  let(:sparse_checkout_set_path) { "packages/#{domain}/samples/#{extension_point_type}/." }
+
+  let(:source) { File.join(path, sparse_checkout_set_path) }
 
   let(:project_creator) do
     GenericProjectCreator.new(
@@ -76,27 +81,67 @@ describe Script::Layers::Infrastructure::Languages::ProjectCreator do
   describe ".setup_dependencies" do
     subject { project_creator.setup_dependencies }
 
-    it "should setup dependencies" do
-      # setup_sparse_checkout
-      ShopifyCli::Git
-        .expects(:sparse_checkout)
-        .with(
-          repo,
-          project_creator.sparse_checkout_set_path,
-          branch,
-          context
+    describe "when Git sparse checkout is successful" do
+      before do
+        ShopifyCli::Git
+          .expects(:sparse_checkout)
+          .with(
+            repo,
+            project_creator.sparse_checkout_set_path,
+            branch,
+            context
+          )
+          .once
+
+        # setup the directory and files that sparse-checkout would produce
+        FileUtils.mkdir_p(source)
+        FileUtils.mkdir_p(".git")
+        File.write(
+          File.join(
+            source,
+            GenericProjectCreator.config_file
+          ),
+          "#{extension_point_type}-default"
         )
-        .once
 
-      # clean
-      source = File.join(project_creator.path_to_project, project_creator.sparse_checkout_set_path)
-      FileUtils.expects(:copy_entry).with(source, project_creator.path_to_project)
+        assert(Dir.exist?(source))
+        assert(Dir.exist?(".git"))
+        assert(File.exist?(File.join(source, GenericProjectCreator.config_file)))
+      end
 
-      # set_project_name
-      File.expects(:read).with(GenericProjectCreator::config_file).returns("name = #{extension_point_type.gsub("_", "-")}-default")
-      File.expects(:write).with(GenericProjectCreator::config_file, "name = #{project_name}")
+      describe "when content in the directory is correct" do
+        
+      end
 
-      subject
+      describe "when content is wrong" do
+        # assert_raises
+      end
+
+      it "should setup dependencies" do
+        subject
+
+        # clean
+        # old directory deleted
+        refute(Dir.exist?(source))
+
+        # config file copied up
+        assert(File.exist?(GenericProjectCreator.config_file))
+
+        # directories deleted
+        refute(Dir.exist?("packages"))
+        refute(Dir.exist?(".git"))
+
+        # update_project_name
+        # config file contents reworked
+        assert_equal(File.read(GenericProjectCreator.config_file), project_name)
+      end
+    end
+
+    describe "when Git sparse checkout throws error" do
+      it "shouuld also throw error" do
+        ShopifyCli::Git.expects(:sparse_checkout).raises(ShopifyCli::Abort)
+        assert_raises(ShopifyCli::Abort) { subject }
+      end
     end
   end
 end

@@ -35,7 +35,7 @@ module Script
                 domain: domain,
                 type: type,
                 repo: repo,
-                script_name: script_name,
+                project_name: script_name,
                 path_to_project: project.id,
                 branch: branch,
                 sparse_checkout_set_path: sparse_checkout_set_path,
