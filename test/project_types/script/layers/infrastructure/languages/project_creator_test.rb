@@ -110,30 +110,28 @@ describe Script::Layers::Infrastructure::Languages::ProjectCreator do
       end
 
       describe "when content in the directory is correct" do
-        
+        it "should sucessfully setup dependencies" do
+          subject
+
+          # clean
+          # old directory deleted
+          refute(Dir.exist?(source))
+
+          # config file copied up
+          assert(File.exist?(GenericProjectCreator.config_file))
+
+          # directories deleted
+          refute(Dir.exist?("packages"))
+          refute(Dir.exist?(".git"))
+
+          # update_project_name
+          # config file contents reworked
+          assert_equal(File.read(GenericProjectCreator.config_file), project_name)
+        end
       end
 
       describe "when content is wrong" do
         # assert_raises
-      end
-
-      it "should setup dependencies" do
-        subject
-
-        # clean
-        # old directory deleted
-        refute(Dir.exist?(source))
-
-        # config file copied up
-        assert(File.exist?(GenericProjectCreator.config_file))
-
-        # directories deleted
-        refute(Dir.exist?("packages"))
-        refute(Dir.exist?(".git"))
-
-        # update_project_name
-        # config file contents reworked
-        assert_equal(File.read(GenericProjectCreator.config_file), project_name)
       end
     end
 
