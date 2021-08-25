@@ -55,18 +55,18 @@ module Script
             ShopifyCli::Git.sparse_checkout(repo, sparse_checkout_set_path, branch, ctx)
           end
 
-          def update_project_name(config_file)
-            upstream_name = "#{type.gsub("_", "-")}-default"
-            contents = File.read(config_file)
-            new_contents = contents.gsub(upstream_name, project_name)
-            File.write(config_file, new_contents)
-          end
-
           def clean
             source = File.join(path_to_project, sparse_checkout_set_path)
             FileUtils.copy_entry(source, path_to_project)
             ctx.rm_rf("packages") # TODO: - needs to be language agnostic
             ctx.rm_rf(".git")
+          end
+
+          def update_project_name(config_file)
+            upstream_name = "#{type.gsub("_", "-")}-default"
+            contents = File.read(config_file)
+            new_contents = contents.gsub(upstream_name, project_name)
+            File.write(config_file, new_contents)
           end
 
           def command_runner

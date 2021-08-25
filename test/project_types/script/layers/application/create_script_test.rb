@@ -52,7 +52,7 @@ describe Script::Layers::Application::CreateScript do
         domain: domain,
         type: extension_point_type,
         repo: repo,
-        script_name: script_name,
+        project_name: script_name,
         path_to_project: script_project.id,
         branch: branch,
         sparse_checkout_set_path: sparse_checkout_set_path,
