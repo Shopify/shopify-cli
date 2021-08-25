@@ -2,11 +2,17 @@
 
 require "project_types/script/test_helper"
 
+class GenericProjectCreator < Script::Layers::Infrastructure::Languages::ProjectCreator
+  def self.config_file
+    "generic.json"
+  end
+end
+
 describe Script::Layers::Infrastructure::Languages::ProjectCreator do
   include TestHelpers::FakeFS
 
   let(:context) { TestHelpers::FakeContext.new }
-  let(:language) { "generic" }
+  let(:language) { "assemblyscript" }
 
   let(:domain) { "fake-domain" }
   let(:extension_point_type) { "fake-ep-type" }
@@ -19,16 +25,15 @@ describe Script::Layers::Infrastructure::Languages::ProjectCreator do
   let(:sparse_checkout_set_path) { "packages/#{domain}/samples/#{extension_point_type}" }
 
   let(:project_creator) do
-    Script::Layers::Infrastructure::Languages::ProjectCreator.for(
+    GenericProjectCreator.new(
       ctx: context,
-      language: language,
       domain: domain,
       type: extension_point_type,
       repo: repo,
       project_name: project_name,
       path_to_project: path,
       branch: branch,
-      sparse_checkout_set_path: sparse_checkout_set_path,
+      sparse_checkout_set_path: sparse_checkout_set_path
     )
   end
 
@@ -53,9 +58,9 @@ describe Script::Layers::Infrastructure::Languages::ProjectCreator do
         )
     end
 
-    describe "when the script language does match an entry in the registry" do
-      it "should return the entry from the registry" do
-        assert_instance_of(Script::Layers::Infrastructure::Languages::GenericProjectCreator, subject)
+    describe "when the script language is AssemblyScript" do
+      it "should return the AssemblyScriptProjectCreator" do
+        assert_instance_of(Script::Layers::Infrastructure::Languages::AssemblyScriptProjectCreator, subject)
       end
     end
 
@@ -68,7 +73,7 @@ describe Script::Layers::Infrastructure::Languages::ProjectCreator do
     end
   end
 
-  describe "setup_dependencies" do
+  describe ".setup_dependencies" do
     subject { project_creator.setup_dependencies }
 
     it "should setup dependencies" do
@@ -88,8 +93,8 @@ describe Script::Layers::Infrastructure::Languages::ProjectCreator do
       FileUtils.expects(:copy_entry).with(source, project_creator.path_to_project)
 
       # set_project_name
-      File.expects(:read).with("package.json").returns("name = #{extension_point_type.gsub("_", "-")}-default")
-      File.expects(:write).with("package.json", "name = #{project_name}")
+      File.expects(:read).with(GenericProjectCreator::config_file).returns("name = #{extension_point_type.gsub("_", "-")}-default")
+      File.expects(:write).with(GenericProjectCreator::config_file, "name = #{project_name}")
 
       subject
     end

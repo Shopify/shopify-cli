@@ -21,7 +21,6 @@ module Script
           )
 
             project_creators = {
-              "generic" => GenericProjectCreator,
               "assemblyscript" => AssemblyScriptProjectCreator,
               "rust" => RustProjectCreator,
             }
@@ -72,12 +71,6 @@ module Script
 
           def command_runner
             @command_runner ||= CommandRunner.new(ctx: ctx)
-          end
-        end
-
-        class GenericProjectCreator < ProjectCreator
-          def self.config_file
-            "package.json"
           end
         end
       end
