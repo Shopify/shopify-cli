@@ -6,8 +6,8 @@ describe Script::Layers::Infrastructure::ScriptService do
   include TestHelpers::Partners
 
   let(:ctx) { TestHelpers::FakeContext.new }
-  let(:script_service) { Script::Layers::Infrastructure::ScriptService.new(ctx: ctx) }
   let(:api_key) { "fake_key" }
+  let(:script_service) { Script::Layers::Infrastructure::ScriptService.new(ctx: ctx, api_key: api_key) }
   let(:extension_point_type) { "DISCOUNT" }
   let(:schema_major_version) { "1" }
   let(:schema_minor_version) { "0" }
@@ -287,7 +287,7 @@ describe Script::Layers::Infrastructure::ScriptService do
   end
 
   describe "UploadScript" do
-    let(:instance) { Script::Layers::Infrastructure::ScriptService::UploadScript.new(ctx) }
+    let(:instance) { Script::Layers::Infrastructure::ScriptService::UploadScript.new(script_service) }
     subject { instance.call(api_key, script_content) }
 
     let(:api_key) { "fake_key" }

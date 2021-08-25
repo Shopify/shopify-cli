@@ -50,7 +50,7 @@ describe Script::Layers::Application::PushScript do
     subject { Script::Layers::Application::PushScript.call(ctx: @context, force: force) }
 
     it "should prepare and push script" do
-      script_service_instance = Script::Layers::Infrastructure::ScriptService.new(ctx: @context)
+      script_service_instance = Script::Layers::Infrastructure::ScriptService.new(ctx: @context, api_key: api_key)
       Script::Layers::Application::ProjectDependencies
         .expects(:install).with(ctx: @context, task_runner: task_runner)
       Script::Layers::Application::BuildScript.expects(:call).with(

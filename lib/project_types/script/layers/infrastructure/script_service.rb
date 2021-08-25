@@ -10,6 +10,10 @@ module Script
         include SmartProperties
         property! :ctx, accepts: ShopifyCli::Context
 
+        def initialize(*args, ctx:, api_key:, **kwargs)
+          @client = ApiClients.default_client(ctx, api_key)
+        end
+
         def push(
           uuid:,
           extension_point_type:,
@@ -19,7 +23,7 @@ module Script
           metadata:,
           script_json:
         )
-          url = UploadScript.new(ctx).call(api_key, script_content)
+          url = UploadScript.new(self).call(api_key, script_content)
 
           query_name = "app_script_set"
           variables = {
@@ -35,7 +39,7 @@ module Script
             configurationDefinition: script_json.configuration&.to_json,
             moduleUploadUrl: url,
           }
-          resp_hash = MakeRequest.new(ctx, api_key).call(query_name: query_name, variables: variables)
+          resp_hash = make_request(query_name: query_name, variables: variables)
           user_errors = resp_hash["data"]["appScriptSet"]["userErrors"]
 
           return resp_hash["data"]["appScriptSet"]["appScript"]["uuid"] if user_errors.empty?
@@ -66,56 +70,42 @@ module Script
         def get_app_scripts(api_key:, extension_point_type:)
           query_name = "get_app_scripts"
           variables = { appKey: api_key, extensionPointName: extension_point_type.upcase }
-          response = MakeRequest.new(ctx, api_key).call(
-            query_name: query_name,
-            variables: variables
-          )
+          response = make_request(query_name: query_name, variables: variables)
           response["data"]["appScripts"]
         end
 
-        class MakeRequest
-          attr_reader :ctx
+        def generate_module_upload_url
+          query_name = "module_upload_url_generate"
+          variables = {}
+          response = make_request(query_name: query_name, variables: variables)
+          user_errors = response["data"]["moduleUploadUrlGenerate"]["userErrors"]
 
-          def initialize(ctx, api_key)
-            @client = ApiClients.default_client(ctx, api_key)
-          end
+          raise Errors::GraphqlError, user_errors if user_errors.any?
+          response["data"]["moduleUploadUrlGenerate"]["url"]
+        end
 
-          def call(query_name:, variables: {})
-            resp = @client.query(query_name, variables: variables)
-            raise_if_graphql_failed(resp)
-            resp
-          end
+        private
 
-          def raise_if_graphql_failed(response)
-            raise Errors::EmptyResponseError if response.nil?
-            raise Errors::GraphqlError, response["errors"] if response.key?("errors")
-          end
+        def make_request(query_name:, variables: {})
+          response = @client.query(query_name, variables: variables)
+          raise Errors::EmptyResponseError if response.nil?
+          raise Errors::GraphqlError, response["errors"] if response.key?("errors")
+
+          response
         end
 
         class UploadScript
-          attr_reader :ctx
-
-          def initialize(ctx)
-            @ctx = ctx
+          def initialize(script_service)
+            @script_service = script_service
           end
 
           def call(api_key, script_content)
-            apply_module_upload_url(api_key).tap do |url|
+            @script_service.generate_module_upload_url.tap do |url|
               upload(url, script_content)
             end
           end
 
           private
-
-          def apply_module_upload_url(api_key)
-            query_name = "module_upload_url_generate"
-            variables = {}
-            resp_hash = MakeRequest.new(ctx, api_key).call(query_name: query_name, variables: variables)
-            user_errors = resp_hash["data"]["moduleUploadUrlGenerate"]["userErrors"]
-
-            raise Errors::GraphqlError, user_errors if user_errors.any?
-            resp_hash["data"]["moduleUploadUrlGenerate"]["url"]
-          end
 
           def upload(url, script_content)
             url = URI(url)
