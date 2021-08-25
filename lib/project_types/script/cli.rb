@@ -45,6 +45,7 @@ module Script
     end
 
     module Infrastructure
+      autoload :ApiClients, Project.project_filepath("layers/infrastructure/api_clients")
       autoload :Errors, Project.project_filepath("layers/infrastructure/errors")
       autoload :CommandRunner, Project.project_filepath("layers/infrastructure/command_runner")
       autoload :PushPackageRepository, Project.project_filepath("layers/infrastructure/push_package_repository")
