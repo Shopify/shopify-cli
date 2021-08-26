@@ -55,7 +55,7 @@ describe Script::Layers::Infrastructure::ScriptService do
     HERE
   end
 
-  describe ".push" do
+  describe ".set_app_script" do
     let(:script_content) { "(module)" }
     let(:api_key) { "fake_key" }
     let(:uuid_from_config) { "uuid_from_config" }
@@ -133,7 +133,7 @@ describe Script::Layers::Infrastructure::ScriptService do
     end
 
     subject do
-      script_service.push(
+      script_service.set_app_script(
         uuid: uuid_from_config,
         extension_point_type: extension_point_type,
         metadata: Script::Layers::Domain::Metadata.new(
@@ -146,7 +146,7 @@ describe Script::Layers::Infrastructure::ScriptService do
       )
     end
 
-    describe "when push to script service succeeds" do
+    describe "when set_app_script to script service succeeds" do
       let(:script_service_response) do
         {
           "data" => {
@@ -177,7 +177,7 @@ describe Script::Layers::Infrastructure::ScriptService do
       end
     end
 
-    describe "when push to script service responds with errors" do
+    describe "when set_app_script to script service responds with errors" do
       let(:response) do
         {
           data: {
@@ -203,7 +203,7 @@ describe Script::Layers::Infrastructure::ScriptService do
       end
     end
 
-    describe "when push to script service responds with userErrors" do
+    describe "when set_app_script to script service responds with userErrors" do
       describe "when invalid app key" do
         let(:response) do
           {
@@ -224,7 +224,7 @@ describe Script::Layers::Infrastructure::ScriptService do
         end
       end
 
-      describe "when repush without a force" do
+      describe "when set_app_script without a force" do
         let(:response) do
           {
             data: {

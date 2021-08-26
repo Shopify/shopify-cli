@@ -16,7 +16,7 @@ module Script
           @client = ApiClients.default_client(ctx, api_key)
         end
 
-        def push(
+        def set_app_script(
           uuid:,
           extension_point_type:,
           force: false,
