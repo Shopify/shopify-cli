@@ -93,6 +93,12 @@ module Script
             super("WebAssembly binary not found")
           end
         end
+
+        # look into error_handler to see how the messages are mapped to errors.
+        # Check with Kate on the content of any error messages you introduce, as they are important part of DX.
+        # I imagine the error msg could say something like: "Internal error.  Please contact Shopify."
+        # In fact, in your PR, you should describe all the failure scenarios, with screen shots of the errors for Kate to review.
+        class InvalidProjectError < ScriptProjectError; end
       end
     end
   end

@@ -1,4 +1,6 @@
 # frozen_string_literal: true
+require 'bundler/setup'
+require "pry"
 
 module Script
   module Layers
@@ -46,7 +48,7 @@ module Script
           def setup_dependencies
             setup_sparse_checkout
             clean
-            update_project_name(self.class.config_file)
+            update_project_name(File.join(path_to_project, self.class.config_file))
           end
 
           private
@@ -56,9 +58,14 @@ module Script
           end
 
           def clean
-            source = File.join(path_to_project, sparse_checkout_set_path)
-            FileUtils.copy_entry(source, path_to_project)
-            ctx.rm_rf("packages") # TODO: - needs to be language agnostic
+            # When I changed the next 2 lines of code to use cp_r, I no longer need to add the weird
+            # trailing . on sparse_checkout_set_path in unit test.  Oh well, this just means that we can't
+            # use copy_entry.
+            source = File.join(path_to_project, sparse_checkout_set_path, ".")
+            FileUtils.cp_r(source, path_to_project)
+            # ctx.rm_rf("packages") # TODO: - needs to be language agnostic
+            # I think this fixes it, and doesn't need to be language agnostic
+            ctx.rm_rf(sparse_checkout_set_path.split('/')[0])
             ctx.rm_rf(".git")
           end
 
