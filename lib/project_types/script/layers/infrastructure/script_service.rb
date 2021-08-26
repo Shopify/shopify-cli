@@ -9,15 +9,16 @@ module Script
       class ScriptService
         include SmartProperties
         property! :ctx, accepts: ShopifyCli::Context
+        property! :api_key, accepts: String
 
         def initialize(*args, ctx:, api_key:, **kwargs)
+          super(*args, ctx: ctx, api_key: api_key, **kwargs)
           @client = ApiClients.default_client(ctx, api_key)
         end
 
         def push(
           uuid:,
           extension_point_type:,
-          api_key: nil,
           force: false,
           metadata:,
           script_json:,
@@ -65,7 +66,7 @@ module Script
           end
         end
 
-        def get_app_scripts(api_key:, extension_point_type:)
+        def get_app_scripts(extension_point_type:)
           query_name = "get_app_scripts"
           variables = { appKey: api_key, extensionPointName: extension_point_type.upcase }
           response = make_request(query_name: query_name, variables: variables)

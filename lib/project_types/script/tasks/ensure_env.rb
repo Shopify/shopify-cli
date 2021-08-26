@@ -90,7 +90,7 @@ module Script
 
       def ask_script_uuid(app, extension_point_type)
         script_service = Layers::Infrastructure::ScriptService.new(ctx: ctx, api_key: app["apiKey"])
-        scripts = script_service.get_app_scripts(api_key: app["apiKey"], extension_point_type: extension_point_type)
+        scripts = script_service.get_app_scripts(extension_point_type: extension_point_type)
 
         return nil unless scripts.count > 0 &&
           CLI::UI::Prompt.confirm(ctx.message("script.application.ensure_env.ask_connect_to_existing_script"))
