@@ -52,7 +52,7 @@ describe Script::Layers::Application::PushScript do
 
     it "should prepare and push script" do
       script_service_instance = Script::Layers::Infrastructure::ScriptService.new(ctx: @context, api_key: api_key)
-      script_service_instance.expects(:push).returns(uuid)
+      script_service_instance.expects(:set_app_script).returns(uuid)
       Script::Layers::Infrastructure::ScriptService
         .expects(:new).returns(script_service_instance)
 
