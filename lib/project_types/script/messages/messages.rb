@@ -141,6 +141,12 @@ module Script
           web_assembly_binary_not_found_suggestion: "No WebAssembly binary found." \
             "Check that your build npm script outputs the generated binary to the root of the directory." \
             "Generated binary should match the script name: <script_name>.wasm",
+
+          project_config_not_found: "The source project did not contain a config file.",
+          project_config_not_found_suggestion: "Ensure the source project is valid.",
+
+          invalid_project_config: "The source config file is not properly configured.",
+          invalid_project_config_suggestion: "Ensure the source config file is valid.",
         },
 
         create: {
