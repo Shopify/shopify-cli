@@ -17,14 +17,12 @@ module Script
         def push(
           uuid:,
           extension_point_type:,
-          script_content:,
           api_key: nil,
           force: false,
           metadata:,
-          script_json:
+          script_json:,
+          module_upload_url:
         )
-          url = UploadScript.new(self).call(api_key, script_content)
-
           query_name = "app_script_set"
           variables = {
             uuid: uuid,
@@ -37,7 +35,7 @@ module Script
             scriptJsonVersion: script_json.version,
             configurationUi: script_json.configuration_ui,
             configurationDefinition: script_json.configuration&.to_json,
-            moduleUploadUrl: url,
+            moduleUploadUrl: module_upload_url,
           }
           resp_hash = make_request(query_name: query_name, variables: variables)
           user_errors = resp_hash["data"]["appScriptSet"]["userErrors"]
@@ -92,34 +90,6 @@ module Script
           raise Errors::GraphqlError, response["errors"] if response.key?("errors")
 
           response
-        end
-
-        class UploadScript
-          def initialize(script_service)
-            @script_service = script_service
-          end
-
-          def call(api_key, script_content)
-            @script_service.generate_module_upload_url.tap do |url|
-              upload(url, script_content)
-            end
-          end
-
-          private
-
-          def upload(url, script_content)
-            url = URI(url)
-
-            https = Net::HTTP.new(url.host, url.port)
-            https.use_ssl = true
-
-            request = Net::HTTP::Put.new(url)
-            request["Content-Type"] = "application/wasm"
-            request.body = script_content
-
-            response = https.request(request)
-            raise Errors::ScriptUploadError unless response.code == "200"
-          end
         end
       end
     end

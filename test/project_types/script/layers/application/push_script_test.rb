@@ -28,6 +28,7 @@ describe Script::Layers::Application::PushScript do
   let(:task_runner) { stub(compiled_type: "wasm", metadata: metadata) }
   let(:ep) { extension_point_repository.get_extension_point(extension_point_type) }
   let(:uuid) { "uuid" }
+  let(:url) { "https://some-bucket" }
 
   before do
     Script::Layers::Infrastructure::PushPackageRepository.stubs(:new).returns(push_package_repository)
@@ -52,6 +53,14 @@ describe Script::Layers::Application::PushScript do
     it "should prepare and push script" do
       script_service_instance = Script::Layers::Infrastructure::ScriptService.new(ctx: @context, api_key: api_key)
       script_service_instance.expects(:push).returns(uuid)
+      Script::Layers::Infrastructure::ScriptService
+        .expects(:new).returns(script_service_instance)
+
+      script_uploader_instance = Script::Layers::Infrastructure::ScriptUploader.new(script_service_instance)
+      script_uploader_instance.expects(:upload).returns(url)
+      Script::Layers::Infrastructure::ScriptUploader
+        .expects(:new).returns(script_uploader_instance)
+
       Script::Layers::Application::ProjectDependencies
         .expects(:install).with(ctx: @context, task_runner: task_runner)
       Script::Layers::Application::BuildScript.expects(:call).with(
@@ -59,8 +68,6 @@ describe Script::Layers::Application::PushScript do
         task_runner: task_runner,
         script_project: script_project
       )
-      Script::Layers::Infrastructure::ScriptService
-        .expects(:new).returns(script_service_instance)
       capture_io { subject }
       assert_equal uuid, script_project_repository.get.uuid
     end
