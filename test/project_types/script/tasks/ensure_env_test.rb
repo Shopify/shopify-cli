@@ -97,7 +97,7 @@ describe Script::Tasks::EnsureEnv do
           Script::Layers::Infrastructure::ScriptService
             .any_instance
             .stubs(:get_app_scripts)
-            .with(api_key: selected_api_key, extension_point_type: extension_point_type)
+            .with(extension_point_type: extension_point_type)
             .returns(existing_scripts)
         end
 

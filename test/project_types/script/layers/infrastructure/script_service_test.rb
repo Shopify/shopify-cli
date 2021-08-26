@@ -142,7 +142,6 @@ describe Script::Layers::Infrastructure::ScriptService do
           use_msgpack,
         ),
         script_json: script_json,
-        api_key: api_key,
         module_upload_url: url
       )
     end
@@ -331,7 +330,6 @@ describe Script::Layers::Infrastructure::ScriptService do
 
     subject do
       script_service.get_app_scripts(
-        api_key: api_key,
         extension_point_type: extension_point_type,
       )
     end

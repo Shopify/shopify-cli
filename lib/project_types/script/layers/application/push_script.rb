@@ -26,7 +26,6 @@ module Script
                 uuid: package.uuid,
                 extension_point_type: package.extension_point_type,
                 script_content: package.script_content,
-                api_key: script_project.api_key,
                 force: force,
                 metadata: package.metadata,
                 script_json: package.script_json,
