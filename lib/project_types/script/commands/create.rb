@@ -25,7 +25,7 @@ module Script
         project = Layers::Application::CreateScript.call(
           ctx: @ctx,
           language: form.language,
-          branch: options.flags[:branch] || "master",
+          branch: options.flags[:branch] || "add-package-json", # I realized later I didn't use the options in my command.
           script_name: form.name,
           extension_point_type: form.extension_point,
           no_config_ui: options.flags.key?(:no_config_ui)
