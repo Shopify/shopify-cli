@@ -1,6 +1,4 @@
 # frozen_string_literal: true
-require 'bundler/setup'
-require "pry"
 
 module Script
   module Layers
@@ -58,20 +56,18 @@ module Script
           end
 
           def clean
-            # When I changed the next 2 lines of code to use cp_r, I no longer need to add the weird
-            # trailing . on sparse_checkout_set_path in unit test.  Oh well, this just means that we can't
-            # use copy_entry.
             source = File.join(path_to_project, sparse_checkout_set_path, ".")
             FileUtils.cp_r(source, path_to_project)
-            # ctx.rm_rf("packages") # TODO: - needs to be language agnostic
-            # I think this fixes it, and doesn't need to be language agnostic
-            ctx.rm_rf(sparse_checkout_set_path.split('/')[0])
+            ctx.rm_rf(sparse_checkout_set_path.split("/")[0])
             ctx.rm_rf(".git")
           end
 
           def update_project_name(config_file)
+            raise Errors::ProjectConfigNotFoundError unless File.exist?(config_file)
             upstream_name = "#{type.gsub("_", "-")}-default"
             contents = File.read(config_file)
+
+            raise Errors::InvalidProjectConfigError unless contents.include?(upstream_name)
             new_contents = contents.gsub(upstream_name, project_name)
             File.write(config_file, new_contents)
           end
