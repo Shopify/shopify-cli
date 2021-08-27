@@ -134,7 +134,7 @@ module ShopifyCli
   Context.load_messages(ShopifyCli::Messages::MESSAGES)
 
   def self.cache_dir
-    cache_dir = if ENV.key?("RUNNING_SHOPIFY_CLI_TESTS")
+    cache_dir = if Environment.running_tests?
       TEMP_DIR
     elsif ENV["LOCALAPPDATA"].nil?
       File.join(File.expand_path(ENV.fetch("XDG_CACHE_HOME", "~/.cache")), TOOL_NAME)
@@ -149,7 +149,7 @@ module ShopifyCli
   end
 
   def self.tool_config_path
-    if ENV.key?("RUNNING_SHOPIFY_CLI_TESTS")
+    if Environment.running_tests?
       TEMP_DIR
     elsif ENV["APPDATA"].nil?
       File.join(File.expand_path(ENV.fetch("XDG_CONFIG_HOME", "~/.config")), TOOL_NAME)

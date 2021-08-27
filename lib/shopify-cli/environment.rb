@@ -10,6 +10,13 @@ module ShopifyCli
       )
     end
 
+    def self.running_tests?(env_variables: ENV)
+      env_variable_truthy?(
+        Constants::EnvironmentVariables::RUNNING_TESTS,
+        env_variables: env_variables
+      )
+    end
+
     def self.partners_domain(env_variables: ENV)
       if use_local_partners_instance?(env_variables: env_variables)
         "partners.myshopify.io"
