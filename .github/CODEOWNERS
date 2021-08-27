@@ -1,4 +1,5 @@
 *       @shopify/core-build-learn
+*       @shopify/development-lifecycle
 
 /lib/project_types/script/ @shopify/scripts-experience
 /test/project_types/script/ @shopify/scripts-experience

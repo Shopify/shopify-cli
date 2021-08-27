@@ -1,0 +1,30 @@
+name: Shopify
+
+on: [push, pull_request]
+
+jobs:
+  test:
+    name: Test with Ruby ${{ matrix.version }} on ${{ matrix.os }}
+    runs-on: ${{ matrix.os }}
+    strategy:
+      matrix:
+        version:
+          - 3.0.0
+          - 2.6.6
+          - 2.7.1
+        os:
+          - macos-latest
+    steps:
+      - uses: actions/checkout@v2
+
+      - name: Set up Ruby ${{ matrix.version }}
+        uses: ruby/setup-ruby@v1
+        with:
+          ruby-version: ${{ matrix.version }}
+          bundler-cache: true
+
+      - name: Install Dependencies
+        run: bundle install
+
+      - name: Run Tests
+        run: bundle exec rake
