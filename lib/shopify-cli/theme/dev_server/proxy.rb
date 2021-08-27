@@ -155,11 +155,16 @@ module ShopifyCli
           Time.now - @last_session_cookie_refresh >= SESSION_COOKIE_MAX_AGE
         end
 
+        def extract_secure_session_id_from_response_headers(headers)
+          return unless headers["set-cookie"]
+          headers["set-cookie"][SESSION_COOKIE_REGEXP, 1]
+        end
+
         def secure_session_id
           if secure_session_id_expired?
             @ctx.debug("Refreshing preview _secure_session_id cookie")
             response = request("HEAD", "/", query: { preview_theme_id: @theme.id })
-            @secure_session_id = response["set-cookie"][SESSION_COOKIE_REGEXP, 1]
+            @secure_session_id = extract_secure_session_id_from_response_headers(response)
             @last_session_cookie_refresh = Time.now
           end
 
@@ -177,6 +182,13 @@ module ShopifyCli
 
           if response_headers["location"]&.include?("myshopify.com")
             response_headers["location"].gsub!(%r{(https://#{@theme.shop})}, "http://127.0.0.1:9292")
+          end
+
+          new_session_id = extract_secure_session_id_from_response_headers(response_headers)
+          if new_session_id
+            @ctx.debug("New _secure_session_id cookie from response")
+            @secure_session_id = new_session_id
+            @last_session_cookie_refresh = Time.now
           end
 
           response_headers

@@ -64,6 +64,38 @@ module ShopifyCli
             times: 2)
         end
 
+        def test_update_session_cookie_when_returned_from_backend
+          stub_session_id_request
+          new_secure_session_id = "#{SECURE_SESSION_ID}2"
+
+          # POST response returning a new session cookie (Set-Cookie)
+          stub_request(:post, "https://dev-theme-server-store.myshopify.com/account/login?_fd=0&pb=0")
+            .with(
+              headers: {
+                "Cookie" => "_secure_session_id=#{SECURE_SESSION_ID}",
+              }
+            )
+            .to_return(
+              status: 200,
+              body: "",
+              headers: {
+                "Set-Cookie" => "_secure_session_id=#{new_secure_session_id}",
+              }
+            )
+
+          # GET / passing the new session cookie
+          stub_request(:get, "https://dev-theme-server-store.myshopify.com/?_fd=0&pb=0")
+            .with(
+              headers: {
+                "Cookie" => "_secure_session_id=#{new_secure_session_id}",
+              }
+            )
+            .to_return(status: 200)
+
+          request.post("/account/login")
+          request.get("/")
+        end
+
         def test_form_data_is_proxied_to_online_store
           stub_request(:post, "https://dev-theme-server-store.myshopify.com/password?_fd=0&pb=0")
             .with(
