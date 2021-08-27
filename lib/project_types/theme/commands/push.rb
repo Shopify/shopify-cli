@@ -15,6 +15,10 @@ module Theme
         parser.on("-j", "--json") { flags[:json] = true }
         parser.on("-a", "--allow-live") { flags[:allow_live] = true }
         parser.on("-p", "--publish") { flags[:publish] = true }
+        parser.on("-x", "--ignore=PATTERN") do |pattern|
+          flags[:ignores] ||= []
+          flags[:ignores] << pattern
+        end
       end
 
       def call(args, _name)
@@ -48,6 +52,8 @@ module Theme
         end
 
         ignore_filter = ShopifyCli::Theme::IgnoreFilter.from_path(root)
+        ignore_filter.add_patterns(options.flags[:ignores]) if options.flags[:ignores]
+
         syncer = ShopifyCli::Theme::Syncer.new(@ctx, theme: theme, ignore_filter: ignore_filter)
         begin
           syncer.start_threads

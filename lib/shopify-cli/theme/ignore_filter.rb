@@ -59,6 +59,13 @@ module ShopifyCli
         @globs = globs
       end
 
+      def add_patterns(patterns)
+        regexes, globs = patterns_to_regexes_and_globs(patterns)
+
+        @regexes += regexes
+        @globs += globs
+      end
+
       def match?(path)
         path = path.to_s
 
