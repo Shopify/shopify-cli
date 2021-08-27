@@ -94,6 +94,8 @@ module ShopifyCli
     )
   end
 
+  autoload :Constants, "shopify-cli/constants"
+  autoload :Environment, "shopify-cli/environment"
   autoload :AdminAPI, "shopify-cli/admin_api"
   autoload :API, "shopify-cli/api"
   autoload :Command, "shopify-cli/command"
