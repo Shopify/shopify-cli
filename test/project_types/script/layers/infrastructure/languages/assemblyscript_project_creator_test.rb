@@ -30,7 +30,6 @@ describe Script::Layers::Infrastructure::Languages::AssemblyScriptProjectCreator
     Script::Layers::Infrastructure::Languages::AssemblyScriptProjectCreator
       .new(
         ctx: context,
-        domain: domain,
         type: extension_point_type,
         repo: repo,
         project_name: project_name,

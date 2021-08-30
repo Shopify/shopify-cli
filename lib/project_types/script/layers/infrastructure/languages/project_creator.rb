@@ -7,7 +7,6 @@ module Script
         class ProjectCreator
           include SmartProperties
           property! :ctx, accepts: ShopifyCli::Context
-          property! :domain, accepts: String
           property! :type, accepts: String
           property! :repo, accepts: String
           property! :project_name, accepts: String
@@ -16,7 +15,7 @@ module Script
           property! :sparse_checkout_set_path, accepts: String
 
           def self.for(
-            ctx:, language:, domain:, type:, repo:,
+            ctx:, language:, type:, repo:,
             project_name:, path_to_project:, branch:, sparse_checkout_set_path:
           )
 
@@ -28,7 +27,6 @@ module Script
             raise Errors::ProjectCreatorNotFoundError unless project_creators[language]
             project_creators[language].new(
               ctx: ctx,
-              domain: domain,
               type: type,
               repo: repo,
               project_name: project_name,

@@ -32,7 +32,6 @@ module Script
               project_creator = Infrastructure::Languages::ProjectCreator.for(
                 ctx: ctx,
                 language: language,
-                domain: domain,
                 type: type,
                 repo: repo,
                 project_name: script_name,

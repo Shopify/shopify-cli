@@ -49,7 +49,6 @@ describe Script::Layers::Application::CreateScript do
       .with(
         ctx: context,
         language: language,
-        domain: domain,
         type: extension_point_type,
         repo: repo,
         project_name: script_name,

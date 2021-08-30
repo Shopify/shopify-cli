@@ -30,7 +30,6 @@ describe Script::Layers::Infrastructure::Languages::ProjectCreator do
   let(:project_creator) do
     GenericProjectCreator.new(
       ctx: context,
-      domain: domain,
       type: extension_point_type,
       repo: repo,
       project_name: project_name,
@@ -51,7 +50,6 @@ describe Script::Layers::Infrastructure::Languages::ProjectCreator do
         .for(
           ctx: context,
           language: language,
-          domain: domain,
           type: extension_point_type,
           repo: repo,
           project_name: project_name,
