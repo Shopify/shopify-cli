@@ -47,6 +47,10 @@ module ShopifyCli
           super(k) || super(@names[k.downcase])
         end
 
+        def fetch(k, default = nil)
+          self[k] || super(@names[k.downcase], default)
+        end
+
         def []=(k, v)
           canonical = k.downcase.freeze
           # .delete is expensive, don't invoke it unless necessary
