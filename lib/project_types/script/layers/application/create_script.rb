@@ -29,7 +29,7 @@ module Script
                 sparse_checkout_set_path = "packages/default/extension-point-as-#{type}/assembly/sample"
               end
 
-              project_creator_input = {
+              project_creator = Infrastructure::Languages::ProjectCreator.for(
                 ctx: ctx,
                 language: language,
                 domain: domain,
@@ -38,10 +38,8 @@ module Script
                 project_name: script_name,
                 path_to_project: project.id,
                 branch: branch,
-                sparse_checkout_set_path: sparse_checkout_set_path,
-              }
-
-              project_creator = Infrastructure::Languages::ProjectCreator.for(project_creator_input)
+                sparse_checkout_set_path: sparse_checkout_set_path
+              )
 
               install_dependencies(ctx, language, script_name, project_creator)
               script_project_repo.update_or_create_script_json(title: script_name, configuration_ui: !no_config_ui)
