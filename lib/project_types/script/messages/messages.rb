@@ -142,11 +142,9 @@ module Script
             "Check that your build npm script outputs the generated binary to the root of the directory." \
             "Generated binary should match the script name: <script_name>.wasm",
 
-          project_config_not_found: "Internal error. The repository’s config file is missing.",
+          project_config_not_found: "Internal error - Script can't be created because the project's config file is missing from the repository.",
 
-          invalid_project_config: "Internal error. The repository’s config file is invalid.",
-          invalid_project_config: "The source config file is not properly configured.",
-          invalid_project_config_suggestion: "Ensure the source config file is valid.",
+          invalid_project_config: "Internal error - Script can't be created because the project's config file is invalid in the repository.",
 
           script_upload_cause: "Fail to upload script.",
           script_upload_help: "Try again.",
