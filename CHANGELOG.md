@@ -1,7 +1,7 @@
 Unreleased
 ------
 
-* [#1386](https://github.com/Shopify/shopify-cli/pull/1386): Update Theme-Check to 1.2
+* [#1386](https://github.com/Shopify/shopify-cli/pull/1485): Update Theme-Check to 1.3
 * [#1457](https://github.com/Shopify/shopify-cli/pull/1457): Fix uploading of binary theme files under Windows
 
 Version 2.2.2
