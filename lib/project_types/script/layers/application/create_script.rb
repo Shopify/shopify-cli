@@ -56,15 +56,15 @@ module Script
             CLI::UI::Frame.open(ctx.message(
               "core.git.pulling_from_to",
               project_creator.repo,
-              project_creator.path_to_project,
+              script_name,
             )) do
               UI::StrictSpinner.spin(ctx.message(
                 "core.git.pulling",
                 project_creator.repo,
-                project_creator.path_to_project,
+                script_name,
               )) do |spinner|
                 project_creator.setup_dependencies
-                spinner.update_title(ctx.message("core.git.pulled", project_creator.path_to_project))
+                spinner.update_title(ctx.message("core.git.pulled", script_name))
               end
             end
             ProjectDependencies.install(ctx: ctx, task_runner: task_runner)
