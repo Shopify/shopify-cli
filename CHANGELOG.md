@@ -1,6 +1,9 @@
 Unreleased
 ------
 
+Version 2.3.0
+------
+
 * [#1386](https://github.com/Shopify/shopify-cli/pull/1386): Update Theme-Check to 1.2
 * [#1457](https://github.com/Shopify/shopify-cli/pull/1457): Fix uploading of binary theme files under Windows
 * [#1480](https://github.com/Shopify/shopify-cli/pull/1480): Fix customers pages not working with `theme serve`
