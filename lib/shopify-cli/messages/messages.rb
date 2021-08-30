@@ -71,10 +71,14 @@ module ShopifyCli
             sparse_checkout_not_enabled: "Sparse checkout could not be enabled.",
             sparse_checkout_not_set: "Sparse checkout set command failed.",
             pull_failed: "Pull failed.",
+            pull_failed_bad_branch: "Pull failed. Could not find the specified branch: %s",
           },
 
           cloning: "Cloning %s into %s…",
           cloned: "{{v}} Cloned into %s",
+          pulling_from_to: "Pulling %s into %s…",
+          pulling: "Pulling…",
+          pulled: "Pulled into %s",
         },
 
         help: {

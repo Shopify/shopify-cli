@@ -126,8 +126,11 @@ module ShopifyCli
           ctx.abort(ctx.message("core.git.error.sparse_checkout_not_set"))
         end
 
-        _, status = ctx.capture2e("git pull origin #{branch}")
+        resp, status = ctx.capture2e("git pull origin #{branch}")
         unless status.success?
+          if resp.include?("fatal: couldn't find remote ref")
+            ctx.abort(ctx.message("core.git.error.pull_failed_bad_branch", branch))
+          end
           ctx.abort(ctx.message("core.git.error.pull_failed"))
         end
       end

@@ -53,7 +53,20 @@ module Script
 
           def install_dependencies(ctx, language, script_name, project_creator)
             task_runner = Infrastructure::Languages::TaskRunner.for(ctx, language, script_name)
-            project_creator.setup_dependencies
+            CLI::UI::Frame.open(ctx.message(
+              "core.git.pulling_from_to",
+              project_creator.repo,
+              project_creator.path_to_project,
+            )) do
+              UI::StrictSpinner.spin(ctx.message(
+                "core.git.pulling",
+                project_creator.repo,
+                project_creator.path_to_project,
+              )) do |spinner|
+                project_creator.setup_dependencies
+                spinner.update_title(ctx.message("core.git.pulled", project_creator.path_to_project))
+              end
+            end
             ProjectDependencies.install(ctx: ctx, task_runner: task_runner)
           end
 

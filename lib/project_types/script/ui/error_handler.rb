@@ -240,12 +240,10 @@ module Script
         when Layers::Infrastructure::Errors::ProjectConfigNotFoundError
           {
             cause_of_error: ShopifyCli::Context.message("script.error.project_config_not_found"),
-            help_suggestion: ShopifyCli::Context.message("script.error.project_config_not_found_suggestion"),
           }
         when Layers::Infrastructure::Errors::InvalidProjectConfigError
           {
             cause_of_error: ShopifyCli::Context.message("script.error.invalid_project_config"),
-            help_suggestion: ShopifyCli::Context.message("script.error.invalid_project_config_suggestion"),
           }
         when Layers::Infrastructure::Errors::ScriptUploadError
           {

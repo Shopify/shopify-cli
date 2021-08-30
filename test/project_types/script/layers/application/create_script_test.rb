@@ -58,6 +58,9 @@ describe Script::Layers::Application::CreateScript do
         sparse_checkout_set_path: sparse_checkout_set_path,
       )
       .returns(project_creator)
+
+    project_creator.stubs(:repo).returns(repo)
+    project_creator.stubs(:path_to_project).returns(script_project.id)
   end
 
   describe ".call" do
