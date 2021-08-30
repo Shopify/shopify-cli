@@ -67,6 +67,22 @@ module ShopifyCli
           assert_includes(filter.regexes, testcase[:regex]) unless testcase[:regex].nil?
         end
       end
+
+      def test_add
+        filter = IgnoreFilter.new("/tmp")
+        test_cases = [
+          { pattern: "config/settings_data.json", glob: "*config/settings_data.json" },
+          { pattern: "config/", glob: "*config/*" },
+          { pattern: "*.jpg", glob: "*.jpg" },
+          { pattern: "/\\.(txt|gif|bat)$/", regex: /\.(txt|gif|bat)$/ },
+        ]
+
+        test_cases.each do |test_case|
+          filter.add_patterns([test_case.fetch(:pattern)])
+          assert_includes(filter.globs, test_case.fetch(:glob)) if test_case.key?(:glob)
+          assert_includes(filter.regexes, test_case.fetch(:regex)) if test_case.key?(:regex)
+        end
+      end
     end
   end
 end

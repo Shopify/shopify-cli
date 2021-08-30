@@ -146,6 +146,29 @@ module Theme
         @command.call([], "push")
       end
 
+      def test_push_with_ignores
+        ShopifyCli::Theme::Theme.expects(:new)
+          .with(@ctx, root: ".", id: 1234)
+          .returns(@theme)
+
+        ShopifyCli::Theme::IgnoreFilter.expects(:from_path).with(".").returns(@ignore_filter)
+        @ignore_filter.expects(:add_patterns).with(["config/*"])
+
+        ShopifyCli::Theme::Syncer.expects(:new)
+          .with(@ctx, theme: @theme, ignore_filter: @ignore_filter)
+          .returns(@syncer)
+
+        @syncer.expects(:start_threads)
+        @syncer.expects(:shutdown)
+
+        @syncer.expects(:upload_theme!).with(delete: true)
+        @ctx.expects(:done)
+
+        @command.options.flags[:theme_id] = 1234
+        @command.options.flags[:ignores] = ["config/*"]
+        @command.call([], "push")
+      end
+
       def test_push_to_development_theme
         ShopifyCli::Theme::DevelopmentTheme.expects(:new)
           .with(@ctx, root: ".")
