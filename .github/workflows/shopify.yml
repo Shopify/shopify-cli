@@ -1,17 +1,19 @@
-name: CI
+name: Shopify
 
 on: [push, pull_request]
 
 jobs:
-  build:
-    name: Ruby ${{ matrix.version }}
-    runs-on: macos-latest
+  test:
+    name: Test with Ruby ${{ matrix.version }} on ${{ matrix.os }}
+    runs-on: ${{ matrix.os }}
     strategy:
       matrix:
         version:
           - 3.0.0
           - 2.6.6
           - 2.7.1
+        os:
+          - macos-latest
     steps:
       - uses: actions/checkout@v2
 
