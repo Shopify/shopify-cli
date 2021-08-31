@@ -8,16 +8,6 @@ module ShopifyCli
   class PartnersAPI < API
     autoload :Organizations, "shopify-cli/partners_api/organizations"
 
-    # Defines the environment variable that this API looks for to operate on local
-    # services. If you set this environment variable in your shell then the partners
-    # API will operate on your local instance
-    #
-    # #### Example
-    #
-    #  SHOPIFY_APP_CLI_LOCAL_PARTNERS=1 shopify create
-    #
-    LOCAL_DEBUG = "SHOPIFY_APP_CLI_LOCAL_PARTNERS"
-
     class << self
       ##
       # issues a graphql query or mutation to the Shopify Partners Dashboard CLI Schema.
@@ -59,11 +49,11 @@ module ShopifyCli
         ctx.puts(ctx.message("core.partners_api.error.account_not_found", ShopifyCli::TOOL_NAME))
       end
 
-      def partners_url_for(organization_id, api_client_id, local_debug)
+      def partners_url_for(organization_id, api_client_id)
         if ShopifyCli::Shopifolk.acting_as_shopify_organization?
           organization_id = "internal"
         end
-        "#{partners_endpoint(local_debug)}/#{organization_id}/apps/#{api_client_id}"
+        "https://#{Environment.partners_domain}/#{organization_id}/apps/#{api_client_id}"
       end
 
       private
@@ -72,7 +62,7 @@ module ShopifyCli
         new(
           ctx: ctx,
           token: access_token(ctx),
-          url: "#{endpoint}/api/cli/graphql",
+          url: "https://#{Environment.partners_domain}/api/cli/graphql",
         )
       end
 
@@ -81,20 +71,6 @@ module ShopifyCli
           IdentityAuth.new(ctx: ctx).authenticate
           ShopifyCli::DB.get(:partners_exchange_token)
         end
-      end
-
-      def endpoint
-        return "https://partners.shopify.com" if ENV[LOCAL_DEBUG].nil?
-        "https://partners.myshopify.io/"
-      end
-
-      def partners_endpoint(local_debug)
-        domain = if local_debug
-          "partners.myshopify.io"
-        else
-          "partners.shopify.com"
-        end
-        "https://#{domain}"
       end
 
       def auth_failure_info(ctx, error)

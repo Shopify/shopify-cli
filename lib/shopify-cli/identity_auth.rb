@@ -17,7 +17,6 @@ module ShopifyCli
     class Error < StandardError; end
     class Timeout < StandardError; end
     LocalRequest = Struct.new(:method, :path, :query, :protocol)
-    LOCAL_DEBUG = "SHOPIFY_APP_CLI_LOCAL_PARTNERS"
 
     DEFAULT_PORT = 3456
     REDIRECT_HOST = "http://127.0.0.1:#{DEFAULT_PORT}"
@@ -236,12 +235,15 @@ module ShopifyCli
     end
 
     def auth_url
-      return "https://accounts.shopify.com/oauth" if ENV[LOCAL_DEBUG].nil?
-      "https://identity.myshopify.io/oauth"
+      if Environment.use_local_partners_instance?
+        "https://identity.myshopify.io/oauth"
+      else
+        "https://accounts.shopify.com/oauth"
+      end
     end
 
     def client_id_for_application(application_name)
-      client_ids = if ENV[LOCAL_DEBUG]
+      client_ids = if Environment.use_local_partners_instance?
         DEV_APPLICATION_CLIENT_IDS
       else
         APPLICATION_CLIENT_IDS
@@ -257,17 +259,15 @@ module ShopifyCli
     end
 
     def client_id
-      return "fbdb2649-e327-4907-8f67-908d24cfd7e3" if ENV[LOCAL_DEBUG].nil?
-
-      ctx.abort(ctx.message("core.identity_auth.error.local_identity_not_running")) unless local_identity_running?
-
-      # Fetch the client ID from the local Identity Dynamic Registration endpoint
-      response = post_request("/client", {
-        name: "shopify-cli-development",
-        public_type: "native",
-      })
-
-      response["client_id"]
+      if Environment.use_local_partners_instance?
+        Constants::Identity::CLIENT_ID_DEV
+      else
+        # In the future we might want to use Identity's dynamic
+        # registration. To migrate to a dynamic client ID we
+        # need to refactor some code that relies on a static
+        # value for the client
+        Constants::Identity::CLIENT_ID
+      end
     end
 
     def local_identity_running?

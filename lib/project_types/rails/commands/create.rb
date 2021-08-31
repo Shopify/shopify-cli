@@ -63,7 +63,7 @@ module Rails
           scopes: "write_products,write_customers,write_draft_orders",
         ).write(@ctx)
 
-        partners_url = ShopifyCli::PartnersAPI.partners_url_for(form.organization_id, api_client["id"], local_debug?)
+        partners_url = ShopifyCli::PartnersAPI.partners_url_for(form.organization_id, api_client["id"])
 
         @ctx.puts(@ctx.message("apps.create.info.created", form.title, partners_url))
         @ctx.puts(@ctx.message("apps.create.info.serve", form.name, ShopifyCli::TOOL_NAME, "rails"))

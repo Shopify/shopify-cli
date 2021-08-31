@@ -5,6 +5,7 @@ module ShopifyCli
     def setup
       super
       @context.stubs(:tty?).returns(false)
+      Environment.stubs(:use_local_partners_instance?).returns(false)
     end
 
     def test_authenticate
@@ -234,7 +235,7 @@ module ShopifyCli
     end
 
     def client_id
-      "fbdb2649-e327-4907-8f67-908d24cfd7e3"
+      "e5380e02-312a-7408-5718-e07017e9cf52"
     end
 
     def authorization_scopes
