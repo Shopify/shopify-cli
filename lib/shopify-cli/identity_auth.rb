@@ -260,13 +260,13 @@ module ShopifyCli
 
     def client_id
       if Environment.use_local_partners_instance?
-        "fbdb2649-e327-4907-8f67-908d24cfd7e3"
+        Constants::Identity::CLIENT_ID_DEV
       else
         # In the future we might want to use Identity's dynamic
         # registration. To migrate to a dynamic client ID we
         # need to refactor some code that relies on a static
         # value for the client
-        "e5380e02-312a-7408-5718-e07017e9cf52"
+        Constants::Identity::CLIENT_ID
       end
     end
 
