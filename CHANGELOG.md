@@ -1,6 +1,8 @@
 Unreleased
 ------
 
+* [#1488](https://github.com/Shopify/shopify-cli/pull/1488): Update Theme-Check to 1.4
+
 Version 2.3.0
 ------
 
