@@ -235,7 +235,7 @@ module ShopifyCli
     end
 
     def client_id
-      "e5380e02-312a-7408-5718-e07017e9cf52"
+      "fbdb2649-e327-4907-8f67-908d24cfd7e3"
     end
 
     def authorization_scopes
