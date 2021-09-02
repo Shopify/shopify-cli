@@ -35,7 +35,10 @@ module ShopifyCli
     end
 
     def self.spin_url(env_variables: ENV)
-      "#{spin_workspace(env_variables: env_variables)}.#{spin_namespace(env_variables: env_variables)}.#{spin_host(env_variables: env_variables)}"
+      spin_workspace = spin_workspace(env_variables: env_variables)
+      spin_namespace = spin_namespace(env_variables: env_variables)
+      spin_host = spin_host(env_variables: env_variables)
+      "#{spin_workspace}.#{spin_namespace}.#{spin_host}"
     end
 
     def self.env_variable_truthy?(variable_name, env_variables: ENV)

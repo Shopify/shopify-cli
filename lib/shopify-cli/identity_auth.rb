@@ -238,7 +238,7 @@ module ShopifyCli
       if Environment.use_local_partners_instance?
         "https://identity.myshopify.io/oauth"
       elsif Environment.use_spin_partners_instance?
-	      "https://identity.#{Environment.spin_url}/oauth"
+        "https://identity.#{Environment.spin_url}/oauth"
       else
         "https://accounts.shopify.com/oauth"
       end
