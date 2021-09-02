@@ -4,26 +4,28 @@ module Script
       class ApiClients
         def self.default_client(ctx, api_key)
           if ENV["BYPASS_PARTNERS_PROXY"]
-            ScriptServiceAPI.new(ctx, api_key)
+            ScriptServiceApiClient.new(ctx, api_key)
           else
-            PartnersProxyAPI.new(ctx, api_key)
+            PartnersProxyApiClient.new(ctx, api_key)
           end
         end
 
-        class ScriptServiceAPI < ShopifyCli::API
-          property(:api_key, accepts: String)
-
+        class ScriptServiceApiClient
           LOCAL_INSTANCE_URL = "https://script-service.myshopify.io"
 
           def initialize(ctx, api_key)
             instance_url = script_service_url
-            super(
+            @api = ShopifyCli::API.new(
               ctx: ctx,
               url: "#{instance_url}/graphql",
               token: { "APP_KEY" => api_key }.compact.to_json,
               auth_header: "X-Shopify-Authenticated-Tokens",
               api_key: api_key
             )
+          end
+
+          def query(query_name, variables: {})
+            @api.query(query_name, variables: variables)
           end
 
           private
@@ -36,9 +38,9 @@ module Script
             end
           end
         end
-        private_constant(:ScriptServiceAPI)
+        private_constant(:ScriptServiceApiClient)
 
-        class PartnersProxyAPI
+        class PartnersProxyApiClient
           def initialize(ctx, api_key)
             @ctx = ctx
             @api_key = api_key
@@ -81,7 +83,7 @@ module Script
           end
           private_constant(:ShimAPI)
         end
-        private_constant(:PartnersProxyAPI)
+        private_constant(:PartnersProxyApiClient)
       end
     end
   end
