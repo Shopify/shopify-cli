@@ -178,7 +178,6 @@ module Rails
       def install_gem(name, version = nil)
         Gem.install(@ctx, name, version)
       end
-
     end
   end
 end
