@@ -44,6 +44,8 @@ module Script
 
           # the sparse checkout process is common to all script types
           def setup_dependencies
+            ctx.mkdir_p(path_to_project)
+            ctx.chdir(path_to_project)
             setup_sparse_checkout
             clean
             update_project_name(File.join(path_to_project, self.class.config_file))

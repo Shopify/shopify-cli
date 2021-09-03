@@ -10,7 +10,7 @@ module Script
           def call(ctx:, language:, branch:, script_name:, extension_point_type:, no_config_ui:)
             raise Infrastructure::Errors::ScriptProjectAlreadyExistsError, script_name if ctx.dir_exist?(script_name)
 
-            in_new_directory_context(ctx, script_name) do
+            # in_new_directory_context(ctx, script_name) do
               extension_point = ExtensionPoints.get(type: extension_point_type)
               script_project_repo = Infrastructure::ScriptProjectRepository.new(ctx: ctx)
               project = script_project_repo.create(
@@ -36,7 +36,7 @@ module Script
                 type: type,
                 repo: repo,
                 project_name: script_name,
-                path_to_project: project.id,
+                path_to_project: project.id + "/#{script_name}",
                 branch: branch,
                 sparse_checkout_set_path: sparse_checkout_set_path,
               }
@@ -47,7 +47,7 @@ module Script
               script_project_repo.update_or_create_script_json(title: script_name, configuration_ui: !no_config_ui)
               project
             end
-          end
+          # end
 
           private
 

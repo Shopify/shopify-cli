@@ -44,6 +44,11 @@ module Script
           )
         end
 
+        def validate_env?()
+          script_project = get
+          script_project.api_key && script_project.api_secret && script_project.uuid_defined?
+        end
+
         def update_env(**args)
           capture_io do
             args.slice(*MUTABLE_ENV_VALUES).each do |key, value|
