@@ -5,7 +5,7 @@ require "project_types/script/test_helper"
 describe Script::Layers::Application::BuildScript do
   include TestHelpers::FakeFS
   describe ".call" do
-    let(:language) { "assemblyscript" }
+    let(:library_name) { "@shopify/fake-library-name" }
     let(:extension_point_type) { "discount" }
     let(:script_name) { "name" }
     let(:op_failed_msg) { "msg" }
@@ -15,11 +15,44 @@ describe Script::Layers::Application::BuildScript do
     let(:task_runner) { stub(compiled_type: compiled_type, metadata: metadata) }
     let(:script_project) { stub }
 
+    let(:library_language) { "assemblyscript" }
+    let(:library_version) { "1.0.0" }
+
+    let(:library) do
+      {
+        language: library_language,
+        version: library_version,
+      }
+    end
+
+    let(:extension_point_repository) { TestHelpers::FakeExtensionPointRepository.new }
+    let(:ep) { extension_point_repository.get_extension_point(extension_point_type) }
+
+    before do
+      task_runner
+        .stubs(:library_version)
+        .returns("1.0.0")
+
+      extension_point_repository.create_extension_point(extension_point_type)
+      Script::Layers::Application::ExtensionPoints
+        .stubs(:get)
+        .with(type: extension_point_type)
+        .returns(ep)
+
+      script_project
+        .stubs(:extension_point_type)
+        .returns(extension_point_type)
+      script_project
+        .stubs(:language)
+        .returns(library_language)
+    end
+
     subject do
       Script::Layers::Application::BuildScript.call(
         ctx: @context,
         task_runner: task_runner,
         script_project: script_project,
+        library: library,
       )
     end
 
@@ -31,7 +64,8 @@ describe Script::Layers::Application::BuildScript do
           script_project: script_project,
           script_content: content,
           compiled_type: "wasm",
-          metadata: metadata
+          metadata: metadata,
+          library: library
         )
         capture_io { subject }
       end
