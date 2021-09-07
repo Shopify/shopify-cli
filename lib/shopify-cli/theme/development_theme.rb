@@ -65,7 +65,7 @@ module ShopifyCli
 
       private
 
-      def generate_theme_name        
+      def generate_theme_name
         hostname = Socket.gethostname.split(".").shift
         hash = SecureRandom.hex(3)
 

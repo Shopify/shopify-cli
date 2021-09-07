@@ -97,22 +97,22 @@ module ShopifyCli
       end
 
       def test_name_is_generated_if_the_existing_name_length_is_above_the_api_limit
-         # Given
-         hostname = "theme-dev-lan-very-long-name-that-will-be-truncated"
-         hash = "5676d"
-         theme_name = "Development ()"
-         hostname_character_limit = ShopifyCli::Theme::API_NAME_LIMIT - theme_name.length - hash.length - 1
-         identifier = "#{hash}-#{hostname.truncate(hostname_character_limit)}"
-         theme_name_without_truncation = "Development (#{hash}-#{hostname})"
-         theme_name = theme_name.gsub("()", "(#{identifier})")
- 
-         ShopifyCli::DB.stubs(:get).with(:development_theme_name).returns(theme_name_without_truncation)
-         SecureRandom.expects(:hex).returns(hash)
-         Socket.expects(:gethostname).returns(hostname)
-         ShopifyCli::DB.expects(:set).with(development_theme_name: theme_name)
- 
-         # When/Then
-         assert_equal(theme_name, @theme.name)
+        # Given
+        hostname = "theme-dev-lan-very-long-name-that-will-be-truncated"
+        hash = "5676d"
+        theme_name = "Development ()"
+        hostname_character_limit = ShopifyCli::Theme::API_NAME_LIMIT - theme_name.length - hash.length - 1
+        identifier = "#{hash}-#{hostname.truncate(hostname_character_limit)}"
+        theme_name_without_truncation = "Development (#{hash}-#{hostname})"
+        theme_name = theme_name.gsub("()", "(#{identifier})")
+
+        ShopifyCli::DB.stubs(:get).with(:development_theme_name).returns(theme_name_without_truncation)
+        SecureRandom.expects(:hex).returns(hash)
+        Socket.expects(:gethostname).returns(hostname)
+        ShopifyCli::DB.expects(:set).with(development_theme_name: theme_name)
+
+        # When/Then
+        assert_equal(theme_name, @theme.name)
       end
 
       def test_name_is_truncated_if_its_above_the_api_limit
