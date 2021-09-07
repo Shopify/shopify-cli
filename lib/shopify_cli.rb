@@ -25,7 +25,6 @@ require "cli/ui"
 require "cli/kit"
 require "smart_properties"
 require_relative "shopify-cli/version"
-require "shopify-cli/extensions"
 
 # Enable stdout routing. At this point all calls to STDOUT (and STDERR) will go through this class.
 # See https://github.com/Shopify/cli-ui/blob/main/lib/cli/ui/stdout_router.rb for more info

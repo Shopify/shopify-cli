@@ -102,9 +102,9 @@ module ShopifyCli
         hash = "5676d"
         theme_name = "Development ()"
         hostname_character_limit = ShopifyCli::Theme::API_NAME_LIMIT - theme_name.length - hash.length - 1
-        identifier = "#{hash}-#{hostname.truncate(hostname_character_limit)}"
+        identifier = "#{hash}-#{hostname[0, hostname_character_limit]}"
         theme_name_without_truncation = "Development (#{hash}-#{hostname})"
-        theme_name = theme_name.gsub("()", "(#{identifier})")
+        theme_name = "Development (#{identifier})"
 
         ShopifyCli::DB.stubs(:get).with(:development_theme_name).returns(theme_name_without_truncation)
         SecureRandom.expects(:hex).returns(hash)
@@ -121,8 +121,8 @@ module ShopifyCli
         hash = "5676d"
         theme_name = "Development ()"
         hostname_character_limit = ShopifyCli::Theme::API_NAME_LIMIT - theme_name.length - hash.length - 1
-        identifier = "#{hash}-#{hostname.truncate(hostname_character_limit)}"
-        theme_name = theme_name.gsub("()", "(#{identifier})")
+        identifier = "#{hash}-#{hostname[0, hostname_character_limit]}"
+        theme_name = "Development (#{identifier})"
 
         ShopifyCli::DB.stubs(:get).with(:development_theme_name).returns(nil)
         SecureRandom.expects(:hex).returns(hash)

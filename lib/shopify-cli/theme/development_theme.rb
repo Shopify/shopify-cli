@@ -71,8 +71,8 @@ module ShopifyCli
 
         theme_name = "Development ()"
         hostname_character_limit = API_NAME_LIMIT - theme_name.length - hash.length - 1
-        identifier = "#{hash}-#{hostname.truncate(hostname_character_limit)}"
-        theme_name = theme_name.gsub("()", "(#{identifier})")
+        identifier = "#{hash}-#{hostname[0, hostname_character_limit]}"
+        theme_name = "Development (#{identifier})"
 
         ShopifyCli::DB.set(development_theme_name: theme_name)
 
