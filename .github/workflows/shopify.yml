@@ -1,6 +1,14 @@
 name: Shopify
 
-on: [push, pull_request]
+on:
+  push:
+    branches:
+      - main
+  pull_request:
+
+concurrency:
+  group: shopify-${{ github.head_ref }}
+  cancel-in-progress: true
 
 jobs:
   test:
