@@ -9,7 +9,7 @@ jobs:
     strategy:
       matrix:
         version:
-          - 3.0.0
+          - 3.0.2
           - 2.6.6
           - 2.7.1
         os:
@@ -27,4 +27,27 @@ jobs:
         run: bundle install
 
       - name: Run Tests
-        run: bundle exec rake
+        run: bundle exec rake test
+  rubocop:
+    name: Rubocop
+    runs-on: ${{ matrix.os }}
+    strategy:
+      matrix:
+        version:
+          - 3.0.2
+        os:
+          - macos-latest
+    steps:
+      - uses: actions/checkout@v2
+
+      - name: Set up Ruby ${{ matrix.version }}
+        uses: ruby/setup-ruby@v1
+        with:
+          ruby-version: ${{ matrix.version }}
+          bundler-cache: true
+
+      - name: Install Dependencies
+        run: bundle install
+
+      - name: Rubocop
+        run: bundle exec rake rubocop
