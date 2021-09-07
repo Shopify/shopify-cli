@@ -19,7 +19,7 @@ module ShopifyCli
         # could have more than 50 characters and the API rejected them.
         # This code ensures we update the name for those users to ensure
         # the name stays under the limit.
-        if existing_name == nil || existing_name.length > API_NAME_LIMIT
+        if existing_name.nil? || existing_name.length > API_NAME_LIMIT
           generate_theme_name
         else
           existing_name
