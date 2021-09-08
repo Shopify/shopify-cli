@@ -15,7 +15,7 @@ module ShopifyCli
 
         def setup
           super
-          WebMock.disable_net_connect!(allow: "localhost:#{@@port}")
+          WebMock.disable_net_connect!(allow: "127.0.0.1:#{@@port}")
 
           ShopifyCli::DB.expects(:get)
             .with(:shopify_exchange_token)
@@ -153,9 +153,9 @@ module ShopifyCli
           get("/assets/theme.css")
 
           # Send the SSE request
-          socket = TCPSocket.new("localhost", @@port)
+          socket = TCPSocket.new("127.0.0.1", @@port)
           socket.write("GET /hot-reload HTTP/1.1\r\n")
-          socket.write("Host: localhost\r\n")
+          socket.write("Host: 127.0.0.1\r\n")
           socket.write("\r\n")
           socket.flush
           # Read the head
@@ -190,7 +190,7 @@ module ShopifyCli
 
         def get(path)
           with_retries(Errno::ECONNREFUSED) do
-            Net::HTTP.get(URI("http://localhost:#{@@port}#{path}"))
+            Net::HTTP.get(URI("http://127.0.0.1:#{@@port}#{path}"))
           end
         end
 

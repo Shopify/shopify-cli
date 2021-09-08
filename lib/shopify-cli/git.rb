@@ -109,7 +109,7 @@ module ShopifyCli
 
       def exec(*args, dir: Dir.pwd, default: nil, ctx: Context.new)
         args = %w(git) + ["--git-dir", File.join(dir, ".git")] + args
-        out, err, stat = ctx.capture3(*args)
+        out, _, stat = ctx.capture3(*args)
         return default unless stat.success?
         out.chomp
       end
