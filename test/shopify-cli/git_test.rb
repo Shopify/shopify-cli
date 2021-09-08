@@ -1,5 +1,6 @@
 require "test_helper"
 require "open3"
+require "shellwords"
 
 module ShopifyCli
   class GitTest < MiniTest::Test
@@ -61,17 +62,17 @@ module ShopifyCli
 
     def test_sha_shortcut
       fake_sha = ("c0ffee" * 6) + "dead"
-      in_repo do |_dir|
-        File.write(".git/HEAD", fake_sha)
+      in_repo do |git_dir|
+        File.write(File.join(git_dir, "HEAD"), fake_sha)
 
-        assert_equal(fake_sha, ShopifyCli::Git.sha)
+        assert_equal(fake_sha, ShopifyCli::Git.sha(dir: File.dirname(git_dir)))
       end
     end
 
     def test_head_sha
-      in_repo do |_dir|
-        empty_commit
-        refute_nil(ShopifyCli::Git.sha)
+      in_repo do |git_dir|
+        empty_commit(git_dir: git_dir)
+        refute_nil(ShopifyCli::Git.sha(dir: File.dirname(git_dir)))
       end
     end
 
@@ -109,15 +110,21 @@ module ShopifyCli
 
     def in_repo
       Dir.mktmpdir do |dir|
-        Dir.chdir(dir) do
-          system('git init --template="" > /dev/null')
-          yield(dir)
-        end
+        system("git init #{Shellwords.escape(dir)}> /dev/null")
+        git_dir = File.join(dir, ".git")
+        yield(File.join(git_dir))
       end
     end
 
-    def empty_commit
-      Context.new.capture3("git", "commit", "-m", "commit", "--allow-empty")
+    def empty_commit(git_dir:)
+      _, err, stat = Context.new.capture3(
+        "git",
+        "--git-dir", git_dir,
+        "commit",
+        "--allow-empty", "-n",
+        "-m", "'Initial commit'"
+      )
+      raise StandardError, err unless stat.success?
     end
 
     def stub_git_init(status:, commits:)
