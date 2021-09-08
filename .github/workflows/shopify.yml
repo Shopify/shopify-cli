@@ -28,6 +28,10 @@ jobs:
           - ubuntu-16.04
     steps:
       - uses: actions/checkout@v2
+      - name: Set Git configuration
+        run: |
+          git config --global user.email "development-lifecycle@shopify.com"
+          git config --global user.name "Development Lifecycle"
 
       - name: Set up Ruby ${{ matrix.version }}
         uses: ruby/setup-ruby@v1
