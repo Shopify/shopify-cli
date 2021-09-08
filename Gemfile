@@ -24,4 +24,5 @@ group :test do
   gem "webmock", require: false
   gem "timecop", require: false
   gem "rack", require: false
+  gem "cucumber", "~> 7.0", require: false
 end
