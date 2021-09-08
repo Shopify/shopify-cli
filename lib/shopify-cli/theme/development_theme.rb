@@ -6,13 +6,24 @@ require "securerandom"
 
 module ShopifyCli
   module Theme
+    API_NAME_LIMIT = 50
+
     class DevelopmentTheme < Theme
       def id
         ShopifyCli::DB.get(:development_theme_id)
       end
 
       def name
-        ShopifyCli::DB.get(:development_theme_name) || generate_theme_name
+        existing_name = ShopifyCli::DB.get(:development_theme_name)
+        # Up to version 2.3.0 (included) generated names stored locally
+        # could have more than 50 characters and the API rejected them.
+        # This code ensures we update the name for those users to ensure
+        # the name stays under the limit.
+        if existing_name.nil? || existing_name.length > API_NAME_LIMIT
+          generate_theme_name
+        else
+          existing_name
+        end
       end
 
       def role
@@ -58,7 +69,10 @@ module ShopifyCli
         hostname = Socket.gethostname.split(".").shift
         hash = SecureRandom.hex(3)
 
-        theme_name = "Development (#{hash}-#{hostname})"
+        theme_name = "Development ()"
+        hostname_character_limit = API_NAME_LIMIT - theme_name.length - hash.length - 1
+        identifier = "#{hash}-#{hostname[0, hostname_character_limit]}"
+        theme_name = "Development (#{identifier})"
 
         ShopifyCli::DB.set(development_theme_name: theme_name)
 
