@@ -15,11 +15,11 @@ desc "Runs the test suite in a Linux Docker environment"
 task :test_linux do
   system("docker", "build", __dir__, "-t", "shopify-cli") || abort
   system(
-    "docker", "run", 
-    "-t", "--rm", 
-    "--volume", "#{Shellwords.escape(__dir__)}:/usr/src/app", 
-    "shopify-cli", 
-    "bundle", "exec", "rake" , "test"
+    "docker", "run",
+    "-t", "--rm",
+    "--volume", "#{Shellwords.escape(__dir__)}:/usr/src/app",
+    "shopify-cli",
+    "bundle", "exec", "rake", "test"
   ) || abort
 end
 
