@@ -87,6 +87,16 @@ module Extension
       autoload :Default, Project.project_filepath("models/specification_handlers/default")
     end
 
+    module ServerConfig
+      autoload :Base, Project.project_filepath("models/server_config/base")
+      autoload :Development, Project.project_filepath("models/server_config/development")
+      autoload :DevelopmentEntries, Project.project_filepath("models/server_config/development_entries")
+      autoload :DevelopmentRenderer, Project.project_filepath("models/server_config/development_renderer")
+      autoload :Extension, Project.project_filepath("models/server_config/extension")
+      autoload :Root, Project.project_filepath("models/server_config/root")
+      autoload :User, Project.project_filepath("models/server_config/user")
+    end
+
     autoload :App, Project.project_filepath("models/app")
     autoload :Registration, Project.project_filepath("models/registration")
     autoload :Version, Project.project_filepath("models/version")
