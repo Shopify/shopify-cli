@@ -2,12 +2,25 @@ require_relative "bin/load_shopify"
 require "rake/testtask"
 require "rubocop/rake_task"
 require "bundler/gem_tasks"
+require "shellwords"
 
 Rake::TestTask.new do |t|
   t.libs += %w(test)
   t.test_files = FileList["test/**/*_test.rb"]
   t.verbose = false
   t.warning = false
+end
+
+desc "Runs the test suite in a Linux Docker environment"
+task :test_linux do
+  system("docker", "build", __dir__, "-t", "shopify-cli") || abort
+  system(
+    "docker", "run",
+    "-t", "--rm",
+    "--volume", "#{Shellwords.escape(__dir__)}:/usr/src/app",
+    "shopify-cli",
+    "bundle", "exec", "rake", "test"
+  ) || abort
 end
 
 RuboCop::RakeTask.new
