@@ -4,9 +4,9 @@ require "tmpdir"
 require "fileutils"
 
 Given(/I have a working directory/) do
-  @dir = Dir.mktmpdir
+  @working_dir = Dir.mktmpdir
 end
 
 After do |_scenario|
-  FileUtils.rm_r(@dir) unless @dir.nil?
+  FileUtils.rm_r(@working_dir) unless @working_dir.nil?
 end
