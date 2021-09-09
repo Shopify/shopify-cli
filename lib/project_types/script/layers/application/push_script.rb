@@ -25,7 +25,6 @@ module Script
               uuid = script_service.set_app_script(
                 uuid: package.uuid,
                 extension_point_type: package.extension_point_type,
-                script_content: package.script_content,
                 force: force,
                 metadata: package.metadata,
                 script_json: package.script_json,
