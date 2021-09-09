@@ -53,6 +53,7 @@ module Script
       autoload :ScriptProjectRepository, Project.project_filepath("layers/infrastructure/script_project_repository")
       autoload :ScriptService, Project.project_filepath("layers/infrastructure/script_service")
       autoload :ScriptUploader, Project.project_filepath("layers/infrastructure/script_uploader")
+      autoload :ServiceLocator, Project.project_filepath("layers/infrastructure/service_locator")
 
       module Languages
         autoload :AssemblyScriptProjectCreator,

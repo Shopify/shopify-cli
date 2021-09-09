@@ -4,7 +4,7 @@ describe Script::Layers::Infrastructure::ScriptUploader do
   describe "UploadScript" do
     let(:ctx) { TestHelpers::FakeContext.new }
     let(:api_key) { "fake_key" }
-    let(:script_service) { Script::Layers::Infrastructure::ScriptService.new(ctx: ctx, api_key: api_key) }
+    let(:script_service) { Script::Layers::Infrastructure::ServiceLocator.script_service(ctx: ctx, api_key: api_key) }
     let(:instance) { Script::Layers::Infrastructure::ScriptUploader.new(script_service) }
     subject { instance.upload(script_content) }
 

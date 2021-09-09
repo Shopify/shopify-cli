@@ -7,7 +7,7 @@ describe Script::Layers::Infrastructure::ScriptService do
 
   let(:ctx) { TestHelpers::FakeContext.new }
   let(:api_key) { "fake_key" }
-  let(:script_service) { Script::Layers::Infrastructure::ScriptService.new(ctx: ctx, api_key: api_key) }
+  let(:script_service) { Script::Layers::Infrastructure::ServiceLocator.script_service(ctx: ctx, api_key: api_key) }
   let(:extension_point_type) { "DISCOUNT" }
   let(:schema_major_version) { "1" }
   let(:schema_minor_version) { "0" }
