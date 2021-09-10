@@ -41,6 +41,7 @@ module Extension
     autoload :FindNpmPackages, Project.project_filepath("tasks/find_npm_packages")
     autoload :GetExtensions, Project.project_filepath("tasks/get_extensions")
     autoload :GetProduct, Project.project_filepath("tasks/get_product")
+    autoload :GoCreateExtension, Project.project_filepath("tasks/go_create_extension")
 
     module Converters
       autoload :RegistrationConverter, Project.project_filepath("tasks/converters/registration_converter")
@@ -55,6 +56,7 @@ module Extension
     module Questions
       autoload :AskApp, Project.project_filepath("forms/questions/ask_app")
       autoload :AskName, Project.project_filepath("forms/questions/ask_name")
+      autoload :AskTemplate, Project.project_filepath("forms/questions/ask_template")
       autoload :AskType, Project.project_filepath("forms/questions/ask_type")
       autoload :AskRegistration, Project.project_filepath("forms/questions/ask_registration")
     end
@@ -106,6 +108,7 @@ module Extension
     autoload :LazySpecificationHandler, Project.project_filepath("models/lazy_specification_handler")
     autoload :NpmPackage, Project.project_filepath("models/npm_package")
     autoload :Product, Project.project_filepath("models/product")
+    autoload :DevelopmentServer, Project.project_filepath("models/development_server")
   end
 
   autoload :ExtensionProjectKeys, Project.project_filepath("extension_project_keys")

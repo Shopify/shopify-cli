@@ -29,6 +29,9 @@ module Extension
       end
 
       def test_create_aborts_if_the_directory_already_exists
+        ShopifyCli::Shopifolk.stubs(:check).returns(false)
+        ShopifyCli::Feature.stubs(:enabled?).with(:extension_server_beta).returns(false)
+
         Dir.expects(:exist?).with(@directory_name).returns(true).once
         Models::SpecificationHandlers::Default.any_instance.expects(:create).never
 
@@ -43,6 +46,9 @@ module Extension
       end
 
       def test_runs_type_create_and_writes_project_files
+        ShopifyCli::Shopifolk.stubs(:check).returns(false)
+        ShopifyCli::Feature.stubs(:enabled?).with(:extension_server_beta).returns(false)
+
         Dir.expects(:exist?).with(@directory_name).returns(false).once
         Models::SpecificationHandlers::Default
           .any_instance.expects(:create).with(@directory_name, @context, getting_started: nil)
@@ -65,6 +71,9 @@ module Extension
       end
 
       def test_does_not_create_project_files_and_outputs_try_again_message_if_type_create_failed
+        ShopifyCli::Shopifolk.stubs(:check).returns(false)
+        ShopifyCli::Feature.stubs(:enabled?).with(:extension_server_beta).returns(false)
+
         Dir.expects(:exist?).with(@directory_name).returns(false).once
         Models::SpecificationHandlers::Default
           .any_instance.expects(:create).with(@directory_name, @context, getting_started: nil)
