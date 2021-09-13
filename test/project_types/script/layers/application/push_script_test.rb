@@ -51,15 +51,12 @@ describe Script::Layers::Application::PushScript do
     subject { Script::Layers::Application::PushScript.call(ctx: @context, force: force) }
 
     it "should prepare and push script" do
-      script_service_instance = Script::Layers::Infrastructure::ServiceLocator.script_service(
-        ctx: @context,
-        api_key: api_key
-      )
+      script_service_instance = mock
       script_service_instance.expects(:set_app_script).returns(uuid)
       Script::Layers::Infrastructure::ScriptService
         .expects(:new).returns(script_service_instance)
 
-      script_uploader_instance = Script::Layers::Infrastructure::ScriptUploader.new(script_service_instance)
+      script_uploader_instance = mock
       script_uploader_instance.expects(:upload).returns(url)
       Script::Layers::Infrastructure::ScriptUploader
         .expects(:new).returns(script_uploader_instance)
