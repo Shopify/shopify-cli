@@ -178,10 +178,6 @@ module Rails
       def install_gem(name, version = nil)
         Gem.install(@ctx, name, version)
       end
-
-      def local_debug?
-        @ctx.getenv(ShopifyCli::PartnersAPI::LOCAL_DEBUG)
-      end
     end
   end
 end

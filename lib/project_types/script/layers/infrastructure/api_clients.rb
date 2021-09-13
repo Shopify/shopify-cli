@@ -16,7 +16,7 @@ module Script
           LOCAL_INSTANCE_URL = "https://script-service.myshopify.io"
 
           def initialize(ctx, api_key)
-            instance_url = spin_instance_url || LOCAL_INSTANCE_URL
+            instance_url = script_service_url
             super(
               ctx: ctx,
               url: "#{instance_url}/graphql",
@@ -28,12 +28,12 @@ module Script
 
           private
 
-          def spin_instance_url
-            workspace = ENV["SPIN_WORKSPACE"]
-            namespace = ENV["SPIN_NAMESPACE"]
-            return if workspace.nil? || namespace.nil?
-
-            "https://script-service.#{workspace}.#{namespace}.us.spin.dev"
+          def script_service_url
+            if ::ShopifyCli::Environment.use_spin_partners_instance?
+              "https://script-service.#{::ShopifyCli::Environment.spin_url}"
+            else
+              LOCAL_INSTANCE_URL
+            end
           end
         end
         private_constant(:ScriptServiceAPI)

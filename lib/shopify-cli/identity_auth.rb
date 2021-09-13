@@ -237,13 +237,15 @@ module ShopifyCli
     def auth_url
       if Environment.use_local_partners_instance?
         "https://identity.myshopify.io/oauth"
+      elsif Environment.use_spin_partners_instance?
+        "https://identity.#{Environment.spin_url}/oauth"
       else
         "https://accounts.shopify.com/oauth"
       end
     end
 
     def client_id_for_application(application_name)
-      client_ids = if Environment.use_local_partners_instance?
+      client_ids = if Environment.use_local_partners_instance? || Environment.use_spin_partners_instance?
         DEV_APPLICATION_CLIENT_IDS
       else
         APPLICATION_CLIENT_IDS
@@ -259,7 +261,7 @@ module ShopifyCli
     end
 
     def client_id
-      if Environment.use_local_partners_instance?
+      if Environment.use_local_partners_instance? || Environment.use_spin_partners_instance?
         Constants::Identity::CLIENT_ID_DEV
       else
         # In the future we might want to use Identity's dynamic
@@ -268,15 +270,6 @@ module ShopifyCli
         # value for the client
         Constants::Identity::CLIENT_ID
       end
-    end
-
-    def local_identity_running?
-      Net::HTTP.start("identity.myshopify.io", 443, use_ssl: true, open_timeout: 1, read_timeout: 10) do |http|
-        req = Net::HTTP::Get.new(URI.join("https://identity.myshopify.io", "/services/ping"))
-        http.request(req).is_a?(Net::HTTPSuccess)
-      end
-    rescue Timeout::Error, Errno::EHOSTUNREACH, Errno::EHOSTDOWN, Errno::EADDRNOTAVAIL, Errno::ECONNREFUSED
-      false
     end
   end
 end
