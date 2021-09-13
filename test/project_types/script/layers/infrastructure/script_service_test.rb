@@ -223,7 +223,7 @@ describe Script::Layers::Infrastructure::ScriptService do
             "url" => url,
             "userErrors" => user_errors,
           },
-        }
+        },
       }
     end
 
