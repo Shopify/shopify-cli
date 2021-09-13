@@ -28,10 +28,11 @@ module Extension
             server.expects(:create).with(server_config).returns(true)
           end
 
-          Tasks::GoCreateExtension.new(
+          Tasks::RunExtensionCommand.new(
             root_dir: "test",
             template: "javascript",
             type: "checkout_ui_extension",
+            command: "create"
           ).call
         end
       end

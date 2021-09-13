@@ -41,7 +41,7 @@ module Extension
     autoload :FindNpmPackages, Project.project_filepath("tasks/find_npm_packages")
     autoload :GetExtensions, Project.project_filepath("tasks/get_extensions")
     autoload :GetProduct, Project.project_filepath("tasks/get_product")
-    autoload :GoCreateExtension, Project.project_filepath("tasks/go_create_extension")
+    autoload :RunExtensionCommand, Project.project_filepath("tasks/run_extension_command")
 
     module Converters
       autoload :RegistrationConverter, Project.project_filepath("tasks/converters/registration_converter")

@@ -60,10 +60,11 @@ module Extension
       end
 
       def use_new_create_flow(form, msg)
-        Tasks::GoCreateExtension.new(
+        Tasks::RunExtensionCommand.new(
           root_dir: form.directory_name,
           template: form.template,
           type: form.type.identifier.downcase,
+          command: "create"
         ).call
 
         @ctx.puts(msg["create.ready_to_start", form.directory_name, form.name])

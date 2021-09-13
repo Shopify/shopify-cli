@@ -4,22 +4,28 @@ require "shopify_cli"
 
 module Extension
   module Tasks
-    class GoCreateExtension < ShopifyCli::Task
+    class RunExtensionCommand < ShopifyCli::Task
       include SmartProperties
 
       SUPPORTED_EXTENSION_TYPES = [
         "checkout_ui_extension",
       ]
 
+      SUPPORTED_COMMANDS = [
+        "create",
+        "build",
+      ]
+
       property! :root_dir, accepts: String
       property! :template, accepts: Models::ServerConfig::Development::VALID_TEMPLATES
       property! :type, accepts: SUPPORTED_EXTENSION_TYPES
+      property! :command, accepts: SUPPORTED_COMMANDS
 
       def call
         ShopifyCli::Result
           .call(&method(:build_extension))
           .then(&method(:build_server_config))
-          .then(&method(:create_extension))
+          .then(&method(:run_command))
           .unwrap { |error| raise error }
       end
 
@@ -37,8 +43,11 @@ module Extension
         Models::ServerConfig::Root.new(extensions: [extension])
       end
 
-      def create_extension(server_config)
-        Models::DevelopmentServer.new.create(server_config)
+      def run_command(server_config)
+        case command
+        when "create"
+          Models::DevelopmentServer.new.create(server_config)
+        end
       end
     end
   end
