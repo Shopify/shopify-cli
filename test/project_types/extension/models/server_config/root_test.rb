@@ -13,13 +13,13 @@ module Extension
         def test_root_is_created_with_valid_attributes
           assert_nothing_raised do
             Models::ServerConfig::Root.new(
-              extensions: extension
+              extensions: [extension]
             )
           end
         end
 
         def test_server_config_root_yaml_output
-          config_file = Models::ServerConfig::Root.new(extensions: extension)
+          config_file = Models::ServerConfig::Root.new(extensions: [extension])
 
           refute_includes(config_file.to_yaml, "---\n")
           refute_includes(config_file.to_yaml, "!ruby/")

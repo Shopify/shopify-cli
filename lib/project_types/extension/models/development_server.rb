@@ -9,8 +9,10 @@ module Extension
         "../../../../../ext/shopify-cli/shopify-extensions", __FILE__
       )
 
-      def create
-        raise NotImplementedError
+      def create(server_config)
+        CLI::Kit::System.capture3(executable, "create", "-", stdin_data: server_config.to_yaml)
+      rescue StandardError => error
+        raise error
       end
 
       def build

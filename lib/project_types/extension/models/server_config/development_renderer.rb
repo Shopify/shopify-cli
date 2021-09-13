@@ -13,6 +13,17 @@ module Extension
         ]
 
         property! :name, accepts: VALID_RENDERERS
+
+        def self.find(type)
+          case type.downcase
+          when "admin_ui_extension"
+            new(name: "@shopify/admin-ui-extensions")
+          when "checkout_ui_extension"
+            new(name: "@shopify/checkout-ui-extensions")
+          when "checkout_post_purchase"
+            new(name: "@shopify/post-purchase-ui-extensions")
+          end
+        end
       end
     end
   end

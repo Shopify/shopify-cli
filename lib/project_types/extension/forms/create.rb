@@ -3,7 +3,7 @@
 module Extension
   module Forms
     class Create < ShopifyCli::Form
-      flag_arguments :name, :type, :api_key
+      flag_arguments :name, :type, :api_key, :template
 
       attr_reader :app
 
@@ -13,6 +13,7 @@ module Extension
         property :app, accepts: Models::App
         property :name, accepts: String
         property :type, accepts: Models::SpecificationHandlers::Default
+        property :template, accepts: String
 
         def complete?
           !!(app && name && type)
@@ -23,6 +24,7 @@ module Extension
         ShopifyCli::Result.wrap(ExtensionProjectDetails.new)
           .then(&Questions::AskApp.new(ctx: ctx, api_key: api_key))
           .then(&Questions::AskType.new(ctx: ctx, type: type))
+          .then(&Questions::AskTemplate.new(ctx: ctx))
           .then(&Questions::AskName.new(ctx: ctx, name: name))
           .unwrap { |e| raise e }
           .tap do |project_details|
@@ -30,6 +32,7 @@ module Extension
 
             self.app = project_details.app
             self.type = project_details.type
+            self.template = project_details.template
             self.name = project_details.name
           end
       end

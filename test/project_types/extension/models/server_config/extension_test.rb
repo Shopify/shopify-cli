@@ -20,6 +20,20 @@ module Extension
           end
         end
 
+        def test_extension_build_creates_expected_extension_config
+          assert_nothing_raised do
+            extension = ServerConfig::Extension.build(
+              template: "javascript",
+              type: "admin_ui_extension",
+              root_dir: "test"
+            )
+
+            assert(true, extension.instance_of?(ServerConfig::Extension))
+            assert_equal("src/index.js", extension.development.entries.main)
+            assert_equal("@shopify/admin-ui-extensions", extension.development.renderer.name)
+          end
+        end
+
         private
 
         def development

@@ -3,6 +3,10 @@
 module Extension
   class Command
     class Create < ShopifyCli::SubCommand
+      DEVELOPMENT_SERVER_SUPPORTED_TYPES = [
+        "checkout_ui_extension",
+      ]
+
       prerequisite_task :ensure_authenticated
 
       options do |parser, flags|
@@ -17,6 +21,8 @@ module Extension
           if Dir.exist?(form.directory_name)
             @ctx.abort(message_for_extension["create.errors.directory_exists", form.directory_name])
           end
+
+          return use_new_create_flow(form, message_for_extension) if supports_development_server?(form.type)
 
           if form.type.create(form.directory_name, @ctx, getting_started: options.flags[:getting_started])
             ExtensionProject.write_cli_file(context: @ctx, type: form.type.identifier)
@@ -46,6 +52,26 @@ module Extension
         return @ctx.puts(self.class.help) if form.nil?
 
         yield form, form.type.method(:message_for_extension)
+      end
+
+      def supports_development_server?(type)
+        return false unless DEVELOPMENT_SERVER_SUPPORTED_TYPES.include?(type.identifier.downcase)
+        ShopifyCli::Shopifolk.check && ShopifyCli::Feature.enabled?(:extension_server_beta)
+      end
+
+      def use_new_create_flow(form, msg)
+        Tasks::RunExtensionCommand.new(
+          root_dir: form.directory_name,
+          template: form.template,
+          type: form.type.identifier.downcase,
+          command: "create"
+        ).call
+
+        @ctx.puts(msg["create.ready_to_start", form.directory_name, form.name])
+        @ctx.puts(msg["create.learn_more", form.type.name])
+      rescue => error
+        @ctx.debug(error)
+        @ctx.puts(msg["create.try_again"])
       end
     end
   end
