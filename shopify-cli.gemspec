@@ -39,7 +39,7 @@ Gem::Specification.new do |spec|
   # `/usr/local/bin/shopify` to that script, in order to "lock" the Ruby used to
   # a single Ruby (useful for debugging in multi-Ruby environments)
 
-  spec.add_development_dependency("bundler", "~> 2.1.4")
+  spec.add_development_dependency("bundler", "~> 2.2.2")
   spec.add_development_dependency("rake", "~> 12.3", ">= 12.3.3")
   spec.add_development_dependency("minitest", "~> 5.0")
 
