@@ -212,4 +212,57 @@ describe Script::Layers::Infrastructure::ScriptService do
       end
     end
   end
+
+  describe ".generate_module_upload_url" do
+    let(:user_errors) { [] }
+    let(:url) { nil }
+    let(:response) do
+      {
+        "data" => {
+          "moduleUploadUrlGenerate" => {
+            "url" => url,
+            "userErrors" => user_errors,
+          },
+        }
+      }
+    end
+
+    before do
+      api_client.expects(:query).returns(response)
+    end
+
+    subject { script_service.generate_module_upload_url }
+
+    describe "when a url can be generated" do
+      let(:url) { "http://fake.com" }
+
+      it "returns a url" do
+        assert_equal url, subject
+      end
+    end
+
+    describe "when query returns errors" do
+      let(:response) { { "errors" => [{ "message" => "errors" }] } }
+
+      it "should raise #{Script::Layers::Infrastructure::Errors::GraphqlError}" do
+        assert_raises(Script::Layers::Infrastructure::Errors::GraphqlError) { subject }
+      end
+    end
+
+    describe "when query returns userErrors" do
+      let(:user_errors) { [{ "message" => "some error", "tag" => "user_error" }] }
+
+      it "should raise #{Script::Layers::Infrastructure::Errors::GraphqlError}" do
+        assert_raises(Script::Layers::Infrastructure::Errors::GraphqlError) { subject }
+      end
+    end
+
+    describe "when response is nil" do
+      let(:response) { nil }
+
+      it "should raise #{Script::Layers::Infrastructure::Errors::EmptyResponseError}" do
+        assert_raises(Script::Layers::Infrastructure::Errors::EmptyResponseError) { subject }
+      end
+    end
+  end
 end
