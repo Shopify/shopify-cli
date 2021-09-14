@@ -99,7 +99,7 @@ module Script
             cause_of_error: ShopifyCli::Context.message("script.error.invalid_extension_cause", e.type),
             help_suggestion: ShopifyCli::Context.message(
               "script.error.invalid_extension_help",
-              Script::Layers::Application::ExtensionPoints.types.join(", ")
+              Script::Layers::Application::ExtensionPoints.available_types.join(", ")
             ),
           }
         when Layers::Domain::Errors::ScriptNotFoundError

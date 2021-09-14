@@ -203,6 +203,13 @@ describe Script::UI::ErrorHandler do
         it "should call display_and_raise" do
           should_call_display_and_raise
         end
+
+        it "should not display deprecated or beta APIs" do
+          expected_types = %w(payment_methods shipping_methods)
+          Script::Layers::Application::ExtensionPoints.expects(:available_types).returns(expected_types)
+          io = capture_io_and_assert_raises(ShopifyCli::AbortSilent) { subject }
+          assert_match(expected_types.join(", "), io.join)
+        end
       end
 
       describe "when ScriptNotFoundError" do
