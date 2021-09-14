@@ -19,8 +19,7 @@ module Script
               ctx: ctx,
               url: "#{instance_url}/graphql",
               token: { "APP_KEY" => api_key }.compact.to_json,
-              auth_header: "X-Shopify-Authenticated-Tokens",
-              api_key: api_key
+              auth_header: "X-Shopify-Authenticated-Tokens"
             )
           end
 
