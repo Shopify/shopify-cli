@@ -24,3 +24,7 @@ test:
     else
       bundle exec rake test $@
     fi
+
+commands:
+  style:
+    run: bundle exec rubocop .
