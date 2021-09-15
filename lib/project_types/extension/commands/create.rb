@@ -55,8 +55,7 @@ module Extension
       end
 
       def supports_development_server?(type)
-        return false unless DEVELOPMENT_SERVER_SUPPORTED_TYPES.include?(type.identifier.downcase)
-        ShopifyCli::Shopifolk.check && ShopifyCli::Feature.enabled?(:extension_server_beta)
+        Models::DevelopmentServerRequirements.supported?(type.identifier)
       end
 
       def use_new_create_flow(form, msg)

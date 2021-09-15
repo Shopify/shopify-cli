@@ -10,11 +10,13 @@ module Extension
           "typescript-react",
         ]
 
-        property! :root_dir, accepts: String
+        CURRENT_DIRECTORY = "."
+
+        property :root_dir, accepts: String, default: CURRENT_DIRECTORY
         property! :build_dir, accepts: String, default: "build"
-        property! :template, accepts: VALID_TEMPLATES
-        property! :renderer, accepts: ServerConfig::DevelopmentRenderer
-        property! :entries, accepts: ServerConfig::DevelopmentEntries
+        property :template, accepts: VALID_TEMPLATES
+        property :renderer, accepts: ServerConfig::DevelopmentRenderer
+        property :entries, accepts: ServerConfig::DevelopmentEntries
       end
     end
   end
