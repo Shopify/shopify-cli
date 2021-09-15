@@ -109,6 +109,7 @@ module Extension
     autoload :NpmPackage, Project.project_filepath("models/npm_package")
     autoload :Product, Project.project_filepath("models/product")
     autoload :DevelopmentServer, Project.project_filepath("models/development_server")
+    autoload :DevelopmentServerRequirements, Project.project_filepath("models/development_server_requirements")
   end
 
   autoload :ExtensionProjectKeys, Project.project_filepath("extension_project_keys")

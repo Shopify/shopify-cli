@@ -68,6 +68,8 @@ module Extension
         HELP
         frame_title: "Building extension with: %s…",
         build_failure_message: "Failed to build extension code.",
+        build_success_message: "Build was successful!",
+        directory_not_found: "Build directory not found.",
       },
       register: {
         help: <<~HELP,
