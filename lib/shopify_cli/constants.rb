@@ -1,5 +1,14 @@
 module ShopifyCLI
   module Constants
+    module Paths
+      ROOT = File.expand_path("../..", __dir__)
+    end
+
+    module StoreKeys
+      LAST_MIGRATION_DATE = :last_migration_date
+      ANALYTICS_ENABLED = :analytics_enabled
+    end
+
     module EnvironmentVariables
       # When true the CLI points to a local instance of
       # the partners dashboard and identity.
@@ -15,7 +24,10 @@ module ShopifyCLI
       SPIN_HOST = "SPIN_HOST"
 
       # Set to true when running tests.
-      RUNNING_TESTS = "RUNNING_SHOPIFY_CLI_TESTS"
+      TEST = "SHOPIFY_CLI_TEST"
+
+      # Set to true when running tests.
+      DEVELOPMENT = "SHOPIFY_CLI_DEVELOPMENT"
     end
 
     module Identity

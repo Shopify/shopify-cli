@@ -1,4 +1,4 @@
-ENV["RUNNING_SHOPIFY_CLI_TESTS"] = 1.to_s
+ENV["SHOPIFY_CLI_TEST"] = "1"
 
 require "rubygems"
 require "bundler/setup"
@@ -14,8 +14,6 @@ require "fakefs/safe"
 require "webmock/minitest"
 
 require "mocha/minitest"
-
-ENV["TEST"] = "1"
 
 Mocha.configure do |c|
   c.stubbing_non_existent_method = :prevent
