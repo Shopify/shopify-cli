@@ -16,8 +16,8 @@ module Extension
         "build",
       ]
 
-      property! :root_dir, accepts: String
-      property! :template, accepts: Models::ServerConfig::Development::VALID_TEMPLATES
+      property :root_dir, accepts: String
+      property :template, accepts: Models::ServerConfig::Development::VALID_TEMPLATES
       property! :type, accepts: SUPPORTED_EXTENSION_TYPES
       property! :command, accepts: SUPPORTED_COMMANDS
 
@@ -26,7 +26,9 @@ module Extension
           .call(&method(:build_extension))
           .then(&method(:build_server_config))
           .then(&method(:run_command))
-          .unwrap { |error| raise error }
+          .unwrap do |error|
+            raise error unless error.nil?
+          end
       end
 
       private
@@ -47,6 +49,8 @@ module Extension
         case command
         when "create"
           Models::DevelopmentServer.new.create(server_config)
+        when "build"
+          Models::DevelopmentServer.new.build(server_config)
         end
       end
     end
