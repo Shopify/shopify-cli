@@ -24,21 +24,15 @@ module Script
               type = extension_point.dasherize_type
               domain = extension_point.domain
 
-              sparse_checkout_set_path = if domain.nil?
-                "packages/default/extension-point-as-#{type}/assembly/sample"
-              else
-                "packages/#{domain}/samples/#{type}"
-              end
-
               project_creator = Infrastructure::Languages::ProjectCreator.for(
                 ctx: ctx,
                 language: language,
                 type: type,
                 project_name: script_name,
                 path_to_project: project.id,
+                sparse_checkout_set_path: derive_sparse_checkout_path(language, domain, type),
                 sparse_checkout_repo: sparse_checkout_repo,
-                sparse_checkout_branch: sparse_checkout_branch,
-                sparse_checkout_set_path: sparse_checkout_set_path
+                sparse_checkout_branch: sparse_checkout_branch
               )
 
               install_dependencies(ctx, language, script_name, project_creator)
@@ -48,6 +42,10 @@ module Script
           end
 
           private
+
+          def derive_sparse_checkout_path(language, domain, type)
+            "#{domain}/#{language}/#{type}/default"
+          end
 
           def install_dependencies(ctx, language, script_name, project_creator)
             task_runner = Infrastructure::Languages::TaskRunner.for(ctx, language, script_name)
@@ -66,13 +64,6 @@ module Script
               end
             end
             ProjectDependencies.install(ctx: ctx, task_runner: task_runner)
-          end
-
-          def bootstrap(ctx, project_creator)
-            UI::StrictSpinner.spin(ctx.message("script.create.creating")) do |spinner|
-              project_creator.bootstrap
-              spinner.update_title(ctx.message("script.create.created"))
-            end
           end
 
           def in_new_directory_context(ctx, directory)

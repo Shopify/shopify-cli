@@ -35,12 +35,12 @@ tax_filter:
 payment_methods:
   domain: 'checkout'
   assemblyscript:
-    repo: "https://github.com/Shopify/extension-points.git"
-    package: "@shopify/scripts-checkout-apis"
-    toolchain-version: "^5.0.0"
+    repo: "https://github.com/Shopify/scripts-apis-examples"
+  typescript:
+    repo: "https://github.com/Shopify/scripts-apis-examples"
 shipping_methods:
   domain: 'checkout'
   assemblyscript:
-    repo: "https://github.com/Shopify/extension-points.git"
-    package: "@shopify/scripts-checkout-apis"
-    toolchain-version: "^5.0.0"
+    repo: "https://github.com/Shopify/scripts-apis-examples"
+  typescript:
+    repo: "https://github.com/Shopify/scripts-apis-examples"

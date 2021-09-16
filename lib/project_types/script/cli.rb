@@ -62,6 +62,10 @@ module Script
         autoload :ProjectCreator, Project.project_filepath("layers/infrastructure/languages/project_creator")
         autoload :RustProjectCreator,
           Project.project_filepath("layers/infrastructure/languages/rust_project_creator.rb")
+        autoload :TypeScriptProjectCreator,
+          Project.project_filepath("layers/infrastructure/languages/typescript_project_creator.rb")
+        autoload :TypeScriptTaskRunner,
+          Project.project_filepath("layers/infrastructure/languages/typescript_task_runner.rb")
         autoload :RustTaskRunner, Project.project_filepath("layers/infrastructure/languages/rust_task_runner")
         autoload :TaskRunner, Project.project_filepath("layers/infrastructure/languages/task_runner")
       end

@@ -28,6 +28,7 @@ module Script
             project_creators = {
               "assemblyscript" => AssemblyScriptProjectCreator,
               "rust" => RustProjectCreator,
+              "typescript" => TypeScriptProjectCreator,
             }
 
             raise Errors::ProjectCreatorNotFoundError unless project_creators[language]
