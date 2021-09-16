@@ -73,6 +73,27 @@ module ShopifyCli
           @watcher.notify_observers(modified, [], [])
         end
 
+        def test_doesnt_broadcast_watcher_events_when_the_list_is_empty
+          root_path = Pathname.new(__dir__)
+          ignore_filter = ShopifyCli::Theme::IgnoreFilter.new(root_path, patterns: ["ignored/**"])
+          modified = ["ignored/style.css"]
+          SSE::Streams.any_instance
+            .expects(:broadcast)
+            .with(JSON.generate(modified: modified))
+            .never
+
+          app = -> { [200, {}, []] }
+          HotReload.new(
+            @ctx, app,
+            theme: @theme,
+            watcher: @watcher,
+            ignore_filter: ignore_filter
+          )
+
+          @watcher.changed
+          @watcher.notify_observers(modified, [], [])
+        end
+
         private
 
         def serve(response_body = "", path: "/", headers: {})

@@ -34,11 +34,10 @@ module ShopifyCli
           files = (modified + added).reject { |file| @ignore_filter&.ignore?(file) }
             .map { |file| @theme[file].relative_path }
 
-          @streams.broadcast(JSON.generate(
-            modified: files,
-          ))
-
-          @ctx.debug("[HotReload] Modified #{files.join(", ")}")
+          unless files.empty?
+            @streams.broadcast(JSON.generate(modified: files))
+            @ctx.debug("[HotReload] Modified #{files.join(", ")}")
+          end
         end
 
         private
