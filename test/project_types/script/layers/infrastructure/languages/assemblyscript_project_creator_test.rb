@@ -60,7 +60,7 @@ describe Script::Layers::Infrastructure::Languages::AssemblyScriptProjectCreator
         .returns(fake_capture2e_response)
       context
         .expects(:capture2e)
-        .with("npm show @shopify/extension-point-as-fake version --json")
+        .with("npm -s show @shopify/extension-point-as-fake version --json")
         .once
         .returns([JSON.generate("2.0.0"), OpenStruct.new(success?: true)])
 
@@ -88,7 +88,7 @@ describe Script::Layers::Infrastructure::Languages::AssemblyScriptProjectCreator
 
       context
         .expects(:capture2e)
-        .with("npm show @shopify/extension-point-as-fake version --json")
+        .with("npm -s show @shopify/extension-point-as-fake version --json")
         .never
 
       sdk = mock
@@ -116,7 +116,7 @@ describe Script::Layers::Infrastructure::Languages::AssemblyScriptProjectCreator
 
       context
         .expects(:capture2e)
-        .with("npm show @shopify/extension-point-as-fake version --json")
+        .with("npm -s show @shopify/extension-point-as-fake version --json")
         .once
         .returns([JSON.generate(""), OpenStruct.new(success?: false)])
 

@@ -40,7 +40,7 @@ module Script
           def extension_point_version
             return extension_point.sdks.assemblyscript.version if extension_point.sdks.assemblyscript.versioned?
 
-            out = command_runner.call("npm show #{extension_point.sdks.assemblyscript.package} version --json")
+            out = command_runner.call("npm -s show #{extension_point.sdks.assemblyscript.package} version --json")
             "^#{JSON.parse(out)}"
           end
 
