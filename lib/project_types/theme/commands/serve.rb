@@ -6,6 +6,7 @@ module Theme
     class Serve < ShopifyCLI::SubCommand
       options do |parser, flags|
         parser.on("--port=PORT") { |port| flags[:port] = port.to_i }
+        parser.on("--poll") { flags[:poll] = true }
       end
 
       def call(*)

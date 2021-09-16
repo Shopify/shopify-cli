@@ -88,7 +88,12 @@ module Theme
         serve: {
           help: <<~HELP,
             Uploads the current theme as a development theme to the connected store, then prints theme editor and preview URLs to your terminal. While running, changes will push to the store in real time.
+
             Usage: {{command:%s theme serve}}
+
+            Options:
+              {{command:--port=PORT}} Local port to serve theme preview from
+              {{command:--poll}}      Force polling to detect file changes
           HELP
           serve: "Viewing theme…",
           open_fail: "Couldn't open the theme",

@@ -23,12 +23,12 @@ module Theme
         command.call
       end
 
-      def test_can_specify_env
+      def test_can_specify_poll
         context = ShopifyCLI::Context.new
-        ShopifyCLI::Theme::DevServer.expects(:start).with(context, ".", env: "staging")
+        ShopifyCLI::Theme::DevServer.expects(:start).with(context, ".", poll: true)
 
         command = Theme::Command::Serve.new(context)
-        command.options.flags[:env] = "staging"
+        command.options.flags[:poll] = true
         command.call
       end
     end
