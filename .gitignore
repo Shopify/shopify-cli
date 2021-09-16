@@ -20,3 +20,4 @@ packaging/debian/shopify-cli.deb
 packaging/rpm/build
 packaging/rpm/shopify-cli.spec
 .byebug_history
+ext/shopify-extensions/shopify-extensions
