@@ -14,7 +14,7 @@ module ShopifyExtensions
     end
 
     def call(platform:, version:, target:)
-      target = platform.format_path(target)
+      target = platform.format_path(target.to_s)
 
       asset = Asset.new(
         platform: platform,
