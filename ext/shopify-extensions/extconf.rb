@@ -10,7 +10,6 @@ MAKEFILE
 
 begin
   ShopifyExtensions.install(
-    version: "v0.1.0",
     target: File.join(File.dirname(__FILE__), "shopify-extensions")
   )
 rescue ShopifyExtensions::InstallationError => error

@@ -13,7 +13,11 @@ module ShopifyExtensions
       new.call(platform: platform, **args)
     end
 
-    def call(platform:, version:, target:)
+    def self.version
+      File.read(File.expand_path("../version", __FILE__)).strip
+    end
+
+    def call(platform:, version: self.class.version, target:)
       target = platform.format_path(target.to_s)
 
       asset = Asset.new(
