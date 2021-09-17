@@ -39,7 +39,7 @@ module Script
         Script::Layers::Application::CreateScript.expects(:call).with(
           ctx: @context,
           language: @language,
-          branch: @branch,
+          sparse_checkout_branch: @branch,
           script_name: @script_name,
           extension_point_type: @ep_type,
           no_config_ui: @no_config_ui
@@ -57,7 +57,7 @@ module Script
         Script::Layers::Application::CreateScript.expects(:call).with(
           ctx: @context,
           language: @language,
-          branch: @branch,
+          sparse_checkout_branch: @branch,
           script_name: @script_name,
           extension_point_type: @ep_type,
           no_config_ui: @no_config_ui

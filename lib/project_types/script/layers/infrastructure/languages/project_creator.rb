@@ -8,15 +8,21 @@ module Script
           include SmartProperties
           property! :ctx, accepts: ShopifyCli::Context
           property! :type, accepts: String
-          property! :repo, accepts: String
           property! :project_name, accepts: String
           property! :path_to_project, accepts: String
-          property! :branch, accepts: String
+          property! :sparse_checkout_repo, accepts: String
+          property! :sparse_checkout_branch, accepts: String
           property! :sparse_checkout_set_path, accepts: String
 
           def self.for(
-            ctx:, language:, type:, repo:,
-            project_name:, path_to_project:, branch:, sparse_checkout_set_path:
+            ctx:,
+            language:,
+            type:,
+            project_name:,
+            path_to_project:,
+            sparse_checkout_repo:,
+            sparse_checkout_branch:,
+            sparse_checkout_set_path:
           )
 
             project_creators = {
@@ -28,10 +34,10 @@ module Script
             project_creators[language].new(
               ctx: ctx,
               type: type,
-              repo: repo,
               project_name: project_name,
               path_to_project: path_to_project,
-              branch: branch,
+              sparse_checkout_repo: sparse_checkout_repo,
+              sparse_checkout_branch: sparse_checkout_branch,
               sparse_checkout_set_path: sparse_checkout_set_path
             )
           end
@@ -50,7 +56,12 @@ module Script
           private
 
           def setup_sparse_checkout
-            ShopifyCli::Git.sparse_checkout(repo, sparse_checkout_set_path, branch, ctx)
+            ShopifyCli::Git.sparse_checkout(
+              sparse_checkout_repo,
+              sparse_checkout_set_path,
+              sparse_checkout_branch,
+              ctx
+            )
           end
 
           def clean

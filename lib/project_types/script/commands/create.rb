@@ -25,7 +25,7 @@ module Script
         project = Layers::Application::CreateScript.call(
           ctx: @ctx,
           language: form.language,
-          branch: options.flags[:branch] || "add-package-json", # TODO: should be master?
+          sparse_checkout_branch: options.flags[:branch] || "add-package-json", # TODO: should be master?
           script_name: form.name,
           extension_point_type: form.extension_point,
           no_config_ui: options.flags.key?(:no_config_ui)

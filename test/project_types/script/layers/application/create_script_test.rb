@@ -18,10 +18,11 @@ describe Script::Layers::Application::CreateScript do
   let(:language) { "assemblyscript" }
   let(:extension_point_type) { "payment-methods" }
   let(:example_config) { extension_point_repository.example_config(extension_point_type) }
-
-  let(:branch) { "add-package-json" } # TODO: update once create script can take a command line argument
-  let(:repo) { example_config[language]["repo"] }
   let(:domain) { example_config["domain"] }
+  let(:sparse_checkout_repo) { example_config[language]["repo"] }
+  let(:sparse_checkout_branch) do
+    "add-package-json"
+  end   # TODO: update once create script can take a command line argument
   let(:sparse_checkout_set_path) { "packages/#{domain}/samples/#{extension_point_type}" }
 
   let(:project_creator) { stub }
@@ -50,15 +51,15 @@ describe Script::Layers::Application::CreateScript do
         ctx: context,
         language: language,
         type: extension_point_type,
-        repo: repo,
         project_name: script_name,
         path_to_project: script_project.id,
-        branch: branch,
+        sparse_checkout_repo: sparse_checkout_repo,
+        sparse_checkout_branch: sparse_checkout_branch,
         sparse_checkout_set_path: sparse_checkout_set_path,
       )
       .returns(project_creator)
 
-    project_creator.stubs(:repo).returns(repo)
+    project_creator.stubs(:sparse_checkout_repo).returns(sparse_checkout_repo)
     project_creator.stubs(:path_to_project).returns(script_project.id)
   end
 
@@ -69,7 +70,7 @@ describe Script::Layers::Application::CreateScript do
       Script::Layers::Application::CreateScript.call(
         ctx: context,
         language: language,
-        branch: branch,
+        sparse_checkout_branch: sparse_checkout_branch,
         script_name: script_name,
         extension_point_type: extension_point_type,
         no_config_ui: no_config_ui

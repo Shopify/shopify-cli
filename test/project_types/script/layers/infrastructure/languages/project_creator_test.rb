@@ -16,13 +16,12 @@ describe Script::Layers::Infrastructure::Languages::ProjectCreator do
 
   let(:domain) { "fake-domain" }
   let(:extension_point_type) { "fake-ep-type" }
-  let(:repo) { "fake-repo" }
-
   let(:project_name) { "myscript" }
-  let(:branch) { "fake-branch" }
 
   let(:path) { "project_path" }
 
+  let(:sparse_checkout_repo) { "fake-repo" }
+  let(:sparse_checkout_branch) { "fake-branch" }
   let(:sparse_checkout_set_path) { "packages/#{domain}/samples/#{extension_point_type}" }
 
   let(:source) { File.join(path, sparse_checkout_set_path) }
@@ -31,10 +30,10 @@ describe Script::Layers::Infrastructure::Languages::ProjectCreator do
     GenericProjectCreator.new(
       ctx: context,
       type: extension_point_type,
-      repo: repo,
       project_name: project_name,
       path_to_project: path,
-      branch: branch,
+      sparse_checkout_repo: sparse_checkout_repo,
+      sparse_checkout_branch: sparse_checkout_branch,
       sparse_checkout_set_path: sparse_checkout_set_path
     )
   end
@@ -51,10 +50,10 @@ describe Script::Layers::Infrastructure::Languages::ProjectCreator do
           ctx: context,
           language: language,
           type: extension_point_type,
-          repo: repo,
           project_name: project_name,
           path_to_project: path,
-          branch: branch,
+          sparse_checkout_repo: sparse_checkout_repo,
+          sparse_checkout_branch: sparse_checkout_branch,
           sparse_checkout_set_path: sparse_checkout_set_path,
         )
     end
@@ -82,9 +81,9 @@ describe Script::Layers::Infrastructure::Languages::ProjectCreator do
         ShopifyCli::Git
           .expects(:sparse_checkout)
           .with(
-            repo,
+            project_creator.sparse_checkout_repo,
             project_creator.sparse_checkout_set_path,
-            branch,
+            project_creator.sparse_checkout_branch,
             context
           )
           .once

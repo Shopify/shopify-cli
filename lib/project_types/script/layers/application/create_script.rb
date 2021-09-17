@@ -7,7 +7,7 @@ module Script
     module Application
       class CreateScript
         class << self
-          def call(ctx:, language:, branch:, script_name:, extension_point_type:, no_config_ui:)
+          def call(ctx:, language:, sparse_checkout_branch:, script_name:, extension_point_type:, no_config_ui:)
             raise Infrastructure::Errors::ScriptProjectAlreadyExistsError, script_name if ctx.dir_exist?(script_name)
 
             in_new_directory_context(ctx, script_name) do
@@ -20,7 +20,7 @@ module Script
               )
 
               # remove the need to pass the whole extension-point object to the infra layer
-              repo = extension_point.sdks.for(language).repo
+              sparse_checkout_repo = extension_point.sdks.for(language).repo
               type = extension_point.dasherize_type
               domain = extension_point.domain
 
@@ -33,10 +33,10 @@ module Script
                 ctx: ctx,
                 language: language,
                 type: type,
-                repo: repo,
                 project_name: script_name,
                 path_to_project: project.id,
-                branch: branch,
+                sparse_checkout_repo: sparse_checkout_repo,
+                sparse_checkout_branch: sparse_checkout_branch,
                 sparse_checkout_set_path: sparse_checkout_set_path
               )
 
@@ -52,12 +52,12 @@ module Script
             task_runner = Infrastructure::Languages::TaskRunner.for(ctx, language, script_name)
             CLI::UI::Frame.open(ctx.message(
               "core.git.pulling_from_to",
-              project_creator.repo,
+              project_creator.sparse_checkout_repo,
               script_name,
             )) do
               UI::StrictSpinner.spin(ctx.message(
                 "core.git.pulling",
-                project_creator.repo,
+                project_creator.sparse_checkout_repo,
                 script_name,
               )) do |spinner|
                 project_creator.setup_dependencies
