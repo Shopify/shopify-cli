@@ -1,9 +1,6 @@
 require "rbconfig"
 require "open-uri"
-require "json"
 require "zlib"
-require "rubygems"
-require "rubygems/package"
 require "open3"
 
 module ShopifyExtensions
