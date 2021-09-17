@@ -33,7 +33,7 @@ Gem::Specification.new do |spec|
   end
   spec.bindir = "bin"
   spec.require_paths = ["lib", "vendor"]
-  spec.extensions = ["ext/shopify-cli/extconf.rb", "ext/shopify-extensions/extconf.rb"]
+  spec.extensions = ["ext/shopify-cli/extconf.rb"]
   # Do NOT include `shopify` as a listed executable via `spec.executables`.
   # `ext/shopify-cli/extconf.rb` will dynamically create a script and soft-link
   # `/usr/local/bin/shopify` to that script, in order to "lock" the Ruby used to

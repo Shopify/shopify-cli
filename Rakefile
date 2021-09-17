@@ -112,27 +112,46 @@ end
 desc("Builds all distribution packages of the CLI")
 task(package: "package:all")
 
-namespace :shopify do
-  namespace :extensions do
-    task :update do
-      version = ENV.fetch("VERSION").strip
-      error("Invalid version") unless /^v\d+\.\d+\.\d+/.match(version)
-      extconf = File.expand_path("../ext/shopify-extensions/extconf.rb", __FILE__)
-      File.open(extconf) do |f|
-        IO.write(extconf, f.read.gsub(/(?<=version: ")(.*?)(?=")/, version))
-      end
-    end
-
-    task :symlink do
-      root = File.dirname(__FILE__)
-      executable = File.expand_path("../shopify-cli-extensions/shopify-extensions", root)
-      error("Unable to find shopify-extensions executable: #{executable}") unless File.executable?(executable)
-      File.symlink(executable, File.join(root, "ext/shopify-extensions/shopify-extensions"))
-    end
-
-    def error(message, output: STDERR, code: 1)
-      output.puts(message)
-      exit(code)
+namespace :extensions do
+  task :update do
+    version = ENV.fetch("VERSION").strip
+    error("Invalid version") unless /^v\d+\.\d+\.\d+/.match(version)
+    extconf = Paths.extension("extconf.rb")
+    File.open(extconf) do |f|
+      IO.write(extconf, f.read.gsub(/(?<=version: ")(.*?)(?=")/, version))
     end
   end
+
+  task :symlink do
+    source = Paths.root("..", "shopify-cli-extensions", "shopify-extensions")
+    error("Unable to find shopify-extensions executable: #{executable}") unless File.executable?(source)
+    target = Paths.extension("shopify-extensions")
+    File.delete(target) if File.exist?(target)
+    File.symlink(source, target)
+  end
+
+  task :install do
+    target = Paths.extension("shopify-extensions")
+    require_relative Paths.extension("shopify_extensions.rb")
+    File.delete(target) if File.exist?(target)
+    ShopifyExtensions.install(
+      version: "v0.1.0",
+      target: target
+    )
+  end
+
+  module Paths
+    def self.extension(*args)
+      root("ext", "shopify-extensions", *args)
+    end
+
+    def self.root(*args)
+      Pathname(File.dirname(__FILE__)).join(*args).to_s
+    end
+  end
+end
+
+def error(message, output: STDERR, code: 1)
+  output.puts(message)
+  exit(code)
 end
