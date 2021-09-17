@@ -1,6 +1,8 @@
 require_relative "./shopify_extensions"
 
-File.write("Makefile", <<~MAKEFILE)
+installation_dir = ENV.fetch("SHOPIFY_CLI_EXTENSIONS_INSTALLATION_DIR", __dir__)
+
+File.write(File.expand_path("Makefile", installation_dir), <<~MAKEFILE)
   .PHONY: clean
 
   clean: ;
@@ -10,7 +12,7 @@ MAKEFILE
 
 begin
   ShopifyExtensions.install(
-    target: File.join(File.dirname(__FILE__), "shopify-extensions")
+    target: File.expand_path("shopify-extensions", installation_dir)
   )
 rescue ShopifyExtensions::InstallationError => error
   STDERR.puts(error.message)
