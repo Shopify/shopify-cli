@@ -83,7 +83,7 @@ module ShopifyExtensions
         assert_equal "linux-amd64", Platform.new(linux_vm).to_s
       end
 
-      def test_recognices_mac_os
+      def test_recognizes_mac_os
         intel_mac = ruby_config(os: "darwin20.3.0", cpu: "x86_64")
         m1_mac = ruby_config(os: "darwin20.3.0", cpu: "arm64")
 
