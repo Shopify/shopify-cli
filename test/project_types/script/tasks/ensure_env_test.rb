@@ -144,19 +144,6 @@ describe Script::Tasks::EnsureEnv do
           end
         end
 
-        describe("when the partners bypass flag is set") do
-          before do
-            Script::Tasks::EnsureEnv.any_instance.stubs(:partner_proxy_bypass).returns(true)
-          end
-
-          it("should not call partners to query for apps") do
-            ShopifyCli::PartnersAPI.expects(:query).never
-            Script::Layers::Infrastructure::ScriptService.any_instance.expects(:get_app_scripts).returns([])
-
-            subject
-          end
-        end
-
         describe("when asking app connection") do
           describe("when number of apps == 0") do
             let(:apps) { [] }
