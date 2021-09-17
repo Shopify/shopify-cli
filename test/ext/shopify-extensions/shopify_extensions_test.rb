@@ -91,7 +91,7 @@ module ShopifyExtensions
         assert_equal "darwin-arm64", Platform.new(m1_mac).to_s
       end
 
-      def test_recognices_windows
+      def test_recognizes_windows
         windows_vm_64_bit = ruby_config(os: "mingw32", cpu: "x64")
         windows_vm_32_bit = ruby_config(os: "mingw32", cpu: "i686")
         assert_equal "windows-amd64", Platform.new(windows_vm_64_bit).to_s
