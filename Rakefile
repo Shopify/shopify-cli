@@ -116,10 +116,7 @@ namespace :extensions do
   task :update do
     version = ENV.fetch("VERSION").strip
     error("Invalid version") unless /^v\d+\.\d+\.\d+/.match(version)
-    extconf = Paths.extension("extconf.rb")
-    File.open(extconf) do |f|
-      IO.write(extconf, f.read.gsub(/(?<=version: ")(.*?)(?=")/, version))
-    end
+    File.write(Paths.extension("version"), version)
   end
 
   task :symlink do
@@ -134,10 +131,7 @@ namespace :extensions do
     target = Paths.extension("shopify-extensions")
     require_relative Paths.extension("shopify_extensions.rb")
     File.delete(target) if File.exist?(target)
-    ShopifyExtensions.install(
-      version: "v0.1.0",
-      target: target
-    )
+    ShopifyExtensions.install(target: target)
   end
 
   module Paths
