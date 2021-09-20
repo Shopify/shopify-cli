@@ -8,13 +8,26 @@ module ShopifyCli
       end
 
       def call(args, _name)
+
+        org_id = ShopifyCli::DB.get(:organization_id)
+        org = ShopifyCli::PartnersAPI::Organizations.fetch(@ctx, id: org_id) unless org_id.nil?
+
         command = args.shift
         language = (options.flags[:lang] || nil)
-        if language.nil? || language === 'en'
-          @ctx.puts("Hello!")
+
+        greeting = if language.nil? || language === 'en'
+          "Hello"
         elsif language === 'fr'
-          @ctx.puts("Bonjour!")
+          "Bonjour"
         end
+
+        output = if org.nil?
+          @ctx.message("core.whoami.not_logged_in", ShopifyCli::TOOL_NAME)
+        else
+          "#{greeting} #{org["businessName"]}"
+        end
+
+        @ctx.puts(output)
       end
 
       private
