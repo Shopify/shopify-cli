@@ -45,7 +45,6 @@ module Script
     end
 
     module Infrastructure
-      autoload :ApiClients, Project.project_filepath("layers/infrastructure/api_clients")
       autoload :Errors, Project.project_filepath("layers/infrastructure/errors")
       autoload :CommandRunner, Project.project_filepath("layers/infrastructure/command_runner")
       autoload :PushPackageRepository, Project.project_filepath("layers/infrastructure/push_package_repository")
@@ -65,6 +64,13 @@ module Script
           Project.project_filepath("layers/infrastructure/languages/rust_project_creator.rb")
         autoload :RustTaskRunner, Project.project_filepath("layers/infrastructure/languages/rust_task_runner")
         autoload :TaskRunner, Project.project_filepath("layers/infrastructure/languages/task_runner")
+      end
+
+      module ApiClients
+        autoload :PartnersProxyApiClient,
+          Project.project_filepath("layers/infrastructure/api_clients/partners_proxy_api_client")
+        autoload :ScriptServiceApiClient,
+          Project.project_filepath("layers/infrastructure/api_clients/script_service_api_client")
       end
     end
   end
