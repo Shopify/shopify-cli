@@ -51,7 +51,7 @@ describe Script::Layers::Infrastructure::ScriptService do
     let(:url) { "https://some-bucket" }
 
     before do
-      api_client.expects(:query).returns(response)
+      api_client.stubs(:query).returns(response)
     end
 
     subject do
@@ -187,7 +187,7 @@ describe Script::Layers::Infrastructure::ScriptService do
     end
 
     before do
-      api_client.expects(:query).returns(response)
+      api_client.stubs(:query).returns(response)
     end
 
     subject do
@@ -228,7 +228,7 @@ describe Script::Layers::Infrastructure::ScriptService do
     end
 
     before do
-      api_client.expects(:query).returns(response)
+      api_client.stubs(:query).returns(response)
     end
 
     subject { script_service.generate_module_upload_url }
