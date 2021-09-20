@@ -179,9 +179,7 @@ module ShopifyCli
     end
 
     def fake_ngrok_api_response
-      @ngrok_api_response ||= begin
-        JSON.parse(File.read(File.join(ShopifyCli::ROOT, "test", "fixtures", "ngrok_api.json")))
-      end
+      @ngrok_api_response ||= JSON.parse(File.read(File.join(ShopifyCli::ROOT, "test", "fixtures", "ngrok_api.json")))
     end
   end
 end
