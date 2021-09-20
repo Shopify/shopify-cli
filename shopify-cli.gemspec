@@ -43,6 +43,6 @@ Gem::Specification.new do |spec|
   spec.add_development_dependency("rake", "~> 12.3", ">= 12.3.3")
   spec.add_development_dependency("minitest", "~> 5.0")
 
-  spec.add_dependency("listen", "~> 3.5")
-  spec.add_dependency("theme-check", "~> 1.4")
+  spec.add_dependency("listen", "~> 3.7.0")
+  spec.add_dependency("theme-check", "~> 1.4.0")
 end
