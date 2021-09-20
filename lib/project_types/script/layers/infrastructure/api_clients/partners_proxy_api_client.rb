@@ -9,10 +9,14 @@ module Script
           end
 
           def query(query_name, variables: {})
-            response = ShimAPI.query(@ctx, query_name, api_key: @api_key, variables: variables.to_json)
-            raise_if_graphql_failed(response)
-            JSON.parse(response["data"]["scriptServiceProxy"])
+            proxy_response = ShimAPI.query(@ctx, query_name, api_key: @api_key, variables: variables.to_json)
+            raise_if_graphql_failed(proxy_response)
+
+            response = proxy_response["data"]["scriptServiceProxy"]
+            JSON.parse(response) if response
           end
+
+          private
 
           def raise_if_graphql_failed(response)
             raise Errors::EmptyResponseError if response.nil?
