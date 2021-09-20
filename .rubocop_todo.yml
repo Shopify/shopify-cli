@@ -14,11 +14,11 @@ Minitest/MultipleAssertions:
 # Cop supports --auto-correct.
 Style/PerlBackrefs:
   Exclude:
-    - 'lib/docgen/markdown.rb'
+    - "lib/docgen/markdown.rb"
 
 # Offense count: 2
 # Cop supports --auto-correct.
 Style/RedundantBegin:
   Exclude:
-    - 'lib/shopify-cli/shopifolk.rb'
-    - 'test/shopify-cli/tunnel_test.rb'
+    - "lib/shopify_cli/shopifolk.rb"
+    - "test/shopify_cli/tunnel_test.rb"

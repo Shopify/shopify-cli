@@ -1,8 +1,8 @@
 # frozen_string_literal: true
-require "shopify-cli/theme/theme"
-require "shopify-cli/theme/development_theme"
-require "shopify-cli/theme/ignore_filter"
-require "shopify-cli/theme/syncer"
+require "shopify_cli/theme/theme"
+require "shopify_cli/theme/development_theme"
+require "shopify_cli/theme/ignore_filter"
+require "shopify_cli/theme/syncer"
 
 module Theme
   class Command

@@ -51,20 +51,20 @@ namespace :rdoc do
   repo = "https://github.com/Shopify/shopify-cli.wiki.git"
   intermediate = "markdown_intermediate"
   file_to_doc = [
-    "lib/shopify-cli/admin_api.rb",
-    "lib/shopify-cli/context.rb",
-    "lib/shopify-cli/db.rb",
-    "lib/shopify-cli/git.rb",
-    "lib/shopify-cli/heroku.rb",
-    "lib/shopify-cli/js_deps.rb",
-    "lib/shopify-cli/lazy_delegator.rb",
-    "lib/shopify-cli/method_object.rb",
-    "lib/shopify-cli/partners_api.rb",
-    "lib/shopify-cli/process_supervision.rb",
-    "lib/shopify-cli/project.rb",
-    "lib/shopify-cli/result.rb",
-    "lib/shopify-cli/transform_data_structure.rb",
-    "lib/shopify-cli/tunnel.rb",
+    "lib/shopify_cli/admin_api.rb",
+    "lib/shopify_cli/context.rb",
+    "lib/shopify_cli/db.rb",
+    "lib/shopify_cli/git.rb",
+    "lib/shopify_cli/heroku.rb",
+    "lib/shopify_cli/js_deps.rb",
+    "lib/shopify_cli/lazy_delegator.rb",
+    "lib/shopify_cli/method_object.rb",
+    "lib/shopify_cli/partners_api.rb",
+    "lib/shopify_cli/process_supervision.rb",
+    "lib/shopify_cli/project.rb",
+    "lib/shopify_cli/result.rb",
+    "lib/shopify_cli/transform_data_structure.rb",
+    "lib/shopify_cli/tunnel.rb",
   ]
 
   task all: [:markdown, :wiki, :cleanup]
@@ -104,7 +104,7 @@ desc("Generate markdown documentation and update the wiki")
 task(rdoc: "rdoc:all")
 
 namespace :package do
-  require "shopify-cli/packager"
+  require "shopify_cli/packager"
 
   task all: [:debian, :rpm, :homebrew]
 

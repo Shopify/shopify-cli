@@ -1,6 +1,6 @@
 # frozen_string_literal: true
 require "test_helper"
-require "shopify-cli/theme/dev_server"
+require "shopify_cli/theme/dev_server"
 require "rack/mock"
 
 module ShopifyCli
@@ -27,7 +27,7 @@ module ShopifyCli
           HTML
 
           reload_js = ::File.read(
-            ::File.expand_path("lib/shopify-cli/theme/dev_server/hot-reload.js", ShopifyCli::ROOT)
+            ::File.expand_path("lib/shopify_cli/theme/dev_server/hot-reload.js", ShopifyCli::ROOT)
           )
           reload_script = "<script>\n#{reload_js}</script>"
           expected_html = <<~HTML

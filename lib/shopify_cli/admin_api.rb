@@ -6,8 +6,8 @@ module ShopifyCli
   # these concerns are taken care of.
   #
   class AdminAPI < API
-    autoload :PopulateResourceCommand, "shopify-cli/admin_api/populate_resource_command"
-    autoload :Schema, "shopify-cli/admin_api/schema"
+    autoload :PopulateResourceCommand, "shopify_cli/admin_api/populate_resource_command"
+    autoload :Schema, "shopify_cli/admin_api/schema"
 
     class << self
       ##

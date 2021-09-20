@@ -1,5 +1,5 @@
 # frozen_string_literal: true
-require "shopify-cli/theme/theme"
+require "shopify_cli/theme/theme"
 
 module Theme
   class Command

@@ -52,7 +52,7 @@ module ShopifyCli
         end
 
         # we delay this require so as to avoid a performance hit on starting the CLI
-        require "shopify-cli/http_request"
+        require "shopify_cli/http_request"
         headers = default_headers.merge(headers)
         response = if method == "POST"
           HttpRequest.post(uri, body, headers)

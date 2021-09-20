@@ -1,5 +1,5 @@
 require "shopify_cli"
-require "shopify-cli/theme/development_theme"
+require "shopify_cli/theme/development_theme"
 
 module ShopifyCli
   module Commands
