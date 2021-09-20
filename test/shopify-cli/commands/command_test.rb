@@ -1,11 +1,11 @@
 require "test_helper"
 
-module ShopifyCli
+module ShopifyCLI
   module Commands
     class CommandTest < MiniTest::Test
       def test_non_existant
         io = capture_io do
-          assert_raises(ShopifyCli::AbortSilent) do
+          assert_raises(ShopifyCLI::AbortSilent) do
             run_cmd("foobar")
           end
         end
@@ -26,7 +26,7 @@ module ShopifyCli
           run_cmd("populate customer --help")
         end
 
-        assert_match(CLI::UI.fmt(ShopifyCli::Commands::Populate::Customer.help), io.join)
+        assert_match(CLI::UI.fmt(ShopifyCLI::Commands::Populate::Customer.help), io.join)
       end
     end
   end

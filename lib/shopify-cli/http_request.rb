@@ -1,7 +1,7 @@
 require "net/http"
 require "openssl"
 
-module ShopifyCli
+module ShopifyCLI
   class HttpRequest
     class << self
       def post(uri, body, headers)

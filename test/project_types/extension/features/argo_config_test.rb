@@ -8,7 +8,7 @@ module Extension
       def setup
         super
         File.stubs(:size?).returns(true)
-        ShopifyCli::ProjectType.load_type(:extension)
+        ShopifyCLI::ProjectType.load_type(:extension)
       end
 
       def test_parses_and_symbolizes_yaml_hash
@@ -25,13 +25,13 @@ module Extension
 
       def test_aborts_when_yaml_is_invalid
         YAML.stubs(:load_file).raises(Psych::SyntaxError.new(nil, 1, 1, nil, nil, nil))
-        assert_raises(ShopifyCli::Abort) { ArgoConfig.parse_yaml(@context) }
+        assert_raises(ShopifyCLI::Abort) { ArgoConfig.parse_yaml(@context) }
       end
 
       def test_aborts_when_yaml_is_not_a_hash
         YAML.stubs(:load_file).returns(false)
 
-        assert_raises(ShopifyCli::Abort) { ArgoConfig.parse_yaml(@context) }
+        assert_raises(ShopifyCLI::Abort) { ArgoConfig.parse_yaml(@context) }
       end
 
       def test_returns_empty_hash_when_file_not_found_or_empty
@@ -51,7 +51,7 @@ module Extension
 
         YAML.stubs(:load_file).returns({ "a" => 1, "c" => 1 })
 
-        assert_raises(ShopifyCli::Abort) { ArgoConfig.parse_yaml(@context, permitted_keys) }
+        assert_raises(ShopifyCLI::Abort) { ArgoConfig.parse_yaml(@context, permitted_keys) }
       end
 
       def test_does_not_abort_when_yaml_contains_no_unpermitted_keys
@@ -59,7 +59,7 @@ module Extension
 
         YAML.stubs(:load_file).returns({ "a" => 1, "b" => 1 })
 
-        assert_nothing_raised(ShopifyCli::Abort) { ArgoConfig.parse_yaml(@context, permitted_keys) }
+        assert_nothing_raised(ShopifyCLI::Abort) { ArgoConfig.parse_yaml(@context, permitted_keys) }
       end
     end
   end

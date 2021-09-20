@@ -1,9 +1,9 @@
 require "shopify_cli"
 require "rbconfig"
 
-module ShopifyCli
+module ShopifyCLI
   module Commands
-    class System < ShopifyCli::Command
+    class System < ShopifyCLI::Command
       hidden_feature(feature_set: :debug)
 
       def call(args, _name)
@@ -28,7 +28,7 @@ module ShopifyCli
       end
 
       def self.help
-        ShopifyCli::Context.message("core.system.help", ShopifyCli::TOOL_NAME)
+        ShopifyCLI::Context.message("core.system.help", ShopifyCLI::TOOL_NAME)
       end
 
       private
@@ -50,21 +50,21 @@ module ShopifyCli
 
         @ctx.puts(@ctx.message("core.system.header"))
         cli_constants.each do |s|
-          @ctx.puts("  " + @ctx.message("core.system.const", s, ShopifyCli.const_get(s.to_sym)) + "\n")
+          @ctx.puts("  " + @ctx.message("core.system.const", s, ShopifyCLI.const_get(s.to_sym)) + "\n")
         end
 
         if show_all_details
           cli_path_methods.each do |m|
-            @ctx.puts("  " + @ctx.message("core.system.const", m.upcase, ShopifyCli.send(m)) + "\n")
+            @ctx.puts("  " + @ctx.message("core.system.const", m.upcase, ShopifyCLI.send(m)) + "\n")
           end
         end
       end
 
       def display_shopify_store(_show_all_details)
-        shop = if ShopifyCli::DB.exists?(:shop)
-          ShopifyCli::AdminAPI.get_shop_or_abort(@ctx)
+        shop = if ShopifyCLI::DB.exists?(:shop)
+          ShopifyCLI::AdminAPI.get_shop_or_abort(@ctx)
         else
-          @ctx.message("core.populate.error.no_shop", ShopifyCli::TOOL_NAME)
+          @ctx.message("core.populate.error.no_shop", ShopifyCLI::TOOL_NAME)
         end
 
         @ctx.puts("\n" + @ctx.message("core.system.shop_header"))
@@ -96,7 +96,7 @@ module ShopifyCli
       end
 
       def display_ngrok
-        ngrok_location = File.join(ShopifyCli.cache_dir, "ngrok#{@ctx.executable_file_extension}")
+        ngrok_location = File.join(ShopifyCLI.cache_dir, "ngrok#{@ctx.executable_file_extension}")
         if File.exist?(ngrok_location)
           @ctx.puts("  " + @ctx.message("core.system.ngrok_available", ngrok_location))
         else
@@ -154,7 +154,7 @@ module ShopifyCli
       end
 
       def display_shopify_staff_identity
-        is_shopifolk = ShopifyCli::Shopifolk.check
+        is_shopifolk = ShopifyCLI::Shopifolk.check
         if is_shopifolk
           @ctx.puts("\n" + @ctx.message("core.system.identity_header"))
           @ctx.puts("  " + @ctx.message("core.system.identity_is_shopifolk"))

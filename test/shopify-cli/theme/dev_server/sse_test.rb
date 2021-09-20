@@ -2,7 +2,7 @@
 require "test_helper"
 require "shopify-cli/theme/dev_server/sse"
 
-module ShopifyCli
+module ShopifyCLI
   module Theme
     module DevServer
       class SSETest < Minitest::Test

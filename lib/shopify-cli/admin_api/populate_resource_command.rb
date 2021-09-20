@@ -1,9 +1,9 @@
 require "shopify_cli"
 require "optparse"
 
-module ShopifyCli
+module ShopifyCLI
   class AdminAPI
-    class PopulateResourceCommand < ShopifyCli::SubCommand
+    class PopulateResourceCommand < ShopifyCLI::SubCommand
       DEFAULT_COUNT = 5
 
       attr_reader :input
@@ -40,7 +40,7 @@ module ShopifyCli
           return @ctx.puts(output)
         end
 
-        ShopifyCli::Tasks::ConfirmStore.call(@ctx) unless @skip_shop_confirmation
+        ShopifyCLI::Tasks::ConfirmStore.call(@ctx) unless @skip_shop_confirmation
         @shop = AdminAPI.get_shop_or_abort(@ctx)
         if @silent
           spin_group = CLI::UI::SpinGroup.new

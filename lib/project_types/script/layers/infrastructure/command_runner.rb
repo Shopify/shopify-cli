@@ -6,7 +6,7 @@ module Script
       class CommandRunner
         include SmartProperties
 
-        property! :ctx, accepts: ShopifyCli::Context
+        property! :ctx, accepts: ShopifyCLI::Context
 
         def call(cmd)
           out, status = ctx.capture2e(cmd)

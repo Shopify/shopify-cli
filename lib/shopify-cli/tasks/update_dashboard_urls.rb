@@ -1,24 +1,24 @@
-module ShopifyCli
+module ShopifyCLI
   module Tasks
-    class UpdateDashboardURLS < ShopifyCli::Task
+    class UpdateDashboardURLS < ShopifyCLI::Task
       NGROK_REGEX = /https:\/\/([a-z0-9\-]+\.ngrok\.io)(.*)/
 
       def call(ctx, url:, callback_url:)
         @ctx = ctx
-        project = ShopifyCli::Project.current
+        project = ShopifyCLI::Project.current
         api_key = project.env.api_key
-        result = ShopifyCli::PartnersAPI.query(ctx, "get_app_urls", apiKey: api_key)
+        result = ShopifyCLI::PartnersAPI.query(ctx, "get_app_urls", apiKey: api_key)
         app = result["data"]["app"]
         consent = check_application_url(app["applicationUrl"], url)
         constructed_urls = construct_redirect_urls(app["redirectUrlWhitelist"], url, callback_url)
         return if url == app["applicationUrl"]
-        ShopifyCli::PartnersAPI.query(@ctx, "update_dashboard_urls", input: {
+        ShopifyCLI::PartnersAPI.query(@ctx, "update_dashboard_urls", input: {
           applicationUrl: consent ? url : app["applicationUrl"],
           redirectUrlWhitelist: constructed_urls, apiKey: api_key
         })
         @ctx.puts(@ctx.message("core.tasks.update_dashboard_urls.updated"))
       rescue
-        @ctx.puts(@ctx.message("core.tasks.update_dashboard_urls.update_error", ShopifyCli::TOOL_NAME))
+        @ctx.puts(@ctx.message("core.tasks.update_dashboard_urls.update_error", ShopifyCLI::TOOL_NAME))
         raise
       end
 

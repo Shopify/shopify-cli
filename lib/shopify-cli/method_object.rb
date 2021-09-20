@@ -1,9 +1,9 @@
-module ShopifyCli
+module ShopifyCLI
   ##
   # The `MethodObject` mixin can be included in any class that implements `call`
   # to ensure that
   #
-  # * `call` will always return a `ShopifyCli::Result` by prepending a module
+  # * `call` will always return a `ShopifyCLI::Result` by prepending a module
   #   that takes care of the result wrapping and
   # * a `to_proc` method that allows instances of this class to be passed as a
   #   block.
@@ -42,8 +42,8 @@ module ShopifyCli
   #   constructed using the `&` operator,
   # * error handling is deferred until the result is unwrapped.
   #
-  # Please see the section for `ShopifyCli::Result`,
-  # `ShopifyCli::Result::Success`, and `ShopifyCli::Result::Failure` for more
+  # Please see the section for `ShopifyCLI::Result`,
+  # `ShopifyCLI::Result::Success`, and `ShopifyCLI::Result::Failure` for more
   # information on the API of result objects.
   #
   module MethodObject

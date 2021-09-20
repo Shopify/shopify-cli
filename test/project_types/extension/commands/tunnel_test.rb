@@ -9,8 +9,8 @@ module Extension
 
       def setup
         super
-        ShopifyCli::ProjectType.load_type(:extension)
-        ShopifyCli::Tasks::EnsureProjectType.stubs(:call)
+        ShopifyCLI::ProjectType.load_type(:extension)
+        ShopifyCLI::Tasks::EnsureProjectType.stubs(:call)
       end
 
       def test_prints_help
@@ -31,19 +31,19 @@ module Extension
       def test_auth_runs_the_core_cli_tunnel_auth_if_token_is_present
         # skip("Need to revisit processing of sub-sub-commands")
         fake_token = "FAKE_TOKEN"
-        ShopifyCli::Tunnel.expects(:auth).with(@context, fake_token).once
+        ShopifyCLI::Tunnel.expects(:auth).with(@context, fake_token).once
 
         capture_io { run_tunnel(Extension::Command::Tunnel::AUTH_SUBCOMMAND, fake_token) }
       end
 
       def test_start_runs_with_the_default_port_if_no_port_provided
-        ShopifyCli::Tunnel.expects(:start).with(@context, port: Extension::Command::Tunnel::DEFAULT_PORT).once
+        ShopifyCLI::Tunnel.expects(:start).with(@context, port: Extension::Command::Tunnel::DEFAULT_PORT).once
 
         capture_io { run_tunnel(Extension::Command::Tunnel::START_SUBCOMMAND) }
       end
 
       def test_start_runs_with_the_requested_port_if_provided
-        ShopifyCli::Tunnel.expects(:start).with(@context, port: 9999).once
+        ShopifyCLI::Tunnel.expects(:start).with(@context, port: 9999).once
 
         capture_io { run_tunnel(Extension::Command::Tunnel::START_SUBCOMMAND, "--port=9999") }
       end
@@ -52,9 +52,9 @@ module Extension
         # skip("Need to revisit processing of sub-sub-commands")
         invalid_port = "NOT_PORT"
 
-        ShopifyCli::Tunnel.expects(:start).never
+        ShopifyCLI::Tunnel.expects(:start).never
 
-        io = capture_io_and_assert_raises(ShopifyCli::Abort) do
+        io = capture_io_and_assert_raises(ShopifyCLI::Abort) do
           run_tunnel(Extension::Command::Tunnel::START_SUBCOMMAND, "--port=#{invalid_port}")
         end
 
@@ -65,13 +65,13 @@ module Extension
 
       def test_stop_runs_the_core_cli_tunnel_stop
         # skip("Need to revisit processing of sub-sub-commands")
-        ShopifyCli::Tunnel.expects(:stop).with(@context).once
+        ShopifyCLI::Tunnel.expects(:stop).with(@context).once
 
         capture_io { run_tunnel(Extension::Command::Tunnel::STOP_SUBCOMMAND) }
       end
 
       def test_status_outputs_no_tunnel_running_if_tunnel_urls_returns_empty
-        ShopifyCli::Tunnel.expects(:urls).returns([]).once
+        ShopifyCLI::Tunnel.expects(:urls).returns([]).once
 
         io = capture_io { run_tunnel(Extension::Command::Tunnel::STATUS_SUBCOMMAND) }
 
@@ -81,7 +81,7 @@ module Extension
       def test_status_outputs_the_https_url_of_the_running_tunnel_url_if_returned_by_tunnel_urls
         fake_http_url = "http://12345.ngrok.io"
         fake_https_url = "https://12345.ngrok.io"
-        ShopifyCli::Tunnel.expects(:urls).returns([fake_http_url, fake_https_url]).once
+        ShopifyCLI::Tunnel.expects(:urls).returns([fake_http_url, fake_https_url]).once
 
         io = capture_io { run_tunnel(Extension::Command::Tunnel::STATUS_SUBCOMMAND) }
 
@@ -90,7 +90,7 @@ module Extension
 
       def test_status_outputs_the_http_url_of_the_running_tunnel_url_if_no_https_url_is_returned_by_tunnel_urls
         fake_http_url = "http://12345.ngrok.io"
-        ShopifyCli::Tunnel.expects(:urls).returns([fake_http_url]).once
+        ShopifyCLI::Tunnel.expects(:urls).returns([fake_http_url]).once
 
         io = capture_io { run_tunnel(Extension::Command::Tunnel::STATUS_SUBCOMMAND) }
 

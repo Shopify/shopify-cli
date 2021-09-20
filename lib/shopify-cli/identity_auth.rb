@@ -8,7 +8,7 @@ require "shopify_cli"
 require "uri"
 require "webrick"
 
-module ShopifyCli
+module ShopifyCLI
   class IdentityAuth
     include SmartProperties
 
@@ -49,7 +49,7 @@ module ShopifyCli
     ]
 
     property! :ctx
-    property :store, default: -> { ShopifyCli::DB.new }
+    property :store, default: -> { ShopifyCLI::DB.new }
     property :state_token, accepts: String, default: SecureRandom.hex(30)
     property :code_verifier, accepts: String, default: SecureRandom.hex(30)
 
@@ -70,7 +70,7 @@ module ShopifyCli
 
     def reauthenticate
       return if refresh_exchange_tokens || refresh_access_tokens
-      ctx.abort(ctx.message("core.identity_auth.error.reauthenticate", ShopifyCli::TOOL_NAME))
+      ctx.abort(ctx.message("core.identity_auth.error.reauthenticate", ShopifyCLI::TOOL_NAME))
     end
 
     def code_challenge
@@ -93,8 +93,8 @@ module ShopifyCli
     end
 
     def self.delete_tokens_and_keys
-      ShopifyCli::DB.del(*IDENTITY_ACCESS_TOKENS)
-      ShopifyCli::DB.del(*EXCHANGE_TOKENS)
+      ShopifyCLI::DB.del(*IDENTITY_ACCESS_TOKENS)
+      ShopifyCLI::DB.del(*EXCHANGE_TOKENS)
     end
 
     private
@@ -212,7 +212,7 @@ module ShopifyCli
       https = Net::HTTP.new(uri.host, uri.port)
       https.use_ssl = true
       request = Net::HTTP::Post.new(uri.path)
-      request["User-Agent"] = "Shopify CLI #{::ShopifyCli::VERSION}"
+      request["User-Agent"] = "Shopify CLI #{::ShopifyCLI::VERSION}"
       request.body = URI.encode_www_form(params)
       res = https.request(request)
       unless res.is_a?(Net::HTTPSuccess)
@@ -256,7 +256,7 @@ module ShopifyCli
 
     def scopes(additional_scopes = [])
       (["openid"] + additional_scopes).tap do |result|
-        result << "employee" if ShopifyCli::Shopifolk.acting_as_shopify_organization?
+        result << "employee" if ShopifyCLI::Shopifolk.acting_as_shopify_organization?
       end.join(" ")
     end
 

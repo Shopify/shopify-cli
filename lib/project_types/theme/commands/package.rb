@@ -4,7 +4,7 @@ require "json"
 
 module Theme
   class Command
-    class Package < ShopifyCli::SubCommand
+    class Package < ShopifyCLI::SubCommand
       THEME_DIRECTORIES = %w[
         assets
         config
@@ -25,7 +25,7 @@ module Theme
       end
 
       def self.help
-        ShopifyCli::Context.message("theme.package.help", ShopifyCli::TOOL_NAME, ShopifyCli::TOOL_NAME)
+        ShopifyCLI::Context.message("theme.package.help", ShopifyCLI::TOOL_NAME, ShopifyCLI::TOOL_NAME)
       end
 
       private

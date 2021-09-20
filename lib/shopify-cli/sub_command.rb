@@ -1,7 +1,7 @@
 # frozen_string_literal: true
 require "shopify_cli"
 
-module ShopifyCli
+module ShopifyCLI
   class SubCommand < Command
     class << self
       def call(args, command_name, parent_command)

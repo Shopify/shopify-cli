@@ -54,8 +54,8 @@ module Extension
       )
 
       if with_mocks
-        ShopifyCli::Project.stubs(:current).returns(project)
-        ShopifyCli::Project.stubs(:has_current?).returns(true)
+        ShopifyCLI::Project.stubs(:current).returns(project)
+        ShopifyCLI::Project.stubs(:has_current?).returns(true)
         ExtensionProject.stubs(:current).returns(project)
         specifications = test_specifications
         Models::Specifications.stubs(:new).returns(specifications)

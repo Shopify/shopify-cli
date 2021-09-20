@@ -3,13 +3,13 @@ require "theme_check"
 
 module Theme
   class Command
-    class LanguageServer < ShopifyCli::SubCommand
+    class LanguageServer < ShopifyCLI::SubCommand
       def call(*)
         ThemeCheck::LanguageServer.start
       end
 
       def self.help
-        ShopifyCli::Context.message("theme.language_server.help", ShopifyCli::TOOL_NAME)
+        ShopifyCLI::Context.message("theme.language_server.help", ShopifyCLI::TOOL_NAME)
       end
     end
   end

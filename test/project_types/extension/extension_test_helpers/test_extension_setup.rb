@@ -4,7 +4,7 @@ module Extension
   module ExtensionTestHelpers
     module TestExtensionSetup
       def setup
-        ShopifyCli::ProjectType.load_type(:extension)
+        ShopifyCLI::ProjectType.load_type(:extension)
 
         specifications = DummySpecifications.build(
           custom_handler_root: File.expand_path("../", __FILE__),

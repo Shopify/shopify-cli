@@ -4,7 +4,7 @@ require_relative "file"
 require "pathname"
 require "time"
 
-module ShopifyCli
+module ShopifyCLI
   module Theme
     class InvalidThemeRole < StandardError; end
 
@@ -101,7 +101,7 @@ module ShopifyCli
       def create
         raise InvalidThemeRole, "Can't create live theme. Use publish." if live?
 
-        _status, body = ShopifyCli::AdminAPI.rest_request(
+        _status, body = ShopifyCLI::AdminAPI.rest_request(
           @ctx,
           shop: shop,
           path: "themes.json",
@@ -144,11 +144,11 @@ module ShopifyCli
       end
 
       def current_development?
-        development? && id == ShopifyCli::DB.get(:development_theme_id)
+        development? && id == ShopifyCLI::DB.get(:development_theme_id)
       end
 
       def foreign_development?
-        development? && id != ShopifyCli::DB.get(:development_theme_id)
+        development? && id != ShopifyCLI::DB.get(:development_theme_id)
       end
 
       def to_h

@@ -1,7 +1,7 @@
 # frozen_string_literal: true
 require "shopify_cli"
 
-module ShopifyCli
+module ShopifyCLI
   class Command < CLI::Kit::BaseCommand
     extend Feature::Set
 
@@ -55,7 +55,7 @@ module ShopifyCli
       end
 
       def task_registry
-        @task_registry || ShopifyCli::Tasks::Registry
+        @task_registry || ShopifyCLI::Tasks::Registry
       end
 
       def call_help(*cmds)
@@ -75,7 +75,7 @@ module ShopifyCli
 
     def initialize(ctx = nil)
       super()
-      @ctx = ctx || ShopifyCli::Context.new
+      @ctx = ctx || ShopifyCLI::Context.new
       self.options = Options.new
     end
   end

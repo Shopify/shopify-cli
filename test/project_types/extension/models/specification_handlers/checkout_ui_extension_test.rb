@@ -12,7 +12,7 @@ module Extension
         def setup
           super
           YAML.stubs(:load_file).returns({})
-          ShopifyCli::ProjectType.load_type(:extension)
+          ShopifyCLI::ProjectType.load_type(:extension)
           Features::Argo.any_instance.stubs(:config).returns({})
           Features::ArgoConfig.stubs(:parse_yaml).returns({})
 

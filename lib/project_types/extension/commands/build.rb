@@ -12,7 +12,7 @@ module Extension
       NPM_BUILD_COMMAND = %w(run-script build)
 
       def call(_args, _command_name)
-        system = ShopifyCli::JsSystem.new(ctx: @ctx)
+        system = ShopifyCLI::JsSystem.new(ctx: @ctx)
 
         CLI::UI::Frame.open(@ctx.message("build.frame_title", system.package_manager)) do
           success = system.call(yarn: YARN_BUILD_COMMAND, npm: NPM_BUILD_COMMAND)
@@ -21,7 +21,7 @@ module Extension
       end
 
       def self.help
-        ShopifyCli::Context.new.message("build.help", ShopifyCli::TOOL_NAME)
+        ShopifyCLI::Context.new.message("build.help", ShopifyCLI::TOOL_NAME)
       end
     end
   end

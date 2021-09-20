@@ -1,13 +1,13 @@
 require "shopify_cli"
 
-module ShopifyCli
+module ShopifyCLI
   module Tasks
-    class CreateApiClient < ShopifyCli::Task
+    class CreateApiClient < ShopifyCLI::Task
       VALID_APP_TYPES = %w(public custom)
       DEFAULT_APP_URL = "https://shopify.github.io/shopify-cli/help/start-app/"
 
       def call(ctx, org_id:, title:, type:)
-        resp = ShopifyCli::PartnersAPI.query(
+        resp = ShopifyCLI::PartnersAPI.query(
           ctx,
           "create_app",
           org: org_id.to_i,
@@ -31,7 +31,7 @@ module ShopifyCli
           ctx.abort(user_errors.map { |err| "#{err["field"]} #{err["message"]}" }.join(", "))
         end
 
-        ShopifyCli::Core::Monorail.metadata[:api_key] = resp.dig("data", "appCreate", "app", "apiKey")
+        ShopifyCLI::Core::Monorail.metadata[:api_key] = resp.dig("data", "appCreate", "app", "apiKey")
 
         resp.dig("data", "appCreate", "app")
       end

@@ -2,7 +2,7 @@
 
 module Extension
   class Command
-    class Create < ShopifyCli::SubCommand
+    class Create < ShopifyCLI::SubCommand
       DEVELOPMENT_SERVER_SUPPORTED_TYPES = [
         "checkout_ui_extension",
       ]
@@ -42,7 +42,7 @@ module Extension
       end
 
       def self.help
-        @ctx.message("create.help", ShopifyCli::TOOL_NAME)
+        @ctx.message("create.help", ShopifyCLI::TOOL_NAME)
       end
 
       private
@@ -56,7 +56,7 @@ module Extension
 
       def supports_development_server?(type)
         return false unless DEVELOPMENT_SERVER_SUPPORTED_TYPES.include?(type.identifier.downcase)
-        ShopifyCli::Shopifolk.check && ShopifyCli::Feature.enabled?(:extension_server_beta)
+        ShopifyCLI::Shopifolk.check && ShopifyCLI::Feature.enabled?(:extension_server_beta)
       end
 
       def use_new_create_flow(form, msg)

@@ -1,4 +1,4 @@
-module ShopifyCli
+module ShopifyCLI
   module Constants
     module EnvironmentVariables
       # When true the CLI points to a local instance of

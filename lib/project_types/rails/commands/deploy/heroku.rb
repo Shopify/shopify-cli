@@ -9,7 +9,7 @@ module Rails
           DB_CHECK_CMD = 'bundle exec rails runner "puts ActiveRecord::Base.connection.adapter_name.downcase"'
 
           def help
-            ShopifyCli::Context.message("rails.deploy.heroku.help", ShopifyCli::TOOL_NAME)
+            ShopifyCLI::Context.message("rails.deploy.heroku.help", ShopifyCLI::TOOL_NAME)
           end
 
           def start(ctx)
@@ -23,7 +23,7 @@ module Rails
             end
 
             spin_group = CLI::UI::SpinGroup.new
-            heroku_service = ShopifyCli::Heroku.new(ctx)
+            heroku_service = ShopifyCLI::Heroku.new(ctx)
 
             spin_group.add(ctx.message("rails.deploy.heroku.downloading")) do |spinner|
               heroku_service.download
@@ -36,7 +36,7 @@ module Rails
               spinner.update_title(ctx.message("rails.deploy.heroku.installed"))
             end
             spin_group.add(ctx.message("rails.deploy.heroku.git.checking")) do |spinner|
-              ShopifyCli::Git.init(ctx)
+              ShopifyCLI::Git.init(ctx)
               spinner.update_title(ctx.message("rails.deploy.heroku.git.initialized"))
             end
             spin_group.wait
@@ -78,7 +78,7 @@ module Rails
               end
             end
 
-            branches = ShopifyCli::Git.branches(ctx)
+            branches = ShopifyCLI::Git.branches(ctx)
             if branches.length == 1
               branch_to_deploy = branches[0]
               ctx.puts(ctx.message("rails.deploy.heroku.git.branch_selected", branch_to_deploy))

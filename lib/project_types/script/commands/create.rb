@@ -2,7 +2,7 @@
 
 module Script
   class Command
-    class Create < ShopifyCli::SubCommand
+    class Create < ShopifyCLI::SubCommand
       prerequisite_task :ensure_authenticated
 
       options do |parser, flags|
@@ -35,7 +35,7 @@ module Script
 
       def self.help
         allowed_values = Script::Layers::Application::ExtensionPoints.available_types.map { |type| "{{cyan:#{type}}}" }
-        ShopifyCli::Context.message("script.create.help", ShopifyCli::TOOL_NAME, allowed_values.join(", "))
+        ShopifyCLI::Context.message("script.create.help", ShopifyCLI::TOOL_NAME, allowed_values.join(", "))
       end
     end
   end

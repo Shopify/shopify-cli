@@ -10,7 +10,7 @@ module Extension
 
         def setup
           super
-          ShopifyCli::ProjectType.load_type(:extension)
+          ShopifyCLI::ProjectType.load_type(:extension)
           specifications = DummySpecifications.build(identifier: "subscription_management", surface: "admin")
 
           @identifier = "PRODUCT_SUBSCRIPTION"

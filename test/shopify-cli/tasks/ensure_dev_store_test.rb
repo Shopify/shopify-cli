@@ -1,6 +1,6 @@
 require "test_helper"
 
-module ShopifyCli
+module ShopifyCLI
   module Tasks
     class EnsureDevStoreTest < MiniTest::Test
       include TestHelpers::Partners
@@ -14,7 +14,7 @@ module ShopifyCli
         stub_org_request
         stub_env(domain: "notther.myshopify.com")
 
-        exception = assert_raises ShopifyCli::Abort do
+        exception = assert_raises ShopifyCLI::Abort do
           EnsureDevStore.call(@context)
         end
         assert_includes exception.message, @context.message(

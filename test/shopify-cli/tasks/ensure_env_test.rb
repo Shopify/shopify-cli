@@ -1,6 +1,6 @@
 require "test_helper"
 
-module ShopifyCli
+module ShopifyCLI
   module Tasks
     class EnsureEnvTest < MiniTest::Test
       include TestHelpers::FakeUI
@@ -11,7 +11,7 @@ module ShopifyCli
         @context = TestHelpers::FakeContext.new(root: root)
         Project.write(@context, project_type: :fake, organization_id: 42)
         FileUtils.cd(@context.root)
-        ShopifyCli::Tunnel.stubs(:start)
+        ShopifyCLI::Tunnel.stubs(:start)
         Shopifolk.stubs(:check)
       end
 
@@ -24,10 +24,10 @@ module ShopifyCli
           }],
           "apps" => [],
         }]
-        ShopifyCli::PartnersAPI::Organizations.expects(:fetch_with_app).with(@context).returns(response)
+        ShopifyCLI::PartnersAPI::Organizations.expects(:fetch_with_app).with(@context).returns(response)
         CLI::UI::Prompt.expects(:ask).with(@context.message("core.tasks.ensure_env.app_name")).returns("new app")
         CLI::UI::Prompt.expects(:ask).with(@context.message("core.tasks.ensure_env.app_type.select")).returns("public")
-        ShopifyCli::Tasks::CreateApiClient.expects(:call).with(
+        ShopifyCLI::Tasks::CreateApiClient.expects(:call).with(
           @context,
           org_id: 421,
           title: "new app",
@@ -58,7 +58,7 @@ module ShopifyCli
             }],
           }],
         }]
-        ShopifyCli::PartnersAPI::Organizations.expects(:fetch_with_app).with(@context).returns(response)
+        ShopifyCLI::PartnersAPI::Organizations.expects(:fetch_with_app).with(@context).returns(response)
         env_file = Minitest::Mock.new
         Resources::EnvFile.expects(:new).with(new_env_file_values).returns(env_file)
         env_file.expect(:write, nil, [@context])
@@ -67,7 +67,7 @@ module ShopifyCli
 
       def test_uses_default_values_for_env_file
         Resources::EnvFile.expects(:parse_external_env).raises(Errno::ENOENT)
-        ShopifyCli::PartnersAPI::Organizations.expects(:fetch_with_app).with(@context).returns(partners_api_response)
+        ShopifyCLI::PartnersAPI::Organizations.expects(:fetch_with_app).with(@context).returns(partners_api_response)
         expect_user_prompts
         env_file = Minitest::Mock.new
         Resources::EnvFile.expects(:new).with(new_env_file_values).returns(env_file)
@@ -77,7 +77,7 @@ module ShopifyCli
 
       def test_keep_existing_env_values
         Resources::EnvFile.expects(:parse_external_env).returns({ host: "host" })
-        ShopifyCli::PartnersAPI::Organizations.expects(:fetch_with_app).with(@context).returns(partners_api_response)
+        ShopifyCLI::PartnersAPI::Organizations.expects(:fetch_with_app).with(@context).returns(partners_api_response)
         expect_user_prompts
         env_file = Minitest::Mock.new
         Resources::EnvFile.expects(:new).with(new_env_file_values.merge({ host: "host" })).returns(env_file)
@@ -87,7 +87,7 @@ module ShopifyCli
 
       def test_not_all_required_values_found
         Resources::EnvFile.expects(:parse_external_env).returns(existing_env_file_values)
-        ShopifyCli::PartnersAPI::Organizations.expects(:fetch_with_app).with(@context).returns(partners_api_response)
+        ShopifyCLI::PartnersAPI::Organizations.expects(:fetch_with_app).with(@context).returns(partners_api_response)
         expect_user_prompts
         env_file = Minitest::Mock.new
         Resources::EnvFile.expects(:new).with(new_env_file_values).returns(env_file)
@@ -105,7 +105,7 @@ module ShopifyCli
         Resources::EnvFile
           .expects(:parse_external_env)
           .returns(existing_env_file_values.merge({ shop: "shop", host: "host" }))
-        ShopifyCli::PartnersAPI::Organizations.expects(:fetch_with_app).with(@context).returns(partners_api_response)
+        ShopifyCLI::PartnersAPI::Organizations.expects(:fetch_with_app).with(@context).returns(partners_api_response)
         expect_user_prompts
         env_file = Minitest::Mock.new
         Resources::EnvFile.expects(:new).with(new_env_file_values.merge({ host: "host" })).returns(env_file)
@@ -115,7 +115,7 @@ module ShopifyCli
 
       def test_regenerate_empty_env_file
         Resources::EnvFile.expects(:parse_external_env).returns({})
-        ShopifyCli::PartnersAPI::Organizations.expects(:fetch_with_app).with(@context).returns(partners_api_response)
+        ShopifyCLI::PartnersAPI::Organizations.expects(:fetch_with_app).with(@context).returns(partners_api_response)
         expect_user_prompts
         env_file = Minitest::Mock.new
         Resources::EnvFile.expects(:new).with(new_env_file_values).returns(env_file)

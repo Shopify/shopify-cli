@@ -6,7 +6,7 @@ module Rails
     class GenerateTest < MiniTest::Test
       def setup
         super
-        ShopifyCli::Tasks::EnsureProjectType.stubs(:call)
+        ShopifyCLI::Tasks::EnsureProjectType.stubs(:call)
       end
 
       def test_without_arguments_calls_help
@@ -18,9 +18,9 @@ module Rails
         failure = mock
         failure.stubs(:success?).returns(false)
         failure.stubs(:exitstatus).returns(1)
-        ShopifyCli::Context.any_instance.expects(:system).returns(failure)
+        ShopifyCLI::Context.any_instance.expects(:system).returns(failure)
 
-        assert_raises(ShopifyCli::Abort) do
+        assert_raises(ShopifyCLI::Abort) do
           Rails::Command::Generate.run_generate(["script"], "test-name", @context)
         end
       end

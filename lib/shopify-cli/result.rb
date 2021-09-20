@@ -1,4 +1,4 @@
-module ShopifyCli
+module ShopifyCLI
   ##
   # This module defines two containers for wrapping the result of an action. One
   # for signifying the successful execution of an action and one for signifying
@@ -261,8 +261,8 @@ module ShopifyCli
       end
 
       ##
-      # raises an `ShopifyCli::Result::UnexpectedError` as a
-      # `ShopifyCli::Result::Failure` does not carry a success value.
+      # raises an `ShopifyCLI::Result::UnexpectedError` as a
+      # `ShopifyCLI::Result::Failure` does not carry a success value.
       #
       def value
         raise UnexpectedFailure
@@ -342,7 +342,7 @@ module ShopifyCli
     end
 
     ##
-    # wraps the given value into a `ShopifyCli::Result::Success` container
+    # wraps the given value into a `ShopifyCLI::Result::Success` container
     #
     # #### Parameters
     #
@@ -353,7 +353,7 @@ module ShopifyCli
     end
 
     ##
-    # wraps the given value into a `ShopifyCli::Result::Failure` container
+    # wraps the given value into a `ShopifyCLI::Result::Failure` container
     #
     # #### Parameters
     #
@@ -367,8 +367,8 @@ module ShopifyCli
     # takes either a value or a block and chooses the appropriate result
     # container based on the type of the value or the type of the block's return
     # value. If the type is an exception, it is wrapped in a
-    # `ShopifyCli::Result::Failure` and otherwise in a
-    # `ShopifyCli::Result::Success`. If a block was provided instead of value, a
+    # `ShopifyCLI::Result::Failure` and otherwise in a
+    # `ShopifyCLI::Result::Success`. If a block was provided instead of value, a
     # `Proc` is returned and the result wrapping doesn't occur until the block
     # is invoked.
     #
@@ -384,12 +384,12 @@ module ShopifyCli
     #
     # #### Examples
     #
-    #   Result.wrap(1) # => ShopifyCli::Result::Success
-    #   Result.wrap(RuntimeError.new) # => ShopifyCli::Result::Failure
+    #   Result.wrap(1) # => ShopifyCLI::Result::Success
+    #   Result.wrap(RuntimeError.new) # => ShopifyCLI::Result::Failure
     #
     #   Result.wrap { 1 } # => Proc
-    #   Result.wrap { 1 }.call # => ShopifyCli::Result::Success
-    #   Result.wrap { raise }.call # => ShopifyCli::Result::Failure
+    #   Result.wrap { 1 }.call # => ShopifyCLI::Result::Success
+    #   Result.wrap { raise }.call # => ShopifyCLI::Result::Failure
     #
     #   Result.wrap { |s| s.upcase }.call("hello").tap do |result|
     #     result # => Result::Success

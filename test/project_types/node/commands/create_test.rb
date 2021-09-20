@@ -24,7 +24,7 @@ module Node
 
       def setup
         super
-        ShopifyCli::Tasks::EnsureAuthenticated.stubs(:call)
+        ShopifyCLI::Tasks::EnsureAuthenticated.stubs(:call)
       end
 
       def test_prints_help_with_no_name_argument
@@ -34,7 +34,7 @@ module Node
 
       def test_check_node_installed
         @context.expects(:which).with("node").returns(nil)
-        assert_raises ShopifyCli::Abort, "node.create.error.node_required" do
+        assert_raises ShopifyCLI::Abort, "node.create.error.node_required" do
           perform_command
         end
       end
@@ -42,7 +42,7 @@ module Node
       def test_check_get_node_version
         @context.expects(:which).with("node").returns("/usr/bin/node")
         @context.expects(:capture2e).with("node", "-v").returns([nil, mock(success?: false)])
-        assert_raises ShopifyCli::Abort, "node.create.error.node_version_failure" do
+        assert_raises ShopifyCLI::Abort, "node.create.error.node_version_failure" do
           perform_command
         end
       end
@@ -51,7 +51,7 @@ module Node
         @context.expects(:which).with("node").returns("/usr/bin/node")
         @context.expects(:capture2e).with("node", "-v").returns(["8.0.0", mock(success?: true)])
         @context.expects(:which).with("npm").returns(nil)
-        assert_raises ShopifyCli::Abort, "node.create.error.npm_required" do
+        assert_raises ShopifyCLI::Abort, "node.create.error.npm_required" do
           perform_command
         end
       end
@@ -61,7 +61,7 @@ module Node
         @context.expects(:capture2e).with("node", "-v").returns(["8.0.0", mock(success?: true)])
         @context.expects(:which).with("npm").returns("/usr/bin/npm")
         @context.expects(:capture2e).with("npm", "-v").returns([nil, mock(success?: false)])
-        assert_raises ShopifyCli::Abort, "node.create.error.npm_version_failure" do
+        assert_raises ShopifyCLI::Abort, "node.create.error.npm_version_failure" do
           perform_command
         end
       end
@@ -73,14 +73,14 @@ module Node
         @context.expects(:capture2).with("npm config get @shopify:registry").returns(
           ["https://registry.yarnpkg.com", nil]
         )
-        ShopifyCli::Git.expects(:clone).with("https://github.com/Shopify/shopify-app-node.git", "test-app")
-        ShopifyCli::JsDeps.expects(:install)
-        ShopifyCli::Tasks::CreateApiClient.stubs(:call).returns({
+        ShopifyCLI::Git.expects(:clone).with("https://github.com/Shopify/shopify-app-node.git", "test-app")
+        ShopifyCLI::JsDeps.expects(:install)
+        ShopifyCLI::Tasks::CreateApiClient.stubs(:call).returns({
           "apiKey" => "ljdlkajfaljf",
           "apiSecretKeys" => [{ "secret": "kldjakljjkj" }],
           "id" => "12345678",
         })
-        ShopifyCli::Resources::EnvFile.stubs(:new).returns(stub(write: true))
+        ShopifyCLI::Resources::EnvFile.stubs(:new).returns(stub(write: true))
 
         perform_command
 
@@ -106,14 +106,14 @@ module Node
           chdir: @context.root + "/test-app"
         )
 
-        ShopifyCli::Git.expects(:clone).with("https://github.com/Shopify/shopify-app-node.git", "test-app")
-        ShopifyCli::JsDeps.expects(:install)
-        ShopifyCli::Tasks::CreateApiClient.stubs(:call).returns({
+        ShopifyCLI::Git.expects(:clone).with("https://github.com/Shopify/shopify-app-node.git", "test-app")
+        ShopifyCLI::JsDeps.expects(:install)
+        ShopifyCLI::Tasks::CreateApiClient.stubs(:call).returns({
           "apiKey" => "ljdlkajfaljf",
           "apiSecretKeys" => [{ "secret": "kldjakljjkj" }],
           "id" => "12345678",
         })
-        ShopifyCli::Resources::EnvFile.stubs(:new).returns(stub(write: true))
+        ShopifyCLI::Resources::EnvFile.stubs(:new).returns(stub(write: true))
 
         perform_command
 
@@ -128,8 +128,8 @@ module Node
         @context.expects(:capture2).with("npm config get @shopify:registry").returns(
           ["https://registry.yarnpkg.com", nil]
         )
-        ShopifyCli::Git.expects(:clone).with("https://github.com/Shopify/shopify-app-node.git", "test-app")
-        ShopifyCli::JsDeps.expects(:install)
+        ShopifyCLI::Git.expects(:clone).with("https://github.com/Shopify/shopify-app-node.git", "test-app")
+        ShopifyCLI::JsDeps.expects(:install)
 
         stub_partner_req(
           "create_app",
@@ -137,7 +137,7 @@ module Node
             org: 42,
             title: "test-app",
             type: "public",
-            app_url: ShopifyCli::Tasks::CreateApiClient::DEFAULT_APP_URL,
+            app_url: ShopifyCLI::Tasks::CreateApiClient::DEFAULT_APP_URL,
             redir: ["http://127.0.0.1:3456"],
           },
           resp: {
@@ -173,7 +173,7 @@ module Node
         @context.expects(:capture2).with("npm config get @shopify:registry").returns(
           ["https://badregistry.com", nil]
         )
-        ShopifyCli::Git.expects(:clone).with("https://github.com/Shopify/shopify-app-node.git", "test-app")
+        ShopifyCLI::Git.expects(:clone).with("https://github.com/Shopify/shopify-app-node.git", "test-app")
         @context.expects(:system).with(
           "npm",
           "--userconfig",
@@ -184,7 +184,7 @@ module Node
           "https://registry.yarnpkg.com",
           chdir: @context.root + "/test-app"
         )
-        ShopifyCli::JsDeps.expects(:install)
+        ShopifyCLI::JsDeps.expects(:install)
 
         stub_partner_req(
           "create_app",
@@ -192,7 +192,7 @@ module Node
             org: 42,
             title: "test-app",
             type: "public",
-            app_url: ShopifyCli::Tasks::CreateApiClient::DEFAULT_APP_URL,
+            app_url: ShopifyCLI::Tasks::CreateApiClient::DEFAULT_APP_URL,
             redir: ["http://127.0.0.1:3456"],
           },
           resp: {

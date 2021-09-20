@@ -8,7 +8,7 @@ module Script
     module Infrastructure
       class ScriptService
         include SmartProperties
-        property! :ctx, accepts: ShopifyCli::Context
+        property! :ctx, accepts: ShopifyCLI::Context
         property! :api_key, accepts: String
 
         def initialize(*args, ctx:, api_key:, **kwargs)

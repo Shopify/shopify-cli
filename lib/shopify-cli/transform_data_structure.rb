@@ -1,5 +1,5 @@
 
-module ShopifyCli
+module ShopifyCLI
   ##
   # `TransformDataStructure` helps to standardize data structure access. It
   # traverses nested data structures and can convert
@@ -22,13 +22,13 @@ module ShopifyCli
   # Since `TransformDataStructure` is a method object, it can easily be chained:
   #
   #    require 'open-uri'
-  #    ShopifyCli::Result
+  #    ShopifyCLI::Result
   #      .call { open("https://jsonplaceholder.typicode.com/todos/1") }
   #      .map(&TransformDataStructure.new(symbolize_keys: true, underscore_keys: true))
   #      .value # => { id: 1, user_id: 1, ... }
   #
   class TransformDataStructure
-    include ShopifyCli::MethodObject
+    include ShopifyCLI::MethodObject
 
     class << self
       private
@@ -53,7 +53,7 @@ module ShopifyCli
           result[transform_key(key)] = call(value).value
         end
       else
-        ShopifyCli::Result.success(object)
+        ShopifyCLI::Result.success(object)
       end
     end
 

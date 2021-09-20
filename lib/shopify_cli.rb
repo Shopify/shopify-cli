@@ -36,7 +36,7 @@ CLI::UI::StdoutRouter.enable
 #
 # It is recommended to read through CLI Kit (https://github.com/shopify/cli-kit) and a CLI Kit example
 # (https://github.com/Shopify/cli-kit-example) to fully understand how shopify-cli functions
-module ShopifyCli
+module ShopifyCLI
   extend CLI::Kit::Autocall
 
   TOOL_NAME         = "shopify"
@@ -75,21 +75,21 @@ module ShopifyCli
   # application and CLI kit framework.
   # To understand how this works, read https://github.com/Shopify/cli-kit/blob/main/lib/cli/kit.rb
 
-  # ShopifyCli::Config
+  # ShopifyCLI::Config
   autocall(:Config)   { CLI::Kit::Config.new(tool_name: TOOL_NAME) }
-  # ShopifyCli::Logger
-  autocall(:Logger)   { CLI::Kit::Logger.new(debug_log_file: ShopifyCli.debug_log_file) }
-  # ShopifyCli::Resolver
+  # ShopifyCLI::Logger
+  autocall(:Logger)   { CLI::Kit::Logger.new(debug_log_file: ShopifyCLI.debug_log_file) }
+  # ShopifyCLI::Resolver
   autocall(:Resolver) do
-    ShopifyCli::Core::HelpResolver.new(
+    ShopifyCLI::Core::HelpResolver.new(
       tool_name: TOOL_NAME,
-      command_registry: ShopifyCli::Commands::Registry
+      command_registry: ShopifyCLI::Commands::Registry
     )
   end
-  # ShopifyCli::ErrorHandler
+  # ShopifyCLI::ErrorHandler
   autocall(:ErrorHandler) do
     CLI::Kit::ErrorHandler.new(
-      log_file: ShopifyCli.log_file,
+      log_file: ShopifyCLI.log_file,
       exception_reporter: nil,
     )
   end
@@ -131,7 +131,7 @@ module ShopifyCli
   autoload :Tunnel, "shopify-cli/tunnel"
 
   require "shopify-cli/messages/messages"
-  Context.load_messages(ShopifyCli::Messages::MESSAGES)
+  Context.load_messages(ShopifyCLI::Messages::MESSAGES)
 
   def self.cache_dir
     cache_dir = if Environment.running_tests?
@@ -168,6 +168,6 @@ module ShopifyCli
 
   def self.sha
     return @sha if defined?(@sha)
-    @sha = Git.sha(dir: ShopifyCli::ROOT)
+    @sha = Git.sha(dir: ShopifyCLI::ROOT)
   end
 end

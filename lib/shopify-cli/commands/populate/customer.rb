@@ -1,13 +1,13 @@
 require "shopify_cli"
 
-module ShopifyCli
+module ShopifyCLI
   module Commands
     class Populate
-      class Customer < ShopifyCli::AdminAPI::PopulateResourceCommand
+      class Customer < ShopifyCLI::AdminAPI::PopulateResourceCommand
         @input_type = :CustomerInput
 
         def defaults
-          first_name, last_name = ShopifyCli::Helpers::Haikunator.name
+          first_name, last_name = ShopifyCLI::Helpers::Haikunator.name
           {
             firstName: first_name,
             lastName: last_name,
@@ -16,7 +16,7 @@ module ShopifyCli
 
         def message(data)
           ret = data["customerCreate"]["customer"]
-          id = ShopifyCli::API.gid_to_id(ret["id"])
+          id = ShopifyCLI::API.gid_to_id(ret["id"])
           @ctx.message("core.populate.customer.added", ret["displayName"], @shop, admin_url, id)
         end
       end

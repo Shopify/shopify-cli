@@ -2,7 +2,7 @@ require "shopify_cli"
 
 module Script
   module Tasks
-    class EnsureEnv < ShopifyCli::Task
+    class EnsureEnv < ShopifyCLI::Task
       attr_accessor :ctx
 
       def call(ctx)
@@ -31,11 +31,11 @@ module Script
       def ask_org
         return stubbed_org if partner_proxy_bypass
 
-        if ShopifyCli::Shopifolk.check && wants_to_run_against_shopify_org?
-          ShopifyCli::Shopifolk.act_as_shopify_organization
+        if ShopifyCLI::Shopifolk.check && wants_to_run_against_shopify_org?
+          ShopifyCLI::Shopifolk.act_as_shopify_organization
         end
 
-        orgs = ShopifyCli::PartnersAPI::Organizations.fetch_with_app(ctx)
+        orgs = ShopifyCLI::PartnersAPI::Organizations.fetch_with_app(ctx)
         if orgs.count == 1
           default = orgs.first
           ctx.puts(ctx.message("script.application.ensure_env.organization", default["businessName"], default["id"]))
@@ -69,7 +69,7 @@ module Script
       end
 
       def ask_app(apps)
-        unless ShopifyCli::Shopifolk.acting_as_shopify_organization?
+        unless ShopifyCLI::Shopifolk.acting_as_shopify_organization?
           apps = apps.select { |app| app["appType"] == "custom" }
         end
 

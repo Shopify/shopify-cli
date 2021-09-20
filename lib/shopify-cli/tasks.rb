@@ -1,6 +1,6 @@
 require "shopify_cli"
 
-module ShopifyCli
+module ShopifyCLI
   module Tasks
     class TaskRegistry
       def initialize

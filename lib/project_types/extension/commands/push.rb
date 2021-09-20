@@ -18,7 +18,7 @@ module Extension
       end
 
       def self.help
-        ShopifyCli::Context.new.message("push.help", ShopifyCli::TOOL_NAME)
+        ShopifyCLI::Context.new.message("push.help", ShopifyCLI::TOOL_NAME)
       end
 
       private

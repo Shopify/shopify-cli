@@ -71,7 +71,7 @@ describe Script::UI::PrintingSpinner do
   def ctx_expects_puts_with_encoding(*lines)
     spinner_text = "spinning.."
     encoded_input = lines.map { |line| "\e[1A\e[1G" + line + "\e[K" }.join("\e[1B\e[1G\n")
-    ShopifyCli::Context.any_instance.expects(:puts).with("#{encoded_input}\n#{spinner_text}")
+    ShopifyCLI::Context.any_instance.expects(:puts).with("#{encoded_input}\n#{spinner_text}")
     Script::UI::PrintingSpinner
       .const_get(:PrintingSpinnerContext)
       .any_instance

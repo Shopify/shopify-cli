@@ -3,7 +3,7 @@
 module Extension
   class PackageResolutionFailed < RuntimeError; end
 
-  class Project < ShopifyCli::ProjectType
+  class Project < ShopifyCLI::ProjectType
     hidden_feature
 
     require Project.project_filepath("messages/messages")
@@ -12,7 +12,7 @@ module Extension
     register_messages(Extension::Messages::MessageLoading.load)
   end
 
-  class Command < ShopifyCli::ProjectCommands
+  class Command < ShopifyCLI::ProjectCommands
     hidden_feature
     autoload :ExtensionCommand, Project.project_filepath("commands/extension_command")
 
@@ -26,7 +26,7 @@ module Extension
     subcommand :Tunnel, "tunnel", Project.project_filepath("commands/tunnel")
     subcommand :Check, "check", Project.project_filepath("commands/check")
   end
-  ShopifyCli::Commands.register("Extension::Command", "extension")
+  ShopifyCLI::Commands.register("Extension::Command", "extension")
 
   module Tasks
     autoload :UserErrors, Project.project_filepath("tasks/user_errors")

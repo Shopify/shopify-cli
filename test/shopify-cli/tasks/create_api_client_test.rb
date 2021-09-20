@@ -1,12 +1,12 @@
 require "test_helper"
 
-module ShopifyCli
+module ShopifyCLI
   module Tasks
     class CreateApiClientTest < MiniTest::Test
       include TestHelpers::Partners
 
       def teardown
-        ShopifyCli::Core::Monorail.metadata = {}
+        ShopifyCLI::Core::Monorail.metadata = {}
         super
       end
 
@@ -17,7 +17,7 @@ module ShopifyCli
             org: 42,
             title: "Test app",
             type: "public",
-            app_url: ShopifyCli::Tasks::CreateApiClient::DEFAULT_APP_URL,
+            app_url: ShopifyCLI::Tasks::CreateApiClient::DEFAULT_APP_URL,
             redir: ["http://127.0.0.1:3456"],
           },
           resp: {
@@ -41,7 +41,7 @@ module ShopifyCli
 
         refute_nil(api_client)
         assert_equal("newapikey", api_client["apiKey"])
-        assert_equal("newapikey", ShopifyCli::Core::Monorail.metadata[:api_key])
+        assert_equal("newapikey", ShopifyCLI::Core::Monorail.metadata[:api_key])
       end
 
       def test_call_will_return_any_general_errors
@@ -51,7 +51,7 @@ module ShopifyCli
             org: 42,
             title: "Test app",
             type: "public",
-            app_url: ShopifyCli::Tasks::CreateApiClient::DEFAULT_APP_URL,
+            app_url: ShopifyCLI::Tasks::CreateApiClient::DEFAULT_APP_URL,
             redir: ["http://127.0.0.1:3456"],
           },
           resp: {
@@ -61,7 +61,7 @@ module ShopifyCli
           }
         )
 
-        err = assert_raises ShopifyCli::Abort do
+        err = assert_raises ShopifyCLI::Abort do
           Tasks::CreateApiClient.call(
             @context,
             org_id: 42,
@@ -79,7 +79,7 @@ module ShopifyCli
             org: 42,
             title: "Test app",
             type: "public",
-            app_url: ShopifyCli::Tasks::CreateApiClient::DEFAULT_APP_URL,
+            app_url: ShopifyCLI::Tasks::CreateApiClient::DEFAULT_APP_URL,
             redir: ["http://127.0.0.1:3456"],
           },
           resp: {
@@ -93,7 +93,7 @@ module ShopifyCli
           }
         )
 
-        err = assert_raises ShopifyCli::Abort do
+        err = assert_raises ShopifyCLI::Abort do
           Tasks::CreateApiClient.call(
             @context,
             org_id: 42,

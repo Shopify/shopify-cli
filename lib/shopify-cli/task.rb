@@ -1,6 +1,6 @@
 require "shopify_cli"
 
-module ShopifyCli
+module ShopifyCLI
   class Task
     def self.call(*args, **kwargs)
       task = new

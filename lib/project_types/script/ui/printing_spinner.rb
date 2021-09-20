@@ -35,7 +35,7 @@ module Script
       # Printing within spinners requires the manipulation of ANSI escape
       # sequences in order to make sure the CLI::UI::Spinner does not overwrite
       # previously printed content.
-      class PrintingSpinnerContext < ShopifyCli::Context
+      class PrintingSpinnerContext < ShopifyCLI::Context
         include SmartProperties
         property :spinner, required: true
 

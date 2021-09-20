@@ -2,7 +2,7 @@
 
 module Script
   class Command
-    class Push < ShopifyCli::SubCommand
+    class Push < ShopifyCLI::SubCommand
       prerequisite_task ensure_project_type: :script
 
       options do |parser, flags|
@@ -28,7 +28,7 @@ module Script
       end
 
       def self.help
-        ShopifyCli::Context.message("script.push.help", ShopifyCli::TOOL_NAME)
+        ShopifyCLI::Context.message("script.push.help", ShopifyCLI::TOOL_NAME)
       end
     end
   end

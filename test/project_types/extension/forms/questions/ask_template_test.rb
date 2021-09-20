@@ -8,12 +8,12 @@ module Extension
 
         def setup
           super
-          ShopifyCli::ProjectType.load_type(:extension)
+          ShopifyCLI::ProjectType.load_type(:extension)
         end
 
         def test_does_not_prompt_for_template_when_not_required
-          ShopifyCli::Shopifolk.stubs(:check).returns(false)
-          ShopifyCli::Feature.stubs(:enabled?).with(:extension_server_beta).returns(false)
+          ShopifyCLI::Shopifolk.stubs(:check).returns(false)
+          ShopifyCLI::Feature.stubs(:enabled?).with(:extension_server_beta).returns(false)
           project_details = OpenStruct.new(
             type: OpenStruct.new(
               identifier: "THEME_APP_EXTENSION",
@@ -26,8 +26,8 @@ module Extension
         end
 
         def test_prompts_for_template_when_required
-          ShopifyCli::Shopifolk.stubs(:check).returns(true)
-          ShopifyCli::Feature.stubs(:enabled?).with(:extension_server_beta).returns(true)
+          ShopifyCLI::Shopifolk.stubs(:check).returns(true)
+          ShopifyCLI::Feature.stubs(:enabled?).with(:extension_server_beta).returns(true)
           project_details = OpenStruct.new(
             type: OpenStruct.new(
               identifier: "CHECKOUT_UI_EXTENSION",

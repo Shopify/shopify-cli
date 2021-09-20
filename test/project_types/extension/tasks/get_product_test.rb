@@ -8,14 +8,14 @@ module Extension
 
       def test_get_performs_api_request_and_parses_response
         response = mock
-        ShopifyCli::AdminAPI.stubs(:query).returns(response)
+        ShopifyCLI::AdminAPI.stubs(:query).returns(response)
         result = mock
         Converters::ProductConverter.expects(:from_hash).with(response).returns(result)
         assert_equal result, Tasks::GetProduct.call(@context, "shop.myshopify.com")
       end
 
       def test_performs_api_request_and_aborts_if_api_response_is_nil
-        ShopifyCli::AdminAPI.stubs(:query).returns(nil)
+        ShopifyCLI::AdminAPI.stubs(:query).returns(nil)
 
         error = assert_raises CLI::Kit::Abort do
           Tasks::GetProduct.call(@context, "shop.myshopify.com")

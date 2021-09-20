@@ -1,10 +1,10 @@
 require "shopify_cli"
 
-module ShopifyCli
+module ShopifyCLI
   class API
     include SmartProperties
 
-    property! :ctx, accepts: ShopifyCli::Context
+    property! :ctx, accepts: ShopifyCLI::Context
     property! :token, accepts: String
     property :auth_header, accepts: String
     property! :url, accepts: String
@@ -91,14 +91,14 @@ module ShopifyCli
     protected
 
     def load_query(name)
-      project_type = ShopifyCli::Project.current_project_type
+      project_type = ShopifyCLI::Project.current_project_type
       project_file_path = File.join(
-        ShopifyCli::ROOT, "lib", "project_types", project_type.to_s, "graphql", "#{name}.graphql"
+        ShopifyCLI::ROOT, "lib", "project_types", project_type.to_s, "graphql", "#{name}.graphql"
       )
       if !project_type.nil? && File.exist?(project_file_path)
         File.read(project_file_path)
       else
-        File.read(File.join(ShopifyCli::ROOT, "lib", "graphql", "#{name}.graphql"))
+        File.read(File.join(ShopifyCLI::ROOT, "lib", "graphql", "#{name}.graphql"))
       end
     end
 
@@ -106,8 +106,8 @@ module ShopifyCli
 
     def default_headers
       {
-        "User-Agent" => "Shopify CLI; v=#{ShopifyCli::VERSION}",
-        "Sec-CH-UA" => "Shopify CLI; v=#{ShopifyCli::VERSION} sha=#{ShopifyCli.sha}",
+        "User-Agent" => "Shopify CLI; v=#{ShopifyCLI::VERSION}",
+        "Sec-CH-UA" => "Shopify CLI; v=#{ShopifyCLI::VERSION} sha=#{ShopifyCLI.sha}",
         "Sec-CH-UA-PLATFORM" => ctx.os.to_s,
       }.tap do |headers|
         headers["X-Shopify-Cli-Employee"] = "1" if Shopifolk.acting_as_shopify_organization?
