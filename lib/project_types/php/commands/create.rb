@@ -27,7 +27,7 @@ module PHP
           organization_id: form.organization_id,
         )
 
-        partners_url = ShopifyCli::PartnersAPI.partners_url_for(form.organization_id, app_id, local_debug?)
+        partners_url = ShopifyCli::PartnersAPI.partners_url_for(form.organization_id, app_id)
 
         @ctx.puts(@ctx.message("apps.create.info.created", form.title, partners_url))
         @ctx.puts(@ctx.message("apps.create.info.serve", form.name, ShopifyCli::TOOL_NAME, "php"))
@@ -118,10 +118,6 @@ module PHP
         end
 
         api_client["id"]
-      end
-
-      def local_debug?
-        @ctx.getenv(ShopifyCli::PartnersAPI::LOCAL_DEBUG)
       end
 
       def set_npm_config
