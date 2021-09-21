@@ -43,10 +43,12 @@ module Extension
         end
 
         def choose_port?(context)
+          return true if supports_development_server?
           argo_runtime(context).supports?(:port)
         end
 
         def establish_tunnel?(context)
+          return true if supports_development_server?
           argo_runtime(context).supports?(:public_url)
         end
 
@@ -66,6 +68,7 @@ module Extension
         end
 
         def argo_runtime(context)
+          return if supports_development_server?
           @argo_runtime ||= Features::ArgoRuntime.find(
             cli_package: cli_package(context),
             identifier: identifier
@@ -117,6 +120,10 @@ module Extension
 
         def messages
           @messages ||= Messages::TYPES[identifier.downcase.to_sym] || {}
+        end
+
+        def supports_development_server?
+          Models::DevelopmentServerRequirements.supported?(identifier)
         end
       end
     end

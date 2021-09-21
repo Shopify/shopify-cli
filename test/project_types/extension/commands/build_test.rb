@@ -45,6 +45,7 @@ module Extension
         stub_project(type)
         ShopifyCli::Shopifolk.stubs(:check).returns(true)
         ShopifyCli::Feature.stubs(:enabled?).with(:extension_server_beta).returns(true)
+        File.stubs(:exist?).returns(true)
 
         extension_command = Tasks::RunExtensionCommand.new(type: type, command: "build")
         Extension::Tasks::RunExtensionCommand.expects(:new).returns(extension_command) do |mock|
