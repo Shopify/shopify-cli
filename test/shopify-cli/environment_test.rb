@@ -131,6 +131,7 @@ module ShopifyCLI
     def test_use_spin_is_true
       env_variables = {
         Constants::EnvironmentVariables::SPIN_WORKSPACE.to_s => "abcd",
+        Constants::EnvironmentVariables::SPIN_NAMESPACE.to_s => "abcd",
       }
 
       got = Environment.use_spin?(env_variables: env_variables)
@@ -141,6 +142,18 @@ module ShopifyCLI
     def test_use_spin_is_false
       env_variables = {
         Constants::EnvironmentVariables::SPIN_WORKSPACE.to_s => nil,
+        Constants::EnvironmentVariables::SPIN_NAMESPACE.to_s => "abcd",
+      }
+
+      got = Environment.use_spin?(env_variables: env_variables)
+
+      refute got
+    end
+
+    def test_use_spin_is_false_when_namespace_and_workspace_nil
+      env_variables = {
+        Constants::EnvironmentVariables::SPIN_WORKSPACE.to_s => nil,
+        Constants::EnvironmentVariables::SPIN_NAMESPACE.to_s => nil,
       }
 
       got = Environment.use_spin?(env_variables: env_variables)
