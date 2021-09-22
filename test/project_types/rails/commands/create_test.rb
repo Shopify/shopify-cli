@@ -29,7 +29,6 @@ module Rails
       end
 
       def test_prints_help_with_no_name_argument
-        skip
         io = capture_io { run_cmd("app rails create --help") }
         assert_match(CLI::UI.fmt(Rails::Command::Create.help), io.join)
       end

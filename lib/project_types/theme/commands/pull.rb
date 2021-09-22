@@ -5,7 +5,7 @@ require "shopify_cli/theme/syncer"
 
 module Theme
   class Command
-    class Pull < ShopifyCLI::SubCommand
+    class Pull < ShopifyCLI::Command::SubCommand
       options do |parser, flags|
         parser.on("-n", "--nodelete") { flags[:nodelete] = true }
         parser.on("-i", "--themeid=ID") { |theme_id| flags[:theme_id] = theme_id }

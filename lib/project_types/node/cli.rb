@@ -6,7 +6,7 @@ module Node
   end
 
   # define/autoload project specific Commands
-  class Command < ShopifyCLI::Command
+  class Command < ShopifyCLI::Command::AppCommand
     subcommand :Connect, "connect", Project.project_filepath("commands/connect")
     subcommand :Create, "create", Project.project_filepath("commands/create")
     subcommand :Deploy, "deploy", Project.project_filepath("commands/deploy")

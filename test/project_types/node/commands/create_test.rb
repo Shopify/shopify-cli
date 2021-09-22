@@ -28,7 +28,6 @@ module Node
       end
 
       def test_prints_help_with_no_name_argument
-        skip
         io = capture_io { run_cmd("app node create --help") }
         assert_match(CLI::UI.fmt(Node::Command::Create.help), io.join)
       end

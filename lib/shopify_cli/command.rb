@@ -3,6 +3,11 @@ require "shopify_cli"
 
 module ShopifyCLI
   class Command < CLI::Kit::BaseCommand
+    autoload :SubCommand,     "shopify_cli/command/sub_command"
+    autoload :AppCommand,     "shopify_cli/command/app_command"
+    autoload :AppSubCommand,  "shopify_cli/command/app_sub_command"
+    autoload :ProjectCommand, "shopify_cli/command/project_command"
+
     extend Feature::Set
 
     attr_writer :ctx
