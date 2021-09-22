@@ -11,7 +11,7 @@ module PHP
       end
 
       def test_run
-        ShopifyCli::Context.any_instance.expects(:open_url!)
+        ShopifyCLI::Context.any_instance.expects(:open_url!)
           .with("https://example.com/login?shop=my-test-shop.myshopify.com")
         run_cmd("php open")
       end

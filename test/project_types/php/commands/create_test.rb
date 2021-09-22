@@ -23,7 +23,7 @@ module PHP
         SHOP=testshop.myshopify.com
         SCOPES=write_products,write_draft_orders,write_customers
         HOST=localhost
-        DB_DATABASE=#{ShopifyCli::ROOT}/test/fixtures/project/test-app/storage/db.sqlite
+        DB_DATABASE=#{ShopifyCLI::ROOT}/test/fixtures/project/test-app/storage/db.sqlite
       CONTENT
 
       SHOPIFYCLI_FILE = <<~APPTYPE
@@ -39,7 +39,7 @@ module PHP
 
       def test_check_php_installed
         @context.expects(:which).with("php").returns(nil)
-        assert_raises ShopifyCli::Abort, "php.create.error.php_required" do
+        assert_raises ShopifyCLI::Abort, "php.create.error.php_required" do
           perform_command
         end
       end
@@ -47,7 +47,7 @@ module PHP
       def test_check_get_php_version
         @context.expects(:which).with("php").returns("/usr/bin/php")
         @context.expects(:capture2e).with("php", "-r", "echo phpversion();").returns([nil, mock(success?: false)])
-        assert_raises ShopifyCli::Abort, "php.create.error.php_version_failure" do
+        assert_raises ShopifyCLI::Abort, "php.create.error.php_version_failure" do
           perform_command
         end
       end
@@ -55,7 +55,7 @@ module PHP
       def test_check_composer_installed
         @context.expects(:which).with("php").returns("/usr/bin/php")
         @context.expects(:which).with("composer").returns(nil)
-        assert_raises ShopifyCli::Abort, "php.create.error.composer_required" do
+        assert_raises ShopifyCLI::Abort, "php.create.error.composer_required" do
           perform_command
         end
       end
@@ -71,9 +71,9 @@ module PHP
           ["https://registry.yarnpkg.com", nil]
         )
 
-        ShopifyCli::Git.expects(:clone).with("https://github.com/Shopify/shopify-app-php.git", "test-app")
-        ShopifyCli::PHPDeps.expects(:install)
-        ShopifyCli::JsDeps.expects(:install)
+        ShopifyCLI::Git.expects(:clone).with("https://github.com/Shopify/shopify-app-php.git", "test-app")
+        ShopifyCLI::PHPDeps.expects(:install)
+        ShopifyCLI::JsDeps.expects(:install)
         @context.expects(:system).with("php", "artisan", "key:generate")
         @context.expects(:system).with("php", "artisan", "migrate")
 
@@ -83,7 +83,7 @@ module PHP
             org: 42,
             title: "test-app",
             type: "public",
-            app_url: ShopifyCli::Tasks::CreateApiClient::DEFAULT_APP_URL,
+            app_url: ShopifyCLI::Tasks::CreateApiClient::DEFAULT_APP_URL,
             redir: ["http://127.0.0.1:3456"],
           },
           resp: {

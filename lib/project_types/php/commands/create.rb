@@ -3,7 +3,7 @@ require "semantic/semantic"
 
 module PHP
   class Command
-    class Create < ShopifyCli::SubCommand
+    class Create < ShopifyCLI::SubCommand
       options do |parser, flags|
         parser.on("--name=NAME") { |name| flags[:title] = name }
         parser.on("--organization-id=ID") { |organization_id| flags[:organization_id] = organization_id }
@@ -21,23 +21,23 @@ module PHP
         check_npm
         app_id = build(form)
 
-        ShopifyCli::Project.write(
+        ShopifyCLI::Project.write(
           @ctx,
           project_type: "php",
           organization_id: form.organization_id,
         )
 
-        partners_url = ShopifyCli::PartnersAPI.partners_url_for(form.organization_id, app_id)
+        partners_url = ShopifyCLI::PartnersAPI.partners_url_for(form.organization_id, app_id)
 
         @ctx.puts(@ctx.message("apps.create.info.created", form.title, partners_url))
-        @ctx.puts(@ctx.message("apps.create.info.serve", form.name, ShopifyCli::TOOL_NAME, "php"))
-        unless ShopifyCli::Shopifolk.acting_as_shopify_organization?
+        @ctx.puts(@ctx.message("apps.create.info.serve", form.name, ShopifyCLI::TOOL_NAME, "php"))
+        unless ShopifyCLI::Shopifolk.acting_as_shopify_organization?
           @ctx.puts(@ctx.message("apps.create.info.install", partners_url, form.title))
         end
       end
 
       def self.help
-        ShopifyCli::Context.message("php.create.help", ShopifyCli::TOOL_NAME, ShopifyCli::TOOL_NAME)
+        ShopifyCLI::Context.message("php.create.help", ShopifyCLI::TOOL_NAME, ShopifyCLI::TOOL_NAME)
       end
 
       private
@@ -72,12 +72,12 @@ module PHP
       end
 
       def build(form)
-        ShopifyCli::Git.clone("https://github.com/Shopify/shopify-app-php.git", form.name)
+        ShopifyCLI::Git.clone("https://github.com/Shopify/shopify-app-php.git", form.name)
 
         @ctx.root = File.join(@ctx.root, form.name)
         @ctx.chdir(@ctx.root)
 
-        api_client = ShopifyCli::Tasks::CreateApiClient.call(
+        api_client = ShopifyCLI::Tasks::CreateApiClient.call(
           @ctx,
           org_id: form.organization_id,
           title: form.title,
@@ -87,7 +87,7 @@ module PHP
         # Override the example settings with our own
         @ctx.cp(".env.example", ".env")
 
-        env_file = ShopifyCli::Resources::EnvFile.read
+        env_file = ShopifyCLI::Resources::EnvFile.read
         env_file.api_key = api_client["apiKey"]
         env_file.secret = api_client["apiSecretKeys"].first["secret"]
         env_file.shop = form.shop_domain
@@ -96,10 +96,10 @@ module PHP
         env_file.extra["DB_DATABASE"] = File.join(@ctx.root, env_file.extra["DB_DATABASE"])
         env_file.write(@ctx)
 
-        ShopifyCli::PHPDeps.install(@ctx, !options.flags[:verbose].nil?)
+        ShopifyCLI::PHPDeps.install(@ctx, !options.flags[:verbose].nil?)
 
         set_npm_config
-        ShopifyCli::JsDeps.install(@ctx, !options.flags[:verbose].nil?)
+        ShopifyCLI::JsDeps.install(@ctx, !options.flags[:verbose].nil?)
 
         title = @ctx.message("php.create.app_setting_up")
         success = @ctx.message("php.create.app_set_up")

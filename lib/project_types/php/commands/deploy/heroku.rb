@@ -6,12 +6,12 @@ module PHP
     class Deploy
       class Heroku
         def self.help
-          ShopifyCli::Context.message("php.deploy.heroku.help", ShopifyCli::TOOL_NAME)
+          ShopifyCLI::Context.message("php.deploy.heroku.help", ShopifyCLI::TOOL_NAME)
         end
 
         def self.start(ctx)
           spin_group = CLI::UI::SpinGroup.new
-          heroku_service = ShopifyCli::Heroku.new(ctx)
+          heroku_service = ShopifyCLI::Heroku.new(ctx)
 
           spin_group.add(ctx.message("php.deploy.heroku.downloading")) do |spinner|
             heroku_service.download
@@ -29,7 +29,7 @@ module PHP
           spin_group.wait
 
           spin_group.add(ctx.message("php.deploy.heroku.git.checking")) do |spinner|
-            ShopifyCli::Git.init(ctx)
+            ShopifyCLI::Git.init(ctx)
             spinner.update_title(ctx.message("php.deploy.heroku.git.initialized"))
           end
           spin_group.wait
@@ -72,7 +72,7 @@ module PHP
             end
           end
 
-          branches = ShopifyCli::Git.branches(ctx)
+          branches = ShopifyCLI::Git.branches(ctx)
           if branches.length == 1
             branch_to_deploy = branches[0]
             ctx.puts(ctx.message("php.deploy.heroku.git.branch_selected", branch_to_deploy))
@@ -92,7 +92,7 @@ module PHP
           ) do
             allowed_configs = [/SHOPIFY_API_KEY/, /SHOPIFY_API_SECRET/, /SCOPES/, /HOST/]
 
-            ShopifyCli::Project.current.env.to_h.each do |config, value|
+            ShopifyCLI::Project.current.env.to_h.each do |config, value|
               next unless allowed_configs.any? { |pattern| pattern.match?(config) }
 
               value = app_url if config == "HOST"

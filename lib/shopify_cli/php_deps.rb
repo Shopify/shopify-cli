@@ -1,16 +1,16 @@
 require "shopify_cli"
 
-module ShopifyCli
+module ShopifyCLI
   ##
-  # ShopifyCli::PHPDeps ensures that all PHP dependencies are installed for projects.
+  # ShopifyCLI::PHPDeps ensures that all PHP dependencies are installed for projects.
   #
   class PHPDeps
     include SmartProperties
 
-    property! :ctx, accepts: ShopifyCli::Context
+    property! :ctx, accepts: ShopifyCLI::Context
 
     ##
-    # Proxy to instance method ShopifyCli::PHPDeps.new.install.
+    # Proxy to instance method ShopifyCLI::PHPDeps.new.install.
     #
     # #### Parameters
     # - `ctx`: running context from your command
@@ -18,7 +18,7 @@ module ShopifyCli
     #
     # #### Example
     #
-    #   ShopifyCli::PHPDeps.install(ctx)
+    #   ShopifyCLI::PHPDeps.install(ctx)
     #
     def self.install(ctx, verbose = false)
       new(ctx: ctx).install(verbose)
@@ -33,7 +33,7 @@ module ShopifyCli
     # #### Example
     #
     #   # context is the running context for the command
-    #   ShopifyCli::PHPDeps.new(context).install(true)
+    #   ShopifyCLI::PHPDeps.new(context).install(true)
     #
     def install(verbose = false)
       title = ctx.message("core.php_deps.installing")
@@ -96,7 +96,7 @@ module ShopifyCli
         ctx.message("core.php_deps.error.invalid_package", File.read(File.join(path, "composer.json"))),
         error: true
       )
-      raise ShopifyCli::AbortSilent
+      raise ShopifyCLI::AbortSilent
     end
   end
 end

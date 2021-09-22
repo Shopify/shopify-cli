@@ -9,17 +9,17 @@ module PHP
       def setup
         super
         project_context("app_types", "php")
-        ShopifyCli::Tasks::EnsureDevStore.stubs(:call)
+        ShopifyCLI::Tasks::EnsureDevStore.stubs(:call)
         @context.stubs(:system)
       end
 
       def test_server_command
-        ShopifyCli::Tunnel.stubs(:start).returns("https://example.com")
-        ShopifyCli::Tasks::UpdateDashboardURLS.expects(:call)
-        ShopifyCli::Resources::EnvFile.any_instance.expects(:update)
-        ShopifyCli::ProcessSupervision.expects(:running?).with(:npm_watch).returns(false)
-        ShopifyCli::ProcessSupervision.expects(:stop).never
-        ShopifyCli::ProcessSupervision.expects(:start).with(:npm_watch, "npm run watch", force_spawn: true)
+        ShopifyCLI::Tunnel.stubs(:start).returns("https://example.com")
+        ShopifyCLI::Tasks::UpdateDashboardURLS.expects(:call)
+        ShopifyCLI::Resources::EnvFile.any_instance.expects(:update)
+        ShopifyCLI::ProcessSupervision.expects(:running?).with(:npm_watch).returns(false)
+        ShopifyCLI::ProcessSupervision.expects(:stop).never
+        ShopifyCLI::ProcessSupervision.expects(:start).with(:npm_watch, "npm run watch", force_spawn: true)
 
         @context.expects(:system).with(
           "php",
@@ -47,12 +47,12 @@ module PHP
       end
 
       def test_restarts_npm_watch_if_running
-        ShopifyCli::Tunnel.stubs(:start).returns("https://example.com")
-        ShopifyCli::Tasks::UpdateDashboardURLS.expects(:call)
-        ShopifyCli::Resources::EnvFile.any_instance.expects(:update)
-        ShopifyCli::ProcessSupervision.expects(:running?).with(:npm_watch).returns(true)
-        ShopifyCli::ProcessSupervision.expects(:stop).with(:npm_watch)
-        ShopifyCli::ProcessSupervision.expects(:start).with(:npm_watch, "npm run watch", force_spawn: true)
+        ShopifyCLI::Tunnel.stubs(:start).returns("https://example.com")
+        ShopifyCLI::Tasks::UpdateDashboardURLS.expects(:call)
+        ShopifyCLI::Resources::EnvFile.any_instance.expects(:update)
+        ShopifyCLI::ProcessSupervision.expects(:running?).with(:npm_watch).returns(true)
+        ShopifyCLI::ProcessSupervision.expects(:stop).with(:npm_watch)
+        ShopifyCLI::ProcessSupervision.expects(:start).with(:npm_watch, "npm run watch", force_spawn: true)
 
         @context.expects(:system).with(
           "php",
@@ -80,11 +80,11 @@ module PHP
       end
 
       def test_server_command_with_invalid_host_url
-        ShopifyCli::Tunnel.stubs(:start).returns("garbage://example.com")
-        ShopifyCli::Tasks::UpdateDashboardURLS.expects(:call).never
-        ShopifyCli::Resources::EnvFile.any_instance.expects(:update).never
-        ShopifyCli::ProcessSupervision.expects(:stop).never
-        ShopifyCli::ProcessSupervision.expects(:start).never
+        ShopifyCLI::Tunnel.stubs(:start).returns("garbage://example.com")
+        ShopifyCLI::Tasks::UpdateDashboardURLS.expects(:call).never
+        ShopifyCLI::Resources::EnvFile.any_instance.expects(:update).never
+        ShopifyCLI::ProcessSupervision.expects(:stop).never
+        ShopifyCLI::ProcessSupervision.expects(:start).never
 
         @context.expects(:system).with(
           "php",
@@ -102,15 +102,15 @@ module PHP
           }
         ).never
 
-        assert_raises ShopifyCli::Abort do
+        assert_raises ShopifyCLI::Abort do
           run_cmd("php serve")
         end
       end
 
       def test_update_env_with_host
-        ShopifyCli::Tunnel.expects(:start).never
-        ShopifyCli::Tasks::UpdateDashboardURLS.expects(:call)
-        ShopifyCli::Resources::EnvFile.any_instance.expects(:update).with(
+        ShopifyCLI::Tunnel.expects(:start).never
+        ShopifyCLI::Tasks::UpdateDashboardURLS.expects(:call)
+        ShopifyCLI::Resources::EnvFile.any_instance.expects(:update).with(
           @context, :host, "https://example-foo.com"
         )
         run_cmd('php serve --host="https://example-foo.com"')

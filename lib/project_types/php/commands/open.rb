@@ -2,14 +2,14 @@
 
 module PHP
   class Command
-    class Open < ShopifyCli::SubCommand
+    class Open < ShopifyCLI::SubCommand
       def call(*)
-        project = ShopifyCli::Project.current
+        project = ShopifyCLI::Project.current
         @ctx.open_url!("#{project.env.host}/login?shop=#{project.env.shop}")
       end
 
       def self.help
-        ShopifyCli::Context.message("php.open.help", ShopifyCli::TOOL_NAME)
+        ShopifyCLI::Context.message("php.open.help", ShopifyCLI::TOOL_NAME)
       end
     end
   end

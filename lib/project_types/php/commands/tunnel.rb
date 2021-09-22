@@ -4,7 +4,7 @@ require "shopify_cli"
 
 module PHP
   class Command
-    class Tunnel < ShopifyCli::SubCommand
+    class Tunnel < ShopifyCLI::SubCommand
       def call(args, _name)
         subcommand = args.shift
         case subcommand
@@ -14,23 +14,23 @@ module PHP
             @ctx.puts(@ctx.message("php.tunnel.error.token_argument_missing"))
             @ctx.puts("#{self.class.help}\n#{self.class.extended_help}")
           else
-            ShopifyCli::Tunnel.auth(@ctx, token)
+            ShopifyCLI::Tunnel.auth(@ctx, token)
           end
         when "start"
-          ShopifyCli::Tunnel.start(@ctx)
+          ShopifyCLI::Tunnel.start(@ctx)
         when "stop"
-          ShopifyCli::Tunnel.stop(@ctx)
+          ShopifyCLI::Tunnel.stop(@ctx)
         else
           @ctx.puts(self.class.help)
         end
       end
 
       def self.help
-        ShopifyCli::Context.message("php.tunnel.help", ShopifyCli::TOOL_NAME)
+        ShopifyCLI::Context.message("php.tunnel.help", ShopifyCLI::TOOL_NAME)
       end
 
       def self.extended_help
-        ShopifyCli::Context.message("php.tunnel.extended_help", ShopifyCli::TOOL_NAME)
+        ShopifyCLI::Context.message("php.tunnel.extended_help", ShopifyCLI::TOOL_NAME)
       end
     end
   end

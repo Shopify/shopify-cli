@@ -120,7 +120,7 @@ module ShopifyCLI
     end
 
     def download_path
-      File.join(ShopifyCli.cache_dir, download_filename)
+      File.join(ShopifyCLI.cache_dir, download_filename)
     end
 
     def git_remote

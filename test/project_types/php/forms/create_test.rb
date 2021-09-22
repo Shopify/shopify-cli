@@ -8,7 +8,7 @@ module PHP
 
       def setup
         super
-        ShopifyCli::Shopifolk.stubs(:check)
+        ShopifyCLI::Shopifolk.stubs(:check)
         stub_shopify_org_confirmation
       end
 

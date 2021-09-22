@@ -2,7 +2,7 @@ require "uri"
 
 module PHP
   module Forms
-    class Create < ShopifyCli::Form
+    class Create < ShopifyCLI::Form
       attr_accessor :name
       flag_arguments :title, :organization_id, :shop_domain, :type
 
@@ -10,7 +10,7 @@ module PHP
         self.title ||= CLI::UI::Prompt.ask(ctx.message("php.forms.create.app_name"))
         self.name = format_name
         self.type = ask_type
-        res = ShopifyCli::Tasks::SelectOrgAndShop.call(ctx, organization_id: organization_id, shop_domain: shop_domain)
+        res = ShopifyCLI::Tasks::SelectOrgAndShop.call(ctx, organization_id: organization_id, shop_domain: shop_domain)
         self.organization_id = res[:organization_id]
         self.shop_domain = res[:shop_domain]
       end
@@ -34,7 +34,7 @@ module PHP
           end
         end
 
-        unless ShopifyCli::Tasks::CreateApiClient::VALID_APP_TYPES.include?(type)
+        unless ShopifyCLI::Tasks::CreateApiClient::VALID_APP_TYPES.include?(type)
           ctx.abort(ctx.message("php.forms.create.error.invalid_app_type", type))
         end
         ctx.puts(ctx.message("php.forms.create.app_type.selected", type))

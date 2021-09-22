@@ -13,9 +13,9 @@ module PHP
           project_context("app_types", "php")
 
           File.stubs(:exist?)
-          File.stubs(:exist?).with(File.join(ShopifyCli::ROOT, "lib", "project_types", "php", "cli.rb")).returns(true)
+          File.stubs(:exist?).with(File.join(ShopifyCLI::ROOT, "lib", "project_types", "php", "cli.rb")).returns(true)
           File.expects(:exist?).with(File.join(FIXTURE_DIR, "app_types", "php", ".shopify-cli.yml")).returns(true)
-          ShopifyCli::Context.any_instance.stubs(:os).returns(:mac)
+          ShopifyCLI::Context.any_instance.stubs(:os).returns(:mac)
           stub_successful_heroku_flow
         end
 
@@ -36,7 +36,7 @@ module PHP
           expects_heroku_installed(status: false)
           expects_heroku_download(status: false)
 
-          assert_raises ShopifyCli::Abort do
+          assert_raises ShopifyCLI::Abort do
             run_cmd("php deploy heroku")
           end
         end
@@ -46,7 +46,7 @@ module PHP
           expects_heroku_download_exists(status: false)
           expects_heroku_download(status: true)
 
-          assert_raises ShopifyCli::Abort do
+          assert_raises ShopifyCLI::Abort do
             run_cmd("php deploy heroku")
           end
         end
@@ -71,7 +71,7 @@ module PHP
           expects_heroku_installed(status: false, twice: true)
           expects_tar_heroku(status: false)
 
-          assert_raises ShopifyCli::Abort do
+          assert_raises ShopifyCLI::Abort do
             run_cmd("php deploy heroku")
           end
         end
@@ -79,7 +79,7 @@ module PHP
         def test_call_raises_if_git_isnt_inited
           expects_git_init_heroku(status: false, commits: false)
 
-          assert_raises ShopifyCli::Abort do
+          assert_raises ShopifyCLI::Abort do
             run_cmd("php deploy heroku")
           end
         end
@@ -87,7 +87,7 @@ module PHP
         def test_call_raises_if_git_is_inited_but_there_are_no_commits
           expects_git_init_heroku(status: true, commits: false)
 
-          assert_raises ShopifyCli::Abort do
+          assert_raises ShopifyCLI::Abort do
             run_cmd("php deploy heroku")
           end
         end
@@ -111,7 +111,7 @@ module PHP
           expects_heroku_whoami(status: false)
           expects_heroku_login(status: false)
 
-          assert_raises ShopifyCli::Abort do
+          assert_raises ShopifyCLI::Abort do
             run_cmd("php deploy heroku")
           end
         end
@@ -151,7 +151,7 @@ module PHP
             .with(@context.message("php.deploy.heroku.app.name"))
             .returns("app-name")
 
-          assert_raises ShopifyCli::Abort do
+          assert_raises ShopifyCLI::Abort do
             run_cmd("php deploy heroku")
           end
         end
@@ -175,7 +175,7 @@ module PHP
             .with(@context.message("php.deploy.heroku.app.no_apps_found"))
             .returns(:new)
 
-          assert_raises ShopifyCli::Abort do
+          assert_raises ShopifyCLI::Abort do
             run_cmd("php deploy heroku")
           end
         end
@@ -202,7 +202,7 @@ module PHP
         def test_call_raises_if_finding_branches_fails
           expects_git_branch(status: false, multiple: false)
 
-          assert_raises ShopifyCli::Abort do
+          assert_raises ShopifyCLI::Abort do
             run_cmd("php deploy heroku")
           end
         end
@@ -216,7 +216,7 @@ module PHP
         def test_call_raises_if_deploy_to_heroku_fails
           expects_git_push_heroku(status: false, branch: "master:master")
 
-          assert_raises ShopifyCli::Abort do
+          assert_raises ShopifyCLI::Abort do
             run_cmd("php deploy heroku")
           end
         end
@@ -224,7 +224,7 @@ module PHP
         def test_call_raises_if_it_cannot_set_heroku_config
           expects_heroku_set_config(status: false)
 
-          assert_raises ShopifyCli::Abort do
+          assert_raises ShopifyCLI::Abort do
             run_cmd("php deploy heroku")
           end
         end
@@ -232,7 +232,7 @@ module PHP
         def test_call_raises_if_it_cannot_generate_php_key
           expects_php_key_generate(status: false)
 
-          assert_raises ShopifyCli::Abort do
+          assert_raises ShopifyCLI::Abort do
             run_cmd("php deploy heroku")
           end
         end
@@ -244,7 +244,7 @@ module PHP
             buildpacks: ["heroku/php", "heroku/nodejs"],
           )
 
-          assert_raises ShopifyCli::Abort do
+          assert_raises ShopifyCLI::Abort do
             run_cmd("php deploy heroku")
           end
         end
@@ -256,7 +256,7 @@ module PHP
             buildpacks: ["heroku/php", "heroku/nodejs"],
           )
 
-          assert_raises ShopifyCli::Abort do
+          assert_raises ShopifyCLI::Abort do
             run_cmd("php deploy heroku")
           end
         end

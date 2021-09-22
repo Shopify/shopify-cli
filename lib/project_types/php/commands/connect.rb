@@ -1,18 +1,18 @@
 # frozen_string_literal: true
 module PHP
   class Command
-    class Connect < ShopifyCli::SubCommand
+    class Connect < ShopifyCLI::SubCommand
       def call(*)
-        if ShopifyCli::Project.has_current? && ShopifyCli::Project.current.env
+        if ShopifyCLI::Project.has_current? && ShopifyCLI::Project.current.env
           @ctx.puts(@ctx.message("php.connect.production_warning"))
         end
 
-        app = ShopifyCli::Connect.new(@ctx).default_connect("php")
+        app = ShopifyCLI::Connect.new(@ctx).default_connect("php")
         @ctx.done(@ctx.message("php.connect.connected", app))
       end
 
       def self.help
-        ShopifyCli::Context.message("php.connect.help", ShopifyCli::TOOL_NAME, ShopifyCli::TOOL_NAME)
+        ShopifyCLI::Context.message("php.connect.help", ShopifyCLI::TOOL_NAME, ShopifyCLI::TOOL_NAME)
       end
     end
   end
