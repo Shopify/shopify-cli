@@ -73,7 +73,7 @@ module Node
         ShopifyCLI::Resources::EnvFile.any_instance.expects(:update).with(
           @context, :host, "https://example-foo.com"
         )
-        run_cmd('node serve --host="https://example-foo.com"')
+        run_cmd('app node serve --host="https://example-foo.com"')
       end
     end
   end
