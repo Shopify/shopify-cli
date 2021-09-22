@@ -7,7 +7,7 @@ module Extension
       NPM_SERVE_COMMAND = %w(run-script server)
 
       property! :specification_handler, accepts: Extension::Models::SpecificationHandlers::Default
-      property! :argo_runtime, accepts: -> (runtime) { runtime.class < Features::Runtimes::Base }
+      property :argo_runtime, accepts: -> (runtime) { runtime.class < Features::Runtimes::Base }
       property! :context, accepts: ShopifyCLI::Context
       property! :port, accepts: Integer, default: 39351
       property  :tunnel_url, accepts: String, default: nil
@@ -30,6 +30,7 @@ module Extension
       private
 
       def start_server
+        return new_serve_flow if supports_development_server?
         js_system.call(context, yarn: yarn_serve_command, npm: npm_serve_command)
       end
 
@@ -107,6 +108,19 @@ module Extension
       def persist_resource_url(resource_url)
         ExtensionProject.update_env_file(context: context, resource_url: resource_url)
         resource_url
+      end
+
+      def new_serve_flow
+        Tasks::RunExtensionCommand.new(
+          type: specification_handler.specification.identifier,
+          command: "serve",
+          context: context,
+          port: port,
+        ).call
+      end
+
+      def supports_development_server?
+        Models::DevelopmentServerRequirements.supported?(specification_handler.specification.identifier)
       end
     end
   end
