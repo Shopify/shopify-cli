@@ -2,6 +2,9 @@ name: dev
 type:
   - ruby
 
+env:
+  SHOPIFY_CLI_DEVELOPMENT: "1"
+
 up:
   - ruby: 2.7.1
   - homebrew:

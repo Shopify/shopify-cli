@@ -11,6 +11,17 @@ module ShopifyCLI
       )
     end
 
+    def self.interactive?
+      ShopifyCLI::Context.new.tty?
+    end
+
+    def self.use_local_partners_instance?(env_variables: ENV)
+      env_variable_truthy?(
+        Constants::EnvironmentVariables::DEVELOPMENT,
+        env_variables: env_variables
+      )
+    end
+
     def self.test?(env_variables: ENV)
       env_variable_truthy?(
         Constants::EnvironmentVariables::TEST,
@@ -18,9 +29,9 @@ module ShopifyCLI
       )
     end
 
-    def self.use_local_partners_instance?(env_variables: ENV)
+    def self.print_backtrace?(env_variables: ENV)
       env_variable_truthy?(
-        Constants::EnvironmentVariables::LOCAL_PARTNERS,
+        Constants::EnvironmentVariables::BACKTRACE,
         env_variables: env_variables
       )
     end
