@@ -32,7 +32,7 @@ module Script
           end
 
           def all
-            [assemblyscript, rust].compact
+            [assemblyscript, rust, javascript].compact
           end
 
           def for(language)
@@ -45,6 +45,10 @@ module Script
 
           def rust
             @rust ||= new_sdk(ExtensionPointRustSDK)
+          end
+
+          def javascript
+            @javascript ||= new_sdk(ExtensionPointJavaScriptSDK)
           end
 
           private
@@ -96,6 +100,12 @@ module Script
         class ExtensionPointRustSDK < ExtensionPointSDK
           def self.language
             "rust"
+          end
+        end
+
+        class ExtensionPointJavaScriptSDK < ExtensionPointSDK
+          def self.language
+            "javascript"
           end
         end
       end

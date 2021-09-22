@@ -24,11 +24,7 @@ module Script
               type = extension_point.dasherize_type
               domain = extension_point.domain
 
-              sparse_checkout_set_path = if domain.nil?
-                "packages/default/extension-point-as-#{type}/assembly/sample"
-              else
-                "packages/#{domain}/samples/#{type}"
-              end
+              lang = language == "javascript" ? "typescript" : language
 
               project_creator = Infrastructure::Languages::ProjectCreator.for(
                 ctx: ctx,
@@ -38,7 +34,7 @@ module Script
                 path_to_project: project.id,
                 sparse_checkout_repo: sparse_checkout_repo,
                 sparse_checkout_branch: sparse_checkout_branch,
-                sparse_checkout_set_path: sparse_checkout_set_path
+                sparse_checkout_set_path: "#{domain}/#{lang}/#{type}/default"
               )
 
               install_dependencies(ctx, language, script_name, project_creator)
