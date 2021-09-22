@@ -1,5 +1,5 @@
 require "test_helper"
-require "shopify-cli/http_request"
+require "shopify_cli/http_request"
 
 module ShopifyCli
   class APITest < MiniTest::Test

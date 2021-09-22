@@ -6,7 +6,7 @@ module ShopifyCli
   # schema.
   #
   class PartnersAPI < API
-    autoload :Organizations, "shopify-cli/partners_api/organizations"
+    autoload :Organizations, "shopify_cli/partners_api/organizations"
 
     class << self
       ##

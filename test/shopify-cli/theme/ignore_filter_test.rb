@@ -1,6 +1,6 @@
 # frozen_string_literal: true
 require "test_helper"
-require "shopify-cli/theme/ignore_filter"
+require "shopify_cli/theme/ignore_filter"
 
 module ShopifyCli
   module Theme

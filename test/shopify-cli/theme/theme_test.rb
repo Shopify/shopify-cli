@@ -1,6 +1,6 @@
 # frozen_string_literal: true
 require "test_helper"
-require "shopify-cli/theme/theme"
+require "shopify_cli/theme/theme"
 
 module ShopifyCli
   module Theme

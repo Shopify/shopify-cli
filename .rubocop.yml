@@ -11,8 +11,8 @@ inherit_gem:
 Minitest:
   Enabled: true
   Include:
-    - '**/test/**/*'
-    - '**/*_test.rb'
+    - "**/test/**/*"
+    - "**/*_test.rb"
 
 Minitest/AssertInDelta: # (new in 0.10)
   Enabled: true
@@ -43,15 +43,15 @@ Minitest/UnspecifiedException: # (new in 0.10)
 
 AllCops:
   Exclude:
-    - 'vendor/**/*'
-    - 'docs/**/*'
-    - 'packaging/**/*'
+    - "vendor/**/*"
+    - "docs/**/*"
+    - "packaging/**/*"
   TargetRubyVersion: 2.4
 
 Layout/EmptyLines:
   Exclude:
     # Need extra line so comment at top isnt registered to the Dev namespace
-    - 'lib/dev/helpers/chruby_reset.rb'
+    - "lib/dev/helpers/chruby_reset.rb"
 
 Layout/EmptyLineBetweenDefs:
   AllowAdjacentOneLineDefs: true
@@ -59,10 +59,10 @@ Layout/EmptyLineBetweenDefs:
 # Changing this could effect the way the content is rendered.
 Layout/HeredocIndentation:
   Exclude:
-    - 'lib/project_types/node/messages/messages.rb'
-    - 'lib/project_types/rails/messages/messages.rb'
-    - 'lib/project_types/script/messages/messages.rb'
-    - 'lib/shopify-cli/messages/messages.rb'
+    - "lib/project_types/node/messages/messages.rb"
+    - "lib/project_types/rails/messages/messages.rb"
+    - "lib/project_types/script/messages/messages.rb"
+    - "lib/shopify_cli/messages/messages.rb"
 
 # allow String.new to create mutable strings
 Style/EmptyLiteral:
@@ -71,7 +71,7 @@ Style/EmptyLiteral:
 # allow String.new to create mutable strings
 Style/HashSyntax:
   Exclude:
-    - 'Rakefile'
+    - "Rakefile"
 
 # allow using %r{} for regexes
 Style/RegexpLiteral:
@@ -97,6 +97,6 @@ Style/MethodCallWithArgsParentheses:
 
 Layout/TrailingWhitespace:
   Exclude:
-    - 'ext/shopify-cli/extconf.rb' # unsure if safe to remove
-    - 'lib/project_types/extension/messages/messages.rb' # unsure if safe to remove
-    - 'test/project_types/extension/extension_test_helpers/stubs/argo_script.rb' # unsure if save to remove
+    - "ext/shopify-cli/extconf.rb" # unsure if safe to remove
+    - "lib/project_types/extension/messages/messages.rb" # unsure if safe to remove
+    - "test/project_types/extension/extension_test_helpers/stubs/argo_script.rb" # unsure if save to remove

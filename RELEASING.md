@@ -13,7 +13,7 @@
    $ git checkout -b release_X_Y_Z
    ```
 
-1. Update the version of Shopify CLI in `lib/shopify-cli/version.rb`
+1. Update the version of Shopify CLI in `lib/shopify_cli/version.rb`
 
 1. Update the version of Shopify CLI at the top of `Gemfile.lock` (failing to do so causes the CI build to fail)
 

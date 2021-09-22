@@ -12,7 +12,7 @@ module ShopifyCli
   class IdentityAuth
     include SmartProperties
 
-    autoload :Servlet, "shopify-cli/identity_auth/servlet"
+    autoload :Servlet, "shopify_cli/identity_auth/servlet"
 
     class Error < StandardError; end
     class Timeout < StandardError; end

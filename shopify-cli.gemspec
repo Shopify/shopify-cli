@@ -1,4 +1,4 @@
-require_relative "lib/shopify-cli/version"
+require_relative "lib/shopify_cli/version"
 
 Gem::Specification.new do |spec|
   spec.name = "shopify-cli"
