@@ -2,17 +2,17 @@
 module TestHelpers
   module Partners
     def setup
-      ShopifyCli::DB.set(partners_exchange_token: "faketoken")
+      ShopifyCLI::DB.set(partners_exchange_token: "faketoken")
       super
     end
 
     def teardown
-      ShopifyCli::DB.del(:partners_exchange_token)
+      ShopifyCLI::DB.del(:partners_exchange_token)
       super
     end
 
     def stub_partner_req(query, variables: {}, status: 200, resp: {})
-      filepaths = Dir[File.join(ShopifyCli::ROOT, "lib", "**", "graphql", "#{query}.graphql")]
+      filepaths = Dir[File.join(ShopifyCLI::ROOT, "lib", "**", "graphql", "#{query}.graphql")]
       if filepaths.count > 1
         raise "Multiple queries in the codebase with filename #{query}.graphql, please rename your query."
       end
@@ -23,14 +23,14 @@ module TestHelpers
     end
 
     def stub_partner_req_not_found(query, variables: {})
-      filepaths = Dir[File.join(ShopifyCli::ROOT, "lib", "**", "graphql", "#{query}.graphql")]
+      filepaths = Dir[File.join(ShopifyCLI::ROOT, "lib", "**", "graphql", "#{query}.graphql")]
       if filepaths.count > 1
         raise "Multiple queries in the codebase with filename #{query}.graphql, please rename your query."
       end
       stub_request(:post, "https://partners.shopify.com/api/cli/graphql").with(body: {
         query: File.read(filepaths.first).tr("\n", ""),
         variables: variables,
-      }.to_json).to_raise(ShopifyCli::PartnersAPI::APIRequestNotFoundError)
+      }.to_json).to_raise(ShopifyCLI::PartnersAPI::APIRequestNotFoundError)
     end
 
     def stub_shopify_org_confirmation(response: false)

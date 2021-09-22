@@ -7,7 +7,7 @@ module Extension
       class RootTest < MiniTest::Test
         def setup
           super
-          ShopifyCli::ProjectType.load_type(:extension)
+          ShopifyCLI::ProjectType.load_type(:extension)
         end
 
         def test_root_is_created_with_valid_attributes

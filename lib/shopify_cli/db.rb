@@ -1,7 +1,7 @@
 require "pstore"
 require "forwardable"
 
-module ShopifyCli
+module ShopifyCLI
   # Persists transient data like access tokens that may be cleared
   # when user clears their session
   #
@@ -14,7 +14,7 @@ module ShopifyCli
 
     attr_reader :db # :nodoc:
 
-    def initialize(path: File.join(ShopifyCli.cache_dir, ".db.pstore")) # :nodoc:
+    def initialize(path: File.join(ShopifyCLI.cache_dir, ".db.pstore")) # :nodoc:
       @db = PStore.new(path)
     end
 
@@ -25,7 +25,7 @@ module ShopifyCli
     #
     # #### Usage
     #
-    #   ShopifyCli::DB.keys
+    #   ShopifyCLI::DB.keys
     #
     def keys
       db.transaction(true) { db.roots }
@@ -42,7 +42,7 @@ module ShopifyCli
     #
     # #### Usage
     #
-    #   exists = ShopifyCli::DB.exists?('shopify_exchange_token')
+    #   exists = ShopifyCLI::DB.exists?('shopify_exchange_token')
     #
     def exists?(key)
       db.transaction(true) { db.root?(key) }
@@ -55,7 +55,7 @@ module ShopifyCli
     #
     # #### Usage
     #
-    #   ShopifyCli::DB.set(shopify_exchange_token: 'token', metric_consent: true)
+    #   ShopifyCLI::DB.set(shopify_exchange_token: 'token', metric_consent: true)
     #
     def set(**args)
       db.transaction do
@@ -80,7 +80,7 @@ module ShopifyCli
     #
     # #### Usage
     #
-    #   ShopifyCli::DB.get(:shopify_exchange_token)
+    #   ShopifyCLI::DB.get(:shopify_exchange_token)
     #
     def get(key)
       val = db.transaction(true) { db[key] }
@@ -95,7 +95,7 @@ module ShopifyCli
     #
     # #### Usage
     #
-    #   ShopifyCli::DB.del(:shopify_exchange_token)
+    #   ShopifyCLI::DB.del(:shopify_exchange_token)
     #
     def del(*args)
       db.transaction { args.each { |key| db.delete(key) } }
@@ -105,7 +105,7 @@ module ShopifyCli
     #
     # #### Usage
     #
-    #   ShopifyCli::DB.clear
+    #   ShopifyCLI::DB.clear
     #
     def clear
       del(*keys)

@@ -1,6 +1,6 @@
 require "test_helper"
 
-module ShopifyCli
+module ShopifyCLI
   module Result
     class ConvenienceConstructorTest < Minitest::Test
       def test_success_constructor

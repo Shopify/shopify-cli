@@ -10,7 +10,7 @@ module Extension
 
       def self.supported?(type)
         return false unless SUPPORTED_EXTENSION_TYPES.include?(type.downcase)
-        ShopifyCli::Shopifolk.check && ShopifyCli::Feature.enabled?(:extension_server_beta)
+        ShopifyCLI::Shopifolk.check && ShopifyCLI::Feature.enabled?(:extension_server_beta)
       end
     end
   end

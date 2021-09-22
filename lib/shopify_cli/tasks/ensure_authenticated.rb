@@ -1,12 +1,12 @@
 require "shopify_cli"
 
-module ShopifyCli
+module ShopifyCLI
   module Tasks
-    class EnsureAuthenticated < ShopifyCli::Task
+    class EnsureAuthenticated < ShopifyCLI::Task
       def call(ctx)
         ctx.abort(
-          ctx.message("core.identity_auth.login_prompt", ShopifyCli::TOOL_NAME)
-        ) unless ShopifyCli::IdentityAuth::IDENTITY_ACCESS_TOKENS.all? { |key| ShopifyCli::DB.exists?(key) }
+          ctx.message("core.identity_auth.login_prompt", ShopifyCLI::TOOL_NAME)
+        ) unless ShopifyCLI::IdentityAuth::IDENTITY_ACCESS_TOKENS.all? { |key| ShopifyCLI::DB.exists?(key) }
       end
     end
   end

@@ -2,20 +2,20 @@ require "test_helper"
 
 module Rails
   module Commands
-    class Fake < ShopifyCli::Command
+    class Fake < ShopifyCLI::Command
     end
   end
 end
 
-module ShopifyCli
+module ShopifyCLI
   module Commands
-    class FakeCommand < ShopifyCli::ProjectCommands
+    class FakeCommand < ShopifyCLI::ProjectCommands
     end
 
     class HelpTest < MiniTest::Test
       def setup
         super
-        ShopifyCli::Commands.register(:FakeCommand, "fake", "fake_path", true)
+        ShopifyCLI::Commands.register(:FakeCommand, "fake", "fake_path", true)
       end
 
       def test_default_behavior_lists_tasks

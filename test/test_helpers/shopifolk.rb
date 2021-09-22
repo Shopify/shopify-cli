@@ -2,7 +2,7 @@
 module TestHelpers
   module Shopifolk
     def teardown
-      ShopifyCli::Shopifolk.reset
+      ShopifyCLI::Shopifolk.reset
       super
     end
   end

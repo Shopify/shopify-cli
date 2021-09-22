@@ -1,8 +1,8 @@
 require "shopify_cli"
 
-module ShopifyCli
+module ShopifyCLI
   ##
-  # ShopifyCli::JsSystem allows conditional system calls of npm or yarn commands.
+  # ShopifyCLI::JsSystem allows conditional system calls of npm or yarn commands.
   #
   class JsSystem
     include SmartProperties
@@ -12,21 +12,21 @@ module ShopifyCli
 
     class << self
       ##
-      # Proxy to instance method `ShopifyCli::JsSystem.new.yarn?`
+      # Proxy to instance method `ShopifyCLI::JsSystem.new.yarn?`
       #
       # #### Parameters
       # - `ctx`: running context from your command
       #
       # #### Example
       #
-      #   ShopifyCli::JsSystem.yarn?(ctx)
+      #   ShopifyCLI::JsSystem.yarn?(ctx)
       #
       def yarn?(ctx)
         JsSystem.new(ctx: ctx).yarn?
       end
 
       ##
-      # Proxy to instance method `ShopifyCli::JsSystem.new.call`
+      # Proxy to instance method `ShopifyCLI::JsSystem.new.call`
       #
       # #### Parameters
       # - `ctx`: running context from your command
@@ -35,21 +35,21 @@ module ShopifyCli
       #
       # #### Example
       #
-      #   ShopifyCli::JsSystem.call(ctx, yarn: ['install', '--silent'], npm: ['install', '--no-audit'])
+      #   ShopifyCLI::JsSystem.call(ctx, yarn: ['install', '--silent'], npm: ['install', '--no-audit'])
       #
       def call(ctx, yarn:, npm:, capture_response: false)
         JsSystem.new(ctx: ctx).call(yarn: yarn, npm: npm, capture_response: capture_response)
       end
     end
 
-    property :ctx, accepts: ShopifyCli::Context
+    property :ctx, accepts: ShopifyCLI::Context
 
     ##
     # Returns the name of the JS package manager being used
     #
     # #### Example
     #
-    #   ShopifyCli::JsSystem.new(ctx: ctx).package_manager
+    #   ShopifyCLI::JsSystem.new(ctx: ctx).package_manager
     #
     def package_manager
       yarn? ? YARN_CORE_COMMAND : NPM_CORE_COMMAND
@@ -60,7 +60,7 @@ module ShopifyCli
     #
     # #### Example
     #
-    #   ShopifyCli::JsSystem.new(ctx: ctx).yarn?
+    #   ShopifyCLI::JsSystem.new(ctx: ctx).yarn?
     #
     def yarn?
       @has_yarn ||= begin
@@ -80,7 +80,7 @@ module ShopifyCli
     #
     # #### Example
     #
-    #   ShopifyCli::JsSystem.new(ctx: ctx).call(
+    #   ShopifyCLI::JsSystem.new(ctx: ctx).call(
     #     yarn: ['install', '--silent'],
     #     npm: ['install', '--no-audit'],
     #     capture_response: false

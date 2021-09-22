@@ -2,7 +2,7 @@
 
 require "openssl"
 
-module ShopifyCli
+module ShopifyCLI
   module Theme
     module DevServer
       class CertificateManager
@@ -19,13 +19,13 @@ module ShopifyCli
         end
 
         def find_or_create_certificates!
-          @private_key = if (private_key_pem = ShopifyCli::DB.get(:ssl_private_key))
+          @private_key = if (private_key_pem = ShopifyCLI::DB.get(:ssl_private_key))
             OpenSSL::PKey::RSA.new(private_key_pem)
           else
             OpenSSL::PKey::RSA.new(2048)
           end
 
-          @certificate = if (certificate_pem = ShopifyCli::DB.get(:ssl_certificate))
+          @certificate = if (certificate_pem = ShopifyCLI::DB.get(:ssl_certificate))
             OpenSSL::X509::Certificate.new(certificate_pem)
           else
             x509_certificate = build_x509_certificate
@@ -35,8 +35,8 @@ module ShopifyCli
             x509_certificate
           end
 
-          ShopifyCli::DB.set(ssl_certificate: certificate.to_pem)
-          ShopifyCli::DB.set(ssl_private_key: private_key.to_pem)
+          ShopifyCLI::DB.set(ssl_certificate: certificate.to_pem)
+          ShopifyCLI::DB.set(ssl_private_key: private_key.to_pem)
         end
 
         private

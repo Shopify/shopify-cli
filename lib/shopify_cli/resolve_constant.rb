@@ -4,13 +4,13 @@
 # are resolved relative to `Kernal`, but the top-level namespace is
 # configurable:
 #
-#    ShopifyCli::Resolve.call(:object).value # => Object
-#    ShopifyCli::Resolve.call('minitest/test').value # => MiniTest::Test
-#    ShopifyCli::Resolve.call(:test, namespace: MiniTest) # => MiniTest::Test
+#    ShopifyCLI::Resolve.call(:object).value # => Object
+#    ShopifyCLI::Resolve.call('minitest/test').value # => MiniTest::Test
+#    ShopifyCLI::Resolve.call(:test, namespace: MiniTest) # => MiniTest::Test
 #
-module ShopifyCli
+module ShopifyCLI
   class ResolveConstant
-    include ShopifyCli::MethodObject
+    include ShopifyCLI::MethodObject
     property! :namespace, accepts: ->(ns) { ns.respond_to?(:const_get) }, default: -> { Kernel }
 
     def call(name)

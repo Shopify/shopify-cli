@@ -1,8 +1,8 @@
 require "shopify_cli"
 
-module ShopifyCli
+module ShopifyCLI
   module Commands
-    class Populate < ShopifyCli::Command
+    class Populate < ShopifyCLI::Command
       subcommand :Customer, "customers", "shopify_cli/commands/populate/customer"
       subcommand :DraftOrder, "draftorders", "shopify_cli/commands/populate/draft_order"
       subcommand :Product, "products", "shopify_cli/commands/populate/product"
@@ -12,11 +12,11 @@ module ShopifyCli
       end
 
       def self.help
-        ShopifyCli::Context.message("core.populate.help", ShopifyCli::TOOL_NAME)
+        ShopifyCLI::Context.message("core.populate.help", ShopifyCLI::TOOL_NAME)
       end
 
       def self.extended_help
-        ShopifyCli::Context.message("core.populate.extended_help", ShopifyCli::TOOL_NAME)
+        ShopifyCLI::Context.message("core.populate.extended_help", ShopifyCLI::TOOL_NAME)
       end
     end
   end

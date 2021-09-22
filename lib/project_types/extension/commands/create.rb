@@ -2,7 +2,7 @@
 
 module Extension
   class Command
-    class Create < ShopifyCli::SubCommand
+    class Create < ShopifyCLI::SubCommand
       DEVELOPMENT_SERVER_SUPPORTED_TYPES = [
         "checkout_ui_extension",
       ]
@@ -42,7 +42,7 @@ module Extension
       end
 
       def self.help
-        @ctx.message("create.help", ShopifyCli::TOOL_NAME)
+        @ctx.message("create.help", ShopifyCLI::TOOL_NAME)
       end
 
       private

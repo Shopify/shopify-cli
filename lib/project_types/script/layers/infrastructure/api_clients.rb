@@ -15,7 +15,7 @@ module Script
 
           def initialize(ctx, api_key)
             instance_url = script_service_url
-            @api = ShopifyCli::API.new(
+            @api = ShopifyCLI::API.new(
               ctx: ctx,
               url: "#{instance_url}/graphql",
               token: { "APP_KEY" => api_key }.compact.to_json,
@@ -30,8 +30,8 @@ module Script
           private
 
           def script_service_url
-            if ::ShopifyCli::Environment.use_spin_partners_instance?
-              "https://script-service.#{::ShopifyCli::Environment.spin_url}"
+            if ::ShopifyCLI::Environment.use_spin_partners_instance?
+              "https://script-service.#{::ShopifyCLI::Environment.spin_url}"
             else
               LOCAL_INSTANCE_URL
             end
@@ -74,7 +74,7 @@ module Script
             end
           end
 
-          class ShimAPI < ShopifyCli::PartnersAPI
+          class ShimAPI < ShopifyCLI::PartnersAPI
             def query(query_name, variables: {})
               variables[:query] = load_query(query_name)
               super("script_service_proxy", variables: variables)

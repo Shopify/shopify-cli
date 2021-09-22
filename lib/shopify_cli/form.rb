@@ -1,6 +1,6 @@
 require "shopify_cli"
 
-module ShopifyCli
+module ShopifyCLI
   class Form
     class << self
       def ask(ctx, args, flags)
@@ -12,7 +12,7 @@ module ShopifyCli
         begin
           form.ask
           form
-        rescue ShopifyCli::Abort => err
+        rescue ShopifyCLI::Abort => err
           ctx.puts(err.message)
           nil
         end

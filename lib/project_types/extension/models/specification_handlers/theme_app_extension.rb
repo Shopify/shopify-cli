@@ -15,7 +15,7 @@ module Extension
           context.root = File.join(context.root, directory_name)
 
           if getting_started
-            ShopifyCli::Git.clone("https://github.com/Shopify/theme-extension-getting-started", context.root)
+            ShopifyCLI::Git.clone("https://github.com/Shopify/theme-extension-getting-started", context.root)
             context.rm_r(".git")
           else
             FileUtils.makedirs(SUPPORTED_BUCKETS.map { |b| File.join(context.root, b) })

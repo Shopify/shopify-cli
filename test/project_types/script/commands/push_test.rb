@@ -11,7 +11,7 @@ module Script
         @api_key = "apikey"
         @uuid = "uuid"
         @force = true
-        @env = ShopifyCli::Resources::EnvFile.new(api_key: @api_key, secret: "shh", extra: { "UUID" => @uuid })
+        @env = ShopifyCLI::Resources::EnvFile.new(api_key: @api_key, secret: "shh", extra: { "UUID" => @uuid })
         @script_project_repo = TestHelpers::FakeScriptProjectRepository.new
         @script_project_repo.create(
           language: "assemblyscript",
@@ -20,7 +20,7 @@ module Script
           env: @env
         )
         Script::Layers::Infrastructure::ScriptProjectRepository.stubs(:new).returns(@script_project_repo)
-        ShopifyCli::Tasks::EnsureProjectType.stubs(:call).with(@context, :script).returns(true)
+        ShopifyCLI::Tasks::EnsureProjectType.stubs(:call).with(@context, :script).returns(true)
       end
 
       def test_calls_push_script
@@ -34,9 +34,9 @@ module Script
       end
 
       def test_help
-        ShopifyCli::Context
+        ShopifyCLI::Context
           .expects(:message)
-          .with("script.push.help", ShopifyCli::TOOL_NAME)
+          .with("script.push.help", ShopifyCLI::TOOL_NAME)
         Script::Command::Push.help
       end
 

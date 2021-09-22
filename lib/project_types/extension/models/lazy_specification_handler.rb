@@ -1,6 +1,6 @@
 module Extension
   module Models
-    class LazySpecificationHandler < ShopifyCli::LazyDelegator
+    class LazySpecificationHandler < ShopifyCLI::LazyDelegator
       attr_reader :identifier
 
       def initialize(identifier, &specification_handler_initializer)

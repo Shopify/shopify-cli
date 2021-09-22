@@ -1,4 +1,4 @@
-module ShopifyCli
+module ShopifyCLI
   class ProjectType
     extend Feature::Set
 
@@ -20,7 +20,7 @@ module ShopifyCli
       end
 
       def load_type(current_type, shallow = false)
-        filepath = File.join(ShopifyCli::ROOT, "lib", "project_types", current_type.to_s, "cli.rb")
+        filepath = File.join(ShopifyCLI::ROOT, "lib", "project_types", current_type.to_s, "cli.rb")
         return unless File.exist?(filepath)
         @shallow_load = shallow
         @current_type = current_type
@@ -31,7 +31,7 @@ module ShopifyCli
       end
 
       def load_all
-        Dir.glob(File.join(ShopifyCli::ROOT, "lib", "project_types", "*", "cli.rb")).map do |filepath|
+        Dir.glob(File.join(ShopifyCLI::ROOT, "lib", "project_types", "*", "cli.rb")).map do |filepath|
           load_type(filepath.split(File::Separator)[-2].to_sym, true)
         end
       end
@@ -41,7 +41,7 @@ module ShopifyCli
       end
 
       def project_filepath(path)
-        File.join(ShopifyCli::PROJECT_TYPES_DIR, project_type.to_s, path)
+        File.join(ShopifyCLI::PROJECT_TYPES_DIR, project_type.to_s, path)
       end
 
       def title(name)
@@ -50,7 +50,7 @@ module ShopifyCli
 
       def register_task(task, name)
         return if project_load_shallow
-        ShopifyCli::Tasks.register(task, name)
+        ShopifyCLI::Tasks.register(task, name)
       end
 
       def register_messages(messages)

@@ -1,6 +1,6 @@
 require "shopify_cli"
 
-module ShopifyCli
+module ShopifyCLI
   module Commands
     Registry = CLI::Kit::CommandRegistry.new(
       default: "help",

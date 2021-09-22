@@ -1,4 +1,4 @@
-module ShopifyCli
+module ShopifyCLI
   class PartnersAPI
     class Organizations
       class << self

@@ -1,4 +1,4 @@
-module ShopifyCli
+module ShopifyCLI
   class ProjectCommands < Command
     def call(*)
       @ctx.puts(self.class.help)
@@ -6,9 +6,9 @@ module ShopifyCli
 
     def self.help
       project_type = name.split("::")[0].downcase
-      ShopifyCli::Context.message(
+      ShopifyCLI::Context.message(
         "#{project_type}.help",
-        ShopifyCli::TOOL_NAME,
+        ShopifyCLI::TOOL_NAME,
         subcommand_registry.command_names.join(" | ")
       )
     end

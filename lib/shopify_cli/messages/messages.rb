@@ -1,6 +1,6 @@
 # frozen_string_literal: true
 
-module ShopifyCli
+module ShopifyCLI
   module Messages
     MESSAGES = {
       apps: {

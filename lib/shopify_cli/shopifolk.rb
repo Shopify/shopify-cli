@@ -1,6 +1,6 @@
-module ShopifyCli
+module ShopifyCLI
   ##
-  # ShopifyCli::Shopifolk contains the logic to determine if the user appears to be a Shopify staff
+  # ShopifyCLI::Shopifolk contains the logic to determine if the user appears to be a Shopify staff
   #
   # The Shopifolk Feature flag will persist between runs so if the flag is enabled or disabled,
   # it will still be in that same state until the next class invocation.
@@ -20,10 +20,10 @@ module ShopifyCli
       #
       # #### Example
       #
-      #     ShopifyCli::Shopifolk.check
+      #     ShopifyCLI::Shopifolk.check
       #
       def check
-        ShopifyCli::Shopifolk.new.shopifolk?
+        ShopifyCLI::Shopifolk.new.shopifolk?
       end
 
       def act_as_shopify_organization
@@ -52,10 +52,10 @@ module ShopifyCli
       return true if Feature.enabled?(FEATURE_NAME)
 
       if shopifolk_by_gcloud? && shopifolk_by_dev?
-        ShopifyCli::Feature.enable(FEATURE_NAME)
+        ShopifyCLI::Feature.enable(FEATURE_NAME)
         true
       else
-        ShopifyCli::Feature.disable(FEATURE_NAME)
+        ShopifyCLI::Feature.disable(FEATURE_NAME)
         false
       end
     end

@@ -1,6 +1,6 @@
-module ShopifyCli
+module ShopifyCLI
   ##
-  # ShopifyCli::Git wraps git functionality to make it easier to integrate will
+  # ShopifyCLI::Git wraps git functionality to make it easier to integrate will
   # git.
   class Git
     class << self
@@ -18,7 +18,7 @@ module ShopifyCli
       #
       # #### Example
       #
-      #   ShopifyCli::Git.sha
+      #   ShopifyCLI::Git.sha
       #
       def sha(dir: Dir.pwd, ctx: Context.new)
         rev_parse("HEAD", dir: dir, ctx: ctx)
@@ -40,7 +40,7 @@ module ShopifyCli
       #
       # #### Example
       #
-      #   ShopifyCli::Git.clone('git@github.com:shopify/test.git', 'test-app')
+      #   ShopifyCLI::Git.clone('git@github.com:shopify/test.git', 'test-app')
       #
       def clone(repository, dest, ctx: Context.new)
         if Dir.exist?(dest)
@@ -66,7 +66,7 @@ module ShopifyCli
       #
       # #### Example
       #
-      #   branches = ShopifyCli::Git.branches(@ctx)
+      #   branches = ShopifyCLI::Git.branches(@ctx)
       #
       def branches(ctx)
         output, status = ctx.capture2e("git", "branch", "--list", "--format=%(refname:short)")
@@ -91,7 +91,7 @@ module ShopifyCli
       #
       # #### Example
       #
-      #   ShopifyCli::Git.init(@ctx)
+      #   ShopifyCLI::Git.init(@ctx)
       #
       def init(ctx)
         output, status = ctx.capture2e("git", "status")

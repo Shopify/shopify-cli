@@ -1,7 +1,7 @@
 # frozen_string_literal: true
 require_relative "mime_type"
 
-module ShopifyCli
+module ShopifyCLI
   module Theme
     class File < Struct.new(:path)
       attr_reader :relative_path

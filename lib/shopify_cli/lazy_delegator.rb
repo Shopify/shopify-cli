@@ -1,6 +1,6 @@
 require "delegate"
 
-module ShopifyCli
+module ShopifyCLI
   ##
   # `LazyDelegator` defers initialization of its underlying delegatee until the
   # latter is accessed for the first time due to a method call that the
@@ -16,7 +16,7 @@ module ShopifyCli
   # LazyDelegator lends itself to being subclassed in scenarios where some
   # facts are known and others are costly to compute:
   #
-  #   class LazySpecificationHandler < ShopifyCli::LazyDelegator
+  #   class LazySpecificationHandler < ShopifyCLI::LazyDelegator
   #     attr_reader :identifier
   #
   #     def initialize(identifier, &initializer)

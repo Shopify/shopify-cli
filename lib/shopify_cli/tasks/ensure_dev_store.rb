@@ -1,8 +1,8 @@
 require "shopify_cli"
 
-module ShopifyCli
+module ShopifyCLI
   module Tasks
-    class EnsureDevStore < ShopifyCli::Task
+    class EnsureDevStore < ShopifyCLI::Task
       def call(ctx)
         @ctx = ctx
         return ctx.abort(ctx.message(
@@ -12,7 +12,7 @@ module ShopifyCli
         return unless CLI::UI::Prompt.confirm(
           ctx.message("core.tasks.ensure_dev_store.convert_to_dev_store", project.env.shop)
         )
-        ShopifyCli::PartnersAPI.query(ctx, "convert_dev_to_test_store", input: {
+        ShopifyCLI::PartnersAPI.query(ctx, "convert_dev_to_test_store", input: {
           organizationID: shop["orgID"].to_i,
           shopId: shop["shopId"],
         })
@@ -22,13 +22,13 @@ module ShopifyCli
       private
 
       def project
-        @project ||= ShopifyCli::Project.current
+        @project ||= ShopifyCLI::Project.current
       end
 
       def shop
         @shop ||= begin
           current_domain = project.env.shop
-          ShopifyCli::PartnersAPI::Organizations.fetch_all(@ctx).map do |org|
+          ShopifyCLI::PartnersAPI::Organizations.fetch_all(@ctx).map do |org|
             org["stores"].find do |store|
               store["orgID"] = org["id"]
               store["shopDomain"] == current_domain

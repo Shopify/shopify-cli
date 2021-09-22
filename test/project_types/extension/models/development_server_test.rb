@@ -4,7 +4,7 @@ module Extension
   module Models
     class DevelopmentServerTest < MiniTest::Test
       def setup
-        ShopifyCli::ProjectType.load_type(:extension)
+        ShopifyCLI::ProjectType.load_type(:extension)
         super
       end
 

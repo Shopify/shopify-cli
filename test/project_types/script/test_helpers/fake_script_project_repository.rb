@@ -11,7 +11,7 @@ module TestHelpers
 
       @project = Script::Layers::Domain::ScriptProject.new(
         id: "/#{script_name}",
-        env: env || ShopifyCli::Resources::EnvFile.new(api_key: "1234", secret: "shh", extra: {}),
+        env: env || ShopifyCLI::Resources::EnvFile.new(api_key: "1234", secret: "shh", extra: {}),
         script_name: script_name,
         extension_point_type: extension_point_type,
         language: language,
@@ -32,7 +32,7 @@ module TestHelpers
     end
 
     def create_env(api_key:, secret:, uuid:)
-      @project.env = ShopifyCli::Resources::EnvFile.new(api_key: api_key, secret: secret, extra: { "UUID" => uuid })
+      @project.env = ShopifyCLI::Resources::EnvFile.new(api_key: api_key, secret: secret, extra: { "UUID" => uuid })
       @project
     end
 

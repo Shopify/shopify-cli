@@ -4,7 +4,7 @@ require "shopify_cli"
 
 module Extension
   module Tasks
-    class RunExtensionCommand < ShopifyCli::Task
+    class RunExtensionCommand < ShopifyCLI::Task
       include SmartProperties
 
       SUPPORTED_EXTENSION_TYPES = [
@@ -22,7 +22,7 @@ module Extension
       property! :command, accepts: SUPPORTED_COMMANDS
 
       def call
-        ShopifyCli::Result
+        ShopifyCLI::Result
           .call(&method(:build_extension))
           .then(&method(:build_server_config))
           .then(&method(:run_command))

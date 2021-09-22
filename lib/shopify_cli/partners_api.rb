@@ -1,8 +1,8 @@
 require "shopify_cli"
 
-module ShopifyCli
+module ShopifyCLI
   ##
-  # ShopifyCli::PartnersAPI provides easy access to the partners dashboard CLI
+  # ShopifyCLI::PartnersAPI provides easy access to the partners dashboard CLI
   # schema.
   #
   class PartnersAPI < API
@@ -21,10 +21,10 @@ module ShopifyCli
       #
       # #### Raises
       #
-      # * http 404 will raise a ShopifyCli::API::APIRequestNotFoundError
-      # * http 400..499 will raise a ShopifyCli::API::APIRequestClientError
-      # * http 500..599 will raise a ShopifyCli::API::APIRequestServerError
-      # * All other codes will raise ShopifyCli::API::APIRequestUnexpectedError
+      # * http 404 will raise a ShopifyCLI::API::APIRequestNotFoundError
+      # * http 400..499 will raise a ShopifyCLI::API::APIRequestClientError
+      # * http 500..599 will raise a ShopifyCLI::API::APIRequestServerError
+      # * All other codes will raise ShopifyCLI::API::APIRequestUnexpectedError
       #
       # #### Returns
       #
@@ -32,13 +32,13 @@ module ShopifyCli
       #
       # #### Example
       #
-      #   ShopifyCli::PartnersAPI.query(@ctx, 'all_organizations')
+      #   ShopifyCLI::PartnersAPI.query(@ctx, 'all_organizations')
       #
       def query(ctx, query_name, **variables)
         CLI::Kit::Util.begin do
           api_client(ctx).query(query_name, variables: variables)
         end.retry_after(API::APIRequestUnauthorizedError, retries: 1) do
-          ShopifyCli::IdentityAuth.new(ctx: ctx).reauthenticate
+          ShopifyCLI::IdentityAuth.new(ctx: ctx).reauthenticate
         end
       rescue API::APIRequestUnauthorizedError => e
         if (request_info = auth_failure_info(ctx, e))
@@ -46,11 +46,11 @@ module ShopifyCli
         end
         ctx.abort(ctx.message("core.api.error.failed_auth"))
       rescue API::APIRequestNotFoundError
-        ctx.puts(ctx.message("core.partners_api.error.account_not_found", ShopifyCli::TOOL_NAME))
+        ctx.puts(ctx.message("core.partners_api.error.account_not_found", ShopifyCLI::TOOL_NAME))
       end
 
       def partners_url_for(organization_id, api_client_id)
-        if ShopifyCli::Shopifolk.acting_as_shopify_organization?
+        if ShopifyCLI::Shopifolk.acting_as_shopify_organization?
           organization_id = "internal"
         end
         "https://#{Environment.partners_domain}/#{organization_id}/apps/#{api_client_id}"
@@ -67,9 +67,9 @@ module ShopifyCli
       end
 
       def access_token(ctx)
-        ShopifyCli::DB.get(:partners_exchange_token) do
+        ShopifyCLI::DB.get(:partners_exchange_token) do
           IdentityAuth.new(ctx: ctx).authenticate
-          ShopifyCli::DB.get(:partners_exchange_token)
+          ShopifyCLI::DB.get(:partners_exchange_token)
         end
       end
 

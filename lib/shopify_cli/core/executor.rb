@@ -1,11 +1,11 @@
 require "shopify_cli"
 
-module ShopifyCli
+module ShopifyCLI
   module Core
     class Executor < CLI::Kit::Executor
       def initialize(ctx, task_registry, *args, **kwargs)
-        @ctx = ctx || ShopifyCli::Context.new
-        @task_registry = task_registry || ShopifyCli::Tasks::TaskRegistry.new
+        @ctx = ctx || ShopifyCLI::Context.new
+        @task_registry = task_registry || ShopifyCLI::Tasks::TaskRegistry.new
         super(*args, **kwargs)
       end
 

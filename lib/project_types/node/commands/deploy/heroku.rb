@@ -6,12 +6,12 @@ module Node
     class Deploy
       class Heroku
         def self.help
-          ShopifyCli::Context.message("node.deploy.heroku.help", ShopifyCli::TOOL_NAME)
+          ShopifyCLI::Context.message("node.deploy.heroku.help", ShopifyCLI::TOOL_NAME)
         end
 
         def self.start(ctx)
           spin_group = CLI::UI::SpinGroup.new
-          heroku_service = ShopifyCli::Heroku.new(ctx)
+          heroku_service = ShopifyCLI::Heroku.new(ctx)
 
           spin_group.add(ctx.message("node.deploy.heroku.downloading")) do |spinner|
             heroku_service.download
@@ -29,7 +29,7 @@ module Node
           spin_group.wait
 
           spin_group.add(ctx.message("node.deploy.heroku.git.checking")) do |spinner|
-            ShopifyCli::Git.init(ctx)
+            ShopifyCLI::Git.init(ctx)
             spinner.update_title(ctx.message("node.deploy.heroku.git.initialized"))
           end
           spin_group.wait
@@ -71,7 +71,7 @@ module Node
             end
           end
 
-          branches = ShopifyCli::Git.branches(ctx)
+          branches = ShopifyCLI::Git.branches(ctx)
           if branches.length == 1
             branch_to_deploy = branches[0]
             ctx.puts(ctx.message("node.deploy.heroku.git.branch_selected", branch_to_deploy))

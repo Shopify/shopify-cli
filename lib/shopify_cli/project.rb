@@ -1,9 +1,9 @@
 # frozen_string_literal: true
 require "shopify_cli"
 
-module ShopifyCli
+module ShopifyCLI
   ##
-  # ShopifyCli::Project captures the current project that the user is working on.
+  # ShopifyCLI::Project captures the current project that the user is working on.
   # This class can be used to fetch and save project environment as well as the
   # project config `.shopify-cli.yml`.
   #
@@ -25,13 +25,13 @@ module ShopifyCli
       #
       # #### Raises
       #
-      # * `ShopifyCli::Abort` - If the cli is not currently in a project directory
+      # * `ShopifyCLI::Abort` - If the cli is not currently in a project directory
       #   then this will be raised with a message implying that the user is not in
       #   a project directory.
       #
       # #### Example
       #
-      #   project = ShopifyCli::Project.current
+      #   project = ShopifyCLI::Project.current
       #
       def current(force_reload: false)
         clear if force_reload
@@ -60,7 +60,7 @@ module ShopifyCli
       #
       # #### Example
       #
-      #   type = ShopifyCli::Project.current_project_type
+      #   type = ShopifyCLI::Project.current_project_type
       #
       def current_project_type
         return unless has_current?
@@ -81,7 +81,7 @@ module ShopifyCli
       #
       # #### Example
       #
-      #   type = ShopifyCli::Project.current_project_type
+      #   type = ShopifyCLI::Project.current_project_type
       #
       def write(ctx, project_type:, organization_id:, **identifiers)
         require "yaml" # takes 20ms, so deferred as late as possible.
@@ -113,7 +113,7 @@ module ShopifyCli
       def at(dir)
         proj_dir = directory(dir)
         unless proj_dir
-          raise(ShopifyCli::Abort, Context.message("core.project.error.not_in_project"))
+          raise(ShopifyCLI::Abort, Context.message("core.project.error.not_in_project"))
         end
         @at ||= Hash.new { |h, k| h[k] = new(directory: k) }
         @at[proj_dir]
@@ -136,11 +136,11 @@ module ShopifyCli
     #
     # #### Returns
     #
-    # * `env` - An instance of a ShopifyCli::Resources::EnvFile
+    # * `env` - An instance of a ShopifyCLI::Resources::EnvFile
     #
     # #### Example
     #
-    #   ShopifyCli::Project.current.env
+    #   ShopifyCLI::Project.current.env
     #
     def env
       @env ||= begin
@@ -159,18 +159,18 @@ module ShopifyCli
     #
     # #### Raises
     #
-    # * `ShopifyCli::Abort` - If the yml is invalid or poorly formatted
-    # * `ShopifyCli::Abort` - If the yml file does not exist
+    # * `ShopifyCLI::Abort` - If the yml is invalid or poorly formatted
+    # * `ShopifyCLI::Abort` - If the yml file does not exist
     #
     # #### Example
     #
-    #   ShopifyCli::Project.current.config
+    #   ShopifyCLI::Project.current.config
     #
     def config
       @config ||= begin
         config = load_yaml_file(".shopify-cli.yml")
         unless config.is_a?(Hash)
-          raise ShopifyCli::Abort, Context.message("core.yaml.error.not_hash", ".shopify-cli.yml")
+          raise ShopifyCLI::Abort, Context.message("core.yaml.error.not_hash", ".shopify-cli.yml")
         end
 
         # The app_type key was deprecated in favour of project_type, so replace it
@@ -191,12 +191,12 @@ module ShopifyCli
       begin
         YAML.load_file(f)
       rescue Psych::SyntaxError => e
-        raise(ShopifyCli::Abort, Context.message("core.yaml.error.invalid", relative_path, e.message))
+        raise(ShopifyCLI::Abort, Context.message("core.yaml.error.invalid", relative_path, e.message))
       # rescue Errno::EACCES => e
       # TODO
       #   Dev::Helpers::EaccesHandler.diagnose_and_raise(f, e, mode: :read)
       rescue Errno::ENOENT
-        raise ShopifyCli::Abort, Context.message("core.yaml.error.not_found", f)
+        raise ShopifyCLI::Abort, Context.message("core.yaml.error.not_found", f)
       end
     end
   end

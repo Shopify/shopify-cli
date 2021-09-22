@@ -6,7 +6,7 @@ module Extension
       class DevelopmentEntriesTest < MiniTest::Test
         def setup
           super
-          ShopifyCli::ProjectType.load_type(:extension)
+          ShopifyCLI::ProjectType.load_type(:extension)
         end
 
         def test_entries_are_created_with_valid_attributes

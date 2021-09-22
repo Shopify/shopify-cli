@@ -1,4 +1,4 @@
-module ShopifyCli
+module ShopifyCLI
   module Core
     autoload :EntryPoint, "shopify_cli/core/entry_point"
     autoload :Executor, "shopify_cli/core/executor"

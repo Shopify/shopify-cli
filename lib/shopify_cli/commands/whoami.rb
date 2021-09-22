@@ -1,15 +1,15 @@
 require "shopify_cli"
 
-module ShopifyCli
+module ShopifyCLI
   module Commands
-    class Whoami < ShopifyCli::Command
+    class Whoami < ShopifyCLI::Command
       def call(_args, _name)
-        shop = ShopifyCli::DB.get(:shop)
-        org_id = ShopifyCli::DB.get(:organization_id)
-        org = ShopifyCli::PartnersAPI::Organizations.fetch(@ctx, id: org_id) unless org_id.nil?
+        shop = ShopifyCLI::DB.get(:shop)
+        org_id = ShopifyCLI::DB.get(:organization_id)
+        org = ShopifyCLI::PartnersAPI::Organizations.fetch(@ctx, id: org_id) unless org_id.nil?
 
         output = if shop.nil? && org.nil?
-          @ctx.message("core.whoami.not_logged_in", ShopifyCli::TOOL_NAME)
+          @ctx.message("core.whoami.not_logged_in", ShopifyCLI::TOOL_NAME)
         elsif !shop.nil? && org.nil?
           @ctx.message("core.whoami.logged_in_shop_only", shop)
         elsif shop.nil? && !org.nil?
@@ -21,7 +21,7 @@ module ShopifyCli
       end
 
       def self.help
-        ShopifyCli::Context.message("core.whoami.help", ShopifyCli::TOOL_NAME)
+        ShopifyCLI::Context.message("core.whoami.help", ShopifyCLI::TOOL_NAME)
       end
     end
   end

@@ -1,7 +1,7 @@
 # frozen_string_literal: true
 module Node
   class Command
-    class Create < ShopifyCli::SubCommand
+    class Create < ShopifyCLI::SubCommand
       prerequisite_task :ensure_authenticated
 
       options do |parser, flags|
@@ -26,37 +26,37 @@ module Node
         check_npm
         build(form.name)
 
-        ShopifyCli::Project.write(
+        ShopifyCLI::Project.write(
           @ctx,
           project_type: "node",
           organization_id: form.organization_id,
         )
 
-        api_client = ShopifyCli::Tasks::CreateApiClient.call(
+        api_client = ShopifyCLI::Tasks::CreateApiClient.call(
           @ctx,
           org_id: form.organization_id,
           title: form.title,
           type: form.type,
         )
 
-        ShopifyCli::Resources::EnvFile.new(
+        ShopifyCLI::Resources::EnvFile.new(
           api_key: api_client["apiKey"],
           secret: api_client["apiSecretKeys"].first["secret"],
           shop: form.shop_domain,
           scopes: "write_products,write_customers,write_draft_orders",
         ).write(@ctx)
 
-        partners_url = ShopifyCli::PartnersAPI.partners_url_for(form.organization_id, api_client["id"])
+        partners_url = ShopifyCLI::PartnersAPI.partners_url_for(form.organization_id, api_client["id"])
 
         @ctx.puts(@ctx.message("apps.create.info.created", form.title, partners_url))
-        @ctx.puts(@ctx.message("apps.create.info.serve", form.name, ShopifyCli::TOOL_NAME, "node"))
-        unless ShopifyCli::Shopifolk.acting_as_shopify_organization?
+        @ctx.puts(@ctx.message("apps.create.info.serve", form.name, ShopifyCLI::TOOL_NAME, "node"))
+        unless ShopifyCLI::Shopifolk.acting_as_shopify_organization?
           @ctx.puts(@ctx.message("apps.create.info.install", partners_url, form.title))
         end
       end
 
       def self.help
-        ShopifyCli::Context.message("node.create.help", ShopifyCli::TOOL_NAME, ShopifyCli::TOOL_NAME)
+        ShopifyCLI::Context.message("node.create.help", ShopifyCLI::TOOL_NAME, ShopifyCLI::TOOL_NAME)
       end
 
       private
@@ -101,12 +101,12 @@ module Node
       end
 
       def build(name)
-        ShopifyCli::Git.clone("https://github.com/Shopify/shopify-app-node.git", name)
+        ShopifyCLI::Git.clone("https://github.com/Shopify/shopify-app-node.git", name)
 
         @ctx.root = File.join(@ctx.root, name)
 
         set_npm_config
-        ShopifyCli::JsDeps.install(@ctx, !options.flags[:verbose].nil?)
+        ShopifyCLI::JsDeps.install(@ctx, !options.flags[:verbose].nil?)
 
         begin
           @ctx.rm_r(".git")

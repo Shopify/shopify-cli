@@ -11,8 +11,8 @@ module Node
         def setup
           super
           File.stubs(:exist?)
-          File.stubs(:exist?).with(File.join(ShopifyCli::ROOT, "lib", "project_types", "node", "cli.rb")).returns(true)
-          ShopifyCli::Context.any_instance.stubs(:os).returns(:mac)
+          File.stubs(:exist?).with(File.join(ShopifyCLI::ROOT, "lib", "project_types", "node", "cli.rb")).returns(true)
+          ShopifyCLI::Context.any_instance.stubs(:os).returns(:mac)
           stub_successful_heroku_flow
         end
 
@@ -33,7 +33,7 @@ module Node
           expects_heroku_installed(status: false)
           expects_heroku_download(status: false)
 
-          assert_raises ShopifyCli::Abort do
+          assert_raises ShopifyCLI::Abort do
             Node::Command::Deploy::Heroku.start(@context)
           end
         end
@@ -43,7 +43,7 @@ module Node
           expects_heroku_download_exists(status: false)
           expects_heroku_download(status: true)
 
-          assert_raises ShopifyCli::Abort do
+          assert_raises ShopifyCLI::Abort do
             Node::Command::Deploy::Heroku.start(@context)
           end
         end
@@ -68,7 +68,7 @@ module Node
           expects_heroku_installed(status: false, twice: true)
           expects_tar_heroku(status: false)
 
-          assert_raises ShopifyCli::Abort do
+          assert_raises ShopifyCLI::Abort do
             Node::Command::Deploy::Heroku.start(@context)
           end
         end
@@ -76,7 +76,7 @@ module Node
         def test_call_raises_if_git_isnt_inited
           expects_git_init_heroku(status: false, commits: false)
 
-          assert_raises ShopifyCli::Abort do
+          assert_raises ShopifyCLI::Abort do
             Node::Command::Deploy::Heroku.start(@context)
           end
         end
@@ -84,7 +84,7 @@ module Node
         def test_call_raises_if_git_is_inited_but_there_are_no_commits
           expects_git_init_heroku(status: true, commits: false)
 
-          assert_raises ShopifyCli::Abort do
+          assert_raises ShopifyCLI::Abort do
             Node::Command::Deploy::Heroku.start(@context)
           end
         end
@@ -108,7 +108,7 @@ module Node
           expects_heroku_whoami(status: false)
           expects_heroku_login(status: false)
 
-          assert_raises ShopifyCli::Abort do
+          assert_raises ShopifyCLI::Abort do
             Node::Command::Deploy::Heroku.start(@context)
           end
         end
@@ -148,7 +148,7 @@ module Node
             .with(@context.message("node.deploy.heroku.app.name"))
             .returns("app-name")
 
-          assert_raises ShopifyCli::Abort do
+          assert_raises ShopifyCLI::Abort do
             Node::Command::Deploy::Heroku.start(@context)
           end
         end
@@ -172,7 +172,7 @@ module Node
             .with(@context.message("node.deploy.heroku.app.no_apps_found"))
             .returns(:new)
 
-          assert_raises ShopifyCli::Abort do
+          assert_raises ShopifyCLI::Abort do
             Node::Command::Deploy::Heroku.start(@context)
           end
         end
@@ -199,7 +199,7 @@ module Node
         def test_call_raises_if_finding_branches_fails
           expects_git_branch(status: false, multiple: false)
 
-          assert_raises ShopifyCli::Abort do
+          assert_raises ShopifyCLI::Abort do
             Node::Command::Deploy::Heroku.start(@context)
           end
         end
@@ -213,7 +213,7 @@ module Node
         def test_call_raises_if_deploy_to_heroku_fails
           expects_git_push_heroku(status: false, branch: "master:master")
 
-          assert_raises ShopifyCli::Abort do
+          assert_raises ShopifyCLI::Abort do
             Node::Command::Deploy::Heroku.start(@context)
           end
         end

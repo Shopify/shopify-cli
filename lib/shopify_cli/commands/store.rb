@@ -1,14 +1,14 @@
 require "shopify_cli"
 
-module ShopifyCli
+module ShopifyCLI
   module Commands
-    class Store < ShopifyCli::Command
+    class Store < ShopifyCLI::Command
       def call(_args, _name)
-        @ctx.puts(@ctx.message("core.store.shop", ShopifyCli::AdminAPI.get_shop_or_abort(@ctx)))
+        @ctx.puts(@ctx.message("core.store.shop", ShopifyCLI::AdminAPI.get_shop_or_abort(@ctx)))
       end
 
       def self.help
-        ShopifyCli::Context.message("core.store.help", ShopifyCli::TOOL_NAME)
+        ShopifyCLI::Context.message("core.store.help", ShopifyCLI::TOOL_NAME)
       end
     end
   end

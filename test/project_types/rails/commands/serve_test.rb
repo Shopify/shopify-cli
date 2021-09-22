@@ -9,15 +9,15 @@ module Rails
       def setup
         super
         project_context("app_types", "rails")
-        ShopifyCli::Tasks::EnsureDevStore.stubs(:call)
-        ShopifyCli::Tasks::EnsureProjectType.stubs(:call)
+        ShopifyCLI::Tasks::EnsureDevStore.stubs(:call)
+        ShopifyCLI::Tasks::EnsureProjectType.stubs(:call)
         @context.stubs(:system)
       end
 
       def test_server_command
-        ShopifyCli::Tunnel.stubs(:start).returns("https://example.com")
-        ShopifyCli::Tasks::UpdateDashboardURLS.expects(:call)
-        ShopifyCli::Resources::EnvFile.any_instance.expects(:update)
+        ShopifyCLI::Tunnel.stubs(:start).returns("https://example.com")
+        ShopifyCLI::Tasks::UpdateDashboardURLS.expects(:call)
+        ShopifyCLI::Resources::EnvFile.any_instance.expects(:update)
         @context.stubs(:getenv).with("GEM_HOME").returns("/gem/path")
         @context.stubs(:getenv).with("GEM_PATH").returns("/gem/path")
         @context.expects(:system).with(
@@ -35,9 +35,9 @@ module Rails
       end
 
       def test_server_command_with_invalid_host_url
-        ShopifyCli::Tunnel.stubs(:start).returns("garbage://example.com")
-        ShopifyCli::Tasks::UpdateDashboardURLS.expects(:call).never
-        ShopifyCli::Resources::EnvFile.any_instance.expects(:update).never
+        ShopifyCLI::Tunnel.stubs(:start).returns("garbage://example.com")
+        ShopifyCLI::Tasks::UpdateDashboardURLS.expects(:call).never
+        ShopifyCLI::Resources::EnvFile.any_instance.expects(:update).never
         @context.expects(:system).with(
           "bin/rails server",
           env: {
@@ -49,15 +49,15 @@ module Rails
           }
         ).never
 
-        assert_raises ShopifyCli::Abort do
+        assert_raises ShopifyCLI::Abort do
           Rails::Command::Serve.new(@context).call
         end
       end
 
       def test_open_while_run
-        ShopifyCli::Tunnel.stubs(:start).returns("https://example.com")
-        ShopifyCli::Tasks::UpdateDashboardURLS.expects(:call)
-        ShopifyCli::Resources::EnvFile.any_instance.expects(:update).with(
+        ShopifyCLI::Tunnel.stubs(:start).returns("https://example.com")
+        ShopifyCLI::Tasks::UpdateDashboardURLS.expects(:call)
+        ShopifyCLI::Resources::EnvFile.any_instance.expects(:update).with(
           @context, :host, "https://example.com"
         )
         @context.expects(:puts).with(
@@ -69,9 +69,9 @@ module Rails
       end
 
       def test_update_env_with_host
-        ShopifyCli::Tunnel.expects(:start).never
-        ShopifyCli::Tasks::UpdateDashboardURLS.expects(:call)
-        ShopifyCli::Resources::EnvFile.any_instance.expects(:update).with(
+        ShopifyCLI::Tunnel.expects(:start).never
+        ShopifyCLI::Tasks::UpdateDashboardURLS.expects(:call)
+        ShopifyCLI::Resources::EnvFile.any_instance.expects(:update).with(
           @context, :host, "https://example-foo.com"
         )
         command = Rails::Command::Serve.new(@context)

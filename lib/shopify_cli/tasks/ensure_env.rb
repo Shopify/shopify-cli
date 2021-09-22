@@ -1,8 +1,8 @@
 require "shopify_cli"
 
-module ShopifyCli
+module ShopifyCLI
   module Tasks
-    class EnsureEnv < ShopifyCli::Task
+    class EnsureEnv < ShopifyCLI::Task
       def call(ctx, regenerate: false, required: [:api_key, :secret])
         @ctx = ctx
         env_data =
@@ -50,7 +50,7 @@ module ShopifyCli
             handler.option(@ctx.message("core.tasks.ensure_env.app_type.select_public")) { "public" }
             handler.option(@ctx.message("core.tasks.ensure_env.app_type.select_custom")) { "custom" }
           end
-          ShopifyCli::Tasks::CreateApiClient.call(@ctx, org_id: org_id, title: title, type: type)
+          ShopifyCLI::Tasks::CreateApiClient.call(@ctx, org_id: org_id, title: title, type: type)
         else
           CLI::UI::Prompt.ask(@ctx.message("core.tasks.ensure_env.app_select")) do |handler|
             apps.each { |app| handler.option(app["title"]) { app } }

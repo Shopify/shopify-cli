@@ -1,13 +1,13 @@
 require "test_helper"
 
-module ShopifyCli
+module ShopifyCLI
   class FormTest < MiniTest::Test
-    class TestForm < ShopifyCli::Form
+    class TestForm < ShopifyCLI::Form
       positional_arguments :one, :two
       flag_arguments :three, :four
 
       def ask
-        raise ShopifyCli::Abort, "I was asked to raise" if three == "raise"
+        raise ShopifyCLI::Abort, "I was asked to raise" if three == "raise"
       end
     end
 

@@ -2,7 +2,7 @@ require "test_helper"
 require "ostruct"
 require "webrick"
 
-module ShopifyCli
+module ShopifyCLI
   module IdentityAuthTests
     class ServletTest < MiniTest::Test
       Request = Struct.new(:query)

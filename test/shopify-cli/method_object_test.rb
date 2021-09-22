@@ -1,9 +1,9 @@
 require "test_helper"
 
-module ShopifyCli
+module ShopifyCLI
   class MethodObjectTest < Minitest::Test
     class GenerateHelloWorld
-      include ShopifyCli::MethodObject
+      include ShopifyCLI::MethodObject
 
       def call(*)
         "Hello World"
@@ -11,7 +11,7 @@ module ShopifyCli
     end
 
     class GenerateNumber
-      include ShopifyCli::MethodObject
+      include ShopifyCLI::MethodObject
 
       property :range, accepts: Range
 
@@ -21,7 +21,7 @@ module ShopifyCli
     end
 
     class Upcase
-      include ShopifyCli::MethodObject
+      include ShopifyCLI::MethodObject
 
       def call(string)
         string.upcase
@@ -29,7 +29,7 @@ module ShopifyCli
     end
 
     class ToJson
-      include ShopifyCli::MethodObject
+      include ShopifyCLI::MethodObject
 
       def call(**data)
         data.to_json
@@ -37,7 +37,7 @@ module ShopifyCli
     end
 
     class BuildArray
-      include ShopifyCli::MethodObject
+      include ShopifyCLI::MethodObject
 
       def call(*elements)
         elements
@@ -45,7 +45,7 @@ module ShopifyCli
     end
 
     class TransformArray
-      include ShopifyCli::MethodObject
+      include ShopifyCLI::MethodObject
 
       def call(*elements, &transform)
         elements.map(&transform)
@@ -54,7 +54,7 @@ module ShopifyCli
 
     def test_returns_a_result
       GenerateHelloWorld.new.call.tap do |result|
-        assert_kind_of(ShopifyCli::Result::Success, result)
+        assert_kind_of(ShopifyCLI::Result::Success, result)
         assert_equal "Hello World", result.value
       end
     end

@@ -110,17 +110,17 @@ namespace :package do
 
   desc("Builds a Debian package of the CLI")
   task :debian do
-    ShopifyCli::Packager.new.build_debian
+    ShopifyCLI::Packager.new.build_debian
   end
 
   desc("Builds an RPM package of the CLI")
   task :rpm do
-    ShopifyCli::Packager.new.build_rpm
+    ShopifyCLI::Packager.new.build_rpm
   end
 
   desc("Builds a Homebrew package of the CLI")
   task :homebrew do
-    ShopifyCli::Packager.new.build_homebrew
+    ShopifyCLI::Packager.new.build_homebrew
   end
 end
 

@@ -6,7 +6,7 @@ module Rails
     class DeployTest < MiniTest::Test
       def setup
         super
-        ShopifyCli::Tasks::EnsureProjectType.expects(:call).with(@context, :rails)
+        ShopifyCLI::Tasks::EnsureProjectType.expects(:call).with(@context, :rails)
       end
 
       def test_without_arguments_calls_help

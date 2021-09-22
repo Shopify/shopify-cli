@@ -2,7 +2,7 @@
 require "shopify_cli"
 require "optparse"
 
-module ShopifyCli
+module ShopifyCLI
   class Options
     include SmartProperties
 

@@ -5,7 +5,7 @@ require "rbconfig"
 require "net/http"
 require "json"
 
-module ShopifyCli
+module ShopifyCLI
   ##
   # Context captures a lot about the current running command. It captures the
   # environment, output, system and file operations. It is useful to have the
@@ -97,7 +97,7 @@ module ShopifyCli
     # See `#development?` for checking for development environment.
     #
     def system?
-      !Dir.exist?(File.join(ShopifyCli::ROOT, "test"))
+      !Dir.exist?(File.join(ShopifyCLI::ROOT, "test"))
     end
 
     # will return true if the cli is running on your development instance.
@@ -382,7 +382,7 @@ module ShopifyCli
     # * `text` - a string message to output
     #
     def abort(text)
-      raise ShopifyCli::Abort, "{{x}} #{text}"
+      raise ShopifyCLI::Abort, "{{x}} #{text}"
     end
 
     # outputs a message, prefixed by a red `DEBUG` tag. This will only output to
@@ -559,7 +559,7 @@ module ShopifyCli
       if (time_of_last_check + VERSION_CHECK_INTERVAL) < (now = Time.now.to_i)
         update_time_of_last_check(now)
         latest_version = retrieve_latest_gem_version
-        latest_version unless latest_version == ShopifyCli::VERSION
+        latest_version unless latest_version == ShopifyCLI::VERSION
       end
     end
 
@@ -600,11 +600,11 @@ module ShopifyCli
     end
 
     def time_of_last_check
-      (val = ShopifyCli::Config.get(VERSION_CHECK_SECTION, LAST_CHECKED_AT_FIELD)) ? val.to_i : 0
+      (val = ShopifyCLI::Config.get(VERSION_CHECK_SECTION, LAST_CHECKED_AT_FIELD)) ? val.to_i : 0
     end
 
     def update_time_of_last_check(time)
-      ShopifyCli::Config.set(VERSION_CHECK_SECTION, LAST_CHECKED_AT_FIELD, time)
+      ShopifyCLI::Config.set(VERSION_CHECK_SECTION, LAST_CHECKED_AT_FIELD, time)
     end
   end
 end

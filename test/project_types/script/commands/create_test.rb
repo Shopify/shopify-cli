@@ -11,7 +11,7 @@ module Script
 
       def setup
         super
-        ShopifyCli::Core::Monorail.stubs(:log).yields
+        ShopifyCLI::Core::Monorail.stubs(:log).yields
         @context = TestHelpers::FakeContext.new
         @language = "assemblyscript"
         @script_name = "name"
@@ -23,7 +23,7 @@ module Script
           script_name: @script_name
         )
         Layers::Application::ExtensionPoints.stubs(:languages).returns(%w(assemblyscript))
-        ShopifyCli::Tasks::EnsureAuthenticated.stubs(:call)
+        ShopifyCLI::Tasks::EnsureAuthenticated.stubs(:call)
       end
 
       def test_prints_help_with_no_name_argument
@@ -68,9 +68,9 @@ module Script
 
       def test_help
         Script::Layers::Application::ExtensionPoints.expects(:available_types).returns(%w(ep1 ep2))
-        ShopifyCli::Context
+        ShopifyCLI::Context
           .expects(:message)
-          .with("script.create.help", ShopifyCli::TOOL_NAME, "{{cyan:ep1}}, {{cyan:ep2}}")
+          .with("script.create.help", ShopifyCLI::TOOL_NAME, "{{cyan:ep1}}, {{cyan:ep2}}")
         Script::Command::Create.help
       end
 

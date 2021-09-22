@@ -1,7 +1,7 @@
 module Extension
   module Tasks
     class ConfigureOptions
-      include ShopifyCli::MethodObject
+      include ShopifyCLI::MethodObject
 
       def call(specification_attribute_sets)
         specification_attribute_sets.each do |attributes|

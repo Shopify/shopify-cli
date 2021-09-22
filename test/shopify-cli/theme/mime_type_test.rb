@@ -2,7 +2,7 @@
 require "test_helper"
 require "shopify_cli/theme/mime_type"
 
-module ShopifyCli
+module ShopifyCLI
   module Theme
     class MimeTypeTest < Minitest::Test
       def test_by_filename

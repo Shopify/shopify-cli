@@ -8,10 +8,10 @@ module Extension
 
       property! :specification_handler, accepts: Extension::Models::SpecificationHandlers::Default
       property! :argo_runtime, accepts: -> (runtime) { runtime.class < Features::Runtimes::Base }
-      property! :context, accepts: ShopifyCli::Context
+      property! :context, accepts: ShopifyCLI::Context
       property! :port, accepts: Integer, default: 39351
       property  :tunnel_url, accepts: String, default: nil
-      property! :js_system, accepts: ->(jss) { jss.respond_to?(:call) }, default: ShopifyCli::JsSystem
+      property! :js_system, accepts: ->(jss) { jss.respond_to?(:call) }, default: ShopifyCLI::JsSystem
       property :resource_url, accepts: String, default: nil
 
       def call
@@ -58,8 +58,8 @@ module Extension
 
         return if required_fields.none?
 
-        ShopifyCli::Tasks::EnsureEnv.call(context, required: required_fields)
-        ShopifyCli::Tasks::EnsureDevStore.call(context) if required_fields.include?(:shop)
+        ShopifyCLI::Tasks::EnsureEnv.call(context, required: required_fields)
+        ShopifyCLI::Tasks::EnsureDevStore.call(context) if required_fields.include?(:shop)
 
         project = ExtensionProject.current
         ensure_resource_resource_url! if specification_handler.supplies_resource_url?
@@ -90,7 +90,7 @@ module Extension
       def ensure_resource_resource_url!
         project = ExtensionProject.current(force_reload: true)
 
-        ShopifyCli::Result
+        ShopifyCLI::Result
           .wrap(project.resource_url)
           .rescue { specification_handler.build_resource_url(shop: project.env.shop, context: context) }
           .then(&method(:persist_resource_url))

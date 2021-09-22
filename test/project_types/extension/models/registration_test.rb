@@ -6,7 +6,7 @@ module Extension
     class RegistrationTest < MiniTest::Test
       def setup
         super
-        ShopifyCli::ProjectType.load_type(:extension)
+        ShopifyCLI::ProjectType.load_type(:extension)
       end
 
       def test_valid_title_returns_true_for_valid_title

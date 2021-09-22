@@ -76,7 +76,7 @@ module Extension
           cli_package_name = specification.features.argo&.cli_package_name
           return unless cli_package_name
 
-          js_system = ShopifyCli::JsSystem.new(ctx: context)
+          js_system = ShopifyCLI::JsSystem.new(ctx: context)
           Tasks::FindNpmPackages.exactly_one_of(cli_package_name, js_system: js_system)
             .unwrap { |_e| context.abort(context.message("errors.package_not_found", cli_package_name)) }
         end
@@ -87,7 +87,7 @@ module Extension
           if (str = messages.dig(*key_parts))
             str % params
           else
-            ShopifyCli::Context.message(key, *params)
+            ShopifyCLI::Context.message(key, *params)
           end
         end
 

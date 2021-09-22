@@ -2,7 +2,7 @@ require_relative "lib/shopify_cli/version"
 
 Gem::Specification.new do |spec|
   spec.name = "shopify-cli"
-  spec.version = ShopifyCli::VERSION
+  spec.version = ShopifyCLI::VERSION
   spec.authors = ["Shopify"]
   spec.email = ["dev-tools-education@shopify.com"]
   spec.license = "MIT"

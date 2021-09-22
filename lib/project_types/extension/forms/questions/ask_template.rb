@@ -2,7 +2,7 @@ module Extension
   module Forms
     module Questions
       class AskTemplate
-        include ShopifyCli::MethodObject
+        include ShopifyCLI::MethodObject
 
         TEMPLATE_REQUIRED_TYPES = [
           "checkout_ui_extension",
@@ -28,7 +28,7 @@ module Extension
         end
 
         def extension_server_beta?
-          ShopifyCli::Shopifolk.check && ShopifyCli::Feature.enabled?(:extension_server_beta)
+          ShopifyCLI::Shopifolk.check && ShopifyCLI::Feature.enabled?(:extension_server_beta)
         end
 
         def choose_interactively

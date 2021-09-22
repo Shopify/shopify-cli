@@ -3,7 +3,7 @@
 require "webrick"
 require "stringio"
 
-module ShopifyCli
+module ShopifyCLI
   module Theme
     module DevServer
       # WEBrick will sometimes cause a fatal deadlock error on shutdown.

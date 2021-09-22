@@ -3,7 +3,7 @@ require "net/http"
 require "stringio"
 require "time"
 
-module ShopifyCli
+module ShopifyCLI
   module Theme
     module DevServer
       HOP_BY_HOP_HEADERS = [
@@ -79,7 +79,7 @@ module ShopifyCli
         end
 
         def bearer_token
-          ShopifyCli::DB.get(:storefront_renderer_production_exchange_token) ||
+          ShopifyCLI::DB.get(:storefront_renderer_production_exchange_token) ||
             raise(KeyError, "storefront_renderer_production_exchange_token missing")
         end
 
