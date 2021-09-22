@@ -28,7 +28,8 @@ module Node
       end
 
       def test_prints_help_with_no_name_argument
-        io = capture_io { run_cmd("node create --help") }
+        skip
+        io = capture_io { run_cmd("app node create --help") }
         assert_match(CLI::UI.fmt(Node::Command::Create.help), io.join)
       end
 
@@ -222,7 +223,7 @@ module Node
       private
 
       def perform_command_snake_case
-        run_cmd("node create \
+        run_cmd("app node create \
           --name=test-app \
           --type=public \
           --organization_id=42 \
@@ -230,7 +231,7 @@ module Node
       end
 
       def perform_command
-        run_cmd("node create \
+        run_cmd("app node create \
           --name=test-app \
           --type=public \
           --organization-id=42 \

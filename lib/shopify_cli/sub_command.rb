@@ -6,7 +6,7 @@ module ShopifyCLI
     class << self
       def call(args, command_name, parent_command)
         cmd = new(@ctx)
-        args = cmd.options.parse(@_options, args[1..-1] || [])
+        args = cmd.options.parse(@_options, args || [])
         return call_help(parent_command, command_name) if cmd.options.help
         run_prerequisites
 

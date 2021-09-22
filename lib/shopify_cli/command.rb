@@ -17,6 +17,7 @@ module ShopifyCLI
         if subcommand
           subcommand.ctx = @ctx
           subcommand.task_registry = @task_registry
+
           subcommand.call(args.drop(1), resolved_name, command_name)
         else
           cmd = new(@ctx)
