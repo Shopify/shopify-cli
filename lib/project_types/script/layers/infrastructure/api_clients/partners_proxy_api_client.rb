@@ -12,8 +12,10 @@ module Script
             proxy_response = ShimAPI.query(@ctx, query_name, api_key: @api_key, variables: variables.to_json)
             raise_if_graphql_failed(proxy_response)
 
-            response = proxy_response["data"]["scriptServiceProxy"]
-            JSON.parse(response) if response
+            response = proxy_response.dig("data", "scriptServiceProxy")
+            raise Errors::InvalidResponseError unless response
+
+            JSON.parse(response)
           end
 
           private
