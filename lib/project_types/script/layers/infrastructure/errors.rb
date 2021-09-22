@@ -43,6 +43,7 @@ module Script
         class DependencyInstallError < ScriptProjectError; end
         class DeprecatedEPError < ScriptProjectError; end
         class EmptyResponseError < ScriptProjectError; end
+        class InvalidResponseError < ScriptProjectError; end
         class ForbiddenError < ScriptProjectError; end
         class InvalidContextError < ScriptProjectError; end
 
