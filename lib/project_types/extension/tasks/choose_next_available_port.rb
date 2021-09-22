@@ -5,7 +5,7 @@ require "socket"
 module Extension
   module Tasks
     class ChooseNextAvailablePort
-      include ShopifyCli::MethodObject
+      include ShopifyCLI::MethodObject
 
       property! :from
       property! :to, default: -> { from + 10 }

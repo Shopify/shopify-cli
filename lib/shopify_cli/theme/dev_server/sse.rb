@@ -1,7 +1,7 @@
 # frozen_string_literal: true
 require "thread"
 
-module ShopifyCli
+module ShopifyCLI
   module Theme
     module DevServer
       # Server-Sent events implementation for Rack.

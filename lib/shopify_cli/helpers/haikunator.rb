@@ -23,7 +23,7 @@
 
 require "securerandom"
 
-module ShopifyCli
+module ShopifyCLI
   module Helpers
     module Haikunator
       class << self

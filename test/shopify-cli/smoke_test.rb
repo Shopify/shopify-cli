@@ -1,11 +1,11 @@
 require "test_helper"
 
-module ShopifyCli
+module ShopifyCLI
   class SmokeTest < MiniTest::Test
     def test_exit_non_zero
       assert_nothing_raised do
         capture_io do
-          ShopifyCli::Core::EntryPoint.call(["help"])
+          ShopifyCLI::Core::EntryPoint.call(["help"])
         end
       end
     end

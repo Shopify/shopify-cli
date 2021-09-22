@@ -1,7 +1,7 @@
 # frozen_string_literal: true
 require "test_helper"
 
-module ShopifyCli
+module ShopifyCLI
   class EnvironmentTest < MiniTest::Test
     def test_use_local_partners_instance_returns_true_when_the_env_variable_is_set
       # Given

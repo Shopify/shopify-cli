@@ -24,7 +24,7 @@ module Extension
       end
 
       def config(context)
-        js_system = ShopifyCli::JsSystem.new(ctx: context)
+        js_system = ShopifyCLI::JsSystem.new(ctx: context)
         if js_system.package_manager == "yarn"
           run_yarn_install(context, js_system)
           run_yarn_run_script(context, js_system)
@@ -42,7 +42,7 @@ module Extension
       end
 
       def renderer_package(context)
-        js_system = ShopifyCli::JsSystem.new(ctx: context)
+        js_system = ShopifyCLI::JsSystem.new(ctx: context)
         Tasks::FindNpmPackages
           .exactly_one_of(renderer_package_name, js_system: js_system)
           .unwrap { |err| raise err }

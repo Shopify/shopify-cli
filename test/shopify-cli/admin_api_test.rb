@@ -1,6 +1,6 @@
 require "test_helper"
 
-module ShopifyCli
+module ShopifyCLI
   class AdminAPITest < MiniTest::Test
     include TestHelpers::Project
 
@@ -15,7 +15,7 @@ module ShopifyCli
         .with("api_versions")
         .returns(JSON.parse(File.read(File.join(FIXTURE_DIR, "api/versions.json"))))
 
-      ShopifyCli::DB.expects(:get).with(:shopify_exchange_token).returns("token123").twice
+      ShopifyCLI::DB.expects(:get).with(:shopify_exchange_token).returns("token123").twice
       api_stub = stub
       AdminAPI.expects(:new).with(
         ctx: @context,
@@ -27,7 +27,7 @@ module ShopifyCli
     end
 
     def test_query_calls_admin_api
-      ShopifyCli::DB.expects(:get).with(:shopify_exchange_token).returns("token123")
+      ShopifyCLI::DB.expects(:get).with(:shopify_exchange_token).returns("token123")
       api_stub = stub
       AdminAPI.expects(:new).with(
         ctx: @context,
@@ -62,7 +62,7 @@ module ShopifyCli
     end
 
     def test_query_can_reauth
-      ShopifyCli::DB.stubs(:get).with(:shopify_exchange_token).returns("token123").then.returns("token456")
+      ShopifyCLI::DB.stubs(:get).with(:shopify_exchange_token).returns("token123").then.returns("token456")
       api_stub = stub
       AdminAPI.expects(:new).with(
         ctx: @context,
@@ -78,7 +78,7 @@ module ShopifyCli
       api_stub.expects(:query).raises(API::APIRequestUnauthorizedError)
 
       @identity_auth_client = mock
-      ShopifyCli::IdentityAuth
+      ShopifyCLI::IdentityAuth
         .expects(:new)
         .with(ctx: @context)
         .returns(@identity_auth_client)
@@ -92,7 +92,7 @@ module ShopifyCli
     end
 
     def test_rest_request_can_reauth
-      ShopifyCli::DB.expects(:get).with(:shopify_exchange_token).returns("token123").twice
+      ShopifyCLI::DB.expects(:get).with(:shopify_exchange_token).returns("token123").twice
       api_stub = stub
       AdminAPI.expects(:new).with(
         ctx: @context,
@@ -105,7 +105,7 @@ module ShopifyCli
       api_stub.expects(:request).raises(API::APIRequestUnauthorizedError)
 
       @identity_auth_client = mock
-      ShopifyCli::IdentityAuth
+      ShopifyCLI::IdentityAuth
         .expects(:new)
         .with(ctx: @context)
         .returns(@identity_auth_client)
@@ -123,7 +123,7 @@ module ShopifyCli
     end
 
     def test_query_calls_admin_api_with_different_shop
-      ShopifyCli::DB.expects(:get).with(:shopify_exchange_token).returns("token123")
+      ShopifyCLI::DB.expects(:get).with(:shopify_exchange_token).returns("token123")
       api_stub = stub
       AdminAPI.expects(:new).with(
         ctx: @context,
@@ -137,7 +137,7 @@ module ShopifyCli
     end
 
     def test_query_fails_gracefully_when_unable_to_authenticate
-      ShopifyCli::DB.expects(:get).with(:shopify_exchange_token).returns("token123").twice
+      ShopifyCLI::DB.expects(:get).with(:shopify_exchange_token).returns("token123").twice
       api_stub = stub
       AdminAPI.expects(:new).with(
         ctx: @context,
@@ -147,10 +147,10 @@ module ShopifyCli
       api_stub.expects(:query).raises(API::APIRequestUnauthorizedError).twice
 
       @identity_auth_client = mock
-      ShopifyCli::IdentityAuth.expects(:new).returns(@identity_auth_client)
+      ShopifyCLI::IdentityAuth.expects(:new).returns(@identity_auth_client)
       @identity_auth_client.expects(:reauthenticate)
 
-      io = capture_io_and_assert_raises(ShopifyCli::Abort) do
+      io = capture_io_and_assert_raises(ShopifyCLI::Abort) do
         AdminAPI.query(@context, "query", shop: "shop.myshopify.com", api_version: "2019-04")
       end
       assert_message_output(
@@ -171,15 +171,15 @@ module ShopifyCli
       unstable_stub.expects(:query)
         .with("api_versions")
         .raises(API::APIRequestForbiddenError)
-      ShopifyCli::DB.expects(:get).with(:shopify_exchange_token).returns("token123").twice
+      ShopifyCLI::DB.expects(:get).with(:shopify_exchange_token).returns("token123").twice
 
-      io = capture_io_and_assert_raises(ShopifyCli::Abort) do
+      io = capture_io_and_assert_raises(ShopifyCLI::Abort) do
         AdminAPI.query(@context, "query", shop: "my-test-shop.myshopify.com")
       end
       assert_message_output(
         io: io,
         expected_content: [
-          @context.message("core.api.error.forbidden", ShopifyCli::TOOL_NAME),
+          @context.message("core.api.error.forbidden", ShopifyCLI::TOOL_NAME),
         ]
       )
     end

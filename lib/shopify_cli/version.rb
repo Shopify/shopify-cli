@@ -1,3 +1,3 @@
-module ShopifyCli
+module ShopifyCLI
   VERSION = "2.4.0"
 end

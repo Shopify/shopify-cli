@@ -14,7 +14,7 @@ require_relative "dev_server/certificate_manager"
 
 require "pathname"
 
-module ShopifyCli
+module ShopifyCLI
   module Theme
     module DevServer
       class << self
@@ -80,8 +80,8 @@ module ShopifyCli
           )
           watcher.stop
 
-        rescue ShopifyCli::API::APIRequestForbiddenError,
-               ShopifyCli::API::APIRequestUnauthorizedError
+        rescue ShopifyCLI::API::APIRequestForbiddenError,
+               ShopifyCLI::API::APIRequestUnauthorizedError
           @ctx.abort("You are not authorized to edit themes on #{theme.shop}.\n" \
                      "Make sure you are a user of that store, and allowed to edit themes.")
         end

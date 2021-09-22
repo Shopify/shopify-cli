@@ -1,7 +1,7 @@
 # frozen_string_literal: true
 require "project_types/node/test_helper"
 
-module ShopifyCli
+module ShopifyCLI
   class JsDepsTest < MiniTest::Test
     def setup
       super

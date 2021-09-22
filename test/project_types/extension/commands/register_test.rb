@@ -9,8 +9,8 @@ module Extension
 
       def setup
         super
-        ShopifyCli::ProjectType.load_type(:extension)
-        ShopifyCli::Tasks::EnsureProjectType.stubs(:call)
+        ShopifyCLI::ProjectType.load_type(:extension)
+        ShopifyCLI::Tasks::EnsureProjectType.stubs(:call)
         @project = ExtensionTestHelpers.fake_extension_project(with_mocks: true, registration_id: nil)
         @specification_handler = ExtensionTestHelpers.test_specification_handler
 
@@ -27,7 +27,7 @@ module Extension
         Tasks::CreateExtension.any_instance.expects(:call).never
         ExtensionProject.expects(:write_env_file).never
 
-        io = capture_io_and_assert_raises(ShopifyCli::Abort) { run_register_command }
+        io = capture_io_and_assert_raises(ShopifyCLI::Abort) { run_register_command }
 
         assert_message_output(io: io, expected_content: @context.message("register.already_registered"))
       end
@@ -43,7 +43,7 @@ module Extension
           .returns(false)
           .once
 
-        io = capture_io_and_assert_raises(ShopifyCli::AbortSilent) { run_register_command }
+        io = capture_io_and_assert_raises(ShopifyCLI::AbortSilent) { run_register_command }
 
         assert_message_output(io: io, expected_content: [
           @context.message("register.confirm_abort"),

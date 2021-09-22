@@ -8,7 +8,7 @@ module Extension
 
       def setup
         super
-        ShopifyCli::ProjectType.load_type(:extension)
+        ShopifyCLI::ProjectType.load_type(:extension)
 
         @test_user_errors = Object.new.extend(Tasks::UserErrors)
       end

@@ -1,7 +1,7 @@
 # frozen_string_literal: true
 require "test_helper"
 
-module ShopifyCli
+module ShopifyCLI
   class ContextTest < MiniTest::Test
     include TestHelpers::FakeFS
 
@@ -110,10 +110,10 @@ module ShopifyCli
     end
 
     def test_check_for_new_version_if_no_config_section
-      ShopifyCli::Config
+      ShopifyCLI::Config
         .expects(:get)
         .returns(false)
-      ShopifyCli::Config
+      ShopifyCLI::Config
         .expects(:set)
         .once
       mock_rubygems_https_call(response_body: "{\"version\":\"99.99.99\"}")
@@ -122,22 +122,22 @@ module ShopifyCli
     end
 
     def test_no_check_for_new_version_if_config_section_and_interval_not_passed
-      ShopifyCli::Config
+      ShopifyCLI::Config
         .expects(:get)
         .returns(Time.now.to_i - 3600)
       Net::HTTP
         .expects(:get_response)
-        .with(ShopifyCli::Context::GEM_LATEST_URI)
+        .with(ShopifyCLI::Context::GEM_LATEST_URI)
         .never
 
       refute(@ctx.new_version)
     end
 
     def test_check_for_new_version_if_config_section_and_interval_passed
-      ShopifyCli::Config
+      ShopifyCLI::Config
         .expects(:get)
         .returns(Time.now.to_i - 86500)
-      ShopifyCli::Config
+      ShopifyCLI::Config
         .expects(:set)
         .once
       mock_rubygems_https_call(response_body: "{\"version\":\"99.99.99\"}")
@@ -146,10 +146,10 @@ module ShopifyCli
     end
 
     def test_check_for_new_version_returns_nil_if_https_call_returns_garbage
-      ShopifyCli::Config
+      ShopifyCLI::Config
         .expects(:get)
         .returns(Time.now.to_i - 86500)
-      ShopifyCli::Config
+      ShopifyCLI::Config
         .expects(:set)
         .once
       mock_rubygems_https_call(response_body: "ad098q907b\n90979a*(&*^*%klhfadkh}")
@@ -158,15 +158,15 @@ module ShopifyCli
     end
 
     def test_check_for_new_version_returns_nil_if_https_call_times_out
-      ShopifyCli::Config
+      ShopifyCLI::Config
         .expects(:get)
         .returns(Time.now.to_i - 86500)
-      ShopifyCli::Config
+      ShopifyCLI::Config
         .expects(:set)
         .once
       Net::HTTP
         .expects(:get_response)
-        .with(ShopifyCli::Context::GEM_LATEST_URI)
+        .with(ShopifyCLI::Context::GEM_LATEST_URI)
         .raises(Net::ReadTimeout)
 
       refute(@ctx.new_version)
@@ -175,7 +175,7 @@ module ShopifyCli
     private
 
     def mock_rubygems_https_call(response_body:)
-      stub_request(:get, ShopifyCli::Context::GEM_LATEST_URI)
+      stub_request(:get, ShopifyCLI::Context::GEM_LATEST_URI)
         .with(headers: {
           "Accept" => "*/*",
           "Accept-Encoding" => "gzip;q=1.0,deflate;q=0.6,identity;q=0.3",

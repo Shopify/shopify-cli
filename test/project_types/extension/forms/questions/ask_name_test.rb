@@ -8,7 +8,7 @@ module Extension
 
         def setup
           super
-          ShopifyCli::ProjectType.load_type(:extension)
+          ShopifyCLI::ProjectType.load_type(:extension)
         end
 
         def test_accepts_a_valid_name_as_property

@@ -1,14 +1,14 @@
 require "shopify_cli"
 
-module ShopifyCli
+module ShopifyCLI
   module Commands
-    class Version < ShopifyCli::Command
+    class Version < ShopifyCLI::Command
       def self.help
-        ShopifyCli::Context.message("core.version.help", ShopifyCli::TOOL_NAME)
+        ShopifyCLI::Context.message("core.version.help", ShopifyCLI::TOOL_NAME)
       end
 
       def call(_args, _name)
-        @ctx.puts(ShopifyCli::VERSION.to_s)
+        @ctx.puts(ShopifyCLI::VERSION.to_s)
       end
     end
   end

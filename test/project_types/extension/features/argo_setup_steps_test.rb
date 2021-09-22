@@ -9,12 +9,12 @@ module Extension
 
       def setup
         super
-        ShopifyCli::ProjectType.load_type(:extension)
+        ShopifyCLI::ProjectType.load_type(:extension)
 
         @git_template = "https://www.github.com/fake_template.git"
         @identifier = "FAKE_ARGO_TYPE"
         @directory = "fake_directory"
-        @system = ShopifyCli::JsSystem.new(ctx: @context)
+        @system = ShopifyCLI::JsSystem.new(ctx: @context)
       end
 
       def test_check_dependencies_loops_through_the_provided_dependencies
@@ -31,7 +31,7 @@ module Extension
       end
 
       def test_clone_template_clones_argo_template_git_repo_into_directory_and_updates_context_root
-        ShopifyCli::Git.expects(:clone).with(@git_template, @directory, ctx: @context).once
+        ShopifyCLI::Git.expects(:clone).with(@git_template, @directory, ctx: @context).once
 
         call_step(ArgoSetupSteps.clone_template(@git_template))
 
@@ -39,10 +39,10 @@ module Extension
       end
 
       def test_install_dependencies_calls_js_deps_to_install_dependencies_and_returns_the_install_result
-        ShopifyCli::JsDeps.any_instance.expects(:install).returns(true).once
+        ShopifyCLI::JsDeps.any_instance.expects(:install).returns(true).once
         assert call_step(ArgoSetupSteps.install_dependencies)
 
-        ShopifyCli::JsDeps.any_instance.expects(:install).returns(false).once
+        ShopifyCLI::JsDeps.any_instance.expects(:install).returns(false).once
         refute call_step(ArgoSetupSteps.install_dependencies)
       end
 

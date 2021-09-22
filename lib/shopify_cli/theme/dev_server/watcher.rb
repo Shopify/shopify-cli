@@ -2,7 +2,7 @@
 require "listen"
 require "observer"
 
-module ShopifyCli
+module ShopifyCLI
   module Theme
     module DevServer
       # Watches for file changes and publish events to the theme

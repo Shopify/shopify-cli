@@ -7,22 +7,22 @@ module Extension
     class ArgoTest < MiniTest::Test
       def setup
         super
-        ShopifyCli::ProjectType.load_type(:extension)
+        ShopifyCLI::ProjectType.load_type(:extension)
       end
 
       def test_nothing_is_raised_if_node_version_meets_minimum_major_and_minor_versions
         mock_node_version("v10.11.12")
-        assert_nothing_raised(ShopifyCli::Abort) do
+        assert_nothing_raised(ShopifyCLI::Abort) do
           ArgoDependencies.node_installed(min_major: 10, min_minor: 11).call(@context)
         end
 
         mock_node_version("v10.11.12")
-        assert_nothing_raised(ShopifyCli::Abort) do
+        assert_nothing_raised(ShopifyCLI::Abort) do
           ArgoDependencies.node_installed(min_major: 9, min_minor: 11).call(@context)
         end
 
         mock_node_version("v10.11.12")
-        assert_nothing_raised(ShopifyCli::Abort) do
+        assert_nothing_raised(ShopifyCLI::Abort) do
           ArgoDependencies.node_installed(min_major: 10, min_minor: 10).call(@context)
         end
       end
@@ -30,7 +30,7 @@ module Extension
       def test_if_node_version_command_fails_abort_with_missing_node_message
         mock_node_version("", success: false)
 
-        io = capture_io_and_assert_raises(ShopifyCli::Abort) do
+        io = capture_io_and_assert_raises(ShopifyCLI::Abort) do
           ArgoDependencies.node_installed(min_major: 11).call(@context)
         end
 
@@ -42,7 +42,7 @@ module Extension
       def test_if_node_exists_but_major_version_is_under_the_minimum_abort_with_message
         mock_node_version("v10.11.12")
 
-        io = capture_io_and_assert_raises(ShopifyCli::Abort) do
+        io = capture_io_and_assert_raises(ShopifyCLI::Abort) do
           ArgoDependencies.node_installed(min_major: 11).call(@context)
         end
 
@@ -54,7 +54,7 @@ module Extension
       def test_if_major_version_is_the_minimum_version_abort_with_message_if_minor_version_is_under_the_minimum_version
         mock_node_version("v10.11.12")
 
-        io = capture_io_and_assert_raises(ShopifyCli::Abort) do
+        io = capture_io_and_assert_raises(ShopifyCLI::Abort) do
           ArgoDependencies.node_installed(min_major: 10, min_minor: 12).call(@context)
         end
 

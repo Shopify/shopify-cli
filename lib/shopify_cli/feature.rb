@@ -1,6 +1,6 @@
-module ShopifyCli
+module ShopifyCLI
   ##
-  # ShopifyCli::Feature contains the logic to hide and show features across the CLI
+  # ShopifyCLI::Feature contains the logic to hide and show features across the CLI
   # These features can be either commands or project types currently.
   #
   # Feature flags will persist between runs so if the flag is enabled or disabled,
@@ -9,7 +9,7 @@ module ShopifyCli
     SECTION = "features"
 
     ##
-    # ShopifyCli::Feature::Set is included on commands and projects to allow you to hide
+    # ShopifyCLI::Feature::Set is included on commands and projects to allow you to hide
     # and enable projects and commands based on feature flags.
     module Set
       ##
@@ -21,9 +21,9 @@ module ShopifyCli
       #
       # #### Example
       #
-      #    module ShopifyCli
+      #    module ShopifyCLI
       #      module Commands
-      #        class Config < ShopifyCli::Command
+      #        class Config < ShopifyCLI::Command
       #          hidden_feature(feature_set: :basic)
       #          ....
       #
@@ -41,7 +41,7 @@ module ShopifyCli
       #
       # #### Example
       #
-      #     ShopifyCli::Commands::Config.hidden?
+      #     ShopifyCLI::Commands::Config.hidden?
       #
       def hidden?
         enabled = (@hidden_feature_set || []).any? do |feature|
@@ -84,11 +84,11 @@ module ShopifyCli
       # * `is_enabled` - will be true if the feature has been enabled.
       def enabled?(feature)
         return false if feature.nil?
-        ShopifyCli::Config.get_bool(SECTION, feature.to_s)
+        ShopifyCLI::Config.get_bool(SECTION, feature.to_s)
       end
 
       def set(feature, value)
-        ShopifyCli::Config.set(SECTION, feature.to_s, value)
+        ShopifyCLI::Config.set(SECTION, feature.to_s, value)
       end
     end
   end

@@ -1,8 +1,8 @@
 require "shopify_cli"
 
-module ShopifyCli
+module ShopifyCLI
   module Commands
-    class Help < ShopifyCli::Command
+    class Help < ShopifyCLI::Command
       def call(args, _name)
         command = args.shift
         if command && command != "help"
@@ -20,7 +20,7 @@ module ShopifyCli
           end
         end
 
-        preamble = @ctx.message("core.help.preamble", ShopifyCli::TOOL_NAME)
+        preamble = @ctx.message("core.help.preamble", ShopifyCLI::TOOL_NAME)
         @ctx.puts(preamble)
 
         available_commands = resolved_commands.select { |_name, c| !c.hidden? }
@@ -43,7 +43,7 @@ module ShopifyCli
       end
 
       def resolved_commands
-        ShopifyCli::Commands::Registry
+        ShopifyCLI::Commands::Registry
           .resolved_commands
           .sort
       end

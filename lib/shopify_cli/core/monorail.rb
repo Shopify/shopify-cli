@@ -3,7 +3,7 @@ require "net/http"
 require "time"
 require "rbconfig"
 
-module ShopifyCli
+module ShopifyCLI
   module Core
     module Monorail
       ENDPOINT_URI = URI.parse("https://monorail-edge.shopifycloud.com/v1/produce")
@@ -50,16 +50,16 @@ module ShopifyCli
         end
 
         def consented?
-          ShopifyCli::Config.get_bool("analytics", "enabled")
+          ShopifyCLI::Config.get_bool("analytics", "enabled")
         end
 
         def prompt_for_consent
           return if Context.new.ci?
           return unless enabled?
-          return if ShopifyCli::Config.get_section("analytics").key?("enabled")
+          return if ShopifyCLI::Config.get_section("analytics").key?("enabled")
           msg = Context.message("core.monorail.consent_prompt")
           opt = CLI::UI::Prompt.confirm(msg)
-          ShopifyCli::Config.set("analytics", "enabled", opt)
+          ShopifyCLI::Config.set("analytics", "enabled", opt)
         end
 
         def send_event(start_time, commands, args, err = nil)
@@ -100,12 +100,12 @@ module ShopifyCli
               success: err.nil?,
               error_message: err,
               uname: RbConfig::CONFIG["host"],
-              cli_version: ShopifyCli::VERSION,
+              cli_version: ShopifyCLI::VERSION,
               ruby_version: RUBY_VERSION,
-              is_employee: ShopifyCli::Shopifolk.acting_as_shopify_organization?,
+              is_employee: ShopifyCLI::Shopifolk.acting_as_shopify_organization?,
             }.tap do |payload|
               payload[:api_key] = metadata.delete(:api_key)
-              payload[:partner_id] = metadata.delete(:organization_id) || ShopifyCli::DB.get(:organization_id)
+              payload[:partner_id] = metadata.delete(:organization_id) || ShopifyCLI::DB.get(:organization_id)
               if Project.has_current?
                 project = Project.current(force_reload: true)
                 payload[:api_key] = project.env&.api_key
@@ -117,7 +117,7 @@ module ShopifyCli
         end
 
         def project_type_from_dir_or_cmd(command)
-          Project.current_project_type || (command unless ShopifyCli::Commands.core_command?(command)) || nil
+          Project.current_project_type || (command unless ShopifyCLI::Commands.core_command?(command)) || nil
         end
       end
     end

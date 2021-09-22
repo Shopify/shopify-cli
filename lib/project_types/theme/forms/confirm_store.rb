@@ -1,6 +1,6 @@
 module Theme
   module Forms
-    class ConfirmStore < ShopifyCli::Form
+    class ConfirmStore < ShopifyCLI::Form
       flag_arguments :title, :force
 
       def ask

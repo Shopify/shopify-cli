@@ -18,7 +18,7 @@ module Extension
       end
 
       def self.help
-        ShopifyCli::Context.new.message("build.help", ShopifyCli::TOOL_NAME)
+        ShopifyCLI::Context.new.message("build.help", ShopifyCLI::TOOL_NAME)
       end
 
       private
@@ -40,7 +40,7 @@ module Extension
       end
 
       def run_legacy_flow
-        system = ShopifyCli::JsSystem.new(ctx: @ctx)
+        system = ShopifyCLI::JsSystem.new(ctx: @ctx)
 
         CLI::UI::Frame.open(@ctx.message("build.frame_title", system.package_manager)) do
           success = system.call(yarn: YARN_BUILD_COMMAND, npm: NPM_BUILD_COMMAND)

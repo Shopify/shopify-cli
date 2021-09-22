@@ -2,7 +2,7 @@
 
 module Extension
   module Forms
-    class Create < ShopifyCli::Form
+    class Create < ShopifyCLI::Form
       flag_arguments :name, :type, :api_key, :template
 
       attr_reader :app
@@ -21,7 +21,7 @@ module Extension
       end
 
       def ask
-        ShopifyCli::Result.wrap(ExtensionProjectDetails.new)
+        ShopifyCLI::Result.wrap(ExtensionProjectDetails.new)
           .then(&Questions::AskApp.new(ctx: ctx, api_key: api_key))
           .then(&Questions::AskType.new(ctx: ctx, type: type))
           .then(&Questions::AskTemplate.new(ctx: ctx))

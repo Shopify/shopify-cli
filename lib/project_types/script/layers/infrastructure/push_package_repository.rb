@@ -5,7 +5,7 @@ module Script
     module Infrastructure
       class PushPackageRepository
         include SmartProperties
-        property! :ctx, accepts: ShopifyCli::Context
+        property! :ctx, accepts: ShopifyCLI::Context
 
         def create_push_package(script_project:, script_content:, compiled_type:, metadata:)
           build_file_path = file_path(script_project.id, compiled_type)

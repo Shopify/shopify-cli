@@ -15,7 +15,7 @@ module Script
         def self.available_types
           Infrastructure::ExtensionPointRepository.new.extension_points.select do |ep|
             next false if ep.deprecated?
-            !ep.beta? || ShopifyCli::Feature.enabled?(:scripts_beta_extension_points)
+            !ep.beta? || ShopifyCLI::Feature.enabled?(:scripts_beta_extension_points)
           end.map(&:type)
         end
 
@@ -28,7 +28,7 @@ module Script
 
         def self.languages(type:)
           get(type: type).sdks.all.map do |sdk|
-            next nil if sdk.beta? && !ShopifyCli::Feature.enabled?(:scripts_beta_languages)
+            next nil if sdk.beta? && !ShopifyCLI::Feature.enabled?(:scripts_beta_languages)
             sdk.class.language
           end.compact
         end

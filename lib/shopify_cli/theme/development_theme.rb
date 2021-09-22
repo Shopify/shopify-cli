@@ -4,17 +4,17 @@ require_relative "theme"
 require "socket"
 require "securerandom"
 
-module ShopifyCli
+module ShopifyCLI
   module Theme
     API_NAME_LIMIT = 50
 
     class DevelopmentTheme < Theme
       def id
-        ShopifyCli::DB.get(:development_theme_id)
+        ShopifyCLI::DB.get(:development_theme_id)
       end
 
       def name
-        existing_name = ShopifyCli::DB.get(:development_theme_name)
+        existing_name = ShopifyCLI::DB.get(:development_theme_name)
         # Up to version 2.3.0 (included) generated names stored locally
         # could have more than 50 characters and the API rejected them.
         # This code ensures we update the name for those users to ensure
@@ -36,27 +36,27 @@ module ShopifyCli
         else
           create
           @ctx.debug("Created temporary development theme: #{@id}")
-          ShopifyCli::DB.set(development_theme_id: @id)
+          ShopifyCLI::DB.set(development_theme_id: @id)
         end
       end
 
       def exists?
         return false unless id
 
-        ShopifyCli::AdminAPI.rest_request(
+        ShopifyCLI::AdminAPI.rest_request(
           @ctx,
           shop: shop,
           path: "themes/#{id}.json",
           api_version: "unstable",
         )
-      rescue ShopifyCli::API::APIRequestNotFoundError
+      rescue ShopifyCLI::API::APIRequestNotFoundError
         false
       end
 
       def delete
         super if exists?
-        ShopifyCli::DB.del(:development_theme_id) if ShopifyCli::DB.exists?(:development_theme_id)
-        ShopifyCli::DB.del(:development_theme_name) if ShopifyCli::DB.exists?(:development_theme_name)
+        ShopifyCLI::DB.del(:development_theme_id) if ShopifyCLI::DB.exists?(:development_theme_id)
+        ShopifyCLI::DB.del(:development_theme_name) if ShopifyCLI::DB.exists?(:development_theme_name)
       end
 
       def self.delete(ctx)
@@ -74,7 +74,7 @@ module ShopifyCli
         identifier = "#{hash}-#{hostname[0, hostname_character_limit]}"
         theme_name = "Development (#{identifier})"
 
-        ShopifyCli::DB.set(development_theme_name: theme_name)
+        ShopifyCLI::DB.set(development_theme_name: theme_name)
 
         theme_name
       end

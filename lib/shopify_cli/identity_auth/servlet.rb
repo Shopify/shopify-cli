@@ -1,4 +1,4 @@
-module ShopifyCli
+module ShopifyCLI
   class IdentityAuth
     class Servlet < WEBrick::HTTPServlet::AbstractServlet
       TEMPLATE = %{<!DOCTYPE html>

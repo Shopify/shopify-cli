@@ -1,6 +1,6 @@
 require "test_helper"
 
-module ShopifyCli
+module ShopifyCLI
   class IdentityAuthTest < MiniTest::Test
     def setup
       super
@@ -165,7 +165,7 @@ module ShopifyCli
       stub_request(:post, "#{endpoint}/authorize?#{URI.encode_www_form(authorize_query)}")
 
       stub_server(client, nil)
-      io = capture_io_and_assert_raises(ShopifyCli::Abort) do
+      io = capture_io_and_assert_raises(ShopifyCLI::Abort) do
         client.authenticate
       end
       assert_message_output(
@@ -179,7 +179,7 @@ module ShopifyCli
     private
 
     def assert_expected_exchange_tokens(token_suffix:, client:)
-      ShopifyCli::IdentityAuth::APPLICATION_SCOPES.keys.each do |key|
+      ShopifyCLI::IdentityAuth::APPLICATION_SCOPES.keys.each do |key|
         assert_equal(key + token_suffix, client.store.get("#{key}_exchange_token".to_sym))
       end
     end
@@ -195,13 +195,13 @@ module ShopifyCli
     end
 
     def stub_exchange_token_calls(exchange_token: "exchangetoken123", access_token: "accesstoken123", status: nil)
-      ShopifyCli::IdentityAuth::APPLICATION_SCOPES.keys.each do |application|
+      ShopifyCLI::IdentityAuth::APPLICATION_SCOPES.keys.each do |application|
         token_query = {
           grant_type: "urn:ietf:params:oauth:grant-type:token-exchange",
           requested_token_type: "urn:ietf:params:oauth:token-type:access_token",
           subject_token_type: "urn:ietf:params:oauth:token-type:access_token",
           client_id: client_id,
-          audience: ShopifyCli::IdentityAuth::APPLICATION_CLIENT_IDS[application],
+          audience: ShopifyCLI::IdentityAuth::APPLICATION_CLIENT_IDS[application],
           scope: scopes(scopes_for(application)),
           subject_token: access_token,
         }.tap do |result|
@@ -223,7 +223,7 @@ module ShopifyCli
 
     def identity_auth_client(*)
       @identity_auth_client ||= begin
-        db = ShopifyCli::DB.new(path: File.join(ShopifyCli::TEMP_DIR, ".test_db.pstore"))
+        db = ShopifyCLI::DB.new(path: File.join(ShopifyCLI::TEMP_DIR, ".test_db.pstore"))
         db.clear
         db.set(shop: "testshop")
         IdentityAuth.new(ctx: @context, store: db, code_verifier: "123456")
@@ -239,11 +239,11 @@ module ShopifyCli
     end
 
     def authorization_scopes
-      ShopifyCli::IdentityAuth::APPLICATION_SCOPES.values.flatten
+      ShopifyCLI::IdentityAuth::APPLICATION_SCOPES.values.flatten
     end
 
     def scopes_for(name)
-      ShopifyCli::IdentityAuth::APPLICATION_SCOPES[name]
+      ShopifyCLI::IdentityAuth::APPLICATION_SCOPES[name]
     end
 
     def stub_auth_response(client)
@@ -269,7 +269,7 @@ module ShopifyCli
 
     def scopes(additional_scopes = [])
       (["openid"] + additional_scopes).tap do |result|
-        result << "employee" if ShopifyCli::Shopifolk.acting_as_shopify_organization?
+        result << "employee" if ShopifyCLI::Shopifolk.acting_as_shopify_organization?
       end.join(" ")
     end
   end

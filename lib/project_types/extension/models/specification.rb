@@ -18,7 +18,7 @@ module Extension
         def self.build(feature_set_attributes)
           feature_set_attributes.each_with_object(OpenStruct.new) do |(identifier, feature_attributes), feature_set|
             next if feature_attributes.nil?
-            feature_set[identifier] = ShopifyCli::ResolveConstant
+            feature_set[identifier] = ShopifyCLI::ResolveConstant
               .call(identifier, namespace: Features)
               .rescue { OpenStruct }
               .then { |c| c.new(**feature_attributes) }

@@ -10,7 +10,7 @@ module Extension
 
         def setup
           super
-          ShopifyCli::ProjectType.load_type(:extension)
+          ShopifyCLI::ProjectType.load_type(:extension)
 
           @api_key = "fake_key"
           @secret = "fake_secret"

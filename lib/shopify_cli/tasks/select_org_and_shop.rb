@@ -1,8 +1,8 @@
 require "shopify_cli"
 
-module ShopifyCli
+module ShopifyCLI
   module Tasks
-    class SelectOrgAndShop < ShopifyCli::Task
+    class SelectOrgAndShop < ShopifyCLI::Task
       attr_reader :ctx
 
       def call(ctx, organization_id: nil, shop_domain: nil)
@@ -12,7 +12,7 @@ module ShopifyCli
         unless Shopifolk.acting_as_shopify_organization?
           shop_domain ||= get_shop_domain(org)
         end
-        ShopifyCli::Core::Monorail.metadata[:organization_id] = org["id"].to_i
+        ShopifyCLI::Core::Monorail.metadata[:organization_id] = org["id"].to_i
         response(org["id"].to_i, shop_domain)
       end
 
@@ -25,20 +25,20 @@ module ShopifyCli
       end
 
       def organizations
-        @organizations ||= ShopifyCli::PartnersAPI::Organizations.fetch_all(ctx)
+        @organizations ||= ShopifyCLI::PartnersAPI::Organizations.fetch_all(ctx)
       end
 
       def get_organization(organization_id)
         @organization ||= if !organization_id.nil?
-          org = ShopifyCli::PartnersAPI::Organizations.fetch(ctx, id: organization_id)
+          org = ShopifyCLI::PartnersAPI::Organizations.fetch(ctx, id: organization_id)
           if org.nil?
-            ctx.puts(ctx.message("core.tasks.select_org_and_shop.authentication_issue", ShopifyCli::TOOL_NAME))
+            ctx.puts(ctx.message("core.tasks.select_org_and_shop.authentication_issue", ShopifyCLI::TOOL_NAME))
             ctx.abort(ctx.message("core.tasks.select_org_and_shop.error.organization_not_found"))
           end
           org
         elsif organizations.count == 0
           if Shopifolk.acting_as_shopify_organization?
-            ctx.abort(ctx.message("core.tasks.select_org_and_shop.error.shopifolk_notice", ShopifyCli::TOOL_NAME))
+            ctx.abort(ctx.message("core.tasks.select_org_and_shop.error.shopifolk_notice", ShopifyCLI::TOOL_NAME))
           else
             ctx.abort(ctx.message("core.tasks.select_org_and_shop.error.no_organizations"))
           end
@@ -64,7 +64,7 @@ module ShopifyCli
         if valid_stores.count == 0
           ctx.puts(ctx.message("core.tasks.select_org_and_shop.error.no_development_stores"))
           ctx.puts(ctx.message("core.tasks.select_org_and_shop.create_store", organization["id"]))
-          ctx.puts(ctx.message("core.tasks.select_org_and_shop.authentication_issue", ShopifyCli::TOOL_NAME))
+          ctx.puts(ctx.message("core.tasks.select_org_and_shop.authentication_issue", ShopifyCLI::TOOL_NAME))
         elsif valid_stores.count == 1
           domain = valid_stores.first["shopDomain"]
           ctx.puts(ctx.message("core.tasks.select_org_and_shop.development_store", domain))

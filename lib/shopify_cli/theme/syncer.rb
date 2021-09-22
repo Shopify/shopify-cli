@@ -3,7 +3,7 @@ require "thread"
 require "json"
 require "base64"
 
-module ShopifyCli
+module ShopifyCLI
   module Theme
     class Syncer
       class Operation < Struct.new(:method, :file)
@@ -80,7 +80,7 @@ module ShopifyCli
       end
 
       def fetch_checksums!
-        _status, response = ShopifyCli::AdminAPI.rest_request(
+        _status, response = ShopifyCLI::AdminAPI.rest_request(
           @ctx,
           shop: @theme.shop,
           path: "themes/#{@theme.id}/assets.json",
@@ -211,7 +211,7 @@ module ShopifyCli
           used, total = limit.split("/").map(&:to_i)
           backoff_if_near_limit!(used, total)
         end
-      rescue ShopifyCli::API::APIRequestError => e
+      rescue ShopifyCLI::API::APIRequestError => e
         report_error(
           "{{red:ERROR}} {{blue:#{operation}}}:\n  " +
           parse_api_errors(e).join("\n  ")
@@ -228,7 +228,7 @@ module ShopifyCli
           asset[:attachment] = Base64.encode64(file.read)
         end
 
-        _status, body, response = ShopifyCli::AdminAPI.rest_request(
+        _status, body, response = ShopifyCLI::AdminAPI.rest_request(
           @ctx,
           shop: @theme.shop,
           path: "themes/#{@theme.id}/assets.json",
@@ -243,7 +243,7 @@ module ShopifyCli
       end
 
       def get(file)
-        _status, body, response = ShopifyCli::AdminAPI.rest_request(
+        _status, body, response = ShopifyCLI::AdminAPI.rest_request(
           @ctx,
           shop: @theme.shop,
           path: "themes/#{@theme.id}/assets.json",
@@ -265,7 +265,7 @@ module ShopifyCli
       end
 
       def delete(file)
-        _status, _body, response = ShopifyCli::AdminAPI.rest_request(
+        _status, _body, response = ShopifyCLI::AdminAPI.rest_request(
           @ctx,
           shop: @theme.shop,
           path: "themes/#{@theme.id}/assets.json",

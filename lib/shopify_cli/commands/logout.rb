@@ -1,37 +1,37 @@
 require "shopify_cli"
 require "shopify_cli/theme/development_theme"
 
-module ShopifyCli
+module ShopifyCLI
   module Commands
-    class Logout < ShopifyCli::Command
+    class Logout < ShopifyCLI::Command
       def call(*)
         try_delete_development_theme
-        ShopifyCli::IdentityAuth.delete_tokens_and_keys
-        ShopifyCli::DB.del(:shop) if has_shop?
-        ShopifyCli::DB.del(:organization_id) if has_organization_id?
-        ShopifyCli::Shopifolk.reset
+        ShopifyCLI::IdentityAuth.delete_tokens_and_keys
+        ShopifyCLI::DB.del(:shop) if has_shop?
+        ShopifyCLI::DB.del(:organization_id) if has_organization_id?
+        ShopifyCLI::Shopifolk.reset
         @ctx.puts(@ctx.message("core.logout.success"))
       end
 
       def self.help
-        ShopifyCli::Context.message("core.logout.help", ShopifyCli::TOOL_NAME)
+        ShopifyCLI::Context.message("core.logout.help", ShopifyCLI::TOOL_NAME)
       end
 
       private
 
       def has_shop?
-        ShopifyCli::DB.exists?(:shop)
+        ShopifyCLI::DB.exists?(:shop)
       end
 
       def has_organization_id?
-        ShopifyCli::DB.exists?(:organization_id)
+        ShopifyCLI::DB.exists?(:organization_id)
       end
 
       def try_delete_development_theme
         return unless has_shop?
 
-        ShopifyCli::Theme::DevelopmentTheme.delete(@ctx)
-      rescue ShopifyCli::API::APIRequestError
+        ShopifyCLI::Theme::DevelopmentTheme.delete(@ctx)
+      rescue ShopifyCLI::API::APIRequestError
         # Ignore since we can't delete it
       end
     end

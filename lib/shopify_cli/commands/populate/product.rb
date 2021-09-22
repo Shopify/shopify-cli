@@ -1,21 +1,21 @@
 require "shopify_cli"
 
-module ShopifyCli
+module ShopifyCLI
   module Commands
     class Populate
-      class Product < ShopifyCli::AdminAPI::PopulateResourceCommand
+      class Product < ShopifyCLI::AdminAPI::PopulateResourceCommand
         @input_type = :ProductInput
 
         def defaults
           {
-            title: ShopifyCli::Helpers::Haikunator.title,
+            title: ShopifyCLI::Helpers::Haikunator.title,
             variants: [{ price: price }],
           }
         end
 
         def message(data)
           ret = data["productCreate"]["product"]
-          id = ShopifyCli::API.gid_to_id(ret["id"])
+          id = ShopifyCLI::API.gid_to_id(ret["id"])
           @ctx.message("core.populate.product.added", ret["title"], @shop, admin_url, id)
         end
       end

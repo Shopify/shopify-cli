@@ -1,8 +1,8 @@
 require "shopify_cli"
 
-module ShopifyCli
+module ShopifyCLI
   module Commands
-    class Login < ShopifyCli::Command
+    class Login < ShopifyCLI::Command
       PROTOCOL_REGEX = /^https?\:\/\//
       PERMANENT_DOMAIN_SUFFIX = /\.myshopify\.(com|io)$/
 
@@ -15,7 +15,7 @@ module ShopifyCli
 
       def call(*)
         shop = (options.flags[:shop] || @ctx.getenv("SHOPIFY_SHOP" || nil))
-        ShopifyCli::DB.set(shop: self.class.validate_shop(shop)) unless shop.nil?
+        ShopifyCLI::DB.set(shop: self.class.validate_shop(shop)) unless shop.nil?
 
         if shop.nil? && Shopifolk.check
           Shopifolk.reset
@@ -28,17 +28,17 @@ module ShopifyCli
 
         # As password auth will soon be deprecated, we enable only in CI
         if @ctx.ci? && (password = options.flags[:password] || @ctx.getenv("SHOPIFY_PASSWORD"))
-          ShopifyCli::DB.set(shopify_exchange_token: password)
+          ShopifyCLI::DB.set(shopify_exchange_token: password)
         else
           IdentityAuth.new(ctx: @ctx).authenticate
           org = select_organization
-          ShopifyCli::DB.set(organization_id: org["id"].to_i) unless org.nil?
+          ShopifyCLI::DB.set(organization_id: org["id"].to_i) unless org.nil?
           Whoami.call([], "whoami")
         end
       end
 
       def self.help
-        ShopifyCli::Context.message("core.login.help", ShopifyCli::TOOL_NAME)
+        ShopifyCLI::Context.message("core.login.help", ShopifyCLI::TOOL_NAME)
       end
 
       def self.validate_shop(shop)
@@ -75,7 +75,7 @@ module ShopifyCli
       private
 
       def select_organization
-        organizations = ShopifyCli::PartnersAPI::Organizations.fetch_all(@ctx)
+        organizations = ShopifyCLI::PartnersAPI::Organizations.fetch_all(@ctx)
 
         if organizations.count == 0
           nil

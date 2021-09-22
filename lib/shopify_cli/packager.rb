@@ -1,7 +1,7 @@
-module ShopifyCli
+module ShopifyCLI
   class Packager
-    PACKAGING_DIR = File.join(ShopifyCli::ROOT, "packaging")
-    BUILDS_DIR = File.join(PACKAGING_DIR, "builds", ShopifyCli::VERSION)
+    PACKAGING_DIR = File.join(ShopifyCLI::ROOT, "packaging")
+    BUILDS_DIR = File.join(PACKAGING_DIR, "builds", ShopifyCLI::VERSION)
 
     def initialize
       FileUtils.mkdir_p(BUILDS_DIR)
@@ -24,7 +24,7 @@ module ShopifyCli
         file_path = File.join(debian_dir, file)
 
         file_contents = File.read(File.join(root_dir, "#{file}.base"))
-        file_contents = file_contents.gsub("SHOPIFY_CLI_VERSION", ShopifyCli::VERSION)
+        file_contents = file_contents.gsub("SHOPIFY_CLI_VERSION", ShopifyCLI::VERSION)
         File.open(file_path, "w", 0775) { |f| f.write(file_contents) }
       end
 
@@ -33,7 +33,7 @@ module ShopifyCli
       raise "Failed to build package" unless system("dpkg-deb", "-b", "shopify-cli")
 
       output_path = File.join(root_dir, "shopify-cli.deb")
-      final_path = File.join(BUILDS_DIR, "shopify-cli-#{ShopifyCli::VERSION}.deb")
+      final_path = File.join(BUILDS_DIR, "shopify-cli-#{ShopifyCLI::VERSION}.deb")
 
       puts "Moving generated package: \n  From: #{output_path}\n  To: #{final_path}\n\n"
       FileUtils.mv(output_path, final_path)
@@ -53,7 +53,7 @@ module ShopifyCli
       File.delete(spec_path) if File.exist?(spec_path)
 
       spec_contents = File.read(File.join(root_dir, "shopify-cli.spec.base"))
-      spec_contents = spec_contents.gsub("SHOPIFY_CLI_VERSION", ShopifyCli::VERSION)
+      spec_contents = spec_contents.gsub("SHOPIFY_CLI_VERSION", ShopifyCLI::VERSION)
       File.write(spec_path, spec_contents)
 
       puts "Building package…"
@@ -76,12 +76,12 @@ module ShopifyCli
       File.delete(build_path) if File.exist?(build_path)
 
       spec_contents = File.read(File.join(root_dir, "shopify-cli.base.rb"))
-      spec_contents = spec_contents.gsub("SHOPIFY_CLI_VERSION", ShopifyCli::VERSION)
+      spec_contents = spec_contents.gsub("SHOPIFY_CLI_VERSION", ShopifyCLI::VERSION)
 
       puts "Grabbing sha256 checksum from Rubygems.org"
       require "digest/sha2"
       require "open-uri"
-      gem_checksum = open("https://rubygems.org/downloads/shopify-cli-#{ShopifyCli::VERSION}.gem") do |io|
+      gem_checksum = open("https://rubygems.org/downloads/shopify-cli-#{ShopifyCLI::VERSION}.gem") do |io|
         Digest::SHA256.new.hexdigest(io.read)
       end
 

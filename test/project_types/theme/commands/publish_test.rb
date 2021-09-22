@@ -9,7 +9,7 @@ module Theme
       def setup
         super
 
-        @ctx = ShopifyCli::Context.new
+        @ctx = ShopifyCLI::Context.new
         @command = Theme::Command::Publish.new(@ctx)
 
         @theme = stub(
@@ -24,7 +24,7 @@ module Theme
       end
 
       def test_publish
-        ShopifyCli::Theme::Theme.expects(:new)
+        ShopifyCLI::Theme::Theme.expects(:new)
           .with(@ctx, id: 1234)
           .returns(@theme)
 
@@ -37,7 +37,7 @@ module Theme
       end
 
       def test_publish_without_confirmation
-        ShopifyCli::Theme::Theme.expects(:new)
+        ShopifyCLI::Theme::Theme.expects(:new)
           .with(@ctx, id: 1234)
           .returns(@theme)
 
@@ -49,7 +49,7 @@ module Theme
       end
 
       def test_publish_force_with_option
-        ShopifyCli::Theme::Theme.expects(:new)
+        ShopifyCLI::Theme::Theme.expects(:new)
           .with(@ctx, id: 1234)
           .returns(@theme)
 
@@ -71,7 +71,7 @@ module Theme
       end
 
       def test_publish_select_aborting
-        CLI::UI::Prompt.expects(:ask).raises(ShopifyCli::Abort)
+        CLI::UI::Prompt.expects(:ask).raises(ShopifyCLI::Abort)
         @ctx.expects(:puts)
 
         @theme.expects(:publish).never

@@ -1,15 +1,15 @@
 require "test_helper"
 
-module ShopifyCli
+module ShopifyCLI
   module Core
     class ExecutorTest < MiniTest::Test
       include TestHelpers::FakeTask
 
-      class FakeCommand < ShopifyCli::Command
+      class FakeCommand < ShopifyCLI::Command
         prerequisite_task :fake
         prerequisite_task fake_with_args: [:foo, :bar]
 
-        class FakeSubCommand < ShopifyCli::SubCommand
+        class FakeSubCommand < ShopifyCLI::SubCommand
           prerequisite_task :fake
           prerequisite_task fake_with_args: [:sub, :command]
 
@@ -41,7 +41,7 @@ module ShopifyCli
       end
 
       def test_prerequisite_task
-        executor = ShopifyCli::Core::Executor.new(@context, @registry, log_file: @log)
+        executor = ShopifyCLI::Core::Executor.new(@context, @registry, log_file: @log)
         reg = CLI::Kit::CommandRegistry.new(default: nil, contextual_resolver: nil)
         reg.add(FakeCommand, :fake)
         @context.expects(:puts).with("success!")
@@ -51,7 +51,7 @@ module ShopifyCli
       end
 
       def test_options
-        executor = ShopifyCli::Core::Executor.new(@context, @registry, log_file: @log)
+        executor = ShopifyCLI::Core::Executor.new(@context, @registry, log_file: @log)
         reg = CLI::Kit::CommandRegistry.new(default: nil, contextual_resolver: nil)
         reg.add(FakeCommand, :fake)
         @context.expects(:puts).with("success!")
@@ -61,7 +61,7 @@ module ShopifyCli
       end
 
       def test_subcommand
-        executor = ShopifyCli::Core::Executor.new(@context, @registry, log_file: @log)
+        executor = ShopifyCLI::Core::Executor.new(@context, @registry, log_file: @log)
         reg = CLI::Kit::CommandRegistry.new(default: nil, contextual_resolver: nil)
         reg.add(FakeCommand, :fake)
         @context.expects(:puts).with("success!")

@@ -2,7 +2,7 @@
 
 module Script
   module Forms
-    class Create < ShopifyCli::Form
+    class Create < ShopifyCLI::Form
       flag_arguments :extension_point, :name, :language
 
       def ask

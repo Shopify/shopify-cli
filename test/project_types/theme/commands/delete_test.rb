@@ -9,7 +9,7 @@ module Theme
       def setup
         super
 
-        @ctx = ShopifyCli::Context.new
+        @ctx = ShopifyCLI::Context.new
         @command = Theme::Command::Delete.new(@ctx)
 
         @config = mock("Config")
@@ -25,7 +25,7 @@ module Theme
       end
 
       def test_delete_theme_ids
-        ShopifyCli::Theme::Theme.expects(:new)
+        ShopifyCLI::Theme::Theme.expects(:new)
           .with(@ctx, id: 1234)
           .returns(@theme)
 
@@ -38,13 +38,13 @@ module Theme
       end
 
       def test_delete_unexisting_theme_ids
-        ShopifyCli::Theme::Theme.expects(:new)
+        ShopifyCLI::Theme::Theme.expects(:new)
           .with(@ctx, id: 1234)
           .returns(@theme)
 
         CLI::UI::Prompt.expects(:confirm).returns(true)
 
-        @theme.expects(:delete).raises(ShopifyCli::API::APIRequestNotFoundError)
+        @theme.expects(:delete).raises(ShopifyCLI::API::APIRequestNotFoundError)
         @ctx.expects(:puts)
         @ctx.expects(:done)
 
@@ -52,7 +52,7 @@ module Theme
       end
 
       def test_cant_delete_live_theme
-        ShopifyCli::Theme::Theme.expects(:new)
+        ShopifyCLI::Theme::Theme.expects(:new)
           .with(@ctx, id: 1234)
           .returns(@theme)
 
@@ -65,7 +65,7 @@ module Theme
       end
 
       def test_delete_development_theme
-        ShopifyCli::Theme::DevelopmentTheme.expects(:new)
+        ShopifyCLI::Theme::DevelopmentTheme.expects(:new)
           .with(@ctx)
           .returns(@theme)
 
@@ -89,7 +89,7 @@ module Theme
       end
 
       def test_delete_select_aborting
-        CLI::UI::Prompt.expects(:ask).raises(ShopifyCli::Abort)
+        CLI::UI::Prompt.expects(:ask).raises(ShopifyCLI::Abort)
         @ctx.expects(:puts)
 
         @theme.expects(:delete).never

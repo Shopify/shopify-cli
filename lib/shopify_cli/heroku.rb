@@ -1,4 +1,4 @@
-module ShopifyCli
+module ShopifyCLI
   class Heroku
     DOWNLOAD_URLS = {
       linux: "https://cli-assets.heroku.com/heroku-linux-x64.tar.gz",
@@ -36,7 +36,7 @@ module ShopifyCli
     def download
       return if installed?
 
-      result = @ctx.system("curl", "-o", download_path, DOWNLOAD_URLS[@ctx.os], chdir: ShopifyCli.cache_dir)
+      result = @ctx.system("curl", "-o", download_path, DOWNLOAD_URLS[@ctx.os], chdir: ShopifyCLI.cache_dir)
       @ctx.abort(@ctx.message("core.heroku.error.download")) unless result.success?
       @ctx.abort(@ctx.message("core.heroku.error.download")) unless File.exist?(download_path)
     end
@@ -47,7 +47,7 @@ module ShopifyCli
       result = if @ctx.windows?
         @ctx.system("\"#{download_path}\"")
       else
-        @ctx.system("tar", "-xf", download_path, chdir: ShopifyCli.cache_dir)
+        @ctx.system("tar", "-xf", download_path, chdir: ShopifyCLI.cache_dir)
       end
       @ctx.abort(@ctx.message("core.heroku.error.install")) unless result.success?
 
@@ -74,7 +74,7 @@ module ShopifyCli
     end
 
     def download_path
-      File.join(ShopifyCli.cache_dir, download_filename)
+      File.join(ShopifyCLI.cache_dir, download_filename)
     end
 
     def git_remote
@@ -83,7 +83,7 @@ module ShopifyCli
     end
 
     def heroku_command
-      local_path = File.join(ShopifyCli.cache_dir, "heroku", "bin", "heroku").to_s
+      local_path = File.join(ShopifyCLI.cache_dir, "heroku", "bin", "heroku").to_s
       if File.exist?(local_path)
         local_path
       elsif @ctx.windows?

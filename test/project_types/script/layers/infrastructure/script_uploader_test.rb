@@ -117,6 +117,6 @@ describe Script::Layers::Infrastructure::ScriptUploader do
   private
 
   def stub_load_query(name, body)
-    ShopifyCli::API.any_instance.stubs(:load_query).with(name).returns(body)
+    ShopifyCLI::API.any_instance.stubs(:load_query).with(name).returns(body)
   end
 end

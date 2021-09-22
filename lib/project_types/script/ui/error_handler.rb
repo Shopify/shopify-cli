@@ -4,7 +4,7 @@ module Script
   module UI
     module ErrorHandler
       def self.display(failed_op:, cause_of_error:, help_suggestion:)
-        $stderr.puts(CLI::UI.fmt(ShopifyCli::Context.message("script.error.generic")))
+        $stderr.puts(CLI::UI.fmt(ShopifyCLI::Context.message("script.error.generic")))
         full_msg = failed_op ? failed_op.dup : ""
         full_msg << " #{cause_of_error}" if cause_of_error
         full_msg << " #{help_suggestion}" if help_suggestion
@@ -13,7 +13,7 @@ module Script
 
       def self.display_and_raise(failed_op: nil, cause_of_error: nil, help_suggestion: nil)
         display(failed_op: failed_op, cause_of_error: cause_of_error, help_suggestion: help_suggestion)
-        raise(ShopifyCli::AbortSilent)
+        raise(ShopifyCLI::AbortSilent)
       end
 
       def self.pretty_print_and_raise(e, failed_op: nil)
@@ -26,85 +26,85 @@ module Script
         case e
         when Errno::EACCES
           {
-            cause_of_error: ShopifyCli::Context.message("script.error.eacces_cause"),
-            help_suggestion: ShopifyCli::Context.message("script.error.eacces_help"),
+            cause_of_error: ShopifyCLI::Context.message("script.error.eacces_cause"),
+            help_suggestion: ShopifyCLI::Context.message("script.error.eacces_help"),
           }
         when Errno::ENOSPC
           {
-            cause_of_error: ShopifyCli::Context.message("script.error.enospc_cause"),
-            help_suggestion: ShopifyCli::Context.message("script.error.enospc_help"),
+            cause_of_error: ShopifyCLI::Context.message("script.error.enospc_cause"),
+            help_suggestion: ShopifyCLI::Context.message("script.error.enospc_help"),
           }
-        when ShopifyCli::IdentityAuth::Error
+        when ShopifyCLI::IdentityAuth::Error
           {
-            cause_of_error: ShopifyCli::Context.message("script.error.oauth_cause"),
-            help_suggestion: ShopifyCli::Context.message("script.error.oauth_help"),
+            cause_of_error: ShopifyCLI::Context.message("script.error.oauth_cause"),
+            help_suggestion: ShopifyCLI::Context.message("script.error.oauth_help"),
           }
         when Layers::Infrastructure::Errors::InvalidContextError
           {
-            cause_of_error: ShopifyCli::Context.message("script.error.invalid_context_cause"),
-            help_suggestion: ShopifyCli::Context.message("script.error.invalid_context_help"),
+            cause_of_error: ShopifyCLI::Context.message("script.error.invalid_context_cause"),
+            help_suggestion: ShopifyCLI::Context.message("script.error.invalid_context_help"),
           }
         when Errors::InvalidConfigProps
           {
-            cause_of_error: ShopifyCli::Context.message("script.error.invalid_config_props_cause"),
-            help_suggestion: ShopifyCli::Context.message("script.error.invalid_config_props_help"),
+            cause_of_error: ShopifyCLI::Context.message("script.error.invalid_config_props_cause"),
+            help_suggestion: ShopifyCLI::Context.message("script.error.invalid_config_props_help"),
           }
         when Errors::InvalidConfigYAMLError
           {
-            cause_of_error: ShopifyCli::Context.message("script.error.invalid_config", e.config_file),
+            cause_of_error: ShopifyCLI::Context.message("script.error.invalid_config", e.config_file),
           }
         when Layers::Infrastructure::Errors::InvalidLanguageError
           {
-            cause_of_error: ShopifyCli::Context.message("script.error.invalid_language_cause", e.language),
-            help_suggestion: ShopifyCli::Context.message(
+            cause_of_error: ShopifyCLI::Context.message("script.error.invalid_language_cause", e.language),
+            help_suggestion: ShopifyCLI::Context.message(
               "script.error.invalid_language_help",
               Script::Layers::Application::ExtensionPoints.languages(type: e.extension_point_type).join(", ")
             ),
           }
         when Errors::InvalidScriptNameError
           {
-            cause_of_error: ShopifyCli::Context.message("script.error.invalid_script_name_cause"),
-            help_suggestion: ShopifyCli::Context.message("script.error.invalid_script_name_help"),
+            cause_of_error: ShopifyCLI::Context.message("script.error.invalid_script_name_cause"),
+            help_suggestion: ShopifyCLI::Context.message("script.error.invalid_script_name_help"),
           }
         when Errors::NoExistingAppsError
           {
-            cause_of_error: ShopifyCli::Context.message("script.error.no_existing_apps_cause"),
-            help_suggestion: ShopifyCli::Context.message("script.error.no_existing_apps_help"),
+            cause_of_error: ShopifyCLI::Context.message("script.error.no_existing_apps_cause"),
+            help_suggestion: ShopifyCLI::Context.message("script.error.no_existing_apps_help"),
           }
         when Errors::NoExistingOrganizationsError
           {
-            cause_of_error: ShopifyCli::Context.message("script.error.no_existing_orgs_cause"),
-            help_suggestion: ShopifyCli::Context.message("script.error.no_existing_orgs_help"),
+            cause_of_error: ShopifyCLI::Context.message("script.error.no_existing_orgs_cause"),
+            help_suggestion: ShopifyCLI::Context.message("script.error.no_existing_orgs_help"),
           }
         when Errors::NoExistingStoresError
           {
-            cause_of_error: ShopifyCli::Context.message("script.error.no_existing_stores_cause"),
-            help_suggestion: ShopifyCli::Context.message(
+            cause_of_error: ShopifyCLI::Context.message("script.error.no_existing_stores_cause"),
+            help_suggestion: ShopifyCLI::Context.message(
               "script.error.no_existing_stores_help",
               organization_id: e.organization_id
             ),
           }
         when Layers::Infrastructure::Errors::ScriptProjectAlreadyExistsError
           {
-            cause_of_error: ShopifyCli::Context.message("script.error.project_exists_cause"),
-            help_suggestion: ShopifyCli::Context.message("script.error.project_exists_help"),
+            cause_of_error: ShopifyCLI::Context.message("script.error.project_exists_cause"),
+            help_suggestion: ShopifyCLI::Context.message("script.error.project_exists_help"),
           }
         when Layers::Infrastructure::Errors::DeprecatedEPError
           {
-            cause_of_error: ShopifyCli::Context.message("script.error.deprecated_ep", e.ep),
-            help_suggestion: ShopifyCli::Context.message("script.error.deprecated_ep_cause"),
+            cause_of_error: ShopifyCLI::Context.message("script.error.deprecated_ep", e.ep),
+            help_suggestion: ShopifyCLI::Context.message("script.error.deprecated_ep_cause"),
           }
         when Layers::Domain::Errors::InvalidExtensionPointError
           {
-            cause_of_error: ShopifyCli::Context.message("script.error.invalid_extension_cause", e.type),
-            help_suggestion: ShopifyCli::Context.message(
+            cause_of_error: ShopifyCLI::Context.message("script.error.invalid_extension_cause", e.type),
+            help_suggestion: ShopifyCLI::Context.message(
               "script.error.invalid_extension_help",
               Script::Layers::Application::ExtensionPoints.available_types.join(", ")
             ),
           }
         when Layers::Domain::Errors::ScriptNotFoundError
           {
-            cause_of_error: ShopifyCli::Context.message(
+            cause_of_error: ShopifyCLI::Context.message(
               "script.error.script_not_found_cause",
               e.script_name,
               e.extension_point_type
@@ -112,135 +112,135 @@ module Script
           }
         when Layers::Domain::Errors::MetadataValidationError
           {
-            cause_of_error: ShopifyCli::Context.message("script.error.metadata_validation_cause"),
-            help_suggestion: ShopifyCli::Context.message("script.error.metadata_validation_help"),
+            cause_of_error: ShopifyCLI::Context.message("script.error.metadata_validation_cause"),
+            help_suggestion: ShopifyCLI::Context.message("script.error.metadata_validation_help"),
           }
         when Layers::Domain::Errors::MetadataNotFoundError
           {
-            cause_of_error: ShopifyCli::Context.message("script.error.metadata_not_found_cause"),
-            help_suggestion: ShopifyCli::Context.message("script.error.metadata_not_found_help"),
+            cause_of_error: ShopifyCLI::Context.message("script.error.metadata_not_found_cause"),
+            help_suggestion: ShopifyCLI::Context.message("script.error.metadata_not_found_help"),
           }
         when Layers::Domain::Errors::MissingScriptJsonFieldError
           {
-            cause_of_error: ShopifyCli::Context.message("script.error.missing_script_json_field_cause", e.field),
-            help_suggestion: ShopifyCli::Context.message("script.error.missing_script_json_field_help"),
+            cause_of_error: ShopifyCLI::Context.message("script.error.missing_script_json_field_cause", e.field),
+            help_suggestion: ShopifyCLI::Context.message("script.error.missing_script_json_field_help"),
           }
         when Layers::Domain::Errors::InvalidScriptJsonDefinitionError
           {
-            cause_of_error: ShopifyCli::Context.message("script.error.invalid_script_json_definition_cause"),
-            help_suggestion: ShopifyCli::Context.message("script.error.invalid_script_json_definition_help"),
+            cause_of_error: ShopifyCLI::Context.message("script.error.invalid_script_json_definition_cause"),
+            help_suggestion: ShopifyCLI::Context.message("script.error.invalid_script_json_definition_help"),
           }
         when Layers::Domain::Errors::NoScriptJsonFile
           {
-            cause_of_error: ShopifyCli::Context.message("script.error.no_script_json_file_cause"),
-            help_suggestion: ShopifyCli::Context.message("script.error.no_script_json_file_help"),
+            cause_of_error: ShopifyCLI::Context.message("script.error.no_script_json_file_cause"),
+            help_suggestion: ShopifyCLI::Context.message("script.error.no_script_json_file_help"),
           }
         when Layers::Infrastructure::Errors::AppNotInstalledError
           {
-            cause_of_error: ShopifyCli::Context.message("script.error.app_not_installed_cause"),
+            cause_of_error: ShopifyCLI::Context.message("script.error.app_not_installed_cause"),
           }
         when Layers::Infrastructure::Errors::BuildError
           {
-            cause_of_error: ShopifyCli::Context.message("script.error.build_error_cause"),
-            help_suggestion: ShopifyCli::Context.message("script.error.build_error_help"),
+            cause_of_error: ShopifyCLI::Context.message("script.error.build_error_cause"),
+            help_suggestion: ShopifyCLI::Context.message("script.error.build_error_help"),
           }
         when Layers::Infrastructure::Errors::ScriptJsonSyntaxError
           {
-            cause_of_error: ShopifyCli::Context.message("script.error.configuration_syntax_error_cause"),
-            help_suggestion: ShopifyCli::Context.message("script.error.configuration_syntax_error_help"),
+            cause_of_error: ShopifyCLI::Context.message("script.error.configuration_syntax_error_cause"),
+            help_suggestion: ShopifyCLI::Context.message("script.error.configuration_syntax_error_help"),
           }
         when Layers::Infrastructure::Errors::ScriptJsonMissingKeysError
           {
-            cause_of_error: ShopifyCli::Context.message(
+            cause_of_error: ShopifyCLI::Context.message(
               "script.error.configuration_missing_keys_error_cause",
               missing_keys: e.missing_keys
             ),
-            help_suggestion: ShopifyCli::Context.message("script.error.configuration_missing_keys_error_help"),
+            help_suggestion: ShopifyCLI::Context.message("script.error.configuration_missing_keys_error_help"),
           }
         when Layers::Infrastructure::Errors::ScriptJsonInvalidValueError
           {
-            cause_of_error: ShopifyCli::Context.message(
+            cause_of_error: ShopifyCLI::Context.message(
               "script.error.configuration_invalid_value_error_cause",
               valid_input_modes: e.valid_input_modes
             ),
-            help_suggestion: ShopifyCli::Context.message("script.error.configuration_invalid_value_error_help"),
+            help_suggestion: ShopifyCLI::Context.message("script.error.configuration_invalid_value_error_help"),
           }
         when Layers::Infrastructure::Errors::ScriptJsonFieldsMissingKeysError
           {
-            cause_of_error: ShopifyCli::Context.message(
+            cause_of_error: ShopifyCLI::Context.message(
               "script.error.configuration_schema_field_missing_keys_error_cause",
               missing_keys: e.missing_keys
             ),
-            help_suggestion: ShopifyCli::Context.message(
+            help_suggestion: ShopifyCLI::Context.message(
               "script.error.configuration_definition_schema_field_missing_keys_error_help"
             ),
           }
         when Layers::Infrastructure::Errors::ScriptJsonFieldsInvalidValueError
           {
-            cause_of_error: ShopifyCli::Context.message(
+            cause_of_error: ShopifyCLI::Context.message(
               "script.error.configuration_schema_field_invalid_value_error_cause",
               valid_types: e.valid_types
             ),
-            help_suggestion: ShopifyCli::Context.message(
+            help_suggestion: ShopifyCLI::Context.message(
               "script.error.configuration_schema_field_invalid_value_error_help"
             ),
           }
         when Layers::Infrastructure::Errors::DependencyInstallError
           {
-            cause_of_error: ShopifyCli::Context.message("script.error.dependency_install_cause"),
-            help_suggestion: ShopifyCli::Context.message("script.error.dependency_install_help"),
+            cause_of_error: ShopifyCLI::Context.message("script.error.dependency_install_cause"),
+            help_suggestion: ShopifyCLI::Context.message("script.error.dependency_install_help"),
           }
         when Layers::Infrastructure::Errors::EmptyResponseError
           {
-            cause_of_error: ShopifyCli::Context.message("script.error.failed_api_request_cause"),
-            help_suggestion: ShopifyCli::Context.message("script.error.failed_api_request_help"),
+            cause_of_error: ShopifyCLI::Context.message("script.error.failed_api_request_cause"),
+            help_suggestion: ShopifyCLI::Context.message("script.error.failed_api_request_help"),
           }
         when Layers::Infrastructure::Errors::ForbiddenError
           {
-            cause_of_error: ShopifyCli::Context.message("script.error.forbidden_error_cause"),
+            cause_of_error: ShopifyCLI::Context.message("script.error.forbidden_error_cause"),
           }
         when Layers::Infrastructure::Errors::GraphqlError
           {
-            cause_of_error: ShopifyCli::Context.message(
+            cause_of_error: ShopifyCLI::Context.message(
               "script.error.graphql_error_cause", JSON.pretty_generate(e.errors)
             ),
-            help_suggestion: ShopifyCli::Context.message("script.error.graphql_error_help"),
+            help_suggestion: ShopifyCLI::Context.message("script.error.graphql_error_help"),
           }
         when Layers::Infrastructure::Errors::SystemCallFailureError
           {
-            cause_of_error: ShopifyCli::Context
+            cause_of_error: ShopifyCLI::Context
               .message("script.error.system_call_failure_cause", cmd: e.cmd),
-            help_suggestion: ShopifyCli::Context.message("script.error.system_call_failure_help", out: e.out),
+            help_suggestion: ShopifyCLI::Context.message("script.error.system_call_failure_help", out: e.out),
           }
         when Layers::Infrastructure::Errors::ScriptRepushError
           {
-            cause_of_error: ShopifyCli::Context.message("script.error.script_repush_cause"),
-            help_suggestion: ShopifyCli::Context.message("script.error.script_repush_help"),
+            cause_of_error: ShopifyCLI::Context.message("script.error.script_repush_cause"),
+            help_suggestion: ShopifyCLI::Context.message("script.error.script_repush_help"),
           }
         when Layers::Infrastructure::Errors::ShopAuthenticationError
           {
-            cause_of_error: ShopifyCli::Context.message("script.error.shop_auth_cause"),
-            help_suggestion: ShopifyCli::Context.message("script.error.shop_auth_help"),
+            cause_of_error: ShopifyCLI::Context.message("script.error.shop_auth_cause"),
+            help_suggestion: ShopifyCLI::Context.message("script.error.shop_auth_help"),
           }
         when Layers::Infrastructure::Errors::BuildScriptNotFoundError
           {
-            cause_of_error: ShopifyCli::Context.message("script.error.build_script_not_found"),
-            help_suggestion: ShopifyCli::Context.message("script.error.build_script_suggestion"),
+            cause_of_error: ShopifyCLI::Context.message("script.error.build_script_not_found"),
+            help_suggestion: ShopifyCLI::Context.message("script.error.build_script_suggestion"),
           }
         when Layers::Infrastructure::Errors::InvalidBuildScriptError
           {
-            cause_of_error: ShopifyCli::Context.message("script.error.invalid_build_script"),
-            help_suggestion: ShopifyCli::Context.message("script.error.build_script_suggestion"),
+            cause_of_error: ShopifyCLI::Context.message("script.error.invalid_build_script"),
+            help_suggestion: ShopifyCLI::Context.message("script.error.build_script_suggestion"),
           }
         when Layers::Infrastructure::Errors::WebAssemblyBinaryNotFoundError
           {
-            cause_of_error: ShopifyCli::Context.message("script.error.web_assembly_binary_not_found"),
-            help_suggestion: ShopifyCli::Context.message("script.error.web_assembly_binary_not_found_suggestion"),
+            cause_of_error: ShopifyCLI::Context.message("script.error.web_assembly_binary_not_found"),
+            help_suggestion: ShopifyCLI::Context.message("script.error.web_assembly_binary_not_found_suggestion"),
           }
         when Layers::Infrastructure::Errors::ScriptUploadError
           {
-            cause_of_error: ShopifyCli::Context.message("script.error.script_upload_cause"),
-            help_suggestion: ShopifyCli::Context.message("script.error.script_upload_help"),
+            cause_of_error: ShopifyCLI::Context.message("script.error.script_upload_cause"),
+            help_suggestion: ShopifyCLI::Context.message("script.error.script_upload_help"),
           }
         end
       end

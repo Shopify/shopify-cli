@@ -1,7 +1,7 @@
 # frozen_string_literal: true
 require "webrick"
 
-module ShopifyCli
+module ShopifyCLI
   module Theme
     class MimeType < Struct.new(:name)
       MIME_TYPES = WEBrick::HTTPUtils::DefaultMimeTypes.merge(

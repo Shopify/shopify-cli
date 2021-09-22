@@ -1,6 +1,6 @@
 require "cli/kit"
 
-module ShopifyCli
+module ShopifyCLI
   module Core
     class HelpResolver < CLI::Kit::Resolver
       def call(args)
@@ -10,7 +10,7 @@ module ShopifyCli
           help = Commands::Help
           help.ctx = Context.new
           help.call([], nil)
-          raise ShopifyCli::AbortSilent
+          raise ShopifyCLI::AbortSilent
         else
           super(args)
         end

@@ -6,7 +6,7 @@ module Script
       module Languages
         class RustProjectCreator
           include SmartProperties
-          property! :ctx, accepts: ShopifyCli::Context
+          property! :ctx, accepts: ShopifyCLI::Context
           property! :extension_point, accepts: Domain::ExtensionPoint
           property! :script_name, accepts: String
           property! :path_to_project, accepts: String

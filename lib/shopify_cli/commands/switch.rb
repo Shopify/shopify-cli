@@ -1,8 +1,8 @@
 require "shopify_cli"
 
-module ShopifyCli
+module ShopifyCLI
   module Commands
-    class Switch < ShopifyCli::Command
+    class Switch < ShopifyCLI::Command
       options do |parser, flags|
         parser.on("--store=STORE") { |url| flags[:shop] = url }
         # backwards compatibility allow 'shop' for now
@@ -18,11 +18,11 @@ module ShopifyCli
         shop = if options.flags[:shop]
           Login.validate_shop(options.flags[:shop])
         elsif (org_id = DB.get(:organization_id))
-          res = ShopifyCli::Tasks::SelectOrgAndShop.call(@ctx, organization_id: org_id)
+          res = ShopifyCLI::Tasks::SelectOrgAndShop.call(@ctx, organization_id: org_id)
           res[:shop_domain]
         else
           AdminAPI.get_shop_or_abort(@ctx)
-          res = ShopifyCli::Tasks::SelectOrgAndShop.call(@ctx)
+          res = ShopifyCLI::Tasks::SelectOrgAndShop.call(@ctx)
           res[:shop_domain]
         end
         DB.set(shop: shop)
@@ -32,7 +32,7 @@ module ShopifyCli
       end
 
       def self.help
-        ShopifyCli::Context.message("core.switch.help", ShopifyCli::TOOL_NAME)
+        ShopifyCLI::Context.message("core.switch.help", ShopifyCLI::TOOL_NAME)
       end
     end
   end

@@ -1,17 +1,17 @@
 require "shopify_cli"
 
-module ShopifyCli
+module ShopifyCLI
   ##
-  # ShopifyCli::JsDeps ensures that all JavaScript dependencies are installed for projects.
+  # ShopifyCLI::JsDeps ensures that all JavaScript dependencies are installed for projects.
   #
   class JsDeps
     include SmartProperties
 
-    property! :ctx, accepts: ShopifyCli::Context
+    property! :ctx, accepts: ShopifyCLI::Context
     property! :system, accepts: JsSystem, default: -> { JsSystem.new(ctx: ctx) }
 
     ##
-    # Proxy to instance method ShopifyCli::JsDeps.new.install.
+    # Proxy to instance method ShopifyCLI::JsDeps.new.install.
     #
     # #### Parameters
     # - `ctx`: running context from your command
@@ -19,7 +19,7 @@ module ShopifyCli
     #
     # #### Example
     #
-    #   ShopifyCli::JsDeps.install(ctx)
+    #   ShopifyCLI::JsDeps.install(ctx)
     #
     def self.install(ctx, verbose = false)
       new(ctx: ctx).install(verbose)
@@ -34,7 +34,7 @@ module ShopifyCli
     # #### Example
     #
     #   # context is the running context for the command
-    #   ShopifyCli::JsDeps.new(context).install(true)
+    #   ShopifyCLI::JsDeps.new(context).install(true)
     #
     def install(verbose = false)
       title = ctx.message("core.js_deps.installing", @system.package_manager)
@@ -104,7 +104,7 @@ module ShopifyCli
         ctx.message("core.js_deps.error.invalid_package", File.read(File.join(path, "package.json"))),
         error: true
       )
-      raise ShopifyCli::AbortSilent
+      raise ShopifyCLI::AbortSilent
     end
   end
 end
