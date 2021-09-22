@@ -41,27 +41,26 @@ module Extension
       end
 
       def test_runs_new_flow_if_development_server_supported
-        type = "checkout_ui_extension"
+        config_file = "shopifile.yml"
+        type = "CHECKOUT_UI_EXTENSION"
         stub_project(type)
-        ShopifyCLI::Shopifolk.stubs(:check).returns(true)
-        ShopifyCLI::Feature.stubs(:enabled?).with(:extension_server_beta).returns(true)
-        File.stubs(:exist?).returns(true)
 
-        extension_command = Tasks::RunExtensionCommand.new(type: type, command: "build")
-        Extension::Tasks::RunExtensionCommand.expects(:new).returns(extension_command) do |mock|
-          mock.expects(:call)
+        Models::DevelopmentServerRequirements.expects(:supported?).with(type).returns(true)
+
+        command = Tasks::RunExtensionCommand.new(type: type.downcase, command: "build", config_file_name: config_file)
+        Tasks::RunExtensionCommand.expects(:new).returns(command) do |cmd|
+          cmd.expects(:call)
         end
 
-        Models::ServerConfig::Extension.expects(:build)
-          .with(template: nil, type: type, root_dir: nil)
-          .returns(extension)
-
         server_config = Models::ServerConfig::Root.new(extensions: [extension])
+        Models::ServerConfig::Extension.expects(:build).returns(extension)
         Models::ServerConfig::Root.expects(:new).returns(server_config)
 
         development_server = Models::DevelopmentServer.new(executable: "fake")
-        Models::DevelopmentServer.expects(:new).returns(development_server) do |mock|
-          mock.expects(:build)
+        File.stubs(:exist?)
+        File.stubs(:exist?).with("fake").returns(true)
+        Models::DevelopmentServer.expects(:new).returns(development_server) do |server|
+          server.expects(:build).with(server_config)
         end
 
         CLI::Kit::System.expects(:capture3)
@@ -78,7 +77,11 @@ module Extension
       end
 
       def stub_project(type = "TEST")
-        project = ExtensionTestHelpers.fake_extension_project(type_identifier: type)
+        project = ExtensionTestHelpers.fake_extension_project(
+          type_identifier: type,
+          with_mocks: true
+        )
+
         ShopifyCLI::Project.stubs(:current).returns(project)
       end
 
