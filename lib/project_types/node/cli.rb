@@ -15,7 +15,7 @@ module Node
     subcommand :Serve, "serve", Project.project_filepath("commands/serve")
     subcommand :Tunnel, "tunnel", Project.project_filepath("commands/tunnel")
   end
-  ShopifyCLI::Commands.register("Node::Command", "node")
+  ShopifyCLI::Commands::App.subcommand("Node::Command", "node")
 
   # define/autoload project specific Tasks
   module Tasks

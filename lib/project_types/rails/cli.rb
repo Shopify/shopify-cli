@@ -15,7 +15,7 @@ module Rails
     subcommand :Serve, "serve", Project.project_filepath("commands/serve")
     subcommand :Tunnel, "tunnel", Project.project_filepath("commands/tunnel")
   end
-  ShopifyCLI::Commands.register("Rails::Command", "rails")
+  ShopifyCLI::Commands::App.subcommand("Rails::Command", "rails")
 
   # define/autoload project specific Tasks
   module Tasks

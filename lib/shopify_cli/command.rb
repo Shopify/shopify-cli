@@ -11,12 +11,13 @@ module ShopifyCLI
     class << self
       attr_writer :ctx, :task_registry
 
-      def call(args, command_name)
+      def call(args, command_name, *)
         subcommand, resolved_name = subcommand_registry.lookup_command(args.first)
+
         if subcommand
           subcommand.ctx = @ctx
           subcommand.task_registry = @task_registry
-          subcommand.call(args, resolved_name, command_name)
+          subcommand.call(args.drop(1), resolved_name, command_name)
         else
           cmd = new(@ctx)
           cmd.options.parse(@_options, args)
