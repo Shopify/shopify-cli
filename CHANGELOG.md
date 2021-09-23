@@ -1,5 +1,6 @@
 Unreleased
 ------
+* [#1566](https://github.com/Shopify/shopify-cli/pull/1566): Fix bug when running `npm | yarn list` for extension package resolution
 
 Version 2.5.0
 ------
