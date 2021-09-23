@@ -9,7 +9,7 @@ module Script
 
       def setup
         super
-        ShopifyCli::ProjectType.load_type(:script)
+        ShopifyCLI::ProjectType.load_type(:script)
         @context = TestHelpers::FakeContext.new
       end
 

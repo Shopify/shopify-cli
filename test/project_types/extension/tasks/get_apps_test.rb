@@ -10,7 +10,7 @@ module Extension
 
       def setup
         super
-        ShopifyCli::ProjectType.load_type(:extension)
+        ShopifyCLI::ProjectType.load_type(:extension)
         @app = Models::App.new(title: "App One", api_key: "1234", secret: "5678")
       end
 

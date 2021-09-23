@@ -8,10 +8,10 @@ module Rails
       include TestHelpers::FakeUI
 
       def test_can_connect
-        context = ShopifyCli::Context.new
+        context = ShopifyCLI::Context.new
 
-        ShopifyCli::Project.expects(:has_current?).returns(false)
-        ShopifyCli::Connect.any_instance.expects(:default_connect)
+        ShopifyCLI::Project.expects(:has_current?).returns(false)
+        ShopifyCLI::Connect.any_instance.expects(:default_connect)
           .with("rails")
           .returns("rails-app")
         context.expects(:done)
@@ -21,12 +21,12 @@ module Rails
       end
 
       def test_warns_if_in_production
-        context = ShopifyCli::Context.new
+        context = ShopifyCLI::Context.new
 
-        ShopifyCli::Project.stubs(:current_project_type).returns(:rails)
+        ShopifyCLI::Project.stubs(:current_project_type).returns(:rails)
         context.expects(:puts)
           .with(context.message("rails.connect.production_warning"))
-        ShopifyCli::Connect.any_instance.expects(:default_connect)
+        ShopifyCLI::Connect.any_instance.expects(:default_connect)
           .with("rails")
           .returns("rails-app")
         context.expects(:done)

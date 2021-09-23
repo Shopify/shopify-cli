@@ -3,7 +3,7 @@ require "shopify_cli"
 
 module Node
   class Command
-    class Generate < ShopifyCli::SubCommand
+    class Generate < ShopifyCLI::SubCommand
       prerequisite_task ensure_project_type: :node
 
       def call(*)
@@ -11,7 +11,7 @@ module Node
       end
 
       def self.help
-        ShopifyCli::Context.message("node.generate.help")
+        ShopifyCLI::Context.message("node.generate.help")
       end
 
       def self.extended_help

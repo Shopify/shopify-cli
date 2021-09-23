@@ -32,8 +32,8 @@ module Extension
           registration_uuid: @registration_uuid,
         )
 
-        ShopifyCli::Project.stubs(:current).returns(@project)
-        ShopifyCli::Project.stubs(:has_current?).returns(true)
+        ShopifyCLI::Project.stubs(:current).returns(@project)
+        ShopifyCLI::Project.stubs(:has_current?).returns(true)
         ExtensionProject.stubs(:current).returns(@project)
         specifications = DummySpecifications.build(
           identifier: type_identifier.downcase,

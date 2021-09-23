@@ -5,7 +5,7 @@ module Script
     module Infrastructure
       class ScriptProjectRepository
         include SmartProperties
-        property! :ctx, accepts: ShopifyCli::Context
+        property! :ctx, accepts: ShopifyCLI::Context
 
         SCRIPT_JSON_FILENAME = "script.json"
         MUTABLE_ENV_VALUES = %i(uuid)
@@ -13,7 +13,7 @@ module Script
         def create(script_name:, extension_point_type:, language:)
           validate_metadata!(extension_point_type, language)
 
-          ShopifyCli::Project.write(
+          ShopifyCLI::Project.write(
             ctx,
             project_type: :script,
             organization_id: nil,
@@ -63,7 +63,7 @@ module Script
         end
 
         def create_env(api_key:, secret:, uuid:)
-          ShopifyCli::Resources::EnvFile.new(
+          ShopifyCLI::Resources::EnvFile.new(
             api_key: api_key,
             secret: secret,
             extra: {
@@ -125,7 +125,7 @@ module Script
         end
 
         def project
-          @project ||= ShopifyCli::Project.current(force_reload: true)
+          @project ||= ShopifyCLI::Project.current(force_reload: true)
         end
 
         def default_language
@@ -142,7 +142,7 @@ module Script
 
         class ScriptJsonRepository
           include SmartProperties
-          property! :ctx, accepts: ShopifyCli::Context
+          property! :ctx, accepts: ShopifyCLI::Context
 
           def get
             current_script_json || raise(Domain::Errors::NoScriptJsonFile)

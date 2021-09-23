@@ -1,7 +1,7 @@
 # frozen_string_literal: true
 module Rails
   class Command
-    class Create < ShopifyCli::SubCommand
+    class Create < ShopifyCLI::SubCommand
       prerequisite_task :ensure_authenticated
 
       USER_AGENT_CODE = <<~USERAGENT
@@ -43,37 +43,37 @@ module Rails
 
         build(form.name, form.db)
         set_custom_ua
-        ShopifyCli::Project.write(
+        ShopifyCLI::Project.write(
           @ctx,
           project_type: "rails",
           organization_id: form.organization_id,
         )
 
-        api_client = ShopifyCli::Tasks::CreateApiClient.call(
+        api_client = ShopifyCLI::Tasks::CreateApiClient.call(
           @ctx,
           org_id: form.organization_id,
           title: form.title,
           type: form.type,
         )
 
-        ShopifyCli::Resources::EnvFile.new(
+        ShopifyCLI::Resources::EnvFile.new(
           api_key: api_client["apiKey"],
           secret: api_client["apiSecretKeys"].first["secret"],
           shop: form.shop_domain,
           scopes: "write_products,write_customers,write_draft_orders",
         ).write(@ctx)
 
-        partners_url = ShopifyCli::PartnersAPI.partners_url_for(form.organization_id, api_client["id"])
+        partners_url = ShopifyCLI::PartnersAPI.partners_url_for(form.organization_id, api_client["id"])
 
         @ctx.puts(@ctx.message("apps.create.info.created", form.title, partners_url))
-        @ctx.puts(@ctx.message("apps.create.info.serve", form.name, ShopifyCli::TOOL_NAME, "rails"))
-        unless ShopifyCli::Shopifolk.acting_as_shopify_organization?
+        @ctx.puts(@ctx.message("apps.create.info.serve", form.name, ShopifyCLI::TOOL_NAME, "rails"))
+        unless ShopifyCLI::Shopifolk.acting_as_shopify_organization?
           @ctx.puts(@ctx.message("apps.create.info.install", partners_url, form.title))
         end
       end
 
       def self.help
-        ShopifyCli::Context.message("rails.create.help", ShopifyCli::TOOL_NAME, ShopifyCli::TOOL_NAME)
+        ShopifyCLI::Context.message("rails.create.help", ShopifyCLI::TOOL_NAME, ShopifyCLI::TOOL_NAME)
       end
 
       private
@@ -84,7 +84,7 @@ module Rails
           @ctx.abort(@ctx.message("rails.create.error.node_required")) unless @ctx.windows?
           @ctx.puts("{{x}} {{red:" + @ctx.message("rails.create.error.node_required") + "}}")
           @ctx.puts(@ctx.message("rails.create.info.open_new_shell", "node"))
-          raise ShopifyCli::AbortSilent
+          raise ShopifyCLI::AbortSilent
         end
 
         version, stat = @ctx.capture2e("node", "-v")
@@ -93,7 +93,7 @@ module Rails
           # execution stops above if not Windows
           @ctx.puts("{{x}} {{red:" + @ctx.message("rails.create.error.node_version_failure") + "}}")
           @ctx.puts(@ctx.message("rails.create.info.open_new_shell", "node"))
-          raise ShopifyCli::AbortSilent
+          raise ShopifyCLI::AbortSilent
         end
 
         @ctx.done(@ctx.message("rails.create.node_version", version))
@@ -105,7 +105,7 @@ module Rails
           @ctx.abort(@ctx.message("rails.create.error.yarn_required")) unless @ctx.windows?
           @ctx.puts("{{x}} {{red:" + @ctx.message("rails.create.error.yarn_required") + "}}")
           @ctx.puts(@ctx.message("rails.create.info.open_new_shell", "yarn"))
-          raise ShopifyCli::AbortSilent
+          raise ShopifyCLI::AbortSilent
         end
 
         version, stat = @ctx.capture2e("yarn", "-v")
@@ -113,7 +113,7 @@ module Rails
           @ctx.abort(@ctx.message("rails.create.error.yarn_version_failure")) unless @ctx.windows?
           @ctx.puts("{{x}} {{red:" + @ctx.message("rails.create.error.yarn_version_failure") + "}}")
           @ctx.puts(@ctx.message("rails.create.info.open_new_shell", "yarn"))
-          raise ShopifyCli::AbortSilent
+          raise ShopifyCLI::AbortSilent
         end
 
         @ctx.done(@ctx.message("rails.create.yarn_version", version))

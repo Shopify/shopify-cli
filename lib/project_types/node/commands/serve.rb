@@ -1,9 +1,9 @@
 # frozen_string_literal: true
 module Node
   class Command
-    class Serve < ShopifyCli::SubCommand
-      prerequisite_task ensure_project_type: :node
-      prerequisite_task :ensure_env, :ensure_dev_store
+    class Serve < ShopifyCLI::SubCommand
+      # prerequisite_task ensure_project_type: :node
+      # prerequisite_task :ensure_env, :ensure_dev_store
 
       options do |parser, flags|
         parser.on("--host=HOST") do |h|
@@ -13,12 +13,12 @@ module Node
       end
 
       def call(*)
-       project = ShopifyCli::Project.current
-        
-        url = options.flags[:host] || ShopifyCli::Tunnel.start(@ctx)
+        # project = ShopifyCLI::Project.current
+        url = options.flags[:host] || ShopifyCLI::Tunnel.start(@ctx)
+        require "byebug"; byebug
         @ctx.abort(@ctx.message("node.serve.error.host_must_be_https")) if url.match(/^https/i).nil?
-        project.env.update(@ctx, :host, url)
-        ShopifyCli::Tasks::UpdateDashboardURLS.call(
+        # project.env.update(@ctx, :host, url)
+        ShopifyCLI::Tasks::UpdateDashboardURLS.call(
           @ctx,
           url: url,
           callback_url: "/auth/callback",
@@ -38,18 +38,17 @@ module Node
 
       def port
         return ShopifyCli::Tunnel::PORT.to_s unless options.flags.key?(:port)
-
         port = options.flags[:port].to_i
         @ctx.abort(@ctx.message("tunnel.invalid_port", options.flags[:port])) unless port > 0
         port
       end
 
       def self.help
-        ShopifyCli::Context.message("node.serve.help", ShopifyCli::TOOL_NAME)
+        ShopifyCLI::Context.message("node.serve.help", ShopifyCLI::TOOL_NAME)
       end
 
       def self.extended_help
-        ShopifyCli::Context.message("node.serve.extended_help")
+        ShopifyCLI::Context.message("node.serve.extended_help")
       end
     end
   end

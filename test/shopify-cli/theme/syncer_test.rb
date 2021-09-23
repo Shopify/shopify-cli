@@ -1,24 +1,24 @@
 # frozen_string_literal: true
 require "test_helper"
-require "shopify-cli/theme/syncer"
-require "shopify-cli/theme/theme"
+require "shopify_cli/theme/syncer"
+require "shopify_cli/theme/theme"
 
-module ShopifyCli
+module ShopifyCLI
   module Theme
     class SyncerTest < Minitest::Test
       def setup
         super
-        root = ShopifyCli::ROOT + "/test/fixtures/theme"
+        root = ShopifyCLI::ROOT + "/test/fixtures/theme"
         @ctx = TestHelpers::FakeContext.new(root: root)
         @theme = Theme.new(@ctx, root: root)
         @syncer = Syncer.new(@ctx, theme: @theme)
 
-        ShopifyCli::DB.stubs(:exists?).with(:shop).returns(true)
-        ShopifyCli::DB
+        ShopifyCLI::DB.stubs(:exists?).with(:shop).returns(true)
+        ShopifyCLI::DB
           .stubs(:get)
           .with(:shop)
           .returns("dev-theme-server-store.myshopify.com")
-        ShopifyCli::DB
+        ShopifyCLI::DB
           .stubs(:get)
           .with(:development_theme_id)
           .returns("12345678")
@@ -34,7 +34,7 @@ module ShopifyCli
       end
 
       def test_update_text_file
-        ShopifyCli::AdminAPI.expects(:rest_request).with(
+        ShopifyCLI::AdminAPI.expects(:rest_request).with(
           @ctx,
           shop: @theme.shop,
           path: "themes/#{@theme.id}/assets.json",
@@ -62,7 +62,7 @@ module ShopifyCli
       end
 
       def test_update_binary_file
-        ShopifyCli::AdminAPI.expects(:rest_request).with(
+        ShopifyCLI::AdminAPI.expects(:rest_request).with(
           @ctx,
           shop: @theme.shop,
           path: "themes/#{@theme.id}/assets.json",
@@ -90,7 +90,7 @@ module ShopifyCli
       end
 
       def test_delete_file
-        ShopifyCli::AdminAPI.expects(:rest_request).with(
+        ShopifyCLI::AdminAPI.expects(:rest_request).with(
           @ctx,
           shop: @theme.shop,
           path: "themes/#{@theme.id}/assets.json",
@@ -116,14 +116,14 @@ module ShopifyCli
       def test_upload_when_unmodified
         @syncer.checksums["assets/theme.css"] = @theme["assets/theme.css"].checksum
 
-        ShopifyCli::AdminAPI.expects(:rest_request).never
+        ShopifyCLI::AdminAPI.expects(:rest_request).never
 
         @syncer.enqueue_updates([@theme["assets/theme.css"]])
         @syncer.wait!
       end
 
       def test_fetch_checksums
-        ShopifyCli::AdminAPI.expects(:rest_request).with(
+        ShopifyCLI::AdminAPI.expects(:rest_request).with(
           @ctx,
           shop: @theme.shop,
           path: "themes/#{@theme.id}/assets.json",
@@ -145,7 +145,7 @@ module ShopifyCli
       end
 
       def test_fetch_checksums_with_duplicate_liquid_assets
-        ShopifyCli::AdminAPI.expects(:rest_request).with(
+        ShopifyCLI::AdminAPI.expects(:rest_request).with(
           @ctx,
           shop: @theme.shop,
           path: "themes/#{@theme.id}/assets.json",
@@ -174,7 +174,7 @@ module ShopifyCli
       end
 
       def test_update_checksum_after_upload
-        ShopifyCli::AdminAPI.expects(:rest_request).returns([
+        ShopifyCLI::AdminAPI.expects(:rest_request).returns([
           200,
           {
             "asset" => {
@@ -207,7 +207,7 @@ module ShopifyCli
 
         file = @theme.static_asset_files.first
         @ctx.expects(:puts).once
-        ShopifyCli::AdminAPI.expects(:rest_request).raises(RuntimeError.new("oops"))
+        ShopifyCLI::AdminAPI.expects(:rest_request).raises(RuntimeError.new("oops"))
 
         @syncer.enqueue_updates([file])
         @syncer.wait!
@@ -218,7 +218,7 @@ module ShopifyCli
 
         expected_size = @theme.theme_files.size
 
-        ShopifyCli::AdminAPI.expects(:rest_request)
+        ShopifyCLI::AdminAPI.expects(:rest_request)
           .times(expected_size + 1) # +1 for checksums
           .returns([200, {}, {}])
 
@@ -238,7 +238,7 @@ module ShopifyCli
           .times(expected_size)
           .with("new content")
 
-        ShopifyCli::AdminAPI.expects(:rest_request)
+        ShopifyCLI::AdminAPI.expects(:rest_request)
           .at_least(expected_size + 1) # +1 for checksums
           .returns([
             200,
@@ -266,7 +266,7 @@ module ShopifyCli
         File.any_instance.expects(:delete).never
         File.any_instance.expects(:write).never
 
-        ShopifyCli::AdminAPI.expects(:rest_request)
+        ShopifyCLI::AdminAPI.expects(:rest_request)
           .at_least(1) # 1 for checksums
           .returns([200, {}, {}])
 
@@ -284,7 +284,7 @@ module ShopifyCli
           .times(expected_size)
           .with("new content")
 
-        ShopifyCli::AdminAPI.expects(:rest_request)
+        ShopifyCLI::AdminAPI.expects(:rest_request)
           .at_least(expected_size + 1) # +1 for checksums
           .returns([
             200,
@@ -305,7 +305,7 @@ module ShopifyCli
 
         expected_size = (@theme.liquid_files + @theme.json_files).size
 
-        ShopifyCli::AdminAPI.expects(:rest_request)
+        ShopifyCLI::AdminAPI.expects(:rest_request)
           .at_least(expected_size)
           .returns([200, {}, {}])
 
@@ -336,7 +336,7 @@ module ShopifyCli
         }
 
         # Checksum request
-        ShopifyCli::AdminAPI.expects(:rest_request).with(
+        ShopifyCLI::AdminAPI.expects(:rest_request).with(
           @ctx,
           shop: @theme.shop,
           path: "themes/#{@theme.id}/assets.json",
@@ -348,11 +348,11 @@ module ShopifyCli
         ])
 
         # Other assets have matching checksum, so should not be uploaded
-        ShopifyCli::AdminAPI.expects(:rest_request)
+        ShopifyCLI::AdminAPI.expects(:rest_request)
           .with(@ctx, has_entries(method: "PUT"))
           .never
 
-        ShopifyCli::AdminAPI.expects(:rest_request)
+        ShopifyCLI::AdminAPI.expects(:rest_request)
           .with(@ctx, has_entries(
             method: "DELETE",
             body: JSON.generate(
@@ -370,7 +370,7 @@ module ShopifyCli
         @syncer.start_threads
         file = @theme.liquid_files.first
 
-        ShopifyCli::AdminAPI.expects(:rest_request).returns([
+        ShopifyCLI::AdminAPI.expects(:rest_request).returns([
           200,
           {},
           {
@@ -388,7 +388,7 @@ module ShopifyCli
         @syncer.start_threads
         file = @theme.liquid_files.first
 
-        ShopifyCli::AdminAPI.expects(:rest_request).returns([
+        ShopifyCLI::AdminAPI.expects(:rest_request).returns([
           200,
           {},
           {
@@ -415,8 +415,8 @@ module ShopifyCli
           }
         )
 
-        ShopifyCli::AdminAPI.expects(:rest_request)
-          .raises(ShopifyCli::API::APIRequestClientError.new(
+        ShopifyCLI::AdminAPI.expects(:rest_request)
+          .raises(ShopifyCLI::API::APIRequestClientError.new(
             "message", response: mock(body: response_body)
           ))
 
@@ -440,8 +440,8 @@ module ShopifyCli
           }
         )
 
-        ShopifyCli::AdminAPI.expects(:rest_request)
-          .raises(ShopifyCli::API::APIRequestClientError.new(
+        ShopifyCLI::AdminAPI.expects(:rest_request)
+          .raises(ShopifyCLI::API::APIRequestClientError.new(
             "exception message", response: mock(body: response_body)
           ))
 
@@ -467,8 +467,8 @@ module ShopifyCli
           }
         )
 
-        ShopifyCli::AdminAPI.expects(:rest_request)
-          .raises(ShopifyCli::API::APIRequestClientError.new(
+        ShopifyCLI::AdminAPI.expects(:rest_request)
+          .raises(ShopifyCLI::API::APIRequestClientError.new(
             "message", response: mock(body: response_body)
           ))
 

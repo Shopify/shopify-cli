@@ -26,7 +26,7 @@ describe Script::UI::ErrorHandler do
           $stderr.expects(:puts).with("\e[0;31m✗ Error\e[0m")
           $stderr.expects(:puts).with("\e[0m#{failed_op} #{cause_of_error} #{help_suggestion}")
         end
-        assert_raises(ShopifyCli::AbortSilent) do
+        assert_raises(ShopifyCLI::AbortSilent) do
           subject
         end
       end
@@ -42,7 +42,7 @@ describe Script::UI::ErrorHandler do
           $stderr.expects(:puts).with("\e[0;31m✗ Error\e[0m")
           $stderr.expects(:puts).with("\e[0m#{cause_of_error} #{help_suggestion}")
         end
-        assert_raises(ShopifyCli::AbortSilent) do
+        assert_raises(ShopifyCLI::AbortSilent) do
           subject
         end
       end
@@ -58,7 +58,7 @@ describe Script::UI::ErrorHandler do
           $stderr.expects(:puts).with("\e[0;31m✗ Error\e[0m")
           $stderr.expects(:puts).with("\e[0m#{failed_op} #{help_suggestion}")
         end
-        assert_raises(ShopifyCli::AbortSilent) do
+        assert_raises(ShopifyCLI::AbortSilent) do
           subject
         end
       end
@@ -74,7 +74,7 @@ describe Script::UI::ErrorHandler do
           $stderr.expects(:puts).with("\e[0;31m✗ Error\e[0m")
           $stderr.expects(:puts).with("\e[0m#{failed_op} #{cause_of_error}")
         end
-        assert_raises(ShopifyCli::AbortSilent) do
+        assert_raises(ShopifyCLI::AbortSilent) do
           subject
         end
       end
@@ -115,7 +115,7 @@ describe Script::UI::ErrorHandler do
       end
 
       describe "when Oauth::Error" do
-        let(:err) { ShopifyCli::IdentityAuth::Error.new }
+        let(:err) { ShopifyCLI::IdentityAuth::Error.new }
         it "should call display_and_raise" do
           should_call_display_and_raise
         end
@@ -207,7 +207,7 @@ describe Script::UI::ErrorHandler do
         it "should not display deprecated or beta APIs" do
           expected_types = %w(payment_methods shipping_methods)
           Script::Layers::Application::ExtensionPoints.expects(:available_types).returns(expected_types)
-          io = capture_io_and_assert_raises(ShopifyCli::AbortSilent) { subject }
+          io = capture_io_and_assert_raises(ShopifyCLI::AbortSilent) { subject }
           assert_match(expected_types.join(", "), io.join)
         end
       end

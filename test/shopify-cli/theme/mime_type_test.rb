@@ -1,8 +1,8 @@
 # frozen_string_literal: true
 require "test_helper"
-require "shopify-cli/theme/mime_type"
+require "shopify_cli/theme/mime_type"
 
-module ShopifyCli
+module ShopifyCLI
   module Theme
     class MimeTypeTest < Minitest::Test
       def test_by_filename

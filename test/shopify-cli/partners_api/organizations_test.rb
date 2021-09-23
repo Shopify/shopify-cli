@@ -1,7 +1,7 @@
 # frozen_string_literal: true
 require "test_helper"
 
-module ShopifyCli
+module ShopifyCLI
   class PartnersAPI
     class OrganizationsTest < MiniTest::Test
       include TestHelpers::Partners

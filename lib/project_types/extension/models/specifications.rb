@@ -5,7 +5,7 @@ module Extension
 
       property! :custom_handler_root,
         accepts: ->(d) { File.directory?(d) },
-        default: -> { File.expand_path("lib/project_types/extension/models/specification_handlers", ShopifyCli::ROOT) }
+        default: -> { File.expand_path("lib/project_types/extension/models/specification_handlers", ShopifyCLI::ROOT) }
 
       property! :custom_handler_namespace,
         accepts: ->(m) { m.respond_to?(:const_get) },
@@ -39,9 +39,9 @@ module Extension
       private
 
       def fetch_specifications_and_build_handlers
-        ShopifyCli::Result
+        ShopifyCLI::Result
           .call(&fetch_specifications)
-          .map(&ShopifyCli::TransformDataStructure.new(symbolize_keys: true, underscore_keys: true))
+          .map(&ShopifyCLI::TransformDataStructure.new(symbolize_keys: true, underscore_keys: true))
           .then(&method(:select_cli_extensions))
           .then(&Tasks::ConfigureFeatures)
           .then(&Tasks::ConfigureOptions)
@@ -61,7 +61,7 @@ module Extension
 
       def instantiate_specification_handlers(specifications)
         specifications.each_with_object({}) do |specification, handlers|
-          ShopifyCli::ResolveConstant.call(specification.identifier, namespace: custom_handler_namespace)
+          ShopifyCLI::ResolveConstant.call(specification.identifier, namespace: custom_handler_namespace)
             .rescue { |error| error.is_a?(NameError) ? SpecificationHandlers::Default : raise(error) }
             .then { |handler_class| handler_class.new(specification) }
             .unwrap { |error| raise error }

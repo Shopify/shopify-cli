@@ -1,8 +1,8 @@
 # frozen_string_literal: true
 require "test_helper"
-require "shopify-cli/theme/ignore_filter"
+require "shopify_cli/theme/ignore_filter"
 
-module ShopifyCli
+module ShopifyCLI
   module Theme
     class IgnoreFilterTest < Minitest::Test
       def test_new_filter
@@ -41,7 +41,7 @@ module ShopifyCli
       end
 
       def test_from_path
-        filter = IgnoreFilter.from_path("#{ShopifyCli::ROOT}/test/fixtures/theme")
+        filter = IgnoreFilter.from_path("#{ShopifyCLI::ROOT}/test/fixtures/theme")
 
         assert_includes(filter.globs, "*config/settings_data.json")
         assert_includes(filter.globs, "*.jpg")

@@ -1,7 +1,7 @@
 require "test_helper"
-require "shopify-cli/http_request"
+require "shopify_cli/http_request"
 
-module ShopifyCli
+module ShopifyCLI
   class HttpRequestTest < MiniTest::Test
     def test_makes_get_request
       uri = URI.parse("https://example.com")

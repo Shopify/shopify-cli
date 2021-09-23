@@ -26,7 +26,7 @@ module Extension
       end
 
       def run_install_steps(context, steps, identifier, directory_name)
-        system = ShopifyCli::JsSystem.new(ctx: context)
+        system = ShopifyCLI::JsSystem.new(ctx: context)
 
         steps.inject(true) do |success, setup_step|
           success && setup_step.call(context, identifier, directory_name, system)

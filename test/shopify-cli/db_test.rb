@@ -1,6 +1,6 @@
 require "test_helper"
 
-module ShopifyCli
+module ShopifyCLI
   class DBTest < MiniTest::Test
     def test_set
       db = new_db
@@ -49,7 +49,7 @@ module ShopifyCli
     private
 
     def new_db
-      db = DB.new(path: File.join(ShopifyCli::TEMP_DIR, ".test_db.pdb"))
+      db = DB.new(path: File.join(ShopifyCLI::TEMP_DIR, ".test_db.pdb"))
       db.clear
       db.db.transaction do
         db.db[:keyone] = "value"

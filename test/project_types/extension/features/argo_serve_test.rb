@@ -8,7 +8,7 @@ module Extension
       include TestHelpers::FakeUI
 
       def setup
-        ShopifyCli::ProjectType.load_type(:extension)
+        ShopifyCLI::ProjectType.load_type(:extension)
         super
       end
 
@@ -45,8 +45,8 @@ module Extension
       end
 
       def test_forwards_resource_url
-        ShopifyCli::Tasks::EnsureDevStore.stubs(:call)
-        ShopifyCli::Tasks::EnsureEnv.stubs(:call)
+        ShopifyCLI::Tasks::EnsureDevStore.stubs(:call)
+        ShopifyCLI::Tasks::EnsureEnv.stubs(:call)
         ExtensionProject.stubs(:update_env_file)
         ExtensionProject.any_instance.expects(:resource_url).returns("/test").at_least_once
 
@@ -69,8 +69,8 @@ module Extension
       end
 
       def test_builds_resource_url_if_necessary
-        ShopifyCli::Tasks::EnsureDevStore.stubs(:call)
-        ShopifyCli::Tasks::EnsureEnv.stubs(:call)
+        ShopifyCLI::Tasks::EnsureDevStore.stubs(:call)
+        ShopifyCLI::Tasks::EnsureEnv.stubs(:call)
         ExtensionProject.expects(:update_env_file).with(
           has_entries(context: anything, resource_url: "/generated")
         )
@@ -89,8 +89,8 @@ module Extension
       end
 
       def test_resource_url_is_used_if_given
-        ShopifyCli::Tasks::EnsureDevStore.stubs(:call)
-        ShopifyCli::Tasks::EnsureEnv.stubs(:call)
+        ShopifyCLI::Tasks::EnsureDevStore.stubs(:call)
+        ShopifyCLI::Tasks::EnsureEnv.stubs(:call)
 
         js_system = mock
         js_system.expects(:call)
@@ -130,7 +130,7 @@ module Extension
       end
 
       def stub_ensure_env_check
-        ShopifyCli::Tasks::EnsureEnv.stubs(:call)
+        ShopifyCLI::Tasks::EnsureEnv.stubs(:call)
       end
 
       def stub_package_manager
@@ -141,7 +141,7 @@ module Extension
           ✨  Done in 0.40s.
         YARN
 
-        ShopifyCli::JsSystem
+        ShopifyCLI::JsSystem
           .new(ctx: @context)
           .tap { |js_system| js_system.stubs(call: [fake_list_result, nil, stub(success?: true)]) }
           .yield_self { |js_system| Tasks::FindNpmPackages.new(js_system: js_system) }

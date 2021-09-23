@@ -14,7 +14,7 @@ module Extension
 
       def setup
         super
-        ShopifyCli::ProjectType.load_type(:extension)
+        ShopifyCLI::ProjectType.load_type(:extension)
         @app = Models::App.new(title: "Fake", api_key: "1234", secret: "4567", business_name: "Fake Business")
         @extension_handler = ExtensionTestHelpers.test_specification_handler
       end

@@ -10,7 +10,7 @@ module Extension
 
         def setup
           super
-          ShopifyCli::ProjectType.load_type(:extension)
+          ShopifyCLI::ProjectType.load_type(:extension)
         end
 
         def test_returns_if_the_given_extension_type_valid
@@ -55,7 +55,7 @@ module Extension
           AskType.new(ctx: context).call(project_details).tap do |result|
             assert_predicate(result, :failure?)
             result.error.tap do |error|
-              assert_kind_of(ShopifyCli::AbortSilent, error)
+              assert_kind_of(ShopifyCLI::AbortSilent, error)
             end
           end
         end

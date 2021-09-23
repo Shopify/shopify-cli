@@ -15,9 +15,9 @@ module Extension
       end
 
       def self.load_current_type_messages
-        return unless ShopifyCli::Project.has_current?
+        return unless ShopifyCLI::Project.has_current?
         messages_for_type(
-          ShopifyCli::Project.current.config[Extension::ExtensionProjectKeys::SPECIFICATION_IDENTIFIER_KEY]
+          ShopifyCLI::Project.current.config[Extension::ExtensionProjectKeys::SPECIFICATION_IDENTIFIER_KEY]
         )
       end
 

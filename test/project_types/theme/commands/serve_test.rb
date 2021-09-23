@@ -1,6 +1,6 @@
 # frozen_string_literal: true
 require "project_types/theme/test_helper"
-require "shopify-cli/theme/dev_server"
+require "shopify_cli/theme/dev_server"
 
 module Theme
   module Commands
@@ -8,15 +8,15 @@ module Theme
       include TestHelpers::FakeUI
 
       def test_serve_command
-        context = ShopifyCli::Context.new
-        ShopifyCli::Theme::DevServer.expects(:start).with(context, ".", optionally({}))
+        context = ShopifyCLI::Context.new
+        ShopifyCLI::Theme::DevServer.expects(:start).with(context, ".", optionally({}))
 
         Theme::Command::Serve.new(context).call
       end
 
       def test_can_specify_port
-        context = ShopifyCli::Context.new
-        ShopifyCli::Theme::DevServer.expects(:start).with(context, ".", port: 9293)
+        context = ShopifyCLI::Context.new
+        ShopifyCLI::Theme::DevServer.expects(:start).with(context, ".", port: 9293)
 
         command = Theme::Command::Serve.new(context)
         command.options.flags[:port] = 9293
@@ -24,8 +24,8 @@ module Theme
       end
 
       def test_can_specify_env
-        context = ShopifyCli::Context.new
-        ShopifyCli::Theme::DevServer.expects(:start).with(context, ".", env: "staging")
+        context = ShopifyCLI::Context.new
+        ShopifyCLI::Theme::DevServer.expects(:start).with(context, ".", env: "staging")
 
         command = Theme::Command::Serve.new(context)
         command.options.flags[:env] = "staging"

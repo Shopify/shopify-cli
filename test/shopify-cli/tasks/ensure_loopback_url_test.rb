@@ -1,6 +1,6 @@
 require "test_helper"
 
-module ShopifyCli
+module ShopifyCLI
   module Tasks
     class EnsureLoopbackURLTest < MiniTest::Test
       include TestHelpers::Partners
@@ -24,7 +24,7 @@ module ShopifyCli
             },
           },
         )
-        ShopifyCli::Tasks::EnsureLoopbackURL.call(@context)
+        ShopifyCLI::Tasks::EnsureLoopbackURL.call(@context)
       end
 
       def test_url_is_added_if_it_is_not_there
@@ -58,7 +58,7 @@ module ShopifyCli
             },
           },
         )
-        ShopifyCli::Tasks::EnsureLoopbackURL.call(@context)
+        ShopifyCLI::Tasks::EnsureLoopbackURL.call(@context)
       end
     end
   end

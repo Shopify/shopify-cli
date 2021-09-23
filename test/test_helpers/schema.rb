@@ -2,9 +2,9 @@ module TestHelpers
   module Schema
     def setup
       super
-      json_data = File.read(File.join(ShopifyCli::ROOT, "test/fixtures/shopify_schema.json"))
-      schema = ShopifyCli::AdminAPI::Schema[JSON.parse(json_data)]
-      ShopifyCli::AdminAPI::Schema.stubs(:get).returns(schema)
+      json_data = File.read(File.join(ShopifyCLI::ROOT, "test/fixtures/shopify_schema.json"))
+      schema = ShopifyCLI::AdminAPI::Schema[JSON.parse(json_data)]
+      ShopifyCLI::AdminAPI::Schema.stubs(:get).returns(schema)
     end
   end
 end

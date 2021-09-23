@@ -1,7 +1,7 @@
 # frozen_string_literal: true
 
 module Script
-  class Project < ShopifyCli::ProjectType
+  class Project < ShopifyCLI::ProjectType
     hidden_feature(feature_set: :script_project)
 
     require Project.project_filepath("messages/messages")
@@ -9,12 +9,12 @@ module Script
   end
 
   # define/autoload project specific Commands
-  class Command < ShopifyCli::ProjectCommands
+  class Command < ShopifyCLI::ProjectCommands
     hidden_feature(feature_set: :script_project)
     subcommand :Create, "create", Project.project_filepath("commands/create")
     subcommand :Push, "push", Project.project_filepath("commands/push")
   end
-  ShopifyCli::Commands.register("Script::Command", "script")
+  ShopifyCLI::Commands.register("Script::Command", "script")
 
   # define/autoload project specific Forms
   module Forms
@@ -45,7 +45,6 @@ module Script
     end
 
     module Infrastructure
-      autoload :ApiClients, Project.project_filepath("layers/infrastructure/api_clients")
       autoload :Errors, Project.project_filepath("layers/infrastructure/errors")
       autoload :CommandRunner, Project.project_filepath("layers/infrastructure/command_runner")
       autoload :PushPackageRepository, Project.project_filepath("layers/infrastructure/push_package_repository")
@@ -53,6 +52,7 @@ module Script
       autoload :ScriptProjectRepository, Project.project_filepath("layers/infrastructure/script_project_repository")
       autoload :ScriptService, Project.project_filepath("layers/infrastructure/script_service")
       autoload :ScriptUploader, Project.project_filepath("layers/infrastructure/script_uploader")
+      autoload :ServiceLocator, Project.project_filepath("layers/infrastructure/service_locator")
 
       module Languages
         autoload :AssemblyScriptProjectCreator,
@@ -64,6 +64,13 @@ module Script
           Project.project_filepath("layers/infrastructure/languages/rust_project_creator.rb")
         autoload :RustTaskRunner, Project.project_filepath("layers/infrastructure/languages/rust_task_runner")
         autoload :TaskRunner, Project.project_filepath("layers/infrastructure/languages/task_runner")
+      end
+
+      module ApiClients
+        autoload :PartnersProxyApiClient,
+          Project.project_filepath("layers/infrastructure/api_clients/partners_proxy_api_client")
+        autoload :ScriptServiceApiClient,
+          Project.project_filepath("layers/infrastructure/api_clients/script_service_api_client")
       end
     end
   end

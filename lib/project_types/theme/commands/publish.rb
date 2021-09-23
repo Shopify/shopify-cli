@@ -1,16 +1,16 @@
 # frozen_string_literal: true
-require "shopify-cli/theme/theme"
+require "shopify_cli/theme/theme"
 
 module Theme
   class Command
-    class Publish < ShopifyCli::SubCommand
+    class Publish < ShopifyCLI::SubCommand
       options do |parser, flags|
         parser.on("-f", "--force") { flags[:force] = true }
       end
 
       def call(args, *)
         theme = if (theme_id = args.first)
-          ShopifyCli::Theme::Theme.new(@ctx, id: theme_id)
+          ShopifyCLI::Theme::Theme.new(@ctx, id: theme_id)
         else
           form = Forms::Select.ask(
             @ctx,
@@ -31,12 +31,12 @@ module Theme
 
         theme.publish
         @ctx.done(@ctx.message("theme.publish.done", theme.preview_url))
-      rescue ShopifyCli::API::APIRequestNotFoundError
+      rescue ShopifyCLI::API::APIRequestNotFoundError
         @ctx.puts(@ctx.message("theme.publish.not_found", theme.id))
       end
 
       def self.help
-        ShopifyCli::Context.message("theme.publish.help", ShopifyCli::TOOL_NAME, ShopifyCli::TOOL_NAME)
+        ShopifyCLI::Context.message("theme.publish.help", ShopifyCLI::TOOL_NAME, ShopifyCLI::TOOL_NAME)
       end
     end
   end

@@ -21,25 +21,25 @@ module Extension
 
         case subcommand
         when AUTH_SUBCOMMAND then authorize(args)
-        when START_SUBCOMMAND then ShopifyCli::Tunnel.start(@ctx, port: port)
-        when STOP_SUBCOMMAND then ShopifyCli::Tunnel.stop(@ctx)
+        when START_SUBCOMMAND then ShopifyCLI::Tunnel.start(@ctx, port: port)
+        when STOP_SUBCOMMAND then ShopifyCLI::Tunnel.stop(@ctx)
         when STATUS_SUBCOMMAND then status
         else @ctx.puts(self.class.help)
         end
       end
 
       def self.help
-        ShopifyCli::Context.message("tunnel.help", ShopifyCli::TOOL_NAME)
+        ShopifyCLI::Context.message("tunnel.help", ShopifyCLI::TOOL_NAME)
       end
 
       def self.extended_help
-        ShopifyCli::Context.message("tunnel.extended_help", ShopifyCli::TOOL_NAME, DEFAULT_PORT)
+        ShopifyCLI::Context.message("tunnel.extended_help", ShopifyCLI::TOOL_NAME, DEFAULT_PORT)
       end
 
       private
 
       def status
-        tunnel_urls = ShopifyCli::Tunnel.urls
+        tunnel_urls = ShopifyCLI::Tunnel.urls
         tunnel_url = tunnel_urls.find { |url| url.start_with?("https://") }
         tunnel_url = tunnel_urls.first if tunnel_url.nil?
 
@@ -65,7 +65,7 @@ module Extension
           @ctx.puts(@ctx.message("tunnel.missing_token"))
           @ctx.puts("#{self.class.help}\n#{self.class.extended_help}")
         else
-          ShopifyCli::Tunnel.auth(@ctx, token)
+          ShopifyCLI::Tunnel.auth(@ctx, token)
         end
       end
     end

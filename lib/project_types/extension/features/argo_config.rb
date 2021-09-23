@@ -21,7 +21,7 @@ module Extension
             return {} if config.nil?
 
             unless config.is_a?(Hash)
-              raise ShopifyCli::Abort, ShopifyCli::Context.message("core.yaml.error.not_hash", CONFIG_FILE_NAME)
+              raise ShopifyCLI::Abort, ShopifyCLI::Context.message("core.yaml.error.not_hash", CONFIG_FILE_NAME)
             end
 
             config.transform_keys!(&:to_sym)
@@ -30,8 +30,8 @@ module Extension
             config
           rescue Psych::SyntaxError => e
             raise(
-              ShopifyCli::Abort,
-              ShopifyCli::Context.message("core.yaml.error.invalid", CONFIG_FILE_NAME, e.message)
+              ShopifyCLI::Abort,
+              ShopifyCLI::Context.message("core.yaml.error.invalid", CONFIG_FILE_NAME, e.message)
             )
           end
         end
@@ -45,8 +45,8 @@ module Extension
 
           unless unpermitted_keys.empty?
             raise(
-              ShopifyCli::Abort,
-              ShopifyCli::Context.message(
+              ShopifyCLI::Abort,
+              ShopifyCLI::Context.message(
                 "features.argo.config.unpermitted_keys",
                 CONFIG_FILE_NAME,
                 unpermitted_keys.map { |k| "\n- #{k}" }.join

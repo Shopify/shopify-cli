@@ -24,7 +24,7 @@ end
 require "cli/ui"
 require "cli/kit"
 require "smart_properties"
-require_relative "shopify-cli/version"
+require_relative "shopify_cli/version"
 
 # Enable stdout routing. At this point all calls to STDOUT (and STDERR) will go through this class.
 # See https://github.com/Shopify/cli-ui/blob/main/lib/cli/ui/stdout_router.rb for more info
@@ -36,7 +36,7 @@ CLI::UI::StdoutRouter.enable
 #
 # It is recommended to read through CLI Kit (https://github.com/shopify/cli-kit) and a CLI Kit example
 # (https://github.com/Shopify/cli-kit-example) to fully understand how shopify-cli functions
-module ShopifyCli
+module ShopifyCLI
   extend CLI::Kit::Autocall
 
   TOOL_NAME         = "shopify"
@@ -75,63 +75,64 @@ module ShopifyCli
   # application and CLI kit framework.
   # To understand how this works, read https://github.com/Shopify/cli-kit/blob/main/lib/cli/kit.rb
 
-  # ShopifyCli::Config
+  # ShopifyCLI::Config
   autocall(:Config)   { CLI::Kit::Config.new(tool_name: TOOL_NAME) }
-  # ShopifyCli::Logger
-  autocall(:Logger)   { CLI::Kit::Logger.new(debug_log_file: ShopifyCli.debug_log_file) }
-  # ShopifyCli::Resolver
+  # ShopifyCLI::Logger
+  autocall(:Logger)   { CLI::Kit::Logger.new(debug_log_file: ShopifyCLI.debug_log_file) }
+  # ShopifyCLI::Resolver
   autocall(:Resolver) do
-    ShopifyCli::Core::HelpResolver.new(
+    ShopifyCLI::Core::HelpResolver.new(
       tool_name: TOOL_NAME,
-      command_registry: ShopifyCli::Commands::Registry
+      command_registry: ShopifyCLI::Commands::Registry
     )
   end
-  # ShopifyCli::ErrorHandler
+  # ShopifyCLI::ErrorHandler
   autocall(:ErrorHandler) do
     CLI::Kit::ErrorHandler.new(
-      log_file: ShopifyCli.log_file,
+      log_file: ShopifyCLI.log_file,
       exception_reporter: nil,
     )
   end
 
-  autoload :Constants, "shopify-cli/constants"
-  autoload :Environment, "shopify-cli/environment"
-  autoload :AdminAPI, "shopify-cli/admin_api"
-  autoload :API, "shopify-cli/api"
-  autoload :Command, "shopify-cli/command"
-  autoload :Commands, "shopify-cli/commands"
-  autoload :Connect, "shopify-cli/connect"
-  autoload :Context, "shopify-cli/context"
-  autoload :Core, "shopify-cli/core"
-  autoload :DB, "shopify-cli/db"
-  autoload :Feature, "shopify-cli/feature"
-  autoload :Form, "shopify-cli/form"
-  autoload :Git, "shopify-cli/git"
-  autoload :Helpers, "shopify-cli/helpers"
-  autoload :Heroku, "shopify-cli/heroku"
-  autoload :IdentityAuth, "shopify-cli/identity_auth"
-  autoload :JsDeps, "shopify-cli/js_deps"
-  autoload :JsSystem, "shopify-cli/js_system"
-  autoload :LazyDelegator, "shopify-cli/lazy_delegator"
-  autoload :MethodObject, "shopify-cli/method_object"
-  autoload :Options, "shopify-cli/options"
-  autoload :PartnersAPI, "shopify-cli/partners_api"
-  autoload :ProcessSupervision, "shopify-cli/process_supervision"
-  autoload :Project, "shopify-cli/project"
-  autoload :ProjectCommands, "shopify-cli/project_commands"
-  autoload :ProjectType, "shopify-cli/project_type"
-  autoload :ResolveConstant, "shopify-cli/resolve_constant"
-  autoload :Resources, "shopify-cli/resources"
-  autoload :Result, "shopify-cli/result"
-  autoload :Shopifolk, "shopify-cli/shopifolk"
-  autoload :SubCommand, "shopify-cli/sub_command"
-  autoload :Task, "shopify-cli/task"
-  autoload :Tasks, "shopify-cli/tasks"
-  autoload :TransformDataStructure, "shopify-cli/transform_data_structure"
-  autoload :Tunnel, "shopify-cli/tunnel"
+  autoload :Constants, "shopify_cli/constants"
+  autoload :Environment, "shopify_cli/environment"
+  autoload :AdminAPI, "shopify_cli/admin_api"
+  autoload :API, "shopify_cli/api"
+  autoload :Command, "shopify_cli/command"
+  autoload :Commands, "shopify_cli/commands"
+  autoload :Connect, "shopify_cli/connect"
+  autoload :Context, "shopify_cli/context"
+  autoload :Core, "shopify_cli/core"
+  autoload :DB, "shopify_cli/db"
+  autoload :Feature, "shopify_cli/feature"
+  autoload :Form, "shopify_cli/form"
+  autoload :Git, "shopify_cli/git"
+  autoload :Helpers, "shopify_cli/helpers"
+  autoload :Heroku, "shopify_cli/heroku"
+  autoload :IdentityAuth, "shopify_cli/identity_auth"
+  autoload :JsDeps, "shopify_cli/js_deps"
+  autoload :JsSystem, "shopify_cli/js_system"
+  autoload :PHPDeps, "shopify_cli/php_deps"
+  autoload :LazyDelegator, "shopify_cli/lazy_delegator"
+  autoload :MethodObject, "shopify_cli/method_object"
+  autoload :Options, "shopify_cli/options"
+  autoload :PartnersAPI, "shopify_cli/partners_api"
+  autoload :ProcessSupervision, "shopify_cli/process_supervision"
+  autoload :Project, "shopify_cli/project"
+  autoload :ProjectCommands, "shopify_cli/project_commands"
+  autoload :ProjectType, "shopify_cli/project_type"
+  autoload :ResolveConstant, "shopify_cli/resolve_constant"
+  autoload :Resources, "shopify_cli/resources"
+  autoload :Result, "shopify_cli/result"
+  autoload :Shopifolk, "shopify_cli/shopifolk"
+  autoload :SubCommand, "shopify_cli/sub_command"
+  autoload :Task, "shopify_cli/task"
+  autoload :Tasks, "shopify_cli/tasks"
+  autoload :TransformDataStructure, "shopify_cli/transform_data_structure"
+  autoload :Tunnel, "shopify_cli/tunnel"
 
-  require "shopify-cli/messages/messages"
-  Context.load_messages(ShopifyCli::Messages::MESSAGES)
+  require "shopify_cli/messages/messages"
+  Context.load_messages(ShopifyCLI::Messages::MESSAGES)
 
   def self.cache_dir
     cache_dir = if Environment.running_tests?
@@ -168,6 +169,6 @@ module ShopifyCli
 
   def self.sha
     return @sha if defined?(@sha)
-    @sha = Git.sha(dir: ShopifyCli::ROOT)
+    @sha = Git.sha(dir: ShopifyCLI::ROOT)
   end
 end

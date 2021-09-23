@@ -1,6 +1,14 @@
 Unreleased
 ------
 
+Version 2.5.0
+------
+
+* [#1553](https://github.com/Shopify/shopify-cli/pull/1553): Add support for PHP app projects
+
+Version 2.4.0
+------
+
 * [#1488](https://github.com/Shopify/shopify-cli/pull/1488): Update Theme-Check to 1.4
 * [#1507](https://github.com/Shopify/shopify-cli/pull/1507): Limit the generated name for themes to 50 characters
 

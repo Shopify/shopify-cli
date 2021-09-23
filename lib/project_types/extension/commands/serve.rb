@@ -29,7 +29,7 @@ module Extension
           resource_url: options.flags[:resource_url]
         )
 
-        ShopifyCli::Result
+        ShopifyCLI::Result
           .success(config)
           .then(&method(:find_available_port))
           .then(&method(:start_tunnel_if_required))
@@ -38,7 +38,7 @@ module Extension
       end
 
       def self.help
-        ShopifyCli::Context.new.message("serve.help", ShopifyCli::TOOL_NAME)
+        ShopifyCLI::Context.new.message("serve.help", ShopifyCLI::TOOL_NAME)
       end
 
       private
@@ -66,12 +66,12 @@ module Extension
       end
 
       def can_start_tunnel?(runtime_configuration)
-        return true if ShopifyCli::Tunnel.urls.empty?
-        ShopifyCli::Tunnel.running_on?(runtime_configuration.port)
+        return true if ShopifyCLI::Tunnel.urls.empty?
+        ShopifyCLI::Tunnel.running_on?(runtime_configuration.port)
       end
 
       def start_tunnel(runtime_configuration)
-        tunnel_url = ShopifyCli::Tunnel.start(@ctx, port: runtime_configuration.port)
+        tunnel_url = ShopifyCLI::Tunnel.start(@ctx, port: runtime_configuration.port)
         runtime_configuration.tap { |c| c.tunnel_url = tunnel_url }
       end
 

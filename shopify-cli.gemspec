@@ -1,8 +1,8 @@
-require_relative "lib/shopify-cli/version"
+require_relative "lib/shopify_cli/version"
 
 Gem::Specification.new do |spec|
   spec.name = "shopify-cli"
-  spec.version = ShopifyCli::VERSION
+  spec.version = ShopifyCLI::VERSION
   spec.authors = ["Shopify"]
   spec.email = ["dev-tools-education@shopify.com"]
   spec.license = "MIT"
@@ -43,6 +43,6 @@ Gem::Specification.new do |spec|
   spec.add_development_dependency("rake", "~> 12.3", ">= 12.3.3")
   spec.add_development_dependency("minitest", "~> 5.0")
 
-  spec.add_dependency("listen", "~> 3.5")
-  spec.add_dependency("theme-check", "~> 1.4")
+  spec.add_dependency("listen", "~> 3.7.0")
+  spec.add_dependency("theme-check", "~> 1.4.0")
 end

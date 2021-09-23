@@ -4,7 +4,7 @@ require "shopify_cli"
 
 module Extension
   module Tasks
-    class RunExtensionCommand < ShopifyCli::Task
+    class RunExtensionCommand < ShopifyCLI::Task
       include SmartProperties
 
       SUPPORTED_EXTENSION_TYPES = [
@@ -14,15 +14,18 @@ module Extension
       SUPPORTED_COMMANDS = [
         "create",
         "build",
+        "serve",
       ]
 
       property :root_dir, accepts: String
       property :template, accepts: Models::ServerConfig::Development::VALID_TEMPLATES
       property! :type, accepts: SUPPORTED_EXTENSION_TYPES
       property! :command, accepts: SUPPORTED_COMMANDS
+      property :context, accepts: ShopifyCLI::Context
+      property :port, accepts: Integer, default: 39351
 
       def call
-        ShopifyCli::Result
+        ShopifyCLI::Result
           .call(&method(:build_extension))
           .then(&method(:build_server_config))
           .then(&method(:run_command))
@@ -42,7 +45,7 @@ module Extension
       end
 
       def build_server_config(extension)
-        Models::ServerConfig::Root.new(extensions: [extension])
+        Models::ServerConfig::Root.new(port: port, extensions: [extension])
       end
 
       def run_command(server_config)
@@ -51,6 +54,10 @@ module Extension
           Models::DevelopmentServer.new.create(server_config)
         when "build"
           Models::DevelopmentServer.new.build(server_config)
+        when "serve"
+          Models::DevelopmentServer.new.serve(context, server_config)
+        else
+          raise NotImplementedError
         end
       end
     end

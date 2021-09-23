@@ -1,12 +1,12 @@
 # frozen_string_literal: true
 module Node
-  class Project < ShopifyCli::ProjectType
+  class Project < ShopifyCLI::ProjectType
     require Project.project_filepath("messages/messages")
     register_messages(Node::Messages::MESSAGES)
   end
 
   # define/autoload project specific Commands
-  class Command < ShopifyCli::ProjectCommands
+  class Command < ShopifyCLI::ProjectCommands
     subcommand :Connect, "connect", Project.project_filepath("commands/connect")
     subcommand :Create, "create", Project.project_filepath("commands/create")
     subcommand :Deploy, "deploy", Project.project_filepath("commands/deploy")
@@ -15,7 +15,7 @@ module Node
     subcommand :Serve, "serve", Project.project_filepath("commands/serve")
     subcommand :Tunnel, "tunnel", Project.project_filepath("commands/tunnel")
   end
-  ShopifyCli::Commands.register("Node::Command", "node")
+  ShopifyCLI::Commands.register("Node::Command", "node")
 
   # define/autoload project specific Tasks
   module Tasks

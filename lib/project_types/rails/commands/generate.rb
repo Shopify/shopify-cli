@@ -3,7 +3,7 @@ require "shopify_cli"
 
 module Rails
   class Command
-    class Generate < ShopifyCli::SubCommand
+    class Generate < ShopifyCLI::SubCommand
       prerequisite_task ensure_project_type: :rails
 
       autoload :Webhook, Project.project_filepath("commands/generate/webhook")
@@ -21,7 +21,7 @@ module Rails
       end
 
       def self.help
-        ShopifyCli::Context.message("rails.generate.help", ShopifyCli::TOOL_NAME)
+        ShopifyCLI::Context.message("rails.generate.help", ShopifyCLI::TOOL_NAME)
       end
 
       def self.extended_help
@@ -34,7 +34,7 @@ module Rails
           end
           extended_help += "\n"
         end
-        extended_help += ShopifyCli::Context.message("rails.generate.extended_help", ShopifyCli::TOOL_NAME)
+        extended_help += ShopifyCLI::Context.message("rails.generate.extended_help", ShopifyCLI::TOOL_NAME)
       end
 
       def self.run_generate(script, name, ctx)

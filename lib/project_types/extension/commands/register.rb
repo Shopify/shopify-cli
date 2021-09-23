@@ -20,7 +20,7 @@ module Extension
       end
 
       def self.help
-        ShopifyCli::Context.new.message("register.help", ShopifyCli::TOOL_NAME)
+        ShopifyCLI::Context.new.message("register.help", ShopifyCLI::TOOL_NAME)
       end
 
       private
@@ -60,7 +60,7 @@ module Extension
 
       def abort_not_registered
         @ctx.puts(@ctx.message("register.confirm_abort"))
-        raise ShopifyCli::AbortSilent
+        raise ShopifyCLI::AbortSilent
       end
     end
   end

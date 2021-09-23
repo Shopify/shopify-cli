@@ -3,7 +3,7 @@ module Extension
     class ConfigureFeaturesTest < MiniTest::Test
       def setup
         super
-        ShopifyCli::ProjectType.load_type(:extension)
+        ShopifyCLI::ProjectType.load_type(:extension)
       end
 
       def test_configures_git_template

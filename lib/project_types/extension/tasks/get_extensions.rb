@@ -3,9 +3,9 @@ require "shopify_cli"
 
 module Extension
   module Tasks
-    class GetExtensions < ShopifyCli::Task
+    class GetExtensions < ShopifyCLI::Task
       def call(context:, type:)
-        organizations = ShopifyCli::PartnersAPI::Organizations.fetch_with_extensions(context, type)
+        organizations = ShopifyCLI::PartnersAPI::Organizations.fetch_with_extensions(context, type)
         extensions_from_organizations(organizations, context: context)
       end
 

@@ -6,7 +6,7 @@ module Extension
     class ValidationErrorTest < MiniTest::Test
       def setup
         super
-        ShopifyCli::ProjectType.load_type(:extension)
+        ShopifyCLI::ProjectType.load_type(:extension)
 
         @error = ValidationError.new(field: ["Hi"], message: "message")
       end

@@ -2,7 +2,7 @@
 
 module Theme
   class Command
-    class Init < ShopifyCli::SubCommand
+    class Init < ShopifyCLI::SubCommand
       options do |parser, flags|
         parser.on("-u", "--clone-url URL") { |url| flags[:clone_url] = url }
       end
@@ -16,7 +16,7 @@ module Theme
       end
 
       def self.help
-        ShopifyCli::Context.message("theme.init.help", ShopifyCli::TOOL_NAME, ShopifyCli::TOOL_NAME)
+        ShopifyCLI::Context.message("theme.init.help", ShopifyCLI::TOOL_NAME, ShopifyCLI::TOOL_NAME)
       end
 
       private
@@ -26,7 +26,7 @@ module Theme
       end
 
       def clone(url, name)
-        ShopifyCli::Git.clone(url, name)
+        ShopifyCLI::Git.clone(url, name)
 
         @ctx.root = File.join(@ctx.root, name)
 

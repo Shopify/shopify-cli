@@ -1,5 +1,5 @@
 module TestHelpers
-  class FakeContext < ShopifyCli::Context
+  class FakeContext < ShopifyCLI::Context
     attr_accessor :output_captured
 
     def puts(*args)
