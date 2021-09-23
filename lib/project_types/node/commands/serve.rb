@@ -13,14 +13,8 @@ module Node
       end
 
       def call(*)
-<<<<<<< HEAD
-       project = ShopifyCli::Project.current
-        
-        url = options.flags[:host] || ShopifyCli::Tunnel.start(@ctx)
-=======
         project = ShopifyCLI::Project.current
         url = options.flags[:host] || ShopifyCLI::Tunnel.start(@ctx)
->>>>>>> 83bf6d935e07599cf72d756032438160f78509db
         @ctx.abort(@ctx.message("node.serve.error.host_must_be_https")) if url.match(/^https/i).nil?
         project.env.update(@ctx, :host, url)
         ShopifyCLI::Tasks::UpdateDashboardURLS.call(
@@ -36,11 +30,7 @@ module Node
 
         CLI::UI::Frame.open(@ctx.message("node.serve.running_server")) do
           env = project.env.to_h
-<<<<<<< HEAD
           env["PORT"] = port.to_s
-=======
-          env["PORT"] = ShopifyCLI::Tunnel::PORT.to_s
->>>>>>> 83bf6d935e07599cf72d756032438160f78509db
           @ctx.system("npm run dev", env: env)
         end
       end
