@@ -42,6 +42,7 @@ module Extension
     autoload :GetExtensions, Project.project_filepath("tasks/get_extensions")
     autoload :GetProduct, Project.project_filepath("tasks/get_product")
     autoload :RunExtensionCommand, Project.project_filepath("tasks/run_extension_command")
+    autoload :LoadServerConfig, Project.project_filepath("tasks/load_server_config")
 
     module Converters
       autoload :RegistrationConverter, Project.project_filepath("tasks/converters/registration_converter")
@@ -49,6 +50,7 @@ module Extension
       autoload :ValidationErrorConverter, Project.project_filepath("tasks/converters/validation_error_converter")
       autoload :AppConverter, Project.project_filepath("tasks/converters/app_converter")
       autoload :ProductConverter, Project.project_filepath("tasks/converters/product_converter")
+      autoload :ServerConfigConverter, Project.project_filepath("tasks/converters/server_config_converter")
     end
   end
 

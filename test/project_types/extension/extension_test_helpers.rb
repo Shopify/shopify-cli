@@ -39,12 +39,14 @@ module Extension
       with_mocks: false,
       api_key: "TEST_KEY",
       api_secret: "TEST_SECRET",
+      directory: "fake/dir",
       title: "Test",
       type_identifier: "TEST_EXTENSION",
       registration_id: 55,
       registration_uuid: "db946ca8-a925-11eb-bcbc-0242ac130002"
     )
       project = FakeExtensionProject.new(
+        directory: directory,
         api_key: api_key,
         api_secret: api_secret,
         title: title,
@@ -57,7 +59,7 @@ module Extension
         ShopifyCLI::Project.stubs(:current).returns(project)
         ShopifyCLI::Project.stubs(:has_current?).returns(true)
         ExtensionProject.stubs(:current).returns(project)
-        specifications = test_specifications
+        specifications = test_specifications(type_identifier: type_identifier)
         Models::Specifications.stubs(:new).returns(specifications)
       end
 

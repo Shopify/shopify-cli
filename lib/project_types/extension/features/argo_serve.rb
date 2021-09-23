@@ -116,6 +116,7 @@ module Extension
           command: "serve",
           context: context,
           port: port,
+          config_file_name: specification_handler.server_config_file,
         ).call
       end
 

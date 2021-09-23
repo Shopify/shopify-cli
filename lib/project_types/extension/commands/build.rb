@@ -26,7 +26,8 @@ module Extension
       def run_new_flow(project)
         Tasks::RunExtensionCommand.new(
           type: project.specification_identifier.downcase,
-          command: "build"
+          command: "build",
+          config_file_name: specification_handler.server_config_file,
         ).call
 
         @ctx.puts(@ctx.message("build.build_success_message"))
