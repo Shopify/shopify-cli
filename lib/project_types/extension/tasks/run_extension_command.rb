@@ -17,17 +17,17 @@ module Extension
         "serve",
       ]
 
+      property! :command, accepts: SUPPORTED_COMMANDS
+      property! :type, accepts: SUPPORTED_EXTENSION_TYPES
+      property :context, accepts: ShopifyCLI::Context
+      property :config_file_name, accepts: String
+      property :port, accepts: Integer, default: 39351
       property :root_dir, accepts: String
       property :template, accepts: Models::ServerConfig::Development::VALID_TEMPLATES
-      property! :type, accepts: SUPPORTED_EXTENSION_TYPES
-      property! :command, accepts: SUPPORTED_COMMANDS
-      property :context, accepts: ShopifyCLI::Context
-      property :port, accepts: Integer, default: 39351
 
       def call
-        ShopifyCLI::Result
-          .call(&method(:build_extension))
-          .then(&method(:build_server_config))
+        ShopifyCLI::Result.success(config_file_exists?)
+          .then(&method(:load_or_build_server_config))
           .then(&method(:run_command))
           .unwrap do |error|
             raise error unless error.nil?
@@ -36,15 +36,31 @@ module Extension
 
       private
 
-      def build_extension
-        Models::ServerConfig::Extension.build(
+      def config_file_exists?
+        return false if config_file_name.nil?
+        project = ExtensionProject.current
+        File.exist?(File.join(project.directory, config_file_name))
+      end
+
+      def load_or_build_server_config(config_file_exists)
+        return load_server_config if config_file_exists
+        build_server_config
+      end
+
+      def load_server_config
+        Tasks::LoadServerConfig.call(
+          file_name: config_file_name,
+          type: type,
+        )
+      end
+
+      def build_server_config
+        extension = Models::ServerConfig::Extension.build(
           template: template,
           type: type,
           root_dir: root_dir,
         )
-      end
 
-      def build_server_config(extension)
         Models::ServerConfig::Root.new(port: port, extensions: [extension])
       end
 

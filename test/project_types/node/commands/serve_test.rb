@@ -77,9 +77,9 @@ module Node
       end
 
       def test_server_command_when_port_passed
-        ShopifyCli::Tunnel.stubs(:start).returns("https://example.com")
-        ShopifyCli::Tasks::UpdateDashboardURLS.expects(:call)
-        ShopifyCli::Resources::EnvFile.any_instance.expects(:update)
+        ShopifyCLI::Tunnel.stubs(:start).returns("https://example.com")
+        ShopifyCLI::Tasks::UpdateDashboardURLS.expects(:call)
+        ShopifyCLI::Resources::EnvFile.any_instance.expects(:update)
         @context.expects(:system).with(
           "npm run dev",
           env: {
@@ -95,9 +95,9 @@ module Node
       end
 
       def test_server_command_when_invalid_port_passed
-        ShopifyCli::Tunnel.stubs(:start).returns("https://example.com")
-        ShopifyCli::Tasks::UpdateDashboardURLS.expects(:call)
-        ShopifyCli::Resources::EnvFile.any_instance.expects(:update)
+        ShopifyCLI::Tunnel.stubs(:start).returns("https://example.com")
+        ShopifyCLI::Tasks::UpdateDashboardURLS.expects(:call)
+        ShopifyCLI::Resources::EnvFile.any_instance.expects(:update)
         @context.expects(:abort).with(
           @context.message("tunnel.invalid_port", "abc")
         )

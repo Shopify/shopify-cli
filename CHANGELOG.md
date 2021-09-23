@@ -1,5 +1,15 @@
 Unreleased
 ------
+* [#1567](https://github.com/Shopify/shopify-cli/pull/1567): dd ability to set custom port for ngrok tunnel in node serve
+* [#1566](https://github.com/Shopify/shopify-cli/pull/1566): Fix bug when running `npm | yarn list` for extension package resolution
+
+Version 2.5.0
+------
+
+* [#1553](https://github.com/Shopify/shopify-cli/pull/1553): Add support for PHP app projects
+
+Version 2.4.0
+------
 
 Version 2.5.0
 ------

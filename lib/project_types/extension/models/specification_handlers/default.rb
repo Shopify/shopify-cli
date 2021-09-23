@@ -103,6 +103,10 @@ module Extension
           raise NotImplementedError
         end
 
+        def server_config_file
+          "shopifile.yml"
+        end
+
         protected
 
         def argo

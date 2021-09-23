@@ -21,6 +21,13 @@ module Extension
           end
         end
       end
+<<<<<<< HEAD
+=======
+
+      def executable_installed?
+        File.exist?(executable)
+      end
+>>>>>>> b3c7e68bd12dff2368fc5fb50fafd3af48103c3f
 
       def create(server_config)
         CLI::Kit::System.capture3(executable, "create", "-", stdin_data: server_config.to_yaml)
