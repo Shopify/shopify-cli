@@ -44,7 +44,7 @@ module Extension
       def renderer_package(context)
         js_system = ShopifyCLI::JsSystem.new(ctx: context)
         Tasks::FindNpmPackages
-          .exactly_one_of(renderer_package_name, js_system: js_system)
+          .exactly_one_of(renderer_package_name, js_system: js_system, production_only: true)
           .unwrap { |err| raise err }
       rescue Extension::PackageResolutionFailed
         context.abort(
