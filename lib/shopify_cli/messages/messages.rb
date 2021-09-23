@@ -92,6 +92,8 @@ module ShopifyCLI
             download: "Heroku CLI could not be downloaded",
             install: "Could not install Heroku CLI",
             could_not_select_app: "Heroku app {{green:%s}} could not be selected",
+            set_config: "Failed to set config %s to %s in Heroku app",
+            add_buildpacks: "Failed to add buildpacks in Heroku app",
           },
         },
 
@@ -186,6 +188,20 @@ module ShopifyCLI
               For authentication issues, run {{command:%s logout}} to clear invalid credentials
             MESSAGE
           },
+        },
+
+        php_deps: {
+          error: {
+            missing_package: "Expected to have a file at: %s",
+            invalid_package: "{{info:%s}} was not valid JSON. Fix this then try again",
+            install: "Failed to install %s packages",
+            install_spinner_error: "Unable to install all %d dependencies",
+            install_error: "An error occurred while installing dependencies",
+          },
+
+          installing: "Installing Composer dependencies…",
+          installed: "Dependencies installed",
+          installed_count: "%d dependencies installed",
         },
 
         api: {
