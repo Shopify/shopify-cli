@@ -75,6 +75,24 @@ module Node
         )
         run_cmd('node serve --host="https://example-foo.com"')
       end
+
+      def test_server_command_when_port_passed
+        ShopifyCli::Tunnel.stubs(:start).returns("https://example.com")
+        ShopifyCli::Tasks::UpdateDashboardURLS.expects(:call)
+        ShopifyCli::Resources::EnvFile.any_instance.expects(:update)
+        @context.expects(:system).with(
+          "npm run dev",
+          env: {
+            "SHOPIFY_API_KEY" => "mykey",
+            "SHOPIFY_API_SECRET" => "mysecretkey",
+            "SHOP" => "my-test-shop.myshopify.com",
+            "SCOPES" => "read_products",
+            "HOST" => "https://example.com",
+            "PORT" => "5000",
+          }
+        )
+        run_cmd("node serve --port=5000")
+      end
     end
   end
 end
