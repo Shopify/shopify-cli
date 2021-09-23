@@ -1,13 +1,13 @@
 # frozen_string_literal: true
 require "test_helper"
-require "shopify-cli/theme/theme"
+require "shopify_cli/theme/theme"
 
-module ShopifyCli
+module ShopifyCLI
   module Theme
     class ThemeTest < Minitest::Test
       def setup
         super
-        root = ShopifyCli::ROOT + "/test/fixtures/theme"
+        root = ShopifyCLI::ROOT + "/test/fixtures/theme"
         @ctx = TestHelpers::FakeContext.new(root: root)
         @theme = Theme.new(@ctx, root: root, id: "123")
       end
@@ -27,7 +27,7 @@ module ShopifyCli
       def test_get_file
         assert_equal(Pathname.new("layout/theme.liquid"), @theme["layout/theme.liquid"].relative_path)
         assert_equal(Pathname.new("layout/theme.liquid"),
-          @theme[Pathname.new("#{ShopifyCli::ROOT}/test/fixtures//theme/layout/theme.liquid")].relative_path)
+          @theme[Pathname.new("#{ShopifyCLI::ROOT}/test/fixtures//theme/layout/theme.liquid")].relative_path)
         assert_equal(@theme.theme_files.first, @theme[@theme.theme_files.first])
       end
 
@@ -43,7 +43,7 @@ module ShopifyCli
       def test_is_theme_file
         assert(@theme.theme_file?(@theme["layout/theme.liquid"]))
         assert(@theme.theme_file?(
-          @theme[Pathname.new(ShopifyCli::ROOT).join("test/fixtures/theme/layout/theme.liquid")]
+          @theme[Pathname.new(ShopifyCLI::ROOT).join("test/fixtures/theme/layout/theme.liquid")]
         ))
       end
 

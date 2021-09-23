@@ -43,7 +43,7 @@ describe Script::Layers::Application::CreateScript do
 
   describe ".call" do
     subject do
-      ShopifyCli::DB.stubs(:get).with(:acting_as_shopify_organization).returns(nil)
+      ShopifyCLI::DB.stubs(:get).with(:acting_as_shopify_organization).returns(nil)
 
       Script::Layers::Application::CreateScript.call(
         ctx: context,

@@ -1,7 +1,7 @@
 require "test_helper"
 require "securerandom"
 
-module ShopifyCli
+module ShopifyCLI
   class LazyDelegatorTest < MiniTest::Test
     def test_defers_invocation_of_the_provided_block_until_absolutely_necessary
       person_created = false

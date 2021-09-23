@@ -6,7 +6,7 @@ module Extension
       class DevelopmentRendererTest < MiniTest::Test
         def setup
           super
-          ShopifyCli::ProjectType.load_type(:extension)
+          ShopifyCLI::ProjectType.load_type(:extension)
         end
 
         def test_extension_config_renderer_can_be_instantiated_with_valid_attributes

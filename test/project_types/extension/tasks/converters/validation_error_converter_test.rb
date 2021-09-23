@@ -10,7 +10,7 @@ module Extension
 
         def setup
           super
-          ShopifyCli::ProjectType.load_type(:extension)
+          ShopifyCLI::ProjectType.load_type(:extension)
         end
 
         def test_from_hash_returns_empty_array_if_errors_are_nil
@@ -18,7 +18,7 @@ module Extension
         end
 
         def test_from_hash_aborts_with_parse_error_if_errors_are_not_an_array_and_not_nil
-          io = capture_io_and_assert_raises(ShopifyCli::Abort) do
+          io = capture_io_and_assert_raises(ShopifyCLI::Abort) do
             ValidationErrorConverter.from_array(@context, Object)
           end
 

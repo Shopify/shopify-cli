@@ -5,7 +5,7 @@ module Rails
   class Gem
     include SmartProperties
 
-    property :ctx, accepts: ShopifyCli::Context, required: true
+    property :ctx, accepts: ShopifyCLI::Context, required: true
     property :name, converts: :to_s, required: true
     property :version, converts: :to_s
 

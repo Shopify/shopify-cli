@@ -7,13 +7,9 @@ module Script
   module Layers
     module Infrastructure
       class ScriptService
-        include SmartProperties
-        property! :ctx, accepts: ShopifyCli::Context
-        property! :api_key, accepts: String
-
-        def initialize(*args, ctx:, api_key:, **kwargs)
-          super(*args, ctx: ctx, api_key: api_key, **kwargs)
-          @client = ApiClients.default_client(ctx, api_key)
+        def initialize(client:, api_key:)
+          @client = client
+          @api_key = api_key
         end
 
         def set_app_script(
@@ -68,7 +64,7 @@ module Script
 
         def get_app_scripts(extension_point_type:)
           query_name = "get_app_scripts"
-          variables = { appKey: api_key, extensionPointName: extension_point_type.upcase }
+          variables = { appKey: @api_key, extensionPointName: extension_point_type.upcase }
           response = make_request(query_name: query_name, variables: variables)
           response["data"]["appScripts"]
         end

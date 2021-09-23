@@ -1,9 +1,9 @@
 PATH
   remote: .
   specs:
-    shopify-cli (2.3.0)
-      listen (~> 3.5)
-      theme-check (~> 1.4)
+    shopify-cli (2.5.0)
+      listen (~> 3.7.0)
+      theme-check (~> 1.4.0)
 
 GEM
   remote: https://rubygems.org/

@@ -11,16 +11,31 @@ Rake::TestTask.new do |t|
   t.warning = false
 end
 
-desc "Runs the test suite in a Linux Docker environment"
-task :test_linux do
-  system("docker", "build", __dir__, "-t", "shopify-cli") || abort
-  system(
-    "docker", "run",
-    "-t", "--rm",
-    "--volume", "#{Shellwords.escape(__dir__)}:/usr/src/app",
-    "shopify-cli",
-    "bundle", "exec", "rake", "test"
-  ) || abort
+desc "A set of tasks that run in Linux environments"
+namespace :linux do
+  desc "Runs the test suite in a Linux Docker environment"
+  task :test do
+    system("docker", "build", __dir__, "-t", "shopify-cli") || abort
+    system(
+      "docker", "run",
+      "-t", "--rm",
+      "--volume", "#{Shellwords.escape(__dir__)}:/usr/src/app",
+      "shopify-cli",
+      "bundle", "exec", "rake", "test"
+    ) || abort
+  end
+
+  desc "Runs the acceptance tests suite in a Linux Docker environment"
+  task :features do
+    system("docker", "build", __dir__, "-t", "shopify-cli") || abort
+    system(
+      "docker", "run",
+      "-t", "--rm",
+      "--volume", "#{Shellwords.escape(__dir__)}:/usr/src/app",
+      "shopify-cli",
+      "bundle", "exec", "cucumber"
+    ) || abort
+  end
 end
 
 RuboCop::RakeTask.new
@@ -36,20 +51,20 @@ namespace :rdoc do
   repo = "https://github.com/Shopify/shopify-cli.wiki.git"
   intermediate = "markdown_intermediate"
   file_to_doc = [
-    "lib/shopify-cli/admin_api.rb",
-    "lib/shopify-cli/context.rb",
-    "lib/shopify-cli/db.rb",
-    "lib/shopify-cli/git.rb",
-    "lib/shopify-cli/heroku.rb",
-    "lib/shopify-cli/js_deps.rb",
-    "lib/shopify-cli/lazy_delegator.rb",
-    "lib/shopify-cli/method_object.rb",
-    "lib/shopify-cli/partners_api.rb",
-    "lib/shopify-cli/process_supervision.rb",
-    "lib/shopify-cli/project.rb",
-    "lib/shopify-cli/result.rb",
-    "lib/shopify-cli/transform_data_structure.rb",
-    "lib/shopify-cli/tunnel.rb",
+    "lib/shopify_cli/admin_api.rb",
+    "lib/shopify_cli/context.rb",
+    "lib/shopify_cli/db.rb",
+    "lib/shopify_cli/git.rb",
+    "lib/shopify_cli/heroku.rb",
+    "lib/shopify_cli/js_deps.rb",
+    "lib/shopify_cli/lazy_delegator.rb",
+    "lib/shopify_cli/method_object.rb",
+    "lib/shopify_cli/partners_api.rb",
+    "lib/shopify_cli/process_supervision.rb",
+    "lib/shopify_cli/project.rb",
+    "lib/shopify_cli/result.rb",
+    "lib/shopify_cli/transform_data_structure.rb",
+    "lib/shopify_cli/tunnel.rb",
   ]
 
   task all: [:markdown, :wiki, :cleanup]
@@ -89,25 +104,63 @@ desc("Generate markdown documentation and update the wiki")
 task(rdoc: "rdoc:all")
 
 namespace :package do
-  require "shopify-cli/packager"
+  require "shopify_cli/packager"
 
   task all: [:debian, :rpm, :homebrew]
 
   desc("Builds a Debian package of the CLI")
   task :debian do
-    ShopifyCli::Packager.new.build_debian
+    ShopifyCLI::Packager.new.build_debian
   end
 
   desc("Builds an RPM package of the CLI")
   task :rpm do
-    ShopifyCli::Packager.new.build_rpm
+    ShopifyCLI::Packager.new.build_rpm
   end
 
   desc("Builds a Homebrew package of the CLI")
   task :homebrew do
-    ShopifyCli::Packager.new.build_homebrew
+    ShopifyCLI::Packager.new.build_homebrew
   end
 end
 
 desc("Builds all distribution packages of the CLI")
 task(package: "package:all")
+
+namespace :extensions do
+  task :update do
+    version = ENV.fetch("VERSION").strip
+    error("Invalid version") unless /^v\d+\.\d+\.\d+/.match(version)
+    File.write(Paths.extension("version"), version)
+  end
+
+  task :symlink do
+    source = Paths.root("..", "shopify-cli-extensions", "shopify-extensions")
+    error("Unable to find shopify-extensions executable: #{executable}") unless File.executable?(source)
+    target = Paths.extension("shopify-extensions")
+    File.delete(target) if File.exist?(target)
+    File.symlink(source, target)
+  end
+
+  task :install do
+    target = Paths.extension("shopify-extensions")
+    require_relative Paths.extension("shopify_extensions.rb")
+    File.delete(target) if File.exist?(target)
+    ShopifyExtensions.install(target: target)
+  end
+
+  module Paths
+    def self.extension(*args)
+      root("ext", "shopify-extensions", *args)
+    end
+
+    def self.root(*args)
+      Pathname(File.dirname(__FILE__)).join(*args).to_s
+    end
+  end
+end
+
+def error(message, output: STDERR, code: 1)
+  output.puts(message)
+  exit(code)
+end

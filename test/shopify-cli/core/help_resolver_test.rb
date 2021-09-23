@@ -1,17 +1,17 @@
 require "test_helper"
 
-module ShopifyCli
+module ShopifyCLI
   module Core
     class HelpResolverTest < MiniTest::Test
       def test_outputs_help_with_help_flag
-        ShopifyCli::Commands::Help.expects(:call)
-        assert_raises(ShopifyCli::AbortSilent) do
+        ShopifyCLI::Commands::Help.expects(:call)
+        assert_raises(ShopifyCLI::AbortSilent) do
           run_cmd("-h")
         end
       end
 
       def test_outputs_help_without_argument
-        ShopifyCli::Commands::Help.expects(:call)
+        ShopifyCLI::Commands::Help.expects(:call)
         run_cmd("")
       end
     end

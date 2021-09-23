@@ -2,7 +2,7 @@ module Extension
   module Forms
     module Questions
       class AskApp
-        include ShopifyCli::MethodObject
+        include ShopifyCLI::MethodObject
 
         property! :ctx
         property :api_key
@@ -45,7 +45,7 @@ module Extension
         def abort_no_apps
           ctx.puts(@ctx.message("create.no_apps"))
           ctx.puts(@ctx.message("create.learn_about_apps"))
-          raise ShopifyCli::AbortSilent
+          raise ShopifyCLI::AbortSilent
         end
       end
     end

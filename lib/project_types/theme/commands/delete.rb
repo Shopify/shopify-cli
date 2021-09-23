@@ -1,10 +1,10 @@
 # frozen_string_literal: true
-require "shopify-cli/theme/theme"
-require "shopify-cli/theme/development_theme"
+require "shopify_cli/theme/theme"
+require "shopify_cli/theme/development_theme"
 
 module Theme
   class Command
-    class Delete < ShopifyCli::SubCommand
+    class Delete < ShopifyCLI::SubCommand
       options do |parser, flags|
         parser.on("-d", "--development") { flags[:development] = true }
         parser.on("-a", "--show-all") { flags[:show_all] = true }
@@ -13,9 +13,9 @@ module Theme
 
       def call(args, _name)
         themes = if options.flags[:development]
-          [ShopifyCli::Theme::DevelopmentTheme.new(@ctx)]
+          [ShopifyCLI::Theme::DevelopmentTheme.new(@ctx)]
         elsif args.any?
-          args.map { |id| ShopifyCli::Theme::Theme.new(@ctx, id: id) }
+          args.map { |id| ShopifyCLI::Theme::Theme.new(@ctx, id: id) }
         else
           form = Forms::Select.ask(
             @ctx,
@@ -38,7 +38,7 @@ module Theme
           end
           theme.delete
           deleted += 1
-        rescue ShopifyCli::API::APIRequestNotFoundError
+        rescue ShopifyCLI::API::APIRequestNotFoundError
           @ctx.puts(@ctx.message("theme.delete.not_found", theme.id))
         end
 
@@ -46,7 +46,7 @@ module Theme
       end
 
       def self.help
-        ShopifyCli::Context.message("theme.delete.help", ShopifyCli::TOOL_NAME, ShopifyCli::TOOL_NAME)
+        ShopifyCLI::Context.message("theme.delete.help", ShopifyCLI::TOOL_NAME, ShopifyCLI::TOOL_NAME)
       end
 
       private

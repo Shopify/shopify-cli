@@ -1,6 +1,6 @@
 require "test_helper"
 
-module ShopifyCli
+module ShopifyCLI
   class AdminAPI
     class PopulateResourceCommandTest < MiniTest::Test
       include TestHelpers::Project
@@ -8,13 +8,13 @@ module ShopifyCli
 
       def setup
         super
-        @resource = ShopifyCli::Commands::Populate::Product.new(@context)
-        ShopifyCli::AdminAPI.stubs(:new).returns(Object.new)
+        @resource = ShopifyCLI::Commands::Populate::Product.new(@context)
+        ShopifyCLI::AdminAPI.stubs(:new).returns(Object.new)
       end
 
       def test_with_schema_args_overrides_input
-        ShopifyCli::DB.expects(:exists?).with(:shop).returns(true).twice
-        ShopifyCli::DB.expects(:get).with(:shop).returns("my-test-shop.myshopify.io").twice
+        ShopifyCLI::DB.expects(:exists?).with(:shop).returns(true).twice
+        ShopifyCLI::DB.expects(:get).with(:shop).returns("my-test-shop.myshopify.io").twice
         CLI::UI::Prompt.expects(:confirm)
           .with(@context.message("core.tasks.confirm_store.prompt", "my-test-shop.myshopify.io"), default: false)
           .returns(true)
@@ -27,30 +27,30 @@ module ShopifyCli
       end
 
       def test_if_no_shop
-        ShopifyCli::DB.expects(:exists?).with(:shop).returns(false)
+        ShopifyCLI::DB.expects(:exists?).with(:shop).returns(false)
         @resource.expects(:run_mutation).never
-        exception = assert_raises ShopifyCli::Abort do
+        exception = assert_raises ShopifyCLI::Abort do
           @resource.call([], nil)
         end
         assert_equal(
-          "{{x}} " + @context.message("core.populate.error.no_shop", ShopifyCli::TOOL_NAME),
+          "{{x}} " + @context.message("core.populate.error.no_shop", ShopifyCLI::TOOL_NAME),
           exception.message
         )
       end
 
       def test_populate_runs_mutation_default_number_of_times
-        ShopifyCli::DB.expects(:exists?).with(:shop).returns(true).twice
-        ShopifyCli::DB.expects(:get).with(:shop).returns("my-test-shop.myshopify.io").twice
+        ShopifyCLI::DB.expects(:exists?).with(:shop).returns(true).twice
+        ShopifyCLI::DB.expects(:get).with(:shop).returns("my-test-shop.myshopify.io").twice
         CLI::UI::Prompt.expects(:confirm)
           .with(@context.message("core.tasks.confirm_store.prompt", "my-test-shop.myshopify.io"), default: false)
           .returns(true)
-        @resource.expects(:run_mutation).times(ShopifyCli::Commands::Populate::Product::DEFAULT_COUNT)
+        @resource.expects(:run_mutation).times(ShopifyCLI::Commands::Populate::Product::DEFAULT_COUNT)
         @resource.call([], nil)
       end
 
       def test_populate_runs_mutation_count_number_of_times
-        ShopifyCli::DB.expects(:exists?).with(:shop).returns(true).twice
-        ShopifyCli::DB.expects(:get).with(:shop).returns("my-test-shop.myshopify.io").twice
+        ShopifyCLI::DB.expects(:exists?).with(:shop).returns(true).twice
+        ShopifyCLI::DB.expects(:get).with(:shop).returns("my-test-shop.myshopify.io").twice
         CLI::UI::Prompt.expects(:confirm)
           .with(@context.message("core.tasks.confirm_store.prompt", "my-test-shop.myshopify.io"), default: false)
           .returns(true)
@@ -59,8 +59,8 @@ module ShopifyCli
       end
 
       def test_populate_does_not_ask_confirmation_if_skip_shop_confirmation
-        ShopifyCli::DB.expects(:exists?).with(:shop).returns(true).once
-        ShopifyCli::DB.expects(:get).with(:shop).returns("my-test-shop.myshopify.io").once
+        ShopifyCLI::DB.expects(:exists?).with(:shop).returns(true).once
+        ShopifyCLI::DB.expects(:get).with(:shop).returns("my-test-shop.myshopify.io").once
         CLI::UI::Prompt.expects(:confirm)
           .with(@context.message("core.tasks.confirm_store.prompt", "my-test-shop.myshopify.io"), default: false)
           .never

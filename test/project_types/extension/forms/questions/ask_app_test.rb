@@ -11,7 +11,7 @@ module Extension
 
         def setup
           super
-          ShopifyCli::ProjectType.load_type(:extension)
+          ShopifyCLI::ProjectType.load_type(:extension)
         end
 
         def test_setup
@@ -38,7 +38,7 @@ module Extension
           AskApp.new(ctx: @context, api_key: api_key).call(OpenStruct.new).tap do |result|
             assert_predicate(result, :failure?)
             result.error.tap do |error|
-              assert_kind_of(ShopifyCli::Abort, error)
+              assert_kind_of(ShopifyCLI::Abort, error)
               assert_match(@context.message("create.invalid_api_key", api_key), error.message)
             end
           end
@@ -72,7 +72,7 @@ module Extension
           io = capture_io do
             AskApp.new(ctx: @context, prompt: ->(_) {}).call(OpenStruct.new).tap do |result|
               assert_predicate(result, :failure?)
-              assert_kind_of(ShopifyCli::AbortSilent, result.error)
+              assert_kind_of(ShopifyCLI::AbortSilent, result.error)
             end
           end
 

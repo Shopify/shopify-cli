@@ -9,8 +9,8 @@ module Extension
       include TestHelpers::FakeUI
       def setup
         super
-        ShopifyCli::ProjectType.load_type(:extension)
-        ShopifyCli::Tasks::EnsureProjectType.stubs(:call)
+        ShopifyCLI::ProjectType.load_type(:extension)
+        ShopifyCLI::Tasks::EnsureProjectType.stubs(:call)
       end
 
       def test_is_a_hidden_command
@@ -23,7 +23,7 @@ module Extension
 
       def test_uses_js_system_to_call_yarn_or_npm_commands
         stub_project
-        ShopifyCli::JsSystem.any_instance
+        ShopifyCLI::JsSystem.any_instance
           .expects(:call)
           .with(yarn: Command::Build::YARN_BUILD_COMMAND, npm: Command::Build::NPM_BUILD_COMMAND)
           .returns(true)
@@ -34,7 +34,7 @@ module Extension
 
       def test_aborts_and_informs_the_user_when_build_fails
         stub_project
-        ShopifyCli::JsSystem.any_instance.stubs(:call).returns(false)
+        ShopifyCLI::JsSystem.any_instance.stubs(:call).returns(false)
         @context.expects(:abort).with(@context.message("build.build_failure_message"))
 
         run_build
@@ -43,8 +43,9 @@ module Extension
       def test_runs_new_flow_if_development_server_supported
         type = "checkout_ui_extension"
         stub_project(type)
-        ShopifyCli::Shopifolk.stubs(:check).returns(true)
-        ShopifyCli::Feature.stubs(:enabled?).with(:extension_server_beta).returns(true)
+        ShopifyCLI::Shopifolk.stubs(:check).returns(true)
+        ShopifyCLI::Feature.stubs(:enabled?).with(:extension_server_beta).returns(true)
+        File.stubs(:exist?).returns(true)
 
         extension_command = Tasks::RunExtensionCommand.new(type: type, command: "build")
         Extension::Tasks::RunExtensionCommand.expects(:new).returns(extension_command) do |mock|
@@ -78,7 +79,7 @@ module Extension
 
       def stub_project(type = "TEST")
         project = ExtensionTestHelpers.fake_extension_project(type_identifier: type)
-        ShopifyCli::Project.stubs(:current).returns(project)
+        ShopifyCLI::Project.stubs(:current).returns(project)
       end
 
       def extension

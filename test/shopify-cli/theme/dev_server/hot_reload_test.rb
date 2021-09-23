@@ -1,15 +1,15 @@
 # frozen_string_literal: true
 require "test_helper"
-require "shopify-cli/theme/dev_server"
+require "shopify_cli/theme/dev_server"
 require "rack/mock"
 
-module ShopifyCli
+module ShopifyCLI
   module Theme
     module DevServer
       class HotReloadTest < Minitest::Test
         def setup
           super
-          root = ShopifyCli::ROOT + "/test/fixtures/theme"
+          root = ShopifyCLI::ROOT + "/test/fixtures/theme"
           @ctx = TestHelpers::FakeContext.new(root: root)
           @theme = Theme.new(@ctx, root: root)
           @syncer = stub("Syncer", enqueue_uploads: true)
@@ -27,7 +27,7 @@ module ShopifyCli
           HTML
 
           reload_js = ::File.read(
-            ::File.expand_path("lib/shopify-cli/theme/dev_server/hot-reload.js", ShopifyCli::ROOT)
+            ::File.expand_path("lib/shopify_cli/theme/dev_server/hot-reload.js", ShopifyCLI::ROOT)
           )
           reload_script = "<script>\n#{reload_js}</script>"
           expected_html = <<~HTML
@@ -75,7 +75,7 @@ module ShopifyCli
 
         def test_doesnt_broadcast_watcher_events_when_the_list_is_empty
           root_path = Pathname.new(__dir__)
-          ignore_filter = ShopifyCli::Theme::IgnoreFilter.new(root_path, patterns: ["ignored/**"])
+          ignore_filter = ShopifyCLI::Theme::IgnoreFilter.new(root_path, patterns: ["ignored/**"])
           modified = ["ignored/style.css"]
           SSE::Streams.any_instance
             .expects(:broadcast)

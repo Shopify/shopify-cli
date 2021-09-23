@@ -1,6 +1,6 @@
 require "test_helper"
 
-module ShopifyCli
+module ShopifyCLI
   module Tasks
     class EnsureProjectTypeTest < MiniTest::Test
       def setup
@@ -9,13 +9,13 @@ module ShopifyCli
       end
 
       def test_returns_true_if_in_proper_project_type
-        ShopifyCli::Project.expects(:current_project_type).returns(:rails)
+        ShopifyCLI::Project.expects(:current_project_type).returns(:rails)
         assert EnsureProjectType.call(@context, "rails")
       end
 
       def test_aborts_if_in_invalid_project_type
-        ShopifyCli::Project.expects(:current_project_type).returns(nil)
-        exception = assert_raises ShopifyCli::Abort do
+        ShopifyCLI::Project.expects(:current_project_type).returns(nil)
+        exception = assert_raises ShopifyCLI::Abort do
           EnsureProjectType.call(@context, "rails")
         end
         assert_includes exception.message, @context.message(

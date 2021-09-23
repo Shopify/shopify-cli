@@ -2,7 +2,7 @@ module Extension
   module Forms
     module Questions
       class AskType
-        include ShopifyCli::MethodObject
+        include ShopifyCLI::MethodObject
 
         property! :ctx
         property :type
@@ -39,7 +39,7 @@ module Extension
 
         def abort_due_to_missing_specifications
           ctx.puts(@ctx.message("create.no_available_extensions"))
-          raise ShopifyCli::AbortSilent
+          raise ShopifyCLI::AbortSilent
         end
       end
     end

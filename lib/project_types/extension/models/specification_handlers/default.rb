@@ -43,10 +43,12 @@ module Extension
         end
 
         def choose_port?(context)
+          return true if supports_development_server?
           argo_runtime(context).supports?(:port)
         end
 
         def establish_tunnel?(context)
+          return true if supports_development_server?
           argo_runtime(context).supports?(:public_url)
         end
 
@@ -66,6 +68,8 @@ module Extension
         end
 
         def argo_runtime(context)
+          return if supports_development_server?
+
           @argo_runtime ||= Features::ArgoRuntime.find(
             cli_package: cli_package(context),
             identifier: identifier
@@ -76,7 +80,7 @@ module Extension
           cli_package_name = specification.features.argo&.cli_package_name
           return unless cli_package_name
 
-          js_system = ShopifyCli::JsSystem.new(ctx: context)
+          js_system = ShopifyCLI::JsSystem.new(ctx: context)
           Tasks::FindNpmPackages.exactly_one_of(cli_package_name, js_system: js_system)
             .unwrap { |_e| context.abort(context.message("errors.package_not_found", cli_package_name)) }
         end
@@ -87,7 +91,7 @@ module Extension
           if (str = messages.dig(*key_parts))
             str % params
           else
-            ShopifyCli::Context.message(key, *params)
+            ShopifyCLI::Context.message(key, *params)
           end
         end
 
@@ -117,6 +121,10 @@ module Extension
 
         def messages
           @messages ||= Messages::TYPES[identifier.downcase.to_sym] || {}
+        end
+
+        def supports_development_server?
+          Models::DevelopmentServerRequirements.supported?(identifier)
         end
       end
     end

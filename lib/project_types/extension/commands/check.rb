@@ -4,7 +4,7 @@ require "theme_check"
 module Extension
   class Command
     class Check < ExtensionCommand
-      class CheckOptions < ShopifyCli::Options
+      class CheckOptions < ShopifyCLI::Options
         def initialize(ctx, theme_check)
           super()
           @theme_check = theme_check
@@ -37,7 +37,7 @@ module Extension
       end
 
       def self.help
-        ShopifyCli::Context.message("check.help", ShopifyCli::TOOL_NAME)
+        ShopifyCLI::Context.message("check.help", ShopifyCLI::TOOL_NAME)
       end
     end
   end

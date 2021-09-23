@@ -1,10 +1,10 @@
 # frozen_string_literal: true
 require "test_helper"
-require "shopify-cli/theme/dev_server"
+require "shopify_cli/theme/dev_server"
 require "rack/mock"
 require "timecop"
 
-module ShopifyCli
+module ShopifyCLI
   module Theme
     module DevServer
       class ProxyTest < Minitest::Test
@@ -12,18 +12,18 @@ module ShopifyCli
 
         def setup
           super
-          root = ShopifyCli::ROOT + "/test/fixtures/theme"
+          root = ShopifyCLI::ROOT + "/test/fixtures/theme"
           @ctx = TestHelpers::FakeContext.new(root: root)
           @theme = DevelopmentTheme.new(@ctx, root: root)
           @syncer = stub(pending_updates: [])
           @proxy = Proxy.new(@ctx, theme: @theme, syncer: @syncer)
 
-          ShopifyCli::DB.stubs(:exists?).with(:shop).returns(true)
-          ShopifyCli::DB
+          ShopifyCLI::DB.stubs(:exists?).with(:shop).returns(true)
+          ShopifyCLI::DB
             .stubs(:get)
             .with(:shop)
             .returns("dev-theme-server-store.myshopify.com")
-          ShopifyCli::DB
+          ShopifyCLI::DB
             .stubs(:get)
             .with(:development_theme_id)
             .returns("123456789")
@@ -129,7 +129,7 @@ module ShopifyCli
 
           stub_session_id_request
 
-          file = ShopifyCli::ROOT + "/test/fixtures/theme/assets/theme.css"
+          file = ShopifyCLI::ROOT + "/test/fixtures/theme/assets/theme.css"
 
           request.post("/cart/add", params: {
             "form_type" => "product",
@@ -187,12 +187,12 @@ module ShopifyCli
         end
 
         def test_pass_pending_templates_to_storefront
-          ShopifyCli::DB
+          ShopifyCLI::DB
             .stubs(:get)
             .with(:shop)
             .returns("dev-theme-server-store.myshopify.com")
 
-          ShopifyCli::DB
+          ShopifyCLI::DB
             .stubs(:get)
             .with(:storefront_renderer_production_exchange_token)
             .returns("TOKEN")
@@ -229,12 +229,12 @@ module ShopifyCli
         end
 
         def test_do_not_pass_pending_files_to_core
-          ShopifyCli::DB
+          ShopifyCLI::DB
             .stubs(:get)
             .with(:shop)
             .returns("dev-theme-server-store.myshopify.com")
 
-          ShopifyCli::DB
+          ShopifyCLI::DB
             .stubs(:get)
             .with(:storefront_renderer_production_exchange_token)
             .returns("TOKEN")
@@ -282,7 +282,7 @@ module ShopifyCli
         end
 
         def test_requires_exchange_token
-          ShopifyCli::DB
+          ShopifyCLI::DB
             .stubs(:get)
             .with(:storefront_renderer_production_exchange_token)
             .returns(nil)

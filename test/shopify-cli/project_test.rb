@@ -1,7 +1,7 @@
 # frozen_string_literal: true
 require "test_helper"
 
-module ShopifyCli
+module ShopifyCLI
   class ProjectTest < MiniTest::Test
     def setup
       super
@@ -21,7 +21,7 @@ module ShopifyCli
     def test_current_fails_if_no_config
       Dir.mktmpdir do |dir|
         Dir.stubs(:pwd).returns("#{dir}/a/b/c/d")
-        assert_raises ShopifyCli::Abort do
+        assert_raises ShopifyCLI::Abort do
           FileUtils.mkdir_p("#{dir}/a/b/c/d")
           Project.current
         end
@@ -31,7 +31,7 @@ module ShopifyCli
     def test_write_writes_yaml
       Shopifolk.stubs(:acting_as_shopify_organization?).returns(false)
       Dir.stubs(:pwd).returns(@context.root)
-      ShopifyCli::Project.write(@context, project_type: :node, organization_id: 42)
+      ShopifyCLI::Project.write(@context, project_type: :node, organization_id: 42)
       assert_equal :node, Project.current.config["project_type"]
       assert_equal 42, Project.current.config["organization_id"]
       refute Project.current.config["shopify_organization"]
@@ -40,21 +40,21 @@ module ShopifyCli
     def test_write_writes_yaml_with_shopify_organization_field
       create_empty_config
       Shopifolk.stubs(:acting_as_shopify_organization?).returns(true)
-      ShopifyCli::Project.write(@context, project_type: :node, organization_id: 42)
+      ShopifyCLI::Project.write(@context, project_type: :node, organization_id: 42)
       assert Project.current.config["shopify_organization"]
     end
 
     def test_write_writes_yaml_without_shopify_organization_field
       create_empty_config
       Shopifolk.stubs(:acting_as_shopify_organization?).returns(false)
-      ShopifyCli::Project.write(@context, project_type: :node, organization_id: 42)
+      ShopifyCLI::Project.write(@context, project_type: :node, organization_id: 42)
       refute Project.current.config["shopify_organization"]
     end
 
     def test_write_includes_identifiers
       create_empty_config
       Shopifolk.stubs(:acting_as_shopify_organization?).returns(false)
-      ShopifyCli::Project.write(
+      ShopifyCLI::Project.write(
         @context,
         project_type: :node,
         organization_id: 42,

@@ -12,7 +12,7 @@ module Extension
           variant = hash.dig(*VARIANT_PATH)
           return unless variant
           Models::Product.new(
-            variant_id: ShopifyCli::API.gid_to_id(variant)
+            variant_id: ShopifyCLI::API.gid_to_id(variant)
           )
         end
       end

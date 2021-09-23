@@ -2,7 +2,7 @@
 
 module Extension
   module Forms
-    class Connect < ShopifyCli::Form
+    class Connect < ShopifyCLI::Form
       attr_reader :registration, :app
 
       flag_arguments :type
@@ -19,7 +19,7 @@ module Extension
       end
 
       def ask
-        ShopifyCli::Result.wrap(ExtensionProjectDetails.new)
+        ShopifyCLI::Result.wrap(ExtensionProjectDetails.new)
           .then(&Questions::AskRegistration.new(ctx: ctx, type: type))
           .unwrap { |e| raise e }
           .tap do |project_details|

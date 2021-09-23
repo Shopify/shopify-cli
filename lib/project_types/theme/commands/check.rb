@@ -3,8 +3,8 @@ require "theme_check"
 
 module Theme
   class Command
-    class Check < ShopifyCli::SubCommand
-      class Options < ShopifyCli::Options
+    class Check < ShopifyCLI::SubCommand
+      class Options < ShopifyCLI::Options
         def initialize(theme_check)
           super()
           @theme_check = theme_check
@@ -26,7 +26,7 @@ module Theme
       end
 
       def self.help
-        ShopifyCli::Context.message("theme.check.help", ShopifyCli::TOOL_NAME)
+        ShopifyCLI::Context.message("theme.check.help", ShopifyCLI::TOOL_NAME)
       end
     end
   end

@@ -1,9 +1,9 @@
 # frozen_string_literal: true
 require "test_helper"
-require "shopify-cli/theme/dev_server"
+require "shopify_cli/theme/dev_server"
 require "rack/mock"
 
-module ShopifyCli
+module ShopifyCLI
   module Theme
     module DevServer
       class LocalAssetsTest < Minitest::Test
@@ -40,7 +40,7 @@ module ShopifyCli
           response = serve("<WRONG>", path: "/assets/theme.css")
           assert_equal("text/css", response["Content-Type"])
           assert_equal(
-            ::File.read("#{ShopifyCli::ROOT}/test/fixtures/theme/assets/theme.css"),
+            ::File.read("#{ShopifyCLI::ROOT}/test/fixtures/theme/assets/theme.css"),
             response.body
           )
         end
@@ -49,7 +49,7 @@ module ShopifyCli
           response = serve("<WRONG>", path: "/assets/theme.js")
           assert_equal("application/javascript", response["Content-Type"])
           assert_equal(
-            ::File.read("#{ShopifyCli::ROOT}/test/fixtures/theme/assets/theme.css"),
+            ::File.read("#{ShopifyCLI::ROOT}/test/fixtures/theme/assets/theme.css"),
             response.body
           )
         end
@@ -66,7 +66,7 @@ module ShopifyCli
           app = lambda do |_env|
             [200, {}, [response_body]]
           end
-          root = ShopifyCli::ROOT + "/test/fixtures/theme"
+          root = ShopifyCLI::ROOT + "/test/fixtures/theme"
           ctx = TestHelpers::FakeContext.new(root: root)
           theme = Theme.new(ctx, root: root)
           stack = LocalAssets.new(ctx, app, theme: theme)

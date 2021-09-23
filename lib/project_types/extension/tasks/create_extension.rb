@@ -3,7 +3,7 @@ require "shopify_cli"
 
 module Extension
   module Tasks
-    class CreateExtension < ShopifyCli::Task
+    class CreateExtension < ShopifyCLI::Task
       include UserErrors
 
       GRAPHQL_FILE = "extension_create"
@@ -20,7 +20,7 @@ module Extension
           extension_context: extension_context,
         }
 
-        response = ShopifyCli::PartnersAPI.query(context, GRAPHQL_FILE, **input).dig(*RESPONSE_FIELD)
+        response = ShopifyCLI::PartnersAPI.query(context, GRAPHQL_FILE, **input).dig(*RESPONSE_FIELD)
         context.abort(context.message("tasks.errors.parse_error")) if response.nil?
 
         abort_if_user_errors(context, response)

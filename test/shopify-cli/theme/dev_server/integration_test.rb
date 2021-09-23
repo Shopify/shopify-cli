@@ -1,8 +1,8 @@
 # frozen_string_literal: true
 require "test_helper"
-require "shopify-cli/theme/dev_server"
+require "shopify_cli/theme/dev_server"
 
-module ShopifyCli
+module ShopifyCLI
   module Theme
     module DevServer
       class IntegrationTest < Minitest::Test
@@ -17,21 +17,21 @@ module ShopifyCli
           super
           WebMock.disable_net_connect!(allow: "127.0.0.1:#{@@port}")
 
-          ShopifyCli::DB.expects(:get)
+          ShopifyCLI::DB.expects(:get)
             .with(:shopify_exchange_token)
             .at_least_once.returns('token123')
 
-          ShopifyCli::DB.expects(:exists?).with(:shop).at_least_once.returns(true)
-          ShopifyCli::DB.expects(:get)
+          ShopifyCLI::DB.expects(:exists?).with(:shop).at_least_once.returns(true)
+          ShopifyCLI::DB.expects(:get)
             .with(:shop)
             .at_least_once.returns("dev-theme-server-store.myshopify.com")
-          ShopifyCli::DB.stubs(:get)
+          ShopifyCLI::DB.stubs(:get)
             .with(:development_theme_name)
             .returns("Development theme")
-          ShopifyCli::DB.stubs(:get)
+          ShopifyCLI::DB.stubs(:get)
             .with(:development_theme_id)
             .returns("123456789")
-          ShopifyCli::DB.stubs(:get).with(:acting_as_shopify_organization).returns(nil)
+          ShopifyCLI::DB.stubs(:get).with(:acting_as_shopify_organization).returns(nil)
         end
 
         def teardown
@@ -81,7 +81,7 @@ module ShopifyCli
             "settings_data.json",
             "ignores_file",
           ]
-          theme_root = "#{ShopifyCli::ROOT}/test/fixtures/theme"
+          theme_root = "#{ShopifyCLI::ROOT}/test/fixtures/theme"
 
           Pathname.new(theme_root).glob("**/*").each do |file|
             next unless file.file? && !ignored_files.include?(file.basename.to_s)
@@ -109,7 +109,7 @@ module ShopifyCli
           # Wait for server to start & sync the files
           get("/assets/bogus.css")
 
-          theme_root = "#{ShopifyCli::ROOT}/test/fixtures/theme"
+          theme_root = "#{ShopifyCLI::ROOT}/test/fixtures/theme"
 
           # Modify a file. Should upload on the fly.
           file = Pathname.new("#{theme_root}/assets/added.css")
@@ -161,7 +161,7 @@ module ShopifyCli
           # Read the head
           assert_includes(socket.readpartial(1024), "HTTP/1.1 200 OK")
           # Add a file
-          file = Pathname.new("#{ShopifyCli::ROOT}/test/fixtures/theme/assets/theme.css")
+          file = Pathname.new("#{ShopifyCLI::ROOT}/test/fixtures/theme/assets/theme.css")
           file.write("modified")
           begin
             assert_equal("2a\r\ndata: {\"modified\":[\"assets/theme.css\"]}\n\n\n\r\n", socket.readpartial(1024))
@@ -174,9 +174,9 @@ module ShopifyCli
         private
 
         def start_server
-          @ctx = TestHelpers::FakeContext.new(root: "#{ShopifyCli::ROOT}/test/fixtures/theme")
+          @ctx = TestHelpers::FakeContext.new(root: "#{ShopifyCLI::ROOT}/test/fixtures/theme")
           @server_thread = Thread.new do
-            DevServer.start(@ctx, "#{ShopifyCli::ROOT}/test/fixtures/theme", port: @@port)
+            DevServer.start(@ctx, "#{ShopifyCLI::ROOT}/test/fixtures/theme", port: @@port)
           rescue Exception => e
             puts "Failed to start DevServer:"
             puts e.message

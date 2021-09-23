@@ -12,7 +12,7 @@ module Extension
         @name = "My Ext"
         @directory_name = "my_ext"
 
-        ShopifyCli::ProjectType.load_type(:extension)
+        ShopifyCLI::ProjectType.load_type(:extension)
 
         ExtensionTestHelpers.fake_extension_project(with_mocks: true)
         @specification_handler = ExtensionTestHelpers.test_specification_handler
@@ -20,7 +20,7 @@ module Extension
         @app = Models::App.new(title: "Fake", api_key: "1234", secret: "4567", business_name: "Fake Business")
         stub_get_app(api_key: "1234", app: @app)
 
-        ShopifyCli::Tasks::EnsureAuthenticated.stubs(:call)
+        ShopifyCLI::Tasks::EnsureAuthenticated.stubs(:call)
       end
 
       def test_prints_help
@@ -29,13 +29,13 @@ module Extension
       end
 
       def test_create_aborts_if_the_directory_already_exists
-        ShopifyCli::Shopifolk.stubs(:check).returns(false)
-        ShopifyCli::Feature.stubs(:enabled?).with(:extension_server_beta).returns(false)
+        ShopifyCLI::Shopifolk.stubs(:check).returns(false)
+        ShopifyCLI::Feature.stubs(:enabled?).with(:extension_server_beta).returns(false)
 
         Dir.expects(:exist?).with(@directory_name).returns(true).once
         Models::SpecificationHandlers::Default.any_instance.expects(:create).never
 
-        io = capture_io_and_assert_raises(ShopifyCli::Abort) do
+        io = capture_io_and_assert_raises(ShopifyCLI::Abort) do
           run_create(%W(extension --name=#{@name} --type=#{@specification_handler.identifier}
                         --api-key=#{@app.api_key}))
         end
@@ -46,8 +46,8 @@ module Extension
       end
 
       def test_runs_type_create_and_writes_project_files
-        ShopifyCli::Shopifolk.stubs(:check).returns(false)
-        ShopifyCli::Feature.stubs(:enabled?).with(:extension_server_beta).returns(false)
+        ShopifyCLI::Shopifolk.stubs(:check).returns(false)
+        ShopifyCLI::Feature.stubs(:enabled?).with(:extension_server_beta).returns(false)
 
         Dir.expects(:exist?).with(@directory_name).returns(false).once
         Models::SpecificationHandlers::Default
@@ -71,8 +71,8 @@ module Extension
       end
 
       def test_does_not_create_project_files_and_outputs_try_again_message_if_type_create_failed
-        ShopifyCli::Shopifolk.stubs(:check).returns(false)
-        ShopifyCli::Feature.stubs(:enabled?).with(:extension_server_beta).returns(false)
+        ShopifyCLI::Shopifolk.stubs(:check).returns(false)
+        ShopifyCLI::Feature.stubs(:enabled?).with(:extension_server_beta).returns(false)
 
         Dir.expects(:exist?).with(@directory_name).returns(false).once
         Models::SpecificationHandlers::Default

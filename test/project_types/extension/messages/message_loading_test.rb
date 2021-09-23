@@ -8,7 +8,7 @@ module Extension
       include ExtensionTestHelpers
       def setup
         super
-        ShopifyCli::ProjectType.load_type(:extension)
+        ShopifyCLI::ProjectType.load_type(:extension)
 
         @fake_messages = {
           name: "Fake Type",
@@ -53,7 +53,7 @@ module Extension
       end
 
       def test_load_current_type_messages_returns_nil_if_there_is_no_current_project
-        ShopifyCli::Project.expects(:has_current?).returns(false).once
+        ShopifyCLI::Project.expects(:has_current?).returns(false).once
 
         assert_nil(Messages::MessageLoading.load_current_type_messages)
       end
@@ -61,8 +61,8 @@ module Extension
       def test_load_current_type_messages_calls_messages_for_type_with_type_if_there_is_a_current_project
         project = ExtensionTestHelpers.fake_extension_project(with_mocks: true)
 
-        ShopifyCli::Project.expects(:has_current?).returns(true).once
-        ShopifyCli::Project.stubs(:current).returns(project).once
+        ShopifyCLI::Project.expects(:has_current?).returns(true).once
+        ShopifyCLI::Project.stubs(:current).returns(project).once
         Messages::MessageLoading.expects(:messages_for_type).with(project.type).once
 
         Messages::MessageLoading.load_current_type_messages

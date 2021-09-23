@@ -21,8 +21,8 @@ describe Script::Tasks::EnsureEnv do
 
     before do
       context.output_captured = true
-      ShopifyCli::Shopifolk.stubs(:check).returns(is_shopifolk)
-      ShopifyCli::Shopifolk.stubs(:acting_as_shopify_organization?).returns(false)
+      ShopifyCLI::Shopifolk.stubs(:check).returns(is_shopifolk)
+      ShopifyCLI::Shopifolk.stubs(:acting_as_shopify_organization?).returns(false)
       Script::Layers::Infrastructure::ScriptProjectRepository.stubs(:new).returns(script_project_repository)
       script_project_repository.create(
         language: language,
@@ -33,12 +33,12 @@ describe Script::Tasks::EnsureEnv do
     end
 
     describe "when env already has all required fields" do
-      let(:env) { ShopifyCli::Resources::EnvFile.new(api_key: "api_key", secret: "shh", extra: { "UUID" => "uuid" }) }
+      let(:env) { ShopifyCLI::Resources::EnvFile.new(api_key: "api_key", secret: "shh", extra: { "UUID" => "uuid" }) }
 
       it "does nothing" do
         CLI::UI::Prompt.expects(:ask).never
         CLI::UI::Prompt.expects(:confirm).never
-        ShopifyCli::PartnersAPI.expects(:query).never
+        ShopifyCLI::PartnersAPI.expects(:query).never
         Script::Layers::Infrastructure::ScriptService.any_instance.expects(:get_app_scripts).never
 
         refute subject
@@ -91,7 +91,7 @@ describe Script::Tasks::EnsureEnv do
         let(:selected_uuid) { nil }
 
         before do
-          ShopifyCli::PartnersAPI::Organizations
+          ShopifyCLI::PartnersAPI::Organizations
             .stubs(:fetch_with_app)
             .returns(orgs_with_apps)
           Script::Layers::Infrastructure::ScriptService
@@ -150,7 +150,7 @@ describe Script::Tasks::EnsureEnv do
           end
 
           it("should not call partners to query for apps") do
-            ShopifyCli::PartnersAPI.expects(:query).never
+            ShopifyCLI::PartnersAPI.expects(:query).never
             Script::Layers::Infrastructure::ScriptService.any_instance.expects(:get_app_scripts).returns([])
 
             subject
@@ -264,7 +264,7 @@ describe Script::Tasks::EnsureEnv do
       end
 
       describe "when missing uuid" do
-        let(:env) { ShopifyCli::Resources::EnvFile.new(api_key: "api_key", secret: "shh") }
+        let(:env) { ShopifyCLI::Resources::EnvFile.new(api_key: "api_key", secret: "shh") }
 
         it_prompts_user_and_update_env
       end

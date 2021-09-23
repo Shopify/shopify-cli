@@ -1,7 +1,7 @@
 # frozen_string_literal: true
 module Node
   class Command
-    class Serve < ShopifyCli::SubCommand
+    class Serve < ShopifyCLI::SubCommand
       prerequisite_task ensure_project_type: :node
       prerequisite_task :ensure_env, :ensure_dev_store
 
@@ -13,12 +13,17 @@ module Node
       end
 
       def call(*)
+<<<<<<< HEAD
        project = ShopifyCli::Project.current
         
         url = options.flags[:host] || ShopifyCli::Tunnel.start(@ctx)
+=======
+        project = ShopifyCLI::Project.current
+        url = options.flags[:host] || ShopifyCLI::Tunnel.start(@ctx)
+>>>>>>> 83bf6d935e07599cf72d756032438160f78509db
         @ctx.abort(@ctx.message("node.serve.error.host_must_be_https")) if url.match(/^https/i).nil?
         project.env.update(@ctx, :host, url)
-        ShopifyCli::Tasks::UpdateDashboardURLS.call(
+        ShopifyCLI::Tasks::UpdateDashboardURLS.call(
           @ctx,
           url: url,
           callback_url: "/auth/callback",
@@ -31,7 +36,11 @@ module Node
 
         CLI::UI::Frame.open(@ctx.message("node.serve.running_server")) do
           env = project.env.to_h
+<<<<<<< HEAD
           env["PORT"] = port.to_s
+=======
+          env["PORT"] = ShopifyCLI::Tunnel::PORT.to_s
+>>>>>>> 83bf6d935e07599cf72d756032438160f78509db
           @ctx.system("npm run dev", env: env)
         end
       end
@@ -45,11 +54,11 @@ module Node
       end
 
       def self.help
-        ShopifyCli::Context.message("node.serve.help", ShopifyCli::TOOL_NAME)
+        ShopifyCLI::Context.message("node.serve.help", ShopifyCLI::TOOL_NAME)
       end
 
       def self.extended_help
-        ShopifyCli::Context.message("node.serve.extended_help")
+        ShopifyCLI::Context.message("node.serve.extended_help")
       end
     end
   end

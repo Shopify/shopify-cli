@@ -1,11 +1,11 @@
 # frozen_string_literal: true
 module Theme
-  class Project < ShopifyCli::ProjectType
+  class Project < ShopifyCLI::ProjectType
     require Project.project_filepath("messages/messages")
     register_messages(Theme::Messages::MESSAGES)
   end
 
-  class Command < ShopifyCli::ProjectCommands
+  class Command < ShopifyCLI::ProjectCommands
     subcommand :Init, "init", Project.project_filepath("commands/init")
     subcommand :Serve, "serve", Project.project_filepath("commands/serve")
     subcommand :Pull, "pull", Project.project_filepath("commands/pull")
@@ -16,7 +16,7 @@ module Theme
     subcommand :Package, "package", Project.project_filepath("commands/package")
     subcommand :LanguageServer, "language-server", Project.project_filepath("commands/language_server")
   end
-  ShopifyCli::Commands.register("Theme::Command", "theme")
+  ShopifyCLI::Commands.register("Theme::Command", "theme")
 
   module Forms
     autoload :ConfirmStore, Project.project_filepath("forms/confirm_store")

@@ -24,8 +24,8 @@ module Rails
 
       def setup
         super
-        ShopifyCli::Tasks::EnsureAuthenticated.stubs(:call)
-        ShopifyCli::Shopifolk.stubs(:acting_as_shopify_organization?).returns(false)
+        ShopifyCLI::Tasks::EnsureAuthenticated.stubs(:call)
+        ShopifyCLI::Shopifolk.stubs(:acting_as_shopify_organization?).returns(false)
       end
 
       def test_prints_help_with_no_name_argument
@@ -35,12 +35,12 @@ module Rails
 
       def test_will_abort_if_bad_ruby
         Ruby.expects(:version).returns(Semantic::Version.new("2.3.7"))
-        assert_raises ShopifyCli::Abort do
+        assert_raises ShopifyCLI::Abort do
           perform_command
         end
 
         Ruby.expects(:version).returns(Semantic::Version.new("3.1.0"))
-        assert_raises ShopifyCli::Abort do
+        assert_raises ShopifyCLI::Abort do
           perform_command
         end
       end
@@ -72,7 +72,7 @@ module Rails
             org: 42,
             title: "test-app",
             type: "public",
-            app_url: ShopifyCli::Tasks::CreateApiClient::DEFAULT_APP_URL,
+            app_url: ShopifyCLI::Tasks::CreateApiClient::DEFAULT_APP_URL,
             redir: ["http://127.0.0.1:3456"],
           },
           resp: {
@@ -124,7 +124,7 @@ module Rails
             org: 42,
             title: "test-app",
             type: "public",
-            app_url: ShopifyCli::Tasks::CreateApiClient::DEFAULT_APP_URL,
+            app_url: ShopifyCLI::Tasks::CreateApiClient::DEFAULT_APP_URL,
             redir: ["http://127.0.0.1:3456"],
           },
           resp: {
@@ -172,7 +172,7 @@ module Rails
             org: 42,
             title: "test-app",
             type: "public",
-            app_url: ShopifyCli::Tasks::CreateApiClient::DEFAULT_APP_URL,
+            app_url: ShopifyCLI::Tasks::CreateApiClient::DEFAULT_APP_URL,
             redir: ["http://127.0.0.1:3456"],
           },
           resp: {
@@ -205,7 +205,7 @@ module Rails
         Gem.expects(:install).with(@context, "bundler", "~>2.0").returns(true)
         Dir.stubs(:exist?).returns(true)
 
-        exception = assert_raises ShopifyCli::Abort do
+        exception = assert_raises ShopifyCLI::Abort do
           perform_command
         end
         assert_equal(
@@ -263,7 +263,7 @@ module Rails
 
         # The dir needs to exist to simulate the command working, but we don't want to fail on the pre-create check
         Dir.expects(:exist?).with(File.join(@context.root, "test-app")).returns(false)
-        Dir.stubs(:exist?).with(File.join(ShopifyCli::ROOT, "test")).returns(true)
+        Dir.stubs(:exist?).with(File.join(ShopifyCLI::ROOT, "test")).returns(true)
       end
     end
   end

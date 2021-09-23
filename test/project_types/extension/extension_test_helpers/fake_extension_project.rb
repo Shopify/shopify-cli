@@ -21,7 +21,7 @@ module Extension
       end
 
       def env
-        @env ||= ShopifyCli::Resources::EnvFile.new(
+        @env ||= ShopifyCLI::Resources::EnvFile.new(
           api_key: api_key,
           secret: api_secret,
           shop: "my-test-shop.myshopify.com",

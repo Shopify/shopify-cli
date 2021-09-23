@@ -10,7 +10,7 @@ module Extension
 
         def setup
           super
-          ShopifyCli::ProjectType.load_type(:extension)
+          ShopifyCLI::ProjectType.load_type(:extension)
 
           @registration_id = 42
           @registration_uuid = "123"
@@ -21,7 +21,7 @@ module Extension
         end
 
         def test_from_hash_aborts_with_a_parse_error_if_the_hash_is_nil
-          io = capture_io_and_assert_raises(ShopifyCli::Abort) do
+          io = capture_io_and_assert_raises(ShopifyCLI::Abort) do
             Converters::RegistrationConverter.from_hash(@context, nil)
           end
 

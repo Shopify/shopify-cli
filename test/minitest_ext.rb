@@ -7,7 +7,7 @@ module Minitest
 
   class Test
     FIXTURE_DIR = File.expand_path("fixtures", File.dirname(__FILE__))
-    CONFIG_FILE = CLI::Kit::Config.new(tool_name: ShopifyCli::TOOL_NAME).file
+    CONFIG_FILE = CLI::Kit::Config.new(tool_name: ShopifyCLI::TOOL_NAME).file
 
     include TestHelpers::Project
 
@@ -17,7 +17,7 @@ module Minitest
         @config_sha_before = Digest::SHA256.hexdigest(File.read(CONFIG_FILE))
       end
       project_context("project")
-      ::ShopifyCli::Project.clear
+      ::ShopifyCLI::Project.clear
       super
     end
 
@@ -53,7 +53,7 @@ module Minitest
       stub_new_version_check
 
       new_cmd = split_cmd ? cmd.split : cmd
-      ShopifyCli::Core::EntryPoint.call(new_cmd, @context)
+      ShopifyCLI::Core::EntryPoint.call(new_cmd, @context)
     end
 
     def capture_io(&block)
@@ -96,18 +96,18 @@ module Minitest
     private
 
     def stub_prompt_for_cli_updates
-      ShopifyCli::Config.stubs(:get_section).with("autoupdate").returns("enabled" => "true")
+      ShopifyCLI::Config.stubs(:get_section).with("autoupdate").returns("enabled" => "true")
     end
 
     def stub_new_version_check
-      stub_request(:get, ShopifyCli::Context::GEM_LATEST_URI)
+      stub_request(:get, ShopifyCLI::Context::GEM_LATEST_URI)
         .with(headers: {
           "Accept" => "*/*",
           "Accept-Encoding" => "gzip;q=1.0,deflate;q=0.6,identity;q=0.3",
           "Host" => "rubygems.org",
           "User-Agent" => "Ruby",
         })
-        .to_return(status: 200, body: "{\"version\":\"#{ShopifyCli::VERSION}\"}", headers: {})
+        .to_return(status: 200, body: "{\"version\":\"#{ShopifyCLI::VERSION}\"}", headers: {})
     end
   end
 end

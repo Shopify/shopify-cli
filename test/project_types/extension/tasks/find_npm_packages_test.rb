@@ -5,7 +5,7 @@ module Extension
     class FindNpmPackagesTest < MiniTest::Test
       def setup
         super
-        ShopifyCli::ProjectType.load_type(:extension)
+        ShopifyCLI::ProjectType.load_type(:extension)
       end
 
       def test_finds_single_package
@@ -157,7 +157,7 @@ module Extension
 
       def stub_js_system(output: yarn_output, &customize)
         customize ||= ->(system) { system }
-        ShopifyCli::JsSystem.new(ctx: @context).tap do |js_system|
+        ShopifyCLI::JsSystem.new(ctx: @context).tap do |js_system|
           success = mock(success?: true)
           customize
             .call(js_system.expects(:call))

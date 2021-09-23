@@ -20,7 +20,10 @@ module Script
                 compiled_type: task_runner.compiled_type,
                 metadata: task_runner.metadata,
               )
-              script_service = Infrastructure::ScriptService.new(ctx: p_ctx, api_key: script_project.api_key)
+              script_service = Infrastructure::ServiceLocator.script_service(
+                ctx: p_ctx,
+                api_key: script_project.api_key
+              )
               module_upload_url = Infrastructure::ScriptUploader.new(script_service).upload(package.script_content)
               uuid = script_service.set_app_script(
                 uuid: package.uuid,
