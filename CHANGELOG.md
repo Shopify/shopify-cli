@@ -1,5 +1,9 @@
 Unreleased
 ------
+
+Version 2.5.0
+------
+
 * [#1553](https://github.com/Shopify/shopify-cli/pull/1553): Add support for PHP app projects
 
 Version 2.4.0
