@@ -1,5 +1,6 @@
 Unreleased
 ------
+* [#1567](https://github.com/Shopify/shopify-cli/pull/1567): dd ability to set custom port for ngrok tunnel in node serve
 
 Version 2.5.0
 ------
