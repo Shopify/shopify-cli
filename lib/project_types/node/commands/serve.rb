@@ -2,8 +2,8 @@
 module Node
   class Command
     class Serve < ShopifyCLI::SubCommand
-      # prerequisite_task ensure_project_type: :node
-      # prerequisite_task :ensure_env, :ensure_dev_store
+      prerequisite_task ensure_project_type: :node
+      prerequisite_task :ensure_env, :ensure_dev_store
 
       options do |parser, flags|
         parser.on("--host=HOST") do |h|
@@ -13,11 +13,10 @@ module Node
       end
 
       def call(*)
-        # project = ShopifyCLI::Project.current
+        project = ShopifyCLI::Project.current
         url = options.flags[:host] || ShopifyCLI::Tunnel.start(@ctx)
-        require "byebug"; byebug
         @ctx.abort(@ctx.message("node.serve.error.host_must_be_https")) if url.match(/^https/i).nil?
-        # project.env.update(@ctx, :host, url)
+        project.env.update(@ctx, :host, url)
         ShopifyCLI::Tasks::UpdateDashboardURLS.call(
           @ctx,
           url: url,
