@@ -128,6 +128,39 @@ module ShopifyCLI
       assert_equal "partners.abcd.my-namespace.us.spin.dev", got
     end
 
+    def test_use_spin_is_true
+      env_variables = {
+        Constants::EnvironmentVariables::SPIN_WORKSPACE.to_s => "abcd",
+        Constants::EnvironmentVariables::SPIN_NAMESPACE.to_s => "abcd",
+      }
+
+      got = Environment.use_spin?(env_variables: env_variables)
+
+      assert got
+    end
+
+    def test_use_spin_is_false
+      env_variables = {
+        Constants::EnvironmentVariables::SPIN_WORKSPACE.to_s => nil,
+        Constants::EnvironmentVariables::SPIN_NAMESPACE.to_s => "abcd",
+      }
+
+      got = Environment.use_spin?(env_variables: env_variables)
+
+      refute got
+    end
+
+    def test_use_spin_is_false_when_namespace_and_workspace_nil
+      env_variables = {
+        Constants::EnvironmentVariables::SPIN_WORKSPACE.to_s => nil,
+        Constants::EnvironmentVariables::SPIN_NAMESPACE.to_s => nil,
+      }
+
+      got = Environment.use_spin?(env_variables: env_variables)
+
+      refute got
+    end
+
     def test_env_variable_truthy
       Environment::TRUTHY_ENV_VARIABLE_VALUES.each do |value|
         assert Environment.env_variable_truthy?("TEST", env_variables: { "TEST" => value })

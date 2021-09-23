@@ -34,6 +34,11 @@ module ShopifyCLI
       end
     end
 
+    def self.use_spin?(env_variables: ENV)
+      !env_variables[Constants::EnvironmentVariables::SPIN_WORKSPACE].nil? &&
+        !env_variables[Constants::EnvironmentVariables::SPIN_NAMESPACE].nil?
+    end
+
     def self.spin_url(env_variables: ENV)
       spin_workspace = spin_workspace(env_variables: env_variables)
       spin_namespace = spin_namespace(env_variables: env_variables)

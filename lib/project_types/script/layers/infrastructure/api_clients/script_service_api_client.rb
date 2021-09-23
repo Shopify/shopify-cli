@@ -22,7 +22,7 @@ module Script
           private
 
           def script_service_url
-            if ::ShopifyCLI::Environment.use_spin_partners_instance?
+            if ::ShopifyCLI::Environment.use_spin?
               "https://script-service.#{::ShopifyCLI::Environment.spin_url}"
             else
               LOCAL_INSTANCE_URL
