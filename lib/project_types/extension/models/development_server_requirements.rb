@@ -19,8 +19,7 @@ module Extension
         private
 
         def binary_installed?
-          extension_dir = File.join(ShopifyCLI::ROOT, "ext", "shopify-extensions")
-          File.exist?(File.join(extension_dir, UNIX_NAME)) || File.exist?(File.join(extension_dir, WINDOWS_NAME))
+          Models::DevelopmentServer.new.executable_installed?
         end
 
         def type_supported?(type)
