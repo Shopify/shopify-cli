@@ -17,7 +17,7 @@ module ShopifyCLI
         app: {
           help: <<~HELP,
           Create and manage embedded apps
-            Usage: {{command:%s app [ rails | node ] }}
+            Usage: {{command:%s app [ rails | node | php ] }}
           HELP
         },
 
