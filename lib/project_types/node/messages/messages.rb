@@ -153,6 +153,7 @@ module Node
           HELP
 
           error: {
+            invalid_port: "%s is not a valid port.",
             token_argument_missing: "{{x}} {{red:auth requires a token argument}}\n\n",
           },
         },
