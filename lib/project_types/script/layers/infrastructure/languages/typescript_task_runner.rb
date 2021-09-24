@@ -4,7 +4,7 @@ module Script
   module Layers
     module Infrastructure
       module Languages
-        class JavaScriptTaskRunner
+        class TypeScriptTaskRunner
           BYTECODE_FILE = "build/%{name}.wasm"
           METADATA_FILE = "build/metadata.json"
           SCRIPT_SDK_BUILD = "npm run build"
@@ -56,9 +56,9 @@ module Script
 
             require "semantic/semantic"
             version = ::Semantic::Version.new(output[1..-1])
-            unless version >= ::Semantic::Version.new(JavaScriptProjectCreator::MIN_NODE_VERSION)
+            unless version >= ::Semantic::Version.new(TypeScriptProjectCreator::MIN_NODE_VERSION)
               raise Errors::DependencyInstallError,
-                "Node version must be >= v#{JavaScriptProjectCreator::MIN_NODE_VERSION}. "\
+                "Node version must be >= v#{TypeScriptProjectCreator::MIN_NODE_VERSION}. "\
             "Current version: #{output.strip}."
             end
           end

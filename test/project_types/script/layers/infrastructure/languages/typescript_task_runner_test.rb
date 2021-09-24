@@ -1,13 +1,13 @@
 
 require "project_types/script/test_helper"
 
-describe Script::Layers::Infrastructure::Languages::JavaScriptTaskRunner do
+describe Script::Layers::Infrastructure::Languages::TypeScriptTaskRunner do
   include TestHelpers::FakeFS
 
   let(:ctx) { TestHelpers::FakeContext.new }
   let(:script_name) { "foo" }
-  let(:language) { "JavaScript" }
-  let(:runner) { Script::Layers::Infrastructure::Languages::JavaScriptTaskRunner.new(ctx, script_name) }
+  let(:language) { "TypeScript" }
+  let(:runner) { Script::Layers::Infrastructure::Languages::TypeScriptTaskRunner.new(ctx, script_name) }
   let(:package_json) do
     {
       scripts: {

@@ -24,8 +24,6 @@ module Script
               type = extension_point.dasherize_type
               domain = extension_point.domain
 
-              lang = language == "javascript" ? "typescript" : language
-
               project_creator = Infrastructure::Languages::ProjectCreator.for(
                 ctx: ctx,
                 language: language,
@@ -34,7 +32,7 @@ module Script
                 path_to_project: project.id,
                 sparse_checkout_repo: sparse_checkout_repo,
                 sparse_checkout_branch: sparse_checkout_branch,
-                sparse_checkout_set_path: "#{domain}/#{lang}/#{type}/default"
+                sparse_checkout_set_path: "#{domain}/#{language}/#{type}/default"
               )
 
               install_dependencies(ctx, language, script_name, project_creator)
