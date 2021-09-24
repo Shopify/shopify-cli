@@ -99,7 +99,7 @@ module Node
         ShopifyCLI::Tasks::UpdateDashboardURLS.expects(:call)
         ShopifyCLI::Resources::EnvFile.any_instance.expects(:update)
         @context.expects(:abort).with(
-          @context.message("tunnel.invalid_port", "abc")
+          @context.message("node.serve.error.invalid_port", "abc")
         )
         run_cmd("node serve --port=abc")
       end
