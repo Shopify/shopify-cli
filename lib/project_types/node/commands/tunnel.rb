@@ -4,7 +4,7 @@ require "shopify_cli"
 
 module Node
   class Command
-    class Tunnel < ShopifyCLI::SubCommand
+    class Tunnel < ShopifyCLI::Command::AppSubCommand
       # subcommands :auth, :start, :stop
 
       prerequisite_task ensure_project_type: :node

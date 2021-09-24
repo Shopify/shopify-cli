@@ -1,7 +1,7 @@
 # frozen_string_literal: true
 module Rails
   class Command
-    class Serve < ShopifyCLI::SubCommand
+    class Serve < ShopifyCLI::Command::AppSubCommand
       prerequisite_task ensure_project_type: :rails
       prerequisite_task :ensure_env, :ensure_dev_store
 

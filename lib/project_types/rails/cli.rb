@@ -6,7 +6,7 @@ module Rails
   end
 
   # define/autoload project specific Commands
-  class Command < ShopifyCLI::ProjectCommands
+  class Command < ShopifyCLI::Command::AppCommand
     subcommand :Connect, "connect", Project.project_filepath("commands/connect")
     subcommand :Create, "create", Project.project_filepath("commands/create")
     subcommand :Deploy, "deploy", Project.project_filepath("commands/deploy")
@@ -15,7 +15,7 @@ module Rails
     subcommand :Serve, "serve", Project.project_filepath("commands/serve")
     subcommand :Tunnel, "tunnel", Project.project_filepath("commands/tunnel")
   end
-  ShopifyCLI::Commands.register("Rails::Command", "rails")
+  ShopifyCLI::Commands::App.subcommand("Rails::Command", "rails")
 
   # define/autoload project specific Tasks
   module Tasks

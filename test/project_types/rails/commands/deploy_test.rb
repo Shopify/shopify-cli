@@ -22,7 +22,7 @@ module Rails
       private
 
       def run_deploy(*args)
-        run_cmd("rails deploy " + args.join(" "))
+        run_cmd("app rails deploy " + args.join(" "))
       end
     end
   end

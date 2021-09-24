@@ -33,7 +33,7 @@ module Rails
       private
 
       def run_generate(*args)
-        run_cmd("rails generate " + args.join(" "))
+        run_cmd("app rails generate " + args.join(" "))
       end
     end
   end

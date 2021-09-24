@@ -5,15 +5,15 @@ module PHP
     MESSAGES = {
       php: {
         help: <<~HELP,
-          Suite of commands for developing PHP apps with Laravel. See {{command:%1$s php <command> --help}} for usage of each command.
-            Usage: {{command:%1$s php [ %2$s ]}}
+          Suite of commands for developing PHP apps with Laravel. See {{command:%1$s app php <command> --help}} for usage of each command.
+            Usage: {{command:%1$s app php [ %2$s ]}}
         HELP
 
         connect: {
           connected: "Project now connected to {{green:%s}}",
           help: <<~HELP,
-            {{command:%s php connect}}: Connects an existing PHP app to Shopify CLI. Creates a config file.
-              Usage: {{command:%s php connect}}
+            {{command:%s app php connect}}: Connects an existing PHP app to Shopify CLI. Creates a config file.
+              Usage: {{command:%s app php connect}}
           HELP
           production_warning: <<~MESSAGE,
             {{yellow:! Warning: if you have connected to an {{bold:app in production}}, running {{command:serve}} may update the app URL and cause an outage.
@@ -22,8 +22,8 @@ module PHP
 
         create: {
           help: <<~HELP,
-            {{command:%s create php}}: Creates an embedded PHP app.
-              Usage: {{command:%s create php}}
+            {{command:%s app php create}}: Creates an embedded PHP app.
+              Usage: {{command:%s app php create}}
               Options:
                 {{command:--name=NAME}} App name. Any string.
                 {{command:--organization-id=ID}} Partner organization ID. Must be an existing organization.
@@ -61,20 +61,20 @@ module PHP
         open: {
           help: <<~HELP,
             Open your local development app in the default browser.
-              Usage: {{command:%s open}}
+              Usage: {{command:%s app php open}}
             HELP
         },
 
         deploy: {
           help: <<~HELP,
             Deploy the current PHP project to a hosting service. Heroku ({{underline:https://www.heroku.com}}) is currently the only option, but more will be added in the future.
-              Usage: {{command:%s deploy [ heroku ]}}
+              Usage: {{command:%s app php deploy [ heroku ]}}
             HELP
 
           extended_help: <<~HELP,
             {{bold:Subcommands:}}
               {{cyan:heroku}}: Deploys the current PHP project to Heroku.
-                Usage: {{command:%s deploy heroku}}
+                Usage: {{command:%s app php deploy heroku}}
             HELP
 
           heroku: {
@@ -128,7 +128,7 @@ module PHP
         serve: {
           help: <<~HELP,
             Start a local development PHP server for your project, as well as a public ngrok tunnel to your localhost.
-              Usage: {{command:%s serve}}
+              Usage: {{command:%s app php serve}}
             HELP
           extended_help: <<~HELP,
             {{bold:Options:}}
@@ -149,19 +149,19 @@ module PHP
         tunnel: {
           help: <<~HELP,
             Start or stop an http tunnel to your local development app using ngrok.
-              Usage: {{command:%s tunnel [ auth | start | stop ]}}
+              Usage: {{command:%s app php tunnel [ auth | start | stop ]}}
             HELP
           extended_help: <<~HELP,
             {{bold:Subcommands:}}
 
               {{cyan:auth}}: Writes an ngrok auth token to ~/.ngrok2/ngrok.yml to connect with an ngrok account. Visit https://dashboard.ngrok.com/signup to sign up.
-                Usage: {{command:%1$s tunnel auth <token>}}
+                Usage: {{command:%1$s app php tunnel auth <token>}}
 
               {{cyan:start}}: Starts an ngrok tunnel, will print the URL for an existing tunnel if already running.
-                Usage: {{command:%1$s tunnel start}}
+                Usage: {{command:%1$s app php tunnel start}}
 
               {{cyan:stop}}: Stops the ngrok tunnel.
-                Usage: {{command:%1$s tunnel stop}}
+                Usage: {{command:%1$s app php tunnel stop}}
 
             HELP
 
