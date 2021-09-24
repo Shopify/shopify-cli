@@ -4,7 +4,7 @@ require "shopify_cli"
 
 module PHP
   class Command
-    class Tunnel < ShopifyCLI::SubCommand
+    class Tunnel < ShopifyCLI::Command::AppSubCommand
       def call(args, _name)
         subcommand = args.shift
         case subcommand

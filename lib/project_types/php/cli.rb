@@ -6,7 +6,7 @@ module PHP
   end
 
   # define/autoload project specific Commands
-  class Command < ShopifyCLI::ProjectCommands
+  class Command < ShopifyCLI::Command::AppCommand
     subcommand :Connect, "connect", Project.project_filepath("commands/connect")
     subcommand :Create, "create", Project.project_filepath("commands/create")
     subcommand :Deploy, "deploy", Project.project_filepath("commands/deploy")
@@ -14,7 +14,7 @@ module PHP
     subcommand :Serve, "serve", Project.project_filepath("commands/serve")
     subcommand :Tunnel, "tunnel", Project.project_filepath("commands/tunnel")
   end
-  ShopifyCLI::Commands.register("PHP::Command", "php")
+  ShopifyCLI::Commands::App.subcommand("PHP::Command", "php")
 
   # define/autoload project specific Tasks
   module Tasks

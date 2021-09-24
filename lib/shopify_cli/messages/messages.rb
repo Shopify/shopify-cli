@@ -14,6 +14,13 @@ module ShopifyCLI
         },
       },
       core: {
+        app: {
+          help: <<~HELP,
+          Create and manage embedded apps
+            Usage: {{command:%s app [ rails | node | php ] }}
+          HELP
+        },
+
         connect: {
           already_connected_warning: "{{yellow:! This app appears to be already connected}}",
           project_type_select: "What type of project would you like to connect?",

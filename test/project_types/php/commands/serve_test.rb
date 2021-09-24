@@ -43,7 +43,7 @@ module PHP
           "\n"
         )
 
-        run_cmd("php serve")
+        run_cmd("app php serve")
       end
 
       def test_restarts_npm_watch_if_running
@@ -76,7 +76,7 @@ module PHP
           "\n"
         )
 
-        run_cmd("php serve")
+        run_cmd("app php serve")
       end
 
       def test_server_command_with_invalid_host_url
@@ -87,6 +87,7 @@ module PHP
         ShopifyCLI::ProcessSupervision.expects(:start).never
 
         @context.expects(:system).with(
+          "app",
           "php",
           "artisan",
           "serve",
@@ -103,7 +104,7 @@ module PHP
         ).never
 
         assert_raises ShopifyCLI::Abort do
-          run_cmd("php serve")
+          run_cmd("app php serve")
         end
       end
 
@@ -113,7 +114,7 @@ module PHP
         ShopifyCLI::Resources::EnvFile.any_instance.expects(:update).with(
           @context, :host, "https://example-foo.com"
         )
-        run_cmd('php serve --host="https://example-foo.com"')
+        run_cmd('app php serve --host="https://example-foo.com"')
       end
     end
   end

@@ -6,7 +6,7 @@
 require "formula"
 require "fileutils"
 
-class ShopifyCLI < Formula
+class ShopifyCli < Formula
   module RubyBin
     def ruby_bin
       Formula["ruby"].opt_bin
