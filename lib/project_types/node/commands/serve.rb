@@ -1,7 +1,10 @@
+require "shopify_cli"
 # frozen_string_literal: true
+
 module Node
   class Command
     class Serve < ShopifyCLI::SubCommand
+      extend CommandPortOption
       prerequisite_task ensure_project_type: :node
       prerequisite_task :ensure_env, :ensure_dev_store
 
@@ -11,6 +14,7 @@ module Node
         end
         parser.on("--port=PORT") { |port| flags[:port] = port }
       end
+      setPort
 
       def call(*)
         project = ShopifyCLI::Project.current
