@@ -2,7 +2,7 @@
 
 require "project_types/script/test_helper"
 
-describe Script::Layers::Infrastructure::Languages::JavaScriptProjectCreator do
+describe Script::Layers::Infrastructure::Languages::TypeScriptProjectCreator do
   include TestHelpers::FakeFS
 
   let(:context) { TestHelpers::FakeContext.new }
@@ -25,7 +25,7 @@ describe Script::Layers::Infrastructure::Languages::JavaScriptProjectCreator do
   let(:sparse_checkout_set_path) { "#{domain}/#{language}/#{extension_point_type}/default" }
 
   let(:project_creator) do
-    Script::Layers::Infrastructure::Languages::JavaScriptProjectCreator
+    Script::Layers::Infrastructure::Languages::TypeScriptProjectCreator
       .new(
         ctx: context,
         type: extension_point_type,
@@ -61,11 +61,11 @@ describe Script::Layers::Infrastructure::Languages::JavaScriptProjectCreator do
 
       context
         .expects(:capture2e)
-        .with(Script::Layers::Infrastructure::Languages::JavaScriptProjectCreator::NPM_SET_REGISTRY_COMMAND)
+        .with(Script::Layers::Infrastructure::Languages::TypeScriptProjectCreator::NPM_SET_REGISTRY_COMMAND)
         .returns(fake_capture2e_response)
       context
         .expects(:capture2e)
-        .with(Script::Layers::Infrastructure::Languages::JavaScriptProjectCreator::NPM_SET_ENGINE_STRICT_COMMAND)
+        .with(Script::Layers::Infrastructure::Languages::TypeScriptProjectCreator::NPM_SET_ENGINE_STRICT_COMMAND)
         .returns(fake_capture2e_response)
 
       context

@@ -38,7 +38,7 @@ payment_methods:
     repo: "https://github.com/Shopify/scripts-apis-examples"
     package: "@shopify/scripts-checkout-apis"
     toolchain-version: "^5.0.0"
-  javascript:
+  typescript:
     beta: true
     repo: "https://github.com/Shopify/scripts-apis-examples"
 shipping_methods:
@@ -47,6 +47,6 @@ shipping_methods:
     repo: "https://github.com/Shopify/scripts-apis-examples"
     package: "@shopify/scripts-checkout-apis"
     toolchain-version: "^5.0.0"
-  javascript:
+  typescript:
     beta: true
     repo: "https://github.com/Shopify/scripts-apis-examples"
