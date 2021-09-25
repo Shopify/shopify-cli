@@ -147,7 +147,7 @@ describe Script::Layers::Application::CreateScript do
         Script::Layers::Application::ProjectDependencies
           .expects(:install)
           .with(ctx: context, task_runner: task_runner)
-        task_runner.expects(:check_system_dependencies!)
+        task_runner.expects(:check_tool_version!)
         project_creator.expects(:setup_dependencies)
         capture_io { subject }
       end
