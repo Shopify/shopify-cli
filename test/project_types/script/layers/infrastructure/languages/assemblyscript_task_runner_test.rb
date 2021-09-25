@@ -5,6 +5,13 @@ require "project_types/script/test_helper"
 describe Script::Layers::Infrastructure::Languages::AssemblyScriptTaskRunner do
   include TestHelpers::FakeFS
 
+  BELOW_NODE_VERSION = "v14.4.0"
+  EXACT_NODE_VERSION = "v14.5.0"
+  ABOVE_NODE_VERSION = "v14.6.0"
+
+  ABOVE_NPM_VERSION = "5.2.1"
+  EXACT_NPM_VERSION = "5.2.0"
+
   let(:ctx) { TestHelpers::FakeContext.new }
   let(:script_id) { "id" }
   let(:script_name) { "foo" }
@@ -125,44 +132,37 @@ describe Script::Layers::Infrastructure::Languages::AssemblyScriptTaskRunner do
   describe ".install_dependencies" do
     subject { as_task_runner.install_dependencies }
 
-    describe "when npm version is below minimum" do
-      it "should raise error" do
-        ctx.expects(:capture2e)
-          .with("npm", "--version")
-          .returns(["2.4.0", mock(success?: true)])
-
-        assert_raises Script::Layers::Infrastructure::Errors::MissingDependencyVersionError do
-          subject
-        end
-      end
-    end
-
-    describe "when npm version is above minimum and node is below minimum" do
-      it "should raise error" do
-        ctx.expects(:capture2e)
-          .with("npm", "--version")
-          .returns(["5.2.0", mock(success?: true)])
-        ctx.expects(:capture2e)
-          .with("node", "--version")
-          .returns(["v14.4.0", mock(success?: true)])
-        assert_raises Script::Layers::Infrastructure::Errors::MissingDependencyVersionError do
-          subject
-        end
-      end
-    end
-
     describe "when npm version and node are above minimum" do
-      it "should install using npm" do
-        ctx.expects(:capture2e)
-          .with("npm", "--version")
-          .returns(["5.2.0", mock(success?: true)])
-        ctx.expects(:capture2e)
-          .with("node", "--version")
-          .returns(["v14.5.0", mock(success?: true)])
-        ctx.expects(:capture2e)
-          .with("npm install --no-audit --no-optional --legacy-peer-deps --loglevel error")
-          .returns([nil, mock(success?: true)])
-        subject
+      describe "when npm packages fail to install" do
+        it "should raise error" do
+          ctx.expects(:capture2e)
+            .with("npm", "--version")
+            .returns([EXACT_NPM_VERSION, mock(success?: true)])
+          ctx.expects(:capture2e)
+            .with("node", "--version")
+            .returns([EXACT_NODE_VERSION, mock(success?: true)])
+          ctx.expects(:capture2e)
+            .with("npm install --no-audit --no-optional --legacy-peer-deps --loglevel error")
+            .returns([nil, mock(success?: false)])
+          assert_raises Script::Layers::Infrastructure::Errors::DependencyInstallationError do
+            subject
+          end
+        end
+      end
+
+      describe "when npm packages fail to install" do
+        it "should successfully install" do
+          ctx.expects(:capture2e)
+            .with("npm", "--version")
+            .returns([EXACT_NPM_VERSION, mock(success?: true)])
+          ctx.expects(:capture2e)
+            .with("node", "--version")
+            .returns([EXACT_NODE_VERSION, mock(success?: true)])
+          ctx.expects(:capture2e)
+            .with("npm install --no-audit --no-optional --legacy-peer-deps --loglevel error")
+            .returns([nil, mock(success?: true)])
+          subject
+        end
       end
     end
   end
@@ -221,7 +221,7 @@ describe Script::Layers::Infrastructure::Languages::AssemblyScriptTaskRunner do
       it "should raise error" do
         ctx.expects(:capture2e)
           .with("npm", "--version")
-          .returns(["5.2.0", mock(success?: true)])
+          .returns([EXACT_NODE_VERSION, mock(success?: true)])
         ctx.expects(:capture2e)
           .with("node", "--version")
           .returns([nil, mock(success?: false)])
@@ -248,10 +248,10 @@ describe Script::Layers::Infrastructure::Languages::AssemblyScriptTaskRunner do
         it "should raise error" do
           ctx.expects(:capture2e)
             .with("npm", "--version")
-            .returns(["5.3.0", mock(success?: true)])
+            .returns([ABOVE_NPM_VERSION, mock(success?: true)])
           ctx.expects(:capture2e)
             .with("node", "--version")
-            .returns(["v14.4.0", mock(success?: true)])
+            .returns([BELOW_NODE_VERSION, mock(success?: true)])
           assert_raises Script::Layers::Infrastructure::Errors::MissingDependencyVersionError do
             subject
           end
@@ -262,10 +262,10 @@ describe Script::Layers::Infrastructure::Languages::AssemblyScriptTaskRunner do
         it "should install successfully" do
           ctx.expects(:capture2e)
             .with("npm", "--version")
-            .returns(["5.3.0", mock(success?: true)])
+            .returns([ABOVE_NPM_VERSION, mock(success?: true)])
           ctx.expects(:capture2e)
             .with("node", "--version")
-            .returns(["v14.6.0", mock(success?: true)])
+            .returns([ABOVE_NODE_VERSION, mock(success?: true)])
           subject
         end
       end
@@ -274,10 +274,10 @@ describe Script::Layers::Infrastructure::Languages::AssemblyScriptTaskRunner do
         it "should install successfully" do
           ctx.expects(:capture2e)
             .with("npm", "--version")
-            .returns(["5.3.0", mock(success?: true)])
+            .returns([ABOVE_NPM_VERSION, mock(success?: true)])
           ctx.expects(:capture2e)
             .with("node", "--version")
-            .returns(["v14.5.0", mock(success?: true)])
+            .returns([EXACT_NODE_VERSION, mock(success?: true)])
           subject
         end
       end
@@ -288,10 +288,10 @@ describe Script::Layers::Infrastructure::Languages::AssemblyScriptTaskRunner do
         it "should raise error" do
           ctx.expects(:capture2e)
             .with("npm", "--version")
-            .returns(["5.2.0", mock(success?: true)])
+            .returns([EXACT_NPM_VERSION, mock(success?: true)])
           ctx.expects(:capture2e)
             .with("node", "--version")
-            .returns(["v14.4.0", mock(success?: true)])
+            .returns([BELOW_NODE_VERSION, mock(success?: true)])
           assert_raises Script::Layers::Infrastructure::Errors::MissingDependencyVersionError do
             subject
           end
@@ -302,10 +302,10 @@ describe Script::Layers::Infrastructure::Languages::AssemblyScriptTaskRunner do
         it "should install successfully" do
           ctx.expects(:capture2e)
             .with("npm", "--version")
-            .returns(["5.2.0", mock(success?: true)])
+            .returns([EXACT_NPM_VERSION, mock(success?: true)])
           ctx.expects(:capture2e)
             .with("node", "--version")
-            .returns(["v14.6.0", mock(success?: true)])
+            .returns([ABOVE_NODE_VERSION, mock(success?: true)])
           subject
         end
       end
@@ -314,10 +314,10 @@ describe Script::Layers::Infrastructure::Languages::AssemblyScriptTaskRunner do
         it "should install successfully" do
           ctx.expects(:capture2e)
             .with("npm", "--version")
-            .returns(["5.2.0", mock(success?: true)])
+            .returns([EXACT_NPM_VERSION, mock(success?: true)])
           ctx.expects(:capture2e)
             .with("node", "--version")
-            .returns(["v14.5.0", mock(success?: true)])
+            .returns([EXACT_NODE_VERSION, mock(success?: true)])
           subject
         end
       end
