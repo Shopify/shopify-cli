@@ -11,8 +11,25 @@ module Script
           }
 
           def self.for(ctx, language, script_name)
-            raise Errors::TaskRunnerNotFoundError unless TASK_RUNNERS[language]
-            TASK_RUNNERS[language].new(ctx, script_name)
+            task_runner = {
+              "assemblyscript" => AssemblyScriptTaskRunner,
+              "rust" => RustTaskRunner,
+            }
+            raise Errors::TaskRunnerNotFoundError unless task_runner[language]
+            task_runner[language].new(ctx, script_name)
+          end
+
+          def check_tool_version!(tool, min_required_version)
+            output, status = @ctx.capture2e(tool, "--version")
+            unless status.success?
+              raise Errors::NoDependencyInstalledError.new(tool, min_required_version)
+            end
+
+            require "semantic/semantic"
+            version = ::Semantic::Version.new(output.gsub(/^v/, ""))
+            unless version >= ::Semantic::Version.new(min_required_version)
+              raise Errors::MissingDependencyVersionError.new(tool, output.strip, min_required_version)
+            end
           end
         end
       end

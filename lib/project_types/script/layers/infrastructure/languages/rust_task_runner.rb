@@ -3,7 +3,7 @@ module Script
   module Layers
     module Infrastructure
       module Languages
-        class RustTaskRunner
+        class RustTaskRunner < TaskRunner
           attr_reader :ctx
 
           BUILD_TARGET = "wasm32-unknown-unknown"
@@ -12,6 +12,7 @@ module Script
           MIN_CARGO_VERSION = "1.50.0"
 
           def initialize(ctx, _)
+            super()
             @ctx = ctx
           end
 
@@ -19,8 +20,8 @@ module Script
             true
           end
 
-          def check_system_dependencies!
-            check_tool_version!("cargo", MIN_CARGO_VERSION)
+          def check_tool_version!
+            super("cargo", MIN_CARGO_VERSION)
           end
 
           def install_dependencies
@@ -57,19 +58,6 @@ module Script
             raise Errors::WebAssemblyBinaryNotFoundError unless ctx.file_exist?(binary_path)
 
             ctx.binread(binary_path)
-          end
-
-          def check_tool_version!(tool, min_required_version)
-            output, status = @ctx.capture2e(tool, "--version")
-            unless status.success?
-              raise Errors::NoDependencyInstalledError.new(tool, min_required_version)
-            end
-
-            require "semantic/semantic"
-            version = ::Semantic::Version.new(output.gsub(/^v/, ""))
-            unless version >= ::Semantic::Version.new(min_required_version)
-              raise Errors::MissingDependencyVersionError.new(tool, output.strip, min_required_version)
-            end
           end
         end
       end

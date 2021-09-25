@@ -4,7 +4,7 @@ module Script
   module Layers
     module Infrastructure
       module Languages
-        class AssemblyScriptTaskRunner
+        class AssemblyScriptTaskRunner < TaskRunner
           BYTECODE_FILE = "build/%{name}.wasm"
           METADATA_FILE = "build/metadata.json"
           SCRIPT_SDK_BUILD = "npm run build"
@@ -13,6 +13,7 @@ module Script
           attr_reader :ctx, :script_name
 
           def initialize(ctx, script_name)
+            super()
             @ctx = ctx
             @script_name = script_name
           end
@@ -27,15 +28,15 @@ module Script
           end
 
           def install_dependencies
-            check_system_dependencies!
+            check_tool_version!
 
             output, status = ctx.capture2e("npm install --no-audit --no-optional --legacy-peer-deps --loglevel error")
             raise Errors::DependencyInstallationError, output unless status.success?
           end
 
-          def check_system_dependencies!
-            check_tool_version!("npm", MIN_NPM_VERSION)
-            check_tool_version!("node", AssemblyScriptProjectCreator::MIN_NODE_VERSION)
+          def check_tool_version!
+            super("npm", MIN_NPM_VERSION)
+            super("node", AssemblyScriptProjectCreator::MIN_NODE_VERSION)
           end
 
           def project_dependencies_installed?
@@ -54,19 +55,6 @@ module Script
           end
 
           private
-
-          def check_tool_version!(tool, min_required_version)
-            output, status = @ctx.capture2e(tool, "--version")
-            unless status.success?
-              raise Errors::NoDependencyInstalledError.new(tool, min_required_version)
-            end
-
-            require "semantic/semantic"
-            version = ::Semantic::Version.new(output.gsub(/^v/, ""))
-            unless version >= ::Semantic::Version.new(min_required_version)
-              raise Errors::MissingDependencyVersionError.new(tool, output.strip, min_required_version)
-            end
-          end
 
           def compile
             check_compilation_dependencies!

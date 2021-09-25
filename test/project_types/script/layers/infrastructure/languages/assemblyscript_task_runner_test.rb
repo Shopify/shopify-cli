@@ -204,7 +204,7 @@ describe Script::Layers::Infrastructure::Languages::AssemblyScriptTaskRunner do
   end
 
   describe ".check_system_dependencies!" do
-    subject { as_task_runner.check_system_dependencies! }
+    subject { as_task_runner.check_tool_version! }
 
     describe "when npm is not installed" do
       it "should raise error" do
@@ -243,29 +243,83 @@ describe Script::Layers::Infrastructure::Languages::AssemblyScriptTaskRunner do
       end
     end
 
-    describe "when npm version is above minimum and node is below minimum" do
-      it "should raise error" do
-        ctx.expects(:capture2e)
-          .with("npm", "--version")
-          .returns(["5.2.0", mock(success?: true)])
-        ctx.expects(:capture2e)
-          .with("node", "--version")
-          .returns(["v14.4.0", mock(success?: true)])
-        assert_raises Script::Layers::Infrastructure::Errors::MissingDependencyVersionError do
+    describe "when npm version is above minimum" do
+      describe "when node version is below minimum" do
+        it "should raise error" do
+          ctx.expects(:capture2e)
+            .with("npm", "--version")
+            .returns(["5.3.0", mock(success?: true)])
+          ctx.expects(:capture2e)
+            .with("node", "--version")
+            .returns(["v14.4.0", mock(success?: true)])
+          assert_raises Script::Layers::Infrastructure::Errors::MissingDependencyVersionError do
+            subject
+          end
+        end
+      end
+
+      describe "when node version is above minimum" do
+        it "should install successfully" do
+          ctx.expects(:capture2e)
+            .with("npm", "--version")
+            .returns(["5.3.0", mock(success?: true)])
+          ctx.expects(:capture2e)
+            .with("node", "--version")
+            .returns(["v14.6.0", mock(success?: true)])
+          subject
+        end
+      end
+
+      describe "when node version is the exact version" do
+        it "should install successfully" do
+          ctx.expects(:capture2e)
+            .with("npm", "--version")
+            .returns(["5.3.0", mock(success?: true)])
+          ctx.expects(:capture2e)
+            .with("node", "--version")
+            .returns(["v14.5.0", mock(success?: true)])
           subject
         end
       end
     end
 
-    describe "when npm version and node are above minimum" do
-      it "should install successfully" do
-        ctx.expects(:capture2e)
-          .with("npm", "--version")
-          .returns(["5.2.0", mock(success?: true)])
-        ctx.expects(:capture2e)
-          .with("node", "--version")
-          .returns(["v14.5.0", mock(success?: true)])
-        subject
+    describe "when npm version is exactly the version" do
+      describe "when node version is below minimum" do
+        it "should raise error" do
+          ctx.expects(:capture2e)
+            .with("npm", "--version")
+            .returns(["5.2.0", mock(success?: true)])
+          ctx.expects(:capture2e)
+            .with("node", "--version")
+            .returns(["v14.4.0", mock(success?: true)])
+          assert_raises Script::Layers::Infrastructure::Errors::MissingDependencyVersionError do
+            subject
+          end
+        end
+      end
+
+      describe "when node version is above minimum" do
+        it "should install successfully" do
+          ctx.expects(:capture2e)
+            .with("npm", "--version")
+            .returns(["5.2.0", mock(success?: true)])
+          ctx.expects(:capture2e)
+            .with("node", "--version")
+            .returns(["v14.6.0", mock(success?: true)])
+          subject
+        end
+      end
+
+      describe "when node version is the exact version" do
+        it "should install successfully" do
+          ctx.expects(:capture2e)
+            .with("npm", "--version")
+            .returns(["5.2.0", mock(success?: true)])
+          ctx.expects(:capture2e)
+            .with("node", "--version")
+            .returns(["v14.5.0", mock(success?: true)])
+          subject
+        end
       end
     end
   end
