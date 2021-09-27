@@ -31,6 +31,7 @@ module ShopifyCLI
             question: "Automatically send error reports moving forward?",
             yes: "Automatically send error reports to the Shopify team",
             no: "Don't send error reports",
+            enabled: "Anonymized error reports will be sent to Shopify.",
           },
           report_error: {
             question: "Send an error report to Shopify?",
