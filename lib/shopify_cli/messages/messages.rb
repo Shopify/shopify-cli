@@ -20,7 +20,25 @@ module ShopifyCLI
             Usage: {{command:%s app [ rails | node | php ] }}
           HELP
         },
-
+        error_reporting: {
+          unhandled_error: {
+            message: "{{x}} {{red:An unexpected error occured.}}",
+            issue_message: "{{red:\tTo \e]8;;#{ShopifyCLI::Constants::Links::NEW_ISSUE}\e\\submit an issue\e]8;;\e\\"\
+              " include the stack trace.}}",
+            stacktrace_message: "{{red:\tTo print the stack trace, add the environment variable %s.}}",
+          },
+          enable_automatic_reporting_prompt: {
+            question: "Automatically send error reports moving forward?",
+            yes: "Automatically send error reports to the Shopify team",
+            no: "Don't send error reports",
+            enabled: "Anonymized error reports will be sent to Shopify.",
+          },
+          report_error: {
+            question: "Send an error report to Shopify?",
+            yes: "Send report",
+            no: "Don't send",
+          },
+        },
         connect: {
           already_connected_warning: "{{yellow:! This app appears to be already connected}}",
           project_type_select: "What type of project would you like to connect?",

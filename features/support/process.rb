@@ -18,7 +18,7 @@ module Process
     args = [shopify_executable_path] + args
     cwd ||= Dir.pwd
     _, err, stat = Open3.capture3(*args, chdir: cwd)
-    raise ProcessError.new(exit_status: stat.exit_status, stderr: err) unless stat.success?
+    raise ProcessError.new(exit_status: stat.exitstatus, stderr: err) unless stat.success?
   end
 
   def self.capture_shopify(*args, cwd: nil)
@@ -26,7 +26,7 @@ module Process
     cwd ||= Dir.pwd
 
     out, err, stat = Open3.capture3(*args, chdir: cwd)
-    raise ProcessError.new(exit_status: stat.exit_status, stderr: err) unless stat.success?
+    raise ProcessError.new(exit_status: stat.exitstatus, stderr: err) unless stat.success?
     out
   end
 

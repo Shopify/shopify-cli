@@ -1,3 +1,5 @@
+ENV["SHOPIFY_CLI_TEST"] = "1"
+
 require_relative "bin/load_shopify"
 require "rake/testtask"
 require "rubocop/rake_task"
