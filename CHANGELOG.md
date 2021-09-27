@@ -13,6 +13,7 @@ Version 2.4.0
 
 * [#1488](https://github.com/Shopify/shopify-cli/pull/1488): Update Theme-Check to 1.4
 * [#1507](https://github.com/Shopify/shopify-cli/pull/1507): Limit the generated name for themes to 50 characters
+* [#1531](https://github.com/Shopify/shopify-cli/pull/1531): Migrate the analytics configuration to the global store.
 
 Version 2.3.0
 ------
