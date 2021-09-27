@@ -95,7 +95,6 @@ module Node
       end
 
       def test_server_command_when_invalid_port_passed
-
         invalid_port = "NOT_PORT"
         ShopifyCLI::Tunnel.stubs(:start).returns("https://example.com")
         ShopifyCLI::Tasks::UpdateDashboardURLS.expects(:call)
