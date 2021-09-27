@@ -29,6 +29,16 @@ end
 
 require_relative "./load_shopify"
 
-exit(ShopifyCLI::ErrorHandler.call do
-  ShopifyCLI::Core::EntryPoint.call(ARGV.dup)
-end)
+exit(proc do
+  begin
+    ShopifyCLI::ErrorHandler.call do
+      ShopifyCLI::Core::EntryPoint.call(ARGV.dup)
+    end
+  rescue StandardError => error
+    if ShopifyCLI::Environment.print_stacktrace?
+      raise error
+    else
+      1
+    end
+  end
+end.call)

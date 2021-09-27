@@ -1,8 +1,9 @@
 Unreleased
 ------
-* [#1566](https://github.com/Shopify/shopify-cli/pull/1566): Fix bug when running `npm | yarn list` for extension package resolution
+* [#1566](https://github.com/Shopify/shopify-cli/pull/1566): Fix bug when running `npm | yarn list` for extension package resolution.
 * [#1557](https://github.com/Shopify/shopify-cli/pull/1557): **Breaking** Move app commands under `shopify app`.
-  
+* [#1524](https://github.com/Shopify/shopify-cli/pull/1524): Add automatic error-reporting.
+
 Version 2.5.0
 ------
 

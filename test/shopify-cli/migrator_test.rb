@@ -16,7 +16,7 @@ module ShopifyCLI
       ShopifyCLI::DB
         .expects(:get)
         .with(ShopifyCLI::Constants::StoreKeys::LAST_MIGRATION_DATE)
-        .returns(Time.now)
+        .returns(Time.now.to_i)
 
       create_migrations_directory(time: time + 20)
       Migrator::Migration
