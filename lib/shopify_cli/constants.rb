@@ -7,6 +7,8 @@ module ShopifyCLI
     module StoreKeys
       LAST_MIGRATION_DATE = :last_migration_date
       ANALYTICS_ENABLED = :analytics_enabled
+    end
+
     module Bugsnag
       API_KEY = "773b0c801eb40c20d8928be5b7c739bd"
     end
@@ -23,8 +25,6 @@ module ShopifyCLI
     end
 
     module EnvironmentVariables
-      DEVELOPMENT = "SHOPIFY_CLI_DEVELOPMENT"
-
       STACKTRACE = "SHOPIFY_CLI_STACKTRACE"
 
       # When true the CLI points to a local instance of
@@ -33,17 +33,12 @@ module ShopifyCLI
 
       # When true the CLI points to a spin instance of spin
       SPIN_PARTNERS = "SHOPIFY_APP_CLI_SPIN_PARTNERS"
-
       SPIN_WORKSPACE = "SPIN_WORKSPACE"
-
       SPIN_NAMESPACE = "SPIN_NAMESPACE"
-
       SPIN_HOST = "SPIN_HOST"
 
-      # Set to true when running tests.
+      # Environments
       TEST = "SHOPIFY_CLI_TEST"
-
-      # Set to true when running tests.
       DEVELOPMENT = "SHOPIFY_CLI_DEVELOPMENT"
     end
 

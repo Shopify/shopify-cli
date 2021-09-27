@@ -17,8 +17,9 @@ module ShopifyCLI
 
     def self.use_local_partners_instance?(env_variables: ENV)
       env_variable_truthy?(
-        Constants::EnvironmentVariables::DEVELOPMENT,
+        Constants::EnvironmentVariables::LOCAL_PARTNERS,
         env_variables: env_variables
+      )
     end
 
     def self.print_stacktrace?(env_variables: ENV)
