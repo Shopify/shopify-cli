@@ -3,7 +3,7 @@ require "date"
 
 module ShopifyCLI
   module Migrator
-    autoload :Migration, "shopify-cli/migrator/migration"
+    autoload :Migration, "shopify_cli/migrator/migration"
 
     def self.migrate(
       migrations_directory: File.expand_path("migrator/migrations", __dir__)
@@ -24,11 +24,11 @@ module ShopifyCLI
     private
 
     def self.store_last_migration_date
-      ShopifyCli::DB.set(ShopifyCli::Constants::StoreKeys::LAST_MIGRATION_DATE => DateTime.now)
+      ShopifyCLI::DB.set(ShopifyCLI::Constants::StoreKeys::LAST_MIGRATION_DATE => DateTime.now)
     end
     
     def self.last_migration_date
-      ShopifyCli::DB.get(ShopifyCli::Constants::StoreKeys::LAST_MIGRATION_DATE)
+      ShopifyCLI::DB.get(ShopifyCLI::Constants::StoreKeys::LAST_MIGRATION_DATE)
     end
 
     def self.migrations(migrations_directory:)

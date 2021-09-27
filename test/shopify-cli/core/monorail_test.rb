@@ -145,8 +145,8 @@ module ShopifyCLI
       end
 
       def test_log_returns_the_result_if_not_sending_monorail_events
-        ShopifyCli::DB.stubs(:get).with(:acting_as_shopify_organization).returns(false)
-        ShopifyCli::DB.stubs(:get).with(:organization_id).returns(42)
+        ShopifyCLI::DB.stubs(:get).with(:acting_as_shopify_organization).returns(false)
+        ShopifyCLI::DB.stubs(:get).with(:organization_id).returns(42)
 
         enabled_and_consented(true, false)
         Net::HTTP.expects(:start).never
@@ -156,8 +156,8 @@ module ShopifyCLI
       end
 
       def test_log_sends_monorail_event_and_raises_exception_if_block_raises_exception
-        ShopifyCli::DB.stubs(:get).with(:acting_as_shopify_organization).returns(false)
-        ShopifyCli::DB.stubs(:get).with(:organization_id).returns(42)
+        ShopifyCLI::DB.stubs(:get).with(:acting_as_shopify_organization).returns(false)
+        ShopifyCLI::DB.stubs(:get).with(:organization_id).returns(42)
 
         enabled_and_consented(true, true)
         Net::HTTP.expects(:start).once
@@ -168,8 +168,8 @@ module ShopifyCLI
       end
 
       def test_log_doesnt_send_monorail_event_if_not_enabled
-        ShopifyCli::DB.stubs(:get).with(:acting_as_shopify_organization).returns(false)
-        ShopifyCli::DB.stubs(:get).with(:organization_id).returns(42)
+        ShopifyCLI::DB.stubs(:get).with(:acting_as_shopify_organization).returns(false)
+        ShopifyCLI::DB.stubs(:get).with(:organization_id).returns(42)
 
         enabled_and_consented(false, true)
         Net::HTTP.expects(:start).never
@@ -178,8 +178,8 @@ module ShopifyCLI
       end
 
       def test_log_doesnt_send_monorail_event_if_enabled_but_not_consented
-        ShopifyCli::DB.stubs(:get).with(:acting_as_shopify_organization).returns(false)
-        ShopifyCli::DB.stubs(:get).with(:organization_id).returns(42)
+        ShopifyCLI::DB.stubs(:get).with(:acting_as_shopify_organization).returns(false)
+        ShopifyCLI::DB.stubs(:get).with(:organization_id).returns(42)
 
         enabled_and_consented(true, false)
         Net::HTTP.expects(:start).never
@@ -188,8 +188,8 @@ module ShopifyCLI
       end
 
       def test_log_send_event_returns_result_if_monorail_returns_not_200
-        ShopifyCli::DB.stubs(:get).with(:acting_as_shopify_organization).returns(false)
-        ShopifyCli::DB.stubs(:get).with(:organization_id).returns(42)
+        ShopifyCLI::DB.stubs(:get).with(:acting_as_shopify_organization).returns(false)
+        ShopifyCLI::DB.stubs(:get).with(:organization_id).returns(42)
 
         enabled_and_consented(true, true)
         stub_request(:post, Monorail::ENDPOINT_URI).to_return(status: 500)
@@ -199,8 +199,8 @@ module ShopifyCLI
       end
 
       def test_log_send_event_returns_result_if_timeout_occurs
-        ShopifyCli::DB.stubs(:get).with(:acting_as_shopify_organization).returns(false)
-        ShopifyCli::DB.stubs(:get).with(:organization_id).returns(42)
+        ShopifyCLI::DB.stubs(:get).with(:acting_as_shopify_organization).returns(false)
+        ShopifyCLI::DB.stubs(:get).with(:organization_id).returns(42)
 
         enabled_and_consented(true, true)
         stub_request(:post, Monorail::ENDPOINT_URI).to_timeout

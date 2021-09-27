@@ -1,7 +1,7 @@
 require "test_helper"
 require "fileutils"
 
-module ShopifyCli
+module ShopifyCLI
   class MigratorTest < Minitest::Test
     include TestHelpers::TemporaryDirectory
 
@@ -13,9 +13,9 @@ module ShopifyCli
     def test_run_when_theres_a_last_migration_date
       # Given
       time = Time.now
-      ShopifyCli::DB
+      ShopifyCLI::DB
         .expects(:get)
-        .with(ShopifyCli::Constants::StoreKeys::LAST_MIGRATION_DATE)
+        .with(ShopifyCLI::Constants::StoreKeys::LAST_MIGRATION_DATE)
         .returns(Time.now)
 
       create_migrations_directory(time: time + 20)
@@ -33,9 +33,9 @@ module ShopifyCli
     def test_run_when_neither_last_migation_nor_installation_date_are_present
       # Given
       time = Time.now
-      ShopifyCli::DB
+      ShopifyCLI::DB
         .expects(:get)
-        .with(ShopifyCli::Constants::StoreKeys::LAST_MIGRATION_DATE)
+        .with(ShopifyCLI::Constants::StoreKeys::LAST_MIGRATION_DATE)
         .returns(nil)
       create_migrations_directory(time: time)
       Migrator::Migration

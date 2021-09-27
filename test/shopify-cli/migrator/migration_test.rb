@@ -1,6 +1,6 @@
 require "test_helper"
 
-module ShopifyCli
+module ShopifyCLI
   module Migrator
     class MigrationTest < MiniTest::Test
       def test_class_name_returns_the_right_value
