@@ -13,9 +13,6 @@ payment_filter:
   sdks:
     assemblyscript:
       package: "@shopify/extension-point-as-payment-filter"
-    rust:
-      beta: true
-      package: "https://github.com/Shopify/scripts-apis-rs"
 shipping_filter:
   deprecated: true
   sdks:
