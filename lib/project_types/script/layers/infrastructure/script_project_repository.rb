@@ -129,7 +129,7 @@ module Script
         end
 
         def default_language
-          Domain::ExtensionPoint::ExtensionPointAssemblyScriptSDK.language
+          "assemblyscript"
         end
 
         def validate_metadata!(extension_point_type, language)

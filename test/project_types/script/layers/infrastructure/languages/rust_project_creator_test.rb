@@ -43,7 +43,7 @@ describe Script::Layers::Infrastructure::Languages::RustProjectCreator do
         .returns(system_output(msg: "", success: true))
       context
         .expects(:capture2e)
-        .with("git remote add -f origin #{extension_point.sdks.rust.package}")
+        .with("git remote add -f origin #{extension_point.sdks.for("rust").package}")
         .once
         .returns(system_output(msg: "", success: true))
       context
@@ -86,7 +86,7 @@ describe Script::Layers::Infrastructure::Languages::RustProjectCreator do
 
       context
         .expects(:capture2e)
-        .with("git remote add -f origin #{extension_point.sdks.rust.package}").once
+        .with("git remote add -f origin #{extension_point.sdks.for("rust").package}").once
         .returns(system_output(msg: "Couldn't set remote origin", success: false))
 
       assert_raises(Script::Layers::Infrastructure::Errors::SystemCallFailureError) { subject }

@@ -37,7 +37,7 @@ module Script
           end
 
           def setup_remote
-            repo = extension_point.sdks.rust.package
+            repo = extension_point.sdks.for("rust").package
             command_runner.call("git remote add -f origin #{repo}")
           end
 

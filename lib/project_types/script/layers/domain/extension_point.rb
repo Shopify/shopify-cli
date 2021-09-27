@@ -32,38 +32,31 @@ module Script
           end
 
           def all
-            [assemblyscript, rust, typescript].compact
+            @all ||= [
+              new_sdk("assemblyscript"),
+              new_sdk("rust"),
+              new_sdk("typescript"),
+            ].compact
           end
 
           def for(language)
-            all.find { |ep| ep.class.language == language }
-          end
-
-          def assemblyscript
-            @assemblyscript ||= new_sdk(ExtensionPointAssemblyScriptSDK)
-          end
-
-          def rust
-            @rust ||= new_sdk(ExtensionPointRustSDK)
-          end
-
-          def typescript
-            @typescript ||= new_sdk(ExtensionPointTypeScriptSDK)
+            all.find { |ep| ep.language == language }
           end
 
           private
 
-          def new_sdk(klass)
-            config = @config[klass.language]
+          def new_sdk(language)
+            config = @config[language]
             return nil if config.nil?
-            klass.new(config)
+            ExtensionPointSDK.new(language, config)
           end
         end
 
         class ExtensionPointSDK
-          attr_reader :version, :beta, :package, :repo
+          attr_reader :language, :version, :beta, :package, :repo
 
-          def initialize(config)
+          def initialize(language, config)
+            @language = language
             @beta = config["beta"] || false
             @package = config["package"]
             @version = config["package-version"]
@@ -76,36 +69,6 @@ module Script
 
           def versioned?
             @version
-          end
-
-          def self.language
-            raise NotImplementedError
-          end
-        end
-
-        class ExtensionPointAssemblyScriptSDK < ExtensionPointSDK
-          attr_reader :sdk_version, :toolchain_version
-
-          def initialize(config)
-            super
-            @sdk_version = config["sdk-version"]
-            @toolchain_version = config["toolchain-version"]
-          end
-
-          def self.language
-            "assemblyscript"
-          end
-        end
-
-        class ExtensionPointRustSDK < ExtensionPointSDK
-          def self.language
-            "rust"
-          end
-        end
-
-        class ExtensionPointTypeScriptSDK < ExtensionPointSDK
-          def self.language
-            "typescript"
           end
         end
       end
