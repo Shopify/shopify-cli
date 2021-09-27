@@ -25,7 +25,7 @@ module ShopifyCLI
     module EnvironmentVariables
       DEVELOPMENT = "SHOPIFY_CLI_DEVELOPMENT"
 
-      BACKTRACE = "SHOPIFY_CLI_BACKTRACE"
+      STACKTRACE = "SHOPIFY_CLI_STACKTRACE"
 
       # When true the CLI points to a local instance of
       # the partners dashboard and identity.

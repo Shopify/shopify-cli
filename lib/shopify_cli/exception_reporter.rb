@@ -7,9 +7,9 @@ module ShopifyCLI
       context.puts("\n")
       context.puts(context.message("core.error_reporting.unhandled_error.message"))
       context.puts(context.message("core.error_reporting.unhandled_error.issue_message"))
-      unless ShopifyCLI::Environment.print_backtrace?
-        context.puts(context.message("core.error_reporting.unhandled_error.backtrace_message",
-          "#{ShopifyCLI::Constants::EnvironmentVariables::BACKTRACE}=1"))
+      unless ShopifyCLI::Environment.print_stacktrace?
+        context.puts(context.message("core.error_reporting.unhandled_error.stacktrace_message",
+          "#{ShopifyCLI::Constants::EnvironmentVariables::STACKTRACE}=1"))
       end
       context.puts("\n")
 

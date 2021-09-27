@@ -19,6 +19,12 @@ module ShopifyCLI
       env_variable_truthy?(
         Constants::EnvironmentVariables::DEVELOPMENT,
         env_variables: env_variables
+    end
+
+    def self.print_stacktrace?(env_variables: ENV)
+      env_variable_truthy?(
+        Constants::EnvironmentVariables::STACKTRACE,
+        env_variables: env_variables
       )
     end
 
