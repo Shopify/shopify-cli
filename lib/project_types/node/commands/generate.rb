@@ -3,7 +3,7 @@ require "shopify_cli"
 
 module Node
   class Command
-    class Generate < ShopifyCLI::SubCommand
+    class Generate < ShopifyCLI::Command::AppSubCommand
       prerequisite_task ensure_project_type: :node
 
       def call(*)

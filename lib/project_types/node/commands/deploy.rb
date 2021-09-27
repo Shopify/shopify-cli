@@ -3,7 +3,7 @@ require "shopify_cli"
 
 module Node
   class Command
-    class Deploy < ShopifyCLI::SubCommand
+    class Deploy < ShopifyCLI::Command::AppSubCommand
       prerequisite_task ensure_project_type: :node
 
       autoload :Heroku, Project.project_filepath("commands/deploy/heroku")

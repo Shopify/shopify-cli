@@ -3,7 +3,7 @@ require "shopify_cli/theme/dev_server"
 
 module Theme
   class Command
-    class Serve < ShopifyCLI::SubCommand
+    class Serve < ShopifyCLI::Command::SubCommand
       options do |parser, flags|
         parser.on("--port=PORT") { |port| flags[:port] = port.to_i }
       end

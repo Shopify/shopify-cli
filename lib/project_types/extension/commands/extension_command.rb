@@ -3,7 +3,7 @@ require "shopify_cli"
 
 module Extension
   class Command
-    class ExtensionCommand < ShopifyCLI::SubCommand
+    class ExtensionCommand < ShopifyCLI::Command::SubCommand
       def project
         @project ||= ExtensionProject.current
       end

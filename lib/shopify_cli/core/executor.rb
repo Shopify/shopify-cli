@@ -12,7 +12,11 @@ module ShopifyCLI
       def call(command, command_name, args)
         command.task_registry = @task_registry
         command.ctx = @ctx
-        super
+        with_traps do
+          with_logging do |_id|
+            command.call(args, command_name)
+          end
+        end
       end
     end
   end

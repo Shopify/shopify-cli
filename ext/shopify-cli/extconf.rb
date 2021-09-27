@@ -1,5 +1,6 @@
 require "rbconfig"
 require "fileutils"
+require "date"
 
 gem = File.expand_path("../../../", __FILE__)
 exe = File.join(gem, "bin", "shopify")
@@ -56,4 +57,5 @@ else
   MAKEFILE
 end
 
+File.write(installation_date_path, Time.now.to_i.to_s)
 File.write("Makefile", makefile_content)

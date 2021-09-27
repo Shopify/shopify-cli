@@ -1,7 +1,7 @@
 # frozen_string_literal: true
 module PHP
   class Command
-    class Connect < ShopifyCLI::SubCommand
+    class Connect < ShopifyCLI::Command::AppSubCommand
       def call(*)
         if ShopifyCLI::Project.has_current? && ShopifyCLI::Project.current.env
           @ctx.puts(@ctx.message("php.connect.production_warning"))

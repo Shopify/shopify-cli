@@ -3,8 +3,7 @@ require "shopify_cli"
 
 module Node
   class Command
-    class Serve < ShopifyCLI::SubCommand
-      extend CommandPortOption
+    class Serve < ShopifyCLI::Command::AppSubCommand
       prerequisite_task ensure_project_type: :node
       prerequisite_task :ensure_env, :ensure_dev_store
 

@@ -3,7 +3,7 @@ require "shopify_cli"
 
 module Rails
   class Command
-    class Generate < ShopifyCLI::SubCommand
+    class Generate < ShopifyCLI::Command::AppSubCommand
       prerequisite_task ensure_project_type: :rails
 
       autoload :Webhook, Project.project_filepath("commands/generate/webhook")

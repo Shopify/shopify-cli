@@ -19,7 +19,7 @@ module PHP
         ShopifyCLI::Connect.any_instance.expects(:default_connect).with("php").returns("php-app")
         ShopifyCLI::Context.any_instance.expects(:message).with("php.connect.connected", "php-app")
 
-        run_cmd("php connect")
+        run_cmd("app php connect")
       end
 
       def test_warns_if_in_production
@@ -33,7 +33,7 @@ module PHP
         ShopifyCLI::Context.any_instance.expects(:message).with("php.connect.production_warning")
         ShopifyCLI::Context.any_instance.expects(:message).with("php.connect.connected", "php-app")
 
-        run_cmd("php connect")
+        run_cmd("app php connect")
       end
     end
   end

@@ -2,7 +2,7 @@
 
 module PHP
   class Command
-    class Open < ShopifyCLI::SubCommand
+    class Open < ShopifyCLI::Command::AppSubCommand
       def call(*)
         project = ShopifyCLI::Project.current
         @ctx.open_url!("#{project.env.host}/login?shop=#{project.env.shop}")

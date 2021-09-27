@@ -3,6 +3,18 @@ module ShopifyCLI
   # the environment in which the CLI runs
   module Environment
     TRUTHY_ENV_VARIABLE_VALUES = ["1", "true", "TRUE", "yes", "YES"]
+
+    def self.development?(env_variables: ENV)
+      env_variable_truthy?(
+        Constants::EnvironmentVariables::DEVELOPMENT,
+        env_variables: env_variables
+      )
+    end
+
+    def self.interactive?
+      ShopifyCLI::Context.new.tty?
+    end
+
     def self.use_local_partners_instance?(env_variables: ENV)
       env_variable_truthy?(
         Constants::EnvironmentVariables::LOCAL_PARTNERS,
@@ -10,16 +22,30 @@ module ShopifyCLI
       )
     end
 
-    def self.use_spin_partners_instance?(env_variables: ENV)
+    def self.print_stacktrace?(env_variables: ENV)
       env_variable_truthy?(
-        Constants::EnvironmentVariables::SPIN_PARTNERS,
+        Constants::EnvironmentVariables::STACKTRACE,
         env_variables: env_variables
       )
     end
 
-    def self.running_tests?(env_variables: ENV)
+    def self.test?(env_variables: ENV)
       env_variable_truthy?(
-        Constants::EnvironmentVariables::RUNNING_TESTS,
+        Constants::EnvironmentVariables::TEST,
+        env_variables: env_variables
+      )
+    end
+
+    def self.print_backtrace?(env_variables: ENV)
+      env_variable_truthy?(
+        Constants::EnvironmentVariables::BACKTRACE,
+        env_variables: env_variables
+      )
+    end
+
+    def self.use_spin_partners_instance?(env_variables: ENV)
+      env_variable_truthy?(
+        Constants::EnvironmentVariables::SPIN_PARTNERS,
         env_variables: env_variables
       )
     end
