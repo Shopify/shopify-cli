@@ -24,8 +24,8 @@ module ShopifyCLI
           unhandled_error: {
             message: "{{x}} {{red:An unexpected error occured.}}",
             issue_message: "{{red:\tTo \e]8;;#{ShopifyCLI::Constants::Links::NEW_ISSUE}\e\\submit an issue\e]8;;\e\\"\
-              " include the backtrace.}}",
-            stacktrace_message: "{{red:\tTo print the backtrace, add the environment variable %s.}}",
+              " include the stack trace.}}",
+            stacktrace_message: "{{red:\tTo print the stack trace, add the environment variable %s.}}",
           },
           enable_automatic_reporting_prompt: {
             question: "Automatically send error reports moving forward?",
