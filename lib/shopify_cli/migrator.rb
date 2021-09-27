@@ -24,7 +24,7 @@ module ShopifyCLI
     private
 
     def self.store_last_migration_date
-      ShopifyCLI::DB.set(ShopifyCLI::Constants::StoreKeys::LAST_MIGRATION_DATE => DateTime.now)
+      ShopifyCLI::DB.set(ShopifyCLI::Constants::StoreKeys::LAST_MIGRATION_DATE => Time.now)
     end
     
     def self.last_migration_date
