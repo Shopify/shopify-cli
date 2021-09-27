@@ -11,7 +11,7 @@ module Script
           @beta = config["beta"] || false
           @deprecated = config["deprecated"] || false
           @domain = config["domain"] || nil
-          @sdks = ExtensionPointSDKs.new(config)
+          @sdks = ExtensionPointSDKs.new(config["sdks"])
         end
 
         def beta?
@@ -32,23 +32,13 @@ module Script
           end
 
           def all
-            @all ||= [
-              new_sdk("assemblyscript"),
-              new_sdk("rust"),
-              new_sdk("typescript"),
-            ].compact
+            @all ||= @config.map do |language, sdk_config|
+              ExtensionPointSDK.new(language, sdk_config)
+            end
           end
 
           def for(language)
             all.find { |ep| ep.language == language }
-          end
-
-          private
-
-          def new_sdk(language)
-            config = @config[language]
-            return nil if config.nil?
-            ExtensionPointSDK.new(language, config)
           end
         end
 

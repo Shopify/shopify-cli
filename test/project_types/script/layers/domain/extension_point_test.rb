@@ -6,22 +6,25 @@ describe Script::Layers::Domain::ExtensionPoint do
   let(:type) { "discount" }
   let(:config) do
     {
-      "assemblyscript" => {
-        "package" => "@shopify/extension-point-as-fake",
-        "sdk-version" => "*",
-        "toolchain-version" => "*",
+      "sdks" => {
+        "assemblyscript" => {
+          "package" => "@shopify/extension-point-as-fake",
+        },
       },
     }
   end
   let(:config_with_rust) do
-    config.merge({
-      "rust" => {
-        "beta" => true,
-        "package" => "@shopify/extension-point-rs-fake",
-        "sdk-version" => "*",
-        "toolchain-version" => "*",
+    {
+      "sdks" => {
+        "assemblyscript" => {
+          "package" => "@shopify/extension-point-as-fake",
+        },
+        "rust" => {
+          "beta" => true,
+          "package" => "@shopify/extension-point-rs-fake",
+        },
       },
-    })
+    }
   end
 
   describe ".new" do

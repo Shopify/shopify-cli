@@ -18,9 +18,11 @@ describe Script::Layers::Infrastructure::Languages::RustProjectCreator do
   end
   let(:extension_point_config) do
     {
-      "rust" => {
-        "package": "https://github.com/Shopify/scripts-apis-rs",
-        "beta": true,
+      "sdks" => {
+        "rust" => {
+          "package": "https://github.com/Shopify/scripts-apis-rs",
+          "beta": true,
+        },
       },
     }
   end
