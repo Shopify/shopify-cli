@@ -91,17 +91,19 @@ module Node
             "PORT" => "5000",
           }
         )
-        run_cmd("node serve --port=5000")
+        run_cmd("app node serve --port=5000")
       end
 
       def test_server_command_when_invalid_port_passed
+
+        invalid_port = "NOT_PORT"
         ShopifyCLI::Tunnel.stubs(:start).returns("https://example.com")
         ShopifyCLI::Tasks::UpdateDashboardURLS.expects(:call)
         ShopifyCLI::Resources::EnvFile.any_instance.expects(:update)
         @context.expects(:abort).with(
-          @context.message("tunnel.invalid_port", "abc")
+          @context.message("node.serve.error.invalid_port", invalid_port)
         )
-        run_cmd("node serve --port=abc")
+        run_cmd("app node serve --port=#{invalid_port}")
       end
     end
   end
