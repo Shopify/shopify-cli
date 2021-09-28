@@ -28,16 +28,25 @@ shipping_filter:
 tax_filter:
   beta: true
   assemblyscript:
+    repo: "https://github.com/Shopify/extension-points.git"
     package: "@shopify/extension-point-as-tax-filter"
     sdk-version: "^9.0.0"
     toolchain-version: "^5.0.0"
 payment_methods:
   domain: 'checkout'
   assemblyscript:
+    repo: "https://github.com/Shopify/scripts-apis-examples"
     package: "@shopify/scripts-checkout-apis"
     toolchain-version: "^5.0.0"
+  typescript:
+    beta: true
+    repo: "https://github.com/Shopify/scripts-apis-examples"
 shipping_methods:
   domain: 'checkout'
   assemblyscript:
+    repo: "https://github.com/Shopify/scripts-apis-examples"
     package: "@shopify/scripts-checkout-apis"
     toolchain-version: "^5.0.0"
+  typescript:
+    beta: true
+    repo: "https://github.com/Shopify/scripts-apis-examples"

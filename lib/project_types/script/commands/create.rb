@@ -10,6 +10,7 @@ module Script
         parser.on("--extension_point=EP_NAME") { |ep_name| flags[:extension_point] = ep_name }
         parser.on("--extension-point=EP_NAME") { |ep_name| flags[:extension_point] = ep_name }
         parser.on("--language=LANGUAGE") { |language| flags[:language] = language }
+        parser.on("--branch=BRANCH") { |branch| flags[:branch] = branch }
         parser.on("--no-config-ui") { |no_config_ui| flags[:no_config_ui] = no_config_ui }
       end
 
@@ -24,6 +25,7 @@ module Script
         project = Layers::Application::CreateScript.call(
           ctx: @ctx,
           language: form.language,
+          sparse_checkout_branch: options.flags[:branch] || "master",
           script_name: form.name,
           extension_point_type: form.extension_point,
           no_config_ui: options.flags.key?(:no_config_ui)

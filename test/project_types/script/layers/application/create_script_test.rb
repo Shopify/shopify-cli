@@ -5,16 +5,26 @@ require "project_types/script/test_helper"
 describe Script::Layers::Application::CreateScript do
   include TestHelpers::FakeFS
 
-  let(:language) { "AssemblyScript" }
-  let(:extension_point_type) { "discount" }
-  let(:script_name) { "name" }
+  let(:script_name) { "path" }
   let(:compiled_type) { "wasm" }
   let(:no_config_ui) { false }
   let(:script_json_filename) { "script.json" }
+
   let(:extension_point_repository) { TestHelpers::FakeExtensionPointRepository.new }
   let(:script_project_repository) { TestHelpers::FakeScriptProjectRepository.new }
   let(:ep) { extension_point_repository.get_extension_point(extension_point_type) }
   let(:task_runner) { stub(compiled_type: compiled_type) }
+
+  let(:language) { "assemblyscript" }
+  let(:extension_point_type) { "payment-methods" }
+  let(:example_config) { extension_point_repository.example_config(extension_point_type) }
+  let(:domain) { example_config["domain"] }
+  let(:sparse_checkout_repo) { example_config[language]["repo"] }
+  let(:sparse_checkout_branch) do
+    "master"
+  end   # TODO: update once create script can take a command line argument
+  let(:sparse_checkout_set_path) { "#{domain}/#{language}/#{extension_point_type}/default" }
+
   let(:project_creator) { stub }
   let(:context) { TestHelpers::FakeContext.new }
 
@@ -37,8 +47,20 @@ describe Script::Layers::Application::CreateScript do
       .returns(task_runner)
     Script::Layers::Infrastructure::Languages::ProjectCreator
       .stubs(:for)
-      .with(context, language, ep, script_name, script_project.id)
+      .with(
+        ctx: context,
+        language: language,
+        type: extension_point_type,
+        project_name: script_name,
+        path_to_project: script_project.id,
+        sparse_checkout_repo: sparse_checkout_repo,
+        sparse_checkout_branch: sparse_checkout_branch,
+        sparse_checkout_set_path: sparse_checkout_set_path,
+      )
       .returns(project_creator)
+
+    project_creator.stubs(:sparse_checkout_repo).returns(sparse_checkout_repo)
+    project_creator.stubs(:path_to_project).returns(script_project.id)
   end
 
   describe ".call" do
@@ -48,6 +70,7 @@ describe Script::Layers::Application::CreateScript do
       Script::Layers::Application::CreateScript.call(
         ctx: context,
         language: language,
+        sparse_checkout_branch: sparse_checkout_branch,
         script_name: script_name,
         extension_point_type: extension_point_type,
         no_config_ui: no_config_ui
@@ -92,9 +115,6 @@ describe Script::Layers::Application::CreateScript do
         Script::Layers::Application::CreateScript
           .expects(:install_dependencies)
           .with(context, language, script_name, project_creator)
-        Script::Layers::Application::CreateScript
-          .expects(:bootstrap)
-          .with(context, project_creator)
       end
 
       it "should create a new script" do
@@ -128,21 +148,6 @@ describe Script::Layers::Application::CreateScript do
           .expects(:install)
           .with(ctx: context, task_runner: task_runner)
         project_creator.expects(:setup_dependencies)
-        capture_io { subject }
-      end
-    end
-
-    describe "bootstrap" do
-      subject do
-        Script::Layers::Application::CreateScript
-          .send(:bootstrap, context, project_creator)
-      end
-
-      it "should return new script" do
-        spinner = TestHelpers::FakeUI::FakeSpinner.new
-        spinner.expects(:update_title).with(context.message("script.create.created"))
-        Script::UI::StrictSpinner.expects(:spin).with(context.message("script.create.creating")).yields(spinner)
-        project_creator.expects(:bootstrap)
         capture_io { subject }
       end
     end
