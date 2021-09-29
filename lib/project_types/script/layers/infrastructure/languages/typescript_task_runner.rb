@@ -4,15 +4,17 @@ module Script
   module Layers
     module Infrastructure
       module Languages
-        class TypeScriptTaskRunner
+        class TypeScriptTaskRunner < TaskRunner
           BYTECODE_FILE = "build/%{name}.wasm"
           METADATA_FILE = "build/metadata.json"
           SCRIPT_SDK_BUILD = "npm run build"
           GEN_METADATA = "npm run gen-metadata"
+          MIN_NPM_VERSION = "5.2.0"
 
           attr_reader :ctx, :script_name
 
           def initialize(ctx, script_name)
+            super()
             @ctx = ctx
             @script_name = script_name
           end
@@ -27,13 +29,18 @@ module Script
           end
 
           def install_dependencies
-            check_node_version!
+            check_system_dependencies!
 
             output, status = ctx.capture2e("npm install --no-audit --no-optional --legacy-peer-deps --loglevel error")
-            raise Errors::DependencyInstallError, output unless status.success?
+            raise Errors::DependencyInstallationError, output unless status.success?
           end
 
-          def dependencies_installed?
+          def check_system_dependencies!
+            check_tool_version!("npm", MIN_NPM_VERSION)
+            check_tool_version!("node", AssemblyScriptProjectCreator::MIN_NODE_VERSION)
+          end
+
+          def project_dependencies_installed?
             # Assuming if node_modules folder exist at root of script folder, all deps are installed
             ctx.dir_exist?("node_modules")
           end
@@ -49,19 +56,6 @@ module Script
           end
 
           private
-
-          def check_node_version!
-            output, status = @ctx.capture2e("node", "--version")
-            raise Errors::DependencyInstallError, output unless status.success?
-
-            require "semantic/semantic"
-            version = ::Semantic::Version.new(output[1..-1])
-            unless version >= ::Semantic::Version.new(TypeScriptProjectCreator::MIN_NODE_VERSION)
-              raise Errors::DependencyInstallError,
-                "Node version must be >= v#{TypeScriptProjectCreator::MIN_NODE_VERSION}. "\
-            "Current version: #{output.strip}."
-            end
-          end
 
           def compile
             check_compilation_dependencies!

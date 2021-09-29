@@ -268,8 +268,22 @@ describe Script::UI::ErrorHandler do
         end
       end
 
-      describe "when DependencyInstallError" do
-        let(:err) { Script::Layers::Infrastructure::Errors::DependencyInstallError.new }
+      describe "when DependencyInstallationError" do
+        let(:err) { Script::Layers::Infrastructure::Errors::DependencyInstallationError.new }
+        it "should call display_and_raise" do
+          should_call_display_and_raise
+        end
+      end
+
+      describe "when NoDependencyInstalledError" do
+        let(:err) { Script::Layers::Infrastructure::Errors::NoDependencyInstalledError.new("npm", "5.0.0") }
+        it "should call display_and_raise" do
+          should_call_display_and_raise
+        end
+      end
+
+      describe "when MissingDependencyVersionError" do
+        let(:err) { Script::Layers::Infrastructure::Errors::MissingDependencyVersionError.new("npm", "5.0.0", "4.9.9") }
         it "should call display_and_raise" do
           should_call_display_and_raise
         end
