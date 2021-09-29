@@ -150,7 +150,7 @@ describe Script::Layers::Infrastructure::Languages::AssemblyScriptTaskRunner do
         end
       end
 
-      describe "when npm packages fail to install" do
+      describe "when npm packages install" do
         it "should successfully install" do
           ctx.expects(:capture2e)
             .with("npm", "--version")
@@ -162,6 +162,24 @@ describe Script::Layers::Infrastructure::Languages::AssemblyScriptTaskRunner do
             .with("npm install --no-audit --no-optional --legacy-peer-deps --loglevel error")
             .returns([nil, mock(success?: true)])
           subject
+        end
+      end
+
+      describe "when capture2e fails" do
+        it "should raise error" do
+          msg = "error message"
+          ctx.expects(:capture2e)
+            .with("npm", "--version")
+            .returns([EXACT_NPM_VERSION, mock(success?: true)])
+          ctx.expects(:capture2e)
+            .with("node", "--version")
+            .returns([EXACT_NODE_VERSION, mock(success?: true)])
+          ctx.expects(:capture2e)
+            .with("npm install --no-audit --no-optional --legacy-peer-deps --loglevel error")
+            .returns([msg, mock(success?: false)])
+          assert_raises Script::Layers::Infrastructure::Errors::DependencyInstallationError, msg do
+            subject
+          end
         end
       end
     end

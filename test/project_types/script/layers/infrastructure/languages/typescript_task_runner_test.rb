@@ -104,8 +104,8 @@ describe Script::Layers::Infrastructure::Languages::TypeScriptTaskRunner do
     end
   end
 
-  describe ".dependencies_installed?" do
-    subject { runner.dependencies_installed? }
+  describe ".project_dependencies_installed?" do
+    subject { runner.project_dependencies_installed? }
 
     before do
       FileUtils.mkdir_p("node_modules")
@@ -124,36 +124,54 @@ describe Script::Layers::Infrastructure::Languages::TypeScriptTaskRunner do
   describe ".install_dependencies" do
     subject { runner.install_dependencies }
 
-    describe "when node version is above minimum" do
-      it "should install using npm" do
-        ctx.expects(:capture2e)
-          .with("node", "--version")
-          .returns(["v14.15.0", mock(success?: true)])
-        ctx.expects(:capture2e)
-          .with("npm install --no-audit --no-optional --legacy-peer-deps --loglevel error")
-          .returns([nil, mock(success?: true)])
-        subject
+    describe "when npm version and node are above minimum" do
+      describe "when npm packages fail to install" do
+        it "should raise error" do
+          ctx.expects(:capture2e)
+            .with("npm", "--version")
+            .returns([EXACT_NPM_VERSION, mock(success?: true)])
+          ctx.expects(:capture2e)
+            .with("node", "--version")
+            .returns([EXACT_NODE_VERSION, mock(success?: true)])
+          ctx.expects(:capture2e)
+            .with("npm install --no-audit --no-optional --legacy-peer-deps --loglevel error")
+            .returns([nil, mock(success?: false)])
+          assert_raises Script::Layers::Infrastructure::Errors::DependencyInstallationError do
+            subject
+          end
+        end
       end
-    end
 
-    describe "when node version is below minimum" do
-      it "should raise error" do
-        ctx.expects(:capture2e)
-          .with("node", "--version")
-          .returns(["v14.4.0", mock(success?: true)])
-
-        assert_raises Script::Layers::Infrastructure::Errors::DependencyInstallError do
+      describe "when npm packages install" do
+        it "should successfully install" do
+          ctx.expects(:capture2e)
+            .with("npm", "--version")
+            .returns([EXACT_NPM_VERSION, mock(success?: true)])
+          ctx.expects(:capture2e)
+            .with("node", "--version")
+            .returns([EXACT_NODE_VERSION, mock(success?: true)])
+          ctx.expects(:capture2e)
+            .with("npm install --no-audit --no-optional --legacy-peer-deps --loglevel error")
+            .returns([nil, mock(success?: true)])
           subject
         end
       end
-    end
 
-    describe "when capture2e fails" do
-      it "should raise error" do
-        msg = "error message"
-        ctx.expects(:capture2e).returns([msg, mock(success?: false)])
-        assert_raises Script::Layers::Infrastructure::Errors::DependencyInstallError, msg do
-          subject
+      describe "when capture2e fails" do
+        it "should raise error" do
+          msg = "error message"
+          ctx.expects(:capture2e)
+            .with("npm", "--version")
+            .returns([EXACT_NPM_VERSION, mock(success?: true)])
+          ctx.expects(:capture2e)
+            .with("node", "--version")
+            .returns([EXACT_NODE_VERSION, mock(success?: true)])
+          ctx.expects(:capture2e)
+            .with("npm install --no-audit --no-optional --legacy-peer-deps --loglevel error")
+            .returns([msg, mock(success?: false)])
+          assert_raises Script::Layers::Infrastructure::Errors::DependencyInstallationError, msg do
+            subject
+          end
         end
       end
     end
@@ -189,6 +207,127 @@ describe Script::Layers::Infrastructure::Languages::TypeScriptTaskRunner do
     describe "when metadata file is missing" do
       it "should raise an exception" do
         assert_raises(Script::Layers::Domain::Errors::MetadataNotFoundError) do
+          subject
+        end
+      end
+    end
+  end
+
+  describe ".check_system_dependencies!" do
+    subject { runner.check_system_dependencies! }
+
+    describe "when npm is not installed" do
+      it "should raise error" do
+        ctx.expects(:capture2e)
+          .with("npm", "--version")
+          .returns([nil, mock(success?: false)])
+        assert_raises Script::Layers::Infrastructure::Errors::NoDependencyInstalledError do
+          subject
+        end
+      end
+    end
+
+    describe "when node is not installed" do
+      it "should raise error" do
+        ctx.expects(:capture2e)
+          .with("npm", "--version")
+          .returns([EXACT_NODE_VERSION, mock(success?: true)])
+        ctx.expects(:capture2e)
+          .with("node", "--version")
+          .returns([nil, mock(success?: false)])
+        assert_raises Script::Layers::Infrastructure::Errors::NoDependencyInstalledError do
+          subject
+        end
+      end
+    end
+
+    describe "when npm version is below minimum" do
+      it "should raise error" do
+        ctx.expects(:capture2e)
+          .with("npm", "--version")
+          .returns([nil, mock(success?: false)])
+
+        assert_raises Script::Layers::Infrastructure::Errors::NoDependencyInstalledError do
+          subject
+        end
+      end
+    end
+
+    describe "when npm version is above minimum" do
+      describe "when node version is below minimum" do
+        it "should raise error" do
+          ctx.expects(:capture2e)
+            .with("npm", "--version")
+            .returns([ABOVE_NPM_VERSION, mock(success?: true)])
+          ctx.expects(:capture2e)
+            .with("node", "--version")
+            .returns([BELOW_NODE_VERSION, mock(success?: true)])
+          assert_raises Script::Layers::Infrastructure::Errors::MissingDependencyVersionError do
+            subject
+          end
+        end
+      end
+
+      describe "when node version is above minimum" do
+        it "should install successfully" do
+          ctx.expects(:capture2e)
+            .with("npm", "--version")
+            .returns([ABOVE_NPM_VERSION, mock(success?: true)])
+          ctx.expects(:capture2e)
+            .with("node", "--version")
+            .returns([ABOVE_NODE_VERSION, mock(success?: true)])
+          subject
+        end
+      end
+
+      describe "when node version is the exact version" do
+        it "should install successfully" do
+          ctx.expects(:capture2e)
+            .with("npm", "--version")
+            .returns([ABOVE_NPM_VERSION, mock(success?: true)])
+          ctx.expects(:capture2e)
+            .with("node", "--version")
+            .returns([EXACT_NODE_VERSION, mock(success?: true)])
+          subject
+        end
+      end
+    end
+
+    describe "when npm version is exactly the version" do
+      describe "when node version is below minimum" do
+        it "should raise error" do
+          ctx.expects(:capture2e)
+            .with("npm", "--version")
+            .returns([EXACT_NPM_VERSION, mock(success?: true)])
+          ctx.expects(:capture2e)
+            .with("node", "--version")
+            .returns([BELOW_NODE_VERSION, mock(success?: true)])
+          assert_raises Script::Layers::Infrastructure::Errors::MissingDependencyVersionError do
+            subject
+          end
+        end
+      end
+
+      describe "when node version is above minimum" do
+        it "should install successfully" do
+          ctx.expects(:capture2e)
+            .with("npm", "--version")
+            .returns([EXACT_NPM_VERSION, mock(success?: true)])
+          ctx.expects(:capture2e)
+            .with("node", "--version")
+            .returns([ABOVE_NODE_VERSION, mock(success?: true)])
+          subject
+        end
+      end
+
+      describe "when node version is the exact version" do
+        it "should install successfully" do
+          ctx.expects(:capture2e)
+            .with("npm", "--version")
+            .returns([EXACT_NPM_VERSION, mock(success?: true)])
+          ctx.expects(:capture2e)
+            .with("node", "--version")
+            .returns([EXACT_NODE_VERSION, mock(success?: true)])
           subject
         end
       end

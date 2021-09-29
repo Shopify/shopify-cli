@@ -5,15 +5,10 @@ module Script
     module Infrastructure
       module Languages
         class TaskRunner
-          TASK_RUNNERS = {
-            "assemblyscript" => AssemblyScriptTaskRunner,
-            "typescript" => TypeScriptTaskRunner,
-          }
-
           def self.for(ctx, language, script_name)
             task_runner = {
               "assemblyscript" => AssemblyScriptTaskRunner,
-              "rust" => RustTaskRunner,
+              "typescript" => TypeScriptTaskRunner,
             }
             raise Errors::TaskRunnerNotFoundError unless task_runner[language]
             task_runner[language].new(ctx, script_name)
