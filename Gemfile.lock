@@ -75,7 +75,7 @@ GEM
       ruby-progressbar
     mocha (1.13.0)
     multi_test (0.1.2)
-    nokogiri (1.12.4)
+    nokogiri (1.12.5)
       mini_portile2 (~> 2.6.1)
       racc (~> 1.4)
     parallel (1.21.0)
