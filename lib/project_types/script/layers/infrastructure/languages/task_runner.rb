@@ -19,6 +19,10 @@ module Script
             task_runner[language].new(ctx, script_name)
           end
 
+          def check_system_dependencies!
+            raise NotImplementedError
+          end
+
           def check_tool_version!(tool, min_required_version)
             output, status = @ctx.capture2e(tool, "--version")
             unless status.success?

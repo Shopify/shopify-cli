@@ -110,7 +110,7 @@ describe Script::Layers::Infrastructure::Languages::RustTaskRunner do
   end
 
   describe ".check_system_dependencies!" do
-    subject { rs_task_runner.check_tool_version! }
+    subject { rs_task_runner.check_system_dependencies! }
 
     describe "when cargo is not installed" do
       it "should raise error" do

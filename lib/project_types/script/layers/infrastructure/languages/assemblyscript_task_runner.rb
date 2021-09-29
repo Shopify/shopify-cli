@@ -28,15 +28,15 @@ module Script
           end
 
           def install_dependencies
-            check_tool_version!
+            check_system_dependencies!
 
             output, status = ctx.capture2e("npm install --no-audit --no-optional --legacy-peer-deps --loglevel error")
             raise Errors::DependencyInstallationError, output unless status.success?
           end
 
-          def check_tool_version!
-            super("npm", MIN_NPM_VERSION)
-            super("node", AssemblyScriptProjectCreator::MIN_NODE_VERSION)
+          def check_system_dependencies!
+            check_tool_version!("npm", MIN_NPM_VERSION)
+            check_tool_version!("node", AssemblyScriptProjectCreator::MIN_NODE_VERSION)
           end
 
           def project_dependencies_installed?

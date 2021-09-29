@@ -204,7 +204,7 @@ describe Script::Layers::Infrastructure::Languages::AssemblyScriptTaskRunner do
   end
 
   describe ".check_system_dependencies!" do
-    subject { as_task_runner.check_tool_version! }
+    subject { as_task_runner.check_system_dependencies! }
 
     describe "when npm is not installed" do
       it "should raise error" do

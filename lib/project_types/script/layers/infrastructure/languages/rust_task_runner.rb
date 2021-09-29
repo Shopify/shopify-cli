@@ -20,8 +20,8 @@ module Script
             true
           end
 
-          def check_tool_version!
-            super("cargo", MIN_CARGO_VERSION)
+          def check_system_dependencies!
+            check_tool_version!("cargo", MIN_CARGO_VERSION)
           end
 
           def install_dependencies
