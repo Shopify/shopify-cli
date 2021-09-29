@@ -27,7 +27,6 @@ module Script
 
             project_creators = {
               "assemblyscript" => AssemblyScriptProjectCreator,
-              "rust" => RustProjectCreator,
               "typescript" => TypeScriptProjectCreator,
             }
 

@@ -7,7 +7,6 @@ module Script
         class TaskRunner
           TASK_RUNNERS = {
             "assemblyscript" => AssemblyScriptTaskRunner,
-            "rust" => RustTaskRunner,
             "typescript" => TypeScriptTaskRunner,
           }
 

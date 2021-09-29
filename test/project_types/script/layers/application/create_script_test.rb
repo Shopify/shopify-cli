@@ -19,7 +19,7 @@ describe Script::Layers::Application::CreateScript do
   let(:extension_point_type) { "payment-methods" }
   let(:example_config) { extension_point_repository.example_config(extension_point_type) }
   let(:domain) { example_config["domain"] }
-  let(:sparse_checkout_repo) { example_config[language]["repo"] }
+  let(:sparse_checkout_repo) { example_config["sdks"][language]["repo"] }
   let(:sparse_checkout_branch) do
     "master"
   end   # TODO: update once create script can take a command line argument

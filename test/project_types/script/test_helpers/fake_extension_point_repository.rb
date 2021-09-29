@@ -47,17 +47,19 @@ module TestHelpers
     def example_config(type)
       {
         "domain" => "fake-domain",
-        "assemblyscript" => {
-          "repo" => "fake-repo",
-          "package" => type,
-          "version" => "1",
-          "sdk" => "1",
-        },
-        "rust" => {
-          "beta" => true,
-          "package" => type,
-          "version" => "1",
-          "sdk" => "1",
+        "sdks" => {
+          "assemblyscript" => {
+            "repo" => "fake-repo",
+            "package" => type,
+            "version" => "1",
+            "sdk" => "1",
+          },
+          "rust" => {
+            "beta" => true,
+            "package" => type,
+            "version" => "1",
+            "sdk" => "1",
+          },
         },
       }
     end
