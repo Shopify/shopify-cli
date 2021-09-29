@@ -4,14 +4,14 @@ module Script
   module Layers
     module Domain
       class ExtensionPoint
-        attr_reader :type, :beta, :deprecated, :sdks, :domain
+        attr_reader :type, :beta, :deprecated, :libraries, :domain
 
         def initialize(type, config)
           @type = type
           @beta = config["beta"] || false
           @deprecated = config["deprecated"] || false
           @domain = config["domain"] || nil
-          @sdks = ExtensionPointSDKs.new(config["sdks"])
+          @libraries = ExtensionPointLibraries.new(config["libraries"])
         end
 
         def beta?
@@ -26,14 +26,14 @@ module Script
           @type.gsub("_", "-")
         end
 
-        class ExtensionPointSDKs
+        class ExtensionPointLibraries
           def initialize(config)
             @config = config
           end
 
           def all
-            @all ||= @config.map do |language, sdk_config|
-              ExtensionPointSDK.new(language, sdk_config)
+            @all ||= @config.map do |language, libray_config|
+              ExtensionPointLibrary.new(language, libray_config)
             end
           end
 
@@ -42,7 +42,7 @@ module Script
           end
         end
 
-        class ExtensionPointSDK
+        class ExtensionPointLibrary
           attr_reader :language, :version, :beta, :package, :repo
 
           def initialize(language, config)

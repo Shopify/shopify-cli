@@ -6,7 +6,7 @@ describe Script::Layers::Domain::ExtensionPoint do
   let(:type) { "discount" }
   let(:config) do
     {
-      "sdks" => {
+      "libraries" => {
         "assemblyscript" => {
           "package" => "@shopify/extension-point-as-fake",
         },
@@ -15,7 +15,7 @@ describe Script::Layers::Domain::ExtensionPoint do
   end
   let(:config_with_rust) do
     {
-      "sdks" => {
+      "libraries" => {
         "assemblyscript" => {
           "package" => "@shopify/extension-point-as-fake",
         },
@@ -72,24 +72,24 @@ describe Script::Layers::Domain::ExtensionPoint do
       end
     end
 
-    describe "when multiple sdks are implemented" do
+    describe "when multiple libraries are implemented" do
       subject { Script::Layers::Domain::ExtensionPoint.new(type, config_with_rust) }
-      it "should return all the implemented sdks" do
+      it "should return all the implemented libraries" do
         extension_point = subject
-        assert_equal 2, extension_point.sdks.all.count
-        refute_nil extension_point.sdks.for("assemblyscript")
-        refute_nil extension_point.sdks.for("rust")
+        assert_equal 2, extension_point.libraries.all.count
+        refute_nil extension_point.libraries.for("assemblyscript")
+        refute_nil extension_point.libraries.for("rust")
       end
     end
 
-    describe "when a sdk is not implemented" do
+    describe "when a libary is not implemented" do
       subject { Script::Layers::Domain::ExtensionPoint.new(type, config) }
 
-      it "should not return that sdk" do
+      it "should not return that library" do
         extension_point = subject
 
-        assert_equal 1, extension_point.sdks.all.count
-        assert_nil extension_point.sdks.for("rust")
+        assert_equal 1, extension_point.libraries.all.count
+        assert_nil extension_point.libraries.for("rust")
       end
     end
   end
