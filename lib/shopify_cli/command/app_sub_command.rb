@@ -3,7 +3,12 @@ module ShopifyCLI
     class AppSubCommand < SubCommand
       class << self
         def call_help(*)
-          @ctx.puts(help)
+          output = self.help
+          if self.respond_to?(:extended_help)
+            output += "\n"
+            output += extended_help
+          end
+          @ctx.puts(output)
         end
       end
     end
