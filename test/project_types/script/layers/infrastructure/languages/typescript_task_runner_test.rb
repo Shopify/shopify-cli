@@ -4,6 +4,13 @@ require "project_types/script/test_helper"
 describe Script::Layers::Infrastructure::Languages::TypeScriptTaskRunner do
   include TestHelpers::FakeFS
 
+  BELOW_NODE_VERSION = "v14.4.0"
+  EXACT_NODE_VERSION = "v14.5.0"
+  ABOVE_NODE_VERSION = "v14.6.0"
+
+  ABOVE_NPM_VERSION = "5.2.1"
+  EXACT_NPM_VERSION = "5.2.0"
+
   let(:ctx) { TestHelpers::FakeContext.new }
   let(:script_name) { "foo" }
   let(:language) { "TypeScript" }
