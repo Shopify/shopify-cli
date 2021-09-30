@@ -2,31 +2,30 @@
 
 require "project_types/script/test_helper"
 
-describe Script::Layers::Infrastructure::Languages::AssemblyScriptProjectCreator do
+describe Script::Layers::Infrastructure::Languages::TypeScriptProjectCreator do
   include TestHelpers::FakeFS
 
   let(:context) { TestHelpers::FakeContext.new }
   let(:fake_capture2e_response) { [nil, OpenStruct.new(success?: true)] }
 
-  let(:extension_point_type) { "payment_methods" }
+  let(:extension_point_type) { "payment-methods" }
   let(:extension_point_config) do
     {
-      "assemblyscript" => {
-        "repo" => "https://github.com/Shopify/extension-points.git",
-        "package" => "@shopify/extension-point-as-fake",
-        "toolchain-version" => "*",
+      "typescript" => {
+        "repo" => "https://github.com/Shopify/scripts-apis-examples",
       },
     }
   end
 
   let(:domain) { "fake-domain" }
+  let(:language) { "typescript" }
   let(:project_name) { "myscript" }
-  let(:sparse_checkout_repo) { extension_point_config["assemblyscript"]["repo"] }
+  let(:sparse_checkout_repo) { extension_point_config["typescript"]["repo"] }
   let(:sparse_checkout_branch) { "fake-branch" }
-  let(:sparse_checkout_set_path) { "packages/#{domain}/samples/#{extension_point_type}" }
+  let(:sparse_checkout_set_path) { "#{domain}/#{language}/#{extension_point_type}/default" }
 
   let(:project_creator) do
-    Script::Layers::Infrastructure::Languages::AssemblyScriptProjectCreator
+    Script::Layers::Infrastructure::Languages::TypeScriptProjectCreator
       .new(
         ctx: context,
         type: extension_point_type,
@@ -50,15 +49,34 @@ describe Script::Layers::Infrastructure::Languages::AssemblyScriptProjectCreator
         .expects(:setup_dependencies)
         .with
         .once
+      context.expects(:file_exist?)
+        .with("yarn.lock")
+        .once
+        .returns(true)
+
+      context.expects(:file_exist?)
+        .with("package-lock.json")
+        .once
+        .returns(true)
 
       context
         .expects(:capture2e)
-        .with(Script::Layers::Infrastructure::Languages::AssemblyScriptProjectCreator::NPM_SET_REGISTRY_COMMAND)
+        .with(Script::Layers::Infrastructure::Languages::TypeScriptProjectCreator::NPM_SET_REGISTRY_COMMAND)
         .returns(fake_capture2e_response)
       context
         .expects(:capture2e)
-        .with(Script::Layers::Infrastructure::Languages::AssemblyScriptProjectCreator::NPM_SET_ENGINE_STRICT_COMMAND)
+        .with(Script::Layers::Infrastructure::Languages::TypeScriptProjectCreator::NPM_SET_ENGINE_STRICT_COMMAND)
         .returns(fake_capture2e_response)
+
+      context
+        .expects(:rm)
+        .with("yarn.lock")
+        .once
+
+      context
+        .expects(:rm)
+        .with("package-lock.json")
+        .once
 
       subject
     end

@@ -1,10 +1,11 @@
 Unreleased
 ------
 * [#1567](https://github.com/Shopify/shopify-cli/pull/1567): Add ability to set custom port for ngrok tunnel in node serve.
-* [#1566](https://github.com/Shopify/shopify-cli/pull/1566): Fix bug when running `npm | yarn list` for extension package resolution.
+* [#1584](https://github.com/Shopify/shopify-cli/issues/1584): Fixed extended help message not showing.
 * [#1566](https://github.com/Shopify/shopify-cli/pull/1566): Fix bug when running `npm | yarn list` for extension package resolution.
 * [#1557](https://github.com/Shopify/shopify-cli/pull/1557): **Breaking** Move app commands under `shopify app`.
 * [#1524](https://github.com/Shopify/shopify-cli/pull/1524): Add automatic error-reporting.
+* [#1528](https://github.com/Shopify/shopify-cli/pull/1528): Bump theme-check version to 1.7
 
 Version 2.5.0
 ------

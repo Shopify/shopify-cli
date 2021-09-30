@@ -36,8 +36,6 @@ module TestHelpers
       @cache.keys
     end
 
-    private
-
     def beta_config(type)
       example_config(type).merge({ "beta" => true })
     end
@@ -48,16 +46,18 @@ module TestHelpers
 
     def example_config(type)
       {
-        "assemblyscript" => {
-          "package" => type,
-          "version" => "1",
-          "sdk" => "1",
-        },
-        "rust" => {
-          "beta" => true,
-          "package" => type,
-          "version" => "1",
-          "sdk" => "1",
+        "domain" => "fake-domain",
+        "libraries" => {
+          "assemblyscript" => {
+            "repo" => "fake-repo",
+            "package" => type,
+            "version" => "1",
+          },
+          "rust" => {
+            "beta" => true,
+            "package" => type,
+            "version" => "1",
+          },
         },
       }
     end

@@ -43,6 +43,7 @@ module Script
         class DependencyInstallError < ScriptProjectError; end
         class DeprecatedEPError < ScriptProjectError; end
         class EmptyResponseError < ScriptProjectError; end
+        class InvalidResponseError < ScriptProjectError; end
         class ForbiddenError < ScriptProjectError; end
         class InvalidContextError < ScriptProjectError; end
 
@@ -94,7 +95,11 @@ module Script
           end
         end
 
+        class InvalidProjectError < ScriptProjectError; end
+
         class ScriptUploadError < ScriptProjectError; end
+        class ProjectConfigNotFoundError < ScriptProjectError; end
+        class InvalidProjectConfigError < ScriptProjectError; end
       end
     end
   end

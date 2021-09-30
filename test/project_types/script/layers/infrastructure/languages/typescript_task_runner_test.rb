@@ -1,35 +1,23 @@
-# frozen_string_literal: true
 
 require "project_types/script/test_helper"
 
-describe Script::Layers::Infrastructure::Languages::AssemblyScriptTaskRunner do
+describe Script::Layers::Infrastructure::Languages::TypeScriptTaskRunner do
   include TestHelpers::FakeFS
 
   let(:ctx) { TestHelpers::FakeContext.new }
-  let(:script_id) { "id" }
   let(:script_name) { "foo" }
-  let(:extension_point_config) do
-    {
-      "assemblyscript" => {
-        "package": "@shopify/extension-point-as-fake",
-        "version": "*",
-      },
-    }
-  end
-  let(:extension_point_type) { "discount" }
-  let(:language) { "AssemblyScript" }
-  let(:as_task_runner) { Script::Layers::Infrastructure::Languages::AssemblyScriptTaskRunner.new(ctx, script_name) }
-
+  let(:language) { "TypeScript" }
+  let(:runner) { Script::Layers::Infrastructure::Languages::TypeScriptTaskRunner.new(ctx, script_name) }
   let(:package_json) do
     {
       scripts: {
-        build: "shopify-scripts-toolchain-as build --src src/shopify_main.ts -b script.wasm -- --lib node_modules",
+        build: "javy build/index.js -o build/index.wasm",
       },
     }
   end
 
   describe ".build" do
-    subject { as_task_runner.build }
+    subject { runner.build }
 
     it "should raise an error if no build script is defined" do
       File.expects(:read).with("package.json").once.returns(JSON.generate(package_json.delete(:scripts)))
@@ -54,6 +42,12 @@ describe Script::Layers::Infrastructure::Languages::AssemblyScriptTaskRunner do
         .once
         .returns(["output", mock(success?: true)])
 
+      ctx
+        .expects(:capture2e)
+        .with("npm run gen-metadata")
+        .once
+        .returns(["output", mock(success?: true)])
+
       assert_raises(Script::Layers::Infrastructure::Errors::WebAssemblyBinaryNotFoundError) { subject }
     end
 
@@ -71,6 +65,12 @@ describe Script::Layers::Infrastructure::Languages::AssemblyScriptTaskRunner do
             .once
             .returns(["output", mock(success?: true)])
 
+          ctx
+            .expects(:capture2e)
+            .with("npm run gen-metadata")
+            .once
+            .returns(["output", mock(success?: true)])
+
           assert ctx.file_exist?(wasmfile)
           assert_equal wasm, subject
           refute ctx.file_exist?(wasmfile)
@@ -84,7 +84,7 @@ describe Script::Layers::Infrastructure::Languages::AssemblyScriptTaskRunner do
       end
 
       describe "new naming" do
-        let(:wasmfile) { "build/script.wasm" }
+        let(:wasmfile) { "build/index.wasm" }
 
         it_triggers_compilation_process
       end
@@ -105,7 +105,7 @@ describe Script::Layers::Infrastructure::Languages::AssemblyScriptTaskRunner do
   end
 
   describe ".dependencies_installed?" do
-    subject { as_task_runner.dependencies_installed? }
+    subject { runner.dependencies_installed? }
 
     before do
       FileUtils.mkdir_p("node_modules")
@@ -122,13 +122,13 @@ describe Script::Layers::Infrastructure::Languages::AssemblyScriptTaskRunner do
   end
 
   describe ".install_dependencies" do
-    subject { as_task_runner.install_dependencies }
+    subject { runner.install_dependencies }
 
     describe "when node version is above minimum" do
       it "should install using npm" do
         ctx.expects(:capture2e)
           .with("node", "--version")
-          .returns(["v14.5.1", mock(success?: true)])
+          .returns(["v14.15.0", mock(success?: true)])
         ctx.expects(:capture2e)
           .with("npm install --no-audit --no-optional --legacy-peer-deps --loglevel error")
           .returns([nil, mock(success?: true)])
@@ -160,7 +160,7 @@ describe Script::Layers::Infrastructure::Languages::AssemblyScriptTaskRunner do
   end
 
   describe ".metadata" do
-    subject { as_task_runner.metadata }
+    subject { runner.metadata }
 
     describe "when metadata file is present and valid" do
       let(:metadata_json) do

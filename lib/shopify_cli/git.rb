@@ -105,6 +105,36 @@ module ShopifyCLI
         end
       end
 
+      def sparse_checkout(repo, set, branch, ctx)
+        _, status = ctx.capture2e("git init")
+        unless status.success?
+          ctx.abort(ctx.message("core.git.error.repo_not_initiated"))
+        end
+
+        _, status = ctx.capture2e("git remote add -f origin #{repo}")
+        unless status.success?
+          ctx.abort(ctx.message("core.git.error.remote_not_added"))
+        end
+
+        _, status = ctx.capture2e("git config core.sparsecheckout true")
+        unless status.success?
+          ctx.abort(ctx.message("core.git.error.sparse_checkout_not_enabled"))
+        end
+
+        _, status = ctx.capture2e("git sparse-checkout set #{set}")
+        unless status.success?
+          ctx.abort(ctx.message("core.git.error.sparse_checkout_not_set"))
+        end
+
+        resp, status = ctx.capture2e("git pull origin #{branch}")
+        unless status.success?
+          if resp.include?("fatal: couldn't find remote ref")
+            ctx.abort(ctx.message("core.git.error.pull_failed_bad_branch", branch))
+          end
+          ctx.abort(ctx.message("core.git.error.pull_failed"))
+        end
+      end
+
       private
 
       def exec(*args, dir: Dir.pwd, default: nil, ctx: Context.new)

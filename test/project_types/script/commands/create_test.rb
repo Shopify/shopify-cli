@@ -22,6 +22,7 @@ module Script
           extension_point_type: @ep_type,
           script_name: @script_name
         )
+        @branch = "master"
         Layers::Application::ExtensionPoints.stubs(:languages).returns(%w(assemblyscript))
         ShopifyCLI::Tasks::EnsureAuthenticated.stubs(:call)
       end
@@ -38,6 +39,7 @@ module Script
         Script::Layers::Application::CreateScript.expects(:call).with(
           ctx: @context,
           language: @language,
+          sparse_checkout_branch: @branch,
           script_name: @script_name,
           extension_point_type: @ep_type,
           no_config_ui: @no_config_ui
@@ -55,6 +57,7 @@ module Script
         Script::Layers::Application::CreateScript.expects(:call).with(
           ctx: @context,
           language: @language,
+          sparse_checkout_branch: @branch,
           script_name: @script_name,
           extension_point_type: @ep_type,
           no_config_ui: @no_config_ui
@@ -89,7 +92,9 @@ module Script
       def perform_command
         run_cmd(
           "script create --name=#{@script_name}
-          --extension-point=#{@ep_type} --language=#{@language} #{@no_config_ui ? "--no-config-ui" : ""}"
+          --extension-point=#{@ep_type} --language=#{@language}
+          --branch=#{@branch}
+          #{@no_config_ui ? "--no-config-ui" : ""}"
         )
       end
     end

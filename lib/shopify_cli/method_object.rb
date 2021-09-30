@@ -48,12 +48,14 @@ module ShopifyCLI
   #
   module MethodObject
     module AutoCreateResultObject
+      def self.ruby2_keywords(*); end unless respond_to?(:ruby2_keywords, true)
+
       ##
       # invokes the original `call` implementation and wraps its return value
       # into a result object.
       #
-      def call(*args, **kwargs, &block)
-        Result.wrap { kwargs.any? ? super(*args, **kwargs, &block) : super(*args, &block) }.call
+      ruby2_keywords def call(*args, &block)
+        Result.wrap { super(*args, &block) }.call
       end
     end
 
@@ -66,8 +68,13 @@ module ShopifyCLI
       #
       def call(*args, **kwargs, &block)
         properties.keys.yield_self do |properties|
-          new(**kwargs.slice(*properties))
-            .call(*args, **kwargs.slice(*(kwargs.keys - properties)), &block)
+          instance = new(**kwargs.slice(*properties))
+          kwargs = kwargs.slice(*(kwargs.keys - properties))
+          if kwargs.any?
+            instance.call(*args, **kwargs, &block)
+          else
+            instance.call(*args, &block)
+          end
         end
       end
 
