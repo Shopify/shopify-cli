@@ -462,7 +462,6 @@ module ShopifyCLI
             ngrok: "Something went wrong with ngrok installation,"\
               "please make sure %s exists within %s before trying again",
           },
-
           installing: "Installing ngrok…",
           not_running: "{{green:x}} ngrok tunnel not running",
           prereq_command_location: "%s @ %s",

@@ -119,10 +119,12 @@ module Node
           extended_help: <<~HELP,
             {{bold:Options:}}
               {{cyan:--host=HOST}}: Bypass running tunnel and use custom host. HOST must be HTTPS url.
+              {{cyan:--port=PORT}}: Use custom port.
           HELP
 
           error: {
             host_must_be_https: "HOST must be a HTTPS url.",
+            invalid_port: "%s is not a valid port.",
           },
 
           open_info: <<~MESSAGE,
@@ -154,6 +156,7 @@ module Node
           error: {
             token_argument_missing: "{{x}} {{red:auth requires a token argument}}\n\n",
           },
+
         },
 
         forms: {

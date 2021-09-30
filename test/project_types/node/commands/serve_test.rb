@@ -75,6 +75,35 @@ module Node
         )
         run_cmd('app node serve --host="https://example-foo.com"')
       end
+
+      def test_server_command_when_port_passed
+        ShopifyCLI::Tunnel.stubs(:start).returns("https://example.com")
+        ShopifyCLI::Tasks::UpdateDashboardURLS.expects(:call)
+        ShopifyCLI::Resources::EnvFile.any_instance.expects(:update)
+        @context.expects(:system).with(
+          "npm run dev",
+          env: {
+            "SHOPIFY_API_KEY" => "mykey",
+            "SHOPIFY_API_SECRET" => "mysecretkey",
+            "SHOP" => "my-test-shop.myshopify.com",
+            "SCOPES" => "read_products",
+            "HOST" => "https://example.com",
+            "PORT" => "5000",
+          }
+        )
+        run_cmd("app node serve --port=5000")
+      end
+
+      def test_server_command_when_invalid_port_passed
+        invalid_port = "NOT_PORT"
+        ShopifyCLI::Tunnel.stubs(:start).returns("https://example.com")
+        ShopifyCLI::Tasks::UpdateDashboardURLS.expects(:call)
+        ShopifyCLI::Resources::EnvFile.any_instance.expects(:update)
+        @context.expects(:abort).with(
+          @context.message("node.serve.error.invalid_port", invalid_port)
+        )
+        run_cmd("app node serve --port=#{invalid_port}")
+      end
     end
   end
 end

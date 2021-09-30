@@ -9,6 +9,7 @@ module Node
         parser.on("--host=HOST") do |h|
           flags[:host] = h.gsub('"', "")
         end
+        parser.on("--port=PORT") { |port| flags[:port] = port }
       end
 
       def call(*)
@@ -29,9 +30,16 @@ module Node
 
         CLI::UI::Frame.open(@ctx.message("node.serve.running_server")) do
           env = project.env.to_h
-          env["PORT"] = ShopifyCLI::Tunnel::PORT.to_s
+          env["PORT"] = port.to_s
           @ctx.system("npm run dev", env: env)
         end
+      end
+
+      def port
+        return ShopifyCLI::Tunnel::PORT.to_s unless options.flags.key?(:port)
+        port = options.flags[:port].to_i
+        @ctx.abort(@ctx.message("node.serve.error.invalid_port", options.flags[:port])) unless port > 0
+        port
       end
 
       def self.help
