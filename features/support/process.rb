@@ -1,6 +1,7 @@
 require "open3"
 
 module Process
+  ENV_VARIABLES = { "SHOPIFY_CLI_ACCEPTANCE_TEST" => "1" }
   class ProcessError < StandardError
     attr_reader :exit_status, :stderr
     def initialize(exit_status:, stderr:)
@@ -17,13 +18,13 @@ module Process
   def self.run_shopify(*args, cwd: nil)
     args = [shopify_executable_path] + args
     cwd ||= Dir.pwd
-    _, err, stat = Open3.capture3(*args, chdir: cwd)
+    _, err, stat = Open3.capture3(ENV_VARIABLES, *args, chdir: cwd)
     raise ProcessError.new(exit_status: stat.exitstatus, stderr: err) unless stat.success?
   end
 
   def self.run(*args, cwd: nil)
     cwd ||= Dir.pwd
-    _, err, stat = Open3.capture3(*args, chdir: cwd)
+    _, err, stat = Open3.capture3(ENV_VARIABLES, *args, chdir: cwd)
     raise ProcessError.new(exit_status: stat.exitstatus, stderr: err) unless stat.success?
   end
 
@@ -31,7 +32,7 @@ module Process
     args = [shopify_executable_path] + args
     cwd ||= Dir.pwd
 
-    out, err, stat = Open3.capture3(*args, chdir: cwd)
+    out, err, stat = Open3.capture3(ENV_VARIABLES, *args, chdir: cwd)
     raise ProcessError.new(exit_status: stat.exitstatus, stderr: err) unless stat.success?
     out
   end

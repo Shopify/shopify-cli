@@ -39,6 +39,7 @@ module ShopifyCLI
 
       # Environments
       TEST = "SHOPIFY_CLI_TEST"
+      ACCEPTANCE_TEST = "SHOPIFY_CLI_ACCEPTANCE_TEST"
       DEVELOPMENT = "SHOPIFY_CLI_DEVELOPMENT"
     end
 
