@@ -14,6 +14,4 @@ WORKDIR /usr/src/app
 COPY Gemfile Gemfile.lock ./
 COPY shopify-cli.gemspec  shopify-cli.gemspec
 COPY lib/shopify_cli/version.rb  lib/shopify_cli/version.rb
-COPY . .
-
 RUN bundle install

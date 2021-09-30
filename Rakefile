@@ -1,10 +1,13 @@
 ENV["SHOPIFY_CLI_TEST"] = "1"
 
 require_relative "bin/load_shopify"
+require_relative "utilities/utilities"
 require "rake/testtask"
 require "rubocop/rake_task"
 require "bundler/gem_tasks"
 require "shellwords"
+require "digest"
+require "open3"
 
 Rake::TestTask.new do |t|
   t.libs += %w(test)
@@ -17,26 +20,12 @@ desc "A set of tasks that run in Linux environments"
 namespace :linux do
   desc "Runs the test suite in a Linux Docker environment"
   task :test do
-    system("docker", "build", __dir__, "-t", "shopify-cli") || abort
-    system(
-      "docker", "run",
-      "-t", "--rm",
-      "--volume", "#{Shellwords.escape(__dir__)}:/usr/src/app",
-      "shopify-cli",
-      "bundle", "exec", "rake", "test"
-    ) || abort
+    Utilities::Docker.run_and_rm_container("bundle", "exec", "rake", "test")
   end
 
   desc "Runs the acceptance tests suite in a Linux Docker environment"
   task :features do
-    system("docker", "build", __dir__, "-t", "shopify-cli") || abort
-    system(
-      "docker", "run",
-      "-t", "--rm",
-      "--volume", "#{Shellwords.escape(__dir__)}:/usr/src/app",
-      "shopify-cli",
-      "bundle", "exec", "cucumber"
-    ) || abort
+    Utilities::Docker.run_and_rm_container("bundle", "exec", "cucumber")
   end
 end
 
