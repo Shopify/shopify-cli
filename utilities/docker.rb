@@ -5,30 +5,6 @@ module Utilities
     Error = Class.new(StandardError)
 
     class << self
-      def create_and_start_disposable_container
-        build_image_if_needed
-        container_id, create_err, create_stat = Open3.capture3("docker", "create", "-t", "-i", image_tag)
-        raise Error, create_err unless create_stat.success?
-        _, start_err, start_stat = Open3.capture3("docker", "start", "-i", container_id)
-        raise Error, start_err unless start_stat.success?
-        container_id
-      end
-
-      def run(*args, container_id:)
-        system(
-          "docker", "run",
-          "-t",
-          "--volume", "#{Shellwords.escape(root_dir)}:/usr/src/app",
-          container_id,
-          *args
-        ) || abort
-      end
-
-      def delete_container(id)
-        _, err, stat = Open3.capture3("docker", "container", "rm", "-f", id)
-        raise Error, err unless stat.success?
-      end
-
       def run_and_rm_container(*args)
         build_image_if_needed
         system(
@@ -53,8 +29,8 @@ module Utilities
       end
 
       def image_tag
-        dockerfile_path = File.expand_path("./Dockerfile", root_dir)
-        image_sha = Digest::SHA256.hexdigest(File.read(dockerfile_path))
+        gemfile_lock_path = File.expand_path("./Gemfile.lock", root_dir)
+        image_sha = Digest::SHA256.hexdigest(File.read(gemfile_lock_path))
         "shopify-cli-#{image_sha}"
       end
 
