@@ -5,7 +5,7 @@ module Extension
     class SpecificationTest < MiniTest::Test
       def setup
         super
-        ShopifyCli::ProjectType.load_type(:extension)
+        ShopifyCLI::ProjectType.load_type(:extension)
       end
 
       def test_can_be_instantiated_from_a_set_of_valid_attributes

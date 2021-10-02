@@ -1,6 +1,6 @@
 require "test_helper"
 
-module ShopifyCli
+module ShopifyCLI
   class TransformDataStructureTest < MiniTest::Test
     def test_primitive_values_are_returned_as_is
       [true, false, 1, "hello", :hello].each do |value|

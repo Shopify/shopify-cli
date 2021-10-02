@@ -7,7 +7,7 @@ module Extension
     class ExtensionCommandTest < MiniTest::Test
       def setup
         super
-        ShopifyCli::ProjectType.load_type(:extension)
+        ShopifyCLI::ProjectType.load_type(:extension)
         @project = ExtensionTestHelpers.fake_extension_project(with_mocks: true)
         @command = Extension::Command::ExtensionCommand.new
       end
@@ -27,7 +27,7 @@ module Extension
         unknown_type = "unknown_type"
         ExtensionTestHelpers.fake_extension_project(with_mocks: true, type_identifier: unknown_type)
 
-        io = capture_io_and_assert_raises(ShopifyCli::Abort) { @command.specification_handler.features }
+        io = capture_io_and_assert_raises(ShopifyCLI::Abort) { @command.specification_handler.features }
 
         assert_message_output(io: io, expected_content: [
           @context.message("errors.unknown_type", unknown_type),

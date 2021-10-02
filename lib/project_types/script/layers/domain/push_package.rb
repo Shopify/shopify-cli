@@ -29,18 +29,6 @@ module Script
           @metadata = metadata
           @script_json = script_json
         end
-
-        def push(script_service, api_key, force)
-          script_service.push(
-            uuid: @uuid,
-            extension_point_type: @extension_point_type,
-            script_content: @script_content,
-            api_key: api_key,
-            force: force,
-            metadata: @metadata,
-            script_json: @script_json,
-          )
-        end
       end
     end
   end

@@ -1,8 +1,8 @@
-require_relative "lib/shopify-cli/version"
+require_relative "lib/shopify_cli/version"
 
 Gem::Specification.new do |spec|
   spec.name = "shopify-cli"
-  spec.version = ShopifyCli::VERSION
+  spec.version = ShopifyCLI::VERSION
   spec.authors = ["Shopify"]
   spec.email = ["dev-tools-education@shopify.com"]
   spec.license = "MIT"
@@ -39,10 +39,18 @@ Gem::Specification.new do |spec|
   # `/usr/local/bin/shopify` to that script, in order to "lock" the Ruby used to
   # a single Ruby (useful for debugging in multi-Ruby environments)
 
-  spec.add_development_dependency("bundler", "~> 2.1.4")
+  spec.add_development_dependency("bundler", "~> 2.2.2")
   spec.add_development_dependency("rake", "~> 12.3", ">= 12.3.3")
   spec.add_development_dependency("minitest", "~> 5.0")
 
-  spec.add_dependency("listen", "~> 3.5")
-  spec.add_dependency("theme-check", "~> 1.2")
+  spec.add_dependency("bugsnag", "~> 6.22")
+  spec.add_dependency("listen", "~> 3.7.0")
+
+  # Note: theme-check is _intentionally_ not specifying the third
+  # digit. We _want_ new features to make their way into new installs
+  # of the Shopify CLI. Otherwise updates need to be released twice.
+  #
+  # That is, DO USE ~> 1.X, DO NOT USE ~> 1.X.Y, this would unnecessarily
+  # fix the feature version.
+  spec.add_dependency("theme-check", "~> 1.7")
 end

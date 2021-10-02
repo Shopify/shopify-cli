@@ -7,11 +7,11 @@ module Extension
     class ArgoSetupStepsTest < MiniTest::Test
       def setup
         super
-        ShopifyCli::ProjectType.load_type(:extension)
+        ShopifyCLI::ProjectType.load_type(:extension)
 
         @identifier = "FAKE_ARGO_TYPE"
         @directory = "fake_directory"
-        @system = ShopifyCli::JsSystem.new(ctx: @context)
+        @system = ShopifyCLI::JsSystem.new(ctx: @context)
       end
 
       def test_always_successful_steps_return_true_no_matter_what_the_step_block_returns
@@ -26,11 +26,11 @@ module Extension
 
       def test_all_step_types_catch_shopify_cli_abort_exceptions_and_output_their_message_and_return_false
         always_successful_io = capture_io do
-          refute call_step(ArgoSetupStep.always_successful { raise ShopifyCli::Abort, "always_successful error" })
+          refute call_step(ArgoSetupStep.always_successful { raise ShopifyCLI::Abort, "always_successful error" })
         end
 
         default_io = capture_io do
-          refute call_step(ArgoSetupStep.default { raise ShopifyCli::Abort, "default_io error" })
+          refute call_step(ArgoSetupStep.default { raise ShopifyCLI::Abort, "default_io error" })
         end
 
         assert_message_output(io: always_successful_io, expected_content: "always_successful error")

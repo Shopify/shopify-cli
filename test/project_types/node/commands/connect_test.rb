@@ -8,10 +8,10 @@ module Node
       include TestHelpers::FakeUI
 
       def test_can_connect
-        context = ShopifyCli::Context.new
+        context = ShopifyCLI::Context.new
 
-        ShopifyCli::Project.stubs(:has_current?).returns(false)
-        ShopifyCli::Connect.any_instance.expects(:default_connect)
+        ShopifyCLI::Project.stubs(:has_current?).returns(false)
+        ShopifyCLI::Connect.any_instance.expects(:default_connect)
           .with("node")
           .returns("node-app")
         context.expects(:done)
@@ -21,11 +21,11 @@ module Node
       end
 
       def test_warns_if_in_production
-        context = ShopifyCli::Context.new
+        context = ShopifyCLI::Context.new
 
         context.expects(:puts)
           .with(context.message("node.connect.production_warning"))
-        ShopifyCli::Connect.any_instance.expects(:default_connect)
+        ShopifyCLI::Connect.any_instance.expects(:default_connect)
           .with("node")
           .returns("node-app")
         context.expects(:done)

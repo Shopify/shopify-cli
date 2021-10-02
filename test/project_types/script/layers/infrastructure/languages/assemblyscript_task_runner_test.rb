@@ -13,7 +13,6 @@ describe Script::Layers::Infrastructure::Languages::AssemblyScriptTaskRunner do
       "assemblyscript" => {
         "package": "@shopify/extension-point-as-fake",
         "version": "*",
-        "sdk-version": "*",
       },
     }
   end

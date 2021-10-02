@@ -45,6 +45,7 @@ module Extension
           "or try creating a new app using {{command:shopify [node|rails] create}}.",
         loading_apps: "Loading your apps…",
         no_available_extensions: "{{x}} There are no available extensions for this app.",
+        ask_template: "Select a template to use for your extension",
       },
       connect: {
         connected: "Project now connected to {{green:%s: %s}}",
@@ -67,6 +68,8 @@ module Extension
         HELP
         frame_title: "Building extension with: %s…",
         build_failure_message: "Failed to build extension code.",
+        build_success_message: "Build was successful!",
+        directory_not_found: "Build directory not found.",
       },
       register: {
         help: <<~HELP,

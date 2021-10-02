@@ -1,7 +1,7 @@
 module Extension
   module Tasks
     class ConfigureFeatures
-      include ShopifyCli::MethodObject
+      include ShopifyCLI::MethodObject
 
       class Error < RuntimeError; end
       class UnknownSurfaceArea < Error; end

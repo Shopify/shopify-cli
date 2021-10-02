@@ -1,6 +1,6 @@
 require "test_helper"
 
-module ShopifyCli
+module ShopifyCLI
   module Tasks
     class ConfirmStoreTest < MiniTest::Test
       def setup
@@ -9,20 +9,20 @@ module ShopifyCli
       end
 
       def test_aborts_if_no_shop_stored
-        ShopifyCli::DB.stubs(:exists?).with(:shop).returns(false)
+        ShopifyCLI::DB.stubs(:exists?).with(:shop).returns(false)
 
-        exception = assert_raises ShopifyCli::Abort do
+        exception = assert_raises ShopifyCLI::Abort do
           ConfirmStore.call(@context)
         end
         assert_includes exception.message, "No store found"
       end
 
       def test_aborts_if_user_says_no
-        ShopifyCli::DB.stubs(:exists?).with(:shop).returns(true)
+        ShopifyCLI::DB.stubs(:exists?).with(:shop).returns(true)
         CLI::UI::Prompt.stubs(:confirm).returns(false)
 
         io = capture_io do
-          assert_raises ShopifyCli::AbortSilent do
+          assert_raises ShopifyCLI::AbortSilent do
             ConfirmStore.call(@context)
           end
         end
@@ -30,9 +30,9 @@ module ShopifyCli
       end
 
       def test_does_not_abort_if_user_says_yes
-        ShopifyCli::DB.stubs(:exists?).with(:shop).returns(true)
+        ShopifyCLI::DB.stubs(:exists?).with(:shop).returns(true)
         fake_store = "not-a-real-shop.shopify.io"
-        ShopifyCli::DB.stubs(:get).with(:shop).returns(fake_store)
+        ShopifyCLI::DB.stubs(:get).with(:shop).returns(fake_store)
         CLI::UI::Prompt.stubs(:confirm).returns(true)
 
         io = capture_io do

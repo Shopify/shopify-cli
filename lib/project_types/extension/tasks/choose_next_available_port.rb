@@ -5,11 +5,11 @@ require "socket"
 module Extension
   module Tasks
     class ChooseNextAvailablePort
-      include ShopifyCli::MethodObject
+      include ShopifyCLI::MethodObject
 
       property! :from
       property! :to, default: -> { from + 10 }
-      property! :host, default: "localhost"
+      property! :host, default: "127.0.0.1"
 
       def call
         available_port = port_range(from: from, to: to).find { |p| available?(host, p) }

@@ -1,10 +1,10 @@
 # frozen_string_literal: true
 require "test_helper"
-require "shopify-cli/theme/dev_server"
+require "shopify_cli/theme/dev_server"
 require "rack/mock"
 require "timecop"
 
-module ShopifyCli
+module ShopifyCLI
   module Theme
     module DevServer
       class ProxyTest < Minitest::Test
@@ -12,18 +12,18 @@ module ShopifyCli
 
         def setup
           super
-          root = ShopifyCli::ROOT + "/test/fixtures/theme"
+          root = ShopifyCLI::ROOT + "/test/fixtures/theme"
           @ctx = TestHelpers::FakeContext.new(root: root)
           @theme = DevelopmentTheme.new(@ctx, root: root)
           @syncer = stub(pending_updates: [])
           @proxy = Proxy.new(@ctx, theme: @theme, syncer: @syncer)
 
-          ShopifyCli::DB.stubs(:exists?).with(:shop).returns(true)
-          ShopifyCli::DB
+          ShopifyCLI::DB.stubs(:exists?).with(:shop).returns(true)
+          ShopifyCLI::DB
             .stubs(:get)
             .with(:shop)
             .returns("dev-theme-server-store.myshopify.com")
-          ShopifyCli::DB
+          ShopifyCLI::DB
             .stubs(:get)
             .with(:development_theme_id)
             .returns("123456789")
@@ -64,6 +64,38 @@ module ShopifyCli
             times: 2)
         end
 
+        def test_update_session_cookie_when_returned_from_backend
+          stub_session_id_request
+          new_secure_session_id = "#{SECURE_SESSION_ID}2"
+
+          # POST response returning a new session cookie (Set-Cookie)
+          stub_request(:post, "https://dev-theme-server-store.myshopify.com/account/login?_fd=0&pb=0")
+            .with(
+              headers: {
+                "Cookie" => "_secure_session_id=#{SECURE_SESSION_ID}",
+              }
+            )
+            .to_return(
+              status: 200,
+              body: "",
+              headers: {
+                "Set-Cookie" => "_secure_session_id=#{new_secure_session_id}",
+              }
+            )
+
+          # GET / passing the new session cookie
+          stub_request(:get, "https://dev-theme-server-store.myshopify.com/?_fd=0&pb=0")
+            .with(
+              headers: {
+                "Cookie" => "_secure_session_id=#{new_secure_session_id}",
+              }
+            )
+            .to_return(status: 200)
+
+          request.post("/account/login")
+          request.get("/")
+        end
+
         def test_form_data_is_proxied_to_online_store
           stub_request(:post, "https://dev-theme-server-store.myshopify.com/password?_fd=0&pb=0")
             .with(
@@ -97,7 +129,7 @@ module ShopifyCli
 
           stub_session_id_request
 
-          file = ShopifyCli::ROOT + "/test/fixtures/theme/assets/theme.css"
+          file = ShopifyCLI::ROOT + "/test/fixtures/theme/assets/theme.css"
 
           request.post("/cart/add", params: {
             "form_type" => "product",
@@ -155,12 +187,12 @@ module ShopifyCli
         end
 
         def test_pass_pending_templates_to_storefront
-          ShopifyCli::DB
+          ShopifyCLI::DB
             .stubs(:get)
             .with(:shop)
             .returns("dev-theme-server-store.myshopify.com")
 
-          ShopifyCli::DB
+          ShopifyCLI::DB
             .stubs(:get)
             .with(:storefront_renderer_production_exchange_token)
             .returns("TOKEN")
@@ -197,12 +229,12 @@ module ShopifyCli
         end
 
         def test_do_not_pass_pending_files_to_core
-          ShopifyCli::DB
+          ShopifyCLI::DB
             .stubs(:get)
             .with(:shop)
             .returns("dev-theme-server-store.myshopify.com")
 
-          ShopifyCli::DB
+          ShopifyCLI::DB
             .stubs(:get)
             .with(:storefront_renderer_production_exchange_token)
             .returns("TOKEN")
@@ -250,7 +282,7 @@ module ShopifyCli
         end
 
         def test_requires_exchange_token
-          ShopifyCli::DB
+          ShopifyCLI::DB
             .stubs(:get)
             .with(:storefront_renderer_production_exchange_token)
             .returns(nil)

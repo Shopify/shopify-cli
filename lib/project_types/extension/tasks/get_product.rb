@@ -3,12 +3,12 @@ require "shopify_cli"
 
 module Extension
   module Tasks
-    class GetProduct < ShopifyCli::Task
+    class GetProduct < ShopifyCLI::Task
       API_VERSION = "2021-07"
       GRAPHQL_FILE = "get_variant_id"
 
       def call(context, shop)
-        response = ShopifyCli::AdminAPI.query(
+        response = ShopifyCLI::AdminAPI.query(
           context,
           GRAPHQL_FILE,
           shop: shop,

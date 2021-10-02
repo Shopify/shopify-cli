@@ -3,10 +3,10 @@ require "shopify_cli"
 require "securerandom"
 
 module Extension
-  class ExtensionProject < ShopifyCli::Project
+  class ExtensionProject < ShopifyCLI::Project
     class << self
       def write_cli_file(context:, type:)
-        ShopifyCli::Project.write(
+        ShopifyCLI::Project.write(
           context,
           project_type: :extension,
           organization_id: nil,
@@ -42,7 +42,7 @@ module Extension
         resource_url: nil,
         shop: nil
       )
-        ShopifyCli::Resources::EnvFile.new(
+        ShopifyCLI::Resources::EnvFile.new(
           api_key: api_key,
           secret: api_secret,
           shop: shop,
@@ -134,7 +134,7 @@ module Extension
 
     def validate_env_present
       return if env
-      raise ShopifyCli::Abort, "Missing .env file. Run `shopify extension connect` to generate an .env file."
+      raise ShopifyCLI::Abort, "Missing .env file. Run `shopify extension connect` to generate an .env file."
     end
 
     def integer?(value)

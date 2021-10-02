@@ -33,7 +33,7 @@ describe Script::Layers::Infrastructure::ScriptProjectRepository do
     end
 
     subject do
-      ShopifyCli::DB.stubs(:get).with(:acting_as_shopify_organization).returns(nil)
+      ShopifyCLI::DB.stubs(:get).with(:acting_as_shopify_organization).returns(nil)
 
       instance.create(
         script_name: script_name,
@@ -113,8 +113,8 @@ describe Script::Layers::Infrastructure::ScriptProjectRepository do
     end
 
     before do
-      ShopifyCli::Project.stubs(:has_current?).returns(true)
-      ShopifyCli::Project.stubs(:current).returns(current_project)
+      ShopifyCLI::Project.stubs(:has_current?).returns(true)
+      ShopifyCLI::Project.stubs(:current).returns(current_project)
       ctx.write(script_json, script_json_content.to_json)
     end
 
@@ -130,10 +130,10 @@ describe Script::Layers::Infrastructure::ScriptProjectRepository do
       describe "when env has values" do
         let(:uuid) { "uuid" }
         let(:api_key) { "api_key" }
-        let(:env) { ShopifyCli::Resources::EnvFile.new(api_key: api_key, secret: "foo", extra: { "UUID" => uuid }) }
+        let(:env) { ShopifyCLI::Resources::EnvFile.new(api_key: api_key, secret: "foo", extra: { "UUID" => uuid }) }
 
         it "should provide access to the env values" do
-          ShopifyCli::Project.any_instance.expects(:env).returns(env).at_least_once
+          ShopifyCLI::Project.any_instance.expects(:env).returns(env).at_least_once
 
           assert_equal env, subject.env
           assert_equal uuid, subject.uuid
@@ -219,7 +219,7 @@ describe Script::Layers::Infrastructure::ScriptProjectRepository do
     let(:updated_uuid) { "updated_uuid" }
     let(:script_json) { "script.json" }
     let(:script_json_content) { { "version" => "1", "title" => script_name }.to_json }
-    let(:env) { ShopifyCli::Resources::EnvFile.new(api_key: "123", secret: "foo", extra: env_extra) }
+    let(:env) { ShopifyCLI::Resources::EnvFile.new(api_key: "123", secret: "foo", extra: env_extra) }
     let(:env_extra) { { "uuid" => "original_uuid", "something" => "else" } }
     let(:valid_config) do
       {
@@ -242,14 +242,14 @@ describe Script::Layers::Infrastructure::ScriptProjectRepository do
       ctx.mkdir_p(dir)
       ctx.chdir(dir)
 
-      ShopifyCli::DB.stubs(:get).with(:acting_as_shopify_organization).returns(nil)
+      ShopifyCLI::DB.stubs(:get).with(:acting_as_shopify_organization).returns(nil)
       instance.create(
         script_name: script_name,
         extension_point_type: extension_point_type,
         language: language
       )
       ctx.write(script_json, script_json_content)
-      ShopifyCli::Project.any_instance.expects(:env).returns(env).at_least_once
+      ShopifyCLI::Project.any_instance.expects(:env).returns(env).at_least_once
     end
 
     describe "when updating an immutable property" do
@@ -264,9 +264,9 @@ describe Script::Layers::Infrastructure::ScriptProjectRepository do
       end
 
       it "should do nothing" do
-        previous_config = ShopifyCli::Project.current.config
+        previous_config = ShopifyCLI::Project.current.config
         assert subject
-        updated_config = ShopifyCli::Project.current.config
+        updated_config = ShopifyCLI::Project.current.config
         assert_equal previous_config, updated_config
       end
     end
@@ -277,10 +277,10 @@ describe Script::Layers::Infrastructure::ScriptProjectRepository do
       end
 
       it "should update the property" do
-        previous_env = ShopifyCli::Project.current.env.to_h
+        previous_env = ShopifyCLI::Project.current.env.to_h
         assert subject
-        ShopifyCli::Project.clear
-        updated_env = ShopifyCli::Project.current.env.to_h
+        ShopifyCLI::Project.clear
+        updated_env = ShopifyCLI::Project.current.env.to_h
 
         assert_equal hash_except(previous_env, "UUID"), hash_except(updated_env, "UUID")
         refute_equal previous_env["UUID"], updated_env["UUID"]
@@ -307,8 +307,8 @@ describe Script::Layers::Infrastructure::ScriptProjectRepository do
     end
 
     before do
-      ShopifyCli::Project.stubs(:has_current?).returns(true)
-      ShopifyCli::Project.stubs(:current).returns(current_project)
+      ShopifyCLI::Project.stubs(:has_current?).returns(true)
+      ShopifyCLI::Project.stubs(:current).returns(current_project)
     end
 
     subject { instance.update_or_create_script_json(title: new_title, configuration_ui: new_configuration_ui) }

@@ -2,7 +2,7 @@ module Extension
   module Forms
     module Questions
       class AskName
-        include ShopifyCli::MethodObject
+        include ShopifyCLI::MethodObject
 
         property! :ctx
         property :name

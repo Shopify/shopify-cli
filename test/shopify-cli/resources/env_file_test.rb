@@ -1,7 +1,7 @@
 # frozen_string_literal: true
 require "test_helper"
 
-module ShopifyCli
+module ShopifyCLI
   module Resources
     class EnvFileTest < MiniTest::Test
       include TestHelpers::FakeUI

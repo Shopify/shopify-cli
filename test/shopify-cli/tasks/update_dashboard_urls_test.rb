@@ -1,6 +1,6 @@
 require "test_helper"
 
-module ShopifyCli
+module ShopifyCLI
   module Tasks
     class UpdateDashboardURLSTest < MiniTest::Test
       include TestHelpers::Partners
@@ -25,7 +25,7 @@ module ShopifyCli
             },
           },
         )
-        ShopifyCli::Tasks::UpdateDashboardURLS.call(
+        ShopifyCLI::Tasks::UpdateDashboardURLS.call(
           @context,
           url: "https://123abc.ngrok.io",
           callback_url: "/callback/fake",
@@ -64,7 +64,7 @@ module ShopifyCli
             },
           },
         )
-        ShopifyCli::Tasks::UpdateDashboardURLS.call(
+        ShopifyCLI::Tasks::UpdateDashboardURLS.call(
           @context,
           url: "https://newone123.ngrok.io",
           callback_url: "/callback/fake",
@@ -111,7 +111,7 @@ module ShopifyCli
             },
           }
         )
-        ShopifyCli::Tasks::UpdateDashboardURLS.call(
+        ShopifyCLI::Tasks::UpdateDashboardURLS.call(
           @context,
           url: "https://newone123.ngrok.io",
           callback_url: "/callback/fake",
@@ -156,7 +156,7 @@ module ShopifyCli
           }
         )
         CLI::UI::Prompt.expects(:confirm).returns(false)
-        ShopifyCli::Tasks::UpdateDashboardURLS.call(
+        ShopifyCLI::Tasks::UpdateDashboardURLS.call(
           @context,
           url: "https://myowndomain.io",
           callback_url: "/callback/fake",
@@ -201,7 +201,7 @@ module ShopifyCli
           }
         )
         CLI::UI::Prompt.expects(:confirm).returns(true)
-        ShopifyCli::Tasks::UpdateDashboardURLS.call(
+        ShopifyCLI::Tasks::UpdateDashboardURLS.call(
           @context,
           url: "https://myowndomain.io",
           callback_url: "/callback/fake",
@@ -239,7 +239,7 @@ module ShopifyCli
             },
           }
         )
-        ShopifyCli::Tasks::UpdateDashboardURLS.call(
+        ShopifyCLI::Tasks::UpdateDashboardURLS.call(
           @context,
           url: "https://newone123.ngrok.io",
           callback_url: "/callback/fake",
@@ -283,7 +283,7 @@ module ShopifyCli
           }
         )
         CLI::UI::Prompt.expects(:confirm).returns(true)
-        ShopifyCli::Tasks::UpdateDashboardURLS.call(
+        ShopifyCLI::Tasks::UpdateDashboardURLS.call(
           @context,
           url: "https://123adifferenturl.ngrok.io",
           callback_url: "/callback/fake",

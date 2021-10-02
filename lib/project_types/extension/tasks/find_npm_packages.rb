@@ -1,9 +1,9 @@
 module Extension
   module Tasks
     class FindNpmPackages
-      include ShopifyCli::MethodObject
+      include ShopifyCLI::MethodObject
 
-      property! :js_system, accepts: ShopifyCli::JsSystem
+      property! :js_system, accepts: ShopifyCLI::JsSystem
       property! :production_only, accepts: [true, false], default: false, reader: :production_only?
 
       def self.at_least_one_of(*package_names, **config)
@@ -69,7 +69,7 @@ module Extension
           raise ArgumentError, "Expected a list of package names"
         end
 
-        ShopifyCli::Result
+        ShopifyCLI::Result
           .call(&method(:list_packages))
           .then(&method(:search_packages).curry[package_names])
           .then(&method(:filter_duplicates))
@@ -84,11 +84,11 @@ module Extension
       end
 
       def yarn_list
-        production_only? ? %w[list --production] : %w[list]
+        production_only? ? %w[list --production --depth=0] : %w[list]
       end
 
       def npm_list
-        production_only? ? %w[list --prod --depth=1] : %w[list --depth=1]
+        production_only? ? %w[list --prod --depth=0] : %w[list]
       end
 
       def search_packages(packages, package_list)

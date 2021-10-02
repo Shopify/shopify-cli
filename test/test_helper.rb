@@ -1,4 +1,4 @@
-ENV["RUNNING_SHOPIFY_CLI_TESTS"] = 1.to_s
+ENV["SHOPIFY_CLI_TEST"] = "1"
 
 require "rubygems"
 require "bundler/setup"

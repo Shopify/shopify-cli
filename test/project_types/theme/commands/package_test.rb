@@ -12,7 +12,7 @@ module Theme
       end
 
       def test_package_theme
-        theme_root = File.join(ShopifyCli::ROOT, "test/fixtures/theme")
+        theme_root = File.join(ShopifyCLI::ROOT, "test/fixtures/theme")
         @context.expects(:system).with(
           "zip",
           "-r",

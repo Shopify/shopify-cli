@@ -3,7 +3,7 @@
 module Extension
   class PackageResolutionFailed < RuntimeError; end
 
-  class Project < ShopifyCli::ProjectType
+  class Project < ShopifyCLI::ProjectType
     hidden_feature
 
     require Project.project_filepath("messages/messages")
@@ -12,7 +12,7 @@ module Extension
     register_messages(Extension::Messages::MessageLoading.load)
   end
 
-  class Command < ShopifyCli::ProjectCommands
+  class Command < ShopifyCLI::Command::ProjectCommand
     hidden_feature
     autoload :ExtensionCommand, Project.project_filepath("commands/extension_command")
 
@@ -26,7 +26,7 @@ module Extension
     subcommand :Tunnel, "tunnel", Project.project_filepath("commands/tunnel")
     subcommand :Check, "check", Project.project_filepath("commands/check")
   end
-  ShopifyCli::Commands.register("Extension::Command", "extension")
+  ShopifyCLI::Commands.register("Extension::Command", "extension")
 
   module Tasks
     autoload :UserErrors, Project.project_filepath("tasks/user_errors")
@@ -41,6 +41,8 @@ module Extension
     autoload :FindNpmPackages, Project.project_filepath("tasks/find_npm_packages")
     autoload :GetExtensions, Project.project_filepath("tasks/get_extensions")
     autoload :GetProduct, Project.project_filepath("tasks/get_product")
+    autoload :RunExtensionCommand, Project.project_filepath("tasks/run_extension_command")
+    autoload :LoadServerConfig, Project.project_filepath("tasks/load_server_config")
 
     module Converters
       autoload :RegistrationConverter, Project.project_filepath("tasks/converters/registration_converter")
@@ -48,6 +50,7 @@ module Extension
       autoload :ValidationErrorConverter, Project.project_filepath("tasks/converters/validation_error_converter")
       autoload :AppConverter, Project.project_filepath("tasks/converters/app_converter")
       autoload :ProductConverter, Project.project_filepath("tasks/converters/product_converter")
+      autoload :ServerConfigConverter, Project.project_filepath("tasks/converters/server_config_converter")
     end
   end
 
@@ -55,6 +58,7 @@ module Extension
     module Questions
       autoload :AskApp, Project.project_filepath("forms/questions/ask_app")
       autoload :AskName, Project.project_filepath("forms/questions/ask_name")
+      autoload :AskTemplate, Project.project_filepath("forms/questions/ask_template")
       autoload :AskType, Project.project_filepath("forms/questions/ask_type")
       autoload :AskRegistration, Project.project_filepath("forms/questions/ask_registration")
     end
@@ -87,6 +91,16 @@ module Extension
       autoload :Default, Project.project_filepath("models/specification_handlers/default")
     end
 
+    module ServerConfig
+      autoload :Base, Project.project_filepath("models/server_config/base")
+      autoload :Development, Project.project_filepath("models/server_config/development")
+      autoload :DevelopmentEntries, Project.project_filepath("models/server_config/development_entries")
+      autoload :DevelopmentRenderer, Project.project_filepath("models/server_config/development_renderer")
+      autoload :Extension, Project.project_filepath("models/server_config/extension")
+      autoload :Root, Project.project_filepath("models/server_config/root")
+      autoload :User, Project.project_filepath("models/server_config/user")
+    end
+
     autoload :App, Project.project_filepath("models/app")
     autoload :Registration, Project.project_filepath("models/registration")
     autoload :Version, Project.project_filepath("models/version")
@@ -96,6 +110,8 @@ module Extension
     autoload :LazySpecificationHandler, Project.project_filepath("models/lazy_specification_handler")
     autoload :NpmPackage, Project.project_filepath("models/npm_package")
     autoload :Product, Project.project_filepath("models/product")
+    autoload :DevelopmentServer, Project.project_filepath("models/development_server")
+    autoload :DevelopmentServerRequirements, Project.project_filepath("models/development_server_requirements")
   end
 
   autoload :ExtensionProjectKeys, Project.project_filepath("extension_project_keys")

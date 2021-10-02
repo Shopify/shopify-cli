@@ -1,6 +1,6 @@
 module Theme
   module Forms
-    class Select < ShopifyCli::Form
+    class Select < ShopifyCLI::Form
       attr_accessor :theme
       flag_arguments :root, :title, :exclude_roles, :include_foreign_developments
 
@@ -17,7 +17,7 @@ module Theme
       private
 
       def themes
-        @themes ||= ShopifyCli::Theme::Theme.all(@ctx, root: root)
+        @themes ||= ShopifyCLI::Theme::Theme.all(@ctx, root: root)
           .sort_by { |theme| theme_sort_order(theme) }
       end
 

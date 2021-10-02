@@ -14,7 +14,7 @@ module Extension
 
       def setup
         super
-        ShopifyCli::ProjectType.load_type(:extension)
+        ShopifyCLI::ProjectType.load_type(:extension)
         @app = Models::App.new(title: "Fake", api_key: "1234", secret: "4567", business_name: "Fake Business")
         @extension_handler = ExtensionTestHelpers.test_specification_handler
       end
@@ -40,12 +40,19 @@ module Extension
           project_details
         end)
 
+        Questions::AskTemplate.expects(:new).returns(->(project_details) do
+          call_order << :ask_template
+          project_details.template = "javascript"
+          project_details
+        end)
+
         form = Create.ask(@context, [], {})
         assert_equal app, form.app
         assert_equal "Test Extension", form.name
         assert_equal extension_handler, form.type
+        assert_equal "javascript", form.template
         assert_equal "test_extension", form.directory_name
-        assert_equal [:ask_app, :ask_type, :ask_name], call_order
+        assert_equal [:ask_app, :ask_type, :ask_template, :ask_name], call_order
       end
 
       def test_command_line_argument_forwarding
@@ -65,6 +72,11 @@ module Extension
 
         Questions::AskType.expects(:new).with(ctx: @context, type: identifier).returns(->(project_details) do
           project_details.type = extension_handler
+          project_details
+        end)
+
+        Questions::AskTemplate.expects(:new).with(ctx: @context).returns(->(project_details) do
+          project_details.template = "javascript"
           project_details
         end)
 

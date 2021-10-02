@@ -6,7 +6,7 @@ describe Script::Layers::Domain::Metadata do
   let(:schema_major_version) { "1" }
   let(:schema_minor_version) { "0" }
   let(:use_msgpack) { true }
-  let(:ctx) { ShopifyCli::Context.new }
+  let(:ctx) { ShopifyCLI::Context.new }
 
   describe ".new" do
     subject { Script::Layers::Domain::Metadata.new(schema_major_version, schema_minor_version, use_msgpack) }

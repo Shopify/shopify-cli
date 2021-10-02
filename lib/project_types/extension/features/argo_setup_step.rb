@@ -11,7 +11,7 @@ module Extension
       def call(context, identifier, directory_name, js_system)
         step_result = step.call(context, identifier, directory_name, js_system)
         can_fail? ? step_result : true
-      rescue ShopifyCli::Abort => e
+      rescue ShopifyCLI::Abort => e
         context.puts(e.message)
         false
       rescue StandardError => e

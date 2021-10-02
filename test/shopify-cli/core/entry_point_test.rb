@@ -1,6 +1,6 @@
 require "test_helper"
 
-module ShopifyCli
+module ShopifyCLI
   module Core
     class EntryPointTest < MiniTest::Test
       include TestHelpers::Project
@@ -9,7 +9,7 @@ module ShopifyCli
         args = %w(help argone argtwo)
 
         Core::Executor.any_instance.expects(:call).with(
-          ShopifyCli::Commands::Help,
+          ShopifyCLI::Commands::Help,
           "help",
           args.dup[1..-1]
         )

@@ -1,7 +1,30 @@
 Unreleased
 ------
+* [#1567](https://github.com/Shopify/shopify-cli/pull/1567): Add ability to set custom port for ngrok tunnel in node serve.
+* [#1584](https://github.com/Shopify/shopify-cli/issues/1584): Fixed extended help message not showing.
+* [#1566](https://github.com/Shopify/shopify-cli/pull/1566): Fix bug when running `npm | yarn list` for extension package resolution.
+* [#1557](https://github.com/Shopify/shopify-cli/pull/1557): **Breaking** Move app commands under `shopify app`.
+* [#1524](https://github.com/Shopify/shopify-cli/pull/1524): Add automatic error-reporting.
+* [#1528](https://github.com/Shopify/shopify-cli/pull/1528): Bump theme-check version to 1.7
+
+Version 2.5.0
+------
+
+* [#1553](https://github.com/Shopify/shopify-cli/pull/1553): Add support for PHP app projects
+
+Version 2.4.0
+------
+
+* [#1488](https://github.com/Shopify/shopify-cli/pull/1488): Update Theme-Check to 1.4
+* [#1507](https://github.com/Shopify/shopify-cli/pull/1507): Limit the generated name for themes to 50 characters
+
+Version 2.3.0
+------
 
 * [#1386](https://github.com/Shopify/shopify-cli/pull/1386): Update Theme-Check to 1.2
+* [#1457](https://github.com/Shopify/shopify-cli/pull/1457): Fix uploading of binary theme files under Windows
+* [#1480](https://github.com/Shopify/shopify-cli/pull/1480): Fix customers pages not working with `theme serve`
+* [#1479](https://github.com/Shopify/shopify-cli/pull/1479): Add theme push & pull option to ignore files per command
 
 Version 2.2.2
 ------

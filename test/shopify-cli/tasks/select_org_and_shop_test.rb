@@ -1,15 +1,15 @@
 require "test_helper"
 
-module ShopifyCli
+module ShopifyCLI
   module Tasks
     class SelectOrgAndShopTest < MiniTest::Test
       def teardown
-        ShopifyCli::Core::Monorail.metadata = {}
+        ShopifyCLI::Core::Monorail.metadata = {}
         super
       end
 
       def test_user_will_be_prompted_if_more_than_one_organization
-        ShopifyCli::PartnersAPI::Organizations.expects(:fetch_all).with(@context).returns([
+        ShopifyCLI::PartnersAPI::Organizations.expects(:fetch_all).with(@context).returns([
           {
             "id" => 421,
             "businessName" => "one",
@@ -28,13 +28,13 @@ module ShopifyCli
           .with(@context.message("core.tasks.select_org_and_shop.organization_select"))
           .returns(431)
         form = call(org_id: nil, shop: nil)
-        assert_equal(431, ShopifyCli::Core::Monorail.metadata[:organization_id])
+        assert_equal(431, ShopifyCLI::Core::Monorail.metadata[:organization_id])
         assert_equal(431, form[:organization_id])
         assert_equal("other.myshopify.com", form[:shop_domain])
       end
 
       def test_will_auto_pick_with_only_one_org
-        ShopifyCli::PartnersAPI::Organizations.expects(:fetch_all).with(@context).returns(
+        ShopifyCLI::PartnersAPI::Organizations.expects(:fetch_all).with(@context).returns(
           [
             {
               "id" => 421,
@@ -58,7 +58,7 @@ module ShopifyCli
       end
 
       def test_organization_will_be_fetched_if_id_is_provided_but_not_shop
-        ShopifyCli::PartnersAPI::Organizations.expects(:fetch).with(@context, id: 123).returns(
+        ShopifyCLI::PartnersAPI::Organizations.expects(:fetch).with(@context, id: 123).returns(
           {
             "id" => 123,
             "stores" => [
@@ -72,10 +72,10 @@ module ShopifyCli
       end
 
       def test_it_will_fail_if_no_orgs_are_available
-        ShopifyCli::PartnersAPI::Organizations.expects(:fetch_all).with(@context).returns([])
+        ShopifyCLI::PartnersAPI::Organizations.expects(:fetch_all).with(@context).returns([])
 
         form = nil
-        io = capture_io_and_assert_raises(ShopifyCli::Abort) do
+        io = capture_io_and_assert_raises(ShopifyCLI::Abort) do
           form = call(org_id: nil, shop: nil)
         end
         assert_nil(form)
@@ -88,7 +88,7 @@ module ShopifyCli
       end
 
       def test_returns_no_shop_if_none_are_available
-        ShopifyCli::PartnersAPI::Organizations.expects(:fetch).with(@context, id: 123).returns(
+        ShopifyCLI::PartnersAPI::Organizations.expects(:fetch).with(@context, id: 123).returns(
           { "id" => 123, "stores" => [] },
         )
 
@@ -102,7 +102,7 @@ module ShopifyCli
       end
 
       def test_autopicks_only_shop
-        ShopifyCli::PartnersAPI::Organizations.expects(:fetch).with(@context, id: 123).returns(
+        ShopifyCLI::PartnersAPI::Organizations.expects(:fetch).with(@context, id: 123).returns(
           {
             "id" => 123,
             "stores" => [
@@ -120,7 +120,7 @@ module ShopifyCli
       end
 
       def test_prompts_user_to_pick_from_shops
-        ShopifyCli::PartnersAPI::Organizations.expects(:fetch).with(@context, id: 123).returns(
+        ShopifyCLI::PartnersAPI::Organizations.expects(:fetch).with(@context, id: 123).returns(
           {
             "id" => 123,
             "stores" => [

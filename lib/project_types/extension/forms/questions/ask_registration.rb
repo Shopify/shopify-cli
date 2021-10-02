@@ -4,7 +4,7 @@ module Extension
   module Forms
     module Questions
       class AskRegistration
-        include ShopifyCli::MethodObject
+        include ShopifyCLI::MethodObject
 
         property! :ctx
         property! :type
@@ -43,7 +43,7 @@ module Extension
         def abort_no_registrations
           ctx.puts(@ctx.message("connect.no_extensions", type))
           ctx.puts(@ctx.message("connect.learn_about_extensions"))
-          raise ShopifyCli::AbortSilent
+          raise ShopifyCLI::AbortSilent
         end
       end
     end

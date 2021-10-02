@@ -9,7 +9,7 @@ module Script
         UUID_ENV_KEY = "UUID"
 
         property! :id, accepts: String
-        property :env, accepts: ShopifyCli::Resources::EnvFile
+        property :env, accepts: ShopifyCLI::Resources::EnvFile
 
         property! :extension_point_type, accepts: String
         property! :script_name, accepts: String
@@ -20,7 +20,7 @@ module Script
         def initialize(*)
           super
 
-          ShopifyCli::Core::Monorail.metadata = {
+          ShopifyCLI::Core::Monorail.metadata = {
             "script_name" => script_name,
             "extension_point_type" => extension_point_type,
             "language" => language,

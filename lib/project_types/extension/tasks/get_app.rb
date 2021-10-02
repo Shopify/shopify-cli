@@ -3,7 +3,7 @@ require "shopify_cli"
 
 module Extension
   module Tasks
-    class GetApp < ShopifyCli::Task
+    class GetApp < ShopifyCLI::Task
       GRAPHQL_FILE = "get_app_by_api_key"
 
       RESPONSE_FIELD = %w(data)
@@ -12,7 +12,7 @@ module Extension
       def call(context:, api_key:)
         input = { api_key: api_key }
 
-        response = ShopifyCli::PartnersAPI.query(context, GRAPHQL_FILE, **input).dig(*RESPONSE_FIELD)
+        response = ShopifyCLI::PartnersAPI.query(context, GRAPHQL_FILE, **input).dig(*RESPONSE_FIELD)
         context.abort(context.message("tasks.errors.parse_error")) if response.nil?
 
         Converters::AppConverter.from_hash(response.dig(APP_FIELD))

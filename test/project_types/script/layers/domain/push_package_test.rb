@@ -35,18 +35,4 @@ describe Script::Layers::Domain::PushPackage do
       assert_equal uuid, subject.uuid
     end
   end
-
-  describe ".push" do
-    subject { push_package.push(script_service, api_key, force) }
-
-    it "should open write to build file and push" do
-      script_service.expect(:push, nil) do |kwargs|
-        kwargs[:extension_point_type] == extension_point_type &&
-          kwargs[:script_content] == script_content &&
-          kwargs[:api_key] == api_key &&
-          kwargs[:uuid] == uuid
-      end
-      subject
-    end
-  end
 end

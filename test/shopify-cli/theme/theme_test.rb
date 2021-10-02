@@ -1,13 +1,13 @@
 # frozen_string_literal: true
 require "test_helper"
-require "shopify-cli/theme/theme"
+require "shopify_cli/theme/theme"
 
-module ShopifyCli
+module ShopifyCLI
   module Theme
     class ThemeTest < Minitest::Test
       def setup
         super
-        root = ShopifyCli::ROOT + "/test/fixtures/theme"
+        root = ShopifyCLI::ROOT + "/test/fixtures/theme"
         @ctx = TestHelpers::FakeContext.new(root: root)
         @theme = Theme.new(@ctx, root: root, id: "123")
       end
@@ -27,7 +27,7 @@ module ShopifyCli
       def test_get_file
         assert_equal(Pathname.new("layout/theme.liquid"), @theme["layout/theme.liquid"].relative_path)
         assert_equal(Pathname.new("layout/theme.liquid"),
-          @theme[Pathname.new("#{ShopifyCli::ROOT}/test/fixtures//theme/layout/theme.liquid")].relative_path)
+          @theme[Pathname.new("#{ShopifyCLI::ROOT}/test/fixtures//theme/layout/theme.liquid")].relative_path)
         assert_equal(@theme.theme_files.first, @theme[@theme.theme_files.first])
       end
 
@@ -43,7 +43,7 @@ module ShopifyCli
       def test_is_theme_file
         assert(@theme.theme_file?(@theme["layout/theme.liquid"]))
         assert(@theme.theme_file?(
-          @theme[Pathname.new(ShopifyCli::ROOT).join("test/fixtures/theme/layout/theme.liquid")]
+          @theme[Pathname.new(ShopifyCLI::ROOT).join("test/fixtures/theme/layout/theme.liquid")]
         ))
       end
 
@@ -87,6 +87,25 @@ module ShopifyCli
           "\"theme_documentation_url\":\"https:\\/\\/shopify.com\"," \
           "\"theme_support_url\":\"https:\\/\\/support.shopify.com\\/\"}]"
         assert_equal(Digest::MD5.hexdigest(normalized), @theme["config/settings_schema.json"].checksum)
+      end
+
+      def test_read_binary_file
+        file = @theme["assets/logo.png"]
+
+        content = file.read
+        assert_equal(file.path.size, content.bytesize)
+      end
+
+      def test_write_binary_file
+        file = @theme["assets/logo.png"]
+        new_file = @theme["assets/logo2.png"]
+
+        begin
+          new_file.write(file.read)
+          assert_equal(file.path.size, new_file.path.size)
+        ensure
+          ::File.delete(new_file.path) if new_file.exist?
+        end
       end
     end
   end

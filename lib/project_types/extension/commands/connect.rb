@@ -19,7 +19,7 @@ module Extension
       end
 
       def self.help
-        ShopifyCli::Context.new.message("connect.help", ShopifyCli::TOOL_NAME, ShopifyCli::TOOL_NAME)
+        ShopifyCLI::Context.new.message("connect.help", ShopifyCLI::TOOL_NAME, ShopifyCLI::TOOL_NAME)
       end
 
       private

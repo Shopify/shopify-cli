@@ -9,8 +9,8 @@ module Extension
 
       def setup
         super
-        ShopifyCli::ProjectType.load_type(:extension)
-        ShopifyCli::Tasks::EnsureProjectType.stubs(:call)
+        ShopifyCLI::ProjectType.load_type(:extension)
+        ShopifyCLI::Tasks::EnsureProjectType.stubs(:call)
         @project = ExtensionTestHelpers.fake_extension_project(with_mocks: true)
         @version = Models::Version.new(
           registration_id: 42,
@@ -29,7 +29,7 @@ module Extension
 
         Command::Register.any_instance.expects(:call).once
         Command::Build.any_instance.stubs(:call)
-        ShopifyCli::JsSystem.any_instance.stubs(:call).returns(true)
+        ShopifyCLI::JsSystem.any_instance.stubs(:call).returns(true)
         Tasks::UpdateDraft.any_instance.stubs(:call).returns(@version)
 
         run_push
@@ -40,7 +40,7 @@ module Extension
 
         Command::Register.any_instance.expects(:call).never
         Command::Build.any_instance.stubs(:call)
-        ShopifyCli::JsSystem.any_instance.stubs(:call).returns(true)
+        ShopifyCLI::JsSystem.any_instance.stubs(:call).returns(true)
         Tasks::UpdateDraft.any_instance.stubs(:call).returns(@version)
 
         run_push
@@ -48,7 +48,7 @@ module Extension
 
       def test_runs_build_command
         Command::Build.any_instance.expects(:call).once
-        ShopifyCli::JsSystem.any_instance.stubs(:call).returns(true)
+        ShopifyCLI::JsSystem.any_instance.stubs(:call).returns(true)
         Tasks::UpdateDraft.any_instance.stubs(:call).returns(@version)
 
         run_push
@@ -57,7 +57,7 @@ module Extension
       def test_updates_the_extensions_draft_version
         specification_handler = ExtensionTestHelpers.test_specification_handler
         Command::Build.any_instance.stubs(:call)
-        ShopifyCli::JsSystem.any_instance.stubs(:call).returns(true)
+        ShopifyCLI::JsSystem.any_instance.stubs(:call).returns(true)
         Tasks::UpdateDraft.any_instance.expects(:call)
           .with(
             context: @context,
@@ -76,7 +76,7 @@ module Extension
         @version.last_user_interaction_at = Time.parse("2020-05-07 19:01:56 UTC")
         @version.location = "https://www.fakeurl.com"
         Command::Build.any_instance.stubs(:call)
-        ShopifyCli::JsSystem.any_instance.stubs(:call).returns(true)
+        ShopifyCLI::JsSystem.any_instance.stubs(:call).returns(true)
         Tasks::UpdateDraft.any_instance.stubs(:call).returns(@version)
 
         io = capture_io { run_push }
@@ -94,7 +94,7 @@ module Extension
 
         @version.last_user_interaction_at = Time.parse(response_time)
         Command::Build.any_instance.stubs(:call)
-        ShopifyCli::JsSystem.any_instance.stubs(:call).returns(true)
+        ShopifyCLI::JsSystem.any_instance.stubs(:call).returns(true)
         Tasks::UpdateDraft.any_instance.stubs(:call).returns(@version)
 
         io = capture_io { run_push }
@@ -111,7 +111,7 @@ module Extension
         ]
 
         Command::Build.any_instance.stubs(:call)
-        ShopifyCli::JsSystem.any_instance.stubs(:call).returns(true)
+        ShopifyCLI::JsSystem.any_instance.stubs(:call).returns(true)
         Tasks::UpdateDraft.any_instance.stubs(:call).returns(@version)
 
         io = capture_io { run_push }

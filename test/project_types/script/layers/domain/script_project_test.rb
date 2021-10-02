@@ -4,7 +4,7 @@ require "project_types/script/test_helper"
 
 describe Script::Layers::Domain::ScriptProject do
   let(:id) { "id" }
-  let(:env) { ShopifyCli::Resources::EnvFile.new(api_key: "1234", secret: "shh") }
+  let(:env) { ShopifyCLI::Resources::EnvFile.new(api_key: "1234", secret: "shh") }
   let(:extension_point_type) { "discount" }
   let(:script_name) { "foo_script" }
   let(:language) { "assemblyscript" }
@@ -37,7 +37,7 @@ describe Script::Layers::Domain::ScriptProject do
         "script_name" => script_name,
         "extension_point_type" => extension_point_type,
         "language" => language,
-      }, ShopifyCli::Core::Monorail.metadata)
+      }, ShopifyCLI::Core::Monorail.metadata)
     end
 
     describe "when all properties are present" do

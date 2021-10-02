@@ -9,7 +9,7 @@ module Theme
       def setup
         super
 
-        @ctx = ShopifyCli::Context.new
+        @ctx = ShopifyCLI::Context.new
         @command = Theme::Command::Pull.new(@ctx)
 
         @theme = stub(
@@ -23,13 +23,13 @@ module Theme
       end
 
       def test_pull_theme
-        ShopifyCli::Theme::Theme.expects(:new)
+        ShopifyCLI::Theme::Theme.expects(:new)
           .with(@ctx, root: ".", id: 1234)
           .returns(@theme)
 
-        ShopifyCli::Theme::IgnoreFilter.expects(:from_path).with(".").returns(@ignore_filter)
+        ShopifyCLI::Theme::IgnoreFilter.expects(:from_path).with(".").returns(@ignore_filter)
 
-        ShopifyCli::Theme::Syncer.expects(:new)
+        ShopifyCLI::Theme::Syncer.expects(:new)
           .with(@ctx, theme: @theme, ignore_filter: @ignore_filter)
           .returns(@syncer)
 
@@ -44,13 +44,13 @@ module Theme
       end
 
       def test_pull_pass_nodelete_to_syncer
-        ShopifyCli::Theme::Theme.expects(:new)
+        ShopifyCLI::Theme::Theme.expects(:new)
           .with(@ctx, root: ".", id: 1234)
           .returns(@theme)
 
-        ShopifyCli::Theme::IgnoreFilter.expects(:from_path).with(".").returns(@ignore_filter)
+        ShopifyCLI::Theme::IgnoreFilter.expects(:from_path).with(".").returns(@ignore_filter)
 
-        ShopifyCli::Theme::Syncer.expects(:new)
+        ShopifyCLI::Theme::Syncer.expects(:new)
           .with(@ctx, theme: @theme, ignore_filter: @ignore_filter)
           .returns(@syncer)
 
@@ -66,15 +66,39 @@ module Theme
         @command.call([], "pull")
       end
 
+      def test_pull_with_ignores
+        ShopifyCLI::Theme::Theme.expects(:new)
+          .with(@ctx, root: ".", id: 1234)
+          .returns(@theme)
+
+        ShopifyCLI::Theme::IgnoreFilter.expects(:from_path).with(".").returns(@ignore_filter)
+        @ignore_filter.expects(:add_patterns).with(["config/*"])
+
+        ShopifyCLI::Theme::Syncer.expects(:new)
+          .with(@ctx, theme: @theme, ignore_filter: @ignore_filter)
+          .returns(@syncer)
+
+        @syncer.expects(:start_threads)
+        @syncer.expects(:shutdown)
+
+        @syncer.expects(:download_theme!).with(delete: true)
+
+        @ctx.expects(:done)
+
+        @command.options.flags[:theme_id] = 1234
+        @command.options.flags[:ignores] = ["config/*"]
+        @command.call([], "pull")
+      end
+
       def test_pull_asks_to_select
         CLI::UI::Prompt.expects(:ask).returns(@theme)
         @ctx.expects(:done)
 
         @syncer.expects(:download_theme!).with(delete: true)
 
-        ShopifyCli::Theme::IgnoreFilter.expects(:from_path).with(".").returns(@ignore_filter)
+        ShopifyCLI::Theme::IgnoreFilter.expects(:from_path).with(".").returns(@ignore_filter)
 
-        ShopifyCli::Theme::Syncer.expects(:new)
+        ShopifyCLI::Theme::Syncer.expects(:new)
           .with(@ctx, theme: @theme, ignore_filter: @ignore_filter)
           .returns(@syncer)
 

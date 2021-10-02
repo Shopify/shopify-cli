@@ -1,13 +1,13 @@
 require "test_helper"
 
-module ShopifyCli
+module ShopifyCLI
   class AdminAPI
     class SchemaTest < MiniTest::Test
       include TestHelpers::Project
 
       def setup
         super
-        json_data = File.read(File.join(ShopifyCli::ROOT, "test/fixtures/shopify_schema.json"))
+        json_data = File.read(File.join(ShopifyCLI::ROOT, "test/fixtures/shopify_schema.json"))
         @test_obj = AdminAPI::Schema[JSON.parse(json_data)]
         @enum = {
           "kind" => "ENUM",
@@ -17,20 +17,20 @@ module ShopifyCli
       end
 
       def test_gets_schema
-        ShopifyCli::DB.expects(:exists?).with(:shopify_admin_schema).returns(false)
-        ShopifyCli::DB.expects(:exists?).with(:shop).returns(true)
-        ShopifyCli::DB.expects(:get).with(:shop).returns("my-test-shop.myshopify.com")
-        ShopifyCli::DB.expects(:set).with(shopify_admin_schema: "{\"foo\":\"baz\"}")
-        ShopifyCli::DB.expects(:get).with(:shopify_admin_schema).returns("{\"foo\":\"baz\"}")
-        ShopifyCli::AdminAPI.expects(:query)
+        ShopifyCLI::DB.expects(:exists?).with(:shopify_admin_schema).returns(false)
+        ShopifyCLI::DB.expects(:exists?).with(:shop).returns(true)
+        ShopifyCLI::DB.expects(:get).with(:shop).returns("my-test-shop.myshopify.com")
+        ShopifyCLI::DB.expects(:set).with(shopify_admin_schema: "{\"foo\":\"baz\"}")
+        ShopifyCLI::DB.expects(:get).with(:shopify_admin_schema).returns("{\"foo\":\"baz\"}")
+        ShopifyCLI::AdminAPI.expects(:query)
           .with(@context, "admin_introspection", shop: "my-test-shop.myshopify.com")
           .returns(foo: "baz")
         assert_equal({ "foo" => "baz" }, AdminAPI::Schema.get(@context))
       end
 
       def test_gets_schema_if_already_downloaded
-        ShopifyCli::DB.expects(:exists?).returns(true)
-        ShopifyCli::DB.expects(:get).with(:shopify_admin_schema).returns("{\"foo\":\"baz\"}")
+        ShopifyCLI::DB.expects(:exists?).returns(true)
+        ShopifyCLI::DB.expects(:get).with(:shopify_admin_schema).returns("{\"foo\":\"baz\"}")
         assert_equal({ "foo" => "baz" }, AdminAPI::Schema.get(@context))
       end
 

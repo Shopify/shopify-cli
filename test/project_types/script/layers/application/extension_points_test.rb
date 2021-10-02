@@ -43,8 +43,22 @@ describe Script::Layers::Application::ExtensionPoints do
   end
 
   describe ".available_types" do
-    it "should return an array of all ep types that are not deprecated or in beta" do
-      assert_equal %w(discount), Script::Layers::Application::ExtensionPoints.available_types
+    describe "when beta flag is disabled" do
+      before do
+        ShopifyCLI::Feature.expects(:enabled?).with(:scripts_beta_extension_points).returns(false).at_least_once
+      end
+      it "should return an array of all ep types that are not deprecated or in beta" do
+        assert_equal %w(discount), Script::Layers::Application::ExtensionPoints.available_types
+      end
+    end
+
+    describe "when beta flag is enabled" do
+      before do
+        ShopifyCLI::Feature.expects(:enabled?).with(:scripts_beta_extension_points).returns(true).at_least_once
+      end
+      it "should return an array of all ep types that are not deprecated or in beta" do
+        assert_equal %w(discount tax_filter), Script::Layers::Application::ExtensionPoints.available_types
+      end
     end
   end
 
@@ -68,7 +82,7 @@ describe Script::Layers::Application::ExtensionPoints do
 
     describe "when beta language flag is enabled" do
       before do
-        ShopifyCli::Feature.expects(:enabled?).with(:scripts_beta_languages).returns(true).at_least_once
+        ShopifyCLI::Feature.expects(:enabled?).with(:scripts_beta_languages).returns(true).at_least_once
       end
 
       it "should return all languages" do
@@ -78,7 +92,7 @@ describe Script::Layers::Application::ExtensionPoints do
 
     describe "when beta language flag is not enabled" do
       before do
-        ShopifyCli::Feature.expects(:enabled?).with(:scripts_beta_languages).returns(false).at_least_once
+        ShopifyCLI::Feature.expects(:enabled?).with(:scripts_beta_languages).returns(false).at_least_once
       end
 
       it "should return only fully supported languages" do
@@ -102,7 +116,7 @@ describe Script::Layers::Application::ExtensionPoints do
 
     describe "when beta language flag is enabled" do
       before do
-        ShopifyCli::Feature.expects(:enabled?).with(:scripts_beta_languages).returns(true).at_least_once
+        ShopifyCLI::Feature.expects(:enabled?).with(:scripts_beta_languages).returns(true).at_least_once
       end
 
       describe "when asking about supported language" do
@@ -140,7 +154,7 @@ describe Script::Layers::Application::ExtensionPoints do
 
     describe "when beta language flag is not enabled" do
       before do
-        ShopifyCli::Feature.expects(:enabled?).with(:scripts_beta_languages).returns(false).at_least_once
+        ShopifyCLI::Feature.expects(:enabled?).with(:scripts_beta_languages).returns(false).at_least_once
       end
 
       describe "when asking about supported language" do

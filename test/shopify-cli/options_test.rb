@@ -1,6 +1,6 @@
 require "test_helper"
 
-module ShopifyCli
+module ShopifyCLI
   class OptionsTest < MiniTest::Test
     def setup
       super

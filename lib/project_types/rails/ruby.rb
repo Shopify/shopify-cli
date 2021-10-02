@@ -4,7 +4,7 @@ module Rails
 
     VERSION_STRING = /ruby ([\d\.]+)/
 
-    property :ctx, accepts: ShopifyCli::Context, required: true
+    property :ctx, accepts: ShopifyCLI::Context, required: true
 
     class << self
       def version(ctx)

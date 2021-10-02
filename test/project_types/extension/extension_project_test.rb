@@ -8,7 +8,7 @@ module Extension
 
     def setup
       super
-      ShopifyCli::ProjectType.load_type(:extension)
+      ShopifyCLI::ProjectType.load_type(:extension)
 
       @specification_handler = ExtensionTestHelpers.test_specification_handler
       @type = @specification_handler.identifier
@@ -19,10 +19,10 @@ module Extension
     end
 
     def test_write_cli_file_create_shopify_cli_yml_file
-      ::ShopifyCli::Project.clear
+      ::ShopifyCLI::Project.clear
 
       assert File.exist?(".shopify-cli.yml")
-      assert_equal :extension, ShopifyCli::Project.current_project_type
+      assert_equal :extension, ShopifyCLI::Project.current_project_type
       assert_equal @specification_handler.identifier, ExtensionProject.current.specification_identifier
     end
 

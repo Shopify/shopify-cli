@@ -20,7 +20,19 @@ module Script
                 compiled_type: task_runner.compiled_type,
                 metadata: task_runner.metadata,
               )
-              uuid = package.push(Infrastructure::ScriptService.new(ctx: p_ctx), script_project.api_key, force)
+              script_service = Infrastructure::ServiceLocator.script_service(
+                ctx: p_ctx,
+                api_key: script_project.api_key
+              )
+              module_upload_url = Infrastructure::ScriptUploader.new(script_service).upload(package.script_content)
+              uuid = script_service.set_app_script(
+                uuid: package.uuid,
+                extension_point_type: package.extension_point_type,
+                force: force,
+                metadata: package.metadata,
+                script_json: package.script_json,
+                module_upload_url: module_upload_url,
+              )
               script_project_repo.update_env(uuid: uuid)
               spinner.update_title(p_ctx.message("script.application.pushed"))
             end

@@ -6,7 +6,7 @@ module Node
     class DeployTest < MiniTest::Test
       def setup
         super
-        ShopifyCli::Tasks::EnsureProjectType.expects(:call).with(@context, :node)
+        ShopifyCLI::Tasks::EnsureProjectType.expects(:call).with(@context, :node)
       end
 
       def test_without_arguments_calls_help
@@ -22,7 +22,7 @@ module Node
       private
 
       def run_deploy(*args)
-        run_cmd("node deploy " + args.join(" "))
+        run_cmd("app node deploy " + args.join(" "))
       end
     end
   end

@@ -2,7 +2,7 @@
 
 module Script
   class Command
-    class Create < ShopifyCli::SubCommand
+    class Create < ShopifyCLI::Command::SubCommand
       prerequisite_task :ensure_authenticated
 
       options do |parser, flags|
@@ -10,6 +10,7 @@ module Script
         parser.on("--extension_point=EP_NAME") { |ep_name| flags[:extension_point] = ep_name }
         parser.on("--extension-point=EP_NAME") { |ep_name| flags[:extension_point] = ep_name }
         parser.on("--language=LANGUAGE") { |language| flags[:language] = language }
+        parser.on("--branch=BRANCH") { |branch| flags[:branch] = branch }
         parser.on("--no-config-ui") { |no_config_ui| flags[:no_config_ui] = no_config_ui }
       end
 
@@ -24,6 +25,7 @@ module Script
         project = Layers::Application::CreateScript.call(
           ctx: @ctx,
           language: form.language,
+          sparse_checkout_branch: options.flags[:branch] || "master",
           script_name: form.name,
           extension_point_type: form.extension_point,
           no_config_ui: options.flags.key?(:no_config_ui)
@@ -35,7 +37,7 @@ module Script
 
       def self.help
         allowed_values = Script::Layers::Application::ExtensionPoints.available_types.map { |type| "{{cyan:#{type}}}" }
-        ShopifyCli::Context.message("script.create.help", ShopifyCli::TOOL_NAME, allowed_values.join(", "))
+        ShopifyCLI::Context.message("script.create.help", ShopifyCLI::TOOL_NAME, allowed_values.join(", "))
       end
     end
   end

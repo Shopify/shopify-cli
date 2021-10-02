@@ -8,7 +8,7 @@ module Extension
     class ArgoSetupTest < MiniTest::Test
       def setup
         super
-        ShopifyCli::ProjectType.load_type(:extension)
+        ShopifyCLI::ProjectType.load_type(:extension)
 
         @git_template = "https://www.github.com/fake_template.git"
         @initializer = ArgoSetup.new(git_template: @git_template)

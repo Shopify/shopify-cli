@@ -6,22 +6,25 @@ describe Script::Layers::Domain::ExtensionPoint do
   let(:type) { "discount" }
   let(:config) do
     {
-      "assemblyscript" => {
-        "package" => "@shopify/extension-point-as-fake",
-        "sdk-version" => "*",
-        "toolchain-version" => "*",
+      "libraries" => {
+        "assemblyscript" => {
+          "package" => "@shopify/extension-point-as-fake",
+        },
       },
     }
   end
   let(:config_with_rust) do
-    config.merge({
-      "rust" => {
-        "beta" => true,
-        "package" => "@shopify/extension-point-rs-fake",
-        "sdk-version" => "*",
-        "toolchain-version" => "*",
+    {
+      "libraries" => {
+        "assemblyscript" => {
+          "package" => "@shopify/extension-point-as-fake",
+        },
+        "rust" => {
+          "beta" => true,
+          "package" => "@shopify/extension-point-rs-fake",
+        },
       },
-    })
+    }
   end
 
   describe ".new" do
@@ -31,11 +34,6 @@ describe Script::Layers::Domain::ExtensionPoint do
         extension_point = subject
         assert_equal type, extension_point.type
         refute extension_point.deprecated?
-
-        sdk = extension_point.sdks.assemblyscript
-        refute_nil sdk.package
-        refute_nil sdk.sdk_version
-        refute_nil sdk.toolchain_version
       end
     end
 
@@ -74,43 +72,24 @@ describe Script::Layers::Domain::ExtensionPoint do
       end
     end
 
-    describe "when multiple sdks are implemented" do
+    describe "when multiple libraries are implemented" do
       subject { Script::Layers::Domain::ExtensionPoint.new(type, config_with_rust) }
-      it "should construct new, non-deprecated ExtensionPoint" do
+      it "should return all the implemented libraries" do
         extension_point = subject
-        assert_equal type, extension_point.type
-        refute extension_point.deprecated?
-
-        assert_equal 2, extension_point.sdks.all.count
-        as_sdk = extension_point.sdks.assemblyscript
-        assert_equal "assemblyscript", as_sdk.class.language
-        refute_nil as_sdk.package
-        refute_nil as_sdk.sdk_version
-        refute_nil as_sdk.toolchain_version
-        refute as_sdk.beta?
-
-        rs_sdk = extension_point.sdks.rust
-        assert_equal "rust", rs_sdk.class.language
-        refute_nil rs_sdk.package
-        assert rs_sdk.beta?
+        assert_equal 2, extension_point.libraries.all.count
+        refute_nil extension_point.libraries.for("assemblyscript")
+        refute_nil extension_point.libraries.for("rust")
       end
     end
 
-    describe "when some sdk is not implemented" do
+    describe "when a libary is not implemented" do
       subject { Script::Layers::Domain::ExtensionPoint.new(type, config) }
 
-      it "should return nil for that sdk" do
+      it "should not return that library" do
         extension_point = subject
 
-        assert_equal 1, extension_point.sdks.all.count
-        as_sdk = extension_point.sdks.assemblyscript
-        assert_equal "assemblyscript", as_sdk.class.language
-        refute_nil as_sdk.package
-        refute_nil as_sdk.sdk_version
-        refute_nil as_sdk.toolchain_version
-        refute as_sdk.beta?
-
-        assert_nil extension_point.sdks.rust
+        assert_equal 1, extension_point.libraries.all.count
+        assert_nil extension_point.libraries.for("rust")
       end
     end
   end

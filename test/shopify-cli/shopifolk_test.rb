@@ -1,17 +1,17 @@
 require "test_helper"
 require "fileutils"
 
-module ShopifyCli
+module ShopifyCLI
   class ShopifolkTest < MiniTest::Test
     include TestHelpers::FakeFS
 
     def setup
       super
-      ShopifyCli::Feature.disable("shopifolk")
+      ShopifyCLI::Feature.disable("shopifolk")
     end
 
     def teardown
-      ShopifyCli::DB.stubs(:del).with(:acting_as_shopify_organization)
+      ShopifyCLI::DB.stubs(:del).with(:acting_as_shopify_organization)
       super
     end
 
@@ -21,81 +21,81 @@ module ShopifyCli
       FileUtils.touch("/opt/dev/.shopify-build")
       stub_gcloud_ini({ "[core]" => { "account" => "test@shopify.com", "project" => "shopify-dev" } })
 
-      ShopifyCli::Shopifolk.check
+      ShopifyCLI::Shopifolk.check
 
-      assert ShopifyCli::Config.get_bool("features", "shopifolk")
+      assert ShopifyCLI::Config.get_bool("features", "shopifolk")
     end
 
     def test_feature_always_returns_true
-      ShopifyCli::Feature.enable("shopifolk")
+      ShopifyCLI::Feature.enable("shopifolk")
 
-      assert ShopifyCli::Shopifolk.check
+      assert ShopifyCLI::Shopifolk.check
     end
 
     def test_no_gcloud_config_disables_shopifolk_feature
-      refute ShopifyCli::Config.get_bool("features", "shopifolk")
+      refute ShopifyCLI::Config.get_bool("features", "shopifolk")
 
-      ShopifyCli::Shopifolk.check
+      ShopifyCLI::Shopifolk.check
 
-      refute ShopifyCli::Config.get_bool("features", "shopifolk")
+      refute ShopifyCLI::Config.get_bool("features", "shopifolk")
     end
 
     def test_no_section_in_gcloud_config_disables_shopifolk_feature
       stub_gcloud_ini({ "account" => "test@shopify.com", "project" => "shopify-dev" })
 
-      ShopifyCli::Shopifolk.check
+      ShopifyCLI::Shopifolk.check
 
-      refute ShopifyCli::Config.get_bool("features", "shopifolk")
+      refute ShopifyCLI::Config.get_bool("features", "shopifolk")
     end
 
     def test_no_account_in_gcloud_config_disables_shopifolk_feature
       stub_gcloud_ini({ "[core]" => { "project" => "shopify-dev" } })
 
-      ShopifyCli::Shopifolk.check
+      ShopifyCLI::Shopifolk.check
 
-      refute ShopifyCli::Config.get_bool("features", "shopifolk")
+      refute ShopifyCLI::Config.get_bool("features", "shopifolk")
     end
 
     def test_incorrect_email_in_gcloud_config_disables_shopifolk_feature
       stub_gcloud_ini({ "[core]" => { "account" => "test@test.com", "project" => "shopify-dev" } })
 
-      ShopifyCli::Shopifolk.check
+      ShopifyCLI::Shopifolk.check
 
-      refute ShopifyCli::Config.get_bool("features", "shopifolk")
+      refute ShopifyCLI::Config.get_bool("features", "shopifolk")
     end
 
     def test_incorrect_dev_path_disables_dev_shopifolk_feature
       stub_gcloud_ini({ "[core]" => { "account" => "test@shopify.com", "project" => "shopify-dev" } })
 
-      ShopifyCli::Shopifolk.check
+      ShopifyCLI::Shopifolk.check
 
-      refute ShopifyCli::Config.get_bool("features", "shopifolk")
+      refute ShopifyCLI::Config.get_bool("features", "shopifolk")
     end
 
     def test_setting_act_as_shopify_organization
-      ShopifyCli::DB.expects(:get).with(:acting_as_shopify_organization).returns(nil)
-      refute ShopifyCli::Shopifolk.acting_as_shopify_organization?
+      ShopifyCLI::DB.expects(:get).with(:acting_as_shopify_organization).returns(nil)
+      refute ShopifyCLI::Shopifolk.acting_as_shopify_organization?
 
-      ShopifyCli::DB.expects(:set).with(acting_as_shopify_organization: true)
-      ShopifyCli::Shopifolk.act_as_shopify_organization
+      ShopifyCLI::DB.expects(:set).with(acting_as_shopify_organization: true)
+      ShopifyCLI::Shopifolk.act_as_shopify_organization
 
-      ShopifyCli::DB.expects(:get).with(:acting_as_shopify_organization).returns(true)
-      assert ShopifyCli::Shopifolk.acting_as_shopify_organization?
+      ShopifyCLI::DB.expects(:get).with(:acting_as_shopify_organization).returns(true)
+      assert ShopifyCLI::Shopifolk.acting_as_shopify_organization?
 
-      ShopifyCli::DB.expects(:del).with(:acting_as_shopify_organization)
-      ShopifyCli::Shopifolk.reset
+      ShopifyCLI::DB.expects(:del).with(:acting_as_shopify_organization)
+      ShopifyCLI::Shopifolk.reset
 
-      ShopifyCli::DB.expects(:get).with(:acting_as_shopify_organization).returns(nil)
-      refute ShopifyCli::Shopifolk.acting_as_shopify_organization?
+      ShopifyCLI::DB.expects(:get).with(:acting_as_shopify_organization).returns(nil)
+      refute ShopifyCLI::Shopifolk.acting_as_shopify_organization?
     end
 
     def test_reading_shopify_organization_from_config
-      ShopifyCli::DB.expects(:get).with(:acting_as_shopify_organization).returns(nil)
+      ShopifyCLI::DB.expects(:get).with(:acting_as_shopify_organization).returns(nil)
       Project.expects(:has_current?).returns(true)
       project = stub("project", config: { "shopify_organization" => true })
       Project.expects(:current).returns(project)
 
-      assert ShopifyCli::Shopifolk.acting_as_shopify_organization?
+      assert ShopifyCLI::Shopifolk.acting_as_shopify_organization?
     end
 
     private

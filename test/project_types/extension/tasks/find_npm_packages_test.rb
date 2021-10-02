@@ -5,7 +5,7 @@ module Extension
     class FindNpmPackagesTest < MiniTest::Test
       def setup
         super
-        ShopifyCli::ProjectType.load_type(:extension)
+        ShopifyCLI::ProjectType.load_type(:extension)
       end
 
       def test_finds_single_package
@@ -110,7 +110,7 @@ module Extension
         js_system = stub_js_system do |expect_js_system_call|
           expect_js_system_call.with do |config|
             assert_equal ["list"], config.fetch(:yarn)
-            assert_equal ["list", "--depth=1"], config.fetch(:npm)
+            assert_equal ["list"], config.fetch(:npm)
           end
         end
         result = FindNpmPackages.call(js_system: js_system)
@@ -120,8 +120,8 @@ module Extension
       def test_supports_filtering_by_production_dependencies
         js_system = stub_js_system do |expect_js_system_call|
           expect_js_system_call.with do |config|
-            assert_equal ["list", "--production"], config.fetch(:yarn)
-            assert_equal ["list", "--prod", "--depth=1"], config.fetch(:npm)
+            assert_equal ["list", "--production", "--depth=0"], config.fetch(:yarn)
+            assert_equal ["list", "--prod", "--depth=0"], config.fetch(:npm)
           end
         end
         result = FindNpmPackages.call(js_system: js_system, production_only: true)
@@ -157,7 +157,7 @@ module Extension
 
       def stub_js_system(output: yarn_output, &customize)
         customize ||= ->(system) { system }
-        ShopifyCli::JsSystem.new(ctx: @context).tap do |js_system|
+        ShopifyCLI::JsSystem.new(ctx: @context).tap do |js_system|
           success = mock(success?: true)
           customize
             .call(js_system.expects(:call))

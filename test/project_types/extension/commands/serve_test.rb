@@ -9,8 +9,8 @@ module Extension
 
       def setup
         super
-        ShopifyCli::ProjectType.load_type("extension")
-        ShopifyCli::Tasks::EnsureProjectType.stubs(:call)
+        ShopifyCLI::ProjectType.load_type("extension")
+        ShopifyCLI::Tasks::EnsureProjectType.stubs(:call)
         ExtensionTestHelpers.fake_extension_project(with_mocks: true)
       end
 
@@ -26,11 +26,11 @@ module Extension
 
         Tasks::ChooseNextAvailablePort.expects(:call)
           .with(from: ::Extension::Command::Serve::DEFAULT_PORT)
-          .returns(ShopifyCli::Result.failure(ArgumentError))
+          .returns(ShopifyCLI::Result.failure(ArgumentError))
           .once
         serve.specification_handler.expects(:choose_port?).returns(true).once
 
-        error = assert_raises ShopifyCli::Abort do
+        error = assert_raises ShopifyCLI::Abort do
           serve.call([], "serve")
         end
 
@@ -49,10 +49,10 @@ module Extension
         serve = ::Extension::Command::Serve.new(@context)
         stub_specification_handler_options(serve, choose_port: true, establish_tunnel: true)
         Tasks::ChooseNextAvailablePort.expects(:call)
-          .returns(ShopifyCli::Result.success(Extension::Command::Serve::DEFAULT_PORT))
-        ShopifyCli::Tunnel.expects(:urls).returns(["https://shopify.ngrok.io"])
-        ShopifyCli::Tunnel.expects(:running_on?).returns(true)
-        ShopifyCli::Tunnel.expects(:start)
+          .returns(ShopifyCLI::Result.success(Extension::Command::Serve::DEFAULT_PORT))
+        ShopifyCLI::Tunnel.expects(:urls).returns(["https://shopify.ngrok.io"])
+        ShopifyCLI::Tunnel.expects(:running_on?).returns(true)
+        ShopifyCLI::Tunnel.expects(:start)
           .with(@context, port: Extension::Command::Serve::DEFAULT_PORT)
           .returns("ngrok.example.com")
           .once
@@ -65,9 +65,9 @@ module Extension
         serve = ::Extension::Command::Serve.new(@context)
         stub_specification_handler_options(serve, choose_port: true, establish_tunnel: true)
         Tasks::ChooseNextAvailablePort.expects(:call)
-          .returns(ShopifyCli::Result.success(Extension::Command::Serve::DEFAULT_PORT))
-        ShopifyCli::Tunnel.expects(:urls).returns([])
-        ShopifyCli::Tunnel.expects(:start)
+          .returns(ShopifyCLI::Result.success(Extension::Command::Serve::DEFAULT_PORT))
+        ShopifyCLI::Tunnel.expects(:urls).returns([])
+        ShopifyCLI::Tunnel.expects(:start)
           .with(@context, port: Extension::Command::Serve::DEFAULT_PORT)
           .returns("ngrok.example.com")
           .once
@@ -79,10 +79,10 @@ module Extension
       def test_serve_quits_if_tunnel_requested_but_tunnel_already_running_on_different_port
         serve = ::Extension::Command::Serve.new(@context)
         stub_specification_handler_options(serve, choose_port: true, establish_tunnel: true)
-        ShopifyCli::Tunnel.expects(:urls).returns(["https://shopify.ngrok.io"])
-        ShopifyCli::Tunnel.expects(:running_on?).returns(false)
+        ShopifyCLI::Tunnel.expects(:urls).returns(["https://shopify.ngrok.io"])
+        ShopifyCLI::Tunnel.expects(:running_on?).returns(false)
 
-        error = assert_raises ShopifyCli::Abort do
+        error = assert_raises ShopifyCLI::Abort do
           serve.call([], "serve")
         end
 
@@ -92,7 +92,7 @@ module Extension
       def test_tunnel_not_started_if_specification_handler_does_not_support_establish_tunnel
         serve = ::Extension::Command::Serve.new(@context)
         stub_specification_handler_options(serve)
-        ShopifyCli::Tunnel.expects(:start).never
+        ShopifyCLI::Tunnel.expects(:start).never
         serve.specification_handler.expects(:serve).once
         serve.call([], "serve")
       end

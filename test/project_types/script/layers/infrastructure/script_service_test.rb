@@ -3,11 +3,10 @@
 require "project_types/script/test_helper"
 
 describe Script::Layers::Infrastructure::ScriptService do
-  include TestHelpers::Partners
-
   let(:ctx) { TestHelpers::FakeContext.new }
-  let(:script_service) { Script::Layers::Infrastructure::ScriptService.new(ctx: ctx) }
   let(:api_key) { "fake_key" }
+  let(:api_client) { mock }
+  let(:script_service) { Script::Layers::Infrastructure::ScriptService.new(client: api_client, api_key: api_key) }
   let(:extension_point_type) { "DISCOUNT" }
   let(:schema_major_version) { "1" }
   let(:schema_minor_version) { "0" }
@@ -43,103 +42,20 @@ describe Script::Layers::Infrastructure::ScriptService do
       "configuration" => expected_configuration,
     }
   end
-  let(:script_service_proxy) do
-    <<~HERE
-      query ProxyRequest($api_key: String, $query: String!, $variables: String) {
-        scriptServiceProxy(
-          apiKey: $api_key
-          query: $query
-          variables: $variables
-        )
-      }
-    HERE
-  end
 
-  before do
-    ::Script::Layers::Infrastructure::ScriptService::MakeRequest.stubs(:bypass_partners_proxy).returns(false)
-    # script_service.stubs(:bypass_partners_proxy).returns(false)
-  end
-
-  describe ".push" do
+  describe ".set_app_script" do
     let(:script_content) { "(module)" }
     let(:api_key) { "fake_key" }
     let(:uuid_from_config) { "uuid_from_config" }
     let(:uuid_from_server) { "uuid_from_server" }
-    let(:app_script_set) do
-      <<~HERE
-        mutation AppScriptSet(
-          $uuid: String
-          $extensionPointName: ExtensionPointName!,
-          $title: String!,
-          $description: String,
-          $force: Boolean,
-          $schemaMajorVersion: String,
-          $schemaMinorVersion: String,
-          $scriptJsonVersion: String!,
-          $configurationUi: Boolean!,
-          $configurationDefinition: String!,
-          $moduleUploadUrl: String!,
-        ) {
-          appScriptSet(
-            uuid: $uuid
-            extensionPointName: $extensionPointName
-            title: $title
-            description: $description
-            force: $force
-            schemaMajorVersion: $schemaMajorVersion
-            schemaMinorVersion: $schemaMinorVersion,
-            scriptJsonVersion: $scriptJsonVersion,
-            configurationUi: $configurationUi,
-            configurationDefinition: $configurationDefinition,
-            moduleUploadUrl: $moduleUploadUrl,
-        ) {
-            userErrors {
-              field
-              message
-              tag
-            }
-            appScript {
-              uuid
-              appKey
-              configSchema
-              extensionPointName
-              title
-            }
-          }
-        }
-      HERE
-    end
     let(:url) { "https://some-bucket" }
 
     before do
-      stub_load_query("script_service_proxy", script_service_proxy)
-      stub_load_query("app_script_set", app_script_set)
-      stub_partner_req(
-        "script_service_proxy",
-        variables: {
-          api_key: api_key,
-          variables: {
-            uuid: uuid_from_config,
-            extensionPointName: extension_point_type,
-            title: script_name,
-            description: expected_description,
-            force: false,
-            schemaMajorVersion: schema_major_version,
-            schemaMinorVersion: schema_minor_version,
-            scriptJsonVersion: expected_script_json_version,
-            configurationUi: expected_configuration_ui,
-            configurationDefinition: expected_configuration&.to_json,
-            moduleUploadUrl: url,
-          }.to_json,
-          query: app_script_set,
-        },
-        resp: response
-      )
-      Script::Layers::Infrastructure::ScriptService::UploadScript.any_instance.stubs(:call).returns(url)
+      api_client.stubs(:query).returns(response)
     end
 
     subject do
-      script_service.push(
+      script_service.set_app_script(
         uuid: uuid_from_config,
         extension_point_type: extension_point_type,
         metadata: Script::Layers::Domain::Metadata.new(
@@ -147,14 +63,13 @@ describe Script::Layers::Infrastructure::ScriptService do
           schema_minor_version,
           use_msgpack,
         ),
-        script_content: script_content,
         script_json: script_json,
-        api_key: api_key,
+        module_upload_url: url
       )
     end
 
-    describe "when push to script service succeeds" do
-      let(:script_service_response) do
+    describe "when set_app_script to script service succeeds" do
+      let(:response) do
         {
           "data" => {
             "appScriptSet" => {
@@ -171,27 +86,13 @@ describe Script::Layers::Infrastructure::ScriptService do
         }
       end
 
-      let(:response) do
-        {
-          data: {
-            scriptServiceProxy: JSON.dump(script_service_response),
-          },
-        }
-      end
-
       it "should post the form without scope" do
         assert_equal(uuid_from_server, subject)
       end
     end
 
-    describe "when push to script service responds with errors" do
-      let(:response) do
-        {
-          data: {
-            scriptServiceProxy: JSON.dump("errors" => [{ message: "errors" }]),
-          },
-        }
-      end
+    describe "when set_app_script to script service responds with errors" do
+      let(:response) { { "errors" => [{ "message" => "errors" }] } }
 
       it "should raise error" do
         assert_raises(Script::Layers::Infrastructure::Errors::GraphqlError) { subject }
@@ -199,29 +100,21 @@ describe Script::Layers::Infrastructure::ScriptService do
     end
 
     describe "when partners responds with errors" do
-      let(:response) do
-        {
-          errors: [{ message: "some error message" }],
-        }
-      end
+      let(:response) { { "errors" => [{ "message" => "some error message" }] } }
 
       it "should raise error" do
         assert_raises(Script::Layers::Infrastructure::Errors::GraphqlError) { subject }
       end
     end
 
-    describe "when push to script service responds with userErrors" do
+    describe "when set_app_script to script service responds with userErrors" do
       describe "when invalid app key" do
         let(:response) do
           {
-            data: {
-              scriptServiceProxy: JSON.dump(
-                "data" => {
-                  "appScriptSet" => {
-                    "userErrors" => [{ "message" => "invalid", "field" => "appKey", "tag" => "user_error" }],
-                  },
-                }
-              ),
+            "data" => {
+              "appScriptSet" => {
+                "userErrors" => [{ "message" => "invalid", "field" => "appKey", "tag" => "user_error" }],
+              },
             },
           }
         end
@@ -231,17 +124,13 @@ describe Script::Layers::Infrastructure::ScriptService do
         end
       end
 
-      describe "when repush without a force" do
+      describe "when set_app_script without a force" do
         let(:response) do
           {
-            data: {
-              scriptServiceProxy: JSON.dump(
-                "data" => {
-                  "appScriptSet" => {
-                    "userErrors" => [{ "message" => "error", "tag" => "already_exists_error" }],
-                  },
-                }
-              ),
+            "data" => {
+              "appScriptSet" => {
+                "userErrors" => [{ "message" => "error", "tag" => "already_exists_error" }],
+              },
             },
           }
         end
@@ -254,14 +143,10 @@ describe Script::Layers::Infrastructure::ScriptService do
       describe "when metadata is invalid" do
         let(:response) do
           {
-            data: {
-              scriptServiceProxy: JSON.dump(
-                "data" => {
-                  "appScriptSet" => {
-                    "userErrors" => [{ "message" => "error", "tag" => error_tag }],
-                  },
-                }
-              ),
+            "data" => {
+              "appScriptSet" => {
+                "userErrors" => [{ "message" => "error", "tag" => error_tag }],
+              },
             },
           }
         end
@@ -291,125 +176,9 @@ describe Script::Layers::Infrastructure::ScriptService do
     end
   end
 
-  describe "UploadScript" do
-    let(:instance) { Script::Layers::Infrastructure::ScriptService::UploadScript.new(ctx) }
-    subject { instance.call(api_key, script_content) }
-
-    let(:api_key) { "fake_key" }
-    let(:script_content) { "(module)" }
-    let(:module_upload_url_generate) do
-      <<~HERE
-        mutation moduleUploadUrlGenerate {
-          moduleUploadUrlGenerate {
-            url
-            userErrors {
-              field
-              message
-            }
-          }
-        }
-        HERE
-    end
-    let(:url) { "https://some-bucket" }
-    let(:response) do
-      {
-        data: {
-          scriptServiceProxy: JSON.dump(script_service_response),
-        },
-      }
-    end
-
-    before do
-      stub_load_query("script_service_proxy", script_service_proxy)
-      stub_load_query("module_upload_url_generate", module_upload_url_generate)
-      stub_partner_req(
-        "script_service_proxy",
-        variables: {
-          api_key: api_key,
-          variables: {}.to_json,
-          query: module_upload_url_generate,
-        },
-        resp: response
-      )
-    end
-
-    describe "when fail to apply module upload url" do
-      let(:script_service_response) do
-        {
-          "data" => {
-            "moduleUploadUrlGenerate" => {
-              "url" => nil,
-              "userErrors" => [{ "message" => "invalid", "field" => "appKey", "tag" => "user_error" }],
-            },
-          },
-        }
-      end
-
-      it "should raise GraphqlError" do
-        assert_raises(Script::Layers::Infrastructure::Errors::GraphqlError) { subject }
-      end
-    end
-
-    describe "when succeed to apply module upload url" do
-      let(:script_service_response) do
-        {
-          "data" => {
-            "moduleUploadUrlGenerate" => {
-              "url" => url,
-              "userErrors" => [],
-            },
-          },
-        }
-      end
-
-      describe "when fail to upload module" do
-        before do
-          stub_request(:put, url).with(
-            headers: { "Content-Type" => "application/wasm" },
-            body: script_content
-          ).to_return(status: 500)
-        end
-
-        it "should raise an ScriptUploadError" do
-          assert_raises(Script::Layers::Infrastructure::Errors::ScriptUploadError) { subject }
-        end
-      end
-
-      describe "when succeed to upload module" do
-        before do
-          stub_request(:put, url).with(
-            headers: { "Content-Type" => "application/wasm" },
-            body: script_content
-          ).to_return(status: 200)
-        end
-
-        it "should return the url" do
-          assert_equal(url, subject)
-        end
-      end
-    end
-  end
-
   describe ".get_app_scripts" do
     let(:api_key) { "fake_key" }
-    let(:get_app_scripts) do
-      <<~HERE
-        query GetAppScripts($appKey: String!, $extensionPointName: ExtensionPointName!) {
-          appScripts(appKeys: [$appKey], extensionPointName: $extensionPointName) {
-            uuid
-            title
-          }
-        }
-      HERE
-    end
-    let(:partners_response) do
-      {
-        "data" => {
-          "scriptServiceProxy" => JSON.dump(script_service_response),
-        },
-      }
-    end
-    let(:script_service_response) do
+    let(:response) do
       {
         "data" => {
           "appScripts" => app_scripts,
@@ -418,25 +187,11 @@ describe Script::Layers::Infrastructure::ScriptService do
     end
 
     before do
-      stub_load_query("script_service_proxy", script_service_proxy)
-      stub_load_query("get_app_scripts", get_app_scripts)
-      stub_partner_req(
-        "script_service_proxy",
-        variables: {
-          api_key: api_key,
-          variables: {
-            appKey: api_key,
-            extensionPointName: extension_point_type,
-          }.to_json,
-          query: get_app_scripts,
-        },
-        resp: partners_response
-      )
+      api_client.stubs(:query).returns(response)
     end
 
     subject do
       script_service.get_app_scripts(
-        api_key: api_key,
         extension_point_type: extension_point_type,
       )
     end
@@ -458,9 +213,56 @@ describe Script::Layers::Infrastructure::ScriptService do
     end
   end
 
-  private
+  describe ".generate_module_upload_url" do
+    let(:user_errors) { [] }
+    let(:url) { nil }
+    let(:response) do
+      {
+        "data" => {
+          "moduleUploadUrlGenerate" => {
+            "url" => url,
+            "userErrors" => user_errors,
+          },
+        },
+      }
+    end
 
-  def stub_load_query(name, body)
-    ShopifyCli::API.any_instance.stubs(:load_query).with(name).returns(body)
+    before do
+      api_client.stubs(:query).returns(response)
+    end
+
+    subject { script_service.generate_module_upload_url }
+
+    describe "when a url can be generated" do
+      let(:url) { "http://fake.com" }
+
+      it "returns a url" do
+        assert_equal url, subject
+      end
+    end
+
+    describe "when query returns errors" do
+      let(:response) { { "errors" => [{ "message" => "errors" }] } }
+
+      it "should raise #{Script::Layers::Infrastructure::Errors::GraphqlError}" do
+        assert_raises(Script::Layers::Infrastructure::Errors::GraphqlError) { subject }
+      end
+    end
+
+    describe "when query returns userErrors" do
+      let(:user_errors) { [{ "message" => "some error", "tag" => "user_error" }] }
+
+      it "should raise #{Script::Layers::Infrastructure::Errors::GraphqlError}" do
+        assert_raises(Script::Layers::Infrastructure::Errors::GraphqlError) { subject }
+      end
+    end
+
+    describe "when response is nil" do
+      let(:response) { nil }
+
+      it "should raise #{Script::Layers::Infrastructure::Errors::EmptyResponseError}" do
+        assert_raises(Script::Layers::Infrastructure::Errors::EmptyResponseError) { subject }
+      end
+    end
   end
 end

@@ -1,0 +1,11 @@
+#!/usr/bin/env ruby
+# frozen_string_literal: true
+
+require_relative "load_shopify"
+require "irb"
+require "irb/completion"
+require "irb/ext/save-history"
+
+IRB.conf[:SAVE_HISTORY] = 100
+IRB.conf[:HISTORY_FILE] = File.expand_path("../../.console_history", __FILE__)
+IRB.start
