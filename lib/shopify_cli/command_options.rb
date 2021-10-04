@@ -1,6 +1,6 @@
 require "shopify_cli"
 
-module ShopifyCli
+module ShopifyCLI
     module CommandOptions
       autoload :CommandPortOption, "shopify_cli/command_options/command_port_option"
     end

@@ -4,16 +4,19 @@ require "shopify_cli"
 module Node
   class Command
     class Serve < ShopifyCLI::Command::AppSubCommand
+      extend ShopifyCLI::CommandOptions::CommandPortOption
+      puts("hi")
       prerequisite_task ensure_project_type: :node
       prerequisite_task :ensure_env, :ensure_dev_store
 
-      options do |parser, flags|
-        parser.on("--host=HOST") do |h|
-          flags[:host] = h.gsub('"', "")
-        end
-        parser.on("--port=PORT") { |port| flags[:port] = port }
-      end
-      setPort
+      # options do |parser, flags|
+      #   parser.on("--host=HOST") do |h|
+      #     flags[:host] = h.gsub('"', "")
+      #   end
+      #   parser.on("--port=PORT") { |port| flags[:port] = port }
+      # end
+      setPort(options, parser, flags)
+      setHost(options, parser, flags)
 
       def call(*)
         project = ShopifyCLI::Project.current
