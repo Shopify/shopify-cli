@@ -92,10 +92,18 @@ module ShopifyCLI
             repo_not_initiated:
               "Git repo is not initiated. Please run {{command:git init}} and make at least one commit.",
             no_commits_made: "No git commits have been made. Please make at least one commit.",
+            remote_not_added: "Remote could not be added.",
+            sparse_checkout_not_enabled: "Sparse checkout could not be enabled.",
+            sparse_checkout_not_set: "Sparse checkout set command failed.",
+            pull_failed: "Pull failed.",
+            pull_failed_bad_branch: "Pull failed. Branch %s cannot be found. Check the branch name and try again.",
           },
 
           cloning: "Cloning %s into %s…",
           cloned: "{{v}} Cloned into %s",
+          pulling_from_to: "Pulling %s into %s…",
+          pulling: "Pulling…",
+          pulled: "Pulled into %s",
         },
 
         help: {
@@ -454,7 +462,6 @@ module ShopifyCLI
             ngrok: "Something went wrong with ngrok installation,"\
               "please make sure %s exists within %s before trying again",
           },
-
           installing: "Installing ngrok…",
           not_running: "{{green:x}} ngrok tunnel not running",
           prereq_command_location: "%s @ %s",

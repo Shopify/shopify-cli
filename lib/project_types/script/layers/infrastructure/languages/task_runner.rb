@@ -7,7 +7,7 @@ module Script
         class TaskRunner
           TASK_RUNNERS = {
             "assemblyscript" => AssemblyScriptTaskRunner,
-            "rust" => RustTaskRunner,
+            "typescript" => TypeScriptTaskRunner,
           }
 
           def self.for(ctx, language, script_name)

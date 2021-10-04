@@ -127,8 +127,10 @@ describe Script::Layers::Infrastructure::ApiClients::PartnersProxyApiClient do
           )
         end
 
-        it "should return nil" do
-          assert_nil(subject)
+        it "should raise #{Script::Layers::Infrastructure::Errors::InvalidResponseError}" do
+          assert_raises(Script::Layers::Infrastructure::Errors::InvalidResponseError) do
+            subject
+          end
         end
       end
 

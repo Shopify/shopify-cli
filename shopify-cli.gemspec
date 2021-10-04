@@ -45,5 +45,12 @@ Gem::Specification.new do |spec|
 
   spec.add_dependency("bugsnag", "~> 6.22")
   spec.add_dependency("listen", "~> 3.7.0")
-  spec.add_dependency("theme-check", "~> 1.4.0")
+
+  # Note: theme-check is _intentionally_ not specifying the third
+  # digit. We _want_ new features to make their way into new installs
+  # of the Shopify CLI. Otherwise updates need to be released twice.
+  #
+  # That is, DO USE ~> 1.X, DO NOT USE ~> 1.X.Y, this would unnecessarily
+  # fix the feature version.
+  spec.add_dependency("theme-check", "~> 1.7")
 end

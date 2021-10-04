@@ -53,7 +53,7 @@ module PHP
       end
 
       def test_check_composer_installed
-        @context.expects(:which).with("php").returns("/usr/bin/php")
+        PHP::Command::Create.any_instance.stubs(:check_php)
         @context.expects(:which).with("composer").returns(nil)
         assert_raises ShopifyCLI::Abort, "php.create.error.composer_required" do
           perform_command

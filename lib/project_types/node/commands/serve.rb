@@ -41,7 +41,7 @@ module Node
       def port
         return ShopifyCLI::Tunnel::PORT.to_s unless options.flags.key?(:port)
         port = options.flags[:port].to_i
-        @ctx.abort(@ctx.message("tunnel.invalid_port", options.flags[:port])) unless port > 0
+        @ctx.abort(@ctx.message("node.serve.error.invalid_port", options.flags[:port])) unless port > 0
         port
       end
 

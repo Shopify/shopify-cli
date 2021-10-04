@@ -4,8 +4,8 @@ module Script
   module Layers
     module Infrastructure
       module Languages
-        class AssemblyScriptProjectCreator < ProjectCreator
-          MIN_NODE_VERSION = "14.5.0" # kept because task_runner uses this
+        class TypeScriptProjectCreator < ProjectCreator
+          MIN_NODE_VERSION = "14.15.0"
           NPM_SET_REGISTRY_COMMAND = "npm --userconfig ./.npmrc config set @shopify:registry https://registry.npmjs.com"
           NPM_SET_ENGINE_STRICT_COMMAND = "npm --userconfig ./.npmrc config set engine-strict true"
 
@@ -17,6 +17,14 @@ module Script
             super
             command_runner.call(NPM_SET_REGISTRY_COMMAND)
             command_runner.call(NPM_SET_ENGINE_STRICT_COMMAND)
+
+            if ctx.file_exist?("yarn.lock")
+              ctx.rm("yarn.lock")
+            end
+
+            if ctx.file_exist?("package-lock.json")
+              ctx.rm("package-lock.json")
+            end
           end
         end
       end

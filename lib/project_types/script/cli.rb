@@ -60,10 +60,11 @@ module Script
         autoload :AssemblyScriptTaskRunner,
           Project.project_filepath("layers/infrastructure/languages/assemblyscript_task_runner")
         autoload :ProjectCreator, Project.project_filepath("layers/infrastructure/languages/project_creator")
-        autoload :RustProjectCreator,
-          Project.project_filepath("layers/infrastructure/languages/rust_project_creator.rb")
-        autoload :RustTaskRunner, Project.project_filepath("layers/infrastructure/languages/rust_task_runner")
         autoload :TaskRunner, Project.project_filepath("layers/infrastructure/languages/task_runner")
+        autoload :TypeScriptProjectCreator,
+          Project.project_filepath("layers/infrastructure/languages/typescript_project_creator.rb")
+        autoload :TypeScriptTaskRunner,
+          Project.project_filepath("layers/infrastructure/languages/typescript_task_runner.rb")
       end
 
       module ApiClients
