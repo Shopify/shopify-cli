@@ -1,5 +1,6 @@
 Unreleased
 ------
+* [#1574](https://github.com/Shopify/shopify-cli/pull/1574): Hide LoadError for ${RUBY_MAJOR}/ffi_c.
 * [#1567](https://github.com/Shopify/shopify-cli/pull/1567): Add ability to set custom port for ngrok tunnel in node serve.
 * [#1584](https://github.com/Shopify/shopify-cli/issues/1584): Fixed extended help message not showing.
 * [#1566](https://github.com/Shopify/shopify-cli/pull/1566): Fix bug when running `npm | yarn list` for extension package resolution.
