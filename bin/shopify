@@ -37,6 +37,7 @@ exit(proc do
       ShopifyCLI::Core::EntryPoint.call(ARGV.dup)
     end
   rescue StandardError => error
+    ShopifyCLI::ErrorHandler.exception = error
     if ShopifyCLI::Environment.print_stacktrace?
       raise error
     else
