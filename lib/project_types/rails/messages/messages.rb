@@ -5,8 +5,8 @@ module Rails
     MESSAGES = {
       rails: {
         help: <<~HELP,
-          Suite of commands for developing Ruby on Rails apps. See {{command:%1$s app rails <command> --help}} for usage of each command.
-            Usage: {{command:%1$s app rails [ %2$s ]}}
+          Suite of commands for developing Ruby on Rails apps. See {{command:%1$s rails <command> --help}} for usage of each command.
+            Usage: {{command:%1$s rails [ %2$s ]}}
         HELP
 
         error: {
@@ -25,8 +25,8 @@ module Rails
         connect: {
           connected: "Project now connected to {{green:%s}}",
           help: <<~HELP,
-            {{command:%s app rails connect}}: Connects an existing Ruby on Rails app to Shopify CLI. Creates a config file.
-              Usage: {{command:%s app rails connect}}
+            {{command:%s rails connect}}: Connects an existing Ruby on Rails app to Shopify CLI. Creates a config file.
+              Usage: {{command:%s rails connect}}
           HELP
           production_warning: <<~MESSAGE,
             {{yellow:! Warning: if you have connected to an {{bold:app in production}}, running {{command:serve}} may update the app URL and cause an outage.
@@ -35,8 +35,8 @@ module Rails
 
         create: {
           help: <<~HELP,
-            {{command:%s app rails create}}: Creates a ruby on rails app.
-              Usage: {{command:%s app rails create}}
+            {{command:%s rails create}}: Creates a ruby on rails app.
+              Usage: {{command:%s rails create}}
               Options:
                 {{command:--name=NAME}} App name. Any string.
                 {{command:--organization-id=ID}} Partner organization ID. Must be an existing organization.
@@ -76,18 +76,18 @@ module Rails
         deploy: {
           help: <<~HELP,
             Deploy the current Rails project to a hosting service. Heroku ({{underline:https://www.heroku.com}}) is currently the only option, but more will be added in the future.
-              Usage: {{command:%s app rails deploy [ heroku ]}}
+              Usage: {{command:%s rails deploy [ heroku ]}}
           HELP
           extended_help: <<~HELP,
             {{bold:Subcommands:}}
               {{cyan:heroku}}: Deploys the current Rails project to Heroku.
-                Usage: {{command:%s app rails deploy heroku}}
+                Usage: {{command:%s rails deploy heroku}}
           HELP
 
           heroku: {
             help: <<~HELP,
               Deploy the current Rails project to Heroku
-              Usage: {{command:%s app rails deploy heroku}}
+              Usage: {{command:%s rails deploy heroku}}
             HELP
             downloading: "Downloading Heroku CLI…",
             downloaded: "Downloaded Heroku CLI",
@@ -131,7 +131,7 @@ module Rails
         generate: {
           help: <<~HELP,
             Generate code in your Rails project. Currently supports generating new webhooks.
-              Usage: {{command:%s app rails generate [ webhook ]}}
+              Usage: {{command:%s rails generate [ webhook ]}}
           HELP
           extended_help: <<~EXAMPLES,
             {{bold:Examples:}}
@@ -147,7 +147,7 @@ module Rails
           webhook: {
             help: <<~HELP,
               Generate and register a new webhook that listens for the specified Shopify store event.
-                Usage: {{command:%s app rails generate webhook <type>}}
+                Usage: {{command:%s rails generate webhook <type>}}
             HELP
 
             select: "What type of webhook would you like to create?",
@@ -158,14 +158,14 @@ module Rails
         open: {
           help: <<~HELP,
             Open your local development app in the default browser.
-              Usage: {{command:%s app rails open}}
+              Usage: {{command:%s rails open}}
           HELP
         },
 
         serve: {
           help: <<~HELP,
             Start a local development rails server for your project, as well as a public ngrok tunnel to your localhost.
-              Usage: {{command:%s app rails serve}}
+              Usage: {{command:%s rails serve}}
           HELP
           extended_help: <<~HELP,
             {{bold:Options:}}
@@ -186,19 +186,19 @@ module Rails
         tunnel: {
           help: <<~HELP,
             Start or stop an http tunnel to your local development app using ngrok.
-              Usage: {{command:%s app rails tunnel [ auth | start | stop ]}}
+              Usage: {{command:%s rails tunnel [ auth | start | stop ]}}
           HELP
           extended_help: <<~HELP,
             {{bold:Subcommands:}}
 
               {{cyan:auth}}: Writes an ngrok auth token to ~/.ngrok2/ngrok.yml to connect with an ngrok account. Visit https://dashboard.ngrok.com/signup to sign up.
-                Usage: {{command:%1$s app rails tunnel auth <token>}}
+                Usage: {{command:%1$s rails tunnel auth <token>}}
 
               {{cyan:start}}: Starts an ngrok tunnel, will print the URL for an existing tunnel if already running.
-                Usage: {{command:%1$s app rails tunnel start}}
+                Usage: {{command:%1$s rails tunnel start}}
 
               {{cyan:stop}}: Stops the ngrok tunnel.
-                Usage: {{command:%1$s app rails tunnel stop}}
+                Usage: {{command:%1$s rails tunnel stop}}
 
           HELP
 

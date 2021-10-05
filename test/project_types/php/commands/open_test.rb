@@ -13,7 +13,7 @@ module PHP
       def test_run
         ShopifyCLI::Context.any_instance.expects(:open_url!)
           .with("https://example.com/login?shop=my-test-shop.myshopify.com")
-        run_cmd("app php open")
+        run_cmd("php open")
       end
     end
   end

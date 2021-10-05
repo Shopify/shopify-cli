@@ -3,7 +3,7 @@ require "semantic/semantic"
 
 module PHP
   class Command
-    class Create < ShopifyCLI::Command::AppSubCommand
+    class Create < ShopifyCLI::SubCommand
       options do |parser, flags|
         parser.on("--name=NAME") { |name| flags[:title] = name }
         parser.on("--organization-id=ID") { |organization_id| flags[:organization_id] = organization_id }

@@ -3,7 +3,7 @@ require "optparse"
 
 module ShopifyCLI
   class AdminAPI
-    class PopulateResourceCommand < ShopifyCLI::Command::SubCommand
+    class PopulateResourceCommand < ShopifyCLI::SubCommand
       DEFAULT_COUNT = 5
 
       attr_reader :input

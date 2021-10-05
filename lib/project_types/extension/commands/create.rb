@@ -2,7 +2,7 @@
 
 module Extension
   class Command
-    class Create < ShopifyCLI::Command::SubCommand
+    class Create < ShopifyCLI::SubCommand
       DEVELOPMENT_SERVER_SUPPORTED_TYPES = [
         "checkout_ui_extension",
       ]

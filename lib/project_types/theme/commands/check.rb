@@ -3,7 +3,7 @@ require "theme_check"
 
 module Theme
   class Command
-    class Check < ShopifyCLI::Command::SubCommand
+    class Check < ShopifyCLI::SubCommand
       class Options < ShopifyCLI::Options
         def initialize(theme_check)
           super()
