@@ -14,6 +14,15 @@ module Theme
         Theme::Command::Serve.new(context).call
       end
 
+      def test_can_specify_bind_address
+        context = ShopifyCLI::Context.new
+        ShopifyCLI::Theme::DevServer.expects(:start).with(context, ".", bind: "0.0.0.0")
+
+        command = Theme::Command::Serve.new(context)
+        command.options.flags[:bind] = "0.0.0.0"
+        command.call
+      end
+
       def test_can_specify_port
         context = ShopifyCLI::Context.new
         ShopifyCLI::Theme::DevServer.expects(:start).with(context, ".", port: 9293)
