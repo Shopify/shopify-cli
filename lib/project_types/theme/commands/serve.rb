@@ -5,6 +5,7 @@ module Theme
   class Command
     class Serve < ShopifyCLI::SubCommand
       options do |parser, flags|
+        parser.on("--bind=HOST") { |bind| flags[:bind] = bind.to_s }
         parser.on("--port=PORT") { |port| flags[:port] = port.to_i }
         parser.on("--poll") { flags[:poll] = true }
       end
