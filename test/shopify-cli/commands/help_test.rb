@@ -9,7 +9,7 @@ end
 
 module ShopifyCLI
   module Commands
-    class FakeCommand < ShopifyCLI::Command::ProjectCommand
+    class FakeCommand < ShopifyCLI::ProjectCommands
     end
 
     class HelpTest < MiniTest::Test

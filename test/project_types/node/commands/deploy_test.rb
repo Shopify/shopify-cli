@@ -22,7 +22,7 @@ module Node
       private
 
       def run_deploy(*args)
-        run_cmd("app node deploy " + args.join(" "))
+        run_cmd("node deploy " + args.join(" "))
       end
     end
   end

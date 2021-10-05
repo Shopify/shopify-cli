@@ -2,7 +2,7 @@
 
 module Script
   class Command
-    class Create < ShopifyCLI::Command::SubCommand
+    class Create < ShopifyCLI::SubCommand
       prerequisite_task :ensure_authenticated
 
       options do |parser, flags|

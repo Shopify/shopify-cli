@@ -6,7 +6,7 @@ module Node
   end
 
   # define/autoload project specific Commands
-  class Command < ShopifyCLI::Command::AppCommand
+  class Command < ShopifyCLI::ProjectCommands
     subcommand :Connect, "connect", Project.project_filepath("commands/connect")
     subcommand :Create, "create", Project.project_filepath("commands/create")
     subcommand :Deploy, "deploy", Project.project_filepath("commands/deploy")
@@ -15,7 +15,7 @@ module Node
     subcommand :Serve, "serve", Project.project_filepath("commands/serve")
     subcommand :Tunnel, "tunnel", Project.project_filepath("commands/tunnel")
   end
-  ShopifyCLI::Commands::App.subcommand("Node::Command", "node")
+  ShopifyCLI::Commands.register("Node::Command", "node")
 
   # define/autoload project specific Tasks
   module Tasks

@@ -14,12 +14,6 @@ module ShopifyCLI
         },
       },
       core: {
-        app: {
-          help: <<~HELP,
-          Create and manage embedded apps
-            Usage: {{command:%s app [ rails | node | php ] }}
-          HELP
-        },
         error_reporting: {
           unhandled_error: {
             message: "{{x}} {{red:An unexpected error occured.}}",

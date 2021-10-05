@@ -4,7 +4,7 @@ require "json"
 
 module Theme
   class Command
-    class Package < ShopifyCLI::Command::SubCommand
+    class Package < ShopifyCLI::SubCommand
       THEME_DIRECTORIES = %w[
         assets
         config
