@@ -135,10 +135,6 @@ module PHP
               {{cyan:--host=HOST}}: Bypass running tunnel and use custom host. HOST must be HTTPS url.
             HELP
 
-          error: {
-            host_must_be_https: "HOST must be a HTTPS url.",
-          },
-
           open_info: <<~MESSAGE,
             {{*}} To install and start using your app, open this URL in your browser:
             {{green:%s}}

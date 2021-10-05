@@ -4,24 +4,17 @@ require "shopify_cli"
 module Node
   class Command
     class Serve < ShopifyCLI::Command::AppSubCommand
-      extend ShopifyCLI::CommandOptions::CommandPortOption
-      puts("hi")
+      include ShopifyCLI::CommandOptions::CommandServeOptions
+
       prerequisite_task ensure_project_type: :node
       prerequisite_task :ensure_env, :ensure_dev_store
 
-      # options do |parser, flags|
-      #   parser.on("--host=HOST") do |h|
-      #     flags[:host] = h.gsub('"', "")
-      #   end
-      #   parser.on("--port=PORT") { |port| flags[:port] = port }
-      # end
-      setPort(options, parser, flags)
-      setHost(options, parser, flags)
+      parse_host_option
+      parse_port_option
 
       def call(*)
         project = ShopifyCLI::Project.current
-        url = options.flags[:host] || ShopifyCLI::Tunnel.start(@ctx)
-        @ctx.abort(@ctx.message("node.serve.error.host_must_be_https")) if url.match(/^https/i).nil?
+        url = host || ShopifyCLI::Tunnel.start(@ctx, port: port)
         project.env.update(@ctx, :host, url)
         ShopifyCLI::Tasks::UpdateDashboardURLS.call(
           @ctx,
@@ -39,13 +32,6 @@ module Node
           env["PORT"] = port.to_s
           @ctx.system("npm run dev", env: env)
         end
-      end
-
-      def port
-        return ShopifyCLI::Tunnel::PORT.to_s unless options.flags.key?(:port)
-        port = options.flags[:port].to_i
-        @ctx.abort(@ctx.message("node.serve.error.invalid_port", options.flags[:port])) unless port > 0
-        port
       end
 
       def self.help

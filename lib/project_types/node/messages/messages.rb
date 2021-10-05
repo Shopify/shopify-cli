@@ -122,11 +122,6 @@ module Node
               {{cyan:--port=PORT}}: Use custom port.
           HELP
 
-          error: {
-            host_must_be_https: "HOST must be a HTTPS url.",
-            invalid_port: "%s is not a valid port.",
-          },
-
           open_info: <<~MESSAGE,
             {{*}} To install and start using your app, open this URL in your browser:
             {{green:%s}}

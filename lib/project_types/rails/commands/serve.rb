@@ -2,19 +2,17 @@
 module Rails
   class Command
     class Serve < ShopifyCLI::Command::AppSubCommand
+      include ShopifyCLI::CommandOptions::CommandServeOptions
+
       prerequisite_task ensure_project_type: :rails
       prerequisite_task :ensure_env, :ensure_dev_store
 
-      options do |parser, flags|
-        parser.on("--host=HOST") do |h|
-          flags[:host] = h.gsub('"', "")
-        end
-      end
+      parse_host_option
+      parse_port_option
 
       def call(*)
         project = ShopifyCLI::Project.current
-        url = options.flags[:host] || ShopifyCLI::Tunnel.start(@ctx)
-        @ctx.abort(@ctx.message("rails.serve.error.host_must_be_https")) if url.match(/^https/i).nil?
+        url = host || ShopifyCLI::Tunnel.start(@ctx, port: port)
         project.env.update(@ctx, :host, url)
         ShopifyCLI::Tasks::UpdateDashboardURLS.call(
           @ctx,
@@ -30,7 +28,7 @@ module Rails
         CLI::UI::Frame.open(@ctx.message("rails.serve.running_server")) do
           env = ShopifyCLI::Project.current.env.to_h
           env.delete("HOST")
-          env["PORT"] = ShopifyCLI::Tunnel::PORT.to_s
+          env["PORT"] = port.to_s
           env["GEM_PATH"] = Gem.gem_path(@ctx)
           if @ctx.windows?
             @ctx.system("ruby bin\\rails server", env: env)

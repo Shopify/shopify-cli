@@ -15,6 +15,12 @@ module ShopifyCLI
       },
       core: {
         app: {
+          serve: {
+            error: {
+              invalid_port: "%s is not a valid port.",
+              host_must_be_https: "HOST must be a HTTPS url.",
+            },
+          },
           help: <<~HELP,
           Create and manage embedded apps
             Usage: {{command:%s app [ rails | node | php ] }}
