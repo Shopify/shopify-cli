@@ -78,6 +78,44 @@ module Rails
         command.options.flags[:host] = "https://example-foo.com"
         command.call
       end
+
+      def test_server_command_when_port_passed
+        ShopifyCLI::Tunnel.stubs(:start).returns("https://example.com")
+        ShopifyCLI::Tasks::UpdateDashboardURLS.expects(:call)
+        ShopifyCLI::Resources::EnvFile.any_instance.expects(:update)
+        @context.stubs(:getenv).with("GEM_HOME").returns("/gem/path")
+        @context.stubs(:getenv).with("GEM_PATH").returns("/gem/path")
+        @context.expects(:system).with(
+          "bin/rails server",
+          env: {
+            "SHOPIFY_API_KEY" => "api_key",
+            "SHOPIFY_API_SECRET" => "secret",
+            "SHOP" => "my-test-shop.myshopify.com",
+            "SCOPES" => "write_products,write_customers,write_orders",
+            "PORT" => "5000",
+            "GEM_PATH" => "/gem/path",
+          }
+        )
+        command = Rails::Command::Serve.new(@context)
+        command.options.flags[:port] = "5000"
+        command.call
+      end
+
+      def test_server_command_when_invalid_port_passed
+        invalid_port = "NOT_PORT"
+        ShopifyCLI::Tunnel.stubs(:start).returns("https://example.com")
+        ShopifyCLI::Tasks::UpdateDashboardURLS.expects(:call)
+        ShopifyCLI::Resources::EnvFile.any_instance.expects(:update)
+        @context.stubs(:getenv).with("GEM_HOME").returns("/gem/path")
+        @context.stubs(:getenv).with("GEM_PATH").returns("/gem/path")
+        @context.expects(:abort).with(
+          @context.message("core.app.serve.error.invalid_port", invalid_port)
+        )
+        # command = Rails::Command::Serve.new(@context)
+        # command.options.flags[:port] = invalid_port
+        # command.call
+        run_cmd("app rails serve --port=#{invalid_port}")
+      end
     end
   end
 end

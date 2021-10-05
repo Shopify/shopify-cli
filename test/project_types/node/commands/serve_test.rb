@@ -100,7 +100,7 @@ module Node
         ShopifyCLI::Tasks::UpdateDashboardURLS.expects(:call)
         ShopifyCLI::Resources::EnvFile.any_instance.expects(:update)
         @context.expects(:abort).with(
-          @context.message("node.serve.error.invalid_port", invalid_port)
+          @context.message("core.app.serve.error.invalid_port", invalid_port)
         )
         run_cmd("app node serve --port=#{invalid_port}")
       end

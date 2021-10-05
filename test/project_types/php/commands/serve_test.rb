@@ -116,6 +116,54 @@ module PHP
         )
         run_cmd('app php serve --host="https://example-foo.com"')
       end
+
+      def test_server_command_when_port_passed
+        ShopifyCLI::Tunnel.stubs(:start).returns("https://example.com")
+        ShopifyCLI::Tasks::UpdateDashboardURLS.expects(:call)
+        ShopifyCLI::Resources::EnvFile.any_instance.expects(:update)
+        ShopifyCLI::ProcessSupervision.expects(:running?).with(:npm_watch).returns(false)
+        ShopifyCLI::ProcessSupervision.expects(:stop).never
+        ShopifyCLI::ProcessSupervision.expects(:start).with(:npm_watch, "npm run watch", force_spawn: true)
+
+        @context.expects(:system).with(
+          "php",
+          "artisan",
+          "serve",
+          "--port",
+          "5000",
+          env: {
+            "SHOPIFY_API_KEY" => "mykey",
+            "SHOPIFY_API_SECRET" => "mysecretkey",
+            "SHOP" => "my-test-shop.myshopify.com",
+            "SCOPES" => "read_products",
+            "HOST" => "https://example.com",
+            "DB_DATABASE" => "storage/db.sqlite",
+          }
+        )
+
+        @context.expects(:puts).with(
+          "\n" +
+          @context.message("php.serve.open_info", "https://example.com/login?shop=my-test-shop.myshopify.com") +
+          "\n"
+        )
+
+        run_cmd("app php serve --port=5000")
+      end
+
+      def test_server_command_when_invalid_port_passed
+        invalid_port = "NOT_PORT"
+        ShopifyCLI::Tunnel.stubs(:start).returns("https://example.com")
+        ShopifyCLI::Tasks::UpdateDashboardURLS.expects(:call)
+        ShopifyCLI::Resources::EnvFile.any_instance.expects(:update)
+        ShopifyCLI::ProcessSupervision.expects(:running?).with(:npm_watch).returns(false)
+        ShopifyCLI::ProcessSupervision.expects(:stop).never
+        ShopifyCLI::ProcessSupervision.expects(:start).with(:npm_watch, "npm run watch", force_spawn: true)
+        @context.expects(:abort).with(
+          @context.message("core.app.serve.error.invalid_port", invalid_port)
+        )
+
+        run_cmd("app php serve --port=#{invalid_port}")
+      end
     end
   end
 end
