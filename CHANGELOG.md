@@ -1,5 +1,6 @@
 From version 2.6.0, the sections in this file adhere to the [keep a changelog](https://keepachangelog.com/en/1.0.0/) specification.
 ## [Unreleased]
+* [#1609](https://github.com/Shopify/shopify-cli/pull/1609): Add `--bind=HOST` option to `shopify theme serve`.
 
 ### Fixed
 * [#1633](https://github.com/Shopify/shopify-cli/pull/1633): Runtime error when the shop passed on login is invalid
@@ -16,7 +17,7 @@ From version 2.6.0, the sections in this file adhere to the [keep a changelog](h
 
 ## Version 2.6.2
 * Fix broken installation due to a missing variable in `extconf.rb`
-  
+
 ## Version 2.6.1
 * [#1608](https://github.com/Shopify/shopify-cli/pull/1608): Fix errors not being reported.
 ## Version 2.6.0
