@@ -1,6 +1,8 @@
 Unreleased
 ------
 
+* [#1608](https://github.com/Shopify/shopify-cli/pull/1608): Fix errors not being reported.
+
 Version 2.6.0
 ------
 
