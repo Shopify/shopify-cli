@@ -42,3 +42,10 @@ shipping_methods:
     typescript:
       beta: true
       repo: "https://github.com/Shopify/scripts-apis-examples"
+discount_types:
+  beta: true
+  domain: 'discounts'
+  libraries:
+    typescript:
+      beta: true
+      repo: "https://github.com/Shopify/scripts-apis-examples"

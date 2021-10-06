@@ -13,7 +13,7 @@ describe Script::Layers::Infrastructure::ExtensionPointRepository do
         it "should be able to load the #{extension_point_type} extension point" do
           extension_point = subject.get_extension_point(extension_point_type)
           assert_equal extension_point_type, extension_point.type
-          refute_nil extension_point.libraries.for("assemblyscript").package
+          refute_empty extension_point.libraries.all
         end
       end
     end
