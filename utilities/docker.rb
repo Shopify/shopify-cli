@@ -5,6 +5,27 @@ module Utilities
     Error = Class.new(StandardError)
 
     class << self
+      def rm(container_id:)
+        build_image_if_needed
+        _, stderr, stat = Open3.capture3(
+          "docker", "rm", "-f", container_id
+        )
+        raise Error, stderr unless stat.success?
+      end
+
+      def run(*args, container_id:)
+        build_image_if_needed
+        _, stderr, stat = Open3.capture3(
+          "docker", "run",
+          "-t",
+          "--name", container_id,
+          "--volume", "#{Shellwords.escape(root_dir)}:/usr/src/app",
+          image_tag,
+          *args
+        )
+        raise Error, stderr unless stat.success?
+      end
+
       def run_and_rm_container(*args)
         build_image_if_needed
         system(
