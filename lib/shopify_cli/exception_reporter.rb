@@ -30,11 +30,11 @@ module ShopifyCLI
 
       metadata = {}
       metadata.merge!(custom_metadata)
-      # Bugsnag.notify(error, metadata)
+      Bugsnag.notify(error, metadata)
     end
 
     def self.report?
-      # return false if ShopifyCLI::Environment.development?
+      return false if ShopifyCLI::Environment.development?
       return true if ExceptionReporter::PermissionController.automatic_reporting_prompted? &&
         ExceptionReporter::PermissionController.can_report_automatically?
 

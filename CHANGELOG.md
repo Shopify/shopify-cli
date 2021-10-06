@@ -1,5 +1,10 @@
 Unreleased
 ------
+
+Version 2.6.3
+------
+* Enable error-reporting.
+
 Version 2.6.2
 ------
 
