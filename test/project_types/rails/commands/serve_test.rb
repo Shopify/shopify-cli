@@ -48,7 +48,7 @@ module Rails
         run_cmd("app rails serve")
       end
 
-      def test_update_env_with_host
+      def test_server_command_when_host_passed
         ShopifyCLI::Tunnel.expects(:start).never
         ShopifyCLI::Tasks::UpdateDashboardURLS.expects(:call)
         ShopifyCLI::Resources::EnvFile.any_instance.expects(:update).with(
@@ -63,28 +63,19 @@ module Rails
         invalid_host = "garbage://example.com"
         ShopifyCLI::Tasks::UpdateDashboardURLS.expects(:call).never
         ShopifyCLI::Resources::EnvFile.any_instance.expects(:update).never
-        ShopifyCLI::ProcessSupervision.expects(:stop).never
-        ShopifyCLI::ProcessSupervision.expects(:start).never
-
         @context.expects(:system).with(
-          "app",
-          "php",
-          "artisan",
-          "serve",
-          "--port",
-          "8081",
+          "bin/rails server",
           env: {
-            "SHOPIFY_API_KEY" => "mykey",
-            "SHOPIFY_API_SECRET" => "mysecretkey",
+            "SHOPIFY_API_KEY" => "api_key",
+            "SHOPIFY_API_SECRET" => "secret",
             "SHOP" => "my-test-shop.myshopify.com",
-            "SCOPES" => "read_products",
-            "HOST" => "https://example.com",
-            "DB_DATABASE" => "storage/db.sqlite",
+            "SCOPES" => "write_products,write_customers,write_orders",
+            "PORT" => "8081",
           }
         ).never
 
         assert_raises ShopifyCLI::Abort do
-          run_cmd("app php serve --host=#{invalid_host}")
+          run_cmd("app rails serve --host=#{invalid_host}")
         end
       end
 
