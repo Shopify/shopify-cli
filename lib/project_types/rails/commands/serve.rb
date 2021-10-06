@@ -12,7 +12,8 @@ module Rails
 
       def call(*)
         project = ShopifyCLI::Project.current
-        url = host || ShopifyCLI::Tunnel.start(@ctx, port: port)
+        tunnelPort = port.to_s
+        url = host || ShopifyCLI::Tunnel.start(@ctx, port: tunnelPort)
         project.env.update(@ctx, :host, url)
         ShopifyCLI::Tasks::UpdateDashboardURLS.call(
           @ctx,
@@ -28,7 +29,7 @@ module Rails
         CLI::UI::Frame.open(@ctx.message("rails.serve.running_server")) do
           env = ShopifyCLI::Project.current.env.to_h
           env.delete("HOST")
-          env["PORT"] = port.to_s
+          env["PORT"] = tunnelPort
           env["GEM_PATH"] = Gem.gem_path(@ctx)
           if @ctx.windows?
             @ctx.system("ruby bin\\rails server", env: env)
