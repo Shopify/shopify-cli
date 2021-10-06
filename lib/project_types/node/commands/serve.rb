@@ -1,6 +1,4 @@
-require "shopify_cli"
 # frozen_string_literal: true
-
 module Node
   class Command
     class Serve < ShopifyCLI::Command::AppSubCommand
