@@ -57,5 +57,4 @@ else
   MAKEFILE
 end
 
-File.write(installation_date_path, Time.now.to_i.to_s)
 File.write("Makefile", makefile_content)

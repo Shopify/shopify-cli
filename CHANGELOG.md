@@ -1,5 +1,10 @@
 Unreleased
 ------
+Version 2.6.2
+------
+
+* Fix broken installation due to a missing variable in `extconf.rb`
+  
 Version 2.6.1
 ------
 
