@@ -36,6 +36,13 @@ module ShopifyCLI
       )
     end
 
+    def self.acceptance_test?(env_variables: ENV)
+      env_variable_truthy?(
+        Constants::EnvironmentVariables::ACCEPTANCE_TEST,
+        env_variables: env_variables
+      )
+    end
+
     def self.print_backtrace?(env_variables: ENV)
       env_variable_truthy?(
         Constants::EnvironmentVariables::BACKTRACE,
