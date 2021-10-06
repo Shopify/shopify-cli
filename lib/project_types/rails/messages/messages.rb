@@ -170,6 +170,7 @@ module Rails
           extended_help: <<~HELP,
             {{bold:Options:}}
               {{cyan:--host=HOST}}: Bypass running tunnel and use custom host. HOST must be HTTPS url.
+              {{cyan:--port=PORT}}: Use custom port.
           HELP
 
           open_info: <<~MESSAGE,
