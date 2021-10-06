@@ -11,8 +11,8 @@ module PHP
 
       def call(*)
         project = ShopifyCLI::Project.current
-        tunnelPort = port.to_s
-        url = host || ShopifyCLI::Tunnel.start(@ctx, port: tunnelPort)
+        tunnel_port = port.to_s
+        url = host || ShopifyCLI::Tunnel.start(@ctx, port: tunnel_port)
         project.env.update(@ctx, :host, url)
         ShopifyCLI::Tasks::UpdateDashboardURLS.call(
           @ctx,
@@ -32,7 +32,7 @@ module PHP
           ShopifyCLI::ProcessSupervision.start(:npm_watch, "npm run watch", force_spawn: true)
 
           env = project.env.to_h
-          @ctx.system("php", "artisan", "serve", "--port", tunnelPort, env: env)
+          @ctx.system("php", "artisan", "serve", "--port", tunnel_port, env: env)
         end
       end
 

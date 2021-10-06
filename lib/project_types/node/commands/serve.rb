@@ -14,8 +14,8 @@ module Node
 
       def call(*)
         project = ShopifyCLI::Project.current
-        tunnelPort = port.to_s
-        url = host || ShopifyCLI::Tunnel.start(@ctx, port: tunnelPort)
+        tunnel_port = port.to_s
+        url = host || ShopifyCLI::Tunnel.start(@ctx, port: tunnel_port)
         project.env.update(@ctx, :host, url)
         ShopifyCLI::Tasks::UpdateDashboardURLS.call(
           @ctx,
@@ -30,7 +30,7 @@ module Node
 
         CLI::UI::Frame.open(@ctx.message("node.serve.running_server")) do
           env = project.env.to_h
-          env["PORT"] = tunnelPort
+          env["PORT"] = tunnel_port
           @ctx.system("npm run dev", env: env)
         end
       end
