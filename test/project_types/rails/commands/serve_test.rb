@@ -118,9 +118,6 @@ module Rails
         @context.expects(:abort).with(
           @context.message("core.app.serve.error.invalid_port", invalid_port)
         )
-        # command = Rails::Command::Serve.new(@context)
-        # command.options.flags[:port] = invalid_port
-        # command.call
         run_cmd("app rails serve --port=#{invalid_port}")
       end
     end
