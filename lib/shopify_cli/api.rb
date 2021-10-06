@@ -1,4 +1,5 @@
 require "shopify_cli"
+require "securerandom"
 
 module ShopifyCLI
   class API
@@ -54,6 +55,7 @@ module ShopifyCLI
         # we delay this require so as to avoid a performance hit on starting the CLI
         require "shopify_cli/http_request"
         headers = default_headers.merge(headers)
+        ctx.debug("#{method} #{uri} with X-Request-Id: #{headers["X-Request-Id"]}")
         response = if method == "POST"
           HttpRequest.post(uri, body, headers)
         elsif method == "PUT"
@@ -82,6 +84,7 @@ module ShopifyCLI
           raise APIRequestUnexpectedError.new("#{response.code}\n#{response.body}", response: response)
         end
       rescue Errno::ETIMEDOUT, Timeout::Error
+        ctx.debug("timeout in #{method} #{uri} with X-Request-Id: #{headers["X-Request-Id"]}")
         raise APIRequestTimeoutError.new("Timeout")
       end.retry_after(APIRequestRetriableError, retries: 3) do |e|
         sleep(1) if e.is_a?(APIRequestThrottledError)
@@ -109,6 +112,7 @@ module ShopifyCLI
         "User-Agent" => "Shopify CLI; v=#{ShopifyCLI::VERSION}",
         "Sec-CH-UA" => "Shopify CLI; v=#{ShopifyCLI::VERSION} sha=#{ShopifyCLI.sha}",
         "Sec-CH-UA-PLATFORM" => ctx.os.to_s,
+        "X-Request-Id" => SecureRandom.uuid,
       }.tap do |headers|
         headers["X-Shopify-Cli-Employee"] = "1" if Shopifolk.acting_as_shopify_organization?
       end.merge(auth_headers(token))
