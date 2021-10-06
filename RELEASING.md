@@ -54,12 +54,7 @@
 1. Go to [releases](https://github.com/Shopify/shopify-cli/releases) page of `Shopify/shopify-cli` repo and create a new release:
     * use the tag created by Shipit (should be "vX.Y.Z")
     * release title = "Version X.Y.Z"
-    * description should be
-      ```
-      Release of version X.Y.Z of Shopify CLI
-
-      Please refer to [CHANGELOG](https://github.com/Shopify/shopify-cli/blob/main/CHANGELOG.md) for details.
-      ```
+    * description should be the content of the section in the `CHANGELOG.md`
     * upload the `.deb` and `.rpm` files from `packaging/builds/X.Y.Z/` (generated in step 9)
     * if it's a pre-release version, select the "This is a pre-release" checkbox
     * and click "Publish release".
