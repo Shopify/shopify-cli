@@ -12,7 +12,8 @@ module ShopifyCLI
           root = ShopifyCLI::ROOT + "/test/fixtures/theme"
           @ctx = TestHelpers::FakeContext.new(root: root)
           @theme = Theme.new(@ctx, root: root)
-          @syncer = stub("Syncer", enqueue_uploads: true)
+          @syncer = Syncer.new(@ctx, theme: @theme)
+          @syncer.start_threads
           @watcher = Watcher.new(@ctx, theme: @theme, syncer: @syncer)
         end
 
@@ -67,7 +68,7 @@ module ShopifyCLI
             .with(JSON.generate(modified: modified))
 
           app = -> { [200, {}, []] }
-          HotReload.new(@ctx, app, theme: @theme, watcher: @watcher)
+          HotReload.new(@ctx, app, theme: @theme, watcher: @watcher, syncer: @syncer)
 
           @watcher.changed
           @watcher.notify_observers(modified, [], [])
@@ -87,11 +88,24 @@ module ShopifyCLI
             @ctx, app,
             theme: @theme,
             watcher: @watcher,
+            syncer: @syncer,
             ignore_filter: ignore_filter
           )
 
           @watcher.changed
           @watcher.notify_observers(modified, [], [])
+        end
+
+        def test_broadcast_upload_complete_event
+          SSE::Streams.any_instance
+            .expects(:broadcast)
+            .with(JSON.generate(uploadComplete: true))
+
+          app = -> { [200, {}, []] }
+          HotReload.new(@ctx, app, theme: @theme, watcher: @watcher, syncer: @syncer)
+  
+          @syncer.enqueue_updates([@theme["snippets/snippet.liquid"]])
+          @syncer.wait!
         end
 
         private
@@ -100,7 +114,7 @@ module ShopifyCLI
           app = lambda do |_env|
             [200, headers, [response_body]]
           end
-          stack = HotReload.new(@ctx, app, theme: @theme, watcher: @watcher)
+          stack = HotReload.new(@ctx, app, theme: @theme, watcher: @watcher, syncer: @syncer)
           request = Rack::MockRequest.new(stack)
           request.get(path).body
         end
