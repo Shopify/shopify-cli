@@ -26,7 +26,7 @@ module PHP
           "artisan",
           "serve",
           "--port",
-          "3000",
+          "8081",
           env: {
             "SHOPIFY_API_KEY" => "mykey",
             "SHOPIFY_API_SECRET" => "mysecretkey",
@@ -59,7 +59,7 @@ module PHP
           "artisan",
           "serve",
           "--port",
-          "3000",
+          "8081",
           env: {
             "SHOPIFY_API_KEY" => "mykey",
             "SHOPIFY_API_SECRET" => "mysecretkey",
@@ -79,8 +79,17 @@ module PHP
         run_cmd("app php serve")
       end
 
-      def test_server_command_with_invalid_host_url
-        ShopifyCLI::Tunnel.stubs(:start).returns("garbage://example.com")
+      def test_update_env_with_host
+        ShopifyCLI::Tunnel.expects(:start).never
+        ShopifyCLI::Tasks::UpdateDashboardURLS.expects(:call)
+        ShopifyCLI::Resources::EnvFile.any_instance.expects(:update).with(
+          @context, :host, "https://example-foo.com"
+        )
+        run_cmd('app php serve --host="https://example-foo.com"')
+      end
+
+      def test_server_command_when_invalid_host_passed
+        invalid_host = "garbage://example.com"
         ShopifyCLI::Tasks::UpdateDashboardURLS.expects(:call).never
         ShopifyCLI::Resources::EnvFile.any_instance.expects(:update).never
         ShopifyCLI::ProcessSupervision.expects(:stop).never
@@ -92,7 +101,7 @@ module PHP
           "artisan",
           "serve",
           "--port",
-          "3000",
+          "8081",
           env: {
             "SHOPIFY_API_KEY" => "mykey",
             "SHOPIFY_API_SECRET" => "mysecretkey",
@@ -104,17 +113,8 @@ module PHP
         ).never
 
         assert_raises ShopifyCLI::Abort do
-          run_cmd("app php serve")
+          run_cmd("app php serve --host=#{invalid_host}")
         end
-      end
-
-      def test_update_env_with_host
-        ShopifyCLI::Tunnel.expects(:start).never
-        ShopifyCLI::Tasks::UpdateDashboardURLS.expects(:call)
-        ShopifyCLI::Resources::EnvFile.any_instance.expects(:update).with(
-          @context, :host, "https://example-foo.com"
-        )
-        run_cmd('app php serve --host="https://example-foo.com"')
       end
 
       def test_server_command_when_port_passed

@@ -31,27 +31,7 @@ module Rails
             "GEM_PATH" => "/gem/path",
           }
         )
-        Rails::Command::Serve.new(@context).call
-      end
-
-      def test_server_command_with_invalid_host_url
-        ShopifyCLI::Tunnel.stubs(:start).returns("garbage://example.com")
-        ShopifyCLI::Tasks::UpdateDashboardURLS.expects(:call).never
-        ShopifyCLI::Resources::EnvFile.any_instance.expects(:update).never
-        @context.expects(:system).with(
-          "bin/rails server",
-          env: {
-            "SHOPIFY_API_KEY" => "api_key",
-            "SHOPIFY_API_SECRET" => "secret",
-            "SHOP" => "my-test-shop.myshopify.com",
-            "SCOPES" => "write_products,write_customers,write_orders",
-            "PORT" => "8081",
-          }
-        ).never
-
-        assert_raises ShopifyCLI::Abort do
-          Rails::Command::Serve.new(@context).call
-        end
+        run_cmd("app rails serve")
       end
 
       def test_open_while_run
@@ -65,7 +45,7 @@ module Rails
           @context.message("rails.serve.open_info", "https://example.com/login?shop=my-test-shop.myshopify.com") +
           "\n"
         )
-        Rails::Command::Serve.new(@context).call
+        run_cmd("app rails serve")
       end
 
       def test_update_env_with_host
@@ -76,7 +56,36 @@ module Rails
         )
         command = Rails::Command::Serve.new(@context)
         command.options.flags[:host] = "https://example-foo.com"
-        command.call
+        run_cmd('app rails serve --host="https://example-foo.com"')
+      end
+
+      def test_server_command_when_invalid_host_passed
+        invalid_host = "garbage://example.com"
+        ShopifyCLI::Tasks::UpdateDashboardURLS.expects(:call).never
+        ShopifyCLI::Resources::EnvFile.any_instance.expects(:update).never
+        ShopifyCLI::ProcessSupervision.expects(:stop).never
+        ShopifyCLI::ProcessSupervision.expects(:start).never
+
+        @context.expects(:system).with(
+          "app",
+          "php",
+          "artisan",
+          "serve",
+          "--port",
+          "8081",
+          env: {
+            "SHOPIFY_API_KEY" => "mykey",
+            "SHOPIFY_API_SECRET" => "mysecretkey",
+            "SHOP" => "my-test-shop.myshopify.com",
+            "SCOPES" => "read_products",
+            "HOST" => "https://example.com",
+            "DB_DATABASE" => "storage/db.sqlite",
+          }
+        ).never
+
+        assert_raises ShopifyCLI::Abort do
+          run_cmd("app php serve --host=#{invalid_host}")
+        end
       end
 
       def test_server_command_when_port_passed
@@ -96,9 +105,7 @@ module Rails
             "GEM_PATH" => "/gem/path",
           }
         )
-        command = Rails::Command::Serve.new(@context)
-        command.options.flags[:port] = "5000"
-        command.call
+        run_cmd("app rails serve --port=5000")
       end
 
       def test_server_command_when_invalid_port_passed
