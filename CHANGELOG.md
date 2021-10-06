@@ -1,5 +1,6 @@
 Unreleased
 ------
+* [#1542](https://github.com/Shopify/shopify-cli/pull/1542): Add option theme serve --poll to force polling when watching files
 
 Version 2.6.3
 ------
