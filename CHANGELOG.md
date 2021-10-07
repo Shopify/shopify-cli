@@ -1,6 +1,7 @@
 Unreleased
 ------
 * [#1542](https://github.com/Shopify/shopify-cli/pull/1542): Add option theme serve --poll to force polling when watching files
+* [#1625](https://github.com/Shopify/shopify-cli/pull/1625): Fix push bug with post-purchase extensions
 
 Version 2.6.3
 ------
