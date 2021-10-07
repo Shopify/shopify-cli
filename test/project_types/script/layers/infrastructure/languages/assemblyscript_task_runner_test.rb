@@ -57,22 +57,27 @@ describe Script::Layers::Infrastructure::Languages::AssemblyScriptTaskRunner do
       assert_raises(Script::Layers::Infrastructure::Errors::WebAssemblyBinaryNotFoundError) { subject }
     end
 
-    it "triggers the compilation process if script.wasm exists" do
-      wasm = "some compiled code"
-      wasmfile = "build/script.wasm"
-      ctx.write("package.json", JSON.generate(package_json))
-      ctx.mkdir_p(File.dirname(wasmfile))
-      ctx.write(wasmfile, wasm)
+    describe "when script.wasm exists"  do
+      let(:wasm) { "some compiled code" }
+      let(:wasmfile) { "build/script.wasm" }
 
-      ctx
-        .expects(:capture2e)
-        .with("npm run build")
-        .once
-        .returns(["output", mock(success?: true)])
+      before do
+        ctx.write("package.json", JSON.generate(package_json))
+        ctx.mkdir_p(File.dirname(wasmfile))
+        ctx.write(wasmfile, wasm)
+      end
 
-      assert ctx.file_exist?(wasmfile)
-      assert_equal wasm, subject
-      refute ctx.file_exist?(wasmfile)
+      it "triggers the compilation process" do
+        ctx
+          .expects(:capture2e)
+          .with("npm run build")
+          .once
+          .returns(["output", mock(success?: true)])
+
+        assert ctx.file_exist?(wasmfile)
+        assert_equal wasm, subject
+        refute ctx.file_exist?(wasmfile)
+      end
     end
 
     it "should raise error without command output on failure" do
