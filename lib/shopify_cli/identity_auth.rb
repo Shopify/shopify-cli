@@ -18,8 +18,9 @@ module ShopifyCLI
     class Timeout < StandardError; end
     LocalRequest = Struct.new(:method, :path, :query, :protocol)
 
-    DEFAULT_PORT = 3456
-    REDIRECT_HOST = "http://127.0.0.1:#{DEFAULT_PORT}"
+    DEFAULT_PORT = ENV.fetch("IDENTITY_AUTH_CALLBACK_PORT", 3456)
+    DEFAULT_HOST = ENV.fetch("SPIN_INSTANCE_FQDN", "127.0.0.1")
+    REDIRECT_URI = "http://#{DEFAULT_HOST}:#{DEFAULT_PORT}"
 
     APPLICATION_SCOPES = {
       "shopify" => %w[https://api.shopify.com/auth/shop.admin.graphql https://api.shopify.com/auth/shop.admin.themes https://api.shopify.com/auth/partners.collaborator-relationships.readonly],
@@ -104,7 +105,7 @@ module ShopifyCLI
       params = {
         client_id: client_id,
         scope: scopes(APPLICATION_SCOPES.values.flatten),
-        redirect_uri: REDIRECT_HOST,
+        redirect_uri: REDIRECT_URI,
         state: state_token,
         response_type: :code,
       }
@@ -131,7 +132,7 @@ module ShopifyCLI
       resp = post_token_request(
         grant_type: :authorization_code,
         code: code,
-        redirect_uri: REDIRECT_HOST,
+        redirect_uri: REDIRECT_URI,
         client_id: client_id,
         code_verifier: code_verifier,
       )
