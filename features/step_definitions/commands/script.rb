@@ -1,10 +1,10 @@
 require_relative "../../../utilities/utilities"
 
-When(/I create a payment method script named (.+)/) do |script_name|
+When(/I create a (.+) script named (.+)/) do |extension_point, script_name|
   Process.exec_shopify(
     "script", "create",
     "--name", script_name,
-    "--extension-point=payment_methods",
+    "--extension-point=#{extension_point}",
     cwd: @docker_tmp_dir,
     container_id: @docker_container_id
   )
