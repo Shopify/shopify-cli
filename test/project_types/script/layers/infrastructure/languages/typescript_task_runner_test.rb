@@ -51,43 +51,28 @@ describe Script::Layers::Infrastructure::Languages::TypeScriptTaskRunner do
       assert_raises(Script::Layers::Infrastructure::Errors::WebAssemblyBinaryNotFoundError) { subject }
     end
 
-    describe "success" do
-      def self.it_triggers_compilation_process
-        it("triggers the compilation process") do
-          wasm = "some compiled code"
-          ctx.write("package.json", JSON.generate(package_json))
-          ctx.mkdir_p(File.dirname(wasmfile))
-          ctx.write(wasmfile, wasm)
+    it "triggers the compilation process if index.wasm exists" do
+      wasmfile = "build/index.wasm"
+      wasm = "some compiled code"
+      ctx.write("package.json", JSON.generate(package_json))
+      ctx.mkdir_p(File.dirname(wasmfile))
+      ctx.write(wasmfile, wasm)
 
-          ctx
-            .expects(:capture2e)
-            .with("npm run build")
-            .once
-            .returns(["output", mock(success?: true)])
+      ctx
+        .expects(:capture2e)
+        .with("npm run build")
+        .once
+        .returns(["output", mock(success?: true)])
 
-          ctx
-            .expects(:capture2e)
-            .with("npm run gen-metadata")
-            .once
-            .returns(["output", mock(success?: true)])
+      ctx
+        .expects(:capture2e)
+        .with("npm run gen-metadata")
+        .once
+        .returns(["output", mock(success?: true)])
 
-          assert ctx.file_exist?(wasmfile)
-          assert_equal wasm, subject
-          refute ctx.file_exist?(wasmfile)
-        end
-      end
-
-      describe "legacy naming" do
-        let(:wasmfile) { "build/#{script_name}.wasm" }
-
-        it_triggers_compilation_process
-      end
-
-      describe "new naming" do
-        let(:wasmfile) { "build/index.wasm" }
-
-        it_triggers_compilation_process
-      end
+      assert ctx.file_exist?(wasmfile)
+      assert_equal wasm, subject
+      refute ctx.file_exist?(wasmfile)
     end
 
     it "should raise error without command output on failure" do
