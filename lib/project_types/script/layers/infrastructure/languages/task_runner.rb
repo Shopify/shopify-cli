@@ -6,6 +6,8 @@ module Script
     module Infrastructure
       module Languages
         class TaskRunner
+          METADATA_FILE = "build/metadata.json"
+
           def self.for(ctx, language, script_name)
             task_runner = {
               "assemblyscript" => AssemblyScriptTaskRunner,
@@ -35,7 +37,32 @@ module Script
           end
 
           def check_system_dependencies!
-            raise NotImplementedError
+            self.class::REQUIRED_TOOL_VERSIONS.each { |tool| check_tool_version!(tool[:tool_name], tool[:min_version])}
+          end
+
+          def install_dependencies
+            check_system_dependencies!
+            output, status = ctx.capture2e(self.class::INSTALL_COMMAND)
+            raise Errors::DependencyInstallationError, output unless status.success?
+          end
+
+          def compiled_type
+            "wasm"
+          end
+
+          def project_dependencies_installed?
+            # Assuming if node_modules folder exist at root of script folder, all deps are installed
+            ctx.dir_exist?("node_modules")
+          end
+
+          def metadata
+            unless @ctx.file_exist?(METADATA_FILE)
+              msg = @ctx.message("script.error.metadata_not_found_cause", METADATA_FILE)
+              raise Domain::Errors::MetadataNotFoundError, msg
+            end
+
+            raw_contents = File.read(METADATA_FILE)
+            Domain::Metadata.create_from_json(@ctx, raw_contents)
           end
 
           def project_dependencies_installed?

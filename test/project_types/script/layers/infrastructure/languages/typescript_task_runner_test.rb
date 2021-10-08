@@ -7,6 +7,7 @@ describe Script::Layers::Infrastructure::Languages::TypeScriptTaskRunner do
   TS_EXACT_NODE_VERSION = "v14.15.0"
   TS_EXACT_NPM_VERSION = "5.2.0"
 
+  INSTALL_COMMAND = "npm install --no-audit --no-optional --legacy-peer-deps --loglevel error"
   let(:ctx) { TestHelpers::FakeContext.new }
   let(:script_name) { "foo" }
   let(:language) { "TypeScript" }

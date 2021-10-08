@@ -6,7 +6,6 @@ module Script
       module Languages
         class TypeScriptTaskRunner < TaskRunner
           BYTECODE_FILE = "build/index.wasm"
-          METADATA_FILE = "build/metadata.json"
           SCRIPT_SDK_BUILD = "npm run build"
           GEN_METADATA = "npm run gen-metadata"
           MIN_NPM_VERSION = "5.2.0"
