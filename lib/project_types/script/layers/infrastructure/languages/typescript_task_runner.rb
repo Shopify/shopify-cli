@@ -5,11 +5,12 @@ module Script
     module Infrastructure
       module Languages
         class TypeScriptTaskRunner < TaskRunner
-          BYTECODE_FILE = "build/%{name}.wasm"
-          METADATA_FILE = "build/metadata.json"
-          SCRIPT_SDK_BUILD = "npm run build"
           GEN_METADATA = "npm run gen-metadata"
-          MIN_NPM_VERSION = "5.2.0"
+          MIN_NODE_VERSION = "14.15.0"
+          REQUIRED_TOOL_VERSIONS = [
+            {"tool_name": "npm", "min_version": MIN_NPM_VERSION},
+            {"tool_name": "node", "min_version": MIN_NODE_VERSION}
+          ]
 
           attr_reader :ctx, :script_name
 
@@ -24,35 +25,8 @@ module Script
             bytecode
           end
 
-          def compiled_type
-            "wasm"
-          end
-
-          def install_dependencies
-            check_system_dependencies!
-
-            output, status = ctx.capture2e("npm install --no-audit --no-optional --legacy-peer-deps --loglevel error")
-            raise Errors::DependencyInstallationError, output unless status.success?
-          end
-
           def check_system_dependencies!
-            check_tool_version!("npm", MIN_NPM_VERSION)
-            check_tool_version!("node", AssemblyScriptProjectCreator::MIN_NODE_VERSION)
-          end
-
-          def project_dependencies_installed?
-            # Assuming if node_modules folder exist at root of script folder, all deps are installed
-            ctx.dir_exist?("node_modules")
-          end
-
-          def metadata
-            unless @ctx.file_exist?(METADATA_FILE)
-              msg = @ctx.message("script.error.metadata_not_found_cause", METADATA_FILE)
-              raise Domain::Errors::MetadataNotFoundError, msg
-            end
-
-            raw_contents = File.read(METADATA_FILE)
-            Domain::Metadata.create_from_json(@ctx, raw_contents)
+            REQUIRED_TOOL_VERSIONS.each { |tool| check_tool_version!(tool[:tool_name], tool[:min_version])}
           end
 
           private
@@ -80,12 +54,12 @@ module Script
             filename = format(BYTECODE_FILE, name: "index")
 
             bytecode_file = if ctx.file_exist?(filename)
-              filename
-            elsif ctx.file_exist?(legacy_filename)
-              legacy_filename
-            else
-              raise Errors::WebAssemblyBinaryNotFoundError
-            end
+                              filename
+                            elsif ctx.file_exist?(legacy_filename)
+                              legacy_filename
+                            else
+                              raise Errors::WebAssemblyBinaryNotFoundError
+                            end
 
             contents = ctx.binread(bytecode_file)
             ctx.rm(bytecode_file)
