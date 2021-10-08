@@ -1,7 +1,5 @@
 module ShopifyCLI
   module ExceptionReporter
-    autoload :PermissionController, "shopify_cli/exception_reporter/permission_controller"
-
     def self.report(error, _logs = nil, _api_key = nil, custom_metadata = {})
       context = ShopifyCLI::Context.new
       context.puts("\n")
@@ -14,7 +12,7 @@ module ShopifyCLI
       context.puts("\n")
 
       return unless reportable_error?(error)
-      return unless report?
+      return unless report?(context: context)
 
       ENV["BUGSNAG_DISABLE_AUTOCONFIGURE"] = "1"
       require "bugsnag"
@@ -33,18 +31,25 @@ module ShopifyCLI
       Bugsnag.notify(error, metadata)
     end
 
-    def self.report?
+    def self.report?(context:)
       return false if ShopifyCLI::Environment.development?
-      return true if ExceptionReporter::PermissionController.automatic_reporting_prompted? &&
-        ExceptionReporter::PermissionController.can_report_automatically?
+      return true if ReportingConfigurationController.automatic_reporting_prompted? &&
+        ReportingConfigurationController.can_report_automatically?
 
-      report_error = ExceptionReporter::PermissionController.report_error?
+      report_error = report_error?(context: context)
 
-      unless ExceptionReporter::PermissionController.automatic_reporting_prompted?
-        ExceptionReporter::PermissionController.can_report_automatically?
+      unless ReportingConfigurationController.automatic_reporting_prompted?
+        ReportingConfigurationController.can_report_automatically?
       end
 
       report_error
+    end
+
+    def self.report_error?(context:)
+      CLI::UI::Prompt.ask(context.message("core.error_reporting.report_error.question")) do |handler|
+        handler.option(context.message("core.error_reporting.report_error.yes")) { |_| true }
+        handler.option(context.message("core.error_reporting.report_error.no")) { |_| false }
+      end
     end
 
     def self.reportable_error?(error)

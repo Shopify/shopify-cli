@@ -15,10 +15,10 @@ module ShopifyCLI
 
     module Config
       module Sections
-        module ErrorTracking
-          NAME = "error-tracking"
+        module Analytics
+          NAME = "analytics"
           module Fields
-            AUTOMATIC_REPORTING = "automatic-reporting"
+            ENABLED = "enabled"
           end
         end
       end
@@ -41,6 +41,9 @@ module ShopifyCLI
       TEST = "SHOPIFY_CLI_TEST"
       ACCEPTANCE_TEST = "SHOPIFY_CLI_ACCEPTANCE_TEST"
       DEVELOPMENT = "SHOPIFY_CLI_DEVELOPMENT"
+
+      # Monorail
+      MONORAIL_REAL_EVENTS = "MONORAIL_REAL_EVENTS"
     end
 
     module Identity
