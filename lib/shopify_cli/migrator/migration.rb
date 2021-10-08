@@ -14,7 +14,7 @@ module ShopifyCLI
 
       def run
         require(path)
-        ShopifyCli::Migrator::Migrations.const_get(class_name).run
+        ShopifyCLI::Migrator::Migrations.const_get(class_name).run
       rescue StandardError
         # Continue
       end
