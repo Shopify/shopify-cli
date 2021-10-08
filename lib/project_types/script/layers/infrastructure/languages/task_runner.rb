@@ -37,7 +37,7 @@ module Script
           end
 
           def check_system_dependencies!
-            self.class::REQUIRED_TOOL_VERSIONS.each { |tool| check_tool_version!(tool[:tool_name], tool[:min_version])}
+            self.class::REQUIRED_TOOL_VERSIONS.each { |tool| check_tool_version!(tool[:tool_name], tool[:min_version]) }
           end
 
           def install_dependencies

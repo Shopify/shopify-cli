@@ -12,8 +12,8 @@ module Script
 <<<<<<< HEAD
 =======
           REQUIRED_TOOL_VERSIONS = [
-            {"tool_name": "npm", "min_version": MIN_NPM_VERSION},
-            {"tool_name": "node", "min_version": MIN_NODE_VERSION}
+            { "tool_name": "npm", "min_version": MIN_NPM_VERSION },
+            { "tool_name": "node", "min_version": MIN_NODE_VERSION },
           ]
           INSTALL_COMMAND = "npm install --no-audit --no-optional --legacy-peer-deps --loglevel error"
 
