@@ -164,10 +164,22 @@ module Script
               "script.error.configuration_schema_field_invalid_value_error_help"
             ),
           }
-        when Layers::Infrastructure::Errors::DependencyInstallError
+        when Layers::Infrastructure::Errors::DependencyInstallationError
           {
-            cause_of_error: ShopifyCLI::Context.message("script.error.dependency_install_cause"),
-            help_suggestion: ShopifyCLI::Context.message("script.error.dependency_install_help"),
+            cause_of_error: ShopifyCLI::Context.message("script.error.dependency_installation_cause"),
+            help_suggestion: ShopifyCLI::Context.message("script.error.dependency_installation_help"),
+          }
+        when Layers::Infrastructure::Errors::NoDependencyInstalledError
+          {
+            cause_of_error: ShopifyCLI::Context.message("script.error.no_dependency_installed_cause", e.tool,
+              e.min_version, e.tool),
+            help_suggestion: ShopifyCLI::Context.message("script.error.no_dependency_installed_help"),
+          }
+        when Layers::Infrastructure::Errors::MissingDependencyVersionError
+          {
+            cause_of_error: ShopifyCLI::Context.message("script.error.missing_dependency_version_cause", e.tool,
+              e.current_version, e.min_version),
+            help_suggestion: ShopifyCLI::Context.message("script.error.missing_dependency_version_help"),
           }
         when Layers::Infrastructure::Errors::EmptyResponseError
           {
