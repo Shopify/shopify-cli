@@ -14,7 +14,6 @@ describe Script::Layers::Infrastructure::Languages::AssemblyScriptProjectCreator
       "assemblyscript" => {
         "repo" => "https://github.com/Shopify/extension-points.git",
         "package" => "@shopify/extension-point-as-fake",
-        "sdk-version" => "*",
         "toolchain-version" => "*",
       },
     }

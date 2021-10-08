@@ -9,7 +9,7 @@ module ShopifyCLI
         prerequisite_task :fake
         prerequisite_task fake_with_args: [:foo, :bar]
 
-        class FakeSubCommand < ShopifyCLI::Command::SubCommand
+        class FakeSubCommand < ShopifyCLI::SubCommand
           prerequisite_task :fake
           prerequisite_task fake_with_args: [:sub, :command]
 

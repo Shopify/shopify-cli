@@ -27,9 +27,9 @@ module Script
         end
 
         def self.languages(type:)
-          get(type: type).sdks.all.map do |sdk|
-            next nil if sdk.beta? && !ShopifyCLI::Feature.enabled?(:scripts_beta_languages)
-            sdk.language
+          get(type: type).libraries.all.map do |library|
+            next nil if library.beta? && !ShopifyCLI::Feature.enabled?(:scripts_beta_languages)
+            library.language
           end.compact
         end
 

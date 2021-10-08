@@ -44,19 +44,14 @@ jobs:
       - name: Run Tests
         run: bundle exec rake test
   acceptance_tests:
-    name: Acceptance Tests with Ruby ${{ matrix.version }} on ${{ matrix.os }}
+    name: Acceptance Tests
     runs-on: ${{ matrix.os }}
     strategy:
       matrix:
         version:
           - 3.0.2
-          - 2.6.6
-          - 2.7.1
         os:
-          - macos-10.15
-          - macos-11
           - ubuntu-20.04
-          - ubuntu-18.04
     steps:
       - uses: actions/checkout@v2
       - name: Set Git configuration
@@ -73,6 +68,8 @@ jobs:
       - uses: actions/setup-node@v2
         with:
           node-version: "14.9.0"
+
+      - uses: docker-practice/actions-setup-docker@master
 
       - name: Install Dependencies
         run: bundle install

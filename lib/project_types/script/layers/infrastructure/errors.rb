@@ -40,27 +40,7 @@ module Script
           end
         end
 
-        class DependencyInstallationError < ScriptProjectError; end
-
-        class MissingDependencyVersionError < ScriptProjectError
-          attr_reader :tool, :current_version, :min_version
-          def initialize(tool, current_version, min_version)
-            super()
-            @tool = tool
-            @current_version = current_version
-            @min_version = min_version
-          end
-        end
-
-        class NoDependencyInstalledError < ScriptProjectError
-          attr_reader :tool, :min_version
-          def initialize(tool, min_version)
-            super()
-            @tool = tool
-            @min_version = min_version
-          end
-        end
-
+        class DependencyInstallError < ScriptProjectError; end
         class DeprecatedEPError < ScriptProjectError; end
         class EmptyResponseError < ScriptProjectError; end
         class InvalidResponseError < ScriptProjectError; end

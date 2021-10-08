@@ -20,7 +20,7 @@ module Script
               )
 
               # remove the need to pass the whole extension-point object to the infra layer
-              sparse_checkout_repo = extension_point.sdks.for(language).repo
+              sparse_checkout_repo = extension_point.libraries.for(language).repo
               type = extension_point.dasherize_type
               domain = extension_point.domain
 
@@ -45,8 +45,6 @@ module Script
 
           def install_dependencies(ctx, language, script_name, project_creator)
             task_runner = Infrastructure::Languages::TaskRunner.for(ctx, language, script_name)
-            task_runner.check_system_dependencies!
-
             CLI::UI::Frame.open(ctx.message(
               "core.git.pulling_from_to",
               project_creator.sparse_checkout_repo,

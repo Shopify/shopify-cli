@@ -5,7 +5,7 @@ module Theme
     register_messages(Theme::Messages::MESSAGES)
   end
 
-  class Command < ShopifyCLI::Command::ProjectCommand
+  class Command < ShopifyCLI::ProjectCommands
     subcommand :Init, "init", Project.project_filepath("commands/init")
     subcommand :Serve, "serve", Project.project_filepath("commands/serve")
     subcommand :Pull, "pull", Project.project_filepath("commands/pull")

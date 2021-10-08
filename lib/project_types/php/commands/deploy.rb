@@ -3,7 +3,7 @@ require "shopify_cli"
 
 module PHP
   class Command
-    class Deploy < ShopifyCLI::Command::AppSubCommand
+    class Deploy < ShopifyCLI::SubCommand
       prerequisite_task ensure_project_type: :php
 
       autoload :Heroku, Project.project_filepath("commands/deploy/heroku")

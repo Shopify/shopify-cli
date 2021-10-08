@@ -29,7 +29,7 @@ module Node
             "PORT" => "8081",
           }
         )
-        run_cmd("app node serve")
+        run_cmd("node serve")
       end
 
       def test_server_command_with_invalid_host_url
@@ -49,7 +49,7 @@ module Node
         ).never
 
         assert_raises ShopifyCLI::Abort do
-          run_cmd("app node serve")
+          run_cmd("node serve")
         end
       end
 
@@ -64,7 +64,7 @@ module Node
           @context.message("node.serve.open_info", "https://example.com/auth?shop=my-test-shop.myshopify.com") +
           "\n"
         )
-        run_cmd("app node serve")
+        run_cmd("node serve")
       end
 
       def test_update_env_with_host
@@ -73,7 +73,36 @@ module Node
         ShopifyCLI::Resources::EnvFile.any_instance.expects(:update).with(
           @context, :host, "https://example-foo.com"
         )
-        run_cmd('app node serve --host="https://example-foo.com"')
+        run_cmd('node serve --host="https://example-foo.com"')
+      end
+
+      def test_server_command_when_port_passed
+        ShopifyCLI::Tunnel.stubs(:start).returns("https://example.com")
+        ShopifyCLI::Tasks::UpdateDashboardURLS.expects(:call)
+        ShopifyCLI::Resources::EnvFile.any_instance.expects(:update)
+        @context.expects(:system).with(
+          "npm run dev",
+          env: {
+            "SHOPIFY_API_KEY" => "mykey",
+            "SHOPIFY_API_SECRET" => "mysecretkey",
+            "SHOP" => "my-test-shop.myshopify.com",
+            "SCOPES" => "read_products",
+            "HOST" => "https://example.com",
+            "PORT" => "5000",
+          }
+        )
+        run_cmd("node serve --port=5000")
+      end
+
+      def test_server_command_when_invalid_port_passed
+        invalid_port = "NOT_PORT"
+        ShopifyCLI::Tunnel.stubs(:start).returns("https://example.com")
+        ShopifyCLI::Tasks::UpdateDashboardURLS.expects(:call)
+        ShopifyCLI::Resources::EnvFile.any_instance.expects(:update)
+        @context.expects(:abort).with(
+          @context.message("node.serve.error.invalid_port", invalid_port)
+        )
+        run_cmd("node serve --port=#{invalid_port}")
       end
     end
   end

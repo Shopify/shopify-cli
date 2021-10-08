@@ -14,12 +14,6 @@ module ShopifyCLI
         },
       },
       core: {
-        app: {
-          help: <<~HELP,
-          Create and manage embedded apps
-            Usage: {{command:%s app [ rails | node | php ] }}
-          HELP
-        },
         error_reporting: {
           unhandled_error: {
             message: "{{x}} {{red:An unexpected error occured.}}",
@@ -462,7 +456,6 @@ module ShopifyCLI
             ngrok: "Something went wrong with ngrok installation,"\
               "please make sure %s exists within %s before trying again",
           },
-
           installing: "Installing ngrok…",
           not_running: "{{green:x}} ngrok tunnel not running",
           prereq_command_location: "%s @ %s",

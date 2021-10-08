@@ -33,7 +33,7 @@ module PHP
       APPTYPE
 
       def test_prints_help_with_no_name_argument
-        io = capture_io { run_cmd("app php create --help") }
+        io = capture_io { run_cmd("php create --help") }
         assert_message_output(io: io, expected_content: [PHP::Command::Create.help])
       end
 
@@ -53,7 +53,7 @@ module PHP
       end
 
       def test_check_composer_installed
-        @context.expects(:which).with("php").returns("/usr/bin/php")
+        PHP::Command::Create.any_instance.stubs(:check_php)
         @context.expects(:which).with("composer").returns(nil)
         assert_raises ShopifyCLI::Abort, "php.create.error.composer_required" do
           perform_command
@@ -115,7 +115,7 @@ module PHP
       private
 
       def perform_command
-        run_cmd("app php create \
+        run_cmd("php create \
           --name=test-app \
           --type=public \
           --organization-id=42 \

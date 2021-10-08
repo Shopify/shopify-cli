@@ -11,22 +11,22 @@ module Rails
 
       def test_auth
         ShopifyCLI::Tunnel.any_instance.expects(:auth)
-        run_cmd("app rails tunnel auth adfhauf98q7rtqhfkajf")
+        run_cmd("rails tunnel auth adfhauf98q7rtqhfkajf")
       end
 
       def test_auth_no_token
         ShopifyCLI::Tunnel.any_instance.expects(:auth).never
-        run_cmd("app rails tunnel auth")
+        run_cmd("rails tunnel auth")
       end
 
       def test_start
         ShopifyCLI::Tunnel.any_instance.expects(:start)
-        run_cmd("app rails tunnel start")
+        run_cmd("rails tunnel start")
       end
 
       def test_stop
         ShopifyCLI::Tunnel.any_instance.expects(:stop)
-        run_cmd("app rails tunnel stop")
+        run_cmd("rails tunnel stop")
       end
     end
   end

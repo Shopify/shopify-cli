@@ -1,7 +1,7 @@
 # frozen_string_literal: true
 module Node
   class Command
-    class Connect < ShopifyCLI::Command::AppSubCommand
+    class Connect < ShopifyCLI::SubCommand
       prerequisite_task ensure_project_type: :node
 
       def call(*)

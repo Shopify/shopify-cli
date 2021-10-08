@@ -9,7 +9,7 @@ module Script
   end
 
   # define/autoload project specific Commands
-  class Command < ShopifyCLI::Command::ProjectCommand
+  class Command < ShopifyCLI::ProjectCommands
     hidden_feature(feature_set: :script_project)
     subcommand :Create, "create", Project.project_filepath("commands/create")
     subcommand :Push, "push", Project.project_filepath("commands/push")
