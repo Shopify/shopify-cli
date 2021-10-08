@@ -32,7 +32,6 @@ module ShopifyCLI
     end
 
     def self.report?(context:)
-      return false if ShopifyCLI::Environment.development?
       return true if ReportingConfigurationController.automatic_reporting_prompted? &&
         ReportingConfigurationController.can_report_automatically?
 

@@ -16,8 +16,6 @@ module ShopifyCLI
         attr_accessor :metadata
 
         def log(name, args, &block) # rubocop:disable Lint/UnusedMethodArgument
-          return yield unless report?
-
           command, command_name = Commands::Registry.lookup_command(name)
           final_command = [command_name]
           if command
@@ -27,13 +25,14 @@ module ShopifyCLI
 
           start_time = now_in_milliseconds
           err = nil
+
           begin
             yield
           rescue Exception => e # rubocop:disable Lint/RescueException
             err = e
             raise
           ensure
-            send_event(start_time, final_command, args - final_command, err&.message)
+            send_event(start_time, final_command, args - final_command, err&.message) if report?
           end
         end
 
@@ -45,12 +44,7 @@ module ShopifyCLI
 
         def report?
           return true if Environment.send_monorail_events?
-          return false if ShopifyCLI::Environment.development?
-          return true if ReportingConfigurationController.automatic_reporting_prompted? &&
-            ReportingConfigurationController.can_report_automatically?
-          unless ReportingConfigurationController.automatic_reporting_prompted?
-            ReportingConfigurationController.can_report_automatically?
-          end
+          ReportingConfigurationController.can_report_automatically?
         end
 
         def send_event(start_time, commands, args, err = nil)

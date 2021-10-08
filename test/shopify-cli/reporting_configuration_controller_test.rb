@@ -7,8 +7,20 @@ module ShopifyCLI
       @context = TestHelpers::FakeContext.new
     end
 
+    def test_can_send_returns_false_when_the_environment_is_development
+      # Given
+      ShopifyCLI::Environment.expects(:development?).returns(true)
+
+      # When
+      got = ReportingConfigurationController.can_report_automatically?(context: @context)
+
+      # Then
+      refute got
+    end
+
     def test_can_send_returns_false_when_the_environment_is_not_interactive
       # Given
+      ShopifyCLI::Environment.expects(:development?).returns(false)
       ShopifyCLI::Environment.expects(:interactive?).returns(false)
 
       # When
@@ -20,6 +32,7 @@ module ShopifyCLI
 
     def test_can_send_returns_true_when_the_user_was_already_prompted_and_they_enabled_it
       # Given
+      ShopifyCLI::Environment.expects(:development?).returns(false)
       ShopifyCLI::Environment.expects(:interactive?).returns(true)
       ShopifyCLI::Config
         .expects(:get_section)
@@ -43,6 +56,7 @@ module ShopifyCLI
 
     def test_can_send_stores_and_returns_the_value_selected_by_the_user
       # Given
+      ShopifyCLI::Environment.expects(:development?).returns(false)
       ShopifyCLI::Environment.expects(:interactive?).returns(true)
       ShopifyCLI::Config
         .expects(:get_section)

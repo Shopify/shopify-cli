@@ -7,6 +7,8 @@ module ShopifyCLI
     end
 
     def self.can_report_automatically?(context: ShopifyCLI::Context.new)
+      return false if ShopifyCLI::Environment.development?
+
       # If the terminal is not interactive we can't prompt the user.
       return false unless ShopifyCLI::Environment.interactive?
 
