@@ -1,7 +1,6 @@
 
 # frozen_string_literal: true
 
-require 'byebug'
 module Script
   module Layers
     module Infrastructure

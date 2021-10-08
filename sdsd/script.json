@@ -1,0 +1,10 @@
+{
+    "version": "1",
+    "title": "Payment methods script",
+    "description": "Payment methods default script",
+    "configurationUi": true,
+    "configuration": {
+        "type": "single",
+        "schema": []
+    }
+}
