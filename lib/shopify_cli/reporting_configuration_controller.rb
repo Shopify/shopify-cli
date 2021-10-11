@@ -1,19 +1,35 @@
 module ShopifyCLI
   module ReportingConfigurationController
-    def self.automatic_reporting_prompted?
+    def self.enable_reporting(enabled)
+      ShopifyCLI::Config.set(
+        Constants::Config::Sections::Analytics::NAME,
+        Constants::Config::Sections::Analytics::Fields::ENABLED,
+        enabled
+      )
+    end
+
+    def self.reporting_prompted?
       ShopifyCLI::Config.get_section(Constants::Config::Sections::Analytics::NAME).key?(
         Constants::Config::Sections::Analytics::Fields::ENABLED
       )
     end
 
-    def self.can_report_automatically?(prompt: true, context: ShopifyCLI::Context.new)
+    def self.reporting_enabled?
+      ShopifyCLI::Config.get_bool(
+        Constants::Config::Sections::Analytics::NAME,
+        Constants::Config::Sections::Analytics::Fields::ENABLED,
+        default: false
+      )
+    end
+
+    def self.check_or_prompt_report_automatically(prompt: true, context: ShopifyCLI::Context.new)
       return false if ShopifyCLI::Environment.development? || ShopifyCLI::Environment.test?
 
       # If the terminal is not interactive we can't prompt the user.
       return false unless ShopifyCLI::Environment.interactive?
 
-      if automatic_reporting_prompted?
-        automatic_reporting_enabled?
+      if reporting_prompted?
+        reporting_enabled?
       elsif prompt
         prompt_user(context: context)
       else
@@ -36,14 +52,6 @@ module ShopifyCLI
       )
 
       enable_automatic_tracking
-    end
-
-    def self.automatic_reporting_enabled?
-      ShopifyCLI::Config.get_bool(
-        Constants::Config::Sections::Analytics::NAME,
-        Constants::Config::Sections::Analytics::Fields::ENABLED,
-        default: false
-      )
     end
   end
 end

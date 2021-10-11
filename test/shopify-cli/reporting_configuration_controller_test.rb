@@ -12,7 +12,7 @@ module ShopifyCLI
       ShopifyCLI::Environment.expects(:development?).returns(true)
 
       # When
-      got = ReportingConfigurationController.can_report_automatically?(context: @context)
+      got = ReportingConfigurationController.check_or_prompt_report_automatically(context: @context)
 
       # Then
       refute got
@@ -24,7 +24,7 @@ module ShopifyCLI
       ShopifyCLI::Environment.expects(:test?).returns(true)
 
       # When
-      got = ReportingConfigurationController.can_report_automatically?(context: @context)
+      got = ReportingConfigurationController.check_or_prompt_report_automatically(context: @context)
 
       # Then
       refute got
@@ -37,7 +37,7 @@ module ShopifyCLI
       ShopifyCLI::Environment.expects(:interactive?).returns(false)
 
       # When
-      got = ReportingConfigurationController.can_report_automatically?(context: @context)
+      got = ReportingConfigurationController.check_or_prompt_report_automatically(context: @context)
 
       # Then
       refute got
@@ -62,7 +62,7 @@ module ShopifyCLI
         .returns(true)
 
       # When
-      got = ReportingConfigurationController.can_report_automatically?(context: @context)
+      got = ReportingConfigurationController.check_or_prompt_report_automatically(context: @context)
 
       # Then
       assert got
@@ -88,7 +88,7 @@ module ShopifyCLI
       CLI::UI::Prompt.expects(:ask).returns(false)
 
       # When
-      got = ReportingConfigurationController.can_report_automatically?(context: @context)
+      got = ReportingConfigurationController.check_or_prompt_report_automatically(context: @context)
 
       # Then
       refute got

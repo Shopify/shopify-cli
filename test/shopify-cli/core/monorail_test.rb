@@ -166,7 +166,7 @@ module ShopifyCLI
 
       def enable_reporting(enabled)
         Environment.expects(:send_monorail_events?).returns(enabled)
-        ReportingConfigurationController.stubs(:can_report_automatically?).returns(enabled)
+        ReportingConfigurationController.stubs(:check_or_prompt_report_automatically).returns(enabled)
       end
     end
   end

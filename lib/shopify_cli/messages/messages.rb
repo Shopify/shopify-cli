@@ -486,7 +486,21 @@ module ShopifyCLI
 
           MESSAGE
         },
-
+        reporting: {
+          help: <<~HELP,
+            Turns anonymous reporting on or off.
+              Usage: {{command:%s reporting on}}
+          HELP
+          invalid_argument: <<~MESSAGE,
+            {{command:%s reporting %s}} is not supported. The valid values are {{command:on}} or {{command:off}}
+          MESSAGE
+          missing_argument: <<~MESSAGE,
+            {{command:%s reporting}} expects an argument {{command:on}} or {{command:off}}
+          MESSAGE
+          turned_on_off: <<~MESSAGE,
+            Anonymous reporting turned %s
+          MESSAGE
+        },
         whoami: {
           help: <<~HELP,
             Identifies which partner organization or store you are currently logged into.
