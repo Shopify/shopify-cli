@@ -5,8 +5,8 @@ module ShopifyCLI
     class Reporting < ShopifyCLI::Command
       def call(args, _name)
         enable_reporting = reporting_enabled?(args)
-        ReportingConfigurationController.enable_reporting(enable_reporting)
-        @ctx.puts(@ctx.message("core.reporting.turned_on_off", args.first))
+        Services::ReportingService.call(enable: enable_reporting)
+        @ctx.puts(@ctx.message("core.reporting.turned_on_off", enable_reporting ? "on" : "off"))
       end
 
       def reporting_enabled?(args)

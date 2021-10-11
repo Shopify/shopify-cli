@@ -128,6 +128,7 @@ module ShopifyCLI
   autoload :ResolveConstant, "shopify_cli/resolve_constant"
   autoload :Resources, "shopify_cli/resources"
   autoload :Result, "shopify_cli/result"
+  autoload :Services, "shopify_cli/services"
   autoload :Shopifolk, "shopify_cli/shopifolk"
   autoload :SubCommand, "shopify_cli/sub_command"
   autoload :Task, "shopify_cli/task"
