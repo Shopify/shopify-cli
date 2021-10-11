@@ -16,7 +16,7 @@ module ShopifyCLI
         end
 
         shop = if options.flags[:shop]
-          Login.validate_shop(options.flags[:shop])
+          Login.validate_shop(options.flags[:shop], context: @ctx)
         elsif (org_id = DB.get(:organization_id))
           res = ShopifyCLI::Tasks::SelectOrgAndShop.call(@ctx, organization_id: org_id)
           res[:shop_domain]
