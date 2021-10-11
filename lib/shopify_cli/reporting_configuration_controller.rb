@@ -51,6 +51,13 @@ module ShopifyCLI
         enable_automatic_tracking
       )
 
+      message = if enable_automatic_tracking
+        context.message("core.reporting.turned_on_message")
+      else
+        context.message("core.reporting.turned_off_message", ShopifyCLI::TOOL_NAME)
+      end
+      context.puts(message)
+
       enable_automatic_tracking
     end
   end

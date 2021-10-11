@@ -6,7 +6,13 @@ module ShopifyCLI
       def call(args, _name)
         enable_reporting = reporting_enabled?(args)
         Services::ReportingService.call(enable: enable_reporting)
-        @ctx.puts(@ctx.message("core.reporting.turned_on_off", enable_reporting ? "on" : "off"))
+
+        message = if enable_reporting
+          @ctx.message("core.reporting.turned_on_message")
+        else
+          @ctx.message("core.reporting.turned_off_message", ShopifyCLI::TOOL_NAME)
+        end
+        @ctx.puts(message)
       end
 
       def reporting_enabled?(args)

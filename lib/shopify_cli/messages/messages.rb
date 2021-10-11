@@ -32,7 +32,6 @@ module ShopifyCLI
             question: "Automatically send reports from now on?",
             yes: "Yes, automatically send anonymized reports to Shopify",
             no: "No, don't send",
-            enabled: "Anonymized reports will be sent to Shopify. ",
           },
         },
         connect: {
@@ -497,8 +496,11 @@ module ShopifyCLI
           missing_argument: <<~MESSAGE,
             {{command:%s reporting}} expects an argument {{command:on}} or {{command:off}}
           MESSAGE
-          turned_on_off: <<~MESSAGE,
-            Anonymous reporting turned %s
+          turned_on_message: <<~MESSAGE,
+            Anonymized reports will be sent to Shopify.
+          MESSAGE
+          turned_off_message: <<~MESSAGE,
+            Turn on automatic reporting later wtih {{command:%s reporting on}}.
           MESSAGE
         },
         whoami: {
