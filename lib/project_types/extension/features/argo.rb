@@ -23,7 +23,7 @@ module Extension
         Features::ArgoSetup.new(git_template: git_template).call(directory_name, identifier, context)
       end
 
-      def config(context)
+      def config(context, include_renderer_version: true)
         js_system = ShopifyCLI::JsSystem.new(ctx: context)
         if js_system.package_manager == "yarn"
           run_yarn_install(context, js_system)
@@ -31,9 +31,15 @@ module Extension
         end
         filepath = File.join(context.root, SCRIPT_PATH)
         context.abort(context.message("features.argo.missing_file_error")) unless File.exist?(filepath)
+
+        renderer_version = nil
+        if include_renderer_version
+          renderer_version = renderer_package(context).version
+        end
+
         begin
           {
-            renderer_version: renderer_package(context).version,
+            renderer_version: renderer_version,
             serialized_script: Base64.strict_encode64(File.read(filepath).chomp),
           }
         rescue StandardError

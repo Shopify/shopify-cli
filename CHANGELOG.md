@@ -3,8 +3,11 @@ From version 2.6.0, the sections in this file adhere to the [keep a changelog](h
 
 ### Fixed
 * [#1633](https://github.com/Shopify/shopify-cli/pull/1633): Runtime error when the shop passed on login is invalid
+* [#1625](https://github.com/Shopify/shopify-cli/pull/1625): Fix push bug with post-purchase extensions
+
 ### Added
 * [#1542](https://github.com/Shopify/shopify-cli/pull/1542): Add option theme serve --poll to force polling when watching files
+
 ### Removed
 
 ### Changed
