@@ -20,9 +20,13 @@ module ShopifyCLI
     end
 
     def self.rails?(project_directory:)
+      rails_binstub_path = File.join(project_directory, "bin/rails")
+      File.exist?(rails_binstub_path)
     end
 
     def self.php?(project_directory:)
+      bootstrap_app_path = File.join(project_directory, "bootstrap/app.php")
+      File.exist?(bootstrap_app_path)
     end
   end
 end
