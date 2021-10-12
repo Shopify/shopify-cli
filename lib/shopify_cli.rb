@@ -96,6 +96,7 @@ module ShopifyCLI
     )
   end
 
+  autoload :AppTypeDetector, "shopify_cli/app_type_detector"
   autoload :Constants, "shopify_cli/constants"
   autoload :Environment, "shopify_cli/environment"
   autoload :AdminAPI, "shopify_cli/admin_api"
