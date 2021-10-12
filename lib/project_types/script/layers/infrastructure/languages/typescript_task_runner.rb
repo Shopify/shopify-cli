@@ -5,7 +5,7 @@ module Script
     module Infrastructure
       module Languages
         class TypeScriptTaskRunner
-          BYTECODE_FILE = "build/%{name}.wasm"
+          BYTECODE_FILE = "build/index.wasm"
           METADATA_FILE = "build/metadata.json"
           SCRIPT_SDK_BUILD = "npm run build"
           GEN_METADATA = "npm run gen-metadata"
@@ -82,19 +82,10 @@ module Script
           end
 
           def bytecode
-            legacy_filename = format(BYTECODE_FILE, name: script_name)
-            filename = format(BYTECODE_FILE, name: "index")
+            raise Errors::WebAssemblyBinaryNotFoundError unless ctx.file_exist?(BYTECODE_FILE)
 
-            bytecode_file = if ctx.file_exist?(filename)
-              filename
-            elsif ctx.file_exist?(legacy_filename)
-              legacy_filename
-            else
-              raise Errors::WebAssemblyBinaryNotFoundError
-            end
-
-            contents = ctx.binread(bytecode_file)
-            ctx.rm(bytecode_file)
+            contents = ctx.binread(BYTECODE_FILE)
+            ctx.rm(BYTECODE_FILE)
 
             contents
           end

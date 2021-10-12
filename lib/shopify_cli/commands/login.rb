@@ -15,7 +15,7 @@ module ShopifyCLI
 
       def call(*)
         shop = (options.flags[:shop] || @ctx.getenv("SHOPIFY_SHOP" || nil))
-        ShopifyCLI::DB.set(shop: self.class.validate_shop(shop)) unless shop.nil?
+        ShopifyCLI::DB.set(shop: self.class.validate_shop(shop, context: @ctx)) unless shop.nil?
 
         if shop.nil? && Shopifolk.check
           Shopifolk.reset
@@ -41,9 +41,9 @@ module ShopifyCLI
         ShopifyCLI::Context.message("core.login.help", ShopifyCLI::TOOL_NAME)
       end
 
-      def self.validate_shop(shop)
+      def self.validate_shop(shop, context:)
         permanent_domain = shop_to_permanent_domain(shop)
-        @ctx.abort(@ctx.message("core.login.invalid_shop", shop)) unless permanent_domain
+        context.abort(context.message("core.login.invalid_shop", shop)) unless permanent_domain
         permanent_domain
       end
 

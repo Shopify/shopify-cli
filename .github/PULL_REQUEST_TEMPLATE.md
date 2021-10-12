@@ -21,12 +21,17 @@ Fixes #0000 <!-- link to issue if one exists -->
   Before / after screenshots appreciated for UI changes.
 -->
 
-### Update checklist
+### Post-release steps
+
 <!--
-  Ideally, CHANGELOG entries should be in the format
-  `* [#PR](PR URL): Message`. You should consider adding your PR
-  and then making the CHANGELOG update once you know the PR number.
+  If changes require post-release steps, for example merging and publishing some documentation changes,
+  specify it in this section and add the label "includes-post-release-steps".
+  If it doesn't, feel free to remove this section.
 -->
+
+### Update checklist
+
 - [ ] I've added a CHANGELOG entry for this PR (if the change is public-facing)
 - [ ] I've considered possible cross-platform impacts (Mac, Linux, Windows).
 - [ ] I've left the version number as is (we'll handle incrementing this when releasing).
+- [ ] I've included any post-release steps in the section above.

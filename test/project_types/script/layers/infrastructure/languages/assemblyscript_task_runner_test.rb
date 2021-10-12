@@ -57,36 +57,26 @@ describe Script::Layers::Infrastructure::Languages::AssemblyScriptTaskRunner do
       assert_raises(Script::Layers::Infrastructure::Errors::WebAssemblyBinaryNotFoundError) { subject }
     end
 
-    describe "success" do
-      def self.it_triggers_compilation_process
-        it("triggers the compilation process") do
-          wasm = "some compiled code"
-          ctx.write("package.json", JSON.generate(package_json))
-          ctx.mkdir_p(File.dirname(wasmfile))
-          ctx.write(wasmfile, wasm)
+    describe "when script.wasm exists"  do
+      let(:wasm) { "some compiled code" }
+      let(:wasmfile) { "build/script.wasm" }
 
-          ctx
-            .expects(:capture2e)
-            .with("npm run build")
-            .once
-            .returns(["output", mock(success?: true)])
-
-          assert ctx.file_exist?(wasmfile)
-          assert_equal wasm, subject
-          refute ctx.file_exist?(wasmfile)
-        end
+      before do
+        ctx.write("package.json", JSON.generate(package_json))
+        ctx.mkdir_p(File.dirname(wasmfile))
+        ctx.write(wasmfile, wasm)
       end
 
-      describe "legacy naming" do
-        let(:wasmfile) { "build/#{script_name}.wasm" }
+      it "triggers the compilation process" do
+        ctx
+          .expects(:capture2e)
+          .with("npm run build")
+          .once
+          .returns(["output", mock(success?: true)])
 
-        it_triggers_compilation_process
-      end
-
-      describe "new naming" do
-        let(:wasmfile) { "build/script.wasm" }
-
-        it_triggers_compilation_process
+        assert ctx.file_exist?(wasmfile)
+        assert_equal wasm, subject
+        refute ctx.file_exist?(wasmfile)
       end
     end
 

@@ -60,7 +60,7 @@ module ShopifyCLI
       def test_can_switch_store_with_store_flag
         new_shop = "testshop2.myshopify.com"
 
-        ShopifyCLI::Commands::Login.expects(:validate_shop).with(new_shop).returns(new_shop)
+        ShopifyCLI::Commands::Login.expects(:validate_shop).with(new_shop, context: @context).returns(new_shop)
         ShopifyCLI::DB.expects(:set).with(shop: new_shop)
 
         @identity_auth_client = mock
@@ -82,7 +82,7 @@ module ShopifyCLI
       def test_can_switch_store_with_shop_flag
         new_shop = "testshop2.myshopify.com"
 
-        ShopifyCLI::Commands::Login.expects(:validate_shop).with(new_shop).returns(new_shop)
+        ShopifyCLI::Commands::Login.expects(:validate_shop).with(new_shop, context: @context).returns(new_shop)
         ShopifyCLI::DB.expects(:set).with(shop: new_shop)
 
         @identity_auth_client = mock
