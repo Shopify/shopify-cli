@@ -7,6 +7,7 @@ module Theme
       options do |parser, flags|
         parser.on("--port=PORT") { |port| flags[:port] = port.to_i }
         parser.on("--poll") { flags[:poll] = true }
+        parser.on("--pull-json-interval=SECONDS") { |seconds| flags[:pull_json_interval] = seconds.to_i }
       end
 
       def call(*)

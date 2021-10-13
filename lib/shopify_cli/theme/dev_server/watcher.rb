@@ -1,6 +1,7 @@
 # frozen_string_literal: true
 require "listen"
 require "observer"
+require "thread"
 
 module ShopifyCLI
   module Theme
@@ -9,7 +10,7 @@ module ShopifyCLI
       class Watcher
         include Observable
 
-        def initialize(ctx, theme:, syncer:, ignore_filter: nil, poll: false)
+        def initialize(ctx, theme:, syncer:, ignore_filter: nil, poll: false, pull_json_interval: nil)
           @ctx = ctx
           @theme = theme
           @syncer = syncer
@@ -18,15 +19,30 @@ module ShopifyCLI
             changed
             notify_observers(modified, added, removed)
           end
+          @pull_json_interval = pull_json_interval
 
           add_observer(self, :upload_files_when_changed)
         end
 
         def start
           @listener.start
+
+          if @pull_json_interval
+            @pull_thread = Thread.new do
+              loop do
+                @syncer.fetch_checksums!
+                @syncer.enqueue_get(@theme.json_files)
+                sleep(@pull_json_interval)
+              end
+            end
+          end
         end
 
         def stop
+          if @pull_thread
+            @pull_thread.kill
+            @pull_thread.join
+          end
           @listener.stop
         end
 
