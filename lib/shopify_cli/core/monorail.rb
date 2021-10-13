@@ -32,7 +32,11 @@ module ShopifyCLI
             err = e
             raise
           ensure
-            send_event(start_time, final_command, args - final_command, err&.message) if report?
+            # If there's an error, we don't prompt from here and we let the exception
+            # reporter do that.
+            if report?(prompt: err.nil?)
+              send_event(start_time, final_command, args - final_command, err&.message)
+            end
           end
         end
 
@@ -42,9 +46,9 @@ module ShopifyCLI
           (Time.now.utc.to_f * 1000).to_i
         end
 
-        def report?
+        def report?(prompt:)
           return true if Environment.send_monorail_events?
-          ReportingConfigurationController.can_report_automatically?
+          ReportingConfigurationController.can_report_automatically?(prompt: prompt)
         end
 
         def send_event(start_time, commands, args, err = nil)

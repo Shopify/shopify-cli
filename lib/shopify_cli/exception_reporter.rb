@@ -2,6 +2,7 @@ module ShopifyCLI
   module ExceptionReporter
     def self.report(error, _logs = nil, _api_key = nil, custom_metadata = {})
       context = ShopifyCLI::Context.new
+
       context.puts("\n")
       context.puts(context.message("core.error_reporting.unhandled_error.message"))
       context.puts(context.message("core.error_reporting.unhandled_error.issue_message"))

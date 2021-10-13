@@ -6,7 +6,7 @@ module ShopifyCLI
       )
     end
 
-    def self.can_report_automatically?(context: ShopifyCLI::Context.new)
+    def self.can_report_automatically?(prompt: true, context: ShopifyCLI::Context.new)
       return false if ShopifyCLI::Environment.development? || ShopifyCLI::Environment.test?
 
       # If the terminal is not interactive we can't prompt the user.
@@ -14,8 +14,10 @@ module ShopifyCLI
 
       if automatic_reporting_prompted?
         automatic_reporting_enabled?
-      else
+      elsif prompt
         prompt_user(context: context)
+      else
+        false
       end
     end
 
