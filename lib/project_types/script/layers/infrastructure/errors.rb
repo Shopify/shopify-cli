@@ -85,6 +85,23 @@ module Script
           end
         end
 
+        class APILibraryNotFoundError < ScriptProjectError
+          attr_reader :library_name
+          def initialize(library_name)
+            super()
+            @library_name = library_name
+          end
+        end
+
+        class LanguageLibraryForAPINotFoundError < ScriptProjectError
+          attr_reader :language, :api
+          def initialize(language:, api:)
+            super()
+            @language = language
+            @api = api
+          end
+        end
+
         class EmptyResponseError < ScriptProjectError; end
         class InvalidResponseError < ScriptProjectError; end
         class ForbiddenError < ScriptProjectError; end
