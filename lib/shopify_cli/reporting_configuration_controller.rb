@@ -22,7 +22,7 @@ module ShopifyCLI
       )
     end
 
-    def self.check_or_prompt_report_automatically(prompt: true, context: ShopifyCLI::Context.new)
+    def self.check_or_prompt_report_automatically(source: :usage, prompt: true, context: ShopifyCLI::Context.new)
       return false if ShopifyCLI::Environment.development? || ShopifyCLI::Environment.test?
 
       # If the terminal is not interactive we can't prompt the user.
@@ -31,18 +31,18 @@ module ShopifyCLI
       if reporting_prompted?
         reporting_enabled?
       elsif prompt
-        prompt_user(context: context)
+        prompt_user(context: context, source: source)
       else
         false
       end
     end
 
-    def self.prompt_user(context:)
+    def self.prompt_user(context:, source:)
       enable_automatic_tracking = CLI::UI::Prompt.ask(
-        context.message("core.analytics.enable_prompt.question")
+        context.message("core.analytics.enable_prompt.#{source}.question")
       ) do |handler|
-        handler.option(context.message("core.analytics.enable_prompt.yes")) { |_| true }
-        handler.option(context.message("core.analytics.enable_prompt.no")) { |_| false }
+        handler.option(context.message("core.analytics.enable_prompt.#{source}.yes")) { |_| true }
+        handler.option(context.message("core.analytics.enable_prompt.#{source}.no")) { |_| false }
       end
 
       ShopifyCLI::Config.set(

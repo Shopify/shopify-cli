@@ -38,12 +38,12 @@ module ShopifyCLI
 
     def self.report?(context:)
       return true if ReportingConfigurationController.reporting_prompted? &&
-        ReportingConfigurationController.check_or_prompt_report_automatically
+        ReportingConfigurationController.check_or_prompt_report_automatically(source: :uncaught_error)
 
       report_error = report_error?(context: context)
 
       unless ReportingConfigurationController.reporting_prompted?
-        ReportingConfigurationController.check_or_prompt_report_automatically
+        ReportingConfigurationController.check_or_prompt_report_automatically(source: :uncaught_error)
       end
 
       report_error

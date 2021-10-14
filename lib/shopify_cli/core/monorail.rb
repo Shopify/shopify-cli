@@ -48,7 +48,7 @@ module ShopifyCLI
 
         def report?(prompt:)
           return true if Environment.send_monorail_events?
-          ReportingConfigurationController.check_or_prompt_report_automatically(prompt: prompt)
+          ReportingConfigurationController.check_or_prompt_report_automatically(source: :usage, prompt: prompt)
         end
 
         def send_event(start_time, commands, args, err = nil)
