@@ -14,45 +14,8 @@ module ShopifyCLI
         super
       end
 
-      def test_log_prompts_for_consent_and_saves_answer
-        enabled_and_consented(true, nil)
-        ShopifyCLI::Config.expects(:get_section).with("analytics").returns({})
-        CLI::UI::Prompt.expects(:confirm).returns(true)
-        ShopifyCLI::Config.expects(:set).with("analytics", "enabled", true)
-        Net::HTTP.expects(:start).never
-
-        ShopifyCLI::Core::Monorail.log("testcommand", %w(arg argtwo)) { "This is the block and result" }
-      end
-
-      def test_log_doesnt_prompt_for_consent_if_not_enabled
-        enabled_and_consented(false, nil)
-        ShopifyCLI::Config.expects(:get_section).never
-        CLI::UI::Prompt.expects(:confirm).never
-        Net::HTTP.expects(:start).never
-
-        ShopifyCLI::Core::Monorail.log("testcommand", %w(arg argtwo)) { "This is the block and result" }
-      end
-
-      def test_log_doesnt_prompt_for_consent_if_already_answered
-        enabled_and_consented(true, false)
-        ShopifyCLI::Config.expects(:get_section).with("analytics").returns("enabled" => "true")
-        CLI::UI::Prompt.expects(:confirm).never
-        Net::HTTP.expects(:start).never
-
-        ShopifyCLI::Core::Monorail.log("testcommand", %w(arg argtwo)) { "This is the block and result" }
-      end
-
-      def test_log_doesnt_prompt_for_consent_if_in_ci
-        ShopifyCLI::Context.any_instance.stubs(:ci?).returns(true)
-        ShopifyCLI::Context.any_instance.stubs(:system?).returns(true)
-        CLI::UI::Prompt.expects(:confirm).never
-        Net::HTTP.expects(:start).never
-
-        ShopifyCLI::Core::Monorail.log("testcommand", %w(arg argtwo)) { "This is the block and result" }
-      end
-
       def test_log_event_contains_schema_and_payload_values
-        enabled_and_consented(true, true)
+        enable_reporting(true)
         ShopifyCLI::Shopifolk.expects(:acting_as_shopify_organization?).returns(true)
         Timecop.freeze do |time|
           this_time = (time.utc.to_f * 1000).to_i
@@ -94,7 +57,7 @@ module ShopifyCLI
       end
 
       def test_log_event_handles_errors
-        enabled_and_consented(true, true)
+        enable_reporting(true)
         ShopifyCLI::Shopifolk.expects(:acting_as_shopify_organization?).returns(false)
         Timecop.freeze do |time|
           this_time = (time.utc.to_f * 1000).to_i
@@ -137,7 +100,7 @@ module ShopifyCLI
       end
 
       def test_log_returns_the_result_after_sending_monorail_events
-        enabled_and_consented(true, true)
+        enable_reporting(true)
         Net::HTTP.expects(:start).once
 
         result = ShopifyCLI::Core::Monorail.log("testcommand", %w(arg argtwo)) { "This is the block and result" }
@@ -148,7 +111,7 @@ module ShopifyCLI
         ShopifyCLI::DB.stubs(:get).with(:acting_as_shopify_organization).returns(false)
         ShopifyCLI::DB.stubs(:get).with(:organization_id).returns(42)
 
-        enabled_and_consented(true, false)
+        enable_reporting(false)
         Net::HTTP.expects(:start).never
 
         result = ShopifyCLI::Core::Monorail.log("testcommand", %w(arg argtwo)) { "This is the block and result" }
@@ -159,7 +122,7 @@ module ShopifyCLI
         ShopifyCLI::DB.stubs(:get).with(:acting_as_shopify_organization).returns(false)
         ShopifyCLI::DB.stubs(:get).with(:organization_id).returns(42)
 
-        enabled_and_consented(true, true)
+        enable_reporting(true)
         Net::HTTP.expects(:start).once
 
         assert_raises Exception do
@@ -171,17 +134,7 @@ module ShopifyCLI
         ShopifyCLI::DB.stubs(:get).with(:acting_as_shopify_organization).returns(false)
         ShopifyCLI::DB.stubs(:get).with(:organization_id).returns(42)
 
-        enabled_and_consented(false, true)
-        Net::HTTP.expects(:start).never
-
-        ShopifyCLI::Core::Monorail.log("testcommand", %w(arg argtwo)) { "This is the block and result" }
-      end
-
-      def test_log_doesnt_send_monorail_event_if_enabled_but_not_consented
-        ShopifyCLI::DB.stubs(:get).with(:acting_as_shopify_organization).returns(false)
-        ShopifyCLI::DB.stubs(:get).with(:organization_id).returns(42)
-
-        enabled_and_consented(true, false)
+        enable_reporting(false)
         Net::HTTP.expects(:start).never
 
         ShopifyCLI::Core::Monorail.log("testcommand", %w(arg argtwo)) { "This is the block and result" }
@@ -191,7 +144,7 @@ module ShopifyCLI
         ShopifyCLI::DB.stubs(:get).with(:acting_as_shopify_organization).returns(false)
         ShopifyCLI::DB.stubs(:get).with(:organization_id).returns(42)
 
-        enabled_and_consented(true, true)
+        enable_reporting(true)
         stub_request(:post, Monorail::ENDPOINT_URI).to_return(status: 500)
 
         result = ShopifyCLI::Core::Monorail.log("testcommand", %w(arg argtwo)) { "This is the block and result" }
@@ -202,7 +155,7 @@ module ShopifyCLI
         ShopifyCLI::DB.stubs(:get).with(:acting_as_shopify_organization).returns(false)
         ShopifyCLI::DB.stubs(:get).with(:organization_id).returns(42)
 
-        enabled_and_consented(true, true)
+        enable_reporting(true)
         stub_request(:post, Monorail::ENDPOINT_URI).to_timeout
 
         result = ShopifyCLI::Core::Monorail.log("testcommand", %w(arg argtwo)) { "This is the block and result" }
@@ -211,11 +164,9 @@ module ShopifyCLI
 
       private
 
-      def enabled_and_consented(enabled, consented)
-        ShopifyCLI::Config.stubs(:get_section).with("analytics").returns({ "enabled" => consented.to_s })
-        ShopifyCLI::Context.any_instance.stubs(:system?).returns(enabled)
-        ShopifyCLI::Context.any_instance.stubs(:ci?).returns(false)
-        ShopifyCLI::Config.stubs(:get_bool).with("analytics", "enabled").returns(consented)
+      def enable_reporting(enabled)
+        Environment.expects(:send_monorail_events?).returns(enabled)
+        ReportingConfigurationController.stubs(:can_report_automatically?).returns(enabled)
       end
     end
   end

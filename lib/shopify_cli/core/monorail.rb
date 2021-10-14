@@ -16,9 +16,6 @@ module ShopifyCLI
         attr_accessor :metadata
 
         def log(name, args, &block) # rubocop:disable Lint/UnusedMethodArgument
-          prompt_for_consent
-          return yield unless enabled? && consented?
-
           command, command_name = Commands::Registry.lookup_command(name)
           final_command = [command_name]
           if command
@@ -28,13 +25,18 @@ module ShopifyCLI
 
           start_time = now_in_milliseconds
           err = nil
+
           begin
             yield
           rescue Exception => e # rubocop:disable Lint/RescueException
             err = e
             raise
           ensure
-            send_event(start_time, final_command, args - final_command, err&.message)
+            # If there's an error, we don't prompt from here and we let the exception
+            # reporter do that.
+            if report?(prompt: err.nil?)
+              send_event(start_time, final_command, args - final_command, err&.message)
+            end
           end
         end
 
@@ -44,22 +46,9 @@ module ShopifyCLI
           (Time.now.utc.to_f * 1000).to_i
         end
 
-        # we only want to send Monorail events in production or when explicitly developing
-        def enabled?
-          (Context.new.system? || ENV["MONORAIL_REAL_EVENTS"] == "1") && !Context.new.ci?
-        end
-
-        def consented?
-          ShopifyCLI::Config.get_bool("analytics", "enabled")
-        end
-
-        def prompt_for_consent
-          return if Context.new.ci?
-          return unless enabled?
-          return if ShopifyCLI::Config.get_section("analytics").key?("enabled")
-          msg = Context.message("core.monorail.consent_prompt")
-          opt = CLI::UI::Prompt.confirm(msg)
-          ShopifyCLI::Config.set("analytics", "enabled", opt)
+        def report?(prompt:)
+          return true if Environment.send_monorail_events?
+          ReportingConfigurationController.can_report_automatically?(prompt: prompt)
         end
 
         def send_event(start_time, commands, args, err = nil)

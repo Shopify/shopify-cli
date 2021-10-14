@@ -21,16 +21,18 @@ module ShopifyCLI
               " include the stack trace.}}",
             stacktrace_message: "{{red:\tTo print the stack trace, add the environment variable %s.}}",
           },
-          enable_automatic_reporting_prompt: {
-            question: "Automatically send error reports moving forward?",
-            yes: "Automatically send error reports to the Shopify team",
-            no: "Don't send error reports",
-            enabled: "Anonymized error reports will be sent to Shopify.",
-          },
           report_error: {
-            question: "Send an error report to Shopify?",
-            yes: "Send report",
-            no: "Don't send",
+            question: "Send an anonymized error report to Shopify?",
+            yes: "Yes, send",
+            no: "No, don't send",
+          },
+        },
+        analytics: {
+          enable_prompt: {
+            question: "Automatically send reports from now on?",
+            yes: "Yes, automatically send anonymized reports to Shopify",
+            no: "No, don't send",
+            enabled: "Anonymized reports will be sent to Shopify. ",
           },
         },
         connect: {
@@ -168,15 +170,6 @@ module ShopifyCLI
           disabled_as_shopify_org: "Can't switch development stores logged in as {{green:Shopify partners org}}",
           success: "Switched development store to {{green:%s}}",
         },
-
-        monorail: {
-          consent_prompt: <<~MSG,
-            Would you like to enable anonymous usage reporting?
-            If you select “Yes”, we’ll collect data about which commands you use and which errors you encounter.
-            Sharing this anonymous data helps Shopify improve this tool.
-          MSG
-        },
-
         identity_auth: {
           error: {
             timeout: "Timed out while waiting for response from Shopify",

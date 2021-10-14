@@ -79,6 +79,13 @@ module ShopifyCLI
       "#{spin_workspace}.#{spin_namespace}.#{spin_host}"
     end
 
+    def self.send_monorail_events?(env_variables: ENV)
+      env_variable_truthy?(
+        Constants::EnvironmentVariables::MONORAIL_REAL_EVENTS,
+        env_variables: env_variables
+      )
+    end
+
     def self.env_variable_truthy?(variable_name, env_variables: ENV)
       TRUTHY_ENV_VARIABLE_VALUES.include?(env_variables[variable_name.to_s])
     end

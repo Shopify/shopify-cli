@@ -8,11 +8,6 @@ module PHP
       include TestHelpers::FakeUI
       include TestHelpers::FakeFS
 
-      def setup
-        super
-        ShopifyCLI::Core::Monorail.stubs(:enabled?).returns(false)
-      end
-
       def test_can_connect_if_not_in_project
         ShopifyCLI::Project.stubs(:has_current?).returns(false)
 

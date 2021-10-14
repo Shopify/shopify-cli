@@ -124,6 +124,7 @@ module ShopifyCLI
   autoload :Project, "shopify_cli/project"
   autoload :ProjectCommands, "shopify_cli/project_commands"
   autoload :ProjectType, "shopify_cli/project_type"
+  autoload :ReportingConfigurationController, "shopify_cli/reporting_configuration_controller"
   autoload :ResolveConstant, "shopify_cli/resolve_constant"
   autoload :Resources, "shopify_cli/resources"
   autoload :Result, "shopify_cli/result"
