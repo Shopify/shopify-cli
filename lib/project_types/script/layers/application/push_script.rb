@@ -11,14 +11,27 @@ module Script
             task_runner = Infrastructure::Languages::TaskRunner
               .for(ctx, script_project.language, script_project.script_name)
 
+            extension_point = ExtensionPoints.get(type: script_project.extension_point_type)
+            library_name = extension_point.libraries.for(script_project.language)&.package
+            raise Infrastructure::Errors::LanguageLibraryForAPINotFoundError.new(
+              language: script_project.language,
+              api: script_project.extension_point_type
+            ) unless library_name
+
+            library = {
+              language: script_project.language,
+              version: task_runner.library_version(library_name),
+            }
+
             ProjectDependencies.install(ctx: ctx, task_runner: task_runner)
-            BuildScript.call(ctx: ctx, task_runner: task_runner, script_project: script_project)
+            BuildScript.call(ctx: ctx, task_runner: task_runner, script_project: script_project, library: library)
 
             UI::PrintingSpinner.spin(ctx, ctx.message("script.application.pushing")) do |p_ctx, spinner|
               package = Infrastructure::PushPackageRepository.new(ctx: p_ctx).get_push_package(
                 script_project: script_project,
                 compiled_type: task_runner.compiled_type,
                 metadata: task_runner.metadata,
+                library: library,
               )
               script_service = Infrastructure::ServiceLocator.script_service(
                 ctx: p_ctx,
@@ -32,6 +45,7 @@ module Script
                 metadata: package.metadata,
                 script_json: package.script_json,
                 module_upload_url: module_upload_url,
+                library: package.library,
               )
               script_project_repo.update_env(uuid: uuid)
               spinner.update_title(p_ctx.message("script.application.pushed"))

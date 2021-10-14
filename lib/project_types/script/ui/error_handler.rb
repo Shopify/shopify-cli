@@ -250,6 +250,22 @@ module Script
             cause_of_error: ShopifyCLI::Context.message("script.error.script_upload_cause"),
             help_suggestion: ShopifyCLI::Context.message("script.error.script_upload_help"),
           }
+        when Layers::Infrastructure::Errors::APILibraryNotFoundError
+          {
+            cause_of_error: ShopifyCLI::Context
+              .message("script.error.api_library_not_found_cause", library_name: e.library_name),
+            help_suggestion: ShopifyCLI::Context.message("script.error.api_library_not_found_help"),
+          }
+        when Layers::Infrastructure::Errors::LanguageLibraryForAPINotFoundError
+          {
+            cause_of_error: ShopifyCLI::Context
+              .message(
+                "script.error.language_library_for_api_not_found_cause",
+                language: e.language,
+                api: e.api
+              ),
+            help_suggestion: ShopifyCLI::Context.message("script.error.language_library_for_api_not_found_help"),
+          }
         end
       end
     end

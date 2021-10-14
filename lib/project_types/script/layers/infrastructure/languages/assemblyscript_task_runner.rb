@@ -47,6 +47,12 @@ module Script
             Domain::Metadata.create_from_json(@ctx, raw_contents)
           end
 
+          def library_version(library_name)
+            output = JSON.parse(CommandRunner.new(ctx: ctx).call("npm list --json"))
+            raise Errors::APILibraryNotFoundError.new(library_name), output unless output["dependencies"][library_name]
+            output["dependencies"][library_name]["version"]
+          end
+
           private
 
           def check_node_version!
