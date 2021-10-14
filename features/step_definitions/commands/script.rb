@@ -8,6 +8,6 @@ When(/I create a (.+) script named (.+)/) do |extension_point, script_name|
   )
 end
 
-Then(/I should be able to (.+) the script in directory (.+)/) do |action, _script_name|
-  @container.exec("npm", "run", action)
+Then(/I should be able to (.+) the script in directory (.+)/) do |action, directory|
+  @container.exec("npm", "run", action, relative_dir: directory)
 end

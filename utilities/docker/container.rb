@@ -31,11 +31,14 @@ module Utilities
         capture(*([SHOPIFY_BIN_PATH] + args))
       end
 
-      def capture(*args)
+      def capture(*args, relative_dir: nil)
         command = ["docker", "exec"]
-        unless @cwd.nil?
-          command += ["-w", @cwd]
+        cwd = if relative_dir.nil?
+          @cwd
+        else
+          File.join(@cwd, relative_dir)
         end
+        command += ["-w", cwd]
         @env.each do |env_name, env_value|
           command += ["--env", "#{env_name}=#{env_value}"]
         end
@@ -47,15 +50,18 @@ module Utilities
         out
       end
 
-      def exec_shopify(*args)
-        exec(*([SHOPIFY_BIN_PATH] + args))
+      def exec_shopify(*args, relative_dir: nil)
+        exec(*([SHOPIFY_BIN_PATH] + args), relative_dir: relative_dir)
       end
 
-      def exec(*args)
+      def exec(*args, relative_dir: nil)
         command = ["docker", "exec"]
-        unless @cwd.nil?
-          command += ["-w", @cwd]
+        cwd = if relative_dir.nil?
+          @cwd
+        else
+          File.join(@cwd, relative_dir)
         end
+        command += ["-w", cwd]
         @env.each do |env_name, env_value|
           command += ["--env", "#{env_name}=#{env_value}"]
         end
