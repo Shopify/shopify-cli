@@ -4,7 +4,7 @@ PATH
     shopify-cli (2.6.3)
       bugsnag (~> 6.22)
       listen (~> 3.7.0)
-      theme-check (~> 1.7)
+      theme-check (~> 1.7.2)
 
 GEM
   remote: https://rubygems.org/
@@ -151,4 +151,4 @@ DEPENDENCIES
   webmock
 
 BUNDLED WITH
-   2.2.22
+   2.2.29
