@@ -3,13 +3,17 @@ module ShopifyCLI
     def self.report(error, _logs = nil, _api_key = nil, custom_metadata = {})
       context = ShopifyCLI::Context.new
 
-      context.puts("\n")
-      context.puts(context.message("core.error_reporting.unhandled_error.message"))
-      context.puts(context.message("core.error_reporting.unhandled_error.issue_message"))
+      unless ShopifyCLI::Environment.development?
+        context.puts(context.message("core.error_reporting.unhandled_error.message"))
+        context.puts(context.message("core.error_reporting.unhandled_error.issue_message"))
+      end
+
+      # Stack trace hint
       unless ShopifyCLI::Environment.print_stacktrace?
         context.puts(context.message("core.error_reporting.unhandled_error.stacktrace_message",
           "#{ShopifyCLI::Constants::EnvironmentVariables::STACKTRACE}=1"))
       end
+
       context.puts("\n")
 
       return unless reportable_error?(error)
@@ -33,19 +37,21 @@ module ShopifyCLI
     end
 
     def self.report?(context:)
-      return true if ReportingConfigurationController.automatic_reporting_prompted? &&
-        ReportingConfigurationController.can_report_automatically?
+      return true if ReportingConfigurationController.reporting_prompted? &&
+        ReportingConfigurationController.check_or_prompt_report_automatically(source: :uncaught_error)
 
       report_error = report_error?(context: context)
 
-      unless ReportingConfigurationController.automatic_reporting_prompted?
-        ReportingConfigurationController.can_report_automatically?
+      unless ReportingConfigurationController.reporting_prompted?
+        ReportingConfigurationController.check_or_prompt_report_automatically(source: :uncaught_error)
       end
 
       report_error
     end
 
     def self.report_error?(context:)
+      return false if Environment.development?
+
       CLI::UI::Prompt.ask(context.message("core.error_reporting.report_error.question")) do |handler|
         handler.option(context.message("core.error_reporting.report_error.yes")) { |_| true }
         handler.option(context.message("core.error_reporting.report_error.no")) { |_| false }

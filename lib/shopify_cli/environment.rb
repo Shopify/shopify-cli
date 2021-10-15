@@ -26,7 +26,7 @@ module ShopifyCLI
       env_variable_truthy?(
         Constants::EnvironmentVariables::STACKTRACE,
         env_variables: env_variables
-      )
+      ) || development?(env_variables: env_variables)
     end
 
     def self.test?(env_variables: ENV)

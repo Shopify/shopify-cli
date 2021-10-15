@@ -4,20 +4,10 @@ require "securerandom"
 require_relative "../../../utilities/utilities"
 
 Given(/I have a VM with the CLI and a working directory/) do
-  @docker_container_id = SecureRandom.hex
-  @docker_tmp_dir = "/tmp/#{SecureRandom.hex}"
-  Utilities::Docker.run(
-    "tail", "-f", "/dev/null",
-    container_id: @docker_container_id
-  )
-  Utilities::Docker.exec(
-    "mkdir", "-p", @docker_tmp_dir,
-    container_id: @docker_container_id
-  )
+  @container = Utilities::Docker.create_container(env: { "SHOPIFY_CLI_ACCEPTANCE_TEST" => "1" })
+  @container_shopify_config_path = File.join(@container.xdg_config_home, "shopify/config")
 end
 
 After do |_scenario|
-  unless @docker_container_id.nil?
-    Utilities::Docker.rm(container_id: @docker_container_id)
-  end
+  @container&.remove
 end

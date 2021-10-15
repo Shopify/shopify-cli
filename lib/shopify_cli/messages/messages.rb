@@ -29,10 +29,17 @@ module ShopifyCLI
         },
         analytics: {
           enable_prompt: {
-            question: "Automatically send reports from now on?",
-            yes: "Yes, automatically send anonymized reports to Shopify",
-            no: "No, don't send",
-            enabled: "Anonymized reports will be sent to Shopify. ",
+            uncaught_error: {
+              question: "Automatically send reports from now on?",
+              yes: "Yes, automatically send anonymized reports to Shopify",
+              no: "No, don't send",
+            },
+            usage: {
+              question: "Automatically send anonymized usage and error reports to Shopify? We use these"\
+                " to make development on Shopify better.",
+              yes: "Yes, automatically send anonymized reports to Shopify",
+              no: "No, don't send",
+            },
           },
         },
         connect: {
@@ -486,7 +493,24 @@ module ShopifyCLI
 
           MESSAGE
         },
-
+        reporting: {
+          help: <<~HELP,
+            Turns anonymous reporting on or off.
+              Usage: {{command:%s reporting on}}
+          HELP
+          invalid_argument: <<~MESSAGE,
+            {{command:%s reporting %s}} is not supported. The valid values are {{command:on}} or {{command:off}}
+          MESSAGE
+          missing_argument: <<~MESSAGE,
+            {{command:%s reporting}} expects an argument {{command:on}} or {{command:off}}
+          MESSAGE
+          turned_on_message: <<~MESSAGE,
+            Anonymized reports will be sent to Shopify.
+          MESSAGE
+          turned_off_message: <<~MESSAGE,
+            Turn on automatic reporting later wtih {{command:%s reporting on}}.
+          MESSAGE
+        },
         whoami: {
           help: <<~HELP,
             Identifies which partner organization or store you are currently logged into.

@@ -7,43 +7,57 @@ module ShopifyCLI
       @context = TestHelpers::FakeContext.new
     end
 
-    def test_can_send_returns_false_when_the_environment_is_development
+    def test_enable_reporting_returns_the_right_value
+      # Given
+      ShopifyCLI::Config
+        .expects(:set)
+        .with(
+          Constants::Config::Sections::Analytics::NAME,
+          Constants::Config::Sections::Analytics::Fields::ENABLED,
+          true
+        )
+
+      # When/Then
+      ReportingConfigurationController.enable_reporting(true)
+    end
+
+    def test_check_or_prompt_report_automatically_returns_false_when_the_environment_is_development
       # Given
       ShopifyCLI::Environment.expects(:development?).returns(true)
 
       # When
-      got = ReportingConfigurationController.can_report_automatically?(context: @context)
+      got = ReportingConfigurationController.check_or_prompt_report_automatically(context: @context)
 
       # Then
       refute got
     end
 
-    def test_can_send_returns_false_when_the_environment_is_test
+    def test_check_or_prompt_report_automatically_returns_false_when_the_environment_is_test
       # Given
       ShopifyCLI::Environment.expects(:development?).returns(false)
       ShopifyCLI::Environment.expects(:test?).returns(true)
 
       # When
-      got = ReportingConfigurationController.can_report_automatically?(context: @context)
+      got = ReportingConfigurationController.check_or_prompt_report_automatically(context: @context)
 
       # Then
       refute got
     end
 
-    def test_can_send_returns_false_when_the_environment_is_not_interactive
+    def test_check_or_prompt_report_automatically_returns_false_when_the_environment_is_not_interactive
       # Given
       ShopifyCLI::Environment.expects(:test?).returns(false)
       ShopifyCLI::Environment.expects(:development?).returns(false)
       ShopifyCLI::Environment.expects(:interactive?).returns(false)
 
       # When
-      got = ReportingConfigurationController.can_report_automatically?(context: @context)
+      got = ReportingConfigurationController.check_or_prompt_report_automatically(context: @context)
 
       # Then
       refute got
     end
 
-    def test_can_send_returns_true_when_the_user_was_already_prompted_and_they_enabled_it
+    def test_check_or_prompt_report_automatically_returns_true_when_the_user_was_already_prompted_and_they_enabled_it
       # Given
       ShopifyCLI::Environment.expects(:test?).returns(false)
       ShopifyCLI::Environment.expects(:development?).returns(false)
@@ -62,13 +76,13 @@ module ShopifyCLI
         .returns(true)
 
       # When
-      got = ReportingConfigurationController.can_report_automatically?(context: @context)
+      got = ReportingConfigurationController.check_or_prompt_report_automatically(context: @context)
 
       # Then
       assert got
     end
 
-    def test_can_send_stores_and_returns_the_value_selected_by_the_user
+    def test_check_or_prompt_report_automatically_stores_and_returns_the_value_selected_by_the_user
       # Given
       ShopifyCLI::Environment.expects(:test?).returns(false)
       ShopifyCLI::Environment.expects(:development?).returns(false)
@@ -88,7 +102,7 @@ module ShopifyCLI
       CLI::UI::Prompt.expects(:ask).returns(false)
 
       # When
-      got = ReportingConfigurationController.can_report_automatically?(context: @context)
+      got = ReportingConfigurationController.check_or_prompt_report_automatically(context: @context)
 
       # Then
       refute got

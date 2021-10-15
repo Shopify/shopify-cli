@@ -1,60 +1,41 @@
 require "open3"
+require "securerandom"
 
 module Utilities
   module Docker
+    autoload :Container, "docker/container"
+
     Error = Class.new(StandardError)
 
     class << self
-      def rm(container_id:)
+      def create_container(env: {})
+        id = SecureRandom.hex
+        cwd = "/tmp/#{SecureRandom.hex}"
+
         build_image_if_needed
-        _, stderr, stat = Open3.capture3(
-          "docker", "rm", "-f", container_id
-        )
-        raise Error, stderr unless stat.success?
-      end
 
-      def capture(*args, container_id:, cwd: nil, env: {})
-        command = ["docker", "exec"]
-        unless cwd.nil?
-          command += ["-w", cwd]
-        end
-        env.each do |env_name, env_value|
-          command += ["--env", "#{env_name}=#{env_value}"]
-        end
-        command << container_id
-        command += args
-
-        out, err, stat = Open3.capture3(*command)
-        raise Error, err unless stat.success?
-        out
-      end
-
-      def exec(*args, container_id:, cwd: nil, env: {})
-        command = ["docker", "exec"]
-        unless cwd.nil?
-          command += ["-w", cwd]
-        end
-        env.each do |env_name, env_value|
-          command += ["--env", "#{env_name}=#{env_value}"]
-        end
-        command << container_id
-        command += args
-
-        out, stat = Open3.capture2e(*command)
-        raise Error, out unless stat.success?
-      end
-
-      def run(*args, container_id:)
-        build_image_if_needed
         _, stderr, stat = Open3.capture3(
           "docker", "run",
           "-t", "-d",
-          "--name", container_id,
+          "--name", id,
           "--volume", "#{Shellwords.escape(root_dir)}:/usr/src/app",
           image_tag,
-          *args
+          "tail", "-f", "/dev/null"
         )
         raise Error, stderr unless stat.success?
+
+        _, stderr, stat = Open3.capture3(
+          "docker", "exec",
+          id,
+          "mkdir", "-p", cwd
+        )
+        raise Error, stderr unless stat.success?
+
+        Container.new(
+          id: id,
+          cwd: cwd,
+          env: env
+        )
       end
 
       def run_and_rm_container(*args)
