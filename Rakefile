@@ -22,11 +22,6 @@ namespace :linux do
   task :test do
     Utilities::Docker.run_and_rm_container("bundle", "exec", "rake", "test")
   end
-
-  desc "Runs the acceptance tests suite in a Linux Docker environment"
-  task :features do
-    Utilities::Docker.run_and_rm_container("bundle", "exec", "cucumber")
-  end
 end
 
 RuboCop::RakeTask.new

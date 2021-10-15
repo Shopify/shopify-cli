@@ -10,6 +10,7 @@ mutation AppScriptSet(
   $configurationUi: Boolean!,
   $configurationDefinition: String!,
   $moduleUploadUrl: String!,
+  $library: LibraryInput,
 ) {
   appScriptSet(
     uuid: $uuid
@@ -23,6 +24,7 @@ mutation AppScriptSet(
     configurationUi: $configurationUi,
     configurationDefinition: $configurationDefinition,
     moduleUploadUrl: $moduleUploadUrl,
+    library: $library,
 ) {
     userErrors {
       field

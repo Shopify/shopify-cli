@@ -12,6 +12,8 @@ module Kernel
     raise if (name == "readline.so") && ShopifyCLI::Context.new.windows?
     # Special case for psych (yaml), which rescues this itself
     raise if name == "#{RUBY_VERSION[/\d+\.\d+/]}/psych.so"
+    # Special case for ffi, which rescues this itself
+    raise if name == "#{RUBY_VERSION.split(".")[0, 2].join(".")}/ffi_c"
     STDERR.puts "[Note] You cannot use gems with Shopify CLI."
     STDERR.puts "[LoadError] #{e.message}"
     if ENV["DEBUG"]
@@ -35,6 +37,7 @@ exit(proc do
       ShopifyCLI::Core::EntryPoint.call(ARGV.dup)
     end
   rescue StandardError => error
+    ShopifyCLI::ErrorHandler.exception = error
     if ShopifyCLI::Environment.print_stacktrace?
       raise error
     else

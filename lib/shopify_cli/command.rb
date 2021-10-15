@@ -3,11 +3,6 @@ require "shopify_cli"
 
 module ShopifyCLI
   class Command < CLI::Kit::BaseCommand
-    autoload :SubCommand,     "shopify_cli/command/sub_command"
-    autoload :AppCommand,     "shopify_cli/command/app_command"
-    autoload :AppSubCommand,  "shopify_cli/command/app_sub_command"
-    autoload :ProjectCommand, "shopify_cli/command/project_command"
-
     extend Feature::Set
 
     attr_writer :ctx
@@ -16,14 +11,12 @@ module ShopifyCLI
     class << self
       attr_writer :ctx, :task_registry
 
-      def call(args, command_name, *)
+      def call(args, command_name)
         subcommand, resolved_name = subcommand_registry.lookup_command(args.first)
-
         if subcommand
           subcommand.ctx = @ctx
           subcommand.task_registry = @task_registry
-
-          subcommand.call(args.drop(1), resolved_name, command_name)
+          subcommand.call(args, resolved_name, command_name)
         else
           cmd = new(@ctx)
           cmd.options.parse(@_options, args)

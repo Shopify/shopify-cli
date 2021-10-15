@@ -1,10 +1,43 @@
 require "open3"
+require "securerandom"
 
 module Utilities
   module Docker
+    autoload :Container, "docker/container"
+
     Error = Class.new(StandardError)
 
     class << self
+      def create_container(env: {})
+        id = SecureRandom.hex
+        cwd = "/tmp/#{SecureRandom.hex}"
+
+        build_image_if_needed
+
+        _, stderr, stat = Open3.capture3(
+          "docker", "run",
+          "-t", "-d",
+          "--name", id,
+          "--volume", "#{Shellwords.escape(root_dir)}:/usr/src/app",
+          image_tag,
+          "tail", "-f", "/dev/null"
+        )
+        raise Error, stderr unless stat.success?
+
+        _, stderr, stat = Open3.capture3(
+          "docker", "exec",
+          id,
+          "mkdir", "-p", cwd
+        )
+        raise Error, stderr unless stat.success?
+
+        Container.new(
+          id: id,
+          cwd: cwd,
+          env: env
+        )
+      end
+
       def run_and_rm_container(*args)
         build_image_if_needed
         system(
@@ -24,18 +57,26 @@ module Utilities
 
       def build_image_if_needed
         unless image_exists?(image_tag)
-          system("docker", "build", root_dir, "-t", image_tag) || abort
+          _, err, stat = Open3.capture3(
+            "docker", "build", root_dir, "-t", image_tag
+          )
+          raise Error, err unless stat.success?
         end
       end
 
       def image_tag
         gemfile_lock_path = File.expand_path("./Gemfile.lock", root_dir)
-        image_sha = Digest::SHA256.hexdigest(File.read(gemfile_lock_path))
+        dockerfile_path = File.expand_path("./Dockerfile", root_dir)
+        fingerprintable_strings = [
+          File.read(gemfile_lock_path),
+          File.read(dockerfile_path),
+        ]
+        image_sha = Digest::SHA256.hexdigest(fingerprintable_strings.join("-"))
         "shopify-cli-#{image_sha}"
       end
 
       def image_exists?(tag)
-        _, stat = Open3.capture2(
+        _, stat = Open3.capture2e(
           "docker", "inspect",
           "--type=image",
           tag

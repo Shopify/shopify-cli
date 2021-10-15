@@ -1,7 +1,7 @@
 # frozen_string_literal: true
 module Rails
   class Command
-    class Serve < ShopifyCLI::Command::AppSubCommand
+    class Serve < ShopifyCLI::SubCommand
       include ShopifyCLI::CommandOptions::CommandServeOptions
 
       prerequisite_task ensure_project_type: :rails

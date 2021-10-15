@@ -31,7 +31,7 @@ module Rails
             "GEM_PATH" => "/gem/path",
           }
         )
-        run_cmd("app rails serve")
+        run_cmd("rails serve")
       end
 
       def test_open_while_run
@@ -45,7 +45,7 @@ module Rails
           @context.message("rails.serve.open_info", "https://example.com/login?shop=my-test-shop.myshopify.com") +
           "\n"
         )
-        run_cmd("app rails serve")
+        run_cmd("rails serve")
       end
 
       def test_server_command_when_host_passed
@@ -56,7 +56,7 @@ module Rails
         )
         command = Rails::Command::Serve.new(@context)
         command.options.flags[:host] = "https://example-foo.com"
-        run_cmd('app rails serve --host="https://example-foo.com"')
+        run_cmd('rails serve --host="https://example-foo.com"')
       end
 
       def test_server_command_when_invalid_host_passed
@@ -75,7 +75,7 @@ module Rails
         ).never
 
         assert_raises ShopifyCLI::Abort do
-          run_cmd("app rails serve --host=#{invalid_host}")
+          run_cmd("rails serve --host=#{invalid_host}")
         end
       end
 
@@ -96,7 +96,7 @@ module Rails
             "GEM_PATH" => "/gem/path",
           }
         )
-        run_cmd("app rails serve --port=5000")
+        run_cmd("rails serve --port=5000")
       end
 
       def test_server_command_when_invalid_port_passed
@@ -109,7 +109,7 @@ module Rails
         @context.expects(:abort).with(
           @context.message("core.app.serve.error.invalid_port", invalid_port)
         )
-        run_cmd("app rails serve --port=#{invalid_port}")
+        run_cmd("rails serve --port=#{invalid_port}")
       end
     end
   end

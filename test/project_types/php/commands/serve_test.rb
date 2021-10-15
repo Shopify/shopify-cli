@@ -43,7 +43,7 @@ module PHP
           "\n"
         )
 
-        run_cmd("app php serve")
+        run_cmd("php serve")
       end
 
       def test_restarts_npm_watch_if_running
@@ -76,7 +76,7 @@ module PHP
           "\n"
         )
 
-        run_cmd("app php serve")
+        run_cmd("php serve")
       end
 
       def test_update_env_with_host
@@ -85,7 +85,7 @@ module PHP
         ShopifyCLI::Resources::EnvFile.any_instance.expects(:update).with(
           @context, :host, "https://example-foo.com"
         )
-        run_cmd('app php serve --host="https://example-foo.com"')
+        run_cmd('php serve --host="https://example-foo.com"')
       end
 
       def test_server_command_when_invalid_host_passed
@@ -96,7 +96,6 @@ module PHP
         ShopifyCLI::ProcessSupervision.expects(:start).never
 
         @context.expects(:system).with(
-          "app",
           "php",
           "artisan",
           "serve",
@@ -113,7 +112,7 @@ module PHP
         ).never
 
         assert_raises ShopifyCLI::Abort do
-          run_cmd("app php serve --host=#{invalid_host}")
+          run_cmd("php serve --host=#{invalid_host}")
         end
       end
 
@@ -147,7 +146,7 @@ module PHP
           "\n"
         )
 
-        run_cmd("app php serve --port=5000")
+        run_cmd("php serve --port=5000")
       end
 
       def test_server_command_when_invalid_port_passed
@@ -162,7 +161,7 @@ module PHP
           @context.message("core.app.serve.error.invalid_port", invalid_port)
         )
 
-        run_cmd("app php serve --port=#{invalid_port}")
+        run_cmd("php serve --port=#{invalid_port}")
       end
     end
   end

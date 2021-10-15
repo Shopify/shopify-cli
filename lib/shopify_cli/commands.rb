@@ -23,12 +23,12 @@ module ShopifyCLI
     register :Login, "login", "shopify_cli/commands/login", true
     register :Logout, "logout", "shopify_cli/commands/logout", true
     register :Populate, "populate", "shopify_cli/commands/populate", true
+    register :Reporting, "reporting", "shopify_cli/commands/reporting", true
     register :Store, "store", "shopify_cli/commands/store", true
     register :Switch, "switch", "shopify_cli/commands/switch", true
     register :System, "system", "shopify_cli/commands/system", true
     register :Version, "version", "shopify_cli/commands/version", true
     register :Whoami, "whoami", "shopify_cli/commands/whoami", true
-    register :App, "app", "shopify_cli/commands/app", true
 
     autoload :Connect, "shopify_cli/commands/connect"
   end

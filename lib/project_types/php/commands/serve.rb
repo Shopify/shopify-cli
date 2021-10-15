@@ -1,7 +1,7 @@
 # frozen_string_literal: true
 module PHP
   class Command
-    class Serve < ShopifyCLI::Command::AppSubCommand
+    class Serve < ShopifyCLI::SubCommand
       include ShopifyCLI::CommandOptions::CommandServeOptions
 
       prerequisite_task :ensure_env, :ensure_dev_store

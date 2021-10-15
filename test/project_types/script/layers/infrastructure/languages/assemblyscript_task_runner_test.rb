@@ -17,8 +17,9 @@ describe Script::Layers::Infrastructure::Languages::AssemblyScriptTaskRunner do
     }
   end
   let(:extension_point_type) { "discount" }
-  let(:language) { "AssemblyScript" }
+  let(:language) { "assemblyscript" }
   let(:as_task_runner) { Script::Layers::Infrastructure::Languages::AssemblyScriptTaskRunner.new(ctx, script_name) }
+  let(:command_runner) { Script::Layers::Infrastructure::CommandRunner }
 
   let(:package_json) do
     {
@@ -57,36 +58,26 @@ describe Script::Layers::Infrastructure::Languages::AssemblyScriptTaskRunner do
       assert_raises(Script::Layers::Infrastructure::Errors::WebAssemblyBinaryNotFoundError) { subject }
     end
 
-    describe "success" do
-      def self.it_triggers_compilation_process
-        it("triggers the compilation process") do
-          wasm = "some compiled code"
-          ctx.write("package.json", JSON.generate(package_json))
-          ctx.mkdir_p(File.dirname(wasmfile))
-          ctx.write(wasmfile, wasm)
+    describe "when script.wasm exists"  do
+      let(:wasm) { "some compiled code" }
+      let(:wasmfile) { "build/script.wasm" }
 
-          ctx
-            .expects(:capture2e)
-            .with("npm run build")
-            .once
-            .returns(["output", mock(success?: true)])
-
-          assert ctx.file_exist?(wasmfile)
-          assert_equal wasm, subject
-          refute ctx.file_exist?(wasmfile)
-        end
+      before do
+        ctx.write("package.json", JSON.generate(package_json))
+        ctx.mkdir_p(File.dirname(wasmfile))
+        ctx.write(wasmfile, wasm)
       end
 
-      describe "legacy naming" do
-        let(:wasmfile) { "build/#{script_name}.wasm" }
+      it "triggers the compilation process" do
+        ctx
+          .expects(:capture2e)
+          .with("npm run build")
+          .once
+          .returns(["output", mock(success?: true)])
 
-        it_triggers_compilation_process
-      end
-
-      describe "new naming" do
-        let(:wasmfile) { "build/script.wasm" }
-
-        it_triggers_compilation_process
+        assert ctx.file_exist?(wasmfile)
+        assert_equal wasm, subject
+        refute ctx.file_exist?(wasmfile)
       end
     end
 
@@ -118,6 +109,55 @@ describe Script::Layers::Infrastructure::Languages::AssemblyScriptTaskRunner do
     it "should return false if node_modules folder does not exists" do
       Dir.stubs(:exist?).returns(false)
       refute subject
+    end
+  end
+
+  describe ".library_version" do
+    subject { as_task_runner.library_version(extension_point_config["assemblyscript"][:package]) }
+
+    describe "when the package is in the dependencies list" do
+      it "should return a valid version number" do
+        command_runner.any_instance.stubs(:call)
+          .with("npm list --json")
+          .returns(
+            {
+              "dependencies" => {
+                extension_point_config["assemblyscript"][:package] => {
+                  "version" => "1.3.7",
+                },
+              },
+            }.to_json
+          )
+        assert_equal "1.3.7", subject
+      end
+    end
+
+    describe "when the package is not in the dependencies list" do
+      it "should return an error" do
+        command_runner.any_instance.stubs(:call)
+          .with("npm list --json")
+          .returns(
+            {
+              "dependencies" => {},
+            }.to_json,
+          )
+        assert_raises Script::Layers::Infrastructure::Errors::APILibraryNotFoundError do
+          subject
+        end
+      end
+    end
+
+    describe "when CommandRunner raises SystemCallFailureError" do
+      it "should raise SystemCallFailureError" do
+        cmd = "npm list --json"
+        command_runner.any_instance.stubs(:call)
+          .with(cmd)
+          .raises(Script::Layers::Infrastructure::Errors::SystemCallFailureError.new(out: "test", cmd: cmd))
+
+        assert_raises Script::Layers::Infrastructure::Errors::SystemCallFailureError do
+          subject
+        end
+      end
     end
   end
 

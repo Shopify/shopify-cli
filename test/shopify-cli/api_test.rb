@@ -36,6 +36,7 @@ module ShopifyCLI
         "Sec-CH-UA" => "Shopify CLI; v=#{ShopifyCLI::VERSION} sha=#{ShopifyCLI.sha}",
         "Sec-CH-UA-PLATFORM" => @context.os.to_s,
         "Auth" => "faketoken",
+        "X-Request-Id" => "1234-5678",
       }
       uri = URI.parse("https://my-test-shop.myshopify.com/admin/api/2019-04/graphql.json")
       variables = { var_name: "var_value" }
@@ -43,6 +44,7 @@ module ShopifyCLI
       File.stubs(:read)
         .with(File.join(ShopifyCLI::ROOT, "lib/graphql/api/mutation.graphql"))
         .returns(@mutation)
+      SecureRandom.stubs(:uuid).returns("1234-5678")
       response = stub("response", code: "200", body: "{}")
       HttpRequest.expects(:post).with(uri, body, headers).returns(response)
       @api.query("api/mutation", variables: variables)
@@ -72,6 +74,7 @@ module ShopifyCLI
         .returns(@mutation)
 
       @context.expects(:puts).with(@context.message("core.api.error.internal_server_error"))
+      # @context.expects(:debug).times(2)
       @api.query("api/mutation")
       @api.stubs(:query).raises(API::APIRequestServerError)
       assert_raises(API::APIRequestServerError) do
@@ -86,8 +89,13 @@ module ShopifyCLI
       File.stubs(:read)
         .with(File.join(ShopifyCLI::ROOT, "lib/graphql/api/mutation.graphql"))
         .returns(@mutation)
+      SecureRandom.stubs(:uuid).returns("1234-5678")
 
-      @context.expects(:debug).with(@context.message("core.api.error.internal_server_error_debug", "500\n{}"))
+      @context.expects(:debug)
+        .with(any_of(
+          @context.message("core.api.error.internal_server_error_debug", "500\n{}"),
+          @context.message("POST #{@api.url} with X-Request-Id: 1234-5678"),
+        )).at_least_once
       @context.expects(:puts).with(@context.message("core.api.error.internal_server_error"))
       @api.query("api/mutation")
       @api.stubs(:query).raises(API::APIRequestServerError)

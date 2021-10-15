@@ -1,20 +1,23 @@
 module ShopifyCLI
   module ExceptionReporter
-    autoload :PermissionController, "shopify_cli/exception_reporter/permission_controller"
-
     def self.report(error, _logs = nil, _api_key = nil, custom_metadata = {})
       context = ShopifyCLI::Context.new
-      context.puts("\n")
-      context.puts(context.message("core.error_reporting.unhandled_error.message"))
-      context.puts(context.message("core.error_reporting.unhandled_error.issue_message"))
+
+      unless ShopifyCLI::Environment.development?
+        context.puts(context.message("core.error_reporting.unhandled_error.message"))
+        context.puts(context.message("core.error_reporting.unhandled_error.issue_message"))
+      end
+
+      # Stack trace hint
       unless ShopifyCLI::Environment.print_stacktrace?
         context.puts(context.message("core.error_reporting.unhandled_error.stacktrace_message",
           "#{ShopifyCLI::Constants::EnvironmentVariables::STACKTRACE}=1"))
       end
+
       context.puts("\n")
 
       return unless reportable_error?(error)
-      return unless report?
+      return unless report?(context: context)
 
       ENV["BUGSNAG_DISABLE_AUTOCONFIGURE"] = "1"
       require "bugsnag"
@@ -30,21 +33,29 @@ module ShopifyCLI
 
       metadata = {}
       metadata.merge!(custom_metadata)
-      # Bugsnag.notify(error, metadata)
+      Bugsnag.notify(error, metadata)
     end
 
-    def self.report?
-      # return false if ShopifyCLI::Environment.development?
-      return true if ExceptionReporter::PermissionController.automatic_reporting_prompted? &&
-        ExceptionReporter::PermissionController.can_report_automatically?
+    def self.report?(context:)
+      return true if ReportingConfigurationController.reporting_prompted? &&
+        ReportingConfigurationController.check_or_prompt_report_automatically(source: :uncaught_error)
 
-      report_error = ExceptionReporter::PermissionController.report_error?
+      report_error = report_error?(context: context)
 
-      unless ExceptionReporter::PermissionController.automatic_reporting_prompted?
-        ExceptionReporter::PermissionController.can_report_automatically?
+      unless ReportingConfigurationController.reporting_prompted?
+        ReportingConfigurationController.check_or_prompt_report_automatically(source: :uncaught_error)
       end
 
       report_error
+    end
+
+    def self.report_error?(context:)
+      return false if Environment.development?
+
+      CLI::UI::Prompt.ask(context.message("core.error_reporting.report_error.question")) do |handler|
+        handler.option(context.message("core.error_reporting.report_error.yes")) { |_| true }
+        handler.option(context.message("core.error_reporting.report_error.no")) { |_| false }
+      end
     end
 
     def self.reportable_error?(error)

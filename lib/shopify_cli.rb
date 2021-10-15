@@ -96,6 +96,7 @@ module ShopifyCLI
     )
   end
 
+  autoload :AppTypeDetector, "shopify_cli/app_type_detector"
   autoload :Constants, "shopify_cli/constants"
   autoload :Environment, "shopify_cli/environment"
   autoload :AdminAPI, "shopify_cli/admin_api"
@@ -122,11 +123,15 @@ module ShopifyCLI
   autoload :PartnersAPI, "shopify_cli/partners_api"
   autoload :ProcessSupervision, "shopify_cli/process_supervision"
   autoload :Project, "shopify_cli/project"
+  autoload :ProjectCommands, "shopify_cli/project_commands"
   autoload :ProjectType, "shopify_cli/project_type"
+  autoload :ReportingConfigurationController, "shopify_cli/reporting_configuration_controller"
   autoload :ResolveConstant, "shopify_cli/resolve_constant"
   autoload :Resources, "shopify_cli/resources"
   autoload :Result, "shopify_cli/result"
+  autoload :Services, "shopify_cli/services"
   autoload :Shopifolk, "shopify_cli/shopifolk"
+  autoload :SubCommand, "shopify_cli/sub_command"
   autoload :Task, "shopify_cli/task"
   autoload :Tasks, "shopify_cli/tasks"
   autoload :TransformDataStructure, "shopify_cli/transform_data_structure"

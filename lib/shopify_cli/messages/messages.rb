@@ -33,16 +33,25 @@ module ShopifyCLI
               " include the stack trace.}}",
             stacktrace_message: "{{red:\tTo print the stack trace, add the environment variable %s.}}",
           },
-          enable_automatic_reporting_prompt: {
-            question: "Automatically send error reports moving forward?",
-            yes: "Automatically send error reports to the Shopify team",
-            no: "Don't send error reports",
-            enabled: "Anonymized error reports will be sent to Shopify.",
-          },
           report_error: {
-            question: "Send an error report to Shopify?",
-            yes: "Send report",
-            no: "Don't send",
+            question: "Send an anonymized error report to Shopify?",
+            yes: "Yes, send",
+            no: "No, don't send",
+          },
+        },
+        analytics: {
+          enable_prompt: {
+            uncaught_error: {
+              question: "Automatically send reports from now on?",
+              yes: "Yes, automatically send anonymized reports to Shopify",
+              no: "No, don't send",
+            },
+            usage: {
+              question: "Automatically send anonymized usage and error reports to Shopify? We use these"\
+                " to make development on Shopify better.",
+              yes: "Yes, automatically send anonymized reports to Shopify",
+              no: "No, don't send",
+            },
           },
         },
         connect: {
@@ -180,15 +189,6 @@ module ShopifyCLI
           disabled_as_shopify_org: "Can't switch development stores logged in as {{green:Shopify partners org}}",
           success: "Switched development store to {{green:%s}}",
         },
-
-        monorail: {
-          consent_prompt: <<~MSG,
-            Would you like to enable anonymous usage reporting?
-            If you select “Yes”, we’ll collect data about which commands you use and which errors you encounter.
-            Sharing this anonymous data helps Shopify improve this tool.
-          MSG
-        },
-
         identity_auth: {
           error: {
             timeout: "Timed out while waiting for response from Shopify",
@@ -505,7 +505,24 @@ module ShopifyCLI
 
           MESSAGE
         },
-
+        reporting: {
+          help: <<~HELP,
+            Turns anonymous reporting on or off.
+              Usage: {{command:%s reporting on}}
+          HELP
+          invalid_argument: <<~MESSAGE,
+            {{command:%s reporting %s}} is not supported. The valid values are {{command:on}} or {{command:off}}
+          MESSAGE
+          missing_argument: <<~MESSAGE,
+            {{command:%s reporting}} expects an argument {{command:on}} or {{command:off}}
+          MESSAGE
+          turned_on_message: <<~MESSAGE,
+            Anonymized reports will be sent to Shopify.
+          MESSAGE
+          turned_off_message: <<~MESSAGE,
+            Turn on automatic reporting later wtih {{command:%s reporting on}}.
+          MESSAGE
+        },
         whoami: {
           help: <<~HELP,
             Identifies which partner organization or store you are currently logged into.

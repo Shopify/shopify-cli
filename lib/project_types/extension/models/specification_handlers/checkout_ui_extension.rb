@@ -9,7 +9,7 @@ module Extension
         def config(context)
           {
             **Features::ArgoConfig.parse_yaml(context, PERMITTED_CONFIG_KEYS),
-            **argo.config(context),
+            **argo.config(context, include_renderer_version: false),
           }
         end
 

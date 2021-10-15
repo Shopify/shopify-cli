@@ -148,6 +148,12 @@ module Script
 
           script_upload_cause: "Fail to upload script.",
           script_upload_help: "Try again.",
+
+          api_library_not_found_cause: "Script can't be created because API library %{library_name} is missing from the dependencies",
+          api_library_not_found_help: "This error can occur because the API library was removed from your system or there is a problem with dependencies in the repository.",
+
+          language_library_for_api_not_found_cause: "Script can’t be pushed because the %{language} library for API %{api} is missing.",
+          language_library_for_api_not_found_help: "Make sure extension_point.yml contains the correct API library.",
         },
 
         create: {
