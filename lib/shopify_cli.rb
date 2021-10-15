@@ -102,6 +102,7 @@ module ShopifyCLI
   autoload :AdminAPI, "shopify_cli/admin_api"
   autoload :API, "shopify_cli/api"
   autoload :Command, "shopify_cli/command"
+  autoload :CommandOptions, "shopify_cli/command_options"
   autoload :Commands, "shopify_cli/commands"
   autoload :Connect, "shopify_cli/connect"
   autoload :Context, "shopify_cli/context"

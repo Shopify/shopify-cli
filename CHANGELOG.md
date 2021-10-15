@@ -8,6 +8,7 @@ From version 2.6.0, the sections in this file adhere to the [keep a changelog](h
 ### Added
 * [#1542](https://github.com/Shopify/shopify-cli/pull/1542): Add option theme serve --poll to force polling when watching files
 * [#1635](https://github.com/Shopify/shopify-cli/pull/1635): Command to enable or disable anonymous usage and error reporting.
+* [#1614](https://github.com/Shopify/shopify-cli/pull/1614): Add ability to set custom ngrok port for all app serve commands.
 ### Removed
 
 ### Changed

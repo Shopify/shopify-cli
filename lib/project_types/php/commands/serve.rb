@@ -2,20 +2,17 @@
 module PHP
   class Command
     class Serve < ShopifyCLI::SubCommand
-      PORT = 3000
+      include ShopifyCLI::CommandOptions::CommandServeOptions
 
       prerequisite_task :ensure_env, :ensure_dev_store
 
-      options do |parser, flags|
-        parser.on("--host=HOST") do |h|
-          flags[:host] = h.gsub('"', "")
-        end
-      end
+      parse_host_option
+      parse_port_option
 
       def call(*)
         project = ShopifyCLI::Project.current
-        url = options.flags[:host] || ShopifyCLI::Tunnel.start(@ctx, port: PORT)
-        @ctx.abort(@ctx.message("php.serve.error.host_must_be_https")) if url.match(/^https/i).nil?
+        tunnel_port = port.to_s
+        url = host || ShopifyCLI::Tunnel.start(@ctx, port: tunnel_port)
         project.env.update(@ctx, :host, url)
         ShopifyCLI::Tasks::UpdateDashboardURLS.call(
           @ctx,
@@ -35,7 +32,7 @@ module PHP
           ShopifyCLI::ProcessSupervision.start(:npm_watch, "npm run watch", force_spawn: true)
 
           env = project.env.to_h
-          @ctx.system("php", "artisan", "serve", "--port", PORT.to_s, env: env)
+          @ctx.system("php", "artisan", "serve", "--port", tunnel_port, env: env)
         end
       end
 

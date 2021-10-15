@@ -27,7 +27,12 @@ module ShopifyCLI
       end
 
       def options(&block)
-        @_options = block
+        existing_options = @_options
+        # We prevent new options calls to override existing blocks by nesting them.
+        @_options = ->(parser, flags) {
+          existing_options&.call(parser, flags)
+          block.call(parser, flags)
+        }
       end
 
       def subcommand(const, cmd, path = nil)
