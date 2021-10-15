@@ -37,7 +37,7 @@ module Script
           end
 
           def check_system_dependencies!
-            self.class::REQUIRED_TOOL_VERSIONS.each { |tool| check_tool_version!(tool[:tool_name], tool[:min_version]) }
+            required_tool_versions.each { |tool| check_tool_version!(tool[:tool_name], tool[:min_version]) }
           end
 
           def install_dependencies
@@ -48,11 +48,6 @@ module Script
 
           def compiled_type
             "wasm"
-          end
-
-          def project_dependencies_installed?
-            # Assuming if node_modules folder exist at root of script folder, all deps are installed
-            ctx.dir_exist?("node_modules")
           end
 
           def metadata
@@ -76,10 +71,7 @@ module Script
           protected
 
           def check_tool_version!(tool, min_required_version)
-            output, status = @ctx.capture2e(tool, "--version")
-            unless status.success?
-              raise Errors::NoDependencyInstalledError.new(tool, min_required_version)
-            end
+            output = tool_version_output(tool, min_required_version)
 
             require "semantic/semantic"
             version = ::Semantic::Version.new(output.gsub(/^v/, ""))
