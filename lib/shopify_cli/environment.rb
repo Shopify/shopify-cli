@@ -51,20 +51,21 @@ module ShopifyCLI
     end
 
     def self.use_spin_partners_instance?(env_variables: ENV)
-      env_variable_truthy?(
-        Constants::EnvironmentVariables::SPIN_PARTNERS,
-        env_variables: env_variables
-      )
+      !env_variables[Constants::EnvironmentVariables::SPIN_PARTNERS].nil?
     end
 
     def self.partners_domain(env_variables: ENV)
       if use_local_partners_instance?(env_variables: env_variables)
         "partners.myshopify.io"
       elsif use_spin_partners_instance?(env_variables: env_variables)
-        "partners.#{spin_url(env_variables: env_variables)}"
+        env_variables.fetch(Constants::EnvironmentVariables::SPIN_PARTNERS)
       else
         "partners.shopify.com"
       end
+    end
+
+    def self.spin_identity_domain(env_variables: ENV)
+      env_variables.fetch(Constants::EnvironmentVariables::SPIN_IDENTITY_SERVICE_FQDN)
     end
 
     def self.use_spin?(env_variables: ENV)
@@ -72,11 +73,8 @@ module ShopifyCLI
         !env_variables[Constants::EnvironmentVariables::SPIN_NAMESPACE].nil?
     end
 
-    def self.spin_url(env_variables: ENV)
-      spin_workspace = spin_workspace(env_variables: env_variables)
-      spin_namespace = spin_namespace(env_variables: env_variables)
-      spin_host = spin_host(env_variables: env_variables)
-      "#{spin_workspace}.#{spin_namespace}.#{spin_host}"
+    def self.spin_fqdn(env_variables: ENV)
+      env_variables.fetch(Constants::EnvironmentVariables::SPIN_INSTANCE_FQDN)
     end
 
     def self.send_monorail_events?(env_variables: ENV)
