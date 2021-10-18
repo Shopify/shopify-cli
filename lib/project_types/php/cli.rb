@@ -5,10 +5,6 @@ module PHP
     register_messages(PHP::Messages::MESSAGES)
   end
 
-  class Command
-    autoload :Create, Project.project_filepath("commands/create")
-  end
-
   # define/autoload project specific Tasks
   module Tasks
   end

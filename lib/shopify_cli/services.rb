@@ -10,6 +10,12 @@ module ShopifyCLI
         autoload :PHPService, "shopify_cli/services/app/serve/php_service"
       end
 
+      module Create
+        # autoload :NodeService, "shopify_cli/services/app/create/node_service"
+        # autoload :RailsService, "shopify_cli/services/app/create/rails_service"
+        autoload :PHPService, "shopify_cli/services/app/create/php_service"
+      end
+
       module Deploy
         module Heroku
           autoload :NodeService, "shopify_cli/services/app/deploy/heroku/node_service"

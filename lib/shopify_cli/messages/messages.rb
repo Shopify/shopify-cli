@@ -27,9 +27,9 @@ module ShopifyCLI
             invalid_type: "The type %s is not supported. The only supported types are"\
               " {{command:[ rails | node | php ]}}",
             help: <<~HELP,
-            Deploy the current app to a hosting service. Heroku ({{underline:https://www.heroku.com}}) is currently the only option, but more will be added in the future.
-              Usage: {{command:%s app deploy [ heroku ]}}
-            HELP
+            {{command:%s app create}}: Creates a ruby on rails app.
+              Usage: {{command:%s app create [ rails | node | php ]}}
+          HELP
           },
           deploy: {
             help: <<~HELP,
