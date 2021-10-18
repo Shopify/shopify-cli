@@ -6,7 +6,8 @@ module ShopifyCLI
                 labels = "type:bug"
                 body = File.read(File.join(ShopifyCLI::ROOT, ".github/ISSUE_TEMPLATE.md"))
                 stacktrace_message = "## Stacktrace\n\nTraceback:\n\n"
-                error.backtrace[0..4].each do |e|
+                stacktrace = error.backtrace.length() < 5 ? error.backtrace : error.backtrace[0..4] # take at most 5 lines from backtrace
+                stacktrace.each do |e|
                     stacktrace_message += e
                     stacktrace_message += "\n"
                 end
