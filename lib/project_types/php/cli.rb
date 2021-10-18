@@ -5,16 +5,9 @@ module PHP
     register_messages(PHP::Messages::MESSAGES)
   end
 
-  # define/autoload project specific Commands
-  class Command < ShopifyCLI::ProjectCommands
-    subcommand :Connect, "connect", Project.project_filepath("commands/connect")
-    subcommand :Create, "create", Project.project_filepath("commands/create")
-    subcommand :Deploy, "deploy", Project.project_filepath("commands/deploy")
-    subcommand :Open, "open", Project.project_filepath("commands/open")
-    subcommand :Serve, "serve", Project.project_filepath("commands/serve")
-    subcommand :Tunnel, "tunnel", Project.project_filepath("commands/tunnel")
+  class Command
+    autoload :Create, Project.project_filepath("commands/create")
   end
-  ShopifyCLI::Commands.register("PHP::Command", "php")
 
   # define/autoload project specific Tasks
   module Tasks

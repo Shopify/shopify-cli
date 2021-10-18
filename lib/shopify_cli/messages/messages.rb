@@ -15,16 +15,156 @@ module ShopifyCLI
       },
       core: {
         app: {
-          serve: {
+          help: <<~HELP,
+          Suite of commands for developing apps. See {{command:%1$s app <command> --help}} for usage of each command.
+            Usage: {{command:%1$s app [ %2$s ]}}
+          HELP
+          type_not_found: <<~MESSAGE,
+          Couldn't detect the app type in directory %s. We currently support Rails, PHP, and NodeJS apps.
+          MESSAGE
+          create: {
+            type_required_error: "",
+            invalid_type: "The type %s is not supported. The only supported types are"\
+              " {{command:[ rails | node | php ]}}",
+            help: <<~HELP,
+            Deploy the current app to a hosting service. Heroku ({{underline:https://www.heroku.com}}) is currently the only option, but more will be added in the future.
+              Usage: {{command:%s app deploy [ heroku ]}}
+            HELP
+          },
+          deploy: {
+            help: <<~HELP,
+            Deploy the current app to a hosting service. Heroku ({{underline:https://www.heroku.com}}) is currently the only option, but more will be added in the future.
+              Usage: {{command:%s app deploy [ heroku ]}}
+            HELP
+            extended_help: <<~HELP,
+              {{bold:Subcommands:}}
+                {{cyan:heroku}}: Deploys the current app to Heroku.
+                  Usage: {{command:%s app deploy heroku}}
+            HELP
             error: {
-              invalid_port: "%s is not a valid port.",
-              host_must_be_https: "HOST must be a HTTPS url.",
+              missing_platform: <<~MESSAGE,
+              The platform argument is missing.
+                Usage: {{command:%s app deploy [ heroku ]}}
+              MESSAGE
+              invalid_platform: <<~MESSAGE,
+              The platform argument passed {{command:%s}} is not supported.
+                Usage: {{command:%s app deploy [ heroku ]}}
+              MESSAGE
+            },
+            heroku: {
+              downloading: "Downloading Heroku CLI…",
+              downloaded: "Downloaded Heroku CLI",
+              installing: "Installing Heroku CLI…",
+              installing_windows: "Running Heroku CLI install wizard…",
+              installed: "Installed Heroku CLI",
+              authenticated_with_account: "{{v}} Authenticated with Heroku as {{green:%s}}",
+              authenticating: "Authenticating with Heroku…",
+              authenticated: "{{v}} Authenticated with Heroku",
+              deploying: "Deploying to Heroku…",
+              deployed: "{{v}} Deployed to Heroku",
+              php: {
+                post_deploy: <<~DEPLOYED,
+                {{v}} Deployed to Heroku, you can access your app at {{green:%s}}
+
+                  If you're deploying this app for the first time, make sure to set up your database and your app's environment at {{bold:App dashboard -> Settings -> Config Vars}}.
+
+                  When setting your config vars, don't forget to set up your database and the appropriate Laravel values for it, particularly {{bold:DB_CONNECTION and DB_DATABASE}}.
+                DEPLOYED
+                error: {
+                  generate_app_key: "Failed to generate Laravel APP_KEY",
+                },
+              },
+              rails: {
+                db_check: {
+                  validating: "Validating application…",
+                  checking: "Checking database type…",
+                  validated: "Database type \"%s\" validated for platform \"Heroku\"",
+                  problem: "A problem was encountered while checking your database type.",
+                  sqlite: <<~SQLITE,
+                    Heroku does not support deployment using the SQLite database system.
+                    Change the database type using {{command:rails db:system:change --to=[new_db_type]}}. For more info:
+                    {{underline:https://gorails.com/episodes/rails-6-db-system-change-command}}
+                  SQLITE
+                },
+              },
+              git: {
+                checking: "Checking git repo…",
+                initialized: "Git repo initialized",
+                what_branch: "What branch would you like to deploy?",
+                branch_selected: "{{v}} Git branch {{green:%s}} selected for deploy",
+              },
+              app: {
+                no_apps_found: "No existing Heroku app found. What would you like to do?",
+                name: "What is your Heroku app’s name?",
+                select: "Specify an existing Heroku app",
+                selecting: "Selecting Heroku app %s…",
+                selected: "{{v}} Heroku app {{green:%s}} selected",
+                create: "Create a new Heroku app",
+                creating: "Creating new Heroku app…",
+                created: "{{v}} New Heroku app created",
+                setting_configs: "Setting Shopify app configs…",
+                configs_set: "{{v}} Shopify app configs set",
+              },
             },
           },
-          help: <<~HELP,
-          Create and manage embedded apps
-            Usage: {{command:%s app [ rails | node | php ] }}
-          HELP
+          connect: {
+            help: <<~HELP,
+            {{command:%s app connect}}: Connects an existing app to Shopify CLI. Creates a config file.
+              Usage: {{command:%s app connect}}
+            HELP
+            connected: "Project now connected to {{green:%s}}",
+            production_warning: <<~MESSAGE,
+              {{yellow:! Warning: if you have connected to an {{bold:app in production}}, running {{command:serve}} may update the app URL and cause an outage.
+            MESSAGE
+          },
+          tunnel: {
+            help: <<~HELP,
+              Start or stop an http tunnel to your local development app using ngrok.
+                Usage: {{command:%s app tunnel [ auth | start | stop ]}}
+            HELP
+            extended_help: <<~HELP,
+              {{bold:Subcommands:}}
+
+                {{cyan:auth}}: Writes an ngrok auth token to ~/.ngrok2/ngrok.yml to connect with an ngrok account. Visit https://dashboard.ngrok.com/signup to sign up.
+                  Usage: {{command:%1$s app tunnel auth <token>}}
+
+                {{cyan:start}}: Starts an ngrok tunnel, will print the URL for an existing tunnel if already running.
+                  Usage: {{command:%1$s app tunnel start}}
+
+                {{cyan:stop}}: Stops the ngrok tunnel.
+                  Usage: {{command:%1$s app tunnel stop}}
+
+            HELP
+            error: {
+              token_argument_missing: "{{x}} {{red:auth requires a token argument}}\n\n",
+            },
+          },
+          serve: {
+            help: <<~HELP,
+              Start a local development server for your project, as well as a public ngrok tunnel to your localhost.
+                Usage: {{command:%s app serve}}
+            HELP
+            extended_help: <<~HELP,
+              {{bold:Options:}}
+                {{cyan:--host=HOST}}: Bypass running tunnel and use custom host. HOST must be HTTPS url.
+                {{cyan:--port=PORT}}: Use custom port.
+            HELP
+            open_info: <<~MESSAGE,
+              {{*}} To install and start using your app, open this URL in your browser:
+              {{green:%s}}
+            MESSAGE
+            running_server: "Running server…",
+            error: {
+              host_must_be_https: "HOST must be a HTTPS url.",
+              invalid_port: "%s is not a valid port.",
+            },
+          },
+          open: {
+            help: <<~HELP,
+              Open your local development app in the default browser.
+                Usage: {{command:%s app open}}
+              HELP
+          },
         },
         error_reporting: {
           unhandled_error: {
@@ -328,7 +468,7 @@ module ShopifyCLI
           error: {
             not_in_project: <<~MESSAGE,
               {{x}} You are not in a Shopify app project
-              {{yellow:{{*}}}}{{reset: Run}}{{cyan: shopify rails create}}{{reset: or}}{{cyan: shopify node create}}{{reset: to create your app}}
+              {{yellow:{{*}}}}{{reset: Run}}{{cyan: shopify app create}}{{reset: to create your app}}
             MESSAGE
           },
         },

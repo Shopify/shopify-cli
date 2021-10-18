@@ -16,7 +16,7 @@ module ShopifyCLI
         ShopifyCLI::Context.message("core.config.help", ShopifyCLI::TOOL_NAME)
       end
 
-      class Feature < ShopifyCLI::SubCommand
+      class Feature < ShopifyCLI::Command::SubCommand
         def self.help
           ShopifyCLI::Context.message("core.config.feature.help", ShopifyCLI::TOOL_NAME)
         end
@@ -45,7 +45,7 @@ module ShopifyCLI
         end
       end
 
-      class Analytics < ShopifyCLI::SubCommand
+      class Analytics < ShopifyCLI::Command::SubCommand
         def self.help
           ShopifyCLI::Context.message("core.config.analytics.help", ShopifyCLI::TOOL_NAME)
         end

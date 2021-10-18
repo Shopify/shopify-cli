@@ -2,7 +2,7 @@
 
 module Theme
   class Command
-    class Init < ShopifyCLI::SubCommand
+    class Init < ShopifyCLI::Command::SubCommand
       options do |parser, flags|
         parser.on("-u", "--clone-url URL") { |url| flags[:clone_url] = url }
       end

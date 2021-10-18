@@ -1,7 +1,7 @@
 # frozen_string_literal: true
 module Rails
   class Command
-    class Create < ShopifyCLI::SubCommand
+    class Create < ShopifyCLI::Command::AppSubCommand
       unless ShopifyCLI::Environment.acceptance_test?
         prerequisite_task :ensure_authenticated
       end

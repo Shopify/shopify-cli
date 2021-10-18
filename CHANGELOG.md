@@ -32,6 +32,8 @@ From version 2.6.0, the sections in this file adhere to the [keep a changelog](h
 
 ### Changed
 * [#1635](https://github.com/Shopify/shopify-cli/pull/1635): Automatic usage and error reporting configuration has been unified under `analytics.enabled`.
+* [#1650](https://github.com/Shopify/shopify-cli/pull/1650): **Breaking** Move app commands under `shopify app`.
+
 ### Security
 
 ## Version 2.6.3

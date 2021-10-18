@@ -33,7 +33,7 @@ module PHP
       APPTYPE
 
       def test_prints_help_with_no_name_argument
-        io = capture_io { run_cmd("php create --help") }
+        io = capture_io { run_cmd("app php create --help") }
         assert_message_output(io: io, expected_content: [PHP::Command::Create.help])
       end
 
@@ -115,7 +115,7 @@ module PHP
       private
 
       def perform_command
-        run_cmd("php create \
+        run_cmd("app php create \
           --name=test-app \
           --type=public \
           --organization-id=42 \
