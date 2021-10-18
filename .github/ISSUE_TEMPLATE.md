@@ -28,7 +28,11 @@ Tip: include an error message (in a `<details></details>` tag) if your issue is 
 
 ## Specifications
 
+<!--SPECS
+Comment this out to include specs about your environment:
 - App type:
 - Operating System:
 - Shell:
 - Ruby version (ruby -v):
+-->
+
