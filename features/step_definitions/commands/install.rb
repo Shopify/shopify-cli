@@ -19,5 +19,5 @@ end
 
 Then("The file `ISSUE_TEMPLATE.md` is retained inside `.github`") do
   issue_template_file_path = File.join(ShopifyCLI::ROOT, ".github/ISSUE_TEMPLATE.md")
-  assert File.exists?(issue_template_file_path)
+  assert File.exist?(issue_template_file_path)
 end
