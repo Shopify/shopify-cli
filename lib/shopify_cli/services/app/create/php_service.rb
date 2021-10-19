@@ -1,3 +1,5 @@
+require "semantic/semantic"
+
 module ShopifyCLI
   module Services
     module App
@@ -19,77 +21,77 @@ module ShopifyCLI
               organization_id: organization_id,
               shop_domain: shop_domain,
               type: type,
-              verbose: verbose
+              verbose: verbose,
             })
             return context.puts(self.class.help) if form.nil?
-    
+
             check_php
             check_composer
             check_npm
             app_id = build(form)
-    
+
             ShopifyCLI::Project.write(
               context,
               project_type: "php",
               organization_id: form.organization_id,
             )
-    
+
             partners_url = ShopifyCLI::PartnersAPI.partners_url_for(form.organization_id, app_id)
-    
+
             context.puts(context.message("apps.create.info.created", form.title, partners_url))
             context.puts(context.message("apps.create.info.serve", form.name, ShopifyCLI::TOOL_NAME, "php"))
             unless ShopifyCLI::Shopifolk.acting_as_shopify_organization?
               context.puts(context.message("apps.create.info.install", partners_url, form.title))
             end
           end
-    
+
           private
-    
+
           def check_php
             cmd_path = context.which("php")
             context.abort(context.message("php.create.error.php_required")) if cmd_path.nil?
-    
+
             version, stat = context.capture2e("php", "-r", "echo phpversion();")
             context.abort(context.message("php.create.error.php_version_failure")) unless stat.success?
-    
+
             if ::Semantic::Version.new(version) < ::Semantic::Version.new("7.3.0")
               context.abort(context.message("php.create.error.php_version_too_low", "7.3"))
             end
-    
+
             context.done(context.message("php.create.php_version", version))
           end
-    
+
           def check_composer
             cmd_path = context.which("composer")
             context.abort(context.message("php.create.error.composer_required")) if cmd_path.nil?
           end
-    
+
           def check_npm
             cmd_path = context.which("npm")
             context.abort(context.message("php.create.error.npm_required")) if cmd_path.nil?
-    
+
             version, stat = context.capture2e("npm", "-v")
             context.abort(context.message("php.create.error.npm_version_failure")) unless stat.success?
-    
+
             context.done(context.message("php.create.npm_version", version))
           end
-    
+
           def build(form)
             ShopifyCLI::Git.clone("https://github.com/Shopify/shopify-app-php.git", form.name)
-    
+
             context.root = File.join(context.root, form.name)
             context.chdir(context.root)
-    
+
             api_client = ShopifyCLI::Tasks::CreateApiClient.call(
               context,
               org_id: form.organization_id,
               title: form.title,
               type: form.type,
             )
-    
+
             # Override the example settings with our own
             context.cp(".env.example", ".env")
-    
+
             env_file = ShopifyCLI::Resources::EnvFile.read
             env_file.api_key = api_client["apiKey"]
             env_file.secret = api_client["apiSecretKeys"].first["secret"]
@@ -98,12 +100,12 @@ module ShopifyCLI
             env_file.scopes = "write_products,write_draft_orders,write_customers"
             env_file.extra["DB_DATABASE"] = File.join(context.root, env_file.extra["DB_DATABASE"])
             env_file.write(context)
-    
+
             ShopifyCLI::PHPDeps.install(context, verbose)
-    
+
             set_npm_config
             ShopifyCLI::JsDeps.install(context, verbose)
-    
+
             title = context.message("php.create.app_setting_up")
             success = context.message("php.create.app_set_up")
             failure = context.message("php.create.error.app_setup")
@@ -112,22 +114,22 @@ module ShopifyCLI
               context.system("php", "artisan", "key:generate")
               context.system("php", "artisan", "migrate")
             end
-    
+
             begin
               context.rm_r(".git")
               context.rm_r(".github")
             rescue Errno::ENOENT => e
               context.debug(e)
             end
-    
+
             api_client["id"]
           end
-    
+
           def set_npm_config
             # check available npmrc (either user or system) for production registry
             registry, _ = context.capture2("npm config get @shopify:registry")
             return if registry.include?("https://registry.yarnpkg.com")
-    
+
             # available npmrc doesn't have production registry =>
             # set a project-based .npmrc
             context.system(
