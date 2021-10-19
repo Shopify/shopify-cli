@@ -6,7 +6,6 @@ module ShopifyCLI
       subcommand :Connect, "connect", "shopify_cli/commands/app/connect"
       subcommand :Create, "create", "shopify_cli/commands/app/create"
       subcommand :Deploy, "deploy", "shopify_cli/commands/app/deploy"
-      subcommand :Generate, "generate", "shopify_cli/commands/app/generate"
       subcommand :Open, "open", "shopify_cli/commands/app/open"
       subcommand :Serve, "serve", "shopify_cli/commands/app/serve"
       subcommand :Tunnel, "tunnel", "shopify_cli/commands/app/tunnel"
