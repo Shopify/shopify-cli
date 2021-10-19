@@ -7,8 +7,8 @@ module ShopifyCLI
 
           options do |parser, flags|
             parser.on("--name=NAME") { |t| flags[:name] = t }
-            parser.on("--organization_id=ID") { |id| flags[:organization_id] = id }
-            parser.on("--shop_domain=MYSHOPIFYDOMAIN") { |url| flags[:shop_domain] = url }
+            parser.on("--organization-id=ID") { |id| flags[:organization_id] = id }
+            parser.on("--store=MYSHOPIFYDOMAIN") { |url| flags[:store] = url }
             parser.on("--type=APPTYPE") { |type| flags[:type] = type }
             parser.on("--verbose") { flags[:verbose] = true }
           end
@@ -17,11 +17,17 @@ module ShopifyCLI
             Services::App::Create::NodeService.call(
               name: options.flags[:name],
               organization_id: options.flags[:organization_id],
-              shop_domain: options.flags[:shop_domain],
+              store: options.flags[:store],
               type: options.flags[:type],
               verbose: !options.flags[:verbose].nil?,
               context: @ctx
             )
+          end
+
+          class << self
+            def help
+              ShopifyCLI::Context.message("core.app.create.node.help", ShopifyCLI::TOOL_NAME, ShopifyCLI::TOOL_NAME)
+            end
           end
         end
       end

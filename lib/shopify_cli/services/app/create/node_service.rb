@@ -5,12 +5,12 @@ module ShopifyCLI
     module App
       module Create
         class NodeService < BaseService
-          attr_reader :context, :name, :organization_id, :shop_domain, :type, :verbose
+          attr_reader :context, :name, :organization_id, :store, :type, :verbose
 
-          def initialize(name:, organization_id:, shop_domain:, type:, verbose:, context:)
+          def initialize(name:, organization_id:, store:, type:, verbose:, context:)
             @name = name
             @organization_id = organization_id
-            @shop_domain = shop_domain
+            @store = store
             @type = type
             @verbose = verbose
             @context = context
@@ -21,7 +21,7 @@ module ShopifyCLI
             form = Node::Forms::Create.ask(context, [], {
               name: name,
               organization_id: organization_id,
-              shop_domain: shop_domain,
+              shop_domain: store,
               type: type,
               verbose: verbose,
             })
@@ -63,22 +63,24 @@ module ShopifyCLI
 
           def check_node
             cmd_path = context.which("node")
-            context.abort(context.message("node.create.error.node_required")) if cmd_path.nil?
+            context.abort(context.message("core.app.create.node.create.error.node_required")) if cmd_path.nil?
 
             version, stat = context.capture2e("node", "-v")
-            context.abort(context.message("node.create.error.node_version_failure")) unless stat.success?
+            unless stat.success?
+              context.abort(context.message("core.app.create.node.create.error.node_version_failure"))
+            end
 
-            context.done(context.message("node.create.node_version", version))
+            context.done(context.message("core.app.create.node.create.node_version", version))
           end
 
           def check_npm
             cmd_path = context.which("npm")
-            context.abort(context.message("node.create.error.npm_required")) if cmd_path.nil?
+            context.abort(context.message("core.app.create.node.create.error.npm_required")) if cmd_path.nil?
 
             version, stat = context.capture2e("npm", "-v")
-            context.abort(context.message("node.create.error.npm_version_failure")) unless stat.success?
+            context.abort(context.message("core.app.create.node.create.error.npm_version_failure")) unless stat.success?
 
-            context.done(context.message("node.create.npm_version", version))
+            context.done(context.message("core.app.create.node.create.npm_version", version))
           end
 
           def set_npm_config

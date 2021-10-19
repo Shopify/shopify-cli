@@ -29,7 +29,103 @@ module ShopifyCLI
             help: <<~HELP,
             {{command:%s app create}}: Creates a ruby on rails app.
               Usage: {{command:%s app create [ rails | node | php ]}}
-          HELP
+            HELP
+            rails: {
+              help: <<~HELP,
+                {{command:%s app create rails}}: Creates a ruby on rails app.
+                  Usage: {{command:%s app create rails}}
+                  Options:
+                    {{command:--name=NAME}} App name. Any string.
+                    {{command:--organization-id=ID}} Partner organization ID. Must be an existing organization.
+                    {{command:--store=MYSHOPIFYDOMAIN }} Development store URL. Must be an existing development store.
+                    {{command:--db=DB}} Database type. Must be one of: mysql, postgresql, sqlite3, oracle, frontbase, ibm_db, sqlserver, jdbcmysql, jdbcsqlite3, jdbcpostgresql, jdbc.
+                    {{command:--rails-opts=RAILSOPTS}} Additional options. Must be string containing one or more valid Rails options, separated by spaces.
+              HELP
+
+              error: {
+                invalid_ruby_version: "This project requires a Ruby version ~> 2.5 or Ruby 3.0.",
+                dir_exists: "Project directory %s already exists. Please use a different name.",
+                install_failure: "Error installing %s gem",
+                node_required: "node is required to create a rails project. Download at https://nodejs.org/en/download.",
+                node_version_failure: "Failed to get the current node version. Please make sure it is installed as " \
+                  "per the instructions at https://nodejs.org/en.",
+                yarn_required: "yarn is required to create a rails project. Download at " \
+                  "https://classic.yarnpkg.com/en/docs/install.",
+                yarn_version_failure: "Failed to get the current yarn version. Please make sure it is " \
+                  "installed as per the instructions at https://classic.yarnpkg.com/en/docs/install.",
+              },
+
+              info: {
+                open_new_shell: "{{*}} {{yellow:After installing %s, please open a new Command Prompt or PowerShell " \
+                  "window to continue.}}",
+              },
+              installing_bundler: "Installing bundler…",
+              generating_app: "Generating new rails app project in %s…",
+              adding_shopify_gem: "{{v}} Adding shopify_app gem…",
+              node_version: "node %s",
+              yarn_version: "yarn %s",
+              running_bundle_install: "Running bundle install…",
+              running_generator: "Running shopify_app generator…",
+              running_migrations: "Running migrations…",
+              running_webpacker_install: "Running webpacker:install…",
+            },
+            node: {
+              help: <<~HELP,
+                {{command:%s app create node}}: Creates an embedded nodejs app.
+                  Usage: {{command:%s app create node}}
+                  Options:
+                    {{command:--name=NAME}} App name. Any string.
+                    {{command:--organization-id=ID}} Partner organization ID. Must be an existing organization.
+                    {{command:--store=MYSHOPIFYDOMAIN }} Development store URL. Must be an existing development store.
+              HELP
+              error: {
+                node_required: "node is required to create an app project. Download at https://nodejs.org/en/download.",
+                node_version_failure: "Failed to get the current node version. Please make sure it is installed as " \
+                  "per the instructions at https://nodejs.org/en.",
+                npm_required: "npm is required to create an app project. Download at https://www.npmjs.com/get-npm.",
+                npm_version_failure: "Failed to get the current npm version. Please make sure it is installed as per " \
+                  "the instructions at https://www.npmjs.com/get-npm.",
+              },
+              node_version: "node %s",
+              npm_version: "npm %s",
+            },
+            php: {
+              help: <<~HELP,
+                {{command:%s app create php}}: Creates an embedded PHP app.
+                  Usage: {{command:%s app create php}}
+                  Options:
+                    {{command:--name=NAME}} App name. Any string.
+                    {{command:--organization-id=ID}} Partner organization ID. Must be an existing organization.
+                    {{command:--store=MYSHOPIFYDOMAIN}} Development store URL. Must be an existing development store.
+                    {{command:--type=APPTYPE}} Whether this app is public or custom.
+                    {{command:--verbose}} Output verbose information when installing dependencies.
+                HELP
+
+              error: {
+                php_required: <<~VERSION,
+                  PHP is required to create an app project. For installation instructions, visit:
+                    {{underline:https://www.php.net/manual/en/install.php}}
+                  VERSION
+                php_version_failure: <<~VERSION,
+                  Failed to get the current PHP version. Please make sure it is installed as per the instructions at:
+                    {{underline:https://www.php.net/manual/en/install.php.}}
+                  VERSION
+                php_version_too_low: "Your PHP version is too low. Please use version %s or higher.",
+                composer_required: <<~COMPOSER,
+                  Composer is required to create an app project. Download at:
+                    {{underline:https://getcomposer.org/download/}}
+                  COMPOSER
+                npm_required: "npm is required to create an app project. Download at https://www.npmjs.com/get-npm.",
+                npm_version_failure: "Failed to get the current npm version. Please make sure it is installed as per " \
+                  "the instructions at https://www.npmjs.com/get-npm.",
+                app_setup: "Failed to set up the app",
+              },
+
+              php_version: "PHP %s",
+              npm_version: "npm %s",
+              app_setting_up: "Setting up app…",
+              app_set_up: "App is now set up",
+            },
           },
           deploy: {
             help: <<~HELP,

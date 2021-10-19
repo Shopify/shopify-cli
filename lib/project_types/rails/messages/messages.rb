@@ -21,46 +21,6 @@ module Rails
           setting_gem_home: "GEM_HOME being set to %s",
           setting_gem_path: "GEM_PATH being set to %s",
         },
-        create: {
-          help: <<~HELP,
-            {{command:%s app rails create}}: Creates a ruby on rails app.
-              Usage: {{command:%s app rails create}}
-              Options:
-                {{command:--name=NAME}} App name. Any string.
-                {{command:--organization-id=ID}} Partner organization ID. Must be an existing organization.
-                {{command:--store=MYSHOPIFYDOMAIN }} Development store URL. Must be an existing development store.
-                {{command:--db=DB}} Database type. Must be one of: mysql, postgresql, sqlite3, oracle, frontbase, ibm_db, sqlserver, jdbcmysql, jdbcsqlite3, jdbcpostgresql, jdbc.
-                {{command:--rails-opts=RAILSOPTS}} Additional options. Must be string containing one or more valid Rails options, separated by spaces.
-          HELP
-
-          error: {
-            invalid_ruby_version: "This project requires a Ruby version ~> 2.5 or Ruby 3.0.",
-            dir_exists: "Project directory %s already exists. Please use a different name.",
-            install_failure: "Error installing %s gem",
-            node_required: "node is required to create a rails project. Download at https://nodejs.org/en/download.",
-            node_version_failure: "Failed to get the current node version. Please make sure it is installed as " \
-              "per the instructions at https://nodejs.org/en.",
-            yarn_required: "yarn is required to create a rails project. Download at " \
-              "https://classic.yarnpkg.com/en/docs/install.",
-            yarn_version_failure: "Failed to get the current yarn version. Please make sure it is installed as per " \
-              "the instructions at https://classic.yarnpkg.com/en/docs/install.",
-          },
-
-          info: {
-            open_new_shell: "{{*}} {{yellow:After installing %s, please open a new Command Prompt or PowerShell " \
-              "window to continue.}}",
-          },
-          installing_bundler: "Installing bundler…",
-          generating_app: "Generating new rails app project in %s…",
-          adding_shopify_gem: "{{v}} Adding shopify_app gem…",
-          node_version: "node %s",
-          yarn_version: "yarn %s",
-          running_bundle_install: "Running bundle install…",
-          running_generator: "Running shopify_app generator…",
-          running_migrations: "Running migrations…",
-          running_webpacker_install: "Running webpacker:install…",
-        },
-
         deploy: {
           help: <<~HELP,
             Deploy the current Rails project to a hosting service. Heroku ({{underline:https://www.heroku.com}}) is currently the only option, but more will be added in the future.

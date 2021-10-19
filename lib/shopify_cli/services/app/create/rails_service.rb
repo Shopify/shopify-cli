@@ -15,12 +15,12 @@ module ShopifyCLI
 
           DEFAULT_RAILS_FLAGS = %w(--skip-spring)
 
-          attr_reader :name, :organization_id, :shop_domain, :type, :db, :rails_opts, :context
+          attr_reader :name, :organization_id, :store, :type, :db, :rails_opts, :context
 
-          def initialize(name:, organization_id:, shop_domain:, type:, db:, rails_opts:, context:)
+          def initialize(name:, organization_id:, store:, type:, db:, rails_opts:, context:)
             @name = name
             @organization_id = organization_id
-            @shop_domain = shop_domain
+            @store = store
             @type = type
             @db = db
             @rails_opts = rails_opts
@@ -32,14 +32,14 @@ module ShopifyCLI
             form = Rails::Forms::Create.ask(context, [], {
               name: name,
               organization_id: organization_id,
-              shop_domain: shop_domain,
+              shop_domain: store,
               type: type,
               db: db,
               rails_opts: rails_opts,
             })
 
             ruby_version = Ruby.version(context)
-            context.abort(context.message("rails.create.error.invalid_ruby_version")) unless
+            context.abort(context.message("core.app.create.rails.error.invalid_ruby_version")) unless
               ruby_version.satisfies?("~>2.5") || ruby_version.satisfies?("~>3.0.0")
 
             check_node
@@ -81,54 +81,55 @@ module ShopifyCLI
           def check_node
             cmd_path = context.which("node")
             if cmd_path.nil?
-              context.abort(context.message("rails.create.error.node_required")) unless context.windows?
-              context.puts("{{x}} {{red:" + context.message("rails.create.error.node_required") + "}}")
-              context.puts(context.message("rails.create.info.open_new_shell", "node"))
+              context.abort(context.message("core.app.create.rails.error.node_required")) unless context.windows?
+              context.puts("{{x}} {{red:" + context.message("core.app.create.rails.error.node_required") + "}}")
+              context.puts(context.message("core.app.create.rails.info.open_new_shell", "node"))
               raise ShopifyCLI::AbortSilent
             end
 
             version, stat = context.capture2e("node", "-v")
             unless stat.success?
-              context.abort(context.message("rails.create.error.node_version_failure")) unless context.windows?
+              context.abort(context.message("core.app.create.rails.error.node_version_failure")) unless context.windows?
               # execution stops above if not Windows
-              context.puts("{{x}} {{red:" + context.message("rails.create.error.node_version_failure") + "}}")
-              context.puts(context.message("rails.create.info.open_new_shell", "node"))
+              context.puts("{{x}} {{red:" + context.message("core.app.create.rails.error.node_version_failure") + "}}")
+              context.puts(context.message("core.app.create.rails.info.open_new_shell", "node"))
               raise ShopifyCLI::AbortSilent
             end
 
-            context.done(context.message("rails.create.node_version", version))
+            context.done(context.message("core.app.create.rails.node_version", version))
           end
 
           def check_yarn
             cmd_path = context.which("yarn")
             if cmd_path.nil?
-              context.abort(context.message("rails.create.error.yarn_required")) unless context.windows?
-              context.puts("{{x}} {{red:" + context.message("rails.create.error.yarn_required") + "}}")
-              context.puts(context.message("rails.create.info.open_new_shell", "yarn"))
+              context.abort(context.message("core.app.create.rails.error.yarn_required")) unless context.windows?
+              context.puts("{{x}} {{red:" + context.message("core.app.create.rails.error.yarn_required") + "}}")
+              context.puts(context.message("core.app.create.rails.info.open_new_shell", "yarn"))
               raise ShopifyCLI::AbortSilent
             end
 
             version, stat = context.capture2e("yarn", "-v")
             unless stat.success?
-              context.abort(context.message("rails.create.error.yarn_version_failure")) unless context.windows?
-              context.puts("{{x}} {{red:" + context.message("rails.create.error.yarn_version_failure") + "}}")
-              context.puts(context.message("rails.create.info.open_new_shell", "yarn"))
+              context.abort(context.message("core.app.create.rails.error.yarn_version_failure")) unless context.windows?
+              context.puts("{{x}} {{red:" + context.message("core.app.create.rails.error.yarn_version_failure") + "}}")
+              context.puts(context.message("core.app.create.rails.info.open_new_shell", "yarn"))
               raise ShopifyCLI::AbortSilent
             end
 
-            context.done(context.message("rails.create.yarn_version", version))
+            context.done(context.message("core.app.create.rails.yarn_version", version))
           end
 
           def build(name, db)
-            context.abort(context.message("rails.create.error.install_failure", "rails")) unless install_gem("rails",
-              "<6.1")
-            context.abort(context.message("rails.create.error.install_failure", "bundler ~>2.0")) unless
+            context.abort(context.message("core.app.create.rails.error.install_failure",
+              "rails")) unless install_gem("rails",
+                "<6.1")
+            context.abort(context.message("core.app.create.rails.error.install_failure", "bundler ~>2.0")) unless
               install_gem("bundler", "~>2.0")
 
             full_path = File.join(context.root, name)
-            context.abort(context.message("rails.create.error.dir_exists", name)) if Dir.exist?(full_path)
+            context.abort(context.message("core.app.create.rails.error.dir_exists", name)) if Dir.exist?(full_path)
 
-            CLI::UI::Frame.open(context.message("rails.create.generating_app", name)) do
+            CLI::UI::Frame.open(context.message("core.app.create.rails.generating_app", name)) do
               new_command = %w(rails new)
               new_command += DEFAULT_RAILS_FLAGS
               new_command << "--database=#{db}"
@@ -142,25 +143,25 @@ module ShopifyCLI
 
             File.open(File.join(context.root, ".gitignore"), "a") { |f| f.write(".env") }
 
-            context.puts(context.message("rails.create.adding_shopify_gem"))
+            context.puts(context.message("core.app.create.rails.adding_shopify_gem"))
             File.open(File.join(context.root, "Gemfile"), "a") do |f|
               f.puts "\ngem 'shopify_app', '>=17.0.3'"
             end
-            CLI::UI::Frame.open(context.message("rails.create.running_bundle_install")) do
+            CLI::UI::Frame.open(context.message("core.app.create.rails.running_bundle_install")) do
               syscall(%w(bundle install))
             end
 
-            CLI::UI::Frame.open(context.message("rails.create.running_generator")) do
+            CLI::UI::Frame.open(context.message("core.app.create.rails.running_generator")) do
               syscall(%w(rails generate shopify_app --new-shopify-cli-app))
             end
 
-            CLI::UI::Frame.open(context.message("rails.create.running_migrations")) do
+            CLI::UI::Frame.open(context.message("core.app.create.rails.running_migrations")) do
               syscall(%w(rails db:create))
               syscall(%w(rails db:migrate RAILS_ENV=development))
             end
 
             unless File.exist?(File.join(context.root, "config/webpacker.yml"))
-              CLI::UI::Frame.open(context.message("rails.create.running_webpacker_install")) do
+              CLI::UI::Frame.open(context.message("core.app.create.rails.running_webpacker_install")) do
                 syscall(%w(rails webpacker:install))
               end
             end

@@ -5,12 +5,12 @@ module ShopifyCLI
     module App
       module Create
         class PHPService < BaseService
-          attr_reader :name, :organization_id, :shop_domain, :type, :verbose, :context
+          attr_reader :name, :organization_id, :store, :type, :verbose, :context
 
-          def initialize(name:, organization_id:, shop_domain:, type:, verbose:, context:)
+          def initialize(name:, organization_id:, store:, type:, verbose:, context:)
             @name = name
             @organization_id = organization_id
-            @shop_domain = shop_domain
+            @store = store
             @type = type
             @verbose = verbose
             @context = context
@@ -21,7 +21,7 @@ module ShopifyCLI
             form = PHP::Forms::Create.ask(context, [], {
               name: name,
               organization_id: organization_id,
-              shop_domain: shop_domain,
+              shop_domain: store,
               type: type,
               verbose: verbose,
             })
@@ -51,31 +51,31 @@ module ShopifyCLI
 
           def check_php
             cmd_path = context.which("php")
-            context.abort(context.message("php.create.error.php_required")) if cmd_path.nil?
+            context.abort(context.message("core.app.create.php.error.php_required")) if cmd_path.nil?
 
             version, stat = context.capture2e("php", "-r", "echo phpversion();")
-            context.abort(context.message("php.create.error.php_version_failure")) unless stat.success?
+            context.abort(context.message("core.app.create.php.error.php_version_failure")) unless stat.success?
 
             if ::Semantic::Version.new(version) < ::Semantic::Version.new("7.3.0")
-              context.abort(context.message("php.create.error.php_version_too_low", "7.3"))
+              context.abort(context.message("core.app.create.php.error.php_version_too_low", "7.3"))
             end
 
-            context.done(context.message("php.create.php_version", version))
+            context.done(context.message("core.app.create.php.php_version", version))
           end
 
           def check_composer
             cmd_path = context.which("composer")
-            context.abort(context.message("php.create.error.composer_required")) if cmd_path.nil?
+            context.abort(context.message("core.app.create.php.error.composer_required")) if cmd_path.nil?
           end
 
           def check_npm
             cmd_path = context.which("npm")
-            context.abort(context.message("php.create.error.npm_required")) if cmd_path.nil?
+            context.abort(context.message("core.app.create.php.error.npm_required")) if cmd_path.nil?
 
             version, stat = context.capture2e("npm", "-v")
-            context.abort(context.message("php.create.error.npm_version_failure")) unless stat.success?
+            context.abort(context.message("core.app.create.php.error.npm_version_failure")) unless stat.success?
 
-            context.done(context.message("php.create.npm_version", version))
+            context.done(context.message("core.app.create.php.npm_version", version))
           end
 
           def build(form)
@@ -108,9 +108,9 @@ module ShopifyCLI
             set_npm_config
             ShopifyCLI::JsDeps.install(context, verbose)
 
-            title = context.message("php.create.app_setting_up")
-            success = context.message("php.create.app_set_up")
-            failure = context.message("php.create.error.app_setup")
+            title = context.message("core.app.create.php.app_setting_up")
+            success = context.message("core.app.create.php.app_set_up")
+            failure = context.message("core.app.create.php.error.app_setup")
             CLI::UI::Frame.open(title, success_text: success, failure_text: failure) do
               FileUtils.touch(env_file.extra["DB_DATABASE"])
               context.system("php", "artisan", "key:generate")
