@@ -4,7 +4,6 @@ module ShopifyCLI
   module Commands
     class Whoami < ShopifyCLI::Command
       def call(_args, _name)
-        raise "faillll"
         shop = ShopifyCLI::DB.get(:shop)
         org_id = ShopifyCLI::DB.get(:organization_id)
         org = ShopifyCLI::PartnersAPI::Organizations.fetch(@ctx, id: org_id) unless org_id.nil?

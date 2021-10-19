@@ -2,11 +2,10 @@ module ShopifyCLI
   module ExceptionReporter
     def self.report(error, _logs = nil, _api_key = nil, custom_metadata = {})
       context = ShopifyCLI::Context.new
-      # require 'byebug'
-      # byebug
       unless ShopifyCLI::Environment.development?
         context.puts(context.message("core.error_reporting.unhandled_error.message"))
-        context.puts(context.message("core.error_reporting.unhandled_error.issue_message", ShopifyCLI::GitHub::IssueURLGenerator::error_url(error)))
+        context.puts(context.message("core.error_reporting.unhandled_error.issue_message",
+          ShopifyCLI::GitHub::IssueURLGenerator.error_url(error)))
       end
 
       # Stack trace hint
@@ -18,9 +17,8 @@ module ShopifyCLI
       context.puts("\n")
 
       return unless reportable_error?(error)
-      
+
       return unless report?(context: context)
-      # context.puts("ERROR HERE #{error} -------------------------------------------------------------")
       ENV["BUGSNAG_DISABLE_AUTOCONFIGURE"] = "1"
       require "bugsnag"
 
@@ -51,7 +49,7 @@ module ShopifyCLI
     end
 
     def self.report_error?(context:)
-      #return false if Environment.development?
+      return false if Environment.development?
 
       CLI::UI::Prompt.ask(context.message("core.error_reporting.report_error.question")) do |handler|
         handler.option(context.message("core.error_reporting.report_error.yes")) { |_| true }
@@ -63,6 +61,5 @@ module ShopifyCLI
       is_abort = error.is_a?(ShopifyCLI::Abort) || error.is_a?(ShopifyCLI::AbortSilent)
       !is_abort
     end
-
   end
 end
