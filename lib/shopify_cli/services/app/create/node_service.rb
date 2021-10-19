@@ -25,7 +25,6 @@ module ShopifyCLI
               type: type,
               verbose: verbose,
             })
-            return context.puts(self.class.help) if form.nil?
 
             check_node
             check_npm
@@ -58,10 +57,6 @@ module ShopifyCLI
             unless ShopifyCLI::Shopifolk.acting_as_shopify_organization?
               context.puts(context.message("apps.create.info.install", partners_url, form.title))
             end
-          end
-
-          def self.help
-            ShopifyCLI::Context.message("node.create.help", ShopifyCLI::TOOL_NAME, ShopifyCLI::TOOL_NAME)
           end
 
           private

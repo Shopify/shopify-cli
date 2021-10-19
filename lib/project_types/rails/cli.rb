@@ -6,7 +6,6 @@ module Rails
   end
 
   class Command
-    autoload :Create, Project.project_filepath("commands/create")
     autoload :Generate, Project.project_filepath("commands/generate")
   end
 

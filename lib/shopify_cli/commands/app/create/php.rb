@@ -3,10 +3,12 @@ module ShopifyCLI
     class App
       class Create
         class PHP < ShopifyCLI::Command::AppSubCommand
+          prerequisite_task :ensure_authenticated
+
           options do |parser, flags|
-            parser.on("--name=NAME") { |name| flags[:title] = name }
-            parser.on("--organization-id=ID") { |organization_id| flags[:organization_id] = organization_id }
-            parser.on("--store=MYSHOPIFYDOMAIN") { |url| flags[:shop_domain] = url }
+            parser.on("--name=NAME") { |name| flags[:name] = name }
+            parser.on("--organization_id=ID") { |organization_id| flags[:organization_id] = organization_id }
+            parser.on("--shop_domain=MYSHOPIFYDOMAIN") { |url| flags[:shop_domain] = url }
             parser.on("--type=APPTYPE") { |type| flags[:type] = type }
             parser.on("--verbose") { flags[:verbose] = true }
           end

@@ -3,8 +3,10 @@ module ShopifyCLI
     class App
       class Create
         class Node < ShopifyCLI::Command::AppSubCommand
+          prerequisite_task :ensure_authenticated
+
           options do |parser, flags|
-            parser.on("--name=NAME") { |t| flags[:title] = t }
+            parser.on("--name=NAME") { |t| flags[:name] = t }
             parser.on("--organization_id=ID") { |id| flags[:organization_id] = id }
             parser.on("--shop_domain=MYSHOPIFYDOMAIN") { |url| flags[:shop_domain] = url }
             parser.on("--type=APPTYPE") { |type| flags[:type] = type }

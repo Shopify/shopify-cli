@@ -79,7 +79,8 @@ module ShopifyCLI
                 branch_to_deploy = branches[0]
                 context.puts(context.message("core.app.deploy.heroku.git.branch_selected", branch_to_deploy))
               else
-                branch_to_deploy = CLI::UI::Prompt.ask(context.message("core.app.deploy.heroku.git.what_branch")) do |handler|
+                prompt_question = context.message("core.app.deploy.heroku.git.what_branch")
+                branch_to_deploy = CLI::UI::Prompt.ask(prompt_question) do |handler|
                   branches.each do |branch|
                     handler.option(branch) { branch }
                   end
@@ -107,7 +108,8 @@ module ShopifyCLI
                 if current_key.nil? || current_key.empty?
                   output, status = context.capture2e("php", "artisan", "key:generate", "--show")
 
-                  context.abort(context.message("core.app.deploy.heroku.php.error.generate_app_key")) unless status.success?
+                  abort_message = context.message("core.app.deploy.heroku.php.error.generate_app_key")
+                  context.abort(abort_message) unless status.success?
 
                   heroku_service.set_config("APP_KEY", output.strip) if status.success?
                 end

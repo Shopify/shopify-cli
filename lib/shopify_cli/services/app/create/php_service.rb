@@ -11,8 +11,10 @@ module ShopifyCLI
             @name = name
             @organization_id = organization_id
             @shop_domain = shop_domain
+            @type = type
             @verbose = verbose
             @context = context
+            super()
           end
 
           def call
