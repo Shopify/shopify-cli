@@ -6,7 +6,7 @@ module ShopifyCLI
           prerequisite_task :ensure_authenticated
 
           options do |parser, flags|
-            parser.on("--name=NAME") { |t| flags[:title] = t }
+            parser.on("--name=NAME") { |t| flags[:name] = t }
             parser.on("--organization-id=ID") { |id| flags[:organization_id] = id }
             parser.on("--store=MYSHOPIFYDOMAIN") { |url| flags[:store] = url }
             parser.on("--type=APPTYPE") { |type| flags[:type] = type }

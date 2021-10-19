@@ -38,7 +38,7 @@ module ShopifyCLI
               rails_opts: rails_opts,
             })
 
-            ruby_version = Ruby.version(context)
+            ruby_version = Rails::Ruby.version(context)
             context.abort(context.message("core.app.create.rails.error.invalid_ruby_version")) unless
               ruby_version.satisfies?("~>2.5") || ruby_version.satisfies?("~>3.0.0")
 
@@ -56,7 +56,7 @@ module ShopifyCLI
             api_client = ShopifyCLI::Tasks::CreateApiClient.call(
               context,
               org_id: form.organization_id,
-              title: form.title,
+              title: form.name,
               type: form.type,
             )
 
@@ -69,10 +69,10 @@ module ShopifyCLI
 
             partners_url = ShopifyCLI::PartnersAPI.partners_url_for(form.organization_id, api_client["id"])
 
-            context.puts(context.message("apps.create.info.created", form.title, partners_url))
+            context.puts(context.message("apps.create.info.created", form.name, partners_url))
             context.puts(context.message("apps.create.info.serve", form.name, ShopifyCLI::TOOL_NAME, "rails"))
             unless ShopifyCLI::Shopifolk.acting_as_shopify_organization?
-              context.puts(context.message("apps.create.info.install", partners_url, form.title))
+              context.puts(context.message("apps.create.info.install", partners_url, form.name))
             end
           end
 
@@ -173,12 +173,12 @@ module ShopifyCLI
           end
 
           def syscall(args)
-            args[0] = Gem.binary_path_for(context, args[0])
+            args[0] = Rails::Gem.binary_path_for(context, args[0])
             context.system(*args, chdir: context.root)
           end
 
           def install_gem(name, version = nil)
-            Gem.install(context, name, version)
+            Rails::Gem.install(context, name, version)
           end
         end
       end
