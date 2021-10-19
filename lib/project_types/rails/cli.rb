@@ -5,14 +5,6 @@ module Rails
     register_messages(Rails::Messages::MESSAGES)
   end
 
-  class Command
-    autoload :Generate, Project.project_filepath("commands/generate")
-  end
-
-  # define/autoload project specific Tasks
-  module Tasks
-  end
-
   # define/autoload project specific Forms
   module Forms
     autoload :Create, Project.project_filepath("forms/create")
