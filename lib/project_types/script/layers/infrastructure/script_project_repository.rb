@@ -81,10 +81,10 @@ module Script
           )
         end
 
-        def update_or_create_script_json(title:, configuration_ui: false)
+        def update_or_create_script_json(title:)
           script_json = ScriptJsonRepository
             .new(ctx: ctx)
-            .update_or_create(title: title, configuration_ui: configuration_ui)
+            .update_or_create(title: title)
 
           Domain::ScriptProject.new(
             id: ctx.root,
@@ -148,11 +148,10 @@ module Script
             current_script_json || raise(Domain::Errors::NoScriptJsonFile)
           end
 
-          def update_or_create(title:, configuration_ui:)
+          def update_or_create(title:)
             json = current_script_json&.content || {}
             json["version"] ||= "1"
             json["title"] = title
-            json["configurationUi"] = !!configuration_ui
 
             ctx.write(SCRIPT_JSON_FILENAME, JSON.pretty_generate(json))
 

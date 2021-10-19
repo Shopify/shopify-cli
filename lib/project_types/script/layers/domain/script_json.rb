@@ -15,7 +15,7 @@ module Script
           @version = @content["version"].to_s
           @title = @content["title"]
           @description = @content["description"]
-          @configuration_ui = @content["configurationUi"]
+          @configuration_ui = @content.fetch("configurationUi", true)
           @configuration = @content["configuration"]
         end
 
