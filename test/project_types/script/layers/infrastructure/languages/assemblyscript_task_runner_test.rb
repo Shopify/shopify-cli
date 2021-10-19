@@ -158,6 +158,23 @@ describe Script::Layers::Infrastructure::Languages::AssemblyScriptTaskRunner do
           subject
         end
       end
+
+      it "should rescue SystemCallFailureError if the library version is present" do
+        cmd = "npm list --json"
+        command_runner.any_instance.stubs(:call)
+          .with(cmd)
+          .raises(Script::Layers::Infrastructure::Errors::SystemCallFailureError.new(
+            out: {
+              "dependencies" => {
+                extension_point_config["assemblyscript"][:package] => {
+                  "version" => "1.3.7",
+                },
+              },
+            }.to_json,
+            cmd: cmd
+          ))
+        assert_equal "1.3.7", subject
+      end
     end
   end
 
