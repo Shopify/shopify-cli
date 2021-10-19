@@ -39,7 +39,7 @@ module ShopifyCLI
             api_client = ShopifyCLI::Tasks::CreateApiClient.call(
               context,
               org_id: form.organization_id,
-              title: form.title,
+              title: form.name,
               type: form.type,
             )
 
@@ -52,10 +52,10 @@ module ShopifyCLI
 
             partners_url = ShopifyCLI::PartnersAPI.partners_url_for(form.organization_id, api_client["id"])
 
-            context.puts(context.message("apps.create.info.created", form.title, partners_url))
+            context.puts(context.message("apps.create.info.created", form.name, partners_url))
             context.puts(context.message("apps.create.info.serve", form.name, ShopifyCLI::TOOL_NAME, "node"))
             unless ShopifyCLI::Shopifolk.acting_as_shopify_organization?
-              context.puts(context.message("apps.create.info.install", partners_url, form.title))
+              context.puts(context.message("apps.create.info.install", partners_url, form.name))
             end
           end
 

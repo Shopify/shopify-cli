@@ -4,10 +4,10 @@ module Node
   module Forms
     class Create < ShopifyCLI::Form
       attr_accessor :name
-      flag_arguments :title, :organization_id, :shop_domain, :type
+      flag_arguments :name, :organization_id, :shop_domain, :type
 
       def ask
-        self.title ||= CLI::UI::Prompt.ask(ctx.message("node.forms.create.app_name"))
+        self.name ||= CLI::UI::Prompt.ask(ctx.message("node.forms.create.app_name"))
         self.name = format_name
         self.type = ask_type
         res = ShopifyCLI::Tasks::SelectOrgAndShop.call(ctx, organization_id: organization_id, shop_domain: shop_domain)
@@ -18,12 +18,12 @@ module Node
       private
 
       def format_name
-        name = title.downcase.split(" ").join("_")
+        formatted_name = name.downcase.split(" ").join("_")
 
-        if name.include?("shopify")
+        if formatted_name.include?("shopify")
           ctx.abort(ctx.message("node.forms.create.error.invalid_app_name"))
         end
-        name
+        formatted_name
       end
 
       def ask_type
