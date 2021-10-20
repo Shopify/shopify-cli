@@ -16,7 +16,8 @@ module ShopifyCLI
               File.stubs(:exist?)
               File.stubs(:exist?).with(File.join(ShopifyCLI::ROOT, "lib", "project_types", "php",
                 "cli.rb")).returns(true)
-              File.expects(:exist?).with(File.join(FIXTURE_DIR, "app_types", "php", ".shopify-cli.yml")).returns(true)
+              File.stubs(:exist?).with(File.join(FIXTURE_DIR, "app_types", "php",
+                Constants::Files::SHOPIFY_CLI_YML)).returns(true)
               ShopifyCLI::Context.any_instance.stubs(:os).returns(:mac)
               stub_successful_heroku_flow
             end
@@ -97,7 +98,8 @@ module ShopifyCLI
             def test_call_uses_existing_heroku_auth_if_available
               expects_heroku_whoami(status: true)
 
-              @context.expects(:puts).with(@context.message("php.deploy.heroku.authenticated_with_account", "username"))
+              @context.expects(:puts).with(@context.message("core.app.deploy.heroku.authenticated_with_account",
+                "username"))
 
               run_cmd("app deploy heroku")
             end
@@ -121,7 +123,7 @@ module ShopifyCLI
             def test_call_uses_existing_heroku_app_if_available
               expects_git_remote_get_url_heroku(status: true, remote: "heroku")
 
-              @context.expects(:puts).with(@context.message("php.deploy.heroku.app.selected", "app-name"))
+              @context.expects(:puts).with(@context.message("core.app.deploy.heroku.app.selected", "app-name"))
 
               run_cmd("app deploy heroku")
             end
@@ -131,11 +133,11 @@ module ShopifyCLI
               expects_heroku_select_app(status: true)
 
               CLI::UI::Prompt.expects(:ask)
-                .with(@context.message("php.deploy.heroku.app.no_apps_found"))
+                .with(@context.message("core.app.deploy.heroku.app.no_apps_found"))
                 .returns(:existing)
 
               CLI::UI::Prompt.expects(:ask)
-                .with(@context.message("php.deploy.heroku.app.name"))
+                .with(@context.message("core.app.deploy.heroku.app.name"))
                 .returns("app-name")
 
               run_cmd("app deploy heroku")
@@ -146,11 +148,11 @@ module ShopifyCLI
               expects_heroku_select_app(status: false)
 
               CLI::UI::Prompt.expects(:ask)
-                .with(@context.message("php.deploy.heroku.app.no_apps_found"))
+                .with(@context.message("core.app.deploy.heroku.app.no_apps_found"))
                 .returns(:existing)
 
               CLI::UI::Prompt.expects(:ask)
-                .with(@context.message("php.deploy.heroku.app.name"))
+                .with(@context.message("core.app.deploy.heroku.app.name"))
                 .returns("app-name")
 
               assert_raises ShopifyCLI::Abort do
@@ -163,7 +165,7 @@ module ShopifyCLI
               expects_heroku_create(status: true)
 
               CLI::UI::Prompt.expects(:ask)
-                .with(@context.message("php.deploy.heroku.app.no_apps_found"))
+                .with(@context.message("core.app.deploy.heroku.app.no_apps_found"))
                 .returns(:new)
 
               run_cmd("app deploy heroku")
@@ -174,7 +176,7 @@ module ShopifyCLI
               expects_heroku_create(status: false)
 
               CLI::UI::Prompt.expects(:ask)
-                .with(@context.message("php.deploy.heroku.app.no_apps_found"))
+                .with(@context.message("core.app.deploy.heroku.app.no_apps_found"))
                 .returns(:new)
 
               assert_raises ShopifyCLI::Abort do
@@ -185,7 +187,7 @@ module ShopifyCLI
             def test_call_doesnt_prompt_if_only_one_branch_exists
               expects_git_branch(status: true, multiple: false)
 
-              @context.expects(:puts).with(@context.message("php.deploy.heroku.git.branch_selected", "master"))
+              @context.expects(:puts).with(@context.message("core.app.deploy.heroku.git.branch_selected", "master"))
 
               run_cmd("app deploy heroku")
             end
@@ -195,7 +197,7 @@ module ShopifyCLI
               expects_git_push_heroku(status: true, branch: "other_branch:master")
 
               CLI::UI::Prompt.expects(:ask)
-                .with(@context.message("php.deploy.heroku.git.what_branch"))
+                .with(@context.message("core.app.deploy.heroku.git.what_branch"))
                 .returns("other_branch")
 
               run_cmd("app deploy heroku")

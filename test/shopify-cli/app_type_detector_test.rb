@@ -70,7 +70,7 @@ module ShopifyCLI
 
     def write_shopify_yml(project_type)
       shopify_cli_yml_path = File.join(@tmp_dir, Constants::Files::SHOPIFY_CLI_YML)
-      shopify_cli_yml = { project_type: project_type }
+      shopify_cli_yml = { "project_type" => project_type }
       File.write(shopify_cli_yml_path, shopify_cli_yml.to_yaml)
     end
   end

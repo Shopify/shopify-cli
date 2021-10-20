@@ -35,7 +35,6 @@ module ShopifyCLI
           APPTYPE
 
           def test_check_php_installed
-            skip
             @context.expects(:which).with("php").returns(nil)
             assert_raises ShopifyCLI::Abort, "core.app.create.php.error.php_required" do
               perform_command
@@ -51,8 +50,7 @@ module ShopifyCLI
           end
 
           def test_check_composer_installed
-            skip
-            PHP::Command::Create.any_instance.stubs(:check_php)
+            PHPService.any_instance.stubs(:check_php)
             @context.expects(:which).with("composer").returns(nil)
             assert_raises ShopifyCLI::Abort, "core.app.create.php.error.composer_required" do
               perform_command
@@ -60,7 +58,6 @@ module ShopifyCLI
           end
 
           def test_can_create_new_app
-            skip
             create_test_app_directory_structure
 
             @context.stubs(:uname).returns("Mac")
@@ -115,11 +112,14 @@ module ShopifyCLI
           private
 
           def perform_command
-            run_cmd("app create php \
-              --name=test-app \
-              --type=public \
-              --organization-id=42 \
-              --store=testshop.myshopify.com")
+            PHPService.call(
+              name: "test-app",
+              organization_id: "42",
+              store: "testshop.myshopify.com",
+              type: "public",
+              verbose: false,
+              context: @context
+            )
           end
 
           def expect_php_composer_check_commands
