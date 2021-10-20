@@ -11,6 +11,7 @@ module Extension
 
       options do |parser, flags|
         parser.on("--name=NAME") { |name| flags[:name] = name }
+        parser.on("--template=TEMPLATE") { |template| flags[:template] = template }
         parser.on("--type=TYPE") { |type| flags[:type] = type.upcase }
         parser.on("--api-key=KEY") { |key| flags[:api_key] = key.downcase }
         parser.on("--getting-started") { flags[:getting_started] = true }
