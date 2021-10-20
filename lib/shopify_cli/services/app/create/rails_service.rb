@@ -70,7 +70,7 @@ module ShopifyCLI
             partners_url = ShopifyCLI::PartnersAPI.partners_url_for(form.organization_id, api_client["id"])
 
             context.puts(context.message("apps.create.info.created", form.name, partners_url))
-            context.puts(context.message("apps.create.info.serve", form.name, ShopifyCLI::TOOL_NAME, "rails"))
+            context.puts(context.message("apps.create.info.serve", form.name, ShopifyCLI::TOOL_NAME))
             unless ShopifyCLI::Shopifolk.acting_as_shopify_organization?
               context.puts(context.message("apps.create.info.install", partners_url, form.name))
             end

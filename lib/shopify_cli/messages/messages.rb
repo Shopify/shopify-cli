@@ -8,7 +8,7 @@ module ShopifyCLI
           info: {
             created: "{{v}} {{green:%s}} was created in the organization's Partner Dashboard {{underline:%s}}",
             serve: "{{*}} Change directories to your new project folder {{green:%s}} and run "\
-            "{{command:%s %s serve}} to start a local server",
+            "{{command:%s app serve}} to start a local server",
             install: "{{*}} Then, visit {{underline:%s/test}} to install {{green:%s}} on your Dev Store",
           },
         },
@@ -19,9 +19,17 @@ module ShopifyCLI
           Suite of commands for developing apps. See {{command:%1$s app <command> --help}} for usage of each command.
             Usage: {{command:%1$s app [ %2$s ]}}
           HELP
-          type_not_found: <<~MESSAGE,
-          Couldn't detect the app type in directory %s. We currently support Rails, PHP, and NodeJS apps.
-          MESSAGE
+          error: {
+            type_not_found: <<~MESSAGE,
+            Couldn't detect the app type in directory %s. We currently support Rails, PHP, and NodeJS apps.
+            MESSAGE
+            missing_shopify_cli_yml: <<~MESSAGE,
+            Couldn't find a #{Constants::Files::SHOPIFY_CLI_YML} file in the directory %s to determine the app type.
+            MESSAGE
+            invalid_project_type: <<~MESSAGE,
+            The project type %s doesn't represent an app.
+            MESSAGE
+          },
           create: {
             type_required_error: "",
             invalid_type: "The type %s is not supported. The only supported types are"\

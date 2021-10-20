@@ -4,6 +4,10 @@ module ShopifyCLI
       ROOT = File.expand_path("../..", __dir__)
     end
 
+    module Files
+      SHOPIFY_CLI_YML = ".shopify-cli.yml"
+    end
+
     module StoreKeys
       LAST_MIGRATION_DATE = :last_migration_date
       ANALYTICS_ENABLED = :analytics_enabled
