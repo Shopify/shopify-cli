@@ -51,12 +51,12 @@ module Script
             output = JSON.parse(CommandRunner.new(ctx: ctx).call("npm list --json"))
             library_version_from_npm_list(output, library_name)
           rescue Errors::SystemCallFailureError => error
-            library_version_from_npm_list_error(error, library_name)
+            library_version_from_npm_list_error_output(error, library_name)
           end
 
           private
 
-          def library_version_from_npm_list_error(error, library_name)
+          def library_version_from_npm_list_error_output(error, library_name)
             # npm list can return a failure status code, even when returning the correct data.
             # This causes the CommandRunner to throw a SystemCallFailure error that contains the data.
             # In here, we check that the output contains `npm list`'s structure and extract the version.
