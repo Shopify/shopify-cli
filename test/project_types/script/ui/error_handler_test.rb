@@ -205,13 +205,6 @@ describe Script::UI::ErrorHandler do
         end
       end
 
-      describe "when AppNotInstalledError" do
-        let(:err) { Script::Layers::Infrastructure::Errors::AppNotInstalledError.new }
-        it "should call display_and_raise" do
-          should_call_display_and_raise
-        end
-      end
-
       describe "when BuildError" do
         let(:err) { Script::Layers::Infrastructure::Errors::BuildError.new }
         it "should call display_and_raise" do
@@ -284,13 +277,6 @@ describe Script::UI::ErrorHandler do
 
       describe "when ScriptRepushError" do
         let(:err) { Script::Layers::Infrastructure::Errors::ScriptRepushError.new("uuid") }
-        it "should call display_and_raise" do
-          should_call_display_and_raise
-        end
-      end
-
-      describe "when ShopAuthenticationError" do
-        let(:err) { Script::Layers::Infrastructure::Errors::ShopAuthenticationError.new }
         it "should call display_and_raise" do
           should_call_display_and_raise
         end

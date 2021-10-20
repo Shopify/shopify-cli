@@ -27,10 +27,6 @@ module Script
             case error_code(response["errors"])
             when "forbidden"
               raise Errors::ForbiddenError
-            when "forbidden_on_shop"
-              raise Errors::ShopAuthenticationError
-            when "app_not_installed_on_shop"
-              raise Errors::AppNotInstalledError
             else
               raise Errors::GraphqlError, response["errors"]
             end

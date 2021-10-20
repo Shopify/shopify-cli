@@ -97,7 +97,6 @@ module Script
           metadata_not_found_help: "Ensure the 'shopify/scripts-toolchain-as' package is up to date and " \
                                      "'package.json' contains a 'scripts/build' entry with a " \
                                      "'--metadata build/metadata.json' argument",
-          app_not_installed_cause: "App not installed on store.",
 
           build_error_cause: "Something went wrong while building the script.",
           build_error_help: "Correct the errors and try again.",
@@ -115,9 +114,6 @@ module Script
 
           script_repush_cause: "A version of this script already exists on the app.",
           script_repush_help: "Use {{cyan:--force}} to replace the existing script.",
-
-          shop_auth_cause: "Unable to authenticate with the store.",
-          shop_auth_help: "Try again.",
 
           invalid_build_script: "The root package.json contains an invalid build command that " \
                                 "is needed to compile your script to WebAssembly.",
