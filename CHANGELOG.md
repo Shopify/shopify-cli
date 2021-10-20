@@ -1,6 +1,9 @@
 From version 2.6.0, the sections in this file adhere to the [keep a changelog](https://keepachangelog.com/en/1.0.0/) specification.
 ## [Unreleased]
 
+## Version 2.6.5
+### Fixed
+* [#1661](https://github.com/Shopify/shopify-cli/pull/1661): Handle npm list non-zero exit status when pushing scripts
 ## Version 2.6.4
 ### Fixed
 * [#1633](https://github.com/Shopify/shopify-cli/pull/1633): Runtime error when the shop passed on login is invalid
