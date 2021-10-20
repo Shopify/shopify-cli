@@ -148,32 +148,55 @@ describe Script::Layers::Infrastructure::Languages::AssemblyScriptTaskRunner do
     end
 
     describe "when CommandRunner raises SystemCallFailureError" do
-      it "should raise SystemCallFailureError" do
-        cmd = "npm list --json"
-        command_runner.any_instance.stubs(:call)
-          .with(cmd)
-          .raises(Script::Layers::Infrastructure::Errors::SystemCallFailureError.new(out: "test", cmd: cmd))
+      describe "when error is not json" do
+        it "should re-raise SystemCallFailureError" do
+          cmd = "npm list --json"
+          command_runner.any_instance.stubs(:call)
+            .with(cmd)
+            .raises(Script::Layers::Infrastructure::Errors::SystemCallFailureError.new(
+out: "some non-json parsable error output", cmd: cmd
+))
 
-        assert_raises Script::Layers::Infrastructure::Errors::SystemCallFailureError do
-          subject
+          assert_raises Script::Layers::Infrastructure::Errors::SystemCallFailureError do
+            subject
+          end
         end
       end
 
-      it "should rescue SystemCallFailureError if the library version is present" do
-        cmd = "npm list --json"
-        command_runner.any_instance.stubs(:call)
-          .with(cmd)
-          .raises(Script::Layers::Infrastructure::Errors::SystemCallFailureError.new(
-            out: {
-              "dependencies" => {
-                extension_point_config["assemblyscript"][:package] => {
-                  "version" => "1.3.7",
+      describe "when error is json, but doesn't contain the expected structure" do
+        it "should re-raise SystemCallFailureError" do
+          cmd = "npm list --json"
+          command_runner.any_instance.stubs(:call)
+            .with(cmd)
+            .raises(Script::Layers::Infrastructure::Errors::SystemCallFailureError.new(
+              out: {
+                "not what we expected" => {},
+              }.to_json,
+              cmd: cmd
+            ))
+          assert_raises Script::Layers::Infrastructure::Errors::SystemCallFailureError do
+            subject
+          end
+        end
+      end
+
+      describe "when error contains expected versioning data" do
+        it "should rescue SystemCallFailureError if the library version is present" do
+          cmd = "npm list --json"
+          command_runner.any_instance.stubs(:call)
+            .with(cmd)
+            .raises(Script::Layers::Infrastructure::Errors::SystemCallFailureError.new(
+              out: {
+                "dependencies" => {
+                  extension_point_config["assemblyscript"][:package] => {
+                    "version" => "1.3.7",
+                  },
                 },
-              },
-            }.to_json,
-            cmd: cmd
-          ))
-        assert_equal "1.3.7", subject
+              }.to_json,
+              cmd: cmd
+            ))
+          assert_equal "1.3.7", subject
+        end
       end
     end
   end
