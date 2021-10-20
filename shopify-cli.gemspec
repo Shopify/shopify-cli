@@ -33,11 +33,7 @@ Gem::Specification.new do |spec|
   end
   spec.bindir = "bin"
   spec.require_paths = ["lib", "vendor"]
-  spec.extensions = ["ext/shopify-cli/extconf.rb"]
-  # Do NOT include `shopify` as a listed executable via `spec.executables`.
-  # `ext/shopify-cli/extconf.rb` will dynamically create a script and soft-link
-  # `/usr/local/bin/shopify` to that script, in order to "lock" the Ruby used to
-  # a single Ruby (useful for debugging in multi-Ruby environments)
+  spec.executables << "shopify"
 
   spec.add_development_dependency("bundler", "~> 2.2.2")
   spec.add_development_dependency("rake", "~> 12.3", ">= 12.3.3")
