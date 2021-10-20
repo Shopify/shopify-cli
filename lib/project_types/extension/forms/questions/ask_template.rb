@@ -9,13 +9,14 @@ module Extension
         ]
 
         property! :ctx
+        property :template, accepts: Models::ServerConfig::Development::VALID_TEMPLATES
         property :prompt,
           accepts: ->(prompt) { prompt.respond_to?(:call) },
           default: -> { CLI::UI::Prompt.method(:ask) }
 
         def call(project_details)
           return project_details unless template_required?(project_details)
-          project_details.template = choose_interactively
+          project_details.template = template || choose_interactively
           project_details
         end
 
