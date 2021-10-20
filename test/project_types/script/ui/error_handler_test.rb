@@ -128,13 +128,6 @@ describe Script::UI::ErrorHandler do
         end
       end
 
-      describe "when InvalidConfigProps" do
-        let(:err) { Script::Errors::InvalidConfigProps.new("") }
-        it "should call display_and_raise" do
-          should_call_display_and_raise
-        end
-      end
-
       describe "when InvalidScriptNameError" do
         let(:err) { Script::Errors::InvalidScriptNameError.new }
         it "should call display_and_raise" do
@@ -151,13 +144,6 @@ describe Script::UI::ErrorHandler do
 
       describe "when NoExistingOrganizationsError" do
         let(:err) { Script::Errors::NoExistingOrganizationsError.new }
-        it "should call display_and_raise" do
-          should_call_display_and_raise
-        end
-      end
-
-      describe "when NoExistingStoresError" do
-        let(:err) { Script::Errors::NoExistingStoresError.new(1) }
         it "should call display_and_raise" do
           should_call_display_and_raise
         end
