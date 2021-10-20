@@ -24,7 +24,7 @@ module Extension
         ShopifyCLI::Result.wrap(ExtensionProjectDetails.new)
           .then(&Questions::AskApp.new(ctx: ctx, api_key: api_key))
           .then(&Questions::AskType.new(ctx: ctx, type: type))
-          .then(&Questions::AskTemplate.new(ctx: ctx))
+          .then(&Questions::AskTemplate.new(ctx: ctx, template: template))
           .then(&Questions::AskName.new(ctx: ctx, name: name))
           .unwrap { |e| raise e }
           .tap do |project_details|
