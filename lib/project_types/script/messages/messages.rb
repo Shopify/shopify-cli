@@ -212,10 +212,6 @@ module Script
           built: "Built",
           pushing: "Pushing",
           pushed: "Pushed",
-          disabling: "Disabling",
-          disabled: "Disabled",
-          enabling: "Enabling",
-          enabled: "Enabled",
           ensure_env: {
             organization: "Partner organization {{green:%s (%s)}}.",
             organization_select: "Which partner organization do you want to use?",
