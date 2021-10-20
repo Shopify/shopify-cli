@@ -33,12 +33,12 @@ module ShopifyCLI
           def test_will_abort_if_bad_ruby
             ::Rails::Ruby.expects(:version).returns(Semantic::Version.new("2.3.7"))
             assert_raises ShopifyCLI::Abort do
-              perform_command
+              call_service
             end
 
             ::Rails::Ruby.expects(:version).returns(Semantic::Version.new("3.1.0"))
             assert_raises ShopifyCLI::Abort do
-              perform_command
+              call_service
             end
           end
 
@@ -84,7 +84,7 @@ module ShopifyCLI
               }
             )
 
-            perform_command
+            call_service
 
             assert_equal SHOPIFYCLI_FILE, File.read("test-app/.shopify-cli.yml")
             assert_equal ENV_FILE, File.read("test-app/.env")
@@ -136,7 +136,7 @@ module ShopifyCLI
               }
             )
 
-            perform_command("--db=postgresql")
+            call_service(db: "postgresql")
 
             delete_gem_path_and_binaries
             FileUtils.rm_r("test-app")
@@ -184,7 +184,7 @@ module ShopifyCLI
               }
             )
 
-            perform_command("--rails-opts=--edge -J")
+            call_service(rails_opts: "--edge -J")
 
             delete_gem_path_and_binaries
             FileUtils.rm_r("test-app")
@@ -203,7 +203,7 @@ module ShopifyCLI
             Dir.stubs(:exist?).returns(true)
 
             exception = assert_raises ShopifyCLI::Abort do
-              perform_command
+              call_service
             end
             assert_equal(
               "{{x}} " + @context.message("core.app.create.rails.error.dir_exists", "test-app"),
@@ -221,24 +221,16 @@ module ShopifyCLI
             @context.expects(:system).with(*command, chdir: chdir).returns(process_status)
           end
 
-          def perform_command_snake_case(add_cmd = nil)
-            default_new_cmd = %w(app create rails \
-                                 --type=public \
-                                 --name=test-app \
-                                 --organization-id=42 \
-                                 --db=sqlite3 \
-                                 --store=testshop.myshopify.com)
-            run_cmd(default_new_cmd << add_cmd, false)
-          end
-
-          def perform_command(add_cmd = nil)
-            default_new_cmd = %w(app create rails \
-                                 --type=public \
-                                 --name=test-app \
-                                 --organization-id=42 \
-                                 --db=sqlite3 \
-                                 --store=testshop.myshopify.com)
-            run_cmd(default_new_cmd << add_cmd, false)
+          def call_service(db: "sqlite3", rails_opts: nil)
+            RailsService.call(
+              name: "test-app",
+              organization_id: "42",
+              store: "testshop.myshopify.com",
+              type: "public",
+              db: db,
+              rails_opts: rails_opts,
+              context: @context
+            )
           end
 
           def create_gem_path_and_binaries

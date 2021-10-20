@@ -1,6 +1,6 @@
 require "test_helper"
 require "semantic/semantic"
-require "project_types/rails/test_helper"
+require "project_types/node/test_helper"
 
 module ShopifyCLI
   module Services
@@ -32,7 +32,7 @@ module ShopifyCLI
           def test_check_node_installed
             @context.expects(:which).with("node").returns(nil)
             assert_raises ShopifyCLI::Abort, "core.app.create.node.error.node_required" do
-              perform_command
+              call_service
             end
           end
 
@@ -40,7 +40,7 @@ module ShopifyCLI
             @context.expects(:which).with("node").returns("/usr/bin/node")
             @context.expects(:capture2e).with("node", "-v").returns([nil, mock(success?: false)])
             assert_raises ShopifyCLI::Abort, "core.app.create.node.error.node_version_failure" do
-              perform_command
+              call_service
             end
           end
 
@@ -49,7 +49,7 @@ module ShopifyCLI
             @context.expects(:capture2e).with("node", "-v").returns(["8.0.0", mock(success?: true)])
             @context.expects(:which).with("npm").returns(nil)
             assert_raises ShopifyCLI::Abort, "core.app.create.node.error.npm_required" do
-              perform_command
+              call_service
             end
           end
 
@@ -59,7 +59,7 @@ module ShopifyCLI
             @context.expects(:which).with("npm").returns("/usr/bin/npm")
             @context.expects(:capture2e).with("npm", "-v").returns([nil, mock(success?: false)])
             assert_raises ShopifyCLI::Abort, "core.app.create.node.error.npm_version_failure" do
-              perform_command
+              call_service
             end
           end
 
@@ -79,7 +79,7 @@ module ShopifyCLI
             })
             ShopifyCLI::Resources::EnvFile.stubs(:new).returns(stub(write: true))
 
-            perform_command
+            call_service
 
             refute File.exist?("test-app/.npmrc")
             FileUtils.rm_r("test-app")
@@ -112,7 +112,7 @@ module ShopifyCLI
             })
             ShopifyCLI::Resources::EnvFile.stubs(:new).returns(stub(write: true))
 
-            perform_command
+            call_service
 
             FileUtils.rm_r("test-app")
           end
@@ -149,7 +149,7 @@ module ShopifyCLI
               }
             )
 
-            perform_command
+            call_service
 
             assert_equal SHOPIFYCLI_FILE, File.read("test-app/.shopify-cli.yml")
             assert_equal ENV_FILE, File.read("test-app/.env")
@@ -204,7 +204,7 @@ module ShopifyCLI
               }
             )
 
-            perform_command
+            call_service
 
             assert_equal SHOPIFYCLI_FILE, File.read("test-app/.shopify-cli.yml")
             assert_equal ENV_FILE, File.read("test-app/.env")
@@ -218,20 +218,15 @@ module ShopifyCLI
 
           private
 
-          def perform_command_snake_case
-            run_cmd("app create node \
-              --name=test-app \
-              --type=public \
-              --organization-id=42 \
-              --store=testshop.myshopify.com")
-          end
-
-          def perform_command
-            run_cmd("app create node \
-              --name=test-app \
-              --type=public \
-              --organization-id=42 \
-              --store=testshop.myshopify.com")
+          def call_service
+            NodeService.call(
+              context: @context,
+              name: "test-app",
+              type: "public",
+              organization_id: "42",
+              store: "testshop.myshopify.com",
+              verbose: false
+            )
           end
 
           def expect_node_npm_check_commands

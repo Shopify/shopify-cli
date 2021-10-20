@@ -29,14 +29,15 @@ module ShopifyCLI
           end
 
           def call
-            form = Rails::Forms::Create.ask(context, [], {
+            form_options = {
               name: name,
               organization_id: organization_id,
               shop_domain: store,
               type: type,
-              db: db,
-              rails_opts: rails_opts,
-            })
+            }
+            form_options[:db] = db unless db.nil?
+            form_options[:rails_opts] = rails_opts unless rails_opts.nil?
+            form = Rails::Forms::Create.ask(context, [], form_options)
 
             ruby_version = Rails::Ruby.version(context)
             context.abort(context.message("core.app.create.rails.error.invalid_ruby_version")) unless

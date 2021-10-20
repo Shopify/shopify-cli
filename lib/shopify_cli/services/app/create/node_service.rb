@@ -18,7 +18,7 @@ module ShopifyCLI
           end
 
           def call
-            form = Node::Forms::Create.ask(context, [], {
+            form = ::Node::Forms::Create.ask(context, [], {
               name: name,
               organization_id: organization_id,
               shop_domain: store,

@@ -16,7 +16,7 @@ module ShopifyCLI
             @context.stubs(:system)
           end
 
-          def test_server_command
+          def test_call
             ShopifyCLI::Tunnel.stubs(:start).returns("https://example.com")
             ShopifyCLI::Tasks::UpdateDashboardURLS.expects(:call)
             ShopifyCLI::Resources::EnvFile.any_instance.expects(:update)
@@ -34,7 +34,7 @@ module ShopifyCLI
             run_cmd("app serve")
           end
 
-          def test_server_command_with_invalid_host_url
+          def test_call_with_invalid_host_url
             ShopifyCLI::Tunnel.stubs(:start).returns("garbage://example.com")
             ShopifyCLI::Tasks::UpdateDashboardURLS.expects(:call).never
             ShopifyCLI::Resources::EnvFile.any_instance.expects(:update).never
@@ -69,7 +69,7 @@ module ShopifyCLI
             run_cmd("app serve")
           end
 
-          def test_server_command_when_host_passed
+          def test_call_when_host_passed
             ShopifyCLI::Tunnel.expects(:start).never
             ShopifyCLI::Tasks::UpdateDashboardURLS.expects(:call)
             ShopifyCLI::Resources::EnvFile.any_instance.expects(:update).with(
@@ -78,7 +78,7 @@ module ShopifyCLI
             run_cmd('app serve --host="https://example-foo.com"')
           end
 
-          def test_server_command_when_invalid_host_passed
+          def test_call_when_invalid_host_passed
             invalid_host = "garbage://example.com"
             ShopifyCLI::Tasks::UpdateDashboardURLS.expects(:call).never
             ShopifyCLI::Resources::EnvFile.any_instance.expects(:update).never
@@ -99,7 +99,7 @@ module ShopifyCLI
             end
           end
 
-          def test_server_command_when_port_passed
+          def test_call_when_port_passed
             ShopifyCLI::Tunnel.stubs(:start).returns("https://example.com")
             ShopifyCLI::Tasks::UpdateDashboardURLS.expects(:call)
             ShopifyCLI::Resources::EnvFile.any_instance.expects(:update)
@@ -117,7 +117,7 @@ module ShopifyCLI
             run_cmd("app serve --port=5000")
           end
 
-          def test_server_command_when_invalid_port_passed
+          def test_call_when_invalid_port_passed
             invalid_port = "NOT_PORT"
             ShopifyCLI::Tunnel.stubs(:start).returns("https://example.com")
             ShopifyCLI::Tasks::UpdateDashboardURLS.expects(:call)

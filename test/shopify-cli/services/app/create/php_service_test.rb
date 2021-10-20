@@ -37,7 +37,7 @@ module ShopifyCLI
           def test_check_php_installed
             @context.expects(:which).with("php").returns(nil)
             assert_raises ShopifyCLI::Abort, "core.app.create.php.error.php_required" do
-              perform_command
+              call_service
             end
           end
 
@@ -45,7 +45,7 @@ module ShopifyCLI
             @context.expects(:which).with("php").returns("/usr/bin/php")
             @context.expects(:capture2e).with("php", "-r", "echo phpversion();").returns([nil, mock(success?: false)])
             assert_raises ShopifyCLI::Abort, "core.app.create.php.error.php_version_failure" do
-              perform_command
+              call_service
             end
           end
 
@@ -53,7 +53,7 @@ module ShopifyCLI
             PHPService.any_instance.stubs(:check_php)
             @context.expects(:which).with("composer").returns(nil)
             assert_raises ShopifyCLI::Abort, "core.app.create.php.error.composer_required" do
-              perform_command
+              call_service
             end
           end
 
@@ -95,7 +95,7 @@ module ShopifyCLI
               }
             )
 
-            perform_command
+            call_service
 
             @context.chdir("..")
 
@@ -111,7 +111,7 @@ module ShopifyCLI
 
           private
 
-          def perform_command
+          def call_service
             PHPService.call(
               name: "test-app",
               organization_id: "42",
