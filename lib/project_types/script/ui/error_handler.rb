@@ -118,10 +118,6 @@ module Script
             cause_of_error: ShopifyCLI::Context.message("script.error.no_script_json_file_cause"),
             help_suggestion: ShopifyCLI::Context.message("script.error.no_script_json_file_help"),
           }
-        when Layers::Infrastructure::Errors::AppNotInstalledError
-          {
-            cause_of_error: ShopifyCLI::Context.message("script.error.app_not_installed_cause"),
-          }
         when Layers::Infrastructure::Errors::BuildError
           {
             cause_of_error: ShopifyCLI::Context.message("script.error.build_error_cause"),
@@ -199,11 +195,6 @@ module Script
           {
             cause_of_error: ShopifyCLI::Context.message("script.error.script_repush_cause"),
             help_suggestion: ShopifyCLI::Context.message("script.error.script_repush_help"),
-          }
-        when Layers::Infrastructure::Errors::ShopAuthenticationError
-          {
-            cause_of_error: ShopifyCLI::Context.message("script.error.shop_auth_cause"),
-            help_suggestion: ShopifyCLI::Context.message("script.error.shop_auth_help"),
           }
         when Layers::Infrastructure::Errors::BuildScriptNotFoundError
           {

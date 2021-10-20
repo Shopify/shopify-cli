@@ -4,7 +4,6 @@ module Script
   module Layers
     module Infrastructure
       module Errors
-        class AppNotInstalledError < ScriptProjectError; end
         class BuildError < ScriptProjectError; end
         class ScriptJsonSyntaxError < ScriptProjectError; end
 
@@ -101,7 +100,6 @@ module Script
         end
 
         class ScriptProjectAlreadyExistsError < ScriptProjectError; end
-        class ShopAuthenticationError < ScriptProjectError; end
         class TaskRunnerNotFoundError < ScriptProjectError; end
         class BuildScriptNotFoundError < ScriptProjectError; end
         class InvalidBuildScriptError < ScriptProjectError; end
