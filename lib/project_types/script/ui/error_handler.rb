@@ -44,15 +44,6 @@ module Script
             cause_of_error: ShopifyCLI::Context.message("script.error.invalid_context_cause"),
             help_suggestion: ShopifyCLI::Context.message("script.error.invalid_context_help"),
           }
-        when Errors::InvalidConfigProps
-          {
-            cause_of_error: ShopifyCLI::Context.message("script.error.invalid_config_props_cause"),
-            help_suggestion: ShopifyCLI::Context.message("script.error.invalid_config_props_help"),
-          }
-        when Errors::InvalidConfigYAMLError
-          {
-            cause_of_error: ShopifyCLI::Context.message("script.error.invalid_config", e.config_file),
-          }
         when Layers::Infrastructure::Errors::InvalidLanguageError
           {
             cause_of_error: ShopifyCLI::Context.message("script.error.invalid_language_cause", e.language),
@@ -75,14 +66,6 @@ module Script
           {
             cause_of_error: ShopifyCLI::Context.message("script.error.no_existing_orgs_cause"),
             help_suggestion: ShopifyCLI::Context.message("script.error.no_existing_orgs_help"),
-          }
-        when Errors::NoExistingStoresError
-          {
-            cause_of_error: ShopifyCLI::Context.message("script.error.no_existing_stores_cause"),
-            help_suggestion: ShopifyCLI::Context.message(
-              "script.error.no_existing_stores_help",
-              organization_id: e.organization_id
-            ),
           }
         when Layers::Infrastructure::Errors::ScriptProjectAlreadyExistsError
           {
