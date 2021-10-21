@@ -63,24 +63,24 @@ module ShopifyCLI
 
           def check_node
             cmd_path = context.which("node")
-            context.abort(context.message("core.app.create.node.create.error.node_required")) if cmd_path.nil?
+            context.abort(context.message("core.app.create.node.error.node_required")) if cmd_path.nil?
 
             version, stat = context.capture2e("node", "-v")
             unless stat.success?
-              context.abort(context.message("core.app.create.node.create.error.node_version_failure"))
+              context.abort(context.message("core.app.create.node.error.node_version_failure"))
             end
 
-            context.done(context.message("core.app.create.node.create.node_version", version))
+            context.done(context.message("core.app.create.node.node_version", version))
           end
 
           def check_npm
             cmd_path = context.which("npm")
-            context.abort(context.message("core.app.create.node.create.error.npm_required")) if cmd_path.nil?
+            context.abort(context.message("core.app.create.node.error.npm_required")) if cmd_path.nil?
 
             version, stat = context.capture2e("npm", "-v")
-            context.abort(context.message("core.app.create.node.create.error.npm_version_failure")) unless stat.success?
+            context.abort(context.message("core.app.create.node.error.npm_version_failure")) unless stat.success?
 
-            context.done(context.message("core.app.create.node.create.npm_version", version))
+            context.done(context.message("core.app.create.node.npm_version", version))
           end
 
           def set_npm_config
