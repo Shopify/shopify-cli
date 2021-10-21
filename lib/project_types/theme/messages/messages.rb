@@ -94,6 +94,7 @@ module Theme
             Options:
               {{command:--port=PORT}} Local port to serve theme preview from
               {{command:--poll}}      Force polling to detect file changes
+              {{command:--bind=HOST}} Set which network interface the web server listens on
           HELP
           serve: "Viewing theme…",
           open_fail: "Couldn't open the theme",

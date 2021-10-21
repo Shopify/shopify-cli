@@ -20,7 +20,7 @@ module ShopifyCLI
       class << self
         attr_accessor :ctx
 
-        def start(ctx, root, port: 9292, poll: false)
+        def start(ctx, root, bind: "127.0.0.1", port: 9292, poll: false)
           @ctx = ctx
           theme = DevelopmentTheme.new(ctx, root: root)
           ignore_filter = IgnoreFilter.from_path(root)
@@ -74,6 +74,7 @@ module ShopifyCLI
           watcher.start
           WebServer.run(
             @app,
+            BindAddress: bind,
             Port: port,
             Logger: logger,
             AccessLog: [],
