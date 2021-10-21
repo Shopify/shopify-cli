@@ -31,10 +31,10 @@ module ShopifyCLI
         config.auto_capture_sessions = false
       end
 
-      metadata = {rubyPlatform: RUBY_PLATFORM}
+      metadata = { rubyPlatform: RUBY_PLATFORM }
       metadata.merge!(custom_metadata)
 
-      Bugsnag.notify(error) do |event|      
+      Bugsnag.notify(error) do |event|
         event.add_metadata(:device, metadata)
       end
     end
