@@ -5,12 +5,12 @@ module ShopifyCLI
     module App
       module Create
         class NodeService < BaseService
-          attr_reader :context, :name, :organization_id, :store, :type, :verbose
+          attr_reader :context, :name, :organization_id, :store_domain, :type, :verbose
 
-          def initialize(name:, organization_id:, store:, type:, verbose:, context:)
+          def initialize(name:, organization_id:, store_domain:, type:, verbose:, context:)
             @name = name
             @organization_id = organization_id
-            @store = store
+            @store_domain = store_domain
             @type = type
             @verbose = verbose
             @context = context
@@ -21,7 +21,7 @@ module ShopifyCLI
             form = ::Node::Forms::Create.ask(context, [], {
               name: name,
               organization_id: organization_id,
-              shop_domain: store,
+              shop_domain: store_domain,
               type: type,
               verbose: verbose,
             })

@@ -8,7 +8,7 @@ module ShopifyCLI
           options do |parser, flags|
             parser.on("--name=NAME") { |t| flags[:name] = t }
             parser.on("--organization-id=ID") { |id| flags[:organization_id] = id }
-            parser.on("--store=MYSHOPIFYDOMAIN") { |url| flags[:store] = url }
+            parser.on("--store-domain=MYSHOPIFYDOMAIN") { |url| flags[:store_domain] = url }
             parser.on("--type=APPTYPE") { |type| flags[:type] = type }
             parser.on("--db=DB") { |db| flags[:db] = db }
             parser.on("--rails-opts=RAILSOPTS") { |opts| flags[:rails_opts] = opts }
@@ -18,7 +18,7 @@ module ShopifyCLI
             Services::App::Create::RailsService.call(
               name: options.flags[:name],
               organization_id: options.flags[:organization_id],
-              store: options.flags[:store],
+              store_domain: options.flags[:store_domain],
               type: options.flags[:type],
               db: options.flags[:db],
               rails_opts: options.flags[:rails_opts],

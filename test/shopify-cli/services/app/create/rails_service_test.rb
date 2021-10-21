@@ -225,7 +225,7 @@ module ShopifyCLI
             RailsService.call(
               name: "test-app",
               organization_id: "42",
-              store: "testshop.myshopify.com",
+              store_domain: "testshop.myshopify.com",
               type: "public",
               db: db,
               rails_opts: rails_opts,

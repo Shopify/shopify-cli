@@ -224,7 +224,7 @@ module ShopifyCLI
               name: "test-app",
               type: "public",
               organization_id: "42",
-              store: "testshop.myshopify.com",
+              store_domain: "testshop.myshopify.com",
               verbose: false
             )
           end

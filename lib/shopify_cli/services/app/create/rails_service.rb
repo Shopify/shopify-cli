@@ -15,12 +15,12 @@ module ShopifyCLI
 
           DEFAULT_RAILS_FLAGS = %w(--skip-spring)
 
-          attr_reader :name, :organization_id, :store, :type, :db, :rails_opts, :context
+          attr_reader :name, :organization_id, :store_domain, :type, :db, :rails_opts, :context
 
-          def initialize(name:, organization_id:, store:, type:, db:, rails_opts:, context:)
+          def initialize(name:, organization_id:, store_domain:, type:, db:, rails_opts:, context:)
             @name = name
             @organization_id = organization_id
-            @store = store
+            @store_domain = store_domain
             @type = type
             @db = db
             @rails_opts = rails_opts
@@ -32,7 +32,7 @@ module ShopifyCLI
             form_options = {
               name: name,
               organization_id: organization_id,
-              shop_domain: store,
+              shop_domain: store_domain,
               type: type,
             }
             form_options[:db] = db unless db.nil?

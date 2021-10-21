@@ -8,7 +8,7 @@ module ShopifyCLI
           options do |parser, flags|
             parser.on("--name=NAME") { |name| flags[:name] = name }
             parser.on("--organization-id=ID") { |organization_id| flags[:organization_id] = organization_id }
-            parser.on("--store=MYSHOPIFYDOMAIN") { |url| flags[:store] = url }
+            parser.on("--store-domain=MYSHOPIFYDOMAIN") { |url| flags[:store_domain] = url }
             parser.on("--type=APPTYPE") { |type| flags[:type] = type }
             parser.on("--verbose") { flags[:verbose] = true }
           end
@@ -17,7 +17,7 @@ module ShopifyCLI
             Services::App::Create::PHPService.call(
               name: options.flags[:name],
               organization_id: options.flags[:organization_id],
-              store: options.flags[:store],
+              store_domain: options.flags[:store_domain],
               type: options.flags[:type],
               verbose: !options.flags[:verbose].nil?,
               context: @ctx

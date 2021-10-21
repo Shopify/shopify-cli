@@ -115,7 +115,7 @@ module ShopifyCLI
             PHPService.call(
               name: "test-app",
               organization_id: "42",
-              store: "testshop.myshopify.com",
+              store_domain: "testshop.myshopify.com",
               type: "public",
               verbose: false,
               context: @context
