@@ -94,7 +94,7 @@ module Theme
             Options:
               {{command:--port=PORT}} Local port to serve theme preview from
               {{command:--poll}}      Force polling to detect file changes
-              {{command:--http-bind=HOST}} Set which network interface the web server listens on
+              {{command:--http-bind=HOST}} Set which network interface the web server listens on. The default value is 127.0.0.1.
           HELP
           serve: "Viewing theme…",
           open_fail: "Couldn't open the theme",
