@@ -177,6 +177,11 @@ module ShopifyCLI
   def self.sha
     return @sha if defined?(@sha)
     @sha = Git.sha(dir: ShopifyCLI::ROOT)
+    # Some environments don't have git in PATH and this prevents
+    # the execution from raising an error
+    # https://app.bugsnag.com/shopify/shopify-cli/errors/615dd36365ce57000889d4c5
+  rescue Errno::ENOENT
+    nil
   end
 
   # Migrate runs migrations that migrate the state of the environment

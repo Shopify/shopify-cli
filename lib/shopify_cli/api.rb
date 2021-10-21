@@ -108,9 +108,13 @@ module ShopifyCLI
     private
 
     def default_headers
+      sha = ShopifyCLI.sha
+      sec_ch_ua = "Shopify CLI; v=#{ShopifyCLI::VERSION}"
+      sec_ch_ua += " sha=#{sha}" unless sha.nil?
+
       {
         "User-Agent" => "Shopify CLI; v=#{ShopifyCLI::VERSION}",
-        "Sec-CH-UA" => "Shopify CLI; v=#{ShopifyCLI::VERSION} sha=#{ShopifyCLI.sha}",
+        "Sec-CH-UA" => sec_ch_ua,
         "Sec-CH-UA-PLATFORM" => ctx.os.to_s,
         "X-Request-Id" => SecureRandom.uuid,
       }.tap do |headers|

@@ -50,6 +50,27 @@ module ShopifyCLI
       @api.query("api/mutation", variables: variables)
     end
 
+    def test_query_no_sha_in_headers_when_sha_unavailable
+      ShopifyCLI.stubs(:sha).returns(nil)
+      headers = {
+        "User-Agent" => "Shopify CLI; v=#{ShopifyCLI::VERSION}",
+        "Sec-CH-UA" => "Shopify CLI; v=#{ShopifyCLI::VERSION}",
+        "Sec-CH-UA-PLATFORM" => @context.os.to_s,
+        "Auth" => "faketoken",
+        "X-Request-Id" => "1234-5678",
+      }
+      uri = URI.parse("https://my-test-shop.myshopify.com/admin/api/2019-04/graphql.json")
+      variables = { var_name: "var_value" }
+      body = JSON.dump(query: @mutation.tr("\n", ""), variables: variables)
+      File.stubs(:read)
+        .with(File.join(ShopifyCLI::ROOT, "lib/graphql/api/mutation.graphql"))
+        .returns(@mutation)
+      SecureRandom.stubs(:uuid).returns("1234-5678")
+      response = stub("response", code: "200", body: "{}")
+      HttpRequest.expects(:post).with(uri, body, headers).returns(response)
+      @api.query("api/mutation", variables: variables)
+    end
+
     def test_raises_error_with_invalid_url
       File.stubs(:read)
         .with(File.join(ShopifyCLI::ROOT, "lib/graphql/api/mutation.graphql"))
