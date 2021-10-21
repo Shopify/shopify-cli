@@ -23,7 +23,7 @@ module Theme
           .with(context, ".", http_bind: Theme::Command::Serve::DEFAULT_HTTP_BIND)
           .raises(ShopifyCLI::Theme::DevServer::AddressBindingError)
 
-        assert_raises ShopifyCLI::Abort,  do
+        assert_raises ShopifyCLI::Abort do
           Theme::Command::Serve.new(context).call
         end
       end
