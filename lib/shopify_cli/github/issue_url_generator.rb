@@ -2,6 +2,7 @@ module ShopifyCLI
   module GitHub
     module IssueURLGenerator
       def self.error_url(error)
+        require 'byebug'; byebug
         title = "#{error.class}: #{error.message}"
         labels = "type:bug"
         # take at most 5 lines from backtrace

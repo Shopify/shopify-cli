@@ -1,0 +1,12 @@
+name: Test 
+
+on:
+  push:
+    branches:
+
+jobs:
+  test:
+    runs-on: windows-latest
+    steps:
+    - name: Git
+      run: git status
