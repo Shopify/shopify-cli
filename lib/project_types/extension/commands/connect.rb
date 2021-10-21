@@ -25,7 +25,7 @@ module Extension
       private
 
       def with_connect_form(args)
-        form = Forms::Connect.ask(@ctx, args, { type: specification_handler.identifier.downcase })
+        form = Forms::Connect.ask(@ctx, args, { type: specification_handler.graphql_identifier })
         return @ctx.puts(self.class.help) if form.nil?
 
         yield form

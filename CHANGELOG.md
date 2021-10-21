@@ -1,5 +1,7 @@
 From version 2.6.0, the sections in this file adhere to the [keep a changelog](https://keepachangelog.com/en/1.0.0/) specification.
 ## [Unreleased]
+### Fixed
+* [#1672](https://github.com/Shopify/shopify-cli/pull/1672): Fix `shopify extension connect` command for `PRODUCT_SUBSCRIPTION` extensions
 
 ## Version 2.6.4
 ### Fixed
