@@ -5,7 +5,7 @@ From version 2.6.0, the sections in this file adhere to the [keep a changelog](h
 
 ## Version 2.6.6
 ### Added
-* [#1609](https://github.com/Shopify/shopify-cli/pull/1609): Add `--bind=HOST` option to `shopify theme serve`.
+* [#1609](https://github.com/Shopify/shopify-cli/pull/1609): Add `--http-bind=HOST` option to `shopify theme serve`.
 
 ### Fixed
 * [#1678](https://github.com/Shopify/shopify-cli/pull/1678): Fix migrator's incompatibility with Ruby 2.5.
