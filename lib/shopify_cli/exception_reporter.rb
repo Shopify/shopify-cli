@@ -17,8 +17,8 @@ module ShopifyCLI
       context.puts("\n")
 
       return unless reportable_error?(error)
-      return unless report?(context: context)
 
+      return unless report?(context: context)
       ENV["BUGSNAG_DISABLE_AUTOCONFIGURE"] = "1"
       require "bugsnag"
 
