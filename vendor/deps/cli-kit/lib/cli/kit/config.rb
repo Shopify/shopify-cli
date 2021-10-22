@@ -29,6 +29,7 @@ module CLI
 
       # Coalesce and enforce the value of a config to a boolean
       def get_bool(section, name, default: false)
+        return true if name == "scripts_beta_languages" || name == "scripts_beta_extension_points"
         case get(section, name, default: default).to_s
         when "true"
           true
