@@ -35,7 +35,7 @@ module ShopifyCLI
         file_name = File.basename(file_path).gsub(".rb", "")
         file_name_components = file_name.split("_")
         date_timestamp = file_name_components[0].to_i
-        migration_name = file_name_components[1...].join("_")
+        migration_name = file_name_components.drop(1).join("_")
 
         Migrator::Migration.new(
           name: migration_name,

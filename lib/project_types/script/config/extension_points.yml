@@ -50,5 +50,5 @@ discount_types:
   libraries:
     typescript:
       beta: true
-      package: "@shopify/scripts-checkout-apis-temp"
+      package: "@shopify/scripts-discount-apis"
       repo: "https://github.com/Shopify/scripts-apis-examples"
