@@ -15,7 +15,7 @@ class Javy
   end
 
   def install(**args)
-    Install.call(target: target, platform: platform, **args)
+    Install.call(target: TARGET, platform: platform, **args)
   end
 
   def build(source:, dest:)
@@ -25,11 +25,7 @@ class Javy
   private
 
   def exec(*args, **kwargs)
-    system(target, *args, **kwargs)
-  end
-
-  def target
-    @target ||= platform.format_path(TARGET)
+    system(TARGET, *args, **kwargs)
   end
 
   def platform
@@ -56,7 +52,7 @@ class Javy
       downloaded = asset.download(target: target)
       raise InstallationError.asset_not_found(platform: platform, version: version, url: asset.url) unless downloaded
 
-      raise InstallationError.installation_failed unless verify(target, version: version)
+      raise InstallationError.installation_failed unless verify_download(target)
     end
 
     private
@@ -67,9 +63,8 @@ class Javy
       nil
     end
 
-    def verify(target, version:)
-      return false unless File.executable?(target)
-      true
+    def verify_download(target)
+      File.executable?(target)
     end
   end
 
@@ -115,37 +110,27 @@ class Javy
 
     def filename
       format(
-        "%{basename}-%{cpu}-%{os}-%{version}.%{extension}",
+        "%{basename}-%{cpu}-%{os}-%{version}.gz",
         basename: basename,
         cpu: platform.cpu,
         os: platform.os,
-        version: version,
-        extension: platform.os == "windows" ? "exe.zip" : "zip"
+        version: version
       )
     end
 
     private
 
     def decompress(source, target)
-      tempdir = "temp-download"
-      CLI::Kit::System.capture2("unzip -u #{source.path} -d #{tempdir}")
-      target << File.read(File.join(__dir__, tempdir, "target", "release", "javy"))
-      FileUtils.rm_rf(tempdir)
+      zlib = Zlib::GzipReader.new(source)
+      target << zlib.read
+    ensure
+      zlib.close
     end
   end
 
   Platform = Struct.new(:ruby_config) do
     def initialize(ruby_config = RbConfig::CONFIG)
       super(ruby_config)
-    end
-
-    def format_path(path)
-      case os
-      when "windows"
-        File.extname(path) != ".exe" ? path + ".exe" : path
-      else
-        path
-      end
     end
 
     def to_s
