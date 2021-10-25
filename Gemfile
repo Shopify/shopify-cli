@@ -14,6 +14,7 @@ group :development, :test do
   gem "rubocop-minitest", require: false
   gem "rubocop-rake", require: false
   gem "iniparse", "~> 1.5"
+  gem "colorize", "~> 0.8.1"
 end
 
 group :test do

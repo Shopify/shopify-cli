@@ -8,7 +8,6 @@ module Rails
       VALID_DB_TYPES = ["sqlite3",
                         "mysql",
                         "postgresql",
-                        "sqlite3",
                         "oracle",
                         "frontbase",
                         "ibm_db",
