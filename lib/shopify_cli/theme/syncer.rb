@@ -224,8 +224,7 @@ module ShopifyCLI
 
         if @pending.size == 0
           changed
-          uploadComplete = true
-          notify_observers(uploadComplete);
+          notify_observers(true)
         end
       end
 
