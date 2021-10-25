@@ -84,11 +84,11 @@ module Extension
       end
 
       def yarn_list
-        production_only? ? %w[list --production --depth=0] : %w[list]
+        production_only? ? %w[list --production --depth=0] : %w[list --depth=1]
       end
 
       def npm_list
-        production_only? ? %w[list --prod --depth=0] : %w[list]
+        production_only? ? %w[list --prod --depth=0] : %w[list --depth=1]
       end
 
       def search_packages(packages, package_list)

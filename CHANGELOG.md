@@ -1,6 +1,7 @@
 From version 2.6.0, the sections in this file adhere to the [keep a changelog](https://keepachangelog.com/en/1.0.0/) specification.
 ## [Unreleased]
 * [#1609](https://github.com/Shopify/shopify-cli/pull/1609): Add `--bind=HOST` option to `shopify theme serve`.
+* [#1685](https://github.com/Shopify/shopify-cli/pull/1685): Fix issue listing dependencies for `PRODUCT_SUBSCRIPTION` extensions on `shopify extension push`
 
 ## Version 2.6.5
 ### Fixed

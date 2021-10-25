@@ -109,8 +109,8 @@ module Extension
       def test_includes_development_dependencies_by_default
         js_system = stub_js_system do |expect_js_system_call|
           expect_js_system_call.with do |config|
-            assert_equal ["list"], config.fetch(:yarn)
-            assert_equal ["list"], config.fetch(:npm)
+            assert_equal ["list", "--depth=1"], config.fetch(:yarn)
+            assert_equal ["list", "--depth=1"], config.fetch(:npm)
           end
         end
         result = FindNpmPackages.call(js_system: js_system)
