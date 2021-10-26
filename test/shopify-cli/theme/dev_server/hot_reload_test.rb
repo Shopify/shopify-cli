@@ -103,7 +103,7 @@ module ShopifyCLI
 
           app = -> { [200, {}, []] }
           HotReload.new(@ctx, app, theme: @theme, watcher: @watcher, syncer: @syncer)
-  
+
           @syncer.enqueue_updates([@theme["snippets/snippet.liquid"]])
           @syncer.wait!
         end
