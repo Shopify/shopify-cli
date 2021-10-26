@@ -82,7 +82,7 @@ module Script
           system_call_failure_help: "Review the following error and try again.\n{{red:%{out}}}",
 
           metadata_validation_cause: "Invalid Script API metadata.",
-          metadata_validation_help: "Ensure the 'shopify/scripts-toolchain-as' package is up to date.",
+          metadata_validation_help: "Ensure the script's library package is up to date.",
 
           metadata_schema_versions_missing: "Invalid Script metadata:" \
                                             " 'schemaVersions' field is missing",
