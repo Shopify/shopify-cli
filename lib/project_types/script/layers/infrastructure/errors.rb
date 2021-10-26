@@ -4,7 +4,6 @@ module Script
   module Layers
     module Infrastructure
       module Errors
-        class AppNotInstalledError < ScriptProjectError; end
         class BuildError < ScriptProjectError; end
         class ScriptJsonSyntaxError < ScriptProjectError; end
 
@@ -37,6 +36,23 @@ module Script
           def initialize(valid_types)
             super()
             @valid_types = valid_types
+          end
+        end
+
+        class APILibraryNotFoundError < ScriptProjectError
+          attr_reader :library_name
+          def initialize(library_name)
+            super()
+            @library_name = library_name
+          end
+        end
+
+        class LanguageLibraryForAPINotFoundError < ScriptProjectError
+          attr_reader :language, :api
+          def initialize(language:, api:)
+            super()
+            @language = language
+            @api = api
           end
         end
 
@@ -84,7 +100,6 @@ module Script
         end
 
         class ScriptProjectAlreadyExistsError < ScriptProjectError; end
-        class ShopAuthenticationError < ScriptProjectError; end
         class TaskRunnerNotFoundError < ScriptProjectError; end
         class BuildScriptNotFoundError < ScriptProjectError; end
         class InvalidBuildScriptError < ScriptProjectError; end

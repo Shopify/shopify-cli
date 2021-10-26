@@ -29,7 +29,7 @@ module Rails
       end
 
       def test_prints_help_with_no_name_argument
-        io = capture_io { run_cmd("app rails create --help") }
+        io = capture_io { run_cmd("rails create --help") }
         assert_match(CLI::UI.fmt(Rails::Command::Create.help), io.join)
       end
 
@@ -225,7 +225,7 @@ module Rails
       end
 
       def perform_command_snake_case(add_cmd = nil)
-        default_new_cmd = %w(app rails create \
+        default_new_cmd = %w(rails create \
                              --type=public \
                              --name=test-app \
                              --organization_id=42 \
@@ -235,7 +235,7 @@ module Rails
       end
 
       def perform_command(add_cmd = nil)
-        default_new_cmd = %w(app rails create \
+        default_new_cmd = %w(rails create \
                              --type=public \
                              --name=test-app \
                              --organization-id=42 \

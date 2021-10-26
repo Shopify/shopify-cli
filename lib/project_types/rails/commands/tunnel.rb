@@ -4,7 +4,7 @@ require "shopify_cli"
 
 module Rails
   class Command
-    class Tunnel < ShopifyCLI::Command::SubCommand
+    class Tunnel < ShopifyCLI::SubCommand
       # subcommands :auth, :start, :stop
 
       prerequisite_task ensure_project_type: :rails

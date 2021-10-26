@@ -10,7 +10,8 @@ module TestHelpers
       script_project:,
       script_content:,
       compiled_type:,
-      metadata:
+      metadata:,
+      library:
     )
       id = id(script_project.script_name, compiled_type)
       @cache[id] = Script::Layers::Domain::PushPackage.new(
@@ -21,11 +22,13 @@ module TestHelpers
         compiled_type: compiled_type,
         metadata: metadata,
         script_json: script_project.script_json,
+        library: library
       )
     end
 
-    def get_push_package(script_project:, compiled_type:, metadata:)
+    def get_push_package(script_project:, compiled_type:, metadata:, library:)
       _ = metadata
+      _ = library
       id = id(script_project.script_name, compiled_type)
       if @cache.key?(id)
         @cache[id]

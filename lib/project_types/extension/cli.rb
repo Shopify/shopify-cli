@@ -12,7 +12,7 @@ module Extension
     register_messages(Extension::Messages::MessageLoading.load)
   end
 
-  class Command < ShopifyCLI::Command::ProjectCommand
+  class Command < ShopifyCLI::ProjectCommands
     hidden_feature
     autoload :ExtensionCommand, Project.project_filepath("commands/extension_command")
 

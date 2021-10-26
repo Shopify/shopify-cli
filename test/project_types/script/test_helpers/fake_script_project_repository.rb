@@ -36,9 +36,9 @@ module TestHelpers
       @project
     end
 
-    def update_or_create_script_json(title:, configuration_ui: false)
+    def update_or_create_script_json(title:)
       script_json = fake_script_json_repo
-        .update_or_create(title: title, configuration_ui: configuration_ui)
+        .update_or_create(title: title)
 
       @project.script_json = script_json
       @project
@@ -61,10 +61,9 @@ module TestHelpers
         )
       end
 
-      def update_or_create(title:, configuration_ui:)
+      def update_or_create(title:)
         json = @cache&.content || {}
         json["title"] = title
-        json["configurationUi"] = !!configuration_ui
 
         @cache = Script::Layers::Domain::ScriptJson.new(
           content: json,

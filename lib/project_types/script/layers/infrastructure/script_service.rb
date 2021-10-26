@@ -18,7 +18,8 @@ module Script
           force: false,
           metadata:,
           script_json:,
-          module_upload_url:
+          module_upload_url:,
+          library:
         )
           query_name = "app_script_set"
           variables = {
@@ -33,6 +34,10 @@ module Script
             configurationUi: script_json.configuration_ui,
             configurationDefinition: script_json.configuration&.to_json,
             moduleUploadUrl: module_upload_url,
+            library: {
+              language: library[:language],
+              version: library[:version],
+            },
           }
           resp_hash = make_request(query_name: query_name, variables: variables)
           user_errors = resp_hash["data"]["appScriptSet"]["userErrors"]
@@ -41,7 +46,7 @@ module Script
 
           if user_errors.any? { |e| e["tag"] == "already_exists_error" }
             raise Errors::ScriptRepushError, uuid
-          elsif (e = user_errors.any? { |err| err["tag"] == "configuration_syntax_error" })
+          elsif (e = user_errors.any? { |err| err["tag"] == "configuration_definition_syntax_error" })
             raise Errors::ScriptJsonSyntaxError
           elsif (e = user_errors.find { |err| err["tag"] == "configuration_definition_missing_keys_error" })
             raise Errors::ScriptJsonMissingKeysError, e["message"]

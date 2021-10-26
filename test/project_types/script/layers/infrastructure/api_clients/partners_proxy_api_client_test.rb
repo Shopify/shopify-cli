@@ -71,26 +71,6 @@ describe Script::Layers::Infrastructure::ApiClients::PartnersProxyApiClient do
           end
         end
 
-        describe "forbidden_on_shop error" do
-          let(:code) { "forbidden_on_shop" }
-
-          it "should raise #{Script::Layers::Infrastructure::Errors::ShopAuthenticationError}" do
-            assert_raises(Script::Layers::Infrastructure::Errors::ShopAuthenticationError) do
-              subject
-            end
-          end
-        end
-
-        describe "app_not_installed_on_shop error" do
-          let(:code) { "app_not_installed_on_shop" }
-
-          it "should raise #{Script::Layers::Infrastructure::Errors::AppNotInstalledError}" do
-            assert_raises(Script::Layers::Infrastructure::Errors::AppNotInstalledError) do
-              subject
-            end
-          end
-        end
-
         describe "unknown error" do
           let(:code) { "<unknown>" }
 

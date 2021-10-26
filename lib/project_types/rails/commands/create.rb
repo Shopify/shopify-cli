@@ -1,7 +1,7 @@
 # frozen_string_literal: true
 module Rails
   class Command
-    class Create < ShopifyCLI::Command::AppSubCommand
+    class Create < ShopifyCLI::SubCommand
       prerequisite_task :ensure_authenticated
 
       USER_AGENT_CODE = <<~USERAGENT

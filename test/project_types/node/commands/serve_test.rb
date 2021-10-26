@@ -29,11 +29,34 @@ module Node
             "PORT" => "8081",
           }
         )
-        run_cmd("app node serve")
+        run_cmd("node serve")
       end
 
-      def test_server_command_with_invalid_host_url
-        ShopifyCLI::Tunnel.stubs(:start).returns("garbage://example.com")
+      def test_open_while_run
+        ShopifyCLI::Tunnel.stubs(:start).returns("https://example.com")
+        ShopifyCLI::Tasks::UpdateDashboardURLS.expects(:call)
+        ShopifyCLI::Resources::EnvFile.any_instance.expects(:update).with(
+          @context, :host, "https://example.com"
+        )
+        @context.expects(:puts).with(
+          "\n" +
+          @context.message("node.serve.open_info", "https://example.com/auth?shop=my-test-shop.myshopify.com") +
+          "\n"
+        )
+        run_cmd("node serve")
+      end
+
+      def test_server_command_when_host_passed
+        ShopifyCLI::Tunnel.expects(:start).never
+        ShopifyCLI::Tasks::UpdateDashboardURLS.expects(:call)
+        ShopifyCLI::Resources::EnvFile.any_instance.expects(:update).with(
+          @context, :host, "https://example-foo.com"
+        )
+        run_cmd('node serve --host="https://example-foo.com"')
+      end
+
+      def test_server_command_when_invalid_host_passed
+        invalid_host = "garbage://example.com"
         ShopifyCLI::Tasks::UpdateDashboardURLS.expects(:call).never
         ShopifyCLI::Resources::EnvFile.any_instance.expects(:update).never
         @context.expects(:system).with(
@@ -49,31 +72,8 @@ module Node
         ).never
 
         assert_raises ShopifyCLI::Abort do
-          run_cmd("app node serve")
+          run_cmd("node serve --host=#{invalid_host}")
         end
-      end
-
-      def test_open_while_run
-        ShopifyCLI::Tunnel.stubs(:start).returns("https://example.com")
-        ShopifyCLI::Tasks::UpdateDashboardURLS.expects(:call)
-        ShopifyCLI::Resources::EnvFile.any_instance.expects(:update).with(
-          @context, :host, "https://example.com"
-        )
-        @context.expects(:puts).with(
-          "\n" +
-          @context.message("node.serve.open_info", "https://example.com/auth?shop=my-test-shop.myshopify.com") +
-          "\n"
-        )
-        run_cmd("app node serve")
-      end
-
-      def test_update_env_with_host
-        ShopifyCLI::Tunnel.expects(:start).never
-        ShopifyCLI::Tasks::UpdateDashboardURLS.expects(:call)
-        ShopifyCLI::Resources::EnvFile.any_instance.expects(:update).with(
-          @context, :host, "https://example-foo.com"
-        )
-        run_cmd('app node serve --host="https://example-foo.com"')
       end
 
       def test_server_command_when_port_passed
@@ -91,7 +91,7 @@ module Node
             "PORT" => "5000",
           }
         )
-        run_cmd("app node serve --port=5000")
+        run_cmd("node serve --port=5000")
       end
 
       def test_server_command_when_invalid_port_passed
@@ -100,9 +100,9 @@ module Node
         ShopifyCLI::Tasks::UpdateDashboardURLS.expects(:call)
         ShopifyCLI::Resources::EnvFile.any_instance.expects(:update)
         @context.expects(:abort).with(
-          @context.message("node.serve.error.invalid_port", invalid_port)
+          @context.message("core.app.serve.error.invalid_port", invalid_port)
         )
-        run_cmd("app node serve --port=#{invalid_port}")
+        run_cmd("node serve --port=#{invalid_port}")
       end
     end
   end

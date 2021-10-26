@@ -2,7 +2,7 @@ require "shopify_cli"
 
 module Node
   class Command
-    class Open < ShopifyCLI::Command::AppSubCommand
+    class Open < ShopifyCLI::SubCommand
       prerequisite_task ensure_project_type: :node
 
       def call(*)

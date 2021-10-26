@@ -44,15 +44,6 @@ module Script
             cause_of_error: ShopifyCLI::Context.message("script.error.invalid_context_cause"),
             help_suggestion: ShopifyCLI::Context.message("script.error.invalid_context_help"),
           }
-        when Errors::InvalidConfigProps
-          {
-            cause_of_error: ShopifyCLI::Context.message("script.error.invalid_config_props_cause"),
-            help_suggestion: ShopifyCLI::Context.message("script.error.invalid_config_props_help"),
-          }
-        when Errors::InvalidConfigYAMLError
-          {
-            cause_of_error: ShopifyCLI::Context.message("script.error.invalid_config", e.config_file),
-          }
         when Layers::Infrastructure::Errors::InvalidLanguageError
           {
             cause_of_error: ShopifyCLI::Context.message("script.error.invalid_language_cause", e.language),
@@ -75,14 +66,6 @@ module Script
           {
             cause_of_error: ShopifyCLI::Context.message("script.error.no_existing_orgs_cause"),
             help_suggestion: ShopifyCLI::Context.message("script.error.no_existing_orgs_help"),
-          }
-        when Errors::NoExistingStoresError
-          {
-            cause_of_error: ShopifyCLI::Context.message("script.error.no_existing_stores_cause"),
-            help_suggestion: ShopifyCLI::Context.message(
-              "script.error.no_existing_stores_help",
-              organization_id: e.organization_id
-            ),
           }
         when Layers::Infrastructure::Errors::ScriptProjectAlreadyExistsError
           {
@@ -134,10 +117,6 @@ module Script
           {
             cause_of_error: ShopifyCLI::Context.message("script.error.no_script_json_file_cause"),
             help_suggestion: ShopifyCLI::Context.message("script.error.no_script_json_file_help"),
-          }
-        when Layers::Infrastructure::Errors::AppNotInstalledError
-          {
-            cause_of_error: ShopifyCLI::Context.message("script.error.app_not_installed_cause"),
           }
         when Layers::Infrastructure::Errors::BuildError
           {
@@ -217,11 +196,6 @@ module Script
             cause_of_error: ShopifyCLI::Context.message("script.error.script_repush_cause"),
             help_suggestion: ShopifyCLI::Context.message("script.error.script_repush_help"),
           }
-        when Layers::Infrastructure::Errors::ShopAuthenticationError
-          {
-            cause_of_error: ShopifyCLI::Context.message("script.error.shop_auth_cause"),
-            help_suggestion: ShopifyCLI::Context.message("script.error.shop_auth_help"),
-          }
         when Layers::Infrastructure::Errors::BuildScriptNotFoundError
           {
             cause_of_error: ShopifyCLI::Context.message("script.error.build_script_not_found"),
@@ -249,6 +223,22 @@ module Script
           {
             cause_of_error: ShopifyCLI::Context.message("script.error.script_upload_cause"),
             help_suggestion: ShopifyCLI::Context.message("script.error.script_upload_help"),
+          }
+        when Layers::Infrastructure::Errors::APILibraryNotFoundError
+          {
+            cause_of_error: ShopifyCLI::Context
+              .message("script.error.api_library_not_found_cause", library_name: e.library_name),
+            help_suggestion: ShopifyCLI::Context.message("script.error.api_library_not_found_help"),
+          }
+        when Layers::Infrastructure::Errors::LanguageLibraryForAPINotFoundError
+          {
+            cause_of_error: ShopifyCLI::Context
+              .message(
+                "script.error.language_library_for_api_not_found_cause",
+                language: e.language,
+                api: e.api
+              ),
+            help_suggestion: ShopifyCLI::Context.message("script.error.language_library_for_api_not_found_help"),
           }
         end
       end

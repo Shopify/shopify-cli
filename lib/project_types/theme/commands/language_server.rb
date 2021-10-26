@@ -3,7 +3,7 @@ require "theme_check"
 
 module Theme
   class Command
-    class LanguageServer < ShopifyCLI::Command::SubCommand
+    class LanguageServer < ShopifyCLI::SubCommand
       def call(*)
         ThemeCheck::LanguageServer.start
       end

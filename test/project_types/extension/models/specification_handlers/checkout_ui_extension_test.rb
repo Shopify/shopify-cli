@@ -34,7 +34,7 @@ module Extension
         end
 
         def test_config_uses_standard_argo_config_implementation
-          Features::Argo.any_instance.expects(:config).with(@context).once.returns({})
+          Features::Argo.any_instance.expects(:config).with(@context, include_renderer_version: false).once.returns({})
           @checkout_ui_extension.config(@context)
         end
 
@@ -47,7 +47,8 @@ module Extension
           initial_config = { script_content: script_content }
           yaml_config = { "extension_points": extension_points, "metafields": metafields, "name": name }
 
-          Features::Argo.any_instance.expects(:config).with(@context).once.returns(initial_config)
+          Features::Argo.any_instance.expects(:config).with(@context, include_renderer_version: false).once
+            .returns(initial_config)
           Features::ArgoConfig.stubs(:parse_yaml).returns(yaml_config)
 
           config = @checkout_ui_extension.config(@context)

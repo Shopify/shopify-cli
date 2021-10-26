@@ -7,7 +7,7 @@ module Script
     module Application
       class CreateScript
         class << self
-          def call(ctx:, language:, sparse_checkout_branch:, script_name:, extension_point_type:, no_config_ui:)
+          def call(ctx:, language:, sparse_checkout_branch:, script_name:, extension_point_type:)
             raise Infrastructure::Errors::ScriptProjectAlreadyExistsError, script_name if ctx.dir_exist?(script_name)
 
             in_new_directory_context(ctx, script_name) do
@@ -36,7 +36,7 @@ module Script
               )
 
               install_dependencies(ctx, language, script_name, project_creator)
-              script_project_repo.update_or_create_script_json(title: script_name, configuration_ui: !no_config_ui)
+              script_project_repo.update_or_create_script_json(title: script_name)
               project
             end
           end

@@ -21,6 +21,12 @@ module Extension
           @checkout_post_purchase = specifications[@identifier]
         end
 
+        def test_renderer_package_name_is_expected
+          expected_package_name = "@shopify/post-purchase-ui-extensions"
+          actual_package_name = SpecificationHandlers::CheckoutPostPurchase::RENDERER_PACKAGE_NAME
+          assert_equal(actual_package_name, expected_package_name)
+        end
+
         def test_create_uses_standard_argo_create_implementation
           directory_name = "checkout_post_purchase"
 
@@ -33,7 +39,7 @@ module Extension
         end
 
         def test_config_uses_standard_argo_config_implementation
-          Features::Argo.any_instance.expects(:config).with(@context).once.returns({})
+          Features::Argo.any_instance.expects(:config).with(@context, include_renderer_version: false).once.returns({})
           @checkout_post_purchase.config(@context)
         end
 
@@ -44,7 +50,8 @@ module Extension
           initial_config = { script_content: script_content }
           yaml_config = { "metafields": metafields }
 
-          Features::Argo.any_instance.expects(:config).with(@context).once.returns(initial_config)
+          Features::Argo.any_instance.expects(:config).with(@context, include_renderer_version: false).once
+            .returns(initial_config)
           Features::ArgoConfig.stubs(:parse_yaml).returns(yaml_config)
 
           config = @checkout_post_purchase.config(@context)

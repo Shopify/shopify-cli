@@ -1,5 +1,5 @@
 module ShopifyCLI
-  class ProjectCommand < Command
+  class ProjectCommands < Command
     def call(*)
       @ctx.puts(self.class.help)
     end

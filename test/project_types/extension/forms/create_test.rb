@@ -75,7 +75,7 @@ module Extension
           project_details
         end)
 
-        Questions::AskTemplate.expects(:new).with(ctx: @context).returns(->(project_details) do
+        Questions::AskTemplate.expects(:new).with(ctx: @context, template: nil).returns(->(project_details) do
           project_details.template = "javascript"
           project_details
         end)

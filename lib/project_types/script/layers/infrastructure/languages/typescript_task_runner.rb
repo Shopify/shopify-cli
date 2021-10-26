@@ -5,7 +5,7 @@ module Script
     module Infrastructure
       module Languages
         class TypeScriptTaskRunner
-          BYTECODE_FILE = "build/%{name}.wasm"
+          BYTECODE_FILE = "build/index.wasm"
           METADATA_FILE = "build/metadata.json"
           SCRIPT_SDK_BUILD = "npm run build"
           GEN_METADATA = "npm run gen-metadata"
@@ -48,7 +48,32 @@ module Script
             Domain::Metadata.create_from_json(@ctx, raw_contents)
           end
 
+          def library_version(library_name)
+            output = JSON.parse(CommandRunner.new(ctx: ctx).call("npm list --json"))
+            library_version_from_npm_list(output, library_name)
+          rescue Errors::SystemCallFailureError => error
+            library_version_from_npm_list_error_output(error, library_name)
+          end
+
           private
+
+          def library_version_from_npm_list_error_output(error, library_name)
+            # npm list can return a failure status code, even when returning the correct data.
+            # This causes the CommandRunner to throw a SystemCallFailure error that contains the data.
+            # In here, we check that the output contains `npm list`'s structure and extract the version.
+            output = JSON.parse(error.out)
+            raise error unless output.key?("dependencies")
+
+            library_version_from_npm_list(output, library_name)
+          rescue JSON::ParserError
+            raise error
+          end
+
+          def library_version_from_npm_list(output, library_name)
+            output.dig("dependencies", library_name, "version").tap do |version|
+              raise Errors::APILibraryNotFoundError, library_name unless version
+            end
+          end
 
           def check_node_version!
             output, status = @ctx.capture2e("node", "--version")
@@ -82,19 +107,10 @@ module Script
           end
 
           def bytecode
-            legacy_filename = format(BYTECODE_FILE, name: script_name)
-            filename = format(BYTECODE_FILE, name: "index")
+            raise Errors::WebAssemblyBinaryNotFoundError unless ctx.file_exist?(BYTECODE_FILE)
 
-            bytecode_file = if ctx.file_exist?(filename)
-              filename
-            elsif ctx.file_exist?(legacy_filename)
-              legacy_filename
-            else
-              raise Errors::WebAssemblyBinaryNotFoundError
-            end
-
-            contents = ctx.binread(bytecode_file)
-            ctx.rm(bytecode_file)
+            contents = ctx.binread(BYTECODE_FILE)
+            ctx.rm(BYTECODE_FILE)
 
             contents
           end

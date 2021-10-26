@@ -12,8 +12,7 @@ module Extension
         end
 
         def test_does_not_prompt_for_template_when_not_required
-          ShopifyCLI::Shopifolk.stubs(:check).returns(false)
-          ShopifyCLI::Feature.stubs(:enabled?).with(:extension_server_beta).returns(false)
+          mock_environment_settings(shopifolk: false, extension_server_beta: false)
           project_details = OpenStruct.new(
             type: OpenStruct.new(
               identifier: "THEME_APP_EXTENSION",
@@ -26,8 +25,7 @@ module Extension
         end
 
         def test_prompts_for_template_when_required
-          ShopifyCLI::Shopifolk.stubs(:check).returns(true)
-          ShopifyCLI::Feature.stubs(:enabled?).with(:extension_server_beta).returns(true)
+          mock_environment_settings
           project_details = OpenStruct.new(
             type: OpenStruct.new(
               identifier: "CHECKOUT_UI_EXTENSION",
@@ -45,10 +43,28 @@ module Extension
           assert_nothing_raised { AskTemplate.new(ctx: FakeContext.new) }
         end
 
+        def test_user_provided_template_is_chosen_over_interactive_option
+          mock_environment_settings
+          project_details = OpenStruct.new(
+            type: OpenStruct.new(
+              identifier: "CHECKOUT_UI_EXTENSION",
+            )
+          )
+
+          AskTemplate.new(ctx: context, template: "typescript").call(project_details).tap do
+            assert_equal("typescript", project_details.template)
+          end
+        end
+
         private
 
         def context
           FakeContext.new
+        end
+
+        def mock_environment_settings(shopifolk: true, extension_server_beta: true)
+          ShopifyCLI::Shopifolk.stubs(:check).returns(shopifolk)
+          ShopifyCLI::Feature.stubs(:enabled?).with(:extension_server_beta).returns(extension_server_beta)
         end
       end
     end

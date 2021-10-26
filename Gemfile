@@ -13,6 +13,7 @@ group :development, :test do
   gem "rubocop-shopify", require: false
   gem "rubocop-minitest", require: false
   gem "rubocop-rake", require: false
+  gem "iniparse", "~> 1.5"
 end
 
 group :test do

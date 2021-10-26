@@ -38,7 +38,6 @@ describe Script::Layers::Infrastructure::ScriptService do
       "version" => expected_script_json_version,
       "title" => script_name,
       "description" => expected_description,
-      "configurationUi" => expected_configuration_ui,
       "configuration" => expected_configuration,
     }
   end
@@ -49,6 +48,15 @@ describe Script::Layers::Infrastructure::ScriptService do
     let(:uuid_from_config) { "uuid_from_config" }
     let(:uuid_from_server) { "uuid_from_server" }
     let(:url) { "https://some-bucket" }
+    let(:library_language) { "assemblyscript" }
+    let(:library_version) { "1.0.0" }
+
+    let(:library) do
+      {
+        language: library_language,
+        version: library_version,
+      }
+    end
 
     before do
       api_client.stubs(:query).returns(response)
@@ -64,7 +72,8 @@ describe Script::Layers::Infrastructure::ScriptService do
           use_msgpack,
         ),
         script_json: script_json,
-        module_upload_url: url
+        module_upload_url: url,
+        library: library
       )
     end
 
