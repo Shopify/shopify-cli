@@ -193,7 +193,7 @@ describe Script::Layers::Infrastructure::Languages::TypeScriptTaskRunner do
     describe "when the package is in the dependencies list" do
       it "should return a valid version number" do
         command_runner.any_instance.stubs(:call)
-          .with("npm list --json")
+          .with("npm -s list --json")
           .returns(
             {
               "dependencies" => {
@@ -210,7 +210,7 @@ describe Script::Layers::Infrastructure::Languages::TypeScriptTaskRunner do
     describe "when the package is not in the dependencies list" do
       it "should return an error" do
         command_runner.any_instance.stubs(:call)
-          .with("npm list --json")
+          .with("npm -s list --json")
           .returns(
             {
               "dependencies" => {},
@@ -225,7 +225,7 @@ describe Script::Layers::Infrastructure::Languages::TypeScriptTaskRunner do
     describe "when CommandRunner raises SystemCallFailureError" do
       describe "when error is not json" do
         it "should re-raise SystemCallFailureError" do
-          cmd = "npm list --json"
+          cmd = "npm -s list --json"
           command_runner.any_instance.stubs(:call)
             .with(cmd)
             .raises(Script::Layers::Infrastructure::Errors::SystemCallFailureError.new(
@@ -241,7 +241,7 @@ describe Script::Layers::Infrastructure::Languages::TypeScriptTaskRunner do
 
       describe "when error is json, but doesn't contain the expected structure" do
         it "should re-raise SystemCallFailureError" do
-          cmd = "npm list --json"
+          cmd = "npm -s list --json"
           command_runner.any_instance.stubs(:call)
             .with(cmd)
             .raises(Script::Layers::Infrastructure::Errors::SystemCallFailureError.new(
@@ -258,7 +258,7 @@ describe Script::Layers::Infrastructure::Languages::TypeScriptTaskRunner do
 
       describe "when error contains expected versioning data" do
         it "should rescue SystemCallFailureError if the library version is present" do
-          cmd = "npm list --json"
+          cmd = "npm -s list --json"
           command_runner.any_instance.stubs(:call)
             .with(cmd)
             .raises(Script::Layers::Infrastructure::Errors::SystemCallFailureError.new(

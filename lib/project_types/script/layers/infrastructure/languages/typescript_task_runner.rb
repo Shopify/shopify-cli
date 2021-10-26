@@ -49,7 +49,7 @@ module Script
           end
 
           def library_version(library_name)
-            output = JSON.parse(CommandRunner.new(ctx: ctx).call("npm list --json"))
+            output = JSON.parse(CommandRunner.new(ctx: ctx).call("npm -s list --json"))
             library_version_from_npm_list(output, library_name)
           rescue Errors::SystemCallFailureError => error
             library_version_from_npm_list_error_output(error, library_name)
