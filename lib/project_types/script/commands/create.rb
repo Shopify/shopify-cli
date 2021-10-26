@@ -9,8 +9,7 @@ module Script
 
       options do |parser, flags|
         parser.on("--name=NAME") { |name| flags[:name] = name }
-        parser.on("--extension_point=EP_NAME") { |ep_name| flags[:extension_point] = ep_name }
-        parser.on("--extension-point=EP_NAME") { |ep_name| flags[:extension_point] = ep_name }
+        parser.on("--api=API_NAME") { |ep_name| flags[:extension_point] = ep_name }
         parser.on("--language=LANGUAGE") { |language| flags[:language] = language }
         parser.on("--branch=BRANCH") { |branch| flags[:branch] = branch }
       end
