@@ -134,18 +134,8 @@ module Extension
       end
 
       def stub_package_manager
-        fake_list_result = <<~YARN
-          yarn list v1.22.5
-          ├─ @fake-package@0.3.9
-          └─ @shopify/admin-ui-extensions@0.3.8
-          ✨  Done in 0.40s.
-        YARN
-
-        ShopifyCLI::JsSystem
-          .new(ctx: @context)
-          .tap { |js_system| js_system.stubs(call: [fake_list_result, nil, stub(success?: true)]) }
-          .yield_self { |js_system| Tasks::FindNpmPackages.new(js_system: js_system) }
-          .tap { |find_npm_packages_stub| Tasks::FindNpmPackages.expects(:new).returns(find_npm_packages_stub) }
+        Tasks::FindPackageFromJson.expects(:call)
+          .returns(Models::NpmPackage.new(name: "@shopify/admin-ui-extensions", version: "0.3.8"))
       end
     end
   end
