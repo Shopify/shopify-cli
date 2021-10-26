@@ -52,22 +52,22 @@ module Rails
           organization_id: form_data.organization_id,
         )
 
-        if ShopifyCLI::Environment.acceptance_test?
-          api_client = {
+        api_client = if ShopifyCLI::Environment.acceptance_test?
+          {
             "apiKey" => "public_api_key",
             "apiSecretKeys" => [
               {
                 "secret" => "api_secret_key",
               },
-            ]
+            ],
           }
         else
-          api_client = ShopifyCLI::Tasks::CreateApiClient.call(
+          ShopifyCLI::Tasks::CreateApiClient.call(
             @ctx,
             org_id: form_data.organization_id,
             title: form_data.title,
             type: form_data.type,
-            )
+          )
         end
 
         ShopifyCLI::Resources::EnvFile.new(
@@ -75,7 +75,7 @@ module Rails
           secret: api_client["apiSecretKeys"].first["secret"],
           shop: form_data.shop_domain,
           scopes: "write_products,write_customers,write_draft_orders",
-          ).write(@ctx)
+        ).write(@ctx)
 
         partners_url = ShopifyCLI::PartnersAPI.partners_url_for(form_data.organization_id, api_client["id"])
 

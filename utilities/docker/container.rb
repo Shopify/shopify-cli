@@ -76,16 +76,16 @@ module Utilities
         docker_prefix = "Docker (#{args.first}):"
 
         if ARGV.include?("--verbose")
-         stat =  Open3.popen3(*command) do |stdin, stdout, stderr, wait_thread|
+          stat = Open3.popen3(*command) do |stdin, stdout, stderr, wait_thread|
             Thread.new do
-              stdout.each {|l| STDOUT.puts("#{docker_prefix.colorize(:cyan).bold} #{l}") }
-              stdout.each {|l| STDERR.puts("#{docker_prefix.colorize(:red).bold} #{l}") }
+              stdout.each { |l| STDOUT.puts("#{docker_prefix.colorize(:cyan).bold} #{l}") }
+              stderr.each { |l| STDERR.puts("#{docker_prefix.colorize(:red).bold} #{l}") }
             end
             stdin.close
 
             wait_thread.value
-         end
-         raise StandardError.new("The command #{args.first} failed") unless stat.success?
+          end
+          raise StandardError, "The command #{args.first} failed" unless stat.success?
         else
           out, stat = Open3.capture2e(*command)
           raise Error, out unless stat.success?
