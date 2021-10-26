@@ -6,8 +6,12 @@ From version 2.6.0, the sections in this file adhere to the [keep a changelog](h
 
 ### Fixed
 * [#1678](https://github.com/Shopify/shopify-cli/pull/1678): Fix migrator's incompatibility with Ruby 2.5.
+  
 ### Changed
 * [#1678](https://github.com/Shopify/shopify-cli/pull/1678): Change the `@shopify/scripts-checkout-apis-temp` package name to `@shopify/scripts-discount-apis`.
+
+### Removed
+* [#1664](https://github.com/Shopify/shopify-cli/pull/1664): Remove ruby-locking extension
 ## Version 2.6.5
 ### Fixed
 * [#1661](https://github.com/Shopify/shopify-cli/pull/1661): Handle npm list non-zero exit status when pushing scripts
