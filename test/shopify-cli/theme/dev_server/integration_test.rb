@@ -164,7 +164,7 @@ module ShopifyCLI
           file = Pathname.new("#{ShopifyCLI::ROOT}/test/fixtures/theme/assets/theme.css")
           file.write("modified")
           begin
-            assert_equal("2a\r\ndata: {\"modified\":[\"assets/theme.css\"]}\n\n\n\r\n", socket.readpartial(1024))
+            assert_includes(socket.readpartial(1024), "2a\r\ndata: {\"modified\":[\"assets/theme.css\"]}\n\n\n\r\n")
           ensure
             file.write("")
           end
