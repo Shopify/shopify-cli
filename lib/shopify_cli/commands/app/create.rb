@@ -1,7 +1,7 @@
 module ShopifyCLI
   module Commands
     class App
-      class Create < ShopifyCLI::Command
+      class Create < ShopifyCLI::Command::AppSubCommand
         subcommand :Rails, "rails", "shopify_cli/commands/app/create/rails"
         subcommand :PHP, "php", "shopify_cli/commands/app/create/php"
         subcommand :Node, "node", "shopify_cli/commands/app/create/node"
