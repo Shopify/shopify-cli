@@ -63,7 +63,7 @@ module Extension
         ShopifyCLI::Tasks::EnsureDevStore.call(context) if required_fields.include?(:shop)
 
         project = ExtensionProject.current
-        ensure_resource_resource_url! if specification_handler.supplies_resource_url?
+        ensure_resource_resource_url! if specification_handler.supplies_resource_url? && !supports_development_server?
 
         return if required_fields.all? do |field|
           value = project.env.public_send(field)
