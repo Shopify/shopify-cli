@@ -17,7 +17,6 @@ module ShopifyCLI
 
       def call(args, command_name, *)
         subcommand, resolved_name = subcommand_registry.lookup_command(args.first)
-
         if subcommand
           subcommand.ctx = @ctx
           subcommand.task_registry = @task_registry
