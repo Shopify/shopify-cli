@@ -3,6 +3,7 @@ require "open3"
 module Utilities
   module Docker
     class Container
+      SHOPIFY_PATH = "/usr/src/app"
       SHOPIFY_BIN_PATH = "/usr/src/app/bin/shopify"
 
       Error = Class.new(StandardError)
