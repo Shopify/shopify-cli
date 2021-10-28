@@ -57,6 +57,7 @@ module Utilities
 
       def build_image_if_needed
         unless image_exists?(image_tag)
+          puts "Rebuilding the Docker image..."
           _, err, stat = Open3.capture3(
             "docker", "build", root_dir, "-t", image_tag
           )
