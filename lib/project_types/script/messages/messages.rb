@@ -81,8 +81,8 @@ module Script
           system_call_failure_cause: "An error was returned while running {{command:%{cmd}}}.",
           system_call_failure_help: "Review the following error and try again.\n{{red:%{out}}}",
 
-          metadata_validation_cause: "Invalid Script API metadata.",
-          metadata_validation_help: "Ensure the 'shopify/scripts-toolchain-as' package is up to date.",
+          metadata_validation_cause: "The Script API metadata is incorrect.",
+          metadata_validation_help: "The 'schemaVersions.major' field contains an unsupported version.",
 
           metadata_schema_versions_missing: "Invalid Script metadata:" \
                                             " 'schemaVersions' field is missing",
