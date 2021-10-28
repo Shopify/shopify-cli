@@ -42,6 +42,8 @@ class Javy
     end
 
     def call(target:, platform:, version: self.class.version)
+      target = platform.format_executable_path(target.to_s)
+
       asset = Asset.new(
         platform: platform,
         version: version,
@@ -49,6 +51,7 @@ class Javy
         repository: "javy",
         basename: "javy"
       )
+
       downloaded = asset.download(target: target)
       raise InstallationError.asset_not_found(platform: platform, version: version, url: asset.url) unless downloaded
 
@@ -71,6 +74,10 @@ class Javy
   class InstallationError < RuntimeError
     def self.installation_failed
       new("Failed to install javy properly")
+    end
+
+    def self.cpu_unsupported
+      new("Javy is not supported on this CPU")
     end
 
     def self.asset_not_found(platform:, version:, url:)
@@ -149,7 +156,22 @@ class Javy
     end
 
     def cpu
-      ruby_config.fetch("host_cpu")
+      host_cpu = ruby_config.fetch("host_cpu")
+      case ruby_config.fetch("host_cpu")
+      when "x64", "x86_64"
+        "x86_64"
+      else
+        raise InstallationError.cpu_unsupported
+      end
+    end
+
+    def format_executable_path(path)
+      case os
+      when "windows"
+        File.extname(path) != ".exe" ? path + ".exe" : path
+      else
+        path
+      end
     end
   end
 end

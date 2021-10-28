@@ -39,6 +39,25 @@ class JavyTest < Minitest::Test
     assert File.executable?(target)
   end
 
+  def test_installing_on_windows_adds_exe_extension
+    stub_executable_download
+
+    target = File.join(Dir.mktmpdir, "javy")
+    expected_target = target + ".exe"
+
+    Javy.install(
+      platform: Javy::Platform.new({
+        "host_os" => "mingw32",
+        "host_cpu" => "x64",
+      }),
+      version: "v0.1.0",
+      target: target
+    )
+
+    assert File.file?(expected_target)
+    assert File.executable?(expected_target)
+  end
+
   def test_handle_http_errors_during_asset_download
     simulate_broken_asset_link
 
@@ -83,18 +102,20 @@ class JavyTest < Minitest::Test
     end
 
     def test_recognizes_mac_os
-      intel_mac = ruby_config(os: "darwin20.3.0", cpu: "x86_64")
-      m1_mac = ruby_config(os: "darwin20.3.0", cpu: "arm64")
-
-      assert_equal "x86_64-macos", Javy::Platform.new(intel_mac).to_s
-      assert_equal "arm64-macos", Javy::Platform.new(m1_mac).to_s
+      intel_mac_vm = ruby_config(os: "darwin20.3.0", cpu: "x86_64")
+      assert_equal "x86_64-macos", Javy::Platform.new(intel_mac_vm).to_s
     end
 
     def test_recognizes_windows
       windows_vm_64_bit = ruby_config(os: "mingw32", cpu: "x64")
+      assert_equal "x86_64-windows", Javy::Platform.new(windows_vm_64_bit).to_s
+    end
+
+    def test_unsupported_on_32_bit_machines
       windows_vm_32_bit = ruby_config(os: "mingw32", cpu: "i686")
-      assert_equal "x64-windows", Javy::Platform.new(windows_vm_64_bit).to_s
-      assert_equal "i686-windows", Javy::Platform.new(windows_vm_32_bit).to_s
+      assert_raises(Javy::InstallationError) do
+        Javy::Platform.new(windows_vm_32_bit).to_s
+      end
     end
 
     private
@@ -110,12 +131,12 @@ class JavyTest < Minitest::Test
   def stub_executable_download
     dummy_archive = load_dummy_archive
 
-    stub_request(:get, "https://github.com/Shopify/javy/releases/download/v0.1.0/javy-x64-windows-v0.1.0.gz")
+    stub_request(:get, "https://github.com/Shopify/javy/releases/download/v0.1.0/javy-x86_64-windows-v0.1.0.gz")
       .to_return(
         status: 200,
         headers: {
           "Content-Type" => "application/octet-stream",
-          "Content-Disposition" => "attachment; filename=javy-x64-windows-v0.1.0.gz",
+          "Content-Disposition" => "attachment; filename=javy-x86_64-windows-v0.1.0.gz",
           "Content-Length" => dummy_archive.size,
         },
         body: dummy_archive
