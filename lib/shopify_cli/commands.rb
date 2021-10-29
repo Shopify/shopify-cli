@@ -19,6 +19,7 @@ module ShopifyCLI
     end
 
     register :Config, "config", "shopify_cli/commands/config", true
+    register :Feedback, "feedback", "shopify_cli/commands/feedback", true
     register :Help, "help", "shopify_cli/commands/help", true
     register :Login, "login", "shopify_cli/commands/login", true
     register :Logout, "logout", "shopify_cli/commands/logout", true
