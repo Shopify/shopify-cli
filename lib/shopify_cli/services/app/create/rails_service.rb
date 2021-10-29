@@ -37,7 +37,7 @@ module ShopifyCLI
             }
             form_options[:db] = db unless db.nil?
             form_options[:rails_opts] = rails_opts unless rails_opts.nil?
-            form = Rails::Forms::Create.ask(context, [], form_options)
+            form = form_data(form_options)
 
             ruby_version = Rails::Ruby.version(context)
             context.abort(context.message("core.app.create.rails.error.invalid_ruby_version")) unless
@@ -54,12 +54,23 @@ module ShopifyCLI
               organization_id: form.organization_id,
             )
 
-            api_client = ShopifyCLI::Tasks::CreateApiClient.call(
-              context,
-              org_id: form.organization_id,
-              title: form.name,
-              type: form.type,
-            )
+            api_client = if ShopifyCLI::Environment.acceptance_test?
+              {
+                "apiKey" => "public_api_key",
+                "apiSecretKeys" => [
+                  {
+                    "secret" => "api_secret_key",
+                  },
+                ],
+              }
+            else
+              ShopifyCLI::Tasks::CreateApiClient.call(
+                @ctx,
+                org_id: form.organization_id,
+                title: form.title,
+                type: form.type,
+              )
+            end
 
             ShopifyCLI::Resources::EnvFile.new(
               api_key: api_client["apiKey"],
@@ -78,6 +89,21 @@ module ShopifyCLI
           end
 
           private
+
+          def form_data(form_options)
+            if ShopifyCLI::Environment.acceptance_test?
+              Struct.new(:title, :name, :organization_id, :type, :shop_domain, :db, keyword_init: true).new(
+                title: form_options[:title],
+                name: form_options[:title],
+                organization_id: "123",
+                shop_domain: "test.shopify.io",
+                type: "public",
+                db: form_options[:db]
+              )
+            else
+              Rails::Forms::Create.ask(context, [], form_options)
+            end
+          end
 
           def check_node
             cmd_path = context.which("node")
