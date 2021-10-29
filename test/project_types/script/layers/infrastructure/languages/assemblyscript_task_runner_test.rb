@@ -150,11 +150,7 @@ describe Script::Layers::Infrastructure::Languages::AssemblyScriptTaskRunner do
     describe "when CommandRunner raises SystemCallFailureError" do
       describe "when error is not json" do
         it "should re-raise SystemCallFailureError" do
-<<<<<<< HEAD
-          cmd = "npm list --json"
-=======
           cmd = "npm -s list --json"
->>>>>>> 1318640b5ef20a1312c3a149d46177e55b3f0201
           command_runner.any_instance.stubs(:call)
             .with(cmd)
             .raises(Script::Layers::Infrastructure::Errors::SystemCallFailureError.new(
