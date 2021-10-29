@@ -6,6 +6,10 @@ module ShopifyCLI
         subcommand :PHP, "php", "shopify_cli/commands/app/create/php"
         subcommand :Node, "node", "shopify_cli/commands/app/create/node"
 
+        def call(_args, _command_name)
+          @ctx.puts(self.class.help)
+        end
+
         def self.help
           ShopifyCLI::Context.message("core.app.create.help", ShopifyCLI::TOOL_NAME, ShopifyCLI::TOOL_NAME)
         end
