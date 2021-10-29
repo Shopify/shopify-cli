@@ -65,9 +65,9 @@ module ShopifyCLI
               }
             else
               ShopifyCLI::Tasks::CreateApiClient.call(
-                @ctx,
+                context,
                 org_id: form.organization_id,
-                title: form.title,
+                title: form.name,
                 type: form.type,
               )
             end
@@ -92,9 +92,8 @@ module ShopifyCLI
 
           def form_data(form_options)
             if ShopifyCLI::Environment.acceptance_test?
-              Struct.new(:title, :name, :organization_id, :type, :shop_domain, :db, keyword_init: true).new(
-                title: form_options[:title],
-                name: form_options[:title],
+              Struct.new(:name, :name, :organization_id, :type, :shop_domain, :db, keyword_init: true).new(
+                name: form_options[:name],
                 organization_id: "123",
                 shop_domain: "test.shopify.io",
                 type: "public",
