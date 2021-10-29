@@ -6,7 +6,7 @@ class JavyTest < Minitest::Test
 
   def setup
     super
-    FileUtils.mkdir_p(::Javy::ROOT)
+    FileUtils.mkdir_p(::Javy::BIN_FOLDER)
     File.write(File.join(::Javy::ROOT, "version"), "v0.1.0")
   end
 
@@ -50,32 +50,49 @@ class JavyTest < Minitest::Test
   def test_build_runs_javy_command_on_unix
     stub_executable_download
     install(PlatformHelper.macos_config)
-
-    source = "src/index.js"
-
-    CLI::Kit::System.expects(:capture2e).with(Javy::TARGET, source, anything)
-    Javy.build(source: source)
+    run_build_and_expect_execution
   end
 
   def test_build_runs_javy_command_on_windows
     stub_executable_download
     install(PlatformHelper.windows_config)
-
-    source = "src/index.js"
-
-    CLI::Kit::System.expects(:capture2e).with(Javy::TARGET + ".exe", source, anything)
-    Javy.build(source: source)
+    run_build_and_expect_execution(target: Javy::TARGET + ".exe")
   end
 
   def test_build_accepts_optional_dest_argument
     stub_executable_download
     install(PlatformHelper.macos_config)
+    run_build_and_expect_execution(dest: nil)
+  end
+  
+  def test_build_installs_javy_by_default
+    stub_executable_download
 
-    source = "src/index.js"
-    dest = "build/index.wasm"
+    refute File.file?(Javy::TARGET)
+    refute File.executable?(Javy::TARGET)
 
-    CLI::Kit::System.expects(:capture2e).with(Javy::TARGET, source, "-o", dest, anything)
-    Javy.build(source: source, dest: dest)
+    run_build_and_expect_execution
+
+    assert File.file?(Javy::TARGET)
+    assert File.executable?(Javy::TARGET)
+  end
+
+  def test_build_deletes_outdated_javy_installations_and_installs_new_one
+    outdated_javy_target = File.join(Javy::BIN_FOLDER, "javy-0.0.0")
+    File.write(outdated_javy_target, "foo")
+
+    stub_executable_download
+    run_build_and_expect_execution
+
+    refute File.file?(outdated_javy_target)
+    assert File.file?(Javy::TARGET)
+    assert File.executable?(Javy::TARGET)
+  end
+
+  def test_build_does_not_reinstall_an_ok_javy_version
+    File.write(Javy::TARGET, "")
+    File.chmod(0755, Javy::TARGET)
+    run_build_and_expect_execution
   end
 
   class PlatformTest < MiniTest::Test
@@ -110,6 +127,13 @@ class JavyTest < Minitest::Test
     stubbed_platform = Javy::Platform.new(platform_config)
     Javy::Platform.stubs(:new).returns(stubbed_platform)
     Javy.install
+  end
+
+  def run_build_and_expect_execution(source: "src/index.js", dest: "build/index.wasm", target: Javy::TARGET)
+    optional_args = dest.nil? ? [] : ["-o", dest]
+
+    CLI::Kit::System.expects(:capture2e).with(target, source, *optional_args, anything)
+    Javy.build(source: source, dest: dest)
   end
 
   def stub_executable_download

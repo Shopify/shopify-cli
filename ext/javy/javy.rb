@@ -5,17 +5,20 @@ require "open3"
 
 module Javy
   ROOT = __dir__
-  TARGET = File.join(ROOT, "javy")
+  BIN_FOLDER = File.join(ROOT, "bin")
   VERSION = File.read(File.join(ROOT, "version")).strip
+  TARGET = File.join(BIN_FOLDER, "javy-#{VERSION}")
 
   class << self
     def install
       ShopifyCLI::Result
-        .wrap { Install.call(target: target, platform: platform, version: VERSION) }
+        .wrap { Installer.call(target: target, platform: platform, version: VERSION) }
         .call
     end
 
     def build(source:, dest: nil)
+      ensure_installed
+
       optional_args = []
       optional_args += ["-o", dest] unless dest.nil?
 
@@ -40,7 +43,22 @@ module Javy
       platform.format_executable_path(TARGET)
     end
 
-    module Install
+    def ensure_installed
+      delete_outdated_installations
+      install unless Installer.installed?(target: target)
+    end
+  
+    def delete_outdated_installations
+      installed_binaries
+        .reject { |v| v == target }
+        .each { |file| File.delete(file) }
+    end
+  
+    def installed_binaries
+      Dir[File.join(BIN_FOLDER, "javy-*")]
+    end
+
+    module Installer
       def self.call(target:, platform:, version:)
         asset = Asset.new(
           platform: platform,
@@ -54,6 +72,10 @@ module Javy
         raise InstallationError.asset_not_found(platform: platform, version: version, url: asset.url) unless downloaded
 
         true
+      end
+
+      def self.installed?(target:)
+        File.executable?(target)
       end
     end
   end

@@ -21,5 +21,5 @@ packaging/rpm/build
 packaging/rpm/shopify-cli.spec
 .byebug_history
 ext/shopify-extensions/shopify-extensions
-ext/javy/javy
+ext/javy/bin
 .console_history
