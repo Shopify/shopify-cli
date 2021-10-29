@@ -17,3 +17,11 @@ Then(/the app has an environment file with (.+) set to (.+)/) do |key, value|
 
   assert env_value[key], value
 end
+
+When(/I create a node app named (.+) in the VM/) do |app_name|
+  @app_name = app_name
+  @container.exec_shopify(
+    "node", "create",
+    "--name", app_name
+  )
+end
