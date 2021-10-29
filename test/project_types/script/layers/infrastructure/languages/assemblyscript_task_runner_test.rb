@@ -165,11 +165,7 @@ out: "some non-json parsable error output", cmd: cmd
 
       describe "when error is json, but doesn't contain the expected structure" do
         it "should re-raise SystemCallFailureError" do
-<<<<<<< HEAD
-          cmd = "npm list --json"
-=======
           cmd = "npm -s list --json"
->>>>>>> 1318640b5ef20a1312c3a149d46177e55b3f0201
           command_runner.any_instance.stubs(:call)
             .with(cmd)
             .raises(Script::Layers::Infrastructure::Errors::SystemCallFailureError.new(

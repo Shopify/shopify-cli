@@ -35,9 +35,7 @@ Otherwise, delete this section.
 
 ## Specifications
 
-Comment this out to include specs about your environment:
 - App type:
 - Operating System:
 - Shell:
 - Ruby version (ruby -v):
-
