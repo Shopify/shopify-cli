@@ -1,8 +1,10 @@
 require "open3"
+require "colorize"
 
 module Utilities
   module Docker
     class Container
+      SHOPIFY_PATH = "/usr/src/app"
       SHOPIFY_BIN_PATH = "/usr/src/app/bin/shopify"
 
       Error = Class.new(StandardError)
@@ -55,6 +57,10 @@ module Utilities
       end
 
       def exec(*args, relative_dir: nil)
+        if ARGV.include?("--verbose")
+          running_prefix = "Running command: #{args.join(" ")}"
+          STDOUT.puts(running_prefix.colorize(:yellow).bold)
+        end
         command = ["docker", "exec"]
         cwd = if relative_dir.nil?
           @cwd
@@ -68,8 +74,23 @@ module Utilities
         command << @id
         command += args
 
-        out, stat = Open3.capture2e(*command)
-        raise Error, out unless stat.success?
+        docker_prefix = "Docker (#{args.first}):"
+
+        if ARGV.include?("--verbose")
+          stat = Open3.popen3(*command) do |stdin, stdout, stderr, wait_thread|
+            Thread.new do
+              stdout.each { |l| STDOUT.puts("#{docker_prefix.colorize(:cyan).bold} #{l}") }
+              stderr.each { |l| STDERR.puts("#{docker_prefix.colorize(:red).bold} #{l}") }
+            end
+            stdin.close
+
+            wait_thread.value
+          end
+          raise StandardError, "The command #{args.first} failed" unless stat.success?
+        else
+          out, stat = Open3.capture2e(*command)
+          raise Error, out unless stat.success?
+        end
       end
     end
   end

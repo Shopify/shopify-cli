@@ -38,7 +38,6 @@ describe Script::Layers::Infrastructure::ScriptService do
       "version" => expected_script_json_version,
       "title" => script_name,
       "description" => expected_description,
-      "configurationUi" => expected_configuration_ui,
       "configuration" => expected_configuration,
     }
   end

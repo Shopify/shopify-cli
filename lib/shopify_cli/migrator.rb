@@ -9,23 +9,21 @@ module ShopifyCLI
       migrations_directory: File.expand_path("migrator/migrations", __dir__)
     )
       baseline_date = last_migration_date
-      unless baseline_date.nil?        
-        migrations = migrations(migrations_directory: migrations_directory)
-          .select { |m| 
-            m.date > baseline_date.to_i 
-          }
-          .each { |m| m.run }
+      unless baseline_date.nil?
+        migrations(migrations_directory: migrations_directory)
+          .select do |m|
+            m.date > baseline_date.to_i
+          end
+          .each(&:run)
       end
 
       store_last_migration_date
     end
 
-    private
-
     def self.store_last_migration_date
       ShopifyCLI::DB.set(ShopifyCLI::Constants::StoreKeys::LAST_MIGRATION_DATE => Time.now.to_i)
     end
-    
+
     def self.last_migration_date
       ShopifyCLI::DB.get(ShopifyCLI::Constants::StoreKeys::LAST_MIGRATION_DATE)
     end
@@ -35,7 +33,7 @@ module ShopifyCLI
         file_name = File.basename(file_path).gsub(".rb", "")
         file_name_components = file_name.split("_")
         date_timestamp = file_name_components[0].to_i
-        migration_name = file_name_components[1...].join("_")
+        migration_name = file_name_components.drop(1).join("_")
 
         Migrator::Migration.new(
           name: migration_name,

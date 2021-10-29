@@ -7,7 +7,9 @@ describe Script::Layers::Infrastructure::Languages::TypeScriptTaskRunner do
   let(:ctx) { TestHelpers::FakeContext.new }
   let(:script_name) { "foo" }
   let(:language) { "TypeScript" }
+  let(:library_name) { "@shopify/extension-point-as-fake" }
   let(:runner) { Script::Layers::Infrastructure::Languages::TypeScriptTaskRunner.new(ctx, script_name) }
+  let(:command_runner) { Script::Layers::Infrastructure::CommandRunner }
   let(:package_json) do
     {
       scripts: {
@@ -180,6 +182,96 @@ describe Script::Layers::Infrastructure::Languages::TypeScriptTaskRunner do
       it "should raise an exception" do
         assert_raises(Script::Layers::Domain::Errors::MetadataNotFoundError) do
           subject
+        end
+      end
+    end
+  end
+
+  describe ".library_version" do
+    subject { runner.library_version(library_name) }
+
+    describe "when the package is in the dependencies list" do
+      it "should return a valid version number" do
+        command_runner.any_instance.stubs(:call)
+          .with("npm -s list --json")
+          .returns(
+            {
+              "dependencies" => {
+                library_name => {
+                  "version" => "1.3.7",
+                },
+              },
+            }.to_json
+          )
+        assert_equal "1.3.7", subject
+      end
+    end
+
+    describe "when the package is not in the dependencies list" do
+      it "should return an error" do
+        command_runner.any_instance.stubs(:call)
+          .with("npm -s list --json")
+          .returns(
+            {
+              "dependencies" => {},
+            }.to_json,
+          )
+        assert_raises Script::Layers::Infrastructure::Errors::APILibraryNotFoundError do
+          subject
+        end
+      end
+    end
+
+    describe "when CommandRunner raises SystemCallFailureError" do
+      describe "when error is not json" do
+        it "should re-raise SystemCallFailureError" do
+          cmd = "npm -s list --json"
+          command_runner.any_instance.stubs(:call)
+            .with(cmd)
+            .raises(Script::Layers::Infrastructure::Errors::SystemCallFailureError.new(
+              out: "some non-json parsable error output",
+              cmd: cmd
+            ))
+
+          assert_raises Script::Layers::Infrastructure::Errors::SystemCallFailureError do
+            subject
+          end
+        end
+      end
+
+      describe "when error is json, but doesn't contain the expected structure" do
+        it "should re-raise SystemCallFailureError" do
+          cmd = "npm -s list --json"
+          command_runner.any_instance.stubs(:call)
+            .with(cmd)
+            .raises(Script::Layers::Infrastructure::Errors::SystemCallFailureError.new(
+              out: {
+                "not what we expected" => {},
+              }.to_json,
+              cmd: cmd
+            ))
+          assert_raises Script::Layers::Infrastructure::Errors::SystemCallFailureError do
+            subject
+          end
+        end
+      end
+
+      describe "when error contains expected versioning data" do
+        it "should rescue SystemCallFailureError if the library version is present" do
+          cmd = "npm -s list --json"
+          command_runner.any_instance.stubs(:call)
+            .with(cmd)
+            .raises(Script::Layers::Infrastructure::Errors::SystemCallFailureError.new(
+              out: {
+                "dependencies" => {
+                  library_name => {
+                    "version" => "1.3.7",
+                  },
+                },
+              }.to_json,
+              cmd: cmd
+            ))
+          assert_equal "1.3.7", subject
         end
       end
     end

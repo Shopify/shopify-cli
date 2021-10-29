@@ -81,8 +81,8 @@ module Script
           system_call_failure_cause: "An error was returned while running {{command:%{cmd}}}.",
           system_call_failure_help: "Review the following error and try again.\n{{red:%{out}}}",
 
-          metadata_validation_cause: "Invalid Script API metadata.",
-          metadata_validation_help: "Ensure the 'shopify/scripts-toolchain-as' package is up to date.",
+          metadata_validation_cause: "The Script API metadata is incorrect.",
+          metadata_validation_help: "The 'schemaVersions.major' field contains an unsupported version.",
 
           metadata_schema_versions_missing: "Invalid Script metadata:" \
                                             " 'schemaVersions' field is missing",
@@ -148,8 +148,7 @@ module Script
               Usage: {{command:%1$s script create}}
               Options:
                 {{command:--name=NAME}} Script project name. Use any string.
-                {{command:--extension-point=TYPE}} Script API name. Allowed values: %2$s.
-                {{command:--no-config-ui}} Specify this option when you don’t want your script to render an interface in Shopify admin.
+                {{command:--api=TYPE}} Script API name. Allowed values: %2$s.
           HELP
 
           error: {

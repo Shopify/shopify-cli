@@ -32,6 +32,7 @@ payment_methods:
       package: "@shopify/scripts-checkout-apis"
     typescript:
       beta: true
+      package: "@shopify/scripts-checkout-apis-temp"
       repo: "https://github.com/Shopify/scripts-apis-examples"
 shipping_methods:
   domain: 'checkout'
@@ -41,6 +42,7 @@ shipping_methods:
       package: "@shopify/scripts-checkout-apis"
     typescript:
       beta: true
+      package: "@shopify/scripts-checkout-apis-temp"
       repo: "https://github.com/Shopify/scripts-apis-examples"
 discount_types:
   beta: true
@@ -48,4 +50,5 @@ discount_types:
   libraries:
     typescript:
       beta: true
+      package: "@shopify/scripts-discount-apis"
       repo: "https://github.com/Shopify/scripts-apis-examples"

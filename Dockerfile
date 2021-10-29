@@ -6,8 +6,7 @@ FROM cimg/ruby:2.7.1
 RUN git config --global user.email "development-lifecycle@shopify.com"
 RUN git config --global user.name "Development Lifecycle"
 
-# throw errors if Gemfile has been modified since Gemfile.lock
-RUN bundle config --global frozen 1
+RUN gem update bundler
 
 WORKDIR /usr/src/app
 
@@ -25,3 +24,12 @@ RUN sudo apt-get install git -y
 RUN sudo apt-get install ca-certificates -y
 RUN curl -fsSL https://deb.nodesource.com/setup_current.x | sudo -E bash -
 RUN sudo apt-get install -y nodejs
+
+# Install the latest version of Yarn
+RUN sudo npm install --global yarn
+
+# Python is necessary to compile NPM packages with native extensions through node-gyp
+RUN sudo apt install python-minimal -y
+
+# Install sqlite3
+RUN sudo apt-get install libsqlite3-dev -y

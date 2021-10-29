@@ -48,7 +48,32 @@ module Script
             Domain::Metadata.create_from_json(@ctx, raw_contents)
           end
 
+          def library_version(library_name)
+            output = JSON.parse(CommandRunner.new(ctx: ctx).call("npm -s list --json"))
+            library_version_from_npm_list(output, library_name)
+          rescue Errors::SystemCallFailureError => error
+            library_version_from_npm_list_error_output(error, library_name)
+          end
+
           private
+
+          def library_version_from_npm_list_error_output(error, library_name)
+            # npm list can return a failure status code, even when returning the correct data.
+            # This causes the CommandRunner to throw a SystemCallFailure error that contains the data.
+            # In here, we check that the output contains `npm list`'s structure and extract the version.
+            output = JSON.parse(error.out)
+            raise error unless output.key?("dependencies")
+
+            library_version_from_npm_list(output, library_name)
+          rescue JSON::ParserError
+            raise error
+          end
+
+          def library_version_from_npm_list(output, library_name)
+            output.dig("dependencies", library_name, "version").tap do |version|
+              raise Errors::APILibraryNotFoundError, library_name unless version
+            end
+          end
 
           def check_node_version!
             output, status = @ctx.capture2e("node", "--version")
