@@ -43,6 +43,7 @@ module Extension
     autoload :GetProduct, Project.project_filepath("tasks/get_product")
     autoload :RunExtensionCommand, Project.project_filepath("tasks/run_extension_command")
     autoload :LoadServerConfig, Project.project_filepath("tasks/load_server_config")
+    autoload :FindPackageFromJson, Project.project_filepath("tasks/find_package_from_json.rb")
 
     module Converters
       autoload :RegistrationConverter, Project.project_filepath("tasks/converters/registration_converter")

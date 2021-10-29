@@ -48,14 +48,7 @@ module Extension
       end
 
       def renderer_package(context)
-        js_system = ShopifyCLI::JsSystem.new(ctx: context)
-        Tasks::FindNpmPackages
-          .exactly_one_of(renderer_package_name, js_system: js_system, production_only: true)
-          .unwrap { |err| raise err }
-      rescue Extension::PackageResolutionFailed
-        context.abort(
-          context.message("features.argo.dependencies.argo_missing_renderer_package_error")
-        )
+        Tasks::FindPackageFromJson.call(renderer_package_name, context: context)
       end
 
       private
