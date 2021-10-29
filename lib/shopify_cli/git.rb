@@ -4,6 +4,15 @@ module ShopifyCLI
   # git.
   class Git
     class << self
+
+      def available?
+        output, status = ctx.capture2e("git", "status")
+        unless status.success?
+          return false
+        end
+        return true
+      end
+
       ##
       # will return the current sha of the cli repo
       #
