@@ -4,7 +4,9 @@ require "zlib"
 require "open3"
 
 class Javy
-  TARGET = File.join(__dir__, "javy")
+  ROOT = __dir__
+  TARGET = File.join(ROOT, "javy")
+  VERSION = File.read(File.join(ROOT, "version")).strip
 
   def self.install(**args)
     new.install(**args)
@@ -15,35 +17,33 @@ class Javy
   end
 
   def install(**args)
-    Install.call(target: TARGET, platform: platform, **args)
+    Install.call(target: target, platform: platform, version: VERSION, **args)
   end
 
   def build(source:, dest:)
-    exec("#{source} -o #{dest}")
+    exec(source, "-o", dest)
   end
 
   private
 
   def exec(*args, **kwargs)
-    system(TARGET, *args, **kwargs)
+    system(target, *args, **kwargs)
   end
 
   def platform
     @platform ||= Platform.new
   end
 
+  def target
+    @target ||= platform.format_executable_path(TARGET)
+  end
+
   class Install
-    def self.call(target:, platform:, **args)
-      new.call(target: target, platform: platform, **args)
+    def self.call(target:, platform:, version:, **args)
+      new.call(target: target, platform: platform, version: version, **args)
     end
 
-    def self.version
-      File.read(File.expand_path("../version", __FILE__)).strip
-    end
-
-    def call(target:, platform:, version: self.class.version)
-      target = platform.format_executable_path(target.to_s)
-
+    def call(target:, platform:, version:)
       asset = Asset.new(
         platform: platform,
         version: version,
@@ -59,12 +59,6 @@ class Javy
     end
 
     private
-
-    def fetch_release_details_for(version:)
-      JSON.parse(URI.parse(release_url_for(version: version)).open.read).yield_self(&Release)
-    rescue OpenURI::HTTPError
-      nil
-    end
 
     def verify_download(target)
       File.executable?(target)
@@ -156,7 +150,6 @@ class Javy
     end
 
     def cpu
-      host_cpu = ruby_config.fetch("host_cpu")
       case ruby_config.fetch("host_cpu")
       when "x64", "x86_64"
         "x86_64"
