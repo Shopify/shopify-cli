@@ -6,10 +6,9 @@ module Extension
     class DevelopmentServerRequirements
       SUPPORTED_EXTENSION_TYPES = [
         "checkout_ui_extension",
+        "checkout_post_purchase",
+        "product_subscription",
       ]
-
-      UNIX_NAME = "shopify-extensions"
-      WINDOWS_NAME = "shopify-extensions.exe"
 
       class << self
         def supported?(type)
