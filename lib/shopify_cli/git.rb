@@ -4,13 +4,12 @@ module ShopifyCLI
   # git.
   class Git
     class << self
-
       def available?
-        output, status = ctx.capture2e("git", "status")
+        _, status = ctx.capture2e("git", "status")
         unless status.success?
           return false
         end
-        return true
+        true
       end
 
       ##
