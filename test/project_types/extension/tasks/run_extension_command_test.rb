@@ -99,7 +99,7 @@ module Extension
         File.stubs(:exist?)
         File.stubs(:exist?).returns(true)
         server_config = Models::ServerConfig::Root.new(extensions: [extension])
-        Tasks::LoadServerConfig.expects(:call).returns(server_config)
+        Tasks::MergeServerConfig.expects(:call).returns(server_config)
 
         dev_server = Models::DevelopmentServer.new(executable: "fake")
         Models::DevelopmentServer.expects(:new).returns(dev_server) do |server|

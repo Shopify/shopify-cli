@@ -63,7 +63,9 @@ module Extension
         ShopifyCLI::Tasks::EnsureDevStore.call(context) if required_fields.include?(:shop)
 
         project = ExtensionProject.current
-        ensure_resource_resource_url! if specification_handler.supplies_resource_url? && !supports_development_server?
+        if resource_url_required?
+          Tasks::EnsureResourceUrl.call(context: context, specification_handler: specification_handler)
+        end
 
         return if required_fields.all? do |field|
           value = project.env.public_send(field)
@@ -71,6 +73,10 @@ module Extension
         end
 
         context.abort(context.message("serve.serve_missing_information"))
+      end
+
+      def resource_url_required?
+        specification_handler.supplies_resource_url? && resource_url.nil?
       end
 
       def options
@@ -88,28 +94,6 @@ module Extension
         end
       end
 
-      def ensure_resource_resource_url!
-        project = ExtensionProject.current(force_reload: true)
-
-        ShopifyCLI::Result
-          .wrap(project.resource_url)
-          .rescue { specification_handler.build_resource_url(shop: project.env.shop, context: context) }
-          .then(&method(:persist_resource_url))
-          .unwrap do |nil_or_exception|
-            case nil_or_exception
-            when nil
-              context.warn(context.message("warnings.resource_url_auto_generation_failed", project.env.shop))
-            else
-              context.abort(nil_or_exception)
-            end
-          end
-      end
-
-      def persist_resource_url(resource_url)
-        ExtensionProject.update_env_file(context: context, resource_url: resource_url)
-        resource_url
-      end
-
       def new_serve_flow
         Tasks::RunExtensionCommand.new(
           type: specification_handler.specification.identifier,
@@ -117,6 +101,8 @@ module Extension
           context: context,
           port: port,
           config_file_name: specification_handler.server_config_file,
+          resource_url: resource_url,
+          tunnel_url: tunnel_url
         ).call
       end
 

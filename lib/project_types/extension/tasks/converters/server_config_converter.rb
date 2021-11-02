@@ -5,7 +5,7 @@ module Extension
   module Tasks
     module Converters
       module ServerConfigConverter
-        def self.from_hash(hash:, type:, registration_uuid:)
+        def self.from_hash(hash:, type:, registration_uuid:, store:, tunnel_url:, resource_url: nil)
           context.abort(context.message("tasks.errors.parse_error")) if hash.nil?
 
           extension = Models::ServerConfig::Extension.new(
@@ -22,7 +22,11 @@ module Extension
             extension_points: hash.dig("extension_points")
           )
 
-          Models::ServerConfig::Root.new(extensions: [extension])
+          unless resource_url.nil?
+            extension.development.resource = Models::ServerConfig::DevelopmentResource.new(url: resource_url)
+          end
+
+          Models::ServerConfig::Root.new(extensions: [extension], store: store, public_url: tunnel_url)
         end
       end
     end

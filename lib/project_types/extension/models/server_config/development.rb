@@ -17,6 +17,7 @@ module Extension
         property :template, accepts: VALID_TEMPLATES
         property :renderer, accepts: ServerConfig::DevelopmentRenderer
         property :entries, accepts: ServerConfig::DevelopmentEntries
+        property :resource, accepts: ServerConfig::DevelopmentResource
       end
     end
   end
