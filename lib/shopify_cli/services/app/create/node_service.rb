@@ -18,7 +18,7 @@ module ShopifyCLI
           end
 
           def call
-            form = ::Node::Forms::Create.ask(context, [], {
+            form = form_data({
               name: name,
               organization_id: organization_id,
               shop_domain: store_domain,
@@ -36,12 +36,23 @@ module ShopifyCLI
               organization_id: form.organization_id,
             )
 
-            api_client = ShopifyCLI::Tasks::CreateApiClient.call(
-              context,
-              org_id: form.organization_id,
-              title: form.name,
-              type: form.type,
-            )
+            api_client = if ShopifyCLI::Environment.acceptance_test?
+             {
+               "apiKey" => "public_api_key",
+               "apiSecretKeys" => [
+                 {
+                   "secret" => "api_secret_key",
+                 },
+               ],
+             }
+            else
+             ShopifyCLI::Tasks::CreateApiClient.call(
+               context,
+               org_id: form.organization_id,
+               title: form.name,
+               type: form.type,
+               )
+            end
 
             ShopifyCLI::Resources::EnvFile.new(
               api_key: api_client["apiKey"],
@@ -60,6 +71,19 @@ module ShopifyCLI
           end
 
           private
+
+          def form_data(form_options)
+            if ShopifyCLI::Environment.acceptance_test?
+              Struct.new(:name, :organization_id, :type, :shop_domain, keyword_init: true).new(
+                name: form_options[:name],
+                organization_id: form_options[:organization_id] || "123",
+                shop_domain: form_options[:shop_domain] || "test.shopify.io",
+                type: form_options[:type] || "public",
+              )
+            else
+              Node::Forms::Create.ask(context, [], form_options)
+            end
+          end
 
           def check_node
             cmd_path = context.which("node")
