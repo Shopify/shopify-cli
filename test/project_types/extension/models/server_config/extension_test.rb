@@ -24,7 +24,7 @@ module Extension
           assert_nothing_raised do
             extension = ServerConfig::Extension.build(
               template: "javascript",
-              type: "admin_ui_extension",
+              type: "product_subscription",
               root_dir: "test"
             )
 

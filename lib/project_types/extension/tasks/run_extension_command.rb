@@ -7,10 +7,6 @@ module Extension
     class RunExtensionCommand < ShopifyCLI::Task
       include SmartProperties
 
-      SUPPORTED_EXTENSION_TYPES = [
-        "checkout_ui_extension",
-      ]
-
       SUPPORTED_COMMANDS = [
         "create",
         "build",
@@ -18,7 +14,7 @@ module Extension
       ]
 
       property! :command, accepts: SUPPORTED_COMMANDS
-      property! :type, accepts: SUPPORTED_EXTENSION_TYPES
+      property! :type, accepts: Models::DevelopmentServerRequirements::SUPPORTED_EXTENSION_TYPES
       property :context, accepts: ShopifyCLI::Context
       property :config_file_name, accepts: String
       property :port, accepts: Integer, default: 39351

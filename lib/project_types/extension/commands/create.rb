@@ -3,10 +3,6 @@
 module Extension
   class Command
     class Create < ShopifyCLI::SubCommand
-      DEVELOPMENT_SERVER_SUPPORTED_TYPES = [
-        "checkout_ui_extension",
-      ]
-
       prerequisite_task :ensure_authenticated
 
       options do |parser, flags|
@@ -66,6 +62,7 @@ module Extension
         @ctx.chdir(form.directory_name)
         write_env_file(form)
       rescue => error
+        @ctx.debug(error)
         raise error
       end
 
