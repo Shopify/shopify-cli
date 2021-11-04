@@ -25,6 +25,24 @@ module ShopifyCLI
           assert_equal(expected_html, serve(original_html).body)
         end
 
+        def test_replace_local_assets_on_same_line
+          original_html = <<~HTML
+            <html>
+              <head>
+                <link rel="stylesheet" href="//cdn.shopify.com/s/files/1/0457/3256/0918/t/2/assets/theme.css?enable_css_minification=1&v=3271603065762738033" /><link rel="stylesheet" href="//cdn.shopify.com/s/files/1/0457/3256/0918/t/2/assets/theme.css?enable_css_minification=1&v=3271603065762738033" />
+              </head>
+            </html>
+          HTML
+          expected_html = <<~HTML
+            <html>
+              <head>
+                <link rel="stylesheet" href="/assets/theme.css?enable_css_minification=1&v=3271603065762738033" /><link rel="stylesheet" href="/assets/theme.css?enable_css_minification=1&v=3271603065762738033" />
+              </head>
+            </html>
+          HTML
+          assert_equal(expected_html, serve(original_html).body)
+        end
+
         def test_dont_replace_other_assets
           original_html = <<~HTML
             <html>
