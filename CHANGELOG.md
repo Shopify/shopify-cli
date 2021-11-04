@@ -1,5 +1,7 @@
 From version 2.6.0, the sections in this file adhere to the [keep a changelog](https://keepachangelog.com/en/1.0.0/) specification.
 ## [Unreleased]
+### Fixed
+* [#1714](https://github.com/Shopify/shopify-cli/pull/1714): Fix theme serve not serving assets locally when two URLs are on the same line
 
 ## Version 2.6.6
 ### Added
