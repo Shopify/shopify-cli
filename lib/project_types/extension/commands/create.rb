@@ -61,6 +61,7 @@ module Extension
         ).call
         @ctx.chdir(form.directory_name)
         write_env_file(form)
+        update_configuration(form) 
       rescue => error
         @ctx.debug(error)
         raise error
@@ -69,6 +70,7 @@ module Extension
       def use_legacy_flow(form)
         if form.type.create(form.directory_name, @ctx, getting_started: options.flags[:getting_started])
           write_env_file(form)
+          update_configuration(form) 
         else
           raise StandardError
         end
@@ -81,6 +83,14 @@ module Extension
           title: form.name,
           api_key: form.app.api_key,
           api_secret: form.app.secret
+        )
+      end
+
+      def update_configuration(form)
+        return unless form.type.identifier == "CHECKOUT_UI_EXTENSION"
+        Models::SpecificationHandlers::CheckoutUiExtension.update_configuration(
+          @ctx,
+          merchant_facing_name: form.merchant_facing_name,
         )
       end
 

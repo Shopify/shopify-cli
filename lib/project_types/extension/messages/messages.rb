@@ -46,6 +46,8 @@ module Extension
         loading_apps: "Loading your apps…",
         no_available_extensions: "{{x}} There are no available extensions for this app.",
         ask_template: "Select a template to use for your extension",
+        ask_merchant_facing_name: "Merchant-facing extension name",
+        invalid_merchant_facing_name: "Merchant-facing extension name must be under %s characters",
       },
       connect: {
         connected: "Project now connected to {{green:%s: %s}}",

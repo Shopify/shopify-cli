@@ -3,7 +3,7 @@
 module Extension
   module Forms
     class Create < ShopifyCLI::Form
-      flag_arguments :name, :type, :api_key, :template
+      flag_arguments :name, :type, :api_key, :template, :merchant_facing_name
 
       attr_reader :app
 
@@ -12,6 +12,7 @@ module Extension
 
         property :app, accepts: Models::App
         property :name, accepts: String
+        property :merchant_facing_name, accepts: String
         property :type, accepts: Models::SpecificationHandlers::Default
         property :template, accepts: String
 
@@ -26,6 +27,7 @@ module Extension
           .then(&Questions::AskType.new(ctx: ctx, type: type))
           .then(&Questions::AskTemplate.new(ctx: ctx, template: template))
           .then(&Questions::AskName.new(ctx: ctx, name: name))
+          .then(&Questions::AskMerchantFacingName.new(ctx: ctx, merchant_facing_name: merchant_facing_name))
           .unwrap { |e| raise e }
           .tap do |project_details|
             ctx.abort(ctx.message("create.incomplete_configuration")) unless project_details.complete?
@@ -34,6 +36,7 @@ module Extension
             self.type = project_details.type
             self.template = project_details.template
             self.name = project_details.name
+            self.merchant_facing_name = project_details.merchant_facing_name
           end
       end
 

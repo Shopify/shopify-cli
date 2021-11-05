@@ -60,6 +60,7 @@ module Extension
     module Questions
       autoload :AskApp, Project.project_filepath("forms/questions/ask_app")
       autoload :AskName, Project.project_filepath("forms/questions/ask_name")
+      autoload :AskMerchantFacingName, Project.project_filepath("forms/questions/ask_merchant_facing_name")
       autoload :AskTemplate, Project.project_filepath("forms/questions/ask_template")
       autoload :AskType, Project.project_filepath("forms/questions/ask_type")
       autoload :AskRegistration, Project.project_filepath("forms/questions/ask_registration")

@@ -36,6 +36,31 @@ module Extension
           end
         end
 
+        def update_yaml(context, permitted_keys = [], **new_config)
+          file_name = File.join(context.root, CONFIG_FILE_NAME)
+          return {} unless File.size?(file_name)
+
+          require "yaml" # takes 20ms, so deferred as late as possible.
+          begin
+            config = YAML.load_file(file_name)
+
+            unless config.is_a?(Hash)
+              raise ShopifyCLI::Abort, ShopifyCLI::Context.message("core.yaml.error.not_hash", CONFIG_FILE_NAME)
+            end
+
+            config.transform_keys!(&:to_sym).merge!(new_config)
+            assert_valid_config(config, permitted_keys) unless permitted_keys.empty?
+
+            context.write(file_name, config.to_yaml)
+            config
+          rescue Psych::SyntaxError => e
+            raise(
+              ShopifyCLI::Abort,
+              ShopifyCLI::Context.message("core.yaml.error.invalid", CONFIG_FILE_NAME, e.message)
+            )
+          end
+        end
+
         private
 
         def assert_valid_config(config, permitted_keys)
