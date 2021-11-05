@@ -69,7 +69,7 @@ module Script
             raise error
           end
 
-          def extract_first_json_hash(output)
+          def extract_first_json_hash(error)
             "#{error.out.split("\n}")[0]}}"
           end
 
