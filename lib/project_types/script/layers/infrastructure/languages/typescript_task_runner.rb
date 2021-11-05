@@ -61,12 +61,16 @@ module Script
             # npm list can return a failure status code, even when returning the correct data.
             # This causes the CommandRunner to throw a SystemCallFailure error that contains the data.
             # In here, we check that the output contains `npm list`'s structure and extract the version.
-            output = JSON.parse(error.out)
+            output = JSON.parse(extract_first_json_hash(error)) 
             raise error unless output.key?("dependencies")
 
             library_version_from_npm_list(output, library_name)
-          rescue JSON::ParserError
+          rescue JSON::ParserError => e
             raise error
+          end
+
+          def extract_first_json_hash(output)
+            "#{error.out.split("\n}")[0]}}"
           end
 
           def library_version_from_npm_list(output, library_name)

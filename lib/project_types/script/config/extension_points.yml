@@ -44,11 +44,20 @@ shipping_methods:
       beta: true
       package: "@shopify/scripts-checkout-apis-temp"
       repo: "https://github.com/Shopify/scripts-apis-examples"
-discount_types:
+delivery_discount_types:
   beta: true
   domain: 'discounts'
   libraries:
     typescript:
       beta: true
-      package: "@shopify/scripts-discount-apis"
+      package: "@shopify/scripts-discounts-apis"
       repo: "https://github.com/Shopify/scripts-apis-examples"
+merchandise_discount_types:
+  beta: true
+  domain: 'discounts'
+  libraries:
+    typescript:
+      beta: true
+      package: "@shopify/scripts-discounts-apis"
+      repo: "https://github.com/Shopify/scripts-apis-examples"
+
