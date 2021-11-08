@@ -92,7 +92,7 @@ module ShopifyCLI
 
           def form_data(form_options)
             if ShopifyCLI::Environment.acceptance_test?
-              Struct.new(:name, :name, :organization_id, :type, :shop_domain, :db, keyword_init: true).new(
+              Struct.new(:name, :organization_id, :type, :shop_domain, :db, keyword_init: true).new(
                 name: form_options[:name],
                 organization_id: "123",
                 shop_domain: "test.shopify.io",
