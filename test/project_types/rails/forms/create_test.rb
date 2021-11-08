@@ -9,21 +9,19 @@ module Rails
       def test_returns_all_defined_attributes_if_valid
         form = ask
         assert_equal("test_app", form.name)
-        assert_equal("Test App", form.title)
         assert_equal(42, form.organization_id)
         assert_equal("shop.myshopify.com", form.shop_domain)
         assert_equal("sqlite3", form.db)
       end
 
       def test_title_can_be_provided_by_flag
-        form = ask(title: "My New App")
+        form = ask(name: "My New App")
         assert_equal("my_new_app", form.name)
-        assert_equal("My New App", form.title)
       end
 
       def test_aborts_if_title_includes_shopify
         io = capture_io do
-          form = ask(title: "Best Shopify Shipping App")
+          form = ask(name: "Best Shopify Shipping App")
           assert_nil(form)
         end
         assert_match(@context.message("rails.forms.create.error.invalid_app_name"), io.join)
@@ -260,11 +258,11 @@ module Rails
 
       private
 
-      def ask(title: "Test App", org_id: 42, shop: "shop.myshopify.com", type: "custom", db: "sqlite3")
+      def ask(name: "Test App", org_id: 42, shop: "shop.myshopify.com", type: "custom", db: "sqlite3")
         Create.ask(
           @context,
           [],
-          title: title,
+          name: name,
           type: type,
           organization_id: org_id,
           shop_domain: shop,

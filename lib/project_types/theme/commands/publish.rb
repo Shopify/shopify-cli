@@ -3,7 +3,7 @@ require "shopify_cli/theme/theme"
 
 module Theme
   class Command
-    class Publish < ShopifyCLI::SubCommand
+    class Publish < ShopifyCLI::Command::SubCommand
       options do |parser, flags|
         parser.on("-f", "--force") { flags[:force] = true }
       end

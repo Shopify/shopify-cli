@@ -3,8 +3,7 @@ require "uri"
 module Rails
   module Forms
     class Create < ShopifyCLI::Form
-      attr_accessor :name
-      flag_arguments :title, :organization_id, :shop_domain, :type, :db
+      flag_arguments :name, :organization_id, :shop_domain, :type, :db
       VALID_DB_TYPES = ["sqlite3",
                         "mysql",
                         "postgresql",
@@ -18,7 +17,7 @@ module Rails
                         "jdbc"]
 
       def ask
-        self.title ||= CLI::UI::Prompt.ask(ctx.message("rails.forms.create.app_name"))
+        self.name ||= CLI::UI::Prompt.ask(ctx.message("rails.forms.create.app_name"))
         self.name = format_name
         self.type = ask_type
         res = ShopifyCLI::Tasks::SelectOrgAndShop.call(ctx, organization_id: organization_id, shop_domain: shop_domain)
@@ -30,13 +29,13 @@ module Rails
       private
 
       def format_name
-        name = title.downcase.split(" ").join("_")
+        formatted_name = name.downcase.split(" ").join("_")
 
-        if name.include?("shopify")
+        if formatted_name.include?("shopify")
           ctx.abort(ctx.message("rails.forms.create.error.invalid_app_name"))
         end
 
-        name
+        formatted_name
       end
 
       def ask_type
