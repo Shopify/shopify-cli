@@ -45,6 +45,7 @@ module Extension
     autoload :MergeServerConfig, Project.project_filepath("tasks/merge_server_config")
     autoload :FindPackageFromJson, Project.project_filepath("tasks/find_package_from_json.rb")
     autoload :EnsureResourceUrl, Project.project_filepath("tasks/ensure_resource_url.rb")
+    autoload :ConvertServerConfig, Project.project_filepath("tasks/convert_server_config")
 
     module Converters
       autoload :RegistrationConverter, Project.project_filepath("tasks/converters/registration_converter")
@@ -52,7 +53,6 @@ module Extension
       autoload :ValidationErrorConverter, Project.project_filepath("tasks/converters/validation_error_converter")
       autoload :AppConverter, Project.project_filepath("tasks/converters/app_converter")
       autoload :ProductConverter, Project.project_filepath("tasks/converters/product_converter")
-      autoload :ServerConfigConverter, Project.project_filepath("tasks/converters/server_config_converter")
     end
   end
 

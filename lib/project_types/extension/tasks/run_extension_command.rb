@@ -18,9 +18,9 @@ module Extension
       property :context, accepts: ShopifyCLI::Context
       property :config_file_name, accepts: String
       property :port, accepts: Integer, default: 39351
+      property :resource_url, accepts: String
       property :root_dir, accepts: String
       property :template, accepts: Models::ServerConfig::Development::VALID_TEMPLATES
-      property :resource_url, accepts: String
       property :tunnel_url, accepts: String
 
       def call

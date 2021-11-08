@@ -5,21 +5,20 @@ require "yaml"
 module Extension
   module Tasks
     class MergeServerConfig < ShopifyCLI::Task
-      include SmartProperties
-
       class << self
         def call(context:, file_name:, resource_url:, tunnel_url:, type:)
           config = YAML.load_file(file_name)
           project = ExtensionProject.current
-          Tasks::Converters::ServerConfigConverter.from_hash(
+          Tasks::ConvertServerConfig.call(
             api_key: project.env.api_key,
             context: context,
             hash: config,
-            type: type,
             registration_uuid: project.registration_uuid,
             resource_url: resource_url || project.resource_url,
             store: project.env.shop || "",
+            title: project.title,
             tunnel_url: tunnel_url,
+            type: type
           )
         rescue Psych::SyntaxError => e
           raise(
