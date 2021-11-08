@@ -47,10 +47,11 @@ module Extension
 
       def merge_server_config
         Tasks::MergeServerConfig.call(
+          context: context,
           file_name: config_file_name,
-          type: type,
           resource_url: resource_url,
-          tunnel_url: tunnel_url
+          tunnel_url: tunnel_url,
+          type: type
         )
       end
 

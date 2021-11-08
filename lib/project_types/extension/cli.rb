@@ -95,6 +95,7 @@ module Extension
 
     module ServerConfig
       autoload :Base, Project.project_filepath("models/server_config/base")
+      autoload :App, Project.project_filepath("models/server_config/app")
       autoload :Development, Project.project_filepath("models/server_config/development")
       autoload :DevelopmentEntries, Project.project_filepath("models/server_config/development_entries")
       autoload :DevelopmentRenderer, Project.project_filepath("models/server_config/development_renderer")
