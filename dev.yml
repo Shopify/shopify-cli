@@ -13,9 +13,6 @@ up:
       - rpm:
           version: 4.16.1.3
   - bundler
-  - node:
-      version: 14.9.0
-      yarn: true
   - docker
 
 test:
