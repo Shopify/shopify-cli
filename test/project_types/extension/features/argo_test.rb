@@ -66,40 +66,35 @@ module Extension
         end
       end
 
-      def test_config_returns_argo_renderer_package_name_version_if_it_exists_using_yarn
-        yarn_list_result = <<~YARN
-          yarn list v1.22.5
-          ├─ @fake-package@0.3.9
-          └─ @shopify/admin-ui-extensions@0.3.8
-          ✨  Done in 0.40s.
-        YARN
+      def test_config_returns_argo_renderer_package_name_version_if_it_exists
+        npm_package = Models::NpmPackage.new(name: @dummy_argo.renderer_package_name, version: "0.0.1")
+        Tasks::FindPackageFromJson.expects(:call).returns(npm_package)
 
         with_stubbed_script(@context, Features::Argo::SCRIPT_PATH) do
-          stub_package_manager(yarn_list_result)
           stub_run_yarn_install_and_run_yarn_run_script_methods
+          Base64.stubs(:strict_encode64).returns(@encoded_script)
+          File.stubs(:read).returns(TEMPLATE_SCRIPT.chomp)
+
           config = @dummy_argo.config(@context)
 
           assert_includes(config.keys, :renderer_version)
           assert_match(Semantic::Version::SemVerRegexp, config[:renderer_version])
-          assert_equal("0.3.8", config[:renderer_version])
+          assert_equal("0.0.1", config[:renderer_version])
         end
       end
 
       def test_config_returns_argo_renderer_package_version_if_it_exists_using_npm
-        npm_list_result = <<~NPM
-          test-extension-template@0.1.0
-          └─┬ @fake-package@0.4.3
-            └── @shopify/admin-ui-extensions@0.4.3
-            ✨  Done in 0.40s.
-        NPM
-
         with_stubbed_script(@context, Features::Argo::SCRIPT_PATH) do
-          stub_package_manager(npm_list_result)
+          Base64.stubs(:strict_encode64).returns(@encoded_script)
+          File.stubs(:read).returns(TEMPLATE_SCRIPT.chomp)
+          npm_package = Models::NpmPackage.new(name: @dummy_argo.renderer_package_name, version: "0.0.1")
+          Tasks::FindPackageFromJson.expects(:call).returns(npm_package)
+
           config = @dummy_argo.config(@context)
 
           assert_includes(config.keys, :renderer_version)
           assert_match(Semantic::Version::SemVerRegexp, config[:renderer_version])
-          assert_equal("0.4.3", config[:renderer_version])
+          assert_equal("0.0.1", config[:renderer_version])
         end
       end
 
@@ -107,33 +102,25 @@ module Extension
         Base64.stubs(:strict_encode64).returns(@encoded_script)
         with_stubbed_script(@context, Argo::SCRIPT_PATH) do
           stub_run_yarn_install_and_run_yarn_run_script_methods
-          Tasks::FindNpmPackages.expects(:exactly_one_of).raises(Extension::PackageResolutionFailed)
+
           error = assert_raises(ShopifyCLI::Abort) { @dummy_argo.config(@context) }
           assert_includes error
             .message, @context.message(
-              "features.argo.dependencies.argo_missing_renderer_package_error",
-              @error_message
+              "errors.module_not_found",
+              @dummy_argo.renderer_package_name
             )
         end
       end
 
       def test_config_aborts_with_error_when_argo_renderer_package_name_not_found
-        package_manager_output = <<~NPM
-          test-extension-template@0.1.0
-          └─┬ @not-a-renderer-package@0.4.3
-            ✨  Done in 0.40s.
-        NPM
-
         with_stubbed_script(@context, Features::Argo::SCRIPT_PATH) do
-          stub_package_manager(package_manager_output)
           stub_run_yarn_install_and_run_yarn_run_script_methods
 
-          error_message = "'#{@dummy_argo.renderer_package_name}' not found."
           error = assert_raises(ShopifyCLI::Abort) { @dummy_argo.config(@context) }
           assert_includes error
             .message, @context.message(
-              "features.argo.dependencies.argo_missing_renderer_package_error",
-              error_message
+              "errors.module_not_found",
+              @dummy_argo.renderer_package_name
             )
         end
       end
@@ -195,6 +182,10 @@ module Extension
           .tap { |js_system| js_system.stubs(call: [package_manager_output, nil, stub(success?: true)]) }
           .yield_self { |js_system| Tasks::FindNpmPackages.new(js_system: js_system) }
           .tap { |find_npm_packages_stub| Tasks::FindNpmPackages.expects(:new).returns(find_npm_packages_stub) }
+      end
+
+      def stub_package_json(package_name:, response:)
+        File.expects(:read).with("node_modules/#{package_name}/package.json").returns(response).once
       end
     end
   end

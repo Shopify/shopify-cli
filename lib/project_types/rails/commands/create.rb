@@ -1,8 +1,10 @@
 # frozen_string_literal: true
 module Rails
   class Command
-    class Create < ShopifyCLI::SubCommand
-      prerequisite_task :ensure_authenticated
+    class Create < ShopifyCLI::Command::AppSubCommand
+      unless ShopifyCLI::Environment.acceptance_test?
+        prerequisite_task :ensure_authenticated
+      end
 
       USER_AGENT_CODE = <<~USERAGENT
         module ShopifyAPI
@@ -31,8 +33,8 @@ module Rails
       end
 
       def call(args, _name)
-        form = Forms::Create.ask(@ctx, args, options.flags)
-        return @ctx.puts(self.class.help) if form.nil?
+        form_data = self.form_data(args)
+        return @ctx.puts(self.class.help) if form_data.nil?
 
         ruby_version = Ruby.version(@ctx)
         @ctx.abort(@ctx.message("rails.create.error.invalid_ruby_version")) unless
@@ -41,34 +43,61 @@ module Rails
         check_node
         check_yarn
 
-        build(form.name, form.db)
+        build(form_data.name, form_data.db)
+
         set_custom_ua
         ShopifyCLI::Project.write(
           @ctx,
           project_type: "rails",
-          organization_id: form.organization_id,
+          organization_id: form_data.organization_id,
         )
 
-        api_client = ShopifyCLI::Tasks::CreateApiClient.call(
-          @ctx,
-          org_id: form.organization_id,
-          title: form.title,
-          type: form.type,
-        )
+        api_client = if ShopifyCLI::Environment.acceptance_test?
+          {
+            "apiKey" => "public_api_key",
+            "apiSecretKeys" => [
+              {
+                "secret" => "api_secret_key",
+              },
+            ],
+          }
+        else
+          ShopifyCLI::Tasks::CreateApiClient.call(
+            @ctx,
+            org_id: form_data.organization_id,
+            title: form_data.title,
+            type: form_data.type,
+          )
+        end
 
         ShopifyCLI::Resources::EnvFile.new(
           api_key: api_client["apiKey"],
           secret: api_client["apiSecretKeys"].first["secret"],
-          shop: form.shop_domain,
+          shop: form_data.shop_domain,
           scopes: "write_products,write_customers,write_draft_orders",
         ).write(@ctx)
 
-        partners_url = ShopifyCLI::PartnersAPI.partners_url_for(form.organization_id, api_client["id"])
+        partners_url = ShopifyCLI::PartnersAPI.partners_url_for(form_data.organization_id, api_client["id"])
 
-        @ctx.puts(@ctx.message("apps.create.info.created", form.title, partners_url))
-        @ctx.puts(@ctx.message("apps.create.info.serve", form.name, ShopifyCLI::TOOL_NAME, "rails"))
+        @ctx.puts(@ctx.message("apps.create.info.created", form_data.title, partners_url))
+        @ctx.puts(@ctx.message("apps.create.info.serve", form_data.name, ShopifyCLI::TOOL_NAME, "rails"))
         unless ShopifyCLI::Shopifolk.acting_as_shopify_organization?
-          @ctx.puts(@ctx.message("apps.create.info.install", partners_url, form.title))
+          @ctx.puts(@ctx.message("apps.create.info.install", partners_url, form_data.title))
+        end
+      end
+
+      def form_data(args)
+        if ShopifyCLI::Environment.acceptance_test?
+          Struct.new(:title, :name, :organization_id, :type, :shop_domain, :db, keyword_init: true).new(
+            title: options.flags[:title],
+            name: options.flags[:title],
+            organization_id: "123",
+            shop_domain: "test.shopify.io",
+            type: "public",
+            db: options.flags[:db]
+          )
+        else
+          Forms::Create.ask(@ctx, args, options.flags)
         end
       end
 

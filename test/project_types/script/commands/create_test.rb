@@ -16,7 +16,6 @@ module Script
         @language = "assemblyscript"
         @script_name = "name"
         @ep_type = "discount"
-        @no_config_ui = false
         @script_project = TestHelpers::FakeScriptProjectRepository.new.create(
           language: @language,
           extension_point_type: @ep_type,
@@ -42,25 +41,6 @@ module Script
           sparse_checkout_branch: @branch,
           script_name: @script_name,
           extension_point_type: @ep_type,
-          no_config_ui: @no_config_ui
-        ).returns(@script_project)
-
-        @context
-          .expects(:puts)
-          .with(@context.message("script.create.change_directory_notice", @script_project.script_name))
-        perform_command
-      end
-
-      def test_can_create_new_script_with_no_config_ui
-        @no_config_ui = true
-
-        Script::Layers::Application::CreateScript.expects(:call).with(
-          ctx: @context,
-          language: @language,
-          sparse_checkout_branch: @branch,
-          script_name: @script_name,
-          extension_point_type: @ep_type,
-          no_config_ui: @no_config_ui
         ).returns(@script_project)
 
         @context
@@ -92,9 +72,8 @@ module Script
       def perform_command
         run_cmd(
           "script create --name=#{@script_name}
-          --extension-point=#{@ep_type} --language=#{@language}
-          --branch=#{@branch}
-          #{@no_config_ui ? "--no-config-ui" : ""}"
+          --api=#{@ep_type} --language=#{@language}
+          --branch=#{@branch}"
         )
       end
     end

@@ -1,10 +1,8 @@
-require_relative "../../../utilities/utilities"
-
 When(/I create a (.+) script named (.+)/) do |extension_point, script_name|
   @container.exec_shopify(
     "script", "create",
     "--name", script_name,
-    "--extension-point=#{extension_point}"
+    "--api=#{extension_point}"
   )
 end
 

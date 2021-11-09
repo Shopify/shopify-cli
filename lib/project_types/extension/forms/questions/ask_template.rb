@@ -4,10 +4,6 @@ module Extension
       class AskTemplate
         include ShopifyCLI::MethodObject
 
-        TEMPLATE_REQUIRED_TYPES = [
-          "checkout_ui_extension",
-        ]
-
         property! :ctx
         property :template, accepts: Models::ServerConfig::Development::VALID_TEMPLATES
         property :prompt,
@@ -25,7 +21,7 @@ module Extension
         def template_required?(project_details)
           return false unless extension_server_beta?
           type = project_details&.type&.identifier
-          TEMPLATE_REQUIRED_TYPES.include?(type.downcase)
+          Models::DevelopmentServerRequirements::SUPPORTED_EXTENSION_TYPES.include?(type.downcase)
         end
 
         def extension_server_beta?

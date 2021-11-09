@@ -16,7 +16,7 @@ module Extension
 
         def self.find(type)
           case type.downcase
-          when "admin_ui_extension"
+          when "product_subscription"
             new(name: "@shopify/admin-ui-extensions")
           when "checkout_ui_extension"
             new(name: "@shopify/checkout-ui-extensions")

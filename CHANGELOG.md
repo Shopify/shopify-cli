@@ -1,7 +1,21 @@
 From version 2.6.0, the sections in this file adhere to the [keep a changelog](https://keepachangelog.com/en/1.0.0/) specification.
 ## [Unreleased]
+### Fixed
+* [#1714](https://github.com/Shopify/shopify-cli/pull/1714): Fix theme serve not serving assets locally when two URLs are on the same line
+
+## Version 2.6.6
+### Added
 * [#1609](https://github.com/Shopify/shopify-cli/pull/1609): Add `--bind=HOST` option to `shopify theme serve`.
 
+### Fixed
+* [#1678](https://github.com/Shopify/shopify-cli/pull/1678): Fix migrator's incompatibility with Ruby 2.5.
+* [#1690](https://github.com/Shopify/shopify-cli/pull/1690): Fix `extension push` command for `PRODUCT_SUBSCRIPTION` extensions
+  
+### Changed
+* [#1678](https://github.com/Shopify/shopify-cli/pull/1678): Change the `@shopify/scripts-checkout-apis-temp` package name to `@shopify/scripts-discount-apis`.
+
+### Removed
+* [#1664](https://github.com/Shopify/shopify-cli/pull/1664): Remove ruby-locking extension
 ## Version 2.6.5
 ### Fixed
 * [#1661](https://github.com/Shopify/shopify-cli/pull/1661): Handle npm list non-zero exit status when pushing scripts
@@ -18,6 +32,8 @@ From version 2.6.0, the sections in this file adhere to the [keep a changelog](h
 
 ### Changed
 * [#1635](https://github.com/Shopify/shopify-cli/pull/1635): Automatic usage and error reporting configuration has been unified under `analytics.enabled`.
+* [#1650](https://github.com/Shopify/shopify-cli/pull/1650): **Breaking** Move app commands under `shopify app`.
+
 ### Security
 
 ## Version 2.6.3

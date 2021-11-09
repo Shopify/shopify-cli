@@ -7,7 +7,6 @@ describe Script::Layers::Application::CreateScript do
 
   let(:script_name) { "path" }
   let(:compiled_type) { "wasm" }
-  let(:no_config_ui) { false }
   let(:script_json_filename) { "script.json" }
 
   let(:extension_point_repository) { TestHelpers::FakeExtensionPointRepository.new }
@@ -73,7 +72,6 @@ describe Script::Layers::Application::CreateScript do
         sparse_checkout_branch: sparse_checkout_branch,
         script_name: script_name,
         extension_point_type: extension_point_type,
-        no_config_ui: no_config_ui
       )
     end
 
@@ -133,7 +131,6 @@ describe Script::Layers::Application::CreateScript do
         script_json = script_project_repository.get.script_json
         assert_equal script_name, script_json.title
         assert_equal "1", script_json.version
-        assert script_json.configuration_ui
       end
     end
 

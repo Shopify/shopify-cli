@@ -1,5 +1,4 @@
 require_relative "../../../ext/shopify-extensions/shopify_extensions"
-require_relative "../../../lib/shopify_cli"
 
 When("Shopify extensions are installed in the working directory") do
   ShopifyExtensions.install(

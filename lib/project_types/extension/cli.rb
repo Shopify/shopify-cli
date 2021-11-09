@@ -12,7 +12,7 @@ module Extension
     register_messages(Extension::Messages::MessageLoading.load)
   end
 
-  class Command < ShopifyCLI::ProjectCommands
+  class Command < ShopifyCLI::Command::ProjectCommand
     hidden_feature
     autoload :ExtensionCommand, Project.project_filepath("commands/extension_command")
 
@@ -42,7 +42,10 @@ module Extension
     autoload :GetExtensions, Project.project_filepath("tasks/get_extensions")
     autoload :GetProduct, Project.project_filepath("tasks/get_product")
     autoload :RunExtensionCommand, Project.project_filepath("tasks/run_extension_command")
-    autoload :LoadServerConfig, Project.project_filepath("tasks/load_server_config")
+    autoload :MergeServerConfig, Project.project_filepath("tasks/merge_server_config")
+    autoload :FindPackageFromJson, Project.project_filepath("tasks/find_package_from_json.rb")
+    autoload :EnsureResourceUrl, Project.project_filepath("tasks/ensure_resource_url.rb")
+    autoload :ConvertServerConfig, Project.project_filepath("tasks/convert_server_config")
 
     module Converters
       autoload :RegistrationConverter, Project.project_filepath("tasks/converters/registration_converter")
@@ -50,7 +53,6 @@ module Extension
       autoload :ValidationErrorConverter, Project.project_filepath("tasks/converters/validation_error_converter")
       autoload :AppConverter, Project.project_filepath("tasks/converters/app_converter")
       autoload :ProductConverter, Project.project_filepath("tasks/converters/product_converter")
-      autoload :ServerConfigConverter, Project.project_filepath("tasks/converters/server_config_converter")
     end
   end
 
@@ -93,9 +95,11 @@ module Extension
 
     module ServerConfig
       autoload :Base, Project.project_filepath("models/server_config/base")
+      autoload :App, Project.project_filepath("models/server_config/app")
       autoload :Development, Project.project_filepath("models/server_config/development")
       autoload :DevelopmentEntries, Project.project_filepath("models/server_config/development_entries")
       autoload :DevelopmentRenderer, Project.project_filepath("models/server_config/development_renderer")
+      autoload :DevelopmentResource, Project.project_filepath("models/server_config/development_resource")
       autoload :Extension, Project.project_filepath("models/server_config/extension")
       autoload :Root, Project.project_filepath("models/server_config/root")
       autoload :User, Project.project_filepath("models/server_config/user")

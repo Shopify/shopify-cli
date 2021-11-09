@@ -85,7 +85,6 @@ describe Script::Layers::Infrastructure::ScriptProjectRepository do
       {
         "version" => "1",
         "title" => script_name,
-        "configurationUi" => true,
         "configuration" => {
           "type": "single",
           "schema": [
@@ -148,7 +147,6 @@ describe Script::Layers::Infrastructure::ScriptProjectRepository do
         assert_equal language, subject.language
         assert_equal script_json_content["version"], subject.script_json.version
         assert_equal script_json_content["version"], subject.script_json.version
-        assert_equal script_json_content["configurationUi"], subject.script_json.configuration_ui
         assert_equal script_json_content["configuration"].to_json, subject.script_json.configuration.to_json
       end
     end
@@ -311,7 +309,7 @@ describe Script::Layers::Infrastructure::ScriptProjectRepository do
       ShopifyCLI::Project.stubs(:current).returns(current_project)
     end
 
-    subject { instance.update_or_create_script_json(title: new_title, configuration_ui: new_configuration_ui) }
+    subject { instance.update_or_create_script_json(title: new_title) }
 
     describe "script.json does not exist" do
       it "creates a new file with the provided fields" do
@@ -321,7 +319,6 @@ describe Script::Layers::Infrastructure::ScriptProjectRepository do
         file_content = JSON.parse(ctx.read(script_json_filename))
 
         assert script_json.configuration_ui
-        assert file_content["configurationUi"]
         assert_equal new_title, script_json.title
         assert_equal new_title, file_content["title"]
         assert_equal "1", file_content["version"]
@@ -342,7 +339,6 @@ describe Script::Layers::Infrastructure::ScriptProjectRepository do
           "version" => "1",
           "title" => initial_title,
           "description" => initial_description,
-          "configurationUi" => false,
           "configuration" => {
             "type": "single",
             "schema": [
@@ -366,8 +362,6 @@ describe Script::Layers::Infrastructure::ScriptProjectRepository do
         script_json = subject.script_json
         file_content = JSON.parse(ctx.read(script_json_filename))
 
-        assert script_json.configuration_ui
-        assert file_content["configurationUi"]
         assert_equal new_title, script_json.title
         assert_equal new_title, file_content["title"]
         refute_equal initial_title, script_json.title

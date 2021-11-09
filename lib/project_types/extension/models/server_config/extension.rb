@@ -5,10 +5,14 @@ module Extension
     module ServerConfig
       class Extension < Base
         include SmartProperties
+
         property! :uuid, accepts: String
         property! :type, accepts: String
         property! :user, accepts: ServerConfig::User
         property! :development, accepts: ServerConfig::Development
+        property  :extension_points, accepts: Array
+        property  :version, accepts: String
+        property  :title, accepts: String
 
         def self.build(uuid: "", template:, type:, root_dir:)
           renderer = ServerConfig::DevelopmentRenderer.find(type)

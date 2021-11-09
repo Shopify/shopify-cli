@@ -31,9 +31,12 @@ module ShopifyCLI
         config.auto_capture_sessions = false
       end
 
-      metadata = {}
+      metadata = { rubyPlatform: RUBY_PLATFORM }
       metadata.merge!(custom_metadata)
-      Bugsnag.notify(error, metadata)
+
+      Bugsnag.notify(error) do |event|
+        event.add_metadata(:device, metadata)
+      end
     end
 
     def self.report?(context:)

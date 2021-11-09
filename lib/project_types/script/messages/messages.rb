@@ -27,10 +27,6 @@ module Script
                                  "extension_point_type or script_name.",
           invalid_context_help: "Add these values and try again.",
 
-          invalid_config_props_cause: "{{command:--config-props}} is formatted incorrectly.",
-          invalid_config_props_help: "Try again using this format: "\
-                                     "{{cyan:--config-props='name1:value1, name2:value2'}}",
-
           invalid_script_name_cause: "Invalid script name.",
           invalid_script_name_help: "Replace or remove unsupported characters. Valid characters "\
                                     "are numbers, letters, hyphens, or underscores.",
@@ -42,9 +38,6 @@ module Script
           no_existing_orgs_cause: "You don't have any partner organizations.",
           no_existing_orgs_help: "Visit https://partners.shopify.com/ to create a partners account.",
 
-          no_existing_stores_cause: "You don't have any stores in your Partner Dashboard.",
-          no_existing_stores_help: "Visit https://partners.shopify.com/%{organization_id}/stores/ to create one.",
-
           project_exists_cause: "A directory with this same name already exists.",
           project_exists_help: "Try again and enter a different name for the script.",
 
@@ -53,9 +46,6 @@ module Script
 
           invalid_language_cause: "Invalid language %s.",
           invalid_language_help: "Allowed values: %s.",
-
-          invalid_config: "Can't change the configuration values because %1$s is missing or "\
-                          "it isn't formatted properly.",
 
           missing_script_json_field_cause: "The script.json file is missing the required %s field.",
           missing_script_json_field_help: "Add the field and try again.",
@@ -91,8 +81,8 @@ module Script
           system_call_failure_cause: "An error was returned while running {{command:%{cmd}}}.",
           system_call_failure_help: "Review the following error and try again.\n{{red:%{out}}}",
 
-          metadata_validation_cause: "Invalid Script API metadata.",
-          metadata_validation_help: "Ensure the 'shopify/scripts-toolchain-as' package is up to date.",
+          metadata_validation_cause: "The Script API metadata is incorrect.",
+          metadata_validation_help: "The 'schemaVersions.major' field contains an unsupported version.",
 
           metadata_schema_versions_missing: "Invalid Script metadata:" \
                                             " 'schemaVersions' field is missing",
@@ -107,7 +97,6 @@ module Script
           metadata_not_found_help: "Ensure the 'shopify/scripts-toolchain-as' package is up to date and " \
                                      "'package.json' contains a 'scripts/build' entry with a " \
                                      "'--metadata build/metadata.json' argument",
-          app_not_installed_cause: "App not installed on store.",
 
           build_error_cause: "Something went wrong while building the script.",
           build_error_help: "Correct the errors and try again.",
@@ -125,9 +114,6 @@ module Script
 
           script_repush_cause: "A version of this script already exists on the app.",
           script_repush_help: "Use {{cyan:--force}} to replace the existing script.",
-
-          shop_auth_cause: "Unable to authenticate with the store.",
-          shop_auth_help: "Try again.",
 
           invalid_build_script: "The root package.json contains an invalid build command that " \
                                 "is needed to compile your script to WebAssembly.",
@@ -162,8 +148,7 @@ module Script
               Usage: {{command:%1$s script create}}
               Options:
                 {{command:--name=NAME}} Script project name. Use any string.
-                {{command:--extension-point=TYPE}} Script API name. Allowed values: %2$s.
-                {{command:--no-config-ui}} Specify this option when you don’t want your script to render an interface in Shopify admin.
+                {{command:--api=TYPE}} Script API name. Allowed values: %2$s.
           HELP
 
           error: {
