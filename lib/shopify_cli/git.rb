@@ -4,6 +4,7 @@ module ShopifyCLI
   # git.
   class Git
     class << self
+      # Check if Git is available in the environment
       def available?
         _output, status = ctx.capture2e("git", "status")
         status.success?
