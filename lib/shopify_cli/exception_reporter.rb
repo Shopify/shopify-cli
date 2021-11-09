@@ -2,10 +2,10 @@ module ShopifyCLI
   module ExceptionReporter
     def self.report(error, _logs = nil, _api_key = nil, custom_metadata = {})
       context = ShopifyCLI::Context.new
-
       unless ShopifyCLI::Environment.development?
         context.puts(context.message("core.error_reporting.unhandled_error.message"))
-        context.puts(context.message("core.error_reporting.unhandled_error.issue_message"))
+        context.puts(context.message("core.error_reporting.unhandled_error.issue_message",
+          ShopifyCLI::GitHub::IssueURLGenerator.error_url(error)))
       end
 
       # Stack trace hint
@@ -17,8 +17,8 @@ module ShopifyCLI
       context.puts("\n")
 
       return unless reportable_error?(error)
-      return unless report?(context: context)
 
+      return unless report?(context: context)
       ENV["BUGSNAG_DISABLE_AUTOCONFIGURE"] = "1"
       require "bugsnag"
 
@@ -48,7 +48,6 @@ module ShopifyCLI
       unless ReportingConfigurationController.reporting_prompted?
         ReportingConfigurationController.check_or_prompt_report_automatically(source: :uncaught_error)
       end
-
       report_error
     end
 

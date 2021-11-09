@@ -25,6 +25,13 @@ Tip: include an error message (in a `<details></details>` tag) if your issue is 
 1.
 
 
+## Stacktrace
+
+<!--Stacktrace
+Add any stacktrace that might help debug the reported issue.
+Otherwise, delete this section.
+-->
+
 
 ## Specifications
 

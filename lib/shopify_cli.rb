@@ -111,6 +111,7 @@ module ShopifyCLI
   autoload :Feature, "shopify_cli/feature"
   autoload :Form, "shopify_cli/form"
   autoload :Git, "shopify_cli/git"
+  autoload :GitHub, "shopify_cli/github"
   autoload :Helpers, "shopify_cli/helpers"
   autoload :Heroku, "shopify_cli/heroku"
   autoload :IdentityAuth, "shopify_cli/identity_auth"

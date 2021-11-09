@@ -2,7 +2,7 @@ Feature: The version command
 
   Scenario: The Ruby Gem is installed in a Linux environment
     Given I have a VM with the CLI and a working directory
-    And I build the Shopify CLI Gem as shopify-cli.gem
+    And I build the Ruby Gem as shopify-cli.gem
     When I install the Ruby Gem shopify-cli.gem
     Then I can run "shopify version" successfully
 
