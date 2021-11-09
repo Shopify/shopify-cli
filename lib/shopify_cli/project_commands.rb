@@ -9,8 +9,20 @@ module ShopifyCLI
       ShopifyCLI::Context.message(
         "#{project_type}.help",
         ShopifyCLI::TOOL_NAME,
-        subcommand_registry.command_names.join(" | ")
+        available_commands
       )
+    end
+
+    private
+
+      def available_commands
+        subcommand_registry
+          .resolved_commands
+          .reject { |_name, command| command.hidden? }
+          .keys
+          .sort
+          .join(" | ")
+      end
     end
   end
 end
