@@ -52,3 +52,11 @@ discount_types:
       beta: true
       package: "@shopify/scripts-discount-apis"
       repo: "https://github.com/Shopify/scripts-apis-examples"
+pickup_options:
+  beta: true
+  domain: 'checkout'
+  libraries:
+    typescript:
+      beta: true
+      package: "@shopify/scripts-checkout-apis-temp"
+      repo: "https://github.com/Shopify/scripts-apis-examples"      
