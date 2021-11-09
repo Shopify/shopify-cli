@@ -24,7 +24,8 @@ module ShopifyCLI
       end
 
       def static_asset_files
-        glob("assets/*").reject(&:liquid?)
+        liquid_assets = glob("assets/*.liquid").map { |file| "#{file.relative_path}" }
+        glob("assets/*").reject { |asset| asset.liquid? || liquid_assets.include?("#{asset.relative_path}.liquid") }
       end
 
       def liquid_files
