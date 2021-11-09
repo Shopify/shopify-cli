@@ -41,5 +41,5 @@ Gem::Specification.new do |spec|
 
   spec.add_dependency("bugsnag", "~> 6.22")
   spec.add_dependency("listen", "~> 3.7.0")
-  spec.add_dependency("theme-check", "~> 1.7.2")
+  spec.add_dependency("theme-check", "~> 1.8.0")
 end
