@@ -12,6 +12,7 @@ module Extension
         property! :development, accepts: ServerConfig::Development
         property  :extension_points, accepts: Array
         property  :version, accepts: String
+        property  :title, accepts: String
 
         def self.build(uuid: "", template:, type:, root_dir:)
           renderer = ServerConfig::DevelopmentRenderer.find(type)
