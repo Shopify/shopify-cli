@@ -5,7 +5,7 @@ module ShopifyCLI
   class Git
     class << self
       # Check if Git is available in the environment
-      def available?
+      def available?(ctx)
         _output, status = ctx.capture2e("git", "status")
         status.success?
       end
@@ -26,8 +26,13 @@ module ShopifyCLI
       #
       #   ShopifyCLI::Git.sha
       #
+      # Some environments don't have git in PATH and this prevents
+      # the execution from raising an error
+      # https://app.bugsnag.com/shopify/shopify-cli/errors/615dd36365ce57000889d4c5
       def sha(dir: Dir.pwd, ctx: Context.new)
-        rev_parse("HEAD", dir: dir, ctx: ctx)
+        if available?(ctx)
+          rev_parse("HEAD", dir: dir, ctx: ctx)
+        end
       end
 
       ##
