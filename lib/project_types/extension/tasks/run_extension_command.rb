@@ -7,10 +7,6 @@ module Extension
     class RunExtensionCommand < ShopifyCLI::Task
       include SmartProperties
 
-      SUPPORTED_EXTENSION_TYPES = [
-        "checkout_ui_extension",
-      ]
-
       SUPPORTED_COMMANDS = [
         "create",
         "build",
@@ -18,12 +14,14 @@ module Extension
       ]
 
       property! :command, accepts: SUPPORTED_COMMANDS
-      property! :type, accepts: SUPPORTED_EXTENSION_TYPES
+      property! :type, accepts: Models::DevelopmentServerRequirements::SUPPORTED_EXTENSION_TYPES
       property :context, accepts: ShopifyCLI::Context
       property :config_file_name, accepts: String
       property :port, accepts: Integer, default: 39351
       property :root_dir, accepts: String
       property :template, accepts: Models::ServerConfig::Development::VALID_TEMPLATES
+      property :resource_url, accepts: String
+      property :tunnel_url, accepts: String
 
       def call
         ShopifyCLI::Result.success(config_file_exists?)
@@ -43,14 +41,17 @@ module Extension
       end
 
       def load_or_build_server_config(config_file_exists)
-        return load_server_config if config_file_exists
+        return merge_server_config if config_file_exists
         build_server_config
       end
 
-      def load_server_config
-        Tasks::LoadServerConfig.call(
+      def merge_server_config
+        Tasks::MergeServerConfig.call(
+          context: context,
           file_name: config_file_name,
-          type: type,
+          resource_url: resource_url,
+          tunnel_url: tunnel_url,
+          type: type
         )
       end
 

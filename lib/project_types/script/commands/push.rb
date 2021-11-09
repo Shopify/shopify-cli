@@ -2,7 +2,7 @@
 
 module Script
   class Command
-    class Push < ShopifyCLI::SubCommand
+    class Push < ShopifyCLI::Command::SubCommand
       prerequisite_task ensure_project_type: :script
 
       options do |parser, flags|

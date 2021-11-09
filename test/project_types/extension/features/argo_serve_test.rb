@@ -68,26 +68,6 @@ module Extension
         argo_serve.call
       end
 
-      def test_builds_resource_url_if_necessary
-        ShopifyCLI::Tasks::EnsureDevStore.stubs(:call)
-        ShopifyCLI::Tasks::EnsureEnv.stubs(:call)
-        ExtensionProject.expects(:update_env_file).with(
-          has_entries(context: anything, resource_url: "/generated")
-        )
-
-        argo_serve = Features::ArgoServe.new(
-          context: @context,
-          argo_runtime: checkout_ui_extension_runtime,
-          specification_handler: specification_handler.tap do |handler|
-            handler.expects(:supplies_resource_url?).returns(true)
-            handler.expects(:build_resource_url).returns("/generated")
-          end,
-          js_system: fake_js_system
-        )
-
-        argo_serve.call
-      end
-
       def test_resource_url_is_used_if_given
         ShopifyCLI::Tasks::EnsureDevStore.stubs(:call)
         ShopifyCLI::Tasks::EnsureEnv.stubs(:call)
@@ -134,18 +114,8 @@ module Extension
       end
 
       def stub_package_manager
-        fake_list_result = <<~YARN
-          yarn list v1.22.5
-          ├─ @fake-package@0.3.9
-          └─ @shopify/admin-ui-extensions@0.3.8
-          ✨  Done in 0.40s.
-        YARN
-
-        ShopifyCLI::JsSystem
-          .new(ctx: @context)
-          .tap { |js_system| js_system.stubs(call: [fake_list_result, nil, stub(success?: true)]) }
-          .yield_self { |js_system| Tasks::FindNpmPackages.new(js_system: js_system) }
-          .tap { |find_npm_packages_stub| Tasks::FindNpmPackages.expects(:new).returns(find_npm_packages_stub) }
+        Tasks::FindPackageFromJson.expects(:call)
+          .returns(Models::NpmPackage.new(name: "@shopify/admin-ui-extensions", version: "0.3.8"))
       end
     end
   end

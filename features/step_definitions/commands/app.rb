@@ -3,7 +3,7 @@ require_relative "../../../utilities/utilities"
 When(/I create a rails app named (.+) in the VM/) do |app_name|
   @app_name = app_name
   @container.exec_shopify(
-    "rails", "create",
+    "app", "create", "rails",
     "--name", app_name,
     "--db", "sqlite3",
   )

@@ -175,6 +175,7 @@ module Extension
       errors: {
         unknown_type: "Unknown extension type %s",
         package_not_found: "`%s` package not found.",
+        module_not_found: "Unable to find module %s. Ensure your dependencies are up-to-date and try again.",
       },
       warnings: {
         resource_url_auto_generation_failed: "{{*}} {{yellow:Warning:}} Unable to auto generate " \
