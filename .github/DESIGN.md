@@ -30,7 +30,7 @@ The user understands the following mechanics of a CLI:
 When creating a new command or subcommand there are a few things to keep in mind.
 
 ### What is the quickest way to execute a command?
-Commands are best executed autonomously. Most of the time the command should be self contained and should not requre additional input from the user. For example when running `shopify populate products` the command will execute without additional inputs required from the user even though the command could ask for things like `product name`, `price`, etc.
+Commands are best executed autonomously. Most of the time the command should be self contained and should not require additional input from the user. For example when running `shopify populate products` the command will execute without additional inputs required from the user even though the command could ask for things like `product name`, `price`, etc.
 
 When creating a new command or subcommand consider how much information is absolutely necessary for the command to execute autonomously. If a command always requires arguments or additional information then  adding smart defaults could help make inputting the command faster. 
 
