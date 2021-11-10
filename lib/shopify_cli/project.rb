@@ -81,7 +81,11 @@ module ShopifyCLI
       #
       # #### Example
       #
-      #   type = ShopifyCLI::Project.current_project_type
+      #   ShopifyCLI::Project.write(
+      #     @ctx,
+      #     project_type: "node",
+      #     organization_id: form_data.organization_id,
+      #   )
       #
       def write(ctx, project_type:, organization_id:, **identifiers)
         require "yaml" # takes 20ms, so deferred as late as possible.
