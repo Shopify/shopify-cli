@@ -17,10 +17,14 @@ require "pathname"
 module ShopifyCLI
   module Theme
     module DevServer
+      # Errors
+      Error = Class.new(StandardError)
+      AddressBindingError = Class.new(Error)
+
       class << self
         attr_accessor :ctx
 
-        def start(ctx, root, bind: "127.0.0.1", port: 9292, poll: false)
+        def start(ctx, root, http_bind: "127.0.0.1", port: 9292, poll: false)
           @ctx = ctx
           theme = DevelopmentTheme.new(ctx, root: root)
           ignore_filter = IgnoreFilter.from_path(root)
@@ -74,7 +78,7 @@ module ShopifyCLI
           watcher.start
           WebServer.run(
             @app,
-            BindAddress: bind,
+            BindAddress: http_bind,
             Port: port,
             Logger: logger,
             AccessLog: [],
@@ -85,6 +89,8 @@ module ShopifyCLI
                ShopifyCLI::API::APIRequestUnauthorizedError
           @ctx.abort("You are not authorized to edit themes on #{theme.shop}.\n" \
                      "Make sure you are a user of that store, and allowed to edit themes.")
+        rescue Errno::EADDRNOTAVAIL
+          raise AddressBindingError, "Error binding to the address #{http_bind}."
         end
 
         def stop
