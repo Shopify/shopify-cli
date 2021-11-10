@@ -2,6 +2,7 @@ From version 2.6.0, the sections in this file adhere to the [keep a changelog](h
 ## [Unreleased]
 ### Fixed
 * [#1714](https://github.com/Shopify/shopify-cli/pull/1714): Fix theme serve not serving assets locally when two URLs are on the same line
+* [#1729](https://github.com/Shopify/shopify-cli/pull/1729): Update theme-check to 1.8.0
 
 ## Version 2.6.6
 ### Added
@@ -57,11 +58,11 @@ From version 2.6.0, the sections in this file adhere to the [keep a changelog](h
 * [#1553](https://github.com/Shopify/shopify-cli/pull/1553): Add support for PHP app projects
 
 ## Version 2.4.0
-* [#1488](https://github.com/Shopify/shopify-cli/pull/1488): Update Theme-Check to 1.4
+* [#1488](https://github.com/Shopify/shopify-cli/pull/1488): Update theme-check to 1.4
 * [#1507](https://github.com/Shopify/shopify-cli/pull/1507): Limit the generated name for themes to 50 characters
 
 ## Version 2.3.0
-* [#1386](https://github.com/Shopify/shopify-cli/pull/1386): Update Theme-Check to 1.2
+* [#1386](https://github.com/Shopify/shopify-cli/pull/1386): Update theme-check to 1.2
 * [#1457](https://github.com/Shopify/shopify-cli/pull/1457): Fix uploading of binary theme files under Windows
 * [#1480](https://github.com/Shopify/shopify-cli/pull/1480): Fix customers pages not working with `theme serve`
 * [#1479](https://github.com/Shopify/shopify-cli/pull/1479): Add theme push & pull option to ignore files per command
