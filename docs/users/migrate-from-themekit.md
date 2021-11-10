@@ -1,4 +1,4 @@
-# Theme Kit Migration
+# Migrate from Theme Kit
 
 Shopify CLI is the recommended and officially supported tool for developing Themes and creating CI/CD workflows.
 
