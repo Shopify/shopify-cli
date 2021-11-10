@@ -59,7 +59,7 @@ module Utilities
         unless image_exists?(image_tag)
           puts "Rebuilding the Docker image..."
           _, err, stat = Open3.capture3(
-            "docker", "build", File.join(root_dir, "Tests.dockerfile"), "-t", image_tag
+            "docker", "build", "-f", File.join(root_dir, "Tests.dockerfile"), "-t", image_tag
           )
           raise Error, err unless stat.success?
         end
