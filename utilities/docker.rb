@@ -59,7 +59,7 @@ module Utilities
         unless image_exists?(image_tag)
           puts "Rebuilding the Docker image..."
           _, err, stat = Open3.capture3(
-            "docker", "build", root_dir, "-t", image_tag
+            "docker", "build", "-t", image_tag, "-f", File.join(root_dir, "Tests.dockerfile"), root_dir
           )
           raise Error, err unless stat.success?
         end
@@ -67,7 +67,7 @@ module Utilities
 
       def image_tag
         gemfile_lock_path = File.expand_path("./Gemfile.lock", root_dir)
-        dockerfile_path = File.expand_path("./Dockerfile", root_dir)
+        dockerfile_path = File.expand_path("./Tests.dockerfile", root_dir)
         fingerprintable_strings = [
           File.read(gemfile_lock_path),
           File.read(dockerfile_path),
