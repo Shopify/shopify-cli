@@ -79,10 +79,10 @@ module Utilities
         if ARGV.include?("--verbose")
           stat = Open3.popen3(*command) do |stdin, stdout, stderr, wait_thread|
             Thread.new do
-              stdout.each { |l| STDOUT.puts("#{docker_prefix.colorize(:cyan).bold} #{l}") } unless stdout.nil?
+              stdout.each { |l| STDOUT.puts("#{docker_prefix.colorize(:cyan).bold} #{l}") } unless stdout&.nil?
             end
             Thread.new do
-              stderr.each { |l| STDERR.puts("#{docker_prefix.colorize(:red).bold} #{l}") } unless stderr.nil?
+              stderr.each { |l| STDERR.puts("#{docker_prefix.colorize(:red).bold} #{l}") } unless stderr&.nil?
             end
             stdin.close
 

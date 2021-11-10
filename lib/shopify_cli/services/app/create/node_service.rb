@@ -37,21 +37,21 @@ module ShopifyCLI
             )
 
             api_client = if ShopifyCLI::Environment.acceptance_test?
-             {
-               "apiKey" => "public_api_key",
-               "apiSecretKeys" => [
-                 {
-                   "secret" => "api_secret_key",
-                 },
-               ],
-             }
+              {
+                "apiKey" => "public_api_key",
+                "apiSecretKeys" => [
+                  {
+                    "secret" => "api_secret_key",
+                  },
+                ],
+              }
             else
-             ShopifyCLI::Tasks::CreateApiClient.call(
-               context,
-               org_id: form.organization_id,
-               title: form.name,
-               type: form.type,
-               )
+              ShopifyCLI::Tasks::CreateApiClient.call(
+                context,
+                org_id: form.organization_id,
+                title: form.name,
+                type: form.type,
+              )
             end
 
             ShopifyCLI::Resources::EnvFile.new(
