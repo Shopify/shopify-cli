@@ -15,6 +15,22 @@ module ShopifyCLI
       @status_mock[:true].stubs(:success?).returns(true)
     end
 
+    def test_available_returns_true_if_git_available
+      @context.expects(:capture2e)
+        .with("git", "status")
+        .returns(["", @status_mock[:true]])
+
+      assert(ShopifyCLI::Git.available?(@context))
+    end
+
+    def test_available_returns_false_if_git_not_available
+      @context.expects(:capture2e)
+        .with("git", "status")
+        .returns(["", @status_mock[:false]])
+
+      refute(ShopifyCLI::Git.available?(@context))
+    end
+
     def test_branches_returns_master_if_no_branches_exist
       @context.expects(:capture2e)
         .with("git", "branch", "--list", "--format=%(refname:short)")
@@ -62,17 +78,28 @@ module ShopifyCLI
 
     def test_sha_shortcut
       fake_sha = ("c0ffee" * 6) + "dead"
+      ShopifyCLI::Git.expects(:available?)
+        .returns(true)
       in_repo do |git_dir|
         File.write(File.join(git_dir, "HEAD"), fake_sha)
-
         assert_equal(fake_sha, ShopifyCLI::Git.sha(dir: File.dirname(git_dir)))
       end
     end
 
     def test_head_sha
+      ShopifyCLI::Git.expects(:available?)
+        .returns(true)
       in_repo do |git_dir|
         empty_commit(git_dir: git_dir)
         refute_nil(ShopifyCLI::Git.sha(dir: File.dirname(git_dir)))
+      end
+    end
+
+    def test_sha_when_git_not_available
+      ShopifyCLI::Git.expects(:available?)
+        .returns(false)
+      in_repo do |git_dir|
+        assert_nil(ShopifyCLI::Git.sha(dir: File.dirname(git_dir)))
       end
     end
 
