@@ -2,12 +2,7 @@
 module TestHelpers
   module Partners
     def setup
-      ShopifyCLI::DB.set(partners_exchange_token: "faketoken")
-      super
-    end
-
-    def teardown
-      ShopifyCLI::DB.del(:partners_exchange_token)
+      ShopifyCLI::IdentityAuth.stubs(:fetch_or_auth_partners_token).returns("faketoken")
       super
     end
 
