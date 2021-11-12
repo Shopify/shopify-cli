@@ -3,9 +3,7 @@ module ShopifyCLI
     class App
       class Create
         class Node < ShopifyCLI::Command::AppSubCommand
-          unless ShopifyCLI::Environment.acceptance_test?
-            prerequisite_task :ensure_authenticated
-          end
+          prerequisite_task :ensure_authenticated
 
           options do |parser, flags|
             parser.on("--name=NAME") { |t| flags[:name] = t }
