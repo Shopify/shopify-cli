@@ -2,9 +2,7 @@
 module Rails
   class Command
     class Create < ShopifyCLI::Command::AppSubCommand
-      unless ShopifyCLI::Environment.acceptance_test?
-        prerequisite_task :ensure_authenticated
-      end
+      prerequisite_task :ensure_authenticated
 
       USER_AGENT_CODE = <<~USERAGENT
         module ShopifyAPI
