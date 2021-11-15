@@ -13,7 +13,7 @@ module Extension
       property  :resource_url, accepts: String
       property! :store, accepts: String
       property! :title, accepts: String
-      property! :tunnel_url, accepts: String
+      property :tunnel_url, accepts: String
       property! :type, accepts: String
 
       def self.call(*args)
