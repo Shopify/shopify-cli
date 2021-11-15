@@ -26,6 +26,8 @@ module ShopifyCLI
               verbose: verbose,
             })
 
+            return context.puts(self.class.help) if form.nil?
+
             check_node
             check_npm
             build(form.name)

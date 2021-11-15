@@ -12,6 +12,9 @@ module ShopifyCLI
         begin
           form.ask
           form
+        rescue ShopifyCLI::Abort => err
+          ctx.puts(err.message)
+          nil
         end
       end
 
