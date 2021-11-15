@@ -127,7 +127,7 @@ describe Script::Forms::Connect do
 
         describe("when the partners bypass flag is set") do
           before do
-            Script::Tasks::EnsureEnv.any_instance.stubs(:partner_proxy_bypass).returns(true)
+            Script::Forms::Connect.any_instance.stubs(:partner_proxy_bypass).returns(true)
           end
 
           it("should not call partners to query for apps") do
