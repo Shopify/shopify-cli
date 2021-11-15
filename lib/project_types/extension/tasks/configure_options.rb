@@ -13,7 +13,7 @@ module Extension
       private
 
       def configure_skip_build(attributes)
-        attributes[:options].merge!(skip_build: attributes[:identifier] == "theme_app_extension")
+        attributes[:options].merge!(skip_build: attributes[:identifier] == "theme_app_extension" || attributes[:identifier] == "analytics_extension")
       end
     end
   end
