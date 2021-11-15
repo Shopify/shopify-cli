@@ -16,10 +16,11 @@ module ShopifyCLI
       attr_reader :checksums
       attr_accessor :ignore_filter
 
-      def initialize(ctx, theme:, ignore_filter: nil)
+      def initialize(ctx, theme:, ignore_filter: nil, confirm: false)
         @ctx = ctx
         @theme = theme
         @ignore_filter = ignore_filter
+        @confirm = confirm
 
         # Queue of `Operation`s waiting to be picked up from a thread for processing.
         @queue = Queue.new
@@ -165,8 +166,10 @@ module ShopifyCLI
             .reject { |file| checksums.key?(file.relative_path.to_s) }.uniq
             .reject { |file| @ignore_filter&.ignore?(file) }
           missing_files.each do |file|
-            @ctx.debug("rm #{file.relative_path}")
-            file.delete
+            if confirm(@ctx.message("theme.syncer.confirm_delete", file.relative_path))
+              @ctx.debug("rm #{file.relative_path}")
+              file.delete
+            end
           end
         end
 
@@ -176,6 +179,11 @@ module ShopifyCLI
       end
 
       private
+
+      def confirm(question)
+        return unless @confirm
+        CLI::UI::Prompt.confirm(question, default: false)
+      end
 
       def enqueue(method, file)
         raise ArgumentError, "file required" unless file
@@ -193,6 +201,10 @@ module ShopifyCLI
         if [:update, :get].include?(method) && operation.file.exist? && !file_has_changed?(operation.file)
           @ctx.debug("skip #{operation}")
           return
+        end
+
+        if method == :get && !confirm(@ctx.message("theme.syncer.confirm_overwrite", file.relative_path))
+          return 
         end
 
         @pending << operation

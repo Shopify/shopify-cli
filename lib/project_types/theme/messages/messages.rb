@@ -166,6 +166,10 @@ module Theme
           done: "Theme pulled successfully",
           not_found: "{{x}} Theme #%s doesn't exist",
         },
+        syncer: {
+          confirm_delete: "Do you want to delete %s? The file was deleted remotely.",
+          confirm_overwrite: "Do you want to overwrite %s? The file was modified remotely.",
+        }
       },
     }.freeze
   end
