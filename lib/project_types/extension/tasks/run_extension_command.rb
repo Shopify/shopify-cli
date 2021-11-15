@@ -15,7 +15,7 @@ module Extension
 
       property! :command, accepts: SUPPORTED_COMMANDS
       property! :type, accepts: Models::DevelopmentServerRequirements::SUPPORTED_EXTENSION_TYPES
-      property :context, accepts: ShopifyCLI::Context
+      property! :context, accepts: ShopifyCLI::Context
       property :config_file_name, accepts: String
       property :port, accepts: Integer, default: 39351
       property :resource_url, accepts: String

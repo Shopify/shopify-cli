@@ -32,7 +32,8 @@ module Extension
             root_dir: "test",
             template: "javascript",
             type: "checkout_ui_extension",
-            command: "create"
+            command: "create",
+            context: context,
           ).call
         end
       end
@@ -62,7 +63,8 @@ module Extension
             root_dir: "test",
             template: "javascript",
             type: "checkout_ui_extension",
-            command: "build"
+            command: "build",
+            context: context,
           ).call
         end
       end
@@ -90,7 +92,8 @@ module Extension
             root_dir: "test",
             template: "javascript",
             type: "checkout_ui_extension",
-            command: "serve"
+            command: "serve",
+            context: context,
           ).call
         end
       end
@@ -115,7 +118,8 @@ module Extension
           template: "javascript",
           type: "checkout_ui_extension",
           command: "build",
-          config_file_name: "test"
+          config_file_name: "test",
+          context: context,
         ).call
       end
 
@@ -138,6 +142,10 @@ module Extension
           user: Models::ServerConfig::User.new,
           development: development
         )
+      end
+
+      def context
+        TestHelpers::FakeContext.new
       end
     end
   end

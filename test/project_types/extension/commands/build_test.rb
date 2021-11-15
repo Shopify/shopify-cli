@@ -47,7 +47,12 @@ module Extension
 
         Models::DevelopmentServerRequirements.expects(:supported?).with(type).returns(true)
 
-        command = Tasks::RunExtensionCommand.new(type: type.downcase, command: "build", config_file_name: config_file)
+        command = Tasks::RunExtensionCommand.new(
+          type: type.downcase,
+          command: "build",
+          config_file_name: config_file,
+          context: @context
+        )
         Tasks::RunExtensionCommand.expects(:new).returns(command) do |cmd|
           cmd.expects(:call)
         end
