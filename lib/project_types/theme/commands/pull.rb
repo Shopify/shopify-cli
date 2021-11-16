@@ -36,7 +36,12 @@ module Theme
         ignore_filter = ShopifyCLI::Theme::IgnoreFilter.from_path(root)
         ignore_filter.add_patterns(options.flags[:ignores]) if options.flags[:ignores]
 
-        syncer = ShopifyCLI::Theme::Syncer.new(@ctx, theme: theme, ignore_filter: ignore_filter, confirm: !options.flags[:force])
+        syncer = ShopifyCLI::Theme::Syncer.new(
+          @ctx,
+          theme: theme,
+          ignore_filter: ignore_filter,
+          confirm: !options.flags[:force]
+        )
         begin
           syncer.start_threads
           CLI::UI::Frame.open(@ctx.message("theme.pull.pulling", theme.name, theme.id, theme.shop)) do

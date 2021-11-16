@@ -203,9 +203,9 @@ module ShopifyCLI
           return
         end
 
-        # We need confirmation when overwriting a local file
+        # Get confirmation when overwriting a local file
         if method == :get && operation.file.exist? && !confirm(@ctx.message("theme.syncer.confirm_overwrite", operation.file.relative_path))
-          return 
+          return
         end
 
         @pending << operation
