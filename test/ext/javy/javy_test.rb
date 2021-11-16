@@ -47,17 +47,6 @@ class JavyTest < Minitest::Test
     assert_match("Unable to download javy", result.error.message)
   end
 
-  def test_install_raises_for_incorrect_binary
-    stub_executable_download
-
-    File.expects(:executable?).with(Javy::TARGET).returns(false)
-
-    result = install(PlatformHelper.macos_config)
-    assert_kind_of(ShopifyCLI::Result::Failure, result)
-    assert_kind_of Javy::InstallationError, result.error
-    assert_equal "Failed to install javy properly", result.error.message
-  end
-
   def test_build_runs_javy_command_on_unix
     stub_executable_download
     install(PlatformHelper.macos_config)

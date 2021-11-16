@@ -60,15 +60,8 @@ class Javy
 
       downloaded = asset.download(target: target)
       raise InstallationError.asset_not_found(platform: platform, version: version, url: asset.url) unless downloaded
-      raise InstallationError.installation_failed unless verify_download(target)
 
       true
-    end
-
-    private
-
-    def verify_download(target)
-      File.executable?(target)
     end
   end
 
@@ -76,10 +69,6 @@ class Javy
   class ExecutionError < Error; end
 
   class InstallationError < Error
-    def self.installation_failed
-      new("Failed to install javy properly")
-    end
-
     def self.cpu_unsupported
       new("Javy is not supported on this CPU")
     end
