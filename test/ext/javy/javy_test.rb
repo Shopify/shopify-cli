@@ -64,7 +64,7 @@ class JavyTest < Minitest::Test
     install(PlatformHelper.macos_config)
     run_build_and_expect_execution(dest: nil)
   end
-  
+
   def test_build_installs_javy_by_default
     stub_executable_download
 

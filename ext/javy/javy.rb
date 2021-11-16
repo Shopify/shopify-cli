@@ -47,13 +47,13 @@ module Javy
       delete_outdated_installations
       install unless Installer.installed?(target: target)
     end
-  
+
     def delete_outdated_installations
       installed_binaries
         .reject { |v| v == target }
         .each { |file| File.delete(file) }
     end
-  
+
     def installed_binaries
       Dir[File.join(BIN_FOLDER, "javy-*")]
     end
@@ -101,6 +101,8 @@ module Javy
 
   Asset = Struct.new(:platform, :version, :owner, :repository, :basename, keyword_init: true) do
     def download(target:)
+      FileUtils.mkdir_p(BIN_FOLDER)
+
       Dir.chdir(File.dirname(target)) do
         File.open(File.basename(target), "wb") do |target_file|
           decompress(url.open, target_file)
