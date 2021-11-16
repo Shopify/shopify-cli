@@ -52,10 +52,9 @@ class JavyTest < Minitest::Test
     install(PlatformHelper.macos_config)
 
     source = "src/index.js"
-    dest = "build/index.wasm"
 
-    CLI::Kit::System.expects(:capture2e).with(Javy::TARGET, source, "-o", dest, anything)
-    Javy.build(source: source, dest: dest)
+    CLI::Kit::System.expects(:capture2e).with(Javy::TARGET, source, anything)
+    Javy.build(source: source)
   end
 
   def test_build_runs_javy_command_on_windows
@@ -63,9 +62,19 @@ class JavyTest < Minitest::Test
     install(PlatformHelper.windows_config)
 
     source = "src/index.js"
+
+    CLI::Kit::System.expects(:capture2e).with(Javy::TARGET + ".exe", source, anything)
+    Javy.build(source: source)
+  end
+
+  def test_build_accepts_optional_dest_argument
+    stub_executable_download
+    install(PlatformHelper.macos_config)
+
+    source = "src/index.js"
     dest = "build/index.wasm"
 
-    CLI::Kit::System.expects(:capture2e).with(Javy::TARGET + ".exe", source, "-o", dest, anything)
+    CLI::Kit::System.expects(:capture2e).with(Javy::TARGET, source, "-o", dest, anything)
     Javy.build(source: source, dest: dest)
   end
 

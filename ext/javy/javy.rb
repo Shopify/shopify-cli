@@ -15,9 +15,12 @@ module Javy
         .call
     end
 
-    def build(source:, dest:)
+    def build(source:, dest: nil)
+      optional_args = []
+      optional_args += ["-o", dest] unless dest.nil?
+
       ShopifyCLI::Result
-        .wrap { exec(source, "-o", dest) }
+        .wrap { exec(source, *optional_args) }
         .call
     end
 
