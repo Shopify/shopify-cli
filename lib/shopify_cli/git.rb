@@ -10,6 +10,12 @@ module ShopifyCLI
         status.success?
       end
 
+      def ensure_git_available!(context: Context.new)
+        return if available?(context)
+        error_message = context.message("core.errors.git_not_found")
+        raise ShopifyCLI::Abort, error_message
+      end
+
       ##
       # will return the current sha of the cli repo
       #
@@ -80,6 +86,7 @@ module ShopifyCLI
       #   branches = ShopifyCLI::Git.branches(@ctx)
       #
       def branches(ctx)
+        ensure_git_available!
         output, status = ctx.capture2e("git", "branch", "--list", "--format=%(refname:short)")
         ctx.abort(ctx.message("core.git.error.no_branches_found")) unless status.success?
 
@@ -105,6 +112,7 @@ module ShopifyCLI
       #   ShopifyCLI::Git.init(@ctx)
       #
       def init(ctx)
+        ensure_git_available!
         output, status = ctx.capture2e("git", "status")
 
         unless status.success?
@@ -117,6 +125,7 @@ module ShopifyCLI
       end
 
       def sparse_checkout(repo, set, branch, ctx)
+        ensure_git_available!
         _, status = ctx.capture2e("git init")
         unless status.success?
           ctx.abort(ctx.message("core.git.error.repo_not_initiated"))

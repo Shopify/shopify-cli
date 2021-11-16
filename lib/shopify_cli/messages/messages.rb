@@ -270,6 +270,10 @@ module ShopifyCLI
               HELP
           },
         },
+        errors: {
+          git_not_found: "Couldn't find {{command:git}} in your environment."\
+          " Ensure that the tool is installed and the executable's directory is part of the PATH environment variable.",
+        },
         error_reporting: {
           unhandled_error: {
             message: "{{x}} {{red:An unexpected error occured.}}",

@@ -31,6 +31,19 @@ module ShopifyCLI
       refute(ShopifyCLI::Git.available?(@context))
     end
 
+    def test_ensure_git_available_raises_abort_when_git_is_not_available
+      # Given
+      @context.expects(:capture2e)
+        .with("git", "status")
+        .returns(["", @status_mock[:false]])
+      expected_message = @context.message("core.errors.git_not_found")
+
+      # Then
+      assert_raises ShopifyCLI::Abort, expected_message do
+        ShopifyCLI::Git.ensure_git_available!(context: @context)
+      end
+    end
+
     def test_branches_returns_master_if_no_branches_exist
       @context.expects(:capture2e)
         .with("git", "branch", "--list", "--format=%(refname:short)")
