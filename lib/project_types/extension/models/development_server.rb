@@ -33,8 +33,8 @@ module Extension
       end
 
       def build(server_config)
-        _, error, status = CLI::Kit::System.capture3(executable, "build", "-", stdin_data: server_config.to_yaml)
-        return if status.success?
+        output, error, status = CLI::Kit::System.capture3(executable, "build", "-", stdin_data: server_config.to_yaml)
+        return output if status.success?
         raise DevelopmentServerError, error
       end
 
