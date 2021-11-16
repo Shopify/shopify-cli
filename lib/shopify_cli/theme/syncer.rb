@@ -181,7 +181,7 @@ module ShopifyCLI
       private
 
       def confirm(question)
-        return true unless @confirm
+        return true unless @ctx.tty? && @confirm
         CLI::UI::Prompt.confirm(question, default: false)
       end
 
