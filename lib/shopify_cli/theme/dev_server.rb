@@ -24,11 +24,11 @@ module ShopifyCLI
       class << self
         attr_accessor :ctx
 
-        def start(ctx, root, http_bind: "127.0.0.1", port: 9292, poll: false)
+        def start(ctx, root, http_bind: "127.0.0.1", port: 9292, poll: false, confirm: false)
           @ctx = ctx
           theme = DevelopmentTheme.new(ctx, root: root)
           ignore_filter = IgnoreFilter.from_path(root)
-          @syncer = Syncer.new(ctx, theme: theme, ignore_filter: ignore_filter)
+          @syncer = Syncer.new(ctx, theme: theme, ignore_filter: ignore_filter, confirm: confirm)
           watcher = Watcher.new(ctx, theme: theme, syncer: @syncer, ignore_filter: ignore_filter, poll: poll)
 
           # Setup the middleware stack. Mimics Rack::Builder / config.ru, but in reverse order

@@ -10,12 +10,14 @@ module Theme
         parser.on("--host=HOST") { |host| flags[:host] = host.to_s }
         parser.on("--port=PORT") { |port| flags[:port] = port.to_i }
         parser.on("--poll") { flags[:poll] = true }
+        parser.on("-f", "--force") { flags[:force] = true }
       end
 
       def call(*)
         flags = options.flags.dup
-        host = flags[:host] || DEFAULT_HTTP_HOST
-        ShopifyCLI::Theme::DevServer.start(@ctx, ".", http_bind: host, **flags) do |syncer|
+        flags[:http_bind] = flags.delete(:host) || DEFAULT_HTTP_HOST
+        flags[:confirm] = !flags.delete(:force)
+        ShopifyCLI::Theme::DevServer.start(@ctx, ".", **flags) do |syncer|
           UI::SyncProgressBar.new(syncer).progress(:upload_theme!, delay_low_priority_files: true)
         end
       rescue ShopifyCLI::Theme::DevServer::AddressBindingError

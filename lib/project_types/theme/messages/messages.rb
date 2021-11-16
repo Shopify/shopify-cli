@@ -95,6 +95,7 @@ module Theme
               {{command:--port=PORT}} Local port to serve theme preview from
               {{command:--poll}}      Force polling to detect file changes
               {{command:--host=HOST}} Set which network interface the web server listens on. The default value is 127.0.0.1.
+              {{command:-f, --force}} Do not ask before deleting or overwriting local files.
           HELP
           serve: "Viewing theme…",
           open_fail: "Couldn't open the theme",
@@ -158,6 +159,8 @@ module Theme
             Options:
               {{command:-i, --themeid=THEMEID}} The Theme ID. Must be an existing theme on your store.
               {{command:-n, --nodelete}}        Runs the pull command without deleting local files.
+              {{command:-x, --ignore=PATTERN}}  Do not pull files matching a specific pattern.
+              {{command:-f, --force}}           Do not ask before deleting or overwriting local files.
 
             Run without options to select theme from a list.
           HELP

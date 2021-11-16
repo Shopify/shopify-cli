@@ -11,7 +11,7 @@ module Theme
         context = ShopifyCLI::Context.new
         ShopifyCLI::Theme::DevServer
           .expects(:start)
-          .with(context, ".", http_bind: Theme::Command::Serve::DEFAULT_HTTP_HOST)
+          .with(context, ".", http_bind: Theme::Command::Serve::DEFAULT_HTTP_HOST, confirm: true)
 
         Theme::Command::Serve.new(context).call
       end
@@ -20,7 +20,7 @@ module Theme
         context = ShopifyCLI::Context.new
         ShopifyCLI::Theme::DevServer
           .expects(:start)
-          .with(context, ".", http_bind: Theme::Command::Serve::DEFAULT_HTTP_HOST)
+          .with(context, ".", http_bind: Theme::Command::Serve::DEFAULT_HTTP_HOST, confirm: true)
           .raises(ShopifyCLI::Theme::DevServer::AddressBindingError)
 
         assert_raises ShopifyCLI::Abort do
@@ -28,19 +28,19 @@ module Theme
         end
       end
 
-      def test_can_specify_bind_address
+      def test_can_specify_host
         context = ShopifyCLI::Context.new
-        ShopifyCLI::Theme::DevServer.expects(:start).with(context, ".", http_bind: "0.0.0.0")
+        ShopifyCLI::Theme::DevServer.expects(:start).with(context, ".", http_bind: "0.0.0.0", confirm: true)
 
         command = Theme::Command::Serve.new(context)
-        command.options.flags[:http_bind] = "0.0.0.0"
+        command.options.flags[:host] = "0.0.0.0"
         command.call
       end
 
       def test_can_specify_port
         context = ShopifyCLI::Context.new
         ShopifyCLI::Theme::DevServer.expects(:start).with(context, ".",
-          http_bind: Theme::Command::Serve::DEFAULT_HTTP_HOST, port: 9293)
+          http_bind: Theme::Command::Serve::DEFAULT_HTTP_HOST, port: 9293, confirm: true)
 
         command = Theme::Command::Serve.new(context)
         command.options.flags[:port] = 9293
@@ -50,10 +50,20 @@ module Theme
       def test_can_specify_poll
         context = ShopifyCLI::Context.new
         ShopifyCLI::Theme::DevServer.expects(:start).with(context, ".",
-          http_bind: Theme::Command::Serve::DEFAULT_HTTP_HOST, poll: true)
+          http_bind: Theme::Command::Serve::DEFAULT_HTTP_HOST, poll: true, confirm: true)
 
         command = Theme::Command::Serve.new(context)
         command.options.flags[:poll] = true
+        command.call
+      end
+
+      def test_can_specify_force
+        context = ShopifyCLI::Context.new
+        ShopifyCLI::Theme::DevServer.expects(:start).with(context, ".",
+          http_bind: Theme::Command::Serve::DEFAULT_HTTP_HOST, confirm: false)
+
+        command = Theme::Command::Serve.new(context)
+        command.options.flags[:force] = true
         command.call
       end
     end
