@@ -764,7 +764,7 @@ module ShopifyCLI
             Anonymized reports will be sent to Shopify.
           MESSAGE
           turned_off_message: <<~MESSAGE,
-            Turn on automatic reporting later wtih {{command:%s reporting on}}.
+            Turn on automatic reporting later with {{command:%s reporting on}}.
           MESSAGE
         },
         whoami: {

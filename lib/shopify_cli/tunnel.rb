@@ -12,7 +12,7 @@ module ShopifyCLI
   class Tunnel
     extend SingleForwardable
 
-    def_delegators :new, :start, :stop, :auth, :stats, :urls, :running_on?
+    def_delegators :new, :start, :stop, :auth, :auth?, :stats, :urls, :running_on?
 
     class FetchUrlError < RuntimeError; end
     class NgrokError < RuntimeError; end
@@ -65,16 +65,12 @@ module ShopifyCLI
     #
     def start(ctx, port: PORT)
       install(ctx)
-      url, account, seconds_remaining = start_ngrok(ctx, port)
-      if account
+      if auth?
+        url, account = start_ngrok(ctx, port)
         ctx.puts(ctx.message("core.tunnel.start_with_account", url, account))
       else
-        if seconds_remaining <= 0
-          ctx.puts(ctx.message("core.tunnel.timed_out"))
-          url, _account, seconds_remaining = restart_ngrok(ctx, port)
-        end
+        url, _ = restart_ngrok(ctx, port)
         ctx.puts(ctx.message("core.tunnel.start", url))
-        ctx.puts(ctx.message("core.tunnel.will_timeout", seconds_to_hm(seconds_remaining)))
         ctx.puts(ctx.message("core.tunnel.signup_suggestion", ShopifyCLI::TOOL_NAME))
       end
       url
@@ -91,7 +87,17 @@ module ShopifyCLI
     #
     def auth(ctx, token)
       install(ctx)
-      ctx.system(File.join(ShopifyCLI.cache_dir, "ngrok"), "authtoken", token)
+      ctx.system(ngrok_path, "authtoken", token)
+    end
+
+    ##
+    # returns a boolean: if the user has a ngrok token to authenticate
+    #
+    def auth?
+      ngrok_config_path = File.join(Dir.home, ".ngrok2/ngrok.yml")
+      File.read(ngrok_config_path).include?("authtoken")
+    rescue Errno::ENOENT
+      false
     end
 
     ##
@@ -145,7 +151,7 @@ module ShopifyCLI
 
     def install(ctx)
       ngrok = "ngrok#{ctx.executable_file_extension}"
-      return if File.exist?(File.join(ShopifyCLI.cache_dir, ngrok))
+      return if File.exist?(ngrok_path)
       check_prereq_command(ctx, "curl")
       check_prereq_command(ctx, ctx.linux? ? "unzip" : "tar")
       spinner = CLI::UI::SpinGroup.new
@@ -165,7 +171,7 @@ module ShopifyCLI
       spinner.wait
 
       # final check to see if ngrok is accessible
-      unless File.exist?(File.join(ShopifyCLI.cache_dir, ngrok))
+      unless File.exist?(ngrok_path)
         ctx.abort(ctx.message("core.tunnel.error.ngrok", ngrok, ShopifyCLI.cache_dir))
       end
     end
@@ -177,8 +183,12 @@ module ShopifyCLI
       raise e.class, e.message
     end
 
+    def ngrok_path
+      File.join(ShopifyCLI.cache_dir, "ngrok")
+    end
+
     def ngrok_command(port)
-      "\"#{File.join(ShopifyCLI.cache_dir, "ngrok")}\" http -inspect=false -log=stdout -log-level=debug #{port}"
+      "\"#{ngrok_path}\" http -inspect=false -log=stdout -log-level=debug #{port}"
     end
 
     def seconds_to_hm(seconds)
@@ -188,14 +198,11 @@ module ShopifyCLI
     def start_ngrok(ctx, port)
       process = ShopifyCLI::ProcessSupervision.start(:ngrok, ngrok_command(port))
       log = fetch_url(ctx, process.log_path)
-      seconds_remaining = (process.time.to_i + log.timeout) - Time.now.to_i
-      [log.url, log.account, seconds_remaining]
+      [log.url, log.account]
     end
 
     def restart_ngrok(ctx, port)
-      unless ShopifyCLI::ProcessSupervision.stop(:ngrok)
-        ctx.abort(ctx.message("core.tunnel.error.stop"))
-      end
+      ShopifyCLI::ProcessSupervision.stop(:ngrok)
       start_ngrok(ctx, port)
     end
 
@@ -208,7 +215,7 @@ module ShopifyCLI
     class LogParser # :nodoc:
       TIMEOUT = 10
 
-      attr_reader :url, :account, :timeout
+      attr_reader :url, :account
 
       def initialize(log_path)
         @log_path = log_path
@@ -237,9 +244,8 @@ module ShopifyCLI
       end
 
       def parse_account
-        account, timeout, _ = @log.match(/AccountName:(.*)\s+SessionDuration:([\d]+) PlanName/)&.captures
+        account, _ = @log.match(/AccountName:(.*)\s+SessionDuration/)&.captures
         @account = account&.empty? ? nil : account
-        @timeout = timeout&.empty? ? 0 : timeout.to_i
       end
 
       def error
