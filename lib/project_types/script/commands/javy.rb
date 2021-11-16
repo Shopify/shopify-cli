@@ -18,9 +18,9 @@ module Script
         source = options.flags[:in_file]
         dest = options.flags[:out_file]
 
-        @ctx.abort(@ctx.message("script.javy.errors.invalid_arguments", ShopifyCLI::TOOL_NAME)) unless source && dest
+        @ctx.abort(@ctx.message("script.javy.errors.invalid_arguments", ShopifyCLI::TOOL_NAME)) unless source
 
-        ::Javy.build(source: source, dest: dest)
+        ::Javy.build(source: source, dest: dest).unwrap { |e| @ctx.abort(e.message) }
       end
 
       def self.help
