@@ -79,6 +79,14 @@ module Script
               raise Errors::MissingDependencyVersionError.new(tool, output.strip, min_required_version)
             end
           end
+
+          def compile
+            raise NotImplementedError
+          end
+
+          def bytecode
+            raise NotImplementedError
+          end
         end
       end
     end

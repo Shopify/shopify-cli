@@ -29,11 +29,6 @@ module Script
           end
 >>>>>>> 6d10b0dc (refactor task_runner)
 
-          def build
-            compile
-            bytecode
-          end
-
           def compiled_type
             "wasm"
           end
