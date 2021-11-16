@@ -17,17 +17,23 @@ class Javy
   end
 
   def install(**args)
-    Install.call(target: target, platform: platform, version: VERSION, **args)
+    ShopifyCLI::Result
+      .wrap { Install.call(target: target, platform: platform, version: VERSION, **args) }
+      .call
   end
 
   def build(source:, dest:)
-    exec(source, "-o", dest)
+    ShopifyCLI::Result
+      .wrap { exec(source, "-o", dest) }
+      .call
   end
 
   private
 
   def exec(*args, **kwargs)
-    system(target, *args, **kwargs)
+    out_and_err, stat = CLI::Kit::System.capture2e(target, *args, **kwargs)
+    raise ExecutionError, out_and_err unless stat.success?
+    true
   end
 
   def platform
@@ -54,8 +60,9 @@ class Javy
 
       downloaded = asset.download(target: target)
       raise InstallationError.asset_not_found(platform: platform, version: version, url: asset.url) unless downloaded
-
       raise InstallationError.installation_failed unless verify_download(target)
+
+      true
     end
 
     private
@@ -65,7 +72,10 @@ class Javy
     end
   end
 
-  class InstallationError < RuntimeError
+  class Error < RuntimeError; end
+  class ExecutionError < Error; end
+
+  class InstallationError < Error
     def self.installation_failed
       new("Failed to install javy properly")
     end

@@ -13,7 +13,7 @@ class JavyTest < Minitest::Test
   def test_install_existing_version_for_mac_os
     stub_executable_download
 
-    install(PlatformHelper.macos_config)
+    assert_kind_of(ShopifyCLI::Result::Success, install(PlatformHelper.macos_config))
 
     assert File.file?(Javy::TARGET)
     assert File.executable?(Javy::TARGET)
@@ -23,7 +23,7 @@ class JavyTest < Minitest::Test
     stub_executable_download
 
     expected_target = Javy::TARGET + ".exe"
-    install(PlatformHelper.windows_config)
+    assert_kind_of(ShopifyCLI::Result::Success, install(PlatformHelper.windows_config))
 
     assert File.file?(expected_target)
     assert File.executable?(expected_target)
@@ -32,7 +32,7 @@ class JavyTest < Minitest::Test
   def test_install_existing_version_for_linux
     stub_executable_download
 
-    install(PlatformHelper.linux_config)
+    assert_kind_of(ShopifyCLI::Result::Success, install(PlatformHelper.linux_config))
 
     assert File.file?(Javy::TARGET)
     assert File.executable?(Javy::TARGET)
@@ -41,9 +41,10 @@ class JavyTest < Minitest::Test
   def test_install_raises_for_http_errors_during_asset_download
     simulate_broken_asset_link
 
-    assert_raises(Javy::InstallationError) do
-      install(PlatformHelper.macos_config)
-    end
+    result = install(PlatformHelper.macos_config)
+    assert_kind_of(ShopifyCLI::Result::Failure, result)
+    assert_kind_of(Javy::InstallationError, result.error)
+    assert_match("Unable to download javy", result.error.message)
   end
 
   def test_install_raises_for_incorrect_binary
@@ -51,11 +52,10 @@ class JavyTest < Minitest::Test
 
     File.expects(:executable?).with(Javy::TARGET).returns(false)
 
-    error = assert_raises(Javy::InstallationError) do
-      install(PlatformHelper.macos_config)
-    end
-
-    assert_equal "Failed to install javy properly", error.message
+    result = install(PlatformHelper.macos_config)
+    assert_kind_of(ShopifyCLI::Result::Failure, result)
+    assert_kind_of Javy::InstallationError, result.error
+    assert_equal "Failed to install javy properly", result.error.message
   end
 
   def test_build_runs_javy_command_on_unix
@@ -65,7 +65,7 @@ class JavyTest < Minitest::Test
     source = "src/index.js"
     dest = "build/index.wasm"
 
-    Javy.any_instance.expects(:system).with(Javy::TARGET, source, "-o", dest, anything)
+    CLI::Kit::System.expects(:capture2e).with(Javy::TARGET, source, "-o", dest, anything)
     Javy.build(source: source, dest: dest)
   end
 
@@ -76,7 +76,7 @@ class JavyTest < Minitest::Test
     source = "src/index.js"
     dest = "build/index.wasm"
 
-    Javy.any_instance.expects(:system).with(Javy::TARGET + ".exe", source, "-o", dest, anything)
+    CLI::Kit::System.expects(:capture2e).with(Javy::TARGET + ".exe", source, "-o", dest, anything)
     Javy.build(source: source, dest: dest)
   end
 
@@ -110,7 +110,7 @@ class JavyTest < Minitest::Test
 
   def install(platform_config)
     stubbed_platform = Javy::Platform.new(platform_config)
-    Javy.any_instance.stubs(:platform).returns(stubbed_platform)
+    Javy::Platform.stubs(:new).returns(stubbed_platform)
     Javy.install
   end
 
