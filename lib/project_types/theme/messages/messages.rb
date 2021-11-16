@@ -114,7 +114,7 @@ module Theme
             {{green:%s}}
 
             Share this theme preview:
-            {{green:%s}}}
+            {{green:%s}}
 
             (Use Ctrl-C to stop)
           CUSTOMIZE_OR_PREVIEW
