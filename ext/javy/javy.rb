@@ -3,65 +3,55 @@ require "open-uri"
 require "zlib"
 require "open3"
 
-class Javy
+module Javy
   ROOT = __dir__
   TARGET = File.join(ROOT, "javy")
   VERSION = File.read(File.join(ROOT, "version")).strip
 
-  def self.install(**args)
-    new.install(**args)
-  end
-
-  def self.build(**args)
-    new.build(**args)
-  end
-
-  def install(**args)
-    ShopifyCLI::Result
-      .wrap { Install.call(target: target, platform: platform, version: VERSION, **args) }
-      .call
-  end
-
-  def build(source:, dest:)
-    ShopifyCLI::Result
-      .wrap { exec(source, "-o", dest) }
-      .call
-  end
-
-  private
-
-  def exec(*args, **kwargs)
-    out_and_err, stat = CLI::Kit::System.capture2e(target, *args, **kwargs)
-    raise ExecutionError, out_and_err unless stat.success?
-    true
-  end
-
-  def platform
-    @platform ||= Platform.new
-  end
-
-  def target
-    @target ||= platform.format_executable_path(TARGET)
-  end
-
-  class Install
-    def self.call(target:, platform:, version:, **args)
-      new.call(target: target, platform: platform, version: version, **args)
+  class << self
+    def install
+      ShopifyCLI::Result
+        .wrap { Install.call(target: target, platform: platform, version: VERSION) }
+        .call
     end
 
-    def call(target:, platform:, version:)
-      asset = Asset.new(
-        platform: platform,
-        version: version,
-        owner: "Shopify",
-        repository: "javy",
-        basename: "javy"
-      )
+    def build(source:, dest:)
+      ShopifyCLI::Result
+        .wrap { exec(source, "-o", dest) }
+        .call
+    end
 
-      downloaded = asset.download(target: target)
-      raise InstallationError.asset_not_found(platform: platform, version: version, url: asset.url) unless downloaded
+    private
 
+    def exec(*args, **kwargs)
+      out_and_err, stat = CLI::Kit::System.capture2e(target, *args, **kwargs)
+      raise ExecutionError, out_and_err unless stat.success?
       true
+    end
+
+    def platform
+      Platform.new
+    end
+
+    def target
+      platform.format_executable_path(TARGET)
+    end
+
+    module Install
+      def self.call(target:, platform:, version:)
+        asset = Asset.new(
+          platform: platform,
+          version: version,
+          owner: "Shopify",
+          repository: "javy",
+          basename: "javy"
+        )
+
+        downloaded = asset.download(target: target)
+        raise InstallationError.asset_not_found(platform: platform, version: version, url: asset.url) unless downloaded
+
+        true
+      end
     end
   end
 
