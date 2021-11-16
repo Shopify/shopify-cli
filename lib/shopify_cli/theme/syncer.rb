@@ -14,7 +14,7 @@ module ShopifyCLI
       API_VERSION = "unstable"
 
       attr_reader :checksums
-      attr_accessor :ignore_filter
+      attr_accessor :ignore_filter, :confirm
 
       def initialize(ctx, theme:, ignore_filter: nil, confirm: false)
         @ctx = ctx
@@ -181,7 +181,7 @@ module ShopifyCLI
       private
 
       def confirm(question)
-        return unless @confirm
+        return true unless @confirm
         CLI::UI::Prompt.confirm(question, default: false)
       end
 
@@ -203,7 +203,8 @@ module ShopifyCLI
           return
         end
 
-        if method == :get && !confirm(@ctx.message("theme.syncer.confirm_overwrite", file.relative_path))
+        # We need confirmation when overwriting a local file
+        if method == :get && operation.file.exist? && !confirm(@ctx.message("theme.syncer.confirm_overwrite", operation.file.relative_path))
           return 
         end
 
