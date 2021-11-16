@@ -9,8 +9,10 @@ describe Script::Layers::Infrastructure::Languages::AssemblyScriptTaskRunner do
   EXACT_NODE_VERSION = "v14.5.0"
   ABOVE_NODE_VERSION = "v14.6.0"
 
-  ABOVE_NPM_VERSION = "5.2.1"
+  BELOW_NPM_VERSION = "5.1.0"
   EXACT_NPM_VERSION = "5.2.0"
+
+  ABOVE_NPM_VERSION = "5.2.1"
 
   let(:ctx) { TestHelpers::FakeContext.new }
   let(:script_id) { "id" }
@@ -34,6 +36,15 @@ describe Script::Layers::Infrastructure::Languages::AssemblyScriptTaskRunner do
         build: "shopify-scripts-toolchain-as build --src src/shopify_main.ts -b script.wasm -- --lib node_modules",
       },
     }
+  end
+
+  def stub_tool_versions(npm:, node:)
+    ctx.stubs(:capture2e)
+      .with("npm", "--version")
+      .returns([npm, mock(success?: true)])
+    ctx.stubs(:capture2e)
+      .with("node", "--version")
+      .returns([node, mock(success?: true)])
   end
 
   describe ".build" do
@@ -211,22 +222,17 @@ out: "some non-json parsable error output", cmd: cmd
   describe ".install_dependencies" do
     subject { as_task_runner.install_dependencies }
 
-    def stub_tool_versions(npm:, node:)
-      ctx.stubs(:capture2e)
-        .with("npm", "--version")
-        .returns([npm, mock(success?: true)])
-      ctx.stubs(:capture2e)
-        .with("node", "--version")
-        .returns([node, mock(success?: true)])
+    def stub_npm_install(msg:, success:)
+      ctx.expects(:capture2e)
+        .with("npm install --no-audit --no-optional --legacy-peer-deps --loglevel error")
+        .returns([msg, mock(success?: success)])
     end
 
     describe "when npm version and node are above minimum" do
       describe "when npm packages fail to install" do
         it "should raise error" do
           stub_tool_versions(npm: EXACT_NPM_VERSION, node: EXACT_NODE_VERSION)
-          ctx.expects(:capture2e)
-            .with("npm install --no-audit --no-optional --legacy-peer-deps --loglevel error")
-            .returns([nil, mock(success?: false)])
+          stub_npm_install(msg: nil, success: false)
           assert_raises Script::Layers::Infrastructure::Errors::DependencyInstallationError do
             subject
           end
@@ -236,9 +242,7 @@ out: "some non-json parsable error output", cmd: cmd
       describe "when npm packages install" do
         it "should successfully install" do
           stub_tool_versions(npm: EXACT_NPM_VERSION, node: EXACT_NODE_VERSION)
-          ctx.expects(:capture2e)
-            .with("npm install --no-audit --no-optional --legacy-peer-deps --loglevel error")
-            .returns([nil, mock(success?: true)])
+          stub_npm_install(msg: nil, success: true)
           subject
         end
       end
@@ -246,15 +250,8 @@ out: "some non-json parsable error output", cmd: cmd
       describe "when capture2e fails" do
         it "should raise error" do
           msg = "error message"
-          ctx.expects(:capture2e)
-            .with("npm", "--version")
-            .returns([EXACT_NPM_VERSION, mock(success?: true)])
-          ctx.expects(:capture2e)
-            .with("node", "--version")
-            .returns([EXACT_NODE_VERSION, mock(success?: true)])
-          ctx.expects(:capture2e)
-            .with("npm install --no-audit --no-optional --legacy-peer-deps --loglevel error")
-            .returns([msg, mock(success?: false)])
+          stub_tool_versions(npm: EXACT_NPM_VERSION, node: EXACT_NODE_VERSION)
+          stub_npm_install(msg: msg, success: false)
           assert_raises Script::Layers::Infrastructure::Errors::DependencyInstallationError, msg do
             subject
           end
@@ -317,7 +314,7 @@ out: "some non-json parsable error output", cmd: cmd
       it "should raise error" do
         ctx.expects(:capture2e)
           .with("npm", "--version")
-          .returns([EXACT_NODE_VERSION, mock(success?: true)])
+          .returns([EXACT_NPM_VERSION, mock(success?: true)])
         ctx.expects(:capture2e)
           .with("node", "--version")
           .returns([nil, mock(success?: false)])
@@ -331,21 +328,12 @@ out: "some non-json parsable error output", cmd: cmd
       it "should raise error" do
         ctx.expects(:capture2e)
           .with("npm", "--version")
-          .returns([nil, mock(success?: false)])
+          .returns([BELOW_NPM_VERSION, mock(success?: true)])
 
-        assert_raises Script::Layers::Infrastructure::Errors::NoDependencyInstalledError do
+        assert_raises Script::Layers::Infrastructure::Errors::MissingDependencyVersionError do
           subject
         end
       end
-    end
-
-    def stub_tool_versions(npm:, node:)
-      ctx.stubs(:capture2e)
-        .with("npm", "--version")
-        .returns([npm, mock(success?: true)])
-      ctx.stubs(:capture2e)
-        .with("node", "--version")
-        .returns([node, mock(success?: true)])
     end
 
     describe "when npm version is above minimum" do

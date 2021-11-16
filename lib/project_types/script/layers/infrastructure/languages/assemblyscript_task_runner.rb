@@ -9,7 +9,7 @@ module Script
           METADATA_FILE = "build/metadata.json"
           SCRIPT_SDK_BUILD = "npm run build"
           MIN_NPM_VERSION = "5.2.0"
-
+          MIN_NODE_VERSION = "14.5.0"
           attr_reader :ctx, :script_name
 
           def initialize(ctx, script_name)
@@ -36,7 +36,7 @@ module Script
 
           def check_system_dependencies!
             check_tool_version!("npm", MIN_NPM_VERSION)
-            check_tool_version!("node", AssemblyScriptProjectCreator::MIN_NODE_VERSION)
+            check_tool_version!("node", MIN_NODE_VERSION)
           end
 
           def project_dependencies_installed?
