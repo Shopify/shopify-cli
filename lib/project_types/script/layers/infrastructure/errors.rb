@@ -56,8 +56,15 @@ module Script
           end
         end
 
+        class DeprecatedEPError < ScriptProjectError
+          attr_reader(:extension_point)
+          def initialize(extension_point)
+            super()
+            @extension_point = extension_point
+          end
+        end
+
         class DependencyInstallError < ScriptProjectError; end
-        class DeprecatedEPError < ScriptProjectError; end
         class EmptyResponseError < ScriptProjectError; end
         class InvalidResponseError < ScriptProjectError; end
         class ForbiddenError < ScriptProjectError; end

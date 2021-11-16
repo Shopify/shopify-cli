@@ -28,6 +28,7 @@ module Extension
           type: project.specification_identifier.downcase,
           command: "build",
           config_file_name: specification_handler.server_config_file,
+          context: @ctx,
         ).call
 
         @ctx.puts(@ctx.message("build.build_success_message"))
