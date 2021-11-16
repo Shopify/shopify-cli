@@ -4,7 +4,7 @@ require_relative "../../../../ext/javy/javy.rb"
 
 module Script
   class Command
-    class Javy < ShopifyCLI::SubCommand
+    class Javy < ShopifyCLI::Command::SubCommand
       hidden_feature
 
       prerequisite_task ensure_project_type: :script
