@@ -26,6 +26,8 @@ module ShopifyCLI
               verbose: verbose,
             })
 
+            raise ShopifyCLI::AbortSilent if form.nil?
+
             check_node
             check_npm
             build(form.name)

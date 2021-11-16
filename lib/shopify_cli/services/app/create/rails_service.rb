@@ -39,6 +39,8 @@ module ShopifyCLI
             form_options[:rails_opts] = rails_opts unless rails_opts.nil?
             form = form_data(form_options)
 
+            raise ShopifyCLI::AbortSilent if form.nil?
+
             ruby_version = Rails::Ruby.version(context)
             context.abort(context.message("core.app.create.rails.error.invalid_ruby_version")) unless
               ruby_version.satisfies?("~>2.5") || ruby_version.satisfies?("~>3.0.0")
