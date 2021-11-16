@@ -25,7 +25,7 @@ module ShopifyCLI
               type: type,
               verbose: verbose,
             })
-            return context.puts(self.class.help) if form.nil?
+            raise ShopifyCLI::AbortSilent if form.nil?
 
             check_php
             check_composer

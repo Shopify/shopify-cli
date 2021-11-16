@@ -26,7 +26,7 @@ module ShopifyCLI
               verbose: verbose,
             })
 
-            return context.puts(self.class.help) if form.nil?
+            raise ShopifyCLI::AbortSilent if form.nil?
 
             check_node
             check_npm
