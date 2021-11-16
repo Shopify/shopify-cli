@@ -176,6 +176,19 @@ module Script
           script_pushed: "{{v}} Script pushed to app (API key: %{api_key}).",
         },
 
+        javy: {
+          help: <<~HELP,
+            Compile the JavaScript code into WebAssembly.
+              Usage: {{command:%s script javy}}
+              Options:
+                {{command:--in}} The name of the JavaScript file that will be compiled.
+                {{command:--out}} The name of the file that the WebAssembly should be written to.
+          HELP
+          errors: {
+            invalid_arguments: "Javy was run with invalid arguments. Run {{command: %s script javy --help}} for more information.",
+          },
+        },
+
         project_deps: {
           none_required: "{{v}} None required",
           checking_with_npm: "Checking dependencies with npm",
