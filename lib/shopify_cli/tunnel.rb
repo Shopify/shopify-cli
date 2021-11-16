@@ -12,7 +12,7 @@ module ShopifyCLI
   class Tunnel
     extend SingleForwardable
 
-    def_delegators :new, :start, :stop, :auth, :auth?, :stats, :urls, :running_on?
+    def_delegators :new, :start, :stop, :auth, :authenticated?, :stats, :urls, :running_on?
 
     class FetchUrlError < RuntimeError; end
     class NgrokError < RuntimeError; end
@@ -65,7 +65,7 @@ module ShopifyCLI
     #
     def start(ctx, port: PORT)
       install(ctx)
-      if auth?
+      if authenticated?
         url, account = start_ngrok(ctx, port)
         ctx.puts(ctx.message("core.tunnel.start_with_account", url, account))
       else
@@ -93,11 +93,10 @@ module ShopifyCLI
     ##
     # returns a boolean: if the user has a ngrok token to authenticate
     #
-    def auth?
+    def authenticated?
       ngrok_config_path = File.join(Dir.home, ".ngrok2/ngrok.yml")
+      return false unless File.exist?(ngrok_config_path)
       File.read(ngrok_config_path).include?("authtoken")
-    rescue Errno::ENOENT
-      false
     end
 
     ##

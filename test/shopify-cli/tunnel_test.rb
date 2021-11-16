@@ -4,7 +4,7 @@ module ShopifyCLI
   class TunnelTest < MiniTest::Test
     def setup
       ShopifyCLI::Tunnel.any_instance.stubs(:install)
-      ShopifyCLI::Tunnel.any_instance.stubs(:auth?).returns(false)
+      ShopifyCLI::Tunnel.any_instance.stubs(:authenticated?).returns(false)
       super
     end
 
@@ -14,26 +14,29 @@ module ShopifyCLI
     end
 
     def test_auth_check_with_authtoken
-      ShopifyCLI::Tunnel.any_instance.unstub(:auth?)
+      ShopifyCLI::Tunnel.any_instance.unstub(:authenticated?)
+      File.stubs(:exist?).with(File.join(Dir.home, ".ngrok2/ngrok.yml")).returns(true)
       File.stubs(:read).with(File.join(Dir.home, ".ngrok2/ngrok.yml")).returns("authtoken: wadus")
 
-      assert ShopifyCLI::Tunnel.auth?
+      assert ShopifyCLI::Tunnel.authenticated?
     end
 
     def test_auth_check_without_authtoken
-      ShopifyCLI::Tunnel.any_instance.unstub(:auth?)
+      ShopifyCLI::Tunnel.any_instance.unstub(:authenticated?)
+      File.stubs(:exist?).with(File.join(Dir.home, ".ngrok2/ngrok.yml")).returns(true)
       File.stubs(:read).with(File.join(Dir.home, ".ngrok2/ngrok.yml")).returns("wadus")
-      refute ShopifyCLI::Tunnel.auth?
+      refute ShopifyCLI::Tunnel.authenticated?
     end
 
     def test_auth_check_without_config_file
-      ShopifyCLI::Tunnel.any_instance.unstub(:auth?)
-      refute ShopifyCLI::Tunnel.auth?
+      ShopifyCLI::Tunnel.any_instance.unstub(:authenticated?)
+      File.stubs(:exist?).with(File.join(Dir.home, ".ngrok2/ngrok.yml")).returns(false)
+      refute ShopifyCLI::Tunnel.authenticated?
     end
 
     def test_start_running_with_account_returns_url
       with_log do
-        ShopifyCLI::Tunnel.any_instance.stubs(:auth?).returns(true)
+        ShopifyCLI::Tunnel.any_instance.stubs(:authenticated?).returns(true)
         ShopifyCLI::ProcessSupervision.stubs(:running?).with(:ngrok).returns(:true)
         assert_equal "https://example.ngrok.io", ShopifyCLI::Tunnel.start(@context)
       end
@@ -76,7 +79,7 @@ module ShopifyCLI
 
     def test_start_displays_url_with_account
       with_log(fixture: "ngrok_account") do
-        ShopifyCLI::Tunnel.any_instance.stubs(:auth?).returns(true)
+        ShopifyCLI::Tunnel.any_instance.stubs(:authenticated?).returns(true)
         ShopifyCLI::ProcessSupervision.stubs(:running?).with(:ngrok).returns(false)
         ShopifyCLI::ProcessSupervision.expects(:start).with(:ngrok, ngrok_start_command)
           .returns(ShopifyCLI::ProcessSupervision.new(:ngrok, pid: 40000))
