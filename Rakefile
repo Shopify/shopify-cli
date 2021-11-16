@@ -146,6 +146,33 @@ namespace :extensions do
   end
 end
 
+namespace :scripts do
+  namespace :javy do
+    task :symlink do
+      source = Paths.root("..", "javy", "target", "release", "javy")
+      error("Unable to find javy executable: #{executable}") unless File.executable?(source)
+      target = Paths.javy("javy")
+      File.delete(target) if File.exist?(target)
+      File.symlink(source, target)
+    end
+
+    task :install do
+      require_relative Paths.javy("javy.rb")
+      Javy.install
+    end
+
+    module Paths
+      def self.javy(*args)
+        root("ext", "javy", *args)
+      end
+
+      def self.root(*args)
+        Pathname(File.dirname(__FILE__)).join(*args).to_s
+      end
+    end
+  end
+end
+
 def error(message, output: STDERR, code: 1)
   output.puts(message)
   exit(code)
