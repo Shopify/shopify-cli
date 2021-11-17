@@ -32,9 +32,10 @@ module Extension
 
           CLI::Kit::System.expects(:capture3)
             .with(@development_server.executable, "build", "-", stdin_data: server_config.to_yaml)
-            .returns(["", nil, mock(success?: true)])
+            .returns(["some output", nil, mock(success?: true)])
 
-          @development_server.build(server_config)
+          output = @development_server.build(server_config)
+          assert_equal "some output", output
         end
       end
 
