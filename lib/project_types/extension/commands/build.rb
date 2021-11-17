@@ -33,7 +33,7 @@ module Extension
 
         @ctx.puts(output)
       rescue => error
-        @ctx.abort(error.message)
+        raise ShopifyCLI::Abort, error.message
       end
 
       def run_legacy_flow
