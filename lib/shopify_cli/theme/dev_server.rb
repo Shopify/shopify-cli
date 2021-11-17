@@ -20,7 +20,6 @@ module ShopifyCLI
       # Errors
       Error = Class.new(StandardError)
       AddressBindingError = Class.new(Error)
-      BlankAbort = ShopifyCLI::Abort.new("")
 
       class << self
         attr_accessor :ctx
@@ -105,7 +104,7 @@ module ShopifyCLI
             @ctx.puts(@ctx.message("theme.serve.try_port_option"))
           end
 
-          raise BlankAbort
+          raise ShopifyCLI::AbortSilent
         end
 
         def open_frame(title, color:, &block)

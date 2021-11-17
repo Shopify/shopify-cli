@@ -124,7 +124,7 @@ module ShopifyCLI
           start_server_and_wait_sync_files
 
           @ctx.output_captured = true
-          io = capture_io_and_assert_raises(ShopifyCLI::Abort) do
+          io = capture_io_and_assert_raises(ShopifyCLI::AbortSilent) do
             DevServer.start(@ctx, "#{ShopifyCLI::ROOT}/test/fixtures/theme", port: @@port)
           end
           @ctx.output_captured = false
