@@ -36,7 +36,11 @@ module ShopifyCLI
           @app = LocalAssets.new(ctx, @app, theme: theme)
           @app = HotReload.new(ctx, @app, theme: theme, watcher: watcher, ignore_filter: ignore_filter)
           stopped = false
+<<<<<<< HEAD
           address = "http://#{host}:#{port}"
+=======
+          address = "http://#{http_bind}:#{port}"
+>>>>>>> 14978da6 (Fix `theme serve` failing when the port is already being used (#1722))
 
           theme.ensure_exists!
 
