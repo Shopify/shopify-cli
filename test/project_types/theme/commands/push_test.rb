@@ -21,7 +21,7 @@ module Theme
           editor_url: "https://test.myshopify.io/",
           live?: false,
         )
-        @syncer = stub("Syncer", delay_errors!: nil, report_errors!: nil)
+        @syncer = stub("Syncer", delay_errors!: nil, report_errors!: nil, has_any_error?: false)
         @ignore_filter = mock("IgnoreFilter")
       end
 
@@ -121,6 +121,37 @@ module Theme
         @command.options.flags[:theme_id] = 1234
         @command.options.flags[:json] = 1234
         @command.call([], "push")
+      end
+
+      def test_push_when_syncer_has_an_error
+        syncer = stub("Syncer", delay_errors!: nil, report_errors!: nil, has_any_error?: true)
+
+        ShopifyCLI::Theme::Theme.expects(:new)
+          .with(@ctx, root: ".", id: 1234)
+          .returns(@theme)
+
+        @theme.expects(:to_h).returns({})
+
+        ShopifyCLI::Theme::IgnoreFilter.expects(:from_path).with(".").returns(@ignore_filter)
+
+        ShopifyCLI::Theme::Syncer.expects(:new)
+          .with(@ctx, theme: @theme, ignore_filter: @ignore_filter)
+          .returns(syncer)
+
+        syncer.expects(:start_threads)
+        syncer.expects(:shutdown)
+
+        syncer.expects(:upload_theme!).with(delete: true)
+        @command.expects(:puts).with("{\"theme\":{}}")
+
+        @ctx.expects(:puts).never
+
+        @command.options.flags[:theme_id] = 1234
+        @command.options.flags[:json] = 1234
+
+        assert_raises(ShopifyCLI::AbortSilent) do
+          @command.call([], "push")
+        end
       end
 
       def test_push_and_publish
