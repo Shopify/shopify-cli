@@ -114,6 +114,7 @@ module Extension
         protected
 
         def argo
+          
           Features::Argo.new(
             git_template: specification.features.argo.git_template,
             renderer_package_name: specification.features.argo.renderer_package_name

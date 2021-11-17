@@ -12,6 +12,7 @@ module Extension
 
       class << self
         def supported?(type)
+          
           binary_installed? && type_supported?(type) && beta_enabled?
         end
 

@@ -5,5 +5,8 @@
     "**/.DS_Store": true
   },
   "editor.formatOnSave": false,
-  "workbench.colorTheme": "Dracula Soft",
+  "files.watcherExclude": {
+    "**/target": true
+  },
+  // "workbench.colorTheme": "Dracula Soft",
 }
