@@ -96,12 +96,36 @@ module Theme
               {{command:--poll}}      Force polling to detect file changes
               {{command:--host=HOST}} Set which network interface the web server listens on. The default value is 127.0.0.1.
           HELP
-          serve: "Viewing theme…",
+          viewing_theme: "Viewing theme…",
+          syncing_theme: "Syncing theme #%s on %s",
           open_fail: "Couldn't open the theme",
           error: {
             address_binding_error: "Couldn't bind to localhost."\
               " To serve your theme, set a different address with {{command:%s theme serve --host=<address>}}",
           },
+          serving: <<~SERVING,
+
+            Serving %s
+
+          SERVING
+          customize_or_preview: <<~CUSTOMIZE_OR_PREVIEW,
+
+            Customize this theme in the Online Store Editor:
+            {{green:%s}}
+
+            Share this theme preview:
+            {{green:%s}}
+
+            (Use Ctrl-C to stop)
+          CUSTOMIZE_OR_PREVIEW
+          ensure_user: <<~ENSURE_USER,
+            You are not authorized to edit themes on %s.
+            Make sure you are a user of that store, and allowed to edit themes.
+          ENSURE_USER
+          already_in_use_error: "Error",
+          address_already_in_use: "The address \"%s\" is already in use.",
+          try_this: "Try this",
+          try_port_option: "Use the --port=PORT option to serve the theme in a different port.",
         },
         check: {
           help: <<~HELP,

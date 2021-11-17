@@ -36,6 +36,7 @@ module ShopifyCLI
           @app = LocalAssets.new(ctx, @app, theme: theme)
           @app = HotReload.new(ctx, @app, theme: theme, watcher: watcher, ignore_filter: ignore_filter)
           stopped = false
+          address = "http://#{http_bind}:#{port}"
 
           theme.ensure_exists!
 
@@ -44,8 +45,8 @@ module ShopifyCLI
             stop
           end
 
-          CLI::UI::Frame.open(@ctx.message("theme.serve.serve")) do
-            ctx.print_task("Syncing theme ##{theme.id} on #{theme.shop}")
+          CLI::UI::Frame.open(@ctx.message("theme.serve.viewing_theme")) do
+            ctx.print_task(ctx.message("theme.serve.syncing_theme", theme.id, theme.shop))
             @syncer.start_threads
             if block_given?
               yield @syncer
@@ -55,18 +56,9 @@ module ShopifyCLI
 
             return if stopped
 
-            ctx.puts("")
-            ctx.puts("Serving #{theme.root}")
-            ctx.puts("")
-            ctx.open_url!("http://127.0.0.1:#{port}")
-            ctx.puts("")
-            ctx.puts("Customize this theme in the Online Store Editor:")
-            ctx.puts("{{green:#{theme.editor_url}}}")
-            ctx.puts("")
-            ctx.puts("Share this theme preview:")
-            ctx.puts("{{green:#{theme.preview_url}}}")
-            ctx.puts("")
-            ctx.puts("(Use Ctrl-C to stop)")
+            ctx.puts(ctx.message("theme.serve.serving", theme.root))
+            ctx.open_url!(address)
+            ctx.puts(ctx.message("theme.serve.customize_or_preview", theme.editor_url, theme.preview_url))
           end
 
           logger = if ctx.debug?
@@ -87,8 +79,9 @@ module ShopifyCLI
 
         rescue ShopifyCLI::API::APIRequestForbiddenError,
                ShopifyCLI::API::APIRequestUnauthorizedError
-          @ctx.abort("You are not authorized to edit themes on #{theme.shop}.\n" \
-                     "Make sure you are a user of that store, and allowed to edit themes.")
+          raise ShopifyCLI::Abort, @ctx.message("theme.serve.ensure_user", theme.shop)
+        rescue Errno::EADDRINUSE
+          abort_address_already_in_use(address)
         rescue Errno::EADDRNOTAVAIL
           raise AddressBindingError, "Error binding to the address #{http_bind}."
         end
@@ -98,6 +91,24 @@ module ShopifyCLI
           @app.close
           @syncer.shutdown
           WebServer.shutdown
+        end
+
+        private
+
+        def abort_address_already_in_use(address)
+          open_frame(@ctx.message("theme.serve.already_in_use_error"), color: :red) do
+            @ctx.puts(@ctx.message("theme.serve.address_already_in_use", address))
+          end
+
+          open_frame(@ctx.message("theme.serve.try_this"), color: :green) do
+            @ctx.puts(@ctx.message("theme.serve.try_port_option"))
+          end
+
+          raise ShopifyCLI::AbortSilent
+        end
+
+        def open_frame(title, color:, &block)
+          CLI::UI::Frame.open(title, color: CLI::UI.resolve_color(color), timing: false, &block)
         end
       end
     end
