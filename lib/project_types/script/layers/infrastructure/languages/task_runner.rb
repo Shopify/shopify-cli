@@ -46,10 +46,6 @@ module Script
             raise Errors::DependencyInstallationError, output unless status.success?
           end
 
-          def compiled_type
-            "wasm"
-          end
-
           def metadata
             unless @ctx.file_exist?(METADATA_FILE)
               msg = @ctx.message("script.error.metadata_not_found_cause", METADATA_FILE)

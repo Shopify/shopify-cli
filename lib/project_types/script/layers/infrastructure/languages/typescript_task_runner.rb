@@ -56,6 +56,21 @@ module Script
 
           private
 
+          def compile
+            check_compilation_dependencies!
+            CommandRunner.new(ctx: ctx).call(SCRIPT_SDK_BUILD)
+            CommandRunner.new(ctx: ctx).call(GEN_METADATA)
+          end
+
+          def bytecode
+            raise Errors::WebAssemblyBinaryNotFoundError unless ctx.file_exist?(BYTECODE_FILE)
+
+            contents = ctx.binread(BYTECODE_FILE)
+            ctx.rm(BYTECODE_FILE)
+
+            contents
+          end
+
           def library_version_from_npm_list_error_output(error, library_name)
             # npm list can return a failure status code, even when returning the correct data.
             # This causes the CommandRunner to throw a SystemCallFailure error that contains the data.
@@ -74,12 +89,6 @@ module Script
             end
           end
 
-          def compile
-            check_compilation_dependencies!
-            CommandRunner.new(ctx: ctx).call(SCRIPT_SDK_BUILD)
-            CommandRunner.new(ctx: ctx).call(GEN_METADATA)
-          end
-
           def check_compilation_dependencies!
             pkg = JSON.parse(File.read("package.json"))
             build_script = pkg.dig("scripts", "build")
@@ -90,15 +99,6 @@ module Script
             unless build_script.start_with?("javy")
               raise Errors::InvalidBuildScriptError, "Invalid build script"
             end
-          end
-
-          def bytecode
-            raise Errors::WebAssemblyBinaryNotFoundError unless ctx.file_exist?(BYTECODE_FILE)
-
-            contents = ctx.binread(BYTECODE_FILE)
-            ctx.rm(BYTECODE_FILE)
-
-            contents
           end
         end
       end

@@ -29,10 +29,6 @@ module Script
           end
 >>>>>>> 6d10b0dc (refactor task_runner)
 
-          def compiled_type
-            "wasm"
-          end
-
           def install_dependencies
             check_system_dependencies!
 
@@ -40,14 +36,14 @@ module Script
             raise Errors::DependencyInstallationError, output unless status.success?
           end
 
-          def check_system_dependencies!
-            check_tool_version!("npm", MIN_NPM_VERSION)
-            check_tool_version!("node", MIN_NODE_VERSION)
-          end
-
           def project_dependencies_installed?
             # Assuming if node_modules folder exist at root of script folder, all deps are installed
             ctx.dir_exist?("node_modules")
+          end
+
+          def check_system_dependencies!
+            check_tool_version!("npm", MIN_NPM_VERSION)
+            check_tool_version!("node", MIN_NODE_VERSION)
           end
 
           def metadata
@@ -60,12 +56,18 @@ module Script
             Domain::Metadata.create_from_json(@ctx, raw_contents)
           end
 
-          def project_dependencies_installed?
-            # Assuming if node_modules folder exist at root of script folder, all deps are installed
-            ctx.dir_exist?("node_modules")
+          def library_version(library_name)
+            output = JSON.parse(CommandRunner.new(ctx: ctx).call("npm -s list --json"))
+            library_version_from_npm_list(output, library_name)
+          rescue Errors::SystemCallFailureError => error
+            library_version_from_npm_list_error_output(error, library_name)
           end
 
           protected
+
+          def compiled_type
+            "wasm"
+          end
 
           def required_tool_versions
             [
@@ -85,6 +87,20 @@ module Script
 
           private
 
+          def compile
+            check_compilation_dependencies!
+            CommandRunner.new(ctx: ctx).call(SCRIPT_SDK_BUILD)
+          end
+
+          def bytecode
+            raise Errors::WebAssemblyBinaryNotFoundError unless ctx.file_exist?(BYTECODE_FILE)
+
+            contents = ctx.binread(BYTECODE_FILE)
+            ctx.rm(BYTECODE_FILE)
+
+            contents
+          end
+
           def library_version_from_npm_list_error_output(error, library_name)
             # npm list can return a failure status code, even when returning the correct data.
             # This causes the CommandRunner to throw a SystemCallFailure error that contains the data.
@@ -103,11 +119,6 @@ module Script
             end
           end
 
-          def compile
-            check_compilation_dependencies!
-            CommandRunner.new(ctx: ctx).call(SCRIPT_SDK_BUILD)
-          end
-
           def check_compilation_dependencies!
             pkg = JSON.parse(File.read("package.json"))
             build_script = pkg.dig("scripts", "build")
@@ -118,15 +129,6 @@ module Script
             unless build_script.start_with?("shopify-scripts")
               raise Errors::InvalidBuildScriptError, "Invalid build script"
             end
-          end
-
-          def bytecode
-            raise Errors::WebAssemblyBinaryNotFoundError unless ctx.file_exist?(BYTECODE_FILE)
-
-            contents = ctx.binread(BYTECODE_FILE)
-            ctx.rm(BYTECODE_FILE)
-
-            contents
           end
         end
       end
