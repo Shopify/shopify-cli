@@ -24,7 +24,7 @@ module ShopifyCLI
       class << self
         attr_accessor :ctx
 
-        def start(ctx, root, http_bind: "127.0.0.1", port: 9292, poll: false)
+        def start(ctx, root, host: "127.0.0.1", port: 9292, poll: false)
           @ctx = ctx
           theme = DevelopmentTheme.new(ctx, root: root)
           ignore_filter = IgnoreFilter.from_path(root)
@@ -36,7 +36,7 @@ module ShopifyCLI
           @app = LocalAssets.new(ctx, @app, theme: theme)
           @app = HotReload.new(ctx, @app, theme: theme, watcher: watcher, ignore_filter: ignore_filter)
           stopped = false
-          address = "http://#{http_bind}:#{port}"
+          address = "http://#{host}:#{port}"
 
           theme.ensure_exists!
 
@@ -70,7 +70,7 @@ module ShopifyCLI
           watcher.start
           WebServer.run(
             @app,
-            BindAddress: http_bind,
+            BindAddress: host,
             Port: port,
             Logger: logger,
             AccessLog: [],
@@ -83,7 +83,7 @@ module ShopifyCLI
         rescue Errno::EADDRINUSE
           abort_address_already_in_use(address)
         rescue Errno::EADDRNOTAVAIL
-          raise AddressBindingError, "Error binding to the address #{http_bind}."
+          raise AddressBindingError, "Error binding to the address #{host}."
         end
 
         def stop
