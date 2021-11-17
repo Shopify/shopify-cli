@@ -7,9 +7,7 @@ module Script
     module Application
       class ConnectApp
         class << self
-
           def call(ctx:)
-
             script_project_repo = Layers::Infrastructure::ScriptProjectRepository.new(ctx: ctx)
             script_project = script_project_repo.get
             return false if env_valid?(script_project: script_project)
@@ -18,7 +16,7 @@ module Script
               ShopifyCLI::Shopifolk.act_as_shopify_organization
             end
 
-            org = 
+            org =
               if partner_proxy_bypass
                 stubbed_org
               else
@@ -27,14 +25,14 @@ module Script
               end
 
             app = Forms::AskApp.ask(
-              ctx, 
+              ctx,
               {
                 apps: org["apps"],
-                acting_as_shopify_organization: ShopifyCLI::Shopifolk.acting_as_shopify_organization?
+                acting_as_shopify_organization: ShopifyCLI::Shopifolk.acting_as_shopify_organization?,
               },
               nil
             ).app
-            
+
             script_service = Layers::Infrastructure::ServiceLocator.script_service(ctx: ctx, api_key: app["apiKey"])
             extension_point_type = script_project.extension_point_type
             scripts = script_service.get_app_scripts(extension_point_type: extension_point_type)
@@ -47,7 +45,7 @@ module Script
               uuid: uuid
             )
 
-            return true
+            true
           end
 
           private
@@ -73,7 +71,6 @@ module Script
               ],
             }
           end
-
         end
       end
     end

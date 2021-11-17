@@ -55,7 +55,5 @@ describe Script::Forms::AskOrg do
         end
       end
     end
-
   end
-
 end

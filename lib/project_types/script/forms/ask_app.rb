@@ -10,7 +10,7 @@ module Script
         acting_as_shopify_organization = @xargs[:acting_as_shopify_organization]
 
         unless acting_as_shopify_organization
-          apps = apps.select { |app| app["appType"] == "custom" }  
+          apps = apps.select { |app| app["appType"] == "custom" }
         end
 
         if apps.count == 1
@@ -27,7 +27,6 @@ module Script
           raise Errors::NoExistingAppsError
         end
       end
-
     end
   end
 end

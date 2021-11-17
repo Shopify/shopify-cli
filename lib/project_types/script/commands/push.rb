@@ -10,7 +10,7 @@ module Script
       end
 
       def call(_args, _name)
-        fresh_env = Layers::Application::ConnectApp.call(ctx:@ctx)
+        fresh_env = Layers::Application::ConnectApp.call(ctx: @ctx)
 
         force = options.flags.key?(:force) || !!fresh_env
 
