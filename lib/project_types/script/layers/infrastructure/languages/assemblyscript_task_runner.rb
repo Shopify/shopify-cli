@@ -32,8 +32,8 @@ module Script
           def install_dependencies
             check_system_dependencies!
 
-            output, status = ctx.capture2e("npm install --no-audit --no-optional --legacy-peer-deps --loglevel error")
-            raise Errors::DependencyInstallationError, output unless status.success?
+            stdout, stderr, status = ctx.capture3(self.class::INSTALL_COMMAND)
+            raise Errors::DependencyInstallationError, stderr unless status.success?
           end
 
           def project_dependencies_installed?
@@ -44,16 +44,6 @@ module Script
           def check_system_dependencies!
             check_tool_version!("npm", MIN_NPM_VERSION)
             check_tool_version!("node", MIN_NODE_VERSION)
-          end
-
-          def metadata
-            unless @ctx.file_exist?(METADATA_FILE)
-              msg = @ctx.message("script.error.metadata_not_found_cause", METADATA_FILE)
-              raise Domain::Errors::MetadataNotFoundError, msg
-            end
-
-            raw_contents = File.read(METADATA_FILE)
-            Domain::Metadata.create_from_json(@ctx, raw_contents)
           end
 
           def library_version(library_name)
