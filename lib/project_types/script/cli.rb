@@ -21,7 +21,7 @@ module Script
     autoload :AskOrg, Project.project_filepath("forms/ask_org")
     autoload :AskApp, Project.project_filepath("forms/ask_app")
     autoload :AskScriptUuid, Project.project_filepath("forms/ask_script_uuid")
-    autoload :AskWantsToRunAgainstShopifyOrg, Project.project_filepath("forms/ask_wants_to_run_against_shopify_org")
+    autoload :RunAgainstShopifyOrg, Project.project_filepath("forms/run_against_shopify_org")
     autoload :Create, Project.project_filepath("forms/create")
     autoload :ScriptForm, Project.project_filepath("forms/script_form")
   end

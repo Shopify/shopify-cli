@@ -2,7 +2,7 @@
 
 module Script
   module Forms
-    class AskWantsToRunAgainstShopifyOrg < ShopifyCLI::Form
+    class RunAgainstShopifyOrg < ShopifyCLI::Form
       attr_reader :response
       def ask
         @ctx.puts(@ctx.message("core.tasks.select_org_and_shop.identified_as_shopify"))

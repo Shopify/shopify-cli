@@ -12,21 +12,9 @@ module Script
         @uuid = "uuid"
         @force = true
         @secret = "shh"
-        @env = ShopifyCLI::Resources::EnvFile.new(api_key: @api_key, secret: @secret, extra: { "UUID" => @uuid })
         @script_project_repo = TestHelpers::FakeScriptProjectRepository.new
-        @script_project_repo.create(
-          language: "assemblyscript",
-          extension_point_type: "discount",
-          script_name: "script_name",
-          env: @env
-        )
-        @app = {
-          "title" => "test_app",
-          "apiKey" => @api_key,
-          "apiSecretKeys" => [{ "secret" => @secret }],
-          "appType" => "custom",
-        }
-        Layers::Application::ConnectApp.stubs(:call).returns
+        @script_project_repo.stubs(:get).returns(stub(api_key: @api_key))
+        Layers::Application::ConnectApp.stubs(:call).returns(false)
 
         Script::Layers::Infrastructure::ScriptProjectRepository.stubs(:new).returns(@script_project_repo)
         ShopifyCLI::Tasks::EnsureProjectType.stubs(:call).with(@context, :script).returns(true)

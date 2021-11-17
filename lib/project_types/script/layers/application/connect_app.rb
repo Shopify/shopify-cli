@@ -10,9 +10,9 @@ module Script
           def call(ctx:)
             script_project_repo = Layers::Infrastructure::ScriptProjectRepository.new(ctx: ctx)
             script_project = script_project_repo.get
-            return false if env_valid?(script_project: script_project)
+            return false if script_project.env_valid?
 
-            if ShopifyCLI::Shopifolk.check && Forms::AskWantsToRunAgainstShopifyOrg.ask(ctx, nil, nil).response
+            if ShopifyCLI::Shopifolk.check && Forms::RunAgainstShopifyOrg.ask(ctx, nil, nil).response
               ShopifyCLI::Shopifolk.act_as_shopify_organization
             end
 
@@ -49,11 +49,6 @@ module Script
           end
 
           private
-
-          def env_valid?(script_project:)
-            return true if script_project.api_key && script_project.api_secret && script_project.uuid_defined?
-            false
-          end
 
           def partner_proxy_bypass
             !ENV["BYPASS_PARTNERS_PROXY"].nil?

@@ -58,9 +58,8 @@ describe Script::Forms::AskApp do
         it("selects the app by default") do
           selected_app_msg = context.message("script.application.ensure_env.app", app_title)
           context.expects(:puts).with(selected_app_msg)
-          context.stubs(:puts).with(Not(equals(selected_app_msg)))
 
-          subject
+          assert_equal apps.first, subject.app
         end
       end
 
@@ -73,7 +72,7 @@ describe Script::Forms::AskApp do
             .with(context.message("script.application.ensure_env.app_select"))
             .returns(apps.last)
 
-          subject
+          assert_equal apps.last, subject.app
         end
       end
     end

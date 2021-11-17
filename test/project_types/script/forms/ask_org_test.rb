@@ -37,9 +37,8 @@ describe Script::Forms::AskOrg do
         it("selects the org by default") do
           selected_org_msg = context.message("script.application.ensure_env.organization", org_name, org_id)
           context.expects(:puts).with(selected_org_msg)
-          context.stubs(:puts).with(Not(equals(selected_org_msg)))
 
-          subject
+          assert_equal orgs.first, subject.org
         end
       end
 
@@ -50,8 +49,9 @@ describe Script::Forms::AskOrg do
           CLI::UI::Prompt
             .expects(:ask)
             .with(context.message("script.application.ensure_env.organization_select"))
+            .returns(orgs.last)
 
-          subject
+          assert_equal orgs.last, subject.org
         end
       end
     end

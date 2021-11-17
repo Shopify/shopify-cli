@@ -15,7 +15,7 @@ describe Script::Forms::AskScriptUuid do
     end
 
     describe("when asking script connection") do
-      describe("when number of scripts == 0") do
+      describe("when there are no scripts") do
         it("should not prompt the user to confirm if they want to replace existing scripts") do
           CLI::UI::Prompt.expects(:confirm).never
           CLI::UI::Prompt.expects(:ask).never
@@ -23,7 +23,7 @@ describe Script::Forms::AskScriptUuid do
         end
       end
 
-      describe("when number of scripts > 0") do
+      describe("when a script exists") do
         let(:new_script_uuid) { "new_script_uuid" }
         let(:existing_scripts) { [{ "title" => "script_title", "uuid" => new_script_uuid }] }
 
@@ -41,13 +41,11 @@ describe Script::Forms::AskScriptUuid do
               .with(context.message("script.application.ensure_env.ask_which_script_to_connect_to"))
               .returns(selected_uuid)
 
-            subject
+            assert_equal selected_uuid, subject.uuid
           end
         end
 
         describe("when user does not want to connect to script") do
-          let(:selected_uuid) { nil }
-
           it("should not prompt the user to select a script") do
             CLI::UI::Prompt
               .expects(:confirm)
@@ -59,7 +57,7 @@ describe Script::Forms::AskScriptUuid do
               .with(context.message("script.application.ensure_env.ask_which_script_to_connect_to"))
               .never
 
-            subject
+            assert_nil subject.uuid
           end
         end
       end
