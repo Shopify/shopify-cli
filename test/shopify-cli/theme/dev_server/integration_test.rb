@@ -64,15 +64,7 @@ module ShopifyCLI
         end
 
         def test_uploads_files_on_boot
-          # Get the checksums
-          stub_request(:any, ASSETS_API_URL)
-            .to_return(status: 200, body: "{}")
-          stub_request(:any, THEMES_API_URL)
-            .to_return(status: 200, body: "{}")
-
-          start_server
-          # Wait for server to start & sync the files
-          get("/assets/bogus.css")
+          start_server_and_wait_sync_files
 
           # Should upload all theme files except the ignored files
           ignored_files = [
@@ -99,15 +91,7 @@ module ShopifyCLI
         end
 
         def test_uploads_files_on_modification
-          # Get the checksums
-          stub_request(:any, ASSETS_API_URL)
-            .to_return(status: 200, body: "{}")
-          stub_request(:any, THEMES_API_URL)
-            .to_return(status: 200, body: "{}")
-
-          start_server
-          # Wait for server to start & sync the files
-          get("/assets/bogus.css")
+          start_server_and_wait_sync_files
 
           theme_root = "#{ShopifyCLI::ROOT}/test/fixtures/theme"
 
@@ -131,26 +115,28 @@ module ShopifyCLI
         end
 
         def test_serve_assets_locally
-          stub_request(:any, ASSETS_API_URL)
-            .to_return(status: 200, body: "{}")
-          stub_request(:any, THEMES_API_URL)
-            .to_return(status: 200, body: "{}")
-
-          start_server
-          response = get("/assets/theme.css")
+          response = start_server_and_wait_sync_files
 
           refute_server_errors(response)
         end
 
-        def test_streams_hot_reload_events
-          stub_request(:any, ASSETS_API_URL)
-            .to_return(status: 200, body: "{}")
-          stub_request(:any, THEMES_API_URL)
-            .to_return(status: 200, body: "{}")
+        def test_address_already_in_use
+          start_server_and_wait_sync_files
 
-          start_server
-          # Wait for server to start
-          get("/assets/theme.css")
+          @ctx.output_captured = true
+          io = capture_io_and_assert_raises(ShopifyCLI::AbortSilent) do
+            DevServer.start(@ctx, "#{ShopifyCLI::ROOT}/test/fixtures/theme", port: @@port)
+          end
+          @ctx.output_captured = false
+
+          io_messages = io.join
+
+          assert_match @ctx.message("theme.serve.address_already_in_use", "http://127.0.0.1:#{@@port}"), io_messages
+          assert_match @ctx.message("theme.serve.try_port_option"), io_messages
+        end
+
+        def test_streams_hot_reload_events
+          start_server_and_wait_sync_files
 
           # Send the SSE request
           socket = TCPSocket.new("127.0.0.1", @@port)
@@ -182,6 +168,18 @@ module ShopifyCLI
             puts e.message
             puts e.backtrace
           end
+        end
+
+        def start_server_and_wait_sync_files
+          # Get the checksums
+          stub_request(:any, ASSETS_API_URL)
+            .to_return(status: 200, body: "{}")
+          stub_request(:any, THEMES_API_URL)
+            .to_return(status: 200, body: "{}")
+
+          start_server
+          # Wait for server to start & sync the files
+          get("/assets/bogus.css")
         end
 
         def refute_server_errors(response)
