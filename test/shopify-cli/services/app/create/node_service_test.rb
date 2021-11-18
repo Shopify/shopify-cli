@@ -216,6 +216,66 @@ module ShopifyCLI
             FileUtils.rm_r("test-app")
           end
 
+          def test_can_create_new_marketplace_app
+            create_test_app_directory_structure
+
+            @context.stubs(:uname).returns("Mac")
+            expect_node_npm_check_commands
+            @context.expects(:capture2).with("npm config get @shopify:registry").returns(
+              ["https://registry.yarnpkg.com", nil]
+            )
+            ShopifyCLI::Git.expects(:clone).with("https://github.com/Shopify/shopify-app-node.git", "test-app")
+            @context.expects(:capture2e).with(
+              "git",
+              "-C",
+              File.join(@context.root, "test-app"),
+              "checkout",
+              "922ec7f8a62d7601e2caa27d34e5b803d257cef4"
+            )
+            ShopifyCLI::JsDeps.expects(:install)
+
+            stub_partner_req(
+              "create_app",
+              variables: {
+                org: 42,
+                title: "test-app",
+                type: "public",
+                app_url: ShopifyCLI::Tasks::CreateApiClient::DEFAULT_APP_URL,
+                redir: ["http://127.0.0.1:3456"],
+              },
+              resp: {
+                'data': {
+                  'appCreate': {
+                    'app': {
+                      'apiKey': "newapikey",
+                      'apiSecretKeys': [{ 'secret': "secret" }],
+                    },
+                  },
+                },
+              }
+            )
+
+            NodeService.call(
+              context: @context,
+              name: "test-app",
+              type: "public",
+              organization_id: "42",
+              store_domain: "testshop.myshopify.com",
+              verbose: false,
+              marketplace: true
+            )
+
+            assert_equal SHOPIFYCLI_FILE, File.read("test-app/.shopify-cli.yml")
+            assert_equal ENV_FILE, File.read("test-app/.env")
+            refute File.exist?("test-app/.npmrc")
+            refute File.exist?("test-app/.git")
+            refute File.exist?("test-app/.github")
+            refute File.exist?("test-app/server/handlers/client.cli.js")
+            assert File.exist?("test-app/server/handlers/client.js")
+
+            FileUtils.rm_r("test-app")
+          end
+
           private
 
           def call_service
@@ -225,7 +285,8 @@ module ShopifyCLI
               type: "public",
               organization_id: "42",
               store_domain: "testshop.myshopify.com",
-              verbose: false
+              verbose: false,
+              marketplace: false
             )
           end
 

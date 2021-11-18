@@ -5,15 +5,16 @@ module ShopifyCLI
     module App
       module Create
         class NodeService < BaseService
-          attr_reader :context, :name, :organization_id, :store_domain, :type, :verbose
+          attr_reader :context, :name, :organization_id, :store_domain, :type, :verbose, :marketplace
 
-          def initialize(name:, organization_id:, store_domain:, type:, verbose:, context:)
+          def initialize(name:, organization_id:, store_domain:, type:, verbose:, marketplace:, context:)
             @name = name
             @organization_id = organization_id
             @store_domain = store_domain
             @type = type
             @verbose = verbose
             @context = context
+            @marketplace = marketplace
             super()
           end
 
@@ -132,6 +133,10 @@ module ShopifyCLI
             ShopifyCLI::Git.clone("https://github.com/Shopify/shopify-app-node.git", name)
 
             context.root = File.join(context.root, name)
+
+            if @marketplace
+              context.capture2e("git", "-C", context.root, "checkout", "922ec7f8a62d7601e2caa27d34e5b803d257cef4")
+            end
 
             set_npm_config
             ShopifyCLI::JsDeps.install(context, verbose)
