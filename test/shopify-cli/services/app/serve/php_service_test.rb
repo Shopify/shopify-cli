@@ -123,12 +123,12 @@ module ShopifyCLI
           end
 
           def test_server_command_when_port_passed
-            ShopifyCLI::Tunnel.stubs(:start).returns("https://example.com")
             ShopifyCLI::Tasks::UpdateDashboardURLS.expects(:call)
             ShopifyCLI::Resources::EnvFile.any_instance.expects(:update)
             ShopifyCLI::ProcessSupervision.expects(:running?).with(:npm_watch).returns(false)
             ShopifyCLI::ProcessSupervision.expects(:stop).never
             ShopifyCLI::ProcessSupervision.expects(:start).with(:npm_watch, "npm run watch", force_spawn: true)
+            ShopifyCLI::Tunnel.expects(:start).with(@context, port: 5000).returns("https://example.com")
 
             @context.expects(:system).with(
               "php",

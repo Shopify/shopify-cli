@@ -82,7 +82,7 @@ module ShopifyCLI
           end
 
           def test_server_command_when_port_passed
-            ShopifyCLI::Tunnel.stubs(:start).returns("https://example.com")
+            ShopifyCLI::Tunnel.expects(:start).with(@context, port: 5000).returns("https://example.com")
             ShopifyCLI::Tasks::UpdateDashboardURLS.expects(:call)
             ShopifyCLI::Resources::EnvFile.any_instance.expects(:update)
             @context.stubs(:getenv).with("GEM_HOME").returns("/gem/path")
