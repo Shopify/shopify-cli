@@ -5,6 +5,7 @@ module Extension
   module Models
     class DevelopmentServerRequirements
       SUPPORTED_EXTENSION_TYPES = [
+        "argo_demo_extension",
         "checkout_ui_extension",
         "checkout_post_purchase",
         "product_subscription",

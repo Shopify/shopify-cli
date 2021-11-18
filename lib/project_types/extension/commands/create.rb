@@ -56,6 +56,7 @@ module Extension
 
       def use_new_create_flow(form)
         Tasks::RunExtensionCommand.new(
+          context: @ctx,
           root_dir: form.directory_name,
           template: form.template,
           type: form.type.identifier.downcase,
