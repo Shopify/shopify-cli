@@ -24,21 +24,16 @@ module Extension
       private
 
       def run_new_flow(project)
-        Tasks::RunExtensionCommand.new(
+        output = Tasks::RunExtensionCommand.new(
           type: project.specification_identifier.downcase,
           command: "build",
           config_file_name: specification_handler.server_config_file,
           context: @ctx,
         ).call
 
-        @ctx.puts(@ctx.message("build.build_success_message"))
+        @ctx.puts(output)
       rescue => error
-        if error.message.include?("no such file or directory")
-          @ctx.abort(@ctx.message("build.directory_not_found"))
-        else
-          @ctx.debug(error)
-          @ctx.abort(@ctx.message("build.build_failure_message"))
-        end
+        raise ShopifyCLI::Abort, error.message
       end
 
       def run_legacy_flow

@@ -2,24 +2,28 @@
 require "thread"
 require "json"
 require "base64"
+require "forwardable"
+
+require_relative "syncer/error_reporter"
+require_relative "syncer/operation"
 
 module ShopifyCLI
   module Theme
     class Syncer
-      class Operation < Struct.new(:method, :file)
-        def to_s
-          "#{method} #{file&.relative_path}"
-        end
-      end
+      extend Forwardable
+
       API_VERSION = "unstable"
 
       attr_reader :checksums
       attr_accessor :ignore_filter
 
+      def_delegators :@error_reporter, :delay_errors!, :report_errors!, :has_any_error?
+
       def initialize(ctx, theme:, ignore_filter: nil)
         @ctx = ctx
         @theme = theme
         @ignore_filter = ignore_filter
+        @error_reporter = ErrorReporter.new(ctx)
 
         # Queue of `Operation`s waiting to be picked up from a thread for processing.
         @queue = Queue.new
@@ -29,10 +33,6 @@ module ShopifyCLI
         @threads = []
         # Mutex used to pause all threads when backing-off when hitting API rate limits
         @backoff_mutex = Mutex.new
-
-        # Allows delaying log of errors, mainly to not break the progress bar.
-        @delay_errors = false
-        @delayed_errors = []
 
         # Latest theme assets checksums. Updated on each upload.
         @checksums = {}
@@ -103,23 +103,14 @@ module ShopifyCLI
               break if operation.nil? # shutdown was called
               perform(operation)
             rescue Exception => e
-              report_error(
+    
+              @error_reporter.report_error(
                 "{{red:ERROR}} {{blue:#{operation}}}: #{e}" +
                 (@ctx.debug? ? "\n\t#{e.backtrace.join("\n\t")}" : "")
               )
             end
           end
         end
-      end
-
-      def delay_errors!
-        @delay_errors = true
-      end
-
-      def report_errors!
-        @delay_errors = false
-        @delayed_errors.each { |error| report_error(error) }
-        @delayed_errors.clear
       end
 
       def upload_theme!(delay_low_priority_files: false, delete: true, &block)
@@ -212,7 +203,7 @@ module ShopifyCLI
           backoff_if_near_limit!(used, total)
         end
       rescue ShopifyCLI::API::APIRequestError => e
-        report_error(
+        @error_reporter.report_error(
           "{{red:ERROR}} {{blue:#{operation}}}:\n  " +
           parse_api_errors(e).join("\n  ")
         )
@@ -293,14 +284,6 @@ module ShopifyCLI
 
       def file_has_changed?(file)
         file.checksum != @checksums[file.relative_path.to_s]
-      end
-
-      def report_error(error)
-        if @delay_errors
-          @delayed_errors << error
-        else
-          @ctx.puts(error)
-        end
       end
 
       def parse_api_errors(exception)
