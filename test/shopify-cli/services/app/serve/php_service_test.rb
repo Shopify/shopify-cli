@@ -123,7 +123,6 @@ module ShopifyCLI
           end
 
           def test_server_command_when_port_passed
-            ShopifyCLI::Tunnel.stubs(:start).returns("https://example.com")
             ShopifyCLI::Tasks::UpdateDashboardURLS.expects(:call)
             ShopifyCLI::Resources::EnvFile.any_instance.expects(:update)
             ShopifyCLI::ProcessSupervision.expects(:running?).with(:npm_watch).returns(false)
