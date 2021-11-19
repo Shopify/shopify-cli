@@ -87,7 +87,7 @@ module ShopifyCLI
     #
     def auth(ctx, token)
       install(ctx)
-      ctx.system(ngrok_path, "authtoken", token)
+      ctx.system(ngrok_path(ctx), "authtoken", token)
     end
 
     ##
@@ -150,7 +150,7 @@ module ShopifyCLI
 
     def install(ctx)
       ngrok = "ngrok#{ctx.executable_file_extension}"
-      return if File.exist?(ngrok_path)
+      return if File.exist?(ngrok_path(ctx))
       check_prereq_command(ctx, "curl")
       check_prereq_command(ctx, ctx.linux? ? "unzip" : "tar")
       spinner = CLI::UI::SpinGroup.new
@@ -170,7 +170,7 @@ module ShopifyCLI
       spinner.wait
 
       # final check to see if ngrok is accessible
-      unless File.exist?(ngrok_path)
+      unless File.exist?(ngrok_path(ctx))
         ctx.abort(ctx.message("core.tunnel.error.ngrok", ngrok, ShopifyCLI.cache_dir))
       end
     end
@@ -182,12 +182,9 @@ module ShopifyCLI
       raise e.class, e.message
     end
 
-    def ngrok_path
-      File.join(ShopifyCLI.cache_dir, "ngrok")
-    end
-
-    def ngrok_command(port)
-      "\"#{ngrok_path}\" http -inspect=false -log=stdout -log-level=debug #{port}"
+    def ngrok_path(ctx)
+      ngrok = "ngrok#{ctx.executable_file_extension}"
+      File.join(ShopifyCLI.cache_dir, ngrok)
     end
 
     def seconds_to_hm(seconds)
@@ -195,7 +192,8 @@ module ShopifyCLI
     end
 
     def start_ngrok(ctx, port)
-      process = ShopifyCLI::ProcessSupervision.start(:ngrok, ngrok_command(port))
+      ngrok_command = "\"#{ngrok_path(ctx)}\" http -inspect=false -log=stdout -log-level=debug #{port}"
+      process = ShopifyCLI::ProcessSupervision.start(:ngrok, ngrok_command)
       log = fetch_url(ctx, process.log_path)
       [log.url, log.account]
     end
