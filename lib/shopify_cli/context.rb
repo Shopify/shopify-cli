@@ -357,6 +357,15 @@ module ShopifyCLI
       Kernel.puts(CLI::UI.fmt(*args))
     end
 
+    # a wrapper around $stderr.puts to allow for easy formatting
+    #
+    # #### Parameters
+    # * `text` - a string message to output
+    #
+    def error(text)
+      $stderr.puts(CLI::UI.fmt(text))
+    end
+
     # a wrapper around Kernel.warn to allow for easy formatting
     #
     # #### Parameters

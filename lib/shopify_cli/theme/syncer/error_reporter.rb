@@ -32,7 +32,7 @@ module ShopifyCLI
             @delayed_errors << error_message
           else
             @has_any_error = true
-            @ctx.puts(error_message)
+            @ctx.error(error_message)
           end
         end
 

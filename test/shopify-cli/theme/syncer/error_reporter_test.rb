@@ -50,7 +50,7 @@ module ShopifyCLI
         end
 
         def test_has_any_error_when_an_error_was_reported
-          @error_reporter.report_error("error 1")
+          capture_io { @error_reporter.report_error("error 1") }
           assert(@error_reporter.has_any_error?)
         end
       end

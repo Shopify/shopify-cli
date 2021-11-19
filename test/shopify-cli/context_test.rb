@@ -10,6 +10,24 @@ module ShopifyCLI
       @ctx = Context.new
     end
 
+    def test_puts
+      expected_stdout = /info message/
+      expected_stderr = /^$/
+
+      assert_output(expected_stdout, expected_stderr) do
+        @ctx.puts("info message")
+      end
+    end
+
+    def test_error
+      expected_stdout = /^$/
+      expected_stderr = /error message/
+
+      assert_output(expected_stdout, expected_stderr) do
+        @ctx.error("error message")
+      end
+    end
+
     def test_write_writes_to_file_in_project
       @ctx.root = Dir.mktmpdir
       @ctx.write(".env", "foobar")

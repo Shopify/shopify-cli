@@ -194,6 +194,7 @@ module ShopifyCLI
       def test_theme_files_are_pending_during_upload
         file = @theme.static_asset_files.first
 
+        @ctx.expects(:error).once
         @syncer.enqueue_updates([file])
         assert_includes(@syncer.pending_updates, file)
 
@@ -206,7 +207,7 @@ module ShopifyCLI
         @syncer.start_threads
 
         file = @theme.static_asset_files.first
-        @ctx.expects(:puts).once
+        @ctx.expects(:error).once
         ShopifyCLI::AdminAPI.expects(:rest_request).raises(RuntimeError.new("oops"))
 
         @syncer.enqueue_updates([file])
@@ -420,7 +421,7 @@ module ShopifyCLI
             "message", response: mock(body: response_body)
           ))
 
-        @ctx.expects(:puts).with(<<~EOS.chomp)
+        @ctx.expects(:error).with(<<~EOS.chomp)
           {{red:ERROR}} {{blue:update sections/footer.liquid}}:
             An error
             Then some
@@ -445,7 +446,7 @@ module ShopifyCLI
             "exception message", response: mock(body: response_body)
           ))
 
-        @ctx.expects(:puts).with(<<~EOS.chomp)
+        @ctx.expects(:error).with(<<~EOS.chomp)
           {{red:ERROR}} {{blue:update sections/footer.liquid}}:
             exception message
         EOS
@@ -472,7 +473,7 @@ module ShopifyCLI
             "message", response: mock(body: response_body)
           ))
 
-        @ctx.expects(:puts).never
+        @ctx.expects(:error).never
 
         @syncer.delay_errors!
         @syncer.enqueue_updates([file])
@@ -481,7 +482,7 @@ module ShopifyCLI
         # Assert @ctx.puts was not called
         mocha_verify
 
-        @ctx.expects(:puts).with(<<~EOS.chomp)
+        @ctx.expects(:error).with(<<~EOS.chomp)
           {{red:ERROR}} {{blue:update sections/footer.liquid}}:
             An error
             Then some
