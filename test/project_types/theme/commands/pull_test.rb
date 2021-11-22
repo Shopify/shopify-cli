@@ -18,7 +18,7 @@ module Theme
           name: "Test theme",
           shop: "test.myshopify.io",
         )
-        @syncer = stub("Syncer", delay_errors!: nil, report_errors!: nil)
+        @syncer = stub("Syncer", lock_io!: nil, unlock_io!: nil)
         @ignore_filter = mock("IgnoreFilter")
       end
 

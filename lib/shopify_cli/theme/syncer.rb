@@ -5,6 +5,7 @@ require "base64"
 require "forwardable"
 
 require_relative "syncer/error_reporter"
+require_relative "syncer/standard_reporter"
 require_relative "syncer/operation"
 
 module ShopifyCLI
@@ -17,13 +18,15 @@ module ShopifyCLI
       attr_reader :checksums
       attr_accessor :ignore_filter
 
-      def_delegators :@error_reporter, :delay_errors!, :report_errors!, :has_any_error?
+      def_delegators :@error_reporter, :has_any_error?
 
       def initialize(ctx, theme:, ignore_filter: nil)
         @ctx = ctx
         @theme = theme
         @ignore_filter = ignore_filter
         @error_reporter = ErrorReporter.new(ctx)
+        @standard_reporter = StandardReporter.new(ctx)
+        @reporters = [@error_reporter, @standard_reporter]
 
         # Queue of `Operation`s waiting to be picked up from a thread for processing.
         @queue = Queue.new
@@ -36,6 +39,14 @@ module ShopifyCLI
 
         # Latest theme assets checksums. Updated on each upload.
         @checksums = {}
+      end
+
+      def lock_io!
+        @reporters.each { |reporter| reporter.disable! }
+      end
+
+      def unlock_io!
+        @reporters.each { |reporter| reporter.enable! }
       end
 
       def enqueue_updates(files)
@@ -104,8 +115,8 @@ module ShopifyCLI
               perform(operation)
             rescue Exception => e
     
-              @error_reporter.report_error(
-                "{{red:ERROR}} {{blue:#{operation}}}: #{e}" +
+              @error_reporter.report(
+                "#{operation.as_error_message}: #{e}" +
                 (@ctx.debug? ? "\n\t#{e.backtrace.join("\n\t")}" : "")
               )
             end
@@ -171,18 +182,18 @@ module ShopifyCLI
       def enqueue(method, file)
         raise ArgumentError, "file required" unless file
 
-        operation = Operation.new(method, @theme[file])
+        operation = Operation.new(@ctx, method, @theme[file])
 
         # Already enqueued
         return if @pending.include?(operation)
 
-        if @ignore_filter&.ignore?(operation.file.relative_path)
-          @ctx.debug("ignore #{operation.file.relative_path}")
+        if @ignore_filter&.ignore?(operation.file_path)
+          @ctx.debug("ignore #{operation.file_path}")
           return
         end
 
         if [:update, :get].include?(method) && operation.file.exist? && !file_has_changed?(operation.file)
-          @ctx.debug("skip #{operation}")
+          @standard_reporter.report(operation.as_unchanged_message)
           return
         end
 
@@ -197,14 +208,16 @@ module ShopifyCLI
 
         response = send(operation.method, operation.file)
 
+        @standard_reporter.report(operation.as_synced_message)
+
         # Check if the API told us we're near the rate limit
         if !backingoff? && (limit = response["x-shopify-shop-api-call-limit"])
           used, total = limit.split("/").map(&:to_i)
           backoff_if_near_limit!(used, total)
         end
       rescue ShopifyCLI::API::APIRequestError => e
-        @error_reporter.report_error(
-          "{{red:ERROR}} {{blue:#{operation}}}:\n  " +
+        @error_reporter.report(
+          "#{operation.as_error_message}:\n  " +
           parse_api_errors(e).join("\n  ")
         )
       ensure

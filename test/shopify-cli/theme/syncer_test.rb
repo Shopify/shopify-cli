@@ -1,5 +1,6 @@
 # frozen_string_literal: true
 require "test_helper"
+require "timecop"
 require "shopify_cli/theme/syncer"
 require "shopify_cli/theme/theme"
 
@@ -404,6 +405,13 @@ module ShopifyCLI
       end
 
       def test_log_api_errors
+        mock_context_error_message
+        @ctx.expects(:error).with(<<~EOS.chomp)
+          12:30:59 [{{red:ERROR}}] {{blue:update sections/footer.liquid}}:
+            An error
+            Then some
+          EOS
+
         @syncer.start_threads
         file = @theme["sections/footer.liquid"]
 
@@ -421,17 +429,19 @@ module ShopifyCLI
             "message", response: mock(body: response_body)
           ))
 
-        @ctx.expects(:error).with(<<~EOS.chomp)
-          {{red:ERROR}} {{blue:update sections/footer.liquid}}:
-            An error
-            Then some
-        EOS
-
-        @syncer.enqueue_updates([file])
-        @syncer.wait!
+        time_freeze do
+          @syncer.enqueue_updates([file])
+          @syncer.wait!
+        end
       end
 
       def test_log_api_errors_with_invalid_response_body
+        mock_context_error_message
+        @ctx.expects(:error).with(<<~EOS.chomp)
+          12:30:59 [{{red:ERROR}}] {{blue:update sections/footer.liquid}}:
+            exception message
+          EOS
+
         @syncer.start_threads
         file = @theme["sections/footer.liquid"]
 
@@ -446,13 +456,10 @@ module ShopifyCLI
             "exception message", response: mock(body: response_body)
           ))
 
-        @ctx.expects(:error).with(<<~EOS.chomp)
-          {{red:ERROR}} {{blue:update sections/footer.liquid}}:
-            exception message
-        EOS
-
-        @syncer.enqueue_updates([file])
-        @syncer.wait!
+        time_freeze do
+          @syncer.enqueue_updates([file])
+          @syncer.wait!
+        end
       end
 
       def test_delays_reporting_errors
@@ -474,20 +481,37 @@ module ShopifyCLI
           ))
 
         @ctx.expects(:error).never
+        mock_context_error_message
 
-        @syncer.delay_errors!
-        @syncer.enqueue_updates([file])
-        @syncer.wait!
+        @syncer.lock_io!
+
+        time_freeze do
+          @syncer.enqueue_updates([file])
+          @syncer.wait!
+        end
 
         # Assert @ctx.puts was not called
         mocha_verify
 
         @ctx.expects(:error).with(<<~EOS.chomp)
-          {{red:ERROR}} {{blue:update sections/footer.liquid}}:
+          12:30:59 [{{red:ERROR}}] {{blue:update sections/footer.liquid}}:
             An error
             Then some
         EOS
-        @syncer.report_errors!
+        @syncer.unlock_io!
+      end
+
+      private
+
+      def time_freeze(&block)
+        time = Time.local(2000, 1, 1, 12, 30, 59)
+        Timecop.freeze(time, &block)
+      end
+
+      def mock_context_error_message
+        @ctx.stubs(:message)
+          .with("theme.serve.operation.status.error")
+          .returns("ERROR")
       end
     end
   end
