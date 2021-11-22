@@ -10,14 +10,11 @@ module Script
           GEN_METADATA = "npm run gen-metadata"
           MIN_NPM_VERSION = "5.2.0"
           MIN_NODE_VERSION = "14.15.0"
+          INSTALL_COMMAND = "npm install --no-audit --no-optional --legacy-peer-deps --loglevel error"
 
           def build
             compile
             bytecode
-          end
-
-          def compiled_type
-            "wasm"
           end
 
           def install_dependencies
@@ -27,24 +24,9 @@ module Script
             raise Errors::DependencyInstallationError, output unless status.success?
           end
 
-          def check_system_dependencies!
-            check_tool_version!("npm", MIN_NPM_VERSION)
-            check_tool_version!("node", MIN_NODE_VERSION)
-          end
-
           def project_dependencies_installed?
             # Assuming if node_modules folder exist at root of script folder, all deps are installed
             ctx.dir_exist?("node_modules")
-          end
-
-          def metadata
-            unless @ctx.file_exist?(METADATA_FILE)
-              msg = @ctx.message("script.error.metadata_not_found_cause", METADATA_FILE)
-              raise Domain::Errors::MetadataNotFoundError, msg
-            end
-
-            raw_contents = File.read(METADATA_FILE)
-            Domain::Metadata.create_from_json(@ctx, raw_contents)
           end
 
           def library_version(library_name)
@@ -52,6 +34,28 @@ module Script
             library_version_from_npm_list(output, library_name)
           rescue Errors::SystemCallFailureError => error
             library_version_from_npm_list_error_output(error, library_name)
+          end
+
+          protected
+
+          def compiled_type
+            "wasm"
+          end
+
+          def required_tool_versions
+            [
+              { "tool_name": "npm", "min_version": MIN_NPM_VERSION },
+              { "tool_name": "node", "min_version": MIN_NODE_VERSION },
+            ]
+          end
+
+          def tool_version_output(tool, min_required_version)
+            output, status = @ctx.capture2e(tool, "--version")
+            unless status.success?
+              raise Errors::NoDependencyInstalledError.new(tool, min_required_version)
+            end
+
+            output
           end
 
           private

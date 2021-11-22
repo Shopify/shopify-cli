@@ -60,10 +60,6 @@ module Script
             raise NotImplementedError
           end
 
-          def metadata
-            raise NotImplementedError
-          end
-
           protected
 
           def check_tool_version!(tool, min_required_version)
