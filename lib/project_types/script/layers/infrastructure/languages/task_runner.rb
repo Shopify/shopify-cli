@@ -1,5 +1,6 @@
 # frozen_string_literal: true
 
+require "byebug"
 module Script
   module Layers
     module Infrastructure
@@ -14,7 +15,34 @@ module Script
             task_runner[language].new(ctx, script_name)
           end
 
+          attr_reader :ctx, :script_name
+
+          def initialize(ctx, script_name)
+            @ctx = ctx
+            @script_name = script_name
+          end
+
+          def build
+            raise NotImplementedError
+          end
+
+          def compiled_type
+            raise NotImplementedError
+          end
+
+          def install_dependencies
+            raise NotImplementedError
+          end
+
           def check_system_dependencies!
+            raise NotImplementedError
+          end
+
+          def project_dependencies_installed?
+            raise NotImplementedError
+          end
+
+          def metadata
             raise NotImplementedError
           end
 

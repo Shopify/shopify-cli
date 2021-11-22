@@ -12,14 +12,6 @@ module Script
           MIN_NPM_VERSION = "5.2.0"
           MIN_NODE_VERSION = "14.15.0"
 
-          attr_reader :ctx, :script_name
-
-          def initialize(ctx, script_name)
-            super()
-            @ctx = ctx
-            @script_name = script_name
-          end
-
           def build
             compile
             bytecode

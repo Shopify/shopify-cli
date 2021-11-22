@@ -4,12 +4,7 @@ require "project_types/script/test_helper"
 describe Script::Layers::Infrastructure::Languages::TypeScriptTaskRunner do
   include TestHelpers::FakeFS
 
-  TS_BELOW_NODE_VERSION = "v14.14.0"
   TS_EXACT_NODE_VERSION = "v14.15.0"
-  TS_ABOVE_NODE_VERSION = "v14.16.0"
-
-  TS_BELOW_NPM_VERSION = "5.1.0"
-  TS_ABOVE_NPM_VERSION = "5.2.1"
   TS_EXACT_NPM_VERSION = "5.2.0"
 
   let(:ctx) { TestHelpers::FakeContext.new }
@@ -26,14 +21,6 @@ describe Script::Layers::Infrastructure::Languages::TypeScriptTaskRunner do
     }
   end
 
-  def stub_tool_versions(npm:, node:)
-    ctx.stubs(:capture2e)
-      .with("npm", "--version")
-      .returns([npm, mock(success?: true)])
-    ctx.stubs(:capture2e)
-      .with("node", "--version")
-      .returns([node, mock(success?: true)])
-  end
 
   describe ".build" do
     subject { runner.build }
@@ -133,6 +120,15 @@ describe Script::Layers::Infrastructure::Languages::TypeScriptTaskRunner do
   describe ".install_dependencies" do
     subject { runner.install_dependencies }
 
+    def stub_tool_versions(npm:, node:)
+      ctx.stubs(:capture2e)
+        .with("npm", "--version")
+        .returns([npm, mock(success?: true)])
+      ctx.stubs(:capture2e)
+        .with("node", "--version")
+        .returns([node, mock(success?: true)])
+    end
+
     def stub_npm_install(msg:, success:)
       ctx.expects(:capture2e)
         .with("npm install --no-audit --no-optional --legacy-peer-deps --loglevel error")
@@ -201,97 +197,6 @@ describe Script::Layers::Infrastructure::Languages::TypeScriptTaskRunner do
     describe "when metadata file is missing" do
       it "should raise an exception" do
         assert_raises(Script::Layers::Domain::Errors::MetadataNotFoundError) do
-          subject
-        end
-      end
-    end
-  end
-
-  describe ".check_system_dependencies!" do
-    subject { runner.check_system_dependencies! }
-
-    describe "when npm is not installed" do
-      it "should raise error" do
-        ctx.expects(:capture2e)
-          .with("npm", "--version")
-          .returns([nil, mock(success?: false)])
-        assert_raises Script::Layers::Infrastructure::Errors::NoDependencyInstalledError do
-          subject
-        end
-      end
-    end
-
-    describe "when node is not installed" do
-      it "should raise error" do
-        ctx.expects(:capture2e)
-          .with("npm", "--version")
-          .returns([TS_EXACT_NODE_VERSION, mock(success?: true)])
-        ctx.expects(:capture2e)
-          .with("node", "--version")
-          .returns([nil, mock(success?: false)])
-        assert_raises Script::Layers::Infrastructure::Errors::NoDependencyInstalledError do
-          subject
-        end
-      end
-    end
-
-    describe "when npm version is below minimum" do
-      it "should raise error" do
-        ctx.expects(:capture2e)
-          .with("npm", "--version")
-          .returns([TS_BELOW_NPM_VERSION, mock(success?: true)])
-
-        assert_raises Script::Layers::Infrastructure::Errors::MissingDependencyVersionError do
-          subject
-        end
-      end
-    end
-
-    describe "when npm version is above minimum" do
-      describe "when node version is below minimum" do
-        it "should raise error" do
-          stub_tool_versions(npm: TS_ABOVE_NPM_VERSION, node: TS_BELOW_NODE_VERSION)
-          assert_raises Script::Layers::Infrastructure::Errors::MissingDependencyVersionError do
-            subject
-          end
-        end
-      end
-
-      describe "when node version is above minimum" do
-        it "should install successfully" do
-          stub_tool_versions(npm: TS_ABOVE_NPM_VERSION, node: TS_ABOVE_NODE_VERSION)
-          subject
-        end
-      end
-
-      describe "when node version is the exact version" do
-        it "should install successfully" do
-          stub_tool_versions(npm: TS_ABOVE_NPM_VERSION, node: TS_EXACT_NODE_VERSION)
-          subject
-        end
-      end
-    end
-
-    describe "when npm version is exactly the version" do
-      describe "when node version is below minimum" do
-        it "should raise error" do
-          stub_tool_versions(npm: TS_EXACT_NPM_VERSION, node: TS_BELOW_NODE_VERSION)
-          assert_raises Script::Layers::Infrastructure::Errors::MissingDependencyVersionError do
-            subject
-          end
-        end
-      end
-
-      describe "when node version is above minimum" do
-        it "should install successfully" do
-          stub_tool_versions(npm: TS_EXACT_NPM_VERSION, node: TS_ABOVE_NODE_VERSION)
-          subject
-        end
-      end
-
-      describe "when node version is the exact version" do
-        it "should install successfully" do
-          stub_tool_versions(npm: TS_EXACT_NPM_VERSION, node: TS_EXACT_NODE_VERSION)
           subject
         end
       end
@@ -385,6 +290,17 @@ describe Script::Layers::Infrastructure::Languages::TypeScriptTaskRunner do
           assert_equal "1.3.7", subject
         end
       end
+    end
+  end
+
+  describe ".check_system_dependencies!" do
+    subject { runner.check_system_dependencies! }
+
+    it "should call the methods" do
+      runner.expects(:check_tool_version!).with("npm", "5.2.0")
+      runner.expects(:check_tool_version!).with("node", "14.15.0")
+
+      subject
     end
   end
 end
