@@ -21,7 +21,6 @@ describe Script::Layers::Infrastructure::Languages::TypeScriptTaskRunner do
     }
   end
 
-
   describe ".build" do
     subject { runner.build }
 
@@ -130,7 +129,7 @@ describe Script::Layers::Infrastructure::Languages::TypeScriptTaskRunner do
     end
 
     def stub_npm_install(msg:, success:)
-      ctx.expects(:capture2e)
+      ctx.stubs(:capture2e)
         .with("npm install --no-audit --no-optional --legacy-peer-deps --loglevel error")
         .returns([msg, mock(success?: success)])
     end

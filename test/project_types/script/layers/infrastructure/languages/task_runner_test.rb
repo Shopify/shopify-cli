@@ -42,7 +42,7 @@ describe Script::Layers::Infrastructure::Languages::TaskRunner do
 
     describe "when tool version is not installed" do
       it "should raise error" do
-        ctx.expects(:capture2e)
+        ctx.stubs(:capture2e)
           .with("npm", "--version")
           .returns([nil, mock(success?: false)])
         assert_raises Script::Layers::Infrastructure::Errors::NoDependencyInstalledError do
@@ -53,7 +53,7 @@ describe Script::Layers::Infrastructure::Languages::TaskRunner do
 
     describe "when tool version is installed and good" do
       it "should install successfully" do
-        ctx.expects(:capture2e)
+        ctx.stubs(:capture2e)
           .with("npm", "--version")
           .returns([EXACT_NPM_VERSION, mock(success?: true)])
 
@@ -63,7 +63,7 @@ describe Script::Layers::Infrastructure::Languages::TaskRunner do
 
     describe "when tool version is installed and outdated" do
       it "should install successfully" do
-        ctx.expects(:capture2e)
+        ctx.stubs(:capture2e)
           .with("npm", "--version")
           .returns([BELOW_NPM_VERSION, mock(success?: true)])
 
@@ -78,7 +78,7 @@ describe Script::Layers::Infrastructure::Languages::TaskRunner do
       let(:tool_version) { EXACT_NODE_VERSION }
 
       it "should remove successfully" do
-        ctx.expects(:capture2e)
+        ctx.stubs(:capture2e)
           .with("node", "--version")
           .returns(["v14.15.1", mock(success?: true)])
 

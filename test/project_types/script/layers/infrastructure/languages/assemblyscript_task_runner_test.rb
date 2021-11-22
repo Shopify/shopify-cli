@@ -32,7 +32,6 @@ describe Script::Layers::Infrastructure::Languages::AssemblyScriptTaskRunner do
     }
   end
 
-
   describe ".build" do
     subject { as_task_runner.build }
 
@@ -209,16 +208,16 @@ out: "some non-json parsable error output", cmd: cmd
     subject { as_task_runner.install_dependencies }
 
     def stub_npm_install(msg:, success:)
-      ctx.expects(:capture2e)
+      ctx.stubs(:capture2e)
         .with("npm install --no-audit --no-optional --legacy-peer-deps --loglevel error")
         .returns([msg, mock(success?: success)])
     end
 
     def stub_tool_versions(npm:, node:)
-      ctx.stubs(:capture2e)
+      ctx.check_tool_version!.stubs(:capture2e)
         .with("npm", "--version")
         .returns([npm, mock(success?: true)])
-      ctx.stubs(:capture2e)
+      ctx.check_tool_version!.stubs(:capture2e)
         .with("node", "--version")
         .returns([node, mock(success?: true)])
     end
