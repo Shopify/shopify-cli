@@ -457,6 +457,7 @@ module ShopifyCLI
             not_authenticated: "Failed to authenticate",
           },
           login_prompt: "Please ensure you've logged in with {{command:%s login}} and try again",
+          token_authentication: "%s environment variable. We'll authenticate using its value as a token.",
         },
 
         options: {

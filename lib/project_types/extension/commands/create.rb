@@ -3,9 +3,7 @@
 module Extension
   class Command
     class Create < ShopifyCLI::Command::SubCommand
-      unless ShopifyCLI::Environment.acceptance_test?
-        prerequisite_task :ensure_authenticated
-      end
+      prerequisite_task :ensure_authenticated
 
       options do |parser, flags|
         parser.on("--name=NAME") { |name| flags[:name] = name }

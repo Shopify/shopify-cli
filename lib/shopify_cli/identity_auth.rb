@@ -68,6 +68,24 @@ module ShopifyCLI
       request_exchange_tokens
     end
 
+    def self.fetch_or_auth_partners_token(ctx:)
+      env_var_auth_token = Environment.auth_token
+      return env_var_auth_token if env_var_auth_token
+
+      ShopifyCLI::DB.get(:partners_exchange_token) do
+        IdentityAuth.new(ctx: ctx).authenticate
+        ShopifyCLI::DB.get(:partners_exchange_token)
+      end
+    end
+
+    def self.environment_auth_token?
+      !!Environment.auth_token
+    end
+
+    def self.authenticated?
+      environment_auth_token? || IDENTITY_ACCESS_TOKENS.all? { |key| ShopifyCLI::DB.exists?(key) }
+    end
+
     def reauthenticate
       return if refresh_exchange_tokens || refresh_access_tokens
       ctx.abort(ctx.message("core.identity_auth.error.reauthenticate", ShopifyCLI::TOOL_NAME))
