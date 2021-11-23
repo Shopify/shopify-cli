@@ -39,14 +39,6 @@ describe Script::Layers::Infrastructure::Languages::AssemblyScriptTaskRunner do
       end
     end
 
-    it "should raise an error if the build script is not compliant" do
-      package_json[:scripts][:build] = ""
-      File.expects(:read).with("package.json").once.returns(JSON.generate(package_json))
-      assert_raises(Script::Layers::Infrastructure::Errors::InvalidBuildScriptError) do
-        subject
-      end
-    end
-
     it "should raise an error if the generated web assembly is not found" do
       ctx.write("package.json", JSON.generate(package_json))
       ctx
