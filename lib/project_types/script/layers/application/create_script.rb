@@ -68,7 +68,7 @@ module Script
               Infrastructure::ScriptProjectRepository.create_project_directory(ctx: ctx, directory: directory)
               yield
             rescue
-              Infrastructure::ScriptProjectRepository.delete_project_directory(ctx: ctx, directory: directory)
+              Infrastructure::ScriptProjectRepository.delete_project_directory(ctx: ctx, initial_directory: initial_directory, directory: directory)
               raise
             ensure
               Infrastructure::ScriptProjectRepository.change_directory(ctx: ctx, directory: initial_directory)

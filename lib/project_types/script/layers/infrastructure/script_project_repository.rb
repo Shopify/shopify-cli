@@ -15,9 +15,8 @@ module Script
           change_directory(ctx: ctx, directory: directory)
         end
 
-        def self.delete_project_directory(ctx:, directory:)
-          parent_directory = Pathname(directory).parent
-          change_directory(ctx: ctx, directory: parent_directory)
+        def self.delete_project_directory(ctx:, initial_directory:, directory:)
+          change_directory(ctx: ctx, directory: initial_directory)
           ctx.rm_r(directory)
         end
 
