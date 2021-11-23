@@ -79,7 +79,7 @@ module ShopifyCLI
     end
 
     def self.environment_auth_token?
-      !Environment.auth_token.nil?
+      !!Environment.auth_token
     end
 
     def self.authenticated?
