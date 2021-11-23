@@ -1,29 +1,3 @@
-discount:
-  deprecated: true
-  libraries:
-    assemblyscript:
-      package: "@shopify/extension-point-as-discount"
-unit_limit_per_order:
-  beta: true
-  libraries:
-    assemblyscript:
-      package: "@shopify/extension-point-as-unit-limit-per-order"
-payment_filter:
-  deprecated: true
-  libraries:
-    assemblyscript:
-      package: "@shopify/extension-point-as-payment-filter"
-shipping_filter:
-  deprecated: true
-  libraries:
-    assemblyscript:
-      package: "@shopify/extension-point-as-shipping-filter"
-tax_filter:
-  beta: true
-  libraries:
-    assemblyscript:
-      repo: "https://github.com/Shopify/extension-points.git"
-      package: "@shopify/extension-point-as-tax-filter"
 payment_methods:
   domain: 'checkout'
   libraries:
