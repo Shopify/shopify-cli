@@ -65,15 +65,13 @@ module Script
           def in_new_directory_context(ctx, directory)
             initial_directory = ctx.root
             begin
-              ctx.mkdir_p(directory)
-              ctx.chdir(directory)
+              Infrastructure::ScriptProjectRepository.create_project_directory(ctx: ctx, directory: directory)
               yield
             rescue
-              ctx.chdir(initial_directory)
-              ctx.rm_r(directory)
+              Infrastructure::ScriptProjectRepository.delete_project_directory(ctx: ctx, directory: directory)
               raise
             ensure
-              ctx.chdir(initial_directory)
+              Infrastructure::ScriptProjectRepository.change_directory(ctx: ctx, directory: initial_directory)
             end
           end
         end

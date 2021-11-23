@@ -10,6 +10,21 @@ module Script
         SCRIPT_JSON_FILENAME = "script.json"
         MUTABLE_ENV_VALUES = %i(uuid)
 
+        def self.create_project_directory(ctx:, directory:)
+          ctx.mkdir_p(directory)
+          change_directory(ctx: ctx, directory: directory)
+        end
+
+        def self.delete_project_directory(ctx:, directory:)
+          parent_directory = Pathname(directory).parent
+          change_directory(ctx: ctx, directory: parent_directory)
+          ctx.rm_r(directory)
+        end
+
+        def self.change_directory(ctx:, directory:)
+          ctx.chdir(directory)
+        end
+
         def create(script_name:, extension_point_type:, language:)
           validate_metadata!(extension_point_type, language)
 
