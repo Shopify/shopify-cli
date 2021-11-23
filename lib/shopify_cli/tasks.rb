@@ -32,7 +32,7 @@ module ShopifyCLI
 
     register :ConfirmStore, :confirm_store, "shopify_cli/tasks/confirm_store"
     register :CreateApiClient, :create_api_client, "shopify_cli/tasks/create_api_client"
-    register :EnsureAuthenticated, :ensure_env, "shopify_cli/tasks/ensure_authenticated"
+    register :EnsureAuthenticated, :ensure_authenticated, "shopify_cli/tasks/ensure_authenticated"
     register :EnsureEnv, :ensure_env, "shopify_cli/tasks/ensure_env"
     register :EnsureLoopbackURL, :ensure_loopback_url, "shopify_cli/tasks/ensure_loopback_url"
     register :EnsureProjectType, :ensure_project_type, "shopify_cli/tasks/ensure_project_type"
