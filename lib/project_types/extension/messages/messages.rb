@@ -67,6 +67,7 @@ module Extension
             Usage: {{command:%s extension build}}
         HELP
         frame_title: "Building extension with: %s…",
+        build_failure_message: "Failed to build extension code.",
       },
       register: {
         help: <<~HELP,
