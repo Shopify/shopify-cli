@@ -36,6 +36,7 @@ module ShopifyCLI
           @app = LocalAssets.new(ctx, @app, theme: theme)
           @app = HotReload.new(ctx, @app, theme: theme, watcher: watcher, ignore_filter: ignore_filter)
           stopped = false
+          address = "http://#{host}:#{port}"
 
           theme.ensure_exists!
 
