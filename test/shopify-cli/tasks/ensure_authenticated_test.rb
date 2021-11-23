@@ -11,7 +11,7 @@ module ShopifyCLI
       def test_call_when_not_authenticated_raises_an_error
         # Given
         ShopifyCLI::IdentityAuth.expects(:authenticated?).returns(false)
-        expected_error_message = @context.message("core.identity_auth.login_prompt", ShopifyCLI::TOOL_NAME)
+        expected_error_message = "Please ensure you've logged in with {{command:shopify login}} and try again"
 
         # Then
         assert_raises ShopifyCLI::Abort, expected_error_message do
