@@ -23,8 +23,7 @@ module ShopifyCLI
         # Given
         ShopifyCLI::IdentityAuth.expects(:authenticated?).returns(true)
         ShopifyCLI::IdentityAuth.expects(:environment_auth_token?).returns(true)
-        expected_message = @context.message("core.identity_auth.token_authentication",
-          ShopifyCLI::Constants::EnvironmentVariables::AUTH_TOKEN)
+        expected_message = "SHOPIFY_CLI_AUTH_TOKEN environment variable. We'll authenticate using its value as a token."
         @context.expects(:puts).with(expected_message)
 
         # Then
