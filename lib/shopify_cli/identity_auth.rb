@@ -70,7 +70,7 @@ module ShopifyCLI
 
     def self.fetch_or_auth_partners_token(ctx:)
       env_var_auth_token = Environment.auth_token
-      return env_var_auth_token unless env_var_auth_token.nil?
+      return env_var_auth_token if env_var_auth_token
 
       ShopifyCLI::DB.get(:partners_exchange_token) do
         IdentityAuth.new(ctx: ctx).authenticate
