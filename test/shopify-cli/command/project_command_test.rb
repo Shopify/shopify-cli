@@ -2,33 +2,33 @@ require "test_helper"
 
 module ShopifyCLI
   class Command
-    class FakeVisibleSubCommand < ShopifyCLI::Command::SubCommand; end
-
-    class FakeHiddenSubCommand < ShopifyCLI::Command::SubCommand
-      hidden_feature
-    end
-
-    class FakeCommand < ShopifyCLI::Command::ProjectCommand
-      subcommand :FakeVisibleSubCommand, "fake_visible"
-      subcommand :FakeHiddenSubCommand, "fake_hidden"
-
-      def self.name
-        "fake"
-      end
-
-      def self.messages
-        {
-          fake: {
-            help: "Usage: {{command:%1$s fake [ %2$s ]}}",
-          },
-        }
-      end
-    end
-
     class ProjectCommandTest < MiniTest::Test
+      class FakeVisibleSubCommand < ShopifyCLI::Command::SubCommand; end
+
+      class FakeHiddenSubCommand < ShopifyCLI::Command::SubCommand
+        hidden_feature
+      end
+
+      class FakeCommand < ShopifyCLI::Command::ProjectCommand
+        subcommand FakeVisibleSubCommand.inspect, "fake_visible"
+        subcommand FakeHiddenSubCommand.inspect, "fake_hidden"
+
+        def self.name
+          "fake"
+        end
+
+        def self.messages
+          {
+            fake: {
+              help: "Usage: {{command:%1$s fake [ %2$s ]}}",
+            },
+          }
+        end
+      end
+
       def setup
         super
-        ShopifyCLI::Commands.register("ShopifyCLI::Command::FakeCommand", "fake")
+        ShopifyCLI::Commands.register(FakeCommand.inspect, "fake")
         ShopifyCLI::Context.load_messages(FakeCommand.messages)
       end
 
