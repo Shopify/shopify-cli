@@ -115,8 +115,6 @@ module Script
           script_repush_cause: "A version of this script already exists on the app.",
           script_repush_help: "Use {{cyan:--force}} to replace the existing script.",
 
-          invalid_build_script: "The root package.json contains an invalid build command that " \
-                                "is needed to compile your script to WebAssembly.",
           build_script_not_found: "The root package.json is missing the build command that " \
                                   "is needed to compile your script to WebAssembly.",
           # rubocop:disable Layout/LineLength
