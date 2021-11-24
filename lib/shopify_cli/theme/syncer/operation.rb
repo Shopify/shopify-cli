@@ -30,7 +30,7 @@ module ShopifyCLI
           as_message_with(status: :synced)
         end
 
-        def as_fixed_message
+        def as_fix_message
           as_message_with(status: :fixed)
         end
 

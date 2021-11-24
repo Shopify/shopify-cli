@@ -33,12 +33,12 @@ module ShopifyCLI
           end
         end
 
-        def test_as_fixed_message
+        def test_as_fix_message
           @ctx.stubs(:message).with("theme.serve.operation.status.fixed")
             .returns("Fixed")
 
           time_freeze do
-            assert_message("{{cyan:Fixed }}", @operation.as_fixed_message)
+            assert_message("{{cyan:Fixed }}", @operation.as_fix_message)
           end
         end
 

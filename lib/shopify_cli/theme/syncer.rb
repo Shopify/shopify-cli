@@ -200,7 +200,7 @@ module ShopifyCLI
 
         if [:update, :get].include?(method) && operation.file.exist? && !file_has_changed?(operation.file)
           is_fixed = !!@error_checksums.delete(operation.file.checksum)
-          @standard_reporter.report(operation.as_fixed_message) if is_fixed
+          @standard_reporter.report(operation.as_fix_message) if is_fixed
           return
         end
 

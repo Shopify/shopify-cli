@@ -458,9 +458,9 @@ module ShopifyCLI
         end
       end
 
-      def test_log_fixed_files
+      def test_log_when_an_error_is_fixed
         mock_context_error_message
-        mock_context_fixed_message
+        mock_context_fix_message
 
         file = @theme["sections/footer.liquid"]
         client_success = [200, {}, {}]
@@ -544,7 +544,7 @@ module ShopifyCLI
           .returns("ERROR")
       end
 
-      def mock_context_fixed_message
+      def mock_context_fix_message
         @ctx.stubs(:message)
           .with("theme.serve.operation.status.fixed")
           .returns("Fixed")
