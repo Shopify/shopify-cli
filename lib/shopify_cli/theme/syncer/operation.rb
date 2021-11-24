@@ -42,9 +42,9 @@ module ShopifyCLI
 
         def as_message_with(status:)
           status_color = COLOR_BY_STATUS[status]
-          status_text = @ctx.message("theme.serve.operation.status.#{status}")
+          status_text = @ctx.message("theme.serve.operation.status.#{status}").ljust(6)
 
-          "#{timestamp} [{{#{status_color}:#{status_text}}}] {{blue:#{self}}}"
+          "#{timestamp} {{#{status_color}:#{status_text}}} {{>}} {{blue:#{self}}}"
         end
 
         def timestamp

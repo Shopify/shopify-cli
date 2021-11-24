@@ -407,7 +407,7 @@ module ShopifyCLI
       def test_log_api_errors
         mock_context_error_message
         @ctx.expects(:error).with(<<~EOS.chomp)
-          12:30:59 [{{red:ERROR}}] {{blue:update sections/footer.liquid}}:
+          12:30:59 {{red:ERROR }} {{>}} {{blue:update sections/footer.liquid}}:
             An error
             Then some
           EOS
@@ -436,7 +436,7 @@ module ShopifyCLI
       def test_log_api_errors_with_invalid_response_body
         mock_context_error_message
         @ctx.expects(:error).with(<<~EOS.chomp)
-          12:30:59 [{{red:ERROR}}] {{blue:update sections/footer.liquid}}:
+          12:30:59 {{red:ERROR }} {{>}} {{blue:update sections/footer.liquid}}:
             message
           EOS
 
@@ -475,7 +475,7 @@ module ShopifyCLI
 
         # Assert an error message
         @ctx.expects(:error).with(<<~EOS.chomp)
-          12:30:59 [{{red:ERROR}}] {{blue:update sections/footer.liquid}}:
+          12:30:59 {{red:ERROR }} {{>}} {{blue:update sections/footer.liquid}}:
             message
           EOS
         file.stubs(checksum: "modified")
@@ -485,7 +485,7 @@ module ShopifyCLI
         end
 
         # Assert a single fix message
-        @ctx.expects(:puts).with("12:30:59 [{{cyan:Fixed}}] {{blue:update sections/footer.liquid}}").once
+        @ctx.expects(:puts).with("12:30:59 {{cyan:Fixed }} {{>}} {{blue:update sections/footer.liquid}}").once
         file.stubs(checksum: "initial")
         time_freeze do
           @syncer.enqueue_updates([file])
@@ -524,7 +524,7 @@ module ShopifyCLI
         mocha_verify
 
         @ctx.expects(:error).with(<<~EOS.chomp)
-          12:30:59 [{{red:ERROR}}] {{blue:update sections/footer.liquid}}:
+          12:30:59 {{red:ERROR }} {{>}} {{blue:update sections/footer.liquid}}:
             An error
             Then some
         EOS

@@ -20,7 +20,7 @@ module ShopifyCLI
             .returns("ERROR")
 
           time_freeze do
-            assert_message("{{red:ERROR}}", @operation.as_error_message)
+            assert_message("{{red:ERROR }}", @operation.as_error_message)
           end
         end
 
@@ -35,10 +35,10 @@ module ShopifyCLI
 
         def test_as_fixed_message
           @ctx.stubs(:message).with("theme.serve.operation.status.fixed")
-            .returns("Unchanged")
+            .returns("Fixed")
 
           time_freeze do
-            assert_message("{{cyan:Unchanged}}", @operation.as_fixed_message)
+            assert_message("{{cyan:Fixed }}", @operation.as_fixed_message)
           end
         end
 
@@ -54,7 +54,7 @@ module ShopifyCLI
         private
 
         def assert_message(status, actual_message)
-          expected_message = "12:30:59 [#{status}] {{blue:update sections/apps.liquid}}"
+          expected_message = "12:30:59 #{status} {{>}} {{blue:update sections/apps.liquid}}"
           assert_equal expected_message, actual_message
         end
 
