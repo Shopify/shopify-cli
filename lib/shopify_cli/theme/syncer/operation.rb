@@ -9,7 +9,7 @@ module ShopifyCLI
         COLOR_BY_STATUS = {
           error: :red,
           synced: :green,
-          unchanged: :cyan,
+          fixed: :cyan,
         }
 
         def initialize(ctx, method, file)
@@ -30,12 +30,12 @@ module ShopifyCLI
           as_message_with(status: :synced)
         end
 
-        def as_unchanged_message
-          as_message_with(status: :unchanged)
+        def as_fixed_message
+          as_message_with(status: :fixed)
         end
 
         def file_path
-          file&.relative_path
+          file&.relative_path.to_s
         end
 
         private

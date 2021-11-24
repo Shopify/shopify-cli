@@ -33,12 +33,12 @@ module ShopifyCLI
           end
         end
 
-        def test_as_unchanged_message
-          @ctx.stubs(:message).with("theme.serve.operation.status.unchanged")
+        def test_as_fixed_message
+          @ctx.stubs(:message).with("theme.serve.operation.status.fixed")
             .returns("Unchanged")
 
           time_freeze do
-            assert_message("{{cyan:Unchanged}}", @operation.as_unchanged_message)
+            assert_message("{{cyan:Unchanged}}", @operation.as_fixed_message)
           end
         end
 

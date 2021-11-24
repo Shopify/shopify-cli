@@ -39,6 +39,9 @@ module ShopifyCLI
 
         # Latest theme assets checksums. Updated on each upload.
         @checksums = {}
+
+        # Checksums of assets with errors. 
+        @error_checksums = []
       end
 
       def lock_io!
@@ -114,11 +117,9 @@ module ShopifyCLI
               break if operation.nil? # shutdown was called
               perform(operation)
             rescue Exception => e
-    
-              @error_reporter.report(
-                "#{operation.as_error_message}: #{e}" +
-                (@ctx.debug? ? "\n\t#{e.backtrace.join("\n\t")}" : "")
-              )
+              error_suffix = ": #{e}"
+              error_suffix += + "\n\t#{e.backtrace.join("\n\t")}" if @ctx.debug?
+              report_error(operation, error_suffix)
             end
           end
         end
@@ -179,6 +180,11 @@ module ShopifyCLI
 
       private
 
+      def report_error(operation, error_suffix = "")
+        @error_checksums << @checksums[operation.file_path]
+        @error_reporter.report("#{operation.as_error_message}#{error_suffix}")
+      end
+
       def enqueue(method, file)
         raise ArgumentError, "file required" unless file
 
@@ -193,7 +199,8 @@ module ShopifyCLI
         end
 
         if [:update, :get].include?(method) && operation.file.exist? && !file_has_changed?(operation.file)
-          @standard_reporter.report(operation.as_unchanged_message)
+          is_fixed = !!@error_checksums.delete(operation.file.checksum)
+          @standard_reporter.report(operation.as_fixed_message) if is_fixed
           return
         end
 
@@ -216,10 +223,8 @@ module ShopifyCLI
           backoff_if_near_limit!(used, total)
         end
       rescue ShopifyCLI::API::APIRequestError => e
-        @error_reporter.report(
-          "#{operation.as_error_message}:\n  " +
-          parse_api_errors(e).join("\n  ")
-        )
+        error_suffix = ":\n  " + parse_api_errors(e).join("\n  ")
+        report_error(operation, error_suffix)
       ensure
         @pending.delete(operation)
       end

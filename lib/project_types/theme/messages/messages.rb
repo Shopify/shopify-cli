@@ -103,7 +103,7 @@ module Theme
             status: {
               error: "ERROR",
               synced: "Synced",
-              unchanged: "Unchanged",
+              fixed: "Fixed",
             },
           },
           error: {

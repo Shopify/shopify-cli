@@ -425,9 +425,7 @@ module ShopifyCLI
         )
 
         ShopifyCLI::AdminAPI.expects(:rest_request)
-          .raises(ShopifyCLI::API::APIRequestClientError.new(
-            "message", response: mock(body: response_body)
-          ))
+          .raises(client_error(response_body))
 
         time_freeze do
           @syncer.enqueue_updates([file])
@@ -439,7 +437,7 @@ module ShopifyCLI
         mock_context_error_message
         @ctx.expects(:error).with(<<~EOS.chomp)
           12:30:59 [{{red:ERROR}}] {{blue:update sections/footer.liquid}}:
-            exception message
+            message
           EOS
 
         @syncer.start_threads
@@ -452,11 +450,45 @@ module ShopifyCLI
         )
 
         ShopifyCLI::AdminAPI.expects(:rest_request)
-          .raises(ShopifyCLI::API::APIRequestClientError.new(
-            "exception message", response: mock(body: response_body)
-          ))
+          .raises(client_error(response_body))
 
         time_freeze do
+          @syncer.enqueue_updates([file])
+          @syncer.wait!
+        end
+      end
+
+      def test_log_fixed_files
+        mock_context_error_message
+        mock_context_fixed_message
+
+        file = @theme["sections/footer.liquid"]
+        client_success = [200, {}, {}]
+
+        ShopifyCLI::AdminAPI.stubs(:rest_request)
+          .raises(client_error)
+          .then
+          .returns(client_success)
+
+        @syncer.checksums["sections/footer.liquid"] = "initial"
+        @syncer.start_threads
+
+        # Assert an error message
+        @ctx.expects(:error).with(<<~EOS.chomp)
+          12:30:59 [{{red:ERROR}}] {{blue:update sections/footer.liquid}}:
+            message
+          EOS
+        file.stubs(checksum: "modified")
+        time_freeze do
+          @syncer.enqueue_updates([file])
+          @syncer.wait!
+        end
+
+        # Assert a single fix message
+        @ctx.expects(:puts).with("12:30:59 [{{cyan:Fixed}}] {{blue:update sections/footer.liquid}}").once
+        file.stubs(checksum: "initial")
+        time_freeze do
+          @syncer.enqueue_updates([file])
           @syncer.enqueue_updates([file])
           @syncer.wait!
         end
@@ -476,9 +508,7 @@ module ShopifyCLI
         )
 
         ShopifyCLI::AdminAPI.expects(:rest_request)
-          .raises(ShopifyCLI::API::APIRequestClientError.new(
-            "message", response: mock(body: response_body)
-          ))
+          .raises(client_error(response_body))
 
         @ctx.expects(:error).never
         mock_context_error_message
@@ -512,6 +542,20 @@ module ShopifyCLI
         @ctx.stubs(:message)
           .with("theme.serve.operation.status.error")
           .returns("ERROR")
+      end
+
+      def mock_context_fixed_message
+        @ctx.stubs(:message)
+          .with("theme.serve.operation.status.fixed")
+          .returns("Fixed")
+      end
+
+      def client_error(response_body = default_response_body)
+        ShopifyCLI::API::APIRequestClientError.new("message", response: mock(body: response_body))
+      end
+
+      def default_response_body
+        JSON.generate(errors: {})
       end
     end
   end
