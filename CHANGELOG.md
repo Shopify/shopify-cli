@@ -1,6 +1,7 @@
 From version 2.6.0, the sections in this file adhere to the [keep a changelog](https://keepachangelog.com/en/1.0.0/) specification.
 ## [Unreleased]
 ### Fixed
+* [#1799](https://github.com/Shopify/shopify-cli/pull/1799): `hot-reload.js` complete refactor to fix invalid section id, and add new client JavaScript events.
 * [#1763](https://github.com/Shopify/shopify-cli/pull/1763): Fix: Tunnel --PORT parameter not working in Node.js app.
 * [#1769](https://github.com/Shopify/shopify-cli/pull/1769): Fix `theme push --development --json` to output the proper exit code
 * [#1766](https://github.com/Shopify/shopify-cli/pull/1766): Fix `theme serve` failing with the `--host` property
