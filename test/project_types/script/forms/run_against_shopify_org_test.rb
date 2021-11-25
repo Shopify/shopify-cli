@@ -3,10 +3,8 @@
 require "project_types/script/test_helper"
 
 describe Script::Forms::RunAgainstShopifyOrg do
-  include TestHelpers::FakeFS
-
   describe ".ask" do
-    let(:context) { TestHelpers::FakeContext.new(root: Dir.mktmpdir) }
+    let(:context) { TestHelpers::FakeContext.new }
 
     subject do
       result = nil
@@ -25,7 +23,7 @@ describe Script::Forms::RunAgainstShopifyOrg do
     end
 
     describe "does not want to run against shopify" do
-      it "respone is false" do
+      it "response is false" do
         CLI::UI::Prompt
           .expects(:confirm)
           .with(context.message("core.tasks.select_org_and_shop.first_party"), default: false)

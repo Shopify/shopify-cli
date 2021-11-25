@@ -3,9 +3,8 @@
 require "project_types/script/test_helper"
 
 describe Script::Forms::AskOrg do
-  include TestHelpers::FakeFS
   describe ".ask" do
-    let(:context) { TestHelpers::FakeContext.new(root: Dir.mktmpdir) }
+    let(:context) { TestHelpers::FakeContext.new }
 
     subject do
       result = nil

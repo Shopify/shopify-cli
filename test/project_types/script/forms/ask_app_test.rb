@@ -3,9 +3,8 @@
 require "project_types/script/test_helper"
 
 describe Script::Forms::AskApp do
-  include TestHelpers::FakeFS
   describe ".ask" do
-    let(:context) { TestHelpers::FakeContext.new(root: Dir.mktmpdir) }
+    let(:context) { TestHelpers::FakeContext.new }
     let(:acting_as_shopify_organization) { false }
     let(:selected_api_key) { "default_api_key" }
     let(:selected_secret) { "default_secret" }
