@@ -156,11 +156,6 @@ namespace :scripts do
       File.symlink(source, target)
     end
 
-    task :install do
-      require_relative Paths.javy("javy.rb")
-      Javy.install
-    end
-
     module Paths
       def self.javy(*args)
         root("ext", "javy", *args)
