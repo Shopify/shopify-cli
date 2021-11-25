@@ -2,10 +2,12 @@ require "rbconfig"
 require "open-uri"
 require "zlib"
 require "open3"
+require "digest/sha2"
 
 module Javy
   ROOT = __dir__
   BIN_FOLDER = File.join(ROOT, "bin")
+  HASH_FOLDER = File.join(ROOT, "hashes")
   VERSION = File.read(File.join(ROOT, "version")).strip
   TARGET = File.join(BIN_FOLDER, "javy-#{VERSION}")
 
@@ -17,14 +19,13 @@ module Javy
     end
 
     def build(source:, dest: nil)
-      ensure_installed
-
       optional_args = []
       optional_args += ["-o", dest] unless dest.nil?
 
       ShopifyCLI::Result
-        .wrap { exec(source, *optional_args) }
+        .wrap { ensure_installed }
         .call
+        .then { exec(source, *optional_args) }
     end
 
     private
@@ -45,7 +46,8 @@ module Javy
 
     def ensure_installed
       delete_outdated_installations
-      install unless Installer.installed?(target: target)
+      install.unwrap { |e| raise e } unless Installer.installed?(target: target)
+      true
     end
 
     def delete_outdated_installations
@@ -97,6 +99,10 @@ module Javy
         url: url
       ))
     end
+
+    def self.invalid_binary
+      new("Invalid Javy binary downloaded.")
+    end
   end
 
   Asset = Struct.new(:platform, :version, :owner, :repository, :basename, keyword_init: true) do
@@ -105,8 +111,12 @@ module Javy
 
       Dir.chdir(File.dirname(target)) do
         File.open(File.basename(target), "wb") do |target_file|
-          decompress(url.open, target_file)
+          source_file = url.open
+          validate_sha!(source_file)
+          source_file.seek(0)
+          decompress(source_file, target_file)
         end
+
         File.chmod(0755, target)
       end
 
@@ -142,6 +152,12 @@ module Javy
       target << zlib.read
     ensure
       zlib.close
+    end
+
+    def validate_sha!(source)
+      generated_hash = Digest::SHA256.hexdigest(source.read).strip
+      expected_hash = File.read(File.join(HASH_FOLDER, "#{filename}.sha256")).strip
+      raise InstallationError.invalid_binary unless generated_hash == expected_hash
     end
   end
 

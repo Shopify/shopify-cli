@@ -4,9 +4,17 @@ require_relative "../../../ext/javy/javy.rb"
 class JavyTest < Minitest::Test
   include TestHelpers::FakeFS
 
+  DUMMY_ARCHIVE = "\u001F\x8B\b\u0000\x9C\xE1{a\u0000\u0003ST"\
+  "\xD6O\xCA\xCC\xD3OJ,\xCE\xE0JM\xCE\xC8WP\xCFH"\
+  "\xCD\xC9\xC9W(\xCF/\xCAIQ\a\u00007Q\xAC4\u001E"\
+  "\u0000\u0000\u0000"
+  DUMMY_ARCHIVE_SHA256 = Digest::SHA256.hexdigest(DUMMY_ARCHIVE)
+  ASSET_FILENAME = "javy-x86_64-%s-v0.1.0.gz"
+
   def setup
     super
     FileUtils.mkdir_p(::Javy::BIN_FOLDER)
+    FileUtils.mkdir_p(::Javy::HASH_FOLDER)
     File.write(File.join(::Javy::ROOT, "version"), "v0.1.0")
   end
 
@@ -45,6 +53,22 @@ class JavyTest < Minitest::Test
     assert_kind_of(ShopifyCLI::Result::Failure, result)
     assert_kind_of(Javy::InstallationError, result.error)
     assert_match("Unable to download javy", result.error.message)
+  end
+
+  def test_install_raises_when_binary_hash_is_unexpected
+    stub_executable_download(executable_sha: "invalid")
+    result = install(PlatformHelper.macos_config)
+    assert_kind_of(ShopifyCLI::Result::Failure, result)
+    assert_kind_of(Javy::InstallationError, result.error)
+    assert_match("Invalid Javy binary downloaded", result.error.message)
+  end
+
+  def test_install_strips_whitespace_when_comparing_shas
+    stub_executable_download(executable_sha: "#{DUMMY_ARCHIVE_SHA256} \n")
+    assert_kind_of(ShopifyCLI::Result::Success, install(PlatformHelper.macos_config))
+
+    assert File.file?(Javy::TARGET)
+    assert File.executable?(Javy::TARGET)
   end
 
   def test_build_runs_javy_command_on_unix
@@ -136,35 +160,30 @@ class JavyTest < Minitest::Test
     Javy.build(source: source, dest: dest)
   end
 
-  def stub_executable_download
-    stub_executable_download_request("linux")
-    stub_executable_download_request("macos")
-    stub_executable_download_request("windows")
+  def stub_executable_download(executable_sha: DUMMY_ARCHIVE_SHA256)
+    stub_executable_download_request("linux", executable_sha)
+    stub_executable_download_request("macos", executable_sha)
+    stub_executable_download_request("windows", executable_sha)
   end
 
-  def stub_executable_download_request(os)
-    stub_request(:get, "https://github.com/Shopify/javy/releases/download/v0.1.0/javy-x86_64-#{os}-v0.1.0.gz")
+  def stub_executable_download_request(os, executable_sha)
+    asset_filename = ASSET_FILENAME % os
+    File.write(File.join(::Javy::HASH_FOLDER, "#{asset_filename}.sha256"), executable_sha)
+    stub_request(:get, "https://github.com/Shopify/javy/releases/download/v0.1.0/#{asset_filename}")
       .to_return(
       status: 200,
       headers: {
         "Content-Type" => "application/octet-stream",
-        "Content-Disposition" => "attachment; filename=javy-x86_64-#{os}-v0.1.0.gz",
-        "Content-Length" => dummy_archive.size,
+        "Content-Disposition" => "attachment; filename=javy-#{asset_filename}",
+        "Content-Length" => DUMMY_ARCHIVE.size,
       },
-      body: dummy_archive
+      body: DUMMY_ARCHIVE
     )
   end
 
   def simulate_broken_asset_link
-    stub_request(:get, "https://github.com/Shopify/javy/releases/download/v0.1.0/javy-x86_64-macos-v0.1.0.gz")
+    stub_request(:get, "https://github.com/Shopify/javy/releases/download/v0.1.0/#{ASSET_FILENAME % "macos"}")
       .to_raise(OpenURI::HTTPError.new("404 Not Found", StringIO.new))
-  end
-
-  def dummy_archive
-    @dummy_archive ||= "\u001F\x8B\b\u0000\x9C\xE1{a\u0000\u0003ST"\
-      "\xD6O\xCA\xCC\xD3OJ,\xCE\xE0JM\xCE\xC8WP\xCFH"\
-      "\xCD\xC9\xC9W(\xCF/\xCAIQ\a\u00007Q\xAC4\u001E"\
-      "\u0000\u0000\u0000"
   end
 
   module PlatformHelper
