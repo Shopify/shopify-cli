@@ -18,46 +18,54 @@ class JavyTest < Minitest::Test
     File.write(File.join(::Javy::ROOT, "version"), "v0.1.0")
   end
 
-  def test_install_existing_version_for_mac_os
+  def test_build_on_macos_installs_javy_automatically_and_executes
     stub_executable_download
+    stub_platform(PlatformHelper.macos_config)
 
-    assert_kind_of(ShopifyCLI::Result::Success, install(PlatformHelper.macos_config))
+    assert_kind_of(ShopifyCLI::Result::Success, run_build_and_expect_execution)
 
     assert File.file?(Javy::TARGET)
     assert File.executable?(Javy::TARGET)
   end
 
-  def test_install_existing_version_for_windows
+  def test_build_on_windows_installs_javy_automatically_and_executes
     stub_executable_download
-
+    stub_platform(PlatformHelper.windows_config)
     expected_target = Javy::TARGET + ".exe"
-    assert_kind_of(ShopifyCLI::Result::Success, install(PlatformHelper.windows_config))
+
+    assert_kind_of(ShopifyCLI::Result::Success, run_build_and_expect_execution(target: expected_target))
 
     assert File.file?(expected_target)
     assert File.executable?(expected_target)
   end
 
-  def test_install_existing_version_for_linux
+  def test_build_on_linux_installs_javy_automatically_and_executes
     stub_executable_download
+    stub_platform(PlatformHelper.linux_config)
 
-    assert_kind_of(ShopifyCLI::Result::Success, install(PlatformHelper.linux_config))
+    assert_kind_of(ShopifyCLI::Result::Success, run_build_and_expect_execution)
 
     assert File.file?(Javy::TARGET)
     assert File.executable?(Javy::TARGET)
   end
 
-  def test_install_raises_for_http_errors_during_asset_download
+  def test_build_returns_failure_for_http_errors_during_asset_download
     simulate_broken_asset_link
+    stub_platform(PlatformHelper.macos_config)
 
-    result = install(PlatformHelper.macos_config)
+    result = run_build
+
     assert_kind_of(ShopifyCLI::Result::Failure, result)
     assert_kind_of(Javy::InstallationError, result.error)
     assert_match("Unable to download javy", result.error.message)
   end
 
-  def test_install_raises_when_binary_hash_is_unexpected
+  def test_build_returns_failure_when_binary_hash_is_unexpected
     stub_executable_download(executable_sha: "invalid")
-    result = install(PlatformHelper.macos_config)
+    stub_platform(PlatformHelper.macos_config)
+
+    result = run_build
+
     assert_kind_of(ShopifyCLI::Result::Failure, result)
     assert_kind_of(Javy::InstallationError, result.error)
     assert_match("Invalid Javy binary downloaded", result.error.message)
@@ -65,40 +73,16 @@ class JavyTest < Minitest::Test
 
   def test_install_strips_whitespace_when_comparing_shas
     stub_executable_download(executable_sha: "#{DUMMY_ARCHIVE_SHA256} \n")
-    assert_kind_of(ShopifyCLI::Result::Success, install(PlatformHelper.macos_config))
+    assert_kind_of(ShopifyCLI::Result::Success, run_build_and_expect_execution)
 
     assert File.file?(Javy::TARGET)
     assert File.executable?(Javy::TARGET)
-  end
-
-  def test_build_runs_javy_command_on_unix
-    stub_executable_download
-    install(PlatformHelper.macos_config)
-    run_build_and_expect_execution
-  end
-
-  def test_build_runs_javy_command_on_windows
-    stub_executable_download
-    install(PlatformHelper.windows_config)
-    run_build_and_expect_execution(target: Javy::TARGET + ".exe")
   end
 
   def test_build_accepts_optional_dest_argument
     stub_executable_download
-    install(PlatformHelper.macos_config)
+    stub_platform(PlatformHelper.macos_config)
     run_build_and_expect_execution(dest: nil)
-  end
-
-  def test_build_installs_javy_by_default
-    stub_executable_download
-
-    refute File.file?(Javy::TARGET)
-    refute File.executable?(Javy::TARGET)
-
-    run_build_and_expect_execution
-
-    assert File.file?(Javy::TARGET)
-    assert File.executable?(Javy::TARGET)
   end
 
   def test_build_deletes_outdated_javy_installations_and_installs_new_one
@@ -147,17 +131,23 @@ class JavyTest < Minitest::Test
 
   private
 
-  def install(platform_config)
+  def stub_platform(platform_config)
     stubbed_platform = Javy::Platform.new(platform_config)
     Javy::Platform.stubs(:new).returns(stubbed_platform)
-    Javy.install
+  end
+
+  def run_build(source: "src/index.js", dest: "build/index.wasm")
+    Javy.build(source: source, dest: dest)
   end
 
   def run_build_and_expect_execution(source: "src/index.js", dest: "build/index.wasm", target: Javy::TARGET)
     optional_args = dest.nil? ? [] : ["-o", dest]
 
-    CLI::Kit::System.expects(:capture2e).with(target, source, *optional_args, anything)
-    Javy.build(source: source, dest: dest)
+    CLI::Kit::System
+      .expects(:capture2e)
+      .with(target, source, *optional_args, anything)
+      .returns([nil, stub(success?: true)])
+    run_build(source: source, dest: dest)
   end
 
   def stub_executable_download(executable_sha: DUMMY_ARCHIVE_SHA256)

@@ -12,12 +12,6 @@ module Javy
   TARGET = File.join(BIN_FOLDER, "javy-#{VERSION}")
 
   class << self
-    def install
-      ShopifyCLI::Result
-        .wrap { Installer.call(target: target, platform: platform, version: VERSION) }
-        .call
-    end
-
     def build(source:, dest: nil)
       optional_args = []
       optional_args += ["-o", dest] unless dest.nil?
@@ -36,6 +30,10 @@ module Javy
       true
     end
 
+    def install
+      Installer.call(target: target, platform: platform, version: VERSION)
+    end
+
     def platform
       Platform.new
     end
@@ -46,7 +44,7 @@ module Javy
 
     def ensure_installed
       delete_outdated_installations
-      install.unwrap { |e| raise e } unless Installer.installed?(target: target)
+      install unless Installer.installed?(target: target)
       true
     end
 
