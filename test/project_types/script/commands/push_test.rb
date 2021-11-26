@@ -11,7 +11,8 @@ module Script
         @api_key = "apikey"
         @uuid = "uuid"
         @force = true
-        @env = ShopifyCLI::Resources::EnvFile.new(api_key: @api_key, secret: "shh", extra: { "UUID" => @uuid })
+        @secret = "shh"
+        @env = ShopifyCLI::Resources::EnvFile.new(api_key: @api_key, secret: @secret, extra: { "UUID" => @uuid })
         @script_project_repo = TestHelpers::FakeScriptProjectRepository.new
         @script_project_repo.create(
           language: "assemblyscript",
@@ -19,12 +20,14 @@ module Script
           script_name: "script_name",
           env: @env
         )
+
+        Layers::Application::ConnectApp.stubs(:call).returns(false)
+
         Script::Layers::Infrastructure::ScriptProjectRepository.stubs(:new).returns(@script_project_repo)
         ShopifyCLI::Tasks::EnsureProjectType.stubs(:call).with(@context, :script).returns(true)
       end
 
       def test_calls_push_script
-        Tasks::EnsureEnv.expects(:call).with(@context)
         Layers::Application::PushScript.expects(:call).with(ctx: @context, force: @force)
 
         @context
@@ -40,11 +43,10 @@ module Script
         Script::Command::Push.help
       end
 
-      def test_push_propagates_error_when_ensure_env_fails
+      def test_push_propagates_error_when_connect_fails
         err_msg = "error message"
-        Tasks::EnsureEnv
+        Layers::Application::ConnectApp
           .expects(:call)
-          .with(@context)
           .raises(StandardError.new(err_msg))
 
         e = assert_raises(StandardError) { perform_command }
@@ -53,19 +55,19 @@ module Script
 
       def test_does_not_force_push_if_user_env_already_existed
         @force = false
-        Layers::Application::PushScript.expects(:call).with(ctx: @context, force: @force)
+        Layers::Application::ConnectApp.expects(:call).returns(false)
+        Layers::Application::PushScript.expects(:call).with(ctx: @context, force: false)
         perform_command
       end
 
       def test_force_pushes_script_if_user_env_was_just_created
         @force = false
-        Tasks::EnsureEnv.expects(:call).returns(true)
+        Layers::Application::ConnectApp.expects(:call).returns(true)
         Layers::Application::PushScript.expects(:call).with(ctx: @context, force: true)
         perform_command
       end
 
       def test_push_doesnt_print_api_key_when_it_hasnt_been_selected
-        Tasks::EnsureEnv.expects(:call)
         @script_project_repo.expects(:get).returns(nil)
 
         UI::ErrorHandler.expects(:pretty_print_and_raise).with do |_error, args|
@@ -76,7 +78,6 @@ module Script
       end
 
       def test_push_prints_api_key_when_it_has_been_selected
-        Tasks::EnsureEnv.expects(:call)
         Layers::Application::PushScript.expects(:call).raises(StandardError.new)
 
         UI::ErrorHandler.expects(:pretty_print_and_raise).with do |_error, args|

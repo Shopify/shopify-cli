@@ -19,6 +19,10 @@ module Script
 
   # define/autoload project specific Forms
   module Forms
+    autoload :AskOrg, Project.project_filepath("forms/ask_org")
+    autoload :AskApp, Project.project_filepath("forms/ask_app")
+    autoload :AskScriptUuid, Project.project_filepath("forms/ask_script_uuid")
+    autoload :RunAgainstShopifyOrg, Project.project_filepath("forms/run_against_shopify_org")
     autoload :Create, Project.project_filepath("forms/create")
     autoload :ScriptForm, Project.project_filepath("forms/script_form")
   end
@@ -30,6 +34,7 @@ module Script
   module Layers
     module Application
       autoload :BuildScript, Project.project_filepath("layers/application/build_script")
+      autoload :ConnectApp, Project.project_filepath("layers/application/connect_app")
       autoload :CreateScript, Project.project_filepath("layers/application/create_script")
       autoload :PushScript, Project.project_filepath("layers/application/push_script")
       autoload :ExtensionPoints, Project.project_filepath("layers/application/extension_points")

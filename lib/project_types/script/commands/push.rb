@@ -10,7 +10,8 @@ module Script
       end
 
       def call(_args, _name)
-        fresh_env = Tasks::EnsureEnv.call(@ctx)
+        fresh_env = Layers::Application::ConnectApp.call(ctx: @ctx)
+
         force = options.flags.key?(:force) || !!fresh_env
 
         api_key = Layers::Infrastructure::ScriptProjectRepository.new(ctx: @ctx).get.api_key

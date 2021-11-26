@@ -17,17 +17,17 @@ module ShopifyCLI
           @delayed_errors = []
         end
 
-        def delay_errors!
+        def disable!
           @delay_errors = true
         end
 
-        def report_errors!
+        def enable!
           @delay_errors = false
-          @delayed_errors.each { |error| report_error(error) }
+          @delayed_errors.each { |error| report(error) }
           @delayed_errors.clear
         end
 
-        def report_error(error_message)
+        def report(error_message)
           if @delay_errors
             @delayed_errors << error_message
           else
