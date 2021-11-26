@@ -43,6 +43,10 @@ module Script
           !raw_uuid.nil?
         end
 
+        def env_valid?
+          api_key && api_secret && uuid_defined?
+        end
+
         private
 
         def raw_uuid
