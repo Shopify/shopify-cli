@@ -67,8 +67,8 @@ module Script
         def initialize(type)
           super(type, {
             "libraries" => {
-              "typescript" => {}
-            }
+              "typescript" => {},
+            },
           })
         end
       end

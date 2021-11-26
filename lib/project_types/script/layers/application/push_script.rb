@@ -15,15 +15,17 @@ module Script
             extension_point_type = script_project.extension_point_type
             extension_point = ExtensionPoints.get(type: extension_point_type)
 
-            library = case extension_point 
+            library = case extension_point
             when Domain::UnknownExtensionPoint
-              raise Domain::Errors::InvalidExtensionPointError, extension_point_type unless allow_unknown_extension_points? 
+              raise Domain::Errors::InvalidExtensionPointError,
+                extension_point_type unless allow_unknown_extension_points?
 
-              ctx.puts(ctx.message("script.application.unknown_warning", extension_point: script_project.extension_point_type))
+              ctx.puts(ctx.message("script.application.unknown_warning",
+                extension_point: script_project.extension_point_type))
 
               {
                 language: script_project.language,
-                version: DEFAULT_VERSION
+                version: DEFAULT_VERSION,
               }
             when Domain::ExtensionPoint
               library_name = extension_point.libraries.for(script_project.language)&.package

@@ -7,7 +7,8 @@ module Script
         def self.get!(type:)
           extension_point = get(type: type)
 
-          raise Domain::Errors::InvalidExtensionPointError, type if extension_point.is_a?(Domain::UnknownExtensionPoint) 
+          raise Domain::Errors::InvalidExtensionPointError,
+            type if extension_point.is_a?(Domain::UnknownExtensionPoint)
 
           extension_point
         end

@@ -125,7 +125,7 @@ describe Script::Layers::Application::PushScript do
 
       describe "When unknown extension points have been allowed" do
         before do
-          Script::Layers::Application::PushScript.expects(:allow_unknown_extension_points?).returns(true) 
+          Script::Layers::Application::PushScript.expects(:allow_unknown_extension_points?).returns(true)
         end
 
         it "should prepare and push the script with mock library information" do
@@ -147,7 +147,7 @@ describe Script::Layers::Application::PushScript do
             script_project: script_project,
             library: {
               language: script_project.language,
-              version: Script::Layers::Application::PushScript::DEFAULT_VERSION
+              version: Script::Layers::Application::PushScript::DEFAULT_VERSION,
             }
           )
           capture_io { subject }

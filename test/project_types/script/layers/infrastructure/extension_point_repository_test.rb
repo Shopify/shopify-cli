@@ -22,7 +22,8 @@ describe Script::Layers::Infrastructure::ExtensionPointRepository do
       let(:bogus_extension) { "bogus" }
 
       it "should return an unknown extension point" do
-        assert Script::Layers::Domain::UnknownExtensionPoint.new(bogus_extension), subject.get_extension_point(bogus_extension)
+        assert Script::Layers::Domain::UnknownExtensionPoint.new(bogus_extension),
+          subject.get_extension_point(bogus_extension)
       end
     end
   end

@@ -21,7 +21,7 @@ describe Script::Layers::Application::ExtensionPoints do
 
   describe ".get" do
     it "should call the extension point repository" do
-      repo_result = mock()
+      repo_result = mock
 
       extension_point_repository.expects(:get_extension_point).returns(repo_result)
 
