@@ -49,6 +49,7 @@ module Extension
         Messages::MessageLoading.expects(:load_current_type_messages).returns(@fake_override_messages).once
 
         loaded_messages = Messages::MessageLoading.load
+        refute_nil loaded_messages[:build][:build_failure_message]
         assert_equal Messages::MESSAGES[:build][:build_failure_message], loaded_messages[:build][:build_failure_message]
       end
 

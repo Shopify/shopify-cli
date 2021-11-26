@@ -90,7 +90,6 @@ describe Script::Layers::Application::BuildScript do
       end
 
       [
-        Script::Layers::Infrastructure::Errors::InvalidBuildScriptError,
         Script::Layers::Infrastructure::Errors::BuildScriptNotFoundError,
         Script::Layers::Infrastructure::Errors::WebAssemblyBinaryNotFoundError,
       ].each do |e|

@@ -109,7 +109,6 @@ module Script
         class ScriptProjectAlreadyExistsError < ScriptProjectError; end
         class TaskRunnerNotFoundError < ScriptProjectError; end
         class BuildScriptNotFoundError < ScriptProjectError; end
-        class InvalidBuildScriptError < ScriptProjectError; end
 
         class WebAssemblyBinaryNotFoundError < ScriptProjectError
           def initialize

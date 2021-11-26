@@ -23,7 +23,6 @@ module Script
                   ctx.puts("\n{{red:#{e.message}}}")
                 end
                 errors = [
-                  Infrastructure::Errors::InvalidBuildScriptError,
                   Infrastructure::Errors::BuildScriptNotFoundError,
                   Infrastructure::Errors::WebAssemblyBinaryNotFoundError,
                 ]

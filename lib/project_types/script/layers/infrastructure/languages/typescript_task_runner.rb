@@ -100,10 +100,6 @@ module Script
 
             raise Errors::BuildScriptNotFoundError,
               "Build script not found" if build_script.nil?
-
-            unless build_script.start_with?("javy")
-              raise Errors::InvalidBuildScriptError, "Invalid build script"
-            end
           end
 
           def bytecode

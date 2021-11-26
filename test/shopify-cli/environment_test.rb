@@ -16,6 +16,19 @@ module ShopifyCLI
       assert got
     end
 
+    def test_auth_token_returns_the_right_value
+      # Given
+      env_variables = {
+        Constants::EnvironmentVariables::AUTH_TOKEN.to_s => "token",
+      }
+
+      # When
+      got = Environment.auth_token(env_variables: env_variables)
+
+      # Then
+      assert_equal "token", got
+    end
+
     def test_use_local_partners_instance_returns_false_when_the_env_variable_is_not_set
       # Given/When
       got = Environment.use_local_partners_instance?(env_variables: {})

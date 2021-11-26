@@ -61,16 +61,9 @@ module ShopifyCLI
       def api_client(ctx)
         new(
           ctx: ctx,
-          token: access_token(ctx),
+          token: IdentityAuth.fetch_or_auth_partners_token(ctx: ctx),
           url: "https://#{Environment.partners_domain}/api/cli/graphql",
         )
-      end
-
-      def access_token(ctx)
-        ShopifyCLI::DB.get(:partners_exchange_token) do
-          IdentityAuth.new(ctx: ctx).authenticate
-          ShopifyCLI::DB.get(:partners_exchange_token)
-        end
       end
 
       def auth_failure_info(ctx, error)

@@ -201,11 +201,6 @@ module Script
             cause_of_error: ShopifyCLI::Context.message("script.error.build_script_not_found"),
             help_suggestion: ShopifyCLI::Context.message("script.error.build_script_suggestion"),
           }
-        when Layers::Infrastructure::Errors::InvalidBuildScriptError
-          {
-            cause_of_error: ShopifyCLI::Context.message("script.error.invalid_build_script"),
-            help_suggestion: ShopifyCLI::Context.message("script.error.build_script_suggestion"),
-          }
         when Layers::Infrastructure::Errors::WebAssemblyBinaryNotFoundError
           {
             cause_of_error: ShopifyCLI::Context.message("script.error.web_assembly_binary_not_found"),
