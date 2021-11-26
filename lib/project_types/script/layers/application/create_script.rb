@@ -11,7 +11,8 @@ module Script
             raise Infrastructure::Errors::ScriptProjectAlreadyExistsError, script_name if ctx.dir_exist?(script_name)
 
             in_new_directory_context(ctx, script_name) do
-              extension_point = ExtensionPoints.get(type: extension_point_type)
+              extension_point = ExtensionPoints.get!(type: extension_point_type)
+
               script_project_repo = Infrastructure::ScriptProjectRepository.new(ctx: ctx)
               project = script_project_repo.create(
                 script_name: script_name,

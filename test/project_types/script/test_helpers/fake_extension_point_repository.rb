@@ -24,7 +24,7 @@ module TestHelpers
       if @cache.key?(type)
         @cache[type]
       else
-        raise Script::Layers::Domain::Errors::InvalidExtensionPointError, type
+        Script::Layers::Domain::UnknownExtensionPoint.new(type)
       end
     end
 

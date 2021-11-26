@@ -62,6 +62,16 @@ module Script
           end
         end
       end
+
+      class UnknownExtensionPoint < ExtensionPoint
+        def initialize(type)
+          super(type, {
+            "libraries" => {
+              "typescript" => {}
+            }
+          })
+        end
+      end
     end
   end
 end

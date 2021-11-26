@@ -208,6 +208,7 @@ module Script
           built: "Built",
           pushing: "Pushing",
           pushed: "Pushed",
+          unknown_warning: "{{?}} Unknown Extension Point '%{extension_point}'",
           ensure_env: {
             organization: "Partner organization {{green:%s (%s)}}.",
             organization_select: "Which partner organization do you want to use?",

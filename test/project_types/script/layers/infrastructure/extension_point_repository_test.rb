@@ -21,10 +21,8 @@ describe Script::Layers::Infrastructure::ExtensionPointRepository do
     describe "when the extension point does not exist" do
       let(:bogus_extension) { "bogus" }
 
-      it "should raise InvalidExtensionPointError" do
-        assert_raises(Script::Layers::Domain::Errors::InvalidExtensionPointError) do
-          subject.get_extension_point(bogus_extension)
-        end
+      it "should return an unknown extension point" do
+        assert Script::Layers::Domain::UnknownExtensionPoint.new(bogus_extension), subject.get_extension_point(bogus_extension)
       end
     end
   end

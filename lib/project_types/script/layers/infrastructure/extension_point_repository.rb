@@ -5,7 +5,11 @@ module Script
     module Infrastructure
       class ExtensionPointRepository
         def get_extension_point(type)
-          Domain::ExtensionPoint.new(type, fetch_extension_point(type))
+          config = fetch_extension_point_config(type)
+
+          return Domain::UnknownExtensionPoint.new(type) if config.nil?
+
+          Domain::ExtensionPoint.new(type, config)
         end
 
         def extension_points
@@ -20,8 +24,7 @@ module Script
 
         private
 
-        def fetch_extension_point(type)
-          raise Domain::Errors::InvalidExtensionPointError, type unless extension_point_configs[type]
+        def fetch_extension_point_config(type)
           extension_point_configs[type]
         end
 

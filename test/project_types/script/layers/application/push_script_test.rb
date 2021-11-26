@@ -9,7 +9,8 @@ describe Script::Layers::Application::PushScript do
   let(:api_key) { "api_key" }
   let(:force) { true }
   let(:use_msgpack) { true }
-  let(:extension_point_type) { "discount" }
+  let(:registered_extension_point_type) { "discount" }
+  let(:script_extension_point_type) { registered_extension_point_type }
   let(:metadata) { Script::Layers::Domain::Metadata.new("1", "0", use_msgpack) }
   let(:library_version) { "1.0.0" }
   let(:library_language) { "assemblyscript" }
@@ -25,7 +26,7 @@ describe Script::Layers::Application::PushScript do
   let(:script_project) do
     script_project_repository.create(
       language: library_language,
-      extension_point_type: extension_point_type,
+      extension_point_type: script_extension_point_type,
       script_name: script_name,
       env: ShopifyCLI::Resources::EnvFile.new(api_key: api_key, secret: "shh")
     )
@@ -34,7 +35,7 @@ describe Script::Layers::Application::PushScript do
   let(:extension_point_repository) { TestHelpers::FakeExtensionPointRepository.new }
   let(:script_project_repository) { TestHelpers::FakeScriptProjectRepository.new }
   let(:task_runner) { stub(compiled_type: "wasm", metadata: metadata, library_version: library_version) }
-  let(:ep) { extension_point_repository.get_extension_point(extension_point_type) }
+  let(:ep) { extension_point_repository.get_extension_point(script_extension_point_type) }
   let(:uuid) { "uuid" }
   let(:url) { "https://some-bucket" }
 
@@ -47,7 +48,7 @@ describe Script::Layers::Application::PushScript do
       .with(@context, library_language, script_name)
       .returns(task_runner)
 
-    extension_point_repository.create_extension_point(extension_point_type)
+    extension_point_repository.create_extension_point(registered_extension_point_type)
     push_package_repository.create_push_package(
       script_project: script_project,
       script_content: "content",
@@ -108,6 +109,50 @@ describe Script::Layers::Application::PushScript do
       it "should raise APILibraryNotFoundError" do
         error = assert_raises(Script::Layers::Infrastructure::Errors::APILibraryNotFoundError) { subject }
         assert_equal library_name, error.library_name
+      end
+    end
+
+    describe "when the extension point is unregistered" do
+      let(:script_extension_point_type) { "arbitrary" }
+
+      describe "When unknown extension points haven't been explicitly allowed" do
+        it "should raise an extension point error" do
+          assert_raises(Script::Layers::Domain::Errors::InvalidExtensionPointError) do
+            subject
+          end
+        end
+      end
+
+      describe "When unknown extension points have been allowed" do
+        before do
+          Script::Layers::Application::PushScript.expects(:allow_unknown_extension_points?).returns(true) 
+        end
+
+        it "should prepare and push the script with mock library information" do
+          script_service_instance = mock
+          script_service_instance.expects(:set_app_script).returns(uuid)
+          Script::Layers::Infrastructure::ScriptService
+            .expects(:new).returns(script_service_instance)
+
+          script_uploader_instance = mock
+          script_uploader_instance.expects(:upload).returns(url)
+          Script::Layers::Infrastructure::ScriptUploader
+            .expects(:new).returns(script_uploader_instance)
+
+          Script::Layers::Application::ProjectDependencies
+            .expects(:install).with(ctx: @context, task_runner: task_runner)
+          Script::Layers::Application::BuildScript.expects(:call).with(
+            ctx: @context,
+            task_runner: task_runner,
+            script_project: script_project,
+            library: {
+              language: script_project.language,
+              version: Script::Layers::Application::PushScript::DEFAULT_VERSION
+            }
+          )
+          capture_io { subject }
+          assert_equal uuid, script_project_repository.get.uuid
+        end
       end
     end
   end

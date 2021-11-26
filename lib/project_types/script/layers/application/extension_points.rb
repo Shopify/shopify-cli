@@ -4,6 +4,14 @@ module Script
   module Layers
     module Application
       class ExtensionPoints
+        def self.get!(type:)
+          extension_point = get(type: type)
+
+          raise Domain::Errors::InvalidExtensionPointError, type if extension_point.is_a?(Domain::UnknownExtensionPoint) 
+
+          extension_point
+        end
+
         def self.get(type:)
           Infrastructure::ExtensionPointRepository.new.get_extension_point(type)
         end

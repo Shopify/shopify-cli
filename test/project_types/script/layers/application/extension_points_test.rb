@@ -20,9 +20,19 @@ describe Script::Layers::Application::ExtensionPoints do
   end
 
   describe ".get" do
+    it "should call the extension point repository" do
+      repo_result = mock()
+
+      extension_point_repository.expects(:get_extension_point).returns(repo_result)
+
+      assert_equal repo_result, Script::Layers::Application::ExtensionPoints.get(type: extension_point_type)
+    end
+  end
+
+  describe ".get!" do
     describe "when extension point exists" do
       it "should return a valid extension point" do
-        ep = Script::Layers::Application::ExtensionPoints.get(type: extension_point_type)
+        ep = Script::Layers::Application::ExtensionPoints.get!(type: extension_point_type)
         assert_equal extension_point, ep
       end
     end
@@ -30,7 +40,7 @@ describe Script::Layers::Application::ExtensionPoints do
     describe "when extension point does not exist" do
       it "should raise InvalidExtensionPointError" do
         assert_raises(Script::Layers::Domain::Errors::InvalidExtensionPointError) do
-          Script::Layers::Application::ExtensionPoints.get(type: "invalid")
+          Script::Layers::Application::ExtensionPoints.get!(type: "invalid")
         end
       end
     end
@@ -72,14 +82,6 @@ describe Script::Layers::Application::ExtensionPoints do
     let(:type) { extension_point_type }
     subject { Script::Layers::Application::ExtensionPoints.languages(type: type) }
 
-    describe "when ep does not exist" do
-      let(:type) { "imaginary" }
-
-      it "should raise InvalidExtensionPointError" do
-        assert_raises(Script::Layers::Domain::Errors::InvalidExtensionPointError) { subject }
-      end
-    end
-
     describe "when beta language flag is enabled" do
       before do
         ShopifyCLI::Feature.expects(:enabled?).with(:scripts_beta_languages).returns(true).at_least_once
@@ -105,14 +107,6 @@ describe Script::Layers::Application::ExtensionPoints do
     let(:type) { extension_point_type }
     let(:language) { "assemblyscript" }
     subject { Script::Layers::Application::ExtensionPoints.supported_language?(type: type, language: language) }
-
-    describe "when ep does not exist" do
-      let(:type) { "imaginary" }
-
-      it "should raise InvalidExtensionPointError" do
-        assert_raises(Script::Layers::Domain::Errors::InvalidExtensionPointError) { subject }
-      end
-    end
 
     describe "when beta language flag is enabled" do
       before do

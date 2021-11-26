@@ -4,24 +4,39 @@ module Script
   module Layers
     module Application
       class PushScript
+        DEFAULT_VERSION = "0.0.1"
+
         class << self
           def call(ctx:, force:)
             script_project_repo = Infrastructure::ScriptProjectRepository.new(ctx: ctx)
             script_project = script_project_repo.get
             task_runner = Infrastructure::Languages::TaskRunner
               .for(ctx, script_project.language, script_project.script_name)
+            extension_point_type = script_project.extension_point_type
+            extension_point = ExtensionPoints.get(type: extension_point_type)
 
-            extension_point = ExtensionPoints.get(type: script_project.extension_point_type)
-            library_name = extension_point.libraries.for(script_project.language)&.package
-            raise Infrastructure::Errors::LanguageLibraryForAPINotFoundError.new(
-              language: script_project.language,
-              api: script_project.extension_point_type
-            ) unless library_name
+            library = case extension_point 
+            when Domain::UnknownExtensionPoint
+              raise Domain::Errors::InvalidExtensionPointError, extension_point_type unless allow_unknown_extension_points? 
 
-            library = {
-              language: script_project.language,
-              version: task_runner.library_version(library_name),
-            }
+              ctx.puts(ctx.message("script.application.unknown_warning", extension_point: script_project.extension_point_type))
+
+              {
+                language: script_project.language,
+                version: DEFAULT_VERSION
+              }
+            when Domain::ExtensionPoint
+              library_name = extension_point.libraries.for(script_project.language)&.package
+              raise Infrastructure::Errors::LanguageLibraryForAPINotFoundError.new(
+                language: script_project.language,
+                api: script_project.extension_point_type
+              ) unless library_name
+
+              {
+                language: script_project.language,
+                version: task_runner.library_version(library_name),
+              }
+            end
 
             ProjectDependencies.install(ctx: ctx, task_runner: task_runner)
             BuildScript.call(ctx: ctx, task_runner: task_runner, script_project: script_project, library: library)
@@ -50,6 +65,12 @@ module Script
               script_project_repo.update_env(uuid: uuid)
               spinner.update_title(p_ctx.message("script.application.pushed"))
             end
+          end
+
+          private
+
+          def allow_unknown_extension_points?
+            ENV["ALLOW_UNKNOWN_EXTENSION_POINTS"] == "1"
           end
         end
       end
