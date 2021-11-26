@@ -21,7 +21,7 @@ module Theme
           editor_url: "https://test.myshopify.io/",
           live?: false,
         )
-        @syncer = stub("Syncer", delay_errors!: nil, report_errors!: nil, has_any_error?: false)
+        @syncer = stub("Syncer", lock_io!: nil, unlock_io!: nil, has_any_error?: false)
         @ignore_filter = mock("IgnoreFilter")
       end
 
@@ -124,7 +124,7 @@ module Theme
       end
 
       def test_push_when_syncer_has_an_error
-        syncer = stub("Syncer", delay_errors!: nil, report_errors!: nil, has_any_error?: true)
+        syncer = stub("Syncer", lock_io!: nil, unlock_io!: nil, has_any_error?: true)
 
         ShopifyCLI::Theme::Theme.expects(:new)
           .with(@ctx, root: ".", id: 1234)

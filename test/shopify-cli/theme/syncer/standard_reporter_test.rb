@@ -6,10 +6,10 @@ require "shopify_cli/theme/syncer"
 module ShopifyCLI
   module Theme
     class Syncer
-      class ErrorReporterTest < Minitest::Test
+      class StandardReporterTest < Minitest::Test
         def setup
           super
-          @reporter = ErrorReporter.new(@context)
+          @reporter = StandardReporter.new(@context)
         end
 
         def test_report
@@ -42,18 +42,9 @@ module ShopifyCLI
 
           assert_empty(before_enabling_io)
           refute_empty(after_enabling_io)
-          assert_match("error 1", after_enabling_io)
-          assert_match("error 2", after_enabling_io)
+          refute_match("error 1", after_enabling_io)
+          refute_match("error 2", after_enabling_io)
           assert_match("error 3", after_enabling_io)
-        end
-
-        def test_has_any_error_when_no_error_was_reported
-          refute(@reporter.has_any_error?)
-        end
-
-        def test_has_any_error_when_an_error_was_reported
-          capture_io { @reporter.report("error 1") }
-          assert(@reporter.has_any_error?)
         end
       end
     end

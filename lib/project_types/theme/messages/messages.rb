@@ -99,6 +99,13 @@ module Theme
           viewing_theme: "Viewing theme…",
           syncing_theme: "Syncing theme #%s on %s",
           open_fail: "Couldn't open the theme",
+          operation: {
+            status: {
+              error: "ERROR",
+              synced: "Synced",
+              fixed: "Fixed",
+            },
+          },
           error: {
             address_binding_error: "Couldn't bind to localhost."\
               " To serve your theme, set a different address with {{command:%s theme serve --host=<address>}}",

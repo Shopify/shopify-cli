@@ -123,6 +123,9 @@ module ShopifyCLI
         def test_address_already_in_use
           start_server_and_wait_sync_files
 
+          # Stub StandardReporter#report to keep test logs clean
+          ShopifyCLI::Theme::Syncer::StandardReporter.any_instance.stubs(:report)
+
           @ctx.output_captured = true
           io = capture_io_and_assert_raises(ShopifyCLI::AbortSilent) do
             DevServer.start(@ctx, "#{ShopifyCLI::ROOT}/test/fixtures/theme", port: @@port)
