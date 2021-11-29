@@ -53,6 +53,7 @@ class JavyTest < Minitest::Test
     assert_kind_of(ShopifyCLI::Result::Failure, result)
     assert_kind_of(Javy::InstallationError, result.error)
     assert_match("Unable to download javy", result.error.message)
+    refute File.file?(Javy::TARGET)
   end
 
   def test_install_raises_when_binary_hash_is_unexpected
@@ -61,6 +62,7 @@ class JavyTest < Minitest::Test
     assert_kind_of(ShopifyCLI::Result::Failure, result)
     assert_kind_of(Javy::InstallationError, result.error)
     assert_match("Invalid Javy binary downloaded", result.error.message)
+    refute File.file?(Javy::TARGET)
   end
 
   def test_install_strips_whitespace_when_comparing_shas

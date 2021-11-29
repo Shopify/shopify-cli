@@ -109,11 +109,12 @@ module Javy
     def download(target:)
       FileUtils.mkdir_p(BIN_FOLDER)
 
+      source_file = url.open
+      validate_sha!(source_file)
+      source_file.seek(0)
+
       Dir.chdir(File.dirname(target)) do
         File.open(File.basename(target), "wb") do |target_file|
-          source_file = url.open
-          validate_sha!(source_file)
-          source_file.seek(0)
           decompress(source_file, target_file)
         end
 
