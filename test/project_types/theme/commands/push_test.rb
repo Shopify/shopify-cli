@@ -51,6 +51,9 @@ module Theme
           .with(@ctx, root: ".")
           .returns(@theme)
 
+        @theme.expects(:live?).returns(true)
+        CLI::UI::Prompt.expects(:confirm).never
+
         ShopifyCLI::Theme::IgnoreFilter.expects(:from_path).with(".").returns(@ignore_filter)
 
         ShopifyCLI::Theme::Syncer.expects(:new)
