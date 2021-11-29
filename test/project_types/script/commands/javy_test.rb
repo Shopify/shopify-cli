@@ -12,7 +12,6 @@ module Script
       def setup
         super
         @context = TestHelpers::FakeContext.new
-        ShopifyCLI::Tasks::EnsureProjectType.stubs(:call).with(@context, :script).returns(true)
       end
 
       def test_calls_javy_and_succeeds

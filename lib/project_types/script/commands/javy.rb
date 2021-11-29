@@ -7,8 +7,6 @@ module Script
     class Javy < ShopifyCLI::Command::SubCommand
       hidden_feature
 
-      prerequisite_task ensure_project_type: :script
-
       options do |parser, flags|
         parser.on("--in=IN") { |in_file| flags[:in_file] = in_file }
         parser.on("--out=OUT") { |out_file| flags[:out_file] = out_file }
