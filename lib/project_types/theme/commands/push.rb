@@ -50,8 +50,7 @@ module Theme
           form.theme
         end
 
-        is_confirm_required = !options.flags[:allow_live] && !options.flags[:live]
-        if theme.live? && is_confirm_required
+        if theme.live? && !options.flags[:allow_live]
           return unless CLI::UI::Prompt.confirm(@ctx.message("theme.push.live"))
         end
 
