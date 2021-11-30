@@ -10,6 +10,7 @@ module Theme
       options do |parser, flags|
         parser.on("-n", "--nodelete") { flags[:nodelete] = true }
         parser.on("-i", "--themeid=ID") { |theme_id| flags[:theme_id] = theme_id }
+        parser.on("-l", "--live") { flags[:live] = true }
         parser.on("-d", "--development") { flags[:development] = true }
         parser.on("-u", "--unpublished") { flags[:unpublished] = true }
         parser.on("-j", "--json") { flags[:json] = true }
@@ -27,6 +28,8 @@ module Theme
 
         theme = if (theme_id = options.flags[:theme_id])
           ShopifyCLI::Theme::Theme.new(@ctx, root: root, id: theme_id)
+        elsif options.flags[:live]
+          ShopifyCLI::Theme::Theme.live(@ctx, root: root)
         elsif options.flags[:development]
           theme = ShopifyCLI::Theme::DevelopmentTheme.new(@ctx, root: root)
           theme.ensure_exists!
@@ -47,7 +50,8 @@ module Theme
           form.theme
         end
 
-        if theme.live? && !options.flags[:allow_live]
+        is_confirm_required = !options.flags[:allow_live] && !options.flags[:live]
+        if theme.live? && is_confirm_required
           return unless CLI::UI::Prompt.confirm(@ctx.message("theme.push.live"))
         end
 

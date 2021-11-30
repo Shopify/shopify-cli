@@ -46,6 +46,30 @@ module Theme
         @command.call([], "push")
       end
 
+      def test_push_to_live
+        ShopifyCLI::Theme::Theme.expects(:live)
+          .with(@ctx, root: ".")
+          .returns(@theme)
+
+        @theme.expects(:live?).returns(true)
+        CLI::UI::Prompt.expects(:confirm).never
+
+        ShopifyCLI::Theme::IgnoreFilter.expects(:from_path).with(".").returns(@ignore_filter)
+
+        ShopifyCLI::Theme::Syncer.expects(:new)
+          .with(@ctx, theme: @theme, ignore_filter: @ignore_filter)
+          .returns(@syncer)
+
+        @syncer.expects(:start_threads)
+        @syncer.expects(:shutdown)
+
+        @syncer.expects(:upload_theme!).with(delete: true)
+        @ctx.expects(:done)
+
+        @command.options.flags[:live] = true
+        @command.call([], "push")
+      end
+
       def test_push_to_live_theme
         ShopifyCLI::Theme::Theme.expects(:new)
           .with(@ctx, root: ".", id: 1234)

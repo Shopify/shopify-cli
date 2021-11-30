@@ -162,26 +162,38 @@ module ShopifyCLI
         }
       end
 
-      def self.all(ctx, root: nil)
-        _status, body = AdminAPI.rest_request(
-          ctx,
-          shop: AdminAPI.get_shop_or_abort(ctx),
-          path: "themes.json",
-          api_version: "unstable",
-        )
+      class << self
+        def all(ctx, root: nil)
+          _status, body = fetch_themes(ctx)
 
-        body["themes"]
-          .sort_by { |attributes| Time.parse(attributes["updated_at"]) }
-          .reverse
-          .map do |attributes|
-            new(
-              ctx,
-              root: root,
-              id: attributes["id"],
-              name: attributes["name"],
-              role: attributes["role"],
-            )
-          end
+          body["themes"]
+            .sort_by { |theme_attrs| Time.parse(theme_attrs["updated_at"]) }
+            .reverse
+            .map { |theme_attrs| new(ctx, root: root, **allowed_attrs(theme_attrs)) }
+        end
+
+        def live(ctx, root: nil)
+          _status, body = fetch_themes(ctx)
+
+          body["themes"]
+            .find { |theme_attrs| theme_attrs["role"] == "main" }
+            .tap { |theme_attrs| break new(ctx, root: root, **allowed_attrs(theme_attrs)) }
+        end
+
+        private
+
+        def allowed_attrs(attrs)
+          attrs.slice("id", "name", "role").transform_keys(&:to_sym)
+        end
+
+        def fetch_themes(ctx)
+          AdminAPI.rest_request(
+            ctx,
+            shop: AdminAPI.get_shop_or_abort(ctx),
+            path: "themes.json",
+            api_version: "unstable",
+          )
+        end
       end
 
       private

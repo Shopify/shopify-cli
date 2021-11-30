@@ -7,9 +7,9 @@ module ShopifyCLI
     class ThemeTest < Minitest::Test
       def setup
         super
-        root = ShopifyCLI::ROOT + "/test/fixtures/theme"
-        @ctx = TestHelpers::FakeContext.new(root: root)
-        @theme = Theme.new(@ctx, root: root, id: "123")
+        @root = ShopifyCLI::ROOT + "/test/fixtures/theme"
+        @ctx = TestHelpers::FakeContext.new(root: @root)
+        @theme = Theme.new(@ctx, root: @root, id: "123")
       end
 
       def test_static_assets
@@ -106,6 +106,89 @@ module ShopifyCLI
         ensure
           ::File.delete(new_file.path) if new_file.exist?
         end
+      end
+
+      def test_all
+        mock_themes_json
+
+        expected_ids = [4, 3, 5, 1]
+        expected_names = %w(Export Development Venture Dawn)
+        expected_roles = %w(unpublished development unpublished live)
+
+        themes = Theme.all(@ctx, root: @root)
+
+        assert_equal 4, themes.size
+        assert_equal expected_ids, themes.map(&:id)
+        assert_equal expected_names, themes.map(&:name)
+        assert_equal expected_roles, themes.map(&:role)
+      end
+
+      def test_live
+        mock_themes_json
+
+        theme = Theme.live(@ctx, root: @root)
+
+        assert_equal 1, theme.id
+        assert_equal "Dawn", theme.name
+        assert_equal "live", theme.role
+        assert theme.live?
+      end
+
+      private
+
+      def mock_themes_json
+        AdminAPI.stubs(:get_shop_or_abort).returns("shop.myshopify.com")
+        AdminAPI.stubs(:rest_request).returns([
+          200,
+          {
+            "themes" => [
+              {
+                "id" => 1,
+                "name" => "Dawn",
+                "created_at" => "2021-01-01T12:30:59+01:00",
+                "updated_at" => "2021-01-02T12:30:59+01:00",
+                "role" => "main",
+                "theme_store_id" => 2,
+                "previewable" => true,
+                "processing" => false,
+                "admin_graphql_api_id" => "gid://shopify/Theme/7",
+              },
+              {
+                "id" => 5,
+                "name" => "Venture",
+                "created_at" => "2021-01-03T12:30:59+01:00",
+                "updated_at" => "2021-01-04T12:30:59+01:00",
+                "role" => "unpublished",
+                "theme_store_id" => 6,
+                "previewable" => true,
+                "processing" => false,
+                "admin_graphql_api_id" => "gid://shopify/Theme/8",
+              },
+              {
+                "id" => 3,
+                "name" => "Development",
+                "created_at" => "2021-01-05T12:30:59+01:00",
+                "updated_at" => "2021-01-06T12:30:59+01:00",
+                "role" => "development",
+                "theme_store_id" => nil,
+                "previewable" => true,
+                "processing" => false,
+                "admin_graphql_api_id" => "gid://shopify/Theme/9",
+              },
+              {
+                "id" => 4,
+                "name" => "Export",
+                "created_at" => "2021-01-07T12:30:59+01:00",
+                "updated_at" => "2021-01-08T12:30:59+01:00",
+                "role" => "unpublished",
+                "theme_store_id" => nil,
+                "previewable" => true,
+                "processing" => false,
+                "admin_graphql_api_id" => "gid://shopify/Theme/10",
+              },
+            ],
+          },
+        ])
       end
     end
   end
