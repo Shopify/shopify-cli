@@ -51,7 +51,7 @@ module ShopifyCLI
             ::Rails::Ruby.expects(:version).returns(Semantic::Version.new("2.5.0"))
             ::Rails::Gem.expects(:install).with(@context, "rails", "<6.1").returns(true)
             ::Rails::Gem.expects(:install).with(@context, "bundler", "~>2.0").returns(true)
-            expect_command(%W(#{gem_path}/bin/rails new --skip-spring --database=sqlite3 test-app))
+            expect_command(%W(#{gem_path}/bin/rails new test-app --skip-spring --database=sqlite3))
             expect_command(%W(#{gem_path}/bin/bundle install),
               chdir: File.join(@context.root, "test-app"))
             expect_command(%W(#{gem_path}/bin/rails generate shopify_app --new-shopify-cli-app),
@@ -103,7 +103,7 @@ module ShopifyCLI
             ::Rails::Ruby.expects(:version).returns(Semantic::Version.new("2.5.0"))
             ::Rails::Gem.expects(:install).with(@context, "rails", "<6.1").returns(true)
             ::Rails::Gem.expects(:install).with(@context, "bundler", "~>2.0").returns(true)
-            expect_command(%W(#{gem_path}/bin/rails new --skip-spring --database=postgresql test-app))
+            expect_command(%W(#{gem_path}/bin/rails new test-app --skip-spring --database=postgresql))
             expect_command(%W(#{gem_path}/bin/bundle install),
               chdir: File.join(@context.root, "test-app"))
             expect_command(%W(#{gem_path}/bin/rails generate shopify_app --new-shopify-cli-app),
@@ -151,7 +151,7 @@ module ShopifyCLI
             ::Rails::Ruby.expects(:version).returns(Semantic::Version.new("2.5.0"))
             ::Rails::Gem.expects(:install).with(@context, "rails", "<6.1").returns(true)
             ::Rails::Gem.expects(:install).with(@context, "bundler", "~>2.0").returns(true)
-            expect_command(%W(#{gem_path}/bin/rails new --skip-spring --database=sqlite3 --edge -J test-app))
+            expect_command(%W(#{gem_path}/bin/rails new test-app --skip-spring --database=sqlite3 --edge -J))
             expect_command(%W(#{gem_path}/bin/bundle install),
               chdir: File.join(@context.root, "test-app"))
             expect_command(%W(#{gem_path}/bin/rails generate shopify_app --new-shopify-cli-app),
