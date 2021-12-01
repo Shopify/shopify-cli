@@ -52,7 +52,7 @@ module Theme
           .returns(@theme)
 
         @theme.expects(:live?).returns(true)
-        CLI::UI::Prompt.expects(:confirm).never
+        CLI::UI::Prompt.expects(:confirm).returns(true)
 
         ShopifyCLI::Theme::IgnoreFilter.expects(:from_path).with(".").returns(@ignore_filter)
 
