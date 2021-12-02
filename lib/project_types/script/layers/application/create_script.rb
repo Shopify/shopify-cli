@@ -8,8 +8,6 @@ module Script
       class CreateScript
         class << self
           def call(ctx:, language:, sparse_checkout_branch:, script_name:, extension_point_type:)
-            raise Infrastructure::Errors::ScriptProjectAlreadyExistsError, script_name if ctx.dir_exist?(script_name)
-
             in_new_directory_context(ctx, script_name) do
               extension_point = ExtensionPoints.get(type: extension_point_type)
               script_project_repo = Infrastructure::ScriptProjectRepository.new(ctx: ctx)

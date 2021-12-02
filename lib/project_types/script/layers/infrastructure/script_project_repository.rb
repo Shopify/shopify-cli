@@ -11,6 +11,7 @@ module Script
         MUTABLE_ENV_VALUES = %i(uuid)
 
         def self.create_project_directory(ctx:, directory:)
+          raise Infrastructure::Errors::ScriptProjectAlreadyExistsError, directory if ctx.dir_exist?(directory)
           ctx.mkdir_p(directory)
           change_directory(ctx: ctx, directory: directory)
         end
