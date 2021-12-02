@@ -16,6 +16,9 @@ describe Script::Layers::Infrastructure::ScriptProjectRepository do
   let(:supported_languages) { ["assemblyscript"] }
   let(:script_json_filename) { "script.json" }
 
+  let(:initial_directory) { ctx.root }
+  let(:directory) { "/script_directory" }
+
   before do
     Script::Layers::Application::ExtensionPoints.stubs(:deprecated_types).returns(deprecated_ep_types)
     Script::Layers::Application::ExtensionPoints.stubs(:languages).returns(supported_languages)
@@ -373,6 +376,78 @@ describe Script::Layers::Infrastructure::ScriptProjectRepository do
         assert_equal script_json_content["configuration"].to_json, script_json.configuration.to_json
         assert_equal script_json_content["configuration"].to_json, file_content["configuration"].to_json
       end
+    end
+  end
+
+  describe ".create_project_directory" do
+    let(:directory) { "/script_directory" }
+    subject do
+      Script::Layers::Infrastructure::ScriptProjectRepository.create_project_directory(ctx: ctx, directory: directory)
+    end
+
+    describe "when another folder with this name already exists" do
+      let(:existing_file) { File.join(directory, "existing-file.txt") }
+      let(:existing_file_content) { "Some content." }
+
+      before do
+        ctx.mkdir_p(directory)
+        ctx.write(existing_file, existing_file_content)
+      end
+
+      it "should not delete the original project during cleanup and raise ScriptProjectAlreadyExistsError" do
+        assert_raises(Script::Layers::Infrastructure::Errors::ScriptProjectAlreadyExistsError) { subject }
+        assert ctx.dir_exist?(directory)
+        assert_equal existing_file_content, File.read(existing_file)
+      end
+    end
+
+    describe "success" do
+      it "should create a new project directory and change_directory into it" do
+        refute ctx.dir_exist?(directory)
+        subject
+        assert_equal directory, ctx.root
+        ctx.dir_exist?(directory)
+      end
+    end
+  end
+
+  describe ".delete_project_directory" do
+    before do
+      ctx.mkdir_p(directory)
+      ctx.chdir(directory)
+    end
+
+    subject do
+      Script::Layers::Infrastructure::ScriptProjectRepository.delete_project_directory(
+        ctx: ctx,
+        initial_directory: initial_directory,
+        directory: directory
+      )
+    end
+
+    it "should delete the directory, and change to the initial directory" do
+      subject
+      assert_equal initial_directory, ctx.root
+      refute ctx.dir_exist?(directory)
+    end
+  end
+
+  describe ".change_directory" do
+    subject do
+      Script::Layers::Infrastructure::ScriptProjectRepository.change_directory(
+        ctx: ctx,
+        directory: directory
+      )
+    end
+
+    before do
+      ctx.mkdir_p(directory)
+    end
+
+    it "should change the directory" do
+      refute_equal ctx.root, directory
+      subject
+      assert_equal ctx.root, directory
     end
   end
 

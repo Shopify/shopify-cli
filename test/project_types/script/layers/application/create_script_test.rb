@@ -76,30 +76,19 @@ describe Script::Layers::Application::CreateScript do
     end
 
     describe "failure" do
-      describe "when another project with this name already exists" do
-        let(:existing_file) { File.join(script_name, "existing-file.txt") }
-        let(:existing_file_content) { "Some content." }
-
-        before do
-          context.mkdir_p(script_name)
-          context.write(existing_file, existing_file_content)
-        end
-
-        it "should not delete the original project during cleanup and raise ScriptProjectAlreadyExistsError" do
-          assert_raises(Script::Layers::Infrastructure::Errors::ScriptProjectAlreadyExistsError) { subject }
-          assert context.dir_exist?(script_name)
-          assert_equal existing_file_content, File.read(existing_file)
-        end
-      end
-
       describe "when an error occurs after the project folder was created" do
         before { Script::Layers::Application::CreateScript.expects(:install_dependencies).raises(StandardError) }
 
-        it "should delete the created folder" do
-          initial_dir = context.root
+        it "should raise the error and delete the created folder" do
+          Script::Layers::Infrastructure::ScriptProjectRepository
+            .expects(:delete_project_directory)
+            .with(
+              ctx: context,
+              initial_directory: context.root,
+              directory: script_name
+            )
+
           assert_raises(StandardError) { subject }
-          assert_equal initial_dir, context.root
-          refute context.dir_exist?(script_name)
         end
       end
     end
@@ -116,13 +105,13 @@ describe Script::Layers::Application::CreateScript do
       end
 
       it "should create a new script" do
-        initial_dir = context.root
-        refute context.dir_exist?(script_name)
-
+        Script::Layers::Infrastructure::ScriptProjectRepository
+          .expects(:create_project_directory)
+          .with(
+            ctx: context,
+            directory: script_name
+          )
         subject
-
-        assert_equal initial_dir, context.root
-        context.dir_exist?(script_name)
       end
 
       it "should update the script.json file" do
