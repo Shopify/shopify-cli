@@ -8,8 +8,7 @@ module ShopifyCLI
         FONTS_CDN = "https://fonts.shopifycdn.com/assistant"
         FONTS_REGEX = %r{#{FONTS_CDN}}
 
-        def initialize(ctx, app, theme:)
-          @ctx = ctx
+        def initialize(app, theme:)
           @app = app
           @theme = theme
         end

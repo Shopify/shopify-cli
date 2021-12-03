@@ -90,13 +90,9 @@ module ShopifyCLI
           app = lambda do |_env|
             [200, {}, [response_body]]
           end
-          stack = CdnFonts.new(ctx, app, theme: theme)
+          stack = CdnFonts.new(app, theme: theme)
           request = Rack::MockRequest.new(stack)
           request.get(path)
-        end
-
-        def ctx
-          @ctx ||= TestHelpers::FakeContext.new(root: root)
         end
 
         def root
@@ -105,7 +101,7 @@ module ShopifyCLI
 
         def theme
           return @theme if @theme
-          @theme = Theme.new(ctx, root: root)
+          @theme = Theme.new(nil, root: root)
           @theme.stubs(shop: "my-test-shop.myshopify.com")
           @theme
         end
