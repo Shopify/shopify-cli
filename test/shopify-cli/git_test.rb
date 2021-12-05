@@ -31,6 +31,14 @@ module ShopifyCLI
       refute(ShopifyCLI::Git.available?(@context))
     end
 
+    def test_available_returns_false_if_git_not_available_and_raises
+      @context.expects(:capture2e)
+        .with("git", "status")
+        .raises(Errno::ENOENT, "No such file or directory - git")
+
+      refute(ShopifyCLI::Git.available?(@context))
+    end
+
     def test_branches_returns_master_if_no_branches_exist
       @context.expects(:capture2e)
         .with("git", "branch", "--list", "--format=%(refname:short)")
