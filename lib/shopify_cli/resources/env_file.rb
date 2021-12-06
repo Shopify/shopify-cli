@@ -14,8 +14,8 @@ module ShopifyCLI
       }
 
       class << self
-        def read(_directory = Dir.pwd)
-          input = parse_external_env
+        def read(_directory = Dir.pwd, overrides: {})
+          input = parse_external_env(overrides: overrides)
           new(input)
         end
 
@@ -37,10 +37,10 @@ module ShopifyCLI
           end
         end
 
-        def parse_external_env(directory = Dir.pwd)
+        def parse_external_env(directory = Dir.pwd, overrides: {})
           env_details = {}
           extra = {}
-          parse(directory).each do |key, value|
+          parse(directory).merge(overrides).each do |key, value|
             if KEY_MAP[key]
               env_details[KEY_MAP[key]] = value
             else

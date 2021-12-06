@@ -107,20 +107,20 @@ module ShopifyCLI
         @dir = nil
       end
 
+      def at(dir, env: nil)
+        proj_dir = directory(dir)
+        unless proj_dir
+          raise(ShopifyCLI::Abort, Context.message("core.project.error.not_in_project"))
+        end
+        @at ||= Hash.new { |h, k| h[k] = new(directory: k, env: env) }
+        @at[proj_dir]
+      end
+      
       private
 
       def directory(dir)
         @dir ||= Hash.new { |h, k| h[k] = __directory(k) }
         @dir[dir]
-      end
-
-      def at(dir)
-        proj_dir = directory(dir)
-        unless proj_dir
-          raise(ShopifyCLI::Abort, Context.message("core.project.error.not_in_project"))
-        end
-        @at ||= Hash.new { |h, k| h[k] = new(directory: k) }
-        @at[proj_dir]
       end
 
       def __directory(curr)
@@ -134,6 +134,7 @@ module ShopifyCLI
     end
 
     property :directory # :nodoc:
+    property :env # :nodoc:
 
     ##
     # will read, parse and return the envfile for the project
