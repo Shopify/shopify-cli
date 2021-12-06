@@ -121,4 +121,9 @@ module Extension
   autoload :ExtensionProjectKeys, Project.project_filepath("extension_project_keys")
   autoload :ExtensionProject, Project.project_filepath("extension_project")
   autoload :Errors, Project.project_filepath("errors")
+
+  module Loaders
+    autoload :Project, Extension::Project.project_filepath("loaders/project")
+    autoload :SpecificationHandler, Extension::Project.project_filepath("loaders/specification_handler")
+  end
 end
