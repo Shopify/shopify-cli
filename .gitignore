@@ -23,3 +23,4 @@ packaging/rpm/shopify-cli.spec
 ext/shopify-extensions/shopify-extensions
 ext/javy/bin
 .console_history
+TODO.md

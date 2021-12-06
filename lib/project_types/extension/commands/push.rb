@@ -8,6 +8,7 @@ module Extension
 
       options do |parser, flags|
         parser.on("--api-key=API_KEY") { |api_key| flags[:api_key] = api_key.gsub('"', "") }
+        parser.on("--api-secret=API_KEY") { |api_secret| flags[:api_secret] = api_secret.gsub('"', "") }
         parser.on("--registration-id=REGISTRATION_ID") do |registration_id|
           flags[:registration_id] = registration_id.gsub('""', "")
         end
@@ -16,15 +17,26 @@ module Extension
       TIME_DISPLAY_FORMAT = "%B %d, %Y %H:%M:%S %Z"
 
       def call(args, name)
-        project = Extension::Loaders::Project.load(directory: Dir.pwd)
+        project = Extension::Loaders::Project.load(
+          directory: Dir.pwd,
+          api_key: options.flags[:api_key],
+          api_secret: options.flags[:api_secret],
+          registration_id: options.flags[:registration_id]
+        )
         specification_handler = Extension::Loaders::SpecificationHandler.load(project: project, context: @ctx)
+        register_if_necessary(project: project)
+        
 
-        Command::Register.new(@ctx).call(args, name) unless project.registered?
         Command::Build.new(@ctx).call(args, name) unless specification_handler.specification.options[:skip_build]
         CLI::UI::Frame.open(@ctx.message("push.frame_title")) do
           updated_draft_version = update_draft(project: project, specification_handler: specification_handler)
           show_message(updated_draft_version, project: project)
         end
+      end
+      
+      def register_if_necessary(project:)
+        return unless !@ctx.tty? || project.registered?
+        Command::Register.new(@ctx).call(args, name) unless project.registered?
       end
 
       def self.help
