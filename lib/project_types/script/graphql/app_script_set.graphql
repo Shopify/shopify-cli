@@ -6,7 +6,7 @@ mutation AppScriptSet(
   $force: Boolean,
   $schemaMajorVersion: String,
   $schemaMinorVersion: String,
-  $scriptJsonVersion: String!,
+  $scriptConfigVersion: String!,
   $configurationUi: Boolean!,
   $configurationDefinition: String!,
   $moduleUploadUrl: String!,
@@ -20,7 +20,7 @@ mutation AppScriptSet(
     force: $force
     schemaMajorVersion: $schemaMajorVersion
     schemaMinorVersion: $schemaMinorVersion,
-    scriptJsonVersion: $scriptJsonVersion,
+    scriptConfigVersion: $scriptConfigVersion,
     configurationUi: $configurationUi,
     configurationDefinition: $configurationDefinition,
     moduleUploadUrl: $moduleUploadUrl,

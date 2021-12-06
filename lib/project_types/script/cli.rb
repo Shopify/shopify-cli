@@ -46,7 +46,7 @@ module Script
       autoload :PushPackage, Project.project_filepath("layers/domain/push_package")
       autoload :Metadata, Project.project_filepath("layers/domain/metadata")
       autoload :ExtensionPoint, Project.project_filepath("layers/domain/extension_point")
-      autoload :ScriptJson, Project.project_filepath("layers/domain/script_json")
+      autoload :ScriptConfig, Project.project_filepath("layers/domain/script_config")
       autoload :ScriptProject, Project.project_filepath("layers/domain/script_project")
     end
 

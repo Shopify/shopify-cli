@@ -7,7 +7,7 @@ module Script
         attr_reader :id,
           :uuid,
           :extension_point_type,
-          :script_json,
+          :script_config,
           :script_content,
           :compiled_type,
           :metadata,
@@ -20,7 +20,7 @@ module Script
           script_content:,
           compiled_type: nil,
           metadata:,
-          script_json:,
+          script_config:,
           library:
         )
           @id = id
@@ -29,7 +29,7 @@ module Script
           @script_content = script_content
           @compiled_type = compiled_type
           @metadata = metadata
-          @script_json = script_json
+          @script_config = script_config
           @library = library
         end
       end
