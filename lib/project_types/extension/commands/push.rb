@@ -6,6 +6,11 @@ module Extension
     class Push < ExtensionCommand
       prerequisite_task ensure_project_type: :extension
 
+      options do |parser, flags|
+        parser.on("--api-key=API_KEY") { |api_key| flags[:api_key] = api_key.gsub('"', "") }
+        parser.on("--registration-id=REGISTRATION_ID") { |registration_id| flags[:registration_id] = registration_id.gsub('""', "") }
+      end
+
       TIME_DISPLAY_FORMAT = "%B %d, %Y %H:%M:%S %Z"
 
       def call(args, name)

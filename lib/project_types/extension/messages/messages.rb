@@ -89,6 +89,9 @@ module Extension
         help: <<~HELP,
           Push the current extension to Shopify.
             Usage: {{command:%s extension push}}
+            Options:
+              {{command:--api-key=TYPE}} The API key used to register an app with the extension.
+              {{command:--registration-id=ID}} The id of the extension's registration.
         HELP
         frame_title: "Pushing your extension to Shopify",
         waiting_text: "Pushing code to Shopify…",
