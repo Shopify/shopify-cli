@@ -177,7 +177,7 @@ module Script
             require "yaml"
             begin
               hash = YAML.load(content)
-            rescue Psych::SyntaxError => e
+            rescue Psych::SyntaxError
               raise Errors::InvalidScriptConfigYmlDefinitionError
             else
               raise Errors::InvalidScriptConfigYmlDefinitionError unless hash.is_a?(Hash)
@@ -216,7 +216,7 @@ module Script
             content = ctx.read(SCRIPT_JSON_FILENAME)
             begin
               hash = JSON.parse(content)
-            rescue JSON::ParserError => e
+            rescue JSON::ParserError
               raise Errors::InvalidScriptJsonDefinitionError
             else
               from_h(hash)
