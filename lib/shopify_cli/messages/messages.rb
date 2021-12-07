@@ -366,6 +366,7 @@ module ShopifyCLI
 
           cloning: "Cloning %s into %s…",
           cloned: "{{v}} Cloned into %s",
+          nonexistent: "Please install git.",
           pulling_from_to: "Pulling %s into %s…",
           pulling: "Pulling…",
           pulled: "Pulled into %s",
