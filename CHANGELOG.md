@@ -5,6 +5,8 @@ From version 2.6.0, the sections in this file adhere to the [keep a changelog](h
 * [#1823](https://github.com/Shopify/shopify-cli/pull/1823): Indicate git is unavailable; don't error out
 * [#1807](https://github.com/Shopify/shopify-cli/pull/1807): Fix `--live` parameter, it should not imply `--allow-live` in the `theme push` command
 * [#1812](https://github.com/Shopify/shopify-cli/pull/1812): App creation with Rails 7
+* [#1821](https://github.com/Shopify/shopify-cli/pull/1821): Fix Shopify hosted fonts to load via the local preview URL
+
 ## Version 2.7.2
 ### Fixed
 * [#1763](https://github.com/Shopify/shopify-cli/pull/1763): Fix: Tunnel --PORT parameter not working in Node.js app.
