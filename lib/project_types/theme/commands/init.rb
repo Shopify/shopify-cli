@@ -10,6 +10,8 @@ module Theme
         parser.on("-u", "--clone-url URL") { |url| flags[:clone_url] = url }
       end
 
+      prerequisite_task :ensure_git_dependency
+
       DEFAULT_CLONE_URL = "https://github.com/Shopify/dawn.git"
 
       def call(args, _name)
