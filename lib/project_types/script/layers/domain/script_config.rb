@@ -16,7 +16,6 @@ module Script
           @title = @content["title"]
           @description = @content["description"]
           @configuration_ui = @content.fetch("configurationUi", true)
-          # should this be called definition?
           @configuration = @content["configuration"]
         end
 
