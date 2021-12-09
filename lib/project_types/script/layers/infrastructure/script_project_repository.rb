@@ -159,7 +159,7 @@ module Script
           private
 
           def update_hash(hash:, title:)
-            hash["version"] ||= "1"
+            hash["version"] ||= "2"
             hash["title"] = title
           end
 

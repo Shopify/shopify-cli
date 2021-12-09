@@ -79,7 +79,7 @@ describe Script::Layers::Infrastructure::ScriptProjectRepository do
     let(:script_config) { "script.config.yml" }
     let(:script_config_content) do
       {
-        "version" => "1",
+        "version" => "2",
         "title" => script_name,
         "configuration" => {
           "type": "single",
@@ -212,7 +212,7 @@ describe Script::Layers::Infrastructure::ScriptProjectRepository do
     let(:uuid) { "uuid" }
     let(:updated_uuid) { "updated_uuid" }
     let(:script_config) { "script.config.yml" }
-    let(:script_config_content) { { "version" => "1", "title" => script_name }.to_json }
+    let(:script_config_content) { { "version" => "2", "title" => script_name }.to_json }
     let(:env) { ShopifyCLI::Resources::EnvFile.new(api_key: "123", secret: "foo", extra: env_extra) }
     let(:env_extra) { { "uuid" => "original_uuid", "something" => "else" } }
     let(:valid_config) do
@@ -317,8 +317,8 @@ describe Script::Layers::Infrastructure::ScriptProjectRepository do
         assert script_config.configuration_ui
         assert_equal new_title, script_config.title
         assert_equal new_title, file_content["title"]
-        assert_equal "1", file_content["version"]
-        assert_equal "1", script_config.version
+        assert_equal "2", file_content["version"]
+        assert_equal "2", script_config.version
 
         assert_nil script_config.content["description"]
         assert_nil file_content["description"]
@@ -332,7 +332,7 @@ describe Script::Layers::Infrastructure::ScriptProjectRepository do
       let(:initial_description) { "my description" }
       let(:script_config_content) do
         {
-          "version" => "1",
+          "version" => "2",
           "title" => initial_title,
           "description" => initial_description,
           "configuration" => {
@@ -376,7 +376,7 @@ describe Script::Layers::Infrastructure::ScriptProjectRepository do
       let(:initial_description) { "my description" }
       let(:script_config_content) do
         {
-          "version" => "1",
+          "version" => "2",
           "title" => initial_title,
           "description" => initial_description,
           "configuration" => {
@@ -419,7 +419,7 @@ describe Script::Layers::Infrastructure::ScriptProjectRepository do
 
   describe "ScriptConfigYmlRepository" do
     let(:instance) { Script::Layers::Infrastructure::ScriptProjectRepository::ScriptConfigYmlRepository.new(ctx: ctx) }
-    let(:version) { "1" }
+    let(:version) { "2" }
     let(:title) { "title" }
     let(:content) { { "version" => version, "title" => title }.to_yaml }
 
@@ -496,7 +496,7 @@ describe Script::Layers::Infrastructure::ScriptProjectRepository do
 
   describe "ScriptJsonRepository" do
     let(:instance) { Script::Layers::Infrastructure::ScriptProjectRepository::ScriptJsonRepository.new(ctx: ctx) }
-    let(:version) { "1" }
+    let(:version) { "2" }
     let(:title) { "title" }
     let(:content) { { "version" => version, "title" => title }.to_json }
     let(:script_config_filename) { "script.json" }
