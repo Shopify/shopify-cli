@@ -124,7 +124,7 @@ describe Script::Layers::Application::CreateScript do
         context.dir_exist?(script_name)
       end
 
-      it "should update the script.config.yml file" do
+      it "should update the script configuration file" do
         subject
 
         script_config = script_project_repository.get.script_config
