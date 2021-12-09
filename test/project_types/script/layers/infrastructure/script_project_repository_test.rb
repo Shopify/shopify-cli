@@ -8,10 +8,6 @@ describe Script::Layers::Infrastructure::ScriptProjectRepository do
   let(:ctx) { TestHelpers::FakeContext.new }
   let(:instance) { Script::Layers::Infrastructure::ScriptProjectRepository.new(ctx: ctx) }
 
-  let(:config_ui_repository) do
-    Script::Layers::Infrastructure::ScriptProjectRepository::ScriptConfigRepository.new(ctx: ctx)
-  end
-
   let(:deprecated_ep_types) { [] }
   let(:supported_languages) { ["assemblyscript"] }
   let(:script_config_filename) { "script.config.yml" }
@@ -421,15 +417,18 @@ describe Script::Layers::Infrastructure::ScriptProjectRepository do
     end
   end
 
-  describe "ScriptConfigRepository" do
-    let(:instance) { Script::Layers::Infrastructure::ScriptProjectRepository::ScriptConfigRepository.new(ctx: ctx) }
+  describe "ScriptConfigYmlRepository" do
+    let(:instance) { Script::Layers::Infrastructure::ScriptProjectRepository::ScriptConfigYmlRepository.new(ctx: ctx) }
+    let(:version) { "1" }
+    let(:title) { "title" }
+    let(:content) { { "version" => version, "title" => title }.to_yaml }
 
-    describe "#get!" do
-      subject { instance.get! }
+    describe "get" do
+      subject { instance.get }
 
       describe "when file does not exist" do
-        it "raises NoScriptConfigYmlFileError" do
-          assert_raises(Script::Layers::Infrastructure::Errors::NoScriptConfigYmlFileError) { subject }
+        it "returns nil" do
+          assert_nil(subject)
         end
       end
 
@@ -438,52 +437,134 @@ describe Script::Layers::Infrastructure::ScriptProjectRepository do
           File.write(script_config_filename, content)
         end
 
-        describe "when config file is script.config.yml" do
-          describe "when content is invalid yaml" do
-            let(:content) { "*" }
+        describe "when content is invalid yaml" do
+          let(:content) { "*" }
 
-            it "raises InvalidScriptConfigYmlDefinitionError" do
-              assert_raises(Script::Layers::Infrastructure::Errors::InvalidScriptConfigYmlDefinitionError) { subject }
-            end
-          end
-
-          describe "when content is not a hash" do
-            let(:content) { "" }
-
-            it "raises InvalidScriptConfigYmlDefinitionError" do
-              assert_raises(Script::Layers::Infrastructure::Errors::InvalidScriptConfigYmlDefinitionError) { subject }
-            end
-          end
-
-          describe "when content is valid yaml" do
-            let(:version) { "1" }
-            let(:content) { { "version" => version, "title" => "title" }.to_yaml }
-
-            it "returns the entity" do
-              assert_equal version, subject.version
-            end
+          it "raises InvalidScriptConfigYmlDefinitionError" do
+            assert_raises(Script::Layers::Infrastructure::Errors::InvalidScriptConfigYmlDefinitionError) { subject }
           end
         end
 
-        describe "when config file is script.json" do
-          let(:script_config_filename) { "script.json" }
+        describe "when content is not a hash" do
+          let(:content) { "" }
 
-          describe "when content is invalid json" do
-            let(:content) { "*" }
-
-            it "raises InvalidScriptJsonDefinitionError" do
-              assert_raises(Script::Layers::Infrastructure::Errors::InvalidScriptJsonDefinitionError) { subject }
-            end
+          it "raises InvalidScriptConfigYmlDefinitionError" do
+            assert_raises(Script::Layers::Infrastructure::Errors::InvalidScriptConfigYmlDefinitionError) { subject }
           end
+        end
 
-          describe "when content is valid json" do
-            let(:version) { "1" }
-            let(:content) { { "version" => version, "title" => "title" }.to_json }
+        describe "when content is missing fields" do
+          let(:content) { {}.to_yaml }
 
-            it "returns the entity" do
-              assert_equal version, subject.version
-            end
+          it "raises MissingScriptConfigYmlFieldError" do
+            assert_raises(Script::Layers::Infrastructure::Errors::MissingScriptConfigYmlFieldError) { subject }
           end
+        end
+
+        describe "when content is valid yaml" do
+          it "returns the entity" do
+            assert_equal version, subject.version
+          end
+        end
+      end
+    end
+
+    describe "update_or_create" do
+      let(:new_title) { "new title" }
+      subject { instance.update_or_create(title: new_title) }
+
+      describe "when file does not exist" do
+        it "creates a ScriptConfig" do
+          refute_nil(subject)
+          assert_equal(new_title, subject.title)
+          assert_equal(version, subject.version)
+        end
+      end
+
+      describe "when file does exist" do
+        before do
+          File.write(script_config_filename, content)
+        end
+
+        it "updates the ScriptConfig" do
+          assert_equal(new_title, subject.title)
+          assert_equal(version, subject.version)
+        end
+      end
+    end
+  end
+
+  describe "ScriptJsonRepository" do
+    let(:instance) { Script::Layers::Infrastructure::ScriptProjectRepository::ScriptJsonRepository.new(ctx: ctx) }
+    let(:version) { "1" }
+    let(:title) { "title" }
+    let(:content) { { "version" => version, "title" => title }.to_json }
+    let(:script_config_filename) { "script.json" }
+
+    describe "get" do
+      subject { instance.get }
+
+      describe "when file does not exist" do
+        it "returns nil" do
+          assert_nil(subject)
+        end
+      end
+
+      describe "when file exists" do
+        before do
+          File.write(script_config_filename, content)
+        end
+
+        describe "when content is invalid json" do
+          let(:content) { "{[}]" }
+
+          it "raises InvalidScriptJsonDefinitionError" do
+            assert_raises(Script::Layers::Infrastructure::Errors::InvalidScriptJsonDefinitionError) { subject }
+          end
+        end
+
+        describe "when content is not a hash" do
+          let(:content) { "" }
+
+          it "raises InvalidScriptJsonDefinitionError" do
+            assert_raises(Script::Layers::Infrastructure::Errors::InvalidScriptJsonDefinitionError) { subject }
+          end
+        end
+
+        describe "when content is missing fields" do
+          let(:content) { {}.to_json }
+
+          it "raises MissingScriptJsonFieldError" do
+            assert_raises(Script::Layers::Infrastructure::Errors::MissingScriptJsonFieldError) { subject }
+          end
+        end
+
+        describe "when content is valid yaml" do
+          it "returns the entity" do
+            assert_equal version, subject.version
+          end
+        end
+      end
+    end
+
+    describe "update" do
+      let(:new_title) { "new title" }
+      subject { instance.update(title: new_title) }
+
+      describe "when file does not exist" do
+        it "returns nil" do
+          assert_nil(subject)
+        end
+      end
+
+      describe "when file does exist" do
+        before do
+          File.write(script_config_filename, content)
+        end
+
+        it "updates the ScriptConfig" do
+          assert_equal(new_title, subject.title)
+          assert_equal(version, subject.version)
         end
       end
     end

@@ -39,7 +39,7 @@ module Script
             script_name: script_name,
             extension_point_type: extension_point_type,
             language: language,
-            script_config: script_config_repository.get!
+            script_config: script_config!
           )
         end
 
@@ -57,7 +57,7 @@ module Script
             script_name: script_name,
             extension_point_type: extension_point_type,
             language: language,
-            script_config: script_config_repository.get!,
+            script_config: script_config!,
           )
         end
 
@@ -76,12 +76,13 @@ module Script
             script_name: script_name,
             extension_point_type: extension_point_type,
             language: language,
-            script_config: script_config_repository.get!,
+            script_config: script_config!,
           )
         end
 
         def update_or_create_script_config(title:)
-          script_config = script_config_repository.update_or_create(title: title)
+          script_config = script_json_repository.update(title: title) ||
+            script_config_yml_repository.update_or_create(title: title)
 
           Domain::ScriptProject.new(
             id: ctx.root,
@@ -137,110 +138,103 @@ module Script
           end
         end
 
-        def script_config_repository
-          @script_config_repository ||= ScriptConfigRepository.new(ctx: ctx)
+        def script_config_yml_repository
+          @script_config_yml_repository ||= ScriptConfigYmlRepository.new(ctx: ctx)
+        end
+
+        def script_json_repository
+          @script_json_repository ||= ScriptJsonRepository.new(ctx: ctx)
+        end
+
+        def script_config!
+          script_config_yml_repository.get ||
+            script_json_repository.get ||
+            raise(Infrastructure::Errors::NoScriptConfigYmlFileError)
         end
 
         class ScriptConfigRepository
           include SmartProperties
           property! :ctx, accepts: ShopifyCLI::Context
 
-          def get!
-            yml_repository.get || json_repository.get || raise(Infrastructure::Errors::NoScriptConfigYmlFileError)
+          private
+
+          def update_hash(hash:, title:)
+            hash["version"] ||= "1"
+            hash["title"] = title
+          end
+
+          def from_h(hash)
+            Domain::ScriptConfig.new(content: hash)
+          rescue Domain::Errors::MissingScriptConfigFieldError => e
+            raise missing_field_class, e.field
+          end
+        end
+
+        class ScriptConfigYmlRepository < ScriptConfigRepository
+          SCRIPT_CONFIG_YML_FILENAME = "script.config.yml"
+
+          def get
+            return nil unless ctx.file_exist?(SCRIPT_CONFIG_YML_FILENAME)
+
+            content = ctx.read(SCRIPT_CONFIG_YML_FILENAME)
+            require "yaml"
+            begin
+              hash = YAML.load(content)
+            rescue Psych::SyntaxError
+              raise Errors::InvalidScriptConfigYmlDefinitionError
+            else
+              raise Errors::InvalidScriptConfigYmlDefinitionError unless hash.is_a?(Hash)
+              from_h(hash)
+            end
           end
 
           def update_or_create(title:)
-            json_repository.update(title: title) || yml_repository.update_or_create(title: title)
+            hash = get&.content || {}
+            update_hash(hash: hash, title: title)
+
+            ctx.write(SCRIPT_CONFIG_YML_FILENAME, YAML.dump(hash))
+
+            from_h(hash)
           end
 
           private
 
-          def yml_repository
-            @yml_repository ||= ScriptConfigYmlRepository.new(ctx: ctx)
+          def missing_field_class
+            Errors::MissingScriptConfigYmlFieldError
           end
+        end
 
-          def json_repository
-            @json_repository ||= ScriptJsonRepository.new(ctx: ctx)
-          end
+        class ScriptJsonRepository < ScriptConfigRepository
+          SCRIPT_JSON_FILENAME = "script.json"
 
-          class ScriptConfigYmlRepository
-            include SmartProperties
-            property! :ctx, accepts: ShopifyCLI::Context
+          def get
+            return nil unless ctx.file_exist?(SCRIPT_JSON_FILENAME)
 
-            SCRIPT_CONFIG_YML_FILENAME = "script.config.yml"
-
-            def get
-              return nil unless ctx.file_exist?(SCRIPT_CONFIG_YML_FILENAME)
-
-              content = ctx.read(SCRIPT_CONFIG_YML_FILENAME)
-              require "yaml"
-              begin
-                hash = YAML.load(content)
-              rescue Psych::SyntaxError
-                raise Errors::InvalidScriptConfigYmlDefinitionError
-              else
-                raise Errors::InvalidScriptConfigYmlDefinitionError unless hash.is_a?(Hash)
-                from_h(hash)
-              end
-            end
-
-            def update_or_create(title:)
-              hash = get&.content || {}
-              hash["version"] ||= "1"
-              hash["title"] = title
-
-              ctx.write(SCRIPT_CONFIG_YML_FILENAME, YAML.dump(hash))
-
+            content = ctx.read(SCRIPT_JSON_FILENAME)
+            begin
+              hash = JSON.parse(content)
+            rescue JSON::ParserError
+              raise Errors::InvalidScriptJsonDefinitionError
+            else
               from_h(hash)
             end
-
-            private
-
-            def from_h(hash)
-              Domain::ScriptConfig.new(content: hash)
-            rescue Domain::Errors::MissingScriptConfigFieldError => e
-              raise Errors::MissingScriptConfigYmlFieldError, e.field
-            end
           end
 
-          class ScriptJsonRepository
-            include SmartProperties
-            property! :ctx, accepts: ShopifyCLI::Context
+          def update(title:)
+            existing = get
+            return nil if existing.nil?
+            hash = existing.content
+            update_hash(hash: hash, title: title)
 
-            SCRIPT_JSON_FILENAME = "script.json"
+            ctx.write(SCRIPT_JSON_FILENAME, JSON.pretty_generate(hash))
 
-            def get
-              return nil unless ctx.file_exist?(SCRIPT_JSON_FILENAME)
+            from_h(hash)
+          end
 
-              content = ctx.read(SCRIPT_JSON_FILENAME)
-              begin
-                hash = JSON.parse(content)
-              rescue JSON::ParserError
-                raise Errors::InvalidScriptJsonDefinitionError
-              else
-                from_h(hash)
-              end
-            end
+          private
 
-            def update(title:)
-              existing = get
-              return nil if existing.nil?
-              hash = existing.content
-              hash["version"] ||= "1"
-              hash["title"] = title
-
-              ctx.write(SCRIPT_JSON_FILENAME, JSON.pretty_generate(hash))
-
-              from_h(hash)
-            end
-
-            private
-
-            def from_h(hash)
-              Domain::ScriptConfig.new(content: hash)
-            rescue Domain::Errors::MissingScriptConfigFieldError => e
-              raise Errors::MissingScriptJsonFieldError, e.field
-            end
+          def missing_field_class
+            Errors::MissingScriptJsonFieldError
           end
         end
       end
