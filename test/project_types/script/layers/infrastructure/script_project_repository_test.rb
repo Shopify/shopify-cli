@@ -380,7 +380,6 @@ describe Script::Layers::Infrastructure::ScriptProjectRepository do
   end
 
   describe ".create_project_directory" do
-    let(:directory) { "/script_directory" }
     subject do
       Script::Layers::Infrastructure::ScriptProjectRepository.create_project_directory(ctx: ctx, directory: directory)
     end
@@ -403,7 +402,6 @@ describe Script::Layers::Infrastructure::ScriptProjectRepository do
 
     describe "success" do
       it "should create a new project directory and change_directory into it" do
-        refute ctx.dir_exist?(directory)
         subject
         assert_equal directory, ctx.root
         ctx.dir_exist?(directory)
@@ -445,7 +443,6 @@ describe Script::Layers::Infrastructure::ScriptProjectRepository do
     end
 
     it "should change the directory" do
-      refute_equal ctx.root, directory
       subject
       assert_equal ctx.root, directory
     end
