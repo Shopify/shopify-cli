@@ -428,7 +428,7 @@ describe Script::Layers::Infrastructure::ScriptProjectRepository do
 
       describe "when file does not exist" do
         it "returns nil" do
-          assert_nil(subject)
+          assert_nil subject
         end
       end
 
@@ -464,6 +464,10 @@ describe Script::Layers::Infrastructure::ScriptProjectRepository do
         describe "when content is valid yaml" do
           it "returns the entity" do
             assert_equal version, subject.version
+            assert_equal title, subject.title
+            assert_nil subject.description
+            assert subject.configuration_ui
+            assert_nil subject.configuration
           end
         end
       end
@@ -475,9 +479,15 @@ describe Script::Layers::Infrastructure::ScriptProjectRepository do
 
       describe "when file does not exist" do
         it "creates a ScriptConfig" do
-          refute_nil(subject)
-          assert_equal(new_title, subject.title)
-          assert_equal(version, subject.version)
+          assert_equal new_title, subject.title
+          assert_equal version, subject.version
+        end
+
+        it "creates the file" do
+          subject
+          file_content = YAML.load(File.read(script_config_filename))
+          assert_equal version, file_content["version"]
+          assert_equal new_title, file_content["title"]
         end
       end
 
@@ -487,8 +497,18 @@ describe Script::Layers::Infrastructure::ScriptProjectRepository do
         end
 
         it "updates the ScriptConfig" do
-          assert_equal(new_title, subject.title)
-          assert_equal(version, subject.version)
+          assert_equal version, subject.version
+          assert_equal new_title, subject.title
+          assert_nil subject.description
+          assert subject.configuration_ui
+          assert_nil subject.configuration
+        end
+
+        it "updates the file" do
+          subject
+          file_content = YAML.load(File.read(script_config_filename))
+          assert_equal version, file_content["version"]
+          assert_equal new_title, file_content["title"]
         end
       end
     end
@@ -506,7 +526,7 @@ describe Script::Layers::Infrastructure::ScriptProjectRepository do
 
       describe "when file does not exist" do
         it "returns nil" do
-          assert_nil(subject)
+          assert_nil subject
         end
       end
 
@@ -542,6 +562,10 @@ describe Script::Layers::Infrastructure::ScriptProjectRepository do
         describe "when content is valid yaml" do
           it "returns the entity" do
             assert_equal version, subject.version
+            assert_equal title, subject.title
+            assert_nil subject.description
+            assert subject.configuration_ui
+            assert_nil subject.configuration
           end
         end
       end
@@ -553,7 +577,7 @@ describe Script::Layers::Infrastructure::ScriptProjectRepository do
 
       describe "when file does not exist" do
         it "returns nil" do
-          assert_nil(subject)
+          assert_nil subject
         end
       end
 
@@ -563,8 +587,18 @@ describe Script::Layers::Infrastructure::ScriptProjectRepository do
         end
 
         it "updates the ScriptConfig" do
-          assert_equal(new_title, subject.title)
-          assert_equal(version, subject.version)
+          assert_equal version, subject.version
+          assert_equal new_title, subject.title
+          assert_nil subject.description
+          assert subject.configuration_ui
+          assert_nil subject.configuration
+        end
+
+        it "updates the file" do
+          subject
+          file_content = JSON.parse(File.read(script_config_filename))
+          assert_equal version, file_content["version"]
+          assert_equal new_title, file_content["title"]
         end
       end
     end
