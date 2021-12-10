@@ -159,10 +159,10 @@ module ShopifyCLI
 
             CLI::UI::Frame.open(context.message("core.app.create.rails.generating_app", name)) do
               new_command = %w(rails new)
+              new_command << name
               new_command += DEFAULT_RAILS_FLAGS
               new_command << "--database=#{db}"
               new_command += rails_opts.split unless rails_opts.nil?
-              new_command << name
 
               syscall(new_command)
             end

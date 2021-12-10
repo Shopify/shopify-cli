@@ -8,6 +8,8 @@ module ShopifyCLI
       def available?(ctx)
         _output, status = ctx.capture2e("git", "status")
         status.success?
+      rescue Errno::ENOENT # git is not installed
+        false
       end
 
       ##

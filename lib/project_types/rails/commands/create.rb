@@ -156,10 +156,10 @@ module Rails
 
         CLI::UI::Frame.open(@ctx.message("rails.create.generating_app", name)) do
           new_command = %w(rails new)
+          new_command << name
           new_command += DEFAULT_RAILS_FLAGS
           new_command << "--database=#{db}"
           new_command += options.flags[:rails_opts].split unless options.flags[:rails_opts].nil?
-          new_command << name
 
           syscall(new_command)
         end
