@@ -1,39 +1,76 @@
 # frozen_string_literal: true
 require "base64"
 require "fileutils"
+require 'json'
 
 module Extension
   module Models
     module SpecificationHandlers
       class TagManagerExtension < Default
 
-        SCRIPT_NAME = 'analytics.js'
+        SCRIPT_FILE = 'analytics_extension.js'
+        CONFIG_FILE = 'config.json'
+
 
         def name
           "Tag Manager Extension"
         end
 
-        def config(context)
-          
-          filepath = File.join(context.root, SCRIPT_NAME)
-          context.abort(context.message("features.argo.missing_file_error")) unless File.exist?(filepath)
+
+        def read_configuration
+
+        end
+
+
+        def create_file(context, file_path, contents = nil)
+          begin
+
+            if contents
+              File.open(file_path,'w') { |file| file.write(contents) }
+            else
+              FileUtils.touch(file_path)
+            end
+          rescue  => error
+            context.abort(context.message("features.argo.script_prepare_error"))
+          end
+        end
+
+
+        def read_file_contents(context,file_path, &read_file_block)
+          context.abort(context.message("features.argo.missing_file_error")) unless File.exist?(file_path)
 
           begin
-            contents = File.read(filepath).chomp
-            {
-              src_code: contents,
-            }
+            read_file_block.call(file_path)
           rescue StandardError
             context.abort(context.message("features.argo.script_prepare_error"))
           end
         end
 
         def create(directory_name, context, **_args)
-          
-          context.root = File.join(context.root, directory_name)
-          FileUtils.makedirs(context.root)
-          FileUtils.touch(File.join(context.root, SCRIPT_NAME))
+          begin
+            context.root = File.join(context.root, directory_name)
+            FileUtils.makedirs(context.root)
+
+
+            create_file(context, File.join(context.root, CONFIG_FILE), "{\"sandboxed\": true}")
+            create_file(context, File.join(context.root, SCRIPT_FILE))
+          rescue  => error
+            context.abort(context.message("features.argo.script_prepare_error"))
+          end
         end
+
+        def config(context)
+          begin
+            ext_config = read_file_contents(context,File.join(context.root, CONFIG_FILE)){|file_path| JSON.parse(File.read(file_path).chomp)}
+            {
+              src_code: read_file_contents(context, File.join(context.root, SCRIPT_FILE)){|file_path| File.read(file_path).chomp},
+              sandboxed: ext_config["sandboxed"] || true
+            }
+          rescue StandardError
+            context.abort(context.message("features.argo.script_prepare_error"))
+          end
+        end
+
       end
     end
   end
