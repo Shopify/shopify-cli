@@ -156,6 +156,15 @@ module Script
           include SmartProperties
           property! :ctx, accepts: ShopifyCLI::Context
 
+          def get
+            return nil unless ctx.file_exist?(filename)
+
+            content = ctx.read(filename)
+            hash = file_content_to_hash(content)
+
+            from_h(hash)
+          end
+
           private
 
           def update_hash(hash:, title:)
@@ -166,74 +175,71 @@ module Script
           def from_h(hash)
             Domain::ScriptConfig.new(content: hash)
           rescue Domain::Errors::MissingScriptConfigFieldError => e
-            raise missing_field_class, e.field
+            raise missing_field_error, e.field
           end
+
+          # to be implemented by subclasses
+          def filename; end
+          def file_content_to_hash(file_content); end
+          def missing_field_error; end
         end
 
         class ScriptConfigYmlRepository < ScriptConfigRepository
-          SCRIPT_CONFIG_YML_FILENAME = "script.config.yml"
-
-          def get
-            return nil unless ctx.file_exist?(SCRIPT_CONFIG_YML_FILENAME)
-
-            content = ctx.read(SCRIPT_CONFIG_YML_FILENAME)
-            require "yaml"
-            begin
-              hash = YAML.load(content)
-            rescue Psych::SyntaxError
-              raise Errors::InvalidScriptConfigYmlDefinitionError
-            else
-              raise Errors::InvalidScriptConfigYmlDefinitionError unless hash.is_a?(Hash)
-              from_h(hash)
-            end
-          end
-
           def update_or_create(title:)
             hash = get&.content || {}
             update_hash(hash: hash, title: title)
 
-            ctx.write(SCRIPT_CONFIG_YML_FILENAME, YAML.dump(hash))
+            ctx.write(filename, YAML.dump(hash))
 
             from_h(hash)
           end
 
           private
 
-          def missing_field_class
+          def filename
+            "script.config.yml"
+          end
+
+          def file_content_to_hash(file_content)
+            begin
+              hash = YAML.load(file_content)
+            rescue Psych::SyntaxError
+              raise Errors::InvalidScriptConfigYmlDefinitionError
+            end
+            raise Errors::InvalidScriptConfigYmlDefinitionError unless hash.is_a?(Hash)
+            hash
+          end
+
+          def missing_field_error
             Errors::MissingScriptConfigYmlFieldError
           end
         end
 
         class ScriptJsonRepository < ScriptConfigRepository
-          SCRIPT_JSON_FILENAME = "script.json"
-
-          def get
-            return nil unless ctx.file_exist?(SCRIPT_JSON_FILENAME)
-
-            content = ctx.read(SCRIPT_JSON_FILENAME)
-            begin
-              hash = JSON.parse(content)
-            rescue JSON::ParserError
-              raise Errors::InvalidScriptJsonDefinitionError
-            else
-              from_h(hash)
-            end
-          end
-
           def update(title:)
             existing = get
             return nil if existing.nil?
             hash = existing.content
             update_hash(hash: hash, title: title)
 
-            ctx.write(SCRIPT_JSON_FILENAME, JSON.pretty_generate(hash))
+            ctx.write(filename, JSON.pretty_generate(hash))
 
             from_h(hash)
           end
 
           private
 
-          def missing_field_class
+          def filename
+            "script.json"
+          end
+
+          def file_content_to_hash(file_content)
+            JSON.parse(file_content)
+          rescue JSON::ParserError
+            raise Errors::InvalidScriptJsonDefinitionError
+          end
+
+          def missing_field_error
             Errors::MissingScriptJsonFieldError
           end
         end
