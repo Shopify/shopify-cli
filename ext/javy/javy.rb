@@ -186,6 +186,8 @@ module Javy
       case ruby_config.fetch("host_cpu")
       when "x64", "x86_64"
         "x86_64"
+      when "arm64",
+        "arm64",
       else
         raise InstallationError.cpu_unsupported
       end

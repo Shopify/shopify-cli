@@ -134,6 +134,12 @@ class JavyTest < Minitest::Test
       assert_equal "javy", platform.format_executable_path("javy")
     end
 
+    def test_recognizes_mac_os_arm64
+      platform = Javy::Platform.new(PlatformHelper.macos_arm64_config)
+      assert_equal "arm64-macos", platform.to_s
+      assert_equal "javy", platform.format_executable_path("javy")
+    end
+
     def test_recognizes_windows
       platform = Javy::Platform.new(PlatformHelper.windows_config)
       assert_equal "x86_64-windows", platform.to_s
@@ -195,6 +201,10 @@ class JavyTest < Minitest::Test
 
     def self.macos_config
       ruby_config(os: "darwin20.3.0", cpu: "x86_64")
+    end
+
+    def self.macos_arm64_config
+      ruby_config(os: "darwin20.3.0", cpu: "arm64")
     end
 
     def self.windows_config
