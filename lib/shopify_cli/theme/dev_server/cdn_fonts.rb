@@ -5,7 +5,7 @@ module ShopifyCLI
     module DevServer
       class CdnFonts
         FONTS_PATH = "/fonts"
-        FONTS_CDN = "https://fonts.shopifycdn.com/assistant"
+        FONTS_CDN = "https://fonts.shopifycdn.com"
         FONTS_REGEX = %r{#{FONTS_CDN}}
 
         def initialize(app, theme:)

@@ -7,7 +7,7 @@ module ShopifyCLI
   module Theme
     module DevServer
       class CdnFontsTest < Minitest::Test
-        def test_replace_local_fonts_in_reponse_body
+        def test_replace_local_assistant_n4_font_in_reponse_body
           original_html = <<~HTML
             <html>
               <head>
@@ -18,7 +18,25 @@ module ShopifyCLI
           expected_html = <<~HTML
             <html>
               <head>
-                <link rel="preload" as="font" href="/fonts/assistant_n4.bcd3d09dcb631dec5544b8fb7b154ff234a44630.woff2?hmac=0a2e92d6956b1312ef7d59f4850549a6e43a908ccf24df47f07b0b4c6da5837d" type="font/woff2" crossorigin="">
+                <link rel="preload" as="font" href="/fonts/assistant/assistant_n4.bcd3d09dcb631dec5544b8fb7b154ff234a44630.woff2?hmac=0a2e92d6956b1312ef7d59f4850549a6e43a908ccf24df47f07b0b4c6da5837d" type="font/woff2" crossorigin="">
+              </head>
+            </html>
+          HTML
+          assert_equal(expected_html, serve(original_html).body)
+        end
+
+        def test_replace_local_firasans_n4_font_in_reponse_body
+          original_html = <<~HTML
+            <html>
+              <head>
+                <link rel="preload" as="font" href="https://fonts.shopifycdn.com/fira_sans/firasans_n4.1b65c27c1439cf29ece2163ea4a810840646dbdc.woff?&hmac=67f25fee11d74ab8def16edf19d274a09843e99443cbf63edc49aecf070d7ec8" type="font/woff2" crossorigin="">
+              </head>
+            </html>
+          HTML
+          expected_html = <<~HTML
+            <html>
+              <head>
+                <link rel="preload" as="font" href="/fonts/fira_sans/firasans_n4.1b65c27c1439cf29ece2163ea4a810840646dbdc.woff?&hmac=67f25fee11d74ab8def16edf19d274a09843e99443cbf63edc49aecf070d7ec8" type="font/woff2" crossorigin="">
               </head>
             </html>
           HTML
@@ -36,7 +54,7 @@ module ShopifyCLI
           expected_html = <<~HTML
             <html>
               <head>
-                <link rel="preload" as="font" href="/fonts/assistant_n4.bcd3d09dcb631dec5544b8fb7b154ff234a44630.woff2?hmac=0a2e92d6956b1312ef7d59f4850549a6e43a908ccf24df47f07b0b4c6da5837d" type="font/woff2" crossorigin=""><link rel="preload" as="font" href="/fonts/assistant_n4.bcd3d09dcb631dec5544b8fb7b154ff234a44630.woff2?hmac=0a2e92d6956b1312ef7d59f4850549a6e43a908ccf24df47f07b0b4c6da5837d" type="font/woff2" crossorigin="">
+                <link rel="preload" as="font" href="/fonts/assistant/assistant_n4.bcd3d09dcb631dec5544b8fb7b154ff234a44630.woff2?hmac=0a2e92d6956b1312ef7d59f4850549a6e43a908ccf24df47f07b0b4c6da5837d" type="font/woff2" crossorigin=""><link rel="preload" as="font" href="/fonts/assistant/assistant_n4.bcd3d09dcb631dec5544b8fb7b154ff234a44630.woff2?hmac=0a2e92d6956b1312ef7d59f4850549a6e43a908ccf24df47f07b0b4c6da5837d" type="font/woff2" crossorigin="">
               </head>
             </html>
           HTML
@@ -64,7 +82,7 @@ module ShopifyCLI
             })
             .to_return(status: 200, body: expected_body, headers: {})
 
-          response = serve(path: "/fonts/font.123.woff2?hmac=456")
+          response = serve(path: "/fonts/assistant/font.123.woff2?hmac=456")
           actual_body = response.body
 
           assert_equal expected_body, actual_body
@@ -78,7 +96,7 @@ module ShopifyCLI
             })
             .to_return(status: 404, body: "Not found", headers: {})
 
-          response = serve(path: "/fonts/missing.123.woff2?hmac=456")
+          response = serve(path: "/fonts/assistant/missing.123.woff2?hmac=456")
 
           assert_equal(404, response.status)
           assert_equal("Not found", response.body)

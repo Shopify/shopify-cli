@@ -8,6 +8,7 @@ From version 2.6.0, the sections in this file adhere to the [keep a changelog](h
 * [#1812](https://github.com/Shopify/shopify-cli/pull/1812): App creation with Rails 7
 * [#1821](https://github.com/Shopify/shopify-cli/pull/1821): Fix Shopify hosted fonts to load via the local preview URL
 * [#1830](https://github.com/Shopify/shopify-cli/pull/1830): Fix hot reload when users update many files "simultaneously"
+* [#1837](https://github.com/Shopify/shopify-cli/pull/1837): Fix `ShopifyCLI::Theme::DevServer::CdnFonts` class to support any font
 
 ## Version 2.7.2
 ### Fixed
