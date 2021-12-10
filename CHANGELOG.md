@@ -2,6 +2,7 @@ From version 2.6.0, the sections in this file adhere to the [keep a changelog](h
 ## [Unreleased]
 
 ### Fixed
+* [#1811](https://github.com/Shopify/shopify-cli/pull/1811): Update theme-check to 1.9.0
 * [#1831](https://github.com/Shopify/shopify-cli/pull/1831): Ensure correct `ngrok` version is downloaded for Apple M1
 * [#1823](https://github.com/Shopify/shopify-cli/pull/1823): Indicate git is unavailable; don't error out
 * [#1807](https://github.com/Shopify/shopify-cli/pull/1807): Fix `--live` parameter, it should not imply `--allow-live` in the `theme push` command
