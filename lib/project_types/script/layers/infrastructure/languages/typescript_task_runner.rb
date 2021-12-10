@@ -49,10 +49,21 @@ module Script
           end
 
           def library_version(library_name)
+            return yarn_library_version(library_name) if ENV["YARN"] == "1"
+
             output = JSON.parse(CommandRunner.new(ctx: ctx).call("npm -s list --json"))
             library_version_from_npm_list(output, library_name)
           rescue Errors::SystemCallFailureError => error
             library_version_from_npm_list_error_output(error, library_name)
+          end
+
+          def yarn_library_version(library_name)
+            yarn_list = JSON.parse(`yarn list --json`)
+            dependencies = yarn_list["data"]["trees"]
+
+            api_library = dependencies.select { |dependency| dependency["name"].start_with?("@shopify") }[0]
+
+            api_library["name"].split("@")[-1]
           end
 
           private
