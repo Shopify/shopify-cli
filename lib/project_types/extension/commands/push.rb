@@ -35,7 +35,7 @@ module Extension
       end
 
       def register_if_necessary(project:)
-        return unless !@ctx.tty? || project.registered?
+        return if @ctx.tty? && !project.registered?
         Command::Register.new(@ctx).call(args, name) unless project.registered?
       end
 
