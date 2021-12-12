@@ -8,7 +8,7 @@ module Extension
 
       options do |parser, flags|
         parser.on("--api-key=API_KEY") { |api_key| flags[:api_key] = api_key.gsub('"', "") }
-        parser.on("--api-secret=API_KEY") { |api_secret| flags[:api_secret] = api_secret.gsub('"', "") }
+        parser.on("--api-secret=API_SECRET") { |api_secret| flags[:api_secret] = api_secret.gsub('"', "") }
         parser.on("--registration-id=REGISTRATION_ID") do |registration_id|
           flags[:registration_id] = registration_id.gsub('""', "")
         end
@@ -25,7 +25,7 @@ module Extension
         )
         specification_handler = Extension::Loaders::SpecificationHandler.load(project: project, context: @ctx)
         register_if_necessary(project: project)
-        
+
 
         Command::Build.new(@ctx).call(args, name) unless specification_handler.specification.options[:skip_build]
         CLI::UI::Frame.open(@ctx.message("push.frame_title")) do
@@ -33,7 +33,7 @@ module Extension
           show_message(updated_draft_version, project: project)
         end
       end
-      
+
       def register_if_necessary(project:)
         return unless !@ctx.tty? || project.registered?
         Command::Register.new(@ctx).call(args, name) unless project.registered?
