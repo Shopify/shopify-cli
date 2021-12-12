@@ -12,7 +12,7 @@ module Extension
         env = begin
           ShopifyCLI::Resources::EnvFile.read(directory, overrides: env_overrides)
         rescue Errno::ENOENT
-          nil
+          ShopifyCLI::Resources::EnvFile.from_hash(env_overrides)
         end
         ExtensionProject.at(directory, env: env)
       end

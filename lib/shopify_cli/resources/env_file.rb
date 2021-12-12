@@ -19,6 +19,11 @@ module ShopifyCLI
           new(input)
         end
 
+        def from_hash(hash, overrides: {})
+          input = env_input(hash, overrides: overrides)
+          new(input)
+        end
+
         def parse(directory)
           File.read(File.join(directory, FILENAME))
             .gsub("\r\n", "\n").split("\n").each_with_object({}) do |line, output|
@@ -38,9 +43,13 @@ module ShopifyCLI
         end
 
         def parse_external_env(directory = Dir.pwd, overrides: {})
+          env_input(parse(directory), overrides: overrides)
+        end
+
+        def env_input(parsed_source, overrides: {})
           env_details = {}
           extra = {}
-          parse(directory).merge(overrides).each do |key, value|
+          parsed_source.merge(overrides).each do |key, value|
             if KEY_MAP[key]
               env_details[KEY_MAP[key]] = value
             else
