@@ -29,7 +29,7 @@ RUN sudo apt-get install -y nodejs
 RUN sudo npm install --global yarn
 
 # Python is necessary to compile NPM packages with native extensions through node-gyp
-RUN sudo apt install python-minimal -y
+RUN sudo apt install python2-minimal -y
 
 # Install sqlite3
 RUN sudo apt-get install libsqlite3-dev -y
