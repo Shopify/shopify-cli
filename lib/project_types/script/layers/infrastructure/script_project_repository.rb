@@ -189,10 +189,21 @@ module Script
           end
 
           # to be implemented by subclasses
-          def filename; end
-          def file_content_to_hash(file_content); end
-          def hash_to_file_content(hash); end
-          def missing_field_error; end
+          def filename
+            raise NotImplementedError
+          end
+
+          def file_content_to_hash(file_content)
+            raise NotImplementedError
+          end
+
+          def hash_to_file_content(hash)
+            raise NotImplementedError
+          end
+
+          def missing_field_error
+            raise NotImplementedError
+          end
         end
 
         class ScriptConfigYmlRepository < ScriptConfigRepository
