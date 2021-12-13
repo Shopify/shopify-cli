@@ -47,14 +47,20 @@ module Script
           invalid_language_cause: "Invalid language %s.",
           invalid_language_help: "Allowed values: %s.",
 
+          missing_script_config_yml_field_cause: "The script.config.yml file is missing the required %s field.",
+          missing_script_config_yml_field_help: "Add the field and try again.",
+
           missing_script_json_field_cause: "The script.json file is missing the required %s field.",
           missing_script_json_field_help: "Add the field and try again.",
 
           invalid_script_json_definition_cause: "The script.json file contains invalid JSON.",
           invalid_script_json_definition_help: "Fix the errors and try again.",
 
-          no_script_json_file_cause: "The script.json file is missing.",
-          no_script_json_file_help: "Create this file and try again.",
+          invalid_script_config_yml_definition_cause: "The script.config.yml file contains invalid YAML.",
+          invalid_script_config_yml_definition_help: "Fix the errors and try again.",
+
+          no_script_config_yml_file_cause: "The script.config.yml file is missing.",
+          no_script_config_yml_file_help: "Create this file and try again.",
 
           configuration_syntax_error_cause: "The script.json is not formatted properly.",
           configuration_syntax_error_help: "Fix the errors and try again.",

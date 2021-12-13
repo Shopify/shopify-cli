@@ -3,7 +3,7 @@
 module Script
   module Layers
     module Domain
-      class ScriptJson
+      class ScriptConfig
         attr_reader :content, :version, :title, :description, :configuration_ui, :configuration
 
         REQUIRED_FIELDS = %w(version title)
@@ -23,7 +23,7 @@ module Script
 
         def validate_content!(content)
           REQUIRED_FIELDS.each do |field|
-            raise Errors::MissingScriptJsonFieldError, field if content[field].nil?
+            raise Errors::MissingScriptConfigFieldError, field if content[field].nil?
           end
         end
       end

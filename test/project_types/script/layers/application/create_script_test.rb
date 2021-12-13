@@ -7,7 +7,6 @@ describe Script::Layers::Application::CreateScript do
 
   let(:script_name) { "path" }
   let(:compiled_type) { "wasm" }
-  let(:script_json_filename) { "script.json" }
 
   let(:extension_point_repository) { TestHelpers::FakeExtensionPointRepository.new }
   let(:script_project_repository) { TestHelpers::FakeScriptProjectRepository.new }
@@ -125,12 +124,12 @@ describe Script::Layers::Application::CreateScript do
         context.dir_exist?(script_name)
       end
 
-      it "should update the script.json file" do
+      it "should update the script configuration file" do
         subject
 
-        script_json = script_project_repository.get.script_json
-        assert_equal script_name, script_json.title
-        assert_equal "1", script_json.version
+        script_config = script_project_repository.get.script_config
+        assert_equal script_name, script_config.title
+        assert_equal "1", script_config.version
       end
     end
 

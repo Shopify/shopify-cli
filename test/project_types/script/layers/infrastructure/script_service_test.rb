@@ -11,14 +11,14 @@ describe Script::Layers::Infrastructure::ScriptService do
   let(:schema_major_version) { "1" }
   let(:schema_minor_version) { "0" }
   let(:use_msgpack) { true }
-  let(:script_json) do
-    Script::Layers::Domain::ScriptJson.new(content: expected_script_json_content)
+  let(:script_config) do
+    Script::Layers::Domain::ScriptConfig.new(content: expected_script_config_content)
   end
   let(:script_name) { "script name" }
-  let(:script_json_version) { "1" }
+  let(:script_config_version) { "1" }
   let(:expected_description) { "some description" }
   let(:expected_configuration_ui) { true }
-  let(:expected_script_json_version) { "1" }
+  let(:expected_script_config_version) { "1" }
   let(:expected_configuration) do
     {
       "type" => "single",
@@ -33,9 +33,9 @@ describe Script::Layers::Infrastructure::ScriptService do
       ],
     }
   end
-  let(:expected_script_json_content) do
+  let(:expected_script_config_content) do
     {
-      "version" => expected_script_json_version,
+      "version" => expected_script_config_version,
       "title" => script_name,
       "description" => expected_description,
       "configuration" => expected_configuration,
@@ -71,7 +71,7 @@ describe Script::Layers::Infrastructure::ScriptService do
           schema_minor_version,
           use_msgpack,
         ),
-        script_json: script_json,
+        script_config: script_config,
         module_upload_url: url,
         library: library
       )
