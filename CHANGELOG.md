@@ -2,6 +2,7 @@ From version 2.6.0, the sections in this file adhere to the [keep a changelog](h
 ## [Unreleased]
 ### Added
 * [#1826](https://github.com/Shopify/shopify-cli/pull/1826): Support using `script.config.yml` file for script configuration
+* [#1843](https://github.com/Shopify/shopify-cli/pull/1826): Support using javy on Apple ARM processors
 
 ### Fixed
 * [#1811](https://github.com/Shopify/shopify-cli/pull/1811): Update theme-check to 1.9.0
