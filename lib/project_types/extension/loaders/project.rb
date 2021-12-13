@@ -14,7 +14,9 @@ module Extension
         rescue Errno::ENOENT
           ShopifyCLI::Resources::EnvFile.from_hash(env_overrides)
         end
-        ExtensionProject.at(directory, env: env)
+        project = ExtensionProject.at(directory)
+        project.env = env
+        project
       end
     end
   end

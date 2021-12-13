@@ -107,15 +107,15 @@ module ShopifyCLI
         @dir = nil
       end
 
-      def at(dir, env: nil)
+      def at(dir)
         proj_dir = directory(dir)
         unless proj_dir
           raise(ShopifyCLI::Abort, Context.message("core.project.error.not_in_project"))
         end
-        @at ||= Hash.new { |h, k| h[k] = new(directory: k, env: env) }
+        @at ||= Hash.new { |h, k| h[k] = new(directory: k) }
         @at[proj_dir]
       end
-      
+
       private
 
       def directory(dir)
