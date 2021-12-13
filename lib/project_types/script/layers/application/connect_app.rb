@@ -7,10 +7,11 @@ module Script
     module Application
       class ConnectApp
         class << self
-          def call(ctx:)
+          def call(ctx:, force: false)
             script_project_repo = Layers::Infrastructure::ScriptProjectRepository.new(ctx: ctx)
             script_project = script_project_repo.get
-            return false if script_project.env_valid?
+
+            return false if script_project.env_valid? && !force
 
             if ShopifyCLI::Shopifolk.check && Forms::RunAgainstShopifyOrg.ask(ctx, nil, nil).response
               ShopifyCLI::Shopifolk.act_as_shopify_organization

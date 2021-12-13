@@ -173,7 +173,13 @@ module Script
 
           script_pushed: "{{v}} Script pushed to app (API key: %{api_key}).",
         },
-
+        connect: {
+          connected: "Project now connected to {{green:%s: %s}}",
+          help: <<~HELP,
+            {{command:%s script connect}}: Connects an existing script to Shopify CLI. Creates a config file.
+              Usage: {{command:%s script connect}}
+          HELP
+        },
         javy: {
           help: <<~HELP,
             Compile the JavaScript code into WebAssembly.
