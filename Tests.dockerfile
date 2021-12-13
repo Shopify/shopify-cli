@@ -1,7 +1,7 @@
 # This is a Docker image to test the CLI in UNIX environments other than macOS
 # Build the image: docker build . -t shopify-cli
 # Run tests: docker run -t --rm --volume "$(pwd):/usr/src/app" shopify-cli bundle exec rake test
-FROM cimg/ruby:2.7.1
+FROM cimg/ruby:2.7.5
 
 RUN git config --global user.email "development-lifecycle@shopify.com"
 RUN git config --global user.name "Development Lifecycle"
