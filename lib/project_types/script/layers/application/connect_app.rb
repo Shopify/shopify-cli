@@ -38,7 +38,7 @@ module Script
             extension_point_type = script_project.extension_point_type
             scripts = script_service.get_app_scripts(extension_point_type: extension_point_type)
 
-            uuid = Forms::AskScriptUuid.ask(ctx, scripts, nil).uuid
+            uuid = Forms::AskScriptUuid.ask(ctx, scripts, nil)&.uuid
 
             script_project_repo.create_env(
               api_key: app["apiKey"],

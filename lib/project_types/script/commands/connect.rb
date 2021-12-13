@@ -7,7 +7,6 @@ module Script
 
       def call(_args, _)
         Layers::Application::ConnectApp.call(ctx: @ctx, force: true)
-        @ctx.done(@ctx.message("connect.connected", form.app.title, form.registration.title))
       end
 
       def self.help

@@ -144,6 +144,7 @@ module Script
 
           language_library_for_api_not_found_cause: "Script can’t be pushed because the %{language} library for API %{api} is missing.",
           language_library_for_api_not_found_help: "Make sure extension_point.yml contains the correct API library.",
+          no_scripts_found_in_app: "The selected apps have no scripts. Please, create them first on the partners' dashboard."
         },
 
         create: {

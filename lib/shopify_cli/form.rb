@@ -15,6 +15,8 @@ module ShopifyCLI
         rescue ShopifyCLI::Abort => err
           ctx.puts(err.message)
           nil
+        rescue ShopifyCLI::AbortSilent
+          nil
         end
       end
 
