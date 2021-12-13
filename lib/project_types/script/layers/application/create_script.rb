@@ -8,9 +8,10 @@ module Script
       class CreateScript
         class << self
           def call(ctx:, language:, sparse_checkout_branch:, script_name:, extension_point_type:)
-            in_new_directory_context(ctx, script_name) do
+            script_project_repo = Infrastructure::ScriptProjectRepository.new(ctx: ctx)
+
+            in_new_directory_context(script_project_repo, script_name) do
               extension_point = ExtensionPoints.get(type: extension_point_type)
-              script_project_repo = Infrastructure::ScriptProjectRepository.new(ctx: ctx)
               project = script_project_repo.create(
                 script_name: script_name,
                 extension_point_type: extension_point_type,
@@ -60,20 +61,21 @@ module Script
             ProjectDependencies.install(ctx: ctx, task_runner: task_runner)
           end
 
-          def in_new_directory_context(ctx, directory)
-            initial_directory = ctx.root
+          def in_new_directory_context(script_project_repo, directory)
+            initial_directory = script_project_repo.ctx.root
             begin
-              Infrastructure::ScriptProjectRepository.create_project_directory(ctx: ctx, directory: directory)
+              script_project_repo.create_project_directory(directory: directory)
               yield
+            rescue Infrastructure::Errors::ScriptProjectAlreadyExistsError
+              raise
             rescue
-              Infrastructure::ScriptProjectRepository.delete_project_directory(
-                ctx: ctx,
+              script_project_repo.delete_project_directory(
                 initial_directory: initial_directory,
                 directory: directory
               )
               raise
             ensure
-              Infrastructure::ScriptProjectRepository.change_directory(ctx: ctx, directory: initial_directory)
+              script_project_repo.change_directory(directory: initial_directory)
             end
           end
         end

@@ -10,7 +10,7 @@ describe Script::Layers::Application::CreateScript do
   let(:script_json_filename) { "script.json" }
 
   let(:extension_point_repository) { TestHelpers::FakeExtensionPointRepository.new }
-  let(:script_project_repository) { TestHelpers::FakeScriptProjectRepository.new }
+  let(:script_project_repository) { TestHelpers::FakeScriptProjectRepository.new(context) }
   let(:ep) { extension_point_repository.get_extension_point(extension_point_type) }
   let(:task_runner) { stub(compiled_type: compiled_type) }
 
@@ -80,10 +80,9 @@ describe Script::Layers::Application::CreateScript do
         before { Script::Layers::Application::CreateScript.expects(:install_dependencies).raises(StandardError) }
 
         it "should raise the error and delete the created folder" do
-          Script::Layers::Infrastructure::ScriptProjectRepository
+          script_project_repository
             .expects(:delete_project_directory)
             .with(
-              ctx: context,
               initial_directory: context.root,
               directory: script_name
             )
@@ -105,10 +104,9 @@ describe Script::Layers::Application::CreateScript do
       end
 
       it "should create a new script" do
-        Script::Layers::Infrastructure::ScriptProjectRepository
+        script_project_repository
           .expects(:create_project_directory)
           .with(
-            ctx: context,
             directory: script_name
           )
         subject

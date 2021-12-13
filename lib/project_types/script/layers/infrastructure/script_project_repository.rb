@@ -10,18 +10,18 @@ module Script
         SCRIPT_JSON_FILENAME = "script.json"
         MUTABLE_ENV_VALUES = %i(uuid)
 
-        def self.create_project_directory(ctx:, directory:)
+        def create_project_directory(directory:)
           raise Infrastructure::Errors::ScriptProjectAlreadyExistsError, directory if ctx.dir_exist?(directory)
           ctx.mkdir_p(directory)
-          change_directory(ctx: ctx, directory: directory)
+          change_directory(directory: directory)
         end
 
-        def self.delete_project_directory(ctx:, initial_directory:, directory:)
-          change_directory(ctx: ctx, directory: initial_directory)
+        def delete_project_directory(initial_directory:, directory:)
+          change_directory(directory: initial_directory)
           ctx.rm_r(directory)
         end
 
-        def self.change_directory(ctx:, directory:)
+        def change_directory(directory:)
           ctx.chdir(directory)
         end
 

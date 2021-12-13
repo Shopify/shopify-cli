@@ -379,9 +379,9 @@ describe Script::Layers::Infrastructure::ScriptProjectRepository do
     end
   end
 
-  describe ".create_project_directory" do
+  describe "#create_project_directory" do
     subject do
-      Script::Layers::Infrastructure::ScriptProjectRepository.create_project_directory(ctx: ctx, directory: directory)
+      instance.create_project_directory(directory: directory)
     end
 
     describe "when another folder with this name already exists" do
@@ -409,15 +409,14 @@ describe Script::Layers::Infrastructure::ScriptProjectRepository do
     end
   end
 
-  describe ".delete_project_directory" do
+  describe "#delete_project_directory" do
     before do
       ctx.mkdir_p(directory)
       ctx.chdir(directory)
     end
 
     subject do
-      Script::Layers::Infrastructure::ScriptProjectRepository.delete_project_directory(
-        ctx: ctx,
+      instance.delete_project_directory(
         initial_directory: initial_directory,
         directory: directory
       )
@@ -430,10 +429,9 @@ describe Script::Layers::Infrastructure::ScriptProjectRepository do
     end
   end
 
-  describe ".change_directory" do
+  describe "#change_directory" do
     subject do
-      Script::Layers::Infrastructure::ScriptProjectRepository.change_directory(
-        ctx: ctx,
+      instance.change_directory(
         directory: directory
       )
     end
