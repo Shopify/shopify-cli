@@ -36,9 +36,9 @@ module TestHelpers
       @project
     end
 
-    def update_or_create_script_config(title:)
+    def update_script_config(title:)
       script_config = fake_script_config_repo
-        .update_or_create(title: title)
+        .update!(title: title)
 
       @project.script_config = script_config
       @project
@@ -59,14 +59,15 @@ module TestHelpers
         @cache = Script::Layers::Domain::ScriptConfig.new(content: content)
       end
 
-      def update_or_create(title:)
-        hash = @cache&.content || {}
+      def update!(title:)
+        hash = get!.content
         hash["title"] = title
 
         @cache = Script::Layers::Domain::ScriptConfig.new(content: hash)
       end
 
-      def get
+      def get!
+        raise Script::Layers::Infrastructure::Errors::NoScriptConfigFileError if @cache.nil?
         @cache
       end
     end

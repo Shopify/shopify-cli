@@ -60,6 +60,7 @@ module Script
         end
 
         class NoScriptConfigYmlFileError < ScriptProjectError; end
+        class NoScriptConfigFileError < ScriptProjectError; end
 
         class APILibraryNotFoundError < ScriptProjectError
           attr_reader :library_name

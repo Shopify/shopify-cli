@@ -39,7 +39,7 @@ module Script
             script_name: script_name,
             extension_point_type: extension_point_type,
             language: language,
-            script_config: script_config!
+            script_config: script_config_repository.get!
           )
         end
 
@@ -57,7 +57,7 @@ module Script
             script_name: script_name,
             extension_point_type: extension_point_type,
             language: language,
-            script_config: script_config!,
+            script_config: script_config_repository.get!,
           )
         end
 
@@ -76,13 +76,12 @@ module Script
             script_name: script_name,
             extension_point_type: extension_point_type,
             language: language,
-            script_config: script_config!,
+            script_config: script_config_repository.get!,
           )
         end
 
-        def update_or_create_script_config(title:)
-          script_config = script_json_repository.update(title: title) ||
-            script_config_yml_repository.update_or_create(title: title)
+        def update_script_config(title:)
+          script_config = script_config_repository.update!(title: title)
 
           Domain::ScriptProject.new(
             id: ctx.root,
@@ -138,29 +137,40 @@ module Script
           end
         end
 
-        def script_config_yml_repository
-          @script_config_yml_repository ||= ScriptConfigYmlRepository.new(ctx: ctx)
-        end
-
-        def script_json_repository
-          @script_json_repository ||= ScriptJsonRepository.new(ctx: ctx)
-        end
-
-        def script_config!
-          script_config_yml_repository.get ||
-            script_json_repository.get ||
-            raise(Infrastructure::Errors::NoScriptConfigYmlFileError)
+        def script_config_repository
+          @script_config_repository ||= begin
+            supported_repos = [
+              ScriptConfigYmlRepository.new(ctx: ctx),
+              ScriptJsonRepository.new(ctx: ctx),
+            ]
+            repo = supported_repos.find(&:active?)
+            raise Infrastructure::Errors::NoScriptConfigYmlFileError if repo.nil?
+            repo
+          end
         end
 
         class ScriptConfigRepository
           include SmartProperties
           property! :ctx, accepts: ShopifyCLI::Context
 
-          def get
-            return nil unless ctx.file_exist?(filename)
+          def active?
+            ctx.file_exist?(filename)
+          end
+
+          def get!
+            raise Infrastructure::Errors::NoScriptConfigFileError unless active?
 
             content = ctx.read(filename)
             hash = file_content_to_hash(content)
+
+            from_h(hash)
+          end
+
+          def update!(title:)
+            hash = get!.content
+            update_hash(hash: hash, title: title)
+
+            ctx.write(filename, hash_to_file_content(hash))
 
             from_h(hash)
           end
@@ -181,19 +191,11 @@ module Script
           # to be implemented by subclasses
           def filename; end
           def file_content_to_hash(file_content); end
+          def hash_to_file_content(hash); end
           def missing_field_error; end
         end
 
         class ScriptConfigYmlRepository < ScriptConfigRepository
-          def update_or_create(title:)
-            hash = get&.content || {}
-            update_hash(hash: hash, title: title)
-
-            ctx.write(filename, YAML.dump(hash))
-
-            from_h(hash)
-          end
-
           private
 
           def filename
@@ -210,23 +212,16 @@ module Script
             hash
           end
 
+          def hash_to_file_content(hash)
+            YAML.dump(hash)
+          end
+
           def missing_field_error
             Errors::MissingScriptConfigYmlFieldError
           end
         end
 
         class ScriptJsonRepository < ScriptConfigRepository
-          def update(title:)
-            existing = get
-            return nil if existing.nil?
-            hash = existing.content
-            update_hash(hash: hash, title: title)
-
-            ctx.write(filename, JSON.pretty_generate(hash))
-
-            from_h(hash)
-          end
-
           private
 
           def filename
@@ -237,6 +232,10 @@ module Script
             JSON.parse(file_content)
           rescue JSON::ParserError
             raise Errors::InvalidScriptJsonDefinitionError
+          end
+
+          def hash_to_file_content(hash)
+            JSON.pretty_generate(hash)
           end
 
           def missing_field_error

@@ -284,7 +284,7 @@ describe Script::Layers::Infrastructure::ScriptProjectRepository do
     end
   end
 
-  describe "#update_or_create_script_config" do
+  describe "#update_script_config" do
     let(:new_title) { "new title" }
     let(:new_configuration_ui) { true }
     let(:current_project) do
@@ -305,25 +305,11 @@ describe Script::Layers::Infrastructure::ScriptProjectRepository do
       ShopifyCLI::Project.stubs(:current).returns(current_project)
     end
 
-    subject { instance.update_or_create_script_config(title: new_title) }
+    subject { instance.update_script_config(title: new_title) }
 
     describe "script.config.yml does not exist" do
-      it "creates a new file with the provided fields" do
-        refute ctx.file_exist?(script_config_filename)
-
-        script_config = subject.script_config
-        file_content = YAML.load(ctx.read(script_config_filename))
-
-        assert script_config.configuration_ui
-        assert_equal new_title, script_config.title
-        assert_equal new_title, file_content["title"]
-        assert_equal "2", file_content["version"]
-        assert_equal "2", script_config.version
-
-        assert_nil script_config.content["description"]
-        assert_nil file_content["description"]
-        assert_nil script_config.configuration
-        assert_nil file_content["configuration"]
+      it "raises NoScriptConfigYmlFileError" do
+        assert_raises(Script::Layers::Infrastructure::Errors::NoScriptConfigYmlFileError) { subject }
       end
     end
 
@@ -423,12 +409,32 @@ describe Script::Layers::Infrastructure::ScriptProjectRepository do
     let(:title) { "title" }
     let(:content) { { "version" => version, "title" => title }.to_yaml }
 
-    describe "get" do
-      subject { instance.get }
+    describe "active?" do
+      subject { instance.active? }
 
       describe "when file does not exist" do
-        it "returns nil" do
-          assert_nil subject
+        it "returns false" do
+          refute subject
+        end
+      end
+
+      describe "when file exists" do
+        before do
+          File.write(script_config_filename, content)
+        end
+
+        it "returns true" do
+          assert subject
+        end
+      end
+    end
+
+    describe "get!" do
+      subject { instance.get! }
+
+      describe "when file does not exist" do
+        it "raises NoScriptConfigFileError" do
+          assert_raises(Script::Layers::Infrastructure::Errors::NoScriptConfigFileError) { subject }
         end
       end
 
@@ -473,21 +479,13 @@ describe Script::Layers::Infrastructure::ScriptProjectRepository do
       end
     end
 
-    describe "update_or_create" do
+    describe "update!" do
       let(:new_title) { "new title" }
-      subject { instance.update_or_create(title: new_title) }
+      subject { instance.update!(title: new_title) }
 
       describe "when file does not exist" do
-        it "creates a ScriptConfig" do
-          assert_equal new_title, subject.title
-          assert_equal version, subject.version
-        end
-
-        it "creates the file" do
-          subject
-          file_content = YAML.load(File.read(script_config_filename))
-          assert_equal version, file_content["version"]
-          assert_equal new_title, file_content["title"]
+        it "raises NoScriptConfigFileError" do
+          assert_raises(Script::Layers::Infrastructure::Errors::NoScriptConfigFileError) { subject }
         end
       end
 
@@ -521,12 +519,32 @@ describe Script::Layers::Infrastructure::ScriptProjectRepository do
     let(:content) { { "version" => version, "title" => title }.to_json }
     let(:script_config_filename) { "script.json" }
 
-    describe "get" do
-      subject { instance.get }
+    describe "active?" do
+      subject { instance.active? }
 
       describe "when file does not exist" do
-        it "returns nil" do
-          assert_nil subject
+        it "returns false" do
+          refute subject
+        end
+      end
+
+      describe "when file exists" do
+        before do
+          File.write(script_config_filename, content)
+        end
+
+        it "returns true" do
+          assert subject
+        end
+      end
+    end
+
+    describe "get!" do
+      subject { instance.get! }
+
+      describe "when file does not exist" do
+        it "raises NoScriptConfigFileError" do
+          assert_raises(Script::Layers::Infrastructure::Errors::NoScriptConfigFileError) { subject }
         end
       end
 
@@ -571,13 +589,13 @@ describe Script::Layers::Infrastructure::ScriptProjectRepository do
       end
     end
 
-    describe "update" do
+    describe "update!" do
       let(:new_title) { "new title" }
-      subject { instance.update(title: new_title) }
+      subject { instance.update!(title: new_title) }
 
       describe "when file does not exist" do
-        it "returns nil" do
-          assert_nil subject
+        it "raises NoScriptConfigFileError" do
+          assert_raises(Script::Layers::Infrastructure::Errors::NoScriptConfigFileError) { subject }
         end
       end
 
