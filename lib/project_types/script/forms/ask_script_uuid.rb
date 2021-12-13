@@ -3,7 +3,6 @@
 module Script
   module Forms
     class AskScriptUuid < ShopifyCLI::Form
-
       attr_reader :uuid
       def ask
         scripts = @xargs
@@ -11,7 +10,7 @@ module Script
           raise ShopifyCLI::Abort, ctx.message("script.error.no_scripts_found_in_app")
         end
 
-        if !CLI::UI::Prompt.confirm(ctx.message("script.application.ensure_env.ask_connect_to_existing_script"))
+        unless CLI::UI::Prompt.confirm(ctx.message("script.application.ensure_env.ask_connect_to_existing_script"))
           raise ShopifyCLI::AbortSilent
         end
 
