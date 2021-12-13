@@ -17,9 +17,9 @@ curl -fsSL https://github.com/rbenv/rbenv-installer/raw/master/bin/rbenv-install
 export PATH=$HOME/.rbenv/bin:$PATH
 eval "$(rbenv init -)"
 echo "################################################################################"
-echo "### Downloading/building/installing ruby v2.7.1"
+echo "### Downloading/building/installing ruby v2.7.5"
 echo "################################################################################"
-rbenv install 2.7.1
+rbenv install 2.7.5
 echo "################################################################################"
 echo "### Downloading/building/installing ruby v2.6.6"
 echo "################################################################################"

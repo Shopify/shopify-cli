@@ -1,7 +1,7 @@
 # This is a Docker image to test the CLI in UNIX environments other than macOS
 # Build the image: docker build . -t shopify-cli
 # Run tests: docker run -t --rm --volume "$(pwd):/usr/src/app" shopify-cli bundle exec rake test
-FROM cimg/ruby:2.7.1
+FROM cimg/ruby:2.7.5
 
 RUN git config --global user.email "development-lifecycle@shopify.com"
 RUN git config --global user.name "Development Lifecycle"
@@ -29,7 +29,7 @@ RUN sudo apt-get install -y nodejs
 RUN sudo npm install --global yarn
 
 # Python is necessary to compile NPM packages with native extensions through node-gyp
-RUN sudo apt install python-minimal -y
+RUN sudo apt install python2-minimal -y
 
 # Install sqlite3
 RUN sudo apt-get install libsqlite3-dev -y
