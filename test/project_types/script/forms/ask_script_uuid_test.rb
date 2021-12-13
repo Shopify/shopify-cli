@@ -15,9 +15,8 @@ describe Script::Forms::AskScriptUuid do
 
     describe("when asking script connection") do
       describe("when there are no scripts") do
-        it("should not prompt the user to confirm if they want to replace existing scripts") do
-          CLI::UI::Prompt.expects(:confirm).never
-          CLI::UI::Prompt.expects(:ask).never
+        it("should abort") do
+          context.expects(:puts).with(context.message("script.error.no_scripts_found_in_app"))
           subject
         end
       end
@@ -56,7 +55,7 @@ describe Script::Forms::AskScriptUuid do
               .with(context.message("script.application.ensure_env.ask_which_script_to_connect_to"))
               .never
 
-            assert_nil subject.uuid
+            assert_nil subject
           end
         end
       end
