@@ -107,13 +107,6 @@ module ShopifyCLI
         @dir = nil
       end
 
-      private
-
-      def directory(dir)
-        @dir ||= Hash.new { |h, k| h[k] = __directory(k) }
-        @dir[dir]
-      end
-
       def at(dir)
         proj_dir = directory(dir)
         unless proj_dir
@@ -121,6 +114,13 @@ module ShopifyCLI
         end
         @at ||= Hash.new { |h, k| h[k] = new(directory: k) }
         @at[proj_dir]
+      end
+
+      private
+
+      def directory(dir)
+        @dir ||= Hash.new { |h, k| h[k] = __directory(k) }
+        @dir[dir]
       end
 
       def __directory(curr)
@@ -134,6 +134,7 @@ module ShopifyCLI
     end
 
     property :directory # :nodoc:
+    property :env # :nodoc:
 
     ##
     # will read, parse and return the envfile for the project
