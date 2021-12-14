@@ -154,6 +154,12 @@ class JavyTest < Minitest::Test
       assert_equal "javy", platform.format_executable_path("javy")
     end
 
+    def test_recognizes_underlying_cpu_in_universal_distributions
+      platform = Javy::Platform.new(PlatformHelper.macos_universal_config)
+      assert_equal "arm-macos", platform.to_s
+      assert_equal "javy", platform.format_executable_path("javy")
+    end
+
     def test_recognizes_windows
       platform = Javy::Platform.new(PlatformHelper.windows_config)
       assert_equal "x86_64-windows", platform.to_s
@@ -220,6 +226,10 @@ class JavyTest < Minitest::Test
       ruby_config(os: "darwin20.3.0", cpu: "arm")
     end
 
+    def self.macos_universal_config
+      ruby_config(os: "darwin20.3.0", cpu: "universal.arm64")
+    end
+
     def self.windows_config
       ruby_config(os: "mingw32", cpu: "x64")
     end
@@ -229,10 +239,7 @@ class JavyTest < Minitest::Test
     end
 
     def self.ruby_config(os:, cpu:)
-      {
-        "host_os" => os,
-        "host_cpu" => cpu,
-      }
+      "#{cpu}-#{os}"
     end
   end
 end
