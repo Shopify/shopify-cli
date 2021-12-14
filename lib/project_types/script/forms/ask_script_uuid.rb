@@ -6,13 +6,9 @@ module Script
       attr_reader :uuid
       def ask
         scripts = @xargs
-        if scripts.empty?
-          raise ShopifyCLI::Abort, ctx.message("script.error.no_scripts_found_in_app")
-        end
 
-        unless CLI::UI::Prompt.confirm(ctx.message("script.application.ensure_env.ask_connect_to_existing_script"))
-          raise ShopifyCLI::AbortSilent
-        end
+        return if scripts.empty? ||
+          !CLI::UI::Prompt.confirm(ctx.message("script.application.ensure_env.ask_connect_to_existing_script"))
 
         @uuid =
           CLI::UI::Prompt.ask(ctx.message("script.application.ensure_env.ask_which_script_to_connect_to")) do |handler|
