@@ -45,6 +45,7 @@ module Script
               secret: app["apiSecretKeys"].first["secret"],
               uuid: uuid
             )
+            ctx.done(ctx.message("script.connect.connected", app["title"]))
 
             true
           end
