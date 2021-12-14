@@ -59,6 +59,7 @@ module Extension
         ShopifyCLI::Project.stubs(:current).returns(project)
         ShopifyCLI::Project.stubs(:has_current?).returns(true)
         ExtensionProject.stubs(:current).returns(project)
+        Extension::Loaders::Project.stubs(:load).returns(project)
         specifications = test_specifications(type_identifier: type_identifier)
         Models::Specifications.stubs(:new).returns(specifications)
       end
