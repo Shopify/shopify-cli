@@ -171,6 +171,9 @@ module Script
               Usage: {{command:%s script push}}
               Options:
                 {{command:[--force]}} Replaces the existing script on the app with this version.
+                {{command:--api-key=API_KEY}} The API key used to register an app with the script. This can be found on the app page on Partners Dashboard.
+                {{command:--api-secret=API_SECRET}} The API secret of the app the script is registered with.
+                {{command:--uuid=UUID}} The uuid of the script.
           HELP
 
           error: {
