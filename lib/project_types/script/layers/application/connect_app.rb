@@ -11,7 +11,7 @@ module Script
             script_project_repo = Layers::Infrastructure::ScriptProjectRepository.new(ctx: ctx)
             script_project = script_project_repo.get
             return false if script_project.env_valid?
-
+            
             if ShopifyCLI::Shopifolk.check && Forms::RunAgainstShopifyOrg.ask(ctx, nil, nil).response
               ShopifyCLI::Shopifolk.act_as_shopify_organization
             end

@@ -90,5 +90,10 @@ module Script
 
   autoload :Errors, Project.project_filepath("errors")
 
+  module Loaders
+    autoload :Project, Script::Project.project_filepath("loaders/project")
+    autoload :SpecificationHandler, Script::Project.project_filepath("loaders/specification_handler")
+  end
+
   class ScriptProjectError < StandardError; end
 end
