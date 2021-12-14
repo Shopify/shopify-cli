@@ -82,12 +82,11 @@ module Extension
       assert_equal "123", project.registration_uuid
     end
 
-    def test_ensures_registered_is_true_only_if_api_key_api_secret_and_registration_id_are_present
+    def test_ensures_registered_is_true_only_if_registration_id_is_present
       sets_of_invalid_attributes = [
         { api_key: "", api_secret: "", title: "title", registration_id: nil },
         { api_key: "1234", api_secret: "", title: "title", registration_id: nil },
         { api_key: "1234", api_secret: "456", title: "title", registration_id: nil },
-        { api_key: "", api_secret: "", title: "title", registration_id: 5 },
       ]
 
       sets_of_invalid_attributes.each do |invalid_attributes|
@@ -100,6 +99,13 @@ module Extension
         .tap do |project|
           assert project.registered?
         end
+    end
+
+    def test_ensures_registered_is_true_if_registration_id_is_present
+      project = ExtensionTestHelpers.fake_extension_project(
+        api_key: "", api_secret: "", title: "", registration_id: 55
+      )
+      assert project.registered?
     end
 
     def test_can_access_app_specific_values_as_an_app
