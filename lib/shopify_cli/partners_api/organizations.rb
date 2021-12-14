@@ -28,11 +28,32 @@ module ShopifyCLI
         end
 
         def fetch_with_extensions(ctx, type)
-          resp = PartnersAPI.query(ctx, "all_orgs_with_extensions", type: type)
-          (resp&.dig("data", "organizations", "nodes") || []).map do |org|
-            org["apps"] = (org.dig("apps", "nodes") || [])
-            org
+          orgs = fetch_with_app(ctx)
+          patch_apps(ctx, orgs, type)
+        end
+
+        private
+
+        def patch_apps(ctx, orgs, type)
+          threads = []
+
+          orgs.each do |org|
+            org["apps"].each do |app|
+              threads << Thread.new { patch_app(ctx, app, type) }
+            end
           end
+
+          threads.each { |thread| thread.join if thread.alive? }
+          orgs
+        end
+
+        def patch_app(ctx, app, type)
+          app.merge!(fetch_extension_registrations(ctx, app["apiKey"], type))
+        end
+
+        def fetch_extension_registrations(ctx, api_key, type)
+          resp = PartnersAPI.query(ctx, "get_extension_registrations", api_key: api_key, type: type)
+          resp&.dig("data", "app") || {}
         end
       end
     end
