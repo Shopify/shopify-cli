@@ -24,7 +24,7 @@ module Extension
           registration_id: options.flags[:registration_id]
         )
         specification_handler = Extension::Loaders::SpecificationHandler.load(project: project, context: @ctx)
-        register_if_necessary(project: project)
+        register_if_necessary(project: project, args: args, name: name)
 
 
         Command::Build.new(@ctx).call(args, name) unless specification_handler.specification.options[:skip_build]
@@ -34,7 +34,7 @@ module Extension
         end
       end
 
-      def register_if_necessary(project:)
+      def register_if_necessary(project:, args:, name:)
         return if @ctx.tty? && !project.registered?
         Command::Register.new(@ctx).call(args, name) unless project.registered?
       end
