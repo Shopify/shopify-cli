@@ -74,7 +74,7 @@ module Extension
     end
 
     def registered?
-      property_present?("api_key") && property_present?("secret") && registration_id?
+      registration_id?
     end
 
     def title
