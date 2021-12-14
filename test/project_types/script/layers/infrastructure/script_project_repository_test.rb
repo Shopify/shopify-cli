@@ -6,7 +6,13 @@ describe Script::Layers::Infrastructure::ScriptProjectRepository do
   include TestHelpers::FakeFS
 
   let(:ctx) { TestHelpers::FakeContext.new }
-  let(:instance) { Script::Layers::Infrastructure::ScriptProjectRepository.new(ctx: ctx) }
+  let(:instance) do
+    Script::Layers::Infrastructure::ScriptProjectRepository.new(
+    ctx: ctx,
+    directory: directory,
+    initial_directory: ctx.root
+  )
+  end
 
   let(:config_ui_repository) do
     Script::Layers::Infrastructure::ScriptProjectRepository::ScriptJsonRepository.new(ctx: ctx)
@@ -381,7 +387,7 @@ describe Script::Layers::Infrastructure::ScriptProjectRepository do
 
   describe "#create_project_directory" do
     subject do
-      instance.create_project_directory(directory: directory)
+      instance.create_project_directory
     end
 
     describe "when another folder with this name already exists" do
@@ -416,10 +422,7 @@ describe Script::Layers::Infrastructure::ScriptProjectRepository do
     end
 
     subject do
-      instance.delete_project_directory(
-        initial_directory: initial_directory,
-        directory: directory
-      )
+      instance.delete_project_directory
     end
 
     it "should delete the directory, and change to the initial directory" do

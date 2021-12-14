@@ -6,17 +6,19 @@ module Script
       class ScriptProjectRepository
         include SmartProperties
         property! :ctx, accepts: ShopifyCLI::Context
+        property! :directory, accepts: String
+        property! :initial_directory, accepts: String
 
         SCRIPT_JSON_FILENAME = "script.json"
         MUTABLE_ENV_VALUES = %i(uuid)
 
-        def create_project_directory(directory:)
+        def create_project_directory
           raise Infrastructure::Errors::ScriptProjectAlreadyExistsError, directory if ctx.dir_exist?(directory)
           ctx.mkdir_p(directory)
           change_directory(directory: directory)
         end
 
-        def delete_project_directory(initial_directory:, directory:)
+        def delete_project_directory
           change_directory(directory: initial_directory)
           ctx.rm_r(directory)
         end

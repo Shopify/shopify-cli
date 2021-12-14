@@ -8,9 +8,13 @@ module Script
       class CreateScript
         class << self
           def call(ctx:, language:, sparse_checkout_branch:, script_name:, extension_point_type:)
-            script_project_repo = Infrastructure::ScriptProjectRepository.new(ctx: ctx)
+            script_project_repo = Infrastructure::ScriptProjectRepository.new(
+              ctx: ctx,
+              directory: script_name,
+              initial_directory: ctx.root
+            )
 
-            in_new_directory_context(script_project_repo, script_name) do
+            in_new_directory_context(script_project_repo) do
               extension_point = ExtensionPoints.get(type: extension_point_type)
               project = script_project_repo.create(
                 script_name: script_name,
@@ -61,22 +65,16 @@ module Script
             ProjectDependencies.install(ctx: ctx, task_runner: task_runner)
           end
 
-          def in_new_directory_context(script_project_repo, directory)
-            initial_directory = script_project_repo.ctx.root
-            begin
-              script_project_repo.create_project_directory(directory: directory)
-              yield
-            rescue Infrastructure::Errors::ScriptProjectAlreadyExistsError
-              raise
-            rescue
-              script_project_repo.delete_project_directory(
-                initial_directory: initial_directory,
-                directory: directory
-              )
-              raise
-            ensure
-              script_project_repo.change_directory(directory: initial_directory)
-            end
+          def in_new_directory_context(script_project_repo)
+            script_project_repo.create_project_directory
+            yield
+          rescue Infrastructure::Errors::ScriptProjectAlreadyExistsError
+            raise
+          rescue
+            script_project_repo.delete_project_directory
+            raise
+          ensure
+            script_project_repo.change_directory(directory: script_project_repo.initial_directory)
           end
         end
       end

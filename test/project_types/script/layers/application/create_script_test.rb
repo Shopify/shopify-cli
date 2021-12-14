@@ -82,10 +82,7 @@ describe Script::Layers::Application::CreateScript do
         it "should raise the error and delete the created folder" do
           script_project_repository
             .expects(:delete_project_directory)
-            .with(
-              initial_directory: context.root,
-              directory: script_name
-            )
+            .with
 
           assert_raises(StandardError) { subject }
         end
@@ -106,9 +103,7 @@ describe Script::Layers::Application::CreateScript do
       it "should create a new script" do
         script_project_repository
           .expects(:create_project_directory)
-          .with(
-            directory: script_name
-          )
+          .with
         subject
       end
 
