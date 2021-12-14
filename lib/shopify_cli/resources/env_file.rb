@@ -14,8 +14,13 @@ module ShopifyCLI
       }
 
       class << self
-        def read(_directory = Dir.pwd)
-          input = parse_external_env
+        def read(_directory = Dir.pwd, overrides: {})
+          input = parse_external_env(overrides: overrides)
+          new(input)
+        end
+
+        def from_hash(hash, overrides: {})
+          input = env_input(hash, overrides: overrides)
           new(input)
         end
 
@@ -37,10 +42,14 @@ module ShopifyCLI
           end
         end
 
-        def parse_external_env(directory = Dir.pwd)
+        def parse_external_env(directory = Dir.pwd, overrides: {})
+          env_input(parse(directory), overrides: overrides)
+        end
+
+        def env_input(parsed_source, overrides: {})
           env_details = {}
           extra = {}
-          parse(directory).each do |key, value|
+          parsed_source.merge(overrides).each do |key, value|
             if KEY_MAP[key]
               env_details[KEY_MAP[key]] = value
             else
