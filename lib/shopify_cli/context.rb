@@ -89,7 +89,7 @@ module ShopifyCLI
 
     # will return true if being launched from a tty
     def tty?
-      $stdin.tty? && !testing?
+      !testing? && $stdin.tty?
     end
 
     # will return true if the cli is being run from an installation, and not a
