@@ -13,7 +13,6 @@ module Extension
   end
 
   class Command < ShopifyCLI::Command::ProjectCommand
-    hidden_feature
     autoload :ExtensionCommand, Project.project_filepath("commands/extension_command")
 
     subcommand :Create, "create", Project.project_filepath("commands/create")
