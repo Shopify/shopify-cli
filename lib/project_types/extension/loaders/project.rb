@@ -14,6 +14,9 @@ module Extension
         rescue Errno::ENOENT
           ShopifyCLI::Resources::EnvFile.from_hash(env_overrides)
         end
+        # This is a somewhat uncomfortable hack we use because `Project::at` is
+        # a global cache and we can't rely on this class loading the project
+        # first. Long-term we should move away from that global cache.
         project = ExtensionProject.at(directory)
         project.env = env
         project
