@@ -91,7 +91,7 @@ module Extension
             Usage: {{command:%s extension push}}
             Options:
               {{command:--api-key=API_KEY}} The API key used to register an app with the extension. This can be found on the app page on Partners Dashboard.
-              {{command:--api-secret=API_SECRET}} The API secret secret of the app the extension is registered with.
+              {{command:--api-secret=API_SECRET}} The API secret of the app the extension is registered with.
               {{command:--registration-id=REGISTRATION_ID}} The id of the extension's registration.
         HELP
         frame_title: "Pushing your extension to Shopify",
