@@ -11,7 +11,7 @@ module Extension
           )
 
           unless specifications.valid?(identifier)
-            context.abort(context.message("errors.unknown_type", project.specification_identifier))
+            raise ShopifyCLI::Abort, context.message("errors.unknown_type", project.specification_identifier)
           end
 
           specifications[identifier]
