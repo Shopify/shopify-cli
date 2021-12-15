@@ -18,6 +18,7 @@ module Extension
 
       def call(args, name)
         project = Extension::Loaders::Project.load(
+          context: @ctx,
           directory: Dir.pwd,
           api_key: options.flags[:api_key],
           api_secret: options.flags[:api_secret],

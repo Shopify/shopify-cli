@@ -61,7 +61,7 @@ module ShopifyCLI
       end
 
       property :api_key, required: true
-      property :secret, required: true
+      property :secret
       property :shop
       property :scopes
       property :host

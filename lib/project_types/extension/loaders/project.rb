@@ -3,7 +3,7 @@
 module Extension
   module Loaders
     module Project
-      def self.load(directory:, api_key:, registration_id:, api_secret:)
+      def self.load(context:, directory:, api_key:, registration_id:, api_secret:)
         env_overrides = {
           "SHOPIFY_API_KEY" => api_key,
           "SHOPIFY_API_SECRET" => api_secret,
@@ -17,6 +17,8 @@ module Extension
         project = ExtensionProject.at(directory)
         project.env = env
         project
+      rescue SmartProperties::InitializationError
+        context.abort(context.message("errors.missing_api_key"))
       end
     end
   end

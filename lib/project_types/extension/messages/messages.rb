@@ -177,6 +177,7 @@ module Extension
       errors: {
         unknown_type: "Unknown extension type %s",
         package_not_found: "`%s` package not found.",
+        missing_api_key: "Missing api_key.",
         module_not_found: "Unable to find module %s. Ensure your dependencies are up-to-date and try again.",
       },
       warnings: {
