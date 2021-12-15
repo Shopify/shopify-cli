@@ -20,7 +20,7 @@ module Extension
         project = ExtensionProject.at(directory)
         project.env = env
         project
-      rescue SmartProperties::InitializationError
+      rescue SmartProperties::InitializationError, SmartProperties::MissingValueError
         context.abort(context.message("errors.missing_api_key"))
       end
     end
