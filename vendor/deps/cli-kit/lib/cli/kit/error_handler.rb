@@ -114,7 +114,9 @@ module CLI
       end
 
       def print_error_message(e)
-        $stderr.puts(format_error_message(e.message))
+        CLI::UI::Frame.open("Error", color: :red, timing: false) do
+          $stderr.puts(format_error_message(e.message))
+        end
       end
     end
   end
