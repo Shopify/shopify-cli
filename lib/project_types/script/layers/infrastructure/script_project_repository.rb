@@ -19,12 +19,12 @@ module Script
         end
 
         def delete_project_directory
-          change_directory(directory: initial_directory)
+          change_to_initial_directory
           ctx.rm_r(directory)
         end
 
-        def change_directory(directory:)
-          ctx.chdir(directory)
+        def change_to_initial_directory
+          change_directory(directory: initial_directory)
         end
 
         def create(script_name:, extension_point_type:, language:)
@@ -114,6 +114,10 @@ module Script
         end
 
         private
+
+        def change_directory(directory:)
+          ctx.chdir(directory)
+        end
 
         def capture_io(&block)
           CLI::UI::StdoutRouter::Capture.new(&block).run

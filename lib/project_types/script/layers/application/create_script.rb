@@ -74,7 +74,7 @@ module Script
             script_project_repo.delete_project_directory
             raise
           ensure
-            script_project_repo.change_directory(directory: script_project_repo.initial_directory)
+            script_project_repo.change_to_initial_directory
           end
         end
       end

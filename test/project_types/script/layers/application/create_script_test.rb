@@ -87,6 +87,18 @@ describe Script::Layers::Application::CreateScript do
           assert_raises(StandardError) { subject }
         end
       end
+
+      describe "when a ScriptProjectAlreadyExistsError error occurs" do
+        before do
+          script_project_repository
+            .expects(:create_project_directory)
+            .raises(Script::Layers::Infrastructure::Errors::ScriptProjectAlreadyExistsError)
+        end
+
+        it "should raise the error" do
+          assert_raises(Script::Layers::Infrastructure::Errors::ScriptProjectAlreadyExistsError) { subject }
+        end
+      end
     end
 
     describe "success" do

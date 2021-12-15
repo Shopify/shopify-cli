@@ -55,7 +55,7 @@ module TestHelpers
 
     def create_project_directory; end
     def delete_project_directory; end
-    def change_directory(directory:); end
+    def change_to_initial_directory; end
 
     private
 

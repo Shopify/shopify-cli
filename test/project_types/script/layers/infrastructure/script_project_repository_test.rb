@@ -432,20 +432,18 @@ describe Script::Layers::Infrastructure::ScriptProjectRepository do
     end
   end
 
-  describe "#change_directory" do
+  describe "#change_to_initial_directory" do
     subject do
-      instance.change_directory(
-        directory: directory
-      )
+      instance.change_to_initial_directory
     end
 
     before do
       ctx.mkdir_p(directory)
     end
 
-    it "should change the directory" do
+    it "should change to the initial directory" do
       subject
-      assert_equal ctx.root, directory
+      assert_equal ctx.root, initial_directory
     end
   end
 
