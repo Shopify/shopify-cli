@@ -19,9 +19,8 @@ module ShopifyCLI
           new(input)
         end
 
-        def from_hash(hash, overrides: {})
-          input = env_input(hash, overrides: overrides)
-          new(input)
+        def from_hash(hash)
+          new(env_input(hash))
         end
 
         def parse(directory)
