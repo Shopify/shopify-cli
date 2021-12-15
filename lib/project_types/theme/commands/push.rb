@@ -51,7 +51,9 @@ module Theme
         end
 
         if theme.live? && !options.flags[:allow_live]
-          return unless CLI::UI::Prompt.confirm(@ctx.message("theme.push.live"))
+          question = @ctx.message("theme.push.live")
+          question += @ctx.message("theme.push.theme", theme.name, theme.id) if options.flags[:live]
+          return unless CLI::UI::Prompt.confirm(question)
         end
 
         ignore_filter = ShopifyCLI::Theme::IgnoreFilter.from_path(root)
