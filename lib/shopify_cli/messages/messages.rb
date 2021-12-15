@@ -14,6 +14,12 @@ module ShopifyCLI
         },
       },
       core: {
+        errors: {
+          option_parser: {
+            invalid_option: "The option {{command:%s}} is not supported.",
+            missing_argument: "The required argument {{command:%s}} is missing.",
+          },
+        },
         app: {
           help: <<~HELP,
           Suite of commands for developing apps. See {{command:%1$s app <command> --help}} for usage of each command.
