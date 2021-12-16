@@ -197,6 +197,10 @@ module ShopifyCLI
             .with(:storefront_renderer_production_exchange_token)
             .returns("TOKEN")
 
+          expected_params = {
+            "replace_templates[layout/theme.liquid]" => @theme["layout/theme.liquid"].read,
+          }
+
           @syncer.expects(:pending_updates).returns([
             @theme["layout/theme.liquid"],
             @theme["assets/theme.css"], # Should not be included in the POST body
@@ -224,7 +228,9 @@ module ShopifyCLI
 
           stub_session_id_request
           response = request.get("/")
+          actual_params = @proxy.templates_to_replace
 
+          assert_equal(expected_params, actual_params)
           assert_equal("PROXY RESPONSE", response.body)
         end
 
