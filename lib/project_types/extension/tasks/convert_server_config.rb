@@ -9,11 +9,12 @@ module Extension
       property! :api_key, accepts: String
       property! :context, accepts: ShopifyCLI::Context
       property! :hash, accepts: Hash
+      property  :port, accepts: Integer, default: ShopifyCLI::Constants::Extension::DEFAULT_PORT
       property! :registration_uuid, accepts: String
       property  :resource_url, accepts: String
       property! :store, accepts: String
       property! :title, accepts: String
-      property :tunnel_url, accepts: String
+      property  :tunnel_url, accepts: String
       property! :type, accepts: String
 
       def self.call(*args)
@@ -46,6 +47,7 @@ module Extension
         end
         server_config = Models::ServerConfig::Root.new(
           extensions: [extension],
+          port: port,
           public_url: tunnel_url,
           store: store
         )

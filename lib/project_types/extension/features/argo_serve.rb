@@ -9,7 +9,7 @@ module Extension
       property! :specification_handler, accepts: Extension::Models::SpecificationHandlers::Default
       property :argo_runtime, accepts: -> (runtime) { runtime.class < Features::Runtimes::Base }
       property! :context, accepts: ShopifyCLI::Context
-      property! :port, accepts: Integer, default: 39351
+      property! :port, accepts: Integer, default: ShopifyCLI::Constants::Extension::DEFAULT_PORT
       property  :tunnel_url, accepts: String, default: nil
       property! :js_system, accepts: ->(jss) { jss.respond_to?(:call) }, default: ShopifyCLI::JsSystem
       property :resource_url, accepts: String, default: nil
@@ -95,15 +95,16 @@ module Extension
       end
 
       def new_serve_flow
-        Tasks::RunExtensionCommand.new(
+        Tasks::ExecuteCommands.serve(
           type: specification_handler.specification.identifier,
-          command: "serve",
           context: context,
+          config_file_path: specification_handler.server_config_path,
           port: port,
-          config_file_name: specification_handler.server_config_file,
           resource_url: resource_url,
           tunnel_url: tunnel_url
-        ).call
+        ).unwrap do |error|
+          raise error unless error.nil?
+        end
       end
 
       def supports_development_server?
