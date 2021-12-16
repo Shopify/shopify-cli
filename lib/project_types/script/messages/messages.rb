@@ -144,6 +144,7 @@ module Script
 
           language_library_for_api_not_found_cause: "Script can’t be pushed because the %{language} library for API %{api} is missing.",
           language_library_for_api_not_found_help: "Make sure extension_point.yml contains the correct API library.",
+          no_scripts_found_in_app: "The selected apps have no scripts. Please, create them first on the partners' dashboard.",
         },
 
         create: {
@@ -182,7 +183,14 @@ module Script
 
           script_pushed: "{{v}} Script pushed to app (API key: %{api_key}).",
         },
-
+        connect: {
+          connected: "Connected! Your project is now connected to {{green:%s}}",
+          missing_script: "No script has been selected.",
+          help: <<~HELP,
+            {{command:%s script connect}}: Connects an existing script to an app.
+              Usage: {{command:%s script connect}}
+          HELP
+        },
         javy: {
           help: <<~HELP,
             Compile the JavaScript code into WebAssembly.

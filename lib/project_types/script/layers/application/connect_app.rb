@@ -7,11 +7,12 @@ module Script
     module Application
       class ConnectApp
         class << self
-          def call(ctx:)
+          def call(ctx:, force: false, strict: false)
             script_project_repo = Layers::Infrastructure::ScriptProjectRepository.new(ctx: ctx)
             script_project = script_project_repo.get
-            return false if script_project.env_valid?
-            
+
+            return false if script_project.env_valid? && !force
+
             if ShopifyCLI::Shopifolk.check && Forms::RunAgainstShopifyOrg.ask(ctx, nil, nil).response
               ShopifyCLI::Shopifolk.act_as_shopify_organization
             end
@@ -37,13 +38,18 @@ module Script
             extension_point_type = script_project.extension_point_type
             scripts = script_service.get_app_scripts(extension_point_type: extension_point_type)
 
-            uuid = Forms::AskScriptUuid.ask(ctx, scripts, nil).uuid
+            uuid = Forms::AskScriptUuid.ask(ctx, scripts, nil)&.uuid
+
+            if strict && uuid.nil?
+              ctx.abort(ctx.message("script.connect.missing_script"))
+            end
 
             script_project_repo.create_env(
               api_key: app["apiKey"],
               secret: app["apiSecretKeys"].first["secret"],
               uuid: uuid
             )
+            ctx.done(ctx.message("script.connect.connected", app["title"]))
 
             true
           end

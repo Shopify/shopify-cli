@@ -2,6 +2,7 @@ From version 2.6.0, the sections in this file adhere to the [keep a changelog](h
 
 ## [Unreleased]
 ### Fixed
+* [#1852](https://github.com/Shopify/shopify-cli/pull/1852): Fix `shopify --help` to include `extension` commands
 * [#1853](https://github.com/Shopify/shopify-cli/pull/1853): Fix javy installation failures from MacOS universal ruby installations
 * [#1851](https://github.com/Shopify/shopify-cli/pull/1851): Improve `shopify theme push --live` confirmation message to show current live theme
 
@@ -9,6 +10,9 @@ From version 2.6.0, the sections in this file adhere to the [keep a changelog](h
 ### Added
 * [#1826](https://github.com/Shopify/shopify-cli/pull/1826): Support using `script.config.yml` file for script configuration
 * [#1843](https://github.com/Shopify/shopify-cli/pull/1826): Support using javy on Apple ARM processors
+
+### Added
+* [#1847](https://github.com/Shopify/shopify-cli/pull/1847): `shopify script connect` command.
 
 ### Fixed
 * [#1811](https://github.com/Shopify/shopify-cli/pull/1811): Update theme-check to 1.9.0
