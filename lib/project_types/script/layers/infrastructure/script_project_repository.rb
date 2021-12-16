@@ -6,8 +6,8 @@ module Script
       class ScriptProjectRepository
         include SmartProperties
         property! :ctx, accepts: ShopifyCLI::Context
-        property! :directory, accepts: String
-        property! :initial_directory, accepts: String
+        property :directory, accepts: String
+        property :initial_directory, accepts: String
 
         MUTABLE_ENV_VALUES = %i(uuid)
 
