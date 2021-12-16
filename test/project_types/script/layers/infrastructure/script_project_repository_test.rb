@@ -6,11 +6,20 @@ describe Script::Layers::Infrastructure::ScriptProjectRepository do
   include TestHelpers::FakeFS
 
   let(:ctx) { TestHelpers::FakeContext.new }
-  let(:instance) { Script::Layers::Infrastructure::ScriptProjectRepository.new(ctx: ctx) }
+  let(:instance) do
+    Script::Layers::Infrastructure::ScriptProjectRepository.new(
+    ctx: ctx,
+    directory: directory,
+    initial_directory: ctx.root
+  )
+  end
 
   let(:deprecated_ep_types) { [] }
   let(:supported_languages) { ["assemblyscript"] }
   let(:script_config_filename) { "script.config.yml" }
+
+  let(:initial_directory) { ctx.root }
+  let(:directory) { "/script_directory" }
 
   before do
     Script::Layers::Application::ExtensionPoints.stubs(:deprecated_types).returns(deprecated_ep_types)
@@ -509,6 +518,68 @@ describe Script::Layers::Infrastructure::ScriptProjectRepository do
           assert_equal new_title, file_content["title"]
         end
       end
+    end
+  end
+
+  describe "#create_project_directory" do
+    subject do
+      instance.create_project_directory
+    end
+
+    describe "when another folder with this name already exists" do
+      let(:existing_file) { File.join(directory, "existing-file.txt") }
+      let(:existing_file_content) { "Some content." }
+
+      before do
+        ctx.mkdir_p(directory)
+        ctx.write(existing_file, existing_file_content)
+      end
+
+      it "should not delete the original project during cleanup and raise ScriptProjectAlreadyExistsError" do
+        assert_raises(Script::Layers::Infrastructure::Errors::ScriptProjectAlreadyExistsError) { subject }
+        assert ctx.dir_exist?(directory)
+        assert_equal existing_file_content, File.read(existing_file)
+      end
+    end
+
+    describe "success" do
+      it "should create a new project directory and change_directory into it" do
+        subject
+        assert_equal directory, ctx.root
+        ctx.dir_exist?(directory)
+      end
+    end
+  end
+
+  describe "#delete_project_directory" do
+    before do
+      ctx.mkdir_p(directory)
+      ctx.chdir(directory)
+    end
+
+    subject do
+      instance.delete_project_directory
+    end
+
+    it "should delete the directory, and change to the initial directory" do
+      subject
+      assert_equal initial_directory, ctx.root
+      refute ctx.dir_exist?(directory)
+    end
+  end
+
+  describe "#change_to_initial_directory" do
+    subject do
+      instance.change_to_initial_directory
+    end
+
+    before do
+      ctx.mkdir_p(directory)
+    end
+
+    it "should change to the initial directory" do
+      subject
+      assert_equal ctx.root, initial_directory
     end
   end
 

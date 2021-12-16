@@ -2,7 +2,16 @@
 
 module TestHelpers
   class FakeScriptProjectRepository
-    def initialize
+    attr_reader :ctx, :initial_directory
+
+    def initialize(
+      ctx = TestHelpers::FakeContext.new,
+      directory = "fake_directory",
+      initial_directory = ctx.root
+    )
+      @ctx = ctx
+      @directory = directory
+      @initial_directory = initial_directory
       @project = nil
     end
 
@@ -43,6 +52,10 @@ module TestHelpers
       @project.script_config = script_config
       @project
     end
+
+    def create_project_directory; end
+    def delete_project_directory; end
+    def change_to_initial_directory; end
 
     private
 
