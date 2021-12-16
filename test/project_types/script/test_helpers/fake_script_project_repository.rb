@@ -7,11 +7,11 @@ module TestHelpers
     def initialize(
       ctx = TestHelpers::FakeContext.new,
       directory = "fake_directory",
-      _initial_directory = "fake_initial_directory"
+      initial_directory = ctx.root
     )
       @ctx = ctx
       @directory = directory
-      @initial_directory = ctx.root
+      @initial_directory = initial_directory
       @project = nil
     end
 
