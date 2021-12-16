@@ -13,6 +13,7 @@ module Script
     hidden_feature(feature_set: :script_project)
     subcommand :Create, "create", Project.project_filepath("commands/create")
     subcommand :Push, "push", Project.project_filepath("commands/push")
+    subcommand :Connect, "connect", Project.project_filepath("commands/connect")
     subcommand :Javy, "javy", Project.project_filepath("commands/javy")
   end
   ShopifyCLI::Commands.register("Script::Command", "script")
@@ -24,6 +25,7 @@ module Script
     autoload :AskScriptUuid, Project.project_filepath("forms/ask_script_uuid")
     autoload :RunAgainstShopifyOrg, Project.project_filepath("forms/run_against_shopify_org")
     autoload :Create, Project.project_filepath("forms/create")
+    autoload :Connect, Project.project_filepath("forms/connect")
     autoload :ScriptForm, Project.project_filepath("forms/script_form")
   end
 
