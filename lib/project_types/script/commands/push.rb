@@ -23,21 +23,24 @@ module Script
         )
 
         puts "project #{project.inspect}"
-
         # specification_handler = Script::Loaders::SpecificationHandler.load(project: project, context: @ctx)
-
-        # pedro's work?
         # fresh_env = Layers::Application::ConnectApp.call(ctx: @ctx)
 
-        force = options.flags.key?(:force) 
+        force = options.flags.key?(:force)
+        api_key = project.env[:api_key]
+        api_secret = project.env[:secret]
+        uuid = project.env[:extra]["UUID"]
 
-        api_key = Layers::Infrastructure::ScriptProjectRepository.new(ctx: @ctx).get.api_key
-        if @ctx.tty?
-          return @ctx.puts(self.class.help) unless api_key
+        return @ctx.puts(self.class.help) if !api_key && @ctx.tty?
+        
+        if @ctx.tty? || uuid
+          Layers::Application::PushScript.call(ctx: @ctx, force: force)
+          @ctx.puts(@ctx.message("script.push.script_pushed", api_key: api_key))
+        else
+           @ctx.puts("UUID is required to push in a CI environment")
         end
-
-        Layers::Application::PushScript.call(ctx: @ctx, force: force)
-        @ctx.puts(@ctx.message("script.push.script_pushed", api_key: api_key))
+      rescue SmartProperties::InitializationError
+        @ctx.puts("Script needs to be connected to an app")
       rescue StandardError => e
         msg = if api_key
           @ctx.message("script.push.error.operation_failed_with_api_key", api_key: api_key)
