@@ -7,7 +7,7 @@ module Script
     module Application
       class ConnectApp
         class << self
-          def call(ctx:, force: false)
+          def call(ctx:, force: false, strict: false)
             script_project_repo = Layers::Infrastructure::ScriptProjectRepository.new(ctx: ctx)
             script_project = script_project_repo.get
 
@@ -39,6 +39,10 @@ module Script
             scripts = script_service.get_app_scripts(extension_point_type: extension_point_type)
 
             uuid = Forms::AskScriptUuid.ask(ctx, scripts, nil)&.uuid
+
+            if strict && uuid.nil?
+              ctx.abort(ctx.message("script.connect.missing_script"))
+            end
 
             script_project_repo.create_env(
               api_key: app["apiKey"],

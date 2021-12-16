@@ -182,6 +182,7 @@ module Script
         },
         connect: {
           connected: "Connected! Your project is now connected to {{green:%s}}",
+          missing_script: "No script has been selected.",
           help: <<~HELP,
             {{command:%s script connect}}: Connects an existing script to an app.
               Usage: {{command:%s script connect}}

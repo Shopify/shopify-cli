@@ -6,7 +6,7 @@ module Script
       prerequisite_task ensure_project_type: :script
 
       def call(_args, _)
-        Layers::Application::ConnectApp.call(ctx: @ctx, force: true)
+        Layers::Application::ConnectApp.call(ctx: @ctx, force: true, strict: true)
       end
 
       def self.help
