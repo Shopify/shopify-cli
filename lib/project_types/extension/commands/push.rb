@@ -27,7 +27,6 @@ module Extension
         specification_handler = Extension::Loaders::SpecificationHandler.load(project: project, context: @ctx)
         register_if_necessary(project: project, args: args, name: name)
 
-
         Command::Build.new(@ctx).call(args, name) unless specification_handler.specification.options[:skip_build]
         CLI::UI::Frame.open(@ctx.message("push.frame_title")) do
           updated_draft_version = update_draft(project: project, specification_handler: specification_handler)
