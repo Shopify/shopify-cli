@@ -89,15 +89,6 @@ module Extension
         assert_message_output(io: io, expected_content: @context.message("create.try_again"))
       end
 
-      def test_help_does_not_load_extension_project_type
-        io = capture_io do
-          run_create(%w(create --help))
-        end
-
-        output = io.join
-        refute_match(" extension ", output)
-      end
-
       private
 
       def run_create(arguments)
