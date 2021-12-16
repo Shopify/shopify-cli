@@ -725,7 +725,7 @@ module ShopifyCLI
           signup_suggestion: <<~MESSAGE,
             {{*}} To avoid tunnels that timeout, it is recommended to signup for a free ngrok
             account at {{underline:https://ngrok.com/signup}}. After you signup, install your
-            personalized authorization token using {{command:%s [ node | rails ] tunnel auth <token>}}.
+            personalized authorization token using {{command:%s app tunnel auth <token>}}.
           MESSAGE
           start: "{{v}} ngrok tunnel running at {{underline:%s}}",
           start_with_account: "{{v}} ngrok tunnel running at {{underline:%s}}, with account %s",
