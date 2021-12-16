@@ -187,6 +187,9 @@ module Script
             {{command:%s script connect}}: Connects an existing script to an app.
               Usage: {{command:%s script connect}}
           HELP
+          error: {
+            operation_failed: "Couldn't connect script to app.",
+          },
         },
         javy: {
           help: <<~HELP,
