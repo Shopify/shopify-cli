@@ -1,7 +1,8 @@
 # frozen_string_literal: true
 
+require "shopify_cli/thread_pool"
+
 require_relative "app_extensions/job"
-require_relative "app_extensions/thread_pool"
 
 module ShopifyCLI
   class PartnersAPI
@@ -23,15 +24,21 @@ module ShopifyCLI
         end
 
         def consume_jobs!(jobs)
-          thread_pool = AppExtensions::ThreadPool.new
+          thread_pool = ShopifyCLI::ThreadPool.new
           jobs.each do |job|
-            thread_pool.schedule { job.fetch_extensions! }
+            thread_pool.schedule(job)
           end
           thread_pool.shutdown
+
+          raise_if_any_error(jobs)
         end
 
         def patch_apps_with_extensions!(jobs)
           jobs.each(&:patch_app_with_extensions!)
+        end
+
+        def raise_if_any_error(jobs)
+          jobs.find(&:error?).tap { |job| raise job.error if job }
         end
       end
     end

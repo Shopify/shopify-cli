@@ -15,7 +15,7 @@ module ShopifyCLI
           @job = PartnersAPI::AppExtensions::Job.new(@context, @app, @type)
         end
 
-        def test_fetch_extensions
+        def test_perform
           stub_get_extension_registrations
 
           expected_result = {
@@ -25,7 +25,7 @@ module ShopifyCLI
           }
 
           assert_nil(@job.result)
-          @job.fetch_extensions!
+          @job.perform!
           assert_equal(expected_result, @job.result)
         end
 
