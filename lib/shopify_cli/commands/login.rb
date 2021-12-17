@@ -15,8 +15,6 @@ module ShopifyCLI
 
       def call(*)
         shop = (options.flags[:shop] || @ctx.getenv("SHOPIFY_SHOP" || nil))
-        ShopifyCLI::DB.set(shop: self.class.validate_shop(shop, context: @ctx)) unless shop.nil?
-
         if shop.nil? && Shopifolk.check
           Shopifolk.reset
           @ctx.puts(@ctx.message("core.tasks.select_org_and_shop.identified_as_shopify"))
@@ -33,17 +31,29 @@ module ShopifyCLI
           IdentityAuth.new(ctx: @ctx).authenticate
           org = select_organization
           ShopifyCLI::DB.set(organization_id: org["id"].to_i) unless org.nil?
-          Whoami.call([], "whoami")
+
         end
+        # validate that shop belongs to organization
+        ShopifyCLI::DB.set(shop: self.class.validate_shop(shop, org, context: @ctx)) unless shop.nil?
+        Whoami.call([], "whoami")
       end
 
       def self.help
         ShopifyCLI::Context.message("core.login.help", ShopifyCLI::TOOL_NAME)
       end
 
-      def self.validate_shop(shop, context:)
+      def self.validate_shop(shop, org, context:)
+        is_verified = false
         permanent_domain = shop_to_permanent_domain(shop)
         context.abort(context.message("core.login.invalid_shop", shop)) unless permanent_domain
+        stores_owned = org["stores"]
+        stores_owned.each do |store|
+          if permanent_domain == store["shopDomain"]
+            is_verified = true
+            break
+          end
+        end
+        context.abort(context.message("core.login.invalid_shop", shop)) unless is_verified
         permanent_domain
       end
 
