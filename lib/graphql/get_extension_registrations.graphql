@@ -1,0 +1,27 @@
+query GetExtensionRegistrations($api_key: String!, $type: String) {
+  app(apiKey: $api_key) {
+    id
+    title
+    apiKey
+    apiSecretKeys{
+      secret
+    }
+    appType
+    extensionRegistrations(specificationIdentifier: $type) {
+      id
+      type
+      uuid
+      title
+      draftVersion {
+        registrationId
+        context
+        lastUserInteractionAt
+        location
+        validationErrors { field message }
+        id
+        uuid
+        versionTag
+      }
+    }
+  }
+}
