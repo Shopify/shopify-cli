@@ -34,7 +34,7 @@ module Script
         return @ctx.puts(self.class.help) if !api_key && @ctx.tty?
         
         if @ctx.tty? || uuid
-          Layers::Application::PushScript.call(ctx: @ctx, force: force)
+          Layers::Application::PushScript.call(ctx: @ctx, force: force, project: project)
           @ctx.puts(@ctx.message("script.push.script_pushed", api_key: api_key))
         else
            @ctx.puts("UUID is required to push in a CI environment")
