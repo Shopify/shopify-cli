@@ -2,6 +2,7 @@
 require "net/http"
 require "stringio"
 require "time"
+require "cgi"
 
 module ShopifyCLI
   module Theme
@@ -117,16 +118,21 @@ module ShopifyCLI
           # Core doesn't support replace_templates
           return params if @core_endpoints.include?(env["PATH_INFO"])
 
-          pending_templates = @syncer.pending_updates.select do |file|
-            # Only replace Liquid or JSON files
-            file.liquid? || file.json?
-          end
-
-          pending_templates.each do |path|
-            params["replace_templates[#{path.relative_path}]"] = path.read
-          end
+          template_files = @syncer.pending_updates + requested_templates(env)
+          template_files
+            .select { |file| file.liquid? || file.json? }
+            .uniq(&:relative_path)
+            .each { |file| params["replace_templates[#{file.relative_path}]"] = file.read }
 
           params
+        end
+
+        def requested_templates(env)
+          cookie = env["HTTP_COOKIE"]
+          sections = CGI::Cookie.parse(cookie)["hot_reload_sections"].join.split(",")
+          sections.map do |section|
+            @theme[section]
+          end
         end
 
         def add_session_cookie(cookie_header)
