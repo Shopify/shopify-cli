@@ -22,14 +22,11 @@ module ShopifyCLI
         SESSION_COOKIE_REGEXP = /#{SESSION_COOKIE_NAME}=(\h+)/
         SESSION_COOKIE_MAX_AGE = 60 * 60 * 23 # 1 day - leeway of 1h
 
-        attr_reader :templates_to_replace
-
         def initialize(ctx, theme:, syncer:)
           @ctx = ctx
           @theme = theme
           @syncer = syncer
           @core_endpoints = Set.new
-          @templates_to_replace = {}
 
           @secure_session_id = nil
           @last_session_cookie_refresh = nil
@@ -115,8 +112,10 @@ module ShopifyCLI
         end
 
         def build_replace_templates_param(env)
+          params = {}
+
           # Core doesn't support replace_templates
-          return @templates_to_replace if @core_endpoints.include?(env["PATH_INFO"])
+          return params if @core_endpoints.include?(env["PATH_INFO"])
 
           pending_templates = @syncer.pending_updates.select do |file|
             # Only replace Liquid or JSON files
@@ -124,10 +123,10 @@ module ShopifyCLI
           end
 
           pending_templates.each do |path|
-            @templates_to_replace["replace_templates[#{path.relative_path}]"] = path.read
+            params["replace_templates[#{path.relative_path}]"] = path.read
           end
 
-          @templates_to_replace
+          params
         end
 
         def add_session_cookie(cookie_header)
