@@ -91,7 +91,6 @@ module Extension
             Usage: {{command:%s extension push}}
             Options:
               {{command:--api-key=API_KEY}} Connect your extension and app by inserting your app's API key (which you can get from your app setup page on shopify.dev).
-              {{command:--api-secret=API_SECRET}} The API secret of the app the extension is registered with.
               {{command:--registration-id=REGISTRATION_ID}} The id of the extension's registration.
         HELP
         frame_title: "Pushing your extension to Shopify",
