@@ -3,6 +3,7 @@ module ShopifyCLI
     class App
       class Deploy < ShopifyCLI::Command::AppSubCommand
         subcommand :Heroku, "heroku", "shopify_cli/commands/app/deploy/heroku"
+        prerequisite_task :ensure_git_dependency
 
         recommend_default_node_range
         recommend_default_ruby_range
