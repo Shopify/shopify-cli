@@ -6,6 +6,7 @@ From version 2.6.0, the sections in this file adhere to the [keep a changelog](h
 * [#1853](https://github.com/Shopify/shopify-cli/pull/1853): Fix javy installation failures from MacOS universal ruby installations
 * [#1851](https://github.com/Shopify/shopify-cli/pull/1851): Improve `shopify theme push --live` confirmation message to show current live theme
 * [#1850](https://github.com/Shopify/shopify-cli/pull/1850): Fix `shopify extension` commands timeout when organization has too many apps
+* [#1860](https://github.com/Shopify/shopify-cli/pull/1860): Fix `theme serve` hot reload when there are many tabs active
 
 ## Version 2.7.3
 ### Added

@@ -2,6 +2,9 @@
 require "net/http"
 require "stringio"
 require "time"
+require "cgi"
+
+require_relative "proxy/template_param_builder"
 
 module ShopifyCLI
   module Theme
@@ -112,21 +115,12 @@ module ShopifyCLI
         end
 
         def build_replace_templates_param(env)
-          params = {}
-
-          # Core doesn't support replace_templates
-          return params if @core_endpoints.include?(env["PATH_INFO"])
-
-          pending_templates = @syncer.pending_updates.select do |file|
-            # Only replace Liquid or JSON files
-            file.liquid? || file.json?
-          end
-
-          pending_templates.each do |path|
-            params["replace_templates[#{path.relative_path}]"] = path.read
-          end
-
-          params
+          TemplateParamBuilder.new
+            .with_core_endpoints(@core_endpoints)
+            .with_syncer(@syncer)
+            .with_theme(@theme)
+            .with_rack_env(env)
+            .build
         end
 
         def add_session_cookie(cookie_header)
