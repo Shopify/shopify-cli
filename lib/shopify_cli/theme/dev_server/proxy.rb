@@ -4,6 +4,8 @@ require "stringio"
 require "time"
 require "cgi"
 
+require_relative "proxy/template_param_builder"
+
 module ShopifyCLI
   module Theme
     module DevServer
@@ -113,26 +115,12 @@ module ShopifyCLI
         end
 
         def build_replace_templates_param(env)
-          params = {}
-
-          # Core doesn't support replace_templates
-          return params if @core_endpoints.include?(env["PATH_INFO"])
-
-          template_files = @syncer.pending_updates + requested_templates(env)
-          template_files
-            .select { |file| file.liquid? || file.json? }
-            .uniq(&:relative_path)
-            .each { |file| params["replace_templates[#{file.relative_path}]"] = file.read }
-
-          params
-        end
-
-        def requested_templates(env)
-          cookie = env["HTTP_COOKIE"]
-          sections = CGI::Cookie.parse(cookie)["hot_reload_sections"].join.split(",")
-          sections.map do |section|
-            @theme[section]
-          end
+          TemplateParamBuilder.new
+            .with_core_endpoints(@core_endpoints)
+            .with_syncer(@syncer)
+            .with_theme(@theme)
+            .with_rack_env(env)
+            .build
         end
 
         def add_session_cookie(cookie_header)
