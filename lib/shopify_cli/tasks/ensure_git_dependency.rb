@@ -5,7 +5,7 @@ module ShopifyCLI
     class EnsureGitDependency < ShopifyCLI::Task
       def call(ctx)
         return if ShopifyCLI::Environment.acceptance_test?
-        unless ShopifyCLI::Git.available?(ctx)
+        unless ShopifyCLI::Git.exists?(ctx)
           raise ShopifyCLI::Abort, ctx.message("core.git.nonexistent")
         end
       end
