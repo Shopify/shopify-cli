@@ -61,5 +61,9 @@ module ShopifyCLI
     module Links
       NEW_ISSUE = "https://github.com/Shopify/shopify-cli/issues/new"
     end
+
+    module Extension
+      DEFAULT_PORT = 39351
+    end
   end
 end
