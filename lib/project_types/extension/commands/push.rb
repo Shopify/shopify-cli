@@ -3,17 +3,40 @@ require "shopify_cli"
 
 module Extension
   class Command
-    class Push < ExtensionCommand
+    class Push < ShopifyCLI::Command::SubCommand
       prerequisite_task ensure_project_type: :extension
+
+      options do |parser, flags|
+        parser.on("--api-key=API_KEY") { |api_key| flags[:api_key] = api_key.gsub('"', "") }
+        parser.on("--api-secret=API_SECRET") { |api_secret| flags[:api_secret] = api_secret.gsub('"', "") }
+        parser.on("--registration-id=REGISTRATION_ID") do |registration_id|
+          flags[:registration_id] = registration_id.gsub('"', "")
+        end
+      end
 
       TIME_DISPLAY_FORMAT = "%B %d, %Y %H:%M:%S %Z"
 
       def call(args, name)
-        Command::Register.new(@ctx).call(args, name) unless project.registered?
+        project = Extension::Loaders::Project.load(
+          context: @ctx,
+          directory: Dir.pwd,
+          api_key: options.flags[:api_key],
+          api_secret: options.flags[:api_secret],
+          registration_id: options.flags[:registration_id]
+        )
+        specification_handler = Extension::Loaders::SpecificationHandler.load(project: project, context: @ctx)
+        register_if_necessary(project: project, args: args, name: name)
+
         Command::Build.new(@ctx).call(args, name) unless specification_handler.specification.options[:skip_build]
         CLI::UI::Frame.open(@ctx.message("push.frame_title")) do
-          updated_draft_version = update_draft
-          show_message(updated_draft_version)
+          updated_draft_version = update_draft(project: project, specification_handler: specification_handler)
+          show_message(updated_draft_version, project: project)
+        end
+      end
+
+      def register_if_necessary(project:, args:, name:)
+        if @ctx.tty? && !project.registered?
+          Command::Register.new(@ctx).call(args, name)
         end
       end
 
@@ -23,11 +46,16 @@ module Extension
 
       private
 
-      def show_message(draft)
-        draft.validation_errors.empty? ? output_success_messages(draft) : output_validation_errors(draft)
+      def show_message(draft, project:)
+        if draft.validation_errors.empty?
+          output_success_messages(draft,
+            project: project)
+        else
+          output_validation_errors(draft)
+        end
       end
 
-      def output_success_messages(draft)
+      def output_success_messages(draft, project:)
         @ctx.puts(@ctx.message("push.success_confirmation", project.title, format_time(draft.last_user_interaction_at)))
         @ctx.puts(@ctx.message("push.success_info", draft.location))
       end
@@ -51,7 +79,7 @@ module Extension
         yield
       end
 
-      def update_draft
+      def update_draft(project:, specification_handler:)
         with_waiting_text do
           Tasks::UpdateDraft.call(
             context: @ctx,
