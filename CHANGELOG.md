@@ -1,6 +1,9 @@
 From version 2.6.0, the sections in this file adhere to the [keep a changelog](https://keepachangelog.com/en/1.0.0/) specification.
 
 ## [Unreleased]
+### Added
+* [#1825](https://github.com/Shopify/shopify-cli/pull/1825): Support passing the connection information through arguments
+
 ### Fixed
 * [#1852](https://github.com/Shopify/shopify-cli/pull/1852): Fix `shopify --help` to include `extension` commands
 * [#1853](https://github.com/Shopify/shopify-cli/pull/1853): Fix javy installation failures from MacOS universal ruby installations
