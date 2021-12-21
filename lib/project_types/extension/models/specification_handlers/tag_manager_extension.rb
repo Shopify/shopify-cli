@@ -62,9 +62,11 @@ module Extension
         def config(context)
           begin
             ext_config = read_file_contents(context,File.join(context.root, CONFIG_FILE)){|file_path| JSON.parse(File.read(file_path).chomp)}
+            script_contents =  read_file_contents(context, File.join(context.root, SCRIPT_FILE)){|file_path| File.read(file_path).chomp}
             {
-              src_code: read_file_contents(context, File.join(context.root, SCRIPT_FILE)){|file_path| File.read(file_path).chomp},
-              sandboxed: ext_config["sandboxed"] || true
+              src_code: script_contents,
+              sandboxed: ext_config["sandboxed"] || true,
+              serialized_script: Base64.strict_encode64(script_contents)
             }
           rescue StandardError
             context.abort(context.message("features.argo.script_prepare_error"))
