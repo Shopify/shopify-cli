@@ -44,6 +44,56 @@ module ShopifyCLI
         str = Context.messages.dig(*key_parts)
         str ? str % params : key
       end
+
+      # a wrapper around Kernel.puts to allow for easy formatting
+      #
+      # #### Parameters
+      # * `text` - a string message to output
+      def puts(*args)
+        Kernel.puts(CLI::UI.fmt(*args))
+      end
+
+      # aborts the current running command and outputs an error message:
+      # - when the `help_message` is not provided, the error message appears in
+      #   a red frame, prefixed by an ✗ icon
+      # - when the `help_message` is provided, the error message appears in a
+      #   red frame, and the help message appears in a green frame
+      #
+      # #### Parameters
+      # * `error_message` - an error message to output
+      # * `help_message` - an optional help message
+      #
+      # #### Example
+      #
+      #   ShopifyCLI::Context.abort("Execution error")
+      #   # Output:
+      #   # ┏━━ Error ━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━
+      #   # ┃ ✗ Execution error
+      #   # ┗━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━
+      #
+      #   ShopifyCLI::Context.abort("Execution error", "export EXECUTION=1")
+      #   # Output:
+      #   # ┏━━ Error ━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━
+      #   # ┃ Execution error
+      #   # ┗━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━
+      #   # ┏━━ Try this ━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━
+      #   # ┃ export EXECUTION=1
+      #   # ┗━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━
+      #
+      def abort(error_message, help_message = nil)
+        raise ShopifyCLI::Abort, "{{x}} #{error_message}" if help_message.nil?
+
+        frame(message("core.error"), color: :red) { self.puts(error_message) }
+        frame(message("core.try_this"), color: :green) { self.puts(help_message) }
+
+        raise ShopifyCLI::AbortSilent
+      end
+
+      private
+
+      def frame(title, color:, &block)
+        CLI::UI::Frame.open(title, color: CLI::UI.resolve_color(color), timing: false, &block)
+      end
     end
 
     # is the directory root that the current command is running in. If you want to
@@ -354,13 +404,13 @@ module ShopifyCLI
       puts "{{yellow:*}} #{text}"
     end
 
-    # a wrapper around Kernel.puts to allow for easy formatting
+    # proxy call to Context.puts.
     #
     # #### Parameters
     # * `text` - a string message to output
     #
     def puts(*args)
-      Kernel.puts(CLI::UI.fmt(*args))
+      Context.puts(*args)
     end
 
     # a wrapper around $stderr.puts to allow for easy formatting
@@ -390,14 +440,13 @@ module ShopifyCLI
       puts("{{v}} #{text}")
     end
 
-    # aborts the current running command and outputs an error message, prefixed
-    # by a red x
+    # proxy call to Context.abort.
     #
     # #### Parameters
-    # * `text` - a string message to output
-    #
-    def abort(text)
-      raise ShopifyCLI::Abort, "{{x}} #{text}"
+    # * `error_message` - an error message to output
+    # * `help_message` - an optional help message
+    def abort(error_message, help_message = nil)
+      Context.abort(error_message, help_message)
     end
 
     # outputs a message, prefixed by a red `DEBUG` tag. This will only output to

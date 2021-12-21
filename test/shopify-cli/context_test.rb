@@ -15,8 +15,55 @@ module ShopifyCLI
       expected_stderr = /^$/
 
       assert_output(expected_stdout, expected_stderr) do
+        Context.puts("info message")
+      end
+    end
+
+    def test_proxy_puts
+      expected_stdout = /info message/
+      expected_stderr = /^$/
+
+      assert_output(expected_stdout, expected_stderr) do
         @ctx.puts("info message")
       end
+    end
+
+    def test_abort
+      io = capture_io_and_assert_raises(ShopifyCLI::Abort) do
+        Context.abort("error message")
+      end
+
+      io = io.join
+      assert_match(/error message/, io)
+    end
+
+    def test_abort_proxy
+      io = capture_io_and_assert_raises(ShopifyCLI::Abort) do
+        @ctx.abort("error message")
+      end
+
+      io = io.join
+      assert_match(/error message/, io)
+    end
+
+    def test_abort_with_help_message
+      io = capture_io_and_assert_raises(ShopifyCLI::AbortSilent) do
+        Context.abort("error message", "help message")
+      end
+
+      io = io.join
+      assert_match(/error message/, io)
+      assert_match(/help message/, io)
+    end
+
+    def test_abort_proxy_with_help_message
+      io = capture_io_and_assert_raises(ShopifyCLI::AbortSilent) do
+        @ctx.abort("error message", "help message")
+      end
+
+      io = io.join
+      assert_match(/error message/, io)
+      assert_match(/help message/, io)
     end
 
     def test_error
