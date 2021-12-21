@@ -1,9 +1,31 @@
 From version 2.6.0, the sections in this file adhere to the [keep a changelog](https://keepachangelog.com/en/1.0.0/) specification.
+
 ## [Unreleased]
+### Fixed
+* [#1852](https://github.com/Shopify/shopify-cli/pull/1852): Fix `shopify --help` to include `extension` commands
+* [#1853](https://github.com/Shopify/shopify-cli/pull/1853): Fix javy installation failures from MacOS universal ruby installations
+* [#1851](https://github.com/Shopify/shopify-cli/pull/1851): Improve `shopify theme push --live` confirmation message to show current live theme
+* [#1850](https://github.com/Shopify/shopify-cli/pull/1850): Fix `shopify extension` commands timeout when organization has too many apps
+* [#1860](https://github.com/Shopify/shopify-cli/pull/1860): Fix `theme serve` hot reload when there are many tabs active
+
+## Version 2.7.3
+### Added
+* [#1826](https://github.com/Shopify/shopify-cli/pull/1826): Support using `script.config.yml` file for script configuration
+* [#1843](https://github.com/Shopify/shopify-cli/pull/1826): Support using javy on Apple ARM processors
+
+### Added
+* [#1847](https://github.com/Shopify/shopify-cli/pull/1847): `shopify script connect` command.
 
 ### Fixed
+* [#1811](https://github.com/Shopify/shopify-cli/pull/1811): Update theme-check to 1.9.0
+* [#1831](https://github.com/Shopify/shopify-cli/pull/1831): Ensure correct `ngrok` version is downloaded for Apple M1
+* [#1823](https://github.com/Shopify/shopify-cli/pull/1823): Indicate git is unavailable; don't error out
 * [#1807](https://github.com/Shopify/shopify-cli/pull/1807): Fix `--live` parameter, it should not imply `--allow-live` in the `theme push` command
 * [#1812](https://github.com/Shopify/shopify-cli/pull/1812): App creation with Rails 7
+* [#1821](https://github.com/Shopify/shopify-cli/pull/1821): Fix Shopify hosted fonts to load via the local preview URL
+* [#1830](https://github.com/Shopify/shopify-cli/pull/1830): Fix hot reload when users update many files "simultaneously"
+* [#1837](https://github.com/Shopify/shopify-cli/pull/1837): Fix `ShopifyCLI::Theme::DevServer::CdnFonts` class to support any font
+
 ## Version 2.7.2
 ### Fixed
 * [#1763](https://github.com/Shopify/shopify-cli/pull/1763): Fix: Tunnel --PORT parameter not working in Node.js app.

@@ -7,10 +7,9 @@ describe Script::Layers::Application::CreateScript do
 
   let(:script_name) { "path" }
   let(:compiled_type) { "wasm" }
-  let(:script_json_filename) { "script.json" }
 
   let(:extension_point_repository) { TestHelpers::FakeExtensionPointRepository.new }
-  let(:script_project_repository) { TestHelpers::FakeScriptProjectRepository.new }
+  let(:script_project_repository) { TestHelpers::FakeScriptProjectRepository.new(context) }
   let(:ep) { extension_point_repository.get_extension_point(extension_point_type) }
   let(:task_runner) { stub(compiled_type: compiled_type) }
 
@@ -76,30 +75,27 @@ describe Script::Layers::Application::CreateScript do
     end
 
     describe "failure" do
-      describe "when another project with this name already exists" do
-        let(:existing_file) { File.join(script_name, "existing-file.txt") }
-        let(:existing_file_content) { "Some content." }
-
-        before do
-          context.mkdir_p(script_name)
-          context.write(existing_file, existing_file_content)
-        end
-
-        it "should not delete the original project during cleanup and raise ScriptProjectAlreadyExistsError" do
-          assert_raises(Script::Layers::Infrastructure::Errors::ScriptProjectAlreadyExistsError) { subject }
-          assert context.dir_exist?(script_name)
-          assert_equal existing_file_content, File.read(existing_file)
-        end
-      end
-
       describe "when an error occurs after the project folder was created" do
         before { Script::Layers::Application::CreateScript.expects(:install_dependencies).raises(StandardError) }
 
-        it "should delete the created folder" do
-          initial_dir = context.root
+        it "should raise the error and delete the created folder" do
+          script_project_repository
+            .expects(:delete_project_directory)
+            .with
+
           assert_raises(StandardError) { subject }
-          assert_equal initial_dir, context.root
-          refute context.dir_exist?(script_name)
+        end
+      end
+
+      describe "when a ScriptProjectAlreadyExistsError error occurs" do
+        before do
+          script_project_repository
+            .expects(:create_project_directory)
+            .raises(Script::Layers::Infrastructure::Errors::ScriptProjectAlreadyExistsError)
+        end
+
+        it "should raise the error" do
+          assert_raises(Script::Layers::Infrastructure::Errors::ScriptProjectAlreadyExistsError) { subject }
         end
       end
     end
@@ -116,21 +112,18 @@ describe Script::Layers::Application::CreateScript do
       end
 
       it "should create a new script" do
-        initial_dir = context.root
-        refute context.dir_exist?(script_name)
-
+        script_project_repository
+          .expects(:create_project_directory)
+          .with
         subject
-
-        assert_equal initial_dir, context.root
-        context.dir_exist?(script_name)
       end
 
-      it "should update the script.json file" do
+      it "should update the script configuration file" do
         subject
 
-        script_json = script_project_repository.get.script_json
-        assert_equal script_name, script_json.title
-        assert_equal "1", script_json.version
+        script_config = script_project_repository.get.script_config
+        assert_equal script_name, script_config.title
+        assert_equal "1", script_config.version
       end
     end
 

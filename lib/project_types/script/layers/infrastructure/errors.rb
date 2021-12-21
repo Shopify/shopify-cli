@@ -5,9 +5,9 @@ module Script
     module Infrastructure
       module Errors
         class BuildError < ScriptProjectError; end
-        class ScriptJsonSyntaxError < ScriptProjectError; end
+        class ScriptConfigSyntaxError < ScriptProjectError; end
 
-        class ScriptJsonMissingKeysError < ScriptProjectError
+        class ScriptConfigMissingKeysError < ScriptProjectError
           attr_reader :missing_keys
           def initialize(missing_keys)
             super()
@@ -15,7 +15,7 @@ module Script
           end
         end
 
-        class ScriptJsonInvalidValueError < ScriptProjectError
+        class ScriptConfigInvalidValueError < ScriptProjectError
           attr_reader :valid_input_modes
           def initialize(valid_input_modes)
             super()
@@ -23,7 +23,7 @@ module Script
           end
         end
 
-        class ScriptJsonFieldsMissingKeysError < ScriptProjectError
+        class ScriptConfigFieldsMissingKeysError < ScriptProjectError
           attr_reader :missing_keys
           def initialize(missing_keys)
             super()
@@ -31,13 +31,36 @@ module Script
           end
         end
 
-        class ScriptJsonFieldsInvalidValueError < ScriptProjectError
+        class ScriptConfigFieldsInvalidValueError < ScriptProjectError
           attr_reader :valid_types
           def initialize(valid_types)
             super()
             @valid_types = valid_types
           end
         end
+
+        class InvalidScriptConfigYmlDefinitionError < ScriptProjectError; end
+
+        class InvalidScriptJsonDefinitionError < ScriptProjectError; end
+
+        class MissingScriptConfigYmlFieldError < ScriptProjectError
+          attr_reader :field
+          def initialize(field)
+            super()
+            @field = field
+          end
+        end
+
+        class MissingScriptJsonFieldError < ScriptProjectError
+          attr_reader :field
+          def initialize(field)
+            super()
+            @field = field
+          end
+        end
+
+        class NoScriptConfigYmlFileError < ScriptProjectError; end
+        class NoScriptConfigFileError < ScriptProjectError; end
 
         class APILibraryNotFoundError < ScriptProjectError
           attr_reader :library_name

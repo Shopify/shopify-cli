@@ -61,6 +61,7 @@ module ShopifyCLI
     # will return which operating system that the cli is running on [:mac, :linux]
     def os
       host = uname
+      return :mac_m1 if /arm64-apple-darwin/i.match(host)
       return :mac if /darwin/i.match(host)
       return :windows if /mswin|mingw|cygwin/i.match(host)
       return :linux if /linux|bsd/i.match(host)

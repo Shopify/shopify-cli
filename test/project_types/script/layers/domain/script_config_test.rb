@@ -2,7 +2,7 @@
 
 require "project_types/script/test_helper"
 
-describe Script::Layers::Domain::ScriptJson do
+describe Script::Layers::Domain::ScriptConfig do
   let(:content) do
     {
       "version" => "1",
@@ -13,10 +13,10 @@ describe Script::Layers::Domain::ScriptJson do
     }
   end
 
-  subject { Script::Layers::Domain::ScriptJson.new(content: content) }
+  subject { Script::Layers::Domain::ScriptConfig.new(content: content) }
 
   describe "#initialize" do
-    it "constructs a ScriptJson" do
+    it "constructs a ScriptConfig" do
       assert_equal("1", subject.version)
       assert_equal("Some Title", subject.title)
       assert_equal("Some Description", subject.description)

@@ -43,7 +43,7 @@ module Script
                 extension_point_type: package.extension_point_type,
                 force: force,
                 metadata: package.metadata,
-                script_json: package.script_json,
+                script_config: package.script_config,
                 module_upload_url: module_upload_url,
                 library: package.library,
               )

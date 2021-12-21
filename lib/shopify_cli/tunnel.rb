@@ -21,6 +21,7 @@ module ShopifyCLI
     # mapping for supported operating systems for where to download ngrok from.
     DOWNLOAD_URLS = {
       mac: "https://bin.equinox.io/c/4VmDzA7iaHb/ngrok-stable-darwin-amd64.zip",
+      mac_m1: "https://bin.equinox.io/c/4VmDzA7iaHb/ngrok-stable-darwin-arm64.zip",
       linux: "https://bin.equinox.io/c/4VmDzA7iaHb/ngrok-stable-linux-amd64.zip",
       windows: "https://bin.equinox.io/c/4VmDzA7iaHb/ngrok-stable-windows-amd64.zip",
     }

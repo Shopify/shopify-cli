@@ -47,14 +47,20 @@ module Script
           invalid_language_cause: "Invalid language %s.",
           invalid_language_help: "Allowed values: %s.",
 
+          missing_script_config_yml_field_cause: "The script.config.yml file is missing the required %s field.",
+          missing_script_config_yml_field_help: "Add the field and try again.",
+
           missing_script_json_field_cause: "The script.json file is missing the required %s field.",
           missing_script_json_field_help: "Add the field and try again.",
 
           invalid_script_json_definition_cause: "The script.json file contains invalid JSON.",
           invalid_script_json_definition_help: "Fix the errors and try again.",
 
-          no_script_json_file_cause: "The script.json file is missing.",
-          no_script_json_file_help: "Create this file and try again.",
+          invalid_script_config_yml_definition_cause: "The script.config.yml file contains invalid YAML.",
+          invalid_script_config_yml_definition_help: "Fix the errors and try again.",
+
+          no_script_config_yml_file_cause: "The script.config.yml file is missing.",
+          no_script_config_yml_file_help: "Create this file and try again.",
 
           configuration_syntax_error_cause: "The script.json is not formatted properly.",
           configuration_syntax_error_help: "Fix the errors and try again.",
@@ -138,6 +144,7 @@ module Script
 
           language_library_for_api_not_found_cause: "Script can’t be pushed because the %{language} library for API %{api} is missing.",
           language_library_for_api_not_found_help: "Make sure extension_point.yml contains the correct API library.",
+          no_scripts_found_in_app: "The selected apps have no scripts. Please, create them first on the partners' dashboard.",
         },
 
         create: {
@@ -173,7 +180,17 @@ module Script
 
           script_pushed: "{{v}} Script pushed to app (API key: %{api_key}).",
         },
-
+        connect: {
+          connected: "Connected! Your project is now connected to {{green:%s}}",
+          missing_script: "No script has been selected.",
+          help: <<~HELP,
+            {{command:%s script connect}}: Connects an existing script to an app.
+              Usage: {{command:%s script connect}}
+          HELP
+          error: {
+            operation_failed: "Couldn't connect script to app.",
+          },
+        },
         javy: {
           help: <<~HELP,
             Compile the JavaScript code into WebAssembly.

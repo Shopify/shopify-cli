@@ -14,6 +14,12 @@ module ShopifyCLI
         },
       },
       core: {
+        errors: {
+          option_parser: {
+            invalid_option: "The option {{command:%s}} is not supported.",
+            missing_argument: "The required argument {{command:%s}} is missing.",
+          },
+        },
         app: {
           help: <<~HELP,
           Suite of commands for developing apps. See {{command:%1$s app <command> --help}} for usage of each command.
@@ -719,7 +725,7 @@ module ShopifyCLI
           signup_suggestion: <<~MESSAGE,
             {{*}} To avoid tunnels that timeout, it is recommended to signup for a free ngrok
             account at {{underline:https://ngrok.com/signup}}. After you signup, install your
-            personalized authorization token using {{command:%s [ node | rails ] tunnel auth <token>}}.
+            personalized authorization token using {{command:%s app tunnel auth <token>}}.
           MESSAGE
           start: "{{v}} ngrok tunnel running at {{underline:%s}}",
           start_with_account: "{{v}} ngrok tunnel running at {{underline:%s}}, with account %s",

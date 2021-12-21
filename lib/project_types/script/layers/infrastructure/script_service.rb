@@ -17,7 +17,7 @@ module Script
           extension_point_type:,
           force: false,
           metadata:,
-          script_json:,
+          script_config:,
           module_upload_url:,
           library:
         )
@@ -25,14 +25,14 @@ module Script
           variables = {
             uuid: uuid,
             extensionPointName: extension_point_type.upcase,
-            title: script_json.title,
-            description: script_json.description,
+            title: script_config.title,
+            description: script_config.description,
             force: force,
             schemaMajorVersion: metadata.schema_major_version.to_s, # API expects string value
             schemaMinorVersion: metadata.schema_minor_version.to_s, # API expects string value
-            scriptJsonVersion: script_json.version,
-            configurationUi: script_json.configuration_ui,
-            configurationDefinition: script_json.configuration&.to_json,
+            scriptConfigVersion: script_config.version,
+            configurationUi: script_config.configuration_ui,
+            configurationDefinition: script_config.configuration&.to_json,
             moduleUploadUrl: module_upload_url,
             library: {
               language: library[:language],
@@ -47,19 +47,19 @@ module Script
           if user_errors.any? { |e| e["tag"] == "already_exists_error" }
             raise Errors::ScriptRepushError, uuid
           elsif (e = user_errors.any? { |err| err["tag"] == "configuration_definition_syntax_error" })
-            raise Errors::ScriptJsonSyntaxError
+            raise Errors::ScriptConfigSyntaxError
           elsif (e = user_errors.find { |err| err["tag"] == "configuration_definition_missing_keys_error" })
-            raise Errors::ScriptJsonMissingKeysError, e["message"]
+            raise Errors::ScriptConfigMissingKeysError, e["message"]
           elsif (e = user_errors.find { |err| err["tag"] == "configuration_definition_invalid_value_error" })
-            raise Errors::ScriptJsonInvalidValueError, e["message"]
+            raise Errors::ScriptConfigInvalidValueError, e["message"]
           elsif (e = user_errors.find do |err|
                    err["tag"] == "configuration_definition_schema_field_missing_keys_error"
                  end)
-            raise Errors::ScriptJsonFieldsMissingKeysError, e["message"]
+            raise Errors::ScriptConfigFieldsMissingKeysError, e["message"]
           elsif (e = user_errors.find do |err|
                    err["tag"] == "configuration_definition_schema_field_invalid_value_error"
                  end)
-            raise Errors::ScriptJsonFieldsInvalidValueError, e["message"]
+            raise Errors::ScriptConfigFieldsInvalidValueError, e["message"]
           elsif user_errors.find { |err| %w(not_use_msgpack_error schema_version_argument_error).include?(err["tag"]) }
             raise Domain::Errors::MetadataValidationError
           else

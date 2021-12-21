@@ -21,7 +21,7 @@ module TestHelpers
         script_content: script_content,
         compiled_type: compiled_type,
         metadata: metadata,
-        script_json: script_project.script_json,
+        script_config: script_project.script_config,
         library: library
       )
     end

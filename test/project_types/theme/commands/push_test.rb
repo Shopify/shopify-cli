@@ -52,7 +52,11 @@ module Theme
           .returns(@theme)
 
         @theme.expects(:live?).returns(true)
-        CLI::UI::Prompt.expects(:confirm).returns(true)
+        CLI::UI::Prompt
+          .expects(:confirm)
+          .with("Are you sure you want to push to your live theme?\n  " \
+                "Theme: {{blue:Test theme #1234}} {{green:[live]}}")
+          .returns(true)
 
         ShopifyCLI::Theme::IgnoreFilter.expects(:from_path).with(".").returns(@ignore_filter)
 
@@ -77,7 +81,10 @@ module Theme
 
         @theme.expects(:live?).returns(true)
 
-        CLI::UI::Prompt.expects(:confirm).returns(true)
+        CLI::UI::Prompt
+          .expects(:confirm)
+          .with("Are you sure you want to push to your live theme?")
+          .returns(true)
 
         ShopifyCLI::Theme::IgnoreFilter.expects(:from_path).with(".").returns(@ignore_filter)
 

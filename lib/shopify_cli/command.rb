@@ -29,6 +29,12 @@ module ShopifyCLI
           run_prerequisites
           cmd.call(args, command_name)
         end
+      rescue OptionParser::InvalidOption => error
+        arg = error.args.first
+        raise ShopifyCLI::Abort, @ctx.message("core.errors.option_parser.invalid_option", arg)
+      rescue OptionParser::MissingArgument => error
+        arg = error.args.first
+        raise ShopifyCLI::Abort, @ctx.message("core.errors.option_parser.missing_argument", arg)
       end
 
       def options(&block)

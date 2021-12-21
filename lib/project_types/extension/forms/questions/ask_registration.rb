@@ -34,8 +34,12 @@ module Extension
         end
 
         def load_registrations(type)
-          ctx.puts(@ctx.message("connect.loading_extensions"))
-          registrations = Tasks::GetExtensions.call(context: ctx, type: type)
+          registrations = []
+          loading_extensions = @ctx.message("connect.loading_extensions")
+
+          CLI::UI::Spinner.spin(loading_extensions) do |_spinner|
+            registrations += Tasks::GetExtensions.call(context: ctx, type: type)
+          end
 
           registrations.empty? ? abort_no_registrations : registrations
         end

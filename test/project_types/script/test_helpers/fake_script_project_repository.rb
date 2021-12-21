@@ -2,12 +2,21 @@
 
 module TestHelpers
   class FakeScriptProjectRepository
-    def initialize
+    attr_reader :ctx, :initial_directory
+
+    def initialize(
+      ctx = TestHelpers::FakeContext.new,
+      directory = "fake_directory",
+      initial_directory = ctx.root
+    )
+      @ctx = ctx
+      @directory = directory
+      @initial_directory = initial_directory
       @project = nil
     end
 
     def create(script_name:, extension_point_type:, language:, env: nil)
-      script_json = fake_script_json_repo.create({ version: 1, title: script_name }.to_json)
+      script_config = fake_script_config_repo.create({ "version" => 1, "title" => script_name })
 
       @project = Script::Layers::Domain::ScriptProject.new(
         id: "/#{script_name}",
@@ -15,7 +24,7 @@ module TestHelpers
         script_name: script_name,
         extension_point_type: extension_point_type,
         language: language,
-        script_json: script_json
+        script_config: script_config
       )
     end
 
@@ -36,41 +45,42 @@ module TestHelpers
       @project
     end
 
-    def update_or_create_script_json(title:)
-      script_json = fake_script_json_repo
-        .update_or_create(title: title)
+    def update_script_config(title:)
+      script_config = fake_script_config_repo
+        .update!(title: title)
 
-      @project.script_json = script_json
+      @project.script_config = script_config
       @project
     end
 
+    def create_project_directory; end
+    def delete_project_directory; end
+    def change_to_initial_directory; end
+
     private
 
-    def fake_script_json_repo
-      @fake_script_json_repo ||= FakeScriptJsonRepository.new
+    def fake_script_config_repo
+      @fake_script_config_repo ||= FakeScriptConfigRepository.new
     end
 
-    class FakeScriptJsonRepository
+    class FakeScriptConfigRepository
       def initialize
         @cache = nil
       end
 
       def create(content)
-        @cache = Script::Layers::Domain::ScriptJson.new(
-          content: JSON.parse(content),
-        )
+        @cache = Script::Layers::Domain::ScriptConfig.new(content: content)
       end
 
-      def update_or_create(title:)
-        json = @cache&.content || {}
-        json["title"] = title
+      def update!(title:)
+        hash = get!.content
+        hash["title"] = title
 
-        @cache = Script::Layers::Domain::ScriptJson.new(
-          content: json,
-        )
+        @cache = Script::Layers::Domain::ScriptConfig.new(content: hash)
       end
 
-      def get
+      def get!
+        raise Script::Layers::Infrastructure::Errors::NoScriptConfigFileError if @cache.nil?
         @cache
       end
     end

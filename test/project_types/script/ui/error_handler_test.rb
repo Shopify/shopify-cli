@@ -170,15 +170,36 @@ describe Script::UI::ErrorHandler do
         end
       end
 
-      describe "when InvalidScriptJsonDefinitionError" do
-        let(:err) { Script::Layers::Domain::Errors::InvalidScriptJsonDefinitionError.new("filename") }
+      describe "when InvalidScriptConfigYmlDefinitionError" do
+        let(:err) { Script::Layers::Infrastructure::Errors::InvalidScriptConfigYmlDefinitionError.new("filename") }
         it "should call display_and_raise" do
           should_call_display_and_raise
         end
       end
 
-      describe "when NoScriptJsonFile" do
-        let(:err) { Script::Layers::Domain::Errors::NoScriptJsonFile.new("filename") }
+      describe "when InvalidScriptJsonDefinitionError" do
+        let(:err) { Script::Layers::Infrastructure::Errors::InvalidScriptJsonDefinitionError.new("filename") }
+        it "should call display_and_raise" do
+          should_call_display_and_raise
+        end
+      end
+
+      describe "when MissingScriptConfigYmlFieldError" do
+        let(:err) { Script::Layers::Infrastructure::Errors::MissingScriptConfigYmlFieldError.new("field") }
+        it "should call display_and_raise" do
+          should_call_display_and_raise
+        end
+      end
+
+      describe "when MissingScriptJsonFieldError" do
+        let(:err) { Script::Layers::Infrastructure::Errors::MissingScriptJsonFieldError.new("field") }
+        it "should call display_and_raise" do
+          should_call_display_and_raise
+        end
+      end
+
+      describe "when NoScriptConfigYmlFileError" do
+        let(:err) { Script::Layers::Infrastructure::Errors::NoScriptConfigYmlFileError.new("filename") }
         it "should call display_and_raise" do
           should_call_display_and_raise
         end
@@ -212,36 +233,36 @@ describe Script::UI::ErrorHandler do
         end
       end
 
-      describe "when ScriptJsonSyntaxError" do
-        let(:err) { Script::Layers::Infrastructure::Errors::ScriptJsonSyntaxError.new }
+      describe "when ScriptConfigSyntaxError" do
+        let(:err) { Script::Layers::Infrastructure::Errors::ScriptConfigSyntaxError.new }
         it "should call display_and_raise" do
           should_call_display_and_raise
         end
       end
 
-      describe "when ScriptJsonMissingKeysError" do
-        let(:err) { Script::Layers::Infrastructure::Errors::ScriptJsonMissingKeysError.new("keys") }
+      describe "when ScriptConfigMissingKeysError" do
+        let(:err) { Script::Layers::Infrastructure::Errors::ScriptConfigMissingKeysError.new("keys") }
         it "should call display_and_raise" do
           should_call_display_and_raise
         end
       end
 
-      describe "when ScriptJsonInvalidValueError" do
-        let(:err) { Script::Layers::Infrastructure::Errors::ScriptJsonInvalidValueError.new("input modes") }
+      describe "when ScriptConfigInvalidValueError" do
+        let(:err) { Script::Layers::Infrastructure::Errors::ScriptConfigInvalidValueError.new("input modes") }
         it "should call display_and_raise" do
           should_call_display_and_raise
         end
       end
 
-      describe "when ScriptJsonFieldsMissingKeysError" do
-        let(:err) { Script::Layers::Infrastructure::Errors::ScriptJsonFieldsMissingKeysError.new("keys") }
+      describe "when ScriptConfigFieldsMissingKeysError" do
+        let(:err) { Script::Layers::Infrastructure::Errors::ScriptConfigFieldsMissingKeysError.new("keys") }
         it "should call display_and_raise" do
           should_call_display_and_raise
         end
       end
 
-      describe "when ScriptJsonFieldsInvalidValueError" do
-        let(:err) { Script::Layers::Infrastructure::Errors::ScriptJsonFieldsInvalidValueError.new("types") }
+      describe "when ScriptConfigFieldsInvalidValueError" do
+        let(:err) { Script::Layers::Infrastructure::Errors::ScriptConfigFieldsInvalidValueError.new("types") }
         it "should call display_and_raise" do
           should_call_display_and_raise
         end

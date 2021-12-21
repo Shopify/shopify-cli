@@ -1,4 +1,3 @@
-require "rbconfig"
 require "open-uri"
 require "zlib"
 require "open3"
@@ -162,9 +161,9 @@ module Javy
     end
   end
 
-  Platform = Struct.new(:ruby_config) do
-    def initialize(ruby_config = RbConfig::CONFIG)
-      super(ruby_config)
+  Platform = Struct.new(:ruby_platform) do
+    def initialize(ruby_platform = RUBY_PLATFORM)
+      super(ruby_platform)
     end
 
     def to_s
@@ -172,7 +171,7 @@ module Javy
     end
 
     def os
-      case ruby_config.fetch("host_os")
+      case ruby_platform
       when /linux/
         "linux"
       when /darwin/
@@ -183,9 +182,11 @@ module Javy
     end
 
     def cpu
-      case ruby_config.fetch("host_cpu")
-      when "x64", "x86_64"
+      case ruby_platform
+      when /x64/, /x86_64/
         "x86_64"
+      when /arm/
+        "arm"
       else
         raise InstallationError.cpu_unsupported
       end

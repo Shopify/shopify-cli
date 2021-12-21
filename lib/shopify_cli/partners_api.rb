@@ -7,6 +7,7 @@ module ShopifyCLI
   #
   class PartnersAPI < API
     autoload :Organizations, "shopify_cli/partners_api/organizations"
+    autoload :AppExtensions, "shopify_cli/partners_api/app_extensions"
 
     class << self
       ##

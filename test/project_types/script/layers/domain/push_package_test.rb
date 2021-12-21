@@ -6,7 +6,7 @@ describe Script::Layers::Domain::PushPackage do
   let(:uuid) { "uuid" }
   let(:extension_point_type) { "discount" }
   let(:script_id) { "id" }
-  let(:script_json) { { "version" => "1", "title" => "title" } }
+  let(:script_config) { { "version" => "1", "title" => "title" } }
   let(:api_key) { "fake_key" }
   let(:force) { false }
   let(:script_content) { "(module)" }
@@ -25,7 +25,7 @@ describe Script::Layers::Domain::PushPackage do
       id: id,
       uuid: uuid,
       extension_point_type: extension_point_type,
-      script_json: script_json,
+      script_config: script_config,
       script_content: script_content,
       compiled_type: compiled_type,
       metadata: metadata,
@@ -42,7 +42,7 @@ describe Script::Layers::Domain::PushPackage do
       assert_equal id, subject.id
       assert_equal uuid, subject.uuid
       assert_equal extension_point_type, subject.extension_point_type
-      assert_equal script_json, subject.script_json
+      assert_equal script_config, subject.script_config
       assert_equal script_content, subject.script_content
       assert_equal compiled_type, subject.compiled_type
       assert_equal metadata, subject.metadata
