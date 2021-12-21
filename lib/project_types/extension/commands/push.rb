@@ -10,7 +10,7 @@ module Extension
         parser.on("--api-key=API_KEY") { |api_key| flags[:api_key] = api_key.gsub('"', "") }
         parser.on("--api-secret=API_SECRET") { |api_secret| flags[:api_secret] = api_secret.gsub('"', "") }
         parser.on("--registration-id=REGISTRATION_ID") do |registration_id|
-          flags[:registration_id] = registration_id.gsub('""', "")
+          flags[:registration_id] = registration_id.gsub('"', "")
         end
       end
 
