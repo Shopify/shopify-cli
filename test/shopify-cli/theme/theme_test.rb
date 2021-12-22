@@ -145,6 +145,21 @@ module ShopifyCLI
         assert theme.development?
       end
 
+      def test_find_by
+        mock_themes_json
+
+        theme = Theme.find_by(@ctx, name: "Venture", root: @root)
+
+        assert_equal 5, theme.id
+        assert_equal "Venture", theme.name
+        assert_equal "unpublished", theme.role
+      end
+
+      def test_find_by_when_theme_is_not_found
+        mock_themes_json
+        assert_nil Theme.find_by(@ctx, name: "Other", root: @root)
+      end
+
       private
 
       def mock_themes_json

@@ -46,6 +46,27 @@ module Theme
         @command.call([], "push")
       end
 
+      def test_push_to_theme_name
+        ShopifyCLI::Theme::Theme.expects(:find_by)
+          .with(@ctx, name: "Test theme", root: ".")
+          .returns(@theme)
+
+        ShopifyCLI::Theme::IgnoreFilter.expects(:from_path).with(".").returns(@ignore_filter)
+
+        ShopifyCLI::Theme::Syncer.expects(:new)
+          .with(@ctx, theme: @theme, ignore_filter: @ignore_filter)
+          .returns(@syncer)
+
+        @syncer.expects(:start_threads)
+        @syncer.expects(:shutdown)
+
+        @syncer.expects(:upload_theme!).with(delete: true)
+        @ctx.expects(:done)
+
+        @command.options.flags[:theme_name] = "Test theme"
+        @command.call([], "push")
+      end
+
       def test_push_to_live
         ShopifyCLI::Theme::Theme.expects(:live)
           .with(@ctx, root: ".")
@@ -278,6 +299,33 @@ module Theme
         @ctx.expects(:done)
 
         @command.options.flags[:unpublished] = true
+        @command.call([], "push")
+      end
+
+      def test_push_to_unpublished_theme_when_name_is_provided
+        ShopifyCLI::Theme::Theme.expects(:new)
+          .with(@ctx, root: ".", name: "NAME", role: "unpublished")
+          .returns(@theme)
+
+        CLI::UI::Prompt.expects(:ask).never
+
+        @theme.expects(:create)
+
+        ShopifyCLI::Theme::IgnoreFilter.expects(:from_path).with(".").returns(@ignore_filter)
+
+        ShopifyCLI::Theme::Syncer.expects(:new)
+          .with(@ctx, theme: @theme, ignore_filter: @ignore_filter)
+          .returns(@syncer)
+
+        @syncer.expects(:start_threads)
+        @syncer.expects(:shutdown)
+
+        @syncer.expects(:upload_theme!).with(delete: true)
+
+        @ctx.expects(:done)
+
+        @command.options.flags[:unpublished] = true
+        @command.options.flags[:theme_name] = "NAME"
         @command.call([], "push")
       end
 

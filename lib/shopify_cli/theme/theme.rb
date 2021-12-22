@@ -173,22 +173,36 @@ module ShopifyCLI
         end
 
         def live(ctx, root: nil)
-          _status, body = fetch_themes(ctx)
-
-          body["themes"]
-            .find { |theme_attrs| theme_attrs["role"] == "main" }
-            .tap { |theme_attrs| break new(ctx, root: root, **allowed_attrs(theme_attrs)) }
+          find(ctx, root) { |attrs| attrs["role"] == "main" }
         end
 
         def development(ctx, root: nil)
-          _status, body = fetch_themes(ctx)
+          find(ctx, root) { |attrs| attrs["role"] == "development" }
+        end
 
-          body["themes"]
-            .find { |theme_attrs| theme_attrs["role"] == "development" }
-            .tap { |theme_attrs| break new(ctx, root: root, **allowed_attrs(theme_attrs)) }
+        # Finds a Theme by its identifier
+        #
+        # #### Parameters
+        # * `ctx` - current running context of your command
+        # * `root` - theme root
+        # * `identifier` - theme ID or theme name
+        def find_by_identifier(ctx, root: nil, identifier:)
+          find(ctx, root) do |attrs|
+            attrs.slice("name", "id").values.map(&:to_s).include?(identifier)
+          end
         end
 
         private
+
+        def find(ctx, root, &block)
+          _status, body = fetch_themes(ctx)
+
+          body["themes"]
+            .find(&block)
+            .tap do |attrs|
+              break new(ctx, root: root, **allowed_attrs(attrs)) if attrs
+            end
+        end
 
         def allowed_attrs(attrs)
           attrs.slice("id", "name", "role").transform_keys(&:to_sym)

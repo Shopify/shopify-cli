@@ -57,14 +57,15 @@ module Theme
               Usage: {{command:%s theme push [ ROOT ]}}
 
               Options:
-                {{command:-i, --themeid=THEMEID}} Theme ID. Must be an existing theme on your store.
-                {{command:-l, --live}}            Push to your remote live theme, and update your live store.
-                {{command:-d, --development}}     Push to your remote development theme, and create it if needed.
-                {{command:-u, --unpublished}}     Create a new unpublished theme and push to it.
-                {{command:-n, --nodelete}}        Runs the push command without deleting remote files from Shopify.
-                {{command:-j, --json}}            Output JSON instead of a UI.
-                {{command:-a, --allow-live}}      Allow push to a live theme.
-                {{command:-p, --publish}}         Publish as the live theme after uploading.
+                {{command:-i, --themeid=THEMEID}}     Theme ID. Must be an existing theme on your store.
+                {{command:-t, --themename=THEMENAME}} Theme name. Must be an existing theme on your store.
+                {{command:-l, --live}}                Push to your remote live theme, and update your live store.
+                {{command:-d, --development}}         Push to your remote development theme, and create it if needed.
+                {{command:-u, --unpublished}}         Create a new unpublished theme and push to it.
+                {{command:-n, --nodelete}}            Runs the push command without deleting remote files from Shopify.
+                {{command:-j, --json}}                Output JSON instead of a UI.
+                {{command:-a, --allow-live}}          Allow push to a live theme.
+                {{command:-p, --publish}}             Publish as the live theme after uploading.
 
               Run without options to select theme from a list.
           HELP
@@ -75,7 +76,7 @@ module Theme
           select: "Select theme to push to",
           live: "Are you sure you want to push to your live theme?",
           theme: "\n  Theme: {{blue:%s #%s}} {{green:[live]}}",
-          theme_not_found: "Theme #%s doesn't exist",
+          theme_not_found: "Theme \"%s\" doesn't exist",
           done: <<~DONE,
             {{green:Your theme was pushed successfully}}
 
@@ -189,17 +190,18 @@ module Theme
             Usage: {{command:%s theme pull [ ROOT ]}}
 
             Options:
-              {{command:-i, --themeid=THEMEID}} The Theme ID. Must be an existing theme on your store.
-              {{command:-l, --live}}            Pull theme files from your remote live theme.
-              {{command:-d, --development}}     Pull theme files from your remote development theme.
-              {{command:-n, --nodelete}}        Runs the pull command without deleting local files.
+              {{command:-i, --themeid=THEMEID}}     The Theme ID. Must be an existing theme on your store.
+              {{command:-t, --themename=THEMENAME}} The Theme name. Must be an existing theme on your store.
+              {{command:-d, --development}}         Pull theme files from your remote development theme.
+              {{command:-l, --live}}                Pull theme files from your remote live theme.
+              {{command:-n, --nodelete}}            Runs the pull command without deleting local files.
 
             Run without options to select theme from a list.
           HELP
           select: "Select a theme to pull from",
           pulling: "Pulling theme files from %s (#%s) on %s",
           done: "Theme pulled successfully",
-          not_found: "{{x}} Theme #%s doesn't exist",
+          theme_not_found: "Theme \"%s\" doesn't exist",
         },
       },
     }.freeze

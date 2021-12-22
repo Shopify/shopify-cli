@@ -9,6 +9,7 @@ module Theme
       options do |parser, flags|
         parser.on("-n", "--nodelete") { flags[:nodelete] = true }
         parser.on("-i", "--themeid=ID") { |theme_id| flags[:theme_id] = theme_id }
+        parser.on("-t", "--themename=THEMENAME") { |theme_name| flags[:theme_name] = theme_name }
         parser.on("-l", "--live") { flags[:live] = true }
         parser.on("-d", "--development") { flags[:development] = true }
         parser.on("-x", "--ignore=PATTERN") do |pattern|
@@ -20,23 +21,8 @@ module Theme
       def call(args, _name)
         root = args.first || "."
         delete = !options.flags[:nodelete]
-
-        theme = if (theme_id = options.flags[:theme_id])
-          ShopifyCLI::Theme::Theme.new(@ctx, root: root, id: theme_id)
-        elsif options.flags[:live]
-          ShopifyCLI::Theme::Theme.live(@ctx, root: root)
-        elsif options.flags[:development]
-          ShopifyCLI::Theme::Theme.development(@ctx, root: root)
-        else
-          form = Forms::Select.ask(
-            @ctx,
-            [],
-            title: @ctx.message("theme.pull.select"),
-            root: root,
-          )
-          return unless form
-          form.theme
-        end
+        theme = find_theme(root, **options.flags)
+        return if theme.nil?
 
         ignore_filter = ShopifyCLI::Theme::IgnoreFilter.from_path(root)
         ignore_filter.add_patterns(options.flags[:ignores]) if options.flags[:ignores]
@@ -49,7 +35,7 @@ module Theme
           end
           @ctx.done(@ctx.message("theme.pull.done"))
         rescue ShopifyCLI::API::APIRequestNotFoundError
-          @ctx.abort(@ctx.message("theme.pull.theme_not_found", theme.id))
+          @ctx.abort(@ctx.message("theme.pull.theme_not_found", "##{theme.id}"))
         ensure
           syncer.shutdown
         end
@@ -57,6 +43,39 @@ module Theme
 
       def self.help
         ShopifyCLI::Context.message("theme.pull.help", ShopifyCLI::TOOL_NAME, ShopifyCLI::TOOL_NAME)
+      end
+
+      private
+
+      def find_theme(root, theme_id: nil, theme_name: nil, live: nil, development: nil, **_args)
+        if theme_id
+          return ShopifyCLI::Theme::Theme.new(@ctx, root: root, id: theme_id)
+        end
+
+        if theme_name
+          theme = ShopifyCLI::Theme::Theme.find_by(@ctx, name: theme_name, root: root)
+          return theme || @ctx.abort(@ctx.message("theme.pull.theme_not_found", theme_name))
+        end
+
+        if live
+          return ShopifyCLI::Theme::Theme.live(@ctx, root: root)
+        end
+
+        if development
+          return ShopifyCLI::Theme::Theme.development(@ctx, root: root)
+        end
+
+        select_theme(root)
+      end
+
+      def select_theme(root)
+        form = Forms::Select.ask(
+          @ctx,
+          [],
+          title: @ctx.message("theme.pull.select"),
+          root: root,
+        )
+        form&.theme
       end
     end
   end

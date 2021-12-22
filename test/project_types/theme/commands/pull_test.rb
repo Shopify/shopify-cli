@@ -43,6 +43,27 @@ module Theme
         @command.call([], "pull")
       end
 
+      def test_pull_theme_with_name
+        ShopifyCLI::Theme::Theme.expects(:find_by)
+          .with(@ctx, name: "Test theme", root: ".")
+          .returns(@theme)
+
+        ShopifyCLI::Theme::IgnoreFilter.expects(:from_path).with(".").returns(@ignore_filter)
+
+        ShopifyCLI::Theme::Syncer.expects(:new)
+          .with(@ctx, theme: @theme, ignore_filter: @ignore_filter)
+          .returns(@syncer)
+
+        @syncer.expects(:start_threads)
+        @syncer.expects(:shutdown)
+
+        @syncer.expects(:download_theme!).with(delete: true)
+        @ctx.expects(:done)
+
+        @command.options.flags[:theme_name] = "Test theme"
+        @command.call([], "pull")
+      end
+
       def test_pull_live_theme
         ShopifyCLI::Theme::Theme.expects(:live)
           .with(@ctx, root: ".")
@@ -61,6 +82,27 @@ module Theme
         @ctx.expects(:done)
 
         @command.options.flags[:live] = true
+        @command.call([], "pull")
+      end
+
+      def test_pull_development_theme
+        ShopifyCLI::Theme::Theme.expects(:development)
+          .with(@ctx, root: ".")
+          .returns(@theme)
+
+        ShopifyCLI::Theme::IgnoreFilter.expects(:from_path).with(".").returns(@ignore_filter)
+
+        ShopifyCLI::Theme::Syncer.expects(:new)
+          .with(@ctx, theme: @theme, ignore_filter: @ignore_filter)
+          .returns(@syncer)
+
+        @syncer.expects(:start_threads)
+        @syncer.expects(:shutdown)
+
+        @syncer.expects(:download_theme!).with(delete: true)
+        @ctx.expects(:done)
+
+        @command.options.flags[:development] = true
         @command.call([], "pull")
       end
 
