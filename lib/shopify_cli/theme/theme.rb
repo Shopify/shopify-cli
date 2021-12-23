@@ -20,11 +20,11 @@ module ShopifyCLI
       end
 
       def theme_files
-        glob(["**/*.liquid", "**/*.json", "assets/*"]).uniq
+        [*static_asset_files, *liquid_files, *json_files].uniq
       end
 
       def static_asset_files
-        glob("assets/*").reject(&:liquid?)
+        glob("assets/**/*", reject_dir: true).reject(&:liquid?)
       end
 
       def liquid_files
@@ -35,8 +35,10 @@ module ShopifyCLI
         glob("**/*.json")
       end
 
-      def glob(pattern)
-        root.glob(pattern).map { |path| File.new(path, root) }
+      def glob(pattern, reject_dir: false)
+        root.glob(pattern).
+          tap { |files| files.reject! { |file| ::File.directory?(file) } if reject_dir }.
+          map { |path| File.new(path, root) }
       end
 
       def theme_file?(file)
