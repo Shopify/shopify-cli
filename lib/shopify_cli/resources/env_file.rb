@@ -61,8 +61,8 @@ module ShopifyCLI
         end
       end
 
-      property :api_key, required: true
-      property :secret, required: true
+      property :api_key, required: true, accepts: lambda { |api_key| !api_key.empty? }
+      property :secret, required: true, accepts: lambda { |api_key| !api_key.empty? }
       property :shop
       property :scopes
       property :host
