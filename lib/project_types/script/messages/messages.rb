@@ -62,6 +62,9 @@ module Script
           no_script_config_yml_file_cause: "The script.config.yml file is missing.",
           no_script_config_yml_file_help: "Create this file and try again.",
 
+          app_not_connected_cause: "Script is not connected to an app.",
+          app_not_connected_help: "Run shopify connect or enter fields for api-key and api-secret.",
+
           configuration_syntax_error_cause: "The script.json is not formatted properly.",
           configuration_syntax_error_help: "Fix the errors and try again.",
 
@@ -177,6 +180,7 @@ module Script
           HELP
 
           error: {
+            operation_failed_no_uuid: "UUID is required to push in a CI environment.",
             operation_failed_with_api_key: "Couldn't push script to app (API key: %{api_key}).",
             operation_failed_no_api_key: "Couldn't push script to app.",
           },

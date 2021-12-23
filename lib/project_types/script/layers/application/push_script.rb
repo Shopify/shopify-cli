@@ -6,11 +6,11 @@ module Script
       class PushScript
         class << self
           def call(ctx:, force:, project:)
+            is_interactive = ctx.tty?
             script_project_repo = Infrastructure::ScriptProjectRepository.new(ctx: ctx)
             script_project = script_project_repo.get
             puts "SCRIPT PROJECT #{script_project.inspect}"
-            # maybe there needs to be a tty check here just in case?
-            script_project.env = project.env # added -> if env does not exist, sets the env here
+            script_project.env = project.env
             puts "SCRIPT PROJECT NEW #{script_project.inspect}"
             task_runner = Infrastructure::Languages::TaskRunner
               .for(ctx, script_project.language, script_project.script_name)
@@ -51,7 +51,9 @@ module Script
                 module_upload_url: module_upload_url,
                 library: package.library,
               )
-              script_project_repo.update_env(uuid: uuid)
+              if is_interactive
+                script_project_repo.update_env(uuid: uuid)
+              end
               spinner.update_title(p_ctx.message("script.application.pushed"))
             end
           end

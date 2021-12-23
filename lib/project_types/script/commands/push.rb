@@ -22,32 +22,19 @@ module Script
           uuid: options.flags[:uuid]
         )
 
-        puts "project #{project.inspect}"
-        # specification_handler = Script::Loaders::SpecificationHandler.load(project: project, context: @ctx)
-        # fresh_env = Layers::Application::ConnectApp.call(ctx: @ctx)
-
         force = options.flags.key?(:force)
         api_key = project.env[:api_key]
-        api_secret = project.env[:secret]
         uuid = project.env[:extra]["UUID"]
 
-        return @ctx.puts(self.class.help) if !api_key && @ctx.tty?
-        
-        if @ctx.tty? || uuid
+        if @ctx.tty? || (uuid && !uuid.empty?)
           Layers::Application::PushScript.call(ctx: @ctx, force: force, project: project)
           @ctx.puts(@ctx.message("script.push.script_pushed", api_key: api_key))
         else
-           @ctx.puts("UUID is required to push in a CI environment")
+          @ctx.puts(@ctx.message("script.push.error.operation_failed_no_uuid"))
         end
-      rescue SmartProperties::InitializationError
-        @ctx.puts("Script needs to be connected to an app")
       rescue StandardError => e
-        msg = if api_key
-          @ctx.message("script.push.error.operation_failed_with_api_key", api_key: api_key)
-        else
-          @ctx.message("script.push.error.operation_failed_no_api_key")
-        end
-        UI::ErrorHandler.pretty_print_and_raise(e, failed_op: msg)
+        UI::ErrorHandler.pretty_print_and_raise(e,
+          failed_op: @ctx.message("script.push.error.operation_failed_no_api_key"))
       end
 
       def self.help
