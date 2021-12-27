@@ -10,6 +10,7 @@ module Theme
         parser.on("-n", "--nodelete") { flags[:nodelete] = true }
         parser.on("-i", "--themeid=ID") { |theme_id| flags[:theme_id] = theme_id }
         parser.on("-l", "--live") { flags[:live] = true }
+        parser.on("-d", "--development") { flags[:development] = true }
         parser.on("-x", "--ignore=PATTERN") do |pattern|
           flags[:ignores] ||= []
           flags[:ignores] << pattern
@@ -24,6 +25,8 @@ module Theme
           ShopifyCLI::Theme::Theme.new(@ctx, root: root, id: theme_id)
         elsif options.flags[:live]
           ShopifyCLI::Theme::Theme.live(@ctx, root: root)
+        elsif options.flags[:development]
+          ShopifyCLI::Theme::Theme.development(@ctx, root: root)
         else
           form = Forms::Select.ask(
             @ctx,
