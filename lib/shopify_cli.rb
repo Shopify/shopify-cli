@@ -10,22 +10,25 @@ Thread.report_on_exception = false
 
 # See bin/load_shopify.rb
 ENV["PATH"] = ENV["PATH"].split(":").select { |p| p.start_with?("/", "~") }.join(":") unless defined?($original_env)
+require "benchmark"
 
 # Load vendor and CLI UI/Kit.
 # Nothing else should be loaded at this point and nothing else should be added to the load path on boot
 vendor_path = File.expand_path("../../vendor/lib", __FILE__)
 $LOAD_PATH.unshift(vendor_path) unless $LOAD_PATH.include?(vendor_path)
 
-deps = %w(cli-ui cli-kit smart_properties webrick)
-deps.each do |dep|
-  vendor_path = File.expand_path("../../vendor/deps/#{dep}/lib", __FILE__)
+{
+  "cli-ui" => "cli/ui",
+  "cli-kit" => "cli/kit",
+  "smart_properties" => "smart_properties",
+  "webrick" => "webrick",
+  "sorbet-runtime" => "sorbet-runtime",
+}.each do |path, require_string|
+  vendor_path = File.expand_path("../../vendor/deps/#{path}/lib", __FILE__)
   $LOAD_PATH.unshift(vendor_path) unless $LOAD_PATH.include?(vendor_path)
+  require require_string
 end
 
-require "cli/ui"
-require "cli/kit"
-require "smart_properties"
-require "sorbet-runtime"
 require_relative "shopify_cli/version"
 require_relative "shopify_cli/migrator"
 require_relative "shopify_cli/exception_reporter"
