@@ -24,3 +24,4 @@ ext/shopify-extensions/shopify-extensions
 ext/javy/bin
 .console_history
 TODO.md
+sorbet/rbi/hidden-definitions/errors.txt
