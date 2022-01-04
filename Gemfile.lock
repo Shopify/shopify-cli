@@ -117,6 +117,17 @@ GEM
     rubocop-shopify (2.0.1)
       rubocop (~> 1.11)
     ruby-progressbar (1.11.0)
+    sorbet (0.5.9468)
+      sorbet-static (= 0.5.9468)
+    sorbet-static (0.5.9468-universal-darwin-14)
+    sorbet-static (0.5.9468-universal-darwin-15)
+    sorbet-static (0.5.9468-universal-darwin-16)
+    sorbet-static (0.5.9468-universal-darwin-17)
+    sorbet-static (0.5.9468-universal-darwin-18)
+    sorbet-static (0.5.9468-universal-darwin-19)
+    sorbet-static (0.5.9468-universal-darwin-20)
+    sorbet-static (0.5.9468-universal-darwin-21)
+    sorbet-static (0.5.9468-x86_64-linux)
     sys-uname (1.2.2)
       ffi (~> 1.1)
     theme-check (1.9.0)
@@ -151,6 +162,7 @@ DEPENDENCIES
   rubocop-rake
   rubocop-shopify
   shopify-cli!
+  sorbet (~> 0.5.9468)
   timecop
   webmock
 
