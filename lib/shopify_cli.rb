@@ -25,6 +25,7 @@ end
 require "cli/ui"
 require "cli/kit"
 require "smart_properties"
+require "sorbet-runtime"
 require_relative "shopify_cli/version"
 require_relative "shopify_cli/migrator"
 require_relative "shopify_cli/exception_reporter"
@@ -39,7 +40,7 @@ CLI::UI::StdoutRouter.enable
 #
 # It is recommended to read through CLI Kit (https://github.com/shopify/cli-kit) and a CLI Kit example
 # (https://github.com/Shopify/cli-kit-example) to fully understand how shopify-cli functions
-module ShopifyCLI
+module ShopifyCLI  
   extend CLI::Kit::Autocall
 
   TOOL_NAME         = "shopify"
