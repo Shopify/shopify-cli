@@ -1,3 +1,4 @@
+# typed: ignore
 # frozen_string_literal: true
 require "project_types/rails/test_helper"
 

@@ -1,3 +1,4 @@
+# typed: ignore
 describe Script::Layers::Infrastructure::ScriptUploader do
   include TestHelpers::Partners
 

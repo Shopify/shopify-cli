@@ -1,3 +1,4 @@
+# typed: true
 require "delegate"
 
 module ShopifyCLI

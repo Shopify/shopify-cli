@@ -1,3 +1,4 @@
+# typed: ignore
 module Extension
   module ExtensionTestHelpers
     class DummyArgo < Extension::Features::Argo

@@ -1,3 +1,4 @@
+# typed: ignore
 require "cli/kit"
 
 module ShopifyCLI

@@ -1,3 +1,4 @@
+# typed: ignore
 ##
 # `ResolveConstant` implements constant resolution. It is implemented as a
 # `MethodObject` and therefore returns a result object. By default, constants

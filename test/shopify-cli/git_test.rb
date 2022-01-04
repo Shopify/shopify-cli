@@ -1,3 +1,4 @@
+# typed: ignore
 require "test_helper"
 require "open3"
 require "shellwords"

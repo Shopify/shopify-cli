@@ -1,3 +1,4 @@
+# typed: ignore
 require "test_helper"
 require_relative "test_helpers"
 

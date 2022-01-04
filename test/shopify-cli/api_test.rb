@@ -1,3 +1,4 @@
+# typed: ignore
 require "test_helper"
 require "shopify_cli/http_request"
 

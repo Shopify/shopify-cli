@@ -1,3 +1,4 @@
+# typed: ignore
 module ShopifyCLI
   module ReportingConfigurationController
     def self.enable_reporting(enabled)

@@ -1,3 +1,4 @@
+# typed: true
 module ShopifyCLI
   module Core
     # This class is just a dummy to make sure that we don't trigger warnings on the first time the updated code runs.

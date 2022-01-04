@@ -1,3 +1,4 @@
+# typed: ignore
 require "fileutils"
 
 module ShopifyCLI

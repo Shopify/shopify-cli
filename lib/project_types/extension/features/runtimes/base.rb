@@ -1,3 +1,4 @@
+# typed: true
 module Extension
   module Features
     module Runtimes

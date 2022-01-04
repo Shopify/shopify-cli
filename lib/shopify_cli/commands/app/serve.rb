@@ -1,3 +1,4 @@
+# typed: ignore
 module ShopifyCLI
   module Commands
     class App

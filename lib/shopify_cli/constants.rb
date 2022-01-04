@@ -1,3 +1,4 @@
+# typed: true
 module ShopifyCLI
   module Constants
     module Paths

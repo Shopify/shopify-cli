@@ -1,3 +1,4 @@
+# typed: ignore
 require "securerandom"
 
 module Extension

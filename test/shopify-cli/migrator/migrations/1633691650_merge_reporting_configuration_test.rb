@@ -1,3 +1,4 @@
+# typed: ignore
 require "test_helper"
 require "shopify-cli/migrator/migrations/migration_helper"
 # frozen_string_literal: true

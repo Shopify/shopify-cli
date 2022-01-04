@@ -1,3 +1,4 @@
+# typed: ignore
 module ShopifyCLI
   module Tasks
     class EnsureLoopbackURL < ShopifyCLI::Task

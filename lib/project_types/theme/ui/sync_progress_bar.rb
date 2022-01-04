@@ -1,3 +1,4 @@
+# typed: ignore
 module Theme
   module UI
     class SyncProgressBar

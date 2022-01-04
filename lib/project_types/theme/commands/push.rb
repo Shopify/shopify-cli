@@ -1,3 +1,4 @@
+# typed: ignore
 # frozen_string_literal: true
 require "shopify_cli/theme/theme"
 require "shopify_cli/theme/development_theme"

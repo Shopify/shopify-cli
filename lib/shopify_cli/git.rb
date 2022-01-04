@@ -1,3 +1,4 @@
+# typed: ignore
 module ShopifyCLI
   ##
   # ShopifyCLI::Git wraps git functionality to make it easier to integrate will

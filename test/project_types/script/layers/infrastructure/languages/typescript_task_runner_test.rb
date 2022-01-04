@@ -1,3 +1,4 @@
+# typed: ignore
 
 require "project_types/script/test_helper"
 

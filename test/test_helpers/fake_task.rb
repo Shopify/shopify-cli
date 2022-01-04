@@ -1,3 +1,4 @@
+# typed: ignore
 module TestHelpers
   module FakeTask
     class FakeTask < ShopifyCLI::Task

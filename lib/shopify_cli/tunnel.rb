@@ -1,3 +1,4 @@
+# typed: ignore
 require "json"
 require "fileutils"
 require "shopify_cli"

@@ -1,3 +1,4 @@
+# typed: ignore
 module ShopifyCLI
   ##
   # ShopifyCLI::Shopifolk contains the logic to determine if the user appears to be a Shopify staff

@@ -1,3 +1,4 @@
+# typed: ignore
 require "shopify_cli"
 require "rbconfig"
 

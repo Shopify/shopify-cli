@@ -1,3 +1,4 @@
+# typed: true
 module ShopifyCLI
   module Services
     module App

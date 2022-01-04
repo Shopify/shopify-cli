@@ -1,3 +1,4 @@
+# typed: strict
 module ShopifyCLI
   module Core
     autoload :EntryPoint, "shopify_cli/core/entry_point"

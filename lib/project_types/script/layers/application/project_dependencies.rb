@@ -1,3 +1,4 @@
+# typed: ignore
 module Script
   module Layers
     module Application

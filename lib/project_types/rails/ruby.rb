@@ -1,3 +1,4 @@
+# typed: ignore
 module Rails
   class Ruby
     include SmartProperties

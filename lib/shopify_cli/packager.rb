@@ -1,3 +1,4 @@
+# typed: ignore
 module ShopifyCLI
   class Packager
     PACKAGING_DIR = File.join(ShopifyCLI::ROOT, "packaging")

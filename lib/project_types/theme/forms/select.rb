@@ -1,3 +1,4 @@
+# typed: ignore
 module Theme
   module Forms
     class Select < ShopifyCLI::Form

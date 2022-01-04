@@ -1,3 +1,4 @@
+# typed: ignore
 ENV["SHOPIFY_CLI_TEST"] = "1"
 
 require "rubygems"

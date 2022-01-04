@@ -1,3 +1,4 @@
+# typed: false
 module ShopifyCLI
   class PartnersAPI
     class Organizations

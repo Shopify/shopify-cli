@@ -1,3 +1,4 @@
+# typed: ignore
 require "test_helper"
 require "semantic/semantic"
 require "project_types/node/test_helper"

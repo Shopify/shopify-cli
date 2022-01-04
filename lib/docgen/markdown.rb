@@ -1,3 +1,4 @@
+# typed: false
 require "rdoc/rdoc"
 require "erb"
 

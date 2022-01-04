@@ -1,3 +1,4 @@
+# typed: ignore
 module Extension
   module ExtensionTestHelpers
     module DummySpecifications

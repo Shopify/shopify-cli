@@ -1,3 +1,6 @@
+# typed: ignore
+require "test_helpers"
+
 module Minitest
   module Assertions
     def assert_nothing_raised(*)

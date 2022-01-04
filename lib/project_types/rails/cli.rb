@@ -1,3 +1,4 @@
+# typed: ignore
 # frozen_string_literal: true
 module Rails
   class Project < ShopifyCLI::ProjectType

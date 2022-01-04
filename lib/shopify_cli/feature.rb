@@ -1,3 +1,4 @@
+# typed: ignore
 module ShopifyCLI
   ##
   # ShopifyCLI::Feature contains the logic to hide and show features across the CLI

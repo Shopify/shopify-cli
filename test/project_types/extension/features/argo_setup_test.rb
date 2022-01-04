@@ -1,3 +1,4 @@
+# typed: ignore
 # frozen_string_literal: true
 require "test_helper"
 require "project_types/extension/extension_test_helpers"

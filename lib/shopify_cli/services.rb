@@ -1,3 +1,4 @@
+# typed: strict
 module ShopifyCLI
   module Services
     autoload :BaseService, "shopify_cli/services/base_service"

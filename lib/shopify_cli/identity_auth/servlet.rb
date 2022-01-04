@@ -1,3 +1,4 @@
+# typed: ignore
 module ShopifyCLI
   class IdentityAuth
     class Servlet < WEBrick::HTTPServlet::AbstractServlet

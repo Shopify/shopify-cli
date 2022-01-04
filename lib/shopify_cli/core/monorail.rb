@@ -1,3 +1,4 @@
+# typed: ignore
 require "json"
 require "net/http"
 require "time"

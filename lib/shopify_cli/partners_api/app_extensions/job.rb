@@ -1,3 +1,4 @@
+# typed: false
 # frozen_string_literal: true
 
 require "shopify_cli/thread_pool/job"

@@ -1,3 +1,4 @@
+# typed: ignore
 module ShopifyCLI
   module ExceptionReporter
     def self.report(error, _logs = nil, _api_key = nil, custom_metadata = {})

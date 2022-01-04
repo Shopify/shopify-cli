@@ -1,3 +1,4 @@
+# typed: false
 Gem.post_uninstall do |uninstaller|
   if uninstaller.spec.name == "shopify-cli"
     if RUBY_PLATFORM.match(/mingw32/)

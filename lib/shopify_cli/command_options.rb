@@ -1,3 +1,4 @@
+# typed: strict
 require "shopify_cli"
 
 module ShopifyCLI

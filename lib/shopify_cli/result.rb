@@ -1,3 +1,4 @@
+# typed: true
 module ShopifyCLI
   ##
   # This module defines two containers for wrapping the result of an action. One

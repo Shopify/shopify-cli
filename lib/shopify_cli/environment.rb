@@ -1,3 +1,4 @@
+# typed: ignore
 module ShopifyCLI
   # The environment module provides an interface to get information from
   # the environment in which the CLI runs

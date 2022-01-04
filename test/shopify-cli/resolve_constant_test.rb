@@ -1,3 +1,4 @@
+# typed: ignore
 module ShopifyCLI
   class ResolveConstantTest < MiniTest::Test
     def test_defaults_to_kernel_namespace

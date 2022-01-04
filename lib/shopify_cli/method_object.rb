@@ -1,3 +1,4 @@
+# typed: ignore
 module ShopifyCLI
   ##
   # The `MethodObject` mixin can be included in any class that implements `call`

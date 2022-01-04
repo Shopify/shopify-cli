@@ -1,3 +1,4 @@
+# typed: false
 module ShopifyCLI
   module Services
     class BaseService

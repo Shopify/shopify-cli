@@ -1,3 +1,4 @@
+# typed: ignore
 require "shopify_cli"
 require "shopify_cli/theme/development_theme"
 

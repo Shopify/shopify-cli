@@ -1,3 +1,4 @@
+# typed: strict
 module ShopifyCLI
   module Helpers
     autoload :Haikunator, "shopify_cli/helpers/haikunator"

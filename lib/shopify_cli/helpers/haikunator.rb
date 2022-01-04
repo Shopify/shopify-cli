@@ -1,3 +1,4 @@
+# typed: true
 # Copyright (c) 2015 Usman Bashir
 #
 # MIT License

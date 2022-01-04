@@ -1,3 +1,4 @@
+# typed: ignore
 module TestHelpers
   module Heroku
     protected

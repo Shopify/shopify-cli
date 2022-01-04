@@ -1,3 +1,4 @@
+# typed: ignore
 require "project_types/node/cli"
 
 module ShopifyCLI
