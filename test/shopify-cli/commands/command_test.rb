@@ -37,9 +37,10 @@ module ShopifyCLI
         "invalidoption=https://",
         ["store=", false],
         ["shop=", false],
-      ].each do |prefix, correction_expected = true|
+        ["s=", false, "-s="],
+      ].each do |prefix, correction_expected = true, full_prefix="--#{prefix}"|
         store_name = "mystore.myshopify.com"
-        store_name_with_prefix = "--#{prefix}#{store_name}"
+        store_name_with_prefix = "#{full_prefix}#{store_name}"
 
         define_method("test_calls_with#{"_prefix_#{prefix}" unless prefix.empty?}_store_as_raw_param") do
           io = capture_io_and_assert_raises(ShopifyCLI::Abort) do
