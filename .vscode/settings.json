@@ -1,9 +1,12 @@
 {
   "files.exclude": {
+    "**/.DS_Store": true,
     "**/.git": true,
-    "**/node_modules": true,
-    "**/.DS_Store": true
+    "**/node_modules": true
   },
   "editor.formatOnSave": false,
   "workbench.colorTheme": "Dracula Soft",
+  "search.exclude": {
+    "**/sorbet/rbi": true
+  },
 }
