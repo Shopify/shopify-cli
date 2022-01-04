@@ -40,7 +40,7 @@ CLI::UI::StdoutRouter.enable
 #
 # It is recommended to read through CLI Kit (https://github.com/shopify/cli-kit) and a CLI Kit example
 # (https://github.com/Shopify/cli-kit-example) to fully understand how shopify-cli functions
-module ShopifyCLI  
+module ShopifyCLI
   extend CLI::Kit::Autocall
 
   TOOL_NAME         = "shopify"
