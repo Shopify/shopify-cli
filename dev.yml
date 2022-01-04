@@ -28,5 +28,17 @@ test:
 commands:
   style:
     run: bundle exec rubocop .
-  tc:
-    run: bundle exec srb tc
+  typecheck:
+    desc: 'run Sorbet typechecking'
+    aliases: ['tc']
+    depends-railgun: false
+    run: bin/srb tc 
+  rbi:
+    desc:   "generate Ruby interface files for Sorbet"
+    subcommands:
+      gems:
+        desc: "updates gem RBI files."
+        run: bin/tapioca gem
+      dsl:
+        desc: "update RBI files for various DSLs. Use 'dev rbi dsl <fully-qualified-class-name, ...>' to update individual class RBI files."
+        run: bin/tapioca dsl

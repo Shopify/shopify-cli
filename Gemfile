@@ -15,7 +15,8 @@ group :development, :test do
   gem "rubocop-rake", require: false
   gem "iniparse", "~> 1.5"
   gem "colorize", "~> 0.8.1"
-  gem "sorbet", "~> 0.5.9468"
+  gem "sorbet"
+  gem "tapioca"
 end
 
 group :test do
