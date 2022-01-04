@@ -99,3 +99,26 @@ jobs:
 
       - name: Rubocop
         run: bundle exec rake rubocop
+  sorbet:
+    name: Sorbet
+    runs-on: ${{ matrix.os }}
+    strategy:
+      matrix:
+        version:
+          - 3.0.2
+        os:
+          - ubuntu-latest
+    steps:
+      - uses: actions/checkout@v2
+
+      - name: Set up Ruby ${{ matrix.version }}
+        uses: ruby/setup-ruby@v1
+        with:
+          ruby-version: ${{ matrix.version }}
+          bundler-cache: true
+
+      - name: Install Dependencies
+        run: bundle install
+
+      - name: Sorbet
+        run: bundle exec srb tc

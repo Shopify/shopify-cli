@@ -28,3 +28,5 @@ test:
 commands:
   style:
     run: bundle exec rubocop .
+  tc:
+    run: bundle exec srb tc
