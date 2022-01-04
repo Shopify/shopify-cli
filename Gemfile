@@ -17,6 +17,7 @@ group :development, :test do
   gem "colorize", "~> 0.8.1"
   gem "sorbet"
   gem "tapioca"
+  gem "rubocop-sorbet", "~> 0.6.5"
 end
 
 group :test do

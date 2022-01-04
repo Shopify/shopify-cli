@@ -121,6 +121,8 @@ GEM
       rubocop
     rubocop-shopify (2.0.1)
       rubocop (~> 1.11)
+    rubocop-sorbet (0.6.5)
+      rubocop (>= 0.90.0)
     ruby-progressbar (1.11.0)
     sorbet (0.5.9468)
       sorbet-static (= 0.5.9468)
@@ -190,6 +192,7 @@ DEPENDENCIES
   rubocop-minitest
   rubocop-rake
   rubocop-shopify
+  rubocop-sorbet (~> 0.6.5)
   shopify-cli!
   sorbet
   tapioca
