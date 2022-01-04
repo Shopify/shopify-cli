@@ -13,6 +13,7 @@ Minitest:
   Include:
     - "**/test/**/*"
     - "**/*_test.rb"
+    - "sorbet/"
 
 Minitest/AssertInDelta: # (new in 0.10)
   Enabled: true

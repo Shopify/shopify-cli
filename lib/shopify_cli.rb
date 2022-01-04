@@ -184,6 +184,3 @@ module ShopifyCLI
     ShopifyCLI::Migrator.migrate
   end
 end
-
-
-ShopifyCLI::ProjectType.load_all
