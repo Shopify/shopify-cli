@@ -20,10 +20,10 @@ module Script
         project.env = env
         project
       rescue SmartProperties::InitializationError, SmartProperties::InvalidValueError => error
-        handle_error(error, context: context)
+        handle_error(error, context: context, env_file_present: env_file_present)
       end
 
-      def self.handle_error(error, context:)
+      def self.handle_error(error, context:, env_file_present:)
         if env_file_present
           properties_hash = { api_key: "SHOPIFY_API_KEY", secret: "SHOPIFY_API_SECRET" }
           missing_env_variables = error.properties.map { |p| properties_hash[p.name] }.compact.join(", ")

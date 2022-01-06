@@ -4,15 +4,19 @@ module ShopifyCLI
   module Environment
     TRUTHY_ENV_VARIABLE_VALUES = ["1", "true", "TRUE", "yes", "YES"]
 
+    def self.interactive=(interactive)
+      @interactive = interactive
+    end
+
+    def self.interactive?
+      @interactive ||= STDIN.tty?
+    end
+
     def self.development?(env_variables: ENV)
       env_variable_truthy?(
         Constants::EnvironmentVariables::DEVELOPMENT,
         env_variables: env_variables
       )
-    end
-
-    def self.interactive?
-      ShopifyCLI::Context.new.tty?
     end
 
     def self.use_local_partners_instance?(env_variables: ENV)

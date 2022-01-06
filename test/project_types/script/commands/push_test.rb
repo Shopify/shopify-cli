@@ -8,6 +8,7 @@ module Script
       def setup
         super
         @context = TestHelpers::FakeContext.new
+        @directory = Dir.pwd
         @script_name = "script_name"
         @api_key = "apikey"
         @uuid = "uuid"
@@ -22,7 +23,6 @@ module Script
         }
 
         @env = ShopifyCLI::Resources::EnvFile.new(api_key: @api_key, secret: @secret, extra: { "UUID" => @uuid })
-        # @env_content = ShopifyCLI::Resources::EnvFile.read(@env)
         @script_project_repo = TestHelpers::FakeScriptProjectRepository.new
         @script_project_repo.create(
           language: "assemblyscript",
@@ -32,29 +32,95 @@ module Script
         )
         @script_project = @script_project_repo.get
 
-        # @project = TestHelpers::FakeProject.new(directory: File.join(@context.root, @script_name), config: @config)
-        # @project.env = @env
-
-        @project = ShopifyCLI::Project.new(
-          env: @env
-        )
-
-        Script::Loaders::Project.stubs(:load).with(directory: Dir.pwd,
-          api_key: nil,
-          api_secret: nil,
-          uuid: nil).returns(@script_project)
-
-        # Script::Layers::Infrastructure::ScriptProjectRepository.stubs(:new).returns(@script_project_repo)
         ShopifyCLI::Tasks::EnsureProjectType.stubs(:call).with(@context, :script).returns(true)
       end
 
-      def test_calls_push_script
-        Layers::Application::PushScript.expects(:call).with(ctx: @context, force: @force, project: @script_project)
-        @context.stubs(:tty?).returns(true)
-        @context
-          .expects(:puts)
-          .with(@context.message("script.push.script_pushed", api_key: @api_key))
-        perform_command
+      def test_call_connects_the_script_to_an_app_when_not_connected_and_interactive_environment
+        # Given
+        ShopifyCLI::Environment.stubs(:interactive?).returns(true)
+        Layers::Application::ConnectApp.expects(:call).with(ctx: @context)
+        Script::Loaders::Project
+          .expects(:load)
+          .with(
+            directory: @directory,
+            api_key: @api_key,
+            api_secret: @secret,
+            uuid: @uuid
+          )
+          .returns(@script_project)
+        Layers::Application::PushScript
+          .expects(:call)
+          .with(ctx: @context, force: @force, project: @script_project)
+
+        # When/Then
+        perform_command_with_flags
+      end
+
+      def test_call_doesnt_connect_the_script_if_the_environment_is_not_interactive
+        # Given
+        ShopifyCLI::Environment.stubs(:interactive?).returns(false)
+        Layers::Application::ConnectApp.expects(:call).never
+        Script::Loaders::Project
+          .expects(:load)
+          .with(
+            directory: @directory,
+            api_key: @api_key,
+            api_secret: @secret,
+            uuid: @uuid
+          )
+          .returns(@script_project)
+        Layers::Application::PushScript
+          .expects(:call)
+          .with(ctx: @context, force: @force, project: @script_project)
+
+        # When/Then
+        perform_command_with_flags
+      end
+
+      def test_call_formats_errors_through_the_error_handler
+        # Given
+        ShopifyCLI::Environment.stubs(:interactive?).returns(true)
+        Layers::Application::ConnectApp.expects(:call).with(ctx: @context)
+        Script::Loaders::Project
+          .expects(:load)
+          .with(
+            directory: @directory,
+            api_key: @api_key,
+            api_secret: @secret,
+            uuid: @uuid
+          )
+          .returns(@script_project)
+        error = StandardError.new("Error")
+        Layers::Application::PushScript
+          .expects(:call)
+          .with(ctx: @context, force: @force, project: @script_project)
+          .raises(error)
+        UI::ErrorHandler
+          .expects(:pretty_print_and_raise)
+          .with(error, failed_op: @context.message("script.push.error.operation_failed_no_api_key"))
+
+        # When/Then
+        perform_command_with_flags
+      end
+
+      def test_call_aborts_if_uuid_isnt_present
+        # Given
+        @uuid = ""
+        ShopifyCLI::Environment.stubs(:interactive?).returns(false)
+        Script::Loaders::Project
+          .expects(:load)
+          .with(
+            directory: @directory,
+            api_key: @api_key,
+            api_secret: @secret,
+            uuid: @uuid
+          )
+          .returns(@script_project)
+        UI::ErrorHandler
+          .expects(:pretty_print_and_raise)
+
+        # When/Then
+        perform_command_with_flags
       end
 
       def test_help
@@ -62,73 +128,6 @@ module Script
           .expects(:message)
           .with("script.push.help", ShopifyCLI::TOOL_NAME)
         Script::Command::Push.help
-      end
-
-      # def test_push_propagates_error_when_connect_fails
-      #   err_msg = "error message"
-      #   Layers::Application::ConnectApp
-      #     .expects(:call)
-      #     .raises(StandardError.new(err_msg))
-
-      #   e = assert_raises(StandardError) { perform_command }
-      #   assert_equal err_msg, e.message
-      # end
-
-      # def test_does_not_force_push_if_user_env_already_existed
-      #   @force = false
-      #   @context.stubs(:tty?).returns(true)
-      #   Layers::Application::PushScript.expects(:call).with(ctx: @context, force: false, project: @script_project)
-      #   perform_command
-      # end
-
-      # def test_force_pushes_script_if_user_env_was_just_created
-      #   @force = false
-      #   @context.stubs(:tty?).returns(true)
-      #   Layers::Application::PushScript.expects(:call).with(ctx: @context, force: true, project: @script_project)
-      #   perform_command
-      # end
-
-      def test_push_fails_when_no_api_key
-        @context.stubs(:tty?).returns(true)
-        Script::Loaders::Project.expects(:load)
-          .raises(Layers::Infrastructure::Errors::ScriptEnvAppNotConnectedError.new)
-        UI::ErrorHandler.expects(:pretty_print_and_raise).with do |_error, args|
-          assert_equal args[:failed_op], @context.message("script.push.error.operation_failed_no_api_key")
-        end
-        perform_command
-      end
-
-      def test_push_missing_flags_on_ci
-        Script::Loaders::Project.expects(:load)
-          .raises(Layers::Infrastructure::Errors::ScriptEnvAppNotConnectedError.new)
-        UI::ErrorHandler.expects(:pretty_print_and_raise).with do |_error, args|
-          assert_equal args[:failed_op], @context.message("script.push.error.operation_failed_no_api_key")
-        end
-        @context.stubs(:tty?).returns(false)
-        perform_command_with_flags
-      end
-
-      def test_push_missing_uuid_on_ci
-        new_project = @script_project
-        new_project.env[:extra]["UUID"] = nil
-        @uuid = nil
-        @context.stubs(:tty?).returns(false)
-        Script::Loaders::Project.expects(:load).with(directory: Dir.pwd,
-          api_key: @api_key,
-          api_secret: @secret,
-          uuid: "").returns(new_project)
-        @context.expects(:puts).with(@context.message("script.push.error.operation_failed_no_uuid"))
-        perform_command_with_flags
-      end
-
-      def test_push_on_ci
-        @context.stubs(:tty?).returns(false)
-        Script::Loaders::Project.expects(:load).with(directory: Dir.pwd,
-          api_key: @api_key,
-          api_secret: @secret,
-          uuid: @uuid).returns(@script_project)
-        Layers::Application::PushScript.expects(:call).with(ctx: @context, force: true, project: @script_project)
-        perform_command_with_flags
       end
 
       private

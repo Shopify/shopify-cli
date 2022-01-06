@@ -48,7 +48,7 @@ module Script
                 module_upload_url: module_upload_url,
                 library: package.library,
               )
-              if ctx.tty?
+              if ShopifyCLI::Environment.interactive?
                 script_project_repo.update_env(uuid: uuid)
               end
               spinner.update_title(p_ctx.message("script.application.pushed"))

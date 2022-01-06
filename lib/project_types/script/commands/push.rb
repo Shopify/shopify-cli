@@ -28,11 +28,11 @@ module Script
         api_key = project.env[:api_key]
         uuid = project.env[:extra]["UUID"]
 
-        if @ctx.tty? || (uuid && !uuid.empty?)
+        if ShopifyCLI::Environment.interactive? || (uuid && !uuid.empty?)
           Layers::Application::PushScript.call(ctx: @ctx, force: force, project: project)
           @ctx.puts(@ctx.message("script.push.script_pushed", api_key: api_key))
         else
-          @ctx.puts(@ctx.message("script.push.error.operation_failed_no_uuid"))
+          raise ShopifyCLI::Abort, @ctx.message("script.push.error.operation_failed_no_uuid")
         end
       end
 
@@ -46,7 +46,7 @@ module Script
       end
 
       def connect_to_app
-        if @ctx.tty?
+        if ShopifyCLI::Environment.interactive?
           Layers::Application::ConnectApp.call(ctx: @ctx)
         end
       end
