@@ -40,7 +40,6 @@ module Extension
     autoload :FindNpmPackages, Project.project_filepath("tasks/find_npm_packages")
     autoload :GetExtensions, Project.project_filepath("tasks/get_extensions")
     autoload :GetProduct, Project.project_filepath("tasks/get_product")
-    autoload :RunExtensionCommand, Project.project_filepath("tasks/run_extension_command")
     autoload :MergeServerConfig, Project.project_filepath("tasks/merge_server_config")
     autoload :FindPackageFromJson, Project.project_filepath("tasks/find_package_from_json.rb")
     autoload :EnsureResourceUrl, Project.project_filepath("tasks/ensure_resource_url.rb")
@@ -52,6 +51,28 @@ module Extension
       autoload :ValidationErrorConverter, Project.project_filepath("tasks/converters/validation_error_converter")
       autoload :AppConverter, Project.project_filepath("tasks/converters/app_converter")
       autoload :ProductConverter, Project.project_filepath("tasks/converters/product_converter")
+      autoload :ExecuteCommands, Project.project_filepath("cli/execute_commands")
+    end
+
+    module ExecuteCommands
+      autoload :Base, Project.project_filepath("tasks/execute_commands/base")
+      autoload :Build, Project.project_filepath("tasks/execute_commands/build")
+      autoload :Create, Project.project_filepath("tasks/execute_commands/create")
+      autoload :Serve, Project.project_filepath("tasks/execute_commands/serve")
+
+      class << self
+        def build(*args)
+          Build.new(*args).call
+        end
+
+        def create(*args)
+          Create.new(*args).call
+        end
+
+        def serve(*args)
+          Serve.new(*args).call
+        end
+      end
     end
   end
 
@@ -120,4 +141,9 @@ module Extension
   autoload :ExtensionProjectKeys, Project.project_filepath("extension_project_keys")
   autoload :ExtensionProject, Project.project_filepath("extension_project")
   autoload :Errors, Project.project_filepath("errors")
+
+  module Loaders
+    autoload :Project, Extension::Project.project_filepath("loaders/project")
+    autoload :SpecificationHandler, Extension::Project.project_filepath("loaders/specification_handler")
+  end
 end

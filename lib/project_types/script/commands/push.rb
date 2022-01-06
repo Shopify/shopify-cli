@@ -15,26 +15,40 @@ module Script
       end
 
       def call(_args, _name)
-        project = Script::Loaders::Project.load(
+        connect_to_app
+        project = load_project
+        push(project: project)
+      rescue StandardError => e
+        UI::ErrorHandler.pretty_print_and_raise(e,
+          failed_op: @ctx.message("script.push.error.operation_failed_no_api_key"))
+      end
+
+      def push(project:)
+        force = options.flags.key?(:force)
+        api_key = project.env[:api_key]
+        uuid = project.env[:extra]["UUID"]
+
+        if ShopifyCLI::Environment.interactive? || (uuid && !uuid.empty?)
+          Layers::Application::PushScript.call(ctx: @ctx, force: force, project: project)
+          @ctx.puts(@ctx.message("script.push.script_pushed", api_key: api_key))
+        else
+          raise ShopifyCLI::Abort, @ctx.message("script.push.error.operation_failed_no_uuid")
+        end
+      end
+
+      def load_project
+        Script::Loaders::Project.load(
           directory: Dir.pwd,
           api_key: options.flags[:api_key],
           api_secret: options.flags[:api_secret],
           uuid: options.flags[:uuid]
         )
+      end
 
-        force = options.flags.key?(:force)
-        api_key = project.env[:api_key]
-        uuid = project.env[:extra]["UUID"]
-
-        if @ctx.tty? || (uuid && !uuid.empty?)
-          Layers::Application::PushScript.call(ctx: @ctx, force: force, project: project)
-          @ctx.puts(@ctx.message("script.push.script_pushed", api_key: api_key))
-        else
-          @ctx.puts(@ctx.message("script.push.error.operation_failed_no_uuid"))
+      def connect_to_app
+        if ShopifyCLI::Environment.interactive?
+          Layers::Application::ConnectApp.call(ctx: @ctx)
         end
-      rescue StandardError => e
-        UI::ErrorHandler.pretty_print_and_raise(e,
-          failed_op: @ctx.message("script.push.error.operation_failed_no_api_key"))
       end
 
       def self.help

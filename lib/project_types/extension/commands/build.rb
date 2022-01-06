@@ -24,16 +24,16 @@ module Extension
       private
 
       def run_new_flow(project)
-        output = Tasks::RunExtensionCommand.new(
-          type: project.specification_identifier.downcase,
-          command: "build",
-          config_file_name: specification_handler.server_config_file,
-          context: @ctx,
-        ).call
-
-        @ctx.puts(output)
-      rescue => error
-        raise ShopifyCLI::Abort, error.message
+        Tasks::ExecuteCommands
+          .build(
+            context: @ctx,
+            config_file_path: specification_handler.server_config_path,
+            type: project.specification_identifier.downcase
+          )
+          .then { |output| @ctx.puts(output) }
+          .unwrap do |error|
+            raise ShopifyCLI::Abort, error.message unless error.nil?
+          end
       end
 
       def run_legacy_flow

@@ -148,6 +148,12 @@ module Script
           language_library_for_api_not_found_cause: "Script can’t be pushed because the %{language} library for API %{api} is missing.",
           language_library_for_api_not_found_help: "Make sure extension_point.yml contains the correct API library.",
           no_scripts_found_in_app: "The selected apps have no scripts. Please, create them first on the partners' dashboard.",
+
+          missing_env_file_variables: "The following variables are missing in the .env file: %s."\
+            " It might happen when the script hasn't been previously connected to an app."\
+            " To connect the script to an app, run {{command:%1$s script connect}}",
+          missing_push_options: "The following options are required: %s."\
+            " You can obtain them from the .env file generated after connecting the script to an app.",
         },
 
         create: {
@@ -174,9 +180,9 @@ module Script
               Usage: {{command:%s script push}}
               Options:
                 {{command:[--force]}} Replaces the existing script on the app with this version.
-                {{command:--api-key=API_KEY}} The API key used to register an app with the script. This can be found on the app page on Partners Dashboard.
-                {{command:--api-secret=API_SECRET}} The API secret of the app the script is registered with.
-                {{command:--uuid=UUID}} The uuid of the script.
+                {{command:[--api-key=API_KEY]}} The API key used to register an app with the script. This can be found on the app page on Partners Dashboard.
+                {{command:[--api-secret=API_SECRET]}} The API secret of the app the script is registered with.
+                {{command:[--uuid=UUID]}} The uuid of the script.
           HELP
 
           error: {
@@ -194,6 +200,9 @@ module Script
             {{command:%s script connect}}: Connects an existing script to an app.
               Usage: {{command:%s script connect}}
           HELP
+          error: {
+            operation_failed: "Couldn't connect script to app.",
+          },
         },
         javy: {
           help: <<~HELP,

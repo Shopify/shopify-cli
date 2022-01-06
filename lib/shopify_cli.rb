@@ -139,6 +139,10 @@ module ShopifyCLI
   require "shopify_cli/messages/messages"
   Context.load_messages(ShopifyCLI::Messages::MESSAGES)
 
+  # cli-ui utilities for capturing the output close the stream while capturing.
+  # By setting the value here we persist the tty value for the whole lifetime of the process.
+  Environment.interactive = $stdin.tty?
+
   def self.cache_dir
     cache_dir = if Environment.test?
       TEMP_DIR

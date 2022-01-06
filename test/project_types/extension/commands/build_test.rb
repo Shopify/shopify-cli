@@ -47,19 +47,14 @@ module Extension
 
         Models::DevelopmentServerRequirements.expects(:supported?).with(type).returns(true)
 
-        command = Tasks::RunExtensionCommand.new(
-          type: type.downcase,
-          command: "build",
-          config_file_name: config_file,
-          context: @context
-        )
-        Tasks::RunExtensionCommand.expects(:new).returns(command) do |cmd|
-          cmd.expects(:call)
+        command = Tasks::ExecuteCommands::Build.new(context: @context, config_file_path: config_file,
+type: type.downcase)
+        Tasks::ExecuteCommands::Build.expects(:new).returns(command) do |cmd|
+          cmd.expects(:call).returns(nil)
         end
 
         server_config = Models::ServerConfig::Root.new(extensions: [extension])
-        Models::ServerConfig::Extension.expects(:build).returns(extension)
-        Models::ServerConfig::Root.expects(:new).returns(server_config)
+        Tasks::MergeServerConfig.expects(:call).returns(server_config)
 
         development_server = Models::DevelopmentServer.new(executable: "fake")
         File.stubs(:exist?)

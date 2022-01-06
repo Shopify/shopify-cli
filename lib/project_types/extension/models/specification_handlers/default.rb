@@ -103,6 +103,10 @@ module Extension
           raise NotImplementedError
         end
 
+        def server_config_path(base_dir = Dir.pwd)
+          File.join(base_dir, server_config_file)
+        end
+
         def server_config_file
           "shopifile.yml"
         end
