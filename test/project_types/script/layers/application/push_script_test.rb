@@ -46,6 +46,7 @@ describe Script::Layers::Application::PushScript do
       .stubs(:for)
       .with(@context, library_language, script_name)
       .returns(task_runner)
+    ShopifyCLI::Environment.stubs(:interactive?).returns(true)
 
     extension_point_repository.create_extension_point(extension_point_type)
     push_package_repository.create_push_package(
