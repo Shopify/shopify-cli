@@ -10,7 +10,7 @@ module Script
           "UUID" => uuid,
         }.compact
         env_file_present = env_file_exists?(directory)
-        if env_file_present
+        env = if env_file_present
           ShopifyCLI::Resources::EnvFile.read(directory, overrides: env_overrides)
         else
           ShopifyCLI::Resources::EnvFile.from_hash(env_overrides)
