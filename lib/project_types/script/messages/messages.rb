@@ -62,9 +62,6 @@ module Script
           no_script_config_yml_file_cause: "The script.config.yml file is missing.",
           no_script_config_yml_file_help: "Create this file and try again.",
 
-          app_not_connected_cause: "Script is not connected to an app.",
-          app_not_connected_help: "Run shopify connect or enter fields for api-key and api-secret.",
-
           configuration_syntax_error_cause: "The script.json is not formatted properly.",
           configuration_syntax_error_help: "Fix the errors and try again.",
 
@@ -148,6 +145,12 @@ module Script
           language_library_for_api_not_found_cause: "Script can’t be pushed because the %{language} library for API %{api} is missing.",
           language_library_for_api_not_found_help: "Make sure extension_point.yml contains the correct API library.",
           no_scripts_found_in_app: "The selected apps have no scripts. Please, create them first on the partners' dashboard.",
+
+          missing_env_file_variables: "The following variables are missing in the .env file: %s."\
+            " It might happen when the script hasn't been previously connected to an app."\
+            " To connect the script to an app, run {{command:%1$s script connect}}",
+          missing_push_options: "The following options are required: %s."\
+            " You can obtain them from the .env file generated after connecting the script to an app.",
         },
 
         create: {

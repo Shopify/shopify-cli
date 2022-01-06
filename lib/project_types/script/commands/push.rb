@@ -15,13 +15,15 @@ module Script
       end
 
       def call(_args, _name)
-        project = Script::Loaders::Project.load(
-          directory: Dir.pwd,
-          api_key: options.flags[:api_key],
-          api_secret: options.flags[:api_secret],
-          uuid: options.flags[:uuid]
-        )
+        connect_to_app
+        project = load_project
+        push(project: project)
+      rescue StandardError => e
+        UI::ErrorHandler.pretty_print_and_raise(e,
+          failed_op: @ctx.message("script.push.error.operation_failed_no_api_key"))
+      end
 
+      def push(project:)
         force = options.flags.key?(:force)
         api_key = project.env[:api_key]
         uuid = project.env[:extra]["UUID"]
@@ -32,9 +34,21 @@ module Script
         else
           @ctx.puts(@ctx.message("script.push.error.operation_failed_no_uuid"))
         end
-      rescue StandardError => e
-        UI::ErrorHandler.pretty_print_and_raise(e,
-          failed_op: @ctx.message("script.push.error.operation_failed_no_api_key"))
+      end
+
+      def load_project
+        Script::Loaders::Project.load(
+          directory: Dir.pwd,
+          api_key: options.flags[:api_key],
+          api_secret: options.flags[:api_secret],
+          uuid: options.flags[:uuid]
+        )
+      end
+
+      def connect_to_app
+        if @ctx.tty?
+          Layers::Application::ConnectApp.call(ctx: @ctx)
+        end
       end
 
       def self.help

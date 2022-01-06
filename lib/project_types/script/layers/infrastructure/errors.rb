@@ -39,8 +39,6 @@ module Script
           end
         end
 
-        class ScriptEnvAppNotConnectedError < ScriptProjectError; end
-
         class InvalidScriptConfigYmlDefinitionError < ScriptProjectError; end
 
         class InvalidScriptJsonDefinitionError < ScriptProjectError; end

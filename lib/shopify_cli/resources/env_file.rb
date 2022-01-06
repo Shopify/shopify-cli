@@ -14,6 +14,10 @@ module ShopifyCLI
       }
 
       class << self
+        def path(directory)
+          File.join(directory, FILENAME)
+        end
+
         def read(_directory = Dir.pwd, overrides: {})
           input = parse_external_env(overrides: overrides)
           new(input)
@@ -39,7 +43,7 @@ module ShopifyCLI
         end
 
         def parse(directory)
-          File.read(File.join(directory, FILENAME))
+          File.read(path(directory))
             .gsub("\r\n", "\n").split("\n").each_with_object({}) do |line, output|
             match = /\A([A-Za-z_0-9]+)\s*=\s*(.*)\z/.match(line)
             if match
