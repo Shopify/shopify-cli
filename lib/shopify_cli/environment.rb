@@ -8,8 +8,15 @@ module ShopifyCLI
       @interactive = interactive
     end
 
-    def self.interactive?
-      @interactive ||= STDIN.tty?
+    def self.interactive?(env_variables: ENV)
+      if env_variables.key?(Constants::EnvironmentVariables::TTY)
+        env_variable_truthy?(
+          Constants::EnvironmentVariables::TTY,
+          env_variables: env_variables
+        )
+      else
+        @interactive ||= STDIN.tty?
+      end
     end
 
     def self.development?(env_variables: ENV)
