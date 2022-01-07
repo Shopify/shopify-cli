@@ -1,6 +1,7 @@
 From version 2.6.0, the sections in this file adhere to the [keep a changelog](https://keepachangelog.com/en/1.0.0/) specification.
 
 ## [Unreleased]
+* [#1896](https://github.com/Shopify/shopify-cli/pull/1896): Release Typescript options for payment_methods and shipping_methods scripts.
 
 ## Version 2.8.0
 ### Fixed
