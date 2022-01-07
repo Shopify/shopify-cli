@@ -6,7 +6,7 @@ module Script
       prerequisite_task ensure_project_type: :script
 
       def call(_args, _)
-        Layers::Application::ConnectApp.call(ctx: @ctx, force: true, strict: true)
+        Layers::Application::ConnectApp.call(ctx: @ctx, force: true)
       rescue StandardError => e
         UI::ErrorHandler.pretty_print_and_raise(e, failed_op: @ctx.message("script.connect.error.operation_failed"))
       end
