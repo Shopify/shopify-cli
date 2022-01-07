@@ -151,7 +151,7 @@ module Script
 
           missing_env_file_variables: "The following variables are missing in the .env file: %s."\
             " It might happen when the script hasn't been previously connected to an app."\
-            " To connect the script to an app, run {{command:%1$s script connect}}",
+            " To connect the script to an app, run {{command:%s script connect}}",
           missing_push_options: "The following options are required: %s."\
             " You can obtain them from the .env file generated after connecting the script to an app.",
         },
