@@ -9,6 +9,7 @@ module Extension
 
       def setup
         super
+        ShopifyCLI::Environment.stubs(:interactive?).returns(true)
         ShopifyCLI::ProjectType.load_type(:extension)
         ShopifyCLI::Tasks::EnsureProjectType.stubs(:call)
         @project = ExtensionTestHelpers.fake_extension_project(with_mocks: true)
@@ -25,7 +26,6 @@ module Extension
       end
 
       def test_runs_register_command_if_extension_not_yet_registered
-        @context.expects(:tty?).returns(true).once
         @project.expects(:registered?).returns(false).once
 
         Command::Register.any_instance.expects(:call).once
