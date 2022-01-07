@@ -180,6 +180,14 @@ module ShopifyCLI
             .tap { |theme_attrs| break new(ctx, root: root, **allowed_attrs(theme_attrs)) }
         end
 
+        def development(ctx, root: nil)
+          _status, body = fetch_themes(ctx)
+
+          body["themes"]
+            .find { |theme_attrs| theme_attrs["role"] == "development" }
+            .tap { |theme_attrs| break new(ctx, root: root, **allowed_attrs(theme_attrs)) }
+        end
+
         private
 
         def allowed_attrs(attrs)

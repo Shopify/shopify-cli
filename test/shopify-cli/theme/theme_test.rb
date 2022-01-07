@@ -134,6 +134,17 @@ module ShopifyCLI
         assert theme.live?
       end
 
+      def test_development
+        mock_themes_json
+
+        theme = Theme.development(@ctx, root: @root)
+
+        assert_equal 3, theme.id
+        assert_equal "Development", theme.name
+        assert_equal "development", theme.role
+        assert theme.development?
+      end
+
       private
 
       def mock_themes_json
