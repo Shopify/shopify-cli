@@ -52,6 +52,16 @@ module Script
             ctx.done(ctx.message("script.connect.connected", app["title"]))
 
             true
+          rescue SmartProperties::InitializationError, SmartProperties::InvalidValueError => error
+            handle_error(error, context: ctx)
+          end
+
+          def handle_error(error, context:)
+            properties_hash = { api_key: "SHOPIFY_API_KEY", secret: "SHOPIFY_API_SECRET" }
+            missing_env_variables = error.properties.map { |p| properties_hash[p.name] }.compact.join(", ")
+            raise ShopifyCLI::Abort,
+              context.message("script.connect.error.missing_env_file_variables", missing_env_variables,
+                ShopifyCLI::TOOL_NAME)
           end
 
           private

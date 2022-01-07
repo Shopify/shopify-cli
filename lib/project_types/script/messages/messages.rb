@@ -148,7 +148,6 @@ module Script
           language_library_for_api_not_found_cause: "Script can’t be pushed because the %{language} library for API %{api} is missing.",
           language_library_for_api_not_found_help: "Make sure extension_point.yml contains the correct API library.",
           no_scripts_found_in_app: "The selected apps have no scripts. Please, create them first on the partners' dashboard.",
-
           missing_env_file_variables: "The following variables are missing in the .env file: %s."\
             " It might happen when the script hasn't been previously connected to an app."\
             " To connect the script to an app, run {{command:%s script connect}}",
@@ -202,6 +201,8 @@ module Script
           HELP
           error: {
             operation_failed: "Couldn't connect script to app.",
+            missing_env_file_variables: "The following variables are missing in the .env file: %s."\
+            " To connect the script to an app, either enter the value into the .env file or delete the .env file, then run {{command:%s script connect}}",
           },
         },
         javy: {
