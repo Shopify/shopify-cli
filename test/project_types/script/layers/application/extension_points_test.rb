@@ -138,7 +138,7 @@ describe Script::Layers::Application::ExtensionPoints do
       end
 
       it "should return all languages" do
-        assert_equal ["assemblyscript", "rust"], subject
+        assert_equal ["assemblyscript", "rust", "other"], subject
       end
     end
 
