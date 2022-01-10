@@ -49,14 +49,14 @@ module Script
           def install_dependencies(ctx, language, script_name, project_creator)
             if language == "other"
               # initialize a basic directory for other languages
-              CLI::UI::Frame.open("Creating basic directory structure for your script") do
-                UI::StrictSpinner.spin("Creating config and metadata files") do |spinner|
+              CLI::UI::Frame.open(ctx.message("script.create.preparing_project")) do
+                UI::StrictSpinner.spin(ctx.message("script.create.creating_other")) do |spinner|
                   project_creator.setup_dependencies
-                  spinner.update_title("Done!")
+                  spinner.update_title(ctx.message("script.create.created_other"))
                 end
               end
             else
-              # perform sparse checkout if this is a 1st party langauge library
+              # perform sparse checkout if this is a 1st party language library
               task_runner = Infrastructure::Languages::TaskRunner.for(ctx, language, script_name)
               CLI::UI::Frame.open(ctx.message(
                 "core.git.pulling_from_to",
