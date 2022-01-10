@@ -10,9 +10,9 @@ module Script
           property! :type, accepts: String
           property! :project_name, accepts: String
           property! :path_to_project, accepts: String
-          property! :sparse_checkout_repo, accepts: String
-          property! :sparse_checkout_branch, accepts: String
-          property! :sparse_checkout_set_path, accepts: String
+          property :sparse_checkout_repo, accepts: String
+          property :sparse_checkout_branch, accepts: String
+          property :sparse_checkout_set_path, accepts: String
 
           def self.for(
             ctx:,
@@ -28,6 +28,7 @@ module Script
             project_creators = {
               "assemblyscript" => AssemblyScriptProjectCreator,
               "typescript" => TypeScriptProjectCreator,
+              "other" => OtherProjectCreator,
             }
 
             raise Errors::ProjectCreatorNotFoundError unless project_creators[language]

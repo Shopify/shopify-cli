@@ -23,7 +23,7 @@ module Script
               )
 
               # remove the need to pass the whole extension-point object to the infra layer
-              sparse_checkout_repo = extension_point.libraries.for(language).repo
+              sparse_checkout_repo = extension_point.libraries.for(language)&.repo
               type = extension_point.dasherize_type
               domain = extension_point.domain
 
@@ -47,22 +47,33 @@ module Script
           private
 
           def install_dependencies(ctx, language, script_name, project_creator)
-            task_runner = Infrastructure::Languages::TaskRunner.for(ctx, language, script_name)
-            CLI::UI::Frame.open(ctx.message(
-              "core.git.pulling_from_to",
-              project_creator.sparse_checkout_repo,
-              script_name,
-            )) do
-              UI::StrictSpinner.spin(ctx.message(
-                "core.git.pulling",
+            if language == "other"
+              # initialize a basic directory for other languages
+              CLI::UI::Frame.open("Creating basic directory structure for your script") do
+                UI::StrictSpinner.spin("Creating config and metadata files") do |spinner|
+                  project_creator.setup_dependencies
+                  spinner.update_title("Done!")
+                end
+              end
+            else
+              # perform sparse checkout if this is a 1st party langauge library
+              task_runner = Infrastructure::Languages::TaskRunner.for(ctx, language, script_name)
+              CLI::UI::Frame.open(ctx.message(
+                "core.git.pulling_from_to",
                 project_creator.sparse_checkout_repo,
                 script_name,
-              )) do |spinner|
-                project_creator.setup_dependencies
-                spinner.update_title(ctx.message("core.git.pulled", script_name))
+              )) do
+                UI::StrictSpinner.spin(ctx.message(
+                  "core.git.pulling",
+                  project_creator.sparse_checkout_repo,
+                  script_name,
+                )) do |spinner|
+                  project_creator.setup_dependencies
+                  spinner.update_title(ctx.message("core.git.pulled", script_name))
+                end
               end
+              ProjectDependencies.install(ctx: ctx, task_runner: task_runner)
             end
-            ProjectDependencies.install(ctx: ctx, task_runner: task_runner)
           end
 
           def in_new_directory_context(script_project_repo)
