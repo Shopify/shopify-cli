@@ -43,17 +43,13 @@ module ShopifyCLI
       end
 
       def self.validate_shop(shop, org, context:)
-        is_verified = false
         permanent_domain = shop_to_permanent_domain(shop)
         context.abort(context.message("core.login.invalid_shop", shop)) unless permanent_domain
-        stores_owned = org["stores"]
-        stores_owned.each do |store|
-          if permanent_domain == store["shopDomain"]
-            is_verified = true
-            break
-          end
+        if org
+          stores_owned = org["stores"]
+          is_verified = stores_owned.any? { |store| store["shopDomain"] == permanent_domain }
+          context.abort(context.message("core.login.invalid_shop", shop)) unless is_verified
         end
-        context.abort(context.message("core.login.invalid_shop", shop)) unless is_verified
         permanent_domain
       end
 
