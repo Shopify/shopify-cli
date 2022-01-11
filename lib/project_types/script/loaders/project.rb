@@ -25,12 +25,12 @@ module Script
 
       def self.handle_error(error, context:, env_file_present:)
         if env_file_present
-          properties_hash = { api_key: "SHOPIFY_API_KEY", secret: "SHOPIFY_API_SECRET" }
+          properties_hash = { api_key: "SHOPIFY_API_KEY" }
           missing_env_variables = error.properties.map { |p| properties_hash[p.name] }.compact.join(", ")
           raise ShopifyCLI::Abort,
             context.message("script.error.missing_env_file_variables", missing_env_variables, ShopifyCLI::TOOL_NAME)
         else
-          properties_hash = { api_key: "--api-key", secret: "--api-secret" }
+          properties_hash = { api_key: "--api-key" }
           missing_options = error.properties.map { |p| properties_hash[p.name] }.compact.join(", ")
           raise ShopifyCLI::Abort, context.message("script.error.missing_push_options", missing_options)
         end

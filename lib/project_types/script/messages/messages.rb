@@ -185,7 +185,7 @@ module Script
           HELP
 
           error: {
-            operation_failed_no_uuid: "UUID is required to push in a CI environment.",
+            operation_failed_no_uuid: "Missing the script UUID. To add it to your .env file, push the script with {{command:%s script push}} or connect it to an existing script with {{command: %s script connect}}.",
             operation_failed_with_api_key: "Couldn't push script to app (API key: %{api_key}).",
             operation_failed_no_api_key: "Couldn't push script to app.",
           },

@@ -32,7 +32,9 @@ module Script
           Layers::Application::PushScript.call(ctx: @ctx, force: force, project: project)
           @ctx.puts(@ctx.message("script.push.script_pushed", api_key: api_key))
         else
-          raise ShopifyCLI::Abort, @ctx.message("script.push.error.operation_failed_no_uuid")
+          raise ShopifyCLI::Abort, @ctx.message("script.push.error.operation_failed_no_uuid",
+            ShopifyCLI::TOOL_NAME,
+            ShopifyCLI::TOOL_NAME)
         end
       end
 
