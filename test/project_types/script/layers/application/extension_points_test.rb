@@ -68,6 +68,29 @@ describe Script::Layers::Application::ExtensionPoints do
     end
   end
 
+  describe ".all_languages" do
+    subject { Script::Layers::Application::ExtensionPoints.all_languages }
+
+    describe "when beta language flag is enabled" do
+      before { ShopifyCLI::Feature.expects(:enabled?).with(:scripts_beta_languages).returns(true).at_least_once }
+
+      it "returns a list of all languages implemented by all extension points" do
+        assert_equal 2, subject.count
+        assert_equal "assemblyscript", subject[0]
+        assert_equal "rust", subject[1]
+      end
+    end
+
+    describe "when beta language flag is disabled" do
+      before { ShopifyCLI::Feature.expects(:enabled?).with(:scripts_beta_languages).returns(false).at_least_once }
+
+      it "returns a list of non-beta languages implemented by all extension points" do
+        assert_equal 1, subject.count
+        assert_equal "assemblyscript", subject[0]
+      end
+    end
+  end
+
   describe ".languages" do
     let(:type) { extension_point_type }
     subject { Script::Layers::Application::ExtensionPoints.languages(type: type) }
