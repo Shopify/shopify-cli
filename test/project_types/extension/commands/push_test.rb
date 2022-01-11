@@ -9,6 +9,7 @@ module Extension
 
       def setup
         super
+        ShopifyCLI::Environment.stubs(:interactive?).returns(true)
         ShopifyCLI::ProjectType.load_type(:extension)
         ShopifyCLI::Tasks::EnsureProjectType.stubs(:call)
         @project = ExtensionTestHelpers.fake_extension_project(with_mocks: true)

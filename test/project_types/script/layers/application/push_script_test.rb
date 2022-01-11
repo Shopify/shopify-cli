@@ -46,6 +46,7 @@ describe Script::Layers::Application::PushScript do
       .stubs(:for)
       .with(@context, library_language, script_name)
       .returns(task_runner)
+    ShopifyCLI::Environment.stubs(:interactive?).returns(true)
 
     extension_point_repository.create_extension_point(extension_point_type)
     push_package_repository.create_push_package(
@@ -58,7 +59,7 @@ describe Script::Layers::Application::PushScript do
   end
 
   describe ".call" do
-    subject { Script::Layers::Application::PushScript.call(ctx: @context, force: force) }
+    subject { Script::Layers::Application::PushScript.call(ctx: @context, force: force, project: script_project) }
 
     it "should prepare and push script" do
       script_service_instance = mock
@@ -80,6 +81,7 @@ describe Script::Layers::Application::PushScript do
         library: library
       )
       capture_io { subject }
+
       assert_equal uuid, script_project_repository.get.uuid
     end
 

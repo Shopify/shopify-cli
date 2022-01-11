@@ -62,6 +62,9 @@ module Script
           no_script_config_yml_file_cause: "The script.config.yml file is missing.",
           no_script_config_yml_file_help: "Create this file and try again.",
 
+          app_not_connected_cause: "Script is not connected to an app.",
+          app_not_connected_help: "Run shopify connect or enter fields for api-key and api-secret.",
+
           configuration_syntax_error_cause: "The script.json is not formatted properly.",
           configuration_syntax_error_help: "Fix the errors and try again.",
 
@@ -145,6 +148,11 @@ module Script
           language_library_for_api_not_found_cause: "Script can’t be pushed because the %{language} library for API %{api} is missing.",
           language_library_for_api_not_found_help: "Make sure extension_point.yml contains the correct API library.",
           no_scripts_found_in_app: "The selected apps have no scripts. Please, create them first on the partners' dashboard.",
+          missing_env_file_variables: "The following variables are missing in the .env file: %s."\
+            " It might happen when the script hasn't been previously connected to an app."\
+            " To connect the script to an app, run {{command:%s script connect}}",
+          missing_push_options: "The following options are required: %s."\
+            " You can obtain them from the .env file generated after connecting the script to an app.",
         },
 
         create: {
@@ -171,9 +179,13 @@ module Script
               Usage: {{command:%s script push}}
               Options:
                 {{command:[--force]}} Replaces the existing script on the app with this version.
+                {{command:[--api-key=API_KEY]}} The API key used to register an app with the script. This can be found on the app page on Partners Dashboard. Overrides the value in the .env file, if present.
+                {{command:[--api-secret=API_SECRET]}} The API secret of the app the script is registered with. Overrides the value in the .env file, if present.
+                {{command:[--uuid=UUID]}} The uuid of the script. Overrides the value in the .env file, if present.
           HELP
 
           error: {
+            operation_failed_no_uuid: "UUID is required to push in a CI environment.",
             operation_failed_with_api_key: "Couldn't push script to app (API key: %{api_key}).",
             operation_failed_no_api_key: "Couldn't push script to app.",
           },
@@ -182,13 +194,14 @@ module Script
         },
         connect: {
           connected: "Connected! Your project is now connected to {{green:%s}}",
-          missing_script: "No script has been selected.",
           help: <<~HELP,
             {{command:%s script connect}}: Connects an existing script to an app.
               Usage: {{command:%s script connect}}
           HELP
           error: {
             operation_failed: "Couldn't connect script to app.",
+            missing_env_file_variables: "The following variables are missing in the .env file: %s."\
+            " To connect the script to an app, either enter the value into the .env file or delete the .env file, then run {{command:%s script connect}}",
           },
         },
         javy: {

@@ -6,7 +6,7 @@ module Extension
       include SmartProperties
 
       property! :api_key, accepts: String
-      property! :secret, accepts: String
+      property :secret, accepts: String
       property :title, accepts: String
       property :business_name, accepts: String
     end

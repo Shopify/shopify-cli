@@ -5,9 +5,10 @@ module Script
     module Application
       class PushScript
         class << self
-          def call(ctx:, force:)
+          def call(ctx:, force:, project:)
             script_project_repo = Infrastructure::ScriptProjectRepository.new(ctx: ctx)
             script_project = script_project_repo.get
+            script_project.env = project.env
             task_runner = Infrastructure::Languages::TaskRunner
               .for(ctx, script_project.language, script_project.script_name)
 
@@ -47,7 +48,9 @@ module Script
                 module_upload_url: module_upload_url,
                 library: package.library,
               )
-              script_project_repo.update_env(uuid: uuid)
+              if ShopifyCLI::Environment.interactive?
+                script_project_repo.update_env(uuid: uuid)
+              end
               spinner.update_title(p_ctx.message("script.application.pushed"))
             end
           end

@@ -7,7 +7,7 @@ module Script
     module Application
       class ConnectApp
         class << self
-          def call(ctx:, force: false, strict: false)
+          def call(ctx:, force: false)
             script_project_repo = Layers::Infrastructure::ScriptProjectRepository.new(ctx: ctx)
             script_project = script_project_repo.get
 
@@ -40,10 +40,6 @@ module Script
 
             uuid = Forms::AskScriptUuid.ask(ctx, scripts, nil)&.uuid
 
-            if strict && uuid.nil?
-              ctx.abort(ctx.message("script.connect.missing_script"))
-            end
-
             script_project_repo.create_env(
               api_key: app["apiKey"],
               secret: app["apiSecretKeys"].first["secret"],
@@ -52,6 +48,16 @@ module Script
             ctx.done(ctx.message("script.connect.connected", app["title"]))
 
             true
+          rescue SmartProperties::InitializationError, SmartProperties::InvalidValueError => error
+            handle_error(error, context: ctx)
+          end
+
+          def handle_error(error, context:)
+            properties_hash = { api_key: "SHOPIFY_API_KEY", secret: "SHOPIFY_API_SECRET" }
+            missing_env_variables = error.properties.map { |p| properties_hash[p.name] }.compact.join(", ")
+            raise ShopifyCLI::Abort,
+              context.message("script.connect.error.missing_env_file_variables", missing_env_variables,
+                ShopifyCLI::TOOL_NAME)
           end
 
           private

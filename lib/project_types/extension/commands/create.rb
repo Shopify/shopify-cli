@@ -53,12 +53,11 @@ module Extension
       end
 
       def use_new_create_flow(form)
-        Tasks::RunExtensionCommand.new(
+        Tasks::ExecuteCommands.create(
           root_dir: form.directory_name,
           template: form.template,
           type: form.type.identifier.downcase,
-          command: "create"
-        ).call
+        )
         @ctx.chdir(form.directory_name)
         write_env_file(form)
       rescue => error

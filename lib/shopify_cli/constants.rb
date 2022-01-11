@@ -30,6 +30,7 @@ module ShopifyCLI
 
     module EnvironmentVariables
       STACKTRACE = "SHOPIFY_CLI_STACKTRACE"
+      TTY = "SHOPIFY_CLI_TTY"
 
       # When true the CLI points to a local instance of
       # the partners dashboard and identity.
@@ -60,6 +61,10 @@ module ShopifyCLI
 
     module Links
       NEW_ISSUE = "https://github.com/Shopify/shopify-cli/issues/new"
+    end
+
+    module Extension
+      DEFAULT_PORT = 39351
     end
   end
 end
