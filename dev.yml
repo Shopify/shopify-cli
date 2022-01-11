@@ -10,8 +10,9 @@ up:
   - homebrew:
       - dpkg:
           version: 1.21.1
-      - rpm:
-          version: 4.17.0
+      # commenting out rpm to dev up on m1s, this is only needed for releases
+      # - rpm:
+      #     version: 4.17.0
   - bundler
   - docker
 
