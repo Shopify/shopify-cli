@@ -26,6 +26,12 @@ module Script
           @type.gsub("_", "-")
         end
 
+        def library_languages(include_betas: false)
+          @libraries.all.map do |library|
+            include_betas || !library.beta? ? library.language : nil
+          end.compact
+        end
+
         class ExtensionPointLibraries
           def initialize(config)
             @config = config

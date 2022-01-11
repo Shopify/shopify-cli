@@ -10,6 +10,9 @@ describe Script::Layers::Domain::ExtensionPoint do
         "assemblyscript" => {
           "package" => "@shopify/extension-point-as-fake",
         },
+        "typescript" => {
+          "package" => "@shopify/extension-point-ts-fake",
+        },
       },
     }
   end
@@ -18,6 +21,9 @@ describe Script::Layers::Domain::ExtensionPoint do
       "libraries" => {
         "assemblyscript" => {
           "package" => "@shopify/extension-point-as-fake",
+        },
+        "typescript" => {
+          "package" => "@shopify/extension-point-ts-fake",
         },
         "rust" => {
           "beta" => true,
@@ -72,24 +78,52 @@ describe Script::Layers::Domain::ExtensionPoint do
       end
     end
 
-    describe "when multiple libraries are implemented" do
-      subject { Script::Layers::Domain::ExtensionPoint.new(type, config_with_rust) }
-      it "should return all the implemented libraries" do
-        extension_point = subject
-        assert_equal 2, extension_point.libraries.all.count
-        refute_nil extension_point.libraries.for("assemblyscript")
-        refute_nil extension_point.libraries.for("rust")
+    describe ".libraries" do
+      describe "when multiple libraries are implemented" do
+        subject { Script::Layers::Domain::ExtensionPoint.new(type, config_with_rust) }
+        it "should return all the implemented libraries" do
+          extension_point = subject
+          assert_equal 3, extension_point.libraries.all.count
+          refute_nil extension_point.libraries.for("assemblyscript")
+          refute_nil extension_point.libraries.for("rust")
+        end
+      end
+
+      describe "when a libary is not implemented" do
+        subject { Script::Layers::Domain::ExtensionPoint.new(type, config) }
+
+        it "should not return that library" do
+          extension_point = subject
+
+          assert_equal 2, extension_point.libraries.all.count
+          assert_nil extension_point.libraries.for("rust")
+        end
       end
     end
 
-    describe "when a libary is not implemented" do
-      subject { Script::Layers::Domain::ExtensionPoint.new(type, config) }
+    describe ".library_languages" do
+      let(:ep) { Script::Layers::Domain::ExtensionPoint.new(type, config_with_rust) }
+      subject { ep.library_languages(include_betas: include_betas) }
 
-      it "should not return that library" do
-        extension_point = subject
+      describe "include_betas argument is true" do
+        let(:include_betas) { true }
 
-        assert_equal 1, extension_point.libraries.all.count
-        assert_nil extension_point.libraries.for("rust")
+        it "returns all the languages of the libraries" do
+          assert_equal 3, subject.count
+          assert_includes subject, "assemblyscript"
+          assert_includes subject, "typescript"
+          assert_includes subject, "rust"
+        end
+      end
+
+      describe "include_betas argument is false" do
+        let(:include_betas) { false }
+
+        it "returns only non-beta languages of the libraries" do
+          assert_equal 2, subject.count
+          assert_includes subject, "assemblyscript"
+          assert_includes subject, "typescript"
+        end
       end
     end
   end
