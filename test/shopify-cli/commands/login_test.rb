@@ -162,7 +162,6 @@ module ShopifyCLI
         stub_request(:head, "https://#{store}.myshopify.com/admin")
           .to_return(status: 404)
 
-        # CLI::UI::Prompt.expects(:ask).never
         auth = mock
         auth.expects(:authenticate)
         IdentityAuth.expects(:new).with(ctx: @context).returns(auth)
