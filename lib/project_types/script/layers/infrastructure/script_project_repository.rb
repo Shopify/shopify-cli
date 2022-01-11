@@ -204,7 +204,7 @@ module Script
           end
 
           def from_h(hash)
-            Domain::ScriptConfig.new(content: hash)
+            Domain::ScriptConfig.new(content: hash, filename: filename)
           rescue Domain::Errors::MissingScriptConfigFieldError => e
             raise missing_field_error, e.field
           end

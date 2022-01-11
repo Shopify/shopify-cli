@@ -5,6 +5,15 @@ module Script
     module Infrastructure
       module Errors
         class BuildError < ScriptProjectError; end
+
+        class ScriptConfigurationDefinitionError < ScriptProjectError
+          attr_reader :filename
+          def initialize(message:, filename:)
+            @filename = filename
+            super(message)
+          end
+        end
+
         class ScriptConfigSyntaxError < ScriptProjectError; end
 
         class ScriptConfigMissingKeysError < ScriptProjectError

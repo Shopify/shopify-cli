@@ -138,6 +138,15 @@ module Script
             cause_of_error: ShopifyCLI::Context.message("script.error.no_script_config_yml_file_cause"),
             help_suggestion: ShopifyCLI::Context.message("script.error.no_script_config_yml_file_help"),
           }
+        when Layers::Infrastructure::Errors::ScriptConfigurationDefinitionError
+          {
+            cause_of_error: ShopifyCLI::Context.message(
+              "script.error.configuration_error_cause",
+              message: e.message,
+              filename: e.filename,
+            ),
+            help_suggestion: ShopifyCLI::Context.message("script.error.configuration_error_help"),
+          }
         when Layers::Infrastructure::Errors::ScriptConfigSyntaxError
           {
             cause_of_error: ShopifyCLI::Context.message("script.error.configuration_syntax_error_cause"),

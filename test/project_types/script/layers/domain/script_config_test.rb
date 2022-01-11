@@ -12,8 +12,9 @@ describe Script::Layers::Domain::ScriptConfig do
       "configuration" => {},
     }
   end
+  let(:filename) { "script.config.yml" }
 
-  subject { Script::Layers::Domain::ScriptConfig.new(content: content) }
+  subject { Script::Layers::Domain::ScriptConfig.new(content: content, filename: filename) }
 
   describe "#initialize" do
     it "constructs a ScriptConfig" do
@@ -22,6 +23,7 @@ describe Script::Layers::Domain::ScriptConfig do
       assert_equal("Some Description", subject.description)
       assert(subject.configuration_ui)
       assert_equal({}, subject.configuration)
+      assert_equal(filename, subject.filename)
     end
   end
 

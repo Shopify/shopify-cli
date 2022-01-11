@@ -11,8 +11,12 @@ describe Script::Layers::Infrastructure::ScriptService do
   let(:schema_major_version) { "1" }
   let(:schema_minor_version) { "0" }
   let(:use_msgpack) { true }
+  let(:script_config_filename) { "script.config.yml" }
   let(:script_config) do
-    Script::Layers::Domain::ScriptConfig.new(content: expected_script_config_content)
+    Script::Layers::Domain::ScriptConfig.new(
+      content: expected_script_config_content,
+      filename: script_config_filename,
+    )
   end
   let(:script_name) { "script name" }
   let(:script_config_version) { "1" }
@@ -172,6 +176,28 @@ describe Script::Layers::Infrastructure::ScriptService do
           it "should raise MetadataValidationError error" do
             assert_raises(Script::Layers::Domain::Errors::MetadataValidationError) { subject }
           end
+        end
+      end
+
+      describe "when configuration is invalid" do
+        let(:response) do
+          {
+            "data" => {
+              "appScriptSet" => {
+                "userErrors" => [{ "message" => "error", "tag" => "configuration_definition_error" }],
+              },
+            },
+          }
+        end
+
+        it "should raise ScriptConfigurationDefinitionError" do
+          assert_raises_and_validate(
+            Script::Layers::Infrastructure::Errors::ScriptConfigurationDefinitionError,
+            proc do |e|
+              assert_equal("error", e.message)
+              assert_equal(script_config_filename, e.filename)
+            end,
+          ) { subject }
         end
       end
 

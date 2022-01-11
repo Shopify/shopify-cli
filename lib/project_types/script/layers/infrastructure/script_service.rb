@@ -46,6 +46,11 @@ module Script
 
           if user_errors.any? { |e| e["tag"] == "already_exists_error" }
             raise Errors::ScriptRepushError, uuid
+          elsif (e = user_errors.find { |err| err["tag"] == "configuration_definition_error" })
+            raise Errors::ScriptConfigurationDefinitionError.new(
+              message: e["message"],
+              filename: script_config.filename,
+            )
           elsif (e = user_errors.any? { |err| err["tag"] == "configuration_definition_syntax_error" })
             raise Errors::ScriptConfigSyntaxError
           elsif (e = user_errors.find { |err| err["tag"] == "configuration_definition_missing_keys_error" })

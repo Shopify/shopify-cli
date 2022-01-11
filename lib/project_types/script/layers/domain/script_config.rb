@@ -4,14 +4,15 @@ module Script
   module Layers
     module Domain
       class ScriptConfig
-        attr_reader :content, :version, :title, :description, :configuration_ui, :configuration
+        attr_reader :content, :version, :title, :description, :configuration_ui, :configuration, :filename
 
         REQUIRED_FIELDS = %w(version title)
 
-        def initialize(content:)
+        def initialize(content:, filename:)
           validate_content!(content)
 
           @content = content
+          @filename = filename
           @version = @content["version"].to_s
           @title = @content["title"]
           @description = @content["description"]

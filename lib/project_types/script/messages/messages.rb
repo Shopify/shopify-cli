@@ -65,6 +65,9 @@ module Script
           app_not_connected_cause: "Script is not connected to an app.",
           app_not_connected_help: "Run shopify connect or enter fields for api-key and api-secret.",
 
+          configuration_error_cause: "There was a problem with the configuration defined in %{filename}. %{message}",
+          configuration_error_help: "Fix the error and try again.",
+
           configuration_syntax_error_cause: "The script.json is not formatted properly.",
           configuration_syntax_error_help: "Fix the errors and try again.",
 
