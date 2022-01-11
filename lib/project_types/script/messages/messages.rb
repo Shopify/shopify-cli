@@ -147,12 +147,7 @@ module Script
 
           language_library_for_api_not_found_cause: "Script can’t be pushed because the %{language} library for API %{api} is missing.",
           language_library_for_api_not_found_help: "Make sure extension_point.yml contains the correct API library.",
-          no_scripts_found_in_app: "The selected apps have no scripts. Please, create them first on the partners' dashboard.",
-          missing_env_file_variables: "The following variables are missing in the .env file: %s."\
-            " It might happen when the script hasn't been previously connected to an app."\
-            " To connect the script to an app, run {{command:%s script connect}}",
-          missing_push_options: "The following options are required: %s."\
-            " You can obtain them from the .env file generated after connecting the script to an app.",
+          no_scripts_found_in_app: "The selected apps have no scripts. Please, create them first on the partners' dashboard."
         },
 
         create: {
@@ -185,9 +180,14 @@ module Script
           HELP
 
           error: {
-            operation_failed_no_uuid: "Missing the script UUID. To add it to your .env file, push the script with {{command:%s script push}} or connect it to an existing script with {{command: %s script connect}}.",
             operation_failed_with_api_key: "Couldn't push script to app (API key: %{api_key}).",
             operation_failed_no_api_key: "Couldn't push script to app.",
+            missing_env_file_variables: "The following variables are missing in the .env file: %s."\
+            " It might happen when the script hasn't been previously connected to an app."\
+            " To connect the script to an app, run {{command:%s script connect}}",
+            missing_push_options: "The following options are required: %s."\
+            " You can obtain them from the .env file generated after connecting the script to an app.",
+            missing_push_option: "Missing the script %s. To add it to your .env file, push the script with {{command:%s script push}} or connect it to an existing script with {{command: %s script connect}}.",
           },
 
           script_pushed: "{{v}} Script pushed to app (API key: %{api_key}).",

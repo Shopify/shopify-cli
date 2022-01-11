@@ -27,12 +27,13 @@ module Script
         if env_file_present
           properties_hash = { api_key: "SHOPIFY_API_KEY" }
           missing_env_variables = error.properties.map { |p| properties_hash[p.name] }.compact.join(", ")
-          raise ShopifyCLI::Abort,
-            context.message("script.error.missing_env_file_variables", missing_env_variables, ShopifyCLI::TOOL_NAME)
+          error_message = context.message("script.error.missing_env_file_variables", missing_env_variables, ShopifyCLI::TOOL_NAME)
+          raise ShopifyCLI::Abort, error_message
         else
           properties_hash = { api_key: "--api-key" }
           missing_options = error.properties.map { |p| properties_hash[p.name] }.compact.join(", ")
-          raise ShopifyCLI::Abort, context.message("script.error.missing_push_options", missing_options)
+          error_message = context.message("script.error.missing_push_options", missing_options)
+          raise ShopifyCLI::Abort, error_message
         end
       end
 
