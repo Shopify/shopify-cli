@@ -174,9 +174,15 @@ module Extension
         },
       },
       errors: {
-        unknown_type: "Unknown extension type %s",
+        unknown_type: "Unknown extension type %s. Valid extension types include: CHECKOUT_POST_PURCHASE, " \
+        "CHECKOUT_UI_EXTENSION, THEME_APP_EXTENSION, and PRODUCT_SUBSCRIPTION.",
         package_not_found: "`%s` package not found.",
-        missing_api_key: "Missing api_key.",
+        missing_push_options_ci: "The following options are required: %s."\
+        " You can obtain them from the .env file generated after connecting the extension to an app with {{command:%s extension connect}}.",
+        missing_env_file_variables: "The following variables are missing in the .env file: %s. ",
+        missing_env_file_variables_solution: "This might happen when your extension is not connected to an app."\
+        " Try connecting your extension with {{command:%1$s extension connect}} "\
+        "or run {{command:%1$s extension register}} to register a new extension.",
         module_not_found: "Unable to find module %s. Ensure your dependencies are up-to-date and try again.",
       },
       warnings: {
