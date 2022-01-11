@@ -20,7 +20,7 @@ module ShopifyCLI
         private
 
         def filter(headers)
-          headers.except(*BLOCKED_HEADERS)
+          headers.reject { |key, _v| BLOCKED_HEADERS.include?(key) }
         end
       end
     end
