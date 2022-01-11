@@ -61,14 +61,19 @@ module ShopifyCLI
     # will return which operating system that the cli is running on [:mac, :linux]
     def os
       host = uname
-      return :mac_m1 if /arm64-apple-darwin/i.match(host)
+      return :mac_m1 if /arm64.*darwin/i.match(host)
       return :mac if /darwin/i.match(host)
       return :windows if /mswin|mingw|cygwin/i.match(host)
       return :linux if /linux|bsd/i.match(host)
       :unknown
     end
 
-    # will return true if the cli is running on an apple computer.
+    # will return true if the cli is running on an ARM Apple computer.
+    def mac_m1?
+      os == :mac_m1
+    end
+
+    # will return true if the cli is running on a Intel x86 Apple computer.
     def mac?
       os == :mac
     end
@@ -329,7 +334,7 @@ module ShopifyCLI
           system("xdg-open", uri.to_s)
         elsif windows?
           system("start \"\" \"#{uri}\"")
-        elsif mac?
+        elsif mac? || mac_m1?
           system("open", uri.to_s)
         else
           open_url!(uri)
