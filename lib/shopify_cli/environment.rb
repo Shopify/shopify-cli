@@ -78,19 +78,13 @@ module ShopifyCLI
       )
     end
 
-    def self.infer_spin?(env_variables: ENV)
-      env_variable_truthy?(
-        Constants::EnvironmentVariables::INFER_SPIN,
-        env_variables: env_variables
-      )
-    end
-
     def self.spin_url(env_variables: ENV)
       spin_workspace = spin_workspace(env_variables: env_variables)
       spin_namespace = spin_namespace(env_variables: env_variables)
       spin_host = spin_host(env_variables: env_variables)
       "#{spin_workspace}.#{spin_namespace}.#{spin_host}"
     end
+
 
     def self.send_monorail_events?(env_variables: ENV)
       env_variable_truthy?(
@@ -108,33 +102,19 @@ module ShopifyCLI
     end
 
     def self.spin_workspace(env_variables: ENV)
-      env_workspace = env_variables[Constants::EnvironmentVariables::SPIN_WORKSPACE]
-      return env_workspace unless env_workspace.nil?
-
-      if infer_spin?(env_variables: env_variables)
-        infer_spin_workspace
-      else
-        raise "Missing required env variable #{Constants::EnvironmentVariables::SPIN_WORKSPACE}"
-      end
+      env_variables[Constants::EnvironmentVariables::SPIN_WORKSPACE] || infer_spin_workspace
     end
 
     def self.infer_spin_workspace
-      %x(cut -d \".\" -f2 <<< \$(spin info fqdn 2> /dev/null)).strip
+      `cut -d \".\" -f2 <<< \$(spin info fqdn 2> /dev/null)`.strip
     end
 
     def self.spin_namespace(env_variables: ENV)
-      env_namespace = env_variables[Constants::EnvironmentVariables::SPIN_NAMESPACE]
-      return env_namespace unless env_namespace.nil?
-
-      if infer_spin?(env_variables: env_variables)
-        infer_spin_namespace
-      else
-        raise "Missing required env variable #{Constants::EnvironmentVariables::SPIN_NAMESPACE}"
-      end
+      env_variables[Constants::EnvironmentVariables::SPIN_NAMESPACE] || infer_spin_namespace
     end
 
     def self.infer_spin_namespace
-      %x(cut -d \".\" -f3 <<< \$(spin info fqdn 2> /dev/null)).strip
+      `cut -d \".\" -f3 <<< \$(spin info fqdn 2> /dev/null)`.strip
     end
 
     def self.spin_host(env_variables: ENV)
