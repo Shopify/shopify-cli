@@ -71,20 +71,59 @@ describe Script::Layers::Application::ExtensionPoints do
   describe ".all_languages" do
     subject { Script::Layers::Application::ExtensionPoints.all_languages }
 
-    describe "when beta language flag is enabled" do
-      before { ShopifyCLI::Feature.expects(:enabled?).with(:scripts_beta_languages).returns(true).at_least_once }
+    let(:scripts_beta_extension_points) { false }
+    let(:scripts_beta_languages) { false }
 
-      it "returns a list of all languages implemented by all extension points" do
+    before do
+      ShopifyCLI::Feature
+        .expects(:enabled?)
+        .with(:scripts_beta_languages)
+        .returns(scripts_beta_languages)
+        .at_least_once
+      ShopifyCLI::Feature
+        .expects(:enabled?)
+        .with(:scripts_beta_extension_points)
+        .returns(scripts_beta_extension_points)
+        .at_least_once
+    end
+
+    describe "when beta language flag is enabled" do
+      let(:scripts_beta_languages) { true }
+
+      it "returns a list of all languages implemented by non beta extension points" do
         assert_equal 2, subject.count
         assert_equal "assemblyscript", subject[0]
         assert_equal "rust", subject[1]
       end
     end
 
-    describe "when beta language flag is disabled" do
-      before { ShopifyCLI::Feature.expects(:enabled?).with(:scripts_beta_languages).returns(false).at_least_once }
+    describe "when beta extension_points is enabled" do
+      let(:scripts_beta_extension_points) { true }
 
       it "returns a list of non-beta languages implemented by all extension points" do
+        assert_equal 2, subject.count
+        assert_equal "assemblyscript", subject[0]
+        assert_equal "tinygo", subject[1]
+      end
+    end
+
+    describe "when beta language and extension points flags are enabled" do
+      let(:scripts_beta_languages) { true }
+      let(:scripts_beta_extension_points) { true }
+
+      it "returns a list of all languages implemented by all extension points" do
+        assert_equal 3, subject.count
+        assert_equal "assemblyscript", subject[0]
+        assert_equal "rust", subject[1]
+        assert_equal "tinygo", subject[2]
+      end
+    end
+
+    describe "when beta language and extension points flags are disabled" do
+      let(:scripts_beta_languages) { false }
+      let(:scripts_beta_extension_points) { false }
+
+      it "returns a list of non-beta languages implemented by non beta extension points" do
         assert_equal 1, subject.count
         assert_equal "assemblyscript", subject[0]
       end
