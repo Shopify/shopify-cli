@@ -44,8 +44,8 @@ module Theme
       end
 
       def test_pull_theme_with_name
-        ShopifyCLI::Theme::Theme.expects(:find_by)
-          .with(@ctx, name: "Test theme", root: ".")
+        ShopifyCLI::Theme::Theme.expects(:find_by_identifier)
+          .with(@ctx, root: ".", identifier: "Test theme")
           .returns(@theme)
 
         ShopifyCLI::Theme::IgnoreFilter.expects(:from_path).with(".").returns(@ignore_filter)
@@ -60,7 +60,7 @@ module Theme
         @syncer.expects(:download_theme!).with(delete: true)
         @ctx.expects(:done)
 
-        @command.options.flags[:theme_name] = "Test theme"
+        @command.options.flags[:theme] = "Test theme"
         @command.call([], "pull")
       end
 

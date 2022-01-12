@@ -9,7 +9,7 @@ module Theme
       options do |parser, flags|
         parser.on("-n", "--nodelete") { flags[:nodelete] = true }
         parser.on("-i", "--themeid=ID") { |theme_id| flags[:theme_id] = theme_id }
-        parser.on("-t", "--themename=THEMENAME") { |theme_name| flags[:theme_name] = theme_name }
+        parser.on("-t", "--theme=THEME") { |theme| flags[:theme] = theme }
         parser.on("-l", "--live") { flags[:live] = true }
         parser.on("-d", "--development") { flags[:development] = true }
         parser.on("-x", "--ignore=PATTERN") do |pattern|
@@ -47,14 +47,14 @@ module Theme
 
       private
 
-      def find_theme(root, theme_id: nil, theme_name: nil, live: nil, development: nil, **_args)
+      def find_theme(root, theme_id: nil, theme: nil, live: nil, development: nil, **_args)
         if theme_id
           return ShopifyCLI::Theme::Theme.new(@ctx, root: root, id: theme_id)
         end
 
-        if theme_name
-          theme = ShopifyCLI::Theme::Theme.find_by(@ctx, name: theme_name, root: root)
-          return theme || @ctx.abort(@ctx.message("theme.pull.theme_not_found", theme_name))
+        if theme
+          selected_theme = ShopifyCLI::Theme::Theme.find_by_identifier(@ctx, root: root, identifier: theme)
+          return selected_theme || @ctx.abort(@ctx.message("theme.pull.theme_not_found", theme))
         end
 
         if live

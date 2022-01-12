@@ -46,9 +46,9 @@ module Theme
         @command.call([], "push")
       end
 
-      def test_push_to_theme_name
-        ShopifyCLI::Theme::Theme.expects(:find_by)
-          .with(@ctx, name: "Test theme", root: ".")
+      def test_push_to_theme
+        ShopifyCLI::Theme::Theme.expects(:find_by_identifier)
+          .with(@ctx, root: ".", identifier: "Test theme")
           .returns(@theme)
 
         ShopifyCLI::Theme::IgnoreFilter.expects(:from_path).with(".").returns(@ignore_filter)
@@ -63,7 +63,7 @@ module Theme
         @syncer.expects(:upload_theme!).with(delete: true)
         @ctx.expects(:done)
 
-        @command.options.flags[:theme_name] = "Test theme"
+        @command.options.flags[:theme] = "Test theme"
         @command.call([], "push")
       end
 
@@ -325,7 +325,7 @@ module Theme
         @ctx.expects(:done)
 
         @command.options.flags[:unpublished] = true
-        @command.options.flags[:theme_name] = "NAME"
+        @command.options.flags[:theme] = "NAME"
         @command.call([], "push")
       end
 

@@ -10,7 +10,7 @@ module Theme
       options do |parser, flags|
         parser.on("-n", "--nodelete") { flags[:nodelete] = true }
         parser.on("-i", "--themeid=ID") { |theme_id| flags[:theme_id] = theme_id }
-        parser.on("-t", "--themename=THEMENAME") { |theme_name| flags[:theme_name] = theme_name }
+        parser.on("-t", "--theme=THEME") { |theme| flags[:theme] = theme }
         parser.on("-l", "--live") { flags[:live] = true }
         parser.on("-d", "--development") { flags[:development] = true }
         parser.on("-u", "--unpublished") { flags[:unpublished] = true }
@@ -70,7 +70,7 @@ module Theme
 
       private
 
-      def find_theme(root, theme_id: nil, theme_name: nil, live: nil, development: nil, unpublished: nil, **_args)
+      def find_theme(root, theme_id: nil, theme: nil, live: nil, development: nil, unpublished: nil, **_args)
         if theme_id
           return ShopifyCLI::Theme::Theme.new(@ctx, root: root, id: theme_id)
         end
@@ -80,21 +80,21 @@ module Theme
         end
 
         if development
-          theme = ShopifyCLI::Theme::DevelopmentTheme.new(@ctx, root: root)
-          theme.ensure_exists!
-          return theme
+          new_theme = ShopifyCLI::Theme::DevelopmentTheme.new(@ctx, root: root)
+          new_theme.ensure_exists!
+          return new_theme
         end
 
         if unpublished
-          name = theme_name || ask_theme_name
-          theme = ShopifyCLI::Theme::Theme.new(@ctx, root: root, name: name, role: "unpublished")
-          theme.create
-          return theme
+          name = theme || ask_theme_name
+          new_theme = ShopifyCLI::Theme::Theme.new(@ctx, root: root, name: name, role: "unpublished")
+          new_theme.create
+          return new_theme
         end
 
-        if theme_name
-          theme = ShopifyCLI::Theme::Theme.find_by(@ctx, name: theme_name, root: root)
-          return theme || @ctx.abort(@ctx.message("theme.push.theme_not_found", theme_name))
+        if theme
+          selected_theme = ShopifyCLI::Theme::Theme.find_by_identifier(@ctx, root: root, identifier: theme)
+          return selected_theme || @ctx.abort(@ctx.message("theme.push.theme_not_found", theme))
         end
 
         select_theme(root)
