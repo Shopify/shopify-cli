@@ -18,6 +18,10 @@ module Script
           @beta
         end
 
+        def stable?
+          !beta?
+        end
+
         def deprecated?
           @deprecated
         end
@@ -28,7 +32,7 @@ module Script
 
         def library_languages(include_betas: false)
           @libraries.all.map do |library|
-            include_betas || !library.beta? ? library.language : nil
+            include_betas || library.stable? ? library.language : nil
           end.compact
         end
 
@@ -61,6 +65,10 @@ module Script
 
           def beta?
             @beta
+          end
+
+          def stable?
+            !beta?
           end
 
           def versioned?

@@ -44,7 +44,7 @@ module Script
           def available_extension_points
             extension_point_repository.extension_points.select do |ep|
               next false if ep.deprecated?
-              !ep.beta? || include_beta_extension_points?
+              ep.stable? || include_beta_extension_points?
             end
           end
 

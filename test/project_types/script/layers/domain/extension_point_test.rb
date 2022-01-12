@@ -54,6 +54,25 @@ describe Script::Layers::Domain::ExtensionPoint do
       end
     end
 
+    describe "when beta status is not specified" do
+      subject { Script::Layers::Domain::ExtensionPoint.new(type, config) }
+      it "should construct new, non-deprecated ExtensionPoint" do
+        refute subject.beta?
+        assert subject.stable?
+      end
+    end
+
+    describe "when beta status is specified" do
+      let(:config_with_deprecation) { config.merge({ "beta" => true }) }
+
+      subject { Script::Layers::Domain::ExtensionPoint.new(type, config_with_deprecation) }
+
+      it "should construct a deprecated extension point" do
+        assert subject.beta?
+        refute subject.stable?
+      end
+    end
+
     describe "when a domain is not specified" do
       subject { Script::Layers::Domain::ExtensionPoint.new(type, config) }
       it "should construct a non-bounded extension point" do
