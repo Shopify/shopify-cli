@@ -13,7 +13,6 @@
   <img src="https://img.shields.io/badge/Powered%20by-Ruby-red" alt="Powered by Ruby">
 </div>
 
-
 Shopify CLI helps you build Shopify themes and apps. Use Shopify CLI to automate and enhance your local development workflow.
 
 Shopify CLI is available as a gem and can be run and installed on Mac, Linux and Windows systems.
