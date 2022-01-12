@@ -18,6 +18,26 @@ module Script
             generate_metadata
           end
 
+          def create_start_message
+            ctx.message(
+              "script.create.preparing_project",
+              sparse_checkout_repo,
+              project_name
+            )
+          end
+
+          def create_inprogress_message
+            ctx.message(
+              "script.create.creating_other",
+              sparse_checkout_repo,
+              project_name
+            )
+          end
+
+          def create_finished_message
+            ctx.message("script.create.created_other", project_name)
+          end
+
           private
 
           # the config is equivalent to TS's script.config.yml

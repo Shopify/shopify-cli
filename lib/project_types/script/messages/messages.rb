@@ -170,8 +170,8 @@ module Script
           change_directory_notice: "{{*}} Change directories to {{green:%s}} to run script commands",
           creating: "Creating script",
           created: "Created script",
-          preparing_project: "Preparing project files",
-          creating_other: "Creating configurations files for your script",
+          preparing_project: "Preparing script project structure",
+          creating_other: "Creating configurations files",
           created_other: "Configuration files created",
         },
 
