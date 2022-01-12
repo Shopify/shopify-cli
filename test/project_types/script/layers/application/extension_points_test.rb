@@ -76,24 +76,20 @@ describe Script::Layers::Application::ExtensionPoints do
 
     before do
       ShopifyCLI::Feature
-        .expects(:enabled?)
+        .stubs(:enabled?)
         .with(:scripts_beta_languages)
         .returns(scripts_beta_languages)
-        .at_least_once
       ShopifyCLI::Feature
-        .expects(:enabled?)
+        .stubs(:enabled?)
         .with(:scripts_beta_extension_points)
         .returns(scripts_beta_extension_points)
-        .at_least_once
     end
 
     describe "when beta language flag is enabled" do
       let(:scripts_beta_languages) { true }
 
       it "returns a list of all languages implemented by non beta extension points" do
-        assert_equal 2, subject.count
-        assert_equal "assemblyscript", subject[0]
-        assert_equal "rust", subject[1]
+        assert_equal ["assemblyscript", "rust"], subject
       end
     end
 
@@ -101,9 +97,7 @@ describe Script::Layers::Application::ExtensionPoints do
       let(:scripts_beta_extension_points) { true }
 
       it "returns a list of non-beta languages implemented by all extension points" do
-        assert_equal 2, subject.count
-        assert_equal "assemblyscript", subject[0]
-        assert_equal "tinygo", subject[1]
+        assert_equal ["assemblyscript", "tinygo"], subject
       end
     end
 
@@ -112,10 +106,7 @@ describe Script::Layers::Application::ExtensionPoints do
       let(:scripts_beta_extension_points) { true }
 
       it "returns a list of all languages implemented by all extension points" do
-        assert_equal 3, subject.count
-        assert_equal "assemblyscript", subject[0]
-        assert_equal "rust", subject[1]
-        assert_equal "tinygo", subject[2]
+        assert_equal ["assemblyscript", "rust", "tinygo"], subject
       end
     end
 
@@ -124,8 +115,7 @@ describe Script::Layers::Application::ExtensionPoints do
       let(:scripts_beta_extension_points) { false }
 
       it "returns a list of non-beta languages implemented by non beta extension points" do
-        assert_equal 1, subject.count
-        assert_equal "assemblyscript", subject[0]
+        assert_equal ["assemblyscript"], subject
       end
     end
   end

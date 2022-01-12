@@ -89,7 +89,7 @@ describe Script::Layers::Domain::ExtensionPoint do
         end
       end
 
-      describe "when a libary is not implemented" do
+      describe "when a library is not implemented" do
         subject { Script::Layers::Domain::ExtensionPoint.new(type, config) }
 
         it "should not return that library" do
