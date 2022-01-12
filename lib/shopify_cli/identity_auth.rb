@@ -255,7 +255,7 @@ module ShopifyCLI
     def auth_url
       if Environment.use_local_partners_instance?
         "https://identity.myshopify.io/oauth"
-      elsif Environment.use_spin_partners_instance?
+      elsif Environment.use_spin?
         "https://identity.#{Environment.spin_url}/oauth"
       else
         "https://accounts.shopify.com/oauth"
@@ -263,7 +263,7 @@ module ShopifyCLI
     end
 
     def client_id_for_application(application_name)
-      client_ids = if Environment.use_local_partners_instance? || Environment.use_spin_partners_instance?
+      client_ids = if Environment.use_local_partners_instance? || Environment.use?
         DEV_APPLICATION_CLIENT_IDS
       else
         APPLICATION_CLIENT_IDS
@@ -279,7 +279,7 @@ module ShopifyCLI
     end
 
     def client_id
-      if Environment.use_local_partners_instance? || Environment.use_spin_partners_instance?
+      if Environment.use_local_partners_instance? || Environment.use_spin?
         Constants::Identity::CLIENT_ID_DEV
       else
         # In the future we might want to use Identity's dynamic
