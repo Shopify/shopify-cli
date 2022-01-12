@@ -162,6 +162,7 @@ module Script
               Options:
                 {{command:--name=NAME}} Script project name. Use any string.
                 {{command:--api=TYPE}} Script API name. Allowed values: %2$s.
+                {{command:--language=LANGUAGE}} Programming language. Allowed values: %3$s.
           HELP
 
           error: {
