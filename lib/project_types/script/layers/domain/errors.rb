@@ -15,10 +15,11 @@ module Script
         end
 
         class MissingScriptConfigFieldError < ScriptProjectError
-          attr_reader :field
-          def initialize(field)
+          attr_reader :field, :filename
+          def initialize(field:, filename:)
             super()
             @field = field
+            @filename = filename
           end
         end
 

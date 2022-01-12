@@ -9,10 +9,9 @@ module Script
         REQUIRED_FIELDS = %w(version title)
 
         def initialize(content:, filename:)
-          validate_content!(content)
-
-          @content = content
           @filename = filename
+          validate_content!(content)
+          @content = content
           @version = @content["version"].to_s
           @title = @content["title"]
           @description = @content["description"]
@@ -24,7 +23,9 @@ module Script
 
         def validate_content!(content)
           REQUIRED_FIELDS.each do |field|
-            raise Errors::MissingScriptConfigFieldError, field if content[field].nil?
+            if content[field].nil?
+              raise Errors::MissingScriptConfigFieldError.new(field: field, filename: filename)
+            end
           end
         end
       end

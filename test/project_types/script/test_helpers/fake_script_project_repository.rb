@@ -80,14 +80,18 @@ module TestHelpers
       end
 
       def get!
-        raise Script::Layers::Infrastructure::Errors::NoScriptConfigFileError if @cache.nil?
+        raise Script::Layers::Infrastructure::Errors::NoScriptConfigFileError, filename if @cache.nil?
         @cache
+      end
+
+      def filename
+        "script.config.yml"
       end
 
       private
 
       def from_h(hash)
-        Script::Layers::Domain::ScriptConfig.new(content: hash, filename: "script.config.yml")
+        Script::Layers::Domain::ScriptConfig.new(content: hash, filename: filename)
       end
     end
   end
