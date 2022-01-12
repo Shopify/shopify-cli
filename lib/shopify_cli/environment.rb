@@ -113,7 +113,7 @@ module ShopifyCLI
     def self.spin_workspace(env_variables: ENV)
       env_value = env_variables[Constants::EnvironmentVariables::SPIN_WORKSPACE]
       return env_value unless env_value.nil?
-      
+
       if infer_spin?(env_variables: env_variables)
         infer_spin_workspace
       else
@@ -122,13 +122,13 @@ module ShopifyCLI
     end
 
     def self.infer_spin_workspace
-      `cut -d \".\" -f2 <<< \$(spin info fqdn 2> /dev/null)`.strip
+      %x(cut -d \".\" -f2 <<< \$(spin info fqdn 2> /dev/null)).strip
     end
 
     def self.spin_namespace(env_variables: ENV)
       env_value = env_variables[Constants::EnvironmentVariables::SPIN_NAMESPACE]
       return env_value unless env_value.nil?
-      
+
       if infer_spin?(env_variables: env_variables)
         infer_spin_namespace
       else
@@ -137,7 +137,7 @@ module ShopifyCLI
     end
 
     def self.infer_spin_namespace
-      `cut -d \".\" -f3 <<< \$(spin info fqdn 2> /dev/null)`.strip
+      %x(cut -d \".\" -f3 <<< \$(spin info fqdn 2> /dev/null)).strip
     end
 
     def self.spin_host(env_variables: ENV)

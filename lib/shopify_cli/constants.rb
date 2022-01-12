@@ -36,7 +36,7 @@ module ShopifyCLI
       # the partners dashboard and identity.
       LOCAL_PARTNERS = "SHOPIFY_APP_CLI_LOCAL_PARTNERS"
 
-      # When true the CLI points to spin instances of services 
+      # When true the CLI points to spin instances of services
       SPIN = "SPIN"
       INFER_SPIN = "INFER_SPIN"
       SPIN_WORKSPACE = "SPIN_WORKSPACE"
