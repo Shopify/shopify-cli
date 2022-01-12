@@ -5,7 +5,7 @@ require "digest/sha2"
 
 module Javy
   ROOT = __dir__
-  BIN_FOLDER = File.join(ROOT, "bin")
+  BIN_FOLDER = File.join(ShopifyCLI.cache_dir, "javy", "bin")
   HASH_FOLDER = File.join(ROOT, "hashes")
   VERSION = File.read(File.join(ROOT, "version")).strip
   TARGET = File.join(BIN_FOLDER, "javy-#{VERSION}")
