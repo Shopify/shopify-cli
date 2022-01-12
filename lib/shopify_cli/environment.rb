@@ -75,6 +75,16 @@ module ShopifyCLI
       env_variable_truthy?(
         Constants::EnvironmentVariables::SPIN,
         env_variables: env_variables
+      ) || env_variable_truthy?(
+        Constants::EnvironmentVariables::SPIN_PARTNERS,
+        env_variables: env_variables
+      )
+    end
+
+    def self.infer_spin?(env_variables: ENV)
+      env_variable_truthy?(
+        Constants::EnvironmentVariables::INFER_SPIN,
+        env_variables: env_variables
       )
     end
 
@@ -84,7 +94,6 @@ module ShopifyCLI
       spin_host = spin_host(env_variables: env_variables)
       "#{spin_workspace}.#{spin_namespace}.#{spin_host}"
     end
-
 
     def self.send_monorail_events?(env_variables: ENV)
       env_variable_truthy?(
@@ -102,7 +111,14 @@ module ShopifyCLI
     end
 
     def self.spin_workspace(env_variables: ENV)
-      env_variables[Constants::EnvironmentVariables::SPIN_WORKSPACE] || infer_spin_workspace
+      env_value = env_variables[Constants::EnvironmentVariables::SPIN_WORKSPACE]
+      return env_value unless env_value.nil?
+      
+      if infer_spin?(env_variables: env_variables)
+        infer_spin_workspace
+      else
+        raise "No value set for #{Constants::EnvironmentVariables::SPIN_WORKSPACE}"
+      end
     end
 
     def self.infer_spin_workspace
@@ -110,7 +126,14 @@ module ShopifyCLI
     end
 
     def self.spin_namespace(env_variables: ENV)
-      env_variables[Constants::EnvironmentVariables::SPIN_NAMESPACE] || infer_spin_namespace
+      env_value = env_variables[Constants::EnvironmentVariables::SPIN_NAMESPACE]
+      return env_value unless env_value.nil?
+      
+      if infer_spin?(env_variables: env_variables)
+        infer_spin_namespace
+      else
+        raise "No value set for #{Constants::EnvironmentVariables::SPIN_NAMESPACE}"
+      end
     end
 
     def self.infer_spin_namespace

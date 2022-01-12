@@ -37,22 +37,22 @@ module ShopifyCLI
       refute got
     end
 
-    def test_use_spin_partners_instance_returns_true_when_the_env_variable_is_set
+    def test_use_spin_returns_true_when_the_partners_env_variable_is_set
       # Given
       env_variables = {
         Constants::EnvironmentVariables::SPIN_PARTNERS.to_s => "1",
       }
 
       # When
-      got = Environment.use_spin_partners_instance?(env_variables: env_variables)
+      got = Environment.use_spin?(env_variables: env_variables)
 
       # Then
       assert got
     end
 
-    def test_use_spin_partners_instance_returns_false_when_the_env_variable_is_not_set
-      # Given/When
-      got = Environment.use_spin_partners_instance?(env_variables: {})
+    def test_use_spin_returns_false_when_the_partners_env_variable_is_set
+      # When
+      got = Environment.use_spin?(env_variables: {})
 
       # Then
       refute got
@@ -129,7 +129,7 @@ module ShopifyCLI
     def test_spin_url_returns_the_right_value_no_host
       # Given
       env_variables = {
-        Constants::EnvironmentVariables::SPIN_PARTNERS.to_s => "1",
+        Constants::EnvironmentVariables::SPIN.to_s => "1",
         Constants::EnvironmentVariables::SPIN_WORKSPACE.to_s => "abcd",
         Constants::EnvironmentVariables::SPIN_NAMESPACE.to_s => "my-namespace",
       }
@@ -143,8 +143,7 @@ module ShopifyCLI
 
     def test_use_spin_is_true
       env_variables = {
-        Constants::EnvironmentVariables::SPIN_WORKSPACE.to_s => "abcd",
-        Constants::EnvironmentVariables::SPIN_NAMESPACE.to_s => "abcd",
+        Constants::EnvironmentVariables::SPIN.to_s => "1",
       }
 
       got = Environment.use_spin?(env_variables: env_variables)
@@ -154,8 +153,7 @@ module ShopifyCLI
 
     def test_use_spin_is_false
       env_variables = {
-        Constants::EnvironmentVariables::SPIN_WORKSPACE.to_s => nil,
-        Constants::EnvironmentVariables::SPIN_NAMESPACE.to_s => "abcd",
+        Constants::EnvironmentVariables::SPIN.to_s => nil,
       }
 
       got = Environment.use_spin?(env_variables: env_variables)
@@ -163,15 +161,57 @@ module ShopifyCLI
       refute got
     end
 
-    def test_use_spin_is_false_when_namespace_and_workspace_nil
+    def test_infer_spin_is_false
       env_variables = {
+        Constants::EnvironmentVariables::INFER_SPIN.to_s => nil,
+      }
+
+      got = Environment.infer_spin?(env_variables: env_variables)
+
+      refute got
+    end
+
+    def test_infer_spin_is_true
+      env_variables = {
+        Constants::EnvironmentVariables::INFER_SPIN.to_s => "1",
+      }
+
+      got = Environment.infer_spin?(env_variables: env_variables)
+
+      assert got
+    end
+
+    def test_raise_when_spin_workspace_missing
+      env_variables = {
+        Constants::EnvironmentVariables::SPIN.to_s => "1",
         Constants::EnvironmentVariables::SPIN_WORKSPACE.to_s => nil,
+        Constants::EnvironmentVariables::SPIN_NAMESPACE.to_s => "my-namespace",
+      }
+
+      assert_raises(RuntimeError) { Environment.spin_url(env_variables: env_variables) }
+    end
+
+    def test_raise_when_spin_namespace_missing
+      env_variables = {
+        Constants::EnvironmentVariables::SPIN.to_s => "1",
+        Constants::EnvironmentVariables::SPIN_WORKSPACE.to_s => "my-workspace",
         Constants::EnvironmentVariables::SPIN_NAMESPACE.to_s => nil,
       }
 
-      got = Environment.use_spin?(env_variables: env_variables)
+      assert_raises(RuntimeError) { Environment.spin_url(env_variables: env_variables) }
+    end
 
-      refute got
+    def test_infer_when_spin_namespace_missing
+      env_variables = {
+        Constants::EnvironmentVariables::SPIN.to_s => "1",
+        Constants::EnvironmentVariables::INFER_SPIN.to_s => "1",
+        Constants::EnvironmentVariables::SPIN_WORKSPACE.to_s => "my-workspace",
+        Constants::EnvironmentVariables::SPIN_NAMESPACE.to_s => nil,
+      }
+
+      Environment.expects(:infer_spin_namespace)
+
+      Environment.spin_url(env_variables: env_variables)
     end
 
     def test_env_variable_truthy

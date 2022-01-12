@@ -263,7 +263,7 @@ module ShopifyCLI
     end
 
     def client_id_for_application(application_name)
-      client_ids = if Environment.use_local_partners_instance? || Environment.use?
+      client_ids = if Environment.use_local_partners_instance? || Environment.use_spin?
         DEV_APPLICATION_CLIENT_IDS
       else
         APPLICATION_CLIENT_IDS
