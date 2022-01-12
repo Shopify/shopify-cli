@@ -61,10 +61,17 @@ module ShopifyCLI
       )
     end
 
+    def self.use_spin_partners_instance?(env_variables: ENV)
+      env_variable_truthy?(
+        Constants::EnvironmentVariables::SPIN_PARTNERS,
+        env_variables: env_variables
+      )
+    end
+
     def self.partners_domain(env_variables: ENV)
       if use_local_partners_instance?(env_variables: env_variables)
         "partners.myshopify.io"
-      elsif use_spin?(env_variables: env_variables)
+      elsif use_spin_partners_instance?(env_variables: env_variables)
         "partners.#{spin_url(env_variables: env_variables)}"
       else
         "partners.shopify.com"
@@ -72,10 +79,8 @@ module ShopifyCLI
     end
 
     def self.use_spin?(env_variables: ENV)
-      env_variable_truthy?(
-        Constants::EnvironmentVariables::SPIN,
-        env_variables: env_variables
-      )
+      !env_variables[Constants::EnvironmentVariables::SPIN_WORKSPACE].nil? &&
+        !env_variables[Constants::EnvironmentVariables::SPIN_NAMESPACE].nil?
     end
 
     def self.spin_url(env_variables: ENV)
@@ -84,7 +89,6 @@ module ShopifyCLI
       spin_host = spin_host(env_variables: env_variables)
       "#{spin_workspace}.#{spin_namespace}.#{spin_host}"
     end
-
 
     def self.send_monorail_events?(env_variables: ENV)
       env_variable_truthy?(
@@ -102,19 +106,11 @@ module ShopifyCLI
     end
 
     def self.spin_workspace(env_variables: ENV)
-      env_variables[Constants::EnvironmentVariables::SPIN_WORKSPACE] || infer_spin_workspace
-    end
-
-    def self.infer_spin_workspace
-      `cut -d \".\" -f2 <<< \$(spin info fqdn 2> /dev/null)`.strip
+      env_variables[Constants::EnvironmentVariables::SPIN_WORKSPACE]
     end
 
     def self.spin_namespace(env_variables: ENV)
-      env_variables[Constants::EnvironmentVariables::SPIN_NAMESPACE] || infer_spin_namespace
-    end
-
-    def self.infer_spin_namespace
-      `cut -d \".\" -f3 <<< \$(spin info fqdn 2> /dev/null)`.strip
+      env_variables[Constants::EnvironmentVariables::SPIN_NAMESPACE]
     end
 
     def self.spin_host(env_variables: ENV)
