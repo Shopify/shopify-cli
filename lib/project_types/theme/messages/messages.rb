@@ -57,15 +57,15 @@ module Theme
               Usage: {{command:%s theme push [ ROOT ]}}
 
               Options:
-                {{command:-i, --themeid=THEMEID}}     Theme ID. Must be an existing theme on your store.
-                {{command:-t, --themename=THEMENAME}} Theme name. Must be an existing theme on your store.
-                {{command:-l, --live}}                Push to your remote live theme, and update your live store.
-                {{command:-d, --development}}         Push to your remote development theme, and create it if needed.
-                {{command:-u, --unpublished}}         Create a new unpublished theme and push to it.
-                {{command:-n, --nodelete}}            Runs the push command without deleting remote files from Shopify.
-                {{command:-j, --json}}                Output JSON instead of a UI.
-                {{command:-a, --allow-live}}          Allow push to a live theme.
-                {{command:-p, --publish}}             Publish as the live theme after uploading.
+                {{command:-t, --theme=THEME}}     Theme ID or name of the remote theme.
+                {{command:-i, --themeid=THEMEID}} Theme ID. Must be an existing theme on your store.
+                {{command:-l, --live}}            Push to your remote live theme, and update your live store.
+                {{command:-d, --development}}     Push to your remote development theme, and create it if needed.
+                {{command:-u, --unpublished}}     Create a new unpublished theme and push to it.
+                {{command:-n, --nodelete}}        Runs the push command without deleting remote files from Shopify.
+                {{command:-j, --json}}            Output JSON instead of a UI.
+                {{command:-a, --allow-live}}      Allow push to a live theme.
+                {{command:-p, --publish}}         Publish as the live theme after uploading.
 
               Run without options to select theme from a list.
           HELP
@@ -190,11 +190,11 @@ module Theme
             Usage: {{command:%s theme pull [ ROOT ]}}
 
             Options:
-              {{command:-i, --themeid=THEMEID}}     The Theme ID. Must be an existing theme on your store.
-              {{command:-t, --themename=THEMENAME}} The Theme name. Must be an existing theme on your store.
-              {{command:-d, --development}}         Pull theme files from your remote development theme.
-              {{command:-l, --live}}                Pull theme files from your remote live theme.
-              {{command:-n, --nodelete}}            Runs the pull command without deleting local files.
+              {{command:-t, --theme=THEME}}     Theme ID or name of the remote theme.
+              {{command:-i, --themeid=THEMEID}} The Theme ID. Must be an existing theme on your store.
+              {{command:-l, --live}}            Pull theme files from your remote live theme.
+              {{command:-d, --development}}     Pull theme files from your remote development theme.
+              {{command:-n, --nodelete}}        Runs the pull command without deleting local files.
 
             Run without options to select theme from a list.
           HELP
