@@ -6,11 +6,12 @@ describe Script::Layers::Infrastructure::ScriptUploader do
     let(:instance) { Script::Layers::Infrastructure::ScriptUploader.new(script_service) }
     let(:script_content) { "(module)" }
     let(:url) { "https://some-bucket" }
+    let(:headers) { { "header" => "value" } }
 
     subject { instance.upload(script_content) }
 
     before do
-      script_service.expects(:generate_module_upload_url).returns(url)
+      script_service.expects(:generate_module_upload_url).returns({ url: url, headers: headers })
     end
 
     describe "when fail to upload module" do

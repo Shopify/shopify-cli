@@ -98,7 +98,9 @@ module Script
           user_errors = response["data"]["moduleUploadUrlGenerate"]["userErrors"]
 
           raise Errors::GraphqlError, user_errors if user_errors.any?
-          response["data"]["moduleUploadUrlGenerate"]["url"]
+
+          data = response["data"]["moduleUploadUrlGenerate"]
+          { url: data["url"], headers: data["headers"] }
         end
 
         private

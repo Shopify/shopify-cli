@@ -1,6 +1,7 @@
 mutation moduleUploadUrlGenerate {
   moduleUploadUrlGenerate {
     url
+    headers
     userErrors {
       field
       message

@@ -335,10 +335,12 @@ describe Script::Layers::Infrastructure::ScriptService do
   describe ".generate_module_upload_url" do
     let(:user_errors) { [] }
     let(:url) { nil }
+    let(:headers) { {} }
     let(:response) do
       {
         "data" => {
           "moduleUploadUrlGenerate" => {
+            "headers" => headers,
             "url" => url,
             "userErrors" => user_errors,
           },
@@ -354,9 +356,14 @@ describe Script::Layers::Infrastructure::ScriptService do
 
     describe "when a url can be generated" do
       let(:url) { "http://fake.com" }
+      let(:headers) { { "header" => "value" } }
 
       it "returns a url" do
-        assert_equal url, subject
+        assert_equal url, subject[:url]
+      end
+
+      it "returns headers" do
+        assert_equal headers, subject[:headers]
       end
     end
 
