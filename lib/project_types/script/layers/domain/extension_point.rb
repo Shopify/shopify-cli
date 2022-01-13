@@ -47,13 +47,15 @@ module Script
             end
           end
 
+          def for(language)
+            all.find { |ep| ep.language == language }
+          end
+
+          private
+
           def other_config
             default_repo = "https://github.com/Shopify/scripts-apis-examples"
             ShopifyCLI::Feature.enabled?(:scripts_beta_languages) ? { "other" => { "repo" => default_repo } } : {}
-          end
-
-          def for(language)
-            all.find { |ep| ep.language == language }
           end
         end
 
