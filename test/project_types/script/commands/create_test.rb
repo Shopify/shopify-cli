@@ -51,9 +51,13 @@ module Script
 
       def test_help
         Script::Layers::Application::ExtensionPoints.expects(:available_types).returns(%w(ep1 ep2))
-        ShopifyCLI::Context
-          .expects(:message)
-          .with("script.create.help", ShopifyCLI::TOOL_NAME, "{{cyan:ep1}}, {{cyan:ep2}}")
+        Script::Layers::Application::ExtensionPoints.expects(:all_languages).returns(%w(lang1 lang2))
+        ShopifyCLI::Context.expects(:message).with(
+          "script.create.help",
+          ShopifyCLI::TOOL_NAME,
+          "{{cyan:ep1}}, {{cyan:ep2}}",
+          "{{cyan:lang1}}, {{cyan:lang2}}"
+        )
         Script::Command::Create.help
       end
 

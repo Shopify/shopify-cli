@@ -229,6 +229,7 @@ module ShopifyCLI
       uri = URI.parse("#{auth_url}#{endpoint}")
       https = Net::HTTP.new(uri.host, uri.port)
       https.use_ssl = true
+      https.verify_mode = OpenSSL::SSL::VERIFY_NONE if ENV["SSL_VERIFY_NONE"]
       request = Net::HTTP::Post.new(uri.path)
       request["User-Agent"] = "Shopify CLI #{::ShopifyCLI::VERSION}"
       request.body = URI.encode_www_form(params)

@@ -18,12 +18,22 @@ module Script
           @beta
         end
 
+        def stable?
+          !beta?
+        end
+
         def deprecated?
           @deprecated
         end
 
         def dasherize_type
           @type.gsub("_", "-")
+        end
+
+        def library_languages(include_betas: false)
+          @libraries.all.map do |library|
+            include_betas || library.stable? ? library.language : nil
+          end.compact
         end
 
         class ExtensionPointLibraries
@@ -55,6 +65,10 @@ module Script
 
           def beta?
             @beta
+          end
+
+          def stable?
+            !beta?
           end
 
           def versioned?

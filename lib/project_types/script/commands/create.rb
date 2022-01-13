@@ -33,8 +33,14 @@ module Script
       end
 
       def self.help
-        allowed_values = Script::Layers::Application::ExtensionPoints.available_types.map { |type| "{{cyan:#{type}}}" }
-        ShopifyCLI::Context.message("script.create.help", ShopifyCLI::TOOL_NAME, allowed_values.join(", "))
+        allowed_apis = Layers::Application::ExtensionPoints.available_types.map { |type| "{{cyan:#{type}}}" }
+        allowed_languages = Layers::Application::ExtensionPoints.all_languages.map { |lang| "{{cyan:#{lang}}}" }
+        ShopifyCLI::Context.message(
+          "script.create.help",
+          ShopifyCLI::TOOL_NAME,
+          allowed_apis.join(", "),
+          allowed_languages.join(", ")
+        )
       end
     end
   end
