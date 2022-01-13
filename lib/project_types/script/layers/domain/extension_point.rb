@@ -42,9 +42,14 @@ module Script
           end
 
           def all
-            @all ||= @config.map do |language, libray_config|
+            @all ||= @config.merge(other_config).map do |language, libray_config|
               ExtensionPointLibrary.new(language, libray_config)
             end
+          end
+
+          def other_config
+            default_repo = "https://github.com/Shopify/scripts-apis-examples"
+            ShopifyCLI::Feature.enabled?(:scripts_beta_languages) ? { "other" => { "repo" => default_repo } } : {}
           end
 
           def for(language)

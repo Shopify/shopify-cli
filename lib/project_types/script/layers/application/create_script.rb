@@ -23,7 +23,8 @@ module Script
               )
 
               # remove the need to pass the whole extension-point object to the infra layer
-              sparse_checkout_repo = extension_point.libraries.for(language)&.repo
+              sparse_checkout_repo = extension_point.libraries.for(language).repo
+
               type = extension_point.dasherize_type
               domain = extension_point.domain
 
