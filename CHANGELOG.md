@@ -5,6 +5,9 @@ From version 2.6.0, the sections in this file adhere to the [keep a changelog](h
 * [#1900](https://github.com/Shopify/shopify-cli/pull/1900): Add `-d'/`--development` flag to Shopify theme pull command
 * [#1896](https://github.com/Shopify/shopify-cli/pull/1896): Release Typescript options for payment_methods and shipping_methods scripts.
 
+### Fixed
+* [#1909](https://github.com/Shopify/shopify-cli/pull/1909): Fix `theme serve` on Safari
+
 ## Version 2.8.0
 ### Fixed
 * [#1879](https://github.com/Shopify/shopify-cli/pull/1879): Disambiguate -s as store option

@@ -18,6 +18,7 @@ module ShopifyCLI
         "trailer",
         "transfer-encoding",
         "upgrade",
+        "content-security-policy",
       ]
 
       class Proxy
