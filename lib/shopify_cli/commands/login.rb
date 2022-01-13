@@ -42,7 +42,7 @@ module ShopifyCLI
         ShopifyCLI::Context.message("core.login.help", ShopifyCLI::TOOL_NAME)
       end
 
-      def self.validate_shop(shop, org, context:)
+      def self.validate_shop(shop:, org:, context:)
         permanent_domain = shop_to_permanent_domain(shop)
         context.abort(context.message("core.login.invalid_shop", shop)) unless permanent_domain
         if org
