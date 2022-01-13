@@ -9,7 +9,7 @@ module Theme
       options do |parser, flags|
         parser.on("-n", "--nodelete") { flags[:nodelete] = true }
         parser.on("-i", "--themeid=ID") { |theme_id| flags[:theme_id] = theme_id }
-        parser.on("-t", "--theme=THEME") { |theme| flags[:theme] = theme }
+        parser.on("-t", "--theme=NAME_OR_ID") { |theme| flags[:theme] = theme }
         parser.on("-l", "--live") { flags[:live] = true }
         parser.on("-d", "--development") { flags[:development] = true }
         parser.on("-x", "--ignore=PATTERN") do |pattern|
@@ -49,6 +49,7 @@ module Theme
 
       def find_theme(root, theme_id: nil, theme: nil, live: nil, development: nil, **_args)
         if theme_id
+          @ctx.warn(@ctx.message("theme.pull.deprecated_themeid"))
           return ShopifyCLI::Theme::Theme.new(@ctx, root: root, id: theme_id)
         end
 

@@ -6,7 +6,7 @@ From version 2.6.0, the sections in this file adhere to the [keep a changelog](h
 * [#1896](https://github.com/Shopify/shopify-cli/pull/1896): Release Typescript options for payment_methods and shipping_methods scripts.
 
 ### Added
-* [#1877](https://github.com/Shopify/shopify-cli/pull/1877): Add theme (`-t`/`--theme=THEME`) parameter to `theme push`/`theme pull` commands
+* [#1877](https://github.com/Shopify/shopify-cli/pull/1877): Add theme (`-t`/`--theme=NAME_OR_ID`) parameter to `theme push`/`theme pull` commands
 
 ## Version 2.8.0
 ### Fixed
