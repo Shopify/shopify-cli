@@ -2,6 +2,8 @@ From version 2.6.0, the sections in this file adhere to the [keep a changelog](h
 
 ## [Unreleased]
 * [#1896](https://github.com/Shopify/shopify-cli/pull/1896): Release Typescript options for payment_methods and shipping_methods scripts.
+* [#1873](https://github.com/Shopify/shopify-cli/pull/1873): Fix partners ability to login to external shops.
+* [#1891](https://github.com/Shopify/shopify-cli/pull/1891): Fix `shopify push script` standard input on CI.
 
 ## Version 2.8.0
 ### Fixed
