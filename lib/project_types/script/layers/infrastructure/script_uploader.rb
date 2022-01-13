@@ -23,9 +23,16 @@ module Script
           request.body = script_content
 
           response = https.request(request)
+          raise Errors::ScriptTooLargeError if script_too_large?(response)
           raise Errors::ScriptUploadError unless response.code == "200"
 
           upload_details[:url]
+        end
+
+        private
+
+        def script_too_large?(response)
+          response.code == "400" && response.body.include?("EntityTooLarge")
         end
       end
     end

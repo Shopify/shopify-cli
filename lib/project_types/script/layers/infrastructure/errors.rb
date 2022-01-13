@@ -159,6 +159,7 @@ module Script
         class ScriptUploadError < ScriptProjectError; end
         class ProjectConfigNotFoundError < ScriptProjectError; end
         class InvalidProjectConfigError < ScriptProjectError; end
+        class ScriptTooLargeError < ScriptProjectError; end
       end
     end
   end
