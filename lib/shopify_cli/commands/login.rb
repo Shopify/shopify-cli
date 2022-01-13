@@ -34,7 +34,7 @@ module ShopifyCLI
 
         end
         # validate that shop belongs to organization
-        ShopifyCLI::DB.set(shop: self.class.validate_shop(shop: shop, org: org, context: @ctx)) unless shop.nil?
+        ShopifyCLI::DB.set(shop: self.class.validate_shop(shop, org, context: @ctx)) unless shop.nil?
         Whoami.call([], "whoami")
       end
 
