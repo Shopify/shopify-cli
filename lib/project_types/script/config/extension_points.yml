@@ -5,6 +5,7 @@ payment_methods:
       repo: "https://github.com/Shopify/scripts-apis-examples"
       package: "@shopify/scripts-checkout-apis"
     typescript:
+      beta: true
       package: "@shopify/scripts-checkout-apis"
       repo: "https://github.com/Shopify/scripts-apis-examples"
 shipping_methods:
@@ -14,6 +15,7 @@ shipping_methods:
       repo: "https://github.com/Shopify/scripts-apis-examples"
       package: "@shopify/scripts-checkout-apis"
     typescript:
+      beta: true
       package: "@shopify/scripts-checkout-apis"
       repo: "https://github.com/Shopify/scripts-apis-examples"
 merchandise_discount_types:
