@@ -91,7 +91,7 @@ module Script
           response["data"]["appScripts"]
         end
 
-        def generate_module_upload_url
+        def generate_module_upload_details
           query_name = "module_upload_url_generate"
           variables = {}
           response = make_request(query_name: query_name, variables: variables)

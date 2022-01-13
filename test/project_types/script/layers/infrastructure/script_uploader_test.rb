@@ -11,7 +11,7 @@ describe Script::Layers::Infrastructure::ScriptUploader do
     subject { instance.upload(script_content) }
 
     before do
-      script_service.expects(:generate_module_upload_url).returns({ url: url, headers: headers })
+      script_service.expects(:generate_module_upload_details).returns({ url: url, headers: headers })
     end
 
     describe "when fail to upload module" do

@@ -332,7 +332,7 @@ describe Script::Layers::Infrastructure::ScriptService do
     end
   end
 
-  describe ".generate_module_upload_url" do
+  describe ".generate_module_upload_details" do
     let(:user_errors) { [] }
     let(:url) { nil }
     let(:headers) { {} }
@@ -352,7 +352,7 @@ describe Script::Layers::Infrastructure::ScriptService do
       api_client.stubs(:query).returns(response)
     end
 
-    subject { script_service.generate_module_upload_url }
+    subject { script_service.generate_module_upload_details }
 
     describe "when a url can be generated" do
       let(:url) { "http://fake.com" }

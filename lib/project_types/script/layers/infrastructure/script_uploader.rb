@@ -7,7 +7,7 @@ module Script
         end
 
         def upload(script_content)
-          upload_details = @script_service.generate_module_upload_url
+          upload_details = @script_service.generate_module_upload_details
           url = URI(upload_details[:url])
 
           https = Net::HTTP.new(url.host, url.port)
