@@ -12,7 +12,7 @@ module ShopifyCLI
         end
 
         def test_get
-          assert_equal :full, ReloadMode.get("full")
+          assert_equal :off, ReloadMode.get("off")
         end
 
         def test_get_when_enum_values_does_not_exist
@@ -30,7 +30,7 @@ module ShopifyCLI
         end
 
         def test_values
-          expected_values = [:fast, :full, :none]
+          expected_values = [:fast, :"full-page", :off]
           actual_values = ReloadMode.values.sort
 
           assert_equal expected_values, actual_values

@@ -4,9 +4,9 @@ module ShopifyCLI
   module Theme
     module DevServer
       class ReloadMode
-        FULL = :full
+        FULL_PAGE = :"full-page"
         FAST = :fast
-        NONE = :none
+        OFF = :off
 
         class << self
           def default

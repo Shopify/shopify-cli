@@ -94,13 +94,13 @@ module Theme
             Usage: {{command:%s theme serve}}
 
             Options:
-              {{command:--port=PORT}}             Local port to serve theme preview from.
-              {{command:--poll}}                  Force polling to detect file changes.
-              {{command:--host=HOST}}             Set which network interface the web server listens on. The default value is 127.0.0.1.
-              {{command:--live-reload-mode=MODE}} The live reload mode switches the server behavior when a file is modified:
-                                        - {{command:fast}} Reloads page sections (default)
-                                        - {{command:full}} Always refreshes the entire page
-                                        - {{command:none}} Deactivate live reload
+              {{command:--port=PORT}}        Local port to serve theme preview from.
+              {{command:--poll}}             Force polling to detect file changes.
+              {{command:--host=HOST}}        Set which network interface the web server listens on. The default value is 127.0.0.1.
+              {{command:--live-reload=MODE}} The live reload mode switches the server behavior when a file is modified:
+                                 - {{command:fast}}      Reloads page sections (default)
+                                 - {{command:full-page}} Always refreshes the entire page
+                                 - {{command:off}}       Deactivate live reload
           HELP
           reload_mode_is_not_valid: "The live reload mode `%s` is not valid.",
           try_a_valid_reload_mode: "Try a valid live reload mode: %s.",

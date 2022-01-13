@@ -14,7 +14,7 @@ module ShopifyCLI
           @theme = Theme.new(@ctx, root: root)
           @syncer = stub("Syncer", enqueue_uploads: true)
           @watcher = Watcher.new(@ctx, theme: @theme, syncer: @syncer)
-          @mode = "test"
+          @mode = "off"
         end
 
         def test_hot_reload_js_injected_if_html_request
@@ -29,7 +29,7 @@ module ShopifyCLI
 
           params_js = <<~JS
             (() => {
-              window.__SHOPIFY_DEV_MODE_ENV__ = {"mode":"test"};
+              window.__SHOPIFY_DEV_MODE_ENV__ = {"mode":"off"};
             })();
           JS
 

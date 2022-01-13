@@ -10,7 +10,7 @@ module Theme
         parser.on("--host=HOST") { |host| flags[:host] = host.to_s }
         parser.on("--port=PORT") { |port| flags[:port] = port.to_i }
         parser.on("--poll") { flags[:poll] = true }
-        parser.on("--live-reload-mode=MODE") { |mode| flags[:mode] = as_reload_mode(mode) }
+        parser.on("--live-reload=MODE") { |mode| flags[:mode] = as_reload_mode(mode) }
       end
 
       def call(*)
