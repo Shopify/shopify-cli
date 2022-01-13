@@ -12,7 +12,6 @@ module ShopifyCLI
         @stub_org = {
           "id" => "1234567",
           "businessName" => "Test partner org",
-          "stores" => [{ "shopDomain" => "testshop.myshopify.io" }],
         }
         ShopifyCLI::PartnersAPI::Organizations.stubs(:fetch_all).with(@context).returns([@stub_org])
       end
@@ -162,10 +161,7 @@ module ShopifyCLI
         stub_request(:head, "https://#{store}.myshopify.com/admin")
           .to_return(status: 404)
 
-        auth = mock
-        auth.expects(:authenticate)
-        IdentityAuth.expects(:new).with(ctx: @context).returns(auth)
-        ShopifyCLI::DB.expects(:set).with(organization_id: @stub_org["id"].to_i).once
+        CLI::UI::Prompt.expects(:ask).never
 
         exception = assert_raises ShopifyCLI::Abort do
           run_cmd("login --shop=#{store}")
