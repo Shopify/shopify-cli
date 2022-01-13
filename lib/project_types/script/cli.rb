@@ -73,8 +73,8 @@ module Script
           Project.project_filepath("layers/infrastructure/languages/typescript_project_creator.rb")
         autoload :TypeScriptTaskRunner,
           Project.project_filepath("layers/infrastructure/languages/typescript_task_runner.rb")
-        autoload :OtherProjectCreator,
-          Project.project_filepath("layers/infrastructure/languages/other_project_creator.rb")
+        autoload :WasmProjectCreator,
+          Project.project_filepath("layers/infrastructure/languages/wasm_project_creator.rb")
       end
 
       module ApiClients

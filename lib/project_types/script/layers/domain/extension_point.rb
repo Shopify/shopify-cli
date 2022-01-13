@@ -42,8 +42,8 @@ module Script
           end
 
           def all
-            @all ||= @config.merge(other_config).map do |language, libray_config|
-              ExtensionPointLibrary.new(language, libray_config)
+            @all ||= @config.merge(wasm_config).map do |language, library_config|
+              ExtensionPointLibrary.new(language, library_config)
             end
           end
 
@@ -53,9 +53,9 @@ module Script
 
           private
 
-          def other_config
+          def wasm_config
             default_repo = "https://github.com/Shopify/scripts-apis-examples"
-            ShopifyCLI::Feature.enabled?(:scripts_beta_languages) ? { "other" => { "repo" => default_repo } } : {}
+            ShopifyCLI::Feature.enabled?(:scripts_beta_languages) ? { "wasm" => { "repo" => default_repo } } : {}
           end
         end
 

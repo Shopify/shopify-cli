@@ -157,9 +157,9 @@ describe Script::Layers::Domain::ExtensionPoint do
         ShopifyCLI::Feature.stubs(:enabled?).with(:scripts_beta_languages).returns(false)
       end
 
-      it "should not return other as a language" do
+      it "should not return wasm as a language" do
         extension_point = subject
-        assert_nil extension_point.libraries.for("other")
+        assert_nil extension_point.libraries.for("wasm")
       end
     end
 
@@ -170,9 +170,9 @@ describe Script::Layers::Domain::ExtensionPoint do
         ShopifyCLI::Feature.stubs(:enabled?).with(:scripts_beta_languages).returns(true)
       end
 
-      it "should return other as a language" do
+      it "should return wasm as a language" do
         extension_point = subject
-        refute_nil extension_point.libraries.for("other")
+        refute_nil extension_point.libraries.for("wasm")
       end
     end
   end

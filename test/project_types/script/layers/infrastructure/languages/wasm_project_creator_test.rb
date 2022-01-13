@@ -2,14 +2,14 @@
 
 require "project_types/script/test_helper"
 
-describe Script::Layers::Infrastructure::Languages::OtherProjectCreator do
+describe Script::Layers::Infrastructure::Languages::WasmProjectCreator do
   include TestHelpers::FakeFS
 
   let(:context) { TestHelpers::FakeContext.new }
   let(:fake_capture2e_response) { [nil, OpenStruct.new(success?: true)] }
 
   let(:type) { "payment-methods" }
-  let(:language) { "other" }
+  let(:language) { "wasm" }
   let(:domain) { "fake-domain" }
   let(:project_name) { "myscript" }
   let(:sparse_checkout_repo) { "fake-repo" }
@@ -17,7 +17,7 @@ describe Script::Layers::Infrastructure::Languages::OtherProjectCreator do
   let(:sparse_checkout_set_path) { "#{domain}/#{language}/#{type}/default" }
 
   let(:project_creator) do
-    Script::Layers::Infrastructure::Languages::OtherProjectCreator
+    Script::Layers::Infrastructure::Languages::WasmProjectCreator
       .new(
         ctx: context,
         type: type,

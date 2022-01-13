@@ -89,7 +89,7 @@ describe Script::Layers::Application::ExtensionPoints do
       let(:scripts_beta_languages) { true }
 
       it "returns a list of all languages implemented by non beta extension points" do
-        assert_equal ["assemblyscript", "rust", "other"], subject
+        assert_equal ["assemblyscript", "rust", "wasm"], subject
       end
     end
 
@@ -106,7 +106,7 @@ describe Script::Layers::Application::ExtensionPoints do
       let(:scripts_beta_extension_points) { true }
 
       it "returns a list of all languages implemented by all extension points" do
-        assert_equal ["assemblyscript", "rust", "other", "tinygo"], subject
+        assert_equal ["assemblyscript", "rust", "wasm", "tinygo"], subject
       end
     end
 
@@ -138,7 +138,7 @@ describe Script::Layers::Application::ExtensionPoints do
       end
 
       it "should return all languages" do
-        assert_equal ["assemblyscript", "rust", "other"], subject
+        assert_equal ["assemblyscript", "rust", "wasm"], subject
       end
     end
 
@@ -195,8 +195,8 @@ describe Script::Layers::Application::ExtensionPoints do
         end
       end
 
-      describe "when asking about other language" do
-        let(:language) { "other" }
+      describe "when asking about wasm language" do
+        let(:language) { "wasm" }
 
         it "should return true" do
           assert subject
@@ -241,8 +241,8 @@ describe Script::Layers::Application::ExtensionPoints do
         end
       end
 
-      describe "when asking about other language" do
-        let(:language) { "other" }
+      describe "when asking about wasm language" do
+        let(:language) { "wasm" }
 
         it "should return false" do
           refute subject

@@ -171,8 +171,8 @@ module Script
           creating: "Creating script",
           created: "Created script",
           preparing_project: "Preparing script project structure",
-          creating_other: "Creating configurations files",
-          created_other: "Configuration files created",
+          creating_wasm: "Creating configurations files",
+          created_wasm: "Configuration files created",
         },
 
         push: {

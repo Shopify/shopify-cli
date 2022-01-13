@@ -4,7 +4,7 @@ module Script
   module Layers
     module Infrastructure
       module Languages
-        class OtherProjectCreator < ProjectCreator
+        class WasmProjectCreator < ProjectCreator
           def self.config_file
             "script.config.yml"
           end
