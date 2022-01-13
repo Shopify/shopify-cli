@@ -23,21 +23,22 @@
    ```
 
 9. Open a PR for the branch, get necessary approvals from code owners and merge into main branch. Note that the PR title will be the release note in Shipit, so make sure it mentions the release
-10. Deploy using Shipit
+10. Deploy to RubyGems using [Shipit](https://shipit.shopify.io/shopify/shopify-cli/rubygems)
 11. Update your `main` branch to the latest version
    ```
    $ git checkout main
    $ git pull
    ```
    
-12. On local machine and _AFTER_ gem has been published to https://rubygems.org, run
+12. On local machine and _AFTER_ gem has been published to https://rubygems.org/gems/shopify-cli, run
    ```
    $ rake package
    ```
    This will generate the `.deb`, `.rpm` and brew formula files, which will be located in `packaging/builds/X.Y.Z/`.
 
 13. Clone the `Shopify/homebrew-shopify` repository (if not already cloned), and then
-    * create a branch named `release_X_Y_Z_of_shopify-cli`
+    * update your `master` branch to the latest version: `git checkout master && git pull`
+    * create a new branch: `git checkout -b release_X_Y_Z_of_shopify-cli`
     * update the brew formula in `shopify-cli.rb` with the generated formula in `packaging/builds/X.Y.Z/` in the `Shopify/shopify-cli` repo (from the `rake package` step above)
     * commit the change and create a PR on the [Shopify Homebrew repository](https://github.com/Shopify/homebrew-shopify)
     * when PR is approved, merge into main branch
