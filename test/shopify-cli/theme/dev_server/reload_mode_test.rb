@@ -8,18 +8,18 @@ module ShopifyCLI
     module DevServer
       class ReloadModeTest < Minitest::Test
         def test_default
-          assert_equal :fast, ReloadMode.default
+          assert_equal :"hot-reload", ReloadMode.default
         end
 
         def test_get
-          assert_equal :off, ReloadMode.get("off")
+          assert_equal :off, ReloadMode.get!("off")
         end
 
         def test_get_when_enum_values_does_not_exist
           stub_context_messages
 
           io = capture_io_and_assert_raises(ShopifyCLI::AbortSilent) do
-            ReloadMode.get("other")
+            ReloadMode.get!("other")
           end
 
           io = io.join
@@ -27,13 +27,6 @@ module ShopifyCLI
           assert_match(/error message/, io)
           assert_match(/Try this/, io)
           assert_match(/help message/, io)
-        end
-
-        def test_values
-          expected_values = [:fast, :"full-page", :off]
-          actual_values = ReloadMode.values.sort
-
-          assert_equal expected_values, actual_values
         end
 
         private

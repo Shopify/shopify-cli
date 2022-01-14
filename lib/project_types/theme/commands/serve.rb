@@ -25,7 +25,7 @@ module Theme
       end
 
       def self.as_reload_mode(mode)
-        ShopifyCLI::Theme::DevServer::ReloadMode.get(mode)
+        ShopifyCLI::Theme::DevServer::ReloadMode.get!(mode)
       end
 
       def self.help

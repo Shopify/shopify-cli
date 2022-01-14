@@ -65,7 +65,7 @@ module ShopifyCLI
           env = { mode: @mode }
           <<~JS
             (() => {
-              window.__SHOPIFY_DEV_MODE_ENV__ = #{env.to_json};
+              window.__SHOPIFY_CLI_ENV__ = #{env.to_json};
             })();
           JS
         end
