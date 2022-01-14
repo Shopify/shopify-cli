@@ -159,7 +159,25 @@ module Script
         class ScriptUploadError < ScriptProjectError; end
         class ProjectConfigNotFoundError < ScriptProjectError; end
         class InvalidProjectConfigError < ScriptProjectError; end
-        class ScriptTooLargeError < ScriptProjectError; end
+
+        class ScriptTooLargeError < ScriptProjectError
+          attr_reader :file_size_limit
+
+          def initialize(file_size_limit)
+            super()
+            @file_size_limit = file_size_limit
+          end
+
+          def humanized_file_size_limit
+            if file_size_limit < 1_000
+              { unit: "B", file_size_limit: file_size_limit }
+            elsif file_size_limit < 1_000_000
+              { unit: "KB", file_size_limit: file_size_limit / 1_000 }
+            else
+              { unit: "MB", file_size_limit: file_size_limit / 1_000_000 }
+            end
+          end
+        end
       end
     end
   end

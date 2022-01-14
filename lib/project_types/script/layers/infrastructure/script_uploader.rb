@@ -2,6 +2,8 @@ module Script
   module Layers
     module Infrastructure
       class ScriptUploader
+        CONTENT_LENGTH_RANGE_HEADER = "x-goog-content-length-range"
+
         def initialize(script_service)
           @script_service = script_service
         end
@@ -16,14 +18,15 @@ module Script
           request = Net::HTTP::Put.new(url)
           request["Content-Type"] = "application/wasm"
 
-          upload_details[:headers].each do |header, value|
+          headers = upload_details[:headers]
+          headers.each do |header, value|
             request[header] = value
           end
 
           request.body = script_content
 
           response = https.request(request)
-          raise Errors::ScriptTooLargeError if script_too_large?(response)
+          raise Errors::ScriptTooLargeError, file_size_limit(headers) if script_too_large?(response)
           raise Errors::ScriptUploadError unless response.code == "200"
 
           upload_details[:url]
@@ -33,6 +36,12 @@ module Script
 
         def script_too_large?(response)
           response.code == "400" && response.body.include?("EntityTooLarge")
+        end
+
+        def file_size_limit(headers)
+          content_length_range_value = headers[CONTENT_LENGTH_RANGE_HEADER]
+          return 0 unless content_length_range_value
+          content_length_range_value.split(",")[1].to_i
         end
       end
     end
