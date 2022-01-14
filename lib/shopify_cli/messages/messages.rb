@@ -415,7 +415,7 @@ module ShopifyCLI
               Usage: {{command:%s login [--store=STORE]}}
           HELP
           invalid_shop: <<~MESSAGE,
-            Invalid store provided (%s). Please provide the store in the following format: my-store.myshopify.com
+            Invalid store provided (%s). Please make sure that the store belongs to your partner organization, and provide the store in the following format: my-store.myshopify.com
           MESSAGE
           shop_prompt: <<~PROMPT,
             What store are you connecting to? (e.g. my-store.myshopify.com; do {{bold:NOT}} include protocol part, e.g., https://)
