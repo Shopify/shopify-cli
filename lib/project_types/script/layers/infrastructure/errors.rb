@@ -161,21 +161,11 @@ module Script
         class InvalidProjectConfigError < ScriptProjectError; end
 
         class ScriptTooLargeError < ScriptProjectError
-          attr_reader :file_size_limit
+          attr_reader :max_size
 
-          def initialize(file_size_limit)
+          def initialize(max_size)
             super()
-            @file_size_limit = file_size_limit
-          end
-
-          def humanized_file_size_limit
-            if file_size_limit < 1_000
-              { unit: "B", file_size_limit: file_size_limit }
-            elsif file_size_limit < 1_000_000
-              { unit: "KB", file_size_limit: file_size_limit / 1_000 }
-            else
-              { unit: "MB", file_size_limit: file_size_limit / 1_000_000 }
-            end
+            @max_size = max_size
           end
         end
       end

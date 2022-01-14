@@ -252,14 +252,9 @@ module Script
             help_suggestion: ShopifyCLI::Context.message("script.error.script_upload_help"),
           }
         when Layers::Infrastructure::Errors::ScriptTooLargeError
-          humanized_file_size_limit = e.humanized_file_size_limit
           {
             cause_of_error: ShopifyCLI::Context.message("script.error.script_too_large_cause"),
-            help_suggestion: ShopifyCLI::Context.message(
-              "script.error.script_too_large_help",
-              limit: humanized_file_size_limit[:file_size_limit],
-              unit: humanized_file_size_limit[:unit],
-            ),
+            help_suggestion: ShopifyCLI::Context.message("script.error.script_too_large_help", max_size: e.max_size),
           }
         when Layers::Infrastructure::Errors::APILibraryNotFoundError
           {

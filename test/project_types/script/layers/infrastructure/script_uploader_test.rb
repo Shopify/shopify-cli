@@ -7,11 +7,16 @@ describe Script::Layers::Infrastructure::ScriptUploader do
     let(:script_content) { "(module)" }
     let(:url) { "https://some-bucket" }
     let(:headers) { { "header" => "value" } }
+    let(:max_size) { "1234 Bytes" }
 
     subject { instance.upload(script_content) }
 
     before do
-      script_service.expects(:generate_module_upload_details).returns({ url: url, headers: headers })
+      script_service.expects(:generate_module_upload_details).returns({
+        url: url,
+        headers: headers,
+        max_size: max_size,
+      })
     end
 
     describe "when fail to upload module" do

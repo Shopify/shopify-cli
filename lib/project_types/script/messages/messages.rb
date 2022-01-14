@@ -141,7 +141,7 @@ module Script
           script_upload_help: "Try again.",
 
           script_too_large_cause: "The size of your Wasm binary file is too large.",
-          script_too_large_help: "Make sure that it is less than %{limit} %{unit}.",
+          script_too_large_help: "Make sure that it is less than %{max_size}.",
 
           api_library_not_found_cause: "Script can't be created because API library %{library_name} is missing from the dependencies",
           api_library_not_found_help: "This error can occur because the API library was removed from your system or there is a problem with dependencies in the repository.",

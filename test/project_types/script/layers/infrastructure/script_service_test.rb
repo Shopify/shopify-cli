@@ -336,13 +336,17 @@ describe Script::Layers::Infrastructure::ScriptService do
     let(:user_errors) { [] }
     let(:url) { nil }
     let(:headers) { {} }
+    let(:humanized_max_size) { "" }
     let(:response) do
       {
         "data" => {
           "moduleUploadUrlGenerate" => {
-            "headers" => headers,
-            "url" => url,
             "userErrors" => user_errors,
+            "details" => {
+              "headers" => headers,
+              "url" => url,
+              "humanizedMaxSize" => humanized_max_size,
+            },
           },
         },
       }
@@ -357,6 +361,7 @@ describe Script::Layers::Infrastructure::ScriptService do
     describe "when a url can be generated" do
       let(:url) { "http://fake.com" }
       let(:headers) { { "header" => "value" } }
+      let(:humanized_max_size) { "123 Bytes" }
 
       it "returns a url" do
         assert_equal url, subject[:url]
@@ -364,6 +369,10 @@ describe Script::Layers::Infrastructure::ScriptService do
 
       it "returns headers" do
         assert_equal headers, subject[:headers]
+      end
+
+      it "returns max size" do
+        assert_equal humanized_max_size, subject[:max_size]
       end
     end
 

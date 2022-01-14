@@ -99,8 +99,8 @@ module Script
 
           raise Errors::GraphqlError, user_errors if user_errors.any?
 
-          data = response["data"]["moduleUploadUrlGenerate"]
-          { url: data["url"], headers: data["headers"] }
+          data = response["data"]["moduleUploadUrlGenerate"]["details"]
+          { url: data["url"], headers: data["headers"], max_size: data["humanizedMaxSize"] }
         end
 
         private
