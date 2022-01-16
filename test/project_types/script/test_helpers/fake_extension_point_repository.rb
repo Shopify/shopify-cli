@@ -37,7 +37,17 @@ module TestHelpers
     end
 
     def beta_config(type)
-      example_config(type).merge({ "beta" => true })
+      {
+        "domain" => "fake-domain",
+        "libraries" => {
+          "tinygo" => {
+            "repo" => "fake-repo",
+            "package" => type,
+            "version" => "1",
+          },
+        },
+        "beta" => true,
+      }
     end
 
     def deprecated_config(type)

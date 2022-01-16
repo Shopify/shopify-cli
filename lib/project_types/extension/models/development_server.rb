@@ -40,7 +40,7 @@ module Extension
 
       def serve(context, server_config)
         CLI::Kit::System.popen3(executable, "serve", "-") do |input, out, err, status|
-          context.puts("Sending configuration data …")
+          context.debug("Sending configuration data to extension development server …")
           input << server_config.to_yaml
           input.close
 
@@ -57,17 +57,15 @@ module Extension
       private
 
       def forward_output_to_user(out, err, ctx)
-        ctx.puts("Starting monitoring threads …")
+        ctx.debug("Starting message processing threads to relay output produced by the extension development server …")
 
         Thread.new do
-          ctx.puts("Ready to process standard output")
           while (line = out.gets)
             ctx.puts(line)
           end
         end
 
         Thread.new do
-          ctx.puts("Ready to process standard error")
           while (error = err.gets)
             ctx.puts(error)
           end

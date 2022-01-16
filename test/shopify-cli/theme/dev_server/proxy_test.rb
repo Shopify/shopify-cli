@@ -176,11 +176,13 @@ module ShopifyCLI
               "Trailer" => 1,
               "Transfer-Encoding" => 1,
               "Upgrade" => 1,
+              "content-security-policy" => 1,
             })
 
           stub_session_id_request
           response = request.get("/")
 
+          assert(response.headers.size.zero?)
           HOP_BY_HOP_HEADERS.each do |header|
             assert(response.headers[header].nil?)
           end

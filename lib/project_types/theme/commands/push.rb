@@ -10,6 +10,7 @@ module Theme
       options do |parser, flags|
         parser.on("-n", "--nodelete") { flags[:nodelete] = true }
         parser.on("-i", "--themeid=ID") { |theme_id| flags[:theme_id] = theme_id }
+        parser.on("-t", "--theme=NAME_OR_ID") { |theme| flags[:theme] = theme }
         parser.on("-l", "--live") { flags[:live] = true }
         parser.on("-d", "--development") { flags[:development] = true }
         parser.on("-u", "--unpublished") { flags[:unpublished] = true }
@@ -25,30 +26,8 @@ module Theme
       def call(args, _name)
         root = args.first || "."
         delete = !options.flags[:nodelete]
-
-        theme = if (theme_id = options.flags[:theme_id])
-          ShopifyCLI::Theme::Theme.new(@ctx, root: root, id: theme_id)
-        elsif options.flags[:live]
-          ShopifyCLI::Theme::Theme.live(@ctx, root: root)
-        elsif options.flags[:development]
-          theme = ShopifyCLI::Theme::DevelopmentTheme.new(@ctx, root: root)
-          theme.ensure_exists!
-          theme
-        elsif options.flags[:unpublished]
-          name = CLI::UI::Prompt.ask(@ctx.message("theme.push.name"), allow_empty: false)
-          theme = ShopifyCLI::Theme::Theme.new(@ctx, root: root, name: name, role: "unpublished")
-          theme.create
-          theme
-        else
-          form = Forms::Select.ask(
-            @ctx,
-            [],
-            title: @ctx.message("theme.push.select"),
-            root: root,
-          )
-          return unless form
-          form.theme
-        end
+        theme = find_theme(root, **options.flags)
+        return if theme.nil?
 
         if theme.live? && !options.flags[:allow_live]
           question = @ctx.message("theme.push.live")
@@ -78,15 +57,66 @@ module Theme
             end
           end
           raise ShopifyCLI::AbortSilent if syncer.has_any_error?
-        rescue ShopifyCLI::API::APIRequestNotFoundError
-          @ctx.abort(@ctx.message("theme.push.theme_not_found", theme.id))
         ensure
           syncer.shutdown
         end
+      rescue ShopifyCLI::API::APIRequestNotFoundError
+        @ctx.abort(@ctx.message("theme.push.theme_not_found", "##{theme.id}"))
       end
 
       def self.help
         ShopifyCLI::Context.message("theme.push.help", ShopifyCLI::TOOL_NAME, ShopifyCLI::TOOL_NAME)
+      end
+
+      private
+
+      def find_theme(root, theme_id: nil, theme: nil, live: nil, development: nil, unpublished: nil, **_args)
+        if theme_id
+          @ctx.warn(@ctx.message("theme.push.deprecated_themeid"))
+          return ShopifyCLI::Theme::Theme.new(@ctx, root: root, id: theme_id)
+        end
+
+        if live
+          return ShopifyCLI::Theme::Theme.live(@ctx, root: root)
+        end
+
+        if development
+          new_theme = ShopifyCLI::Theme::DevelopmentTheme.new(@ctx, root: root)
+          new_theme.ensure_exists!
+          return new_theme
+        end
+
+        if unpublished
+          name = theme || ask_theme_name
+          new_theme = ShopifyCLI::Theme::Theme.new(@ctx, root: root, name: name, role: "unpublished")
+          new_theme.create
+          return new_theme
+        end
+
+        if theme
+          selected_theme = ShopifyCLI::Theme::Theme.find_by_identifier(@ctx, root: root, identifier: theme)
+          return selected_theme || @ctx.abort(@ctx.message("theme.push.theme_not_found", theme))
+        end
+
+        select_theme(root)
+      end
+
+      def ask_theme_name
+        CLI::UI::Prompt.ask(@ctx.message("theme.push.name"), allow_empty: false)
+      end
+
+      def select_theme(root)
+        form = Forms::Select.ask(
+          @ctx,
+          [],
+          title: @ctx.message("theme.push.select"),
+          root: root,
+        )
+        form&.theme
+      end
+
+      def themes(root)
+        ShopifyCLI::Theme::Theme.all(@ctx, root: root)
       end
     end
   end
