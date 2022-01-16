@@ -21,11 +21,11 @@ module ShopifyCLI
       end
 
       def theme_files
-        glob(["**/*.liquid", "**/*.json", "assets/*"]).uniq
+        [*glob(["**/*.liquid", "**/*.json"]), *static_asset_files].uniq
       end
 
       def static_asset_files
-        glob("assets/*").reject(&:liquid?)
+        glob("assets/*", raise_on_dir: true).reject(&:liquid?)
       end
 
       def liquid_files
@@ -36,8 +36,16 @@ module ShopifyCLI
         glob("**/*.json")
       end
 
-      def glob(pattern)
-        root.glob(pattern).map { |path| File.new(path, root) }
+      def glob(pattern, raise_on_dir: false)
+        paths = root.glob(pattern)
+        if raise_on_dir
+          paths.each do |path|
+            if ::File.directory?(path)
+              ctx.abort('theme.serve.error.invalid_subdirectory', path.to_s)
+            end
+          end
+        end
+        paths.map { |path| File.new(path, root) }
       end
 
       def theme_file?(file)

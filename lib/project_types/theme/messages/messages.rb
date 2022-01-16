@@ -124,6 +124,10 @@ module Theme
           error: {
             address_binding_error: "Couldn't bind to localhost."\
               " To serve your theme, set a different address with {{command:%s theme serve --host=<address>}}",
+            invalid_subdirectory: "The file %s is in an invalid location."\
+              " Nonstandard subdirectories are not supported within themes."\
+              " For more details on supported theme directory structure, see"\
+              " https://shopify.dev/themes/architecture#directory-structure-and-component-types."
           },
           serving: <<~SERVING,
 
