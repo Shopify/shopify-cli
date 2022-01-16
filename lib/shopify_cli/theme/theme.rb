@@ -41,7 +41,7 @@ module ShopifyCLI
         if raise_on_dir
           paths.each do |path|
             if ::File.directory?(path)
-              ctx.abort('theme.serve.error.invalid_subdirectory', path.to_s)
+              @ctx.abort(@ctx.message('theme.serve.error.invalid_subdirectory', path.to_s))
             end
           end
         end

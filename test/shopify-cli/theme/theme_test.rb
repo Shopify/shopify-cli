@@ -13,6 +13,18 @@ module ShopifyCLI
         @theme = Theme.new(@ctx, root: @root, id: "123")
       end
 
+      def test_static_assets_with_subdirectory
+        root = @root + "_with_subdirectories"
+        ctx = TestHelpers::FakeContext.new(root: root)
+        theme = Theme.new(ctx, root: root, id: "123")
+
+        io = capture_io_and_assert_raises(ShopifyCLI::Abort) do
+          theme.static_asset_paths
+        end
+        filepath = root + "/assets/assets_subdir"
+        assert_message_output(io: io, expected_content: ctx.message('theme.serve.error.invalid_subdirectory', filepath))
+      end
+
       def test_static_assets
         assert_includes(@theme.static_asset_paths, Pathname.new("assets/theme.css"))
       end
