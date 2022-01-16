@@ -3,6 +3,7 @@ From version 2.6.0, the sections in this file adhere to the [keep a changelog](h
 ## [Unreleased]
 
 ### Fixed
+* [#1922](https://github.com/Shopify/shopify-cli/pull/1922): Respect RUBY_BINDIR from Homebrew for installing gem
 * [#1906](https://github.com/Shopify/shopify-cli/pull/1906): Fix Ngrok incompatibility with some Apple ARM environments
 * [#1873](https://github.com/Shopify/shopify-cli/pull/1873): Fix partners ability to login to external shops.
 * [#1909](https://github.com/Shopify/shopify-cli/pull/1909): Fix `theme serve` on Safari
