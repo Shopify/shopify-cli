@@ -117,11 +117,19 @@ module ShopifyCLI
     def self.spin_workspace(env_variables: ENV)
       env_value = env_variables[Constants::EnvironmentVariables::SPIN_WORKSPACE]
       return env_value unless env_value.nil?
+
+      if env_value.nil?
+        raise "No value set for #{Constants::EnvironmentVariables::SPIN_WORKSPACE}"
+      end
     end
 
     def self.spin_namespace(env_variables: ENV)
       env_value = env_variables[Constants::EnvironmentVariables::SPIN_NAMESPACE]
       return env_value unless env_value.nil?
+
+      if env_value.nil?
+        raise "No value set for #{Constants::EnvironmentVariables::SPIN_NAMESPACE}"
+      end
     end
 
     def self.spin_host(env_variables: ENV)

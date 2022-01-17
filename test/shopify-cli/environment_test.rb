@@ -209,8 +209,6 @@ module ShopifyCLI
         Constants::EnvironmentVariables::SPIN_NAMESPACE.to_s => nil,
       }
 
-      Environment.expects(:infer_spin_namespace)
-
       Environment.spin_url(env_variables: env_variables)
     end
 
