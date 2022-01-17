@@ -61,17 +61,10 @@ module ShopifyCLI
       )
     end
 
-    def self.use_spin_partners_instance?(env_variables: ENV)
-      env_variable_truthy?(
-        Constants::EnvironmentVariables::SPIN_PARTNERS,
-        env_variables: env_variables
-      )
-    end
-
     def self.partners_domain(env_variables: ENV)
       if use_local_partners_instance?(env_variables: env_variables)
         "partners.myshopify.io"
-      elsif use_spin_partners_instance?(env_variables: env_variables)
+      elsif use_spin?(env_variables: env_variables)
         "partners.#{spin_url(env_variables: env_variables)}"
       else
         "partners.shopify.com"
@@ -79,15 +72,31 @@ module ShopifyCLI
     end
 
     def self.use_spin?(env_variables: ENV)
-      !env_variables[Constants::EnvironmentVariables::SPIN_WORKSPACE].nil? &&
-        !env_variables[Constants::EnvironmentVariables::SPIN_NAMESPACE].nil?
+      env_variable_truthy?(
+        Constants::EnvironmentVariables::SPIN,
+        env_variables: env_variables
+      ) || env_variable_truthy?(
+        Constants::EnvironmentVariables::SPIN_PARTNERS,
+        env_variables: env_variables
+      )
+    end
+
+    def self.infer_spin?(env_variables: ENV)
+      env_variable_truthy?(
+        Constants::EnvironmentVariables::INFER_SPIN,
+        env_variables: env_variables
+      )
     end
 
     def self.spin_url(env_variables: ENV)
-      spin_workspace = spin_workspace(env_variables: env_variables)
-      spin_namespace = spin_namespace(env_variables: env_variables)
-      spin_host = spin_host(env_variables: env_variables)
-      "#{spin_workspace}.#{spin_namespace}.#{spin_host}"
+      if infer_spin?(env_variables: env_variables)
+        %x(spin info fqdn 2> /dev/null).strip
+      else
+        spin_workspace = spin_workspace(env_variables: env_variables)
+        spin_namespace = spin_namespace(env_variables: env_variables)
+        spin_host = spin_host(env_variables: env_variables)
+        "#{spin_workspace}.#{spin_namespace}.#{spin_host}"
+      end
     end
 
     def self.send_monorail_events?(env_variables: ENV)
@@ -106,11 +115,21 @@ module ShopifyCLI
     end
 
     def self.spin_workspace(env_variables: ENV)
-      env_variables[Constants::EnvironmentVariables::SPIN_WORKSPACE]
+      env_value = env_variables[Constants::EnvironmentVariables::SPIN_WORKSPACE]
+      return env_value unless env_value.nil?
+
+      if env_value.nil?
+        raise "No value set for #{Constants::EnvironmentVariables::SPIN_WORKSPACE}"
+      end
     end
 
     def self.spin_namespace(env_variables: ENV)
-      env_variables[Constants::EnvironmentVariables::SPIN_NAMESPACE]
+      env_value = env_variables[Constants::EnvironmentVariables::SPIN_NAMESPACE]
+      return env_value unless env_value.nil?
+
+      if env_value.nil?
+        raise "No value set for #{Constants::EnvironmentVariables::SPIN_NAMESPACE}"
+      end
     end
 
     def self.spin_host(env_variables: ENV)
