@@ -4,10 +4,11 @@ module ShopifyCLI
   module Theme
     module DevServer
       class HotReload
-        def initialize(ctx, app, theme:, watcher:, ignore_filter: nil)
+        def initialize(ctx, app, theme:, watcher:, mode:, ignore_filter: nil)
           @ctx = ctx
           @app = app
           @theme = theme
+          @mode = mode
           @streams = SSE::Streams.new
           @watcher = watcher
           @watcher.add_observer(self, :notify_streams_of_file_change)
@@ -48,10 +49,25 @@ module ShopifyCLI
 
         def inject_hot_reload_javascript(body)
           hot_reload_js = ::File.read("#{__dir__}/hot-reload.js")
-          hot_reload_script = "<script>\n#{hot_reload_js}</script>"
+          hot_reload_script = [
+            "<script>",
+            params_js,
+            hot_reload_js,
+            "</script>",
+          ].join("\n")
+
           body = body.join.gsub("</body>", "#{hot_reload_script}\n</body>")
 
           [body]
+        end
+
+        def params_js
+          env = { mode: @mode }
+          <<~JS
+            (() => {
+              window.__SHOPIFY_CLI_ENV__ = #{env.to_json};
+            })();
+          JS
         end
 
         def create_stream

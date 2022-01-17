@@ -790,6 +790,8 @@ module ShopifyCLI
           logged_in_partner_only: "Logged into partner organization {{green:%s}}",
           logged_in_partner_and_shop: "Logged into store {{green:%s}} in partner organization {{green:%s}}",
         },
+        error: "Error",
+        try_this: "Try this",
       },
     }.freeze
   end

@@ -97,10 +97,16 @@ module Theme
             Usage: {{command:%s theme serve}}
 
             Options:
-              {{command:--port=PORT}} Local port to serve theme preview from
-              {{command:--poll}}      Force polling to detect file changes
-              {{command:--host=HOST}} Set which network interface the web server listens on. The default value is 127.0.0.1.
+              {{command:--port=PORT}}        Local port to serve theme preview from.
+              {{command:--poll}}             Force polling to detect file changes.
+              {{command:--host=HOST}}        Set which network interface the web server listens on. The default value is 127.0.0.1.
+              {{command:--live-reload=MODE}} The live reload mode switches the server behavior when a file is modified:
+                                 - {{command:hot-reload}} Hot reloads local changes to CSS and sections (default)
+                                 - {{command:full-page}}  Always refreshes the entire page
+                                 - {{command:off}}        Deactivate live reload
           HELP
+          reload_mode_is_not_valid: "The live reload mode `%s` is not valid.",
+          try_a_valid_reload_mode: "Try a valid live reload mode: %s.",
           viewing_theme: "Viewing theme…",
           syncing_theme: "Syncing theme #%s on %s",
           open_fail: "Couldn't open the theme",
@@ -134,9 +140,7 @@ module Theme
             You are not authorized to edit themes on %s.
             Make sure you are a user of that store, and allowed to edit themes.
           ENSURE_USER
-          already_in_use_error: "Error",
           address_already_in_use: "The address \"%s\" is already in use.",
-          try_this: "Try this",
           try_port_option: "Use the --port=PORT option to serve the theme in a different port.",
         },
         check: {

@@ -14,6 +14,7 @@ module ShopifyCLI
           @theme = Theme.new(@ctx, root: root)
           @syncer = stub("Syncer", enqueue_uploads: true)
           @watcher = Watcher.new(@ctx, theme: @theme, syncer: @syncer)
+          @mode = "off"
         end
 
         def test_hot_reload_js_injected_if_html_request
@@ -26,16 +27,24 @@ module ShopifyCLI
             </html>
           HTML
 
+          params_js = <<~JS
+            (() => {
+              window.__SHOPIFY_CLI_ENV__ = {"mode":"off"};
+            })();
+          JS
+
           reload_js = ::File.read(
             ::File.expand_path("lib/shopify_cli/theme/dev_server/hot-reload.js", ShopifyCLI::ROOT)
           )
-          reload_script = "<script>\n#{reload_js}</script>"
+
+          injected_script = "<script>\n#{params_js}\n#{reload_js}\n</script>"
+
           expected_html = <<~HTML
             <html>
               <head></head>
               <body>
                 <h1>Hello</h1>
-              #{reload_script}
+              #{injected_script}
             </body>
             </html>
           HTML
@@ -67,7 +76,7 @@ module ShopifyCLI
             .with(JSON.generate(modified: modified))
 
           app = -> { [200, {}, []] }
-          HotReload.new(@ctx, app, theme: @theme, watcher: @watcher)
+          HotReload.new(@ctx, app, theme: @theme, watcher: @watcher, mode: @mode)
 
           @watcher.changed
           @watcher.notify_observers(modified, [], [])
@@ -87,6 +96,7 @@ module ShopifyCLI
             @ctx, app,
             theme: @theme,
             watcher: @watcher,
+            mode: @mode,
             ignore_filter: ignore_filter
           )
 
@@ -100,7 +110,7 @@ module ShopifyCLI
           app = lambda do |_env|
             [200, headers, [response_body]]
           end
-          stack = HotReload.new(@ctx, app, theme: @theme, watcher: @watcher)
+          stack = HotReload.new(@ctx, app, theme: @theme, watcher: @watcher, mode: @mode)
           request = Rack::MockRequest.new(stack)
           request.get(path).body
         end
