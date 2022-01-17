@@ -57,6 +57,7 @@ module Script
       autoload :CommandRunner, Project.project_filepath("layers/infrastructure/command_runner")
       autoload :PushPackageRepository, Project.project_filepath("layers/infrastructure/push_package_repository")
       autoload :ExtensionPointRepository, Project.project_filepath("layers/infrastructure/extension_point_repository")
+      autoload :MetadataRepository, Project.project_filepath("layers/infrastructure/metadata_repository")
       autoload :ScriptProjectRepository, Project.project_filepath("layers/infrastructure/script_project_repository")
       autoload :ScriptService, Project.project_filepath("layers/infrastructure/script_service")
       autoload :ScriptUploader, Project.project_filepath("layers/infrastructure/script_uploader")

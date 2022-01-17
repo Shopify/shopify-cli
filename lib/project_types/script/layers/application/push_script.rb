@@ -13,25 +13,32 @@ module Script
               .for(ctx, script_project.language, script_project.script_name)
 
             extension_point = ExtensionPoints.get(type: script_project.extension_point_type)
-            library_name = extension_point.libraries.for(script_project.language)&.package
+
+            library = extension_point.libraries.for(script_project.language)
+
             raise Infrastructure::Errors::LanguageLibraryForAPINotFoundError.new(
               language: script_project.language,
               api: script_project.extension_point_type
-            ) unless library_name
+            ) unless library || (script_project.language == "wasm")
 
-            library = {
+            library_name = library&.package
+            library_data = {
               language: script_project.language,
               version: task_runner.library_version(library_name),
-            }
+            } if library_name
 
             ProjectDependencies.install(ctx: ctx, task_runner: task_runner)
-            BuildScript.call(ctx: ctx, task_runner: task_runner, script_project: script_project, library: library)
+            BuildScript.call(ctx: ctx, task_runner: task_runner, script_project: script_project, library: library_data)
+
+            compiled_type = task_runner.compiled_type
+            metadata_file_location = task_runner.metadata_file_location
+            metadata = Infrastructure::MetadataRepository.new(ctx: ctx).get_metadata(metadata_file_location)
 
             UI::PrintingSpinner.spin(ctx, ctx.message("script.application.pushing")) do |p_ctx, spinner|
               package = Infrastructure::PushPackageRepository.new(ctx: p_ctx).get_push_package(
                 script_project: script_project,
-                metadata: task_runner.metadata,
-                library: library,
+                metadata: metadata,
+                library: library_data,
               )
               script_service = Infrastructure::ServiceLocator.script_service(
                 ctx: p_ctx,
