@@ -15,6 +15,9 @@ From version 2.6.0, the sections in this file adhere to the [keep a changelog](h
 * [#1877](https://github.com/Shopify/shopify-cli/pull/1877): Add theme (`-t`/`--theme=NAME_OR_ID`) parameter to `theme push`/`theme pull` commands
 * [#1871](https://github.com/Shopify/shopify-cli/pull/1871): Add a new `--live-reload` parameter to the `theme serve` command
 
+### Changed
+- [#1929](https://github.com/Shopify/shopify-cli/pull/1929): Rename `--registration-id` to `--extension-id` in `shopify extension push`.
+
 ## Version 2.8.0
 ### Fixed
 * [#1879](https://github.com/Shopify/shopify-cli/pull/1879): Disambiguate -s as store option
