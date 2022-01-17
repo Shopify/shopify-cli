@@ -18,7 +18,7 @@ module ShopifyCLI
 
       def read
         if text?
-          path.read
+          path.read(universal_newline: true)
         else
           path.read(mode: "rb")
         end
@@ -27,7 +27,7 @@ module ShopifyCLI
       def write(content)
         path.parent.mkpath unless path.parent.directory?
         if text?
-          path.write(content)
+          path.write(content, universal_newline: true)
         else
           path.write(content, 0, mode: "wb")
         end
