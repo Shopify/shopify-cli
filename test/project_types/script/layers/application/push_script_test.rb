@@ -9,7 +9,9 @@ describe Script::Layers::Application::PushScript do
   let(:force) { true }
   let(:use_msgpack) { true }
   let(:extension_point_type) { "discount" }
-  let(:metadata) { Script::Layers::Domain::Metadata.new("1", "0", use_msgpack) }
+  let(:metadata_file_location) { "metadata.json" }
+  let(:metadata_repository) { TestHelpers::FakeMetadataRepository.new }
+  let(:metadata) { metadata_repository.get_metadata(metadata_file_location) }
   let(:library_version) { "1.0.0" }
   let(:library_language) { "assemblyscript" }
   let(:library_name) { "@shopify/fake-library-name" }
@@ -34,7 +36,12 @@ describe Script::Layers::Application::PushScript do
   let(:push_package_repository) { TestHelpers::FakePushPackageRepository.new }
   let(:extension_point_repository) { TestHelpers::FakeExtensionPointRepository.new }
   let(:script_project_repository) { TestHelpers::FakeScriptProjectRepository.new }
-  let(:task_runner) { stub(metadata: metadata, library_version: library_version) }
+  let(:task_runner) do
+    stub(
+      metadata_file_location: metadata_file_location,
+      library_version: library_version,
+    )
+  end
   let(:ep) { extension_point_repository.get_extension_point(extension_point_type) }
   let(:uuid) { "uuid" }
   let(:url) { "https://some-bucket" }
@@ -43,12 +50,14 @@ describe Script::Layers::Application::PushScript do
     Script::Layers::Infrastructure::PushPackageRepository.stubs(:new).returns(push_package_repository)
     Script::Layers::Infrastructure::ExtensionPointRepository.stubs(:new).returns(extension_point_repository)
     Script::Layers::Infrastructure::ScriptProjectRepository.stubs(:new).returns(script_project_repository)
+    Script::Layers::Infrastructure::MetadataRepository.stubs(:new).returns(metadata_repository)
     Script::Layers::Infrastructure::Languages::TaskRunner
       .stubs(:for)
       .with(@context, library_language, script_name)
       .returns(task_runner)
     ShopifyCLI::Environment.stubs(:interactive?).returns(true)
 
+    metadata_repository.create_metadata(metadata_file_location)
     extension_point_repository.create_extension_point(extension_point_type)
     push_package_repository.create_push_package(
       script_project: script_project,
@@ -61,43 +70,47 @@ describe Script::Layers::Application::PushScript do
   describe ".call" do
     subject { Script::Layers::Application::PushScript.call(ctx: @context, force: force, project: script_project) }
 
-    it "should prepare and push script" do
-      script_service_instance = mock
-      script_service_instance
-        .expects(:set_app_script)
-        .with do |params|
-          assert_equal "{ aField }", params.fetch(:input_query)
-        end
-        .returns(uuid)
-      Script::Layers::Infrastructure::ScriptService
-        .expects(:new).returns(script_service_instance)
-
-      Script::Layers::Infrastructure::ScriptUploader.expects(new: mock(upload: url))
-
-      Script::Layers::Application::ProjectDependencies
-        .expects(:install).with(ctx: @context, task_runner: task_runner)
-      Script::Layers::Application::BuildScript.expects(:call).with(
-        ctx: @context,
-        task_runner: task_runner,
-        script_project: script_project,
-        library: library
-      )
-      capture_io { subject }
-
-      assert_equal uuid, script_project_repository.get.uuid
-    end
-
-    describe "when fails to find a library for the API in an unsupported language" do
+    describe "success" do
       before do
-        ep.libraries
-          .stubs(:for)
-          .with(library[:language])
-          .returns(nil)
+        script_service_instance = mock
+        script_service_instance.expects(:set_app_script).returns(uuid)
+        Script::Layers::Infrastructure::ScriptService
+          .expects(:new).returns(script_service_instance)
+
+        script_uploader_instance = mock
+        script_uploader_instance.expects(:upload).returns(url)
+        Script::Layers::Infrastructure::ScriptUploader
+          .expects(:new).returns(script_uploader_instance)
       end
 
-      it "should raise LanguageLibraryForAPINotFoundError" do
-        assert_raises(Script::Layers::Infrastructure::Errors::LanguageLibraryForAPINotFoundError) do
-          subject
+      it "should prepare and push script" do
+        Script::Layers::Application::ProjectDependencies
+          .expects(:install).with(ctx: @context, task_runner: task_runner)
+        Script::Layers::Application::BuildScript.expects(:call).with(
+          ctx: @context,
+          task_runner: task_runner,
+          script_project: script_project,
+          library: library
+        )
+
+        capture_io { subject }
+
+        assert_equal uuid, script_project_repository.get.uuid
+      end
+
+      describe "when the script project's language is wasm" do
+        let(:library_language) { "wasm" }
+        it "should not raise LanguageLibraryForAPINotFoundError" do
+          Script::Layers::Application::ProjectDependencies
+            .expects(:install).with(ctx: @context, task_runner: task_runner)
+          Script::Layers::Application::BuildScript.expects(:call).with(
+            ctx: @context,
+            task_runner: task_runner,
+            script_project: script_project,
+            library: library
+          )
+
+          capture_io { subject }
         end
       end
     end
@@ -112,6 +125,16 @@ describe Script::Layers::Application::PushScript do
       it "should raise APILibraryNotFoundError" do
         error = assert_raises(Script::Layers::Infrastructure::Errors::APILibraryNotFoundError) { subject }
         assert_equal library_name, error.library_name
+      end
+    end
+
+    describe "when the script project's language is not found in the extension point's libraries" do
+      before do
+        ep.libraries.stubs(:for).with(library_language).returns(nil)
+      end
+
+      it "should raise LanguageLibraryForAPINotFoundError" do
+        assert_raises(Script::Layers::Infrastructure::Errors::LanguageLibraryForAPINotFoundError) { subject }
       end
     end
   end

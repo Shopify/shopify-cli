@@ -9,10 +9,13 @@ module Script
             CLI::UI::Frame.open(ctx.message("script.application.building")) do
               begin
                 UI::StrictSpinner.spin(ctx.message("script.application.building_script")) do |spinner|
+                  metadata_file_location = task_runner.metadata_file_location
+                  metadata = Infrastructure::MetadataRepository.new(ctx: ctx).get_metadata(metadata_file_location)
+
                   Infrastructure::PushPackageRepository.new(ctx: ctx).create_push_package(
                     script_project: script_project,
                     script_content: task_runner.build,
-                    metadata: task_runner.metadata,
+                    metadata: metadata,
                     library: library,
                   )
                   spinner.update_title(ctx.message("script.application.built"))

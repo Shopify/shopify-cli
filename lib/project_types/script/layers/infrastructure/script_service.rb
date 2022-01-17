@@ -35,12 +35,14 @@ module Script
             configurationUi: script_config.configuration_ui,
             configurationDefinition: script_config.configuration&.to_json,
             moduleUploadUrl: module_upload_url,
-            library: {
-              language: library[:language],
-              version: library[:version],
-            },
             inputQuery: input_query,
           }
+
+          variables[:library] = {
+            language: library[:language],
+            version: library[:version],
+          }  if library
+
           resp_hash = make_request(query_name: query_name, variables: variables)
           user_errors = resp_hash["data"]["appScriptSet"]["userErrors"]
 

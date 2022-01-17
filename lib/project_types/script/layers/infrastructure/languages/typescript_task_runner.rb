@@ -34,14 +34,8 @@ module Script
             ctx.dir_exist?("node_modules")
           end
 
-          def metadata
-            unless @ctx.file_exist?(METADATA_FILE)
-              msg = @ctx.message("script.error.metadata_not_found_cause", METADATA_FILE)
-              raise Domain::Errors::MetadataNotFoundError, msg
-            end
-
-            raw_contents = File.read(METADATA_FILE)
-            Domain::Metadata.create_from_json(@ctx, raw_contents)
+          def metadata_file_location
+            METADATA_FILE
           end
 
           def library_version(library_name)
