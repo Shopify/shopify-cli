@@ -54,8 +54,10 @@ module Script
           private
 
           def wasm_config
+            return {} unless ShopifyCLI::Feature.enabled?(:scripts_beta_languages)
+
             default_repo = "https://github.com/Shopify/scripts-apis-examples"
-            ShopifyCLI::Feature.enabled?(:scripts_beta_languages) ? { "wasm" => { "repo" => default_repo } } : {}
+            { "wasm" => { "repo" => default_repo } }
           end
         end
 
