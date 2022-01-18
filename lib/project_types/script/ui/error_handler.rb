@@ -137,11 +137,11 @@ module Script
         when Layers::Infrastructure::Errors::ScriptConfigurationDefinitionError
           {
             cause_of_error: ShopifyCLI::Context.message(
-              "script.error.configuration_error_cause",
+              "script.error.configuration_definition_error_cause",
               message: e.message,
               filename: e.filename,
             ),
-            help_suggestion: ShopifyCLI::Context.message("script.error.configuration_error_help"),
+            help_suggestion: ShopifyCLI::Context.message("script.error.configuration_definition_error_help"),
           }
         when Layers::Infrastructure::Errors::ScriptConfigSyntaxError
           {
