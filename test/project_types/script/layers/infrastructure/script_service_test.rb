@@ -11,8 +11,12 @@ describe Script::Layers::Infrastructure::ScriptService do
   let(:schema_major_version) { "1" }
   let(:schema_minor_version) { "0" }
   let(:use_msgpack) { true }
+  let(:script_config_filename) { "script.config.yml" }
   let(:script_config) do
-    Script::Layers::Domain::ScriptConfig.new(content: expected_script_config_content)
+    Script::Layers::Domain::ScriptConfig.new(
+      content: expected_script_config_content,
+      filename: script_config_filename,
+    )
   end
   let(:script_name) { "script name" }
   let(:script_config_version) { "1" }
@@ -171,6 +175,112 @@ describe Script::Layers::Infrastructure::ScriptService do
           let(:error_tag) { "schema_version_argument_error" }
           it "should raise MetadataValidationError error" do
             assert_raises(Script::Layers::Domain::Errors::MetadataValidationError) { subject }
+          end
+        end
+      end
+
+      describe "when v2 configuration is invalid" do
+        let(:response) do
+          {
+            "data" => {
+              "appScriptSet" => {
+                "userErrors" => [{ "message" => "error", "tag" => "configuration_definition_error" }],
+              },
+            },
+          }
+        end
+
+        it "should raise ScriptConfigurationDefinitionError" do
+          assert_raises_and_validate(
+            Script::Layers::Infrastructure::Errors::ScriptConfigurationDefinitionError,
+            proc do |e|
+              assert_equal("error", e.message)
+              assert_equal(script_config_filename, e.filename)
+            end,
+          ) { subject }
+        end
+      end
+
+      describe "when v1 configuration is invalid" do
+        let(:response) do
+          {
+            "data" => {
+              "appScriptSet" => {
+                "userErrors" => [{ "message" => error_message, "tag" => error_tag }],
+              },
+            },
+          }
+        end
+
+        describe "when missing keys" do
+          let(:error_message) { "keys" }
+          let(:error_tag) { "configuration_definition_missing_keys_error" }
+
+          it "should raise ScriptConfigMissingKeysError" do
+            assert_raises_and_validate(
+              Script::Layers::Infrastructure::Errors::ScriptConfigMissingKeysError,
+              proc do |e|
+                assert_equal(error_message, e.missing_keys)
+                assert_equal(script_config_filename, e.filename)
+              end,
+            ) { subject }
+          end
+        end
+
+        describe "when fields missing keys" do
+          let(:error_message) { "keys" }
+          let(:error_tag) { "configuration_definition_schema_field_missing_keys_error" }
+
+          it "should raise ScriptConfigFieldsMissingKeysError" do
+            assert_raises_and_validate(
+              Script::Layers::Infrastructure::Errors::ScriptConfigFieldsMissingKeysError,
+              proc do |e|
+                assert_equal(error_message, e.missing_keys)
+                assert_equal(script_config_filename, e.filename)
+              end,
+            ) { subject }
+          end
+        end
+
+        describe "when invalid value" do
+          let(:error_message) { "input modes" }
+          let(:error_tag) { "configuration_definition_invalid_value_error" }
+
+          it "should raise ScriptConfigInvalidValueError" do
+            assert_raises_and_validate(
+              Script::Layers::Infrastructure::Errors::ScriptConfigInvalidValueError,
+              proc do |e|
+                assert_equal(error_message, e.valid_input_modes)
+                assert_equal(script_config_filename, e.filename)
+              end,
+            ) { subject }
+          end
+        end
+
+        describe "when fields invalid value" do
+          let(:error_message) { "valid types" }
+          let(:error_tag) { "configuration_definition_schema_field_invalid_value_error" }
+
+          it "should raise ScriptConfigFieldsInvalidValueError" do
+            assert_raises_and_validate(
+              Script::Layers::Infrastructure::Errors::ScriptConfigFieldsInvalidValueError,
+              proc do |e|
+                assert_equal(error_message, e.valid_types)
+                assert_equal(script_config_filename, e.filename)
+              end,
+            ) { subject }
+          end
+        end
+
+        describe "when invalid syntax" do
+          let(:error_message) { "invalid syntax" }
+          let(:error_tag) { "configuration_definition_syntax_error" }
+
+          it "should raise ScriptConfigSyntaxError" do
+            assert_raises_and_validate(
+              Script::Layers::Infrastructure::Errors::ScriptConfigSyntaxError,
+              proc { |e| assert_equal(script_config_filename, e.filename) },
+            ) { subject }
           end
         end
       end

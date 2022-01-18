@@ -5,64 +5,77 @@ module Script
     module Infrastructure
       module Errors
         class BuildError < ScriptProjectError; end
-        class ScriptConfigSyntaxError < ScriptProjectError; end
+
+        class ScriptConfigurationDefinitionError < ScriptProjectError
+          attr_reader :filename
+          def initialize(message:, filename:)
+            @filename = filename
+            super(message)
+          end
+        end
+
+        class ScriptConfigSyntaxError < ScriptProjectError
+          attr_reader :filename
+          def initialize(filename)
+            @filename = filename
+            super()
+          end
+        end
 
         class ScriptConfigMissingKeysError < ScriptProjectError
-          attr_reader :missing_keys
-          def initialize(missing_keys)
+          attr_reader :missing_keys, :filename
+          def initialize(missing_keys:, filename:)
             super()
             @missing_keys = missing_keys
+            @filename = filename
           end
         end
 
         class ScriptConfigInvalidValueError < ScriptProjectError
-          attr_reader :valid_input_modes
-          def initialize(valid_input_modes)
+          attr_reader :valid_input_modes, :filename
+          def initialize(valid_input_modes:, filename:)
             super()
             @valid_input_modes = valid_input_modes
+            @filename = filename
           end
         end
 
         class ScriptConfigFieldsMissingKeysError < ScriptProjectError
-          attr_reader :missing_keys
-          def initialize(missing_keys)
+          attr_reader :missing_keys, :filename
+          def initialize(missing_keys:, filename:)
             super()
             @missing_keys = missing_keys
+            @filename = filename
           end
         end
 
         class ScriptConfigFieldsInvalidValueError < ScriptProjectError
-          attr_reader :valid_types
-          def initialize(valid_types)
+          attr_reader :valid_types, :filename
+          def initialize(valid_types:, filename:)
             super()
             @valid_types = valid_types
+            @filename = filename
           end
         end
 
         class ScriptEnvAppNotConnectedError < ScriptProjectError; end
 
-        class InvalidScriptConfigYmlDefinitionError < ScriptProjectError; end
-
-        class InvalidScriptJsonDefinitionError < ScriptProjectError; end
-
-        class MissingScriptConfigYmlFieldError < ScriptProjectError
-          attr_reader :field
-          def initialize(field)
+        class ScriptConfigParseError < ScriptProjectError
+          attr_reader :filename, :serialization_format
+          def initialize(filename:, serialization_format:)
             super()
-            @field = field
+            @filename = filename
+            @serialization_format = serialization_format
           end
         end
 
-        class MissingScriptJsonFieldError < ScriptProjectError
-          attr_reader :field
-          def initialize(field)
+        class NoScriptConfigFileError < ScriptProjectError
+          attr_reader :filename
+          def initialize(filename)
             super()
-            @field = field
+            @filename = filename
           end
         end
-
-        class NoScriptConfigYmlFileError < ScriptProjectError; end
-        class NoScriptConfigFileError < ScriptProjectError; end
 
         class APILibraryNotFoundError < ScriptProjectError
           attr_reader :library_name

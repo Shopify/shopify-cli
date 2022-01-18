@@ -46,20 +46,37 @@ module Script
 
           if user_errors.any? { |e| e["tag"] == "already_exists_error" }
             raise Errors::ScriptRepushError, uuid
+          elsif (e = user_errors.find { |err| err["tag"] == "configuration_definition_error" })
+            raise Errors::ScriptConfigurationDefinitionError.new(
+              message: e["message"],
+              filename: script_config.filename,
+            )
           elsif (e = user_errors.any? { |err| err["tag"] == "configuration_definition_syntax_error" })
-            raise Errors::ScriptConfigSyntaxError
+            raise Errors::ScriptConfigSyntaxError, script_config.filename
           elsif (e = user_errors.find { |err| err["tag"] == "configuration_definition_missing_keys_error" })
-            raise Errors::ScriptConfigMissingKeysError, e["message"]
+            raise Errors::ScriptConfigMissingKeysError.new(
+              missing_keys: e["message"],
+              filename: script_config.filename,
+            )
           elsif (e = user_errors.find { |err| err["tag"] == "configuration_definition_invalid_value_error" })
-            raise Errors::ScriptConfigInvalidValueError, e["message"]
+            raise Errors::ScriptConfigInvalidValueError.new(
+              valid_input_modes: e["message"],
+              filename: script_config.filename,
+            )
           elsif (e = user_errors.find do |err|
                    err["tag"] == "configuration_definition_schema_field_missing_keys_error"
                  end)
-            raise Errors::ScriptConfigFieldsMissingKeysError, e["message"]
+            raise Errors::ScriptConfigFieldsMissingKeysError.new(
+              missing_keys: e["message"],
+              filename: script_config.filename,
+            )
           elsif (e = user_errors.find do |err|
                    err["tag"] == "configuration_definition_schema_field_invalid_value_error"
                  end)
-            raise Errors::ScriptConfigFieldsInvalidValueError, e["message"]
+            raise Errors::ScriptConfigFieldsInvalidValueError.new(
+              valid_types: e["message"],
+              filename: script_config.filename,
+            )
           elsif user_errors.find { |err| %w(not_use_msgpack_error schema_version_argument_error).include?(err["tag"]) }
             raise Domain::Errors::MetadataValidationError
           else

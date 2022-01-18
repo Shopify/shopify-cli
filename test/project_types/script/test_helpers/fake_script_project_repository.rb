@@ -69,19 +69,29 @@ module TestHelpers
       end
 
       def create(content)
-        @cache = Script::Layers::Domain::ScriptConfig.new(content: content)
+        @cache = from_h(content)
       end
 
       def update!(title:)
         hash = get!.content
         hash["title"] = title
 
-        @cache = Script::Layers::Domain::ScriptConfig.new(content: hash)
+        @cache = from_h(hash)
       end
 
       def get!
-        raise Script::Layers::Infrastructure::Errors::NoScriptConfigFileError if @cache.nil?
+        raise Script::Layers::Infrastructure::Errors::NoScriptConfigFileError, filename if @cache.nil?
         @cache
+      end
+
+      def filename
+        "script.config.yml"
+      end
+
+      private
+
+      def from_h(hash)
+        Script::Layers::Domain::ScriptConfig.new(content: hash, filename: filename)
       end
     end
   end

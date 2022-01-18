@@ -47,41 +47,39 @@ module Script
           invalid_language_cause: "Invalid language %s.",
           invalid_language_help: "Allowed values: %s.",
 
-          missing_script_config_yml_field_cause: "The script.config.yml file is missing the required %s field.",
-          missing_script_config_yml_field_help: "Add the field and try again.",
+          missing_script_config_field_cause: "The %{filename} file is missing the required %{field} field.",
+          missing_script_config_field_help: "Add the field and try again.",
 
-          missing_script_json_field_cause: "The script.json file is missing the required %s field.",
-          missing_script_json_field_help: "Add the field and try again.",
+          script_config_parse_error_cause: "The %{filename} file contains invalid %{serialization_format}.",
+          script_config_parse_error_help: "Fix the errors and try again.",
 
-          invalid_script_json_definition_cause: "The script.json file contains invalid JSON.",
-          invalid_script_json_definition_help: "Fix the errors and try again.",
-
-          invalid_script_config_yml_definition_cause: "The script.config.yml file contains invalid YAML.",
-          invalid_script_config_yml_definition_help: "Fix the errors and try again.",
-
-          no_script_config_yml_file_cause: "The script.config.yml file is missing.",
-          no_script_config_yml_file_help: "Create this file and try again.",
+          no_script_config_file_cause: "The %{filename} file is missing.",
+          no_script_config_file_help: "Create this file and try again.",
 
           app_not_connected_cause: "Script is not connected to an app.",
           app_not_connected_help: "Run shopify connect or enter fields for api-key and api-secret.",
 
-          configuration_syntax_error_cause: "The script.json is not formatted properly.",
+          configuration_definition_error_cause: "In the %{filename} file, there was a problem with the "\
+                                                "configuration. %{message}",
+          configuration_definition_error_help: "Fix the error and try again.",
+
+          configuration_syntax_error_cause: "The %{filename} is not formatted properly.",
           configuration_syntax_error_help: "Fix the errors and try again.",
 
-          configuration_missing_keys_error_cause: "The script.json file is missing required keys: "\
+          configuration_missing_keys_error_cause: "The %{filename} file is missing required keys: "\
                                               "%{missing_keys}.",
           configuration_missing_keys_error_help: "Add the keys and try again.",
 
-          configuration_invalid_value_error_cause: "The script.json configuration only accepts "\
+          configuration_invalid_value_error_cause: "The %{filename} configuration only accepts "\
                                                    "one of the following types(s): %{valid_input_modes}.",
           configuration_invalid_value_error_help: "Change the type and try again.",
 
-          configuration_schema_field_missing_keys_error_cause: "A configuration entry in the script.json file "\
+          configuration_schema_field_missing_keys_error_cause: "A configuration entry in the %{filename} file "\
                                                      "is missing required keys: %{missing_keys}.",
           configuration_definition_schema_field_missing_keys_error_help: "Add the keys and try again.",
 
           configuration_schema_field_invalid_value_error_cause: "The configuration entries in the "\
-                                                     "script.json file only accept one of the following "\
+                                                     "%{filename} file only accept one of the following "\
                                                      "type(s): %{valid_types}.",
           configuration_schema_field_invalid_value_error_help: "Change the types and try again.",
 

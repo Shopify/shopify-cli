@@ -170,36 +170,32 @@ describe Script::UI::ErrorHandler do
         end
       end
 
-      describe "when InvalidScriptConfigYmlDefinitionError" do
-        let(:err) { Script::Layers::Infrastructure::Errors::InvalidScriptConfigYmlDefinitionError.new("filename") }
+      describe "when ScriptConfigParseError" do
+        let(:err) do
+          Script::Layers::Infrastructure::Errors::ScriptConfigParseError.new(
+            filename: "filename",
+            serialization_format: "serialization_format",
+          )
+        end
         it "should call display_and_raise" do
           should_call_display_and_raise
         end
       end
 
-      describe "when InvalidScriptJsonDefinitionError" do
-        let(:err) { Script::Layers::Infrastructure::Errors::InvalidScriptJsonDefinitionError.new("filename") }
+      describe "when MissingScriptConfigFieldError" do
+        let(:err) do
+          Script::Layers::Domain::Errors::MissingScriptConfigFieldError.new(
+            field: "field",
+            filename: "filename",
+          )
+        end
         it "should call display_and_raise" do
           should_call_display_and_raise
         end
       end
 
-      describe "when MissingScriptConfigYmlFieldError" do
-        let(:err) { Script::Layers::Infrastructure::Errors::MissingScriptConfigYmlFieldError.new("field") }
-        it "should call display_and_raise" do
-          should_call_display_and_raise
-        end
-      end
-
-      describe "when MissingScriptJsonFieldError" do
-        let(:err) { Script::Layers::Infrastructure::Errors::MissingScriptJsonFieldError.new("field") }
-        it "should call display_and_raise" do
-          should_call_display_and_raise
-        end
-      end
-
-      describe "when NoScriptConfigYmlFileError" do
-        let(:err) { Script::Layers::Infrastructure::Errors::NoScriptConfigYmlFileError.new("filename") }
+      describe "when NoScriptConfigFileError" do
+        let(:err) { Script::Layers::Infrastructure::Errors::NoScriptConfigFileError.new("filename") }
         it "should call display_and_raise" do
           should_call_display_and_raise
         end
@@ -233,36 +229,68 @@ describe Script::UI::ErrorHandler do
         end
       end
 
+      describe "when ScriptConfigurationDefinitionError" do
+        let(:err) do
+          Script::Layers::Infrastructure::Errors::ScriptConfigurationDefinitionError.new(
+            message: "message",
+            filename: "filename",
+          )
+        end
+        it "should call display_and_raise" do
+          should_call_display_and_raise
+        end
+      end
+
       describe "when ScriptConfigSyntaxError" do
-        let(:err) { Script::Layers::Infrastructure::Errors::ScriptConfigSyntaxError.new }
+        let(:err) { Script::Layers::Infrastructure::Errors::ScriptConfigSyntaxError.new("filename") }
         it "should call display_and_raise" do
           should_call_display_and_raise
         end
       end
 
       describe "when ScriptConfigMissingKeysError" do
-        let(:err) { Script::Layers::Infrastructure::Errors::ScriptConfigMissingKeysError.new("keys") }
+        let(:err) do
+          Script::Layers::Infrastructure::Errors::ScriptConfigMissingKeysError.new(
+            missing_keys: "keys",
+            filename: "filename",
+          )
+        end
         it "should call display_and_raise" do
           should_call_display_and_raise
         end
       end
 
       describe "when ScriptConfigInvalidValueError" do
-        let(:err) { Script::Layers::Infrastructure::Errors::ScriptConfigInvalidValueError.new("input modes") }
+        let(:err) do
+          Script::Layers::Infrastructure::Errors::ScriptConfigInvalidValueError.new(
+            valid_input_modes: "input modes",
+            filename: "filename",
+          )
+        end
         it "should call display_and_raise" do
           should_call_display_and_raise
         end
       end
 
       describe "when ScriptConfigFieldsMissingKeysError" do
-        let(:err) { Script::Layers::Infrastructure::Errors::ScriptConfigFieldsMissingKeysError.new("keys") }
+        let(:err) do
+          Script::Layers::Infrastructure::Errors::ScriptConfigFieldsMissingKeysError.new(
+            missing_keys: "keys",
+            filename: "filename",
+          )
+        end
         it "should call display_and_raise" do
           should_call_display_and_raise
         end
       end
 
       describe "when ScriptConfigFieldsInvalidValueError" do
-        let(:err) { Script::Layers::Infrastructure::Errors::ScriptConfigFieldsInvalidValueError.new("types") }
+        let(:err) do
+          Script::Layers::Infrastructure::Errors::ScriptConfigFieldsInvalidValueError.new(
+            valid_types: "types",
+            filename: "filename",
+          )
+        end
         it "should call display_and_raise" do
           should_call_display_and_raise
         end

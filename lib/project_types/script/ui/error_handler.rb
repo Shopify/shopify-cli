@@ -103,44 +103,52 @@ module Script
             cause_of_error: ShopifyCLI::Context.message("script.error.metadata_not_found_cause"),
             help_suggestion: ShopifyCLI::Context.message("script.error.metadata_not_found_help"),
           }
+        when Layers::Domain::Errors::MissingScriptConfigFieldError
+          {
+            cause_of_error: ShopifyCLI::Context.message(
+              "script.error.missing_script_config_field_cause",
+              field: e.field,
+              filename: e.filename,
+            ),
+            help_suggestion: ShopifyCLI::Context.message("script.error.missing_script_config_field_help"),
+          }
         when Layers::Infrastructure::Errors::BuildError
           {
             cause_of_error: ShopifyCLI::Context.message("script.error.build_error_cause"),
             help_suggestion: ShopifyCLI::Context.message("script.error.build_error_help"),
           }
-        when Layers::Infrastructure::Errors::InvalidScriptConfigYmlDefinitionError
+        when Layers::Infrastructure::Errors::ScriptConfigParseError
           {
-            cause_of_error: ShopifyCLI::Context.message("script.error.invalid_script_config_yml_definition_cause"),
-            help_suggestion: ShopifyCLI::Context.message("script.error.invalid_script_config_yml_definition_help"),
+            cause_of_error: ShopifyCLI::Context.message(
+              "script.error.script_config_parse_error_cause",
+              filename: e.filename,
+              serialization_format: e.serialization_format,
+            ),
+            help_suggestion: ShopifyCLI::Context.message("script.error.script_config_parse_error_help"),
           }
-        when Layers::Infrastructure::Errors::InvalidScriptJsonDefinitionError
+        when Layers::Infrastructure::Errors::NoScriptConfigFileError
           {
-            cause_of_error: ShopifyCLI::Context.message("script.error.invalid_script_json_definition_cause"),
-            help_suggestion: ShopifyCLI::Context.message("script.error.invalid_script_json_definition_help"),
+            cause_of_error: ShopifyCLI::Context.message(
+              "script.error.no_script_config_file_cause",
+              filename: e.filename,
+            ),
+            help_suggestion: ShopifyCLI::Context.message("script.error.no_script_config_file_help"),
           }
-        when Layers::Infrastructure::Errors::MissingScriptConfigYmlFieldError
+        when Layers::Infrastructure::Errors::ScriptConfigurationDefinitionError
           {
-            cause_of_error: ShopifyCLI::Context.message("script.error.missing_script_config_yml_field_cause", e.field),
-            help_suggestion: ShopifyCLI::Context.message("script.error.missing_script_config_yml_field_help"),
-          }
-        when Layers::Infrastructure::Errors::MissingScriptConfigYmlFieldError
-          {
-            cause_of_error: ShopifyCLI::Context.message("script.error.missing_script_config_yml_field_cause", e.field),
-            help_suggestion: ShopifyCLI::Context.message("script.error.missing_script_config_yml_field_help"),
-          }
-        when Layers::Infrastructure::Errors::MissingScriptJsonFieldError
-          {
-            cause_of_error: ShopifyCLI::Context.message("script.error.missing_script_json_field_cause", e.field),
-            help_suggestion: ShopifyCLI::Context.message("script.error.missing_script_json_field_help"),
-          }
-        when Layers::Infrastructure::Errors::NoScriptConfigYmlFileError
-          {
-            cause_of_error: ShopifyCLI::Context.message("script.error.no_script_config_yml_file_cause"),
-            help_suggestion: ShopifyCLI::Context.message("script.error.no_script_config_yml_file_help"),
+            cause_of_error: ShopifyCLI::Context.message(
+              "script.error.configuration_definition_error_cause",
+              message: e.message,
+              filename: e.filename,
+            ),
+            help_suggestion: ShopifyCLI::Context.message("script.error.configuration_definition_error_help"),
           }
         when Layers::Infrastructure::Errors::ScriptConfigSyntaxError
           {
-            cause_of_error: ShopifyCLI::Context.message("script.error.configuration_syntax_error_cause"),
+            cause_of_error: ShopifyCLI::Context.message(
+              "script.error.configuration_syntax_error_cause",
+              filename: e.filename,
+            ),
             help_suggestion: ShopifyCLI::Context.message("script.error.configuration_syntax_error_help"),
           }
         when Layers::Infrastructure::Errors::ScriptEnvAppNotConnectedError
@@ -152,7 +160,8 @@ module Script
           {
             cause_of_error: ShopifyCLI::Context.message(
               "script.error.configuration_missing_keys_error_cause",
-              missing_keys: e.missing_keys
+              missing_keys: e.missing_keys,
+              filename: e.filename,
             ),
             help_suggestion: ShopifyCLI::Context.message("script.error.configuration_missing_keys_error_help"),
           }
@@ -160,7 +169,8 @@ module Script
           {
             cause_of_error: ShopifyCLI::Context.message(
               "script.error.configuration_invalid_value_error_cause",
-              valid_input_modes: e.valid_input_modes
+              valid_input_modes: e.valid_input_modes,
+              filename: e.filename,
             ),
             help_suggestion: ShopifyCLI::Context.message("script.error.configuration_invalid_value_error_help"),
           }
@@ -168,7 +178,8 @@ module Script
           {
             cause_of_error: ShopifyCLI::Context.message(
               "script.error.configuration_schema_field_missing_keys_error_cause",
-              missing_keys: e.missing_keys
+              missing_keys: e.missing_keys,
+              filename: e.filename,
             ),
             help_suggestion: ShopifyCLI::Context.message(
               "script.error.configuration_definition_schema_field_missing_keys_error_help"
@@ -178,7 +189,8 @@ module Script
           {
             cause_of_error: ShopifyCLI::Context.message(
               "script.error.configuration_schema_field_invalid_value_error_cause",
-              valid_types: e.valid_types
+              valid_types: e.valid_types,
+              filename: e.filename,
             ),
             help_suggestion: ShopifyCLI::Context.message(
               "script.error.configuration_schema_field_invalid_value_error_help"

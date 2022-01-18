@@ -317,8 +317,11 @@ describe Script::Layers::Infrastructure::ScriptProjectRepository do
     subject { instance.update_script_config(title: new_title) }
 
     describe "script.config.yml does not exist" do
-      it "raises NoScriptConfigYmlFileError" do
-        assert_raises(Script::Layers::Infrastructure::Errors::NoScriptConfigYmlFileError) { subject }
+      it "raises NoScriptConfigFileError" do
+        assert_raises_and_validate(
+          Script::Layers::Infrastructure::Errors::NoScriptConfigFileError,
+          proc { |e| assert_equal(script_config_filename, e.filename) }
+        ) { subject }
       end
     end
 
@@ -443,7 +446,10 @@ describe Script::Layers::Infrastructure::ScriptProjectRepository do
 
       describe "when file does not exist" do
         it "raises NoScriptConfigFileError" do
-          assert_raises(Script::Layers::Infrastructure::Errors::NoScriptConfigFileError) { subject }
+          assert_raises_and_validate(
+            Script::Layers::Infrastructure::Errors::NoScriptConfigFileError,
+            proc { |e| assert_equal(script_config_filename, e.filename) }
+          ) { subject }
         end
       end
 
@@ -455,24 +461,39 @@ describe Script::Layers::Infrastructure::ScriptProjectRepository do
         describe "when content is invalid yaml" do
           let(:content) { "*" }
 
-          it "raises InvalidScriptConfigYmlDefinitionError" do
-            assert_raises(Script::Layers::Infrastructure::Errors::InvalidScriptConfigYmlDefinitionError) { subject }
+          it "raises ScriptConfigParseError" do
+            assert_raises_and_validate(
+              Script::Layers::Infrastructure::Errors::ScriptConfigParseError,
+              proc do |e|
+                assert_equal(script_config_filename, e.filename)
+                assert_equal("YAML", e.serialization_format)
+              end,
+            ) { subject }
           end
         end
 
         describe "when content is not a hash" do
-          let(:content) { "" }
+          let(:content) { "[]" }
 
-          it "raises InvalidScriptConfigYmlDefinitionError" do
-            assert_raises(Script::Layers::Infrastructure::Errors::InvalidScriptConfigYmlDefinitionError) { subject }
+          it "raises ScriptConfigParseError" do
+            assert_raises_and_validate(
+              Script::Layers::Infrastructure::Errors::ScriptConfigParseError,
+              proc do |e|
+                assert_equal(script_config_filename, e.filename)
+                assert_equal("YAML", e.serialization_format)
+              end,
+            ) { subject }
           end
         end
 
         describe "when content is missing fields" do
           let(:content) { {}.to_yaml }
 
-          it "raises MissingScriptConfigYmlFieldError" do
-            assert_raises(Script::Layers::Infrastructure::Errors::MissingScriptConfigYmlFieldError) { subject }
+          it "raises MissingScriptJsonFieldError" do
+            assert_raises_and_validate(
+              Script::Layers::Domain::Errors::MissingScriptConfigFieldError,
+              proc { |e| assert_equal(script_config_filename, e.filename) },
+            ) { subject }
           end
         end
 
@@ -494,7 +515,10 @@ describe Script::Layers::Infrastructure::ScriptProjectRepository do
 
       describe "when file does not exist" do
         it "raises NoScriptConfigFileError" do
-          assert_raises(Script::Layers::Infrastructure::Errors::NoScriptConfigFileError) { subject }
+          assert_raises_and_validate(
+            Script::Layers::Infrastructure::Errors::NoScriptConfigFileError,
+            proc { |e| assert_equal(script_config_filename, e.filename) }
+          ) { subject }
         end
       end
 
@@ -615,7 +639,10 @@ describe Script::Layers::Infrastructure::ScriptProjectRepository do
 
       describe "when file does not exist" do
         it "raises NoScriptConfigFileError" do
-          assert_raises(Script::Layers::Infrastructure::Errors::NoScriptConfigFileError) { subject }
+          assert_raises_and_validate(
+            Script::Layers::Infrastructure::Errors::NoScriptConfigFileError,
+            proc { |e| assert_equal(script_config_filename, e.filename) }
+          ) { subject }
         end
       end
 
@@ -627,16 +654,28 @@ describe Script::Layers::Infrastructure::ScriptProjectRepository do
         describe "when content is invalid json" do
           let(:content) { "{[}]" }
 
-          it "raises InvalidScriptJsonDefinitionError" do
-            assert_raises(Script::Layers::Infrastructure::Errors::InvalidScriptJsonDefinitionError) { subject }
+          it "raises ScriptConfigParseError" do
+            assert_raises_and_validate(
+              Script::Layers::Infrastructure::Errors::ScriptConfigParseError,
+              proc do |e|
+                assert_equal(script_config_filename, e.filename)
+                assert_equal("JSON", e.serialization_format)
+              end,
+            ) { subject }
           end
         end
 
         describe "when content is not a hash" do
-          let(:content) { "" }
+          let(:content) { "[]" }
 
-          it "raises InvalidScriptJsonDefinitionError" do
-            assert_raises(Script::Layers::Infrastructure::Errors::InvalidScriptJsonDefinitionError) { subject }
+          it "raises ScriptConfigParseError" do
+            assert_raises_and_validate(
+              Script::Layers::Infrastructure::Errors::ScriptConfigParseError,
+              proc do |e|
+                assert_equal(script_config_filename, e.filename)
+                assert_equal("JSON", e.serialization_format)
+              end,
+            ) { subject }
           end
         end
 
@@ -644,7 +683,10 @@ describe Script::Layers::Infrastructure::ScriptProjectRepository do
           let(:content) { {}.to_json }
 
           it "raises MissingScriptJsonFieldError" do
-            assert_raises(Script::Layers::Infrastructure::Errors::MissingScriptJsonFieldError) { subject }
+            assert_raises_and_validate(
+              Script::Layers::Domain::Errors::MissingScriptConfigFieldError,
+              proc { |e| assert_equal(script_config_filename, e.filename) },
+            ) { subject }
           end
         end
 
@@ -666,7 +708,10 @@ describe Script::Layers::Infrastructure::ScriptProjectRepository do
 
       describe "when file does not exist" do
         it "raises NoScriptConfigFileError" do
-          assert_raises(Script::Layers::Infrastructure::Errors::NoScriptConfigFileError) { subject }
+          assert_raises_and_validate(
+            Script::Layers::Infrastructure::Errors::NoScriptConfigFileError,
+            proc { |e| assert_equal(script_config_filename, e.filename) }
+          ) { subject }
         end
       end
 
