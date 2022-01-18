@@ -6,6 +6,8 @@ module Script
       class ExtensionPoint
         attr_reader :type, :beta, :deprecated, :libraries, :domain
 
+        DEFAULT_REPO = "https://github.com/Shopify/scripts-apis-examples"
+
         def initialize(type, config)
           @type = type
           @beta = config["beta"] || false
@@ -55,9 +57,7 @@ module Script
 
           def wasm_config
             return {} unless ShopifyCLI::Feature.enabled?(:scripts_beta_languages)
-
-            default_repo = "https://github.com/Shopify/scripts-apis-examples"
-            { "wasm" => { "repo" => default_repo } }
+            { "wasm" => { "repo" => DEFAULT_REPO } }
           end
         end
 
