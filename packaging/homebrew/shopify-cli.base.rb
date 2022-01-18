@@ -1,5 +1,9 @@
 # frozen_string_literal: true
-
+#
+# The canonical copy of this file is hosted at
+# https://github.com/Shopify/shopify-cli/blob/main/packaging/homebrew/shopify-cli.base.rb
+# so please make all updates there.
+#
 # Modified from formula originally generated via `brew-gem` using
 # `brew gem formula shopify-cli`
 
