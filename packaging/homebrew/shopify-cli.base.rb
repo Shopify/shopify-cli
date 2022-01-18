@@ -52,7 +52,7 @@ class ShopifyCli < Formula
   url "shopify-cli", using: RubyGemsDownloadStrategy
   version "SHOPIFY_CLI_VERSION"
   sha256 "SHOPIFY_CLI_GEM_CHECKSUM"
-  depends_on "ruby"
+  depends_on "ruby" => "3"
   depends_on "git"
 
   def install
@@ -96,6 +96,7 @@ class ShopifyCli < Formula
         #!#{ruby_bin}/ruby --disable-gems
         ENV['GEM_HOME']="#{prefix}"
         ENV['GEM_PATH']="#{prefix}"
+        ENV['RUBY_BINDIR']="#{ruby_bin}/"
         require 'rubygems'
         $:.unshift(#{ruby_libs.map(&:inspect).join(",")})
         load "#{file}"
