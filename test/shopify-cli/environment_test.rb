@@ -3,6 +3,74 @@ require "test_helper"
 
 module ShopifyCLI
   class EnvironmentTest < MiniTest::Test
+    def test_ruby_version_when_the_command_raises
+      # Given
+      context = TestHelpers::FakeContext.new
+      stat = mock("error", success?: false)
+      out = ""
+      err = "Error executing the command"
+      context.expects(:capture3)
+        .with('ruby -e "puts RUBY_VERSION"')
+        .returns([out, err, stat])
+
+      # When/Then
+      error = assert_raises ShopifyCLI::Abort do
+        Environment.ruby_version(context: context)
+      end
+      assert_equal err, error.message
+    end
+
+    def test_ruby_version
+      # Given
+      context = TestHelpers::FakeContext.new
+      stat = mock("success", success?: true)
+      out = '"3.2.1"'
+      err = ""
+      context.expects(:capture3)
+        .with('ruby -e "puts RUBY_VERSION"')
+        .returns([out, err, stat])
+
+      # When
+      got = Environment.ruby_version(context: context)
+
+      # Then
+      assert_equal ::Semantic::Version.new("3.2.1"), got
+    end
+
+    def test_node_version_when_the_command_raises
+      # Given
+      context = TestHelpers::FakeContext.new
+      stat = mock("error", success?: false)
+      out = ""
+      err = "Error executing the command"
+      context.expects(:capture3)
+        .with("node", "--version")
+        .returns([out, err, stat])
+
+      # When/Then
+      error = assert_raises ShopifyCLI::Abort do
+        Environment.node_version(context: context)
+      end
+      assert_equal err, error.message
+    end
+
+    def test_node_version
+      # Given
+      context = TestHelpers::FakeContext.new
+      stat = mock("success", success?: true)
+      out = "v3.2.1"
+      err = ""
+      context.expects(:capture3)
+        .with("node", "--version")
+        .returns([out, err, stat])
+
+      # When
+      got = Environment.node_version(context: context)
+
+      # Then
+      assert_equal ::Semantic::Version.new("3.2.1"), got
+    end
+
     def test_use_local_partners_instance_returns_true_when_the_env_variable_is_set
       # Given
       env_variables = {

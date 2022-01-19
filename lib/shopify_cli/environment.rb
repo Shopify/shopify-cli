@@ -1,8 +1,24 @@
+require "semantic/semantic"
+
 module ShopifyCLI
   # The environment module provides an interface to get information from
   # the environment in which the CLI runs
   module Environment
     TRUTHY_ENV_VARIABLE_VALUES = ["1", "true", "TRUE", "yes", "YES"]
+
+    def self.ruby_version(context: Context.new)
+      out, err, stat = context.capture3('ruby -e "puts RUBY_VERSION"')
+      raise ShopifyCLI::Abort, err unless stat.success?
+      out = out.gsub('"', "")
+      ::Semantic::Version.new(out.chomp)
+    end
+
+    def self.node_version(context: Context.new)
+      out, err, stat = context.capture3("node", "--version")
+      raise ShopifyCLI::Abort, err unless stat.success?
+      out = out.gsub("v", "")
+      ::Semantic::Version.new(out.chomp)
+    end
 
     def self.interactive=(interactive)
       @interactive = interactive
