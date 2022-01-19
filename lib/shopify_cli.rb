@@ -15,12 +15,13 @@ ENV["PATH"] = ENV["PATH"].split(":").select { |p| p.start_with?("/", "~") }.join
 vendor_path = File.expand_path("../../vendor/lib", __FILE__)
 $LOAD_PATH.unshift(vendor_path) unless $LOAD_PATH.include?(vendor_path)
 
-deps = %w(cli-ui cli-kit smart_properties webrick)
+deps = %w(cli-ui cli-kit smart_properties ruby2_keywords webrick)
 deps.each do |dep|
   vendor_path = File.expand_path("../../vendor/deps/#{dep}/lib", __FILE__)
   $LOAD_PATH.unshift(vendor_path) unless $LOAD_PATH.include?(vendor_path)
 end
 
+require "ruby2_keywords"
 require "cli/ui"
 require "cli/kit"
 require "smart_properties"
