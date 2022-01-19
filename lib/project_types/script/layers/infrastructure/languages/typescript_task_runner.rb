@@ -22,6 +22,14 @@ module Script
             bytecode
           end
 
+          def compiled_type
+            "wasm"
+          end
+
+          def has_dependencies?
+            true
+          end
+
           def install_dependencies
             check_node_version!
 

@@ -56,14 +56,8 @@ module Script
                 end
               end
 
-              # This isn't ideal, but works for now.
-              # Ideally, CreateScript shouldn't need to know which ProjectCreators need dependencies installed.
-              # For that we'd want to have better composability,
-              # and omit the following steps when we have an "wasm" language script.
-              unless language == "wasm"
-                task_runner = Infrastructure::Languages::TaskRunner.for(ctx, language, script_name)
-                ProjectDependencies.install(ctx: ctx, task_runner: task_runner)
-              end
+              task_runner = Infrastructure::Languages::TaskRunner.for(ctx, language, script_name)
+              ProjectDependencies.install(ctx: ctx, task_runner: task_runner) if task_runner.has_dependencies?
             end
           end
 
