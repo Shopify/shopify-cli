@@ -8,6 +8,9 @@ require "shopify_cli/theme/syncer"
 module Theme
   class Command
     class Push < ShopifyCLI::Command::SubCommand
+      recommend_default_node_range
+      recommend_default_ruby_range
+
       options do |parser, flags|
         parser.on("-n", "--nodelete") { flags[:nodelete] = true }
         parser.on("-i", "--themeid=ID") { |theme_id| flags[:theme_id] = theme_id }

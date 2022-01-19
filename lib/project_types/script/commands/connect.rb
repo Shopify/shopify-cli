@@ -5,6 +5,9 @@ module Script
       prerequisite_task :ensure_authenticated
       prerequisite_task ensure_project_type: :script
 
+      recommend_default_node_range
+      recommend_default_ruby_range
+
       def call(_args, _)
         Layers::Application::ConnectApp.call(ctx: @ctx, force: true)
       rescue StandardError => e

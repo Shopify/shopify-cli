@@ -5,6 +5,9 @@ module Script
     class Push < ShopifyCLI::Command::SubCommand
       prerequisite_task ensure_project_type: :script
 
+      recommend_default_node_range
+      recommend_default_ruby_range
+
       options do |parser, flags|
         parser.on("--force") { |t| flags[:force] = t }
         parser.on("--api-key=API_KEY") { |api_key| flags[:api_key] = api_key.gsub('"', "") }

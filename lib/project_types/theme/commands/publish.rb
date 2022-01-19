@@ -4,6 +4,9 @@ require "shopify_cli/theme/theme"
 module Theme
   class Command
     class Publish < ShopifyCLI::Command::SubCommand
+      recommend_default_node_range
+      recommend_default_ruby_range
+
       options do |parser, flags|
         parser.on("-f", "--force") { flags[:force] = true }
       end

@@ -5,6 +5,9 @@ module ShopifyCLI
         class Node < ShopifyCLI::Command::AppSubCommand
           prerequisite_task :ensure_authenticated
 
+          recommend_default_node_range
+          recommend_default_ruby_range
+
           options do |parser, flags|
             parser.on("--name=NAME") { |t| flags[:name] = t }
             parser.on("--organization-id=ID") { |id| flags[:organization_id] = id }

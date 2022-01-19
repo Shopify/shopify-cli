@@ -1,11 +1,14 @@
 # frozen_string_literal: true
 require "shopify_cli"
+require "semantic/semantic"
 
 module ShopifyCLI
   class Command < CLI::Kit::BaseCommand
     autoload :SubCommand,     "shopify_cli/command/sub_command"
     autoload :AppSubCommand,  "shopify_cli/command/app_sub_command"
     autoload :ProjectCommand, "shopify_cli/command/project_command"
+
+    VersionRange = Struct.new(:from, :to, keyword_init: true)
 
     extend Feature::Set
 
@@ -26,6 +29,8 @@ module ShopifyCLI
           cmd = new(@ctx)
           cmd.options.parse(@_options, args)
           return call_help(command_name) if cmd.options.help
+          check_ruby_version
+          check_node_version
           run_prerequisites
           cmd.call(args, command_name)
         end
@@ -56,6 +61,62 @@ module ShopifyCLI
           default: nil,
           contextual_resolver: nil,
         )
+      end
+
+      def recommend_ruby(from:, to:)
+        @compatible_ruby_range = VersionRange.new(
+          from: Semantic::Version.new(from),
+          to: Semantic::Version.new(to)
+        )
+      end
+
+      def recommend_default_ruby_range
+        recommend_ruby(
+          from: Constants::SupportedVersions::Ruby::FROM,
+          to: Constants::SupportedVersions::Ruby::TO
+        )
+      end
+
+      def check_ruby_version
+        check_version(
+          Environment.ruby_version,
+          range: @compatible_ruby_range,
+          runtime: "Ruby"
+        )
+      end
+
+      def recommend_node(from:, to:)
+        @compatible_node_range = VersionRange.new(
+          from: Semantic::Version.new(from),
+          to: Semantic::Version.new(to)
+        )
+      end
+
+      def recommend_default_node_range
+        recommend_node(
+          from: Constants::SupportedVersions::Node::FROM,
+          to: Constants::SupportedVersions::Node::TO
+        )
+      end
+
+      def check_node_version
+        check_version(
+          Environment.node_version,
+          range: @compatible_node_range,
+          runtime: "Node"
+        )
+      end
+
+      def check_version(version, range:, runtime:)
+        return if Environment.test?
+        return if range.nil?
+        return if version >= range.from && version < range.to
+        Context.new.warn("Your environment #{runtime} version, #{version},"\
+          " is outside of the range supported by the CLI,"\
+          " #{range.from}..<#{range.to},"\
+          " and might cause incompatibility issues.")
+      rescue StandardError => error
+        ExceptionReporter.report_error_silently(error)
       end
 
       def prerequisite_task(*tasks_without_args, **tasks_with_args)
