@@ -5,8 +5,13 @@ module Script
       prerequisite_task :ensure_authenticated
       prerequisite_task ensure_project_type: :script
 
+      options do |parser, flags|
+        parser.on("--print") { |t| flags[:print] = t }
+      end
+
       def call(_args, _)
-        Layers::Application::ConnectApp.call(ctx: @ctx, force: true)
+        print = options.flags.key?(:print)
+        Layers::Application::ConnectApp.call(ctx: @ctx, print: print, force: true)
       rescue StandardError => e
         UI::ErrorHandler.pretty_print_and_raise(e, failed_op: @ctx.message("script.connect.error.operation_failed"))
       end

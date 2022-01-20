@@ -7,7 +7,7 @@ module Script
     module Application
       class ConnectApp
         class << self
-          def call(ctx:, force: false)
+          def call(ctx:, print: false, force: false)
             script_project_repo = Layers::Infrastructure::ScriptProjectRepository.new(ctx: ctx)
             script_project = script_project_repo.get
 
@@ -39,10 +39,20 @@ module Script
             scripts = script_service.get_app_scripts(extension_point_type: extension_point_type)
 
             uuid = Forms::AskScriptUuid.ask(ctx, scripts, nil)&.uuid
+            api_key = app["apiKey"]
+            secret = app["apiSecretKeys"].first["secret"]
+
+            if print
+              ctx.puts(<<~ENV)
+                API_KEY=#{api_key}
+                API_SECRET=#{secret}
+                UUID=#{uuid}
+              ENV
+            end
 
             script_project_repo.create_env(
-              api_key: app["apiKey"],
-              secret: app["apiSecretKeys"].first["secret"],
+              api_key: api_key,
+              secret: secret,
               uuid: uuid
             )
             ctx.done(ctx.message("script.connect.connected", app["title"]))

@@ -18,7 +18,7 @@ module Script
       end
 
       def test_calls_connect_app
-        Script::Layers::Application::ConnectApp.expects(:call).with(ctx: @context, force: true)
+        Script::Layers::Application::ConnectApp.expects(:call).with(ctx: @context, print: false, force: true)
         perform_command
       end
 
