@@ -171,7 +171,7 @@ module Script
           creating: "Creating script",
           created: "Created script",
           preparing_project: "Preparing script project structure",
-          creating_wasm: "Creating configurations files",
+          creating_wasm: "Creating configuration files",
           created_wasm: "Configuration files created",
         },
 
