@@ -195,14 +195,6 @@ describe Script::Layers::Application::ExtensionPoints do
         end
       end
 
-      describe "when asking about wasm language" do
-        let(:language) { "wasm" }
-
-        it "should return true" do
-          assert subject
-        end
-      end
-
       describe "when asking about unsupported language" do
         let(:language) { "english" }
 
@@ -238,14 +230,6 @@ describe Script::Layers::Application::ExtensionPoints do
 
         it "should return true" do
           assert subject
-        end
-      end
-
-      describe "when asking about wasm language" do
-        let(:language) { "wasm" }
-
-        it "should return false" do
-          refute subject
         end
       end
 

@@ -44,20 +44,13 @@ module Script
           end
 
           def all
-            @all ||= @config.merge(wasm_config).map do |language, library_config|
+            @all ||= @config.map do |language, library_config|
               ExtensionPointLibrary.new(language, library_config)
             end
           end
 
           def for(language)
             all.find { |ep| ep.language == language }
-          end
-
-          private
-
-          def wasm_config
-            return {} unless ShopifyCLI::Feature.enabled?(:scripts_beta_languages)
-            { "wasm" => { "repo" => DEFAULT_REPO } }
           end
         end
 

@@ -68,6 +68,11 @@ module TestHelpers
             "package" => type,
             "version" => "1",
           },
+          "wasm" => {
+            "beta" => true,
+            "package" => type,
+            "version" => "1",
+          },
         },
       }
     end

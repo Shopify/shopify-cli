@@ -34,10 +34,6 @@ describe Script::Layers::Domain::ExtensionPoint do
   end
 
   describe ".new" do
-    before do
-      ShopifyCLI::Feature.stubs(:enabled?).with(:scripts_beta_languages).returns(false)
-    end
-
     describe "when deprecation status is not specified" do
       subject { Script::Layers::Domain::ExtensionPoint.new(type, config) }
       it "should construct new, non-deprecated ExtensionPoint" do
@@ -147,32 +143,6 @@ describe Script::Layers::Domain::ExtensionPoint do
           assert_includes subject, "assemblyscript"
           assert_includes subject, "typescript"
         end
-      end
-    end
-
-    describe "when scripts_beta_languages flag is disabled" do
-      subject { Script::Layers::Domain::ExtensionPoint.new(type, config) }
-
-      before do
-        ShopifyCLI::Feature.stubs(:enabled?).with(:scripts_beta_languages).returns(false)
-      end
-
-      it "should not return wasm as a language" do
-        extension_point = subject
-        assert_nil extension_point.libraries.for("wasm")
-      end
-    end
-
-    describe "when scripts_beta_languages flag is enabled" do
-      subject { Script::Layers::Domain::ExtensionPoint.new(type, config) }
-
-      before do
-        ShopifyCLI::Feature.stubs(:enabled?).with(:scripts_beta_languages).returns(true)
-      end
-
-      it "should return wasm as a language" do
-        extension_point = subject
-        refute_nil extension_point.libraries.for("wasm")
       end
     end
   end
