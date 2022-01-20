@@ -221,7 +221,7 @@ module Script
 
         project_deps: {
           none_required: "{{v}} None required",
-          checking_with_npm: "Checking dependencies with npm",
+          checking: "Checking dependencies",
           installing: "Dependencies installing",
           installed: "Missing dependencies installed",
         },

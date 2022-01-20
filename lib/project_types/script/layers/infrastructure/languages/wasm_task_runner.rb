@@ -16,10 +16,6 @@ module Script
             true
           end
 
-          def has_dependencies?
-            false
-          end
-
           def library_version(_library_name)
             nil
           end

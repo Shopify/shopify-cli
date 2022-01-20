@@ -58,7 +58,6 @@ module Script
 
               task_runner = Infrastructure::Languages::TaskRunner.for(ctx, language, script_name)
               ProjectDependencies.install(ctx: ctx, task_runner: task_runner)
-              true
             end
           end
 

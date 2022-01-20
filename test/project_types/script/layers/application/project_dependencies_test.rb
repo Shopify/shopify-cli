@@ -10,7 +10,7 @@ describe Script::Layers::Application::ProjectDependencies do
   let(:extension_point_type) { "discount" }
   let(:extension_point_repository) { TestHelpers::FakeExtensionPointRepository.new }
   let(:extension_point) { extension_point_repository.get_extension_point(extension_point_type) }
-  let(:task_runner) { stub(has_dependencies?: true) }
+  let(:task_runner) { stub }
 
   before do
     extension_point_repository.create_extension_point(extension_point_type)
@@ -22,17 +22,6 @@ describe Script::Layers::Application::ProjectDependencies do
       capture_io do
         Script::Layers::Application::ProjectDependencies
           .install(ctx: @context, task_runner: task_runner)
-      end
-    end
-
-    describe "when task_runner does not have dependencies" do
-      before do
-        task_runner.stubs(:has_dependencies?).returns(false)
-      end
-
-      it "should skip installation" do
-        task_runner.expects(:install_dependencies).never
-        subject
       end
     end
 
