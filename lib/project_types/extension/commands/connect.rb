@@ -4,13 +4,27 @@ module Extension
     class Connect < ExtensionCommand
       prerequisite_task :ensure_authenticated
 
+      options do |parser, flags|
+        parser.on("--print") { |t| flags[:print] = t }
+      end
+
       def call(args, _)
         with_connect_form(args) do |form|
+          api_key = form.app.api_key
+          api_secret = form.app.secret
+          registration_id = form.registration.id
+          if options.flags.key?(:print)
+            @ctx.puts(<<~ENV)
+              API_KEY=#{api_key}
+              API_SECRET=#{api_secret}
+              EXTENSION_ID=#{registration_id}
+            ENV
+          end
           ExtensionProject.write_env_file(
             context: @ctx,
-            api_key: form.app.api_key,
-            api_secret: form.app.secret,
-            registration_id: form.registration.id,
+            api_key: api_key,
+            api_secret: api_secret,
+            registration_id: registration_id,
             registration_uuid: form.registration.uuid,
             title: form.registration.title
           )
