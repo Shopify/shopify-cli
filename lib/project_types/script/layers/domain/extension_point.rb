@@ -6,8 +6,6 @@ module Script
       class ExtensionPoint
         attr_reader :type, :beta, :deprecated, :libraries, :domain
 
-        DEFAULT_REPO = "https://github.com/Shopify/scripts-apis-examples"
-
         def initialize(type, config)
           @type = type
           @beta = config["beta"] || false

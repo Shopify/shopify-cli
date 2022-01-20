@@ -6,7 +6,6 @@ describe Script::Layers::Infrastructure::Languages::WasmProjectCreator do
   include TestHelpers::FakeFS
 
   let(:context) { TestHelpers::FakeContext.new }
-  let(:fake_capture2e_response) { [nil, OpenStruct.new(success?: true)] }
 
   let(:type) { "payment-methods" }
   let(:language) { "wasm" }

@@ -132,12 +132,6 @@ describe Script::Layers::Application::CreateScript do
           .send(:install_dependencies, context, language, script_name, project_creator)
       end
 
-      before do
-        project_creator.stubs(:create_start_message).returns("")
-        project_creator.stubs(:create_inprogress_message).returns("")
-        project_creator.stubs(:create_finished_message).returns("")
-      end
-
       it "should return new script" do
         Script::Layers::Application::ProjectDependencies
           .expects(:install)
