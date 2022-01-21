@@ -36,8 +36,10 @@ module Extension
         else
           properties_hash = { api_key: "--api-key", secret: "--api-secret"}
           missing_options = error.properties.map { |p| properties_hash[p.name] }.compact.join(", ")
+          message = context.message("errors.missing_push_options_ci", missing_options)
+          message += context.message("errors.missing_push_options_ci_solution", ShopifyCLI::TOOL_NAME)
           raise ShopifyCLI::Abort,
-          context.message("errors.missing_push_options_ci", missing_options, ShopifyCLI::TOOL_NAME)
+            message
         end
       end
 
