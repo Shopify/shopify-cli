@@ -332,21 +332,15 @@ describe Script::Layers::Infrastructure::ScriptService do
     end
   end
 
-  describe ".generate_module_upload_details" do
+  describe ".generate_module_upload_url" do
     let(:user_errors) { [] }
     let(:url) { nil }
-    let(:headers) { {} }
-    let(:humanized_max_size) { "" }
     let(:response) do
       {
         "data" => {
           "moduleUploadUrlGenerate" => {
+            "url" => url,
             "userErrors" => user_errors,
-            "details" => {
-              "headers" => headers,
-              "url" => url,
-              "humanizedMaxSize" => humanized_max_size,
-            },
           },
         },
       }
@@ -356,23 +350,13 @@ describe Script::Layers::Infrastructure::ScriptService do
       api_client.stubs(:query).returns(response)
     end
 
-    subject { script_service.generate_module_upload_details }
+    subject { script_service.generate_module_upload_url }
 
     describe "when a url can be generated" do
       let(:url) { "http://fake.com" }
-      let(:headers) { { "header" => "value" } }
-      let(:humanized_max_size) { "123 Bytes" }
 
       it "returns a url" do
-        assert_equal url, subject[:url]
-      end
-
-      it "returns headers" do
-        assert_equal headers, subject[:headers]
-      end
-
-      it "returns max size" do
-        assert_equal humanized_max_size, subject[:max_size]
+        assert_equal url, subject
       end
     end
 

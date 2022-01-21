@@ -1,10 +1,6 @@
 mutation moduleUploadUrlGenerate {
   moduleUploadUrlGenerate {
-    details {
-      url
-      headers
-      humanizedMaxSize
-    }
+    url
     userErrors {
       field
       message

@@ -91,16 +91,14 @@ module Script
           response["data"]["appScripts"]
         end
 
-        def generate_module_upload_details
+        def generate_module_upload_url
           query_name = "module_upload_url_generate"
           variables = {}
           response = make_request(query_name: query_name, variables: variables)
           user_errors = response["data"]["moduleUploadUrlGenerate"]["userErrors"]
 
           raise Errors::GraphqlError, user_errors if user_errors.any?
-
-          data = response["data"]["moduleUploadUrlGenerate"]["details"]
-          { url: data["url"], headers: data["headers"], max_size: data["humanizedMaxSize"] }
+          response["data"]["moduleUploadUrlGenerate"]["url"]
         end
 
         private
