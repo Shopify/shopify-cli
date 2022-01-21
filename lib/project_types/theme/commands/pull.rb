@@ -13,7 +13,7 @@ module Theme
         parser.on("-t", "--theme=NAME_OR_ID") { |theme| flags[:theme] = theme }
         parser.on("-l", "--live") { flags[:live] = true }
         parser.on("-d", "--development") { flags[:development] = true }
-        parser.on("-F", "--filter=PATTERN") { |pattern| flags[:includes] = pattern }
+        parser.on("-o", "--only=PATTERN") { |pattern| flags[:includes] = pattern }
         parser.on("-x", "--ignore=PATTERN") do |pattern|
           flags[:ignores] ||= []
           flags[:ignores] << pattern

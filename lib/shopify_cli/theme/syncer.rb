@@ -195,7 +195,7 @@ module ShopifyCLI
         # Already enqueued
         return if @pending.include?(operation)
 
-        if ignore?(operation) 
+        if ignore?(operation)
           @ctx.debug("ignore #{operation.file_path}")
           return
         end
