@@ -21,12 +21,14 @@ describe Script::Layers::Application::PushScript do
   end
   let(:schema_minor_version) { "0" }
   let(:script_name) { "name" }
+  let(:input_query) { "{ aField }" }
   let(:script_project) do
     script_project_repository.create(
       language: library_language,
       extension_point_type: extension_point_type,
       script_name: script_name,
-      env: ShopifyCLI::Resources::EnvFile.new(api_key: api_key, secret: "shh")
+      env: ShopifyCLI::Resources::EnvFile.new(api_key: api_key, secret: "shh"),
+      input_query: input_query,
     )
   end
   let(:push_package_repository) { TestHelpers::FakePushPackageRepository.new }
@@ -61,14 +63,16 @@ describe Script::Layers::Application::PushScript do
 
     it "should prepare and push script" do
       script_service_instance = mock
-      script_service_instance.expects(:set_app_script).returns(uuid)
+      script_service_instance
+        .expects(:set_app_script)
+        .with do |params|
+          assert_equal "{ aField }", params.fetch(:input_query)
+        end
+        .returns(uuid)
       Script::Layers::Infrastructure::ScriptService
         .expects(:new).returns(script_service_instance)
 
-      script_uploader_instance = mock
-      script_uploader_instance.expects(:upload).returns(url)
-      Script::Layers::Infrastructure::ScriptUploader
-        .expects(:new).returns(script_uploader_instance)
+      Script::Layers::Infrastructure::ScriptUploader.expects(new: mock(upload: url))
 
       Script::Layers::Application::ProjectDependencies
         .expects(:install).with(ctx: @context, task_runner: task_runner)

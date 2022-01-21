@@ -21,6 +21,7 @@ describe Script::Layers::Domain::ScriptProject do
       "title" => script_name,
     }
   end
+  let(:input_query) { "{ aField }" }
 
   describe ".new" do
     subject { Script::Layers::Domain::ScriptProject.new(**args) }
@@ -33,6 +34,7 @@ describe Script::Layers::Domain::ScriptProject do
         script_name: script_name,
         language: language,
         script_config: script_config,
+        input_query: input_query,
       }
     end
     let(:args) { all_args }
@@ -54,6 +56,7 @@ describe Script::Layers::Domain::ScriptProject do
         assert_equal script_name, subject.script_name
         assert_equal language, subject.language
         assert_equal script_config, subject.script_config
+        assert_equal input_query, subject.input_query
       end
     end
 
