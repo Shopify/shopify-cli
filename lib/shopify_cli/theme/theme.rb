@@ -37,15 +37,10 @@ module ShopifyCLI
       end
 
       def glob(pattern, raise_on_dir: false)
-        paths = root.glob(pattern)
-        if raise_on_dir
-          paths.each do |path|
-            if ::File.directory?(path)
-              @ctx.abort(@ctx.message('theme.serve.error.invalid_subdirectory', path.to_s))
-            end
-          end
+        root.glob(pattern).map do |path|
+          abort_if_directory!(path) if raise_on_dir
+          File.new(path, root)
         end
-        paths.map { |path| File.new(path, root) }
       end
 
       def theme_file?(file)
@@ -225,6 +220,11 @@ module ShopifyCLI
         @role = body.dig("theme", "role")
 
         self
+      end
+
+      def abort_if_directory!(path)
+        return unless ::File.directory?(path)
+        @ctx.abort(@ctx.message('theme.serve.error.invalid_subdirectory', path.to_s))
       end
     end
   end
