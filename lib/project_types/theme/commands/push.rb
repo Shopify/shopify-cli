@@ -2,6 +2,7 @@
 require "shopify_cli/theme/theme"
 require "shopify_cli/theme/development_theme"
 require "shopify_cli/theme/ignore_filter"
+require "shopify_cli/theme/include_filter"
 require "shopify_cli/theme/syncer"
 
 module Theme
@@ -17,6 +18,7 @@ module Theme
         parser.on("-j", "--json") { flags[:json] = true }
         parser.on("-a", "--allow-live") { flags[:allow_live] = true }
         parser.on("-p", "--publish") { flags[:publish] = true }
+        parser.on("-o", "--only=PATTERN") { |pattern| flags[:includes] = pattern }
         parser.on("-x", "--ignore=PATTERN") do |pattern|
           flags[:ignores] ||= []
           flags[:ignores] << pattern
@@ -35,10 +37,13 @@ module Theme
           return unless CLI::UI::Prompt.confirm(question)
         end
 
+        include_filter = ShopifyCLI::Theme::IncludeFilter.new(options.flags[:includes])
         ignore_filter = ShopifyCLI::Theme::IgnoreFilter.from_path(root)
         ignore_filter.add_patterns(options.flags[:ignores]) if options.flags[:ignores]
 
-        syncer = ShopifyCLI::Theme::Syncer.new(@ctx, theme: theme, ignore_filter: ignore_filter)
+        syncer = ShopifyCLI::Theme::Syncer.new(@ctx, theme: theme,
+                                               include_filter: include_filter,
+                                               ignore_filter: ignore_filter)
         begin
           syncer.start_threads
           if options.flags[:json]

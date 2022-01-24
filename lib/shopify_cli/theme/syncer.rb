@@ -16,13 +16,15 @@ module ShopifyCLI
       API_VERSION = "unstable"
 
       attr_reader :checksums
+      attr_accessor :include_filter
       attr_accessor :ignore_filter
 
       def_delegators :@error_reporter, :has_any_error?
 
-      def initialize(ctx, theme:, ignore_filter: nil)
+      def initialize(ctx, theme:, include_filter: nil, ignore_filter: nil)
         @ctx = ctx
         @theme = theme
+        @include_filter = include_filter
         @ignore_filter = ignore_filter
         @error_reporter = ErrorReporter.new(ctx)
         @standard_reporter = StandardReporter.new(ctx)
@@ -193,7 +195,7 @@ module ShopifyCLI
         # Already enqueued
         return if @pending.include?(operation)
 
-        if @ignore_filter&.ignore?(operation.file_path)
+        if ignore?(operation)
           @ctx.debug("ignore #{operation.file_path}")
           return
         end
@@ -249,6 +251,19 @@ module ShopifyCLI
         update_checksums(body)
 
         response
+      end
+
+      def ignore?(operation)
+        path = operation.file_path
+        ignored_by_ignore_filter?(path) || ignored_by_include_filter?(path)
+      end
+
+      def ignored_by_ignore_filter?(path)
+        ignore_filter&.ignore?(path)
+      end
+
+      def ignored_by_include_filter?(path)
+        include_filter && !include_filter.match?(path)
       end
 
       def get(file)

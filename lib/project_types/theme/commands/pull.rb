@@ -1,6 +1,7 @@
 # frozen_string_literal: true
 require "shopify_cli/theme/theme"
 require "shopify_cli/theme/ignore_filter"
+require "shopify_cli/theme/include_filter"
 require "shopify_cli/theme/syncer"
 
 module Theme
@@ -12,6 +13,7 @@ module Theme
         parser.on("-t", "--theme=NAME_OR_ID") { |theme| flags[:theme] = theme }
         parser.on("-l", "--live") { flags[:live] = true }
         parser.on("-d", "--development") { flags[:development] = true }
+        parser.on("-o", "--only=PATTERN") { |pattern| flags[:includes] = pattern }
         parser.on("-x", "--ignore=PATTERN") do |pattern|
           flags[:ignores] ||= []
           flags[:ignores] << pattern
@@ -24,10 +26,13 @@ module Theme
         theme = find_theme(root, **options.flags)
         return if theme.nil?
 
+        include_filter = ShopifyCLI::Theme::IncludeFilter.new(options.flags[:includes])
         ignore_filter = ShopifyCLI::Theme::IgnoreFilter.from_path(root)
         ignore_filter.add_patterns(options.flags[:ignores]) if options.flags[:ignores]
 
-        syncer = ShopifyCLI::Theme::Syncer.new(@ctx, theme: theme, ignore_filter: ignore_filter)
+        syncer = ShopifyCLI::Theme::Syncer.new(@ctx, theme: theme,
+                                               include_filter: include_filter,
+                                               ignore_filter: ignore_filter)
         begin
           syncer.start_threads
           CLI::UI::Frame.open(@ctx.message("theme.pull.pulling", theme.name, theme.id, theme.shop)) do
