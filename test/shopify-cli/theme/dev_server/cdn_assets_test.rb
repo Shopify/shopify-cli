@@ -79,18 +79,6 @@ module ShopifyCLI
           assert_equal(expected_html, serve(original_html).body)
         end
 
-        def test_dont_replace_other_assets
-          original_html = <<~HTML
-            <html>
-              <head>
-              <link rel="stylesheet" href="//cdn.shopify.com/s/files/1/0457/3256/0918/t/2/assets/theme.css" />
-                <script src="https://cdn.shopify.com/s/files/1/0457/3256/0918/t/2/assets/theme.js"></script>
-              </head>
-            </html>
-          HTML
-          assert_equal(original_html, serve(original_html).body)
-        end
-
         def test_serve_js_asset_from_cdn
           response_body = "<ASSET_FILE_FROM_CDN>" \
                           "//# sourceMappingURL=/script.js.map"

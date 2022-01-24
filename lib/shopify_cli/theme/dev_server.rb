@@ -37,8 +37,8 @@ module ShopifyCLI
           # Setup the middleware stack. Mimics Rack::Builder / config.ru, but in reverse order
           @app = Proxy.new(ctx, theme: theme, syncer: @syncer)
           @app = CdnFonts.new(@app, theme: theme)
-          @app = CdnAssets.new(@app, theme: theme)
           @app = LocalAssets.new(ctx, @app, theme: theme)
+          @app = CdnAssets.new(@app, theme: theme)
           @app = HotReload.new(ctx, @app, theme: theme, watcher: watcher, mode: mode, ignore_filter: ignore_filter)
           stopped = false
           address = "http://#{host}:#{port}"

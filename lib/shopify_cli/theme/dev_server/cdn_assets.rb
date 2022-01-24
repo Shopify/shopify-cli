@@ -11,7 +11,7 @@ module ShopifyCLI
 
         ASSETS_PROXY_PATH = "/cdn_asset"
         ASSETS_CDN = "//cdn.shopify.com"
-        ASSETS_CDN_REGEX = %r{((https?:)?#{ASSETS_CDN}(.*\.(css|js|map)))}
+        ASSETS_CDN_REGEX = %r{(https?:)?#{ASSETS_CDN}}
         ASSETS_SOURCE_MAP_REGEX = /\/[\/|\*]# sourceMappingURL\=(\/.*)/
 
         def initialize(app, theme:)
@@ -50,15 +50,7 @@ module ShopifyCLI
         end
 
         def replace_asset_urls(body)
-          replaced_body = body.join.gsub(ASSETS_CDN_REGEX) do |match|
-            if local_asset?(match)
-              match
-            else
-              match.gsub(%r{(https?:)?#{ASSETS_CDN}}, ASSETS_PROXY_PATH)
-            end
-          end
-
-          [replaced_body]
+          [body.join.gsub(ASSETS_CDN_REGEX, ASSETS_PROXY_PATH)]
         end
 
         def replace_source_map_url(body)
@@ -70,14 +62,6 @@ module ShopifyCLI
           return body if map_url.nil?
 
           [body_content.gsub(map_url, "#{ASSETS_PROXY_PATH}#{map_url}")]
-        end
-
-        def local_asset?(path)
-          match = path.match(LocalAssets::ASSET_REGEX)
-          return false if match.nil?
-
-          path = Pathname.new(match[1])
-          @theme.static_asset_paths.include?(path)
         end
       end
     end
