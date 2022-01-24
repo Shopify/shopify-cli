@@ -277,6 +277,24 @@ module ShopifyCLI
               HELP
           },
         },
+        extension: {
+          push: {
+            checkout_ui_extension: {
+              localization: {
+                error: {
+                  bundle_too_large: "Total size of all locale files must be less than %s.",
+                  file_empty: "Locale file `%s` is empty.",
+                  file_too_large: "Locale file `%s` too large; size must be less than %s.",
+                  invalid_file_extension: "Invalid locale filename: `%s`; only .json files are allowed.",
+                  invalid_locale_code: "Invalid locale filename: `%s`; locale code should be 2 or 3 letters,"\
+                    " optionally followed by a two-letter region code, e.g. `fr-CA`.",
+                  single_default_locale: "There must be one and only one locale identified as the default locale,"\
+                    " e.g. `en.default.json`",
+                },
+              },
+            },
+          },
+        },
         error_reporting: {
           unhandled_error: {
             message: "{{x}} {{red:An unexpected error occured.}}",
