@@ -11,7 +11,8 @@ module ShopifyCLI
 
         ASSETS_PROXY_PATH = "/cdn_asset"
         ASSETS_CDN = "//cdn.shopify.com"
-        ASSETS_CDN_REGEX = %r{((https?:)?#{ASSETS_CDN}(.*\.(css|js)))}
+        ASSETS_CDN_REGEX = %r{((https?:)?#{ASSETS_CDN}(.*\.(css|js|map)))}
+        ASSETS_SOURCE_MAP_REGEX = /\/[\/|\*]# sourceMappingURL\=(\/.*)/
 
         def initialize(app, theme:)
           @app = app
@@ -24,9 +25,6 @@ module ShopifyCLI
           # Serve assets from CDN
           return serve_asset(env, path) if path.start_with?(ASSETS_PROXY_PATH)
 
-          # Serve maps from CDN
-          return serve_path(env, path) if path.end_with?(".map")
-
           # Proxy the request, and replace the URLs in the response
           status, headers, body = @app.call(env)
           body = replace_asset_urls(body)
@@ -36,14 +34,13 @@ module ShopifyCLI
         private
 
         def serve_asset(env, path)
-          serve_path(env, path.gsub(%r{^#{ASSETS_PROXY_PATH}}, ""))
-        end
-
-        def serve_path(env, path)
+          path = path.gsub(%r{^#{ASSETS_PROXY_PATH}}, "")
           query = env["QUERY_STRING"]
           uri = asset_cdn_uri(path, query)
 
-          proxy_request(env, uri, @theme)
+          status, headers, body = proxy_request(env, uri, @theme)
+
+          [status, headers, replace_source_map_url(body)]
         end
 
         def asset_cdn_uri(path, query)
@@ -62,6 +59,17 @@ module ShopifyCLI
           end
 
           [replaced_body]
+        end
+
+        def replace_source_map_url(body)
+          body_content = body.join
+          map_regex_match = body_content.match(ASSETS_SOURCE_MAP_REGEX)
+          return body if map_regex_match.nil?
+
+          map_url = map_regex_match[1]
+          return body if map_url.nil?
+
+          [body_content.gsub(map_url, "#{ASSETS_PROXY_PATH}#{map_url}")]
         end
 
         def local_asset?(path)

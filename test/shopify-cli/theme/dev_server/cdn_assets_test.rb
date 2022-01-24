@@ -91,17 +91,39 @@ module ShopifyCLI
           assert_equal(original_html, serve(original_html).body)
         end
 
-        def test_serve_asset_from_cdn
-          expected_body = "<ASSET_FILE_FROM_CDN>"
+        def test_serve_js_asset_from_cdn
+          response_body = "<ASSET_FILE_FROM_CDN>" \
+                          "//# sourceMappingURL=/script.js.map"
+          expected_body = "<ASSET_FILE_FROM_CDN>" \
+                          "//# sourceMappingURL=/cdn_asset/script.js.map"
 
           stub_request(:get, "https://cdn.shopify.com/script.js")
             .with(headers: {
               "Referer" => "https://my-test-shop.myshopify.com",
               "Transfer-Encoding" => "chunked",
             })
-            .to_return(status: 200, body: expected_body, headers: {})
+            .to_return(status: 200, body: response_body, headers: {})
 
           response = serve(path: "/cdn_asset/script.js")
+          actual_body = response.body
+
+          assert_equal expected_body, actual_body
+        end
+
+        def test_serve_css_asset_from_cdn
+          response_body = "<ASSET_FILE_FROM_CDN>" \
+                          "/*# sourceMappingURL=/style.css.map */"
+          expected_body = "<ASSET_FILE_FROM_CDN>" \
+                          "/*# sourceMappingURL=/cdn_asset/style.css.map */"
+
+          stub_request(:get, "https://cdn.shopify.com/style.css")
+            .with(headers: {
+              "Referer" => "https://my-test-shop.myshopify.com",
+              "Transfer-Encoding" => "chunked",
+            })
+            .to_return(status: 200, body: response_body, headers: {})
+
+          response = serve(path: "/cdn_asset/style.css")
           actual_body = response.body
 
           assert_equal expected_body, actual_body
@@ -117,7 +139,7 @@ module ShopifyCLI
             })
             .to_return(status: 200, body: expected_body, headers: {})
 
-          response = serve(path: "/s/any/theme.css.min.map")
+          response = serve(path: "/cdn_asset/s/any/theme.css.min.map")
           actual_body = response.body
 
           assert_equal expected_body, actual_body
@@ -145,7 +167,7 @@ module ShopifyCLI
             })
             .to_return(status: 404, body: "Not found", headers: {})
 
-          response = serve(path: "/s/any/not_found_resource.map")
+          response = serve(path: "/cdn_asset/s/any/not_found_resource.map")
 
           assert_equal(404, response.status)
           assert_equal("Not found", response.body)
