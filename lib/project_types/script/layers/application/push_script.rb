@@ -30,7 +30,6 @@ module Script
             UI::PrintingSpinner.spin(ctx, ctx.message("script.application.pushing")) do |p_ctx, spinner|
               package = Infrastructure::PushPackageRepository.new(ctx: p_ctx).get_push_package(
                 script_project: script_project,
-                compiled_type: task_runner.compiled_type,
                 metadata: task_runner.metadata,
                 library: library,
               )

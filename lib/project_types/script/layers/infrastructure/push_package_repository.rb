@@ -7,8 +7,8 @@ module Script
         include SmartProperties
         property! :ctx, accepts: ShopifyCLI::Context
 
-        def create_push_package(script_project:, script_content:, compiled_type:, metadata:, library:)
-          build_file_path = file_path(script_project.id, compiled_type)
+        def create_push_package(script_project:, script_content:, metadata:, library:)
+          build_file_path = file_path(script_project.id)
           write_to_path(build_file_path, script_content)
 
           Domain::PushPackage.new(
@@ -16,15 +16,14 @@ module Script
             uuid: script_project.uuid,
             extension_point_type: script_project.extension_point_type,
             script_content: script_content,
-            compiled_type: compiled_type,
             metadata: metadata,
             script_config: script_project.script_config,
             library: library
           )
         end
 
-        def get_push_package(script_project:, compiled_type:, metadata:, library:)
-          build_file_path = file_path(script_project.id, compiled_type)
+        def get_push_package(script_project:, metadata:, library:)
+          build_file_path = file_path(script_project.id)
           raise Domain::PushPackageNotFoundError unless ctx.file_exist?(build_file_path)
 
           script_content = ctx.binread(build_file_path)
@@ -46,8 +45,8 @@ module Script
           ctx.binwrite(path, content)
         end
 
-        def file_path(path_to_script, compiled_type)
-          "#{path_to_script}/build/script.#{compiled_type}"
+        def file_path(path_to_script)
+          "#{path_to_script}/build/script.wasm"
         end
       end
     end

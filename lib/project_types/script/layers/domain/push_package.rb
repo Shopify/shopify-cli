@@ -9,7 +9,6 @@ module Script
           :extension_point_type,
           :script_config,
           :script_content,
-          :compiled_type,
           :metadata,
           :library
 
@@ -18,7 +17,6 @@ module Script
           uuid:,
           extension_point_type:,
           script_content:,
-          compiled_type: nil,
           metadata:,
           script_config:,
           library:
@@ -27,7 +25,6 @@ module Script
           @uuid = uuid
           @extension_point_type = extension_point_type
           @script_content = script_content
-          @compiled_type = compiled_type
           @metadata = metadata
           @script_config = script_config
           @library = library

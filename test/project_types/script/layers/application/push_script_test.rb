@@ -5,7 +5,6 @@ require "project_types/script/test_helper"
 describe Script::Layers::Application::PushScript do
   include TestHelpers::FakeFS
 
-  let(:compiled_type) { "wasm" }
   let(:api_key) { "api_key" }
   let(:force) { true }
   let(:use_msgpack) { true }
@@ -33,7 +32,7 @@ describe Script::Layers::Application::PushScript do
   let(:push_package_repository) { TestHelpers::FakePushPackageRepository.new }
   let(:extension_point_repository) { TestHelpers::FakeExtensionPointRepository.new }
   let(:script_project_repository) { TestHelpers::FakeScriptProjectRepository.new }
-  let(:task_runner) { stub(compiled_type: "wasm", metadata: metadata, library_version: library_version) }
+  let(:task_runner) { stub(metadata: metadata, library_version: library_version) }
   let(:ep) { extension_point_repository.get_extension_point(extension_point_type) }
   let(:uuid) { "uuid" }
   let(:url) { "https://some-bucket" }
@@ -52,7 +51,6 @@ describe Script::Layers::Application::PushScript do
     push_package_repository.create_push_package(
       script_project: script_project,
       script_content: "content",
-      compiled_type: compiled_type,
       metadata: metadata,
       library: library
     )

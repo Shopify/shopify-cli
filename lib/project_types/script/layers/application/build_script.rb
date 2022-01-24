@@ -12,7 +12,6 @@ module Script
                   Infrastructure::PushPackageRepository.new(ctx: ctx).create_push_package(
                     script_project: script_project,
                     script_content: task_runner.build,
-                    compiled_type: task_runner.compiled_type,
                     metadata: task_runner.metadata,
                     library: library,
                   )
