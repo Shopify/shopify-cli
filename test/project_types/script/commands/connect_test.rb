@@ -32,6 +32,11 @@ module Script
         perform_command
       end
 
+      def test_prints_credentials
+        Script::Layers::Application::ConnectApp.expects(:call).with(ctx: @context, print: true, force: true)
+        run_cmd("script connect --print")
+      end
+
       private
 
       def perform_command
