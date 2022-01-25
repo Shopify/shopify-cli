@@ -2,6 +2,7 @@ From version 2.6.0, the sections in this file adhere to the [keep a changelog](h
 
 ## [Unreleased]
 
+## Version 2.10.0
 ### Fixed
 * [#1937](https://github.com/Shopify/shopify-cli/pull/1937): Fix `theme pull` to no longer add empty lines on Windows
 * [#1952](https://github.com/Shopify/shopify-cli/pull/1952): Fix CORS (cross-origin resource sharing) errors
@@ -10,8 +11,7 @@ From version 2.6.0, the sections in this file adhere to the [keep a changelog](h
 ### Added
 * [#1892](https://github.com/Shopify/shopify-cli/pull/1892): Add `-o`/`--only` parameter to filter files on `theme push`/`theme pull` commands
 
-## 2.9.0
-
+## Version 2.9.0
 ### Fixed
 * [#1922](https://github.com/Shopify/shopify-cli/pull/1922): Respect RUBY_BINDIR from Homebrew for installing gem
 * [#1906](https://github.com/Shopify/shopify-cli/pull/1906): Fix Ngrok incompatibility with some Apple ARM environments
