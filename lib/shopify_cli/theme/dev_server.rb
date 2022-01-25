@@ -3,6 +3,7 @@ require_relative "development_theme"
 require_relative "ignore_filter"
 require_relative "syncer"
 
+require_relative "dev_server/cdn_assets"
 require_relative "dev_server/cdn_fonts"
 require_relative "dev_server/hot_reload"
 require_relative "dev_server/header_hash"
@@ -37,6 +38,7 @@ module ShopifyCLI
           @app = Proxy.new(ctx, theme: theme, syncer: @syncer)
           @app = CdnFonts.new(@app, theme: theme)
           @app = LocalAssets.new(ctx, @app, theme: theme)
+          @app = CdnAssets.new(@app, theme: theme)
           @app = HotReload.new(ctx, @app, theme: theme, watcher: watcher, mode: mode, ignore_filter: ignore_filter)
           stopped = false
           address = "http://#{host}:#{port}"

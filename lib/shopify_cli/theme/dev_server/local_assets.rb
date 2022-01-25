@@ -11,6 +11,10 @@ module ShopifyCLI
             @path = path
           end
 
+          def join
+            @path.read
+          end
+
           # Naive implementation. Only used in unit tests.
           def each
             yield @path.read
