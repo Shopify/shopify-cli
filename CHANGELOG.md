@@ -5,6 +5,7 @@ From version 2.6.0, the sections in this file adhere to the [keep a changelog](h
 ### Fixed
 * [#1937](https://github.com/Shopify/shopify-cli/pull/1937): Fix `theme pull` to no longer add empty lines on Windows
 * [#1952](https://github.com/Shopify/shopify-cli/pull/1952): Fix CORS (cross-origin resource sharing) errors
+* [#1965](https://github.com/Shopify/shopify-cli/pull/1965): Revert: Fix partners ability to login to external shops. (#1873)
 
 ### Added
 * [#1892](https://github.com/Shopify/shopify-cli/pull/1892): Add `-o`/`--only` parameter to filter files on `theme push`/`theme pull` commands
