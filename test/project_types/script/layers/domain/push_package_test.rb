@@ -10,7 +10,6 @@ describe Script::Layers::Domain::PushPackage do
   let(:api_key) { "fake_key" }
   let(:force) { false }
   let(:script_content) { "(module)" }
-  let(:compiled_type) { "wasm" }
   let(:metadata) { Script::Layers::Domain::Metadata.new("1", "0", true) }
   let(:library_language) { "assemblyscript" }
   let(:library_version) { "1.0.0" }
@@ -27,7 +26,6 @@ describe Script::Layers::Domain::PushPackage do
       extension_point_type: extension_point_type,
       script_config: script_config,
       script_content: script_content,
-      compiled_type: compiled_type,
       metadata: metadata,
       library: library
     )
@@ -44,7 +42,6 @@ describe Script::Layers::Domain::PushPackage do
       assert_equal extension_point_type, subject.extension_point_type
       assert_equal script_config, subject.script_config
       assert_equal script_content, subject.script_content
-      assert_equal compiled_type, subject.compiled_type
       assert_equal metadata, subject.metadata
       assert_equal library, subject.library
     end

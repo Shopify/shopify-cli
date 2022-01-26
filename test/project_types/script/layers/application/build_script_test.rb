@@ -10,9 +10,8 @@ describe Script::Layers::Application::BuildScript do
     let(:script_name) { "name" }
     let(:op_failed_msg) { "msg" }
     let(:content) { "content" }
-    let(:compiled_type) { "wasm" }
     let(:metadata) { Script::Layers::Domain::Metadata.new("1", "0", false) }
-    let(:task_runner) { stub(compiled_type: compiled_type, metadata: metadata) }
+    let(:task_runner) { stub(metadata: metadata) }
     let(:script_project) { stub }
 
     let(:library_language) { "assemblyscript" }
@@ -63,7 +62,6 @@ describe Script::Layers::Application::BuildScript do
         Script::Layers::Infrastructure::PushPackageRepository.any_instance.expects(:create_push_package).with(
           script_project: script_project,
           script_content: content,
-          compiled_type: "wasm",
           metadata: metadata,
           library: library
         )
