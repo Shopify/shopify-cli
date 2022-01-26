@@ -1,5 +1,7 @@
 # frozen_string_literal: true
 
+require_relative "hot_reload/liquid_css_reloader"
+
 module ShopifyCLI
   module Theme
     module DevServer
@@ -10,6 +12,7 @@ module ShopifyCLI
           @theme = theme
           @mode = mode
           @streams = SSE::Streams.new
+          @liquid_css_reloader = LiquidCssReloader.new(ctx, theme: @theme, streams: @streams)
           @watcher = watcher
           @watcher.add_observer(self, :notify_streams_of_file_change)
           @ignore_filter = ignore_filter
@@ -32,16 +35,29 @@ module ShopifyCLI
         end
 
         def notify_streams_of_file_change(modified, added, _removed)
-          files = (modified + added).reject { |file| @ignore_filter&.ignore?(file) }
-            .map { |file| @theme[file].relative_path }
+          files = (modified + added)
+            .reject { |file| @ignore_filter&.ignore?(file) }
+            .map { |file| @theme[file] }
 
-          unless files.empty?
-            @streams.broadcast(JSON.generate(modified: files))
-            @ctx.debug("[HotReload] Modified #{files.join(", ")}")
-          end
+          files -= liquid_css_files = files.select(&:liquid_css?)
+
+          hot_reload(files) unless files.empty?
+          liquid_css_reload(liquid_css_files)
         end
 
         private
+
+        def hot_reload(files)
+          paths = files.map(&:relative_path)
+          @streams.broadcast(JSON.generate(modified: paths))
+          @ctx.debug("[HotReload] Modified #{paths.join(", ")}")
+        end
+
+        def liquid_css_reload(files)
+          files.each do |file|
+            @liquid_css_reloader.reload(file)
+          end
+        end
 
         def request_is_html?(headers)
           headers["content-type"]&.start_with?("text/html")
