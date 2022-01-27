@@ -30,7 +30,6 @@ module Script
             ProjectDependencies.install(ctx: ctx, task_runner: task_runner)
             BuildScript.call(ctx: ctx, task_runner: task_runner, script_project: script_project, library: library_data)
 
-            compiled_type = task_runner.compiled_type
             metadata_file_location = task_runner.metadata_file_location
             metadata = Infrastructure::MetadataRepository.new(ctx: ctx).get_metadata(metadata_file_location)
 

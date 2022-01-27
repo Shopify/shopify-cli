@@ -21,10 +21,6 @@ module Script
             nil
           end
 
-          def compiled_type
-            "wasm"
-          end
-
           def metadata_file_location
             "metadata.json"
           end
