@@ -10,7 +10,6 @@ describe Script::Layers::Application::BuildScript do
     let(:script_name) { "name" }
     let(:op_failed_msg) { "msg" }
     let(:content) { "content" }
-    let(:compiled_type) { "wasm" }
     let(:metadata_file_location) { "metadata.json" }
     let(:metadata_repository) { TestHelpers::FakeMetadataRepository.new }
     let(:metadata) { metadata_repository.get_metadata(metadata_file_location) }

@@ -25,14 +25,6 @@ describe Script::Layers::Infrastructure::Languages::WasmTaskRunner do
     end
   end
 
-  describe ".compiled_type" do
-    subject { runner.compiled_type }
-
-    it "should always return wasm" do
-      assert_equal "wasm", subject
-    end
-  end
-
   describe ".metadata_file_location" do
     subject { runner.metadata_file_location }
 
