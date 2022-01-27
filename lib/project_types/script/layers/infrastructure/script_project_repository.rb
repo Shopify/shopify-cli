@@ -39,13 +39,7 @@ module Script
             language: language
           )
 
-          Domain::ScriptProject.new(
-            id: ctx.root,
-            env: project.env,
-            script_name: script_name,
-            extension_point_type: extension_point_type,
-            language: language,
-          )
+          build_script_project(script_config: nil)
         end
 
         def get
@@ -70,14 +64,7 @@ module Script
             end
           end
 
-          Domain::ScriptProject.new(
-            id: ctx.root,
-            env: project.env,
-            script_name: script_name,
-            extension_point_type: extension_point_type,
-            language: language,
-            script_config: script_config_repository.get!,
-          )
+          build_script_project
         end
 
         def create_env(api_key:, secret:, uuid:)
@@ -89,19 +76,19 @@ module Script
             }
           ).write(ctx)
 
-          Domain::ScriptProject.new(
-            id: ctx.root,
-            env: project.env,
-            script_name: script_name,
-            extension_point_type: extension_point_type,
-            language: language,
-            script_config: script_config_repository.get!,
-          )
+          build_script_project
         end
 
         def update_script_config(title:)
           script_config = script_config_repository.update!(title: title)
+          build_script_project(script_config: script_config)
+        end
 
+        private
+
+        def build_script_project(
+          script_config: script_config_repository.get!
+        )
           Domain::ScriptProject.new(
             id: ctx.root,
             env: project.env,
@@ -111,8 +98,6 @@ module Script
             script_config: script_config,
           )
         end
-
-        private
 
         def change_directory(directory:)
           ctx.chdir(directory)
