@@ -28,3 +28,6 @@ test:
 commands:
   style:
     run: bundle exec rubocop .
+  test:script:
+    desc: "Run all script-related tests"
+    run: TEST='test/project_types/script/**/*.rb' bundle exec rake test $@
