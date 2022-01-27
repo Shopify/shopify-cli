@@ -11,6 +11,8 @@ module CLI
           Linux
         when /mingw32/
           Windows
+         when /mingw/
+          Windows
         else
           raise "Could not determine OS from platform #{RUBY_PLATFORM}"
         end
