@@ -8,6 +8,9 @@ payment_methods:
       beta: true
       package: "@shopify/scripts-checkout-apis"
       repo: "https://github.com/Shopify/scripts-apis-examples"
+    wasm:
+      beta: true
+      repo: "https://github.com/Shopify/scripts-apis-examples"
 shipping_methods:
   domain: 'checkout'
   libraries:
@@ -17,6 +20,9 @@ shipping_methods:
     typescript:
       beta: true
       package: "@shopify/scripts-checkout-apis"
+      repo: "https://github.com/Shopify/scripts-apis-examples"
+    wasm:
+      beta: true
       repo: "https://github.com/Shopify/scripts-apis-examples"
 merchandise_discount_types:
   beta: true

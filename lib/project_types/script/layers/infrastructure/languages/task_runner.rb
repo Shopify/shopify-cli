@@ -8,6 +8,7 @@ module Script
           TASK_RUNNERS = {
             "assemblyscript" => AssemblyScriptTaskRunner,
             "typescript" => TypeScriptTaskRunner,
+            "wasm" => WasmTaskRunner,
           }
 
           def self.for(ctx, language, script_name)
