@@ -5,6 +5,7 @@ module Script
     module Infrastructure
       module Languages
         class WasmTaskRunner
+          BYTECODE_FILE = "script.wasm"
           attr_reader :ctx, :script_name
 
           def initialize(ctx, script_name)
@@ -18,6 +19,15 @@ module Script
 
           def library_version(_library_name)
             nil
+          end
+
+          def metadata_file_location
+            "metadata.json"
+          end
+
+          def build
+            raise Errors::WebAssemblyBinaryNotFoundError unless ctx.file_exist?(BYTECODE_FILE)
+            ctx.binread(BYTECODE_FILE)
           end
         end
       end

@@ -231,39 +231,11 @@ out: "some non-json parsable error output", cmd: cmd
     end
   end
 
-  describe ".metadata" do
-    subject { as_task_runner.metadata }
+  describe ".metadata_file_location" do
+    subject { as_task_runner.metadata_file_location }
 
-    describe "when metadata file is present and valid" do
-      let(:metadata_json) do
-        JSON.dump(
-          {
-            schemaVersions: {
-              example: { major: "1", minor: "0" },
-            },
-          },
-        )
-      end
-
-      it "should return a proper metadata object" do
-        File.expects(:read).with("build/metadata.json").once.returns(metadata_json)
-
-        ctx
-          .expects(:file_exist?)
-          .with("build/metadata.json")
-          .once
-          .returns(true)
-
-        assert subject
-      end
-    end
-
-    describe "when metadata file is missing" do
-      it "should raise an exception" do
-        assert_raises(Script::Layers::Domain::Errors::MetadataNotFoundError) do
-          subject
-        end
-      end
+    it "should return the filename" do
+      assert_equal("build/metadata.json", subject)
     end
   end
 end

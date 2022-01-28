@@ -32,6 +32,9 @@ merchandise_discount_types:
       beta: true
       package: "@shopify/scripts-discounts-apis"
       repo: "https://github.com/Shopify/scripts-apis-examples"
+    wasm:
+      beta: true
+      repo: "https://github.com/Shopify/scripts-apis-examples"
 delivery_discount_types:
   beta: true
   domain: 'discounts'
@@ -39,4 +42,7 @@ delivery_discount_types:
     typescript:
       beta: true
       package: "@shopify/scripts-discounts-apis"
+      repo: "https://github.com/Shopify/scripts-apis-examples"
+    wasm:
+      beta: true
       repo: "https://github.com/Shopify/scripts-apis-examples"
