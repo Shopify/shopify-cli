@@ -12,7 +12,7 @@ module Script
       end
 
       def self.help
-        ShopifyCLI::Context.new.message("connect.help", ShopifyCLI::TOOL_NAME, ShopifyCLI::TOOL_NAME)
+        ShopifyCLI::Context.new.message("script.connect.help", ShopifyCLI::TOOL_NAME, ShopifyCLI::TOOL_NAME)
       end
     end
   end
