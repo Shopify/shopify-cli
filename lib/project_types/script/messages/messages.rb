@@ -239,6 +239,7 @@ module Script
           building_script: "Building script",
           built: "Built",
           pushing: "Pushing",
+          pushing_script: "Pushing script",
           pushed: "Pushed",
           ensure_env: {
             organization: "Partner organization {{green:%s (%s)}}.",
