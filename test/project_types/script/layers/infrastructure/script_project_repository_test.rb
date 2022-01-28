@@ -8,10 +8,10 @@ describe Script::Layers::Infrastructure::ScriptProjectRepository do
   let(:ctx) { TestHelpers::FakeContext.new }
   let(:instance) do
     Script::Layers::Infrastructure::ScriptProjectRepository.new(
-    ctx: ctx,
-    directory: directory,
-    initial_directory: ctx.root
-  )
+      ctx: ctx,
+      directory: directory,
+      initial_directory: ctx.root
+    )
   end
 
   let(:deprecated_ep_types) { [] }
@@ -115,11 +115,13 @@ describe Script::Layers::Infrastructure::ScriptProjectRepository do
     let(:current_project) do
       TestHelpers::FakeProject.new(directory: File.join(ctx.root, script_name), config: actual_config)
     end
+    let(:input_query) { nil }
 
     before do
       ShopifyCLI::Project.stubs(:has_current?).returns(true)
       ShopifyCLI::Project.stubs(:current).returns(current_project)
       ctx.write(script_config, script_config_content.to_json)
+      ctx.write("input.graphql", input_query) if input_query
     end
 
     describe "when project config is valid" do
@@ -153,6 +155,14 @@ describe Script::Layers::Infrastructure::ScriptProjectRepository do
         assert_equal script_config_content["version"], subject.script_config.version
         assert_equal script_config_content["version"], subject.script_config.version
         assert_equal script_config_content["configuration"].to_json, subject.script_config.configuration.to_json
+        assert_nil subject.input_query
+      end
+
+      describe "when input.graphql file is present" do
+        let(:input_query) { "{ aField }" }
+        it "populates the input_query field" do
+          assert_equal input_query, subject.input_query
+        end
       end
     end
 

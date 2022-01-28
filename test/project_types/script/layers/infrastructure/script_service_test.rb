@@ -99,7 +99,7 @@ describe Script::Layers::Infrastructure::ScriptService do
         }
       end
 
-      it "should post the form without scope" do
+      it "returns the script's uuid" do
         assert_equal(uuid_from_server, subject)
       end
     end
