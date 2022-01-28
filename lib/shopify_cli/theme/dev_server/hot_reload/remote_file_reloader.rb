@@ -53,6 +53,8 @@ module ShopifyCLI
               api_version: "unstable",
               query: URI.encode_www_form("asset[key]" => file.relative_path.to_s),
             )
+          rescue ShopifyCLI::API::APIRequestNotFoundError
+            [404, {}]
           end
         end
       end
