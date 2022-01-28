@@ -184,7 +184,10 @@ describe Script::Layers::Infrastructure::ScriptService do
           {
             "data" => {
               "appScriptSet" => {
-                "userErrors" => [{ "message" => "error", "tag" => "configuration_definition_error" }],
+                "userErrors" => [
+                  { "message" => "error1", "tag" => "configuration_definition_error" },
+                  { "message" => "error2", "tag" => "configuration_definition_error" },
+                ],
               },
             },
           }
@@ -194,7 +197,7 @@ describe Script::Layers::Infrastructure::ScriptService do
           assert_raises_and_validate(
             Script::Layers::Infrastructure::Errors::ScriptConfigurationDefinitionError,
             proc do |e|
-              assert_equal("error", e.message)
+              assert_equal(["error1", "error2"], e.messages)
               assert_equal(script_config_filename, e.filename)
             end,
           ) { subject }

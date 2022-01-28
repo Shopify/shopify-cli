@@ -18,16 +18,35 @@ describe Script::UI::ErrorHandler do
     end
 
     describe "when failed operation message, cause of error, and help suggestion are all provided" do
-      it "should abort with the cause of error and help suggestion" do
-        if ci?
-          $stderr.expects(:puts).with("✗ Error")
-          $stderr.expects(:puts).with("#{failed_op} #{cause_of_error} #{help_suggestion}")
-        else
-          $stderr.expects(:puts).with("\e[0;31m✗ Error\e[0m")
-          $stderr.expects(:puts).with("\e[0m#{failed_op} #{cause_of_error} #{help_suggestion}")
+      describe "when failed operation message and cause of error end with whitespace" do
+        let(:failed_op) { "Operation didn't complete. " }
+        let(:cause_of_error) { "This is why it failed.\n" }
+        it "should abort with the cause of error and help suggestion" do
+          if ci?
+            $stderr.expects(:puts).with("✗ Error")
+            $stderr.expects(:puts).with("#{failed_op}#{cause_of_error}#{help_suggestion}")
+          else
+            $stderr.expects(:puts).with("\e[0;31m✗ Error\e[0m")
+            $stderr.expects(:puts).with("\e[0m#{failed_op}#{cause_of_error}#{help_suggestion}")
+          end
+          assert_raises(ShopifyCLI::AbortSilent) do
+            subject
+          end
         end
-        assert_raises(ShopifyCLI::AbortSilent) do
-          subject
+      end
+
+      describe "when failed operation message and cause of error do not end with whitespace" do
+        it "should abort with the cause of error and help suggestion" do
+          if ci?
+            $stderr.expects(:puts).with("✗ Error")
+            $stderr.expects(:puts).with("#{failed_op} #{cause_of_error} #{help_suggestion}")
+          else
+            $stderr.expects(:puts).with("\e[0;31m✗ Error\e[0m")
+            $stderr.expects(:puts).with("\e[0m#{failed_op} #{cause_of_error} #{help_suggestion}")
+          end
+          assert_raises(ShopifyCLI::AbortSilent) do
+            subject
+          end
         end
       end
     end
@@ -232,12 +251,23 @@ describe Script::UI::ErrorHandler do
       describe "when ScriptConfigurationDefinitionError" do
         let(:err) do
           Script::Layers::Infrastructure::Errors::ScriptConfigurationDefinitionError.new(
-            message: "message",
+            messages: messages,
             filename: "filename",
           )
         end
-        it "should call display_and_raise" do
-          should_call_display_and_raise
+
+        describe "when there is a single error message" do
+          let(:messages) { ["message"] }
+          it "should call display_and_raise" do
+            should_call_display_and_raise
+          end
+        end
+
+        describe "when there are multiple error messages" do
+          let(:messages) { ["message1", "message2"] }
+          it "should call display_and_raise" do
+            should_call_display_and_raise
+          end
         end
       end
 
