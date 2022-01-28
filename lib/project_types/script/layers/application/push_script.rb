@@ -19,7 +19,7 @@ module Script
             raise Infrastructure::Errors::LanguageLibraryForAPINotFoundError.new(
               language: script_project.language,
               api: script_project.extension_point_type
-            ) unless library || (script_project.language == "wasm")
+            ) if library.nil? && (script_project.language != "wasm")
 
             library_name = library&.package
             library_data = {
