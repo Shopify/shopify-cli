@@ -4,7 +4,7 @@ module ShopifyCLI
   module Theme
     module DevServer
       class HotReload
-        class LiquidCssReloader
+        class RemoteFileReloader
           def initialize(ctx, theme:, streams:)
             @ctx = ctx
             @theme = theme
@@ -37,7 +37,7 @@ module ShopifyCLI
 
           def notify(file)
             @streams.broadcast(JSON.generate(modified: [file]))
-            @ctx.debug("[LiquidCssReloader] Modified #{file}")
+            @ctx.debug("[RemoteFileReloader] Modified #{file}")
           end
 
           def wait

@@ -1,6 +1,6 @@
 # frozen_string_literal: true
 
-require_relative "hot_reload/liquid_css_reloader"
+require_relative "hot_reload/remote_file_reloader"
 
 module ShopifyCLI
   module Theme
@@ -12,7 +12,7 @@ module ShopifyCLI
           @theme = theme
           @mode = mode
           @streams = SSE::Streams.new
-          @liquid_css_reloader = LiquidCssReloader.new(ctx, theme: @theme, streams: @streams)
+          @remote_file_reloader = RemoteFileReloader.new(ctx, theme: @theme, streams: @streams)
           @watcher = watcher
           @watcher.add_observer(self, :notify_streams_of_file_change)
           @ignore_filter = ignore_filter
@@ -42,7 +42,7 @@ module ShopifyCLI
           files -= liquid_css_files = files.select(&:liquid_css?)
 
           hot_reload(files) unless files.empty?
-          liquid_css_reload(liquid_css_files)
+          remote_reload(liquid_css_files)
         end
 
         private
@@ -53,9 +53,9 @@ module ShopifyCLI
           @ctx.debug("[HotReload] Modified #{paths.join(", ")}")
         end
 
-        def liquid_css_reload(files)
+        def remote_reload(files)
           files.each do |file|
-            @liquid_css_reloader.reload(file)
+            @remote_file_reloader.reload(file)
           end
         end
 

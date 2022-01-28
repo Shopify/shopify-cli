@@ -1,7 +1,7 @@
 # frozen_string_literal: true
 require "test_helper"
 require "shopify_cli/theme/dev_server"
-require "shopify_cli/theme/dev_server/hot_reload/liquid_css_reloader"
+require "shopify_cli/theme/dev_server/hot_reload/remote_file_reloader"
 require "rack/mock"
 
 module ShopifyCLI
@@ -107,9 +107,9 @@ module ShopifyCLI
 
         def test_doesnt_broadcast_watcher_events_when_modified_file_is_a_liquid_css
           modified = ["assets/generated.css.liquid"]
-          HotReload::LiquidCssReloader
+          HotReload::RemoteFileReloader
             .stubs(:new)
-            .returns(liquid_css_reloader)
+            .returns(remote_file_reloader)
           SSE::Streams.any_instance
             .expects(:broadcast)
             .with(JSON.generate(modified: modified))
@@ -124,7 +124,7 @@ module ShopifyCLI
 
         private
 
-        def liquid_css_reloader
+        def remote_file_reloader
           reloader = mock("Reloader")
           reloader.stubs(reload: nil)
           reloader

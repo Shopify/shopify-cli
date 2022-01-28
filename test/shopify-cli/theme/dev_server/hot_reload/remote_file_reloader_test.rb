@@ -1,19 +1,19 @@
 # frozen_string_literal: true
 
 require "test_helper"
-require "shopify_cli/theme/dev_server/hot_reload/liquid_css_reloader"
+require "shopify_cli/theme/dev_server/hot_reload/remote_file_reloader"
 require "shopify_cli/theme/theme"
 
 module ShopifyCLI
   module Theme
     module DevServer
       class HotReload
-        class LiquidCssReloaderTest < Minitest::Test
+        class RemoteFileReloaderTest < Minitest::Test
           def setup
             super
             shopify_db_mock
 
-            @reloader = LiquidCssReloader.new(ctx, theme: theme, streams: streams)
+            @reloader = RemoteFileReloader.new(ctx, theme: theme, streams: streams)
             @reloader.stubs(:wait)
           end
 
