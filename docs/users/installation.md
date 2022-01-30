@@ -8,6 +8,14 @@ The easiest method to install the Shopify CLI is through RubyGems:
 $ gem install shopify-cli
 ```
 
+## Installation for Windows Users
+
+- Go to the [Ruby Intstaller Kit](https://rubyinstaller.org/downloads/) download the latest version.
+- Run installer leave all boxes checked. Make sure to associate install with **PATH** Environment variable.
+- *A PC restart my be required* - Restart the terminal or PowerShell in *admin mode*.
+- Run `gem install shopify-cli` 
+- After the installation is completed, run `shopify version`, if this outputs a version number you've successfully installed the CLI.
+
 ## Installation for macOS Users
 
 - Make sure you have [Homebrew](https://brew.sh/) installed
