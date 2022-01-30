@@ -1,6 +1,7 @@
 From version 2.6.0, the sections in this file adhere to the [keep a changelog](https://keepachangelog.com/en/1.0.0/) specification.
 
 ## [Unreleased]
+* [#1989](https://github.com/Shopify/shopify-cli/pull/1989): Added windows installation documentation more clear when installing pre-requisites needed.
 * [#1928](https://github.com/Shopify/shopify-cli/pull/1928): Ensure script Wasm file sizes don't exceed the limit
 
 ## Version 2.10.1
