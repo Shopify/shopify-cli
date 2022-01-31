@@ -216,7 +216,7 @@ module Script
                 {{command:--out}} The name of the file that the WebAssembly should be written to.
           HELP
           errors: {
-            invalid_arguments: "Javy was run with invalid arguments. Run {{command: %s script javy --help}}",
+            invalid_arguments: "Javy was run with invalid arguments. Run {{command: %s script javy --help}}.",
           },
         },
 
