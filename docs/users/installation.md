@@ -23,6 +23,7 @@ $ gem install shopify-cli
 - Run `brew tap shopify/shopify`
 - Run `brew install shopify-cli`
 - After the installation is completed, run `shopify version`, if this outputs a version number you've successfully installed the CLI.
+- If a runtime issue occurs after the run of the command please refer to issue [#1990](https://github.com/Shopify/shopify-cli/issues/1990).
 
 ### To upgrade Shopify CLI
 
