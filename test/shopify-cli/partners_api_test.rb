@@ -5,7 +5,7 @@ module ShopifyCLI
     include TestHelpers::Project
 
     def test_query_calls_partners_api
-      IdentityAuth.expects(:fetch_or_auth_partners_token).with(ctx: @context).returns("token123")
+      IdentityAuth.any_instance.stubs(:fetch_or_auth_partners_token).returns("token123")
 
       api_stub = stub
       PartnersAPI.expects(:new).with(
@@ -19,7 +19,7 @@ module ShopifyCLI
 
     def test_query_fails_gracefully_when_unable_to_authenticate
       Shopifolk.stubs(:check).returns(false)
-      IdentityAuth.expects(:fetch_or_auth_partners_token).with(ctx: @context).returns("token123").twice
+      IdentityAuth.any_instance.stubs(:fetch_or_auth_partners_token).returns("token123")
 
       api_stub = stub
       PartnersAPI.expects(:new).with(
@@ -48,7 +48,7 @@ module ShopifyCLI
     end
 
     def test_query_fails_gracefully_without_partners_account
-      IdentityAuth.expects(:fetch_or_auth_partners_token).with(ctx: @context).returns("token123")
+      IdentityAuth.any_instance.stubs(:fetch_or_auth_partners_token).returns("token123")
 
       api_stub = stub
       PartnersAPI.expects(:new).with(
@@ -62,7 +62,7 @@ module ShopifyCLI
     end
 
     def test_query
-      IdentityAuth.expects(:fetch_or_auth_partners_token).with(ctx: @context).returns("token123")
+      IdentityAuth.any_instance.stubs(:fetch_or_auth_partners_token).returns("token123")
 
       api_stub = stub
       PartnersAPI.expects(:new).with(
