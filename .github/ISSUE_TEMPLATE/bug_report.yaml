@@ -1,10 +1,10 @@
 name: Bug Report
 description: File a bug report
 title: "[Bug]: "
-labels: ["bug"]
+labels: ["type:bug"]
 body:
   - type: checkboxes
-    id: preflight-checks
+    id: preflight_checks
     attributes:
       label: Before jumping to submit...
       description: |-
@@ -24,7 +24,7 @@ body:
     attributes:
       value: '## General Questions'
   - type: dropdown
-    id: app-type
+    id: app_type
     attributes:
       label: What type of project are you working on?
       options:
@@ -36,7 +36,7 @@ body:
     validations:
       required: true
   - type: input
-    id: issue-summary
+    id: issue_summary
     attributes:
       label: Issue summary
       description: Write a short description of the issue here ↓
@@ -44,7 +44,7 @@ body:
     validations:
       required: true
   - type: textarea
-    id: expected-behavior
+    id: expected_behavior
     attributes:
       label: Expected behavior
       description: What do you think should have happened?
@@ -52,7 +52,7 @@ body:
     validations:
       required: true
   - type: textarea
-    id: actual-behavior
+    id: actual_behavior
     attributes:
       label: Actual behavior
       description: What actually happened?
@@ -60,7 +60,7 @@ body:
     validations:
       required: true
   - type: textarea
-    id: stack-trace
+    id: stack_trace
     attributes:
       label: Stack trace
       description: Paste in a stack trace if you've got one!
@@ -68,7 +68,7 @@ body:
     validations:
       required: false
   - type: textarea
-    id: repro-steps
+    id: repro_steps
     attributes:
       label: Reproduction steps
       description: Let us know the exact steps required to reproduce the error. The more detail, the better!
@@ -94,7 +94,7 @@ body:
     validations:
       required: true
   - type: input
-    id: cli-version
+    id: cli_version
     attributes:
       label: CLI version (run `shopify version` if you're not sure)
       placeholder: 2.10.0
@@ -106,12 +106,12 @@ body:
       label: Shell
       placeholder: Cygwin, Git Bash, iTerm2, bash, zsh...
   - type: input
-    id: ruby-version
+    id: ruby_version
     attributes:
       label: Ruby version (run `ruby -v` if you're not sure)
       placeholder: 3.0.2p107
   - type: input
-    id: other-versions
+    id: other_versions
     attributes:
       label: What language and version are you using in your application?
       placeholder: Ruby 3.0.3, Node 17.1, PHP 7.4...
