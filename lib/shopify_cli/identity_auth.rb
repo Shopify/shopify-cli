@@ -81,7 +81,6 @@ module ShopifyCLI
     def exchange_partners_auth_token(subject_token)
       application = "partners"
       request_exchange_token(
-        name: application,
         audience: client_id_for_application(application),
         additional_scopes: APPLICATION_SCOPES[application],
         subject_token: subject_token,
@@ -212,17 +211,16 @@ module ShopifyCLI
     def request_and_save_exchange_token(name, audience, additional_scopes)
       return if name == "shopify" && !store.exists?(:shop)
       access_token = request_exchange_token(
-        name: name,
         audience: audience,
         additional_scopes: additional_scopes,
         subject_token: store.get(:identity_access_token),
-        destination: (name == "shopify") ? "https://#{store.get(:shop)}/admin" : nil
+        destination: name == "shopify" ? "https://#{store.get(:shop)}/admin" : nil
       )
       store.set("#{name}_exchange_token".to_sym => access_token)
       ctx.debug("#{name}_exchange_token: " + access_token)
     end
 
-    def request_exchange_token(name:, audience:, additional_scopes:, subject_token:, destination: nil)
+    def request_exchange_token(audience:, additional_scopes:, subject_token:, destination: nil)
       params = {
         grant_type: "urn:ietf:params:oauth:grant-type:token-exchange",
         requested_token_type: "urn:ietf:params:oauth:token-type:access_token",
