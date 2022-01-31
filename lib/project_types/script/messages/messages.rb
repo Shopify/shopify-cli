@@ -30,7 +30,8 @@ module Script
           invalid_script_name_cause: "Script name contains unsupported characters.",
           invalid_script_name_help: "Use only numbers, letters, hyphens, or underscores.",
 
-          no_existing_apps_cause: "Your script can’t be pushed to an app because your Partner account doesn’t have any apps.",
+          no_existing_apps_cause: "Your script can’t be pushed to an app because your Partner account "\
+                                  "doesn’t have any apps.",
           no_existing_apps_help: "Create an app.",
 
           no_existing_orgs_cause: "Your account doesn’t belong to a Partner Organization.",
@@ -179,7 +180,7 @@ module Script
         push: {
           help: <<~HELP,
             Build the script, upload it to Shopify, and register it to an app.
-              Usage: {{command:%s script push}} 
+              Usage: {{command:%s script push}}
               Options:
                 {{command:[--force]}} Replace the existing script with this version.
                 {{command:[--api-key=API_KEY]}} The API key used to register an app with the script. This can be found on the app page on Partners Dashboard. Overrides the value in the .env file, if present.
