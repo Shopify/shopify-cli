@@ -26,6 +26,7 @@ module ShopifyCLI
 
           def setup
             super
+            Services::App::Create::RailsService.any_instance.stubs(:check_yarn).returns(true)
             ShopifyCLI::Tasks::EnsureAuthenticated.stubs(:call)
             ShopifyCLI::Shopifolk.stubs(:acting_as_shopify_organization?).returns(false)
           end
