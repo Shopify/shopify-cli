@@ -10,7 +10,7 @@ module Script
         HELP
 
         error: {
-          deprecated_ep: "This script won't work in production because "\
+          deprecated_ep: "This script won't run in a store because "\
                          "it uses a deprecated Script API (%s).",
           deprecated_ep_cause: "Recreate this script using a supported Script API.",
           generic: "{{red:{{x}} Error}}",
@@ -40,7 +40,7 @@ module Script
           project_exists_help: "Choose a different name for your script.",
 
           invalid_extension_cause: "The name of the Script API is incorrect: %s.",
-          invalid_extension_help: "Supported values: %s.",
+          invalid_extension_help: "Choose a supported API: %s.",
 
           invalid_language_cause: "The language is not supported: %s.",
           invalid_language_help: "Choose a supported language: %s.",
