@@ -133,16 +133,22 @@ module ShopifyCLI
     end
 
     [
-      { tty: true, mac: true, windows: false, linux: false, expect_output: false, expect_system: "open" },
-      { tty: true, mac: false, windows: true, linux: false, expect_output: false, expect_system: "start" },
-      { tty: true, mac: false, windows: false, linux: true, expect_output: false, expect_system: "xdg-open" },
-      { tty: true, mac: false, windows: false, linux: true, expect_output: true, expect_system: nil },
-      { tty: true, mac: false, windows: false, linux: false, expect_output: true },
-      { tty: false, mac: true, windows: false, linux: false, expect_output: true },
+      { tty: true, mac: true, mac_m1: false, windows: false, linux: false, expect_output: false,
+        expect_system: "open" },
+      { tty: true, mac: false, mac_m1: true, windows: false, linux: false, expect_output: false,
+        expect_system: "open" },
+      { tty: true, mac: false, mac_m1: false, windows: true, linux: false, expect_output: false,
+        expect_system: "start" },
+      { tty: true, mac: false, mac_m1: false, windows: false, linux: true, expect_output: false,
+        expect_system: "xdg-open" },
+      { tty: true, mac: false, mac_m1: false, windows: false, linux: true, expect_output: true, expect_system: nil },
+      { tty: true, mac: false, mac_m1: false, windows: false, linux: false, expect_output: true },
+      { tty: false, mac: true, mac_m1: false, windows: false, linux: false, expect_output: true },
     ].each do |test|
       define_method("test_open_browser_url_with_" +
         (test[:tty] ? "_tty" : "_no_tty") +
         (test[:mac] ? "_mac" : "") +
+        (test[:mac_m1] ? "_mac_m1" : "") +
         (test[:windows] ? "_windows" : "") +
         (test[:linux] ? "_linux" : "") +
         (test[:expect_output] ? "_to_stdout" : "") +
@@ -150,6 +156,7 @@ module ShopifyCLI
         url = "http://shoesbycolin.com"
         @ctx.stubs(:tty?).returns(test[:tty])
         @ctx.stubs(:mac?).returns(test[:mac])
+        @ctx.stubs(:mac_m1?).returns(test[:mac_m1])
         @ctx.stubs(:windows?).returns(test[:windows])
         @ctx.stubs(:linux?).returns(test[:linux])
         @ctx.stubs(:which).returns(test[:expect_system]) if test[:linux]
