@@ -174,11 +174,16 @@ module CLI
         end
 
         def os
-          return :mac if /darwin/.match(RUBY_PLATFORM)
-          return :linux if /linux/.match(RUBY_PLATFORM)
-          return :windows if /mingw32/.match(RUBY_PLATFORM)
-
-          raise "Could not determine OS from platform #{RUBY_PLATFORM}"
+          @current_os ||= case RbConfig::CONFIG['host_os']
+          when /darwin/ then :mac
+          when /linux/ then :linux
+          else
+            if RUBY_PLATFORM !~ /cygwin/ && ENV['OS'] == 'Windows_NT'
+              :windows
+            else
+              raise "Could not determine OS from host_os #{RbConfig::CONFIG["host_os"]}"
+            end
+          end
         end
 
         private
