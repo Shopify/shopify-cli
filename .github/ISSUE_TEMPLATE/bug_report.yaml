@@ -60,21 +60,21 @@ body:
     attributes:
       label: Stack trace
       description: Paste in a stack trace if you've got one!
+      render: shell
     validations:
       required: false
-    render: shell
   - type: textarea
     id: repro-steps
     attributes:
       label: Reproduction steps
       description: Let us know the exact steps required to reproduce the error. The more detail, the better! (markdown accepted)
-    value: |-
-      1.
-      1.
-      1.
+      value: |-
+        1.
+        1.
+        1.
+      render: markdown
     validations:
       required: true
-    render: markdown
   - type: markdown
     attributes:
       value: |
