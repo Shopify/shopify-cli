@@ -35,7 +35,7 @@ body:
         - other
     validations:
       required: true
-  - type: textarea
+  - type: input
     id: issue-summary
     attributes:
       label: Issue summary
