@@ -3,7 +3,7 @@ module Script
     module Application
       class ProjectDependencies
         def self.install(ctx:, task_runner:)
-          CLI::UI::Frame.open(ctx.message("script.project_deps.checking_with_npm")) do
+          CLI::UI::Frame.open(ctx.message("script.project_deps.checking")) do
             begin
               if task_runner.dependencies_installed?
                 ctx.puts(ctx.message("script.project_deps.none_required"))

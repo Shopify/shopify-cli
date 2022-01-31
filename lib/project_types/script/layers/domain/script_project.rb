@@ -16,6 +16,7 @@ module Script
         property! :language, accepts: String
 
         property :script_config, accepts: ScriptConfig
+        property :input_query, accepts: String
 
         def initialize(*)
           super

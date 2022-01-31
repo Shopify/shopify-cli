@@ -100,7 +100,7 @@ module Script
           }
         when Layers::Domain::Errors::MetadataNotFoundError
           {
-            cause_of_error: ShopifyCLI::Context.message("script.error.metadata_not_found_cause"),
+            cause_of_error: ShopifyCLI::Context.message("script.error.metadata_not_found_cause", e.filename),
             help_suggestion: ShopifyCLI::Context.message("script.error.metadata_not_found_help"),
           }
         when Layers::Domain::Errors::MissingScriptConfigFieldError
@@ -250,6 +250,11 @@ module Script
           {
             cause_of_error: ShopifyCLI::Context.message("script.error.script_upload_cause"),
             help_suggestion: ShopifyCLI::Context.message("script.error.script_upload_help"),
+          }
+        when Layers::Infrastructure::Errors::ScriptTooLargeError
+          {
+            cause_of_error: ShopifyCLI::Context.message("script.error.script_too_large_cause"),
+            help_suggestion: ShopifyCLI::Context.message("script.error.script_too_large_help", max_size: e.max_size),
           }
         when Layers::Infrastructure::Errors::APILibraryNotFoundError
           {

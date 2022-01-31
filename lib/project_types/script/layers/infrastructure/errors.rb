@@ -159,6 +159,15 @@ module Script
         class ScriptUploadError < ScriptProjectError; end
         class ProjectConfigNotFoundError < ScriptProjectError; end
         class InvalidProjectConfigError < ScriptProjectError; end
+
+        class ScriptTooLargeError < ScriptProjectError
+          attr_reader :max_size
+
+          def initialize(max_size)
+            super()
+            @max_size = max_size
+          end
+        end
       end
     end
   end

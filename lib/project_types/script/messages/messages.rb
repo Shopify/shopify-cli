@@ -129,8 +129,8 @@ module Script
             "\nbuild: npx shopify-scripts-toolchain-as build --src src/shopify_main.ts --binary build/<script_name>.wasm --metadata build/metadata.json -- --lib node_modules --optimize --use Date=",
 
           web_assembly_binary_not_found: "WebAssembly binary not found.",
-          web_assembly_binary_not_found_suggestion: "No WebAssembly binary found." \
-            "Check that your build npm script outputs the generated binary to the root of the directory." \
+          web_assembly_binary_not_found_suggestion: "No WebAssembly binary found. " \
+            "Check that your build script outputs the generated binary to the root of the directory. " \
             "Generated binary should match the script name: <script_name>.wasm",
 
           project_config_not_found: "Internal error - Script can't be created because the project's config file is missing from the repository.",
@@ -139,6 +139,9 @@ module Script
 
           script_upload_cause: "Fail to upload script.",
           script_upload_help: "Try again.",
+
+          script_too_large_cause: "The size of your Wasm binary file is too large.",
+          script_too_large_help: "It must be less than %{max_size}.",
 
           api_library_not_found_cause: "Script can't be created because API library %{library_name} is missing from the dependencies",
           api_library_not_found_help: "This error can occur because the API library was removed from your system or there is a problem with dependencies in the repository.",
@@ -170,6 +173,9 @@ module Script
           change_directory_notice: "{{*}} Change directories to {{green:%s}} to run script commands",
           creating: "Creating script",
           created: "Created script",
+          preparing_project: "Preparing script project structure",
+          creating_wasm: "Creating configuration files",
+          created_wasm: "Configuration files created",
         },
 
         push: {
@@ -218,7 +224,7 @@ module Script
 
         project_deps: {
           none_required: "{{v}} None required",
-          checking_with_npm: "Checking dependencies with npm",
+          checking: "Checking dependencies",
           installing: "Dependencies installing",
           installed: "Missing dependencies installed",
         },
@@ -236,6 +242,7 @@ module Script
           building_script: "Building script",
           built: "Built",
           pushing: "Pushing",
+          pushing_script: "Pushing script",
           pushed: "Pushed",
           ensure_env: {
             organization: "Partner organization {{green:%s (%s)}}.",

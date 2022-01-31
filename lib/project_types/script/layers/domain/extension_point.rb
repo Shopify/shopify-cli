@@ -42,8 +42,8 @@ module Script
           end
 
           def all
-            @all ||= @config.map do |language, libray_config|
-              ExtensionPointLibrary.new(language, libray_config)
+            @all ||= @config.map do |language, library_config|
+              ExtensionPointLibrary.new(language, library_config)
             end
           end
 

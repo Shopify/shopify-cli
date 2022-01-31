@@ -3,6 +3,11 @@ From version 2.6.0, the sections in this file adhere to the [keep a changelog](h
 ## [Unreleased]
 ### Fixed
 * [#1983](https://github.com/Shopify/shopify-cli/pull/1983): Improve Windows compatibility
+* [#1928](https://github.com/Shopify/shopify-cli/pull/1928): Ensure script Wasm file sizes don't exceed the limit
+
+## Version 2.10.1
+### Fixed
+* [#1985](https://github.com/Shopify/shopify-cli/pull/1985): Revert "Fix CORS (Cross-origin resource sharing) errors (#1952)"
 
 ## Version 2.10.0
 ### Fixed

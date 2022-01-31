@@ -99,7 +99,7 @@ describe Script::Layers::Infrastructure::ScriptService do
         }
       end
 
-      it "should post the form without scope" do
+      it "returns the script's uuid" do
         assert_equal(uuid_from_server, subject)
       end
     end
@@ -332,15 +332,21 @@ describe Script::Layers::Infrastructure::ScriptService do
     end
   end
 
-  describe ".generate_module_upload_url" do
+  describe ".generate_module_upload_details" do
     let(:user_errors) { [] }
     let(:url) { nil }
+    let(:headers) { {} }
+    let(:humanized_max_size) { "" }
     let(:response) do
       {
         "data" => {
           "moduleUploadUrlGenerate" => {
-            "url" => url,
             "userErrors" => user_errors,
+            "details" => {
+              "headers" => headers,
+              "url" => url,
+              "humanizedMaxSize" => humanized_max_size,
+            },
           },
         },
       }
@@ -350,13 +356,23 @@ describe Script::Layers::Infrastructure::ScriptService do
       api_client.stubs(:query).returns(response)
     end
 
-    subject { script_service.generate_module_upload_url }
+    subject { script_service.generate_module_upload_details }
 
     describe "when a url can be generated" do
       let(:url) { "http://fake.com" }
+      let(:headers) { { "header" => "value" } }
+      let(:humanized_max_size) { "123 Bytes" }
 
       it "returns a url" do
-        assert_equal url, subject
+        assert_equal url, subject[:url]
+      end
+
+      it "returns headers" do
+        assert_equal headers, subject[:headers]
+      end
+
+      it "returns max size" do
+        assert_equal humanized_max_size, subject[:max_size]
       end
     end
 

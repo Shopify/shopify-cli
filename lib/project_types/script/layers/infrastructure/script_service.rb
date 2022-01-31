@@ -19,7 +19,8 @@ module Script
           metadata:,
           script_config:,
           module_upload_url:,
-          library:
+          library:,
+          input_query: nil
         )
           query_name = "app_script_set"
           variables = {
@@ -34,11 +35,14 @@ module Script
             configurationUi: script_config.configuration_ui,
             configurationDefinition: script_config.configuration&.to_json,
             moduleUploadUrl: module_upload_url,
-            library: {
-              language: library[:language],
-              version: library[:version],
-            },
+            inputQuery: input_query,
           }
+
+          variables[:library] = {
+            language: library[:language],
+            version: library[:version],
+          }  if library
+
           resp_hash = make_request(query_name: query_name, variables: variables)
           user_errors = resp_hash["data"]["appScriptSet"]["userErrors"]
 
@@ -91,14 +95,16 @@ module Script
           response["data"]["appScripts"]
         end
 
-        def generate_module_upload_url
+        def generate_module_upload_details
           query_name = "module_upload_url_generate"
           variables = {}
           response = make_request(query_name: query_name, variables: variables)
           user_errors = response["data"]["moduleUploadUrlGenerate"]["userErrors"]
 
           raise Errors::GraphqlError, user_errors if user_errors.any?
-          response["data"]["moduleUploadUrlGenerate"]["url"]
+
+          data = response["data"]["moduleUploadUrlGenerate"]["details"]
+          { url: data["url"], headers: data["headers"], max_size: data["humanizedMaxSize"] }
         end
 
         private
