@@ -1,0 +1,113 @@
+name: Bug Report
+description: File a bug report
+title: "[Bug]: "
+labels: ["bug"]
+body:
+  - type: markdown
+    attributes:
+      value: |
+        Hi! 👋 Thanks for taking the time to open an issue.
+
+        *Before submitting your issue*, please ensure that:
+
+        1. You've searched the [existing issues](https://github.com/Shopify/shopify-cli/issues) to see if someone else has already submitted the same thing. (Feel free to add any additional information in a comment!)
+        2. You've given as much detail as reasonably possible
+        3. You're working with the [latest CLI version](https://github.com/Shopify/shopify-cli/releases)
+
+        This is important because:
+
+        1. We will notice and prioritize 1 popular issue more quickly than many small duplicates
+        2. More details = faster, higher-quality response
+        3. We might have fixed your issue already!
+
+  - type: dropdown
+    id: app-type
+    attributes:
+      label: What type of project are you working with?
+      options:
+        - app
+        - extension
+        - script
+        - theme
+    validations:
+      required: true
+  - type: textarea
+    id: issue-summary
+    attributes:
+      label: Issue summary
+      description: Write a short description of the issue here ↓
+      placeholder: Tell us what you see!
+    validations:
+      required: true
+  - type: textarea
+    id: expected-behavior
+    attributes:
+      label: Expected behavior
+      description: What do you think should have happened?
+      placeholder: It should have worked
+    validations:
+      required: true
+  - type: textarea
+    id: actual-behavior
+    attributes:
+      label: Actual behavior
+      description: What actually happened?
+      placeholder: It didn't work
+    validations:
+      required: true
+  - type: textarea
+    id: stack-trace
+    attributes:
+      label: Stack trace
+      description: Paste in a stack trace if you've got one!
+    validations:
+      required: false
+    render: shell
+  - type: textarea
+    id: repro-steps
+    attributes:
+      label: Reproduction steps
+      description: Let us know the exact steps required to reproduce the error. The more detail, the better! (markdown accepted)
+    value: |-
+      1.
+      1.
+      1.
+    validations:
+      required: true
+    render: markdown
+  - type: markdown
+    attributes:
+      value: |
+        Just a few more technical questions, to help us find out if bugs are linked to particular enviroments.
+  - type: dropdown
+    id: os
+    attributes:
+      label: What is your Operating System?
+      options:
+        - Windows
+        - Mac OS
+        - Linux
+        - Other
+    validations:
+      required: true
+  - type: input
+    id: shell
+    attributes:
+      label: What shell are you running?
+  - type: input
+    id: ruby-version
+    attributes:
+      label: What Ruby version are you running? (run `ruby -v` if you're not sure)
+  - type: input
+    id: cli-version
+    attributes:
+      label: What CLI version are you running? (run `shopify version` if you're not sure)
+    validations:
+      required: true
+
+## Specifications
+
+- App type:
+- Operating System:
+- Shell:
+- Ruby version (ruby -v):
