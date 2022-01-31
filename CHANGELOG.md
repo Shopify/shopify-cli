@@ -1,6 +1,8 @@
 From version 2.6.0, the sections in this file adhere to the [keep a changelog](https://keepachangelog.com/en/1.0.0/) specification.
 
 ## [Unreleased]
+### Added
+* [#1998](https://github.com/Shopify/shopify-cli/pull/1998): Add support for Rails 7
 
 ## Version 2.10.2
 ### Fixed
