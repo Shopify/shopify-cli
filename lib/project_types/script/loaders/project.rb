@@ -33,7 +33,7 @@ module Script
           properties_hash = { api_key: "--api-key", secret: "--api-secret" }
           missing_options = error.properties.map { |p| properties_hash[p.name] }.compact.join(", ")
           raise ShopifyCLI::Abort, context.message("script.error.missing_push_options", missing_options,
-           ShopifyCli::TOOL_NAME)
+            ShopifyCli::TOOL_NAME)
         end
       end
 
