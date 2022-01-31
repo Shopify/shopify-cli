@@ -33,7 +33,7 @@ module Script
           no_existing_apps_cause: "Your script can’t be pushed to an app because your Partner account doesn’t have any apps.",
           no_existing_apps_help: "Create an app.",
 
-          no_existing_orgs_cause: "Your account doesn’t belong to a Partner Organization",
+          no_existing_orgs_cause: "Your account doesn’t belong to a Partner Organization.",
           no_existing_orgs_help: "Visit https://partners.shopify.com/ to create an account.",
 
           project_exists_cause: "A directory with this same name already exists.",
