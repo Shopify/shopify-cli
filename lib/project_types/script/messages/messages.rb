@@ -248,7 +248,7 @@ module Script
             app: "Push script to app {{green:%s}}.",
             app_select: "Which app do you want to push this script to?",
             ask_connect_to_existing_script: "This app contains scripts. Do you want to replace an "\
-              "existing script on the app with this script?"?",
+              "existing script on the app with this script?",
             ask_which_script_to_connect_to: "Which script do you want to replace?",
           },
         },
