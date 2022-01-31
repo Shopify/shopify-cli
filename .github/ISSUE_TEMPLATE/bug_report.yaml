@@ -96,7 +96,7 @@ body:
   - type: input
     id: cli-version
     attributes:
-      label: What CLI version are you running? (run `shopify version` if you're not sure)
+      label: CLI version (run `shopify version` if you're not sure)
       placeholder: 2.10.0
     validations:
       required: true
@@ -108,7 +108,7 @@ body:
   - type: input
     id: ruby-version
     attributes:
-      label: What Ruby version are you running? (run `ruby -v` if you're not sure)
+      label: Ruby version (run `ruby -v` if you're not sure)
       placeholder: 3.0.2p107
   - type: input
     id: other-versions
