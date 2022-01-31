@@ -104,10 +104,3 @@ body:
       label: What CLI version are you running? (run `shopify version` if you're not sure)
     validations:
       required: true
-
-## Specifications
-
-- App type:
-- Operating System:
-- Shell:
-- Ruby version (ruby -v):
