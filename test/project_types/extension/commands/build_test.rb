@@ -41,7 +41,7 @@ module Extension
       end
 
       def test_runs_new_flow_if_development_server_supported
-        config_file = "shopifile.yml"
+        config_file = "extension.config.yml"
         type = "CHECKOUT_UI_EXTENSION"
         stub_project(type)
 
