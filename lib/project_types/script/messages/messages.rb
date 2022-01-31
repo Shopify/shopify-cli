@@ -159,7 +159,7 @@ module Script
             {{command:%1$s script create}}: Creates a script project.
               Usage: {{command:%1$s script create}}
               Options:
-                {{command:--name=NAME}} Script project name. 
+                {{command:--name=NAME}} Script project name.
                 {{command:--api=TYPE}} Script API name. Supported values: %2$s.
                 {{command:--language=LANGUAGE}} Programming language. Supported values: %3$s.
           HELP
@@ -178,8 +178,8 @@ module Script
 
         push: {
           help: <<~HELP,
-            Build the script, upload it to Shopify, and register it to an app.  
-              Usage: {{command:%s script push}}
+            Build the script, upload it to Shopify, and register it to an app.
+              Usage: {{command:%s script push}} 
               Options:
                 {{command:[--force]}} Replace the existing script with this version.
                 {{command:[--api-key=API_KEY]}} The API key used to register an app with the script. This can be found on the app page on Partners Dashboard. Overrides the value in the .env file, if present.
