@@ -224,8 +224,8 @@ module Script
         project_deps: {
           none_required: "{{v}} Dependencies up to date.",
           checking: "Checking dependencies",
-          installing: "Installing dependencies",
-          installed: "Installed missing dependencies",
+          installing: "Installing dependencies.",
+          installed: "Installed missing dependencies.",
         },
 
         forms: {
