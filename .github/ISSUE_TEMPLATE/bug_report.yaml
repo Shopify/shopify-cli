@@ -1,38 +1,42 @@
 name: Bug Report
 description: File a bug report
 title: "[Bug]: "
-labels: ["bug"]
+labels: ["type:bug"]
 body:
-  - type: markdown
+  - type: checkboxes
+    id: preflight_checks
     attributes:
-      value: |
+      label: Before jumping to submit...
+      description: |-
         Hi! 👋 Thanks for taking the time to open an issue.
 
-        *Before submitting your issue*, please ensure that:
-
-        1. You've searched the [existing issues](https://github.com/Shopify/shopify-cli/issues) to see if someone else has already submitted the same thing. (Feel free to add any additional information in a comment!)
-        2. You've given as much detail as reasonably possible
-        3. You're working with the [latest CLI version](https://github.com/Shopify/shopify-cli/releases)
-
-        This is important because:
-
-        1. We will notice and prioritize 1 popular issue more quickly than many small duplicates
-        2. More details = faster, higher-quality response
-        3. We might have fixed your issue already!
-
-  - type: dropdown
-    id: app-type
+        **Before submitting your issue**, please confirm:
+      options:
+        - label: I've searched the [existing issues](https://github.com/Shopify/shopify-cli/issues) to see if someone else has already submitted the same thing. (Feel free to add any additional information in a comment!)
+          required: true
+        - label: I've given as much detail as reasonably possible
+          required: true
+        - label: I've tested with the [latest CLI version](https://github.com/Shopify/shopify-cli/releases)
+          required: true
+    validations:
+      required: true
+  - type: markdown
     attributes:
-      label: What type of project are you working with?
+      value: '## General Questions'
+  - type: dropdown
+    id: app_type
+    attributes:
+      label: What type of project are you working on?
       options:
         - app
         - extension
         - script
         - theme
+        - other
     validations:
       required: true
-  - type: textarea
-    id: issue-summary
+  - type: input
+    id: issue_summary
     attributes:
       label: Issue summary
       description: Write a short description of the issue here ↓
@@ -40,7 +44,7 @@ body:
     validations:
       required: true
   - type: textarea
-    id: expected-behavior
+    id: expected_behavior
     attributes:
       label: Expected behavior
       description: What do you think should have happened?
@@ -48,7 +52,7 @@ body:
     validations:
       required: true
   - type: textarea
-    id: actual-behavior
+    id: actual_behavior
     attributes:
       label: Actual behavior
       description: What actually happened?
@@ -56,7 +60,7 @@ body:
     validations:
       required: true
   - type: textarea
-    id: stack-trace
+    id: stack_trace
     attributes:
       label: Stack trace
       description: Paste in a stack trace if you've got one!
@@ -64,43 +68,50 @@ body:
     validations:
       required: false
   - type: textarea
-    id: repro-steps
+    id: repro_steps
     attributes:
       label: Reproduction steps
-      description: Let us know the exact steps required to reproduce the error. The more detail, the better! (markdown accepted)
+      description: Let us know the exact steps required to reproduce the error. The more detail, the better!
       value: |-
         1.
-        1.
-        1.
-      render: markdown
+        2.
+        3.
     validations:
       required: true
   - type: markdown
     attributes:
       value: |
-        Just a few more technical questions, to help us find out if bugs are linked to particular enviroments.
-  - type: dropdown
+        <hr/>
+
+        ## Environment Details
+
+        Just a few more technical questions, to help us understand if your bug is linked to a particular runtime enviroment.
+  - type: input
     id: os
     attributes:
-      label: What is your Operating System?
-      options:
-        - Windows
-        - Mac OS
-        - Linux
-        - Other
+      label: Operating System
+      placeholder: Windows 11, Mac OS Monterey, Ubuntu 20.04...
+    validations:
+      required: true
+  - type: input
+    id: cli_version
+    attributes:
+      label: CLI version (run `shopify version` if you're not sure)
+      placeholder: 2.10.0
     validations:
       required: true
   - type: input
     id: shell
     attributes:
-      label: What shell are you running?
+      label: Shell
+      placeholder: Cygwin, Git Bash, iTerm2, bash, zsh...
   - type: input
-    id: ruby-version
+    id: ruby_version
     attributes:
-      label: What Ruby version are you running? (run `ruby -v` if you're not sure)
+      label: Ruby version (run `ruby -v` if you're not sure)
+      placeholder: 3.0.2p107
   - type: input
-    id: cli-version
+    id: other_versions
     attributes:
-      label: What CLI version are you running? (run `shopify version` if you're not sure)
-    validations:
-      required: true
+      label: What language and version are you using in your application?
+      placeholder: Ruby 3.0.3, Node 17.1, PHP 7.4...
