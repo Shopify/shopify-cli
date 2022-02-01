@@ -18,23 +18,23 @@ module Script
           eacces_help: "Get permission for this directory or choose a different one.",
 
           enospc_cause: "You don't have enough disk space to do this action.",
-          enospc_help: "Get more space.",
+          enospc_help: "Free up more space.",
 
           oauth_cause: "Something went wrong while authenticating your account with the Partner Dashboard.",
           oauth_help: "Wait a few minutes and try again.",
 
-          invalid_context_cause: "Your .shopify-cli.yml is formatted incorrectly. It’s missing values for "\
+          invalid_context_cause: "Your .shopify-cli.yml is formatted incorrectly. It's missing values for "\
                                  "extension_point_type or script_name.",
-          invalid_context_help: "Add these values and try again.",
+          invalid_context_help: "Add these values.",
 
           invalid_script_name_cause: "Script name contains unsupported characters.",
           invalid_script_name_help: "Use only numbers, letters, hyphens, or underscores.",
 
-          no_existing_apps_cause: "Your script can’t be pushed to an app because your Partner account "\
-                                  "doesn’t have any apps.",
+          no_existing_apps_cause: "Your script can't be pushed to an app because your Partner account "\
+                                  "doesn't have any apps.",
           no_existing_apps_help: "Create an app.",
 
-          no_existing_orgs_cause: "Your account doesn’t belong to a Partner Organization.",
+          no_existing_orgs_cause: "Your account doesn't belong to a Partner Organization.",
           no_existing_orgs_help: "Visit https://partners.shopify.com/ to create an account.",
 
           project_exists_cause: "A directory with this same name already exists.",
@@ -122,15 +122,14 @@ module Script
           script_repush_help: "Use {{cyan:--force}} to replace the existing script.",
 
           build_script_not_found: "The root package.json is missing the build command that " \
-                                  "is needed to compile your script to WebAssembly.",
+                                  "is needed to compile your script to Wasm.",
           # rubocop:disable Layout/LineLength
           build_script_suggestion: "\n\nFor example, your package.json needs the following command:" \
             "\nbuild: npx shopify-scripts-toolchain-as build --src src/shopify_main.ts --binary build/<script_name>.wasm --metadata build/metadata.json -- --lib node_modules --optimize --use Date=",
 
-          web_assembly_binary_not_found: "WebAssembly binary not found.",
-          web_assembly_binary_not_found_suggestion: "No WebAssembly binary found. " \
-            "Check that your build script outputs the generated binary to the root of the directory. " \
-            "The generated binary should match the script name: <script_name>.wasm",
+          web_assembly_binary_not_found: "Wasm binary not found.",
+          web_assembly_binary_not_found_suggestion: "Check that there is a valid Wasm binary in the root directory" \
+          "Your Wasm binary should match the script name: <script_name>.wasm",
 
           project_config_not_found: "Internal error - Script can't be created because the project's config file is missing from the repository.",
 
@@ -166,7 +165,7 @@ module Script
           HELP
 
           error: {
-            operation_failed: "Something went wrong and the script wasn’t created.",
+            operation_failed: "Something went wrong and the script wasn't created.",
           },
 
           change_directory_notice: "{{*}} Change directories to {{green:%s}} to run script commands.",
@@ -210,11 +209,11 @@ module Script
         },
         javy: {
           help: <<~HELP,
-            Compile the JavaScript code into WebAssembly.
+            Compile the JavaScript code into Wasm.
               Usage: {{command:%s script javy}}
               Options:
                 {{command:--in}} The name of the JavaScript file that will be compiled.
-                {{command:--out}} The name of the file that the WebAssembly should be written to.
+                {{command:--out}} The name of the file that the Wasm should be written to.
           HELP
           errors: {
             invalid_arguments: "Javy was run with invalid arguments. Run {{command: %s script javy --help}}.",
@@ -222,8 +221,8 @@ module Script
         },
 
         project_deps: {
-          none_required: "{{v}} Dependencies up to date.",
-          checking: "Checking dependencies",
+          none_required: "{{v}} Dependencies are up to date.",
+          checking: "Checking dependencies.",
           installing: "Installing dependencies.",
           installed: "Installed missing dependencies.",
         },
@@ -232,7 +231,7 @@ module Script
           create: {
             select_extension_point: "Which Script API do you want to use?",
             select_language: "Which language do you want to use?",
-            script_name: "Script name",
+            script_name: "What do you want to name your script?",
           },
         },
 
