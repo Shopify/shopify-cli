@@ -13,7 +13,7 @@ module ShopifyCLI
           labels: labels,
           template: "bug_report.yaml",
           stack_trace: stacktrace_text,
-          os: RbConfig::CONFIG['host_os'],
+          os: RUBY_PLATFORM,
           cli_version: ShopifyCLI::VERSION,
           ruby_version: "#{RUBY_VERSION}p#{RUBY_PATCHLEVEL}",
         })
