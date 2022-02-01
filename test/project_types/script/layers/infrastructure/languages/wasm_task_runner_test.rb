@@ -25,6 +25,14 @@ describe Script::Layers::Infrastructure::Languages::WasmTaskRunner do
     end
   end
 
+  describe ".install_dependencies" do
+    subject { runner.install_dependencies }
+
+    it "should always return nil" do
+      assert_nil subject
+    end
+  end
+
   describe ".metadata_file_location" do
     subject { runner.metadata_file_location }
 
