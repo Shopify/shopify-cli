@@ -107,13 +107,10 @@ body:
       placeholder: Ruby 3.0.3, Node 17.1, PHP 7.4...
   - type: markdown
     attributes:
-      value: |
+      value: |-
 
         ## What to Expect
 
-        When you submit this issue, it will go to a Shopify developer experience
-        team. We may not be able to reply right away, but we usually respond
-        within a week.
+        When you submit this issue, it will go to a Shopify developer experience team. We may not be able to reply right away, but we usually respond within a week.
 
-        We always value your feedback. Thanks again for taking the time to help
-        improve the CLI for everyone!
+        We always value your feedback. Thanks again for taking the time to help improve the CLI for everyone!
