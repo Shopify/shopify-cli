@@ -5,7 +5,6 @@ require "shopify_cli/theme/include_filter"
 module ShopifyCLI
   module Theme
     class IncludeFilterTest < Minitest::Test
-
       def test_match_when_patterns_is_not_provided
         assert IncludeFilter.new.match?("../file.txt")
       end
@@ -21,7 +20,7 @@ module ShopifyCLI
       def test_match_when_patterns_has_multiple_globs_and_matches_both
         tests = [
           { glob: "templates/test.txt" },
-          { glob: "build/test.txt" }
+          { glob: "build/test.txt" },
         ]
 
         filter = IncludeFilter.new(["templates/", "build/"])
