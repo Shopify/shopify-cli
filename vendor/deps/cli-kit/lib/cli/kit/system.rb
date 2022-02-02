@@ -227,7 +227,7 @@ module CLI
         end
 
         def which(cmd, env)
-          exts = os == :windows ? env.fetch('PATHEXT', ['']).split(';') : ['']
+          exts = (os == :windows && env['PATHEXT']&.split(';')) || ['']
           env.fetch('PATH', '').split(File::PATH_SEPARATOR).each do |path|
             exts.each do |ext|
               exe = File.join(path, "#{cmd}#{ext}")
