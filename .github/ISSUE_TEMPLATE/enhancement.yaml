@@ -1,0 +1,38 @@
+name: Enhancement
+description: Enhancement to our codebase that isn't a adding or changing a feature
+title: "[Enhancement]: <YOUR ENHANCEMENT>"
+labels: ["type:enhancement"]
+body:
+  - type: markdown
+    attributes:
+      value:
+        Hi! 👋 Thanks for taking the time to open an issue.
+
+        While we can't promise we'll implement your request, we'll certainly look it over and take your needs into consideration.
+  - type: dropdown
+    id: app_type
+    attributes:
+      label: What type of project(s) will this request affect?
+      options:
+        - app
+        - extension
+        - script
+        - theme
+        - other
+      multiple: true
+    validations:
+      required: true
+  - type: textarea
+    id: overview
+    attributes:
+      label: Overview
+      description: Describe in your own words the change you'd like to be made to the CLI.
+    validations:
+      required: true
+  - type: textarea
+    id: motivation
+    attributes:
+      label: Motivation
+      description: What inspired this request? What problems were you facing?
+    validations:
+      required: true
