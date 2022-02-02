@@ -1,0 +1,47 @@
+name: Feature Request
+description: Suggest a new feature, or changes to an existing one
+title: "[Feature]: <YOUR FEATURE>"
+labels: ["type:feature"]
+body:
+  - type: markdown
+    attributes:
+      value:
+        Hi! 👋 Thanks for taking the time to open an issue.
+
+        While we can't promise we'll implement your request, we'll certainly look it over and take your needs into consideration.
+  - type: dropdown
+    id: app_type
+    attributes:
+      label: What type of project(s) will this request affect?
+      options:
+        - app
+        - extension
+        - script
+        - theme
+        - other
+      multiple: true
+    validations:
+      required: true
+  - type: dropdown
+    id: type
+    attributes:
+      label: What type of change do you want to see?
+      options:
+        - New feature
+        - Substantial change to existing feature
+    validations:
+      required: true
+  - type: textarea
+    id: overview
+    attributes:
+      label: Overview
+      description: Describe in your own words the feature you'd like to be added to the CLI.
+    validations:
+      required: true
+  - type: textarea
+    id: motivation
+    attributes:
+      label: Motivation
+      description: What inspired this feature request? What problems were you facing?
+    validations:
+      required: true
