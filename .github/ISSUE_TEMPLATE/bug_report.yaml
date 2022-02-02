@@ -73,8 +73,6 @@ body:
   - type: markdown
     attributes:
       value: |
-        <hr/>
-
         ## Environment Details
 
         Just a few more technical questions, to help us understand if your bug is linked to a particular runtime enviroment.
@@ -109,7 +107,10 @@ body:
       placeholder: Ruby 3.0.3, Node 17.1, PHP 7.4...
   - type: markdown
     attributes:
-      value:
+      value: |
+
+        ## What to Expect
+
         When you submit this issue, it will go to a Shopify developer experience
         team. We may not be able to reply right away, but we usually respond
         within a week.
