@@ -155,10 +155,13 @@ module ShopifyCLI
           end
 
           def build(name, db)
-            context.abort(context.message("core.app.create.rails.error.install_failure", "rails")) unless
-              install_gem("rails", "<6.1")
-            context.abort(context.message("core.app.create.rails.error.install_failure", "bundler ~>2.0")) unless
-              install_gem("bundler", "~>2.0")
+            unless install_gem("rails")
+              context.abort(context.message("core.app.create.rails.error.install_failure", "rails"))
+            end
+
+            unless install_gem("bundler", "~>2.0")
+              context.abort(context.message("core.app.create.rails.error.install_failure", "bundler ~>2.0"))
+            end
 
             full_path = File.join(context.root, name)
             context.abort(context.message("core.app.create.rails.error.dir_exists", name)) if Dir.exist?(full_path)

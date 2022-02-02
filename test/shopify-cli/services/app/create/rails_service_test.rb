@@ -51,7 +51,7 @@ module ShopifyCLI
             ::Rails::Gem.stubs(:gem_home).returns(gem_path)
 
             ::Rails::Ruby.expects(:version).returns(Semantic::Version.new("2.5.0"))
-            ::Rails::Gem.expects(:install).with(@context, "rails", "<6.1").returns(true)
+            ::Rails::Gem.expects(:install).with(@context, "rails", nil).returns(true)
             ::Rails::Gem.expects(:install).with(@context, "bundler", "~>2.0").returns(true)
             expect_rails_version("7.0.1")
             expect_command(%W(#{gem_path}/bin/rails new test-app --skip-spring --database=sqlite3))
@@ -102,7 +102,7 @@ module ShopifyCLI
             ::Rails::Gem.stubs(:gem_home).returns(gem_path)
 
             ::Rails::Ruby.expects(:version).returns(Semantic::Version.new("2.5.0"))
-            ::Rails::Gem.expects(:install).with(@context, "rails", "<6.1").returns(true)
+            ::Rails::Gem.expects(:install).with(@context, "rails", nil).returns(true)
             ::Rails::Gem.expects(:install).with(@context, "bundler", "~>2.0").returns(true)
             expect_rails_version("6.1.4.1")
             expect_command(%W(#{gem_path}/bin/rails new test-app --skip-spring --database=sqlite3))
@@ -155,7 +155,7 @@ module ShopifyCLI
             ::Rails::Gem.stubs(:gem_home).returns(gem_path)
 
             ::Rails::Ruby.expects(:version).returns(Semantic::Version.new("2.5.0"))
-            ::Rails::Gem.expects(:install).with(@context, "rails", "<6.1").returns(true)
+            ::Rails::Gem.expects(:install).with(@context, "rails", nil).returns(true)
             ::Rails::Gem.expects(:install).with(@context, "bundler", "~>2.0").returns(true)
             expect_rails_version("6.1.4.1")
             expect_command(%W(#{gem_path}/bin/rails new test-app --skip-spring --database=postgresql))
@@ -204,7 +204,7 @@ module ShopifyCLI
             ::Rails::Gem.stubs(:gem_home).returns(gem_path)
 
             ::Rails::Ruby.expects(:version).returns(Semantic::Version.new("2.5.0"))
-            ::Rails::Gem.expects(:install).with(@context, "rails", "<6.1").returns(true)
+            ::Rails::Gem.expects(:install).with(@context, "rails", nil).returns(true)
             ::Rails::Gem.expects(:install).with(@context, "bundler", "~>2.0").returns(true)
             expect_rails_version("6.1.4.1")
             expect_command(%W(#{gem_path}/bin/rails new test-app --skip-spring --database=sqlite3 --edge -J))
@@ -254,7 +254,7 @@ module ShopifyCLI
             ::Rails::Gem.stubs(:gem_home).returns(gem_path)
 
             ::Rails::Ruby.expects(:version).returns(Semantic::Version.new("2.5.0"))
-            ::Rails::Gem.expects(:install).with(@context, "rails", "<6.1").returns(true)
+            ::Rails::Gem.expects(:install).with(@context, "rails", nil).returns(true)
             ::Rails::Gem.expects(:install).with(@context, "bundler", "~>2.0").returns(true)
             Dir.stubs(:exist?).returns(true)
 
