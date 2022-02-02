@@ -41,6 +41,24 @@ module Extension
         assert_equal(expected.to_hash, extension.to_hash)
       end
 
+      def test_server_config_converter_sets_default_build_directory
+        @config_file["development"].delete("build_dir")
+
+        result = Tasks::ConvertServerConfig.call(
+          api_key: @api_key,
+          context: @fake_context,
+          hash: @config_file,
+          registration_uuid: @registration_uuid,
+          store: @store,
+          title: @title,
+          tunnel_url: @tunnel_url,
+          type: @type
+        )
+
+        extension = result.extensions.first
+        assert_equal("build", extension.to_hash.dig("development", "build_dir"))
+      end
+
       def test_resource_url_included_if_one_given
         resource_url = "/cart/1:1"
         result = Tasks::ConvertServerConfig.call(
