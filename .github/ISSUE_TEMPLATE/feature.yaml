@@ -5,7 +5,7 @@ labels: ["type:feature"]
 body:
   - type: markdown
     attributes:
-      value:
+      value: |-
         Hi! 👋 Thanks for taking the time to open an issue.
 
         While we can't promise we'll implement your request, we'll certainly look it over and take your needs into consideration.
