@@ -26,7 +26,7 @@ module Extension
       end
 
       def self.handle_error(error, context:, env_file_present:)
-        if env_file_present
+        if ShopifyCLI::Environment.interactive?
           properties_hash = { api_key: "SHOPIFY_API_KEY", secret: "SHOPIFY_API_SECRET"}
           missing_env_variables = error.properties.map { |p| properties_hash[p.name] }.compact.join(", ")
           message = context.message("errors.missing_env_file_variables", missing_env_variables)
