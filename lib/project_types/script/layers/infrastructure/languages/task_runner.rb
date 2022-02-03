@@ -5,9 +5,9 @@ module Script
     module Infrastructure
       module Languages
         class TaskRunner
-          attr_reader :ctx, :script_name
+          attr_reader :ctx
 
-          def self.for(ctx, language, script_name)
+          def self.for(ctx, language)
             task_runners = {
               "assemblyscript" => AssemblyScriptTaskRunner,
               "typescript" => TypeScriptTaskRunner,
@@ -15,12 +15,11 @@ module Script
             }
 
             raise Errors::TaskRunnerNotFoundError unless task_runners[language]
-            task_runners[language].new(ctx, script_name)
+            task_runners[language].new(ctx)
           end
 
-          def initialize(ctx, script_name)
+          def initialize(ctx)
             @ctx = ctx
-            @script_name = script_name
           end
 
           def build
