@@ -17,6 +17,8 @@ module Extension
       property  :tunnel_url, accepts: String
       property! :type, accepts: String
 
+      DEFAULT_BUILD_DIR = "build"
+
       def self.call(*args)
         new(*args).call
       end
@@ -31,7 +33,7 @@ module Extension
           type: type.upcase,
           user: Models::ServerConfig::User.new,
           development: Models::ServerConfig::Development.new(
-            build_dir: hash.dig("development", "build_dir"),
+            build_dir: hash.dig("development", "build_dir") || DEFAULT_BUILD_DIR,
             renderer: renderer,
             entries: Models::ServerConfig::DevelopmentEntries.new(
               main: hash.dig("development", "entries", "main")

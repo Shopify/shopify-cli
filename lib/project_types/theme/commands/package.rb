@@ -5,6 +5,9 @@ require "json"
 module Theme
   class Command
     class Package < ShopifyCLI::Command::SubCommand
+      recommend_default_node_range
+      recommend_default_ruby_range
+
       THEME_DIRECTORIES = %w[
         assets
         config

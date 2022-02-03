@@ -3,6 +3,9 @@
 module Theme
   class Command
     class Init < ShopifyCLI::Command::SubCommand
+      recommend_default_node_range
+      recommend_default_ruby_range
+
       options do |parser, flags|
         parser.on("-u", "--clone-url URL") { |url| flags[:clone_url] = url }
       end
