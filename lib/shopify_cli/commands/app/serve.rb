@@ -6,6 +6,9 @@ module ShopifyCLI
 
         prerequisite_task :ensure_env, :ensure_dev_store
 
+        recommend_default_ruby_range
+        recommend_default_node_range
+
         options do |parser, flags|
           parser.on("--host=HOST") do |h|
             flags[:host] = h.gsub('"', "")

@@ -6,6 +6,9 @@ module Extension
     class Push < ShopifyCLI::Command::SubCommand
       prerequisite_task ensure_project_type: :extension
 
+      recommend_default_node_range
+      recommend_default_ruby_range
+
       options do |parser, flags|
         parser.on("--api-key=API_KEY") { |api_key| flags[:api_key] = api_key.gsub('"', "") }
         parser.on("--api-secret=API_SECRET") { |api_secret| flags[:api_secret] = api_secret.gsub('"', "") }

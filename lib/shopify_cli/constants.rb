@@ -58,6 +58,18 @@ module ShopifyCLI
       MONORAIL_REAL_EVENTS = "MONORAIL_REAL_EVENTS"
     end
 
+    module SupportedVersions
+      module Ruby
+        FROM = "2.6.6"
+        TO = "3.0.2"
+      end
+
+      module Node
+        FROM = "12.0.0"
+        TO = "17.0.0"
+      end
+    end
+
     module Identity
       CLIENT_ID_DEV = "e5380e02-312a-7408-5718-e07017e9cf52"
       CLIENT_ID = "fbdb2649-e327-4907-8f67-908d24cfd7e3"

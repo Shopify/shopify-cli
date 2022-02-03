@@ -5,6 +5,8 @@ module Script
     class Create < ShopifyCLI::Command::SubCommand
       prerequisite_task :ensure_authenticated
 
+      recommend_default_ruby_range
+
       options do |parser, flags|
         parser.on("--name=NAME") { |name| flags[:name] = name }
         parser.on("--api=API_NAME") { |ep_name| flags[:extension_point] = ep_name }

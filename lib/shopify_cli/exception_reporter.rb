@@ -1,5 +1,10 @@
 module ShopifyCLI
   module ExceptionReporter
+    def self.report_error_silently(error)
+      return unless ReportingConfigurationController.reporting_enabled?
+      report_to_bugsnag(error: error)
+    end
+
     def self.report(error, _logs = nil, _api_key = nil, custom_metadata = {})
       context = ShopifyCLI::Context.new
       unless ShopifyCLI::Environment.development?
@@ -19,6 +24,10 @@ module ShopifyCLI
       return unless reportable_error?(error)
 
       return unless report?(context: context)
+      report_to_bugsnag(error: error, custom_metadata: custom_metadata)
+    end
+
+    def self.report_to_bugsnag(error:, custom_metadata: {})
       ENV["BUGSNAG_DISABLE_AUTOCONFIGURE"] = "1"
       require "bugsnag"
 

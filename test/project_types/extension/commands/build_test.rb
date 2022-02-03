@@ -9,6 +9,8 @@ module Extension
       include TestHelpers::FakeUI
       def setup
         super
+        ShopifyCLI::Environment.stubs(:ruby_version).returns("2.7.5")
+        ShopifyCLI::Environment.stubs(:node_version).returns("12.0.0")
         ShopifyCLI::ProjectType.load_type(:extension)
         ShopifyCLI::Tasks::EnsureProjectType.stubs(:call)
       end
