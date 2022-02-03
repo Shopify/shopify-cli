@@ -17,9 +17,7 @@ module Script
             true
           end
 
-          def install_dependencies
-            nil
-          end
+          def install_dependencies; end
 
           def library_version(_library_name)
             nil

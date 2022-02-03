@@ -32,7 +32,7 @@ module Script
             raise NotImplementedError
           end
 
-          def library_version(_library_version)
+          def library_version(_library_name)
             raise NotImplementedError
           end
         end
