@@ -6,12 +6,6 @@ module Script
       module Languages
         class WasmTaskRunner < TaskRunner
           BYTECODE_FILE = "script.wasm"
-          attr_reader :ctx, :script_name
-
-          def initialize(ctx, script_name) # rubocop:disable Lint/MissingSuper
-            @ctx = ctx
-            @script_name = script_name
-          end
 
           def dependencies_installed?
             true

@@ -10,13 +10,6 @@ module Script
           SCRIPT_SDK_BUILD = "npm run build"
           GEN_METADATA = "npm run gen-metadata"
 
-          attr_reader :ctx, :script_name
-
-          def initialize(ctx, script_name) # rubocop:disable Lint/MissingSuper
-            @ctx = ctx
-            @script_name = script_name
-          end
-
           def build
             compile
             bytecode
