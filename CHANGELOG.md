@@ -5,6 +5,7 @@ From version 2.6.0, the sections in this file adhere to the [keep a changelog](h
 * [#2005](https://github.com/Shopify/shopify-cli/pull/2005): Fix PHP app serve on Windows environments
 
 ### Added
+* [#1998](https://github.com/Shopify/shopify-cli/pull/1998): Add support for Rails 7
 * [#1945](https://github.com/Shopify/shopify-cli/pull/1945): Check Node and Ruby versions and warn the user if their environment's version might be incompatible with the version the command expects.
 
 ## Version 2.10.2
