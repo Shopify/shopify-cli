@@ -5,6 +5,7 @@ describe Script::Layers::Infrastructure::Languages::TypeScriptTaskRunner do
   include TestHelpers::FakeFS
 
   let(:ctx) { TestHelpers::FakeContext.new }
+  let(:fake_capture2e_response) { [nil, OpenStruct.new(success?: true)] }
   let(:language) { "TypeScript" }
   let(:library_name) { "@shopify/extension-point-as-fake" }
   let(:runner) { Script::Layers::Infrastructure::Languages::TypeScriptTaskRunner.new(ctx) }
@@ -107,11 +108,15 @@ describe Script::Layers::Infrastructure::Languages::TypeScriptTaskRunner do
   describe ".install_dependencies" do
     subject { runner.install_dependencies }
 
+    before do
+      ShopifyCLI::Environment.stubs(:node_version)
+        .returns(::Semantic::Version.new("14.15.0"))
+      ShopifyCLI::Environment.stubs(:npm_version)
+        .returns(::Semantic::Version.new("5.2.0"))
+    end
+
     describe "when node version is above minimum" do
       it "should install using npm" do
-        ctx.expects(:capture2e)
-          .with("node", "--version")
-          .returns(["v14.15.0", mock(success?: true)])
         ctx.expects(:capture2e)
           .with("npm install --no-audit --no-optional --legacy-peer-deps --loglevel error")
           .returns([nil, mock(success?: true)])
@@ -121,9 +126,8 @@ describe Script::Layers::Infrastructure::Languages::TypeScriptTaskRunner do
 
     describe "when node version is below minimum" do
       it "should raise error" do
-        ctx.expects(:capture2e)
-          .with("node", "--version")
-          .returns(["v14.4.0", mock(success?: true)])
+        ShopifyCLI::Environment.expects(:node_version)
+          .returns(::Semantic::Version.new("14.14.0"))
 
         assert_raises Script::Layers::Infrastructure::Errors::DependencyInstallError do
           subject
@@ -237,6 +241,34 @@ describe Script::Layers::Infrastructure::Languages::TypeScriptTaskRunner do
           assert_equal "1.3.7", subject
         end
       end
+    end
+  end
+
+  describe ".set_npm_config" do
+    subject { runner.set_npm_config }
+
+    it "should run npm config commands" do
+      ctx
+        .expects(:capture2e)
+        .with(Script::Layers::Infrastructure::Languages::TypeScriptTaskRunner::NPM_SET_REGISTRY_COMMAND)
+        .returns(fake_capture2e_response)
+      ctx
+        .expects(:capture2e)
+        .with(Script::Layers::Infrastructure::Languages::TypeScriptTaskRunner::NPM_SET_ENGINE_STRICT_COMMAND)
+        .returns(fake_capture2e_response)
+
+      subject
+    end
+  end
+
+  describe ".ensure_environment" do
+    subject { runner.ensure_environment }
+
+    it "should call check_tool_versions with tools" do
+      runner
+        .expects(:check_tool_versions)
+        .with(runner.class::TOOLS)
+      subject
     end
   end
 end

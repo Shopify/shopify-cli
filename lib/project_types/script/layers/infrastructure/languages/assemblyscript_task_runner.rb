@@ -5,9 +5,21 @@ module Script
     module Infrastructure
       module Languages
         class AssemblyScriptTaskRunner < TaskRunner
+          include ToolVersionChecker
+          TOOLS = {
+            "node" => {
+              "minimum_version" => "14.15.0",
+            },
+            "npm" => {
+              "minimum_version" => "5.2.0",
+            },
+          }
+
           BYTECODE_FILE = "build/script.wasm"
           METADATA_FILE = "build/metadata.json"
           SCRIPT_SDK_BUILD = "npm run build"
+          NPM_SET_REGISTRY_COMMAND = "npm --userconfig ./.npmrc config set @shopify:registry https://registry.npmjs.com"
+          NPM_SET_ENGINE_STRICT_COMMAND = "npm --userconfig ./.npmrc config set engine-strict true"
 
           def build
             compile
@@ -15,7 +27,7 @@ module Script
           end
 
           def install_dependencies
-            check_node_version!
+            ensure_environment
 
             output, status = ctx.capture2e("npm install --no-audit --no-optional --legacy-peer-deps --loglevel error")
             raise Errors::DependencyInstallError, output unless status.success?
@@ -31,10 +43,21 @@ module Script
           end
 
           def library_version(library_name)
+            ensure_environment
             output = JSON.parse(CommandRunner.new(ctx: ctx).call("npm -s list --json"))
             library_version_from_npm_list(output, library_name)
           rescue Errors::SystemCallFailureError => error
             library_version_from_npm_list_error_output(error, library_name)
+          end
+
+          def set_npm_config
+            ensure_environment
+            CommandRunner.new(ctx: ctx).call(NPM_SET_REGISTRY_COMMAND)
+            CommandRunner.new(ctx: ctx).call(NPM_SET_ENGINE_STRICT_COMMAND)
+          end
+
+          def ensure_environment
+            check_tool_versions(TOOLS)
           end
 
           private
@@ -54,19 +77,6 @@ module Script
           def library_version_from_npm_list(output, library_name)
             output.dig("dependencies", library_name, "version").tap do |version|
               raise Errors::APILibraryNotFoundError, library_name unless version
-            end
-          end
-
-          def check_node_version!
-            output, status = @ctx.capture2e("node", "--version")
-            raise Errors::DependencyInstallError, output unless status.success?
-
-            require "semantic/semantic"
-            version = ::Semantic::Version.new(output[1..-1])
-            unless version >= ::Semantic::Version.new(AssemblyScriptProjectCreator::MIN_NODE_VERSION)
-              raise Errors::DependencyInstallError,
-                "Node version must be >= v#{AssemblyScriptProjectCreator::MIN_NODE_VERSION}. "\
-                "Current version: #{output.strip}."
             end
           end
 

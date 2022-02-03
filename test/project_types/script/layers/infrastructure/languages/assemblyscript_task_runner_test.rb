@@ -19,6 +19,7 @@ describe Script::Layers::Infrastructure::Languages::AssemblyScriptTaskRunner do
   let(:language) { "assemblyscript" }
   let(:as_task_runner) { Script::Layers::Infrastructure::Languages::AssemblyScriptTaskRunner.new(ctx) }
   let(:command_runner) { Script::Layers::Infrastructure::CommandRunner }
+  let(:fake_capture2e_response) { [nil, OpenStruct.new(success?: true)] }
 
   let(:package_json) do
     {
@@ -145,8 +146,9 @@ describe Script::Layers::Infrastructure::Languages::AssemblyScriptTaskRunner do
           command_runner.any_instance.stubs(:call)
             .with(cmd)
             .raises(Script::Layers::Infrastructure::Errors::SystemCallFailureError.new(
-out: "some non-json parsable error output", cmd: cmd
-))
+              out: "some non-json parsable error output",
+              cmd: cmd
+            ))
 
           assert_raises Script::Layers::Infrastructure::Errors::SystemCallFailureError do
             subject
@@ -195,11 +197,15 @@ out: "some non-json parsable error output", cmd: cmd
   describe ".install_dependencies" do
     subject { as_task_runner.install_dependencies }
 
+    before do
+      ShopifyCLI::Environment.stubs(:node_version)
+        .returns(::Semantic::Version.new("14.15.0"))
+      ShopifyCLI::Environment.stubs(:npm_version)
+        .returns(::Semantic::Version.new("5.2.0"))
+    end
+
     describe "when node version is above minimum" do
       it "should install using npm" do
-        ctx.expects(:capture2e)
-          .with("node", "--version")
-          .returns(["v14.5.1", mock(success?: true)])
         ctx.expects(:capture2e)
           .with("npm install --no-audit --no-optional --legacy-peer-deps --loglevel error")
           .returns([nil, mock(success?: true)])
@@ -209,9 +215,8 @@ out: "some non-json parsable error output", cmd: cmd
 
     describe "when node version is below minimum" do
       it "should raise error" do
-        ctx.expects(:capture2e)
-          .with("node", "--version")
-          .returns(["v14.4.0", mock(success?: true)])
+        ShopifyCLI::Environment.expects(:node_version)
+          .returns(::Semantic::Version.new("14.14.0"))
 
         assert_raises Script::Layers::Infrastructure::Errors::DependencyInstallError do
           subject
@@ -235,6 +240,34 @@ out: "some non-json parsable error output", cmd: cmd
 
     it "should return the filename" do
       assert_equal("build/metadata.json", subject)
+    end
+  end
+
+  describe ".set_npm_config" do
+    subject { as_task_runner.set_npm_config }
+
+    it "should run npm config commands" do
+      ctx
+        .expects(:capture2e)
+        .with(Script::Layers::Infrastructure::Languages::AssemblyScriptTaskRunner::NPM_SET_REGISTRY_COMMAND)
+        .returns(fake_capture2e_response)
+      ctx
+        .expects(:capture2e)
+        .with(Script::Layers::Infrastructure::Languages::AssemblyScriptTaskRunner::NPM_SET_ENGINE_STRICT_COMMAND)
+        .returns(fake_capture2e_response)
+
+      subject
+    end
+  end
+
+  describe ".ensure_environment" do
+    subject { as_task_runner.ensure_environment }
+
+    it "should call check_tool_versions with tools" do
+      as_task_runner
+        .expects(:check_tool_versions)
+        .with(as_task_runner.class::TOOLS)
+      subject
     end
   end
 end

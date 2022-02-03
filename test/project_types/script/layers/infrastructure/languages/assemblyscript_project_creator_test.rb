@@ -6,7 +6,6 @@ describe Script::Layers::Infrastructure::Languages::AssemblyScriptProjectCreator
   include TestHelpers::FakeFS
 
   let(:context) { TestHelpers::FakeContext.new }
-  let(:fake_capture2e_response) { [nil, OpenStruct.new(success?: true)] }
 
   let(:extension_point_type) { "payment_methods" }
   let(:extension_point_config) do
@@ -51,14 +50,10 @@ describe Script::Layers::Infrastructure::Languages::AssemblyScriptProjectCreator
         .with
         .once
 
-      context
-        .expects(:capture2e)
-        .with(Script::Layers::Infrastructure::Languages::AssemblyScriptProjectCreator::NPM_SET_REGISTRY_COMMAND)
-        .returns(fake_capture2e_response)
-      context
-        .expects(:capture2e)
-        .with(Script::Layers::Infrastructure::Languages::AssemblyScriptProjectCreator::NPM_SET_ENGINE_STRICT_COMMAND)
-        .returns(fake_capture2e_response)
+      Script::Layers::Infrastructure::Languages::AssemblyScriptTaskRunner.any_instance
+        .expects(:ensure_environment)
+      Script::Layers::Infrastructure::Languages::AssemblyScriptTaskRunner.any_instance
+        .expects(:set_npm_config)
 
       subject
     end
