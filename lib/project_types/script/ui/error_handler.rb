@@ -173,7 +173,8 @@ module Script
         when Layers::Infrastructure::Errors::ScriptEnvAppNotConnectedError
           {
             cause_of_error: ShopifyCLI::Context.message("script.error.app_not_connected_cause"),
-            help_suggestion: ShopifyCLI::Context.message("script.error.app_not_connected_help"),
+            help_suggestion: ShopifyCLI::Context.message("script.error.app_not_connected_help",
+              tool_name: ShopifyCLI::TOOL_NAME),
           }
         when Layers::Infrastructure::Errors::ScriptConfigMissingKeysError
           {

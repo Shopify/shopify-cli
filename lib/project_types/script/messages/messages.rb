@@ -56,7 +56,7 @@ module Script
           no_script_config_file_help: "Create this file.",
 
           app_not_connected_cause: "The script is not connected to an app.",
-          app_not_connected_help: "Run {{command:%s script connect}}",
+          app_not_connected_help: "Run {{command:%{tool_name} script connect}}.",
 
           configuration_definition_error_cause: "In %{filename} there is a problem with the "\
                                                 "configuration. %{message}",
