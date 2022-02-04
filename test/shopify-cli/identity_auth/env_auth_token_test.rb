@@ -16,7 +16,7 @@ module ShopifyCLI
 
       def test_exchanged_partners_token
         # Given
-        EnvAuthToken.expects(:exchanged_partners_token=).with do |token|
+        EnvAuthToken.stubs(:exchanged_partners_token=).with do |token|
           token.token == "access_token"
         end
         EnvAuthToken.stubs(:exchanged_partners_token).returns(nil)
