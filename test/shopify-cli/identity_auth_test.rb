@@ -181,7 +181,7 @@ module ShopifyCLI
       env_auth_token = "token"
       exchanged_token = "exchanged_token"
       IdentityAuth::EnvAuthToken.stubs(:partners_token_present?).returns(true)
-      IdentityAuth::EnvAuthToken.expects(:exchanged_partners_token)
+      IdentityAuth::EnvAuthToken.stubs(:fetch_exchanged_partners_token)
         .yields(env_auth_token)
         .returns(exchanged_token)
       IdentityAuth.any_instance.expects(:exchange_partners_auth_token).returns(exchanged_token)
