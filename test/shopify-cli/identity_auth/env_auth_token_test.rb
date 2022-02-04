@@ -51,7 +51,7 @@ module ShopifyCLI
       def test_exchanged_partners_token_exchanges_the_token_if_the_existing_has_expired
         # Given
         expires_at = Time.now.to_i - 3000
-        EnvAuthToken.expects(:exchanged_partners_token=).with do |token|
+        EnvAuthToken.stubs(:exchanged_partners_token=).with do |token|
           token.token == "access_token"
         end
         EnvAuthToken
