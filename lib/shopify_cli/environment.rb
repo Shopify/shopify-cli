@@ -105,9 +105,9 @@ module ShopifyCLI
     end
 
     def self.spin_url(env_variables: ENV)
-      if infer_spin?(env_variables: env_variables)
-        # TODO: Remove version check and delete spin-legacy branch
-        #  once spin2 becomes the installed "spin" binary by default
+      if ENV.key?("SPIN_INSTANCE")
+        %x(spin show -o fqdn 2> /dev/null).strip
+      elsif infer_spin?(env_variables: env_variables)
         instances = JSON.parse(%x(exe/spin list --json --output created,fqdn))
 
         last_created_instance = instances.sort do |instance_a, instance_b|
@@ -116,8 +116,7 @@ module ShopifyCLI
 
         last_created_instance["fqdn"]
       else
-        raise ShopifyCLI:: Abort, "SPIN_INSTANCE must be specified" unless ENV.key?("SPIN_INSTANCE")
-        %x(spin show -o fqdn 2> /dev/null).strip
+        raise ShopifyCLI:: Abort, "SPIN_INSTANCE or INFER_SPIN must be specified" unless ENV.key?("SPIN_INSTANCE")
       end
     end
 
