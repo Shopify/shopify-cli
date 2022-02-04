@@ -100,9 +100,8 @@ module Script
                                                   " 'schemaVersions' is missing the 'minor' field",
 
           metadata_not_found_cause: "Can't find the script version file (%s).",
-          metadata_not_found_help: "Make sure the 'shopify/scripts-toolchain-as' package is up to date and " \
-                                     "'package.json' contains a 'scripts/build' entry with a " \
-                                     "'--metadata build/metadata.json' argument",
+          metadata_not_found_help: "Make sure your project is up-to-date and a script metadata file n" \
+                                   "is accessible at {path}.",
 
           build_error_cause: "Something went wrong while building the script.",
           build_error_help: "Correct the errors.",
