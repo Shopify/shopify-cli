@@ -5,7 +5,7 @@ module ShopifyCLI
     class EnvAuthTokenTest < MiniTest::Test
       def test_partners_token_present
         # Given
-        Environment.expects(:auth_token).returns("token")
+        Environment.stubs(:auth_token).returns("token")
 
         # When
         got = EnvAuthToken.partners_token_present?
