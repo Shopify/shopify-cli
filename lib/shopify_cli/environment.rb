@@ -106,7 +106,17 @@ module ShopifyCLI
 
     def self.spin_url(env_variables: ENV)
       if infer_spin?(env_variables: env_variables)
-        %x(spin info fqdn 2> /dev/null).strip
+        # TODO: Remove version check and delete spin-legacy branch
+        #  once spin2 becomes the installed "spin" binary by default
+        spin_version = %x(spin version 2> /dev/null).strip
+        if spin_version.start_with?("spin-")
+          # spin2
+          raise ShopifyCLI:: Abort, "SPIN_INSTANCE must be specified" unless ENV.key?("SPIN_INSTANCE")
+          %x(spin show -o fqdn 2> /dev/null).strip
+        else
+          # spin-legacy
+          %x(spin info fqdn 2> /dev/null).strip
+        end
       else
         spin_workspace = spin_workspace(env_variables: env_variables)
         spin_namespace = spin_namespace(env_variables: env_variables)
