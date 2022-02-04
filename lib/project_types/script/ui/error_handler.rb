@@ -107,8 +107,8 @@ module Script
           }
         when Layers::Domain::Errors::MetadataNotFoundError
           {
-            cause_of_error: ShopifyCLI::Context.message("script.error.metadata_not_found_cause", e.filename),
-            help_suggestion: ShopifyCLI::Context.message("script.error.metadata_not_found_help"),
+            cause_of_error: ShopifyCLI::Context.message("script.error.metadata_not_found_cause", filename: e.filename),
+            help_suggestion: ShopifyCLI::Context.message("script.error.metadata_not_found_help", filename: e.filename),
           }
         when Layers::Domain::Errors::MissingScriptConfigFieldError
           {

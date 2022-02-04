@@ -152,7 +152,7 @@ describe Script::UI::ErrorHandler do
       end
 
       describe "when MetadataNotFoundError" do
-        let(:err) { Script::Layers::Domain::Errors::MetadataNotFoundError.new(filename: "filename") }
+        let(:err) { Script::Layers::Domain::Errors::MetadataNotFoundError.new("filename") }
         it "should call display_and_raise" do
           should_call_display_and_raise
         end

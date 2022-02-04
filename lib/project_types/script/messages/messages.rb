@@ -103,9 +103,9 @@ module Script
           metadata_schema_versions_missing_minor: "Invalid Script API metadata:" \
                                                   " 'schemaVersions' is missing the 'minor' field",
 
-          metadata_not_found_cause: "Can't find the script version file (%s).",
-          metadata_not_found_help: "Make sure your project is up-to-date and a script metadata file n" \
-                                   "is accessible at {path}.",
+          metadata_not_found_cause: "Can't find the script version file (%{filename}).",
+          metadata_not_found_help: "Make sure your project is up-to-date and a script metadata file " \
+                                   "is accessible at %{filename}.",
 
           build_error_cause: "Something went wrong while building the script.",
           build_error_help: "Correct the errors.",
