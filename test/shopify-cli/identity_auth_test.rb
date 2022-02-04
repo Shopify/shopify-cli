@@ -184,7 +184,7 @@ module ShopifyCLI
       IdentityAuth::EnvAuthToken.stubs(:fetch_exchanged_partners_token)
         .yields(env_auth_token)
         .returns(exchanged_token)
-      IdentityAuth.any_instance.expects(:exchange_partners_auth_token).returns(exchanged_token)
+      IdentityAuth.any_instance.stubs(:exchange_partners_auth_token).returns(exchanged_token)
 
       # When
       got = identity_auth_client.fetch_or_auth_partners_token
