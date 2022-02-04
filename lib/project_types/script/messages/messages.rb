@@ -56,7 +56,7 @@ module Script
           no_script_config_file_help: "Create this file.",
 
           app_not_connected_cause: "The script is not connected to an app.",
-          app_not_connected_help: "Run {{command:%s script connect}}",
+          app_not_connected_help: "Run {{command:%{tool_name} script connect}}.",
 
           configuration_definition_error_cause: "In %{filename} there is a problem with the "\
                                                 "configuration. %{message}",
@@ -103,9 +103,9 @@ module Script
           metadata_schema_versions_missing_minor: "Invalid Script API metadata:" \
                                                   " 'schemaVersions' is missing the 'minor' field",
 
-          metadata_not_found_cause: "Can't find the script version file (%s).",
-          metadata_not_found_help: "Make sure your project is up-to-date and a script metadata file n" \
-                                   "is accessible at {path}.",
+          metadata_not_found_cause: "Can't find the script version file (%{filename}).",
+          metadata_not_found_help: "Make sure your project is up-to-date and a script metadata file " \
+                                   "is accessible at %{filename}.",
 
           build_error_cause: "Something went wrong while building the script.",
           build_error_help: "Correct the errors.",
