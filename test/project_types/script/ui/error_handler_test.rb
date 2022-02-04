@@ -151,6 +151,13 @@ describe Script::UI::ErrorHandler do
         end
       end
 
+      describe "when MetadataNotFoundError" do
+        let(:err) { Script::Layers::Domain::Errors::MetadataNotFoundError.new(filename: "filename") }
+        it "should call display_and_raise" do
+          should_call_display_and_raise
+        end
+      end
+
       describe "when ScriptConfigParseError" do
         let(:err) do
           Script::Layers::Infrastructure::Errors::ScriptConfigParseError.new(
@@ -196,6 +203,13 @@ describe Script::UI::ErrorHandler do
         end
       end
 
+      describe "when DeprecatedEPError" do
+        let(:err) { Script::Layers::Infrastructure::Errors::DeprecatedEPError.new("some_api") }
+        it "should call display_and_raise" do
+          should_call_display_and_raise
+        end
+      end
+
       describe "when ScriptNotFoundError" do
         let(:err) { Script::Layers::Domain::Errors::ScriptNotFoundError.new("ep type", "name") }
         it "should call display_and_raise" do
@@ -235,6 +249,13 @@ describe Script::UI::ErrorHandler do
 
       describe "when ScriptConfigSyntaxError" do
         let(:err) { Script::Layers::Infrastructure::Errors::ScriptConfigSyntaxError.new("filename") }
+        it "should call display_and_raise" do
+          should_call_display_and_raise
+        end
+      end
+
+      describe "when ScriptEnvAppNotConnectedError" do
+        let(:err) { Script::Layers::Infrastructure::Errors::ScriptEnvAppNotConnectedError.new("filename") }
         it "should call display_and_raise" do
           should_call_display_and_raise
         end
@@ -316,6 +337,13 @@ describe Script::UI::ErrorHandler do
         end
       end
 
+      describe "when SystemCallFailureError" do
+        let(:err) { Script::Layers::Infrastructure::Errors::SystemCallFailureError.new(out: "out", cmd: "cmd") }
+        it "should call display_and_raise" do
+          should_call_display_and_raise
+        end
+      end
+
       describe "when ScriptRepushError" do
         let(:err) { Script::Layers::Infrastructure::Errors::ScriptRepushError.new("uuid") }
         it "should call display_and_raise" do
@@ -323,8 +351,63 @@ describe Script::UI::ErrorHandler do
         end
       end
 
-      describe "when DeprecatedEPError" do
-        let(:err) { Script::Layers::Infrastructure::Errors::DeprecatedEPError.new("some_api") }
+      describe "when BuildScriptNotFoundError" do
+        let(:err) { Script::Layers::Infrastructure::Errors::BuildScriptNotFoundError.new }
+        it "should call display_and_raise" do
+          should_call_display_and_raise
+        end
+      end
+
+      describe "when WebAssemblyBinaryNotFoundError" do
+        let(:err) { Script::Layers::Infrastructure::Errors::WebAssemblyBinaryNotFoundError.new }
+        it "should call display_and_raise" do
+          should_call_display_and_raise
+        end
+      end
+
+      describe "when ProjectConfigNotFoundError" do
+        let(:err) { Script::Layers::Infrastructure::Errors::ProjectConfigNotFoundError.new }
+        it "should call display_and_raise" do
+          should_call_display_and_raise
+        end
+      end
+
+      describe "when InvalidProjectConfigError" do
+        let(:err) { Script::Layers::Infrastructure::Errors::InvalidProjectConfigError.new }
+        it "should call display_and_raise" do
+          should_call_display_and_raise
+        end
+      end
+
+      describe "when ScriptUploadError" do
+        let(:err) { Script::Layers::Infrastructure::Errors::ScriptUploadError.new }
+        it "should call display_and_raise" do
+          should_call_display_and_raise
+        end
+      end
+
+      describe "when ScriptTooLargeError" do
+        let(:err) { Script::Layers::Infrastructure::Errors::ScriptTooLargeError.new(max_size: "10") }
+        it "should call display_and_raise" do
+          should_call_display_and_raise
+        end
+      end
+
+      describe "when APILibraryNotFoundError" do
+        let(:err) { Script::Layers::Infrastructure::Errors::APILibraryNotFoundError.new(library_name: "library") }
+        it "should call display_and_raise" do
+          should_call_display_and_raise
+        end
+      end
+
+      describe "when LanguageLibraryForAPINotFoundError" do
+        let(:err) do
+          Script::Layers::Infrastructure::Errors::LanguageLibraryForAPINotFoundError.new(
+            language: "lang",
+            api: "api"
+          )
+        end
+
         it "should call display_and_raise" do
           should_call_display_and_raise
         end
