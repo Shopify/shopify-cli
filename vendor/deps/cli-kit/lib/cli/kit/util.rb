@@ -168,9 +168,13 @@ module CLI
           @block_that_might_raise = block_that_might_raise
         end
 
-        def retry_after(exception = StandardError, retries: 1, &before_retry)
+        def retry_after(exception = StandardError, retries: 1, only: nil, &before_retry)
           @block_that_might_raise.call
         rescue exception => e
+          should_retry = only ? only.call : true
+  
+          raise unless should_retry
+
           raise if (retries -= 1) < 0
           if before_retry
             if before_retry.arity == 0

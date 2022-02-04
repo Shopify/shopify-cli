@@ -38,7 +38,11 @@ module ShopifyCLI
       def query(ctx, query_name, **variables)
         CLI::Kit::Util.begin do
           api_client(ctx).query(query_name, variables: variables)
-        end.retry_after(API::APIRequestUnauthorizedError, retries: 1) do
+        end.retry_after(
+          API::APIRequestUnauthorizedError,
+          retries: 1,
+          only: -> { !IdentityAuth::EnvAuthToken.partners_token_present? }
+        ) do
           ShopifyCLI::IdentityAuth.new(ctx: ctx).reauthenticate
         end
       rescue API::APIRequestUnauthorizedError => e
@@ -60,9 +64,10 @@ module ShopifyCLI
       private
 
       def api_client(ctx)
+        identity_auth = ShopifyCLI::IdentityAuth.new(ctx: ctx)
         new(
           ctx: ctx,
-          token: IdentityAuth.fetch_or_auth_partners_token(ctx: ctx),
+          token: identity_auth.fetch_or_auth_partners_token,
           url: "https://#{Environment.partners_domain}/api/cli/graphql",
         )
       end

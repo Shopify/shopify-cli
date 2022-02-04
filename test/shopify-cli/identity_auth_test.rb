@@ -176,6 +176,23 @@ module ShopifyCLI
       )
     end
 
+    def test_fetch_or_auth_partners_token_when_environment_auth_token
+      # Given
+      env_auth_token = "token"
+      exchanged_token = "exchanged_token"
+      IdentityAuth::EnvAuthToken.stubs(:partners_token_present?).returns(true)
+      IdentityAuth::EnvAuthToken.stubs(:fetch_exchanged_partners_token)
+        .yields(env_auth_token)
+        .returns(exchanged_token)
+      IdentityAuth.any_instance.stubs(:exchange_partners_auth_token).returns(exchanged_token)
+
+      # When
+      got = identity_auth_client.fetch_or_auth_partners_token
+
+      # Then
+      assert_equal exchanged_token, got
+    end
+
     private
 
     def assert_expected_exchange_tokens(token_suffix:, client:)
