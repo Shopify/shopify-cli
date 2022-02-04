@@ -233,8 +233,8 @@ module ShopifyCLI
         audience: audience,
         scope: scopes,
         subject_token: subject_token,
-      }
-      params[:destination] = destination unless destination.nil?
+        destination: destination
+      }.compact
       # ctx.debug(params)
       post_token_request(params)
     end
