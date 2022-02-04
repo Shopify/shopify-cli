@@ -7,9 +7,6 @@ describe Script::UI::ErrorHandler do
     let(:failed_op) { "Operation didn't complete." }
     let(:cause_of_error) { "This is why it failed." }
     let(:help_suggestion) { "Perhaps this is what's wrong." }
-    let(:ctx_root) { "/some/dir/here" }
-    let(:ctx) { TestHelpers::FakeContext.new(root: ctx_root) }
-    let(:ci?) { ctx.ci? }
 
     subject do
       Script::UI::ErrorHandler.display_and_raise(
@@ -18,16 +15,17 @@ describe Script::UI::ErrorHandler do
     end
 
     describe "when failed operation message, cause of error, and help suggestion are all provided" do
-      it "should abort with the cause of error and help suggestion" do
-        if ci?
-          $stderr.expects(:puts).with("✗ Error")
-          $stderr.expects(:puts).with("#{failed_op} #{cause_of_error} #{help_suggestion}")
-        else
-          $stderr.expects(:puts).with("\e[0;31m✗ Error\e[0m")
-          $stderr.expects(:puts).with("\e[0m#{failed_op} #{cause_of_error} #{help_suggestion}")
+      describe "when failed operation message and cause of error end with whitespace" do
+        let(:failed_op) { "Operation didn't complete. " }
+        let(:cause_of_error) { "This is why it failed.\n" }
+        it "should abort with the cause of error and help suggestion" do
+          assert_silent_abort_and_stderr("✗ Error\n#{failed_op}#{cause_of_error}#{help_suggestion}\n") { subject }
         end
-        assert_raises(ShopifyCLI::AbortSilent) do
-          subject
+      end
+
+      describe "when failed operation message and cause of error do not end with whitespace" do
+        it "should abort with the cause of error and help suggestion" do
+          assert_silent_abort_and_stderr("✗ Error\n#{failed_op} #{cause_of_error} #{help_suggestion}\n") { subject }
         end
       end
     end
@@ -35,49 +33,32 @@ describe Script::UI::ErrorHandler do
     describe "when failed operation message is missing" do
       let(:failed_op) { nil }
       it "should abort with the cause of error and help suggestion" do
-        if ci?
-          $stderr.expects(:puts).with("✗ Error")
-          $stderr.expects(:puts).with("#{cause_of_error} #{help_suggestion}")
-        else
-          $stderr.expects(:puts).with("\e[0;31m✗ Error\e[0m")
-          $stderr.expects(:puts).with("\e[0m#{cause_of_error} #{help_suggestion}")
-        end
-        assert_raises(ShopifyCLI::AbortSilent) do
-          subject
-        end
+        assert_silent_abort_and_stderr("✗ Error\n#{cause_of_error} #{help_suggestion}\n") { subject }
       end
     end
 
     describe "when cause of error is missing" do
       let(:cause_of_error) { nil }
       it "should abort with the failed operation message and help suggestion" do
-        if ci?
-          $stderr.expects(:puts).with("✗ Error")
-          $stderr.expects(:puts).with("#{failed_op} #{help_suggestion}")
-        else
-          $stderr.expects(:puts).with("\e[0;31m✗ Error\e[0m")
-          $stderr.expects(:puts).with("\e[0m#{failed_op} #{help_suggestion}")
-        end
-        assert_raises(ShopifyCLI::AbortSilent) do
-          subject
-        end
+        assert_silent_abort_and_stderr("✗ Error\n#{failed_op} #{help_suggestion}\n") { subject }
       end
     end
 
     describe "when help suggestion is missing" do
       let(:help_suggestion) { nil }
       it "should abort with the failed operation message and cause of error" do
-        if ci?
-          $stderr.expects(:puts).with("✗ Error")
-          $stderr.expects(:puts).with("#{failed_op} #{cause_of_error}")
-        else
-          $stderr.expects(:puts).with("\e[0;31m✗ Error\e[0m")
-          $stderr.expects(:puts).with("\e[0m#{failed_op} #{cause_of_error}")
-        end
-        assert_raises(ShopifyCLI::AbortSilent) do
-          subject
-        end
+        assert_silent_abort_and_stderr("✗ Error\n#{failed_op} #{cause_of_error}\n") { subject }
       end
+    end
+
+    private
+
+    def assert_silent_abort_and_stderr(expected_err)
+      out, err = capture_io(strip_ansi: true) do
+        assert_raises(ShopifyCLI::AbortSilent) { yield }
+      end
+      assert_empty(out)
+      assert_equal(expected_err, err)
     end
   end
 
@@ -232,12 +213,23 @@ describe Script::UI::ErrorHandler do
       describe "when ScriptConfigurationDefinitionError" do
         let(:err) do
           Script::Layers::Infrastructure::Errors::ScriptConfigurationDefinitionError.new(
-            message: "message",
+            messages: messages,
             filename: "filename",
           )
         end
-        it "should call display_and_raise" do
-          should_call_display_and_raise
+
+        describe "when there is a single error message" do
+          let(:messages) { ["message"] }
+          it "should call display_and_raise" do
+            should_call_display_and_raise
+          end
+        end
+
+        describe "when there are multiple error messages" do
+          let(:messages) { ["message1", "message2"] }
+          it "should call display_and_raise" do
+            should_call_display_and_raise
+          end
         end
       end
 

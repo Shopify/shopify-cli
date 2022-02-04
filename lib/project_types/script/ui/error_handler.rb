@@ -1,3 +1,5 @@
+# frozen_string_literal: true
+
 require "cli/ui"
 
 module Script
@@ -5,9 +7,9 @@ module Script
     module ErrorHandler
       def self.display(failed_op:, cause_of_error:, help_suggestion:)
         $stderr.puts(CLI::UI.fmt(ShopifyCLI::Context.message("script.error.generic")))
-        full_msg = failed_op ? failed_op.dup : ""
-        full_msg << " #{cause_of_error}" if cause_of_error
-        full_msg << " #{help_suggestion}" if help_suggestion
+        full_msg = failed_op ? failed_op.dup : String.new
+        append_msg(full_msg, cause_of_error) if cause_of_error
+        append_msg(full_msg, help_suggestion) if help_suggestion
         $stderr.puts(CLI::UI.fmt(full_msg.strip))
       end
 
@@ -20,6 +22,11 @@ module Script
         messages = error_messages(e)
         raise e if messages.nil?
         display_and_raise(failed_op: failed_op, **messages)
+      end
+
+      private_class_method def self.append_msg(full_msg, msg_to_append)
+        full_msg << " " unless /\s$/.match?(full_msg)
+        full_msg << msg_to_append
       end
 
       def self.error_messages(e)
@@ -135,14 +142,26 @@ module Script
             help_suggestion: ShopifyCLI::Context.message("script.error.no_script_config_file_help"),
           }
         when Layers::Infrastructure::Errors::ScriptConfigurationDefinitionError
-          {
-            cause_of_error: ShopifyCLI::Context.message(
-              "script.error.configuration_definition_error_cause",
-              message: e.message,
-              filename: e.filename,
-            ),
-            help_suggestion: ShopifyCLI::Context.message("script.error.configuration_definition_error_help"),
-          }
+          if e.messages.count == 1
+            {
+              cause_of_error: ShopifyCLI::Context.message(
+                "script.error.configuration_definition_error_cause",
+                message: e.messages.fetch(0),
+                filename: e.filename,
+              ),
+              help_suggestion: ShopifyCLI::Context.message("script.error.configuration_definition_error_help"),
+            }
+          else
+            {
+              cause_of_error: ShopifyCLI::Context.message(
+                "script.error.configuration_definition_errors_cause",
+                concatenated_messages: e.messages.map { |m| "{{x}} #{m}" }.join("\n"),
+                filename: e.filename,
+                error_count: e.messages.count,
+              ),
+              help_suggestion: ShopifyCLI::Context.message("script.error.configuration_definition_errors_help"),
+            }
+          end
         when Layers::Infrastructure::Errors::ScriptConfigSyntaxError
           {
             cause_of_error: ShopifyCLI::Context.message(

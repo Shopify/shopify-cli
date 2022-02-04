@@ -7,10 +7,11 @@ module Script
         class BuildError < ScriptProjectError; end
 
         class ScriptConfigurationDefinitionError < ScriptProjectError
-          attr_reader :filename
-          def initialize(message:, filename:)
+          attr_reader :filename, :messages
+          def initialize(messages:, filename:)
+            super()
+            @messages = messages
             @filename = filename
-            super(message)
           end
         end
 
