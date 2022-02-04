@@ -233,7 +233,7 @@ module ShopifyCLI
         audience: audience,
         scope: scopes,
         subject_token: subject_token,
-        destination: destination
+        destination: destination,
       }.compact
       # ctx.debug(params)
       post_token_request(params)
