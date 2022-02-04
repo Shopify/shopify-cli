@@ -13,6 +13,7 @@ module ShopifyCLI
     include SmartProperties
 
     autoload :Servlet, "shopify_cli/identity_auth/servlet"
+    autoload :EnvAuthToken, "shopify_cli/identity_auth/env_auth_token"
 
     class Error < StandardError; end
     class Timeout < StandardError; end
@@ -69,8 +70,11 @@ module ShopifyCLI
     end
 
     def fetch_or_auth_partners_token
-      env_var_auth_token = Environment.auth_token
-      return exchange_partners_auth_token(env_var_auth_token) if env_var_auth_token
+      if EnvAuthToken.partners_token_present?
+        return EnvAuthToken.exchanged_partners_token do |env_token|
+          exchange_partners_auth_token(env_token)
+        end
+      end
 
       ShopifyCLI::DB.get(:partners_exchange_token) do
         IdentityAuth.new(ctx: ctx).authenticate
@@ -82,7 +86,7 @@ module ShopifyCLI
       application = "partners"
       request_exchange_token(
         audience: client_id_for_application(application),
-        additional_scopes: APPLICATION_SCOPES[application],
+        scopes: APPLICATION_SCOPES[application],
         subject_token: subject_token,
       )
     end
@@ -212,28 +216,27 @@ module ShopifyCLI
       return if name == "shopify" && !store.exists?(:shop)
       access_token = request_exchange_token(
         audience: audience,
-        additional_scopes: additional_scopes,
+        scopes: scopes(additional_scopes),
         subject_token: store.get(:identity_access_token),
         destination: name == "shopify" ? "https://#{store.get(:shop)}/admin" : nil
-      )
+      )["access_token"]
       store.set("#{name}_exchange_token".to_sym => access_token)
       ctx.debug("#{name}_exchange_token: " + access_token)
     end
 
-    def request_exchange_token(audience:, additional_scopes:, subject_token:, destination: nil)
+    def request_exchange_token(audience:, scopes:, subject_token:, destination: nil)
       params = {
         grant_type: "urn:ietf:params:oauth:grant-type:token-exchange",
         requested_token_type: "urn:ietf:params:oauth:token-type:access_token",
         subject_token_type: "urn:ietf:params:oauth:token-type:access_token",
         client_id: client_id,
         audience: audience,
-        scope: scopes(additional_scopes),
+        scope: scopes,
         subject_token: subject_token,
       }
       params[:destination] = destination unless destination.nil?
       # ctx.debug(params)
-      resp = post_token_request(params)
-      resp["access_token"]
+      post_token_request(params)
     end
 
     def post_token_request(params)

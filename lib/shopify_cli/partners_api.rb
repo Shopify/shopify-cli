@@ -38,7 +38,11 @@ module ShopifyCLI
       def query(ctx, query_name, **variables)
         CLI::Kit::Util.begin do
           api_client(ctx).query(query_name, variables: variables)
-        end.retry_after(API::APIRequestUnauthorizedError, retries: 1) do
+        end.retry_after(
+          API::APIRequestUnauthorizedError,
+          retries: 1,
+          only: -> { !IdentityAuth::EnvAuthToken.partners_token_present? }
+        ) do
           ShopifyCLI::IdentityAuth.new(ctx: ctx).reauthenticate
         end
       rescue API::APIRequestUnauthorizedError => e

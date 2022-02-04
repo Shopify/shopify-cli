@@ -180,17 +180,17 @@ module ShopifyCLI
       # Given
       env_auth_token = "token"
       exchanged_token = "exchanged_token"
-      Environment.stubs(:auth_token).returns(env_auth_token)
-      stub_exchange_token_calls(
-        exchange_token: exchanged_token,
-        access_token: env_auth_token
-      )
+      IdentityAuth::EnvAuthToken.stubs(:partners_token_present?).returns(true)
+      IdentityAuth::EnvAuthToken.expects(:exchanged_partners_token)
+        .yields(env_auth_token)
+        .returns(exchanged_token)
+      IdentityAuth.any_instance.expects(:exchange_partners_auth_token).returns(exchanged_token)
 
       # When
       got = identity_auth_client.fetch_or_auth_partners_token
 
       # Then
-      assert_equal "partners" + exchanged_token, got
+      assert_equal exchanged_token, got
     end
 
     private
