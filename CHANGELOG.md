@@ -6,6 +6,7 @@ From version 2.6.0, the sections in this file adhere to the [keep a changelog](h
 ### Fixed
 * [#1983](https://github.com/Shopify/shopify-cli/pull/1983): Improve Windows compatibility
 * [#1928](https://github.com/Shopify/shopify-cli/pull/1928): Ensure script Wasm file sizes don't exceed the limit
+* [#2006](https://github.com/Shopify/shopify-cli/pull/2006): Fix: More defensive URL generation
 
 ## Version 2.10.1
 ### Fixed
