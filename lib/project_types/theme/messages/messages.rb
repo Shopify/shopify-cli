@@ -191,6 +191,7 @@ module Theme
             Check your theme for errors, suggestions, and best practices.
             Usage: {{command:%s check}}
           HELP
+          error: "Theme check failed with error:\n%s",
         },
         delete: {
           help: <<~HELP,
