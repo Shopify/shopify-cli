@@ -61,7 +61,7 @@ module ShopifyCLI
     module SupportedVersions
       module Ruby
         FROM = "2.6.6"
-        TO = "3.0.2"
+        TO = "3.1.0"
       end
 
       module Node

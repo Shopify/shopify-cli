@@ -11,6 +11,7 @@ From version 2.6.0, the sections in this file adhere to the [keep a changelog](h
 
 ### Changed
 * [#2002](https://github.com/Shopify/shopify-cli/pull/2002): Update `-o`/`--only` parameter to allow multiple patterns on `theme push`/`theme pull` commands
+* [#2022](https://github.com/Shopify/shopify-cli/pull/2022): Don't warn the user if the Ruby version is in the range 3.0.x.
 
 ## Version 2.10.2
 ### Fixed
