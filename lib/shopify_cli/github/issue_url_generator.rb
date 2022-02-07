@@ -21,7 +21,7 @@ module ShopifyCLI
           os: RUBY_PLATFORM,
           cli_version: ShopifyCLI::VERSION,
           ruby_version: "#{RUBY_VERSION}p#{RUBY_PATCHLEVEL}",
-          shell: ENV['SHELL'],
+          shell: ENV["SHELL"],
         })
         "#{ShopifyCLI::Constants::Links::NEW_ISSUE}?#{query}"
       end
