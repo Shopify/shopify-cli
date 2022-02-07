@@ -10,8 +10,8 @@ From version 2.6.0, the sections in this file adhere to the [keep a changelog](h
 * [#2011](https://github.com/Shopify/shopify-cli/pull/2011): Adds support for the Spin rewrite
 
 ### Changed
-* [#2001](https://github.com/Shopify/shopify-cli/pull/2001): Improve Bug Issue Template
-* [#2004](https://github.com/Shopify/shopify-cli/pull/2004): Template improvements II
+* [#2001](https://github.com/Shopify/shopify-cli/pull/2001): Improve Bug Issue Template. Includes autofill of CLI/Ruby/environment information.
+* [#2004](https://github.com/Shopify/shopify-cli/pull/2004): Template improvements II. Includes autofill of Shell if $SHELL is set.
 
 ## Version 2.10.2
 ### Fixed
