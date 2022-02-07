@@ -108,14 +108,13 @@ module ShopifyCLI
       if ENV.key?("SPIN_INSTANCE")
         %x(spin show -o fqdn 2> /dev/null).strip
       elsif infer_spin?(env_variables: env_variables)
-        instance = begin 
-          JSON.parse(%x(spin show --latest --json))
-        rescue JSON::ParserError => e
-          raise "Failed to process spin output: #{e}. Ensure 'spin show --latest --json' returns valid output"
+        begin 
+          instance = JSON.parse(%x(spin show --latest --json))
+          raise "Missing expected key 'fqdn' from spin show. Actual response: #{instance}" unless instance.include?("fqdn")
+          instance["fqdn"]
+        rescue => e
+          raise "Failed to infer spin environment: #{e}. Try using SPIN_INSTANCE instead."
         end
-
-        raise "Spin output didn't contain expected key fqdn. Actual output of 'spin show --latest --json': #{instance}"
-        instance["fqdn"]
       else
         raise ShopifyCLI:: Abort, "SPIN_INSTANCE or INFER_SPIN must be specified" unless ENV.key?("SPIN_INSTANCE")
       end
