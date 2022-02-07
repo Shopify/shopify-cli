@@ -71,7 +71,8 @@ module Theme
         end
 
         if development
-          return ShopifyCLI::Theme::Theme.development(@ctx, root: root)
+          dev_theme = ShopifyCLI::Theme::DevelopmentTheme.new(@ctx, root: root)
+          return dev_theme.exists? ? dev_theme : @ctx.abort(@ctx.message("theme.pull.theme_not_found", dev_theme.name))
         end
 
         select_theme(root)
