@@ -110,9 +110,9 @@ module ShopifyCLI
       elsif infer_spin?(env_variables: env_variables)
         instances = JSON.parse(%x(exe/spin list --json --output created,fqdn))
 
-        last_created_instance = instances.sort do |instance_a, instance_b|
-          DateTime.parse(instance_b["created"]) <=> DateTime.parse(instance_a["created"]) 
-        end.first
+        last_created_instance = instances.min_by do |instance|
+          DateTime.parse(instance["created"])
+        end
 
         last_created_instance["fqdn"]
       else
