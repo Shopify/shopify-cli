@@ -9,6 +9,10 @@ From version 2.6.0, the sections in this file adhere to the [keep a changelog](h
 * [#1945](https://github.com/Shopify/shopify-cli/pull/1945): Check Node and Ruby versions and warn the user if their environment's version might be incompatible with the version the command expects.
 * [#2011](https://github.com/Shopify/shopify-cli/pull/2011): Adds support for the Spin rewrite
 
+### Changed
+* [#2001](https://github.com/Shopify/shopify-cli/pull/2001): Improve Bug Issue Template
+* [#2004](https://github.com/Shopify/shopify-cli/pull/2004): Template improvements II
+
 ## Version 2.10.2
 ### Fixed
 * [#1983](https://github.com/Shopify/shopify-cli/pull/1983): Improve Windows compatibility
