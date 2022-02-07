@@ -1,0 +1,41 @@
+# This workflow warns and then closes issues and PRs that have had no activity for a specified amount of time.
+#
+# You can adjust the behavior by modifying this file.
+# For more information, see:
+# https://github.com/actions/stale
+name: Mark stale issues and pull requests
+
+on:
+  schedule:
+  - cron: '31 3 * * *' # randomly chosen time of day
+
+jobs:
+  stale:
+
+    runs-on: ubuntu-latest
+    permissions:
+      issues: write
+      pull-requests: write
+
+    steps:
+    - uses: actions/stale@v3
+      with:
+        repo-token: ${{ secrets.GITHUB_TOKEN }}
+        days-before-issue-stale: 90
+        days-before-pr-stale: 30
+        days-before-close: 10
+        stale-issue-message: |-
+          It seems this issue has been sitting for a while.
+
+          To help the CLI maintainers focus on problems users are still facing, I've been tasked with cleaning up issues that have gone untouched for too long, as they're likely out-of-date.
+
+          If this is still relevant, please post a comment within a week, and I'll be happy to leave this issue as is.
+
+          Have a great day!
+        stale-pr-message: |-
+          This PR hasn't been touched in some time. Is it still relevant?
+
+          If so, please comment within the next week. Otherwise, I'll assume this is no longer desired, and close the PR.
+        stale-issue-label: 'no-issue-activity'
+        stale-pr-label: 'no-pr-activity'
+        operations-per-run: 10 # temporary so we can ease into staling and see what happens
