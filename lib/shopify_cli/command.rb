@@ -112,9 +112,10 @@ module ShopifyCLI
         return if range.nil?
 
         version_without_pre_nor_build = Utilities.version_dropping_pre_and_build(version)
+        is_higher_than_bottom = version_without_pre_nor_build >= Utilities.version_dropping_pre_and_build(range.from)
+        is_lower_than_top = version_without_pre_nor_build < Utilities.version_dropping_pre_and_build(range.to)
+        return if is_higher_than_bottom && is_lower_than_top
 
-        return if version_without_pre_nor_build >= Utilities.version_dropping_pre_and_build(range.from) &&
-        version_without_pre_nor_build < Utilities.version_dropping_pre_and_build(range.to)
         Context.new.warn("Your environment #{runtime} version, #{version},"\
           " is outside of the range supported by the CLI,"\
           " #{range.from}..<#{range.to},"\
