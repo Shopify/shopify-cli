@@ -21,6 +21,9 @@ module Semantic
       @version = version_str
     end
 
+    def dropping_pre_and_build
+      Version.new("#{@major}.#{@minor}.#{@patch}")
+    end
 
     def build=(b)
       @build = (!b.nil? && b.empty?) ? nil : b

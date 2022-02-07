@@ -110,7 +110,8 @@ module ShopifyCLI
       def check_version(version, range:, runtime:)
         return if Environment.test?
         return if range.nil?
-        return if version >= range.from && version < range.to
+        return if version.dropping_pre_and_build >= range.from.dropping_pre_and_build && 
+        version.dropping_pre_and_build < range.to.dropping_pre_and_build
         Context.new.warn("Your environment #{runtime} version, #{version},"\
           " is outside of the range supported by the CLI,"\
           " #{range.from}..<#{range.to},"\
