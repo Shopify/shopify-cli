@@ -1,6 +1,9 @@
 From version 2.6.0, the sections in this file adhere to the [keep a changelog](https://keepachangelog.com/en/1.0.0/) specification.
 
 ## [Unreleased]
+
+## Version 2.11.0
+
 ### Fixed
 * [#2005](https://github.com/Shopify/shopify-cli/pull/2005): Fix PHP app serve on Windows environments
 
