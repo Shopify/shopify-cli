@@ -12,6 +12,7 @@ From version 2.6.0, the sections in this file adhere to the [keep a changelog](h
 ### Changed
 * [#2001](https://github.com/Shopify/shopify-cli/pull/2001): Improve Bug Issue Template. Includes autofill of CLI/Ruby/environment information.
 * [#2004](https://github.com/Shopify/shopify-cli/pull/2004): Template improvements II. Includes autofill of Shell if $SHELL is set.
+* [#2002](https://github.com/Shopify/shopify-cli/pull/2002): Update `-o`/`--only` parameter to allow multiple patterns on `theme push`/`theme pull` commands
 
 ## Version 2.10.2
 ### Fixed
@@ -85,7 +86,7 @@ From version 2.6.0, the sections in this file adhere to the [keep a changelog](h
 * [#1769](https://github.com/Shopify/shopify-cli/pull/1769): Fix `theme push --development --json` to output the proper exit code
 * [#1766](https://github.com/Shopify/shopify-cli/pull/1766): Fix `theme serve` failing with the `--host` property
 * [#1771](https://github.com/Shopify/shopify-cli/pull/1771): Fix `theme push --development --json` to output errors in the STDERR
-* [#1778](https://github.com/Shopify/shopify-cli/pull/1778): Fix ngrok installation check on Windows 
+* [#1778](https://github.com/Shopify/shopify-cli/pull/1778): Fix ngrok installation check on Windows
 * [#1798](https://github.com/Shopify/shopify-cli/pull/1798): Add `--live` option to the `theme pull` and the `theme push` commands
 * [#1788](https://github.com/Shopify/shopify-cli/pull/1788): Improve `theme serve` errors and add logs for successful operations
 * [#1794](https://github.com/Shopify/shopify-cli/pull/1794): Fix bug where hidden subcommands appear in the help menu.
@@ -94,7 +95,7 @@ From version 2.6.0, the sections in this file adhere to the [keep a changelog](h
 ### Fixed
 * [#1722](https://github.com/Shopify/shopify-cli/pull/1722): Fix `theme serve` failing when the port is already being used
 * [#1751](https://github.com/Shopify/shopify-cli/pull/1751): A bug in the app creation flow that caused the CLI to abort when the form validation failed.
-* [#1750](https://github.com/Shopify/shopify-cli/pull/1750): Runtime errors in Windows' environments when the `PATHEXT` environment variable is not defined. 
+* [#1750](https://github.com/Shopify/shopify-cli/pull/1750): Runtime errors in Windows' environments when the `PATHEXT` environment variable is not defined.
 * [#1758](https://github.com/Shopify/shopify-cli/pull/1758): Fix tunnel creation for expired anonymous tunnels
 
 ## Version 2.7.0
@@ -112,7 +113,7 @@ From version 2.6.0, the sections in this file adhere to the [keep a changelog](h
 ### Fixed
 * [#1678](https://github.com/Shopify/shopify-cli/pull/1678): Fix migrator's incompatibility with Ruby 2.5.
 * [#1690](https://github.com/Shopify/shopify-cli/pull/1690): Fix `extension push` command for `PRODUCT_SUBSCRIPTION` extensions
-  
+
 ### Changed
 * [#1678](https://github.com/Shopify/shopify-cli/pull/1678): Change the `@shopify/scripts-checkout-apis-temp` package name to `@shopify/scripts-discount-apis`.
 

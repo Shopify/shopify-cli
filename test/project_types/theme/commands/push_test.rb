@@ -242,7 +242,7 @@ module Theme
       end
 
       def test_push_with_filter
-        includes = "config/*"
+        includes = ["config/*"]
         include_filter = mock("IncludeFilter")
 
         ShopifyCLI::Theme::Theme.expects(:find_by_identifier)

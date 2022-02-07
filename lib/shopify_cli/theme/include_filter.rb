@@ -7,36 +7,58 @@ module ShopifyCLI
     class IncludeFilter
       include Filter::PathMatcher
 
-      def initialize(pattern = nil)
-        @pattern = pattern
+      attr_reader :globs, :regexes
+
+      def initialize(patterns = [])
+        @patterns = patterns.nil? ? [] : patterns.compact.reject(&:empty?)
+
+        regexes, globs = patterns_to_regexes_and_globs(@patterns)
+
+        @regexes = regexes
+        @globs = globs
       end
 
       def match?(path)
-        return true unless present?(@pattern)
+        return true unless present?(@patterns)
 
-        if regex_pattern?
-          regex_match?(regex_pattern, path)
-        else
-          glob_match?(glob_pattern, path)
+        path = path.to_s
+
+        return true if path.empty?
+
+        regexes.each do |regex|
+          return true if regex_match?(regex, path)
         end
+
+        globs.each do |glob|
+          return true if glob_match?(glob, path)
+        end
+
+        false
       end
 
       private
 
-      def present?(pattern)
-        !pattern.nil? && !pattern.empty?
+      def present?(patterns)
+        !patterns.nil? && !patterns.empty?
       end
 
-      def regex_pattern?
-        @is_regex_pattern ||= regex?(@pattern)
-      end
+      # Take in string patterns and convert them to either
+      # regex patterns or glob patterns so that they are handled in an expected manner.
+      def patterns_to_regexes_and_globs(patterns)
+        new_regexes = []
+        new_globs = []
 
-      def regex_pattern
-        @regex_pattern ||= as_regex(@pattern)
-      end
+        patterns
+          .map(&:strip)
+          .each do |pattern|
+            if regex?(pattern)
+              new_regexes << as_regex(pattern)
+            else
+              new_globs << as_glob(pattern)
+            end
+          end
 
-      def glob_pattern
-        @glob_pattern ||= as_glob(@pattern)
+        [new_regexes, new_globs]
       end
     end
   end

@@ -21,7 +21,10 @@ module Theme
         parser.on("-j", "--json") { flags[:json] = true }
         parser.on("-a", "--allow-live") { flags[:allow_live] = true }
         parser.on("-p", "--publish") { flags[:publish] = true }
-        parser.on("-o", "--only=PATTERN") { |pattern| flags[:includes] = pattern }
+        parser.on("-o", "--only=PATTERN") do |pattern|
+          flags[:includes] ||= []
+          flags[:includes] << pattern
+        end
         parser.on("-x", "--ignore=PATTERN") do |pattern|
           flags[:ignores] ||= []
           flags[:ignores] << pattern
