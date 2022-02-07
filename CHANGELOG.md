@@ -10,6 +10,8 @@ From version 2.6.0, the sections in this file adhere to the [keep a changelog](h
 * [#2011](https://github.com/Shopify/shopify-cli/pull/2011): Adds support for the Spin rewrite
 
 ### Changed
+* [#2001](https://github.com/Shopify/shopify-cli/pull/2001): Improve Bug Issue Template. Includes autofill of CLI/Ruby/environment information.
+* [#2004](https://github.com/Shopify/shopify-cli/pull/2004): Template improvements II. Includes autofill of Shell if $SHELL is set.
 * [#2002](https://github.com/Shopify/shopify-cli/pull/2002): Update `-o`/`--only` parameter to allow multiple patterns on `theme push`/`theme pull` commands
 * [#2022](https://github.com/Shopify/shopify-cli/pull/2022): Don't warn the user if the Ruby version is in the range 3.0.x.
 
