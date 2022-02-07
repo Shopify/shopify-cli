@@ -108,13 +108,13 @@ module ShopifyCLI
       if ENV.key?("SPIN_INSTANCE")
         %x(spin show -o fqdn 2> /dev/null).strip
       elsif infer_spin?(env_variables: env_variables)
-        instances = JSON.parse(%x(exe/spin list --json --output created,fqdn))
-
-        last_created_instance = instances.min_by do |instance|
-          DateTime.parse(instance["created"])
+        instances = begin 
+          JSON.parse(%x(spin show --latest --json))
+        rescue JSON::ParserError => e
+          raise "Failed to process spin output: #{e}. Ensure 'spin show --latest --json' returns valid output"
         end
 
-        last_created_instance["fqdn"]
+        instances["fqdn"]
       else
         raise ShopifyCLI:: Abort, "SPIN_INSTANCE or INFER_SPIN must be specified" unless ENV.key?("SPIN_INSTANCE")
       end
