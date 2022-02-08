@@ -5,15 +5,41 @@ module Script
     module Infrastructure
       module Languages
         class TaskRunner
-          TASK_RUNNERS = {
-            "assemblyscript" => AssemblyScriptTaskRunner,
-            "typescript" => TypeScriptTaskRunner,
-            "wasm" => WasmTaskRunner,
-          }
+          attr_reader :ctx
 
-          def self.for(ctx, language, script_name)
-            raise Errors::TaskRunnerNotFoundError unless TASK_RUNNERS[language]
-            TASK_RUNNERS[language].new(ctx, script_name)
+          def self.for(ctx, language)
+            task_runners = {
+              "assemblyscript" => AssemblyScriptTaskRunner,
+              "typescript" => TypeScriptTaskRunner,
+              "wasm" => WasmTaskRunner,
+            }
+
+            raise Errors::TaskRunnerNotFoundError unless task_runners[language]
+            task_runners[language].new(ctx)
+          end
+
+          def initialize(ctx)
+            @ctx = ctx
+          end
+
+          def build
+            raise NotImplementedError
+          end
+
+          def dependencies_installed?
+            raise NotImplementedError
+          end
+
+          def install_dependencies
+            raise NotImplementedError
+          end
+
+          def metadata_file_location
+            raise NotImplementedError
+          end
+
+          def library_version(_library_name)
+            raise NotImplementedError
           end
         end
       end

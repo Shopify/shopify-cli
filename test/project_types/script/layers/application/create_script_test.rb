@@ -40,7 +40,7 @@ describe Script::Layers::Application::CreateScript do
     extension_point_repository.create_extension_point(extension_point_type)
     Script::Layers::Infrastructure::Languages::TaskRunner
       .stubs(:for)
-      .with(context, language, script_name)
+      .with(context, language)
       .returns(task_runner)
     Script::Layers::Infrastructure::Languages::ProjectCreator
       .stubs(:for)
