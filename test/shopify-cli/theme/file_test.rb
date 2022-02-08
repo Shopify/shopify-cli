@@ -11,6 +11,16 @@ module ShopifyCLI
         @file.stubs(:path).returns(path)
       end
 
+      def test_liquid_css_when_it_is_a_liquid_css_asset
+        @file.stubs(:relative_path).returns("assets/base.css.liquid")
+        assert @file.liquid_css?
+      end
+
+      def test_liquid_css_when_it_is_not_a_liquid_css_asset
+        @file.stubs(:relative_path).returns("assets/base.css")
+        refute @file.liquid_css?
+      end
+
       def test_read_when_file_is_a_text
         @file.stubs(:text?).returns(true)
 
