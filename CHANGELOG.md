@@ -2,6 +2,8 @@ From version 2.6.0, the sections in this file adhere to the [keep a changelog](h
 
 ## [Unreleased]
 
+* [#2025](https://github.com/Shopify/shopify-cli/pull/2025): Improve `theme pull`/`push` help messages to indicate multiple `--include`/`--ignore` flags are allowed.
+
 ## Version 2.11.0
 
 ### Fixed
