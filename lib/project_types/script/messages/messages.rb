@@ -152,7 +152,7 @@ module Script
             " To add it, run {{command:%s script connect}}",
           missing_push_options: "The following are missing: %s. "\
             "To add them to a CI environment:\n\t1. Run a connect command {{command:%s script connect}}\n\t2. Navigate to the .env file at the root of your project\n\t"\
-            "3. Copy the missing values, then pass them through as arguments."
+            "3. Copy the missing values, then pass them through as arguments.",
         },
 
         create: {

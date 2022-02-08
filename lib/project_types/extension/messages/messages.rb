@@ -178,10 +178,12 @@ module Extension
         "CHECKOUT_UI_EXTENSION, THEME_APP_EXTENSION, and PRODUCT_SUBSCRIPTION.",
         package_not_found: "`%s` package not found.",
         missing_push_options_ci: "The following are missing: %s. ",
-        missing_push_options_ci_solution: "To add them to a CI environment:\n\t1. Run a connect command ({{command:%1$s extension connect}})\n\t2. Navigate to the .env file at the root of your project\n\t"\
+        missing_push_options_ci_solution: "To add them to a CI environment:\n\t1. Run a connect command " \
+        "({{command:%1$s extension connect}})\n\t2. Navigate to the .env file at the root of your project\n\t" \
             "3. Copy the missing values and pass them through as arguments in {{command:%1$s extension push}}",
         missing_env_file_variables: "The following are missing in the .env file: %s. ",
-        missing_env_file_variables_solution: "To add it, connect your extension with {{command:%1$s extension connect}} "\
+        missing_env_file_variables_solution: "To add it, connect your extension with " \
+        "{{command:%1$s extension connect}} " \
         "or run {{command:%1$s extension register}} to register a new extension.",
         module_not_found: "Unable to find module %s. Ensure your dependencies are up-to-date and try again.",
       },
