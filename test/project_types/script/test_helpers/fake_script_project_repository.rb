@@ -15,7 +15,7 @@ module TestHelpers
       @project = nil
     end
 
-    def create(script_name:, extension_point_type:, language:, env: nil)
+    def create(script_name:, extension_point_type:, language:, env: nil, input_query: nil)
       script_config = fake_script_config_repo.create({ "version" => 1, "title" => script_name })
 
       @project = Script::Layers::Domain::ScriptProject.new(
@@ -24,7 +24,8 @@ module TestHelpers
         script_name: script_name,
         extension_point_type: extension_point_type,
         language: language,
-        script_config: script_config
+        script_config: script_config,
+        input_query: input_query,
       )
     end
 
@@ -69,19 +70,29 @@ module TestHelpers
       end
 
       def create(content)
-        @cache = Script::Layers::Domain::ScriptConfig.new(content: content)
+        @cache = from_h(content)
       end
 
       def update!(title:)
         hash = get!.content
         hash["title"] = title
 
-        @cache = Script::Layers::Domain::ScriptConfig.new(content: hash)
+        @cache = from_h(hash)
       end
 
       def get!
-        raise Script::Layers::Infrastructure::Errors::NoScriptConfigFileError if @cache.nil?
+        raise Script::Layers::Infrastructure::Errors::NoScriptConfigFileError, filename if @cache.nil?
         @cache
+      end
+
+      def filename
+        "script.config.yml"
+      end
+
+      private
+
+      def from_h(hash)
+        Script::Layers::Domain::ScriptConfig.new(content: hash, filename: filename)
       end
     end
   end

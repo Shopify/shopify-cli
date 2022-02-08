@@ -6,6 +6,7 @@ require_relative "syncer"
 require_relative "dev_server/cdn_fonts"
 require_relative "dev_server/hot_reload"
 require_relative "dev_server/header_hash"
+require_relative "dev_server/reload_mode"
 require_relative "dev_server/local_assets"
 require_relative "dev_server/proxy"
 require_relative "dev_server/sse"
@@ -25,7 +26,7 @@ module ShopifyCLI
       class << self
         attr_accessor :ctx
 
-        def start(ctx, root, host: "127.0.0.1", port: 9292, poll: false)
+        def start(ctx, root, host: "127.0.0.1", port: 9292, poll: false, mode: ReloadMode.default)
           @ctx = ctx
           theme = DevelopmentTheme.new(ctx, root: root)
           ignore_filter = IgnoreFilter.from_path(root)
@@ -36,7 +37,7 @@ module ShopifyCLI
           @app = Proxy.new(ctx, theme: theme, syncer: @syncer)
           @app = CdnFonts.new(@app, theme: theme)
           @app = LocalAssets.new(ctx, @app, theme: theme)
-          @app = HotReload.new(ctx, @app, theme: theme, watcher: watcher, ignore_filter: ignore_filter)
+          @app = HotReload.new(ctx, @app, theme: theme, watcher: watcher, mode: mode, ignore_filter: ignore_filter)
           stopped = false
           address = "http://#{host}:#{port}"
 
@@ -83,7 +84,9 @@ module ShopifyCLI
                ShopifyCLI::API::APIRequestUnauthorizedError
           raise ShopifyCLI::Abort, @ctx.message("theme.serve.ensure_user", theme.shop)
         rescue Errno::EADDRINUSE
-          abort_address_already_in_use(address)
+          error_message = @ctx.message("theme.serve.address_already_in_use", address)
+          help_message = @ctx.message("theme.serve.try_port_option")
+          @ctx.abort(error_message, help_message)
         rescue Errno::EADDRNOTAVAIL
           raise AddressBindingError, "Error binding to the address #{host}."
         end
@@ -93,24 +96,6 @@ module ShopifyCLI
           @app.close
           @syncer.shutdown
           WebServer.shutdown
-        end
-
-        private
-
-        def abort_address_already_in_use(address)
-          open_frame(@ctx.message("theme.serve.already_in_use_error"), color: :red) do
-            @ctx.puts(@ctx.message("theme.serve.address_already_in_use", address))
-          end
-
-          open_frame(@ctx.message("theme.serve.try_this"), color: :green) do
-            @ctx.puts(@ctx.message("theme.serve.try_port_option"))
-          end
-
-          raise ShopifyCLI::AbortSilent
-        end
-
-        def open_frame(title, color:, &block)
-          CLI::UI::Frame.open(title, color: CLI::UI.resolve_color(color), timing: false, &block)
         end
       end
     end

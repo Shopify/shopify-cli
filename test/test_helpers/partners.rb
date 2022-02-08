@@ -2,7 +2,7 @@
 module TestHelpers
   module Partners
     def setup
-      ShopifyCLI::IdentityAuth.stubs(:fetch_or_auth_partners_token).returns("faketoken")
+      ShopifyCLI::IdentityAuth.any_instance.stubs(:fetch_or_auth_partners_token).returns("faketoken")
       super
     end
 

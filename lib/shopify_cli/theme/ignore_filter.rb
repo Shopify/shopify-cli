@@ -1,8 +1,12 @@
 # frozen_string_literal: true
 
+require_relative "filter/path_matcher"
+
 module ShopifyCLI
   module Theme
     class IgnoreFilter
+      include Filter::PathMatcher
+
       FILE = ".shopifyignore"
 
       DEFAULT_REGEXES = [
@@ -72,11 +76,11 @@ module ShopifyCLI
         return true if path.empty?
 
         regexes.each do |regex|
-          return true if regex.match(path)
+          return true if regex_match?(regex, path)
         end
 
         globs.each do |glob|
-          return true if ::File.fnmatch?(glob, path)
+          return true if glob_match?(glob, path)
         end
 
         false
@@ -91,23 +95,15 @@ module ShopifyCLI
         new_regexes = DEFAULT_REGEXES.dup
         new_globs = DEFAULT_GLOBS.dup
 
-        patterns.each do |pattern|
-          pattern = pattern.strip
-
-          if pattern.start_with?("/") && pattern.end_with?("/")
-            new_regexes << Regexp.new(pattern.gsub(%r{^\/|\/$}, ""))
-            next
+        patterns
+          .map(&:strip)
+          .each do |pattern|
+            if regex?(pattern)
+              new_regexes << as_regex(pattern)
+            else
+              new_globs << as_glob(pattern)
+            end
           end
-
-          # if specifying a directory, match everything below it
-          pattern += "*" if pattern.end_with?("/")
-
-          # The pattern will be scoped to root directory, so it should match anything
-          # within that space
-          pattern.prepend("*") unless pattern.start_with?("*")
-
-          new_globs << pattern
-        end
 
         [new_regexes, new_globs]
       end

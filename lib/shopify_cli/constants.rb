@@ -36,11 +36,15 @@ module ShopifyCLI
       # the partners dashboard and identity.
       LOCAL_PARTNERS = "SHOPIFY_APP_CLI_LOCAL_PARTNERS"
 
-      # When true the CLI points to a spin instance of spin
-      SPIN_PARTNERS = "SHOPIFY_APP_CLI_SPIN_PARTNERS"
+      # When true the CLI points to spin instances of services
+      SPIN = "SPIN"
+      INFER_SPIN = "INFER_SPIN"
       SPIN_WORKSPACE = "SPIN_WORKSPACE"
       SPIN_NAMESPACE = "SPIN_NAMESPACE"
       SPIN_HOST = "SPIN_HOST"
+
+      # Deprecated, equivalent to using SPIN=1
+      SPIN_PARTNERS = "SHOPIFY_APP_CLI_SPIN_PARTNERS"
 
       # Environments
       TEST = "SHOPIFY_CLI_TEST"
@@ -52,6 +56,18 @@ module ShopifyCLI
 
       # Monorail
       MONORAIL_REAL_EVENTS = "MONORAIL_REAL_EVENTS"
+    end
+
+    module SupportedVersions
+      module Ruby
+        FROM = "2.6.6"
+        TO = "3.1.0"
+      end
+
+      module Node
+        FROM = "12.0.0"
+        TO = "17.0.0"
+      end
     end
 
     module Identity

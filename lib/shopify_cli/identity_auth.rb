@@ -13,6 +13,7 @@ module ShopifyCLI
     include SmartProperties
 
     autoload :Servlet, "shopify_cli/identity_auth/servlet"
+    autoload :EnvAuthToken, "shopify_cli/identity_auth/env_auth_token"
 
     class Error < StandardError; end
     class Timeout < StandardError; end
@@ -68,14 +69,26 @@ module ShopifyCLI
       request_exchange_tokens
     end
 
-    def self.fetch_or_auth_partners_token(ctx:)
-      env_var_auth_token = Environment.auth_token
-      return env_var_auth_token if env_var_auth_token
+    def fetch_or_auth_partners_token
+      if EnvAuthToken.partners_token_present?
+        return EnvAuthToken.fetch_exchanged_partners_token do |env_token|
+          exchange_partners_auth_token(env_token)
+        end
+      end
 
       ShopifyCLI::DB.get(:partners_exchange_token) do
         IdentityAuth.new(ctx: ctx).authenticate
         ShopifyCLI::DB.get(:partners_exchange_token)
       end
+    end
+
+    def exchange_partners_auth_token(subject_token)
+      application = "partners"
+      request_exchange_token(
+        audience: client_id_for_application(application),
+        scopes: APPLICATION_SCOPES[application],
+        subject_token: subject_token,
+      )
     end
 
     def self.environment_auth_token?
@@ -195,30 +208,35 @@ module ShopifyCLI
 
     def request_exchange_tokens
       APPLICATION_SCOPES.each do |key, scopes|
-        request_exchange_token(key, client_id_for_application(key), scopes)
+        request_and_save_exchange_token(key, client_id_for_application(key), scopes)
       end
     end
 
-    def request_exchange_token(name, audience, additional_scopes)
+    def request_and_save_exchange_token(name, audience, additional_scopes)
       return if name == "shopify" && !store.exists?(:shop)
+      access_token = request_exchange_token(
+        audience: audience,
+        scopes: scopes(additional_scopes),
+        subject_token: store.get(:identity_access_token),
+        destination: name == "shopify" ? "https://#{store.get(:shop)}/admin" : nil
+      )["access_token"]
+      store.set("#{name}_exchange_token".to_sym => access_token)
+      ctx.debug("#{name}_exchange_token: " + access_token)
+    end
 
+    def request_exchange_token(audience:, scopes:, subject_token:, destination: nil)
       params = {
         grant_type: "urn:ietf:params:oauth:grant-type:token-exchange",
         requested_token_type: "urn:ietf:params:oauth:token-type:access_token",
         subject_token_type: "urn:ietf:params:oauth:token-type:access_token",
         client_id: client_id,
         audience: audience,
-        scope: scopes(additional_scopes),
-        subject_token: store.get(:identity_access_token),
-      }.tap do |result|
-        if name == "shopify"
-          result[:destination] = "https://#{store.get(:shop)}/admin"
-        end
-      end
+        scope: scopes,
+        subject_token: subject_token,
+        destination: destination,
+      }.compact
       # ctx.debug(params)
-      resp = post_token_request(params)
-      store.set("#{name}_exchange_token".to_sym => resp["access_token"])
-      ctx.debug("#{name}_exchange_token: " + resp["access_token"])
+      post_token_request(params)
     end
 
     def post_token_request(params)
@@ -229,6 +247,7 @@ module ShopifyCLI
       uri = URI.parse("#{auth_url}#{endpoint}")
       https = Net::HTTP.new(uri.host, uri.port)
       https.use_ssl = true
+      https.verify_mode = OpenSSL::SSL::VERIFY_NONE if ENV["SSL_VERIFY_NONE"]
       request = Net::HTTP::Post.new(uri.path)
       request["User-Agent"] = "Shopify CLI #{::ShopifyCLI::VERSION}"
       request.body = URI.encode_www_form(params)
@@ -255,7 +274,7 @@ module ShopifyCLI
     def auth_url
       if Environment.use_local_partners_instance?
         "https://identity.myshopify.io/oauth"
-      elsif Environment.use_spin_partners_instance?
+      elsif Environment.use_spin?
         "https://identity.#{Environment.spin_url}/oauth"
       else
         "https://accounts.shopify.com/oauth"
@@ -263,7 +282,7 @@ module ShopifyCLI
     end
 
     def client_id_for_application(application_name)
-      client_ids = if Environment.use_local_partners_instance? || Environment.use_spin_partners_instance?
+      client_ids = if Environment.use_local_partners_instance? || Environment.use_spin?
         DEV_APPLICATION_CLIENT_IDS
       else
         APPLICATION_CLIENT_IDS
@@ -279,7 +298,7 @@ module ShopifyCLI
     end
 
     def client_id
-      if Environment.use_local_partners_instance? || Environment.use_spin_partners_instance?
+      if Environment.use_local_partners_instance? || Environment.use_spin?
         Constants::Identity::CLIENT_ID_DEV
       else
         # In the future we might want to use Identity's dynamic

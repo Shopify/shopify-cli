@@ -1,0 +1,117 @@
+name: Bug Report
+description: File a bug report
+title: "[Bug]: <YOUR ISSUE TITLE>"
+labels: ["type:bug"]
+body:
+  - type: markdown
+    attributes:
+      value: |-
+        Hi! 👋 Thanks for taking the time to open an issue.
+
+        ## Before you begin
+  - type: checkboxes
+    id: preflight_checks
+    attributes:
+      label: |-
+        Please confirm that you have:
+      options:
+        - label: Searched [existing issues](https://github.com/Shopify/shopify-cli/issues) to see if your issue is a duplicate. (If you’ve found a duplicate issue, feel free to add additional information in a comment on it.)
+          required: true
+        - label: Reproduced the issue in [the latest CLI version](https://github.com/Shopify/shopify-cli/releases).
+          required: true
+    validations:
+      required: true
+  - type: markdown
+    attributes:
+      value: '## General Questions'
+  - type: dropdown
+    id: app_type
+    attributes:
+      label: What type of project are you working on?
+      options:
+        - app
+        - extension
+        - script
+        - theme
+        - other
+    validations:
+      required: true
+  - type: textarea
+    id: expected_behavior
+    attributes:
+      label: Expected behavior
+      description: What do you think should have happened?
+      placeholder: It should have worked
+    validations:
+      required: true
+  - type: textarea
+    id: actual_behavior
+    attributes:
+      label: Actual behavior
+      description: What actually happened?
+      placeholder: It didn't work
+    validations:
+      required: true
+  - type: textarea
+    id: stack_trace
+    attributes:
+      label: Stack trace
+      description: Paste in a stack trace if you've got one!
+      render: shell
+    validations:
+      required: false
+  - type: textarea
+    id: repro_steps
+    attributes:
+      label: Reproduction steps
+      description: Let us know the exact steps required to reproduce the error. The more detail, the better!
+      value: |-
+        1.
+        2.
+        3.
+    validations:
+      required: true
+  - type: markdown
+    attributes:
+      value: |
+        ## Environment Details
+
+        Just a few more technical questions, to help us understand if your bug is linked to a particular runtime enviroment.
+  - type: input
+    id: os
+    attributes:
+      label: Operating System
+      placeholder: Windows 11, Mac OS Monterey, Ubuntu 20.04...
+    validations:
+      required: true
+  - type: input
+    id: cli_version
+    attributes:
+      label: CLI version (run `shopify version` if you're not sure)
+      placeholder: 2.10.0
+    validations:
+      required: true
+  - type: input
+    id: shell
+    attributes:
+      label: Shell
+      placeholder: Cygwin, Git Bash, iTerm2, bash, zsh...
+  - type: input
+    id: ruby_version
+    attributes:
+      label: Ruby version (run `ruby -v` if you're not sure)
+      placeholder: 3.0.2p107
+  - type: input
+    id: other_versions
+    attributes:
+      label: What language and version are you using in your application?
+      placeholder: Ruby 3.0.3, Node 17.1, PHP 7.4...
+  - type: markdown
+    attributes:
+      value: |-
+
+        ## What to Expect
+
+        When you submit this issue, it will go to a Shopify developer experience team. We may not be able to reply right away, but we usually respond within a week.
+
+        We always value your feedback. Thanks again for taking the time to help improve the CLI for everyone!

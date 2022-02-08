@@ -23,17 +23,41 @@ module Theme
         )
         @syncer = stub("Syncer", lock_io!: nil, unlock_io!: nil, has_any_error?: false)
         @ignore_filter = mock("IgnoreFilter")
+        @include_filter = mock("IncludeFilter")
+
+        ShopifyCLI::Theme::IgnoreFilter.stubs(:from_path).with(".").returns(@ignore_filter)
+        ShopifyCLI::Theme::IncludeFilter.stubs(:new).returns(@include_filter)
       end
 
-      def test_push_to_theme_id
+      def test_push_with_deprecated_theme_id
         ShopifyCLI::Theme::Theme.expects(:new)
           .with(@ctx, root: ".", id: 1234)
+          .returns(@theme)
+
+        ShopifyCLI::Theme::Syncer.expects(:new)
+          .with(@ctx, theme: @theme, include_filter: @include_filter, ignore_filter: @ignore_filter)
+          .returns(@syncer)
+
+        @syncer.expects(:start_threads)
+        @syncer.expects(:shutdown)
+
+        @syncer.expects(:upload_theme!).with(delete: true)
+        @ctx.expects(:warn)
+        @ctx.expects(:done)
+
+        @command.options.flags[:theme_id] = 1234
+        @command.call([], "push")
+      end
+
+      def test_push_with_theme_id
+        ShopifyCLI::Theme::Theme.expects(:find_by_identifier)
+          .with(@ctx, root: ".", identifier: 1234)
           .returns(@theme)
 
         ShopifyCLI::Theme::IgnoreFilter.expects(:from_path).with(".").returns(@ignore_filter)
 
         ShopifyCLI::Theme::Syncer.expects(:new)
-          .with(@ctx, theme: @theme, ignore_filter: @ignore_filter)
+          .with(@ctx, theme: @theme, include_filter: @include_filter, ignore_filter: @ignore_filter)
           .returns(@syncer)
 
         @syncer.expects(:start_threads)
@@ -42,7 +66,28 @@ module Theme
         @syncer.expects(:upload_theme!).with(delete: true)
         @ctx.expects(:done)
 
-        @command.options.flags[:theme_id] = 1234
+        @command.options.flags[:theme] = 1234
+        @command.call([], "push")
+      end
+
+      def test_push_with_theme_name
+        ShopifyCLI::Theme::Theme.expects(:find_by_identifier)
+          .with(@ctx, root: ".", identifier: "Test theme")
+          .returns(@theme)
+
+        ShopifyCLI::Theme::IgnoreFilter.expects(:from_path).with(".").returns(@ignore_filter)
+
+        ShopifyCLI::Theme::Syncer.expects(:new)
+          .with(@ctx, theme: @theme, include_filter: @include_filter, ignore_filter: @ignore_filter)
+          .returns(@syncer)
+
+        @syncer.expects(:start_threads)
+        @syncer.expects(:shutdown)
+
+        @syncer.expects(:upload_theme!).with(delete: true)
+        @ctx.expects(:done)
+
+        @command.options.flags[:theme] = "Test theme"
         @command.call([], "push")
       end
 
@@ -58,10 +103,8 @@ module Theme
                 "Theme: {{blue:Test theme #1234}} {{green:[live]}}")
           .returns(true)
 
-        ShopifyCLI::Theme::IgnoreFilter.expects(:from_path).with(".").returns(@ignore_filter)
-
         ShopifyCLI::Theme::Syncer.expects(:new)
-          .with(@ctx, theme: @theme, ignore_filter: @ignore_filter)
+          .with(@ctx, theme: @theme, include_filter: @include_filter, ignore_filter: @ignore_filter)
           .returns(@syncer)
 
         @syncer.expects(:start_threads)
@@ -75,8 +118,8 @@ module Theme
       end
 
       def test_push_to_live_theme
-        ShopifyCLI::Theme::Theme.expects(:new)
-          .with(@ctx, root: ".", id: 1234)
+        ShopifyCLI::Theme::Theme.expects(:find_by_identifier)
+          .with(@ctx, root: ".", identifier: 1234)
           .returns(@theme)
 
         @theme.expects(:live?).returns(true)
@@ -86,10 +129,8 @@ module Theme
           .with("Are you sure you want to push to your live theme?")
           .returns(true)
 
-        ShopifyCLI::Theme::IgnoreFilter.expects(:from_path).with(".").returns(@ignore_filter)
-
         ShopifyCLI::Theme::Syncer.expects(:new)
-          .with(@ctx, theme: @theme, ignore_filter: @ignore_filter)
+          .with(@ctx, theme: @theme, include_filter: @include_filter, ignore_filter: @ignore_filter)
           .returns(@syncer)
 
         @syncer.expects(:start_threads)
@@ -98,23 +139,21 @@ module Theme
         @syncer.expects(:upload_theme!).with(delete: true)
         @ctx.expects(:done)
 
-        @command.options.flags[:theme_id] = 1234
+        @command.options.flags[:theme] = 1234
         @command.call([], "push")
       end
 
       def test_allow_live
-        ShopifyCLI::Theme::Theme.expects(:new)
-          .with(@ctx, root: ".", id: 1234)
+        ShopifyCLI::Theme::Theme.expects(:find_by_identifier)
+          .with(@ctx, root: ".", identifier: 1234)
           .returns(@theme)
 
         @theme.expects(:live?).returns(true)
 
         CLI::UI::Prompt.expects(:confirm).never
 
-        ShopifyCLI::Theme::IgnoreFilter.expects(:from_path).with(".").returns(@ignore_filter)
-
         ShopifyCLI::Theme::Syncer.expects(:new)
-          .with(@ctx, theme: @theme, ignore_filter: @ignore_filter)
+          .with(@ctx, theme: @theme, include_filter: @include_filter, ignore_filter: @ignore_filter)
           .returns(@syncer)
 
         @syncer.expects(:start_threads)
@@ -123,22 +162,20 @@ module Theme
         @syncer.expects(:upload_theme!).with(delete: true)
         @ctx.expects(:done)
 
-        @command.options.flags[:theme_id] = 1234
+        @command.options.flags[:theme] = 1234
         @command.options.flags[:allow_live] = true
         @command.call([], "push")
       end
 
       def test_push_json
-        ShopifyCLI::Theme::Theme.expects(:new)
-          .with(@ctx, root: ".", id: 1234)
+        ShopifyCLI::Theme::Theme.expects(:find_by_identifier)
+          .with(@ctx, root: ".", identifier: 1234)
           .returns(@theme)
 
         @theme.expects(:to_h).returns({})
 
-        ShopifyCLI::Theme::IgnoreFilter.expects(:from_path).with(".").returns(@ignore_filter)
-
         ShopifyCLI::Theme::Syncer.expects(:new)
-          .with(@ctx, theme: @theme, ignore_filter: @ignore_filter)
+          .with(@ctx, theme: @theme, include_filter: @include_filter, ignore_filter: @ignore_filter)
           .returns(@syncer)
 
         @syncer.expects(:start_threads)
@@ -149,7 +186,7 @@ module Theme
 
         @ctx.expects(:puts).never
 
-        @command.options.flags[:theme_id] = 1234
+        @command.options.flags[:theme] = 1234
         @command.options.flags[:json] = 1234
         @command.call([], "push")
       end
@@ -157,16 +194,14 @@ module Theme
       def test_push_when_syncer_has_an_error
         syncer = stub("Syncer", lock_io!: nil, unlock_io!: nil, has_any_error?: true)
 
-        ShopifyCLI::Theme::Theme.expects(:new)
-          .with(@ctx, root: ".", id: 1234)
+        ShopifyCLI::Theme::Theme.expects(:find_by_identifier)
+          .with(@ctx, root: ".", identifier: 1234)
           .returns(@theme)
 
         @theme.expects(:to_h).returns({})
 
-        ShopifyCLI::Theme::IgnoreFilter.expects(:from_path).with(".").returns(@ignore_filter)
-
         ShopifyCLI::Theme::Syncer.expects(:new)
-          .with(@ctx, theme: @theme, ignore_filter: @ignore_filter)
+          .with(@ctx, theme: @theme, include_filter: @include_filter, ignore_filter: @ignore_filter)
           .returns(syncer)
 
         syncer.expects(:start_threads)
@@ -177,7 +212,7 @@ module Theme
 
         @ctx.expects(:puts).never
 
-        @command.options.flags[:theme_id] = 1234
+        @command.options.flags[:theme] = 1234
         @command.options.flags[:json] = 1234
 
         assert_raises(ShopifyCLI::AbortSilent) do
@@ -186,14 +221,12 @@ module Theme
       end
 
       def test_push_and_publish
-        ShopifyCLI::Theme::Theme.expects(:new)
-          .with(@ctx, root: ".", id: 1234)
+        ShopifyCLI::Theme::Theme.expects(:find_by_identifier)
+          .with(@ctx, root: ".", identifier: 1234)
           .returns(@theme)
 
-        ShopifyCLI::Theme::IgnoreFilter.expects(:from_path).with(".").returns(@ignore_filter)
-
         ShopifyCLI::Theme::Syncer.expects(:new)
-          .with(@ctx, theme: @theme, ignore_filter: @ignore_filter)
+          .with(@ctx, theme: @theme, include_filter: @include_filter, ignore_filter: @ignore_filter)
           .returns(@syncer)
 
         @syncer.expects(:start_threads)
@@ -203,21 +236,23 @@ module Theme
         @ctx.expects(:done)
         @theme.expects(:publish)
 
-        @command.options.flags[:theme_id] = 1234
+        @command.options.flags[:theme] = 1234
         @command.options.flags[:publish] = true
         @command.call([], "push")
       end
 
-      def test_push_with_ignores
-        ShopifyCLI::Theme::Theme.expects(:new)
-          .with(@ctx, root: ".", id: 1234)
+      def test_push_with_filter
+        includes = ["config/*"]
+        include_filter = mock("IncludeFilter")
+
+        ShopifyCLI::Theme::Theme.expects(:find_by_identifier)
+          .with(@ctx, root: ".", identifier: 1234)
           .returns(@theme)
-
-        ShopifyCLI::Theme::IgnoreFilter.expects(:from_path).with(".").returns(@ignore_filter)
-        @ignore_filter.expects(:add_patterns).with(["config/*"])
-
+        ShopifyCLI::Theme::IncludeFilter.expects(:new)
+          .with(includes)
+          .returns(include_filter)
         ShopifyCLI::Theme::Syncer.expects(:new)
-          .with(@ctx, theme: @theme, ignore_filter: @ignore_filter)
+          .with(@ctx, theme: @theme, include_filter: include_filter, ignore_filter: @ignore_filter)
           .returns(@syncer)
 
         @syncer.expects(:start_threads)
@@ -226,7 +261,30 @@ module Theme
         @syncer.expects(:upload_theme!).with(delete: true)
         @ctx.expects(:done)
 
-        @command.options.flags[:theme_id] = 1234
+        @command.options.flags[:theme] = 1234
+        @command.options.flags[:includes] = includes
+        @command.call([], "push")
+      end
+
+      def test_push_with_ignores
+        ShopifyCLI::Theme::Theme.expects(:find_by_identifier)
+          .with(@ctx, root: ".", identifier: 1234)
+          .returns(@theme)
+
+        ShopifyCLI::Theme::IgnoreFilter.expects(:from_path).with(".").returns(@ignore_filter)
+        @ignore_filter.expects(:add_patterns).with(["config/*"])
+
+        ShopifyCLI::Theme::Syncer.expects(:new)
+          .with(@ctx, theme: @theme, include_filter: @include_filter, ignore_filter: @ignore_filter)
+          .returns(@syncer)
+
+        @syncer.expects(:start_threads)
+        @syncer.expects(:shutdown)
+
+        @syncer.expects(:upload_theme!).with(delete: true)
+        @ctx.expects(:done)
+
+        @command.options.flags[:theme] = 1234
         @command.options.flags[:ignores] = ["config/*"]
         @command.call([], "push")
       end
@@ -238,10 +296,8 @@ module Theme
 
         @theme.expects(:ensure_exists!)
 
-        ShopifyCLI::Theme::IgnoreFilter.expects(:from_path).with(".").returns(@ignore_filter)
-
         ShopifyCLI::Theme::Syncer.expects(:new)
-          .with(@ctx, theme: @theme, ignore_filter: @ignore_filter)
+          .with(@ctx, theme: @theme, include_filter: @include_filter, ignore_filter: @ignore_filter)
           .returns(@syncer)
 
         @syncer.expects(:start_threads)
@@ -264,10 +320,8 @@ module Theme
 
         @theme.expects(:create)
 
-        ShopifyCLI::Theme::IgnoreFilter.expects(:from_path).with(".").returns(@ignore_filter)
-
         ShopifyCLI::Theme::Syncer.expects(:new)
-          .with(@ctx, theme: @theme, ignore_filter: @ignore_filter)
+          .with(@ctx, theme: @theme, include_filter: @include_filter, ignore_filter: @ignore_filter)
           .returns(@syncer)
 
         @syncer.expects(:start_threads)
@@ -281,15 +335,40 @@ module Theme
         @command.call([], "push")
       end
 
-      def test_push_pass_nodelete_to_syncer
+      def test_push_to_unpublished_theme_when_name_is_provided
         ShopifyCLI::Theme::Theme.expects(:new)
-          .with(@ctx, root: ".", id: 1234)
+          .with(@ctx, root: ".", name: "NAME", role: "unpublished")
           .returns(@theme)
+
+        CLI::UI::Prompt.expects(:ask).never
+
+        @theme.expects(:create)
 
         ShopifyCLI::Theme::IgnoreFilter.expects(:from_path).with(".").returns(@ignore_filter)
 
         ShopifyCLI::Theme::Syncer.expects(:new)
-          .with(@ctx, theme: @theme, ignore_filter: @ignore_filter)
+          .with(@ctx, theme: @theme, include_filter: @include_filter, ignore_filter: @ignore_filter)
+          .returns(@syncer)
+
+        @syncer.expects(:start_threads)
+        @syncer.expects(:shutdown)
+
+        @syncer.expects(:upload_theme!).with(delete: true)
+
+        @ctx.expects(:done)
+
+        @command.options.flags[:unpublished] = true
+        @command.options.flags[:theme] = "NAME"
+        @command.call([], "push")
+      end
+
+      def test_push_pass_nodelete_to_syncer
+        ShopifyCLI::Theme::Theme.expects(:find_by_identifier)
+          .with(@ctx, root: ".", identifier: 1234)
+          .returns(@theme)
+
+        ShopifyCLI::Theme::Syncer.expects(:new)
+          .with(@ctx, theme: @theme, include_filter: @include_filter, ignore_filter: @ignore_filter)
           .returns(@syncer)
 
         @syncer.expects(:start_threads)
@@ -299,7 +378,7 @@ module Theme
 
         @ctx.expects(:done)
 
-        @command.options.flags[:theme_id] = 1234
+        @command.options.flags[:theme] = 1234
         @command.options.flags[:nodelete] = true
         @command.call([], "push")
       end
@@ -310,10 +389,8 @@ module Theme
 
         @syncer.expects(:upload_theme!).with(delete: true)
 
-        ShopifyCLI::Theme::IgnoreFilter.expects(:from_path).with(".").returns(@ignore_filter)
-
         ShopifyCLI::Theme::Syncer.expects(:new)
-          .with(@ctx, theme: @theme, ignore_filter: @ignore_filter)
+          .with(@ctx, theme: @theme, include_filter: @include_filter, ignore_filter: @ignore_filter)
           .returns(@syncer)
 
         @syncer.expects(:start_threads)

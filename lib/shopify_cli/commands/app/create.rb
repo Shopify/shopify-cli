@@ -6,6 +6,9 @@ module ShopifyCLI
         subcommand :PHP, "php", "shopify_cli/commands/app/create/php"
         subcommand :Node, "node", "shopify_cli/commands/app/create/node"
 
+        recommend_default_node_range
+        recommend_default_ruby_range
+
         def call(_args, _command_name)
           @ctx.puts(self.class.help)
         end

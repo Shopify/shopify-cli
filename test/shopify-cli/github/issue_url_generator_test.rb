@@ -11,10 +11,17 @@ message: "Error Message")
       end
 
       def test_call_error_url
-        file = File.read(File.join(ShopifyCLI::ROOT, ".github/ISSUE_TEMPLATE.md"))
-        body = @error.backtrace.join("\n").to_s
-        output = file.gsub(/<!--Stacktrace(.|\n)*-->/, body)
-        query = URI.encode_www_form({ title: "#{@error.class}: #{@error.message}", body: output, labels: "type:bug" })
+        stacktrace_text = @error.backtrace.join("\n").to_s
+        query = URI.encode_www_form({
+          title: "[Bug]: #{@error.class}: #{@error.message}",
+          labels: ["type:bug"],
+          template: "bug_report.yaml",
+          stack_trace: stacktrace_text,
+          os: RUBY_PLATFORM,
+          cli_version: ShopifyCLI::VERSION,
+          ruby_version: "#{RUBY_VERSION}p#{RUBY_PATCHLEVEL}",
+          shell: ENV["SHELL"],
+        })
         url = "#{ShopifyCLI::Constants::Links::NEW_ISSUE}?#{query}"
         generated_url = IssueURLGenerator.error_url(@error)
         assert_equal url, generated_url

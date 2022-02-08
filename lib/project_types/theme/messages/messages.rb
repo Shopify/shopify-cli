@@ -57,14 +57,16 @@ module Theme
               Usage: {{command:%s theme push [ ROOT ]}}
 
               Options:
-                {{command:-i, --themeid=THEMEID}} Theme ID. Must be an existing theme on your store.
-                {{command:-l, --live}}            Push to your remote live theme, and update your live store.
-                {{command:-d, --development}}     Push to your remote development theme, and create it if needed.
-                {{command:-u, --unpublished}}     Create a new unpublished theme and push to it.
-                {{command:-n, --nodelete}}        Runs the push command without deleting remote files from Shopify.
-                {{command:-j, --json}}            Output JSON instead of a UI.
-                {{command:-a, --allow-live}}      Allow push to a live theme.
-                {{command:-p, --publish}}         Publish as the live theme after uploading.
+                {{command:-t, --theme=NAME_OR_ID}} Theme ID or name of the remote theme.
+                {{command:-l, --live}}             Push to your remote live theme, and update your live store.
+                {{command:-d, --development}}      Push to your remote development theme, and create it if needed.
+                {{command:-u, --unpublished}}      Create a new unpublished theme and push to it.
+                {{command:-n, --nodelete}}         Runs the push command without deleting remote files from Shopify.
+                {{command:-j, --json}}             Output JSON instead of a UI.
+                {{command:-a, --allow-live}}       Allow push to a live theme.
+                {{command:-p, --publish}}          Publish as the live theme after uploading.
+                {{command:-o, --only}}             Upload only the specified files.
+                {{command:-x, --ignore}}           Skip uploading the specified files.
 
               Run without options to select theme from a list.
           HELP
@@ -75,7 +77,10 @@ module Theme
           select: "Select theme to push to",
           live: "Are you sure you want to push to your live theme?",
           theme: "\n  Theme: {{blue:%s #%s}} {{green:[live]}}",
-          theme_not_found: "Theme #%s doesn't exist",
+          deprecated_themeid: <<~WARN,
+            {{warning:The {{command:-i, --themeid}} flag is deprecated. Use {{command:-t, --theme}} instead.}}
+          WARN
+          theme_not_found: "Theme \"%s\" doesn't exist",
           done: <<~DONE,
             {{green:Your theme was pushed successfully}}
 
@@ -94,10 +99,16 @@ module Theme
             Usage: {{command:%s theme serve}}
 
             Options:
-              {{command:--port=PORT}} Local port to serve theme preview from
-              {{command:--poll}}      Force polling to detect file changes
-              {{command:--host=HOST}} Set which network interface the web server listens on. The default value is 127.0.0.1.
+              {{command:--port=PORT}}        Local port to serve theme preview from.
+              {{command:--poll}}             Force polling to detect file changes.
+              {{command:--host=HOST}}        Set which network interface the web server listens on. The default value is 127.0.0.1.
+              {{command:--live-reload=MODE}} The live reload mode switches the server behavior when a file is modified:
+                                 - {{command:hot-reload}} Hot reloads local changes to CSS and sections (default)
+                                 - {{command:full-page}}  Always refreshes the entire page
+                                 - {{command:off}}        Deactivate live reload
           HELP
+          reload_mode_is_not_valid: "The live reload mode `%s` is not valid.",
+          try_a_valid_reload_mode: "Try a valid live reload mode: %s.",
           viewing_theme: "Viewing theme…",
           syncing_theme: "Syncing theme #%s on %s",
           open_fail: "Couldn't open the theme",
@@ -131,9 +142,7 @@ module Theme
             You are not authorized to edit themes on %s.
             Make sure you are a user of that store, and allowed to edit themes.
           ENSURE_USER
-          already_in_use_error: "Error",
           address_already_in_use: "The address \"%s\" is already in use.",
-          try_this: "Try this",
           try_port_option: "Use the --port=PORT option to serve the theme in a different port.",
         },
         check: {
@@ -189,16 +198,22 @@ module Theme
             Usage: {{command:%s theme pull [ ROOT ]}}
 
             Options:
-              {{command:-i, --themeid=THEMEID}} The Theme ID. Must be an existing theme on your store.
-              {{command:-l, --live}}            Pull theme files from your remote live theme.
-              {{command:-n, --nodelete}}        Runs the pull command without deleting local files.
+              {{command:-t, --theme=NAME_OR_ID}} Theme ID or name of the remote theme.
+              {{command:-l, --live}}             Pull theme files from your remote live theme.
+              {{command:-d, --development}}      Pull theme files from your remote development theme.
+              {{command:-n, --nodelete}}         Runs the pull command without deleting local files.
+              {{command:-o, --only}}             Download only the specified files.
+              {{command:-x, --ignore}}           Skip downloading the specified files.
 
             Run without options to select theme from a list.
           HELP
           select: "Select a theme to pull from",
           pulling: "Pulling theme files from %s (#%s) on %s",
           done: "Theme pulled successfully",
-          not_found: "{{x}} Theme #%s doesn't exist",
+          deprecated_themeid: <<~WARN,
+            {{warning:The {{command:-i, --themeid}} flag is deprecated. Use {{command:-t, --theme}} instead.}}
+          WARN
+          theme_not_found: "Theme \"%s\" doesn't exist",
         },
       },
     }.freeze

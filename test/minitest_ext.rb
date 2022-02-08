@@ -56,12 +56,14 @@ module Minitest
       ShopifyCLI::Core::EntryPoint.call(new_cmd, @context)
     end
 
-    def capture_io(&block)
+    def capture_io(strip_ansi: false, &block)
       cap = CLI::UI::StdoutRouter::Capture.new(with_frame_inset: true, &block)
       @context.output_captured = true if @context
       cap.run
       @context.output_captured = false if @context
-      [cap.stdout, cap.stderr]
+      [cap.stdout, cap.stderr].map do |s|
+        strip_ansi ? CLI::UI::ANSI.strip_codes(s) : s
+      end
     end
 
     def capture_io_and_assert_raises(exception_class)
@@ -91,6 +93,14 @@ module Minitest
           failure.message.force_encoding(Encoding::UTF_8),
         ]
       end.join("\n")
+    end
+
+    def assert_raises_and_validate(exception_class, field_expectation_proc)
+      yield
+    rescue exception_class => e
+      field_expectation_proc.call(e)
+    else
+      flunk("Expected a #{exception_class} to be raised but it was not")
     end
 
     private

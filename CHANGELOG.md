@@ -1,7 +1,57 @@
 From version 2.6.0, the sections in this file adhere to the [keep a changelog](https://keepachangelog.com/en/1.0.0/) specification.
 
 ## [Unreleased]
-* [#1896](https://github.com/Shopify/shopify-cli/pull/1896): Release Typescript options for payment_methods and shipping_methods scripts.
+
+## Version 2.11.0
+
+### Fixed
+* [#2005](https://github.com/Shopify/shopify-cli/pull/2005): Fix PHP app serve on Windows environments
+
+### Added
+* [#1998](https://github.com/Shopify/shopify-cli/pull/1998): Add support for Rails 7
+* [#1945](https://github.com/Shopify/shopify-cli/pull/1945): Check Node and Ruby versions and warn the user if their environment's version might be incompatible with the version the command expects.
+* [#2011](https://github.com/Shopify/shopify-cli/pull/2011): Adds support for the Spin rewrite
+
+### Changed
+* [#2001](https://github.com/Shopify/shopify-cli/pull/2001): Improve Bug Issue Template. Includes autofill of CLI/Ruby/environment information.
+* [#2004](https://github.com/Shopify/shopify-cli/pull/2004): Template improvements II. Includes autofill of Shell if $SHELL is set.
+* [#2002](https://github.com/Shopify/shopify-cli/pull/2002): Update `-o`/`--only` parameter to allow multiple patterns on `theme push`/`theme pull` commands
+* [#2022](https://github.com/Shopify/shopify-cli/pull/2022): Don't warn the user if the Ruby version is in the range 3.0.x.
+
+## Version 2.10.2
+### Fixed
+* [#1983](https://github.com/Shopify/shopify-cli/pull/1983): Improve Windows compatibility
+* [#1928](https://github.com/Shopify/shopify-cli/pull/1928): Ensure script Wasm file sizes don't exceed the limit
+* [#2006](https://github.com/Shopify/shopify-cli/pull/2006): Fix: More defensive URL generation
+
+## Version 2.10.1
+### Fixed
+* [#1985](https://github.com/Shopify/shopify-cli/pull/1985): Revert "Fix CORS (Cross-origin resource sharing) errors (#1952)"
+
+## Version 2.10.0
+### Fixed
+* [#1937](https://github.com/Shopify/shopify-cli/pull/1937): Fix `theme pull` to no longer add empty lines on Windows
+* [#1952](https://github.com/Shopify/shopify-cli/pull/1952): Fix CORS (cross-origin resource sharing) errors
+* [#1965](https://github.com/Shopify/shopify-cli/pull/1965): Revert: Fix partners ability to login to external shops. (#1873)
+
+### Added
+* [#1892](https://github.com/Shopify/shopify-cli/pull/1892): Add `-o`/`--only` parameter to filter files on `theme push`/`theme pull` commands
+
+## Version 2.9.0
+### Fixed
+* [#1922](https://github.com/Shopify/shopify-cli/pull/1922): Respect RUBY_BINDIR from Homebrew for installing gem
+* [#1906](https://github.com/Shopify/shopify-cli/pull/1906): Fix Ngrok incompatibility with some Apple ARM environments
+* [#1873](https://github.com/Shopify/shopify-cli/pull/1873): Fix partners ability to login to external shops.
+* [#1909](https://github.com/Shopify/shopify-cli/pull/1909): Fix `theme serve` on Safari
+
+### Added
+* [#1900](https://github.com/Shopify/shopify-cli/pull/1900): Add `-d`/`--development` flag to Shopify theme pull command
+* [#1891](https://github.com/Shopify/shopify-cli/pull/1891): Allow for additional arguments in `shopify push script` on CI.
+* [#1877](https://github.com/Shopify/shopify-cli/pull/1877): Add theme (`-t`/`--theme=NAME_OR_ID`) parameter to `theme push`/`theme pull` commands
+* [#1871](https://github.com/Shopify/shopify-cli/pull/1871): Add a new `--live-reload` parameter to the `theme serve` command
+
+### Changed
+- [#1929](https://github.com/Shopify/shopify-cli/pull/1929): Rename `--registration-id` to `--extension-id` in `shopify extension push`.
 
 ## Version 2.8.0
 ### Fixed
@@ -40,7 +90,7 @@ From version 2.6.0, the sections in this file adhere to the [keep a changelog](h
 * [#1769](https://github.com/Shopify/shopify-cli/pull/1769): Fix `theme push --development --json` to output the proper exit code
 * [#1766](https://github.com/Shopify/shopify-cli/pull/1766): Fix `theme serve` failing with the `--host` property
 * [#1771](https://github.com/Shopify/shopify-cli/pull/1771): Fix `theme push --development --json` to output errors in the STDERR
-* [#1778](https://github.com/Shopify/shopify-cli/pull/1778): Fix ngrok installation check on Windows 
+* [#1778](https://github.com/Shopify/shopify-cli/pull/1778): Fix ngrok installation check on Windows
 * [#1798](https://github.com/Shopify/shopify-cli/pull/1798): Add `--live` option to the `theme pull` and the `theme push` commands
 * [#1788](https://github.com/Shopify/shopify-cli/pull/1788): Improve `theme serve` errors and add logs for successful operations
 * [#1794](https://github.com/Shopify/shopify-cli/pull/1794): Fix bug where hidden subcommands appear in the help menu.
@@ -49,7 +99,7 @@ From version 2.6.0, the sections in this file adhere to the [keep a changelog](h
 ### Fixed
 * [#1722](https://github.com/Shopify/shopify-cli/pull/1722): Fix `theme serve` failing when the port is already being used
 * [#1751](https://github.com/Shopify/shopify-cli/pull/1751): A bug in the app creation flow that caused the CLI to abort when the form validation failed.
-* [#1750](https://github.com/Shopify/shopify-cli/pull/1750): Runtime errors in Windows' environments when the `PATHEXT` environment variable is not defined. 
+* [#1750](https://github.com/Shopify/shopify-cli/pull/1750): Runtime errors in Windows' environments when the `PATHEXT` environment variable is not defined.
 * [#1758](https://github.com/Shopify/shopify-cli/pull/1758): Fix tunnel creation for expired anonymous tunnels
 
 ## Version 2.7.0
@@ -67,7 +117,7 @@ From version 2.6.0, the sections in this file adhere to the [keep a changelog](h
 ### Fixed
 * [#1678](https://github.com/Shopify/shopify-cli/pull/1678): Fix migrator's incompatibility with Ruby 2.5.
 * [#1690](https://github.com/Shopify/shopify-cli/pull/1690): Fix `extension push` command for `PRODUCT_SUBSCRIPTION` extensions
-  
+
 ### Changed
 * [#1678](https://github.com/Shopify/shopify-cli/pull/1678): Change the `@shopify/scripts-checkout-apis-temp` package name to `@shopify/scripts-discount-apis`.
 

@@ -53,7 +53,7 @@ module ShopifyCLI
                     {{command:--organization-id=ID}} Partner organization ID. Must be an existing organization.
                     {{command:--store-domain=MYSHOPIFYDOMAIN }} Development store URL. Must be an existing development store.
                     {{command:--db=DB}} Database type. Must be one of: mysql, postgresql, sqlite3, oracle, frontbase, ibm_db, sqlserver, jdbcmysql, jdbcsqlite3, jdbcpostgresql, jdbc.
-                    {{command:--rails-opts=RAILSOPTS}} Additional options. Must be string containing one or more valid Rails options, separated by spaces.
+                    {{command:--rails-opts=RAILSOPTS}} Additional options. Must be a string containing one or more valid Rails options, separated by spaces.
               HELP
 
               error: {
@@ -790,6 +790,8 @@ module ShopifyCLI
           logged_in_partner_only: "Logged into partner organization {{green:%s}}",
           logged_in_partner_and_shop: "Logged into store {{green:%s}} in partner organization {{green:%s}}",
         },
+        error: "Error",
+        try_this: "Try this",
       },
     }.freeze
   end

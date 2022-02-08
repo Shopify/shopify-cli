@@ -18,6 +18,10 @@ module Script
           @beta
         end
 
+        def stable?
+          !beta?
+        end
+
         def deprecated?
           @deprecated
         end
@@ -26,14 +30,20 @@ module Script
           @type.gsub("_", "-")
         end
 
+        def library_languages(include_betas: false)
+          @libraries.all.map do |library|
+            include_betas || library.stable? ? library.language : nil
+          end.compact
+        end
+
         class ExtensionPointLibraries
           def initialize(config)
             @config = config
           end
 
           def all
-            @all ||= @config.map do |language, libray_config|
-              ExtensionPointLibrary.new(language, libray_config)
+            @all ||= @config.map do |language, library_config|
+              ExtensionPointLibrary.new(language, library_config)
             end
           end
 
@@ -55,6 +65,10 @@ module Script
 
           def beta?
             @beta
+          end
+
+          def stable?
+            !beta?
           end
 
           def versioned?

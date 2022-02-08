@@ -21,7 +21,6 @@ module Semantic
       @version = version_str
     end
 
-
     def build=(b)
       @build = (!b.nil? && b.empty?) ? nil : b
     end

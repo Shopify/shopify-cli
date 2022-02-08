@@ -15,10 +15,11 @@ module Script
         end
 
         class MissingScriptConfigFieldError < ScriptProjectError
-          attr_reader :field
-          def initialize(field)
+          attr_reader :field, :filename
+          def initialize(field:, filename:)
             super()
             @field = field
+            @filename = filename
           end
         end
 
@@ -31,7 +32,13 @@ module Script
           end
         end
 
-        class MetadataNotFoundError < ScriptProjectError; end
+        class MetadataNotFoundError < ScriptProjectError
+          attr_reader :filename
+          def initialize(filename)
+            super()
+            @filename = filename
+          end
+        end
 
         class MetadataValidationError < ScriptProjectError; end
       end

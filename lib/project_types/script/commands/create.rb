@@ -5,6 +5,8 @@ module Script
     class Create < ShopifyCLI::Command::SubCommand
       prerequisite_task :ensure_authenticated
 
+      recommend_default_ruby_range
+
       options do |parser, flags|
         parser.on("--name=NAME") { |name| flags[:name] = name }
         parser.on("--api=API_NAME") { |ep_name| flags[:extension_point] = ep_name }
@@ -33,8 +35,14 @@ module Script
       end
 
       def self.help
-        allowed_values = Script::Layers::Application::ExtensionPoints.available_types.map { |type| "{{cyan:#{type}}}" }
-        ShopifyCLI::Context.message("script.create.help", ShopifyCLI::TOOL_NAME, allowed_values.join(", "))
+        allowed_apis = Layers::Application::ExtensionPoints.available_types.map { |type| "{{cyan:#{type}}}" }
+        allowed_languages = Layers::Application::ExtensionPoints.all_languages.map { |lang| "{{cyan:#{lang}}}" }
+        ShopifyCLI::Context.message(
+          "script.create.help",
+          ShopifyCLI::TOOL_NAME,
+          allowed_apis.join(", "),
+          allowed_languages.join(", ")
+        )
       end
     end
   end

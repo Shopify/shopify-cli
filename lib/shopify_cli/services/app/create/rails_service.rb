@@ -41,12 +41,7 @@ module ShopifyCLI
 
             raise ShopifyCLI::AbortSilent if form.nil?
 
-            ruby_version = Rails::Ruby.version(context)
-            context.abort(context.message("core.app.create.rails.error.invalid_ruby_version")) unless
-              ruby_version.satisfies?("~>2.5") || ruby_version.satisfies?("~>3.0.0")
-
-            check_node
-            check_yarn
+            check_dependencies
 
             build(form.name, form.db)
             set_custom_ua
@@ -106,6 +101,18 @@ module ShopifyCLI
             end
           end
 
+          def check_dependencies
+            check_ruby
+            check_node
+            check_yarn
+          end
+
+          def check_ruby
+            ruby_version = Rails::Ruby.version(context)
+            return if ruby_version.satisfies?("~>2.5") || ruby_version.satisfies?("~>3.0.0")
+            context.abort(context.message("core.app.create.rails.error.invalid_ruby_version"))
+          end
+
           def check_node
             cmd_path = context.which("node")
             if cmd_path.nil?
@@ -148,11 +155,13 @@ module ShopifyCLI
           end
 
           def build(name, db)
-            context.abort(context.message("core.app.create.rails.error.install_failure",
-              "rails")) unless install_gem("rails",
-                "<6.1")
-            context.abort(context.message("core.app.create.rails.error.install_failure", "bundler ~>2.0")) unless
-              install_gem("bundler", "~>2.0")
+            unless install_gem("rails")
+              context.abort(context.message("core.app.create.rails.error.install_failure", "rails"))
+            end
+
+            unless install_gem("bundler", "~>2.0")
+              context.abort(context.message("core.app.create.rails.error.install_failure", "bundler ~>2.0"))
+            end
 
             full_path = File.join(context.root, name)
             context.abort(context.message("core.app.create.rails.error.dir_exists", name)) if Dir.exist?(full_path)
@@ -173,7 +182,7 @@ module ShopifyCLI
 
             context.puts(context.message("core.app.create.rails.adding_shopify_gem"))
             File.open(File.join(context.root, "Gemfile"), "a") do |f|
-              f.puts "\ngem 'shopify_app', '>=17.0.3'"
+              f.puts "\ngem 'shopify_app', '>=18.1.0'"
             end
             CLI::UI::Frame.open(context.message("core.app.create.rails.running_bundle_install")) do
               syscall(%w(bundle install))
@@ -188,7 +197,7 @@ module ShopifyCLI
               syscall(%w(rails db:migrate RAILS_ENV=development))
             end
 
-            unless File.exist?(File.join(context.root, "config/webpacker.yml"))
+            if install_webpacker?
               CLI::UI::Frame.open(context.message("core.app.create.rails.running_webpacker_install")) do
                 syscall(%w(rails webpacker:install))
               end
@@ -207,6 +216,21 @@ module ShopifyCLI
 
           def install_gem(name, version = nil)
             Rails::Gem.install(context, name, version)
+          end
+
+          def install_webpacker?
+            rails_version < ::Semantic::Version.new("7.0.0") &&
+              !File.exist?(File.join(context.root, "config/webpacker.yml"))
+          end
+
+          def rails_version
+            output, status = context.capture2e("rails", "--version")
+            unless status.success?
+              context.abort(context.message("core.app.create.rails.error.install_failure", "rails"))
+            end
+
+            version = output.scan(/Rails \d+\.\d+\.\d+/).first.split(" ").last
+            ::Semantic::Version.new(version)
           end
         end
       end

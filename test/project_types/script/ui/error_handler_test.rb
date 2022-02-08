@@ -7,9 +7,6 @@ describe Script::UI::ErrorHandler do
     let(:failed_op) { "Operation didn't complete." }
     let(:cause_of_error) { "This is why it failed." }
     let(:help_suggestion) { "Perhaps this is what's wrong." }
-    let(:ctx_root) { "/some/dir/here" }
-    let(:ctx) { TestHelpers::FakeContext.new(root: ctx_root) }
-    let(:ci?) { ctx.ci? }
 
     subject do
       Script::UI::ErrorHandler.display_and_raise(
@@ -18,16 +15,17 @@ describe Script::UI::ErrorHandler do
     end
 
     describe "when failed operation message, cause of error, and help suggestion are all provided" do
-      it "should abort with the cause of error and help suggestion" do
-        if ci?
-          $stderr.expects(:puts).with("✗ Error")
-          $stderr.expects(:puts).with("#{failed_op} #{cause_of_error} #{help_suggestion}")
-        else
-          $stderr.expects(:puts).with("\e[0;31m✗ Error\e[0m")
-          $stderr.expects(:puts).with("\e[0m#{failed_op} #{cause_of_error} #{help_suggestion}")
+      describe "when failed operation message and cause of error end with whitespace" do
+        let(:failed_op) { "Operation didn't complete. " }
+        let(:cause_of_error) { "This is why it failed.\n" }
+        it "should abort with the cause of error and help suggestion" do
+          assert_silent_abort_and_stderr("✗ Error\n#{failed_op}#{cause_of_error}#{help_suggestion}\n") { subject }
         end
-        assert_raises(ShopifyCLI::AbortSilent) do
-          subject
+      end
+
+      describe "when failed operation message and cause of error do not end with whitespace" do
+        it "should abort with the cause of error and help suggestion" do
+          assert_silent_abort_and_stderr("✗ Error\n#{failed_op} #{cause_of_error} #{help_suggestion}\n") { subject }
         end
       end
     end
@@ -35,49 +33,32 @@ describe Script::UI::ErrorHandler do
     describe "when failed operation message is missing" do
       let(:failed_op) { nil }
       it "should abort with the cause of error and help suggestion" do
-        if ci?
-          $stderr.expects(:puts).with("✗ Error")
-          $stderr.expects(:puts).with("#{cause_of_error} #{help_suggestion}")
-        else
-          $stderr.expects(:puts).with("\e[0;31m✗ Error\e[0m")
-          $stderr.expects(:puts).with("\e[0m#{cause_of_error} #{help_suggestion}")
-        end
-        assert_raises(ShopifyCLI::AbortSilent) do
-          subject
-        end
+        assert_silent_abort_and_stderr("✗ Error\n#{cause_of_error} #{help_suggestion}\n") { subject }
       end
     end
 
     describe "when cause of error is missing" do
       let(:cause_of_error) { nil }
       it "should abort with the failed operation message and help suggestion" do
-        if ci?
-          $stderr.expects(:puts).with("✗ Error")
-          $stderr.expects(:puts).with("#{failed_op} #{help_suggestion}")
-        else
-          $stderr.expects(:puts).with("\e[0;31m✗ Error\e[0m")
-          $stderr.expects(:puts).with("\e[0m#{failed_op} #{help_suggestion}")
-        end
-        assert_raises(ShopifyCLI::AbortSilent) do
-          subject
-        end
+        assert_silent_abort_and_stderr("✗ Error\n#{failed_op} #{help_suggestion}\n") { subject }
       end
     end
 
     describe "when help suggestion is missing" do
       let(:help_suggestion) { nil }
       it "should abort with the failed operation message and cause of error" do
-        if ci?
-          $stderr.expects(:puts).with("✗ Error")
-          $stderr.expects(:puts).with("#{failed_op} #{cause_of_error}")
-        else
-          $stderr.expects(:puts).with("\e[0;31m✗ Error\e[0m")
-          $stderr.expects(:puts).with("\e[0m#{failed_op} #{cause_of_error}")
-        end
-        assert_raises(ShopifyCLI::AbortSilent) do
-          subject
-        end
+        assert_silent_abort_and_stderr("✗ Error\n#{failed_op} #{cause_of_error}\n") { subject }
       end
+    end
+
+    private
+
+    def assert_silent_abort_and_stderr(expected_err)
+      out, err = capture_io(strip_ansi: true) do
+        assert_raises(ShopifyCLI::AbortSilent) { yield }
+      end
+      assert_empty(out)
+      assert_equal(expected_err, err)
     end
   end
 
@@ -170,36 +151,39 @@ describe Script::UI::ErrorHandler do
         end
       end
 
-      describe "when InvalidScriptConfigYmlDefinitionError" do
-        let(:err) { Script::Layers::Infrastructure::Errors::InvalidScriptConfigYmlDefinitionError.new("filename") }
+      describe "when MetadataNotFoundError" do
+        let(:err) { Script::Layers::Domain::Errors::MetadataNotFoundError.new("filename") }
         it "should call display_and_raise" do
           should_call_display_and_raise
         end
       end
 
-      describe "when InvalidScriptJsonDefinitionError" do
-        let(:err) { Script::Layers::Infrastructure::Errors::InvalidScriptJsonDefinitionError.new("filename") }
+      describe "when ScriptConfigParseError" do
+        let(:err) do
+          Script::Layers::Infrastructure::Errors::ScriptConfigParseError.new(
+            filename: "filename",
+            serialization_format: "serialization_format",
+          )
+        end
         it "should call display_and_raise" do
           should_call_display_and_raise
         end
       end
 
-      describe "when MissingScriptConfigYmlFieldError" do
-        let(:err) { Script::Layers::Infrastructure::Errors::MissingScriptConfigYmlFieldError.new("field") }
+      describe "when MissingScriptConfigFieldError" do
+        let(:err) do
+          Script::Layers::Domain::Errors::MissingScriptConfigFieldError.new(
+            field: "field",
+            filename: "filename",
+          )
+        end
         it "should call display_and_raise" do
           should_call_display_and_raise
         end
       end
 
-      describe "when MissingScriptJsonFieldError" do
-        let(:err) { Script::Layers::Infrastructure::Errors::MissingScriptJsonFieldError.new("field") }
-        it "should call display_and_raise" do
-          should_call_display_and_raise
-        end
-      end
-
-      describe "when NoScriptConfigYmlFileError" do
-        let(:err) { Script::Layers::Infrastructure::Errors::NoScriptConfigYmlFileError.new("filename") }
+      describe "when NoScriptConfigFileError" do
+        let(:err) { Script::Layers::Infrastructure::Errors::NoScriptConfigFileError.new("filename") }
         it "should call display_and_raise" do
           should_call_display_and_raise
         end
@@ -219,6 +203,13 @@ describe Script::UI::ErrorHandler do
         end
       end
 
+      describe "when DeprecatedEPError" do
+        let(:err) { Script::Layers::Infrastructure::Errors::DeprecatedEPError.new("some_api") }
+        it "should call display_and_raise" do
+          should_call_display_and_raise
+        end
+      end
+
       describe "when ScriptNotFoundError" do
         let(:err) { Script::Layers::Domain::Errors::ScriptNotFoundError.new("ep type", "name") }
         it "should call display_and_raise" do
@@ -233,36 +224,86 @@ describe Script::UI::ErrorHandler do
         end
       end
 
+      describe "when ScriptConfigurationDefinitionError" do
+        let(:err) do
+          Script::Layers::Infrastructure::Errors::ScriptConfigurationDefinitionError.new(
+            messages: messages,
+            filename: "filename",
+          )
+        end
+
+        describe "when there is a single error message" do
+          let(:messages) { ["message"] }
+          it "should call display_and_raise" do
+            should_call_display_and_raise
+          end
+        end
+
+        describe "when there are multiple error messages" do
+          let(:messages) { ["message1", "message2"] }
+          it "should call display_and_raise" do
+            should_call_display_and_raise
+          end
+        end
+      end
+
       describe "when ScriptConfigSyntaxError" do
-        let(:err) { Script::Layers::Infrastructure::Errors::ScriptConfigSyntaxError.new }
+        let(:err) { Script::Layers::Infrastructure::Errors::ScriptConfigSyntaxError.new("filename") }
+        it "should call display_and_raise" do
+          should_call_display_and_raise
+        end
+      end
+
+      describe "when ScriptEnvAppNotConnectedError" do
+        let(:err) { Script::Layers::Infrastructure::Errors::ScriptEnvAppNotConnectedError.new("filename") }
         it "should call display_and_raise" do
           should_call_display_and_raise
         end
       end
 
       describe "when ScriptConfigMissingKeysError" do
-        let(:err) { Script::Layers::Infrastructure::Errors::ScriptConfigMissingKeysError.new("keys") }
+        let(:err) do
+          Script::Layers::Infrastructure::Errors::ScriptConfigMissingKeysError.new(
+            missing_keys: "keys",
+            filename: "filename",
+          )
+        end
         it "should call display_and_raise" do
           should_call_display_and_raise
         end
       end
 
       describe "when ScriptConfigInvalidValueError" do
-        let(:err) { Script::Layers::Infrastructure::Errors::ScriptConfigInvalidValueError.new("input modes") }
+        let(:err) do
+          Script::Layers::Infrastructure::Errors::ScriptConfigInvalidValueError.new(
+            valid_input_modes: "input modes",
+            filename: "filename",
+          )
+        end
         it "should call display_and_raise" do
           should_call_display_and_raise
         end
       end
 
       describe "when ScriptConfigFieldsMissingKeysError" do
-        let(:err) { Script::Layers::Infrastructure::Errors::ScriptConfigFieldsMissingKeysError.new("keys") }
+        let(:err) do
+          Script::Layers::Infrastructure::Errors::ScriptConfigFieldsMissingKeysError.new(
+            missing_keys: "keys",
+            filename: "filename",
+          )
+        end
         it "should call display_and_raise" do
           should_call_display_and_raise
         end
       end
 
       describe "when ScriptConfigFieldsInvalidValueError" do
-        let(:err) { Script::Layers::Infrastructure::Errors::ScriptConfigFieldsInvalidValueError.new("types") }
+        let(:err) do
+          Script::Layers::Infrastructure::Errors::ScriptConfigFieldsInvalidValueError.new(
+            valid_types: "types",
+            filename: "filename",
+          )
+        end
         it "should call display_and_raise" do
           should_call_display_and_raise
         end
@@ -296,6 +337,13 @@ describe Script::UI::ErrorHandler do
         end
       end
 
+      describe "when SystemCallFailureError" do
+        let(:err) { Script::Layers::Infrastructure::Errors::SystemCallFailureError.new(out: "out", cmd: "cmd") }
+        it "should call display_and_raise" do
+          should_call_display_and_raise
+        end
+      end
+
       describe "when ScriptRepushError" do
         let(:err) { Script::Layers::Infrastructure::Errors::ScriptRepushError.new("uuid") }
         it "should call display_and_raise" do
@@ -303,8 +351,63 @@ describe Script::UI::ErrorHandler do
         end
       end
 
-      describe "when DeprecatedEPError" do
-        let(:err) { Script::Layers::Infrastructure::Errors::DeprecatedEPError.new("some_api") }
+      describe "when BuildScriptNotFoundError" do
+        let(:err) { Script::Layers::Infrastructure::Errors::BuildScriptNotFoundError.new }
+        it "should call display_and_raise" do
+          should_call_display_and_raise
+        end
+      end
+
+      describe "when WebAssemblyBinaryNotFoundError" do
+        let(:err) { Script::Layers::Infrastructure::Errors::WebAssemblyBinaryNotFoundError.new }
+        it "should call display_and_raise" do
+          should_call_display_and_raise
+        end
+      end
+
+      describe "when ProjectConfigNotFoundError" do
+        let(:err) { Script::Layers::Infrastructure::Errors::ProjectConfigNotFoundError.new }
+        it "should call display_and_raise" do
+          should_call_display_and_raise
+        end
+      end
+
+      describe "when InvalidProjectConfigError" do
+        let(:err) { Script::Layers::Infrastructure::Errors::InvalidProjectConfigError.new }
+        it "should call display_and_raise" do
+          should_call_display_and_raise
+        end
+      end
+
+      describe "when ScriptUploadError" do
+        let(:err) { Script::Layers::Infrastructure::Errors::ScriptUploadError.new }
+        it "should call display_and_raise" do
+          should_call_display_and_raise
+        end
+      end
+
+      describe "when ScriptTooLargeError" do
+        let(:err) { Script::Layers::Infrastructure::Errors::ScriptTooLargeError.new(max_size: "10") }
+        it "should call display_and_raise" do
+          should_call_display_and_raise
+        end
+      end
+
+      describe "when APILibraryNotFoundError" do
+        let(:err) { Script::Layers::Infrastructure::Errors::APILibraryNotFoundError.new(library_name: "library") }
+        it "should call display_and_raise" do
+          should_call_display_and_raise
+        end
+      end
+
+      describe "when LanguageLibraryForAPINotFoundError" do
+        let(:err) do
+          Script::Layers::Infrastructure::Errors::LanguageLibraryForAPINotFoundError.new(
+            language: "lang",
+            api: "api"
+          )
+        end
+
         it "should call display_and_raise" do
           should_call_display_and_raise
         end

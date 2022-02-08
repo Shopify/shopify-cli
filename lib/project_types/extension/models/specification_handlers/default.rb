@@ -108,7 +108,7 @@ module Extension
         end
 
         def server_config_file
-          "shopifile.yml"
+          "extension.config.yml"
         end
 
         protected

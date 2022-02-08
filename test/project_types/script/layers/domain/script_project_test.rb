@@ -8,13 +8,20 @@ describe Script::Layers::Domain::ScriptProject do
   let(:extension_point_type) { "discount" }
   let(:script_name) { "foo_script" }
   let(:language) { "assemblyscript" }
-  let(:script_config) { Script::Layers::Domain::ScriptConfig.new(content: script_config_content) }
+  let(:script_config_filename) { "script.config.yml" }
+  let(:script_config) do
+    Script::Layers::Domain::ScriptConfig.new(
+      content: script_config_content,
+      filename: script_config_filename,
+    )
+  end
   let(:script_config_content) do
     {
       "version" => "1",
       "title" => script_name,
     }
   end
+  let(:input_query) { "{ aField }" }
 
   describe ".new" do
     subject { Script::Layers::Domain::ScriptProject.new(**args) }
@@ -27,6 +34,7 @@ describe Script::Layers::Domain::ScriptProject do
         script_name: script_name,
         language: language,
         script_config: script_config,
+        input_query: input_query,
       }
     end
     let(:args) { all_args }
@@ -48,6 +56,7 @@ describe Script::Layers::Domain::ScriptProject do
         assert_equal script_name, subject.script_name
         assert_equal language, subject.language
         assert_equal script_config, subject.script_config
+        assert_equal input_query, subject.input_query
       end
     end
 

@@ -10,9 +10,10 @@ describe Script::Layers::Application::BuildScript do
     let(:script_name) { "name" }
     let(:op_failed_msg) { "msg" }
     let(:content) { "content" }
-    let(:compiled_type) { "wasm" }
-    let(:metadata) { Script::Layers::Domain::Metadata.new("1", "0", false) }
-    let(:task_runner) { stub(compiled_type: compiled_type, metadata: metadata) }
+    let(:metadata_file_location) { "metadata.json" }
+    let(:metadata_repository) { TestHelpers::FakeMetadataRepository.new }
+    let(:metadata) { metadata_repository.get_metadata(metadata_file_location) }
+    let(:task_runner) { stub(metadata_file_location: metadata_file_location) }
     let(:script_project) { stub }
 
     let(:library_language) { "assemblyscript" }
@@ -45,6 +46,9 @@ describe Script::Layers::Application::BuildScript do
       script_project
         .stubs(:language)
         .returns(library_language)
+
+      metadata_repository.create_metadata(metadata_file_location)
+      Script::Layers::Infrastructure::MetadataRepository.stubs(:new).returns(metadata_repository)
     end
 
     subject do
@@ -63,7 +67,6 @@ describe Script::Layers::Application::BuildScript do
         Script::Layers::Infrastructure::PushPackageRepository.any_instance.expects(:create_push_package).with(
           script_project: script_project,
           script_content: content,
-          compiled_type: "wasm",
           metadata: metadata,
           library: library
         )

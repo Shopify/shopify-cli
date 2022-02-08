@@ -79,8 +79,7 @@ module Rails
     def install!
       spin = CLI::UI::SpinGroup.new
       spin.add(ctx.message("rails.gem.installing", name)) do |spinner|
-        args = %w(gem install)
-        args.push(name)
+        args = ["#{ENV["RUBY_BINDIR"]}gem", "install", name]
         unless version.nil?
           if ctx.windows? && version.include?("~")
             args.push("-v", "\"#{version}\"")

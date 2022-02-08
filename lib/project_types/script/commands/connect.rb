@@ -5,6 +5,8 @@ module Script
       prerequisite_task :ensure_authenticated
       prerequisite_task ensure_project_type: :script
 
+      recommend_default_ruby_range
+
       def call(_args, _)
         Layers::Application::ConnectApp.call(ctx: @ctx, force: true)
       rescue StandardError => e
@@ -12,7 +14,7 @@ module Script
       end
 
       def self.help
-        ShopifyCLI::Context.new.message("connect.help", ShopifyCLI::TOOL_NAME, ShopifyCLI::TOOL_NAME)
+        ShopifyCLI::Context.new.message("script.connect.help", ShopifyCLI::TOOL_NAME, ShopifyCLI::TOOL_NAME)
       end
     end
   end

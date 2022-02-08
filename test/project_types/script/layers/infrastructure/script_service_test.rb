@@ -11,8 +11,12 @@ describe Script::Layers::Infrastructure::ScriptService do
   let(:schema_major_version) { "1" }
   let(:schema_minor_version) { "0" }
   let(:use_msgpack) { true }
+  let(:script_config_filename) { "script.config.yml" }
   let(:script_config) do
-    Script::Layers::Domain::ScriptConfig.new(content: expected_script_config_content)
+    Script::Layers::Domain::ScriptConfig.new(
+      content: expected_script_config_content,
+      filename: script_config_filename,
+    )
   end
   let(:script_name) { "script name" }
   let(:script_config_version) { "1" }
@@ -95,7 +99,7 @@ describe Script::Layers::Infrastructure::ScriptService do
         }
       end
 
-      it "should post the form without scope" do
+      it "returns the script's uuid" do
         assert_equal(uuid_from_server, subject)
       end
     end
@@ -175,6 +179,115 @@ describe Script::Layers::Infrastructure::ScriptService do
         end
       end
 
+      describe "when v2 configuration is invalid" do
+        let(:response) do
+          {
+            "data" => {
+              "appScriptSet" => {
+                "userErrors" => [
+                  { "message" => "error1", "tag" => "configuration_definition_error" },
+                  { "message" => "error2", "tag" => "configuration_definition_error" },
+                ],
+              },
+            },
+          }
+        end
+
+        it "should raise ScriptConfigurationDefinitionError" do
+          assert_raises_and_validate(
+            Script::Layers::Infrastructure::Errors::ScriptConfigurationDefinitionError,
+            proc do |e|
+              assert_equal(["error1", "error2"], e.messages)
+              assert_equal(script_config_filename, e.filename)
+            end,
+          ) { subject }
+        end
+      end
+
+      describe "when v1 configuration is invalid" do
+        let(:response) do
+          {
+            "data" => {
+              "appScriptSet" => {
+                "userErrors" => [{ "message" => error_message, "tag" => error_tag }],
+              },
+            },
+          }
+        end
+
+        describe "when missing keys" do
+          let(:error_message) { "keys" }
+          let(:error_tag) { "configuration_definition_missing_keys_error" }
+
+          it "should raise ScriptConfigMissingKeysError" do
+            assert_raises_and_validate(
+              Script::Layers::Infrastructure::Errors::ScriptConfigMissingKeysError,
+              proc do |e|
+                assert_equal(error_message, e.missing_keys)
+                assert_equal(script_config_filename, e.filename)
+              end,
+            ) { subject }
+          end
+        end
+
+        describe "when fields missing keys" do
+          let(:error_message) { "keys" }
+          let(:error_tag) { "configuration_definition_schema_field_missing_keys_error" }
+
+          it "should raise ScriptConfigFieldsMissingKeysError" do
+            assert_raises_and_validate(
+              Script::Layers::Infrastructure::Errors::ScriptConfigFieldsMissingKeysError,
+              proc do |e|
+                assert_equal(error_message, e.missing_keys)
+                assert_equal(script_config_filename, e.filename)
+              end,
+            ) { subject }
+          end
+        end
+
+        describe "when invalid value" do
+          let(:error_message) { "input modes" }
+          let(:error_tag) { "configuration_definition_invalid_value_error" }
+
+          it "should raise ScriptConfigInvalidValueError" do
+            assert_raises_and_validate(
+              Script::Layers::Infrastructure::Errors::ScriptConfigInvalidValueError,
+              proc do |e|
+                assert_equal(error_message, e.valid_input_modes)
+                assert_equal(script_config_filename, e.filename)
+              end,
+            ) { subject }
+          end
+        end
+
+        describe "when fields invalid value" do
+          let(:error_message) { "valid types" }
+          let(:error_tag) { "configuration_definition_schema_field_invalid_value_error" }
+
+          it "should raise ScriptConfigFieldsInvalidValueError" do
+            assert_raises_and_validate(
+              Script::Layers::Infrastructure::Errors::ScriptConfigFieldsInvalidValueError,
+              proc do |e|
+                assert_equal(error_message, e.valid_types)
+                assert_equal(script_config_filename, e.filename)
+              end,
+            ) { subject }
+          end
+        end
+
+        describe "when invalid syntax" do
+          let(:error_message) { "invalid syntax" }
+          let(:error_tag) { "configuration_definition_syntax_error" }
+
+          it "should raise ScriptConfigSyntaxError" do
+            assert_raises_and_validate(
+              Script::Layers::Infrastructure::Errors::ScriptConfigSyntaxError,
+              proc { |e| assert_equal(script_config_filename, e.filename) },
+            ) { subject }
+          end
+        end
+      end
+
       describe "when response is empty" do
         let(:response) { nil }
 
@@ -222,15 +335,21 @@ describe Script::Layers::Infrastructure::ScriptService do
     end
   end
 
-  describe ".generate_module_upload_url" do
+  describe ".generate_module_upload_details" do
     let(:user_errors) { [] }
     let(:url) { nil }
+    let(:headers) { {} }
+    let(:humanized_max_size) { "" }
     let(:response) do
       {
         "data" => {
           "moduleUploadUrlGenerate" => {
-            "url" => url,
             "userErrors" => user_errors,
+            "details" => {
+              "headers" => headers,
+              "url" => url,
+              "humanizedMaxSize" => humanized_max_size,
+            },
           },
         },
       }
@@ -240,13 +359,23 @@ describe Script::Layers::Infrastructure::ScriptService do
       api_client.stubs(:query).returns(response)
     end
 
-    subject { script_service.generate_module_upload_url }
+    subject { script_service.generate_module_upload_details }
 
     describe "when a url can be generated" do
       let(:url) { "http://fake.com" }
+      let(:headers) { { "header" => "value" } }
+      let(:humanized_max_size) { "123 Bytes" }
 
       it "returns a url" do
-        assert_equal url, subject
+        assert_equal url, subject[:url]
+      end
+
+      it "returns headers" do
+        assert_equal headers, subject[:headers]
+      end
+
+      it "returns max size" do
+        assert_equal humanized_max_size, subject[:max_size]
       end
     end
 
