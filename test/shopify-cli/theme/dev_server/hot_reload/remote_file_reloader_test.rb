@@ -22,6 +22,10 @@ module ShopifyCLI
               .to_return(
                 { status: 200, body: '{ "asset": { "checksum": "5678" } }', headers: {} },
                 { status: 200, body: '{ "asset": { "checksum": "5678" } }', headers: {} },
+                { status: 200, body: '{ "asset": { "checksum": "5678" } }', headers: {} },
+                { status: 200, body: '{ "asset": { "checksum": "5678" } }', headers: {} },
+                { status: 200, body: '{ "asset": { "checksum": "5678" } }', headers: {} },
+                { status: 200, body: '{ "asset": { "checksum": "5678" } }', headers: {} },
                 { status: 200, body: '{ "asset": { "checksum": "1234" } }', headers: {} }
               )
 
@@ -29,6 +33,7 @@ module ShopifyCLI
 
             streams.expects(:broadcast).with('{"modified":["<# assets/liquid.css.liquid>"]}')
 
+            @reloader.expects(:wait).times(6)
             @reloader.reload(file)
           end
 

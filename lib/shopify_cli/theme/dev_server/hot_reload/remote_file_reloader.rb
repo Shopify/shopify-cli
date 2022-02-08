@@ -12,7 +12,7 @@ module ShopifyCLI
           end
 
           def reload(file)
-            retries = 3
+            retries = 6
 
             until retries.zero?
               retries -= 1
