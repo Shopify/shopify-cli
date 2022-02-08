@@ -113,6 +113,10 @@ module Script
           dependency_install_cause: "Something went wrong while installing the needed dependencies.",
           dependency_install_help: "Correct the errors.",
 
+          invalid_environment_cause: "Your environment %{tool} version, %{env_version}, "\
+                                     "is too low. It must be greater than %{minimum_version}.",
+          invalid_environment_help: "Update your %{tool}",
+
           failed_api_request_cause: "Something went wrong while communicating with Shopify.",
           failed_api_request_help: "Try again.",
 

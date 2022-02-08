@@ -105,6 +105,17 @@ module Script
 
         class DependencyInstallError < ScriptProjectError; end
         class EmptyResponseError < ScriptProjectError; end
+
+        class InvalidEnvironmentError < ScriptProjectError
+          attr_reader :tool, :env_version, :minimum_version
+          def initialize(tool, env_version, minimum_version)
+            super()
+            @tool = tool
+            @env_version = env_version
+            @minimum_version = minimum_version
+          end
+        end
+
         class InvalidResponseError < ScriptProjectError; end
         class ForbiddenError < ScriptProjectError; end
         class InvalidContextError < ScriptProjectError; end

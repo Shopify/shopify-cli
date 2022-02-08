@@ -218,7 +218,7 @@ describe Script::Layers::Infrastructure::Languages::AssemblyScriptTaskRunner do
         ShopifyCLI::Environment.expects(:node_version)
           .returns(::Semantic::Version.new("14.14.0"))
 
-        assert_raises Script::Layers::Infrastructure::Errors::DependencyInstallError do
+        assert_raises Script::Layers::Infrastructure::Errors::InvalidEnvironmentError do
           subject
         end
       end

@@ -32,7 +32,7 @@ describe Script::Layers::Infrastructure::Languages::ToolVersionChecker do
         ShopifyCLI::Environment.expects(:node_version).returns(::Semantic::Version.new("1.0.0"))
         ShopifyCLI::Environment.expects(:npm_version).returns(::Semantic::Version.new("1.0.0"))
 
-        assert_raises(Script::Layers::Infrastructure::Errors::DependencyInstallError) { subject }
+        assert_raises(Script::Layers::Infrastructure::Errors::InvalidEnvironmentError) { subject }
       end
     end
   end

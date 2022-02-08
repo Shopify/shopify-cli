@@ -13,8 +13,7 @@ module Script
               end
 
               next if env_version >= ::Semantic::Version.new(properties["minimum_version"])
-              raise Errors::DependencyInstallError, "Your environment #{tool} version, #{env_version},"\
-                " is too low. It must be greater than #{properties["minimum_version"]}."
+              raise Errors::InvalidEnvironmentError.new(tool, env_version, properties["minimum_version"])
             end
           end
         end

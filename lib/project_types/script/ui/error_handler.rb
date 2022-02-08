@@ -237,6 +237,19 @@ module Script
             ),
             help_suggestion: ShopifyCLI::Context.message("script.error.graphql_error_help"),
           }
+        when Layers::Infrastructure::Errors::InvalidEnvironmentError
+          {
+            cause_of_error: ShopifyCLI::Context.message(
+              "script.error.invalid_environment_cause",
+              tool: e.tool,
+              env_version: e.env_version,
+              minimum_version: e.minimum_version,
+            ),
+            help_suggestion: ShopifyCLI::Context.message(
+              "script.error.invalid_environment_help",
+              tool: e.tool,
+            ),
+          }
         when Layers::Infrastructure::Errors::SystemCallFailureError
           {
             cause_of_error: ShopifyCLI::Context
