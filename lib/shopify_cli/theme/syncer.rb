@@ -42,7 +42,7 @@ module ShopifyCLI
         # Latest theme assets checksums. Updated on each upload.
         @checksums = {}
 
-        # Checksums of assets with errors. 
+        # Checksums of assets with errors.
         @error_checksums = []
       end
 
@@ -168,7 +168,7 @@ module ShopifyCLI
           # Delete local files not present remotely
           missing_files = @theme.theme_files
             .reject { |file| checksums.key?(file.relative_path.to_s) }.uniq
-            .reject { |file| @ignore_filter&.ignore?(file) }
+            .reject { |file| ignore_path?(file) }
           missing_files.each do |file|
             @ctx.debug("rm #{file.relative_path}")
             file.delete
@@ -255,6 +255,11 @@ module ShopifyCLI
 
       def ignore?(operation)
         path = operation.file_path
+        ignore_path?(path)
+      end
+
+      def ignore_path?(file_or_path)
+        path = file_or_path.respond_to?(:path) ? file_or_path.path : file_or_path
         ignored_by_ignore_filter?(path) || ignored_by_include_filter?(path)
       end
 
