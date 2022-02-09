@@ -5,6 +5,11 @@ module ShopifyCLI
   # the environment in which the CLI runs
   module Environment
     TRUTHY_ENV_VARIABLE_VALUES = ["1", "true", "TRUE", "yes", "YES"]
+    SPIN_OVERRIDE_ENV_NAMES = [
+      Constants::EnvironmentVariables::SPIN_WORKSPACE,
+      Constants::EnvironmentVariables::SPIN_NAMESPACE,
+      Constants::EnvironmentVariables::SPIN_HOST
+    ]
 
     def self.ruby_version(context: Context.new)
       out, err, stat = context.capture3('ruby -e "puts RUBY_VERSION"')
@@ -87,6 +92,20 @@ module ShopifyCLI
       end
     end
 
+    def self.spin_url_override(env_variables: ENV)
+      tokens = SPIN_OVERRIDE_ENV_NAMES.map do |name|
+        env_variables[name]
+      end
+
+      return if tokens.all? { |token| token.nil? }
+
+      if tokens.any? { |token| token.nil? }
+        raise "To manually target a spin instance, you must set #{SPIN_OVERRIDE_ENV_NAMES}"
+      else
+        tokens.join(".")
+      end
+    end
+
     def self.use_spin?(env_variables: ENV)
       env_variable_truthy?(
         Constants::EnvironmentVariables::SPIN,
@@ -98,6 +117,9 @@ module ShopifyCLI
     end
 
     def self.spin_url(env_variables: ENV)
+      override = spin_url_override(env_variables: env_variables)
+      return override unless override.nil?
+
       spin_response = if env_variables.key?(
         Constants::EnvironmentVariables::SPIN_INSTANCE
       )

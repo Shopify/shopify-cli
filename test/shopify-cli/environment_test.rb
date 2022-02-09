@@ -142,10 +142,40 @@ module ShopifyCLI
       assert_equal "partners.shopify.com", got
     end
 
+    def test_spin_url_returns_complete_override
+      # Given
+      env_variables = {
+        Constants::EnvironmentVariables::SPIN.to_s => "1",
+        Constants::EnvironmentVariables::SPIN_WORKSPACE.to_s => "abcd",
+        Constants::EnvironmentVariables::SPIN_NAMESPACE.to_s => "namespace",
+        Constants::EnvironmentVariables::SPIN_HOST.to_s => "host",
+      }
+
+      # When
+      got = Environment.partners_domain(env_variables: env_variables)
+
+      # Then
+      assert_equal "partners.abcd.namespace.host", got
+    end
+
+    def test_spin_url_raises_partial_override
+      # Given
+      env_variables = {
+        Constants::EnvironmentVariables::SPIN.to_s => "1",
+        Constants::EnvironmentVariables::SPIN_WORKSPACE.to_s => "abcd",
+        Constants::EnvironmentVariables::SPIN_NAMESPACE.to_s => "namespace",
+      }
+
+      # When/Then
+      assert_raises(RuntimeError) do
+        Environment.partners_domain(env_variables: env_variables)
+      end
+    end
+
     def test_spin_url_returns_specified_instance_url
       # Given
       env_variables = {
-        Constants::EnvironmentVariables::SPIN_PARTNERS.to_s => "1",
+        Constants::EnvironmentVariables::SPIN.to_s => "1",
         Constants::EnvironmentVariables::SPIN_INSTANCE.to_s => "abcd",
       }
       Environment.expects(:spin_show).with.returns(@mock_spin_instance.to_json)

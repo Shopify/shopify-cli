@@ -39,6 +39,9 @@ module ShopifyCLI
       # When true the CLI points to spin instances of services
       SPIN = "SPIN"
       SPIN_INSTANCE = "SPIN_INSTANCE"
+      SPIN_WORKSPACE = "SPIN_WORKSPACE"
+      SPIN_NAMESPACE = "SPIN_NAMESPACE"
+      SPIN_HOST = "SPIN_HOST"
 
       # Deprecated, equivalent to using SPIN=1
       SPIN_PARTNERS = "SHOPIFY_APP_CLI_SPIN_PARTNERS"
