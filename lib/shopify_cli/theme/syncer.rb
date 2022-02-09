@@ -118,7 +118,7 @@ module ShopifyCLI
               operation = @queue.pop
               break if operation.nil? # shutdown was called
               perform(operation)
-            rescue Exception => e
+            rescue Exception => e # rubocop:disable Lint/RescueException
               error_suffix = ": #{e}"
               error_suffix += + "\n\t#{e.backtrace.join("\n\t")}" if @ctx.debug?
               report_error(operation, error_suffix)
@@ -279,7 +279,7 @@ module ShopifyCLI
         update_checksums(body)
 
         attachment = body.dig("asset", "attachment")
-        value = if attachment
+        if attachment
           file.write(Base64.decode64(attachment))
         else
           file.write(body.dig("asset", "value"))
@@ -323,7 +323,7 @@ module ShopifyCLI
         parsed_body = JSON.parse(exception&.response&.body)
         message = parsed_body.dig("errors", "asset") || parsed_body["message"] || exception.message
         # Truncate to first lines
-        [message].flatten.map { |message| message.split("\n", 2).first }
+        [message].flatten.map { |mess| mess.split("\n", 2).first }
       rescue JSON::ParserError
         [exception.message]
       end

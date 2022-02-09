@@ -166,7 +166,7 @@ module ShopifyCLI
           @ctx = TestHelpers::FakeContext.new(root: "#{ShopifyCLI::ROOT}/test/fixtures/theme")
           @server_thread = Thread.new do
             DevServer.start(@ctx, "#{ShopifyCLI::ROOT}/test/fixtures/theme", port: @@port)
-          rescue Exception => e
+          rescue Exception => e # rubocop:disable Lint/RescueException
             puts "Failed to start DevServer:"
             puts e.message
             puts e.backtrace
