@@ -15,6 +15,7 @@ module ShopifyCLI
       },
       core: {
         errors: {
+          missing_node: "Node is necessary for this command and was not found in the environment.",
           option_parser: {
             invalid_option: "The option {{command:%s}} is not supported.",
             missing_argument: "The required argument {{command:%s}} is missing.",
