@@ -65,10 +65,14 @@ module ShopifyCLI
 
       def api_client(ctx)
         identity_auth = ShopifyCLI::IdentityAuth.new(ctx: ctx)
+        token = identity_auth.fetch_or_auth_partners_token
+        url = "https://#{Environment.partners_domain}/api/cli/graphql"
+        p "token: #{token}"
+        p "url: #{url}"
         new(
           ctx: ctx,
-          token: identity_auth.fetch_or_auth_partners_token,
-          url: "https://#{Environment.partners_domain}/api/cli/graphql",
+          token: token,
+          url: url,
         )
       end
 

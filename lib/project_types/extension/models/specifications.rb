@@ -19,6 +19,8 @@ module Extension
       end
 
       def valid?(identifier)
+        p identifier
+        p handlers
         handlers.key?(identifier)
       end
 
