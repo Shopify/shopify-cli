@@ -46,7 +46,7 @@ AllCops:
     - "vendor/**/*"
     - "docs/**/*"
     - "packaging/**/*"
-  TargetRubyVersion: 2.4
+  TargetRubyVersion: 3.1
 
 Layout/EmptyLines:
   Exclude:
