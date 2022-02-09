@@ -1,5 +1,6 @@
 # frozen_string_literal: true
 module TestHelpers
+  autoload :Command, "test_helpers/command"
   autoload :Constants, "test_helpers/constants"
   autoload :FakeTask, "test_helpers/fake_task"
   autoload :FakeContext, "test_helpers/fake_context"

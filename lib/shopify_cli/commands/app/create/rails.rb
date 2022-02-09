@@ -5,7 +5,6 @@ module ShopifyCLI
         class Rails < ShopifyCLI::Command::AppSubCommand
           prerequisite_task :ensure_authenticated
 
-          recommend_default_node_range
           recommend_default_ruby_range
 
           options do |parser, flags|
