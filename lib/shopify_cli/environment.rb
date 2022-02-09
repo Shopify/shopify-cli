@@ -8,7 +8,7 @@ module ShopifyCLI
     SPIN_OVERRIDE_ENV_NAMES = [
       Constants::EnvironmentVariables::SPIN_WORKSPACE,
       Constants::EnvironmentVariables::SPIN_NAMESPACE,
-      Constants::EnvironmentVariables::SPIN_HOST
+      Constants::EnvironmentVariables::SPIN_HOST,
     ]
 
     def self.ruby_version(context: Context.new)
@@ -97,9 +97,9 @@ module ShopifyCLI
         env_variables[name]
       end
 
-      return if tokens.all? { |token| token.nil? }
+      return if tokens.all?(&:nil?)
 
-      if tokens.any? { |token| token.nil? }
+      if tokens.any?(&:nil?)
         raise "To manually target a spin instance, you must set #{SPIN_OVERRIDE_ENV_NAMES}"
       else
         tokens.join(".")

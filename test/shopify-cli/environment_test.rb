@@ -3,7 +3,7 @@ require "test_helper"
 
 module ShopifyCLI
   class EnvironmentTest < MiniTest::Test
-    def setup 
+    def setup
       super
       @mock_spin_instance = {
         "name": name,
