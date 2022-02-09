@@ -17,12 +17,10 @@ module Extension
 
       def self.clone_template(git_template)
         ArgoSetupStep.default do |context, _identifier, directory_name, _js_system|
-          begin
-            ShopifyCLI::Git.clone(git_template, directory_name, ctx: context)
-            context.root = File.join(context.root, directory_name)
-          rescue StandardError
-            context.puts("{{x}} Unable to clone the repository.")
-          end
+          ShopifyCLI::Git.clone(git_template, directory_name, ctx: context)
+          context.root = File.join(context.root, directory_name)
+        rescue StandardError
+          context.puts("{{x}} Unable to clone the repository.")
         end
       end
 

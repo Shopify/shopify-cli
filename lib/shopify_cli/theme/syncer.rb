@@ -42,16 +42,16 @@ module ShopifyCLI
         # Latest theme assets checksums. Updated on each upload.
         @checksums = {}
 
-        # Checksums of assets with errors. 
+        # Checksums of assets with errors.
         @error_checksums = []
       end
 
       def lock_io!
-        @reporters.each { |reporter| reporter.disable! }
+        @reporters.each(&:disable!)
       end
 
       def unlock_io!
-        @reporters.each { |reporter| reporter.enable! }
+        @reporters.each(&:enable!)
       end
 
       def enqueue_updates(files)
@@ -296,7 +296,7 @@ module ShopifyCLI
           method: "DELETE",
           api_version: API_VERSION,
           body: JSON.generate(asset: {
-            key: file.relative_path.to_s
+            key: file.relative_path.to_s,
           })
         )
 
@@ -331,7 +331,7 @@ module ShopifyCLI
       def backoff_if_near_limit!(used, limit)
         if used > limit - @threads.size
           @ctx.debug("Near API call limit, waiting 2 sec…")
-          @backoff_mutex.synchronize { sleep 2 }
+          @backoff_mutex.synchronize { sleep(2) }
         end
       end
 

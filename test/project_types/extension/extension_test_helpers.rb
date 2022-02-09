@@ -20,10 +20,10 @@ module Extension
 
     def self.test_specifications(type_identifier: "TEST_EXTENSION")
       DummySpecifications.build(
-          identifier: type_identifier.downcase,
+        identifier: type_identifier.downcase,
         custom_handler_root: File.expand_path("../", __FILE__),
         custom_handler_namespace: ::Extension::ExtensionTestHelpers,
-        )
+      )
     end
 
     def self.test_specification_handler(type_identifier: "TEST_EXTENSION")

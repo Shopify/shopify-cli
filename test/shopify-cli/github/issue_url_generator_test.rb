@@ -7,7 +7,7 @@ module ShopifyCLI
         super
         @ctx = ShopifyCLI::Context.new
         @error = stub(backtrace: ["Backtrace Line 1", "Backtrace Line 2"], class: "Runtime Error",
-message: "Error Message")
+          message: "Error Message")
       end
 
       def test_call_error_url

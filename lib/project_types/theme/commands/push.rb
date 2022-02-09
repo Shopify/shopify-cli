@@ -48,8 +48,8 @@ module Theme
         ignore_filter.add_patterns(options.flags[:ignores]) if options.flags[:ignores]
 
         syncer = ShopifyCLI::Theme::Syncer.new(@ctx, theme: theme,
-                                               include_filter: include_filter,
-                                               ignore_filter: ignore_filter)
+          include_filter: include_filter,
+          ignore_filter: ignore_filter)
         begin
           syncer.start_threads
           if options.flags[:json]

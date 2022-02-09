@@ -145,8 +145,8 @@ describe Script::Layers::Infrastructure::Languages::AssemblyScriptTaskRunner do
           command_runner.any_instance.stubs(:call)
             .with(cmd)
             .raises(Script::Layers::Infrastructure::Errors::SystemCallFailureError.new(
-out: "some non-json parsable error output", cmd: cmd
-))
+              out: "some non-json parsable error output", cmd: cmd
+            ))
 
           assert_raises Script::Layers::Infrastructure::Errors::SystemCallFailureError do
             subject
