@@ -8,6 +8,7 @@ module Script
     class JavyTest < MiniTest::Test
       include TestHelpers::FakeUI
       include TestHelpers::FakeFS
+      include TestHelpers::Command
 
       def setup
         super

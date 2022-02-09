@@ -4,7 +4,6 @@ require "theme_check"
 module Theme
   class Command
     class Check < ShopifyCLI::Command::SubCommand
-      recommend_default_node_range
       recommend_default_ruby_range
 
       class Options < ShopifyCLI::Options
