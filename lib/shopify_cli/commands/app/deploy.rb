@@ -4,7 +4,6 @@ module ShopifyCLI
       class Deploy < ShopifyCLI::Command::AppSubCommand
         subcommand :Heroku, "heroku", "shopify_cli/commands/app/deploy/heroku"
 
-        recommend_default_node_range
         recommend_default_ruby_range
 
         def call(args, _name)

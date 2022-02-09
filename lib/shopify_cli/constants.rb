@@ -38,7 +38,7 @@ module ShopifyCLI
 
       # When true the CLI points to spin instances of services
       SPIN = "SPIN"
-      INFER_SPIN = "INFER_SPIN"
+      SPIN_INSTANCE = "SPIN_INSTANCE"
       SPIN_WORKSPACE = "SPIN_WORKSPACE"
       SPIN_NAMESPACE = "SPIN_NAMESPACE"
       SPIN_HOST = "SPIN_HOST"

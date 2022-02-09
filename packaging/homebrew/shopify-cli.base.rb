@@ -52,7 +52,7 @@ class ShopifyCli < Formula
   url "shopify-cli", using: RubyGemsDownloadStrategy
   version "SHOPIFY_CLI_VERSION"
   sha256 "SHOPIFY_CLI_GEM_CHECKSUM"
-  depends_on "ruby" => "3"
+  depends_on "ruby@3.0"
   depends_on "git"
 
   def install
