@@ -3,6 +3,14 @@ require "test_helper"
 
 module ShopifyCLI
   class EnvironmentTest < MiniTest::Test
+    def setup 
+      super
+      @mock_spin_instance = {
+        "name": name,
+        "fqdn": "#{name}.namespace.host",
+      }
+    end
+
     def test_ruby_version_when_the_command_raises
       # Given
       context = TestHelpers::FakeContext.new
@@ -126,50 +134,6 @@ module ShopifyCLI
       refute got
     end
 
-    def test_partners_domain_returns_the_right_value_when_local_instance
-      # Given
-      env_variables = {
-        Constants::EnvironmentVariables::LOCAL_PARTNERS.to_s => "1",
-      }
-
-      # When
-      got = Environment.partners_domain(env_variables: env_variables)
-
-      # Then
-      assert_equal "partners.myshopify.io", got
-    end
-
-    def test_partners_domain_returns_the_right_value_when_spin_instance
-      # Given
-      env_variables = {
-        Constants::EnvironmentVariables::SPIN_PARTNERS.to_s => "1",
-        Constants::EnvironmentVariables::SPIN_WORKSPACE.to_s => "abcd",
-        Constants::EnvironmentVariables::SPIN_NAMESPACE.to_s => "my-namespace",
-        Constants::EnvironmentVariables::SPIN_HOST.to_s => "us-dev.scvm.io",
-      }
-
-      # When
-      got = Environment.partners_domain(env_variables: env_variables)
-
-      # Then
-      assert_equal "partners.abcd.my-namespace.us-dev.scvm.io", got
-    end
-
-    def test_partners_domain_returns_the_right_value_when_spin_instance_no_host
-      # Given
-      env_variables = {
-        Constants::EnvironmentVariables::SPIN_PARTNERS.to_s => "1",
-        Constants::EnvironmentVariables::SPIN_WORKSPACE.to_s => "abcd",
-        Constants::EnvironmentVariables::SPIN_NAMESPACE.to_s => "my-namespace",
-      }
-
-      # When
-      got = Environment.partners_domain(env_variables: env_variables)
-
-      # Then
-      assert_equal "partners.abcd.my-namespace.us.spin.dev", got
-    end
-
     def test_partners_domain_returns_the_right_value_when_production_instance
       # Given/When
       got = Environment.partners_domain
@@ -178,35 +142,33 @@ module ShopifyCLI
       assert_equal "partners.shopify.com", got
     end
 
-    def test_spin_url_returns_the_right_value
+    def test_spin_url_returns_specified_instance_url
       # Given
       env_variables = {
         Constants::EnvironmentVariables::SPIN_PARTNERS.to_s => "1",
-        Constants::EnvironmentVariables::SPIN_WORKSPACE.to_s => "abcd",
-        Constants::EnvironmentVariables::SPIN_NAMESPACE.to_s => "my-namespace",
-        Constants::EnvironmentVariables::SPIN_HOST.to_s => "us-dev.scvm.io",
+        Constants::EnvironmentVariables::SPIN_INSTANCE.to_s => "abcd",
       }
+      Environment.expects(:spin_show).with.returns(@mock_spin_instance.to_json)
 
       # When
       got = Environment.partners_domain(env_variables: env_variables)
 
       # Then
-      assert_equal "partners.abcd.my-namespace.us-dev.scvm.io", got
+      assert_equal "partners.#{@mock_spin_instance[:fqdn]}", got
     end
 
-    def test_spin_url_returns_the_right_value_no_host
+    def test_spin_url_returns_latest
       # Given
       env_variables = {
-        Constants::EnvironmentVariables::SPIN.to_s => "1",
-        Constants::EnvironmentVariables::SPIN_WORKSPACE.to_s => "abcd",
-        Constants::EnvironmentVariables::SPIN_NAMESPACE.to_s => "my-namespace",
+        Constants::EnvironmentVariables::SPIN_PARTNERS.to_s => "1",
       }
+      Environment.expects(:spin_show).with(latest: true).returns(@mock_spin_instance.to_json)
 
       # When
       got = Environment.partners_domain(env_variables: env_variables)
 
       # Then
-      assert_equal "partners.abcd.my-namespace.us.spin.dev", got
+      assert_equal "partners.#{@mock_spin_instance[:fqdn]}", got
     end
 
     def test_use_spin_is_true
@@ -227,57 +189,6 @@ module ShopifyCLI
       got = Environment.use_spin?(env_variables: env_variables)
 
       refute got
-    end
-
-    def test_infer_spin_is_false
-      env_variables = {
-        Constants::EnvironmentVariables::INFER_SPIN.to_s => nil,
-      }
-
-      got = Environment.infer_spin?(env_variables: env_variables)
-
-      refute got
-    end
-
-    def test_infer_spin_is_true
-      env_variables = {
-        Constants::EnvironmentVariables::INFER_SPIN.to_s => "1",
-      }
-
-      got = Environment.infer_spin?(env_variables: env_variables)
-
-      assert got
-    end
-
-    def test_raise_when_spin_workspace_missing
-      env_variables = {
-        Constants::EnvironmentVariables::SPIN.to_s => "1",
-        Constants::EnvironmentVariables::SPIN_WORKSPACE.to_s => nil,
-        Constants::EnvironmentVariables::SPIN_NAMESPACE.to_s => "my-namespace",
-      }
-
-      assert_raises(RuntimeError) { Environment.spin_url(env_variables: env_variables) }
-    end
-
-    def test_raise_when_spin_namespace_missing
-      env_variables = {
-        Constants::EnvironmentVariables::SPIN.to_s => "1",
-        Constants::EnvironmentVariables::SPIN_WORKSPACE.to_s => "my-workspace",
-        Constants::EnvironmentVariables::SPIN_NAMESPACE.to_s => nil,
-      }
-
-      assert_raises(RuntimeError) { Environment.spin_url(env_variables: env_variables) }
-    end
-
-    def test_infer_when_spin_namespace_missing
-      env_variables = {
-        Constants::EnvironmentVariables::SPIN.to_s => "1",
-        Constants::EnvironmentVariables::INFER_SPIN.to_s => "1",
-        Constants::EnvironmentVariables::SPIN_WORKSPACE.to_s => "my-workspace",
-        Constants::EnvironmentVariables::SPIN_NAMESPACE.to_s => nil,
-      }
-
-      Environment.spin_url(env_variables: env_variables)
     end
 
     def test_env_variable_truthy
