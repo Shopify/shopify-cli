@@ -123,7 +123,7 @@ GEM
       liquid (>= 5.1.0)
       nokogiri (>= 1.12)
       parser (~> 3)
-    timecop (0.9.2)
+    timecop (0.9.4)
     unicode-display_width (2.0.0)
     webmock (3.9.3)
       addressable (>= 2.3.6)
