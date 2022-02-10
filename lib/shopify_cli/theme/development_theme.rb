@@ -38,6 +38,8 @@ module ShopifyCLI
           @ctx.debug("Created temporary development theme: #{@id}")
           ShopifyCLI::DB.set(development_theme_id: @id)
         end
+
+        self
       end
 
       def exists?
