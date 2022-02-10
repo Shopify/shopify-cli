@@ -89,7 +89,7 @@ module Theme
         end
 
         if development
-          return ShopifyCLI::Theme::Theme.development(@ctx, root: root)
+          return ShopifyCLI::Theme::Theme.development!(@ctx, root: root)
         end
 
         if unpublished
