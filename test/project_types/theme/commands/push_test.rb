@@ -290,7 +290,7 @@ module Theme
       end
 
       def test_push_to_development_theme
-        ShopifyCLI::Theme::Theme.expects(:development)
+        ShopifyCLI::Theme::Theme.expects(:development!)
           .with(@ctx, root: ".")
           .returns(@theme)
 

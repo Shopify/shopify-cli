@@ -138,16 +138,16 @@ module ShopifyCLI
       def test_development_when_expected_to_exist
         mock_themes_json
         dev_theme = ShopifyCLI::Theme::DevelopmentTheme.new(@ctx, root: @root)
-        dev_theme.stubs(:ensure_exists!).returns(true)
+        dev_theme.stubs(:ensure_exists!).returns(dev_theme)
         dev_theme.stubs(:exists?).returns(true)
         dev_theme.stubs(:id).returns(3)
 
         ShopifyCLI::Theme::DevelopmentTheme.stubs(:new).with(@ctx, root: @root).returns(dev_theme)
 
-        theme = Theme.development(@ctx, root: @root)
+        theme = Theme.development!(@ctx, root: @root)
 
         assert_equal 3, theme.id
-        assert_match "Development", theme.name
+        assert_match("Development", theme.name)
         assert_equal "development", theme.role
         assert theme.development?
       end
@@ -155,7 +155,7 @@ module ShopifyCLI
       def test_development_when_does_not_exist
         ShopifyCLI::DB.stubs(:get).with(:development_theme_id).returns(nil)
 
-        theme = Theme.development(@ctx, root: @root, create_if_missing: false)
+        theme = Theme.development(@ctx, root: @root)
 
         assert_nil theme
       end

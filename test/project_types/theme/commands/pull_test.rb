@@ -109,7 +109,7 @@ module Theme
 
       def test_pull_development_theme
         ShopifyCLI::Theme::Theme.expects(:development)
-          .with(@ctx, root: ".", create_if_missing: false)
+          .with(@ctx, root: ".")
           .returns(@theme)
 
         ShopifyCLI::Theme::IgnoreFilter.expects(:from_path).with(".").returns(@ignore_filter)
