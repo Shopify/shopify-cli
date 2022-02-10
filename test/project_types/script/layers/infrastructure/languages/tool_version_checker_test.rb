@@ -3,41 +3,53 @@
 require "project_types/script/test_helper"
 
 describe Script::Layers::Infrastructure::Languages::ToolVersionChecker do
-  let(:checker) { ToolVersionCheckerTester.new }
-  let(:tools) do
-    {
-      "node" => {
-        "minimum_version" => "1.0.0",
-      },
-      "npm" => {
-        "minimum_version" => "2.0.0",
-      },
-    }
-  end
+  describe ".check_node" do
+    subject do
+      Script::Layers::Infrastructure::Languages::ToolVersionChecker
+        .check_node(minimum_version: minimum_version)
+    end
 
-  describe ".check_tool_versions" do
-    subject { checker.check_tool_versions(tools) }
+    describe "when version is acceptable" do
+      let(:minimum_version) { "1.0.0" }
 
-    describe "when all tool versions acceptable" do
       it "should return true" do
         ShopifyCLI::Environment.expects(:node_version).returns(::Semantic::Version.new("1.0.0"))
-        ShopifyCLI::Environment.expects(:npm_version).returns(::Semantic::Version.new("2.0.0"))
-
         subject
       end
     end
 
-    describe "when some tool versions are outdated" do
-      it "should raise DependencyInstallError" do
-        ShopifyCLI::Environment.expects(:node_version).returns(::Semantic::Version.new("1.0.0"))
-        ShopifyCLI::Environment.expects(:npm_version).returns(::Semantic::Version.new("1.0.0"))
+    describe "when version is outdated" do
+      let(:minimum_version) { "5.0.0" }
 
+      it "should should raise DependencyInstallError" do
+        ShopifyCLI::Environment.expects(:node_version).returns(::Semantic::Version.new("1.0.0"))
         assert_raises(Script::Layers::Infrastructure::Errors::InvalidEnvironmentError) { subject }
       end
     end
   end
-end
 
-class ToolVersionCheckerTester
-  include Script::Layers::Infrastructure::Languages::ToolVersionChecker
+  describe ".check_npm" do
+    subject do
+      Script::Layers::Infrastructure::Languages::ToolVersionChecker
+        .check_npm(minimum_version: minimum_version)
+    end
+
+    describe "when version is acceptable" do
+      let(:minimum_version) { "1.0.0" }
+
+      it "should return true" do
+        ShopifyCLI::Environment.expects(:npm_version).returns(::Semantic::Version.new("1.0.0"))
+        subject
+      end
+    end
+
+    describe "when version is outdated" do
+      let(:minimum_version) { "5.0.0" }
+
+      it "should should raise DependencyInstallError" do
+        ShopifyCLI::Environment.expects(:npm_version).returns(::Semantic::Version.new("1.0.0"))
+        assert_raises(Script::Layers::Infrastructure::Errors::InvalidEnvironmentError) { subject }
+      end
+    end
+  end
 end

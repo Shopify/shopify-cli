@@ -264,10 +264,13 @@ describe Script::Layers::Infrastructure::Languages::TypeScriptTaskRunner do
   describe ".ensure_environment" do
     subject { runner.ensure_environment }
 
-    it "should call check_tool_versions with tools" do
-      runner
-        .expects(:check_tool_versions)
-        .with(runner.class::TOOLS)
+    it "should call ToolVersionChecker with tools" do
+      Script::Layers::Infrastructure::Languages::ToolVersionChecker
+        .expects(:check_node)
+        .with(minimum_version: runner.class::NODE_MIN_VERSION)
+      Script::Layers::Infrastructure::Languages::ToolVersionChecker
+        .expects(:check_npm)
+        .with(minimum_version: runner.class::NPM_MIN_VERSION)
       subject
     end
   end

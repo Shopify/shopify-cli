@@ -5,21 +5,15 @@ module Script
     module Infrastructure
       module Languages
         class AssemblyScriptTaskRunner < TaskRunner
-          include ToolVersionChecker
-          TOOLS = {
-            "node" => {
-              "minimum_version" => "14.15.0",
-            },
-            "npm" => {
-              "minimum_version" => "5.2.0",
-            },
-          }
+          NODE_MIN_VERSION = "14.15.0"
+          NPM_MIN_VERSION = "5.2.0"
 
           BYTECODE_FILE = "build/script.wasm"
           METADATA_FILE = "build/metadata.json"
           SCRIPT_SDK_BUILD = "npm run build"
           NPM_SET_REGISTRY_COMMAND = "npm --userconfig ./.npmrc config set @shopify:registry https://registry.npmjs.com"
           NPM_SET_ENGINE_STRICT_COMMAND = "npm --userconfig ./.npmrc config set engine-strict true"
+          NPM_INSTALL_COMMAND = "npm install --no-audit --no-optional --legacy-peer-deps --loglevel error"
 
           def build
             compile
@@ -27,10 +21,10 @@ module Script
           end
 
           def install_dependencies
-            ensure_environment
+            npm_run(NPM_INSTALL_COMMAND)
 
-            output, status = ctx.capture2e("npm install --no-audit --no-optional --legacy-peer-deps --loglevel error")
-            raise Errors::DependencyInstallError, output unless status.success?
+          rescue Errors::SystemCallFailureError => e
+            raise Errors::DependencyInstallError, e.out
           end
 
           def dependencies_installed?
@@ -43,24 +37,31 @@ module Script
           end
 
           def library_version(library_name)
-            ensure_environment
-            output = JSON.parse(CommandRunner.new(ctx: ctx).call("npm -s list --json"))
+            output = JSON.parse(npm_run("npm -s list --json"))
             library_version_from_npm_list(output, library_name)
           rescue Errors::SystemCallFailureError => error
             library_version_from_npm_list_error_output(error, library_name)
           end
 
           def set_npm_config
-            ensure_environment
-            CommandRunner.new(ctx: ctx).call(NPM_SET_REGISTRY_COMMAND)
-            CommandRunner.new(ctx: ctx).call(NPM_SET_ENGINE_STRICT_COMMAND)
+            npm_run(NPM_SET_REGISTRY_COMMAND)
+            npm_run(NPM_SET_ENGINE_STRICT_COMMAND)
           end
 
           def ensure_environment
-            check_tool_versions(TOOLS)
+            return if defined?(@environment_checked)
+            @environment_checked = true
+
+            ToolVersionChecker.check_node(minimum_version: NODE_MIN_VERSION)
+            ToolVersionChecker.check_npm(minimum_version: NPM_MIN_VERSION)
           end
 
           private
+
+          def npm_run(cmd)
+            ensure_environment
+            CommandRunner.new(ctx: ctx).call(cmd)
+          end
 
           def library_version_from_npm_list_error_output(error, library_name)
             # npm list can return a failure status code, even when returning the correct data.
@@ -82,7 +83,7 @@ module Script
 
           def compile
             check_compilation_dependencies!
-            CommandRunner.new(ctx: ctx).call(SCRIPT_SDK_BUILD)
+            npm_run(SCRIPT_SDK_BUILD)
           end
 
           def check_compilation_dependencies!

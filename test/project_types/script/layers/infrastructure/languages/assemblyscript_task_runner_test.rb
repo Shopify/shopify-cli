@@ -263,10 +263,13 @@ describe Script::Layers::Infrastructure::Languages::AssemblyScriptTaskRunner do
   describe ".ensure_environment" do
     subject { as_task_runner.ensure_environment }
 
-    it "should call check_tool_versions with tools" do
-      as_task_runner
-        .expects(:check_tool_versions)
-        .with(as_task_runner.class::TOOLS)
+    it "should call ToolVersionChecker with tools" do
+      Script::Layers::Infrastructure::Languages::ToolVersionChecker
+        .expects(:check_node)
+        .with(minimum_version: as_task_runner.class::NODE_MIN_VERSION)
+      Script::Layers::Infrastructure::Languages::ToolVersionChecker
+        .expects(:check_npm)
+        .with(minimum_version: as_task_runner.class::NPM_MIN_VERSION)
       subject
     end
   end

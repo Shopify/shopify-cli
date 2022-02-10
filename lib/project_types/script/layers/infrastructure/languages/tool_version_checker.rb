@@ -2,18 +2,21 @@ module Script
   module Layers
     module Infrastructure
       module Languages
-        module ToolVersionChecker
-          def check_tool_versions(tools)
-            tools.each do |tool, properties|
-              env_version = case tool
-              when "node"
-                ShopifyCLI::Environment.node_version
-              when "npm"
-                ShopifyCLI::Environment.npm_version
-              end
+        class ToolVersionChecker
+          class << self
+            def check_node(minimum_version:)
+              check_version("node", ShopifyCLI::Environment.node_version, minimum_version)
+            end
 
-              next if env_version >= ::Semantic::Version.new(properties["minimum_version"])
-              raise Errors::InvalidEnvironmentError.new(tool, env_version, properties["minimum_version"])
+            def check_npm(minimum_version:)
+              check_version("npm", ShopifyCLI::Environment.npm_version, minimum_version)
+            end
+
+            private
+
+            def check_version(tool, env_version, minimum_version)
+              return if env_version >= ::Semantic::Version.new(minimum_version)
+              raise Errors::InvalidEnvironmentError.new(tool, env_version, minimum_version)
             end
           end
         end
