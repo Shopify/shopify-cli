@@ -27,7 +27,7 @@ module Script
           change_directory(directory: initial_directory)
         end
 
-        def create(script_name:, extension_point_type:, language:)
+        def create(title:, extension_point_type:, language:)
           validate_metadata!(extension_point_type, language)
 
           ShopifyCLI::Project.write(
@@ -35,7 +35,8 @@ module Script
             project_type: :script,
             organization_id: nil,
             extension_point_type: extension_point_type,
-            script_name: script_name,
+            title: title,
+            description: nil,
             language: language
           )
 
@@ -48,7 +49,8 @@ module Script
           Domain::ScriptProject.new(
             id: project.directory,
             env: project.env,
-            script_name: script_name,
+            title: title,
+            description: description,
             extension_point_type: extension_point_type,
             language: language,
             script_config: script_config_repository.get!,
@@ -79,11 +81,6 @@ module Script
           build_script_project
         end
 
-        def update_script_config(title:)
-          script_config = script_config_repository.update!(title: title)
-          build_script_project(script_config: script_config)
-        end
-
         private
 
         def build_script_project(
@@ -92,7 +89,8 @@ module Script
           Domain::ScriptProject.new(
             id: ctx.root,
             env: project.env,
-            script_name: script_name,
+            title: title,
+            description: description,
             extension_point_type: extension_point_type,
             language: language,
             script_config: script_config,
@@ -111,8 +109,12 @@ module Script
           project_config_value!("extension_point_type")
         end
 
-        def script_name
-          project_config_value!("script_name")
+        def title
+          project_config_value!("title")
+        end
+
+        def description
+          project_config_value("description")
         end
 
         def language
@@ -181,25 +183,11 @@ module Script
             from_h(hash)
           end
 
-          def update!(title:)
-            hash = get!.content
-            update_hash(hash: hash, title: title)
-
-            ctx.write(filename, hash_to_file_content(hash))
-
-            from_h(hash)
-          end
-
           def filename
             raise NotImplementedError
           end
 
           private
-
-          def update_hash(hash:, title:)
-            hash["version"] ||= "2"
-            hash["title"] = title
-          end
 
           def from_h(hash)
             Domain::ScriptConfig.new(content: hash, filename: filename)

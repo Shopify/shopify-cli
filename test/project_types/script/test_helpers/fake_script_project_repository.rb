@@ -15,13 +15,16 @@ module TestHelpers
       @project = nil
     end
 
-    def create(script_name:, extension_point_type:, language:, env: nil, input_query: nil)
-      script_config = fake_script_config_repo.create({ "version" => 1, "title" => script_name })
+    def create(title:, extension_point_type:, language:,
+      env: nil, input_query: nil, description: "project_description")
+
+      script_config = fake_script_config_repo.create({ "version" => 1 })
 
       @project = Script::Layers::Domain::ScriptProject.new(
-        id: "/#{script_name}",
+        id: "/#{title}",
         env: env || ShopifyCLI::Resources::EnvFile.new(api_key: "1234", secret: "shh", extra: {}),
-        script_name: script_name,
+        title: title,
+        description: description,
         extension_point_type: extension_point_type,
         language: language,
         script_config: script_config,
@@ -46,14 +49,6 @@ module TestHelpers
       @project
     end
 
-    def update_script_config(title:)
-      script_config = fake_script_config_repo
-        .update!(title: title)
-
-      @project.script_config = script_config
-      @project
-    end
-
     def create_project_directory; end
     def delete_project_directory; end
     def change_to_initial_directory; end
@@ -71,13 +66,6 @@ module TestHelpers
 
       def create(content)
         @cache = from_h(content)
-      end
-
-      def update!(title:)
-        hash = get!.content
-        hash["title"] = title
-
-        @cache = from_h(hash)
       end
 
       def get!
