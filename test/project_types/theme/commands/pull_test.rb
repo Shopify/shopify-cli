@@ -108,7 +108,7 @@ module Theme
       end
 
       def test_pull_development_theme
-        ShopifyCLI::Theme::Theme.expects(:development)
+        ShopifyCLI::Theme::DevelopmentTheme.expects(:find)
           .with(@ctx, root: ".")
           .returns(@theme)
 

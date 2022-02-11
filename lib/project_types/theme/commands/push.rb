@@ -91,9 +91,7 @@ module Theme
         end
 
         if development
-          new_theme = ShopifyCLI::Theme::DevelopmentTheme.new(@ctx, root: root)
-          new_theme.ensure_exists!
-          return new_theme
+          return ShopifyCLI::Theme::DevelopmentTheme.find_or_create!(@ctx, root: root)
         end
 
         if unpublished
