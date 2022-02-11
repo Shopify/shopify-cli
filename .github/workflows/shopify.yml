@@ -17,9 +17,10 @@ jobs:
     strategy:
       matrix:
         version:
-          - 3.0.2
           - 2.6.6
           - 2.7.5
+          - 3.0.2
+          - 3.1.0
         os:
           - macos-10.15
           - macos-11
