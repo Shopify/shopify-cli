@@ -28,7 +28,7 @@ module ShopifyCLI
 
         def start(ctx, root, host: "127.0.0.1", port: 9292, poll: false, mode: ReloadMode.default)
           @ctx = ctx
-          theme = Theme.development!(ctx, root: root)
+          theme = DevelopmentTheme.find_or_create!(ctx, root: root)
           ignore_filter = IgnoreFilter.from_path(root)
           @syncer = Syncer.new(ctx, theme: theme, ignore_filter: ignore_filter)
           watcher = Watcher.new(ctx, theme: theme, syncer: @syncer, ignore_filter: ignore_filter, poll: poll)

@@ -65,6 +65,15 @@ module ShopifyCLI
         new(ctx).delete
       end
 
+      def self.find(ctx, root: nil)
+        dev_theme = new(ctx, root: root)
+        dev_theme.exists? ? dev_theme : nil
+      end
+
+      def self.find_or_create!(ctx, root: nil)
+        new(ctx, root: root).ensure_exists!
+      end
+
       private
 
       def generate_theme_name

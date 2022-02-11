@@ -176,15 +176,6 @@ module ShopifyCLI
           find(ctx, root) { |attrs| attrs["role"] == "main" }
         end
 
-        def development(ctx, root: nil)
-          dev_theme = ShopifyCLI::Theme::DevelopmentTheme.new(ctx, root: root)
-          dev_theme.exists? ? dev_theme : nil
-        end
-
-        def development!(ctx, root: nil)
-          ShopifyCLI::Theme::DevelopmentTheme.new(ctx, root: root).ensure_exists!
-        end
-
         # Finds a Theme by its identifier
         #
         # #### Parameters
