@@ -2,6 +2,7 @@ From version 2.6.0, the sections in this file adhere to the [keep a changelog](h
 
 ## [Unreleased]
 
+## Version 2.11.2
 ### Fixed
 * [#2047](https://github.com/Shopify/shopify-cli/pull/2047): Fix the Homebrew installation
 * [#2019](https://github.com/Shopify/shopify-cli/pull/2019): Provide helpful link when nokogiri fails to load
