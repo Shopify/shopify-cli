@@ -22,7 +22,7 @@ module Script
           end
 
           def install_dependencies
-            npm_run(NPM_INSTALL_COMMAND)
+            run_cmd_with_env_check(NPM_INSTALL_COMMAND)
 
           rescue Errors::SystemCallFailureError => e
             raise Errors::DependencyInstallError, e.out
@@ -38,15 +38,15 @@ module Script
           end
 
           def library_version(library_name)
-            output = JSON.parse(npm_run("npm -s list --json"))
+            output = JSON.parse(run_cmd_with_env_check("npm -s list --json"))
             library_version_from_npm_list(output, library_name)
           rescue Errors::SystemCallFailureError => error
             library_version_from_npm_list_error_output(error, library_name)
           end
 
           def set_npm_config
-            npm_run(NPM_SET_REGISTRY_COMMAND)
-            npm_run(NPM_SET_ENGINE_STRICT_COMMAND)
+            run_cmd_with_env_check(NPM_SET_REGISTRY_COMMAND)
+            run_cmd_with_env_check(NPM_SET_ENGINE_STRICT_COMMAND)
           end
 
           private
@@ -59,7 +59,7 @@ module Script
             ToolVersionChecker.check_npm(minimum_version: NPM_MIN_VERSION)
           end
 
-          def npm_run(cmd)
+          def run_cmd_with_env_check(cmd)
             ensure_environment
             CommandRunner.new(ctx: ctx).call(cmd)
           end
@@ -84,8 +84,8 @@ module Script
 
           def compile
             check_compilation_dependencies!
-            npm_run(SCRIPT_SDK_BUILD)
-            npm_run(GEN_METADATA)
+            run_cmd_with_env_check(SCRIPT_SDK_BUILD)
+            run_cmd_with_env_check(GEN_METADATA)
           end
 
           def check_compilation_dependencies!
