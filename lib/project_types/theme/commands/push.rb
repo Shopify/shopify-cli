@@ -8,7 +8,6 @@ require "shopify_cli/theme/syncer"
 module Theme
   class Command
     class Push < ShopifyCLI::Command::SubCommand
-      recommend_default_node_range
       recommend_default_ruby_range
 
       options do |parser, flags|
@@ -21,7 +20,10 @@ module Theme
         parser.on("-j", "--json") { flags[:json] = true }
         parser.on("-a", "--allow-live") { flags[:allow_live] = true }
         parser.on("-p", "--publish") { flags[:publish] = true }
-        parser.on("-o", "--only=PATTERN") { |pattern| flags[:includes] = pattern }
+        parser.on("-o", "--only=PATTERN") do |pattern|
+          flags[:includes] ||= []
+          flags[:includes] << pattern
+        end
         parser.on("-x", "--ignore=PATTERN") do |pattern|
           flags[:ignores] ||= []
           flags[:ignores] << pattern
@@ -89,9 +91,7 @@ module Theme
         end
 
         if development
-          new_theme = ShopifyCLI::Theme::DevelopmentTheme.new(@ctx, root: root)
-          new_theme.ensure_exists!
-          return new_theme
+          return ShopifyCLI::Theme::DevelopmentTheme.find_or_create!(@ctx, root: root)
         end
 
         if unpublished

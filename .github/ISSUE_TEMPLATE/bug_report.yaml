@@ -1,22 +1,23 @@
 name: Bug Report
 description: File a bug report
-title: "[Bug]: "
+title: "[Bug]: <YOUR ISSUE TITLE>"
 labels: ["type:bug"]
 body:
+  - type: markdown
+    attributes:
+      value: |-
+        Hi! 👋 Thanks for taking the time to open an issue.
+
+        ## Before you begin
   - type: checkboxes
     id: preflight_checks
     attributes:
-      label: Before jumping to submit...
-      description: |-
-        Hi! 👋 Thanks for taking the time to open an issue.
-
-        **Before submitting your issue**, please confirm:
+      label: |-
+        Please confirm that you have:
       options:
-        - label: I've searched the [existing issues](https://github.com/Shopify/shopify-cli/issues) to see if someone else has already submitted the same thing. (Feel free to add any additional information in a comment!)
+        - label: Searched [existing issues](https://github.com/Shopify/shopify-cli/issues) to see if your issue is a duplicate. (If you’ve found a duplicate issue, feel free to add additional information in a comment on it.)
           required: true
-        - label: I've given as much detail as reasonably possible
-          required: true
-        - label: I've tested with the [latest CLI version](https://github.com/Shopify/shopify-cli/releases)
+        - label: Reproduced the issue in [the latest CLI version](https://github.com/Shopify/shopify-cli/releases).
           required: true
     validations:
       required: true
@@ -33,14 +34,6 @@ body:
         - script
         - theme
         - other
-    validations:
-      required: true
-  - type: input
-    id: issue_summary
-    attributes:
-      label: Issue summary
-      description: Write a short description of the issue here ↓
-      placeholder: Tell us what you see!
     validations:
       required: true
   - type: textarea
@@ -81,8 +74,6 @@ body:
   - type: markdown
     attributes:
       value: |
-        <hr/>
-
         ## Environment Details
 
         Just a few more technical questions, to help us understand if your bug is linked to a particular runtime enviroment.
@@ -115,3 +106,12 @@ body:
     attributes:
       label: What language and version are you using in your application?
       placeholder: Ruby 3.0.3, Node 17.1, PHP 7.4...
+  - type: markdown
+    attributes:
+      value: |-
+
+        ## What to Expect
+
+        When you submit this issue, it will go to a Shopify developer experience team. We may not be able to reply right away, but we usually respond within a week.
+
+        We always value your feedback. Thanks again for taking the time to help improve the CLI for everyone!

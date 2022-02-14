@@ -38,7 +38,7 @@ module ShopifyCLI
 
       # When true the CLI points to spin instances of services
       SPIN = "SPIN"
-      INFER_SPIN = "INFER_SPIN"
+      SPIN_INSTANCE = "SPIN_INSTANCE"
       SPIN_WORKSPACE = "SPIN_WORKSPACE"
       SPIN_NAMESPACE = "SPIN_NAMESPACE"
       SPIN_HOST = "SPIN_HOST"
@@ -61,7 +61,7 @@ module ShopifyCLI
     module SupportedVersions
       module Ruby
         FROM = "2.6.6"
-        TO = "3.0.2"
+        TO = "3.1.0"
       end
 
       module Node

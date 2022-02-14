@@ -53,7 +53,7 @@ describe Script::Layers::Application::PushScript do
     Script::Layers::Infrastructure::MetadataRepository.stubs(:new).returns(metadata_repository)
     Script::Layers::Infrastructure::Languages::TaskRunner
       .stubs(:for)
-      .with(@context, library_language, script_name)
+      .with(@context, library_language)
       .returns(task_runner)
     ShopifyCLI::Environment.stubs(:interactive?).returns(true)
 

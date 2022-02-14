@@ -100,18 +100,29 @@ module ShopifyCLI
       end
 
       def check_node_version
+        context = Context.new
+        if @compatible_node_range && context.which("node").nil?
+          raise ShopifyCLI::Abort, context.message("core.errors.missing_node")
+        end
+
         check_version(
           Environment.node_version,
           range: @compatible_node_range,
-          runtime: "Node"
+          runtime: "Node",
+          context: context
         )
       end
 
-      def check_version(version, range:, runtime:)
+      def check_version(version, range:, runtime:, context: Context.new)
         return if Environment.test?
         return if range.nil?
-        return if version >= range.from && version < range.to
-        Context.new.warn("Your environment #{runtime} version, #{version},"\
+
+        version_without_pre_nor_build = Utilities.version_dropping_pre_and_build(version)
+        is_higher_than_bottom = version_without_pre_nor_build >= Utilities.version_dropping_pre_and_build(range.from)
+        is_lower_than_top = version_without_pre_nor_build < Utilities.version_dropping_pre_and_build(range.to)
+        return if is_higher_than_bottom && is_lower_than_top
+
+        context.warn("Your environment #{runtime} version, #{version},"\
           " is outside of the range supported by the CLI,"\
           " #{range.from}..<#{range.to},"\
           " and might cause incompatibility issues.")

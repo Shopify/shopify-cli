@@ -27,6 +27,10 @@ module Extension
           api_secret: options.flags[:api_secret],
           registration_id: options.flags[:registration_id]
         )
+        # on ci, registration id must be present
+        registration_id = options.flags[:registration_id]
+        check_registration(registration_id: registration_id, context: @ctx)
+
         specification_handler = Extension::Loaders::SpecificationHandler.load(project: project, context: @ctx)
         register_if_necessary(project: project, args: args, name: name)
 
@@ -40,6 +44,15 @@ module Extension
       def register_if_necessary(project:, args:, name:)
         if ShopifyCLI::Environment.interactive? && !project.registered?
           Command::Register.new(@ctx).call(args, name)
+        end
+      end
+
+      def check_registration(registration_id:, context:)
+        if !ShopifyCLI::Environment.interactive? && (!registration_id || registration_id.empty?)
+          message = context.message("errors.missing_push_options_ci", "--registration-id")
+          message += context.message("errors.missing_push_options_ci_solution", ShopifyCLI::TOOL_NAME)
+          raise ShopifyCLI::Abort,
+            message
         end
       end
 

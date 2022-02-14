@@ -8,6 +8,7 @@ module Script
       include TestHelpers::Partners
       include TestHelpers::FakeUI
       include TestHelpers::FakeFS
+      include TestHelpers::Command
 
       def setup
         super

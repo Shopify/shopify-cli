@@ -1,6 +1,7 @@
 # frozen_string_literal: true
 require "test_helper"
 require "shopify_cli/theme/theme"
+require "shopify_cli/theme/development_theme"
 
 module ShopifyCLI
   module Theme
@@ -134,15 +135,29 @@ module ShopifyCLI
         assert theme.live?
       end
 
-      def test_development
+      def test_development_when_expected_to_exist
         mock_themes_json
+        dev_theme = DevelopmentTheme.new(@ctx, root: @root)
+        dev_theme.stubs(:ensure_exists!).returns(dev_theme)
+        dev_theme.stubs(:exists?).returns(true)
+        dev_theme.stubs(:id).returns(3)
 
-        theme = Theme.development(@ctx, root: @root)
+        DevelopmentTheme.stubs(:new).with(@ctx, root: @root).returns(dev_theme)
+
+        theme = DevelopmentTheme.find_or_create!(@ctx, root: @root)
 
         assert_equal 3, theme.id
-        assert_equal "Development", theme.name
+        assert_match("Development", theme.name)
         assert_equal "development", theme.role
         assert theme.development?
+      end
+
+      def test_development_when_does_not_exist
+        ShopifyCLI::DB.stubs(:get).with(:development_theme_id).returns(nil)
+
+        theme = DevelopmentTheme.find(@ctx, root: @root)
+
+        assert_nil theme
       end
 
       def test_find_by_identifier_with_id

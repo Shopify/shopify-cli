@@ -1,6 +1,7 @@
 # frozen_string_literal: true
 require "test_helper"
 require "shopify_cli/theme/dev_server"
+require "shopify_cli/theme/dev_server/hot_reload/remote_file_reloader"
 require "rack/mock"
 
 module ShopifyCLI
@@ -12,7 +13,7 @@ module ShopifyCLI
           root = ShopifyCLI::ROOT + "/test/fixtures/theme"
           @ctx = TestHelpers::FakeContext.new(root: root)
           @theme = Theme.new(@ctx, root: root)
-          @syncer = stub("Syncer", enqueue_uploads: true)
+          @syncer = stub("Syncer", enqueue_uploads: true, enqueue_updates: true)
           @watcher = Watcher.new(@ctx, theme: @theme, syncer: @syncer)
           @mode = "off"
         end
@@ -104,7 +105,30 @@ module ShopifyCLI
           @watcher.notify_observers(modified, [], [])
         end
 
+        def test_doesnt_broadcast_watcher_events_when_modified_file_is_a_liquid_css
+          modified = ["assets/generated.css.liquid"]
+          HotReload::RemoteFileReloader
+            .stubs(:new)
+            .returns(remote_file_reloader)
+          SSE::Streams.any_instance
+            .expects(:broadcast)
+            .with(JSON.generate(modified: modified))
+            .never
+
+          app = -> { [200, {}, []] }
+          HotReload.new(@ctx, app, theme: @theme, watcher: @watcher, mode: @mode)
+
+          @watcher.changed
+          @watcher.notify_observers(modified, [], [])
+        end
+
         private
+
+        def remote_file_reloader
+          reloader = mock("Reloader")
+          reloader.stubs(reload: nil)
+          reloader
+        end
 
         def serve(response_body = "", path: "/", headers: {})
           app = lambda do |_env|
