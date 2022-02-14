@@ -15,7 +15,7 @@ module ShopifyCLI
       },
       core: {
         errors: {
-          missing_node: "Node is necessary for this command and was not found in the environment.",
+          missing_node: "Node is required to continue. Install node here: https://nodejs.org/en/download.",
           option_parser: {
             invalid_option: "The option {{command:%s}} is not supported.",
             missing_argument: "The required argument {{command:%s}} is missing.",
@@ -42,7 +42,7 @@ module ShopifyCLI
             invalid_type: "The type %s is not supported. The only supported types are"\
               " {{command:[ rails | node | php ]}}",
             help: <<~HELP,
-            {{command:%s app create}}: Creates a ruby on rails app.
+            {{command:%s app create}}: Creates a new project in a subdirectory.
               Usage: {{command:%s app create [ rails | node | php ]}}
             HELP
             rails: {
