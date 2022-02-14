@@ -79,6 +79,23 @@ module ShopifyCLI
       assert_equal ::Semantic::Version.new("3.2.1"), got
     end
 
+    def test_npm_version
+      # Given
+      context = TestHelpers::FakeContext.new
+      stat = mock("success", success?: true)
+      out = "8.4.1"
+      err = ""
+      context.expects(:capture3)
+        .with("npm", "--version")
+        .returns([out, err, stat])
+
+      # When
+      got = Environment.npm_version(context: context)
+
+      # Then
+      assert_equal ::Semantic::Version.new("8.4.1"), got
+    end
+
     def test_use_local_partners_instance_returns_true_when_the_env_variable_is_set
       # Given
       env_variables = {
