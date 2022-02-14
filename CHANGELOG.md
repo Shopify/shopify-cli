@@ -7,6 +7,7 @@ From version 2.6.0, the sections in this file adhere to the [keep a changelog](h
 * [#2047](https://github.com/Shopify/shopify-cli/pull/2047): Fix the Homebrew installation
 * [#2019](https://github.com/Shopify/shopify-cli/pull/2019): Provide helpful link when nokogiri fails to load
 * [#2055](https://github.com/Shopify/shopify-cli/pull/2055): Remove unneeded Node requirements
+* [#2020](https://github.com/Shopify/shopify-cli/pull/2020): Fix `theme pull` so that correct dev theme is used with `-d` option
 
 ## Version 2.11.1
 ### Fixed
@@ -18,7 +19,6 @@ From version 2.6.0, the sections in this file adhere to the [keep a changelog](h
 ## Version 2.11.0
 ### Fixed
 * [#2005](https://github.com/Shopify/shopify-cli/pull/2005): Fix PHP app serve on Windows environments
-* [#2020](https://github.com/Shopify/shopify-cli/pull/2020): Fix `theme pull` so that correct dev theme is used with `-d` option
 
 ### Added
 * [#1998](https://github.com/Shopify/shopify-cli/pull/1998): Add support for Rails 7
