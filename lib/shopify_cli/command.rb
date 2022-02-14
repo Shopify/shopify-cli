@@ -100,8 +100,10 @@ module ShopifyCLI
       end
 
       def check_node_version
+        return unless @compatible_node_range
+
         context = Context.new
-        if @compatible_node_range && context.which("node").nil?
+        if context.which("node").nil?
           raise ShopifyCLI::Abort, context.message("core.errors.missing_node")
         end
 
