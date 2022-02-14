@@ -18,6 +18,13 @@ describe Script::Layers::Infrastructure::Languages::TypeScriptTaskRunner do
     }
   end
 
+  before do
+    ShopifyCLI::Environment.stubs(
+      node_version: ::Semantic::Version.new(runner.class::NODE_MIN_VERSION),
+      npm_version: ::Semantic::Version.new(runner.class::NPM_MIN_VERSION)
+    )
+  end
+
   describe ".build" do
     subject { runner.build }
 
@@ -107,13 +114,6 @@ describe Script::Layers::Infrastructure::Languages::TypeScriptTaskRunner do
 
   describe ".install_dependencies" do
     subject { runner.install_dependencies }
-
-    before do
-      ShopifyCLI::Environment.stubs(:node_version)
-        .returns(::Semantic::Version.new("14.15.0"))
-      ShopifyCLI::Environment.stubs(:npm_version)
-        .returns(::Semantic::Version.new("5.2.0"))
-    end
 
     describe "when node version is above minimum" do
       it "should install using npm" do
