@@ -11,10 +11,8 @@ module Script
 
           def setup_dependencies
             task_runner = Infrastructure::Languages::AssemblyScriptTaskRunner.new(ctx)
-            task_runner.ensure_environment
-
-            super
             task_runner.set_npm_config
+            super
           end
         end
       end

@@ -11,10 +11,9 @@ module Script
 
           def setup_dependencies
             task_runner = Infrastructure::Languages::TypeScriptTaskRunner.new(ctx)
-            task_runner.ensure_environment
+            task_runner.set_npm_config
 
             super
-            task_runner.set_npm_config
 
             if ctx.file_exist?("yarn.lock")
               ctx.rm("yarn.lock")

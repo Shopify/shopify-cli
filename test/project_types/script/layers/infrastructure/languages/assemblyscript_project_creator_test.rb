@@ -51,8 +51,6 @@ describe Script::Layers::Infrastructure::Languages::AssemblyScriptProjectCreator
         .once
 
       Script::Layers::Infrastructure::Languages::AssemblyScriptTaskRunner.any_instance
-        .expects(:ensure_environment)
-      Script::Layers::Infrastructure::Languages::AssemblyScriptTaskRunner.any_instance
         .expects(:set_npm_config)
 
       subject

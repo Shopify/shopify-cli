@@ -50,8 +50,6 @@ describe Script::Layers::Infrastructure::Languages::TypeScriptProjectCreator do
         .once
 
       Script::Layers::Infrastructure::Languages::TypeScriptTaskRunner.any_instance
-        .expects(:ensure_environment)
-      Script::Layers::Infrastructure::Languages::TypeScriptTaskRunner.any_instance
         .expects(:set_npm_config)
 
       context.expects(:file_exist?)

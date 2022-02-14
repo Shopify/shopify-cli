@@ -49,6 +49,8 @@ module Script
             npm_run(NPM_SET_ENGINE_STRICT_COMMAND)
           end
 
+          private
+
           def ensure_environment
             return if defined?(@environment_checked)
             @environment_checked = true
@@ -56,8 +58,6 @@ module Script
             ToolVersionChecker.check_node(minimum_version: NODE_MIN_VERSION)
             ToolVersionChecker.check_npm(minimum_version: NPM_MIN_VERSION)
           end
-
-          private
 
           def npm_run(cmd)
             ensure_environment
