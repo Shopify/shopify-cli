@@ -690,7 +690,8 @@ module ShopifyCLI
             },
           },
           ensure_dev_store: {
-            could_not_verify_store: "Couldn't verify your store %s",
+            could_not_verify_store: "Couldn't verify your store. If you don't have a development store set up, "
+              \"please create one in your Partners dashboard and run `shopify app connect`.",
             convert_to_dev_store: <<~MESSAGE,
               Do you want to convert %s to a development store?
               Doing this will allow you to install your app, but the store will become {{bold:transfer-disabled}}.
