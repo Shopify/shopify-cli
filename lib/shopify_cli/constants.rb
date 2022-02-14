@@ -65,7 +65,7 @@ module ShopifyCLI
       end
 
       module Node
-        FROM = "12.0.0"
+        FROM = "14.5.0"
         TO = "17.0.0"
       end
     end
