@@ -198,10 +198,10 @@ describe Script::Layers::Infrastructure::Languages::AssemblyScriptTaskRunner do
     subject { as_task_runner.install_dependencies }
 
     before do
-      ShopifyCLI::Environment.stubs(:node_version)
-        .returns(::Semantic::Version.new("14.15.0"))
-      ShopifyCLI::Environment.stubs(:npm_version)
-        .returns(::Semantic::Version.new("5.2.0"))
+      ShopifyCLI::Environment.stubs(
+        node_version: ::Semantic::Version.new("14.15.0"),
+        npm_version: ::Semantic::Version.new("5.2.0")
+      )
     end
 
     describe "when node version is above minimum" do
