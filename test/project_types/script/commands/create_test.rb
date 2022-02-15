@@ -47,6 +47,19 @@ module Script
         perform_command(name: @script_name, api: @ep_type, branch: @branch)
       end
 
+      def test_downcases_language
+        @language = "TypeScript"
+        Script::Layers::Application::CreateScript.expects(:call).with(
+          ctx: @context,
+          language: @language.downcase,
+          sparse_checkout_branch: @branch,
+          script_name: @script_name,
+          extension_point_type: @ep_type,
+        ).returns(@script_project)
+
+        perform_command(name: @script_name, api: @ep_type, language: @language, branch: @branch)
+      end
+
       def test_can_create_new_script
         Script::Layers::Application::CreateScript.expects(:call).with(
           ctx: @context,
