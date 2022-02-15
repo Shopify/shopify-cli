@@ -6,7 +6,7 @@ module ShopifyCLI
       def call(ctx)
         return if ShopifyCLI::Environment.acceptance_test?
         unless ShopifyCLI::Git.exists?(ctx)
-          raise ShopifyCLI::Abort, ctx.message("core.git.nonexistent")
+          raise ShopifyCLI::Abort, ctx.message("core.git.error.nonexistent")
         end
       end
     end

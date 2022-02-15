@@ -354,6 +354,7 @@ module ShopifyCLI
           error: {
             directory_exists: "Project directory already exists. Please create a project with a new name.",
             no_branches_found: "Could not find any git branches",
+            nonexistent: "Git needs to be installed: https://git-scm.com/download",
             repo_not_initiated:
               "Git repo is not initiated. Please run {{command:git init}} and make at least one commit.",
             no_commits_made: "No git commits have been made. Please make at least one commit.",
@@ -366,7 +367,6 @@ module ShopifyCLI
 
           cloning: "Cloning %s into %s…",
           cloned: "{{v}} Cloned into %s",
-          nonexistent: "Please install git.",
           pulling_from_to: "Pulling %s into %s…",
           pulling: "Pulling…",
           pulled: "Pulled into %s",
