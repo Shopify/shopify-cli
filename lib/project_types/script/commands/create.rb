@@ -15,6 +15,7 @@ module Script
       end
 
       def call(args, _name)
+        options.flags[:language] = "wasm" unless options.flags[:language]
         form = Forms::Create.ask(@ctx, args, options.flags)
         return @ctx.puts(self.class.help) if form.nil?
 

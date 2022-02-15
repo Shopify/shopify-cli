@@ -31,8 +31,20 @@ module Script
         root = File.expand_path(__dir__ + "../../../../..")
         FakeFS::FileSystem.clone(root + "/lib/project_types/script/config/extension_points.yml")
         @script_name = nil
-        io = capture_io { perform_command }
+        io = capture_io { perform_command(name: @script_name, api: @ep_type, language: @language, branch: @branch) }
         assert_match(CLI::UI.fmt(Script::Command::Create.help), io.join)
+      end
+
+      def test_defaults_to_wasm
+        Script::Layers::Application::CreateScript.expects(:call).with(
+          ctx: @context,
+          language: "wasm",
+          sparse_checkout_branch: @branch,
+          script_name: @script_name,
+          extension_point_type: @ep_type,
+        ).returns(@script_project)
+
+        perform_command(name: @script_name, api: @ep_type, branch: @branch)
       end
 
       def test_can_create_new_script
@@ -47,7 +59,7 @@ module Script
         @context
           .expects(:puts)
           .with(@context.message("script.create.change_directory_notice", @script_project.script_name))
-        perform_command
+        perform_command(name: @script_name, api: @ep_type, language: @language, branch: @branch)
       end
 
       def test_help
@@ -64,22 +76,8 @@ module Script
 
       private
 
-      def perform_command_snake_case
-        args = {
-          name: @script_name,
-          extension_point: @ep_type,
-          language: @language,
-        }
-
+      def perform_command(args)
         run_cmd("script create #{args.map { |k, v| "--#{k}=#{v}" }.join(" ")}")
-      end
-
-      def perform_command
-        run_cmd(
-          "script create --name=#{@script_name}
-          --api=#{@ep_type} --language=#{@language}
-          --branch=#{@branch}"
-        )
       end
     end
   end
