@@ -4,6 +4,7 @@ module ShopifyCLI
       class Create
         class Rails < ShopifyCLI::Command::AppSubCommand
           prerequisite_task :ensure_authenticated
+          prerequisite_task :ensure_git_dependency
 
           recommend_default_ruby_range
           recommend_default_node_range

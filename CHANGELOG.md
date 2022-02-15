@@ -2,6 +2,7 @@ From version 2.6.0, the sections in this file adhere to the [keep a changelog](h
 
 ## [Unreleased]
 ### Added
+* [#1866](https://github.com/Shopify/shopify-cli/pull/1866): Enforce git dependency
 * [#2009](https://github.com/Shopify/shopify-cli/pull/2009): Add localization support for Checkout Extensions
 
 ## Version 2.11.2
