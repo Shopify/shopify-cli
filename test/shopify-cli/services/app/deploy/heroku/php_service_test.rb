@@ -20,6 +20,7 @@ module ShopifyCLI
                 Constants::Files::SHOPIFY_CLI_YML)).returns(true)
               ShopifyCLI::Context.any_instance.stubs(:os).returns(:mac)
               stub_successful_heroku_flow
+              expects_git_version
             end
 
             def test_call_doesnt_download_heroku_cli_if_it_is_installed

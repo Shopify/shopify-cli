@@ -110,6 +110,15 @@ module TestHelpers
         .returns([output, status_mock[:"#{status}"]])
     end
 
+    def expects_git_version
+      output = <<~EOS
+        git version 2.34.0
+      EOS
+      @context.expects(:capture2e)
+        .with("git", "version")
+        .returns([output, status_mock[:true]])
+    end
+
     def expects_git_init_heroku(status:, commits:)
       output = if commits == true
         <<~EOS

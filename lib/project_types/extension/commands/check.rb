@@ -4,7 +4,6 @@ require "theme_check"
 module Extension
   class Command
     class Check < ExtensionCommand
-      recommend_default_node_range
       recommend_default_ruby_range
 
       class CheckOptions < ShopifyCLI::Options

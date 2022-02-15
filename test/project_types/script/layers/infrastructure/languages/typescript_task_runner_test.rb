@@ -5,10 +5,9 @@ describe Script::Layers::Infrastructure::Languages::TypeScriptTaskRunner do
   include TestHelpers::FakeFS
 
   let(:ctx) { TestHelpers::FakeContext.new }
-  let(:script_name) { "foo" }
   let(:language) { "TypeScript" }
   let(:library_name) { "@shopify/extension-point-as-fake" }
-  let(:runner) { Script::Layers::Infrastructure::Languages::TypeScriptTaskRunner.new(ctx, script_name) }
+  let(:runner) { Script::Layers::Infrastructure::Languages::TypeScriptTaskRunner.new(ctx) }
   let(:command_runner) { Script::Layers::Infrastructure::CommandRunner }
   let(:package_json) do
     {

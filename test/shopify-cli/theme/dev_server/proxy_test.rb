@@ -138,6 +138,24 @@ module ShopifyCLI
           })
         end
 
+        def test_query_parameters_with_two_values
+          stub_request(:get, "https://dev-theme-server-store.myshopify.com/?_fd=0&pb=0&value=A&value=B")
+            .with(headers: default_proxy_headers)
+            .to_return(status: 200, body: "", headers: {})
+
+          stub_session_id_request
+
+          URI.expects(:encode_www_form)
+            .with([[:preview_theme_id, "123456789"], [:_fd, 0], [:pb, 0]])
+            .returns("_fd=0&pb=0&preview_theme_id=123456789")
+
+          URI.expects(:encode_www_form)
+            .with([["value", "A"], ["value", "B"], [:_fd, 0], [:pb, 0]])
+            .returns("_fd=0&pb=0&value=A&value=B")
+
+          request.get("/?value=A&value=B")
+        end
+
         def test_storefront_redirect_headers_are_rewritten
           stub_request(:get, "https://dev-theme-server-store.myshopify.com/?_fd=0&pb=0")
             .with(headers: default_proxy_headers)

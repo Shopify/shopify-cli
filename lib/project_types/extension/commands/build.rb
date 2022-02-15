@@ -8,9 +8,6 @@ module Extension
 
       prerequisite_task ensure_project_type: :extension
 
-      recommend_default_node_range
-      recommend_default_ruby_range
-
       YARN_BUILD_COMMAND = %w(build)
       NPM_BUILD_COMMAND = %w(run-script build)
 

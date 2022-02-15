@@ -53,6 +53,10 @@ module ShopifyCLI
         path.extname == ".liquid"
       end
 
+      def liquid_css?
+        relative_path.to_s.end_with?(".css.liquid")
+      end
+
       def json?
         path.extname == ".json"
       end
