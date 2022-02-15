@@ -55,9 +55,10 @@ module Script
           def handle_error(error, context:)
             properties_hash = { api_key: "SHOPIFY_API_KEY", secret: "SHOPIFY_API_SECRET" }
             missing_env_variables = error.properties.map { |p| properties_hash[p.name] }.compact.join(", ")
+            message = context.message("script.error.missing_env_file_variables", missing_env_variables)
+            message += context.message("script.error.missing_env_file_variables_solution", ShopifyCLI::TOOL_NAME)
             raise ShopifyCLI::Abort,
-              context.message("script.connect.error.missing_env_file_variables", missing_env_variables,
-                ShopifyCLI::TOOL_NAME)
+            message
           end
 
           private
