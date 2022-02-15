@@ -7,7 +7,6 @@ describe Script::Layers::Infrastructure::Languages::AssemblyScriptTaskRunner do
 
   let(:ctx) { TestHelpers::FakeContext.new }
   let(:script_id) { "id" }
-  let(:script_name) { "foo" }
   let(:extension_point_config) do
     {
       "assemblyscript" => {
@@ -18,7 +17,7 @@ describe Script::Layers::Infrastructure::Languages::AssemblyScriptTaskRunner do
   end
   let(:extension_point_type) { "discount" }
   let(:language) { "assemblyscript" }
-  let(:as_task_runner) { Script::Layers::Infrastructure::Languages::AssemblyScriptTaskRunner.new(ctx, script_name) }
+  let(:as_task_runner) { Script::Layers::Infrastructure::Languages::AssemblyScriptTaskRunner.new(ctx) }
   let(:command_runner) { Script::Layers::Infrastructure::CommandRunner }
 
   let(:package_json) do

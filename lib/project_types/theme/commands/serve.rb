@@ -4,7 +4,6 @@ require "shopify_cli/theme/dev_server"
 module Theme
   class Command
     class Serve < ShopifyCLI::Command::SubCommand
-      recommend_default_node_range
       recommend_default_ruby_range
 
       DEFAULT_HTTP_HOST = "127.0.0.1"

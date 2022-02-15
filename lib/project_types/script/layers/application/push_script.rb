@@ -10,7 +10,7 @@ module Script
             script_project = script_project_repo.get
             script_project.env = project.env
             task_runner = Infrastructure::Languages::TaskRunner
-              .for(ctx, script_project.language, script_project.script_name)
+              .for(ctx, script_project.language)
 
             extension_point = ExtensionPoints.get(type: script_project.extension_point_type)
 

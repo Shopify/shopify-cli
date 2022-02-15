@@ -3,6 +3,24 @@ From version 2.6.0, the sections in this file adhere to the [keep a changelog](h
 ## [Unreleased]
 * [#2051](https://github.com/Shopify/shopify-cli/pull/2051): Update `theme serve` to accept `root` argument
 
+### Added
+* [#2009](https://github.com/Shopify/shopify-cli/pull/2009): Add localization support for Checkout Extensions
+
+## Version 2.11.2
+### Fixed
+* [#2047](https://github.com/Shopify/shopify-cli/pull/2047): Fix the Homebrew installation
+* [#2019](https://github.com/Shopify/shopify-cli/pull/2019): Provide helpful link when nokogiri fails to load
+* [#2055](https://github.com/Shopify/shopify-cli/pull/2055): Remove unneeded Node requirements
+* [#2020](https://github.com/Shopify/shopify-cli/pull/2020): Fix `theme pull` so that correct dev theme is used with `-d` option
+
+## Version 2.11.1
+### Fixed
+* [#1973](https://github.com/Shopify/shopify-cli/pull/1973): Fix `theme serve` to preview generated files (`*.css.liquid`)
+* [#2034](https://github.com/Shopify/shopify-cli/pull/2034): Fix `theme serve` to accept parameters with multiple values
+* [#2033](https://github.com/Shopify/shopify-cli/pull/2033): Pin Homebrew Ruby to 3.0
+* [#2032](https://github.com/Shopify/shopify-cli/pull/2032): Runtime error checking the Node version if Node is not present in the environment.
+
+## Version 2.11.0
 ### Fixed
 * [#2005](https://github.com/Shopify/shopify-cli/pull/2005): Fix PHP app serve on Windows environments
 
@@ -10,6 +28,12 @@ From version 2.6.0, the sections in this file adhere to the [keep a changelog](h
 * [#1998](https://github.com/Shopify/shopify-cli/pull/1998): Add support for Rails 7
 * [#1945](https://github.com/Shopify/shopify-cli/pull/1945): Check Node and Ruby versions and warn the user if their environment's version might be incompatible with the version the command expects.
 * [#2011](https://github.com/Shopify/shopify-cli/pull/2011): Adds support for the Spin rewrite
+
+### Changed
+* [#2001](https://github.com/Shopify/shopify-cli/pull/2001): Improve Bug Issue Template. Includes autofill of CLI/Ruby/environment information.
+* [#2004](https://github.com/Shopify/shopify-cli/pull/2004): Template improvements II. Includes autofill of Shell if $SHELL is set.
+* [#2002](https://github.com/Shopify/shopify-cli/pull/2002): Update `-o`/`--only` parameter to allow multiple patterns on `theme push`/`theme pull` commands
+* [#2022](https://github.com/Shopify/shopify-cli/pull/2022): Don't warn the user if the Ruby version is in the range 3.0.x.
 
 ## Version 2.10.2
 ### Fixed

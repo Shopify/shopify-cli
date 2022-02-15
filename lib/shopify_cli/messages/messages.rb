@@ -15,6 +15,7 @@ module ShopifyCLI
       },
       core: {
         errors: {
+          missing_node: "Node is required to continue. Install node here: https://nodejs.org/en/download.",
           option_parser: {
             invalid_option: "The option {{command:%s}} is not supported.",
             missing_argument: "The required argument {{command:%s}} is missing.",
@@ -41,7 +42,7 @@ module ShopifyCLI
             invalid_type: "The type %s is not supported. The only supported types are"\
               " {{command:[ rails | node | php ]}}",
             help: <<~HELP,
-            {{command:%s app create}}: Creates a ruby on rails app.
+            {{command:%s app create}}: Creates a new project in a subdirectory.
               Usage: {{command:%s app create [ rails | node | php ]}}
             HELP
             rails: {
@@ -274,6 +275,24 @@ module ShopifyCLI
               Open your local development app in the default browser.
                 Usage: {{command:%s app open}}
               HELP
+          },
+        },
+        extension: {
+          push: {
+            checkout_ui_extension: {
+              localization: {
+                error: {
+                  bundle_too_large: "Total size of all locale files must be less than %s.",
+                  file_empty: "Locale file `%s` is empty.",
+                  file_too_large: "Locale file `%s` too large; size must be less than %s.",
+                  invalid_file_extension: "Invalid locale filename: `%s`; only .json files are allowed.",
+                  invalid_locale_code: "Invalid locale filename: `%s`; locale code should be 2 or 3 letters,"\
+                    " optionally followed by a two-letter region code, e.g. `fr-CA`.",
+                  single_default_locale: "There must be one and only one locale identified as the default locale,"\
+                    " e.g. `en.default.json`",
+                },
+              },
+            },
           },
         },
         error_reporting: {
