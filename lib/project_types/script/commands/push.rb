@@ -25,7 +25,8 @@ module Script
         project = load_project
         push(project: project)
       rescue StandardError => e
-        UI::ErrorHandler.pretty_print_and_raise(e)
+        UI::ErrorHandler.pretty_print_and_raise(e,
+          failed_op: @ctx.message("script.push.error.operation_failed"))
       end
 
       def push(project:)

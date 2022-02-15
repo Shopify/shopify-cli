@@ -194,7 +194,7 @@ module Script
           HELP
 
           error: {
-            
+            operation_failed: "Couldn't push script to app.",
           },
 
           script_pushed: "{{v}} Script pushed to app (API key: %{api_key}).",

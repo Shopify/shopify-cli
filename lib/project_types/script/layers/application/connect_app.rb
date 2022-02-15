@@ -58,7 +58,7 @@ module Script
             message = context.message("script.error.missing_env_file_variables", missing_env_variables)
             message += context.message("script.error.missing_env_file_variables_solution", ShopifyCLI::TOOL_NAME)
             raise ShopifyCLI::Abort,
-            message
+              message
           end
 
           private
