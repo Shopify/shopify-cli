@@ -233,7 +233,6 @@ module Script
         forms: {
           create: {
             select_extension_point: "Which Script API do you want to use?",
-            select_language: "Which language do you want to use?",
             script_name: "What do you want to name your script?",
           },
         },
