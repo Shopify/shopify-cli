@@ -127,7 +127,18 @@ describe Script::Layers::Infrastructure::Languages::TypeScriptTaskRunner do
     describe "when node version is below minimum" do
       it "should raise error" do
         ShopifyCLI::Environment.expects(:node_version)
-          .returns(::Semantic::Version.new("14.14.0"))
+          .returns(::Semantic::Version.new(decrement_version(runner.class::NODE_MIN_VERSION)))
+
+        assert_raises Script::Layers::Infrastructure::Errors::InvalidEnvironmentError do
+          subject
+        end
+      end
+    end
+
+    describe "when npm version is below minimum" do
+      it "should raise error" do
+        ShopifyCLI::Environment.expects(:npm_version)
+          .returns(::Semantic::Version.new(decrement_version(runner.class::NPM_MIN_VERSION)))
 
         assert_raises Script::Layers::Infrastructure::Errors::InvalidEnvironmentError do
           subject
@@ -259,5 +270,12 @@ describe Script::Layers::Infrastructure::Languages::TypeScriptTaskRunner do
 
       subject
     end
+  end
+
+  private
+
+  def decrement_version(version)
+    major, minor, patch = version.split(".")
+    [major.to_i - 1, minor, patch].join(".")
   end
 end
