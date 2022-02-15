@@ -6,7 +6,6 @@ module Extension
     class Push < ShopifyCLI::Command::SubCommand
       prerequisite_task ensure_project_type: :extension
 
-      recommend_default_node_range
       recommend_default_ruby_range
 
       options do |parser, flags|

@@ -8,7 +8,6 @@ require "shopify_cli/theme/syncer"
 module Theme
   class Command
     class Push < ShopifyCLI::Command::SubCommand
-      recommend_default_node_range
       recommend_default_ruby_range
 
       options do |parser, flags|
@@ -92,9 +91,7 @@ module Theme
         end
 
         if development
-          new_theme = ShopifyCLI::Theme::DevelopmentTheme.new(@ctx, root: root)
-          new_theme.ensure_exists!
-          return new_theme
+          return ShopifyCLI::Theme::DevelopmentTheme.find_or_create!(@ctx, root: root)
         end
 
         if unpublished

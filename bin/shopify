@@ -14,6 +14,15 @@ module Kernel
     raise if name == "#{RUBY_VERSION[/\d+\.\d+/]}/psych.so"
     # Special case for ffi, which rescues this itself
     raise if name == "#{RUBY_VERSION.split(".")[0, 2].join(".")}/ffi_c"
+    # Special case for nokogiri, which might install the wrong architecture
+    if name == "nokogiri/nokogiri"
+      STDERR.puts "[Note] Nokogiri is failing to load, which most likely means " \
+        "it is installed with the wrong architecture for your system. This link " \
+        "has instructions for how to install the correct version for your system: " \
+        "https://nokogiri.org/tutorials/installing_nokogiri.html"
+      STDERR.puts e.full_message
+      exit(1)
+    end
     STDERR.puts "[Note] You cannot use gems with Shopify CLI."
     STDERR.puts "[LoadError] #{e.message}"
     if ENV["DEBUG"]
