@@ -9,22 +9,34 @@ module Theme
         end
 
         def convert(parser)
-          elements = []
           argv = parser.default_argv
-          index = argv.index { |v| options.include?(v) }
+          option_index = argv.index { |v| options.include?(v) }
 
-          return elements if index.nil?
+          return [] if option_index.nil?
 
-          argv[(index + 1)..-1].each do |v|
-            break if v.start_with?("-")
-            elements << v
-          end
-
-          elements
+          option_values(argv, option_index)
         end
 
         def options
           raise "`#{self.class.name}#options` must be defined"
+        end
+
+        private
+
+        def option_values(argv, option_index)
+          start_index = option_index + 1
+          values = []
+
+          argv[start_index..-1].each do |value|
+            return values if parameter?(value)
+            values << value
+          end
+
+          values
+        end
+
+        def parameter?(value)
+          value.start_with?("-")
         end
       end
     end
