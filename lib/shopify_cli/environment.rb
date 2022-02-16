@@ -25,6 +25,12 @@ module ShopifyCLI
       ::Semantic::Version.new(out.chomp)
     end
 
+    def self.npm_version(context: Context.new)
+      out, err, stat = context.capture3("npm", "--version")
+      raise ShopifyCLI::Abort, err unless stat.success?
+      ::Semantic::Version.new(out.chomp)
+    end
+
     def self.interactive=(interactive)
       @interactive = interactive
     end

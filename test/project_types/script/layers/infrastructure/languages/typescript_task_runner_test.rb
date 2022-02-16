@@ -5,6 +5,7 @@ describe Script::Layers::Infrastructure::Languages::TypeScriptTaskRunner do
   include TestHelpers::FakeFS
 
   let(:ctx) { TestHelpers::FakeContext.new }
+  let(:fake_capture2e_response) { [nil, OpenStruct.new(success?: true)] }
   let(:language) { "TypeScript" }
   let(:library_name) { "@shopify/extension-point-as-fake" }
   let(:runner) { Script::Layers::Infrastructure::Languages::TypeScriptTaskRunner.new(ctx) }
@@ -15,6 +16,13 @@ describe Script::Layers::Infrastructure::Languages::TypeScriptTaskRunner do
         build: "javy build/index.js -o build/index.wasm",
       },
     }
+  end
+
+  before do
+    ShopifyCLI::Environment.stubs(
+      node_version: ::Semantic::Version.new(runner.class::NODE_MIN_VERSION),
+      npm_version: ::Semantic::Version.new(runner.class::NPM_MIN_VERSION)
+    )
   end
 
   describe ".build" do
@@ -110,9 +118,6 @@ describe Script::Layers::Infrastructure::Languages::TypeScriptTaskRunner do
     describe "when node version is above minimum" do
       it "should install using npm" do
         ctx.expects(:capture2e)
-          .with("node", "--version")
-          .returns(["v14.15.0", mock(success?: true)])
-        ctx.expects(:capture2e)
           .with("npm install --no-audit --no-optional --legacy-peer-deps --loglevel error")
           .returns([nil, mock(success?: true)])
         subject
@@ -121,11 +126,21 @@ describe Script::Layers::Infrastructure::Languages::TypeScriptTaskRunner do
 
     describe "when node version is below minimum" do
       it "should raise error" do
-        ctx.expects(:capture2e)
-          .with("node", "--version")
-          .returns(["v14.4.0", mock(success?: true)])
+        ShopifyCLI::Environment.expects(:node_version)
+          .returns(::Semantic::Version.new(decrement_version(runner.class::NODE_MIN_VERSION)))
 
-        assert_raises Script::Layers::Infrastructure::Errors::DependencyInstallError do
+        assert_raises Script::Layers::Infrastructure::Errors::InvalidEnvironmentError do
+          subject
+        end
+      end
+    end
+
+    describe "when npm version is below minimum" do
+      it "should raise error" do
+        ShopifyCLI::Environment.expects(:npm_version)
+          .returns(::Semantic::Version.new(decrement_version(runner.class::NPM_MIN_VERSION)))
+
+        assert_raises Script::Layers::Infrastructure::Errors::InvalidEnvironmentError do
           subject
         end
       end
@@ -238,5 +253,29 @@ describe Script::Layers::Infrastructure::Languages::TypeScriptTaskRunner do
         end
       end
     end
+  end
+
+  describe ".set_npm_config" do
+    subject { runner.set_npm_config }
+
+    it "should run npm config commands" do
+      ctx
+        .expects(:capture2e)
+        .with(Script::Layers::Infrastructure::Languages::TypeScriptTaskRunner::NPM_SET_REGISTRY_COMMAND)
+        .returns(fake_capture2e_response)
+      ctx
+        .expects(:capture2e)
+        .with(Script::Layers::Infrastructure::Languages::TypeScriptTaskRunner::NPM_SET_ENGINE_STRICT_COMMAND)
+        .returns(fake_capture2e_response)
+
+      subject
+    end
+  end
+
+  private
+
+  def decrement_version(version)
+    major, minor, patch = version.split(".")
+    [major.to_i - 1, minor, patch].join(".")
   end
 end
