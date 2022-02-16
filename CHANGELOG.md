@@ -5,6 +5,9 @@ From version 2.6.0, the sections in this file adhere to the [keep a changelog](h
 * [#1866](https://github.com/Shopify/shopify-cli/pull/1866): Enforce git dependency
 * [#2009](https://github.com/Shopify/shopify-cli/pull/2009): Add localization support for Checkout Extensions
 
+### Fixed
+* [#2030](https://github.com/Shopify/shopify-cli/pull/2030): Fix Theme::Syncer handling of file deletions in `download_file!`
+
 ## Version 2.11.2
 ### Fixed
 * [#2047](https://github.com/Shopify/shopify-cli/pull/2047): Fix the Homebrew installation

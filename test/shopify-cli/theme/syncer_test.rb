@@ -287,7 +287,7 @@ module ShopifyCLI
       def test_download_theme_with_ignores
         @syncer.ignore_filter = mock("IgnoreFilter")
         @syncer.ignore_filter.stubs(:ignore?).returns(false)
-        @syncer.ignore_filter.expects(:ignore?).with(@theme["assets/generated.css.liquid"]).returns(true)
+        @syncer.ignore_filter.expects(:ignore?).with(@theme["assets/generated.css.liquid"].path).returns(true)
 
         @syncer.start_threads
         @syncer.checksums.replace(@theme.theme_files.map { |file| [file.relative_path.to_s, file.checksum] }.to_h)
