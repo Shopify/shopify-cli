@@ -4,6 +4,8 @@ require "shopify_cli/theme/development_theme"
 require "shopify_cli/theme/ignore_filter"
 require "shopify_cli/theme/include_filter"
 require "shopify_cli/theme/syncer"
+require "project_types/theme/conversions/include_glob"
+require "project_types/theme/conversions/ignore_glob"
 
 module Theme
   class Command
@@ -11,23 +13,26 @@ module Theme
       recommend_default_ruby_range
 
       options do |parser, flags|
+        Conversions::IncludeGlob.register(parser)
+        Conversions::IgnoreGlob.register(parser)
+
         parser.on("-n", "--nodelete") { flags[:nodelete] = true }
         parser.on("-i", "--themeid=ID") { |theme_id| flags[:theme_id] = theme_id }
         parser.on("-t", "--theme=NAME_OR_ID") { |theme| flags[:theme] = theme }
         parser.on("-l", "--live") { flags[:live] = true }
         parser.on("-d", "--development") { flags[:development] = true }
-        parser.on("-o", "--only=PATTERN") do |pattern|
+        parser.on("-o", "--only=PATTERN", Conversions::IncludeGlob) do |pattern|
           flags[:includes] ||= []
-          flags[:includes] << pattern
+          flags[:includes] += pattern
         end
-        parser.on("-x", "--ignore=PATTERN") do |pattern|
+        parser.on("-x", "--ignore=PATTERN", Conversions::IgnoreGlob) do |pattern|
           flags[:ignores] ||= []
-          flags[:ignores] << pattern
+          flags[:ignores] += pattern
         end
       end
 
       def call(args, _name)
-        root = args.first || "."
+        root = first_arg(args, options)
         delete = !options.flags[:nodelete]
         theme = find_theme(root, **options.flags)
         return if theme.nil?
@@ -57,6 +62,16 @@ module Theme
       end
 
       private
+
+      def first_arg(args, options)
+        first = args.first
+        return "." if first.nil?
+
+        glob_parameters = [options.flags[:includes], options.flags[:ignores]].flatten.compact
+        return "." if glob_parameters.include?(first)
+
+        first
+      end
 
       def find_theme(root, theme_id: nil, theme: nil, live: nil, development: nil, **_args)
         if theme_id
