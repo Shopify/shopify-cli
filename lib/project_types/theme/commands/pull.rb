@@ -34,13 +34,13 @@ module Theme
         end
       end
 
-      def call(args, _name)
-        root = root_value(args, options)
+      def call(_args, name)
+        root = root_value(options, name)
         delete = !options.flags[:nodelete]
         theme = find_theme(root, **options.flags)
         return if theme.nil?
 
-        include_filter = ShopifyCLI::Theme::IncludeFilter.new(options.flags[:includes])
+        include_filter = ShopifyCLI::Theme::IncludeFilter.new(root, options.flags[:includes])
         ignore_filter = ShopifyCLI::Theme::IgnoreFilter.from_path(root)
         ignore_filter.add_patterns(options.flags[:ignores]) if options.flags[:ignores]
 

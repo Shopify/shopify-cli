@@ -157,7 +157,7 @@ module Theme
           .with(@ctx, root: ".", identifier: 1234)
           .returns(@theme)
         ShopifyCLI::Theme::IncludeFilter.expects(:new)
-          .with(includes)
+          .with(".", includes)
           .returns(include_filter)
         ShopifyCLI::Theme::Syncer.expects(:new)
           .with(@ctx, theme: @theme, include_filter: include_filter, ignore_filter: @ignore_filter)

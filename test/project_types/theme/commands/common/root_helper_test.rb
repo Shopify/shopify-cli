@@ -9,40 +9,77 @@ module Theme
       class RootHelperTest < MiniTest::Test
         include Common::RootHelper
 
-        def test_root_value_when_args_is_nil
-          assert_equal(".", root_value(nil, nil))
+        def test_root_value_when_root_is_nil_and_flags_are_not_present
+          options = options_mock([
+            "theme",
+            "pull",
+          ])
+
+          assert_equal(".", root_value(options, "pull"))
         end
 
         def test_root_value_when_args_is_empty
-          assert_equal(".", root_value([], nil))
+          options = options_mock([
+            "theme",
+            "pull",
+            "-x",
+            "dir",
+            "-o",
+            "dir",
+          ])
+
+          assert_equal(".", root_value(options, "pull"))
         end
 
-        def test_root_value_when_args_is_not_empty
-          options = stub(flags: {
-            includes: ["layout/password.liquid"],
-            ignores: ["layout/password.liquid"],
-          })
-          assert_equal("dir", root_value(["dir"], options))
+        def test_root_value_when_args_root_is_equal_to_flags
+          options = options_mock([
+            "theme",
+            "pull",
+            "dir",
+            "-x",
+            "dir",
+            "-o",
+            "dir",
+          ])
+
+          assert_equal("dir", root_value(options, "pull"))
         end
 
-        def test_root_value_when_args_is_not_empty_and_options_is_nil
-          assert_equal("dir", root_value(["dir"], nil))
+        def test_root_value_when_args_root_is_not_equal_to_flags
+          options = options_mock([
+            "theme",
+            "pull",
+            "dir",
+            "-x",
+            "sections/announcement-bar.liquid",
+            "sections/apps.liquid",
+            "sections/cart-icon-bubble.liquid",
+            "sections/cart-live-region-text.liquid",
+          ])
+
+          assert_equal("dir", root_value(options, "pull"))
         end
 
-        def test_root_value_when_options_include_an_arg_value
-          options = stub(flags: {
-            includes: ["layout/password.liquid", nil],
-            ignores: nil,
-          })
-          assert_equal(".", root_value(["layout/password.liquid"], options))
+        def test_root_value_when_name_is_invalid
+          options = options_mock([
+            "theme",
+            "pull",
+            "dir",
+            "-x",
+            "sections/announcement-bar.liquid",
+            "sections/apps.liquid",
+            "sections/cart-icon-bubble.liquid",
+            "sections/cart-live-region-text.liquid",
+          ])
+
+          assert_equal(".", root_value(options, "invalid"))
         end
 
-        def test_root_value_when_options_ignore_an_arg_value
-          options = stub(flags: {
-            ignores: ["layout/password.liquid", nil],
-            includes: [nil],
-          })
-          assert_equal(".", root_value(["layout/password.liquid"], options))
+        private
+
+        def options_mock(args)
+          parser = stub(default_argv: args)
+          stub(parser: parser)
         end
       end
     end
