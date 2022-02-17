@@ -164,7 +164,7 @@ module Script
               Options:
                 {{command:--name=NAME}} Script project name.
                 {{command:--api=TYPE}} Script API name. Supported values: %2$s.
-                {{command:--language=LANGUAGE}} Programming language. Supported values: %3$s.
+                {{command:--language=LANGUAGE}} Programming language. Defaults to wasm. Supported values: %3$s.
           HELP
 
           error: {
