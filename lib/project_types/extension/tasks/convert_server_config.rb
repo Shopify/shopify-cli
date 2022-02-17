@@ -28,6 +28,8 @@ module Extension
 
         renderer = Models::ServerConfig::DevelopmentRenderer.find(type)
 
+        binding.pry
+
         extension = Models::ServerConfig::Extension.new(
           uuid: registration_uuid,
           type: type.upcase,
@@ -36,7 +38,7 @@ module Extension
             build_dir: hash.dig("development", "build_dir") || DEFAULT_BUILD_DIR,
             renderer: renderer,
             entries: Models::ServerConfig::DevelopmentEntries.new(
-              main: hash.dig("development", "entries", "main")
+              main: hash.dig("development", "entries", "main") || Dir['src/*'].grep(/index.[jt]sx?/).first
             )
           ),
           extension_points: hash.dig("extension_points"),
