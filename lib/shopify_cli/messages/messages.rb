@@ -230,19 +230,16 @@ module ShopifyCLI
           },
           tunnel: {
             help: <<~HELP,
-              Start or stop an http tunnel to your local development app using ngrok.
-                Usage: {{command:%s app tunnel [ auth | start | stop ]}}
+              Start or stop an http tunnel to your local development app.
+                Usage: {{command:%s app tunnel [ start | stop ]}}
             HELP
             extended_help: <<~HELP,
               {{bold:Subcommands:}}
 
-                {{cyan:auth}}: Writes an ngrok auth token to ~/.ngrok2/ngrok.yml to connect with an ngrok account. Visit https://dashboard.ngrok.com/signup to sign up.
-                  Usage: {{command:%1$s app tunnel auth <token>}}
-
-                {{cyan:start}}: Starts an ngrok tunnel, will print the URL for an existing tunnel if already running.
+                {{cyan:start}}: Starts a tunnel, will print the URL for an existing tunnel if already running.
                   Usage: {{command:%1$s app tunnel start}}
 
-                {{cyan:stop}}: Stops the ngrok tunnel.
+                {{cyan:stop}}: Stops the tunnel.
                   Usage: {{command:%1$s app tunnel stop}}
 
             HELP
@@ -252,7 +249,7 @@ module ShopifyCLI
           },
           serve: {
             help: <<~HELP,
-              Start a local development server for your project, as well as a public ngrok tunnel to your localhost.
+              Start a local development server for your project, as well as a public tunnel to your localhost.
                 Usage: {{command:%s app serve}}
             HELP
             extended_help: <<~HELP,
@@ -642,8 +639,6 @@ module ShopifyCLI
           command_header: "{{bold:Commands}}",
           command_with_path: "{{v}} %s, %s",
           command_not_found: "{{x}} %s",
-          ngrok_available: "{{v}} ngrok, %s",
-          ngrok_not_available: "{{x}} ngrok NOT available",
           project: {
             header: "{{bold:In a {{cyan:%s}} project directory}}",
             command_with_path: "{{v}} %s, %s, version %s",
@@ -733,25 +728,14 @@ module ShopifyCLI
 
         tunnel: {
           error: {
-            stop: "ngrok tunnel could not be stopped. Try running {{command:killall -9 ngrok}}",
+            stop: "tunnel could not be stopped. Try running {{command:pkill -f npx.*lt}}",
             url_fetch_failure: "Unable to fetch external url",
-            prereq_command_required: "%1$s is required for installing ngrok. Please install %1$s using the appropriate"\
-              " package manager for your system.",
-            ngrok: "Something went wrong with ngrok installation,"\
-              "please make sure %s exists within %s before trying again",
           },
-          installing: "Installing ngrok…",
-          not_running: "{{green:x}} ngrok tunnel not running",
+          not_running: "{{green:x}} tunnel not running",
           prereq_command_location: "%s @ %s",
-          signup_suggestion: <<~MESSAGE,
-            {{*}} To avoid tunnels that timeout, it is recommended to signup for a free ngrok
-            account at {{underline:https://ngrok.com/signup}}. After you signup, install your
-            personalized authorization token using {{command:%s app tunnel auth <token>}}.
-          MESSAGE
-          start: "{{v}} ngrok tunnel running at {{underline:%s}}",
-          start_with_account: "{{v}} ngrok tunnel running at {{underline:%s}}, with account %s",
-          stopped: "{{green:x}} ngrok tunnel stopped",
-          timed_out: "{{x}} ngrok tunnel has timed out, restarting…",
+          start: "{{v}} tunnel running at {{underline:%s}}",
+          stopped: "{{green:x}} tunnel stopped",
+          timed_out: "{{x}} tunnel has timed out, restarting…",
           will_timeout: "{{*}} This tunnel will timeout in {{red:%s}}",
         },
 

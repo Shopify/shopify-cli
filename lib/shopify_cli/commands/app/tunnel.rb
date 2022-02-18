@@ -7,16 +7,6 @@ module ShopifyCLI
         def call(args, _name)
           subcommand = args.shift
           case subcommand
-          when "auth"
-            token = args.shift
-            if token.nil?
-              raise ShopifyCLI::Abort, @ctx.message("core.app.tunnel.error.token_argument_missing")
-            else
-              Services::App::Tunnel::AuthService.call(
-                token: token,
-                context: @ctx
-              )
-            end
           when "start"
             Services::App::Tunnel::StartService.call(
               context: @ctx

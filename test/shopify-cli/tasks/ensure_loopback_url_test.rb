@@ -17,7 +17,7 @@ module ShopifyCLI
             data: {
               app: {
                 redirectUrlWhitelist: [
-                  "https://123abc.ngrok.io",
+                  "https://example.loca.lt",
                   "http://127.0.0.1:3456",
                 ],
               },
@@ -39,7 +39,7 @@ module ShopifyCLI
             data: {
               app: {
                 redirectUrlWhitelist: [
-                  "https://123abc.ngrok.io",
+                  "https://example.loca.lt",
                 ],
               },
             },
@@ -51,7 +51,7 @@ module ShopifyCLI
           variables: {
             input: {
               redirectUrlWhitelist: [
-                "https://123abc.ngrok.io",
+                "https://example.loca.lt",
                 "http://127.0.0.1:3456",
               ],
               apiKey: api_key,

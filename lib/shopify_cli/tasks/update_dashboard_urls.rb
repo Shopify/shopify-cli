@@ -1,7 +1,7 @@
 module ShopifyCLI
   module Tasks
     class UpdateDashboardURLS < ShopifyCLI::Task
-      NGROK_REGEX = /https:\/\/([a-z0-9\-]+\.ngrok\.io)(.*)/
+      TUNNEL_REGEX = /https:\/\/([a-z0-9\-]+\.loca\.lt)(.*)/
 
       def call(ctx, url:, callback_url:)
         @ctx = ctx
@@ -29,7 +29,7 @@ module ShopifyCLI
 
       def construct_redirect_urls(urls, new_url, callback_url)
         new_urls = urls.map do |url|
-          if (match = url.match(NGROK_REGEX))
+          if (match = url.match(TUNNEL_REGEX))
             "#{new_url}#{match[2]}"
           else
             url

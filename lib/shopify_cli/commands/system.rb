@@ -95,15 +95,6 @@ module ShopifyCLI
         end
       end
 
-      def display_ngrok
-        ngrok_location = File.join(ShopifyCLI.cache_dir, "ngrok#{@ctx.executable_file_extension}")
-        if File.exist?(ngrok_location)
-          @ctx.puts("  " + @ctx.message("core.system.ngrok_available", ngrok_location))
-        else
-          @ctx.puts("  " + @ctx.message("core.system.ngrok_not_available"))
-        end
-      end
-
       def display_project_commands(_show_all_details)
         case Project.current_project_type
         when :node
@@ -125,7 +116,6 @@ module ShopifyCLI
             @ctx.puts("  " + @ctx.message("core.system.project.command_not_found", s))
           end
         end
-        display_ngrok
         display_project_environment
       end
 

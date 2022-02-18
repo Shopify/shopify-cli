@@ -17,7 +17,7 @@ module Extension
         @registration_uuid = "00000000-0000-0000-0000-000000000000"
         @store = "my-test-store"
         @title = "Extension title"
-        @tunnel_url = "https://shopify.ngrok.io"
+        @tunnel_url = "https://example.loca.lt"
         @type = "CHECKOUT_UI_EXTENSION"
         stub_renderer_package
       end

@@ -16,10 +16,10 @@ module ShopifyCLI
           resp: {
             data: {
               app: {
-                applicationUrl: "https://123abc.ngrok.io",
+                applicationUrl: "https://123abc.loca.lt",
                 redirectUrlWhitelist: [
-                  "https://123abc.ngrok.io",
-                  "https://123abc.ngrok.io/callback/fake",
+                  "https://123abc.loca.lt",
+                  "https://123abc.loca.lt/callback/fake",
                 ],
               },
             },
@@ -27,7 +27,7 @@ module ShopifyCLI
         )
         ShopifyCLI::Tasks::UpdateDashboardURLS.call(
           @context,
-          url: "https://123abc.ngrok.io",
+          url: "https://123abc.loca.lt",
           callback_url: "/callback/fake",
         )
       end
@@ -44,10 +44,10 @@ module ShopifyCLI
           resp: {
             data: {
               app: {
-                applicationUrl: "https://oldone123.ngrok.io",
+                applicationUrl: "https://oldone123.loca.lt",
                 redirectUrlWhitelist: [
-                  "https://123abc.ngrok.io",
-                  "https://newone123.ngrok.io/callback/fake",
+                  "https://123abc.loca.lt",
+                  "https://newone123.loca.lt/callback/fake",
                 ],
               },
             },
@@ -58,22 +58,22 @@ module ShopifyCLI
           "update_dashboard_urls",
           variables: {
             input: {
-              applicationUrl: "https://newone123.ngrok.io",
-              redirectUrlWhitelist: ["https://newone123.ngrok.io", "https://newone123.ngrok.io/callback/fake"],
+              applicationUrl: "https://newone123.loca.lt",
+              redirectUrlWhitelist: ["https://newone123.loca.lt", "https://newone123.loca.lt/callback/fake"],
               apiKey: api_key,
             },
           },
         )
         ShopifyCLI::Tasks::UpdateDashboardURLS.call(
           @context,
-          url: "https://newone123.ngrok.io",
+          url: "https://newone123.loca.lt",
           callback_url: "/callback/fake",
         )
         assert_requested(get_request)
         assert_requested(update_request)
       end
 
-      def test_only_ngrok_urls_are_updated
+      def test_only_tunnel_urls_are_updated
         CLI::UI::Prompt.stubs(:confirm).returns(true)
         Project.current.stubs(:env).returns(Resources::EnvFile.new(api_key: "1234", secret: "foo"))
         api_key = "1234"
@@ -85,9 +85,9 @@ module ShopifyCLI
           resp: {
             data: {
               app: {
-                applicationUrl: "https://oldone123.ngrok.io",
+                applicationUrl: "https://oldone123.loca.lt",
                 redirectUrlWhitelist: [
-                  "https://123abc.ngrok.io",
+                  "https://123abc.loca.lt",
                   "https://fake.fakeurl.com",
                   "https://fake.fakeurl.com/callback/fake",
                 ],
@@ -100,12 +100,12 @@ module ShopifyCLI
           "update_dashboard_urls",
           variables: {
             input: {
-              applicationUrl: "https://newone123.ngrok.io",
+              applicationUrl: "https://newone123.loca.lt",
               redirectUrlWhitelist: [
-                "https://newone123.ngrok.io",
+                "https://newone123.loca.lt",
                 "https://fake.fakeurl.com",
                 "https://fake.fakeurl.com/callback/fake",
-                "https://newone123.ngrok.io/callback/fake",
+                "https://newone123.loca.lt/callback/fake",
               ],
               apiKey: api_key,
             },
@@ -113,7 +113,7 @@ module ShopifyCLI
         )
         ShopifyCLI::Tasks::UpdateDashboardURLS.call(
           @context,
-          url: "https://newone123.ngrok.io",
+          url: "https://newone123.loca.lt",
           callback_url: "/callback/fake",
         )
       end
@@ -129,9 +129,9 @@ module ShopifyCLI
           resp: {
             data: {
               app: {
-                applicationUrl: "https://newone123.ngrok.io",
+                applicationUrl: "https://newone123.loca.lt",
                 redirectUrlWhitelist: [
-                  "https://123abc.ngrok.io",
+                  "https://123abc.loca.lt",
                   "https://fake.fakeurl.com",
                   "https://fake.fakeurl.com/callback/fake",
                 ],
@@ -144,7 +144,7 @@ module ShopifyCLI
           "update_dashboard_urls",
           variables: {
             input: {
-              applicationUrl: "https://newone123.ngrok.io",
+              applicationUrl: "https://newone123.loca.lt",
               redirectUrlWhitelist: [
                 "https://myowndomain.io",
                 "https://fake.fakeurl.com",
@@ -174,9 +174,9 @@ module ShopifyCLI
           resp: {
             data: {
               app: {
-                applicationUrl: "https://newone123.ngrok.io",
+                applicationUrl: "https://newone123.loca.lt",
                 redirectUrlWhitelist: [
-                  "https://123abc.ngrok.io",
+                  "https://123abc.loca.lt",
                   "https://fake.fakeurl.com",
                   "https://fake.fakeurl.com/callback/fake",
                 ],
@@ -220,7 +220,7 @@ module ShopifyCLI
           resp: {
             data: {
               app: {
-                applicationUrl: "https://oldone123.ngrok.io",
+                applicationUrl: "https://oldone123.loca.lt",
                 redirectUrlWhitelist: [],
               },
             },
@@ -231,9 +231,9 @@ module ShopifyCLI
           "update_dashboard_urls",
           variables: {
             input: {
-              applicationUrl: "https://newone123.ngrok.io",
+              applicationUrl: "https://newone123.loca.lt",
               redirectUrlWhitelist: [
-                "https://newone123.ngrok.io/callback/fake",
+                "https://newone123.loca.lt/callback/fake",
               ],
               apiKey: api_key,
             },
@@ -241,7 +241,7 @@ module ShopifyCLI
         )
         ShopifyCLI::Tasks::UpdateDashboardURLS.call(
           @context,
-          url: "https://newone123.ngrok.io",
+          url: "https://newone123.loca.lt",
           callback_url: "/callback/fake",
         )
         assert_requested(get_request)
@@ -259,10 +259,10 @@ module ShopifyCLI
           resp: {
             data: {
               app: {
-                applicationUrl: "https://123abc.ngrok.io",
+                applicationUrl: "https://123abc.loca.lt",
                 redirectUrlWhitelist: [
-                  "https://123abc.ngrok.io",
-                  "https://123abc.ngrok.io/callback/fake",
+                  "https://123abc.loca.lt",
+                  "https://123abc.loca.lt/callback/fake",
                 ],
               },
             },
@@ -273,10 +273,10 @@ module ShopifyCLI
           "update_dashboard_urls",
           variables: {
             input: {
-              applicationUrl: "https://123adifferenturl.ngrok.io",
+              applicationUrl: "https://123adifferenturl.loca.lt",
               redirectUrlWhitelist: [
-                "https://123adifferenturl.ngrok.io",
-                "https://123adifferenturl.ngrok.io/callback/fake",
+                "https://123adifferenturl.loca.lt",
+                "https://123adifferenturl.loca.lt/callback/fake",
               ],
               apiKey: api_key,
             },
@@ -285,7 +285,7 @@ module ShopifyCLI
         CLI::UI::Prompt.expects(:confirm).returns(true)
         ShopifyCLI::Tasks::UpdateDashboardURLS.call(
           @context,
-          url: "https://123adifferenturl.ngrok.io",
+          url: "https://123adifferenturl.loca.lt",
           callback_url: "/callback/fake",
         )
       end

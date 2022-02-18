@@ -106,40 +106,34 @@ module Extension
           Serve your extension in a local simulator for development.
             Usage: {{command:%s extension serve}}
             Options:
-            {{command:--tunnel=TUNNEL}} Establish an ngrok tunnel (default: false)
+            {{command:--tunnel=TUNNEL}} Establish a tunnel (default: false)
         HELP
         frame_title: "Serving extension…",
         no_available_ports_found: "No available ports found to run extension.",
         serve_failure_message: "Failed to run extension code.",
         serve_missing_information: "Missing shop or api_key.",
-        tunnel_already_running: "A tunnel running on another port has been detected. Close the tunnel and try again.",
+        tunnel_already_running: "A tunnel already running has been detected. Close the tunnel and try again.",
       },
       tunnel: {
-        missing_token: "{{x}} {{red:auth requires a token argument}}. "\
-          "Find it on your ngrok dashboard: {{underline:https://dashboard.ngrok.com/auth/your-authtoken}}.",
         invalid_port: "%s is not a valid port.",
         no_tunnel_running: "No tunnel running.",
         tunnel_running_at: "Tunnel running at: {{underline:%s}}",
         help: <<~HELP,
-          Start or stop an http tunnel to your local development extension using ngrok.
-            Usage: {{command:%s extension tunnel [ auth | start | stop | status ]}}
+          Start or stop an http tunnel to your local development extension.
+            Usage: {{command:%s extension tunnel [ start | stop | status ]}}
         HELP
         extended_help: <<~HELP,
           {{bold:Subcommands:}}
 
-            {{cyan:auth}}: Writes an ngrok auth token to ~/.ngrok2/ngrok.yml to connect with an ngrok account.
-            Visit https://dashboard.ngrok.com/signup to sign up.
-              Usage: {{command:%1$s extension tunnel auth <token>}}
-
-            {{cyan:start}}: Starts an ngrok tunnel, will print the URL for an existing tunnel if already running.
+            {{cyan:start}}: Starts a tunnel, will print the URL for an existing tunnel if already running.
               Usage: {{command:%1$s extension tunnel start}}
               Options:
-              {{command:--port=PORT}} Forward the ngrok subdomain to local port PORT. Defaults to %2$s.
+              {{command:--port=PORT}} Forward the tunnel URL to local port PORT. Defaults to %2$s.
 
-            {{cyan:stop}}: Stops the ngrok tunnel.
+            {{cyan:stop}}: Stops the tunnel.
               Usage: {{command:%1$s extension tunnel stop}}
 
-            {{cyan:status}}: Output the current status of the ngrok tunnel.
+            {{cyan:status}}: Output the current status of the tunnel.
               Usage: {{command:%1$s extension tunnel status}}
         HELP
       },

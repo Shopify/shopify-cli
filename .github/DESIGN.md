@@ -147,7 +147,7 @@ Examples:
 `shopify populate products --count 100`
 
 ### `Serve`
-Start an ngrok tunnel.
+Start a tunnel.
 
 Example:  
 `shopify serve`

@@ -10,7 +10,7 @@ module Extension
       DEFAULT_PORT = 39351
 
       options do |parser, flags|
-        parser.on("-t", "--[no-]tunnel", "Establish an ngrok tunnel") { |tunnel| flags[:tunnel] = tunnel }
+        parser.on("-t", "--[no-]tunnel", "Establish a tunnel") { |tunnel| flags[:tunnel] = tunnel }
         parser.on("--resourceUrl=RESOURCE_URL", "Provide a resource URL") do |resource_url|
           flags[:resource_url] = resource_url
         end
@@ -63,13 +63,7 @@ module Extension
         return runtime_configuration unless specification_handler.establish_tunnel?(@ctx)
         return runtime_configuration unless runtime_configuration.tunnel_requested?
 
-        return start_tunnel(runtime_configuration) if can_start_tunnel?(runtime_configuration)
-        @ctx.abort(@ctx.message("serve.tunnel_already_running"))
-      end
-
-      def can_start_tunnel?(runtime_configuration)
-        return true if ShopifyCLI::Tunnel.urls.empty?
-        ShopifyCLI::Tunnel.running_on?(runtime_configuration.port)
+        start_tunnel(runtime_configuration)
       end
 
       def start_tunnel(runtime_configuration)

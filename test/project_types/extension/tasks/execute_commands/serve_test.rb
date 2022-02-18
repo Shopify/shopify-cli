@@ -27,7 +27,7 @@ module Extension
             type: "checkout_ui_extension",
             config_file_path: File.join(test_file_path, "test.txt"),
             context: TestHelpers::FakeContext.new,
-            tunnel_url: "http://example.ngrok.io"
+            tunnel_url: "https://example.loca.lt"
           ).call
           assert_kind_of(ShopifyCLI::Result::Success, result)
         end

@@ -1,1 +1,0 @@
-t=2019-01-04T10:03:57-0500 lvl=crit msg="command failed" err="Tunnel session failed: Your account may not run more than 8 tunnels over a single ngrok client session."
