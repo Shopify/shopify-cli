@@ -18,6 +18,7 @@ module Extension
       property! :type, accepts: String
 
       DEFAULT_BUILD_DIR = "build"
+      DEFAULT_MAIN = Dir['src/*'].lazy.grep(/index.[jt]sx?/).first
 
       def self.call(*args)
         new(*args).call
@@ -38,7 +39,7 @@ module Extension
             build_dir: hash.dig("development", "build_dir") || DEFAULT_BUILD_DIR,
             renderer: renderer,
             entries: Models::ServerConfig::DevelopmentEntries.new(
-              main: hash.dig("development", "entries", "main") || Dir['src/*'].grep(/index.[jt]sx?/).first
+              main: hash.dig("development", "entries", "main") || DEFAULT_MAIN
             )
           ),
           extension_points: hash.dig("extension_points"),
