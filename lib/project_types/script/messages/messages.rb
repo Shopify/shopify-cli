@@ -168,7 +168,7 @@ module Script
               Options:
                 {{command:--name=NAME}} Script project name.
                 {{command:--api=TYPE}} Script API name. Supported values: %2$s.
-                {{command:--language=LANGUAGE}} Programming language. Supported values: %3$s.
+                {{command:--language=LANGUAGE}} Programming language. Defaults to wasm. Supported values: %3$s.
           HELP
 
           error: {
@@ -237,7 +237,6 @@ module Script
         forms: {
           create: {
             select_extension_point: "Which Script API do you want to use?",
-            select_language: "Which language do you want to use?",
             script_name: "What do you want to name your script?",
           },
         },
