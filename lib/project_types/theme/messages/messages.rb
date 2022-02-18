@@ -8,6 +8,11 @@ module Theme
             Usage: {{command:%1$s theme [ %2$s ]}}
         HELP
 
+        ensure_user: <<~ENSURE_USER,
+            You are not authorized to edit themes on %s.
+            Make sure you are a user of that store, and allowed to edit themes.
+          ENSURE_USER
+
         init: {
           help: <<~HELP,
             {{command:%s theme init}}: Clones a Git repository to use as a starting point for building a new theme.

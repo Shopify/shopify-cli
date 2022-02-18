@@ -4,10 +4,12 @@ require "shopify_cli/theme/development_theme"
 require "shopify_cli/theme/ignore_filter"
 require "shopify_cli/theme/include_filter"
 require "shopify_cli/theme/syncer"
+require "project_types/theme/commands/common/error_helper"
 
 module Theme
   class Command
     class Pull < ShopifyCLI::Command::SubCommand
+      include Common::ErrorHelper
       recommend_default_ruby_range
 
       options do |parser, flags|
@@ -79,6 +81,10 @@ module Theme
         end
 
         select_theme(root)
+
+      rescue ShopifyCLI::API::APIRequestForbiddenError,
+               ShopifyCLI::API::APIRequestUnauthorizedError
+        handle_permissions_error(@ctx)
       end
 
       def select_theme(root)

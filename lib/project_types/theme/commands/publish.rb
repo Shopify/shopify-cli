@@ -1,9 +1,11 @@
 # frozen_string_literal: true
 require "shopify_cli/theme/theme"
+require "project_types/theme/commands/common/error_helper"
 
 module Theme
   class Command
     class Publish < ShopifyCLI::Command::SubCommand
+      include Common::ErrorHelper
       recommend_default_ruby_range
 
       options do |parser, flags|
@@ -33,6 +35,9 @@ module Theme
 
         theme.publish
         @ctx.done(@ctx.message("theme.publish.done", theme.preview_url))
+      rescue ShopifyCLI::API::APIRequestForbiddenError,
+               ShopifyCLI::API::APIRequestUnauthorizedError
+        handle_permissions_error(@ctx)
       rescue ShopifyCLI::API::APIRequestNotFoundError
         @ctx.puts(@ctx.message("theme.publish.not_found", theme.id))
       end

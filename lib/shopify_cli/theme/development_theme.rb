@@ -71,7 +71,8 @@ module ShopifyCLI
       end
 
       def self.find_or_create!(ctx, root: nil)
-        new(ctx, root: root).ensure_exists!
+        dev_theme = new(ctx, root: root)
+        dev_theme.ensure_exists!
       end
 
       private

@@ -4,10 +4,12 @@ require "shopify_cli/theme/development_theme"
 require "shopify_cli/theme/ignore_filter"
 require "shopify_cli/theme/include_filter"
 require "shopify_cli/theme/syncer"
+require "project_types/theme/commands/common/error_helper"
 
 module Theme
   class Command
     class Push < ShopifyCLI::Command::SubCommand
+      include Common::ErrorHelper
       recommend_default_ruby_range
 
       options do |parser, flags|
@@ -70,6 +72,9 @@ module Theme
         ensure
           syncer.shutdown
         end
+      rescue ShopifyCLI::API::APIRequestForbiddenError,
+               ShopifyCLI::API::APIRequestUnauthorizedError
+        handle_permissions_error(@ctx)
       rescue ShopifyCLI::API::APIRequestNotFoundError
         @ctx.abort(@ctx.message("theme.push.theme_not_found", "##{theme.id}"))
       end

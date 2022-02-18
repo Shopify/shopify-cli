@@ -14,6 +14,7 @@ require_relative "dev_server/watcher"
 require_relative "dev_server/web_server"
 require_relative "dev_server/certificate_manager"
 
+require "project_types/theme/commands/common/error_helper"
 require "pathname"
 
 module ShopifyCLI
@@ -24,6 +25,7 @@ module ShopifyCLI
       AddressBindingError = Class.new(Error)
 
       class << self
+        include ::Theme::Command::Common::ErrorHelper
         attr_accessor :ctx
 
         def start(ctx, root, host: "127.0.0.1", port: 9292, poll: false, mode: ReloadMode.default)
@@ -80,7 +82,7 @@ module ShopifyCLI
 
         rescue ShopifyCLI::API::APIRequestForbiddenError,
                ShopifyCLI::API::APIRequestUnauthorizedError
-          raise ShopifyCLI::Abort, @ctx.message("theme.serve.ensure_user", theme.shop)
+          handle_permissions_error(ctx)
         rescue Errno::EADDRINUSE
           error_message = @ctx.message("theme.serve.address_already_in_use", address)
           help_message = @ctx.message("theme.serve.try_port_option")
