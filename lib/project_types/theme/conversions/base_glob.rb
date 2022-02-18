@@ -14,7 +14,16 @@ module Theme
 
           return [] if option_index.nil?
 
-          option_values(argv, option_index)
+          start_index = option_index + 1
+          option_by_key = options_map(parser)
+          values = []
+
+          argv[start_index..-1].each do |value|
+            return values unless option_by_key[value].nil?
+            values << value
+          end
+
+          values
         end
 
         def options
@@ -23,16 +32,13 @@ module Theme
 
         private
 
-        def option_values(argv, option_index)
-          start_index = option_index + 1
-          values = []
-
-          argv[start_index..-1].each do |value|
-            return values if parameter?(value)
-            values << value
+        def options_map(parser)
+          map = {}
+          parser.top.list.each do |option|
+            map[option.short.first] = option
+            map[option.long.first] = option
           end
-
-          values
+          map
         end
 
         def parameter?(value)

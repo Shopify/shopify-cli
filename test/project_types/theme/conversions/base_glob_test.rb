@@ -14,9 +14,6 @@ module Theme
       end
 
       def test_convert_with_only
-        parser = mock
-        parser.stubs(:default_argv).returns(argv)
-
         Conversions::BaseGlob.stubs(:options).returns(%w(-o --only))
 
         actual_params = Conversions::BaseGlob.convert(parser)
@@ -29,9 +26,6 @@ module Theme
       end
 
       def test_convert_with_ignore
-        parser = mock
-        parser.stubs(:default_argv).returns(argv)
-
         Conversions::BaseGlob.stubs(:options).returns(%w(-x --ignore))
 
         actual_params = Conversions::BaseGlob.convert(parser)
@@ -44,14 +38,15 @@ module Theme
       end
 
       def test_convert_when_options_is_not_defined
-        parser = mock
-        parser.stubs(:default_argv).returns(argv)
-
         error = assert_raises(RuntimeError) { Conversions::BaseGlob.convert(parser) }
         assert_match(/`Class#options` must be defined/, error.message)
       end
 
       private
+
+      def parser
+        stub(default_argv: argv, top: top)
+      end
 
       def argv
         [
@@ -65,6 +60,19 @@ module Theme
           "sections/announcement-bar.liquid",
           "sections/contact-form.liquid",
         ]
+      end
+
+      def top
+        stub(list: [
+          stub(short: ["-h"], long: ["--help"], arg: nil),
+          stub(short: ["-n"], long: ["--nodelete"], arg: nil),
+          stub(short: ["-i"], long: ["--themeid"], arg: "=ID"),
+          stub(short: ["-t"], long: ["--theme"], arg: "=NAME_OR_ID"),
+          stub(short: ["-l"], long: ["--live"], arg: nil),
+          stub(short: ["-d"], long: ["--development"], arg: nil),
+          stub(short: ["-o"], long: ["--only"], arg: "=PATTERN"),
+          stub(short: ["-x"], long: ["--ignore"], arg: "=PATTERN"),
+        ])
       end
     end
   end
