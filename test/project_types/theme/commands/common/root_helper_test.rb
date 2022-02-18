@@ -67,6 +67,27 @@ module Theme
           assert_equal("dir", root_value(options, "pull"))
         end
 
+        def test_root_value_when_root_appears_after_an_option_with_a_list_of_arguments
+          options = options_mock([
+            "theme",
+            "pull",
+            "-d",
+            "-x",
+            "sections/announcement-bar.liquid",
+            "sections/announcement-bar.liquid",
+            "sections/announcement-bar.liquid",
+            "-o",
+            "layout/*",
+            "--theme",
+            "1",
+            "dir",
+            "-o",
+            "other",
+          ])
+
+          assert_equal("dir", root_value(options, "pull"))
+        end
+
         def test_root_value_when_args_root_is_equal_to_flags
           options = options_mock([
             "theme",

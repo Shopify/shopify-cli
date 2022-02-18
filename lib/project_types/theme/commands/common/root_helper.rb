@@ -19,11 +19,14 @@ module Theme
 
             return element if option.nil?
 
-            # PATTERN arguments take precedence over the `root`
-            return "." if option.arg =~ /PATTERN/
-
             # Skip the option argument
             next_index += 1 unless option.arg.nil?
+
+            # PATTERN arguments take precedence over the `root`
+            if option.arg =~ /PATTERN/
+              next_index += 1 while option_argument?(argv, next_index, option_by_key)
+              next
+            end
 
             next_index += 1
           end
@@ -48,6 +51,13 @@ module Theme
 
         def options_list(options)
           options.parser.top.list
+        end
+
+        def option_argument?(argv, next_index, option_by_key)
+          return false unless next_index < argv.size
+
+          element = argv[next_index]
+          option_by_key[element].nil?
         end
       end
     end
