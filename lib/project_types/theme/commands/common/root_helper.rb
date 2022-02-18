@@ -5,30 +5,49 @@ module Theme
     module Common
       module RootHelper
         def root_value(options, name)
-          eligible_root = eligible_root(options, name)
-
-          if eligible_root.nil? || parameter?(eligible_root)
-            return "."
-          end
-
-          eligible_root
-        end
-
-        private
-
-        def eligible_root(options, name)
           argv = default_argv(options)
           command_index = argv.index(name)
 
-          argv[command_index + 1] unless command_index.nil?
+          return "." if command_index.nil?
+
+          next_index = command_index + 1
+          option_by_key = options_map(options)
+
+          while next_index < argv.size
+            element = argv[next_index]
+            option = option_by_key[element]
+
+            return element if option.nil?
+
+            # PATTERN arguments take precedence over the `root`
+            return "." if option.arg =~ /PATTERN/
+
+            # Skip the option argument
+            next_index += 1 unless option.arg.nil?
+
+            next_index += 1
+          end
+
+          "."
         end
+
+        private
 
         def default_argv(options)
           options.parser.default_argv
         end
 
-        def parameter?(value)
-          value.start_with?("-")
+        def options_map(options)
+          map = {}
+          options_list(options).each do |option|
+            map[option.short.first] = option
+            map[option.long.first] = option
+          end
+          map
+        end
+
+        def options_list(options)
+          options.parser.top.list
         end
       end
     end
