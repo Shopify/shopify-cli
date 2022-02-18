@@ -20,7 +20,7 @@ Shopify CLI is available as a gem and can be run and installed on Mac, Linux and
 
 ## Installation 
 
-Check out our [installation steps](docs/users/installation.md).
+Check out our [installation steps](https://shopify.dev/apps/tools/cli/installation).
 
 ## Contributing 👩‍💻
 

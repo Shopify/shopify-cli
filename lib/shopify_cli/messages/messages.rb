@@ -42,7 +42,7 @@ module ShopifyCLI
             invalid_type: "The type %s is not supported. The only supported types are"\
               " {{command:[ rails | node | php ]}}",
             help: <<~HELP,
-            {{command:%s app create}}: Creates a new project in a subdirectory.
+            {{command:%s app create}}: Creates a basic app
               Usage: {{command:%s app create [ rails | node | php ]}}
             HELP
             rails: {
