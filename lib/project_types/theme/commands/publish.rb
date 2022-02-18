@@ -36,7 +36,7 @@ module Theme
         theme.publish
         @ctx.done(@ctx.message("theme.publish.done", theme.preview_url))
       rescue ShopifyCLI::API::APIRequestForbiddenError,
-               ShopifyCLI::API::APIRequestUnauthorizedError
+             ShopifyCLI::API::APIRequestUnauthorizedError
         handle_permissions_error(@ctx)
       rescue ShopifyCLI::API::APIRequestNotFoundError
         @ctx.puts(@ctx.message("theme.publish.not_found", theme.id))

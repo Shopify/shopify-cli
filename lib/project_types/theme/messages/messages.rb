@@ -9,8 +9,8 @@ module Theme
         HELP
 
         ensure_user: <<~ENSURE_USER,
-            You are not authorized to edit themes on %s.
-            Make sure you are a user of that store, and allowed to edit themes.
+          You are not authorized to edit themes on %s.
+          Make sure you are a user of that store, and allowed to edit themes.
           ENSURE_USER
 
         init: {

@@ -4,7 +4,7 @@ module Theme
   class Command
     module Common
       module ErrorHelper
-        def handle_permissions_error(ctx)
+        def handle_permissions_error
           theme = ShopifyCLI::Theme::Theme.new(@ctx)
           @ctx.abort(@ctx.message("theme.serve.ensure_user", theme.shop))
         end

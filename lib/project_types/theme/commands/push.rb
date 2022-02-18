@@ -73,7 +73,7 @@ module Theme
           syncer.shutdown
         end
       rescue ShopifyCLI::API::APIRequestForbiddenError,
-               ShopifyCLI::API::APIRequestUnauthorizedError
+             ShopifyCLI::API::APIRequestUnauthorizedError
         handle_permissions_error(@ctx)
       rescue ShopifyCLI::API::APIRequestNotFoundError
         @ctx.abort(@ctx.message("theme.push.theme_not_found", "##{theme.id}"))

@@ -83,7 +83,7 @@ module Theme
         select_theme(root)
 
       rescue ShopifyCLI::API::APIRequestForbiddenError,
-               ShopifyCLI::API::APIRequestUnauthorizedError
+             ShopifyCLI::API::APIRequestUnauthorizedError
         handle_permissions_error(@ctx)
       end
 
