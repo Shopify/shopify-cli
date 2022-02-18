@@ -29,8 +29,6 @@ module Extension
 
         renderer = Models::ServerConfig::DevelopmentRenderer.find(type)
 
-        binding.pry
-
         extension = Models::ServerConfig::Extension.new(
           uuid: registration_uuid,
           type: type.upcase,
