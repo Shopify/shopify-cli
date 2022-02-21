@@ -47,7 +47,7 @@ module Script
           private
 
           def install_dependencies(ctx, language, script_name, project_creator)
-            task_runner = Infrastructure::Languages::TaskRunner.for(ctx, language, script_name)
+            task_runner = Infrastructure::Languages::TaskRunner.for(ctx, language)
             CLI::UI::Frame.open(ctx.message(
               "core.git.pulling_from_to",
               project_creator.sparse_checkout_repo,

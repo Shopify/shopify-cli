@@ -38,6 +38,8 @@ module ShopifyCLI
           @ctx.debug("Created temporary development theme: #{@id}")
           ShopifyCLI::DB.set(development_theme_id: @id)
         end
+
+        self
       end
 
       def exists?
@@ -61,6 +63,15 @@ module ShopifyCLI
 
       def self.delete(ctx)
         new(ctx).delete
+      end
+
+      def self.find(ctx, root: nil)
+        dev_theme = new(ctx, root: root)
+        dev_theme.exists? ? dev_theme : nil
+      end
+
+      def self.find_or_create!(ctx, root: nil)
+        new(ctx, root: root).ensure_exists!
       end
 
       private

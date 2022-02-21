@@ -1,5 +1,6 @@
 # frozen_string_literal: true
 require "shopify_cli/theme/theme"
+require "shopify_cli/theme/development_theme"
 require "shopify_cli/theme/ignore_filter"
 require "shopify_cli/theme/include_filter"
 require "shopify_cli/theme/syncer"
@@ -7,7 +8,6 @@ require "shopify_cli/theme/syncer"
 module Theme
   class Command
     class Pull < ShopifyCLI::Command::SubCommand
-      recommend_default_node_range
       recommend_default_ruby_range
 
       options do |parser, flags|
@@ -74,7 +74,8 @@ module Theme
         end
 
         if development
-          return ShopifyCLI::Theme::Theme.development(@ctx, root: root)
+          dev_theme = ShopifyCLI::Theme::DevelopmentTheme.find(@ctx, root: root)
+          return dev_theme || @ctx.abort(@ctx.message("theme.pull.theme_not_found", dev_theme.name))
         end
 
         select_theme(root)

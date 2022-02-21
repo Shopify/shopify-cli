@@ -176,10 +176,6 @@ module ShopifyCLI
           find(ctx, root) { |attrs| attrs["role"] == "main" }
         end
 
-        def development(ctx, root: nil)
-          find(ctx, root) { |attrs| attrs["role"] == "development" }
-        end
-
         # Finds a Theme by its identifier
         #
         # #### Parameters

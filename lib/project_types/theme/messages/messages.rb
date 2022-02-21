@@ -96,7 +96,7 @@ module Theme
           help: <<~HELP,
             Uploads the current theme as a development theme to the connected store, then prints theme editor and preview URLs to your terminal. While running, changes will push to the store in real time.
 
-            Usage: {{command:%s theme serve}}
+            Usage: {{command:%s theme serve [ ROOT ]}}
 
             Options:
               {{command:--port=PORT}}        Local port to serve theme preview from.

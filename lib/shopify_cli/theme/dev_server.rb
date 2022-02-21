@@ -28,7 +28,7 @@ module ShopifyCLI
 
         def start(ctx, root, host: "127.0.0.1", port: 9292, poll: false, mode: ReloadMode.default)
           @ctx = ctx
-          theme = DevelopmentTheme.new(ctx, root: root)
+          theme = DevelopmentTheme.find_or_create!(ctx, root: root)
           ignore_filter = IgnoreFilter.from_path(root)
           @syncer = Syncer.new(ctx, theme: theme, ignore_filter: ignore_filter)
           watcher = Watcher.new(ctx, theme: theme, syncer: @syncer, ignore_filter: ignore_filter, poll: poll)
@@ -40,8 +40,6 @@ module ShopifyCLI
           @app = HotReload.new(ctx, @app, theme: theme, watcher: watcher, mode: mode, ignore_filter: ignore_filter)
           stopped = false
           address = "http://#{host}:#{port}"
-
-          theme.ensure_exists!
 
           trap("INT") do
             stopped = true

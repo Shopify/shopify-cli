@@ -126,6 +126,15 @@ module Extension
           end
         end
 
+        def test_bad_locale_types
+          ThemeAppExtension::SUPPORTED_LOCALE_EXTS.each do |ext|
+            write("locales/test#{ext}1", "hello")
+            assert_raises Extension::Errors::InvalidFilenameError do
+              @spec.config(@context)
+            end
+          end
+        end
+
         def test_too_much_liquid
           stub_const(ThemeAppExtension, :LIQUID_SIZE_LIMIT, 50) do
             write("blocks/app1.liquid", "1" * 25)

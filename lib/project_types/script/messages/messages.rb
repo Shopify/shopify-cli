@@ -113,6 +113,10 @@ module Script
           dependency_install_cause: "Something went wrong while installing the needed dependencies.",
           dependency_install_help: "Correct the errors.",
 
+          invalid_environment_cause: "Your environment %{tool} version, %{env_version}, "\
+                                     "is too low. It must be at least %{minimum_version}.",
+          invalid_environment_help: "Update %{tool}.",
+
           failed_api_request_cause: "Something went wrong while communicating with Shopify.",
           failed_api_request_help: "Try again.",
 
@@ -149,12 +153,12 @@ module Script
 
           language_library_for_api_not_found_cause: "Script can’t be pushed because the %{language} library for API %{api} is missing.",
           language_library_for_api_not_found_help: "Make sure extension_point.yml contains the correct API library.",
-          no_scripts_found_in_app: "The selected apps have no scripts. Create them first on the partners' dashboard.",
-          missing_env_file_variables: "The following variables are missing in the .env file: %s."\
-            " This can occur when the script hasn't been connected to an app."\
-            " To connect the script to an app, run {{command:%s script connect}}",
-          missing_push_options: "The following options are missing from .env: %s."\
-            " Run {{command:%s script connect}} to connect the script to an app and generate these options.",
+          no_scripts_found_in_app: "The selected apps have no scripts. Please, create them first on the partners' dashboard.",
+          missing_env_file_variables: "The following are missing in the .env file: %s."\
+            " To add it, run {{command:%s script connect}}",
+          missing_push_options: "The following are missing: %s. "\
+            "To add them to a CI environment:\n\t1. Run a connect command {{command:%s script connect}}\n\t2. Navigate to the .env file at the root of your project\n\t"\
+            "3. Copy the missing values, then pass them through as arguments.",
         },
 
         create: {
@@ -164,7 +168,7 @@ module Script
               Options:
                 {{command:--name=NAME}} Script project name.
                 {{command:--api=TYPE}} Script API name. Supported values: %2$s.
-                {{command:--language=LANGUAGE}} Programming language. Supported values: %3$s.
+                {{command:--language=LANGUAGE}} Programming language. Defaults to wasm. Supported values: %3$s.
           HELP
 
           error: {
@@ -233,7 +237,6 @@ module Script
         forms: {
           create: {
             select_extension_point: "Which Script API do you want to use?",
-            select_language: "Which language do you want to use?",
             script_name: "What do you want to name your script?",
           },
         },

@@ -4,7 +4,6 @@ require "shopify_cli/theme/dev_server"
 module Theme
   class Command
     class Serve < ShopifyCLI::Command::SubCommand
-      recommend_default_node_range
       recommend_default_ruby_range
 
       DEFAULT_HTTP_HOST = "127.0.0.1"
@@ -16,10 +15,11 @@ module Theme
         parser.on("--live-reload=MODE") { |mode| flags[:mode] = as_reload_mode(mode) }
       end
 
-      def call(*)
+      def call(args, _name)
+        root = args.first || "."
         flags = options.flags.dup
         host = flags[:host] || DEFAULT_HTTP_HOST
-        ShopifyCLI::Theme::DevServer.start(@ctx, ".", host: host, **flags) do |syncer|
+        ShopifyCLI::Theme::DevServer.start(@ctx, root, host: host, **flags) do |syncer|
           UI::SyncProgressBar.new(syncer).progress(:upload_theme!, delay_low_priority_files: true)
         end
       rescue ShopifyCLI::Theme::DevServer::AddressBindingError

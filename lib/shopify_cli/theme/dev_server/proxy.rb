@@ -43,9 +43,8 @@ module ShopifyCLI
           headers["Accept-Encoding"] = "none"
           headers["User-Agent"] = "Shopify CLI"
 
-          query = URI.decode_www_form(env["QUERY_STRING"]).to_h
+          query = URI.decode_www_form(env["QUERY_STRING"])
           replace_templates = build_replace_templates_param(env)
-
           response = if replace_templates.any?
             # Pass to SFR the recently modified templates in `replace_templates` body param
             headers["Authorization"] = "Bearer #{bearer_token}"
@@ -158,7 +157,7 @@ module ShopifyCLI
         def secure_session_id
           if secure_session_id_expired?
             @ctx.debug("Refreshing preview _secure_session_id cookie")
-            response = request("HEAD", "/", query: { preview_theme_id: @theme.id })
+            response = request("HEAD", "/", query: [[:preview_theme_id, @theme.id]])
             @secure_session_id = extract_secure_session_id_from_response_headers(response)
             @last_session_cookie_refresh = Time.now
           end
@@ -189,9 +188,9 @@ module ShopifyCLI
           response_headers
         end
 
-        def request(method, path, headers: nil, query: {}, form_data: nil, body_stream: nil)
+        def request(method, path, headers: nil, query: [], form_data: nil, body_stream: nil)
           uri = URI.join("https://#{@theme.shop}", path)
-          uri.query = URI.encode_www_form(query.merge(_fd: 0, pb: 0))
+          uri.query = URI.encode_www_form(query + [[:_fd, 0], [:pb, 0]])
 
           @ctx.debug("Proxying #{method} #{uri}")
 

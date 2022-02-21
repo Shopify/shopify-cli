@@ -5,7 +5,6 @@ require "shopify_cli/theme/development_theme"
 module Theme
   class Command
     class Delete < ShopifyCLI::Command::SubCommand
-      recommend_default_node_range
       recommend_default_ruby_range
 
       options do |parser, flags|

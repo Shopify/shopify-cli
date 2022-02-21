@@ -5,9 +5,8 @@ describe Script::Layers::Infrastructure::Languages::WasmTaskRunner do
   include TestHelpers::FakeFS
 
   let(:ctx) { TestHelpers::FakeContext.new }
-  let(:script_name) { "foo" }
   let(:library_name) { nil }
-  let(:runner) { Script::Layers::Infrastructure::Languages::WasmTaskRunner.new(ctx, script_name) }
+  let(:runner) { Script::Layers::Infrastructure::Languages::WasmTaskRunner.new(ctx) }
 
   describe ".dependencies_installed?" do
     subject { runner.dependencies_installed? }
@@ -19,6 +18,14 @@ describe Script::Layers::Infrastructure::Languages::WasmTaskRunner do
 
   describe ".library_version" do
     subject { runner.library_version(library_name) }
+
+    it "should always return nil" do
+      assert_nil subject
+    end
+  end
+
+  describe ".install_dependencies" do
+    subject { runner.install_dependencies }
 
     it "should always return nil" do
       assert_nil subject
