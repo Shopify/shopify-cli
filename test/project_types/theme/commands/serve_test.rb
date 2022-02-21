@@ -66,10 +66,19 @@ module Theme
 
       private
 
-      def run_serve_command(args = [])
+      def run_serve_command(argv = [])
         command = Theme::Command::Serve.new(@ctx)
+
+        stubs_parser(command, argv)
         yield(command) if block_given?
-        command.call(args, :serve)
+
+        command.call(nil, :serve)
+      end
+
+      def stubs_parser(command, argv)
+        argv = ["shopify", "theme", "serve"] + argv
+        parser = command.options.parser
+        parser.stubs(:default_argv).returns(argv)
       end
     end
   end

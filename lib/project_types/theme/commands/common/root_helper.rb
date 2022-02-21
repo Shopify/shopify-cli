@@ -6,7 +6,7 @@ module Theme
       module RootHelper
         def root_value(options, name)
           argv = default_argv(options)
-          command_index = argv.index(name)
+          command_index = argv.index(name.to_s)
 
           return "." if command_index.nil?
 

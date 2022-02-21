@@ -88,6 +88,29 @@ module Theme
         @command.call([], "pull")
       end
 
+      def test_pull_with_root
+        ShopifyCLI::Theme::Theme.expects(:find_by_identifier)
+          .with(@ctx, root: "dist", identifier: 1234)
+          .returns(@theme)
+
+        ShopifyCLI::Theme::IgnoreFilter.expects(:from_path).with("dist").returns(@ignore_filter)
+
+        ShopifyCLI::Theme::Syncer.expects(:new)
+          .with(@ctx, theme: @theme, include_filter: @include_filter, ignore_filter: @ignore_filter)
+          .returns(@syncer)
+
+        @syncer.expects(:start_threads)
+        @syncer.expects(:shutdown)
+
+        @syncer.expects(:download_theme!).with(delete: true)
+        @ctx.expects(:done)
+
+        stubs_command_parser(["dist"])
+
+        @command.options.flags[:theme] = 1234
+        @command.call([], "pull")
+      end
+
       def test_pull_live_theme
         ShopifyCLI::Theme::Theme.expects(:live)
           .with(@ctx, root: ".")
@@ -214,6 +237,14 @@ module Theme
         @syncer.expects(:shutdown)
 
         @command.call([], "pull")
+      end
+
+      private
+
+      def stubs_command_parser(argv)
+        argv = ["shopify", "theme", "pull"] + argv
+        parser = @command.options.parser
+        parser.stubs(:default_argv).returns(argv)
       end
     end
   end
