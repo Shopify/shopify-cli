@@ -3,7 +3,6 @@ require "net/http"
 require "stringio"
 require "time"
 require "cgi"
-
 require_relative "proxy/template_param_builder"
 
 module ShopifyCLI
@@ -70,12 +69,22 @@ module ShopifyCLI
             @core_endpoints << env["PATH_INFO"]
           end
 
-          body = response.body || [""]
+          body = patch_body(env, response.body)
           body = [body] unless body.respond_to?(:each)
           [response.code, headers, body]
         end
 
         private
+
+        def patch_body(env, body)
+          return [""] unless body
+
+          body.gsub(%r{(http:|https:)?//#{@theme.shop}/}, "http://#{host(env)}/")
+        end
+
+        def host(env)
+          env["HTTP_HOST"]
+        end
 
         def has_body?(headers)
           headers["Content-Length"] || headers["Transfer-Encoding"]
