@@ -6,6 +6,7 @@ module Extension
       prerequisite_task ensure_project_type: :extension
 
       recommend_default_ruby_range
+      recommend_default_node_range
 
       DEFAULT_PORT = 39351
 

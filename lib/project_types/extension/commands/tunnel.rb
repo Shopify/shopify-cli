@@ -6,6 +6,8 @@ module Extension
     class Tunnel < ExtensionCommand
       prerequisite_task ensure_project_type: :extension
 
+      recommend_default_node_range
+
       options do |parser, flags|
         parser.on("--port=PORT") { |port| flags[:port] = port }
       end

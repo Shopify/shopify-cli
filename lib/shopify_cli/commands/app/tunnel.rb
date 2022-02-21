@@ -4,6 +4,8 @@ module ShopifyCLI
   module Commands
     class App
       class Tunnel < ShopifyCLI::Command::AppSubCommand
+        recommend_default_node_range
+
         def call(args, _name)
           subcommand = args.shift
           case subcommand

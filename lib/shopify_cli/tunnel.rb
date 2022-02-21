@@ -85,17 +85,10 @@ module ShopifyCLI
     end
 
     def start_tunnel(ctx, port)
-      # check_prereq_command(ctx, "npx")
       command = "npx --yes localtunnel --port #{port}"
       process = ShopifyCLI::ProcessSupervision.start(:tunnel, command)
       fetch_url(ctx, process.log_path)
     end
-
-    # def check_prereq_command(ctx, command)
-    #   cmd_path = ctx.which(command)
-    #   ctx.abort(ctx.message("core.tunnel.error.prereq_command_required", command)) if cmd_path.nil?
-    #   ctx.done(ctx.message("core.tunnel.prereq_command_location", command, cmd_path))
-    # end
   end
 
   class LogParser # :nodoc:
