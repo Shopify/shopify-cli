@@ -156,8 +156,7 @@ module Script
           "3. Copy the missing values and pass them through as arguments in {{command:%1$s script push}}",
           missing_env_file_variables: "The following are missing in the .env file: %s. ",
           missing_env_file_variables_solution: "To add it, connect your script with " \
-          "{{command:%1$s script connect}} " \
-          "or run {{command:%1$s script register}} to register a new script.",
+          "{{command:%1$s script connect}} ",
         },
 
         create: {
