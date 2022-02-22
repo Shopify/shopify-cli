@@ -4,6 +4,7 @@ From version 2.6.0, the sections in this file adhere to the [keep a changelog](h
 ### Added
 * [#1866](https://github.com/Shopify/shopify-cli/pull/1866): Enforce git dependency
 * [#2009](https://github.com/Shopify/shopify-cli/pull/2009): Add localization support for Checkout Extensions
+* [#2060](https://github.com/Shopify/shopify-cli/pull/2060): Improve CLI error messages for token-based auth (scripts)
 
 ## Version 2.11.2
 ### Fixed
