@@ -18,7 +18,7 @@ module Extension
       property! :type, accepts: String
 
       DEFAULT_BUILD_DIR = "build"
-      DEFAULT_MAIN = Dir['src/*'].lazy.grep(/index.[jt]sx?/).first
+      DEFAULT_MAIN = Dir["src/*"].lazy.grep(/index.[jt]sx?/).first
 
       def self.call(*args)
         new(*args).call
