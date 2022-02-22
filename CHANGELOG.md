@@ -8,6 +8,9 @@ From version 2.6.0, the sections in this file adhere to the [keep a changelog](h
 ### Fixed
 * [#2030](https://github.com/Shopify/shopify-cli/pull/2030): Fix Theme::Syncer handling of file deletions in `download_file!`
 
+### Changed
+* [#2074](https://github.com/Shopify/shopify-cli/pull/2074): Replace Ngrok with Localtunnel
+
 ## Version 2.11.2
 ### Fixed
 * [#2047](https://github.com/Shopify/shopify-cli/pull/2047): Fix the Homebrew installation
