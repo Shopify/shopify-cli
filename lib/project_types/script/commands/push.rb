@@ -5,10 +5,6 @@ module Script
     class Push < ShopifyCLI::Command::SubCommand
       prerequisite_task ensure_project_type: :script
 
-      recommend_node(
-        from: ::Script::Layers::Infrastructure::Languages::TypeScriptProjectCreator::MIN_NODE_VERSION,
-        to: ShopifyCLI::Constants::SupportedVersions::Node::TO
-      )
       recommend_default_ruby_range
 
       options do |parser, flags|

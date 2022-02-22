@@ -6,7 +6,6 @@ describe Script::Layers::Infrastructure::Languages::TypeScriptProjectCreator do
   include TestHelpers::FakeFS
 
   let(:context) { TestHelpers::FakeContext.new }
-  let(:fake_capture2e_response) { [nil, OpenStruct.new(success?: true)] }
 
   let(:extension_point_type) { "payment-methods" }
   let(:extension_point_config) do
@@ -49,6 +48,10 @@ describe Script::Layers::Infrastructure::Languages::TypeScriptProjectCreator do
         .expects(:setup_dependencies)
         .with
         .once
+
+      Script::Layers::Infrastructure::Languages::TypeScriptTaskRunner.any_instance
+        .expects(:set_npm_config)
+
       context.expects(:file_exist?)
         .with("yarn.lock")
         .once
@@ -58,15 +61,6 @@ describe Script::Layers::Infrastructure::Languages::TypeScriptProjectCreator do
         .with("package-lock.json")
         .once
         .returns(true)
-
-      context
-        .expects(:capture2e)
-        .with(Script::Layers::Infrastructure::Languages::TypeScriptProjectCreator::NPM_SET_REGISTRY_COMMAND)
-        .returns(fake_capture2e_response)
-      context
-        .expects(:capture2e)
-        .with(Script::Layers::Infrastructure::Languages::TypeScriptProjectCreator::NPM_SET_ENGINE_STRICT_COMMAND)
-        .returns(fake_capture2e_response)
 
       context
         .expects(:rm)

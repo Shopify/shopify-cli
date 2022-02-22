@@ -113,6 +113,10 @@ module Script
           dependency_install_cause: "Something went wrong while installing the needed dependencies.",
           dependency_install_help: "Correct the errors.",
 
+          invalid_environment_cause: "Your environment %{tool} version, %{env_version}, "\
+                                     "is too low. It must be at least %{minimum_version}.",
+          invalid_environment_help: "Update %{tool}.",
+
           failed_api_request_cause: "Something went wrong while communicating with Shopify.",
           failed_api_request_help: "Try again.",
 
@@ -166,7 +170,7 @@ module Script
               Options:
                 {{command:--name=NAME}} Script project name.
                 {{command:--api=TYPE}} Script API name. Supported values: %2$s.
-                {{command:--language=LANGUAGE}} Programming language. Supported values: %3$s.
+                {{command:--language=LANGUAGE}} Programming language. Defaults to wasm. Supported values: %3$s.
           HELP
 
           error: {
@@ -231,7 +235,6 @@ module Script
         forms: {
           create: {
             select_extension_point: "Which Script API do you want to use?",
-            select_language: "Which language do you want to use?",
             script_name: "What do you want to name your script?",
           },
         },
