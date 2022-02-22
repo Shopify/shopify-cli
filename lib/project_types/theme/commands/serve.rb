@@ -1,9 +1,12 @@
 # frozen_string_literal: true
 require "shopify_cli/theme/dev_server"
+require "project_types/theme/commands/common/root_helper"
 
 module Theme
   class Command
     class Serve < ShopifyCLI::Command::SubCommand
+      include Common::RootHelper
+
       recommend_default_ruby_range
 
       DEFAULT_HTTP_HOST = "127.0.0.1"
@@ -15,8 +18,8 @@ module Theme
         parser.on("--live-reload=MODE") { |mode| flags[:mode] = as_reload_mode(mode) }
       end
 
-      def call(args, _name)
-        root = args.first || "."
+      def call(_args, name)
+        root = root_value(options, name)
         flags = options.flags.dup
         host = flags[:host] || DEFAULT_HTTP_HOST
         ShopifyCLI::Theme::DevServer.start(@ctx, root, host: host, **flags) do |syncer|
