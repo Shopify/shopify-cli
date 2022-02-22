@@ -271,9 +271,15 @@ module ShopifyCLI
               <html>
                 <body>
                   <h1>My dev-theme-server-store.myshopify.com store!</h1>
-                  <a href="http://dev-theme-server-store.myshopify.com/link">1</a>
-                  <a href="https://dev-theme-server-store.myshopify.com/link">2</a>
-                  <a href="//dev-theme-server-store.myshopify.com/link">3</a>
+
+                  <a data-attr-1="http://dev-theme-server-store.myshopify.com/link">1</a>
+                  <a data-attr-2="https://dev-theme-server-store.myshopify.com/link">2</a>
+                  <a data-attr-3="//dev-theme-server-store.myshopify.com/link">3</a>
+                  <a data-attr-4='//dev-theme-server-store.myshopify.com/li"nk'>4</a>
+
+                  <a href="http://dev-theme-server-store.myshopify.com/link">5</a>
+                  <a href="https://dev-theme-server-store.myshopify.com/link">6</a>
+                  <a href="//dev-theme-server-store.myshopify.com/link">7</a>
                 </body>
               </html>
             PROXY_RESPONSE
@@ -285,9 +291,15 @@ module ShopifyCLI
               <html>
                 <body>
                   <h1>My dev-theme-server-store.myshopify.com store!</h1>
-                  <a href="http://127.0.0.1:9292/link">1</a>
-                  <a href="http://127.0.0.1:9292/link">2</a>
-                  <a href="http://127.0.0.1:9292/link">3</a>
+
+                  <a data-attr-1="http://127.0.0.1:9292/link">1</a>
+                  <a data-attr-2="http://127.0.0.1:9292/link">2</a>
+                  <a data-attr-3="http://127.0.0.1:9292/link">3</a>
+                  <a data-attr-4='http://127.0.0.1:9292/li"nk'>4</a>
+
+                  <a href="http://dev-theme-server-store.myshopify.com/link">5</a>
+                  <a href="https://dev-theme-server-store.myshopify.com/link">6</a>
+                  <a href="//dev-theme-server-store.myshopify.com/link">7</a>
                 </body>
               </html>
           EXPECTED_RESPONSE
