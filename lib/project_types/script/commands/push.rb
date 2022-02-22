@@ -22,7 +22,7 @@ module Script
         push(project: project)
       rescue StandardError => e
         UI::ErrorHandler.pretty_print_and_raise(e,
-          failed_op: @ctx.message("script.push.error.operation_failed_no_api_key"))
+          failed_op: @ctx.message("script.push.error.operation_failed"))
       end
 
       def push(project:)
@@ -34,7 +34,9 @@ module Script
           Layers::Application::PushScript.call(ctx: @ctx, force: force, project: project)
           @ctx.puts(@ctx.message("script.push.script_pushed", api_key: api_key))
         else
-          raise ShopifyCLI::Abort, @ctx.message("script.push.error.operation_failed_no_uuid")
+          message = @ctx.message("script.error.missing_push_options_ci", "--uuid")
+          message += @ctx.message("script.error.missing_push_options_ci_solution", ShopifyCLI::TOOL_NAME)
+          raise ShopifyCLI::Abort, message
         end
       end
 

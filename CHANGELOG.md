@@ -5,6 +5,7 @@ From version 2.6.0, the sections in this file adhere to the [keep a changelog](h
 ### Added
 * [#1866](https://github.com/Shopify/shopify-cli/pull/1866): Enforce git dependency
 * [#2009](https://github.com/Shopify/shopify-cli/pull/2009): Add localization support for Checkout Extensions
+* [#2060](https://github.com/Shopify/shopify-cli/pull/2060): Improve CLI error messages for token-based auth (scripts)
 * [#2076](https://github.com/Shopify/shopify-cli/pull/2076): Release Wasm Script Projects
 * [#2051](https://github.com/Shopify/shopify-cli/pull/2051): Update `theme serve` to accept `root` argument
 * [#2025](https://github.com/Shopify/shopify-cli/pull/2025): Improve `theme pull`/`push` help messages to indicate multiple `--only`/`--ignore` flags are allowed.
