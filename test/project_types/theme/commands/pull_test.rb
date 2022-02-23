@@ -239,6 +239,23 @@ module Theme
         @command.call([], "pull")
       end
 
+      def test_pull_with_permissions_error
+        ShopifyCLI::Theme::DevelopmentTheme.expects(:find)
+          .with(@ctx, root: ".")
+          .raises(ShopifyCLI::API::APIRequestForbiddenError)
+
+        ShopifyCLI::Theme::Theme.expects(:new)
+          .returns(@theme)
+
+        @ctx.expects(:message)
+          .with("theme.ensure_user", "test.myshopify.io")
+
+        @ctx.expects(:abort)
+
+        @command.options.flags[:development] = true
+        @command.call([], "pull")
+      end
+
       private
 
       def stubs_command_parser(argv)
