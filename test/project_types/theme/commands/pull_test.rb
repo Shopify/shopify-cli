@@ -133,6 +133,9 @@ module Theme
           .with(@ctx, root: ".")
           .returns(nil)
 
+        @ctx.expects(:message)
+          .with("theme.pull.theme_not_found", "development")
+
         @ctx.expects(:abort)
 
         @command.options.flags[:development] = true
