@@ -14,6 +14,7 @@ From version 2.6.0, the sections in this file adhere to the [keep a changelog](h
 * [#2030](https://github.com/Shopify/shopify-cli/pull/2030): Fix Theme::Syncer handling of file deletions in `download_file!`
 * [#2066](https://github.com/Shopify/shopify-cli/pull/2066): Improve `--only`/`--ignore` parameters on Theme `pull`/`push` commands to work without quotes
 * [#2078](https://github.com/Shopify/shopify-cli/pull/2078): Fix errors on section rendering caused by CORS issues
+* [#2072](https://github.com/Shopify/shopify-cli/pull/2072): Fix `theme serve` raised error when there is a permissions error
 
 ## Version 2.11.2
 ### Fixed
