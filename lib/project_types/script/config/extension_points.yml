@@ -9,7 +9,6 @@ payment_methods:
       package: "@shopify/scripts-checkout-apis"
       repo: "https://github.com/Shopify/scripts-apis-examples"
     wasm:
-      beta: true
       repo: "https://github.com/Shopify/scripts-apis-examples"
 shipping_methods:
   domain: 'checkout'
@@ -22,7 +21,6 @@ shipping_methods:
       package: "@shopify/scripts-checkout-apis"
       repo: "https://github.com/Shopify/scripts-apis-examples"
     wasm:
-      beta: true
       repo: "https://github.com/Shopify/scripts-apis-examples"
 merchandise_discount_types:
   beta: true
@@ -33,7 +31,6 @@ merchandise_discount_types:
       package: "@shopify/scripts-discounts-apis"
       repo: "https://github.com/Shopify/scripts-apis-examples"
     wasm:
-      beta: true
       repo: "https://github.com/Shopify/scripts-apis-examples"
 delivery_discount_types:
   beta: true
@@ -44,5 +41,4 @@ delivery_discount_types:
       package: "@shopify/scripts-discounts-apis"
       repo: "https://github.com/Shopify/scripts-apis-examples"
     wasm:
-      beta: true
       repo: "https://github.com/Shopify/scripts-apis-examples"

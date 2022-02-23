@@ -7,54 +7,78 @@ module Theme
     class ServeTest < MiniTest::Test
       include TestHelpers::FakeUI
 
+      def setup
+        super
+        @ctx = ShopifyCLI::Context.new
+      end
+
       def test_serve_command
-        context = ShopifyCLI::Context.new
         ShopifyCLI::Theme::DevServer
           .expects(:start)
-          .with(context, ".", host: Theme::Command::Serve::DEFAULT_HTTP_HOST)
+          .with(@ctx, ".", host: Theme::Command::Serve::DEFAULT_HTTP_HOST)
 
-        Theme::Command::Serve.new(context).call
+        run_serve_command
       end
 
       def test_serve_command_raises_abort_when_cant_bind_address
-        context = ShopifyCLI::Context.new
         ShopifyCLI::Theme::DevServer
           .expects(:start)
-          .with(context, ".", host: Theme::Command::Serve::DEFAULT_HTTP_HOST)
+          .with(@ctx, ".", host: Theme::Command::Serve::DEFAULT_HTTP_HOST)
           .raises(ShopifyCLI::Theme::DevServer::AddressBindingError)
 
         assert_raises ShopifyCLI::Abort do
-          Theme::Command::Serve.new(context).call
+          run_serve_command
         end
       end
 
       def test_can_specify_bind_address
-        context = ShopifyCLI::Context.new
-        ShopifyCLI::Theme::DevServer.expects(:start).with(context, ".", host: "0.0.0.0")
+        ShopifyCLI::Theme::DevServer.expects(:start).with(@ctx, ".", host: "0.0.0.0")
 
-        command = Theme::Command::Serve.new(context)
-        command.options.flags[:host] = "0.0.0.0"
-        command.call
+        run_serve_command do |command|
+          command.options.flags[:host] = "0.0.0.0"
+        end
       end
 
       def test_can_specify_port
-        context = ShopifyCLI::Context.new
-        ShopifyCLI::Theme::DevServer.expects(:start).with(context, ".",
-          host: Theme::Command::Serve::DEFAULT_HTTP_HOST, port: 9293)
+        ShopifyCLI::Theme::DevServer.expects(:start)
+          .with(@ctx, ".", host: Theme::Command::Serve::DEFAULT_HTTP_HOST, port: 9293)
 
-        command = Theme::Command::Serve.new(context)
-        command.options.flags[:port] = 9293
-        command.call
+        run_serve_command do |command|
+          command.options.flags[:port] = 9293
+        end
       end
 
       def test_can_specify_poll
-        context = ShopifyCLI::Context.new
-        ShopifyCLI::Theme::DevServer.expects(:start).with(context, ".",
-          host: Theme::Command::Serve::DEFAULT_HTTP_HOST, poll: true)
+        ShopifyCLI::Theme::DevServer.expects(:start)
+          .with(@ctx, ".", host: Theme::Command::Serve::DEFAULT_HTTP_HOST, poll: true)
 
-        command = Theme::Command::Serve.new(context)
-        command.options.flags[:poll] = true
-        command.call
+        run_serve_command do |command|
+          command.options.flags[:poll] = true
+        end
+      end
+
+      def test_can_specify_root
+        ShopifyCLI::Theme::DevServer.expects(:start)
+          .with(@ctx, "dist", host: Theme::Command::Serve::DEFAULT_HTTP_HOST)
+
+        run_serve_command(["dist"])
+      end
+
+      private
+
+      def run_serve_command(argv = [])
+        command = Theme::Command::Serve.new(@ctx)
+
+        stubs_parser(command, argv)
+        yield(command) if block_given?
+
+        command.call(nil, :serve)
+      end
+
+      def stubs_parser(command, argv)
+        argv = ["shopify", "theme", "serve"] + argv
+        parser = command.options.parser
+        parser.stubs(:default_argv).returns(argv)
       end
     end
   end

@@ -18,13 +18,13 @@ module Script
         form = Forms::Create.ask(@ctx, args, options.flags)
         return @ctx.puts(self.class.help) if form.nil?
 
-        unless !form.name.empty? && form.extension_point && form.language
+        unless !form.name.empty? && form.extension_point
           return @ctx.puts(self.class.help)
         end
 
         project = Layers::Application::CreateScript.call(
           ctx: @ctx,
-          language: form.language,
+          language: options.flags[:language]&.downcase || "wasm",
           sparse_checkout_branch: options.flags[:branch] || "master",
           script_name: form.name,
           extension_point_type: form.extension_point,
