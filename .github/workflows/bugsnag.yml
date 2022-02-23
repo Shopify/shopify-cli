@@ -1,0 +1,17 @@
+name: Bugsnag
+
+on:
+  push:
+    branches:
+      - main
+
+jobs:
+  report:
+    runs-on: ubuntu-latest
+    name: Bugsnag - Report Build
+    steps:
+    - uses: actions/checkout@v2
+    - name: report
+      uses: lhansford/bugsnag-report-build-action@v1.1.0
+      with:
+        apiKey: ${{ secrets.BUGSNAG_TOKEN }}
