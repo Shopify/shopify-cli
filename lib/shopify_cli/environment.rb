@@ -12,10 +12,10 @@ module ShopifyCLI
     ]
 
     def self.ruby_version(context: Context.new)
-      out, err, stat = context.capture3('ruby -e "puts RUBY_VERSION"')
+      out, err, stat = context.capture3("ruby", "-v")
       raise ShopifyCLI::Abort, err unless stat.success?
-      out = out.gsub('"', "")
-      ::Semantic::Version.new(out.chomp)
+      version = out.match(/ruby (\d+\.\d+\.\d+)/)[1]
+      ::Semantic::Version.new(version)
     end
 
     def self.node_version(context: Context.new)

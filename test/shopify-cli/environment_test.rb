@@ -18,7 +18,7 @@ module ShopifyCLI
       out = ""
       err = "Error executing the command"
       context.expects(:capture3)
-        .with('ruby -e "puts RUBY_VERSION"')
+        .with("ruby", "-v")
         .returns([out, err, stat])
 
       # When/Then
@@ -32,17 +32,17 @@ module ShopifyCLI
       # Given
       context = TestHelpers::FakeContext.new
       stat = mock("success", success?: true)
-      out = '"3.2.1"'
+      out = "ruby 3.0.3p157 (2021-11-24 revision 3fb7d2cadc) [x86_64-darwin21]"
       err = ""
       context.expects(:capture3)
-        .with('ruby -e "puts RUBY_VERSION"')
+        .with("ruby", "-v")
         .returns([out, err, stat])
 
       # When
       got = Environment.ruby_version(context: context)
 
       # Then
-      assert_equal ::Semantic::Version.new("3.2.1"), got
+      assert_equal ::Semantic::Version.new("3.0.3"), got
     end
 
     def test_node_version_when_the_command_raises
