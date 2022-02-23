@@ -104,7 +104,7 @@ module ShopifyCLI
             Environment.expects(:ruby_version).returns(Semantic::Version.new("2.5.0"))
             ::Rails::Gem.expects(:install).with(@context, "rails", nil).returns(true)
             ::Rails::Gem.expects(:install).with(@context, "bundler", "~>2.0").returns(true)
-            expect_rails_version("6.1.4.1")
+            expect_rails_version("6.1.4")
             expect_command(%W(#{gem_path}/bin/rails new test-app --skip-spring --database=sqlite3))
             expect_command(%W(#{gem_path}/bin/bundle install),
               chdir: File.join(@context.root, "test-app"))
@@ -157,7 +157,7 @@ module ShopifyCLI
             Environment.expects(:ruby_version).returns(Semantic::Version.new("2.5.0"))
             ::Rails::Gem.expects(:install).with(@context, "rails", nil).returns(true)
             ::Rails::Gem.expects(:install).with(@context, "bundler", "~>2.0").returns(true)
-            expect_rails_version("6.1.4.1")
+            expect_rails_version("6.1.4")
             expect_command(%W(#{gem_path}/bin/rails new test-app --skip-spring --database=postgresql))
             expect_command(%W(#{gem_path}/bin/bundle install),
               chdir: File.join(@context.root, "test-app"))
@@ -206,7 +206,7 @@ module ShopifyCLI
             Environment.expects(:ruby_version).returns(Semantic::Version.new("2.5.0"))
             ::Rails::Gem.expects(:install).with(@context, "rails", nil).returns(true)
             ::Rails::Gem.expects(:install).with(@context, "bundler", "~>2.0").returns(true)
-            expect_rails_version("6.1.4.1")
+            expect_rails_version("6.1.4")
             expect_command(%W(#{gem_path}/bin/rails new test-app --skip-spring --database=sqlite3 --edge -J))
             expect_command(%W(#{gem_path}/bin/bundle install),
               chdir: File.join(@context.root, "test-app"))
@@ -278,9 +278,7 @@ module ShopifyCLI
           end
 
           def expect_rails_version(version)
-            @context.expects(:capture2e).with("rails", "--version").returns(
-              ["Rails #{version}", mock(success?: true)]
-            )
+            Environment.expects(:rails_version).with(context: @context).returns(::Semantic::Version.new(version))
           end
 
           def call_service(db: "sqlite3", rails_opts: nil)

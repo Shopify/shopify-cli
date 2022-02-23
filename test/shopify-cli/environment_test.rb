@@ -96,6 +96,38 @@ module ShopifyCLI
       assert_equal ::Semantic::Version.new("8.4.1"), got
     end
 
+    def test_rails_version_when_the_command_raises
+      # Given
+      context = TestHelpers::FakeContext.new
+      stat = mock("error", success?: false)
+      out = ""
+      context.expects(:capture2e)
+        .with("rails", "--version")
+        .returns([out, stat])
+
+      # When/Then
+      error = assert_raises CLI::Kit::Abort do
+        Environment.rails_version(context: context)
+      end
+      assert_equal "{{x}} Error installing rails gem", error.message
+    end
+
+    def test_rails_version
+      # Given
+      context = TestHelpers::FakeContext.new
+      stat = mock("success", success?: true)
+      out = "Rails 6.1.4.6"
+      context.expects(:capture2e)
+        .with("rails", "--version")
+        .returns([out, stat])
+
+      # When
+      got = Environment.rails_version(context: context)
+
+      # Then
+      assert_equal ::Semantic::Version.new("6.1.4"), got
+    end
+
     def test_use_local_partners_instance_returns_true_when_the_env_variable_is_set
       # Given
       env_variables = {

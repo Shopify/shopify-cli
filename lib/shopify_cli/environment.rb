@@ -31,6 +31,15 @@ module ShopifyCLI
       ::Semantic::Version.new(out.chomp)
     end
 
+    def self.rails_version(context: Context.new)
+      output, status = context.capture2e("rails", "--version")
+      unless status.success?
+        context.abort(context.message("core.app.create.rails.error.install_failure", "rails"))
+      end
+      version = output.match(/Rails (\d+\.\d+\.\d+)/)[1]
+      ::Semantic::Version.new(version)
+    end
+
     def self.interactive=(interactive)
       @interactive = interactive
     end
