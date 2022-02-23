@@ -83,7 +83,7 @@ module Theme
 
         if development
           dev_theme = ShopifyCLI::Theme::DevelopmentTheme.find(@ctx, root: root)
-          return dev_theme || @ctx.abort(@ctx.message("theme.pull.theme_not_found", dev_theme.name))
+          return dev_theme || @ctx.abort(@ctx.message("theme.pull.theme_not_found", "development"))
         end
 
         select_theme(root)

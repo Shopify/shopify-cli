@@ -151,6 +151,20 @@ module Theme
         @command.call([], "pull")
       end
 
+      def test_pull_development_theme_when_does_not_exist
+        ShopifyCLI::Theme::DevelopmentTheme.expects(:find)
+          .with(@ctx, root: ".")
+          .returns(nil)
+
+        @ctx.expects(:message)
+          .with("theme.pull.theme_not_found", "development")
+
+        @ctx.expects(:abort)
+
+        @command.options.flags[:development] = true
+        @command.call([], "pull")
+      end
+
       def test_pull_pass_nodelete_to_syncer
         ShopifyCLI::Theme::Theme.expects(:find_by_identifier)
           .with(@ctx, root: ".", identifier: 1234)
