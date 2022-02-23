@@ -98,7 +98,7 @@ module Script
           .raises(error)
         UI::ErrorHandler
           .expects(:pretty_print_and_raise)
-          .with(error, failed_op: @context.message("script.push.error.operation_failed_no_api_key"))
+          .with(error, failed_op: @context.message("script.push.error.operation_failed"))
 
         # When/Then
         perform_command_with_flags

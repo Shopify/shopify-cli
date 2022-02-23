@@ -65,8 +65,8 @@ module Theme
                 {{command:-j, --json}}             Output JSON instead of a UI.
                 {{command:-a, --allow-live}}       Allow push to a live theme.
                 {{command:-p, --publish}}          Publish as the live theme after uploading.
-                {{command:-o, --only}}             Upload only the specified files.
-                {{command:-x, --ignore}}           Skip uploading the specified files.
+                {{command:-o, --only}}             Upload only the specified files (Multiple flags allowed).
+                {{command:-x, --ignore}}           Skip uploading the specified files (Multiple flags allowed).
 
               Run without options to select theme from a list.
           HELP
@@ -96,7 +96,7 @@ module Theme
           help: <<~HELP,
             Uploads the current theme as a development theme to the connected store, then prints theme editor and preview URLs to your terminal. While running, changes will push to the store in real time.
 
-            Usage: {{command:%s theme serve}}
+            Usage: {{command:%s theme serve [ ROOT ]}}
 
             Options:
               {{command:--port=PORT}}        Local port to serve theme preview from.
@@ -202,8 +202,8 @@ module Theme
               {{command:-l, --live}}             Pull theme files from your remote live theme.
               {{command:-d, --development}}      Pull theme files from your remote development theme.
               {{command:-n, --nodelete}}         Runs the pull command without deleting local files.
-              {{command:-o, --only}}             Download only the specified files.
-              {{command:-x, --ignore}}           Skip downloading the specified files.
+              {{command:-o, --only}}             Download only the specified files (Multiple flags allowed).
+              {{command:-x, --ignore}}           Skip downloading the specified files (Multiple flags allowed).
 
             Run without options to select theme from a list.
           HELP
