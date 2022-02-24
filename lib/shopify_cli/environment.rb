@@ -19,10 +19,10 @@ module ShopifyCLI
     end
 
     def self.node_version(context: Context.new)
-      out, err, stat = context.capture3("node", "--version")
-      raise ShopifyCLI::Abort, err unless stat.success?
-      out = out.gsub("v", "")
-      ::Semantic::Version.new(out.chomp)
+      output, status = context.capture2e("node", "--version")
+      raise ShopifyCLI::Abort, context.message("core.errors.missing_node") unless status.success?
+      version = output.match(/v(\d+\.\d+\.\d+)/)[1]
+      ::Semantic::Version.new(version)
     end
 
     def self.npm_version(context: Context.new)

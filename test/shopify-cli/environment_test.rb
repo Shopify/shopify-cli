@@ -50,33 +50,32 @@ module ShopifyCLI
       context = TestHelpers::FakeContext.new
       stat = mock("error", success?: false)
       out = ""
-      err = "Error executing the command"
-      context.expects(:capture3)
+      context.expects(:capture2e)
         .with("node", "--version")
-        .returns([out, err, stat])
+        .returns([out, stat])
 
       # When/Then
       error = assert_raises ShopifyCLI::Abort do
         Environment.node_version(context: context)
       end
-      assert_equal err, error.message
+      expected_error = "Node.js is required to continue. Install Node.js here: https://nodejs.org/en/download."
+      assert_equal error.message, expected_error
     end
 
     def test_node_version
       # Given
       context = TestHelpers::FakeContext.new
       stat = mock("success", success?: true)
-      out = "v3.2.1"
-      err = ""
-      context.expects(:capture3)
+      out = "v17.5.0"
+      context.expects(:capture2e)
         .with("node", "--version")
-        .returns([out, err, stat])
+        .returns([out, stat])
 
       # When
       got = Environment.node_version(context: context)
 
       # Then
-      assert_equal ::Semantic::Version.new("3.2.1"), got
+      assert_equal ::Semantic::Version.new("17.5.0"), got
     end
 
     def test_npm_version
