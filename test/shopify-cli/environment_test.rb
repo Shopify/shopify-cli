@@ -16,16 +16,16 @@ module ShopifyCLI
       context = TestHelpers::FakeContext.new
       stat = mock("error", success?: false)
       out = ""
-      err = "Error executing the command"
-      context.expects(:capture3)
-        .with("ruby", "-v")
-        .returns([out, err, stat])
+      context.expects(:capture2e)
+        .with("ruby", "--version")
+        .returns([out, stat])
 
       # When/Then
       error = assert_raises ShopifyCLI::Abort do
         Environment.ruby_version(context: context)
       end
-      assert_equal err, error.message
+      expected_error = "Ruby is required to continue. Install Ruby here: https://www.ruby-lang.org/en/downloads."
+      assert_equal error.message, expected_error
     end
 
     def test_ruby_version
@@ -33,10 +33,9 @@ module ShopifyCLI
       context = TestHelpers::FakeContext.new
       stat = mock("success", success?: true)
       out = "ruby 3.0.3p157 (2021-11-24 revision 3fb7d2cadc) [x86_64-darwin21]"
-      err = ""
-      context.expects(:capture3)
-        .with("ruby", "-v")
-        .returns([out, err, stat])
+      context.expects(:capture2e)
+        .with("ruby", "--version")
+        .returns([out, stat])
 
       # When
       got = Environment.ruby_version(context: context)
@@ -83,10 +82,9 @@ module ShopifyCLI
       context = TestHelpers::FakeContext.new
       stat = mock("success", success?: true)
       out = "8.4.1"
-      err = ""
-      context.expects(:capture3)
+      context.expects(:capture2e)
         .with("npm", "--version")
-        .returns([out, err, stat])
+        .returns([out, stat])
 
       # When
       got = Environment.npm_version(context: context)

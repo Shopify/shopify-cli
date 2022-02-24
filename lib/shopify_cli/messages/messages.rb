@@ -16,6 +16,8 @@ module ShopifyCLI
       core: {
         errors: {
           missing_node: "Node.js is required to continue. Install Node.js here: https://nodejs.org/en/download.",
+          missing_npm: "npm is required to continue. Install npm here: https://www.npmjs.com/get-npm.",
+          missing_ruby: "Ruby is required to continue. Install Ruby here: https://www.ruby-lang.org/en/downloads.",
           option_parser: {
             invalid_option: "The option {{command:%s}} is not supported.",
             missing_argument: "The required argument {{command:%s}} is missing.",
