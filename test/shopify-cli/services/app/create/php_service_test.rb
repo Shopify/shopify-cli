@@ -130,8 +130,7 @@ module ShopifyCLI
           end
 
           def expect_npm_check_commands
-            @context.expects(:which).with("npm").returns("/usr/bin/npm")
-            @context.expects(:capture2e).with("npm", "-v").returns(["1", mock(success?: true)])
+            Environment.expects(:npm_version).with(context: @context).returns("1")
           end
 
           def create_test_app_directory_structure

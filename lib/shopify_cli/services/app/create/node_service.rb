@@ -88,24 +88,12 @@ module ShopifyCLI
           end
 
           def check_node
-            cmd_path = context.which("node")
-            context.abort(context.message("core.app.create.node.error.node_required")) if cmd_path.nil?
-
-            version, stat = context.capture2e("node", "-v")
-            unless stat.success?
-              context.abort(context.message("core.app.create.node.error.node_version_failure"))
-            end
-
+            version = ShopifyCLI::Environment.node_version(context: context)
             context.done(context.message("core.app.create.node.node_version", version))
           end
 
           def check_npm
-            cmd_path = context.which("npm")
-            context.abort(context.message("core.app.create.node.error.npm_required")) if cmd_path.nil?
-
-            version, stat = context.capture2e("npm", "-v")
-            context.abort(context.message("core.app.create.node.error.npm_version_failure")) unless stat.success?
-
+            version = ShopifyCLI::Environment.npm_version(context: context)
             context.done(context.message("core.app.create.node.npm_version", version))
           end
 

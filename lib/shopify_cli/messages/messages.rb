@@ -97,8 +97,6 @@ module ShopifyCLI
               HELP
               error: {
                 node_required: "node is required to create an app project. Download at https://nodejs.org/en/download.",
-                node_version_failure: "Failed to get the current node version. Please make sure it is installed as " \
-                  "per the instructions at https://nodejs.org/en.",
                 npm_required: "npm is required to create an app project. Download at https://www.npmjs.com/get-npm.",
                 npm_version_failure: "Failed to get the current npm version. Please make sure it is installed as per " \
                   "the instructions at https://www.npmjs.com/get-npm.",
@@ -133,8 +131,6 @@ module ShopifyCLI
                     {{underline:https://getcomposer.org/download/}}
                   COMPOSER
                 npm_required: "npm is required to create an app project. Download at https://www.npmjs.com/get-npm.",
-                npm_version_failure: "Failed to get the current npm version. Please make sure it is installed as per " \
-                  "the instructions at https://www.npmjs.com/get-npm.",
                 app_setup: "Failed to set up the app",
               },
 

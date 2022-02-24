@@ -69,12 +69,7 @@ module ShopifyCLI
           end
 
           def check_npm
-            cmd_path = context.which("npm")
-            context.abort(context.message("core.app.create.php.error.npm_required")) if cmd_path.nil?
-
-            version, stat = context.capture2e("npm", "-v")
-            context.abort(context.message("core.app.create.php.error.npm_version_failure")) unless stat.success?
-
+            version = ShopifyCLI::Environment.npm_version(context: context)
             context.done(context.message("core.app.create.php.npm_version", version))
           end
 
