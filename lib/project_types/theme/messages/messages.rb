@@ -87,7 +87,7 @@ module Theme
               {{info:View your theme:}}
               {{underline:%s}}
 
-              {{info:Customize this theme in the Online Store Editor:}}
+              {{info:Customize this theme in the Theme Editor:}}
               {{underline:%s}}
           DONE
           name: "Theme name",
@@ -130,7 +130,7 @@ module Theme
           SERVING
           customize_or_preview: <<~CUSTOMIZE_OR_PREVIEW,
 
-            Customize this theme in the Online Store Editor:
+            Customize this theme in the Theme Editor:
             {{green:%s}}
 
             Share this theme preview:
@@ -214,6 +214,35 @@ module Theme
             {{warning:The {{command:-i, --themeid}} flag is deprecated. Use {{command:-t, --theme}} instead.}}
           WARN
           theme_not_found: "Theme \"%s\" doesn't exist",
+        },
+        open: {
+          select: "Select a theme to open",
+          theme_not_found: "Theme \"%s\" doesn't exist",
+          details: <<~DETAILS,
+            {{*}} {{bold:%s}}
+
+            Customize your theme in the Theme Editor:
+            {{green:%s}}
+
+          DETAILS
+          help: <<~HELP,
+            {{command:%s theme open}}: Opens the preview of your remote theme.
+
+            Usage: {{command:%s theme open}}
+
+            Options:
+              {{command:-t, --theme=NAME_OR_ID}} Theme ID or name of your theme.
+              {{command:-l, --live}}             Open your live theme.
+              {{command:-d, --development}}      Open your development theme.
+          HELP
+        },
+        list: {
+          title: "{{*}} List of {{bold:%s}} themes:",
+          help: <<~HELP,
+            {{command:%s theme list}}: Lists your remote themes.
+
+            Usage: {{command:%s theme list}}
+          HELP
         },
       },
     }.freeze
