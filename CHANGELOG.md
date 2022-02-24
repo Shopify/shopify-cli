@@ -1,6 +1,9 @@
 From version 2.6.0, the sections in this file adhere to the [keep a changelog](https://keepachangelog.com/en/1.0.0/) specification.
 
 ## [Unreleased]
+### Fixed
+* [#2088](https://github.com/Shopify/shopify-cli/pull/2088): Update theme-check to 1.10.1
+
 
 ## Version 2.13.0
 
