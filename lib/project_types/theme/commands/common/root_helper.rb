@@ -15,15 +15,16 @@ module Theme
 
           while next_index < argv.size
             element = argv[next_index]
-            option = option_by_key[element]
+            key, value = key_value_tuple(element)
+            option = option_by_key[key]
 
             return element if option.nil?
 
             # Skip the option argument
-            next_index += 1 unless option.arg.nil?
+            next_index += 1 if !option.arg.nil? && !value
 
             # PATTERN arguments take precedence over the `root`
-            if option.arg =~ /PATTERN/
+            if option.arg =~ /PATTERN/ && !value
               next_index += 1 while option_argument?(argv, next_index, option_by_key)
               next
             end
@@ -37,7 +38,7 @@ module Theme
         private
 
         def default_argv(options)
-          options.parser.default_argv
+          options.parser.default_argv.compact
         end
 
         def options_map(options)
@@ -57,7 +58,12 @@ module Theme
           return false unless next_index < argv.size
 
           element = argv[next_index]
-          option_by_key[element].nil?
+          key, _value = key_value_tuple(element)
+          option_by_key[key].nil?
+        end
+
+        def key_value_tuple(element)
+          element.split("=")
         end
       end
     end
