@@ -7,6 +7,8 @@ From version 2.6.0, the sections in this file adhere to the [keep a changelog](h
 ### Fixed
 * [#2092](https://github.com/Shopify/shopify-cli/pull/2092): Fix `RootHelper` parse logic to support options with an equal (e.g.: `option=value`)
 
+* [#2089](https://github.com/Shopify/shopify-cli/pull/2089): Use javy version 0.2.0
+
 ## Version 2.12.0
 ### Added
 * [#1866](https://github.com/Shopify/shopify-cli/pull/1866): Enforce git dependency
