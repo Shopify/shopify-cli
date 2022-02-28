@@ -20,13 +20,6 @@ module Extension
         end
       end
 
-      def test_fails_when_surface_is_unknown
-        result = ConfigureFeatures
-          .call(build_set_of_specification_attributes(surface: "unknown"))
-        assert_predicate(result, :failure?)
-        assert_kind_of(ConfigureFeatures::UnknownSurfaceArea, result.error)
-      end
-
       def test_fails_when_surface_is_unspecified
         attributes = build_set_of_specification_attributes.tap do |attrs|
           attrs.first[:features][:argo].delete(:surface)
@@ -66,10 +59,18 @@ module Extension
         assert_equal "@shopify/checkout-ui-extensions", result.value.dig(0, :features, :argo, :renderer_package_name)
       end
 
+      def test_gracefully_handles_unknown_surface_areas
+        set_of_attributes = build_set_of_specification_attributes(surface: "unknown-surface-area")
+        result = ConfigureFeatures.call(set_of_attributes)
+        assert_predicate(result, :success?)
+        assert_match(/Warning: surface area not configured properly/, result.value.dig(0, :name))
+      end
+
       private
 
       def build_set_of_specification_attributes(surface: "admin")
         [{
+          name: "Test extension",
           identifier: "test_extension",
           features: {
             argo: {

@@ -12,12 +12,20 @@ module Extension
           argo_configuration = extract_argo_configuration(attributes)
           next if argo_configuration.nil?
           surface_area = extract_surface_area(argo_configuration)
-          surface_area_configuration = fetch_surface_area_configuration(surface_area)
-          argo_configuration.merge!(surface_area_configuration)
+          if known_surface_area?(surface_area)
+            surface_area_configuration = fetch_surface_area_configuration(surface_area)
+            argo_configuration.merge!(surface_area_configuration)
+          else
+            clear_argo_configuration(attributes)
+          end
         end
       end
 
       private
+
+      def known_surface_area?(surface_area)
+        surface_area_configurations.keys.include?(surface_area.to_sym)
+      end
 
       def extract_argo_configuration(attributes)
         attributes.dig(:features, :argo)
@@ -33,6 +41,11 @@ module Extension
         surface_area_configurations.fetch(surface_area.to_sym) do
           raise UnknownSurfaceArea, "Unknown surface area: #{surface_area}"
         end
+      end
+
+      def clear_argo_configuration(attributes)
+        attributes[:name] = "#{attributes[:name]} (Warning: surface area not configured properly)"
+        attributes[:features][:argo] = nil
       end
 
       def surface_area_configurations
