@@ -12,11 +12,13 @@ module TestHelpers
       metadata:,
       library:
     )
-      id = id(script_project.script_name)
+      id = id(script_project.title)
       @cache[id] = Script::Layers::Domain::PushPackage.new(
         id: id,
         uuid: script_project.uuid,
         extension_point_type: script_project.extension_point_type,
+        title: script_project.title,
+        description: script_project.description,
         script_content: script_content,
         metadata: metadata,
         script_config: script_project.script_config,
@@ -27,7 +29,7 @@ module TestHelpers
     def get_push_package(script_project:, metadata:, library:)
       _ = metadata
       _ = library
-      id = id(script_project.script_name)
+      id = id(script_project.title)
       if @cache.key?(id)
         @cache[id]
       else
@@ -37,8 +39,8 @@ module TestHelpers
 
     private
 
-    def id(script_name)
-      "#{script_name}.wasm"
+    def id(title)
+      "#{title}.wasm"
     end
   end
 end

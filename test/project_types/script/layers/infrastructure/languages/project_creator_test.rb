@@ -2,12 +2,6 @@
 
 require "project_types/script/test_helper"
 
-class GenericProjectCreator < Script::Layers::Infrastructure::Languages::ProjectCreator
-  def self.config_file
-    "generic.json"
-  end
-end
-
 describe Script::Layers::Infrastructure::Languages::ProjectCreator do
   include TestHelpers::FakeFS
 
@@ -27,7 +21,7 @@ describe Script::Layers::Infrastructure::Languages::ProjectCreator do
   let(:source) { File.join(path, sparse_checkout_set_path) }
 
   let(:project_creator) do
-    GenericProjectCreator.new(
+    Script::Layers::Infrastructure::Languages::ProjectCreator.new(
       ctx: context,
       type: extension_point_type,
       project_name: project_name,
@@ -93,64 +87,11 @@ describe Script::Layers::Infrastructure::Languages::ProjectCreator do
         FileUtils.mkdir_p(".git")
       end
 
-      describe "when config is present" do
-        before do
-          FileUtils.touch(
-            File.join(
-              source,
-              GenericProjectCreator.config_file
-            )
-          )
-        end
+      it "should sucessfully setup dependencies" do
+        context.expects(:rm_rf).with(project_creator.sparse_checkout_set_path.split("/")[0])
+        context.expects(:rm_rf).with(".git")
 
-        describe "when content is correct" do
-          before do
-            File.write(
-              File.join(
-                source,
-                GenericProjectCreator.config_file
-              ),
-              "#{extension_point_type}-default"
-            )
-          end
-
-          it "should sucessfully setup dependencies" do
-            context.expects(:rm_rf).with(project_creator.sparse_checkout_set_path.split("/")[0])
-            context.expects(:rm_rf).with(".git")
-
-            subject
-
-            # clean
-            # config file copied up (NOTE: needs to check that the file is in path/config_file)
-            config_file = File.join(path, GenericProjectCreator.config_file)
-            assert(File.exist?(config_file))
-
-            # update_project_name
-            # config file contents reworked
-            assert_equal(File.read(config_file), project_name)
-          end
-        end
-
-        describe "when content is wrong" do
-          before do
-            File.write(
-              File.join(
-                source,
-                GenericProjectCreator.config_file
-              ),
-              "something is wrong"
-            )
-          end
-          it "should raise InvalidProjectError error" do
-            assert_raises(Script::Layers::Infrastructure::Errors::InvalidProjectConfigError) { subject }
-          end
-        end
-      end
-
-      describe "when the expected config is missing" do
-        it "should raise InvalidProjectError error" do
-          assert_raises(Script::Layers::Infrastructure::Errors::ProjectConfigNotFoundError) { subject }
-        end
+        subject
       end
     end
 

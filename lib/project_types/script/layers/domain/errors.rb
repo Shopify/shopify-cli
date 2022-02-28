@@ -24,10 +24,10 @@ module Script
         end
 
         class ScriptNotFoundError < ScriptProjectError
-          attr_reader :script_name, :extension_point_type
-          def initialize(extension_point_type, script_name)
+          attr_reader :title, :extension_point_type
+          def initialize(extension_point_type, title)
             super()
-            @script_name = script_name
+            @title = title
             @extension_point_type = extension_point_type
           end
         end

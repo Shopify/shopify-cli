@@ -5,7 +5,6 @@ require "project_types/script/test_helper"
 describe Script::Layers::Application::ExtensionPoints do
   include TestHelpers::FakeFS
 
-  let(:script_name) { "name" }
   let(:extension_point_type) { "discount" }
   let(:deprecated_extension_point_type) { "unit_limit_per_order" }
   let(:beta_extension_point_type) { "tax_filter" }

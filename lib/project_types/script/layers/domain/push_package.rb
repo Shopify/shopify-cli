@@ -7,6 +7,8 @@ module Script
         attr_reader :id,
           :uuid,
           :extension_point_type,
+          :title,
+          :description,
           :script_config,
           :script_content,
           :metadata,
@@ -16,6 +18,8 @@ module Script
           id:,
           uuid:,
           extension_point_type:,
+          title:,
+          description:,
           script_content:,
           metadata:,
           script_config:,
@@ -24,6 +28,8 @@ module Script
           @id = id
           @uuid = uuid
           @extension_point_type = extension_point_type
+          @title = title
+          @description = description
           @script_content = script_content
           @metadata = metadata
           @script_config = script_config

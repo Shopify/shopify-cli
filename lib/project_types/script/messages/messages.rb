@@ -24,11 +24,11 @@ module Script
           oauth_help: "Wait a few minutes and try again.",
 
           invalid_context_cause: "Your .shopify-cli.yml is formatted incorrectly. It's missing values for "\
-                                 "extension_point_type or script_name.",
+                                 "extension_point_type or title.",
           invalid_context_help: "Add these values.",
 
-          invalid_script_name_cause: "Script name contains unsupported characters.",
-          invalid_script_name_help: "Use only numbers, letters, hyphens, or underscores.",
+          invalid_script_title_cause: "Script title contains unsupported characters.",
+          invalid_script_title_help: "Use only numbers, letters, hyphens, or underscores.",
 
           no_existing_apps_cause: "Your script can't be pushed to an app because your Partner account "\
                                   "doesn't have any apps.",
@@ -37,8 +37,8 @@ module Script
           no_existing_orgs_cause: "Your account doesn't belong to a Partner Organization.",
           no_existing_orgs_help: "Visit https://partners.shopify.com/ to create an account.",
 
-          project_exists_cause: "A directory with this same name already exists.",
-          project_exists_help: "Choose a different name for your script.",
+          project_exists_cause: "A directory with this same title already exists.",
+          project_exists_help: "Choose a different title for your script.",
 
           invalid_extension_cause: "The name of the Script API is incorrect: %s.",
           invalid_extension_help: "Choose a supported API: %s.",
@@ -168,7 +168,7 @@ module Script
             {{command:%1$s script create}}: Creates a script project.
               Usage: {{command:%1$s script create}}
               Options:
-                {{command:--name=NAME}} Script project name.
+                {{command:--title=TITLE}} Script project title.
                 {{command:--api=TYPE}} Script API name. Supported values: %2$s.
                 {{command:--language=LANGUAGE}} Programming language. Defaults to wasm. Supported values: %3$s.
           HELP
@@ -235,7 +235,7 @@ module Script
         forms: {
           create: {
             select_extension_point: "Which Script API do you want to use?",
-            script_name: "What do you want to name your script?",
+            script_title: "What do you want to title your script?",
           },
         },
 

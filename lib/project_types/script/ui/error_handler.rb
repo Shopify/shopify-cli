@@ -59,10 +59,10 @@ module Script
               Script::Layers::Application::ExtensionPoints.languages(type: e.extension_point_type).join(", ")
             ),
           }
-        when Errors::InvalidScriptNameError
+        when Errors::InvalidScriptTitleError
           {
-            cause_of_error: ShopifyCLI::Context.message("script.error.invalid_script_name_cause"),
-            help_suggestion: ShopifyCLI::Context.message("script.error.invalid_script_name_help"),
+            cause_of_error: ShopifyCLI::Context.message("script.error.invalid_script_title_cause"),
+            help_suggestion: ShopifyCLI::Context.message("script.error.invalid_script_title_help"),
           }
         when Errors::NoExistingAppsError
           {
@@ -96,7 +96,7 @@ module Script
           {
             cause_of_error: ShopifyCLI::Context.message(
               "script.error.script_not_found_cause",
-              e.script_name,
+              e.title,
               e.extension_point_type
             ),
           }

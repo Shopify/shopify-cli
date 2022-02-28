@@ -2,7 +2,7 @@
 
 module Script
   module Errors
-    class InvalidScriptNameError < ScriptProjectError; end
+    class InvalidScriptTitleError < ScriptProjectError; end
 
     class NoExistingAppsError < ScriptProjectError; end
     class NoExistingOrganizationsError < ScriptProjectError; end

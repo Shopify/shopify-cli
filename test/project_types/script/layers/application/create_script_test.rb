@@ -5,7 +5,7 @@ require "project_types/script/test_helper"
 describe Script::Layers::Application::CreateScript do
   include TestHelpers::FakeFS
 
-  let(:script_name) { "path" }
+  let(:title) { "path" }
 
   let(:extension_point_repository) { TestHelpers::FakeExtensionPointRepository.new }
   let(:script_project_repository) { TestHelpers::FakeScriptProjectRepository.new(context) }
@@ -29,7 +29,7 @@ describe Script::Layers::Application::CreateScript do
     script_project_repository.create(
       language: language,
       extension_point_type: extension_point_type,
-      script_name: script_name
+      title: title
     )
   end
 
@@ -48,7 +48,7 @@ describe Script::Layers::Application::CreateScript do
         ctx: context,
         language: language,
         type: extension_point_type,
-        project_name: script_name,
+        project_name: title,
         path_to_project: script_project.id,
         sparse_checkout_repo: sparse_checkout_repo,
         sparse_checkout_branch: sparse_checkout_branch,
@@ -68,7 +68,7 @@ describe Script::Layers::Application::CreateScript do
         ctx: context,
         language: language,
         sparse_checkout_branch: sparse_checkout_branch,
-        script_name: script_name,
+        title: title,
         extension_point_type: extension_point_type,
       )
     end
@@ -107,7 +107,7 @@ describe Script::Layers::Application::CreateScript do
           .returns(ep)
         Script::Layers::Application::CreateScript
           .expects(:install_dependencies)
-          .with(context, language, script_name, project_creator)
+          .with(context, language, title, project_creator)
       end
 
       it "should create a new script" do
@@ -121,7 +121,6 @@ describe Script::Layers::Application::CreateScript do
         subject
 
         script_config = script_project_repository.get.script_config
-        assert_equal script_name, script_config.title
         assert_equal "1", script_config.version
       end
     end
@@ -129,7 +128,7 @@ describe Script::Layers::Application::CreateScript do
     describe "install_dependencies" do
       subject do
         Script::Layers::Application::CreateScript
-          .send(:install_dependencies, context, language, script_name, project_creator)
+          .send(:install_dependencies, context, language, title, project_creator)
       end
 
       it "should return new script" do

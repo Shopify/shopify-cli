@@ -43,15 +43,10 @@ module Script
             )
           end
 
-          def self.config_file
-            raise NotImplementedError
-          end
-
           # the sparse checkout process is common to all script types
           def setup_dependencies
             setup_sparse_checkout
             clean
-            update_project_name(File.join(path_to_project, self.class.config_file))
           end
 
           private
@@ -70,16 +65,6 @@ module Script
             FileUtils.cp_r(source, path_to_project)
             ctx.rm_rf(sparse_checkout_set_path.split("/")[0])
             ctx.rm_rf(".git")
-          end
-
-          def update_project_name(config_file)
-            raise Errors::ProjectConfigNotFoundError unless File.exist?(config_file)
-            upstream_name = "#{type.gsub("_", "-")}-default"
-            contents = File.read(config_file)
-
-            raise Errors::InvalidProjectConfigError unless contents.include?(upstream_name)
-            new_contents = contents.gsub(upstream_name, project_name)
-            File.write(config_file, new_contents)
           end
 
           def command_runner

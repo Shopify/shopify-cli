@@ -9,7 +9,7 @@ module Script
         super
         @context = TestHelpers::FakeContext.new
         @directory = Dir.pwd
-        @script_name = "script_name"
+        @title = "title"
         @api_key = "apikey"
         @uuid = "uuid"
         @secret = "shh"
@@ -18,7 +18,7 @@ module Script
           "project_type" => "script",
           "organization_id" => 1,
           "extension_point_type" => "payment_methods",
-          "script_name" => @script_name,
+          "title" => @title,
           "language" => "assemblyscript",
         }
 
@@ -28,7 +28,7 @@ module Script
         @script_project_repo.create(
           language: "assemblyscript",
           extension_point_type: "discount",
-          script_name: "script_name",
+          title: "title",
           env: @env
         )
         @script_project = @script_project_repo.get
