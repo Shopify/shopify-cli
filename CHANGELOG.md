@@ -1,6 +1,9 @@
 From version 2.6.0, the sections in this file adhere to the [keep a changelog](https://keepachangelog.com/en/1.0.0/) specification.
 
 ## [Unreleased]
+### Added
+* [#2087](https://github.com/Shopify/shopify-cli/pull/2087): Add new Theme CLI commands: `theme list` and `theme open`
+
 ### Fixed
 * [#2092](https://github.com/Shopify/shopify-cli/pull/2092): Fix `RootHelper` parse logic to support options with an equal (e.g.: `option=value`)
 
