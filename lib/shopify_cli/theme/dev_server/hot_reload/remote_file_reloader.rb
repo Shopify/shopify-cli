@@ -28,6 +28,10 @@ module ShopifyCLI
 
           private
 
+          def api_client
+            @api_client ||= ThemeAdminAPI.new(@ctx, @theme.shop)
+          end
+
           def updated_file?(body, file)
             remote_checksum = body.dig("asset", "checksum")
             local_checksum = file.checksum
@@ -45,12 +49,8 @@ module ShopifyCLI
           end
 
           def fetch_asset(file)
-            ShopifyCLI::AdminAPI.rest_request(
-              @ctx,
-              shop: @theme.shop,
+            api_client.get(
               path: "themes/#{@theme.id}/assets.json",
-              method: "GET",
-              api_version: "unstable",
               query: URI.encode_www_form("asset[key]" => file.relative_path.to_s),
             )
           rescue ShopifyCLI::API::APIRequestNotFoundError
