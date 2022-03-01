@@ -46,8 +46,6 @@ module ShopifyCLI
       private
 
       def rest_request(**args)
-        puts "here in rest_request"
-
         ShopifyCLI::AdminAPI.rest_request(
           @ctx,
           shop: @shop,
