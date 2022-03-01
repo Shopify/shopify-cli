@@ -15,23 +15,23 @@ module Script
         ShopifyCLI::Core::Monorail.stubs(:log).yields
         @context = TestHelpers::FakeContext.new
         @language = "assemblyscript"
-        @script_name = "name"
+        @title = "title"
         @ep_type = "discount"
         @script_project = TestHelpers::FakeScriptProjectRepository.new.create(
           language: @language,
           extension_point_type: @ep_type,
-          script_name: @script_name
+          title: @title
         )
         @branch = "master"
         Layers::Application::ExtensionPoints.stubs(:languages).returns(%w(assemblyscript))
         ShopifyCLI::Tasks::EnsureAuthenticated.stubs(:call)
       end
 
-      def test_prints_help_with_no_name_argument
+      def test_prints_help_with_no_title_argument
         root = File.expand_path(__dir__ + "../../../../..")
         FakeFS::FileSystem.clone(root + "/lib/project_types/script/config/extension_points.yml")
-        @script_name = nil
-        io = capture_io { perform_command(name: @script_name, api: @ep_type, language: @language, branch: @branch) }
+        @title = nil
+        io = capture_io { perform_command(title: @title, api: @ep_type, language: @language, branch: @branch) }
         assert_match(CLI::UI.fmt(Script::Command::Create.help), io.join)
       end
 
@@ -40,11 +40,11 @@ module Script
           ctx: @context,
           language: "wasm",
           sparse_checkout_branch: @branch,
-          script_name: @script_name,
+          title: @title,
           extension_point_type: @ep_type,
         ).returns(@script_project)
 
-        perform_command(name: @script_name, api: @ep_type, branch: @branch)
+        perform_command(title: @title, api: @ep_type, branch: @branch)
       end
 
       def test_downcases_language
@@ -53,11 +53,11 @@ module Script
           ctx: @context,
           language: @language.downcase,
           sparse_checkout_branch: @branch,
-          script_name: @script_name,
+          title: @title,
           extension_point_type: @ep_type,
         ).returns(@script_project)
 
-        perform_command(name: @script_name, api: @ep_type, language: @language, branch: @branch)
+        perform_command(title: @title, api: @ep_type, language: @language, branch: @branch)
       end
 
       def test_can_create_new_script
@@ -65,14 +65,14 @@ module Script
           ctx: @context,
           language: @language,
           sparse_checkout_branch: @branch,
-          script_name: @script_name,
+          title: @title,
           extension_point_type: @ep_type,
         ).returns(@script_project)
 
         @context
           .expects(:puts)
-          .with(@context.message("script.create.change_directory_notice", @script_project.script_name))
-        perform_command(name: @script_name, api: @ep_type, language: @language, branch: @branch)
+          .with(@context.message("script.create.change_directory_notice", @script_project.title))
+        perform_command(title: @title, api: @ep_type, language: @language, branch: @branch)
       end
 
       def test_help

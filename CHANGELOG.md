@@ -1,7 +1,15 @@
 From version 2.6.0, the sections in this file adhere to the [keep a changelog](https://keepachangelog.com/en/1.0.0/) specification.
 
 ## [Unreleased]
+### Added
+* [#2087](https://github.com/Shopify/shopify-cli/pull/2087): Add new Theme CLI commands: `theme list` and `theme open`
 
+### Fixed
+* [#2092](https://github.com/Shopify/shopify-cli/pull/2092): Fix `RootHelper` parse logic to support options with an equal (e.g.: `option=value`)
+
+* [#2089](https://github.com/Shopify/shopify-cli/pull/2089): Use javy version 0.2.0
+
+## Version 2.12.0
 ### Added
 * [#1866](https://github.com/Shopify/shopify-cli/pull/1866): Enforce git dependency
 * [#2009](https://github.com/Shopify/shopify-cli/pull/2009): Add localization support for Checkout Extensions
@@ -12,6 +20,7 @@ From version 2.6.0, the sections in this file adhere to the [keep a changelog](h
 
 ### Fixed
 * [#2030](https://github.com/Shopify/shopify-cli/pull/2030): Fix Theme::Syncer handling of file deletions in `download_file!`
+* [#2071](https://github.com/Shopify/shopify-cli/pull/2071): Fix `theme pull` error message when dev theme doesn't exist
 * [#2066](https://github.com/Shopify/shopify-cli/pull/2066): Improve `--only`/`--ignore` parameters on Theme `pull`/`push` commands to work without quotes
 * [#2078](https://github.com/Shopify/shopify-cli/pull/2078): Fix errors on section rendering caused by CORS issues
 * [#2072](https://github.com/Shopify/shopify-cli/pull/2072): Fix `theme serve` raised error when there is a permissions error

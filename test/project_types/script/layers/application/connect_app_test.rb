@@ -4,7 +4,7 @@ require "project_types/script/test_helper"
 
 describe Script::Layers::Application::ConnectApp do
   let(:context) { TestHelpers::FakeContext.new(root: Dir.mktmpdir) }
-  let(:script_name) { "script_name" }
+  let(:title) { "title" }
   let(:language) { "typescript" }
   let(:extension_point_type) { "payment-methods" }
 
@@ -25,7 +25,7 @@ describe Script::Layers::Application::ConnectApp do
         script_project_repository.create(
           language: language,
           extension_point_type: extension_point_type,
-          script_name: script_name,
+          title: title,
           env: ShopifyCLI::Resources::EnvFile.new(
             api_key: "api_key",
             secret: "secret",
@@ -78,7 +78,7 @@ describe Script::Layers::Application::ConnectApp do
         script_project_repository.create(
           language: language,
           extension_point_type: extension_point_type,
-          script_name: script_name,
+          title: title,
           env: ShopifyCLI::Resources::EnvFile.new(
             api_key: selected_api_key,
             secret: selected_secret,

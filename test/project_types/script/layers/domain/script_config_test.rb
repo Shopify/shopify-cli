@@ -6,8 +6,6 @@ describe Script::Layers::Domain::ScriptConfig do
   let(:content) do
     {
       "version" => "1",
-      "title" => "Some Title",
-      "description" => "Some Description",
       "configurationUi" => true,
       "configuration" => {},
     }
@@ -19,8 +17,6 @@ describe Script::Layers::Domain::ScriptConfig do
   describe "#initialize" do
     it "constructs a ScriptConfig" do
       assert_equal("1", subject.version)
-      assert_equal("Some Title", subject.title)
-      assert_equal("Some Description", subject.description)
       assert(subject.configuration_ui)
       assert_equal({}, subject.configuration)
       assert_equal(filename, subject.filename)
@@ -29,13 +25,13 @@ describe Script::Layers::Domain::ScriptConfig do
 
   describe "#configuration_ui" do
     describe "when configurationUi key is not provided" do
-      let(:content) { { "version" => "1", "title" => "Title" } }
+      let(:content) { { "version" => "1" } }
 
       it("is true") { assert(subject.configuration_ui) }
     end
 
     describe "when configurationUi is false" do
-      let(:content) { { "version" => "1", "title" => "Title", "configurationUi" => false } }
+      let(:content) { { "version" => "1", "configurationUi" => false } }
 
       it("is false") { refute(subject.configuration_ui) }
     end

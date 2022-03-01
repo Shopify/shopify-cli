@@ -7,7 +7,6 @@ describe Script::Layers::Application::BuildScript do
   describe ".call" do
     let(:library_name) { "@shopify/fake-library-name" }
     let(:extension_point_type) { "discount" }
-    let(:script_name) { "name" }
     let(:op_failed_msg) { "msg" }
     let(:content) { "content" }
     let(:metadata_file_location) { "metadata.json" }

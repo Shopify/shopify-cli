@@ -48,6 +48,8 @@ module Script
                 uuid = script_service.set_app_script(
                   uuid: package.uuid,
                   extension_point_type: package.extension_point_type,
+                  title: package.title,
+                  description: package.description,
                   force: force,
                   metadata: package.metadata,
                   script_config: package.script_config,

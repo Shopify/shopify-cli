@@ -5,9 +5,6 @@ module Script
     module Infrastructure
       module Languages
         class WasmProjectCreator < ProjectCreator
-          def self.config_file
-            "script.config.yml"
-          end
         end
       end
     end

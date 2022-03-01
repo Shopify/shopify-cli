@@ -36,6 +36,13 @@ describe Script::Layers::Infrastructure::Languages::TypeScriptProjectCreator do
       )
   end
 
+  let(:package_json_content) do
+    {
+      "name" => "default-name-from-examples-repo",
+      "other" => "some other property",
+    }
+  end
+
   before do
     context.mkdir_p(project_name)
   end
@@ -71,6 +78,18 @@ describe Script::Layers::Infrastructure::Languages::TypeScriptProjectCreator do
         .expects(:rm)
         .with("package-lock.json")
         .once
+
+      context
+        .expects(:read)
+        .with("package.json")
+        .returns(package_json_content.to_json)
+
+      new_content = package_json_content.dup
+      new_content["name"] = project_name
+
+      context
+        .expects(:write)
+        .with("package.json", JSON.pretty_generate(new_content))
 
       subject
     end
