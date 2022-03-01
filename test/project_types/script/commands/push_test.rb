@@ -19,14 +19,14 @@ module Script
           "organization_id" => 1,
           "extension_point_type" => "payment_methods",
           "title" => @title,
-          "language" => "assemblyscript",
+          "language" => "typescript",
         }
 
         @env = ShopifyCLI::Resources::EnvFile.new(api_key: @api_key, secret: @secret, extra: { "UUID" => @uuid })
         # @env_content = ShopifyCLI::Resources::EnvFile.read(@env)
         @script_project_repo = TestHelpers::FakeScriptProjectRepository.new
         @script_project_repo.create(
-          language: "assemblyscript",
+          language: "typescript",
           extension_point_type: "discount",
           title: "title",
           env: @env

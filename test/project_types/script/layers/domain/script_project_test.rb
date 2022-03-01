@@ -8,7 +8,7 @@ describe Script::Layers::Domain::ScriptProject do
   let(:extension_point_type) { "discount" }
   let(:title) { "foo_script" }
   let(:description) { "description" }
-  let(:language) { "assemblyscript" }
+  let(:language) { "typescript" }
   let(:script_config_filename) { "script.config.yml" }
   let(:script_config) do
     Script::Layers::Domain::ScriptConfig.new(

@@ -13,7 +13,7 @@ describe Script::Layers::Domain::PushPackage do
   let(:force) { false }
   let(:script_content) { "(module)" }
   let(:metadata) { Script::Layers::Domain::Metadata.new("1", "0", true) }
-  let(:library_language) { "assemblyscript" }
+  let(:library_language) { "typescript" }
   let(:library_version) { "1.0.0" }
   let(:library) do
     {

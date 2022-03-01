@@ -15,7 +15,7 @@ describe Script::Layers::Infrastructure::ScriptProjectRepository do
   end
 
   let(:deprecated_ep_types) { [] }
-  let(:supported_languages) { ["assemblyscript"] }
+  let(:supported_languages) { ["wasm"] }
   let(:script_config_filename) { "script.config.yml" }
 
   let(:initial_directory) { ctx.root }
@@ -29,7 +29,7 @@ describe Script::Layers::Infrastructure::ScriptProjectRepository do
   describe "#create" do
     let(:title) { "title" }
     let(:extension_point_type) { "tax_filter" }
-    let(:language) { "assemblyscript" }
+    let(:language) { "wasm" }
 
     before do
       dir = "/#{title}"
@@ -84,8 +84,8 @@ describe Script::Layers::Infrastructure::ScriptProjectRepository do
 
     let(:title) { "title" }
     let(:description) { "#{extension_point_type} default script" }
-    let(:extension_point_type) { "tax_filter" }
-    let(:language) { "assemblyscript" }
+    let(:extension_point_type) { "payment_methods" }
+    let(:language) { "wasm" }
     let(:uuid) { "uuid" }
     let(:script_config) { "script.config.yml" }
     let(:script_config_content) do
@@ -107,7 +107,7 @@ describe Script::Layers::Infrastructure::ScriptProjectRepository do
     end
     let(:valid_config) do
       {
-        "extension_point_type" => "tax_filter",
+        "extension_point_type" => "payment_methods",
         "title" => title,
         "description" => description,
         "script_config" => script_config,
@@ -230,7 +230,7 @@ describe Script::Layers::Infrastructure::ScriptProjectRepository do
 
     let(:title) { "title" }
     let(:extension_point_type) { "tax_filter" }
-    let(:language) { "assemblyscript" }
+    let(:language) { "wasm" }
     let(:uuid) { "uuid" }
     let(:updated_uuid) { "updated_uuid" }
     let(:script_config) { "script.config.yml" }

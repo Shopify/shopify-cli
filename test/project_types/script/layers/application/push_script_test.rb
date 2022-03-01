@@ -13,7 +13,7 @@ describe Script::Layers::Application::PushScript do
   let(:metadata_repository) { TestHelpers::FakeMetadataRepository.new }
   let(:metadata) { metadata_repository.get_metadata(metadata_file_location) }
   let(:library_version) { "1.0.0" }
-  let(:library_language) { "assemblyscript" }
+  let(:library_language) { "typescript" }
   let(:library_name) { "@shopify/fake-library-name" }
   let(:library) do
     {

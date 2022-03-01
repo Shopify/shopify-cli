@@ -15,7 +15,7 @@ describe Script::Layers::Application::BuildScript do
     let(:task_runner) { stub(metadata_file_location: metadata_file_location) }
     let(:script_project) { stub }
 
-    let(:library_language) { "assemblyscript" }
+    let(:library_language) { "typescript" }
     let(:library_version) { "1.0.0" }
 
     let(:library) do

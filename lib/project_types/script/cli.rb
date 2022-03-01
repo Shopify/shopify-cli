@@ -64,10 +64,6 @@ module Script
       autoload :ServiceLocator, Project.project_filepath("layers/infrastructure/service_locator")
 
       module Languages
-        autoload :AssemblyScriptProjectCreator,
-          Project.project_filepath("layers/infrastructure/languages/assemblyscript_project_creator")
-        autoload :AssemblyScriptTaskRunner,
-          Project.project_filepath("layers/infrastructure/languages/assemblyscript_task_runner")
         autoload :ProjectCreator, Project.project_filepath("layers/infrastructure/languages/project_creator")
         autoload :TaskRunner, Project.project_filepath("layers/infrastructure/languages/task_runner")
         autoload :TypeScriptProjectCreator,

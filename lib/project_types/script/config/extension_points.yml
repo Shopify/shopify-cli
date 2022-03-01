@@ -1,9 +1,6 @@
 payment_methods:
   domain: 'checkout'
   libraries:
-    assemblyscript:
-      repo: "https://github.com/Shopify/scripts-apis-examples"
-      package: "@shopify/scripts-checkout-apis"
     typescript:
       beta: true
       package: "@shopify/scripts-checkout-apis"
@@ -13,9 +10,6 @@ payment_methods:
 shipping_methods:
   domain: 'checkout'
   libraries:
-    assemblyscript:
-      repo: "https://github.com/Shopify/scripts-apis-examples"
-      package: "@shopify/scripts-checkout-apis"
     typescript:
       beta: true
       package: "@shopify/scripts-checkout-apis"
