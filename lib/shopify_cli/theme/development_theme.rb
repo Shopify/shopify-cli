@@ -45,11 +45,8 @@ module ShopifyCLI
       def exists?
         return false unless id
 
-        ShopifyCLI::AdminAPI.rest_request(
-          @ctx,
-          shop: shop,
-          path: "themes/#{id}.json",
-          api_version: "unstable",
+        api_client.get(
+          path: "themes/#{id}.json"
         )
       rescue ShopifyCLI::API::APIRequestNotFoundError
         false
