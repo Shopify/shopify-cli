@@ -118,7 +118,7 @@ module ShopifyCLI
               operation = @queue.pop
               break if operation.nil? # shutdown was called
               perform(operation)
-            rescue => e
+            rescue Exception => e # rubocop:disable Lint/RescueException
               error_suffix = ": #{e}"
               error_suffix += + "\n\t#{e.backtrace.join("\n\t")}" if @ctx.debug?
               report_error(operation, error_suffix)
