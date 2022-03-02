@@ -49,8 +49,8 @@ module ShopifyCLI
         url: "https://shop.myshopify.com/admin/api/unstable/data.json",
       ).returns(api_stub)
       api_stub.expects(:request).with(url: "https://shop.myshopify.com/admin/api/unstable/data.json",
-                                      body: nil,
-                                      method: "GET").returns("response")
+        body: nil,
+        method: "GET").returns("response")
       assert_equal(
         "response",
         AdminAPI.rest_request(@context,

@@ -8,12 +8,10 @@ module Script
       def self.spin(title, auto_debrief: false)
         exception = nil
         CLI::UI::Spinner.spin(title, auto_debrief: auto_debrief) do |*args|
-          begin
-            yield(*args)
-          rescue StandardError => e
-            exception = e
-            CLI::UI::Spinner::TASK_FAILED
-          end
+          yield(*args)
+        rescue StandardError => e
+          exception = e
+          CLI::UI::Spinner::TASK_FAILED
         end
         raise exception if exception
       end

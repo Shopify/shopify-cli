@@ -7,7 +7,7 @@ module ShopifyCLI
     module DevServer
       class IntegrationTest < Minitest::Test
         include TestHelpers::FakeUI
-        
+
         @@port = 9292 # rubocop:disable Style/ClassVars
 
         THEMES_API_URL = "https://dev-theme-server-store.myshopify.com/admin/api/unstable/themes/123456789.json"
@@ -19,7 +19,7 @@ module ShopifyCLI
 
           ShopifyCLI::DB.expects(:get)
             .with(:shopify_exchange_token)
-            .at_least_once.returns('token123')
+            .at_least_once.returns("token123")
 
           ShopifyCLI::DB.expects(:exists?).with(:shop).at_least_once.returns(true)
           ShopifyCLI::DB.expects(:get)
@@ -134,8 +134,8 @@ module ShopifyCLI
 
           io_messages = io.join
 
-          assert_match @ctx.message("theme.serve.address_already_in_use", "http://127.0.0.1:#{@@port}"), io_messages
-          assert_match @ctx.message("theme.serve.try_port_option"), io_messages
+          assert_match(@ctx.message("theme.serve.address_already_in_use", "http://127.0.0.1:#{@@port}"), io_messages)
+          assert_match(@ctx.message("theme.serve.try_port_option"), io_messages)
         end
 
         def test_streams_hot_reload_events
@@ -166,7 +166,7 @@ module ShopifyCLI
           @ctx = TestHelpers::FakeContext.new(root: "#{ShopifyCLI::ROOT}/test/fixtures/theme")
           @server_thread = Thread.new do
             DevServer.start(@ctx, "#{ShopifyCLI::ROOT}/test/fixtures/theme", port: @@port)
-          rescue Exception => e
+          rescue => e
             puts "Failed to start DevServer:"
             puts e.message
             puts e.backtrace

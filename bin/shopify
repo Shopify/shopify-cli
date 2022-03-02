@@ -44,8 +44,8 @@ end
 
 require_relative "./load_shopify"
 
-exit(proc do
-  begin
+exit(
+  proc do
     ShopifyCLI::ErrorHandler.call do
       ShopifyCLI::Core::EntryPoint.call(ARGV.dup)
     end
@@ -56,5 +56,5 @@ exit(proc do
     else
       1
     end
-  end
-end.call)
+  end.call
+)
