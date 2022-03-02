@@ -46,9 +46,9 @@ module Extension
         end
       end
 
-      def test_argo_feature_requires_renderer_package_name
+      def test_argo_feature_requires_renderer
         invalid_attributes = valid_attributes.tap do |attrs|
-          attrs[:features][:argo].delete(:renderer_package_name)
+          attrs[:features][:argo].delete(:renderer)
         end
 
         assert_raises SmartProperties::Error do
@@ -80,7 +80,10 @@ module Extension
             argo: {
               surface: "admin",
               git_template: "https://github.com/Shopify/argo-test-template.git",
-              renderer_package_name: "@shopify/argo-test",
+              renderer: {
+                name: "@shopify/argo-test",
+                version: "latest"
+              }
             },
           },
         }

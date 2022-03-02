@@ -1,3 +1,5 @@
+require_relative "../extension_project_test"
+
 module Extension
   module Tasks
     class ConfigureFeaturesTest < MiniTest::Test
@@ -38,10 +40,11 @@ module Extension
         )
       end
 
-      def test_correct_renderer_package_name_for_admin_extensions
+      def test_correct_renderer_for_admin_extensions
         set_of_attributes = build_set_of_specification_attributes(surface: "admin")
         result = ConfigureFeatures.call(set_of_attributes)
-        assert_equal "@shopify/admin-ui-extensions", result.value.dig(0, :features, :argo, :renderer_package_name)
+        assert_equal "@shopify/admin-ui-extensions", result.value.dig(0, :features, :argo, :renderer, :name)
+        assert_equal "latest", result.value.dig(0, :features, :argo, :renderer, :version)
       end
 
       def test_correct_git_template_for_checkout_extensions
@@ -53,10 +56,11 @@ module Extension
         )
       end
 
-      def test_correct_renderer_package_name_for_checkout_extensions
+      def test_correct_renderer_checkout_extensions
         set_of_attributes = build_set_of_specification_attributes(surface: "checkout")
         result = ConfigureFeatures.call(set_of_attributes)
-        assert_equal "@shopify/checkout-ui-extensions", result.value.dig(0, :features, :argo, :renderer_package_name)
+        assert_equal "@shopify/checkout-ui-extensions", result.value.dig(0, :features, :argo, :renderer, :name)
+        assert_equal "latest", result.value.dig(0, :features, :argo, :renderer, :version)
       end
 
       def test_gracefully_handles_unknown_surface_areas
