@@ -103,7 +103,7 @@ module ShopifyCLI
     # any command run by the context.
     attr_accessor :env
 
-    def initialize(root: Dir.pwd, env: ($original_env || ENV).clone) # :nodoc:
+    def initialize(root: Dir.pwd, env: ($original_env || ENV).to_h) # :nodoc:
       self.root = root
       self.env = env
     end
