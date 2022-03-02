@@ -17,13 +17,8 @@ module Script
               ShopifyCLI::Shopifolk.act_as_shopify_organization
             end
 
-            org =
-              if partner_proxy_bypass
-                stubbed_org
-              else
-                orgs = ShopifyCLI::PartnersAPI::Organizations.fetch_with_app(ctx)
-                Forms::AskOrg.ask(ctx, orgs, nil).org
-              end
+            orgs = ShopifyCLI::PartnersAPI::Organizations.fetch_with_app(ctx)
+            org = Forms::AskOrg.ask(ctx, orgs, nil).org
 
             app = Forms::AskApp.ask(
               ctx,
@@ -62,10 +57,6 @@ module Script
           end
 
           private
-
-          def partner_proxy_bypass
-            !ENV["BYPASS_PARTNERS_PROXY"].nil?
-          end
 
           def stubbed_org
             {

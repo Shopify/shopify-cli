@@ -85,8 +85,6 @@ module Script
       module ApiClients
         autoload :PartnersProxyApiClient,
           Project.project_filepath("layers/infrastructure/api_clients/partners_proxy_api_client")
-        autoload :ScriptServiceApiClient,
-          Project.project_filepath("layers/infrastructure/api_clients/script_service_api_client")
       end
     end
   end

@@ -3,11 +3,7 @@ module Script
     module Infrastructure
       class ServiceLocator
         def self.api_client(ctx:, api_key:)
-          if ENV["BYPASS_PARTNERS_PROXY"]
-            ApiClients::ScriptServiceApiClient.new(ctx, api_key)
-          else
-            ApiClients::PartnersProxyApiClient.new(ctx, api_key)
-          end
+          ApiClients::PartnersProxyApiClient.new(ctx, api_key)
         end
 
         def self.script_service(ctx:, api_key:)
