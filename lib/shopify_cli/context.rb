@@ -164,7 +164,7 @@ module ShopifyCLI
 
     # will return true while tests are running, either locally or on CI
     def testing?
-      ci? || ENV["TEST"]
+      ci? || ENV["SHOPIFY_CLI_TEST"]
     end
 
     ##
