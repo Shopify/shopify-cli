@@ -50,7 +50,7 @@ module Extension
         Models::DevelopmentServerRequirements.expects(:supported?).with(type).returns(true)
 
         command = Tasks::ExecuteCommands::Build.new(context: @context, config_file_path: config_file,
-type: type.downcase)
+          type: type.downcase)
         Tasks::ExecuteCommands::Build.expects(:new).returns(command) do |cmd|
           cmd.expects(:call).returns(nil)
         end

@@ -47,11 +47,11 @@ module ShopifyCLI
       end
 
       def lock_io!
-        @reporters.each { |reporter| reporter.disable! }
+        @reporters.each(&:disable!)
       end
 
       def unlock_io!
-        @reporters.each { |reporter| reporter.enable! }
+        @reporters.each(&:enable!)
       end
 
       def enqueue_updates(files)
@@ -118,7 +118,7 @@ module ShopifyCLI
               operation = @queue.pop
               break if operation.nil? # shutdown was called
               perform(operation)
-            rescue Exception => e
+            rescue Exception => e # rubocop:disable Lint/RescueException
               error_suffix = ": #{e}"
               error_suffix += + "\n\t#{e.backtrace.join("\n\t")}" if @ctx.debug?
               report_error(operation, error_suffix)
@@ -288,7 +288,7 @@ module ShopifyCLI
         update_checksums(body)
 
         attachment = body.dig("asset", "attachment")
-        value = if attachment
+        if attachment
           file.write(Base64.decode64(attachment))
         else
           file.write(body.dig("asset", "value"))
@@ -305,7 +305,7 @@ module ShopifyCLI
           method: "DELETE",
           api_version: API_VERSION,
           body: JSON.generate(asset: {
-            key: file.relative_path.to_s
+            key: file.relative_path.to_s,
           })
         )
 
@@ -332,7 +332,7 @@ module ShopifyCLI
         parsed_body = JSON.parse(exception&.response&.body)
         message = parsed_body.dig("errors", "asset") || parsed_body["message"] || exception.message
         # Truncate to first lines
-        [message].flatten.map { |message| message.split("\n", 2).first }
+        [message].flatten.map { |mess| mess.split("\n", 2).first }
       rescue JSON::ParserError
         [exception.message]
       end
@@ -340,7 +340,7 @@ module ShopifyCLI
       def backoff_if_near_limit!(used, limit)
         if used > limit - @threads.size
           @ctx.debug("Near API call limit, waiting 2 sec…")
-          @backoff_mutex.synchronize { sleep 2 }
+          @backoff_mutex.synchronize { sleep(2) }
         end
       end
 

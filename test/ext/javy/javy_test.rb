@@ -198,14 +198,14 @@ class JavyTest < Minitest::Test
     File.write(File.join(::Javy::HASH_FOLDER, "#{asset_filename}.sha256"), executable_sha)
     stub_request(:get, "https://github.com/Shopify/javy/releases/download/v0.2.0/#{asset_filename}")
       .to_return(
-      status: 200,
-      headers: {
-        "Content-Type" => "application/octet-stream",
-        "Content-Disposition" => "attachment; filename=javy-#{asset_filename}",
-        "Content-Length" => DUMMY_ARCHIVE.size,
-      },
-      body: DUMMY_ARCHIVE
-    )
+        status: 200,
+        headers: {
+          "Content-Type" => "application/octet-stream",
+          "Content-Disposition" => "attachment; filename=javy-#{asset_filename}",
+          "Content-Length" => DUMMY_ARCHIVE.size,
+        },
+        body: DUMMY_ARCHIVE
+      )
   end
 
   def simulate_broken_asset_link

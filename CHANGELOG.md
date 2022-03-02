@@ -2,12 +2,16 @@ From version 2.6.0, the sections in this file adhere to the [keep a changelog](h
 
 ## [Unreleased]
 ### Added
-* [#2087](https://github.com/Shopify/shopify-cli/pull/2087): Add new Theme CLI commands: `theme list` and `theme open`
 * [#2103](https://github.com/Shopify/shopify-cli/pull/2103): Improve `shopify theme package` to include the `release-notes.md` file
+
+## Version 2.13.0
+
+### Added
+* [#2087](https://github.com/Shopify/shopify-cli/pull/2087): Add new Theme CLI commands: `theme list` and `theme open`
+* [#2035](https://github.com/Shopify/shopify-cli/pull/2035): Support Ruby 3.1
 
 ### Fixed
 * [#2092](https://github.com/Shopify/shopify-cli/pull/2092): Fix `RootHelper` parse logic to support options with an equal (e.g.: `option=value`)
-
 * [#2089](https://github.com/Shopify/shopify-cli/pull/2089): Use javy version 0.2.0
 
 ## Version 2.12.0

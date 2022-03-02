@@ -6,7 +6,7 @@ env:
   SHOPIFY_CLI_DEVELOPMENT: "1"
 
 up:
-  - ruby: 2.7.5
+  - ruby: 3.1.0
   - homebrew:
       - dpkg:
           version: 1.21.1

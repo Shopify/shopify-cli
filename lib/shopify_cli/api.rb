@@ -85,7 +85,7 @@ module ShopifyCLI
         end
       rescue Errno::ETIMEDOUT, Timeout::Error
         ctx.debug("timeout in #{method} #{uri} with X-Request-Id: #{headers["X-Request-Id"]}")
-        raise APIRequestTimeoutError.new("Timeout")
+        raise APIRequestTimeoutError, "Timeout"
       end.retry_after(APIRequestRetriableError, retries: 3) do |e|
         sleep(1) if e.is_a?(APIRequestThrottledError)
       end
