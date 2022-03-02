@@ -14,10 +14,10 @@ module Script
       end
 
       def test_returns_all_defined_attributes_if_valid
-        name = "name"
+        title = "title"
         extension_point = "discount"
-        form = ask(name: name, extension_point: extension_point, language: "assemblyscript")
-        assert_equal(form.name, name)
+        form = ask(title: title, extension_point: extension_point)
+        assert_equal(form.title, title)
         assert_equal(form.extension_point, extension_point)
       end
 
@@ -28,76 +28,49 @@ module Script
           @context.message("script.forms.create.select_extension_point"),
           options: eps
         )
-        ask(name: "name", language: "assemblyscript")
+        ask(title: "title")
       end
 
-      def test_asks_name_if_no_flag
-        name = "name"
-        CLI::UI::Prompt.expects(:ask).with(@context.message("script.forms.create.script_name")).returns(name)
-        form = ask(extension_point: "discount", language: "assemblyscript")
-        assert_equal name, form.name
+      def test_asks_title_if_no_flag
+        title = "title"
+        CLI::UI::Prompt.expects(:ask).with(@context.message("script.forms.create.script_title")).returns(title)
+        form = ask(extension_point: "discount")
+        assert_equal title, form.title
       end
 
-      def test_name_is_cleaned_after_prompt
-        name = "name with space"
-        CLI::UI::Prompt.expects(:ask).with(@context.message("script.forms.create.script_name")).returns(name)
-        form = ask(extension_point: "discount", language: "assemblyscript")
-        assert_equal "name_with_space", form.name
+      def test_title_is_cleaned_after_prompt
+        title = "title with space"
+        CLI::UI::Prompt.expects(:ask).with(@context.message("script.forms.create.script_title")).returns(title)
+        form = ask(extension_point: "discount")
+        assert_equal "title_with_space", form.title
       end
 
-      def test_name_is_cleaned_when_using_flag
-        form = ask(name: "name with space", extension_point: "discount", language: "assemblyscript")
-        assert_equal "name_with_space", form.name
+      def test_title_is_cleaned_when_using_flag
+        form = ask(title: "title with space", extension_point: "discount")
+        assert_equal "title_with_space", form.title
       end
 
-      def test_invalid_name
-        name = "na/me"
-        CLI::UI::Prompt.expects(:ask).returns(name)
+      def test_invalid_title
+        title = "na/me"
+        CLI::UI::Prompt.expects(:ask).returns(title)
 
-        assert_raises(Script::Errors::InvalidScriptNameError) { ask }
+        assert_raises(Script::Errors::InvalidScriptTitleError) { ask }
       end
 
-      def test_invalid_name_as_option
-        assert_raises(Script::Errors::InvalidScriptNameError) do
-          ask(name: "na/me", language: "assemblyscript")
+      def test_invalid_title_as_option
+        assert_raises(Script::Errors::InvalidScriptTitleError) do
+          ask(title: "na/me")
         end
-      end
-
-      def test_auto_selects_existing_language_if_only_one_exists
-        language = "assemblyscript"
-        Layers::Application::ExtensionPoints.expects(:languages).returns(%w(assemblyscript))
-        CLI::UI::Prompt.expects(:ask).never
-        form = ask(name: "name", extension_point: "discount")
-        assert_equal language, form.language
-      end
-
-      def test_prompts_for_language_when_multiple_options_exist_and_no_flag_passed
-        language = "rust"
-        all_languages = %w(assemblyscript rust)
-        Layers::Application::ExtensionPoints.expects(:languages).returns(all_languages)
-        CLI::UI::Prompt
-          .expects(:ask)
-          .with(@context.message("script.forms.create.select_language"), options: all_languages)
-          .returns(language)
-        form = ask(name: "name", extension_point: "discount")
-        assert_equal language, form.language
-      end
-
-      def test_succeeds_when_requested_language_is_capitalized
-        language = "AssemblyScript"
-        form = ask(name: "name", extension_point: "discount", language: language)
-        assert_equal language.downcase, form.language
       end
 
       private
 
-      def ask(name: nil, extension_point: nil, language: nil)
+      def ask(title: nil, extension_point: nil)
         Create.ask(
           @context,
           [],
-          name: name,
-          extension_point: extension_point,
-          language: language
+          title: title,
+          extension_point: extension_point
         )
       end
     end

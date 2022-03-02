@@ -109,8 +109,8 @@ describe Script::UI::ErrorHandler do
         end
       end
 
-      describe "when InvalidScriptNameError" do
-        let(:err) { Script::Errors::InvalidScriptNameError.new }
+      describe "when InvalidScriptTitleError" do
+        let(:err) { Script::Errors::InvalidScriptTitleError.new }
         it "should call display_and_raise" do
           should_call_display_and_raise
         end
@@ -132,6 +132,20 @@ describe Script::UI::ErrorHandler do
 
       describe "when ScriptProjectAlreadyExistsError" do
         let(:err) { Script::Layers::Infrastructure::Errors::ScriptProjectAlreadyExistsError.new("/") }
+        it "should call display_and_raise" do
+          should_call_display_and_raise
+        end
+      end
+
+      describe "when InvalidEnvironmentError" do
+        let(:err) do
+          Script::Layers::Infrastructure::Errors::InvalidEnvironmentError.new(
+            "node",
+            ::Semantic::Version.new("14.15.0"),
+            "1.0.0",
+          )
+        end
+
         it "should call display_and_raise" do
           should_call_display_and_raise
         end

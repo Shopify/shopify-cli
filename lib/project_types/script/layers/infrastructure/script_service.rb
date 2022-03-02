@@ -15,6 +15,8 @@ module Script
         def set_app_script(
           uuid:,
           extension_point_type:,
+          title:,
+          description:,
           force: false,
           metadata:,
           script_config:,
@@ -26,8 +28,8 @@ module Script
           variables = {
             uuid: uuid,
             extensionPointName: extension_point_type.upcase,
-            title: script_config.title,
-            description: script_config.description,
+            title: title,
+            description: description,
             force: force,
             schemaMajorVersion: metadata.schema_major_version.to_s, # API expects string value
             schemaMinorVersion: metadata.schema_minor_version.to_s, # API expects string value

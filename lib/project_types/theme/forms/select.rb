@@ -1,3 +1,7 @@
+# frozen_string_literal: true
+
+require "project_types/theme/presenters/themes_presenter"
+
 module Theme
   module Forms
     class Select < ShopifyCLI::Form
@@ -6,53 +10,21 @@ module Theme
 
       def ask
         self.theme = CLI::UI::Prompt.ask(title, allow_empty: false) do |handler|
-          themes.each do |theme|
+          theme_presenters.each do |presenter|
+            theme = presenter.theme
+
             next if exclude_roles&.include?(theme.role)
             next if !include_foreign_developments && theme.foreign_development?
-            handler.option("#{theme.name} #{theme_tags(theme)}") { theme }
+
+            handler.option(presenter.to_s(:short)) { theme }
           end
         end
       end
 
       private
 
-      def themes
-        @themes ||= ShopifyCLI::Theme::Theme.all(@ctx, root: root)
-          .sort_by { |theme| theme_sort_order(theme) }
-      end
-
-      def theme_sort_order(theme)
-        case theme.role
-        when "live"
-          0
-        when "unpublished"
-          1
-        when "development"
-          2
-        else
-          3
-        end
-      end
-
-      def theme_tags(theme)
-        color = case theme.role
-        when "live"
-          "green"
-        when "unpublished"
-          "yellow"
-        when "development"
-          "blue"
-        else
-          "italic"
-        end
-
-        tags = ["{{#{color}:[#{theme.role}]}}"]
-
-        if theme.current_development?
-          tags << "{{cyan:[yours]}}}}"
-        end
-
-        tags.join(" ")
+      def theme_presenters
+        Theme::Presenters::ThemesPresenter.new(ctx, root).all
       end
     end
   end

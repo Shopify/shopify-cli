@@ -24,11 +24,11 @@ module Script
           oauth_help: "Wait a few minutes and try again.",
 
           invalid_context_cause: "Your .shopify-cli.yml is formatted incorrectly. It's missing values for "\
-                                 "extension_point_type or script_name.",
+                                 "extension_point_type or title.",
           invalid_context_help: "Add these values.",
 
-          invalid_script_name_cause: "Script name contains unsupported characters.",
-          invalid_script_name_help: "Use only numbers, letters, hyphens, or underscores.",
+          invalid_script_title_cause: "Script title contains unsupported characters.",
+          invalid_script_title_help: "Use only numbers, letters, hyphens, or underscores.",
 
           no_existing_apps_cause: "Your script can't be pushed to an app because your Partner account "\
                                   "doesn't have any apps.",
@@ -37,8 +37,8 @@ module Script
           no_existing_orgs_cause: "Your account doesn't belong to a Partner Organization.",
           no_existing_orgs_help: "Visit https://partners.shopify.com/ to create an account.",
 
-          project_exists_cause: "A directory with this same name already exists.",
-          project_exists_help: "Choose a different name for your script.",
+          project_exists_cause: "A directory with this same title already exists.",
+          project_exists_help: "Choose a different title for your script.",
 
           invalid_extension_cause: "The name of the Script API is incorrect: %s.",
           invalid_extension_help: "Choose a supported API: %s.",
@@ -113,6 +113,10 @@ module Script
           dependency_install_cause: "Something went wrong while installing the needed dependencies.",
           dependency_install_help: "Correct the errors.",
 
+          invalid_environment_cause: "Your environment %{tool} version, %{env_version}, "\
+                                     "is too low. It must be at least %{minimum_version}.",
+          invalid_environment_help: "Update %{tool}.",
+
           failed_api_request_cause: "Something went wrong while communicating with Shopify.",
           failed_api_request_help: "Try again.",
 
@@ -150,11 +154,13 @@ module Script
           language_library_for_api_not_found_cause: "Script can’t be pushed because the %{language} library for API %{api} is missing.",
           language_library_for_api_not_found_help: "Make sure extension_point.yml contains the correct API library.",
           no_scripts_found_in_app: "The selected apps have no scripts. Please, create them first on the partners' dashboard.",
-          missing_env_file_variables: "The following are missing in the .env file: %s."\
-            " To add it, run {{command:%s script connect}}",
-          missing_push_options: "The following are missing: %s. "\
-            "To add them to a CI environment:\n\t1. Run a connect command {{command:%s script connect}}\n\t2. Navigate to the .env file at the root of your project\n\t"\
-            "3. Copy the missing values, then pass them through as arguments.",
+          missing_push_options_ci: "The following are missing: %s. ",
+          missing_push_options_ci_solution: "To add them to a CI environment:\n\t1. Run a connect command " \
+          "({{command:%1$s script connect}})\n\t2. Navigate to the .env file at the root of your project\n\t" \
+          "3. Copy the missing values and pass them through as arguments in {{command:%1$s script push}}",
+          missing_env_file_variables: "The following are missing in the .env file: %s. ",
+          missing_env_file_variables_solution: "To add it, connect your script with " \
+          "{{command:%1$s script connect}} ",
         },
 
         create: {
@@ -162,9 +168,9 @@ module Script
             {{command:%1$s script create}}: Creates a script project.
               Usage: {{command:%1$s script create}}
               Options:
-                {{command:--name=NAME}} Script project name.
+                {{command:--title=TITLE}} Script project title.
                 {{command:--api=TYPE}} Script API name. Supported values: %2$s.
-                {{command:--language=LANGUAGE}} Programming language. Supported values: %3$s.
+                {{command:--language=LANGUAGE}} Programming language. Defaults to wasm. Supported values: %3$s.
           HELP
 
           error: {
@@ -191,9 +197,7 @@ module Script
           HELP
 
           error: {
-            operation_failed_no_uuid: "UUID is required to push in a CI environment.",
-            operation_failed_with_api_key: "Couldn't push script to app (API key: %{api_key}).",
-            operation_failed_no_api_key: "Couldn't push script to app.",
+            operation_failed: "Couldn't push script to app.",
           },
 
           script_pushed: "{{v}} Script pushed to app (API key: %{api_key}).",
@@ -206,8 +210,6 @@ module Script
           HELP
           error: {
             operation_failed: "Couldn't connect script to app.",
-            missing_env_file_variables: "The following variables are missing in the .env file: %s."\
-            " To connect the script to an app, enter the value into the .env file or delete the .env file, and then run {{command:%s script connect}}",
           },
         },
         javy: {
@@ -233,8 +235,7 @@ module Script
         forms: {
           create: {
             select_extension_point: "Which Script API do you want to use?",
-            select_language: "Which language do you want to use?",
-            script_name: "What do you want to name your script?",
+            script_title: "What do you want to title your script?",
           },
         },
 

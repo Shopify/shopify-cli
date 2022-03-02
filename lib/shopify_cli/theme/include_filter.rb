@@ -9,7 +9,8 @@ module ShopifyCLI
 
       attr_reader :globs, :regexes
 
-      def initialize(patterns = [])
+      def initialize(root, patterns = [])
+        @root = Pathname.new(root)
         @patterns = patterns.nil? ? [] : patterns.compact.reject(&:empty?)
 
         regexes, globs = patterns_to_regexes_and_globs(@patterns)
@@ -22,8 +23,9 @@ module ShopifyCLI
         return true unless present?(@patterns)
 
         path = path.to_s
-
         return true if path.empty?
+
+        path = @root.join(path).to_s
 
         regexes.each do |regex|
           return true if regex_match?(regex, path)

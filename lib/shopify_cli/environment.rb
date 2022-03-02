@@ -5,6 +5,11 @@ module ShopifyCLI
   # the environment in which the CLI runs
   module Environment
     TRUTHY_ENV_VARIABLE_VALUES = ["1", "true", "TRUE", "yes", "YES"]
+    SPIN_OVERRIDE_ENV_NAMES = [
+      Constants::EnvironmentVariables::SPIN_WORKSPACE,
+      Constants::EnvironmentVariables::SPIN_NAMESPACE,
+      Constants::EnvironmentVariables::SPIN_HOST,
+    ]
 
     def self.ruby_version(context: Context.new)
       out, err, stat = context.capture3('ruby -e "puts RUBY_VERSION"')
@@ -17,6 +22,12 @@ module ShopifyCLI
       out, err, stat = context.capture3("node", "--version")
       raise ShopifyCLI::Abort, err unless stat.success?
       out = out.gsub("v", "")
+      ::Semantic::Version.new(out.chomp)
+    end
+
+    def self.npm_version(context: Context.new)
+      out, err, stat = context.capture3("npm", "--version")
+      raise ShopifyCLI::Abort, err unless stat.success?
       ::Semantic::Version.new(out.chomp)
     end
 
@@ -87,6 +98,20 @@ module ShopifyCLI
       end
     end
 
+    def self.spin_url_override(env_variables: ENV)
+      tokens = SPIN_OVERRIDE_ENV_NAMES.map do |name|
+        env_variables[name]
+      end
+
+      return if tokens.all?(&:nil?)
+
+      if tokens.any?(&:nil?)
+        raise "To manually target a spin instance, you must set #{SPIN_OVERRIDE_ENV_NAMES}"
+      else
+        tokens.join(".")
+      end
+    end
+
     def self.use_spin?(env_variables: ENV)
       env_variable_truthy?(
         Constants::EnvironmentVariables::SPIN,
@@ -97,32 +122,29 @@ module ShopifyCLI
       )
     end
 
-    def self.infer_spin?(env_variables: ENV)
-      env_variable_truthy?(
-        Constants::EnvironmentVariables::INFER_SPIN,
-        env_variables: env_variables
+    def self.spin_url(env_variables: ENV)
+      override = spin_url_override(env_variables: env_variables)
+      return override unless override.nil?
+
+      spin_response = if env_variables.key?(
+        Constants::EnvironmentVariables::SPIN_INSTANCE
       )
+        spin_show
+      else
+        spin_show(latest: true)
+      end
+
+      begin
+        instance = JSON.parse(spin_response)
+        raise "Missing key 'fqdn' from spin show. Actual response: #{instance}" unless instance.include?("fqdn")
+        instance["fqdn"]
+      rescue => e
+        raise "Failed to infer spin environment from spin show response #{spin_response}: #{e}"
+      end
     end
 
-    def self.spin_url(env_variables: ENV)
-      if infer_spin?(env_variables: env_variables)
-        # TODO: Remove version check and delete spin-legacy branch
-        #  once spin2 becomes the installed "spin" binary by default
-        spin_version = %x(spin version 2> /dev/null).strip
-        if spin_version.start_with?("spin-")
-          # spin2
-          raise ShopifyCLI:: Abort, "SPIN_INSTANCE must be specified" unless ENV.key?("SPIN_INSTANCE")
-          %x(spin show -o fqdn 2> /dev/null).strip
-        else
-          # spin-legacy
-          %x(spin info fqdn 2> /dev/null).strip
-        end
-      else
-        spin_workspace = spin_workspace(env_variables: env_variables)
-        spin_namespace = spin_namespace(env_variables: env_variables)
-        spin_host = spin_host(env_variables: env_variables)
-        "#{spin_workspace}.#{spin_namespace}.#{spin_host}"
-      end
+    def self.spin_show(latest: false)
+      latest ? %x(spin show --latest --json) : %x(spin show --json)
     end
 
     def self.send_monorail_events?(env_variables: ENV)
@@ -138,28 +160,6 @@ module ShopifyCLI
 
     def self.env_variable_truthy?(variable_name, env_variables: ENV)
       TRUTHY_ENV_VARIABLE_VALUES.include?(env_variables[variable_name.to_s])
-    end
-
-    def self.spin_workspace(env_variables: ENV)
-      env_value = env_variables[Constants::EnvironmentVariables::SPIN_WORKSPACE]
-      return env_value unless env_value.nil?
-
-      if env_value.nil?
-        raise "No value set for #{Constants::EnvironmentVariables::SPIN_WORKSPACE}"
-      end
-    end
-
-    def self.spin_namespace(env_variables: ENV)
-      env_value = env_variables[Constants::EnvironmentVariables::SPIN_NAMESPACE]
-      return env_value unless env_value.nil?
-
-      if env_value.nil?
-        raise "No value set for #{Constants::EnvironmentVariables::SPIN_NAMESPACE}"
-      end
-    end
-
-    def self.spin_host(env_variables: ENV)
-      env_variables[Constants::EnvironmentVariables::SPIN_HOST] || "us.spin.dev"
     end
   end
 end

@@ -9,13 +9,13 @@ class JavyTest < Minitest::Test
   "\xCD\xC9\xC9W(\xCF/\xCAIQ\a\u00007Q\xAC4\u001E"\
   "\u0000\u0000\u0000"
   DUMMY_ARCHIVE_SHA256 = Digest::SHA256.hexdigest(DUMMY_ARCHIVE)
-  ASSET_FILENAME = "javy-x86_64-%s-v0.1.0.gz"
+  ASSET_FILENAME = "javy-x86_64-%s-v0.2.0.gz"
 
   def setup
     super
     FileUtils.mkdir_p(::Javy::BIN_FOLDER)
     FileUtils.mkdir_p(::Javy::HASH_FOLDER)
-    File.write(File.join(::Javy::ROOT, "version"), "v0.1.0")
+    File.write(File.join(::Javy::ROOT, "version"), "v0.2.0")
   end
 
   def test_install_existing_version_for_mac_os
@@ -196,7 +196,7 @@ class JavyTest < Minitest::Test
   def stub_executable_download_request(os, executable_sha)
     asset_filename = ASSET_FILENAME % os
     File.write(File.join(::Javy::HASH_FOLDER, "#{asset_filename}.sha256"), executable_sha)
-    stub_request(:get, "https://github.com/Shopify/javy/releases/download/v0.1.0/#{asset_filename}")
+    stub_request(:get, "https://github.com/Shopify/javy/releases/download/v0.2.0/#{asset_filename}")
       .to_return(
         status: 200,
         headers: {
@@ -209,7 +209,7 @@ class JavyTest < Minitest::Test
   end
 
   def simulate_broken_asset_link
-    stub_request(:get, "https://github.com/Shopify/javy/releases/download/v0.1.0/#{ASSET_FILENAME % "macos"}")
+    stub_request(:get, "https://github.com/Shopify/javy/releases/download/v0.2.0/#{ASSET_FILENAME % "macos"}")
       .to_raise(OpenURI::HTTPError.new("404 Not Found", StringIO.new))
   end
 

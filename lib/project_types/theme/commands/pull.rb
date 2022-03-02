@@ -1,38 +1,46 @@
 # frozen_string_literal: true
 require "shopify_cli/theme/theme"
+require "shopify_cli/theme/development_theme"
 require "shopify_cli/theme/ignore_filter"
 require "shopify_cli/theme/include_filter"
 require "shopify_cli/theme/syncer"
+require "project_types/theme/commands/common/root_helper"
+require "project_types/theme/conversions/include_glob"
+require "project_types/theme/conversions/ignore_glob"
 
 module Theme
   class Command
     class Pull < ShopifyCLI::Command::SubCommand
-      recommend_default_node_range
+      include Common::RootHelper
+
       recommend_default_ruby_range
 
       options do |parser, flags|
+        Conversions::IncludeGlob.register(parser)
+        Conversions::IgnoreGlob.register(parser)
+
         parser.on("-n", "--nodelete") { flags[:nodelete] = true }
         parser.on("-i", "--themeid=ID") { |theme_id| flags[:theme_id] = theme_id }
         parser.on("-t", "--theme=NAME_OR_ID") { |theme| flags[:theme] = theme }
         parser.on("-l", "--live") { flags[:live] = true }
         parser.on("-d", "--development") { flags[:development] = true }
-        parser.on("-o", "--only=PATTERN") do |pattern|
+        parser.on("-o", "--only=PATTERN", Conversions::IncludeGlob) do |pattern|
           flags[:includes] ||= []
-          flags[:includes] << pattern
+          flags[:includes] += pattern
         end
-        parser.on("-x", "--ignore=PATTERN") do |pattern|
+        parser.on("-x", "--ignore=PATTERN", Conversions::IgnoreGlob) do |pattern|
           flags[:ignores] ||= []
-          flags[:ignores] << pattern
+          flags[:ignores] += pattern
         end
       end
 
-      def call(args, _name)
-        root = args.first || "."
+      def call(_args, name)
+        root = root_value(options, name)
         delete = !options.flags[:nodelete]
         theme = find_theme(root, **options.flags)
         return if theme.nil?
 
-        include_filter = ShopifyCLI::Theme::IncludeFilter.new(options.flags[:includes])
+        include_filter = ShopifyCLI::Theme::IncludeFilter.new(root, options.flags[:includes])
         ignore_filter = ShopifyCLI::Theme::IgnoreFilter.from_path(root)
         ignore_filter.add_patterns(options.flags[:ignores]) if options.flags[:ignores]
 
@@ -74,7 +82,8 @@ module Theme
         end
 
         if development
-          return ShopifyCLI::Theme::Theme.development(@ctx, root: root)
+          dev_theme = ShopifyCLI::Theme::DevelopmentTheme.find(@ctx, root: root)
+          return dev_theme || @ctx.abort(@ctx.message("theme.pull.theme_not_found", "development"))
         end
 
         select_theme(root)

@@ -6,10 +6,11 @@ module Extension
   module Models
     module SpecificationHandlers
       class ThemeAppExtension < Default
-        SUPPORTED_BUCKETS = %w(assets blocks snippets)
+        SUPPORTED_BUCKETS = %w(assets blocks snippets locales)
         BUNDLE_SIZE_LIMIT = 10 * 1024 * 1024 # 10MB
         LIQUID_SIZE_LIMIT = 100 * 1024 # 100kb
         SUPPORTED_ASSET_EXTS = %w(.jpg .js .css .png .svg)
+        SUPPORTED_LOCALE_EXTS = %w(.json)
 
         def create(directory_name, context, getting_started: false)
           context.root = File.join(context.root, directory_name)
@@ -88,6 +89,11 @@ module Extension
             unless SUPPORTED_ASSET_EXTS.include?(ext)
               raise Extension::Errors::InvalidFilenameError,
                 "Invalid filename: #{filename}; #{ext} is not supported"
+            end
+          elsif dirname == "locales"
+            unless SUPPORTED_LOCALE_EXTS.include?(ext)
+              raise Extension::Errors::InvalidFilenameError,
+                "Invalid filename: #{filename}; Only #{SUPPORTED_LOCALE_EXTS.join(", ")} allowed in #{dirname}"
             end
           elsif ext != ".liquid"
             raise Extension::Errors::InvalidFilenameError,

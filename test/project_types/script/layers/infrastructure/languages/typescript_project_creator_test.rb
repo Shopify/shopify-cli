@@ -6,7 +6,6 @@ describe Script::Layers::Infrastructure::Languages::TypeScriptProjectCreator do
   include TestHelpers::FakeFS
 
   let(:context) { TestHelpers::FakeContext.new }
-  let(:fake_capture2e_response) { [nil, OpenStruct.new(success?: true)] }
 
   let(:extension_point_type) { "payment-methods" }
   let(:extension_point_config) do
@@ -37,6 +36,13 @@ describe Script::Layers::Infrastructure::Languages::TypeScriptProjectCreator do
       )
   end
 
+  let(:package_json_content) do
+    {
+      "name" => "default-name-from-examples-repo",
+      "other" => "some other property",
+    }
+  end
+
   before do
     context.mkdir_p(project_name)
   end
@@ -49,6 +55,10 @@ describe Script::Layers::Infrastructure::Languages::TypeScriptProjectCreator do
         .expects(:setup_dependencies)
         .with
         .once
+
+      Script::Layers::Infrastructure::Languages::TypeScriptTaskRunner.any_instance
+        .expects(:set_npm_config)
+
       context.expects(:file_exist?)
         .with("yarn.lock")
         .once
@@ -60,15 +70,6 @@ describe Script::Layers::Infrastructure::Languages::TypeScriptProjectCreator do
         .returns(true)
 
       context
-        .expects(:capture2e)
-        .with(Script::Layers::Infrastructure::Languages::TypeScriptProjectCreator::NPM_SET_REGISTRY_COMMAND)
-        .returns(fake_capture2e_response)
-      context
-        .expects(:capture2e)
-        .with(Script::Layers::Infrastructure::Languages::TypeScriptProjectCreator::NPM_SET_ENGINE_STRICT_COMMAND)
-        .returns(fake_capture2e_response)
-
-      context
         .expects(:rm)
         .with("yarn.lock")
         .once
@@ -77,6 +78,18 @@ describe Script::Layers::Infrastructure::Languages::TypeScriptProjectCreator do
         .expects(:rm)
         .with("package-lock.json")
         .once
+
+      context
+        .expects(:read)
+        .with("package.json")
+        .returns(package_json_content.to_json)
+
+      new_content = package_json_content.dup
+      new_content["name"] = project_name
+
+      context
+        .expects(:write)
+        .with("package.json", JSON.pretty_generate(new_content))
 
       subject
     end

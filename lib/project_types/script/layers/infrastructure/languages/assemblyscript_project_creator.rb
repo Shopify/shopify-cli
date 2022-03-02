@@ -5,18 +5,29 @@ module Script
     module Infrastructure
       module Languages
         class AssemblyScriptProjectCreator < ProjectCreator
-          MIN_NODE_VERSION = "14.5.0" # kept because task_runner uses this
-          NPM_SET_REGISTRY_COMMAND = "npm --userconfig ./.npmrc config set @shopify:registry https://registry.npmjs.com"
-          NPM_SET_ENGINE_STRICT_COMMAND = "npm --userconfig ./.npmrc config set engine-strict true"
+          def setup_dependencies
+            task_runner = Infrastructure::Languages::AssemblyScriptTaskRunner.new(ctx)
+            task_runner.set_npm_config
+            super
 
-          def self.config_file
-            "package.json"
+            update_package_json_name
           end
 
-          def setup_dependencies
-            super
-            command_runner.call(NPM_SET_REGISTRY_COMMAND)
-            command_runner.call(NPM_SET_ENGINE_STRICT_COMMAND)
+          private
+
+          def update_package_json_name
+            file_content = ctx.read("package.json")
+            hash = file_content_to_hash(file_content)
+            hash["name"] = project_name
+            ctx.write("package.json", hash_to_file_content(hash))
+          end
+
+          def file_content_to_hash(content)
+            JSON.parse(content)
+          end
+
+          def hash_to_file_content(hash)
+            JSON.pretty_generate(hash)
           end
         end
       end

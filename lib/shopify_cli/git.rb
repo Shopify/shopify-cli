@@ -4,7 +4,15 @@ module ShopifyCLI
   # git.
   class Git
     class << self
-      # Check if Git is available in the environment
+      # Check if Git exists in the environment
+      def exists?(ctx)
+        _output, status = ctx.capture2e("git", "version")
+        status.success?
+      rescue Errno::ENOENT # git is not installed
+        false
+      end
+
+      # Check if the current working directory is a Git repository
       def available?(ctx)
         _output, status = ctx.capture2e("git", "status")
         status.success?

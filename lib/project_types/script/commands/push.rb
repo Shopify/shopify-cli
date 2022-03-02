@@ -5,10 +5,6 @@ module Script
     class Push < ShopifyCLI::Command::SubCommand
       prerequisite_task ensure_project_type: :script
 
-      recommend_node(
-        from: ::Script::Layers::Infrastructure::Languages::TypeScriptProjectCreator::MIN_NODE_VERSION,
-        to: ShopifyCLI::Constants::SupportedVersions::Node::TO
-      )
       recommend_default_ruby_range
 
       options do |parser, flags|
@@ -26,7 +22,7 @@ module Script
         push(project: project)
       rescue StandardError => e
         UI::ErrorHandler.pretty_print_and_raise(e,
-          failed_op: @ctx.message("script.push.error.operation_failed_no_api_key"))
+          failed_op: @ctx.message("script.push.error.operation_failed"))
       end
 
       def push(project:)
@@ -38,7 +34,9 @@ module Script
           Layers::Application::PushScript.call(ctx: @ctx, force: force, project: project)
           @ctx.puts(@ctx.message("script.push.script_pushed", api_key: api_key))
         else
-          raise ShopifyCLI::Abort, @ctx.message("script.push.error.operation_failed_no_uuid")
+          message = @ctx.message("script.error.missing_push_options_ci", "--uuid")
+          message += @ctx.message("script.error.missing_push_options_ci_solution", ShopifyCLI::TOOL_NAME)
+          raise ShopifyCLI::Abort, message
         end
       end
 

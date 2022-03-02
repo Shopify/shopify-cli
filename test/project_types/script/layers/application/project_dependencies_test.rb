@@ -6,7 +6,6 @@ require "project_types/script/test_helpers"
 describe Script::Layers::Application::ProjectDependencies do
   include TestHelpers::FakeFS
 
-  let(:script_name) { "name" }
   let(:extension_point_type) { "discount" }
   let(:extension_point_repository) { TestHelpers::FakeExtensionPointRepository.new }
   let(:extension_point) { extension_point_repository.get_extension_point(extension_point_type) }

@@ -15,6 +15,7 @@ module ShopifyCLI
       },
       core: {
         errors: {
+          missing_node: "Node is required to continue. Install node here: https://nodejs.org/en/download.",
           option_parser: {
             invalid_option: "The option {{command:%s}} is not supported.",
             missing_argument: "The required argument {{command:%s}} is missing.",
@@ -41,7 +42,7 @@ module ShopifyCLI
             invalid_type: "The type %s is not supported. The only supported types are"\
               " {{command:[ rails | node | php ]}}",
             help: <<~HELP,
-            {{command:%s app create}}: Creates a ruby on rails app.
+            {{command:%s app create}}: Creates a new project in a subdirectory.
               Usage: {{command:%s app create [ rails | node | php ]}}
             HELP
             rails: {
@@ -276,6 +277,24 @@ module ShopifyCLI
               HELP
           },
         },
+        extension: {
+          push: {
+            checkout_ui_extension: {
+              localization: {
+                error: {
+                  bundle_too_large: "Total size of all locale files must be less than %s.",
+                  file_empty: "Locale file `%s` is empty.",
+                  file_too_large: "Locale file `%s` too large; size must be less than %s.",
+                  invalid_file_extension: "Invalid locale filename: `%s`; only .json files are allowed.",
+                  invalid_locale_code: "Invalid locale filename: `%s`; locale code should be 2 or 3 letters,"\
+                    " optionally followed by a two-letter region code, e.g. `fr-CA`.",
+                  single_default_locale: "There must be one and only one locale identified as the default locale,"\
+                    " e.g. `en.default.json`",
+                },
+              },
+            },
+          },
+        },
         error_reporting: {
           unhandled_error: {
             message: "{{x}} {{red:An unexpected error occured.}}",
@@ -354,6 +373,7 @@ module ShopifyCLI
           error: {
             directory_exists: "Project directory already exists. Please create a project with a new name.",
             no_branches_found: "Could not find any git branches",
+            nonexistent: "Git needs to be installed: https://git-scm.com/download",
             repo_not_initiated:
               "Git repo is not initiated. Please run {{command:git init}} and make at least one commit.",
             no_commits_made: "No git commits have been made. Please make at least one commit.",
@@ -671,7 +691,8 @@ module ShopifyCLI
             },
           },
           ensure_dev_store: {
-            could_not_verify_store: "Couldn't verify your store %s",
+            could_not_verify_store: "Couldn't verify your store. If you don't have a development store set up, "\
+              "please create one in your Partners dashboard and run `shopify app connect`.",
             convert_to_dev_store: <<~MESSAGE,
               Do you want to convert %s to a development store?
               Doing this will allow you to install your app, but the store will become {{bold:transfer-disabled}}.

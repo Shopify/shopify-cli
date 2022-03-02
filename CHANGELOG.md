@@ -1,11 +1,44 @@
 From version 2.6.0, the sections in this file adhere to the [keep a changelog](https://keepachangelog.com/en/1.0.0/) specification.
 
 ## [Unreleased]
+### Added
+* [#2087](https://github.com/Shopify/shopify-cli/pull/2087): Add new Theme CLI commands: `theme list` and `theme open`
+
+### Fixed
+* [#2092](https://github.com/Shopify/shopify-cli/pull/2092): Fix `RootHelper` parse logic to support options with an equal (e.g.: `option=value`)
+
+* [#2089](https://github.com/Shopify/shopify-cli/pull/2089): Use javy version 0.2.0
+
+## Version 2.12.0
+### Added
+* [#1866](https://github.com/Shopify/shopify-cli/pull/1866): Enforce git dependency
+* [#2009](https://github.com/Shopify/shopify-cli/pull/2009): Add localization support for Checkout Extensions
+* [#2060](https://github.com/Shopify/shopify-cli/pull/2060): Improve CLI error messages for token-based auth (scripts)
+* [#2076](https://github.com/Shopify/shopify-cli/pull/2076): Release Wasm Script Projects
+* [#2051](https://github.com/Shopify/shopify-cli/pull/2051): Update `theme serve` to accept `root` argument
+* [#2025](https://github.com/Shopify/shopify-cli/pull/2025): Improve `theme pull`/`push` help messages to indicate multiple `--only`/`--ignore` flags are allowed.
+
+### Fixed
+* [#2030](https://github.com/Shopify/shopify-cli/pull/2030): Fix Theme::Syncer handling of file deletions in `download_file!`
+* [#2071](https://github.com/Shopify/shopify-cli/pull/2071): Fix `theme pull` error message when dev theme doesn't exist
+* [#2066](https://github.com/Shopify/shopify-cli/pull/2066): Improve `--only`/`--ignore` parameters on Theme `pull`/`push` commands to work without quotes
+* [#2078](https://github.com/Shopify/shopify-cli/pull/2078): Fix errors on section rendering caused by CORS issues
+
+## Version 2.11.2
+### Fixed
+* [#2047](https://github.com/Shopify/shopify-cli/pull/2047): Fix the Homebrew installation
+* [#2019](https://github.com/Shopify/shopify-cli/pull/2019): Provide helpful link when nokogiri fails to load
+* [#2055](https://github.com/Shopify/shopify-cli/pull/2055): Remove unneeded Node requirements
+* [#2020](https://github.com/Shopify/shopify-cli/pull/2020): Fix `theme pull` so that correct dev theme is used with `-d` option
+
+## Version 2.11.1
 ### Fixed
 * [#1973](https://github.com/Shopify/shopify-cli/pull/1973): Fix `theme serve` to preview generated files (`*.css.liquid`)
+* [#2034](https://github.com/Shopify/shopify-cli/pull/2034): Fix `theme serve` to accept parameters with multiple values
+* [#2033](https://github.com/Shopify/shopify-cli/pull/2033): Pin Homebrew Ruby to 3.0
+* [#2032](https://github.com/Shopify/shopify-cli/pull/2032): Runtime error checking the Node version if Node is not present in the environment.
 
 ## Version 2.11.0
-
 ### Fixed
 * [#2005](https://github.com/Shopify/shopify-cli/pull/2005): Fix PHP app serve on Windows environments
 

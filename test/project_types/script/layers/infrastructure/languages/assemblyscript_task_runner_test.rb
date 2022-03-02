@@ -19,6 +19,7 @@ describe Script::Layers::Infrastructure::Languages::AssemblyScriptTaskRunner do
   let(:language) { "assemblyscript" }
   let(:as_task_runner) { Script::Layers::Infrastructure::Languages::AssemblyScriptTaskRunner.new(ctx) }
   let(:command_runner) { Script::Layers::Infrastructure::CommandRunner }
+  let(:fake_capture2e_response) { [nil, OpenStruct.new(success?: true)] }
 
   let(:package_json) do
     {
@@ -26,6 +27,13 @@ describe Script::Layers::Infrastructure::Languages::AssemblyScriptTaskRunner do
         build: "shopify-scripts-toolchain-as build --src src/shopify_main.ts -b script.wasm -- --lib node_modules",
       },
     }
+  end
+
+  before do
+    ShopifyCLI::Environment.stubs(
+      node_version: ::Semantic::Version.new(as_task_runner.class::NODE_MIN_VERSION),
+      npm_version: ::Semantic::Version.new(as_task_runner.class::NPM_MIN_VERSION)
+    )
   end
 
   describe ".build" do
@@ -198,9 +206,6 @@ describe Script::Layers::Infrastructure::Languages::AssemblyScriptTaskRunner do
     describe "when node version is above minimum" do
       it "should install using npm" do
         ctx.expects(:capture2e)
-          .with("node", "--version")
-          .returns(["v14.5.1", mock(success?: true)])
-        ctx.expects(:capture2e)
           .with("npm install --no-audit --no-optional --legacy-peer-deps --loglevel error")
           .returns([nil, mock(success?: true)])
         subject
@@ -209,11 +214,21 @@ describe Script::Layers::Infrastructure::Languages::AssemblyScriptTaskRunner do
 
     describe "when node version is below minimum" do
       it "should raise error" do
-        ctx.expects(:capture2e)
-          .with("node", "--version")
-          .returns(["v14.4.0", mock(success?: true)])
+        ShopifyCLI::Environment.expects(:node_version)
+          .returns(::Semantic::Version.new(decrement_version(as_task_runner.class::NODE_MIN_VERSION)))
 
-        assert_raises Script::Layers::Infrastructure::Errors::DependencyInstallError do
+        assert_raises Script::Layers::Infrastructure::Errors::InvalidEnvironmentError do
+          subject
+        end
+      end
+    end
+
+    describe "when npm version is below minimum" do
+      it "should raise error" do
+        ShopifyCLI::Environment.expects(:npm_version)
+          .returns(::Semantic::Version.new(decrement_version(as_task_runner.class::NPM_MIN_VERSION)))
+
+        assert_raises Script::Layers::Infrastructure::Errors::InvalidEnvironmentError do
           subject
         end
       end
@@ -236,5 +251,29 @@ describe Script::Layers::Infrastructure::Languages::AssemblyScriptTaskRunner do
     it "should return the filename" do
       assert_equal("build/metadata.json", subject)
     end
+  end
+
+  describe ".set_npm_config" do
+    subject { as_task_runner.set_npm_config }
+
+    it "should run npm config commands" do
+      ctx
+        .expects(:capture2e)
+        .with(Script::Layers::Infrastructure::Languages::AssemblyScriptTaskRunner::NPM_SET_REGISTRY_COMMAND)
+        .returns(fake_capture2e_response)
+      ctx
+        .expects(:capture2e)
+        .with(Script::Layers::Infrastructure::Languages::AssemblyScriptTaskRunner::NPM_SET_ENGINE_STRICT_COMMAND)
+        .returns(fake_capture2e_response)
+
+      subject
+    end
+  end
+
+  private
+
+  def decrement_version(version)
+    major, minor, patch = version.split(".")
+    [major.to_i - 1, minor, patch].join(".")
   end
 end

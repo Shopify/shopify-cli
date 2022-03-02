@@ -18,7 +18,7 @@ describe Script::Layers::Infrastructure::ScriptService do
       filename: script_config_filename,
     )
   end
-  let(:script_name) { "script name" }
+  let(:title) { "script name" }
   let(:script_config_version) { "1" }
   let(:expected_description) { "some description" }
   let(:expected_configuration_ui) { true }
@@ -40,7 +40,7 @@ describe Script::Layers::Infrastructure::ScriptService do
   let(:expected_script_config_content) do
     {
       "version" => expected_script_config_version,
-      "title" => script_name,
+      "title" => title,
       "description" => expected_description,
       "configuration" => expected_configuration,
     }
@@ -52,6 +52,8 @@ describe Script::Layers::Infrastructure::ScriptService do
     let(:uuid_from_config) { "uuid_from_config" }
     let(:uuid_from_server) { "uuid_from_server" }
     let(:url) { "https://some-bucket" }
+    let(:title) { "title_from_project_config" }
+    let(:description) { "description_from_project_config" }
     let(:library_language) { "assemblyscript" }
     let(:library_version) { "1.0.0" }
 
@@ -70,6 +72,8 @@ describe Script::Layers::Infrastructure::ScriptService do
       script_service.set_app_script(
         uuid: uuid_from_config,
         extension_point_type: extension_point_type,
+        title: title,
+        description: description,
         metadata: Script::Layers::Domain::Metadata.new(
           schema_major_version,
           schema_minor_version,

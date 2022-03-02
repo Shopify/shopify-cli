@@ -78,6 +78,8 @@ module Script
           Project.project_filepath("layers/infrastructure/languages/wasm_project_creator.rb")
         autoload :WasmTaskRunner,
           Project.project_filepath("layers/infrastructure/languages/wasm_task_runner.rb")
+        autoload :ToolVersionChecker,
+          Project.project_filepath("layers/infrastructure/languages/tool_version_checker.rb")
       end
 
       module ApiClients

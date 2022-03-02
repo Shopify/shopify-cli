@@ -4,6 +4,7 @@ module ShopifyCLI
       class Create
         class PHP < ShopifyCLI::Command::AppSubCommand
           prerequisite_task :ensure_authenticated
+          prerequisite_task :ensure_git_dependency
 
           options do |parser, flags|
             parser.on("--name=NAME") { |name| flags[:name] = name }

@@ -6,7 +6,6 @@ describe Script::Layers::Infrastructure::Languages::AssemblyScriptProjectCreator
   include TestHelpers::FakeFS
 
   let(:context) { TestHelpers::FakeContext.new }
-  let(:fake_capture2e_response) { [nil, OpenStruct.new(success?: true)] }
 
   let(:extension_point_type) { "payment_methods" }
   let(:extension_point_config) do
@@ -38,6 +37,13 @@ describe Script::Layers::Infrastructure::Languages::AssemblyScriptProjectCreator
       )
   end
 
+  let(:package_json_content) do
+    {
+      "name" => "default-name-from-examples-repo",
+      "other" => "some other property",
+    }
+  end
+
   before do
     context.mkdir_p(project_name)
   end
@@ -51,14 +57,20 @@ describe Script::Layers::Infrastructure::Languages::AssemblyScriptProjectCreator
         .with
         .once
 
+      Script::Layers::Infrastructure::Languages::AssemblyScriptTaskRunner.any_instance
+        .expects(:set_npm_config)
+
       context
-        .expects(:capture2e)
-        .with(Script::Layers::Infrastructure::Languages::AssemblyScriptProjectCreator::NPM_SET_REGISTRY_COMMAND)
-        .returns(fake_capture2e_response)
+        .expects(:read)
+        .with("package.json")
+        .returns(package_json_content.to_json)
+
+      new_content = package_json_content.dup
+      new_content["name"] = project_name
+
       context
-        .expects(:capture2e)
-        .with(Script::Layers::Infrastructure::Languages::AssemblyScriptProjectCreator::NPM_SET_ENGINE_STRICT_COMMAND)
-        .returns(fake_capture2e_response)
+        .expects(:write)
+        .with("package.json", JSON.pretty_generate(new_content))
 
       subject
     end

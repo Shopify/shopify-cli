@@ -65,8 +65,8 @@ module Theme
                 {{command:-j, --json}}             Output JSON instead of a UI.
                 {{command:-a, --allow-live}}       Allow push to a live theme.
                 {{command:-p, --publish}}          Publish as the live theme after uploading.
-                {{command:-o, --only}}             Upload only the specified files.
-                {{command:-x, --ignore}}           Skip uploading the specified files.
+                {{command:-o, --only}}             Upload only the specified files (Multiple flags allowed).
+                {{command:-x, --ignore}}           Skip uploading the specified files (Multiple flags allowed).
 
               Run without options to select theme from a list.
           HELP
@@ -87,7 +87,7 @@ module Theme
               {{info:View your theme:}}
               {{underline:%s}}
 
-              {{info:Customize this theme in the Online Store Editor:}}
+              {{info:Customize this theme in the Theme Editor:}}
               {{underline:%s}}
           DONE
           name: "Theme name",
@@ -96,7 +96,7 @@ module Theme
           help: <<~HELP,
             Uploads the current theme as a development theme to the connected store, then prints theme editor and preview URLs to your terminal. While running, changes will push to the store in real time.
 
-            Usage: {{command:%s theme serve}}
+            Usage: {{command:%s theme serve [ ROOT ]}}
 
             Options:
               {{command:--port=PORT}}        Local port to serve theme preview from.
@@ -130,7 +130,7 @@ module Theme
           SERVING
           customize_or_preview: <<~CUSTOMIZE_OR_PREVIEW,
 
-            Customize this theme in the Online Store Editor:
+            Customize this theme in the Theme Editor:
             {{green:%s}}
 
             Share this theme preview:
@@ -202,8 +202,8 @@ module Theme
               {{command:-l, --live}}             Pull theme files from your remote live theme.
               {{command:-d, --development}}      Pull theme files from your remote development theme.
               {{command:-n, --nodelete}}         Runs the pull command without deleting local files.
-              {{command:-o, --only}}             Download only the specified files.
-              {{command:-x, --ignore}}           Skip downloading the specified files.
+              {{command:-o, --only}}             Download only the specified files (Multiple flags allowed).
+              {{command:-x, --ignore}}           Skip downloading the specified files (Multiple flags allowed).
 
             Run without options to select theme from a list.
           HELP
@@ -214,6 +214,35 @@ module Theme
             {{warning:The {{command:-i, --themeid}} flag is deprecated. Use {{command:-t, --theme}} instead.}}
           WARN
           theme_not_found: "Theme \"%s\" doesn't exist",
+        },
+        open: {
+          select: "Select a theme to open",
+          theme_not_found: "Theme \"%s\" doesn't exist",
+          details: <<~DETAILS,
+            {{*}} {{bold:%s}}
+
+            Customize your theme in the Theme Editor:
+            {{green:%s}}
+
+          DETAILS
+          help: <<~HELP,
+            {{command:%s theme open}}: Opens the preview of your remote theme.
+
+            Usage: {{command:%s theme open}}
+
+            Options:
+              {{command:-t, --theme=NAME_OR_ID}} Theme ID or name of your theme.
+              {{command:-l, --live}}             Open your live theme.
+              {{command:-d, --development}}      Open your development theme.
+          HELP
+        },
+        list: {
+          title: "{{*}} List of {{bold:%s}} themes:",
+          help: <<~HELP,
+            {{command:%s theme list}}: Lists your remote themes.
+
+            Usage: {{command:%s theme list}}
+          HELP
         },
       },
     }.freeze

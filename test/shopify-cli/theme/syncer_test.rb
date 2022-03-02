@@ -25,8 +25,6 @@ module ShopifyCLI
           .returns("12345678")
 
         File.any_instance.stubs(:write)
-
-        @syncer.start_threads
       end
 
       def teardown
@@ -35,6 +33,7 @@ module ShopifyCLI
       end
 
       def test_update_text_file
+        @syncer.start_threads
         ShopifyCLI::AdminAPI.expects(:rest_request).with(
           @ctx,
           shop: @theme.shop,
@@ -63,6 +62,7 @@ module ShopifyCLI
       end
 
       def test_update_binary_file
+        @syncer.start_threads
         ShopifyCLI::AdminAPI.expects(:rest_request).with(
           @ctx,
           shop: @theme.shop,
@@ -91,6 +91,7 @@ module ShopifyCLI
       end
 
       def test_delete_file
+        @syncer.start_threads
         ShopifyCLI::AdminAPI.expects(:rest_request).with(
           @ctx,
           shop: @theme.shop,
@@ -115,6 +116,7 @@ module ShopifyCLI
       end
 
       def test_upload_when_unmodified
+        @syncer.start_threads
         @syncer.checksums["assets/theme.css"] = @theme["assets/theme.css"].checksum
 
         ShopifyCLI::AdminAPI.expects(:rest_request).never
@@ -124,6 +126,7 @@ module ShopifyCLI
       end
 
       def test_fetch_checksums
+        @syncer.start_threads
         ShopifyCLI::AdminAPI.expects(:rest_request).with(
           @ctx,
           shop: @theme.shop,
@@ -146,6 +149,7 @@ module ShopifyCLI
       end
 
       def test_fetch_checksums_with_duplicate_liquid_assets
+        @syncer.start_threads
         ShopifyCLI::AdminAPI.expects(:rest_request).with(
           @ctx,
           shop: @theme.shop,
@@ -175,6 +179,7 @@ module ShopifyCLI
       end
 
       def test_update_checksum_after_upload
+        @syncer.start_threads
         ShopifyCLI::AdminAPI.expects(:rest_request).returns([
           200,
           {
@@ -205,13 +210,15 @@ module ShopifyCLI
       end
 
       def test_logs_upload_error
-        @syncer.start_threads
-
         file = @theme.static_asset_files.first
-        @ctx.expects(:error).once
-        ShopifyCLI::AdminAPI.expects(:rest_request).raises(RuntimeError.new("oops"))
+        @ctx.expects(:error)
+
+        response_body = JSON.generate(errors: { message: "oops" })
+        ShopifyCLI::AdminAPI.stubs(:rest_request).raises(client_error(response_body))
 
         @syncer.enqueue_updates([file])
+
+        @syncer.start_threads
         @syncer.wait!
       end
 
@@ -287,7 +294,7 @@ module ShopifyCLI
       def test_download_theme_with_ignores
         @syncer.ignore_filter = mock("IgnoreFilter")
         @syncer.ignore_filter.stubs(:ignore?).returns(false)
-        @syncer.ignore_filter.expects(:ignore?).with(@theme["assets/generated.css.liquid"]).returns(true)
+        @syncer.ignore_filter.expects(:ignore?).with(@theme["assets/generated.css.liquid"].path).returns(true)
 
         @syncer.start_threads
         @syncer.checksums.replace(@theme.theme_files.map { |file| [file.relative_path.to_s, file.checksum] }.to_h)

@@ -168,7 +168,7 @@ module ShopifyCLI
           # Delete local files not present remotely
           missing_files = @theme.theme_files
             .reject { |file| checksums.key?(file.relative_path.to_s) }.uniq
-            .reject { |file| @ignore_filter&.ignore?(file) }
+            .reject { |file| ignore_file?(file) }
           missing_files.each do |file|
             @ctx.debug("rm #{file.relative_path}")
             file.delete
@@ -195,7 +195,7 @@ module ShopifyCLI
         # Already enqueued
         return if @pending.include?(operation)
 
-        if ignore?(operation)
+        if ignore_operation?(operation)
           @ctx.debug("ignore #{operation.file_path}")
           return
         end
@@ -253,8 +253,17 @@ module ShopifyCLI
         response
       end
 
-      def ignore?(operation)
+      def ignore_operation?(operation)
         path = operation.file_path
+        ignore_path?(path)
+      end
+
+      def ignore_file?(file)
+        path = file.path
+        ignore_path?(path)
+      end
+
+      def ignore_path?(path)
         ignored_by_ignore_filter?(path) || ignored_by_include_filter?(path)
       end
 

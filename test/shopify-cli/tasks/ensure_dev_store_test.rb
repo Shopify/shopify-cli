@@ -18,7 +18,7 @@ module ShopifyCLI
           EnsureDevStore.call(@context)
         end
         assert_includes exception.message, @context.message(
-          "core.tasks.ensure_dev_store.could_not_verify_store", "notther.myshopify.com"
+          "core.tasks.ensure_dev_store.could_not_verify_store"
         )
       end
 

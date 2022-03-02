@@ -138,6 +138,24 @@ module ShopifyCLI
           })
         end
 
+        def test_query_parameters_with_two_values
+          stub_request(:get, "https://dev-theme-server-store.myshopify.com/?_fd=0&pb=0&value=A&value=B")
+            .with(headers: default_proxy_headers)
+            .to_return(status: 200, body: "", headers: {})
+
+          stub_session_id_request
+
+          URI.expects(:encode_www_form)
+            .with([[:preview_theme_id, "123456789"], [:_fd, 0], [:pb, 0]])
+            .returns("_fd=0&pb=0&preview_theme_id=123456789")
+
+          URI.expects(:encode_www_form)
+            .with([["value", "A"], ["value", "B"], [:_fd, 0], [:pb, 0]])
+            .returns("_fd=0&pb=0&value=A&value=B")
+
+          request.get("/?value=A&value=B")
+        end
+
         def test_storefront_redirect_headers_are_rewritten
           stub_request(:get, "https://dev-theme-server-store.myshopify.com/?_fd=0&pb=0")
             .with(headers: default_proxy_headers)
@@ -228,6 +246,63 @@ module ShopifyCLI
           response = request.get("/")
 
           assert_equal("PROXY RESPONSE", response.body)
+        end
+
+        def test_patching_store_urls
+          ShopifyCLI::DB
+            .stubs(:get)
+            .with(:storefront_renderer_production_exchange_token)
+            .returns("TOKEN")
+
+          @syncer.stubs(:pending_updates).returns([@theme["layout/theme.liquid"]])
+          @proxy.stubs(:host).returns("127.0.0.1:9292")
+
+          stub_request(:post, "https://dev-theme-server-store.myshopify.com/?_fd=0&pb=0")
+            .with(
+              body: {
+                "_method" => "GET",
+                "replace_templates" => {
+                  "layout/theme.liquid" => @theme["layout/theme.liquid"].read,
+                },
+              },
+              headers: { "User-Agent" => "Shopify CLI" }
+            )
+            .to_return(status: 200, body: <<-PROXY_RESPONSE)
+              <html>
+                <body>
+                  <h1>My dev-theme-server-store.myshopify.com store!</h1>
+
+                  <a data-attr-1="http://dev-theme-server-store.myshopify.com/link">1</a>
+                  <a data-attr-2="https://dev-theme-server-store.myshopify.com/link">2</a>
+                  <a data-attr-3="//dev-theme-server-store.myshopify.com/link">3</a>
+                  <a data-attr-4='//dev-theme-server-store.myshopify.com/li"nk'>4</a>
+
+                  <a href="http://dev-theme-server-store.myshopify.com/link">5</a>
+                  <a href="https://dev-theme-server-store.myshopify.com/link">6</a>
+                  <a href="//dev-theme-server-store.myshopify.com/link">7</a>
+                </body>
+              </html>
+            PROXY_RESPONSE
+
+          stub_session_id_request
+          response = request.get("/")
+
+          assert_equal(<<-EXPECTED_RESPONSE, response.body)
+              <html>
+                <body>
+                  <h1>My dev-theme-server-store.myshopify.com store!</h1>
+
+                  <a data-attr-1="http://127.0.0.1:9292/link">1</a>
+                  <a data-attr-2="http://127.0.0.1:9292/link">2</a>
+                  <a data-attr-3="http://127.0.0.1:9292/link">3</a>
+                  <a data-attr-4='http://127.0.0.1:9292/li"nk'>4</a>
+
+                  <a href="http://dev-theme-server-store.myshopify.com/link">5</a>
+                  <a href="https://dev-theme-server-store.myshopify.com/link">6</a>
+                  <a href="//dev-theme-server-store.myshopify.com/link">7</a>
+                </body>
+              </html>
+          EXPECTED_RESPONSE
         end
 
         def test_do_not_pass_pending_files_to_core
