@@ -16,6 +16,7 @@ module ShopifyCLI
       API_VERSION = "unstable"
 
       attr_reader :checksums
+      attr_reader :checksums_mutex
       attr_accessor :include_filter
       attr_accessor :ignore_filter
 
@@ -38,6 +39,9 @@ module ShopifyCLI
         @threads = []
         # Mutex used to pause all threads when backing-off when hitting API rate limits
         @backoff_mutex = Mutex.new
+
+        # Mutex used to coordinate changes in the checksums (shared accross all threads)
+        @checksums_mutex = Mutex.new
 
         # Latest theme assets checksums. Updated on each upload.
         @checksums = {}
@@ -314,14 +318,17 @@ module ShopifyCLI
 
       def update_checksums(api_response)
         api_response.values.flatten.each do |asset|
-          if asset["key"]
+          next unless asset["key"]
+          checksums_mutex.synchronize do
             @checksums[asset["key"]] = asset["checksum"]
           end
         end
         # Generate .liquid asset files are reported twice in checksum:
         # once of generated, once for .liquid. We only keep the .liquid, that's the one we have
         # on disk.
-        @checksums.reject! { |key, _| @checksums.key?("#{key}.liquid") }
+        checksums_mutex.synchronize do
+          @checksums.reject! { |key, _| @checksums.key?("#{key}.liquid") }
+        end
       end
 
       def file_has_changed?(file)
