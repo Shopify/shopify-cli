@@ -347,8 +347,6 @@ module ShopifyCLI
           .returns([200, {}, {}])
 
         @syncer.upload_theme!(delay_low_priority_files: true)
-        # Still has pending assets to upload
-        refute_empty(@syncer)
 
         @syncer.wait!
         assert_empty(@syncer)
