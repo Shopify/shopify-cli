@@ -58,9 +58,7 @@ module ShopifyCLI
       end
 
       def handle_permissions_error
-        # theme = ShopifyCLI::Theme::Theme.new(ctx)
-        # @ctx.abort(ctx.message("theme.ensure_user", theme.shop))
-        @ctx.abort(ctx.message("theme.ensure_user", get_shop_or_abort))
+        @ctx.abort(@ctx.message("theme.ensure_user", get_shop_or_abort))
       end
 
     end
