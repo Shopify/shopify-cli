@@ -144,8 +144,9 @@ module ShopifyCLI
           .raises(ShopifyCLI::API::APIRequestForbiddenError)
 
         @api_client.expects(:get_shop_or_abort).returns(@shop)
-        @ctx.expects(:message).with("theme.ensure_user", @shop)
-        @ctx.expects(:abort)
+        @ctx.expects(:message).with("theme.ensure_user_error", @shop).returns("ensure_user_error")
+        @ctx.expects(:message).with("theme.ensure_user_try_this").returns("ensure_user_try_this")
+        @ctx.expects(:abort).with("ensure_user_error", "ensure_user_try_this")
 
         @api_client.post(
           path: path

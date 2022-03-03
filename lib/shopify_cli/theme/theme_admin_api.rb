@@ -61,7 +61,10 @@ module ShopifyCLI
       end
 
       def handle_permissions_error
-        @ctx.abort(@ctx.message("theme.ensure_user", get_shop_or_abort))
+        ensure_user_error = @ctx.message("theme.ensure_user_error", get_shop_or_abort)
+        ensure_user_try_this = @ctx.message("theme.ensure_user_try_this")
+
+        @ctx.abort(ensure_user_error, ensure_user_try_this)
       end
 
     end
