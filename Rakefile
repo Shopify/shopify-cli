@@ -2,6 +2,8 @@ ENV["SHOPIFY_CLI_TEST"] = "1"
 
 require_relative "bin/load_shopify"
 require_relative "utilities/utilities"
+require_relative "lib/shopify_cli/constants"
+require_relative "lib/shopify_cli/version"
 require "rake/testtask"
 require "rubocop/rake_task"
 require "bundler/gem_tasks"
@@ -31,6 +33,20 @@ task(default: [:test, :rubocop])
 desc("Start up irb with cli loaded")
 task :console do
   exec("irb", "-r", "./bin/load_shopify.rb", "-r", "byebug")
+end
+
+desc("Notifies a new version to Bugsnag")
+task :notify_version_to_bugsnag do
+  # This task runs at deployment time to notify
+  # Bugsnag about new versions. Because the deployment
+  # environment has Node, we can run the Bugsnag CLI
+  # through npx.
+  system(
+    { "npm_config_yes" => "true" },
+    "npx", "-q", "bugsnag-build-reporter",
+    "-k", ShopifyCLI::Constants::Bugsnag::API_KEY,
+    "-v", ShopifyCLI::VERSION
+  ) || abort
 end
 
 namespace :rdoc do

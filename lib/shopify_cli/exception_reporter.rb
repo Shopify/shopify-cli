@@ -46,6 +46,8 @@ module ShopifyCLI
       Bugsnag.notify(error) do |event|
         event.add_metadata(:device, metadata)
       end
+    rescue
+      nil
     end
 
     def self.report?(context:)
