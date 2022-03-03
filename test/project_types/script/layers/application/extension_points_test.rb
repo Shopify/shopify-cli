@@ -88,7 +88,7 @@ describe Script::Layers::Application::ExtensionPoints do
       let(:scripts_beta_languages) { true }
 
       it "returns a list of all languages implemented by non beta extension points" do
-        assert_equal ["assemblyscript", "rust", "wasm"], subject
+        assert_equal ["typescript", "rust", "wasm"], subject
       end
     end
 
@@ -96,7 +96,7 @@ describe Script::Layers::Application::ExtensionPoints do
       let(:scripts_beta_extension_points) { true }
 
       it "returns a list of non-beta languages implemented by all extension points" do
-        assert_equal ["assemblyscript", "tinygo"], subject
+        assert_equal ["typescript", "tinygo"], subject
       end
     end
 
@@ -105,7 +105,7 @@ describe Script::Layers::Application::ExtensionPoints do
       let(:scripts_beta_extension_points) { true }
 
       it "returns a list of all languages implemented by all extension points" do
-        assert_equal ["assemblyscript", "rust", "wasm", "tinygo"], subject
+        assert_equal ["typescript", "rust", "wasm", "tinygo"], subject
       end
     end
 
@@ -114,7 +114,7 @@ describe Script::Layers::Application::ExtensionPoints do
       let(:scripts_beta_extension_points) { false }
 
       it "returns a list of non-beta languages implemented by non beta extension points" do
-        assert_equal ["assemblyscript"], subject
+        assert_equal ["typescript"], subject
       end
     end
   end
@@ -137,7 +137,7 @@ describe Script::Layers::Application::ExtensionPoints do
       end
 
       it "should return all languages" do
-        assert_equal ["assemblyscript", "rust", "wasm"], subject
+        assert_equal ["typescript", "rust", "wasm"], subject
       end
     end
 
@@ -147,14 +147,14 @@ describe Script::Layers::Application::ExtensionPoints do
       end
 
       it "should return only fully supported languages" do
-        assert_equal ["assemblyscript"], subject
+        assert_equal ["typescript"], subject
       end
     end
   end
 
   describe ".supported_language?" do
     let(:type) { extension_point_type }
-    let(:language) { "assemblyscript" }
+    let(:language) { "typescript" }
     subject { Script::Layers::Application::ExtensionPoints.supported_language?(type: type, language: language) }
 
     describe "when ep does not exist" do
@@ -171,7 +171,7 @@ describe Script::Layers::Application::ExtensionPoints do
       end
 
       describe "when asking about supported language" do
-        let(:language) { "assemblyscript" }
+        let(:language) { "typescript" }
 
         it "should return true" do
           assert subject
@@ -209,7 +209,7 @@ describe Script::Layers::Application::ExtensionPoints do
       end
 
       describe "when asking about supported language" do
-        let(:language) { "assemblyscript" }
+        let(:language) { "typescript" }
 
         it "should return true" do
           assert subject
@@ -225,7 +225,7 @@ describe Script::Layers::Application::ExtensionPoints do
       end
 
       describe "when user capitalizes supported language" do
-        let(:language) { "AssemblyScript" }
+        let(:language) { "TypeScript" }
 
         it "should return true" do
           assert subject

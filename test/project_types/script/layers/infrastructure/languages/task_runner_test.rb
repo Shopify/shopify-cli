@@ -7,10 +7,10 @@ describe Script::Layers::Infrastructure::Languages::TaskRunner do
     subject { Script::Layers::Infrastructure::Languages::TaskRunner.for(@context, language) }
 
     describe "when the script language and compile type match an entry in the registry" do
-      let(:language) { "assemblyscript" }
+      let(:language) { "typescript" }
 
       it "should return the entry from the registry" do
-        Script::Layers::Infrastructure::Languages::AssemblyScriptTaskRunner
+        Script::Layers::Infrastructure::Languages::TypeScriptTaskRunner
           .expects(:new)
           .with(@context)
         subject

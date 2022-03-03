@@ -6,7 +6,7 @@ describe Script::Layers::Infrastructure::Languages::ProjectCreator do
   include TestHelpers::FakeFS
 
   let(:context) { TestHelpers::FakeContext.new }
-  let(:language) { "assemblyscript" }
+  let(:language) { "typescript" }
 
   let(:domain) { "fake-domain" }
   let(:extension_point_type) { "fake-ep-type" }
@@ -52,9 +52,17 @@ describe Script::Layers::Infrastructure::Languages::ProjectCreator do
         )
     end
 
-    describe "when the script language is AssemblyScript" do
-      it "should return the AssemblyScriptProjectCreator" do
-        assert_instance_of(Script::Layers::Infrastructure::Languages::AssemblyScriptProjectCreator, subject)
+    describe "when the script language is typescript" do
+      it "should return the TypeScriptProjectCreator" do
+        assert_instance_of(Script::Layers::Infrastructure::Languages::TypeScriptProjectCreator, subject)
+      end
+    end
+
+    describe "when the script language is wasm" do
+      let(:language) { "wasm" }
+
+      it "should return the WasmProjectCreator" do
+        assert_instance_of(Script::Layers::Infrastructure::Languages::WasmProjectCreator, subject)
       end
     end
 
