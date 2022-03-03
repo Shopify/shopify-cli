@@ -5,29 +5,14 @@ module Extension
 
       module Features
         class Argo
-          class Renderer
-            include SmartProperties
-
-            property! :name, accepts: String
-            property! :version, accepts: String
-
-            def self.to_proc
-              method(:new).to_proc
-            end
-          end
-
           include SmartProperties
 
           property! :surface, converts: :to_str
-          property! :renderer, converts: Renderer
+          property! :renderer_package_name, converts: :to_str
           property! :git_template, converts: :to_str
           property! :required_fields, accepts: Array, default: -> { [] }
           property! :required_shop_beta_flags, accepts: Array, default: -> { [] }
           property! :cli_package_name, accepts: String, converts: :to_str, default: ""
-
-          def renderer_package_name
-            renderer.name
-          end
         end
 
         def self.build(feature_set_attributes)

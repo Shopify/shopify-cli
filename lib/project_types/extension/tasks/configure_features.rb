@@ -52,19 +52,13 @@ module Extension
         {
           admin: {
             git_template: "https://github.com/Shopify/admin-ui-extensions-template",
-            renderer: {
-              name: "@shopify/admin-ui-extensions",
-              version: "latest"
-            },
+            renderer_package_name: "@shopify/admin-ui-extensions",
             required_fields: [:shop, :api_key],
             cli_package_name: "@shopify/admin-ui-extensions-run",
           },
           checkout: {
             git_template: "https://github.com/Shopify/checkout-ui-extensions-template",
-            renderer: {
-              name: "@shopify/checkout-ui-extensions",
-              version: "latest"
-            },
+            renderer_package_name: "@shopify/checkout-ui-extensions",
             required_fields: [:shop],
             cli_package_name: "@shopify/checkout-ui-extensions-run",
           },
