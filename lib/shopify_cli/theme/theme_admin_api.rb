@@ -10,6 +10,7 @@ module ShopifyCLI
 
       def get(path:, **args)
         rest_request(
+          method: "GET",
           path: path,
           **args
         )
