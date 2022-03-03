@@ -3,6 +3,8 @@ module ShopifyCLI
     class ThemeAdminAPI
       API_VERSION = "unstable"
 
+      attr_reader :shop
+
       def initialize(ctx, shop = nil)
         @ctx = ctx
         @shop = shop || get_shop_or_abort
