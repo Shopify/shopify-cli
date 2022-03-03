@@ -28,7 +28,7 @@ module Extension
           %w[product_subscription checkout_ui_extension checkout_post_purchase].each do |type|
             renderer = ServerConfig::DevelopmentRenderer.find(type)
             refute_nil renderer
-            refute_equal "latest", renderer.version
+            refute_equal("latest", renderer.version)
             refute_empty renderer.version
           end
         end
