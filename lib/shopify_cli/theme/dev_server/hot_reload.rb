@@ -1,6 +1,7 @@
 # frozen_string_literal: true
 
 require_relative "hot_reload/remote_file_reloader"
+require_relative "hot_reload/sections_index"
 
 module ShopifyCLI
   module Theme
@@ -13,6 +14,7 @@ module ShopifyCLI
           @mode = mode
           @streams = SSE::Streams.new
           @remote_file_reloader = RemoteFileReloader.new(ctx, theme: @theme, streams: @streams)
+          @sections_index = SectionsIndex.new(@theme)
           @watcher = watcher
           @watcher.add_observer(self, :notify_streams_of_file_change)
           @ignore_filter = ignore_filter
@@ -78,7 +80,10 @@ module ShopifyCLI
         end
 
         def params_js
-          env = { mode: @mode }
+          env = {
+            mode: @mode,
+            section_names_by_type: @sections_index.section_names_by_type,
+          }
           <<~JS
             (() => {
               window.__SHOPIFY_CLI_ENV__ = #{env.to_json};

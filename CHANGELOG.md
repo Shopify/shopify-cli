@@ -2,6 +2,9 @@ From version 2.6.0, the sections in this file adhere to the [keep a changelog](h
 
 ## [Unreleased]
 
+### Fixed
+* [#2121](https://github.com/Shopify/shopify-cli/pull/2121): Fix the hot-reload to work when the section name is not equal to the type
+
 ## Version 2.15.1
 
 ### Added
