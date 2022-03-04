@@ -18,7 +18,7 @@ module Extension
         def self.find(type)
           case type.downcase
           when "product_subscription"
-            new(name: "@shopify/admin-ui-extensions", version: "~> 1.0.1")
+            new(name: "@shopify/admin-ui-extensions", version: "^1.0.1")
           when "checkout_ui_extension"
             new(name: "@shopify/checkout-ui-extensions", version: "~> 0.14.0")
           when "checkout_post_purchase"
