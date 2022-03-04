@@ -1,6 +1,8 @@
 From version 2.6.0, the sections in this file adhere to the [keep a changelog](https://keepachangelog.com/en/1.0.0/) specification.
 
 ## [Unreleased]
+### Fixed
+* [#2086](https://github.com/Shopify/shopify-cli/pull/2086): Improve check of dependency versions
 
 ## Version 2.13.0
 
