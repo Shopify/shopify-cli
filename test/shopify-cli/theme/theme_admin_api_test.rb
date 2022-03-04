@@ -47,7 +47,7 @@ module ShopifyCLI
         request_params = {
           method: "PUT",
           path: path,
-          body: body
+          body: body,
         }
 
         expect_correct_request_arguments(request_params)
@@ -67,7 +67,7 @@ module ShopifyCLI
         request_params = {
           method: "POST",
           path: path,
-          body: body
+          body: body,
         }
 
         expect_correct_request_arguments(request_params)
@@ -105,8 +105,8 @@ module ShopifyCLI
           method: "POST",
           path: "themes.json",
           query: "query",
-          body: JSON.generate({ theme: {}}),
-          token: "token123"
+          body: JSON.generate({ theme: {} }),
+          token: "token123",
         }
 
         ShopifyCLI::AdminAPI.expects(:rest_request)
@@ -121,7 +121,7 @@ module ShopifyCLI
 
         request_params = {
           method: "POST",
-          path: path
+          path: path,
         }
 
         expect_correct_request_arguments(request_params)
@@ -136,7 +136,7 @@ module ShopifyCLI
         path = "themes.json"
         request_params = {
           method: "POST",
-          path: path
+          path: path,
         }
 
         ShopifyCLI::AdminAPI.expects(:rest_request)
@@ -159,7 +159,6 @@ module ShopifyCLI
         ShopifyCLI::AdminAPI.expects(:rest_request)
           .with(@ctx, shop: @shop, api_version: @api_version, **request_params)
       end
-
     end
   end
 end

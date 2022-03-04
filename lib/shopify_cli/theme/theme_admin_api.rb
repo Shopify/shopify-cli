@@ -66,7 +66,6 @@ module ShopifyCLI
 
         @ctx.abort(ensure_user_error, ensure_user_try_this)
       end
-
     end
   end
 end
