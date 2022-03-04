@@ -10,8 +10,22 @@ module Theme
 
         def convert(parser)
           argv = parser.default_argv
-          option_index = argv.index { |v| options.include?(v) }
+          values = []
 
+          option_indexes(argv).each do |option_index|
+            values += option_values(argv, parser, option_index)
+          end
+
+          values
+        end
+
+        def options
+          raise "`#{self.class.name}#options` must be defined"
+        end
+
+        private
+
+        def option_values(argv, parser, option_index)
           return [] if option_index.nil?
 
           start_index = option_index + 1
@@ -26,11 +40,12 @@ module Theme
           values
         end
 
-        def options
-          raise "`#{self.class.name}#options` must be defined"
+        def option_indexes(argv)
+          argv
+            .each_with_index
+            .select { |item, _index| options.include?(item) }
+            .map(&:last)
         end
-
-        private
 
         def options_map(parser)
           map = {}

@@ -30,11 +30,11 @@ module Theme
         parser.on("-p", "--publish") { flags[:publish] = true }
         parser.on("-o", "--only=PATTERN", Conversions::IncludeGlob) do |pattern|
           flags[:includes] ||= []
-          flags[:includes] += pattern
+          flags[:includes] |= pattern
         end
         parser.on("-x", "--ignore=PATTERN", Conversions::IgnoreGlob) do |pattern|
           flags[:ignores] ||= []
-          flags[:ignores] += pattern
+          flags[:ignores] |= pattern
         end
       end
 

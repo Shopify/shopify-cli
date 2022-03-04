@@ -18,8 +18,9 @@ module Theme
 
         actual_params = Conversions::BaseGlob.convert(parser)
         expected_params = [
-          "layout/password.liquid",
+          "layout/password1.liquid",
           "layout/theme.liquid",
+          "layout/password2.liquid",
         ]
 
         assert_equal(expected_params, actual_params)
@@ -54,11 +55,13 @@ module Theme
           "push",
           "-d",
           "--only",
-          "layout/password.liquid",
+          "layout/password1.liquid",
           "layout/theme.liquid",
           "--ignore",
           "sections/announcement-bar.liquid",
           "sections/contact-form.liquid",
+          "--only",
+          "layout/password2.liquid",
         ]
       end
 
