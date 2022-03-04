@@ -8,16 +8,7 @@ module Script
           def call(ctx:, task_runner:, script_project:, library:)
             CLI::UI::Frame.open(ctx.message("script.application.building")) do
               UI::StrictSpinner.spin(ctx.message("script.application.building_script")) do |spinner|
-                script_content = task_runner.build
-                metadata_file_location = task_runner.metadata_file_location
-                metadata = Infrastructure::MetadataRepository.new(ctx: ctx).get_metadata(metadata_file_location)
-
-                Infrastructure::PushPackageRepository.new(ctx: ctx).create_push_package(
-                  script_project: script_project,
-                  script_content: script_content,
-                  metadata: metadata,
-                  library: library,
-                )
+                task_runner.build
                 spinner.update_title(ctx.message("script.application.built"))
               end
             rescue StandardError => e

@@ -45,7 +45,7 @@ describe Script::Layers::Infrastructure::Languages::WasmTaskRunner do
 
     describe "when there is an existing .wasm file" do
       let(:wasm) { "some compiled code" }
-      let(:wasmfile) { "script.wasm" }
+      let(:wasmfile) { "index.wasm" }
 
       before do
         ctx.write(wasmfile, wasm)

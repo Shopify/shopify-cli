@@ -5,7 +5,7 @@ module Script
     module Infrastructure
       module Languages
         class WasmTaskRunner < TaskRunner
-          BYTECODE_FILE = "script.wasm"
+          BYTECODE_FILE = "build/index.wasm"
 
           def dependencies_installed?
             true
@@ -22,6 +22,7 @@ module Script
           end
 
           def build
+            # raise Errors::WebAssemblyBinaryNotFoundError
             raise Errors::WebAssemblyBinaryNotFoundError unless ctx.file_exist?(BYTECODE_FILE)
             ctx.binread(BYTECODE_FILE)
           end
