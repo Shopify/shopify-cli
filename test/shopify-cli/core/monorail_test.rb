@@ -33,7 +33,7 @@ module ShopifyCLI
 
         # When
         got = Core::Monorail.full_command(create_command, ["rails"], resolved_command: ["create"])
-        
+
         # Then
         assert_equal ["create", "rails"], got
       end
