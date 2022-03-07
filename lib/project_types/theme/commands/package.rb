@@ -15,6 +15,7 @@ module Theme
         sections
         snippets
         templates
+        release-notes.md
       ]
 
       def call(args, _name)
