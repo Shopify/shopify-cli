@@ -1,6 +1,7 @@
 From version 2.6.0, the sections in this file adhere to the [keep a changelog](https://keepachangelog.com/en/1.0.0/) specification.
 
 ## [Unreleased]
+* [#2126](https://github.com/Shopify/shopify-cli/pull/2126): Use javy version 0.2.1
 
 ## Version 2.13.0
 
