@@ -135,8 +135,8 @@ module Script
             "\nbuild: npx shopify-scripts-toolchain-as build --src src/shopify_main.ts --binary build/<script_name>.wasm --metadata build/metadata.json -- --lib node_modules --optimize --use Date=",
 
           web_assembly_binary_not_found: "Wasm binary not found.",
-          web_assembly_binary_not_found_suggestion: "Check that there is a valid Wasm binary in the root directory" \
-          "Your Wasm binary should match the script name: <script_name>.wasm",
+          web_assembly_binary_not_found_suggestion: "Check that a valid Wasm binary is present in the root directory. " \
+          "The Wasm binary's filename must be 'script.wasm'.",
 
           project_config_not_found: "Internal error - Script can't be created because the project's config file is missing from the repository.",
 
