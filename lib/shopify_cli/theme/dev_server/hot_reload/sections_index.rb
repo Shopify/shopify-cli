@@ -31,7 +31,7 @@ module ShopifyCLI
 
           def section_hash(file)
             content = JSON.parse(file.read)
-            return [] if content.is_a?(Array)
+            return [] unless content.is_a?(Hash)
 
             sections = content["sections"]
             return [] if sections.nil?
