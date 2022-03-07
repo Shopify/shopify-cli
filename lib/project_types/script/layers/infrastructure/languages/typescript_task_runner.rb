@@ -18,6 +18,8 @@ module Script
 
           def build
             compile
+          rescue Errors::SystemCallFailureError => e
+            raise Errors::BuildError, e.out
           end
 
           def install_dependencies
