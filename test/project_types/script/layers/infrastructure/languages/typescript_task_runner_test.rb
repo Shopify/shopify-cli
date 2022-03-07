@@ -35,31 +35,9 @@ describe Script::Layers::Infrastructure::Languages::TypeScriptTaskRunner do
       end
     end
 
-    it "should raise an error if the generated web assembly is not found" do
-      ctx.write("package.json", JSON.generate(package_json))
-      ctx
-        .expects(:capture2e)
-        .with("npm run build")
-        .once
-        .returns(["output", mock(success?: true)])
-
-      ctx
-        .expects(:capture2e)
-        .with("npm run gen-metadata")
-        .once
-        .returns(["output", mock(success?: true)])
-
-      assert_raises(Script::Layers::Infrastructure::Errors::WebAssemblyBinaryNotFoundError) { subject }
-    end
-
-    describe "when index.wasm exists" do
-      let(:wasm) { "some compiled code" }
-      let(:wasmfile) { "build/index.wasm" }
-
+    describe "when build script exists" do
       before do
         ctx.write("package.json", JSON.generate(package_json))
-        ctx.mkdir_p(File.dirname(wasmfile))
-        ctx.write(wasmfile, wasm)
       end
 
       it "triggers the compilation and metadata generation processes" do
@@ -75,13 +53,11 @@ describe Script::Layers::Infrastructure::Languages::TypeScriptTaskRunner do
           .once
           .returns(["output", mock(success?: true)])
 
-        assert ctx.file_exist?(wasmfile)
-        assert_equal wasm, subject
-        refute ctx.file_exist?(wasmfile)
+        subject
       end
     end
 
-    it "should raise error without command output on failure" do
+    it "should raise build error when fails" do
       output = "error_output"
       File.expects(:read).with("package.json").once.returns(JSON.generate(package_json))
       File.expects(:read).never
@@ -89,7 +65,7 @@ describe Script::Layers::Infrastructure::Languages::TypeScriptTaskRunner do
         .stubs(:capture2e)
         .returns([output, mock(success?: false)])
 
-      assert_raises(Script::Layers::Infrastructure::Errors::SystemCallFailureError, output) do
+      assert_raises(Script::Layers::Infrastructure::Errors::BuildError, output) do
         subject
       end
     end

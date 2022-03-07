@@ -5,7 +5,7 @@ module Script
     module Application
       class BuildScript
         class << self
-          def call(ctx:, task_runner:, script_project:, library:)
+          def call(ctx:, task_runner:)
             CLI::UI::Frame.open(ctx.message("script.application.building")) do
               UI::StrictSpinner.spin(ctx.message("script.application.building_script")) do |spinner|
                 task_runner.build
