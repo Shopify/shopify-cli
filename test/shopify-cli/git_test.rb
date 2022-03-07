@@ -176,7 +176,7 @@ module ShopifyCLI
 
     def in_repo
       Dir.mktmpdir do |dir|
-        system("git init #{Shellwords.escape(dir)}> /dev/null")
+        system("git init --initial-branch=main #{Shellwords.escape(dir)}> /dev/null")
         git_dir = File.join(dir, ".git")
         yield(File.join(git_dir))
       end
