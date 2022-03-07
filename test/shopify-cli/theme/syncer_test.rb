@@ -564,6 +564,29 @@ module ShopifyCLI
         @syncer.unlock_io!
       end
 
+      def test_update_checksums_without_checksums_mutex
+        api_value = { "key" => "key", "checksum" => "checksum" }
+        api_response = stub(values: [api_value])
+        checksums_mutex = stub(synchronize: nil)
+
+        @syncer.stubs(:checksums_mutex).returns(checksums_mutex)
+
+        @syncer.checksums.expects(:[]=).never
+        @syncer.checksums.expects(:reject!).never
+
+        @syncer.send(:update_checksums, api_response)
+      end
+
+      def test_update_checksums_with_checksums_mutex
+        api_value = { "key" => "key", "checksum" => "checksum" }
+        api_response = stub(values: [api_value])
+
+        @syncer.checksums.expects(:[]=).once
+        @syncer.checksums.expects(:reject!).once
+
+        @syncer.send(:update_checksums, api_response)
+      end
+
       private
 
       def time_freeze(&block)
