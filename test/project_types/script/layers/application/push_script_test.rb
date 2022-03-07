@@ -90,8 +90,6 @@ describe Script::Layers::Application::PushScript do
         Script::Layers::Application::BuildScript.expects(:call).with(
           ctx: @context,
           task_runner: task_runner,
-          script_project: script_project,
-          library: library
         )
 
         capture_io { subject }
@@ -105,8 +103,6 @@ describe Script::Layers::Application::PushScript do
           Script::Layers::Application::BuildScript.expects(:call).with(
             ctx: @context,
             task_runner: task_runner,
-            script_project: script_project,
-            library: library
           )
 
           capture_io { subject }

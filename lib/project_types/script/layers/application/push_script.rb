@@ -28,7 +28,7 @@ module Script
               language: script_project.language,
               version: task_runner.library_version(library_name),
             } if library_name
-            BuildScript.call(ctx: ctx, task_runner: task_runner, script_project: script_project, library: library_data)
+            BuildScript.call(ctx: ctx, task_runner: task_runner)
 
             metadata_file_location = task_runner.metadata_file_location
             metadata = Infrastructure::MetadataRepository.new(ctx: ctx).get_metadata(metadata_file_location)
