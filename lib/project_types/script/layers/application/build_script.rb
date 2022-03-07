@@ -11,16 +11,10 @@ module Script
                 task_runner.build
                 spinner.update_title(ctx.message("script.application.built"))
               end
-            rescue StandardError => e
+            rescue Infrastructure::Errors::BuildError => e
               CLI::UI::Frame.with_frame_color_override(:red) do
                 ctx.puts("\n{{red:#{e.message}}}")
               end
-              errors = [
-                Infrastructure::Errors::BuildScriptNotFoundError,
-                Infrastructure::Errors::WebAssemblyBinaryNotFoundError,
-              ]
-
-              raise Infrastructure::Errors::BuildError unless errors.any? { |err| e.is_a?(err) }
               raise
             end
           end
