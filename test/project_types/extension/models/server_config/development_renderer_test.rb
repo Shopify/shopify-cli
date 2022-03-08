@@ -12,8 +12,24 @@ module Extension
         def test_extension_config_renderer_can_be_instantiated_with_valid_attributes
           assert_nothing_raised do
             ServerConfig::DevelopmentRenderer.new(
-              name: "@shopify/checkout-ui-extensions"
+              name: "@shopify/checkout-ui-extensions",
+              version: "~> 0.1.0"
             )
+          end
+        end
+
+        def test_version_fallback_is_latest
+          ServerConfig::DevelopmentRenderer.new(name: "@shopify/checkout-ui-extensions",).tap do |renderer|
+            assert_equal "latest", renderer.version
+          end
+        end
+
+        def test_find_sets_specific_versions
+          %w[product_subscription checkout_ui_extension checkout_post_purchase].each do |type|
+            renderer = ServerConfig::DevelopmentRenderer.find(type)
+            refute_nil renderer
+            refute_equal("latest", renderer.version)
+            refute_empty renderer.version
           end
         end
 
