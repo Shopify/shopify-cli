@@ -17,7 +17,16 @@ module Theme
           "zip",
           "-r",
           "Example-1.0.0.zip",
-          *Theme::Command::Package::THEME_DIRECTORIES,
+          *%w[
+            assets
+            config
+            layout
+            locales
+            sections
+            snippets
+            templates
+            release-notes.md
+          ],
           chdir: theme_root
         )
 
