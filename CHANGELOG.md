@@ -6,6 +6,7 @@ From version 2.6.0, the sections in this file adhere to the [keep a changelog](h
 
 ### Fixed
 * [#2112](https://github.com/Shopify/shopify-cli/pull/2112): Fix intermittent error ("can't add a new key into hash during iteration") in the `theme push` command
+* [#2088](https://github.com/Shopify/shopify-cli/pull/2088): Update theme-check to 1.10.1
 
 ## Version 2.13.0
 

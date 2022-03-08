@@ -48,5 +48,5 @@ Gem::Specification.new do |spec|
   # Whereas if we were to have "~> 1.9", that version would still be satisfied and thus not upgraded.
   # Both shopify-cli and theme-check gems are owned and developed by Shopify.
   # These gems are currently being actively developed and it's easiest to update them together.
-  spec.add_dependency("theme-check", "~> 1.9.0")
+  spec.add_dependency("theme-check", "~> 1.10.1")
 end
