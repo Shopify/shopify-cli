@@ -58,7 +58,7 @@ module TestHelpers
       {
         "domain" => "fake-domain",
         "libraries" => {
-          "assemblyscript" => {
+          "typescript" => {
             "repo" => "fake-repo",
             "package" => type,
             "version" => "1",

@@ -5,7 +5,7 @@ module ShopifyCLI
     module EntryPoint
       class << self
         def call(args, ctx = Context.new)
-          if ctx.development?
+          if ctx.development? && !ctx.testing?
             ctx.warn(
               ctx.message("core.warning.development_version", File.join(ShopifyCLI::ROOT, "bin", ShopifyCLI::TOOL_NAME))
             )

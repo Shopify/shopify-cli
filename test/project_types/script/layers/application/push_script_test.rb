@@ -13,7 +13,7 @@ describe Script::Layers::Application::PushScript do
   let(:metadata_repository) { TestHelpers::FakeMetadataRepository.new }
   let(:metadata) { metadata_repository.get_metadata(metadata_file_location) }
   let(:library_version) { "1.0.0" }
-  let(:library_language) { "assemblyscript" }
+  let(:library_language) { "typescript" }
   let(:library_name) { "@shopify/fake-library-name" }
   let(:library) do
     {
@@ -81,11 +81,12 @@ describe Script::Layers::Application::PushScript do
         script_uploader_instance.expects(:upload).returns(url)
         Script::Layers::Infrastructure::ScriptUploader
           .expects(:new).returns(script_uploader_instance)
+
+        Script::Layers::Application::ProjectDependencies
+          .expects(:install).with(ctx: @context, task_runner: task_runner)
       end
 
       it "should prepare and push script" do
-        Script::Layers::Application::ProjectDependencies
-          .expects(:install).with(ctx: @context, task_runner: task_runner)
         Script::Layers::Application::BuildScript.expects(:call).with(
           ctx: @context,
           task_runner: task_runner,
@@ -101,8 +102,6 @@ describe Script::Layers::Application::PushScript do
       describe "when the script project's language is wasm" do
         let(:library_language) { "wasm" }
         it "should not raise LanguageLibraryForAPINotFoundError" do
-          Script::Layers::Application::ProjectDependencies
-            .expects(:install).with(ctx: @context, task_runner: task_runner)
           Script::Layers::Application::BuildScript.expects(:call).with(
             ctx: @context,
             task_runner: task_runner,
@@ -123,6 +122,8 @@ describe Script::Layers::Application::PushScript do
       end
 
       it "should raise APILibraryNotFoundError" do
+        Script::Layers::Application::ProjectDependencies
+          .expects(:install).with(ctx: @context, task_runner: task_runner)
         error = assert_raises(Script::Layers::Infrastructure::Errors::APILibraryNotFoundError) { subject }
         assert_equal library_name, error.library_name
       end

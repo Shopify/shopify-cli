@@ -14,6 +14,30 @@ module ShopifyCLI
         super
       end
 
+      def test_full_command
+        # Given
+        create_subcommand_registry = mock("create_subcommand_registry")
+        create_command = mock("create_command")
+        create_command.stubs(:subcommand_registry)
+          .returns(create_subcommand_registry)
+        rails_subcommand_registry = mock("rails_subcommand_registry")
+        rails_command = mock("rails_command")
+        rails_command.stubs(:subcommand_registry).returns(rails_subcommand_registry)
+        create_subcommand_registry
+          .stubs(:lookup_command)
+          .with("rails")
+          .returns([rails_command, "rails"])
+        rails_subcommand_registry
+          .stubs(:lookup_command)
+          .returns(nil)
+
+        # When
+        got = Core::Monorail.full_command(create_command, ["rails"], resolved_command: ["create"])
+
+        # Then
+        assert_equal ["create", "rails"], got
+      end
+
       def test_log_event_contains_schema_and_payload_values
         enable_reporting(true)
         ShopifyCLI::Shopifolk.expects(:acting_as_shopify_organization?).returns(true)

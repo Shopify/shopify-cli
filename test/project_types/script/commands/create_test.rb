@@ -14,7 +14,7 @@ module Script
         super
         ShopifyCLI::Core::Monorail.stubs(:log).yields
         @context = TestHelpers::FakeContext.new
-        @language = "assemblyscript"
+        @language = "typescript"
         @title = "title"
         @ep_type = "discount"
         @script_project = TestHelpers::FakeScriptProjectRepository.new.create(
@@ -23,7 +23,7 @@ module Script
           title: @title
         )
         @branch = "master"
-        Layers::Application::ExtensionPoints.stubs(:languages).returns(%w(assemblyscript))
+        Layers::Application::ExtensionPoints.stubs(:languages).returns(%w(typescript))
         ShopifyCLI::Tasks::EnsureAuthenticated.stubs(:call)
       end
 

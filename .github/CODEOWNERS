@@ -3,3 +3,8 @@
 
 /lib/project_types/script/ @shopify/scripts-platform
 /test/project_types/script/ @shopify/scripts-platform
+
+/lib/project_types/theme/ @shopify/theme-platform-dev-experience
+/lib/shopify_cli/theme/ @shopify/theme-platform-dev-experience
+/test/project_types/theme/ @shopify/theme-platform-dev-experience
+/test/shopify-cli/theme/ @shopify/theme-platform-dev-experience

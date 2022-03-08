@@ -1,0 +1,3 @@
+deploy:
+  post:
+    - bundle exec rake notify_version_to_bugsnag

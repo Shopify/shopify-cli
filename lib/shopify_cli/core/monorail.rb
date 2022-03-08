@@ -17,11 +17,7 @@ module ShopifyCLI
 
         def log(name, args, &block) # rubocop:disable Lint/UnusedMethodArgument
           command, command_name = Commands::Registry.lookup_command(name)
-          final_command = [command_name]
-          if command
-            subcommand, subcommand_name = command.subcommand_registry.lookup_command(args.first)
-            final_command << subcommand_name if subcommand
-          end
+          full_command = self.full_command(command, args, resolved_command: [command_name])
 
           start_time = now_in_milliseconds
           err = nil
@@ -35,9 +31,21 @@ module ShopifyCLI
             # If there's an error, we don't prompt from here and we let the exception
             # reporter do that.
             if report?(prompt: err.nil?)
-              send_event(start_time, final_command, args - final_command, err&.message)
+              send_event(start_time, full_command, args - full_command, err&.message)
             end
           end
+        end
+
+        def full_command(command, args, resolved_command:)
+          resolved_command = resolved_command.dup
+          if command
+            subcommand, subcommand_name = command.subcommand_registry.lookup_command(args.first)
+            resolved_command << subcommand_name if subcommand
+            if subcommand&.subcommand_registry
+              resolved_command = full_command(subcommand, args.drop(1), resolved_command: resolved_command)
+            end
+          end
+          resolved_command
         end
 
         private

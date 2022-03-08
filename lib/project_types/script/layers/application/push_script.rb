@@ -21,13 +21,13 @@ module Script
               api: script_project.extension_point_type
             ) if library.nil? && (script_project.language != "wasm")
 
+            ProjectDependencies.install(ctx: ctx, task_runner: task_runner)
+
             library_name = library&.package
             library_data = {
               language: script_project.language,
               version: task_runner.library_version(library_name),
             } if library_name
-
-            ProjectDependencies.install(ctx: ctx, task_runner: task_runner)
             BuildScript.call(ctx: ctx, task_runner: task_runner, script_project: script_project, library: library_data)
 
             metadata_file_location = task_runner.metadata_file_location

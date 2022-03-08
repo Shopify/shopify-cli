@@ -40,4 +40,4 @@ Fixes #0000 <!-- link to issue if one exists -->
 - [ ] I've added a CHANGELOG entry for this PR (if the change is public-facing)
 - [ ] I've considered possible cross-platform impacts (Mac, Linux, Windows).
 - [ ] I've left the version number as is (we'll handle incrementing this when releasing).
-- [ ] I've included any post-release steps in the section above.
+- [ ] I've included any post-release steps in the section above (if needed).

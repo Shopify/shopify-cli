@@ -347,8 +347,6 @@ module ShopifyCLI
           .returns([200, {}, {}])
 
         @syncer.upload_theme!(delay_low_priority_files: true)
-        # Still has pending assets to upload
-        refute_empty(@syncer)
 
         @syncer.wait!
         assert_empty(@syncer)
@@ -564,6 +562,29 @@ module ShopifyCLI
             Then some
         EOS
         @syncer.unlock_io!
+      end
+
+      def test_update_checksums_without_checksums_mutex
+        api_value = { "key" => "key", "checksum" => "checksum" }
+        api_response = stub(values: [api_value])
+        checksums_mutex = stub(synchronize: nil)
+
+        @syncer.stubs(:checksums_mutex).returns(checksums_mutex)
+
+        @syncer.checksums.expects(:[]=).never
+        @syncer.checksums.expects(:reject!).never
+
+        @syncer.send(:update_checksums, api_response)
+      end
+
+      def test_update_checksums_with_checksums_mutex
+        api_value = { "key" => "key", "checksum" => "checksum" }
+        api_response = stub(values: [api_value])
+
+        @syncer.checksums.expects(:[]=).once
+        @syncer.checksums.expects(:reject!).once
+
+        @syncer.send(:update_checksums, api_response)
       end
 
       private
