@@ -1,4 +1,5 @@
 # frozen_string_literal: true
+
 require "shopify_cli"
 
 module Extension
@@ -12,7 +13,7 @@ module Extension
 
       class << self
         def supported?(type)
-          binary_installed? && type_supported?(type) && beta_enabled?
+          binary_installed? && type_supported?(type) && type_enabled?(type)
         end
 
         private
@@ -27,6 +28,11 @@ module Extension
 
         def beta_enabled?
           ShopifyCLI::Shopifolk.check && ShopifyCLI::Feature.enabled?(:extension_server_beta)
+        end
+
+        # Some types are enabled unconditionally; others require beta_enabled
+        def type_enabled?(type)
+          beta_enabled? || "checkout_ui_extension" == type.downcase
         end
       end
     end
