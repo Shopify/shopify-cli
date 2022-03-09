@@ -1,6 +1,8 @@
 From version 2.6.0, the sections in this file adhere to the [keep a changelog](https://keepachangelog.com/en/1.0.0/) specification.
 
 ## [Unreleased]
+
+### Changed
 * [#2126](https://github.com/Shopify/shopify-cli/pull/2126): Use javy version 0.2.1
 
 ### Added
@@ -9,6 +11,7 @@ From version 2.6.0, the sections in this file adhere to the [keep a changelog](h
 ### Fixed
 * [#2112](https://github.com/Shopify/shopify-cli/pull/2112): Fix intermittent error ("can't add a new key into hash during iteration") in the `theme push` command
 * [#2088](https://github.com/Shopify/shopify-cli/pull/2088): Update theme-check to 1.10.1
+* [#2130](https://github.com/Shopify/shopify-cli/pull/2130): Fix Homebrew installation.
 
 ## Version 2.13.0
 
