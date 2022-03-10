@@ -57,7 +57,7 @@ describe Script::Layers::Infrastructure::Languages::TypeScriptTaskRunner do
       end
     end
 
-    it "should raise build error when fails" do
+    it "should raise BuildError when fails" do
       output = "error_output"
       File.expects(:read).with("package.json").once.returns(JSON.generate(package_json))
       File.expects(:read).never
