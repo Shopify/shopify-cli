@@ -61,16 +61,10 @@ describe Script::Layers::Application::BuildScript do
       end
 
       describe "when non-build error" do
-        [
-          Script::Layers::Infrastructure::Errors::BuildScriptNotFoundError,
-          Script::Layers::Infrastructure::Errors::WebAssemblyBinaryNotFoundError,
-          StandardError,
-        ].each do |e|
-          it "it should re-raise #{e} when the raised error is #{e}" do
-            task_runner.expects(:build).raises(e)
-            capture_io do
-              assert_raises(e) { subject }
-            end
+        it "it should re-raise error when the raised error is not BuildError" do
+          task_runner.expects(:build).raises(StandardError)
+          capture_io do
+            assert_raises(StandardError) { subject }
           end
         end
       end
