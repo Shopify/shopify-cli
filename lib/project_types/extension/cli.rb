@@ -63,6 +63,7 @@ module Extension
       autoload :Build, Project.project_filepath("tasks/execute_commands/build")
       autoload :Create, Project.project_filepath("tasks/execute_commands/create")
       autoload :Serve, Project.project_filepath("tasks/execute_commands/serve")
+      autoload :OutdatedExtensionDetection, Project.project_filepath("tasks/execute_commands/outdated_extension_detection")
 
       class << self
         def build(*args)
