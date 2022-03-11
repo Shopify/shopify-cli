@@ -112,7 +112,7 @@ module ShopifyCLI
         ShopifyCLI::AdminAPI.expects(:rest_request)
           .with(@ctx, shop: @shop, api_version: @api_version, **request_params)
 
-        @api_client.send(:rest_request, request_params)
+        @api_client.send(:rest_request, **request_params)
       end
 
       def test_does_not_pass_nil_arguments
