@@ -25,6 +25,10 @@ module Extension
           SUPPORTED_EXTENSION_TYPES.include?(type.downcase)
         end
 
+        def type_supported?(type)
+          SUPPORTED_EXTENSION_TYPES.include?(type.downcase)
+        end
+
         private
 
         def binary_installed?

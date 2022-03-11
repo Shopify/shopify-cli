@@ -8,9 +8,9 @@ module Extension
 
       property :name
       property :version
-      property :scripts, accepts: Hash
-      property :dependencies, accepts: Hash
-      property :dev_dependencies, accepts: Hash
+      property :scripts, accepts: Hash, default: -> { {} }
+      property :dependencies, accepts: Hash, default: -> { {} }
+      property :dev_dependencies, accepts: Hash, default: -> { {} }
 
       def initialize(**config)
         super(**config.select { |property_name, _| self.class.properties.key?(property_name) })
@@ -26,6 +26,18 @@ module Extension
       def <=>(other)
         return nil unless name == other.name
         Semantic::Version.new(version) <=> Semantic::Version.new(other.version)
+      end
+
+      def script?(name)
+        scripts.key?(name)
+      end
+
+      def dependency?(name)
+        dependencies.key?(name)
+      end
+
+      def dev_dependency?(name)
+        dev_dependencies.key?(name)
       end
     end
   end
