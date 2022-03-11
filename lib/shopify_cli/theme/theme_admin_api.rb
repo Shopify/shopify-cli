@@ -42,7 +42,7 @@ module ShopifyCLI
         )
       end
 
-      def get_shop_or_abort
+      def get_shop_or_abort # rubocop:disable Naming/AccessorMethodName
         ShopifyCLI::AdminAPI.get_shop_or_abort(@ctx)
       end
 
