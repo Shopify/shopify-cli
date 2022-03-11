@@ -40,6 +40,7 @@ module ShopifyCLI
 
     property! :underscore_keys, accepts: [true, false], default: false, reader: :underscore_keys?
     property! :symbolize_keys, accepts: [true, false], default: false, reader: :symbolize_keys?
+    property! :shallow, accepts: [true, false], default: false, reader: :shallow?
     property! :associative_array_container,
       accepts: ->(c) { c.respond_to?(:new) && c.method_defined?(:[]=) },
       default: -> { Hash }
@@ -47,10 +48,10 @@ module ShopifyCLI
     def call(object)
       case object
       when Array
-        object.map(&self).map(&:value)
+        shallow? ? object.dup : object.map(&self).map(&:value)
       when Hash
         object.each.with_object(associative_array_container.new) do |(key, value), result|
-          result[transform_key(key)] = call(value).value
+          result[transform_key(key)] = shallow? ? value : call(value).value
         end
       else
         ShopifyCLI::Result.success(object)
