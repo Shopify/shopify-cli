@@ -7,6 +7,8 @@ module Theme
           Suite of commands for developing Shopify themes. See {{command:%1$s theme <command> --help}} for usage of each command.
             Usage: {{command:%1$s theme [ %2$s ]}}
         HELP
+        ensure_user_error: "You are not authorized to edit themes on %s.",
+        ensure_user_try_this: "Make sure you are a user of that store, and allowed to edit themes.",
 
         init: {
           help: <<~HELP,

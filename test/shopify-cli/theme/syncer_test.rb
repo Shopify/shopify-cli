@@ -129,9 +129,11 @@ module ShopifyCLI
         @syncer.start_threads
         ShopifyCLI::AdminAPI.expects(:rest_request).with(
           @ctx,
+          api_version: "unstable",
+          method: "GET",
           shop: @theme.shop,
           path: "themes/#{@theme.id}/assets.json",
-          api_version: "unstable",
+
         ).returns([
           200,
           {
@@ -153,8 +155,10 @@ module ShopifyCLI
         ShopifyCLI::AdminAPI.expects(:rest_request).with(
           @ctx,
           shop: @theme.shop,
-          path: "themes/#{@theme.id}/assets.json",
           api_version: "unstable",
+          method: "GET",
+          path: "themes/#{@theme.id}/assets.json",
+
         ).returns([
           200,
           {
@@ -373,9 +377,10 @@ module ShopifyCLI
         # Checksum request
         ShopifyCLI::AdminAPI.expects(:rest_request).with(
           @ctx,
-          shop: @theme.shop,
-          path: "themes/#{@theme.id}/assets.json",
           api_version: "unstable",
+          method: "GET",
+          shop: @theme.shop,
+          path: "themes/#{@theme.id}/assets.json"
         ).returns([
           200,
           { "assets" => response_assets },

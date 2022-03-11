@@ -25,15 +25,16 @@ module ShopifyCLI
         ShopifyCLI::AdminAPI.expects(:rest_request).with(
           @ctx,
           shop: shop,
-          path: "themes.json",
+          api_version: "unstable",
           method: "POST",
+          path: "themes.json",
           body: JSON.generate({
             theme: {
               name: theme_name,
               role: "development",
             },
           }),
-          api_version: "unstable",
+
         ).returns([
           201,
           "theme" => {
@@ -57,22 +58,25 @@ module ShopifyCLI
         ShopifyCLI::AdminAPI.expects(:rest_request).with(
           @ctx,
           shop: shop,
-          path: "themes/#{theme_id}.json",
           api_version: "unstable",
+          method: "GET",
+          path: "themes/#{theme_id}.json",
+
         ).raises(ShopifyCLI::API::APIRequestNotFoundError)
 
         ShopifyCLI::AdminAPI.expects(:rest_request).with(
           @ctx,
           shop: shop,
-          path: "themes.json",
+          api_version: "unstable",
           method: "POST",
+          path: "themes.json",
           body: JSON.generate({
             theme: {
               name: theme_name,
               role: "development",
             },
           }),
-          api_version: "unstable",
+
         ).returns([
           201,
           "theme" => {

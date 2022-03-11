@@ -7,13 +7,12 @@ require "forwardable"
 require_relative "syncer/error_reporter"
 require_relative "syncer/standard_reporter"
 require_relative "syncer/operation"
+require_relative "theme_admin_api"
 
 module ShopifyCLI
   module Theme
     class Syncer
       extend Forwardable
-
-      API_VERSION = "unstable"
 
       attr_reader :checksums
       attr_reader :checksums_mutex
@@ -48,6 +47,10 @@ module ShopifyCLI
 
         # Checksums of assets with errors.
         @error_checksums = []
+      end
+
+      def api_client
+        @api_client ||= ThemeAdminAPI.new(@ctx, @theme.shop)
       end
 
       def lock_io!
@@ -100,11 +103,8 @@ module ShopifyCLI
       end
 
       def fetch_checksums!
-        _status, response = ShopifyCLI::AdminAPI.rest_request(
-          @ctx,
-          shop: @theme.shop,
-          path: "themes/#{@theme.id}/assets.json",
-          api_version: API_VERSION,
+        _status, response = api_client.get(
+          path: "themes/#{@theme.id}/assets.json"
         )
         update_checksums(response)
       end
@@ -243,12 +243,8 @@ module ShopifyCLI
           asset[:attachment] = Base64.encode64(file.read)
         end
 
-        _status, body, response = ShopifyCLI::AdminAPI.rest_request(
-          @ctx,
-          shop: @theme.shop,
+        _status, body, response = api_client.put(
           path: "themes/#{@theme.id}/assets.json",
-          method: "PUT",
-          api_version: API_VERSION,
           body: JSON.generate(asset: asset)
         )
 
@@ -280,12 +276,8 @@ module ShopifyCLI
       end
 
       def get(file)
-        _status, body, response = ShopifyCLI::AdminAPI.rest_request(
-          @ctx,
-          shop: @theme.shop,
+        _status, body, response = api_client.get(
           path: "themes/#{@theme.id}/assets.json",
-          method: "GET",
-          api_version: API_VERSION,
           query: URI.encode_www_form("asset[key]" => file.relative_path.to_s),
         )
 
@@ -302,12 +294,8 @@ module ShopifyCLI
       end
 
       def delete(file)
-        _status, _body, response = ShopifyCLI::AdminAPI.rest_request(
-          @ctx,
-          shop: @theme.shop,
+        _status, _body, response = api_client.delete(
           path: "themes/#{@theme.id}/assets.json",
-          method: "DELETE",
-          api_version: API_VERSION,
           body: JSON.generate(asset: {
             key: file.relative_path.to_s,
           })
