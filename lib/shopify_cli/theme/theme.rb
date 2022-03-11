@@ -1,5 +1,6 @@
 # frozen_string_literal: true
 require_relative "file"
+require_relative "theme_admin_api"
 
 require "pathname"
 require "time"
@@ -59,7 +60,7 @@ module ShopifyCLI
       end
 
       def shop
-        AdminAPI.get_shop_or_abort(@ctx)
+        api_client.get_shop_or_abort
       end
 
       def editor_url
@@ -101,9 +102,7 @@ module ShopifyCLI
       def create
         raise InvalidThemeRole, "Can't create live theme. Use publish." if live?
 
-        _status, body = ShopifyCLI::AdminAPI.rest_request(
-          @ctx,
-          shop: shop,
+        _status, body = api_client.post(
           path: "themes.json",
           body: JSON.generate({
             theme: {
@@ -111,31 +110,21 @@ module ShopifyCLI
               role: role,
             },
           }),
-          method: "POST",
-          api_version: "unstable",
         )
 
         @id = body["theme"]["id"]
       end
 
       def delete
-        AdminAPI.rest_request(
-          @ctx,
-          shop: shop,
-          method: "DELETE",
-          path: "themes/#{id}.json",
-          api_version: "unstable",
+        api_client.delete(
+          path: "themes/#{id}.json"
         )
       end
 
       def publish
         return if live?
-        AdminAPI.rest_request(
-          @ctx,
-          shop: shop,
-          method: "PUT",
+        api_client.put(
           path: "themes/#{id}.json",
-          api_version: "unstable",
           body: JSON.generate(theme: {
             role: "main",
           })
@@ -205,23 +194,23 @@ module ShopifyCLI
         end
 
         def fetch_themes(ctx)
-          AdminAPI.rest_request(
-            ctx,
-            shop: AdminAPI.get_shop_or_abort(ctx),
-            path: "themes.json",
-            api_version: "unstable",
+          api_client = ThemeAdminAPI.new(ctx)
+
+          api_client.get(
+            path: "themes.json"
           )
         end
       end
 
       private
 
+      def api_client
+        @api_client ||= ThemeAdminAPI.new(@ctx)
+      end
+
       def load_info_from_api
-        _status, body = AdminAPI.rest_request(
-          @ctx,
-          shop: shop,
-          path: "themes/#{id}.json",
-          api_version: "unstable",
+        _status, body = api_client.get(
+          path: "themes/#{id}.json"
         )
 
         @name = body.dig("theme", "name")
