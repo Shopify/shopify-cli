@@ -42,7 +42,6 @@ module ShopifyCLI
 
           @watcher.filter_theme_files([absolute_path])
         end
-
       end
     end
   end
