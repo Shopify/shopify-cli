@@ -22,29 +22,31 @@ module Script
             ) if library.nil? && (script_project.language != "wasm")
 
             ProjectDependencies.install(ctx: ctx, task_runner: task_runner)
-
-            library_name = library&.package
-            library_data = {
-              language: script_project.language,
-              version: task_runner.library_version(library_name),
-            } if library_name
-            BuildScript.call(ctx: ctx, task_runner: task_runner, script_project: script_project, library: library_data)
-
-            metadata_file_location = task_runner.metadata_file_location
-            metadata = Infrastructure::MetadataRepository.new(ctx: ctx).get_metadata(metadata_file_location)
+            BuildScript.call(ctx: ctx, task_runner: task_runner)
 
             CLI::UI::Frame.open(ctx.message("script.application.pushing")) do
               UI::PrintingSpinner.spin(ctx, ctx.message("script.application.pushing_script")) do |p_ctx, spinner|
+                library_name = library&.package
+                library_data = {
+                  language: script_project.language,
+                  version: task_runner.library_version(library_name),
+                } if library_name
+
+                metadata_file_location = task_runner.metadata_file_location
+                metadata = Infrastructure::MetadataRepository.new(ctx: ctx).get_metadata(metadata_file_location)
+
                 package = Infrastructure::PushPackageRepository.new(ctx: p_ctx).get_push_package(
                   script_project: script_project,
                   metadata: metadata,
                   library: library_data,
                 )
+
                 script_service = Infrastructure::ServiceLocator.script_service(
                   ctx: p_ctx,
                   api_key: script_project.api_key
                 )
                 module_upload_url = Infrastructure::ScriptUploader.new(script_service).upload(package.script_content)
+
                 uuid = script_service.set_app_script(
                   uuid: package.uuid,
                   extension_point_type: package.extension_point_type,

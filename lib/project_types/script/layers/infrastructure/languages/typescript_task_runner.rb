@@ -18,7 +18,8 @@ module Script
 
           def build
             compile
-            bytecode
+          rescue Errors::SystemCallFailureError => e
+            raise Errors::BuildError, e.out
           end
 
           def install_dependencies
@@ -94,15 +95,6 @@ module Script
 
             raise Errors::BuildScriptNotFoundError,
               "Build script not found" if build_script.nil?
-          end
-
-          def bytecode
-            raise Errors::WebAssemblyBinaryNotFoundError unless ctx.file_exist?(BYTECODE_FILE)
-
-            contents = ctx.binread(BYTECODE_FILE)
-            ctx.rm(BYTECODE_FILE)
-
-            contents
           end
         end
       end

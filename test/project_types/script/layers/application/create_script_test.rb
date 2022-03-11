@@ -12,7 +12,7 @@ describe Script::Layers::Application::CreateScript do
   let(:ep) { extension_point_repository.get_extension_point(extension_point_type) }
   let(:task_runner) { stub }
 
-  let(:language) { "assemblyscript" }
+  let(:language) { "typescript" }
   let(:extension_point_type) { "payment-methods" }
   let(:example_config) { extension_point_repository.example_config(extension_point_type) }
   let(:domain) { example_config["domain"] }

@@ -129,9 +129,11 @@ module ShopifyCLI
         @syncer.start_threads
         ShopifyCLI::AdminAPI.expects(:rest_request).with(
           @ctx,
+          api_version: "unstable",
+          method: "GET",
           shop: @theme.shop,
           path: "themes/#{@theme.id}/assets.json",
-          api_version: "unstable",
+
         ).returns([
           200,
           {
@@ -153,8 +155,10 @@ module ShopifyCLI
         ShopifyCLI::AdminAPI.expects(:rest_request).with(
           @ctx,
           shop: @theme.shop,
-          path: "themes/#{@theme.id}/assets.json",
           api_version: "unstable",
+          method: "GET",
+          path: "themes/#{@theme.id}/assets.json",
+
         ).returns([
           200,
           {
@@ -373,9 +377,10 @@ module ShopifyCLI
         # Checksum request
         ShopifyCLI::AdminAPI.expects(:rest_request).with(
           @ctx,
-          shop: @theme.shop,
-          path: "themes/#{@theme.id}/assets.json",
           api_version: "unstable",
+          method: "GET",
+          shop: @theme.shop,
+          path: "themes/#{@theme.id}/assets.json"
         ).returns([
           200,
           { "assets" => response_assets },
@@ -562,6 +567,29 @@ module ShopifyCLI
             Then some
         EOS
         @syncer.unlock_io!
+      end
+
+      def test_update_checksums_without_checksums_mutex
+        api_value = { "key" => "key", "checksum" => "checksum" }
+        api_response = stub(values: [api_value])
+        checksums_mutex = stub(synchronize: nil)
+
+        @syncer.stubs(:checksums_mutex).returns(checksums_mutex)
+
+        @syncer.checksums.expects(:[]=).never
+        @syncer.checksums.expects(:reject!).never
+
+        @syncer.send(:update_checksums, api_response)
+      end
+
+      def test_update_checksums_with_checksums_mutex
+        api_value = { "key" => "key", "checksum" => "checksum" }
+        api_response = stub(values: [api_value])
+
+        @syncer.checksums.expects(:[]=).once
+        @syncer.checksums.expects(:reject!).once
+
+        @syncer.send(:update_checksums, api_response)
       end
 
       private

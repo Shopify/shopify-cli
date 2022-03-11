@@ -35,7 +35,7 @@ Gem::Specification.new do |spec|
   spec.require_paths = ["lib", "vendor"]
   spec.executables << "shopify"
 
-  spec.add_development_dependency("bundler", "~> 2.2.2")
+  spec.add_development_dependency("bundler", "~> 2.3.8")
   spec.add_development_dependency("rake", "~> 12.3", ">= 12.3.3")
   spec.add_development_dependency("minitest", "~> 5.0")
 
@@ -48,5 +48,5 @@ Gem::Specification.new do |spec|
   # Whereas if we were to have "~> 1.9", that version would still be satisfied and thus not upgraded.
   # Both shopify-cli and theme-check gems are owned and developed by Shopify.
   # These gems are currently being actively developed and it's easiest to update them together.
-  spec.add_dependency("theme-check", "~> 1.9.0")
+  spec.add_dependency("theme-check", "~> 1.10.1")
 end

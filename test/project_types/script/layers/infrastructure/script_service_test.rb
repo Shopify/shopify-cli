@@ -54,7 +54,7 @@ describe Script::Layers::Infrastructure::ScriptService do
     let(:url) { "https://some-bucket" }
     let(:title) { "title_from_project_config" }
     let(:description) { "description_from_project_config" }
-    let(:library_language) { "assemblyscript" }
+    let(:library_language) { "typescript" }
     let(:library_version) { "1.0.0" }
 
     let(:library) do

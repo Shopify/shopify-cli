@@ -136,7 +136,7 @@ module Script
         end
 
         def default_language
-          "assemblyscript"
+          "wasm"
         end
 
         def validate_metadata!(extension_point_type, language)

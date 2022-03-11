@@ -4,6 +4,17 @@ From version 2.6.0, the sections in this file adhere to the [keep a changelog](h
 ### Fixed
 * [#2086](https://github.com/Shopify/shopify-cli/pull/2086): Improve check of dependency versions
 
+### Changed
+* [#2126](https://github.com/Shopify/shopify-cli/pull/2126): Use javy version 0.2.1
+
+### Added
+* [#2103](https://github.com/Shopify/shopify-cli/pull/2103): Improve `shopify theme package` to include the `release-notes.md` file
+
+### Fixed
+* [#2112](https://github.com/Shopify/shopify-cli/pull/2112): Fix intermittent error ("can't add a new key into hash during iteration") in the `theme push` command
+* [#2088](https://github.com/Shopify/shopify-cli/pull/2088): Update theme-check to 1.10.1
+* [#2130](https://github.com/Shopify/shopify-cli/pull/2130): Fix Homebrew installation.
+
 ## Version 2.13.0
 
 ### Added
@@ -13,6 +24,10 @@ From version 2.6.0, the sections in this file adhere to the [keep a changelog](h
 ### Fixed
 * [#2092](https://github.com/Shopify/shopify-cli/pull/2092): Fix `RootHelper` parse logic to support options with an equal (e.g.: `option=value`)
 * [#2089](https://github.com/Shopify/shopify-cli/pull/2089): Use javy version 0.2.0
+* [#2114](https://github.com/Shopify/shopify-cli/pull/2114): Fix `theme` command error messaging with `ThemeAdminAPI` wrapper
+
+### Removed
+* [#2102](https://github.com/Shopify/shopify-cli/pull/2102): Remove AssemblyScript as a supported script language.
 
 ## Version 2.12.0
 ### Added

@@ -13,7 +13,7 @@ describe Script::Layers::Application::PushScript do
   let(:metadata_repository) { TestHelpers::FakeMetadataRepository.new }
   let(:metadata) { metadata_repository.get_metadata(metadata_file_location) }
   let(:library_version) { "1.0.0" }
-  let(:library_language) { "assemblyscript" }
+  let(:library_language) { "typescript" }
   let(:library_name) { "@shopify/fake-library-name" }
   let(:library) do
     {
@@ -84,16 +84,13 @@ describe Script::Layers::Application::PushScript do
 
         Script::Layers::Application::ProjectDependencies
           .expects(:install).with(ctx: @context, task_runner: task_runner)
-      end
-
-      it "should prepare and push script" do
         Script::Layers::Application::BuildScript.expects(:call).with(
           ctx: @context,
           task_runner: task_runner,
-          script_project: script_project,
-          library: library
         )
+      end
 
+      it "should prepare and push script" do
         capture_io { subject }
 
         assert_equal uuid, script_project_repository.get.uuid
@@ -102,13 +99,6 @@ describe Script::Layers::Application::PushScript do
       describe "when the script project's language is wasm" do
         let(:library_language) { "wasm" }
         it "should not raise LanguageLibraryForAPINotFoundError" do
-          Script::Layers::Application::BuildScript.expects(:call).with(
-            ctx: @context,
-            task_runner: task_runner,
-            script_project: script_project,
-            library: library
-          )
-
           capture_io { subject }
         end
       end
@@ -124,8 +114,15 @@ describe Script::Layers::Application::PushScript do
       it "should raise APILibraryNotFoundError" do
         Script::Layers::Application::ProjectDependencies
           .expects(:install).with(ctx: @context, task_runner: task_runner)
-        error = assert_raises(Script::Layers::Infrastructure::Errors::APILibraryNotFoundError) { subject }
-        assert_equal library_name, error.library_name
+        Script::Layers::Application::BuildScript.expects(:call).with(
+          ctx: @context,
+          task_runner: task_runner,
+        )
+
+        capture_io do
+          error = assert_raises(Script::Layers::Infrastructure::Errors::APILibraryNotFoundError) { subject }
+          assert_equal library_name, error.library_name
+        end
       end
     end
 
