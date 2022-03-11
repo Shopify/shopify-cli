@@ -20,4 +20,4 @@ Mocha.configure do |c|
   c.stubbing_method_on_nil = :prevent
 end
 
-Minitest::Reporters.use!([Minitest::Reporters::DefaultReporter.new(color: true)])
+Minitest::Reporters.use!([Minitest::Reporters::DefaultReporter.new(color: true)]) unless ENV["RM_INFO"]
