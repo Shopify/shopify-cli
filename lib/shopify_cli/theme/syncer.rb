@@ -272,7 +272,7 @@ module ShopifyCLI
       end
 
       def ignored_by_include_filter?(path)
-        include_filter && !include_filter.match?(path)
+        !!include_filter && !include_filter.match?(path)
       end
 
       def get(file)
