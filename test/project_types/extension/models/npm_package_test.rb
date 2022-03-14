@@ -45,6 +45,49 @@ module Extension
         end
       end
 
+      def test_parse_name_and_version
+        package_json = StringIO.new(<<~JSON)
+          {
+            "name": "test-package",
+            "version": "1.2.3"
+          }
+        JSON
+
+        package = NpmPackage.parse(package_json)
+        assert_equal "test-package", package.name
+        assert_equal "1.2.3", package.version
+      end
+
+      def test_parse_full_package_json
+        package_json = StringIO.new(<<~JSON)
+          {
+            "dependencies": {
+              "@shopify/checkout-ui-extensions": "^0.14.0"
+            },
+            "devDependencies": {
+              "@shopify/shopify-cli-extensions": "latest"
+            },
+            "license": "MIT",
+            "name": "checkout_ui_extension",
+            "scripts": {
+              "build": "shopify-cli-extensions build",
+              "develop": "shopify-cli-extensions develop"
+            }
+          }
+        JSON
+
+        package = NpmPackage.parse(package_json)
+        assert_equal "checkout_ui_extension", package.name
+        assert_equal "shopify-cli-extensions build", package.scripts.fetch("build")
+        assert_equal "shopify-cli-extensions develop", package.scripts.fetch("develop")
+        assert_equal "^0.14.0", package.dependencies.fetch("@shopify/checkout-ui-extensions")
+        assert_equal "latest", package.dev_dependencies.fetch("@shopify/shopify-cli-extensions")
+      end
+
+      def test_unknown_keyword_arguments_are_ignored
+        assert_nothing_raised { NpmPackage.new(ignored_property: true) }
+      end
+
       private
 
       def valid_attributes_with(**overrides)

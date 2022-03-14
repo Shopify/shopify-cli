@@ -97,5 +97,27 @@ module ShopifyCLI
         assert_equal(1, result.value.a)
       end
     end
+
+    def test_shallow_transformation_of_hashs
+      TransformDataStructure.new(underscore_keys: true, symbolize_keys: true, shallow: true).call({
+        "devDependencies" => {
+          "@shopify/some-package" => "1.2.3",
+        },
+      }).tap do |result|
+        assert_predicate(result, :success?)
+        assert_equal("1.2.3", result.value.fetch(:dev_dependencies).fetch("@shopify/some-package"))
+      end
+    end
+
+    def test_shallow_transformation_of_arrays
+      TransformDataStructure.new(underscore_keys: true, symbolize_keys: true, shallow: true).call([{
+        "devDependencies" => {
+          "@shopify/some-package" => "1.2.3",
+        },
+      }]).tap do |result|
+        assert_predicate(result, :success?)
+        assert_equal("1.2.3", result.value[0].fetch("devDependencies").fetch("@shopify/some-package"))
+      end
+    end
   end
 end
