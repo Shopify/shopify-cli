@@ -189,7 +189,7 @@ module ShopifyCLI
             end
 
             CLI::UI::Frame.open(context.message("core.app.create.rails.running_generator")) do
-              syscall(%w(rails generate shopify_app --new-shopify-cli-app))
+              syscall(%w(rails generate shopify_app --new-shopify-cli-app -f))
             end
 
             CLI::UI::Frame.open(context.message("core.app.create.rails.running_migrations")) do
