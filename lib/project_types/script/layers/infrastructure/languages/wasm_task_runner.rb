@@ -5,7 +5,7 @@ module Script
     module Infrastructure
       module Languages
         class WasmTaskRunner < TaskRunner
-          BYTECODE_FILE = "script.wasm"
+          BYTECODE_FILE = "build/index.wasm"
 
           def dependencies_installed?
             true
