@@ -182,6 +182,13 @@ module ShopifyCLI
       end
 
       ##
+      # returns the value this success represents
+      #
+      def unwrap!
+        value
+      end
+
+      ##
       # returns the success value and ignores the fallback value that was either
       # provided as a method argument or by passing a block. However, the caller
       # is still required to specify a fallback value to ensure that in the
@@ -338,6 +345,13 @@ module ShopifyCLI
       def unwrap(*args, &block)
         raise ArgumentError, "expected either a fallback value or a block" unless (args.length == 1) ^ block
         block ? block.call(@error) : args.pop
+      end
+
+      ##
+      # raises the error this failure represents
+      #
+      def unwrap!
+        raise error
       end
     end
 
