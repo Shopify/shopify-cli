@@ -144,6 +144,11 @@ module ShopifyCLI
         assert_same(success, success.rescue { called = true })
         refute called
       end
+
+      def test_force_unwrapping_returns_the_value
+        success = Success.new(:success)
+        assert_equal :success, success.unwrap!
+      end
     end
 
     class FailureTest < Minitest::Test
@@ -219,6 +224,14 @@ module ShopifyCLI
 
       def test_rescue_captures_exceptions_and_wraps_them_in_an_error
         assert Failure.new(1).then { raise "Failure" }.failure?
+      end
+
+      def test_force_unwrapping_raises_the_error
+        failure = Failure.new(RuntimeError.new("Some error"))
+        error = assert_raises(RuntimeError) do
+          failure.unwrap!
+        end
+        assert_equal "Some error", error.message
       end
     end
   end
