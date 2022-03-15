@@ -25,7 +25,7 @@ module Extension
         end
 
         def extension_server_beta?
-          ShopifyCLI::Shopifolk.check && ShopifyCLI::Feature.enabled?(:extension_server_beta)
+          Extension::Models::DevelopmentServerRequirements.beta_enabled?
         end
 
         def choose_interactively
