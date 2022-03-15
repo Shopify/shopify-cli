@@ -2,6 +2,8 @@ From version 2.6.0, the sections in this file adhere to the [keep a changelog](h
 
 ## [Unreleased]
 
+## Version 2.14.0
+
 ### Changed
 * [#2126](https://github.com/Shopify/shopify-cli/pull/2126): Use javy version 0.2.1
 
