@@ -57,7 +57,7 @@ module ShopifyCLI
             expect_command(%W(#{gem_path}/bin/rails new test-app --skip-spring --database=sqlite3))
             expect_command(%W(#{gem_path}/bin/bundle install),
               chdir: File.join(@context.root, "test-app"))
-            expect_command(%W(#{gem_path}/bin/rails generate shopify_app --new-shopify-cli-app),
+            expect_command(%W(#{gem_path}/bin/rails generate shopify_app --new-shopify-cli-app -f),
               chdir: File.join(@context.root, "test-app"))
             expect_command(%W(#{gem_path}/bin/rails db:create),
               chdir: File.join(@context.root, "test-app"))
@@ -108,7 +108,7 @@ module ShopifyCLI
             expect_command(%W(#{gem_path}/bin/rails new test-app --skip-spring --database=sqlite3))
             expect_command(%W(#{gem_path}/bin/bundle install),
               chdir: File.join(@context.root, "test-app"))
-            expect_command(%W(#{gem_path}/bin/rails generate shopify_app --new-shopify-cli-app),
+            expect_command(%W(#{gem_path}/bin/rails generate shopify_app --new-shopify-cli-app -f),
               chdir: File.join(@context.root, "test-app"))
             expect_command(%W(#{gem_path}/bin/rails db:create),
               chdir: File.join(@context.root, "test-app"))
@@ -161,7 +161,7 @@ module ShopifyCLI
             expect_command(%W(#{gem_path}/bin/rails new test-app --skip-spring --database=postgresql))
             expect_command(%W(#{gem_path}/bin/bundle install),
               chdir: File.join(@context.root, "test-app"))
-            expect_command(%W(#{gem_path}/bin/rails generate shopify_app --new-shopify-cli-app),
+            expect_command(%W(#{gem_path}/bin/rails generate shopify_app --new-shopify-cli-app -f),
               chdir: File.join(@context.root, "test-app"))
             expect_command(%W(#{gem_path}/bin/rails db:create),
               chdir: File.join(@context.root, "test-app"))
@@ -210,7 +210,7 @@ module ShopifyCLI
             expect_command(%W(#{gem_path}/bin/rails new test-app --skip-spring --database=sqlite3 --edge -J))
             expect_command(%W(#{gem_path}/bin/bundle install),
               chdir: File.join(@context.root, "test-app"))
-            expect_command(%W(#{gem_path}/bin/rails generate shopify_app --new-shopify-cli-app),
+            expect_command(%W(#{gem_path}/bin/rails generate shopify_app --new-shopify-cli-app -f),
               chdir: File.join(@context.root, "test-app"))
             expect_command(%W(#{gem_path}/bin/rails db:create),
               chdir: File.join(@context.root, "test-app"))
