@@ -162,6 +162,22 @@ module Extension
           end
         end
 
+        def test_l10n_duplicate_locales_with_different_casing
+          write("locales/EN.json", "{}")
+          write("locales/en.default.json", "{}")
+          assert_raises ShopifyCLI::Abort, "#{L10N_ERROR_PREFIX}.duplicate_locale_code" do
+            @checkout_ui_extension.config(@context)
+          end
+        end
+
+        def test_l10n_duplicate_locales_with_same_casing
+          write("locales/fr-ca.json", "{}")
+          write("locales/fr-ca.default.json", "{}")
+          assert_raises ShopifyCLI::Abort, "#{L10N_ERROR_PREFIX}.duplicate_locale_code" do
+            @checkout_ui_extension.config(@context)
+          end
+        end
+
         def test_l10n_no_defaults
           write("locales/fr.json", "{}")
           assert_raises ShopifyCLI::Abort, "#{L10N_ERROR_PREFIX}.single_default_locale" do

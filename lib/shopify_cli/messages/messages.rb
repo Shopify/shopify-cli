@@ -281,6 +281,8 @@ module ShopifyCLI
               localization: {
                 error: {
                   bundle_too_large: "Total size of all locale files must be less than %s.",
+                  duplicate_locale_code: "Duplicate locale found: `%s`; locale codes"\
+                    " should be unique and are case insensitive.",
                   file_empty: "Locale file `%s` is empty.",
                   file_too_large: "Locale file `%s` too large; size must be less than %s.",
                   invalid_file_extension: "Invalid locale filename: `%s`; only .json files are allowed.",
