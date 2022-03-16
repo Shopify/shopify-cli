@@ -52,5 +52,13 @@ shipping_discount_type:
   beta: true
   domain: 'discounts'
   libraries:
+cart_restrictions:
+  beta: true
+  domain: 'cart'
+  libraries:
+    typescript:
+      beta: true
+      package: "@shopify/scripts-discounts-apis"
+      repo: "https://github.com/Shopify/scripts-apis-examples"
     wasm:
       repo: "https://github.com/Shopify/scripts-apis-examples"
