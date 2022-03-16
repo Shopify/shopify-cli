@@ -42,11 +42,12 @@ module ShopifyCLI
       rescue ShopifyCLI::API::APIRequestForbiddenError,
              ShopifyCLI::API::APIRequestUnauthorizedError => error
         # The Admin API returns 403 Forbidden responses on different
-        # scenarios.
+        # scenarios:
         #
         # * when a user doesn't have permissions for a request:
         #   <APIRequestForbiddenError: 403 {}>
-        # * when an asset cannot be removed:
+        #
+        # * when an asset operation cannot be performed:
         #   <APIRequestForbiddenError: 403 {"message":"templates/gift_card.liquid could not be deleted"}>
         if empty_response_error?(error)
           return handle_permissions_error
