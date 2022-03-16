@@ -15,7 +15,9 @@ module ShopifyCLI
       },
       core: {
         errors: {
-          missing_node: "Node is required to continue. Install node here: https://nodejs.org/en/download.",
+          missing_node: "Node.js is required to continue. Install Node.js here: https://nodejs.org/en/download.",
+          missing_npm: "npm is required to continue. Install npm here: https://www.npmjs.com/get-npm.",
+          missing_ruby: "Ruby is required to continue. Install Ruby here: https://www.ruby-lang.org/en/downloads.",
           option_parser: {
             invalid_option: "The option {{command:%s}} is not supported.",
             missing_argument: "The required argument {{command:%s}} is missing.",
@@ -95,8 +97,6 @@ module ShopifyCLI
               HELP
               error: {
                 node_required: "node is required to create an app project. Download at https://nodejs.org/en/download.",
-                node_version_failure: "Failed to get the current node version. Please make sure it is installed as " \
-                  "per the instructions at https://nodejs.org/en.",
                 npm_required: "npm is required to create an app project. Download at https://www.npmjs.com/get-npm.",
                 npm_version_failure: "Failed to get the current npm version. Please make sure it is installed as per " \
                   "the instructions at https://www.npmjs.com/get-npm.",
@@ -131,8 +131,6 @@ module ShopifyCLI
                     {{underline:https://getcomposer.org/download/}}
                   COMPOSER
                 npm_required: "npm is required to create an app project. Download at https://www.npmjs.com/get-npm.",
-                npm_version_failure: "Failed to get the current npm version. Please make sure it is installed as per " \
-                  "the instructions at https://www.npmjs.com/get-npm.",
                 app_setup: "Failed to set up the app",
               },
 

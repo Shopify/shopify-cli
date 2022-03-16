@@ -33,12 +33,12 @@ module ShopifyCLI
           end
 
           def test_will_abort_if_bad_ruby
-            ::Rails::Ruby.expects(:version).returns(Semantic::Version.new("2.3.7"))
+            Environment.expects(:ruby_version).returns(Semantic::Version.new("2.3.7"))
             assert_raises ShopifyCLI::Abort do
               call_service
             end
 
-            ::Rails::Ruby.expects(:version).returns(Semantic::Version.new("3.1.0"))
+            Environment.expects(:ruby_version).returns(Semantic::Version.new("3.1.0"))
             assert_raises ShopifyCLI::Abort do
               call_service
             end
@@ -50,7 +50,7 @@ module ShopifyCLI
             gem_path = create_gem_path_and_binaries
             ::Rails::Gem.stubs(:gem_home).returns(gem_path)
 
-            ::Rails::Ruby.expects(:version).returns(Semantic::Version.new("2.5.0"))
+            Environment.expects(:ruby_version).returns(Semantic::Version.new("2.5.0"))
             ::Rails::Gem.expects(:install).with(@context, "rails", nil).returns(true)
             ::Rails::Gem.expects(:install).with(@context, "bundler", "~>2.0").returns(true)
             expect_rails_version("7.0.1")
@@ -101,10 +101,10 @@ module ShopifyCLI
             gem_path = create_gem_path_and_binaries
             ::Rails::Gem.stubs(:gem_home).returns(gem_path)
 
-            ::Rails::Ruby.expects(:version).returns(Semantic::Version.new("2.5.0"))
+            Environment.expects(:ruby_version).returns(Semantic::Version.new("2.5.0"))
             ::Rails::Gem.expects(:install).with(@context, "rails", nil).returns(true)
             ::Rails::Gem.expects(:install).with(@context, "bundler", "~>2.0").returns(true)
-            expect_rails_version("6.1.4.1")
+            expect_rails_version("6.1.4")
             expect_command(%W(#{gem_path}/bin/rails new test-app --skip-spring --database=sqlite3))
             expect_command(%W(#{gem_path}/bin/bundle install),
               chdir: File.join(@context.root, "test-app"))
@@ -154,10 +154,10 @@ module ShopifyCLI
             gem_path = create_gem_path_and_binaries
             ::Rails::Gem.stubs(:gem_home).returns(gem_path)
 
-            ::Rails::Ruby.expects(:version).returns(Semantic::Version.new("2.5.0"))
+            Environment.expects(:ruby_version).returns(Semantic::Version.new("2.5.0"))
             ::Rails::Gem.expects(:install).with(@context, "rails", nil).returns(true)
             ::Rails::Gem.expects(:install).with(@context, "bundler", "~>2.0").returns(true)
-            expect_rails_version("6.1.4.1")
+            expect_rails_version("6.1.4")
             expect_command(%W(#{gem_path}/bin/rails new test-app --skip-spring --database=postgresql))
             expect_command(%W(#{gem_path}/bin/bundle install),
               chdir: File.join(@context.root, "test-app"))
@@ -203,10 +203,10 @@ module ShopifyCLI
             gem_path = create_gem_path_and_binaries
             ::Rails::Gem.stubs(:gem_home).returns(gem_path)
 
-            ::Rails::Ruby.expects(:version).returns(Semantic::Version.new("2.5.0"))
+            Environment.expects(:ruby_version).returns(Semantic::Version.new("2.5.0"))
             ::Rails::Gem.expects(:install).with(@context, "rails", nil).returns(true)
             ::Rails::Gem.expects(:install).with(@context, "bundler", "~>2.0").returns(true)
-            expect_rails_version("6.1.4.1")
+            expect_rails_version("6.1.4")
             expect_command(%W(#{gem_path}/bin/rails new test-app --skip-spring --database=sqlite3 --edge -J))
             expect_command(%W(#{gem_path}/bin/bundle install),
               chdir: File.join(@context.root, "test-app"))
@@ -253,7 +253,7 @@ module ShopifyCLI
             gem_path = create_gem_path_and_binaries
             ::Rails::Gem.stubs(:gem_home).returns(gem_path)
 
-            ::Rails::Ruby.expects(:version).returns(Semantic::Version.new("2.5.0"))
+            Environment.expects(:ruby_version).returns(Semantic::Version.new("2.5.0"))
             ::Rails::Gem.expects(:install).with(@context, "rails", nil).returns(true)
             ::Rails::Gem.expects(:install).with(@context, "bundler", "~>2.0").returns(true)
             Dir.stubs(:exist?).returns(true)
@@ -278,9 +278,7 @@ module ShopifyCLI
           end
 
           def expect_rails_version(version)
-            @context.expects(:capture2e).with("rails", "--version").returns(
-              ["Rails #{version}", mock(success?: true)]
-            )
+            Environment.expects(:rails_version).with(context: @context).returns(::Semantic::Version.new(version))
           end
 
           def call_service(db: "sqlite3", rails_opts: nil)

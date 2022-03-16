@@ -108,7 +108,7 @@ module ShopifyCLI
           end
 
           def check_ruby
-            ruby_version = Rails::Ruby.version(context)
+            ruby_version = Environment.ruby_version(context)
             return if ruby_version.satisfies?("~>2.5") || ruby_version.satisfies?("~>3.1.0")
             context.abort(context.message("core.app.create.rails.error.invalid_ruby_version"))
           end
@@ -219,18 +219,10 @@ module ShopifyCLI
           end
 
           def install_webpacker?
-            rails_version < ::Semantic::Version.new("7.0.0") &&
-              !File.exist?(File.join(context.root, "config/webpacker.yml"))
-          end
+            rails_version = Environment.rails_version(context: context)
+            webpacker_config = File.exist?(File.join(context.root, "config/webpacker.yml"))
 
-          def rails_version
-            output, status = context.capture2e("rails", "--version")
-            unless status.success?
-              context.abort(context.message("core.app.create.rails.error.install_failure", "rails"))
-            end
-
-            version = output.scan(/Rails \d+\.\d+\.\d+/).first.split(" ").last
-            ::Semantic::Version.new(version)
+            rails_version < ::Semantic::Version.new("7.0.0") && !webpacker_config
           end
         end
       end

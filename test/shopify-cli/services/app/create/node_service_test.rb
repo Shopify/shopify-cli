@@ -30,35 +30,15 @@ module ShopifyCLI
           end
 
           def test_check_node_installed
-            @context.expects(:which).with("node").returns(nil)
-            assert_raises ShopifyCLI::Abort, "core.app.create.node.error.node_required" do
-              call_service
-            end
-          end
-
-          def test_check_get_node_version
-            @context.expects(:which).with("node").returns("/usr/bin/node")
-            @context.expects(:capture2e).with("node", "-v").returns([nil, mock(success?: false)])
-            assert_raises ShopifyCLI::Abort, "core.app.create.node.error.node_version_failure" do
+            Environment.expects(:node_version).with(context: @context).raises(ShopifyCLI::Abort)
+            assert_raises ShopifyCLI::Abort, "core.errors.missing_node" do
               call_service
             end
           end
 
           def test_check_npm_installed
-            @context.expects(:which).with("node").returns("/usr/bin/node")
-            @context.expects(:capture2e).with("node", "-v").returns(["8.0.0", mock(success?: true)])
-            @context.expects(:which).with("npm").returns(nil)
-            assert_raises ShopifyCLI::Abort, "core.app.create.node.error.npm_required" do
-              call_service
-            end
-          end
-
-          def test_check_get_npm_version
-            @context.expects(:which).with("node").returns("/usr/bin/node")
-            @context.expects(:capture2e).with("node", "-v").returns(["8.0.0", mock(success?: true)])
-            @context.expects(:which).with("npm").returns("/usr/bin/npm")
-            @context.expects(:capture2e).with("npm", "-v").returns([nil, mock(success?: false)])
-            assert_raises ShopifyCLI::Abort, "core.app.create.node.error.npm_version_failure" do
+            Environment.expects(:npm_version).with(context: @context).raises(ShopifyCLI::Abort)
+            assert_raises ShopifyCLI::Abort, "core.errors.missing_npm" do
               call_service
             end
           end
@@ -230,10 +210,8 @@ module ShopifyCLI
           end
 
           def expect_node_npm_check_commands
-            @context.expects(:which).with("node").returns("/usr/bin/node")
-            @context.expects(:capture2e).with("node", "-v").returns(["8.0.0", mock(success?: true)])
-            @context.expects(:which).with("npm").returns("/usr/bin/npm")
-            @context.expects(:capture2e).with("npm", "-v").returns(["1", mock(success?: true)])
+            Environment.expects(:node_version).with(context: @context).returns("8.0.0")
+            Environment.expects(:npm_version).with(context: @context).returns("1")
           end
 
           def create_test_app_directory_structure

@@ -16,33 +16,32 @@ module ShopifyCLI
       context = TestHelpers::FakeContext.new
       stat = mock("error", success?: false)
       out = ""
-      err = "Error executing the command"
-      context.expects(:capture3)
-        .with('ruby -e "puts RUBY_VERSION"')
-        .returns([out, err, stat])
+      context.expects(:capture2e)
+        .with("ruby", "--version")
+        .returns([out, stat])
 
       # When/Then
       error = assert_raises ShopifyCLI::Abort do
         Environment.ruby_version(context: context)
       end
-      assert_equal err, error.message
+      expected_error = "Ruby is required to continue. Install Ruby here: https://www.ruby-lang.org/en/downloads."
+      assert_equal error.message, expected_error
     end
 
     def test_ruby_version
       # Given
       context = TestHelpers::FakeContext.new
       stat = mock("success", success?: true)
-      out = '"3.2.1"'
-      err = ""
-      context.expects(:capture3)
-        .with('ruby -e "puts RUBY_VERSION"')
-        .returns([out, err, stat])
+      out = "ruby 3.0.3p157 (2021-11-24 revision 3fb7d2cadc) [x86_64-darwin21]"
+      context.expects(:capture2e)
+        .with("ruby", "--version")
+        .returns([out, stat])
 
       # When
       got = Environment.ruby_version(context: context)
 
       # Then
-      assert_equal ::Semantic::Version.new("3.2.1"), got
+      assert_equal ::Semantic::Version.new("3.0.3"), got
     end
 
     def test_node_version_when_the_command_raises
@@ -50,33 +49,32 @@ module ShopifyCLI
       context = TestHelpers::FakeContext.new
       stat = mock("error", success?: false)
       out = ""
-      err = "Error executing the command"
-      context.expects(:capture3)
+      context.expects(:capture2e)
         .with("node", "--version")
-        .returns([out, err, stat])
+        .returns([out, stat])
 
       # When/Then
       error = assert_raises ShopifyCLI::Abort do
         Environment.node_version(context: context)
       end
-      assert_equal err, error.message
+      expected_error = "Node.js is required to continue. Install Node.js here: https://nodejs.org/en/download."
+      assert_equal error.message, expected_error
     end
 
     def test_node_version
       # Given
       context = TestHelpers::FakeContext.new
       stat = mock("success", success?: true)
-      out = "v3.2.1"
-      err = ""
-      context.expects(:capture3)
+      out = "v17.5.0"
+      context.expects(:capture2e)
         .with("node", "--version")
-        .returns([out, err, stat])
+        .returns([out, stat])
 
       # When
       got = Environment.node_version(context: context)
 
       # Then
-      assert_equal ::Semantic::Version.new("3.2.1"), got
+      assert_equal ::Semantic::Version.new("17.5.0"), got
     end
 
     def test_npm_version
@@ -84,16 +82,47 @@ module ShopifyCLI
       context = TestHelpers::FakeContext.new
       stat = mock("success", success?: true)
       out = "8.4.1"
-      err = ""
-      context.expects(:capture3)
+      context.expects(:capture2e)
         .with("npm", "--version")
-        .returns([out, err, stat])
+        .returns([out, stat])
 
       # When
       got = Environment.npm_version(context: context)
 
       # Then
       assert_equal ::Semantic::Version.new("8.4.1"), got
+    end
+
+    def test_rails_version_when_the_command_raises
+      # Given
+      context = TestHelpers::FakeContext.new
+      stat = mock("error", success?: false)
+      out = ""
+      context.expects(:capture2e)
+        .with("rails", "--version")
+        .returns([out, stat])
+
+      # When/Then
+      error = assert_raises CLI::Kit::Abort do
+        Environment.rails_version(context: context)
+      end
+      assert_equal "{{x}} Error installing rails gem", error.message
+    end
+
+    def test_rails_version
+      # Given
+      context = TestHelpers::FakeContext.new
+      stat = mock("success", success?: true)
+      out = "Rails 6.1.4.6"
+      context.expects(:capture2e)
+        .with("rails", "--version")
+        .returns([out, stat])
+
+      # When
+      got = Environment.rails_version(context: context)
+
+      # Then
+      assert_equal ::Semantic::Version.new("6.1.4"), got
     end
 
     def test_use_local_partners_instance_returns_true_when_the_env_variable_is_set

@@ -12,23 +12,31 @@ module ShopifyCLI
     ]
 
     def self.ruby_version(context: Context.new)
-      out, err, stat = context.capture3('ruby -e "puts RUBY_VERSION"')
-      raise ShopifyCLI::Abort, err unless stat.success?
-      out = out.gsub('"', "")
-      ::Semantic::Version.new(out.chomp)
+      output, status = context.capture2e("ruby", "--version")
+      raise ShopifyCLI::Abort, context.message("core.errors.missing_ruby") unless status.success?
+      version = output.match(/ruby (\d+\.\d+\.\d+)/)[1]
+      ::Semantic::Version.new(version)
     end
 
     def self.node_version(context: Context.new)
-      out, err, stat = context.capture3("node", "--version")
-      raise ShopifyCLI::Abort, err unless stat.success?
-      out = out.gsub("v", "")
-      ::Semantic::Version.new(out.chomp)
+      output, status = context.capture2e("node", "--version")
+      raise ShopifyCLI::Abort, context.message("core.errors.missing_node") unless status.success?
+      version = output.match(/v(\d+\.\d+\.\d+)/)[1]
+      ::Semantic::Version.new(version)
     end
 
     def self.npm_version(context: Context.new)
-      out, err, stat = context.capture3("npm", "--version")
-      raise ShopifyCLI::Abort, err unless stat.success?
-      ::Semantic::Version.new(out.chomp)
+      output, status = context.capture2e("npm", "--version")
+      raise ShopifyCLI::Abort, context.message("core.errors.missing_npm") unless status.success?
+      version = output.match(/(\d+\.\d+\.\d+)/)[1]
+      ::Semantic::Version.new(version)
+    end
+
+    def self.rails_version(context: Context.new)
+      output, status = context.capture2e("rails", "--version")
+      context.abort(context.message("core.app.create.rails.error.install_failure", "rails")) unless status.success?
+      version = output.match(/Rails (\d+\.\d+\.\d+)/)[1]
+      ::Semantic::Version.new(version)
     end
 
     def self.interactive=(interactive)
