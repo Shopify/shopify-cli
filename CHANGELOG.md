@@ -3,6 +3,7 @@ From version 2.6.0, the sections in this file adhere to the [keep a changelog](h
 ## [Unreleased]
 ### Fixed
 * [#2086](https://github.com/Shopify/shopify-cli/pull/2086): Improve check of dependency versions
+* [#2149](https://github.com/Shopify/shopify-cli/pull/2149): Fix `ThemeAdminAPI` not to handle asset errors
 
 ## Version 2.14.0
 
