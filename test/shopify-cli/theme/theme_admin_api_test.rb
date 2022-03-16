@@ -143,7 +143,6 @@ module ShopifyCLI
           .with(@ctx, shop: @shop, api_version: @api_version, **request_params)
           .raises(ShopifyCLI::API::APIRequestForbiddenError)
 
-        @api_client.expects(:get_shop_or_abort).returns(@shop)
         @ctx.expects(:message).with("theme.ensure_user_error", @shop).returns("ensure_user_error")
         @ctx.expects(:message).with("theme.ensure_user_try_this").returns("ensure_user_try_this")
         @ctx.expects(:abort).with("ensure_user_error", "ensure_user_try_this")
@@ -151,6 +150,22 @@ module ShopifyCLI
         @api_client.post(
           path: path
         )
+      end
+
+      def test_forbiden_errors_not_related_to_unauthorized_access
+        path = "themes.json"
+        error_response = stub(body: '{"message":"templates/gift_card.liquid could not be deleted"}')
+        expected_error = ShopifyCLI::API::APIRequestForbiddenError.new("403", response: error_response)
+
+        ShopifyCLI::AdminAPI.expects(:rest_request)
+          .with(@ctx, shop: @shop, api_version: @api_version, method: "POST", path: path)
+          .raises(expected_error)
+
+        actual_error = assert_raises(ShopifyCLI::API::APIRequestForbiddenError) do
+          @api_client.post(path: path)
+        end
+
+        assert_equal(expected_error, actual_error)
       end
 
       private
