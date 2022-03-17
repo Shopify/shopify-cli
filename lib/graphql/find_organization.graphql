@@ -1,10 +1,10 @@
 query FindOrg($id: ID!) {
-  organizations(id: $id) {
+  organizations(id: $id, first: 1) {
     nodes {
       id
       businessName
       website
-      stores(first: 500) {
+      stores(first: 190) {
         nodes {
           link
           shopDomain

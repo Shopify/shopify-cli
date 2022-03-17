@@ -1,10 +1,10 @@
 query AllOrgs{
-  organizations {
+  organizations(first: 3) {
     nodes {
       id
       businessName
       website
-      stores(first: 500) {
+      stores(first: 25) {
         nodes {
           shopId
           link
@@ -14,7 +14,7 @@ query AllOrgs{
           convertableToPartnerTest
         }
       }
-      apps(first: 500) {
+      apps(first: 25) {
         nodes {
           id
           title
