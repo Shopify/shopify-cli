@@ -43,6 +43,7 @@ module Extension
             # Localization is optional
             return {} if locale_filenames.empty?
 
+            validate_no_duplicate_locale(locale_filenames)
             validate_total_size(locale_filenames)
             default_locale = single_default_locale(locale_filenames)
 
@@ -59,6 +60,18 @@ module Extension
               }
             end
           end
+        end
+
+        def validate_no_duplicate_locale(locale_filenames)
+          duplicate_locale = locale_filenames
+            .map { |filename| basename_for_locale_filename(filename.downcase) }
+            .group_by { |locale| locale }
+            .detect { |_k, v| v.size > 1 }
+            &.first
+          raise(
+            ShopifyCLI::Abort,
+            ShopifyCLI::Context.message("#{L10N_ERROR_PREFIX}.duplicate_locale_code", duplicate_locale)
+          ) unless duplicate_locale.nil?
         end
 
         def validate_total_size(locale_filenames)
