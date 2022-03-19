@@ -26,26 +26,32 @@ module Extension
         def test_bypasses_outdated_check_for_extensions_that_do_not_support_the_new_development_server
           Models::DevelopmentServerRequirements.expects(:supported?).returns(false)
           OutdatedExtensionDetection::OutdatedCheck.expects(:call).never
-          assert_equal :success, dummy_command.call(type: "checkout_ui_extension").unwrap!
+          assert_equal :success, dummy_command.call(type: "checkout_ui_extension", context: fake_context).unwrap!
         end
 
         def test_performs_outdated_check_for_extensions_supporting_the_new_development_server
           Models::DevelopmentServerRequirements.expects(:supported?).returns(true)
           OutdatedExtensionDetection::OutdatedCheck
-            .expects(:call).with(type: "checkout_ui_extension").once
+            .expects(:call).with(has_entries(type: "checkout_ui_extension")).once
             .returns(ShopifyCLI::Result.wrap(true))
-          assert_equal :success, dummy_command.call(type: "checkout_ui_extension").unwrap!
+          assert_equal :success, dummy_command.call(type: "checkout_ui_extension", context: fake_context).unwrap!
         end
 
         def test_aborts_command_execution_if_outdated_check_fails
           Models::DevelopmentServerRequirements.expects(:supported?).returns(true)
           OutdatedExtensionDetection::OutdatedCheck
-            .expects(:call).with(type: "checkout_ui_extension").once
+            .expects(:call).with(has_entries(type: "checkout_ui_extension")).once
             .returns(ShopifyCLI::Result.wrap(RuntimeError.new))
 
-          dummy_command_instance = dummy_command.new(type: "checkout_ui_extension")
+          dummy_command_instance = dummy_command.new(type: "checkout_ui_extension", context: fake_context)
           assert_raises(RuntimeError) { dummy_command_instance.call.unwrap! }
           refute dummy_command_instance.executed
+        end
+
+        private
+
+        def fake_context
+          TestHelpers::FakeContext.new
         end
       end
 
@@ -80,7 +86,7 @@ module Extension
             * Change then build script to: shopify-cli-extensions build
           TEXT
 
-          result = OutdatedExtensionDetection::OutdatedCheck.call(type: "checkout_ui_extension")
+          result = OutdatedExtensionDetection::OutdatedCheck.call(type: "checkout_ui_extension", context: TestHelpers::FakeContext.new)
           assert_predicate(result, :failure?)
           assert_equal message, result.error.message
         end

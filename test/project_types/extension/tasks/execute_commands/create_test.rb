@@ -20,7 +20,8 @@ module Extension
             ExecuteCommands::Create.new(
               type: "checkout_ui_extension",
               template: "javascript",
-              root_dir: "test"
+              root_dir: "test",
+              context: TestHelpers::FakeContext.new
             ).call
           end
         end
