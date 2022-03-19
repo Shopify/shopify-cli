@@ -8,6 +8,7 @@ module Extension
         include SmartProperties
 
         property! :type, accepts: Models::DevelopmentServerRequirements::SUPPORTED_EXTENSION_TYPES
+        property! :context, accepts: ShopifyCLI::Context
 
         def self.inherited(subclass)
           subclass.prepend(OutdatedExtensionDetection)

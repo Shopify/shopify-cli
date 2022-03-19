@@ -6,6 +6,7 @@ module Extension
           include ShopifyCLI::MethodObject
 
           property! :type, accepts: Models::DevelopmentServerRequirements.method(:type_supported?)
+          property! :context, accepts: ShopifyCLI::Context
           property! :project, accepts: ShopifyCLI::Project, default: -> { ShopifyCLI::Project.current }
 
           def call
@@ -54,7 +55,7 @@ module Extension
 
         def call(*)
           return super unless Models::DevelopmentServerRequirements.supported?(type)
-          OutdatedCheck.call(type: type).then { super }
+          OutdatedCheck.call(type: type, context: context).then { super }
         end
       end
     end

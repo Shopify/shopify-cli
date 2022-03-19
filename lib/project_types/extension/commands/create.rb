@@ -59,6 +59,7 @@ module Extension
           root_dir: form.directory_name,
           template: form.template,
           type: form.type.identifier.downcase,
+          context: @ctx,
         )
         @ctx.chdir(form.directory_name)
         write_env_file(form)
