@@ -10,7 +10,7 @@ module Extension
           property! :project, accepts: ShopifyCLI::Project, default: -> { ShopifyCLI::Project.current }
 
           def call
-            return if valid?(parse_package)
+            return false if valid?(parse_package)
             raise upgrade_instructions
           end
 
@@ -19,19 +19,9 @@ module Extension
           def upgrade_instructions
             case type
             when "checkout_ui_extension"
-              <<~TEXT.strip
-                Please update your package.json as follows:
-                * Replace the development dependency @shopify/checkout-ui-extensions-run
-                  with @shopify/shopify-cli-extensions
-                * Remove the start and server script
-                * Add a develop script: shopify-cli-extensions develop
-                * Change then build script to: shopify-cli-extensions build
-              TEXT
+              context.message("errors.outdated_extensions.checkout_ui_extension")
             else
-              <<~TEXT.strip
-              Please refer to the documentation for more information on how to upgrade your extension:
-              https://shopify.dev/apps/app-extensions
-              TEXT
+              context.message("errors.outdated_extensions.unknown")
             end
           end
 
@@ -44,7 +34,7 @@ module Extension
           def valid?(package)
             case type
             when "checkout_ui_extension"
-              package.dependency?("@shopify/checkout-ui-extensions") &&
+              package.dev_dependency?("@shopify/shopify-cli-extensions") &&
                 package.script?("build") &&
                 package.script?("develop")
             else
