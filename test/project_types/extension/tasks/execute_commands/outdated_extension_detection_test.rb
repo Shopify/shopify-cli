@@ -90,6 +90,32 @@ module Extension
           assert_predicate(result, :failure?)
           assert_equal message, result.error.message
         end
+
+        def test_does_not_raise_with_upgrade_instructions_if_package_json_is_up_to_date
+          $debug = true
+          package_json = StringIO.new(<<~JSON)
+          {
+            "name": "my-extension",
+            "devDependencies": {
+              "@shopify/shopify-cli-extensions": "^0.2.0"
+            },
+            "scripts": {
+              "build": "some command",
+              "develop": "some other command"
+            }
+          }
+          JSON
+
+          File
+            .expects(:open)
+            .with(Pathname(ShopifyCLI::Project.current.directory).join("package.json"))
+            .returns(Models::NpmPackage.parse(package_json))
+
+          result = OutdatedExtensionDetection::OutdatedCheck.call(type: "checkout_ui_extension", context: TestHelpers::FakeContext.new)
+          assert_predicate(result, :success?)
+        ensure
+          $debug = false
+        end
       end
     end
   end
