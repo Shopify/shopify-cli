@@ -17,7 +17,7 @@ When contributing to the Shopify CLI, there are a set of [design guidelines](htt
 
 ### Where to find known issues
 
-We track all of our issues in GitHub and [bugs](https://github.com/Shopify/shopify-cli/labels/Bug) are labeled accordingly. If you are planning to work on an issue, avoid ones which already have an assignee, where someone has commented within the last two weeks they are working on it, or the issue is labeled with [fix in progress](https://github.com/Shopify/shopify-cli/labels/fix%20in%20progress). We will do our best to communicate when an issue is being worked on internally.
+We track all of our issues in GitHub and [bugs](https://github.com/Shopify/shopify-cli/labels/type:bug) are labeled accordingly. If you are planning to work on an issue, avoid ones which already have an assignee, where someone has commented within the last two weeks they are working on it, or the issue is labeled with [fix in progress](https://github.com/Shopify/shopify-cli/labels/fix%20in%20progress). We will do our best to communicate when an issue is being worked on internally.
 
 ### Running against a local environment
 
