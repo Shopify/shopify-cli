@@ -9,20 +9,6 @@ module Extension
           ShopifyCLI::ProjectType.load_type(:extension)
         end
 
-        def dummy_command
-          Class.new(Base) do
-            include ShopifyCLI::MethodObject
-
-            property :type
-            property! :executed, default: false
-
-            def call
-              self.executed = true
-              :success
-            end
-          end
-        end
-
         def test_bypasses_outdated_check_for_extensions_that_do_not_support_the_new_development_server
           Models::DevelopmentServerRequirements.expects(:supported?).returns(false)
           OutdatedExtensionDetection::OutdatedCheck.expects(:call).never
@@ -50,6 +36,20 @@ module Extension
 
         private
 
+        def dummy_command
+          Class.new(Base) do
+            include ShopifyCLI::MethodObject
+
+            property :type
+            property! :executed, default: false
+
+            def call
+              self.executed = true
+              :success
+            end
+          end
+        end
+
         def fake_context
           TestHelpers::FakeContext.new
         end
@@ -63,13 +63,13 @@ module Extension
 
         def test_raises_with_upgrade_instructions_if_package_json_is_outdated
           package_json = StringIO.new(<<~JSON)
-          {
-            "name": "my-extension",
-            "scripts": {
-              "start": "some command",
-              "build": "some other command"
+            {
+              "name": "my-extension",
+              "scripts": {
+                "start": "some command",
+                "build": "some other command"
+              }
             }
-          }
           JSON
 
           File
@@ -86,7 +86,8 @@ module Extension
             * Change then build script to: shopify-cli-extensions build
           TEXT
 
-          result = OutdatedExtensionDetection::OutdatedCheck.call(type: "checkout_ui_extension", context: TestHelpers::FakeContext.new)
+          result = OutdatedExtensionDetection::OutdatedCheck.call(type: "checkout_ui_extension",
+            context: TestHelpers::FakeContext.new)
           assert_predicate(result, :failure?)
           assert_equal message, result.error.message
         end
@@ -94,16 +95,16 @@ module Extension
         def test_does_not_raise_with_upgrade_instructions_if_package_json_is_up_to_date
           $debug = true
           package_json = StringIO.new(<<~JSON)
-          {
-            "name": "my-extension",
-            "devDependencies": {
-              "@shopify/shopify-cli-extensions": "^0.2.0"
-            },
-            "scripts": {
-              "build": "some command",
-              "develop": "some other command"
+            {
+              "name": "my-extension",
+              "devDependencies": {
+                "@shopify/shopify-cli-extensions": "^0.2.0"
+              },
+              "scripts": {
+                "build": "some command",
+                "develop": "some other command"
+              }
             }
-          }
           JSON
 
           File
@@ -111,7 +112,8 @@ module Extension
             .with(Pathname(ShopifyCLI::Project.current.directory).join("package.json"))
             .returns(Models::NpmPackage.parse(package_json))
 
-          result = OutdatedExtensionDetection::OutdatedCheck.call(type: "checkout_ui_extension", context: TestHelpers::FakeContext.new)
+          result = OutdatedExtensionDetection::OutdatedCheck.call(type: "checkout_ui_extension",
+            context: TestHelpers::FakeContext.new)
           assert_predicate(result, :success?)
         ensure
           $debug = false

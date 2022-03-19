@@ -11,6 +11,7 @@ module Extension
         property! :context, accepts: ShopifyCLI::Context
 
         def self.inherited(subclass)
+          super
           subclass.prepend(OutdatedExtensionDetection)
         end
       end

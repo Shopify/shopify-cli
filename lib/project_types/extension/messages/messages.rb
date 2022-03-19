@@ -210,7 +210,7 @@ module Extension
             * Add a develop script: shopify-cli-extensions develop
             * Change then build script to: shopify-cli-extensions build
           TEXT
-        }
+        },
       },
       warnings: {
         resource_url_auto_generation_failed: "{{*}} {{yellow:Warning:}} Unable to auto generate " \
