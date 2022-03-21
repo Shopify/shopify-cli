@@ -3,7 +3,6 @@ require "test_helper"
 module Extension
   module Models
     class DevelopmentServerRequirementsTest < MiniTest::Test
-      include TestHelpers::FakeFS
 
       UNCONDITIONALLY_SUPPORTED_TYPES = [
         "checkout_ui_extension",
