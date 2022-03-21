@@ -11,17 +11,18 @@ module Extension
           default: -> { CLI::UI::Prompt.method(:ask) }
 
         def call(project_details)
-          return project_details unless template_required?(project_details)
-          project_details.template = template || choose_interactively
+          if template_required?(project_details)
+            project_details.template = template || choose_interactively
+          end
           project_details
         end
 
         private
 
         def template_required?(project_details)
-          return false unless Models::DevelopmentServerRequirements.type_supported?
           type = project_details&.type&.identifier
-          Models::DevelopmentServerRequirements::SUPPORTED_EXTENSION_TYPES.include?(type.downcase)
+          (Models::DevelopmentServerRequirements.beta_enabled? &&
+            Models::DevelopmentServerRequirements.type_supported?(type.downcase))
         end
 
         def choose_interactively
