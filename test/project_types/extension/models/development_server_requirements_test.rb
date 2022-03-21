@@ -3,7 +3,6 @@ require "test_helper"
 module Extension
   module Models
     class DevelopmentServerRequirementsTest < MiniTest::Test
-
       UNCONDITIONALLY_SUPPORTED_TYPES = [
         "checkout_ui_extension",
       ]
