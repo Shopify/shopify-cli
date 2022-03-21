@@ -28,7 +28,7 @@ Gem::Specification.new do |spec|
   spec.files = Dir.chdir(File.expand_path("..", __FILE__)) do
     %x(git ls-files -z).split("\x0").reject do |f|
       f.match(%r{^(test|spec|features|packaging)/}) ||
-      f.match(%r{^bin/(update-deps|shopify.bat)$})
+        f.match(%r{^bin/(update-deps|shopify.bat)$})
     end
   end
   spec.bindir = "bin"
@@ -49,4 +49,6 @@ Gem::Specification.new do |spec|
   # Both shopify-cli and theme-check gems are owned and developed by Shopify.
   # These gems are currently being actively developed and it's easiest to update them together.
   spec.add_dependency("theme-check", "~> 1.10.1")
+
+  spec.extensions = ["ext/shopify-extensions/extconf.rb"]
 end
