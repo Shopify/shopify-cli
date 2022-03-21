@@ -16,6 +16,10 @@ module Extension
           binary_installed? && type_supported?(type) && type_enabled?(type)
         end
 
+        def beta_enabled?
+          ShopifyCLI::Shopifolk.check && ShopifyCLI::Feature.enabled?(:extension_server_beta)
+        end
+
         private
 
         def binary_installed?
@@ -24,10 +28,6 @@ module Extension
 
         def type_supported?(type)
           SUPPORTED_EXTENSION_TYPES.include?(type.downcase)
-        end
-
-        def beta_enabled?
-          ShopifyCLI::Shopifolk.check && ShopifyCLI::Feature.enabled?(:extension_server_beta)
         end
 
         # Some types are enabled unconditionally; others require beta_enabled

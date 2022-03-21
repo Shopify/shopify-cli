@@ -19,13 +19,9 @@ module Extension
         private
 
         def template_required?(project_details)
-          return false unless extension_server_beta?
+          return false unless Models::DevelopmentServerRequirements.type_supported?
           type = project_details&.type&.identifier
           Models::DevelopmentServerRequirements::SUPPORTED_EXTENSION_TYPES.include?(type.downcase)
-        end
-
-        def extension_server_beta?
-          ShopifyCLI::Feature.enabled?(:extension_server_beta)
         end
 
         def choose_interactively
