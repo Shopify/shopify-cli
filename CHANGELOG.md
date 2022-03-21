@@ -1,6 +1,9 @@
 From version 2.6.0, the sections in this file adhere to the [keep a changelog](https://keepachangelog.com/en/1.0.0/) specification.
 
 ## [Unreleased]
+
+## Version 2.15.0
+
 ### Fixed
 * [#2086](https://github.com/Shopify/shopify-cli/pull/2086): Improve check of dependency versions
 * [#2149](https://github.com/Shopify/shopify-cli/pull/2149): Fix `ThemeAdminAPI` not to handle asset errors
