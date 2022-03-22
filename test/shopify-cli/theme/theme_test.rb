@@ -22,7 +22,7 @@ module ShopifyCLI
           theme.static_asset_paths
         end
         filepath = root + "/assets/assets_subdir"
-        assert_message_output(io: io, expected_content: ctx.message('theme.serve.error.invalid_subdirectory', filepath))
+        assert_message_output(io: io, expected_content: ctx.message("theme.serve.error.invalid_subdirectory", filepath))
       end
 
       def test_static_assets

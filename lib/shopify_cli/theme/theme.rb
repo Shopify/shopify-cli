@@ -224,7 +224,7 @@ module ShopifyCLI
 
       def abort_if_directory!(path)
         return unless ::File.directory?(path)
-        @ctx.abort(@ctx.message('theme.serve.error.invalid_subdirectory', path.to_s))
+        @ctx.abort(@ctx.message("theme.serve.error.invalid_subdirectory", path.to_s))
       end
     end
   end
