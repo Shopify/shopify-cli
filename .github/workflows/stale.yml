@@ -40,5 +40,7 @@ jobs:
         stale-issue-label: 'no-issue-activity'
         stale-pr-label: 'no-pr-activity'
         ascending: true
-        operations-per-run: 90 # Should allow for max of 30 issues in a day, but in following days we won't move much
-        debug-only: true # Temporary to make sure changes are safe
+        # The math seems a bit fuzzy, but this should amount to a max of 50 issues daily.
+        # But then the same issues get checked first so we don't end up progressing too quickly until we can close what we started.
+        # Hopefully https://github.com/actions/stale/issues/692 will be closed and fix some of this mess.
+        operations-per-run: 200
