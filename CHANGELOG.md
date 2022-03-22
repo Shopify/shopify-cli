@@ -2,6 +2,9 @@ From version 2.6.0, the sections in this file adhere to the [keep a changelog](h
 
 ## [Unreleased]
 
+### Fixed
+* [#1874](https://github.com/Shopify/shopify-cli/pull/1874): Make ngrok errors more robust and helpful
+
 ## Version 2.15.0
 
 ### Fixed

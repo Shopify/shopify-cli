@@ -115,6 +115,16 @@ module Extension
         tunnel_already_running: "A tunnel running on another port has been detected. Close the tunnel and try again.",
       },
       tunnel: {
+        duplicate_session: <<~MESSAGE,
+          Another ngrok tunnel is currently running with your auth token, possibly on another machine.
+
+          Terminate that tunnel before opening a new one.
+        MESSAGE
+        invalid_token: <<~MESSAGE,
+          The ngrok token currently configured is invalid.
+
+          After generating a new token, update your local ngrok configuration using {{command:shopify app tunnel auth <token>}}
+        MESSAGE
         missing_token: "{{x}} {{red:auth requires a token argument}}. "\
           "Find it on your ngrok dashboard: {{underline:https://dashboard.ngrok.com/auth/your-authtoken}}.",
         invalid_port: "%s is not a valid port.",

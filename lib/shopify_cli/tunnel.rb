@@ -178,6 +178,15 @@ module ShopifyCLI
 
     def fetch_url(ctx, log_path)
       LogParser.new(log_path)
+    rescue NgrokError => e
+      # Full error messages/descriptions: https://ngrok.com/docs/errors
+      case e.message
+      when /ERR_NGROK_107/
+        ctx.abort(ctx.message("tunnel.invalid_token", e.message))
+      when /ERR_NGROK_108/
+        ctx.abort(ctx.message("tunnel.duplicate_session", e.message))
+      end
+      raise e.class, e.message
     rescue RuntimeError => e
       stop(ctx)
       raise e.class, e.message
