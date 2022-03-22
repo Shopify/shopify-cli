@@ -8,6 +8,7 @@ name: Mark stale issues and pull requests
 on:
   schedule:
   - cron: '31 3 * * *' # randomly chosen time of day
+  workflow_dispatch:
 
 jobs:
   stale:
@@ -38,4 +39,4 @@ jobs:
           Thanks for helping to improve Shopify's dev tooling and experience.
         stale-issue-label: 'no-issue-activity'
         stale-pr-label: 'no-pr-activity'
-        operations-per-run: 10 # temporary so we can ease into staling and see what happens
+        operations-per-run: 30 # Should allow for 10 issues per run
