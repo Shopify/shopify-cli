@@ -19,7 +19,7 @@ jobs:
       pull-requests: write
 
     steps:
-    - uses: actions/stale@v3
+    - uses: actions/stale@v4
       with:
         repo-token: ${{ secrets.GITHUB_TOKEN }}
         days-before-issue-stale: 90
@@ -39,4 +39,6 @@ jobs:
           Thanks for helping to improve Shopify's dev tooling and experience.
         stale-issue-label: 'no-issue-activity'
         stale-pr-label: 'no-pr-activity'
-        operations-per-run: 30 # Should allow for 10 issues per run
+        ascending: true
+        operations-per-run: 90 # Should allow for max of 30 issues in a day, but in following days we won't move much
+        debug-only: true # Temporary to make sure changes are safe
