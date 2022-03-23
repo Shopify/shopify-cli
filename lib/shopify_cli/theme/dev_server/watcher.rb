@@ -59,7 +59,7 @@ module ShopifyCLI
         private
 
         def ignore_file?(file)
-          @ignore_filter&.ignore?(file.relative_path.to_s)
+          @ignore_filter&.ignore?(file.relative_path)
         end
       end
     end

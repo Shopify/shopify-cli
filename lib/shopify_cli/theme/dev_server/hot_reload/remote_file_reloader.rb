@@ -51,7 +51,7 @@ module ShopifyCLI
           def fetch_asset(file)
             api_client.get(
               path: "themes/#{@theme.id}/assets.json",
-              query: URI.encode_www_form("asset[key]" => file.relative_path.to_s),
+              query: URI.encode_www_form("asset[key]" => file.relative_path),
             )
           rescue ShopifyCLI::API::APIRequestNotFoundError
             [404, {}]

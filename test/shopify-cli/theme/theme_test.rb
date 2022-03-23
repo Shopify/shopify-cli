@@ -26,20 +26,20 @@ module ShopifyCLI
       end
 
       def test_static_assets
-        assert_includes(@theme.static_asset_paths, Pathname.new("assets/theme.css"))
+        assert_includes(@theme.static_asset_paths, "assets/theme.css")
       end
 
       def test_theme_files
-        assert_includes(@theme.theme_files.map(&:relative_path), Pathname.new("layout/theme.liquid"))
-        assert_includes(@theme.theme_files.map(&:relative_path), Pathname.new("templates/blog.json"))
-        assert_includes(@theme.theme_files.map(&:relative_path), Pathname.new("locales/en.default.json"))
-        assert_includes(@theme.theme_files.map(&:relative_path), Pathname.new("assets/theme.css"))
-        assert_includes(@theme.theme_files.map(&:relative_path), Pathname.new("assets/theme.js"))
+        assert_includes(@theme.theme_files.map(&:relative_path), "layout/theme.liquid")
+        assert_includes(@theme.theme_files.map(&:relative_path), "templates/blog.json")
+        assert_includes(@theme.theme_files.map(&:relative_path), "locales/en.default.json")
+        assert_includes(@theme.theme_files.map(&:relative_path), "assets/theme.css")
+        assert_includes(@theme.theme_files.map(&:relative_path), "assets/theme.js")
       end
 
       def test_get_file
-        assert_equal(Pathname.new("layout/theme.liquid"), @theme["layout/theme.liquid"].relative_path)
-        assert_equal(Pathname.new("layout/theme.liquid"),
+        assert_equal("layout/theme.liquid", @theme["layout/theme.liquid"].relative_path)
+        assert_equal("layout/theme.liquid",
           @theme[Pathname.new("#{ShopifyCLI::ROOT}/test/fixtures//theme/layout/theme.liquid")].relative_path)
         assert_equal(@theme.theme_files.first, @theme[@theme.theme_files.first])
       end
