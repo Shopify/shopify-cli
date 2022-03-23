@@ -180,6 +180,23 @@ module Script
             @max_size = max_size
           end
         end
+
+        class InvalidInputQueryErrors < ScriptProjectError
+          attr_reader :messages
+
+          def initialize(messages)
+            @messages = messages
+            super()
+          end
+
+          def input_query_path
+            ScriptProjectRepository::INPUT_QUERY_PATH
+          end
+
+          def message
+            messages.join("\n")
+          end
+        end
       end
     end
   end

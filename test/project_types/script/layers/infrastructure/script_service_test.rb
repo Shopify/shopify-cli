@@ -292,6 +292,23 @@ describe Script::Layers::Infrastructure::ScriptService do
         end
       end
 
+      describe "when input query is invalid" do
+        let(:response) do
+          {
+            "data" => {
+              "appScriptSet" => {
+                "userErrors" => [{ "message" => "error", "tag" => "input_query_validation_error" }],
+              },
+            },
+          }
+        end
+
+        it "raises InvalidInputQueryError" do
+          error = assert_raises(Script::Layers::Infrastructure::Errors::InvalidInputQueryErrors) { subject }
+          assert_equal(["error"], error.messages)
+        end
+      end
+
       describe "when response is empty" do
         let(:response) { nil }
 

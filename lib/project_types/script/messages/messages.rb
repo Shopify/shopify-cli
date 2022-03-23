@@ -86,6 +86,9 @@ module Script
                                                      "type(s): %{valid_types}.",
           configuration_schema_field_invalid_value_error_help: "Change the value of the type.",
 
+          input_query_error_cause: "Input query is invalid:\n%{messages}\n\n",
+          input_query_error_help: "Fix the query in the `%{input_query_path}` file.",
+
           script_not_found_cause: "Can't find script %s for Script API %s",
 
           system_call_failure_cause: "Something went wrong while running: {{command:%{cmd}}}.",
