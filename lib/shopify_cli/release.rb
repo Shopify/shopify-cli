@@ -11,7 +11,7 @@ module ShopifyCLI
     end
 
     def create!
-      ensure_updated_main
+      #ensure_updated_main
       create_release_branch
       update_changelog
       update_versions_in_files
