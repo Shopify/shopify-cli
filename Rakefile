@@ -129,6 +129,33 @@ end
 desc("Builds all distribution packages of the CLI")
 task(package: "package:all")
 
+namespace :release do
+  require "shopify_cli/release"
+
+  task :prepare, [:new_version] do |_t, args|
+    new_version = args[:new_version]
+    unless new_version
+      raise <<~NO_NEW_VERSION
+        New version must be provided, e.g.:
+
+        $ GITHUB_ACCESS_TOKEN=abcdef rake "release:prepare[1.2.3]"
+
+      NO_NEW_VERSION
+    end
+    github_access_token = ENV['GITHUB_ACCESS_TOKEN']
+    unless github_access_token
+      raise <<~NO_GITHUB_ACCESS_TOKEN
+        GitHub access token must be provided, e.g.:
+
+        $ GITHUB_ACCESS_TOKEN=abcdef rake "release:prepare[1.2.3]"
+      NO_GITHUB_ACCESS_TOKEN
+    end
+
+    ShopifyCLI::Release.new(new_version, github_access_token).create!
+    puts "Completed!"
+  end
+end
+
 namespace :extensions do
   task :update do
     version = ENV.fetch("VERSION").strip
