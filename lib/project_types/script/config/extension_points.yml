@@ -36,3 +36,21 @@ delivery_discount_types:
       repo: "https://github.com/Shopify/scripts-apis-examples"
     wasm:
       repo: "https://github.com/Shopify/scripts-apis-examples"
+product_discount_type:
+  beta: true
+  domain: 'discounts'
+  libraries:
+    wasm:
+      repo: "https://github.com/Shopify/scripts-apis-examples"
+order_discount_type:
+  beta: true
+  domain: 'discounts'
+  libraries:
+    wasm:
+      repo: "https://github.com/Shopify/scripts-apis-examples"
+shipping_discount_type:
+  beta: true
+  domain: 'discounts'
+  libraries:
+    wasm:
+      repo: "https://github.com/Shopify/scripts-apis-examples"
