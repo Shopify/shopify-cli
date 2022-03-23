@@ -108,7 +108,7 @@ module ShopifyCLI
           end
 
           def check_ruby
-            ruby_version = Environment.ruby_version(context)
+            ruby_version = Environment.ruby_version(context: context)
             return if ruby_version.satisfies?("~>2.5") || ruby_version.satisfies?("~>3.1.0")
             context.abort(context.message("core.app.create.rails.error.invalid_ruby_version"))
           end
