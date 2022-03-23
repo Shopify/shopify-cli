@@ -36,6 +36,13 @@ module ShopifyCLI
         end
       rescue OptionParser::InvalidOption => error
         arg = error.args.first
+        store_name = arg.match(/\A--(?<store_name>.*\.myshopify\.com)\z/)&.[](:store_name)
+        if store_name && !arg.match?(/\A--(store|shop)=/)
+          # Sometimes it may look like --invalidoption=https://storename.myshopify.com
+          store_name = store_name.sub(%r{\A(.*=)?(https?://)?}, "")
+          raise ShopifyCLI::Abort,
+            @ctx.message("core.errors.option_parser.invalid_option_store_equals", arg, store_name)
+        end
         raise ShopifyCLI::Abort, @ctx.message("core.errors.option_parser.invalid_option", arg)
       rescue OptionParser::MissingArgument => error
         arg = error.args.first

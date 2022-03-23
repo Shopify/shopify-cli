@@ -4,6 +4,7 @@ From version 2.6.0, the sections in this file adhere to the [keep a changelog](h
 
 ### Added
 * [#1934](https://github.com/Shopify/shopify-cli/pull/1934): Block directories in theme assets
+* [#1880](https://github.com/Shopify/shopify-cli/pull/1880): Recognize attempts to pass a store name and suggest correction
 
 ### Fixed
 * [#1874](https://github.com/Shopify/shopify-cli/pull/1874): Make ngrok errors more robust and helpful

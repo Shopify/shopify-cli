@@ -28,6 +28,39 @@ module ShopifyCLI
 
         assert_match(CLI::UI.fmt(ShopifyCLI::Commands::Populate::Customer.help), io.join)
       end
+
+      [
+        "",
+        "http://",
+        "https://",
+        "invalidoption=",
+        "invalidoption=https://",
+        ["store=", false],
+        ["shop=", false],
+        ["s=", false, "-s="],
+      ].each do |prefix, correction_expected = true, full_prefix = "--#{prefix}"|
+        store_name = "mystore.myshopify.com"
+        store_name_with_prefix = "#{full_prefix}#{store_name}"
+
+        define_method("test_calls_with#{"_prefix_#{prefix}" unless prefix.empty?}_store_as_raw_param") do
+          io = capture_io_and_assert_raises(ShopifyCLI::Abort) do
+            run_cmd("help login #{store_name_with_prefix}")
+          end
+
+          if correction_expected
+            assert_message_output(io: io, expected_content: [
+              @context.message(
+                "core.errors.option_parser.invalid_option_store_equals",
+                store_name_with_prefix, store_name
+              ),
+            ])
+          else
+            assert_message_output(io: io, expected_content: [
+              @context.message("core.errors.option_parser.invalid_option", store_name_with_prefix),
+            ])
+          end
+        end
+      end
     end
   end
 end

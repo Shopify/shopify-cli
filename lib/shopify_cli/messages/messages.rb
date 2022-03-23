@@ -20,6 +20,12 @@ module ShopifyCLI
           missing_ruby: "Ruby is required to continue. Install Ruby here: https://www.ruby-lang.org/en/downloads.",
           option_parser: {
             invalid_option: "The option {{command:%s}} is not supported.",
+            invalid_option_store_equals: <<~MESSAGE,
+            The option {{command:%s}} isn't recognized.
+
+            Try this:
+            {{command:--store=%s}}.
+            MESSAGE
             missing_argument: "The required argument {{command:%s}} is missing.",
           },
         },
