@@ -80,7 +80,7 @@ module ShopifyCLI
         release_branch_name,
         "Packaging for release v#{new_version}",
         release_notes
-      )
+      ).tap { |results| puts "Created PR ##{results["number"]}" }
     end
 
     def release_branch_name
