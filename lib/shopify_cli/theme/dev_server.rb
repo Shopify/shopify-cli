@@ -27,13 +27,13 @@ module ShopifyCLI
       class << self
         attr_accessor :ctx
 
-        def start(ctx, root, host: "127.0.0.1", port: 9292, poll: false, pull_interval: 0, mode: ReloadMode.default)
+        def start(ctx, root, host: "127.0.0.1", port: 9292, poll: false, editor_sync: false, mode: ReloadMode.default)
           @ctx = ctx
           theme = DevelopmentTheme.find_or_create!(ctx, root: root)
           ignore_filter = IgnoreFilter.from_path(root)
-          @syncer = Syncer.new(ctx, theme: theme, ignore_filter: ignore_filter, overwrite_json: pull_interval.zero?)
+          @syncer = Syncer.new(ctx, theme: theme, ignore_filter: ignore_filter, overwrite_json: !editor_sync)
           watcher = Watcher.new(ctx, theme: theme, syncer: @syncer, ignore_filter: ignore_filter, poll: poll)
-          remote_watcher = RemoteWatcher.to(theme: theme, syncer: @syncer, interval: pull_interval)
+          remote_watcher = RemoteWatcher.to(theme: theme, syncer: @syncer)
 
           # Setup the middleware stack. Mimics Rack::Builder / config.ru, but in reverse order
           @app = Proxy.new(ctx, theme: theme, syncer: @syncer)
@@ -59,7 +59,7 @@ module ShopifyCLI
 
             return if stopped
 
-            preview_suffix = pull_interval.zero? ? ctx.message("theme.serve.download_changes") : ""
+            preview_suffix = editor_sync ? "" : ctx.message("theme.serve.download_changes")
             preview_message = ctx.message(
               "theme.serve.customize_or_preview",
               preview_suffix,
@@ -79,7 +79,7 @@ module ShopifyCLI
           end
 
           watcher.start
-          remote_watcher.start
+          remote_watcher.start if editor_sync
           WebServer.run(
             @app,
             BindAddress: host,
@@ -87,7 +87,7 @@ module ShopifyCLI
             Logger: logger,
             AccessLog: [],
           )
-          remote_watcher.stop
+          remote_watcher.stop if editor_sync
           watcher.stop
 
         rescue ShopifyCLI::API::APIRequestForbiddenError,

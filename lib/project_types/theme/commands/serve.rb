@@ -16,7 +16,7 @@ module Theme
         parser.on("--port=PORT") { |port| flags[:port] = port.to_i }
         parser.on("--poll") { flags[:poll] = true }
         parser.on("--live-reload=MODE") { |mode| flags[:mode] = as_reload_mode(mode) }
-        parser.on("--theme-editor-sync=SECONDS") { |seconds| flags[:pull_interval] = seconds.to_i }
+        parser.on("--theme-editor-sync") { flags[:editor_sync] = true }
       end
 
       def call(_args, name)
