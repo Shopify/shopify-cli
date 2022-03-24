@@ -27,6 +27,7 @@ module ShopifyCLI
       ensure_correct_gem_version
       Rake::Task["package"].invoke
       update_homebrew
+      create_github_release
     end
 
     private
@@ -51,7 +52,7 @@ module ShopifyCLI
     end
 
     def update_changelog
-      if release_notes.empty?
+      if release_notes("Unreleased").empty?
         puts "No unreleased CHANGELOG updates found!"
       else
         puts "Updating CHANGELOG"
@@ -89,7 +90,7 @@ module ShopifyCLI
         "main",
         release_branch_name,
         "Packaging for release v#{new_version}",
-        release_notes
+        release_notes("Unreleased")
       ).tap { |results| puts "Created #{repo} PR ##{results["number"]}" }
     end
 
@@ -148,6 +149,24 @@ module ShopifyCLI
       ).tap { |results| puts "Created #{repo} PR ##{results["number"]}" }
     end
 
+    def create_github_release
+      release = github.create_release(
+        "Shopify/shopify-cli",
+        "v#{new_version}",
+        {
+          name: "Version #{new_version}",
+          body: release_notes(new_version)
+        }
+      )
+      %w(.deb -1.noarch.rpm).each do |suffix|
+        github.upload_asset(
+          release["url"],
+          File.join(package_dir, "shopify-cli-#{new_version}#{suffix}")
+        )
+      end
+      system("open #{release["html_url"]}")
+    end
+
     def homebrew_path
       @homebrew_path ||= `/opt/dev/bin/dev project-path homebrew-shopify`.chomp
     end
@@ -173,8 +192,8 @@ module ShopifyCLI
       @release_branch_name ||= "release_#{new_version.split(".").join("_")}"
     end
 
-    def release_notes
-      @release_notes ||= changelog.release_notes("Unreleased")
+    def release_notes(version)
+      changelog.release_notes(version)
     end
   end
 end
