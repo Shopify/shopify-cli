@@ -127,7 +127,6 @@ module ShopifyCLI
     def update_homebrew_repo
       source_file = File.join(package_dir, "shopify-cli.rb")
       FileUtils.copy(source_file, homebrew_path)
-      message = "Update Shopify CLI to #{new_version}"
       Dir.chdir(homebrew_path) do
         unless system("git commit -am '#{homebrew_update_message}'")
           raise "Commit failed!"
@@ -155,7 +154,7 @@ module ShopifyCLI
         "v#{new_version}",
         {
           name: "Version #{new_version}",
-          body: release_notes(new_version)
+          body: release_notes(new_version),
         }
       )
       %w(.deb -1.noarch.rpm).each do |suffix|
@@ -168,7 +167,7 @@ module ShopifyCLI
     end
 
     def homebrew_path
-      @homebrew_path ||= `/opt/dev/bin/dev project-path homebrew-shopify`.chomp
+      @homebrew_path ||= %x(/opt/dev/bin/dev project-path homebrew-shopify).chomp
     end
 
     def homebrew_update_message
