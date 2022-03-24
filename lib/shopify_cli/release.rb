@@ -10,7 +10,7 @@ module ShopifyCLI
       @github = Octokit::Client.new(access_token: github_access_token)
     end
 
-    def create!
+    def prepare!
       ensure_updated_main
       create_release_branch
       update_changelog

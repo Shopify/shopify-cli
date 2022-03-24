@@ -151,7 +151,7 @@ namespace :release do
       NO_GITHUB_ACCESS_TOKEN
     end
 
-    ShopifyCLI::Release.new(new_version, github_access_token).create!
+    ShopifyCLI::Release.new(new_version, github_access_token).prepare!
     puts "Completed!"
   end
 end
