@@ -15,6 +15,7 @@ group :development, :test do
   gem "rubocop-rake", require: false
   gem "iniparse", "~> 1.5"
   gem "colorize", "~> 0.8.1"
+  gem "octokit", "~> 4.0"
 end
 
 group :test do
