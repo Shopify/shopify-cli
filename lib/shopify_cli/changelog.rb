@@ -1,4 +1,4 @@
-require 'shopify_cli/sed'
+require "shopify_cli/sed"
 
 module ShopifyCLI
   class Changelog
@@ -17,12 +17,12 @@ module ShopifyCLI
     end
 
     def release_notes(version)
-      changes[version].map { |change_category, changes|
+      changes[version].map do |change_category, changes|
         <<~CHANGES
           ### #{change_category}
           #{changes.map { |change| entry(**change) }.join("\n")}
         CHANGES
-      }.join("\n")
+      end.join("\n")
     end
 
     def entry(pr_id:, desc:)
@@ -33,8 +33,8 @@ module ShopifyCLI
 
     def changes
       @changes ||= Hash.new do |h, k|
-        h[k] = Hash.new do |h, k|
-          h[k] = []
+        h[k] = Hash.new do |h2, k2|
+          h2[k2] = []
         end
       end
     end
@@ -57,12 +57,13 @@ module ShopifyCLI
             changes[current_version][change_category] << { pr_id: pr_id, desc: desc }
           elsif /\A\#\# Version (?<version>\d+\.\d+\.\d+)/ =~ line
             current_version = version
-            case state
-            when :unreleased
-              state = :last_version
-            else
-              state = :finished
-            end
+            state =
+              case state
+              when :unreleased
+                :last_version
+              else
+                :finished
+              end
           elsif !line.match?(/\s*\n/)
             raise "Unrecognized line: #{line.inspect}"
           end

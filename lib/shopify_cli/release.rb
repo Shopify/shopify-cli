@@ -1,6 +1,6 @@
-require 'shopify_cli/sed'
-require 'shopify_cli/changelog'
-require 'octokit'
+require "shopify_cli/sed"
+require "shopify_cli/changelog"
+require "octokit"
 
 module ShopifyCLI
   class Release
@@ -11,7 +11,7 @@ module ShopifyCLI
     end
 
     def create!
-      #ensure_updated_main
+      ensure_updated_main
       create_release_branch
       update_changelog
       update_versions_in_files
@@ -25,7 +25,7 @@ module ShopifyCLI
     attr_reader :new_version, :changelog, :github
 
     def ensure_updated_main
-      current_branch = `git branch --show-current`
+      current_branch = %x(git branch --show-current)
       unless current_branch == "main"
         raise "Must be on the main branch to package a release!"
       end
@@ -84,7 +84,7 @@ module ShopifyCLI
     end
 
     def release_branch_name
-      @release_branch_name ||= "release_#{new_version.split('.').join('_')}"
+      @release_branch_name ||= "release_#{new_version.split(".").join("_")}"
     end
 
     def release_notes

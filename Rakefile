@@ -142,7 +142,7 @@ namespace :release do
 
       NO_NEW_VERSION
     end
-    github_access_token = ENV['GITHUB_ACCESS_TOKEN']
+    github_access_token = ENV["GITHUB_ACCESS_TOKEN"]
     unless github_access_token
       raise <<~NO_GITHUB_ACCESS_TOKEN
         GitHub access token must be provided, e.g.:
