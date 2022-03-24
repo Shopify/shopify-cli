@@ -1,3 +1,5 @@
+require "net/http"
+require "fileutils"
 require "shopify_cli/sed"
 require "shopify_cli/changelog"
 require "octokit"
@@ -20,6 +22,13 @@ module ShopifyCLI
       system("open #{pr["html_url"]}")
     end
 
+    def package!
+      ensure_updated_main
+      ensure_correct_gem_version
+      Rake::Task["package"].invoke
+      update_homebrew
+    end
+
     private
 
     attr_reader :new_version, :changelog, :github
@@ -27,7 +36,7 @@ module ShopifyCLI
     def ensure_updated_main
       current_branch = %x(git branch --show-current)
       unless current_branch == "main"
-        raise "Must be on the main branch to package a release!"
+        raise "Must be on the main branch to perform this operation. First run `git checkout main`"
       end
       unless system("git pull")
         raise "git pull failed, cannot be sure there aren't new commits!"
@@ -66,21 +75,98 @@ module ShopifyCLI
     def commit
       puts "Committing"
       unless system("git commit -am 'Packaging for release v#{new_version}'")
-        puts "Commit failed!"
+        raise "Commit failed!"
       end
       unless system("git push -u origin #{release_branch_name}")
-        puts "Failed to push branch!"
+        raise "Failed to push branch!"
       end
     end
 
     def create_pr
+      repo = "Shopify/shopify-cli"
       github.create_pull_request(
-        "Shopify/shopify-cli",
+        repo,
         "main",
         release_branch_name,
         "Packaging for release v#{new_version}",
         release_notes
-      ).tap { |results| puts "Created PR ##{results["number"]}" }
+      ).tap { |results| puts "Created #{repo} PR ##{results["number"]}" }
+    end
+
+    def ensure_correct_gem_version
+      response = Net::HTTP.get(URI("https://rubygems.org/api/v1/versions/shopify-cli/latest.json"))
+      latest_version = JSON.parse(response)["version"]
+      unless latest_version == new_version
+        raise "Attempted to update to #{new_version}, but latest on RubyGems is #{latest_version}"
+      end
+    end
+
+    def update_homebrew
+      ensure_updated_homebrew_repo
+      update_homebrew_repo
+      pr = create_homebrew_pr
+      system("open #{pr["html_url"]}")
+    end
+
+    def ensure_updated_homebrew_repo
+      unless File.exist?(homebrew_path)
+        unless system("/opt/dev/bin/dev clone homebrew-shopify")
+          raise "Failed to clone homebrew-shopify repo!"
+        end
+      end
+
+      Dir.chdir(homebrew_path) do
+        unless system("git checkout master && git pull")
+          raise "Failed to pull latest homebrew-shopify!"
+        end
+        system("git checkout -b #{homebrew_release_branch}")
+      end
+    end
+
+    def update_homebrew_repo
+      source_file = File.join(package_dir, "shopify-cli.rb")
+      FileUtils.copy(source_file, homebrew_path)
+      message = "Update Shopify CLI to #{new_version}"
+      Dir.chdir(homebrew_path) do
+        unless system("git commit -am '#{homebrew_update_message}'")
+          raise "Commit failed!"
+        end
+        unless system("git push -u origin #{homebrew_release_branch}")
+          raise "Failed to push branch!"
+        end
+      end
+    end
+
+    def create_homebrew_pr
+      repo = "Shopify/homebrew-shopify"
+      github.create_pull_request(
+        repo,
+        "master",
+        homebrew_release_branch,
+        homebrew_update_message,
+        homebrew_release_notes
+      ).tap { |results| puts "Created #{repo} PR ##{results["number"]}" }
+    end
+
+    def homebrew_path
+      @homebrew_path ||= `/opt/dev/bin/dev project-path homebrew-shopify`.chomp
+    end
+
+    def homebrew_update_message
+      @homebrew_update_message ||= "Update Shopify CLI to #{new_version}"
+    end
+
+    def package_dir
+      @package_dir ||= File.join(ShopifyCLI::ROOT, "packaging", "builds", new_version)
+    end
+
+    def homebrew_release_branch
+      "release_#{new_version.split(".").join("_")}_of_shopify-cli"
+    end
+
+    def homebrew_release_notes
+      "I'm releasing a new version of the Shopify CLI, " \
+        "[#{new_version}](https://github.com/Shopify/shopify-cli/releases/tag/v#{new_version})"
     end
 
     def release_branch_name
