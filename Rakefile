@@ -161,7 +161,7 @@ namespace :release do
       raise <<~NO_GITHUB_ACCESS_TOKEN
         GitHub access token must be provided, e.g.:
 
-        $ GITHUB_ACCESS_TOKEN=abcdef rake "release:package"
+        $ GITHUB_ACCESS_TOKEN=abcdef rake release:package
       NO_GITHUB_ACCESS_TOKEN
     end
     ShopifyCLI::Release.new(ShopifyCLI::VERSION, github_access_token).package!
