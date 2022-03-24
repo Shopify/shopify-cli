@@ -101,14 +101,14 @@ module Theme
             Usage: {{command:%s theme serve [ ROOT ]}}
 
             Options:
-              {{command:--port=PORT}}                 Local port to serve theme preview from.
-              {{command:--poll}}                      Force polling to detect file changes.
-              {{command:--host=HOST}}                 Set which network interface the web server listens on. The default value is 127.0.0.1.
-              {{command:--theme-editor-sync=SECONDS}} Pulling interval (in seconds) to download Theme Editor changes and in your local theme files (default: off).
-              {{command:--live-reload=MODE}}          The live reload mode switches the server behavior when a file is modified:
-                                          - {{command:hot-reload}} Hot reloads local changes to CSS and sections (default)
-                                          - {{command:full-page}}  Always refreshes the entire page
-                                          - {{command:off}}        Deactivate live reload
+              {{command:--port=PORT}}         Local port to serve theme preview from.
+              {{command:--poll}}              Force polling to detect file changes.
+              {{command:--host=HOST}}         Set which network interface the web server listens on. The default value is 127.0.0.1.
+              {{command:--theme-editor-sync}} Pulling interval (in seconds) to download Theme Editor changes and in your local theme files (default: off).
+              {{command:--live-reload=MODE}}  The live reload mode switches the server behavior when a file is modified:
+                                  - {{command:hot-reload}} Hot reloads local changes to CSS and sections (default)
+                                  - {{command:full-page}}  Always refreshes the entire page
+                                  - {{command:off}}        Deactivate live reload
           HELP
           reload_mode_is_not_valid: "The live reload mode `%s` is not valid.",
           try_a_valid_reload_mode: "Try a valid live reload mode: %s.",
