@@ -30,7 +30,7 @@ module ShopifyCLI
 
           params_js = <<~JS
             (() => {
-              window.__SHOPIFY_CLI_ENV__ = {"mode":"off"};
+              window.__SHOPIFY_CLI_ENV__ = {"mode":"off","section_names_by_type":{"main-blog":["main"]}};
             })();
           JS
 
