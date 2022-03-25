@@ -31,7 +31,7 @@ module ShopifyCLI
         :union_merge, # - Union merges the local file content with the remote file content
       ]
 
-      attr_reader :theme, :checksums
+      attr_reader :theme, :checksums, :error_checksums
       attr_accessor :include_filter, :ignore_filter
 
       def_delegators :@error_reporter, :has_any_error?
@@ -107,6 +107,10 @@ module ShopifyCLI
 
       def remote_file?(file)
         checksums.has?(file)
+      end
+
+      def broken_file?(file)
+        error_checksums.key?(file.relative_path)
       end
 
       def wait!
@@ -225,10 +229,10 @@ module ShopifyCLI
           return
         end
 
-        if [:update, :get].include?(method) && operation.file.exist? && !checksums.file_has_changed?(operation.file)
+        if [:update, :get].include?(method) && operation.file.exist?
           is_fixed = !!@error_checksums.delete(operation.file.checksum)
           @standard_reporter.report(operation.as_fix_message) if is_fixed
-          return
+          return unless checksums.file_has_changed?(operation.file)
         end
 
         @pending << operation
@@ -318,6 +322,9 @@ module ShopifyCLI
         content = Merger.union_merge(file, remote_content)
 
         file.write(content)
+
+        enqueue(:update, file)
+
         response
       end
 

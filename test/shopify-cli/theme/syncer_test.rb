@@ -137,6 +137,14 @@ module ShopifyCLI
 
         file.expects(:write).with("merged content")
 
+        @syncer.expects(:enqueue).with(:update, file)
+        @syncer.send(:union_merge, file)
+      end
+
+      def test_enqueue_union_merges
+        file = @theme["assets/theme.css"]
+
+        @syncer.expects(:enqueue).with(:union_merge, file)
         @syncer.start_threads
         @syncer.enqueue_union_merges([file])
         @syncer.wait!
@@ -664,6 +672,20 @@ module ShopifyCLI
         actual_error = error.message
 
         assert_equal(expected_error, actual_error)
+      end
+
+      def test_broken_file_when_file_is_broken
+        file = stub(relative_path: "templates/index.json")
+        @syncer.stubs(:error_checksums).returns({ "templates/index.json" => nil })
+
+        assert(@syncer.broken_file?(file))
+      end
+
+      def test_broken_file_when_file_is_not_broken
+        file = stub(relative_path: "templates/index.json")
+        @syncer.stubs(:error_checksums).returns({})
+
+        refute(@syncer.broken_file?(file))
       end
 
       private

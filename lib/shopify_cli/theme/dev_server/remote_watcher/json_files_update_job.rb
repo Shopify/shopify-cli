@@ -25,6 +25,7 @@ module ShopifyCLI
             @theme
               .json_files
               .reject { |file| @syncer.pending_updates.include?(file) }
+              .reject { |file| @syncer.broken_file?(file) }
           end
         end
       end
