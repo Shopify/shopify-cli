@@ -675,15 +675,17 @@ module ShopifyCLI
       end
 
       def test_broken_file_when_file_is_broken
-        file = stub(relative_path: "templates/index.json")
-        @syncer.stubs(:error_checksums).returns({ "templates/index.json" => nil })
+        file = stub(relative_path: "templates/index.json", checksum: "AAAABBBCCC")
+        @syncer.stubs(:checksums).returns({ "templates/index.json" => "AAAABBBCCC" })
+        @syncer.stubs(:error_checksums).returns(["AAAABBBCCC"])
 
         assert(@syncer.broken_file?(file))
       end
 
       def test_broken_file_when_file_is_not_broken
-        file = stub(relative_path: "templates/index.json")
-        @syncer.stubs(:error_checksums).returns({})
+        file = stub(relative_path: "templates/index.json", checksum: "AAAABBBCCC")
+        @syncer.stubs(:checksums).returns({ "templates/index.json" => "AAAABBBCCC" })
+        @syncer.stubs(:error_checksums).returns([])
 
         refute(@syncer.broken_file?(file))
       end

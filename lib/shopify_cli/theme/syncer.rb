@@ -110,7 +110,7 @@ module ShopifyCLI
       end
 
       def broken_file?(file)
-        error_checksums.key?(file.relative_path)
+        error_checksums.include?(checksums[file.relative_path])
       end
 
       def wait!
@@ -157,8 +157,6 @@ module ShopifyCLI
 
       def upload_theme!(delay_low_priority_files: false, delete: true, &block)
         fetch_checksums!
-        removed_json_files = []
-        removed_files = []
 
         if delete
           removed_json_files, removed_files = checksums
@@ -171,8 +169,8 @@ module ShopifyCLI
           enqueue_json_deletes(removed_json_files)
         end
 
-        enqueue_updates(@theme.liquid_files - removed_files)
-        enqueue_json_updates(@theme.json_files - removed_json_files)
+        enqueue_updates(@theme.liquid_files)
+        enqueue_json_updates(@theme.json_files)
 
         if delay_low_priority_files
           # Wait for liquid & JSON files to upload, because those are rendered remotely
@@ -182,7 +180,7 @@ module ShopifyCLI
         # Process lower-priority files in the background
 
         # Assets are served locally, so can be uploaded in the background
-        enqueue_updates(@theme.static_asset_files - removed_files)
+        enqueue_updates(@theme.static_asset_files)
 
         unless delay_low_priority_files
           wait!(&block)

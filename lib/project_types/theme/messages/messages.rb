@@ -104,7 +104,7 @@ module Theme
               {{command:--port=PORT}}         Local port to serve theme preview from.
               {{command:--poll}}              Force polling to detect file changes.
               {{command:--host=HOST}}         Set which network interface the web server listens on. The default value is 127.0.0.1.
-              {{command:--theme-editor-sync}} Pulling interval (in seconds) to download Theme Editor changes and in your local theme files (default: off).
+              {{command:--theme-editor-sync}} Synchronize Theme Editor updates in the local theme files.
               {{command:--live-reload=MODE}}  The live reload mode switches the server behavior when a file is modified:
                                   - {{command:hot-reload}} Hot reloads local changes to CSS and sections (default)
                                   - {{command:full-page}}  Always refreshes the entire page
