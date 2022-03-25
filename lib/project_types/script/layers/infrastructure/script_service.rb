@@ -83,6 +83,8 @@ module Script
               valid_types: e["message"],
               filename: script_config.filename,
             )
+          elsif (errors = user_errors.filter { |err| err["tag"] == "input_query_validation_error" }).any?
+            raise Errors::InvalidInputQueryErrors, errors.map { |err| err["message"] }
           elsif user_errors.find { |err| %w(not_use_msgpack_error schema_version_argument_error).include?(err["tag"]) }
             raise Domain::Errors::MetadataValidationError
           else
