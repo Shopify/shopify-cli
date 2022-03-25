@@ -115,6 +115,65 @@ module ShopifyCLI
         @syncer.wait!
       end
 
+      def test_union_merge_file
+        file = @theme["assets/theme.css"]
+
+        ShopifyCLI::AdminAPI
+          .expects(:rest_request)
+          .with(
+            @ctx,
+            api_version: "unstable",
+            method: "GET",
+            shop: @theme.shop,
+            path: "themes/#{@theme.id}/assets.json",
+            query: "asset%5Bkey%5D=assets%2Ftheme.css"
+          )
+          .returns([200, { "asset" => { "value" => "new content" } }, {}])
+
+        Syncer::Merger
+          .expects(:union_merge)
+          .with(file, "new content")
+          .returns("merged content")
+
+        file.expects(:write).with("merged content")
+
+        @syncer.expects(:enqueue).with(:update, file)
+        @syncer.send(:union_merge, file)
+      end
+
+      def test_enqueue_union_merges
+        file = @theme["assets/theme.css"]
+
+        @syncer.expects(:enqueue).with(:union_merge, file)
+        @syncer.start_threads
+        @syncer.enqueue_union_merges([file])
+        @syncer.wait!
+      end
+
+      def test_union_merge_file_when_file_is_not_a_text
+        file = @theme["assets/logo.png"]
+
+        ShopifyCLI::AdminAPI
+          .expects(:rest_request)
+          .with(
+            @ctx,
+            api_version: "unstable",
+            method: "GET",
+            shop: @theme.shop,
+            path: "themes/#{@theme.id}/assets.json",
+            query: "asset%5Bkey%5D=assets%2Flogo.png"
+          )
+          .returns([200, {}, {}])
+
+        Syncer::Merger.expects(:union_merge).never
+
+        file.expects(:write).never
+
+        @syncer.start_threads
+        @syncer.enqueue_union_merges([file])
+        @syncer.wait!
+      end
+
       def test_upload_when_unmodified
         @syncer.start_threads
         @syncer.checksums["assets/theme.css"] = @theme["assets/theme.css"].checksum
@@ -241,8 +300,9 @@ module ShopifyCLI
 
       def test_download_theme
         @syncer.start_threads
-        @syncer.checksums.replace(@theme.theme_files.map { |file| [file.relative_path.to_s, "OUTDATED"] }.to_h)
-        @syncer.checksums.delete("assets/generated.css.liquid")
+        @theme.theme_files
+          .reject { |file| file.relative_path == "assets/generated.css.liquid" }
+          .each { |file| @syncer.checksums[file.relative_path] = "OUTDATED" }
 
         expected_size = @theme.theme_files.size - 1 # 1 deleted file
 
@@ -273,7 +333,8 @@ module ShopifyCLI
         @syncer.include_filter.expects(:match?).with("layout/theme.liquid").returns(true)
 
         @syncer.start_threads
-        @syncer.checksums.replace(@theme.theme_files.map { |file| [file.relative_path.to_s, "OUTDATED"] }.to_h)
+
+        @theme.theme_files.each { |file| @syncer.checksums[file.relative_path] = "OUTDATED" }
 
         File.any_instance.expects(:write)
           .with("new content")
@@ -301,8 +362,10 @@ module ShopifyCLI
         @syncer.ignore_filter.expects(:ignore?).with(@theme["assets/generated.css.liquid"].path).returns(true)
 
         @syncer.start_threads
-        @syncer.checksums.replace(@theme.theme_files.map { |file| [file.relative_path.to_s, file.checksum] }.to_h)
-        @syncer.checksums.delete("assets/generated.css.liquid")
+
+        @theme.theme_files
+          .reject { |file| file.relative_path == "assets/generated.css.liquid" }
+          .each { |file| @syncer.checksums[file.relative_path] = file.checksum }
 
         File.any_instance.expects(:delete).never
         File.any_instance.expects(:write).never
@@ -317,7 +380,7 @@ module ShopifyCLI
 
       def test_download_theme_without_checksum
         @syncer.start_threads
-        @syncer.checksums.replace(@theme.theme_files.map { |file| [file.relative_path.to_s, nil] }.to_h)
+        @theme.theme_files.each { |file| @syncer.checksums[file.relative_path] = nil }
 
         expected_size = @theme.theme_files.size
 
@@ -363,7 +426,7 @@ module ShopifyCLI
 
         response_assets = expected_files.map do |file|
           {
-            "key" => file.relative_path.to_s,
+            "key" => file.relative_path,
             "checksum" => file.checksum,
           }
         end
@@ -404,6 +467,38 @@ module ShopifyCLI
           .returns([200, {}, {}])
 
         @syncer.upload_theme!
+      end
+
+      def test_upload_theme_deletes_missing_files_when_delete_is_true
+        @syncer.stubs(:overwrite_json?).returns(false)
+        @syncer.stubs(:fetch_checksums!)
+        @syncer.checksums[removed_css_file.relative_path] = "removed non-JSON file"
+        @syncer.checksums[removed_json_file.relative_path] = "removed JSON file"
+
+        @syncer.expects(:enqueue_deletes).with([removed_css_file])
+        @syncer.expects(:enqueue_json_deletes).with([removed_json_file])
+        @syncer.expects(:enqueue_updates).with(@theme.liquid_files)
+        @syncer.expects(:enqueue_updates).with(@theme.static_asset_files)
+        @syncer.expects(:enqueue_json_updates).with(@theme.json_files)
+
+        @syncer.start_threads
+        @syncer.upload_theme!(delete: true)
+      end
+
+      def test_upload_theme_deletes_missing_files_when_delete_is_false
+        @syncer.stubs(:overwrite_json?).returns(false)
+        @syncer.stubs(:fetch_checksums!)
+        @syncer.checksums[removed_css_file.relative_path] = "removed non-JSON file"
+        @syncer.checksums[removed_json_file.relative_path] = "removed JSON file"
+
+        @syncer.expects(:enqueue_deletes).never
+        @syncer.expects(:enqueue_json_deletes).never
+        @syncer.expects(:enqueue_updates).with(@theme.liquid_files)
+        @syncer.expects(:enqueue_updates).with(@theme.static_asset_files)
+        @syncer.expects(:enqueue_json_updates).with(@theme.json_files)
+
+        @syncer.start_threads
+        @syncer.upload_theme!(delete: false)
       end
 
       def test_backoff_near_api_limit
@@ -569,27 +664,30 @@ module ShopifyCLI
         @syncer.unlock_io!
       end
 
-      def test_update_checksums_without_checksums_mutex
-        api_value = { "key" => "key", "checksum" => "checksum" }
-        api_response = stub(values: [api_value])
-        checksums_mutex = stub(synchronize: nil)
+      def test_enqueue_invalid_method
+        file = mock
+        error = assert_raises(ArgumentError) { @syncer.send(:enqueue, :shutdown, file) }
 
-        @syncer.stubs(:checksums_mutex).returns(checksums_mutex)
+        expected_error = "method 'shutdown' cannot be queued"
+        actual_error = error.message
 
-        @syncer.checksums.expects(:[]=).never
-        @syncer.checksums.expects(:reject!).never
-
-        @syncer.send(:update_checksums, api_response)
+        assert_equal(expected_error, actual_error)
       end
 
-      def test_update_checksums_with_checksums_mutex
-        api_value = { "key" => "key", "checksum" => "checksum" }
-        api_response = stub(values: [api_value])
+      def test_broken_file_when_file_is_broken
+        file = stub(relative_path: "templates/index.json", checksum: "AAAABBBCCC")
+        @syncer.stubs(:checksums).returns({ "templates/index.json" => "AAAABBBCCC" })
+        @syncer.stubs(:error_checksums).returns(["AAAABBBCCC"])
 
-        @syncer.checksums.expects(:[]=).once
-        @syncer.checksums.expects(:reject!).once
+        assert(@syncer.broken_file?(file))
+      end
 
-        @syncer.send(:update_checksums, api_response)
+      def test_broken_file_when_file_is_not_broken
+        file = stub(relative_path: "templates/index.json", checksum: "AAAABBBCCC")
+        @syncer.stubs(:checksums).returns({ "templates/index.json" => "AAAABBBCCC" })
+        @syncer.stubs(:error_checksums).returns([])
+
+        refute(@syncer.broken_file?(file))
       end
 
       private
@@ -617,6 +715,18 @@ module ShopifyCLI
 
       def default_response_body
         JSON.generate(errors: {})
+      end
+
+      def removed_json_file
+        @removed_json_file ||= File.new("templates/removed.json", root)
+      end
+
+      def removed_css_file
+        @removed_css_file ||= File.new("assets/removed.css", root)
+      end
+
+      def root
+        @root ||= Pathname.new(ShopifyCLI::ROOT)
       end
     end
   end

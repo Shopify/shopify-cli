@@ -388,6 +388,7 @@ module ShopifyCLI
             sparse_checkout_not_set: "Sparse checkout set command failed.",
             pull_failed: "Pull failed.",
             pull_failed_bad_branch: "Pull failed. Branch %s cannot be found. Check the branch name and try again.",
+            merge_failed: "The file %s merge failed.",
           },
 
           cloning: "Cloning %s into %s…",

@@ -27,11 +27,23 @@ module ShopifyCLI
     def spawn_thread
       Thread.new do
         catch(:stop_thread) do
-          loop do
-            @jobs.pop.call
-          end
+          loop { perform(@jobs.pop) }
         end
       end
+    end
+
+    def perform(job)
+      job.call
+      reschedule(job) if job.recurring?
+    end
+
+    def reschedule(job)
+      wait(job.interval)
+      schedule(job)
+    end
+
+    def wait(seconds)
+      sleep(seconds)
     end
   end
 end

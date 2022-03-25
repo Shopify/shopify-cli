@@ -57,6 +57,15 @@ module Theme
         end
       end
 
+      def test_can_specify_editor_sync
+        ShopifyCLI::Theme::DevServer.expects(:start)
+          .with(@ctx, ".", host: Theme::Command::Serve::DEFAULT_HTTP_HOST, editor_sync: true)
+
+        run_serve_command do |command|
+          command.options.flags[:editor_sync] = true
+        end
+      end
+
       def test_can_specify_root
         ShopifyCLI::Theme::DevServer.expects(:start)
           .with(@ctx, "dist", host: Theme::Command::Serve::DEFAULT_HTTP_HOST)

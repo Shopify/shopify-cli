@@ -35,7 +35,7 @@ module ShopifyCLI
         end
 
         def file_path
-          file&.relative_path.to_s
+          file&.relative_path
         end
 
         private

@@ -103,6 +103,42 @@ module ShopifyCLI
       end
 
       ##
+      # Run git three-way file merge (it doesn't require an initialized git repository)
+      #
+      # #### Parameters
+      #
+      # * `current_file  - string path of the current file
+      # * `base_file`    - string path of the base file
+      # * `other_file`   - string path of the other file
+      # * `opts`         - list of "git merge-file" options. Valid values:
+      #                    - "-q"       - do not warn about conflicts
+      #                    - "--diff3"  - show conflicts
+      #                    - "--ours"   - resolve conflicts favoring lines from `current_file`
+      #                    - "--theirs" - resolve conflicts favoring lines from `other_file`
+      #                    - "--union"  - resolve conflicts favoring lines from both files
+      #                    - "-p"       - send results to standard output instead of
+      #                                 overwriting the `current_file`
+      # * `ctx`          - the current running context of your command, defaults to a new context
+      #
+      # #### Returns
+      #
+      # * standard output from git
+      #
+      # #### Example
+      #
+      #   output = ShopifyCLI::Git.merge_file(current_file, base_file, other_file, opts, ctx: ctx)
+      #
+      def merge_file(current_file, base_file, other_file, opts = [], ctx: Context.new)
+        output, status = ctx.capture2e("git", "merge-file", current_file, base_file, other_file, *opts)
+
+        unless status.success?
+          ctx.abort(ctx.message("core.git.error.merge_failed"))
+        end
+
+        output
+      end
+
+      ##
       # will initialize a new repo in the current directory. This will output
       # if it was successful or not.
       #
