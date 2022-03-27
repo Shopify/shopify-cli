@@ -100,8 +100,8 @@ module ShopifyCLI
         when :unreleased, :last_version
           if /\A\#\#\# (?<category>\w+)/ =~ line
             change_category = category
-          elsif %r{\A\* \[\#(?<pr_id>\d+)\]\(https://github.com/Shopify/shopify-cli/pull/\d+\): (?<desc>.+)\n} =~ line
-            changes[current_version][change_category] << { pr_id: pr_id, desc: desc }
+          elsif %r{\A\* \[\#(?<id>\d+)\]\(https://github.com/Shopify/shopify-cli/pull/\k<id>\): (?<desc>.+)\n} =~ line
+            changes[current_version][change_category] << { pr_id: id, desc: desc }
           elsif /\A\#\# Version (?<version>\d+\.\d+\.\d+)/ =~ line
             current_version = version
             state =
