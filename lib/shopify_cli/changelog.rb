@@ -1,8 +1,10 @@
 require "shopify_cli/sed"
+require "octokit"
 
 module ShopifyCLI
   class Changelog
     CHANGELOG_FILE = File.join(ShopifyCLI::ROOT, "CHANGELOG.md")
+    CHANGE_CATEGORIES = %w(Added Fixed Changed)
 
     def initialize
       load(File.read(CHANGELOG_FILE))
@@ -16,6 +18,13 @@ module ShopifyCLI
       )
     end
 
+    def update!
+      pr = pr_for_current_branch
+      category = CLI::UI::Prompt.ask("What type of change?", options: CHANGE_CATEGORIES)
+      add_change(category, { pr_id: pr.number, desc: pr.title })
+      save!
+    end
+
     def release_notes(version)
       changes[version].map do |change_category, changes|
         <<~CHANGES
@@ -23,6 +32,10 @@ module ShopifyCLI
           #{changes.map { |change| entry(**change) }.join("\n")}
         CHANGES
       end.join("\n")
+    end
+
+    def add_change(category, change)
+      changes["Unreleased"][category] << change
     end
 
     def entry(pr_id:, desc:)
@@ -36,6 +49,10 @@ module ShopifyCLI
         release_notes_with_header(ShopifyCLI::VERSION),
         remainder,
       ].map(&:chomp).join("\n") << "\n"
+    end
+
+    def save!
+      File.write(CHANGELOG_FILE, full_contents)
     end
 
     private
@@ -100,6 +117,20 @@ module ShopifyCLI
         end
         @remainder << line if state == :finished
       end
+    end
+
+    def pr_for_current_branch
+      current_branch = %x(git branch --show-current).chomp
+      search_term = "repo:Shopify/shopify-cli is:pr is:open head:#{current_branch}"
+      results = Octokit::Client.new.search_issues(search_term)
+      case results.total_count
+      when 0
+        raise "PR not opened yet!"
+      when (2..)
+        raise "Multiple open PRs, not sure which one to use for changelog!"
+      end
+
+      results.items.first
     end
   end
 end

@@ -129,6 +129,14 @@ end
 desc("Builds all distribution packages of the CLI")
 task(package: "package:all")
 
+namespace :changelog do
+  require "shopify_cli/changelog"
+
+  task :update do
+    ShopifyCLI::Changelog.new.update!
+  end
+end
+
 namespace :release do
   require "shopify_cli/release"
 
