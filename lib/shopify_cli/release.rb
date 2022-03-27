@@ -17,7 +17,7 @@ module ShopifyCLI
       create_release_branch
       update_changelog
       update_versions_in_files
-      commit
+      commit_packaging
       pr = create_pr
       system("open #{pr["html_url"]}")
     end
@@ -35,10 +35,16 @@ module ShopifyCLI
     attr_reader :new_version, :changelog, :github
 
     def ensure_updated_main
-      current_branch = %x(git branch --show-current)
-      unless current_branch == "main"
-        raise "Must be on the main branch to perform this operation. First run `git checkout main`"
+      # We can't be sure what is the correct action to take if changes have been
+      # made but not committed. Ensure the user handles the situation before
+      # moving on.
+      unless %x(git status --porcelain).empty?
+        raise <<~MESSAGE
+          Uncommitted changes have been made to the repository.
+          Please make sure `git status` does not show any changes before continuing.
+        MESSAGE
       end
+      system_or_fail("git checkout main", "check out main branch")
       unless system("git pull")
         raise "git pull failed, cannot be sure there aren't new commits!"
       end
@@ -46,9 +52,7 @@ module ShopifyCLI
 
     def create_release_branch
       puts "Checking out release branch"
-      unless system("git checkout -b #{release_branch_name}")
-        puts "Cannot check out release branch!"
-      end
+      system_or_fail("git checkout -b #{release_branch_name}", "check out release branch")
     end
 
     def update_changelog
@@ -73,14 +77,10 @@ module ShopifyCLI
       )
     end
 
-    def commit
+    def commit_packaging
       puts "Committing"
-      unless system("git commit -am 'Packaging for release v#{new_version}'")
-        raise "Commit failed!"
-      end
-      unless system("git push -u origin #{release_branch_name}")
-        raise "Failed to push branch!"
-      end
+      system_or_fail("git commit -am 'Packaging for release v#{new_version}'", "commit")
+      system_or_fail("git push -u origin #{release_branch_name}", "push branch")
     end
 
     def create_pr
@@ -111,16 +111,12 @@ module ShopifyCLI
 
     def ensure_updated_homebrew_repo
       unless File.exist?(homebrew_path)
-        unless system("/opt/dev/bin/dev clone homebrew-shopify")
-          raise "Failed to clone homebrew-shopify repo!"
-        end
+        system_or_fail("/opt/dev/bin/dev clone homebrew-shopify", "clone homebrew-shopify repo")
       end
 
       Dir.chdir(homebrew_path) do
-        unless system("git checkout master && git pull")
-          raise "Failed to pull latest homebrew-shopify!"
-        end
-        system("git checkout -b #{homebrew_release_branch}")
+        system_or_fail("git checkout master && git pull", "pull latest homebrew-shopify")
+        system_or_fail("git checkout -b #{homebrew_release_branch}", "check out homebrew branch")
       end
     end
 
@@ -128,12 +124,8 @@ module ShopifyCLI
       source_file = File.join(package_dir, "shopify-cli.rb")
       FileUtils.copy(source_file, homebrew_path)
       Dir.chdir(homebrew_path) do
-        unless system("git commit -am '#{homebrew_update_message}'")
-          raise "Commit failed!"
-        end
-        unless system("git push -u origin #{homebrew_release_branch}")
-          raise "Failed to push branch!"
-        end
+        system_or_fail("git commit -am '#{homebrew_update_message}'", "commit homebrew update")
+        system_or_fail("git push -u origin #{homebrew_release_branch}", "push homebrew branch")
       end
     end
 
@@ -193,6 +185,10 @@ module ShopifyCLI
 
     def release_notes(version)
       changelog.release_notes(version)
+    end
+
+    def system_or_fail(command, action)
+      raise "Failed to #{action}!" unless system(command)
     end
   end
 end
