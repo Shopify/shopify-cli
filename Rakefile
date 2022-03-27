@@ -154,6 +154,19 @@ namespace :release do
     ShopifyCLI::Release.new(new_version, github_access_token).prepare!
     puts "Completed!"
   end
+
+  task :package do
+    github_access_token = ENV["GITHUB_ACCESS_TOKEN"]
+    unless github_access_token
+      raise <<~NO_GITHUB_ACCESS_TOKEN
+        GitHub access token must be provided, e.g.:
+
+        $ GITHUB_ACCESS_TOKEN=abcdef rake release:package
+      NO_GITHUB_ACCESS_TOKEN
+    end
+    ShopifyCLI::Release.new(ShopifyCLI::VERSION, github_access_token).package!
+    puts "Completed!"
+  end
 end
 
 namespace :extensions do
