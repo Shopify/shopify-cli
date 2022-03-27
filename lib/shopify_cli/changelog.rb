@@ -29,7 +29,33 @@ module ShopifyCLI
       "* [##{pr_id}](https://github.com/Shopify/shopify-cli/pull/#{pr_id}): #{desc}"
     end
 
+    def full_contents
+      [
+        heading,
+        release_notes_with_header("Unreleased"),
+        release_notes_with_header(ShopifyCLI::VERSION),
+        remainder,
+      ].map(&:chomp).join("\n") << "\n"
+    end
+
     private
+
+    attr_reader :heading, :remainder
+
+    def release_notes_with_header(version)
+      header_line =
+        if version == "Unreleased"
+          "[Unreleased]"
+        else
+          "Version #{version}"
+        end
+
+      <<~CHANGES
+        ## #{header_line}
+
+        #{release_notes(version)}
+      CHANGES
+    end
 
     def changes
       @changes ||= Hash.new do |h, k|
@@ -43,13 +69,17 @@ module ShopifyCLI
       state = :initial
       change_category = nil
       current_version = nil
+      @heading = ""
       @remainder = ""
       log.each_line do |line|
         case state
         when :initial
-          next unless line.chomp == "\#\# [Unreleased]"
-          state = :unreleased
-          current_version = "Unreleased"
+          if line.chomp == "\#\# [Unreleased]"
+            state = :unreleased
+            current_version = "Unreleased"
+          else
+            @heading << line
+          end
         when :unreleased, :last_version
           if /\A\#\#\# (?<category>\w+)/ =~ line
             change_category = category
@@ -67,9 +97,8 @@ module ShopifyCLI
           elsif !line.match?(/\s*\n/)
             raise "Unrecognized line: #{line.inspect}"
           end
-        when :finished
-          @remainder << line
         end
+        @remainder << line if state == :finished
       end
     end
   end
