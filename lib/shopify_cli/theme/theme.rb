@@ -21,7 +21,7 @@ module ShopifyCLI
       end
 
       def theme_files
-        (glob(["**/*.liquid", "**/*.json"]) + static_asset_files).uniq
+        (glob(["**/*.liquid", "**/*.json"]) + static_asset_files).uniq.sort_by(&:path)
       end
 
       def static_asset_files
