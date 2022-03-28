@@ -8,8 +8,9 @@ module Theme
             Usage: {{command:%1$s theme [ %2$s ]}}
         HELP
         ensure_user_error: "You are not authorized to edit themes on %s.",
-        ensure_user_try_this: "Make sure you are a user of that store, and allowed to edit themes.",
-
+        ensure_user_try_this: <<~ENSURE_USER,
+          Check if your user is activated, has permission to edit themes at the store, and try to re-login.
+        ENSURE_USER
         init: {
           help: <<~HELP,
             {{command:%s theme init}}: Clones a Git repository to use as a starting point for building a new theme.
@@ -181,7 +182,7 @@ module Theme
           CUSTOMIZE_OR_PREVIEW
           ensure_user: <<~ENSURE_USER,
             You are not authorized to edit themes on %s.
-            Make sure you are a user of that store, and allowed to edit themes.
+            Check if your user is activated, has permission to edit themes at the store, and try to re-login.
           ENSURE_USER
           address_already_in_use: "The address \"%s\" is already in use.",
           try_port_option: "Use the --port=PORT option to serve the theme in a different port.",
