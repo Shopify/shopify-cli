@@ -4,7 +4,7 @@ require "octokit"
 module ShopifyCLI
   class Changelog
     CHANGELOG_FILE = File.join(ShopifyCLI::ROOT, "CHANGELOG.md")
-    CHANGE_CATEGORIES = %w(Added Fixed Changed)
+    CHANGE_CATEGORIES = %w(Added Changed Deprecated Removed Fixed Security)
 
     def initialize
       load(File.read(CHANGELOG_FILE))
