@@ -48,7 +48,7 @@ module ShopifyCLI
         release_notes_with_header("Unreleased"),
         release_notes_with_header(ShopifyCLI::VERSION),
         remainder,
-      ].map(&:chomp).join("\n") << "\n"
+      ].map { |section| section.chomp << "\n" }.join
     end
 
     def save!
@@ -67,11 +67,10 @@ module ShopifyCLI
           "Version #{version}"
         end
 
-      <<~CHANGES
-        ## #{header_line}
-
-        #{release_notes(version)}
-      CHANGES
+      [
+        "## #{header_line}",
+        release_notes(version),
+      ].reject(&:empty?).map { |section| section.chomp << "\n\n" }.join
     end
 
     def changes
