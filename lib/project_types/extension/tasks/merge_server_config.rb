@@ -22,6 +22,7 @@ module Extension
       def call
         context.debug("Loading configuration from #{file_path}")
         config = YAML.load_file(file_path)
+        context.debug("Configuration loaded: #{config.inspect}")
         project = ExtensionProject.current
         Tasks::ConvertServerConfig.call(
           api_key: project.env.api_key,
