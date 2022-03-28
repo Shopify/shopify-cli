@@ -20,6 +20,7 @@ module Extension
       end
 
       def call
+        context.debug("Loading configuration from #{file_path}")
         config = YAML.load_file(file_path)
         project = ExtensionProject.current
         Tasks::ConvertServerConfig.call(
