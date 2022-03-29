@@ -9,7 +9,7 @@ module Extension
       include SmartProperties
 
       property! :context, accepts: ShopifyCLI::Context
-      property! :file_path, accepts: ->(path) { Pathname(path).yield_self { |pn| pn.absolute? && pn.file? } }
+      property! :file_path, accepts: ->(path) { Pathname(path).yield_self(&:absolute?) }
       property  :port, accepts: Integer, default: ShopifyCLI::Constants::Extension::DEFAULT_PORT
       property  :resource_url, accepts: String
       property  :tunnel_url, accepts: String
@@ -20,7 +20,9 @@ module Extension
       end
 
       def call
-        config = YAML.load_file(file_path)
+        config = YAML.load_file(file_path) if File.file?(file_path)
+        config ||= {}
+
         project = ExtensionProject.current
         Tasks::ConvertServerConfig.call(
           api_key: project.env.api_key,
