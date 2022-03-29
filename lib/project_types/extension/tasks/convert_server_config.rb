@@ -18,7 +18,6 @@ module Extension
       property! :type, accepts: String
 
       DEFAULT_BUILD_DIR = "build"
-      DEFAULT_MAIN = Dir["src/*"].lazy.grep(/index.[jt]sx?/).first
 
       def self.call(*args)
         new(*args).call
@@ -37,7 +36,7 @@ module Extension
             build_dir: hash.dig("development", "build_dir") || DEFAULT_BUILD_DIR,
             renderer: renderer,
             entries: Models::ServerConfig::DevelopmentEntries.new(
-              main: hash.dig("development", "entries", "main") || DEFAULT_MAIN
+              main: hash.dig("development", "entries", "main") || determine_default_entry_main(project_directory),
             )
           ),
           extension_points: hash.dig("extension_points"),
@@ -64,6 +63,18 @@ module Extension
 
       def version(renderer, context)
         Tasks::FindPackageFromJson.call(renderer, context: context).version
+      end
+
+      private
+
+      def determine_default_entry_main(project_directory)
+        Dir.chdir(project_directory) do
+          Dir["src/*"].lazy.grep(/index.[jt]sx?/).first
+        end
+      end
+
+      def project_directory
+        ExtensionProject.current.directory
       end
     end
   end
