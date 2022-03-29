@@ -114,7 +114,7 @@ module ShopifyCLI
 
           def test_server_command_when_no_update_passed
             ShopifyCLI::Tasks::UpdateDashboardURLS.expects(:call).never
-            run_cmd('app serve --no-update')
+            run_cmd("app serve --no-update")
           end
         end
       end

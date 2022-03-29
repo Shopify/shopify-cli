@@ -16,7 +16,7 @@ module ShopifyCLI
         ShopifyCLI::PartnersAPI.query(@ctx, "update_dashboard_urls", input: {
           applicationUrl: url,
           redirectUrlWhitelist: constructed_urls,
-          apiKey: api_key
+          apiKey: api_key,
         })
 
         @ctx.puts(@ctx.message("core.tasks.update_dashboard_urls.updated"))

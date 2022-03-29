@@ -62,7 +62,8 @@ module ShopifyCLI
             )
             @context.expects(:puts).with(
               "\n" +
-              @context.message("core.app.serve.open_info", "https://example.com/login?shop=my-test-shop.myshopify.com") +
+              @context.message("core.app.serve.open_info",
+                "https://example.com/login?shop=my-test-shop.myshopify.com") +
               "\n"
             )
             run_cmd("app serve")
@@ -128,7 +129,7 @@ module ShopifyCLI
 
           def test_call_when_no_update_passed
             ShopifyCLI::Tasks::UpdateDashboardURLS.expects(:call).never
-            run_cmd('app serve --no-update')
+            run_cmd("app serve --no-update")
           end
         end
       end

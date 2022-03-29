@@ -20,7 +20,7 @@ module ShopifyCLI
           private
 
           def generate_url
-            url = create_tunnel
+            create_tunnel
             update_url unless no_update
             show_app_url
           end
