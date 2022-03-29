@@ -32,7 +32,7 @@ module ShopifyCLI
           theme = DevelopmentTheme.find_or_create!(ctx, root: root)
           ignore_filter = IgnoreFilter.from_path(root)
           @syncer = Syncer.new(ctx, theme: theme, ignore_filter: ignore_filter, overwrite_json: !editor_sync)
-          watcher = Watcher.new(ctx, theme: theme, syncer: @syncer, ignore_filter: ignore_filter, poll: poll)
+          watcher = Watcher.new(ctx, theme: theme, syncer: @syncer, poll: poll)
           remote_watcher = RemoteWatcher.to(theme: theme, syncer: @syncer)
 
           # Setup the middleware stack. Mimics Rack::Builder / config.ru, but in reverse order
