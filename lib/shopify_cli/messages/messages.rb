@@ -714,6 +714,10 @@ module ShopifyCLI
             update_error:
               "{{x}} error: For authentication issues, run {{command:%s logout}} to clear invalid credentials",
             update_prompt: "Do you want to update your application url?",
+            auto_update_warning: <<~WARN,
+              {{warning:Note: starting with the next release (2.17.0), {{command:app serve}} will update application URLs by default.
+              To avoid an automatic URL update, use the {{command:--no-update}} flag.}}
+            WARN
           },
           select_org_and_shop: {
             authentication_issue: "For authentication issues, run {{command:%s logout}} to clear invalid credentials",

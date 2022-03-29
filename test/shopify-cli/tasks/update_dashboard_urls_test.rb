@@ -282,7 +282,8 @@ module ShopifyCLI
             },
           }
         )
-        CLI::UI::Prompt.expects(:confirm).returns(true)
+        @context.expects(:puts).with(@context.message("core.tasks.update_dashboard_urls.auto_update_warning"))
+        CLI::UI::Prompt.expects(:confirm).returns(false)
         ShopifyCLI::Tasks::UpdateDashboardURLS.call(
           @context,
           url: "https://123adifferenturl.ngrok.io",
