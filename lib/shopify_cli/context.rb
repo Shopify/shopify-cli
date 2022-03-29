@@ -16,6 +16,7 @@ module ShopifyCLI
     GEM_LATEST_URI = URI.parse("https://rubygems.org/api/v1/versions/shopify-cli/latest.json")
     VERSION_CHECK_SECTION = "versioncheck"
     LAST_CHECKED_AT_FIELD = "last_checked_at"
+    LATEST_VERSION_FIELD = "latest_version"
     VERSION_CHECK_INTERVAL = 86400
 
     class << self
@@ -618,11 +619,17 @@ module ShopifyCLI
     #            : nil otherwise
     #
     def new_version
-      if (time_of_last_check + VERSION_CHECK_INTERVAL) < (now = Time.now.to_i)
-        update_time_of_last_check(now)
-        latest_version = retrieve_latest_gem_version
-        latest_version unless latest_version == ShopifyCLI::VERSION
+      if (time_of_last_check + VERSION_CHECK_INTERVAL) < (Time.now.to_i)
+        fork do
+          retrieve_latest_gem_version
+        rescue
+          # Don't display weird warning messages after the main process exits.
+          # This functionality isn't critical enough to warrant error messages
+          # displayed to the user, especially after the main process exits.
+        end
       end
+      latest_version = ShopifyCLI::Config.get(VERSION_CHECK_SECTION, LATEST_VERSION_FIELD, default: ShopifyCLI::VERSION)
+      latest_version unless latest_version == ShopifyCLI::VERSION
     end
 
     # Returns file extension depending on OS
@@ -656,17 +663,14 @@ module ShopifyCLI
     def retrieve_latest_gem_version
       response = Net::HTTP.get_response(GEM_LATEST_URI)
       latest = JSON.parse(response.body)
-      latest["version"]
+      ShopifyCLI::Config.set(VERSION_CHECK_SECTION, LAST_CHECKED_AT_FIELD, Time.now.to_i)
+      ShopifyCLI::Config.set(VERSION_CHECK_SECTION, LATEST_VERSION_FIELD, latest["version"])
     rescue
       nil
     end
 
     def time_of_last_check
       (val = ShopifyCLI::Config.get(VERSION_CHECK_SECTION, LAST_CHECKED_AT_FIELD)) ? val.to_i : 0
-    end
-
-    def update_time_of_last_check(time)
-      ShopifyCLI::Config.set(VERSION_CHECK_SECTION, LAST_CHECKED_AT_FIELD, time)
     end
   end
 end
