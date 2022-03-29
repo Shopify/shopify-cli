@@ -622,10 +622,6 @@ module ShopifyCLI
       if (time_of_last_check + VERSION_CHECK_INTERVAL) < (Time.now.to_i)
         fork do
           retrieve_latest_gem_version
-        rescue
-          # Don't display weird warning messages after the main process exits.
-          # This functionality isn't critical enough to warrant error messages
-          # displayed to the user, especially after the main process exits.
         end
       end
       latest_version = ShopifyCLI::Config.get(VERSION_CHECK_SECTION, LATEST_VERSION_FIELD, default: ShopifyCLI::VERSION)
