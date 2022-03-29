@@ -30,10 +30,13 @@ module ShopifyCLI
             end
 
             CLI::UI::Frame.open(context.message("core.app.serve.running_server")) do
-              env = ShopifyCLI::Project.current.env.to_h
+              original_env = JSON.parse(ENV["ORIGINAL_ENV"] || "{}")
+              env = original_env.merge(ShopifyCLI::Project.current.env.to_h)
               env.delete("HOST")
               env["PORT"] = port.to_s
-              env["GEM_PATH"] = Rails::Gem.gem_path(context)
+              env["GEM_PATH"] =
+                [env["GEM_PATH"], Rails::Gem.gem_path(context)].compact
+                  .join(CLI::UI::OS.current.path_separator)
               if context.windows?
                 context.system("ruby bin\\rails server", env: env)
               else
