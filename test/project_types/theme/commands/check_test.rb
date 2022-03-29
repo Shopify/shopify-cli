@@ -32,7 +32,7 @@ module Theme
         end
 
         assert_message_output(io: io, expected_content: [
-          ShopifyCLI::Context.message('theme.check.error', error.full_message)
+          ShopifyCLI::Context.message("theme.check.error", error.full_message),
         ])
       end
     end
