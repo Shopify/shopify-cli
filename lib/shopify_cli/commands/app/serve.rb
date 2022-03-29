@@ -43,7 +43,7 @@ module ShopifyCLI
         end
 
         def self.extended_help
-          ShopifyCLI::Context.message("app.core.serve.extended_help")
+          ShopifyCLI::Context.message("core.app.serve.extended_help")
         end
       end
     end

@@ -263,6 +263,7 @@ module ShopifyCLI
               {{bold:Options:}}
                 {{cyan:--host=HOST}}: Bypass running tunnel and use custom host. HOST must be HTTPS url.
                 {{cyan:--port=PORT}}: Use custom port.
+                {{cyan:--no-update}}: Skips the dashboard URL update step
             HELP
             open_info: <<~MESSAGE,
               {{*}} To install and start using your app, open this URL in your browser:
