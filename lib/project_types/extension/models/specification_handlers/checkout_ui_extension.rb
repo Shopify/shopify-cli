@@ -49,7 +49,7 @@ module Extension
 
             locale_filenames.map do |filename|
               locale = basename_for_locale_filename(filename)
-              [locale.to_sym, Base64.strict_encode64(File.read(filename, mode: "rt", encoding: "UTF-8").strip)]
+              [locale.to_sym, read_locale_file(filename)]
             end
               .yield_self do |encoded_files_by_locale|
               {
@@ -60,6 +60,14 @@ module Extension
               }
             end
           end
+        end
+
+        def read_locale_file(filename)
+          content = File.read(filename, mode: "rt", encoding: "bom|utf-8").strip
+          raise_invalid_encoding_error(filename) unless content.valid_encoding?
+          Base64.strict_encode64(content)
+        rescue ArgumentError
+          raise_invalid_encoding_error(filename)
         end
 
         def validate_no_duplicate_locale(locale_filenames)
@@ -148,6 +156,13 @@ module Extension
 
         def basename_for_locale_filename(filename)
           File.basename(File.basename(filename, ".json"), ".default")
+        end
+
+        def raise_invalid_encoding_error(filename)
+          raise(
+            ShopifyCLI::Abort,
+            ShopifyCLI::Context.message("#{L10N_ERROR_PREFIX}.invalid_file_encoding", filename)
+          )
         end
       end
     end

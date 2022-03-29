@@ -3,6 +3,8 @@ From version 2.6.0, the sections in this file adhere to the [keep a changelog](h
 ## [Unreleased]
 
 ### Fixed
+* [#2162](https://github.com/Shopify/shopify-cli/pull/2162): Improve encoding error handling for Checkout Extension localization
+* [#2187](https://github.com/Shopify/shopify-cli/pull/2187): Fix app serve after rails update
 * [#2191](https://github.com/Shopify/shopify-cli/pull/2191): Diretories with the `.json` extension should not be handled as JSON files
 
 ## Version 2.15.2

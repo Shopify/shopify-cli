@@ -294,6 +294,7 @@ module ShopifyCLI
                   invalid_file_extension: "Invalid locale filename: `%s`; only .json files are allowed.",
                   invalid_locale_code: "Invalid locale filename: `%s`; locale code should be 2 or 3 letters,"\
                     " optionally followed by a two-letter region code, e.g. `fr-CA`.",
+                  invalid_file_encoding: "Invalid file encoding for `%s`; file encoding should be UTF-8.",
                   single_default_locale: "There must be one and only one locale identified as the default locale,"\
                     " e.g. `en.default.json`",
                 },

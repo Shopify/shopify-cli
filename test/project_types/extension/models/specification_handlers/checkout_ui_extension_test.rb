@@ -218,6 +218,31 @@ module Extension
           end
         end
 
+        def test_l10n_invalid_file_encoding
+          File.stubs(:read).returns("{\"invalid\": \"\xD8\x3D\xDC\xA9\" }")
+          write("locales/en.default.json", '{"laugh": "lol"}') # read content overriden by stub
+
+          assert_raises ShopifyCLI::Abort, "#{L10N_ERROR_PREFIX}.invalid_file_encoding" do
+            @checkout_ui_extension.config(@context)
+          end
+        end
+
+        def test_l10n_utf8_bom_is_stripped
+          en_content = '{"laugh": "lol"}'
+          bom_content = "\xEF\xBB\xBF#{en_content}"
+          write("locales/en.default.json", bom_content)
+
+          expected = {
+            localization: {
+              translations: {
+                en: Base64.strict_encode64(en_content),
+              },
+              default_locale: "en",
+            },
+          }
+          assert_equal(expected, @checkout_ui_extension.config(@context))
+        end
+
         VALID_L10N_FILENAMES.each do |filename|
           define_method("test_valid_l10n_filename_#{filename}") do
             write("locales/en.default.json", "{}")
