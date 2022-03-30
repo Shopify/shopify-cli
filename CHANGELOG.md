@@ -7,7 +7,7 @@ From version 2.6.0, the sections in this file adhere to the [keep a changelog](h
 * [#2187](https://github.com/Shopify/shopify-cli/pull/2187): Fix app serve after rails update
 * [#2018](https://github.com/Shopify/shopify-cli/pull/2018): Run theme-check as a code dependency, not a pseudo-CLI invocation
 
-## Version 2.15.2
+## Version 2.15.2 - 2022-03-28
 
 ### Fixed
 * [#2121](https://github.com/Shopify/shopify-cli/pull/2121): Fix the hot-reload to work when the section name is not equal to the type
@@ -15,7 +15,7 @@ From version 2.6.0, the sections in this file adhere to the [keep a changelog](h
 ### Added
 * [#2174](https://github.com/Shopify/shopify-cli/pull/2174): Add optional 2-way sync between the CLI (`theme serve`) and the Theme Editor
 
-## Version 2.15.1
+## Version 2.15.1 - 2022-03-24
 
 ### Added
 * [#1934](https://github.com/Shopify/shopify-cli/pull/1934): Block directories in theme assets
@@ -25,7 +25,7 @@ From version 2.6.0, the sections in this file adhere to the [keep a changelog](h
 * [#1874](https://github.com/Shopify/shopify-cli/pull/1874): Make ngrok errors more robust and helpful
 * [#2172](https://github.com/Shopify/shopify-cli/pull/2172): Fix Ruby check for Rails app creation
 
-## Version 2.15.0
+## Version 2.15.0 - 2022-03-21
 
 ### Fixed
 * [#2086](https://github.com/Shopify/shopify-cli/pull/2086): Improve check of dependency versions
@@ -33,7 +33,7 @@ From version 2.6.0, the sections in this file adhere to the [keep a changelog](h
 * [#2122](https://github.com/Shopify/shopify-cli/pull/2122): Fix `--only`/`--ignore` flags parser to support multiple occurrences without quotes
 * [#2146](https://github.com/Shopify/shopify-cli/pull/2146): Prevent duplicate locales for Checkout extension localization
 
-## Version 2.14.0
+## Version 2.14.0 - 2022-03-15
 
 ### Changed
 * [#2126](https://github.com/Shopify/shopify-cli/pull/2126): Use javy version 0.2.1
@@ -47,7 +47,7 @@ From version 2.6.0, the sections in this file adhere to the [keep a changelog](h
 * [#2130](https://github.com/Shopify/shopify-cli/pull/2130): Fix Homebrew installation.
 * [#2133](https://github.com/Shopify/shopify-cli/pull/2133): Fix ignore file handling in DevServer::Watcher.
 
-## Version 2.13.0
+## Version 2.13.0 - 2022-03-02
 
 ### Added
 * [#2087](https://github.com/Shopify/shopify-cli/pull/2087): Add new Theme CLI commands: `theme list` and `theme open`
@@ -61,7 +61,7 @@ From version 2.6.0, the sections in this file adhere to the [keep a changelog](h
 ### Removed
 * [#2102](https://github.com/Shopify/shopify-cli/pull/2102): Remove AssemblyScript as a supported script language.
 
-## Version 2.12.0
+## Version 2.12.0 - 2022-02-23
 
 ### Added
 * [#1866](https://github.com/Shopify/shopify-cli/pull/1866): Enforce git dependency
@@ -77,7 +77,7 @@ From version 2.6.0, the sections in this file adhere to the [keep a changelog](h
 * [#2066](https://github.com/Shopify/shopify-cli/pull/2066): Improve `--only`/`--ignore` parameters on Theme `pull`/`push` commands to work without quotes
 * [#2078](https://github.com/Shopify/shopify-cli/pull/2078): Fix errors on section rendering caused by CORS issues
 
-## Version 2.11.2
+## Version 2.11.2 - 2022-02-14
 
 ### Fixed
 * [#2047](https://github.com/Shopify/shopify-cli/pull/2047): Fix the Homebrew installation
@@ -85,7 +85,7 @@ From version 2.6.0, the sections in this file adhere to the [keep a changelog](h
 * [#2055](https://github.com/Shopify/shopify-cli/pull/2055): Remove unneeded Node requirements
 * [#2020](https://github.com/Shopify/shopify-cli/pull/2020): Fix `theme pull` so that correct dev theme is used with `-d` option
 
-## Version 2.11.1
+## Version 2.11.1 - 2022-02-09
 
 ### Fixed
 * [#1973](https://github.com/Shopify/shopify-cli/pull/1973): Fix `theme serve` to preview generated files (`*.css.liquid`)
@@ -93,7 +93,7 @@ From version 2.6.0, the sections in this file adhere to the [keep a changelog](h
 * [#2033](https://github.com/Shopify/shopify-cli/pull/2033): Pin Homebrew Ruby to 3.0
 * [#2032](https://github.com/Shopify/shopify-cli/pull/2032): Runtime error checking the Node version if Node is not present in the environment.
 
-## Version 2.11.0
+## Version 2.11.0 - 2022-02-07
 
 ### Fixed
 * [#2005](https://github.com/Shopify/shopify-cli/pull/2005): Fix PHP app serve on Windows environments
@@ -109,19 +109,19 @@ From version 2.6.0, the sections in this file adhere to the [keep a changelog](h
 * [#2002](https://github.com/Shopify/shopify-cli/pull/2002): Update `-o`/`--only` parameter to allow multiple patterns on `theme push`/`theme pull` commands
 * [#2022](https://github.com/Shopify/shopify-cli/pull/2022): Don't warn the user if the Ruby version is in the range 3.0.x.
 
-## Version 2.10.2
+## Version 2.10.2 - 2022-01-31
 
 ### Fixed
 * [#1983](https://github.com/Shopify/shopify-cli/pull/1983): Improve Windows compatibility
 * [#1928](https://github.com/Shopify/shopify-cli/pull/1928): Ensure script Wasm file sizes don't exceed the limit
 * [#2006](https://github.com/Shopify/shopify-cli/pull/2006): Fix: More defensive URL generation
 
-## Version 2.10.1
+## Version 2.10.1 - 2022-01-28
 
 ### Fixed
 * [#1985](https://github.com/Shopify/shopify-cli/pull/1985): Revert "Fix CORS (Cross-origin resource sharing) errors (#1952)"
 
-## Version 2.10.0
+## Version 2.10.0 - 2022-01-25
 
 ### Fixed
 * [#1937](https://github.com/Shopify/shopify-cli/pull/1937): Fix `theme pull` to no longer add empty lines on Windows
@@ -131,7 +131,7 @@ From version 2.6.0, the sections in this file adhere to the [keep a changelog](h
 ### Added
 * [#1892](https://github.com/Shopify/shopify-cli/pull/1892): Add `-o`/`--only` parameter to filter files on `theme push`/`theme pull` commands
 
-## Version 2.9.0
+## Version 2.9.0 - 2022-01-17
 
 ### Fixed
 * [#1922](https://github.com/Shopify/shopify-cli/pull/1922): Respect RUBY_BINDIR from Homebrew for installing gem
@@ -148,12 +148,12 @@ From version 2.6.0, the sections in this file adhere to the [keep a changelog](h
 ### Changed
 * [#1929](https://github.com/Shopify/shopify-cli/pull/1929): Rename `--registration-id` to `--extension-id` in `shopify extension push`.
 
-## Version 2.8.0
+## Version 2.8.0 - 2022-01-06
 
 ### Fixed
 * [#1879](https://github.com/Shopify/shopify-cli/pull/1879): Disambiguate -s as store option
 
-## Version 2.7.4
+## Version 2.7.4 - 2021-12-22
 
 ### Added
 * [#1825](https://github.com/Shopify/shopify-cli/pull/1825): Support passing the connection information through arguments
@@ -165,7 +165,7 @@ From version 2.6.0, the sections in this file adhere to the [keep a changelog](h
 * [#1850](https://github.com/Shopify/shopify-cli/pull/1850): Fix `shopify extension` commands timeout when organization has too many apps
 * [#1860](https://github.com/Shopify/shopify-cli/pull/1860): Fix `theme serve` hot reload when there are many tabs active
 
-## Version 2.7.3
+## Version 2.7.3 - 2021-12-13
 
 ### Added
 * [#1826](https://github.com/Shopify/shopify-cli/pull/1826): Support using `script.config.yml` file for script configuration
@@ -182,7 +182,7 @@ From version 2.6.0, the sections in this file adhere to the [keep a changelog](h
 * [#1830](https://github.com/Shopify/shopify-cli/pull/1830): Fix hot reload when users update many files "simultaneously"
 * [#1837](https://github.com/Shopify/shopify-cli/pull/1837): Fix `ShopifyCLI::Theme::DevServer::CdnFonts` class to support any font
 
-## Version 2.7.2
+## Version 2.7.2 - 2021-11-30
 
 ### Fixed
 * [#1763](https://github.com/Shopify/shopify-cli/pull/1763): Fix: Tunnel --PORT parameter not working in Node.js app.
@@ -194,7 +194,7 @@ From version 2.6.0, the sections in this file adhere to the [keep a changelog](h
 * [#1788](https://github.com/Shopify/shopify-cli/pull/1788): Improve `theme serve` errors and add logs for successful operations
 * [#1794](https://github.com/Shopify/shopify-cli/pull/1794): Fix bug where hidden subcommands appear in the help menu.
 
-## Version 2.7.1
+## Version 2.7.1 - 2021-11-17
 
 ### Fixed
 * [#1722](https://github.com/Shopify/shopify-cli/pull/1722): Fix `theme serve` failing when the port is already being used
@@ -202,7 +202,7 @@ From version 2.6.0, the sections in this file adhere to the [keep a changelog](h
 * [#1750](https://github.com/Shopify/shopify-cli/pull/1750): Runtime errors in Windows' environments when the `PATHEXT` environment variable is not defined.
 * [#1758](https://github.com/Shopify/shopify-cli/pull/1758): Fix tunnel creation for expired anonymous tunnels
 
-## Version 2.7.0
+## Version 2.7.0 - 2021-11-15
 
 ### Changed
 * [#1650](https://github.com/Shopify/shopify-cli/pull/1650): **Breaking** Move app commands under `shopify app`.
