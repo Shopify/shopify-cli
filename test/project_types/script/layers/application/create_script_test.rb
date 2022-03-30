@@ -133,7 +133,6 @@ describe Script::Layers::Application::CreateScript do
         let(:input_queries_beta_enabled?) { true }
 
         before do
-          Script::Layers::Infrastructure::Languages::ProjectCreator.unstub(:for)
           Script::Layers::Infrastructure::Languages::ProjectCreator
             .expects(:for)
             .with(
