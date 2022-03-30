@@ -73,8 +73,6 @@ module Extension
         help: <<~HELP,
           Register your local extension to a Shopify app
               Usage: {{command:%s extension register}}
-              Options:
-                {{command:--api-key=API_KEY}} The API key used to register an app with the extension. This can be found on the app page on Partners Dashboard.
         HELP
         frame_title: "Registering Extension",
         waiting_text: "Registering with Shopify…",
