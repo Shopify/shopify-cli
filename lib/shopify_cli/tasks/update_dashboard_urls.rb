@@ -10,7 +10,7 @@ module ShopifyCLI
         result = ShopifyCLI::PartnersAPI.query(ctx, "get_app_urls", apiKey: api_key)
         app = result["data"]["app"]
 
-        return unless should_update_url(app["applicationUrl"], url)
+        return if app["applicationUrl"].match(url)
 
         constructed_urls = construct_redirect_urls(app["redirectUrlWhitelist"], url, callback_url)
         ShopifyCLI::PartnersAPI.query(@ctx, "update_dashboard_urls", input: {
@@ -23,13 +23,6 @@ module ShopifyCLI
       rescue
         @ctx.puts(@ctx.message("core.tasks.update_dashboard_urls.update_error", ShopifyCLI::TOOL_NAME))
         raise
-      end
-
-      def should_update_url(application_url, new_url)
-        return false if application_url.match(new_url)
-
-        @ctx.puts(@ctx.message("core.tasks.update_dashboard_urls.auto_update_warning"))
-        CLI::UI::Prompt.confirm(@ctx.message("core.tasks.update_dashboard_urls.update_prompt"))
       end
 
       def construct_redirect_urls(urls, new_url, callback_url)
