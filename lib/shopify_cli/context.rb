@@ -659,10 +659,11 @@ module ShopifyCLI
     def retrieve_latest_gem_version
       response = Net::HTTP.get_response(GEM_LATEST_URI)
       latest = JSON.parse(response.body)
-      ShopifyCLI::Config.set(VERSION_CHECK_SECTION, LAST_CHECKED_AT_FIELD, Time.now.to_i)
       ShopifyCLI::Config.set(VERSION_CHECK_SECTION, LATEST_VERSION_FIELD, latest["version"])
     rescue
       nil
+    ensure
+      ShopifyCLI::Config.set(VERSION_CHECK_SECTION, LAST_CHECKED_AT_FIELD, Time.now.to_i)
     end
 
     def time_of_last_check
