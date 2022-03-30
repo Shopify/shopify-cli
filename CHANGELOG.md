@@ -62,6 +62,7 @@ From version 2.6.0, the sections in this file adhere to the [keep a changelog](h
 * [#2102](https://github.com/Shopify/shopify-cli/pull/2102): Remove AssemblyScript as a supported script language.
 
 ## Version 2.12.0
+
 ### Added
 * [#1866](https://github.com/Shopify/shopify-cli/pull/1866): Enforce git dependency
 * [#2009](https://github.com/Shopify/shopify-cli/pull/2009): Add localization support for Checkout Extensions
@@ -77,6 +78,7 @@ From version 2.6.0, the sections in this file adhere to the [keep a changelog](h
 * [#2078](https://github.com/Shopify/shopify-cli/pull/2078): Fix errors on section rendering caused by CORS issues
 
 ## Version 2.11.2
+
 ### Fixed
 * [#2047](https://github.com/Shopify/shopify-cli/pull/2047): Fix the Homebrew installation
 * [#2019](https://github.com/Shopify/shopify-cli/pull/2019): Provide helpful link when nokogiri fails to load
@@ -84,6 +86,7 @@ From version 2.6.0, the sections in this file adhere to the [keep a changelog](h
 * [#2020](https://github.com/Shopify/shopify-cli/pull/2020): Fix `theme pull` so that correct dev theme is used with `-d` option
 
 ## Version 2.11.1
+
 ### Fixed
 * [#1973](https://github.com/Shopify/shopify-cli/pull/1973): Fix `theme serve` to preview generated files (`*.css.liquid`)
 * [#2034](https://github.com/Shopify/shopify-cli/pull/2034): Fix `theme serve` to accept parameters with multiple values
@@ -91,6 +94,7 @@ From version 2.6.0, the sections in this file adhere to the [keep a changelog](h
 * [#2032](https://github.com/Shopify/shopify-cli/pull/2032): Runtime error checking the Node version if Node is not present in the environment.
 
 ## Version 2.11.0
+
 ### Fixed
 * [#2005](https://github.com/Shopify/shopify-cli/pull/2005): Fix PHP app serve on Windows environments
 
@@ -106,16 +110,19 @@ From version 2.6.0, the sections in this file adhere to the [keep a changelog](h
 * [#2022](https://github.com/Shopify/shopify-cli/pull/2022): Don't warn the user if the Ruby version is in the range 3.0.x.
 
 ## Version 2.10.2
+
 ### Fixed
 * [#1983](https://github.com/Shopify/shopify-cli/pull/1983): Improve Windows compatibility
 * [#1928](https://github.com/Shopify/shopify-cli/pull/1928): Ensure script Wasm file sizes don't exceed the limit
 * [#2006](https://github.com/Shopify/shopify-cli/pull/2006): Fix: More defensive URL generation
 
 ## Version 2.10.1
+
 ### Fixed
 * [#1985](https://github.com/Shopify/shopify-cli/pull/1985): Revert "Fix CORS (Cross-origin resource sharing) errors (#1952)"
 
 ## Version 2.10.0
+
 ### Fixed
 * [#1937](https://github.com/Shopify/shopify-cli/pull/1937): Fix `theme pull` to no longer add empty lines on Windows
 * [#1952](https://github.com/Shopify/shopify-cli/pull/1952): Fix CORS (cross-origin resource sharing) errors
@@ -125,6 +132,7 @@ From version 2.6.0, the sections in this file adhere to the [keep a changelog](h
 * [#1892](https://github.com/Shopify/shopify-cli/pull/1892): Add `-o`/`--only` parameter to filter files on `theme push`/`theme pull` commands
 
 ## Version 2.9.0
+
 ### Fixed
 * [#1922](https://github.com/Shopify/shopify-cli/pull/1922): Respect RUBY_BINDIR from Homebrew for installing gem
 * [#1906](https://github.com/Shopify/shopify-cli/pull/1906): Fix Ngrok incompatibility with some Apple ARM environments
@@ -138,13 +146,15 @@ From version 2.6.0, the sections in this file adhere to the [keep a changelog](h
 * [#1871](https://github.com/Shopify/shopify-cli/pull/1871): Add a new `--live-reload` parameter to the `theme serve` command
 
 ### Changed
-- [#1929](https://github.com/Shopify/shopify-cli/pull/1929): Rename `--registration-id` to `--extension-id` in `shopify extension push`.
+* [#1929](https://github.com/Shopify/shopify-cli/pull/1929): Rename `--registration-id` to `--extension-id` in `shopify extension push`.
 
 ## Version 2.8.0
+
 ### Fixed
 * [#1879](https://github.com/Shopify/shopify-cli/pull/1879): Disambiguate -s as store option
 
 ## Version 2.7.4
+
 ### Added
 * [#1825](https://github.com/Shopify/shopify-cli/pull/1825): Support passing the connection information through arguments
 
@@ -156,9 +166,10 @@ From version 2.6.0, the sections in this file adhere to the [keep a changelog](h
 * [#1860](https://github.com/Shopify/shopify-cli/pull/1860): Fix `theme serve` hot reload when there are many tabs active
 
 ## Version 2.7.3
+
 ### Added
 * [#1826](https://github.com/Shopify/shopify-cli/pull/1826): Support using `script.config.yml` file for script configuration
-* [#1843](https://github.com/Shopify/shopify-cli/pull/1826): Support using javy on Apple ARM processors
+* [#1843](https://github.com/Shopify/shopify-cli/pull/1843): Support using javy on Apple ARM processors
 * [#1847](https://github.com/Shopify/shopify-cli/pull/1847): `shopify script connect` command.
 
 ### Fixed
@@ -172,6 +183,7 @@ From version 2.6.0, the sections in this file adhere to the [keep a changelog](h
 * [#1837](https://github.com/Shopify/shopify-cli/pull/1837): Fix `ShopifyCLI::Theme::DevServer::CdnFonts` class to support any font
 
 ## Version 2.7.2
+
 ### Fixed
 * [#1763](https://github.com/Shopify/shopify-cli/pull/1763): Fix: Tunnel --PORT parameter not working in Node.js app.
 * [#1769](https://github.com/Shopify/shopify-cli/pull/1769): Fix `theme push --development --json` to output the proper exit code
@@ -183,6 +195,7 @@ From version 2.6.0, the sections in this file adhere to the [keep a changelog](h
 * [#1794](https://github.com/Shopify/shopify-cli/pull/1794): Fix bug where hidden subcommands appear in the help menu.
 
 ## Version 2.7.1
+
 ### Fixed
 * [#1722](https://github.com/Shopify/shopify-cli/pull/1722): Fix `theme serve` failing when the port is already being used
 * [#1751](https://github.com/Shopify/shopify-cli/pull/1751): A bug in the app creation flow that caused the CLI to abort when the form validation failed.
@@ -190,6 +203,7 @@ From version 2.6.0, the sections in this file adhere to the [keep a changelog](h
 * [#1758](https://github.com/Shopify/shopify-cli/pull/1758): Fix tunnel creation for expired anonymous tunnels
 
 ## Version 2.7.0
+
 ### Changed
 * [#1650](https://github.com/Shopify/shopify-cli/pull/1650): **Breaking** Move app commands under `shopify app`.
 
