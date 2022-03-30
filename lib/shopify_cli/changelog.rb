@@ -45,8 +45,7 @@ module ShopifyCLI
     def full_contents
       [
         heading,
-        release_notes_with_header("Unreleased"),
-        release_notes_with_header(ShopifyCLI::VERSION),
+        *changes.each_key.map { |version| release_notes_with_header(version) }.join,
         remainder,
       ].map { |section| section.chomp << "\n" }.join
     end
@@ -96,20 +95,22 @@ module ShopifyCLI
           else
             @heading << line
           end
-        when :unreleased, :last_version
+        when :unreleased, :prior_versions
           if /\A\#\#\# (?<category>\w+)/ =~ line
             change_category = category
           elsif %r{\A\* \[\#(?<id>\d+)\]\(https://github.com/Shopify/shopify-cli/pull/\k<id>\): (?<desc>.+)\n} =~ line
             changes[current_version][change_category] << { pr_id: id, desc: desc }
           elsif /\A\#\# Version (?<version>\d+\.\d+\.\d+)/ =~ line
             current_version = version
-            state =
-              case state
-              when :unreleased
-                :last_version
-              else
-                :finished
+            if state == :unreleased
+              state = :prior_versions
+            else
+              major, minor, patch = current_version.split(".")
+              # Changelog starts to become irregular in 2.6.x
+              if major.to_i <= 2 && minor.to_i < 7
+                state = :finished
               end
+            end
           elsif !line.match?(/\s*\n/)
             raise "Unrecognized line: #{line.inspect}"
           end
