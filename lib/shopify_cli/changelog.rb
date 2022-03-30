@@ -1,3 +1,4 @@
+require "date"
 require "shopify_cli/sed"
 require "octokit"
 
@@ -11,11 +12,10 @@ module ShopifyCLI
     end
 
     def update_version!(new_version)
-      Sed.new.replace_inline(
-        CHANGELOG_FILE,
-        "## \\[Unreleased\\]",
-        "## [Unreleased]\\n\\n## Version #{new_version}"
-      )
+      changes[new_version] = changes["Unreleased"]
+      changes[new_version][:date] = Date.today.iso8601
+      changes["Unreleased"] = { changes: [], date: nil }
+      save!
     end
 
     def update!
@@ -43,9 +43,17 @@ module ShopifyCLI
     end
 
     def full_contents
+      sorted_changes = changes.each_key.sort_by { |change|
+        if change == "Unreleased"
+          [Float::INFINITY] * 3 # end of the list
+        else
+          major, minor, patch = change.split(".").map(&:to_i)
+          [major, minor, patch]
+        end
+      }.reverse
       [
         heading,
-        *changes.each_key.map { |version| release_notes_with_header(version) }.join,
+        *sorted_changes.each.map { |version| release_notes_with_header(version) }.join,
         remainder,
       ].map { |section| section.chomp << "\n" }.join
     end
