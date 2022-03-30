@@ -5,6 +5,7 @@ From version 2.6.0, the sections in this file adhere to the [keep a changelog](h
 ### Fixed
 * [#2162](https://github.com/Shopify/shopify-cli/pull/2162): Improve encoding error handling for Checkout Extension localization
 * [#2187](https://github.com/Shopify/shopify-cli/pull/2187): Fix app serve after rails update
+* [#2018](https://github.com/Shopify/shopify-cli/pull/2018): Run theme-check as a code dependency, not a pseudo-CLI invocation
 
 ## Version 2.15.2
 
