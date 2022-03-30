@@ -132,6 +132,21 @@ describe Script::Layers::Application::CreateScript do
       describe "when scripts_beta_input_queries feature is enabled" do
         let(:input_queries_beta_enabled?) { true }
 
+        before do
+          Script::Layers::Infrastructure::Languages::ProjectCreator.unstub(:for)
+          Script::Layers::Infrastructure::Languages::ProjectCreator
+            .expects(:for)
+            .with(
+              ctx: context,
+              language: language,
+              type: extension_point_type,
+              project_name: title,
+              path_to_project: script_project.id,
+              sparse_checkout_details: sparse_checkout_details,
+            )
+            .returns(project_creator)
+        end
+
         it "passes correct arguments to project creator" do
           subject
         end

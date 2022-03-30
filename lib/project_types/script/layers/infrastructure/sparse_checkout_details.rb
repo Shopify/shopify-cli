@@ -16,12 +16,12 @@ module Script
         end
 
         def setup(ctx)
-          ShopifyCLI::Git.sparse_checkout(repo, set_path, branch, ctx)
+          ShopifyCLI::Git.sparse_checkout(repo, patterns_to_checkout, branch, ctx)
         end
 
         private
 
-        def set_path
+        def patterns_to_checkout
           paths = [path]
           unless input_queries_enabled
             paths << "!#{path}/#{ScriptProjectRepository::INPUT_QUERY_PATH}"

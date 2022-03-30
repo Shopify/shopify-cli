@@ -38,15 +38,11 @@ module Script
 
           # the sparse checkout process is common to all script types
           def setup_dependencies
-            setup_sparse_checkout
+            sparse_checkout_details.setup(ctx)
             clean
           end
 
           private
-
-          def setup_sparse_checkout
-            sparse_checkout_details.setup(ctx)
-          end
 
           def clean
             source = File.join(path_to_project, sparse_checkout_details.path, ".")
