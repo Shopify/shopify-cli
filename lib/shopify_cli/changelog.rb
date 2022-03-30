@@ -26,7 +26,7 @@ module ShopifyCLI
     end
 
     def release_notes(version)
-      changes[version].map do |change_category, changes|
+      changes[version][:changes].map do |change_category, changes|
         <<~CHANGES
           ### #{change_category}
           #{changes.map { |change| entry(**change) }.join("\n")}
@@ -35,7 +35,7 @@ module ShopifyCLI
     end
 
     def add_change(category, change)
-      changes["Unreleased"][category] << change
+      changes["Unreleased"][:changes][category] << change
     end
 
     def entry(pr_id:, desc:)
@@ -63,7 +63,8 @@ module ShopifyCLI
         if version == "Unreleased"
           "[Unreleased]"
         else
-          "Version #{version}"
+          date = changes[version][:date]
+          "Version #{version}#{" - #{date}" if date}"
         end
 
       [
@@ -74,9 +75,12 @@ module ShopifyCLI
 
     def changes
       @changes ||= Hash.new do |h, k|
-        h[k] = Hash.new do |h2, k2|
-          h2[k2] = []
-        end
+        h[k] = {
+          date: nil,
+          changes: Hash.new do |h2, k2|
+            h2[k2] = []
+          end,
+        }
       end
     end
 
@@ -99,8 +103,8 @@ module ShopifyCLI
           if /\A\#\#\# (?<category>\w+)/ =~ line
             change_category = category
           elsif %r{\A\* \[\#(?<id>\d+)\]\(https://github.com/Shopify/shopify-cli/pull/\k<id>\): (?<desc>.+)\n} =~ line
-            changes[current_version][change_category] << { pr_id: id, desc: desc }
-          elsif /\A\#\# Version (?<version>\d+\.\d+\.\d+)/ =~ line
+            changes[current_version][:changes][change_category] << { pr_id: id, desc: desc }
+          elsif /\A\#\# Version (?<version>\d+\.\d+\.\d+)( - (?<date>\d{4}-\d{2}-\d{2}))?/ =~ line
             current_version = version
             if state == :unreleased
               state = :prior_versions
@@ -111,6 +115,7 @@ module ShopifyCLI
                 state = :finished
               end
             end
+            changes[current_version][:date] = date unless state == :finished
           elsif !line.match?(/\s*\n/)
             raise "Unrecognized line: #{line.inspect}"
           end
