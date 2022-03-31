@@ -8,6 +8,9 @@ From version 2.6.0, the sections in this file adhere to the [keep a changelog](h
 * [#2191](https://github.com/Shopify/shopify-cli/pull/2191): Diretories with the `.json` extension should not be handled as JSON files
 * [#2018](https://github.com/Shopify/shopify-cli/pull/2018): Run theme-check as a code dependency, not a pseudo-CLI invocation
 
+### Added
+* [#2190](https://github.com/Shopify/shopify-cli/pull/2190): Better login experience with spinner
+
 ## Version 2.15.2
 
 ### Fixed
