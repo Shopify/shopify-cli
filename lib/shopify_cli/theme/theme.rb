@@ -155,6 +155,13 @@ module ShopifyCLI
       end
 
       class << self
+        def create_unpublished(ctx, root: nil, name: nil)
+          name ||= random_name
+          theme = new(ctx, root: root, name: name, role: "unpublished")
+          theme.create
+          theme
+        end
+
         def all(ctx, root: nil)
           _status, body = fetch_themes(ctx)
 
@@ -181,6 +188,10 @@ module ShopifyCLI
         end
 
         private
+
+        def random_name
+          ShopifyCLI::Helpers::Haikunator.haikunate(9999)
+        end
 
         def find(ctx, root, &block)
           _status, body = fetch_themes(ctx)

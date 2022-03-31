@@ -290,6 +290,21 @@ module Theme
             Usage: {{command:%s theme list}}
           HELP
         },
+        share: {
+          help: <<~HELP,
+            {{command:%s theme share}}: Creates a shareable theme on your theme library.
+
+            Usage: {{command:%s theme share [ ROOT ]}}
+          HELP
+          done: <<~DONE,
+            {{green:The {{bold:%s}} theme was pushed successfully}}
+
+              {{info:Share your theme preview:}}
+              {{underline:%s}}
+
+          DONE
+          upload: "Pushing theme files to %s (#%s) on %s",
+        },
       },
     }.freeze
   end

@@ -104,9 +104,7 @@ module Theme
 
         if unpublished
           name = theme || ask_theme_name
-          new_theme = ShopifyCLI::Theme::Theme.new(@ctx, root: root, name: name, role: "unpublished")
-          new_theme.create
-          return new_theme
+          return ShopifyCLI::Theme::Theme.create_unpublished(@ctx, root: root, name: name)
         end
 
         if theme
