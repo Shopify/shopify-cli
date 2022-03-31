@@ -10,9 +10,7 @@ module Script
           property! :type, accepts: String
           property! :project_name, accepts: String
           property! :path_to_project, accepts: String
-          property! :sparse_checkout_repo, accepts: String
-          property! :sparse_checkout_branch, accepts: String
-          property! :sparse_checkout_set_path, accepts: String
+          property! :sparse_checkout_details, accepts: SparseCheckoutDetails
 
           def self.for(
             ctx:,
@@ -20,9 +18,7 @@ module Script
             type:,
             project_name:,
             path_to_project:,
-            sparse_checkout_repo:,
-            sparse_checkout_branch:,
-            sparse_checkout_set_path:
+            sparse_checkout_details:
           )
 
             project_creators = {
@@ -36,33 +32,22 @@ module Script
               type: type,
               project_name: project_name,
               path_to_project: path_to_project,
-              sparse_checkout_repo: sparse_checkout_repo,
-              sparse_checkout_branch: sparse_checkout_branch,
-              sparse_checkout_set_path: sparse_checkout_set_path
+              sparse_checkout_details: sparse_checkout_details,
             )
           end
 
           # the sparse checkout process is common to all script types
           def setup_dependencies
-            setup_sparse_checkout
+            sparse_checkout_details.setup(ctx)
             clean
           end
 
           private
 
-          def setup_sparse_checkout
-            ShopifyCLI::Git.sparse_checkout(
-              sparse_checkout_repo,
-              sparse_checkout_set_path,
-              sparse_checkout_branch,
-              ctx
-            )
-          end
-
           def clean
-            source = File.join(path_to_project, sparse_checkout_set_path, ".")
+            source = File.join(path_to_project, sparse_checkout_details.path, ".")
             FileUtils.cp_r(source, path_to_project)
-            ctx.rm_rf(sparse_checkout_set_path.split("/")[0])
+            ctx.rm_rf(sparse_checkout_details.path.split("/")[0])
             ctx.rm_rf(".git")
           end
 

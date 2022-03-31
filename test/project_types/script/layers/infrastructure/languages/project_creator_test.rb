@@ -14,11 +14,16 @@ describe Script::Layers::Infrastructure::Languages::ProjectCreator do
 
   let(:path) { "project_path" }
 
-  let(:sparse_checkout_repo) { "fake-repo" }
-  let(:sparse_checkout_branch) { "fake-branch" }
-  let(:sparse_checkout_set_path) { "packages/#{domain}/samples/#{extension_point_type}" }
+  let(:sparse_checkout_details) do
+    Script::Layers::Infrastructure::SparseCheckoutDetails.new(
+      repo: "fake-repo",
+      branch: "fake-branch",
+      path: "packages/#{domain}/samples/#{extension_point_type}",
+      input_queries_enabled: false,
+    )
+  end
 
-  let(:source) { File.join(path, sparse_checkout_set_path) }
+  let(:source) { File.join(path, sparse_checkout_details.path) }
 
   let(:project_creator) do
     Script::Layers::Infrastructure::Languages::ProjectCreator.new(
@@ -26,9 +31,7 @@ describe Script::Layers::Infrastructure::Languages::ProjectCreator do
       type: extension_point_type,
       project_name: project_name,
       path_to_project: path,
-      sparse_checkout_repo: sparse_checkout_repo,
-      sparse_checkout_branch: sparse_checkout_branch,
-      sparse_checkout_set_path: sparse_checkout_set_path
+      sparse_checkout_details: sparse_checkout_details,
     )
   end
 
@@ -46,9 +49,7 @@ describe Script::Layers::Infrastructure::Languages::ProjectCreator do
           type: extension_point_type,
           project_name: project_name,
           path_to_project: path,
-          sparse_checkout_repo: sparse_checkout_repo,
-          sparse_checkout_branch: sparse_checkout_branch,
-          sparse_checkout_set_path: sparse_checkout_set_path,
+          sparse_checkout_details: sparse_checkout_details,
         )
     end
 
@@ -80,15 +81,7 @@ describe Script::Layers::Infrastructure::Languages::ProjectCreator do
 
     describe "when Git sparse checkout is successful" do
       before do
-        ShopifyCLI::Git
-          .expects(:sparse_checkout)
-          .with(
-            project_creator.sparse_checkout_repo,
-            project_creator.sparse_checkout_set_path,
-            project_creator.sparse_checkout_branch,
-            context
-          )
-          .once
+        sparse_checkout_details.expects(:setup).with(context).once
 
         # setup the directory and files that sparse-checkout would produce
         FileUtils.mkdir_p(source)
@@ -96,7 +89,7 @@ describe Script::Layers::Infrastructure::Languages::ProjectCreator do
       end
 
       it "should sucessfully setup dependencies" do
-        context.expects(:rm_rf).with(project_creator.sparse_checkout_set_path.split("/")[0])
+        context.expects(:rm_rf).with(project_creator.sparse_checkout_details.path.split("/")[0])
         context.expects(:rm_rf).with(".git")
 
         subject
@@ -104,8 +97,8 @@ describe Script::Layers::Infrastructure::Languages::ProjectCreator do
     end
 
     describe "when Git sparse checkout throws error" do
-      it "shouuld also throw error" do
-        ShopifyCLI::Git.expects(:sparse_checkout).raises(ShopifyCLI::Abort)
+      it "should also throw error" do
+        sparse_checkout_details.expects(:setup).raises(ShopifyCLI::Abort)
         assert_raises(ShopifyCLI::Abort) { subject }
       end
     end

@@ -16,11 +16,16 @@ describe Script::Layers::Application::CreateScript do
   let(:extension_point_type) { "payment-methods" }
   let(:example_config) { extension_point_repository.example_config(extension_point_type) }
   let(:domain) { example_config["domain"] }
-  let(:sparse_checkout_repo) { example_config["libraries"][language]["repo"] }
-  let(:sparse_checkout_branch) do
-    "master"
-  end   # TODO: update once create script can take a command line argument
-  let(:sparse_checkout_set_path) { "#{domain}/#{language}/#{extension_point_type}/default" }
+  let(:sparse_checkout_branch) { "master" }
+  let(:input_queries_beta_enabled?) { false }
+  let(:sparse_checkout_details) do
+    Script::Layers::Infrastructure::SparseCheckoutDetails.new(
+      repo: example_config["libraries"][language]["repo"],
+      branch: sparse_checkout_branch,
+      path: "#{domain}/#{language}/#{extension_point_type}/default",
+      input_queries_enabled: input_queries_beta_enabled?,
+    )
+  end
 
   let(:project_creator) { stub }
   let(:context) { TestHelpers::FakeContext.new }
@@ -50,14 +55,14 @@ describe Script::Layers::Application::CreateScript do
         type: extension_point_type,
         project_name: title,
         path_to_project: script_project.id,
-        sparse_checkout_repo: sparse_checkout_repo,
-        sparse_checkout_branch: sparse_checkout_branch,
-        sparse_checkout_set_path: sparse_checkout_set_path,
+        sparse_checkout_details: sparse_checkout_details,
       )
       .returns(project_creator)
 
-    project_creator.stubs(:sparse_checkout_repo).returns(sparse_checkout_repo)
+    project_creator.stubs(:sparse_checkout_details).returns(sparse_checkout_details)
     project_creator.stubs(:path_to_project).returns(script_project.id)
+
+    ShopifyCLI::Feature.stubs(:enabled?).with(:scripts_beta_input_queries).returns(input_queries_beta_enabled?)
   end
 
   describe ".call" do
@@ -122,6 +127,28 @@ describe Script::Layers::Application::CreateScript do
 
         script_config = script_project_repository.get.script_config
         assert_equal "1", script_config.version
+      end
+
+      describe "when scripts_beta_input_queries feature is enabled" do
+        let(:input_queries_beta_enabled?) { true }
+
+        before do
+          Script::Layers::Infrastructure::Languages::ProjectCreator
+            .expects(:for)
+            .with(
+              ctx: context,
+              language: language,
+              type: extension_point_type,
+              project_name: title,
+              path_to_project: script_project.id,
+              sparse_checkout_details: sparse_checkout_details,
+            )
+            .returns(project_creator)
+        end
+
+        it "passes correct arguments to project creator" do
+          subject
+        end
       end
     end
 
