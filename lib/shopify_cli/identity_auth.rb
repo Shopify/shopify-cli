@@ -68,7 +68,7 @@ module ShopifyCLI
       rescue IdentityAuth::Timeout => e
         ctx.abort(e.message)
       end
-      with_spinner(spinner, "Finalizing authentication") do
+      with_spinner(spinner, ctx.message("core.login.spinner.finalizing")) do
         request_exchange_tokens
       end
     end
