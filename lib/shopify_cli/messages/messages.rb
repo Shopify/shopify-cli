@@ -448,6 +448,11 @@ module ShopifyCLI
           shop_prompt: <<~PROMPT,
             What store are you connecting to? (e.g. my-store.myshopify.com; do {{bold:NOT}} include protocol part, e.g., https://)
           PROMPT
+          spinner: {
+            initiating: "Initiating authentication",
+            finalizing: "Finalizing authentication",
+            loading_organizations: "Loading available partner organizations",
+          },
         },
 
         logout: {
