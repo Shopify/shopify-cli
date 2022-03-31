@@ -20,10 +20,15 @@ module ShopifyCLI
             file2 = mock
             file3 = mock
             file4 = mock
+            file5 = mock
+
             syncer.stubs(pending_updates: [file2])
             syncer.stubs(:broken_file?).returns(false)
+            syncer.stubs(:ignore_file?).returns(false)
             syncer.stubs(:broken_file?).with(file3).returns(true)
-            theme.stubs(json_files: [file1, file2, file3, file4])
+            syncer.stubs(:ignore_file?).with(file5).returns(true)
+
+            theme.stubs(json_files: [file1, file2, file3, file4, file5])
 
             syncer.expects(:fetch_checksums!)
             syncer.expects(:enqueue_get).with([file1, file4])

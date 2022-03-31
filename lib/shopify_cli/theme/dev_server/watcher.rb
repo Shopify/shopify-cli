@@ -46,20 +46,14 @@ module ShopifyCLI
           files
             .select { |file| @theme.theme_file?(file) }
             .map { |file| @theme[file] }
-            .reject { |file| ignore_file?(file) }
+            .reject { |file| @syncer.ignore_file?(file) }
         end
 
         def filter_remote_files(files)
           files
             .select { |file| @syncer.remote_file?(file) }
             .map { |file| @theme[file] }
-            .reject { |file| ignore_file?(file) }
-        end
-
-        private
-
-        def ignore_file?(file)
-          @ignore_filter&.ignore?(file.relative_path)
+            .reject { |file| @syncer.ignore_file?(file) }
         end
       end
     end
