@@ -92,7 +92,8 @@ module ShopifyCLI
 
         rescue ShopifyCLI::API::APIRequestForbiddenError,
                ShopifyCLI::API::APIRequestUnauthorizedError
-          raise ShopifyCLI::Abort, @ctx.message("theme.serve.ensure_user", theme.shop)
+          shop = ShopifyCLI::AdminAPI.get_shop_or_abort(@ctx)
+          raise ShopifyCLI::Abort, @ctx.message("theme.serve.ensure_user", shop)
         rescue Errno::EADDRINUSE
           error_message = @ctx.message("theme.serve.address_already_in_use", address)
           help_message = @ctx.message("theme.serve.try_port_option")
