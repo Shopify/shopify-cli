@@ -17,8 +17,8 @@ module Theme
       def call(_args, _name)
         theme = find_theme(**options.flags)
 
-        @ctx.puts(@ctx.message("theme.open.details", theme.name, theme.editor_url))
-        @ctx.open_url!(theme.preview_url)
+        @ctx.puts(@ctx.message("theme.open.details", theme.name, theme.preview_url, theme.editor_url))
+        @ctx.open_browser_url!(theme.preview_url)
       end
 
       def self.help
