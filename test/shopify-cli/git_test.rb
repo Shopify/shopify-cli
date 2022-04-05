@@ -65,6 +65,41 @@ module ShopifyCLI
       end
     end
 
+    def test_merge_file_successfully
+      current_file = "/tmp/current_file"
+      base_file = "/tmp/base_file"
+      other_file = "/tmp/other_file"
+      opts = ["--ours", "-p"]
+      expected_output = "<output>"
+      ctx = mock
+
+      ctx.expects(:abort).never
+      ctx.expects(:capture2e)
+        .with("git", "merge-file", current_file, base_file, other_file, "--ours", "-p")
+        .returns([expected_output, stub(success?: true)])
+
+      actual_output = ShopifyCLI::Git.merge_file(current_file, base_file, other_file, opts, ctx: ctx)
+
+      assert_equal(expected_output, actual_output)
+    end
+
+    def test_merge_file_fails
+      current_file = "/tmp/current_file"
+      base_file = "/tmp/base_file"
+      other_file = "/tmp/other_file"
+      opts = ["--ours", "-p"]
+      expected_output = "<output>"
+      ctx = mock
+
+      ctx.expects(:message).with("core.git.error.merge_failed").returns("merge_failed")
+      ctx.expects(:abort).with("merge_failed")
+      ctx.expects(:capture2e)
+        .with("git", "merge-file", current_file, base_file, other_file, "--ours", "-p")
+        .returns([expected_output, stub(success?: false)])
+
+      ShopifyCLI::Git.merge_file(current_file, base_file, other_file, opts, ctx: ctx)
+    end
+
     def test_init_initializes_successfully
       stub_git_init(status: true, commits: true)
       assert_nil(ShopifyCLI::Git.init(@context))

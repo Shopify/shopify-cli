@@ -16,7 +16,7 @@ module ShopifyCLI
       def test_perform_with_an_invalid_job
         job = InvalidJob.new
 
-        expected_error = "`ShopifyCLI::ThreadPool::InvalidJob#perform!` must be defined"
+        expected_error = "`ShopifyCLI::ThreadPool::JobTest::InvalidJob#perform!' must be defined"
         actual_error = assert_raises(RuntimeError) { job.perform! }.message
 
         assert_equal(expected_error, actual_error)
@@ -50,21 +50,35 @@ module ShopifyCLI
         refute error_job.success?
         assert success_job.success?
       end
-    end
 
-    class ValidJob < ShopifyCLI::ThreadPool::Job
-      def perform!
-        true
+      def test_recurring_when_it_returns_true
+        job = ValidJob.new(1)
+
+        assert(job.recurring?)
+        assert_equal(1, job.interval)
       end
-    end
 
-    class InvalidJob < ShopifyCLI::ThreadPool::Job
-      # Without `#perform!` definition
-    end
+      def test_recurring_when_it_returns_false
+        job = ValidJob.new
 
-    class ErrorJob < ShopifyCLI::ThreadPool::Job
-      def perform!
-        raise "error message"
+        refute(job.recurring?)
+        assert_equal(0, job.interval)
+      end
+
+      class ValidJob < ShopifyCLI::ThreadPool::Job
+        def perform!
+          true
+        end
+      end
+
+      class InvalidJob < ShopifyCLI::ThreadPool::Job
+        # Without `#perform!` definition
+      end
+
+      class ErrorJob < ShopifyCLI::ThreadPool::Job
+        def perform!
+          raise "error message"
+        end
       end
     end
   end

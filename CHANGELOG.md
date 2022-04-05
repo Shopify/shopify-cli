@@ -4,9 +4,25 @@ From version 2.6.0, the sections in this file adhere to the [keep a changelog](h
 
 ### Changed
 * [#2188](https://github.com/Shopify/shopify-cli/pull/2188): Update URLs by default on serve and add --no-update flag to skip it
+* [#2203](https://github.com/Shopify/shopify-cli/pull/2203): Use javy version 0.3.0
+
+### Fixed
+* [#2162](https://github.com/Shopify/shopify-cli/pull/2162): Improve encoding error handling for Checkout Extension localization
+* [#2187](https://github.com/Shopify/shopify-cli/pull/2187): Fix app serve after rails update
+* [#2191](https://github.com/Shopify/shopify-cli/pull/2191): Diretories with the `.json` extension should not be handled as JSON files
+* [#2018](https://github.com/Shopify/shopify-cli/pull/2018): Run theme-check as a code dependency, not a pseudo-CLI invocation
+
+### Added
+* [#2190](https://github.com/Shopify/shopify-cli/pull/2190): Better login experience with spinner
+
+## Version 2.15.2
 
 ### Fixed
 * [#2121](https://github.com/Shopify/shopify-cli/pull/2121): Fix the hot-reload to work when the section name is not equal to the type
+* [#2183](https://github.com/Shopify/shopify-cli/pull/2183): Improve error message when suspended users run `theme serve`
+
+### Added
+* [#2174](https://github.com/Shopify/shopify-cli/pull/2174): Add optional 2-way sync between the CLI (`theme serve`) and the Theme Editor
 
 ## Version 2.15.1
 

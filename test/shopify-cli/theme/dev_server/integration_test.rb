@@ -160,6 +160,23 @@ module ShopifyCLI
           socket.close
         end
 
+        def test_forbidden_error
+          start_server_and_wait_sync_files
+          error_message = "error message"
+          shop = "dev-theme-server-store.myshopify.com"
+
+          ShopifyCLI::Theme::DevelopmentTheme.stubs(:find_or_create!).raises(ShopifyCLI::API::APIRequestForbiddenError)
+
+          @ctx.stubs(:message).with("theme.serve.ensure_user", shop).returns(error_message)
+          @ctx.output_captured = true
+          io = capture_io_and_assert_raises(ShopifyCLI::Abort) do
+            DevServer.start(@ctx, "#{ShopifyCLI::ROOT}/test/fixtures/theme", port: @@port)
+          end
+          @ctx.output_captured = false
+
+          assert_message_output(io: io, expected_content: [error_message])
+        end
+
         private
 
         def start_server

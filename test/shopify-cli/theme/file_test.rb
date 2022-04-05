@@ -67,7 +67,48 @@ module ShopifyCLI
         @file.write("content")
       end
 
+      def test_name
+        file = fixture_file("layout/theme.liquid")
+
+        expected_name = "theme.liquid"
+        actual_name = file.name
+
+        assert_equal(expected_name, actual_name)
+      end
+
+      def test_name_with_args
+        file = fixture_file("layout/theme.liquid")
+
+        expected_name = "theme"
+        actual_name = file.name(".*")
+
+        assert_equal(expected_name, actual_name)
+      end
+
+      def test_absolute_path
+        absolute_path = "#{ShopifyCLI::ROOT}/layout/theme.liquid"
+
+        realpath = stub(to_s: absolute_path)
+        path = stub(realpath: realpath)
+        @file.stubs(path: path)
+
+        assert_equal(absolute_path, @file.absolute_path)
+      end
+
+      def test_relative_path
+        file = fixture_file("layout/theme.liquid")
+
+        expected_relative_path = "layout/theme.liquid"
+        actual_relative_path = file.relative_path
+
+        assert_equal(expected_relative_path, actual_relative_path)
+      end
+
       private
+
+      def fixture_file(file_path)
+        File.new("#{ShopifyCLI::ROOT}/#{file_path}", root)
+      end
 
       def path
         @path = mock

@@ -41,7 +41,7 @@ module Extension
         invalid_api_key: "The API key %s does not match any of your apps.",
         ask_app: "Which app would you like to register this extension with?",
         no_apps: "{{x}} You don’t have any apps.",
-        learn_about_apps: "{{*}} Learn more about building apps at <https://shopify.dev/concepts/apps>, " \
+        learn_about_apps: "{{*}} Learn more about building apps at <https://shopify.dev/apps>, " \
           "or try creating a new app using {{command:shopify [node|rails] create}}.",
         loading_apps: "Loading your apps…",
         no_available_extensions: "{{x}} There are no available extensions for this app.",
@@ -73,8 +73,6 @@ module Extension
         help: <<~HELP,
           Register your local extension to a Shopify app
               Usage: {{command:%s extension register}}
-              Options:
-                {{command:--api-key=API_KEY}} The API key used to register an app with the extension. This can be found on the app page on Partners Dashboard.
         HELP
         frame_title: "Registering Extension",
         waiting_text: "Registering with Shopify…",

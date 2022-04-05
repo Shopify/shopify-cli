@@ -8,8 +8,9 @@ module Theme
             Usage: {{command:%1$s theme [ %2$s ]}}
         HELP
         ensure_user_error: "You are not authorized to edit themes on %s.",
-        ensure_user_try_this: "Make sure you are a user of that store, and allowed to edit themes.",
-
+        ensure_user_try_this: <<~ENSURE_USER,
+          Check if your user is activated, has permission to edit themes at the store, and try to re-login.
+        ENSURE_USER
         init: {
           help: <<~HELP,
             {{command:%s theme init}}: Clones a Git repository to use as a starting point for building a new theme.
@@ -101,13 +102,14 @@ module Theme
             Usage: {{command:%s theme serve [ ROOT ]}}
 
             Options:
-              {{command:--port=PORT}}        Local port to serve theme preview from.
-              {{command:--poll}}             Force polling to detect file changes.
-              {{command:--host=HOST}}        Set which network interface the web server listens on. The default value is 127.0.0.1.
-              {{command:--live-reload=MODE}} The live reload mode switches the server behavior when a file is modified:
-                                 - {{command:hot-reload}} Hot reloads local changes to CSS and sections (default)
-                                 - {{command:full-page}}  Always refreshes the entire page
-                                 - {{command:off}}        Deactivate live reload
+              {{command:--port=PORT}}         Local port to serve theme preview from.
+              {{command:--poll}}              Force polling to detect file changes.
+              {{command:--host=HOST}}         Set which network interface the web server listens on. The default value is 127.0.0.1.
+              {{command:--theme-editor-sync}} Synchronize Theme Editor updates in the local theme files.
+              {{command:--live-reload=MODE}}  The live reload mode switches the server behavior when a file is modified:
+                                  - {{command:hot-reload}} Hot reloads local changes to CSS and sections (default)
+                                  - {{command:full-page}}  Always refreshes the entire page
+                                  - {{command:off}}        Deactivate live reload
           HELP
           reload_mode_is_not_valid: "The live reload mode `%s` is not valid.",
           try_a_valid_reload_mode: "Try a valid live reload mode: %s.",
@@ -119,6 +121,36 @@ module Theme
               error: "ERROR",
               synced: "Synced",
               fixed: "Fixed",
+            },
+          },
+          syncer: {
+            forms: {
+              apply_to_all: {
+                title: "Would like apply this to all the other %s files?",
+                yes: "Yes",
+                no: "No",
+              },
+              update_strategy: {
+                title_context: <<~TITLE,
+
+                  The local file {{command:%s}} is different from the remote version in the development theme."
+                TITLE
+                title_question: "What would you like to do?",
+                keep_remote: "Keep the remote version",
+                keep_local: "Keep the local version",
+                union_merge: "Merge files (it may break the local file)",
+                exit: "Exit",
+              },
+              delete_strategy: {
+                title_context: <<~TITLE,
+
+                  The local file {{command:%s}} has been recently removed, but it's present on your remote development theme.",
+                TITLE
+                title_question: "What would you like to do?",
+                delete: "Delete permanently",
+                restore: "Restore with the remote version",
+                exit: "Exit",
+              },
             },
           },
           error: {
@@ -137,9 +169,10 @@ module Theme
             Serving %s
 
           SERVING
+          download_changes: ", and use 'theme pull' to get the changes",
           customize_or_preview: <<~CUSTOMIZE_OR_PREVIEW,
 
-            Customize this theme in the Theme Editor:
+            Customize this theme in the Theme Editor%s:
             {{green:%s}}
 
             Share this theme preview:
@@ -149,7 +182,7 @@ module Theme
           CUSTOMIZE_OR_PREVIEW
           ensure_user: <<~ENSURE_USER,
             You are not authorized to edit themes on %s.
-            Make sure you are a user of that store, and allowed to edit themes.
+            Check if your user is activated, has permission to edit themes at the store, and try to re-login.
           ENSURE_USER
           address_already_in_use: "The address \"%s\" is already in use.",
           try_port_option: "Use the --port=PORT option to serve the theme in a different port.",
@@ -159,6 +192,7 @@ module Theme
             Check your theme for errors, suggestions, and best practices.
             Usage: {{command:%s check}}
           HELP
+          error: "Theme check failed with error:\n%s",
         },
         delete: {
           help: <<~HELP,

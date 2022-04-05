@@ -216,6 +216,17 @@ module Script
               "script.error.configuration_schema_field_invalid_value_error_help"
             ),
           }
+        when Layers::Infrastructure::Errors::InvalidInputQueryErrors
+          {
+            cause_of_error: ShopifyCLI::Context.message(
+              "script.error.input_query_error_cause",
+              messages: e.messages.map { |message| "  {{x}} #{message}." }.join("\n"),
+            ),
+            help_suggestion: ShopifyCLI::Context.message(
+              "script.error.input_query_error_help",
+              input_query_path: e.input_query_path,
+            ),
+          }
         when Layers::Infrastructure::Errors::DependencyInstallError
           {
             cause_of_error: ShopifyCLI::Context.message("script.error.dependency_install_cause"),

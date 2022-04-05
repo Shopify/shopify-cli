@@ -32,7 +32,12 @@ module Extension
 
       def call(*)
         if project.specification_identifier == "THEME_APP_EXTENSION"
-          @theme_check.run
+          begin
+            @theme_check.run!
+          rescue ThemeCheck::Cli::Abort, ThemeCheck::ThemeCheckError => e
+            raise ShopifyCLI::Abort,
+              ShopifyCLI::Context.message("theme.check.error", e.full_message)
+          end
         else
           @ctx.abort(@ctx.message("check.unsupported", project.specification_identifier))
         end

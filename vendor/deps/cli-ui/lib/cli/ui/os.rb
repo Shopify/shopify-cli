@@ -35,6 +35,10 @@ module CLI
           def shift_cursor_on_line_reset?
             false
           end
+
+          def path_separator
+            ":"
+          end
         end
       end
 
@@ -57,6 +61,10 @@ module CLI
 
           def shift_cursor_on_line_reset?
             true
+          end
+
+          def path_separator
+            ";"
           end
         end
       end

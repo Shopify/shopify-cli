@@ -11,10 +11,14 @@ describe Script::Layers::Infrastructure::Languages::WasmProjectCreator do
   let(:language) { "wasm" }
   let(:domain) { "fake-domain" }
   let(:project_name) { "myscript" }
-  let(:sparse_checkout_repo) { "fake-repo" }
-  let(:sparse_checkout_branch) { "fake-branch" }
-  let(:sparse_checkout_set_path) { "#{domain}/#{language}/#{type}/default" }
-
+  let(:sparse_checkout_details) do
+    Script::Layers::Infrastructure::SparseCheckoutDetails.new(
+      repo: "fake-repo",
+      branch: "fake-branch",
+      path: "#{domain}/#{language}/#{type}/default",
+      input_queries_enabled: false,
+    )
+  end
   let(:project_creator) do
     Script::Layers::Infrastructure::Languages::WasmProjectCreator
       .new(
@@ -22,9 +26,7 @@ describe Script::Layers::Infrastructure::Languages::WasmProjectCreator do
         type: type,
         project_name: project_name,
         path_to_project: project_name,
-        sparse_checkout_repo: sparse_checkout_repo,
-        sparse_checkout_branch: sparse_checkout_branch,
-        sparse_checkout_set_path: sparse_checkout_set_path,
+        sparse_checkout_details: sparse_checkout_details,
       )
   end
 

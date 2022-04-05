@@ -1,6 +1,7 @@
 # frozen_string_literal: true
 require "shopify_cli"
 require "yaml"
+require "pathname"
 
 module Extension
   module Tasks

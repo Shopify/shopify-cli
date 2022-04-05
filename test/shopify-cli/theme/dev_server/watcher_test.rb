@@ -13,8 +13,7 @@ module ShopifyCLI
           @ctx = TestHelpers::FakeContext.new(root: @root)
           @theme = Theme.new(@ctx, root: @root)
           @syncer = stub("Syncer", enqueue_uploads: true, enqueue_updates: true)
-          @ignore_filter = IgnoreFilter.new(@root, patterns: ["foo/*"])
-          @watcher = Watcher.new(@ctx, theme: @theme, syncer: @syncer, ignore_filter: @ignore_filter)
+          @watcher = Watcher.new(@ctx, theme: @theme, syncer: @syncer)
         end
 
         def test_upload_files_when_changed
@@ -25,22 +24,16 @@ module ShopifyCLI
 
           @theme.expects(:theme_file?).with(included_path).returns(true)
           @theme.expects(:theme_file?).with(ignored_path).returns(true)
+
           @theme.expects(:[]).with(included_path).returns(included_file)
           @theme.expects(:[]).with(ignored_path).returns(ignored_file)
+
+          @syncer.expects(:ignore_file?).with(included_file).returns(false)
+          @syncer.expects(:ignore_file?).with(ignored_file).returns(true)
 
           @syncer.expects(:enqueue_updates).with([included_file])
 
           @watcher.upload_files_when_changed([included_path, ignored_path], [], [])
-        end
-
-        def test_filters_theme_files_correctly_by_relative_path
-          relative_path = "layout/theme.liquid"
-          absolute_path = ::File.join(@root, relative_path)
-
-          @theme.expects(:theme_file?).with(absolute_path).returns(true)
-          @ignore_filter.expects(:ignore?).with(relative_path)
-
-          @watcher.filter_theme_files([absolute_path])
         end
       end
     end

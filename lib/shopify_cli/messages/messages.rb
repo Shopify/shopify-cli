@@ -295,6 +295,7 @@ module ShopifyCLI
                   invalid_file_extension: "Invalid locale filename: `%s`; only .json files are allowed.",
                   invalid_locale_code: "Invalid locale filename: `%s`; locale code should be 2 or 3 letters,"\
                     " optionally followed by a two-letter region code, e.g. `fr-CA`.",
+                  invalid_file_encoding: "Invalid file encoding for `%s`; file encoding should be UTF-8.",
                   single_default_locale: "There must be one and only one locale identified as the default locale,"\
                     " e.g. `en.default.json`",
                 },
@@ -389,6 +390,7 @@ module ShopifyCLI
             sparse_checkout_not_set: "Sparse checkout set command failed.",
             pull_failed: "Pull failed.",
             pull_failed_bad_branch: "Pull failed. Branch %s cannot be found. Check the branch name and try again.",
+            merge_failed: "The file %s merge failed.",
           },
 
           cloning: "Cloning %s into %s…",
@@ -439,7 +441,7 @@ module ShopifyCLI
         login: {
           help: <<~HELP,
             Log in to the Shopify CLI by authenticating with a store or partner organization
-              Usage: {{command:%s login [--store=STORE]}}
+              Usage: {{command:%s login [--store STORE]}}
           HELP
           invalid_shop: <<~MESSAGE,
             Invalid store provided (%s). Please provide the store in the following format: my-store.myshopify.com
@@ -447,6 +449,11 @@ module ShopifyCLI
           shop_prompt: <<~PROMPT,
             What store are you connecting to? (e.g. my-store.myshopify.com; do {{bold:NOT}} include protocol part, e.g., https://)
           PROMPT
+          spinner: {
+            initiating: "Initiating authentication",
+            finalizing: "Finalizing authentication",
+            loading_organizations: "Loading available partner organizations",
+          },
         },
 
         logout: {
@@ -461,7 +468,7 @@ module ShopifyCLI
         switch: {
           help: <<~HELP,
             Switch between development stores in your partner organization
-              Usage: {{command:%s switch [--store=STORE]}}
+              Usage: {{command:%s switch [--store STORE]}}
           HELP
           disabled_as_shopify_org: "Can't switch development stores logged in as {{green:Shopify partners org}}",
           success: "Switched development store to {{green:%s}}",
@@ -574,7 +581,7 @@ module ShopifyCLI
           HELP
 
           error: {
-            no_shop: "No store found. Please run {{command:%s login --store=STORE}} to login to a specific store",
+            no_shop: "No store found. Please run {{command:%s login --store STORE}} to login to a specific store",
           },
 
           customer: {
@@ -809,7 +816,7 @@ module ShopifyCLI
           not_logged_in: <<~MESSAGE,
             It doesn't appear that you're logged in. You must log into a partner organization or a store staff account.
 
-            If trying to log into a store staff account, please use {{command:%s login --store=STORE}} to log in.
+            If trying to log into a store staff account, please use {{command:%s login --store STORE}} to log in.
           MESSAGE
           logged_in_shop_only: <<~MESSAGE,
             Logged into store {{green:%s}} as staff (no partner organizations available for this login)

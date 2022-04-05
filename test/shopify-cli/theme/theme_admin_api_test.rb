@@ -134,14 +134,28 @@ module ShopifyCLI
 
       def test_graceullly_handles_api_permissions_errors
         path = "themes.json"
-        request_params = {
-          method: "POST",
-          path: path,
-        }
 
         ShopifyCLI::AdminAPI.expects(:rest_request)
-          .with(@ctx, shop: @shop, api_version: @api_version, **request_params)
+          .with(@ctx, shop: @shop, api_version: @api_version, method: "POST", path: path)
           .raises(ShopifyCLI::API::APIRequestForbiddenError)
+
+        @ctx.expects(:message).with("theme.ensure_user_error", @shop).returns("ensure_user_error")
+        @ctx.expects(:message).with("theme.ensure_user_try_this").returns("ensure_user_try_this")
+        @ctx.expects(:abort).with("ensure_user_error", "ensure_user_try_this")
+
+        @api_client.post(
+          path: path
+        )
+      end
+
+      def test_forbiden_errors_related_to_unauthorized_access
+        path = "themes.json"
+        error_response = stub(body: '{"errors":"Unauthorized Access"}')
+        expected_error = ShopifyCLI::API::APIRequestForbiddenError.new("403", response: error_response)
+
+        ShopifyCLI::AdminAPI.expects(:rest_request)
+          .with(@ctx, shop: @shop, api_version: @api_version, method: "POST", path: path)
+          .raises(expected_error)
 
         @ctx.expects(:message).with("theme.ensure_user_error", @shop).returns("ensure_user_error")
         @ctx.expects(:message).with("theme.ensure_user_try_this").returns("ensure_user_try_this")
@@ -166,6 +180,50 @@ module ShopifyCLI
         end
 
         assert_equal(expected_error, actual_error)
+      end
+
+      def test_unauthorized_response_with_nil_error
+        error = nil
+        refute(@api_client.send(:unauthorized_response?, error))
+      end
+
+      def test_unauthorized_response_with_nil_response
+        error = stub(response: nil)
+        refute(@api_client.send(:unauthorized_response?, error))
+      end
+
+      def test_unauthorized_response_with_nil_body
+        response = stub(body: nil)
+        error = stub(response: response)
+        refute(@api_client.send(:unauthorized_response?, error))
+      end
+
+      def test_unauthorized_response_with_invalid_json
+        body = '{"errors":"Unauthorized Access")))'
+        response = stub(body: body)
+        error = stub(response: response)
+        refute(@api_client.send(:unauthorized_response?, error))
+      end
+
+      def test_unauthorized_response_with_no_error
+        body = '{"message":"templates/gift_card.liquid could not be deleted"}'
+        response = stub(body: body)
+        error = stub(response: response)
+        refute(@api_client.send(:unauthorized_response?, error))
+      end
+
+      def test_unauthorized_response_with_unauthorized_error
+        body = '{"errors":"Unauthorized Access"}'
+        response = stub(body: body)
+        error = stub(response: response)
+        assert(@api_client.send(:unauthorized_response?, error))
+      end
+
+      def test_unauthorized_response_with_other_error
+        body = '{"errors":"500 Internal Server Error"}'
+        response = stub(body: body)
+        error = stub(response: response)
+        refute(@api_client.send(:unauthorized_response?, error))
       end
 
       private
