@@ -263,6 +263,7 @@ module ShopifyCLI
               {{bold:Options:}}
                 {{cyan:--host=HOST}}: Bypass running tunnel and use custom host. HOST must be HTTPS url.
                 {{cyan:--port=PORT}}: Use custom port.
+                {{cyan:--no-update}}: Skips the dashboard URL update step
             HELP
             open_info: <<~MESSAGE,
               {{*}} To install and start using your app, open this URL in your browser:
@@ -720,7 +721,6 @@ module ShopifyCLI
             updated: "{{v}} Whitelist URLS updated in Partners Dashboard}}",
             update_error:
               "{{x}} error: For authentication issues, run {{command:%s logout}} to clear invalid credentials",
-            update_prompt: "Do you want to update your application url?",
           },
           select_org_and_shop: {
             authentication_issue: "For authentication issues, run {{command:%s logout}} to clear invalid credentials",

@@ -14,10 +14,10 @@ module ShopifyCLI
             project_context("app_types", "php")
             ShopifyCLI::Tasks::EnsureDevStore.stubs(:call)
             @context.stubs(:system)
+            ShopifyCLI::Tunnel.stubs(:start).returns("https://example.com")
           end
 
           def test_server_command
-            ShopifyCLI::Tunnel.stubs(:start).returns("https://example.com")
             ShopifyCLI::Tasks::UpdateDashboardURLS.expects(:call)
             ShopifyCLI::Resources::EnvFile.any_instance.expects(:update)
             ShopifyCLI::ProcessSupervision.expects(:running?).with(:npm_watch).returns(false)
@@ -51,7 +51,6 @@ module ShopifyCLI
           end
 
           def test_restarts_npm_watch_if_running
-            ShopifyCLI::Tunnel.stubs(:start).returns("https://example.com")
             ShopifyCLI::Tasks::UpdateDashboardURLS.expects(:call)
             ShopifyCLI::Resources::EnvFile.any_instance.expects(:update)
             ShopifyCLI::ProcessSupervision.expects(:running?).with(:npm_watch).returns(true)
@@ -158,7 +157,6 @@ module ShopifyCLI
 
           def test_server_command_when_invalid_port_passed
             invalid_port = "NOT_PORT"
-            ShopifyCLI::Tunnel.stubs(:start).returns("https://example.com")
             ShopifyCLI::Tasks::UpdateDashboardURLS.expects(:call)
             ShopifyCLI::Resources::EnvFile.any_instance.expects(:update)
             ShopifyCLI::ProcessSupervision.expects(:running?).with(:npm_watch).returns(false)
@@ -169,6 +167,11 @@ module ShopifyCLI
             )
 
             run_cmd("app serve --port=#{invalid_port}")
+          end
+
+          def test_server_command_when_no_update_passed
+            ShopifyCLI::Tasks::UpdateDashboardURLS.expects(:call).never
+            run_cmd("app serve --no-update")
           end
         end
       end
