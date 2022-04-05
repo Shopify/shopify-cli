@@ -264,6 +264,9 @@ module Theme
           details: <<~DETAILS,
             {{*}} {{bold:%s}}
 
+            Preview your theme:
+            {{green:%s}}
+
             Customize your theme in the Theme Editor:
             {{green:%s}}
 
