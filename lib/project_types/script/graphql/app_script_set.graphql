@@ -12,6 +12,7 @@ mutation AppScriptSet(
   $moduleUploadUrl: String!,
   $library: LibraryInput,
   $inputQuery: String,
+  $appBridgeMetadata: AppBridgeMetadataInput
 ) {
   appScriptSet(
     uuid: $uuid
@@ -27,6 +28,7 @@ mutation AppScriptSet(
     moduleUploadUrl: $moduleUploadUrl,
     library: $library,
     inputQuery: $inputQuery,
+    appBridgeMetadata: $appBridgeMetadata,
 ) {
     userErrors {
       field

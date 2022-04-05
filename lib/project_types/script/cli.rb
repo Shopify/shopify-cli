@@ -50,6 +50,7 @@ module Script
       autoload :ExtensionPoint, Project.project_filepath("layers/domain/extension_point")
       autoload :ScriptConfig, Project.project_filepath("layers/domain/script_config")
       autoload :ScriptProject, Project.project_filepath("layers/domain/script_project")
+      autoload :AppBridgeMetadata, Project.project_filepath("layers/domain/app_bridge_metadata")
     end
 
     module Infrastructure

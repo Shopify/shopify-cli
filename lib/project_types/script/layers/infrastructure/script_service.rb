@@ -22,7 +22,8 @@ module Script
           script_config:,
           module_upload_url:,
           library:,
-          input_query: nil
+          input_query: nil,
+          app_bridge_metadata: nil
         )
           query_name = "app_script_set"
           variables = {
@@ -44,6 +45,11 @@ module Script
             language: library[:language],
             version: library[:version],
           }  if library
+
+          variables[:appBridgeMetadata] = {
+            configurationDetailsPath: app_bridge_metadata.configuration_details_path,
+            configurationCreatePath: app_bridge_metadata.configuration_create_path,
+          } if app_bridge_metadata
 
           resp_hash = make_request(query_name: query_name, variables: variables)
           user_errors = resp_hash["data"]["appScriptSet"]["userErrors"]

@@ -19,6 +19,8 @@ module Script
         property :script_config, accepts: ScriptConfig
         property :input_query, accepts: String
 
+        property :app_bridge_metadata, accepts: AppBridgeMetadata
+
         def initialize(*)
           super
 

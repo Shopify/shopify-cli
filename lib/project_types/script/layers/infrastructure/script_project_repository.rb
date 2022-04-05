@@ -55,6 +55,7 @@ module Script
             language: language,
             script_config: script_config_repository.get!,
             input_query: read_input_query,
+            app_bridge_metadata: app_bridge_metadata,
           )
         end
 
@@ -94,6 +95,7 @@ module Script
             extension_point_type: extension_point_type,
             language: language,
             script_config: script_config,
+            app_bridge_metadata: app_bridge_metadata,
           )
         end
 
@@ -119,6 +121,15 @@ module Script
 
         def language
           project_config_value("language")&.downcase || default_language
+        end
+
+        def app_bridge_metadata
+          if project_config_value("app_bridge_configuration_create_path")
+            Domain::AppBridgeMetadata.new(
+              configuration_create_path: project_config_value("app_bridge_configuration_create_path"),
+              configuration_details_path: project_config_value("app_bridge_configuration_details_path"),
+            )
+          end
         end
 
         def project_config_value(key)

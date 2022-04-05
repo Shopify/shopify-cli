@@ -58,6 +58,7 @@ module Script
                   module_upload_url: module_upload_url,
                   library: package.library,
                   input_query: script_project.input_query,
+                  app_bridge_metadata: script_project.app_bridge_metadata,
                 )
                 if ShopifyCLI::Environment.interactive?
                   script_project_repo.update_env(uuid: uuid)
