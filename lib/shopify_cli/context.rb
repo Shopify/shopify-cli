@@ -4,6 +4,7 @@ require "fileutils"
 require "rbconfig"
 require "net/http"
 require "json"
+require "bundler"
 
 module ShopifyCLI
   ##
@@ -650,10 +651,8 @@ module ShopifyCLI
     # #### Returns
     # - version: a Semantic::Version object with the gem version
     def ruby_gem_version(gem)
-      output, status = capture2e("bundle", "info", gem)
-      abort(message("core.errors.bundle_info_failure", gem)) unless status.success?
-      version = output.match(/\s+\* #{gem} \((\d+\.\d+\.\d+)\)/)[1]
-      ::Semantic::Version.new(version)
+      version = Bundler.load.specs.find { |s| s.name == gem }.version
+      ::Semantic::Version.new(version.to_s)
     end
 
     private
