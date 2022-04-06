@@ -96,6 +96,59 @@ module ShopifyCLI
             FileUtils.rm_r("test-app")
           end
 
+          def test_can_create_new_app
+            create_mock_dirs
+
+            gem_path = create_gem_path_and_binaries
+            ::Rails::Gem.stubs(:gem_home).returns(gem_path)
+
+            Environment.expects(:ruby_version).with(context: @context).returns(Semantic::Version.new("2.5.0"))
+            ::Rails::Gem.expects(:install).with(@context, "rails", nil).returns(true)
+            ::Rails::Gem.expects(:install).with(@context, "bundler", "~>2.0").returns(true)
+            expect_rails_version("6.1.4")
+            expect_command(%W(#{gem_path}/bin/rails new test-app --skip-spring --database=sqlite3))
+            expect_command(%W(#{gem_path}/bin/bundle install),
+              chdir: File.join(@context.root, "test-app"))
+            expect_command(%W(#{gem_path}/bin/rails generate shopify_app --new-shopify-cli-app),
+              chdir: File.join(@context.root, "test-app"))
+            expect_command(%W(#{gem_path}/bin/rails db:create),
+              chdir: File.join(@context.root, "test-app"))
+            expect_command(%W(#{gem_path}/bin/rails db:migrate RAILS_ENV=development),
+              chdir: File.join(@context.root, "test-app"))
+            expect_command(%W(#{gem_path}/bin/rails webpacker:install),
+              chdir: File.join(@context.root, "test-app"))
+
+            stub_partner_req(
+              "create_app",
+              variables: {
+                org: 42,
+                title: "test-app",
+                type: "public",
+                app_url: ShopifyCLI::Tasks::CreateApiClient::DEFAULT_APP_URL,
+                redir: ["http://127.0.0.1:3456"],
+              },
+              resp: {
+                'data': {
+                  'appCreate': {
+                    'app': {
+                      'apiKey': "newapikey",
+                      'apiSecretKeys': [{ 'secret': "secret" }],
+                    },
+                  },
+                },
+              }
+            )
+
+            call_service
+
+            assert_equal SHOPIFYCLI_FILE, File.read("test-app/.shopify-cli.yml")
+            assert_equal ENV_FILE, File.read("test-app/.env")
+            assert_equal RailsService::USER_AGENT_CODE, File.read("test-app/config/initializers/user_agent.rb")
+
+            delete_gem_path_and_binaries
+            FileUtils.rm_r("test-app")
+          end
+
           def test_skips_user_agent_initializer_after_app_v19
             @context.stubs(:ruby_gem_version).with("shopify_app").returns(Semantic::Version.new("19.0.0"))
 
