@@ -194,9 +194,15 @@ module Extension
         "{{command:%1$s extension connect}} " \
         "or run {{command:%1$s extension register}} to register a new extension.",
         module_not_found: "Unable to find module %s. Ensure your dependencies are up-to-date and try again.",
-        development_server_binary_not_found: <<~ERROR,
-          Development server binary not found! If you're running a development version of the CLI, please run `rake extensions:install` to install it. Otherwise, please file a bug report via https://github.com/Shopify/shopify-cli/issues/new.
-        ERROR
+        development_server_binary_not_found: {
+          title: "Development Server Binary Missing",
+          message: <<~ERROR,
+            The extension development server binary could not be found!
+
+            If you're running a development version of the CLI, please run `rake extensions:install` to install it.
+            Otherwise, please file a bug report via https://github.com/Shopify/shopify-cli/issues/new.
+          ERROR
+        },
         outdated_extensions: {
           unknown: <<~TEXT.strip,
             Please refer to the documentation for more information on how to upgrade your extension:
