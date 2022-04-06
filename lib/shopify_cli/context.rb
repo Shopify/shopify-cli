@@ -642,6 +642,20 @@ module ShopifyCLI
       end
     end
 
+    # Uses bundle to grab the version of a gem
+    #
+    # #### Parameters
+    # - gem: the name of the gem to check
+    #
+    # #### Returns
+    # - version: a Semantic::Version object with the gem version
+    def ruby_gem_version(gem)
+      output, status = capture2e("bundle", "info", gem)
+      abort(message("core.errors.bundle_info_failure", gem)) unless status.success?
+      version = output.match(/\s+\* #{gem} \((\d+\.\d+\.\d+)\)/)[1]
+      ::Semantic::Version.new(version)
+    end
+
     private
 
     def ctx_path(fname)

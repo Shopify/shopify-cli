@@ -15,6 +15,7 @@ module ShopifyCLI
             ShopifyCLI::Tasks::EnsureDevStore.stubs(:call)
             ShopifyCLI::Tasks::EnsureProjectType.stubs(:call)
             @context.stubs(:system)
+            @context.stubs(:ruby_gem_version).with("shopify_app").returns(Semantic::Version.new("18.0.0"))
             ShopifyCLI::Tunnel.stubs(:start).returns("https://example.com")
           end
 
@@ -32,6 +33,27 @@ module ShopifyCLI
                 "SCOPES" => "write_products,write_customers,write_orders",
                 "PORT" => "8081",
                 "GEM_PATH" => "/gem/path",
+              }
+            )
+            run_cmd("app serve")
+          end
+
+          def test_preserves_host_after_v19_app
+            ShopifyCLI::Tasks::UpdateDashboardURLS.expects(:call)
+            ShopifyCLI::Resources::EnvFile.any_instance.expects(:update)
+            @context.stubs(:getenv).with("GEM_HOME").returns("/gem/path")
+            @context.stubs(:getenv).with("GEM_PATH").returns("/gem/path")
+            @context.stubs(:ruby_gem_version).with("shopify_app").returns(Semantic::Version.new("19.0.0"))
+            @context.expects(:system).with(
+              "bin/rails server",
+              env: {
+                "SHOPIFY_API_KEY" => "api_key",
+                "SHOPIFY_API_SECRET" => "secret",
+                "SHOP" => "my-test-shop.myshopify.com",
+                "SCOPES" => "write_products,write_customers,write_orders",
+                "PORT" => "8081",
+                "GEM_PATH" => "/gem/path",
+                "HOST" => "https://example.com",
               }
             )
             run_cmd("app serve")
