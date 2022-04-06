@@ -82,7 +82,7 @@ module Extension
         File.write(project_directory.join("src/index.js"), "")
 
         assert_nothing_raised do
-          Tasks::ConvertServerConfig.call(
+          result = Tasks::ConvertServerConfig.call(
             api_key: @api_key,
             context: @fake_context,
             hash: {},
@@ -92,6 +92,8 @@ module Extension
             tunnel_url: @tunnel_url,
             type: @type
           )
+
+          refute(result.extensions.first.can_access_network)
         end
       ensure
         FileUtils.rm_r(project_directory.join("src/"))
@@ -108,6 +110,7 @@ module Extension
             build_dir: "build"
           extension_points:
             - Checkout::Feature::Render
+          can_access_network: true
         YAML
       end
 
@@ -120,6 +123,7 @@ module Extension
           uuid: @registration_uuid,
           type: @type.upcase,
           user: Models::ServerConfig::User.new,
+          can_access_network: true,
           development: Models::ServerConfig::Development.new(
             build_dir: @build,
             renderer: Models::ServerConfig::DevelopmentRenderer.find(@type),

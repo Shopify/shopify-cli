@@ -39,6 +39,7 @@ module Extension
               main: hash.dig("development", "entries", "main") || determine_default_entry_main(project_directory),
             )
           ),
+          can_access_network: hash.dig("can_access_network") || false,
           extension_points: hash.dig("extension_points"),
           version: version(renderer.name, context),
           title: title

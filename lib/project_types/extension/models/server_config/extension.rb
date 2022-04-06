@@ -10,6 +10,7 @@ module Extension
         property! :type, accepts: String
         property! :user, accepts: ServerConfig::User
         property! :development, accepts: ServerConfig::Development
+        property  :can_access_network, accepts: [TrueClass, FalseClass]
         property  :extension_points, accepts: Array
         property  :version, accepts: String
         property  :title, accepts: String
