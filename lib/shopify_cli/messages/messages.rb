@@ -18,6 +18,7 @@ module ShopifyCLI
           missing_node: "Node.js is required to continue. Install Node.js here: https://nodejs.org/en/download.",
           missing_npm: "npm is required to continue. Install npm here: https://www.npmjs.com/get-npm.",
           missing_ruby: "Ruby is required to continue. Install Ruby here: https://www.ruby-lang.org/en/downloads.",
+          bundle_info_failure: "Error getting version for %s gem",
           option_parser: {
             invalid_option: "The option {{command:%s}} is not supported.",
             invalid_option_store_equals: <<~MESSAGE,

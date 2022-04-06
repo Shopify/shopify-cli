@@ -9,7 +9,7 @@ module ShopifyCLI
             CLI::UI::Frame.open(context.message("core.app.serve.running_server")) do
               original_env = JSON.parse(ENV["ORIGINAL_ENV"] || "{}")
               env = original_env.merge(ShopifyCLI::Project.current.env.to_h)
-              env.delete("HOST")
+              env.delete("HOST") if context.ruby_gem_version("shopify_app") < ::Semantic::Version.new("19.0.0")
               env["PORT"] = port.to_s
               env["GEM_PATH"] =
                 [env["GEM_PATH"], Rails::Gem.gem_path(context)].compact
