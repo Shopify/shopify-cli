@@ -292,7 +292,8 @@ module Theme
         },
         share: {
           help: <<~HELP,
-            {{command:%s theme share}}: Creates a shareable theme on your theme library.
+            {{command:%s theme share}}: Creates a shareable, unpublished, and new theme on your theme library with a randomized name.
+                                 Works like an alias to {{command:theme push -u -t=RANDOMIZED_NAME}}.
 
             Usage: {{command:%s theme share [ ROOT ]}}
           HELP
