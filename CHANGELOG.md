@@ -12,6 +12,7 @@ From version 2.6.0, the sections in this file adhere to the [keep a changelog](h
 * [#2191](https://github.com/Shopify/shopify-cli/pull/2191): Diretories with the `.json` extension should not be handled as JSON files
 * [#2018](https://github.com/Shopify/shopify-cli/pull/2018): Run theme-check as a code dependency, not a pseudo-CLI invocation
 * [#2211](https://github.com/Shopify/shopify-cli/pull/2211): Fix the `theme open` command to open the theme in the browser
+* [#2183](https://github.com/Shopify/shopify-cli/pull/2183): Improve error message when suspended users run `theme serve`
 
 ### Added
 * [#2190](https://github.com/Shopify/shopify-cli/pull/2190): Better login experience with spinner
@@ -20,7 +21,6 @@ From version 2.6.0, the sections in this file adhere to the [keep a changelog](h
 
 ### Fixed
 * [#2121](https://github.com/Shopify/shopify-cli/pull/2121): Fix the hot-reload to work when the section name is not equal to the type
-* [#2183](https://github.com/Shopify/shopify-cli/pull/2183): Improve error message when suspended users run `theme serve`
 
 ### Added
 * [#2174](https://github.com/Shopify/shopify-cli/pull/2174): Add optional 2-way sync between the CLI (`theme serve`) and the Theme Editor
