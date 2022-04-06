@@ -338,10 +338,8 @@ describe Script::Layers::Infrastructure::ScriptProjectRepository do
 
       describe "when file does not exist" do
         it "raises NoScriptConfigFileError" do
-          assert_raises_and_validate(
-            Script::Layers::Infrastructure::Errors::NoScriptConfigFileError,
-            proc { |e| assert_equal(script_config_filename, e.filename) }
-          ) { subject }
+          e = assert_raises(Script::Layers::Infrastructure::Errors::NoScriptConfigFileError) { subject }
+          assert_equal(script_config_filename, e.filename)
         end
       end
 
@@ -354,13 +352,9 @@ describe Script::Layers::Infrastructure::ScriptProjectRepository do
           let(:content) { "*" }
 
           it "raises ScriptConfigParseError" do
-            assert_raises_and_validate(
-              Script::Layers::Infrastructure::Errors::ScriptConfigParseError,
-              proc do |e|
-                assert_equal(script_config_filename, e.filename)
-                assert_equal("YAML", e.serialization_format)
-              end,
-            ) { subject }
+            e = assert_raises(Script::Layers::Infrastructure::Errors::ScriptConfigParseError) { subject }
+            assert_equal(script_config_filename, e.filename)
+            assert_equal("YAML", e.serialization_format)
           end
         end
 
@@ -368,13 +362,9 @@ describe Script::Layers::Infrastructure::ScriptProjectRepository do
           let(:content) { "[]" }
 
           it "raises ScriptConfigParseError" do
-            assert_raises_and_validate(
-              Script::Layers::Infrastructure::Errors::ScriptConfigParseError,
-              proc do |e|
-                assert_equal(script_config_filename, e.filename)
-                assert_equal("YAML", e.serialization_format)
-              end,
-            ) { subject }
+            e = assert_raises(Script::Layers::Infrastructure::Errors::ScriptConfigParseError) { subject }
+            assert_equal(script_config_filename, e.filename)
+            assert_equal("YAML", e.serialization_format)
           end
         end
 
@@ -382,10 +372,8 @@ describe Script::Layers::Infrastructure::ScriptProjectRepository do
           let(:content) { {}.to_yaml }
 
           it "raises MissingScriptJsonFieldError" do
-            assert_raises_and_validate(
-              Script::Layers::Domain::Errors::MissingScriptConfigFieldError,
-              proc { |e| assert_equal(script_config_filename, e.filename) },
-            ) { subject }
+            e = assert_raises(Script::Layers::Domain::Errors::MissingScriptConfigFieldError) { subject }
+            assert_equal(script_config_filename, e.filename)
           end
         end
 
@@ -493,10 +481,8 @@ describe Script::Layers::Infrastructure::ScriptProjectRepository do
 
       describe "when file does not exist" do
         it "raises NoScriptConfigFileError" do
-          assert_raises_and_validate(
-            Script::Layers::Infrastructure::Errors::NoScriptConfigFileError,
-            proc { |e| assert_equal(script_config_filename, e.filename) }
-          ) { subject }
+          e = assert_raises(Script::Layers::Infrastructure::Errors::NoScriptConfigFileError) { subject }
+          assert_equal(script_config_filename, e.filename)
         end
       end
 
@@ -509,13 +495,9 @@ describe Script::Layers::Infrastructure::ScriptProjectRepository do
           let(:content) { "{[}]" }
 
           it "raises ScriptConfigParseError" do
-            assert_raises_and_validate(
-              Script::Layers::Infrastructure::Errors::ScriptConfigParseError,
-              proc do |e|
-                assert_equal(script_config_filename, e.filename)
-                assert_equal("JSON", e.serialization_format)
-              end,
-            ) { subject }
+            e = assert_raises(Script::Layers::Infrastructure::Errors::ScriptConfigParseError) { subject }
+            assert_equal(script_config_filename, e.filename)
+            assert_equal("JSON", e.serialization_format)
           end
         end
 
@@ -523,13 +505,9 @@ describe Script::Layers::Infrastructure::ScriptProjectRepository do
           let(:content) { "[]" }
 
           it "raises ScriptConfigParseError" do
-            assert_raises_and_validate(
-              Script::Layers::Infrastructure::Errors::ScriptConfigParseError,
-              proc do |e|
-                assert_equal(script_config_filename, e.filename)
-                assert_equal("JSON", e.serialization_format)
-              end,
-            ) { subject }
+            e = assert_raises(Script::Layers::Infrastructure::Errors::ScriptConfigParseError) { subject }
+            assert_equal(script_config_filename, e.filename)
+            assert_equal("JSON", e.serialization_format)
           end
         end
 
@@ -537,10 +515,8 @@ describe Script::Layers::Infrastructure::ScriptProjectRepository do
           let(:content) { {}.to_json }
 
           it "raises MissingScriptJsonFieldError" do
-            assert_raises_and_validate(
-              Script::Layers::Domain::Errors::MissingScriptConfigFieldError,
-              proc { |e| assert_equal(script_config_filename, e.filename) },
-            ) { subject }
+            e = assert_raises(Script::Layers::Domain::Errors::MissingScriptConfigFieldError) { subject }
+            assert_equal(script_config_filename, e.filename)
           end
         end
 

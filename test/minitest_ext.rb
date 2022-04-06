@@ -95,14 +95,6 @@ module Minitest
       end.join("\n")
     end
 
-    def assert_raises_and_validate(exception_class, field_expectation_proc)
-      yield
-    rescue exception_class => e
-      field_expectation_proc.call(e)
-    else
-      flunk("Expected a #{exception_class} to be raised but it was not")
-    end
-
     private
 
     def stub_prompt_for_cli_updates
