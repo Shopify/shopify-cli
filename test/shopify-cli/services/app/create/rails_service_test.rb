@@ -145,7 +145,7 @@ module ShopifyCLI
 
             assert_equal SHOPIFYCLI_FILE, File.read("test-app/.shopify-cli.yml")
             assert_equal ENV_FILE, File.read("test-app/.env")
-            refute File.exists?("test-app/config/initializers/user_agent.rb")
+            refute File.exist?("test-app/config/initializers/user_agent.rb")
 
             delete_gem_path_and_binaries
             FileUtils.rm_r("test-app")
