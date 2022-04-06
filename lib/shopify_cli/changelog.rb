@@ -43,14 +43,14 @@ module ShopifyCLI
     end
 
     def full_contents
-      sorted_changes = changes.each_key.sort_by { |change|
+      sorted_changes = changes.each_key.sort_by do |change|
         if change == "Unreleased"
           [Float::INFINITY] * 3 # end of the list
         else
           major, minor, patch = change.split(".").map(&:to_i)
           [major, minor, patch]
         end
-      }.reverse
+      end.reverse
       [
         heading,
         *sorted_changes.each.map { |version| release_notes_with_header(version) }.join,
@@ -114,14 +114,11 @@ module ShopifyCLI
             changes[current_version][:changes][change_category] << { pr_id: id, desc: desc }
           elsif /\A\#\# Version (?<version>\d+\.\d+\.\d+)( - (?<date>\d{4}-\d{2}-\d{2}))?/ =~ line
             current_version = version
-            if state == :unreleased
-              state = :prior_versions
-            else
-              major, minor, patch = current_version.split(".")
+            state = :prior_versions
+            major, minor, _patch = current_version.split(".")
+            if major.to_i <= 2 && minor.to_i < 7
               # Changelog starts to become irregular in 2.6.x
-              if major.to_i <= 2 && minor.to_i < 7
-                state = :finished
-              end
+              state = :finished
             end
             changes[current_version][:date] = date unless state == :finished
           elsif !line.match?(/\s*\n/)
