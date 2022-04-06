@@ -77,6 +77,16 @@ module Extension
 
         refute DevelopmentServerRequirements.supported?("unknown")
       end
+
+      def test_emits_debug_message_when_binary_missing
+        Extension::Models::DevelopmentServerRequirements.stubs(:binary_installed?).returns(false)
+        Extension::Models::DevelopmentServerRequirements.stubs(:beta_enabled?).returns(true)
+        ShopifyCLI::Context.any_instance
+          .expects(:puts)
+          .with(ShopifyCLI::Context.message("errors.development_server_binary_not_found.message"))
+
+        refute Extension::Models::DevelopmentServerRequirements.supported?("checkout_ui_extension")
+      end
     end
   end
 end
