@@ -2,6 +2,8 @@ From version 2.6.0, the sections in this file adhere to the [keep a changelog](h
 
 ## [Unreleased]
 
+## Version 2.15.3 - 2022-04-07
+
 ### Changed
 * [#2188](https://github.com/Shopify/shopify-cli/pull/2188): Update URLs by default on serve and add --no-update flag to skip it
 * [#2203](https://github.com/Shopify/shopify-cli/pull/2203): Use javy version 0.3.0
