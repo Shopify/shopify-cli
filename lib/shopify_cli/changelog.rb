@@ -104,6 +104,8 @@ module ShopifyCLI
           if line.chomp == "\#\# [Unreleased]"
             state = :unreleased
             current_version = "Unreleased"
+            # Ensure Unreleased changeset exists even if no changes have happened yet
+            changes["Unreleased"]
           else
             @heading << line
           end
