@@ -9,6 +9,7 @@ module Extension
       CONDITIONALLY_SUPPORTED_TYPES = [
         "checkout_post_purchase",
         "product_subscription",
+        "beacon_extension",
       ]
 
       def setup

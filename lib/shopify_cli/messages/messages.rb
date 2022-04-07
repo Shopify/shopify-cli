@@ -285,6 +285,13 @@ module ShopifyCLI
         },
         extension: {
           push: {
+            beacon_extension: {
+              error: {
+                file_read_error: "There was a problem reading %s",
+                missing_config_key_error: "Configuration is missing key: %s",
+                invalid_config_value_error: "Configuration value is invalid: %s",
+              },
+            },
             checkout_ui_extension: {
               localization: {
                 error: {
