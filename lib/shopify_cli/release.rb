@@ -90,7 +90,7 @@ module ShopifyCLI
         "main",
         release_branch_name,
         "Packaging for release v#{new_version}",
-        release_notes("Unreleased")
+        release_notes(new_version)
       ).tap { |results| puts "Created #{repo} PR ##{results["number"]}" }
     end
 
