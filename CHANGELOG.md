@@ -9,7 +9,7 @@ From version 2.6.0, the sections in this file adhere to the [keep a changelog](h
 ### Fixed
 * [#2162](https://github.com/Shopify/shopify-cli/pull/2162): Improve encoding error handling for Checkout Extension localization
 * [#2187](https://github.com/Shopify/shopify-cli/pull/2187): Fix app serve after rails update
-* [#2191](https://github.com/Shopify/shopify-cli/pull/2191): Diretories with the `.json` extension should not be handled as JSON files
+* [#2191](https://github.com/Shopify/shopify-cli/pull/2191): Directories with the `.json` extension should not be handled as JSON files
 * [#2018](https://github.com/Shopify/shopify-cli/pull/2018): Run theme-check as a code dependency, not a pseudo-CLI invocation
 * [#2211](https://github.com/Shopify/shopify-cli/pull/2211): Fix the `theme open` command to open the theme in the browser
 * [#2183](https://github.com/Shopify/shopify-cli/pull/2183): Improve error message when suspended users run `theme serve`
