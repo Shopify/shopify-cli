@@ -207,7 +207,63 @@ module ShopifyCLI
         assert_nil Theme.find_by_identifier(@ctx, root: @root, identifier: "Other")
       end
 
+      def test_create_unpublished
+        id = 42
+        name = "custom-theme-42"
+
+        mock_post_themes(id, name)
+
+        theme = Theme.create_unpublished(@ctx, root: @root, name: name)
+
+        assert_equal id, theme.id
+        assert_equal name, theme.name
+        assert_equal "unpublished", theme.role
+      end
+
+      def test_create_unpublished_with_default_name
+        id = 42
+        name = "generated-name-9999"
+
+        ShopifyCLI::Helpers::Haikunator.stubs(:haikunate).with(9999).returns(name)
+
+        mock_post_themes(id, name)
+
+        theme = Theme.create_unpublished(@ctx, root: @root)
+
+        assert_equal id, theme.id
+        assert_equal name, theme.name
+        assert_equal "unpublished", theme.role
+      end
+
       private
+
+      def mock_post_themes(id, name)
+        shop = "shop.myshopify.com"
+
+        response_body = {
+          "theme" => {
+            "id" => id,
+            "name" => name,
+            "role" => "main",
+          },
+        }
+
+        AdminAPI.expects(:get_shop_or_abort).returns(shop)
+        AdminAPI.expects(:rest_request)
+          .with(@ctx, {
+            shop: shop,
+            api_version: "unstable",
+            method: "POST",
+            path: "themes.json",
+            body: JSON.generate({
+              theme: {
+                name: name,
+                role: "unpublished",
+              },
+            }),
+          })
+          .returns([200, response_body])
+      end
 
       def mock_themes_json
         AdminAPI.stubs(:get_shop_or_abort).returns("shop.myshopify.com")

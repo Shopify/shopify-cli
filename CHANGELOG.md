@@ -17,6 +17,7 @@ From version 2.6.0, the sections in this file adhere to the [keep a changelog](h
 
 ### Added
 * [#2190](https://github.com/Shopify/shopify-cli/pull/2190): Better login experience with spinner
+* [#2200](https://github.com/Shopify/shopify-cli/pull/2200): Add `theme share` command
 
 ## Version 2.15.2 - 2022-03-28
 

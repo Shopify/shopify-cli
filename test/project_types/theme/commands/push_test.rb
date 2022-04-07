@@ -333,13 +333,11 @@ module Theme
       end
 
       def test_push_to_unpublished_theme
-        ShopifyCLI::Theme::Theme.expects(:new)
-          .with(@ctx, root: ".", name: "NAME", role: "unpublished")
+        ShopifyCLI::Theme::Theme.expects(:create_unpublished)
+          .with(@ctx, root: ".", name: "NAME")
           .returns(@theme)
 
         CLI::UI::Prompt.expects(:ask).returns("NAME")
-
-        @theme.expects(:create)
 
         ShopifyCLI::Theme::Syncer.expects(:new)
           .with(@ctx, theme: @theme, include_filter: @include_filter, ignore_filter: @ignore_filter)
@@ -357,13 +355,11 @@ module Theme
       end
 
       def test_push_to_unpublished_theme_when_name_is_provided
-        ShopifyCLI::Theme::Theme.expects(:new)
-          .with(@ctx, root: ".", name: "NAME", role: "unpublished")
+        ShopifyCLI::Theme::Theme.expects(:create_unpublished)
+          .with(@ctx, root: ".", name: "NAME")
           .returns(@theme)
 
         CLI::UI::Prompt.expects(:ask).never
-
-        @theme.expects(:create)
 
         ShopifyCLI::Theme::IgnoreFilter.expects(:from_path).with(".").returns(@ignore_filter)
 
