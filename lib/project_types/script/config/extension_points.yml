@@ -54,3 +54,9 @@ shipping_discount_type:
   libraries:
     wasm:
       repo: "https://github.com/Shopify/scripts-apis-examples"
+return_policies:
+  beta: true
+  domain: 'returns'
+  libraries:
+    wasm:
+      repo: "https://github.com/Shopify/scripts-apis-examples"
