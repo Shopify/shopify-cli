@@ -97,7 +97,7 @@ class ShopifyCli < Formula
     file = Pathname.new("#{brew_gem_prefix}/bin/#{exe}")
     (bin + file.basename).open("w") do |f|
       f << <<~RUBY
-        #!#{ruby_bin}/ruby --disable-gems
+        #!#{ruby_bin}/ruby -rjson --disable-gems
         ENV['ORIGINAL_ENV']=ENV.to_h.to_json
         ENV['GEM_HOME']="#{prefix}"
         ENV['GEM_PATH']="#{prefix}"
