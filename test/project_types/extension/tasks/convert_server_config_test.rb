@@ -31,7 +31,8 @@ module Extension
           store: @store,
           title: @title,
           tunnel_url: @tunnel_url,
-          type: @type
+          type: @type,
+          port: 1234
         )
 
         extension = result.extensions.first
@@ -52,7 +53,8 @@ module Extension
           store: @store,
           title: @title,
           tunnel_url: @tunnel_url,
-          type: @type
+          type: @type,
+          port: 1234
         )
 
         extension = result.extensions.first
@@ -70,7 +72,8 @@ module Extension
           store: @store,
           title: @title,
           tunnel_url: @tunnel_url,
-          type: @type
+          type: @type,
+          port: 1234
         )
 
         assert_equal(resource_url, result.extensions.first.development.resource.url)
@@ -90,7 +93,8 @@ module Extension
             store: @store,
             title: @title,
             tunnel_url: @tunnel_url,
-            type: @type
+            type: @type,
+            port: 1234
           )
         end
       ensure

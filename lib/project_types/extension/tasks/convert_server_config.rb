@@ -9,7 +9,7 @@ module Extension
       property! :api_key, accepts: String
       property! :context, accepts: ShopifyCLI::Context
       property! :hash, accepts: Hash
-      property  :port, accepts: Integer, default: ShopifyCLI::Constants::Extension::DEFAULT_PORT
+      property!  :port, accepts: Integer
       property! :registration_uuid, accepts: String
       property  :resource_url, accepts: String
       property! :store, accepts: String
