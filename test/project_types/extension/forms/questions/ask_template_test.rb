@@ -64,7 +64,7 @@ module Extension
 
         def mock_environment_settings(shopifolk: true, dev_server_supported: true)
           ShopifyCLI::Shopifolk.stubs(:check).returns(shopifolk)
-          Models::DevelopmentServerRequirements.stubs(:supported).returns(dev_server_supported)
+          Models::DevelopmentServerRequirements.stubs(:supported?).returns(dev_server_supported)
         end
       end
     end
