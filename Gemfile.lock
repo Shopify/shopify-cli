@@ -1,7 +1,7 @@
 PATH
   remote: .
   specs:
-    shopify-cli (2.15.4)
+    shopify-cli (2.15.5)
       bugsnag (~> 6.22)
       listen (~> 3.7.0)
       theme-check (~> 1.10.1)
