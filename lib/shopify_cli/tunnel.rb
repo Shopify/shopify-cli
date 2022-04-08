@@ -66,14 +66,9 @@ module ShopifyCLI
     #
     def start(ctx, port: PORT)
       install(ctx)
-      if authenticated?
-        url, account = start_ngrok(ctx, port)
-        ctx.puts(ctx.message("core.tunnel.start_with_account", url, account))
-      else
-        url, _ = restart_ngrok(ctx, port)
-        ctx.puts(ctx.message("core.tunnel.start", url))
-        ctx.puts(ctx.message("core.tunnel.signup_suggestion", ShopifyCLI::TOOL_NAME))
-      end
+      ctx.abort(ctx.message("core.tunnel.error.signup_required", ShopifyCLI::TOOL_NAME)) unless authenticated?
+      url, account = start_ngrok(ctx, port)
+      ctx.puts(ctx.message("core.tunnel.start_with_account", url, account))
       url
     end
 
@@ -206,11 +201,6 @@ module ShopifyCLI
       process = ShopifyCLI::ProcessSupervision.start(:ngrok, ngrok_command)
       log = fetch_url(ctx, process.log_path)
       [log.url, log.account]
-    end
-
-    def restart_ngrok(ctx, port)
-      ShopifyCLI::ProcessSupervision.stop(:ngrok)
-      start_ngrok(ctx, port)
     end
 
     def check_prereq_command(ctx, command)
