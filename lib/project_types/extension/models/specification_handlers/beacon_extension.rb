@@ -46,7 +46,7 @@ module Extension
             runtime_context: access_config_property(context, ext_config, "runtime_context"),
             serialized_script: Base64.strict_encode64(script_contents),
             runtime_configuration_definition: access_config_property(context, ext_config,
-              "configuration", &:to_json),
+              "configuration") { |config_def_hash| JSON.pretty_generate(config_def_hash) },
             config_version: access_config_property(context, ext_config,
               "version", &:to_s),
           }
