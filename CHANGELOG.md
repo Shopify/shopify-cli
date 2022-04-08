@@ -2,6 +2,11 @@ From version 2.6.0, the sections in this file adhere to the [keep a changelog](h
 
 ## [Unreleased]
 
+## Version 2.15.5 - 2022-04-08
+
+### Fixed
+* [#2237](https://github.com/Shopify/shopify-cli/pull/2237): Fix Homebrew Wrapper
+
 ## Version 2.15.4 - 2022-04-08
 
 ### Fixed
