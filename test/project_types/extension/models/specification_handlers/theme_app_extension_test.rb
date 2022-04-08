@@ -145,6 +145,16 @@ module Extension
           end
         end
 
+        def test_locales_does_not_impact_liquid_limit
+          stub_const(ThemeAppExtension, :LIQUID_SIZE_LIMIT, 50) do
+            write("locales/en.default.json", "1" * 25)
+            write("locales/en.default.schema.json", "2" * 26)
+            assert_nothing_raised do
+              @spec.config(@context)
+            end
+          end
+        end
+
         private
 
         def write(filename, content, mode: "w", encoding: "utf-8")
