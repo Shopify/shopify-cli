@@ -2,8 +2,12 @@ From version 2.6.0, the sections in this file adhere to the [keep a changelog](h
 
 ## [Unreleased]
 
+## Version 2.15.4 - 2022-04-08
+
 ### Fixed
 * [#2230](https://github.com/Shopify/shopify-cli/pull/2230): Show an error without ngrok account
+* [#2235](https://github.com/Shopify/shopify-cli/pull/2235): Update shopify-extensions to v0.3.0 and fix issues with template choosing and missing dependencies
+* [#2226](https://github.com/Shopify/shopify-cli/pull/2226): Fix liquid file size validation to disclude locales directory
 
 ## Version 2.15.3 - 2022-04-07
 
