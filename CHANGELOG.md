@@ -2,6 +2,9 @@ From version 2.6.0, the sections in this file adhere to the [keep a changelog](h
 
 ## [Unreleased]
 
+### Fixed
+* [#2230](https://github.com/Shopify/shopify-cli/pull/2230): Show an error without ngrok account
+
 ## Version 2.15.3 - 2022-04-07
 
 ### Changed
