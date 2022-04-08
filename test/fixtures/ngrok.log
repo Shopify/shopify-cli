@@ -1,4 +1,4 @@
-t=2019-03-26T14:45:57-0400 lvl=dbug msg="decoded response" obj=csess id=63b552dbb648 sid=3 resp="&{Version:2 ClientID:640713d23ff34283f8d9c211fb8f2839 Error: Extra:{Version:prod Cookie:redacted AccountName: SessionDuration:28799 PlanName:Free}}" err=nil
+t=2019-08-09T15:35:57-0400 lvl=dbug msg="decoded response" obj=csess id=63b552dbb648 sid=3 resp="&{Version:2 ClientID:640713d23ff34283f8d9c211fb8f2839 Error: Extra:{Version:prod Cookie:redacted AccountName:Tom Cruise SessionDuration:0 PlanName:Free}}" err=nil
 t=2019-03-26T14:45:57-0400 lvl=dbug msg="start tunnel listen" obj=tunnels.session name="command_line (http)" proto=http opts="&{Hostname:example.ngrok.io Auth: Subdomain: HostHeaderRewrite:false LocalURLScheme:http}" err=nil
 t=2019-03-26T14:45:57-0400 lvl=info msg="started tunnel" obj=tunnels name="command_line (http)" addr=http://localhost:8081 url=http://example.ngrok.io
 t=2019-03-26T14:45:57-0400 lvl=info msg="started tunnel" obj=tunnels name=command_line addr=http://localhost:8081 url=https://example.ngrok.io

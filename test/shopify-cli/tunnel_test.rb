@@ -34,65 +34,47 @@ module ShopifyCLI
       refute ShopifyCLI::Tunnel.authenticated?
     end
 
-    def test_start_running_with_account_returns_url
+    def test_start_returns_url
       with_log do
         ShopifyCLI::Tunnel.any_instance.stubs(:authenticated?).returns(true)
-        ShopifyCLI::ProcessSupervision.stubs(:running?).with(:ngrok).returns(:true)
-        assert_equal "https://example.ngrok.io", ShopifyCLI::Tunnel.start(@context)
-      end
-    end
-
-    def test_start_running_returns_url
-      with_log do
-        ShopifyCLI::ProcessSupervision.stubs(:running?).with(:ngrok).returns(true)
-        ShopifyCLI::ProcessSupervision.expects(:stop).with(:ngrok).returns(true)
         ShopifyCLI::ProcessSupervision.expects(:start).with(:ngrok, ngrok_start_command)
           .returns(ShopifyCLI::ProcessSupervision.new(:ngrok, pid: 40000))
         assert_equal "https://example.ngrok.io", ShopifyCLI::Tunnel.start(@context)
       end
     end
 
-    def test_start_not_running_starts_ngrok
+    def test_start_displays_url_with_account
       with_log do
-        ShopifyCLI::ProcessSupervision.stubs(:running?).with(:ngrok).returns(false)
-        ShopifyCLI::ProcessSupervision.expects(:stop).with(:ngrok).returns(true)
+        ShopifyCLI::Tunnel.any_instance.stubs(:authenticated?).returns(true)
         ShopifyCLI::ProcessSupervision.expects(:start).with(:ngrok, ngrok_start_command)
           .returns(ShopifyCLI::ProcessSupervision.new(:ngrok, pid: 40000))
-        @context.expects(:puts).with(@context.message("core.tunnel.start", "https://example.ngrok.io"))
-        @context.expects(:puts).with(@context.message("core.tunnel.signup_suggestion", ShopifyCLI::TOOL_NAME))
-        assert_equal "https://example.ngrok.io", ShopifyCLI::Tunnel.start(@context)
+        @context.expects(:puts).with(tunnel_started_message)
+        ShopifyCLI::Tunnel.start(@context)
       end
     end
 
     def test_start_accepts_configurable_port
       configured_port = 3000
       with_log do
-        ShopifyCLI::ProcessSupervision.stubs(:running?).with(:ngrok).returns(false)
-        ShopifyCLI::ProcessSupervision.expects(:stop).with(:ngrok).returns(true)
+        ShopifyCLI::Tunnel.any_instance.stubs(:authenticated?).returns(true)
         ShopifyCLI::ProcessSupervision.expects(:start).with(:ngrok, ngrok_start_command(port: configured_port))
           .returns(ShopifyCLI::ProcessSupervision.new(:ngrok, pid: 40000))
-        @context.expects(:puts).with(@context.message("core.tunnel.start", "https://example.ngrok.io"))
-        @context.expects(:puts).with(@context.message("core.tunnel.signup_suggestion", ShopifyCLI::TOOL_NAME))
         assert_equal "https://example.ngrok.io", ShopifyCLI::Tunnel.start(@context, port: configured_port)
       end
     end
 
-    def test_start_displays_url_with_account
-      with_log(fixture: "ngrok_account") do
-        ShopifyCLI::Tunnel.any_instance.stubs(:authenticated?).returns(true)
-        ShopifyCLI::ProcessSupervision.stubs(:running?).with(:ngrok).returns(false)
-        ShopifyCLI::ProcessSupervision.expects(:start).with(:ngrok, ngrok_start_command)
-          .returns(ShopifyCLI::ProcessSupervision.new(:ngrok, pid: 40000))
-        @context.expects(:puts).with(
-          @context.message("core.tunnel.start_with_account", "https://example.ngrok.io", "Tom Cruise")
-        )
-        assert_equal "https://example.ngrok.io", ShopifyCLI::Tunnel.start(@context)
+    def test_start_raises_error_without_auth
+      with_log(fixture: "ngrok_error") do
+        ShopifyCLI::Tunnel.any_instance.stubs(:authenticated?).returns(false)
+        assert_raises(ShopifyCLI::Abort) do
+          ShopifyCLI::Tunnel.start(@context)
+        end
       end
     end
 
     def test_start_raises_error_on_ngrok_failure
       with_log(fixture: "ngrok_error") do
-        ShopifyCLI::ProcessSupervision.expects(:stop).with(:ngrok).returns(true)
+        ShopifyCLI::Tunnel.any_instance.stubs(:authenticated?).returns(true)
         ShopifyCLI::ProcessSupervision.expects(:start).with(:ngrok, ngrok_start_command)
           .returns(ShopifyCLI::ProcessSupervision.new(:ngrok, pid: 40000))
         assert_raises ShopifyCLI::Tunnel::NgrokError do
@@ -187,6 +169,10 @@ module ShopifyCLI
 
     def ngrok_start_command(port: 8081)
       "\"#{File.join(ShopifyCLI.cache_dir, "ngrok")}\" http -inspect=false -log=stdout -log-level=debug #{port}"
+    end
+
+    def tunnel_started_message
+      "{{v}} ngrok tunnel running at {{underline:https://example.ngrok.io}}, with account Tom Cruise"
     end
   end
 end
