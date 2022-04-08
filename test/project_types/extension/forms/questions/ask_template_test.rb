@@ -12,7 +12,7 @@ module Extension
         end
 
         def test_does_not_prompt_for_template_when_not_required
-          mock_environment_settings(shopifolk: false, extension_server_beta: false)
+          mock_environment_settings(shopifolk: false, dev_server_supported: false)
           project_details = OpenStruct.new(
             type: OpenStruct.new(
               identifier: "THEME_APP_EXTENSION",
@@ -62,9 +62,9 @@ module Extension
           FakeContext.new
         end
 
-        def mock_environment_settings(shopifolk: true, extension_server_beta: true)
+        def mock_environment_settings(shopifolk: true, dev_server_supported: true)
           ShopifyCLI::Shopifolk.stubs(:check).returns(shopifolk)
-          ShopifyCLI::Feature.stubs(:enabled?).with(:extension_server_beta).returns(extension_server_beta)
+          Models::DevelopmentServerRequirements.stubs(:supported).returns(dev_server_supported)
         end
       end
     end
