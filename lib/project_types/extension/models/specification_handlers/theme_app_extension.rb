@@ -38,7 +38,10 @@ module Extension
                   # Other assets should be treated as UTF-8 encoded text
                   mode = "rt"
                   encoding = "UTF-8"
-                  current_liquid_size += File.size(filename)
+
+                  if dirname == "snippets" || dirname == "blocks"
+                    current_liquid_size += File.size(filename)
+                  end
                 end
                 current_size += File.size(filename)
                 if current_size > BUNDLE_SIZE_LIMIT
