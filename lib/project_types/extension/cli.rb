@@ -1,5 +1,9 @@
 # frozen_string_literal: true
 
+require 'pathname'
+require 'json'
+require 'yaml'
+
 module Extension
   class PackageResolutionFailed < RuntimeError; end
 
