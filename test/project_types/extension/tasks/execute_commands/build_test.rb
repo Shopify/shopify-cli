@@ -54,15 +54,15 @@ module Extension
           {
             "name": "test-extension",
             "dependencies": {
-              "@shopify/checkout-ui-extensions": "^1.0.0"
+              "@shopify/checkout-ui-extensions": "^1.0.0",
             },
             "devDependencies": {
-              "@shopify/shopify-cli-extensions": "latest"
+              "@shopify/shopify-cli-extensions": "latest",
             },
             "scripts": {
               "build": "some command",
-              "develop": "some command"
-            }
+              "develop": "some command",
+            },
           }
         end
       end
