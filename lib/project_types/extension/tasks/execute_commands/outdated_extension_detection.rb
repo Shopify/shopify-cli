@@ -11,7 +11,7 @@ module Extension
 
           def call
             return false if valid?(parse_package)
-            raise upgrade_instructions
+            context.abort(upgrade_instructions)
           end
 
           private
