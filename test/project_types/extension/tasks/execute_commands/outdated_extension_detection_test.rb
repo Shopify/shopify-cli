@@ -62,7 +62,7 @@ module Extension
         end
 
         def test_raises_with_upgrade_instructions_if_package_json_is_outdated
-          package_json = StringIO.new(<<~JSON)
+          File.write("package.json", <<~JSON)
             {
               "name": "my-extension",
               "scripts": {
@@ -72,13 +72,8 @@ module Extension
             }
           JSON
 
-          File
-            .expects(:open)
-            .with(Pathname(ShopifyCLI::Project.current.directory).join("package.json"))
-            .returns(Models::NpmPackage.parse(package_json))
-
           message = <<~TEXT.strip
-            Please update your package.json as follows:
+            {{x}} Please update your package.json as follows:
             * Replace the development dependency @shopify/checkout-ui-extensions-run
               with @shopify/shopify-cli-extensions
             * Remove the start and server script
@@ -90,10 +85,11 @@ module Extension
             context: TestHelpers::FakeContext.new)
           assert_predicate(result, :failure?)
           assert_equal message, result.error.message
+        ensure
+          FileUtils.rm("package.json")
         end
 
         def test_does_not_raise_with_upgrade_instructions_if_package_json_is_up_to_date
-          $debug = true
           package_json = StringIO.new(<<~JSON)
             {
               "name": "my-extension",
