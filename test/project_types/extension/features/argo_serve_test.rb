@@ -18,8 +18,7 @@ module Extension
           context: @context,
           argo_runtime: admin_ui_extension_runtime,
           specification_handler: specification_handler,
-          js_system: fake_js_system,
-          port: 1234,
+          js_system: fake_js_system
         )
 
         argo_serve.expects(:validate_env!).once
@@ -32,8 +31,7 @@ module Extension
           context: @context,
           argo_runtime: admin_ui_extension_runtime,
           specification_handler: specification_handler,
-          js_system: fake_js_system(success: false),
-          port: 1234,
+          js_system: fake_js_system(success: false)
         )
 
         argo_serve.expects(:validate_env!).once
@@ -64,8 +62,7 @@ module Extension
           context: @context,
           argo_runtime: checkout_ui_extension_runtime,
           specification_handler: specification_handler,
-          js_system: js_system,
-          port: 1234,
+          js_system: js_system
         )
 
         argo_serve.call
@@ -88,8 +85,7 @@ module Extension
           argo_runtime: checkout_ui_extension_runtime,
           specification_handler: specification_handler,
           js_system: js_system,
-          resource_url: "/provided",
-          port: 1234,
+          resource_url: "/provided"
         )
 
         argo_serve.call

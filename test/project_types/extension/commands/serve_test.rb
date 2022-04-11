@@ -100,7 +100,7 @@ module Extension
       def test_resource_url_is_forwarded_to_specification_handler_if_one_is_provided
         serve = ::Extension::Command::Serve.new(@context)
         expected_resource_url = "foo/bar"
-        stub_specification_handler_options(serve, choose_port: true)
+        stub_specification_handler_options(serve)
 
         serve.specification_handler
           .expects(:serve)
