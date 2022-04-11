@@ -25,8 +25,9 @@ module Extension
           SUPPORTED_EXTENSION_TYPES.include?(type.downcase)
         end
 
-        def type_supported?(type)
-          SUPPORTED_EXTENSION_TYPES.include?(type.downcase)
+        # Some types are enabled unconditionally; others require beta_enabled
+        def type_enabled?(type)
+          beta_enabled? || "checkout_ui_extension" == type.downcase
         end
 
         private
@@ -35,9 +36,8 @@ module Extension
           Models::DevelopmentServer.new.executable_installed?
         end
 
-        # Some types are enabled unconditionally; others require beta_enabled
-        def type_enabled?(type)
-          beta_enabled? || "checkout_ui_extension" == type.downcase
+        def context
+          @context ||= ShopifyCLI::Context.new
         end
       end
     end
