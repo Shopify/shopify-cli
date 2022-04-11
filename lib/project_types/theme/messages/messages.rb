@@ -121,6 +121,14 @@ module Theme
           viewing_theme: "Viewing theme…",
           syncing_theme: "Syncing theme #%s on %s",
           open_fail: "Couldn't open the theme",
+          auth: {
+            error_message: "You're not authenticated for using the {{command:%s theme serve}}.",
+            help_message: <<~HELP_MESSAGE,
+              Please try to logout and login with the {{command:%s login --store STORE}} command.
+
+              Tip: Unset the {{command:SHOPIFY_SHOP}} and {{command:SHOPIFY_PASSWORD}} environment variables before trying to re-login.
+            HELP_MESSAGE
+          },
           operation: {
             status: {
               error: "ERROR",
