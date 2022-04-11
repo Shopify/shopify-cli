@@ -9,7 +9,7 @@ module Extension
       property! :specification_handler, accepts: Extension::Models::SpecificationHandlers::Default
       property :argo_runtime, accepts: -> (runtime) { runtime.class < Features::Runtimes::Base }
       property! :context, accepts: ShopifyCLI::Context
-      property! :port, accepts: Integer, default: ShopifyCLI::Constants::Extension::DEFAULT_PORT
+      property! :port, accepts: Integer
       property  :tunnel_url, accepts: String, default: nil
       property! :js_system, accepts: ->(jss) { jss.respond_to?(:call) }, default: ShopifyCLI::JsSystem
       property :resource_url, accepts: String, default: nil
