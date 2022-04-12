@@ -36,7 +36,7 @@ module ShopifyCLI
             ShopifyCLI::Tasks::UpdateDashboardURLS.call(
               context,
               url: project.env.host,
-              callback_url: "/auth/shopify/callback",
+              callback_urls: %w(/auth/shopify/callback /auth/callback),
             )
           end
 

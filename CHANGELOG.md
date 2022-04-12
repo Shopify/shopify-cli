@@ -2,6 +2,9 @@ From version 2.6.0, the sections in this file adhere to the [keep a changelog](h
 
 ## [Unreleased]
 
+### Fixed
+* [#2246](https://github.com/Shopify/shopify-cli/pull/2246): Fix callback urls for app serve
+
 ## Version 2.15.5 - 2022-04-08
 
 ### Fixed
