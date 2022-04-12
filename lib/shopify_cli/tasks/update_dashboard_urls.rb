@@ -10,9 +10,10 @@ module ShopifyCLI
         result = ShopifyCLI::PartnersAPI.query(ctx, "get_app_urls", apiKey: api_key)
         app = result["data"]["app"]
 
-        return if app["applicationUrl"].match(url)
-
         constructed_urls = construct_redirect_urls(app["redirectUrlWhitelist"], url, callback_urls)
+
+        return if already_updated(app, constructed_urls, url)
+
         ShopifyCLI::PartnersAPI.query(@ctx, "update_dashboard_urls", input: {
           applicationUrl: url,
           redirectUrlWhitelist: constructed_urls,
@@ -39,6 +40,13 @@ module ShopifyCLI
           end
         end
         new_urls.uniq
+      end
+
+      private
+
+      def already_updated(app, constructed_urls, url)
+        app["applicationUrl"].match(url) &&
+          Set.new(constructed_urls) == Set.new(app["redirectUrlWhitelist"])
       end
     end
   end
