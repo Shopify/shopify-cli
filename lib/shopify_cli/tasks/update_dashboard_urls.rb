@@ -1,3 +1,5 @@
+require 'set'
+
 module ShopifyCLI
   module Tasks
     class UpdateDashboardURLS < ShopifyCLI::Task
