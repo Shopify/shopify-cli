@@ -13,32 +13,31 @@ module Script
               "wasm" => WasmTaskRunner,
             }
 
-            raise Errors::TaskRunnerNotFoundError unless task_runners[language]
-            task_runners[language].new(ctx)
+            task_runner = task_runners[language] || TaskRunner
+
+            task_runner.new(ctx)
           end
 
           def initialize(ctx)
             @ctx = ctx
           end
 
-          def build
-            raise NotImplementedError
-          end
+          def build; end
 
           def dependencies_installed?
-            raise NotImplementedError
+            true
           end
 
-          def install_dependencies
-            raise NotImplementedError
-          end
+          def install_dependencies; end
 
+          # this should be removed soon
           def metadata_file_location
-            raise NotImplementedError
+            "build/metadata.json"
           end
 
+          # this should be removed soon
           def library_version(_library_name)
-            raise NotImplementedError
+            "1.0.0"
           end
         end
       end

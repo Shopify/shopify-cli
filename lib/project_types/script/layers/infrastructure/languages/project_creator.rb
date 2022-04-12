@@ -26,8 +26,9 @@ module Script
               "wasm" => WasmProjectCreator,
             }
 
-            raise Errors::ProjectCreatorNotFoundError unless project_creators[language]
-            project_creators[language].new(
+            project_creator = project_creators[language] || ProjectCreator
+
+            project_creator.new(
               ctx: ctx,
               type: type,
               project_name: project_name,

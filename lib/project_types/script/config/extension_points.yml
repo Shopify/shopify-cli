@@ -7,6 +7,8 @@ payment_methods:
       repo: "https://github.com/Shopify/scripts-apis-examples"
     wasm:
       repo: "https://github.com/Shopify/scripts-apis-examples"
+    rust:
+      repo: "https://github.com/Shopify/scripts-apis-examples"
 shipping_methods:
   domain: 'checkout'
   libraries:
