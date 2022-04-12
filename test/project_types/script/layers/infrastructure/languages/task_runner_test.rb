@@ -21,7 +21,10 @@ describe Script::Layers::Infrastructure::Languages::TaskRunner do
       let(:language) { "imaginary" }
 
       it "should raise a builder not found error" do
-        assert_raises(Script::Layers::Infrastructure::Errors::TaskRunnerNotFoundError) { subject }
+        Script::Layers::Infrastructure::Languages::TaskRunner
+          .expects(:new)
+          .with(@context)
+        subject
       end
     end
   end

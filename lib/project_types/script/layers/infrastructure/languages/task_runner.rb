@@ -32,7 +32,7 @@ module Script
 
           # this should be removed soon
           def metadata_file_location
-            "build/metadata.json"
+            "metadata.json"
           end
 
           # this should be removed soon
