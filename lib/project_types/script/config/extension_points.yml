@@ -16,6 +16,11 @@ shipping_methods:
       repo: "https://github.com/Shopify/scripts-apis-examples"
     wasm:
       repo: "https://github.com/Shopify/scripts-apis-examples"
+shipping_rate_presenter:
+  domain: 'checkout'
+  libraries:
+    wasm:
+      repo: "https://github.com/Shopify/scripts-apis-examples"
 merchandise_discount_types:
   beta: true
   domain: 'discounts'
