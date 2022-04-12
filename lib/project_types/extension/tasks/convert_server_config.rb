@@ -40,7 +40,7 @@ module Extension
             )
           ),
           extension_points: hash.dig("extension_points"),
-          version: version(renderer.name, context),
+          version: renderer ? version(renderer.name, context) : nil,
           title: title
         )
 
