@@ -18,7 +18,11 @@ module ShopifyCLI
           end
 
           def test_call
-            ShopifyCLI::Tasks::UpdateDashboardURLS.expects(:call)
+            ShopifyCLI::Tasks::UpdateDashboardURLS.expects(:call).with(
+              @context,
+              url: "https://example.com",
+              callback_urls: %w(/auth/shopify/callback /auth/callback)
+            )
             ShopifyCLI::Resources::EnvFile.any_instance.expects(:update)
             @context.expects(:system).with(
               "npm run dev",

@@ -20,7 +20,11 @@ module ShopifyCLI
           end
 
           def test_server_command
-            ShopifyCLI::Tasks::UpdateDashboardURLS.expects(:call)
+            ShopifyCLI::Tasks::UpdateDashboardURLS.expects(:call).with(
+              @context,
+              url: "https://example.com",
+              callback_urls: %w(/auth/shopify/callback /auth/callback)
+            )
             ShopifyCLI::Resources::EnvFile.any_instance.expects(:update)
             @context.stubs(:getenv).with("GEM_HOME").returns("/gem/path")
             @context.stubs(:getenv).with("GEM_PATH").returns("/gem/path")

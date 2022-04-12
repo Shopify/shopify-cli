@@ -3,7 +3,7 @@ module ShopifyCLI
     class UpdateDashboardURLS < ShopifyCLI::Task
       NGROK_REGEX = /https:\/\/([a-z0-9\-]+\.ngrok\.io)(.*)/
 
-      def call(ctx, url:, callback_url:)
+      def call(ctx, url:, callback_urls:)
         @ctx = ctx
         project = ShopifyCLI::Project.current
         api_key = project.env.api_key
@@ -12,7 +12,7 @@ module ShopifyCLI
 
         return if app["applicationUrl"].match(url)
 
-        constructed_urls = construct_redirect_urls(app["redirectUrlWhitelist"], url, callback_url)
+        constructed_urls = construct_redirect_urls(app["redirectUrlWhitelist"], url, callback_urls)
         ShopifyCLI::PartnersAPI.query(@ctx, "update_dashboard_urls", input: {
           applicationUrl: url,
           redirectUrlWhitelist: constructed_urls,
@@ -25,7 +25,7 @@ module ShopifyCLI
         raise
       end
 
-      def construct_redirect_urls(urls, new_url, callback_url)
+      def construct_redirect_urls(urls, new_url, callback_urls)
         new_urls = urls.map do |url|
           if (match = url.match(NGROK_REGEX))
             "#{new_url}#{match[2]}"
@@ -33,8 +33,10 @@ module ShopifyCLI
             url
           end
         end
-        if new_urls.grep(/#{new_url}#{callback_url}/).empty?
-          new_urls.push("#{new_url}#{callback_url}")
+        callback_urls.each do |callback_url|
+          if new_urls.grep(/#{new_url}#{callback_url}/).empty?
+            new_urls.push("#{new_url}#{callback_url}")
+          end
         end
         new_urls.uniq
       end
