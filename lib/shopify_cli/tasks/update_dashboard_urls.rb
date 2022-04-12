@@ -44,9 +44,11 @@ module ShopifyCLI
 
       private
 
-      def already_updated(app, constructed_urls, url)
-        app["applicationUrl"].match(url) &&
-          Set.new(constructed_urls) == Set.new(app["redirectUrlWhitelist"])
+      def already_updated(app, new_redirect_urls, new_url)
+        current_url = app["applicationUrl"]
+        current_redirect_urls = app["redirectUrlWhitelist"]
+        current_url.match(new_url) &&
+          Set.new(current_redirect_urls) == Set.new(new_redirect_urls)
       end
     end
   end
