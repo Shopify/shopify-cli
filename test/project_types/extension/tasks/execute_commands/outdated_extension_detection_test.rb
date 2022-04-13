@@ -79,7 +79,7 @@ module Extension
               with @shopify/shopify-cli-extensions
             * Remove the start and server script
             * Add a develop script: shopify-cli-extensions develop
-            * Change then build script to: shopify-cli-extensions build
+            * Change the build script to: shopify-cli-extensions build
           TEXT
 
           result = OutdatedExtensionDetection::OutdatedCheck.call(type: "checkout_ui_extension",
