@@ -38,6 +38,7 @@ module Extension
 
         def dummy_command
           Class.new(Base) do
+            prepend OutdatedExtensionDetection
             include ShopifyCLI::MethodObject
 
             property :type
