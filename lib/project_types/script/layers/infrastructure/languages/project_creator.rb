@@ -26,7 +26,7 @@ module Script
               "wasm" => WasmProjectCreator,
             }
 
-            project_creator = project_creators[language] || ProjectCreator
+            project_creator = project_creators[language] || WasmProjectCreator
 
             project_creator.new(
               ctx: ctx,
