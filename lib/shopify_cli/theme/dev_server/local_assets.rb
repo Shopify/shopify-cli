@@ -44,7 +44,7 @@ module ShopifyCLI
 
         def serve_file(path_info)
           path = @theme.root.join(path_info[1..-1])
-          if path.file? && path.readable? && @theme.theme_file?(path)
+          if path.file? && path.readable? && @theme.static_asset_file?(path)
             [
               200,
               {

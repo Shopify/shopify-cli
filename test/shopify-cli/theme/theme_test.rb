@@ -70,6 +70,16 @@ module ShopifyCLI
         ))
       end
 
+      def test_is_static_asset_file_when_it_is_a_static_file
+        file = @theme["assets/theme.css"]
+        assert(@theme.static_asset_file?(file))
+      end
+
+      def test_is_static_asset_file_when_it_is_not_a_static_file
+        file = @theme["layout/theme.liquid"]
+        refute(@theme.static_asset_file?(file))
+      end
+
       def test_mime_type
         assert_equal("text/x-liquid", @theme["layout/theme.liquid"].mime_type.name)
         assert_equal("text/css", @theme["assets/theme.css"].mime_type.name)
