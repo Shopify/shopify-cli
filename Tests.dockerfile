@@ -6,7 +6,7 @@ FROM cimg/ruby:2.7.5
 RUN git config --global user.email "development-lifecycle@shopify.com"
 RUN git config --global user.name "Development Lifecycle"
 
-RUN gem update bundler
+RUN gem install bundler -v 2.3.11
 
 WORKDIR /usr/src/app
 
