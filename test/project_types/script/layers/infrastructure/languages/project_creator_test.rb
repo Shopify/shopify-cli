@@ -70,8 +70,8 @@ describe Script::Layers::Infrastructure::Languages::ProjectCreator do
     describe "when the script language doesn't match an entry in the registry" do
       let(:language) { "ArnoldC" }
 
-      it "should return a project creator" do
-        assert_instance_of(Script::Layers::Infrastructure::Languages::ProjectCreator, subject)
+      it "should return a wasm project creator" do
+        assert_instance_of(Script::Layers::Infrastructure::Languages::WasmProjectCreator, subject)
       end
     end
   end

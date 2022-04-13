@@ -13,8 +13,7 @@ module Script
               "wasm" => WasmTaskRunner,
             }
 
-            task_runner = task_runners[language] || TaskRunner
-
+            task_runner = task_runners[language] || WasmTaskRunner
             task_runner.new(ctx)
           end
 
@@ -22,22 +21,24 @@ module Script
             @ctx = ctx
           end
 
-          def build; end
+          def build
+            raise NotImplementedError
+          end
 
           def dependencies_installed?
-            true
+            raise NotImplementedError
           end
 
-          def install_dependencies; end
+          def install_dependencies
+            raise NotImplementedError
+          end
 
-          # this should be removed soon
           def metadata_file_location
-            "metadata.json"
+            raise NotImplementedError
           end
 
-          # this should be removed soon
           def library_version(_library_name)
-            "1.0.0"
+            raise NotImplementedError
           end
         end
       end

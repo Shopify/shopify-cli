@@ -20,8 +20,8 @@ describe Script::Layers::Infrastructure::Languages::TaskRunner do
     describe "when the script language and compile type doesn't match an entry in the registry" do
       let(:language) { "imaginary" }
 
-      it "should raise a builder not found error" do
-        Script::Layers::Infrastructure::Languages::TaskRunner
+      it "should return the wasm task runner" do
+        Script::Layers::Infrastructure::Languages::WasmTaskRunner
           .expects(:new)
           .with(@context)
         subject
