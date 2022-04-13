@@ -47,6 +47,10 @@ module ShopifyCLI
         theme_files.include?(self[file])
       end
 
+      def static_asset_file?(file)
+        static_asset_files.include?(self[file])
+      end
+
       def static_asset_paths
         static_asset_files.map(&:relative_path)
       end
