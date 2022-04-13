@@ -9,11 +9,6 @@ module Extension
 
         property! :type, accepts: Models::DevelopmentServerRequirements::SUPPORTED_EXTENSION_TYPES
         property! :context, accepts: ShopifyCLI::Context
-
-        def self.inherited(subclass)
-          super
-          subclass.prepend(OutdatedExtensionDetection)
-        end
       end
     end
   end

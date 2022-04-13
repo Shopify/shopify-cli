@@ -5,6 +5,8 @@ module Extension
   module Tasks
     module ExecuteCommands
       class Build < Base
+        prepend OutdatedExtensionDetection
+
         property! :config_file_path, accepts: String
 
         def call

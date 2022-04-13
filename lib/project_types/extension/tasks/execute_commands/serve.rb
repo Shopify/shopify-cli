@@ -5,6 +5,8 @@ module Extension
   module Tasks
     module ExecuteCommands
       class Serve < Base
+        prepend OutdatedExtensionDetection
+
         property! :config_file_path, accepts: String
         property  :port, accepts: Integer, default: ShopifyCLI::Constants::Extension::DEFAULT_PORT
         property  :resource_url, accepts: String
