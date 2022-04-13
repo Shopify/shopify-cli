@@ -137,8 +137,6 @@ module Script
           end
         end
 
-        class ProjectCreatorNotFoundError < ScriptProjectError; end
-
         class SystemCallFailureError < ScriptProjectError
           attr_reader :out, :cmd
           def initialize(out:, cmd:)
@@ -157,7 +155,6 @@ module Script
         end
 
         class ScriptProjectAlreadyExistsError < ScriptProjectError; end
-        class TaskRunnerNotFoundError < ScriptProjectError; end
         class BuildScriptNotFoundError < ScriptProjectError; end
 
         class WebAssemblyBinaryNotFoundError < ScriptProjectError
