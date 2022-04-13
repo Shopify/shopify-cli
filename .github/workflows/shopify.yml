@@ -44,39 +44,6 @@ jobs:
 
       - name: Run Tests
         run: bundle exec rake test
-  acceptance_tests:
-    name: Acceptance Tests
-    runs-on: ${{ matrix.os }}
-    strategy:
-      matrix:
-        version:
-          - 3.0.2
-        os:
-          - ubuntu-20.04
-    steps:
-      - uses: actions/checkout@v2
-      - name: Set Git configuration
-        run: |
-          git config --global user.email "development-lifecycle@shopify.com"
-          git config --global user.name "Development Lifecycle"
-
-      - name: Set up Ruby ${{ matrix.version }}
-        uses: ruby/setup-ruby@v1
-        with:
-          ruby-version: ${{ matrix.version }}
-          bundler-cache: true
-
-      - uses: actions/setup-node@v2
-        with:
-          node-version: "14.9.0"
-
-      - uses: docker-practice/actions-setup-docker@master
-
-      - name: Install Dependencies
-        run: bundle install
-
-      - name: Run Tests
-        run: bundle exec cucumber
   rubocop:
     name: Rubocop
     runs-on: ${{ matrix.os }}
