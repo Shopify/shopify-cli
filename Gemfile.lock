@@ -165,7 +165,7 @@ PLATFORMS
   ruby
 
 DEPENDENCIES
-  bundler (~> 2.3.8)
+  bundler (~> 2.3.11)
   byebug
   colorize (~> 0.8.1)
   cucumber (~> 7.0)
@@ -187,4 +187,4 @@ DEPENDENCIES
   webmock
 
 BUNDLED WITH
-   2.3.8
+   2.3.11
