@@ -9,12 +9,11 @@ payment_methods:
       repo: "https://github.com/Shopify/scripts-apis-examples"
     rust:
       repo: "https://github.com/Shopify/scripts-apis-examples"
-shipping_methods:
+shipping_rate_presenter:
+  beta: true
   domain: 'checkout'
   libraries:
-    typescript:
-      beta: true
-      package: "@shopify/scripts-checkout-apis"
+    rust:
       repo: "https://github.com/Shopify/scripts-apis-examples"
     wasm:
       repo: "https://github.com/Shopify/scripts-apis-examples"
