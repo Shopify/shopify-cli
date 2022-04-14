@@ -45,10 +45,6 @@ module Extension
         def context
           @context ||= ShopifyCLI::Context.new
         end
-
-        def context
-          @context ||= ShopifyCLI::Context.new
-        end
       end
     end
   end
