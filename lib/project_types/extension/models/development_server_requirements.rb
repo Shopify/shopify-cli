@@ -14,7 +14,13 @@ module Extension
 
       class << self
         def supported?(type)
-          binary_installed? && type_supported?(type) && type_enabled?(type)
+          if type_supported?(type) && type_enabled?(type)
+            return true if binary_installed?
+
+            context.debug(context.message("errors.development_server_binary_not_found"))
+          end
+
+          false
         end
 
         def beta_enabled?
@@ -34,6 +40,10 @@ module Extension
 
         def binary_installed?
           Models::DevelopmentServer.new.executable_installed?
+        end
+
+        def context
+          @context ||= ShopifyCLI::Context.new
         end
 
         def context

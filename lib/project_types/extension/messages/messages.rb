@@ -197,6 +197,7 @@ module Extension
         development_server_binary_not_found: <<~ERROR,
           Development server binary not found! If you're running a development version of the CLI, please run `rake extensions:install` to install it. Otherwise, please file a bug report via https://github.com/Shopify/shopify-cli/issues/new.
         ERROR
+<<<<<<< HEAD
         outdated_extensions: {
           unknown: <<~TEXT.strip,
             Please refer to the documentation for more information on how to upgrade your extension:
@@ -211,6 +212,8 @@ module Extension
             * Change the build script to: shopify-cli-extensions build
           TEXT
         },
+=======
+>>>>>>> parent of 85d0e02a (Revert "Extension serve port selection (#2228)")
       },
       warnings: {
         resource_url_auto_generation_failed: "{{*}} {{yellow:Warning:}} Unable to auto generate " \
