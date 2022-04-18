@@ -2,6 +2,9 @@ From version 2.6.0, the sections in this file adhere to the [keep a changelog](h
 
 ## [Unreleased]
 
+### Added
+* [#2262](https://github.com/Shopify/shopify-cli/pull/2262): Add `capabilities` permissions to checkout extensions config
+
 ## Version 2.16.1 - 2022-04-26
 
 ### Fixed
