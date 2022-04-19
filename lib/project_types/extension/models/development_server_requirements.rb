@@ -16,8 +16,7 @@ module Extension
         def supported?(type)
           if type_supported?(type) && type_enabled?(type)
             return true if binary_installed?
-
-            context.debug(context.message("errors.development_server_binary_not_found"))
+            warn_about_missing_binary
           end
 
           false
@@ -40,6 +39,16 @@ module Extension
 
         def binary_installed?
           Models::DevelopmentServer.new.executable_installed?
+        end
+
+        def warn_about_missing_binary
+          CLI::UI::Frame.open(message("errors.development_server_binary_not_found.title"), color: :yellow) do
+            context.puts(message("errors.development_server_binary_not_found.message"))
+          end
+        end
+
+        def message(key)
+          context.message(key)
         end
 
         def context
