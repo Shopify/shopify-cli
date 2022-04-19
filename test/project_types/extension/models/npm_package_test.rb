@@ -62,7 +62,7 @@ module Extension
         package_json = StringIO.new(<<~JSON)
           {
             "dependencies": {
-              "@shopify/checkout-ui-extensions": "^0.14.0"
+              "@shopify/checkout-ui-extensions": "^0.15.0"
             },
             "devDependencies": {
               "@shopify/shopify-cli-extensions": "latest"
@@ -80,7 +80,7 @@ module Extension
         assert_equal "checkout_ui_extension", package.name
         assert_equal "shopify-cli-extensions build", package.scripts.fetch("build")
         assert_equal "shopify-cli-extensions develop", package.scripts.fetch("develop")
-        assert_equal "^0.14.0", package.dependencies.fetch("@shopify/checkout-ui-extensions")
+        assert_equal "^0.15.0", package.dependencies.fetch("@shopify/checkout-ui-extensions")
         assert_equal "latest", package.dev_dependencies.fetch("@shopify/shopify-cli-extensions")
       end
 

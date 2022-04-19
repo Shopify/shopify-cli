@@ -20,7 +20,7 @@ module Extension
           when "product_subscription"
             new(name: "@shopify/admin-ui-extensions", version: "^1.0.1")
           when "checkout_ui_extension"
-            new(name: "@shopify/checkout-ui-extensions", version: "^0.14.0")
+            new(name: "@shopify/checkout-ui-extensions", version: "^0.15.0")
           when "checkout_post_purchase"
             new(name: "@shopify/post-purchase-ui-extensions", version: "^0.13.2")
           end
