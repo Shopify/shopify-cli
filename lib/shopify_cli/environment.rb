@@ -166,6 +166,14 @@ module ShopifyCLI
       env_variables[Constants::EnvironmentVariables::AUTH_TOKEN]
     end
 
+    def self.admin_auth_token(env_variables: ENV)
+      env_variables[Constants::EnvironmentVariables::ADMIN_AUTH_TOKEN]
+    end
+
+    def self.store(env_variables: ENV)
+      env_variables[Constants::EnvironmentVariables::STORE]
+    end
+
     def self.env_variable_truthy?(variable_name, env_variables: ENV)
       TRUTHY_ENV_VARIABLE_VALUES.include?(env_variables[variable_name.to_s])
     end

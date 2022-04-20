@@ -98,6 +98,8 @@ module ShopifyCLI
       end
 
       def get_shop_or_abort(ctx)
+        envStore = Environment.store
+        return envStore unless envStore.nil?
         ctx.abort(
           ctx.message("core.populate.error.no_shop", ShopifyCLI::TOOL_NAME)
         ) unless ShopifyCLI::DB.exists?(:shop)
@@ -119,7 +121,8 @@ module ShopifyCLI
       end
 
       def access_token(ctx, shop)
-        ShopifyCLI::DB.get(:shopify_exchange_token) do
+        envToken = Environment.admin_auth_token
+        envToken || ShopifyCLI::DB.get(:shopify_exchange_token) do
           authenticate(ctx, shop)
           ShopifyCLI::DB.get(:shopify_exchange_token)
         end

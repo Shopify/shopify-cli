@@ -53,9 +53,11 @@ module ShopifyCLI
 
       # Authentication
       AUTH_TOKEN = "SHOPIFY_CLI_AUTH_TOKEN"
+      ADMIN_AUTH_TOKEN = "SHOPIFY_CLI_ADMIN_AUTH_TOKEN"
 
       # Monorail
       MONORAIL_REAL_EVENTS = "MONORAIL_REAL_EVENTS"
+      STORE = "SHOPIFY_CLI_STORE"
     end
 
     module SupportedVersions
