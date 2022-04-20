@@ -24,7 +24,10 @@ module Theme
       end
 
       def call(*)
-        @theme_check.run
+        @theme_check.run!
+      rescue ThemeCheck::Cli::Abort, ThemeCheck::ThemeCheckError => e
+        raise ShopifyCLI::Abort,
+          ShopifyCLI::Context.message("theme.check.error", e.full_message)
       end
 
       def self.help

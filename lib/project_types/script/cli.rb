@@ -62,6 +62,7 @@ module Script
       autoload :ScriptService, Project.project_filepath("layers/infrastructure/script_service")
       autoload :ScriptUploader, Project.project_filepath("layers/infrastructure/script_uploader")
       autoload :ServiceLocator, Project.project_filepath("layers/infrastructure/service_locator")
+      autoload :SparseCheckoutDetails, Project.project_filepath("layers/infrastructure/sparse_checkout_details")
 
       module Languages
         autoload :ProjectCreator, Project.project_filepath("layers/infrastructure/languages/project_creator")

@@ -25,6 +25,16 @@ module ShopifyCLI
         assert_message_output(io: io, expected_content: ctx.message("theme.serve.error.invalid_subdirectory", filepath))
       end
 
+      def test_json_files_when_a_directory_has_a_json_extension
+        root = @root
+        ctx = TestHelpers::FakeContext.new(root: root)
+        theme = Theme.new(ctx, root: root, id: "123")
+
+        json_files = theme.json_files.map(&:relative_path)
+
+        refute_includes(json_files, "directory.json")
+      end
+
       def test_static_assets
         assert_includes(@theme.static_asset_paths, "assets/theme.css")
       end
@@ -58,6 +68,16 @@ module ShopifyCLI
         assert(@theme.theme_file?(
           @theme[Pathname.new(ShopifyCLI::ROOT).join("test/fixtures/theme/layout/theme.liquid")]
         ))
+      end
+
+      def test_is_static_asset_file_when_it_is_a_static_file
+        file = @theme["assets/theme.css"]
+        assert(@theme.static_asset_file?(file))
+      end
+
+      def test_is_static_asset_file_when_it_is_not_a_static_file
+        file = @theme["layout/theme.liquid"]
+        refute(@theme.static_asset_file?(file))
       end
 
       def test_mime_type
@@ -197,7 +217,63 @@ module ShopifyCLI
         assert_nil Theme.find_by_identifier(@ctx, root: @root, identifier: "Other")
       end
 
+      def test_create_unpublished
+        id = 42
+        name = "custom-theme-42"
+
+        mock_post_themes(id, name)
+
+        theme = Theme.create_unpublished(@ctx, root: @root, name: name)
+
+        assert_equal id, theme.id
+        assert_equal name, theme.name
+        assert_equal "unpublished", theme.role
+      end
+
+      def test_create_unpublished_with_default_name
+        id = 42
+        name = "generated-name-9999"
+
+        ShopifyCLI::Helpers::Haikunator.stubs(:haikunate).with(9999).returns(name)
+
+        mock_post_themes(id, name)
+
+        theme = Theme.create_unpublished(@ctx, root: @root)
+
+        assert_equal id, theme.id
+        assert_equal name, theme.name
+        assert_equal "unpublished", theme.role
+      end
+
       private
+
+      def mock_post_themes(id, name)
+        shop = "shop.myshopify.com"
+
+        response_body = {
+          "theme" => {
+            "id" => id,
+            "name" => name,
+            "role" => "main",
+          },
+        }
+
+        AdminAPI.expects(:get_shop_or_abort).returns(shop)
+        AdminAPI.expects(:rest_request)
+          .with(@ctx, {
+            shop: shop,
+            api_version: "unstable",
+            method: "POST",
+            path: "themes.json",
+            body: JSON.generate({
+              theme: {
+                name: name,
+                role: "unpublished",
+              },
+            }),
+          })
+          .returns([200, response_body])
+      end
 
       def mock_themes_json
         AdminAPI.stubs(:get_shop_or_abort).returns("shop.myshopify.com")

@@ -198,13 +198,9 @@ describe Script::Layers::Infrastructure::ScriptService do
         end
 
         it "should raise ScriptConfigurationDefinitionError" do
-          assert_raises_and_validate(
-            Script::Layers::Infrastructure::Errors::ScriptConfigurationDefinitionError,
-            proc do |e|
-              assert_equal(["error1", "error2"], e.messages)
-              assert_equal(script_config_filename, e.filename)
-            end,
-          ) { subject }
+          e = assert_raises(Script::Layers::Infrastructure::Errors::ScriptConfigurationDefinitionError) { subject }
+          assert_equal(["error1", "error2"], e.messages)
+          assert_equal(script_config_filename, e.filename)
         end
       end
 
@@ -224,13 +220,9 @@ describe Script::Layers::Infrastructure::ScriptService do
           let(:error_tag) { "configuration_definition_missing_keys_error" }
 
           it "should raise ScriptConfigMissingKeysError" do
-            assert_raises_and_validate(
-              Script::Layers::Infrastructure::Errors::ScriptConfigMissingKeysError,
-              proc do |e|
-                assert_equal(error_message, e.missing_keys)
-                assert_equal(script_config_filename, e.filename)
-              end,
-            ) { subject }
+            e = assert_raises(Script::Layers::Infrastructure::Errors::ScriptConfigMissingKeysError) { subject }
+            assert_equal(error_message, e.missing_keys)
+            assert_equal(script_config_filename, e.filename)
           end
         end
 
@@ -239,13 +231,9 @@ describe Script::Layers::Infrastructure::ScriptService do
           let(:error_tag) { "configuration_definition_schema_field_missing_keys_error" }
 
           it "should raise ScriptConfigFieldsMissingKeysError" do
-            assert_raises_and_validate(
-              Script::Layers::Infrastructure::Errors::ScriptConfigFieldsMissingKeysError,
-              proc do |e|
-                assert_equal(error_message, e.missing_keys)
-                assert_equal(script_config_filename, e.filename)
-              end,
-            ) { subject }
+            e = assert_raises(Script::Layers::Infrastructure::Errors::ScriptConfigFieldsMissingKeysError) { subject }
+            assert_equal(error_message, e.missing_keys)
+            assert_equal(script_config_filename, e.filename)
           end
         end
 
@@ -254,13 +242,9 @@ describe Script::Layers::Infrastructure::ScriptService do
           let(:error_tag) { "configuration_definition_invalid_value_error" }
 
           it "should raise ScriptConfigInvalidValueError" do
-            assert_raises_and_validate(
-              Script::Layers::Infrastructure::Errors::ScriptConfigInvalidValueError,
-              proc do |e|
-                assert_equal(error_message, e.valid_input_modes)
-                assert_equal(script_config_filename, e.filename)
-              end,
-            ) { subject }
+            e = assert_raises(Script::Layers::Infrastructure::Errors::ScriptConfigInvalidValueError) { subject }
+            assert_equal(error_message, e.valid_input_modes)
+            assert_equal(script_config_filename, e.filename)
           end
         end
 
@@ -269,13 +253,9 @@ describe Script::Layers::Infrastructure::ScriptService do
           let(:error_tag) { "configuration_definition_schema_field_invalid_value_error" }
 
           it "should raise ScriptConfigFieldsInvalidValueError" do
-            assert_raises_and_validate(
-              Script::Layers::Infrastructure::Errors::ScriptConfigFieldsInvalidValueError,
-              proc do |e|
-                assert_equal(error_message, e.valid_types)
-                assert_equal(script_config_filename, e.filename)
-              end,
-            ) { subject }
+            e = assert_raises(Script::Layers::Infrastructure::Errors::ScriptConfigFieldsInvalidValueError) { subject }
+            assert_equal(error_message, e.valid_types)
+            assert_equal(script_config_filename, e.filename)
           end
         end
 
@@ -284,10 +264,8 @@ describe Script::Layers::Infrastructure::ScriptService do
           let(:error_tag) { "configuration_definition_syntax_error" }
 
           it "should raise ScriptConfigSyntaxError" do
-            assert_raises_and_validate(
-              Script::Layers::Infrastructure::Errors::ScriptConfigSyntaxError,
-              proc { |e| assert_equal(script_config_filename, e.filename) },
-            ) { subject }
+            e = assert_raises(Script::Layers::Infrastructure::Errors::ScriptConfigSyntaxError) { subject }
+            assert_equal(script_config_filename, e.filename)
           end
         end
       end

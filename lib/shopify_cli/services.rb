@@ -5,6 +5,7 @@ module ShopifyCLI
 
     module App
       module Serve
+        autoload :ServeService, "shopify_cli/services/app/serve/serve_service"
         autoload :NodeService, "shopify_cli/services/app/serve/node_service"
         autoload :RailsService, "shopify_cli/services/app/serve/rails_service"
         autoload :PHPService, "shopify_cli/services/app/serve/php_service"

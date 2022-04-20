@@ -13,8 +13,8 @@ module Script
               "wasm" => WasmTaskRunner,
             }
 
-            raise Errors::TaskRunnerNotFoundError unless task_runners[language]
-            task_runners[language].new(ctx)
+            task_runner = task_runners[language] || WasmTaskRunner
+            task_runner.new(ctx)
           end
 
           def initialize(ctx)

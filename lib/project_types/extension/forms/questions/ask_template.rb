@@ -21,8 +21,7 @@ module Extension
 
         def template_required?(project_details)
           type = project_details&.type&.identifier
-          (Models::DevelopmentServerRequirements.beta_enabled? &&
-            Models::DevelopmentServerRequirements.type_supported?(type.downcase))
+          Models::DevelopmentServerRequirements.supported?(type)
         end
 
         def choose_interactively

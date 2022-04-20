@@ -5,7 +5,8 @@ module Extension
   module Tasks
     module ExecuteCommands
       class Build < Base
-        property! :context, accepts: ShopifyCLI::Context
+        prepend OutdatedExtensionDetection
+
         property! :config_file_path, accepts: String
 
         def call

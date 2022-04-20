@@ -23,9 +23,15 @@ module Script
               )
 
               # remove the need to pass the whole extension-point object to the infra layer
-              sparse_checkout_repo = extension_point.libraries.for(language).repo
               type = extension_point.dasherize_type
               domain = extension_point.domain
+
+              sparse_checkout_details = Infrastructure::SparseCheckoutDetails.new(
+                repo: extension_point.libraries.for(language).repo,
+                branch: sparse_checkout_branch,
+                path: "#{domain}/#{language}/#{type}/default",
+                input_queries_enabled: input_queries_enabled?,
+              )
 
               project_creator = Infrastructure::Languages::ProjectCreator.for(
                 ctx: ctx,
@@ -33,9 +39,7 @@ module Script
                 type: type,
                 project_name: title,
                 path_to_project: project.id,
-                sparse_checkout_repo: sparse_checkout_repo,
-                sparse_checkout_branch: sparse_checkout_branch,
-                sparse_checkout_set_path: "#{domain}/#{language}/#{type}/default"
+                sparse_checkout_details: sparse_checkout_details,
               )
 
               install_dependencies(ctx, language, title, project_creator)
@@ -49,12 +53,12 @@ module Script
             task_runner = Infrastructure::Languages::TaskRunner.for(ctx, language)
             CLI::UI::Frame.open(ctx.message(
               "core.git.pulling_from_to",
-              project_creator.sparse_checkout_repo,
+              project_creator.sparse_checkout_details.repo,
               title,
             )) do
               UI::StrictSpinner.spin(ctx.message(
                 "core.git.pulling",
-                project_creator.sparse_checkout_repo,
+                project_creator.sparse_checkout_details.repo,
                 title,
               )) do |spinner|
                 project_creator.setup_dependencies
@@ -74,6 +78,10 @@ module Script
             raise
           ensure
             script_project_repo.change_to_initial_directory
+          end
+
+          def input_queries_enabled?
+            ShopifyCLI::Feature.enabled?(:scripts_beta_input_queries)
           end
         end
       end

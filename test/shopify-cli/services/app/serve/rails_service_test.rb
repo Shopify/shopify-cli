@@ -15,11 +15,16 @@ module ShopifyCLI
             ShopifyCLI::Tasks::EnsureDevStore.stubs(:call)
             ShopifyCLI::Tasks::EnsureProjectType.stubs(:call)
             @context.stubs(:system)
+            @context.stubs(:ruby_gem_version).with("shopify_app").returns(Semantic::Version.new("18.0.0"))
+            ShopifyCLI::Tunnel.stubs(:start).returns("https://example.com")
           end
 
           def test_server_command
-            ShopifyCLI::Tunnel.stubs(:start).returns("https://example.com")
-            ShopifyCLI::Tasks::UpdateDashboardURLS.expects(:call)
+            ShopifyCLI::Tasks::UpdateDashboardURLS.expects(:call).with(
+              @context,
+              url: "https://example.com",
+              callback_urls: %w(/auth/shopify/callback /auth/callback)
+            )
             ShopifyCLI::Resources::EnvFile.any_instance.expects(:update)
             @context.stubs(:getenv).with("GEM_HOME").returns("/gem/path")
             @context.stubs(:getenv).with("GEM_PATH").returns("/gem/path")
@@ -37,8 +42,28 @@ module ShopifyCLI
             run_cmd("app serve")
           end
 
+          def test_preserves_host_after_v19_app
+            ShopifyCLI::Tasks::UpdateDashboardURLS.expects(:call)
+            ShopifyCLI::Resources::EnvFile.any_instance.expects(:update)
+            @context.stubs(:getenv).with("GEM_HOME").returns("/gem/path")
+            @context.stubs(:getenv).with("GEM_PATH").returns("/gem/path")
+            @context.stubs(:ruby_gem_version).with("shopify_app").returns(Semantic::Version.new("19.0.0"))
+            @context.expects(:system).with(
+              "bin/rails server",
+              env: {
+                "SHOPIFY_API_KEY" => "api_key",
+                "SHOPIFY_API_SECRET" => "secret",
+                "SHOP" => "my-test-shop.myshopify.com",
+                "SCOPES" => "write_products,write_customers,write_orders",
+                "PORT" => "8081",
+                "GEM_PATH" => "/gem/path",
+                "HOST" => "https://example.com",
+              }
+            )
+            run_cmd("app serve")
+          end
+
           def test_open_while_run
-            ShopifyCLI::Tunnel.stubs(:start).returns("https://example.com")
             ShopifyCLI::Tasks::UpdateDashboardURLS.expects(:call)
             ShopifyCLI::Resources::EnvFile.any_instance.expects(:update).with(
               @context, :host, "https://example.com"
@@ -103,7 +128,6 @@ module ShopifyCLI
 
           def test_server_command_when_invalid_port_passed
             invalid_port = "NOT_PORT"
-            ShopifyCLI::Tunnel.stubs(:start).returns("https://example.com")
             ShopifyCLI::Tasks::UpdateDashboardURLS.expects(:call)
             ShopifyCLI::Resources::EnvFile.any_instance.expects(:update)
             @context.stubs(:getenv).with("GEM_HOME").returns("/gem/path")
@@ -112,6 +136,11 @@ module ShopifyCLI
               @context.message("core.app.serve.error.invalid_port", invalid_port)
             )
             run_cmd("app serve --port=#{invalid_port}")
+          end
+
+          def test_server_command_when_no_update_passed
+            ShopifyCLI::Tasks::UpdateDashboardURLS.expects(:call).never
+            run_cmd("app serve --no-update")
           end
         end
       end

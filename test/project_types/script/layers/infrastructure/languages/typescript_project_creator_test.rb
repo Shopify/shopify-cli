@@ -19,9 +19,14 @@ describe Script::Layers::Infrastructure::Languages::TypeScriptProjectCreator do
   let(:domain) { "fake-domain" }
   let(:language) { "typescript" }
   let(:project_name) { "myscript" }
-  let(:sparse_checkout_repo) { extension_point_config["typescript"]["repo"] }
-  let(:sparse_checkout_branch) { "fake-branch" }
-  let(:sparse_checkout_set_path) { "#{domain}/#{language}/#{extension_point_type}/default" }
+  let(:sparse_checkout_details) do
+    Script::Layers::Infrastructure::SparseCheckoutDetails.new(
+      repo: extension_point_config["typescript"]["repo"],
+      branch: "fake-branch",
+      path: "#{domain}/#{language}/#{extension_point_type}/default",
+      input_queries_enabled: false,
+    )
+  end
 
   let(:project_creator) do
     Script::Layers::Infrastructure::Languages::TypeScriptProjectCreator
@@ -30,9 +35,7 @@ describe Script::Layers::Infrastructure::Languages::TypeScriptProjectCreator do
         type: extension_point_type,
         project_name: project_name,
         path_to_project: project_name,
-        sparse_checkout_repo: sparse_checkout_repo,
-        sparse_checkout_branch: sparse_checkout_branch,
-        sparse_checkout_set_path: sparse_checkout_set_path,
+        sparse_checkout_details: sparse_checkout_details,
       )
   end
 

@@ -8,12 +8,9 @@ module ShopifyCLI
 
         recommend_default_ruby_range
 
-        options do |parser, flags|
-          parser.on("--host=HOST") do |h|
-            flags[:host] = h.gsub('"', "")
-          end
-          parser.on("--port=PORT") { |port| flags[:port] = port }
-        end
+        parse_host_option
+        parse_port_option
+        parse_no_update_option
 
         def call(*)
           case detect_app
@@ -21,18 +18,21 @@ module ShopifyCLI
             Services::App::Serve::RailsService.call(
               host: host,
               port: port,
+              no_update: no_update,
               context: @ctx
             )
           when :node
             Services::App::Serve::NodeService.call(
               host: host,
               port: port,
+              no_update: no_update,
               context: @ctx
             )
           when :php
             Services::App::Serve::PHPService.call(
               host: host,
               port: port,
+              no_update: no_update,
               context: @ctx
             )
           end
@@ -43,7 +43,7 @@ module ShopifyCLI
         end
 
         def self.extended_help
-          ShopifyCLI::Context.message("app.core.serve.extended_help")
+          ShopifyCLI::Context.message("core.app.serve.extended_help")
         end
       end
     end

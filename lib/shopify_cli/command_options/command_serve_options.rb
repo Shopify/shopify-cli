@@ -20,6 +20,10 @@ module ShopifyCLI
             end
             host
           end
+
+          def no_update
+            options.flags[:no_update] || false
+          end
         end
       end
 
@@ -35,6 +39,12 @@ module ShopifyCLI
         def parse_port_option
           options do |parser, flags|
             parser.on("--port=PORT") { |port| flags[:port] = port }
+          end
+        end
+
+        def parse_no_update_option
+          options do |parser, flags|
+            parser.on("--no-update") { flags[:no_update] = true }
           end
         end
       end

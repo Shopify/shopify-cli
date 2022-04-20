@@ -12,7 +12,7 @@ module Extension
 
         def test_error_is_raised_if_error_occurs
           development_server = Models::DevelopmentServer.new(executable: "fake")
-          Models::DevelopmentServer.expects(:new).returns(development_server) do |server|
+          Models::DevelopmentServer.expects(:new).at_least_once.returns(development_server) do |server|
             server.expects(:create).returns(StandardError)
           end
 
@@ -20,7 +20,8 @@ module Extension
             ExecuteCommands::Create.new(
               type: "checkout_ui_extension",
               template: "javascript",
-              root_dir: "test"
+              root_dir: "test",
+              context: TestHelpers::FakeContext.new
             ).call
           end
         end

@@ -207,6 +207,12 @@ module ShopifyCLI
           end
 
           def set_custom_ua
+            requires_ua_file = Dir.chdir(context.root) do
+              context.ruby_gem_version("shopify_app") < ::Semantic::Version.new("19.0.0")
+            end
+
+            return unless requires_ua_file
+
             ua_path = File.join("config", "initializers", "user_agent.rb")
             context.write(ua_path, USER_AGENT_CODE)
           end

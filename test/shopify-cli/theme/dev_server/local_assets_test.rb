@@ -72,6 +72,18 @@ module ShopifyCLI
           )
         end
 
+        def test_serve_file_with_a_not_theme_file
+          response = serve("<WRONG>", path: "/assets/../../../test_helper.rb")
+          assert_equal("text/plain", response["Content-Type"])
+          assert_equal("Not found", response.body)
+        end
+
+        def test_serve_file_with_a_non_static_asset
+          response = serve("<WRONG>", path: "/assets/../config/super_secret.json")
+          assert_equal("text/plain", response["Content-Type"])
+          assert_equal("Not found", response.body)
+        end
+
         def test_404_on_missing_local_assets
           response = serve("<WRONG>", path: "/assets/missing.css")
           assert_equal("text/plain", response["Content-Type"])

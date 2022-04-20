@@ -76,6 +76,27 @@ module Extension
         assert_equal(resource_url, result.extensions.first.development.resource.url)
       end
 
+      def test_empty_config_and_entry_fallback
+        project_directory = Pathname(ExtensionProject.current.directory)
+        FileUtils.mkdir_p(project_directory.join("src"))
+        File.write(project_directory.join("src/index.js"), "")
+
+        assert_nothing_raised do
+          Tasks::ConvertServerConfig.call(
+            api_key: @api_key,
+            context: @fake_context,
+            hash: {},
+            registration_uuid: @registration_uuid,
+            store: @store,
+            title: @title,
+            tunnel_url: @tunnel_url,
+            type: @type
+          )
+        end
+      ensure
+        FileUtils.rm_r(project_directory.join("src/"))
+      end
+
       private
 
       def mock_extension_config_yaml

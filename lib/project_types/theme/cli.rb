@@ -16,6 +16,7 @@ module Theme
     subcommand :Package, "package", Project.project_filepath("commands/package")
     subcommand :Open, "open", Project.project_filepath("commands/open")
     subcommand :List, "list", Project.project_filepath("commands/list")
+    subcommand :Share, "share", Project.project_filepath("commands/share")
     subcommand :LanguageServer, "language-server", Project.project_filepath("commands/language_server")
   end
   ShopifyCLI::Commands.register("Theme::Command", "theme")

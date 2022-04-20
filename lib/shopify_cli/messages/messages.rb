@@ -18,6 +18,7 @@ module ShopifyCLI
           missing_node: "Node.js is required to continue. Install Node.js here: https://nodejs.org/en/download.",
           missing_npm: "npm is required to continue. Install npm here: https://www.npmjs.com/get-npm.",
           missing_ruby: "Ruby is required to continue. Install Ruby here: https://www.ruby-lang.org/en/downloads.",
+          bundle_info_failure: "Error getting version for %s gem",
           option_parser: {
             invalid_option: "The option {{command:%s}} is not supported.",
             invalid_option_store_equals: <<~MESSAGE,
@@ -263,6 +264,7 @@ module ShopifyCLI
               {{bold:Options:}}
                 {{cyan:--host=HOST}}: Bypass running tunnel and use custom host. HOST must be HTTPS url.
                 {{cyan:--port=PORT}}: Use custom port.
+                {{cyan:--no-update}}: Skips the dashboard URL update step
             HELP
             open_info: <<~MESSAGE,
               {{*}} To install and start using your app, open this URL in your browser:
@@ -283,6 +285,13 @@ module ShopifyCLI
         },
         extension: {
           push: {
+            beacon_extension: {
+              error: {
+                file_read_error: "There was a problem reading %s",
+                missing_config_key_error: "Configuration is missing key: %s",
+                invalid_config_value_error: "Configuration value is invalid: %s",
+              },
+            },
             checkout_ui_extension: {
               localization: {
                 error: {
@@ -448,6 +457,11 @@ module ShopifyCLI
           shop_prompt: <<~PROMPT,
             What store are you connecting to? (e.g. my-store.myshopify.com; do {{bold:NOT}} include protocol part, e.g., https://)
           PROMPT
+          spinner: {
+            initiating: "Initiating authentication",
+            finalizing: "Finalizing authentication",
+            loading_organizations: "Loading available partner organizations",
+          },
         },
 
         logout: {
@@ -715,7 +729,6 @@ module ShopifyCLI
             updated: "{{v}} Whitelist URLS updated in Partners Dashboard}}",
             update_error:
               "{{x}} error: For authentication issues, run {{command:%s logout}} to clear invalid credentials",
-            update_prompt: "Do you want to update your application url?",
           },
           select_org_and_shop: {
             authentication_issue: "For authentication issues, run {{command:%s logout}} to clear invalid credentials",
@@ -747,16 +760,12 @@ module ShopifyCLI
               " package manager for your system.",
             ngrok: "Something went wrong with ngrok installation,"\
               "please make sure %s exists within %s before trying again",
+            signup_required: "A free ngrok account is required: {{underline:https://ngrok.com/signup}}. After you "\
+              "signup, install your personal authorization token using {{command:%s app tunnel auth <token>}}.",
           },
           installing: "Installing ngrok…",
           not_running: "{{green:x}} ngrok tunnel not running",
           prereq_command_location: "%s @ %s",
-          signup_suggestion: <<~MESSAGE,
-            {{*}} To avoid tunnels that timeout, it is recommended to signup for a free ngrok
-            account at {{underline:https://ngrok.com/signup}}. After you signup, install your
-            personalized authorization token using {{command:%s app tunnel auth <token>}}.
-          MESSAGE
-          start: "{{v}} ngrok tunnel running at {{underline:%s}}",
           start_with_account: "{{v}} ngrok tunnel running at {{underline:%s}}, with account %s",
           stopped: "{{green:x}} ngrok tunnel stopped",
           timed_out: "{{x}} ngrok tunnel has timed out, restarting…",

@@ -13,22 +13,20 @@ module Extension
           CLI::Kit::System.expects(:capture3).returns(["some output", nil, mock(success?: true)])
         end
 
-        def teardown
-          FileUtils.rm_rf("tmp")
-        end
-
         def test_success_object_is_returned_on_successful_call
-          Dir.mkdir("tmp") unless Dir.exist?("tmp")
-          FileUtils.touch("tmp/test.txt")
-
-          test_file_path = File.join(Dir.pwd, "tmp")
+          FileUtils.touch("extension.config.yml")
+          File.write("package.json", JSON.dump(up_to_date_package_json))
 
           result = ExecuteCommands::Build.new(
             type: "checkout_ui_extension",
-            config_file_path: File.join(test_file_path, "test.txt"),
+            config_file_path: "extension.config.yml",
             context: TestHelpers::FakeContext.new
           ).call
+
           assert_kind_of(ShopifyCLI::Result::Success, result)
+        ensure
+          FileUtils.rm("package.json")
+          FileUtils.rm("extension.config.yml")
         end
 
         private
@@ -50,6 +48,22 @@ module Extension
             user: Models::ServerConfig::User.new,
             development: development
           )
+        end
+
+        def up_to_date_package_json
+          {
+            "name": "test-extension",
+            "dependencies": {
+              "@shopify/checkout-ui-extensions": "^1.0.0",
+            },
+            "devDependencies": {
+              "@shopify/shopify-cli-extensions": "latest",
+            },
+            "scripts": {
+              "build": "some command",
+              "develop": "some command",
+            },
+          }
         end
       end
     end

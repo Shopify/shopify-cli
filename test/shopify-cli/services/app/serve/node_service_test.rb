@@ -14,11 +14,15 @@ module ShopifyCLI
             project_context("app_types", "node")
             ShopifyCLI::Tasks::EnsureDevStore.stubs(:call)
             @context.stubs(:system)
+            ShopifyCLI::Tunnel.stubs(:start).returns("https://example.com")
           end
 
           def test_call
-            ShopifyCLI::Tunnel.stubs(:start).returns("https://example.com")
-            ShopifyCLI::Tasks::UpdateDashboardURLS.expects(:call)
+            ShopifyCLI::Tasks::UpdateDashboardURLS.expects(:call).with(
+              @context,
+              url: "https://example.com",
+              callback_urls: %w(/auth/shopify/callback /auth/callback)
+            )
             ShopifyCLI::Resources::EnvFile.any_instance.expects(:update)
             @context.expects(:system).with(
               "npm run dev",
@@ -56,14 +60,14 @@ module ShopifyCLI
           end
 
           def test_open_while_run
-            ShopifyCLI::Tunnel.stubs(:start).returns("https://example.com")
             ShopifyCLI::Tasks::UpdateDashboardURLS.expects(:call)
             ShopifyCLI::Resources::EnvFile.any_instance.expects(:update).with(
               @context, :host, "https://example.com"
             )
             @context.expects(:puts).with(
               "\n" +
-              @context.message("core.app.serve.open_info", "https://example.com/auth?shop=my-test-shop.myshopify.com") +
+              @context.message("core.app.serve.open_info",
+                "https://example.com/login?shop=my-test-shop.myshopify.com") +
               "\n"
             )
             run_cmd("app serve")
@@ -119,13 +123,17 @@ module ShopifyCLI
 
           def test_call_when_invalid_port_passed
             invalid_port = "NOT_PORT"
-            ShopifyCLI::Tunnel.stubs(:start).returns("https://example.com")
             ShopifyCLI::Tasks::UpdateDashboardURLS.expects(:call)
             ShopifyCLI::Resources::EnvFile.any_instance.expects(:update)
             @context.expects(:abort).with(
               @context.message("core.app.serve.error.invalid_port", invalid_port)
             )
             run_cmd("app serve --port=#{invalid_port}")
+          end
+
+          def test_call_when_no_update_passed
+            ShopifyCLI::Tasks::UpdateDashboardURLS.expects(:call).never
+            run_cmd("app serve --no-update")
           end
         end
       end

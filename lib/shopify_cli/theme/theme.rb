@@ -37,14 +37,18 @@ module ShopifyCLI
       end
 
       def glob(pattern, raise_on_dir: false)
-        root.glob(pattern).map do |path|
-          abort_if_directory!(path) if raise_on_dir
-          File.new(path, root)
-        end
+        root
+          .glob(pattern)
+          .select { |path| file?(path, raise_on_dir) }
+          .map { |path| File.new(path, root) }
       end
 
       def theme_file?(file)
         theme_files.include?(self[file])
+      end
+
+      def static_asset_file?(file)
+        static_asset_files.include?(self[file])
       end
 
       def static_asset_paths
@@ -155,6 +159,13 @@ module ShopifyCLI
       end
 
       class << self
+        def create_unpublished(ctx, root: nil, name: nil)
+          name ||= random_name
+          theme = new(ctx, root: root, name: name, role: "unpublished")
+          theme.create
+          theme
+        end
+
         def all(ctx, root: nil)
           _status, body = fetch_themes(ctx)
 
@@ -181,6 +192,10 @@ module ShopifyCLI
         end
 
         private
+
+        def random_name
+          ShopifyCLI::Helpers::Haikunator.haikunate(9999)
+        end
 
         def find(ctx, root, &block)
           _status, body = fetch_themes(ctx)
@@ -222,9 +237,12 @@ module ShopifyCLI
         self
       end
 
-      def abort_if_directory!(path)
-        return unless ::File.directory?(path)
-        @ctx.abort(@ctx.message("theme.serve.error.invalid_subdirectory", path.to_s))
+      def file?(path, raise_on_dir = false)
+        if raise_on_dir && ::File.directory?(path)
+          @ctx.abort(@ctx.message("theme.serve.error.invalid_subdirectory", path.to_s))
+        end
+
+        ::File.file?(path)
       end
     end
   end

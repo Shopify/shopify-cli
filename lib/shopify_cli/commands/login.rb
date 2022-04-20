@@ -30,7 +30,7 @@ module ShopifyCLI
         if @ctx.ci? && (password = options.flags[:password] || @ctx.getenv("SHOPIFY_PASSWORD"))
           ShopifyCLI::DB.set(shopify_exchange_token: password)
         else
-          IdentityAuth.new(ctx: @ctx).authenticate
+          IdentityAuth.new(ctx: @ctx).authenticate(spinner: true)
           org = select_organization
           ShopifyCLI::DB.set(organization_id: org["id"].to_i) unless org.nil?
           Whoami.call([], "whoami")
@@ -75,7 +75,10 @@ module ShopifyCLI
       private
 
       def select_organization
-        organizations = ShopifyCLI::PartnersAPI::Organizations.fetch_all(@ctx)
+        organizations = []
+        CLI::UI::Spinner.spin(@ctx.message("core.login.spinner.loading_organizations")) do
+          organizations = ShopifyCLI::PartnersAPI::Organizations.fetch_all(@ctx)
+        end
 
         if organizations.count == 0
           nil

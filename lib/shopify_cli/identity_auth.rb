@@ -56,8 +56,10 @@ module ShopifyCLI
 
     attr_accessor :response_query
 
-    def authenticate
-      return if refresh_exchange_tokens || refresh_access_tokens
+    def authenticate(spinner: false)
+      return if with_spinner(spinner, ctx.message("core.login.spinner.initiating")) do
+        attempt_reauthenticate
+      end
 
       initiate_authentication
 
@@ -66,7 +68,21 @@ module ShopifyCLI
       rescue IdentityAuth::Timeout => e
         ctx.abort(e.message)
       end
-      request_exchange_tokens
+      with_spinner(spinner, ctx.message("core.login.spinner.finalizing")) do
+        request_exchange_tokens
+      end
+    end
+
+    def with_spinner(spinner, message, &block)
+      result = nil
+      if spinner
+        CLI::UI::Spinner.spin(message) do
+          result = block.call
+        end
+      else
+        result = block.call
+      end
+      result
     end
 
     def fetch_or_auth_partners_token
@@ -100,8 +116,12 @@ module ShopifyCLI
     end
 
     def reauthenticate
-      return if refresh_exchange_tokens || refresh_access_tokens
+      return if attempt_reauthenticate
       ctx.abort(ctx.message("core.identity_auth.error.reauthenticate", ShopifyCLI::TOOL_NAME))
+    end
+
+    def attempt_reauthenticate
+      refresh_exchange_tokens || refresh_access_tokens
     end
 
     def code_challenge

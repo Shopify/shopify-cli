@@ -47,7 +47,10 @@ module Extension
         type = "CHECKOUT_UI_EXTENSION"
         stub_project(type)
 
-        Models::DevelopmentServerRequirements.expects(:supported?).with(type).returns(true)
+        Models::DevelopmentServerRequirements.stubs(:supported?).returns(true)
+        Tasks::ExecuteCommands::OutdatedExtensionDetection::OutdatedCheck
+          .expects(:call)
+          .returns(ShopifyCLI::Result.success(true))
 
         command = Tasks::ExecuteCommands::Build.new(context: @context, config_file_path: config_file,
           type: type.downcase)

@@ -4,6 +4,7 @@ require "fileutils"
 require "rbconfig"
 require "net/http"
 require "json"
+require "bundler"
 
 module ShopifyCLI
   ##
@@ -643,6 +644,18 @@ module ShopifyCLI
       else
         ""
       end
+    end
+
+    # Uses bundle to grab the version of a gem
+    #
+    # #### Parameters
+    # - gem: the name of the gem to check
+    #
+    # #### Returns
+    # - version: a Semantic::Version object with the gem version
+    def ruby_gem_version(gem)
+      version = Bundler.load.specs.find { |s| s.name == gem }.version
+      ::Semantic::Version.new(version.to_s)
     end
 
     private

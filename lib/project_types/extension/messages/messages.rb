@@ -73,8 +73,6 @@ module Extension
         help: <<~HELP,
           Register your local extension to a Shopify app
               Usage: {{command:%s extension register}}
-              Options:
-                {{command:--api-key=API_KEY}} The API key used to register an app with the extension. This can be found on the app page on Partners Dashboard.
         HELP
         frame_title: "Registering Extension",
         waiting_text: "Registering with Shopify…",
@@ -196,6 +194,29 @@ module Extension
         "{{command:%1$s extension connect}} " \
         "or run {{command:%1$s extension register}} to register a new extension.",
         module_not_found: "Unable to find module %s. Ensure your dependencies are up-to-date and try again.",
+        development_server_binary_not_found: {
+          title: "Development Server Binary Missing",
+          message: <<~ERROR,
+            The extension development server binary could not be found!
+
+            If you're running a development version of the CLI, please run `rake extensions:install` to install it.
+            Otherwise, please file a bug report via https://github.com/Shopify/shopify-cli/issues/new.
+          ERROR
+        },
+        outdated_extensions: {
+          unknown: <<~TEXT.strip,
+            Please refer to the documentation for more information on how to upgrade your extension:
+            https://shopify.dev/apps/app-extensions
+          TEXT
+          checkout_ui_extension: <<~TEXT.strip,
+            Please update your package.json as follows:
+            * Replace the development dependency @shopify/checkout-ui-extensions-run
+              with @shopify/shopify-cli-extensions
+            * Remove the start and server script
+            * Add a develop script: shopify-cli-extensions develop
+            * Change the build script to: shopify-cli-extensions build
+          TEXT
+        },
       },
       warnings: {
         resource_url_auto_generation_failed: "{{*}} {{yellow:Warning:}} Unable to auto generate " \
