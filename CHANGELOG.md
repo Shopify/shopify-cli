@@ -2,6 +2,8 @@ From version 2.6.0, the sections in this file adhere to the [keep a changelog](h
 
 ## [Unreleased]
 
+* [#2270](https://github.com/Shopify/shopify-cli/pull/2270): Use ignore filter regex in watcher class
+
 ### Added
 * [#2189](https://github.com/Shopify/shopify-cli/pull/2189): Retrieve latest CLI version in the background
 

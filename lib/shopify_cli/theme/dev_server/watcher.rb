@@ -19,6 +19,8 @@ module ShopifyCLI
             notify_observers(modified, added, removed)
           end
 
+          @ignore_filter.regexes.each { |ignore| @listener.ignore ignore }
+
           add_observer(self, :upload_files_when_changed)
         end
 
