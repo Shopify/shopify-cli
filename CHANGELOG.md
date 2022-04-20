@@ -2,6 +2,9 @@ From version 2.6.0, the sections in this file adhere to the [keep a changelog](h
 
 ## [Unreleased]
 
+### Added
+* [#2189](https://github.com/Shopify/shopify-cli/pull/2189): Retrieve latest CLI version in the background
+
 ## Version 2.15.6 - 2022-04-12
 
 ### Fixed

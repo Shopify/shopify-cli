@@ -2,6 +2,14 @@
 require "test_helper"
 
 module ShopifyCLI
+  class Context
+    # Run fork in-process so method stubbing and expectations works
+    def fork(&block)
+      block.call
+    rescue
+    end
+  end
+
   class ContextTest < MiniTest::Test
     include TestHelpers::FakeFS
 
@@ -9,6 +17,42 @@ module ShopifyCLI
       super
       @ctx = Context.new
     end
+
+    # rubocop:disable Minitest/TestMethodName
+    def with_stubbed_context(&block)
+      @old_config = ShopifyCLI::Config
+      without_warnings do
+        ShopifyCLI.const_set(:Config, Class.new do
+          class << self
+            def set(key1, key2, value)
+              hash[[key1, key2]] = value
+            end
+
+            def get(key1, key2, default: nil)
+              hash.fetch([key1, key2], default)
+            end
+
+            def hash
+              @hash ||= {}
+            end
+          end
+        end)
+      end
+      block.call
+    ensure
+      without_warnings do
+        ShopifyCLI.const_set(:Config, @old_config)
+      end
+    end
+
+    def without_warnings(&block)
+      old_verbose = $VERBOSE
+      $VERBOSE = nil
+      block.call
+    ensure
+      $VERBOSE = old_verbose
+    end
+    # rubocop:enable Minitest/TestMethodName
 
     def test_puts
       expected_stdout = /info message/
@@ -175,66 +219,53 @@ module ShopifyCLI
     end
 
     def test_check_for_new_version_if_no_config_section
-      ShopifyCLI::Config
-        .expects(:get)
-        .returns(false)
-      ShopifyCLI::Config
-        .expects(:set)
-        .once
-      mock_rubygems_https_call(response_body: "{\"version\":\"99.99.99\"}")
+      with_stubbed_context do
+        mock_rubygems_https_call(response_body: "{\"version\":\"99.99.99\"}")
 
-      assert_equal("99.99.99", @ctx.new_version)
+        assert_equal("99.99.99", @ctx.new_version)
+      end
     end
 
     def test_no_check_for_new_version_if_config_section_and_interval_not_passed
-      ShopifyCLI::Config
-        .expects(:get)
-        .returns(Time.now.to_i - 3600)
-      Net::HTTP
-        .expects(:get_response)
-        .with(ShopifyCLI::Context::GEM_LATEST_URI)
-        .never
+      with_stubbed_context do
+        Config.set(Context::VERSION_CHECK_SECTION, Context::LAST_CHECKED_AT_FIELD, Time.now.to_i - 3600)
+        Net::HTTP
+          .expects(:get_response)
+          .with(ShopifyCLI::Context::GEM_LATEST_URI)
+          .never
 
-      refute(@ctx.new_version)
+        refute(@ctx.new_version)
+      end
     end
 
     def test_check_for_new_version_if_config_section_and_interval_passed
-      ShopifyCLI::Config
-        .expects(:get)
-        .returns(Time.now.to_i - 86500)
-      ShopifyCLI::Config
-        .expects(:set)
-        .once
-      mock_rubygems_https_call(response_body: "{\"version\":\"99.99.99\"}")
+      with_stubbed_context do
+        Config.set(Context::VERSION_CHECK_SECTION, Context::LAST_CHECKED_AT_FIELD, Time.now.to_i - 86500)
+        mock_rubygems_https_call(response_body: "{\"version\":\"99.99.99\"}")
 
-      assert_equal("99.99.99", @ctx.new_version)
+        assert_equal("99.99.99", @ctx.new_version)
+      end
     end
 
     def test_check_for_new_version_returns_nil_if_https_call_returns_garbage
-      ShopifyCLI::Config
-        .expects(:get)
-        .returns(Time.now.to_i - 86500)
-      ShopifyCLI::Config
-        .expects(:set)
-        .once
-      mock_rubygems_https_call(response_body: "ad098q907b\n90979a*(&*^*%klhfadkh}")
+      with_stubbed_context do
+        Config.set(Context::VERSION_CHECK_SECTION, Context::LAST_CHECKED_AT_FIELD, Time.now.to_i - 86500)
+        mock_rubygems_https_call(response_body: "ad098q907b\n90979a*(&*^*%klhfadkh}")
 
-      refute(@ctx.new_version)
+        refute(@ctx.new_version)
+      end
     end
 
     def test_check_for_new_version_returns_nil_if_https_call_times_out
-      ShopifyCLI::Config
-        .expects(:get)
-        .returns(Time.now.to_i - 86500)
-      ShopifyCLI::Config
-        .expects(:set)
-        .once
-      Net::HTTP
-        .expects(:get_response)
-        .with(ShopifyCLI::Context::GEM_LATEST_URI)
-        .raises(Net::ReadTimeout)
+      with_stubbed_context do
+        Config.set(Context::VERSION_CHECK_SECTION, Context::LAST_CHECKED_AT_FIELD, Time.now.to_i - 86500)
+        Net::HTTP
+          .expects(:get_response)
+          .with(ShopifyCLI::Context::GEM_LATEST_URI)
+          .raises(Net::ReadTimeout)
 
-      refute(@ctx.new_version)
+        refute(@ctx.new_version)
+      end
     end
 
     private
