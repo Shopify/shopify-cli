@@ -130,7 +130,7 @@ module ShopifyCLI
         assert_equal(0, org["stores"].count)
       end
 
-      def test_fetch_org_with_app_info
+      def test_fetch_all_org_with_app_info
         stub_partner_req(
           "all_orgs_with_apps",
           resp: {
@@ -178,13 +178,13 @@ module ShopifyCLI
             },
           },
         )
-        orgs = PartnersAPI::Organizations.fetch_with_app(@context)
+        orgs = PartnersAPI::Organizations.fetch_all_with_apps(@context)
         assert_equal(2, orgs.count)
         assert_equal(421, orgs.first["id"])
         assert_equal("store.myshopify.com", orgs.first["stores"].first["shopDomain"])
       end
 
-      def test_fetch_org_with_empty_app_info
+      def test_fetch_all_org_with_empty_app_info
         stub_partner_req(
           "all_orgs_with_apps",
           resp: {
@@ -202,7 +202,7 @@ module ShopifyCLI
             },
           },
         )
-        orgs = PartnersAPI::Organizations.fetch_with_app(@context)
+        orgs = PartnersAPI::Organizations.fetch_all_with_apps(@context)
         assert_equal(1, orgs.count)
         assert_equal(421, orgs.first["id"])
         assert_equal(0, orgs.first["stores"].count)

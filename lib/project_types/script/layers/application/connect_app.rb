@@ -21,7 +21,7 @@ module Script
               if partner_proxy_bypass
                 stubbed_org
               else
-                orgs = ShopifyCLI::PartnersAPI::Organizations.fetch_with_app(ctx)
+                orgs = ShopifyCLI::PartnersAPI::Organizations.fetch_all_with_apps(ctx)
                 Forms::AskOrg.ask(ctx, orgs, nil).org
               end
 
