@@ -25,7 +25,7 @@ module Extension
         end
 
         def test_find_sets_specific_versions
-          %w[product_subscription checkout_ui_extension checkout_post_purchase].each do |type|
+          %w[product_subscription checkout_ui_extension checkout_post_purchase pos_ui_extension].each do |type|
             renderer = ServerConfig::DevelopmentRenderer.find(type)
             refute_nil renderer
             refute_equal("latest", renderer.version)

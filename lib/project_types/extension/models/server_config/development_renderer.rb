@@ -10,6 +10,7 @@ module Extension
           "@shopify/admin-ui-extensions",
           "@shopify/post-purchase-ui-extensions",
           "@shopify/checkout-ui-extensions",
+          "@shopify/retail-ui-extensions",
         ]
 
         property! :name, accepts: VALID_RENDERERS
@@ -23,6 +24,10 @@ module Extension
             new(name: "@shopify/checkout-ui-extensions", version: "^0.15.0")
           when "checkout_post_purchase"
             new(name: "@shopify/post-purchase-ui-extensions", version: "^0.13.2")
+          when "pos_ui_extension"
+            new(name: "@shopify/retail-ui-extensions", version: "^0.1.0")
+          else
+            raise ArgumentError, "Unknown extension type: #{type}"
           end
         end
       end
