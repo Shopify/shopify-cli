@@ -209,6 +209,96 @@ module ShopifyCLI
         assert_equal(0, orgs.first["apps"].count)
       end
 
+      def test_fetch_org_with_apps
+        stub_partner_req(
+          "find_organization_with_apps",
+          variables: { id: 42 },
+          resp: {
+            data: {
+              organizations: {
+                nodes: [
+                  {
+                    'id': 42,
+                    'businessName': "One",
+                    'stores': {
+                      'nodes': [
+                        { 'shopDomain': "store.myshopify.com" },
+                      ],
+                    },
+                    'apps': {
+                      nodes: [
+                        {
+                          title: "first_app",
+                          apiKey: 1234,
+                          apiSecretKeys: [
+                            { secret: 1233 },
+                          ],
+                        },
+                      ],
+                    },
+                  },
+                ],
+              },
+            },
+          },
+        )
+        orgs = PartnersAPI::Organizations.fetch_with_apps(@context, id: 42)
+        assert_equal(1, orgs.count)
+        expected_organization = orgs.first
+        assert_equal(42, expected_organization["id"])
+        assert_equal("store.myshopify.com", expected_organization["stores"].first["shopDomain"])
+        assert_equal("first_app", expected_organization["apps"].first["title"])
+      end
+
+      def test_fetch_org_with_no_apps_returns_empty_list_when_not_found
+        stub_partner_req(
+          "find_organization_with_apps",
+          variables: { id: 42 },
+          resp: {
+            data: {
+              organizations: {
+                nodes: [],
+              },
+            },
+          },
+        )
+        orgs = PartnersAPI::Organizations.fetch_with_apps(@context, id: 42)
+        assert_equal([], orgs)
+      end
+
+      def test_fetch_org_with_no_apps
+        stub_partner_req(
+          "find_organization_with_apps",
+          variables: { id: 42 },
+          resp: {
+            data: {
+              organizations: {
+                nodes: [
+                  {
+                    'id': 42,
+                    'businessName': "No apps",
+                    'stores': {
+                      'nodes': [
+                        { 'shopDomain': "store.myshopify.com" },
+                      ],
+                    },
+                    'apps': {
+                      nodes: [],
+                    },
+                  },
+                ],
+              },
+            },
+          },
+        )
+        orgs = PartnersAPI::Organizations.fetch_with_apps(@context, id: 42)
+        assert_equal(1, orgs.count)
+        expected_organization = orgs.first
+        assert_equal(42, expected_organization["id"])
+        assert_equal("store.myshopify.com", expected_organization["stores"].first["shopDomain"])
+        assert_equal([], expected_organization["apps"])
+      end
+
       def test_fetch_all_with_nil_resp
         stub_partner_req_not_found("all_organizations")
         orgs = PartnersAPI::Organizations.fetch_all(@context)

@@ -27,6 +27,15 @@ module ShopifyCLI
           end
         end
 
+        def fetch_with_apps(ctx, id:)
+          resp = PartnersAPI.query(ctx, "find_organization_with_apps", id: id)
+          (resp&.dig("data", "organizations", "nodes") || []).map do |org|
+            org["stores"] = (org.dig("stores", "nodes") || [])
+            org["apps"] = (org.dig("apps", "nodes") || [])
+            org
+          end
+        end
+
         def fetch_with_extensions(ctx, type)
           organizations = fetch_all_with_apps(ctx)
           AppExtensions.fetch_apps_extensions(ctx, organizations, type)
