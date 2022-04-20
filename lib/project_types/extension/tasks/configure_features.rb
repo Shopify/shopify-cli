@@ -62,6 +62,10 @@ module Extension
             required_fields: [:shop],
             cli_package_name: "@shopify/checkout-ui-extensions-run",
           },
+          point_of_sale: {
+            git_template: "",
+            renderer_package_name: "@shopify/retail-ui-extensions",
+          },
         }
       end
     end

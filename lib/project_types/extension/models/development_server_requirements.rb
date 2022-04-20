@@ -10,6 +10,7 @@ module Extension
         "checkout_post_purchase",
         "product_subscription",
         "beacon_extension",
+        "pos_ui_extension",
       ]
 
       class << self
