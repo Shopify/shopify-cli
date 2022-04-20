@@ -11,45 +11,64 @@ module Extension
       def setup
         super
         ShopifyCLI::ProjectType.load_type(:extension)
-        @app = Models::App.new(title: "App One", api_key: "1234", secret: "5678")
       end
 
-      def test_loads_all_apps_into_a_list_from_organizations
-        stub_get_organizations([
-          organization(name: "Organization One", apps: [@app]),
-        ])
+      def test_loads_all_apps_into_a_list_from_organization
+        test_org = {
+          "id" => "1234567",
+          "businessName" => "test business name",
+          "apps" => [
+            { "id" => 9940, "title" => "App One", "apiKey" => "1234", "apiSecretKeys" => [{ "secret" => "5678" }] },
+          ],
+        }
+        stub_db_setup(organization_id: test_org["id"])
+        ShopifyCLI::PartnersAPI::Organizations.stubs(:fetch_with_apps).returns([test_org])
 
         app_list = Tasks::GetApps.call(context: @context)
         app = app_list.first
 
         assert_equal 1, app_list.size
-        assert_equal "Organization One", app.business_name
+        assert_equal "test business name", app.business_name
         assert_equal "App One", app.title
         assert_equal "1234", app.api_key
         assert_equal "5678", app.secret
       end
 
-      def test_returns_empty_array_if_there_are_no_organizations
-        stub_get_organizations([])
+      def test_returns_empty_list_with_no_organization_id
+        stub_db_setup(organization_id: nil)
+
+        ShopifyCLI::PartnersAPI::Organizations.expects(:fetch_with_apps).never
+        assert_empty(Tasks::GetApps.call(context: @context))
+      end
+
+      def test_returns_empty_list_with_no_organization
+        test_org = {
+          "id" => "1234567",
+          "businessName" => "test business name",
+          "apps" => [@app],
+        }
+        stub_db_setup(organization_id: test_org["id"])
+        ShopifyCLI::PartnersAPI::Organizations.stubs(:fetch_with_apps).returns([])
 
         assert_empty(Tasks::GetApps.call(context: @context))
       end
 
       def test_returns_empty_array_if_there_are_no_apps
-        stub_get_organizations([
-          organization(name: "Organization One", apps: []),
-        ])
+        test_org = {
+          "id" => "1234567",
+          "businessName" => "test business name",
+          "apps" => [],
+        }
+        stub_db_setup(organization_id: test_org["id"])
+        ShopifyCLI::PartnersAPI::Organizations.stubs(:fetch_with_apps).returns([test_org])
 
         assert_empty(Tasks::GetApps.call(context: @context))
       end
 
-      def test_can_handle_multiple_organizations_where_one_has_no_apps
-        stub_get_organizations([
-          organization(name: "Organization One", apps: [@app]),
-          organization(name: "Organization Two", apps: []),
-        ])
+      private
 
-        assert_equal 1, Tasks::GetApps.call(context: @context).size
+      def stub_db_setup(organization_id:)
+        ShopifyCLI::DB.stubs(:get).with(:organization_id).returns(organization_id)
       end
     end
   end
