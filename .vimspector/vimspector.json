@@ -1,0 +1,29 @@
+{
+  "configurations": {
+    "attach remote debug": {
+      "adapter": "cust_vscode-ruby",
+      "default": true,
+      "configuration": {
+        "type": "Ruby",
+        "request": "attach",
+        "cwd": "${workspaceRoot}",
+        "remoteHost": "0.0.0.0",
+        "remotePort": "1234",
+        "trace": true,
+        "showDebuggerOutput": true
+      }
+    },
+    "shopify extension create": {
+      "adapter": "cust_vscode-ruby",
+      "configuration": {
+        "type": "Ruby",
+        "request": "launch",
+        "cwd": "${workspaceRoot}",
+        "program": "${workspaceRoot}/bin/shopify",
+        "args": [ "extension", "create" ],
+        "trace": true,
+        "showDebuggerOutput": true
+      }
+    }
+  }
+}

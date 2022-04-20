@@ -1,0 +1,16 @@
+{
+  "adapters": {
+    "cust_vscode-ruby": {
+      "command": [
+        "node",
+        "${gadgetDir}/cust_vscode-ruby/dist/debugger/main.js"
+      ],
+      "configuration": {
+        "cwd": "${workspaceRoot}",
+        "showDebugOutput": false,
+        "trace": false
+      },
+      "name": "vscode-ruby-debug"
+    }
+  }
+}
