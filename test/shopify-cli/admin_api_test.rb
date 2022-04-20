@@ -61,6 +61,21 @@ module ShopifyCLI
       )
     end
 
+    def test_query_uses_env_token_if_available
+      Environment.stubs(:admin_auth_token).returns("env_token")
+      api_stub = stub
+      AdminAPI.expects(:new).with(
+        ctx: @context,
+        token: "env_token",
+        url: "https://my-test-shop.myshopify.com/admin/api/2019-04/graphql.json",
+      ).returns(api_stub)
+      api_stub.expects(:query).with("query", variables: {}).returns("response")
+      assert_equal(
+        "response",
+        AdminAPI.query(@context, "query", shop: "my-test-shop.myshopify.com", api_version: "2019-04"),
+      )
+    end
+
     def test_query_can_reauth
       ShopifyCLI::DB.stubs(:get).with(:shopify_exchange_token).returns("token123").then.returns("token456")
       api_stub = stub
