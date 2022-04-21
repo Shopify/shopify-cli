@@ -1,5 +1,5 @@
 query FindOrg($id: ID!) {
-  organizations(id: $id) {
+  organizations(id: $id, first: 1) {
     nodes {
       id
       businessName
@@ -13,16 +13,6 @@ query FindOrg($id: ID!) {
             secret
           }
           appType
-        }
-      }
-      stores(first: 500) {
-        nodes {
-          shopId
-          link
-          shopDomain
-          shopName
-          transferDisabled
-          convertableToPartnerTest
         }
       }
     }
