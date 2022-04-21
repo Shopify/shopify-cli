@@ -55,7 +55,7 @@ module Extension
 
       def test_returns_empty_array_if_there_are_no_apps
         test_org = {
-          "id" => "1234567",
+          "id" => 1234567,
           "businessName" => "test business name",
           "apps" => [],
         }
@@ -63,12 +63,6 @@ module Extension
         ShopifyCLI::PartnersAPI::Organizations.stubs(:fetch_with_apps).returns([test_org])
 
         assert_empty(Tasks::GetApps.call(context: @context))
-      end
-
-      private
-
-      def stub_db_setup(organization_id:)
-        ShopifyCLI::DB.stubs(:get).with(:organization_id).returns(organization_id)
       end
     end
   end

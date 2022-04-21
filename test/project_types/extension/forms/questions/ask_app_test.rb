@@ -44,25 +44,26 @@ module Extension
           end
         end
 
-        # def test_fetches_all_apps_if_no_api_key_was_given
-        #   apps = [
-        #     Models::App.new(title: "Fake 1", api_key: "1234", secret: "4567"),
-        #     Models::App.new(title: "Fake 2", api_key: "abcd", secret: "efgh"),
-        #   ]
-        #   stub_get_organizations([
-        #     organization(name: "Organization One", apps: apps),
-        #   ])
-        #
-        #   prompt = PromptToChooseOption.new
-        #   AskApp.new(ctx: FakeContext.new, prompt: prompt).call(OpenStruct.new).tap do |result|
-        #     assert_predicate(result, :success?)
-        #     result.value.app.tap do |app|
-        #       assert_kind_of(Models::App, app)
-        #     end
-        #   end
-        #
-        #   assert_equal 2, prompt.options.count
-        # end
+        def test_fetches_all_apps_if_no_api_key_was_given
+          apps = [
+            Models::App.new(title: "Fake 1", api_key: "1234", secret: "4567"),
+            Models::App.new(title: "Fake 2", api_key: "abcd", secret: "efgh"),
+          ]
+          test_organization = organization(name: "Organization One", apps: apps)
+          stub_db_setup(organization_id: test_organization[:id])
+          ShopifyCLI::DB.stubs(:get).with(:acting_as_shopify_organization).returns(false)
+          stub_fetch_org_with_apps(test_organization)
+
+          prompt = PromptToChooseOption.new
+          AskApp.new(ctx: FakeContext.new, prompt: prompt).call(OpenStruct.new).tap do |result|
+            assert_predicate(result, :success?)
+            result.value.app.tap do |app|
+              assert_kind_of(Models::App, app)
+            end
+          end
+
+          assert_equal 2, prompt.options.count
+        end
 
         def test_aborts_and_informs_user_if_there_are_no_apps
           stub_get_organizations([
