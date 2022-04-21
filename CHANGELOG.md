@@ -4,11 +4,12 @@ From version 2.6.0, the sections in this file adhere to the [keep a changelog](h
 
 ### Added
 * [#2189](https://github.com/Shopify/shopify-cli/pull/2189): Retrieve latest CLI version in the background
+* [#2263](https://github.com/Shopify/shopify-cli/pull/2263): Add `POS UI Extension` to support third party developers to extend POS smart grid functionality using native retail components. 
 
 ## Version 2.15.6 - 2022-04-12
 
 ### Fixed
-* [#2246](https://github.com/Shopify/shopify-cli/pull/2246): Fix callback urls for app serve
+* [#2246](https://github.com/Shopify/shopify-cli/pull/2246): Fix callback urls for app serve 
 
 ## Version 2.15.5 - 2022-04-08
 
