@@ -151,6 +151,32 @@ module ShopifyCLI
       assert_equal "token", got
     end
 
+    def test_admin_auth_token_returns_the_right_value
+      # Given
+      env_variables = {
+        Constants::EnvironmentVariables::ADMIN_AUTH_TOKEN.to_s => "admin_token",
+      }
+
+      # When
+      got = Environment.admin_auth_token(env_variables: env_variables)
+
+      # Then
+      assert_equal "admin_token", got
+    end
+
+    def test_store_returns_the_right_value
+      # Given
+      env_variables = {
+        Constants::EnvironmentVariables::STORE.to_s => "store",
+      }
+
+      # When
+      got = Environment.store(env_variables: env_variables)
+
+      # Then
+      assert_equal "store", got
+    end
+
     def test_use_local_partners_instance_returns_false_when_the_env_variable_is_not_set
       # Given/When
       got = Environment.use_local_partners_instance?(env_variables: {})
