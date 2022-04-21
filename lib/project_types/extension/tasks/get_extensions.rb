@@ -5,7 +5,10 @@ module Extension
   module Tasks
     class GetExtensions < ShopifyCLI::Task
       def call(context:, type:)
-        organizations = ShopifyCLI::PartnersAPI::Organizations.fetch_with_extensions(context, type)
+        org_id = ShopifyCLI::DB.get(:organization_id)
+        return [] unless org_id
+
+        organizations = ShopifyCLI::PartnersAPI::Organizations.fetch_with_extensions(context, type, id: org_id)
         extensions_from_organizations(organizations, context: context)
       end
 

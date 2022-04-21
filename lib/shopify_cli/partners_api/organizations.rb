@@ -36,8 +36,8 @@ module ShopifyCLI
           end
         end
 
-        def fetch_with_extensions(ctx, type)
-          organizations = fetch_all_with_apps(ctx)
+        def fetch_with_extensions(ctx, type, id:)
+          organizations = fetch_with_apps(ctx, id: id)
           AppExtensions.fetch_apps_extensions(ctx, organizations, type)
         end
       end

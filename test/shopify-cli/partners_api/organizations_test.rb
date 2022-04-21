@@ -307,10 +307,10 @@ module ShopifyCLI
 
       def test_fetch_with_extensions
         type = "THEME_APP_EXTENSION"
-        stub_all_orgs_with_apps
+        stub_fetch_org_with_apps
         stub_get_extension_registrations(type)
 
-        orgs = PartnersAPI::Organizations.fetch_with_extensions(@context, type)
+        orgs = PartnersAPI::Organizations.fetch_with_extensions(@context, type, id: 1)
 
         assert_equal(1, orgs.size)
         org = orgs.first
@@ -329,17 +329,18 @@ module ShopifyCLI
       end
 
       def test_fetch_with_extensions_with_nil_resp
-        stub_partner_req_not_found("all_orgs_with_apps")
+        stub_partner_req_not_found("find_organization_with_apps", variables: { id: 1 })
         type = "THEME_APP_EXTENSION"
-        orgs = PartnersAPI::Organizations.fetch_with_extensions(@context, type)
+        orgs = PartnersAPI::Organizations.fetch_with_extensions(@context, type, id: 1)
         assert_equal([], orgs)
       end
 
       private
 
-      def stub_all_orgs_with_apps
+      def stub_fetch_org_with_apps
         stub_partner_req(
-          "all_orgs_with_apps",
+          "find_organization_with_apps",
+          variables: { id: 1 },
           resp: {
             data: {
               organizations: {
