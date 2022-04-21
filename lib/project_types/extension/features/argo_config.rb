@@ -11,7 +11,6 @@ module Extension
 
           return {} unless File.size?(file_name)
 
-          require "yaml" # takes 20ms, so deferred as late as possible.
           begin
             config = YAML.load_file(file_name)
 
