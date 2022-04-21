@@ -5,6 +5,9 @@ From version 2.6.0, the sections in this file adhere to the [keep a changelog](h
 ### Added
 * [#2189](https://github.com/Shopify/shopify-cli/pull/2189): Retrieve latest CLI version in the background
 
+### Changed
+* [#2272](https://github.com/Shopify/shopify-cli/pull/2272): [Feature]: Changed interactive apps list scope for extension create|register|connect commands
+
 ## Version 2.15.6 - 2022-04-12
 
 ### Fixed
