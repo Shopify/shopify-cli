@@ -24,7 +24,6 @@ module Extension
       end
 
       def config(context, include_renderer_version: true)
-        js_system = ShopifyCLI::JsSystem.new(ctx: context)
         filepath = File.join(context.root, SCRIPT_PATH)
         context.abort(context.message("features.argo.missing_file_error")) unless File.exist?(filepath)
 
