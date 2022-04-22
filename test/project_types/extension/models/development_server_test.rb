@@ -18,7 +18,7 @@ module Extension
         assert_nothing_raised do
           server_config = Models::ServerConfig::Root.new(extensions: [extension])
 
-          CLI::Kit::System.expects(:capture3)
+          CLI::Kit::System.expects(:capture2e)
             .with(@development_server.executable, "create", "-", stdin_data: server_config.to_yaml)
             .returns("", nil, true)
 
