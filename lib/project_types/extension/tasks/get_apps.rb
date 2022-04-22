@@ -8,7 +8,7 @@ module Extension
         org_id = ShopifyCLI::DB.get(:organization_id)
         return [] unless org_id
 
-        organization = ShopifyCLI::PartnersAPI::Organizations.fetch_with_apps(context, id: org_id).first
+        organization = ShopifyCLI::PartnersAPI::Organizations.fetch_with_apps(context, id: org_id)
         apps_owned_by_organization(organization)
       end
 

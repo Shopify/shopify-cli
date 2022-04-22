@@ -22,7 +22,7 @@ module Extension
           ],
         }
         stub_db_setup(organization_id: test_org["id"])
-        ShopifyCLI::PartnersAPI::Organizations.stubs(:fetch_with_apps).returns([test_org])
+        ShopifyCLI::PartnersAPI::Organizations.stubs(:fetch_with_apps).returns(test_org)
 
         app_list = Tasks::GetApps.call(context: @context)
         app = app_list.first
@@ -42,14 +42,9 @@ module Extension
       end
 
       def test_returns_empty_list_with_no_organization
-        test_org = {
-          "id" => "1234567",
-          "businessName" => "test business name",
-          "apps" => [@app],
-        }
-        stub_db_setup(organization_id: test_org["id"])
-        ShopifyCLI::PartnersAPI::Organizations.stubs(:fetch_with_apps).returns([])
+        stub_db_setup(organization_id: "not-found")
 
+        ShopifyCLI::PartnersAPI::Organizations.stubs(:fetch_with_apps).returns(nil)
         assert_empty(Tasks::GetApps.call(context: @context))
       end
 
@@ -60,7 +55,7 @@ module Extension
           "apps" => [],
         }
         stub_db_setup(organization_id: test_org["id"])
-        ShopifyCLI::PartnersAPI::Organizations.stubs(:fetch_with_apps).returns([test_org])
+        ShopifyCLI::PartnersAPI::Organizations.stubs(:fetch_with_apps).returns(test_org)
 
         assert_empty(Tasks::GetApps.call(context: @context))
       end

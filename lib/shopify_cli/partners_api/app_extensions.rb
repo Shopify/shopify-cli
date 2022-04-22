@@ -8,19 +8,19 @@ module ShopifyCLI
   class PartnersAPI
     class AppExtensions
       class << self
-        def fetch_apps_extensions(ctx, orgs, type)
-          jobs = apps(orgs).map { |app| AppExtensions::Job.new(ctx, app, type) }
+        def fetch_apps_extensions(ctx, org, type)
+          jobs = apps(org).map { |app| AppExtensions::Job.new(ctx, app, type) }
 
           consume_jobs!(jobs)
           patch_apps_with_extensions!(jobs)
 
-          orgs
+          org
         end
 
         private
 
-        def apps(orgs)
-          orgs.flat_map { |org| org["apps"] }
+        def apps(org)
+          (org && org["apps"]) || []
         end
 
         def consume_jobs!(jobs)

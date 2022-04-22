@@ -24,7 +24,8 @@ module Extension
         return [] unless organization.key?("apps") && organization["apps"].any?
 
         organization["apps"].flat_map do |app|
-          app["extensionRegistrations"].map do |registration|
+          registrations = app["extensionRegistrations"] || []
+          registrations.map do |registration|
             [Converters::AppConverter.from_hash(app, organization),
              Converters::RegistrationConverter.from_hash(context, registration)]
           end
