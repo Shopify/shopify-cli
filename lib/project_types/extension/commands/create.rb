@@ -61,6 +61,11 @@ module Extension
           type: form.type.identifier.downcase,
           context: @ctx,
         )
+          .then { |output| @ctx.puts(output) }
+          .unwrap do |error|
+            raise ShopifyCLI::Abort, error.message unless error.nil?
+          end
+
         @ctx.chdir(form.directory_name)
         write_env_file(form)
       rescue => error

@@ -11,9 +11,6 @@ module Extension
         def call
           ShopifyCLI::Result.success(generate_config)
             .then { |server_config| Models::DevelopmentServer.new.create(server_config) }
-            .unwrap do |error|
-              raise error unless error.nil?
-            end
         end
 
         private
