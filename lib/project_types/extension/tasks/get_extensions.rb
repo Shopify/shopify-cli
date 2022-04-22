@@ -8,17 +8,11 @@ module Extension
         org_id = ShopifyCLI::DB.get(:organization_id)
         return [] unless org_id
 
-        organizations = ShopifyCLI::PartnersAPI::Organizations.fetch_with_extensions(context, type, id: org_id)
-        extensions_from_organizations(organizations, context: context)
+        organization = ShopifyCLI::PartnersAPI::Organizations.fetch_with_extensions(context, type, id: org_id)
+        extensions_owned_by_organization(organization, context: context)
       end
 
       private
-
-      def extensions_from_organizations(organizations, context:)
-        organizations.flat_map do |organization|
-          extensions_owned_by_organization(organization, context: context)
-        end
-      end
 
       def extensions_owned_by_organization(organization, context:)
         return [] unless organization.key?("apps") && organization["apps"].any?
