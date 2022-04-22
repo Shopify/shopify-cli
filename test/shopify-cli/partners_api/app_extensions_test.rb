@@ -32,7 +32,7 @@ module ShopifyCLI
 
       def fake_org
         fake_app = { "apiKey" => 3 }
-        { "apps" => [fake_app]  }
+        { "apps" => [fake_app] }
       end
 
       def stub_get_extension_registrations

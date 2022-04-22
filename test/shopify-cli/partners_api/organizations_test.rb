@@ -255,7 +255,7 @@ module ShopifyCLI
           },
         )
         org = PartnersAPI::Organizations.fetch_with_apps(@context, id: 42)
-        assert_equal(nil, org)
+        assert_nil(org)
       end
 
       def test_fetch_org_with_no_apps
@@ -313,7 +313,7 @@ module ShopifyCLI
         stub_partner_req_not_found("find_organization_with_apps", variables: { id: 1 })
         type = "THEME_APP_EXTENSION"
         org = PartnersAPI::Organizations.fetch_with_extensions(@context, type, id: 1)
-        assert_equal(nil, org)
+        assert_nil(org)
       end
 
       private
