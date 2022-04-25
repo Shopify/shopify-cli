@@ -16,14 +16,14 @@ module Extension
             server.expects(:create).returns(StandardError)
           end
 
-          assert_raises StandardError do
-            ExecuteCommands::Create.new(
-              type: "checkout_ui_extension",
-              template: "javascript",
-              root_dir: "test",
-              context: TestHelpers::FakeContext.new
-            ).call
-          end
+          result = ExecuteCommands::Create.new(
+            type: "checkout_ui_extension",
+            template: "javascript",
+            root_dir: "test",
+            context: TestHelpers::FakeContext.new
+          ).call
+
+          assert_predicate(result, :failure?)
         end
 
         private

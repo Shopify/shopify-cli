@@ -24,11 +24,6 @@ module Extension
       end
 
       def config(context, include_renderer_version: true)
-        js_system = ShopifyCLI::JsSystem.new(ctx: context)
-        if js_system.package_manager == "yarn"
-          run_yarn_install(context, js_system)
-          run_yarn_run_script(context, js_system)
-        end
         filepath = File.join(context.root, SCRIPT_PATH)
         context.abort(context.message("features.argo.missing_file_error")) unless File.exist?(filepath)
 
@@ -49,32 +44,6 @@ module Extension
 
       def renderer_package(context)
         Tasks::FindPackageFromJson.call(renderer_package_name, context: context)
-      end
-
-      private
-
-      def run_yarn_install(context, js_system)
-        _result, error, status = js_system.call(
-          yarn: YARN_INSTALL_COMMAND + YARN_INSTALL_PARAMETERS,
-          npm: [],
-          capture_response: true
-        )
-
-        context.abort(
-          context.message("features.argo.dependencies.yarn_install_error", error)
-        ) unless status.success?
-      end
-
-      def run_yarn_run_script(context, js_system)
-        _result, error, status = js_system.call(
-          yarn: YARN_RUN_COMMAND + YARN_RUN_SCRIPT_NAME,
-          npm: [],
-          capture_response: true
-        )
-
-        context.abort(
-          context.message("features.argo.dependencies.yarn_run_script_error", error)
-        ) unless status.success?
       end
     end
   end

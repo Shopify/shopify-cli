@@ -27,7 +27,8 @@ module Extension
       end
 
       def create(server_config)
-        CLI::Kit::System.capture3(executable, "create", "-", stdin_data: server_config.to_yaml)
+        output, _ = CLI::Kit::System.capture2e(executable, "create", "-", stdin_data: server_config.to_yaml)
+        output
       rescue StandardError => error
         raise error
       end
