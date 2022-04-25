@@ -2,6 +2,11 @@ From version 2.6.0, the sections in this file adhere to the [keep a changelog](h
 
 ## [Unreleased]
 
+## Version 2.16.0 - 2022-04-25
+
+### Fixed
+* [#2274](https://github.com/Shopify/shopify-cli/pull/2274): Fix broken `shopify extension register` and `shopify extension push`
+
 ### Added
 * [#2189](https://github.com/Shopify/shopify-cli/pull/2189): Retrieve latest CLI version in the background
 * [#2263](https://github.com/Shopify/shopify-cli/pull/2263): Add `POS UI Extension` to support third party developers to extend POS smart grid functionality using native retail components. 
