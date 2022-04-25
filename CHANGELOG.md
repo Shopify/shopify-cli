@@ -13,7 +13,6 @@ From version 2.6.0, the sections in this file adhere to the [keep a changelog](h
 
 ### Changed
 * [#2272](https://github.com/Shopify/shopify-cli/pull/2272): Changed interactive apps list scope for extension create|register|connect commands
-* Rename shipit.yml -> shipit.rubygems.yml
 
 ## Version 2.15.6 - 2022-04-12
 
