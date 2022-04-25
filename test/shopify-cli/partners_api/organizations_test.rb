@@ -130,7 +130,7 @@ module ShopifyCLI
         assert_equal(0, org["stores"].count)
       end
 
-      def test_fetch_org_with_app_info
+      def test_fetch_all_org_with_app_info
         stub_partner_req(
           "all_orgs_with_apps",
           resp: {
@@ -178,13 +178,13 @@ module ShopifyCLI
             },
           },
         )
-        orgs = PartnersAPI::Organizations.fetch_with_app(@context)
+        orgs = PartnersAPI::Organizations.fetch_all_with_apps(@context)
         assert_equal(2, orgs.count)
         assert_equal(421, orgs.first["id"])
         assert_equal("store.myshopify.com", orgs.first["stores"].first["shopDomain"])
       end
 
-      def test_fetch_org_with_empty_app_info
+      def test_fetch_all_org_with_empty_app_info
         stub_partner_req(
           "all_orgs_with_apps",
           resp: {
@@ -202,11 +202,85 @@ module ShopifyCLI
             },
           },
         )
-        orgs = PartnersAPI::Organizations.fetch_with_app(@context)
+        orgs = PartnersAPI::Organizations.fetch_all_with_apps(@context)
         assert_equal(1, orgs.count)
         assert_equal(421, orgs.first["id"])
         assert_equal(0, orgs.first["stores"].count)
         assert_equal(0, orgs.first["apps"].count)
+      end
+
+      def test_fetch_org_with_apps
+        stub_partner_req(
+          "find_organization_with_apps",
+          variables: { id: 42 },
+          resp: {
+            data: {
+              organizations: {
+                nodes: [
+                  {
+                    'id': 42,
+                    'businessName': "One",
+                    'apps': {
+                      nodes: [
+                        {
+                          title: "first_app",
+                          apiKey: 1234,
+                          apiSecretKeys: [
+                            { secret: 1233 },
+                          ],
+                        },
+                      ],
+                    },
+                  },
+                ],
+              },
+            },
+          },
+        )
+        expected_organization = PartnersAPI::Organizations.fetch_with_apps(@context, id: 42)
+        assert_equal(42, expected_organization["id"])
+        assert_equal("first_app", expected_organization["apps"].first["title"])
+      end
+
+      def test_fetch_org_with_no_apps_returns_empty_list_when_not_found
+        stub_partner_req(
+          "find_organization_with_apps",
+          variables: { id: 42 },
+          resp: {
+            data: {
+              organizations: {
+                nodes: [],
+              },
+            },
+          },
+        )
+        org = PartnersAPI::Organizations.fetch_with_apps(@context, id: 42)
+        assert_nil(org)
+      end
+
+      def test_fetch_org_with_no_apps
+        stub_partner_req(
+          "find_organization_with_apps",
+          variables: { id: 42 },
+          resp: {
+            data: {
+              organizations: {
+                nodes: [
+                  {
+                    'id': 42,
+                    'businessName': "No apps",
+                    'apps': {
+                      nodes: [],
+                    },
+                  },
+                ],
+              },
+            },
+          },
+        )
+        expected_organization = PartnersAPI::Organizations.fetch_with_apps(@context, id: 42)
+        assert_equal(42, expected_organization["id"])
+        assert_equal([], expected_organization["apps"])
       end
 
       def test_fetch_all_with_nil_resp
@@ -217,16 +291,13 @@ module ShopifyCLI
 
       def test_fetch_with_extensions
         type = "THEME_APP_EXTENSION"
-        stub_all_orgs_with_apps
+        stub_fetch_org_with_apps
         stub_get_extension_registrations(type)
 
-        orgs = PartnersAPI::Organizations.fetch_with_extensions(@context, type)
-
-        assert_equal(1, orgs.size)
-        org = orgs.first
+        org = PartnersAPI::Organizations.fetch_with_extensions(@context, type, id: 1)
 
         assert_equal(1, org["apps"].size)
-        app = orgs.first["apps"].first
+        app = org["apps"].first
 
         assert_equal(1, app["extensionRegistrations"].size)
         registration = app["extensionRegistrations"].first
@@ -239,17 +310,18 @@ module ShopifyCLI
       end
 
       def test_fetch_with_extensions_with_nil_resp
-        stub_partner_req_not_found("all_orgs_with_apps")
+        stub_partner_req_not_found("find_organization_with_apps", variables: { id: 1 })
         type = "THEME_APP_EXTENSION"
-        orgs = PartnersAPI::Organizations.fetch_with_extensions(@context, type)
-        assert_equal([], orgs)
+        org = PartnersAPI::Organizations.fetch_with_extensions(@context, type, id: 1)
+        assert_nil(org)
       end
 
       private
 
-      def stub_all_orgs_with_apps
+      def stub_fetch_org_with_apps
         stub_partner_req(
-          "all_orgs_with_apps",
+          "find_organization_with_apps",
+          variables: { id: 1 },
           resp: {
             data: {
               organizations: {

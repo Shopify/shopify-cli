@@ -24,7 +24,7 @@ module ShopifyCLI
           }],
           "apps" => [],
         }]
-        ShopifyCLI::PartnersAPI::Organizations.expects(:fetch_with_app).with(@context).returns(response)
+        ShopifyCLI::PartnersAPI::Organizations.expects(:fetch_all_with_apps).with(@context).returns(response)
         CLI::UI::Prompt.expects(:ask).with(@context.message("core.tasks.ensure_env.app_name")).returns("new app")
         CLI::UI::Prompt.expects(:ask).with(@context.message("core.tasks.ensure_env.app_type.select")).returns("public")
         ShopifyCLI::Tasks::CreateApiClient.expects(:call).with(
@@ -58,7 +58,7 @@ module ShopifyCLI
             }],
           }],
         }]
-        ShopifyCLI::PartnersAPI::Organizations.expects(:fetch_with_app).with(@context).returns(response)
+        ShopifyCLI::PartnersAPI::Organizations.expects(:fetch_all_with_apps).with(@context).returns(response)
         env_file = Minitest::Mock.new
         Resources::EnvFile.expects(:new).with(new_env_file_values).returns(env_file)
         env_file.expect(:write, nil, [@context])
@@ -67,7 +67,10 @@ module ShopifyCLI
 
       def test_uses_default_values_for_env_file
         Resources::EnvFile.expects(:parse_external_env).raises(Errno::ENOENT)
-        ShopifyCLI::PartnersAPI::Organizations.expects(:fetch_with_app).with(@context).returns(partners_api_response)
+        ShopifyCLI::PartnersAPI::Organizations
+          .expects(:fetch_all_with_apps)
+          .with(@context)
+          .returns(partners_api_response)
         expect_user_prompts
         env_file = Minitest::Mock.new
         Resources::EnvFile.expects(:new).with(new_env_file_values).returns(env_file)
@@ -77,7 +80,10 @@ module ShopifyCLI
 
       def test_keep_existing_env_values
         Resources::EnvFile.expects(:parse_external_env).returns({ host: "host" })
-        ShopifyCLI::PartnersAPI::Organizations.expects(:fetch_with_app).with(@context).returns(partners_api_response)
+        ShopifyCLI::PartnersAPI::Organizations
+          .expects(:fetch_all_with_apps)
+          .with(@context)
+          .returns(partners_api_response)
         expect_user_prompts
         env_file = Minitest::Mock.new
         Resources::EnvFile.expects(:new).with(new_env_file_values.merge({ host: "host" })).returns(env_file)
@@ -87,7 +93,10 @@ module ShopifyCLI
 
       def test_not_all_required_values_found
         Resources::EnvFile.expects(:parse_external_env).returns(existing_env_file_values)
-        ShopifyCLI::PartnersAPI::Organizations.expects(:fetch_with_app).with(@context).returns(partners_api_response)
+        ShopifyCLI::PartnersAPI::Organizations
+          .expects(:fetch_all_with_apps)
+          .with(@context)
+          .returns(partners_api_response)
         expect_user_prompts
         env_file = Minitest::Mock.new
         Resources::EnvFile.expects(:new).with(new_env_file_values).returns(env_file)
@@ -105,7 +114,10 @@ module ShopifyCLI
         Resources::EnvFile
           .expects(:parse_external_env)
           .returns(existing_env_file_values.merge({ shop: "shop", host: "host" }))
-        ShopifyCLI::PartnersAPI::Organizations.expects(:fetch_with_app).with(@context).returns(partners_api_response)
+        ShopifyCLI::PartnersAPI::Organizations
+          .expects(:fetch_all_with_apps)
+          .with(@context)
+          .returns(partners_api_response)
         expect_user_prompts
         env_file = Minitest::Mock.new
         Resources::EnvFile.expects(:new).with(new_env_file_values.merge({ host: "host" })).returns(env_file)
@@ -115,7 +127,10 @@ module ShopifyCLI
 
       def test_regenerate_empty_env_file
         Resources::EnvFile.expects(:parse_external_env).returns({})
-        ShopifyCLI::PartnersAPI::Organizations.expects(:fetch_with_app).with(@context).returns(partners_api_response)
+        ShopifyCLI::PartnersAPI::Organizations
+          .expects(:fetch_all_with_apps)
+          .with(@context)
+          .returns(partners_api_response)
         expect_user_prompts
         env_file = Minitest::Mock.new
         Resources::EnvFile.expects(:new).with(new_env_file_values).returns(env_file)
@@ -126,10 +141,14 @@ module ShopifyCLI
       private
 
       def expect_user_prompts
-        CLI::UI::Prompt.expects(:ask).with(@context.message("core.tasks.ensure_env.organization_select")).returns(101)
-        CLI::UI::Prompt.expects(:ask).with(
-          @context.message("core.tasks.ensure_env.development_store_select")
-        ).returns("store.myshopify.com")
+        CLI::UI::Prompt
+          .expects(:ask)
+          .with(@context.message("core.tasks.ensure_env.organization_select"))
+          .returns(101)
+        CLI::UI::Prompt
+          .expects(:ask)
+          .with(@context.message("core.tasks.ensure_env.development_store_select"))
+          .returns("store.myshopify.com")
       end
 
       def new_env_file_values

@@ -1,0 +1,20 @@
+query FindOrg($id: ID!) {
+  organizations(id: $id, first: 1) {
+    nodes {
+      id
+      businessName
+      website
+      apps(first: 500) {
+        nodes {
+          id
+          title
+          apiKey
+          apiSecretKeys {
+            secret
+          }
+          appType
+        }
+      }
+    }
+  }
+}

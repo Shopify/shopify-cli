@@ -15,9 +15,7 @@ module ShopifyCLI
       def test_fetch_apps_extensions
         stub_get_extension_registrations
 
-        orgs = PartnersAPI::AppExtensions.fetch_apps_extensions(@context, fake_orgs, @type)
-
-        org = orgs.first
+        org = PartnersAPI::AppExtensions.fetch_apps_extensions(@context, fake_org, @type)
         apps = org["apps"]
         app = apps.first
         registration = app["extensionRegistrations"].first
@@ -32,9 +30,9 @@ module ShopifyCLI
 
       private
 
-      def fake_orgs
+      def fake_org
         fake_app = { "apiKey" => 3 }
-        [{ "apps" => [fake_app]  }]
+        { "apps" => [fake_app] }
       end
 
       def stub_get_extension_registrations

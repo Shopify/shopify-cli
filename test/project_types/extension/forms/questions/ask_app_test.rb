@@ -49,9 +49,10 @@ module Extension
             Models::App.new(title: "Fake 1", api_key: "1234", secret: "4567"),
             Models::App.new(title: "Fake 2", api_key: "abcd", secret: "efgh"),
           ]
-          stub_get_organizations([
-            organization(name: "Organization One", apps: apps),
-          ])
+          test_organization = organization(name: "Organization One", apps: apps)
+          stub_db_setup(organization_id: test_organization[:id])
+          ShopifyCLI::DB.stubs(:get).with(:acting_as_shopify_organization).returns(false)
+          stub_fetch_org_with_apps(test_organization)
 
           prompt = PromptToChooseOption.new
           AskApp.new(ctx: FakeContext.new, prompt: prompt).call(OpenStruct.new).tap do |result|

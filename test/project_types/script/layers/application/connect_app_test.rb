@@ -95,7 +95,7 @@ describe Script::Layers::Application::ConnectApp do
           org.merge({ "apps" => apps })
         end
         ShopifyCLI::PartnersAPI::Organizations
-          .stubs(:fetch_with_app)
+          .stubs(:fetch_all_with_apps)
           .returns(orgs_with_apps)
 
         selected_org = orgs_with_apps.first
