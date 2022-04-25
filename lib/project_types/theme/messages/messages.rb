@@ -124,9 +124,7 @@ module Theme
           auth: {
             error_message: "You're not authenticated for using {{command:%s theme serve}}.",
             help_message: <<~HELP_MESSAGE,
-              Please try to logout and login with the {{command:%s login --store STORE}} command.
-
-              Tip: Unset the {{command:SHOPIFY_SHOP}} and {{command:SHOPIFY_PASSWORD}} environment variables before trying to re-login.
+              Please try to logout and login with the {{command:%s login --password "" --store STORE}} command.
             HELP_MESSAGE
           },
           operation: {

@@ -85,6 +85,21 @@ module ShopifyCLI
         run_cmd("login --store=testshop.myshopify.io")
       end
 
+      def test_call_login_with_empty_password
+        ShopifyCLI::DB.expects(:set).with(shop: "testshop.myshopify.io").once.returns("testshop.myshopify.io")
+        ShopifyCLI::Shopifolk.stubs(:check).returns(true)
+        CLI::UI::Prompt.expects(:confirm).never
+        ShopifyCLI::DB.expects(:set).with(acting_as_shopify_organization: true).never
+
+        auth = mock
+        auth.expects(:authenticate)
+        IdentityAuth.expects(:new).with(ctx: @context).returns(auth)
+        ShopifyCLI::DB.expects(:set).with(organization_id: @stub_org["id"].to_i).once
+        Whoami.expects(:call).with([], "whoami")
+
+        run_cmd("login --store=testshop.myshopify.io --password=")
+      end
+
       def test_call_login_with_shop_flag_doesnt_ask_acting_as_shopify
         ShopifyCLI::DB.expects(:set).with(shop: "testshop.myshopify.io").once.returns("testshop.myshopify.io")
         ShopifyCLI::Shopifolk.stubs(:check).returns(true)
