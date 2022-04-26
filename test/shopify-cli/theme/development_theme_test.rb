@@ -166,6 +166,20 @@ module ShopifyCLI
         assert_equal(theme_name, @theme.name)
       end
 
+      def test_name_is_valid_when_the_host_contains_an_ascii_character
+        ascii_string_char = 0x8f.chr
+        hostname = "theme-dev-#{ascii_string_char}.lan"
+        hash = "5676d"
+        theme_name = "Development (5676d-theme-dev--)"
+
+        ShopifyCLI::DB.stubs(:get).with(:development_theme_name).returns(nil)
+        SecureRandom.expects(:hex).returns(hash)
+        Socket.expects(:gethostname).returns(hostname)
+        ShopifyCLI::DB.expects(:set).with(development_theme_name: theme_name)
+
+        assert_equal(theme_name, @theme.name)
+      end
+
       def test_delete
         shop = "dev-theme-server-store.myshopify.com"
         theme_id = "12345678"
