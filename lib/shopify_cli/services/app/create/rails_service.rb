@@ -184,7 +184,7 @@ module ShopifyCLI
 
             context.puts(context.message("core.app.create.rails.adding_shopify_gem"))
             File.open(File.join(context.root, "Gemfile"), "a") do |f|
-              f.puts "\ngem 'shopify_app', '>=18.1.0'"
+              f.puts "\ngem 'shopify_app', '~>19.0.1'"
             end
             CLI::UI::Frame.open(context.message("core.app.create.rails.running_bundle_install")) do
               syscall(%w(bundle install))
