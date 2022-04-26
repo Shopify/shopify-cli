@@ -1,4 +1,5 @@
 require "test_helper"
+require "shopify_cli/theme/development_theme"
 
 module ShopifyCLI
   module Commands
