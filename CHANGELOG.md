@@ -2,6 +2,9 @@ From version 2.6.0, the sections in this file adhere to the [keep a changelog](h
 
 ## [Unreleased]
 
+### Fixed
+* [#2279](https://github.com/Shopify/shopify-cli/pull/2279): Fix logout when there are theme permission issues
+
 ## Version 2.16.0 - 2022-04-25
 
 ### Fixed
