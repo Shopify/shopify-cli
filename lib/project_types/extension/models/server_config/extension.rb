@@ -10,6 +10,7 @@ module Extension
         property! :type, accepts: String
         property! :user, accepts: ServerConfig::User
         property! :development, accepts: ServerConfig::Development
+        property  :capabilities, accepts: ServerConfig::Capabilities
         property  :extension_points, accepts: Array
         property  :version, accepts: String
         property  :title, accepts: String
@@ -26,7 +27,10 @@ module Extension
               template: template,
               renderer: renderer,
               entries: entry
-            )
+            ),
+            capabilities: ServerConfig::Capabilities.new(
+              network_access: false
+            ),
           )
         end
 
