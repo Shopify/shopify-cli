@@ -2,6 +2,9 @@ From version 2.6.0, the sections in this file adhere to the [keep a changelog](h
 
 ## [Unreleased]
 
+### Fixed
+* [#2284](https://github.com/Shopify/shopify-cli/pull/2284): Fix version check for Windows
+
 ## Version 2.16.0 - 2022-04-25
 
 ### Fixed
