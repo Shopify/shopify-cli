@@ -268,6 +268,15 @@ module ShopifyCLI
       end
     end
 
+    def test_check_for_new_version_returns_nil_if_the_current_version_is_higher
+      with_stubbed_context do
+        Config.set(Context::VERSION_CHECK_SECTION, Context::LAST_CHECKED_AT_FIELD, Time.now.to_i - 86500)
+        mock_rubygems_https_call(response_body: "{\"version\":\"2.16.0\"}")
+
+        refute(@ctx.new_version)
+      end
+    end    
+
     private
 
     def mock_rubygems_https_call(response_body:)
