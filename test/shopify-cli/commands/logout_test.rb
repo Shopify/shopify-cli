@@ -1,4 +1,5 @@
 require "test_helper"
+require "shopify_cli/theme/development_theme"
 
 module ShopifyCLI
   module Commands
@@ -24,6 +25,15 @@ module ShopifyCLI
 
         ShopifyCLI::DB.expects(:exists?).with(:development_theme_name).returns(true)
         ShopifyCLI::DB.expects(:del).with(:development_theme_name).once
+
+        run_cmd("logout")
+      end
+
+      def test_call_finishes_if_dev_theme_deletion_fails
+        ShopifyCLI::DB.expects(:exists?).with(:shop).twice.returns(true)
+        ShopifyCLI::DB.expects(:exists?).with(:organization_id).once.returns(true)
+        ShopifyCLI::Theme::DevelopmentTheme.expects(:delete).once.raises(ShopifyCLI::Abort)
+        @context.expects(:puts).with("Successfully logged out of your account")
 
         run_cmd("logout")
       end
