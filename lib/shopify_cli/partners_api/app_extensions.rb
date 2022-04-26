@@ -24,7 +24,7 @@ module ShopifyCLI
         end
 
         def consume_jobs!(jobs)
-          thread_pool = ShopifyCLI::ThreadPool.new
+          thread_pool = ShopifyCLI::ThreadPool.new(pool_size: 1)
           jobs.each do |job|
             thread_pool.schedule(job)
           end
