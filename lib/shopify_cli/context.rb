@@ -621,7 +621,10 @@ module ShopifyCLI
     #
     def new_version
       if (time_of_last_check + VERSION_CHECK_INTERVAL) < (Time.now.to_i)
-        fork do
+        # Fork is not supported in Windows
+        if Process.respond_to?(:fork)
+          fork { retrieve_latest_gem_version }
+        else
           retrieve_latest_gem_version
         end
       end
