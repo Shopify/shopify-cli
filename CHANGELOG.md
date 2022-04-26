@@ -2,6 +2,9 @@ From version 2.6.0, the sections in this file adhere to the [keep a changelog](h
 
 ## [Unreleased]
 
+### Fixed
+* [#2287](https://github.com/Shopify/shopify-cli/pull/2287): Fix `Encoding::UndefinedConversionError` on `theme serve` and `theme pull`
+
 ## Version 2.16.1 - 2022-04-26
 
 ### Fixed
