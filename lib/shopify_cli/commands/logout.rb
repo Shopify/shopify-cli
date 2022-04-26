@@ -31,7 +31,7 @@ module ShopifyCLI
         return unless has_shop?
 
         ShopifyCLI::Theme::DevelopmentTheme.delete(@ctx)
-      rescue ShopifyCLI::API::APIRequestError
+      rescue ShopifyCLI::API::APIRequestError, ShopifyCLI::Abort, ShopifyCLI::AbortSilent
         # Ignore since we can't delete it
       end
     end
