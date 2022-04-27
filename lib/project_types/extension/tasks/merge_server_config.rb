@@ -32,7 +32,8 @@ module Extension
           store: project.env.shop || "",
           title: project.title,
           tunnel_url: tunnel_url,
-          type: type
+          type: type,
+          metafields: config["metafields"]
         )
       rescue Psych::SyntaxError => e
         raise(
