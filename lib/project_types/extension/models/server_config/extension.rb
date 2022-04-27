@@ -14,27 +14,31 @@ module Extension
         property  :extension_points, accepts: Array
         property  :version, accepts: String
         property  :title, accepts: String
+        property  :metafields, accepts: Array, default: -> { [] }
 
-        def self.build(uuid: "", template:, type:, root_dir:)
-          renderer = ServerConfig::DevelopmentRenderer.find(type)
-          entry = ServerConfig::DevelopmentEntries.find(template)
-          new(
-            uuid: uuid.empty? ? generate_dev_uuid : uuid,
-            type: type.downcase,
+        def initialize(**_args)
+          renderer = ServerConfig::DevelopmentRenderer.find(_args[:type])
+          entry = ServerConfig::DevelopmentEntries.find(_args[:template])
+          super(
+            uuid: !_args[:uuid] ? generate_dev_uuid : _args[:uuid],
+            type: _args[:type].downcase,
             user: ServerConfig::User.new,
             development: ServerConfig::Development.new(
-              root_dir: root_dir,
-              template: template,
+              root_dir: _args[:root_dir],
+              template: _args[:template],
               renderer: renderer,
               entries: entry
             ),
             capabilities: ServerConfig::Capabilities.new(
               network_access: false
             ),
+            metafields: _args[:metafields]
           )
         end
 
-        def self.generate_dev_uuid
+        private
+
+        def generate_dev_uuid
           "dev-#{SecureRandom.uuid}"
         end
       end

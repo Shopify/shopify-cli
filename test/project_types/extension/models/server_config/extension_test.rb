@@ -22,7 +22,7 @@ module Extension
 
         def test_extension_build_creates_expected_extension_config
           assert_nothing_raised do
-            extension = ServerConfig::Extension.build(
+            extension = ServerConfig::Extension.new(
               template: "javascript",
               type: "product_subscription",
               root_dir: "test"

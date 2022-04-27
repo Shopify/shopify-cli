@@ -16,7 +16,7 @@ module Extension
         private
 
         def generate_config
-          extension = Models::ServerConfig::Extension.build(
+          extension = Models::ServerConfig::Extension.new(
             template: template,
             type: type,
             root_dir: root_dir,
