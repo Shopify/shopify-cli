@@ -54,6 +54,7 @@ module Script
             extension_point_type: extension_point_type,
             language: language,
             script_config: script_config_repository.get!,
+            app_bridge: app_bridge,
             input_query: read_input_query,
           )
         end
@@ -94,6 +95,7 @@ module Script
             extension_point_type: extension_point_type,
             language: language,
             script_config: script_config,
+            app_bridge: app_bridge,
           )
         end
 
@@ -119,6 +121,16 @@ module Script
 
         def language
           project_config_value("language")&.downcase || default_language
+        end
+
+        def app_bridge
+          create_path = project_config_value("app_bridge_create_path") || "/"
+          details_path = project_config_value("app_bridge_details_path") || "/"
+
+          Domain::AppBridge.new(
+            create_path: create_path,
+            details_path: details_path,
+          )
         end
 
         def project_config_value(key)

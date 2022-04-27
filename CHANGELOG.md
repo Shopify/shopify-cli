@@ -4,6 +4,7 @@ From version 2.6.0, the sections in this file adhere to the [keep a changelog](h
 
 ### Added
 * [#2262](https://github.com/Shopify/shopify-cli/pull/2262): Add `capabilities` permissions to checkout extensions config
+* [#2292](https://github.com/Shopify/shopify-cli/pull/2292): Add support for App Bridge create/details URLs for scripts
 
 ## Version 2.16.1 - 2022-04-26
 

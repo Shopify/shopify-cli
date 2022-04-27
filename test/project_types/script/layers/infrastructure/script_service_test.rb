@@ -18,6 +18,12 @@ describe Script::Layers::Infrastructure::ScriptService do
       filename: script_config_filename,
     )
   end
+  let(:app_bridge) do
+    Script::Layers::Domain::AppBridge.new(
+      create_path: "/new",
+      details_path: "/details",
+    )
+  end
   let(:title) { "script name" }
   let(:script_config_version) { "1" }
   let(:expected_description) { "some description" }
@@ -80,6 +86,7 @@ describe Script::Layers::Infrastructure::ScriptService do
           use_msgpack,
         ),
         script_config: script_config,
+        app_bridge: app_bridge,
         module_upload_url: url,
         library: library
       )
