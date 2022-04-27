@@ -1,10 +1,6 @@
 payment_methods:
   domain: 'checkout'
   libraries:
-    typescript:
-      beta: true
-      package: "@shopify/scripts-checkout-apis"
-      repo: "https://github.com/Shopify/scripts-apis-examples"
     wasm:
       repo: "https://github.com/Shopify/scripts-apis-examples"
     rust:
