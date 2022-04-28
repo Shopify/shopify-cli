@@ -9,7 +9,7 @@ module Extension
       property! :api_key, accepts: String
       property! :context, accepts: ShopifyCLI::Context
       property! :hash, accepts: Hash
-      property  :port, accepts: Integer, default: ShopifyCLI::Constants::Extension::DEFAULT_PORT
+      property! :port, accepts: Integer
       property! :registration_uuid, accepts: String
       property  :resource_url, accepts: String
       property! :store, accepts: String
@@ -27,7 +27,6 @@ module Extension
         context.abort(context.message("tasks.errors.parse_error")) if hash.nil?
 
         renderer = Models::ServerConfig::DevelopmentRenderer.find(type)
-
         extension = Models::ServerConfig::Extension.new(
           uuid: registration_uuid,
           type: type.upcase,
@@ -40,6 +39,9 @@ module Extension
             )
           ),
           extension_points: hash.dig("extension_points"),
+          capabilities: Models::ServerConfig::Capabilities.new(
+            network_access: hash.dig("capabilities", "network_access") || false
+          ),
           version: renderer ? version(renderer.name, context) : nil,
           title: title
         )

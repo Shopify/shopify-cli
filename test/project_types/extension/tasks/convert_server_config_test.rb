@@ -13,6 +13,7 @@ module Extension
         @config_file = YAML.load(mock_extension_config_yaml)
         @entry_main = "src/index.js"
         @extension_points = ["Checkout::Feature::Render"]
+        @network_access = true
         @fake_context = TestHelpers::FakeContext.new
         @registration_uuid = "00000000-0000-0000-0000-000000000000"
         @store = "my-test-store"
@@ -31,7 +32,8 @@ module Extension
           store: @store,
           title: @title,
           tunnel_url: @tunnel_url,
-          type: @type
+          type: @type,
+          port: 1234
         )
 
         extension = result.extensions.first
@@ -52,7 +54,8 @@ module Extension
           store: @store,
           title: @title,
           tunnel_url: @tunnel_url,
-          type: @type
+          type: @type,
+          port: 1234
         )
 
         extension = result.extensions.first
@@ -70,7 +73,8 @@ module Extension
           store: @store,
           title: @title,
           tunnel_url: @tunnel_url,
-          type: @type
+          type: @type,
+          port: 1234
         )
 
         assert_equal(resource_url, result.extensions.first.development.resource.url)
@@ -82,7 +86,7 @@ module Extension
         File.write(project_directory.join("src/index.js"), "")
 
         assert_nothing_raised do
-          Tasks::ConvertServerConfig.call(
+          result = Tasks::ConvertServerConfig.call(
             api_key: @api_key,
             context: @fake_context,
             hash: {},
@@ -90,8 +94,11 @@ module Extension
             store: @store,
             title: @title,
             tunnel_url: @tunnel_url,
-            type: @type
+            type: @type,
+            port: 1234
           )
+
+          refute(result.extensions.first.capabilities.network_access)
         end
       ensure
         FileUtils.rm_r(project_directory.join("src/"))
@@ -108,6 +115,8 @@ module Extension
             build_dir: "build"
           extension_points:
             - Checkout::Feature::Render
+          capabilities:
+            network_access: true
         YAML
       end
 
@@ -128,6 +137,9 @@ module Extension
             )
           ),
           extension_points: @extension_points,
+          capabilities: Models::ServerConfig::Capabilities.new(
+            network_access: @network_access
+          ),
           version: @version,
           title: @title
         )

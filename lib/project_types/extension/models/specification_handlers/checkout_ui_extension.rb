@@ -15,7 +15,7 @@ module Extension
            (?<region>[a-zA-Z]{2}) # Optional region subtag
           )?
           \z}x
-        PERMITTED_CONFIG_KEYS = [:extension_points, :metafields, :name]
+        PERMITTED_CONFIG_KEYS = [:extension_points, :metafields, :name, :capabilities]
 
         def config(context)
           {
