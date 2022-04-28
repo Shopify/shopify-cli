@@ -67,6 +67,18 @@ module ShopifyCLI
         @file.write("content")
       end
 
+      def test_write_when_file_has_ascii_content
+        ascii_string_char = 0x8f.chr
+        content = "#{ascii_string_char} #{ascii_string_char}"
+
+        @path.parent.stubs(:directory?).returns(true)
+        @file.stubs(:text?).returns(true)
+
+        @path.expects(:write).with(content, universal_newline: true).raises(Encoding::UndefinedConversionError)
+        @path.expects(:write).with(content, 0, mode: "wb")
+        @file.write(content)
+      end
+
       def test_name
         file = fixture_file("layout/theme.liquid")
 

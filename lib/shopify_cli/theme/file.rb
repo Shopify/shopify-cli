@@ -30,6 +30,15 @@ module ShopifyCLI
         else
           path.write(content, 0, mode: "wb")
         end
+      rescue Encoding::UndefinedConversionError
+        ##
+        # The CLI tries to write the file and normalize EOL characters to avoid
+        # errors on Windows when files are shared across different operational systems.
+        #
+        # The CLI fallbacks any error during the conversion by writing the file
+        # in binary mode when the normalization fails (e.g., ASCII files), so no data is lost.
+        #
+        path.write(content, 0, mode: "wb")
       end
 
       def delete

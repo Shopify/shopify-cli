@@ -79,12 +79,22 @@ module ShopifyCLI
 
         theme_name = "Development ()"
         hostname_character_limit = API_NAME_LIMIT - theme_name.length - hash.length - 1
-        identifier = "#{hash}-#{hostname[0, hostname_character_limit]}"
+        identifier = encode_identifier("#{hash}-#{hostname[0, hostname_character_limit]}")
         theme_name = "Development (#{identifier})"
 
         ShopifyCLI::DB.set(development_theme_name: theme_name)
 
         theme_name
+      end
+
+      ##
+      # In some cases, the identifier string encoding may be obfuscated by the hostname,
+      # which may be an ASCII string.
+      #
+      # This method ensures the result identifier is a UTF-8 valid string.
+      #
+      def encode_identifier(identifier)
+        identifier.encode(Encoding::UTF_8, invalid: :replace, undef: :replace, replace: "-")
       end
     end
   end
