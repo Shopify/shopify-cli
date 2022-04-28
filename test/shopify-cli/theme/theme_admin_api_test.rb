@@ -152,18 +152,21 @@ module ShopifyCLI
         path = "themes.json"
         error_response = stub(body: '{"errors":"Unauthorized Access"}')
         expected_error = ShopifyCLI::API::APIRequestForbiddenError.new("403", response: error_response)
+        error_message = "Unauthorized message"
 
         ShopifyCLI::AdminAPI.expects(:rest_request)
           .with(@ctx, shop: @shop, api_version: @api_version, method: "POST", path: path)
           .raises(expected_error)
 
-        @ctx.expects(:message).with("theme.ensure_user_error", @shop).returns("ensure_user_error")
-        @ctx.expects(:message).with("theme.ensure_user_try_this").returns("ensure_user_try_this")
-        @ctx.expects(:abort).with("ensure_user_error", "ensure_user_try_this")
+        @ctx.expects(:message).with("theme.unauthorized_error", @shop).returns(error_message)
 
-        @api_client.post(
-          path: path
-        )
+        error = assert_raises(ShopifyCLI::Abort) do
+          @api_client.post(
+            path: path
+          )
+        end
+
+        assert_equal error_message, error.message
       end
 
       def test_forbiden_errors_not_related_to_unauthorized_access

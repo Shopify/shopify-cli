@@ -8,6 +8,9 @@ From version 2.6.0, the sections in this file adhere to the [keep a changelog](h
 ### Fixed
 * [#2297](https://github.com/Shopify/shopify-cli/pull/2297): Only show update message when the new version is higher
 
+### Changed
+* [#2299](https://github.com/Shopify/shopify-cli/pull/2299): Improve the unauthorized API errors when doing theme development
+
 ## Version 2.16.1 - 2022-04-26
 
 ### Fixed
