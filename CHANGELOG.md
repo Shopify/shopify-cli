@@ -2,6 +2,9 @@ From version 2.6.0, the sections in this file adhere to the [keep a changelog](h
 
 ## [Unreleased]
 
+### Fixed
+* [#2297](https://github.com/Shopify/shopify-cli/pull/2297): Only show update message when the new version is higher
+
 ## Version 2.16.1 - 2022-04-26
 
 ### Fixed
