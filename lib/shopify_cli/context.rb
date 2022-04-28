@@ -630,7 +630,7 @@ module ShopifyCLI
         end
       end
       latest_version = ShopifyCLI::Config.get(VERSION_CHECK_SECTION, LATEST_VERSION_FIELD, default: ShopifyCLI::VERSION)
-      latest_version unless latest_version == ShopifyCLI::VERSION
+      latest_version if ::Semantic::Version.new(latest_version) > ::Semantic::Version.new(ShopifyCLI::VERSION)
     end
 
     # Returns file extension depending on OS

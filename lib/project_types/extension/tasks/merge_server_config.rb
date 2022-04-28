@@ -9,7 +9,7 @@ module Extension
 
       property! :context, accepts: ShopifyCLI::Context
       property! :file_path, accepts: ->(path) { Pathname(path).yield_self(&:absolute?) }
-      property  :port, accepts: Integer, default: ShopifyCLI::Constants::Extension::DEFAULT_PORT
+      property! :port, accepts: Integer, default: ShopifyCLI::Constants::Extension::DEFAULT_PORT
       property  :resource_url, accepts: String
       property  :tunnel_url, accepts: String
       property! :type, accepts: Models::DevelopmentServerRequirements::SUPPORTED_EXTENSION_TYPES
@@ -33,6 +33,7 @@ module Extension
           title: project.title,
           tunnel_url: tunnel_url,
           type: type,
+          port: port,
           metafields: config["metafields"]
         )
       rescue Psych::SyntaxError => e
