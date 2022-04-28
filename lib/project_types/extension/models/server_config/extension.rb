@@ -20,7 +20,7 @@ module Extension
         property  :version, accepts: String
         property  :metafields, accepts: Array
 
-        def self.build(uuid: "", template:, type:, root_dir:, **_args)
+        def self.build(uuid: "", template:, type:, root_dir:, **args)
           renderer = ServerConfig::DevelopmentRenderer.find(type)
           entry = ServerConfig::DevelopmentEntries.find(template)
           new(
@@ -36,7 +36,7 @@ module Extension
             capabilities: ServerConfig::Capabilities.new(
               network_access: false
             ),
-            metafields: _args.delete(:metafields)
+            metafields: args.delete(:metafields)
           )
         end
 
