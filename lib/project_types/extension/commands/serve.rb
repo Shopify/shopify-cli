@@ -14,6 +14,9 @@ module Extension
         parser.on("--resourceUrl=RESOURCE_URL", "Provide a resource URL") do |resource_url|
           flags[:resource_url] = resource_url
         end
+        parser.on("-p", "--port=PORT", "Specify the port to use") do |port|
+          flags[:port] = port.to_i
+        end
       end
 
       class RuntimeConfiguration
@@ -22,13 +25,14 @@ module Extension
         property :tunnel_url, accepts: String, default: nil
         property :resource_url, accepts: String, default: nil
         property! :tunnel_requested, accepts: [true, false], reader: :tunnel_requested?, default: true
-        property! :port, accepts: (1...(2**16)), default: DEFAULT_PORT
+        property :port, accepts: (1...(2**16))
       end
 
       def call(_args, _command_name)
         config = RuntimeConfiguration.new(
           tunnel_requested: tunnel_requested?,
-          resource_url: options.flags[:resource_url]
+          resource_url: options.flags[:resource_url],
+          port: options.flags[:port]
         )
 
         ShopifyCLI::Result
@@ -51,10 +55,11 @@ module Extension
       end
 
       def find_available_port(runtime_configuration)
+        return runtime_configuration unless runtime_configuration.port.nil?
         return runtime_configuration unless specification_handler.choose_port?(@ctx)
 
         chosen_port = Tasks::ChooseNextAvailablePort
-          .call(from: runtime_configuration.port)
+          .call(from: DEFAULT_PORT)
           .unwrap { |_error| @ctx.abort(@ctx.message("serve.no_available_ports_found")) }
         runtime_configuration.tap { |c| c.port = chosen_port }
       end
