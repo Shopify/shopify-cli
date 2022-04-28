@@ -275,7 +275,7 @@ module ShopifyCLI
 
         refute(@ctx.new_version)
       end
-    end    
+    end
 
     private
 
