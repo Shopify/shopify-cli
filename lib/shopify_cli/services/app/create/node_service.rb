@@ -117,12 +117,22 @@ module ShopifyCLI
           end
 
           def build(name)
-            ShopifyCLI::Git.clone("https://github.com/Shopify/shopify-app-node.git", name)
+            pwd = Dir.pwd
+            ShopifyCLI::Git.clone("https://github.com/Shopify/starter-node-app.git", name)
+            
+            context.chdir(name)
+            ShopifyCLI::Git.updateSubmodules(context)
 
-            context.root = File.join(context.root, name)
-
-            set_npm_config
-            ShopifyCLI::JsDeps.install(context, verbose)
+            # context.root = File.join(context.root, name)
+            root = context.root
+            Dir.glob('**/package.json').each do |package_json|
+              next if /node_modules/ =~ package_json
+              
+              # set dir and install deps
+              context.chdir(File.join(root, File.dirname(package_json)))
+              set_npm_config
+              ShopifyCLI::JsDeps.install(context, verbose) 
+            end
 
             begin
               context.rm_r(".git")
@@ -135,6 +145,8 @@ module ShopifyCLI
             rescue Errno::ENOENT => e
               context.debug(e)
             end
+          ensure
+            context.chdir(pwd)
           end
         end
       end

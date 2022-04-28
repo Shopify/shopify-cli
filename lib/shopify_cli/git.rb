@@ -73,6 +73,22 @@ module ShopifyCLI
           end
         end
       end
+      ##
+      # will initialize any submodules within the current repo
+      #
+       #
+      # #### Returns
+      #
+      # * `status` - int representing the exit status of the command
+      #
+      # #### Example
+      #
+      #   ShopifyCLI::Git.updateSubmodules(context)
+      #      
+      def updateSubmodules(ctx)
+        output, status = ctx.capture2e("git", "submodule", "update", "--init")
+        status
+      end
 
       ##
       # will fetch the repos list of branches.

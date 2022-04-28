@@ -97,7 +97,7 @@ module ShopifyCLI
             end
 
       %w(dependencies devDependencies).map do |key|
-        pkg.fetch(key, []).keys
+        pkg.fetch(key, {}).keys
       end.flatten
     rescue JSON::ParserError
       ctx.puts(
