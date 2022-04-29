@@ -2,15 +2,13 @@ From version 2.6.0, the sections in this file adhere to the [keep a changelog](h
 
 ## [Unreleased]
 
-### Fixed
-* [#2270](https://github.com/Shopify/shopify-cli/pull/2270): Use ignore filter regex in watcher class
-
 ### Added
 * [#2262](https://github.com/Shopify/shopify-cli/pull/2262): Add `capabilities` permissions to checkout extensions config
 
 ### Fixed
 * [#2287](https://github.com/Shopify/shopify-cli/pull/2287): Fix `Encoding::UndefinedConversionError` on `theme serve` and `theme pull`
 * [#2297](https://github.com/Shopify/shopify-cli/pull/2297): Only show update message when the new version is higher
+* [#2270](https://github.com/Shopify/shopify-cli/pull/2270): Use ignore filter regex in watcher class
 
 ### Changed
 * [#2299](https://github.com/Shopify/shopify-cli/pull/2299): Improve the unauthorized API errors when doing theme development
