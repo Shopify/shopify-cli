@@ -14,7 +14,8 @@ module ShopifyCLI
           @theme = theme
           @syncer = syncer
           @ignore_filter = ignore_filter
-          @listener = Listen.to(@theme.root, force_polling: poll) do |modified, added, removed|
+          @listener = Listen.to(@theme.root, force_polling: poll,
+            ignore: @ignore_filter&.regexes) do |modified, added, removed|
             changed
             notify_observers(modified, added, removed)
           end
