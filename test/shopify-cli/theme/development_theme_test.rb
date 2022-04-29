@@ -49,7 +49,6 @@ module ShopifyCLI
         shop = "dev-theme-server-store.myshopify.com"
         theme_id = "12345678"
         error_message = "error message"
-        try_this_message = "try this message"
         unauthorized_error_response = stub(body: '{"errors":"Unauthorized Access"}')
         unauthorized_error = ShopifyCLI::API::APIRequestForbiddenError.new("403", response: unauthorized_error_response)
 
@@ -64,14 +63,12 @@ module ShopifyCLI
           path: "themes/#{theme_id}.json",
         ).raises(unauthorized_error)
 
-        @ctx.expects(:message).with("theme.ensure_user_error", shop).returns(error_message)
-        @ctx.expects(:message).with("theme.ensure_user_try_this").returns(try_this_message)
+        @ctx.expects(:message).with("theme.unauthorized_error", shop).returns(error_message)
 
-        io = capture_io_and_assert_raises(ShopifyCLI::AbortSilent) do
+        io = capture_io_and_assert_raises(ShopifyCLI::Abort) do
           @theme.ensure_exists!
         end
-
-        assert_message_output(io: io, expected_content: [error_message, try_this_message])
+        assert_message_output(io: io, expected_content: [error_message])
       end
 
       def test_creates_development_theme_if_missing_from_api

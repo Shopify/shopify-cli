@@ -53,8 +53,10 @@ module ShopifyCLI
         # * when an asset operation cannot be performed:
         #   - <APIRequestForbiddenError: 403 {"message":"templates/gift_card.liquid could not be deleted"}>
         #
-        if empty_response?(error) || unauthorized_response?(error)
+        if empty_response?(error)
           return permission_error
+        elsif unauthorized_response?(error)
+          raise ShopifyCLI::Abort, @ctx.message("theme.unauthorized_error", @shop)
         end
 
         raise error

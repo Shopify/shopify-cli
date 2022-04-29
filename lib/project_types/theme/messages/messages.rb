@@ -8,6 +8,11 @@ module Theme
             Usage: {{command:%1$s theme [ %2$s ]}}
         HELP
         ensure_user_error: "You are not authorized to edit themes on %s.",
+        unauthorized_error: <<~EOD,
+          You can't use Shopify CLI with development stores if you only have Partner staff member access. If you want to use Shopify CLI to work on a development store, then you should be the store owner or create a staff account on the store.
+
+          If you're the store owner, then you need to log in to the store directly using the store URL at least once (for example, using %s.myshopify.com/admin) before you log in using Shopify CLI. Logging in to the Shopify admin directly connects the development store with your Shopify login.
+        EOD
         ensure_user_try_this: <<~ENSURE_USER,
           Check if your user is activated, has permission to edit themes at the store, and try to re-login.
         ENSURE_USER
