@@ -42,7 +42,7 @@ module ShopifyCLI
           end
 
           def files
-            @theme.json_files
+            @theme.json_files.filter(&:template?)
           end
         end
       end
