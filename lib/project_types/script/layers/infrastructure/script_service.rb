@@ -20,6 +20,7 @@ module Script
           force: false,
           metadata:,
           script_config:,
+          app_bridge:,
           module_upload_url:,
           library:,
           input_query: nil
@@ -36,6 +37,10 @@ module Script
             scriptConfigVersion: script_config.version,
             configurationUi: script_config.configuration_ui,
             configurationDefinition: script_config.configuration&.to_json,
+            appBridge: {
+              createPath: app_bridge.create_path,
+              detailsPath: app_bridge.details_path,
+            },
             moduleUploadUrl: module_upload_url,
             inputQuery: input_query,
           }

@@ -111,9 +111,13 @@ describe Script::Layers::Infrastructure::ScriptProjectRepository do
         "title" => title,
         "description" => description,
         "script_config" => script_config,
+        "app_bridge_create_path" => app_bridge_create_path,
+        "app_bridge_details_path" => app_bridge_details_path,
       }
     end
     let(:actual_config) { valid_config }
+    let(:app_bridge_create_path) { nil }
+    let(:app_bridge_details_path) { nil }
     let(:current_project) do
       TestHelpers::FakeProject.new(directory: File.join(ctx.root, title), config: actual_config)
     end
@@ -165,6 +169,16 @@ describe Script::Layers::Infrastructure::ScriptProjectRepository do
         let(:input_query) { "{ aField }" }
         it "populates the input_query field" do
           assert_equal input_query, subject.input_query
+        end
+      end
+
+      describe "when app bridge paths are present" do
+        let(:app_bridge_create_path) { "/new" }
+        let(:app_bridge_details_path) { "/details" }
+
+        it "populates the app bridge paths" do
+          assert_equal "/new", subject.app_bridge.create_path
+          assert_equal "/details", subject.app_bridge.details_path
         end
       end
     end
@@ -220,6 +234,17 @@ describe Script::Layers::Infrastructure::ScriptProjectRepository do
         it "should succeed" do
           assert subject
           assert_nil subject.uuid
+        end
+      end
+
+      describe "when missing app bridge paths" do
+        let(:app_bridge_create_path) { nil }
+        let(:app_bridge_details_path) { nil }
+
+        it "should default to /" do
+          assert subject
+          assert "/", subject.app_bridge.create_path
+          assert "/", subject.app_bridge.details_path
         end
       end
     end

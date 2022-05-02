@@ -17,6 +17,7 @@ module Script
         property! :language, accepts: String
 
         property :script_config, accepts: ScriptConfig
+        property :app_bridge, accepts: AppBridge
         property :input_query, accepts: String
 
         def initialize(*)
