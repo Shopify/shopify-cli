@@ -12,10 +12,12 @@ module Extension
         property! :development, accepts: ServerConfig::Development
         property  :capabilities, accepts: ServerConfig::Capabilities
         property  :extension_points, accepts: Array
-        property  :version, accepts: String
         property  :title, accepts: String
+        property  :description, accepts: String
+        property  :version, accepts: String
+        property  :metafields, accepts: Array
 
-        def self.build(uuid: "", template:, type:, root_dir:)
+        def self.build(uuid: "", template:, type:, root_dir:, **args)
           renderer = ServerConfig::DevelopmentRenderer.find(type)
           entry = ServerConfig::DevelopmentEntries.find(template)
           new(
@@ -31,6 +33,7 @@ module Extension
             capabilities: ServerConfig::Capabilities.new(
               network_access: false
             ),
+            metafields: args.delete(:metafields)
           )
         end
 

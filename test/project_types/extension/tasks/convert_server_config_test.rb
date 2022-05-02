@@ -20,6 +20,7 @@ module Extension
         @title = "Extension title"
         @tunnel_url = "https://shopify.ngrok.io"
         @type = "CHECKOUT_UI_EXTENSION"
+        @metafields = [{ "namespace" => "my-namespace", "foo" => "bar" }, { "namespace" => "my-namespace" }]
         stub_renderer_package
       end
 
@@ -33,7 +34,8 @@ module Extension
           title: @title,
           tunnel_url: @tunnel_url,
           type: @type,
-          port: 1234
+          port: 1234,
+          metafields: @metafields
         )
 
         extension = result.extensions.first
@@ -141,7 +143,8 @@ module Extension
             network_access: @network_access
           ),
           version: @version,
-          title: @title
+          title: @title,
+          metafields: @metafields
         )
       end
     end

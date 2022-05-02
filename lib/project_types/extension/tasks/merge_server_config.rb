@@ -33,7 +33,8 @@ module Extension
           title: project.title,
           tunnel_url: tunnel_url,
           type: type,
-          port: port
+          port: port,
+          metafields: config["metafields"]
         )
       rescue Psych::SyntaxError => e
         raise(

@@ -16,6 +16,7 @@ module Extension
       property! :title, accepts: String
       property  :tunnel_url, accepts: String
       property! :type, accepts: String
+      property  :metafields, accepts: Array
 
       DEFAULT_BUILD_DIR = "build"
 
@@ -43,7 +44,8 @@ module Extension
             network_access: hash.dig("capabilities", "network_access") || false
           ),
           version: renderer ? version(renderer.name, context) : nil,
-          title: title
+          title: title,
+          metafields: metafields
         )
 
         unless resource_url.nil?
