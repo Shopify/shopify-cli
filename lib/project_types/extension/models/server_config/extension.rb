@@ -6,9 +6,6 @@ module Extension
       class Extension < Base
         include SmartProperties
 
-        # property! :uuid, accepts: String, default: -> { generate_dev_uuid }
-        # property! :type, accepts: String, converts: :downcase
-        # property! :user, accepts: ServerConfig::User, default: -> { ServerConfig::User.new }
         property! :uuid, accepts: String
         property! :type, accepts: String
         property! :user, accepts: ServerConfig::User
