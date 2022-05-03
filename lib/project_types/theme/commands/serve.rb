@@ -20,9 +20,12 @@ module Theme
       end
 
       def call(_args, name)
+        valid_authentication_method!
+
         root = root_value(options, name)
         flags = options.flags.dup
         host = flags[:host] || DEFAULT_HTTP_HOST
+
         ShopifyCLI::Theme::DevServer.start(@ctx, root, host: host, **flags) do |syncer|
           UI::SyncProgressBar.new(syncer).progress(:upload_theme!, delay_low_priority_files: true)
         end
@@ -37,6 +40,30 @@ module Theme
 
       def self.help
         ShopifyCLI::Context.message("theme.serve.help", ShopifyCLI::TOOL_NAME)
+      end
+
+      private
+
+      def valid_authentication_method!
+        if exchange_token && !storefront_renderer_token
+          ShopifyCLI::Context.abort(error_message, help_message)
+        end
+      end
+
+      def error_message
+        ShopifyCLI::Context.message("theme.serve.auth.error_message", ShopifyCLI::TOOL_NAME)
+      end
+
+      def help_message
+        ShopifyCLI::Context.message("theme.serve.auth.help_message", ShopifyCLI::TOOL_NAME, ShopifyCLI::TOOL_NAME)
+      end
+
+      def exchange_token
+        ShopifyCLI::DB.get(:shopify_exchange_token)
+      end
+
+      def storefront_renderer_token
+        ShopifyCLI::DB.get(:storefront_renderer_production_exchange_token)
       end
     end
   end

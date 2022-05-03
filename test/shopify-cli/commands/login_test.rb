@@ -85,6 +85,21 @@ module ShopifyCLI
         run_cmd("login --store=testshop.myshopify.io")
       end
 
+      def test_call_login_with_empty_password
+        ShopifyCLI::DB.expects(:set).with(shop: "testshop.myshopify.io").once.returns("testshop.myshopify.io")
+        ShopifyCLI::Shopifolk.stubs(:check).returns(true)
+        CLI::UI::Prompt.expects(:confirm).never
+        ShopifyCLI::DB.expects(:set).with(acting_as_shopify_organization: true).never
+
+        auth = mock
+        auth.expects(:authenticate)
+        IdentityAuth.expects(:new).with(ctx: @context).returns(auth)
+        ShopifyCLI::DB.expects(:set).with(organization_id: @stub_org["id"].to_i).once
+        Whoami.expects(:call).with([], "whoami")
+
+        run_cmd("login --store=testshop.myshopify.io --password=")
+      end
+
       def test_call_login_with_shop_flag_doesnt_ask_acting_as_shopify
         ShopifyCLI::DB.expects(:set).with(shop: "testshop.myshopify.io").once.returns("testshop.myshopify.io")
         ShopifyCLI::Shopifolk.stubs(:check).returns(true)
@@ -107,8 +122,6 @@ module ShopifyCLI
         ShopifyCLI::DB.expects(:set).with(shopify_exchange_token: "muffin")
         IdentityAuth.expects(:new).never
 
-        @context.expects(:ci?).returns(true)
-
         run_cmd("login --store=testshop.myshopify.io --password=muffin")
       end
 
@@ -119,26 +132,7 @@ module ShopifyCLI
         ShopifyCLI::DB.expects(:set).with(shopify_exchange_token: "muffin")
         IdentityAuth.expects(:new).never
 
-        @context.expects(:ci?).returns(true)
-
         run_cmd("login --shop=testshop.myshopify.io --password=muffin")
-      end
-
-      def test_cant_call_login_with_password_flag_not_on_ci
-        CLI::UI::Prompt.expects(:confirm).never
-        ShopifyCLI::DB.expects(:get).with(:acting_as_shopify_organization).never
-        ShopifyCLI::DB.expects(:set).with(shop: "testshop.myshopify.io")
-        ShopifyCLI::DB.expects(:set).with(shopify_exchange_token: "muffin").never
-
-        auth = mock
-        auth.expects(:authenticate)
-        IdentityAuth.expects(:new).with(ctx: @context).returns(auth)
-        ShopifyCLI::DB.expects(:set).with(organization_id: @stub_org["id"].to_i).once
-        Whoami.expects(:call).with([], "whoami")
-
-        @context.expects(:ci?).returns(false)
-
-        run_cmd("login --store=testshop.myshopify.io --password=muffin")
       end
 
       def test_call_login_with_shop_and_password_env_vars
@@ -147,8 +141,6 @@ module ShopifyCLI
         ShopifyCLI::DB.expects(:set).with(shop: "testshop.myshopify.io")
         ShopifyCLI::DB.expects(:set).with(shopify_exchange_token: "muffin")
         IdentityAuth.expects(:new).never
-
-        @context.expects(:ci?).returns(true)
 
         @context.expects(:getenv).with("SHOPIFY_SHOP").returns("testshop.myshopify.io")
         @context.expects(:getenv).with("SHOPIFY_PASSWORD").returns("muffin")

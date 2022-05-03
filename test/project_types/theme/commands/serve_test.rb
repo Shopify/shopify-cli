@@ -73,11 +73,62 @@ module Theme
         run_serve_command(["dist"])
       end
 
+      def test_valid_authentication_method_when_storefront_renderer_token_and_password_are_present
+        ShopifyCLI::DB.stubs(:get).with(:shopify_exchange_token).returns("password")
+        ShopifyCLI::DB.stubs(:get).with(:storefront_renderer_production_exchange_token).returns("SFR token")
+
+        ShopifyCLI::Context.expects(:abort).never
+
+        command = Theme::Command::Serve.new(@ctx)
+        command.send(:valid_authentication_method!)
+      end
+
+      def test_valid_authentication_method_when_storefront_renderer_token_is_present_and_password_is_not_present
+        ShopifyCLI::DB.stubs(:get).with(:shopify_exchange_token).returns(nil)
+        ShopifyCLI::DB.stubs(:get).with(:storefront_renderer_production_exchange_token).returns("SFR token")
+
+        ShopifyCLI::Context.expects(:abort).never
+
+        command = Theme::Command::Serve.new(@ctx)
+        command.send(:valid_authentication_method!)
+      end
+
+      def test_valid_authentication_method_when_storefront_renderer_token_is_not_present_and_password_is_present
+        error_message = "error message"
+        help_message = "help message"
+
+        ShopifyCLI::Context.stubs(:message)
+          .with("theme.serve.auth.error_message", ShopifyCLI::TOOL_NAME)
+          .returns(error_message)
+        ShopifyCLI::Context.stubs(:message)
+          .with("theme.serve.auth.help_message", ShopifyCLI::TOOL_NAME, ShopifyCLI::TOOL_NAME)
+          .returns(help_message)
+
+        ShopifyCLI::DB.stubs(:get).with(:shopify_exchange_token).returns("password")
+        ShopifyCLI::DB.stubs(:get).with(:storefront_renderer_production_exchange_token).returns(nil)
+
+        ShopifyCLI::Context.expects(:abort).with(error_message, help_message)
+
+        command = Theme::Command::Serve.new(@ctx)
+        command.send(:valid_authentication_method!)
+      end
+
+      def test_valid_authentication_method_when_storefront_renderer_token_and_password_are_not_present
+        ShopifyCLI::DB.stubs(:get).with(:shopify_exchange_token).returns(nil)
+        ShopifyCLI::DB.stubs(:get).with(:storefront_renderer_production_exchange_token).returns(nil)
+
+        ShopifyCLI::Context.expects(:abort).never
+
+        command = Theme::Command::Serve.new(@ctx)
+        command.send(:valid_authentication_method!)
+      end
+
       private
 
       def run_serve_command(argv = [])
         command = Theme::Command::Serve.new(@ctx)
 
+        stubs_auth(command)
         stubs_parser(command, argv)
         yield(command) if block_given?
 
@@ -88,6 +139,10 @@ module Theme
         argv = ["shopify", "theme", "serve"] + argv
         parser = command.options.parser
         parser.stubs(:default_argv).returns(argv)
+      end
+
+      def stubs_auth(command)
+        command.stubs(:valid_authentication_method!)
       end
     end
   end

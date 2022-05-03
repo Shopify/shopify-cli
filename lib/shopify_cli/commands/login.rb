@@ -26,8 +26,8 @@ module ShopifyCLI
           end
         end
 
-        # As password auth will soon be deprecated, we enable only in CI
-        if @ctx.ci? && (password = options.flags[:password] || @ctx.getenv("SHOPIFY_PASSWORD"))
+        password = options.flags[:password] || @ctx.getenv("SHOPIFY_PASSWORD")
+        if !password.nil? && !password.empty?
           ShopifyCLI::DB.set(shopify_exchange_token: password)
         else
           IdentityAuth.new(ctx: @ctx).authenticate(spinner: true)
