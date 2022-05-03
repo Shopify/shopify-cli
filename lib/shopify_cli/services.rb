@@ -32,7 +32,11 @@ module ShopifyCLI
       end
 
       autoload :ConnectService, "shopify_cli/services/app/connect_service"
-      autoload :OpenService, "shopify_cli/services/app/open_service"
+
+      module Open
+        autoload :OpenService, "shopify_cli/services/app/open/open_service"
+        autoload :NodeService, "shopify_cli/services/app/open/node_service"
+      end
     end
   end
 end

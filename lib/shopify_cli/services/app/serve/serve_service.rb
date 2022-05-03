@@ -17,6 +17,14 @@ module ShopifyCLI
             raise NotImplementedError
           end
 
+          def project_url
+            "#{project.env.host}/login?shop=#{project.env.shop}"
+          end
+
+          def callback_urls
+            %w(/auth/shopify/callback /auth/callback)
+          end
+
           private
 
           def generate_url
@@ -36,14 +44,13 @@ module ShopifyCLI
             ShopifyCLI::Tasks::UpdateDashboardURLS.call(
               context,
               url: project.env.host,
-              callback_urls: %w(/auth/shopify/callback /auth/callback),
+              callback_urls: callback_urls,
             )
           end
 
           def show_app_url
             return unless project.env.shop
 
-            project_url = "#{project.env.host}/login?shop=#{project.env.shop}"
             context.puts("\n" + context.message("core.app.serve.open_info", project_url) + "\n")
           end
 
