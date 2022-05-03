@@ -122,9 +122,11 @@ module Theme
           syncing_theme: "Syncing theme #%s on %s",
           open_fail: "Couldn't open the theme",
           auth: {
-            error_message: "You're not authenticated for using {{command:%s theme serve}}.",
+            error_message: <<~ERROR_MESSAGE,
+              It looks like you are using credentials that do not work with {{command:%s theme serve}}.
+            ERROR_MESSAGE
             help_message: <<~HELP_MESSAGE,
-              Please try to logout and login with the {{command:%s login --password "" --store STORE}} command.
+              Run {{command:%s logout}} and {{command:%s login --password "" --store STORE}} to force the authentication thought your browser.
             HELP_MESSAGE
           },
           operation: {

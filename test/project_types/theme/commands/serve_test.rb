@@ -101,7 +101,7 @@ module Theme
           .with("theme.serve.auth.error_message", ShopifyCLI::TOOL_NAME)
           .returns(error_message)
         ShopifyCLI::Context.stubs(:message)
-          .with("theme.serve.auth.help_message", ShopifyCLI::TOOL_NAME)
+          .with("theme.serve.auth.help_message", ShopifyCLI::TOOL_NAME, ShopifyCLI::TOOL_NAME)
           .returns(help_message)
 
         ShopifyCLI::DB.stubs(:get).with(:shopify_exchange_token).returns("password")

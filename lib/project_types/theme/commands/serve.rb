@@ -55,7 +55,7 @@ module Theme
       end
 
       def help_message
-        ShopifyCLI::Context.message("theme.serve.auth.help_message", ShopifyCLI::TOOL_NAME)
+        ShopifyCLI::Context.message("theme.serve.auth.help_message", ShopifyCLI::TOOL_NAME, ShopifyCLI::TOOL_NAME)
       end
 
       def exchange_token
