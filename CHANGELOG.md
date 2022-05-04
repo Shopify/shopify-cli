@@ -8,6 +8,7 @@ From version 2.6.0, the sections in this file adhere to the [keep a changelog](h
 
 ### Fixed
 * [#2287](https://github.com/Shopify/shopify-cli/pull/2287): Fix `Encoding::UndefinedConversionError` on `theme serve` and `theme pull`
+* [#2310](https://github.com/Shopify/shopify-cli/pull/2310): Fix live-reload to be resilient and no longer raise an error when a locale file is invalid
 * [#2297](https://github.com/Shopify/shopify-cli/pull/2297): Only show update message when the new version is higher
 * [#2270](https://github.com/Shopify/shopify-cli/pull/2270): Use ignore filter regex in watcher class
 

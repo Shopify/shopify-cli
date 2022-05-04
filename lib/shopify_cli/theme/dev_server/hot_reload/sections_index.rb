@@ -14,13 +14,12 @@ module ShopifyCLI
 
             files.each do |file|
               section_hash(file).each do |key, value|
-                name = key
-                type = value&.dig("type")
-
-                next if !name || !type
+                next unless key
+                next unless value.is_a?(Hash)
+                next unless (type = value&.dig("type"))
 
                 index[type] = [] unless index[type]
-                index[type] << name
+                index[type] << key
               end
             end
 
