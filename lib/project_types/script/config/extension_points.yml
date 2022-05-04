@@ -62,3 +62,8 @@ shipping_discounts:
       repo: "https://github.com/Shopify/scripts-apis-examples"
     rust:
       repo: "https://github.com/Shopify/scripts-apis-examples"
+shipping_rates_consolidation:
+  domain: 'checkout'
+  libraries:
+    wasm:
+      repo: "https://github.com/Shopify/scripts-apis-examples"
