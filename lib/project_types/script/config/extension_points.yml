@@ -63,6 +63,7 @@ shipping_discounts:
     rust:
       repo: "https://github.com/Shopify/scripts-apis-examples"
 shipping_rates_consolidation:
+  beta: true
   domain: 'checkout'
   libraries:
     wasm:
