@@ -4,8 +4,6 @@ require "shopify_cli"
 module Extension
   class Command
     class Build < ExtensionCommand
-      hidden_feature
-
       prerequisite_task ensure_project_type: :extension
 
       YARN_BUILD_COMMAND = %w(build)

@@ -16,7 +16,7 @@ module Extension
       end
 
       def test_is_a_hidden_command
-        assert Command::Build.hidden?
+        assert Command::Info.hidden?
       end
 
       def test_implements_help
