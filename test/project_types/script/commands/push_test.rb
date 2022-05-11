@@ -124,6 +124,32 @@ module Script
         perform_command_with_flags
       end
 
+      def test_compilation_failed
+        # Given
+        ShopifyCLI::Environment.stubs(:interactive?).returns(true)
+        Layers::Application::ConnectApp.expects(:call).with(ctx: @context)
+        Script::Loaders::Project
+          .expects(:load)
+          .with(
+            directory: @directory,
+            api_key: @api_key,
+            api_secret: @secret,
+            uuid: @uuid
+          )
+          .returns(@script_project)
+        error = Script::Layers::Infrastructure::Errors::CompilationFailed.new(api_key: "api_key")
+        Layers::Application::PushScript
+          .expects(:call)
+          .with(ctx: @context, force: @force, project: @script_project)
+          .raises(error)
+        UI::ErrorHandler
+          .expects(:pretty_print_and_raise)
+          .with(error, failed_op: @context.message("script.push.error.operation_failed"))
+
+        # When/Then
+        perform_command_with_flags
+      end
+
       def test_help
         ShopifyCLI::Context
           .expects(:message)

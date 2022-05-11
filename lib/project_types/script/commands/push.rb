@@ -32,12 +32,15 @@ module Script
 
         if ShopifyCLI::Environment.interactive? || (uuid && !uuid.empty?)
           Layers::Application::PushScript.call(ctx: @ctx, force: force, project: project)
+
           @ctx.puts(@ctx.message("script.push.script_pushed", api_key: api_key))
         else
           message = @ctx.message("script.error.missing_push_options_ci", "--uuid")
           message += @ctx.message("script.error.missing_push_options_ci_solution", ShopifyCLI::TOOL_NAME)
           raise ShopifyCLI::Abort, message
         end
+      rescue Script::Layers::Infrastructure::Errors::CompilationFailed => e
+        UI::ErrorHandler.pretty_print_and_raise(e, failed_op: @ctx.message("script.push.error.operation_failed"))
       end
 
       def load_project

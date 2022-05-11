@@ -1,0 +1,9 @@
+mutation compileModule($moduleUploadUrl: String!) {
+  compileModule(moduleUploadUrl: $moduleUploadUrl) {
+    jobId
+    userErrors {
+      field
+      message
+    }
+  }
+}

@@ -1,5 +1,6 @@
 # frozen_string_literal: true
 
+require "securerandom"
 require "project_types/script/test_helper"
 
 describe Script::Layers::Infrastructure::ScriptService do
@@ -382,6 +383,110 @@ describe Script::Layers::Infrastructure::ScriptService do
 
       it "returns max size" do
         assert_equal humanized_max_size, subject[:max_size]
+      end
+    end
+
+    describe "when query returns errors" do
+      let(:response) { { "errors" => [{ "message" => "errors" }] } }
+
+      it "should raise #{Script::Layers::Infrastructure::Errors::GraphqlError}" do
+        assert_raises(Script::Layers::Infrastructure::Errors::GraphqlError) { subject }
+      end
+    end
+
+    describe "when query returns userErrors" do
+      let(:user_errors) { [{ "message" => "some error", "tag" => "user_error" }] }
+
+      it "should raise #{Script::Layers::Infrastructure::Errors::GraphqlError}" do
+        assert_raises(Script::Layers::Infrastructure::Errors::GraphqlError) { subject }
+      end
+    end
+
+    describe "when response is nil" do
+      let(:response) { nil }
+
+      it "should raise #{Script::Layers::Infrastructure::Errors::EmptyResponseError}" do
+        assert_raises(Script::Layers::Infrastructure::Errors::EmptyResponseError) { subject }
+      end
+    end
+  end
+
+  describe ".compile" do
+    let(:user_errors) { [] }
+    let(:job_id) { SecureRandom.uuid }
+    let(:module_upload_url) { "https://fake/#{SecureRandom.uuid}.wasm" }
+    let(:response) do
+      {
+        "data" => {
+          "compileModule" => {
+            "userErrors" => user_errors,
+            "jobId" => job_id,
+          },
+        },
+      }
+    end
+
+    before do
+      api_client.stubs(:query).returns(response)
+    end
+
+    subject { script_service.compile(module_upload_url: module_upload_url) }
+
+    describe "when compilation is scheduled" do
+      it "returns a job_id" do
+        assert_equal job_id, subject
+      end
+    end
+
+    describe "when query returns errors" do
+      let(:response) { { "errors" => [{ "message" => "errors" }] } }
+
+      it "should raise #{Script::Layers::Infrastructure::Errors::GraphqlError}" do
+        assert_raises(Script::Layers::Infrastructure::Errors::GraphqlError) { subject }
+      end
+    end
+
+    describe "when query returns userErrors" do
+      let(:user_errors) { [{ "message" => "some error", "tag" => "user_error" }] }
+
+      it "should raise #{Script::Layers::Infrastructure::Errors::GraphqlError}" do
+        assert_raises(Script::Layers::Infrastructure::Errors::GraphqlError) { subject }
+      end
+    end
+
+    describe "when response is nil" do
+      let(:response) { nil }
+
+      it "should raise #{Script::Layers::Infrastructure::Errors::EmptyResponseError}" do
+        assert_raises(Script::Layers::Infrastructure::Errors::EmptyResponseError) { subject }
+      end
+    end
+  end
+
+  describe ".compilation_status" do
+    let(:user_errors) { [] }
+    let(:job_id) { SecureRandom.uuid }
+    let(:status) { "completed" }
+    let(:response) do
+      {
+        "data" => {
+          "moduleCompilationStatus" => {
+            "userErrors" => user_errors,
+            "status" => status,
+          },
+        },
+      }
+    end
+
+    before do
+      api_client.stubs(:query).returns(response)
+    end
+
+    subject { script_service.compilation_status(job_id: job_id) }
+
+    describe "when status is returned" do
+      it "returns a status" do
+        assert_equal status, subject
       end
     end
 

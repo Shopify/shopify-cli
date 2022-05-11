@@ -95,6 +95,24 @@ module Script
           end
         end
 
+        class CompilationFailed < ScriptProjectError
+          attr_reader :api_key
+
+          def initialize(api_key:)
+            super()
+            @api_key = api_key
+          end
+        end
+
+        class CompilationTimeout < ScriptProjectError
+          attr_reader :api_key
+
+          def initialize(api_key:)
+            super()
+            @api_key = api_key
+          end
+        end
+
         class DeprecatedEPError < ScriptProjectError
           attr_reader(:extension_point)
           def initialize(extension_point)

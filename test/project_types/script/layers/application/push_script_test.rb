@@ -1,5 +1,6 @@
 # frozen_string_literal: true
 
+require "securerandom"
 require "project_types/script/test_helper"
 
 describe Script::Layers::Application::PushScript do
@@ -72,10 +73,17 @@ describe Script::Layers::Application::PushScript do
 
     describe "success" do
       before do
+        job_id = SecureRandom.uuid
         script_service_instance = mock
         script_service_instance.expects(:set_app_script).returns(uuid)
+        script_service_instance.expects(:compile).returns(job_id)
+        script_service_instance.expects(:compilation_status).times(2)
+          .with(job_id: job_id)
+          .returns("pending")
+          .then.returns("completed")
         Script::Layers::Infrastructure::ScriptService
-          .expects(:new).returns(script_service_instance)
+          .expects(:new).times(3).returns(script_service_instance)
+        Script::Layers::Application::PushScript.expects(:sleep_for).times(2)
 
         script_uploader_instance = mock
         script_uploader_instance.expects(:upload).returns(url)
@@ -101,6 +109,57 @@ describe Script::Layers::Application::PushScript do
         it "should not raise LanguageLibraryForAPINotFoundError" do
           capture_io { subject }
         end
+      end
+    end
+
+    describe "when compilation" do
+      let(:job_id) { SecureRandom.uuid }
+      let(:script_service_instance) { mock }
+
+      before do
+        script_service_instance.expects(:compile).returns(job_id)
+        Script::Layers::Infrastructure::ScriptService
+          .expects(:new).times(2).returns(script_service_instance)
+
+        script_uploader_instance = mock
+        script_uploader_instance.expects(:upload).returns(url)
+        Script::Layers::Infrastructure::ScriptUploader
+          .expects(:new).returns(script_uploader_instance)
+
+        Script::Layers::Application::ProjectDependencies
+          .expects(:install).with(ctx: @context, task_runner: task_runner)
+        Script::Layers::Application::BuildScript.expects(:call).with(
+          ctx: @context,
+          task_runner: task_runner,
+        )
+      end
+
+      it "fails should return CompilationFailed" do
+        script_service_instance.expects(:compilation_status)
+          .with(job_id: job_id)
+          .returns("failed")
+        Script::Layers::Application::PushScript.expects(:sleep_for)
+
+        capture_io { assert_raises(Script::Layers::Infrastructure::Errors::CompilationFailed) { subject } }
+      end
+
+      it "fails should return CompilationFailed when pending then failed" do
+        script_service_instance.expects(:compilation_status).times(2)
+          .with(job_id: job_id)
+          .returns("pending")
+          .then.returns("failed")
+        Script::Layers::Application::PushScript.expects(:sleep_for).times(2)
+
+        capture_io { assert_raises(Script::Layers::Infrastructure::Errors::CompilationFailed) { subject } }
+      end
+
+      it "pending should return CompilationTimeout after timeout" do
+        script_service_instance.expects(:compilation_status).times(7)
+          .with(job_id: job_id)
+          .returns("pending")
+        Script::Layers::Application::PushScript.expects(:sleep_for).times(7)
+
+        capture_io { assert_raises(Script::Layers::Infrastructure::Errors::CompilationTimeout) { subject } }
       end
     end
 

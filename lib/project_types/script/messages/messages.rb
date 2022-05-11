@@ -201,6 +201,9 @@ module Script
 
           error: {
             operation_failed: "Couldn't push script to app.",
+            script_compilation_failed: "Script compilation failed for app (API key: %s).",
+            script_compilation_timeout: "Script compilation timed out for app (API key: %s).",
+            script_compilation_failed_help: "Validate script and try again",
           },
 
           script_pushed: "{{v}} Script pushed to app (API key: %{api_key}).",
@@ -246,8 +249,12 @@ module Script
           building: "Building",
           building_script: "Building script",
           built: "Built",
+          uploading_wasm: "Uploading",
+          compiling_wasm: "Compiling",
           pushing: "Pushing",
-          pushing_script: "Pushing script",
+          pushing_script: "Finalizing script",
+          failed: "Compiling script failed",
+          timeout: "Compiling script timed out",
           pushed: "Pushed",
           ensure_env: {
             organization: "Partner organization {{green:%s (%s)}}.",

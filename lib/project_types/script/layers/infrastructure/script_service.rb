@@ -116,6 +116,30 @@ module Script
           { url: data["url"], headers: data["headers"], max_size: data["humanizedMaxSize"] }
         end
 
+        def compile(module_upload_url:)
+          query_name = "compile_module"
+          variables = { moduleUploadUrl: module_upload_url }
+          response = make_request(query_name: query_name, variables: variables)
+
+          user_errors = response["data"]["compileModule"]["userErrors"]
+
+          raise Errors::GraphqlError, user_errors if user_errors.any?
+
+          response["data"]["compileModule"]["jobId"]
+        end
+
+        def compilation_status(job_id:)
+          query_name = "module_compilation_status"
+          variables = { jobId: job_id }
+          response = make_request(query_name: query_name, variables: variables)
+
+          user_errors = response["data"]["moduleCompilationStatus"]["userErrors"]
+
+          raise Errors::GraphqlError, user_errors if user_errors.any?
+
+          response["data"]["moduleCompilationStatus"]["status"]
+        end
+
         private
 
         def make_request(query_name:, variables: {})

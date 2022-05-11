@@ -137,6 +137,20 @@ describe Script::UI::ErrorHandler do
         end
       end
 
+      describe "when CompilationFailed" do
+        let(:err) { Script::Layers::Infrastructure::Errors::CompilationFailed.new(api_key: "api_key") }
+        it "should call display_and_raise" do
+          should_call_display_and_raise
+        end
+      end
+
+      describe "when CompilationTimeout" do
+        let(:err) { Script::Layers::Infrastructure::Errors::CompilationTimeout.new(api_key: "api_key") }
+        it "should call display_and_raise" do
+          should_call_display_and_raise
+        end
+      end
+
       describe "when InvalidEnvironmentError" do
         let(:err) do
           Script::Layers::Infrastructure::Errors::InvalidEnvironmentError.new(

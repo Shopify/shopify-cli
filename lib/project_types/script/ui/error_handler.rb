@@ -59,6 +59,20 @@ module Script
               Script::Layers::Application::ExtensionPoints.languages(type: e.extension_point_type).join(", ")
             ),
           }
+        when Layers::Infrastructure::Errors::CompilationFailed
+          {
+            cause_of_error: ShopifyCLI::Context.message("script.push.error.script_compilation_failed", e.api_key),
+            help_suggestion: ShopifyCLI::Context.message(
+              "script.push.error.script_compilation_failed_help"
+            ),
+          }
+        when Layers::Infrastructure::Errors::CompilationTimeout
+          {
+            cause_of_error: ShopifyCLI::Context.message("script.push.error.script_compilation_timeout", e.api_key),
+            help_suggestion: ShopifyCLI::Context.message(
+              "script.push.error.script_compilation_failed_help"
+            ),
+          }
         when Errors::InvalidScriptTitleError
           {
             cause_of_error: ShopifyCLI::Context.message("script.error.invalid_script_title_cause"),

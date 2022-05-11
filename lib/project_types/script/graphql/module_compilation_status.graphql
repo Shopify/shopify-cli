@@ -1,0 +1,9 @@
+query moduleCompilationStatus($jobId: String!) {
+  moduleCompilationStatus(jobId: $jobId) {
+    status
+    userErrors {
+      field
+      message
+    }
+  }
+}

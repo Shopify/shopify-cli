@@ -4,6 +4,10 @@ module Script
   module Layers
     module Application
       class PushScript
+        MAX_STATUS_CHECK_COUNT = 6
+        COMPILATION_TIME_TO_WAIT = 7
+        COMPILATION_NEXT_STATUS_CHECK = 5
+
         class << self
           def call(ctx:, force:, project:)
             script_project_repo = Infrastructure::ScriptProjectRepository.new(ctx: ctx)
@@ -25,7 +29,9 @@ module Script
             BuildScript.call(ctx: ctx, task_runner: task_runner)
 
             CLI::UI::Frame.open(ctx.message("script.application.pushing")) do
-              UI::PrintingSpinner.spin(ctx, ctx.message("script.application.pushing_script")) do |p_ctx, spinner|
+              package = nil
+              module_upload_url = nil
+              UI::PrintingSpinner.spin(ctx, ctx.message("script.application.uploading_wasm")) do |p_ctx, _spinner|
                 library_name = library&.package
                 library_data = {
                   language: script_project.language,
@@ -45,7 +51,42 @@ module Script
                   ctx: p_ctx,
                   api_key: script_project.api_key
                 )
+
                 module_upload_url = Infrastructure::ScriptUploader.new(script_service).upload(package.script_content)
+              end
+
+              UI::PrintingSpinner.spin(ctx, ctx.message("script.application.compiling_wasm")) do |p_ctx, spinner|
+                script_service = Infrastructure::ServiceLocator.script_service(
+                  ctx: p_ctx,
+                  api_key: script_project.api_key
+                )
+                script_compiler = Infrastructure::ScriptCompiler.new(script_service)
+                job_id = script_compiler.compile(module_upload_url: module_upload_url)
+
+                sleep_for(COMPILATION_TIME_TO_WAIT)
+
+                status = script_compiler.compilation_status(job_id: job_id)
+                status_check_count = 0
+                while status == "pending" && status_check_count < MAX_STATUS_CHECK_COUNT
+                  status_check_count += 1
+                  sleep_for(COMPILATION_NEXT_STATUS_CHECK)
+                  status = script_compiler.compilation_status(job_id: job_id)
+                end
+
+                if status == "pending"
+                  spinner.update_title(p_ctx.message("script.application.timeout"))
+                  raise Infrastructure::Errors::CompilationTimeout.new(api_key: script_project.api_key)
+                elsif status != "completed"
+                  spinner.update_title(p_ctx.message("script.application.failed"))
+                  raise Infrastructure::Errors::CompilationFailed.new(api_key: script_project.api_key)
+                end
+              end
+
+              UI::PrintingSpinner.spin(ctx, ctx.message("script.application.pushing_script")) do |p_ctx, spinner|
+                script_service = Infrastructure::ServiceLocator.script_service(
+                  ctx: p_ctx,
+                  api_key: script_project.api_key
+                )
 
                 uuid = script_service.set_app_script(
                   uuid: package.uuid,
@@ -66,6 +107,10 @@ module Script
                 spinner.update_title(p_ctx.message("script.application.pushed"))
               end
             end
+          end
+
+          def sleep_for(time)
+            sleep(time)
           end
         end
       end
