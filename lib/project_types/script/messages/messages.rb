@@ -164,6 +164,9 @@ module Script
           missing_env_file_variables: "The following are missing in the .env file: %s. ",
           missing_env_file_variables_solution: "To add it, connect your script with " \
           "{{command:%1$s script connect}} ",
+
+          invalid_app_bridge_path_cause: "The script couldn't be pushed because the App Bridge path is incorrect in .shopify-cli.yml.",
+          invalid_app_bridge_path_help: "The %{path_key} needs to be set to a path that starts with {{command:/}}.",
         },
 
         create: {

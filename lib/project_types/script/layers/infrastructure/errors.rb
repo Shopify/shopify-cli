@@ -194,6 +194,17 @@ module Script
             messages.join("\n")
           end
         end
+
+        class InvalidAppBridgePathError < ScriptProjectError
+          def initialize(path_type)
+            @path_type = path_type
+            super()
+          end
+
+          def path_key
+            "app_bridge_#{@path_type}_path"
+          end
+        end
       end
     end
   end

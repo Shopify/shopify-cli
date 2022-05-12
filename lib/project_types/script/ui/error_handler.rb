@@ -316,6 +316,14 @@ module Script
               ),
             help_suggestion: ShopifyCLI::Context.message("script.error.language_library_for_api_not_found_help"),
           }
+        when Layers::Infrastructure::Errors::InvalidAppBridgePathError
+          {
+            cause_of_error: ShopifyCLI::Context.message("script.error.invalid_app_bridge_path_cause"),
+            help_suggestion: ShopifyCLI::Context.message(
+              "script.error.invalid_app_bridge_path_help",
+              path_key: e.path_key,
+            ),
+          }
         end
       end
     end

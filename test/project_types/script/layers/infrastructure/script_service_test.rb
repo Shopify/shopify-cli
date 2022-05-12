@@ -301,6 +301,40 @@ describe Script::Layers::Infrastructure::ScriptService do
           assert_raises(Script::Layers::Infrastructure::Errors::EmptyResponseError) { subject }
         end
       end
+
+      describe "when app_bridge is invalid" do
+        describe "when create path is invalid" do
+          let(:response) do
+            {
+              "data" => {
+                "appScriptSet" => {
+                  "userErrors" => [{ "message" => "error", "tag" => "invalid_app_bridge_create_path" }],
+                },
+              },
+            }
+          end
+
+          it "raises InvalidAppBridgePathError" do
+            assert_raises(Script::Layers::Infrastructure::Errors::InvalidAppBridgePathError) { subject }
+          end
+        end
+
+        describe "when details path is invalid" do
+          let(:response) do
+            {
+              "data" => {
+                "appScriptSet" => {
+                  "userErrors" => [{ "message" => "error", "tag" => "invalid_app_bridge_details_path" }],
+                },
+              },
+            }
+          end
+
+          it "raises InvalidAppBridgePathError" do
+            assert_raises(Script::Layers::Infrastructure::Errors::InvalidAppBridgePathError) { subject }
+          end
+        end
+      end
     end
   end
 
