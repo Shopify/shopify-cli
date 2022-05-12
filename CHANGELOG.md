@@ -2,56 +2,7 @@ From version 2.6.0, the sections in this file adhere to the [keep a changelog](h
 
 ## [Unreleased]
 
-### Added
-* [#2262](https://github.com/Shopify/shopify-cli/pull/2262): Add `capabilities` permissions to checkout extensions config
-* [#2292](https://github.com/Shopify/shopify-cli/pull/2292): Add support for App Bridge create/details URLs for scripts
-
-### Fixed
-* [#2287](https://github.com/Shopify/shopify-cli/pull/2287): Fix `Encoding::UndefinedConversionError` on `theme serve` and `theme pull`
-* [#2310](https://github.com/Shopify/shopify-cli/pull/2310): Fix live-reload to be resilient and no longer raise an error when a locale file is invalid
-* [#2297](https://github.com/Shopify/shopify-cli/pull/2297): Only show update message when the new version is higher
-* [#2270](https://github.com/Shopify/shopify-cli/pull/2270): Use ignore filter regex in watcher class
-
-### Changed
-* [#2299](https://github.com/Shopify/shopify-cli/pull/2299): Improve the unauthorized API errors when doing theme development
-
-## Version 2.16.1 - 2022-04-26
-
-### Fixed
-* [#2279](https://github.com/Shopify/shopify-cli/pull/2279): Fix logout when there are theme permission issues
-* [#2285](https://github.com/Shopify/shopify-cli/pull/2285): Fix extension loading for extension connect
-* [#2284](https://github.com/Shopify/shopify-cli/pull/2284): Fix version check for Windows
-
-## Version 2.16.0 - 2022-04-25
-
-### Fixed
-* [#2274](https://github.com/Shopify/shopify-cli/pull/2274): Fix broken `shopify extension register` and `shopify extension push`
-
-### Added
-* [#2189](https://github.com/Shopify/shopify-cli/pull/2189): Retrieve latest CLI version in the background
-* [#2263](https://github.com/Shopify/shopify-cli/pull/2263): Add `POS UI Extension` to support third party developers to extend POS smart grid functionality using native retail components. 
-
-### Changed
-* [#2272](https://github.com/Shopify/shopify-cli/pull/2272): Changed interactive apps list scope for extension create|register|connect commands
-
-## Version 2.15.6 - 2022-04-12
-
-### Fixed
-* [#2246](https://github.com/Shopify/shopify-cli/pull/2246): Fix callback urls for app serve 
-
-## Version 2.15.5 - 2022-04-08
-
-### Fixed
-* [#2237](https://github.com/Shopify/shopify-cli/pull/2237): Fix Homebrew Wrapper
-
-## Version 2.15.4 - 2022-04-08
-
-### Fixed
-* [#2230](https://github.com/Shopify/shopify-cli/pull/2230): Show an error without ngrok account
-* [#2235](https://github.com/Shopify/shopify-cli/pull/2235): Update shopify-extensions to v0.3.0 and fix issues with template choosing and missing dependencies
-* [#2226](https://github.com/Shopify/shopify-cli/pull/2226): Fix liquid file size validation to disclude locales directory
-
-## Version 2.15.3 - 2022-04-07
+## Version 2.17.0 - 2022-05-12
 
 ### Changed
 * [#2188](https://github.com/Shopify/shopify-cli/pull/2188): Update URLs by default on serve and add --no-update flag to skip it
@@ -60,7 +11,7 @@ From version 2.6.0, the sections in this file adhere to the [keep a changelog](h
 ### Fixed
 * [#2162](https://github.com/Shopify/shopify-cli/pull/2162): Improve encoding error handling for Checkout Extension localization
 * [#2187](https://github.com/Shopify/shopify-cli/pull/2187): Fix app serve after rails update
-* [#2191](https://github.com/Shopify/shopify-cli/pull/2191): Directories with the `.json` extension should not be handled as JSON files
+* [#2191](https://github.com/Shopify/shopify-cli/pull/2191): Diretories with the `.json` extension should not be handled as JSON files
 * [#2018](https://github.com/Shopify/shopify-cli/pull/2018): Run theme-check as a code dependency, not a pseudo-CLI invocation
 * [#2211](https://github.com/Shopify/shopify-cli/pull/2211): Fix the `theme open` command to open the theme in the browser
 * [#2183](https://github.com/Shopify/shopify-cli/pull/2183): Improve error message when suspended users run `theme serve`
@@ -68,7 +19,6 @@ From version 2.6.0, the sections in this file adhere to the [keep a changelog](h
 
 ### Added
 * [#2190](https://github.com/Shopify/shopify-cli/pull/2190): Better login experience with spinner
-* [#2200](https://github.com/Shopify/shopify-cli/pull/2200): Add `theme share` command
 
 ## Version 2.15.2 - 2022-03-28
 
