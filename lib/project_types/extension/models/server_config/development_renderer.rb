@@ -13,8 +13,8 @@ module Extension
           "@shopify/retail-ui-extensions",
         ]
 
-        property :name, accepts: VALID_RENDERERS, required: false
-        property :version, accepts: String, default: "latest", required: false
+        property! :name, accepts: VALID_RENDERERS
+        property! :version, accepts: String, default: "latest"
 
         def self.find(type)
           case type.downcase
