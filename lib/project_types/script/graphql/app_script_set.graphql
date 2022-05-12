@@ -12,6 +12,7 @@ mutation AppScriptSet(
   $moduleUploadUrl: String!,
   $library: LibraryInput,
   $inputQuery: String,
+  $skipCompilationJob: Boolean,
   $appBridge: AppBridgeInput!,
 ) {
   appScriptSet(
@@ -28,6 +29,7 @@ mutation AppScriptSet(
     moduleUploadUrl: $moduleUploadUrl,
     library: $library,
     inputQuery: $inputQuery,
+    skipCompilationJob: $skipCompilationJob
     appBridge: $appBridge
 ) {
     userErrors {

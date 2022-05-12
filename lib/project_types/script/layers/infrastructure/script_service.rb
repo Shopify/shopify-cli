@@ -43,6 +43,7 @@ module Script
             },
             moduleUploadUrl: module_upload_url,
             inputQuery: input_query,
+            skipCompilationJob: true,
           }
 
           variables[:library] = {
