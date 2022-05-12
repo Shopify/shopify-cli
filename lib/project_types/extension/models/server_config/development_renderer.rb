@@ -13,8 +13,8 @@ module Extension
           "@shopify/retail-ui-extensions",
         ]
 
-        property! :name, accepts: VALID_RENDERERS
-        property! :version, accepts: String, default: "latest"
+        property :name, accepts: VALID_RENDERERS, required: false
+        property :version, accepts: String, default: "latest", required: false
 
         def self.find(type)
           case type.downcase
@@ -26,6 +26,8 @@ module Extension
             new(name: "@shopify/post-purchase-ui-extensions", version: "^0.13.2")
           when "pos_ui_extension"
             new(name: "@shopify/retail-ui-extensions", version: "^0.1.0")
+          when "beacon_extension"
+            nil
           else
             raise ArgumentError, "Unknown extension type: #{type}"
           end
