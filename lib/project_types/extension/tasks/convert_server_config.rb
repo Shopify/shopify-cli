@@ -30,7 +30,7 @@ module Extension
         renderer = Models::ServerConfig::DevelopmentRenderer.find(type)
         extension = Models::ServerConfig::Extension.new(
           uuid: registration_uuid,
-          type: type.upcase,
+          type: type,
           user: Models::ServerConfig::User.new,
           development: Models::ServerConfig::Development.new(
             build_dir: hash.dig("development", "build_dir") || DEFAULT_BUILD_DIR,

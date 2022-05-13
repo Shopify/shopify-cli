@@ -19,7 +19,7 @@ module Extension
         @store = "my-test-store"
         @title = "Extension title"
         @tunnel_url = "https://shopify.ngrok.io"
-        @type = "CHECKOUT_UI_EXTENSION"
+        @type = "checkout_ui_extension"
         @metafields = [{ "namespace" => "my-namespace", "foo" => "bar" }, { "namespace" => "my-namespace" }]
         stub_renderer_package
       end
@@ -129,7 +129,7 @@ module Extension
       def mock_extension_config
         Models::ServerConfig::Extension.new(
           uuid: @registration_uuid,
-          type: @type.upcase,
+          type: @type,
           user: Models::ServerConfig::User.new,
           development: Models::ServerConfig::Development.new(
             build_dir: @build,
