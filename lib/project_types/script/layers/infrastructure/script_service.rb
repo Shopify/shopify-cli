@@ -92,6 +92,10 @@ module Script
             raise Errors::InvalidInputQueryErrors, errors.map { |err| err["message"] }
           elsif user_errors.find { |err| %w(not_use_msgpack_error schema_version_argument_error).include?(err["tag"]) }
             raise Domain::Errors::MetadataValidationError
+          elsif user_errors.find { |err| err["tag"] == "invalid_app_bridge_create_path" }
+            raise Errors::InvalidAppBridgePathError, "create"
+          elsif user_errors.find { |err| err["tag"] == "invalid_app_bridge_details_path" }
+            raise Errors::InvalidAppBridgePathError, "details"
           else
             raise Errors::GraphqlError, user_errors
           end
