@@ -22,21 +22,17 @@ merchandise_discount_types:
   beta: true
   domain: 'discounts'
   libraries:
-    typescript:
-      beta: true
-      package: "@shopify/scripts-discounts-apis"
-      repo: "https://github.com/Shopify/scripts-apis-examples"
     wasm:
+      repo: "https://github.com/Shopify/scripts-apis-examples"
+    rust:
       repo: "https://github.com/Shopify/scripts-apis-examples"
 delivery_discount_types:
   beta: true
   domain: 'discounts'
   libraries:
-    typescript:
-      beta: true
-      package: "@shopify/scripts-discounts-apis"
-      repo: "https://github.com/Shopify/scripts-apis-examples"
     wasm:
+      repo: "https://github.com/Shopify/scripts-apis-examples"
+    rust:
       repo: "https://github.com/Shopify/scripts-apis-examples"
 product_discounts:
   beta: true
