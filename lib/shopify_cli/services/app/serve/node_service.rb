@@ -14,14 +14,14 @@ module ShopifyCLI
                 env["FRONTEND_PORT"] = port.to_s
                 env["BACKEND_PORT"] = (port.to_i + 1).to_s
 
-                Dir.chdir(File.join(context.root, "home", "frontend")) do
+                Dir.chdir(File.join(context.root, "web", "frontend")) do
                   if ShopifyCLI::ProcessSupervision.running?(:frontend)
                     ShopifyCLI::ProcessSupervision.stop(:frontend)
                   end
                   ShopifyCLI::ProcessSupervision.start(:frontend, "npm run dev", force_spawn: true, env: env)
                 end
 
-                Dir.chdir(File.join(context.root, "home")) do
+                Dir.chdir(File.join(context.root, "web")) do
                   context.system("npm run dev", env: env)
                 end
               else
