@@ -261,6 +261,29 @@ describe Script::UI::ErrorHandler do
         end
       end
 
+      describe "when MetaobjectDefinitionError" do
+        let(:err) do
+          Script::Layers::Infrastructure::Errors::MetaobjectDefinitionError.new(
+            messages: messages,
+            filename: "filename",
+          )
+        end
+
+        describe "when there is a single error message" do
+          let(:messages) { ["message"] }
+          it "should call display_and_raise" do
+            should_call_display_and_raise
+          end
+        end
+
+        describe "when there are multiple error messages" do
+          let(:messages) { ["message1", "message2"] }
+          it "should call display_and_raise" do
+            should_call_display_and_raise
+          end
+        end
+      end
+
       describe "when ScriptConfigSyntaxError" do
         let(:err) { Script::Layers::Infrastructure::Errors::ScriptConfigSyntaxError.new("filename") }
         it "should call display_and_raise" do

@@ -60,14 +60,22 @@ module Script
 
           configuration_definition_error_cause: "In %{filename} there is a problem with the "\
                                                 "configuration. %{message}",
-          configuration_definition_error_help: "Fix the error.",
+          configuration_definition_error_help: "Correct the error.",
 
           configuration_definition_errors_cause: "In %{filename}, there are %{error_count} problems with "\
                                                  "the configuration:\n%{concatenated_messages}\n",
           configuration_definition_errors_help: "Correct the errors.",
 
+          metaobject_definition_error_cause: "In %{filename} there is a problem with the "\
+                                                "metaobject definition. %{message}",
+          metaobject_definition_error_help: "Correct the error.",
+
+          metaobject_definition_errors_cause: "In %{filename}, there are %{error_count} problems with "\
+                                                 "the metaobject definition:\n%{concatenated_messages}\n",
+          metaobject_definition_errors_help: "Correct the errors.",
+
           configuration_syntax_error_cause: "The %{filename} is not formatted correctly.",
-          configuration_syntax_error_help: "Fix the errors.",
+          configuration_syntax_error_help: "Correct the errors.",
 
           configuration_missing_keys_error_cause: "The %{filename} is missing required keys: "\
                                               "%{missing_keys}.",

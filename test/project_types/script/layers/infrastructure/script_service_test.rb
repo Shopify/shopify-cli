@@ -51,6 +51,14 @@ describe Script::Layers::Infrastructure::ScriptService do
       "configuration" => expected_configuration,
     }
   end
+  let(:metaobject_definition) do
+    Script::Layers::Domain::MetaobjectDefinition.new(
+      content: expected_metaobject_definition_content,
+      filename: expected_metaobject_definition_filename,
+    )
+  end
+  let(:expected_metaobject_definition_content) { { "key" => "value" } }
+  let(:expected_metaobject_definition_filename) { "function.metaobject.yml" }
 
   describe ".set_app_script" do
     let(:script_content) { "(module)" }
@@ -86,6 +94,7 @@ describe Script::Layers::Infrastructure::ScriptService do
           use_msgpack,
         ),
         script_config: script_config,
+        metaobject_definition: metaobject_definition,
         app_bridge: app_bridge,
         module_upload_url: url,
         library: library
@@ -274,6 +283,27 @@ describe Script::Layers::Infrastructure::ScriptService do
             e = assert_raises(Script::Layers::Infrastructure::Errors::ScriptConfigSyntaxError) { subject }
             assert_equal(script_config_filename, e.filename)
           end
+        end
+      end
+
+      describe "when metaobject definition is invalid" do
+        let(:response) do
+          {
+            "data" => {
+              "appScriptSet" => {
+                "userErrors" => [
+                  { "message" => "error1", "tag" => "metaobject_definition_error" },
+                  { "message" => "error2", "tag" => "metaobject_definition_error" },
+                ],
+              },
+            },
+          }
+        end
+
+        it "should raise MetaobjectDefinitionError" do
+          e = assert_raises(Script::Layers::Infrastructure::Errors::MetaobjectDefinitionError) { subject }
+          assert_equal(["error1", "error2"], e.messages)
+          assert_equal(expected_metaobject_definition_filename, e.filename)
         end
       end
 

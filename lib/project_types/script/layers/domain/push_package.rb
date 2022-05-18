@@ -10,6 +10,7 @@ module Script
           :title,
           :description,
           :script_config,
+          :metaobject_definition,
           :script_content,
           :metadata,
           :library
@@ -23,6 +24,7 @@ module Script
           script_content:,
           metadata:,
           script_config:,
+          metaobject_definition:,
           library:
         )
           @id = id
@@ -33,6 +35,7 @@ module Script
           @script_content = script_content
           @metadata = metadata
           @script_config = script_config
+          @metaobject_definition = metaobject_definition
           @library = library
         end
       end

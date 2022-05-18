@@ -55,6 +55,7 @@ module Script
                   force: force,
                   metadata: package.metadata,
                   script_config: package.script_config,
+                  metaobject_definition: package.metaobject_definition,
                   app_bridge: script_project.app_bridge,
                   module_upload_url: module_upload_url,
                   library: package.library,

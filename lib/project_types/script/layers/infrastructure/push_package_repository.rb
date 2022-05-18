@@ -21,6 +21,7 @@ module Script
             script_content: script_content,
             metadata: metadata,
             script_config: script_project.script_config,
+            metaobject_definition: script_project.metaobject_definition,
             library: library
           )
         end

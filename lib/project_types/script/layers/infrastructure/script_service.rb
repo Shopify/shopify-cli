@@ -20,6 +20,7 @@ module Script
           force: false,
           metadata:,
           script_config:,
+          metaobject_definition:,
           app_bridge:,
           module_upload_url:,
           library:,
@@ -37,6 +38,7 @@ module Script
             scriptConfigVersion: script_config.version,
             configurationUi: script_config.configuration_ui,
             configurationDefinition: script_config.configuration&.to_json,
+            metaobjectDefinition: metaobject_definition.content,
             appBridge: {
               createPath: app_bridge.create_path,
               detailsPath: app_bridge.details_path,
@@ -61,6 +63,11 @@ module Script
             raise Errors::ScriptConfigurationDefinitionError.new(
               messages: errors.map { |e| e["message"] },
               filename: script_config.filename,
+            )
+          elsif (errors = user_errors.select { |err| err["tag"] == "metaobject_definition_error" }).any?
+            raise Errors::MetaobjectDefinitionError.new(
+              messages: errors.map { |e| e["message"] },
+              filename: metaobject_definition.filename,
             )
           elsif (e = user_errors.any? { |err| err["tag"] == "configuration_definition_syntax_error" })
             raise Errors::ScriptConfigSyntaxError, script_config.filename

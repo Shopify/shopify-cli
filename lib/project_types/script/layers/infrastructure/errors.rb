@@ -15,6 +15,15 @@ module Script
           end
         end
 
+        class MetaobjectDefinitionError < ScriptProjectError
+          attr_reader :filename, :messages
+          def initialize(messages:, filename:)
+            super()
+            @messages = messages
+            @filename = filename
+          end
+        end
+
         class ScriptConfigSyntaxError < ScriptProjectError
           attr_reader :filename
           def initialize(filename)

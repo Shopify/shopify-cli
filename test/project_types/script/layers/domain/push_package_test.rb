@@ -7,6 +7,12 @@ describe Script::Layers::Domain::PushPackage do
   let(:extension_point_type) { "discount" }
   let(:script_id) { "id" }
   let(:script_config) { { "version" => "1" } }
+  let(:metaobject_definition) do
+    Script::Layers::Domain::MetaobjectDefinition.new(
+      filename: "function.metaobject.yml",
+      content: { "key" => "value" },
+    )
+  end
   let(:project_title) { "title" }
   let(:project_description) { "description" }
   let(:api_key) { "fake_key" }
@@ -29,6 +35,7 @@ describe Script::Layers::Domain::PushPackage do
       title: project_title,
       description: project_description,
       script_config: script_config,
+      metaobject_definition: metaobject_definition,
       script_content: script_content,
       metadata: metadata,
       library: library
@@ -47,6 +54,7 @@ describe Script::Layers::Domain::PushPackage do
       assert_equal project_title, subject.title
       assert_equal project_description, subject.description
       assert_equal script_config, subject.script_config
+      assert_equal metaobject_definition, subject.metaobject_definition
       assert_equal script_content, subject.script_content
       assert_equal metadata, subject.metadata
       assert_equal library, subject.library

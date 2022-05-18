@@ -40,7 +40,7 @@ module Script
             language: language
           )
 
-          build_script_project(script_config: nil)
+          build_script_project(script_config: nil, metaobject_definition: nil)
         end
 
         def get
@@ -54,6 +54,7 @@ module Script
             extension_point_type: extension_point_type,
             language: language,
             script_config: script_config_repository.get!,
+            metaobject_definition: metaobject_definition_repository.get!,
             app_bridge: app_bridge,
             input_query: read_input_query,
           )
@@ -85,7 +86,8 @@ module Script
         private
 
         def build_script_project(
-          script_config: script_config_repository.get!
+          script_config: script_config_repository.get!,
+          metaobject_definition: metaobject_definition_repository.get!
         )
           Domain::ScriptProject.new(
             id: ctx.root,
@@ -95,6 +97,7 @@ module Script
             extension_point_type: extension_point_type,
             language: language,
             script_config: script_config,
+            metaobject_definition: metaobject_definition,
             app_bridge: app_bridge,
           )
         end
@@ -174,6 +177,10 @@ module Script
           end
         end
 
+        def metaobject_definition_repository
+          MetaobjectDefinitionRepository.new(ctx: ctx)
+        end
+
         def read_input_query
           ctx.read(INPUT_QUERY_PATH) if ctx.file_exist?(INPUT_QUERY_PATH)
         end
@@ -208,10 +215,6 @@ module Script
           def file_content_to_hash(file_content)
             raise NotImplementedError
           end
-
-          def hash_to_file_content(hash)
-            raise NotImplementedError
-          end
         end
 
         class ScriptConfigYmlRepository < ScriptConfigRepository
@@ -229,10 +232,6 @@ module Script
             end
             raise parse_error unless hash.is_a?(Hash)
             hash
-          end
-
-          def hash_to_file_content(hash)
-            YAML.dump(hash)
           end
 
           def parse_error
@@ -257,12 +256,30 @@ module Script
             hash
           end
 
-          def hash_to_file_content(hash)
-            JSON.pretty_generate(hash)
+          def parse_error
+            Errors::ScriptConfigParseError.new(filename: filename, serialization_format: "JSON")
+          end
+        end
+
+        class MetaobjectDefinitionRepository < ScriptConfigRepository
+          def filename
+            "function.metaobject.yml"
+          end
+
+          private
+
+          def from_h(hash)
+            Domain::MetaobjectDefinition.new(content: hash, filename: filename)
+          end
+
+          def file_content_to_hash(file_content)
+            YAML.load(file_content)
+          rescue Psych::SyntaxError
+            raise parse_error
           end
 
           def parse_error
-            Errors::ScriptConfigParseError.new(filename: filename, serialization_format: "JSON")
+            Errors::ScriptConfigParseError.new(filename: filename, serialization_format: "YAML")
           end
         end
       end

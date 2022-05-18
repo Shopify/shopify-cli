@@ -17,6 +17,8 @@ describe Script::Layers::Infrastructure::ScriptProjectRepository do
   let(:deprecated_ep_types) { [] }
   let(:supported_languages) { ["wasm"] }
   let(:script_config_filename) { "script.config.yml" }
+  let(:metaobject_definition_filename) { "function.metaobject.yml" }
+  let(:metaobject_definition_content) { { "key" => "value" } }
 
   let(:initial_directory) { ctx.root }
   let(:directory) { "/script_directory" }
@@ -127,6 +129,7 @@ describe Script::Layers::Infrastructure::ScriptProjectRepository do
       ShopifyCLI::Project.stubs(:has_current?).returns(true)
       ShopifyCLI::Project.stubs(:current).returns(current_project)
       ctx.write(script_config, script_config_content.to_json)
+      ctx.write(metaobject_definition_filename, metaobject_definition_content.to_yaml) if metaobject_definition_filename
       ctx.write("input.graphql", input_query) if input_query
     end
 
@@ -162,6 +165,7 @@ describe Script::Layers::Infrastructure::ScriptProjectRepository do
         assert_equal script_config_content["version"], subject.script_config.version
         assert_equal script_config_content["version"], subject.script_config.version
         assert_equal script_config_content["configuration"].to_json, subject.script_config.configuration.to_json
+        assert_equal metaobject_definition_content, subject.metaobject_definition.content
         assert_nil subject.input_query
       end
 
@@ -248,6 +252,15 @@ describe Script::Layers::Infrastructure::ScriptProjectRepository do
         end
       end
     end
+
+    describe "when missing metaobject definition" do
+      let(:metaobject_definition_filename) { nil }
+
+      it "should raise NoScriptConfigFileError" do
+        e = assert_raises(Script::Layers::Infrastructure::Errors::NoScriptConfigFileError) { subject }
+        assert_equal("function.metaobject.yml", e.filename)
+      end
+    end
   end
 
   describe "#update_env" do
@@ -291,6 +304,7 @@ describe Script::Layers::Infrastructure::ScriptProjectRepository do
         language: language
       )
       ctx.write(script_config, script_config_content)
+      ctx.write(metaobject_definition_filename, metaobject_definition_content.to_yaml)
       ShopifyCLI::Project.any_instance.expects(:env).returns(env).at_least_once
     end
 
@@ -550,6 +564,68 @@ describe Script::Layers::Infrastructure::ScriptProjectRepository do
             assert_equal version, subject.version
             assert subject.configuration_ui
             assert_nil subject.configuration
+          end
+        end
+      end
+    end
+  end
+
+  describe "MetaobjectDefinitionRepository" do
+    let(:instance) do
+      Script::Layers::Infrastructure::ScriptProjectRepository::MetaobjectDefinitionRepository.new(ctx: ctx)
+    end
+    let(:parsed_content) { { "key" => "value" } }
+    let(:content) { parsed_content.to_yaml }
+
+    describe "active?" do
+      subject { instance.active? }
+
+      describe "when file does not exist" do
+        it "returns false" do
+          refute subject
+        end
+      end
+
+      describe "when file exists" do
+        before do
+          File.write(metaobject_definition_filename, content)
+        end
+
+        it "returns true" do
+          assert subject
+        end
+      end
+    end
+
+    describe "get!" do
+      subject { instance.get! }
+
+      describe "when file does not exist" do
+        it "raises NoScriptConfigFileError" do
+          e = assert_raises(Script::Layers::Infrastructure::Errors::NoScriptConfigFileError) { subject }
+          assert_equal(metaobject_definition_filename, e.filename)
+        end
+      end
+
+      describe "when file exists" do
+        before do
+          File.write(metaobject_definition_filename, content)
+        end
+
+        describe "when content is invalid yaml" do
+          let(:content) { "*" }
+
+          it "raises ScriptConfigParseError" do
+            e = assert_raises(Script::Layers::Infrastructure::Errors::ScriptConfigParseError) { subject }
+            assert_equal(metaobject_definition_filename, e.filename)
+            assert_equal("YAML", e.serialization_format)
+          end
+        end
+
+        describe "when content is valid yaml" do
+          it "returns the entity" do
+            assert_instance_of(Script::Layers::Domain::MetaobjectDefinition, subject)
+            assert_equal parsed_content, subject.content
           end
         end
       end

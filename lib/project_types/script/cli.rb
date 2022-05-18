@@ -49,6 +49,7 @@ module Script
       autoload :Metadata, Project.project_filepath("layers/domain/metadata")
       autoload :ExtensionPoint, Project.project_filepath("layers/domain/extension_point")
       autoload :ScriptConfig, Project.project_filepath("layers/domain/script_config")
+      autoload :MetaobjectDefinition, Project.project_filepath("layers/domain/metaobject_definition")
       autoload :ScriptProject, Project.project_filepath("layers/domain/script_project")
       autoload :AppBridge, Project.project_filepath("layers/domain/app_bridge")
     end

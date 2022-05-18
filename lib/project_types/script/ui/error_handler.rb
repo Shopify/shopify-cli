@@ -162,6 +162,27 @@ module Script
               help_suggestion: ShopifyCLI::Context.message("script.error.configuration_definition_errors_help"),
             }
           end
+        when Layers::Infrastructure::Errors::MetaobjectDefinitionError
+          if e.messages.count == 1
+            {
+              cause_of_error: ShopifyCLI::Context.message(
+                "script.error.metaobject_definition_error_cause",
+                message: e.messages.fetch(0),
+                filename: e.filename,
+              ),
+              help_suggestion: ShopifyCLI::Context.message("script.error.metaobject_definition_error_help"),
+            }
+          else
+            {
+              cause_of_error: ShopifyCLI::Context.message(
+                "script.error.metaobject_definition_errors_cause",
+                concatenated_messages: e.messages.map { |m| "{{x}} #{m}" }.join("\n"),
+                filename: e.filename,
+                error_count: e.messages.count,
+              ),
+              help_suggestion: ShopifyCLI::Context.message("script.error.metaobject_definition_errors_help"),
+            }
+          end
         when Layers::Infrastructure::Errors::ScriptConfigSyntaxError
           {
             cause_of_error: ShopifyCLI::Context.message(

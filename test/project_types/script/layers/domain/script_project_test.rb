@@ -21,6 +21,14 @@ describe Script::Layers::Domain::ScriptProject do
       "version" => "1",
     }
   end
+  let(:metaobject_definition_filename) { "function.metaobject.yml" }
+  let(:metaobject_definition_content) { { "key" => "value" } }
+  let(:metaobject_definition) do
+    Script::Layers::Domain::MetaobjectDefinition.new(
+      content: metaobject_definition_content,
+      filename: metaobject_definition_filename,
+    )
+  end
   let(:input_query) { "{ aField }" }
 
   describe ".new" do
@@ -35,6 +43,7 @@ describe Script::Layers::Domain::ScriptProject do
         description: description,
         language: language,
         script_config: script_config,
+        metaobject_definition: metaobject_definition,
         input_query: input_query,
       }
     end
@@ -58,6 +67,7 @@ describe Script::Layers::Domain::ScriptProject do
         assert_equal description, subject.description
         assert_equal language, subject.language
         assert_equal script_config, subject.script_config
+        assert_equal metaobject_definition, subject.metaobject_definition
         assert_equal input_query, subject.input_query
       end
     end
@@ -72,6 +82,7 @@ describe Script::Layers::Domain::ScriptProject do
         assert_equal title, subject.title
         assert_equal language, subject.language
         assert_nil subject.script_config
+        assert_nil subject.metaobject_definition
       end
     end
 
