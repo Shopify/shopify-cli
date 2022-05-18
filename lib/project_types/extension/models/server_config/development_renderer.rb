@@ -26,6 +26,8 @@ module Extension
             new(name: "@shopify/post-purchase-ui-extensions", version: "^0.13.2")
           when "pos_ui_extension"
             new(name: "@shopify/retail-ui-extensions", version: "^0.1.0")
+          when "beacon_extension"
+            nil
           else
             raise ArgumentError, "Unknown extension type: #{type}"
           end
