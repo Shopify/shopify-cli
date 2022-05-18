@@ -54,6 +54,48 @@ module Theme
         ])
       end
 
+      def test_open_with_editor_flag
+        ShopifyCLI::Theme::Theme
+          .expects(:find_by_identifier)
+          .with(ctx, identifier: 1234)
+          .returns(theme)
+
+        ctx.expects(:open_browser_url!).with("https://test.myshopify.io/editor")
+
+        io = capture_io do
+          @command.options.flags[:theme] = 1234
+          @command.options.flags[:editor] = true
+          @command.call([], "open")
+        end
+
+        assert_message_output(io: io, expected_content: [
+          "{{*}} {{bold:My test theme}}",
+
+          "\n\nPreview your theme:",
+          "{{green:https://test.myshopify.io/preview}}",
+
+          "\n\nCustomize your theme in the Theme Editor:",
+          "{{green:https://test.myshopify.io/editor}}",
+        ])
+      end
+
+      def test_open_with_editor_flag_when_theme_does_not_exist
+        ShopifyCLI::Theme::Theme
+          .expects(:find_by_identifier)
+          .with(ctx, identifier: 1234)
+          .returns(nil)
+
+        ctx.expects(:open_browser_url!).never
+
+        error = assert_raises CLI::Kit::Abort do
+          @command.options.flags[:theme] = 1234
+          @command.options.flags[:editor] = true
+          @command.call([], "open")
+        end
+
+        assert_equal("{{x}} Theme \"1234\" doesn't exist", error.message)
+      end
+
       def test_open_with_theme_flag_when_theme_does_not_exist
         ShopifyCLI::Theme::Theme
           .expects(:find_by_identifier)

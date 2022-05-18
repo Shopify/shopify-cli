@@ -293,6 +293,7 @@ module Theme
               {{command:-t, --theme=NAME_OR_ID}} Theme ID or name of your theme.
               {{command:-l, --live}}             Open your live theme.
               {{command:-d, --development}}      Open your development theme.
+              {{command:-e, --editor}}           Open the editor to the specified/selected theme.
           HELP
         },
         list: {

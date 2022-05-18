@@ -12,13 +12,18 @@ module Theme
         parser.on("-t", "--theme=NAME_OR_ID") { |theme| flags[:theme] = theme }
         parser.on("-l", "--live") { flags[:live] = true }
         parser.on("-d", "--development") { flags[:development] = true }
+        parser.on("-e", "--editor") { flags[:editor] = true }
       end
 
       def call(_args, _name)
         theme = find_theme(**options.flags)
 
         @ctx.puts(@ctx.message("theme.open.details", theme.name, theme.preview_url, theme.editor_url))
-        @ctx.open_browser_url!(theme.preview_url)
+        if options.flags[:editor]
+          @ctx.open_browser_url!(theme.editor_url)
+        else
+          @ctx.open_browser_url!(theme.preview_url)
+        end
       end
 
       def self.help
