@@ -8,7 +8,6 @@ module ShopifyCLI
   class Release
     def initialize(new_version, github_access_token)
       @new_version = new_version
-      @changelog = ShopifyCLI::Changelog.new
       @github = Octokit::Client.new(access_token: github_access_token)
     end
 
@@ -32,7 +31,7 @@ module ShopifyCLI
 
     private
 
-    attr_reader :new_version, :changelog, :github
+    attr_reader :new_version, :github
 
     def ensure_updated_main
       # We can't be sure what is the correct action to take if changes have been
@@ -189,6 +188,10 @@ module ShopifyCLI
 
     def system_or_fail(command, action)
       raise "Failed to #{action}!" unless system(command)
+    end
+
+    def changelog
+      @changelog ||= ShopifyCLI::Changelog.new
     end
   end
 end
