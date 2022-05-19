@@ -9,7 +9,7 @@ payment_methods:
       repo: "https://github.com/Shopify/scripts-apis-examples"
     rust:
       repo: "https://github.com/Shopify/scripts-apis-examples"
-payment_customizations:
+payment_customization:
   beta: true
   domain: 'checkout'
   libraries:
