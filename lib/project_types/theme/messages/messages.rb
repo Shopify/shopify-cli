@@ -139,14 +139,14 @@ module Theme
           syncer: {
             forms: {
               apply_to_all: {
-                title: "Would like apply this to all the other %s files?",
+                title: "Would you like to apply this to all the other %s files?",
                 yes: "Yes",
                 no: "No",
               },
               update_strategy: {
                 title_context: <<~TITLE,
 
-                  The local file {{command:%s}} is different from the remote version in the development theme."
+                  The local file {{command:%s}} is different from the remote version in the development theme.
                 TITLE
                 title_question: "What would you like to do?",
                 keep_remote: "Keep the remote version",
@@ -154,10 +154,21 @@ module Theme
                 union_merge: "Merge files (it may break the local file)",
                 exit: "Exit",
               },
+              update_remote_deleted_strategy: {
+                title_context: <<~TITLE,
+
+                  The local file {{command:%s}} doesn’t exist in the remote version of the development theme.
+                TITLE
+                title_question: "What would you like to do?",
+                keep_remote: "Keep the remote version (and remove it locally)",
+                keep_local: "Keep the local version (and restore it remotely)",
+                union_merge: "Merge files (it may break the local file)",
+                exit: "Exit",
+              },
               delete_strategy: {
                 title_context: <<~TITLE,
 
-                  The local file {{command:%s}} has been recently removed, but it's present on your remote development theme.",
+                  The local file {{command:%s}} has been recently removed, but it's present on your remote development theme.
                 TITLE
                 title_question: "What would you like to do?",
                 delete: "Delete permanently",

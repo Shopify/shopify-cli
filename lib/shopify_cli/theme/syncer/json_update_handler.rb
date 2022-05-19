@@ -74,7 +74,7 @@ module ShopifyCLI
         end
 
         def ask_update_strategy(file)
-          Forms::SelectUpdateStrategy.ask(@ctx, [], file: file).strategy
+          Forms::SelectUpdateStrategy.ask(@ctx, [], file: file, exists_remotely: file_exist_remotely?(file)).strategy
         end
       end
     end

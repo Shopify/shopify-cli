@@ -32,7 +32,7 @@ module ShopifyCLI
           @to_update.each do |file|
             Forms::SelectUpdateStrategy
               .expects(:ask)
-              .with(@ctx, [], file: file)
+              .with(@ctx, [], file: file, exists_remotely: file != @file1)
               .returns(stub(strategy: :keep_remote))
           end
 
@@ -52,7 +52,7 @@ module ShopifyCLI
           @to_update.each do |file|
             Forms::SelectUpdateStrategy
               .expects(:ask)
-              .with(@ctx, [], file: file)
+              .with(@ctx, [], file: file, exists_remotely: file != @file1)
               .returns(stub(strategy: :keep_local))
           end
 
@@ -71,7 +71,7 @@ module ShopifyCLI
           @to_update.each do |file|
             Forms::SelectUpdateStrategy
               .expects(:ask)
-              .with(@ctx, [], file: file)
+              .with(@ctx, [], file: file, exists_remotely: file != @file1)
               .returns(stub(strategy: :union_merge))
           end
 

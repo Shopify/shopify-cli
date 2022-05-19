@@ -7,7 +7,7 @@ module ShopifyCLI
     class Syncer
       module Forms
         class SelectUpdateStrategy < BaseStrategyForm
-          flag_arguments :file
+          flag_arguments :file, :exists_remotely
 
           def strategies
             %i[
@@ -19,7 +19,7 @@ module ShopifyCLI
           end
 
           def prefix
-            "theme.serve.syncer.forms.update_strategy"
+            "theme.serve.syncer.forms.#{exists_remotely ? "update_strategy" : "update_remote_deleted_strategy"}"
           end
         end
       end
