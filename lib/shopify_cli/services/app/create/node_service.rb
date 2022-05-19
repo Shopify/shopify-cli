@@ -117,26 +117,30 @@ module ShopifyCLI
           end
 
           def build(name)
-            pwd = Dir.pwd
+            app_folder = File.join(context.root, name)
+
             ShopifyCLI::Git.clone("https://github.com/Shopify/starter-node-app.git", name)
-            
-            context.chdir(name)
-            ShopifyCLI::Git.updateSubmodules(context)
+
+            context.chdir(app_folder)
+            ShopifyCLI::Git.update_submodules(context)
 
             # context.root = File.join(context.root, name)
             root = context.root
             Dir.glob('**/package.json').each do |package_json|
               next if /node_modules/ =~ package_json
-              
+
               # set dir and install deps
               context.chdir(File.join(root, File.dirname(package_json)))
               set_npm_config
-              ShopifyCLI::JsDeps.install(context, verbose) 
+              ShopifyCLI::JsDeps.install(context, verbose)
             end
+
+            context.chdir(app_folder)
 
             begin
               context.rm_r(".git")
               context.rm_r(".github")
+              context.rm_r(".gitmodules")
               context.rm(File.join("server", "handlers", "client.js"))
               context.rename(
                 File.join("server", "handlers", "client.cli.js"),
@@ -146,7 +150,7 @@ module ShopifyCLI
               context.debug(e)
             end
           ensure
-            context.chdir(pwd)
+            context.chdir(app_folder)
           end
         end
       end

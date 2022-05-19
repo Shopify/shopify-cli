@@ -83,9 +83,9 @@ module ShopifyCLI
       #
       # #### Example
       #
-      #   ShopifyCLI::Git.updateSubmodules(context)
+      #   ShopifyCLI::Git.update_submodules(context)
       #
-      def updateSubmodules(ctx)
+      def update_submodules(ctx)
         output, status = ctx.capture2e("git", "submodule", "update", "--init")
         status
       end
