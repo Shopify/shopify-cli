@@ -5,9 +5,15 @@ module ShopifyCLI
     module App
       class ReportingServiceTest < MiniTest::Test
         def setup
+          super
           project_context("app_types", "php")
+
+          File.stubs(:exist?).returns(true)
+          File.stubs(:exist?).with(
+            File.join(FIXTURE_DIR, "app_types", "php", Constants::Files::SHOPIFY_CLI_YML)
+          ).returns(true)
+
           @context.stubs(:system)
-          super()
         end
 
         def test_call
