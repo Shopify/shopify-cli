@@ -15,6 +15,12 @@ payment_customization:
   libraries:
     wasm:
       repo: "https://github.com/Shopify/scripts-apis-examples"
+delivery_option_presenter:
+  beta: true
+  domain: 'checkout'
+  libraries:
+    wasm:
+      repo: "https://github.com/Shopify/scripts-apis-examples"
 shipping_methods:
   domain: 'checkout'
   libraries:
