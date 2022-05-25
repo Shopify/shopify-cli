@@ -76,6 +76,14 @@ describe Script::Layers::Infrastructure::ScriptProjectRepository do
         assert_equal extension_point_type, subject.extension_point_type
         assert_equal language, subject.language
       end
+
+      it "stores default app bridge values to project config" do
+        capture_io { subject }
+        project = ShopifyCLI::Project.current(force_reload: true)
+
+        assert_equal "/", project.config["app_bridge_create_path"]
+        assert_equal "/", project.config["app_bridge_details_path"]
+      end
     end
   end
 
@@ -106,18 +114,21 @@ describe Script::Layers::Infrastructure::ScriptProjectRepository do
       }
     end
     let(:valid_config) do
-      {
+      config = {
         "extension_point_type" => "payment_methods",
         "title" => title,
         "description" => description,
         "script_config" => script_config,
-        "app_bridge_create_path" => app_bridge_create_path,
-        "app_bridge_details_path" => app_bridge_details_path,
       }
+
+      config["app_bridge_create_path"] = app_bridge_create_path if app_bridge_create_path
+      config["app_bridge_details_path"] = app_bridge_details_path if app_bridge_details_path
+
+      config
     end
     let(:actual_config) { valid_config }
-    let(:app_bridge_create_path) { nil }
-    let(:app_bridge_details_path) { nil }
+    let(:app_bridge_create_path) { "/" }
+    let(:app_bridge_details_path) { "/" }
     let(:current_project) do
       TestHelpers::FakeProject.new(directory: File.join(ctx.root, title), config: actual_config)
     end
@@ -241,10 +252,8 @@ describe Script::Layers::Infrastructure::ScriptProjectRepository do
         let(:app_bridge_create_path) { nil }
         let(:app_bridge_details_path) { nil }
 
-        it "should default to /" do
-          assert subject
-          assert "/", subject.app_bridge.create_path
-          assert "/", subject.app_bridge.details_path
+        it "should raise error" do
+          assert_raises(Script::Layers::Infrastructure::Errors::InvalidContextError) { subject }
         end
       end
     end
