@@ -187,23 +187,23 @@ module TestHelpers
         .returns([db, status_mock[:"#{status}"]])
     end
 
-    def expects_heroku_download_exists(status:)
+    def expects_heroku_download_exists(status:, os: :mac)
       File.expects(:exist?)
-        .with(download_path)
+        .with(download_path(os))
         .returns(status)
     end
 
-    def expects_heroku_download(status:)
+    def expects_heroku_download(status:, os: :mac)
       if status.nil?
         @context.expects(:system)
-          .with("curl", "-o", download_path,
-            ShopifyCLI::Heroku::DOWNLOAD_URLS[:mac],
+          .with("curl", "-o", download_path(os),
+            ShopifyCLI::Heroku::DOWNLOAD_URLS[os],
             chdir: ShopifyCLI.cache_dir)
           .never
       else
         @context.expects(:system)
-          .with("curl", "-o", download_path,
-            ShopifyCLI::Heroku::DOWNLOAD_URLS[:mac],
+          .with("curl", "-o", download_path(os),
+            ShopifyCLI::Heroku::DOWNLOAD_URLS[os],
             chdir: ShopifyCLI.cache_dir)
           .returns(status_mock[:"#{status}"])
       end
@@ -298,12 +298,12 @@ module TestHelpers
 
     private
 
-    def download_filename
-      "heroku-darwin-x64.tar.gz"
+    def download_filename(os)
+      URI.parse(ShopifyCLI::Heroku::DOWNLOAD_URLS[os]).path.split("/").last
     end
 
-    def download_path
-      File.join(ShopifyCLI.cache_dir, download_filename)
+    def download_path(os = :mac)
+      File.join(ShopifyCLI.cache_dir, download_filename(os))
     end
 
     def heroku_command(full_path: false)

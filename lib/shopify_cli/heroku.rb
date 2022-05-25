@@ -4,6 +4,7 @@ module ShopifyCLI
       linux: "https://cli-assets.heroku.com/heroku-linux-x64.tar.gz",
       mac: "https://cli-assets.heroku.com/heroku-darwin-x64.tar.gz",
       windows: "https://cli-assets.heroku.com/heroku-x64.exe",
+      mac_m1: "https://cli-assets.heroku.com/heroku-darwin-x64.tar.gz",
     }
 
     def initialize(ctx)
@@ -97,15 +98,16 @@ module ShopifyCLI
       if File.exist?(local_path)
         local_path
       elsif @ctx.windows?
-        # Check if Heroku exists in the Windows registry and run it from there
-        require "win32/registry"
         begin
+          # Check if Heroku exists in the Windows registry and run it from there
+          require "win32/registry"
+
           windows_path = Win32::Registry::HKEY_CURRENT_USER.open('SOFTWARE\heroku') do |reg|
             reg[""] # This reads the 'Default' registry key
           end
 
           File.join(windows_path, "bin", "heroku").to_s
-        rescue
+        rescue StandardError, LoadError
           "heroku"
         end
       else

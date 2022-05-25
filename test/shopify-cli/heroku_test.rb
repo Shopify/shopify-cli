@@ -105,14 +105,18 @@ module ShopifyCLI
       assert_nil(heroku_service.download)
     end
 
-    def test_download_downloads_heroku_cli_if_it_is_not_installed
-      expects_heroku_installed(status: false)
-      expects_heroku_download(status: true)
-      expects_heroku_download_exists(status: true)
-
-      heroku_service = ShopifyCLI::Heroku.new(@context)
-
-      assert_nil(heroku_service.download)
+    [:linux, :mac, :mac_m1, :windows].each do |os|
+      define_method("test_download_downloads_heroku_cli_if_it_is_not_installed_for_#{os}") do
+        ShopifyCLI::Context.any_instance.stubs(:os).returns(os)
+        
+        expects_heroku_installed(status: false)
+        expects_heroku_download(status: true, os: os)
+        expects_heroku_download_exists(status: true, os: os)
+        
+        heroku_service = ShopifyCLI::Heroku.new(@context)
+        
+        assert_nil(heroku_service.download)
+      end
     end
 
     def test_download_raises_if_heroku_cli_download_fails
