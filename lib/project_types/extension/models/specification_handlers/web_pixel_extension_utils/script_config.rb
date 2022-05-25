@@ -3,7 +3,7 @@
 module Extension
   module Models
     module SpecificationHandlers
-      module BeaconExtensionUtils
+      module WebPixelExtensionUtils
         class ScriptConfig
           attr_reader :content, :version, :configuration, :filename
 

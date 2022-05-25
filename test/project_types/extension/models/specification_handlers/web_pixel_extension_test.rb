@@ -4,7 +4,7 @@ require "project_types/extension/extension_test_helpers"
 module Extension
   module Models
     module SpecificationHandlers
-      class BeaconExtensionTest < MiniTest::Test
+      class WebPixelExtensionTest < MiniTest::Test
         include ExtensionTestHelpers
         CONFIG_CONTENTS = <<~EOS
           runtime_context: sandbox
@@ -22,18 +22,18 @@ module Extension
           super
           ShopifyCLI::ProjectType.load_type(:extension)
 
-          specifications = DummySpecifications.build(identifier: "beacon_extension", surface: "admin")
+          specifications = DummySpecifications.build(identifier: "web_pixel_extension", surface: "admin")
 
-          @identifier = "BEACON_EXTENSION"
-          @beacon_extension = specifications[@identifier]
+          @identifier = "WEB_PIXEL_EXTENSION"
+          @web_pixel_extension = specifications[@identifier]
           @context.root = Dir.mktmpdir
         end
 
         def test_config_raises_file_read_error_if_config_is_missing
           err = assert_raises(CLI::Kit::Abort) do
-            @beacon_extension.config(@context)
+            @web_pixel_extension.config(@context)
           end
-          assert_equal("{{x}} There was a problem reading #{BeaconExtensionUtils::ScriptConfigYmlRepository.filename}",
+          assert_equal("{{x}} There was a problem reading #{WebPixelExtensionUtils::ScriptConfigYmlRepository.filename}",
             err.message)
         end
 
@@ -41,21 +41,21 @@ module Extension
           create(@context, "0", CONFIG_CONTENTS)
           File.delete(File.join(@context.root, "build/main.js"))
           err = assert_raises(CLI::Kit::Abort) do
-            @beacon_extension.config(@context)
+            @web_pixel_extension.config(@context)
           end
           assert_equal("{{x}} There was a problem reading build/main.js", err.message)
         end
 
         def test_raises_missing_config_key_error_if_expected_key_is_missing
           err = assert_raises(CLI::Kit::Abort) do
-            @beacon_extension.access_config_property(@context, {}, "some_key")
+            @web_pixel_extension.access_config_property(@context, {}, "some_key")
           end
           assert_equal("{{x}} Configuration is missing key: some_key", err.message)
         end
 
         def test_raises_invalid_config_value_error_if_unable_to_process_value
           err = assert_raises(CLI::Kit::Abort) do
-            @beacon_extension.access_config_property(@context, { "some_key" => "some_value" },
+            @web_pixel_extension.access_config_property(@context, { "some_key" => "some_value" },
               "some_key") do |_v|
               raise RuntimeError
             end
@@ -65,7 +65,7 @@ module Extension
 
         def test_config_implementation
           create(@context, "0", CONFIG_CONTENTS)
-          payload = @beacon_extension.config(@context)
+          payload = @web_pixel_extension.config(@context)
           assert_equal("sandbox", payload[:runtime_context])
           assert_equal("MA==", payload[:serialized_script])
           assert_equal("1", payload[:config_version])

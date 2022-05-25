@@ -4,17 +4,17 @@ require "project_types/extension/extension_test_helpers"
 module Extension
   module Models
     module SpecificationHandlers
-      module BeaconExtensionUtils
+      module WebPixelExtensionUtils
         class ScriptConfigTest < MiniTest::Test
           include ExtensionTestHelpers
           def setup
             super
             ShopifyCLI::ProjectType.load_type(:extension)
 
-            specifications = DummySpecifications.build(identifier: "beacon_extension", surface: "admin")
+            specifications = DummySpecifications.build(identifier: "web_pixel_extension", surface: "admin")
 
-            @identifier = "BEACON_EXTENSION"
-            @beacon_extension = specifications[@identifier]
+            @identifier = "WEB_PIXEL_EXTENSION"
+            @web_pixel_extension = specifications[@identifier]
             @context.root = Dir.mktmpdir
           end
 
@@ -27,7 +27,7 @@ module Extension
               },
             }
 
-            script_config = Extension::Models::SpecificationHandlers::BeaconExtensionUtils::ScriptConfig.new(
+            script_config = Extension::Models::SpecificationHandlers::WebPixelExtensionUtils::ScriptConfig.new(
               content: content, filename: "some-file-name.yml"
             )
             assert_equal({
@@ -49,7 +49,7 @@ module Extension
               },
             }
             assert_raises(RuntimeError) do
-              Extension::Models::SpecificationHandlers::BeaconExtensionUtils::ScriptConfig.new(content: content,
+              Extension::Models::SpecificationHandlers::WebPixelExtensionUtils::ScriptConfig.new(content: content,
                 filename: "some-file-name.yml")
             end
           end

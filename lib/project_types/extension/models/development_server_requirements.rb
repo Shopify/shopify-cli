@@ -9,7 +9,7 @@ module Extension
         "checkout_ui_extension",
         "checkout_post_purchase",
         "product_subscription",
-        "beacon_extension",
+        "web_pixel_extension",
         "pos_ui_extension",
       ]
 
