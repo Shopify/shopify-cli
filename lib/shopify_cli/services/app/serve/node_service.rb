@@ -10,11 +10,11 @@ module ShopifyCLI
               env = project.env.to_h
 
               # This is the updated node app repo, so we need to run FE and BE separately
-              if new_repo?
+              if project.config["is_new_template"]
                 env["FRONTEND_PORT"] = port.to_s
                 env["BACKEND_PORT"] = (port.to_i + 1).to_s
 
-                Dir.chdir(File.join(context.root, "web", "frontend")) do
+                Dir.chdir(File.join(context.root, "web/frontend")) do
                   if ShopifyCLI::ProcessSupervision.running?(:frontend)
                     ShopifyCLI::ProcessSupervision.stop(:frontend)
                   end
@@ -32,7 +32,7 @@ module ShopifyCLI
           end
 
           def project_url
-            if new_repo?
+            if project.config["is_new_template"]
               "#{project.env.host}/api/auth?shop=#{project.env.shop}"
             else
               "#{project.env.host}/login?shop=#{project.env.shop}"
@@ -40,17 +40,11 @@ module ShopifyCLI
           end
 
           def callback_urls
-            if new_repo?
+            if project.config["is_new_template"]
               %w(/api/auth/callback)
             else
               %w(/auth/shopify/callback /auth/callback)
             end
-          end
-
-          private
-
-          def new_repo?
-            @is_new_repo ||= File.exist?(File.join(context.root, "shopify.app.toml"))
           end
         end
       end

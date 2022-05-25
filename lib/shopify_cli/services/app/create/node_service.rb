@@ -36,6 +36,7 @@ module ShopifyCLI
               context,
               project_type: "node",
               organization_id: form.organization_id,
+              is_new_template: true
             )
 
             api_client = if ShopifyCLI::Environment.acceptance_test?
@@ -124,14 +125,18 @@ module ShopifyCLI
             context.chdir(app_folder)
             ShopifyCLI::Git.update_submodules(context)
 
-            # context.root = File.join(context.root, name)
+            set_npm_config
+
+            # Clean up the repo
+            context.rename("package.json", "package.json.cli3beta")
+            context.rename("package.json.cli2", "package.json")
+
             root = context.root
-            Dir.glob('**/package.json').each do |package_json|
+            Dir.glob("**/package.json").each do |package_json|
               next if /node_modules/ =~ package_json
 
               # set dir and install deps
               context.chdir(File.join(root, File.dirname(package_json)))
-              set_npm_config
               ShopifyCLI::JsDeps.install(context, verbose)
             end
 
@@ -141,11 +146,6 @@ module ShopifyCLI
               context.rm_r(".git")
               context.rm_r(".github")
               context.rm_r(".gitmodules")
-              context.rm(File.join("server", "handlers", "client.js"))
-              context.rename(
-                File.join("server", "handlers", "client.cli.js"),
-                File.join("server", "handlers", "client.js")
-              )
             rescue Errno::ENOENT => e
               context.debug(e)
             end

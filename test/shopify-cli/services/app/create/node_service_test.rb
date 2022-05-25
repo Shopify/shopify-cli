@@ -22,6 +22,7 @@ module ShopifyCLI
             ---
             project_type: node
             organization_id: 42
+            is_new_template: true
           APPTYPE
 
           def setup
@@ -47,7 +48,9 @@ module ShopifyCLI
             create_test_app_directory_structure
 
             expect_node_npm_check_commands
-
+            @context.expects(:capture2).with("npm config get @shopify:registry").returns([
+              "https://registry.yarnpkg.com", nil
+            ])
             expect_git_clone_commands
 
             ShopifyCLI::Tasks::CreateApiClient.stubs(:call).returns({
@@ -58,7 +61,7 @@ module ShopifyCLI
             ShopifyCLI::Resources::EnvFile.stubs(:new).returns(stub(write: true))
 
             call_service
-            @context.chdir('..')
+            @context.chdir("..")
 
             refute File.exist?("test-app/.npmrc")
             FileUtils.rm_r("test-app")
@@ -68,8 +71,19 @@ module ShopifyCLI
             create_test_app_directory_structure
 
             expect_node_npm_check_commands
-
-            expect_git_clone_commands(expect_npm_set: true, npm_registry: "https://badregistry.com")
+            @context.expects(:capture2).with("npm config get @shopify:registry")
+              .returns(["https://badregistry.com", nil])
+            @context.expects(:system).with(
+              "npm",
+              "--userconfig",
+              "./.npmrc",
+              "config",
+              "set",
+              "@shopify:registry",
+              "https://registry.yarnpkg.com",
+              chdir: @context.root + "/test-app"
+            )
+            expect_git_clone_commands
 
             ShopifyCLI::Tasks::CreateApiClient.stubs(:call).returns({
               "apiKey" => "ljdlkajfaljf",
@@ -79,7 +93,7 @@ module ShopifyCLI
             ShopifyCLI::Resources::EnvFile.stubs(:new).returns(stub(write: true))
 
             call_service
-            @context.chdir('..')
+            @context.chdir("..")
 
             FileUtils.rm_r("test-app")
           end
@@ -89,7 +103,9 @@ module ShopifyCLI
 
             @context.stubs(:uname).returns("Mac")
             expect_node_npm_check_commands
-
+            @context.expects(:capture2).with("npm config get @shopify:registry").returns([
+              "https://registry.yarnpkg.com", nil
+            ])
             expect_git_clone_commands
 
             stub_partner_req(
@@ -114,16 +130,17 @@ module ShopifyCLI
             )
 
             call_service
-            @context.chdir('..')
+            @context.chdir("..")
 
             assert_equal SHOPIFYCLI_FILE, File.read("test-app/.shopify-cli.yml")
             assert_equal ENV_FILE, File.read("test-app/.env")
             refute File.exist?("test-app/.npmrc")
             refute File.exist?("test-app/.git")
-            refute File.exist?("test-app/.gitmodules")
             refute File.exist?("test-app/.github")
-            refute File.exist?("test-app/server/handlers/client.cli.js")
-            assert File.exist?("test-app/server/handlers/client.js")
+            refute File.exist?("test-app/.gitmodules")
+            refute File.exist?("test-app/package.json.cli2")
+            assert File.exist?("test-app/package.json")
+            assert File.exist?("test-app/package.json.cli3beta")
 
             FileUtils.rm_r("test-app")
           end
@@ -133,8 +150,19 @@ module ShopifyCLI
 
             @context.stubs(:uname).returns("Mac")
             expect_node_npm_check_commands
-
-            expect_git_clone_commands(expect_npm_set: true, npm_registry: "https://badregistry.com")
+            expect_git_clone_commands
+            @context.expects(:capture2).with("npm config get @shopify:registry")
+              .returns(["https://badregistry.com", nil])
+            @context.expects(:system).with(
+              "npm",
+              "--userconfig",
+              "./.npmrc",
+              "config",
+              "set",
+              "@shopify:registry",
+              "https://registry.yarnpkg.com",
+              chdir: @context.root + "/test-app"
+            )
 
             stub_partner_req(
               "create_app",
@@ -158,15 +186,16 @@ module ShopifyCLI
             )
 
             call_service
-            @context.chdir('..')
+            @context.chdir("..")
 
             assert_equal SHOPIFYCLI_FILE, File.read("test-app/.shopify-cli.yml")
             assert_equal ENV_FILE, File.read("test-app/.env")
             refute File.exist?("test-app/.git")
             refute File.exist?("test-app/.github")
             refute File.exist?("test-app/.gitmodules")
-            refute File.exist?("test-app/server/handlers/client.cli.js")
-            assert File.exist?("test-app/server/handlers/client.js")
+            refute File.exist?("test-app/package.json.cli2")
+            assert File.exist?("test-app/package.json")
+            assert File.exist?("test-app/package.json.cli3beta")
 
             FileUtils.rm_r("test-app")
           end
@@ -191,34 +220,19 @@ module ShopifyCLI
 
           def create_test_app_directory_structure
             FileUtils.mkdir_p("test-app")
-            FileUtils.mkdir_p("test-app/server/handlers")
             FileUtils.mkdir_p("test-app/web")
             FileUtils.touch("test-app/web/package.json")
+            FileUtils.touch("test-app/package.json")
+            FileUtils.touch("test-app/package.json.cli2")
             FileUtils.touch("test-app/.git")
             FileUtils.touch("test-app/.github")
             FileUtils.touch("test-app/.gitmodules")
-            FileUtils.touch("test-app/server/handlers/client.js")
-            FileUtils.touch("test-app/server/handlers/client.cli.js")
           end
 
-          def expect_git_clone_commands(expect_npm_set: false, npm_registry:  "https://registry.yarnpkg.com")
+          def expect_git_clone_commands
             ShopifyCLI::Git.expects(:clone).with("https://github.com/Shopify/starter-node-app.git", "test-app")
             ShopifyCLI::Git.expects(:update_submodules).with(@context)
-
-            @context.expects(:capture2).with("npm config get @shopify:registry").returns([npm_registry, nil])
-            if expect_npm_set
-              @context.expects(:system).with(
-                "npm",
-                "--userconfig",
-                "./.npmrc",
-                "config",
-                "set",
-                "@shopify:registry",
-                "https://registry.yarnpkg.com",
-                chdir: @context.root + "/test-app/web"
-              )
-            end
-
+            ShopifyCLI::JsDeps.expects(:install).with(@context, false)
             ShopifyCLI::JsDeps.expects(:install).with(@context, false)
           end
         end
