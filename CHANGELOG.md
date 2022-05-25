@@ -2,6 +2,9 @@ From version 2.6.0, the sections in this file adhere to the [keep a changelog](h
 
 ## [Unreleased]
 
+### Fixed
+* [#2347](https://github.com/Shopify/shopify-cli/pull/2347): Fix #2346 Heroku CLI installation for Apple silicon
+
 ## Version 2.17.0 - 2022-05-12
 
 ### Added
