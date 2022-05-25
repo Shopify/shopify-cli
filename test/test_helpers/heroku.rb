@@ -299,7 +299,14 @@ module TestHelpers
     private
 
     def download_filename(os)
-      URI.parse(ShopifyCLI::Heroku::DOWNLOAD_URLS[os]).path.split("/").last
+      case os
+      when :mac, :mac_m1
+        "heroku-darwin-x64.tar.gz"
+      when :linux
+        "heroku-linux-x64.tar.gz"
+      when :windows
+        "heroku-x64.exe"
+      end
     end
 
     def download_path(os = :mac)
