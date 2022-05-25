@@ -216,6 +216,22 @@ module Extension
             * Add a develop script: shopify-cli-extensions develop
             * Change the build script to: shopify-cli-extensions build
           TEXT
+          product_subscription: <<~TEXT.strip,
+            Please update your package.json as follows:
+            * Replace the development dependency @shopify/admin-ui-extensions-run
+              with @shopify/shopify-cli-extensions
+            * Remove the start and server script
+            * Add a develop script: shopify-cli-extensions develop
+            * Change the build script to: shopify-cli-extensions build
+          TEXT
+          checkout_post_purchase: <<~TEXT.strip,
+            Please update your package.json as follows:
+            * Replace the development dependency @shopify/checkout-ui-extensions-run
+              with @shopify/shopify-cli-extensions
+            * Remove the start and server script
+            * Add a develop script: shopify-cli-extensions develop
+            * Change the build script to: shopify-cli-extensions build
+          TEXT
         },
       },
       warnings: {

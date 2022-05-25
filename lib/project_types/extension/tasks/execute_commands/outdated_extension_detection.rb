@@ -20,6 +20,10 @@ module Extension
             case type
             when "checkout_ui_extension"
               context.message("errors.outdated_extensions.checkout_ui_extension")
+            when "product_subscription"
+              context.message("errors.outdated_extensions.product_subscription")
+            when "checkout_post_purchase"
+              context.message("errors.outdated_extensions.checkout_post_purchase")
             else
               context.message("errors.outdated_extensions.unknown")
             end
@@ -33,7 +37,7 @@ module Extension
 
           def valid?(package)
             case type
-            when "checkout_ui_extension"
+            when "checkout_ui_extension", "product_subscription", "checkout_post_purchase"
               package.dev_dependency?("@shopify/shopify-cli-extensions") &&
                 package.script?("build") &&
                 package.script?("develop")
