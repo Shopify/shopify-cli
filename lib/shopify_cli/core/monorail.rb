@@ -6,7 +6,7 @@ require "rbconfig"
 module ShopifyCLI
   module Core
     module Monorail
-      ENDPOINT_URI = URI.parse("https://monorail-edge.shopifycloud.com/v1/produce")
+      ENDPOINT_URI = URI.parse("https://monorail-edge.shopifysvc.com/v1/produce")
       INVOCATIONS_SCHEMA = "app_cli_command/5.0"
 
       # Extra hash of data that will be sent in the payload
