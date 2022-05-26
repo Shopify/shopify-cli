@@ -92,7 +92,7 @@ module Extension
           Features::Argo.any_instance.stubs(:config).returns({})
           Features::ArgoConfig
             .expects(:parse_yaml)
-            .with(@context, [:extension_points, :metafields, :name, :capabilities])
+            .with(@context, [:extension_points, :metafields, :name, :capabilities, :configuration_schema])
             .once
             .returns({})
 
