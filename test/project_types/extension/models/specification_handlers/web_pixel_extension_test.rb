@@ -33,7 +33,8 @@ module Extension
           err = assert_raises(CLI::Kit::Abort) do
             @web_pixel_extension.config(@context)
           end
-          assert_equal("{{x}} There was a problem reading #{WebPixelExtensionUtils::ScriptConfigYmlRepository.filename}",
+          assert_equal("{{x}} There was a problem reading " +
+            WebPixelExtensionUtils::ScriptConfigYmlRepository.filename.to_s,
             err.message)
         end
 

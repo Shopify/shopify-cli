@@ -25,7 +25,8 @@ module Extension
           begin
             process_value.nil? ? ext_config[key] : process_value.call(ext_config[key])
           rescue StandardError
-            context.abort(context.message("core.extension.push.web_pixel_extension.error.invalid_config_value_error", key))
+            context.abort(context.message("core.extension.push.web_pixel_extension.error.invalid_config_value_error",
+              key))
           end
         end
 
