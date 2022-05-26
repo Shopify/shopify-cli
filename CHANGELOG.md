@@ -2,14 +2,16 @@ From version 2.6.0, the sections in this file adhere to the [keep a changelog](h
 
 ## [Unreleased]
 
+### Added
+* [#2325](https://github.com/Shopify/shopify-cli/pull/2325): Add `-e/--editor` flag to open theme editor in the `theme open` command
+* [#2330](https://github.com/Shopify/shopify-cli/pull/2330): Add remote file deleted warning flow to `theme serve --theme-editor-sync`
+
 ### Fixed
 * [#2347](https://github.com/Shopify/shopify-cli/pull/2347): Fix #2346 Heroku CLI installation for Apple silicon
 
 ## Version 2.17.0 - 2022-05-12
 
 ### Added
-* [#2330](https://github.com/Shopify/shopify-cli/pull/2330): Add remote file deleted warning flow to `theme serve --theme-editor-sync`
-* [#2325](https://github.com/Shopify/shopify-cli/pull/2325): Add `-e/--editor` flag to open theme editor in the `theme open` command
 * [#2262](https://github.com/Shopify/shopify-cli/pull/2262): Add `capabilities` permissions to checkout extensions config
 * [#2292](https://github.com/Shopify/shopify-cli/pull/2292): Add support for App Bridge create/details URLs for scripts
 
