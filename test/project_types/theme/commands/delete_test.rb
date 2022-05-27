@@ -116,6 +116,16 @@ module Theme
         @command.options.flags[:force] = true
         @command.call([], "delete")
       end
+
+      def test_delete_when_no_valid_themes_to_select_from
+        CLI::UI::Prompt.expects(:ask).raises(ShopifyCLI::Abort)
+
+        @theme.expects(:delete).never
+        @ctx.expects(:done).never
+        @ctx.expects(:puts)
+
+        @command.call([], "delete")
+      end
     end
   end
 end

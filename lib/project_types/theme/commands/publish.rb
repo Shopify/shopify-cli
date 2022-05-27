@@ -19,6 +19,7 @@ module Theme
             [],
             title: @ctx.message("theme.publish.select"),
             exclude_roles: ["live", "development", "demo"],
+            cmd: :publish
           )
           return unless form
           form.theme

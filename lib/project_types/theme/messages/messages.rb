@@ -42,6 +42,8 @@ module Theme
           HELP
           done: "Your theme is now live at %s",
           not_found: "Theme #%s does not exist",
+          no_themes_error: "You don't have any theme to be published.",
+          no_themes_resolution: "Try to create an unpublished theme with {{command:theme push -u -t <theme_name>}}.",
           select: "Select theme to push to",
           confirm: "Are you sure you want to make %s the new live theme on %s?",
         },
@@ -233,6 +235,8 @@ module Theme
           HELP
           select: "Select theme to delete",
           done: "%s theme(s) deleted",
+          no_themes_error: "You don't have any theme to be deleted.",
+          no_themes_resolution: "Try to create an unpublished theme with {{command:theme push -u -t <theme_name>}}.",
           not_found: "{{x}} Theme #%s does not exist",
           live: "{{x}} Theme #%s is your live theme. You can't delete it.",
           confirm: "Are you sure you want to delete %s on %s?",

@@ -6,7 +6,7 @@ module Theme
   module Forms
     class Select < ShopifyCLI::Form
       attr_accessor :theme
-      flag_arguments :root, :title, :exclude_roles, :include_foreign_developments
+      flag_arguments :root, :title, :exclude_roles, :include_foreign_developments, :cmd
 
       def ask
         self.theme = CLI::UI::Prompt.ask(title, allow_empty: false) do |handler|
@@ -17,6 +17,9 @@ module Theme
             next if !include_foreign_developments && theme.foreign_development?
 
             handler.option(presenter.to_s(:short)) { theme }
+          end
+          if handler.options.empty? && cmd
+            @ctx.abort(@ctx.message("theme.#{cmd}.no_themes_error"), @ctx.message("theme.#{cmd}.no_themes_resolution"))
           end
         end
       end
