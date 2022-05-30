@@ -27,9 +27,10 @@ module ShopifyCLI
       class << self
         attr_accessor :ctx
 
-        def start(ctx, root, host: "127.0.0.1", port: 9292, poll: false, editor_sync: false, mode: ReloadMode.default)
+        def start(ctx, root, host: "127.0.0.1", theme: nil, port: 9292, poll: false, editor_sync: false,
+          mode: ReloadMode.default)
           @ctx = ctx
-          theme = DevelopmentTheme.find_or_create!(ctx, root: root)
+          theme = find_theme(root, theme)
           ignore_filter = IgnoreFilter.from_path(root)
           @syncer = Syncer.new(ctx, theme: theme, ignore_filter: ignore_filter, overwrite_json: !editor_sync)
           watcher = Watcher.new(ctx, theme: theme, ignore_filter: ignore_filter, syncer: @syncer, poll: poll)
@@ -107,6 +108,22 @@ module ShopifyCLI
           @app.close
           @syncer.shutdown
           WebServer.shutdown
+        end
+
+        private
+
+        def find_theme(root, identifier)
+          return theme_by_identifier(root, identifier) if identifier
+          DevelopmentTheme.find_or_create!(@ctx, root: root)
+        end
+
+        def theme_by_identifier(root, identifier)
+          theme = ShopifyCLI::Theme::Theme.find_by_identifier(@ctx, root: root, identifier: identifier)
+          theme || not_found_error(identifier)
+        end
+
+        def not_found_error(identifier)
+          @ctx.abort(@ctx.message("theme.serve.theme_not_found", identifier))
         end
       end
     end

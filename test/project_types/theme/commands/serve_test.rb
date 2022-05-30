@@ -73,6 +73,16 @@ module Theme
         run_serve_command(["dist"])
       end
 
+      def test_can_specify_theme
+        ShopifyCLI::Theme::DevServer
+          .expects(:start)
+          .with(@ctx, ".", host: Theme::Command::Serve::DEFAULT_HTTP_HOST, theme: 1234)
+
+        run_serve_command do |command|
+          command.options.flags[:theme] = 1234
+        end
+      end
+
       def test_valid_authentication_method_when_storefront_renderer_token_and_password_are_present
         ShopifyCLI::DB.stubs(:get).with(:shopify_exchange_token).returns("password")
         ShopifyCLI::DB.stubs(:get).with(:storefront_renderer_production_exchange_token).returns("SFR token")

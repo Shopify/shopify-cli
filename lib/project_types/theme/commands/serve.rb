@@ -17,6 +17,7 @@ module Theme
         parser.on("--poll") { flags[:poll] = true }
         parser.on("--live-reload=MODE") { |mode| flags[:mode] = as_reload_mode(mode) }
         parser.on("--theme-editor-sync") { flags[:editor_sync] = true }
+        parser.on("-t", "--theme=NAME_OR_ID") { |theme| flags[:theme] = theme }
       end
 
       def call(_args, name)

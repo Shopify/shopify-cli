@@ -3,6 +3,7 @@ From version 2.6.0, the sections in this file adhere to the [keep a changelog](h
 ## [Unreleased]
 
 ### Added
+* [#2336](https://github.com/Shopify/shopify-cli/pull/2336): Add `--theme/-t` flag support to the `theme serve` command
 * [#2325](https://github.com/Shopify/shopify-cli/pull/2325): Add `-e/--editor` flag to open theme editor in the `theme open` command
 * [#2330](https://github.com/Shopify/shopify-cli/pull/2330): Add remote file deleted warning flow to `theme serve --theme-editor-sync`
 

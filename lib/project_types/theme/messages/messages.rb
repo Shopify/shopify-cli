@@ -103,6 +103,7 @@ module Theme
           name: "Theme name",
         },
         serve: {
+          theme_not_found: "Theme \"%s\" doesn't exist",
           help: <<~HELP,
             Uploads the current theme as a development theme to the connected store, then prints theme editor and preview URLs to your terminal. While running, changes will push to the store in real time.
 
