@@ -2,6 +2,8 @@ From version 2.6.0, the sections in this file adhere to the [keep a changelog](h
 
 ## [Unreleased]
 
+## Version 2.18.0 - 2022-05-30
+
 ### Added
 * [#2336](https://github.com/Shopify/shopify-cli/pull/2336): Add `--theme/-t` flag support to the `theme serve` command
 * [#2325](https://github.com/Shopify/shopify-cli/pull/2325): Add `-e/--editor` flag to open theme editor in the `theme open` command
