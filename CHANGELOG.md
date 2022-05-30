@@ -7,6 +7,7 @@ From version 2.6.0, the sections in this file adhere to the [keep a changelog](h
 * [#2330](https://github.com/Shopify/shopify-cli/pull/2330): Add remote file deleted warning flow to `theme serve --theme-editor-sync`
 
 ### Fixed
+* [#2352](https://github.com/Shopify/shopify-cli/pull/2352): Provide better DX when dealing with empty theme selection
 * [#2347](https://github.com/Shopify/shopify-cli/pull/2347): Fix #2346 Heroku CLI installation for Apple silicon
 
 ## Version 2.17.0 - 2022-05-12

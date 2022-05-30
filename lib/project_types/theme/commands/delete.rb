@@ -25,6 +25,7 @@ module Theme
             title: @ctx.message("theme.delete.select"),
             exclude_roles: ["live"],
             include_foreign_developments: options.flags[:show_all],
+            cmd: :delete
           )
           return unless form
           [form.theme]

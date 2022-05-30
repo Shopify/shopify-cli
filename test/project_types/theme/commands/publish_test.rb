@@ -78,6 +78,16 @@ module Theme
 
         @command.call([])
       end
+
+      def test_publish_when_no_valid_themes_to_select_from
+        CLI::UI::Prompt.expects(:ask).raises(ShopifyCLI::Abort)
+
+        @theme.expects(:publish).never
+        @ctx.expects(:done).never
+        @ctx.expects(:puts)
+
+        @command.call([])
+      end
     end
   end
 end
