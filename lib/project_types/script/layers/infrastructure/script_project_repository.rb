@@ -37,7 +37,9 @@ module Script
             extension_point_type: extension_point_type,
             title: title,
             description: nil,
-            language: language
+            language: language,
+            app_bridge_create_path: "/",
+            app_bridge_details_path: "/",
           )
 
           build_script_project(script_config: nil)
@@ -124,8 +126,8 @@ module Script
         end
 
         def app_bridge
-          create_path = project_config_value("app_bridge_create_path") || "/"
-          details_path = project_config_value("app_bridge_details_path") || "/"
+          create_path = project_config_value!("app_bridge_create_path")
+          details_path = project_config_value!("app_bridge_details_path")
 
           Domain::AppBridge.new(
             create_path: create_path,

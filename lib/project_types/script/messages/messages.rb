@@ -24,7 +24,7 @@ module Script
           oauth_help: "Wait a few minutes and try again.",
 
           invalid_context_cause: "Your .shopify-cli.yml is formatted incorrectly. It's missing values for "\
-                                 "extension_point_type or title.",
+                                 "extension_point_type, title, app_bridge_create_path or app_bridge_details_path.",
           invalid_context_help: "Add these values.",
 
           invalid_script_title_cause: "Script title contains unsupported characters.",
