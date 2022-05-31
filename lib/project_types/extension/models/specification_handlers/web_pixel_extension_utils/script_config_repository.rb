@@ -2,7 +2,7 @@ require_relative "script_config"
 module Extension
   module Models
     module SpecificationHandlers
-      module BeaconExtensionUtils
+      module WebPixelExtensionUtils
         class ScriptConfigRepository
           include SmartProperties
           property! :ctx, accepts: ShopifyCLI::Context
@@ -27,7 +27,7 @@ module Extension
           private
 
           def from_h(hash)
-            Extension::Models::SpecificationHandlers::BeaconExtensionUtils::ScriptConfig.new(content: hash,
+            Extension::Models::SpecificationHandlers::WebPixelExtensionUtils::ScriptConfig.new(content: hash,
               filename: filename)
           end
 

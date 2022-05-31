@@ -2,45 +2,46 @@
 require "base64"
 require "fileutils"
 require "json"
-require_relative "beacon_extension_utils/script_config"
-require_relative "beacon_extension_utils/script_config_repository"
+require_relative "web_pixel_extension_utils/script_config"
+require_relative "web_pixel_extension_utils/script_config_repository"
 
 module Extension
   module Models
     module SpecificationHandlers
-      class BeaconExtension < Default
+      class WebPixelExtension < Default
         SCRIPT_FILE = "build/main.js"
 
         def name
-          "Beacon Extension"
+          "Web Pixel Extension"
         end
 
         def read_configuration
         end
 
         def access_config_property(context, ext_config, key, &process_value)
-          context.abort(context.message("core.extension.push.beacon_extension.error.missing_config_key_error",
+          context.abort(context.message("core.extension.push.web_pixel_extension.error.missing_config_key_error",
             key)) unless ext_config.key?(key)
 
           begin
             process_value.nil? ? ext_config[key] : process_value.call(ext_config[key])
           rescue StandardError
-            context.abort(context.message("core.extension.push.beacon_extension.error.invalid_config_value_error", key))
+            context.abort(context.message("core.extension.push.web_pixel_extension.error.invalid_config_value_error",
+              key))
           end
         end
 
         def config(context)
           begin
-            ext_config = BeaconExtensionUtils::ScriptConfigYmlRepository.new(ctx: context).get!.content
+            ext_config = WebPixelExtensionUtils::ScriptConfigYmlRepository.new(ctx: context).get!.content
           rescue StandardError
-            context.abort(context.message("core.extension.push.beacon_extension.error.file_read_error",
-              BeaconExtensionUtils::ScriptConfigYmlRepository.filename))
+            context.abort(context.message("core.extension.push.web_pixel_extension.error.file_read_error",
+              WebPixelExtensionUtils::ScriptConfigYmlRepository.filename))
           end
 
           begin
             script_contents = File.read(File.join(context.root, SCRIPT_FILE)).chomp
           rescue
-            context.abort(context.message("core.extension.push.beacon_extension.error.file_read_error", SCRIPT_FILE))
+            context.abort(context.message("core.extension.push.web_pixel_extension.error.file_read_error", SCRIPT_FILE))
           end
           {
             runtime_context: access_config_property(context, ext_config, "runtime_context"),

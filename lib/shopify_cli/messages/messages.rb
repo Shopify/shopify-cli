@@ -285,7 +285,7 @@ module ShopifyCLI
         },
         extension: {
           push: {
-            beacon_extension: {
+            web_pixel_extension: {
               error: {
                 file_read_error: "There was a problem reading %s",
                 missing_config_key_error: "Configuration is missing key: %s",

@@ -14,7 +14,7 @@ module Extension
 
       def configure_skip_build(attributes)
         attributes[:options].merge!(skip_build: attributes[:identifier] == "theme_app_extension" ||
-         attributes[:identifier] == "beacon_extension")
+         attributes[:identifier] == "web_pixel_extension")
       end
     end
   end
