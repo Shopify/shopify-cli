@@ -7,7 +7,7 @@ module Extension
       class WebPixelExtensionTest < MiniTest::Test
         include ExtensionTestHelpers
         CONFIG_CONTENTS = <<~EOS
-          runtime_context: sandbox
+          runtime_context: strict
           version: "1"
           configuration:
             type: object
@@ -67,7 +67,7 @@ module Extension
         def test_config_implementation
           create(@context, "0", CONFIG_CONTENTS)
           payload = @web_pixel_extension.config(@context)
-          assert_equal("sandbox", payload[:runtime_context])
+          assert_equal("strict", payload[:runtime_context])
           assert_equal("MA==", payload[:serialized_script])
           assert_equal("1", payload[:config_version])
           config = JSON.parse(payload[:runtime_configuration_definition])

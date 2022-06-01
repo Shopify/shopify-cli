@@ -20,7 +20,7 @@ module Extension
 
           def test_script_config_parses_valid_content
             content = {
-              "runtime_context" => "sandbox",
+              "runtime_context" => "strict",
               "version" => 2,
               "configuration" => {
 
@@ -31,7 +31,7 @@ module Extension
               content: content, filename: "some-file-name.yml"
             )
             assert_equal({
-              "runtime_context" => "sandbox",
+              "runtime_context" => "strict",
               "version" => 2,
               "configuration" => {
 
@@ -43,7 +43,7 @@ module Extension
 
           def test_script_config_raises_error_if_expected_field_is_missing
             content = {
-              "runtime_context" => "sandbox",
+              "runtime_context" => "strict",
               "configuration" => {
 
               },
