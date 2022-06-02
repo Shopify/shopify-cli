@@ -62,7 +62,7 @@ module Extension
           ShopifyCLI::ProjectType.load_type(:extension)
         end
 
-        def test_raises_with_upgrade_instructions_if_package_json_is_outdated
+        def test_raises_with_upgrade_instructions_if_checkout_ui_package_json_is_outdated
           File.write("package.json", <<~JSON)
             {
               "name": "my-extension",
@@ -90,7 +90,63 @@ module Extension
           FileUtils.rm("package.json")
         end
 
-        def test_does_not_raise_with_upgrade_instructions_if_package_json_is_up_to_date
+        def test_raises_with_upgrade_instructions_if_product_subscription_package_json_is_outdated
+          File.write("package.json", <<~JSON)
+            {
+              "name": "my-extension",
+              "scripts": {
+                "start": "some command",
+                "build": "some other command"
+              }
+            }
+          JSON
+
+          message = <<~TEXT.strip
+            {{x}} Please update your package.json as follows:
+            * Replace the development dependency @shopify/admin-ui-extensions-run
+              with @shopify/shopify-cli-extensions
+            * Remove the start and server script
+            * Add a develop script: shopify-cli-extensions develop
+            * Change the build script to: shopify-cli-extensions build
+          TEXT
+
+          result = OutdatedExtensionDetection::OutdatedCheck.call(type: "product_subscription",
+            context: TestHelpers::FakeContext.new)
+          assert_predicate(result, :failure?)
+          assert_equal message, result.error.message
+        ensure
+          FileUtils.rm("package.json")
+        end
+
+        def test_raises_with_upgrade_instructions_if_checkout_post_purchase_package_json_is_outdated
+          File.write("package.json", <<~JSON)
+            {
+              "name": "my-extension",
+              "scripts": {
+                "start": "some command",
+                "build": "some other command"
+              }
+            }
+          JSON
+
+          message = <<~TEXT.strip
+            {{x}} Please update your package.json as follows:
+            * Replace the development dependency @shopify/checkout-ui-extensions-run
+              with @shopify/shopify-cli-extensions
+            * Remove the start and server script
+            * Add a develop script: shopify-cli-extensions develop
+            * Change the build script to: shopify-cli-extensions build
+          TEXT
+
+          result = OutdatedExtensionDetection::OutdatedCheck.call(type: "checkout_post_purchase",
+            context: TestHelpers::FakeContext.new)
+          assert_predicate(result, :failure?)
+          assert_equal message, result.error.message
+        ensure
+          FileUtils.rm("package.json")
+        end
+
+        def test_does_not_raise_with_upgrade_instructions_if_checkout_ui_package_json_is_up_to_date
           package_json = StringIO.new(<<~JSON)
             {
               "name": "my-extension",
@@ -110,6 +166,58 @@ module Extension
             .returns(Models::NpmPackage.parse(package_json))
 
           result = OutdatedExtensionDetection::OutdatedCheck.call(type: "checkout_ui_extension",
+            context: TestHelpers::FakeContext.new)
+          assert_predicate(result, :success?)
+        ensure
+          $debug = false
+        end
+
+        def test_does_not_raise_with_upgrade_instructions_if_product_subscription_package_json_is_up_to_date
+          package_json = StringIO.new(<<~JSON)
+            {
+              "name": "my-extension",
+              "devDependencies": {
+                "@shopify/shopify-cli-extensions": "^0.2.0"
+              },
+              "scripts": {
+                "build": "some command",
+                "develop": "some other command"
+              }
+            }
+          JSON
+
+          File
+            .expects(:open)
+            .with(Pathname(ShopifyCLI::Project.current.directory).join("package.json"))
+            .returns(Models::NpmPackage.parse(package_json))
+
+          result = OutdatedExtensionDetection::OutdatedCheck.call(type: "product_subscription",
+            context: TestHelpers::FakeContext.new)
+          assert_predicate(result, :success?)
+        ensure
+          $debug = false
+        end
+
+        def test_does_not_raise_with_upgrade_instructions_if_checkout_post_purchase_package_json_is_up_to_date
+          package_json = StringIO.new(<<~JSON)
+            {
+              "name": "my-extension",
+              "devDependencies": {
+                "@shopify/shopify-cli-extensions": "^0.2.0"
+              },
+              "scripts": {
+                "build": "some command",
+                "develop": "some other command"
+              }
+            }
+          JSON
+
+          File
+            .expects(:open)
+            .with(Pathname(ShopifyCLI::Project.current.directory).join("package.json"))
+            .returns(Models::NpmPackage.parse(package_json))
+
+          result = OutdatedExtensionDetection::OutdatedCheck.call(type: "checkout_post_purchase",
             context: TestHelpers::FakeContext.new)
           assert_predicate(result, :success?)
         ensure
