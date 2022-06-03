@@ -160,6 +160,22 @@ module ShopifyCLI
       end
     end
 
+    def test_clones_git_repo_with_branch
+      Open3.expects(:popen3).with(
+        "git",
+        "clone",
+        "--single-branch",
+        "--branch",
+        "cli_test_branch",
+        "git@github.com:shopify/test.git",
+        "test-app",
+        "--progress"
+      ).returns(mock(success?: true))
+      capture_io do
+        ShopifyCLI::Git.clone("git@github.com:shopify/test.git#cli_test_branch", "test-app", ctx: @context)
+      end
+    end
+
     def test_clone_failure
       assert_raises(ShopifyCLI::Abort) do
         Open3.expects(:popen3).with(
