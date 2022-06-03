@@ -74,7 +74,7 @@ module ShopifyCLI
           end
 
           def build(form)
-            ShopifyCLI::Git.clone("https://github.com/Shopify/shopify-app-php.git", form.name)
+            ShopifyCLI::Git.clone("https://github.com/Shopify/shopify-app-template-php.git#cli_two", form.name)
 
             context.root = File.join(context.root, form.name)
             context.chdir(context.root)

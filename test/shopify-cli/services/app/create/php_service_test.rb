@@ -68,7 +68,10 @@ module ShopifyCLI
               ["https://registry.yarnpkg.com", nil]
             )
 
-            ShopifyCLI::Git.expects(:clone).with("https://github.com/Shopify/shopify-app-php.git", "test-app")
+            ShopifyCLI::Git.expects(:clone).with(
+              "https://github.com/Shopify/shopify-app-template-php.git#cli_two",
+              "test-app"
+            )
             ShopifyCLI::PHPDeps.expects(:install)
             ShopifyCLI::JsDeps.expects(:install)
             @context.expects(:system).with("php", "artisan", "key:generate")
