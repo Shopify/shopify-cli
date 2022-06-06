@@ -67,9 +67,14 @@ module ShopifyCLI
         if Dir.exist?(dest)
           ctx.abort(ctx.message("core.git.error.directory_exists"))
         else
+          repo, branch = repository.split("#")
           success_message = ctx.message("core.git.cloned", dest)
-          CLI::UI::Frame.open(ctx.message("core.git.cloning", repository, dest), success_text: success_message) do
-            clone_progress("clone", "--single-branch", repository, dest, ctx: ctx)
+          CLI::UI::Frame.open(ctx.message("core.git.cloning", repo, dest), success_text: success_message) do
+            if branch
+              clone_progress("clone", "--single-branch", "--branch", branch, repo, dest, ctx: ctx)
+            else
+              clone_progress("clone", "--single-branch", repo, dest, ctx: ctx)
+            end
           end
         end
       end
