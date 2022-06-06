@@ -117,7 +117,7 @@ module ShopifyCLI
           end
 
           def build(name)
-            ShopifyCLI::Git.clone("https://github.com/Shopify/shopify-app-node.git", name)
+            ShopifyCLI::Git.clone("https://github.com/Shopify/shopify-app-template-node.git#cli_two", name)
 
             context.root = File.join(context.root, name)
 
