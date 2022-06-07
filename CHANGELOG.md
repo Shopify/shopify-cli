@@ -2,6 +2,10 @@ From version 2.6.0, the sections in this file adhere to the [keep a changelog](h
 
 ## [Unreleased]
 
+### Fixed
+* [#2377](https://github.com/Shopify/shopify-cli/pull/2377): Update PHP template repository
+* [#2312](https://github.com/Shopify/shopify-cli/pull/2312): Update Node template repository
+
 ## Version 2.18.0 - 2022-05-30
 
 ### Added
