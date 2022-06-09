@@ -10,7 +10,6 @@ describe Script::Layers::Infrastructure::ScriptService do
   let(:extension_point_type) { "DISCOUNT" }
   let(:schema_major_version) { "1" }
   let(:schema_minor_version) { "0" }
-  let(:use_msgpack) { true }
   let(:script_config_filename) { "script.config.yml" }
   let(:script_config) do
     Script::Layers::Domain::ScriptConfig.new(
@@ -83,7 +82,6 @@ describe Script::Layers::Infrastructure::ScriptService do
         metadata: Script::Layers::Domain::Metadata.new(
           schema_major_version,
           schema_minor_version,
-          use_msgpack,
         ),
         script_config: script_config,
         app_bridge: app_bridge,
@@ -173,13 +171,6 @@ describe Script::Layers::Infrastructure::ScriptService do
               },
             },
           }
-        end
-
-        describe "when not using msgpack" do
-          let(:error_tag) { "not_use_msgpack_error" }
-          it "should raise MetadataValidationError error" do
-            assert_raises(Script::Layers::Domain::Errors::MetadataValidationError) { subject }
-          end
         end
 
         describe "when invalid schema version" do

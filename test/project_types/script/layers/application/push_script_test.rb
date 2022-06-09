@@ -7,7 +7,6 @@ describe Script::Layers::Application::PushScript do
 
   let(:api_key) { "api_key" }
   let(:force) { true }
-  let(:use_msgpack) { true }
   let(:extension_point_type) { "discount" }
   let(:metadata_file_location) { "metadata.json" }
   let(:metadata_repository) { TestHelpers::FakeMetadataRepository.new }
