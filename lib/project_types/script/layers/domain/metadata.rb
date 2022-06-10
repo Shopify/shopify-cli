@@ -4,12 +4,11 @@ module Script
   module Layers
     module Domain
       class Metadata
-        attr_reader :schema_major_version, :schema_minor_version, :use_msgpack
+        attr_reader :schema_major_version, :schema_minor_version
 
-        def initialize(schema_major_version, schema_minor_version, use_msgpack)
+        def initialize(schema_major_version, schema_minor_version)
           @schema_major_version = schema_major_version
           @schema_minor_version = schema_minor_version
-          @use_msgpack = use_msgpack
         end
 
         class << self
@@ -17,7 +16,6 @@ module Script
             err_tag = nil
             metadata_hash = JSON.parse(metadata_json)
 
-            use_msgpack = !!metadata_hash.dig("flags", "use_msgpack")
             schema_versions = metadata_hash["schemaVersions"] || {}
 
             version = schema_versions.values.first || {}
@@ -35,7 +33,7 @@ module Script
               err_tag = "script.error.metadata_schema_versions_missing_minor"
             end
 
-            Metadata.new(schema_major_version, schema_minor_version, use_msgpack)
+            Metadata.new(schema_major_version, schema_minor_version)
           rescue JSON::ParserError
             err_tag = "script.error.metadata_validation_cause"
           ensure

@@ -90,7 +90,7 @@ module Script
             )
           elsif (errors = user_errors.filter { |err| err["tag"] == "input_query_validation_error" }).any?
             raise Errors::InvalidInputQueryErrors, errors.map { |err| err["message"] }
-          elsif user_errors.find { |err| %w(not_use_msgpack_error schema_version_argument_error).include?(err["tag"]) }
+          elsif user_errors.find { |err| %w(schema_version_argument_error).include?(err["tag"]) }
             raise Domain::Errors::MetadataValidationError
           elsif user_errors.find { |err| err["tag"] == "invalid_app_bridge_create_path" }
             raise Errors::InvalidAppBridgePathError, "create"

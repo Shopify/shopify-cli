@@ -12,7 +12,7 @@ describe Script::Layers::Domain::PushPackage do
   let(:api_key) { "fake_key" }
   let(:force) { false }
   let(:script_content) { "(module)" }
-  let(:metadata) { Script::Layers::Domain::Metadata.new("1", "0", true) }
+  let(:metadata) { Script::Layers::Domain::Metadata.new("1", "0") }
   let(:library_language) { "typescript" }
   let(:library_version) { "1.0.0" }
   let(:library) do

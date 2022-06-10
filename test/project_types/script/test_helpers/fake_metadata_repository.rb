@@ -8,12 +8,10 @@ module TestHelpers
 
     def create_metadata(file_location,
       schema_major_version = "1",
-      schema_minor_version = "0",
-      use_msgpack = true)
+      schema_minor_version = "0")
       @cache[file_location] = Script::Layers::Domain::Metadata.new(
         schema_major_version,
         schema_minor_version,
-        use_msgpack
       )
     end
 
