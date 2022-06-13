@@ -15,7 +15,7 @@ module Extension
 
       class << self
         def supported?(type)
-          if type_supported?(type) && type_enabled?(type)
+          if type_supported?(type) && beta_enabled?
             return true if binary_installed?
             warn_about_missing_binary
           end
@@ -29,11 +29,6 @@ module Extension
 
         def type_supported?(type)
           SUPPORTED_EXTENSION_TYPES.include?(type.downcase)
-        end
-
-        # Some types are enabled unconditionally; others require beta_enabled
-        def type_enabled?(type)
-          beta_enabled? || "checkout_ui_extension" == type.downcase
         end
 
         private
