@@ -1,6 +1,7 @@
 # frozen_string_literal: true
 
 require_relative "hot_reload/remote_file_reloader"
+require_relative "hot_reload/remote_file_deleter"
 require_relative "hot_reload/sections_index"
 
 module ShopifyCLI
@@ -14,6 +15,7 @@ module ShopifyCLI
           @mode = mode
           @streams = SSE::Streams.new
           @remote_file_reloader = RemoteFileReloader.new(ctx, theme: @theme, streams: @streams)
+          @remote_file_deleter = RemoteFileDeleter.new(ctx, theme: @theme, streams: @streams)
           @sections_index = SectionsIndex.new(@theme)
           @watcher = watcher
           @watcher.add_observer(self, :notify_streams_of_file_change)
@@ -36,12 +38,19 @@ module ShopifyCLI
           @streams.close
         end
 
-        def notify_streams_of_file_change(modified, added, _removed)
+        def notify_streams_of_file_change(modified, added, removed)
           files = (modified + added)
             .reject { |file| @ignore_filter&.ignore?(file) }
             .map { |file| @theme[file] }
 
           files -= liquid_css_files = files.select(&:liquid_css?)
+
+          deleted_files = removed
+            .reject { |file| @ignore_filter&.ignore?(file) }
+            .map { |file| @theme[file] }
+
+          remote_delete(deleted_files) unless deleted_files.empty?
+          reload_page(removed) unless deleted_files.empty?
 
           hot_reload(files) unless files.empty?
           remote_reload(liquid_css_files)
@@ -55,8 +64,21 @@ module ShopifyCLI
           @ctx.debug("[HotReload] Modified #{paths.join(", ")}")
         end
 
+        def reload_page(removed)
+          @streams.broadcast(JSON.generate(reload_page: true))
+          @ctx.debug("[ReloadPage] Deleted #{removed.join(", ")}")
+        end
+
+        def remote_delete(files)
+          files.each do |file|
+            @ctx.debug("delete file each -> file.relative_path #{file.relative_path}")
+            @remote_file_deleter.delete(file)
+          end
+        end
+
         def remote_reload(files)
           files.each do |file|
+            @ctx.debug("reload file each -> file.relative_path #{file.relative_path}")
             @remote_file_reloader.reload(file)
           end
         end

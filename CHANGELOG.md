@@ -4,6 +4,7 @@ From version 2.6.0, the sections in this file adhere to the [keep a changelog](h
 
 ### Fixed
 * [#2458](https://github.com/Shopify/shopify-cli/pull/2458): Fix shop URL in unauthorized error message
+* [#2405](https://github.com/Shopify/shopify-cli/pull/2405): Update `theme serve` to trigger page refresh when a file is deleted
 
 ## Version 2.20.0 - 2022-07-11
 

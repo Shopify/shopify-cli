@@ -3,12 +3,13 @@
 require "test_helper"
 require "shopify_cli/theme/dev_server/hot_reload/remote_file_reloader"
 require "shopify_cli/theme/theme"
+require_relative "remote_file_test_helper"
 
 module ShopifyCLI
   module Theme
     module DevServer
       class HotReload
-        class RemoteFileReloaderTest < Minitest::Test
+        class RemoteFileReloaderTest < RemoteFileTestHelper
           def setup
             super
             shopify_db_mock
@@ -49,42 +50,6 @@ module ShopifyCLI
             streams.expects(:broadcast).with('{"modified":["<# assets/liquid.css.liquid>"]}')
 
             @reloader.reload(file)
-          end
-
-          private
-
-          def file
-            return @file if @file
-            @file = mock("File")
-            @file.stubs(relative_path: "assets/liquid.css.liquid")
-            @file.stubs(to_s: "<# assets/liquid.css.liquid>")
-            @file
-          end
-
-          def shopify_db_mock
-            ShopifyCLI::DB.stubs(:exists?).with(:shop).returns(true)
-            ShopifyCLI::DB.stubs(:get).with(:shop).returns("shop.myshopify.com")
-            ShopifyCLI::DB.stubs(:get).with(:shopify_exchange_token).returns("token1234")
-            ShopifyCLI::DB.stubs(:get).with(:acting_as_shopify_organization).returns(nil)
-          end
-
-          def streams
-            @streams ||= mock("Streams")
-          end
-
-          def theme
-            return @theme if @theme
-            @theme = ShopifyCLI::Theme::Theme.new(@ctx, root: root)
-            @theme.stubs(id: "1234")
-            @theme
-          end
-
-          def root
-            @root ||= ShopifyCLI::ROOT + "/test/fixtures/theme"
-          end
-
-          def ctx
-            @ctx ||= TestHelpers::FakeContext.new(root: root)
           end
         end
       end
