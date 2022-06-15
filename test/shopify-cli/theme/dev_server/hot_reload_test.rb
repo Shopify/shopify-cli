@@ -2,6 +2,7 @@
 require "test_helper"
 require "shopify_cli/theme/dev_server"
 require "shopify_cli/theme/dev_server/hot_reload/remote_file_reloader"
+require "shopify_cli/theme/dev_server/hot_reload/remote_file_deleter"
 require "rack/mock"
 
 module ShopifyCLI
@@ -13,7 +14,9 @@ module ShopifyCLI
           root = ShopifyCLI::ROOT + "/test/fixtures/theme"
           @ctx = TestHelpers::FakeContext.new(root: root)
           @theme = Theme.new(@ctx, root: root)
-          @syncer = stub("Syncer", enqueue_uploads: true, enqueue_updates: true, ignore_file?: false)
+          @syncer = stub("Syncer", enqueue_uploads: true, enqueue_deletes: true, enqueue_updates: true,
+            ignore_file?: false)
+          @syncer.stubs(remote_file?: true)
           @watcher = Watcher.new(@ctx, theme: @theme, syncer: @syncer)
           @mode = "off"
         end
@@ -74,7 +77,7 @@ module ShopifyCLI
           serve(path: "/hot-reload")
         end
 
-        def test_broadcasts_watcher_events
+        def test_broadcasts_watcher_events_when_file_modified
           modified = ["style.css"]
           SSE::Streams.any_instance
             .expects(:broadcast)
@@ -87,7 +90,24 @@ module ShopifyCLI
           @watcher.notify_observers(modified, [], [])
         end
 
-        def test_doesnt_broadcast_watcher_events_when_the_list_is_empty
+        def test_broadcasts_watcher_events_when_file_deleted
+          deleted = ["announcement.liquid"]
+          HotReload::RemoteFileDeleter
+            .stubs(:new)
+            .returns(remote_file_deleter)
+
+          SSE::Streams.any_instance
+            .expects(:broadcast)
+            .with(JSON.generate(reload_page: true))
+
+          app = -> { [200, {}, []] }
+          HotReload.new(@ctx, app, theme: @theme, watcher: @watcher, mode: @mode)
+
+          @watcher.changed
+          @watcher.notify_observers([], [], deleted)
+        end
+
+        def test_doesnt_broadcast_watcher_events_when_modified_list_is_empty
           root_path = Pathname.new(__dir__)
           ignore_filter = ShopifyCLI::Theme::IgnoreFilter.new(root_path, patterns: ["ignored/**"])
           modified = ["ignored/style.css"]
@@ -107,6 +127,28 @@ module ShopifyCLI
 
           @watcher.changed
           @watcher.notify_observers(modified, [], [])
+        end
+
+        def test_doesnt_broadcast_watcher_events_when_deleted_list_is_empty
+          root_path = Pathname.new(__dir__)
+          ignore_filter = ShopifyCLI::Theme::IgnoreFilter.new(root_path, patterns: ["ignored/**"])
+          deleted = ["ignored/announcement.liquid"]
+          SSE::Streams.any_instance
+            .expects(:broadcast)
+            .with(JSON.generate(reload_page: true))
+            .never
+
+          app = -> { [200, {}, []] }
+          HotReload.new(
+            @ctx, app,
+            theme: @theme,
+            watcher: @watcher,
+            mode: @mode,
+            ignore_filter: ignore_filter
+          )
+
+          @watcher.changed
+          @watcher.notify_observers([], [], deleted)
         end
 
         def test_doesnt_broadcast_watcher_events_when_modified_file_is_a_liquid_css
@@ -132,6 +174,12 @@ module ShopifyCLI
           reloader = mock("Reloader")
           reloader.stubs(reload: nil)
           reloader
+        end
+
+        def remote_file_deleter
+          deleter = mock("Deleter")
+          deleter.stubs(delete: nil)
+          deleter
         end
 
         def serve(response_body = "", path: "/", headers: {})
