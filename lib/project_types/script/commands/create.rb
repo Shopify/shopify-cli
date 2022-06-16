@@ -25,7 +25,7 @@ module Script
         project = Layers::Application::CreateScript.call(
           ctx: @ctx,
           language: options.flags[:language]&.downcase || "wasm",
-          sparse_checkout_branch: options.flags[:branch] || "master",
+          sparse_checkout_branch: options.flags[:branch] || "main",
           title: form.title,
           extension_point_type: form.extension_point,
         )
