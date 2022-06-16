@@ -22,7 +22,7 @@ module Script
           extension_point_type: @ep_type,
           title: @title
         )
-        @branch = "master"
+        @branch = "main"
         Layers::Application::ExtensionPoints.stubs(:languages).returns(%w(typescript))
         ShopifyCLI::Tasks::EnsureAuthenticated.stubs(:call)
       end

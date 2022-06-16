@@ -11,7 +11,7 @@ describe Script::Layers::Infrastructure::Languages::TypeScriptProjectCreator do
   let(:extension_point_config) do
     {
       "typescript" => {
-        "repo" => "https://github.com/Shopify/scripts-apis-examples",
+        "repo" => "https://github.com/Shopify/function-examples",
       },
     }
   end
