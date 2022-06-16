@@ -7,11 +7,6 @@ module Script
 
       def ask
         apps = @xargs.fetch(:apps)
-
-        unless @xargs[:acting_as_shopify_organization]
-          apps = apps.select { |app| app["appType"] == "custom" }
-        end
-
         raise Errors::NoExistingAppsError if apps.empty?
 
         @app =

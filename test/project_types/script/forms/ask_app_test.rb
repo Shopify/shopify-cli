@@ -42,14 +42,6 @@ describe Script::Forms::AskApp do
         end
       end
 
-      describe("when there is 1 public app") do
-        let(:apps) { new_app("app1", "1", "1", "public") }
-
-        it("raises NoExistingAppsError") do
-          assert_raises(Script::Errors::NoExistingAppsError) { subject }
-        end
-      end
-
       describe("when number of apps == 1") do
         let(:app_title) { "app1" }
         let(:apps) { [new_app("app1", selected_api_key, selected_secret)] }
