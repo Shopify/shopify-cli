@@ -253,29 +253,31 @@ module ShopifyCLI
         @ctx.debug(operation.to_s)
 
         send(operation.method, operation.file) do |response|
-          begin
-            @standard_reporter.report(operation.as_synced_message)
+          raise response if response.is_a?(StandardError)
 
-            # Check if the API told us we're near the rate limit
-            if !backingoff? && (limit = response["x-shopify-shop-api-call-limit"])
-              used, total = limit.split("/").map(&:to_i)
-              backoff_if_near_limit!(used, total)
-            end
-          ensure
-            @pending_mutex.synchronize do
-              # Avoid abrupt jumps in the progress bar
-              sleep(0.05)
-              @pending.delete(operation)
-            end
+          @standard_reporter.report(operation.as_synced_message)
+
+          # Check if the API told us we're near the rate limit
+          if !backingoff? && (limit = response["x-shopify-shop-api-call-limit"])
+            used, total = limit.split("/").map(&:to_i)
+            backoff_if_near_limit!(used, total)
+          end
+        rescue StandardError => error
+          handle_operation_error(operation, error)
+        ensure
+          @pending_mutex.synchronize do
+            # Avoid abrupt jumps in the progress bar
+            wait(0.05)
+            @pending.delete(operation)
           end
         end
-      rescue ShopifyCLI::API::APIRequestError => e
-        error_suffix = ":\n  " + parse_api_errors(e).join("\n  ")
-        report_error(operation, error_suffix)
+      rescue StandardError => error
+        handle_operation_error(operation, error)
       end
 
       def update(file)
         asset = { key: file.relative_path }
+
         if file.text?
           asset[:value] = file.read
         else
@@ -285,7 +287,7 @@ module ShopifyCLI
         path = "themes/#{@theme.id}/assets.json"
         req_body = JSON.generate(asset: asset)
 
-        api_client.put(path: path, body: req_body) do |status, resp_body, response|
+        api_client.put(path: path, body: req_body) do |_status, resp_body, response|
           update_checksums(resp_body)
           yield(response) if block_given?
         end
@@ -326,11 +328,11 @@ module ShopifyCLI
           query: URI.encode_www_form("asset[key]" => file.relative_path),
         )
 
-        return response unless file.text?
+        return yield(response) unless file.text?
 
         remote_content = body.dig("asset", "value")
 
-        return response if remote_content.nil?
+        return yield(response) if remote_content.nil?
 
         content = Merger.union_merge(file, remote_content)
 
@@ -351,7 +353,11 @@ module ShopifyCLI
       end
 
       def parse_api_errors(exception)
-        parsed_body = JSON.parse(exception&.response&.body)
+        parsed_body = if exception&.response&.is_a?(Hash)
+          exception&.response&.[](:body)
+        else
+          JSON.parse(exception&.response&.body)
+        end
         message = parsed_body.dig("errors", "asset") || parsed_body["message"] || exception.message
         # Truncate to first lines
         [message].flatten.map { |m| m.split("\n", 2).first }
@@ -362,7 +368,7 @@ module ShopifyCLI
       def backoff_if_near_limit!(used, limit)
         if used > limit - @threads.size
           @ctx.debug("Near API call limit, waiting 2 sec…")
-          @backoff_mutex.synchronize { sleep(2) }
+          @backoff_mutex.synchronize { wait(2) }
         end
       end
 
@@ -377,6 +383,15 @@ module ShopifyCLI
       def wait_for_backoff!
         # Sleeping in the mutex in another thread. Wait for unlock
         @backoff_mutex.synchronize {} if backingoff?
+      end
+
+      def handle_operation_error(operation, error)
+        error_suffix = ":\n  " + parse_api_errors(error).join("\n  ")
+        report_error(operation, error_suffix)
+      end
+
+      def wait(duration)
+        sleep(duration)
       end
     end
   end

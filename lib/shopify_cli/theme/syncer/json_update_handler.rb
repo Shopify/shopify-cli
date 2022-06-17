@@ -23,7 +23,9 @@ module ShopifyCLI
 
         def enqueue_delayed_files_updates
           # Update delayed files synchronously
-          delayed_files.each { |file| update(file) }
+          delayed_files.each do |file|
+            update(file) if checksums.file_has_changed?(file)
+          end
         end
 
         def delayed_files

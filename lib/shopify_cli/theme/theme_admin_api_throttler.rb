@@ -10,6 +10,8 @@ module ShopifyCLI
     class ThemeAdminAPIThrottler
       extend Forwardable
 
+      attr_reader :bulk, :admin_api
+
       def_delegators :@admin_api, :get, :post, :delete
 
       def initialize(ctx, admin_api, active = true)
@@ -41,19 +43,19 @@ module ShopifyCLI
       end
 
       def shutdown
-        @bulk.shutdown
+        bulk.shutdown
       end
 
       private
 
       def rest_request(request)
-        @admin_api.rest_request(**request.to_h, &request.block)
-      rescue => error
-        request.block.call(nil, error, nil)
+        request.block.call(admin_api.rest_request(**request.to_h))
+      rescue StandardError => error
+        request.block.call(500, {}, error)
       end
 
       def bulk_request(request)
-        @bulk.enqueue(request)
+        bulk.enqueue(request)
       end
     end
   end
