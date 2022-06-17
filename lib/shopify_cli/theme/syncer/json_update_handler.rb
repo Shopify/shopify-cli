@@ -8,16 +8,10 @@ module ShopifyCLI
     class Syncer
       module JsonUpdateHandler
         def enqueue_json_updates(files)
-          # Some files must be uploaded after the other ones
-          delayed_files = [
-            theme["config/settings_schema.json"],
-            theme["config/settings_data.json"],
-          ]
-
           # Update remote JSON files and delays `delayed_files` update
           files = files
             .select { |file| !ignore_file?(file) && file.exist? && checksums.file_has_changed?(file) }
-            .sort_by { |file| delayed_files.include?(file) ? 1 : 0 }
+            .reject { |file| delayed_files.include?(file) }
 
           if overwrite_json?
             enqueue_updates(files)
@@ -25,6 +19,18 @@ module ShopifyCLI
             # Handle conflicts when JSON files cannot be overwritten
             handle_update_conflicts(files)
           end
+        end
+
+        def enqueue_delayed_files_updates
+          # Update delayed files synchronously
+          delayed_files.each { |file| update(file) }
+        end
+
+        def delayed_files
+          [
+            theme["config/settings_schema.json"],
+            theme["config/settings_data.json"],
+          ]
         end
 
         private

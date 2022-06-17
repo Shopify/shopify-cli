@@ -1,3 +1,5 @@
+# frozen_string_literal: true
+
 module ShopifyCLI
   module Theme
     class ThemeAdminAPI
@@ -10,35 +12,36 @@ module ShopifyCLI
         @shop = shop || get_shop_or_abort
       end
 
-      def get(path:, **args)
-        rest_request(method: "GET", path: path, **args)
+      def get(path:, **args, &block)
+        rest_request(method: "GET", path: path, **args, &block)
       end
 
-      def put(path:, **args)
-        rest_request(method: "PUT", path: path, **args)
+      def put(path:, **args, &block)
+        rest_request(method: "PUT", path: path, **args, &block)
       end
 
-      def post(path:, **args)
-        rest_request(method: "POST", path: path, **args)
+      def post(path:, **args, &block)
+        rest_request(method: "POST", path: path, **args, &block)
       end
 
-      def delete(path:, **args)
-        rest_request(method: "DELETE", path: path, **args)
+      def delete(path:, **args, &block)
+        rest_request(method: "DELETE", path: path, **args, &block)
       end
 
       def get_shop_or_abort # rubocop:disable Naming/AccessorMethodName
         ShopifyCLI::AdminAPI.get_shop_or_abort(@ctx)
       end
 
-      private
-
       def rest_request(**args)
-        ShopifyCLI::AdminAPI.rest_request(
+        status, body, response = ShopifyCLI::AdminAPI.rest_request(
           @ctx,
           shop: @shop,
           api_version: API_VERSION,
           **args.compact
         )
+        return yield(status, body, response) if block_given?
+
+        [status, body, response]
       rescue ShopifyCLI::API::APIRequestForbiddenError,
              ShopifyCLI::API::APIRequestUnauthorizedError => error
 
@@ -61,6 +64,8 @@ module ShopifyCLI
 
         raise error
       end
+
+      private
 
       def permission_error
         ensure_user_error = @ctx.message("theme.ensure_user_error", shop)

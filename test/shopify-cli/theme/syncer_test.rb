@@ -10,20 +10,20 @@ module ShopifyCLI
       def setup
         super
         root = ShopifyCLI::ROOT + "/test/fixtures/theme"
-        @ctx = TestHelpers::FakeContext.new(root: root)
-        @theme = Theme.new(@ctx, root: root)
-        @syncer = Syncer.new(@ctx, theme: @theme)
+        Environment.stubs(:admin_auth_token).returns("env_token")
+        ShopifyCLI::DB
+          .stubs(:get)
+          .with(:development_theme_id)
+          .returns("12345678")
 
         ShopifyCLI::DB.stubs(:exists?).with(:shop).returns(true)
         ShopifyCLI::DB
           .stubs(:get)
           .with(:shop)
           .returns("dev-theme-server-store.myshopify.com")
-        ShopifyCLI::DB
-          .stubs(:get)
-          .with(:development_theme_id)
-          .returns("12345678")
-
+        @ctx = TestHelpers::FakeContext.new(root: root)
+        @theme = Theme.new(@ctx, root: root)
+        @syncer = Syncer.new(@ctx, theme: @theme)
         File.any_instance.stubs(:write)
       end
 
@@ -56,6 +56,38 @@ module ShopifyCLI
           },
           {},
         ])
+
+        @syncer.enqueue_updates([@theme["assets/theme.css"]])
+        @syncer.wait!
+      end
+
+      def test_update_text_file_bulk
+        @syncer.start_threads
+        ShopifyCLI::AdminAPI.expects(:rest_request).with(
+          @ctx,
+          shop: @theme.shop,
+          path: "themes/#{@theme.id}/assets/bulk.json",
+          api_version: "unstable",
+          method: "PUT",
+          body: JSON.generate({
+            asset: {
+              key: "assets/theme.css",
+              value: @theme["assets/theme.css"].read,
+            },
+          })
+        ).returns(
+          [
+            [
+              200,
+              {
+                "asset" => {
+                  "key" => "assets/theme.css",
+                  "checksum" => @theme["assets/theme.css"].checksum,
+                },
+              },
+            ],
+          ],
+        )
 
         @syncer.enqueue_updates([@theme["assets/theme.css"]])
         @syncer.wait!
@@ -138,7 +170,7 @@ module ShopifyCLI
         file.expects(:write).with("merged content")
 
         @syncer.expects(:enqueue).with(:update, file)
-        @syncer.send(:union_merge, file)
+        @syncer.send(:union_merge, file) {}
       end
 
       def test_enqueue_union_merges
@@ -689,6 +721,8 @@ module ShopifyCLI
 
         refute(@syncer.broken_file?(file))
       end
+
+      # ASYNC BATCH
 
       private
 
