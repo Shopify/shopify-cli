@@ -13,7 +13,6 @@ up:
       - rpm:
           version: 4.17.0
   - bundler
-  - docker
 
 test:
   desc: "Run tests."
