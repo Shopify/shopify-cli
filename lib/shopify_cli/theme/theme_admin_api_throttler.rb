@@ -41,7 +41,7 @@ module ShopifyCLI
       end
 
       def shutdown
-        @bulk.shutdown if active?
+        @bulk.shutdown
       end
 
       private

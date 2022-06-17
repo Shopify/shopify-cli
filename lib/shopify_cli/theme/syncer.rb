@@ -37,7 +37,7 @@ module ShopifyCLI
 
       def_delegators :@error_reporter, :has_any_error?
 
-      def initialize(ctx, theme:, include_filter: nil, ignore_filter: nil, overwrite_json: true)
+      def initialize(ctx, theme:, include_filter: nil, ignore_filter: nil, overwrite_json: true, stable: false)
         @ctx = ctx
         @theme = theme
         @include_filter = include_filter
@@ -71,7 +71,8 @@ module ShopifyCLI
         # Initialize `api_client` on main thread
         @api_client = ThemeAdminAPIThrottler.new(
           @ctx,
-          ThemeAdminAPI.new(@ctx, @theme.shop)
+          ThemeAdminAPI.new(@ctx, @theme.shop),
+          !stable
         )
       end
 
@@ -286,7 +287,7 @@ module ShopifyCLI
 
         api_client.put(path: path, body: req_body) do |status, resp_body, response|
           update_checksums(resp_body)
-          yield(response)
+          yield(response) if block_given?
         end
       end
 

@@ -28,11 +28,11 @@ module ShopifyCLI
         attr_accessor :ctx
 
         def start(ctx, root, host: "127.0.0.1", theme: nil, port: 9292, poll: false, editor_sync: false,
-          mode: ReloadMode.default)
+          mode: ReloadMode.default, stable: false)
           @ctx = ctx
           theme = find_theme(root, theme)
           ignore_filter = IgnoreFilter.from_path(root)
-          @syncer = Syncer.new(ctx, theme: theme, ignore_filter: ignore_filter, overwrite_json: !editor_sync)
+          @syncer = Syncer.new(ctx, theme: theme, ignore_filter: ignore_filter, overwrite_json: !editor_sync, stable: stable)
           watcher = Watcher.new(ctx, theme: theme, ignore_filter: ignore_filter, syncer: @syncer, poll: poll)
           remote_watcher = RemoteWatcher.to(theme: theme, syncer: @syncer)
 

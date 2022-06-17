@@ -43,7 +43,7 @@ module ShopifyCLI
         end
 
         def consume_put_requests
-          
+
           to_batch = []
           to_batch_size_bytes = 0
           @mut.synchronize do
