@@ -11,7 +11,8 @@ module ShopifyCLI
           # Update remote JSON files and delays `delayed_files` update
           files = files
             .select { |file| !ignore_file?(file) && file.exist? && checksums.file_has_changed?(file) }
-            .reject { |file| delayed_files.include?(file) }
+            .sort_by { |file| delayed_files.include?(file) ? 1 : 0 }
+            .reject { |file| overwrite_json? && delayed_files.include?(file) }
 
           if overwrite_json?
             enqueue_updates(files)
@@ -22,6 +23,7 @@ module ShopifyCLI
         end
 
         def enqueue_delayed_files_updates
+          return unless overwrite_json?
           # Update delayed files synchronously
           delayed_files.each do |file|
             update(file) if checksums.file_has_changed?(file)

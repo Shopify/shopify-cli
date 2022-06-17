@@ -2,7 +2,6 @@
 
 require "test_helper"
 require "shopify_cli/theme/theme"
-require "shopify_cli/theme/theme_admin_api_throttler/errors"
 require "shopify_cli/theme/theme_admin_api_throttler/response_parser"
 
 module ShopifyCLI

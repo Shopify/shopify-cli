@@ -22,7 +22,7 @@ module ShopifyCLI
         def test_enqueue_json_updates_when_it_should_overwrite_json_files
           @overwrite_json = true
 
-          expects(:enqueue_updates).with(@to_update)
+          expects(:enqueue_updates).with(@to_update - [@delayed_file1, @delayed_file2])
 
           enqueue_json_updates(@files)
         end
@@ -101,6 +101,24 @@ module ShopifyCLI
           enqueue_json_updates(@files)
         end
 
+        def test_enqueue_delayed_files_updates_when_overwrite_json_is_true
+          @overwrite_json = true
+
+          expects(:update).with(@delayed_file1)
+          expects(:update).with(@delayed_file2)
+
+          enqueue_delayed_files_updates
+        end
+
+        def test_enqueue_delayed_files_updates_when_overwrite_json_is_false
+          @overwrite_json = false
+
+          expects(:update).with(@delayed_file1).never
+          expects(:update).with(@delayed_file2).never
+
+          enqueue_delayed_files_updates
+        end
+
         private
 
         def mock_files
@@ -157,6 +175,7 @@ module ShopifyCLI
         def enqueue_union_merges(files); end
         def delete_locally(file); end
         def ignore_file?(file); end
+        def update(file); end
       end
     end
   end
