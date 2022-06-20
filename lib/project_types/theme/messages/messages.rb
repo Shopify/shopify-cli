@@ -16,6 +16,8 @@ module Theme
         ensure_user_try_this: <<~ENSURE_USER,
           Check if your user is activated, has permission to edit themes at the store, and try to re-login.
         ENSURE_USER
+        stable_flag_suggestion: "If the current command isn't working as expected," \
+          " we suggest re-running the command with the {{command: --stable}} flag",
         init: {
           help: <<~HELP,
             {{command:%s theme init}}: Clones a Git repository to use as a starting point for building a new theme.

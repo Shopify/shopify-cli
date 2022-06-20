@@ -12,7 +12,9 @@ module ShopifyCLI
         root = ShopifyCLI::ROOT + "/test/fixtures/theme"
         @ctx = TestHelpers::FakeContext.new(root: root)
         @theme = Theme.new(@ctx, root: root)
-        @syncer = Syncer.new(@ctx, theme: @theme)
+        @theme.stubs(:shop).returns("dev-theme-server-store.myshopify.com")
+        @syncer = Syncer.new(@ctx, theme: @theme, stable: true)
+        @syncer.stubs(:wait).returns(nil)
 
         ShopifyCLI::DB.stubs(:exists?).with(:shop).returns(true)
         ShopifyCLI::DB
@@ -23,7 +25,6 @@ module ShopifyCLI
           .stubs(:get)
           .with(:development_theme_id)
           .returns("12345678")
-
         File.any_instance.stubs(:write)
       end
 
@@ -59,6 +60,18 @@ module ShopifyCLI
 
         @syncer.enqueue_updates([@theme["assets/theme.css"]])
         @syncer.wait!
+      end
+
+      def test_update_with_bulk_request
+        @syncer.api_client.deactivate_throttler!
+        @syncer.api_client.admin_api.expects(:rest_request)
+        @syncer.send(:update, @theme["assets/theme.css"])
+      end
+
+      def test_update_with_regular_request_bulk
+        @syncer.api_client.activate_throttler!
+        @syncer.api_client.bulk.expects(:enqueue)
+        @syncer.send(:update, @theme["assets/theme.css"])
       end
 
       def test_update_binary_file
@@ -138,7 +151,7 @@ module ShopifyCLI
         file.expects(:write).with("merged content")
 
         @syncer.expects(:enqueue).with(:update, file)
-        @syncer.send(:union_merge, file)
+        @syncer.send(:union_merge, file) {}
       end
 
       def test_enqueue_union_merges
@@ -263,7 +276,8 @@ module ShopifyCLI
       def test_theme_files_are_pending_during_upload
         file = @theme.static_asset_files.first
 
-        @ctx.expects(:error).once
+        ShopifyCLI::AdminAPI.stubs(:rest_request).returns([200, {}, {}])
+
         @syncer.enqueue_updates([file])
         assert_includes(@syncer.pending_updates, file)
 
@@ -480,6 +494,8 @@ module ShopifyCLI
         @syncer.expects(:enqueue_updates).with(@theme.liquid_files)
         @syncer.expects(:enqueue_updates).with(@theme.static_asset_files)
         @syncer.expects(:enqueue_json_updates).with(@theme.json_files)
+        @syncer.expects(:enqueue_delayed_files_updates)
+        @syncer.api_client.expects(:deactivate_throttler!)
 
         @syncer.start_threads
         @syncer.upload_theme!(delete: true)
@@ -496,6 +512,7 @@ module ShopifyCLI
         @syncer.expects(:enqueue_updates).with(@theme.liquid_files)
         @syncer.expects(:enqueue_updates).with(@theme.static_asset_files)
         @syncer.expects(:enqueue_json_updates).with(@theme.json_files)
+        @syncer.expects(:enqueue_delayed_files_updates)
 
         @syncer.start_threads
         @syncer.upload_theme!(delete: false)
@@ -513,7 +530,7 @@ module ShopifyCLI
           },
         ])
 
-        @syncer.expects(:sleep).with(2)
+        @syncer.expects(:wait).with(2)
 
         @syncer.enqueue_updates([file])
         @syncer.wait!

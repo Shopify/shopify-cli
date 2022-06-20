@@ -48,6 +48,15 @@ module Theme
         end
       end
 
+      def test_with_stable
+        ShopifyCLI::Theme::DevServer.expects(:start)
+          .with(@ctx, ".", host: Theme::Command::Serve::DEFAULT_HTTP_HOST, stable: true)
+
+        run_serve_command do |command|
+          command.options.flags[:stable] = true
+        end
+      end
+
       def test_can_specify_poll
         ShopifyCLI::Theme::DevServer.expects(:start)
           .with(@ctx, ".", host: Theme::Command::Serve::DEFAULT_HTTP_HOST, poll: true)

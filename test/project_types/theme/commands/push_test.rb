@@ -35,7 +35,7 @@ module Theme
           .returns(@theme)
 
         ShopifyCLI::Theme::Syncer.expects(:new)
-          .with(@ctx, theme: @theme, include_filter: @include_filter, ignore_filter: @ignore_filter)
+          .with(@ctx, theme: @theme, include_filter: @include_filter, ignore_filter: @ignore_filter, stable: nil)
           .returns(@syncer)
 
         @syncer.expects(:start_threads)
@@ -57,7 +57,7 @@ module Theme
         ShopifyCLI::Theme::IgnoreFilter.expects(:from_path).with(".").returns(@ignore_filter)
 
         ShopifyCLI::Theme::Syncer.expects(:new)
-          .with(@ctx, theme: @theme, include_filter: @include_filter, ignore_filter: @ignore_filter)
+          .with(@ctx, theme: @theme, include_filter: @include_filter, ignore_filter: @ignore_filter, stable: nil)
           .returns(@syncer)
 
         @syncer.expects(:start_threads)
@@ -70,6 +70,28 @@ module Theme
         @command.call([], "push")
       end
 
+      def test_push_with_stable
+        ShopifyCLI::Theme::Theme.expects(:find_by_identifier)
+          .with(@ctx, root: ".", identifier: 1234)
+          .returns(@theme)
+
+        ShopifyCLI::Theme::IgnoreFilter.expects(:from_path).with(".").returns(@ignore_filter)
+
+        ShopifyCLI::Theme::Syncer.expects(:new)
+          .with(@ctx, theme: @theme, include_filter: @include_filter, ignore_filter: @ignore_filter, stable: true)
+          .returns(@syncer)
+
+        @syncer.expects(:start_threads)
+        @syncer.expects(:shutdown)
+
+        @syncer.expects(:upload_theme!).with(delete: true)
+        @ctx.expects(:done)
+
+        @command.options.flags[:theme] = 1234
+        @command.options.flags[:stable] = true
+        @command.call([], "push")
+      end
+
       def test_push_with_root
         ShopifyCLI::Theme::Theme.expects(:find_by_identifier)
           .with(@ctx, root: "dist", identifier: 1234)
@@ -78,7 +100,7 @@ module Theme
         ShopifyCLI::Theme::IgnoreFilter.expects(:from_path).with("dist").returns(@ignore_filter)
 
         ShopifyCLI::Theme::Syncer.expects(:new)
-          .with(@ctx, theme: @theme, include_filter: @include_filter, ignore_filter: @ignore_filter)
+          .with(@ctx, theme: @theme, include_filter: @include_filter, ignore_filter: @ignore_filter, stable: nil)
           .returns(@syncer)
 
         @syncer.expects(:start_threads)
@@ -101,7 +123,7 @@ module Theme
         ShopifyCLI::Theme::IgnoreFilter.expects(:from_path).with(".").returns(@ignore_filter)
 
         ShopifyCLI::Theme::Syncer.expects(:new)
-          .with(@ctx, theme: @theme, include_filter: @include_filter, ignore_filter: @ignore_filter)
+          .with(@ctx, theme: @theme, include_filter: @include_filter, ignore_filter: @ignore_filter, stable: nil)
           .returns(@syncer)
 
         @syncer.expects(:start_threads)
@@ -127,7 +149,7 @@ module Theme
           .returns(true)
 
         ShopifyCLI::Theme::Syncer.expects(:new)
-          .with(@ctx, theme: @theme, include_filter: @include_filter, ignore_filter: @ignore_filter)
+          .with(@ctx, theme: @theme, include_filter: @include_filter, ignore_filter: @ignore_filter, stable: nil)
           .returns(@syncer)
 
         @syncer.expects(:start_threads)
@@ -153,7 +175,7 @@ module Theme
           .returns(true)
 
         ShopifyCLI::Theme::Syncer.expects(:new)
-          .with(@ctx, theme: @theme, include_filter: @include_filter, ignore_filter: @ignore_filter)
+          .with(@ctx, theme: @theme, include_filter: @include_filter, ignore_filter: @ignore_filter, stable: nil)
           .returns(@syncer)
 
         @syncer.expects(:start_threads)
@@ -176,7 +198,7 @@ module Theme
         CLI::UI::Prompt.expects(:confirm).never
 
         ShopifyCLI::Theme::Syncer.expects(:new)
-          .with(@ctx, theme: @theme, include_filter: @include_filter, ignore_filter: @ignore_filter)
+          .with(@ctx, theme: @theme, include_filter: @include_filter, ignore_filter: @ignore_filter, stable: nil)
           .returns(@syncer)
 
         @syncer.expects(:start_threads)
@@ -198,7 +220,7 @@ module Theme
         @theme.expects(:to_h).returns({})
 
         ShopifyCLI::Theme::Syncer.expects(:new)
-          .with(@ctx, theme: @theme, include_filter: @include_filter, ignore_filter: @ignore_filter)
+          .with(@ctx, theme: @theme, include_filter: @include_filter, ignore_filter: @ignore_filter, stable: nil)
           .returns(@syncer)
 
         @syncer.expects(:start_threads)
@@ -224,7 +246,7 @@ module Theme
         @theme.expects(:to_h).returns({})
 
         ShopifyCLI::Theme::Syncer.expects(:new)
-          .with(@ctx, theme: @theme, include_filter: @include_filter, ignore_filter: @ignore_filter)
+          .with(@ctx, theme: @theme, include_filter: @include_filter, ignore_filter: @ignore_filter, stable: nil)
           .returns(syncer)
 
         syncer.expects(:start_threads)
@@ -249,7 +271,7 @@ module Theme
           .returns(@theme)
 
         ShopifyCLI::Theme::Syncer.expects(:new)
-          .with(@ctx, theme: @theme, include_filter: @include_filter, ignore_filter: @ignore_filter)
+          .with(@ctx, theme: @theme, include_filter: @include_filter, ignore_filter: @ignore_filter, stable: nil)
           .returns(@syncer)
 
         @syncer.expects(:start_threads)
@@ -275,7 +297,7 @@ module Theme
           .with(".", includes)
           .returns(include_filter)
         ShopifyCLI::Theme::Syncer.expects(:new)
-          .with(@ctx, theme: @theme, include_filter: include_filter, ignore_filter: @ignore_filter)
+          .with(@ctx, theme: @theme, include_filter: include_filter, ignore_filter: @ignore_filter, stable: nil)
           .returns(@syncer)
 
         @syncer.expects(:start_threads)
@@ -298,7 +320,7 @@ module Theme
         @ignore_filter.expects(:add_patterns).with(["config/*"])
 
         ShopifyCLI::Theme::Syncer.expects(:new)
-          .with(@ctx, theme: @theme, include_filter: @include_filter, ignore_filter: @ignore_filter)
+          .with(@ctx, theme: @theme, include_filter: @include_filter, ignore_filter: @ignore_filter, stable: nil)
           .returns(@syncer)
 
         @syncer.expects(:start_threads)
@@ -318,7 +340,7 @@ module Theme
           .returns(@theme)
 
         ShopifyCLI::Theme::Syncer.expects(:new)
-          .with(@ctx, theme: @theme, include_filter: @include_filter, ignore_filter: @ignore_filter)
+          .with(@ctx, theme: @theme, include_filter: @include_filter, ignore_filter: @ignore_filter, stable: nil)
           .returns(@syncer)
 
         @syncer.expects(:start_threads)
@@ -340,7 +362,7 @@ module Theme
         CLI::UI::Prompt.expects(:ask).returns("NAME")
 
         ShopifyCLI::Theme::Syncer.expects(:new)
-          .with(@ctx, theme: @theme, include_filter: @include_filter, ignore_filter: @ignore_filter)
+          .with(@ctx, theme: @theme, include_filter: @include_filter, ignore_filter: @ignore_filter, stable: nil)
           .returns(@syncer)
 
         @syncer.expects(:start_threads)
@@ -364,7 +386,7 @@ module Theme
         ShopifyCLI::Theme::IgnoreFilter.expects(:from_path).with(".").returns(@ignore_filter)
 
         ShopifyCLI::Theme::Syncer.expects(:new)
-          .with(@ctx, theme: @theme, include_filter: @include_filter, ignore_filter: @ignore_filter)
+          .with(@ctx, theme: @theme, include_filter: @include_filter, ignore_filter: @ignore_filter, stable: nil)
           .returns(@syncer)
 
         @syncer.expects(:start_threads)
@@ -385,7 +407,7 @@ module Theme
           .returns(@theme)
 
         ShopifyCLI::Theme::Syncer.expects(:new)
-          .with(@ctx, theme: @theme, include_filter: @include_filter, ignore_filter: @ignore_filter)
+          .with(@ctx, theme: @theme, include_filter: @include_filter, ignore_filter: @ignore_filter, stable: nil)
           .returns(@syncer)
 
         @syncer.expects(:start_threads)
@@ -407,7 +429,7 @@ module Theme
         @syncer.expects(:upload_theme!).with(delete: true)
 
         ShopifyCLI::Theme::Syncer.expects(:new)
-          .with(@ctx, theme: @theme, include_filter: @include_filter, ignore_filter: @ignore_filter)
+          .with(@ctx, theme: @theme, include_filter: @include_filter, ignore_filter: @ignore_filter, stable: nil)
           .returns(@syncer)
 
         @syncer.expects(:start_threads)
