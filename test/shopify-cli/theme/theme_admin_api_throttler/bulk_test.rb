@@ -48,6 +48,7 @@ module ShopifyCLI
             @bulk.enqueue(request)
           end
 
+          @bulk.timeout!
           @bulk.send(:wait_put_requests)
 
           assert_equal(2, @bulk.consume_put_requests_calls)
@@ -66,6 +67,7 @@ module ShopifyCLI
             @bulk.enqueue(request)
           end
 
+          @bulk.timeout!
           @bulk.send(:wait_put_requests)
 
           assert_equal(3, @bulk.consume_put_requests_calls)
@@ -80,6 +82,7 @@ module ShopifyCLI
             @bulk.enqueue(generate_put_request("file#{n}.txt", 100_000))
           end
 
+          @bulk.timeout!
           @bulk.send(:wait_put_requests)
 
           assert_equal(1, @bulk.consume_put_requests_calls)
@@ -96,6 +99,7 @@ module ShopifyCLI
             @bulk.enqueue(generate_put_request("file#{n}.txt", 10_000))
           end
 
+          @bulk.timeout!
           @bulk.send(:wait_put_requests)
 
           assert_equal(2, @bulk.consume_put_requests_calls)
@@ -106,15 +110,21 @@ module ShopifyCLI
         def test_batch_big_test_with_multiple_threads
           @bulk = FakeBulk.new(@ctx, @admin_api, pool_size: MULTIPLE_THREADS)
 
-          5.times do |n|
-            size = (Bulk::MAX_BULK_BYTESIZE / 2) - 10
-            @bulk.enqueue(generate_put_request("file#{n}.txt", size + n))
+          files = 5.times.map do |i|
+            size = (Bulk::MAX_BULK_BYTESIZE / 2) - 1000
+            generate_put_request("file#{i}.txt", size + i)
           end
 
+          files.each { |file| @bulk.enqueue(file) }
+
+          @bulk.timeout!
           @bulk.send(:wait_put_requests)
 
           assert_equal(3, @bulk.consume_put_requests_calls)
-          assert_equal([10485741, 10485745, 5242874], @bulk.sizes)
+          assert_equal([
+            files[0].size + files[1].size,
+            files[2].size + files[3].size,
+            files[4].size], @bulk.sizes)
           @bulk.shutdown
         end
 
@@ -153,6 +163,7 @@ module ShopifyCLI
           def initialize(ctx, admin_api, pool_size: 20)
             super(ctx, admin_api, pool_size: pool_size)
             @consume_put_requests_calls = 0
+            @is_queue_timeout = false
             @sizes = []
           end
 
@@ -161,6 +172,10 @@ module ShopifyCLI
             @sizes << bulk_request.map(&:size).reduce(0, &:+)
             @consume_put_requests_calls += 1
             bulk_request
+          end
+
+          def timeout!
+            @is_queue_timeout = true
           end
         end
       end
