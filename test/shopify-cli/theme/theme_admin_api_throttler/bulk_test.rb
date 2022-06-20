@@ -124,7 +124,8 @@ module ShopifyCLI
           assert_equal([
             files[0].size + files[1].size,
             files[2].size + files[3].size,
-            files[4].size], @bulk.sizes)
+            files[4].size,
+          ], @bulk.sizes)
           @bulk.shutdown
         end
 
