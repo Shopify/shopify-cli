@@ -9,6 +9,7 @@ module ShopifyCLI
     class ThemeAdminAPIThrottler
       class BulkJob < ShopifyCLI::ThreadPool::Job
         JOB_TIMEOUT = 0.2 # 200ms
+        MAX_RETRIES = 5
 
         attr_reader :bulk
 
@@ -31,13 +32,13 @@ module ShopifyCLI
             responses(bulk_body).each_with_index do |tuple, index|
               status, body = tuple
               put_request = put_requests[index]
-              if status == 200 || put_request.retries > 5
-                @ctx.debug("[BulkJob] asset saved: #{put_request}")
+              if status == 200 || put_request.retries > MAX_RETRIES
+                @ctx.debug("[BulkJob] asset saved: #{put_request.key}") if status == 200
                 @block_mutex.synchronize do
                   put_request.block.call(status, body, response)
                 end
               else
-                @ctx.debug("[BulkJob] asset error: #{put_request}")
+                @ctx.debug("[BulkJob] asset error: #{put_request.key}")
                 @block_mutex.synchronize do
                   put_request.retries += 1
                   bulk.enqueue(put_request)
@@ -45,8 +46,7 @@ module ShopifyCLI
               end
             end
           else
-            # ignore
-            @ctx.puts("Suggest --stable flag")
+            @ctx.puts(@ctx.message("theme.stable_flag_suggestion"))
           end
         end
 

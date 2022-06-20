@@ -32,7 +32,8 @@ module ShopifyCLI
           @ctx = ctx
           theme = find_theme(root, theme)
           ignore_filter = IgnoreFilter.from_path(root)
-          @syncer = Syncer.new(ctx, theme: theme, ignore_filter: ignore_filter, overwrite_json: !editor_sync, stable: stable)
+          @syncer = Syncer.new(ctx, theme: theme, ignore_filter: ignore_filter, overwrite_json: !editor_sync,
+            stable: stable)
           watcher = Watcher.new(ctx, theme: theme, ignore_filter: ignore_filter, syncer: @syncer, poll: poll)
           remote_watcher = RemoteWatcher.to(theme: theme, syncer: @syncer)
 

@@ -36,7 +36,7 @@ module ShopifyCLI
         end
 
         def key
-          JSON.parse(body)["asset"]["key"]
+          @key ||= JSON.parse(body)["asset"]["key"]
         end
 
         def bulk_path

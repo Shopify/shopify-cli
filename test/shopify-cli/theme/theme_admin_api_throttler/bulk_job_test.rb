@@ -1,11 +1,9 @@
 # frozen_string_literal: true
 
 require "test_helper"
-require "timecop"
 require "shopify_cli/theme/theme"
 require "shopify_cli/theme/theme_admin_api_throttler/put_request"
 require "shopify_cli/theme/theme_admin_api_throttler/bulk"
-
 
 module ShopifyCLI
   module Theme
@@ -32,7 +30,20 @@ module ShopifyCLI
         end
 
         def test_perform_success
-          @job = BulkJob.new(bulk)
+          files = [generate_put_request("file1.txt")]
+          @job = BulkJob.new(@ctx, bulk(files: files))
+          resp_body = {
+            "results" => [
+              {
+                "code" => 200,
+                "body" => {
+                  "asset" => {
+                    "key" => "file1.txt",
+                  },
+                },
+              },
+            ],
+          }
           ShopifyCLI::AdminAPI
             .expects(:rest_request)
             .with(
@@ -43,37 +54,27 @@ module ShopifyCLI
               api_version: "unstable",
               body: JSON.generate({
                 assets: [
-                  { key: "file1.txt", value: "file1" },
-                ]
+                  { key: "file1.txt", value: "file1.txt" },
+                ],
               })
             ).returns(
               [
                 207,
-                {
-                  "results" => [
-                    {
-                      "code" => 200,
-                      "body" => {
-                        "asset" => {
-                          "key" => "file1.txt",
-                        }
-                      }
-                    },
-                  ],
-                },
-                {}
+                resp_body,
+                {},
               ]
             )
-
-          @ctx.expects(:puts).with("12:30:59 {{green:Synced }} {{>}} {{blue:update file1.txt}}").once
-
-          time_freeze do
-            @job.perform!
-          end
+          @ctx.expects(:debug)
+            .with("[BulkJob] asset saved: file1.txt")
+            .once
+          @ctx.expects(:puts)
+            .with(resp_body["results"].first["body"])
+          @job.perform!
         end
 
-        def test_perform_when_bulk_request_error
-          @job = BulkJob.new(bulk)
+        def test_suggest_stable_flag_when_bulk_request_error
+          files = [generate_put_request("file1.txt")]
+          @job = BulkJob.new(@ctx, bulk(files: files))
           ShopifyCLI::AdminAPI
             .expects(:rest_request)
             .with(
@@ -84,112 +85,104 @@ module ShopifyCLI
               api_version: "unstable",
               body: JSON.generate({
                 assets: [
-                  { key: "file1.txt", value: "file1" },
-                ]
+                  { key: "file1.txt", value: "file1.txt" },
+                ],
               })
             ).returns(
               [
                 400,
                 {},
-                {}
+                {},
               ]
             )
-          @job.expects(:handle_requeue).once
+          @ctx.expects(:puts)
+            .with(@ctx.message("theme.stable_flag_suggestion"))
+            .once
           @job.perform!
         end
 
-        def test_perform_when_asset_update_error
-          @job = BulkJob.new(bulk)
-          ShopifyCLI::AdminAPI
-            .expects(:rest_request)
-            .with(
-              @ctx,
-              shop: @theme.shop,
-              path: "themes/#{@theme.id}/assets/bulk.json",
-              method: "PUT",
-              api_version: "unstable",
-              body: JSON.generate({
-                assets: [
-                  { key: "file1.txt", value: "file1" },
-                ]
-              })
-            ).returns(
-              [
-                207,
-                {
-                  "results" => [
-                    {
-                      "code" => 422,
-                      "body" => {
-                        "errors" => {
-                          "asset" => "Something is wrong with this file!!!",
-                        }
-                      }
-                    },
+        def test_retry_when_asset_update_error
+          files = [generate_put_request("file1.txt")]
+          bulker = bulk(files: files)
+          @job = BulkJob.new(@ctx, bulker)
+          bulker.expects(:enqueue).times(5)
+
+          (BulkJob::MAX_RETRIES + 1).times do |request_num|
+            ShopifyCLI::AdminAPI
+              .expects(:rest_request)
+              .with(
+                @ctx,
+                shop: @theme.shop,
+                path: "themes/#{@theme.id}/assets/bulk.json",
+                method: "PUT",
+                api_version: "unstable",
+                body: JSON.generate({
+                  assets: [
+                    { key: "file1.txt", value: "file1.txt" },
                   ],
-                },
-                {}
-              ]
-            )
-          # TODO: determine how to handle
+                })
+              ).returns(
+                [
+                  207,
+                  {
+                    "results" => [
+                      {
+                        "code" => 422,
+                        "body" => {
+                          "errors" => {
+                            "asset" => "Something is wrong with this file!!!",
+                          },
+                        },
+                      },
+                    ],
+                  },
+                  {},
+                ]
+              )
+            if request_num == BulkJob::MAX_RETRIES + 1
+              @ctx.expects(:debug)
+                .never
+              @ctx.expects(:error).once
+            else
+              @ctx.expects(:debug)
+                .with("[BulkJob] asset error: file1.txt")
+            end
+            @job.perform!
+          end
         end
 
         private
 
-        def bulk
-          @bulk ||= stub(
+        def bulk(files:)
+          stub(
             "Bulk",
             ready?: true,
-            consume_put_requests: [generate_put_request("file1", 34_021)],
+            consume_put_requests: files,
             admin_api: @admin_api,
+            enqueue: nil,
           )
         end
 
-        def simulate_operations
-          # print error if passed error in block
-          # print synced otherwise
-        end
-
-        def generate_put_request(name, size, &block)
-          body = request_body(name, size)
+        def generate_put_request(name)
+          req_body = request_body(name)
           path = "themes/#{@theme.id}/assets.json"
-          request = stub(
-            "PutRequest",
-            name: name, # debugging
-            method: "PUT",
-            body: body,
-            size: size,
-            path: path,
-            bulk_path: path.gsub(/.json$/, "/bulk.json"),
-            block: block,
-          )
-          request
+          req = PutRequest.new(path, req_body) do |status, body, _response|
+            if status == 200
+              @ctx.puts(body)
+            else
+              @ctx.error(body)
+            end
+          end
+          req
         end
 
-        def request_body(name, size)
+        def request_body(name)
           JSON.generate(
             asset: {
-              key: "#{name}.txt",
-              value: "#{name}",
+              key: name,
+              value: name,
             }
           )
-        end
-
-        def time_freeze(&block)
-          time = Time.local(2000, 1, 1, 12, 30, 59)
-          Timecop.freeze(time, &block)
-        end
-
-        def mock_context_synced_message
-          @ctx.stubs(:message)
-            .with("theme.serve.operation.status.synced")
-            .returns("Synced")
-        end
-
-        def mock_context_synced_message
-          @ctx.stubs(:message)
-            .with("theme.serve.operation.status.error")
-            .returns("Error")
         end
       end
     end
