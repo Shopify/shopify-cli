@@ -38,75 +38,83 @@ module ShopifyCLI
         end
 
         def test_batch_bytesize_upper_bound_with_multiple_threads
-          @bulk = BulkMock.new(@ctx, @admin_api, pool_size: MULTIPLE_THREADS)
+          @bulk = FakeBulk.new(@ctx, @admin_api, pool_size: MULTIPLE_THREADS)
 
-          file1 = generate_put_request("file1.txt", 30_010)
-          file2 = generate_put_request("file2.txt", 60_020)
-          file3 = generate_put_request("file3.txt", 5_242_880) # exactly max bytesize
+          request_1 = generate_put_request("file1.txt", Bulk::MAX_BULK_BYTESIZE / 3)
+          request_2 = generate_put_request("file2.txt", Bulk::MAX_BULK_BYTESIZE / 3)
+          request_3 = generate_put_request("file3.txt", Bulk::MAX_BULK_BYTESIZE + 1)
 
-          [file1, file2, file3].each do |r|
-            @bulk.enqueue(r)
+          [request_1, request_2, request_3].each do |request|
+            @bulk.enqueue(request)
           end
 
-          assert_equal(@bulk.num_calls, 2)
-          assert_equal(@bulk.sizes, [90_030, 5_242_880])
+          @bulk.send(:wait_put_requests)
+
+          assert_equal(2, @bulk.consume_put_requests_calls)
+          assert_equal([request_1.size + request_2.size, request_3.size], @bulk.sizes)
           @bulk.shutdown
         end
 
         def test_batch_bytesize_upper_bound_with_single_thread
-          @bulk = BulkMock.new(@ctx, @admin_api)
+          @bulk = FakeBulk.new(@ctx, @admin_api)
 
-          file1 = generate_put_request("file1.txt", 5_242_802)
-          file2 = generate_put_request("file2.txt", 5_242_803)
-          file3 = generate_put_request("file3.txt", 5_242_804) # exactly max bytesize
+          request_1 = generate_put_request("file1.txt", Bulk::MAX_BULK_BYTESIZE + 2)
+          request_2 = generate_put_request("file2.txt", Bulk::MAX_BULK_BYTESIZE + 3)
+          request_3 = generate_put_request("file3.txt", Bulk::MAX_BULK_BYTESIZE + 4)
 
-          [file1, file2, file3].each do |r|
-            @bulk.enqueue(r)
+          [request_1, request_2, request_3].each do |request|
+            @bulk.enqueue(request)
           end
 
-          assert_equal(@bulk.num_calls, 3)
-          assert_equal(@bulk.sizes, [5_242_802, 5_242_803, 5_242_804])
+          @bulk.send(:wait_put_requests)
+
+          assert_equal(3, @bulk.consume_put_requests_calls)
+          assert_equal([request_1.size, request_2.size, request_3.size], @bulk.sizes)
           @bulk.shutdown
         end
 
         def test_batch_num_files_upper_bound_with_single_thread
-          @bulk = BulkMock.new(@ctx, @admin_api)
+          @bulk = FakeBulk.new(@ctx, @admin_api)
 
           Bulk::MAX_BULK_FILES.times do |n|
-            file = generate_put_request("file#{n}.txt", 100_000)
-            @bulk.enqueue(file)
+            @bulk.enqueue(generate_put_request("file#{n}.txt", 100_000))
           end
 
-          assert_equal(@bulk.num_calls, 1)
-          assert_equal(@bulk.sizes, [3_000_000])
+          @bulk.send(:wait_put_requests)
+
+          assert_equal(1, @bulk.consume_put_requests_calls)
+          assert_equal([2_000_000], @bulk.sizes)
           @bulk.shutdown
         end
 
         def test_batch_num_files_upper_bound_with_multiple_threads
-          @bulk = BulkMock.new(@ctx, @admin_api, pool_size: MULTIPLE_THREADS)
+          @bulk = FakeBulk.new(@ctx, @admin_api, pool_size: MULTIPLE_THREADS)
 
           num_requests = Bulk::MAX_BULK_FILES << 1
 
           num_requests.times do |n|
-            file = generate_put_request("file#{n}.txt", 10_000)
-            @bulk.enqueue(file)
+            @bulk.enqueue(generate_put_request("file#{n}.txt", 10_000))
           end
 
-          assert_equal(@bulk.num_calls, 2)
-          assert_equal(@bulk.sizes, [Bulk::MAX_BULK_FILES * 10_000, Bulk::MAX_BULK_FILES * 10_000])
+          @bulk.send(:wait_put_requests)
+
+          assert_equal(2, @bulk.consume_put_requests_calls)
+          assert_equal([Bulk::MAX_BULK_FILES * 10_000, Bulk::MAX_BULK_FILES * 10_000], @bulk.sizes)
           @bulk.shutdown
         end
 
         def test_batch_big_test_with_multiple_threads
-          @bulk = BulkMock.new(@ctx, @admin_api, pool_size: MULTIPLE_THREADS)
+          @bulk = FakeBulk.new(@ctx, @admin_api, pool_size: MULTIPLE_THREADS)
 
           5.times do |n|
-            file = generate_put_request("file#{n}.txt", 3_565_210 + n)
-            @bulk.enqueue(file)
+            size = (Bulk::MAX_BULK_BYTESIZE / 2) - 10
+            @bulk.enqueue(generate_put_request("file#{n}.txt", size + n))
           end
 
-          assert_equal(5, @bulk.num_calls)
-          assert_equal(@bulk.sizes, [3_565_211, 3_565_212, 3_565_213, 3_565_214, 3_565_215])
+          @bulk.send(:wait_put_requests)
+
+          assert_equal(3, @bulk.consume_put_requests_calls)
+          assert_equal([10485741, 10485745, 5242874], @bulk.sizes)
           @bulk.shutdown
         end
 
@@ -122,6 +130,7 @@ module ShopifyCLI
               @ctx.error(body)
             end
           end
+          req.stubs(:size).returns(size)
           req
         end
 
@@ -138,18 +147,20 @@ module ShopifyCLI
           [1234, [], {}]
         end
 
-        class BulkMock < Bulk
-          attr_accessor :num_calls, :sizes
+        class FakeBulk < Bulk
+          attr_accessor :consume_put_requests_calls, :sizes
 
           def initialize(ctx, admin_api, pool_size: 20)
             super(ctx, admin_api, pool_size: pool_size)
-            @num_calls = 0
+            @consume_put_requests_calls = 0
             @sizes = []
           end
 
           def consume_put_requests
             bulk_request = super
-            @num_calls += 1
+            @sizes << bulk_request.map(&:size).reduce(0, &:+)
+            @consume_put_requests_calls += 1
+            bulk_request
           end
         end
       end

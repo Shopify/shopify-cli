@@ -38,7 +38,7 @@ module ShopifyCLI
         end
 
         def shutdown
-          sleep(0.2) until @put_requests.empty?
+          wait_put_requests
           @thread_pool.shutdown
         end
 
@@ -86,6 +86,10 @@ module ShopifyCLI
           return false if bulk_size.zero?
           elapsed_time = now - @latest_enqueued_at
           elapsed_time > QUEUE_TIMEOUT
+        end
+
+        def wait_put_requests
+          sleep(0.2) until @put_requests.empty?
         end
 
         def now

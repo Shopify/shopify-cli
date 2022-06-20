@@ -194,6 +194,7 @@ module ShopifyCLI
           wait!(&block)
         end
 
+        api_client.deactivate_throttler!
         enqueue_delayed_files_updates
       end
 

@@ -63,13 +63,13 @@ module ShopifyCLI
       end
 
       def test_update_with_bulk_request
-        @syncer.api_client.deactivate!
+        @syncer.api_client.deactivate_throttler!
         @syncer.api_client.admin_api.expects(:rest_request)
         @syncer.send(:update, @theme["assets/theme.css"])
       end
 
       def test_update_with_regular_request_bulk
-        @syncer.api_client.activate!
+        @syncer.api_client.activate_throttler!
         @syncer.api_client.bulk.expects(:enqueue)
         @syncer.send(:update, @theme["assets/theme.css"])
       end
@@ -495,6 +495,7 @@ module ShopifyCLI
         @syncer.expects(:enqueue_updates).with(@theme.static_asset_files)
         @syncer.expects(:enqueue_json_updates).with(@theme.json_files)
         @syncer.expects(:enqueue_delayed_files_updates)
+        @syncer.api_client.expects(:deactivate_throttler!)
 
         @syncer.start_threads
         @syncer.upload_theme!(delete: true)

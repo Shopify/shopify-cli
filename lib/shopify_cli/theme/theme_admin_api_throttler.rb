@@ -30,11 +30,11 @@ module ShopifyCLI
         end
       end
 
-      def activate!
+      def activate_throttler!
         @active = true
       end
 
-      def deactivate!
+      def deactivate_throttler!
         @active = false
       end
 

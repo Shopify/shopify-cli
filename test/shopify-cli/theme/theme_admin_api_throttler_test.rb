@@ -40,7 +40,7 @@ module ShopifyCLI
           .once
 
         @throttler.put(path: op1.path, **op1.body) { operation_handler_block }
-        @throttler.deactivate!
+        @throttler.deactivate_throttler!
         @throttler.put(path: op2.path, **op2.body) { operation_handler_block }
         @throttler.shutdown
       end
