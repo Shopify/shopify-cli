@@ -4,6 +4,7 @@ From version 2.6.0, the sections in this file adhere to the [keep a changelog](h
 
 ### Added
 * [#2368](https://github.com/Shopify/shopify-cli/pull/2368): Add performance enhancements to the `theme serve` and `theme push` commands
+* [#2413](https://github.com/Shopify/shopify-cli/pull/2413): Add `-t/--theme` flag support to `shopify theme delete` and clean up Development Theme deletion DX
 
 ## Version 2.18.0 - 2022-05-30
 
@@ -45,7 +46,7 @@ From version 2.6.0, the sections in this file adhere to the [keep a changelog](h
 
 ### Added
 * [#2189](https://github.com/Shopify/shopify-cli/pull/2189): Retrieve latest CLI version in the background
-* [#2263](https://github.com/Shopify/shopify-cli/pull/2263): Add `POS UI Extension` to support third party developers to extend POS smart grid functionality using native retail components. 
+* [#2263](https://github.com/Shopify/shopify-cli/pull/2263): Add `POS UI Extension` to support third party developers to extend POS smart grid functionality using native retail components.
 
 ### Changed
 * [#2272](https://github.com/Shopify/shopify-cli/pull/2272): Changed interactive apps list scope for extension create|register|connect commands
@@ -53,7 +54,7 @@ From version 2.6.0, the sections in this file adhere to the [keep a changelog](h
 ## Version 2.15.6 - 2022-04-12
 
 ### Fixed
-* [#2246](https://github.com/Shopify/shopify-cli/pull/2246): Fix callback urls for app serve 
+* [#2246](https://github.com/Shopify/shopify-cli/pull/2246): Fix callback urls for app serve
 
 ## Version 2.15.5 - 2022-04-08
 
