@@ -183,7 +183,7 @@ module Extension
       },
       errors: {
         unknown_type: "Unknown extension type %s. Valid extension types include: CHECKOUT_POST_PURCHASE, " \
-        "CHECKOUT_UI_EXTENSION, THEME_APP_EXTENSION, and PRODUCT_SUBSCRIPTION.",
+        "THEME_APP_EXTENSION, and PRODUCT_SUBSCRIPTION.",
         package_not_found: "`%s` package not found.",
         missing_push_options_ci: "The following are missing: %s. ",
         missing_push_options_ci_solution: "To add them to a CI environment:\n\t1. Run a connect command " \

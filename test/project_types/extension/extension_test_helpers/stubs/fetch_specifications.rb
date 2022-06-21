@@ -44,6 +44,24 @@ module Extension
                 },
               },
             },
+            {
+              name: "Checkout UI Extension",
+              identifier: "checkout_ui_extension",
+              features: {
+                argo: {
+                  surface: "admin",
+                },
+              },
+            },
+            {
+              name: "Checkout Argo Extension",
+              identifier: "checkout_argo_extension",
+              features: {
+                argo: {
+                  surface: "admin",
+                },
+              },
+            },
           ]
         end
       end
