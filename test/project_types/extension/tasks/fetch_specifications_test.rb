@@ -25,6 +25,22 @@ module Extension
           end
         end
       end
+
+      def test_request_removes_checkout_ui_extensions
+        stub_fetch_specifications(api_key: "1234")
+
+        FetchSpecifications.call(context: FakeContext.new, api_key: "1234").tap do |result|
+          assert_predicate(result, :success?)
+          result.value.tap do |specifications|
+            assert_kind_of(Array, specifications)
+            assert(
+              specifications.none? do |s|
+                ::Extension::Features::Runtimes::CheckoutUiExtension::IDENTIFIERS.include?(s["identifier"].upcase)
+              end
+            )
+          end
+        end
+      end
     end
   end
 end
