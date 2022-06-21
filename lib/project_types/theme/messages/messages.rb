@@ -238,6 +238,9 @@ module Theme
           HELP
           select: "Select theme to delete",
           done: "%s theme(s) deleted",
+          theme_not_found: "Theme \"%s\" doesn't exist",
+          no_development_theme_error: "You don't have any development themes to be deleted.",
+          no_development_theme_resolution: "Try creating one with {{command:theme push -d -t <theme_name>}}.",
           no_themes_error: "You don't have any theme to be deleted.",
           no_themes_resolution: "Try to create an unpublished theme with {{command:theme push -u -t <theme_name>}}.",
           not_found: "{{x}} Theme #%s does not exist",

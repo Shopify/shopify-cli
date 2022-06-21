@@ -11,25 +11,12 @@ module Theme
         parser.on("-d", "--development") { flags[:development] = true }
         parser.on("-a", "--show-all") { flags[:show_all] = true }
         parser.on("-f", "--force") { flags[:force] = true }
+        parser.on("-t", "--theme=NAME_OR_ID") { |theme| flags[:theme] = theme }
       end
 
-      def call(args, _name)
-        themes = if options.flags[:development]
-          [ShopifyCLI::Theme::DevelopmentTheme.new(@ctx)]
-        elsif args.any?
-          args.map { |id| ShopifyCLI::Theme::Theme.new(@ctx, id: id) }
-        else
-          form = Forms::Select.ask(
-            @ctx,
-            [],
-            title: @ctx.message("theme.delete.select"),
-            exclude_roles: ["live"],
-            include_foreign_developments: options.flags[:show_all],
-            cmd: :delete
-          )
-          return unless form
-          [form.theme]
-        end
+      def call(_args, _name)
+        themes = find_themes(**options.flags)
+        return if themes.empty?
 
         deleted = 0
         themes.each do |theme|
@@ -61,6 +48,40 @@ module Theme
           title: @ctx.message("theme.delete.confirm", theme.name, theme.shop),
           force: options.flags[:force],
         ).confirmed?
+      end
+
+      def find_themes(theme: nil, development: nil, show_all: false, **_args)
+        if theme
+          selected_theme = ShopifyCLI::Theme::Theme.find_by_identifier(@ctx, identifier: theme)
+          return [selected_theme] if selected_theme
+
+          @ctx.abort(@ctx.message("theme.delete.theme_not_found", theme))
+          return []
+        end
+
+        if development
+          dev_theme = ShopifyCLI::Theme::DevelopmentTheme.find(@ctx)
+          return [dev_theme] if dev_theme
+
+          @ctx.abort(@ctx.message("theme.delete.no_development_theme_error"),
+            @ctx.message("theme.delete.no_development_theme_resolution"))
+          return []
+        end
+
+        select_theme(show_all)
+      end
+
+      def select_theme(show_all)
+        form = Forms::Select.ask(
+          @ctx,
+          [],
+          title: @ctx.message("theme.delete.select"),
+          exclude_roles: ["live"],
+          include_foreign_developments: show_all,
+          cmd: :delete
+        )
+        return [] unless form
+        [form.theme]
       end
     end
   end
