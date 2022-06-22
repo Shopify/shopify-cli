@@ -5,6 +5,9 @@ From version 2.6.0, the sections in this file adhere to the [keep a changelog](h
 ### Added
 * [#2368](https://github.com/Shopify/shopify-cli/pull/2368): Add performance enhancements to the `theme serve` and `theme push` commands
 
+### Fixed
+* [#2418](https://github.com/Shopify/shopify-cli/pull/2418): Improve the help message of the `theme open -e/--editor` flag
+
 ## Version 2.18.0 - 2022-05-30
 
 ### Added
