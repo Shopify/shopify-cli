@@ -46,7 +46,7 @@ module ShopifyCLI
           to_batch = []
           to_batch_size_bytes = 0
           @mut.synchronize do
-            # sort requests to perform less retries at the `bulk_job`` level
+            # sort requests to perform less retries at the `bulk_job` level
             @put_requests.sort_by! { |r| r.liquid? ? 0 : 1 }
 
             is_ready = false
@@ -55,6 +55,7 @@ module ShopifyCLI
               if to_batch.empty? && request.size > MAX_BULK_BYTESIZE
                 is_ready = true
                 to_batch << request
+                to_batch_size_bytes += request.size
                 @put_requests.shift
               elsif to_batch.size + 1 > MAX_BULK_FILES || to_batch_size_bytes + request.size > MAX_BULK_BYTESIZE
                 is_ready = true
@@ -65,7 +66,7 @@ module ShopifyCLI
               end
             end
           end
-          to_batch
+          [to_batch, to_batch_size_bytes]
         end
 
         def ready?

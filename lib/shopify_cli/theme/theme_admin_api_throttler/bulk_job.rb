@@ -24,8 +24,10 @@ module ShopifyCLI
 
         def perform!
           return unless bulk.ready?
-          put_requests = bulk.consume_put_requests
+          put_requests, bulk_size = bulk.consume_put_requests
+          return if put_requests.empty?
 
+          @ctx.debug("[BulkJob] size: #{put_requests.size}, bytesize: #{bulk_size}")
           bulk_status, bulk_body, response = rest_request(put_requests)
 
           if bulk_status == 207

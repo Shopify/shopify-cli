@@ -30,8 +30,8 @@ module ShopifyCLI
         end
 
         def test_perform_success
-          files = [generate_put_request("file1.txt")]
-          @job = BulkJob.new(@ctx, bulk(files: files))
+          file1 = generate_put_request("file1.txt")
+          @job = BulkJob.new(@ctx, bulk(files: [file1], size: file1.size))
           resp_body = {
             "results" => [
               {
@@ -65,6 +65,8 @@ module ShopifyCLI
               ]
             )
           @ctx.expects(:debug)
+            .with("[BulkJob] size: 1, bytesize: #{file1.size}")
+          @ctx.expects(:debug)
             .with("[BulkJob] asset saved: file1.txt")
             .once
           @ctx.expects(:puts)
@@ -73,8 +75,8 @@ module ShopifyCLI
         end
 
         def test_suggest_stable_flag_when_bulk_request_error
-          files = [generate_put_request("file1.txt")]
-          @job = BulkJob.new(@ctx, bulk(files: files))
+          file1 = generate_put_request("file1.txt")
+          @job = BulkJob.new(@ctx, bulk(files: [file1], size: file1.size))
           ShopifyCLI::AdminAPI
             .expects(:rest_request)
             .with(
@@ -95,6 +97,8 @@ module ShopifyCLI
                 {},
               ]
             )
+          @ctx.expects(:debug)
+            .with("[BulkJob] size: 1, bytesize: #{file1.size}")
           @ctx.expects(:puts)
             .with(@ctx.message("theme.stable_flag_suggestion"))
             .once
@@ -102,8 +106,8 @@ module ShopifyCLI
         end
 
         def test_retry_when_asset_update_error
-          files = [generate_put_request("file1.txt")]
-          bulker = bulk(files: files)
+          file1 = generate_put_request("file1.txt")
+          bulker = bulk(files: [file1], size: file1.size)
           @job = BulkJob.new(@ctx, bulker)
           bulker.expects(:enqueue).times(5)
 
@@ -139,13 +143,14 @@ module ShopifyCLI
                   {},
                 ]
               )
+            @ctx.expects(:debug)
+              .with("[BulkJob] size: 1, bytesize: #{file1.size}")
             if request_num == BulkJob::MAX_RETRIES + 1
-              @ctx.expects(:debug)
-                .never
               @ctx.expects(:error).once
             else
               @ctx.expects(:debug)
                 .with("[BulkJob] asset error: file1.txt")
+                .once
             end
             @job.perform!
           end
@@ -153,11 +158,11 @@ module ShopifyCLI
 
         private
 
-        def bulk(files:)
+        def bulk(files:, size:)
           stub(
             "Bulk",
             ready?: true,
-            consume_put_requests: files,
+            consume_put_requests: [files, size],
             admin_api: @admin_api,
             enqueue: nil,
           )
