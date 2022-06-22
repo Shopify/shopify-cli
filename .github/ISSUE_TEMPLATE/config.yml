@@ -1,0 +1,9 @@
+blank_issues_enabled: true
+contact_links:
+  - name: Shopify Partners Community 🙌
+    url: https://www.shopify.com/partners/community#conversation
+    about: Connect with Shopify and other Shopify Partners through our online communities!
+  - name: Shopify CLI 3.0 issues 📝
+    url: https://www.github.com/Shopify/cli/issues/new/choose
+    about: |-
+      You're about to open an issue about Shopify CLI 2.0. Are you actually using our new CLI? If so, please create an issue there instead.
