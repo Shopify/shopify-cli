@@ -498,11 +498,9 @@ module ShopifyCLI
             "{{i}} Authentication required. Login to the URL below with your %s credentials to continue.",
 
           servlet: {
-            success_response: "Authenticated successfully. You may now close this page.",
+            success_response: "You've successfuly logged into the Shopify CLI!",
             invalid_request_response: "Invalid request: %s",
-            invalid_state_response: "Anti-forgery state token does not match the initial request.",
-            authenticated: "Authenticated successfully",
-            not_authenticated: "Failed to authenticate",
+            invalid_state_response: "The anti-forgery state token does not match the initial request.",
           },
           login_prompt: "Please ensure you've logged in with {{command:%s login}} and try again",
           token_authentication: "%s environment variable. We'll authenticate using its value as a token.",

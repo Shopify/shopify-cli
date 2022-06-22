@@ -1,20 +1,8 @@
 module ShopifyCLI
   class IdentityAuth
     class Servlet < WEBrick::HTTPServlet::AbstractServlet
-      TEMPLATE = %{<!DOCTYPE html>
-        <html>
-        <head>
-          <title>%{title}</title>
-        </head>
-        <body>
-          <h1 style="color: #%{color};">%{message}</h1>
-          %{autoclose}
-        </body>
-        </html>
-      }
-      AUTOCLOSE_TEMPLATE = %{
-        <script>window.close();</script>
-      }
+      ERB_FILENAME = File.join(ROOT, "lib/shopify_cli/assets/post_auth_page/index.html.erb")
+      CSS_FILENAME = File.join(ROOT, "lib/shopify_cli/assets/post_auth_page/style.css")
 
       def initialize(server, identity_auth, token)
         super
@@ -46,14 +34,10 @@ module ShopifyCLI
         locals = {
           status: status,
           message: message,
-          color: successful ? "black" : "red",
-          title: Context.message(
-            successful ? "core.identity_auth.servlet.authenticated" : "core.identity_auth.servlet.not_authenticated"
-          ),
-          autoclose: successful ? AUTOCLOSE_TEMPLATE : "",
+          css: File.read(CSS_FILENAME),
         }
         response.status = status
-        response.body = format(TEMPLATE, locals)
+        response.body = ERB.new(File.read(ERB_FILENAME)).result(binding)
       end
     end
   end
