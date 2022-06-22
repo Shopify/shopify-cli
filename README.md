@@ -1,6 +1,5 @@
-<div align="center">
-  <img src="assets/logo.png" width="150"/>
-  <h1>Shopify CLI</h1>
+# Shopify CLI 2.0
+  
   <a href=""><img src="https://github.com/shopify/shopify-cli/workflows/CI/badge.svg" alt="Shopify"></a>
   <img src="https://img.shields.io/github/v/release/shopify/shopify-cli?include_prereleases&style=flat-square" alt="Latest Version">
   <img src="https://img.shields.io/github/forks/shopify/shopify-cli?style=flat-square" alt="GitHub forks">
@@ -11,12 +10,14 @@
   <a href="http://twitter.com/ShopifyDevs"><img src="https://img.shields.io/twitter/follow/ShopifyDevs?style=flat-square" alt="Twitter Followers"></a>
   <img src="https://img.shields.io/badge/License-MIT-green.svg" alt="License">
   <img src="https://img.shields.io/badge/Powered%20by-Ruby-red" alt="Powered by Ruby">
-</div>
 
 
-Shopify CLI helps you build Shopify themes and apps. Use Shopify CLI to automate and enhance your local development workflow.
+Shopify CLI 2.0 is a command line to help you build on Shopify. It's available as a Ruby gem and can be run and installed on Mac, Linux, and Windows systems.
 
-Shopify CLI is available as a gem and can be run and installed on Mac, Linux and Windows systems.
+## Note on Shopify CLI 2.0 versus Shopify CLI 3.0 ##
+
+Use 2.0 for developing themes. For developing apps and custom storefronts, we recommend using [Shopify CLI 3.0](https://github.com/Shopify/cli).
+
 
 ## Installation 
 
