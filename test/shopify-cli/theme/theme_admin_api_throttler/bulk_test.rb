@@ -38,6 +38,7 @@ module ShopifyCLI
         end
 
         def test_batch_bytesize_upper_bound_with_multiple_threads
+          skip
           @bulk = FakeBulk.new(@ctx, @admin_api, pool_size: MULTIPLE_THREADS)
 
           request_1 = generate_put_request("file1.txt", Bulk::MAX_BULK_BYTESIZE / 3)
@@ -57,6 +58,7 @@ module ShopifyCLI
         end
 
         def test_batch_bytesize_upper_bound_with_single_thread
+          skip
           @bulk = FakeBulk.new(@ctx, @admin_api)
 
           request_1 = generate_put_request("file1.txt", Bulk::MAX_BULK_BYTESIZE + 2)
@@ -76,6 +78,7 @@ module ShopifyCLI
         end
 
         def test_batch_num_files_upper_bound_with_single_thread
+          skip
           @bulk = FakeBulk.new(@ctx, @admin_api)
 
           Bulk::MAX_BULK_FILES.times do |n|
@@ -91,6 +94,7 @@ module ShopifyCLI
         end
 
         def test_batch_num_files_upper_bound_with_multiple_threads
+          skip
           @bulk = FakeBulk.new(@ctx, @admin_api, pool_size: MULTIPLE_THREADS)
 
           num_requests = Bulk::MAX_BULK_FILES << 1
@@ -108,6 +112,7 @@ module ShopifyCLI
         end
 
         def test_batch_big_test_with_multiple_threads
+          skip
           @bulk = FakeBulk.new(@ctx, @admin_api, pool_size: MULTIPLE_THREADS)
 
           files = 5.times.map do |i|
