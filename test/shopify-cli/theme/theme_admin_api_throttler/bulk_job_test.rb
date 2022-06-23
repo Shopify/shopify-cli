@@ -67,10 +67,10 @@ module ShopifyCLI
           @ctx.expects(:debug)
             .with("[BulkJob] size: 1, bytesize: #{file1.size}")
           @ctx.expects(:debug)
-            .with("[BulkJob] asset saved: file1.txt")
+            .with("[BulkJob] asset saved: #{file1.key}")
             .once
           @ctx.expects(:puts)
-            .with(resp_body["results"].first["body"])
+            .with("UPDATED: #{file1.key}")
           @job.perform!
         end
 
@@ -109,9 +109,22 @@ module ShopifyCLI
           file1 = generate_put_request("file1.txt")
           bulker = bulk(files: [file1], size: file1.size)
           @job = BulkJob.new(@ctx, bulker)
-          bulker.expects(:enqueue).times(5)
 
-          (BulkJob::MAX_RETRIES + 1).times do |request_num|
+          bulker.expects(:enqueue).times(BulkJob::MAX_RETRIES)
+          @ctx.expects(:debug)
+            .with("[BulkJob] asset error: file1.txt")
+            .times(BulkJob::MAX_RETRIES)
+          @ctx.expects(:debug)
+            .with("[BulkJob] asset continuing with error: file1.txt")
+            .once
+          @ctx.expects(:debug)
+            .with("[BulkJob] size: 1, bytesize: #{file1.size}")
+            .times(1 + BulkJob::MAX_RETRIES)
+          @ctx.expects(:error)
+            .with("ERROR: Something is wrong with this file!!!")
+            .once
+
+          (BulkJob::MAX_RETRIES + 1).times do |_i|
             ShopifyCLI::AdminAPI
               .expects(:rest_request)
               .with(
@@ -143,15 +156,6 @@ module ShopifyCLI
                   {},
                 ]
               )
-            @ctx.expects(:debug)
-              .with("[BulkJob] size: 1, bytesize: #{file1.size}")
-            if request_num == BulkJob::MAX_RETRIES + 1
-              @ctx.expects(:error).once
-            else
-              @ctx.expects(:debug)
-                .with("[BulkJob] asset error: file1.txt")
-                .once
-            end
             @job.perform!
           end
         end
@@ -171,11 +175,11 @@ module ShopifyCLI
         def generate_put_request(name)
           req_body = request_body(name)
           path = "themes/#{@theme.id}/assets.json"
-          req = PutRequest.new(path, req_body) do |status, body, _response|
+          req = PutRequest.new(path, req_body) do |status, body, response|
             if status == 200
-              @ctx.puts(body)
+              @ctx.puts("UPDATED: #{body["asset"]["key"]}")
             else
-              @ctx.error(body)
+              @ctx.error("ERROR: #{response.response[:body].dig("errors", "asset")}")
             end
           end
           req

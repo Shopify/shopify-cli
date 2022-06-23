@@ -3,6 +3,7 @@
 require "shopify_cli/thread_pool/job"
 require_relative "request_parser"
 require_relative "response_parser"
+require_relative "errors"
 
 module ShopifyCLI
   module Theme
@@ -34,10 +35,16 @@ module ShopifyCLI
             responses(bulk_body).each_with_index do |tuple, index|
               status, body = tuple
               put_request = put_requests[index]
-              if status == 200 || put_request.retries > MAX_RETRIES
-                @ctx.debug("[BulkJob] asset saved: #{put_request.key}") if status == 200
+              if status == 200 || put_request.retries >= MAX_RETRIES
                 @block_mutex.synchronize do
-                  put_request.block.call(status, body, response)
+                  if status == 200
+                    @ctx.debug("[BulkJob] asset saved: #{put_request.key}")
+                    put_request.block.call(status, body, response)
+                  else
+                    @ctx.debug("[BulkJob] asset continuing with error: #{put_request.key}")
+                    err = AssetUploadError.new(body, response: { body: body })
+                    put_request.block.call(status, {}, err)
+                  end
                 end
               else
                 @ctx.debug("[BulkJob] asset error: #{put_request.key}")
