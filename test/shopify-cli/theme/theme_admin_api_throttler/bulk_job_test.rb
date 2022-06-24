@@ -30,8 +30,8 @@ module ShopifyCLI
         end
 
         def test_perform_success
-          files = [generate_put_request("file1.txt")]
-          @job = BulkJob.new(@ctx, bulk(files: files))
+          file1 = generate_put_request("file1.txt")
+          @job = BulkJob.new(@ctx, bulk(files: [file1], size: file1.size))
           resp_body = {
             "results" => [
               {
@@ -65,16 +65,18 @@ module ShopifyCLI
               ]
             )
           @ctx.expects(:debug)
-            .with("[BulkJob] asset saved: file1.txt")
+            .with("[BulkJob] size: 1, bytesize: #{file1.size}")
+          @ctx.expects(:debug)
+            .with("[BulkJob] asset saved: #{file1.key}")
             .once
           @ctx.expects(:puts)
-            .with(resp_body["results"].first["body"])
+            .with("UPDATED: #{file1.key}")
           @job.perform!
         end
 
         def test_suggest_stable_flag_when_bulk_request_error
-          files = [generate_put_request("file1.txt")]
-          @job = BulkJob.new(@ctx, bulk(files: files))
+          file1 = generate_put_request("file1.txt")
+          @job = BulkJob.new(@ctx, bulk(files: [file1], size: file1.size))
           ShopifyCLI::AdminAPI
             .expects(:rest_request)
             .with(
@@ -95,6 +97,8 @@ module ShopifyCLI
                 {},
               ]
             )
+          @ctx.expects(:debug)
+            .with("[BulkJob] size: 1, bytesize: #{file1.size}")
           @ctx.expects(:puts)
             .with(@ctx.message("theme.stable_flag_suggestion"))
             .once
@@ -102,12 +106,25 @@ module ShopifyCLI
         end
 
         def test_retry_when_asset_update_error
-          files = [generate_put_request("file1.txt")]
-          bulker = bulk(files: files)
+          file1 = generate_put_request("file1.txt")
+          bulker = bulk(files: [file1], size: file1.size)
           @job = BulkJob.new(@ctx, bulker)
-          bulker.expects(:enqueue).times(5)
 
-          (BulkJob::MAX_RETRIES + 1).times do |request_num|
+          bulker.expects(:enqueue).times(BulkJob::MAX_RETRIES)
+          @ctx.expects(:debug)
+            .with("[BulkJob] asset error: file1.txt")
+            .times(BulkJob::MAX_RETRIES)
+          @ctx.expects(:debug)
+            .with("[BulkJob] asset continuing with error: file1.txt")
+            .once
+          @ctx.expects(:debug)
+            .with("[BulkJob] size: 1, bytesize: #{file1.size}")
+            .times(1 + BulkJob::MAX_RETRIES)
+          @ctx.expects(:error)
+            .with("ERROR: Something is wrong with this file!!!")
+            .once
+
+          (BulkJob::MAX_RETRIES + 1).times do |_i|
             ShopifyCLI::AdminAPI
               .expects(:rest_request)
               .with(
@@ -139,25 +156,17 @@ module ShopifyCLI
                   {},
                 ]
               )
-            if request_num == BulkJob::MAX_RETRIES + 1
-              @ctx.expects(:debug)
-                .never
-              @ctx.expects(:error).once
-            else
-              @ctx.expects(:debug)
-                .with("[BulkJob] asset error: file1.txt")
-            end
             @job.perform!
           end
         end
 
         private
 
-        def bulk(files:)
+        def bulk(files:, size:)
           stub(
             "Bulk",
             ready?: true,
-            consume_put_requests: files,
+            consume_put_requests: [files, size],
             admin_api: @admin_api,
             enqueue: nil,
           )
@@ -166,11 +175,11 @@ module ShopifyCLI
         def generate_put_request(name)
           req_body = request_body(name)
           path = "themes/#{@theme.id}/assets.json"
-          req = PutRequest.new(path, req_body) do |status, body, _response|
+          req = PutRequest.new(path, req_body) do |status, body, response|
             if status == 200
-              @ctx.puts(body)
+              @ctx.puts("UPDATED: #{body["asset"]["key"]}")
             else
-              @ctx.error(body)
+              @ctx.error("ERROR: #{response.response[:body].dig("errors", "asset")}")
             end
           end
           req

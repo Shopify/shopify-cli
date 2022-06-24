@@ -38,8 +38,7 @@ module ShopifyCLI
         end
 
         def test_batch_bytesize_upper_bound_with_multiple_threads
-          skip
-          @bulk = FakeBulk.new(@ctx, @admin_api, pool_size: MULTIPLE_THREADS)
+          @bulk = Bulk.new(@ctx, @admin_api, pool_size: MULTIPLE_THREADS)
 
           request_1 = generate_put_request("file1.txt", Bulk::MAX_BULK_BYTESIZE / 3)
           request_2 = generate_put_request("file2.txt", Bulk::MAX_BULK_BYTESIZE / 3)
@@ -49,17 +48,15 @@ module ShopifyCLI
             @bulk.enqueue(request)
           end
 
-          @bulk.timeout!
-          @bulk.send(:wait_put_requests)
-
-          assert_equal(2, @bulk.consume_put_requests_calls)
-          assert_equal([request_1.size + request_2.size, request_3.size], @bulk.sizes)
+          @ctx.expects(:debug)
+            .with(debug_formatter(2, request_1.size + request_2.size))
+          @ctx.expects(:debug)
+            .with(debug_formatter(1, request_3.size))
           @bulk.shutdown
         end
 
         def test_batch_bytesize_upper_bound_with_single_thread
-          skip
-          @bulk = FakeBulk.new(@ctx, @admin_api)
+          @bulk = Bulk.new(@ctx, @admin_api)
 
           request_1 = generate_put_request("file1.txt", Bulk::MAX_BULK_BYTESIZE + 2)
           request_2 = generate_put_request("file2.txt", Bulk::MAX_BULK_BYTESIZE + 3)
@@ -69,33 +66,29 @@ module ShopifyCLI
             @bulk.enqueue(request)
           end
 
-          @bulk.timeout!
-          @bulk.send(:wait_put_requests)
-
-          assert_equal(3, @bulk.consume_put_requests_calls)
-          assert_equal([request_1.size, request_2.size, request_3.size], @bulk.sizes)
+          @ctx.expects(:debug)
+            .with(debug_formatter(1, request_1.size))
+          @ctx.expects(:debug)
+            .with(debug_formatter(1, request_2.size))
+          @ctx.expects(:debug)
+            .with(debug_formatter(1, request_3.size))
           @bulk.shutdown
         end
 
         def test_batch_num_files_upper_bound_with_single_thread
-          skip
-          @bulk = FakeBulk.new(@ctx, @admin_api)
+          @bulk = Bulk.new(@ctx, @admin_api)
 
           Bulk::MAX_BULK_FILES.times do |n|
             @bulk.enqueue(generate_put_request("file#{n}.txt", 100_000))
           end
 
-          @bulk.timeout!
-          @bulk.send(:wait_put_requests)
-
-          assert_equal(1, @bulk.consume_put_requests_calls)
-          assert_equal([2_000_000], @bulk.sizes)
+          @ctx.expects(:debug)
+            .with(debug_formatter(20, 2_000_000))
           @bulk.shutdown
         end
 
         def test_batch_num_files_upper_bound_with_multiple_threads
-          skip
-          @bulk = FakeBulk.new(@ctx, @admin_api, pool_size: MULTIPLE_THREADS)
+          @bulk = Bulk.new(@ctx, @admin_api, pool_size: MULTIPLE_THREADS)
 
           num_requests = Bulk::MAX_BULK_FILES << 1
 
@@ -103,17 +96,14 @@ module ShopifyCLI
             @bulk.enqueue(generate_put_request("file#{n}.txt", 10_000))
           end
 
-          @bulk.timeout!
-          @bulk.send(:wait_put_requests)
-
-          assert_equal(2, @bulk.consume_put_requests_calls)
-          assert_equal([Bulk::MAX_BULK_FILES * 10_000, Bulk::MAX_BULK_FILES * 10_000], @bulk.sizes)
+          @ctx.expects(:debug)
+            .with(debug_formatter(20, Bulk::MAX_BULK_FILES * 10_000))
+            .twice
           @bulk.shutdown
         end
 
         def test_batch_big_test_with_multiple_threads
-          skip
-          @bulk = FakeBulk.new(@ctx, @admin_api, pool_size: MULTIPLE_THREADS)
+          @bulk = Bulk.new(@ctx, @admin_api, pool_size: MULTIPLE_THREADS)
 
           files = 5.times.map do |i|
             size = (Bulk::MAX_BULK_BYTESIZE / 2) - 1000
@@ -122,15 +112,12 @@ module ShopifyCLI
 
           files.each { |file| @bulk.enqueue(file) }
 
-          @bulk.timeout!
-          @bulk.send(:wait_put_requests)
-
-          assert_equal(3, @bulk.consume_put_requests_calls)
-          assert_equal([
-            files[0].size + files[1].size,
-            files[2].size + files[3].size,
-            files[4].size,
-          ], @bulk.sizes)
+          @ctx.expects(:debug)
+            .with(debug_formatter(2, files[0].size + files[1].size))
+          @ctx.expects(:debug)
+            .with(debug_formatter(2, files[2].size + files[3].size))
+          @ctx.expects(:debug)
+            .with(debug_formatter(1, files[4].size))
           @bulk.shutdown
         end
 
@@ -163,26 +150,8 @@ module ShopifyCLI
           [1234, [], {}]
         end
 
-        class FakeBulk < Bulk
-          attr_accessor :consume_put_requests_calls, :sizes
-
-          def initialize(ctx, admin_api, pool_size: 20)
-            super(ctx, admin_api, pool_size: pool_size)
-            @consume_put_requests_calls = 0
-            @is_queue_timeout = false
-            @sizes = []
-          end
-
-          def consume_put_requests
-            bulk_request = super
-            @sizes << bulk_request.map(&:size).reduce(0, &:+)
-            @consume_put_requests_calls += 1
-            bulk_request
-          end
-
-          def timeout!
-            @is_queue_timeout = true
-          end
+        def debug_formatter(num_files, size)
+          "[BulkJob] size: #{num_files}, bytesize: #{size}"
         end
       end
     end
