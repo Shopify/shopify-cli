@@ -9,7 +9,7 @@ module ShopifyCLI
   module Theme
     class ThemeAdminAPIThrottler
       class BulkTest < Minitest::Test
-        MULTIPLE_THREADS = 3
+        MULTIPLE_THREADS = 1
 
         def setup
           super
@@ -90,9 +90,9 @@ module ShopifyCLI
         def test_batch_num_files_upper_bound_with_multiple_threads
           @bulk = Bulk.new(@ctx, @admin_api, pool_size: MULTIPLE_THREADS)
 
-          num_requests = Bulk::MAX_BULK_FILES << 1
+          num_requests = Bulk::MAX_BULK_FILES * 2
 
-          num_requests.times do |n|
+          num_requests.times do |n| # 40
             @bulk.enqueue(generate_put_request("file#{n}.txt", 10_000))
           end
 
