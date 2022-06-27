@@ -1,4 +1,5 @@
 # frozen_string_literal: true
+require 'byebug'
 
 module Extension
   module Models
@@ -78,6 +79,8 @@ module Extension
 
         def cli_package(context)
           cli_package_name = specification.features.argo&.cli_package_name
+          puts("----------------- #{cli_package_name}")
+          # byebug
           return unless cli_package_name
 
           js_system = ShopifyCLI::JsSystem.new(ctx: context)

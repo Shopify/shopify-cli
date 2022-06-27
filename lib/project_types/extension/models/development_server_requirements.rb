@@ -11,6 +11,7 @@ module Extension
         "product_subscription",
         "web_pixel_extension",
         "pos_ui_extension",
+        "theme_app_extension",
       ]
 
       class << self

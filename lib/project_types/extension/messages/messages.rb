@@ -267,9 +267,7 @@ module Extension
               {{*}} You’re ready to start building {{green:%s}}!
             MESSAGE
           },
-          serve: {
-            unsupported: "shopify extension serve is not supported for theme app extensions",
-          },
+
         },
       },
     }

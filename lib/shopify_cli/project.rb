@@ -1,5 +1,6 @@
 # frozen_string_literal: true
 require "shopify_cli"
+require 'byebug'
 
 module ShopifyCLI
   ##
@@ -174,6 +175,7 @@ module ShopifyCLI
     def config
       @config ||= begin
         config = load_yaml_file(".shopify-cli.yml")
+        # byebug
         unless config.is_a?(Hash)
           raise ShopifyCLI::Abort, Context.message("core.yaml.error.not_hash", ".shopify-cli.yml")
         end
