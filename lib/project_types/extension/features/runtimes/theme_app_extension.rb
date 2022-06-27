@@ -6,8 +6,13 @@ module Extension
           "THEME_APP_EXTENSION"
         ]
 
+        AVAILABLE_FLAGS = [
+          :port,
+          :public_url,
+        ]
+
         def available_flags
-          []
+          AVAILABLE_FLAGS
         end
 
         def supports?(flag)
