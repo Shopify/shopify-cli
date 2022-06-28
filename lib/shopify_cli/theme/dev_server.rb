@@ -17,6 +17,8 @@ require_relative "dev_server/certificate_manager"
 
 require "pathname"
 
+require "byebug"
+
 module ShopifyCLI
   module Theme
     module DevServer
@@ -82,6 +84,7 @@ module ShopifyCLI
 
           watcher.start
           remote_watcher.start if editor_sync
+          byebug
           WebServer.run(
             @app,
             BindAddress: host,
@@ -102,6 +105,58 @@ module ShopifyCLI
           @ctx.abort(error_message, help_message)
         rescue Errno::EADDRNOTAVAIL
           raise AddressBindingError, "Error binding to the address #{host}."
+        end
+
+        def app_extension_start(
+          ctx, 
+          root, 
+          host: "127.0.0.1", 
+          theme: nil, 
+          port: 9292, 
+          poll: false, 
+          editor_sync: false,
+          mode: ReloadMode.default, 
+          stable: false
+        )
+          @ctx = ctx
+          stopped = false
+          address = "http://#{host}:#{port}"
+
+          trap("INT") do
+            stopped = true
+            stop
+          end
+
+          CLI::UI::Frame.open(@ctx.message("theme.serve.viewing_theme")) do
+            return if stopped
+
+            preview_suffix = editor_sync ? "" : ctx.message("theme.serve.download_changes")
+            preview_message = ctx.message(
+              "theme.serve.customize_or_preview",
+              preview_suffix,
+              theme.editor_url,
+              theme.preview_url
+            )
+
+            ctx.puts(ctx.message("theme.serve.serving", theme.root))
+            ctx.open_url!(address)
+            ctx.puts(preview_message)
+          end
+
+
+          logger = if ctx.debug?
+            WEBrick::Log.new(nil, WEBrick::BasicLog::INFO)
+          else
+            WEBrick::Log.new(nil, WEBrick::BasicLog::FATAL)
+          end
+
+          WebServer.run(
+            # @app,
+            BindAddress: host,
+            Port: port,
+            Logger: logger,
+            AccessLog: [],
+          )
         end
 
         def stop
