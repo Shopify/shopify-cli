@@ -67,14 +67,18 @@ module Extension
         # def choose_port?(ctx)
         #   ctx.abort(ctx.message("serve.unsupported"))
         # end
+        # always false - use the port from the param, fail if that port is being used
+        # not trying a different port
 
         # def establish_tunnel?(ctx)
         #   ctx.abort(ctx.message("serve.unsupported"))
         # end
+        # might always be false 
 
         # def serve(ctx)
         #   # ctx.abort(ctx.message("serve.unsupported"))
         # end
+        # instantiate dev server at this spot 
 
         private
 

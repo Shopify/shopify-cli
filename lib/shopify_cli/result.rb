@@ -418,7 +418,7 @@ module ShopifyCLI
           values.pop.yield_self do |value|
             case value
             when Result::Success, Result::Failure
-              value
+              value6
             when NilClass, Exception
               Result.failure(value)
             else
