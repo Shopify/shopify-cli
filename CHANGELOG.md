@@ -18,6 +18,7 @@ From version 2.6.0, the sections in this file adhere to the [keep a changelog](h
 ### Fixed
 * [#2352](https://github.com/Shopify/shopify-cli/pull/2352): Provide better DX when dealing with empty theme selection
 * [#2347](https://github.com/Shopify/shopify-cli/pull/2347): Fix #2346 Heroku CLI installation for Apple silicon
+* [#2422](https://github.com/Shopify/shopify-cli/pull/2422): Add Shopify branding and styling to post-authentication browser page
 
 ## Version 2.17.0 - 2022-05-12
 
@@ -48,7 +49,7 @@ From version 2.6.0, the sections in this file adhere to the [keep a changelog](h
 
 ### Added
 * [#2189](https://github.com/Shopify/shopify-cli/pull/2189): Retrieve latest CLI version in the background
-* [#2263](https://github.com/Shopify/shopify-cli/pull/2263): Add `POS UI Extension` to support third party developers to extend POS smart grid functionality using native retail components. 
+* [#2263](https://github.com/Shopify/shopify-cli/pull/2263): Add `POS UI Extension` to support third party developers to extend POS smart grid functionality using native retail components.
 
 ### Changed
 * [#2272](https://github.com/Shopify/shopify-cli/pull/2272): Changed interactive apps list scope for extension create|register|connect commands
@@ -56,7 +57,7 @@ From version 2.6.0, the sections in this file adhere to the [keep a changelog](h
 ## Version 2.15.6 - 2022-04-12
 
 ### Fixed
-* [#2246](https://github.com/Shopify/shopify-cli/pull/2246): Fix callback urls for app serve 
+* [#2246](https://github.com/Shopify/shopify-cli/pull/2246): Fix callback urls for app serve
 
 ## Version 2.15.5 - 2022-04-08
 
