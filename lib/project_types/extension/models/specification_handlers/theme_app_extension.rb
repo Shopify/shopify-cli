@@ -64,20 +64,22 @@ module Extension
           "Theme App Extension"
         end
 
-        # def choose_port?(ctx)
-        #   ctx.abort(ctx.message("serve.unsupported"))
-        # end
+        def choose_port?(ctx)
+          false
+        end
         # always false - use the port from the param, fail if that port is being used
         # not trying a different port
 
-        # def establish_tunnel?(ctx)
-        #   ctx.abort(ctx.message("serve.unsupported"))
-        # end
+        def establish_tunnel?(ctx)
+          false
+        end
         # might always be false 
 
-        # def serve(ctx)
-        #   # ctx.abort(ctx.message("serve.unsupported"))
-        # end
+        def serve(ctx)
+          # ctx.abort(ctx.message("serve.unsupported"))
+          puts ('------- HIHIHIHIHI')
+          Theme::Command::Serve.new(*args).app_extension_call
+        end
         # instantiate dev server at this spot 
 
         private

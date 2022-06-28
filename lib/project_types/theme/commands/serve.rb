@@ -36,6 +36,19 @@ module Theme
           ShopifyCLI::Context.message("theme.serve.error.address_binding_error", ShopifyCLI::TOOL_NAME)
       end
 
+      def app_extension_call(_args, name)
+        valid_authentication_method!
+
+        root = root_value(options, name)
+        flags = options.flags.dup
+        host = flags[:host] || DEFAULT_HTTP_HOST
+
+        ShopifyCLI::Theme::DevServer.start(@ctx, root, host: host, **flags)
+      rescue ShopifyCLI::Theme::DevServer::AddressBindingError
+        raise ShopifyCLI::Abort,
+          ShopifyCLI::Context.message("theme.serve.error.address_binding_error", ShopifyCLI::TOOL_NAME)
+      end
+
       def self.as_reload_mode(mode)
         ShopifyCLI::Theme::DevServer::ReloadMode.get!(mode)
       end
