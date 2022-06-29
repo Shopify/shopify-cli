@@ -102,7 +102,6 @@ module Extension
       autoload :Base, Project.project_filepath("features/runtimes/base")
       autoload :CheckoutPostPurchase, Project.project_filepath("features/runtimes/checkout_post_purchase")
       autoload :CheckoutUiExtension, Project.project_filepath("features/runtimes/checkout_ui_extension")
-
     end
     autoload :ArgoServe, Project.project_filepath("features/argo_serve")
     autoload :ArgoServeOptions, Project.project_filepath("features/argo_serve_options")
