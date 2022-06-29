@@ -3,24 +3,11 @@ require "base64"
 require "json"
 require "webrick"
 require "stringio"
-require "byebug"
-
-
-class Simple < WEBrick::HTTPServlet::AbstractServlet
-  def do_GET request, response
-    # status, content_type, body = do_stuff_with request
-
-    response.status = 200
-    response['Content-Type'] = 'text/plain'
-    response.body = 'Hello, World!'
-  end
-end
+require_relative "../../../../shopify_cli/theme/dev_server/web_server"
 
 module Extension
   module Models
     module SpecificationHandlers
-
-
       class ThemeAppExtension < Default
         SUPPORTED_BUCKETS = %w(assets blocks snippets locales)
         BUNDLE_SIZE_LIMIT = 10 * 1024 * 1024 # 10MB
@@ -92,14 +79,7 @@ module Extension
         # might always be false 
 
         def serve(ctx)
-          # TODO hello world page
-          options = {
-            :BindAddress=>"127.0.0.1", 
-            :Port=>9292
-          }
-          @server = ::WEBrick::HTTPServer.new(options)
-          @server.mount '/', Simple
-          @server.start
+          ShopifyCLI::Theme::DevServer::AppExtensionWebServer.run
         end
         # instantiate dev server at this spot 
 

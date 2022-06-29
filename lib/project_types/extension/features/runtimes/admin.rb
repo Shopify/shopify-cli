@@ -1,5 +1,3 @@
-require 'byebug'
-
 module Extension
   module Features
     module Runtimes
