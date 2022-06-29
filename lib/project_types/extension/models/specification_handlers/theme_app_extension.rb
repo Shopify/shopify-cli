@@ -1,10 +1,18 @@
 # frozen_string_literal: true
 require "base64"
 require "json"
+require "webrick"
+require "stringio"
+
+# class ThemeAppExtensionWebServer < ::WEBrick::HTTPServlet::AbstractServlet
+
+# end
 
 module Extension
   module Models
     module SpecificationHandlers
+
+
       class ThemeAppExtension < Default
         SUPPORTED_BUCKETS = %w(assets blocks snippets locales)
         BUNDLE_SIZE_LIMIT = 10 * 1024 * 1024 # 10MB
@@ -76,9 +84,9 @@ module Extension
         # might always be false 
 
         def serve(ctx)
-          # ctx.abort(ctx.message("serve.unsupported"))
-          puts ('------- HIHIHIHIHI')
-          Theme::Command::Serve.new(*args).app_extension_call
+          # TODO hello world page
+          @server = ::WEBrick::HTTPServer.new(options)
+          @server.start
         end
         # instantiate dev server at this spot 
 
