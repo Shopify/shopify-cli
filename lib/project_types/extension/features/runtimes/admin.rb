@@ -21,8 +21,6 @@ module Extension
         end
 
         def active_runtime?(cli_package, identifier)
-          return false if cli_package.nil?
-
           cli_package.name == ADMIN_UI_EXTENSIONS_RUN && identifier == PRODUCT_SUBSCRIPTION
         end
       end

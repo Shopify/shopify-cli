@@ -1,8 +1,6 @@
 # frozen_string_literal: true
 require "base64"
 require "json"
-require "webrick"
-require "stringio"
 require_relative "../../../../shopify_cli/theme/dev_server/web_server"
 
 module Extension
@@ -70,18 +68,14 @@ module Extension
         def choose_port?(ctx)
           false
         end
-        # always false - use the port from the param, fail if that port is being used
-        # not trying a different port
 
         def establish_tunnel?(ctx)
           false
         end
-        # might always be false 
 
         def serve(ctx)
           ShopifyCLI::Theme::DevServer::AppExtensionWebServer.run
         end
-        # instantiate dev server at this spot 
 
         private
 
