@@ -3,10 +3,18 @@ require "base64"
 require "json"
 require "webrick"
 require "stringio"
+require "byebug"
 
-# class ThemeAppExtensionWebServer < ::WEBrick::HTTPServlet::AbstractServlet
 
-# end
+class Simple < WEBrick::HTTPServlet::AbstractServlet
+  def do_GET request, response
+    # status, content_type, body = do_stuff_with request
+
+    response.status = 200
+    response['Content-Type'] = 'text/plain'
+    response.body = 'Hello, World!'
+  end
+end
 
 module Extension
   module Models
@@ -85,7 +93,12 @@ module Extension
 
         def serve(ctx)
           # TODO hello world page
+          options = {
+            :BindAddress=>"127.0.0.1", 
+            :Port=>9292
+          }
           @server = ::WEBrick::HTTPServer.new(options)
+          @server.mount '/', Simple
           @server.start
         end
         # instantiate dev server at this spot 

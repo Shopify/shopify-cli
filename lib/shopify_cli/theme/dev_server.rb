@@ -82,6 +82,7 @@ module ShopifyCLI
 
           watcher.start
           remote_watcher.start if editor_sync
+          
           WebServer.run(
             @app,
             BindAddress: host,
