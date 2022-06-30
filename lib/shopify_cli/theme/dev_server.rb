@@ -38,6 +38,7 @@ module ShopifyCLI
           remote_watcher = RemoteWatcher.to(theme: theme, syncer: @syncer)
 
           # Setup the middleware stack. Mimics Rack::Builder / config.ru, but in reverse order
+          # TODO mimic pattern and use app
           @app = Proxy.new(ctx, theme: theme, syncer: @syncer)
           @app = CdnFonts.new(@app, theme: theme)
           @app = LocalAssets.new(ctx, @app, theme: theme)

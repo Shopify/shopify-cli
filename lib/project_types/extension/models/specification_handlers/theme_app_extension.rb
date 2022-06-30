@@ -1,7 +1,7 @@
 # frozen_string_literal: true
 require "base64"
 require "json"
-require_relative "../../../../shopify_cli/theme/dev_server/web_server"
+require "shopify_cli/theme/app_extension_dev_server"
 
 module Extension
   module Models
@@ -74,7 +74,10 @@ module Extension
         end
 
         def serve(ctx)
-          ShopifyCLI::Theme::DevServer::AppExtensionWebServer.run
+          # TODO fix params
+          # get from cli command class options
+          # ShopifyCLI::Theme::AppExtensionDevServer.start(@ctx, root, host: host, **flags)
+          ShopifyCLI::Theme::AppExtensionDevServer.start(@ctx)
         end
 
         private
