@@ -73,11 +73,16 @@ module Extension
           false
         end
 
-        def serve(ctx)
-          # TODO fix params
-          # get from cli command class options
-          # ShopifyCLI::Theme::AppExtensionDevServer.start(@ctx, root, host: host, **flags)
-          ShopifyCLI::Theme::AppExtensionDevServer.start(@ctx)
+        def serve(**options)
+          @ctx = options[:context]
+          port = options[:port]
+          root = nil # TODO
+          
+          ShopifyCLI::Theme::DevServer::AppExtensionDevServer.start(
+            @ctx, 
+            root, 
+            port: port
+          )
         end
 
         private

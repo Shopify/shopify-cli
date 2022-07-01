@@ -28,16 +28,16 @@ module Theme
         flags = options.flags.dup
         host = flags[:host] || DEFAULT_HTTP_HOST
 
-        ShopifyCLI::Theme::ThemeDevServer.start(@ctx, root, host: host, **flags) do |syncer|
+        ShopifyCLI::Theme::DevServer::ThemeDevServer.start(@ctx, root, host: host, **flags) do |syncer|
           UI::SyncProgressBar.new(syncer).progress(:upload_theme!, delay_low_priority_files: true)
         end
-      rescue ShopifyCLI::Theme::ThemeDevServer::AddressBindingError
+      rescue ShopifyCLI::Theme::DevServer::AddressBindingError
         raise ShopifyCLI::Abort,
           ShopifyCLI::Context.message("theme.serve.error.address_binding_error", ShopifyCLI::TOOL_NAME)
       end
 
       def self.as_reload_mode(mode)
-        ShopifyCLI::Theme::ThemeDevServer::ReloadMode.get!(mode)
+        ShopifyCLI::Theme::DevServer::ReloadMode.get!(mode)
       end
 
       def self.help
