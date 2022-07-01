@@ -89,7 +89,7 @@ module ShopifyCLI
             watcher.stop
 
           rescue ShopifyCLI::API::APIRequestForbiddenError,
-                ShopifyCLI::API::APIRequestUnauthorizedError
+                 ShopifyCLI::API::APIRequestUnauthorizedError
             shop = ShopifyCLI::AdminAPI.get_shop_or_abort(@ctx)
             raise ShopifyCLI::Abort, @ctx.message("theme.serve.ensure_user", shop)
           rescue Errno::EADDRINUSE

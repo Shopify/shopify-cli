@@ -65,11 +65,11 @@ module Extension
           "Theme App Extension"
         end
 
-        def choose_port?(ctx)
+        def choose_port?(_ctx)
           false
         end
 
-        def establish_tunnel?(ctx)
+        def establish_tunnel?(_ctx)
           false
         end
 
@@ -77,10 +77,10 @@ module Extension
           @ctx = options[:context]
           port = options[:port]
           root = nil # TODO
-          
+
           ShopifyCLI::Theme::DevServer::AppExtensionDevServer.start(
-            @ctx, 
-            root, 
+            @ctx,
+            root,
             port: port
           )
         end

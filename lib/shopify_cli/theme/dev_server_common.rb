@@ -15,5 +15,5 @@ module ShopifyCLI
         end
       end
     end
-  end 
-end 
+  end
+end

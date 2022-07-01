@@ -11,7 +11,7 @@ module ShopifyCLI
     module DevServer
       class AppExtensionDevServer < DevServerCommon
         class << self
-          def start(ctx, root, host: "127.0.0.1", theme: nil, port: 9292, poll: false)
+          def start(_ctx, _root, host: "127.0.0.1", _theme: nil, port: 9292, _poll: false)
             @app = AppExtensions.new
             logger = WEBrick::Log.new(nil, WEBrick::BasicLog::INFO)
 
@@ -28,4 +28,3 @@ module ShopifyCLI
     end
   end
 end
-
