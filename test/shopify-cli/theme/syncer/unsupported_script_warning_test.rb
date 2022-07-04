@@ -32,12 +32,12 @@ module ShopifyCLI
           assert_equal(<<~EXPECTED_MESSAGE, actual_message)
 
 
-          {{blue: 1 |}} http://123.com
-          {{yellow:     ^ {{bold:unsupported script}}}}
+            {{blue: 1 |}} http://123.com
+            {{yellow:     ^ {{bold:unsupported script}}}}
 
-          {{blue: 3 |}}  http://789.com
-          {{yellow:      ^ {{bold:unsupported script}}}}
-           {{yellow: unsupported script long text, lines:line 1 and column 1line 3 and column 2}}
+            {{blue: 3 |}}  http://789.com
+            {{yellow:      ^ {{bold:unsupported script}}}}
+             {{yellow: unsupported script long text, lines:line 1 and column 1line 3 and column 2}}
           EXPECTED_MESSAGE
         end
 
