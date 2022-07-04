@@ -791,6 +791,10 @@ module ShopifyCLI
               {{underline:https://shopify.dev/tools/cli/troubleshooting#upgrade-shopify-cli}}}}
 
           MESSAGE
+
+          in_3_0_directory: <<~MESSAGE,
+            {{*}} {{yellow:You appear to be working with a CLI 3.0 project. Please use CLI 3.0 instead.}}
+          MESSAGE
         },
         reporting: {
           help: <<~HELP,

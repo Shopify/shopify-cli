@@ -16,6 +16,10 @@ module ShopifyCLI
             ctx.warn(ctx.message("core.warning.new_version", ShopifyCLI::VERSION, ctx.new_version))
           end
 
+          if ShopifyCLI::Core::CliVersion.using_3_0?
+            ctx.warn(ctx.message("core.warning.in_3_0_directory"))
+          end
+
           ProjectType.load_all
 
           task_registry = ShopifyCLI::Tasks::Registry
