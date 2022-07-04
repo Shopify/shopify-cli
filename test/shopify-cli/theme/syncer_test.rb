@@ -608,6 +608,56 @@ module ShopifyCLI
         end
       end
 
+      def test_log_when_the_file_is_synced
+        mock_context_synced_message
+
+        file_path = "sections/footer.liquid"
+        file = @theme[file_path]
+        client_success = [200, {}, {}]
+
+        ShopifyCLI::AdminAPI.stubs(:rest_request)
+          .returns(client_success)
+
+        @syncer.start_threads
+
+        # Assert a single synced message
+        @ctx.expects(:puts)
+          .with("12:30:59 {{green:Synced}} {{>}} {{blue:update #{file_path}}}").once
+
+        file.stubs(checksum: "initial")
+        time_freeze do
+          @syncer.enqueue_updates([file])
+          @syncer.wait!
+        end
+      end
+
+      def test_log_when_the_file_is_synced_with_warnings
+        mock_context_synced_message
+
+        file_path = "sections/footer.liquid"
+        warning_message = "unsupported script warning string"
+
+        file = @theme[file_path]
+        client_success = [200, { "asset" => { "warnings" => [mock] } }, {}]
+
+        ShopifyCLI::AdminAPI.stubs(:rest_request)
+          .returns(client_success)
+        Syncer::UnsupportedScriptWarning.stubs(:new)
+          .returns(stub(to_s: warning_message))
+
+        @syncer.start_threads
+
+        # Assert a single synced message with the warning string
+        @ctx.expects(:error)
+          .with("12:30:59 {{yellow:Synced}} {{>}} {{blue:update #{file_path}}}#{warning_message}").once
+
+        file.stubs(checksum: "initial")
+        time_freeze do
+          @syncer.enqueue_updates([file])
+          @syncer.wait!
+        end
+      end
+
       def test_log_when_an_error_is_fixed
         mock_context_error_message
         mock_context_fix_message
@@ -724,6 +774,12 @@ module ShopifyCLI
         @ctx.stubs(:message)
           .with("theme.serve.operation.status.fixed")
           .returns("Fixed")
+      end
+
+      def mock_context_synced_message
+        @ctx.stubs(:message)
+          .with("theme.serve.operation.status.synced")
+          .returns("Synced")
       end
 
       def client_error(response_body = default_response_body)
