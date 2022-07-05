@@ -13,8 +13,9 @@ body:
     id: preflight_checks
     attributes:
       label: |-
-        Please confirm that you have:
+        Please confirm that you:
       options:
+        - label: Are working with Shopify CLI 2.0, not 3.0 (You can [open a 3.0 issue here](https://github.com/Shopify/cli/issues/new/choose))
         - label: Searched [existing issues](https://github.com/Shopify/shopify-cli/issues) to see if your issue is a duplicate. (If you’ve found a duplicate issue, feel free to add additional information in a comment on it.)
           required: true
         - label: Reproduced the issue in [the latest CLI version](https://github.com/Shopify/shopify-cli/releases).
