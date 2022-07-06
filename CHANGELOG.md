@@ -8,6 +8,9 @@ From version 2.6.0, the sections in this file adhere to the [keep a changelog](h
 ### Fixed
 * [#2418](https://github.com/Shopify/shopify-cli/pull/2418): Improve the help message of the `theme open -e/--editor` flag
 
+### Changed
+* [#2444](https://github.com/Shopify/shopify-cli/pull/2444): Expose the `-s` option in the help text of `login`, `switch` etc.
+
 ## Version 2.18.0 - 2022-05-30
 
 ### Added
