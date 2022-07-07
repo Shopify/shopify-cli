@@ -1,7 +1,7 @@
 # frozen_string_literal: true
 require "test_helper"
 require "shopify_cli/theme/theme_dev_server"
-require "shopify_cli/theme/dev_server/watcher"
+require "shopify_cli/theme/dev_server/theme_watcher"
 
 module ShopifyCLI
   module Theme
@@ -13,7 +13,7 @@ module ShopifyCLI
           @ctx = TestHelpers::FakeContext.new(root: @root)
           @theme = Theme.new(@ctx, root: @root)
           @syncer = stub("Syncer", enqueue_uploads: true, enqueue_updates: true)
-          @watcher = Watcher.new(@ctx, theme: @theme, syncer: @syncer)
+          @watcher = ThemeWatcher.new(@ctx, theme: @theme, syncer: @syncer)
         end
 
         def test_upload_files_when_changed

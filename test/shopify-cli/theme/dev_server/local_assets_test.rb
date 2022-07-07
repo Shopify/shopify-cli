@@ -99,7 +99,7 @@ module ShopifyCLI
           root = ShopifyCLI::ROOT + "/test/fixtures/theme"
           ctx = TestHelpers::FakeContext.new(root: root)
           theme = Theme.new(ctx, root: root)
-          stack = LocalAssets.new(ctx, app, theme: theme)
+          stack = ThemeLocalAssets.new(ctx, app, theme: theme)
           request = Rack::MockRequest.new(stack)
           request.get(path)
         end
