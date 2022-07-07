@@ -37,6 +37,9 @@ module ShopifyCLI
           reload_js = ::File.read(
             ::File.expand_path("lib/shopify_cli/theme/dev_server/hot-reload.js", ShopifyCLI::ROOT)
           )
+          hot_reload_no_script = ::File.read(
+            ::File.expand_path("lib/shopify_cli/theme/dev_server/hot-reload-no-script.html", ShopifyCLI::ROOT)
+          )
 
           injected_script = "<script>\n#{params_js}\n#{reload_js}\n</script>"
 
@@ -45,7 +48,8 @@ module ShopifyCLI
               <head></head>
               <body>
                 <h1>Hello</h1>
-              #{injected_script}
+              #{hot_reload_no_script}
+            #{injected_script}
             </body>
             </html>
           HTML
