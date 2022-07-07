@@ -17,7 +17,7 @@ module ShopifyCLI
           @syncer = stub("Syncer", enqueue_uploads: true, enqueue_deletes: true, enqueue_updates: true,
             ignore_file?: false)
           @syncer.stubs(remote_file?: true)
-          @watcher = Watcher.new(@ctx, theme: @theme, syncer: @syncer)
+          @watcher = ThemeWatcher.new(@ctx, theme: @theme, syncer: @syncer)
           @mode = "off"
         end
 

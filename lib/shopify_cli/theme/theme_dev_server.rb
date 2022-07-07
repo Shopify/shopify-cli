@@ -7,10 +7,10 @@ require_relative "dev_server/cdn_fonts"
 require_relative "dev_server/hot_reload"
 require_relative "dev_server/header_hash"
 require_relative "dev_server/reload_mode"
-require_relative "dev_server/local_assets"
-require_relative "dev_server/proxy"
+require_relative "dev_server/theme_local_assets"
+require_relative "dev_server/theme_proxy"
+require_relative "dev_server/theme_watcher"
 require_relative "dev_server/sse"
-require_relative "dev_server/watcher"
 require_relative "dev_server/remote_watcher"
 require_relative "dev_server/web_server"
 require_relative "dev_server/certificate_manager"
@@ -31,13 +31,13 @@ module ShopifyCLI
             ignore_filter = IgnoreFilter.from_path(root)
             @syncer = Syncer.new(ctx, theme: theme, ignore_filter: ignore_filter, overwrite_json: !editor_sync,
               stable: stable)
-            watcher = Watcher.new(ctx, theme: theme, ignore_filter: ignore_filter, syncer: @syncer, poll: poll)
+            watcher = ThemeWatcher.new(ctx, theme: theme, ignore_filter: ignore_filter, syncer: @syncer, poll: poll)
             remote_watcher = RemoteWatcher.to(theme: theme, syncer: @syncer)
 
             # Setup the middleware stack. Mimics Rack::Builder / config.ru, but in reverse order
-            @app = Proxy.new(ctx, theme: theme, syncer: @syncer)
+            @app = ThemeProxy.new(ctx, theme: theme, syncer: @syncer)
             @app = CdnFonts.new(@app, theme: theme)
-            @app = LocalAssets.new(ctx, @app, theme: theme)
+            @app = ThemeLocalAssets.new(ctx, @app, theme: theme)
             @app = HotReload.new(ctx, @app, theme: theme, watcher: watcher, mode: mode, ignore_filter: ignore_filter)
             stopped = false
             address = "http://#{host}:#{port}"
