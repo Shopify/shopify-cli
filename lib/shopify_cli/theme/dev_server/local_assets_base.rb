@@ -3,9 +3,7 @@
 module ShopifyCLI
   module Theme
     module DevServer
-      class LocalAssets
-        ASSET_REGEX = %r{//cdn\.shopify\.com/s/.+?/(assets/.+?\.(?:css|js))}
-
+      class LocalAssetsBase
         class FileBody
           def initialize(path)
             @path = path
@@ -22,10 +20,9 @@ module ShopifyCLI
           end
         end
 
-        def initialize(ctx, app, theme:)
+        def initialize(ctx, app)
           @ctx = ctx
           @app = app
-          @theme = theme
         end
 
         def call(env)
@@ -42,23 +39,11 @@ module ShopifyCLI
 
         private
 
-        def serve_file(path_info)
-          path = @theme.root.join(path_info[1..-1])
-          if path.file? && path.readable? && @theme.static_asset_file?(path)
-            [
-              200,
-              {
-                "Content-Type" => MimeType.by_filename(path).to_s,
-                "Content-Length" => path.size.to_s,
-              },
-              FileBody.new(path),
-            ]
-          else
-            fail(404, "Not found")
-          end
+        def serve_file(_path_info)
+          raise "#{self.class.name}#serve_file(path_info) must be defined"
         end
 
-        def fail(status, body)
+        def serve_fail(status, body)
           [
             status,
             {
@@ -69,17 +54,8 @@ module ShopifyCLI
           ]
         end
 
-        def replace_asset_urls(body)
-          replaced_body = body.join.gsub(ASSET_REGEX) do |match|
-            path = Regexp.last_match[1]
-            if @theme.static_asset_paths.include?(path)
-              "/#{path}"
-            else
-              match
-            end
-          end
-
-          [replaced_body]
+        def replace_asset_urls(_body)
+          raise "#{self.class.name}#replace_asset_urls(body) must be defined!"
         end
       end
     end

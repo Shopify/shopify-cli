@@ -78,11 +78,7 @@ module Extension
           port = options[:port]
           root = options[:context]&.root
 
-          ShopifyCLI::Theme::DevServer::AppExtensionDevServer.start(
-            @ctx,
-            root,
-            port: port
-          )
+          ShopifyCLI::Theme::DevServer::AppExtensionDevServer.start(@ctx, root)
         end
 
         private
