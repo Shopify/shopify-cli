@@ -181,6 +181,41 @@ module Theme
                 exit: "Exit",
               },
             },
+            warnings: {
+              unsupported_script: "unsupported script",
+              unsupported_script_text: <<~UNSUPPORTED_SCRIPT,
+
+                {{underline:Unsupported external checkout script}}
+
+                You have a code snippet on your storefront that violates
+                Shopify's Terms of Service. This script removes Shopify's
+                ability to protect your store against fraudulent orders,
+                could steal customer data and may cause customers to be
+                charged the wrong amount.
+
+                %s
+                By proceeding, you're acknowledging that you understand the
+                risks and will not hold Shopify liable for any problems that
+                occur due to the use of an external checkout, including:
+
+                - Discounts
+                - Shipping rules
+                - Multi-currency rules
+                - Variant selection
+                - Orders and fulfillment workflows
+                - Shopify Fraud Protection
+                - Payment settings
+                - Cart
+
+                You also acknowledge that you will not be able to reliably
+                get support for those features from Shopify because you are
+                violating Shopify's terms of service and that your account
+                may become suspended as a result.
+              UNSUPPORTED_SCRIPT
+              line_and_column: <<~LINE_AND_COLUMN,
+                - Line: %s Column: %s
+              LINE_AND_COLUMN
+            },
           },
           error: {
             address_binding_error: "Couldn't bind to localhost."\
