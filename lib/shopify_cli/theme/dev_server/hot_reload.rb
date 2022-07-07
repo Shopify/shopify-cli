@@ -8,7 +8,7 @@ module ShopifyCLI
   module Theme
     module DevServer
       class HotReload
-        def initialize(ctx, app, theme:, watcher:, mode:, ignore_filter: nil)
+        def initialize(ctx, app, theme:, watcher:, mode:, ignore_filter: nil, extension: nil)
           @ctx = ctx
           @app = app
           @theme = theme
@@ -20,6 +20,7 @@ module ShopifyCLI
           @watcher = watcher
           @watcher.add_observer(self, :notify_streams_of_file_change)
           @ignore_filter = ignore_filter
+          @extension = extension
         end
 
         def call(env)
@@ -41,7 +42,7 @@ module ShopifyCLI
         def notify_streams_of_file_change(modified, added, removed)
           files = (modified + added)
             .reject { |file| @ignore_filter&.ignore?(file) }
-            .map { |file| @theme[file] }
+            .map { |file| @extension ? @extension[file] : @theme[file] }
 
           files -= liquid_css_files = files.select(&:liquid_css?)
 
