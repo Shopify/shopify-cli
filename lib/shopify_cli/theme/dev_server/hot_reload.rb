@@ -67,7 +67,9 @@ module ShopifyCLI
 
         def inject_hot_reload_javascript(body)
           hot_reload_js = ::File.read("#{__dir__}/hot-reload.js")
+          hot_reload_no_script = ::File.read("#{__dir__}/hot-reload-no-script.html")
           hot_reload_script = [
+            hot_reload_no_script,
             "<script>",
             params_js,
             hot_reload_js,
