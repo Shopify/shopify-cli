@@ -13,6 +13,7 @@ require_relative "syncer/json_update_handler"
 require_relative "syncer/merger"
 require_relative "syncer/operation"
 require_relative "syncer/standard_reporter"
+require_relative "syncer/unsupported_script_warning"
 require_relative "theme_admin_api"
 require_relative "theme_admin_api_throttler"
 
@@ -256,7 +257,16 @@ module ShopifyCLI
         send(operation.method, operation.file) do |response|
           raise response if response.is_a?(StandardError)
 
-          @standard_reporter.report(operation.as_synced_message)
+          file = operation.file
+
+          if file.warnings.any?
+            warning_message =
+              operation.as_synced_message(color: :yellow) +
+              UnsupportedScriptWarning.new(@ctx, file).to_s
+            @error_reporter.report(warning_message)
+          else
+            @standard_reporter.report(operation.as_synced_message)
+          end
 
           # Check if the API told us we're near the rate limit
           if !backingoff? && (limit = response["x-shopify-shop-api-call-limit"])
@@ -290,6 +300,9 @@ module ShopifyCLI
 
         api_client.put(path: path, body: req_body) do |_status, resp_body, response|
           update_checksums(resp_body)
+
+          file.warnings = resp_body.dig("asset", "warnings")
+
           yield(response) if block_given?
         end
       end

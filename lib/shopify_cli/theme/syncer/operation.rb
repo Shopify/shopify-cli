@@ -9,6 +9,7 @@ module ShopifyCLI
         COLOR_BY_STATUS = {
           error: :red,
           synced: :green,
+          warning: :yellow,
           fixed: :cyan,
         }
 
@@ -26,8 +27,8 @@ module ShopifyCLI
           as_message_with(status: :error)
         end
 
-        def as_synced_message
-          as_message_with(status: :synced)
+        def as_synced_message(color: :green)
+          as_message_with(status: :synced, color: color)
         end
 
         def as_fix_message
@@ -40,11 +41,11 @@ module ShopifyCLI
 
         private
 
-        def as_message_with(status:)
-          status_color = COLOR_BY_STATUS[status]
-          status_text = @ctx.message("theme.serve.operation.status.#{status}").ljust(6)
+        def as_message_with(status:, color: nil)
+          color ||= COLOR_BY_STATUS[status]
+          text = @ctx.message("theme.serve.operation.status.#{status}").ljust(6)
 
-          "#{timestamp} {{#{status_color}:#{status_text}}} {{>}} {{blue:#{self}}}"
+          "#{timestamp} {{#{color}:#{text}}} {{>}} {{blue:#{self}}}"
         end
 
         def timestamp

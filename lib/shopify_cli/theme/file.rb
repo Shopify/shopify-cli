@@ -5,6 +5,7 @@ module ShopifyCLI
   module Theme
     class File < Struct.new(:path)
       attr_accessor :remote_checksum
+      attr_writer :warnings
 
       def initialize(path, root)
         super(Pathname.new(path))
@@ -102,6 +103,10 @@ module ShopifyCLI
 
       def relative_path
         @relative_path.to_s
+      end
+
+      def warnings
+        @warnings || []
       end
 
       private

@@ -4,6 +4,7 @@ From version 2.6.0, the sections in this file adhere to the [keep a changelog](h
 
 ### Added
 * [#2368](https://github.com/Shopify/shopify-cli/pull/2368): Add performance enhancements to the `theme serve` and `theme push` commands
+* [#2437](https://github.com/Shopify/shopify-cli/pull/2437): Add support to the `warnings` field in the assets API
 * [#2446](https://github.com/Shopify/shopify-cli/pull/2446): Show a friendly message when developers use a browser without SSE support
 
 ### Fixed

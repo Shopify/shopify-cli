@@ -33,6 +33,15 @@ module ShopifyCLI
           end
         end
 
+        def test_as_synced_message_with_different_color
+          @ctx.stubs(:message).with("theme.serve.operation.status.synced")
+            .returns("Synced")
+
+          time_freeze do
+            assert_message("{{yellow:Synced}}", @operation.as_synced_message(color: :yellow))
+          end
+        end
+
         def test_as_fix_message
           @ctx.stubs(:message).with("theme.serve.operation.status.fixed")
             .returns("Fixed")

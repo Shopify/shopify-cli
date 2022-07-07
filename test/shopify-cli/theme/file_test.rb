@@ -116,6 +116,21 @@ module ShopifyCLI
         assert_equal(expected_relative_path, actual_relative_path)
       end
 
+      def test_warnings_when_it_is_nil
+        @file.warnings = nil
+
+        assert_empty(@file.warnings)
+      end
+
+      def test_warnings_when_it_is_not_nil
+        expected_warnings = [mock, mock]
+        @file.warnings = expected_warnings
+
+        actual_warnings = @file.warnings
+
+        assert_equal(expected_warnings, actual_warnings)
+      end
+
       private
 
       def fixture_file(file_path)
