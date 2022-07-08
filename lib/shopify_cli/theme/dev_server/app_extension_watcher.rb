@@ -14,11 +14,6 @@ module ShopifyCLI
         def initialize(ctx, extension:, poll: false)
           @ctx = ctx
           @listener = FileSystemListener.new(root: extension.root.to_s, force_poll: poll, ignore_regex: nil)
-          add_observer(self, :testing)
-        end
-
-        def testing(modified, added, removed)
-          puts "#{modified}, #{added}, #{removed}"
         end
 
         def start
