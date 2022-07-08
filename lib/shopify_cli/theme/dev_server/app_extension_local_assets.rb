@@ -18,7 +18,7 @@ module ShopifyCLI
         def replace_asset_urls(body)
           replaced_body = body.join.gsub(EXT_ASSET_REGEX) do |match|
             path = Regexp.last_match[2]
-            if @extension.static_asset_paths.include?(path) && @extension.id == 1234 # TODO
+            if @extension.static_asset_paths.include?(path) # && @extension.id == 1234 # TODO
               "/#{path}"
             else
               match

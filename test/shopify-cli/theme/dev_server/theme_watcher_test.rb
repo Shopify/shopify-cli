@@ -6,7 +6,7 @@ require "shopify_cli/theme/dev_server/theme_watcher"
 module ShopifyCLI
   module Theme
     module DevServer
-      class WatcherTest < Minitest::Test
+      class ThemeWatcherTest < Minitest::Test
         def setup
           super
           @root = ShopifyCLI::ROOT + "/test/fixtures/theme"
