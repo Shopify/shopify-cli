@@ -2,7 +2,7 @@ From version 2.6.0, the sections in this file adhere to the [keep a changelog](h
 
 ## [Unreleased]
 
-## Version 2.19.0 - 2022-07-11
+## Version 2.20.0 - 2022-07-11
 
 ### Added
 * [#2368](https://github.com/Shopify/shopify-cli/pull/2368): Add performance enhancements to the `theme serve` and `theme push` commands
