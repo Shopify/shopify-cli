@@ -1,5 +1,5 @@
 # frozen_string_literal: true
-require "shopify_cli/theme/dev_server"
+require "shopify_cli/theme/theme_dev_server"
 require "project_types/theme/commands/common/root_helper"
 
 module Theme
@@ -28,7 +28,7 @@ module Theme
         flags = options.flags.dup
         host = flags[:host] || DEFAULT_HTTP_HOST
 
-        ShopifyCLI::Theme::DevServer.start(@ctx, root, host: host, **flags) do |syncer|
+        ShopifyCLI::Theme::DevServer::ThemeDevServer.start(@ctx, root, host: host, **flags) do |syncer|
           UI::SyncProgressBar.new(syncer).progress(:upload_theme!, delay_low_priority_files: true)
         end
       rescue ShopifyCLI::Theme::DevServer::AddressBindingError

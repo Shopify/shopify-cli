@@ -1,6 +1,7 @@
 # frozen_string_literal: true
 require "base64"
 require "json"
+require "shopify_cli/theme/app_extension_dev_server"
 
 module Extension
   module Models
@@ -64,16 +65,24 @@ module Extension
           "Theme App Extension"
         end
 
-        def choose_port?(ctx)
-          ctx.abort(ctx.message("serve.unsupported"))
+        def choose_port?(_ctx)
+          false
         end
 
-        def establish_tunnel?(ctx)
-          ctx.abort(ctx.message("serve.unsupported"))
+        def establish_tunnel?(_ctx)
+          false
         end
 
-        def serve(ctx)
-          ctx.abort(ctx.message("serve.unsupported"))
+        def serve(**options)
+          @ctx = options[:context]
+          port = options[:port]
+          root = options[:context]&.root
+
+          ShopifyCLI::Theme::DevServer::AppExtensionDevServer.start(
+            @ctx,
+            root,
+            port: port
+          )
         end
 
         private
