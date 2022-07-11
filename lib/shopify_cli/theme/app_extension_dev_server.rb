@@ -1,17 +1,13 @@
 # frozen_string_literal: true
 
-<<<<<<< HEAD
 require_relative "dev_server"
 require_relative "dev_server/app_extensions"
 require_relative "dev_server/web_server"
 
-=======
 require "shopify_cli/theme/app_extension"
 require "shopify_cli/theme/syncer"
->>>>>>> 90bc7954 (basic hot-reloading of tae static assets)
 require "pathname"
 
-require_relative "dev_server_common"
 require_relative "development_theme"
 require_relative "dev_server/hot_reload"
 require_relative "dev_server/reload_mode"
@@ -31,7 +27,7 @@ module ShopifyCLI
         class << self
           attr_accessor :ctx
 
-          def start(ctx, _root, host: "127.0.0.1", _theme: nil, port: 9292, _poll: false)
+          def start(ctx, root, host: "127.0.0.1", _theme: nil, port: 9292, poll: false)
             @ctx = ctx
             # @app = AppExtensions.new
 
