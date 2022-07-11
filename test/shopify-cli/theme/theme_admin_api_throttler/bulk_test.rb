@@ -37,7 +37,23 @@ module ShopifyCLI
           @admin_api = ThemeAdminAPI.new(@ctx, @theme.shop)
         end
 
-        def test_batch_bytesize_upper_bound_with_multiple_threads
+        def self.test_order; :sorted; end
+
+        def test_a_batch_num_files_upper_bound_with_single_thread
+          # puts __method__.to_s
+          @bulk = Bulk.new(@ctx, @admin_api)
+
+          Bulk::MAX_BULK_FILES.times do |n|
+            @bulk.enqueue(generate_put_request("file#{n}.txt", 100_000))
+          end
+
+          @ctx.expects(:debug)
+            .with(debug_formatter(20, 2_000_000))
+          @bulk.shutdown
+        end
+
+        def test_b_batch_bytesize_upper_bound_with_multiple_threads
+          # puts __method__.to_s
           @bulk = Bulk.new(@ctx, @admin_api, pool_size: MULTIPLE_THREADS)
 
           request_1 = generate_put_request("file1.txt", Bulk::MAX_BULK_BYTESIZE / 3)
@@ -55,7 +71,44 @@ module ShopifyCLI
           @bulk.shutdown
         end
 
-        def test_batch_bytesize_upper_bound_with_single_thread
+        def test_c_batch_big_test_with_multiple_threads
+          # puts __method__.to_s
+          @bulk = Bulk.new(@ctx, @admin_api, pool_size: MULTIPLE_THREADS)
+
+          files = 5.times.map do |i|
+            size = (Bulk::MAX_BULK_BYTESIZE / 2) - 1000
+            generate_put_request("file#{i}.txt", size + i)
+          end
+
+          files.each { |file| @bulk.enqueue(file) }
+
+          @ctx.expects(:debug)
+            .with(debug_formatter(2, files[0].size + files[1].size))
+          @ctx.expects(:debug)
+            .with(debug_formatter(2, files[2].size + files[3].size))
+          @ctx.expects(:debug)
+            .with(debug_formatter(1, files[4].size))
+          @bulk.shutdown
+        end
+
+        def test_d_batch_num_files_upper_bound_with_multiple_threads
+          # puts __method__.to_s
+          @bulk = Bulk.new(@ctx, @admin_api, pool_size: MULTIPLE_THREADS)
+
+          num_requests = Bulk::MAX_BULK_FILES << 1
+
+          num_requests.times do |n|
+            @bulk.enqueue(generate_put_request("file#{n}.txt", 10_000))
+          end
+
+          @ctx.expects(:debug)
+            .with(debug_formatter(20, Bulk::MAX_BULK_FILES * 10_000))
+            .twice
+          @bulk.shutdown
+        end
+
+        def test_e_batch_bytesize_upper_bound_with_single_thread
+          # puts __method__.to_s
           @bulk = Bulk.new(@ctx, @admin_api)
 
           request_1 = generate_put_request("file1.txt", Bulk::MAX_BULK_BYTESIZE + 2)
@@ -72,52 +125,6 @@ module ShopifyCLI
             .with(debug_formatter(1, request_2.size))
           @ctx.expects(:debug)
             .with(debug_formatter(1, request_3.size))
-          @bulk.shutdown
-        end
-
-        def test_batch_num_files_upper_bound_with_single_thread
-          @bulk = Bulk.new(@ctx, @admin_api)
-
-          Bulk::MAX_BULK_FILES.times do |n|
-            @bulk.enqueue(generate_put_request("file#{n}.txt", 100_000))
-          end
-
-          @ctx.expects(:debug)
-            .with(debug_formatter(20, 2_000_000))
-          @bulk.shutdown
-        end
-
-        def test_batch_num_files_upper_bound_with_multiple_threads
-          @bulk = Bulk.new(@ctx, @admin_api, pool_size: MULTIPLE_THREADS)
-
-          num_requests = Bulk::MAX_BULK_FILES << 1
-
-          num_requests.times do |n|
-            @bulk.enqueue(generate_put_request("file#{n}.txt", 10_000))
-          end
-
-          @ctx.expects(:debug)
-            .with(debug_formatter(20, Bulk::MAX_BULK_FILES * 10_000))
-            .twice
-          @bulk.shutdown
-        end
-
-        def test_batch_big_test_with_multiple_threads
-          @bulk = Bulk.new(@ctx, @admin_api, pool_size: MULTIPLE_THREADS)
-
-          files = 5.times.map do |i|
-            size = (Bulk::MAX_BULK_BYTESIZE / 2) - 1000
-            generate_put_request("file#{i}.txt", size + i)
-          end
-
-          files.each { |file| @bulk.enqueue(file) }
-
-          @ctx.expects(:debug)
-            .with(debug_formatter(2, files[0].size + files[1].size))
-          @ctx.expects(:debug)
-            .with(debug_formatter(2, files[2].size + files[3].size))
-          @ctx.expects(:debug)
-            .with(debug_formatter(1, files[4].size))
           @bulk.shutdown
         end
 
