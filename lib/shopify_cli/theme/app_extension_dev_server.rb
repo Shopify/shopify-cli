@@ -29,7 +29,6 @@ module ShopifyCLI
 
           def start(ctx, root, host: "127.0.0.1", _theme: nil, port: 9292, poll: false)
             @ctx = ctx
-            # @app = AppExtensions.new
 
             tmp_theme_dir = root + "/../tmp_theme"
             @ctx.mkdir_p(tmp_theme_dir)
