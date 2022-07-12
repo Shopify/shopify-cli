@@ -20,9 +20,10 @@ module ShopifyCLI
           end
         end
 
-        def initialize(ctx, app)
+        def initialize(ctx, app, target:)
           @ctx = ctx
           @app = app
+          @target = target
         end
 
         def call(env)
@@ -39,10 +40,6 @@ module ShopifyCLI
 
         private
 
-        def serve_file(_path_info)
-          raise "#{self.class.name}#serve_file(path_info) must be defined"
-        end
-
         def serve_fail(status, body)
           [
             status,
@@ -54,8 +51,20 @@ module ShopifyCLI
           ]
         end
 
-        def replace_asset_urls(_body)
-          raise "#{self.class.name}#replace_asset_urls(body) must be defined!"
+        def serve_file(path_info)
+          path = @target.root.join(path_info[1..-1])
+          if path.file? && path.readable? && @target.static_asset_file?(path)
+            [
+              200,
+              {
+                "Content-Type" => MimeType.by_filename(path).to_s,
+                "Content-Length" => path.size.to_s,
+              },
+              FileBody.new(path),
+            ]
+          else
+            serve_fail(404, "Not found")
+          end
         end
       end
     end
