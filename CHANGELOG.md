@@ -2,6 +2,10 @@ From version 2.6.0, the sections in this file adhere to the [keep a changelog](h
 
 ## [Unreleased]
 
+### Fixed
+
+* [#2453](https://github.com/Shopify/shopify-cli/pull/2453): Fix [#2382](https://github.com/Shopify/shopify-cli/issues/2382): Only return latest version when 24 hours has lapsed
+
 ## Version 2.20.0 - 2022-07-11
 
 ### Added
