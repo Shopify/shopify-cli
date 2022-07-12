@@ -1,5 +1,6 @@
 # frozen_string_literal: true
 require_relative "file"
+require_relative "root"
 require_relative "theme_admin_api"
 
 require "pathname"
@@ -9,12 +10,11 @@ module ShopifyCLI
   module Theme
     class InvalidThemeRole < StandardError; end
 
-    class Theme
+    class Theme < Root
       attr_reader :root, :id
 
       def initialize(ctx, root: nil, id: nil, name: nil, role: nil)
-        @ctx = ctx
-        @root = Pathname.new(root) if root
+        super(ctx, root: root)
         @id = id
         @name = name
         @role = role
@@ -24,46 +24,8 @@ module ShopifyCLI
         (glob(["**/*.liquid", "**/*.json"]) + static_asset_files).uniq
       end
 
-      def static_asset_files
-        glob("assets/*", raise_on_dir: true).reject(&:liquid?)
-      end
-
-      def liquid_files
-        glob("**/*.liquid")
-      end
-
-      def json_files
-        glob("**/*.json")
-      end
-
-      def glob(pattern, raise_on_dir: false)
-        root
-          .glob(pattern)
-          .select { |path| file?(path, raise_on_dir) }
-          .map { |path| File.new(path, root) }
-      end
-
       def theme_file?(file)
         theme_files.include?(self[file])
-      end
-
-      def static_asset_file?(file)
-        static_asset_files.include?(self[file])
-      end
-
-      def static_asset_paths
-        static_asset_files.map(&:relative_path)
-      end
-
-      def [](file)
-        case file
-        when File
-          file
-        when Pathname
-          File.new(file, root)
-        when String
-          File.new(root.join(file), root)
-        end
       end
 
       def shop
@@ -235,14 +197,6 @@ module ShopifyCLI
         @role = body.dig("theme", "role")
 
         self
-      end
-
-      def file?(path, raise_on_dir = false)
-        if raise_on_dir && ::File.directory?(path)
-          @ctx.abort(@ctx.message("theme.serve.error.invalid_subdirectory", path.to_s))
-        end
-
-        ::File.file?(path)
       end
     end
   end
