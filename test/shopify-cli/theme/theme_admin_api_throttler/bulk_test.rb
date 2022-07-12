@@ -9,7 +9,7 @@ module ShopifyCLI
   module Theme
     class ThemeAdminAPIThrottler
       class BulkTest < Minitest::Test
-        MULTIPLE_THREADS = 1
+        MULTIPLE_THREADS = 20
 
         def setup
           super
