@@ -628,7 +628,8 @@ module ShopifyCLI
           thread = Thread.new { retrieve_latest_gem_version }
           at_exit { thread.join }
         end
-        latest_version = ShopifyCLI::Config.get(VERSION_CHECK_SECTION, LATEST_VERSION_FIELD, default: ShopifyCLI::VERSION)
+        latest_version =
+          ShopifyCLI::Config.get(VERSION_CHECK_SECTION, LATEST_VERSION_FIELD, default: ShopifyCLI::VERSION)
         latest_version if ::Semantic::Version.new(latest_version) > ::Semantic::Version.new(ShopifyCLI::VERSION)
       end
     end
