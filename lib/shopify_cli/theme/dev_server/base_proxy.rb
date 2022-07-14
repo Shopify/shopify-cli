@@ -1,8 +1,8 @@
 # frozen_string_literal: true
-require "net/http"
 require "stringio"
 require "time"
 require "cgi"
+require "net/http"
 require_relative "proxy/template_param_builder"
 
 module ShopifyCLI
@@ -20,15 +20,13 @@ module ShopifyCLI
         "content-security-policy",
       ]
 
-      class Proxy
+      class BaseProxy
         SESSION_COOKIE_NAME = "_secure_session_id"
         SESSION_COOKIE_REGEXP = /#{SESSION_COOKIE_NAME}=(\h+)/
         SESSION_COOKIE_MAX_AGE = 60 * 60 * 23 # 1 day - leeway of 1h
 
-        def initialize(ctx, theme:, syncer:)
+        def initialize(ctx)
           @ctx = ctx
-          @theme = theme
-          @syncer = syncer
           @core_endpoints = Set.new
 
           @secure_session_id = nil
@@ -37,13 +35,12 @@ module ShopifyCLI
 
         def call(env)
           headers = extract_http_request_headers(env)
-          headers["Host"] = @theme.shop
+          headers["Host"] = @shop
           headers["Cookie"] = add_session_cookie(headers["Cookie"])
           headers["Accept-Encoding"] = "none"
           headers["User-Agent"] = "Shopify CLI"
-
           query = URI.decode_www_form(env["QUERY_STRING"])
-          replace_templates = build_replace_templates_param(env)
+          replace_templates = build_replacement_param(env)
           response = if replace_templates.any?
             # Pass to SFR the recently modified templates in `replace_templates` body param
             headers["Authorization"] = "Bearer #{bearer_token}"
@@ -79,7 +76,7 @@ module ShopifyCLI
         def patch_body(env, body)
           return [""] unless body
 
-          body.gsub(%r{(data-.+=(["']))(http:|https:)?//#{@theme.shop}(.*)(\2)}) do |_|
+          body.gsub(%r{(data-.+=(["']))(http:|https:)?//#{@shop}(.*)(\2)}) do |_|
             match = Regexp.last_match
             "#{match[1]}http://#{host(env)}#{match[4]}#{match[5]}"
           end
@@ -126,15 +123,6 @@ module ShopifyCLI
           name.sub(/^HTTP_/, "").gsub("_", "-")
         end
 
-        def build_replace_templates_param(env)
-          TemplateParamBuilder.new
-            .with_core_endpoints(@core_endpoints)
-            .with_syncer(@syncer)
-            .with_theme(@theme)
-            .with_rack_env(env)
-            .build
-        end
-
         def add_session_cookie(cookie_header)
           cookie_header = if cookie_header
             cookie_header.dup
@@ -169,7 +157,7 @@ module ShopifyCLI
         def secure_session_id
           if secure_session_id_expired?
             @ctx.debug("Refreshing preview _secure_session_id cookie")
-            response = request("HEAD", "/", query: [[:preview_theme_id, @theme.id]])
+            response = request("HEAD", "/", query: [[:preview_theme_id, @theme_id]])
             @secure_session_id = extract_secure_session_id_from_response_headers(response)
             @last_session_cookie_refresh = Time.now
           end
@@ -187,7 +175,7 @@ module ShopifyCLI
           response_headers.reject! { |k| HOP_BY_HOP_HEADERS.include?(k.downcase) }
 
           if response_headers["location"]&.include?("myshopify.com")
-            response_headers["location"].gsub!(%r{(https://#{@theme.shop})}, "http://127.0.0.1:9292")
+            response_headers["location"].gsub!(%r{(https://#{@shop})}, "http://127.0.0.1:9292")
           end
 
           new_session_id = extract_secure_session_id_from_response_headers(response_headers)
@@ -201,7 +189,7 @@ module ShopifyCLI
         end
 
         def request(method, path, headers: nil, query: [], form_data: nil, body_stream: nil)
-          uri = URI.join("https://#{@theme.shop}", path)
+          uri = URI.join("https://#{@shop}", path)
           uri.query = URI.encode_www_form(query + [[:_fd, 0], [:pb, 0]])
 
           @ctx.debug("Proxying #{method} #{uri}")
@@ -216,6 +204,10 @@ module ShopifyCLI
             @ctx.debug("`-> #{response.code} request_id: #{response["x-request-id"]}")
             response
           end
+        end
+
+        def build_replacement_param(_env)
+          raise "`#{self.class.name}#build_liquid_replacement_param(env)' must be defined"
         end
       end
     end

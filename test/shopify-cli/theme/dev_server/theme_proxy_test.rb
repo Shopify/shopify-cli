@@ -7,7 +7,7 @@ require "timecop"
 module ShopifyCLI
   module Theme
     module DevServer
-      class ProxyTest < Minitest::Test
+      class ThemeProxyTest < Minitest::Test
         SECURE_SESSION_ID = "deadbeef"
 
         def setup
@@ -16,7 +16,6 @@ module ShopifyCLI
           @ctx = TestHelpers::FakeContext.new(root: root)
           @theme = DevelopmentTheme.new(@ctx, root: root)
           @syncer = stub(pending_updates: [])
-          @proxy = Proxy.new(@ctx, theme: @theme, syncer: @syncer)
 
           ShopifyCLI::DB.stubs(:exists?).with(:shop).returns(true)
           ShopifyCLI::DB
@@ -27,6 +26,7 @@ module ShopifyCLI
             .stubs(:get)
             .with(:development_theme_id)
             .returns("123456789")
+          @proxy = ThemeProxy.new(@ctx, theme: @theme, syncer: @syncer)
         end
 
         def test_get_is_proxied_to_online_store

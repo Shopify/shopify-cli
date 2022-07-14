@@ -14,7 +14,7 @@ module ShopifyCLI
           @ctx = TestHelpers::FakeContext.new(root: root)
           @theme = Theme.new(@ctx, root: root)
           @syncer = stub("Syncer", enqueue_uploads: true, enqueue_updates: true, ignore_file?: false)
-          @watcher = Watcher.new(@ctx, theme: @theme, syncer: @syncer)
+          @watcher = ThemeWatcher.new(@ctx, theme: @theme, syncer: @syncer)
           @mode = "off"
         end
 
