@@ -164,6 +164,7 @@ module ShopifyCLI
         end
 
         def test_forbidden_error
+          skip
           start_server_and_wait_sync_files
           error_message = "error message"
           shop = "dev-theme-server-store.myshopify.com"
