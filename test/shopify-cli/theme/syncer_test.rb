@@ -16,6 +16,7 @@ module ShopifyCLI
         @theme.stubs(:shop).returns("dev-theme-server-store.myshopify.com")
         @syncer = Syncer.new(@ctx, theme: @theme, stable: true)
         @syncer.stubs(:wait).returns(nil)
+        @syncer.stubs(:theme_created_at_runtime?).returns(false)
 
         ShopifyCLI::DB.stubs(:exists?).with(:shop).returns(true)
         ShopifyCLI::DB

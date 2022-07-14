@@ -393,7 +393,11 @@ module ShopifyCLI
       end
 
       def overwrite_json?
-        @overwrite_json
+        theme_created_at_runtime? || @overwrite_json
+      end
+
+      def theme_created_at_runtime?
+        @theme.created_at_runtime?
       end
 
       def backingoff?
