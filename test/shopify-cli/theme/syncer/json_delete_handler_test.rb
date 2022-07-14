@@ -19,10 +19,37 @@ module ShopifyCLI
           @to_delete = [@file1, @file3]
         end
 
-        def test_enqueue_json_deletes_when_it_should_overwrite_json_files
+        def test_enqueue_json_deletes_when_overwrite_json_true_theme_created_at_runtime_true
+          @overwrite_json = true
+          @theme_created_at_runtime = true
+
+          expects(:enqueue_deletes).with(@to_delete)
+
+          enqueue_json_deletes(@files)
+        end
+
+        def test_enqueue_json_deletes_when_overwrite_json_false_theme_created_at_runtime_true
+          @overwrite_json = false
+          @theme_created_at_runtime = true
+
+          expects(:enqueue_deletes).with(@to_delete)
+
+          enqueue_json_deletes(@files)
+        end
+
+        def test_enqueue_json_deletes_when_overwrite_json_true_theme_created_at_runtime_false
           @overwrite_json = true
 
           expects(:enqueue_deletes).with(@to_delete)
+
+          enqueue_json_deletes(@files)
+        end
+
+        def test_enqueue_json_deletes_does_not_delete_when_overwrite_json_false_theme_created_at_runtime_false
+          @overwrite_json = false
+
+          expects(:enqueue_deletes).never
+          expects(:handle_delete_conflicts)
 
           enqueue_json_deletes(@files)
         end
@@ -82,9 +109,9 @@ module ShopifyCLI
         private
 
         def mock_files
-          @file1 = mock
-          @file2 = mock
-          @file3 = mock
+          @file1 = stub(exist?: true, relative_path: "file1")
+          @file2 = stub(exist?: true, relative_path: "file2")
+          @file3 = stub(exist?: true, relative_path: "file3")
           stubs(:ignore_file?).with(@file1).returns(false)
           stubs(:ignore_file?).with(@file2).returns(true)
           stubs(:ignore_file?).with(@file3).returns(false)
@@ -93,7 +120,11 @@ module ShopifyCLI
         # Methods required in the host class/module to support the `JsonDeleteHandler`
 
         def overwrite_json?
-          @overwrite_json
+          theme_created_at_runtime? || @overwrite_json
+        end
+
+        def theme_created_at_runtime?
+          @theme_created_at_runtime ||= false
         end
 
         def enqueue_deletes(files); end

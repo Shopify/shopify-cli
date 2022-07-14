@@ -19,8 +19,26 @@ module ShopifyCLI
           @to_update = [@file1, @file3, @file5, @delayed_file1, @delayed_file2]
         end
 
-        def test_enqueue_json_updates_when_it_should_overwrite_json_files
+        def test_enqueue_json_updates_when_overwrite_json_true_theme_created_at_runtime_false
           @overwrite_json = true
+
+          expects(:enqueue_updates).with(@to_update - [@delayed_file1, @delayed_file2])
+
+          enqueue_json_updates(@files)
+        end
+
+        def test_enqueue_json_updates_when_overwrite_json_false_theme_created_at_runtime_true
+          @overwrite_json = false
+          @theme_created_at_runtime = true
+
+          expects(:enqueue_updates).with(@to_update - [@delayed_file1, @delayed_file2])
+
+          enqueue_json_updates(@files)
+        end
+
+        def test_enqueue_json_updates_when_overwrite_json_true_theme_created_at_runtime_true
+          @overwrite_json = true
+          @theme_created_at_runtime = true
 
           expects(:enqueue_updates).with(@to_update - [@delayed_file1, @delayed_file2])
 
@@ -101,7 +119,7 @@ module ShopifyCLI
           enqueue_json_updates(@files)
         end
 
-        def test_enqueue_delayed_files_updates_when_overwrite_json_is_true
+        def test_enqueue_delayed_files_updates_when_overwrite_json_true_theme_created_at_runtime_false
           @overwrite_json = true
 
           expects(:update).with(@delayed_file1)
@@ -110,7 +128,27 @@ module ShopifyCLI
           enqueue_delayed_files_updates
         end
 
-        def test_enqueue_delayed_files_updates_when_overwrite_json_is_false
+        def test_enqueue_delayed_files_updates_when_overwrite_json_false_theme_created_at_runtime_true
+          @overwrite_json = false
+          @theme_created_at_runtime = true
+
+          expects(:update).with(@delayed_file1)
+          expects(:update).with(@delayed_file2)
+
+          enqueue_delayed_files_updates
+        end
+
+        def test_enqueue_delayed_files_updates_when_overwrite_json_true_theme_created_at_runtime_true
+          @overwrite_json = true
+          @theme_created_at_runtime = true
+
+          expects(:update).with(@delayed_file1)
+          expects(:update).with(@delayed_file2)
+
+          enqueue_delayed_files_updates
+        end
+
+        def test_enqueue_delayed_files_updates_when_overwrite_json_false_theme_created_at_runtime_false
           @overwrite_json = false
 
           expects(:update).with(@delayed_file1).never
@@ -176,7 +214,11 @@ module ShopifyCLI
         attr_reader :checksums, :theme
 
         def overwrite_json?
-          @overwrite_json
+          theme_created_at_runtime? || @overwrite_json
+        end
+
+        def theme_created_at_runtime?
+          @theme_created_at_runtime ||= false
         end
 
         def enqueue_get(files); end

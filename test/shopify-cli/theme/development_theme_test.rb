@@ -43,6 +43,7 @@ module ShopifyCLI
         ])
 
         @theme.ensure_exists!
+        assert(@theme.created_at_runtime?)
       end
 
       def test_creates_development_theme_when_an_unauthorized_error_happens
@@ -111,6 +112,7 @@ module ShopifyCLI
         ])
 
         @theme.ensure_exists!
+        assert(@theme.created_at_runtime?)
       end
 
       def test_name_is_generated_unless_exists_in_db
@@ -175,6 +177,13 @@ module ShopifyCLI
         ShopifyCLI::DB.expects(:set).with(development_theme_name: theme_name)
 
         assert_equal(theme_name, @theme.name)
+      end
+
+      def test_created_at_runtime_returns_false_if_development_theme_exists_in_db
+        @theme.expects(:exists?).returns(true)
+
+        @theme.ensure_exists!
+        refute(@theme.created_at_runtime?)
       end
 
       def test_delete

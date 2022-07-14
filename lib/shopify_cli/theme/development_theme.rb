@@ -35,6 +35,7 @@ module ShopifyCLI
           @ctx.debug("Using temporary development theme: ##{id} #{name}")
         else
           create
+          @created_at_runtime = true
           @ctx.debug("Created temporary development theme: #{@id}")
           ShopifyCLI::DB.set(development_theme_id: @id)
         end
@@ -50,6 +51,10 @@ module ShopifyCLI
         )
       rescue ShopifyCLI::API::APIRequestNotFoundError
         false
+      end
+
+      def created_at_runtime?
+        @created_at_runtime ||= false
       end
 
       def delete
