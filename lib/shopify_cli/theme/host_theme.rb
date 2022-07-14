@@ -1,7 +1,7 @@
 # frozen_string_literal: true
-require_relative "theme"
-require_relative "shopify_cli/git"
 require_relative "syncer"
+require_relative "development_theme"
+require "shopify_cli/git"
 require "tmpdir"
 require "fileutils"
 
@@ -13,7 +13,7 @@ module ShopifyCLI
       end
 
       def name
-        existing = ShopifyCLI:DB.get(:host_theme_name)
+        existing_name = ShopifyCLI::DB.get(:host_theme_name)
         if existing_name.nil? || existing_name.length > API_NAME_LIMIT
           generate_host_theme_name
         else
@@ -23,40 +23,40 @@ module ShopifyCLI
 
       def ensure_exists!
         if exists?
+          generate_tmp_theme
           @ctx.debug("Using temporary host theme: ##{id} #{name}")
         else
           create
           @ctx.debug("Created temporary host theme: #{@id}")
-          ShopifyCLI::DB.set(host_theme_id: @id)
         end
 
         self
       end
 
-      def delete
+      def clear
+        @dir ||= ShopifyCLI::DB.get(:host_theme_dir)
         raise StandardError.new("Couldn't get @dir") unless @dir
         FileUtils.remove_entry @dir
+      end
+
+      def delete
+        clear
+        super if exists?
+
         ShopifyCLI::DB.del(:host_theme_id) if ShopifyCLI::DB.exists?(:host_theme_id)
         ShopifyCLI::DB.del(:host_theme_name) if ShopifyCLI::DB.exists?(:host_theme_name)
+        ShopifyCLI::DB.del(:host_theme_dir) if ShopifyCLI::DB.exists?(:host_theme_dir)
       end
 
       def create
-        @dir = Dir.mktmpdir
-        Git.clone("https://github.com/Shopify/dawn.git", @dir)
+        super
+        ShopifyCLI::DB.set(host_theme_id: @id)
 
-        @ctx.root = File.join(@ctx.root, name)
-        syncer = Syncer.new(@ctx, theme: self)
+        generate_tmp_theme
+      end
 
-        begin
-          @ctx.rm_r(".git")
-          @ctx.rm_r(".github")
-          syncer.start_threads
-          syncer.upload_theme!(delete: false)
-        rescue Errno::ENOENT => e
-          @ctx.debug(e)
-        ensure
-          syncer.shutdown
-        end
+      def self.find_or_create!(ctx)
+        new(ctx, root: nil).ensure_exists!
       end
 
       private
@@ -73,6 +73,28 @@ module ShopifyCLI
         ShopifyCLI::DB.set(host_theme_name: theme_name)
 
         theme_name
+      end
+
+      def generate_tmp_theme
+        @dir = Dir.mktmpdir
+        ShopifyCLI::DB.set(host_theme_dir: @dir)
+
+        @root = Pathname.new(@dir)
+        @ctx.root = @dir
+        Git.clone("https://github.com/Shopify/dawn.git", @dir)
+
+        syncer = Syncer.new(@ctx, theme: self)
+
+        begin
+          syncer.start_threads
+          ::CLI::UI::Frame.open(@ctx.message("theme.push.info.pushing", name, id, shop)) do
+            syncer.upload_theme!(delete: false)
+          end
+        rescue Errno::ENOENT => e
+          @ctx.debug(e.message)
+        ensure
+          syncer.shutdown
+        end
       end
     end
   end

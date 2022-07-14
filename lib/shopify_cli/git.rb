@@ -64,7 +64,7 @@ module ShopifyCLI
       #   ShopifyCLI::Git.clone('git@github.com:shopify/test.git', 'test-app')
       #
       def clone(repository, dest, ctx: Context.new)
-        if Dir.exist?(dest)
+        if !Dir.empty?(dest) && Dir.exist?(dest)
           ctx.abort(ctx.message("core.git.error.directory_exists"))
         else
           repo, branch = repository.split("#")

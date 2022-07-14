@@ -6,6 +6,7 @@ require_relative "dev_server/web_server"
 
 require "shopify_cli/theme/app_extension"
 require "shopify_cli/theme/syncer"
+require "shopify_cli/theme/host_theme"
 require "pathname"
 
 require_relative "development_theme"
@@ -30,10 +31,7 @@ module ShopifyCLI
           def start(ctx, root, host: "127.0.0.1", _theme: nil, port: 9292, poll: false)
             @ctx = ctx
 
-            tmp_theme_dir = root + "/../tmp_theme"
-            @ctx.mkdir_p(tmp_theme_dir)
-
-            @theme = DevelopmentTheme.find_or_create!(@ctx, root: tmp_theme_dir)
+            @theme = HostTheme.find_or_create!(@ctx)
             @extension = AppExtension.new(@ctx, root: root, id: 1234)
             logger = WEBrick::Log.new(nil, WEBrick::BasicLog::INFO)
             watcher = AppExtensionWatcher.new(@ctx, extension: @extension, poll: poll)
@@ -68,16 +66,16 @@ module ShopifyCLI
                 Logger: logger,
                 AccessLog: [],
               )
+              watcher.stop
             rescue ShopifyCLI::API::APIRequestNotFoundError
               @ctx.abort(@ctx.message("theme.pull.theme_not_found", "##{theme.id}"))
-            ensure
-              watcher.stop
-              @ctx.rm_rf(tmp_theme_dir)
             end
           end
 
           def stop
             @ctx.puts("Stopping…")
+            @app.close
+            @theme.clear
             WebServer.shutdown
           end
 
