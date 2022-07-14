@@ -59,7 +59,7 @@ module ShopifyCLI
         if empty_response?(error)
           return permission_error
         elsif unauthorized_response?(error)
-          raise ShopifyCLI::Abort, @ctx.message("theme.unauthorized_error", @shop.delete_suffix(".myshopify.com"))
+          raise ShopifyCLI::Abort, @ctx.message("theme.unauthorized_error", @shop)
         end
 
         raise error
