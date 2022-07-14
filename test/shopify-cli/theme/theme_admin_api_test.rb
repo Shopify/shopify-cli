@@ -158,7 +158,7 @@ module ShopifyCLI
           .with(@ctx, shop: @shop, api_version: @api_version, method: "POST", path: path)
           .raises(expected_error)
 
-        @ctx.expects(:message).with("theme.unauthorized_error", @shop).returns(error_message)
+        @ctx.expects(:message).with("theme.unauthorized_error", "dev-theme-server-store").returns(error_message)
 
         error = assert_raises(ShopifyCLI::Abort) do
           @api_client.post(

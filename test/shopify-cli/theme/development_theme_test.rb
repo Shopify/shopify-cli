@@ -63,7 +63,7 @@ module ShopifyCLI
           path: "themes/#{theme_id}.json",
         ).raises(unauthorized_error)
 
-        @ctx.expects(:message).with("theme.unauthorized_error", shop).returns(error_message)
+        @ctx.expects(:message).with("theme.unauthorized_error", "dev-theme-server-store").returns(error_message)
 
         io = capture_io_and_assert_raises(ShopifyCLI::Abort) do
           @theme.ensure_exists!
