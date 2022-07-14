@@ -32,6 +32,7 @@ module ShopifyCLI
             .with(:development_theme_id)
             .returns("123456789")
           ShopifyCLI::DB.stubs(:get).with(:acting_as_shopify_organization).returns(nil)
+          @mut = Mutex.new
         end
 
         def teardown
@@ -39,7 +40,9 @@ module ShopifyCLI
             DevServer.stop
             @server_thread.join
           end
-          @@port += 1 # rubocop:disable Style/ClassVars
+          @mut.synchronize do
+            @@port += 1 # rubocop:disable Style/ClassVars
+          end
         end
 
         def test_proxy_to_sfr
@@ -128,13 +131,13 @@ module ShopifyCLI
 
           @ctx.output_captured = true
           io = capture_io_and_assert_raises(ShopifyCLI::AbortSilent) do
-            DevServer.start(@ctx, "#{ShopifyCLI::ROOT}/test/fixtures/theme", port: @@port, stable: true)
+            DevServer.start(@ctx, "#{ShopifyCLI::ROOT}/test/fixtures/theme", port: get_port, stable: true)
           end
           @ctx.output_captured = false
 
           io_messages = io.join
 
-          assert_match(@ctx.message("theme.serve.address_already_in_use", "http://127.0.0.1:#{@@port}"), io_messages)
+          assert_match(@ctx.message("theme.serve.address_already_in_use", "http://127.0.0.1:#{get_port}"), io_messages)
           assert_match(@ctx.message("theme.serve.try_port_option"), io_messages)
         end
 
@@ -142,7 +145,7 @@ module ShopifyCLI
           start_server_and_wait_sync_files
 
           # Send the SSE request
-          socket = TCPSocket.new("127.0.0.1", @@port)
+          socket = TCPSocket.new("127.0.0.1", get_port)
           socket.write("GET /hot-reload HTTP/1.1\r\n")
           socket.write("Host: 127.0.0.1\r\n")
           socket.write("\r\n")
@@ -170,7 +173,7 @@ module ShopifyCLI
           @ctx.stubs(:message).with("theme.serve.ensure_user", shop).returns(error_message)
           @ctx.output_captured = true
           io = capture_io_and_assert_raises(ShopifyCLI::Abort) do
-            DevServer.start(@ctx, "#{ShopifyCLI::ROOT}/test/fixtures/theme", port: @@port, stable: true)
+            DevServer.start(@ctx, "#{ShopifyCLI::ROOT}/test/fixtures/theme", port: get_port, stable: true)
           end
           @ctx.output_captured = false
 
@@ -179,10 +182,14 @@ module ShopifyCLI
 
         private
 
+        def get_port
+          @mut.synchronize { @@port }
+        end
+
         def start_server
           @ctx = TestHelpers::FakeContext.new(root: "#{ShopifyCLI::ROOT}/test/fixtures/theme")
           @server_thread = Thread.new do
-            DevServer.start(@ctx, "#{ShopifyCLI::ROOT}/test/fixtures/theme", port: @@port, stable: true)
+            DevServer.start(@ctx, "#{ShopifyCLI::ROOT}/test/fixtures/theme", port: get_port, stable: true)
           rescue => e
             puts "Failed to start DevServer:"
             puts e.message
@@ -211,7 +218,7 @@ module ShopifyCLI
 
         def get(path)
           with_retries(Errno::ECONNREFUSED) do
-            Net::HTTP.get(URI("http://127.0.0.1:#{@@port}#{path}"))
+            Net::HTTP.get(URI("http://127.0.0.1:#{get_port}#{path}"))
           end
         end
 
