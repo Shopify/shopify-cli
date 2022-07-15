@@ -366,17 +366,23 @@ module ShopifyCLI
         checksums.reject_duplicated_checksums!
       end
 
-      def parse_api_errors(exception)
+      def parse_api_errors(operation, exception)
         parsed_body = if exception&.response&.is_a?(Hash)
           exception&.response&.[](:body)
         else
           JSON.parse(exception&.response&.body)
         end
-        message = parsed_body.dig("errors", "asset") || parsed_body["message"] || exception.message
+
+        errors = parsed_body.dig("errors") # either nil or another type
+        errors = errors.dig("asset") if errors&.is_a?(Hash)
+
+        message = errors || parsed_body["message"] || exception.message
         # Truncate to first lines
         [message].flatten.map { |m| m.split("\n", 2).first }
       rescue JSON::ParserError
         [exception.message]
+      rescue StandardError => e
+        ["The asset #{operation.file} is could not be synced (cause: #{e.message})."]
       end
 
       def backoff_if_near_limit!(used, limit)
@@ -400,7 +406,7 @@ module ShopifyCLI
       end
 
       def handle_operation_error(operation, error)
-        error_suffix = ":\n  " + parse_api_errors(error).join("\n  ")
+        error_suffix = ":\n  " + parse_api_errors(operation, error).join("\n  ")
         report_error(operation, error_suffix)
       end
 
