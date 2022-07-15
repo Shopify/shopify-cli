@@ -119,6 +119,16 @@ module ShopifyCLI
           enqueue_delayed_files_updates
         end
 
+        def test_enqueue_delayed_files_updates_when_overwrite_json_is_true_and_file1_ignored
+          @overwrite_json = true
+          stubs(:ignore_file?).with(@delayed_file1).returns(true)
+
+          expects(:update).with(@delayed_file1).never
+          expects(:update).with(@delayed_file2).once
+
+          enqueue_delayed_files_updates
+        end
+
         private
 
         def mock_files
