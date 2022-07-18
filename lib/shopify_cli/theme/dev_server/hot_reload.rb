@@ -105,10 +105,9 @@ module ShopifyCLI
         end
 
         def params_js
-          env = {
-            mode: @mode,
-            section_names_by_type: @sections_index.section_names_by_type,
-          }
+          env = { mode: @mode }
+          env[:section_names_by_type] = @extension ? [] : @sections_index.section_names_by_type
+
           <<~JS
             (() => {
               window.__SHOPIFY_CLI_ENV__ = #{env.to_json};
