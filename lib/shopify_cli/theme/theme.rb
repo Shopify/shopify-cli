@@ -85,9 +85,7 @@ module ShopifyCLI
       end
 
       def delete
-        api_client.delete(
-          path: "themes/#{id}.json"
-        )
+        delete_theme
       end
 
       def publish
@@ -186,6 +184,12 @@ module ShopifyCLI
 
       def api_client
         @api_client ||= ThemeAdminAPI.new(@ctx)
+      end
+
+      def delete_theme
+        api_client.delete(
+          path: "themes/#{id}.json"
+        )
       end
 
       def load_info_from_api
