@@ -2,6 +2,7 @@
 require "test_helper"
 require "timecop"
 require "shopify_cli/theme/syncer"
+require "shopify_cli/theme/theme_admin_api_throttler/errors"
 require "shopify_cli/theme/theme"
 
 module ShopifyCLI
@@ -755,6 +756,47 @@ module ShopifyCLI
         @syncer.stubs(:error_checksums).returns([])
 
         refute(@syncer.broken_file?(file))
+      end
+
+      # Case where file is an asset but has errors, resp is: { errors => { asset => ["..."]}}
+      def test_parse_valid_theme_asset_with_errors_bulk
+        op = stub(file: "sections/footer.liquid", method: "update")
+        expected_result = ["Something is wrong with this theme file."]
+        body = {
+          "errors" => {
+            "asset" => expected_result,
+          },
+        }
+        err = ShopifyCLI::Theme::ThemeAdminAPIThrottler::AssetUploadError.new(body, response: { body: body })
+
+        result = @syncer.send(:parse_api_errors, op, err)
+        assert_equal(result, expected_result)
+      end
+
+      # Case where file is not a valid theme asset, resp is: { errors => ["..."]}
+      def test_parse_invalid_theme_asset_with_errors_bulk
+        op = stub(file: "package.json", method: "update")
+        expected_result = ["This is not a valid theme file", "Please check the file type"]
+        body = {
+          "errors" => expected_result,
+        }
+        err = ShopifyCLI::Theme::ThemeAdminAPIThrottler::AssetUploadError.new(body, response: { body: body })
+
+        result = @syncer.send(:parse_api_errors, op, err)
+        assert_equal(result, expected_result)
+      end
+
+      def test_parse_invalid_theme_asset_with_error_bulk
+        op = stub(file: "package.json", method: "update")
+        error = "This is not a valid theme file"
+        body = {
+          "errors" => error,
+        }
+        err = ShopifyCLI::Theme::ThemeAdminAPIThrottler::AssetUploadError.new(body, response: { body: body })
+
+        result = @syncer.send(:parse_api_errors, op, err)
+        expected_result = [error]
+        assert_equal(result, expected_result)
       end
 
       private
