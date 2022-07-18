@@ -2,6 +2,8 @@ From version 2.6.0, the sections in this file adhere to the [keep a changelog](h
 
 ## [Unreleased]
 
+## Version 2.20.1 - 2022-07-18
+
 ### Fixed
 * [#2458](https://github.com/Shopify/shopify-cli/pull/2458): Fix shop URL in unauthorized error message
 * [#2459](https://github.com/Shopify/shopify-cli/pull/2459): Fix `.json` file ignore issues with `shopify theme push`
