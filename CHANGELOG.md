@@ -5,6 +5,13 @@ From version 2.6.0, the sections in this file adhere to the [keep a changelog](h
 ### Fixed
 * [#2453](https://github.com/Shopify/shopify-cli/pull/2453): Fix [#2382](https://github.com/Shopify/shopify-cli/issues/2382): Ensure we wait 24 hours to show update message again
 
+## Version 2.20.1 - 2022-07-18
+
+### Fixed
+* [#2458](https://github.com/Shopify/shopify-cli/pull/2458): Fix shop URL in unauthorized error message
+* [#2459](https://github.com/Shopify/shopify-cli/pull/2459): Fix `.json` file ignore issues with `shopify theme push`
+* [#2460](https://github.com/Shopify/shopify-cli/pull/2460): Fix job retries for .json theme file dependencies and support wider range of asset API errors
+
 ## Version 2.20.0 - 2022-07-11
 
 ### Added

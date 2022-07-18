@@ -10,7 +10,7 @@ module ShopifyCLI
     class ThemeAdminAPIThrottler
       class BulkJob < ShopifyCLI::ThreadPool::Job
         JOB_TIMEOUT = 0.2 # 200ms
-        MAX_RETRIES = 5
+        MAX_RETRIES = 10
 
         attr_reader :bulk
 

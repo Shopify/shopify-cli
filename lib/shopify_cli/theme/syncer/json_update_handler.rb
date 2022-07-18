@@ -10,7 +10,7 @@ module ShopifyCLI
         def enqueue_json_updates(files)
           # Update remote JSON files and delays `delayed_files` update
           files = files
-            .select { |file| !ignore_file?(file) && file.exist? && checksums.file_has_changed?(file) }
+            .select { |file| ready_to_update?(file) }
             .sort_by { |file| delayed_files.include?(file) ? 1 : 0 }
             .reject { |file| overwrite_json? && delayed_files.include?(file) }
 
@@ -26,7 +26,7 @@ module ShopifyCLI
           return unless overwrite_json?
           # Update delayed files synchronously
           delayed_files.each do |file|
-            update(file) if checksums.file_has_changed?(file)
+            update(file) if ready_to_update?(file)
           end
         end
 
@@ -85,6 +85,10 @@ module ShopifyCLI
 
         def ask_update_strategy(file)
           Forms::SelectUpdateStrategy.ask(@ctx, [], file: file, exists_remotely: file_exist_remotely?(file)).strategy
+        end
+
+        def ready_to_update?(file)
+          !ignore_file?(file) && file.exist? && checksums.file_has_changed?(file)
         end
       end
     end
