@@ -16,7 +16,13 @@ module ShopifyCLI
         private
 
         def build_replacement_param(_env)
-          []
+          return []
+
+          AppExtensionTemplateParamBuilder.new
+            .with_core_endpoints(@core_endpoints)
+            .with_theme(@theme)
+            .with_rack_env(env)
+            .build
         end
       end
     end

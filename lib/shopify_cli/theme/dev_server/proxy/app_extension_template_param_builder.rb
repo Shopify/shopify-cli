@@ -36,10 +36,16 @@ module ShopifyCLI
           private
 
           def as_param(file)
-            ["replace_templates[#{file.relative_path}]", file.read]
+            if file&.relative_path&.include? "blocks/"
+              ["replace_extension_templates[blocks][#{file.relative_path}]", file.read]
+            elsif file&.relative_path&.include? "snippets/"
+              ["replace_extension_templates[snippets][#{file.relative_path}]", file.read]
+            end
           end
 
           def request_templates
+            # TODO assuming "section" is referring to section id, this should work for app embed
+            # blocks too? or will "hot_reload_sections" not include app embed blocks?
             cookie_sections
               .map { |section| @theme[section] unless @theme.nil? }
               .compact

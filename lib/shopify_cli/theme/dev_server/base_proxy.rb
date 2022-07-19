@@ -42,7 +42,8 @@ module ShopifyCLI
           query = URI.decode_www_form(env["QUERY_STRING"])
           replace_templates = build_replacement_param(env)
           response = if replace_templates.any?
-            # Pass to SFR the recently modified templates in `replace_templates` body param
+            # Pass to SFR the recently modified templates in `replace_templates` or 
+            # `replace_extension_templates` body param
             headers["Authorization"] = "Bearer #{bearer_token}"
             form_data = URI.decode_www_form(env["rack.input"].read).to_h
             request(
