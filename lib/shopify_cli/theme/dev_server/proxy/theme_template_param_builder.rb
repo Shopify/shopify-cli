@@ -6,7 +6,7 @@ module ShopifyCLI
   module Theme
     module DevServer
       class BaseProxy
-        class TemplateParamBuilder
+        class ThemeTemplateParamBuilder
           def build
             # Core doesn't support replace_templates
             return {} if core?(current_path)
