@@ -18,7 +18,7 @@ module ShopifyCLI
         private
 
         def build_replacement_param(env)
-          TemplateParamBuilder.new
+          ThemeTemplateParamBuilder.new
             .with_core_endpoints(@core_endpoints)
             .with_syncer(@syncer)
             .with_theme(@theme)

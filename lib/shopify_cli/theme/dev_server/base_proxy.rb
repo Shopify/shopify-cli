@@ -3,7 +3,7 @@ require "stringio"
 require "time"
 require "cgi"
 require "net/http"
-require_relative "proxy/template_param_builder"
+require_relative "proxy/theme_template_param_builder"
 
 module ShopifyCLI
   module Theme
