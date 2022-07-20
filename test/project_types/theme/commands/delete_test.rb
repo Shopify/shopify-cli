@@ -65,7 +65,7 @@ module Theme
       end
 
       def test_delete_development_theme
-        ShopifyCLI::Theme::DevelopmentTheme.expects(:new)
+        ShopifyCLI::Theme::DevelopmentTheme.expects(:find)
           .with(@ctx)
           .returns(@theme)
 
@@ -124,6 +124,21 @@ module Theme
         @ctx.expects(:done).never
         @ctx.expects(:puts)
 
+        @command.call([], "delete")
+      end
+
+      def test_delete_when_development_theme_doesnt_exist
+        ShopifyCLI::Theme::DevelopmentTheme.expects(:find)
+          .with(@ctx)
+          .returns(nil)
+
+        @theme.expects(:delete).never
+        @ctx.expects(:done).never
+        @ctx.expects(:abort)
+          .with(@ctx.message("theme.delete.no_development_theme_error"),
+            @ctx.message("theme.delete.no_development_theme_resolution"))
+
+        @command.options.flags[:development] = true
         @command.call([], "delete")
       end
     end

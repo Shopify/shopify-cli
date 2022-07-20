@@ -14,22 +14,8 @@ module Theme
       end
 
       def call(args, _name)
-        themes = if options.flags[:development]
-          [ShopifyCLI::Theme::DevelopmentTheme.new(@ctx)]
-        elsif args.any?
-          args.map { |id| ShopifyCLI::Theme::Theme.new(@ctx, id: id) }
-        else
-          form = Forms::Select.ask(
-            @ctx,
-            [],
-            title: @ctx.message("theme.delete.select"),
-            exclude_roles: ["live"],
-            include_foreign_developments: options.flags[:show_all],
-            cmd: :delete
-          )
-          return unless form
-          [form.theme]
-        end
+        themes = find_themes(args: args, **options.flags)
+        return if themes.empty?
 
         deleted = 0
         themes.each do |theme|
@@ -53,6 +39,36 @@ module Theme
       end
 
       private
+
+      def find_themes(args:, development: false, show_all: false, **_options)
+        if args.any?
+          return args.map { |id| ShopifyCLI::Theme::Theme.new(@ctx, id: id) }
+        end
+
+        if development
+          dev_theme = ShopifyCLI::Theme::DevelopmentTheme.find(@ctx)
+          return [dev_theme] if dev_theme
+
+          @ctx.abort(@ctx.message("theme.delete.no_development_theme_error"),
+            @ctx.message("theme.delete.no_development_theme_resolution"))
+          return []
+        end
+
+        select_theme(show_all)
+      end
+
+      def select_theme(show_all)
+        form = Forms::Select.ask(
+          @ctx,
+          [],
+          title: @ctx.message("theme.delete.select"),
+          exclude_roles: ["live"],
+          include_foreign_developments: show_all,
+          cmd: :delete
+        )
+        return [] unless form
+        [form.theme]
+      end
 
       def confirm?(theme)
         Forms::ConfirmStore.ask(
