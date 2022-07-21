@@ -12,7 +12,7 @@ module ShopifyCLI
             return {} if core?(current_path)
 
             request_templates
-              .select { |file| file.liquid? }
+              .select(&:liquid?)
               .uniq(&:relative_path)
               .map { |file| as_param(file) }
               .to_h

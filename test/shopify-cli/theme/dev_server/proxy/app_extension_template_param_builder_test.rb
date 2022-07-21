@@ -19,7 +19,7 @@ module ShopifyCLI
 
           def test_build_with_rack_env
             @param_builder
-              .with_theme(theme)
+              .with_extension(theme)
               .with_rack_env({ "HTTP_COOKIE" => http_cookie })
 
             assert_equal({
@@ -30,7 +30,7 @@ module ShopifyCLI
 
           def test_build_with_rack_env_when_current_path_is_a_core_endpoint
             @param_builder
-              .with_theme(theme)
+              .with_extension(theme)
               .with_core_endpoints(["/core_end_point"])
               .with_rack_env({
                 "HTTP_COOKIE" => http_cookie,
