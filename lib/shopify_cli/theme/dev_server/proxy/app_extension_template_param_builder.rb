@@ -28,8 +28,8 @@ module ShopifyCLI
             self
           end
 
-          def with_theme(theme)
-            @theme = theme
+          def with_extension(extension)
+            @extension = extension
             self
           end
 
@@ -45,7 +45,7 @@ module ShopifyCLI
 
           def request_templates
             cookie_files
-              .map { |file_path| @theme[file_path] unless @theme.nil? }
+              .map { |file_path| @extension[file_path] unless @extension.nil? }
               .compact
           end
 
