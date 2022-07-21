@@ -209,6 +209,7 @@ module ShopifyCLI
 
         def test_pass_pending_templates_to_storefront
           skip # TODO: remove skip once replace_templates param is formed properly
+
           ShopifyCLI::DB
             .stubs(:get)
             .with(:shop)
@@ -223,8 +224,10 @@ module ShopifyCLI
             .with(
               body: {
                 "_method" => "GET",
-                "replace_templates" => {
-                  "layout/theme.liquid" => @theme["layout/theme.liquid"].read,
+                "replace_extension_templates" => {
+                  "blocks" => {
+                    "blocks/block.liquid" => @theme["blocks/block.liquid"].read
+                  } 
                 },
               },
               headers: {
