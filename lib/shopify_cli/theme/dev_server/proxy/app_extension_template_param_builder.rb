@@ -12,7 +12,7 @@ module ShopifyCLI
             return {} if core?(current_path)
 
             request_templates
-              .select { |file| file.liquid? || file.json? }
+              .select { |file| file.liquid? }
               .uniq(&:relative_path)
               .map { |file| as_param(file) }
               .to_h
@@ -40,8 +40,6 @@ module ShopifyCLI
               ["replace_extension_templates[blocks][#{file.relative_path}]", file.read]
             elsif file&.relative_path&.include?("snippets/")
               ["replace_extension_templates[snippets][#{file.relative_path}]", file.read]
-            else
-              ["replace_extension_templates[#{file.relative_path}]", file.read]
             end
           end
 
@@ -52,7 +50,7 @@ module ShopifyCLI
           end
 
           def cookie_files
-            CGI::Cookie.parse(cookie)["hot_reload_sections"].join.split(",") || []
+            CGI::Cookie.parse(cookie)["hot_reload_files"].join.split(",") || []
           end
 
           def core?(path)

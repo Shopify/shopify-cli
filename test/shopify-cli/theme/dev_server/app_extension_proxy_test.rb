@@ -226,7 +226,7 @@ module ShopifyCLI
                 "_method" => "GET",
                 "replace_extension_templates" => {
                   "blocks" => {
-                    "blocks/block.liquid" => @theme[blocks/block.liquid"].read
+                    "blocks/block.liquid" => @theme["blocks/block.liquid"].read
                   } 
                 },
               },

@@ -101,7 +101,7 @@ module ShopifyCLI
           end
 
           def http_cookie
-            "cart_currency=EUR; storefront_digest=123; hot_reload_sections=layout/theme.liquid"
+            "cart_currency=EUR; storefront_digest=123; hot_reload_files=layout/theme.liquid"
           end
 
           def syncer

@@ -28,20 +28,6 @@ module ShopifyCLI
             }, @param_builder.build)
           end
 
-          def test_build_with_rack_env_with_json
-            @param_builder
-              .with_theme(theme)
-              .with_rack_env({
-                "HTTP_COOKIE" => http_cookie("blocks/block.liquid,snippets/snippet.liquid,locales/fr.json"),
-              })
-
-            assert_equal({
-              "replace_extension_templates[blocks][blocks/block.liquid]" => "<block file content>",
-              "replace_extension_templates[snippets][snippets/snippet.liquid]" => "<snippet file content>",
-              "replace_extension_templates[locales/fr.json]" => "{ json file }",
-            }, @param_builder.build)
-          end
-
           def test_build_with_rack_env_when_current_path_is_a_core_endpoint
             @param_builder
               .with_theme(theme)
@@ -65,6 +51,7 @@ module ShopifyCLI
           def theme
             block = liquid_block_file("block")
             snippet = liquid_snippet_file("snippet")
+            # add json to be sure tests ignore these files
             locales = json_file("fr")
 
             {
@@ -102,7 +89,7 @@ module ShopifyCLI
           end
 
           def http_cookie(hot_reload_files = "blocks/block.liquid,snippets/snippet.liquid")
-            "cart_currency=EUR; storefront_digest=123; hot_reload_sections=#{hot_reload_files}"
+            "cart_currency=EUR; storefront_digest=123; hot_reload_files=#{hot_reload_files}"
           end
         end
       end
