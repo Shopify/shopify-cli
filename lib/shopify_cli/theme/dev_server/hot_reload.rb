@@ -21,6 +21,7 @@ module ShopifyCLI
           @watcher.add_observer(self, :notify_streams_of_file_change)
           @ignore_filter = ignore_filter
           @extension = extension
+          @extension_mode = !extension.nil?
         end
 
         def call(env)
@@ -42,7 +43,7 @@ module ShopifyCLI
         def notify_streams_of_file_change(modified, added, removed)
           files = (modified + added)
             .reject { |file| @ignore_filter&.ignore?(file) }
-            .map { |file| @extension ? @extension[file] : @theme[file] }
+            .map { |file| @extension_mode ? @extension[file] : @theme[file] }
 
           files -= liquid_css_files = files.select(&:liquid_css?)
 
@@ -89,8 +90,9 @@ module ShopifyCLI
         end
 
         def inject_hot_reload_javascript(body)
-          hot_reload_js = ::File.read("#{__dir__}/hot-reload.js")
+          hot_reload_filename = @extension_mode ? "hot-reload-tae.js" : "hot-reload-theme.js"
           hot_reload_no_script = ::File.read("#{__dir__}/hot-reload-no-script.html")
+          hot_reload_js = ::File.read("#{__dir__}/#{hot_reload_filename}")
           hot_reload_script = [
             hot_reload_no_script,
             "<script>",
@@ -106,7 +108,7 @@ module ShopifyCLI
 
         def params_js
           env = { mode: @mode }
-          env[:section_names_by_type] = @extension ? [] : @sections_index.section_names_by_type
+          env[:section_names_by_type] = @extension_mode ? [] : @sections_index.section_names_by_type
 
           <<~JS
             (() => {
