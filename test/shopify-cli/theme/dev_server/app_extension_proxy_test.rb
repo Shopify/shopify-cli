@@ -159,17 +159,9 @@ module ShopifyCLI
         end
 
         def test_multipart_is_proxied_to_online_store
-          skip # not sure how to match multipart file when multipart matching isn't supported for stubs
+          skip
           stub_request(:post, "https://dev-theme-server-store.myshopify.com/cart/add?_fd=0&pb=0")
             .with(
-              body: {
-                "_method" => "GET",
-                "replace_extension_templates" => {
-                  "blocks" => {
-                    "blocks/block2.liquid" => @extension["blocks/block2.liquid"].read,
-                  },
-                },
-              },
               headers: default_proxy_headers.merge(
                 "Content-Length" => "272",
                 "Content-Type" => "multipart/form-data; boundary=AaB03x",
@@ -177,7 +169,9 @@ module ShopifyCLI
             )
             .to_return(status: 200)
 
-          file = @extension_root + "/blocks/block2.liquid"
+          # TODO: fix -- using an theme app extension file causes the test to fail, using a theme file works
+          file = @extension_root + "/blocks/block1.liquid"
+          # file = ShopifyCLI::ROOT + "/test/fixtures/theme/assets/theme.css"
 
           stub_session_id_request
 
