@@ -12,10 +12,12 @@ module ShopifyCLI
 
         def setup
           super
-          root = ShopifyCLI::ROOT + "/test/fixtures/extension"
-          @ctx = TestHelpers::FakeContext.new(root: root)
-          @theme = DevelopmentTheme.new(@ctx, root: root)
-          @extension = AppExtension.new(@ctx, root: root, id: 1234)
+          theme_root = ShopifyCLI::ROOT + "/test/fixtures/theme"
+          @extension_root = ShopifyCLI::ROOT + "/test/fixtures/extension"
+          
+          @ctx = TestHelpers::FakeContext.new(root: @extension_root)
+          @theme = DevelopmentTheme.new(@ctx, root: @theme_root)
+          @extension = AppExtension.new(@ctx, root: @extension_root, id: 1234)
 
           ShopifyCLI::DB.stubs(:exists?).with(:shop).returns(true)
           ShopifyCLI::DB
@@ -134,7 +136,7 @@ module ShopifyCLI
                 "_method" => "GET",
                 "replace_extension_templates" => {
                   "blocks" => {
-                    "blocks/block2.liquid" => @theme["blocks/block2.liquid"].read,
+                    "blocks/block2.liquid" => @extension["blocks/block2.liquid"].read,
                   },
                 },
               },
@@ -164,7 +166,7 @@ module ShopifyCLI
                 "_method" => "GET",
                 "replace_extension_templates" => {
                   "blocks" => {
-                    "blocks/block2.liquid" => @theme["blocks/block2.liquid"].read,
+                    "blocks/block2.liquid" => @extension["blocks/block2.liquid"].read,
                   },
                 },
               },
@@ -174,6 +176,8 @@ module ShopifyCLI
               )
             )
             .to_return(status: 200)
+
+          file =  @extension_root + "/blocks/block2.liquid"
 
           stub_session_id_request
 
@@ -250,61 +254,6 @@ module ShopifyCLI
           HOP_BY_HOP_HEADERS.each do |header|
             assert(response.headers[header].nil?)
           end
-        end
-
-        def test_patching_store_urls
-          skip # not sure how this test should work
-          ShopifyCLI::DB
-            .stubs(:get)
-            .with(:storefront_renderer_production_exchange_token)
-            .returns("TOKEN")
-
-          @proxy.stubs(:host).returns("127.0.0.1:9292")
-
-          stub_request(:post, "https://dev-theme-server-store.myshopify.com/?_fd=0&pb=0")
-            .with(
-              body: {
-                "_method" => "GET",
-                "replace_extension_templates" => {
-                  "blocks" => {
-                    "blocks/block2.liquid" => @theme["blocks/block2.liquid"].read,
-                  },
-                },
-              },
-              headers: { "User-Agent" => "Shopify CLI" }
-            )
-            .to_return(status: 200, body: <<-PROXY_RESPONSE)
-              <html>
-                <body>
-                  <h1>My dev-theme-server-store.myshopify.com store!</h1>
-                  <a data-attr-1="http://dev-theme-server-store.myshopify.com/link">1</a>
-                  <a data-attr-2="https://dev-theme-server-store.myshopify.com/link">2</a>
-                  <a data-attr-3="//dev-theme-server-store.myshopify.com/link">3</a>
-                  <a data-attr-4='//dev-theme-server-store.myshopify.com/li"nk'>4</a>
-                  <a href="http://dev-theme-server-store.myshopify.com/link">5</a>
-                  <a href="https://dev-theme-server-store.myshopify.com/link">6</a>
-                  <a href="//dev-theme-server-store.myshopify.com/link">7</a>
-                </body>
-              </html>
-            PROXY_RESPONSE
-
-          stub_session_id_request
-          response = request.get("/")
-
-          assert_equal(<<-EXPECTED_RESPONSE, response.body)
-              <html>
-                <body>
-                  <h1>My dev-theme-server-store.myshopify.com store!</h1>
-                  <a data-attr-1="http://127.0.0.1:9292/link">1</a>
-                  <a data-attr-2="http://127.0.0.1:9292/link">2</a>
-                  <a data-attr-3="http://127.0.0.1:9292/link">3</a>
-                  <a data-attr-4='http://127.0.0.1:9292/li"nk'>4</a>
-                  <a href="http://dev-theme-server-store.myshopify.com/link">5</a>
-                  <a href="https://dev-theme-server-store.myshopify.com/link">6</a>
-                  <a href="//dev-theme-server-store.myshopify.com/link">7</a>
-                </body>
-              </html>
-          EXPECTED_RESPONSE
         end
 
         def test_do_not_pass_pending_files_to_core
