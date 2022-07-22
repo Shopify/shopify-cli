@@ -12,9 +12,9 @@ module ShopifyCLI
 
         def setup
           super
-          theme_root = ShopifyCLI::ROOT + "/test/fixtures/theme"
+          @theme_root = ShopifyCLI::ROOT + "/test/fixtures/theme"
           @extension_root = ShopifyCLI::ROOT + "/test/fixtures/extension"
-          
+
           @ctx = TestHelpers::FakeContext.new(root: @extension_root)
           @theme = DevelopmentTheme.new(@ctx, root: @theme_root)
           @extension = AppExtension.new(@ctx, root: @extension_root, id: 1234)
@@ -177,7 +177,7 @@ module ShopifyCLI
             )
             .to_return(status: 200)
 
-          file =  @extension_root + "/blocks/block2.liquid"
+          file = @extension_root + "/blocks/block2.liquid"
 
           stub_session_id_request
 
