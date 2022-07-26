@@ -12,10 +12,12 @@ module ShopifyCLI
 
         def setup
           super
-          root = ShopifyCLI::ROOT + "/test/fixtures/extension"
-          @ctx = TestHelpers::FakeContext.new(root: root)
-          @theme = DevelopmentTheme.new(@ctx, root: root)
-          @extension = AppExtension.new(@ctx, root: root, id: 1234)
+          @theme_root = ShopifyCLI::ROOT + "/test/fixtures/theme"
+          @extension_root = ShopifyCLI::ROOT + "/test/fixtures/extension"
+
+          @ctx = TestHelpers::FakeContext.new(root: @extension_root)
+          @theme = DevelopmentTheme.new(@ctx, root: @theme_root)
+          @extension = AppExtension.new(@ctx, root: @extension_root, id: 1234)
 
           ShopifyCLI::DB.stubs(:exists?).with(:shop).returns(true)
           ShopifyCLI::DB
@@ -117,8 +119,47 @@ module ShopifyCLI
           })
         end
 
+        def test_pass_replace_templates_from_cookie_to_storefront
+          ShopifyCLI::DB
+            .stubs(:get)
+            .with(:shop)
+            .returns("dev-theme-server-store.myshopify.com")
+
+          ShopifyCLI::DB
+            .stubs(:get)
+            .with(:storefront_renderer_production_exchange_token)
+            .returns("TOKEN")
+
+          stub_request(:post, "https://dev-theme-server-store.myshopify.com/?_fd=0&pb=0")
+            .with(
+              body: {
+                "_method" => "GET",
+                "replace_extension_templates" => {
+                  "blocks" => {
+                    "blocks/block2.liquid" => @extension["blocks/block2.liquid"].read,
+                  },
+                },
+              },
+              headers: {
+                "Accept-Encoding" => "none",
+                "Authorization" => "Bearer TOKEN",
+                "Content-Type" => "application/x-www-form-urlencoded",
+                "Cookie" => http_cookie,
+                "Host" => "dev-theme-server-store.myshopify.com",
+                "X-Forwarded-For" => "",
+                "User-Agent" => "Shopify CLI",
+              }
+            )
+            .to_return(status: 200, body: "PROXY RESPONSE")
+
+          stub_session_id_request
+          response = request.get("/", "HTTP_COOKIE" => http_cookie)
+
+          assert_equal("PROXY RESPONSE", response.body)
+        end
+
         def test_multipart_is_proxied_to_online_store
-          skip # TODO: remove skip once replace_templates param is formed properly
+          skip
           stub_request(:post, "https://dev-theme-server-store.myshopify.com/cart/add?_fd=0&pb=0")
             .with(
               headers: default_proxy_headers.merge(
@@ -128,9 +169,11 @@ module ShopifyCLI
             )
             .to_return(status: 200)
 
-          stub_session_id_request
+          # TODO: fix -- using an theme app extension file causes the test to fail, using a theme file works
+          file = @extension_root + "/blocks/block1.liquid"
+          # file = ShopifyCLI::ROOT + "/test/fixtures/theme/assets/theme.css"
 
-          file = ShopifyCLI::ROOT + "/test/fixtures/extension/assets/block1.css"
+          stub_session_id_request
 
           request.post("/cart/add", params: {
             "form_type" => "product",
@@ -205,101 +248,6 @@ module ShopifyCLI
           HOP_BY_HOP_HEADERS.each do |header|
             assert(response.headers[header].nil?)
           end
-        end
-
-        def test_pass_pending_templates_to_storefront
-          skip # TODO: remove skip once replace_templates param is formed properly
-          ShopifyCLI::DB
-            .stubs(:get)
-            .with(:shop)
-            .returns("dev-theme-server-store.myshopify.com")
-
-          ShopifyCLI::DB
-            .stubs(:get)
-            .with(:storefront_renderer_production_exchange_token)
-            .returns("TOKEN")
-
-          stub_request(:post, "https://dev-theme-server-store.myshopify.com/?_fd=0&pb=0")
-            .with(
-              body: {
-                "_method" => "GET",
-                "replace_templates" => {
-                  "layout/theme.liquid" => @theme["layout/theme.liquid"].read,
-                },
-              },
-              headers: {
-                "Accept-Encoding" => "none",
-                "Authorization" => "Bearer TOKEN",
-                "Content-Type" => "application/x-www-form-urlencoded",
-                "Cookie" => "_secure_session_id=#{SECURE_SESSION_ID}",
-                "Host" => "dev-theme-server-store.myshopify.com",
-                "X-Forwarded-For" => "",
-                "User-Agent" => "Shopify CLI",
-              }
-            )
-            .to_return(status: 200, body: "PROXY RESPONSE")
-
-          stub_session_id_request
-          response = request.get("/")
-
-          assert_equal("PROXY RESPONSE", response.body)
-        end
-
-        def test_patching_store_urls
-          skip # TODO: remove skip once replace_templates param is formed properly
-          ShopifyCLI::DB
-            .stubs(:get)
-            .with(:storefront_renderer_production_exchange_token)
-            .returns("TOKEN")
-
-          @proxy.stubs(:host).returns("127.0.0.1:9292")
-
-          stub_request(:post, "https://dev-theme-server-store.myshopify.com/?_fd=0&pb=0")
-            .with(
-              body: {
-                "_method" => "GET",
-                "replace_templates" => {
-                  "layout/theme.liquid" => @theme["layout/theme.liquid"].read,
-                },
-              },
-              headers: { "User-Agent" => "Shopify CLI" }
-            )
-            .to_return(status: 200, body: <<-PROXY_RESPONSE)
-              <html>
-                <body>
-                  <h1>My dev-theme-server-store.myshopify.com store!</h1>
-
-                  <a data-attr-1="http://dev-theme-server-store.myshopify.com/link">1</a>
-                  <a data-attr-2="https://dev-theme-server-store.myshopify.com/link">2</a>
-                  <a data-attr-3="//dev-theme-server-store.myshopify.com/link">3</a>
-                  <a data-attr-4='//dev-theme-server-store.myshopify.com/li"nk'>4</a>
-
-                  <a href="http://dev-theme-server-store.myshopify.com/link">5</a>
-                  <a href="https://dev-theme-server-store.myshopify.com/link">6</a>
-                  <a href="//dev-theme-server-store.myshopify.com/link">7</a>
-                </body>
-              </html>
-            PROXY_RESPONSE
-
-          stub_session_id_request
-          response = request.get("/")
-
-          assert_equal(<<-EXPECTED_RESPONSE, response.body)
-              <html>
-                <body>
-                  <h1>My dev-theme-server-store.myshopify.com store!</h1>
-
-                  <a data-attr-1="http://127.0.0.1:9292/link">1</a>
-                  <a data-attr-2="http://127.0.0.1:9292/link">2</a>
-                  <a data-attr-3="http://127.0.0.1:9292/link">3</a>
-                  <a data-attr-4='http://127.0.0.1:9292/li"nk'>4</a>
-
-                  <a href="http://dev-theme-server-store.myshopify.com/link">5</a>
-                  <a href="https://dev-theme-server-store.myshopify.com/link">6</a>
-                  <a href="//dev-theme-server-store.myshopify.com/link">7</a>
-                </body>
-              </html>
-          EXPECTED_RESPONSE
         end
 
         def test_do_not_pass_pending_files_to_core
@@ -378,6 +326,16 @@ module ShopifyCLI
                 "Set-Cookie" => "_secure_session_id=#{SECURE_SESSION_ID}",
               }
             )
+        end
+
+        def http_cookie(hot_reload_files = "blocks/block2.liquid")
+          cookie = [
+            "cart_currency=EUR",
+            "storefront_digest=123",
+            "hot_reload_files=#{hot_reload_files}",
+            "_secure_session_id=#{SECURE_SESSION_ID}",
+          ]
+          cookie.join("; ")
         end
       end
     end
