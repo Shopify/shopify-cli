@@ -1,5 +1,6 @@
 # frozen_string_literal: true
 require_relative "base_proxy"
+require_relative "proxy/theme_template_param_builder"
 
 module ShopifyCLI
   module Theme
@@ -18,7 +19,7 @@ module ShopifyCLI
         private
 
         def build_replacement_param(env)
-          TemplateParamBuilder.new
+          ThemeTemplateParamBuilder.new
             .with_core_endpoints(@core_endpoints)
             .with_syncer(@syncer)
             .with_theme(@theme)

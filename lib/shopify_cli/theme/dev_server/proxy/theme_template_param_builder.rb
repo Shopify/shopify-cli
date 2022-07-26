@@ -6,7 +6,7 @@ module ShopifyCLI
   module Theme
     module DevServer
       class BaseProxy
-        class TemplateParamBuilder
+        class ThemeTemplateParamBuilder
           def build
             # Core doesn't support replace_templates
             return {} if core?(current_path)
@@ -55,7 +55,7 @@ module ShopifyCLI
           end
 
           def cookie_sections
-            CGI::Cookie.parse(cookie)["hot_reload_sections"].join.split(",") || []
+            CGI::Cookie.parse(cookie)["hot_reload_files"].join.split(",") || []
           end
 
           def core?(path)
