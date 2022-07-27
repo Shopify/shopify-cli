@@ -120,6 +120,7 @@ module ShopifyCLI
         )
 
         @id = body["theme"]["id"]
+        @created_at_runtime = true
       end
 
       def delete
@@ -145,6 +146,10 @@ module ShopifyCLI
 
       def foreign_development?
         development? && id != ShopifyCLI::DB.get(:development_theme_id)
+      end
+
+      def created_at_runtime?
+        @created_at_runtime ||= false
       end
 
       def to_h

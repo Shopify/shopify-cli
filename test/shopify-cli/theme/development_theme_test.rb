@@ -179,13 +179,6 @@ module ShopifyCLI
         assert_equal(theme_name, @theme.name)
       end
 
-      def test_created_at_runtime_returns_false_if_development_theme_exists_in_db
-        @theme.expects(:exists?).returns(true)
-
-        @theme.ensure_exists!
-        refute(@theme.created_at_runtime?)
-      end
-
       def test_delete
         shop = "dev-theme-server-store.myshopify.com"
         theme_id = "12345678"
