@@ -8,6 +8,9 @@ From version 2.6.0, the sections in this file adhere to the [keep a changelog](h
 * [#2405](https://github.com/Shopify/shopify-cli/pull/2405): Fix `theme serve` to trigger page refresh when a file is deleted
 * [#2489](https://github.com/Shopify/shopify-cli/pull/2489): Fix `theme serve` to hot reload many occurrences of a stylesheet
 
+### Added
+* [#2496](https://github.com/Shopify/shopify-cli/pull/2496): Accept storefront renderer token from ENV variable
+
 ## Version 2.20.1 - 2022-07-18
 
 ### Fixed

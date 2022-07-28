@@ -164,6 +164,19 @@ module ShopifyCLI
       assert_equal "admin_token", got
     end
 
+    def test_storefront_renderer_auth_token_returns_the_right_value
+      # Given
+      env_variables = {
+        Constants::EnvironmentVariables::STOREFRONT_RENDERER_AUTH_TOKEN.to_s => "storefront_renderer_token",
+      }
+
+      # When
+      got = Environment.storefront_renderer_auth_token(env_variables: env_variables)
+
+      # Then
+      assert_equal "storefront_renderer_token", got
+    end
+
     def test_store_returns_the_right_value
       # Given
       env_variables = {
