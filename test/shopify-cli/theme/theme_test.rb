@@ -182,6 +182,7 @@ module ShopifyCLI
         assert_match("Development", theme.name)
         assert_equal "development", theme.role
         assert theme.development?
+        refute theme.created_at_runtime?
       end
 
       def test_development_when_does_not_exist
@@ -228,6 +229,7 @@ module ShopifyCLI
         assert_equal id, theme.id
         assert_equal name, theme.name
         assert_equal "unpublished", theme.role
+        assert theme.created_at_runtime?
       end
 
       def test_create_unpublished_with_default_name
@@ -243,6 +245,7 @@ module ShopifyCLI
         assert_equal id, theme.id
         assert_equal name, theme.name
         assert_equal "unpublished", theme.role
+        assert theme.created_at_runtime?
       end
 
       private
