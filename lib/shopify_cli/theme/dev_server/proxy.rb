@@ -94,6 +94,7 @@ module ShopifyCLI
         end
 
         def bearer_token
+          Environment.storefront_renderer_auth_token ||
           ShopifyCLI::DB.get(:storefront_renderer_production_exchange_token) ||
             raise(KeyError, "storefront_renderer_production_exchange_token missing")
         end

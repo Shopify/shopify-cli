@@ -170,6 +170,10 @@ module ShopifyCLI
       env_variables[Constants::EnvironmentVariables::ADMIN_AUTH_TOKEN]
     end
 
+    def self.storefront_renderer_auth_token(env_variables: ENV)
+      env_variables[Constants::EnvironmentVariables::STOREFRONT_RENDERER_AUTH_TOKEN]
+    end
+
     def self.store(env_variables: ENV)
       env_variables[Constants::EnvironmentVariables::STORE]
     end
