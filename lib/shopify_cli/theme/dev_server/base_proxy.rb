@@ -3,6 +3,7 @@ require "stringio"
 require "time"
 require "cgi"
 require "net/http"
+require_relative "header_hash"
 
 module ShopifyCLI
   module Theme
@@ -207,7 +208,7 @@ module ShopifyCLI
         end
 
         def build_replacement_param(_env)
-          raise "`#{self.class.name}#build_liquid_replacement_param(env)' must be defined"
+          []
         end
       end
     end
