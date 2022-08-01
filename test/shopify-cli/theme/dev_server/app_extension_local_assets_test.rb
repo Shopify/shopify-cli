@@ -8,20 +8,19 @@ module ShopifyCLI
     module DevServer
       class AppExtensionLocalAssetsTest < Minitest::Test
         def test_replace_correct_extension_asset_when_same_name
-          skip # TODO: remove skip once id checks are working
           original_html = <<~HTML
             <html>
               <head>
-                <link rel="stylesheet" href="https://cdn.shopify.com/extensions/some-alphanumeric-id/0.0.0/assets/block1.css?v=1657160440" id="1234"/>
-                <link rel="stylesheet" href="https://cdn.shopify.com/extensions/some-alphanumeric-id/0.0.0/assets/block1.css?v=1657160440" id="5678"/>
+                <link rel="stylesheet" href="https://cdn.shopify.com/extensions/some-alphanumeric-id/0.0.0/assets/block1.css?v=1657160440" data-app-id="1234"/>
+                <link rel="stylesheet" href="https://cdn.shopify.com/extensions/some-alphanumeric-id/0.0.0/assets/block1.css?v=1657160440" data-app-id="5678"/>
               </head>
             </html>
           HTML
           expected_html = <<~HTML
             <html>
               <head>
-                <link rel="stylesheet" href="/assets/block1.css?v=1657160440" id="1234"/>
-                <link rel="stylesheet" href="https://cdn.shopify.com/extensions/some-alphanumeric-id/0.0.0/assets/block1.css?v=1657160440" id="5678"/>
+                <link rel="stylesheet" href="/assets/block1.css?v=1657160440" data-app-id="1234"/>
+                <link rel="stylesheet" href="https://cdn.shopify.com/extensions/some-alphanumeric-id/0.0.0/assets/block1.css?v=1657160440" data-app-id="5678"/>
               </head>
             </html>
           HTML
@@ -32,14 +31,14 @@ module ShopifyCLI
           original_html = <<~HTML
             <html>
               <head>
-                <link rel="stylesheet" href="https://cdn.shopify.com/extensions/some-alphanumeric-id/0.0.0/assets/block1.css?v=1657160440" />
+                <link rel="stylesheet" href="https://cdn.shopify.com/extensions/some-alphanumeric-id/0.0.0/assets/block1.css?v=1657160440" data-app-id="1234"/>
               </head>
             </html>
           HTML
           expected_html = <<~HTML
             <html>
               <head>
-                <link rel="stylesheet" href="/assets/block1.css?v=1657160440" />
+                <link rel="stylesheet" href="/assets/block1.css?v=1657160440" data-app-id="1234"/>
               </head>
             </html>
           HTML
@@ -50,14 +49,14 @@ module ShopifyCLI
           original_html = <<~HTML
             <html>
               <head>
-                <link rel="stylesheet" href="http://cdn.shopify.com/extensions/some-alphanumeric-id/0.0.0/assets/block1.css?v=1657160440" />
+                <link rel="stylesheet" href="http://cdn.shopify.com/extensions/some-alphanumeric-id/0.0.0/assets/block1.css?v=1657160440" data-app-id="1234"/>
               </head>
             </html>
           HTML
           expected_html = <<~HTML
             <html>
               <head>
-                <link rel="stylesheet" href="/assets/block1.css?v=1657160440" />
+                <link rel="stylesheet" href="/assets/block1.css?v=1657160440" data-app-id="1234"/>
               </head>
             </html>
           HTML
@@ -68,14 +67,32 @@ module ShopifyCLI
           original_html = <<~HTML
             <html>
               <head>
-                <link rel="stylesheet" href="https://cdn.shopify.com/extensions/some-alphanumeric-id/0.0.0/assets/block1.css?v=1657160440" /><link rel="stylesheet" href="https://cdn.shopify.com/extensions/some-alphanumeric-id/0.0.0/assets/block1.css?v=1657160440" />
+                <link rel="stylesheet" href="https://cdn.shopify.com/extensions/some-alphanumeric-id/0.0.0/assets/block1.css?v=1657160440" data-app-id="1234"/><link rel="stylesheet" href="https://cdn.shopify.com/extensions/some-alphanumeric-id/0.0.0/assets/block1.css?v=1657160440" data-app-id="1234"/>
               </head>
             </html>
           HTML
           expected_html = <<~HTML
             <html>
               <head>
-                <link rel="stylesheet" href="/assets/block1.css?v=1657160440" /><link rel="stylesheet" href="/assets/block1.css?v=1657160440" />
+                <link rel="stylesheet" href="/assets/block1.css?v=1657160440" data-app-id="1234"/><link rel="stylesheet" href="/assets/block1.css?v=1657160440" data-app-id="1234"/>
+              </head>
+            </html>
+          HTML
+          assert_equal(expected_html, serve(original_html).body)
+        end
+
+        def test_replace_local_assets_on_same_line_different_apps
+          original_html = <<~HTML
+            <html>
+              <head>
+                <link rel="stylesheet" href="https://cdn.shopify.com/extensions/some-alphanumeric-id/0.0.0/assets/block1.css?v=1657160440" data-app-id="1234"/><link rel="stylesheet" href="https://cdn.shopify.com/extensions/some-alphanumeric-id/0.0.0/assets/block1.css?v=1657160440" data-app-id="5678"/>
+              </head>
+            </html>
+          HTML
+          expected_html = <<~HTML
+            <html>
+              <head>
+                <link rel="stylesheet" href="/assets/block1.css?v=1657160440" data-app-id="1234"/><link rel="stylesheet" href="https://cdn.shopify.com/extensions/some-alphanumeric-id/0.0.0/assets/block1.css?v=1657160440" data-app-id="5678"/>
               </head>
             </html>
           HTML
