@@ -1,7 +1,7 @@
 # frozen_string_literal: true
 require "base64"
 require "json"
-require "shopify_cli/theme/app_extension_dev_server"
+require "shopify_cli/theme/extension/dev_server"
 
 module Extension
   module Models

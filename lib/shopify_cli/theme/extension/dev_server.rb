@@ -1,30 +1,30 @@
 # frozen_string_literal: true
 
-require_relative "dev_server"
+require_relative "../dev_server"
 require_relative "dev_server/app_extensions"
-require_relative "dev_server/web_server"
+require_relative "../dev_server/web_server"
 
 require "shopify_cli/theme/app_extension"
 require "shopify_cli/theme/syncer"
-require "shopify_cli/theme/host_theme"
+require "shopify_cli/theme/extension/host_theme"
 require "pathname"
 
-require_relative "development_theme"
-require_relative "dev_server/hot_reload"
-require_relative "dev_server/reload_mode"
-require_relative "dev_server/app_extension_local_assets"
-require_relative "dev_server/app_extension_proxy"
-require_relative "dev_server/sse"
-require_relative "dev_server/cdn_fonts"
-require_relative "dev_server/app_extension_watcher"
-require_relative "dev_server/web_server"
-require_relative "dev_server/certificate_manager"
-require_relative "dev_server/header_hash"
+require_relative "../development_theme"
+require_relative "../dev_server/hot_reload"
+require_relative "../dev_server/reload_mode"
+require_relative "dev_server/local_assets"
+require_relative "dev_server/proxy"
+require_relative "../dev_server/sse"
+require_relative "../dev_server/cdn_fonts"
+require_relative "dev_server/watcher"
+require_relative "../dev_server/web_server"
+require_relative "../dev_server/certificate_manager"
+require_relative "../dev_server/header_hash"
 
 module ShopifyCLI
   module Theme
-    module DevServer
-      module AppExtensionDevServer
+    module Extension
+      module DevServer
         class << self
           attr_accessor :ctx
 
@@ -34,10 +34,10 @@ module ShopifyCLI
             @theme = HostTheme.find_or_create!(@ctx)
             @extension = AppExtension.new(@ctx, root: root, id: 1234)
             logger = WEBrick::Log.new(nil, WEBrick::BasicLog::INFO)
-            watcher = AppExtensionWatcher.new(@ctx, extension: @extension, poll: poll)
+            watcher = Watcher.new(@ctx, extension: @extension, poll: poll)
 
-            @app = AppExtensionProxy.new(@ctx, extension: @extension, theme: @theme)
-            @app = AppExtensionLocalAssets.new(@ctx, @app, extension: @extension)
+            @app = Proxy.new(@ctx, extension: @extension, theme: @theme)
+            @app = LocalAssets.new(@ctx, @app, extension: @extension)
             @app = HotReload.new(@ctx, @app, theme: @theme, watcher: watcher, mode: ReloadMode.default,
               extension: @extension)
             address = "http://#{host}:#{port}"
