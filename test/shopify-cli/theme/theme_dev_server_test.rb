@@ -1,10 +1,10 @@
 # frozen_string_literal: true
 require "test_helper"
-require "shopify_cli/theme/theme_dev_server"
+require "shopify_cli/theme/dev_server"
 
 module ShopifyCLI
   module Theme
-    class ThemeDevServerTest < Minitest::Test
+    class DevServerTest < Minitest::Test
       def setup
         super
         @ctx = ShopifyCLI::Context.new
@@ -18,7 +18,7 @@ module ShopifyCLI
           preview_url: "https://test.myshopify.io/preview",
           live?: false,
         )
-        ShopifyCLI::Theme::DevServer::ThemeDevServer.ctx = @ctx
+        ShopifyCLI::Theme::DevServer.ctx = @ctx
       end
 
       def test_abort_when_invalid_theme
@@ -64,7 +64,7 @@ module ShopifyCLI
       private
 
       def simulate_server(root = ".", identifier = nil)
-        ShopifyCLI::Theme::DevServer::ThemeDevServer
+        ShopifyCLI::Theme::DevServer
           .send(:find_theme, root, identifier)
       end
     end

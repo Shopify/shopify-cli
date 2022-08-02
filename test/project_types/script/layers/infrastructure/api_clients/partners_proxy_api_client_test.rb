@@ -51,7 +51,7 @@ describe Script::Layers::Infrastructure::ApiClients::PartnersProxyApiClient do
           }
         end
 
-        describe "nil proxy response" do
+        describe "nil proxy_helpers response" do
           let(:proxy_response) { nil }
 
           it "should raise #{Script::Layers::Infrastructure::Errors::EmptyResponseError}" do

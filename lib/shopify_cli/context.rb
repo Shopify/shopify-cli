@@ -406,7 +406,7 @@ module ShopifyCLI
       puts "{{yellow:*}} #{text}"
     end
 
-    # proxy call to Context.puts.
+    # proxy_helpers call to Context.puts.
     #
     # #### Parameters
     # * `text` - a string message to output
@@ -442,7 +442,7 @@ module ShopifyCLI
       puts("{{v}} #{text}")
     end
 
-    # proxy call to Context.abort.
+    # proxy_helpers call to Context.abort.
     #
     # #### Parameters
     # * `error_message` - an error message to output
@@ -461,7 +461,7 @@ module ShopifyCLI
       puts("{{red:DEBUG}} #{text}") if debug?
     end
 
-    # proxy call to Context.message.
+    # proxy_helpers call to Context.message.
     #
     # #### Parameters
     # * `key` - a symbol representing the message

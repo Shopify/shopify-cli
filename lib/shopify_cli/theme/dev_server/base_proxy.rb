@@ -173,7 +173,9 @@ module ShopifyCLI
           # According to https://tools.ietf.org/html/draft-ietf-httpbis-p1-messaging-14#section-7.1.3.1Acc
           # should remove hop-by-hop header fields
           # (Taken from Rack::Proxy)
+          puts "REJECTING: #{response_headers}"
           response_headers.reject! { |k| HOP_BY_HOP_HEADERS.include?(k.downcase) }
+          puts "REJECTING: #{response_headers}"
 
           if response_headers["location"]&.include?("myshopify.com")
             response_headers["location"].gsub!(%r{(https://#{@shop})}, "http://127.0.0.1:9292")

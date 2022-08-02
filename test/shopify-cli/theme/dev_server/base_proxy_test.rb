@@ -188,6 +188,8 @@ module ShopifyCLI
           stub_session_id_request
           response = request.get("/")
 
+          puts "RESP: #{response.headers}"
+
           assert(response.headers.size.zero?)
           HOP_BY_HOP_HEADERS.each do |header|
             assert(response.headers[header].nil?)
