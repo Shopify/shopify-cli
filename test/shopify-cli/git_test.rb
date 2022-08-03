@@ -176,6 +176,38 @@ module ShopifyCLI
       end
     end
 
+    def test_clones_git_repo_when_directory_exists_but_it_is_empty
+      destination = "test-app"
+
+      Dir.stubs(:exist?).with(destination).returns(true)
+      Dir.stubs(:empty?).with(destination).returns(true)
+
+      Open3.expects(:popen3).with(
+        "git",
+        "clone",
+        "--single-branch",
+        "git@github.com:shopify/test.git",
+        "test-app",
+        "--progress"
+      ).returns(mock(success?: true))
+      capture_io do
+        ShopifyCLI::Git.clone("git@github.com:shopify/test.git", destination, ctx: @context)
+      end
+    end
+
+    def test_it_does_not_clone_git_repo_when_directory_is_not_empty
+      destination = "test-app"
+
+      Dir.stubs(:exist?).with(destination).returns(true)
+      Dir.stubs(:empty?).with(destination).returns(false)
+
+      assert_raises(ShopifyCLI::Abort) do
+        capture_io do
+          ShopifyCLI::Git.clone("git@github.com:shopify/test.git", destination, ctx: @context)
+        end
+      end
+    end
+
     def test_clone_failure
       assert_raises(ShopifyCLI::Abort) do
         Open3.expects(:popen3).with(
