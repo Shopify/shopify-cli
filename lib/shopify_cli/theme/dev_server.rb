@@ -4,6 +4,7 @@ require_relative "ignore_filter"
 require_relative "syncer"
 
 require_relative "dev_server/cdn_fonts"
+require_relative "dev_server/errors"
 require_relative "dev_server/hot_reload"
 require_relative "dev_server/header_hash"
 require_relative "dev_server/reload_mode"

@@ -38,7 +38,8 @@ module ShopifyCLI
 
             @app = Proxy.new(@ctx, extension: @extension, theme: @theme)
             @app = LocalAssets.new(@ctx, @app, extension: @extension)
-            @app = HotReload.new(@ctx, @app, theme: @theme, watcher: watcher, mode: ReloadMode.default,
+            @app = ShopifyCLI::Theme::DevServer::HotReload.new(@ctx, @app, theme: @theme, watcher: watcher,
+              mode: ShopifyCLI::Theme::DevServer::ReloadMode.default,
               extension: @extension)
             address = "http://#{host}:#{port}"
 
@@ -59,7 +60,7 @@ module ShopifyCLI
               ctx.open_url!(address)
               ctx.puts(preview_message)
               watcher.start
-              WebServer.run(
+              ShopifyCLI::Theme::DevServer::WebServer.run(
                 @app,
                 BindAddress: host,
                 Port: port,
@@ -75,7 +76,7 @@ module ShopifyCLI
           def stop
             @ctx.puts("Stopping…")
             @app.close
-            WebServer.shutdown
+            ShopifyCLI::Theme::DevServer::WebServer.shutdown
           end
 
           private
