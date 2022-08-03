@@ -5,18 +5,18 @@ require_relative "local_assets_base"
 module ShopifyCLI
   module Theme
     module DevServer
-      class AppExtensionLocalAssets < LocalAssetsBase
-        TAE_ASSET_REGEX = %r{(http:|https:)?//cdn\.shopify\.com/extensions/.+?/(assets/.+?\.(?:css|js))}
+      class LocalAssets < LocalAssetsBase
+        THEME_REGEX = %r{//cdn\.shopify\.com/s/.+?/(assets/.+?\.(?:css|js))}
 
-        def initialize(ctx, app, extension:)
-          super(ctx, app, target: extension)
+        def initialize(ctx, app, theme:)
+          super(ctx, app, target: theme)
         end
 
         private
 
         def replace_asset_urls(body)
-          replaced_body = body.join.gsub(TAE_ASSET_REGEX) do |match|
-            path = Regexp.last_match[2]
+          replaced_body = body.join.gsub(THEME_REGEX) do |match|
+            path = Regexp.last_match[1]
             if @target.static_asset_paths.include?(path)
               "/#{path}"
             else
