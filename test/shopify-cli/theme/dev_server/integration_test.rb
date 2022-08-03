@@ -1,6 +1,6 @@
 # frozen_string_literal: true
 require "test_helper"
-require "shopify_cli/theme/theme_dev_server"
+require "shopify_cli/theme/dev_server"
 
 module ShopifyCLI
   module Theme
@@ -36,7 +36,7 @@ module ShopifyCLI
 
         def teardown
           if @server_thread
-            ThemeDevServer.stop
+            DevServer.stop
             @server_thread.join
           end
           @@port += 1 # rubocop:disable Style/ClassVars
@@ -129,7 +129,7 @@ module ShopifyCLI
 
           @ctx.output_captured = true
           io = capture_io_and_assert_raises(ShopifyCLI::AbortSilent) do
-            ThemeDevServer.start(@ctx, "#{ShopifyCLI::ROOT}/test/fixtures/theme", port: @@port, stable: true)
+            DevServer.start(@ctx, "#{ShopifyCLI::ROOT}/test/fixtures/theme", port: @@port, stable: true)
           end
           @ctx.output_captured = false
 
@@ -171,7 +171,7 @@ module ShopifyCLI
           @ctx.stubs(:message).with("theme.serve.ensure_user", shop).returns(error_message)
           @ctx.output_captured = true
           io = capture_io_and_assert_raises(ShopifyCLI::Abort) do
-            ThemeDevServer.start(@ctx, "#{ShopifyCLI::ROOT}/test/fixtures/theme", port: @@port, stable: true)
+            DevServer.start(@ctx, "#{ShopifyCLI::ROOT}/test/fixtures/theme", port: @@port, stable: true)
           end
           @ctx.output_captured = false
 
@@ -183,7 +183,7 @@ module ShopifyCLI
         def start_server
           @ctx = TestHelpers::FakeContext.new(root: "#{ShopifyCLI::ROOT}/test/fixtures/theme")
           @server_thread = Thread.new do
-            ThemeDevServer.start(@ctx, "#{ShopifyCLI::ROOT}/test/fixtures/theme", port: @@port, stable: true)
+            DevServer.start(@ctx, "#{ShopifyCLI::ROOT}/test/fixtures/theme", port: @@port, stable: true)
           rescue => e
             puts "Failed to start DevServer:"
             puts e.message

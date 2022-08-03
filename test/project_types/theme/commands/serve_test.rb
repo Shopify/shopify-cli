@@ -1,6 +1,6 @@
 # frozen_string_literal: true
 require "project_types/theme/test_helper"
-require "shopify_cli/theme/theme_dev_server"
+require "shopify_cli/theme/dev_server/errors"
 
 module Theme
   module Commands
@@ -13,7 +13,7 @@ module Theme
       end
 
       def test_serve_command
-        ShopifyCLI::Theme::DevServer::ThemeDevServer
+        ShopifyCLI::Theme::DevServer
           .expects(:start)
           .with(@ctx, ".", host: Theme::Command::Serve::DEFAULT_HTTP_HOST)
 
@@ -21,7 +21,7 @@ module Theme
       end
 
       def test_serve_command_raises_abort_when_cant_bind_address
-        ShopifyCLI::Theme::DevServer::ThemeDevServer
+        ShopifyCLI::Theme::DevServer
           .expects(:start)
           .with(@ctx, ".", host: Theme::Command::Serve::DEFAULT_HTTP_HOST)
           .raises(ShopifyCLI::Theme::DevServer::AddressBindingError)
@@ -32,7 +32,7 @@ module Theme
       end
 
       def test_can_specify_bind_address
-        ShopifyCLI::Theme::DevServer::ThemeDevServer.expects(:start).with(@ctx, ".", host: "0.0.0.0")
+        ShopifyCLI::Theme::DevServer.expects(:start).with(@ctx, ".", host: "0.0.0.0")
 
         run_serve_command do |command|
           command.options.flags[:host] = "0.0.0.0"
@@ -40,7 +40,7 @@ module Theme
       end
 
       def test_can_specify_port
-        ShopifyCLI::Theme::DevServer::ThemeDevServer.expects(:start)
+        ShopifyCLI::Theme::DevServer.expects(:start)
           .with(@ctx, ".", host: Theme::Command::Serve::DEFAULT_HTTP_HOST, port: 9293)
 
         run_serve_command do |command|
@@ -49,7 +49,7 @@ module Theme
       end
 
       def test_with_stable
-        ShopifyCLI::Theme::DevServer::ThemeDevServer.expects(:start)
+        ShopifyCLI::Theme::DevServer.expects(:start)
           .with(@ctx, ".", host: Theme::Command::Serve::DEFAULT_HTTP_HOST, stable: true)
 
         run_serve_command do |command|
@@ -58,7 +58,7 @@ module Theme
       end
 
       def test_can_specify_poll
-        ShopifyCLI::Theme::DevServer::ThemeDevServer.expects(:start)
+        ShopifyCLI::Theme::DevServer.expects(:start)
           .with(@ctx, ".", host: Theme::Command::Serve::DEFAULT_HTTP_HOST, poll: true)
 
         run_serve_command do |command|
@@ -67,7 +67,7 @@ module Theme
       end
 
       def test_can_specify_editor_sync
-        ShopifyCLI::Theme::DevServer::ThemeDevServer.expects(:start)
+        ShopifyCLI::Theme::DevServer.expects(:start)
           .with(@ctx, ".", host: Theme::Command::Serve::DEFAULT_HTTP_HOST, editor_sync: true)
 
         run_serve_command do |command|
@@ -76,14 +76,14 @@ module Theme
       end
 
       def test_can_specify_root
-        ShopifyCLI::Theme::DevServer::ThemeDevServer.expects(:start)
+        ShopifyCLI::Theme::DevServer.expects(:start)
           .with(@ctx, "dist", host: Theme::Command::Serve::DEFAULT_HTTP_HOST)
 
         run_serve_command(["dist"])
       end
 
       def test_can_specify_theme
-        ShopifyCLI::Theme::DevServer::ThemeDevServer
+        ShopifyCLI::Theme::DevServer
           .expects(:start)
           .with(@ctx, ".", host: Theme::Command::Serve::DEFAULT_HTTP_HOST, theme: 1234)
 

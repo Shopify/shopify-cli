@@ -1,13 +1,13 @@
 # frozen_string_literal: true
 require "test_helper"
-require "shopify_cli/theme/theme_dev_server"
+require "shopify_cli/theme/dev_server"
 require "rack/mock"
 require "timecop"
 
 module ShopifyCLI
   module Theme
     module DevServer
-      class ThemeProxyTest < Minitest::Test
+      class ProxyTest < Minitest::Test
         SECURE_SESSION_ID = "deadbeef"
 
         def setup
@@ -26,7 +26,7 @@ module ShopifyCLI
             .stubs(:get)
             .with(:development_theme_id)
             .returns("123456789")
-          @proxy = ThemeProxy.new(@ctx, theme: @theme, syncer: @syncer)
+          @proxy = Proxy.new(@ctx, theme: @theme, syncer: @syncer)
         end
 
         def test_pass_pending_templates_to_storefront
