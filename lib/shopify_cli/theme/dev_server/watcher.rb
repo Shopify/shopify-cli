@@ -6,7 +6,7 @@ module ShopifyCLI
   module Theme
     module DevServer
       # Watches for file changes and publish events to the theme
-      class ThemeWatcher
+      class Watcher
         extend Forwardable
 
         def_delegators :@listener, :add_observer, :changed, :notify_observers
