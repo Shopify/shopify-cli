@@ -2,6 +2,9 @@ From version 2.6.0, the sections in this file adhere to the [keep a changelog](h
 
 ## [Unreleased]
 
+### Fixed
+* [#2512](https://github.com/Shopify/shopify-cli/pull/2512): Add the `-t/--theme` parameter to the `shopify theme serve -h` message
+
 ## Version 2.21.0 - 2022-08-03
 
 ### Fixed
