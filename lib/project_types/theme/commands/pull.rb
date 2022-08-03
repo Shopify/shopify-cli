@@ -52,7 +52,11 @@ module Theme
           CLI::UI::Frame.open(@ctx.message("theme.pull.pulling", theme.name, theme.id, theme.shop)) do
             UI::SyncProgressBar.new(syncer).progress(:download_theme!, delete: delete)
           end
-          @ctx.done(@ctx.message("theme.pull.done"))
+          if syncer.has_any_error?
+            @ctx.warn(@ctx.message("theme.pull.done_with_errors"))
+          else
+            @ctx.done(@ctx.message("theme.pull.done"))
+          end
         rescue ShopifyCLI::API::APIRequestNotFoundError
           @ctx.abort(@ctx.message("theme.pull.theme_not_found", "##{theme.id}"))
         ensure

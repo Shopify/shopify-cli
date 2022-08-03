@@ -63,20 +63,12 @@ module Theme
           syncer.start_threads
           if options.flags[:json]
             syncer.upload_theme!(delete: delete)
-            puts(JSON.generate(theme: theme.to_h))
           else
             CLI::UI::Frame.open(@ctx.message("theme.push.info.pushing", theme.name, theme.id, theme.shop)) do
               UI::SyncProgressBar.new(syncer).progress(:upload_theme!, delete: delete)
             end
-
-            if options.flags[:publish]
-              theme.publish
-              @ctx.done(@ctx.message("theme.publish.done", theme.preview_url))
-            else
-              @ctx.done(@ctx.message("theme.push.done", theme.preview_url, theme.editor_url))
-            end
           end
-          raise ShopifyCLI::AbortSilent if syncer.has_any_error?
+          push_completion_handler(theme, syncer.has_any_error?)
         ensure
           syncer.shutdown
         end
@@ -89,6 +81,23 @@ module Theme
       end
 
       private
+
+      def push_completion_handler(theme, has_errors)
+        if options.flags[:json]
+          output = { theme: theme.to_h }
+          output[:warning] = "Theme pushed with errors." if has_errors
+
+          puts(JSON.generate(output))
+        elsif options.flags[:publish]
+          theme.publish
+          return @ctx.done(@ctx.message("theme.publish.done", theme.preview_url)) unless has_errors
+          @ctx.warn(@ctx.message("theme.publish.done_with_errors", theme.preview_url))
+        else
+          return @ctx.done(@ctx.message("theme.push.done", theme.preview_url, theme.editor_url)) unless has_errors
+          @ctx.warn(@ctx.message("theme.push.done_with_errors", theme.preview_url, theme.editor_url))
+        end
+        raise ShopifyCLI::AbortSilent if has_errors
+      end
 
       def find_theme(root, theme_id: nil, theme: nil, live: nil, development: nil, unpublished: nil, **_args)
         if theme_id

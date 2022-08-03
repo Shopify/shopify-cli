@@ -18,7 +18,7 @@ module Theme
           name: "Test theme",
           shop: "test.myshopify.io",
         )
-        @syncer = stub("Syncer", lock_io!: nil, unlock_io!: nil)
+        @syncer = stub("Syncer", lock_io!: nil, unlock_io!: nil, has_any_error?: false)
         @ignore_filter = mock("IgnoreFilter")
         @include_filter = mock("IncludeFilter")
 
@@ -242,6 +242,24 @@ module Theme
         @ctx.expects(:done)
 
         @syncer.expects(:download_theme!).with(delete: true)
+
+        ShopifyCLI::Theme::Syncer.expects(:new)
+          .with(@ctx, theme: @theme, include_filter: @include_filter, ignore_filter: @ignore_filter)
+          .returns(@syncer)
+
+        @syncer.expects(:start_threads)
+        @syncer.expects(:shutdown)
+
+        @command.call([], "pull")
+      end
+
+      def test_pull_with_asset_errors_displays_warning
+        CLI::UI::Prompt.expects(:ask).returns(@theme)
+        @ctx.expects(:warn).with(@ctx.message("theme.pull.done_with_errors")).once
+        @ctx.expects(:done).never
+
+        @syncer.expects(:download_theme!).with(delete: true)
+        @syncer.stubs(:has_any_error?).returns(true)
 
         ShopifyCLI::Theme::Syncer.expects(:new)
           .with(@ctx, theme: @theme, include_filter: @include_filter, ignore_filter: @ignore_filter)

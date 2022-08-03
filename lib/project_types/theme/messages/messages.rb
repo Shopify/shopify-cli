@@ -43,6 +43,7 @@ module Theme
               Run without arguments to select theme from a list.
           HELP
           done: "Your theme is now live at %s",
+          done_with_errors: "{{warning:Your theme was published with errors and is now live at %s.}}",
           not_found: "Theme #%s does not exist",
           no_themes_error: "You don't have any theme to be published.",
           no_themes_resolution: "Try to create an unpublished theme with {{command:theme push -u -t <theme_name>}}.",
@@ -102,6 +103,15 @@ module Theme
               {{info:Customize this theme in the Theme Editor:}}
               {{underline:%s}}
           DONE
+          done_with_errors: <<~WARN,
+            {{yellow:Your theme was pushed with errors.}}
+
+              {{info:View your theme:}}
+              {{underline:%s}}
+
+              {{info:Customize this theme in the Theme Editor:}}
+              {{underline:%s}}
+          WARN
           name: "Theme name",
         },
         serve: {
@@ -319,7 +329,8 @@ module Theme
           HELP
           select: "Select a theme to pull from",
           pulling: "Pulling theme files from %s (#%s) on %s",
-          done: "Theme pulled successfully",
+          done: "Theme pulled successfully.",
+          done_with_errors: "{{warning:Your theme was pulled with errors.}}",
           deprecated_themeid: <<~WARN,
             {{warning:The {{command:-i, --themeid}} flag is deprecated. Use {{command:-t, --theme}} instead.}}
           WARN
