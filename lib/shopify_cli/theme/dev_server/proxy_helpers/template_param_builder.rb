@@ -5,8 +5,8 @@ require "cgi"
 module ShopifyCLI
   module Theme
     module DevServer
-      class BaseProxy
-        class ThemeTemplateParamBuilder
+      module ProxyHelpers
+        class TemplateParamBuilder
           def build
             # Core doesn't support replace_templates
             return {} if core?(current_path)

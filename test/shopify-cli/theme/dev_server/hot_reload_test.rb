@@ -1,6 +1,6 @@
 # frozen_string_literal: true
 require "test_helper"
-require "shopify_cli/theme/theme_dev_server"
+require "shopify_cli/theme/dev_server"
 require "shopify_cli/theme/dev_server/hot_reload/remote_file_reloader"
 require "shopify_cli/theme/dev_server/hot_reload/remote_file_deleter"
 require "rack/mock"
@@ -17,7 +17,7 @@ module ShopifyCLI
           @syncer = stub("Syncer", enqueue_uploads: true, enqueue_deletes: true, enqueue_updates: true,
             ignore_file?: false)
           @syncer.stubs(remote_file?: true)
-          @watcher = ThemeWatcher.new(@ctx, theme: @theme, syncer: @syncer)
+          @watcher = Watcher.new(@ctx, theme: @theme, syncer: @syncer)
           @mode = "off"
         end
 
