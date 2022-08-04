@@ -13,6 +13,7 @@ module ShopifyCLI
         assert_equal("https://example.com", env_file.host)
         assert_equal("my-test-shop.myshopify.com", env_file.shop)
         assert_equal("awskey", env_file.extra["AWSKEY"])
+        assert_equal("value", env_file.extra["#COMMENTED_KEY"])
       end
 
       def test_parse_external_env
@@ -21,7 +22,7 @@ module ShopifyCLI
         assert_equal("secret", env_file[:secret])
         assert_equal("https://example.com", env_file[:host])
         assert_equal("my-test-shop.myshopify.com", env_file[:shop])
-        assert_equal({ "AWSKEY" => "awskey" }, env_file[:extra])
+        assert_equal({ "AWSKEY" => "awskey", "#COMMENTED_KEY" => "value" }, env_file[:extra])
       end
 
       def test_write_writes_env_content_to_file
@@ -29,13 +30,14 @@ module ShopifyCLI
           api_key: "foo",
           secret: "bar",
           host: "baz",
-          extra: { "AWSKEY" => "awskey" },
+          extra: { "AWSKEY" => "awskey", "#COMMENTED_KEY" => "value" },
         )
         content = <<~CONTENT
           SHOPIFY_API_KEY=foo
           SHOPIFY_API_SECRET=bar
           HOST=baz
           AWSKEY=awskey
+          #COMMENTED_KEY=value
         CONTENT
         @context.expects(:write).with(".env", content)
         @context.expects(:print_task).with("writing .env file")
