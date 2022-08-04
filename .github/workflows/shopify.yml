@@ -22,7 +22,6 @@ jobs:
           - 2.6.6
           - 2.7.5
         os:
-          - macos-10.15
           - macos-11
           - ubuntu-20.04
           - ubuntu-18.04
