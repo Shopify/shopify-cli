@@ -1,9 +1,11 @@
 # frozen_string_literal: true
-require_relative "../syncer"
-require_relative "../development_theme"
-require "shopify_cli/git"
-require "tmpdir"
+
 require "fileutils"
+require "tmpdir"
+
+require "shopify_cli/git"
+require "shopify_cli/theme/development_theme"
+require "shopify_cli/theme/syncer"
 
 module ShopifyCLI
   module Theme

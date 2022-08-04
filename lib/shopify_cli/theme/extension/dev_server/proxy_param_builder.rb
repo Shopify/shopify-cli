@@ -4,15 +4,15 @@ require "cgi"
 
 module ShopifyCLI
   module Theme
-    module DevServer
-      module ProxyHelpers
-        class TemplateParamBuilder
+    module Extension
+      module DevServer
+        class ProxyParamBuilder
           def build
-            # Core doesn't support replace_templates
+            # Core doesn't support replace_extension_templates
             return {} if core?(current_path)
 
-            (syncer_templates + request_templates)
-              .select { |file| file.liquid? || file.json? }
+            request_templates
+              .select(&:liquid?)
               .uniq(&:relative_path)
               .map { |file| as_param(file) }
               .to_h
@@ -23,38 +23,33 @@ module ShopifyCLI
             self
           end
 
-          def with_syncer(syncer)
-            @syncer = syncer
-            self
-          end
-
           def with_rack_env(rack_env)
             @rack_env = rack_env
             self
           end
 
-          def with_theme(theme)
-            @theme = theme
+          def with_extension(extension)
+            @extension = extension
             self
           end
 
           private
 
           def as_param(file)
-            ["replace_templates[#{file.relative_path}]", file.read]
-          end
-
-          def syncer_templates
-            @syncer&.pending_updates || []
+            if file&.relative_path&.include?("blocks/")
+              ["replace_extension_templates[blocks][#{file.relative_path}]", file.read]
+            elsif file&.relative_path&.include?("snippets/")
+              ["replace_extension_templates[snippets][#{file.relative_path}]", file.read]
+            end
           end
 
           def request_templates
-            cookie_sections
-              .map { |section| @theme[section] unless @theme.nil? }
+            cookie_files
+              .map { |file_path| @extension[file_path] unless @extension.nil? }
               .compact
           end
 
-          def cookie_sections
+          def cookie_files
             CGI::Cookie.parse(cookie)["hot_reload_files"].join.split(",") || []
           end
 
