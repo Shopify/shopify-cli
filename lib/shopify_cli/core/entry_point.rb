@@ -9,9 +9,8 @@ module ShopifyCLI
             ctx.warn(
               ctx.message("core.warning.development_version", File.join(ShopifyCLI::ROOT, "bin", ShopifyCLI::TOOL_NAME))
             )
-          elsif !ctx.testing?
-            new_version = ctx.new_version
-            ctx.warn(ctx.message("core.warning.new_version", ShopifyCLI::VERSION, new_version)) unless new_version.nil?
+          elsif !ctx.new_version.nil? && !ctx.testing? && !Environment.ignore_upgrade_message?
+            ctx.warn(ctx.message("core.warning.new_version", ShopifyCLI::VERSION, ctx.new_version))
           end
 
           ProjectType.load_all

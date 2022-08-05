@@ -31,6 +31,7 @@ module ShopifyCLI
     module EnvironmentVariables
       STACKTRACE = "SHOPIFY_CLI_STACKTRACE"
       TTY = "SHOPIFY_CLI_TTY"
+      IGNORE_UPGRADE_WARNING = "SHOPIFY_CLI_IGNORE_UPGRADE_WARNING"
 
       # When true the CLI points to a local instance of
       # the partners dashboard and identity.
