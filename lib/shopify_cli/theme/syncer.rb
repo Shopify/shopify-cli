@@ -382,7 +382,9 @@ module ShopifyCLI
       rescue JSON::ParserError
         [exception.message]
       rescue StandardError => e
-        ["The asset #{operation.file} is could not be synced (cause: #{e.message})."]
+        cause = "(cause: #{e.message})"
+        backtrace = e.backtrace.join("\n")
+        ["The asset #{operation.file} could not be synced #{cause} #{backtrace}"]
       end
 
       def backoff_if_near_limit!(used, limit)

@@ -85,7 +85,7 @@ module Theme
       def push_completion_handler(theme, has_errors)
         if options.flags[:json]
           output = { theme: theme.to_h }
-          output[:warning] = "Theme pushed with errors." if has_errors
+          output[:warning] = @ctx.message("theme.push.with_errors") if has_errors
 
           puts(JSON.generate(output))
         elsif options.flags[:publish]
