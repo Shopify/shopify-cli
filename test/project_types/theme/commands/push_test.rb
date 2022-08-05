@@ -236,7 +236,7 @@ module Theme
         @command.call([], "push")
       end
 
-      def test_push_when_syncer_has_an_error
+      def test_push_when_syncer_has_an_error_json
         syncer = stub("Syncer", lock_io!: nil, unlock_io!: nil, has_any_error?: true)
 
         ShopifyCLI::Theme::Theme.expects(:find_by_identifier)
@@ -253,12 +253,36 @@ module Theme
         syncer.expects(:shutdown)
 
         syncer.expects(:upload_theme!).with(delete: true)
-        @command.expects(:puts).with("{\"theme\":{}}")
+        @command.expects(:puts).with("{\"theme\":{},\"warning\":\"Theme pushed with errors.\"}")
 
         @ctx.expects(:puts).never
 
         @command.options.flags[:theme] = 1234
         @command.options.flags[:json] = 1234
+
+        assert_raises(ShopifyCLI::AbortSilent) do
+          @command.call([], "push")
+        end
+      end
+
+      def test_push_when_syncer_has_an_error_io
+        syncer = stub("Syncer", lock_io!: nil, unlock_io!: nil, has_any_error?: true)
+
+        ShopifyCLI::Theme::Theme.expects(:find_by_identifier)
+          .with(@ctx, root: ".", identifier: 1234)
+          .returns(@theme)
+
+        ShopifyCLI::Theme::Syncer.expects(:new)
+          .with(@ctx, theme: @theme, include_filter: @include_filter, ignore_filter: @ignore_filter, stable: nil)
+          .returns(syncer)
+
+        syncer.expects(:start_threads)
+        syncer.expects(:shutdown)
+
+        syncer.expects(:upload_theme!).with(delete: true)
+        @ctx.expects(:warn).with(@ctx.message("theme.push.done_with_errors", @theme.preview_url, @theme.editor_url))
+
+        @command.options.flags[:theme] = 1234
 
         assert_raises(ShopifyCLI::AbortSilent) do
           @command.call([], "push")
@@ -284,6 +308,32 @@ module Theme
         @command.options.flags[:theme] = 1234
         @command.options.flags[:publish] = true
         @command.call([], "push")
+      end
+
+      def test_push_and_publish_with_errors
+        ShopifyCLI::Theme::Theme.expects(:find_by_identifier)
+          .with(@ctx, root: ".", identifier: 1234)
+          .returns(@theme)
+
+        ShopifyCLI::Theme::Syncer.expects(:new)
+          .with(@ctx, theme: @theme, include_filter: @include_filter, ignore_filter: @ignore_filter, stable: nil)
+          .returns(@syncer)
+
+        @syncer.expects(:start_threads)
+        @syncer.expects(:shutdown)
+        @syncer.stubs(:has_any_error?).returns(true)
+
+        @syncer.expects(:upload_theme!).with(delete: true)
+        @ctx.expects(:warn).with(@ctx.message("theme.publish.done_with_errors", @theme.preview_url))
+        @ctx.expects(:done).never
+        @theme.expects(:publish)
+
+        @command.options.flags[:theme] = 1234
+        @command.options.flags[:publish] = true
+
+        assert_raises(ShopifyCLI::AbortSilent) do
+          @command.call([], "push")
+        end
       end
 
       def test_push_with_filter

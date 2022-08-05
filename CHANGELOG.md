@@ -4,6 +4,7 @@ From version 2.6.0, the sections in this file adhere to the [keep a changelog](h
 
 ### Fixed
 * [#2512](https://github.com/Shopify/shopify-cli/pull/2512): Add the `-t/--theme` parameter to the `shopify theme serve -h` message
+* [#2505](https://github.com/Shopify/shopify-cli/pull/2505): Show warning messages when `shopify theme push/pull` has errors
 
 ## Version 2.21.0 - 2022-08-03
 
