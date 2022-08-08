@@ -113,6 +113,7 @@ module Theme
               {{underline:%s}}
           WARN
           name: "Theme name",
+          with_errors: "Theme pushed with errors.",
         },
         serve: {
           theme_not_found: "Theme \"%s\" doesn't exist",
