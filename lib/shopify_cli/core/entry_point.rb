@@ -9,9 +9,11 @@ module ShopifyCLI
             ctx.warn(
               ctx.message("core.warning.development_version", File.join(ShopifyCLI::ROOT, "bin", ShopifyCLI::TOOL_NAME))
             )
-          elsif !ctx.testing?
-            new_version = ctx.new_version
-            ctx.warn(ctx.message("core.warning.new_version", ShopifyCLI::VERSION, new_version)) unless new_version.nil?
+          # because `!ctx.new_version.nil?` will change the config by calling ::Config.set
+          # it's important to keep the checks in this order so that we don't trigger it while testing
+          # since changing the config will throw errors
+          elsif !ctx.testing? && !ctx.new_version.nil? && !Environment.run_as_subprocess?
+            ctx.warn(ctx.message("core.warning.new_version", ShopifyCLI::VERSION, ctx.new_version))
           end
 
           ProjectType.load_all

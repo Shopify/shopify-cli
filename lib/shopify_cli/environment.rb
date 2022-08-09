@@ -181,5 +181,12 @@ module ShopifyCLI
     def self.env_variable_truthy?(variable_name, env_variables: ENV)
       TRUTHY_ENV_VARIABLE_VALUES.include?(env_variables[variable_name.to_s])
     end
+
+    def self.run_as_subprocess?(env_variables: ENV)
+      env_variable_truthy?(
+        Constants::EnvironmentVariables::RUN_AS_SUBPROCESS,
+        env_variables: env_variables
+      )
+    end
   end
 end
