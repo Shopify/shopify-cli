@@ -9,7 +9,7 @@ From version 2.6.0, the sections in this file adhere to the [keep a changelog](h
 * [#2505](https://github.com/Shopify/shopify-cli/pull/2505): Show warning messages when `shopify theme push/pull` has errors
 
 ### Added
-* [#2520](https://github.com/Shopify/shopify-cli/pull/2520): Add the option to ignore new version warnings by passing the `SHOPIFY_CLI_IGNORE_UPGRADE_WARNING` environment variable
+* [#2520](https://github.com/Shopify/shopify-cli/pull/2520): Add the option to ignore new version warnings by passing the `SHOPIFY_CLI_RUN_AS_SUBPROCESS` environment variable
 
 ## Version 2.21.0 - 2022-08-03
 

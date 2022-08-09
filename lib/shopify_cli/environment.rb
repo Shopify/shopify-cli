@@ -182,9 +182,9 @@ module ShopifyCLI
       TRUTHY_ENV_VARIABLE_VALUES.include?(env_variables[variable_name.to_s])
     end
 
-    def self.ignore_upgrade_message?(env_variables: ENV)
+    def self.run_as_subprocess?(env_variables: ENV)
       env_variable_truthy?(
-        Constants::EnvironmentVariables::IGNORE_UPGRADE_WARNING,
+        Constants::EnvironmentVariables::RUN_AS_SUBPROCESS,
         env_variables: env_variables
       )
     end

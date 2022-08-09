@@ -27,11 +27,11 @@ module ShopifyCLI
         EntryPoint.call(args, @context)
       end
 
-      def test_warns_of_new_version_in_non_tests_when_not_ignoring_message
+      def test_warns_of_new_version_in_non_tests_when_not_running_as_subprocess
         args = %w(help argone argtwo)
 
         ShopifyCLI::Environment.stubs(
-          ignore_upgrade_message?: false,
+          run_as_subprocess?: false,
         )
 
         @context.stubs(
@@ -43,11 +43,11 @@ module ShopifyCLI
         EntryPoint.call(args, @context)
       end
 
-      def test_does_not_warn_of_new_version_in_non_tests_when_ignoring_message
+      def test_does_not_warn_of_new_version_in_non_tests_when_running_as_subprocess
         args = %w(help argone argtwo)
 
         ShopifyCLI::Environment.stubs(
-          ignore_upgrade_message?: true,
+          run_as_subprocess?: true,
         )
 
         @context.stubs(
