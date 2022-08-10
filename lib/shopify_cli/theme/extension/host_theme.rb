@@ -33,6 +33,10 @@ module ShopifyCLI
           self
         end
 
+        def self.delete(ctx)
+          new(ctx, root: nil).delete
+        end
+
         def delete
           delete_theme if exists? # Avoid deleting any existing development theme logic
 
