@@ -8,28 +8,28 @@ require "fileutils"
 module ShopifyCLI
   module Theme
     module Extension
-      # TODO MOVEEEEEEE
+      # TODO: MOVEEEEEEE
       class HostThemeProgressBar
         GIT_CLONE_PROGRESS_SHARE = 0.2
         SYNC_PROGRESS_SHARE = 0.8
 
-        def initialize(syncer, git_dir)
-          # TODO fix sig
+        def initialize(syncer, dir)
+          # TODO: fix sig
           @syncer = syncer
-          @git_dir = git_dir
+          @dir = dir
         end
-  
+
         def progress(method, **args)
           @syncer.lock_io!
           CLI::UI::Progress.progress do |bar|
-            Git.public_send(:clone, "https://github.com/Shopify/dawn.git", @git_dir) do |percent|
-              bar.tick(set_percent: percent*GIT_CLONE_PROGRESS_SHARE)
+            Git.public_send(:clone, "https://github.com/Shopify/dawn.git", @dir) do |percent|
+              bar.tick(set_percent: percent * GIT_CLONE_PROGRESS_SHARE)
             end
-  
+
             @syncer.public_send(method, **args) do |left, total|
-              bar.tick(set_percent: (1 - left.to_f / total)*SYNC_PROGRESS_SHARE + GIT_CLONE_PROGRESS_SHARE)
+              bar.tick(set_percent: (1 - left.to_f / total) * SYNC_PROGRESS_SHARE + GIT_CLONE_PROGRESS_SHARE)
             end
-  
+
             bar.tick(set_percent: 1)
           end
           @syncer.unlock_io!
@@ -51,13 +51,13 @@ module ShopifyCLI
         end
 
         def ensure_exists!
-          # TODO put pack
+          # TODO: put pack
 
           # if exists?
           #   @ctx.debug("Using temporary host theme: ##{id} #{name}")
           # else
-            create
-            @ctx.debug("Created temporary host theme: #{@id}")
+          create
+          @ctx.debug("Created temporary host theme: #{@id}")
           # end
 
           self
@@ -106,7 +106,7 @@ module ShopifyCLI
             begin
               syncer.start_threads
               ::CLI::UI::Frame.open(@ctx.message("theme.push.info.pushing", name, id, shop)) do
-                # TODO move to other file  
+                # TODO: move to other file
                 HostThemeProgressBar.new(syncer, dir).progress(:upload_theme!, delete: false)
               end
             rescue Errno::ENOENT => e

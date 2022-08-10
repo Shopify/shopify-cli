@@ -14,7 +14,7 @@ module Theme
           # end
 
           @syncer.public_send(method, **args) do |left, total|
-            bar.tick(set_percent: 0.7 - (left.to_f / total)*0.7)
+            bar.tick(set_percent: 0.7 - (left.to_f / total) * 0.7)
           end
 
           bar.tick(set_percent: 1)

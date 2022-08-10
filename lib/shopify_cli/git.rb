@@ -68,23 +68,11 @@ module ShopifyCLI
           ctx.abort(ctx.message("core.git.error.directory_exists"))
         else
           repo, branch = repository.split("#")
-          success_message = ctx.message("core.git.cloned", dest)
 
-          # TODO remove dupe
-          if block_given?
-            if branch
-              clone_progress("clone", "--single-branch", "--branch", branch, repo, dest, ctx: ctx, &block)
-            else
-              clone_progress("clone", "--single-branch", repo, dest, ctx: ctx, &block)
-            end
+          if branch
+            clone_progress("clone", "--single-branch", "--branch", branch, repo, dest, ctx: ctx, &block)
           else
-            CLI::UI::Frame.open(ctx.message("core.git.cloning", repo, dest), success_text: success_message) do
-              if branch
-                clone_progress("clone", "--single-branch", "--branch", branch, repo, dest, ctx: ctx)
-              else
-                clone_progress("clone", "--single-branch", repo, dest, ctx: ctx)
-              end
-            end
+            clone_progress("clone", "--single-branch", repo, dest, ctx: ctx, &block)
           end
         end
       end
@@ -220,26 +208,32 @@ module ShopifyCLI
         exec("rev-parse", *args, dir: dir, ctx: ctx)
       end
 
-      # TODO tests
+      # TODO: tests
       def clone_progress(*git_command, ctx:, &block)
         success = false
 
         if block_given?
           success = execute_clone(*git_command, &block)
         else
-          CLI::UI::Progress.progress do |bar|
-            success = execute_clone(*git_command, bar: bar)
-  
-            ctx.abort(msg.join("\n")) unless success
-            bar.tick(set_percent: 1.0)
+          dest = git_command.last
+          repo = git_command[-2]
+          success_message = ctx.message("core.git.cloned", dest)
+
+          CLI::UI::Frame.open(ctx.message("core.git.cloning", repo, dest), success_text: success_message) do
+            CLI::UI::Progress.progress do |bar|
+              success = execute_clone(*git_command, bar: bar)
+
+              ctx.abort(msg.join("\n")) unless success
+              bar.tick(set_percent: 1.0)
+            end
           end
         end
 
         success
       end
 
-      # TODO tests
-      def execute_clone(*git_command, bar: nil, &block)
+      # TODO: tests
+      def execute_clone(*git_command, bar: nil)
         msg = []
         require "open3"
 
