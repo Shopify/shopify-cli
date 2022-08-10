@@ -70,9 +70,9 @@ module ShopifyCLI
           repo, branch = repository.split("#")
 
           if branch
-            clone_progress("clone", "--single-branch", "--branch", branch, repo, dest, ctx: ctx, &block)
+            execute_clone_cmd("clone", "--single-branch", "--branch", branch, repo, dest, ctx: ctx, &block)
           else
-            clone_progress("clone", "--single-branch", repo, dest, ctx: ctx, &block)
+            execute_clone_cmd("clone", "--single-branch", repo, dest, ctx: ctx, &block)
           end
         end
       end
@@ -195,6 +195,62 @@ module ShopifyCLI
         end
       end
 
+      # TODO: tests
+      def execute_clone_cmd(*git_command, ctx:, &block)
+        success = false
+        msg = []
+        require "open3"
+
+        if block_given?
+          success = Open3.popen3("git", *git_command, "--progress") do |_stdin, _stdout, stderr, thread|
+            msg = clone_progress(stderr, bar: nil, &block)
+
+            thread.value
+          end.success?
+
+          ctx.abort((msg.join("\n"))) unless success
+        else
+          dest = git_command.last
+          repo = git_command[-2]
+          success_message = ctx.message("core.git.cloned", dest)
+
+          CLI::UI::Frame.open(ctx.message("core.git.cloning", repo, dest), success_text: success_message) do
+            CLI::UI::Progress.progress do |bar|
+              success = Open3.popen3("git", *git_command, "--progress") do |_stdin, _stdout, stderr, thread|
+                msg = clone_progress(stderr, bar: bar)
+
+                thread.value
+              end.success?
+
+              ctx.abort((msg.join("\n"))) unless success
+              bar.tick(set_percent: 1.0)
+            end
+          end
+        end
+
+        success
+      end
+
+      def clone_progress(stderr, bar: nil, &block) # rubocop:disable Lint/UnusedMethodArgument
+        msg = []
+
+        while (line = stderr.gets)
+          msg << line.chomp
+          next unless line.strip.start_with?("Receiving objects:")
+          percent = (line.match(/Receiving objects:\s+(\d+)/)[1].to_f / 100).round(2)
+
+          if block_given?
+            yield percent
+          elsif !bar.nil?
+            bar.tick(set_percent: percent)
+          end
+
+          next
+        end
+
+        msg
+      end
+
       private
 
       def exec(*args, dir: Dir.pwd, default: nil, ctx: Context.new)
@@ -206,59 +262,6 @@ module ShopifyCLI
 
       def rev_parse(*args, dir: nil, ctx: Context.new)
         exec("rev-parse", *args, dir: dir, ctx: ctx)
-      end
-
-      # TODO: tests
-      def clone_progress(*git_command, ctx:, &block)
-        success = false
-
-        # need to keep context var here because of circular dependency
-        if block_given?
-          success, msg = execute_clone(*git_command, &block)
-          ctx.abort((msg.join("\n"))) unless success
-        else
-          dest = git_command.last
-          repo = git_command[-2]
-          success_message = ctx.message("core.git.cloned", dest)
-
-          CLI::UI::Frame.open(ctx.message("core.git.cloning", repo, dest), success_text: success_message) do
-            CLI::UI::Progress.progress do |bar|
-              success, msg = execute_clone(*git_command, bar: bar)
-
-              ctx.abort((msg.join("\n"))) unless success
-              bar.tick(set_percent: 1.0)
-            end
-          end
-        end
-
-        success
-      end
-
-      # TODO: tests
-      def execute_clone(*git_command, bar: nil, &block) # rubocop:disable Lint/UnusedMethodArgument
-        msg = []
-        require "open3"
-
-        success = Open3.popen3("git", *git_command, "--progress") do |_stdin, _stdout, stderr, thread|
-          while (line = stderr.gets)
-            msg << line.chomp
-            next unless line.strip.start_with?("Receiving objects:")
-            percent = (line.match(/Receiving objects:\s+(\d+)/)[1].to_f / 100).round(2)
-
-            if block_given?
-              yield percent
-            elsif !bar.nil?
-              bar.tick(set_percent: percent)
-            end
-
-            next
-          end
-
-          thread.value
-        end.success?
-
-        # TODO: turn to object
-        [success, msg]
       end
     end
   end

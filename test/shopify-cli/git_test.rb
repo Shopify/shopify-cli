@@ -4,6 +4,30 @@ require "shellwords"
 
 module ShopifyCLI
   class GitTest < MiniTest::Test
+    class StdErr
+      def initialize(msg)
+        @msg = msg
+      end
+
+      def gets
+        @msg.shift
+      end
+    end
+
+    class CaptureIO
+      def initialize
+        @io = []
+      end
+
+      def record(msg)
+        @io << msg
+      end
+
+      def get
+        @io
+      end
+    end
+
     def setup
       super
 
@@ -193,6 +217,57 @@ module ShopifyCLI
       capture_io do
         ShopifyCLI::Git.clone("git@github.com:shopify/test.git", destination, ctx: @context)
       end
+    end
+
+    def test_clones_git_repo_when_directory_exists_but_it_is_empty222222222222
+      destination = "test-app"
+
+      Dir.stubs(:exist?).with(destination).returns(true)
+      Dir.stubs(:empty?).with(destination).returns(true)
+
+      Open3.expects(:popen3).with(
+        "git",
+        "clone",
+        "--single-branch",
+        "git@github.com:shopify/test.git",
+        "test-app",
+        "--progress"
+      ).returns(mock(success?: true))
+      capture_io do
+        ShopifyCLI::Git.clone("git@github.com:shopify/test.git", destination, ctx: @context) do |percent|
+          puts(percent)
+        end
+      end
+    end
+
+    def test_clone_progress_parses_percentage_and_yield_to_block
+      capture_io = CaptureIO.new
+
+      clone_msg_stream = [
+        "Receiving objects: 7% (5824/5824), 8.78 MiB | 19.86 MiB/s, done.",
+        "Receiving objects: 91% (5824/5824), 8.78 MiB | 19.86 MiB/s, done.",
+        "Receiving objects: 100% (5824/5824), 8.78 MiB | 19.86 MiB/s, done.",
+      ]
+      ShopifyCLI::Git.clone_progress(stderr(clone_msg_stream), bar: nil) do |percent|
+        capture_io.record(percent)
+      end
+
+      assert_equal([0.07, 0.91, 1.0], capture_io.get)
+    end
+
+    def test_clone_progress_does_not_call_yield_without_percentage
+      capture_io = CaptureIO.new
+
+      clone_msg_stream = ["Unknown message"]
+      ShopifyCLI::Git.clone_progress(stderr(clone_msg_stream), bar: nil) do |percent|
+        capture_io.record(percent)
+      end
+
+      assert_equal([], capture_io.get)
+    end
+
+    def stderr(msg) # rubocop:disable Minitest/TestMethodName:
+      StdErr.new(msg)
     end
 
     def test_it_does_not_clone_git_repo_when_directory_is_not_empty
