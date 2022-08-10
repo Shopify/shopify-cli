@@ -212,8 +212,10 @@ module ShopifyCLI
       def clone_progress(*git_command, ctx:, &block)
         success = false
 
+        # need to keep context var here because of circular dependency
         if block_given?
-          success = execute_clone(*git_command, &block)
+          success, msg = execute_clone(*git_command, &block)
+          ctx.abort((msg.join("\n"))) unless success
         else
           dest = git_command.last
           repo = git_command[-2]
@@ -221,9 +223,9 @@ module ShopifyCLI
 
           CLI::UI::Frame.open(ctx.message("core.git.cloning", repo, dest), success_text: success_message) do
             CLI::UI::Progress.progress do |bar|
-              success = execute_clone(*git_command, bar: bar)
+              success, msg = execute_clone(*git_command, bar: bar)
 
-              ctx.abort(msg.join("\n")) unless success
+              ctx.abort((msg.join("\n"))) unless success
               bar.tick(set_percent: 1.0)
             end
           end
@@ -233,7 +235,7 @@ module ShopifyCLI
       end
 
       # TODO: tests
-      def execute_clone(*git_command, bar: nil)
+      def execute_clone(*git_command, bar: nil, &block) # rubocop:disable Lint/UnusedMethodArgument
         msg = []
         require "open3"
 
@@ -255,7 +257,8 @@ module ShopifyCLI
           thread.value
         end.success?
 
-        success
+        # TODO: turn to object
+        [success, msg]
       end
     end
   end
