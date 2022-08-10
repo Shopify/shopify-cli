@@ -1,11 +1,14 @@
 require "shopify_cli"
 require "shopify_cli/theme/development_theme"
+require "shopify_cli/theme/extension/host_theme"
 
 module ShopifyCLI
   module Commands
     class Logout < ShopifyCLI::Command
       def call(*)
         try_delete_development_theme
+        try_delete_host_theme
+
         ShopifyCLI::IdentityAuth.delete_tokens_and_keys
         ShopifyCLI::DB.del(:shop) if has_shop?
         ShopifyCLI::DB.del(:organization_id) if has_organization_id?
@@ -31,8 +34,16 @@ module ShopifyCLI
         return unless has_shop?
 
         ShopifyCLI::Theme::DevelopmentTheme.delete(@ctx)
-      rescue ShopifyCLI::API::APIRequestError, ShopifyCLI::Abort, ShopifyCLI::AbortSilent
-        # Ignore since we can't delete it
+      rescue ShopifyCLI::API::APIRequestError, ShopifyCLI::Abort, ShopifyCLI::AbortSilent => e
+        @ctx.debug("[Logout Error]: #{e.message}")
+      end
+
+      def try_delete_host_theme
+        return unless has_shop?
+
+        ShopifyCLI::Theme::Extension::HostTheme.delete(@ctx)
+      rescue ShopifyCLI::API::APIRequestError, ShopifyCLI::Abort, ShopifyCLI::AbortSilent => e
+        @ctx.debug("[Logout Error]: #{e.message}")
       end
     end
   end
