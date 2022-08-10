@@ -85,6 +85,29 @@ module ShopifyCLI
           @host_theme.delete
         end
 
+        def test_delete_static
+          theme_id = "12345678"
+
+          ShopifyCLI::AdminAPI.stubs(:get_shop_or_abort).returns(@shop)
+          ShopifyCLI::DB.stubs(:get).with(:host_theme_id).returns(theme_id)
+          ShopifyCLI::DB.stubs(:exists?).with(:host_theme_id).returns(true)
+          ShopifyCLI::DB.stubs(:del).with(:host_theme_id)
+          ShopifyCLI::DB.stubs(:exists?).with(:host_theme_name).returns(true)
+          ShopifyCLI::DB.stubs(:del).with(:host_theme_name)
+
+          HostTheme.any_instance.expects(:exists?).returns(true).once
+
+          ShopifyCLI::AdminAPI.expects(:rest_request).with(
+            @ctx,
+            shop: @shop,
+            path: "themes/#{theme_id}.json",
+            method: "DELETE",
+            api_version: "unstable",
+          )
+
+          HostTheme.delete(@ctx)
+        end
+
         def test_name_is_valid_when_the_host_contains_an_ascii_character
           ascii_string_char = 0x8f.chr
           hostname = "theme-dev-#{ascii_string_char}.lan"
