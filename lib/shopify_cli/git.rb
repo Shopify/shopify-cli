@@ -63,17 +63,27 @@ module ShopifyCLI
       #
       #   ShopifyCLI::Git.clone('git@github.com:shopify/test.git', 'test-app')
       #
-      def clone(repository, dest, ctx: Context.new)
+      def clone(repository, dest, ctx: Context.new, &block)
         if Dir.exist?(dest) && !Dir.empty?(dest)
           ctx.abort(ctx.message("core.git.error.directory_exists"))
         else
           repo, branch = repository.split("#")
           success_message = ctx.message("core.git.cloned", dest)
-          CLI::UI::Frame.open(ctx.message("core.git.cloning", repo, dest), success_text: success_message) do
+
+          # TODO remove dupe
+          if block_given?
             if branch
-              clone_progress("clone", "--single-branch", "--branch", branch, repo, dest, ctx: ctx)
+              clone_progress("clone", "--single-branch", "--branch", branch, repo, dest, ctx: ctx, &block)
             else
-              clone_progress("clone", "--single-branch", repo, dest, ctx: ctx)
+              clone_progress("clone", "--single-branch", repo, dest, ctx: ctx, &block)
+            end
+          else
+            CLI::UI::Frame.open(ctx.message("core.git.cloning", repo, dest), success_text: success_message) do
+              if branch
+                clone_progress("clone", "--single-branch", "--branch", branch, repo, dest, ctx: ctx)
+              else
+                clone_progress("clone", "--single-branch", repo, dest, ctx: ctx)
+              end
             end
           end
         end
@@ -210,27 +220,48 @@ module ShopifyCLI
         exec("rev-parse", *args, dir: dir, ctx: ctx)
       end
 
-      def clone_progress(*git_command, ctx:)
-        CLI::UI::Progress.progress do |bar|
-          msg = []
-          require "open3"
+      # TODO tests
+      def clone_progress(*git_command, ctx:, &block)
+        success = false
 
-          success = Open3.popen3("git", *git_command, "--progress") do |_stdin, _stdout, stderr, thread|
-            while (line = stderr.gets)
-              msg << line.chomp
-              next unless line.strip.start_with?("Receiving objects:")
-              percent = (line.match(/Receiving objects:\s+(\d+)/)[1].to_f / 100).round(2)
+        if block_given?
+          success = execute_clone(*git_command, &block)
+        else
+          CLI::UI::Progress.progress do |bar|
+            success = execute_clone(*git_command, bar: bar)
+  
+            ctx.abort(msg.join("\n")) unless success
+            bar.tick(set_percent: 1.0)
+          end
+        end
+
+        success
+      end
+
+      # TODO tests
+      def execute_clone(*git_command, bar: nil, &block)
+        msg = []
+        require "open3"
+
+        success = Open3.popen3("git", *git_command, "--progress") do |_stdin, _stdout, stderr, thread|
+          while (line = stderr.gets)
+            msg << line.chomp
+            next unless line.strip.start_with?("Receiving objects:")
+            percent = (line.match(/Receiving objects:\s+(\d+)/)[1].to_f / 100).round(2)
+
+            if block_given?
+              yield percent
+            elsif !bar.nil?
               bar.tick(set_percent: percent)
-              next
             end
 
-            thread.value
-          end.success?
+            next
+          end
 
-          ctx.abort(msg.join("\n")) unless success
-          bar.tick(set_percent: 1.0)
-          success
-        end
+          thread.value
+        end.success?
+
+        success
       end
     end
   end
