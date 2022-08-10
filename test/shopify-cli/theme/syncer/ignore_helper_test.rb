@@ -30,19 +30,19 @@ module ShopifyCLI
         end
 
         def test_ignore_file_when_it_returns_true
-          path = mock
-          file = stub(path: path)
+          relative_path = mock
+          file = stub(relative_path: relative_path)
 
-          expects(:ignore_path?).with(path).returns(true)
+          expects(:ignore_path?).with(relative_path).returns(true)
 
           assert(ignore_file?(file))
         end
 
         def test_ignore_file_when_it_returns_false
-          path = mock
-          file = stub(path: path)
+          relative_path = mock
+          file = stub(relative_path: relative_path)
 
-          expects(:ignore_path?).with(path).returns(false)
+          expects(:ignore_path?).with(relative_path).returns(false)
 
           refute(ignore_file?(file))
         end
