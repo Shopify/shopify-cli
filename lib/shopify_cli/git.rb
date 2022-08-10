@@ -46,12 +46,75 @@ module ShopifyCLI
       end
 
       ##
-      # will make calls to git to clone a new repo into a supplied destination,
-      # it will also output progress of the cloning process.
+      # returns array with components of git clone command
       #
       # #### Parameters
       #
-      # * `repository` - a git url for git to clone the repo from
+      # * `repo` - repo url without branch name
+      # * `dest` - a filepath to where the repo should be cloned to
+      # * `branch` - branch name when cloning
+      #
+      # #### Returns
+      #
+      # * array of strings
+      #
+      # #### Example
+      #
+      #   ["clone", "--single-branch", "--branch", "test-branch", "test-app"]
+      #
+      def git_clone_command(repo, dest, branch)
+        if branch
+          ["clone", "--single-branch", "--branch", branch, repo, dest]
+        else
+          ["clone", "--single-branch", repo, dest]
+        end
+      end
+
+      ##
+      # calls git to clone a new repo into a supplied destination,
+      # it will also call a supplied block with the percentage of clone completion
+      #
+      # #### Parameters
+      #
+      # * `repo_with_branch` - a git url for git to clone the repo from
+      # * `dest` - a filepath to where the repo should be cloned to
+      # * `ctx` - the current running context of your command, defaults to a new context.
+      #
+      # #### Returns
+      #
+      # * `sha_string` - string of the sha of the most recent commit to the repo
+      #
+      # #### Example
+      #
+      #   ShopifyCLI::Git.raw_clone('git@github.com:shopify/test.git', 'test-app')
+      #
+      def raw_clone(repo_with_branch, dest, ctx: Context.new)
+        if Dir.exist?(dest) && !Dir.empty?(dest)
+          ctx.abort(ctx.message("core.git.error.directory_exists"))
+        else
+          msg = []
+          require "open3"
+
+          repo, branch = repo_with_branch.split("#")
+          git_cmd = git_clone_command(repo, dest, branch)
+
+          success = Open3.popen3("git", *git_cmd, "--progress") do |_stdin, _stdout, stderr, thread|
+            msg = clone_progress(stderr, bar: nil)
+
+            thread.value
+          end.success?
+
+          ctx.abort((msg.join("\n"))) unless success
+        end
+      end
+
+      ##
+      # calls git to clone a new repo into a supplied destination,
+      # it will also output progress of the cloning process into a new progress bar
+      #
+      # #### Parameters
+      #
+      # * `repo_with_branch` - a git url for git to clone the repo from
       # * `dest` - a filepath to where the repo should be cloned to
       # * `ctx` - the current running context of your command, defaults to a new context.
       #
@@ -63,17 +126,28 @@ module ShopifyCLI
       #
       #   ShopifyCLI::Git.clone('git@github.com:shopify/test.git', 'test-app')
       #
-      def clone(repository, dest, ctx: Context.new)
+      def clone(repo_with_branch, dest, ctx: Context.new)
         if Dir.exist?(dest) && !Dir.empty?(dest)
           ctx.abort(ctx.message("core.git.error.directory_exists"))
         else
-          repo, branch = repository.split("#")
+          msg = []
+          require "open3"
+
+          repo, branch = repo_with_branch.split("#")
+          git_cmd = git_clone_command(repo, dest, branch)
+
           success_message = ctx.message("core.git.cloned", dest)
+
           CLI::UI::Frame.open(ctx.message("core.git.cloning", repo, dest), success_text: success_message) do
-            if branch
-              clone_progress("clone", "--single-branch", "--branch", branch, repo, dest, ctx: ctx)
-            else
-              clone_progress("clone", "--single-branch", repo, dest, ctx: ctx)
+            CLI::UI::Progress.progress do |bar|
+              success = Open3.popen3("git", *git_cmd, "--progress") do |_stdin, _stdout, stderr, thread|
+                msg = clone_progress(stderr, bar: bar)
+
+                thread.value
+              end.success?
+
+              ctx.abort((msg.join("\n"))) unless success
+              bar.tick(set_percent: 1.0)
             end
           end
         end
@@ -197,6 +271,36 @@ module ShopifyCLI
         end
       end
 
+      ##
+      # handles showing the progress of the git clone command.
+      # if block given, assumes passing percent to block, otherwise
+      # increments bar for progress bar
+      #
+      # #### Parameters
+      #
+      # * `stderr` - Open3.popen3 output stream
+      # * `bar` - progress bar object to set percent
+      #
+      def clone_progress(stderr, bar: nil)
+        msg = []
+
+        while (line = stderr.gets)
+          msg << line.chomp
+          next unless line.strip.start_with?("Receiving objects:")
+          percent = (line.match(/Receiving objects:\s+(\d+)/)[1].to_f / 100).round(2)
+
+          if block_given?
+            yield percent
+          elsif !bar.nil?
+            bar.tick(set_percent: percent)
+          end
+
+          next
+        end
+
+        msg
+      end
+
       private
 
       def exec(*args, dir: Dir.pwd, default: nil, ctx: Context.new)
@@ -208,29 +312,6 @@ module ShopifyCLI
 
       def rev_parse(*args, dir: nil, ctx: Context.new)
         exec("rev-parse", *args, dir: dir, ctx: ctx)
-      end
-
-      def clone_progress(*git_command, ctx:)
-        CLI::UI::Progress.progress do |bar|
-          msg = []
-          require "open3"
-
-          success = Open3.popen3("git", *git_command, "--progress") do |_stdin, _stdout, stderr, thread|
-            while (line = stderr.gets)
-              msg << line.chomp
-              next unless line.strip.start_with?("Receiving objects:")
-              percent = (line.match(/Receiving objects:\s+(\d+)/)[1].to_f / 100).round(2)
-              bar.tick(set_percent: percent)
-              next
-            end
-
-            thread.value
-          end.success?
-
-          ctx.abort(msg.join("\n")) unless success
-          bar.tick(set_percent: 1.0)
-          success
-        end
       end
     end
   end

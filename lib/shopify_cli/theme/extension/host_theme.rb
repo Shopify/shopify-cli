@@ -2,6 +2,7 @@
 require_relative "../syncer"
 require_relative "../development_theme"
 require "shopify_cli/git"
+require "shopify_cli/theme/extension/ui/host_theme_progress_bar"
 require "tmpdir"
 require "fileutils"
 
@@ -75,14 +76,13 @@ module ShopifyCLI
           Dir.mktmpdir do |dir|
             @root = Pathname.new(dir)
             @ctx.root = dir
-            Git.clone("https://github.com/Shopify/dawn.git", dir)
 
             syncer = ShopifyCLI::Theme::Syncer.new(@ctx, theme: self)
 
             begin
               syncer.start_threads
               ::CLI::UI::Frame.open(@ctx.message("theme.push.info.pushing", name, id, shop)) do
-                syncer.upload_theme!(delete: false)
+                UI::HostThemeProgressBar.new(syncer, dir).progress(:upload_theme!, delete: false)
               end
             rescue Errno::ENOENT => e
               @ctx.debug(e.message)
