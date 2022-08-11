@@ -5,7 +5,6 @@ require_relative "dev_server/app_extensions"
 require_relative "../dev_server/web_server"
 
 require "shopify_cli/theme/app_extension"
-require "shopify_cli/theme/syncer"
 require "shopify_cli/theme/extension/host_theme"
 require "pathname"
 
@@ -20,6 +19,7 @@ require_relative "dev_server/watcher"
 require_relative "../dev_server/web_server"
 require_relative "../dev_server/certificate_manager"
 require_relative "../dev_server/header_hash"
+require_relative "syncer"
 
 module ShopifyCLI
   module Theme
@@ -33,10 +33,11 @@ module ShopifyCLI
 
             @theme = HostTheme.find_or_create!(@ctx)
             @extension = AppExtension.new(@ctx, root: root, id: 1234)
+            @syncer = Syncer.new(@ctx, extension: @extension)
             logger = WEBrick::Log.new(nil, WEBrick::BasicLog::INFO)
-            watcher = Watcher.new(@ctx, extension: @extension, poll: poll)
+            watcher = Watcher.new(@ctx, syncer: @syncer, extension: @extension, poll: poll)
 
-            @app = Proxy.new(@ctx, extension: @extension, theme: @theme)
+            @app = Proxy.new(@ctx, syncer: @syncer, extension: @extension, theme: @theme)
             @app = LocalAssets.new(@ctx, @app, extension: @extension)
             @app = ShopifyCLI::Theme::DevServer::HotReload.new(@ctx, @app, theme: @theme, watcher: watcher,
               mode: ShopifyCLI::Theme::DevServer::ReloadMode.default,
@@ -48,6 +49,7 @@ module ShopifyCLI
             end
 
             begin
+              @syncer.start
               preview_suffix = ctx.message("theme.serve.download_changes")
               preview_message = ctx.message(
                 "theme.serve.customize_or_preview",
@@ -76,6 +78,7 @@ module ShopifyCLI
           def stop
             @ctx.puts("Stopping…")
             @app.close
+            @syncer.shutdown
             ShopifyCLI::Theme::DevServer::WebServer.shutdown
           end
 
