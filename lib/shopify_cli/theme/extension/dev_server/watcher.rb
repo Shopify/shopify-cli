@@ -5,7 +5,7 @@ require "forwardable"
 module ShopifyCLI
   module Theme
     module Extension
-      module DevServer
+      class DevServer < ShopifyCLI::Theme::DevServer
         # Watches for file changes and publish events to the theme
         class Watcher
           extend Forwardable

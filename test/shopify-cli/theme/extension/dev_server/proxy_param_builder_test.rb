@@ -6,7 +6,7 @@ require "shopify_cli/theme/extension/dev_server/proxy_param_builder"
 module ShopifyCLI
   module Theme
     module Extension
-      module DevServer
+      class DevServer
         class ProxyParamBuilderTest < Minitest::Test
           def setup
             super

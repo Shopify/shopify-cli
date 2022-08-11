@@ -2,7 +2,7 @@
 
 module ShopifyCLI
   module Theme
-    module DevServer
+    class DevServer
       class LocalAssets
         THEME_REGEX = %r{//cdn\.shopify\.com/s/.+?/(assets/.+?\.(?:css|js))}
 

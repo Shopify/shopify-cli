@@ -9,7 +9,7 @@ require_relative "proxy_param_builder"
 
 module ShopifyCLI
   module Theme
-    module DevServer
+    class DevServer
       HOP_BY_HOP_HEADERS = [
         "connection",
         "keep-alive",

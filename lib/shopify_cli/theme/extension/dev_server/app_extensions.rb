@@ -3,7 +3,7 @@
 module ShopifyCLI
   module Theme
     module Extension
-      module DevServer
+      class DevServer < ShopifyCLI::Theme::DevServer
         class AppExtensions
           def call(_env)
             headers = {}
