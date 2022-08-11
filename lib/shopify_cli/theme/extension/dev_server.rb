@@ -16,76 +16,72 @@ module ShopifyCLI
   module Theme
     module Extension
       class DevServer < ShopifyCLI::Theme::DevServer
-        class << self
-          attr_accessor :ctx
+        Proxy = ShopifyCLI::Theme::DevServer::Proxy
+        HotReload = ShopifyCLI::Theme::DevServer::HotReload
 
-          Proxy = ShopifyCLI::Theme::DevServer::Proxy
-          HotReload = ShopifyCLI::Theme::DevServer::HotReload
-          ReloadMode = ShopifyCLI::Theme::DevServer::ReloadMode
-          WebServer = ShopifyCLI::Theme::DevServer::WebServer
+        private
 
-          def start(ctx, root, host: "127.0.0.1", _theme: nil, port: 9292, poll: false)
-            @ctx = ctx
+        def middleware_stack
+          @app = Proxy.new(ctx, theme, param_builder)
+          @app = LocalAssets.new(ctx, app, extension)
+          @app = HotReload.new(ctx, app, theme: theme, watcher: watcher, mode: mode, extension: extension)
+        end
 
-            @theme = HostTheme.find_or_create!(@ctx)
-            @extension = AppExtension.new(@ctx, root: root, id: 1234)
+        def sync_theme
+          # Ensures the hot theme exists
+          !!theme
+        end
 
-            logger = WEBrick::Log.new(nil, WEBrick::BasicLog::INFO)
-            watcher = Watcher.new(@ctx, extension: @extension, poll: poll)
-            param_builder = ProxyParamBuilder.new.with_extension(@extension)
+        def syncer
+          # TODO: Instantiate 'Sycner' here
+          todo = Object.new
 
-            @app = Proxy.new(@ctx, @theme, param_builder)
-            @app = LocalAssets.new(@ctx, @app, @extension)
-            @app = HotReload.new(@ctx, @app, theme: @theme, watcher: watcher,
-              mode: ReloadMode.default,
-              extension: @extension)
-            address = "http://#{host}:#{port}"
-
-            trap("INT") do
-              stop
-            end
-
-            begin
-              preview_suffix = ctx.message("theme.serve.download_changes")
-              preview_message = ctx.message(
-                "theme.serve.customize_or_preview",
-                preview_suffix,
-                @theme.editor_url,
-                @theme.preview_url
-              )
-
-              ctx.puts(ctx.message("extension.serve.frame_title", root))
-              ctx.open_url!(address)
-              ctx.puts(preview_message)
-              watcher.start
-              WebServer.run(
-                @app,
-                BindAddress: host,
-                Port: port,
-                Logger: logger,
-                AccessLog: [],
-              )
-              watcher.stop
-            rescue ShopifyCLI::API::APIRequestNotFoundError
-              @ctx.abort(@ctx.message("theme.pull.theme_not_found", "##{theme.id}"))
-            end
+          def todo.shutdown
+            puts "TODO: Call 'shutdown' method on syncer"
           end
 
-          def stop
-            @ctx.puts("Stopping…")
-            @app.close
-            WebServer.shutdown
-          end
+          todo
+        end
 
-          private
-
-          def logger
-            if @ctx.debug?
-              WEBrick::Log.new(nil, WEBrick::BasicLog::INFO)
-            else
-              WEBrick::Log.new(nil, WEBrick::BasicLog::FATAL)
-            end
+        def theme
+          @theme ||= if identifier
+            theme = ShopifyCLI::Theme::Theme.find_by_identifier(ctx, root: root, identifier: identifier)
+            theme || ctx.abort(not_found_error_message)
+          else
+            HostTheme.find_or_create!(ctx)
           end
+        end
+
+        def extension
+          @extension ||= AppExtension.new(ctx, root: root, id: 1234)
+        end
+
+        def watcher
+          @watcher ||= Watcher.new(ctx, extension: extension, poll: poll)
+        end
+
+        def param_builder
+          @param_builder ||= ProxyParamBuilder.new
+            .new
+            .with_extension(extension)
+        end
+
+        def setup_server
+          ctx.puts(frame_title)
+          ctx.open_url!(address)
+          ctx.puts(preview_message)
+
+          watcher.start
+        end
+
+        def teardown_server
+          watcher.stop
+        end
+
+        # Messages
+
+        def frame_title
+          ctx.message("extension.serve.frame_title", root)
         end
       end
     end
