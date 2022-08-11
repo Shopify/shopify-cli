@@ -7,7 +7,7 @@ require_relative "remote_file_test_helper"
 
 module ShopifyCLI
   module Theme
-    module DevServer
+    class DevServer
       class HotReload
         class RemoteFileReloaderTest < RemoteFileTestHelper
           def setup

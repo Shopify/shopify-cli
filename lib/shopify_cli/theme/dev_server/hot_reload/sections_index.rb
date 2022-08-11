@@ -2,7 +2,7 @@
 
 module ShopifyCLI
   module Theme
-    module DevServer
+    class DevServer
       class HotReload
         class SectionsIndex
           def initialize(theme)

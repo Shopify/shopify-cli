@@ -4,7 +4,7 @@ require "shopify_cli/theme/dev_server"
 
 module ShopifyCLI
   module Theme
-    module DevServer
+    class DevServer
       class IntegrationTest < Minitest::Test
         include TestHelpers::FakeUI
 

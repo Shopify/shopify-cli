@@ -5,7 +5,7 @@ require "shopify_cli/theme/dev_server"
 
 module ShopifyCLI
   module Theme
-    module DevServer
+    class DevServer
       class RemoteWatcherTest < Minitest::Test
         def test_start
           thread_pool = mock
