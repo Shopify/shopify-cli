@@ -77,7 +77,7 @@ module ShopifyCLI
             @ctx.root = dir
             Git.clone("https://github.com/Shopify/dawn.git", dir)
 
-            syncer = Syncer.new(@ctx, theme: self)
+            syncer = ShopifyCLI::Theme::Syncer.new(@ctx, theme: self)
 
             begin
               syncer.start_threads

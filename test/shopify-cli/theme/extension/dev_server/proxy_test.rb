@@ -18,6 +18,7 @@ module ShopifyCLI
             @ctx = TestHelpers::FakeContext.new(root: @extension_root)
             @theme = HostTheme.new(@ctx)
             @extension = AppExtension.new(@ctx, root: @extension_root, id: 1234)
+            @syncer = stub(pending_updates: [])
 
             ShopifyCLI::DB.stubs(:exists?).with(:shop).returns(true)
             ShopifyCLI::DB
@@ -28,7 +29,7 @@ module ShopifyCLI
               .stubs(:get)
               .with(:host_theme_id)
               .returns("123456789")
-            @proxy = Proxy.new(@ctx, extension: @extension, theme: @theme)
+            @proxy = Proxy.new(@ctx, syncer: @syncer, extension: @extension, theme: @theme)
           end
 
           def test_pass_replace_templates_from_cookie_to_storefront
