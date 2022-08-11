@@ -11,7 +11,10 @@ module ShopifyCLI
           unless Environment.run_as_subprocess?
             if ctx.development? && !ctx.testing?
               ctx.warn(
-                ctx.message("core.warning.development_version", File.join(ShopifyCLI::ROOT, "bin", ShopifyCLI::TOOL_NAME))
+                ctx.message(
+                  "core.warning.development_version",
+                  File.join(ShopifyCLI::ROOT, "bin", ShopifyCLI::TOOL_NAME)
+                )
               )
               # because `!ctx.new_version.nil?` will change the config by calling ::Config.set
               # it's important to keep the checks in this order so that we don't trigger it while testing
