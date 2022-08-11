@@ -12,13 +12,7 @@ module ShopifyCLI
         private
 
         def cli_3_0_toml
-          curr = Dir.pwd
-          loop do
-            return nil if curr == "/" || /^[A-Z]:\/$/.match?(curr)
-            file = File.join(curr, "shopify.app.toml")
-            return curr if File.exist?(file)
-            curr = File.dirname(curr)
-          end
+          Utilities.directory("shopify.app.toml", Dir.pwd)
         end
       end
     end

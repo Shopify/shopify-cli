@@ -119,17 +119,8 @@ module ShopifyCLI
       private
 
       def directory(dir)
-        @dir ||= Hash.new { |h, k| h[k] = __directory(k) }
+        @dir ||= Hash.new { |h, k| h[k] = Utilities.directory(".shopify-cli.yml", k) }
         @dir[dir]
-      end
-
-      def __directory(curr)
-        loop do
-          return nil if curr == "/" || /^[A-Z]:\/$/.match?(curr)
-          file = File.join(curr, ".shopify-cli.yml")
-          return curr if File.exist?(file)
-          curr = File.dirname(curr)
-        end
       end
     end
 
