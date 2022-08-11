@@ -7,7 +7,7 @@ require "timecop"
 
 module ShopifyCLI
   module Theme
-    module DevServer
+    class DevServer
       class ProxyTest < Minitest::Test
         SECURE_SESSION_ID = "deadbeef"
 

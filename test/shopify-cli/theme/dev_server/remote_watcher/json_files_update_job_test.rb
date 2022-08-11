@@ -5,7 +5,7 @@ require "shopify_cli/theme/dev_server/remote_watcher/json_files_update_job"
 
 module ShopifyCLI
   module Theme
-    module DevServer
+    class DevServer
       class RemoteWatcher
         class JsonFilesUpdateJobTest < Minitest::Test
           def setup

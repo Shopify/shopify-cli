@@ -2,7 +2,7 @@
 
 module ShopifyCLI
   module Theme
-    module DevServer
+    class DevServer
       class HotReload
         class RemoteFileReloader
           def initialize(ctx, theme:, streams:)

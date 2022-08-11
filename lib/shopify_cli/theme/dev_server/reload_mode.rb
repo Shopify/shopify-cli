@@ -2,7 +2,7 @@
 
 module ShopifyCLI
   module Theme
-    module DevServer
+    class DevServer
       class ReloadMode
         MODES = [:"hot-reload", :"full-page", :off]
 

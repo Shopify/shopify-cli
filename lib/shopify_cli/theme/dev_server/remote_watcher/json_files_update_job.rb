@@ -4,7 +4,7 @@ require "shopify_cli/thread_pool/job"
 
 module ShopifyCLI
   module Theme
-    module DevServer
+    class DevServer
       class RemoteWatcher
         class JsonFilesUpdateJob < ShopifyCLI::ThreadPool::Job
           def initialize(theme, syncer, interval)

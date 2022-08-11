@@ -5,7 +5,7 @@ require "shopify_cli/theme/dev_server"
 
 module ShopifyCLI
   module Theme
-    module DevServer
+    class DevServer
       class ReloadModeTest < Minitest::Test
         def test_default
           assert_equal :"hot-reload", ReloadMode.default
