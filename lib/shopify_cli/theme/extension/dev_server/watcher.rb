@@ -12,9 +12,13 @@ module ShopifyCLI
 
           def_delegators :@listener, :add_observer, :changed, :notify_observers
 
-          def initialize(ctx, extension:, poll: false)
+          def initialize(ctx, extension:, syncer:, poll: false)
             @ctx = ctx
-            @listener = FileSystemListener.new(root: extension.root.to_s, force_poll: poll, ignore_regex: nil)
+            @extension = extension
+            @syncer = syncer
+            @listener = FileSystemListener.new(root: @extension.root.to_s, force_poll: poll, ignore_regex: nil)
+
+            add_observer(self, :notify_updates)
           end
 
           def start
@@ -23,6 +27,18 @@ module ShopifyCLI
 
           def stop
             @listener.stop
+          end
+
+          def notify_updates(modified, added, _removed)
+            @syncer.enqueue_files(filter_extension_files(modified + added))
+          end
+
+          private
+
+          def filter_extension_files(files)
+            files
+              .select { |f| @extension.extension_file?(f) }
+              .map { |f| @extension[f] }
           end
         end
       end

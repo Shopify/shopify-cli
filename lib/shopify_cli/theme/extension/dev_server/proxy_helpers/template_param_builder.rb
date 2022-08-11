@@ -12,7 +12,7 @@ module ShopifyCLI
               # Core doesn't support replace_extension_templates
               return {} if core?(current_path)
 
-              request_templates
+              (request_templates + syncer_templates)
                 .select(&:liquid?)
                 .uniq(&:relative_path)
                 .map { |file| as_param(file) }
@@ -21,6 +21,11 @@ module ShopifyCLI
 
             def with_core_endpoints(core_endpoints)
               @core_endpoints = core_endpoints
+              self
+            end
+
+            def with_syncer(syncer)
+              @syncer = syncer
               self
             end
 
@@ -48,6 +53,10 @@ module ShopifyCLI
               cookie_files
                 .map { |file_path| @extension[file_path] unless @extension.nil? }
                 .compact
+            end
+
+            def syncer_templates
+              @syncer&.pending_updates || []
             end
 
             def cookie_files
