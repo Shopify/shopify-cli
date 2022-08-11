@@ -794,6 +794,9 @@ module ShopifyCLI
 
           in_3_0_directory: <<~MESSAGE,
             {{*}} {{yellow:You appear to be working with a CLI 3.0 project. Please use CLI 3.0 instead.}}
+
+              For more information on CLI 3.0, see the documentation:
+              {{underline:https://shopify.dev/apps/tools/cli}}
           MESSAGE
         },
         reporting: {
