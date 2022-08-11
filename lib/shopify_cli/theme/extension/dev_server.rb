@@ -16,7 +16,7 @@ require_relative "syncer"
 module ShopifyCLI
   module Theme
     module Extension
-      module DevServer
+      class DevServer < ShopifyCLI::Theme::DevServer
         class << self
           attr_accessor :ctx
 
