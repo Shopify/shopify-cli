@@ -1,17 +1,13 @@
 # frozen_string_literal: true
 
-require_relative "../../dev_server/local_assets_base"
+require "shopify_cli/theme/dev_server/local_assets"
 
 module ShopifyCLI
   module Theme
     module Extension
       module DevServer
-        class LocalAssets < ShopifyCLI::Theme::DevServer::LocalAssetsBase
+        class LocalAssets < ShopifyCLI::Theme::DevServer::LocalAssets
           TAE_ASSET_REGEX = %r{(http:|https:)?//cdn\.shopify\.com/extensions/.+?/(assets/.+?\.(?:css|js))}
-
-          def initialize(ctx, app, extension:)
-            super(ctx, app, target: extension)
-          end
 
           private
 

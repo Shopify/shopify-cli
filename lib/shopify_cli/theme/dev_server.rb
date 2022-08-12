@@ -1,23 +1,24 @@
 # frozen_string_literal: true
+
+require "pathname"
+
+require_relative "dev_server/cdn_fonts"
+require_relative "dev_server/certificate_manager"
+require_relative "dev_server/errors"
+require_relative "dev_server/header_hash"
+require_relative "dev_server/hot_reload"
+require_relative "dev_server/local_assets"
+require_relative "dev_server/proxy_param_builder"
+require_relative "dev_server/proxy"
+require_relative "dev_server/reload_mode"
+require_relative "dev_server/remote_watcher"
+require_relative "dev_server/sse"
+require_relative "dev_server/watcher"
+require_relative "dev_server/web_server"
+
 require_relative "development_theme"
 require_relative "ignore_filter"
 require_relative "syncer"
-
-require_relative "dev_server/cdn_fonts"
-require_relative "dev_server/errors"
-require_relative "dev_server/hot_reload"
-require_relative "dev_server/header_hash"
-require_relative "dev_server/reload_mode"
-require_relative "dev_server/local_assets"
-require_relative "dev_server/proxy_helpers/template_param_builder"
-require_relative "dev_server/proxy"
-require_relative "dev_server/watcher"
-require_relative "dev_server/sse"
-require_relative "dev_server/remote_watcher"
-require_relative "dev_server/web_server"
-require_relative "dev_server/certificate_manager"
-
-require "pathname"
 
 module ShopifyCLI
   module Theme
@@ -34,11 +35,12 @@ module ShopifyCLI
             stable: stable)
           watcher = Watcher.new(ctx, theme: theme, ignore_filter: ignore_filter, syncer: @syncer, poll: poll)
           remote_watcher = RemoteWatcher.to(theme: theme, syncer: @syncer)
+          param_builder = ProxyParamBuilder.new.with_theme(theme).with_syncer(@syncer)
 
           # Setup the middleware stack. Mimics Rack::Builder / config.ru, but in reverse order
-          @app = Proxy.new(ctx, theme: theme, syncer: @syncer)
+          @app = Proxy.new(ctx, theme, param_builder)
           @app = CdnFonts.new(@app, theme: theme)
-          @app = LocalAssets.new(ctx, @app, theme: theme)
+          @app = LocalAssets.new(ctx, @app, theme)
           @app = HotReload.new(ctx, @app, theme: theme, watcher: watcher, mode: mode, ignore_filter: ignore_filter)
           stopped = false
           address = "http://#{host}:#{port}"

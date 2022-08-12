@@ -1,24 +1,17 @@
 # frozen_string_literal: true
 
-require_relative "../dev_server"
-require_relative "dev_server/app_extensions"
-require_relative "../dev_server/web_server"
-
-require "shopify_cli/theme/app_extension"
-require "shopify_cli/theme/extension/host_theme"
 require "pathname"
 
-require_relative "../development_theme"
-require_relative "../dev_server/hot_reload"
-require_relative "../dev_server/reload_mode"
+require "shopify_cli/theme/app_extension"
+require "shopify_cli/theme/dev_server"
+require "shopify_cli/theme/extension/host_theme"
+require "shopify_cli/theme/syncer"
+
+require_relative "dev_server/app_extensions"
 require_relative "dev_server/local_assets"
-require_relative "dev_server/proxy"
-require_relative "../dev_server/sse"
-require_relative "../dev_server/cdn_fonts"
+require_relative "dev_server/proxy_param_builder"
 require_relative "dev_server/watcher"
-require_relative "../dev_server/web_server"
-require_relative "../dev_server/certificate_manager"
-require_relative "../dev_server/header_hash"
+
 require_relative "syncer"
 
 module ShopifyCLI
@@ -28,6 +21,11 @@ module ShopifyCLI
         class << self
           attr_accessor :ctx
 
+          Proxy = ShopifyCLI::Theme::DevServer::Proxy
+          HotReload = ShopifyCLI::Theme::DevServer::HotReload
+          ReloadMode = ShopifyCLI::Theme::DevServer::ReloadMode
+          WebServer = ShopifyCLI::Theme::DevServer::WebServer
+
           def start(ctx, root, host: "127.0.0.1", _theme: nil, port: 9292, poll: false)
             @ctx = ctx
 
@@ -36,11 +34,12 @@ module ShopifyCLI
             @syncer = Syncer.new(@ctx, extension: @extension)
             logger = WEBrick::Log.new(nil, WEBrick::BasicLog::INFO)
             watcher = Watcher.new(@ctx, syncer: @syncer, extension: @extension, poll: poll)
+            param_builder = ProxyParamBuilder.new.with_extension(@extension).with_syncer(@syncer)
 
-            @app = Proxy.new(@ctx, syncer: @syncer, extension: @extension, theme: @theme)
-            @app = LocalAssets.new(@ctx, @app, extension: @extension)
-            @app = ShopifyCLI::Theme::DevServer::HotReload.new(@ctx, @app, theme: @theme, watcher: watcher,
-              mode: ShopifyCLI::Theme::DevServer::ReloadMode.default,
+            @app = Proxy.new(@ctx, @theme, param_builder)
+            @app = LocalAssets.new(@ctx, @app, @extension)
+            @app = HotReload.new(@ctx, @app, theme: @theme, watcher: watcher,
+              mode: ReloadMode.default,
               extension: @extension)
             address = "http://#{host}:#{port}"
 
@@ -62,7 +61,7 @@ module ShopifyCLI
               ctx.open_url!(address)
               ctx.puts(preview_message)
               watcher.start
-              ShopifyCLI::Theme::DevServer::WebServer.run(
+              WebServer.run(
                 @app,
                 BindAddress: host,
                 Port: port,
@@ -79,7 +78,7 @@ module ShopifyCLI
             @ctx.puts("Stopping…")
             @app.close
             @syncer.shutdown
-            ShopifyCLI::Theme::DevServer::WebServer.shutdown
+            WebServer.shutdown
           end
 
           private
