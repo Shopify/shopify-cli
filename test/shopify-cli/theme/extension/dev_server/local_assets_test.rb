@@ -139,7 +139,7 @@ module ShopifyCLI
             root = ShopifyCLI::ROOT + "/test/fixtures/extension"
             ctx = TestHelpers::FakeContext.new(root: root)
             extension = AppExtension.new(ctx, root: root, id: 1234)
-            stack = LocalAssets.new(ctx, app, extension: extension)
+            stack = LocalAssets.new(ctx, app, extension)
             request = Rack::MockRequest.new(stack)
             request.get(path)
           end
