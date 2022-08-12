@@ -1,6 +1,7 @@
 # frozen_string_literal: true
 
 require "pathname"
+require "singleton"
 
 require_relative "dev_server/cdn_fonts"
 require_relative "dev_server/certificate_manager"
@@ -22,110 +23,238 @@ require_relative "syncer"
 
 module ShopifyCLI
   module Theme
-    module DevServer
+    class DevServer
+      include Singleton
+
+      attr_reader :app, :stopped, :ctx, :root, :host, :theme_identifier, :port, :poll, :editor_sync, :stable, :mode,
+        :block
+
       class << self
-        attr_accessor :ctx
-
-        def start(ctx, root, host: "127.0.0.1", theme: nil, port: 9292, poll: false, editor_sync: false,
-          mode: ReloadMode.default, stable: false)
-          @ctx = ctx
-          theme = find_theme(root, theme)
-          ignore_filter = IgnoreFilter.from_path(root)
-          @syncer = Syncer.new(ctx, theme: theme, ignore_filter: ignore_filter, overwrite_json: !editor_sync,
-            stable: stable)
-          watcher = Watcher.new(ctx, theme: theme, ignore_filter: ignore_filter, syncer: @syncer, poll: poll)
-          remote_watcher = RemoteWatcher.to(theme: theme, syncer: @syncer)
-          param_builder = ProxyParamBuilder.new.with_theme(theme).with_syncer(@syncer)
-
-          # Setup the middleware stack. Mimics Rack::Builder / config.ru, but in reverse order
-          @app = Proxy.new(ctx, theme, param_builder)
-          @app = CdnFonts.new(@app, theme: theme)
-          @app = LocalAssets.new(ctx, @app, theme)
-          @app = HotReload.new(ctx, @app, theme: theme, watcher: watcher, mode: mode, ignore_filter: ignore_filter)
-          stopped = false
-          address = "http://#{host}:#{port}"
-
-          trap("INT") do
-            stopped = true
-            stop
-          end
-
-          CLI::UI::Frame.open(@ctx.message("theme.serve.viewing_theme")) do
-            ctx.print_task(ctx.message("theme.serve.syncing_theme", theme.id, theme.shop))
-            @syncer.start_threads
-            if block_given?
-              yield @syncer
-            else
-              @syncer.upload_theme!(delay_low_priority_files: true)
-            end
-
-            return if stopped
-
-            preview_suffix = editor_sync ? "" : ctx.message("theme.serve.download_changes")
-            preview_message = ctx.message(
-              "theme.serve.customize_or_preview",
-              preview_suffix,
-              theme.editor_url,
-              theme.preview_url
-            )
-
-            ctx.puts(ctx.message("theme.serve.serving", theme.root))
-            ctx.open_url!(address)
-            ctx.puts(preview_message)
-          end
-
-          logger = if ctx.debug?
-            WEBrick::Log.new(nil, WEBrick::BasicLog::INFO)
-          else
-            WEBrick::Log.new(nil, WEBrick::BasicLog::FATAL)
-          end
-
-          watcher.start
-          remote_watcher.start if editor_sync
-          WebServer.run(
-            @app,
-            BindAddress: host,
-            Port: port,
-            Logger: logger,
-            AccessLog: [],
-          )
-          remote_watcher.stop if editor_sync
-          watcher.stop
-
-        rescue ShopifyCLI::API::APIRequestForbiddenError,
-               ShopifyCLI::API::APIRequestUnauthorizedError
-          shop = ShopifyCLI::AdminAPI.get_shop_or_abort(@ctx)
-          raise ShopifyCLI::Abort, @ctx.message("theme.serve.ensure_user", shop)
-        rescue Errno::EADDRINUSE
-          error_message = @ctx.message("theme.serve.address_already_in_use", address)
-          help_message = @ctx.message("theme.serve.try_port_option")
-          @ctx.abort(error_message, help_message)
-        rescue Errno::EADDRNOTAVAIL
-          raise AddressBindingError, "Error binding to the address #{host}."
+        def start(
+          ctx,
+          root,
+          host: "127.0.0.1",
+          theme: nil,
+          port: 9292,
+          poll: false,
+          editor_sync: false,
+          stable: false,
+          mode: ReloadMode.default,
+          &block
+        )
+          instance.setup(ctx, root, host, theme, port, poll, editor_sync, stable, mode, &block)
+          instance.start
         end
 
         def stop
-          @ctx.puts("Stopping…")
-          @app.close
-          @syncer.shutdown
-          WebServer.shutdown
+          instance.stop
         end
+      end
 
-        private
+      # rubocop:disable Metrics/ParameterLists
+      def setup(ctx, root, host, theme_identifier, port, poll, editor_sync, stable, mode, &block)
+        @ctx = ctx
+        @root = root
+        @host = host
+        @theme_identifier = theme_identifier
+        @port = port
+        @poll = poll
+        @editor_sync = editor_sync
+        @stable = stable
+        @mode = mode
+        @block = block
+      end
 
-        def find_theme(root, identifier)
-          return theme_by_identifier(root, identifier) if identifier
-          DevelopmentTheme.find_or_create!(@ctx, root: root)
+      def start
+        sync_theme
+
+        # Handle process stop
+        trap("INT") { stop }
+
+        # Setup the middleware stack. Mimics Rack::Builder / config.ru, but in reverse order
+        @app = middleware_stack
+
+        # Start development server
+        setup_server
+        start_server
+        teardown_server
+
+      rescue ShopifyCLI::API::APIRequestForbiddenError,
+             ShopifyCLI::API::APIRequestUnauthorizedError
+        ctx.abort(ensure_user_message)
+      rescue Errno::EADDRINUSE
+        ctx.abort(port_error_message, port_error_help_message)
+      rescue Errno::EADDRNOTAVAIL
+        ctx.abort(binding_error_message)
+      end
+
+      def stop
+        @stopped = true
+
+        ctx.puts(stopping_message)
+        app.close
+        WebServer.shutdown
+      end
+
+      private
+
+      def setup_server
+        watcher.start
+        remote_watcher.start if editor_sync
+      end
+
+      def teardown_server
+        # Use instance variables, so we don't build components
+        # at the teardown phase.
+        @remote_watcher&.stop if editor_sync
+        @watcher&.stop
+        @syncer&.shutdown
+      end
+
+      def start_server
+        WebServer.run(
+          app,
+          BindAddress: host,
+          Port: port,
+          Logger: logger,
+          AccessLog: [],
+        )
+      end
+
+      def middleware_stack
+        @app = Proxy.new(ctx, theme, param_builder)
+        @app = CdnFonts.new(@app, theme: theme)
+        @app = LocalAssets.new(ctx, @app, theme)
+        @app = HotReload.new(ctx, @app, theme: theme, watcher: watcher, mode: mode, ignore_filter: ignore_filter)
+      end
+
+      def sync_theme
+        CLI::UI::Frame.open(viewing_theme_message) do
+          ctx.print_task(syncing_theme_message)
+          syncer.start_threads
+
+          if block
+            block.call(syncer)
+          else
+            syncer.upload_theme!(delay_low_priority_files: true)
+          end
+
+          return if stopped
+
+          ctx.puts(serving_theme_message)
+          ctx.open_url!(address)
+          ctx.open_browser_url!(address)
+          ctx.puts(preview_message)
         end
+      end
 
-        def theme_by_identifier(root, identifier)
-          theme = ShopifyCLI::Theme::Theme.find_by_identifier(@ctx, root: root, identifier: identifier)
-          theme || not_found_error(identifier)
-        end
+      def ignore_filter
+        @ignore_filter ||= IgnoreFilter.from_path(root)
+      end
 
-        def not_found_error(identifier)
-          @ctx.abort(@ctx.message("theme.serve.theme_not_found", identifier))
+      def theme
+        @theme ||= if theme_identifier
+          theme = ShopifyCLI::Theme::Theme.find_by_identifier(ctx, root: root, identifier: theme_identifier)
+          theme || ctx.abort(not_found_error_message)
+        else
+          DevelopmentTheme.find_or_create!(ctx, root: root)
         end
+      end
+
+      def syncer
+        @syncer ||= Syncer.new(
+          ctx,
+          theme: theme,
+          ignore_filter: ignore_filter,
+          overwrite_json: !editor_sync,
+          stable: stable
+        )
+      end
+
+      def watcher
+        @watcher ||= Watcher.new(
+          ctx,
+          theme: theme,
+          ignore_filter: ignore_filter,
+          syncer: syncer,
+          poll: poll
+        )
+      end
+
+      def remote_watcher
+        @remote_watcher ||= RemoteWatcher.to(
+          theme: theme,
+          syncer: syncer
+        )
+      end
+
+      def param_builder
+        @param_builder ||= ProxyParamBuilder
+          .new
+          .with_theme(theme)
+          .with_syncer(syncer)
+      end
+
+      def logger
+        @logger ||= if ctx.debug?
+          WEBrick::Log.new(nil, WEBrick::BasicLog::INFO)
+        else
+          WEBrick::Log.new(nil, WEBrick::BasicLog::FATAL)
+        end
+      end
+
+      def address
+        @address ||= "http://#{host}:#{port}"
+      end
+
+      # Messages
+
+      def ensure_user_message
+        shop = ShopifyCLI::AdminAPI.get_shop_or_abort(ctx)
+        ctx.message("theme.serve.ensure_user", shop)
+      end
+
+      def port_error_message
+        ctx.message("theme.serve.address_already_in_use", address)
+      end
+
+      def port_error_help_message
+        ctx.message("theme.serve.try_port_option")
+      end
+
+      def binding_error_message
+        ctx.message("theme.serve.binding_error", ShopifyCLI::TOOL_NAME)
+      end
+
+      def viewing_theme_message
+        ctx.message("theme.serve.viewing_theme")
+      end
+
+      def syncing_theme_message
+        ctx.message("theme.serve.syncing_theme", theme.id, theme.shop)
+      end
+
+      def serving_theme_message
+        ctx.message("theme.serve.serving", theme.root)
+      end
+
+      def stopping_message
+        ctx.message("theme.serve.stopping")
+      end
+
+      def not_found_error_message
+        ctx.message("theme.serve.theme_not_found", theme_identifier)
+      end
+
+      def preview_message
+        preview_suffix = editor_sync ? "" : ctx.message("theme.serve.download_changes")
+
+        ctx.message(
+          "theme.serve.customize_or_preview",
+          preview_suffix,
+          theme.editor_url,
+          theme.preview_url
+        )
       end
     end
   end

@@ -10,85 +10,73 @@ require "shopify_cli/theme/syncer"
 require_relative "dev_server/local_assets"
 require_relative "dev_server/proxy_param_builder"
 require_relative "dev_server/watcher"
-
 require_relative "syncer"
 
 module ShopifyCLI
   module Theme
     module Extension
       class DevServer < ShopifyCLI::Theme::DevServer
-        class << self
-          attr_accessor :ctx
+        Proxy = ShopifyCLI::Theme::DevServer::Proxy
+        CdnFonts = ShopifyCLI::Theme::DevServer::CdnFonts
+        HotReload = ShopifyCLI::Theme::DevServer::HotReload
 
-          Proxy = ShopifyCLI::Theme::DevServer::Proxy
-          HotReload = ShopifyCLI::Theme::DevServer::HotReload
-          ReloadMode = ShopifyCLI::Theme::DevServer::ReloadMode
-          WebServer = ShopifyCLI::Theme::DevServer::WebServer
+        private
 
-          def start(ctx, root, host: "127.0.0.1", _theme: nil, port: 9292, poll: false)
-            @ctx = ctx
+        def middleware_stack
+          @app = Proxy.new(ctx, theme, param_builder)
+          @app = CdnFonts.new(@app, theme: theme)
+          @app = LocalAssets.new(ctx, @app, extension)
+          @app = HotReload.new(ctx, @app, theme: theme, watcher: watcher, mode: mode, extension: extension)
+        end
 
-            @theme = HostTheme.find_or_create!(@ctx)
-            @extension = AppExtension.new(@ctx, root: root, id: 1234)
-            @syncer = Syncer.new(@ctx, extension: @extension)
-            logger = WEBrick::Log.new(nil, WEBrick::BasicLog::INFO)
-            watcher = Watcher.new(@ctx, syncer: @syncer, extension: @extension, poll: poll)
-            param_builder = ProxyParamBuilder.new.with_extension(@extension).with_syncer(@syncer)
+        def sync_theme
+          # Ensures the host theme exists
+          !!theme
+        end
 
-            @app = Proxy.new(@ctx, @theme, param_builder)
-            @app = LocalAssets.new(@ctx, @app, @extension)
-            @app = HotReload.new(@ctx, @app, theme: @theme, watcher: watcher,
-              mode: ReloadMode.default,
-              extension: @extension)
-            address = "http://#{host}:#{port}"
+        def syncer
+          @syncer ||= Syncer.new(ctx, extension: extension)
+        end
 
-            trap("INT") do
-              stop
-            end
+        def theme
+          @theme ||= if theme_identifier
+            theme = ShopifyCLI::Theme::Theme.find_by_identifier(ctx, identifier: theme_identifier)
+            theme || ctx.abort(not_found_error_message)
+          else
+            HostTheme.find_or_create!(ctx)
+          end
+        end
 
-            begin
-              @syncer.start
-              preview_suffix = ctx.message("theme.serve.download_changes")
-              preview_message = ctx.message(
-                "theme.serve.customize_or_preview",
-                preview_suffix,
-                @theme.editor_url,
-                @theme.preview_url
-              )
+        def extension
+          @extension ||= AppExtension.new(ctx, root: root, id: 1234)
+        end
 
-              ctx.puts(ctx.message("extension.serve.frame_title", root))
-              ctx.open_url!(address)
-              ctx.puts(preview_message)
-              watcher.start
-              WebServer.run(
-                @app,
-                BindAddress: host,
-                Port: port,
-                Logger: logger,
-                AccessLog: [],
-              )
-              watcher.stop
-            rescue ShopifyCLI::API::APIRequestNotFoundError
-              @ctx.abort(@ctx.message("theme.pull.theme_not_found", "##{theme.id}"))
-            end
+        def watcher
+          @watcher ||= Watcher.new(ctx, syncer: syncer, extension: extension, poll: poll)
+        end
+
+        def param_builder
+          @param_builder ||= ProxyParamBuilder
+            .new
+            .with_extension(extension)
+            .with_syncer(syncer)
+        end
+
+        def setup_server
+          CLI::UI::Frame.open(frame_title, color: :magenta, timing: nil) do
+            # TODO: https://github.com/Shopify/shopify-cli/issues/2538
+            ctx.open_url!(address)
+            ctx.puts(preview_message)
           end
 
-          def stop
-            @ctx.puts("Stopping…")
-            @app.close
-            @syncer.shutdown
-            WebServer.shutdown
-          end
+          watcher.start
+          syncer.start
+        end
 
-          private
+        # Messages
 
-          def logger
-            if @ctx.debug?
-              WEBrick::Log.new(nil, WEBrick::BasicLog::INFO)
-            else
-              WEBrick::Log.new(nil, WEBrick::BasicLog::FATAL)
-            end
-          end
+        def frame_title
+          ctx.message("serve.frame_title", root)
         end
       end
     end

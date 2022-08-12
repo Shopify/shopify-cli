@@ -31,9 +31,6 @@ module Theme
         ShopifyCLI::Theme::DevServer.start(@ctx, root, host: host, **flags) do |syncer|
           UI::SyncProgressBar.new(syncer).progress(:upload_theme!, delay_low_priority_files: true)
         end
-      rescue ShopifyCLI::Theme::DevServer::AddressBindingError
-        raise ShopifyCLI::Abort,
-          ShopifyCLI::Context.message("theme.serve.error.address_binding_error", ShopifyCLI::TOOL_NAME)
       end
 
       def self.as_reload_mode(mode)

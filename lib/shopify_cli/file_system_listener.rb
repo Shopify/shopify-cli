@@ -19,6 +19,8 @@ module ShopifyCLI
 
     def start
       @listener.start
+    rescue ArgumentError
+      # Ignore errors during the transition of 'listen' events
     end
 
     def stop

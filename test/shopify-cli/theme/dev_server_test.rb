@@ -5,12 +5,92 @@ require "shopify_cli/theme/dev_server"
 module ShopifyCLI
   module Theme
     class DevServerTest < Minitest::Test
-      def setup
-        super
-        @ctx = ShopifyCLI::Context.new
-        @theme = stub(
+      def test_middleware_stack
+        server = dev_server
+        server.stubs(:theme).returns(stub)
+        server.stubs(:syncer)
+        server.stubs(:watcher)
+
+        middleware_sequence = sequence("middleware sequence")
+
+        DevServer::Proxy.expects(:new).in_sequence(middleware_sequence)
+        DevServer::CdnFonts.expects(:new).in_sequence(middleware_sequence)
+        DevServer::LocalAssets.expects(:new).in_sequence(middleware_sequence)
+        DevServer::HotReload.expects(:new).in_sequence(middleware_sequence)
+
+        server.send(:middleware_stack)
+      end
+
+      def test_theme_when_theme_does_not_exist
+        Theme
+          .expects(:find_by_identifier)
+          .with(ctx, root: root, identifier: theme.id)
+          .returns(nil)
+
+        error = assert_raises(CLI::Kit::Abort) do
+          dev_server(identifier: theme.id).send(:theme)
+        end
+        assert_equal("{{x}} Theme \"1234\" doesn't exist", error.message)
+      end
+
+      def test_theme_with_valid_theme_id
+        Theme
+          .expects(:find_by_identifier)
+          .with(ctx, root: root, identifier: theme.id)
+          .returns(theme)
+
+        dev_server(identifier: theme.id).send(:theme)
+      end
+
+      def test_theme_with_valid_theme_name
+        Theme
+          .expects(:find_by_identifier)
+          .with(ctx, root: root, identifier: theme.name)
+          .returns(theme)
+
+        dev_server(identifier: theme.name).send(:theme)
+      end
+
+      def test_finds_or_creates_a_dev_theme_when_no_theme_specified
+        Theme
+          .expects(:find_by_identifier).never
+        DevelopmentTheme
+          .expects(:find_or_create!)
+          .with(ctx, root: root).once
+
+        dev_server.send(:theme)
+      end
+
+      def teardown
+        TestHelpers::Singleton.reset_singleton!(dev_server)
+      end
+
+      private
+
+      def dev_server(identifier: nil)
+        host, port, poll, editor_sync, stable, mode = nil
+        server = DevServer.instance
+        server.setup(ctx, root, host, identifier, port, poll, editor_sync, stable, mode)
+        server
+      end
+
+      def ctx
+        @ctx ||= ShopifyCLI::Context.new.tap do |context|
+          context.stubs(:message).returns("default mock")
+          context.stubs(:message)
+            .with("theme.serve.theme_not_found", 1234)
+            .returns("Theme \"1234\" doesn't exist")
+        end
+      end
+
+      def root
+        "."
+      end
+
+      def theme
+        @theme ||= stub(
           "Dev Server Testing",
-          root: ".",
+          root: root,
           id: 1234,
           name: "DevServer Test",
           shop: "test.myshopify.io",
@@ -18,54 +98,6 @@ module ShopifyCLI
           preview_url: "https://test.myshopify.io/preview",
           live?: false,
         )
-        ShopifyCLI::Theme::DevServer.ctx = @ctx
-      end
-
-      def test_abort_when_invalid_theme
-        ShopifyCLI::Theme::Theme
-          .expects(:find_by_identifier)
-          .with(@ctx, root: @theme.root, identifier: @theme.id)
-          .returns(nil)
-
-        error = assert_raises CLI::Kit::Abort do
-          simulate_server(@theme.root, @theme.id)
-        end
-        assert_equal("{{x}} Theme \"1234\" doesn't exist", error.message)
-      end
-
-      def test_works_with_valid_theme_id
-        ShopifyCLI::Theme::Theme
-          .expects(:find_by_identifier)
-          .with(@ctx, root: @theme.root, identifier: @theme.id)
-          .returns(@theme)
-
-        simulate_server(@theme.root, @theme.id)
-      end
-
-      def test_works_with_valid_theme_name
-        ShopifyCLI::Theme::Theme
-          .expects(:find_by_identifier)
-          .with(@ctx, root: @theme.root, identifier: @theme.name)
-          .returns(@theme)
-
-        simulate_server(@theme.root, @theme.name)
-      end
-
-      def test_finds_or_creates_a_dev_theme_when_no_theme_specified
-        ShopifyCLI::Theme::Theme
-          .expects(:find_by_identifier).never
-        ShopifyCLI::Theme::DevelopmentTheme
-          .expects(:find_or_create!)
-          .with(@ctx, root: ".").once
-
-        simulate_server
-      end
-
-      private
-
-      def simulate_server(root = ".", identifier = nil)
-        ShopifyCLI::Theme::DevServer
-          .send(:find_theme, root, identifier)
       end
     end
   end
