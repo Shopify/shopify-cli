@@ -5,15 +5,27 @@ module ShopifyCLI
     module EntryPoint
       class << self
         def call(args, ctx = Context.new)
-          if ctx.development? && !ctx.testing?
-            ctx.warn(
-              ctx.message("core.warning.development_version", File.join(ShopifyCLI::ROOT, "bin", ShopifyCLI::TOOL_NAME))
-            )
-          # because `!ctx.new_version.nil?` will change the config by calling ::Config.set
-          # it's important to keep the checks in this order so that we don't trigger it while testing
-          # since changing the config will throw errors
-          elsif !ctx.testing? && !ctx.new_version.nil? && !Environment.run_as_subprocess?
-            ctx.warn(ctx.message("core.warning.new_version", ShopifyCLI::VERSION, ctx.new_version))
+          # Only instruct the user to update the CLI, or warn them that they're
+          # using CLI2 not CLI3, if they're running CLI2 directly. Otherwise the
+          # warnings will be confusing and/or incorrect.
+          unless Environment.run_as_subprocess?
+            if ctx.development? && !ctx.testing?
+              ctx.warn(
+                ctx.message(
+                  "core.warning.development_version",
+                  File.join(ShopifyCLI::ROOT, "bin", ShopifyCLI::TOOL_NAME)
+                )
+              )
+              # because `!ctx.new_version.nil?` will change the config by calling ::Config.set
+              # it's important to keep the checks in this order so that we don't trigger it while testing
+              # since changing the config will throw errors
+            elsif !ctx.testing? && !ctx.new_version.nil?
+              ctx.warn(ctx.message("core.warning.new_version", ShopifyCLI::VERSION, ctx.new_version))
+            end
+
+            if ShopifyCLI::Core::CliVersion.using_3_0?
+              ctx.warn(ctx.message("core.warning.in_3_0_directory"))
+            end
           end
 
           ProjectType.load_all

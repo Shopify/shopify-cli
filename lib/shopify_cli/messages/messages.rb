@@ -791,6 +791,16 @@ module ShopifyCLI
               {{underline:https://shopify.dev/tools/cli/troubleshooting#upgrade-shopify-cli}}}}
 
           MESSAGE
+
+          in_3_0_directory: <<~MESSAGE,
+            {{*}} {{yellow:You appear to be working with a CLI 3.0 project, but running a CLI 2.0 command. New syntax documentation: https://shopify.dev/apps/tools/cli/commands#command-syntax}}
+
+              For more information on CLI 3.0, see the documentation:
+              {{underline:https://shopify.dev/apps/tools/cli}}
+
+              Already have CLI 3.0 installed? Run it using your node package manager, as explained here:
+              {{underline:https://shopify.dev/apps/tools/cli/cli-2#running-shopify-cli-2-x-and-3-x-in-the-same-environment}}
+          MESSAGE
         },
         reporting: {
           help: <<~HELP,
