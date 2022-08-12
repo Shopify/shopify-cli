@@ -27,7 +27,7 @@ module Extension
           current_size = 0
           current_liquid_size = 0
           Dir.chdir(context.root) do
-            Dir["**/*"].select { |filename| File.file?(filename) && validate(filename) }
+            Dir["**/*"].select { |filename| File.file?(filename) && validate_filename(filename) }
               .map do |filename|
                 dirname = File.dirname(filename)
                 if dirname == "assets"
@@ -57,6 +57,7 @@ module Extension
               .yield_self do |encoded_files_by_name|
                 { "theme_extension" => { "files" => encoded_files_by_name.to_h } }
               end
+              .tap { |config| validate_config(config) }
           end
         end
 
@@ -78,7 +79,7 @@ module Extension
 
         private
 
-        def validate(filename)
+        def validate_filename(filename)
           dirname = File.dirname(filename)
           # Skip files in the root of the directory tree
           return false if dirname == "."
@@ -103,6 +104,20 @@ module Extension
               "Invalid filename: #{filename}; Only .liquid allowed in #{dirname}"
           end
           true
+        end
+
+        def validate_config(config)
+          # Check that if we have any non-default locale files, that we also have a corresponding default
+          all_locale_files = config["theme_extension"]["files"].map { |f, _| f }.select { |f| File.dirname(f) == "locales" }
+
+          all_locale_files.partition { |f| f.end_with?(".schema.json") }.each do |locale_files|
+            default_count, nondefault_count = locale_files.partition { |f| f.include?(".default.") }.map(&:count)
+            if default_count > 1
+              raise Extension::Errors::ExtensionError, "Too many default locale files: #{locale_files.join(", ")}"
+            elsif nondefault_count > 0 && default_count == 0
+              raise Extension::Errors::ExtensionError, "Missing default locale file for #{locale_files.first}"
+            end
+          end
         end
       end
     end

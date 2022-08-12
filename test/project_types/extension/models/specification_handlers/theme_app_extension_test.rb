@@ -155,6 +155,23 @@ module Extension
           end
         end
 
+        def test_missing_locale_default
+          write("locales/en.json", "{}")
+          error = assert_raises Extension::Errors::ExtensionError do
+            @spec.config(@context)
+          end
+          assert_equal "Missing default locale file for locales/en.json", error.message
+        end
+
+        def test_too_many_default_locales
+          write("locales/en.default.json", "{}")
+          write("locales/fr.default.json", "{}")
+          error = assert_raises Extension::Errors::ExtensionError do
+            @spec.config(@context)
+          end
+          assert_equal "Too many default locale files: locales/en.default.json, locales/fr.default.json", error.message
+        end
+
         private
 
         def write(filename, content, mode: "w", encoding: "utf-8")
