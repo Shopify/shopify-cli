@@ -92,7 +92,7 @@ describe Script::Layers::Infrastructure::ScriptProjectRepository do
 
     let(:title) { "title" }
     let(:description) { "#{extension_point_type} default script" }
-    let(:extension_point_type) { "payment_methods" }
+    let(:extension_point_type) { "order_discounts" }
     let(:language) { "wasm" }
     let(:uuid) { "uuid" }
     let(:script_config) { "script.config.yml" }
@@ -115,7 +115,7 @@ describe Script::Layers::Infrastructure::ScriptProjectRepository do
     end
     let(:valid_config) do
       config = {
-        "extension_point_type" => "payment_methods",
+        "extension_point_type" => "order_discounts",
         "title" => title,
         "description" => description,
         "script_config" => script_config,
