@@ -7,7 +7,6 @@ require "shopify_cli/theme/dev_server"
 require "shopify_cli/theme/extension/host_theme"
 require "shopify_cli/theme/syncer"
 
-require_relative "dev_server/app_extensions"
 require_relative "dev_server/local_assets"
 require_relative "dev_server/proxy_param_builder"
 require_relative "dev_server/watcher"
