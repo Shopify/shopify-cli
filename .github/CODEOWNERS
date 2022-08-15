@@ -1,5 +1,5 @@
 *       @shopify/core-build-learn
-*       @shopify/development-lifecycle
+*       @shopify/cli-foundations
 
 /lib/project_types/script/ @shopify/scripts-platform
 /test/project_types/script/ @shopify/scripts-platform
