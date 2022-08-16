@@ -1,14 +1,3 @@
-payment_methods:
-  domain: 'checkout'
-  libraries:
-    typescript:
-      beta: true
-      package: "@shopify/scripts-checkout-apis"
-      repo: "https://github.com/Shopify/function-examples"
-    wasm:
-      repo: "https://github.com/Shopify/function-examples"
-    rust:
-      repo: "https://github.com/Shopify/function-examples"
 payment_customization:
   beta: true
   domain: 'checkout'
@@ -20,10 +9,6 @@ payment_customization:
 shipping_methods:
   domain: 'checkout'
   libraries:
-    typescript:
-      beta: true
-      package: "@shopify/scripts-checkout-apis"
-      repo: "https://github.com/Shopify/function-examples"
     wasm:
       repo: "https://github.com/Shopify/function-examples"
     rust:
