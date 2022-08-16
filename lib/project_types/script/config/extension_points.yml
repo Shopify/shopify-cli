@@ -58,3 +58,9 @@ shipping_rates_consolidation:
   libraries:
     wasm:
       repo: "https://github.com/Shopify/function-examples"
+merchandising_line_items_merge:
+  beta: true
+  domain: 'checkout'
+  libraries:
+    wasm:
+      repo: "https://github.com/Shopify/function-examples"
