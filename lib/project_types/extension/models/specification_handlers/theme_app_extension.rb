@@ -75,7 +75,6 @@ module Extension
 
         def serve(**options)
           @ctx = options[:context]
-          # port = options[:port]
           root = options[:context]&.root
 
           ShopifyCLI::Theme::Extension::DevServer.start(@ctx, root)

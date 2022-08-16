@@ -155,6 +155,26 @@ module Extension
           end
         end
 
+        def test_choose_port_returns_false
+          refute @spec.choose_port?(@context)
+        end
+
+        def test_establish_tunnel_returns_false
+          refute @spec.establish_tunnel?(@context)
+        end
+
+        def test_serve_calls_extension_dev_server_with_context
+          ShopifyCLI::Theme::Extension::DevServer.expects(:start).with(@context, @context.root)
+
+          @spec.serve(context: @context)
+        end
+
+        def test_serve_calls_extension_dev_server_with_nil_when_no_context
+          ShopifyCLI::Theme::Extension::DevServer.expects(:start).with(nil, nil)
+
+          @spec.serve
+        end
+
         private
 
         def write(filename, content, mode: "w", encoding: "utf-8")
