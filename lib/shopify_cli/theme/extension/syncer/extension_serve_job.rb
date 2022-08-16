@@ -12,6 +12,8 @@ module ShopifyCLI
           PUSH_INTERVAL = 5 # seconds
 
           RESPONSE_FIELD = %w(data extensionUpdateDraft)
+          VERSION_FIELD = "extensionVersion"
+          USER_ERRORS_FIELD = "userErrors"
 
           def initialize(ctx, syncer:, extension:)
             super(POLL_FREQUENCY)
@@ -44,11 +46,13 @@ module ShopifyCLI
               extension_context: specification_handler.extension_context(@ctx),
             }
             response = ShopifyCLI::PartnersAPI.query(@ctx, "extension_update_draft", **input).dig(*RESPONSE_FIELD)
+            user_errors = response.dig(USER_ERRORS_FIELD)
 
-            if response["userErrors"].nil?
-              @ctx.done("Synced Extension")
+            if user_errors
+              @ctx.error("ERROR: #{user_errors.first["message"]}")
             else
-              @ctx.error("ERROR: #{response["userErrors"].first["message"]}")
+              @ctx.done("Synced Extension")
+              ::Extension::Tasks::Converters::VersionConverter.from_hash(@ctx, response.dig(VERSION_FIELD))
             end
 
             @mut.synchronize do

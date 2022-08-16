@@ -75,10 +75,17 @@ module Extension
 
         def serve(**options)
           @ctx = options[:context]
-          # port = options[:port]
           root = options[:context]&.root
 
-          ShopifyCLI::Theme::Extension::DevServer.start(@ctx, root)
+          project = Extension::Loaders::Project.load(
+            context: @ctx,
+            directory: Dir.pwd,
+            api_key: nil,
+            api_secret: nil,
+            registration_id: nil
+          )
+
+          ShopifyCLI::Theme::Extension::DevServer.start(@ctx, root, extension: project.registration_id)
         end
 
         private

@@ -25,11 +25,11 @@ module ShopifyCLI
           ReloadMode = ShopifyCLI::Theme::DevServer::ReloadMode
           WebServer = ShopifyCLI::Theme::DevServer::WebServer
 
-          def start(ctx, root, host: "127.0.0.1", _theme: nil, port: 9292, poll: false)
+          def start(ctx, root, extension:, host: "127.0.0.1", _theme: nil, port: 9292, poll: false)
             @ctx = ctx
 
             @theme = HostTheme.find_or_create!(@ctx)
-            @extension = AppExtension.new(@ctx, root: root, id: 1234)
+            @extension = AppExtension.new(@ctx, root: root, id: extension)
             @syncer = Syncer.new(@ctx, extension: @extension)
             logger = WEBrick::Log.new(nil, WEBrick::BasicLog::INFO)
             watcher = Watcher.new(@ctx, syncer: @syncer, extension: @extension, poll: poll)
