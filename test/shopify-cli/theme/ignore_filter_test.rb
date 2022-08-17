@@ -56,7 +56,7 @@ module ShopifyCLI
 
         assert_equal(IgnoreFilter::DEFAULT_REGEXES, filter.regexes)
         assert_equal(IgnoreFilter::DEFAULT_GLOBS, filter.globs)
-        
+
         refute_includes(filter.globs, "*config/settings_data.json")
         refute_includes(filter.globs, "*.jpg")
         refute_includes(filter.regexes, /\.(txt|gif|bat)$/)
