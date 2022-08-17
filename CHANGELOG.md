@@ -3,6 +3,7 @@ From version 2.6.0, the sections in this file adhere to the [keep a changelog](h
 ## [Unreleased]
 
 ### Added
+* [#2550](https://github.com/Shopify/shopify-cli/pull/2550): Added option flag `--no-ignore`/`-e` to `theme push` and `theme pull` commands to skip loading the `.shopifyignore` file
 * [#2520](https://github.com/Shopify/shopify-cli/pull/2520): Add the option to ignore new version warnings by passing the `SHOPIFY_CLI_RUN_AS_SUBPROCESS` environment variable
 * [#2440](https://github.com/Shopify/shopify-cli/pull/2440): Warn when using CLI 2.0 in a CLI 3.0 project
 
