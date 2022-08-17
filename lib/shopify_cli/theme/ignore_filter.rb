@@ -29,10 +29,10 @@ module ShopifyCLI
 
       attr_reader :root, :globs, :regexes
 
-      def self.from_path(root)
+      def self.from_path(root, load_ignore_file = true)
         root = Pathname.new(root)
-        ignore_file = root.join(FILE)
-        patterns = if ignore_file.file?
+        ignore_file = load_ignore_file != false ? root.join(FILE) : nil
+        patterns = if ignore_file&.file?
           parse_ignore_file(ignore_file)
         else
           []

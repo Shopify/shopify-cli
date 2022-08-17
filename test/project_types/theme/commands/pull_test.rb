@@ -22,7 +22,7 @@ module Theme
         @ignore_filter = mock("IgnoreFilter")
         @include_filter = mock("IncludeFilter")
 
-        ShopifyCLI::Theme::IgnoreFilter.stubs(:from_path).with(".").returns(@ignore_filter)
+        ShopifyCLI::Theme::IgnoreFilter.stubs(:from_path).with(".", nil).returns(@ignore_filter)
         ShopifyCLI::Theme::IncludeFilter.stubs(:new).returns(@include_filter)
       end
 
@@ -51,7 +51,7 @@ module Theme
           .with(@ctx, root: ".", identifier: 1234)
           .returns(@theme)
 
-        ShopifyCLI::Theme::IgnoreFilter.expects(:from_path).with(".").returns(@ignore_filter)
+        ShopifyCLI::Theme::IgnoreFilter.expects(:from_path).with(".", nil).returns(@ignore_filter)
 
         ShopifyCLI::Theme::Syncer.expects(:new)
           .with(@ctx, theme: @theme, include_filter: @include_filter, ignore_filter: @ignore_filter)
@@ -72,7 +72,7 @@ module Theme
           .with(@ctx, root: ".", identifier: "Test theme")
           .returns(@theme)
 
-        ShopifyCLI::Theme::IgnoreFilter.expects(:from_path).with(".").returns(@ignore_filter)
+        ShopifyCLI::Theme::IgnoreFilter.expects(:from_path).with(".", nil).returns(@ignore_filter)
 
         ShopifyCLI::Theme::Syncer.expects(:new)
           .with(@ctx, theme: @theme, include_filter: @include_filter, ignore_filter: @ignore_filter)
@@ -93,7 +93,7 @@ module Theme
           .with(@ctx, root: "dist", identifier: 1234)
           .returns(@theme)
 
-        ShopifyCLI::Theme::IgnoreFilter.expects(:from_path).with("dist").returns(@ignore_filter)
+        ShopifyCLI::Theme::IgnoreFilter.expects(:from_path).with("dist", nil).returns(@ignore_filter)
 
         ShopifyCLI::Theme::Syncer.expects(:new)
           .with(@ctx, theme: @theme, include_filter: @include_filter, ignore_filter: @ignore_filter)
@@ -135,7 +135,7 @@ module Theme
           .with(@ctx, root: ".")
           .returns(@theme)
 
-        ShopifyCLI::Theme::IgnoreFilter.expects(:from_path).with(".").returns(@ignore_filter)
+        ShopifyCLI::Theme::IgnoreFilter.expects(:from_path).with(".", nil).returns(@ignore_filter)
 
         ShopifyCLI::Theme::Syncer.expects(:new)
           .with(@ctx, theme: @theme, include_filter: @include_filter, ignore_filter: @ignore_filter)
@@ -219,7 +219,7 @@ module Theme
         @ignore_filter.expects(:add_patterns).with(["config/*"])
 
         ShopifyCLI::Theme::IgnoreFilter.expects(:from_path)
-          .with(".")
+          .with(".", nil)
           .returns(@ignore_filter)
         ShopifyCLI::Theme::Syncer.expects(:new)
           .with(@ctx, theme: @theme, include_filter: @include_filter, ignore_filter: @ignore_filter)
@@ -234,6 +234,30 @@ module Theme
 
         @command.options.flags[:theme] = 1234
         @command.options.flags[:ignores] = ["config/*"]
+        @command.call([], "pull")
+      end
+
+      def test_pull_with_no_ignore
+        ShopifyCLI::Theme::Theme.expects(:find_by_identifier)
+          .with(@ctx, root: ".", identifier: 1234)
+          .returns(@theme)
+
+        ShopifyCLI::Theme::IgnoreFilter.expects(:from_path)
+          .with(".", false)
+          .returns(@ignore_filter)
+        ShopifyCLI::Theme::Syncer.expects(:new)
+          .with(@ctx, theme: @theme, include_filter: @include_filter, ignore_filter: @ignore_filter)
+          .returns(@syncer)
+
+        @syncer.expects(:start_threads)
+        @syncer.expects(:shutdown)
+
+        @syncer.expects(:download_theme!).with(delete: true)
+
+        @ctx.expects(:done)
+
+        @command.options.flags[:theme] = 1234
+        @command.options.flags[:load_ignore_file] = false
         @command.call([], "pull")
       end
 

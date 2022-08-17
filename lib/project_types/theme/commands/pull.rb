@@ -32,6 +32,7 @@ module Theme
           flags[:ignores] ||= []
           flags[:ignores] |= pattern
         end
+        parser.on("-e", "--noignore") { flags[:load_ignore_file] = false }
       end
 
       def call(_args, name)
@@ -41,7 +42,7 @@ module Theme
         return if theme.nil?
 
         include_filter = ShopifyCLI::Theme::IncludeFilter.new(root, options.flags[:includes])
-        ignore_filter = ShopifyCLI::Theme::IgnoreFilter.from_path(root)
+        ignore_filter = ShopifyCLI::Theme::IgnoreFilter.from_path(root, options.flags[:load_ignore_file])
         ignore_filter.add_patterns(options.flags[:ignores]) if options.flags[:ignores]
 
         syncer = ShopifyCLI::Theme::Syncer.new(@ctx, theme: theme,

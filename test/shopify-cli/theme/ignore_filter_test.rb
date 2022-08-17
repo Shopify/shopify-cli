@@ -51,6 +51,17 @@ module ShopifyCLI
         refute_includes(filter.globs, "*")
       end
 
+      def test_from_path_no_ignore_file
+        filter = IgnoreFilter.from_path("#{ShopifyCLI::ROOT}/test/fixtures/theme", false)
+
+        assert_equal(IgnoreFilter::DEFAULT_REGEXES, filter.regexes)
+        assert_equal(IgnoreFilter::DEFAULT_GLOBS, filter.globs)
+        
+        refute_includes(filter.globs, "*config/settings_data.json")
+        refute_includes(filter.globs, "*.jpg")
+        refute_includes(filter.regexes, /\.(txt|gif|bat)$/)
+      end
+
       def test_patterns_to_regexes_and_globs
         tests = [
           { pattern: "config/settings_data.json", glob: "*config/settings_data.json" },

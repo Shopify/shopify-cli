@@ -25,7 +25,7 @@ module Theme
         @ignore_filter = mock("IgnoreFilter")
         @include_filter = mock("IncludeFilter")
 
-        ShopifyCLI::Theme::IgnoreFilter.stubs(:from_path).with(".").returns(@ignore_filter)
+        ShopifyCLI::Theme::IgnoreFilter.stubs(:from_path).with(".", nil).returns(@ignore_filter)
         ShopifyCLI::Theme::IncludeFilter.stubs(:new).returns(@include_filter)
       end
 
@@ -54,7 +54,7 @@ module Theme
           .with(@ctx, root: ".", identifier: 1234)
           .returns(@theme)
 
-        ShopifyCLI::Theme::IgnoreFilter.expects(:from_path).with(".").returns(@ignore_filter)
+        ShopifyCLI::Theme::IgnoreFilter.expects(:from_path).with(".", nil).returns(@ignore_filter)
 
         ShopifyCLI::Theme::Syncer.expects(:new)
           .with(@ctx, theme: @theme, include_filter: @include_filter, ignore_filter: @ignore_filter, stable: nil)
@@ -75,7 +75,7 @@ module Theme
           .with(@ctx, root: ".", identifier: 1234)
           .returns(@theme)
 
-        ShopifyCLI::Theme::IgnoreFilter.expects(:from_path).with(".").returns(@ignore_filter)
+        ShopifyCLI::Theme::IgnoreFilter.expects(:from_path).with(".", nil).returns(@ignore_filter)
 
         ShopifyCLI::Theme::Syncer.expects(:new)
           .with(@ctx, theme: @theme, include_filter: @include_filter, ignore_filter: @ignore_filter, stable: true)
@@ -97,7 +97,7 @@ module Theme
           .with(@ctx, root: "dist", identifier: 1234)
           .returns(@theme)
 
-        ShopifyCLI::Theme::IgnoreFilter.expects(:from_path).with("dist").returns(@ignore_filter)
+        ShopifyCLI::Theme::IgnoreFilter.expects(:from_path).with("dist", nil).returns(@ignore_filter)
 
         ShopifyCLI::Theme::Syncer.expects(:new)
           .with(@ctx, theme: @theme, include_filter: @include_filter, ignore_filter: @ignore_filter, stable: nil)
@@ -120,7 +120,7 @@ module Theme
           .with(@ctx, root: ".", identifier: "Test theme")
           .returns(@theme)
 
-        ShopifyCLI::Theme::IgnoreFilter.expects(:from_path).with(".").returns(@ignore_filter)
+        ShopifyCLI::Theme::IgnoreFilter.expects(:from_path).with(".", nil).returns(@ignore_filter)
 
         ShopifyCLI::Theme::Syncer.expects(:new)
           .with(@ctx, theme: @theme, include_filter: @include_filter, ignore_filter: @ignore_filter, stable: nil)
@@ -366,7 +366,7 @@ module Theme
           .with(@ctx, root: ".", identifier: 1234)
           .returns(@theme)
 
-        ShopifyCLI::Theme::IgnoreFilter.expects(:from_path).with(".").returns(@ignore_filter)
+        ShopifyCLI::Theme::IgnoreFilter.expects(:from_path).with(".", nil).returns(@ignore_filter)
         @ignore_filter.expects(:add_patterns).with(["config/*"])
 
         ShopifyCLI::Theme::Syncer.expects(:new)
@@ -381,6 +381,28 @@ module Theme
 
         @command.options.flags[:theme] = 1234
         @command.options.flags[:ignores] = ["config/*"]
+        @command.call([], "push")
+      end
+
+      def test_push_with_no_ignore
+        ShopifyCLI::Theme::Theme.expects(:find_by_identifier)
+          .with(@ctx, root: ".", identifier: 1234)
+          .returns(@theme)
+
+        ShopifyCLI::Theme::IgnoreFilter.expects(:from_path).with(".", false).returns(@ignore_filter)
+
+        ShopifyCLI::Theme::Syncer.expects(:new)
+          .with(@ctx, theme: @theme, include_filter: @include_filter, ignore_filter: @ignore_filter, stable: nil)
+          .returns(@syncer)
+
+        @syncer.expects(:start_threads)
+        @syncer.expects(:shutdown)
+
+        @syncer.expects(:upload_theme!).with(delete: true)
+        @ctx.expects(:done)
+
+        @command.options.flags[:theme] = 1234
+        @command.options.flags[:load_ignore_file] = false
         @command.call([], "push")
       end
 
@@ -433,7 +455,7 @@ module Theme
 
         CLI::UI::Prompt.expects(:ask).never
 
-        ShopifyCLI::Theme::IgnoreFilter.expects(:from_path).with(".").returns(@ignore_filter)
+        ShopifyCLI::Theme::IgnoreFilter.expects(:from_path).with(".", nil).returns(@ignore_filter)
 
         ShopifyCLI::Theme::Syncer.expects(:new)
           .with(@ctx, theme: @theme, include_filter: @include_filter, ignore_filter: @ignore_filter, stable: nil)
