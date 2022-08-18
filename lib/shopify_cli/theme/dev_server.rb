@@ -16,6 +16,8 @@ require_relative "dev_server/remote_watcher"
 require_relative "dev_server/sse"
 require_relative "dev_server/watcher"
 require_relative "dev_server/web_server"
+require_relative "dev_server/hooks/file_change_hook"
+require_relative "dev_server/hooks/reload_js_hook"
 
 require_relative "development_theme"
 require_relative "ignore_filter"
@@ -125,7 +127,8 @@ module ShopifyCLI
         @app = Proxy.new(ctx, theme, param_builder)
         @app = CdnFonts.new(@app, theme: theme)
         @app = LocalAssets.new(ctx, @app, theme)
-        @app = HotReload.new(ctx, @app, theme: theme, watcher: watcher, mode: mode, ignore_filter: ignore_filter)
+        @app = HotReload.new(ctx, @app, broadcast_hooks: broadcast_hooks, watcher: watcher, mode: mode,
+          js_hook: js_hook)
       end
 
       def sync_theme
@@ -201,6 +204,17 @@ module ShopifyCLI
         else
           WEBrick::Log.new(nil, WEBrick::BasicLog::FATAL)
         end
+      end
+
+      # Hooks
+
+      def broadcast_hooks
+        file_handler = Hooks::FileChangeHook.new(ctx, theme: theme, ignore_filter: ignore_filter)
+        [file_handler]
+      end
+
+      def js_hook
+        Hooks::ReloadJSHook.new(ctx, theme: theme)
       end
 
       def address
