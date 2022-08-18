@@ -138,6 +138,7 @@ module Theme
           viewing_theme: "Viewing theme…",
           syncing_theme: "Syncing theme #%s on %s",
           open_fail: "Couldn't open the theme",
+          stopping: "Stopping…",
           auth: {
             error_message: <<~ERROR_MESSAGE,
               It looks like you are using credentials that do not work with {{command:%s theme serve}}.
@@ -230,8 +231,6 @@ module Theme
             },
           },
           error: {
-            address_binding_error: "Couldn't bind to localhost."\
-              " To serve your theme, set a different address with {{command:%s theme serve --host=<address>}}",
             invalid_subdirectory: <<~MESSAGE,
               The presence of %s in the directory structure isn't supported.
 
@@ -262,6 +261,8 @@ module Theme
           ENSURE_USER
           address_already_in_use: "The address \"%s\" is already in use.",
           try_port_option: "Use the --port=PORT option to serve the theme in a different port.",
+          binding_error: "Couldn't bind to localhost." \
+            " To serve your theme, set a different address with {{command:%s theme serve --host=<address>}}",
         },
         check: {
           help: <<~HELP,

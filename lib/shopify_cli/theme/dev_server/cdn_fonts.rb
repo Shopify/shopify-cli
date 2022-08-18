@@ -2,7 +2,7 @@
 
 module ShopifyCLI
   module Theme
-    module DevServer
+    class DevServer
       class CdnFonts
         FONTS_PATH = "/fonts"
         FONTS_CDN = "https://fonts.shopifycdn.com"

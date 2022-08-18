@@ -4,7 +4,7 @@ require "cgi"
 
 module ShopifyCLI
   module Theme
-    module DevServer
+    class DevServer
       class ProxyParamBuilder
         def build
           # Core doesn't support replace_templates

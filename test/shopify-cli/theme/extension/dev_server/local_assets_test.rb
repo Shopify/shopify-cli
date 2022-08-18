@@ -6,7 +6,7 @@ require "rack/mock"
 module ShopifyCLI
   module Theme
     module Extension
-      module DevServer
+      class DevServer
         class LocalAssetsTest < Minitest::Test
           def test_replace_correct_extension_asset_when_same_name
             skip # TODO: remove skip once id checks are working

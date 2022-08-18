@@ -6,7 +6,7 @@ require "rack/mock"
 
 module ShopifyCLI
   module Theme
-    module DevServer
+    class DevServer
       class LocalAssetsTest < Minitest::Test
         def test_replace_local_assets_in_reponse_body
           original_html = <<~HTML

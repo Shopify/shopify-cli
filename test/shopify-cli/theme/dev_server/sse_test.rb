@@ -4,7 +4,7 @@ require "shopify_cli/theme/dev_server/sse"
 
 module ShopifyCLI
   module Theme
-    module DevServer
+    class DevServer
       class SSETest < Minitest::Test
         def test_broadcast_events
           streams = SSE::Streams.new

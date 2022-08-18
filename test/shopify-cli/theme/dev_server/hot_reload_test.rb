@@ -7,7 +7,7 @@ require "rack/mock"
 
 module ShopifyCLI
   module Theme
-    module DevServer
+    class DevServer
       class HotReloadTest < Minitest::Test
         def setup
           super

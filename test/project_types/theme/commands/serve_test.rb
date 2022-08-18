@@ -20,17 +20,6 @@ module Theme
         run_serve_command
       end
 
-      def test_serve_command_raises_abort_when_cant_bind_address
-        ShopifyCLI::Theme::DevServer
-          .expects(:start)
-          .with(@ctx, ".", host: Theme::Command::Serve::DEFAULT_HTTP_HOST)
-          .raises(ShopifyCLI::Theme::DevServer::AddressBindingError)
-
-        assert_raises ShopifyCLI::Abort do
-          run_serve_command
-        end
-      end
-
       def test_can_specify_bind_address
         ShopifyCLI::Theme::DevServer.expects(:start).with(@ctx, ".", host: "0.0.0.0")
 

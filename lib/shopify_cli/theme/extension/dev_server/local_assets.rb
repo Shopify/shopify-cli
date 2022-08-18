@@ -5,7 +5,7 @@ require "shopify_cli/theme/dev_server/local_assets"
 module ShopifyCLI
   module Theme
     module Extension
-      module DevServer
+      class DevServer < ShopifyCLI::Theme::DevServer
         class LocalAssets < ShopifyCLI::Theme::DevServer::LocalAssets
           TAE_ASSET_REGEX = %r{(http:|https:)?//cdn\.shopify\.com/extensions/.+?/(assets/.+?\.(?:css|js))}
 
