@@ -5,7 +5,7 @@ require "stringio"
 
 module ShopifyCLI
   module Theme
-    module DevServer
+    class DevServer
       # WEBrick will sometimes cause a fatal deadlock error on shutdown.
       # The error happens because `Thread#join` is called without a timeout argument.
       # We monkey-patch WEBrick to call `Thread#join(timeout)` before the existing

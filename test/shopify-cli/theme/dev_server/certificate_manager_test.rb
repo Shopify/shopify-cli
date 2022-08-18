@@ -4,7 +4,7 @@ require "shopify_cli/theme/dev_server"
 
 module ShopifyCLI
   module Theme
-    module DevServer
+    class DevServer
       class CertificateManagerTest < Minitest::Test
         def test_find_or_create_certificates!
           ctx = TestHelpers::FakeContext.new

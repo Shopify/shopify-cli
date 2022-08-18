@@ -6,7 +6,7 @@ require_relative "hot_reload/sections_index"
 
 module ShopifyCLI
   module Theme
-    module DevServer
+    class DevServer
       class HotReload
         def initialize(ctx, app, theme:, watcher:, mode:, ignore_filter: nil, extension: nil)
           @ctx = ctx

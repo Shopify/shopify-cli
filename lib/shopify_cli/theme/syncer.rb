@@ -371,10 +371,16 @@ module ShopifyCLI
       end
 
       def parse_api_errors(operation, exception)
-        parsed_body = if exception&.response&.is_a?(Hash)
-          exception&.response&.[](:body)
-        else
-          JSON.parse(exception&.response&.body)
+        parsed_body = {}
+
+        if exception.respond_to?(:response)
+          response = exception.response
+
+          parsed_body = if response&.is_a?(Hash)
+            response&.[](:body)
+          else
+            JSON.parse(response&.body)
+          end
         end
 
         errors = parsed_body.dig("errors") # either nil or another type

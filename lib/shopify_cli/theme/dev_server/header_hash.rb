@@ -2,7 +2,7 @@
 
 module ShopifyCLI
   module Theme
-    module DevServer
+    class DevServer
       # Based on Rack::HeaderHash
       class HeaderHash < Hash
         def self.[](headers)

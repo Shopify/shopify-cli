@@ -3,7 +3,7 @@ require "thread"
 
 module ShopifyCLI
   module Theme
-    module DevServer
+    class DevServer
       # Server-Sent events implementation for Rack.
       # Based on https://gist.github.com/raggi/ff7971991297e5c8a1ce
       class SSE

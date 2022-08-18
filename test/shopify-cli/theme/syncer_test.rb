@@ -800,6 +800,16 @@ module ShopifyCLI
         assert_equal(result, expected_result)
       end
 
+      def test_parse_api_errors_wiht_a_standard_errors
+        operation = stub(file: "package.json", method: "update")
+        error = Errno::EADDRINUSE.new
+
+        actual_result = @syncer.send(:parse_api_errors, operation, error)
+        expected_result = ["Address already in use"]
+
+        assert_equal(expected_result, actual_result)
+      end
+
       private
 
       def time_freeze(&block)

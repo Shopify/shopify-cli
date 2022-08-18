@@ -5,7 +5,7 @@ require "rack/mock"
 
 module ShopifyCLI
   module Theme
-    module DevServer
+    class DevServer
       class CdnFontsTest < Minitest::Test
         def test_replace_local_assistant_n4_font_in_reponse_body
           original_html = <<~HTML

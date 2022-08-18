@@ -6,7 +6,7 @@ require_relative "remote_watcher/json_files_update_job"
 
 module ShopifyCLI
   module Theme
-    module DevServer
+    class DevServer
       class RemoteWatcher
         SYNC_INTERVAL = 3 # seconds
 
