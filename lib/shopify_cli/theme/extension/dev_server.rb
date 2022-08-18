@@ -10,6 +10,8 @@ require "shopify_cli/theme/syncer"
 require_relative "dev_server/local_assets"
 require_relative "dev_server/proxy_param_builder"
 require_relative "dev_server/watcher"
+require_relative "dev_server/hooks/file_change_hook"
+require_relative "dev_server/hooks/reload_js_hook"
 require_relative "syncer"
 
 module ShopifyCLI
@@ -26,7 +28,8 @@ module ShopifyCLI
           @app = Proxy.new(ctx, theme, param_builder)
           @app = CdnFonts.new(@app, theme: theme)
           @app = LocalAssets.new(ctx, @app, extension)
-          @app = HotReload.new(ctx, @app, theme: theme, watcher: watcher, mode: mode, extension: extension)
+          @app = HotReload.new(ctx, @app, broadcast_hooks: broadcast_hooks, watcher: watcher, mode: mode,
+            js_hook: js_hook)
         end
 
         def sync_theme
@@ -71,6 +74,17 @@ module ShopifyCLI
 
           watcher.start
           syncer.start
+        end
+
+        # Hooks
+
+        def broadcast_hooks
+          file_handler = Hooks::FileChangeHook.new(ctx, extension: extension)
+          [file_handler]
+        end
+
+        def js_hook
+          Hooks::ReloadJSHook.new(ctx)
         end
 
         # Messages
