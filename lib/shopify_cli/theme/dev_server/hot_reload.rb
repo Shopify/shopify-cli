@@ -40,14 +40,14 @@ module ShopifyCLI
 
         def notify_streams_of_file_change(modified, added, removed)
           files = (modified + added)
-            .reject { |file| @ignore_filter&.ignore?(file) }
             .map { |file| @theme[file] }
+            .reject { |file| @ignore_filter&.ignore?(file.relative_path) }
 
           files -= liquid_css_files = files.select(&:liquid_css?)
 
           deleted_files = removed
-            .reject { |file| @ignore_filter&.ignore?(file) }
             .map { |file| @theme[file] }
+            .reject { |file| @ignore_filter&.ignore?(file.relative_path) }
 
           remote_delete(deleted_files) unless deleted_files.empty?
           reload_page(removed) unless deleted_files.empty?

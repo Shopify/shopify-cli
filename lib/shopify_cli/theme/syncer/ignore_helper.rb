@@ -10,7 +10,7 @@ module ShopifyCLI
         end
 
         def ignore_file?(file)
-          path = file.path
+          path = file.relative_path
           ignore_path?(path)
         end
 
