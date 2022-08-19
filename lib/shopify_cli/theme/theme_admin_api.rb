@@ -29,11 +29,11 @@ module ShopifyCLI
       end
 
       def get_shop_or_abort # rubocop:disable Naming/AccessorMethodName
-        ShopifyCLI::AdminAPI.get_shop_or_abort(@ctx)
+        api_client.get_shop_or_abort(@ctx)
       end
 
       def rest_request(**args)
-        status, body, response = ShopifyCLI::AdminAPI.rest_request(
+        status, body, response = api_client.rest_request(
           @ctx,
           shop: @shop,
           api_version: API_VERSION,
@@ -66,6 +66,13 @@ module ShopifyCLI
       end
 
       private
+
+      def api_client
+        @api_client ||= begin
+          theme_access_password = Environment.admin_auth_token&.start_with?("shptka_")
+          theme_access_password ? ShopifyCLI::ThemeAccessAPI : ShopifyCLI::AdminAPI
+        end
+      end
 
       def permission_error
         ensure_user_error = @ctx.message("theme.ensure_user_error", shop)
