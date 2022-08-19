@@ -62,6 +62,7 @@ module ShopifyCLI
         end
 
         def test_uploads_files_on_boot
+          skip("Causing flaky behavior in CI, need to revisit")
           start_server_and_wait_sync_files
 
           # Should upload all theme files except the ignored files
@@ -109,12 +110,14 @@ module ShopifyCLI
         end
 
         def test_serve_assets_locally
+          skip("Causing flaky behavior in CI, need to revisit")
           response = start_server_and_wait_sync_files
 
           refute_server_errors(response)
         end
 
         def test_address_already_in_use
+          skip("Causing flaky behavior in CI, need to revisit")
           start_server_and_wait_sync_files
 
           # Stub StandardReporter#report to keep test logs clean
@@ -133,6 +136,7 @@ module ShopifyCLI
         end
 
         def test_streams_hot_reload_events
+          skip("Causing flaky behavior in CI, need to revisit")
           start_server_and_wait_sync_files
 
           # Send the SSE request
@@ -155,6 +159,7 @@ module ShopifyCLI
         end
 
         def test_forbidden_error
+          skip("Causing flaky behavior in CI, need to revisit")
           root = "#{ShopifyCLI::ROOT}/test/fixtures/theme"
           ctx = TestHelpers::FakeContext.new(root: root)
           error_message = "error message"
