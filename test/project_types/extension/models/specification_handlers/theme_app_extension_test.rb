@@ -164,7 +164,9 @@ module Extension
         end
 
         def test_serve_calls_extension_dev_server_with_context
-          ShopifyCLI::Theme::Extension::DevServer.expects(:start).with(@context, @context.root)
+          ShopifyCLI::Theme::Extension::DevServer.expects(:start).with do |ctx, root, flags|
+            ctx == @context && root == @context.root && [nil, {}].include?(flags)
+          end
 
           @spec.serve(context: @context)
         end
@@ -182,7 +184,9 @@ module Extension
         end
 
         def test_serve_calls_extension_dev_server_with_nil_when_no_context
-          ShopifyCLI::Theme::Extension::DevServer.expects(:start).with(nil, nil)
+          ShopifyCLI::Theme::Extension::DevServer.expects(:start).with do |ctx, root, flags|
+            ctx.nil? && root.nil? && [nil, {}].include?(flags)
+          end
 
           @spec.serve
         end
