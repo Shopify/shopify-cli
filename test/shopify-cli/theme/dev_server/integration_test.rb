@@ -65,12 +65,7 @@ module ShopifyCLI
           start_server_and_wait_sync_files
 
           # Should upload all theme files except the ignored files
-          ignored_files = [
-            "config.yml",
-            "super_secret.json",
-            "settings_data.json",
-            "ignores_file",
-          ]
+          ignored_files = %w[config.yml super_secret.json settings_data.json ignores_file]
           theme_root = "#{ShopifyCLI::ROOT}/test/fixtures/theme"
 
           Pathname.new(theme_root).glob("**/*").each do |file|
