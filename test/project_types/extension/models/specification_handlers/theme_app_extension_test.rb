@@ -169,6 +169,18 @@ module Extension
           @spec.serve(context: @context)
         end
 
+        def test_serve_calls_extension_dev_server_with_port
+          ShopifyCLI::Theme::Extension::DevServer.expects(:start).with(@context, @context.root, port: 9192)
+
+          @spec.serve(context: @context, port: 9192)
+        end
+
+        def test_serve_calls_extension_dev_server_with_theme
+          ShopifyCLI::Theme::Extension::DevServer.expects(:start).with(@context, @context.root, theme: "1234")
+
+          @spec.serve(context: @context, theme: "1234")
+        end
+
         def test_serve_calls_extension_dev_server_with_nil_when_no_context
           ShopifyCLI::Theme::Extension::DevServer.expects(:start).with(nil, nil)
 
