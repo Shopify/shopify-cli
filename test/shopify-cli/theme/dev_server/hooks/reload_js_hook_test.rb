@@ -36,14 +36,24 @@ module ShopifyCLI
               })();
             JS
 
-            reload_js = ::File.read(
-              ::File.expand_path("lib/shopify_cli/theme/dev_server/hot-reload-theme.js", ShopifyCLI::ROOT)
+            hot_reload_js = ::File.read(
+              ::File.expand_path("lib/shopify_cli/theme/dev_server/hot_reload/resources/hot_reload.js",
+                ShopifyCLI::ROOT)
+            )
+            theme_js = ::File.read(
+              ::File.expand_path("lib/shopify_cli/theme/dev_server/hot_reload/resources/theme.js", ShopifyCLI::ROOT)
+            )
+            sse_client_js = ::File.read(
+              ::File.expand_path("lib/shopify_cli/theme/dev_server/hot_reload/resources/sse_client.js",
+                ShopifyCLI::ROOT)
             )
             hot_reload_no_script = ::File.read(
-              ::File.expand_path("lib/shopify_cli/theme/dev_server/hot-reload-no-script.html", ShopifyCLI::ROOT)
+              ::File.expand_path("lib/shopify_cli/theme/dev_server/hot_reload/resources/hot-reload-no-script.html",
+                ShopifyCLI::ROOT)
             )
 
-            injected_script = "<script>\n#{params_js}\n#{reload_js}\n</script>"
+            injected_script = "<script>\n#{params_js}\n#{hot_reload_js}\n" \
+              "#{sse_client_js}\n#{theme_js}\n</script>"
 
             expected_html = <<~HTML
               <html>
