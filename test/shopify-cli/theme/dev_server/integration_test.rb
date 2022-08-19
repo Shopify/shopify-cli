@@ -54,7 +54,7 @@ module ShopifyCLI
           stub_sfr = stub_request(:get, "https://dev-theme-server-store.myshopify.com/?_fd=0&pb=0")
 
           start_server(port)
-          response = get(port,"/")
+          response = get(port, "/")
 
           refute_server_errors(response)
           assert_requested(stub_sfr)
