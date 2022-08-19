@@ -68,10 +68,7 @@ module ShopifyCLI
       private
 
       def api_client
-        @api_client ||= begin
-          theme_access_password = Environment.admin_auth_token&.start_with?("shptka_")
-          theme_access_password ? ShopifyCLI::ThemeAccessAPI : ShopifyCLI::AdminAPI
-        end
+        @api_client ||= Environment.theme_access_password? ? ShopifyCLI::ThemeAccessAPI : ShopifyCLI::AdminAPI
       end
 
       def permission_error
