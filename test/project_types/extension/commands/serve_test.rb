@@ -104,8 +104,21 @@ module Extension
 
         serve.specification_handler
           .expects(:serve)
-          .with(context: @context, tunnel_url: nil, port: 39351, resource_url: expected_resource_url)
+          .with(context: @context, tunnel_url: nil, port: 39351, theme: nil, resource_url: expected_resource_url)
         serve.options.flags[:resource_url] = expected_resource_url
+        serve.call([], "serve")
+      end
+
+      def test_theme_is_forwarded_to_specification_handler_if_one_is_provided
+        serve = ::Extension::Command::Serve.new(@context)
+        theme = "dev theme"
+        stub_specification_handler_options(serve, choose_port: true)
+
+        serve.specification_handler
+          .expects(:serve)
+          .with(context: @context, tunnel_url: nil, port: 39351, theme: theme, resource_url: nil)
+
+        serve.options.flags[:theme] = theme
         serve.call([], "serve")
       end
 

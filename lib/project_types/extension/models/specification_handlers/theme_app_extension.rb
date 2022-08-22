@@ -76,8 +76,9 @@ module Extension
         def serve(**options)
           @ctx = options[:context]
           root = options[:context]&.root
+          flags = options.slice(:port, :theme).compact
 
-          ShopifyCLI::Theme::Extension::DevServer.start(@ctx, root)
+          ShopifyCLI::Theme::Extension::DevServer.start(@ctx, root, **flags)
         end
 
         private
