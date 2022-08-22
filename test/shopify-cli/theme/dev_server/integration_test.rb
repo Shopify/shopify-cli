@@ -40,6 +40,7 @@ module ShopifyCLI
         end
 
         def test_proxy_to_sfr
+          puts __method__
           skip("Causing flaky behavior in CI, need to revisit")
           stub_request(:any, ASSETS_API_URL)
             .to_return(status: 200, body: "{}")
@@ -61,16 +62,16 @@ module ShopifyCLI
           assert_requested(stub_sfr)
         end
 
+        # 1. start the server
+        # 2. stub any requests to urls, make sure they return 200
+        # 3.
+
         def test_uploads_files_on_boot
+          puts __method__
           start_server_and_wait_sync_files
 
           # Should upload all theme files except the ignored files
-          ignored_files = [
-            "config.yml",
-            "super_secret.json",
-            "settings_data.json",
-            "ignores_file",
-          ]
+          ignored_files = %w[config.yml super_secret.json settings_data.json ignores_file]
           theme_root = "#{ShopifyCLI::ROOT}/test/fixtures/theme"
 
           Pathname.new(theme_root).glob("**/*").each do |file|
@@ -89,6 +90,7 @@ module ShopifyCLI
         end
 
         def test_uploads_files_on_modification
+          puts __method__
           skip("Causing flaky behavior in CI, need to revisit")
           start_server_and_wait_sync_files
 
@@ -114,12 +116,14 @@ module ShopifyCLI
         end
 
         def test_serve_assets_locally
+          puts __method__
           response = start_server_and_wait_sync_files
 
           refute_server_errors(response)
         end
 
         def test_address_already_in_use
+          puts __method__
           start_server_and_wait_sync_files
 
           # Stub StandardReporter#report to keep test logs clean
@@ -138,6 +142,7 @@ module ShopifyCLI
         end
 
         def test_streams_hot_reload_events
+          puts __method__
           start_server_and_wait_sync_files
 
           # Send the SSE request
@@ -160,6 +165,7 @@ module ShopifyCLI
         end
 
         def test_forbidden_error
+          puts __method__
           root = "#{ShopifyCLI::ROOT}/test/fixtures/theme"
           ctx = TestHelpers::FakeContext.new(root: root)
           error_message = "error message"
