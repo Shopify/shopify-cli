@@ -15,7 +15,7 @@ License: Distributable
 URL: https://shopify.github.io/shopify-cli
 # Make sure the spec template is included in the SRPM
 Source0: %{rbname}.spec.in
-Requires: ruby >= 2.6.0, git >= 2.13, make
+Requires: ruby >= 2.7.0, git >= 2.13, make
 BuildArch: noarch
 Provides: ruby(Shopify-cli) = %{version}
 

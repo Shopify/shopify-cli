@@ -15,7 +15,7 @@ Gem::Specification.new do |spec|
     and webhooks.
   HERE
   spec.homepage = "https://shopify.github.io/shopify-cli/"
-  spec.required_ruby_version = Gem::Requirement.new(">= 2.6")
+  spec.required_ruby_version = Gem::Requirement.new(">= 2.7")
 
   spec.metadata["allowed_push_host"] = "https://rubygems.org"
 
