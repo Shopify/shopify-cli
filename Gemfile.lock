@@ -4,7 +4,7 @@ PATH
     shopify-cli (2.23.0)
       bugsnag (~> 6.22)
       listen (~> 3.7.0)
-      theme-check (~> 1.10.3)
+      theme-check (~> 1.11.0)
 
 GEM
   remote: https://rubygems.org/
@@ -81,7 +81,7 @@ GEM
     ffi (1.15.4)
     hashdiff (1.0.1)
     iniparse (1.5.0)
-    liquid (5.3.0)
+    liquid (5.4.0)
     listen (3.7.1)
       rb-fsevent (~> 0.10, >= 0.10.3)
       rb-inotify (~> 0.9, >= 0.9.10)
@@ -101,14 +101,14 @@ GEM
     mocha (1.13.0)
     multi_test (0.1.2)
     multipart-post (2.1.1)
-    nokogiri (1.13.6)
+    nokogiri (1.13.8)
       mini_portile2 (~> 2.8.0)
       racc (~> 1.4)
     octokit (4.22.0)
       faraday (>= 0.9)
       sawyer (~> 0.8.0, >= 0.5.3)
     parallel (1.21.0)
-    parser (3.1.2.0)
+    parser (3.1.2.1)
       ast (~> 2.4.1)
     pry (0.13.1)
       coderay (~> 1.1)
@@ -150,8 +150,8 @@ GEM
       faraday (> 0.8, < 2.0)
     sys-uname (1.2.2)
       ffi (~> 1.1)
-    theme-check (1.10.3)
-      liquid (>= 5.1.0)
+    theme-check (1.11.0)
+      liquid (>= 5.4.0)
       nokogiri (>= 1.12)
       parser (~> 3)
     timecop (0.9.4)
@@ -187,4 +187,4 @@ DEPENDENCIES
   webmock
 
 BUNDLED WITH
-   2.3.11
+   2.3.20
