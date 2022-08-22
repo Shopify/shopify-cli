@@ -2,6 +2,8 @@ From version 2.6.0, the sections in this file adhere to the [keep a changelog](h
 
 ## [Unreleased]
 
+## Version 2.23.0 - 2022-08-22
+
 ### Fixed
 * [#2528](https://github.com/Shopify/shopify-cli/pull/2528): Switch from using absolute file paths to relative paths for ignore filter
 
