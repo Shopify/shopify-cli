@@ -1,5 +1,5 @@
 # frozen_string_literal: true
-require_relative "root"
+require "shopify_cli/theme/root"
 
 module ShopifyCLI
   module Theme
