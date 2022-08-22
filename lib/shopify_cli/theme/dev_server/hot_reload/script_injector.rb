@@ -4,15 +4,15 @@ require_relative "../hot_reload/sections_index"
 module ShopifyCLI
   module Theme
     class DevServer
-      module Hooks
-        class ReloadJSHook
+      class HotReload
+        class ScriptInjector
           def initialize(ctx, theme: nil)
             @ctx = ctx
             @theme = theme
             @sections_index = HotReload::SectionsIndex.new(theme) unless theme.nil?
           end
 
-          def call(body:, dir:, mode:)
+          def inject(body:, dir:, mode:)
             @mode = mode
             @dir = dir
             hot_reload_script = [

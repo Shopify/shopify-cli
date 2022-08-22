@@ -8,6 +8,7 @@ require_relative "dev_server/certificate_manager"
 require_relative "dev_server/errors"
 require_relative "dev_server/header_hash"
 require_relative "dev_server/hot_reload"
+require_relative "dev_server/hot_reload/script_injector"
 require_relative "dev_server/local_assets"
 require_relative "dev_server/proxy_param_builder"
 require_relative "dev_server/proxy"
@@ -17,7 +18,6 @@ require_relative "dev_server/sse"
 require_relative "dev_server/watcher"
 require_relative "dev_server/web_server"
 require_relative "dev_server/hooks/file_change_hook"
-require_relative "dev_server/hooks/reload_js_hook"
 
 require_relative "development_theme"
 require_relative "ignore_filter"
@@ -128,7 +128,7 @@ module ShopifyCLI
         @app = CdnFonts.new(@app, theme: theme)
         @app = LocalAssets.new(ctx, @app, theme)
         @app = HotReload.new(ctx, @app, broadcast_hooks: broadcast_hooks, watcher: watcher, mode: mode,
-          js_hook: js_hook)
+          script_injector: script_injector)
       end
 
       def sync_theme
@@ -213,8 +213,8 @@ module ShopifyCLI
         [file_handler]
       end
 
-      def js_hook
-        Hooks::ReloadJSHook.new(ctx, theme: theme)
+      def script_injector
+        HotReload::ScriptInjector.new(ctx, theme: theme)
       end
 
       def address

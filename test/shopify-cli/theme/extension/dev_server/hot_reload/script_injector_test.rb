@@ -7,8 +7,8 @@ module ShopifyCLI
   module Theme
     module Extension
       class DevServer
-        module Hooks
-          class ReloadJSHookTest < Minitest::Test
+        class HotReload
+          class ScriptInjectorTest < Minitest::Test
             HotReload = ::ShopifyCLI::Theme::DevServer::HotReload
             def setup
               super
@@ -96,9 +96,11 @@ module ShopifyCLI
               app = lambda do |_env|
                 [200, headers, [response_body]]
               end
-              js_hook = ReloadJSHook.new(@ctx)
+
+              script_injector = ShopifyCLI::Theme::Extension::DevServer::HotReload::ScriptInjector.new(@ctx)
+
               stack = HotReload.new(@ctx, app, watcher: @watcher, mode: @mode,
-                js_hook: js_hook)
+                script_injector: script_injector)
               request = Rack::MockRequest.new(stack)
               request.get(path).body
             end

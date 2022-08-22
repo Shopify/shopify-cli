@@ -11,16 +11,20 @@ require_relative "dev_server/local_assets"
 require_relative "dev_server/proxy_param_builder"
 require_relative "dev_server/watcher"
 require_relative "dev_server/hooks/file_change_hook"
-require_relative "dev_server/hooks/reload_js_hook"
+require_relative "dev_server/hot_reload"
+require_relative "dev_server/hot_reload/script_injector"
 require_relative "syncer"
 
 module ShopifyCLI
   module Theme
     module Extension
       class DevServer < ShopifyCLI::Theme::DevServer
+        # Themes
         Proxy = ShopifyCLI::Theme::DevServer::Proxy
         CdnFonts = ShopifyCLI::Theme::DevServer::CdnFonts
-        HotReload = ShopifyCLI::Theme::DevServer::HotReload
+
+        # Extensions
+        ScriptInjector = ShopifyCLI::Theme::Extension::DevServer::HotReload::ScriptInjector
 
         private
 
@@ -29,7 +33,7 @@ module ShopifyCLI
           @app = CdnFonts.new(@app, theme: theme)
           @app = LocalAssets.new(ctx, @app, extension)
           @app = HotReload.new(ctx, @app, broadcast_hooks: broadcast_hooks, watcher: watcher, mode: mode,
-            js_hook: js_hook)
+            script_injector: script_injector)
         end
 
         def sync_theme
@@ -83,8 +87,8 @@ module ShopifyCLI
           [file_handler]
         end
 
-        def js_hook
-          Hooks::ReloadJSHook.new(ctx)
+        def script_injector
+          ScriptInjector.new(ctx)
         end
 
         # Messages

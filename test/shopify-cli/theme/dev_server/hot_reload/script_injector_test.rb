@@ -6,8 +6,8 @@ require "shopify_cli/theme/dev_server"
 module ShopifyCLI
   module Theme
     class DevServer
-      module Hooks
-        class ReloadJSHookTest < Minitest::Test
+      class HotReload
+        class ScriptInjectorTest < Minitest::Test
           def setup
             super
             root = ShopifyCLI::ROOT + "/test/fixtures/theme"
@@ -95,8 +95,8 @@ module ShopifyCLI
             app = lambda do |_env|
               [200, headers, [response_body]]
             end
-            js_hook = ReloadJSHook.new(@ctx, theme: @theme)
-            stack = HotReload.new(@ctx, app, watcher: @watcher, mode: @mode, js_hook: js_hook)
+            script_injector = ScriptInjector.new(@ctx, theme: @theme)
+            stack = HotReload.new(@ctx, app, watcher: @watcher, mode: @mode, script_injector: script_injector)
             request = Rack::MockRequest.new(stack)
             request.get(path).body
           end

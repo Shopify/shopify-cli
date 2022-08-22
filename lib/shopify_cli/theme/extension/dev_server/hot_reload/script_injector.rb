@@ -1,11 +1,13 @@
 # frozen_string_literal: true
 
+require "shopify_cli/theme/dev_server/hot_reload/script_injector"
+
 module ShopifyCLI
   module Theme
     module Extension
-      class DevServer
-        module Hooks
-          class ReloadJSHook < ShopifyCLI::Theme::DevServer::Hooks::ReloadJSHook
+      class DevServer < ShopifyCLI::Theme::DevServer
+        class HotReload < ShopifyCLI::Theme::DevServer::HotReload
+          class ScriptInjector < ShopifyCLI::Theme::DevServer::HotReload::ScriptInjector
             private
 
             def javascript_files
