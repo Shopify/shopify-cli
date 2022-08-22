@@ -17,6 +17,9 @@ module Extension
         parser.on("-p", "--port=PORT", "Specify the port to use") do |port|
           flags[:port] = port.to_i
         end
+        parser.on("-T", "--theme=NAME_OR_ID", "Theme ID or name of the theme app extension host theme.") do |theme|
+          flags[:theme] = theme
+        end
       end
 
       class RuntimeConfiguration
@@ -26,13 +29,15 @@ module Extension
         property :resource_url, accepts: String, default: nil
         property! :tunnel_requested, accepts: [true, false], reader: :tunnel_requested?, default: true
         property :port, accepts: (1...(2**16))
+        property :theme, accepts: String, default: nil
       end
 
       def call(_args, _command_name)
         config = RuntimeConfiguration.new(
           tunnel_requested: tunnel_requested?,
           resource_url: options.flags[:resource_url],
-          port: options.flags[:port]
+          port: options.flags[:port],
+          theme: options.flags[:theme]
         )
 
         ShopifyCLI::Result
@@ -87,6 +92,7 @@ module Extension
           context: @ctx,
           tunnel_url: runtime_configuration.tunnel_url,
           port: runtime_configuration.port,
+          theme: runtime_configuration.theme,
           resource_url: runtime_configuration.resource_url
         )
         runtime_configuration

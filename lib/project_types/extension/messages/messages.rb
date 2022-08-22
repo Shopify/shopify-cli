@@ -104,7 +104,9 @@ module Extension
           Serve your extension in a local simulator for development.
             Usage: {{command:%s extension serve}}
             Options:
-            {{command:--tunnel=TUNNEL}} Establish an ngrok tunnel (default: false)
+              {{command:--tunnel=TUNNEL}}        Establish an ngrok tunnel (default: false).
+              {{command:-p, --port=PORT}}        Local port of the development serve.
+              {{command:-T, --theme=NAME_OR_ID}} Theme ID or name of the host theme.
         HELP
         frame_title: "Serving extension…",
         no_available_ports_found: "No available ports found to run extension.",
