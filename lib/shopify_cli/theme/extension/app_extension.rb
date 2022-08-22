@@ -3,12 +3,15 @@ require "shopify_cli/theme/root"
 
 module ShopifyCLI
   module Theme
-    class AppExtension < Root
+    class AppExtension
+      extend Forwardable
+
       attr_reader :root, :id
+      def_delegators :@root, :[], :glob, :static_asset_files
 
       def initialize(ctx, root:, id:)
-        super(ctx, root: root)
         @id = id
+        @root = Root.new(ctx, root: root)
       end
 
       def extension_files
