@@ -6,8 +6,8 @@ require "shopify_cli/theme/dev_server"
 module ShopifyCLI
   module Theme
     class DevServer
-      module Hooks
-        class ReloadJSHookTest < Minitest::Test
+      class HotReload
+        class ScriptInjectorTest < Minitest::Test
           def setup
             super
             root = ShopifyCLI::ROOT + "/test/fixtures/theme"
@@ -30,7 +30,7 @@ module ShopifyCLI
               </html>
             HTML
 
-            params_js = <<~JS
+            javascript_inline = <<~JS
               (() => {
                 window.__SHOPIFY_CLI_ENV__ = {"mode":"off","section_names_by_type":{"main-blog":["main"]}};
               })();
@@ -52,8 +52,16 @@ module ShopifyCLI
                 ShopifyCLI::ROOT)
             )
 
-            injected_script = "<script>\n#{params_js}\n#{hot_reload_js}\n" \
-              "#{sse_client_js}\n#{theme_js}\n</script>"
+            injected_script = [
+              "<script>",
+              "(() => {",
+              javascript_inline,
+              hot_reload_js,
+              sse_client_js,
+              theme_js,
+              "})();",
+              "</script>",
+            ].join("\n")
 
             expected_html = <<~HTML
               <html>
@@ -87,8 +95,8 @@ module ShopifyCLI
             app = lambda do |_env|
               [200, headers, [response_body]]
             end
-            js_hook = ReloadJSHook.new(@ctx, theme: @theme)
-            stack = HotReload.new(@ctx, app, watcher: @watcher, mode: @mode, js_hook: js_hook)
+            script_injector = ScriptInjector.new(@ctx, theme: @theme)
+            stack = HotReload.new(@ctx, app, watcher: @watcher, mode: @mode, script_injector: script_injector)
             request = Rack::MockRequest.new(stack)
             request.get(path).body
           end
