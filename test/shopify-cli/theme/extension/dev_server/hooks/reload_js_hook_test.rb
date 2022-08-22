@@ -30,7 +30,7 @@ module ShopifyCLI
                 </html>
               HTML
 
-              params_js = <<~JS
+              javascript_inline = <<~JS
                 (() => {
                   window.__SHOPIFY_CLI_ENV__ = {"mode":"off"};
                 })();
@@ -53,8 +53,16 @@ module ShopifyCLI
                   ShopifyCLI::ROOT)
               )
 
-              injected_script = "<script>\n#{params_js}\n#{hot_reload_js}\n" \
-              "#{sse_client_js}\n#{theme_extension_js}\n</script>"
+              injected_script = [
+                "<script>",
+                "(() => {",
+                javascript_inline,
+                hot_reload_js,
+                sse_client_js,
+                theme_extension_js,
+                "})();",
+                "</script>",
+              ].join("\n")
 
               expected_html = <<~HTML
                 <html>

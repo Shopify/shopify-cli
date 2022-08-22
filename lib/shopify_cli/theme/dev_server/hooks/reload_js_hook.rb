@@ -6,22 +6,22 @@ module ShopifyCLI
     class DevServer
       module Hooks
         class ReloadJSHook
-          def initialize(ctx, theme:)
+          def initialize(ctx, theme: nil)
             @ctx = ctx
             @theme = theme
-            @sections_index = HotReload::SectionsIndex.new(@theme)
+            @sections_index = HotReload::SectionsIndex.new(theme) unless theme.nil?
           end
 
           def call(body:, dir:, mode:)
             @mode = mode
             @dir = dir
             hot_reload_script = [
-              get_file("hot-reload-no-script.html"),
+              read("hot-reload-no-script.html"),
               "<script>",
-              params_js,
-              get_file("hot_reload.js"),
-              get_file("sse_client.js"),
-              get_file("theme.js"),
+              "(() => {",
+              javascript_inline,
+              *javascript_files.map { |file| read(file) },
+              "})();",
               "</script>",
             ].join("\n")
 
@@ -32,7 +32,11 @@ module ShopifyCLI
 
           private
 
-          def params_js
+          def javascript_files
+            %w(hot_reload.js sse_client.js theme.js)
+          end
+
+          def javascript_inline
             env = { mode: @mode }
             env[:section_names_by_type] = @sections_index.section_names_by_type
 
@@ -43,7 +47,7 @@ module ShopifyCLI
             JS
           end
 
-          def get_file(filename)
+          def read(filename)
             ::File.read("#{@dir}/hot_reload/resources/#{filename}")
           end
         end

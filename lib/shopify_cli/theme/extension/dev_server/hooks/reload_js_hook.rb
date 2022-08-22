@@ -5,42 +5,20 @@ module ShopifyCLI
     module Extension
       class DevServer
         module Hooks
-          class ReloadJSHook
-            def initialize(ctx)
-              @ctx = ctx
-            end
-
-            def call(body:, dir:, mode:)
-              @mode = mode
-              @dir = dir
-              hot_reload_script = [
-                get_file("hot-reload-no-script.html"),
-                "<script>",
-                params_js,
-                get_file("hot_reload.js"),
-                get_file("sse_client.js"),
-                get_file("theme_extension.js"),
-                "</script>",
-              ].join("\n")
-
-              body = body.join.gsub("</body>", "#{hot_reload_script}\n</body>")
-
-              [body]
-            end
-
+          class ReloadJSHook < ShopifyCLI::Theme::DevServer::Hooks::ReloadJSHook
             private
 
-            def params_js
+            def javascript_files
+              %w(hot_reload.js sse_client.js theme_extension.js)
+            end
+
+            def javascript_inline
               env = { mode: @mode }
               <<~JS
                 (() => {
                   window.__SHOPIFY_CLI_ENV__ = #{env.to_json};
                 })();
               JS
-            end
-
-            def get_file(filename)
-              ::File.read("#{@dir}/hot_reload/resources/#{filename}")
             end
           end
         end
