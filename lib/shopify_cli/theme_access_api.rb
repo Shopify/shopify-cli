@@ -6,7 +6,7 @@ module ShopifyCLI
   # generated from Shopify Theme Access app to access the Shopify Admin API (for theme operations)
   #
   class ThemeAccessAPI < API
-    URL = "https://theme-kit-access.shopifyapps.com/cli"
+    BASE_URL = "theme-kit-access.shopifyapps.com"
 
     class << self
       ##
@@ -38,9 +38,10 @@ module ShopifyCLI
       #                                           path: 'data.json',
       #                                           token: 'theme-app-password')
       #
-      def rest_request(ctx, shop:, path:, body: nil, method: "GET", api_version: "unstable")
+      def rest_request(ctx, shop:, path:, query: nil, body: nil, method: "GET", api_version: "unstable")
         client = api_client(ctx, api_version, shop, path: path)
-        client.request(url: build_url(api_version, path), body: body, headers: headers(shop), method: method)
+        url = build_url(api_version, path, query)
+        client.request(url: url, body: body, headers: headers(shop), method: method)
       end
 
       def get_shop_or_abort(ctx)
@@ -53,8 +54,12 @@ module ShopifyCLI
 
       private
 
-      def build_url(api_version, path)
-        "#{URL}/admin/api/#{api_version}/#{path}"
+      def build_url(api_version, path, query = nil)
+        URI::HTTPS.build(
+          host: BASE_URL,
+          path: "/cli/admin/api/#{api_version}/#{path}",
+          query: query
+        ).to_s
       end
 
       def api_client(ctx, api_version, _shop, path: "graphql.json")
