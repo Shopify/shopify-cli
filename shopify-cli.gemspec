@@ -15,7 +15,7 @@ Gem::Specification.new do |spec|
     and webhooks.
   HERE
   spec.homepage = "https://shopify.github.io/shopify-cli/"
-  spec.required_ruby_version = Gem::Requirement.new(">= 2.6")
+  spec.required_ruby_version = Gem::Requirement.new(">= 2.7")
 
   spec.metadata["allowed_push_host"] = "https://rubygems.org"
 
@@ -48,7 +48,7 @@ Gem::Specification.new do |spec|
   # Whereas if we were to have "~> 1.9", that version would still be satisfied and thus not upgraded.
   # Both shopify-cli and theme-check gems are owned and developed by Shopify.
   # These gems are currently being actively developed and it's easiest to update them together.
-  spec.add_dependency("theme-check", "~> 1.10.3")
+  spec.add_dependency("theme-check", "~> 1.11.0")
 
   spec.extensions = ["ext/shopify-extensions/extconf.rb"]
 end
