@@ -255,9 +255,7 @@ module ShopifyCLI
         @ctx.debug(operation.to_s)
 
         send(operation.method, operation.file) do |response|
-          puts "FILE: #{operation.file}"
           if response.is_a?(StandardError)
-            puts "RESPONSE: #{response.backtrace}"
             raise response
           end
 

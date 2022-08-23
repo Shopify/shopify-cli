@@ -22,8 +22,7 @@ desc "A set of tasks that run in Linux environments"
 namespace :linux do
   desc "Runs the test suite in a Linux Docker environment"
   task :test do
-    Utilities::Docker.run_and_rm_container("ruby", "-I", "test",
-      "test/shopify-cli/theme/dev_server/integration_test.rb", "--name", "test_uploads_files_on_boot")
+    Utilities::Docker.run_and_rm_container("bundle", "exec", "rake", "test")
   end
 end
 

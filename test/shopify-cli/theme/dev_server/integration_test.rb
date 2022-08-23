@@ -41,7 +41,7 @@ module ShopifyCLI
 
         def test_proxy_to_sfr
           puts __method__
-          skip("Causing flaky behavior in CI, need to revisit")
+          # skip("Causing flaky behavior in CI, need to revisit")
           stub_request(:any, ASSETS_API_URL)
             .to_return(status: 200, body: "{}")
           stub_request(:any, THEMES_API_URL)
@@ -68,8 +68,6 @@ module ShopifyCLI
 
         def test_uploads_files_on_boot
           puts __method__
-          start_server_and_wait_sync_files
-
           # Should upload all theme files except the ignored files
           ignored_files = %w[config.yml super_secret.json settings_data.json ignores_file]
           theme_root = "#{ShopifyCLI::ROOT}/test/fixtures/theme"
@@ -87,12 +85,13 @@ module ShopifyCLI
               body: JSON.generate(asset: asset),
               at_least_times: 1)
           end
+          start_server_and_wait_sync_files
         end
 
         def test_uploads_files_on_modification
           puts __method__
-          skip("Causing flaky behavior in CI, need to revisit")
           start_server_and_wait_sync_files
+          # skip("Causing flaky behavior in CI, need to revisit")
 
           theme_root = "#{ShopifyCLI::ROOT}/test/fixtures/theme"
 
