@@ -29,12 +29,13 @@ module ShopifyCLI
           @watcher.notify_observers([], [], [])
         end
 
-        def test_calls_reload_js_hook
+        def test_calls_reload_script_injector
           app = lambda do |_env|
             [200, { "content-type" => "text/html" }, []]
           end
           correct_output = "<html><script>console.log('testing');</script></html>"
-          stack = HotReload.new(@ctx, app, watcher: @watcher, mode: @mode, js_hook: reload_js_hook_mock(correct_output))
+          stack = HotReload.new(@ctx, app, watcher: @watcher, mode: @mode,
+            script_injector: reload_script_injector_mock(correct_output))
           request = Rack::MockRequest.new(stack)
 
           assert_equal(correct_output, request.get("/").body)
@@ -45,8 +46,8 @@ module ShopifyCLI
         def app
         end
 
-        def reload_js_hook_mock(body)
-          hook = mock("ReloadJSHook", call: body)
+        def reload_script_injector_mock(body)
+          hook = mock("ScriptInjector", inject: body)
           hook
         end
 

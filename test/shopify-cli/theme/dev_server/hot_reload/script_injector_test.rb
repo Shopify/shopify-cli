@@ -6,8 +6,8 @@ require "shopify_cli/theme/dev_server"
 module ShopifyCLI
   module Theme
     class DevServer
-      module Hooks
-        class ReloadJSHookTest < Minitest::Test
+      class HotReload
+        class ScriptInjectorTest < Minitest::Test
           def setup
             super
             root = ShopifyCLI::ROOT + "/test/fixtures/theme"
@@ -30,20 +30,38 @@ module ShopifyCLI
               </html>
             HTML
 
-            params_js = <<~JS
+            javascript_inline = <<~JS
               (() => {
                 window.__SHOPIFY_CLI_ENV__ = {"mode":"off","section_names_by_type":{"main-blog":["main"]}};
               })();
             JS
 
-            reload_js = ::File.read(
-              ::File.expand_path("lib/shopify_cli/theme/dev_server/hot-reload-theme.js", ShopifyCLI::ROOT)
+            hot_reload_js = ::File.read(
+              ::File.expand_path("lib/shopify_cli/theme/dev_server/hot_reload/resources/hot_reload.js",
+                ShopifyCLI::ROOT)
+            )
+            theme_js = ::File.read(
+              ::File.expand_path("lib/shopify_cli/theme/dev_server/hot_reload/resources/theme.js", ShopifyCLI::ROOT)
+            )
+            sse_client_js = ::File.read(
+              ::File.expand_path("lib/shopify_cli/theme/dev_server/hot_reload/resources/sse_client.js",
+                ShopifyCLI::ROOT)
             )
             hot_reload_no_script = ::File.read(
-              ::File.expand_path("lib/shopify_cli/theme/dev_server/hot-reload-no-script.html", ShopifyCLI::ROOT)
+              ::File.expand_path("lib/shopify_cli/theme/dev_server/hot_reload/resources/hot-reload-no-script.html",
+                ShopifyCLI::ROOT)
             )
 
-            injected_script = "<script>\n#{params_js}\n#{reload_js}\n</script>"
+            injected_script = [
+              "<script>",
+              "(() => {",
+              javascript_inline,
+              hot_reload_js,
+              sse_client_js,
+              theme_js,
+              "})();",
+              "</script>",
+            ].join("\n")
 
             expected_html = <<~HTML
               <html>
@@ -77,8 +95,8 @@ module ShopifyCLI
             app = lambda do |_env|
               [200, headers, [response_body]]
             end
-            js_hook = ReloadJSHook.new(@ctx, theme: @theme)
-            stack = HotReload.new(@ctx, app, watcher: @watcher, mode: @mode, js_hook: js_hook)
+            script_injector = ScriptInjector.new(@ctx, theme: @theme)
+            stack = HotReload.new(@ctx, app, watcher: @watcher, mode: @mode, script_injector: script_injector)
             request = Rack::MockRequest.new(stack)
             request.get(path).body
           end
