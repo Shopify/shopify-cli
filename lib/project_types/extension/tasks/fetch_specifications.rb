@@ -7,16 +7,9 @@ module Extension
       property :api_key
 
       def call
-        # TODO: remove me when SFR gets merged
-        response = [
-          {
-            "name" => "Online Store - App Theme Extension",
-            "identifier" => "theme_app_extension",
-            "options" => { "managementExperience" => "cli" },
-            "features" => { "argo" => nil },
-          },
-        ]
-
+        response = ShopifyCLI::PartnersAPI
+          .query(context, "fetch_specifications", api_key: api_key)
+          .dig("data", "extensionSpecifications")
         context.abort(context.message("tasks.errors.parse_error")) if response.nil?
 
         response.reject do |line|
