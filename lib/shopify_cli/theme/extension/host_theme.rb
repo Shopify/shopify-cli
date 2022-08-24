@@ -78,19 +78,21 @@ module ShopifyCLI
         end
 
         def generate_tmp_theme
+          ctx = @ctx.dup
+
           Dir.mktmpdir do |dir|
             @root = Pathname.new(dir)
-            @ctx.root = dir
+            ctx.root = dir
 
-            syncer = ShopifyCLI::Theme::Syncer.new(@ctx, theme: self)
+            syncer = ShopifyCLI::Theme::Syncer.new(ctx, theme: self)
 
             begin
               syncer.start_threads
-              ::CLI::UI::Frame.open(@ctx.message("theme.push.info.pushing", name, id, shop)) do
+              ::CLI::UI::Frame.open(ctx.message("theme.push.info.pushing", name, id, shop)) do
                 UI::HostThemeProgressBar.new(syncer, dir).progress(:upload_theme!, delete: false)
               end
             rescue Errno::ENOENT => e
-              @ctx.debug(e.message)
+              ctx.debug(e.message)
             ensure
               syncer.shutdown
             end

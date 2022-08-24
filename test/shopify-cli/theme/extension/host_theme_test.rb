@@ -16,6 +16,8 @@ module ShopifyCLI
           @ctx = TestHelpers::FakeContext.new(root: root)
           @syncer = stub("Syncer", lock_io!: nil, unlock_io!: nil, has_any_error?: false)
           @host_theme = HostTheme.new(@ctx, root: root)
+
+          @ctx.stubs(:dup).returns(@ctx)
         end
 
         def teardown
