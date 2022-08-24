@@ -4,8 +4,6 @@ require "timecop"
 require "shopify_cli/theme/app_extension"
 require "shopify_cli/theme/extension/syncer"
 require "shopify_cli/theme/extension/syncer/extension_serve_job"
-require "project_types/extension/loaders/specification_handler"
-require "project_types/extension/loaders/project"
 require "project_types/extension/tasks/converters/version_converter"
 
 module ShopifyCLI
@@ -16,15 +14,14 @@ module ShopifyCLI
           super
           root = ShopifyCLI::ROOT + "/test/fixtures/extension"
           @ctx = TestHelpers::FakeContext.new(root: root)
-          @extension = AppExtension.new(@ctx, root: root, id: 1234)
+          @extension = AppExtension.new(@ctx, root: root, app_id: 1234)
+          @extension.stubs(:extension_files).returns([])
           @extension_title = "Extension Testing"
           @project = generate_fake_project
           @specification_handler = generate_fake_spec_handler
 
-          ::Extension::Loaders::Project.expects(:load).returns(@project)
-          ::Extension::Loaders::SpecificationHandler.expects(:load).returns(@specification_handler)
-
-          @syncer = Syncer.new(@ctx, extension: @extension)
+          @syncer = Syncer.new(@ctx, extension: @extension, project: @project,
+            specification_handler: @specification_handler)
         end
 
         def test_logs_success_when_draft_syncs_successfully

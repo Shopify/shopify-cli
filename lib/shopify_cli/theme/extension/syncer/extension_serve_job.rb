@@ -43,11 +43,11 @@ module ShopifyCLI
             user_errors = response.dig(USER_ERRORS_FIELD)
 
             if user_errors
-              @ctx.puts(error_message(project.title))
+              @ctx.puts(error_message(@project.title))
               error_files = erroneous_files(user_errors)
               print_items(error_files)
             else
-              @ctx.puts(success_message(project.title))
+              @ctx.puts(success_message(@project.title))
               print_items({}.freeze)
               ::Extension::Tasks::Converters::VersionConverter.from_hash(@ctx, response.dig(VERSION_FIELD))
             end
