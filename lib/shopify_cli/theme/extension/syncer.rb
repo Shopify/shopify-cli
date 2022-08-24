@@ -1,5 +1,6 @@
 # frozen_string_literal: true
 require_relative "syncer/extension_serve_job"
+require "shopify_cli/thread_pool"
 
 module ShopifyCLI
   module Theme
@@ -19,7 +20,7 @@ module ShopifyCLI
 
         def enqueue_files(files)
           @update_mutex.synchronize do
-            files.each { |f| @pending_updates << f }
+            files.each { |f| @pending_updates << f unless @pending_updates.include?(f) }
           end
         end
 
