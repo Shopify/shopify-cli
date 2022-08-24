@@ -76,12 +76,28 @@ module Extension
         def serve(**options)
           @ctx = options[:context]
           root = options[:context]&.root
-          flags = options.slice(:port, :theme).compact
+          properties = options
+            .slice(:port, :theme)
+            .compact
+            .merge({
+              project: load_project(options),
+              specification_handler: self,
+            })
 
-          ShopifyCLI::Theme::Extension::DevServer.start(@ctx, root, **flags)
+          ShopifyCLI::Theme::Extension::DevServer.start(@ctx, root, **properties)
         end
 
         private
+
+        def load_project(options)
+          Extension::Loaders::Project.load(
+            context: options[:context],
+            directory: Dir.pwd,
+            api_key: options[:api_key],
+            api_secret: options[:api_secret],
+            registration_id: options[:registration_id]
+          )
+        end
 
         def validate(filename)
           dirname = File.dirname(filename)

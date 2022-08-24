@@ -17,11 +17,13 @@ module ShopifyCLI
           USER_ERRORS_FIELD = "userErrors"
           ERROR_FILE_REGEX = /\[([^\]\[]*)\]/
 
-          def initialize(ctx, syncer:, extension:)
+          def initialize(ctx, syncer:, extension:, project:, specification_handler:)
             super(POLL_FREQUENCY)
 
             @ctx = ctx
             @extension = extension
+            @project = project
+            @specification_handler = specification_handler
             @syncer = syncer
 
             @mut = Mutex.new
@@ -31,21 +33,11 @@ module ShopifyCLI
             return if @syncer.pending_updates.empty? # if no updates
             return if Time.now - @syncer.latest_sync < PUSH_INTERVAL
 
-            project = ::Extension::Loaders::Project.load(
-              context: @ctx,
-              directory: Dir.pwd,
-              api_key: nil,
-              api_secret: nil,
-              registration_id: nil,
-            )
-
-            specification_handler = ::Extension::Loaders::SpecificationHandler.load(project: project, context: @ctx)
-
             input = {
-              api_key: project.app.api_key,
-              registration_id: project.registration_id,
-              config: JSON.generate(specification_handler.config(@ctx)),
-              extension_context: specification_handler.extension_context(@ctx),
+              api_key: @project.app.api_key,
+              registration_id: @project.registration_id,
+              config: JSON.generate(@specification_handler.config(@ctx)),
+              extension_context: @specification_handler.extension_context(@ctx),
             }
             response = ShopifyCLI::PartnersAPI.query(@ctx, "extension_update_draft", **input).dig(*RESPONSE_FIELD)
             user_errors = response.dig(USER_ERRORS_FIELD)

@@ -104,15 +104,31 @@ module Extension
           Serve your extension in a local simulator for development.
             Usage: {{command:%s extension serve}}
             Options:
-              {{command:--tunnel=TUNNEL}}        Establish an ngrok tunnel (default: false).
-              {{command:-p, --port=PORT}}        Local port of the development serve.
-              {{command:-T, --theme=NAME_OR_ID}} Theme ID or name of the host theme.
+              {{command:-p, --port=PORT}}             Local port of the development serve.
+              {{command:-T, --theme=NAME_OR_ID}}      Theme ID or name of the host theme.
+              {{command:--tunnel=TUNNEL}}             Establish an ngrok tunnel (default: false).
+              {{command:--api-key=API_KEY}}           Connect your extension and app by inserting your app's API key (which you can get from your app setup page on shopify.dev).
+              {{command:--api-secret=API_SECRET}}     The API secret of the app the script is registered with.
+              {{command:--extension-id=EXTENSION_ID}} The id of the extension's registration.
         HELP
-        frame_title: "Serving extension…",
+        frame_title: "Viewing extension…",
+        pushing_extension: "Pushing extension…",
         no_available_ports_found: "No available ports found to run extension.",
         serve_failure_message: "Failed to run extension code.",
         serve_missing_information: "Missing shop or api_key.",
         tunnel_already_running: "A tunnel running on another port has been detected. Close the tunnel and try again.",
+        preview_message: <<~PREVIEW_MESSAGE,
+          Enable your theme app extension:
+          {{green:%s}}
+
+          Setup your theme app extension in the host theme:
+          {{green:%s}}
+
+          Preview your theme app extension:
+          {{green:%s}}
+
+          (Use Ctrl-C to stop)
+        PREVIEW_MESSAGE
       },
       tunnel: {
         duplicate_session: <<~MESSAGE,

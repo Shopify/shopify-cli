@@ -26,6 +26,17 @@ module ShopifyCLI
         # Extensions
         ScriptInjector = ShopifyCLI::Theme::Extension::DevServer::HotReload::ScriptInjector
 
+        attr_accessor :project, :specification_handler
+
+        class << self
+          def start(ctx, root, port: 8282, theme: nil, project:, specification_handler:)
+            instance.project = project
+            instance.specification_handler = specification_handler
+
+            super(ctx, root, port: port, theme: theme)
+          end
+        end
+
         private
 
         def middleware_stack
@@ -38,11 +49,20 @@ module ShopifyCLI
 
         def sync_theme
           # Ensures the host theme exists
-          !!theme
+          theme
+
+          # Ensure the theme app extension is pushed (Spinner required as it might take 1..4 seconds)
+          CLI::UI::Spinner.spin(pushing_extension) { |_s| extension }
+          clean_last_line
         end
 
         def syncer
-          @syncer ||= Syncer.new(ctx, extension: extension)
+          @syncer ||= Syncer.new(
+            ctx,
+            extension: extension,
+            project: project,
+            specification_handler: specification_handler
+          )
         end
 
         def theme
@@ -55,7 +75,27 @@ module ShopifyCLI
         end
 
         def extension
-          @extension ||= AppExtension.new(ctx, root: root, id: 1234)
+          return @extension if @extension
+
+          properties = push_theme_app_extension.dig(*%w(data extensionUpdateDraft extensionVersion)) || {}
+
+          @extension = AppExtension.new(
+            ctx,
+            root: root,
+            location: properties["location"],
+            registration_id: properties["registrationId"],
+          )
+        end
+
+        def push_theme_app_extension
+          input = {
+            api_key: project.app.api_key,
+            registration_id: project.registration_id,
+            config: JSON.generate(specification_handler.config(ctx)),
+            extension_context: specification_handler.extension_context(ctx),
+          }
+
+          ShopifyCLI::PartnersAPI.query(ctx, "extension_update_draft", **input)
         end
 
         def watcher
@@ -71,13 +111,24 @@ module ShopifyCLI
 
         def setup_server
           CLI::UI::Frame.open(frame_title, color: :magenta, timing: nil) do
-            # TODO: https://github.com/Shopify/shopify-cli/issues/2538
-            ctx.open_url!(address)
             ctx.puts(preview_message)
           end
 
           watcher.start
           syncer.start
+        end
+
+        def clean_last_line
+          # move the cursor to the start of the line
+          command = "\r"
+
+          # move the cursor up one line
+          command += CLI::UI::ANSI.control("A", "")
+
+          # clear the line
+          command += CLI::UI::ANSI.control("K", "")
+
+          print(command)
         end
 
         # Hooks
@@ -93,8 +144,16 @@ module ShopifyCLI
 
         # Messages
 
+        def pushing_extension
+          ctx.message("serve.pushing_extension")
+        end
+
         def frame_title
           ctx.message("serve.frame_title", root)
+        end
+
+        def preview_message
+          ctx.message("serve.preview_message", extension.location, theme.editor_url, address)
         end
       end
     end

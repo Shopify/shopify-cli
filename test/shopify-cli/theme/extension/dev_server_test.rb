@@ -9,6 +9,9 @@ module ShopifyCLI
         def test_middleware_stack
           server = dev_server
           server.stubs(:theme).returns(stub)
+          server.stubs(:extension).returns(stub(root: nil))
+          server.stubs(:watcher).returns(stub)
+
           middleware_sequence = sequence("middleware sequence")
 
           DevServer::Proxy.expects(:new).in_sequence(middleware_sequence)
@@ -60,6 +63,64 @@ module ShopifyCLI
           dev_server.send(:theme)
         end
 
+        def test_extension_when_it_is_created
+          location = "http://location:1234"
+          registration_id = "registration_id_5678"
+
+          ShopifyCLI::PartnersAPI
+            .expects(:query)
+            .with(
+              ctx,
+              "extension_update_draft",
+              api_key: "api_key_1234",
+              registration_id: "registration_id_5678",
+              config: "\"config\"",
+              extension_context: "extension_context",
+            )
+            .returns({
+              "data" => {
+                "extensionUpdateDraft" => {
+                  "extensionVersion" => {
+                    "location" => location,
+                    "registrationId" => registration_id,
+                  },
+                },
+              },
+            })
+
+          extension1 = dev_server.send(:extension)
+          extension2 = dev_server.send(:extension)
+
+          assert_same(extension1, extension2)
+          assert_equal(location, extension1.location)
+          assert_equal(registration_id, extension1.registration_id)
+        end
+
+        def test_extension_when_it_is_not_created
+          ShopifyCLI::PartnersAPI
+            .expects(:query)
+            .with(
+              ctx,
+              "extension_update_draft",
+              api_key: "api_key_1234",
+              registration_id: "registration_id_5678",
+              config: "\"config\"",
+              extension_context: "extension_context",
+            )
+            .returns({
+              "data" => {
+                "error" => "error message",
+              },
+            })
+
+          extension1 = dev_server.send(:extension)
+          extension2 = dev_server.send(:extension)
+
+          assert_same(extension1, extension2)
+          assert_nil(extension1.location)
+          assert_nil(extension1.registration_id)
+        end
+
         def teardown
           TestHelpers::Singleton.reset_singleton!(dev_server)
         end
@@ -67,17 +128,35 @@ module ShopifyCLI
         private
 
         def dev_server(identifier: nil)
-          host, port, poll, editor_sync, stable, mode = nil
+          host,
+          port, poll, editor_sync, stable, mode = nil
           server = Extension::DevServer.instance
           server.setup(ctx, root, host, identifier, port, poll, editor_sync, stable, mode)
+          server.project = project
+          server.specification_handler = specification_handler
           server
+        end
+
+        def project
+          app = stub(api_key: "api_key_1234")
+          stub(app: app, registration_id: "registration_id_5678")
+        end
+
+        def specification_handler
+          stub(config: "config", extension_context: "extension_context")
         end
 
         def ctx
           @ctx ||= ShopifyCLI::Context.new.tap do |context|
-            context.stubs(:message)
+            context
+              .stubs(:message)
               .with("theme.serve.theme_not_found", 1234)
               .returns("Theme \"1234\" doesn't exist")
+
+            context
+              .stubs(:message)
+              .with("core.login.spinner.initiating")
+              .returns("")
           end
         end
 

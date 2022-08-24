@@ -4,11 +4,13 @@ require_relative "root"
 module ShopifyCLI
   module Theme
     class AppExtension < Root
-      attr_reader :root, :id
+      attr_reader :root, :location, :registration_id
 
-      def initialize(ctx, root:, id:)
+      def initialize(ctx, root:, location: nil, registration_id: nil)
         super(ctx, root: root)
-        @id = id
+
+        @location = location
+        @registration_id = registration_id
       end
 
       def extension_files
