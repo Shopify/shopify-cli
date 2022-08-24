@@ -1,14 +1,16 @@
 # frozen_string_literal: true
+
 require_relative "root"
 
 module ShopifyCLI
   module Theme
     class AppExtension < Root
-      attr_reader :root, :location, :registration_id
+      attr_reader :root, :app_id, :location, :registration_id
 
-      def initialize(ctx, root:, location: nil, registration_id: nil)
+      def initialize(ctx, root:, app_id: nil, location: nil, registration_id: nil)
         super(ctx, root: root)
 
+        @app_id = app_id
         @location = location
         @registration_id = registration_id
       end

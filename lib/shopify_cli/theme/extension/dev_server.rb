@@ -51,9 +51,8 @@ module ShopifyCLI
           # Ensures the host theme exists
           theme
 
-          # Ensure the theme app extension is pushed (Spinner required as it might take 1..4 seconds)
-          CLI::UI::Spinner.spin(pushing_extension) { |_s| extension }
-          clean_last_line
+          # Ensure the theme app extension is pushed
+          extension
         end
 
         def syncer
@@ -77,25 +76,32 @@ module ShopifyCLI
         def extension
           return @extension if @extension
 
-          properties = push_theme_app_extension.dig(*%w(data extensionUpdateDraft extensionVersion)) || {}
+          app = fetch_theme_app_extension_info.dig(*%w(data app)) || {}
+
+          app_id = app["id"]
+
+          registrations = app["extensionRegistrations"] || []
+          registration = registrations.find { |r| r["type"] == "THEME_APP_EXTENSION" } || {}
+
+          location = registration.dig(*%w(draftVersion location))
+          registration_id = registration["id"]
 
           @extension = AppExtension.new(
             ctx,
             root: root,
-            location: properties["location"],
-            registration_id: properties["registrationId"],
+            app_id: app_id,
+            location: location,
+            registration_id: registration_id,
           )
         end
 
-        def push_theme_app_extension
-          input = {
+        def fetch_theme_app_extension_info
+          params = {
             api_key: project.app.api_key,
-            registration_id: project.registration_id,
-            config: JSON.generate(specification_handler.config(ctx)),
-            extension_context: specification_handler.extension_context(ctx),
+            type: specification_handler.identifier.downcase,
           }
 
-          ShopifyCLI::PartnersAPI.query(ctx, "extension_update_draft", **input)
+          PartnersAPI.query(@ctx, "get_extension_registrations", **params)
         end
 
         def watcher
@@ -116,19 +122,6 @@ module ShopifyCLI
 
           watcher.start
           syncer.start
-        end
-
-        def clean_last_line
-          # move the cursor to the start of the line
-          command = "\r"
-
-          # move the cursor up one line
-          command += CLI::UI::ANSI.control("A", "")
-
-          # clear the line
-          command += CLI::UI::ANSI.control("K", "")
-
-          print(command)
         end
 
         # Hooks

@@ -15,9 +15,9 @@ module ShopifyCLI
           @specification_handler = specification_handler
 
           @pool = ThreadPool.new(pool_size: 1)
-          @pending_updates = []
+          @pending_updates = extension.extension_files
           @update_mutex = Mutex.new
-          @latest_sync = Time.now
+          @latest_sync = Time.now - ExtensionServeJob::PUSH_INTERVAL
         end
 
         def enqueue_files(files)

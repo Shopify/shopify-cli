@@ -1,4 +1,5 @@
 # frozen_string_literal: true
+
 require "test_helper"
 require "shopify_cli/theme/extension/dev_server"
 
@@ -9,7 +10,7 @@ module ShopifyCLI
         def test_middleware_stack
           server = dev_server
           server.stubs(:theme).returns(stub)
-          server.stubs(:extension).returns(stub(root: nil))
+          server.stubs(:extension).returns(stub(root: nil, extension_files: []))
           server.stubs(:watcher).returns(stub)
 
           middleware_sequence = sequence("middleware sequence")
@@ -64,6 +65,7 @@ module ShopifyCLI
         end
 
         def test_extension_when_it_is_created
+          app_id = "app_0000"
           location = "http://location:1234"
           registration_id = "registration_id_5678"
 
@@ -71,19 +73,36 @@ module ShopifyCLI
             .expects(:query)
             .with(
               ctx,
-              "extension_update_draft",
+              "get_extension_registrations",
               api_key: "api_key_1234",
-              registration_id: "registration_id_5678",
-              config: "\"config\"",
-              extension_context: "extension_context",
+              type: "theme_app_extension",
             )
             .returns({
               "data" => {
-                "extensionUpdateDraft" => {
-                  "extensionVersion" => {
-                    "location" => location,
-                    "registrationId" => registration_id,
-                  },
+                "app" => {
+                  "id" => app_id,
+                  "title" => "mock",
+                  "apiKey" => "00000000000",
+                  "apiSecretKeys" => [{ "secret" => "00000000000" }],
+                  "appType" => "public",
+                  "extensionRegistrations" => [
+                    {
+                      "id" => registration_id,
+                      "type" => "THEME_APP_EXTENSION",
+                      "uuid" => "dac9b229-a4dc-4569-8d1b-d36102db719f",
+                      "title" => "theme-app-extension",
+                      "draftVersion" => {
+                        "registrationId" => registration_id,
+                        "context" => nil,
+                        "lastUserInteractionAt" => "1992-01-02T12:00:00-00:00",
+                        "location" => location,
+                        "validationErrors" => [],
+                        "id" => "00000000000",
+                        "uuid" => "0000-1111-2222-3333",
+                        "versionTag" => "0.0.0",
+                      },
+                    },
+                  ],
                 },
               },
             })
@@ -92,6 +111,7 @@ module ShopifyCLI
           extension2 = dev_server.send(:extension)
 
           assert_same(extension1, extension2)
+          assert_equal(app_id, extension1.app_id)
           assert_equal(location, extension1.location)
           assert_equal(registration_id, extension1.registration_id)
         end
@@ -101,11 +121,9 @@ module ShopifyCLI
             .expects(:query)
             .with(
               ctx,
-              "extension_update_draft",
+              "get_extension_registrations",
               api_key: "api_key_1234",
-              registration_id: "registration_id_5678",
-              config: "\"config\"",
-              extension_context: "extension_context",
+              type: "theme_app_extension",
             )
             .returns({
               "data" => {
@@ -117,6 +135,7 @@ module ShopifyCLI
           extension2 = dev_server.send(:extension)
 
           assert_same(extension1, extension2)
+          assert_nil(extension1.app_id)
           assert_nil(extension1.location)
           assert_nil(extension1.registration_id)
         end
@@ -143,7 +162,7 @@ module ShopifyCLI
         end
 
         def specification_handler
-          stub(config: "config", extension_context: "extension_context")
+          stub(config: "config", identifier: "THEME_APP_EXTENSION", extension_context: "extension_context")
         end
 
         def ctx
