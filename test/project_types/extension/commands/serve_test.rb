@@ -102,9 +102,17 @@ module Extension
         expected_resource_url = "foo/bar"
         stub_specification_handler_options(serve, choose_port: true)
 
-        serve.specification_handler
-          .expects(:serve)
-          .with(context: @context, tunnel_url: nil, port: 39351, theme: nil, resource_url: expected_resource_url)
+        serve.specification_handler.expects(:serve).with(
+          context: @context,
+          tunnel_url: nil,
+          port: 39351,
+          theme: nil,
+          api_key: nil,
+          api_secret: nil,
+          registration_id: nil,
+          resource_url: expected_resource_url,
+        )
+
         serve.options.flags[:resource_url] = expected_resource_url
         serve.call([], "serve")
       end
@@ -114,11 +122,43 @@ module Extension
         theme = "dev theme"
         stub_specification_handler_options(serve, choose_port: true)
 
-        serve.specification_handler
-          .expects(:serve)
-          .with(context: @context, tunnel_url: nil, port: 39351, theme: theme, resource_url: nil)
+        serve.specification_handler.expects(:serve).with(
+          context: @context,
+          tunnel_url: nil,
+          port: 39351,
+          theme: theme,
+          api_key: nil,
+          api_secret: nil,
+          registration_id: nil,
+          resource_url: nil,
+        )
 
         serve.options.flags[:theme] = theme
+        serve.call([], "serve")
+      end
+
+      def test_auth_keys_are_forwarded_to_specification_handler_when_provided
+        serve = ::Extension::Command::Serve.new(@context)
+        api_key = "api_key_1234"
+        api_secret = "api_secret_5678"
+        registration_id = "registration_id_9ABC"
+
+        stub_specification_handler_options(serve, choose_port: true)
+
+        serve.specification_handler.expects(:serve).with(
+          context: @context,
+          tunnel_url: nil,
+          port: 39351,
+          theme: nil,
+          api_key: api_key,
+          api_secret: api_secret,
+          registration_id: registration_id,
+          resource_url: nil,
+        )
+
+        serve.options.flags[:api_key] = api_key
+        serve.options.flags[:api_secret] = api_secret
+        serve.options.flags[:registration_id] = registration_id
         serve.call([], "serve")
       end
 

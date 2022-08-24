@@ -8,14 +8,16 @@ module ShopifyCLI
       class Syncer
         attr_accessor :pending_updates, :latest_sync
 
-        def initialize(ctx, extension:)
+        def initialize(ctx, extension:, project:, specification_handler:)
           @ctx = ctx
           @extension = extension
+          @project = project
+          @specification_handler = specification_handler
 
           @pool = ThreadPool.new(pool_size: 1)
-          @pending_updates = []
+          @pending_updates = extension.extension_files
           @update_mutex = Mutex.new
-          @latest_sync = Time.now
+          @latest_sync = Time.now - ExtensionServeJob::PUSH_INTERVAL
         end
 
         def enqueue_files(files)
@@ -25,11 +27,23 @@ module ShopifyCLI
         end
 
         def start
-          @pool.schedule(ExtensionServeJob.new(@ctx, syncer: self, extension: @extension))
+          @pool.schedule(job)
         end
 
         def shutdown
           @pool.shutdown
+        end
+
+        private
+
+        def job
+          ExtensionServeJob.new(
+            @ctx,
+            syncer: self,
+            extension: @extension,
+            project: @project,
+            specification_handler: @specification_handler
+          )
         end
       end
     end

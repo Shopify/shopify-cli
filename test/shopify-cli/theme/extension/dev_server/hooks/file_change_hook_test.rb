@@ -19,7 +19,7 @@ module ShopifyCLI
               super
               root = ShopifyCLI::ROOT + "/test/fixtures/extension"
               @ctx = TestHelpers::FakeContext.new(root: root)
-              @extension = AppExtension.new(@ctx, root: root, id: 1234)
+              @extension = AppExtension.new(@ctx, root: root)
               @syncer = stub("Syncer", enqueue_files: true)
               @watcher = Watcher.new(@ctx, extension: @extension, syncer: @syncer)
               @mode = "off"
