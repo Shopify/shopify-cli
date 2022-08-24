@@ -137,10 +137,6 @@ module ShopifyCLI
 
         # Messages
 
-        def pushing_extension
-          ctx.message("serve.pushing_extension")
-        end
-
         def frame_title
           ctx.message("serve.frame_title", root)
         end

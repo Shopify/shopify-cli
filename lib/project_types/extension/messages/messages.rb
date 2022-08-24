@@ -112,7 +112,6 @@ module Extension
               {{command:--extension-id=EXTENSION_ID}} The id of the extension's registration.
         HELP
         frame_title: "Viewing extension…",
-        pushing_extension: "Pushing extension…",
         no_available_ports_found: "No available ports found to run extension.",
         serve_failure_message: "Failed to run extension code.",
         serve_missing_information: "Missing shop or api_key.",
