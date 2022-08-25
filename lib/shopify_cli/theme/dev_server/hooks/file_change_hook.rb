@@ -16,12 +16,12 @@ module ShopifyCLI
           def call(modified, added, removed, streams: nil)
             @streams = streams
             files = (modified + added)
-              .reject { |f| @ignore_filter&.ignore?(f) }
               .map { |f| @theme[f] }
+              .reject { |f| @ignore_filter&.ignore?(f.relative_path) }
             files -= liquid_css_files = files.select(&:liquid_css?)
             deleted_files = removed
-              .reject { |f| @ignore_filter&.ignore?(f) }
               .map { |f| @theme[f] }
+              .reject { |f| @ignore_filter&.ignore?(f.relative_path) }
 
             remote_delete(deleted_files) unless deleted_files.empty?
             reload_page(removed) unless deleted_files.empty?
