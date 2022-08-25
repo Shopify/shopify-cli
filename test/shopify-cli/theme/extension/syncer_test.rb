@@ -1,7 +1,7 @@
 # frozen_string_literal: true
 require "test_helper"
 require "timecop"
-require "shopify_cli/theme/app_extension"
+require "shopify_cli/theme/extension/app_extension"
 require "shopify_cli/theme/extension/syncer"
 require "shopify_cli/theme/extension/syncer/extension_serve_job"
 require "project_types/extension/tasks/converters/version_converter"

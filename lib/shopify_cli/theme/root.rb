@@ -5,6 +5,8 @@ require "pathname"
 module ShopifyCLI
   module Theme
     class Root
+      attr_reader :root, :ctx
+
       def initialize(ctx, root:)
         @ctx = ctx
         @root = Pathname.new(root) if root

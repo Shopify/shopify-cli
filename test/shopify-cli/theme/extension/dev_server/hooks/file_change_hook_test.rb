@@ -1,7 +1,7 @@
 # frozen_string_literal: true
 require "test_helper"
 require "rack/mock"
-require "shopify_cli/theme/app_extension"
+require "shopify_cli/theme/extension/app_extension"
 require "shopify_cli/theme/extension/dev_server"
 require "shopify_cli/theme/dev_server/sse"
 require "shopify_cli/theme/dev_server/hot_reload"

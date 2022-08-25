@@ -2,7 +2,7 @@
 
 require "pathname"
 
-require "shopify_cli/theme/app_extension"
+require "shopify_cli/theme/extension/app_extension"
 require "shopify_cli/theme/dev_server"
 require "shopify_cli/theme/extension/host_theme"
 require "shopify_cli/theme/syncer"
