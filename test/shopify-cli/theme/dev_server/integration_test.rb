@@ -9,6 +9,7 @@ module ShopifyCLI
         include TestHelpers::FakeUI
 
         @@port = 9292 # rubocop:disable Style/ClassVars
+        @@mutex = Mutex.new # rubocop:disable Style/ClassVars
 
         THEMES_API_URL = "https://dev-theme-server-store.myshopify.com/admin/api/unstable/themes/123456789.json"
         ASSETS_API_URL = "https://dev-theme-server-store.myshopify.com/admin/api/unstable/themes/123456789/assets.json"
@@ -40,138 +41,151 @@ module ShopifyCLI
         end
 
         def test_proxy_to_sfr
-          skip("Causing flaky behavior in CI, need to revisit")
-          stub_request(:any, ASSETS_API_URL)
-            .to_return(status: 200, body: "{}")
-          stub_request(:any, THEMES_API_URL)
-            .to_return(status: 200, body: "{}")
-          stub_request(:head, "https://dev-theme-server-store.myshopify.com/?_fd=0&pb=0&preview_theme_id=123456789")
-            .to_return(
-              status: 200,
-              headers: {
-                "Set-Cookie" => "_secure_session_id=abcd1234",
-              }
-            )
-          stub_sfr = stub_request(:get, "https://dev-theme-server-store.myshopify.com/?_fd=0&pb=0")
+          @@mutex.synchronize do
+            skip("Causing flaky behavior in CI, need to revisit")
+            stub_request(:any, ASSETS_API_URL)
+              .to_return(status: 200, body: "{}")
+            stub_request(:any, THEMES_API_URL)
+              .to_return(status: 200, body: "{}")
+            stub_request(:head, "https://dev-theme-server-store.myshopify.com/?_fd=0&pb=0&preview_theme_id=123456789")
+              .to_return(
+                status: 200,
+                headers: {
+                  "Set-Cookie" => "_secure_session_id=abcd1234",
+                }
+              )
+            stub_sfr = stub_request(:get, "https://dev-theme-server-store.myshopify.com/?_fd=0&pb=0")
 
-          start_server
-          response = get("/")
+            start_server
+            response = get("/")
 
-          refute_server_errors(response)
-          assert_requested(stub_sfr)
+            refute_server_errors(response)
+            assert_requested(stub_sfr)
+          end
         end
 
         def test_uploads_files_on_boot
-          start_server_and_wait_sync_files
+          @@mutex.synchronize do
+            start_server_and_wait_sync_files
+            # Should upload all theme files except the ignored files
+            ignored_files = [
+              "config.yml",
+              "super_secret.json",
+              "settings_data.json",
+              "ignores_file",
+            ]
+            theme_root = "#{ShopifyCLI::ROOT}/test/fixtures/theme"
 
-          # Should upload all theme files except the ignored files
-          ignored_files = [
-            "config.yml",
-            "super_secret.json",
-            "settings_data.json",
-            "ignores_file",
-          ]
-          theme_root = "#{ShopifyCLI::ROOT}/test/fixtures/theme"
+            Pathname.new(theme_root).glob("**/*").each do |file|
+              next unless file.file? && !ignored_files.include?(file.basename.to_s)
+              asset = { key: file.relative_path_from(theme_root).to_s }
+              if file.extname == ".png"
+                asset[:attachment] = Base64.encode64(file.read)
+              else
+                asset[:value] = file.read
+              end
 
-          Pathname.new(theme_root).glob("**/*").each do |file|
-            next unless file.file? && !ignored_files.include?(file.basename.to_s)
-            asset = { key: file.relative_path_from(theme_root).to_s }
-            if file.extname == ".png"
-              asset[:attachment] = Base64.encode64(file.read)
-            else
-              asset[:value] = file.read
+              assert_requested(:put, ASSETS_API_URL,
+                body: JSON.generate(asset: asset),
+                at_least_times: 1)
             end
-
-            assert_requested(:put, ASSETS_API_URL,
-              body: JSON.generate(asset: asset),
-              at_least_times: 1)
           end
         end
 
         def test_uploads_files_on_modification
-          skip("Causing flaky behavior in CI, need to revisit")
-          start_server_and_wait_sync_files
+          @@mutex.synchronize do
+            skip("Causing flaky behavior in CI, need to revisit")
+            start_server_and_wait_sync_files
 
-          theme_root = "#{ShopifyCLI::ROOT}/test/fixtures/theme"
+            theme_root = "#{ShopifyCLI::ROOT}/test/fixtures/theme"
 
-          # Modify a file. Should upload on the fly.
-          file = Pathname.new("#{theme_root}/assets/added.css")
-          begin
-            file.write("added")
-            with_retries(Minitest::Assertion) do
-              assert_requested(:put, ASSETS_API_URL,
-                body: JSON.generate(
-                  asset: {
-                    key: "assets/added.css",
-                    value: "added",
-                  }
-                ),
-                at_least_times: 1)
+            # Modify a file. Should upload on the fly.
+            file = Pathname.new("#{theme_root}/assets/added.css")
+            begin
+              file.write("added")
+              with_retries(Minitest::Assertion) do
+                assert_requested(:put, ASSETS_API_URL,
+                  body: JSON.generate(
+                    asset: {
+                      key: "assets/added.css",
+                      value: "added",
+                    }
+                  ),
+                  at_least_times: 1)
+              end
+            ensure
+              file.delete
             end
-          ensure
-            file.delete
           end
         end
 
         def test_serve_assets_locally
-          response = start_server_and_wait_sync_files
+          @@mutex.synchronize do
+            response = start_server_and_wait_sync_files
 
-          refute_server_errors(response)
+            refute_server_errors(response)
+          end
         end
 
         def test_address_already_in_use
-          start_server_and_wait_sync_files
+          @@mutex.synchronize do
+            start_server_and_wait_sync_files
 
-          # Stub StandardReporter#report to keep test logs clean
-          ShopifyCLI::Theme::Syncer::StandardReporter.any_instance.stubs(:report)
+            # Stub StandardReporter#report to keep test logs clean
+            ShopifyCLI::Theme::Syncer::StandardReporter.any_instance.stubs(:report)
 
-          @ctx.output_captured = true
-          io = capture_io_and_assert_raises(ShopifyCLI::AbortSilent) do
-            DevServer.start(@ctx, "#{ShopifyCLI::ROOT}/test/fixtures/theme", port: @@port, stable: true)
+            @ctx.output_captured = true
+            io = capture_io_and_assert_raises(ShopifyCLI::AbortSilent) do
+              DevServer.start(@ctx, "#{ShopifyCLI::ROOT}/test/fixtures/theme", port: @@port, stable: true)
+            end
+            @ctx.output_captured = false
+
+            io_messages = io.join
+
+            assert_match(@ctx.message("theme.serve.address_already_in_use", "http://127.0.0.1:#{@@port}"), io_messages)
+            assert_match(@ctx.message("theme.serve.try_port_option"), io_messages)
           end
-          @ctx.output_captured = false
-
-          io_messages = io.join
-
-          assert_match(@ctx.message("theme.serve.address_already_in_use", "http://127.0.0.1:#{@@port}"), io_messages)
-          assert_match(@ctx.message("theme.serve.try_port_option"), io_messages)
         end
 
         def test_streams_hot_reload_events
-          start_server_and_wait_sync_files
+          @@mutex.synchronize do
+            start_server_and_wait_sync_files
 
-          # Send the SSE request
-          socket = TCPSocket.new("127.0.0.1", @@port)
-          socket.write("GET /hot-reload HTTP/1.1\r\n")
-          socket.write("Host: 127.0.0.1\r\n")
-          socket.write("\r\n")
-          socket.flush
-          # Read the head
-          assert_includes(socket.readpartial(1024), "HTTP/1.1 200 OK")
-          # Add a file
-          file = Pathname.new("#{ShopifyCLI::ROOT}/test/fixtures/theme/assets/theme.css")
-          file.write("modified")
-          begin
-            assert_equal("2a\r\ndata: {\"modified\":[\"assets/theme.css\"]}\n\n\n\r\n", socket.readpartial(1024))
-          ensure
-            file.write("")
+            # Send the SSE request
+            socket = TCPSocket.new("127.0.0.1", @@port)
+            socket.write("GET /hot-reload HTTP/1.1\r\n")
+            socket.write("Host: 127.0.0.1\r\n")
+            socket.write("\r\n")
+            socket.flush
+            # Read the head
+            assert_includes(socket.readpartial(1024), "HTTP/1.1 200 OK")
+            # Add a file
+            file = Pathname.new("#{ShopifyCLI::ROOT}/test/fixtures/theme/assets/theme.css")
+            file.write("modified")
+            begin
+              assert_equal("2a\r\ndata: {\"modified\":[\"assets/theme.css\"]}\n\n\n\r\n", socket.readpartial(1024))
+            ensure
+              file.write("")
+            end
+            socket.close
           end
-          socket.close
         end
 
         def test_forbidden_error
-          root = "#{ShopifyCLI::ROOT}/test/fixtures/theme"
-          ctx = TestHelpers::FakeContext.new(root: root)
-          error_message = "error message"
-          shop = "dev-theme-server-store.myshopify.com"
+          @@mutex.synchronize do
+            root = "#{ShopifyCLI::ROOT}/test/fixtures/theme"
+            ctx = TestHelpers::FakeContext.new(root: root)
+            error_message = "error message"
+            shop = "dev-theme-server-store.myshopify.com"
 
-          ctx.stubs(:message).returns("")
-          ctx.stubs(:message).with("theme.serve.ensure_user", shop).returns(error_message)
+            ctx.stubs(:message).returns("")
+            ctx.stubs(:message).with("theme.serve.ensure_user", shop).returns(error_message)
 
-          ctx.expects(:abort).with(error_message)
+            ctx.expects(:abort).with(error_message)
 
-          DevelopmentTheme.stubs(:find_or_create!).raises(ShopifyCLI::API::APIRequestForbiddenError)
-          DevServer.start(ctx, "#{ShopifyCLI::ROOT}/test/fixtures/theme", port: @@port, stable: true)
+            DevelopmentTheme.stubs(:find_or_create!).raises(ShopifyCLI::API::APIRequestForbiddenError)
+            DevServer.start(ctx, "#{ShopifyCLI::ROOT}/test/fixtures/theme", port: @@port, stable: true)
+          end
         end
 
         private
