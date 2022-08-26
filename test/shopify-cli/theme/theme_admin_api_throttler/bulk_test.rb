@@ -44,14 +44,14 @@ module ShopifyCLI
           request_2 = generate_put_request("file2.txt", Bulk::MAX_BULK_BYTESIZE / 3)
           request_3 = generate_put_request("file3.txt", Bulk::MAX_BULK_BYTESIZE + 1)
 
+          @ctx.expects(:debug)
+              .with(debug_formatter(2, request_1.size + request_2.size))
+          @ctx.expects(:debug)
+              .with(debug_formatter(1, request_3.size))
+
           [request_1, request_2, request_3].each do |request|
             @bulk.enqueue(request)
           end
-
-          @ctx.expects(:debug)
-            .with(debug_formatter(2, request_1.size + request_2.size))
-          @ctx.expects(:debug)
-            .with(debug_formatter(1, request_3.size))
           @bulk.shutdown
         end
 
@@ -62,28 +62,28 @@ module ShopifyCLI
           request_2 = generate_put_request("file2.txt", Bulk::MAX_BULK_BYTESIZE + 3)
           request_3 = generate_put_request("file3.txt", Bulk::MAX_BULK_BYTESIZE + 4)
 
+          @ctx.expects(:debug)
+              .with(debug_formatter(1, request_1.size))
+          @ctx.expects(:debug)
+              .with(debug_formatter(1, request_2.size))
+          @ctx.expects(:debug)
+              .with(debug_formatter(1, request_3.size))
+
           [request_1, request_2, request_3].each do |request|
             @bulk.enqueue(request)
           end
-
-          @ctx.expects(:debug)
-            .with(debug_formatter(1, request_1.size))
-          @ctx.expects(:debug)
-            .with(debug_formatter(1, request_2.size))
-          @ctx.expects(:debug)
-            .with(debug_formatter(1, request_3.size))
           @bulk.shutdown
         end
 
         def test_batch_num_files_upper_bound_with_single_thread
           @bulk = Bulk.new(@ctx, @admin_api)
 
+          @ctx.expects(:debug)
+              .with(debug_formatter(20, 2_000_000))
+
           Bulk::MAX_BULK_FILES.times do |n|
             @bulk.enqueue(generate_put_request("file#{n}.txt", 100_000))
           end
-
-          @ctx.expects(:debug)
-            .with(debug_formatter(20, 2_000_000))
           @bulk.shutdown
         end
 
@@ -92,13 +92,13 @@ module ShopifyCLI
 
           num_requests = Bulk::MAX_BULK_FILES << 1
 
+          @ctx.expects(:debug)
+              .with(debug_formatter(20, Bulk::MAX_BULK_FILES * 10_000))
+              .twice
+
           num_requests.times do |n|
             @bulk.enqueue(generate_put_request("file#{n}.txt", 10_000))
           end
-
-          @ctx.expects(:debug)
-            .with(debug_formatter(20, Bulk::MAX_BULK_FILES * 10_000))
-            .twice
           @bulk.shutdown
         end
 
@@ -110,14 +110,14 @@ module ShopifyCLI
             generate_put_request("file#{i}.txt", size + i)
           end
 
-          files.each { |file| @bulk.enqueue(file) }
+          @ctx.expects(:debug)
+              .with(debug_formatter(2, files[0].size + files[1].size))
+          @ctx.expects(:debug)
+              .with(debug_formatter(2, files[2].size + files[3].size))
+          @ctx.expects(:debug)
+              .with(debug_formatter(1, files[4].size))
 
-          @ctx.expects(:debug)
-            .with(debug_formatter(2, files[0].size + files[1].size))
-          @ctx.expects(:debug)
-            .with(debug_formatter(2, files[2].size + files[3].size))
-          @ctx.expects(:debug)
-            .with(debug_formatter(1, files[4].size))
+          files.each { |file| @bulk.enqueue(file) }
           @bulk.shutdown
         end
 
