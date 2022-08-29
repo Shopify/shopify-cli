@@ -1,3 +1,3 @@
 module ShopifyCLI
-  VERSION = "2.23.0"
+  VERSION = "2.23.1"
 end
