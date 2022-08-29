@@ -2,6 +2,8 @@ From version 2.6.0, the sections in this file adhere to the [keep a changelog](h
 
 ## [Unreleased]
 
+## Version 2.24.0 - 2022-08-29
+
 ### Fixed
 * [#2527](https://github.com/Shopify/shopify-cli/pull/2527): **Breaking** Update theme-check to 1.11.0 (dropped support for ruby 2.6)
 
